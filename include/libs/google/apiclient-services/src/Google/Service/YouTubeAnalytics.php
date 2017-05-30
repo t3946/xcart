@@ -215,10 +215,6 @@ class Google_Service_YouTubeAnalytics extends Google_Service
                   'location' => 'query',
                   'type' => 'string',
                 ),
-                'include-historical-channel-data' => array(
-                  'location' => 'query',
-                  'type' => 'boolean',
-                ),
                 'max-results' => array(
                   'location' => 'query',
                   'type' => 'integer',

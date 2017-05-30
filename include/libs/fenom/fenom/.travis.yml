@@ -11,11 +11,10 @@ php:
   - 7.1
 
 before_script:
-  - composer global require satooshi/php-coveralls
-#  - composer update --dev --quiet
+  - composer update --dev --quiet
 
 script:
-  - phpunit -c phpunit.xml.dist
+  - phpunit
 
 after_script:
-  - coveralls
+  - php vendor/bin/coveralls

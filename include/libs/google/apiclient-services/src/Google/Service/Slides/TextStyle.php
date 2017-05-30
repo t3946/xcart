@@ -32,8 +32,6 @@ class Google_Service_Slides_TextStyle extends Google_Model
   public $smallCaps;
   public $strikethrough;
   public $underline;
-  protected $weightedFontFamilyType = 'Google_Service_Slides_WeightedFontFamily';
-  protected $weightedFontFamilyDataType = '';
 
   public function setBackgroundColor(Google_Service_Slides_OptionalColor $backgroundColor)
   {
@@ -122,13 +120,5 @@ class Google_Service_Slides_TextStyle extends Google_Model
   public function getUnderline()
   {
     return $this->underline;
-  }
-  public function setWeightedFontFamily(Google_Service_Slides_WeightedFontFamily $weightedFontFamily)
-  {
-    $this->weightedFontFamily = $weightedFontFamily;
-  }
-  public function getWeightedFontFamily()
-  {
-    return $this->weightedFontFamily;
   }
 }

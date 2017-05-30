@@ -19,8 +19,6 @@ class Google_Service_Dataflow_CounterUpdate extends Google_Model
 {
   public $boolean;
   public $cumulative;
-  protected $distributionType = 'Google_Service_Dataflow_DistributionUpdate';
-  protected $distributionDataType = '';
   public $floatingPoint;
   protected $floatingPointListType = 'Google_Service_Dataflow_FloatingPointList';
   protected $floatingPointListDataType = '';
@@ -56,14 +54,6 @@ class Google_Service_Dataflow_CounterUpdate extends Google_Model
   public function getCumulative()
   {
     return $this->cumulative;
-  }
-  public function setDistribution(Google_Service_Dataflow_DistributionUpdate $distribution)
-  {
-    $this->distribution = $distribution;
-  }
-  public function getDistribution()
-  {
-    return $this->distribution;
   }
   public function setFloatingPoint($floatingPoint)
   {

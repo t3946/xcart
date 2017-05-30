@@ -140,14 +140,7 @@ class SQLSrvStatement implements IteratorAggregate, Statement
      */
     public function bindValue($param, $value, $type = null)
     {
-        if (!is_numeric($param)) {
-            throw new SQLSrvException(
-                'sqlsrv does not support named parameters to queries, use question mark (?) placeholders instead.'
-            );
-        }
-
-        $this->variables[$param] = $value;
-        $this->types[$param] = $type;
+        return $this->bindParam($param, $value, $type, null);
     }
 
     /**
@@ -161,9 +154,6 @@ class SQLSrvStatement implements IteratorAggregate, Statement
 
         $this->variables[$column] =& $variable;
         $this->types[$column] = $type;
-
-        // unset the statement resource if it exists as the new one will need to be bound to the new variable
-        $this->stmt = null;
     }
 
     /**
@@ -225,7 +215,8 @@ class SQLSrvStatement implements IteratorAggregate, Statement
             $hasZeroIndex = array_key_exists(0, $params);
             foreach ($params as $key => $val) {
                 $key = ($hasZeroIndex && is_numeric($key)) ? $key + 1 : $key;
-                $this->bindValue($key, $val);
+                $this->variables[$key] = $val;
+                $this->types[$key] = null;
             }
         }
 

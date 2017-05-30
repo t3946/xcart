@@ -11,9 +11,9 @@
 
 namespace Jaybizzle\CrawlerDetect;
 
-use Jaybizzle\CrawlerDetect\Fixtures\Headers;
 use Jaybizzle\CrawlerDetect\Fixtures\Crawlers;
 use Jaybizzle\CrawlerDetect\Fixtures\Exclusions;
+use Jaybizzle\CrawlerDetect\Fixtures\Headers;
 
 class CrawlerDetect
 {
@@ -86,7 +86,7 @@ class CrawlerDetect
         $this->compiledExclusions = $this->compileRegex($this->exclusions->getAll());
 
         $this->setHttpHeaders($headers);
-        $this->userAgent = $this->setUserAgent($userAgent);
+        $this->setUserAgent($userAgent);
     }
 
     /**
@@ -104,9 +104,9 @@ class CrawlerDetect
     /**
      * Set HTTP headers.
      *
-     * @param array|null $httpHeaders
+     * @param array $httpHeaders
      */
-    public function setHttpHeaders($httpHeaders)
+    public function setHttpHeaders($httpHeaders = null)
     {
         // Use global _SERVER if $httpHeaders aren't defined.
         if (! is_array($httpHeaders) || ! count($httpHeaders)) {
@@ -140,23 +140,26 @@ class CrawlerDetect
      *
      * @param string $userAgent
      */
-    public function setUserAgent($userAgent)
+    public function setUserAgent($userAgent = null)
     {
-        if (is_null($userAgent)) {
+        if (false === empty($userAgent)) {
+            $this->userAgent = $userAgent;
+        } else {
+            $this->userAgent = null;
             foreach ($this->getUaHttpHeaders() as $altHeader) {
-                if (isset($this->httpHeaders[$altHeader])) {
-                    $userAgent .= $this->httpHeaders[$altHeader].' ';
+                if (false === empty($this->httpHeaders[$altHeader])) { // @todo: should use getHttpHeader(), but it would be slow.
+                    $this->userAgent .= $this->httpHeaders[$altHeader].' ';
                 }
             }
-        }
 
-        return $userAgent;
+            $this->userAgent = (! empty($this->userAgent) ? trim($this->userAgent) : null);
+        }
     }
 
     /**
      * Check user agent string against the regex.
      *
-     * @param string|null $userAgent
+     * @param string $userAgent
      *
      * @return bool
      */

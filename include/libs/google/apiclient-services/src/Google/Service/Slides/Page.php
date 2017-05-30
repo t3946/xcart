@@ -20,15 +20,12 @@ class Google_Service_Slides_Page extends Google_Collection
   protected $collection_key = 'pageElements';
   protected $layoutPropertiesType = 'Google_Service_Slides_LayoutProperties';
   protected $layoutPropertiesDataType = '';
-  protected $notesPropertiesType = 'Google_Service_Slides_NotesProperties';
-  protected $notesPropertiesDataType = '';
   public $objectId;
   protected $pageElementsType = 'Google_Service_Slides_PageElement';
   protected $pageElementsDataType = 'array';
   protected $pagePropertiesType = 'Google_Service_Slides_PageProperties';
   protected $pagePropertiesDataType = '';
   public $pageType;
-  public $revisionId;
   protected $slidePropertiesType = 'Google_Service_Slides_SlideProperties';
   protected $slidePropertiesDataType = '';
 
@@ -39,14 +36,6 @@ class Google_Service_Slides_Page extends Google_Collection
   public function getLayoutProperties()
   {
     return $this->layoutProperties;
-  }
-  public function setNotesProperties(Google_Service_Slides_NotesProperties $notesProperties)
-  {
-    $this->notesProperties = $notesProperties;
-  }
-  public function getNotesProperties()
-  {
-    return $this->notesProperties;
   }
   public function setObjectId($objectId)
   {
@@ -79,14 +68,6 @@ class Google_Service_Slides_Page extends Google_Collection
   public function getPageType()
   {
     return $this->pageType;
-  }
-  public function setRevisionId($revisionId)
-  {
-    $this->revisionId = $revisionId;
-  }
-  public function getRevisionId()
-  {
-    return $this->revisionId;
   }
   public function setSlideProperties(Google_Service_Slides_SlideProperties $slideProperties)
   {

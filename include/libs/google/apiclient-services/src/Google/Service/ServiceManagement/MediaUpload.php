@@ -18,7 +18,6 @@
 class Google_Service_ServiceManagement_MediaUpload extends Google_Model
 {
   public $enabled;
-  public $uploadService;
 
   public function setEnabled($enabled)
   {
@@ -27,13 +26,5 @@ class Google_Service_ServiceManagement_MediaUpload extends Google_Model
   public function getEnabled()
   {
     return $this->enabled;
-  }
-  public function setUploadService($uploadService)
-  {
-    $this->uploadService = $uploadService;
-  }
-  public function getUploadService()
-  {
-    return $this->uploadService;
   }
 }

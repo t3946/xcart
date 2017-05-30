@@ -18,7 +18,6 @@
 class Google_Service_Proximitybeacon_BeaconAttachment extends Google_Model
 {
   public $attachmentName;
-  public $creationTimeMs;
   public $data;
   public $namespacedType;
 
@@ -29,14 +28,6 @@ class Google_Service_Proximitybeacon_BeaconAttachment extends Google_Model
   public function getAttachmentName()
   {
     return $this->attachmentName;
-  }
-  public function setCreationTimeMs($creationTimeMs)
-  {
-    $this->creationTimeMs = $creationTimeMs;
-  }
-  public function getCreationTimeMs()
-  {
-    return $this->creationTimeMs;
   }
   public function setData($data)
   {

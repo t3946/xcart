@@ -39,7 +39,6 @@ class Google_Service_CloudBuild_Build extends Google_Collection
   public $statusDetail;
   protected $stepsType = 'Google_Service_CloudBuild_BuildStep';
   protected $stepsDataType = 'array';
-  public $substitutions;
   public $timeout;
 
   public function setBuildTriggerId($buildTriggerId)
@@ -169,14 +168,6 @@ class Google_Service_CloudBuild_Build extends Google_Collection
   public function getSteps()
   {
     return $this->steps;
-  }
-  public function setSubstitutions($substitutions)
-  {
-    $this->substitutions = $substitutions;
-  }
-  public function getSubstitutions()
-  {
-    return $this->substitutions;
   }
   public function setTimeout($timeout)
   {

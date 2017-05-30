@@ -19,7 +19,6 @@ class Google_Service_Drive_PermissionList extends Google_Collection
 {
   protected $collection_key = 'permissions';
   public $kind;
-  public $nextPageToken;
   protected $permissionsType = 'Google_Service_Drive_Permission';
   protected $permissionsDataType = 'array';
 
@@ -30,14 +29,6 @@ class Google_Service_Drive_PermissionList extends Google_Collection
   public function getKind()
   {
     return $this->kind;
-  }
-  public function setNextPageToken($nextPageToken)
-  {
-    $this->nextPageToken = $nextPageToken;
-  }
-  public function getNextPageToken()
-  {
-    return $this->nextPageToken;
   }
   public function setPermissions($permissions)
   {

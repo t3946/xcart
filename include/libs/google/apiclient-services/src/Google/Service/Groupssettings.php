@@ -30,7 +30,7 @@
  */
 class Google_Service_Groupssettings extends Google_Service
 {
-  /** View and manage the settings of a G Suite group. */
+  /** View and manage the settings of a Google Apps Group. */
   const APPS_GROUPS_SETTINGS =
       "https://www.googleapis.com/auth/apps.groups.settings";
 

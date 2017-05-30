@@ -24,8 +24,6 @@ class Google_Service_Bigquery_TableListTables extends Google_Model
   protected $tableReferenceType = 'Google_Service_Bigquery_TableReference';
   protected $tableReferenceDataType = '';
   public $type;
-  protected $viewType = 'Google_Service_Bigquery_TableListTablesView';
-  protected $viewDataType = '';
 
   public function setFriendlyName($friendlyName)
   {
@@ -74,13 +72,5 @@ class Google_Service_Bigquery_TableListTables extends Google_Model
   public function getType()
   {
     return $this->type;
-  }
-  public function setView(Google_Service_Bigquery_TableListTablesView $view)
-  {
-    $this->view = $view;
-  }
-  public function getView()
-  {
-    return $this->view;
   }
 }

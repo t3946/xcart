@@ -18,13 +18,9 @@
 class Google_Service_Kgsearch_SearchResponse extends Google_Collection
 {
   protected $collection_key = 'itemListElement';
-  protected $internal_gapi_mappings = array(
-        "context" => "@context",
-        "type" => "@type",
-  );
   public $context;
-  public $type;
   public $itemListElement;
+  public $type;
 
   public function setContext($context)
   {
@@ -34,14 +30,6 @@ class Google_Service_Kgsearch_SearchResponse extends Google_Collection
   {
     return $this->context;
   }
-  public function setType($type)
-  {
-    $this->type = $type;
-  }
-  public function getType()
-  {
-    return $this->type;
-  }
   public function setItemListElement($itemListElement)
   {
     $this->itemListElement = $itemListElement;
@@ -49,5 +37,13 @@ class Google_Service_Kgsearch_SearchResponse extends Google_Collection
   public function getItemListElement()
   {
     return $this->itemListElement;
+  }
+  public function setType($type)
+  {
+    $this->type = $type;
+  }
+  public function getType()
+  {
+    return $this->type;
   }
 }

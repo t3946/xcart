@@ -19,8 +19,6 @@ class Google_Service_Dataflow_WorkerMessageResponse extends Google_Model
 {
   protected $workerHealthReportResponseType = 'Google_Service_Dataflow_WorkerHealthReportResponse';
   protected $workerHealthReportResponseDataType = '';
-  protected $workerMetricsResponseType = 'Google_Service_Dataflow_ResourceUtilizationReportResponse';
-  protected $workerMetricsResponseDataType = '';
 
   public function setWorkerHealthReportResponse(Google_Service_Dataflow_WorkerHealthReportResponse $workerHealthReportResponse)
   {
@@ -29,13 +27,5 @@ class Google_Service_Dataflow_WorkerMessageResponse extends Google_Model
   public function getWorkerHealthReportResponse()
   {
     return $this->workerHealthReportResponse;
-  }
-  public function setWorkerMetricsResponse(Google_Service_Dataflow_ResourceUtilizationReportResponse $workerMetricsResponse)
-  {
-    $this->workerMetricsResponse = $workerMetricsResponse;
-  }
-  public function getWorkerMetricsResponse()
-  {
-    return $this->workerMetricsResponse;
   }
 }

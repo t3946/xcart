@@ -19,7 +19,6 @@ class Google_Service_YouTube_VideoTopicDetails extends Google_Collection
 {
   protected $collection_key = 'topicIds';
   public $relevantTopicIds;
-  public $topicCategories;
   public $topicIds;
 
   public function setRelevantTopicIds($relevantTopicIds)
@@ -29,14 +28,6 @@ class Google_Service_YouTube_VideoTopicDetails extends Google_Collection
   public function getRelevantTopicIds()
   {
     return $this->relevantTopicIds;
-  }
-  public function setTopicCategories($topicCategories)
-  {
-    $this->topicCategories = $topicCategories;
-  }
-  public function getTopicCategories()
-  {
-    return $this->topicCategories;
   }
   public function setTopicIds($topicIds)
   {

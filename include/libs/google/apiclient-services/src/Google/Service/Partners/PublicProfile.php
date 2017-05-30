@@ -20,7 +20,6 @@ class Google_Service_Partners_PublicProfile extends Google_Model
   public $displayImageUrl;
   public $displayName;
   public $id;
-  public $profileImage;
   public $url;
 
   public function setDisplayImageUrl($displayImageUrl)
@@ -46,14 +45,6 @@ class Google_Service_Partners_PublicProfile extends Google_Model
   public function getId()
   {
     return $this->id;
-  }
-  public function setProfileImage($profileImage)
-  {
-    $this->profileImage = $profileImage;
-  }
-  public function getProfileImage()
-  {
-    return $this->profileImage;
   }
   public function setUrl($url)
   {

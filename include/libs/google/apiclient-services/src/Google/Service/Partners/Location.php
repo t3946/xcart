@@ -15,20 +15,11 @@
  * the License.
  */
 
-class Google_Service_Partners_Location extends Google_Collection
+class Google_Service_Partners_Location extends Google_Model
 {
-  protected $collection_key = 'addressLine';
   public $address;
-  public $addressLine;
-  public $administrativeArea;
-  public $dependentLocality;
-  public $languageCode;
   protected $latLngType = 'Google_Service_Partners_LatLng';
   protected $latLngDataType = '';
-  public $locality;
-  public $postalCode;
-  public $regionCode;
-  public $sortingCode;
 
   public function setAddress($address)
   {
@@ -38,38 +29,6 @@ class Google_Service_Partners_Location extends Google_Collection
   {
     return $this->address;
   }
-  public function setAddressLine($addressLine)
-  {
-    $this->addressLine = $addressLine;
-  }
-  public function getAddressLine()
-  {
-    return $this->addressLine;
-  }
-  public function setAdministrativeArea($administrativeArea)
-  {
-    $this->administrativeArea = $administrativeArea;
-  }
-  public function getAdministrativeArea()
-  {
-    return $this->administrativeArea;
-  }
-  public function setDependentLocality($dependentLocality)
-  {
-    $this->dependentLocality = $dependentLocality;
-  }
-  public function getDependentLocality()
-  {
-    return $this->dependentLocality;
-  }
-  public function setLanguageCode($languageCode)
-  {
-    $this->languageCode = $languageCode;
-  }
-  public function getLanguageCode()
-  {
-    return $this->languageCode;
-  }
   public function setLatLng(Google_Service_Partners_LatLng $latLng)
   {
     $this->latLng = $latLng;
@@ -77,37 +36,5 @@ class Google_Service_Partners_Location extends Google_Collection
   public function getLatLng()
   {
     return $this->latLng;
-  }
-  public function setLocality($locality)
-  {
-    $this->locality = $locality;
-  }
-  public function getLocality()
-  {
-    return $this->locality;
-  }
-  public function setPostalCode($postalCode)
-  {
-    $this->postalCode = $postalCode;
-  }
-  public function getPostalCode()
-  {
-    return $this->postalCode;
-  }
-  public function setRegionCode($regionCode)
-  {
-    $this->regionCode = $regionCode;
-  }
-  public function getRegionCode()
-  {
-    return $this->regionCode;
-  }
-  public function setSortingCode($sortingCode)
-  {
-    $this->sortingCode = $sortingCode;
-  }
-  public function getSortingCode()
-  {
-    return $this->sortingCode;
   }
 }

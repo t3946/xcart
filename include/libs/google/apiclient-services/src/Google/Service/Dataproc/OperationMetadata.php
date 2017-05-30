@@ -17,7 +17,7 @@
 
 class Google_Service_Dataproc_OperationMetadata extends Google_Collection
 {
-  protected $collection_key = 'warnings';
+  protected $collection_key = 'statusHistory';
   public $clusterName;
   public $clusterUuid;
   public $description;
@@ -32,7 +32,6 @@ class Google_Service_Dataproc_OperationMetadata extends Google_Collection
   protected $statusDataType = '';
   protected $statusHistoryType = 'Google_Service_Dataproc_OperationStatus';
   protected $statusHistoryDataType = 'array';
-  public $warnings;
 
   public function setClusterName($clusterName)
   {
@@ -129,13 +128,5 @@ class Google_Service_Dataproc_OperationMetadata extends Google_Collection
   public function getStatusHistory()
   {
     return $this->statusHistory;
-  }
-  public function setWarnings($warnings)
-  {
-    $this->warnings = $warnings;
-  }
-  public function getWarnings()
-  {
-    return $this->warnings;
   }
 }

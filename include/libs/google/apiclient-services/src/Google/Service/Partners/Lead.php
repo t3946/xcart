@@ -18,31 +18,18 @@
 class Google_Service_Partners_Lead extends Google_Collection
 {
   protected $collection_key = 'gpsMotivations';
-  public $adwordsCustomerId;
   public $comments;
-  public $createTime;
   public $email;
   public $familyName;
   public $givenName;
   public $gpsMotivations;
   public $id;
-  public $languageCode;
-  public $marketingOptIn;
   protected $minMonthlyBudgetType = 'Google_Service_Partners_Money';
   protected $minMonthlyBudgetDataType = '';
   public $phoneNumber;
-  public $state;
   public $type;
   public $websiteUrl;
 
-  public function setAdwordsCustomerId($adwordsCustomerId)
-  {
-    $this->adwordsCustomerId = $adwordsCustomerId;
-  }
-  public function getAdwordsCustomerId()
-  {
-    return $this->adwordsCustomerId;
-  }
   public function setComments($comments)
   {
     $this->comments = $comments;
@@ -50,14 +37,6 @@ class Google_Service_Partners_Lead extends Google_Collection
   public function getComments()
   {
     return $this->comments;
-  }
-  public function setCreateTime($createTime)
-  {
-    $this->createTime = $createTime;
-  }
-  public function getCreateTime()
-  {
-    return $this->createTime;
   }
   public function setEmail($email)
   {
@@ -99,22 +78,6 @@ class Google_Service_Partners_Lead extends Google_Collection
   {
     return $this->id;
   }
-  public function setLanguageCode($languageCode)
-  {
-    $this->languageCode = $languageCode;
-  }
-  public function getLanguageCode()
-  {
-    return $this->languageCode;
-  }
-  public function setMarketingOptIn($marketingOptIn)
-  {
-    $this->marketingOptIn = $marketingOptIn;
-  }
-  public function getMarketingOptIn()
-  {
-    return $this->marketingOptIn;
-  }
   public function setMinMonthlyBudget(Google_Service_Partners_Money $minMonthlyBudget)
   {
     $this->minMonthlyBudget = $minMonthlyBudget;
@@ -130,14 +93,6 @@ class Google_Service_Partners_Lead extends Google_Collection
   public function getPhoneNumber()
   {
     return $this->phoneNumber;
-  }
-  public function setState($state)
-  {
-    $this->state = $state;
-  }
-  public function getState()
-  {
-    return $this->state;
   }
   public function setType($type)
   {

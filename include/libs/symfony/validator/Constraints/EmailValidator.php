@@ -93,7 +93,7 @@ class EmailValidator extends ConstraintValidator
             return;
         }
 
-        $host = (string) substr($value, strrpos($value, '@') + 1);
+        $host = substr($value, strrpos($value, '@') + 1);
 
         // Check for host DNS resource records
         if ($constraint->checkMX) {
@@ -138,7 +138,7 @@ class EmailValidator extends ConstraintValidator
      */
     private function checkMX($host)
     {
-        return '' !== $host && checkdnsrr($host, 'MX');
+        return checkdnsrr($host, 'MX');
     }
 
     /**
@@ -150,6 +150,6 @@ class EmailValidator extends ConstraintValidator
      */
     private function checkHost($host)
     {
-        return '' !== $host && ($this->checkMX($host) || (checkdnsrr($host, 'A') || checkdnsrr($host, 'AAAA')));
+        return $this->checkMX($host) || (checkdnsrr($host, 'A') || checkdnsrr($host, 'AAAA'));
     }
 }

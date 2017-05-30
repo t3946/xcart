@@ -4,7 +4,7 @@ namespace Fenom;
 use Fenom\Error\UnexpectedTokenException;
 use Fenom\Tokenizer;
 
-class TokenizerTest extends TestCase
+class TokenizerTest extends \PHPUnit_Framework_TestCase
 {
 
     public function testGetName()

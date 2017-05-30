@@ -15,13 +15,10 @@
  * the License.
  */
 
-class Google_Service_Slides_CreateSlideRequest extends Google_Collection
+class Google_Service_Slides_CreateSlideRequest extends Google_Model
 {
-  protected $collection_key = 'placeholderIdMappings';
   public $insertionIndex;
   public $objectId;
-  protected $placeholderIdMappingsType = 'Google_Service_Slides_LayoutPlaceholderIdMapping';
-  protected $placeholderIdMappingsDataType = 'array';
   protected $slideLayoutReferenceType = 'Google_Service_Slides_LayoutReference';
   protected $slideLayoutReferenceDataType = '';
 
@@ -40,14 +37,6 @@ class Google_Service_Slides_CreateSlideRequest extends Google_Collection
   public function getObjectId()
   {
     return $this->objectId;
-  }
-  public function setPlaceholderIdMappings($placeholderIdMappings)
-  {
-    $this->placeholderIdMappings = $placeholderIdMappings;
-  }
-  public function getPlaceholderIdMappings()
-  {
-    return $this->placeholderIdMappings;
   }
   public function setSlideLayoutReference(Google_Service_Slides_LayoutReference $slideLayoutReference)
   {

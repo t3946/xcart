@@ -175,9 +175,7 @@ class Google_Service_AndroidEnterprise_Resource_Users extends Google_Service_Res
     return $this->call('revokeToken', array($params));
   }
   /**
-   * Modifies the set of products that a user is entitled to access (referred to
-   * as whitelisted products). Only products that are approved or products that
-   * were previously approved (products with revoked approval) can be whitelisted.
+   * Modifies the set of products a user is entitled to access.
    * (users.setAvailableProductSet)
    *
    * @param string $enterpriseId The ID of the enterprise.

@@ -61,7 +61,6 @@ class Accessor {
      */
     public static function parserProperty($prop, Tokenizer $tokens, Template $tpl, &$is_var)
     {
-        $is_var = true;
         return self::parserVar('$tpl->getStorage()->'.$prop, $tokens, $tpl, $is_var);
     }
 

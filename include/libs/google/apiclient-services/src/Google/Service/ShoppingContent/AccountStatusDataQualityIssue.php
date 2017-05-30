@@ -19,13 +19,11 @@ class Google_Service_ShoppingContent_AccountStatusDataQualityIssue extends Googl
 {
   protected $collection_key = 'exampleItems';
   public $country;
-  public $detail;
   public $displayedValue;
   protected $exampleItemsType = 'Google_Service_ShoppingContent_AccountStatusExampleItem';
   protected $exampleItemsDataType = 'array';
   public $id;
   public $lastChecked;
-  public $location;
   public $numItems;
   public $severity;
   public $submittedValue;
@@ -37,14 +35,6 @@ class Google_Service_ShoppingContent_AccountStatusDataQualityIssue extends Googl
   public function getCountry()
   {
     return $this->country;
-  }
-  public function setDetail($detail)
-  {
-    $this->detail = $detail;
-  }
-  public function getDetail()
-  {
-    return $this->detail;
   }
   public function setDisplayedValue($displayedValue)
   {
@@ -77,14 +67,6 @@ class Google_Service_ShoppingContent_AccountStatusDataQualityIssue extends Googl
   public function getLastChecked()
   {
     return $this->lastChecked;
-  }
-  public function setLocation($location)
-  {
-    $this->location = $location;
-  }
-  public function getLocation()
-  {
-    return $this->location;
   }
   public function setNumItems($numItems)
   {

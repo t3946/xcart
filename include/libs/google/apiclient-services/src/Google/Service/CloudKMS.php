@@ -16,11 +16,10 @@
  */
 
 /**
- * Service definition for CloudKMS (v1).
+ * Service definition for CloudKMS (v1beta1).
  *
  * <p>
- * Manages encryption for your cloud services the same way you do on-premise.
- * You can generate, use, rotate, and destroy AES256 encryption keys.</p>
+</p>
  *
  * <p>
  * For more information about this service, see the API
@@ -50,7 +49,7 @@ class Google_Service_CloudKMS extends Google_Service
     parent::__construct($client);
     $this->rootUrl = 'https://cloudkms.googleapis.com/';
     $this->servicePath = '';
-    $this->version = 'v1';
+    $this->version = 'v1beta1';
     $this->serviceName = 'cloudkms';
 
     $this->projects_locations = new Google_Service_CloudKMS_Resource_ProjectsLocations(
@@ -60,7 +59,7 @@ class Google_Service_CloudKMS extends Google_Service
         array(
           'methods' => array(
             'get' => array(
-              'path' => 'v1/{+name}',
+              'path' => 'v1beta1/{+name}',
               'httpMethod' => 'GET',
               'parameters' => array(
                 'name' => array(
@@ -70,13 +69,17 @@ class Google_Service_CloudKMS extends Google_Service
                 ),
               ),
             ),'list' => array(
-              'path' => 'v1/{+name}/locations',
+              'path' => 'v1beta1/{+name}/locations',
               'httpMethod' => 'GET',
               'parameters' => array(
                 'name' => array(
                   'location' => 'path',
                   'type' => 'string',
                   'required' => true,
+                ),
+                'pageSize' => array(
+                  'location' => 'query',
+                  'type' => 'integer',
                 ),
                 'filter' => array(
                   'location' => 'query',
@@ -85,10 +88,6 @@ class Google_Service_CloudKMS extends Google_Service
                 'pageToken' => array(
                   'location' => 'query',
                   'type' => 'string',
-                ),
-                'pageSize' => array(
-                  'location' => 'query',
-                  'type' => 'integer',
                 ),
               ),
             ),
@@ -102,7 +101,7 @@ class Google_Service_CloudKMS extends Google_Service
         array(
           'methods' => array(
             'create' => array(
-              'path' => 'v1/{+parent}/keyRings',
+              'path' => 'v1beta1/{+parent}/keyRings',
               'httpMethod' => 'POST',
               'parameters' => array(
                 'parent' => array(
@@ -116,7 +115,7 @@ class Google_Service_CloudKMS extends Google_Service
                 ),
               ),
             ),'get' => array(
-              'path' => 'v1/{+name}',
+              'path' => 'v1beta1/{+name}',
               'httpMethod' => 'GET',
               'parameters' => array(
                 'name' => array(
@@ -126,7 +125,7 @@ class Google_Service_CloudKMS extends Google_Service
                 ),
               ),
             ),'getIamPolicy' => array(
-              'path' => 'v1/{+resource}:getIamPolicy',
+              'path' => 'v1beta1/{+resource}:getIamPolicy',
               'httpMethod' => 'GET',
               'parameters' => array(
                 'resource' => array(
@@ -136,7 +135,7 @@ class Google_Service_CloudKMS extends Google_Service
                 ),
               ),
             ),'list' => array(
-              'path' => 'v1/{+parent}/keyRings',
+              'path' => 'v1beta1/{+parent}/keyRings',
               'httpMethod' => 'GET',
               'parameters' => array(
                 'parent' => array(
@@ -144,17 +143,17 @@ class Google_Service_CloudKMS extends Google_Service
                   'type' => 'string',
                   'required' => true,
                 ),
-                'pageToken' => array(
-                  'location' => 'query',
-                  'type' => 'string',
-                ),
                 'pageSize' => array(
                   'location' => 'query',
                   'type' => 'integer',
                 ),
+                'pageToken' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                ),
               ),
             ),'setIamPolicy' => array(
-              'path' => 'v1/{+resource}:setIamPolicy',
+              'path' => 'v1beta1/{+resource}:setIamPolicy',
               'httpMethod' => 'POST',
               'parameters' => array(
                 'resource' => array(
@@ -164,7 +163,7 @@ class Google_Service_CloudKMS extends Google_Service
                 ),
               ),
             ),'testIamPermissions' => array(
-              'path' => 'v1/{+resource}:testIamPermissions',
+              'path' => 'v1beta1/{+resource}:testIamPermissions',
               'httpMethod' => 'POST',
               'parameters' => array(
                 'resource' => array(
@@ -184,7 +183,7 @@ class Google_Service_CloudKMS extends Google_Service
         array(
           'methods' => array(
             'create' => array(
-              'path' => 'v1/{+parent}/cryptoKeys',
+              'path' => 'v1beta1/{+parent}/cryptoKeys',
               'httpMethod' => 'POST',
               'parameters' => array(
                 'parent' => array(
@@ -198,7 +197,7 @@ class Google_Service_CloudKMS extends Google_Service
                 ),
               ),
             ),'decrypt' => array(
-              'path' => 'v1/{+name}:decrypt',
+              'path' => 'v1beta1/{+name}:decrypt',
               'httpMethod' => 'POST',
               'parameters' => array(
                 'name' => array(
@@ -208,7 +207,7 @@ class Google_Service_CloudKMS extends Google_Service
                 ),
               ),
             ),'encrypt' => array(
-              'path' => 'v1/{+name}:encrypt',
+              'path' => 'v1beta1/{+name}:encrypt',
               'httpMethod' => 'POST',
               'parameters' => array(
                 'name' => array(
@@ -218,7 +217,7 @@ class Google_Service_CloudKMS extends Google_Service
                 ),
               ),
             ),'get' => array(
-              'path' => 'v1/{+name}',
+              'path' => 'v1beta1/{+name}',
               'httpMethod' => 'GET',
               'parameters' => array(
                 'name' => array(
@@ -228,7 +227,7 @@ class Google_Service_CloudKMS extends Google_Service
                 ),
               ),
             ),'getIamPolicy' => array(
-              'path' => 'v1/{+resource}:getIamPolicy',
+              'path' => 'v1beta1/{+resource}:getIamPolicy',
               'httpMethod' => 'GET',
               'parameters' => array(
                 'resource' => array(
@@ -238,7 +237,7 @@ class Google_Service_CloudKMS extends Google_Service
                 ),
               ),
             ),'list' => array(
-              'path' => 'v1/{+parent}/cryptoKeys',
+              'path' => 'v1beta1/{+parent}/cryptoKeys',
               'httpMethod' => 'GET',
               'parameters' => array(
                 'parent' => array(
@@ -246,17 +245,17 @@ class Google_Service_CloudKMS extends Google_Service
                   'type' => 'string',
                   'required' => true,
                 ),
-                'pageToken' => array(
-                  'location' => 'query',
-                  'type' => 'string',
-                ),
                 'pageSize' => array(
                   'location' => 'query',
                   'type' => 'integer',
                 ),
+                'pageToken' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                ),
               ),
             ),'patch' => array(
-              'path' => 'v1/{+name}',
+              'path' => 'v1beta1/{+name}',
               'httpMethod' => 'PATCH',
               'parameters' => array(
                 'name' => array(
@@ -270,7 +269,7 @@ class Google_Service_CloudKMS extends Google_Service
                 ),
               ),
             ),'setIamPolicy' => array(
-              'path' => 'v1/{+resource}:setIamPolicy',
+              'path' => 'v1beta1/{+resource}:setIamPolicy',
               'httpMethod' => 'POST',
               'parameters' => array(
                 'resource' => array(
@@ -280,7 +279,7 @@ class Google_Service_CloudKMS extends Google_Service
                 ),
               ),
             ),'testIamPermissions' => array(
-              'path' => 'v1/{+resource}:testIamPermissions',
+              'path' => 'v1beta1/{+resource}:testIamPermissions',
               'httpMethod' => 'POST',
               'parameters' => array(
                 'resource' => array(
@@ -290,7 +289,7 @@ class Google_Service_CloudKMS extends Google_Service
                 ),
               ),
             ),'updatePrimaryVersion' => array(
-              'path' => 'v1/{+name}:updatePrimaryVersion',
+              'path' => 'v1beta1/{+name}:updatePrimaryVersion',
               'httpMethod' => 'POST',
               'parameters' => array(
                 'name' => array(
@@ -310,7 +309,7 @@ class Google_Service_CloudKMS extends Google_Service
         array(
           'methods' => array(
             'create' => array(
-              'path' => 'v1/{+parent}/cryptoKeyVersions',
+              'path' => 'v1beta1/{+parent}/cryptoKeyVersions',
               'httpMethod' => 'POST',
               'parameters' => array(
                 'parent' => array(
@@ -320,7 +319,7 @@ class Google_Service_CloudKMS extends Google_Service
                 ),
               ),
             ),'destroy' => array(
-              'path' => 'v1/{+name}:destroy',
+              'path' => 'v1beta1/{+name}:destroy',
               'httpMethod' => 'POST',
               'parameters' => array(
                 'name' => array(
@@ -330,7 +329,7 @@ class Google_Service_CloudKMS extends Google_Service
                 ),
               ),
             ),'get' => array(
-              'path' => 'v1/{+name}',
+              'path' => 'v1beta1/{+name}',
               'httpMethod' => 'GET',
               'parameters' => array(
                 'name' => array(
@@ -340,7 +339,7 @@ class Google_Service_CloudKMS extends Google_Service
                 ),
               ),
             ),'list' => array(
-              'path' => 'v1/{+parent}/cryptoKeyVersions',
+              'path' => 'v1beta1/{+parent}/cryptoKeyVersions',
               'httpMethod' => 'GET',
               'parameters' => array(
                 'parent' => array(
@@ -348,17 +347,17 @@ class Google_Service_CloudKMS extends Google_Service
                   'type' => 'string',
                   'required' => true,
                 ),
-                'pageToken' => array(
-                  'location' => 'query',
-                  'type' => 'string',
-                ),
                 'pageSize' => array(
                   'location' => 'query',
                   'type' => 'integer',
                 ),
+                'pageToken' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                ),
               ),
             ),'patch' => array(
-              'path' => 'v1/{+name}',
+              'path' => 'v1beta1/{+name}',
               'httpMethod' => 'PATCH',
               'parameters' => array(
                 'name' => array(
@@ -372,7 +371,7 @@ class Google_Service_CloudKMS extends Google_Service
                 ),
               ),
             ),'restore' => array(
-              'path' => 'v1/{+name}:restore',
+              'path' => 'v1beta1/{+name}:restore',
               'httpMethod' => 'POST',
               'parameters' => array(
                 'name' => array(

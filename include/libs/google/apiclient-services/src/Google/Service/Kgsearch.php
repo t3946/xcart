@@ -19,7 +19,8 @@
  * Service definition for Kgsearch (v1).
  *
  * <p>
- * Searches the Google Knowledge Graph for entities.</p>
+ * Knowledge Graph Search API allows developers to search the Google Knowledge
+ * Graph for entities.</p>
  *
  * <p>
  * For more information about this service, see the API
@@ -57,6 +58,20 @@ class Google_Service_Kgsearch extends Google_Service
               'path' => 'v1/entities:search',
               'httpMethod' => 'GET',
               'parameters' => array(
+                'query' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                ),
+                'ids' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                  'repeated' => true,
+                ),
+                'languages' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                  'repeated' => true,
+                ),
                 'types' => array(
                   'location' => 'query',
                   'type' => 'string',
@@ -66,27 +81,13 @@ class Google_Service_Kgsearch extends Google_Service
                   'location' => 'query',
                   'type' => 'boolean',
                 ),
-                'languages' => array(
-                  'location' => 'query',
-                  'type' => 'string',
-                  'repeated' => true,
-                ),
-                'ids' => array(
-                  'location' => 'query',
-                  'type' => 'string',
-                  'repeated' => true,
-                ),
-                'limit' => array(
-                  'location' => 'query',
-                  'type' => 'integer',
-                ),
                 'prefix' => array(
                   'location' => 'query',
                   'type' => 'boolean',
                 ),
-                'query' => array(
+                'limit' => array(
                   'location' => 'query',
-                  'type' => 'string',
+                  'type' => 'integer',
                 ),
               ),
             ),

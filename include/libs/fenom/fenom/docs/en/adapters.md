@@ -6,4 +6,3 @@ Adapters
 * Fenom + Symphony
 * Fenom + Symphony2
 * Fenom + Zend Framework
-* [Fenom + Slim Framework 3](https://github.com/runcmf/runbb-ext-renderer) — RunBB forum extension  

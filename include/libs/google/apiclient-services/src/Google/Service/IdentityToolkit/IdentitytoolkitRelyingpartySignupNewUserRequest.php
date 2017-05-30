@@ -25,7 +25,6 @@ class Google_Service_IdentityToolkit_IdentitytoolkitRelyingpartySignupNewUserReq
   public $emailVerified;
   public $idToken;
   public $instanceId;
-  public $localId;
   public $password;
   public $photoUrl;
 
@@ -92,14 +91,6 @@ class Google_Service_IdentityToolkit_IdentitytoolkitRelyingpartySignupNewUserReq
   public function getInstanceId()
   {
     return $this->instanceId;
-  }
-  public function setLocalId($localId)
-  {
-    $this->localId = $localId;
-  }
-  public function getLocalId()
-  {
-    return $this->localId;
   }
   public function setPassword($password)
   {

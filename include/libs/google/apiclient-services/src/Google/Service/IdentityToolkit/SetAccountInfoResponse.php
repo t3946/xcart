@@ -20,7 +20,6 @@ class Google_Service_IdentityToolkit_SetAccountInfoResponse extends Google_Colle
   protected $collection_key = 'providerUserInfo';
   public $displayName;
   public $email;
-  public $emailVerified;
   public $expiresIn;
   public $idToken;
   public $kind;
@@ -47,14 +46,6 @@ class Google_Service_IdentityToolkit_SetAccountInfoResponse extends Google_Colle
   public function getEmail()
   {
     return $this->email;
-  }
-  public function setEmailVerified($emailVerified)
-  {
-    $this->emailVerified = $emailVerified;
-  }
-  public function getEmailVerified()
-  {
-    return $this->emailVerified;
   }
   public function setExpiresIn($expiresIn)
   {

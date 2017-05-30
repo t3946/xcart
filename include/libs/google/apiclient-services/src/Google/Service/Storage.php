@@ -202,16 +202,6 @@ class Google_Service_Storage extends Google_Service
                   'type' => 'string',
                 ),
               ),
-            ),'getIamPolicy' => array(
-              'path' => 'b/{bucket}/iam',
-              'httpMethod' => 'GET',
-              'parameters' => array(
-                'bucket' => array(
-                  'location' => 'path',
-                  'type' => 'string',
-                  'required' => true,
-                ),
-              ),
             ),'insert' => array(
               'path' => 'b',
               'httpMethod' => 'POST',
@@ -288,32 +278,6 @@ class Google_Service_Storage extends Google_Service
                 'projection' => array(
                   'location' => 'query',
                   'type' => 'string',
-                ),
-              ),
-            ),'setIamPolicy' => array(
-              'path' => 'b/{bucket}/iam',
-              'httpMethod' => 'PUT',
-              'parameters' => array(
-                'bucket' => array(
-                  'location' => 'path',
-                  'type' => 'string',
-                  'required' => true,
-                ),
-              ),
-            ),'testIamPermissions' => array(
-              'path' => 'b/{bucket}/iam/testPermissions',
-              'httpMethod' => 'GET',
-              'parameters' => array(
-                'bucket' => array(
-                  'location' => 'path',
-                  'type' => 'string',
-                  'required' => true,
-                ),
-                'permissions' => array(
-                  'location' => 'query',
-                  'type' => 'string',
-                  'repeated' => true,
-                  'required' => true,
                 ),
               ),
             ),'update' => array(
@@ -782,25 +746,6 @@ class Google_Service_Storage extends Google_Service
                   'type' => 'string',
                 ),
               ),
-            ),'getIamPolicy' => array(
-              'path' => 'b/{bucket}/o/{object}/iam',
-              'httpMethod' => 'GET',
-              'parameters' => array(
-                'bucket' => array(
-                  'location' => 'path',
-                  'type' => 'string',
-                  'required' => true,
-                ),
-                'object' => array(
-                  'location' => 'path',
-                  'type' => 'string',
-                  'required' => true,
-                ),
-                'generation' => array(
-                  'location' => 'query',
-                  'type' => 'string',
-                ),
-              ),
             ),'insert' => array(
               'path' => 'b/{bucket}/o',
               'httpMethod' => 'POST',
@@ -993,50 +938,6 @@ class Google_Service_Storage extends Google_Service
                   'type' => 'string',
                 ),
                 'sourceGeneration' => array(
-                  'location' => 'query',
-                  'type' => 'string',
-                ),
-              ),
-            ),'setIamPolicy' => array(
-              'path' => 'b/{bucket}/o/{object}/iam',
-              'httpMethod' => 'PUT',
-              'parameters' => array(
-                'bucket' => array(
-                  'location' => 'path',
-                  'type' => 'string',
-                  'required' => true,
-                ),
-                'object' => array(
-                  'location' => 'path',
-                  'type' => 'string',
-                  'required' => true,
-                ),
-                'generation' => array(
-                  'location' => 'query',
-                  'type' => 'string',
-                ),
-              ),
-            ),'testIamPermissions' => array(
-              'path' => 'b/{bucket}/o/{object}/iam/testPermissions',
-              'httpMethod' => 'GET',
-              'parameters' => array(
-                'bucket' => array(
-                  'location' => 'path',
-                  'type' => 'string',
-                  'required' => true,
-                ),
-                'object' => array(
-                  'location' => 'path',
-                  'type' => 'string',
-                  'required' => true,
-                ),
-                'permissions' => array(
-                  'location' => 'query',
-                  'type' => 'string',
-                  'repeated' => true,
-                  'required' => true,
-                ),
-                'generation' => array(
                   'location' => 'query',
                   'type' => 'string',
                 ),

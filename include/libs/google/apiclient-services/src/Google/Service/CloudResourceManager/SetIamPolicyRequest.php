@@ -19,7 +19,6 @@ class Google_Service_CloudResourceManager_SetIamPolicyRequest extends Google_Mod
 {
   protected $policyType = 'Google_Service_CloudResourceManager_Policy';
   protected $policyDataType = '';
-  public $updateMask;
 
   public function setPolicy(Google_Service_CloudResourceManager_Policy $policy)
   {
@@ -28,13 +27,5 @@ class Google_Service_CloudResourceManager_SetIamPolicyRequest extends Google_Mod
   public function getPolicy()
   {
     return $this->policy;
-  }
-  public function setUpdateMask($updateMask)
-  {
-    $this->updateMask = $updateMask;
-  }
-  public function getUpdateMask()
-  {
-    return $this->updateMask;
   }
 }

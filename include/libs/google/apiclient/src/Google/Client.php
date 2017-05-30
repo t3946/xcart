@@ -163,7 +163,6 @@ class Google_Client
    *
    * @param $code string code from accounts.google.com
    * @return array access token
-   * @deprecated
    */
   public function authenticate($code)
   {
@@ -202,7 +201,6 @@ class Google_Client
    * alias for fetchAccessTokenWithAssertion
    *
    * @return array access token
-   * @deprecated
    */
   public function refreshTokenWithAssertion()
   {
@@ -262,7 +260,7 @@ class Google_Client
    */
   public function fetchAccessTokenWithRefreshToken($refreshToken = null)
   {
-    if (null === $refreshToken) {
+    if (is_null($refreshToken)) {
       if (!isset($this->token['refresh_token'])) {
         throw new LogicException(
             'refresh token must be passed in or set as part of setAccessToken'
@@ -352,7 +350,7 @@ class Google_Client
     $credentials = null;
     $token = null;
     $scopes = null;
-    if (null === $http) {
+    if (is_null($http)) {
       $http = $this->getHttpClient();
     }
 
@@ -366,7 +364,7 @@ class Google_Client
     } elseif ($token = $this->getAccessToken()) {
       $scopes = $this->prepareScopes();
       // add refresh subscriber to request a new token
-      if (isset($token['refresh_token']) && $this->isAccessTokenExpired()) {
+      if ($this->isAccessTokenExpired() && isset($token['refresh_token'])) {
         $credentials = $this->createUserRefreshCredentials(
             $scopes,
             $token['refresh_token']
@@ -477,7 +475,10 @@ class Google_Client
     }
 
     // If the token is set to expire in the next 30 seconds.
-    return ($created + ($this->token['expires_in'] - 30)) < time();
+    $expired = ($created
+      + ($this->token['expires_in'] - 30)) < time();
+
+    return $expired;
   }
 
   public function getAuth()
@@ -595,7 +596,7 @@ class Google_Client
   public function setRequestVisibleActions($requestVisibleActions)
   {
     if (is_array($requestVisibleActions)) {
-      $requestVisibleActions = implode(" ", $requestVisibleActions);
+      $requestVisibleActions = join(" ", $requestVisibleActions);
     }
     $this->config['request_visible_actions'] = $requestVisibleActions;
   }
@@ -696,7 +697,7 @@ class Google_Client
         $this->config['jwt']
     );
 
-    if (null === $idToken) {
+    if (is_null($idToken)) {
       $token = $this->getAccessToken();
       if (!isset($token['id_token'])) {
         throw new LogicException(
@@ -761,8 +762,8 @@ class Google_Client
     if (empty($this->requestedScopes)) {
       return null;
     }
-
-    return implode(' ', $this->requestedScopes);
+    $scopes = implode(' ', $this->requestedScopes);
+    return $scopes;
   }
 
   /**
@@ -827,7 +828,6 @@ class Google_Client
    *
    * @param string $file the configuration file
    * @throws Google_Exception
-   * @deprecated
    */
   public function setAuthConfigFile($file)
   {
@@ -1028,7 +1028,7 @@ class Google_Client
    */
   public function getHttpClient()
   {
-    if (null === $this->http) {
+    if (is_null($this->http)) {
       $this->http = $this->createDefaultHttpClient();
     }
 

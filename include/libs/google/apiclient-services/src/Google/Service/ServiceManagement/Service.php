@@ -37,8 +37,6 @@ class Google_Service_ServiceManagement_Service extends Google_Collection
   protected $endpointsDataType = 'array';
   protected $enumsType = 'Google_Service_ServiceManagement_Enum';
   protected $enumsDataType = 'array';
-  protected $experimentalType = 'Google_Service_ServiceManagement_Experimental';
-  protected $experimentalDataType = '';
   protected $httpType = 'Google_Service_ServiceManagement_Http';
   protected $httpDataType = '';
   public $id;
@@ -54,8 +52,6 @@ class Google_Service_ServiceManagement_Service extends Google_Collection
   protected $monitoringDataType = '';
   public $name;
   public $producerProjectId;
-  protected $sourceInfoType = 'Google_Service_ServiceManagement_SourceInfo';
-  protected $sourceInfoDataType = '';
   protected $systemParametersType = 'Google_Service_ServiceManagement_SystemParameters';
   protected $systemParametersDataType = '';
   protected $systemTypesType = 'Google_Service_ServiceManagement_Type';
@@ -148,14 +144,6 @@ class Google_Service_ServiceManagement_Service extends Google_Collection
   {
     return $this->enums;
   }
-  public function setExperimental(Google_Service_ServiceManagement_Experimental $experimental)
-  {
-    $this->experimental = $experimental;
-  }
-  public function getExperimental()
-  {
-    return $this->experimental;
-  }
   public function setHttp(Google_Service_ServiceManagement_Http $http)
   {
     $this->http = $http;
@@ -227,14 +215,6 @@ class Google_Service_ServiceManagement_Service extends Google_Collection
   public function getProducerProjectId()
   {
     return $this->producerProjectId;
-  }
-  public function setSourceInfo(Google_Service_ServiceManagement_SourceInfo $sourceInfo)
-  {
-    $this->sourceInfo = $sourceInfo;
-  }
-  public function getSourceInfo()
-  {
-    return $this->sourceInfo;
   }
   public function setSystemParameters(Google_Service_ServiceManagement_SystemParameters $systemParameters)
   {

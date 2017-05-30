@@ -3,10 +3,6 @@
 namespace  Modules\Amazon\Helpers;
 use FBAInboundServiceMWS_Exception;
 use FBAInboundServiceMWS_Interface;
-use MarketplaceWebService_Exception;
-use MarketplaceWebService_Model_SubmitFeedResponse;
-use MarketplaceWebServiceOrders_Exception;
-use MarketplaceWebServiceProducts_Exception;
 use Modules\Amazon\Models\AmazonFbaProductModel;
 use Modules\Amazon\Models\AmazonFbaProductsQuickModel;
 use Xcart\Product;
@@ -23,7 +19,7 @@ class AmazonHelper
             $dom->formatOutput = true;
             return $dom->saveXML();
 
-        } catch (MarketplaceWebServiceProducts_Exception $ex) {
+        } catch (\MarketplaceWebServiceProducts_Exception $ex) {
             $return_echo["function"] = "invokeGetCompetitivePricingForSKU";
             $return_echo["Caught_Exception"] = $ex->getMessage();
             $return_echo["Response_Status_Code"] = $ex->getStatusCode();
@@ -48,7 +44,7 @@ class AmazonHelper
             $dom->formatOutput = true;
             return $dom->saveXML();
 
-        } catch (MarketplaceWebServiceProducts_Exception $ex) {
+        } catch (\MarketplaceWebServiceProducts_Exception $ex) {
             $return_echo["function"] = "invokeGetLowestOfferListingsForSKU";
             $return_echo["Caught_Exception"] = $ex->getMessage();
             $return_echo["Response_Status_Code"] = $ex->getStatusCode();
@@ -129,7 +125,7 @@ class AmazonHelper
             $return_echo["Report_Contents"] = stream_get_contents($request->getReport());
             $return_echo["ResponseHeaderMetadata"] = $response->getResponseHeaderMetadata();
             return $return_echo;
-        } catch (MarketplaceWebService_Exception $ex) {
+        } catch (\MarketplaceWebService_Exception $ex) {
             $return_echo["Caught_Exception"] = $ex->getMessage();
             $return_echo["Response_Status_Code"] = $ex->getStatusCode();
             $return_echo["Error_Code"] = $ex->getErrorCode();
@@ -179,7 +175,7 @@ class AmazonHelper
             $return_echo["ResponseHeaderMetadata"] = $response->getResponseHeaderMetadata();
             return $return_echo;
 
-        } catch (MarketplaceWebService_Exception $ex) {
+        } catch (\MarketplaceWebService_Exception $ex) {
             $return_echo["function"] = "invokeRequestReport";
             $return_echo["Caught_Exception"] = $ex->getMessage();
             $return_echo["Response_Status_Code"] = $ex->getStatusCode();
@@ -249,7 +245,7 @@ class AmazonHelper
             $return_echo["ResponseHeaderMetadata"] = $response->getResponseHeaderMetadata();
             return $return_echo;
 
-        } catch (MarketplaceWebService_Exception $ex) {
+        } catch (\MarketplaceWebService_Exception $ex) {
             $return_echo["function"] = "invokeGetReportRequestList";
             $return_echo["Caught_Exception"] = $ex->getMessage();
             $return_echo["Response_Status_Code"] = $ex->getStatusCode();
@@ -278,7 +274,7 @@ class AmazonHelper
                     }
                 }
             }
-        } catch (MarketplaceWebService_Exception $ex) {
+        } catch (\MarketplaceWebService_Exception $ex) {
             $response_arr["Caught Exception"] =  $ex->getMessage();
             $response_arr["Response Status Code"] = $ex->getStatusCode();
             $response_arr["Error Code"] = $ex->getErrorCode();
@@ -295,7 +291,7 @@ class AmazonHelper
         try {
             $response = $oMWSService->updateReportAcknowledgements($request);
             $response_arr = [];
-        } catch (MarketplaceWebService_Exception $ex) {
+        } catch (\MarketplaceWebService_Exception $ex) {
             $response_arr["Caught Exception"] =  $ex->getMessage();
             $response_arr["Response Status Code"] = $ex->getStatusCode();
             $response_arr["Error Code"] = $ex->getErrorCode();
@@ -316,7 +312,7 @@ class AmazonHelper
             $dom->preserveWhiteSpace = false;
             $dom->formatOutput = true;
             return $dom->saveXML();
-        } catch (MarketplaceWebServiceOrders_Exception $ex) {
+        } catch (\MarketplaceWebServiceOrders_Exception $ex) {
             $return_echo["function"] = "invokeGetOrder";
             $return_echo["Caught_Exception"] = $ex->getMessage();
             $return_echo["Response_Status_Code"] = $ex->getStatusCode();
@@ -343,7 +339,7 @@ class AmazonHelper
             $dom->formatOutput = true;
             return $dom->saveXML();
 
-        } catch (MarketplaceWebServiceOrders_Exception $ex) {
+        } catch (\MarketplaceWebServiceOrders_Exception $ex) {
             $return_echo["function"] = "invokeListOrders";
             $return_echo["Caught_Exception"] = $ex->getMessage();
             $return_echo["Response_Status_Code"] = $ex->getStatusCode();
@@ -370,7 +366,7 @@ class AmazonHelper
             $dom->formatOutput = true;
             return $dom->saveXML();
 
-        } catch (MarketplaceWebServiceOrders_Exception $ex) {
+        } catch (\MarketplaceWebServiceOrders_Exception $ex) {
             $return_echo["function"] = "invokeListOrdersByNextToken";
             $return_echo["Caught_Exception"] = $ex->getMessage();
             $return_echo["Response_Status_Code"] = $ex->getStatusCode();
@@ -396,7 +392,7 @@ class AmazonHelper
             $dom->formatOutput = true;
             return $dom->saveXML();
 
-        } catch (MarketplaceWebServiceOrders_Exception $ex) {
+        } catch (\MarketplaceWebServiceOrders_Exception $ex) {
             $return_echo["function"] = "invokeListOrderItems";
             $return_echo["Caught_Exception"] = $ex->getMessage();
             $return_echo["Response_Status_Code"] = $ex->getStatusCode();
@@ -441,7 +437,7 @@ class AmazonHelper
     {
         $return_echo = [];
         try {
-            /** @var MarketplaceWebService_Model_SubmitFeedResponse $response */
+            /** @var \MarketplaceWebService_Model_SubmitFeedResponse $response */
             $response = $oMWSService->submitFeed($request);
 
             if ($response->isSetSubmitFeedResult()) {
@@ -476,7 +472,7 @@ class AmazonHelper
             }
 
             $return_echo["ResponseHeaderMetadata"] = $response->getResponseHeaderMetadata();
-        } catch (MarketplaceWebService_Exception $ex) {
+        } catch (\MarketplaceWebService_Exception $ex) {
             $return_echo["function"] = "invokeSubmitFeed";
             $return_echo["Caught_Exception"] = $ex->getMessage();
             $return_echo["Response_Status_Code"] = $ex->getStatusCode();
@@ -508,7 +504,7 @@ class AmazonHelper
                 }
             }
             $return_echo['ResponseHeaderMetadata'] = $response->getResponseHeaderMetadata();
-        } catch (MarketplaceWebService_Exception $ex) {
+        } catch (\MarketplaceWebService_Exception $ex) {
             $return_echo["Caught Exception"] = $ex->getMessage();
             $return_echo["Response Status Code"] = $ex->getStatusCode();
             $return_echo["Error Code"] = $ex->getErrorCode();

@@ -24,8 +24,6 @@ class Google_Service_AndroidEnterprise_Notification extends Google_Model
   public $enterpriseId;
   protected $installFailureEventType = 'Google_Service_AndroidEnterprise_InstallFailureEvent';
   protected $installFailureEventDataType = '';
-  protected $newDeviceEventType = 'Google_Service_AndroidEnterprise_NewDeviceEvent';
-  protected $newDeviceEventDataType = '';
   protected $newPermissionsEventType = 'Google_Service_AndroidEnterprise_NewPermissionsEvent';
   protected $newPermissionsEventDataType = '';
   protected $productApprovalEventType = 'Google_Service_AndroidEnterprise_ProductApprovalEvent';
@@ -65,14 +63,6 @@ class Google_Service_AndroidEnterprise_Notification extends Google_Model
   public function getInstallFailureEvent()
   {
     return $this->installFailureEvent;
-  }
-  public function setNewDeviceEvent(Google_Service_AndroidEnterprise_NewDeviceEvent $newDeviceEvent)
-  {
-    $this->newDeviceEvent = $newDeviceEvent;
-  }
-  public function getNewDeviceEvent()
-  {
-    return $this->newDeviceEvent;
   }
   public function setNewPermissionsEvent(Google_Service_AndroidEnterprise_NewPermissionsEvent $newPermissionsEvent)
   {
