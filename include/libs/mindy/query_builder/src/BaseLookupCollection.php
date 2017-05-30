@@ -54,31 +54,31 @@ class BaseLookupCollection implements ILookupCollection
                 } else {
                     $sqlValue = $adapter->quoteValue($value);
                 }
-                return $adapter->quoteColumn($column) . ' = ' . $sqlValue;
+                return $adapter->quoteColumn($column) . '=' . $sqlValue;
 
             case 'gte':
                 if ($value instanceof \DateTime) {
                     $value = $adapter->getDateTime($value);
                 }
-                return $adapter->quoteColumn($column) . ' >= ' . $adapter->quoteValue($value);
+                return $adapter->quoteColumn($column) . '>=' . $adapter->quoteValue($value);
 
             case 'gt':
                 if ($value instanceof \DateTime) {
                     $value = $adapter->getDateTime($value);
                 }
-                return $adapter->quoteColumn($column) . ' > ' . $adapter->quoteValue($value);
+                return $adapter->quoteColumn($column) . '>' . $adapter->quoteValue($value);
 
             case 'lte':
                 if ($value instanceof \DateTime) {
                     $value = $adapter->getDateTime($value);
                 }
-                return $adapter->quoteColumn($column) . ' <= ' . $adapter->quoteValue($value);
+                return $adapter->quoteColumn($column) . '<=' . $adapter->quoteValue($value);
 
             case 'lt':
                 if ($value instanceof \DateTime) {
                     $value = $adapter->getDateTime($value);
                 }
-                return $adapter->quoteColumn($column) . ' < ' . $adapter->quoteValue($value);
+                return $adapter->quoteColumn($column) . '<' . $adapter->quoteValue($value);
 
             case 'range':
                 list($min, $max) = $value;
@@ -89,7 +89,7 @@ class BaseLookupCollection implements ILookupCollection
                 if (in_array($adapter->getSqlType($value), ['TRUE', 'FALSE', 'NULL'])) {
                     return $adapter->quoteColumn($column) . ' IS NOT ' . $adapter->getSqlType($value);
                 } else {
-                    return $adapter->quoteColumn($column) . ' != ' . $adapter->quoteValue($value);
+                    return $adapter->quoteColumn($column) . '!=' . $adapter->quoteValue($value);
                 }
 
             case 'isnull':

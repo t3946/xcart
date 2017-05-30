@@ -1,9 +1,14 @@
 <?php
+/**
+ * Created by PhpStorm.
+ * User: max
+ * Date: 05/07/16
+ * Time: 11:17
+ */
 
 namespace Mindy\QueryBuilder\Aggregation;
 
 use Mindy\QueryBuilder\Expression;
-use Mindy\QueryBuilder\QueryBuilder;
 
 class Aggregation extends Expression
 {
@@ -27,28 +32,9 @@ class Aggregation extends Expression
         return $this;
     }
 
-    public function quoteColumn(QueryBuilder $qb)
+    public function toSQL()
     {
-        $adapter = $qb->getAdapter();
-
-        return [$adapter->quoteColumn($this->tableAlias), $adapter->quoteColumn($this->alias)];
-    }
-
-    public function toSQL(QueryBuilder $qb = null)
-    {
-        $sql = '';
-
-        if ($this->tableAlias) {
-            $ta = $this->tableAlias;
-
-            if ($qb) {
-                list($ta) = $this->quoteColumn($qb);
-            }
-
-            $sql = $ta . '.';
-        }
-
-        return $sql . $this->fieldsSql;
+        return (empty($this->tableAlias) ? '' : '[[' . $this->tableAlias . ']].') . $this->fieldsSql;
     }
 
     public function getFields()
@@ -58,15 +44,6 @@ class Aggregation extends Expression
 
     public function getAlias()
     {
-        return $this->alias;
-    }
-    
-    public function getQuotedAlias(QueryBuilder $qb = null)
-    {
-        if ($qb) {
-            return $qb->getAdapter()->quoteColumn($this->alias);
-        }
-
         return $this->alias;
     }
 
