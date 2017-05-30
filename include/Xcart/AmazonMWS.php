@@ -1909,6 +1909,7 @@ SQL;
     {
         if (!empty($this->aProducts)) {
 
+            $this->dom_xml_arr = null;
             $client = new MwsProductClient(
                 AWS_ACCESS_KEY_ID,
                 AWS_SECRET_ACCESS_KEY,
