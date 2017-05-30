@@ -25,7 +25,19 @@ use MarketplaceWebService_Model_TypeList;
 use MarketplaceWebService_Model_UpdateReportAcknowledgementsRequest;
 use MarketplaceWebServiceOrders_Exception;
 use MarketplaceWebServiceProducts_Exception;
+use MarketplaceWebServiceProducts_Model_ASINIdentifier;
+use MarketplaceWebServiceProducts_Model_CompetitivePriceList;
+use MarketplaceWebServiceProducts_Model_CompetitivePriceType;
+use MarketplaceWebServiceProducts_Model_CompetitivePricingType;
 use MarketplaceWebServiceProducts_Model_GetCompetitivePricingForSKURequest;
+use MarketplaceWebServiceProducts_Model_GetCompetitivePricingForSKUResult;
+use MarketplaceWebServiceProducts_Model_IdentifierType;
+use MarketplaceWebServiceProducts_Model_MoneyType;
+use MarketplaceWebServiceProducts_Model_PriceType;
+use MarketplaceWebServiceProducts_Model_Product;
+use MarketplaceWebServiceProducts_Model_SalesRankList;
+use MarketplaceWebServiceProducts_Model_SalesRankType;
+use MarketplaceWebServiceProducts_Model_SellerSKUIdentifier;
 use MarketplaceWebServiceProducts_Model_SellerSKUListType;
 use Modules\Amazon\Helpers\AmazonHelper;
 use Modules\Amazon\Models\AmazonFbaProductModel;
@@ -40,6 +52,8 @@ use Modules\Order\Models\OrderGroupModel;
 use Modules\Order\Models\OrderModel;
 use Modules\Product\Helpers\ProductHelper;
 use Modules\Product\Models\ProductModel;
+use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
 use SimpleXMLElement;
 use Xcart\External_Marketplaces\StoreFrontMarketPlace;
 use Xcart\External_Product_Verification\ExternalVerificationFeeds;
@@ -457,9 +471,9 @@ SQL;
             foreach ($ReportContent as $report_data) {
                 $cntLine = 0;
                 if ($this->bEnableLog && $this->sLogPrefix && !empty($report_data)) {
-                    $log = new \Monolog\Logger('fee_report');
+                    $log = new Logger('fee_report');
                     $logFile = sprintf("../var/log/{$this->sLogPrefix}-%s.log", date('ymd'));
-                    $log->pushHandler(new \Monolog\Handler\StreamHandler($logFile, \Monolog\Logger::DEBUG));
+                    $log->pushHandler(new StreamHandler($logFile, Logger::DEBUG));
                     $log->addDebug($report_data);
                 }
                 $aReportValue = [];
@@ -559,9 +573,9 @@ SQL;
             func_backprocess_log(self::BACK_PROCESS_LOG_NAME_SETTLEMENT, $log_text);
 
             if ($this->bEnableLog && $this->sLogPrefix) {
-                $log = new \Monolog\Logger('settlement_report');
+                $log = new Logger('settlement_report');
                 $logFile = sprintf("../var/log/{$this->sLogPrefix}-%s.log", date('ymd'));
-                $log->pushHandler(new \Monolog\Handler\StreamHandler($logFile, \Monolog\Logger::DEBUG));
+                $log->pushHandler(new StreamHandler($logFile, Logger::DEBUG));
             }
 
             foreach ($ReportContent as $report_id => $report_data) {
@@ -1001,9 +1015,9 @@ SQL;
         if (!empty($ReportContent)) {
             foreach ($ReportContent as $report_id => $report_data) {
                 if ($this->bEnableLog && $this->sLogPrefix) {
-                    $log = new \Monolog\Logger('amazon_info');
+                    $log = new Logger('amazon_info');
                     $logFile = sprintf("../var/log/{$this->sLogPrefix}-%s.log", date('ymd'));
-                    $log->pushHandler(new \Monolog\Handler\StreamHandler($logFile, \Monolog\Logger::DEBUG));
+                    $log->pushHandler(new StreamHandler($logFile, Logger::DEBUG));
                     $log->addDebug($report_data);
                 }
                 $cntLine = 0;
@@ -1859,9 +1873,9 @@ SQL;
                 $this->dom_xml_arr = $aa->toXML(); //@TODO rewrite to Amazon Models
 
                 if ($this->bEnableLog && $this->sLogPrefix) {
-                    $log = new \Monolog\Logger('amazon_info');
+                    $log = new Logger('amazon_info');
                     $logFile = sprintf("../var/log/{$this->sLogPrefix}-%s.log", date('ymd'));
-                    $log->pushHandler(new \Monolog\Handler\StreamHandler($logFile, \Monolog\Logger::DEBUG));
+                    $log->pushHandler(new StreamHandler($logFile, Logger::DEBUG));
                     $log->debug($this->dom_xml_arr);
                 }
 
@@ -1913,15 +1927,21 @@ SQL;
                     'SellerSKUList' => ['SellerSKU' => $aSKUs]
                 ]);
                 if ($this->bEnableLog && $this->sLogPrefix) {
-                    $log = new \Monolog\Logger('amazon_info');
+                    $log = new Logger('amazon_info');
                     $logFile = sprintf("../var/log/{$this->sLogPrefix}-%s.log", date('ymd'));
-                    $log->pushHandler(new \Monolog\Handler\StreamHandler($logFile, \Monolog\Logger::DEBUG));
+                    $log->pushHandler(new StreamHandler($logFile, Logger::DEBUG));
                     $log->debug($aa->toXML());
                 }
                 $res = $aa->getGetCompetitivePricingForSKUResult();
+                /** @var MarketplaceWebServiceProducts_Model_GetCompetitivePricingForSKUResult $r */
                 foreach ($res as $r) {
+                    /** @var MarketplaceWebServiceProducts_Model_Product $p */
                     if ($p = $r->getProduct()) {
-                        $sSKU = $p->getIdentifiers()->getSKUIdentifier()->getSellerSKU();
+                        /** @var MarketplaceWebServiceProducts_Model_IdentifierType $identifier */
+                        $identifier = $p->getIdentifiers();
+                        /** @var MarketplaceWebServiceProducts_Model_SellerSKUIdentifier $skuIdentifier */
+                        $skuIdentifier = $identifier->getSKUIdentifier();
+                        $sSKU = $skuIdentifier->getSellerSKU();
                         $aProductModels = array_filter(
                             $this->aProducts,
                             function ($e) use ($sSKU) {
@@ -1934,27 +1954,41 @@ SQL;
                             $params = ['productcode' => $sSKU, 'productid' => $oProductModel->productid, 'report_date' => $iReportDate];
                             if ($oAmazonProductModel = AmazonHelper::getAmazonFbaProductModel($params)) {
                                 $oAmazonProductModel->report_date = $iReportDate;
-                                if ($srl = $p->getSalesRankings()->getSalesRank()) {
+                                /** @var MarketplaceWebServiceProducts_Model_SalesRankList $sRanks */
+                                $sRanks = $p->getSalesRankings();
+                                if ($srl = $sRanks->getSalesRank()) {
+                                    /** @var MarketplaceWebServiceProducts_Model_SalesRankType $sr */
                                     foreach ($srl as $sr) {
                                         $oAmazonProductModel->cpr_SalesRank = max(intval($sr->getRank()), $oAmazonProductModel->cpr_SalesRank);
                                     }
                                 }
-                                if ($cpl = $p->getCompetitivePricing()->getCompetitivePrices()->getCompetitivePrice()) {
+                                /** @var MarketplaceWebServiceProducts_Model_CompetitivePricingType $comPricing */
+                                $comPricing = $p->getCompetitivePricing();
+                                /** @var MarketplaceWebServiceProducts_Model_CompetitivePriceList $comPrices */
+                                $comPrices = $comPricing->getCompetitivePrices();
+                                if ($cpl = $comPrices->getCompetitivePrice()) {
+                                    /** @var MarketplaceWebServiceProducts_Model_CompetitivePriceType $cp */
                                     foreach ($cpl as $cp) {
                                         if ($cp->getcondition() == $cp->getsubcondition() && $cp->getsubcondition() == 'New') {
+                                            /** @var MarketplaceWebServiceProducts_Model_PriceType $price */
                                             $price = $cp->getPrice();
                                             if ($cp->getbelongsToRequester() == 'true') {
-                                                $oAmazonProductModel->cpr_belongs_LandedPrice = $price->getLandedPrice()->getAmount();
+                                                /** @var MarketplaceWebServiceProducts_Model_MoneyType $lPrice */
+                                                $lPrice = $price->getLandedPrice();
+                                                $oAmazonProductModel->cpr_belongs_LandedPrice = $lPrice->getAmount();
                                                 $oAmazonProductModel->buybox_in++;
                                             } else {
-                                                $oAmazonProductModel->cpr_LandedPrice = $price->getListingPrice()->getAmount();
+                                                $lPrice = $price->getListingPrice();
+                                                $oAmazonProductModel->cpr_LandedPrice = $lPrice->getAmount();
                                                 $oAmazonProductModel->buybox_out++;
                                             }
                                         }
                                     }
                                 }
 
-                                $sAsin = $p->getIdentifiers()->getMarketplaceASIN()->getASIN();
+                                /** @var MarketplaceWebServiceProducts_Model_ASINIdentifier $identifierASIN */
+                                $identifierASIN = $identifier->getMarketplaceASIN();
+                                $sAsin = $identifierASIN->getASIN();
                                 if (!empty($sAsin)) {
                                     $oAmazonProductModel->ASIN = $sAsin;
                                 }
@@ -2106,9 +2140,9 @@ SQL;
                 return $this;
             }
             if ($this->bEnableLog && $this->sLogPrefix) {
-                $log = new \Monolog\Logger('amazon_info');
+                $log = new Logger('amazon_info');
                 $logFile = sprintf("../var/log/{$this->sLogPrefix}-%s.log", date('ymd'));
-                $log->pushHandler(new \Monolog\Handler\StreamHandler($logFile, \Monolog\Logger::DEBUG));
+                $log->pushHandler(new StreamHandler($logFile, Logger::DEBUG));
                 $log->debug('ListInboundItems', [$this->dom_xml_arr]);
             }
 
