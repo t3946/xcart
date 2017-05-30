@@ -1969,7 +1969,7 @@ SQL;
                                 if ($cpl = $comPrices->getCompetitivePrice()) {
                                     /** @var MarketplaceWebServiceProducts_Model_CompetitivePriceType $cp */
                                     foreach ($cpl as $cp) {
-                                        if ($cp->getcondition() == $cp->getsubcondition() && $cp->getsubcondition() == 'New') {
+                                        if ($cp->getcondition() == 'New' && $cp->getsubcondition() == 'New') {
                                             /** @var MarketplaceWebServiceProducts_Model_PriceType $price */
                                             $price = $cp->getPrice();
                                             if ($cp->getbelongsToRequester() == 'true') {
