@@ -1851,7 +1851,6 @@ SQL;
     {
         $this->dom_xml_arr = null;
         if (!empty($this->aProducts)) {
-
             $client = new MwsProductClient(
                 AWS_ACCESS_KEY_ID,
                 AWS_SECRET_ACCESS_KEY,
@@ -1907,9 +1906,8 @@ SQL;
      */
     public function doGetCompetitivePricing()
     {
+        $this->dom_xml_arr = null;
         if (!empty($this->aProducts)) {
-
-            $this->dom_xml_arr = null;
             $client = new MwsProductClient(
                 AWS_ACCESS_KEY_ID,
                 AWS_SECRET_ACCESS_KEY,
@@ -2008,6 +2006,7 @@ SQL;
 
     public function doListInventorySupply()
     {
+        $this->dom_xml_arr = null;
         if (!empty($this->aProducts)) {
             $client = new \FBAInventoryServiceMWS_Client(
                 AWS_ACCESS_KEY_ID,
