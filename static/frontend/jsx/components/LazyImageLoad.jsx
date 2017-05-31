@@ -1,4 +1,3 @@
-import Modernizr from 'modernizr';
 import inViewport from '../utils/inViewport';
 
 export default class LazyImageLoad
