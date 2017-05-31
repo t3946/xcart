@@ -2,7 +2,10 @@
 namespace Modules\Sites;
 
 use Mindy\QueryBuilder\Q\QOr;
+use Modules\Sites\Helpers\CurrentSiteHelper;
 use Modules\Sites\Models\SiteModel;
+use Xcart\App\Cli\Cli;
+use Xcart\App\Main\Xcart;
 use Xcart\App\Module\Module;
 
 class SitesModule extends Module
@@ -15,9 +18,11 @@ class SitesModule extends Module
      * @var \Modules\Sites\Models\SiteModel
      */
     private $_site;
+    private $_setted = false;
 
     public function setSite(SiteModel $model)
     {
+        $this->_setted = true;
         $this->_site = $model;
     }
 
@@ -27,6 +32,11 @@ class SitesModule extends Module
      */
     public function getSite()
     {
+        if (!$this->_setted && !Cli::isCli()) { //@TODO: remove for future
+            $this->_setted = true;
+            CurrentSiteHelper::check(Xcart::app()->request);
+        }
+
         if (!$this->_site) {
             $this->initDefaultSite();
         }
