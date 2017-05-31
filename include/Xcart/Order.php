@@ -268,8 +268,7 @@ class Order extends Data
 
     public function isOrderAmazon()
     {
-        $sAmazonOrderId = $this->getField('amazonorderid');
-        return !empty($sAmazonOrderId);
+        return !empty($this->amazonorderid);
     }
 
     public function getAmazonChanell()

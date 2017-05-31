@@ -520,7 +520,7 @@ function ship2diffOpen() {
 <table cellpadding="0" cellspacing="0">
 <tr>
 <td valign="top" nowrap="nowrap">
-<input type="text" name="b_firstname" id="b_firstname" size="32" maxlength="32" value="{$userinfo.b_firstname|replace:"&amp;#039;":"'"}" placeholder="{$lng.lbl_fill_in_examples_firstname}" onkeyup="cidev_check_field_name('b_firstname')"  />
+<input autocomplete="billing name" type="text" name="b_firstname" id="b_firstname" size="32" maxlength="32" value="{$userinfo.b_firstname|replace:"&amp;#039;":"'"}" placeholder="{$lng.lbl_fill_in_examples_firstname}" onkeyup="cidev_check_field_name('b_firstname')"  />
 </td>
 
 {if $usertype eq "C"}
@@ -582,7 +582,7 @@ function ship2diffOpen() {
 <table cellpadding="0" cellspacing="0">
 <tr>
 <td valign="top" nowrap="nowrap">
-<input type="text" id="b_address" name="b_address" size="32" maxlength="64" value="{$userinfo.b_address}" placeholder="{$lng.lbl_fill_in_examples_address}" onkeyup="cidev_check_field_address('b_address')" />
+<input autocomplete="billing street-address" type="text" id="b_address" name="b_address" size="32" maxlength="64" value="{$userinfo.b_address}" placeholder="{$lng.lbl_fill_in_examples_address}" onkeyup="cidev_check_field_address('b_address')" />
 </td>
 
 {if $usertype eq "C"}
@@ -614,7 +614,7 @@ function ship2diffOpen() {
 <table cellpadding="0" cellspacing="0">
 <tr>
 <td valign="top" nowrap="nowrap">
-<input type="text" id="b_address_2" name="b_address_2" size="32" maxlength="64" value="{$userinfo.b_address_2}" placeholder="{$lng.lbl_fill_in_examples_address2}" onkeyup="cidev_check_field_address('b_address_2')" />
+<input autocomplete="billing address-line2" type="text" id="b_address_2" name="b_address_2" size="32" maxlength="64" value="{$userinfo.b_address_2}" placeholder="{$lng.lbl_fill_in_examples_address2}" onkeyup="cidev_check_field_address('b_address_2')" />
 </td>
 
 {if $usertype eq "C"}
@@ -659,9 +659,9 @@ function ship2diffOpen() {
 <table cellpadding="0" cellspacing="0">
 <tr>
 <td valign="top" nowrap="nowrap">
-<input type="text" id="b_countryname" name="b_countryname" size="32" maxlength="64" value="{if $geo_litecity_location.country ne "" && $userinfo.b_countryname eq ""}{section name=country_idx loop=$countries}{if $geo_litecity_location.country eq $countries[country_idx].country_code}{if $countries[country_idx].country ne ""}{$countries[country_idx].country|amp}{assign var="cidev_is_country_b" value="Y"}{/if}{/if}{/section}{else}{if $userinfo.b_countryname ne ""}{$userinfo.b_countryname}{assign var="cidev_is_country_b" value="Y"}{/if}{/if}" 
+<input autocomplete="billing country" type="text" id="b_countryname" name="b_countryname" size="32" maxlength="64" value="{if $geo_litecity_location.country ne "" && $userinfo.b_countryname eq ""}{section name=country_idx loop=$countries}{if $geo_litecity_location.country eq $countries[country_idx].country_code}{if $countries[country_idx].country ne ""}{$countries[country_idx].country|amp}{assign var="cidev_is_country_b" value="Y"}{/if}{/if}{/section}{else}{if $userinfo.b_countryname ne ""}{$userinfo.b_countryname}{assign var="cidev_is_country_b" value="Y"}{/if}{/if}"
 onkeyup="cidev_check_country_usa('b_countryname'); cidev_check_field_country('b_countryname'); cidev_check_zip_b();"  onchange="cidev_check_field_country('b_countryname'); cidev_check_zip_b();"
-autocomplete="off" placeholder="{if $geo_litecity_location.country ne ""}{section name=country_idx loop=$countries}{if $geo_litecity_location.country eq $countries[country_idx].country_code}{$countries[country_idx].country|amp}{/if}{/section}{/if}" />
+placeholder="{if $geo_litecity_location.country ne ""}{section name=country_idx loop=$countries}{if $geo_litecity_location.country eq $countries[country_idx].country_code}{$countries[country_idx].country|amp}{/if}{/section}{/if}" />
 </td>
 
 {if $usertype eq "C"}
@@ -720,7 +720,7 @@ autocomplete="off" placeholder="{if $geo_litecity_location.country ne ""}{sectio
 <table cellpadding="0" cellspacing="0">
 <tr>
 <td valign="top" nowrap="nowrap">
-<input type="text" id="b_zipcode" name="b_zipcode" size="32" maxlength="32" value="{if $userinfo.b_zipcode ne ""}{$userinfo.b_zipcode}{/if}" {if $usertype ne "P" && $usertype ne "A"} onchange="if ($('#ship2diff').attr('checked') )cidev_new_check_zip_code(); check_zip_code_ship('b_zipcode', 'b_countryname');" onkeyup="cidev_check_field('b_zipcode'); cidev_check_address_b();" {/if} autocomplete="off" placeholder="{if $geo_litecity_location.postalCode ne ""}{$geo_litecity_location.postalCode}{else}{$lng.lbl_fill_in_examples_zip}{/if}" />
+<input autocomplete="billing postal-code" type="text" id="b_zipcode" name="b_zipcode" size="32" maxlength="32" value="{if $userinfo.b_zipcode ne ""}{$userinfo.b_zipcode}{/if}" {if $usertype ne "P" && $usertype ne "A"} onchange="if ($('#ship2diff').attr('checked') )cidev_new_check_zip_code(); check_zip_code_ship('b_zipcode', 'b_countryname');" onkeyup="cidev_check_field('b_zipcode'); cidev_check_address_b();" {/if} placeholder="{if $geo_litecity_location.postalCode ne ""}{$geo_litecity_location.postalCode}{else}{$lng.lbl_fill_in_examples_zip}{/if}" />
 </td>
 {if $usertype eq "C"}
 <td id="b_zipcode_verified" valign="top" nowrap="nowrap" style="display: none;">
@@ -758,10 +758,9 @@ autocomplete="off" placeholder="{if $geo_litecity_location.country ne ""}{sectio
 <table cellpadding="0" cellspacing="0">
 <tr>
 <td valign="top" nowrap="nowrap">
-<input type="text" id="b_statename" name="b_statename" size="32" maxlength="64" 
+<input autocomplete="billing region" type="text" id="b_statename" name="b_statename" size="32" maxlength="64"
 value="{if $userinfo.b_statename ne ""}{$userinfo.b_statename}{/if}"
 onkeyup="cidev_check_field_country('b_statename'); cidev_check_zip_b();" 
-autocomplete="off" 
 placeholder="
 {if $geo_litecity_location.region ne ""}
 {section name=state_idx loop=$states}
@@ -830,7 +829,7 @@ placeholder="
 <table cellpadding="0" cellspacing="0">
 <tr>
 <td valign="top" nowrap="nowrap">
-<input autocomplete="off" type="text" id="b_city" name="b_city" size="32" maxlength="64" value="{if $userinfo.b_city ne ""}{$userinfo.b_city}{/if}" {if $usertype ne "P" && $usertype ne "A"} onkeyup="cidev_check_field('b_city'); cidev_check_zip_b();" {/if} placeholder="{if $geo_litecity_location.city ne ""}{$geo_litecity_location.city}{else}{$lng.lbl_fill_in_examples_city}{/if}" />
+<input autocomplete="billing locality" type="text" id="b_city" name="b_city" size="32" maxlength="64" value="{if $userinfo.b_city ne ""}{$userinfo.b_city}{/if}" {if $usertype ne "P" && $usertype ne "A"} onkeyup="cidev_check_field('b_city'); cidev_check_zip_b();" {/if} placeholder="{if $geo_litecity_location.city ne ""}{$geo_litecity_location.city}{else}{$lng.lbl_fill_in_examples_city}{/if}" />
 </td>
 {if $usertype eq "C"}
 <td id="b_city_verified" valign="top" nowrap="nowrap" {if $geo_litecity_location.city eq "" && $userinfo.b_city eq ""}style="display: none;"{/if}>

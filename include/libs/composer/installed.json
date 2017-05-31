@@ -1056,6 +1056,102 @@
         "require": {
             "php": ">=5.3.2"
         },
+        "time": "2017-03-28 15:17:10",
+        "type": "library",
+        "installation-source": "source",
+        "autoload": {
+            "psr-0": {
+                "CaponicaAmazonMwsComplete\\": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "Apache-2.0"
+        ],
+        "authors": [
+            {
+                "name": "Christian Morgan, Caponica",
+                "homepage": "http://www.github.com/Caponica"
+            }
+        ],
+        "description": "Complete Amazon MWS PHP SDK, including all libraries",
+        "keywords": [
+            "amazon",
+            "mws"
+        ]
+    },
+    {
+        "name": "mobiledetect/mobiledetectlib",
+        "version": "2.8.25",
+        "version_normalized": "2.8.25.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/serbanghita/Mobile-Detect.git",
+            "reference": "f0896b5c7274d1450023b0b376240be902c3251c"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/serbanghita/Mobile-Detect/zipball/f0896b5c7274d1450023b0b376240be902c3251c",
+            "reference": "f0896b5c7274d1450023b0b376240be902c3251c",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.0.0"
+        },
+        "require-dev": {
+            "phpunit/phpunit": "*"
+        },
+        "time": "2017-03-29 13:59:30",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "classmap": [
+                "Mobile_Detect.php"
+            ],
+            "psr-0": {
+                "Detection": "namespaced/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Serban Ghita",
+                "email": "serbanghita@gmail.com",
+                "homepage": "http://mobiledetect.net",
+                "role": "Developer"
+            }
+        ],
+        "description": "Mobile_Detect is a lightweight PHP class for detecting mobile devices. It uses the User-Agent string combined with specific HTTP headers to detect the mobile environment.",
+        "homepage": "https://github.com/serbanghita/Mobile-Detect",
+        "keywords": [
+            "detect mobile devices",
+            "mobile",
+            "mobile detect",
+            "mobile detector",
+            "php mobile detect"
+        ]
+    },
+    {
+        "name": "guzzlehttp/psr7",
+        "version": "1.4.2",
+        "version_normalized": "1.4.2.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/guzzle/psr7.git",
+            "reference": "f5b8a8512e2b58b0071a7280e39f14f72e05d87c"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/guzzle/psr7/zipball/f5b8a8512e2b58b0071a7280e39f14f72e05d87c",
+            "reference": "f5b8a8512e2b58b0071a7280e39f14f72e05d87c",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.2"
+        },
         "time": "2017-03-28T15:17:10+00:00",
         "type": "library",
         "installation-source": "source",
@@ -1161,7 +1257,7 @@
             "phpspec/phpspec": "^2.2",
             "phpunit/phpunit": "~4.8"
         },
-        "suggest": {
+        "time": "2017-03-20 17:10:46",
             "ext-fileinfo": "Required for MimeType",
             "league/flysystem-aws-s3-v2": "Allows you to use S3 storage with AWS SDK v2",
             "league/flysystem-aws-s3-v3": "Allows you to use S3 storage with AWS SDK v3",
@@ -1174,19 +1270,21 @@
             "league/flysystem-sftp": "Allows you to use SFTP server storage via phpseclib",
             "league/flysystem-webdav": "Allows you to use WebDAV storage",
             "league/flysystem-ziparchive": "Allows you to use ZipArchive adapter"
-        },
         "time": "2016-10-07T12:20:37+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
-                "dev-master": "1.1-dev"
+                "dev-master": "1.4-dev"
             }
         },
         "installation-source": "dist",
         "autoload": {
             "psr-4": {
                 "League\\Flysystem\\": "src/"
-            }
+            },
+            "files": [
+                "src/functions_include.php"
+            ]
         },
         "notification-url": "https://packagist.org/downloads/",
         "license": [
@@ -1196,6 +1294,10 @@
             {
                 "name": "Frank de Jonge",
                 "email": "info@frenky.net"
+            },
+            {
+                "name": "Tobias Schultze",
+                "homepage": "https://github.com/Tobion"
             }
         ],
         "description": "Filesystem abstraction: Many filesystems, one API.",
@@ -1424,7 +1526,6 @@
         "extra": {
             "branch-alias": {
                 "dev-master": "1.4-dev"
-            }
         },
         "installation-source": "dist",
         "autoload": {
@@ -1441,9 +1542,8 @@
         ],
         "authors": [
             {
-                "name": "Michael Dowling",
-                "email": "mtdowling@gmail.com",
-                "homepage": "https://github.com/mtdowling"
+                "name": "Jan Sorgalla",
+                "email": "jsorgalla@gmail.com"
             },
             {
                 "name": "Tobias Schultze",
@@ -1452,7 +1552,6 @@
         ],
         "description": "PSR-7 message implementation that also provides common utility methods",
         "keywords": [
-            "http",
             "message",
             "request",
             "response",
@@ -2088,48 +2187,32 @@
             {
                 "name": "Jonathan Wage",
                 "email": "jonwage@gmail.com"
-            }
-        ],
         "description": "Database Abstraction Layer",
         "homepage": "http://www.doctrine-project.org",
-        "keywords": [
             "database",
             "dbal",
             "persistence",
             "queryobject"
-        ]
-    },
-    {
+            },
+            {
         "name": "ircmaxell/password-compat",
         "version": "v1.0.4",
         "version_normalized": "1.0.4.0",
-        "source": {
-            "type": "git",
             "url": "https://github.com/ircmaxell/password_compat.git",
             "reference": "5c5cde8822a69545767f7c7f3058cb15ff84614c"
-        },
-        "dist": {
-            "type": "zip",
             "url": "https://api.github.com/repos/ircmaxell/password_compat/zipball/5c5cde8822a69545767f7c7f3058cb15ff84614c",
             "reference": "5c5cde8822a69545767f7c7f3058cb15ff84614c",
-            "shasum": ""
-        },
         "require-dev": {
             "phpunit/phpunit": "4.*"
-        },
+            },
         "time": "2014-11-20T16:49:30+00:00",
-        "type": "library",
+                "name": "Guilherme Blanco",
         "installation-source": "dist",
-        "autoload": {
             "files": [
                 "lib/password.php"
             ]
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
+            },
             "MIT"
-        ],
-        "authors": [
             {
                 "name": "Anthony Ferrara",
                 "email": "ircmaxell@php.net",
@@ -2141,6 +2224,8 @@
         "keywords": [
             "hashing",
             "password"
+            "persistence",
+            "queryobject"
         ]
     },
     {

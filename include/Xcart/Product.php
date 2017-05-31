@@ -282,23 +282,35 @@ class Product extends Data
 
     public function isProductOutOfStock()
     {
-        $result = false;
-        if (intval($this->getField('avail')) <= 0)
-            $result = true;
-        $iEtaDate = $this->getField('eta_date_mm_dd_yyyy');
-        if ($result && !empty($iEtaDate)) {
-            $current_time = time();
-            if ($current_time < $iEtaDate) {
-                $result = true;
-            }
+        if (!$this->isForSale()) {
+            return true;
         }
-        if (!$result && $this->getProductCostToUs() > $this->getPrice())
-            $result = true;
 
-        if (!$result && floatval($this->getField("shipping_freight")) == 0 && strpos($this->getField("productcode"), "ART-") === false)
-            $result = true;
+        if ($this->cost_to_us <= 0) {
+            return true;
+        }
 
-        return $result;
+        if ($this->avail <= 0) {
+            return true;
+        }
+
+        if ($this->avail < $this->min_amount) {
+            return true;
+        }
+
+        if ($this->cost_to_us >= $this->getPrice()) {
+            return true;
+        }
+
+        if ($this->eta_date_mm_dd_yyyy && time() < $this->eta_date_mm_dd_yyyy) {
+            return true;
+        }
+
+        if (floatval($this->shipping_freight) == 0 && strpos($this->productcode, "ART-") === false) {
+            return true;
+        }
+
+        return false;
     }
 
     public function getMapPrice()
@@ -359,8 +371,9 @@ SQL;
     {
         $fPrice = $this->getPrice($forQuantity);
 
-        if ($this->isSupplierFeedsEnabled() && $this->isProductOutOfStock()) {
-            $fPrice = max ($fPrice,$this->cost_to_us + ($fPrice - $this->cost_to_us) / 3);
+        if ($this->isSupplierFeedsEnabled() && $this->isProductOutOfStock() && $fPrice > $this->cost_to_us) {
+            $fPrice = round($this->cost_to_us + ($fPrice - $this->cost_to_us) / 3,2);
+            $fPrice = max($this->getMapPrice(), $fPrice);
         }
 
         return $fPrice;

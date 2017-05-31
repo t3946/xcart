@@ -57,6 +57,9 @@ class AmazonStore extends BaseStore
             if (!empty($data['restocking_competitive_price'])) {
                 $filter[] = new QOr(['min_fba_price__lt' => new Expression(' avg_comp_price'), 'avg_comp_price' => -1]);
             }
+            if (!empty($data['items_sold_last_1m_of_stock'])) {
+                $filter['items_sold_last_1m_of_stock__gt'] = 0;
+            }
         }
         if (!empty($data['batch_id'])) {
             $filter['batch_id'] = $data['batch_id'];
@@ -71,6 +74,7 @@ class AmazonStore extends BaseStore
         if (!$this->qs) {
             $this->qs = AmazonReorderBatchDataModel::objects()->getQuerySet();
             $this->qs->join('inner join', 'xcart_manufacturers', ['manufacturerid' => 'm.manufacturerid'], 'm');
+            $this->qs->join('left join', 'xcart_manufacturers', ['m2.manufacturerid' => 'm.parent_manufacturer_id'], 'm2');
             $this->qs->join('inner join', 'xcart_products_sf', ['productid' => 'sf.productid'], 'sf');
         }
         return $this->qs;
@@ -82,8 +86,8 @@ class AmazonStore extends BaseStore
     {
             /** @var QuerySet $qs */
             $qs = $this->getQuerySet();
-            $qs->select(['m.manufacturer',
-                'm.code',
+            $qs->select(['manufacturer' => new Expression("IFNULL(m2.manufacturer, `m`.`manufacturer`)"),
+                'code' => new Expression("IFNULL(m2.code, `m`.`code`)"),
                 'm.m_address',
                 'm.m_city',
                 'm.m_country',
@@ -91,12 +95,14 @@ class AmazonStore extends BaseStore
                 'm.m_zipcode',
                 'sf.sfid',
                 'r_order' => new Expression("(restocking_qty * cost_to_us)"),
-                'r_qty_order' => new Expression("IF (restocking_qty > 2, 0, 1)"),
+                'r_qty_order' => new Expression("IF (restocking_qty >= 2, 0, 1)"),
+                'r_last1m_sale' => new Expression("IF (items_sold_last_1m_of_stock > 0 AND restocking_qty = 1, 0, 1)"),
                 '*'
             ])
                 ->order([
-                    'm.manufacturer',
+                    'manufacturer',
                     'r_qty_order',
+                    'r_last1m_sale',
                     '-r_order'
                 ]);
 

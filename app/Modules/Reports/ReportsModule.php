@@ -53,5 +53,10 @@ class ReportsModule extends Module
             }
             return $res;
         });
+
+        $template->addModifier('format_value', function($value, $prefix, $suffix)
+        {
+            return $prefix . $value . $suffix;
+        });
     }
 }
