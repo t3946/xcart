@@ -252,9 +252,22 @@ table.customer-info-edit input {
 table.customer-info-edit td {
 	padding-right: 5px;
 }
-tr.distributor-totals-line td {
+tr.distributor-totals-line td, tr.distributor-totals-line td a {
 	font-weight: bold; 
 	color: green;
+	vertical-align: top;
+}
+tr.group_total_price_row {
+	display: none;
+}
+tr.group_total_price_row td {
+	padding-top: 0;
+	padding-bottom: 0;
+	font-weight: bold;
+}
+tr.distributor-totals-line td a {
+	text-decoration: none;
+	border-bottom: 1px dotted;
 }
 tr.refund-distr-totals-line td {
 	font-weight: bold; 

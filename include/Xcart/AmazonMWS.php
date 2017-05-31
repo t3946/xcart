@@ -1,6 +1,50 @@
 <?php
 namespace Xcart;
 
+use CaponicaAmazonMwsComplete\AmazonClient\FbaOutboundClient;
+use CaponicaAmazonMwsComplete\AmazonClient\MwsOrderClient;
+use CaponicaAmazonMwsComplete\AmazonClient\MwsProductClient;
+use FBAInventoryServiceMWS_Exception;
+use FBAOutboundServiceMWS_Exception;
+use FBAOutboundServiceMWS_Model_Address;
+use FBAOutboundServiceMWS_Model_CreateFulfillmentOrderItem;
+use FBAOutboundServiceMWS_Model_CreateFulfillmentOrderItemList;
+use FBAOutboundServiceMWS_Model_CreateFulfillmentOrderRequest;
+use FBAOutboundServiceMWS_Model_Currency;
+use FBAOutboundServiceMWS_Model_Fee;
+use FBAOutboundServiceMWS_Model_FeeList;
+use FBAOutboundServiceMWS_Model_FulfillmentPreview;
+use FBAOutboundServiceMWS_Model_FulfillmentPreviewList;
+use FBAOutboundServiceMWS_Model_GetFulfillmentPreviewItem;
+use FBAOutboundServiceMWS_Model_GetFulfillmentPreviewItemList;
+use FBAOutboundServiceMWS_Model_GetFulfillmentPreviewRequest;
+use FBAOutboundServiceMWS_Model_GetFulfillmentPreviewResult;
+use FBAOutboundServiceMWS_Model_ShippingSpeedCategoryList;
+use MarketplaceWebService_Model_GetFeedSubmissionResultRequest;
+use MarketplaceWebService_Model_GetReportListRequest;
+use MarketplaceWebService_Model_GetReportRequest;
+use MarketplaceWebService_Model_GetReportRequestListRequest;
+use MarketplaceWebService_Model_IdList;
+use MarketplaceWebService_Model_RequestReportRequest;
+use MarketplaceWebService_Model_SubmitFeedRequest;
+use MarketplaceWebService_Model_TypeList;
+use MarketplaceWebService_Model_UpdateReportAcknowledgementsRequest;
+use MarketplaceWebServiceOrders_Exception;
+use MarketplaceWebServiceProducts_Exception;
+use MarketplaceWebServiceProducts_Model_ASINIdentifier;
+use MarketplaceWebServiceProducts_Model_CompetitivePriceList;
+use MarketplaceWebServiceProducts_Model_CompetitivePriceType;
+use MarketplaceWebServiceProducts_Model_CompetitivePricingType;
+use MarketplaceWebServiceProducts_Model_GetCompetitivePricingForSKURequest;
+use MarketplaceWebServiceProducts_Model_GetCompetitivePricingForSKUResult;
+use MarketplaceWebServiceProducts_Model_IdentifierType;
+use MarketplaceWebServiceProducts_Model_MoneyType;
+use MarketplaceWebServiceProducts_Model_PriceType;
+use MarketplaceWebServiceProducts_Model_Product;
+use MarketplaceWebServiceProducts_Model_SalesRankList;
+use MarketplaceWebServiceProducts_Model_SalesRankType;
+use MarketplaceWebServiceProducts_Model_SellerSKUIdentifier;
+use MarketplaceWebServiceProducts_Model_SellerSKUListType;
 use Modules\Amazon\Helpers\AmazonHelper;
 use Modules\Amazon\Models\AmazonFbaProductModel;
 use Modules\Amazon\Models\AmazonFbaProductsQuickModel;
@@ -14,6 +58,8 @@ use Modules\Order\Models\OrderGroupModel;
 use Modules\Order\Models\OrderModel;
 use Modules\Product\Helpers\ProductHelper;
 use Modules\Product\Models\ProductModel;
+use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
 use SimpleXMLElement;
 use Xcart\External_Marketplaces\StoreFrontMarketPlace;
 use Xcart\External_Product_Verification\ExternalVerificationFeeds;
@@ -68,6 +114,9 @@ class AmazonMWS
     public function __construct($oServiceClass = 'MarketplaceWebService_Client', $uri = '')
     {
         global $sql_tbl;
+        $cl_v = MwsProductClient::MWS_CLIENT_VERSION;
+        $cl_v = MwsOrderClient::MWS_CLIENT_VERSION;
+        $cl_v = FbaOutboundClient::MWS_CLIENT_VERSION;
         $this->sServiceUrl = "https://mws.amazonservices.com" . $uri;
         $a_config = array(
             'ServiceURL' => $this->sServiceUrl,
@@ -133,7 +182,7 @@ class AmazonMWS
         if (!empty($this->error)) return $this;
 
         $this->aWaitLoopExitCondition = [];
-        $request = new \MarketplaceWebService_Model_RequestReportRequest();
+        $request = new MarketplaceWebService_Model_RequestReportRequest();
         $request->setMarketplaceIdList($this->marketplaceIdArray);
         $request->setMerchant(MERCHANT_ID);
         $request->setReportType($this->amazonReportType);
@@ -164,10 +213,10 @@ class AmazonMWS
         if ($this->dom_xml_arr['ReportRequestId']) {
             $this->aWaitLoopExitCondition = [['ReportProcessingStatus' => '_DONE_'], ['ReportProcessingStatus' => '_DONE_NO_DATA_'], ['ReportProcessingStatus' => '_CANCELLED_']];
 
-            $reportRequestIdList = new \MarketplaceWebService_Model_IdList();
+            $reportRequestIdList = new MarketplaceWebService_Model_IdList();
             $reportRequestIdList->setId($this->dom_xml_arr['ReportRequestId']);
 
-            $request = new \MarketplaceWebService_Model_GetReportRequestListRequest();
+            $request = new MarketplaceWebService_Model_GetReportRequestListRequest();
             $request->setMerchant(MERCHANT_ID);
             $request->setReportRequestIdList($reportRequestIdList);
 
@@ -199,11 +248,11 @@ class AmazonMWS
 
         $this->setTimeOut(60);
 
-        $req = new \MarketplaceWebService_Model_TypeList();
+        $req = new MarketplaceWebService_Model_TypeList();
 
         $req->withType($this->amazonReportType);
 
-        $request = new \MarketplaceWebService_Model_GetReportListRequest();
+        $request = new MarketplaceWebService_Model_GetReportListRequest();
         $request->setMerchant(MERCHANT_ID);
 
         $request->setReportTypeList($req);
@@ -235,7 +284,7 @@ class AmazonMWS
             if (is_array($this->aReportIds)) {
                 $this->dom_xml_arr = [];
                 foreach ($this->aReportIds as $reportId) {
-                    $request = new \MarketplaceWebService_Model_GetReportRequest();
+                    $request = new MarketplaceWebService_Model_GetReportRequest();
                     $request->setMerchant(MERCHANT_ID);
                     $request->setReport(@fopen('php://memory', 'rw+'));
                     $request->setReportId($reportId);
@@ -255,12 +304,12 @@ class AmazonMWS
     {
         $this->setTimeOut(45);
 
-        $request = new \MarketplaceWebService_Model_UpdateReportAcknowledgementsRequest();
+        $request = new MarketplaceWebService_Model_UpdateReportAcknowledgementsRequest();
         $request->setMerchant(MERCHANT_ID);
 
         if (!empty($this->aReportIds)) {
             foreach ($this->aReportIds as $iReportId) {
-                $idList = new \MarketplaceWebService_Model_IdList();
+                $idList = new MarketplaceWebService_Model_IdList();
 
                 $request->setReportIdList($idList->withId($iReportId));
                 $request->setAcknowledged(true); //true
@@ -428,9 +477,9 @@ SQL;
             foreach ($ReportContent as $report_data) {
                 $cntLine = 0;
                 if ($this->bEnableLog && $this->sLogPrefix && !empty($report_data)) {
-                    $log = new \Monolog\Logger('fee_report');
+                    $log = new Logger('fee_report');
                     $logFile = sprintf("../var/log/{$this->sLogPrefix}-%s.log", date('ymd'));
-                    $log->pushHandler(new \Monolog\Handler\StreamHandler($logFile, \Monolog\Logger::DEBUG));
+                    $log->pushHandler(new StreamHandler($logFile, Logger::DEBUG));
                     $log->addDebug($report_data);
                 }
                 $aReportValue = [];
@@ -530,9 +579,9 @@ SQL;
             func_backprocess_log(self::BACK_PROCESS_LOG_NAME_SETTLEMENT, $log_text);
 
             if ($this->bEnableLog && $this->sLogPrefix) {
-                $log = new \Monolog\Logger('settlement_report');
+                $log = new Logger('settlement_report');
                 $logFile = sprintf("../var/log/{$this->sLogPrefix}-%s.log", date('ymd'));
-                $log->pushHandler(new \Monolog\Handler\StreamHandler($logFile, \Monolog\Logger::DEBUG));
+                $log->pushHandler(new StreamHandler($logFile, Logger::DEBUG));
             }
 
             foreach ($ReportContent as $report_id => $report_data) {
@@ -881,7 +930,7 @@ SQL;
             return false;
         }
 
-        $address = new \FBAOutboundServiceMWS_Model_Address();
+        $address = new FBAOutboundServiceMWS_Model_Address();
 
         $address->setName($oOrder->getClientShippingName());
         $address->setLine1($oOrder->getField('s_address'));
@@ -895,11 +944,11 @@ SQL;
 
         $aProducts = $oOrderGroup->getOrderGroupProducts();
         if (!empty($aProducts)) {
-            $list = new \FBAOutboundServiceMWS_Model_CreateFulfillmentOrderItemList();
+            $list = new FBAOutboundServiceMWS_Model_CreateFulfillmentOrderItemList();
 
             foreach ($aProducts as $oProduct) {
                 $iAmount = 0;
-                $item = new \FBAOutboundServiceMWS_Model_CreateFulfillmentOrderItem();
+                $item = new FBAOutboundServiceMWS_Model_CreateFulfillmentOrderItem();
 
                 $aOrderDetails = OrderDetail::getOrderDetailsByOrderIdAndProductId($oOrderGroup->getOrderId(), $oProduct->getProductId());
                 foreach ($aOrderDetails as $oOrderDetail) {
@@ -920,7 +969,7 @@ SQL;
                 $list->withmember($item);
             }
 
-            $req = new \FBAOutboundServiceMWS_Model_CreateFulfillmentOrderRequest();
+            $req = new FBAOutboundServiceMWS_Model_CreateFulfillmentOrderRequest();
             $req->setSellerId(MERCHANT_ID);
             $req->setSellerFulfillmentOrderId($oOrderGroup->getAmazonShippingOrderId());
             $req->setDisplayableOrderId($oOrderGroup->getAmazonShippingOrderId());
@@ -950,7 +999,7 @@ SQL;
                 $oOrderGroup->changeOrderGroupStatusDC('L');
 
 
-            } catch (\FBAOutboundServiceMWS_Exception $ex) {
+            } catch (FBAOutboundServiceMWS_Exception $ex) {
                 $log .= "Caught Exception: " . $ex->getMessage() . "\n";
                 $log .= "Response Status Code: " . $ex->getStatusCode() . "\n";
                 $log .= "Error Code: " . $ex->getErrorCode() . "\n";
@@ -972,9 +1021,9 @@ SQL;
         if (!empty($ReportContent)) {
             foreach ($ReportContent as $report_id => $report_data) {
                 if ($this->bEnableLog && $this->sLogPrefix) {
-                    $log = new \Monolog\Logger('amazon_info');
+                    $log = new Logger('amazon_info');
                     $logFile = sprintf("../var/log/{$this->sLogPrefix}-%s.log", date('ymd'));
-                    $log->pushHandler(new \Monolog\Handler\StreamHandler($logFile, \Monolog\Logger::DEBUG));
+                    $log->pushHandler(new StreamHandler($logFile, Logger::DEBUG));
                     $log->addDebug($report_data);
                 }
                 $cntLine = 0;
@@ -1160,23 +1209,41 @@ SQL;
     private function doOrderListRequest()
     {
         $timeoffset = 24 * 60 * 30 * 300;
+        $client = new MwsOrderClient(
+            AWS_ACCESS_KEY_ID,
+            AWS_SECRET_ACCESS_KEY,
+            APPLICATION_NAME,
+            APPLICATION_VERSION,
+            ['ServiceURL' => $this->sServiceUrl]
+        );
+
         while (!empty($this->nextToken)) {
-            if ($this->nextToken == 'start') {
-                $request = new \MarketplaceWebServiceOrders_Model_ListOrdersRequest();
-                $request->setSellerId(MERCHANT_ID);
-                $request->setMarketplaceId(MARKETPLACE_ID);
-                $request->setCreatedAfter(gmdate('Y-m-d\TH:i:s\Z', time() - $timeoffset));
-                $request->setOrderStatus(['Shipped', 'Unshipped', 'PartiallyShipped', 'Canceled']);
-                $this->dom_xml_arr = AmazonHelper::invokeListOrders($request, $this->oMWSService);
-            } else {
-                $request = new \MarketplaceWebServiceOrders_Model_ListOrdersByNextTokenRequest();
-                $request->setNextToken($this->nextToken);
-                $request->setSellerId(MERCHANT_ID);
-                $this->dom_xml_arr = AmazonHelper::invokeListOrdersByNextToken($request, $this->oMWSService);
-            }
-            if (!empty($this->dom_xml_arr["Caught_Exception"]) && $this->dom_xml_arr["Caught_Exception"] == "Request is throttled" && $this->dom_xml_arr["Response_Status_Code"] == "503") {
+            $this->dom_xml_arr = null;
+            try {
+                if ($this->nextToken == 'start') {
+
+                    $aa = $client->ListOrders([
+                        'SellerId' => MERCHANT_ID,
+                        'MarketplaceId' => MARKETPLACE_ID,
+                        'CreatedAfter' => gmdate('Y-m-d\TH:i:s\Z', time() - $timeoffset),
+                        'OrderStatus' => ['Shipped', 'Unshipped', 'PartiallyShipped', 'Canceled'],
+                        'ExcludeMe' => true
+                    ]);
+                } else {
+                    $aa = $client->ListOrdersByNextToken([
+                        'NextToken' => $this->nextToken,
+                        'SellerId' => MERCHANT_ID
+                    ]);
+                }
+                $this->dom_xml_arr = $aa->toXML();
+            } catch(MarketplaceWebServiceOrders_Exception $e){
+                $this->dom_xml_arr["Caught_Exception"] = (string) $e->getErrorMessage();
+                $this->dom_xml_arr["Response_Status_Code"] = $e->getStatusCode();
+                $log_text = "...ListOrdersByNextToken  throttling delay";
+                func_backprocess_log("amazon_orders", $log_text);
                 return $this;
             }
+
             $this->processOrderList();
         }
         return $this;
@@ -1185,11 +1252,25 @@ SQL;
     private function doOrderRequest()
     {
         if (!is_null($this->oOrder)) {
-            $request = new \MarketplaceWebServiceOrders_Model_GetOrderRequest();
-            $request->setSellerId(MERCHANT_ID);
-            $request->setAmazonOrderId($this->oOrder->getField('amazonorderid'));
-            // object or array of parameters
-            $this->dom_xml_arr = AmazonHelper::invokeGetOrder($request, $this->oMWSService);
+            $client = new MwsOrderClient(
+                AWS_ACCESS_KEY_ID,
+                AWS_SECRET_ACCESS_KEY,
+                APPLICATION_NAME,
+                APPLICATION_VERSION,
+                ['ServiceURL' => $this->sServiceUrl]
+            );
+            $this->dom_xml_arr = null;
+            try {
+                $aa = $client->getOrder([
+                    'SellerId' => MERCHANT_ID,
+                    'AmazonOrderId' => $this->oOrder->amazonorderid
+                ]);
+                $this->dom_xml_arr = $aa->toXML();
+            }
+            catch(MarketplaceWebServiceOrders_Exception $e){
+                $this->dom_xml_arr["Caught_Exception"] = (string) $e->getErrorMessage();
+                $this->dom_xml_arr["Response_Status_Code"] = $e->getStatusCode();
+            }
         }
         return $this;
     }
@@ -1197,11 +1278,25 @@ SQL;
     private function doOrderInfoRequest()
     {
         if (!is_null($this->oOrder)) {
-            $request = new \MarketplaceWebServiceOrders_Model_ListOrderItemsRequest();
-            $request->setSellerId(MERCHANT_ID);
-            $request->setAmazonOrderId($this->oOrder->getField('amazonorderid'));
-            // object or array of parameters
-            $this->dom_xml_arr = AmazonHelper::invokeListOrderItems($request, $this->oMWSService);
+            $client = new MwsOrderClient(
+                AWS_ACCESS_KEY_ID,
+                AWS_SECRET_ACCESS_KEY,
+                APPLICATION_NAME,
+                APPLICATION_VERSION,
+                ['ServiceURL' => $this->sServiceUrl]
+            );
+            $this->dom_xml_arr = null;
+            try {
+                $aa = $client->listOrderItems([
+                    'SellerId' => MERCHANT_ID,
+                    'AmazonOrderId' => $this->oOrder->amazonorderid
+                ]);
+                $this->dom_xml_arr = $aa->toXML();
+            }
+            catch(MarketplaceWebServiceOrders_Exception $e){
+                $this->dom_xml_arr["Caught_Exception"] = (string) $e->getErrorMessage();
+                $this->dom_xml_arr["Response_Status_Code"] = $e->getStatusCode();
+            }
         }
         return $this;
     }
@@ -1499,114 +1594,81 @@ SQL;
 
     /**
      * @param Customer $oCustomer
-     * @param Cart $oShippingCart
-     * @param ShippingRate[] $aShippingRates
-     * @return array|string
+     * @param \Xcart\Cart $oShippingCart
+     * @param $aShippingRates
+     * @return array|null
+     * @throws \Exception
      */
     public function getGetFulfillmentRates(Customer $oCustomer, Cart $oShippingCart, $aShippingRates)
     {
         $aShippingRatesCalc = null;
-        if (!empty($aShippingRates)) {
+        $aProductsCart = $oShippingCart->getElements();
+        if (!empty($aShippingRates) && !empty($aProductsCart)) {
+            $client = new FbaOutboundClient(
+                AWS_ACCESS_KEY_ID,
+                AWS_SECRET_ACCESS_KEY,
+                ['ServiceURL' => $this->sServiceUrl],
+                APPLICATION_NAME,
+                APPLICATION_VERSION
+            );
+            $param = [
+                'SellerId' => MERCHANT_ID,
+                'Address' => [
+                    'Name' => empty($oCustomer->s_firstname) ? 'Albert Einstain' : $oCustomer->s_firstname,
+                    'Line1' => empty($oCustomer->s_address) ? 'Village road 1' : $oCustomer->s_address . (empty($oCustomer->s_address_2) ? '' : "\n$oCustomer->s_address_2"),
+                    'City' => $oCustomer->s_city,
+                    'CountryCode' => $oCustomer->s_country,
+                    'StateOrProvinceCode' => $oCustomer->s_state,
+                    'PostalCode' => $oCustomer->s_zipcode
+                ],
+            ];
             foreach ($aShippingRates as $oShippingRate) {
-                $aShipName[] = $oShippingRate->getShippingEntity()->getName();
-            }
-        }
-
-        if (!empty($aShipName)) {
-
-            $request = new \FBAOutboundServiceMWS_Model_GetFulfillmentPreviewRequest();
-            $request->setSellerId(MERCHANT_ID);
-
-            $address = new \FBAOutboundServiceMWS_Model_Address();
-            if ($oCustomer->getField("s_firstname")) {
-                $address->setName($oCustomer->getField("s_firstname"));
-            } else {
-                $address->setName('Albert Einstain');
-            }
-            if (!empty($oCustomer->s_address)) {
-                $address->setLine1($oCustomer->s_address . (empty($oCustomer->s_address_2) ? "" : "\n$oCustomer->s_address_2"));
-            } else {
-                $address->setLine1('Village road 1');
+                $param['ShippingSpeedCategories']['member'][] = $oShippingRate->getShippingEntity()->getName();
             }
 
-            $address->setCity($oCustomer->getField("s_city"));
-            $address->setCountryCode($oCustomer->getField("s_country"));
-            $address->setStateOrProvinceCode($oCustomer->getField("s_state"));
-            $address->setPostalCode($oCustomer->getField("s_zipcode"));
-            $request->setAddress($address);
-
-            $items = [];
-
-            $aProductsCart = $oShippingCart->getElements();
-
-            if (!empty($aProductsCart)) {
-                /** @var CartElement $oCartElement */
-                foreach ($aProductsCart as $oCartElement) {
-                    $oProduct = $oCartElement->getProduct();
-                    if (!($oProduct->isAmazonFBAEnabled())) {
-                        $aProducts = $oProduct->getProductsAvailOnAmazonParentWithChild(1);
-                        if (!empty($aProducts)) {
-                            $oProductParentOrChild = reset($aProducts);
-                            $oProduct = $oProductParentOrChild['oProduct'];
-                        }
+            /** @var CartElement $oCartElement */
+            foreach ($aProductsCart as $oCartElement) {
+                $oProduct = $oCartElement->getProduct();
+                if (!($oProduct->isAmazonFBAEnabled())) {
+                    $aProducts = $oProduct->getProductsAvailOnAmazonParentWithChild(1);
+                    if (!empty($aProducts)) {
+                        $oProductParentOrChild = reset($aProducts);
+                        $oProduct = $oProductParentOrChild['oProduct'];
                     }
-                    $item = new \FBAOutboundServiceMWS_Model_GetFulfillmentPreviewItem();
-                    $item->setSellerSKU($oProduct->getSKU());
-                    $item->setQuantity($oCartElement->getQuantity());
-                    $item->setSellerFulfillmentOrderItemId($oProduct->getSKU());
-                    $items[] = $item;
                 }
-                $itemList = new \FBAOutboundServiceMWS_Model_GetFulfillmentPreviewItemList();
-                $itemList->setmember($items);
-                $request->setItems($itemList);
-                $shippingArray = new \FBAOutboundServiceMWS_Model_ShippingSpeedCategoryList();
-                $aShipName = [];
-
-
-                $shippingArray->setmember($aShipName);
-                $request->setShippingSpeedCategories($shippingArray);
-                $aXML = AmazonHelper::invokeGetFulfillmentPreview($request, $this->oMWSService);
-                if (!empty($aXML['saveXML'])) {
-                    $aXML['saveXML'] = str_replace('http://mws.amazonaws.com', 'https://mws.amazonservices.com', $aXML['saveXML']);
-                    $this->dom_xml_arr = str_replace($this->sServiceUrl, '', $aXML['saveXML']);
-                    $docShipping = new \DOMDocument;
-                    $docShipping->loadXML($this->dom_xml_arr);
-                    $xpath = new \DOMXPath($docShipping);
-                    $aShippingEntries = $xpath->query('/*/*/FulfillmentPreviews/member');
-
-                    if (!empty($aShippingEntries) && $aShippingEntries->length > 0) {
-                        foreach ($aShippingEntries as $k => $shippingNode) {
+                $param['Items']['member'][] = [
+                    'SellerSKU' => $oProduct->getSKU(),
+                    'Quantity' => $oCartElement->getQuantity(),
+                    'SellerFulfillmentOrderItemId' => $oProduct->getSKU()
+                ];
+            }
+            try {
+                $aa = $client->getFulfillmentPreview($param);
+                /** @var FBAOutboundServiceMWS_Model_GetFulfillmentPreviewResult $fpr */
+                $fpr = $aa->getGetFulfillmentPreviewResult();
+                /** @var FBAOutboundServiceMWS_Model_FulfillmentPreviewList $fp */
+                $fp = $fpr->getFulfillmentPreviews();
+                if ($fp && $shr = $fp->getmember()) {
+                    /** @var FBAOutboundServiceMWS_Model_FulfillmentPreview $sh */
+                    foreach ($shr as $sh) {
+                        /** @var FBAOutboundServiceMWS_Model_FeeList $feeList */
+                        $feeList = $sh->getEstimatedFees();
+                        if ($feeList && $efees = $feeList->getmember()) {
                             $fAmount = null;
-                            $ShippingSpeedCategory = $shippingNode->getElementsByTagName('ShippingSpeedCategory');
-                            if ($ShippingSpeedCategory->length) {
-                                $sShippingName = $ShippingSpeedCategory->item(0)->nodeValue;
+                            /** @var FBAOutboundServiceMWS_Model_Fee $efee */
+                            foreach ($efees as $efee) {
+                                /** @var FBAOutboundServiceMWS_Model_Currency $currency */
+                                $currency = $efee->getAmount();
+                                $fAmount += floatval($currency->getValue());
                             }
-                            $EstimatedFees = $shippingNode->getElementsByTagName('EstimatedFees');
-                            if ($EstimatedFees->length) {
-                                $aShippingFees = $EstimatedFees->item(0)->getElementsByTagName('member');
-                            }
-                            if (!empty($aShippingFees) && $aShippingFees->length > 0) {
-                                foreach ($aShippingFees as $oShippingFee) {
-                                    $Amount = $oShippingFee->getElementsByTagName('Amount');
-                                    if ($Amount->length) {
-                                        $value = $Amount->item(0)->getElementsByTagName('Value');
-                                        if ($value->length) {
-                                            $fAmount += floatval($value->item(0)->nodeValue);
-                                        }
-                                    }
-
-                                }
-                            }
-                            $aShippingRatesCalc[$sShippingName] = $fAmount;
+                            $aShippingRatesCalc[(string)$sh->getShippingSpeedCategory()] = $fAmount;
                         }
-                    }
-                } else {
-                    if (!empty($aXML['Caught_Exception'])) {
-                        throw new \Exception($aXML['Caught_Exception']);
+
                     }
                 }
+            } catch (FBAOutboundServiceMWS_Exception $e) {
+                throw new \Exception((string)$e->getMessage());
             }
-
         }
         return $aShippingRatesCalc;
     }
@@ -1702,7 +1764,7 @@ SQL;
                         'ContentMd5' => base64_encode(md5(stream_get_contents($feedHandle), true)),
                     );
 
-                    $request = new \MarketplaceWebService_Model_SubmitFeedRequest($parameters);
+                    $request = new MarketplaceWebService_Model_SubmitFeedRequest($parameters);
                     $aResult = AmazonHelper::invokeSubmitFeed($request, $this->oMWSService);
                     if (!empty($aResult)) {
                         if (!empty($aResult['FeedSubmissionId'])) {
@@ -1730,7 +1792,7 @@ SQL;
     {
         if (!empty($this->error)) return $this;
 
-        $request = new \MarketplaceWebService_Model_GetFeedSubmissionResultRequest();
+        $request = new MarketplaceWebService_Model_GetFeedSubmissionResultRequest();
         $request->setMerchant(MERCHANT_ID);
         $sReportId = reset($this->aReportIds);
         $request->setFeedSubmissionId($sReportId);
@@ -1804,252 +1866,213 @@ SQL;
 
     public function doGetLowestOfferListingsForSKU()
     {
+        $this->dom_xml_arr = null;
         if (!empty($this->aProducts)) {
-            $request = new \MarketplaceWebServiceProducts_Model_GetLowestOfferListingsForSKURequest();
-            $request->setSellerId(MERCHANT_ID);
-            $request->setMarketplaceId(MARKETPLACE_ID);
-            $SellerSKUList = new \MarketplaceWebServiceProducts_Model_SellerSKUListType();
-            $SellerSKUList->setSellerSKU(array_map(function ($oP) {return $oP->productcode;}, $this->aProducts));
-            $request->setSellerSKUList($SellerSKUList);
-            $request->setItemCondition("New");
-            $request->setExcludeMe(true);
+            $client = new MwsProductClient(
+                AWS_ACCESS_KEY_ID,
+                AWS_SECRET_ACCESS_KEY,
+                APPLICATION_NAME,
+                APPLICATION_VERSION,
+                ['ServiceURL' => $this->sServiceUrl]
+            );
 
-            $this->dom_xml_arr = AmazonHelper::invokeGetLowestOfferListingsForSKU($request, $this->oMWSService);
-            if (!empty($this->dom_xml_arr["Caught_Exception"]) && $this->dom_xml_arr["Caught_Exception"] == "Request is throttled" && $this->dom_xml_arr["Response_Status_Code"] == "503") {
-                return $this;
-            }
-            if ($this->bEnableLog && $this->sLogPrefix) {
-                $log = new \Monolog\Logger('amazon_info');
-                $logFile = sprintf("../var/log/{$this->sLogPrefix}-%s.log", date('ymd'));
-                $log->pushHandler(new \Monolog\Handler\StreamHandler($logFile, \Monolog\Logger::DEBUG));
-                $log->debug('GetLowestOfferListingsForSKU', [$this->dom_xml_arr]);
-            }
-            if (is_array($this->dom_xml_arr)) {
-                $log = new \Monolog\Logger('amazon_info_error');
-                $logFile = sprintf("../var/log/{$this->sLogPrefix}-%s.log", date('ymd'));
-                $log->pushHandler(new \Monolog\Handler\StreamHandler($logFile, \Monolog\Logger::DEBUG));
-                $log->debug('GetLowestOfferListingsForSKU', [$this->dom_xml_arr]);
-                return $this;
-            }
-            $iReportDate = mktime(0, 0, 0, date("n"), date("j"), date("Y"));
-            $aOffers = AmazonHelper::parseAmazonOffers($this->dom_xml_arr, $this->aProducts);
+            $aSKUs = array_map(function ($oP) {return $oP->productcode;}, $this->aProducts);
+            try {
+                $aa = $client->getLowestOfferListingsForSKU([
+                    'SellerId' => MERCHANT_ID,
+                    'MarketplaceId' => MARKETPLACE_ID,
+                    'SellerSKUList' => ['SellerSKU' => $aSKUs],
+                    'ItemCondition' => "New",
+                    'ExcludeMe' => true
+                ]);
+                //$res = $aa->getGetLowestOfferListingsForSKUResult();
+                $this->dom_xml_arr = $aa->toXML(); //@TODO rewrite to Amazon Models
 
-            if (!empty($aOffers)) {
-                foreach ($aOffers as $aOffer) {
-                    $aOffer['report_date'] = $iReportDate;
-                    $params = ['productcode' => $aOffer['productcode'], 'productid' => $aOffer['productid'], 'report_date' => $aOffer['report_date']];
-                    if ($oAmazonFbaProductModel = AmazonHelper::getAmazonFbaProductModel($params)) {
-                        $oAmazonFbaProductModel->setAttributes($aOffer);
-                        if ($oAmazonFbaProductModel->productid) {
-                            $oAmazonFbaProductModel->save();
+                if ($this->bEnableLog && $this->sLogPrefix) {
+                    $log = new Logger('amazon_info');
+                    $logFile = sprintf("../var/log/{$this->sLogPrefix}-%s.log", date('ymd'));
+                    $log->pushHandler(new StreamHandler($logFile, Logger::DEBUG));
+                    $log->debug($this->dom_xml_arr);
+                }
+
+                $iReportDate = mktime(0, 0, 0, date("n"), date("j"), date("Y"));
+                $aOffers = AmazonHelper::parseAmazonOffers($this->dom_xml_arr, $this->aProducts);
+
+                if (!empty($aOffers)) {
+                    foreach ($aOffers as $aOffer) {
+                        $aOffer['report_date'] = $iReportDate;
+                        $params = ['productcode' => $aOffer['productcode'], 'productid' => $aOffer['productid'], 'report_date' => $aOffer['report_date']];
+                        if ($oAmazonFbaProductModel = AmazonHelper::getAmazonFbaProductModel($params)) {
+                            $oAmazonFbaProductModel->setAttributes($aOffer);
+                            if ($oAmazonFbaProductModel->productid) {
+                                $oAmazonFbaProductModel->save();
+                            }
                         }
                     }
                 }
+            } catch(MarketplaceWebServiceProducts_Exception $e){
+                $this->dom_xml_arr['Caught_Exception'] = (string) $e->getErrorMessage();
+                $this->dom_xml_arr['Response_Status_Code'] = $e->getStatusCode();
             }
         }
         return $this;
     }
 
+    /**
+     * @return $this
+     */
     public function doGetCompetitivePricing()
     {
+        $this->dom_xml_arr = null;
         if (!empty($this->aProducts)) {
-            $request = new \MarketplaceWebServiceProducts_Model_GetCompetitivePricingForSKURequest();
-            $request->setSellerId(MERCHANT_ID);
-            $request->setMarketplaceId(MARKETPLACE_ID);
-            $SellerSKUList = new \MarketplaceWebServiceProducts_Model_SellerSKUListType();
+            $client = new MwsProductClient(
+                AWS_ACCESS_KEY_ID,
+                AWS_SECRET_ACCESS_KEY,
+                APPLICATION_NAME,
+                APPLICATION_VERSION,
+                ['ServiceURL' => $this->sServiceUrl]
+            );
+
             $aSKUs = array_map(function ($oP) {
                 return $oP->productcode;
             }, $this->aProducts);
-            $SellerSKUList->setSellerSKU($aSKUs);
-            $request->setSellerSKUList($SellerSKUList);
-            $this->dom_xml_arr = AmazonHelper::invokeGetCompetitivePricingForSKU($request, $this->oMWSService);
-            if (!empty($this->dom_xml_arr["Caught_Exception"]) && $this->dom_xml_arr["Caught_Exception"] == "Request is throttled" && $this->dom_xml_arr["Response_Status_Code"] == "503") {
-                return $this;
-            }
-            if ($this->bEnableLog && $this->sLogPrefix) {
-                $log = new \Monolog\Logger('amazon_info');
-                $logFile = sprintf("../var/log/{$this->sLogPrefix}-%s.log", date('ymd'));
-                $log->pushHandler(new \Monolog\Handler\StreamHandler($logFile, \Monolog\Logger::DEBUG));
-                $log->debug('GetCompetitivePricing', [$this->dom_xml_arr]);
-            }
-            if (is_array($this->dom_xml_arr)) {
-                $log = new \Monolog\Logger('amazon_info_error');
-                $logFile = sprintf("../var/log/{$this->sLogPrefix}-%s.log", date('ymd'));
-                $log->pushHandler(new \Monolog\Handler\StreamHandler($logFile, \Monolog\Logger::DEBUG));
-                $log->debug('GetCompetitivePricing', [$this->dom_xml_arr]);
-                return $this;
-            }
-            $this->dom_xml_arr = str_replace('http://mws.amazonservices.com/schema/Products/2011-10-01', '', $this->dom_xml_arr);
-            $docShipping = new \DOMDocument;
-            $docShipping->loadXML($this->dom_xml_arr);
-            $xpath = new \DOMXPath($docShipping);
-            $aCompetitivePricingForSKUResult = $xpath->query('/*/GetCompetitivePricingForSKUResult');
-            /** @var \DOMElement[] $aCompetitivePricingForSKUResult */
-            foreach ($aCompetitivePricingForSKUResult as $aCompetitivePricing) {
-                $sSKU = $aCompetitivePricing->getAttribute('SellerSKU');
-                $sStatus = $aCompetitivePricing->getAttribute('status');
-                $iReportDate = mktime(0, 0, 0, date("n"), date("j"), date("Y"));
-                $aProductModels = array_filter(
-                    $this->aProducts,
-                    function ($e) use ($sSKU) {
-                        return $e->productcode == $sSKU;
-                    });
-                $oProductModel = reset($aProductModels);
-                if ($oProductModel) {
-                    $params = ['productcode' => $sSKU, 'productid' => $oProductModel->productid, 'report_date' => $iReportDate];
-                    if ($oAmazonProductModel = AmazonHelper::getAmazonFbaProductModel($params)) {
-                        $oAmazonProductModel->report_date = $iReportDate;
-                        $aSalesRanking = $aCompetitivePricing->getElementsByTagName('SalesRankings');
-                        if ($aSalesRanking->length) {
-                            /** @var \DOMElement[] $aSalesRanking */
-                            foreach ($aSalesRanking as $SalesRanking) {
-                                $aSalesRank = $SalesRanking->getElementsByTagName('SalesRank');
-                                if (!empty($aSalesRank)) {
-                                    /** @var \DOMElement[] $aSalesRank */
-                                    foreach ($aSalesRank as $SalesRank) {
-                                        $aRank = $SalesRank->getElementsByTagName('Rank');
-                                        if (!empty($aRank)) {
-                                            foreach ($aRank as $Rank) {
-                                                $oAmazonProductModel->cpr_SalesRank = max(intval($Rank->nodeValue), $oAmazonProductModel->cpr_SalesRank);
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        $aCompetitivePrice = $aCompetitivePricing->getElementsByTagName('CompetitivePrice');
-                        if ($aCompetitivePrice->length) {
-                            /** @var \DOMElement[] $aCompetitivePrice */
-                            foreach ($aCompetitivePrice as $CompetitivePrice) {
-                                if ($CompetitivePrice->getAttribute('condition') == 'New' && $CompetitivePrice->getAttribute('subcondition') == 'New') {
-                                    $sLandedPrice = '';
-                                    $aLandedPrice = $CompetitivePrice->getElementsByTagName('LandedPrice');
-                                    if (!empty($aLandedPrice)) {
-                                        $aAmount = $aLandedPrice->item(0)->getElementsByTagName('Amount');
-                                        if (!empty($aAmount)) {
-                                            $sLandedPrice = $aAmount->item(0)->nodeValue;
-                                        }
-                                    } else {
-                                        $aListingPrice = $CompetitivePrice->getElementsByTagName('ListingPrice');
-                                        if (!empty($aListingPrice)) {
-                                            $aAmount = $aListingPrice->item(0)->getElementsByTagName('Amount');
-                                            if (!empty($aAmount)) {
-                                                $sLandedPrice = $aAmount->item(0)->nodeValue;
-                                            }
-                                        }
-                                    }
-                                    if ($sLandedPrice) {
-                                        switch ($CompetitivePrice->getAttribute('belongsToRequester')) {
-                                            case 'true':
-                                                $oAmazonProductModel->cpr_belongs_LandedPrice = $sLandedPrice;
-                                                $oAmazonProductModel->buybox_in++;
-                                                break;
-                                            case 'false':
-                                                $oAmazonProductModel->cpr_LandedPrice = $sLandedPrice;
-                                                $oAmazonProductModel->buybox_out++;
-                                                break;
-                                        }
-                                    }
-                                }
-                            }
-                        }
+            try {
+                $aa = $client->getCompetitivePricingForSKU([
+                    'SellerId' => MERCHANT_ID,
+                    'MarketplaceId' => MARKETPLACE_ID,
+                    'SellerSKUList' => ['SellerSKU' => $aSKUs]
+                ]);
+                if ($this->bEnableLog && $this->sLogPrefix) {
+                    $log = new Logger('amazon_info');
+                    $logFile = sprintf("../var/log/{$this->sLogPrefix}-%s.log", date('ymd'));
+                    $log->pushHandler(new StreamHandler($logFile, Logger::DEBUG));
+                    $log->debug($aa->toXML());
+                }
+                $res = $aa->getGetCompetitivePricingForSKUResult();
+                /** @var MarketplaceWebServiceProducts_Model_GetCompetitivePricingForSKUResult $r */
+                foreach ($res as $r) {
+                    /** @var MarketplaceWebServiceProducts_Model_Product $p */
+                    if ($p = $r->getProduct()) {
+                        /** @var MarketplaceWebServiceProducts_Model_IdentifierType $identifier */
+                        $identifier = $p->getIdentifiers();
+                        /** @var MarketplaceWebServiceProducts_Model_SellerSKUIdentifier $skuIdentifier */
+                        $skuIdentifier = $identifier->getSKUIdentifier();
+                        $sSKU = $skuIdentifier->getSellerSKU();
+                        $aProductModels = array_filter(
+                            $this->aProducts,
+                            function ($e) use ($sSKU) {
+                                return $e->productcode == $sSKU;
+                            });
+                        $oProductModel = reset($aProductModels);
+                        $iReportDate = mktime(0, 0, 0, date("n"), date("j"), date("Y"));
 
-                        if ($oAmazonProductModel->productid) {
-                            if ($sStatus == 'ClientError') {
-                                $oAmazonProductModel->ASIN = 'invalid SellerSKU';
-                            } else {
-                                $aASIN = $aCompetitivePricing->getElementsByTagName('ASIN');
-                                if ($aASIN->length) {
-                                    $oAmazonProductModel->ASIN = $aASIN->item(0)->nodeValue;
+                        if ($oProductModel) {
+                            $params = ['productcode' => $sSKU, 'productid' => $oProductModel->productid, 'report_date' => $iReportDate];
+                            if ($oAmazonProductModel = AmazonHelper::getAmazonFbaProductModel($params)) {
+                                $oAmazonProductModel->report_date = $iReportDate;
+                                /** @var MarketplaceWebServiceProducts_Model_SalesRankList $sRanks */
+                                $sRanks = $p->getSalesRankings();
+                                if ($srl = $sRanks->getSalesRank()) {
+                                    /** @var MarketplaceWebServiceProducts_Model_SalesRankType $sr */
+                                    foreach ($srl as $sr) {
+                                        $oAmazonProductModel->cpr_SalesRank = max(intval($sr->getRank()), $oAmazonProductModel->cpr_SalesRank);
+                                    }
                                 }
+                                /** @var MarketplaceWebServiceProducts_Model_CompetitivePricingType $comPricing */
+                                $comPricing = $p->getCompetitivePricing();
+                                /** @var MarketplaceWebServiceProducts_Model_CompetitivePriceList $comPrices */
+                                $comPrices = $comPricing->getCompetitivePrices();
+                                if ($cpl = $comPrices->getCompetitivePrice()) {
+                                    /** @var MarketplaceWebServiceProducts_Model_CompetitivePriceType $cp */
+                                    foreach ($cpl as $cp) {
+                                        if ($cp->getcondition() == 'New' && $cp->getsubcondition() == 'New') {
+                                            /** @var MarketplaceWebServiceProducts_Model_PriceType $price */
+                                            $price = $cp->getPrice();
+                                            if ($cp->getbelongsToRequester() == 'true') {
+                                                /** @var MarketplaceWebServiceProducts_Model_MoneyType $lPrice */
+                                                $lPrice = $price->getLandedPrice();
+                                                $oAmazonProductModel->cpr_belongs_LandedPrice = $lPrice->getAmount();
+                                                $oAmazonProductModel->buybox_in++;
+                                            } else {
+                                                $lPrice = $price->getListingPrice();
+                                                $oAmazonProductModel->cpr_LandedPrice = $lPrice->getAmount();
+                                                $oAmazonProductModel->buybox_out++;
+                                            }
+                                        }
+                                    }
+                                }
+
+                                /** @var MarketplaceWebServiceProducts_Model_ASINIdentifier $identifierASIN */
+                                $identifierASIN = $identifier->getMarketplaceASIN();
+                                $sAsin = $identifierASIN->getASIN();
+                                if (!empty($sAsin)) {
+                                    $oAmazonProductModel->ASIN = $sAsin;
+                                }
+                                $oAmazonProductModel->save();
                             }
-                            $oAmazonProductModel->save();
                         }
                     }
                 }
+            } catch (MarketplaceWebServiceProducts_Exception $e) {
+                $this->dom_xml_arr["Caught_Exception"] = (string)$e->getErrorMessage();
+                $this->dom_xml_arr["Response_Status_Code"] = $e->getStatusCode();
             }
-
         }
         return $this;
     }
 
     public function doListInventorySupply()
     {
+        $this->dom_xml_arr = null;
         if (!empty($this->aProducts)) {
-            while (!empty($this->nextToken)) {
-                if ($this->nextToken == 'start') {
-                    $request = new \FBAInventoryServiceMWS_Model_ListInventorySupplyRequest();
-                    $request->setSellerId(MERCHANT_ID);
-                    $aSKUs = array_map(function ($oP) {
-                        return $oP->productcode;
-                    }, $this->aProducts);
-                    $sellerSKUs = new \FBAInventoryServiceMWS_Model_SellerSkuList();
-                    $sellerSKUs->setmember($aSKUs);
-                    $request->setSellerSkus($sellerSKUs);
-                    $this->dom_xml_arr = AmazonHelper::invokeListInventorySupply($request, $this->oMWSService);
-                } else {
-                    $request = new \FBAInventoryServiceMWS_Model_ListInventorySupplyByNextTokenRequest();
-                    $request->setSellerId(MERCHANT_ID);
-                    $request->setNextToken($this->nextToken);
-                    $this->dom_xml_arr = AmazonHelper::invokeListInventorySupplyByNextToken($request, $this->oMWSService);
-                }
-                if (!empty($this->dom_xml_arr["Caught_Exception"]) && $this->dom_xml_arr["Caught_Exception"] == "Request is throttled" && $this->dom_xml_arr["Response_Status_Code"] == "503") {
-                    return $this;
-                }
-                if ($this->bEnableLog && $this->sLogPrefix) {
-                    $log = new \Monolog\Logger('amazon_info');
-                    $logFile = sprintf("../var/log/{$this->sLogPrefix}-%s.log", date('ymd'));
-                    $log->pushHandler(new \Monolog\Handler\StreamHandler($logFile, \Monolog\Logger::DEBUG));
-                    $log->debug('ListInventorySupply', [$this->dom_xml_arr]);
-                }
-                if (!empty($this->dom_xml_arr) && !is_array($this->dom_xml_arr)) {
+            $client = new \FBAInventoryServiceMWS_Client(
+                AWS_ACCESS_KEY_ID,
+                AWS_SECRET_ACCESS_KEY,
+                ['ServiceURL' => $this->sServiceUrl],
+                APPLICATION_NAME,
+                APPLICATION_VERSION
+            );
+            $aSKUs = array_map(function ($oP) {return $oP->productcode;}, $this->aProducts);
+            try {
+                $aa = $client->listInventorySupply([
+                    'SellerId' => MERCHANT_ID,
+                    'MarketplaceId' => MARKETPLACE_ID,
+                    'SellerSkus' => ['member' => $aSKUs]
+                ]);
+                if ($res = $aa->getListInventorySupplyResult()->getInventorySupplyList()->getmember()) {
                     $iReportDate = mktime(0, 0, 0, date("n"), date("j"), date("Y"));
-                    $this->dom_xml_arr = str_replace('http://mws.amazonaws.com/FulfillmentInventory/2010-10-01/', '', $this->dom_xml_arr);
-                    $docShipping = new \DOMDocument;
-                    $docShipping->loadXML($this->dom_xml_arr);
-                    $xpath = new \DOMXPath($docShipping);
-                    $aInventorySupplyList = $xpath->query('/*/*/InventorySupplyList/member');
-                    if (!empty($aInventorySupplyList)) {
-                        /** @var \DOMElement[] $aInventorySupplyList */
-                        foreach ($aInventorySupplyList as $InventorySupplyList) {
-                            $aTotalSupplyQuantity = $InventorySupplyList->getElementsByTagName('TotalSupplyQuantity');
-                            $aInStockSupplyQuantity = $InventorySupplyList->getElementsByTagName('InStockSupplyQuantity');
-                            $aASIN = $InventorySupplyList->getElementsByTagName('ASIN');
-                            $aSKU = $InventorySupplyList->getElementsByTagName('SellerSKU');
-                            if (!empty($aSKU)) {
-                                $sSKU = $aSKU->item(0)->nodeValue;
-                                $aProductModels = array_filter(
-                                    $this->aProducts,
-                                    function ($e) use ($sSKU) {
-                                        return $e->productcode == $sSKU;
-                                    });
-                                if (!empty($aProductModels)) {
-                                    $oProductModel = reset($aProductModels);
-                                    $params = ['productcode' => $sSKU, 'productid' => $oProductModel->productid, 'report_date' => $iReportDate];
-                                    $oAmazonProductModel = AmazonHelper::getAmazonFbaProductModel($params);
-                                    if ($aASIN->length) {
-                                        $oAmazonProductModel->ASIN = $aASIN->item(0)->nodeValue;
-                                    }
-                                    if ($aTotalSupplyQuantity->length) {
-                                        $oAmazonProductModel->lis_TotalSupplyQuantity = $aTotalSupplyQuantity->item(0)->nodeValue;
-                                    }
-                                    if ($aInStockSupplyQuantity->length) {
-                                        $oAmazonProductModel->lis_InStockSupplyQuantity = $aInStockSupplyQuantity->item(0)->nodeValue;
-                                    }
-                                    $oAmazonProductModel->report_date = $iReportDate;
-                                    if ($oAmazonProductModel->productid) {
-                                        $oAmazonProductModel->save();
-                                    }
-                                }
+                    foreach ($res as $r) {
+                        $totalSupplyQuantity = $r->getTotalSupplyQuantity();
+                        $inStockSupplyQuantity = $r->getInStockSupplyQuantity();
+                        $sASIN = $r->getASIN();
+                        $sSKU = $r->getSellerSKU();
+                        $aProductModels = array_filter($this->aProducts, function ($e) use ($sSKU) {
+                            return $e->productcode == $sSKU;
+                        });
+                        if (!empty($aProductModels)) {
+                            $oProductModel = reset($aProductModels);
+                            $params = ['productcode' => $sSKU, 'productid' => $oProductModel->productid, 'report_date' => $iReportDate];
+                            $oAmazonProductModel = AmazonHelper::getAmazonFbaProductModel($params);
+                            if (!empty($sASIN)) {
+                                $oAmazonProductModel->ASIN = $sASIN;
+                            }
+                            if (!is_null($totalSupplyQuantity)) {
+                                $oAmazonProductModel->lis_TotalSupplyQuantity = $totalSupplyQuantity;
+                            }
+                            if (!is_null($inStockSupplyQuantity)) {
+                                $oAmazonProductModel->lis_InStockSupplyQuantity = $inStockSupplyQuantity;
+                            }
+                            $oAmazonProductModel->report_date = $iReportDate;
+                            if ($oAmazonProductModel->productid) {
+                                $oAmazonProductModel->save();
                             }
                         }
                     }
-                    $this->nextToken = $xpath->query('/*/*/NextToken')->item(0)->nodeValue;
-                } else {
-                    break;
                 }
+            } catch(FBAInventoryServiceMWS_Exception $e){
+                $this->dom_xml_arr["Caught_Exception"] = (string) $e->getErrorMessage();
+                $this->dom_xml_arr["Response_Status_Code"] = $e->getStatusCode();
             }
-            $this->nextToken = 'start';
         }
         return $this;
     }
@@ -2134,9 +2157,9 @@ SQL;
                 return $this;
             }
             if ($this->bEnableLog && $this->sLogPrefix) {
-                $log = new \Monolog\Logger('amazon_info');
+                $log = new Logger('amazon_info');
                 $logFile = sprintf("../var/log/{$this->sLogPrefix}-%s.log", date('ymd'));
-                $log->pushHandler(new \Monolog\Handler\StreamHandler($logFile, \Monolog\Logger::DEBUG));
+                $log->pushHandler(new StreamHandler($logFile, Logger::DEBUG));
                 $log->debug('ListInboundItems', [$this->dom_xml_arr]);
             }
 

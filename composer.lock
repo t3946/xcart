@@ -44,7 +44,7 @@
                 "amazon",
                 "mws"
             ],
-            "time": "2017-03-28T15:17:10+00:00"
+            "time": "2017-03-28 15:17:10"
         },
         {
             "name": "doctrine/annotations",
@@ -517,16 +517,16 @@
         },
         {
             "name": "fenom/fenom",
-            "version": "2.11.6",
+            "version": "2.11.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fenom-template/fenom.git",
-                "reference": "7d0db43050122d56ec3fb76700f07bad8fc10a91"
+                "reference": "87303434425f0b9df923b7cd303e7e827d1ba3c3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fenom-template/fenom/zipball/7d0db43050122d56ec3fb76700f07bad8fc10a91",
-                "reference": "7d0db43050122d56ec3fb76700f07bad8fc10a91",
+                "url": "https://api.github.com/repos/fenom-template/fenom/zipball/87303434425f0b9df923b7cd303e7e827d1ba3c3",
+                "reference": "87303434425f0b9df923b7cd303e7e827d1ba3c3",
                 "shasum": ""
             },
             "require": {
@@ -563,7 +563,7 @@
                 "templater",
                 "templating"
             ],
-            "time": "2017-04-22T19:48:52+00:00"
+            "time": "2017-05-23T08:21:35+00:00"
         },
         {
             "name": "firebase/php-jwt",
@@ -1078,16 +1078,16 @@
         },
         {
             "name": "jaybizzle/crawler-detect",
-            "version": "v1.2.42",
+            "version": "v1.2.43",
             "source": {
                 "type": "git",
                 "url": "https://github.com/JayBizzle/Crawler-Detect.git",
-                "reference": "76fdb6855d3490b2b24f7b19f22fcd661c22f7d0"
+                "reference": "75628e4606c0a6e8cdacac4ac190be7386408b5b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/JayBizzle/Crawler-Detect/zipball/76fdb6855d3490b2b24f7b19f22fcd661c22f7d0",
-                "reference": "76fdb6855d3490b2b24f7b19f22fcd661c22f7d0",
+                "url": "https://api.github.com/repos/JayBizzle/Crawler-Detect/zipball/75628e4606c0a6e8cdacac4ac190be7386408b5b",
+                "reference": "75628e4606c0a6e8cdacac4ac190be7386408b5b",
                 "shasum": ""
             },
             "require": {
@@ -1122,7 +1122,7 @@
                 "crawlerdetect",
                 "php crawler detect"
             ],
-            "time": "2017-05-15T08:27:52+00:00"
+            "time": "2017-05-29T20:35:19+00:00"
         },
         {
             "name": "league/flysystem",
@@ -1718,16 +1718,16 @@
         },
         {
             "name": "symfony/http-foundation",
-            "version": "v2.8.20",
+            "version": "v2.8.21",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/http-foundation.git",
-                "reference": "cfa9013809ad18514855144d14bb321cf4673561"
+                "reference": "03bf5ded5a4b54473e7551df5cfab854f7434ed4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/http-foundation/zipball/cfa9013809ad18514855144d14bb321cf4673561",
-                "reference": "cfa9013809ad18514855144d14bb321cf4673561",
+                "url": "https://api.github.com/repos/symfony/http-foundation/zipball/03bf5ded5a4b54473e7551df5cfab854f7434ed4",
+                "reference": "03bf5ded5a4b54473e7551df5cfab854f7434ed4",
                 "shasum": ""
             },
             "require": {
@@ -1769,7 +1769,7 @@
             ],
             "description": "Symfony HttpFoundation Component",
             "homepage": "https://symfony.com",
-            "time": "2017-05-01T14:31:55+00:00"
+            "time": "2017-05-19T11:49:58+00:00"
         },
         {
             "name": "symfony/polyfill-mbstring",
@@ -1946,7 +1946,7 @@
         },
         {
             "name": "symfony/translation",
-            "version": "v2.8.20",
+            "version": "v2.8.21",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/translation.git",
@@ -2010,7 +2010,7 @@
         },
         {
             "name": "symfony/validator",
-            "version": "v2.8.20",
+            "version": "v2.8.21",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/validator.git",

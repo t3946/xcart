@@ -1238,4 +1238,30 @@ class OrderGroup extends Data
         }
         return $aShippingRates;
     }
+
+    public function getTotalProductPrice()
+    {
+        $result = null;
+        $aOrderDetails = $this->getOrderDetails();
+        if (!empty($aOrderDetails)) {
+            foreach ($aOrderDetails as $oOrderDetail) {
+                $result += $oOrderDetail->getTotalProductPrice();
+            }
+
+        }
+        return $result;
+    }
+
+    public function getTotalProductAmount()
+    {
+        $result = null;
+        $aOrderDetails = $this->getOrderDetails();
+        if (!empty($aOrderDetails)) {
+            foreach ($aOrderDetails as $oOrderDetail) {
+                $result += $oOrderDetail->getAmount();
+            }
+
+        }
+        return $result;
+    }
 }
