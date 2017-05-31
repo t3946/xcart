@@ -1,6 +1,7 @@
 <?php
 use Modules\Order\Models\OrderTransactionModel;
 use Modules\Order\Models\TransactionLogModel;
+use Modules\Payment\Gateways\Gateway;
 use Xcart\Paypal;
 
 global $REQUEST_METHOD, $mode, $top_message, $order_transaction_id, $paypal_vt, $transaction_status, $AJAX_SUBMIT, $login;
@@ -44,45 +45,47 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array("auth
         }
     }
 
-    if ($mode == "authorize") {
-        $log .= "'Authorize' at 'Authorization'";
-        if (!empty($Access_Token)) {
-            switch ($paypal_vt["card_number"]{0}) {
-                case '3':
-                    $credit_card_typy = "amex";
-                    break;
-                case '4':
-                    $credit_card_typy = "visa";
-                    break;
-                case '5':
-                    $credit_card_typy = "mastercard";
-                    break;
-                case '6':
-                    $credit_card_typy = "discover";
-                    break;
-                default:
-                    $credit_card_typy = "";
-            }
-            foreach ($paypal_vt as $key => $val) {
-                $val = func_stripslashes(func_html_entity_decode($val));
-                $val = htmlspecialchars_decode($val, ENT_QUOTES);
-                $paypal_vt[$key] = $val;
-            }
-            $cardholderl_name = trim($paypal_vt["cardholderl_name"]);
-            $cardholderl_name_arr = explode(" ", $cardholderl_name);
-            $first_name = trim($cardholderl_name_arr[0]);
-            unset($cardholderl_name_arr[0]);
-            $last_name = implode(" ", $cardholderl_name_arr);
-            $last_name = trim($last_name);
-            $shipping_address_type = 'residential';
-            if (!empty($order["extra"]["additional_fields"]) && is_array($order["extra"]["additional_fields"])) {
-                foreach ($order["extra"]["additional_fields"] as $k_ea => $v_ea) {
-                    if (!empty($v_ea["value"]) && $v_ea["title"] == "Company" && $v_ea["section"] == "S") {
-                        $shipping_address_type = 'business';
+    $gw = Gateway::getGateway($orderTransaction->payment_method_model);
+    switch($mode) {
+        case 'authorize' :
+            $log .= "'Authorize' at 'Authorization'";
+            if (!empty($Access_Token)) {
+                switch ($paypal_vt["card_number"]{0}) {
+                    case '3':
+                        $credit_card_typy = "amex";
+                        break;
+                    case '4':
+                        $credit_card_typy = "visa";
+                        break;
+                    case '5':
+                        $credit_card_typy = "mastercard";
+                        break;
+                    case '6':
+                        $credit_card_typy = "discover";
+                        break;
+                    default:
+                        $credit_card_typy = "";
+                }
+                foreach ($paypal_vt as $key => $val) {
+                    $val = func_stripslashes(func_html_entity_decode($val));
+                    $val = htmlspecialchars_decode($val, ENT_QUOTES);
+                    $paypal_vt[$key] = $val;
+                }
+                $cardholderl_name = trim($paypal_vt["cardholderl_name"]);
+                $cardholderl_name_arr = explode(" ", $cardholderl_name);
+                $first_name = trim($cardholderl_name_arr[0]);
+                unset($cardholderl_name_arr[0]);
+                $last_name = implode(" ", $cardholderl_name_arr);
+                $last_name = trim($last_name);
+                $shipping_address_type = 'residential';
+                if (!empty($order["extra"]["additional_fields"]) && is_array($order["extra"]["additional_fields"])) {
+                    foreach ($order["extra"]["additional_fields"] as $k_ea => $v_ea) {
+                        if (!empty($v_ea["value"]) && $v_ea["title"] == "Company" && $v_ea["section"] == "S") {
+                            $shipping_address_type = 'business';
+                        }
                     }
                 }
-            }
-            $data_json = '{
+                $data_json = '{
 		        "intent":"authorize",
 		        "payer":{
                 		"payment_method":"credit_card",
@@ -138,122 +141,194 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array("auth
 		                }
 		        ]
 		}';
-            //$count_transactions = func_query_first_cell("SELECT COUNT(*) FROM $sql_tbl[order_transactions] WHERE transaction_status!='' AND transaction_id!='' AND orderid='$orderid'");
-            $count_transactions = OrderTransactionModel::objects()
-                ->filter(['orderid' => $orderid])
-                ->exclude(['transaction_status' => '', 'transaction_id' => ''])
-                ->count();
-            $allowed_statuses_flag = func_check_for_the_allowed_statuses_for_create_payment($order);
-            if (($allowed_statuses_flag && empty($count_transactions) && (empty($AJAX_SUBMIT) || $AJAX_SUBMIT != "Y")) || $count_transactions >= 1) {
-                $result = func_paypal_create_payment($Access_Token, $data_json);
-            } else {
-                $result = false;
-                if (!$allowed_statuses_flag && empty($count_transactions) && (empty($AJAX_SUBMIT) || $AJAX_SUBMIT != "Y")) {
+                //$count_transactions = func_query_first_cell("SELECT COUNT(*) FROM $sql_tbl[order_transactions] WHERE transaction_status!='' AND transaction_id!='' AND orderid='$orderid'");
+                $count_transactions = OrderTransactionModel::objects()
+                    ->filter(['orderid' => $orderid])
+                    ->exclude(['transaction_status' => '', 'transaction_id' => ''])
+                    ->count();
+                $allowed_statuses_flag = func_check_for_the_allowed_statuses_for_create_payment($order);
+                if (($allowed_statuses_flag && empty($count_transactions) && (empty($AJAX_SUBMIT) || $AJAX_SUBMIT != "Y")) || $count_transactions >= 1) {
+                    $result = func_paypal_create_payment($Access_Token, $data_json);
+                } else {
+                    $result = false;
+                    if (!$allowed_statuses_flag && empty($count_transactions) && (empty($AJAX_SUBMIT) || $AJAX_SUBMIT != "Y")) {
 
-                    $top_message = array(
-                        'type' => 'E',
-                        'content' => func_get_langvar_by_name("lbl_first_transaction_in_order_exception")
-                    );
-                    $section_name_top_message = $top_message;
-                    x_session_save("section_name_top_message");
-                    func_header_location("order.php?orderid=" . $orderid . "&tab=y#main_order_tabs-VT");
-                }
-            }
-
-            if (in_array($result["curl_getinfo"]["http_code"], array("200", "201"))) {
-                $transaction_id = $result["transactions"][0]["related_resources"][0]["authorization"]["id"];
-                if (!empty($transaction_id)) {
-                    $result2 = func_paypal_look_up_payment($Access_Token, $transaction_id, "authorization");
-                    if (!empty($result2["links"]) && is_array($result2["links"])) {
-                        $result["links"] = $result2["links"];
+                        $top_message = array(
+                            'type' => 'E',
+                            'content' => func_get_langvar_by_name("lbl_first_transaction_in_order_exception")
+                        );
+                        $section_name_top_message = $top_message;
+                        x_session_save("section_name_top_message");
+                        func_header_location("order.php?orderid=" . $orderid . "&tab=y#main_order_tabs-VT");
                     }
-                    $log .= "<br />Transaction:" . $transaction_id;
-                    $transaction_status = $result["transactions"][0]["related_resources"][0]["authorization"]["state"];
-                    $transaction_currency = $result["transactions"][0]["related_resources"][0]["authorization"]["amount"]["currency"];
-                    $transaction_total = $result["transactions"][0]["related_resources"][0]["authorization"]["amount"]["total"];
+                }
+
+                if (in_array($result["curl_getinfo"]["http_code"], array("200", "201"))) {
+                    $transaction_id = $result["transactions"][0]["related_resources"][0]["authorization"]["id"];
+                    if (!empty($transaction_id)) {
+                        $result2 = func_paypal_look_up_payment($Access_Token, $transaction_id, "authorization");
+                        if (!empty($result2["links"]) && is_array($result2["links"])) {
+                            $result["links"] = $result2["links"];
+                        }
+                        $log .= "<br />Transaction:" . $transaction_id;
+                        $transaction_status = $result["transactions"][0]["related_resources"][0]["authorization"]["state"];
+                        $transaction_currency = $result["transactions"][0]["related_resources"][0]["authorization"]["amount"]["currency"];
+                        $transaction_total = $result["transactions"][0]["related_resources"][0]["authorization"]["amount"]["total"];
 
 //				db_query("INSERT INTO $sql_tbl[transaction_logs] (orderid, paymentid, transaction_id, transaction_status, transaction_currency, transaction_total, date, login) VALUE ('$orderid', '5', '$transaction_id', '$transaction_status', '$transaction_currency', '$transaction_total', '".time()."', '$login')");
-                    if (empty($count_transactions) && !empty($order["shipping_groups"]) && is_array($order["shipping_groups"])) {
-                        $new_cb_status_flag = false;
-                        $new_cb_status_value = func_query_first_cell("SELECT name FROM $sql_tbl[order_statuses] WHERE code='AP'");
-                        foreach ($order["shipping_groups"] as $ko => $vo) {
-                            if (in_array($vo["cb_status"], array('Q', 'N', 'I'))) {
-                                db_query("UPDATE $sql_tbl[order_groups] SET cb_status='AP' WHERE orderid='$orderid' AND manufacturerid='$ko'");
-                                $current_cb_status_value = func_query_first_cell("SELECT name FROM $sql_tbl[order_statuses] WHERE code='" . $vo["cb_status"] . "'");
-                                $log .= "<br /><B>" . $vo["all_distributor_info"]["code"] . ":</B> cb_status: " . $current_cb_status_value . " -> " . $new_cb_status_value;
-                                $new_cb_status_flag = true;
+                        if (empty($count_transactions) && !empty($order["shipping_groups"]) && is_array($order["shipping_groups"])) {
+                            $new_cb_status_flag = false;
+                            $new_cb_status_value = func_query_first_cell("SELECT name FROM $sql_tbl[order_statuses] WHERE code='AP'");
+                            foreach ($order["shipping_groups"] as $ko => $vo) {
+                                if (in_array($vo["cb_status"], array('Q', 'N', 'I'))) {
+                                    db_query("UPDATE $sql_tbl[order_groups] SET cb_status='AP' WHERE orderid='$orderid' AND manufacturerid='$ko'");
+                                    $current_cb_status_value = func_query_first_cell("SELECT name FROM $sql_tbl[order_statuses] WHERE code='" . $vo["cb_status"] . "'");
+                                    $log .= "<br /><B>" . $vo["all_distributor_info"]["code"] . ":</B> cb_status: " . $current_cb_status_value . " -> " . $new_cb_status_value;
+                                    $new_cb_status_flag = true;
+                                }
+                            }
+                            if ($new_cb_status_flag) {
+                                db_query("UPDATE $sql_tbl[orders] SET cb_status='AP' WHERE orderid='$orderid'");
+                                func_send_order_status_notification($orderid, "AP");
                             }
                         }
-                        if ($new_cb_status_flag) {
-                            db_query("UPDATE $sql_tbl[orders] SET cb_status='AP' WHERE orderid='$orderid'");
-                            func_send_order_status_notification($orderid, "AP");
-                        }
+                    } else {
+                        $log .= "<br />Failed. Empty transaction id";
                     }
                 } else {
-                    $log .= "<br />Failed. Empty transaction id";
+                    $log .= "<br />Failed. http_code: " . $result["curl_getinfo"]["http_code"];
                 }
-            } else {
-                $log .= "<br />Failed. http_code: " . $result["curl_getinfo"]["http_code"];
             }
-        } // if (!empty($Access_Token))
-    } // if ($mode == "authorize")
-    elseif ($mode == "void_transaction" && $orderTransaction && !empty($orderTransaction->transaction_id)) {
-        $log .= "'Void authorized transaction' at 'Virtual Terminal'";
-        if (!empty($Access_Token)) {
-            $result = func_paypal_void($Access_Token, $orderTransaction->transaction_id);
-            $transaction_id = $result["id"];
-            $transaction_status = $result["state"];
-            $transaction_currency = $result["amount"]["currency"];
-            $transaction_total = $result["amount"]["total"];
-        }
-    } elseif ($mode == "capture_transaction" && $orderTransaction && !empty($orderTransaction->transaction_id) && !empty($transaction_amount[$order_transaction_id])) {
-        $log .= "'Capture authorized transaction' at 'Virtual Terminal'";
-        if (!empty($Access_Token)) {
-            $data_arr["amount"]["currency"] = $orderTransaction->transaction_currency;
-            $data_arr["amount"]["total"] = $transaction_amount[$order_transaction_id];
-            $data_arr["is_final_capture"] = false; // true
-            //$result = func_paypal_capture($Access_Token, $transaction_info["transaction_id"], $data_arr);
-            $result = $oPaypal->captureTransaction($orderTransaction->transaction_id, $data_arr);
-            $aResultStates = array('pending', 'completed', 'refunded', 'partially_refunded');
-            if (!empty($result['state'])) {
-                switch ($result['state']) {
-                    case  'completed' :
-                        $log .= "<br />Transaction: {$orderTransaction->transaction_id} -> {$result['id']}";
+            break;
+        case 'void_transaction' :
+            $log .= "'Void authorized transaction' at 'Virtual Terminal'";
+            if ($orderTransaction && !empty($orderTransaction->transaction_id)) {
+                $log .= "'Void authorized transaction' at 'Virtual Terminal'";
+                if (!empty($Access_Token)) {
+                    $result = func_paypal_void($Access_Token, $orderTransaction->transaction_id);
+                    $transaction_id = $result["id"];
+                    $transaction_status = $result["state"];
+                    $transaction_currency = $result["amount"]["currency"];
+                    $transaction_total = $result["amount"]["total"];
+                }
+            }
+            break;
+        case 'capture_transaction' :
+            if ($orderTransaction && !empty($orderTransaction->transaction_id) && !empty($transaction_amount[$order_transaction_id])) {
+                $log .= "'Capture authorized transaction' at 'Virtual Terminal'";
+                if ($gw) {
+                    switch ($gw->model->module_name) {
+                        case 'BluePay' :
+                            $res = $gw
+                                ->gateway
+                                ->setToken($orderTransaction->transaction_id)
+                                ->capture([
+                                    'amount' => $transaction_amount[$order_transaction_id],
+                                    'transactionReference' => ''
+                                ])
+                                ->send();
+                            $result = $res->getData();
+                            $orderTransaction->transaction_response = $result;
+                            if ($res->isSuccessful()){
+                                $result["state"] = 'completed';
+                                $result['id'] = $res->getTransactionReference();
+                                $result["amount"]["currency"] = $orderTransaction->transaction_currency;
+                                $result["amount"]["total"] = $transaction_amount[$order_transaction_id];
+                                $transaction_id = $result["id"];
+                                $transaction_status = $result["state"];
+                                $transaction_currency = $result["amount"]["currency"];
+                                $transaction_total = $result["amount"]["total"];
+                                $orderTransaction->transaction_response =
+                                    array_merge(
+                                        $orderTransaction->transaction_response,
+                                        ['links' => [
+                                            ['rel' => 'refund']
+                                        ]]);
+                                func_send_order_status_notification($orderid, "P");
+                                $log .= "<br />Transaction: {$orderTransaction->transaction_id} -> {$result['id']}";
+                                $log .= "<br />state: " . $result["state"];
+                            } else {
+                                $log .= "<br />{$res->getMessage()}";
+                            }
+                            $orderTransaction->save();
+                            break;
+                        default:
+                            if (!empty($Access_Token)) {
+                                $data_arr["amount"]["currency"] = $orderTransaction->transaction_currency;
+                                $data_arr["amount"]["total"] = $transaction_amount[$order_transaction_id];
+                                $data_arr["is_final_capture"] = false; // true
+                                //$result = func_paypal_capture($Access_Token, $transaction_info["transaction_id"], $data_arr);
+                                $result = $oPaypal->captureTransaction($orderTransaction->transaction_id, $data_arr);
+                                $aResultStates = array('pending', 'completed', 'refunded', 'partially_refunded');
+                                if (!empty($result['state'])) {
+                                    switch ($result['state']) {
+                                        case  'completed' :
+                                            $log .= "<br />Transaction: {$orderTransaction->transaction_id} -> {$result['id']}";
+                                            $transaction_id = $result["id"];
+                                            $transaction_status = $result["state"];
+                                            $transaction_currency = $result["amount"]["currency"];
+                                            $transaction_total = $result["amount"]["total"];
+                                            func_send_order_status_notification($orderid, "P");
+                                            break;
+                                        default :
+                                            $log .= "<br />Transaction: {$orderTransaction->transaction_id} -> {$result['id']}";
+                                            $log .= "<br />state: " . $result["state"];
+                                    }
+                                } else {
+                                    if ($result['name'] == 'AUTHORIZATION_EXPIRED') {
+                                        $transaction_status = 'Expired';
+                                        $orderTransaction->transaction_status = $transaction_status;
+                                        $orderTransaction->transaction_response = $result;
+                                        $orderTransaction->save();
+                                    }
+                                    $log .= "<br />{$result['name']}";
+                                    $log .= "<br />{$result['message']}";
+                                }
+                            }
+                    }
+
+                }
+            }
+            break;
+        case 're_authorize_transaction' :
+            if ($orderTransaction && !empty($orderTransaction->transaction_id) && !empty($transaction_amount[$order_transaction_id])) {
+                $log .= "'RE-authorize transaction' at 'Virtual Terminal'";
+                if (!empty($Access_Token)) {
+                    $data_arr["amount"]["total"] = $transaction_amount[$order_transaction_id];
+                    $data_arr["amount"]["currency"] = $orderTransaction->transaction_currency;
+                    $result = func_paypal_reauthorize($Access_Token, $orderTransaction->transaction_id, $data_arr);
+                    if ($result["state"] == "authorized") {
                         $transaction_id = $result["id"];
                         $transaction_status = $result["state"];
                         $transaction_currency = $result["amount"]["currency"];
                         $transaction_total = $result["amount"]["total"];
-                        func_send_order_status_notification($orderid, "P");
-                        break;
-                    default :
-                        $log .= "<br />Transaction: {$orderTransaction->transaction_id} -> {$result['id']}";
-                        $log .= "<br />state: " . $result["state"];
+                    }
                 }
-            } else {
-                if ($result['name'] == 'AUTHORIZATION_EXPIRED') {
-                    $transaction_status = 'Expired';
-                    $orderTransaction->transaction_status = $transaction_status;
-                    $orderTransaction->transaction_response = $result;
-                    $orderTransaction->save();
+            }
+            break;
+        case 'refund_transaction' :
+            if ($mode == "refund_transaction" && $orderTransaction && !empty($orderTransaction->transaction_id) && !empty($transaction_amount[$order_transaction_id])) {
+                $log .= "'Refund transaction' at 'Virtual Terminal'";
+                if (!empty($Access_Token)) {
+                    $data_arr["amount"]["total"] = $transaction_amount[$order_transaction_id];
+                    $data_arr["amount"]["currency"] = $orderTransaction->transaction_currency;
+                    $result = func_paypal_refund($Access_Token, $orderTransaction->transaction_id, $data_arr);
+                    if (!empty($result["id"])) {
+                        $transaction_id = $result["id"];
+                        if ($result["state"] == "completed") {
+                            $transaction_status = "refunded";
+                        } else {
+                            $transaction_status = $result["state"];
+                        }
+                        $transaction_currency = $result["amount"]["currency"];
+                        $transaction_total = $result["amount"]["total"];
+                    }
                 }
-                $log .= "<br />{$result['name']}";
-                $log .= "<br />{$result['message']}";
             }
-        }
-    } elseif ($mode == "re_authorize_transaction" && $orderTransaction && !empty($orderTransaction->transaction_id) && !empty($transaction_amount[$order_transaction_id])) {
-        $log .= "'RE-authorize transaction' at 'Virtual Terminal'";
-        if (!empty($Access_Token)) {
-            $data_arr["amount"]["total"] = $transaction_amount[$order_transaction_id];
-            $data_arr["amount"]["currency"] = $orderTransaction->transaction_currency;
-            $result = func_paypal_reauthorize($Access_Token, $orderTransaction->transaction_id, $data_arr);
-            if ($result["state"] == "authorized") {
-                $transaction_id = $result["id"];
-                $transaction_status = $result["state"];
-                $transaction_currency = $result["amount"]["currency"];
-                $transaction_total = $result["amount"]["total"];
-            }
-        }
-    } elseif ($mode == "refund_transaction" && $orderTransaction && !empty($orderTransaction->transaction_id) && !empty($transaction_amount[$order_transaction_id])) {
+            break;
+    }
+
+    if ($mode == "refund_transaction" && $orderTransaction && !empty($orderTransaction->transaction_id) && !empty($transaction_amount[$order_transaction_id])) {
         $log .= "'Refund transaction' at 'Virtual Terminal'";
         if (!empty($Access_Token)) {
             $data_arr["amount"]["total"] = $transaction_amount[$order_transaction_id];
@@ -281,35 +356,59 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array("auth
     } elseif ($mode == "look_up_payment" && $orderTransaction && !empty($orderTransaction->transaction_id)) {
         $log .= "'Look up payment (Get links)' at 'Virtual Terminal'";
         $transaction_status = $orderTransaction->transaction_status;
-        if (!empty($Access_Token)) {
-            $transaction_type = "authorization";
-            if (in_array(strtolower($transaction_status), array('completed', 'p'))) {
-                $transaction_type = "capture";
-            } elseif (in_array(strtolower($transaction_status), array('refunded', 'refund'))) {
-                $transaction_type = "refund";
-            }
-            $result = func_paypal_look_up_payment($Access_Token, $orderTransaction->transaction_id, $transaction_type);
-            if (!empty($result["id"])) {
-                $transaction_id = $result["id"];
-                $transaction_total = (empty($result["amount"]["total"])) ? $orderTransaction->transaction_amount : $result["amount"]["total"];
-                switch($result['state']) {
-                    case 'expired':
-                        $transaction_status = 'Expired';
-                        break;
-                    case 'pending':
-                        $transaction_status = 'Pending';
-                        $transaction_currency = $orderTransaction->transaction_currency;
-                        break;
-                    case 'completed':
-                    case 'refunded':
-                        $transaction_status = $result['state'];
-                        $transaction_currency = $orderTransaction->transaction_currency;
-                        break;
-                }
-                $orderTransaction->transaction_status = $transaction_status;
-                $orderTransaction->transaction_response = $result;
-                $orderTransaction->transaction_amount = $transaction_total;
-                $orderTransaction->save();
+
+        if ($gw) {
+            switch($gw->model->module_name) {
+                case 'BluePay':
+                    if ($transaction_status == 'authorized') {
+                        $orderTransaction->transaction_response = ['links' => [
+                            ['rel' => 'capture'],
+                            ['rel' => 'void'],
+                            ['rel' => 'reauthorize'],
+                        ]];
+                    }
+                    if ($transaction_status == 'completed') {
+                        $orderTransaction->transaction_response = ['links' => [
+                            ['rel' => 'refund']
+                        ]];
+                    }
+                    $transaction_total = $orderTransaction->transaction_amount;
+                    $orderTransaction->save();
+                    break;
+                default:
+                    if (!empty($Access_Token)) {
+                        $transaction_type = "authorization";
+                        if (in_array(strtolower($transaction_status), array('completed', 'p'))) {
+                            $transaction_type = "capture";
+                        } elseif (in_array(strtolower($transaction_status), array('refunded', 'refund'))) {
+                            $transaction_type = "refund";
+                        }
+                        $result = func_paypal_look_up_payment($Access_Token, $orderTransaction->transaction_id, $transaction_type);
+                        if (!empty($result["id"])) {
+                            $transaction_id = $result["id"];
+                            $transaction_total = (empty($result["amount"]["total"])) ? $orderTransaction->transaction_amount : $result["amount"]["total"];
+                            switch ($result['state']) {
+                                case 'expired':
+                                    $transaction_status = 'Expired';
+                                    break;
+                                case 'pending':
+                                    $transaction_status = 'Pending';
+                                    $transaction_currency = $orderTransaction->transaction_currency;
+                                    break;
+                                case 'completed':
+                                case 'refunded':
+                                    $transaction_status = $result['state'];
+                                    $transaction_currency = $orderTransaction->transaction_currency;
+                                    break;
+                            }
+                            $orderTransaction->transaction_status = $transaction_status;
+                            $orderTransaction->transaction_response = $result;
+                            $orderTransaction->transaction_amount = $transaction_total;
+                            $orderTransaction->save();
+                        }
+                    }
+                    break;
+
             }
         }
     } elseif ($mode == "add_manual_transaction") {
