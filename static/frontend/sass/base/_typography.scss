@@ -7,3 +7,17 @@ h1, h2, h3, h4, h5, h6 {
     text-align: left;
   }
 }
+
+pre, code {
+  line-height: 1.1em;
+  padding: .7em;
+  font: {
+    size: rem-calc(12);
+    family: Menlo, 'Bitstream Vera Sans Mono', 'DejaVu Sans Mono', Monaco, Consolas, monospace;
+  }
+}
+
+code {
+  background:#F8F8FF;
+  border:black dashed 1px;
+}
