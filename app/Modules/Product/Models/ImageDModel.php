@@ -15,7 +15,7 @@ class ImageDModel extends ImageModel
 
     public static function getFields()
     {
-        return array_merge(parent::getFields(), [
+        return array_merge_recursive(parent::getFields(), [
             'image_path' => [
                 'uploadTo' => 'D/%M/%O/%Y-%m-%d',
             ]
