@@ -2,8 +2,10 @@
 
 namespace Modules\Menu\TemplateLibraries;
 
+use Mindy\QueryBuilder\Expression;
 use Mindy\QueryBuilder\Q\QOr;
 use Modules\Product\Models\CategoryModel;
+use Modules\Product\Models\ProductModel;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Template\TemplateLibrary;
 
@@ -157,14 +159,39 @@ class MenuLibrary extends TemplateLibrary
             /** @var \Modules\Sites\SitesModule $module */
             $module = Xcart::app()->getModule('Sites');
 
-            self::$root_categories = CategoryModel::objects()
-                                                    ->filter([
-                                                        new QOr(['parentid__isnull' => true, 'parentid' => 0]),
-                                                        'storefrontid' => $module->getSite()->pk,
-                                                        'avail' => 'Y'
-                                                     ])
-                                                    ->order(['order_by'])
-                                                    ->all();
+            $qs = CategoryModel::objects()
+                               ->filter([
+                                            new QOr(['parentid__isnull' => true, 'parentid' => 0]),
+                                            'storefrontid' => $module->getSite()->pk,
+                                            'avail' => 'Y',
+                                        ])
+                               ->order(['order_by']);
+
+            $ta = $qs->getTableAlias();
+
+            $pcountSql = ProductModel::objects()
+                                     ->with(['categories'])
+                                     ->filter([
+                                                  'forsale' => 'Y',
+                                                  'categories__lft__gte' => new Expression("{{category}}.lft"),
+                                                  'categories__rgt__lte' => new Expression("{{category}}.rgt"),
+                                                  'categories__root' => new Expression("{{category}}.root"),
+                                              ])
+                                     ->countSql();
+
+            $pcountSql = str_replace($ta, 'cp', $pcountSql);
+            $pcountSql = str_replace("{{category}}", $ta, $pcountSql);
+
+            $qs->with(['products']);
+            $qs->group(['categoryid']);
+            $qs->select([
+                            'pcount' => $pcountSql,
+                            '*',
+                        ]);
+
+            $qs->having(['pcount__gt' => 0]);
+
+            self::$root_categories = $qs->all();
         }
 
         return self::$root_categories;
