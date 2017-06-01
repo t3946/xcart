@@ -1,4 +1,4 @@
-{if isset($breadcrumbs) && $breadcrumbs|count > 0}
+{if isset($breadcrumbs) && $breadcrumbs|instanceof:'Xcart\App\Components\Breadcrumbs' && $breadcrumbs->get()|count > 0}
 <nav class="breadcrumbs-container">
     <section class="back show-for-small">
         <a href="#" onclick="history.back()">
@@ -17,7 +17,7 @@
             <meta itemprop="position" content="0" />
         </li>
 
-        {foreach $breadcrumbs as $item index=$index last=$last}
+        {foreach $breadcrumbs->get() as $item index=$index last=$last}
             <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
                 {if !$last || $item.url}
                     <a itemscope itemtype="http://schema.org/Thing" itemprop="item" href="{$item.url}">

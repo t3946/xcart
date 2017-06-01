@@ -102,7 +102,7 @@ class CategoryController extends Controller
                 'pager' => $pager,
                 'sort'  => $orderBy,
                 'sort_arr'  => ProductSortHelper::$orderBy,
-                'breadcrumbs' => $model->getBreadcrumbs()->get(),
+                'breadcrumbs' => $model->getBreadcrumbs(),
             ]);
         }
     }

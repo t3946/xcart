@@ -34,7 +34,7 @@ class DefaultController extends Controller
 
         echo $this->render('product/product.tpl', [
             'model' => $model,
-            'breadcrumbs' => $model->getBreadcrumbs()->get(),
+            'breadcrumbs' => $model->getBreadcrumbs(),
         ]);
 
         func_dump($model);
