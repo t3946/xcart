@@ -19,7 +19,7 @@ abstract class Gateway
      */
     public function __construct($model)
     {
-        $this->gateway = Omnipay::create($this::getProcessorName());
+        $this->gateway = Omnipay::create(static::getProcessorName());
         if ($this->gateway) {
             $this->model = $model;
             $this->init();
@@ -48,5 +48,10 @@ abstract class Gateway
     public function init()
     {
         $this->test_mode = ($this->model->testmode == 'Y');
+    }
+
+    public static function getProcessorName()
+    {
+        return null;
     }
 }
