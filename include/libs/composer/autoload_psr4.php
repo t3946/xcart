@@ -24,7 +24,7 @@ return array(
     'Psr\\Http\\Message\\' => array($vendorDir . '/psr/http-message/src'),
     'Psr\\Cache\\' => array($vendorDir . '/psr/cache/src'),
     'Omnipay\\PayPal\\' => array($vendorDir . '/omnipay/paypal/src'),
-    'Omnipay\\BluePay\\' => array($vendorDir . '/zburke/omnipay-bluepay/src'),
+    'Omnipay\\BluePay\\' => array($baseDir . '/app/Modules/Payment/Gateways/Omnipay/BluePay'),
     'Monolog\\' => array($vendorDir . '/monolog/monolog/src/Monolog'),
     'Modules\\' => array($baseDir . '/app/Modules'),
     'Mindy\\QueryBuilder\\' => array($vendorDir . '/mindy/query_builder/src'),

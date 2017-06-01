@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "b33e0a7b88cb80d2d169a09ba06d65ce",
-    "content-hash": "ca69abb99e5c48579e858175cd18042f",
+    "hash": "c8caad18aa7d5ce8a0289ae523ff8b52",
+    "content-hash": "a390bf7dc8ebff3b9ab3ab2c1c6b41f0",
     "packages": [
         {
             "name": "caponica/amazon-mws-complete",
@@ -1175,16 +1175,16 @@
         },
         {
             "name": "jaybizzle/crawler-detect",
-            "version": "v1.2.42",
+            "version": "v1.2.43",
             "source": {
                 "type": "git",
                 "url": "https://github.com/JayBizzle/Crawler-Detect.git",
-                "reference": "76fdb6855d3490b2b24f7b19f22fcd661c22f7d0"
+                "reference": "75628e4606c0a6e8cdacac4ac190be7386408b5b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/JayBizzle/Crawler-Detect/zipball/76fdb6855d3490b2b24f7b19f22fcd661c22f7d0",
-                "reference": "76fdb6855d3490b2b24f7b19f22fcd661c22f7d0",
+                "url": "https://api.github.com/repos/JayBizzle/Crawler-Detect/zipball/75628e4606c0a6e8cdacac4ac190be7386408b5b",
+                "reference": "75628e4606c0a6e8cdacac4ac190be7386408b5b",
                 "shasum": ""
             },
             "require": {
@@ -1219,7 +1219,7 @@
                 "crawlerdetect",
                 "php crawler detect"
             ],
-            "time": "2017-05-15 08:27:52"
+            "time": "2017-05-29 20:35:19"
         },
         {
             "name": "mindy/query_builder",
@@ -1227,12 +1227,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/tsukasa-mixer/QueryBuilder.git",
-                "reference": "044eef77c4efea8933e818c248c78b3f882f1767"
+                "reference": "c2f6c7fda065b3ec8da4a5280f0799b00f50b1d0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tsukasa-mixer/QueryBuilder/zipball/044eef77c4efea8933e818c248c78b3f882f1767",
-                "reference": "044eef77c4efea8933e818c248c78b3f882f1767",
+                "url": "https://api.github.com/repos/tsukasa-mixer/QueryBuilder/zipball/c2f6c7fda065b3ec8da4a5280f0799b00f50b1d0",
+                "reference": "c2f6c7fda065b3ec8da4a5280f0799b00f50b1d0",
                 "shasum": ""
             },
             "require": {
@@ -1268,7 +1268,7 @@
             "support": {
                 "source": "https://github.com/tsukasa-mixer/QueryBuilder/tree/master_5.4"
             },
-            "time": "2017-05-16 18:20:10"
+            "time": "2017-05-31 10:53:07"
         },
         {
             "name": "mobiledetect/mobiledetectlib",
@@ -2176,7 +2176,7 @@
         },
         {
             "name": "symfony/translation",
-            "version": "v2.8.20",
+            "version": "v2.8.21",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/translation.git",
@@ -2240,7 +2240,7 @@
         },
         {
             "name": "symfony/validator",
-            "version": "v2.8.20",
+            "version": "v2.8.21",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/validator.git",
@@ -2356,63 +2356,6 @@
                 "punycode"
             ],
             "time": "2016-11-16 10:37:54"
-        },
-        {
-            "name": "zburke/omnipay-bluepay",
-            "version": "1.1.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/zburke/omnipay-bluepay.git",
-                "reference": "e3e31ad88b1de46de39dded702aa73976915c942"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/zburke/omnipay-bluepay/zipball/e3e31ad88b1de46de39dded702aa73976915c942",
-                "reference": "e3e31ad88b1de46de39dded702aa73976915c942",
-                "shasum": ""
-            },
-            "require": {
-                "omnipay/common": "~2.0"
-            },
-            "require-dev": {
-                "omnipay/tests": "~2.0"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "2.0.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Omnipay\\BluePay\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Zak Burke",
-                    "email": "zak.burke@gmail.com"
-                },
-                {
-                    "name": "Omnipay Contributors",
-                    "homepage": "https://github.com/zburke/omnipay-bluepay/contributors"
-                }
-            ],
-            "description": "BluePay gateway for the Omnipay payment processing library",
-            "homepage": "https://github.com/zburke/omnipay-bluepay",
-            "keywords": [
-                "bluepay",
-                "gateway",
-                "merchant",
-                "omnipay",
-                "pay",
-                "payment"
-            ],
-            "time": "2016-07-28 11:42:07"
         }
     ],
     "packages-dev": [],

@@ -1524,56 +1524,6 @@
         ]
     },
     {
-        "name": "jaybizzle/crawler-detect",
-        "version": "v1.2.42",
-        "version_normalized": "1.2.42.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/JayBizzle/Crawler-Detect.git",
-            "reference": "76fdb6855d3490b2b24f7b19f22fcd661c22f7d0"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/JayBizzle/Crawler-Detect/zipball/76fdb6855d3490b2b24f7b19f22fcd661c22f7d0",
-            "reference": "76fdb6855d3490b2b24f7b19f22fcd661c22f7d0",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.3.0"
-        },
-        "require-dev": {
-            "phpunit/phpunit": "4.*"
-        },
-        "time": "2017-05-15 08:27:52",
-        "type": "library",
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "Jaybizzle\\CrawlerDetect\\": "src/"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Mark Beech",
-                "email": "m@rkbee.ch",
-                "role": "Developer"
-            }
-        ],
-        "description": "CrawlerDetect is a PHP class for detecting bots/crawlers/spiders via the user agent",
-        "homepage": "https://github.com/JayBizzle/Crawler-Detect/",
-        "keywords": [
-            "crawler",
-            "crawler detect",
-            "crawler detector",
-            "crawlerdetect",
-            "php crawler detect"
-        ]
-    },
-    {
         "name": "fenom/fenom",
         "version": "2.11.7",
         "version_normalized": "2.11.7.0",
@@ -1624,147 +1574,6 @@
             "templater",
             "templating"
         ]
-    },
-    {
-        "name": "symfony/translation",
-        "version": "v2.8.20",
-        "version_normalized": "2.8.20.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/symfony/translation.git",
-            "reference": "32b7c0bffc07772cf1a902e3464ef77117fa07c7"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/symfony/translation/zipball/32b7c0bffc07772cf1a902e3464ef77117fa07c7",
-            "reference": "32b7c0bffc07772cf1a902e3464ef77117fa07c7",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.3.9",
-            "symfony/polyfill-mbstring": "~1.0"
-        },
-        "conflict": {
-            "symfony/config": "<2.7"
-        },
-        "require-dev": {
-            "psr/log": "~1.0",
-            "symfony/config": "~2.8",
-            "symfony/intl": "~2.7.25|^2.8.18|~3.2.5",
-            "symfony/yaml": "~2.2|~3.0.0"
-        },
-        "suggest": {
-            "psr/log": "To use logging capability in translator",
-            "symfony/config": "",
-            "symfony/yaml": ""
-        },
-        "time": "2017-04-12 14:07:15",
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "2.8-dev"
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "Symfony\\Component\\Translation\\": ""
-            },
-            "exclude-from-classmap": [
-                "/Tests/"
-            ]
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Fabien Potencier",
-                "email": "fabien@symfony.com"
-            },
-            {
-                "name": "Symfony Community",
-                "homepage": "https://symfony.com/contributors"
-            }
-        ],
-        "description": "Symfony Translation Component",
-        "homepage": "https://symfony.com"
-    },
-    {
-        "name": "symfony/validator",
-        "version": "v2.8.20",
-        "version_normalized": "2.8.20.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/symfony/validator.git",
-            "reference": "e125c9ec86d615231817302115a1558cd74d9aa1"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/symfony/validator/zipball/e125c9ec86d615231817302115a1558cd74d9aa1",
-            "reference": "e125c9ec86d615231817302115a1558cd74d9aa1",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.3.9",
-            "symfony/polyfill-mbstring": "~1.0",
-            "symfony/translation": "~2.4|~3.0.0"
-        },
-        "require-dev": {
-            "doctrine/annotations": "~1.0",
-            "doctrine/cache": "~1.0",
-            "egulias/email-validator": "^1.2.1",
-            "symfony/config": "~2.2|~3.0.0",
-            "symfony/expression-language": "~2.4|~3.0.0",
-            "symfony/http-foundation": "~2.3|~3.0.0",
-            "symfony/intl": "~2.7.25|^2.8.18|~3.2.5",
-            "symfony/property-access": "~2.3|~3.0.0",
-            "symfony/yaml": "^2.0.5|~3.0.0"
-        },
-        "suggest": {
-            "doctrine/annotations": "For using the annotation mapping. You will also need doctrine/cache.",
-            "doctrine/cache": "For using the default cached annotation reader and metadata cache.",
-            "egulias/email-validator": "Strict (RFC compliant) email validation",
-            "symfony/config": "",
-            "symfony/expression-language": "For using the 2.4 Expression validator",
-            "symfony/http-foundation": "",
-            "symfony/intl": "",
-            "symfony/property-access": "For using the 2.4 Validator API",
-            "symfony/yaml": ""
-        },
-        "time": "2017-04-12 14:07:15",
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "2.8-dev"
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "Symfony\\Component\\Validator\\": ""
-            },
-            "exclude-from-classmap": [
-                "/Tests/"
-            ]
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Fabien Potencier",
-                "email": "fabien@symfony.com"
-            },
-            {
-                "name": "Symfony Community",
-                "homepage": "https://symfony.com/contributors"
-            }
-        ],
-        "description": "Symfony Validator Component",
-        "homepage": "https://symfony.com"
     },
     {
         "name": "doctrine/dbal",
@@ -1838,57 +1647,6 @@
             "persistence",
             "queryobject"
         ]
-    },
-    {
-        "name": "mindy/query_builder",
-        "version": "dev-master_5.4",
-        "version_normalized": "dev-master_5.4",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/tsukasa-mixer/QueryBuilder.git",
-            "reference": "044eef77c4efea8933e818c248c78b3f882f1767"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/tsukasa-mixer/QueryBuilder/zipball/044eef77c4efea8933e818c248c78b3f882f1767",
-            "reference": "044eef77c4efea8933e818c248c78b3f882f1767",
-            "shasum": ""
-        },
-        "require": {
-            "doctrine/dbal": "^2.5"
-        },
-        "require-dev": {
-            "phpunit/php-code-coverage": "^4",
-            "phpunit/phpunit": "*"
-        },
-        "time": "2017-05-16 18:20:10",
-        "type": "library",
-        "installation-source": "source",
-        "autoload": {
-            "files": [
-                "src/Conditions.php"
-            ],
-            "psr-4": {
-                "Mindy\\QueryBuilder\\": "src/"
-            }
-        },
-        "autoload-dev": {
-            "psr-4": {
-                "Mindy\\Tests\\": "test/"
-            }
-        },
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Falaleev Maxim",
-                "email": "max@studio107.ru"
-            }
-        ],
-        "support": {
-            "source": "https://github.com/tsukasa-mixer/QueryBuilder/tree/master_5.4"
-        }
     },
     {
         "name": "ircmaxell/password-compat",
@@ -2430,37 +2188,32 @@
         ]
     },
     {
-        "name": "zburke/omnipay-bluepay",
-        "version": "1.1.0",
-        "version_normalized": "1.1.0.0",
+        "name": "jaybizzle/crawler-detect",
+        "version": "v1.2.43",
+        "version_normalized": "1.2.43.0",
         "source": {
             "type": "git",
-            "url": "https://github.com/zburke/omnipay-bluepay.git",
-            "reference": "e3e31ad88b1de46de39dded702aa73976915c942"
+            "url": "https://github.com/JayBizzle/Crawler-Detect.git",
+            "reference": "75628e4606c0a6e8cdacac4ac190be7386408b5b"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/zburke/omnipay-bluepay/zipball/e3e31ad88b1de46de39dded702aa73976915c942",
-            "reference": "e3e31ad88b1de46de39dded702aa73976915c942",
+            "url": "https://api.github.com/repos/JayBizzle/Crawler-Detect/zipball/75628e4606c0a6e8cdacac4ac190be7386408b5b",
+            "reference": "75628e4606c0a6e8cdacac4ac190be7386408b5b",
             "shasum": ""
         },
         "require": {
-            "omnipay/common": "~2.0"
+            "php": ">=5.3.0"
         },
         "require-dev": {
-            "omnipay/tests": "~2.0"
+            "phpunit/phpunit": "4.*"
         },
-        "time": "2016-07-28 11:42:07",
+        "time": "2017-05-29 20:35:19",
         "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "2.0.x-dev"
-            }
-        },
         "installation-source": "dist",
         "autoload": {
             "psr-4": {
-                "Omnipay\\BluePay\\": "src/"
+                "Jaybizzle\\CrawlerDetect\\": "src/"
             }
         },
         "notification-url": "https://packagist.org/downloads/",
@@ -2469,23 +2222,211 @@
         ],
         "authors": [
             {
-                "name": "Zak Burke",
-                "email": "zak.burke@gmail.com"
-            },
-            {
-                "name": "Omnipay Contributors",
-                "homepage": "https://github.com/zburke/omnipay-bluepay/contributors"
+                "name": "Mark Beech",
+                "email": "m@rkbee.ch",
+                "role": "Developer"
             }
         ],
-        "description": "BluePay gateway for the Omnipay payment processing library",
-        "homepage": "https://github.com/zburke/omnipay-bluepay",
+        "description": "CrawlerDetect is a PHP class for detecting bots/crawlers/spiders via the user agent",
+        "homepage": "https://github.com/JayBizzle/Crawler-Detect/",
         "keywords": [
-            "bluepay",
-            "gateway",
-            "merchant",
-            "omnipay",
-            "pay",
-            "payment"
+            "crawler",
+            "crawler detect",
+            "crawler detector",
+            "crawlerdetect",
+            "php crawler detect"
         ]
+    },
+    {
+        "name": "symfony/translation",
+        "version": "v2.8.21",
+        "version_normalized": "2.8.21.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/symfony/translation.git",
+            "reference": "32b7c0bffc07772cf1a902e3464ef77117fa07c7"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/symfony/translation/zipball/32b7c0bffc07772cf1a902e3464ef77117fa07c7",
+            "reference": "32b7c0bffc07772cf1a902e3464ef77117fa07c7",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.9",
+            "symfony/polyfill-mbstring": "~1.0"
+        },
+        "conflict": {
+            "symfony/config": "<2.7"
+        },
+        "require-dev": {
+            "psr/log": "~1.0",
+            "symfony/config": "~2.8",
+            "symfony/intl": "~2.7.25|^2.8.18|~3.2.5",
+            "symfony/yaml": "~2.2|~3.0.0"
+        },
+        "suggest": {
+            "psr/log": "To use logging capability in translator",
+            "symfony/config": "",
+            "symfony/yaml": ""
+        },
+        "time": "2017-04-12 14:07:15",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "2.8-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Symfony\\Component\\Translation\\": ""
+            },
+            "exclude-from-classmap": [
+                "/Tests/"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Fabien Potencier",
+                "email": "fabien@symfony.com"
+            },
+            {
+                "name": "Symfony Community",
+                "homepage": "https://symfony.com/contributors"
+            }
+        ],
+        "description": "Symfony Translation Component",
+        "homepage": "https://symfony.com"
+    },
+    {
+        "name": "symfony/validator",
+        "version": "v2.8.21",
+        "version_normalized": "2.8.21.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/symfony/validator.git",
+            "reference": "e125c9ec86d615231817302115a1558cd74d9aa1"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/symfony/validator/zipball/e125c9ec86d615231817302115a1558cd74d9aa1",
+            "reference": "e125c9ec86d615231817302115a1558cd74d9aa1",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.9",
+            "symfony/polyfill-mbstring": "~1.0",
+            "symfony/translation": "~2.4|~3.0.0"
+        },
+        "require-dev": {
+            "doctrine/annotations": "~1.0",
+            "doctrine/cache": "~1.0",
+            "egulias/email-validator": "^1.2.1",
+            "symfony/config": "~2.2|~3.0.0",
+            "symfony/expression-language": "~2.4|~3.0.0",
+            "symfony/http-foundation": "~2.3|~3.0.0",
+            "symfony/intl": "~2.7.25|^2.8.18|~3.2.5",
+            "symfony/property-access": "~2.3|~3.0.0",
+            "symfony/yaml": "^2.0.5|~3.0.0"
+        },
+        "suggest": {
+            "doctrine/annotations": "For using the annotation mapping. You will also need doctrine/cache.",
+            "doctrine/cache": "For using the default cached annotation reader and metadata cache.",
+            "egulias/email-validator": "Strict (RFC compliant) email validation",
+            "symfony/config": "",
+            "symfony/expression-language": "For using the 2.4 Expression validator",
+            "symfony/http-foundation": "",
+            "symfony/intl": "",
+            "symfony/property-access": "For using the 2.4 Validator API",
+            "symfony/yaml": ""
+        },
+        "time": "2017-04-12 14:07:15",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "2.8-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Symfony\\Component\\Validator\\": ""
+            },
+            "exclude-from-classmap": [
+                "/Tests/"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Fabien Potencier",
+                "email": "fabien@symfony.com"
+            },
+            {
+                "name": "Symfony Community",
+                "homepage": "https://symfony.com/contributors"
+            }
+        ],
+        "description": "Symfony Validator Component",
+        "homepage": "https://symfony.com"
+    },
+    {
+        "name": "mindy/query_builder",
+        "version": "dev-master_5.4",
+        "version_normalized": "dev-master_5.4",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/tsukasa-mixer/QueryBuilder.git",
+            "reference": "c2f6c7fda065b3ec8da4a5280f0799b00f50b1d0"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/tsukasa-mixer/QueryBuilder/zipball/c2f6c7fda065b3ec8da4a5280f0799b00f50b1d0",
+            "reference": "c2f6c7fda065b3ec8da4a5280f0799b00f50b1d0",
+            "shasum": ""
+        },
+        "require": {
+            "doctrine/dbal": "^2.5"
+        },
+        "require-dev": {
+            "phpunit/php-code-coverage": "^4",
+            "phpunit/phpunit": "*"
+        },
+        "time": "2017-05-31 10:53:07",
+        "type": "library",
+        "installation-source": "source",
+        "autoload": {
+            "files": [
+                "src/Conditions.php"
+            ],
+            "psr-4": {
+                "Mindy\\QueryBuilder\\": "src/"
+            }
+        },
+        "autoload-dev": {
+            "psr-4": {
+                "Mindy\\Tests\\": "test/"
+            }
+        },
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Falaleev Maxim",
+                "email": "max@studio107.ru"
+            }
+        ],
+        "support": {
+            "source": "https://github.com/tsukasa-mixer/QueryBuilder/tree/master_5.4"
+        }
     }
 ]
