@@ -16,7 +16,6 @@ class CategoryController extends Controller
     {
         if ( $this->getRequest()->getIsPost() && !empty($_POST['sort'])) {
             $this->getRequest()->session->add('category_sort', $_POST['sort']);
-            echo $this->getRequest()->session->get('category_sort');
             echo "OK";
             Xcart::app()->end();
         }
