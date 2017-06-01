@@ -37,7 +37,7 @@ class Breadcrumbs
         return $this->_lists[$this->_active] = [];
     }
 
-    public function add($name, $url = null, $params = [])
+    public function add($name, $url = null, $params = [], $meta = [])
     {
         if (!isset($this->_lists[$this->_active])) {
             $this->_lists[$this->_active] = [];
@@ -53,7 +53,8 @@ class Breadcrumbs
         }
         $item = [
             'name' => $name,
-            'url' => $url
+            'url' => $url,
+            'meta' => $meta
         ];
         $this->_lists[$this->_active][] = $item;
     }
