@@ -17,21 +17,7 @@ if (!defined('XCART_SESSION_START')) {
 }
 
 if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array("authorize", "void_transaction", "capture_transaction", "re_authorize_transaction", "refund_transaction", "self_transaction", "look_up_payment", "add_manual_transaction"))) {
-    $log = "";
-    if (func_check_comma_in_field($orderid, $transaction_amount[$order_transaction_id], 'paypal_vt_transaction_amount')) {
-        $top_message["content"] .= func_get_langvar_by_name("lbl_error_comma_in_number");
-        $top_message["type"] = "I";
-        $section_name_top_message = $top_message;
-        x_session_save("section_name_top_message");
-        func_header_location("order.php?orderid=" . $orderid . "&tab=y#main_order_tabs-VT");
-    }
-    if (func_check_comma_in_field($orderid, $paypal_vt["grand_total"], 'paypal_vt_grand_total')) {
-        $top_message["content"] .= func_get_langvar_by_name("lbl_error_comma_in_number");
-        $top_message["type"] = "I";
-        $section_name_top_message = $top_message;
-        x_session_save("section_name_top_message");
-        func_header_location("order.php?orderid=" . $orderid . "&tab=y#main_order_tabs-VT");
-    }
+    $gw = $log = null;
     try {
         $oPaypal = new Paypal();
         $Access_Token = $oPaypal->getAccessToken();
@@ -39,8 +25,6 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array("auth
         $oPaypal = null;
         $Access_Token = null;
     }
-
-    $gw = null;
 
     if (empty($Access_Token)) {
         $log .= "'Access_Token' - failed <br />";
@@ -500,13 +484,7 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array("auth
         case 'add_manual_transaction' :
             $transaction_id = trim($transaction_id);
             $transaction_amount = trim($transaction_amount);
-            if (func_check_comma_in_field($orderid, $transaction_amount, 'manual_transaction_amount')) {
-                $top_message["content"] .= func_get_langvar_by_name("lbl_error_comma_in_number");
-                $top_message["type"] = "I";
-                $section_name_top_message = $top_message;
-                x_session_save("section_name_top_message");
-                func_header_location("order.php?orderid=" . $orderid . "&tab=y#main_order_tabs-VT");
-            }
+
             if (empty($transaction_amount) || $transaction_amount <= 0 || empty($paymentid) || empty($transaction_id)) {
                 $top_message = array(
                     'type' => 'I',
@@ -516,6 +494,7 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array("auth
                 x_session_save("section_name_top_message");
                 func_header_location("order.php?orderid=" . $orderid . "&tab=y#main_order_tabs-VT");
             }
+
             if ($transaction_status == "authorized") {
                 $transaction_type = "authorization";
                 $set_cb_status_for_first_transaction = "AP";
@@ -523,7 +502,6 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array("auth
                 $transaction_type = "capture";
                 $set_cb_status_for_first_transaction = "P";
             }
-            //$count_transactions = func_query_first_cell("SELECT COUNT(*) FROM $sql_tbl[order_transactions] WHERE transaction_status!='' AND transaction_id!='' AND orderid='$orderid'");
             $count_transactions = OrderTransactionModel::objects()
                 ->filter(['orderid' => $orderid])
                 ->exclude(['transaction_status' => '', 'transaction_id' => ''])
@@ -570,11 +548,7 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array("auth
     $result["POST_params"] = $data_arr;
     $serialize_result = serialize($result);
     if (empty($paymentid)) {
-        if ($gw) {
-            $paymentid = $gw->model->paymentid;
-        } else {
-            $paymentid = "5";
-        }
+        $paymentid = isset($gw) ? $gw->model->paymentid : 5;
     }
     $transactionLog = new TransactionLogModel;
     $transactionLog->setAttributes([

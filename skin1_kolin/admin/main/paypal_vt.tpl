@@ -109,7 +109,7 @@ function func_AJAX_authorize_PayPal() {
     </tr>
     <tr>
         <td align="right" style="font-size: 12px;"><b>Grand total:</b></td>
-        <td><input style="font-size: 12px;" type="text" name="paypal_vt[grand_total]" value="{$order.total}" size="8"
+        <td><input style="font-size: 12px;" type="text" name="paypal_vt[grand_total]" value="{$order.total}" size="8" required pattern="^\d+\.?\d+$"
                    id="paypal_vt_grand_total"/></td>
     </tr>
     <tr>
@@ -336,7 +336,7 @@ function func_AJAX_authorize_PayPal() {
        <td width="20">&nbsp;</td>
        <td>
            <b>Transaction amount:</b><br />
-           <input type="text" name="transaction_amount" value="0" size="8" />
+           <input type="text" name="transaction_amount" value="0" size="8" required pattern="^\d+\.?\d+$"/>
        </td>
      </tr>
 </table>
