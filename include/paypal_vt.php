@@ -3,6 +3,8 @@ use Modules\Order\Models\OrderTransactionModel;
 use Modules\Order\Models\TransactionLogModel;
 use Modules\Payment\Gateways\Gateway;
 use Modules\Payment\Models\PaymentMethodModel;
+use Modules\Payment\Models\PaymentProcessorModel;
+use Omnipay\Common\CreditCard;
 use Xcart\Paypal;
 
 global $REQUEST_METHOD, $mode, $top_message, $order_transaction_id, $paypal_vt, $transaction_status, $AJAX_SUBMIT, $login;
@@ -37,57 +39,109 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array("auth
         $oPaypal = null;
         $Access_Token = null;
     }
-//	$Access_Token = func_paypal_get_access_token();
+
+    $gw = null;
+
     if (empty($Access_Token)) {
         $log .= "'Access_Token' - failed <br />";
     } else {
         if (!empty($order_transaction_id)) {
             $orderTransaction = OrderTransactionModel::objects()->get(['id' => $order_transaction_id]);
+            $gw = Gateway::getGateway($orderTransaction->payment_method_model);
         }
     }
-
-    $gw = Gateway::getGateway($orderTransaction->payment_method_model);
 
     switch($mode) {
         case 'authorize' :
             $log .= "'Authorize' at 'Authorization'";
-            if (!empty($Access_Token)) {
-                switch ($paypal_vt["card_number"]{0}) {
-                    case '3':
-                        $credit_card_typy = "amex";
-                        break;
-                    case '4':
-                        $credit_card_typy = "visa";
-                        break;
-                    case '5':
-                        $credit_card_typy = "mastercard";
-                        break;
-                    case '6':
-                        $credit_card_typy = "discover";
-                        break;
-                    default:
-                        $credit_card_typy = "";
-                }
-                foreach ($paypal_vt as $key => $val) {
-                    $val = func_stripslashes(func_html_entity_decode($val));
-                    $val = htmlspecialchars_decode($val, ENT_QUOTES);
-                    $paypal_vt[$key] = $val;
-                }
+            if ($pmModel = PaymentMethodModel::objects()->get(['payment_method' => $paypal_vt["processor"]])){
+                $gw = Gateway::getGateway($pmModel);
+            }
+            if ($gw) {
                 $cardholderl_name = trim($paypal_vt["cardholderl_name"]);
                 $cardholderl_name_arr = explode(" ", $cardholderl_name);
                 $first_name = trim($cardholderl_name_arr[0]);
                 unset($cardholderl_name_arr[0]);
                 $last_name = implode(" ", $cardholderl_name_arr);
                 $last_name = trim($last_name);
-                $shipping_address_type = 'residential';
-                if (!empty($order["extra"]["additional_fields"]) && is_array($order["extra"]["additional_fields"])) {
-                    foreach ($order["extra"]["additional_fields"] as $k_ea => $v_ea) {
-                        if (!empty($v_ea["value"]) && $v_ea["title"] == "Company" && $v_ea["section"] == "S") {
-                            $shipping_address_type = 'business';
+
+                switch ($gw->model->module_name) {
+                    case 'BluePay_VT' :
+                        $paymentid = $gw->model->paymentid;
+                        $params = array(
+                            'amount' => number_format($paypal_vt["grand_total"], 2),
+                            'currency' => $paypal_vt["currency"],
+                            'card' => new CreditCard(array(
+                                'firstName' => $first_name,
+                                'billingFirstName' => $first_name,
+                                'shippingFirstName' => $order["s_firstname"],
+                                'lastName' => $last_name,
+                                'billingLastName' => $last_name,
+                                'number' => $paypal_vt["card_number"],
+                                'expiryMonth' => $paypal_vt["expiration_month"],
+                                'expiryYear' => substr(date("Y"), 0, 2) . $paypal_vt["expiration_year"],
+                                'cvv' => $paypal_vt["csc"],
+                                'billingAddress1' => $paypal_vt["b_address"],
+                                'billingAddress2' => $paypal_vt["b_address_2"],
+                                'billingCity' => $paypal_vt["b_city"],
+                                'billingState' => $paypal_vt["b_state"],
+                                'billingPostcode' => $paypal_vt["b_zipcode"],
+                                'billingCountry' => $paypal_vt["b_country"],
+                                'email' => $order["email"],
+                                'shippingAddress1' => ($order["s_address"]) . (!empty($order["s_address_2"]) ? " " . ($order["s_address_2"]) : ""),
+                                'shippingCity' => $order["s_city"],
+                                'shippingPostcode' => $order["s_zipcode"],
+                                'shippingState' => $order["s_state"],
+                                'shippingCountry' => $order["s_country"],
+                            )),
+                        );
+
+                        if ($res = $gw->authorize($params)){
+                            $transaction_status = "authorized";
+                            $transaction_id = $gw->result->getTransactionReference();
+                            $transaction_currency = $paypal_vt["currency"];
+                            $transaction_total = $paypal_vt["grand_total"];
+
+                        } else {
+                            $transaction_status = "failed";
                         }
-                    }
-                }
-                $data_json = '{
+
+                        $result = $gw->result->getData();
+
+                        break;
+                    default :
+                        if (!empty($Access_Token)) {
+                            switch ($paypal_vt["card_number"]{0}) {
+                                case '3':
+                                    $credit_card_typy = "amex";
+                                    break;
+                                case '4':
+                                    $credit_card_typy = "visa";
+                                    break;
+                                case '5':
+                                    $credit_card_typy = "mastercard";
+                                    break;
+                                case '6':
+                                    $credit_card_typy = "discover";
+                                    break;
+                                default:
+                                    $credit_card_typy = "";
+                            }
+                            foreach ($paypal_vt as $key => $val) {
+                                $val = func_stripslashes(func_html_entity_decode($val));
+                                $val = htmlspecialchars_decode($val, ENT_QUOTES);
+                                $paypal_vt[$key] = $val;
+                            }
+
+                            $shipping_address_type = 'residential';
+                            if (!empty($order["extra"]["additional_fields"]) && is_array($order["extra"]["additional_fields"])) {
+                                foreach ($order["extra"]["additional_fields"] as $k_ea => $v_ea) {
+                                    if (!empty($v_ea["value"]) && $v_ea["title"] == "Company" && $v_ea["section"] == "S") {
+                                        $shipping_address_type = 'business';
+                                    }
+                                }
+                            }
+                            $data_json = '{
 		        "intent":"authorize",
 		        "payer":{
                 		"payment_method":"credit_card",
@@ -143,63 +197,66 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array("auth
 		                }
 		        ]
 		}';
-                //$count_transactions = func_query_first_cell("SELECT COUNT(*) FROM $sql_tbl[order_transactions] WHERE transaction_status!='' AND transaction_id!='' AND orderid='$orderid'");
-                $count_transactions = OrderTransactionModel::objects()
-                    ->filter(['orderid' => $orderid])
-                    ->exclude(['transaction_status' => '', 'transaction_id' => ''])
-                    ->count();
-                $allowed_statuses_flag = func_check_for_the_allowed_statuses_for_create_payment($order);
-                if (($allowed_statuses_flag && empty($count_transactions) && (empty($AJAX_SUBMIT) || $AJAX_SUBMIT != "Y")) || $count_transactions >= 1) {
-                    $result = func_paypal_create_payment($Access_Token, $data_json);
-                } else {
-                    $result = false;
-                    if (!$allowed_statuses_flag && empty($count_transactions) && (empty($AJAX_SUBMIT) || $AJAX_SUBMIT != "Y")) {
+                            $count_transactions = OrderTransactionModel::objects()
+                                ->filter(['orderid' => $orderid])
+                                ->exclude(['transaction_status' => '', 'transaction_id' => ''])
+                                ->count();
+                            $allowed_statuses_flag = func_check_for_the_allowed_statuses_for_create_payment($order);
+                            if (($allowed_statuses_flag && empty($count_transactions) && (empty($AJAX_SUBMIT) || $AJAX_SUBMIT != "Y")) || $count_transactions >= 1) {
+                                $result = func_paypal_create_payment($Access_Token, $data_json);
+                            } else {
+                                $result = false;
+                                if (!$allowed_statuses_flag && empty($count_transactions) && (empty($AJAX_SUBMIT) || $AJAX_SUBMIT != "Y")) {
 
-                        $top_message = array(
-                            'type' => 'E',
-                            'content' => func_get_langvar_by_name("lbl_first_transaction_in_order_exception")
-                        );
-                        $section_name_top_message = $top_message;
-                        x_session_save("section_name_top_message");
-                        func_header_location("order.php?orderid=" . $orderid . "&tab=y#main_order_tabs-VT");
-                    }
-                }
-
-                if (in_array($result["curl_getinfo"]["http_code"], array("200", "201"))) {
-                    $transaction_id = $result["transactions"][0]["related_resources"][0]["authorization"]["id"];
-                    if (!empty($transaction_id)) {
-                        $result2 = func_paypal_look_up_payment($Access_Token, $transaction_id, "authorization");
-                        if (!empty($result2["links"]) && is_array($result2["links"])) {
-                            $result["links"] = $result2["links"];
-                        }
-                        $log .= "<br />Transaction:" . $transaction_id;
-                        $transaction_status = $result["transactions"][0]["related_resources"][0]["authorization"]["state"];
-                        $transaction_currency = $result["transactions"][0]["related_resources"][0]["authorization"]["amount"]["currency"];
-                        $transaction_total = $result["transactions"][0]["related_resources"][0]["authorization"]["amount"]["total"];
-
-//				db_query("INSERT INTO $sql_tbl[transaction_logs] (orderid, paymentid, transaction_id, transaction_status, transaction_currency, transaction_total, date, login) VALUE ('$orderid', '5', '$transaction_id', '$transaction_status', '$transaction_currency', '$transaction_total', '".time()."', '$login')");
-                        if (empty($count_transactions) && !empty($order["shipping_groups"]) && is_array($order["shipping_groups"])) {
-                            $new_cb_status_flag = false;
-                            $new_cb_status_value = func_query_first_cell("SELECT name FROM $sql_tbl[order_statuses] WHERE code='AP'");
-                            foreach ($order["shipping_groups"] as $ko => $vo) {
-                                if (in_array($vo["cb_status"], array('Q', 'N', 'I'))) {
-                                    db_query("UPDATE $sql_tbl[order_groups] SET cb_status='AP' WHERE orderid='$orderid' AND manufacturerid='$ko'");
-                                    $current_cb_status_value = func_query_first_cell("SELECT name FROM $sql_tbl[order_statuses] WHERE code='" . $vo["cb_status"] . "'");
-                                    $log .= "<br /><B>" . $vo["all_distributor_info"]["code"] . ":</B> cb_status: " . $current_cb_status_value . " -> " . $new_cb_status_value;
-                                    $new_cb_status_flag = true;
+                                    $top_message = array(
+                                        'type' => 'E',
+                                        'content' => func_get_langvar_by_name("lbl_first_transaction_in_order_exception")
+                                    );
+                                    $section_name_top_message = $top_message;
+                                    x_session_save("section_name_top_message");
+                                    func_header_location("order.php?orderid=" . $orderid . "&tab=y#main_order_tabs-VT");
                                 }
                             }
-                            if ($new_cb_status_flag) {
-                                db_query("UPDATE $sql_tbl[orders] SET cb_status='AP' WHERE orderid='$orderid'");
-                                func_send_order_status_notification($orderid, "AP");
+
+                            if (in_array($result["curl_getinfo"]["http_code"], array("200", "201"))) {
+                                $transaction_id = $result["transactions"][0]["related_resources"][0]["authorization"]["id"];
+                                if (!empty($transaction_id)) {
+                                    $result2 = func_paypal_look_up_payment($Access_Token, $transaction_id, "authorization");
+                                    if (!empty($result2["links"]) && is_array($result2["links"])) {
+                                        $result["links"] = $result2["links"];
+                                    }
+                                    $log .= "<br />Transaction:" . $transaction_id;
+                                    $transaction_status = $result["transactions"][0]["related_resources"][0]["authorization"]["state"];
+                                    $transaction_currency = $result["transactions"][0]["related_resources"][0]["authorization"]["amount"]["currency"];
+                                    $transaction_total = $result["transactions"][0]["related_resources"][0]["authorization"]["amount"]["total"];
+
+                                    if (empty($count_transactions) && !empty($order["shipping_groups"]) && is_array($order["shipping_groups"])) {
+                                        $new_cb_status_flag = false;
+                                        $new_cb_status_value = func_query_first_cell("SELECT name FROM $sql_tbl[order_statuses] WHERE code='AP'");
+                                        foreach ($order["shipping_groups"] as $ko => $vo) {
+                                            if (in_array($vo["cb_status"], array('Q', 'N', 'I'))) {
+                                                db_query("UPDATE $sql_tbl[order_groups] SET cb_status='AP' WHERE orderid='$orderid' AND manufacturerid='$ko'");
+                                                $current_cb_status_value = func_query_first_cell("SELECT name FROM $sql_tbl[order_statuses] WHERE code='" . $vo["cb_status"] . "'");
+                                                $log .= "<br /><B>" . $vo["all_distributor_info"]["code"] . ":</B> cb_status: " . $current_cb_status_value . " -> " . $new_cb_status_value;
+                                                $new_cb_status_flag = true;
+                                            }
+                                        }
+                                        if ($new_cb_status_flag) {
+                                            db_query("UPDATE $sql_tbl[orders] SET cb_status='AP' WHERE orderid='$orderid'");
+                                            func_send_order_status_notification($orderid, "AP");
+                                        }
+                                    }
+                                } else {
+                                    $log .= "<br />Failed. Empty transaction id";
+                                }
+                            } else {
+                                $log .= "<br />Failed. http_code: " . $result["curl_getinfo"]["http_code"];
                             }
-                        }
-                    } else {
-                        $log .= "<br />Failed. Empty transaction id";
-                    }
-                } else {
-                    $log .= "<br />Failed. http_code: " . $result["curl_getinfo"]["http_code"];
+                        break;
                 }
+            }
+
+
             }
             break;
         case 'void_transaction' :
@@ -209,19 +266,22 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array("auth
                 if ($gw) {
                     switch ($gw->model->module_name) {
                         case 'BluePay' :
-                            $res = $gw->gateway
-                                ->setToken($orderTransaction->transaction_id)
-                                ->void([])->send();
-                            $result = $res->getData();
-                            $orderTransaction->transaction_response = $result;
-                            $transaction_currency = $orderTransaction->transaction_currency;
-                            $transaction_total = $orderTransaction->transaction_amount;
-                            if ($res->isSuccessful() && $result['TRANS_TYPE'] == 'VOID'){
-                                $transaction_status = 'voided';
-                                $transaction_id = $res->getTransactionReference();
+                            if ($res = $gw->void([
+                                'transaction_id' => $orderTransaction->transaction_id,
+                            ]))
+                            {
+                                $transaction_status = "voided";
+                                $transaction_id = $gw->result->getTransactionReference();
                             } else {
-                                $transaction_status = 'failed';
+                                $transaction_status = "failed";
                             }
+
+                            $transaction_currency = $orderTransaction->transaction_currency;
+                            $transaction_total = $transaction_amount[$order_transaction_id];
+
+                            $result = $gw->result->getData();
+                            $orderTransaction->transaction_response = $result;
+
                             break;
                         default :
                             if (!empty($Access_Token)) {
@@ -334,21 +394,23 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array("auth
                 if ($gw) {
                     switch ($gw->model->module_name) {
                         case 'BluePay' :
-                            $res = $gw->gateway
-                                ->setToken($orderTransaction->transaction_id)
-                                ->refund([
-                                    'amount' => $transaction_amount[$order_transaction_id]
-                            ])->send();
-                            $result = $res->getData();
-                            $orderTransaction->transaction_response = $result;
-                            $transaction_currency = $orderTransaction->transaction_currency;
-                            $transaction_total = $transaction_amount[$order_transaction_id];
-                            if ($res->isSuccessful() && ($result['TRANS_TYPE'] != 'VOID')){
+                            if ($res = $gw->refund([
+                                'transaction_id' => $orderTransaction->transaction_id,
+                                'amount' => $transaction_amount[$order_transaction_id]
+                            ]))
+                            {
                                 $transaction_status = "refunded";
-                                $transaction_id = $res->getTransactionReference();
+                                $transaction_id = $gw->result->getTransactionReference();
                             } else {
                                 $transaction_status = "failed";
                             }
+
+                            $transaction_currency = $orderTransaction->transaction_currency;
+                            $transaction_total = $transaction_amount[$order_transaction_id];
+
+                            $result = $gw->result->getData();
+                            $orderTransaction->transaction_response = $result;
+
                             break;
                         default :
                             if (!empty($Access_Token)) {
@@ -389,17 +451,11 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array("auth
                 if ($gw) {
                     switch ($gw->model->module_name) {
                         case 'BluePay':
-                            if ($transaction_status == 'authorized') {
-                                $orderTransaction->transaction_response = ['links' => [
-                                    ['rel' => 'capture'],
-                                    ['rel' => 'void'],
-                                ]];
-                            }
-                            if ($transaction_status == 'completed') {
-                                $orderTransaction->transaction_response = ['links' => [
-                                    ['rel' => 'refund']
-                                ]];
-                            }
+                            $orderTransaction->transaction_response =
+                                $gw->lookup([
+                                'transaction_id' => $orderTransaction->transaction_id,
+                                'transaction_status' => $orderTransaction->transaction_status
+                            ]);
                             $transaction_total = $orderTransaction->transaction_amount;
                             $orderTransaction->save();
                             break;
@@ -516,7 +572,11 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array("auth
     if (empty($paymentid)) {
         $paymentid = "5";
         if ($gw) {
-            if ($pmVT = PaymentMethodModel::objects()->filter(['payment_method' => $gw->model->module_name . ' VT'])->limit(1)->get()){
+            if ($pmVT = PaymentMethodModel::objects()
+                ->filter(['payment_method' => $gw->model->module_name . ' VT','active' => 'Y'])
+                ->limit(1)
+                ->get())
+            {
                 $paymentid = $pmVT->paymentid;
             }
         }

@@ -133,7 +133,7 @@ class Gateway extends AbstractGateway
     }
 
 
-    public function authorize(array $options = array())
+    public function authorize(array $parameters = array())
     {
         return $this->createRequest('\Omnipay\BluePay\Message\AuthRequest', $parameters);
     }

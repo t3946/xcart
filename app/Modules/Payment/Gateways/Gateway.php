@@ -11,6 +11,7 @@ abstract class Gateway
     public $gateway;
     public $model;
     public $test_mode = false;
+    public $result;
 
     /**
      * Gateway constructor.

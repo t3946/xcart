@@ -93,33 +93,33 @@ function func_AJAX_authorize_PayPal() {
 
 <table cellspacing="5" cellpadding="0" align="center">
 
-  <tr>
-    <td align="right"><h3 style="color: #000000;">Amount and currency</h3></td>
-    <td></td>
-  </tr>
-  <tr>
-    <td align="right"><b>Currency:</b> </td>
-    <td>
-<select name="paypal_vt[currency]" id="paypal_vt_currency">
-<option value="USD">US Dollars</option>
-<option value="CAN">CA Dollars</option>
-</select>
-    </td>
-  </tr>
-  <tr>
-    <td align="right" style="font-size: 12px;"><b>Grand total:</b> </td>
-    <td><input style="font-size: 12px;" type="text" name="paypal_vt[grand_total]" value="{$order.total}" size="8" id="paypal_vt_grand_total" /></td>
-  </tr>
 
-
-  <tr>
-    <td align="right"><h3 style="color: #000000;">Credit card information</h3></td>
-    <td></td>
-  </tr>
-  <tr>
-    <td align="right"><b>Cardholder's name:</b> </td>
-    <td><input type="text" name="paypal_vt[cardholderl_name]" value="{$customer.b_firstname}" /></td>
-  </tr>
+    <tr>
+        <td align="right"><h3 style="color: #000000;">Amount and currency</h3></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td align="right"><b>Currency:</b></td>
+        <td>
+            <select name="paypal_vt[currency]" id="paypal_vt_currency">
+                <option value="USD">US Dollars</option>
+                <option value="CAN">CA Dollars</option>
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <td align="right" style="font-size: 12px;"><b>Grand total:</b></td>
+        <td><input style="font-size: 12px;" type="text" name="paypal_vt[grand_total]" value="{$order.total}" size="8"
+                   id="paypal_vt_grand_total"/></td>
+    </tr>
+    <tr>
+        <td align="right"><h3 style="color: #000000;">Credit card information</h3></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td align="right"><b>Cardholder's name:</b></td>
+        <td><input type="text" name="paypal_vt[cardholderl_name]" value="{$customer.b_firstname}"/></td>
+    </tr>
   <tr>
     <td align="right"><b>Card number:</b> </td>
     <td><input type="text" name="paypal_vt[card_number]" value="" autocomplete="off" id="paypal_vt_card_number" onkeyup="cidev_check_field_phone_ext('paypal_vt_card_number')" /></td>
@@ -175,13 +175,19 @@ function func_AJAX_authorize_PayPal() {
     <td align="right"><b>{$lng.lbl_zip_code}:</b> </td>
     <td>{if !$static}<input type="text" name="paypal_vt[b_zipcode]" value="{$customer.b_zipcode}" />{else}{$customer.b_zipcode}{/if}</td>
   </tr>
+    <tr>
+        <td>&nbsp;</td>
+    </tr>
   <tr>
-    <td></td>
+    <td align="right"><b>Processor:</b></td>
     <td>	
-	<br />
-
 	<div id="default_Authorize_button">
-		<input type="button" value="Authorize" onclick="javascript: submitForm(this, 'authorize');" />
+
+          <select name="paypal_vt[processor]" id="paypal_vt_processor">
+              <option value="Paypal VT">Paypal VT</option>
+              <option value="BluePay VT">BluePay VT</option>
+          </select>
+      	<input type="button" value="Authorize" onclick="javascript: submitForm(this, 'authorize');" />
 	</div>
 
 	
