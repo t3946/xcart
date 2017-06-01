@@ -2,6 +2,7 @@
 use Modules\Order\Models\OrderTransactionModel;
 use Modules\Order\Models\TransactionLogModel;
 use Modules\Payment\Gateways\Gateway;
+use Modules\Payment\Models\PaymentMethodModel;
 use Xcart\Paypal;
 
 global $REQUEST_METHOD, $mode, $top_message, $order_transaction_id, $paypal_vt, $transaction_status, $AJAX_SUBMIT, $login;
@@ -213,13 +214,13 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array("auth
                                 ->void([])->send();
                             $result = $res->getData();
                             $orderTransaction->transaction_response = $result;
-                            if ($res->isSuccessful()){
-                                if ($result['TRANS_TYPE'] == 'VOID') {
-                                    $result["state"] = 'voided';
-                                    $result['id'] = $res->getTransactionReference();
-                                    $result["amount"]["currency"] = $orderTransaction->transaction_currency;
-                                    $result["amount"]["total"] = $orderTransaction->transaction_amount;
-                                }
+                            $transaction_currency = $orderTransaction->transaction_currency;
+                            $transaction_total = $orderTransaction->transaction_amount;
+                            if ($res->isSuccessful() && $result['TRANS_TYPE'] == 'VOID'){
+                                $transaction_status = 'voided';
+                                $transaction_id = $res->getTransactionReference();
+                            } else {
+                                $transaction_status = 'failed';
                             }
                             break;
                         default :
@@ -340,13 +341,13 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array("auth
                             ])->send();
                             $result = $res->getData();
                             $orderTransaction->transaction_response = $result;
-                            if ($res->isSuccessful()){
-                                if ($result['TRANS_TYPE'] != 'VOID') {
-                                    $transaction_status = "refunded";
-                                    $transaction_currency = $orderTransaction->transaction_currency;
-                                    $transaction_total = $transaction_amount[$order_transaction_id];
-                                    $transaction_id = $orderTransaction->transaction_id;
-                                }
+                            $transaction_currency = $orderTransaction->transaction_currency;
+                            $transaction_total = $transaction_amount[$order_transaction_id];
+                            if ($res->isSuccessful() && ($result['TRANS_TYPE'] != 'VOID')){
+                                $transaction_status = "refunded";
+                                $transaction_id = $res->getTransactionReference();
+                            } else {
+                                $transaction_status = "failed";
                             }
                             break;
                         default :
@@ -514,6 +515,11 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array("auth
     $serialize_result = serialize($result);
     if (empty($paymentid)) {
         $paymentid = "5";
+        if ($gw) {
+            if ($pmVT = PaymentMethodModel::objects()->filter(['payment_method' => $gw->model->module_name . ' VT'])->limit(1)->get()){
+                $paymentid = $pmVT->paymentid;
+            }
+        }
     }
     $transactionLog = new TransactionLogModel;
     $transactionLog->setAttributes([
