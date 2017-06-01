@@ -65,8 +65,8 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array("auth
                 $last_name = implode(" ", $cardholderl_name_arr);
                 $last_name = trim($last_name);
 
-                switch ($gw->model->module_name) {
-                    case 'BluePay_VT' :
+                switch ($gw->gateway->getName()) {
+                    case 'BluePay' :
                         $paymentid = $gw->model->paymentid;
                         $params = array(
                             'amount' => number_format($paypal_vt["grand_total"], 2),
@@ -264,7 +264,7 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array("auth
             if ($orderTransaction && !empty($orderTransaction->transaction_id)) {
                 $log .= "'Void authorized transaction' at 'Virtual Terminal'";
                 if ($gw) {
-                    switch ($gw->model->module_name) {
+                    switch ($gw->gateway->getName()) {
                         case 'BluePay' :
                             if ($res = $gw->void([
                                 'transaction_id' => $orderTransaction->transaction_id,
@@ -300,7 +300,7 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array("auth
             if ($orderTransaction && !empty($orderTransaction->transaction_id) && !empty($transaction_amount[$order_transaction_id])) {
                 $log .= "'Capture authorized transaction' at 'Virtual Terminal'";
                 if ($gw) {
-                    switch ($gw->model->module_name) {
+                    switch ($gw->gateway->getName()) {
                         case 'BluePay' :
                             $res = $gw->gateway
                                       ->setToken($orderTransaction->transaction_id)
@@ -449,7 +449,7 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array("auth
                 $log .= "'Look up payment (Get links)' at 'Virtual Terminal'";
                 $transaction_status = $orderTransaction->transaction_status;
                 if ($gw) {
-                    switch ($gw->model->module_name) {
+                    switch ($gw->gateway->getName()) {
                         case 'BluePay':
                             $orderTransaction->transaction_response =
                                 $gw->lookup([
