@@ -3,6 +3,7 @@ namespace Modules\Product\Models;
 
 use Modules\Brand\Models\BrandModel;
 use Modules\Distributor\Models\DistributorModel;
+use Xcart\App\Components\Breadcrumbs;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\AutoMetaModel;
 use Xcart\App\Orm\Fields\AutoField;
@@ -202,5 +203,19 @@ class ProductModel extends AutoMetaModel
     public function getAbsoluteUrl()
     {
         return Xcart::app()->router->url('product:view', ['sku' => $this->productcode]);
+    }
+    public function getBreadcrumbs()
+    {
+        /** @var CategoryModel $category */
+        if ($category = CategoryModel::objects()->filter(['products_link__main' => 'Y', 'products_link__productid' => $this->productid])->limit(1)->get()) {
+            $bread = $category->getBreadcrumbs();
+        }
+        else {
+            $bread = new Breadcrumbs();
+        }
+
+        $bread->add($this->product, $this->getAbsoluteUrl());
+
+        return $bread;
     }
 }

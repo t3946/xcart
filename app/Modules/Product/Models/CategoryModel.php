@@ -7,6 +7,7 @@ use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\AutoMetaTreeModel;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\CharField;
+use Xcart\App\Orm\Fields\HasManyField;
 use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Fields\ManyToManyField;
 
@@ -30,6 +31,12 @@ class CategoryModel extends AutoMetaTreeModel
                      'class' => ManyToManyField::className(),
                      'modelClass' => ProductModel::className(),
                      'through' => ProductCategoriesModel::className()
+                 ],
+
+                 'products_link' => [
+                     'class' => HasManyField::className(),
+                     'modelClass' => ProductCategoriesModel::className(),
+                     'link' => ['categoryid' => 'categoryid']
                  ],
 
                 'categoryid' => [
