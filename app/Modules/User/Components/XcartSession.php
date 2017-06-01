@@ -22,7 +22,7 @@ class XcartSession extends Session
 
     public function add($key, $value)
     {
-        $this->open();
+        $this->startIfNot();
 
         $this->data[ $key ] = $value;
 
@@ -34,7 +34,7 @@ class XcartSession extends Session
 
     public function has($key)
     {
-        $this->open();
+        $this->startIfNot();
 
         return array_key_exists($key, isset($this->data) ? $this->data : []);
     }
@@ -56,7 +56,7 @@ class XcartSession extends Session
 
     public function all()
     {
-        $this->open();
+        $this->startIfNot();
         return $this->data;
     }
 
@@ -84,7 +84,7 @@ class XcartSession extends Session
 
     public function collectGlobals($vars = null)
     {
-        $this->open();
+        $this->startIfNot();
 
         if (!empty($vars)) {
             foreach ($vars as $key) {
@@ -127,7 +127,7 @@ class XcartSession extends Session
             return;
         }
 
-        if ($this->getId() == $ssid) {
+        if ($this->getIsActive() && $this->getId() == $ssid) {
             return;
         }
 
@@ -259,6 +259,13 @@ class XcartSession extends Session
     public function getIsActive()
     {
         return $this->getId() ? true : false;
+    }
+
+    private function startIfNot()
+    {
+        if (!$this->getIsActive()) {
+            $this->start();
+        }
     }
 
     public function gc()

@@ -42,6 +42,7 @@ class ImageHelper
 
         }
         $image_file_name = str_replace(' ', '', rawurldecode($image_file_name));
+        $image_file_name = str_replace('/', '_', rawurldecode($image_file_name));
         $image_file_path = "/images/D/" . $image_file_name;
 
         $imageModel = ImageDModel::objects()->filter(['image_path' => '.' . $image_file_path, 'id' => $product_id])->limit(1)->get();
