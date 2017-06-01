@@ -28,6 +28,7 @@ return array(
     'Monolog\\' => array($vendorDir . '/monolog/monolog/src/Monolog'),
     'Modules\\' => array($baseDir . '/app/Modules'),
     'Mindy\\QueryBuilder\\' => array($vendorDir . '/mindy/query_builder/src'),
+    'League\\Flysystem\\' => array($vendorDir . '/league/flysystem/src'),
     'Jaybizzle\\CrawlerDetect\\' => array($vendorDir . '/jaybizzle/crawler-detect/src'),
     'GuzzleHttp\\Stream\\' => array($vendorDir . '/guzzlehttp/streams/src'),
     'GuzzleHttp\\Ring\\' => array($vendorDir . '/guzzlehttp/ringphp/src'),

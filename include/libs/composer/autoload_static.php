@@ -102,6 +102,10 @@ class ComposerStaticInited1e2f7cb4425e4bdc0264910bb94e92
             'Modules\\' => 8,
             'Mindy\\QueryBuilder\\' => 19,
         ),
+        'L' => 
+        array (
+            'League\\Flysystem\\' => 17,
+        ),
         'J' => 
         array (
             'Jaybizzle\\CrawlerDetect\\' => 24,
@@ -212,6 +216,10 @@ class ComposerStaticInited1e2f7cb4425e4bdc0264910bb94e92
         'Mindy\\QueryBuilder\\' => 
         array (
             0 => __DIR__ . '/..' . '/mindy/query_builder/src',
+        ),
+        'League\\Flysystem\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/league/flysystem/src',
         ),
         'Jaybizzle\\CrawlerDetect\\' => 
         array (
