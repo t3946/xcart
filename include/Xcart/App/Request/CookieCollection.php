@@ -21,9 +21,7 @@ class CookieCollection implements ArrayAccess, Countable
 {
     public function add($key, $value, $expire = 0, $path = '/', $domain = false, $secure = false, $httponly = false)
     {
-        if (!headers_sent()) {
-            setcookie($key, $value, $expire, $path, $domain, $secure, $httponly);
-        }
+        $this->setCookie($key, $value, $expire, $path, $domain, $secure, $httponly);
     }
 
     public function has($key)
@@ -45,16 +43,18 @@ class CookieCollection implements ArrayAccess, Countable
     public function remove($key)
     {
         if ($this->has($key)) {
-            unset($_COOKIE[$key]);
-            setcookie($key, "", time()-3600, '/');
+            if ($this->setCookie($key, "", time()-3600, '/')) {
+                unset($_COOKIE[$key]);
+            }
         }
     }
 
     public function clear()
     {
         foreach (array_keys($_COOKIE) as $key) {
-            unset($_COOKIE[$key]);
-            setcookie($key, "", time()-3600, '/');
+            if ($this->setCookie($key, "", time()-3600, '/')) {
+                unset($_COOKIE[$key]);
+            }
         }
     }
 
@@ -132,5 +132,16 @@ class CookieCollection implements ArrayAccess, Countable
     public function count()
     {
         return count($_COOKIE);
+    }
+
+    private function setCookie ($name, $value = "", $expire = 0, $path = "", $domain = "", $secure = false, $httponly = false) {
+        if (!headers_sent()) {
+            if (setcookie($name, $value, $expire, $path, $domain, $secure, $httponly)) {
+                $_COOKIE[$name] = $value;
+                return true;
+            }
+        }
+
+        return false;
     }
 }

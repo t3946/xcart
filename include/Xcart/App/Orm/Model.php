@@ -35,10 +35,19 @@ class Model extends AbstractModel
     public static function getBundleName()
     {
         $object = new ReflectionClass(get_called_class());
+
+        // For classical modules
+        if ($pos = strpos($object->getFileName(), 'Modules')) {
+            $shortPath = substr($object->getFileName(), $pos + 8);
+            return substr($shortPath, 0, strpos($shortPath, '/'));
+        }
+
+        // For symphony bundles
         if ($pos = strpos($object->getFileName(), 'Bundle')) {
             $shortPath = substr($object->getFileName(), $pos + 7);
             return substr($shortPath, 0, strpos($shortPath, '/'));
         }
+
         return '';
     }
 

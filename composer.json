@@ -22,7 +22,9 @@
         "true/punycode": "^2.1",
         "caponica/amazon-mws-complete": "dev-master",
         "mobiledetect/mobiledetectlib": "^2.8",
-        "omnipay/paypal": "v2.6.3"
+        "omnipay/paypal": "v2.6.3",
+        "league/flysystem": "^1.0",
+        "symfony/http-foundation": "^2.8"
     },
     "autoload": {
         "psr-4": {
