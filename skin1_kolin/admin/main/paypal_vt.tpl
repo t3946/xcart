@@ -109,7 +109,7 @@ function func_AJAX_authorize_PayPal() {
     </tr>
     <tr>
         <td align="right" style="font-size: 12px;"><b>Grand total:</b></td>
-        <td><input style="font-size: 12px;" type="text" name="paypal_vt[grand_total]" value="{$order.total}" size="8" required pattern="^\d+\.?\d+$"
+        <td><input style="font-size: 12px;" type="text" name="paypal_vt[grand_total]" value="{$order.total}" size="8" required pattern="^\d+(\.?\d+|)$"
                    id="paypal_vt_grand_total"/></td>
     </tr>
     <tr>
@@ -316,8 +316,8 @@ function func_AJAX_authorize_PayPal() {
      <tr>
        <td>
          <b>Payment method:</b><br />
-         <select name="paymentid" >
-         <option value="0"></option>
+         <select name="paymentid" required>
+         <option value=""></option>
          {foreach from=$all_vt_processors item=item_vt key=key_vt}
          <option {if $v.additional_vt_paymentid eq $item_vt.paymentid} selected="selected"{/if} value="{$item_vt.paymentid}">{$item_vt.payment_method}</option>
          {/foreach}
@@ -326,7 +326,7 @@ function func_AJAX_authorize_PayPal() {
        <td width="20">&nbsp;</td>
        <td>
            <b>Virtual terminal transaction ID:</b><br />
-           <input type="text" name="transaction_id" value="" size="40" />
+           <input type="text" name="transaction_id" value="" size="40" required />
        </td>
        <td width="20">&nbsp;</td>
        <td>
@@ -336,12 +336,12 @@ function func_AJAX_authorize_PayPal() {
        <td width="20">&nbsp;</td>
        <td>
            <b>Transaction amount:</b><br />
-           <input type="text" name="transaction_amount" value="0" size="8" required pattern="^\d+\.?\d+$"/>
+           <input name="transaction_amount" value="0" size="8" required pattern="^\d+(\.?\d+|)$" type="text" />
        </td>
      </tr>
 </table>
 
-<input type="button" value="Add transaction" onclick="javascript: submitForm(this, 'add_manual_transaction');" />
+<input type="submit" type="button" value="Add transaction" />
 
 </form>
 

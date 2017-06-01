@@ -45,7 +45,7 @@
 <tr>
     <td class="transaction_action" colspan="7" data-transaction-id="{$v.model->id}">
         <span style="float: left; line-height: 22px;"><b>Available actions:</b></span>&nbsp;
-        <input type="text" name="transaction_amount[{$v.model->id}]" id="transaction_amount_{$v.model->id}" size="6" value="{$v.model->transaction_amount}" required pattern="^\d+\.?\d+$"/>
+        <input type="text" name="transaction_amount[{$v.model->id}]" id="transaction_amount_{$v.model->id}" size="6" value="{$v.model->transaction_amount}" required pattern="^\d+(\.?\d+|)$"/>
         <div class="ui xcart buttons">
             <div data-action="look_up_payment" class="ui button lookup" style="border: 1px solid #808080;">Look up payment (Get links)</div>
             {if $v.model->transaction_response.links ne ""}

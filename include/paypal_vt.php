@@ -485,16 +485,6 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array("auth
             $transaction_id = trim($transaction_id);
             $transaction_amount = trim($transaction_amount);
 
-            if (empty($transaction_amount) || $transaction_amount <= 0 || empty($paymentid) || empty($transaction_id)) {
-                $top_message = array(
-                    'type' => 'I',
-                    'content' => func_get_langvar_by_name("lbl_manual_transaction_no_required_fileds")
-                );
-                $section_name_top_message = $top_message;
-                x_session_save("section_name_top_message");
-                func_header_location("order.php?orderid=" . $orderid . "&tab=y#main_order_tabs-VT");
-            }
-
             if ($transaction_status == "authorized") {
                 $transaction_type = "authorization";
                 $set_cb_status_for_first_transaction = "AP";
