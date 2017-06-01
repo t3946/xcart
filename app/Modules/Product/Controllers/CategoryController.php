@@ -12,6 +12,18 @@ use Xcart\App\Pagination\Pagination;
 
 class CategoryController extends Controller
 {
+    public function beforeAction($action, $params)
+    {
+        if ( $this->getRequest()->getIsPost() && !empty($_POST['sort'])) {
+            $this->getRequest()->session->add('category_sort', $_POST['sort']);
+            echo $this->getRequest()->session->get('category_sort');
+            echo "OK";
+            Xcart::app()->end();
+        }
+
+        parent::beforeAction($action, $params);
+    }
+
     public function view_old($id, $slug)
     {
         $this->view_internal(CategoryModel::objects()->filter(['categoryid' => $id])->get());
@@ -35,13 +47,7 @@ class CategoryController extends Controller
             $this->error();
         }
 
-        if ( $this->getRequest()->getIsPost() && !empty($_POST['sort'])) {
-            Xcart::app()->request->session->add('category_sort', $this->getRequest()->post->get('category_sort', $_POST['sort']));
-            echo "OK";
-            die();
-        }
-
-        $orderBy = Xcart::app()->request->session->get('category_sort', 'relevance');
+        $orderBy = Xcart::app()->request->session->get('category_sort', ProductSortHelper::$default);
 
         /** @var \Xcart\App\Orm\QuerySet $pqs */
         $pqs = ProductModel::objects()
@@ -76,7 +82,7 @@ class CategoryController extends Controller
             }
             case 'relevance':
             default: {
-                $orderBy = 'relevance';
+                $orderBy = ProductSortHelper::$default;
                 $pqs = $oh->getOrderByRelevance($model);
             }
         }

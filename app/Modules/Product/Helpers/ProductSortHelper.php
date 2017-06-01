@@ -6,6 +6,8 @@ use Xcart\Helpers\ViewedRelatedProducts;
 
 class ProductSortHelper
 {
+    public static $default = 'relevance';
+
     public static $orderBy = [
         'relevance' => 'Relevance',
         'price' => 'Price low to high',

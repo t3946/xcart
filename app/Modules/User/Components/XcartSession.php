@@ -75,6 +75,8 @@ class XcartSession extends Session
             if ($this->registerGlobals) {
                 $this->collectFromGlobals();
             }
+
+            func_dump('save_session');
             $this->model->data = $this->data;
             $this->model->save();
         }
