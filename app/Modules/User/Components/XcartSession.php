@@ -22,7 +22,7 @@ class XcartSession extends Session
 
     public function add($key, $value)
     {
-        $this->startIfNot();
+        $this->open();
 
         $this->data[ $key ] = $value;
 
@@ -34,7 +34,7 @@ class XcartSession extends Session
 
     public function has($key)
     {
-        $this->startIfNot();
+        $this->open();
 
         return array_key_exists($key, isset($this->data) ? $this->data : []);
     }
@@ -56,7 +56,7 @@ class XcartSession extends Session
 
     public function all()
     {
-        $this->startIfNot();
+        $this->open();
         return $this->data;
     }
 
@@ -82,7 +82,7 @@ class XcartSession extends Session
 
     public function collectGlobals($vars = null)
     {
-        $this->startIfNot();
+        $this->open();
 
         if (!empty($vars)) {
             foreach ($vars as $key) {
@@ -129,11 +129,7 @@ class XcartSession extends Session
             return;
         }
 
-        $this->registerSessionHandler();
-
-        if ($this->autoStart || $ssid) {
-            $this->start($ssid);
-        }
+        $this->start($ssid);
     }
 
     public function start($id = null)
@@ -184,12 +180,10 @@ class XcartSession extends Session
         $key = 'xid';
 
         if (!$this->session_key) {
-            if (defined('AREA_TYPE') && AREA_TYPE == 'C') {
-                /** @var \Modules\Sites\SitesModule $module */
-                if ($module = Xcart::app()->getModule('Sites')) {
-                    if ($model = $module->getSite()) {
-                        $key .= $model->storefrontid;
-                    }
+            /** @var \Modules\Sites\SitesModule $module */
+            if ($module = Xcart::app()->getModule('Sites')) {
+                if ($model = $module->getSite()) {
+                    $key .= $model->storefrontid;
                 }
             }
 
@@ -259,12 +253,6 @@ class XcartSession extends Session
         return $this->getId() ? true : false;
     }
 
-    private function startIfNot()
-    {
-        if (!$this->getIsActive()) {
-            $this->start();
-        }
-    }
 
     public function gc()
     {

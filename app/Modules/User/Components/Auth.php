@@ -33,7 +33,7 @@ class Auth implements AuthInterface
      * @var string
      */
 //    public $authSessionName = 'USER_ID';
-    public $authSessionName = 'login';
+    public $authSessionName = 'admin_login';
 
     public $class = 'Modules\User\Models\UserModel';
 
