@@ -8,10 +8,10 @@ class DataPriorityQueue extends DataQueue
         $this->data[] = ['data' => $data, 'priority' => $priority];
 
         usort($this->data, function($a, $b){
-            if ($a == $b) {
+            if ($a['priority'] == $b['priority']) {
                 return 0;
             }
-            return ($a < $b) ? -1 : 1;
+            return ($a['priority'] < $b['priority']) ? -1 : 1;
         });
     }
 

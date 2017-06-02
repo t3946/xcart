@@ -180,6 +180,12 @@ class DefaultConnection extends DBALConnection
         $oMail->body = $msg;
         $oMail->sendEmail();
 
-        x_log_add('SQL', $msg);
+
+        if (function_exists('x_log_add')) {
+            x_log_add('SQL', $msg);
+        }
+        else {
+            print_r($msg);
+        }
     }
 }

@@ -1251,4 +1251,17 @@ class OrderGroup extends Data
         }
         return $result;
     }
+
+    public function getTotalProductAmount()
+    {
+        $result = null;
+        $aOrderDetails = $this->getOrderDetails();
+        if (!empty($aOrderDetails)) {
+            foreach ($aOrderDetails as $oOrderDetail) {
+                $result += $oOrderDetail->getAmount();
+            }
+
+        }
+        return $result;
+    }
 }

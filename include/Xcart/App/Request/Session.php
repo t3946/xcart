@@ -25,7 +25,11 @@ class Session implements ArrayAccess, Countable
     public function init()
     {
         Xcart::app()->event->on('app:end', [$this, 'close']);
-        $this->open();
+        $this->registerSessionHandler();
+        if ($this->autoStart) {
+
+            $this->open();
+        }
     }
 
     public function open()
@@ -33,11 +37,8 @@ class Session implements ArrayAccess, Countable
         if ($this->getIsActive()) {
             return;
         }
-        $this->registerSessionHandler();
 
-        if ($this->autoStart) {
-            $this->start();
-        }
+        $this->start();
     }
 
     public function start($sessid = null)

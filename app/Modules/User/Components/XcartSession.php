@@ -8,6 +8,7 @@ use Xcart\App\Request\Session;
 
 class XcartSession extends Session
 {
+    public $autoStart = false; //@NOTE: Do not turn on. Initialization on first access
     public $autoGc = true;
     public $registerGlobals = true;
     public $fullUnpackGlobals = false;
@@ -21,6 +22,8 @@ class XcartSession extends Session
 
     public function add($key, $value)
     {
+        $this->open();
+
         $this->data[ $key ] = $value;
 
         if ($this->registerGlobals) {
@@ -31,6 +34,8 @@ class XcartSession extends Session
 
     public function has($key)
     {
+        $this->open();
+
         return array_key_exists($key, isset($this->data) ? $this->data : []);
     }
 
@@ -51,6 +56,7 @@ class XcartSession extends Session
 
     public function all()
     {
+        $this->open();
         return $this->data;
     }
 
@@ -76,6 +82,8 @@ class XcartSession extends Session
 
     public function collectGlobals($vars = null)
     {
+        $this->open();
+
         if (!empty($vars)) {
             foreach ($vars as $key) {
                 if (isset($GLOBALS[ $key ])) {
@@ -113,15 +121,15 @@ class XcartSession extends Session
 
     public function open($ssid = null)
     {
-        if ($this->getIsActive() != $ssid) {
+        if ($this->getIsActive() && !$ssid ) {
             return;
         }
 
-        $this->registerSessionHandler();
-
-        if ($this->autoStart || $ssid) {
-            $this->start($ssid);
+        if ($this->getIsActive() && $this->getId() == $ssid) {
+            return;
         }
+
+        $this->start($ssid);
     }
 
     public function start($id = null)
@@ -172,12 +180,10 @@ class XcartSession extends Session
         $key = 'xid';
 
         if (!$this->session_key) {
-            if (defined('AREA_TYPE') && AREA_TYPE == 'C') {
-                /** @var \Modules\Sites\SitesModule $module */
-                if ($module = Xcart::app()->getModule('Sites')) {
-                    if ($model = $module->getSite()) {
-                        $key .= $model->storefrontid;
-                    }
+            /** @var \Modules\Sites\SitesModule $module */
+            if ($module = Xcart::app()->getModule('Sites')) {
+                if ($model = $module->getSite()) {
+                    $key .= $model->storefrontid;
                 }
             }
 
@@ -246,6 +252,7 @@ class XcartSession extends Session
     {
         return $this->getId() ? true : false;
     }
+
 
     public function gc()
     {

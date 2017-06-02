@@ -551,25 +551,43 @@ function check_r_fields(){
         </td>
         <td align="right">
             <a class="group_total_link" href="#">{include file="currency2.tpl" value=$v.total.net}</a>
-            <div class="group_total_price_link" style="display:none;">
-                <div style="BACKGROUND-COLOR: #cccccc; color: #000000" align="right">{include file="currency2.tpl" value=$v.oOrderGroup->getTotalProductPrice()}</div>
-                <div style="BACKGROUND-COLOR: #FFD44C; color: #000000" align="right">{include file="currency2.tpl" value=$v.oOrderGroup->getTotalCostToUs()}</div>
-            </div>
         </td>
         <td align="right">{include file="currency2.tpl" value=$v.total.gst hide_zero='Y'}</td>
         {*  <td align="right">{include file="currency2.tpl" value=$v.total.pst hide_zero='Y'}</td> *}
         <td align="right">
             <a class="group_total_link" href="#">{include file="currency2.tpl" value=$v.total.gross}</a>
-            <div class="group_total_price_link" style="display:none;">
-                <div style="BACKGROUND-COLOR: #cccccc; color: #000000" align="right">{include file="currency2.tpl" value=$v.oOrderGroup->getTotalProductPrice()}</div>
-                <div style="BACKGROUND-COLOR: #FFD44C; color: #000000" align="right">{include file="currency2.tpl" value=$v.oOrderGroup->getTotalCostToUs()}</div>
-            </div>
         </td>
         <td>
-            {if $v.empty_products_list eq "Y"}<input type="checkbox" value="Y"
-                                                     name="distributors_to_delete[{$m_id}][delete]"
-                                                     {if $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}disabled="disabled"{/if} />{else}&nbsp;{/if}
+            {if $v.empty_products_list eq "Y"}
+                <input type="checkbox" value="Y" name="distributors_to_delete[{$m_id}][delete]"
+                {if $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}disabled="disabled"{/if} />{else}&nbsp;{/if}
         </td>
+    </tr>
+    <tr class="group_total_price_row">
+        <td><b>Dx Totals</b></td>
+        <td></td>
+        <td></td>
+        <td align="center"><b>{$v.oOrderGroup->getTotalProductAmount()}</b></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td><div style="BACKGROUND-COLOR: #cccccc; color: #000000" align="right">{include file="currency2.tpl" value=$v.oOrderGroup->getTotalProductPrice()}</div></td>
+        <td></td>
+        <td><div style="BACKGROUND-COLOR: #cccccc; color: #000000" align="right">{include file="currency2.tpl" value=$v.oOrderGroup->getTotalProductPrice()}</td>
+        <td></td>
+    </tr>
+    <tr class="group_total_price_row">
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td><div style="BACKGROUND-COLOR: #FFD44C; color: #000000" align="right">{include file="currency2.tpl" value=$v.oOrderGroup->getTotalCostToUs()}</div></td>
+        <td></td>
+        <td><div style="BACKGROUND-COLOR: #FFD44C; color: #000000" align="right">{include file="currency2.tpl" value=$v.oOrderGroup->getTotalCostToUs()}</div></td>
+        <td></td>
     </tr>
 
 {assign var="GROUP_cost_to_us" value="0"}
@@ -1574,7 +1592,7 @@ multirowInputSets['add_additional_fee_to_order'].noCloneContent = 1;
       }
     });
     $('.group_total_link').on('click', function(){
-        $(this).next('.group_total_price_link').toggle();
+        $(this).closest('tr').siblings('.group_total_price_row').toggle();
         return false;
     })
   });

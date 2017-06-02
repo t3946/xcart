@@ -21,7 +21,9 @@
         "symfony/validator": "^2.8",
         "true/punycode": "^2.1",
         "caponica/amazon-mws-complete": "dev-master",
-        "mobiledetect/mobiledetectlib": "^2.8"
+        "mobiledetect/mobiledetectlib": "^2.8",
+        "league/flysystem": "^1.0",
+        "symfony/http-foundation": "^2.8"
     },
     "autoload": {
         "psr-4": {
@@ -30,11 +32,10 @@
             "Xcart\\External_Product_Verification\\": "modules/External_Product_Verification/include",
             "Xcart\\External_Marketplaces\\": "modules/External_Marketplaces/include"
         },
-        "classmap": ["MarketplaceWebService",
-            "src/FBAOutboundServiceMWS",
-            "MarketplaceWebServiceOrders",
-            "FBAInventoryServiceMWS",
-            "MarketplaceWebServiceProducts"
+        "classmap": [
+            "include/libs/caponica/amazon-mws-complete/src/AmazonPhpClientLibrary/FBAOutboundServiceMWS",
+            "include/libs/caponica/amazon-mws-complete/src/AmazonPhpClientLibrary/MarketplaceWebService",
+            "src/FBAInventoryServiceMWS"
         ],
         "files": [
             "include/func/func.core.php",

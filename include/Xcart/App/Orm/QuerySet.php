@@ -14,6 +14,7 @@ use Mindy\QueryBuilder\Aggregation\Sum;
 use Mindy\QueryBuilder\Q\QAndNot;
 use Mindy\QueryBuilder\Q\QOrNot;
 use Mindy\QueryBuilder\QueryBuilder;
+use Xcart\App\Orm\Fields\RelatedField;
 
 /**
  * Class QuerySet
@@ -298,17 +299,14 @@ class QuerySet extends QuerySetBase
 
             if ($this->getModel()->getMeta()->hasRelatedField($name)) {
                 $this->with[] = $name;
-//                $field = $this->getModel()->getField($name);
-//
-//                if ($field instanceof ForeignField
-//                    || $field instanceof HasManyField
-//                    || $field instanceof ManyToManyField
-//                ) {
-//                    foreach ($field->getJoin($this->getQueryBuilder(), $this->getTableAlias()) as $join) {
-//                        list($type, $table, $on, $alias) = $join;
-//                        $this->join($type, $table, $on, $alias);
-//                    }
-//                }
+                $field = $this->getModel()->getField($name);
+
+                if ($field instanceof RelatedField) {
+                    foreach ($field->getJoin($this->getQueryBuilder(), $this->getTableAlias()) as $join) {
+                        list($type, $table, $on, $alias) = $join;
+                        $this->join($type, $table, $on, $alias);
+                    }
+                }
             }
         }
         return $this;
@@ -323,9 +321,6 @@ class QuerySet extends QuerySetBase
                 }
                 else if ($value instanceof Manager || $value instanceof QuerySet) {
                     return $value->getQueryBuilder();
-                }
-                else if ($value instanceof Expression) {
-                    return new QAnd($value); //@TODO: Its bug... fix it.
                 }
                 return $value;
             }, $query);
@@ -407,16 +402,33 @@ class QuerySet extends QuerySetBase
     {
         if (is_array($columns)) {
             $newColumns = array_map(function ($value) {
+
                 if ($value instanceof Model) {
                     return $value->pk;
-                } else if ($value instanceof Manager || $value instanceof QuerySet) {
+                }
+                else if ($value instanceof Manager || $value instanceof QuerySet) {
                     return $value->getQueryBuilder();
-                } else if (is_string($value)) {
+                }
+                else if (is_string($value)) {
                     $direction = substr($value, 0, 1) === '-' ? '-' : '';
-                    $column = substr($value, 1);
+
+                    if ($direction) {
+                        $column = substr($value, 1);
+                    }
+                    else {
+                        $column = $value;
+                    }
+                    
+
                     if ($this->getModel()->getMeta()->hasForeignField($column)) {
-                        return $direction . $column;
-                    } else {
+                        $field = $this->getModel()->getField($column);
+
+                        return $direction . $field->getAttributeName();
+                    }
+                    else if ($field = $this->getModel()->getField($column)) {
+                        return $direction . $field->getAttributeName();
+                    }
+                    else {
                         return $value;
                     }
                 }

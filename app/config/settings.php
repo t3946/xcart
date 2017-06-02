@@ -8,19 +8,7 @@ return array_replace_recursive([
        'base' => realpath(implode(DIRECTORY_SEPARATOR, [__DIR__, '..'])),
        'www' => realpath(implode(DIRECTORY_SEPARATOR, [__DIR__, '..', '..'])),
    ],
-   'modules' => [
-       'Core',
-       'Dashboard',
-       'Distributor',
-       'Product',
-       'Order',
-       'Shipping',
-       'User'   => ['sessionTime' => 15552000],
-       'Sites'  => ['defaultStore' => 'AR'],
-       'Amazon',
-       'Order',
-       'Reports',
-    ],
+   'modules' => include dirname(__FILE__) . DIRECTORY_SEPARATOR . 'modules.php',
    'locale' => [
        'language' => 'ru',
        'sourceLanguage' => 'en',
@@ -52,7 +40,7 @@ return array_replace_recursive([
 //       ],
        'event' => [
            'class' => '\\Xcart\\App\\Event\\EventManager',
-           'events' => include 'events.php'
+           'events' => include dirname(__FILE__) . DIRECTORY_SEPARATOR .  'events.php'
        ],
 
        'middleware' => [
@@ -90,6 +78,22 @@ return array_replace_recursive([
            'forceCompile' => false,
            'autoReload' => false
        ],
+
+       'storage' => [
+           'class' => '\\Xcart\\App\\Storage\\Storage',
+           'default' => 'local',
+           'adapters' => [
+               'local' => [
+                   'class' => '\\Xcart\\App\\Storage\\Adapters\\LocalAdapter',
+                   'root' => 'www.media',
+               ],
+               'www' => [
+                   'class' => '\\Xcart\\App\\Storage\\Adapters\\LocalAdapter',
+                   'root' => 'www',
+               ]
+           ],
+       ],
+
        'cache' => [
            'class' => '\\Xcart\\App\\Cache\\Cache',
            'saveInMemory' => true,
