@@ -538,7 +538,16 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array("auth
     $result["POST_params"] = $data_arr;
     $serialize_result = serialize($result);
     if (empty($paymentid)) {
-        $paymentid = isset($gw) ? $gw->model->paymentid : 5;
+        $paymentid = 5;
+        if ($gw) {
+            if ($pmVT = PaymentMethodModel::objects()
+                ->filter(['payment_method' => $gw->gateway->getName() . ' VT','active' => 'Y'])
+                ->limit(1)
+                ->get())
+            {
+                $paymentid = $pmVT->paymentid;
+            }
+        }
     }
     $transactionLog = new TransactionLogModel;
     $transactionLog->setAttributes([
