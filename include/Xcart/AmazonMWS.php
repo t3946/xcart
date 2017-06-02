@@ -1987,16 +1987,17 @@ SQL;
                                         foreach ($cpl as $cp) {
                                             if ($cp->getcondition() == 'New' && $cp->getsubcondition() == 'New') {
                                                 /** @var MarketplaceWebServiceProducts_Model_PriceType $price */
-                                                $price = $cp->getPrice();
-                                                if ($cp->getbelongsToRequester() == 'true') {
-                                                    /** @var MarketplaceWebServiceProducts_Model_MoneyType $lPrice */
-                                                    $lPrice = $price->getLandedPrice();
-                                                    $oAmazonProductModel->cpr_belongs_LandedPrice = $lPrice->getAmount();
-                                                    $oAmazonProductModel->buybox_in++;
-                                                } else {
-                                                    $lPrice = $price->getListingPrice();
-                                                    $oAmazonProductModel->cpr_LandedPrice = $lPrice->getAmount();
-                                                    $oAmazonProductModel->buybox_out++;
+                                                if ($price = $cp->getPrice()) {
+                                                    if ($cp->getbelongsToRequester() == 'true') {
+                                                        /** @var MarketplaceWebServiceProducts_Model_MoneyType $lPrice */
+                                                        $lPrice = $price->getLandedPrice();
+                                                        $oAmazonProductModel->cpr_belongs_LandedPrice = $lPrice->getAmount();
+                                                        $oAmazonProductModel->buybox_in++;
+                                                    } else {
+                                                        $lPrice = $price->getListingPrice();
+                                                        $oAmazonProductModel->cpr_LandedPrice = $lPrice->getAmount();
+                                                        $oAmazonProductModel->buybox_out++;
+                                                    }
                                                 }
                                             }
                                         }
