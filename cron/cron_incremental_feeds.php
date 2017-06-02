@@ -106,14 +106,11 @@ SELECT p.productid, pp.time_stamp, p.forsale, GROUP_CONCAT(pp.type ORDER BY pp.t
   FROM xcart_cidev_updated_products pp
   INNER JOIN xcart_products p ON p.productid = pp.resourceid
   INNER JOIN xcart_products_sf PS ON PS.productid = p.productid
-WHERE PS.sfid = :sfid AND pp.type <= :type AND p.forsale = :forsale
+WHERE PS.sfid = :sfid AND pp.type <= :type 
 GROUP BY p.productid
 ORDER BY utype DESC, forsale DESC
 SQL;
-        $aUpdatedProducts = Connection::getInstance()->fetchAll($sqlProductUpdate. " LIMIT 3000", ['sfid' => $storefrontid, 'type' => 2, 'forsale' => 'Y']);
-        if (empty($aUpdatedProducts)) {
-            $aUpdatedProducts = Connection::getInstance()->fetchAll($sqlProductUpdate. " LIMIT 130", ['sfid' => $storefrontid, 'type' => 2, 'forsale' => 'N']);
-        }
+        $aUpdatedProducts = Connection::getInstance()->fetchAll($sqlProductUpdate. " LIMIT 3000", ['sfid' => $storefrontid, 'type' => 2]);
         $timeout = 60 * 20;
         $storefront_time_start = time();
 

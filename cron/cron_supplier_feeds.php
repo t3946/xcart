@@ -222,7 +222,10 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
                         $modelProduct->save();
                         break;
                     case 'P' :
-
+                        if (!isset($aProduct['cost_to_us'])) {
+                            $skippedProductsCount++;
+                            continue;
+                        }
                         if (!empty($modelProduct->fulldescr) && $supplierFeedModel->native_full_description != "Y") {
                             $modelProduct->fulldescr = ProductHelper::cleanProductFullDescription($modelProduct->fulldescr);
                         }
