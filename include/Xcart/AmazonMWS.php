@@ -1972,41 +1972,43 @@ SQL;
                                 $oAmazonProductModel->report_date = $iReportDate;
                                 /** @var MarketplaceWebServiceProducts_Model_SalesRankList $sRanks */
                                 $sRanks = $p->getSalesRankings();
-                                if ($srl = $sRanks->getSalesRank()) {
+                                if ($sRanks && $srl = $sRanks->getSalesRank()) {
                                     /** @var MarketplaceWebServiceProducts_Model_SalesRankType $sr */
                                     foreach ($srl as $sr) {
                                         $oAmazonProductModel->cpr_SalesRank = max(intval($sr->getRank()), $oAmazonProductModel->cpr_SalesRank);
                                     }
                                 }
                                 /** @var MarketplaceWebServiceProducts_Model_CompetitivePricingType $comPricing */
-                                $comPricing = $p->getCompetitivePricing();
-                                /** @var MarketplaceWebServiceProducts_Model_CompetitivePriceList $comPrices */
-                                $comPrices = $comPricing->getCompetitivePrices();
-                                if ($cpl = $comPrices->getCompetitivePrice()) {
-                                    /** @var MarketplaceWebServiceProducts_Model_CompetitivePriceType $cp */
-                                    foreach ($cpl as $cp) {
-                                        if ($cp->getcondition() == 'New' && $cp->getsubcondition() == 'New') {
-                                            /** @var MarketplaceWebServiceProducts_Model_PriceType $price */
-                                            $price = $cp->getPrice();
-                                            if ($cp->getbelongsToRequester() == 'true') {
-                                                /** @var MarketplaceWebServiceProducts_Model_MoneyType $lPrice */
-                                                $lPrice = $price->getLandedPrice();
-                                                $oAmazonProductModel->cpr_belongs_LandedPrice = $lPrice->getAmount();
-                                                $oAmazonProductModel->buybox_in++;
-                                            } else {
-                                                $lPrice = $price->getListingPrice();
-                                                $oAmazonProductModel->cpr_LandedPrice = $lPrice->getAmount();
-                                                $oAmazonProductModel->buybox_out++;
+                                if ($comPricing = $p->getCompetitivePricing()) {
+                                    /** @var MarketplaceWebServiceProducts_Model_CompetitivePriceList $comPrices */
+                                    $comPrices = $comPricing->getCompetitivePrices();
+                                    if ($comPrices && $cpl = $comPrices->getCompetitivePrice()) {
+                                        /** @var MarketplaceWebServiceProducts_Model_CompetitivePriceType $cp */
+                                        foreach ($cpl as $cp) {
+                                            if ($cp->getcondition() == 'New' && $cp->getsubcondition() == 'New') {
+                                                /** @var MarketplaceWebServiceProducts_Model_PriceType $price */
+                                                $price = $cp->getPrice();
+                                                if ($cp->getbelongsToRequester() == 'true') {
+                                                    /** @var MarketplaceWebServiceProducts_Model_MoneyType $lPrice */
+                                                    $lPrice = $price->getLandedPrice();
+                                                    $oAmazonProductModel->cpr_belongs_LandedPrice = $lPrice->getAmount();
+                                                    $oAmazonProductModel->buybox_in++;
+                                                } else {
+                                                    $lPrice = $price->getListingPrice();
+                                                    $oAmazonProductModel->cpr_LandedPrice = $lPrice->getAmount();
+                                                    $oAmazonProductModel->buybox_out++;
+                                                }
                                             }
                                         }
                                     }
                                 }
 
                                 /** @var MarketplaceWebServiceProducts_Model_ASINIdentifier $identifierASIN */
-                                $identifierASIN = $identifier->getMarketplaceASIN();
-                                $sAsin = $identifierASIN->getASIN();
-                                if (!empty($sAsin)) {
-                                    $oAmazonProductModel->ASIN = $sAsin;
+                                if ($identifierASIN = $identifier->getMarketplaceASIN()) {
+                                    $sAsin = $identifierASIN->getASIN();
+                                    if (!empty($sAsin)) {
+                                        $oAmazonProductModel->ASIN = $sAsin;
+                                    }
                                 }
                                 $oAmazonProductModel->save();
                             }
