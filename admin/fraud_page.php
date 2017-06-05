@@ -775,7 +775,7 @@ if (!empty($fraud_checks) && is_array($fraud_checks)) {
                 'MANUAL_PAYPAL_FULLNAME_EQUAL_TO_ORDER',
                 'MANUAL_PAYPAL_EMAIL_EQUAL_TO_ORDER',
                 'MANUAL_PAYPAL_FULLNAME_VERIFIED'])) {
-                if ($oPaymentMethod && strpos($oPaymentMethod->payment_method . $oPaymentMethod->transaction_link_anchor, 'PayPal') === false ) {
+                if ($oPaymentMethod && in_array($oPaymentMethod->paymentid, [21, 102])) {
                     $fraud_checks[$k]["manual_action"] = "N";
                     $fraud_result = "negative";
                     $bare_fraud_score = $importance_factor_arr[0];
