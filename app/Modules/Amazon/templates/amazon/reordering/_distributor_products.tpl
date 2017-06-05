@@ -44,12 +44,12 @@
             <td align="center">{$product.instock_days_3m}</td>
             <td align="center">{$product.items_sold_last_1m_of_stock}</td>
             <td align="center">{$product.instock_days_1m}</td>
-            <td align="center">{$product.orders_rate_last_1_month|formatprice:",":"."}</td>
-            <td align="center">{$product.overall_orders_rate|formatprice:",":"."}</td>
-            <td class="float cost-to-us" align="center">${$product.cost_to_us|formatprice:",":"."}</td>
-            <td class="float" align="center">${$product.price|formatprice:",":"."}</td>
-            <td class="float" align="center">${$product.min_fba_price|formatprice:",":"."}</td>
-            <td align="center">{if $product.avg_comp_price >= 0}${$product.avg_comp_price|formatprice:",":"."}{/if}</td>
+            <td align="center">{$product.orders_rate_last_1_month|formatprice:"":"."}</td>
+            <td align="center">{$product.overall_orders_rate|formatprice:"":"."}</td>
+            <td class="float cost-to-us" align="center">${$product.cost_to_us|formatprice:"":"."}</td>
+            <td class="float" align="center">${$product.price|formatprice:"":"."}</td>
+            <td class="float" align="center">${$product.min_fba_price|formatprice:"":"."}</td>
+            <td align="center">{if $product.avg_comp_price >= 0}${$product.avg_comp_price|formatprice:"":"."}{/if}</td>
             <td align="center">{$product.ads_a}</td>
             <td align="center">{$product.ads_x}</td>
             <td align="center">{$product.r_avail}</td>
