@@ -59,33 +59,11 @@ class CategoryController extends Controller
         /**
          * block for filtrate
          */
+        $filters = FilterLibrary::getFilterStructure($pqs);
 
-
-        $oh = new ProductSortHelper($pqs);
-
-        switch ($orderBy) {
-            case 'price': {
-                $pqs = $oh->getOrderByPrice('');
-                break;
-            }
-            case '-price': {
-                $pqs = $oh->getOrderByPrice('-');
-                break;
-            }
-            case 'new': {
-                $pqs = $oh->getOrderByNew();
-                break;
-            }
-            case 'brand': {
-                $pqs = $oh->getOrderByBrand();
-                break;
-            }
-            case 'relevance':
-            default: {
-                $orderBy = ProductSortHelper::$default;
-                $pqs = $oh->getOrderByRelevance($model);
-            }
-        }
+        $pqs = (new ProductSortHelper($pqs))
+            ->setCategory($model)
+            ->getSortedQS($orderBy);
 
         $pager = new Pagination($pqs, ['pageSize' => 100, 'view' => 'core/pager/front_endless.tpl'], new QuerySetDataSource());
 
@@ -104,7 +82,7 @@ class CategoryController extends Controller
                 'sort'  => $orderBy,
                 'sort_arr'  => ProductSortHelper::$orderBy,
                 'breadcrumbs' => $model->getBreadcrumbs(),
-                'filters' => FilterLibrary::getFilterStructure($pqs),
+                'filters' => $filters,
             ]);
         }
     }

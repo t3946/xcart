@@ -18,6 +18,7 @@ class ProductSortHelper
 
     /** @var \Xcart\App\Orm\Manager|\Xcart\App\Orm\QuerySet  */
     private $qs;
+    private $category;
 
     /**
      * ProductSortHelper constructor.
@@ -26,6 +27,42 @@ class ProductSortHelper
      */
     public function __construct($qs) {
         $this->qs = $qs;
+        return $this;
+    }
+
+    public function setCategory($category = null)
+    {
+        $this->category = $category;
+        return $this;
+    }
+
+    public function getSortedQS($orderBy = 'relevance')
+    {
+        switch ($orderBy) {
+            case 'price': {
+                $pqs = $this->getOrderByPrice('');
+                break;
+            }
+            case '-price': {
+                $pqs = $this->getOrderByPrice('-');
+                break;
+            }
+            case 'new': {
+                $pqs = $this->getOrderByNew();
+                break;
+            }
+            case 'brand': {
+                $pqs = $this->getOrderByBrand();
+                break;
+            }
+            case 'relevance':
+            default: {
+                $orderBy = static::$default;
+                $pqs = $this->getOrderByRelevance();
+            }
+        }
+        
+        return $pqs;
     }
 
     /**
@@ -34,7 +71,7 @@ class ProductSortHelper
      *
      * @return \Xcart\App\Orm\Manager|\Xcart\App\Orm\QuerySet
      */
-    public function getOrderByRelevance($category, $max_product = 50)
+    public function getOrderByRelevance($max_product = 50)
     {
         $qs = clone $this->qs;
         $ta = $qs->getTableAlias();
@@ -44,7 +81,9 @@ class ProductSortHelper
         if ($p_ids = (new ViewedRelatedProducts())->getRelated()) {
             $t_ids = [];
 
-            $categories = CategoryModel::objects($category)->descendants(true)->valuesList(['pk'], true);
+            if ($this->category) {
+                $categories = CategoryModel::objects($this->category)->descendants(true)->valuesList(['pk'], true);
+            }
 
             foreach ($p_ids as $n => $product)
             {
@@ -53,11 +92,14 @@ class ProductSortHelper
 
                 if (in_array($push_el, $t_ids)) { continue; }
 
-                if (!empty($categories) && !empty($product['categoryid']))
+                if ($this->category && !empty($categories) && !empty($product['categoryid']))
                 {
                     if (!empty(array_intersect($categories, $product['categoryid']))) {
                         $push = true;
                     }
+                }
+                else if (!$this->category) {
+                    $push = true;
                 }
 
                 if ($push) {
