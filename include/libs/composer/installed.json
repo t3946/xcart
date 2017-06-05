@@ -410,130 +410,6 @@
         ]
     },
     {
-        "name": "doctrine/dbal",
-        "version": "v2.5.12",
-        "version_normalized": "2.5.12.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/doctrine/dbal.git",
-            "reference": "7b9e911f9d8b30d43b96853dab26898c710d8f44"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/doctrine/dbal/zipball/7b9e911f9d8b30d43b96853dab26898c710d8f44",
-            "reference": "7b9e911f9d8b30d43b96853dab26898c710d8f44",
-            "shasum": ""
-        },
-        "require": {
-            "doctrine/common": ">=2.4,<2.8-dev",
-            "php": ">=5.3.2"
-        },
-        "require-dev": {
-            "phpunit/phpunit": "4.*",
-            "symfony/console": "2.*||^3.0"
-        },
-        "suggest": {
-            "symfony/console": "For helpful console commands such as SQL execution and import of files."
-        },
-        "time": "2017-02-08T12:53:47+00:00",
-        "bin": [
-            "bin/doctrine-dbal"
-        ],
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "2.5.x-dev"
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "psr-0": {
-                "Doctrine\\DBAL\\": "lib/"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Roman Borschel",
-                "email": "roman@code-factory.org"
-            },
-            {
-                "name": "Benjamin Eberlei",
-                "email": "kontakt@beberlei.de"
-            },
-            {
-                "name": "Guilherme Blanco",
-                "email": "guilhermeblanco@gmail.com"
-            },
-            {
-                "name": "Jonathan Wage",
-                "email": "jonwage@gmail.com"
-            }
-        ],
-        "description": "Database Abstraction Layer",
-        "homepage": "http://www.doctrine-project.org",
-        "keywords": [
-            "database",
-            "dbal",
-            "persistence",
-            "queryobject"
-        ]
-    },
-    {
-        "name": "mindy/query_builder",
-        "version": "dev-master_5.4",
-        "version_normalized": "dev-master_5.4",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/tsukasa-mixer/QueryBuilder.git",
-            "reference": "044eef77c4efea8933e818c248c78b3f882f1767"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/tsukasa-mixer/QueryBuilder/zipball/044eef77c4efea8933e818c248c78b3f882f1767",
-            "reference": "044eef77c4efea8933e818c248c78b3f882f1767",
-            "shasum": ""
-        },
-        "require": {
-            "doctrine/dbal": "^2.5"
-        },
-        "require-dev": {
-            "phpunit/php-code-coverage": "^4",
-            "phpunit/phpunit": "*"
-        },
-        "time": "2017-05-16T18:20:10+00:00",
-        "type": "library",
-        "installation-source": "source",
-        "autoload": {
-            "files": [
-                "src/Conditions.php"
-            ],
-            "psr-4": {
-                "Mindy\\QueryBuilder\\": "src/"
-            }
-        },
-        "autoload-dev": {
-            "psr-4": {
-                "Mindy\\Tests\\": "test/"
-            }
-        },
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Falaleev Maxim",
-                "email": "max@studio107.ru"
-            }
-        ],
-        "support": {
-            "source": "https://github.com/tsukasa-mixer/QueryBuilder/tree/master_5.4"
-        }
-    },
-    {
         "name": "psr/log",
         "version": "1.0.2",
         "version_normalized": "1.0.2.0",
@@ -649,48 +525,6 @@
         ]
     },
     {
-        "name": "caponica/amazon-mws-complete",
-        "version": "dev-master",
-        "version_normalized": "9999999-dev",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/caponica/AmazonMwsComplete.git",
-            "reference": "a1de77b994914b9f119aa85dd1e7f90c9998f62e"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/caponica/AmazonMwsComplete/zipball/a1de77b994914b9f119aa85dd1e7f90c9998f62e",
-            "reference": "a1de77b994914b9f119aa85dd1e7f90c9998f62e",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.3.2"
-        },
-        "time": "2017-03-28T15:17:10+00:00",
-        "type": "library",
-        "installation-source": "source",
-        "autoload": {
-            "psr-0": {
-                "CaponicaAmazonMwsComplete\\": "src/"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "Apache-2.0"
-        ],
-        "authors": [
-            {
-                "name": "Christian Morgan, Caponica",
-                "homepage": "http://www.github.com/Caponica"
-            }
-        ],
-        "description": "Complete Amazon MWS PHP SDK, including all libraries",
-        "keywords": [
-            "amazon",
-            "mws"
-        ]
-    },
-    {
         "name": "psr/http-message",
         "version": "1.0.1",
         "version_normalized": "1.0.1.0",
@@ -740,121 +574,6 @@
             "psr-7",
             "request",
             "response"
-        ]
-    },
-    {
-        "name": "guzzlehttp/psr7",
-        "version": "1.4.2",
-        "version_normalized": "1.4.2.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/guzzle/psr7.git",
-            "reference": "f5b8a8512e2b58b0071a7280e39f14f72e05d87c"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/guzzle/psr7/zipball/f5b8a8512e2b58b0071a7280e39f14f72e05d87c",
-            "reference": "f5b8a8512e2b58b0071a7280e39f14f72e05d87c",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.4.0",
-            "psr/http-message": "~1.0"
-        },
-        "provide": {
-            "psr/http-message-implementation": "1.0"
-        },
-        "require-dev": {
-            "phpunit/phpunit": "~4.0"
-        },
-        "time": "2017-03-20T17:10:46+00:00",
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "1.4-dev"
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "GuzzleHttp\\Psr7\\": "src/"
-            },
-            "files": [
-                "src/functions_include.php"
-            ]
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Michael Dowling",
-                "email": "mtdowling@gmail.com",
-                "homepage": "https://github.com/mtdowling"
-            },
-            {
-                "name": "Tobias Schultze",
-                "homepage": "https://github.com/Tobion"
-            }
-        ],
-        "description": "PSR-7 message implementation that also provides common utility methods",
-        "keywords": [
-            "http",
-            "message",
-            "request",
-            "response",
-            "stream",
-            "uri",
-            "url"
-        ]
-    },
-    {
-        "name": "react/promise",
-        "version": "v2.5.1",
-        "version_normalized": "2.5.1.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/reactphp/promise.git",
-            "reference": "62785ae604c8d69725d693eb370e1d67e94c4053"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/reactphp/promise/zipball/62785ae604c8d69725d693eb370e1d67e94c4053",
-            "reference": "62785ae604c8d69725d693eb370e1d67e94c4053",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.4.0"
-        },
-        "require-dev": {
-            "phpunit/phpunit": "~4.8"
-        },
-        "time": "2017-03-25T12:08:31+00:00",
-        "type": "library",
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "React\\Promise\\": "src/"
-            },
-            "files": [
-                "src/functions_include.php"
-            ]
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Jan Sorgalla",
-                "email": "jsorgalla@gmail.com"
-            }
-        ],
-        "description": "A lightweight implementation of CommonJS Promises/A for PHP",
-        "keywords": [
-            "promise",
-            "promises"
         ]
     },
     {
@@ -1014,6 +733,520 @@
             "http client",
             "rest",
             "web service"
+        ]
+    },
+    {
+        "name": "firebase/php-jwt",
+        "version": "v4.0.0",
+        "version_normalized": "4.0.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/firebase/php-jwt.git",
+            "reference": "dccf163dc8ed7ed6a00afc06c51ee5186a428d35"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/firebase/php-jwt/zipball/dccf163dc8ed7ed6a00afc06c51ee5186a428d35",
+            "reference": "dccf163dc8ed7ed6a00afc06c51ee5186a428d35",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.0"
+        },
+        "time": "2016-07-18T04:51:16+00:00",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Firebase\\JWT\\": "src"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "BSD-3-Clause"
+        ],
+        "authors": [
+            {
+                "name": "Neuman Vong",
+                "email": "neuman+pear@twilio.com",
+                "role": "Developer"
+            },
+            {
+                "name": "Anant Narayanan",
+                "email": "anant@php.net",
+                "role": "Developer"
+            }
+        ],
+        "description": "A simple library to encode and decode JSON Web Tokens (JWT) in PHP. Should conform to the current spec.",
+        "homepage": "https://github.com/firebase/php-jwt"
+    },
+    {
+        "name": "psr/cache",
+        "version": "1.0.1",
+        "version_normalized": "1.0.1.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/php-fig/cache.git",
+            "reference": "d11b50ad223250cf17b86e38383413f5a6764bf8"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/php-fig/cache/zipball/d11b50ad223250cf17b86e38383413f5a6764bf8",
+            "reference": "d11b50ad223250cf17b86e38383413f5a6764bf8",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.0"
+        },
+        "time": "2016-08-06T20:24:11+00:00",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "1.0.x-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Psr\\Cache\\": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "PHP-FIG",
+                "homepage": "http://www.php-fig.org/"
+            }
+        ],
+        "description": "Common interface for caching libraries",
+        "keywords": [
+            "cache",
+            "psr",
+            "psr-6"
+        ]
+    },
+    {
+        "name": "google/auth",
+        "version": "v0.11.1",
+        "version_normalized": "0.11.1.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/google/google-auth-library-php.git",
+            "reference": "a240674b08a09949fd5597f7590b3ed83663a12d"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/google/google-auth-library-php/zipball/a240674b08a09949fd5597f7590b3ed83663a12d",
+            "reference": "a240674b08a09949fd5597f7590b3ed83663a12d",
+            "shasum": ""
+        },
+        "require": {
+            "firebase/php-jwt": "~2.0|~3.0|~4.0",
+            "guzzlehttp/guzzle": "~5.3|~6.0",
+            "guzzlehttp/psr7": "~1.2",
+            "php": ">=5.4",
+            "psr/cache": "^1.0",
+            "psr/http-message": "^1.0"
+        },
+        "require-dev": {
+            "friendsofphp/php-cs-fixer": "^1.11",
+            "phpunit/phpunit": "3.7.*"
+        },
+        "time": "2016-11-02T14:59:14+00:00",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "classmap": [
+                "src/"
+            ],
+            "psr-4": {
+                "Google\\Auth\\": "src"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "Apache-2.0"
+        ],
+        "description": "Google Auth Library for PHP",
+        "homepage": "http://github.com/google/google-auth-library-php",
+        "keywords": [
+            "Authentication",
+            "google",
+            "oauth2"
+        ]
+    },
+    {
+        "name": "paypal/rest-api-sdk-php",
+        "version": "1.11.0",
+        "version_normalized": "1.11.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/paypal/PayPal-PHP-SDK.git",
+            "reference": "7e664f12be32b975575371e8ad3bc17b6b318851"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/paypal/PayPal-PHP-SDK/zipball/7e664f12be32b975575371e8ad3bc17b6b318851",
+            "reference": "7e664f12be32b975575371e8ad3bc17b6b318851",
+            "shasum": ""
+        },
+        "require": {
+            "ext-curl": "*",
+            "ext-json": "*",
+            "php": ">=5.3.0",
+            "psr/log": "^1.0.0"
+        },
+        "require-dev": {
+            "phpunit/phpunit": "3.7.*"
+        },
+        "time": "2016-12-14T21:59:21+00:00",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-0": {
+                "PayPal": "lib/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "Apache-2.0"
+        ],
+        "authors": [
+            {
+                "name": "PayPal",
+                "homepage": "https://github.com/paypal/rest-api-sdk-php/contributors"
+            }
+        ],
+        "description": "PayPal's PHP SDK for REST APIs",
+        "homepage": "http://paypal.github.io/PayPal-PHP-SDK/",
+        "keywords": [
+            "payments",
+            "paypal",
+            "rest",
+            "sdk"
+        ]
+    },
+    {
+        "name": "symfony/polyfill-mbstring",
+        "version": "v1.3.0",
+        "version_normalized": "1.3.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/symfony/polyfill-mbstring.git",
+            "reference": "e79d363049d1c2128f133a2667e4f4190904f7f4"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/e79d363049d1c2128f133a2667e4f4190904f7f4",
+            "reference": "e79d363049d1c2128f133a2667e4f4190904f7f4",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.3"
+        },
+        "suggest": {
+            "ext-mbstring": "For best performance"
+        },
+        "time": "2016-11-14T01:06:16+00:00",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "1.3-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Symfony\\Polyfill\\Mbstring\\": ""
+            },
+            "files": [
+                "bootstrap.php"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Nicolas Grekas",
+                "email": "p@tchwork.com"
+            },
+            {
+                "name": "Symfony Community",
+                "homepage": "https://symfony.com/contributors"
+            }
+        ],
+        "description": "Symfony polyfill for the Mbstring extension",
+        "homepage": "https://symfony.com",
+        "keywords": [
+            "compatibility",
+            "mbstring",
+            "polyfill",
+            "portable",
+            "shim"
+        ]
+    },
+    {
+        "name": "true/punycode",
+        "version": "v2.1.1",
+        "version_normalized": "2.1.1.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/true/php-punycode.git",
+            "reference": "a4d0c11a36dd7f4e7cd7096076cab6d3378a071e"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/true/php-punycode/zipball/a4d0c11a36dd7f4e7cd7096076cab6d3378a071e",
+            "reference": "a4d0c11a36dd7f4e7cd7096076cab6d3378a071e",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.0",
+            "symfony/polyfill-mbstring": "^1.3"
+        },
+        "require-dev": {
+            "phpunit/phpunit": "~4.7",
+            "squizlabs/php_codesniffer": "~2.0"
+        },
+        "time": "2016-11-16T10:37:54+00:00",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "TrueBV\\": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Renan Gonçalves",
+                "email": "renan.saddam@gmail.com"
+            }
+        ],
+        "description": "A Bootstring encoding of Unicode for Internationalized Domain Names in Applications (IDNA)",
+        "homepage": "https://github.com/true/php-punycode",
+        "keywords": [
+            "idna",
+            "punycode"
+        ]
+    },
+    {
+        "name": "caponica/amazon-mws-complete",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/caponica/AmazonMwsComplete.git",
+            "reference": "a1de77b994914b9f119aa85dd1e7f90c9998f62e"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/caponica/AmazonMwsComplete/zipball/a1de77b994914b9f119aa85dd1e7f90c9998f62e",
+            "reference": "a1de77b994914b9f119aa85dd1e7f90c9998f62e",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.2"
+        },
+        "time": "2017-03-28T15:17:10+00:00",
+        "type": "library",
+        "installation-source": "source",
+        "autoload": {
+            "psr-0": {
+                "CaponicaAmazonMwsComplete\\": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "Apache-2.0"
+        ],
+        "authors": [
+            {
+                "name": "Christian Morgan, Caponica",
+                "homepage": "http://www.github.com/Caponica"
+            }
+        ],
+        "description": "Complete Amazon MWS PHP SDK, including all libraries",
+        "keywords": [
+            "amazon",
+            "mws"
+        ]
+    },
+    {
+        "name": "mobiledetect/mobiledetectlib",
+        "version": "2.8.25",
+        "version_normalized": "2.8.25.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/serbanghita/Mobile-Detect.git",
+            "reference": "f0896b5c7274d1450023b0b376240be902c3251c"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/serbanghita/Mobile-Detect/zipball/f0896b5c7274d1450023b0b376240be902c3251c",
+            "reference": "f0896b5c7274d1450023b0b376240be902c3251c",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.0.0"
+        },
+        "require-dev": {
+            "phpunit/phpunit": "*"
+        },
+        "time": "2017-03-29T13:59:30+00:00",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "classmap": [
+                "Mobile_Detect.php"
+            ],
+            "psr-0": {
+                "Detection": "namespaced/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Serban Ghita",
+                "email": "serbanghita@gmail.com",
+                "homepage": "http://mobiledetect.net",
+                "role": "Developer"
+            }
+        ],
+        "description": "Mobile_Detect is a lightweight PHP class for detecting mobile devices. It uses the User-Agent string combined with specific HTTP headers to detect the mobile environment.",
+        "homepage": "https://github.com/serbanghita/Mobile-Detect",
+        "keywords": [
+            "detect mobile devices",
+            "mobile",
+            "mobile detect",
+            "mobile detector",
+            "php mobile detect"
+        ]
+    },
+    {
+        "name": "guzzlehttp/psr7",
+        "version": "1.4.2",
+        "version_normalized": "1.4.2.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/guzzle/psr7.git",
+            "reference": "f5b8a8512e2b58b0071a7280e39f14f72e05d87c"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/guzzle/psr7/zipball/f5b8a8512e2b58b0071a7280e39f14f72e05d87c",
+            "reference": "f5b8a8512e2b58b0071a7280e39f14f72e05d87c",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.4.0",
+            "psr/http-message": "~1.0"
+        },
+        "provide": {
+            "psr/http-message-implementation": "1.0"
+        },
+        "require-dev": {
+            "phpunit/phpunit": "~4.0"
+        },
+        "time": "2017-03-20T17:10:46+00:00",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "1.4-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "GuzzleHttp\\Psr7\\": "src/"
+            },
+            "files": [
+                "src/functions_include.php"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Michael Dowling",
+                "email": "mtdowling@gmail.com",
+                "homepage": "https://github.com/mtdowling"
+            },
+            {
+                "name": "Tobias Schultze",
+                "homepage": "https://github.com/Tobion"
+            }
+        ],
+        "description": "PSR-7 message implementation that also provides common utility methods",
+        "keywords": [
+            "http",
+            "message",
+            "request",
+            "response",
+            "stream",
+            "uri",
+            "url"
+        ]
+    },
+    {
+        "name": "react/promise",
+        "version": "v2.5.1",
+        "version_normalized": "2.5.1.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/reactphp/promise.git",
+            "reference": "62785ae604c8d69725d693eb370e1d67e94c4053"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/reactphp/promise/zipball/62785ae604c8d69725d693eb370e1d67e94c4053",
+            "reference": "62785ae604c8d69725d693eb370e1d67e94c4053",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.4.0"
+        },
+        "require-dev": {
+            "phpunit/phpunit": "~4.8"
+        },
+        "time": "2017-03-25T12:08:31+00:00",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "React\\Promise\\": "src/"
+            },
+            "files": [
+                "src/functions_include.php"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Jan Sorgalla",
+                "email": "jsorgalla@gmail.com"
+            }
+        ],
+        "description": "A lightweight implementation of CommonJS Promises/A for PHP",
+        "keywords": [
+            "promise",
+            "promises"
         ]
     },
     {
@@ -1191,51 +1424,6 @@
         ]
     },
     {
-        "name": "firebase/php-jwt",
-        "version": "v4.0.0",
-        "version_normalized": "4.0.0.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/firebase/php-jwt.git",
-            "reference": "dccf163dc8ed7ed6a00afc06c51ee5186a428d35"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/firebase/php-jwt/zipball/dccf163dc8ed7ed6a00afc06c51ee5186a428d35",
-            "reference": "dccf163dc8ed7ed6a00afc06c51ee5186a428d35",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.3.0"
-        },
-        "time": "2016-07-18T04:51:16+00:00",
-        "type": "library",
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "Firebase\\JWT\\": "src"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "BSD-3-Clause"
-        ],
-        "authors": [
-            {
-                "name": "Neuman Vong",
-                "email": "neuman+pear@twilio.com",
-                "role": "Developer"
-            },
-            {
-                "name": "Anant Narayanan",
-                "email": "anant@php.net",
-                "role": "Developer"
-            }
-        ],
-        "description": "A simple library to encode and decode JSON Web Tokens (JWT) in PHP. Should conform to the current spec.",
-        "homepage": "https://github.com/firebase/php-jwt"
-    },
-    {
         "name": "google/apiclient-services",
         "version": "v0.11",
         "version_normalized": "0.11.0.0",
@@ -1272,104 +1460,6 @@
         "homepage": "http://developers.google.com/api-client-library/php",
         "keywords": [
             "google"
-        ]
-    },
-    {
-        "name": "psr/cache",
-        "version": "1.0.1",
-        "version_normalized": "1.0.1.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/php-fig/cache.git",
-            "reference": "d11b50ad223250cf17b86e38383413f5a6764bf8"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/php-fig/cache/zipball/d11b50ad223250cf17b86e38383413f5a6764bf8",
-            "reference": "d11b50ad223250cf17b86e38383413f5a6764bf8",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.3.0"
-        },
-        "time": "2016-08-06T20:24:11+00:00",
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "1.0.x-dev"
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "Psr\\Cache\\": "src/"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "PHP-FIG",
-                "homepage": "http://www.php-fig.org/"
-            }
-        ],
-        "description": "Common interface for caching libraries",
-        "keywords": [
-            "cache",
-            "psr",
-            "psr-6"
-        ]
-    },
-    {
-        "name": "google/auth",
-        "version": "v0.11.1",
-        "version_normalized": "0.11.1.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/google/google-auth-library-php.git",
-            "reference": "a240674b08a09949fd5597f7590b3ed83663a12d"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/google/google-auth-library-php/zipball/a240674b08a09949fd5597f7590b3ed83663a12d",
-            "reference": "a240674b08a09949fd5597f7590b3ed83663a12d",
-            "shasum": ""
-        },
-        "require": {
-            "firebase/php-jwt": "~2.0|~3.0|~4.0",
-            "guzzlehttp/guzzle": "~5.3|~6.0",
-            "guzzlehttp/psr7": "~1.2",
-            "php": ">=5.4",
-            "psr/cache": "^1.0",
-            "psr/http-message": "^1.0"
-        },
-        "require-dev": {
-            "friendsofphp/php-cs-fixer": "^1.11",
-            "phpunit/phpunit": "3.7.*"
-        },
-        "time": "2016-11-02T14:59:14+00:00",
-        "type": "library",
-        "installation-source": "dist",
-        "autoload": {
-            "classmap": [
-                "src/"
-            ],
-            "psr-4": {
-                "Google\\Auth\\": "src"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "Apache-2.0"
-        ],
-        "description": "Google Auth Library for PHP",
-        "homepage": "http://github.com/google/google-auth-library-php",
-        "keywords": [
-            "Authentication",
-            "google",
-            "oauth2"
         ]
     },
     {
@@ -1434,56 +1524,6 @@
         ]
     },
     {
-        "name": "jaybizzle/crawler-detect",
-        "version": "v1.2.43",
-        "version_normalized": "1.2.43.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/JayBizzle/Crawler-Detect.git",
-            "reference": "75628e4606c0a6e8cdacac4ac190be7386408b5b"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/JayBizzle/Crawler-Detect/zipball/75628e4606c0a6e8cdacac4ac190be7386408b5b",
-            "reference": "75628e4606c0a6e8cdacac4ac190be7386408b5b",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.3.0"
-        },
-        "require-dev": {
-            "phpunit/phpunit": "4.*"
-        },
-        "time": "2017-05-29T20:35:19+00:00",
-        "type": "library",
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "Jaybizzle\\CrawlerDetect\\": "src/"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Mark Beech",
-                "email": "m@rkbee.ch",
-                "role": "Developer"
-            }
-        ],
-        "description": "CrawlerDetect is a PHP class for detecting bots/crawlers/spiders via the user agent",
-        "homepage": "https://github.com/JayBizzle/Crawler-Detect/",
-        "keywords": [
-            "crawler",
-            "crawler detect",
-            "crawler detector",
-            "crawlerdetect",
-            "php crawler detect"
-        ]
-    },
-    {
         "name": "fenom/fenom",
         "version": "2.11.7",
         "version_normalized": "2.11.7.0",
@@ -1536,443 +1576,76 @@
         ]
     },
     {
-        "name": "paypal/rest-api-sdk-php",
-        "version": "1.11.0",
-        "version_normalized": "1.11.0.0",
+        "name": "doctrine/dbal",
+        "version": "v2.5.12",
+        "version_normalized": "2.5.12.0",
         "source": {
             "type": "git",
-            "url": "https://github.com/paypal/PayPal-PHP-SDK.git",
-            "reference": "7e664f12be32b975575371e8ad3bc17b6b318851"
+            "url": "https://github.com/doctrine/dbal.git",
+            "reference": "7b9e911f9d8b30d43b96853dab26898c710d8f44"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/paypal/PayPal-PHP-SDK/zipball/7e664f12be32b975575371e8ad3bc17b6b318851",
-            "reference": "7e664f12be32b975575371e8ad3bc17b6b318851",
+            "url": "https://api.github.com/repos/doctrine/dbal/zipball/7b9e911f9d8b30d43b96853dab26898c710d8f44",
+            "reference": "7b9e911f9d8b30d43b96853dab26898c710d8f44",
             "shasum": ""
         },
         "require": {
-            "ext-curl": "*",
-            "ext-json": "*",
-            "php": ">=5.3.0",
-            "psr/log": "^1.0.0"
+            "doctrine/common": ">=2.4,<2.8-dev",
+            "php": ">=5.3.2"
         },
         "require-dev": {
-            "phpunit/phpunit": "3.7.*"
+            "phpunit/phpunit": "4.*",
+            "symfony/console": "2.*||^3.0"
         },
-        "time": "2016-12-14T21:59:21+00:00",
+        "suggest": {
+            "symfony/console": "For helpful console commands such as SQL execution and import of files."
+        },
+        "time": "2017-02-08T12:53:47+00:00",
+        "bin": [
+            "bin/doctrine-dbal"
+        ],
         "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "2.5.x-dev"
+            }
+        },
         "installation-source": "dist",
         "autoload": {
             "psr-0": {
-                "PayPal": "lib/"
+                "Doctrine\\DBAL\\": "lib/"
             }
         },
         "notification-url": "https://packagist.org/downloads/",
         "license": [
-            "Apache-2.0"
+            "MIT"
         ],
         "authors": [
             {
-                "name": "PayPal",
-                "homepage": "https://github.com/paypal/rest-api-sdk-php/contributors"
+                "name": "Roman Borschel",
+                "email": "roman@code-factory.org"
+            },
+            {
+                "name": "Benjamin Eberlei",
+                "email": "kontakt@beberlei.de"
+            },
+            {
+                "name": "Guilherme Blanco",
+                "email": "guilhermeblanco@gmail.com"
+            },
+            {
+                "name": "Jonathan Wage",
+                "email": "jonwage@gmail.com"
             }
         ],
-        "description": "PayPal's PHP SDK for REST APIs",
-        "homepage": "http://paypal.github.io/PayPal-PHP-SDK/",
+        "description": "Database Abstraction Layer",
+        "homepage": "http://www.doctrine-project.org",
         "keywords": [
-            "payments",
-            "paypal",
-            "rest",
-            "sdk"
-        ]
-    },
-    {
-        "name": "symfony/polyfill-mbstring",
-        "version": "v1.3.0",
-        "version_normalized": "1.3.0.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/symfony/polyfill-mbstring.git",
-            "reference": "e79d363049d1c2128f133a2667e4f4190904f7f4"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/e79d363049d1c2128f133a2667e4f4190904f7f4",
-            "reference": "e79d363049d1c2128f133a2667e4f4190904f7f4",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.3.3"
-        },
-        "suggest": {
-            "ext-mbstring": "For best performance"
-        },
-        "time": "2016-11-14T01:06:16+00:00",
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "1.3-dev"
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "Symfony\\Polyfill\\Mbstring\\": ""
-            },
-            "files": [
-                "bootstrap.php"
-            ]
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Nicolas Grekas",
-                "email": "p@tchwork.com"
-            },
-            {
-                "name": "Symfony Community",
-                "homepage": "https://symfony.com/contributors"
-            }
-        ],
-        "description": "Symfony polyfill for the Mbstring extension",
-        "homepage": "https://symfony.com",
-        "keywords": [
-            "compatibility",
-            "mbstring",
-            "polyfill",
-            "portable",
-            "shim"
-        ]
-    },
-    {
-        "name": "symfony/translation",
-        "version": "v2.8.21",
-        "version_normalized": "2.8.21.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/symfony/translation.git",
-            "reference": "32b7c0bffc07772cf1a902e3464ef77117fa07c7"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/symfony/translation/zipball/32b7c0bffc07772cf1a902e3464ef77117fa07c7",
-            "reference": "32b7c0bffc07772cf1a902e3464ef77117fa07c7",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.3.9",
-            "symfony/polyfill-mbstring": "~1.0"
-        },
-        "conflict": {
-            "symfony/config": "<2.7"
-        },
-        "require-dev": {
-            "psr/log": "~1.0",
-            "symfony/config": "~2.8",
-            "symfony/intl": "~2.7.25|^2.8.18|~3.2.5",
-            "symfony/yaml": "~2.2|~3.0.0"
-        },
-        "suggest": {
-            "psr/log": "To use logging capability in translator",
-            "symfony/config": "",
-            "symfony/yaml": ""
-        },
-        "time": "2017-04-12T14:07:15+00:00",
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "2.8-dev"
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "Symfony\\Component\\Translation\\": ""
-            },
-            "exclude-from-classmap": [
-                "/Tests/"
-            ]
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Fabien Potencier",
-                "email": "fabien@symfony.com"
-            },
-            {
-                "name": "Symfony Community",
-                "homepage": "https://symfony.com/contributors"
-            }
-        ],
-        "description": "Symfony Translation Component",
-        "homepage": "https://symfony.com"
-    },
-    {
-        "name": "symfony/validator",
-        "version": "v2.8.21",
-        "version_normalized": "2.8.21.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/symfony/validator.git",
-            "reference": "e125c9ec86d615231817302115a1558cd74d9aa1"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/symfony/validator/zipball/e125c9ec86d615231817302115a1558cd74d9aa1",
-            "reference": "e125c9ec86d615231817302115a1558cd74d9aa1",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.3.9",
-            "symfony/polyfill-mbstring": "~1.0",
-            "symfony/translation": "~2.4|~3.0.0"
-        },
-        "require-dev": {
-            "doctrine/annotations": "~1.0",
-            "doctrine/cache": "~1.0",
-            "egulias/email-validator": "^1.2.1",
-            "symfony/config": "~2.2|~3.0.0",
-            "symfony/expression-language": "~2.4|~3.0.0",
-            "symfony/http-foundation": "~2.3|~3.0.0",
-            "symfony/intl": "~2.7.25|^2.8.18|~3.2.5",
-            "symfony/property-access": "~2.3|~3.0.0",
-            "symfony/yaml": "^2.0.5|~3.0.0"
-        },
-        "suggest": {
-            "doctrine/annotations": "For using the annotation mapping. You will also need doctrine/cache.",
-            "doctrine/cache": "For using the default cached annotation reader and metadata cache.",
-            "egulias/email-validator": "Strict (RFC compliant) email validation",
-            "symfony/config": "",
-            "symfony/expression-language": "For using the 2.4 Expression validator",
-            "symfony/http-foundation": "",
-            "symfony/intl": "",
-            "symfony/property-access": "For using the 2.4 Validator API",
-            "symfony/yaml": ""
-        },
-        "time": "2017-04-12T14:07:15+00:00",
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "2.8-dev"
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "Symfony\\Component\\Validator\\": ""
-            },
-            "exclude-from-classmap": [
-                "/Tests/"
-            ]
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Fabien Potencier",
-                "email": "fabien@symfony.com"
-            },
-            {
-                "name": "Symfony Community",
-                "homepage": "https://symfony.com/contributors"
-            }
-        ],
-        "description": "Symfony Validator Component",
-        "homepage": "https://symfony.com"
-    },
-    {
-        "name": "true/punycode",
-        "version": "v2.1.1",
-        "version_normalized": "2.1.1.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/true/php-punycode.git",
-            "reference": "a4d0c11a36dd7f4e7cd7096076cab6d3378a071e"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/true/php-punycode/zipball/a4d0c11a36dd7f4e7cd7096076cab6d3378a071e",
-            "reference": "a4d0c11a36dd7f4e7cd7096076cab6d3378a071e",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.3.0",
-            "symfony/polyfill-mbstring": "^1.3"
-        },
-        "require-dev": {
-            "phpunit/phpunit": "~4.7",
-            "squizlabs/php_codesniffer": "~2.0"
-        },
-        "time": "2016-11-16T10:37:54+00:00",
-        "type": "library",
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "TrueBV\\": "src/"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Renan Gonçalves",
-                "email": "renan.saddam@gmail.com"
-            }
-        ],
-        "description": "A Bootstring encoding of Unicode for Internationalized Domain Names in Applications (IDNA)",
-        "homepage": "https://github.com/true/php-punycode",
-        "keywords": [
-            "idna",
-            "punycode"
-        ]
-    },
-    {
-        "name": "mobiledetect/mobiledetectlib",
-        "version": "2.8.25",
-        "version_normalized": "2.8.25.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/serbanghita/Mobile-Detect.git",
-            "reference": "f0896b5c7274d1450023b0b376240be902c3251c"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/serbanghita/Mobile-Detect/zipball/f0896b5c7274d1450023b0b376240be902c3251c",
-            "reference": "f0896b5c7274d1450023b0b376240be902c3251c",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.0.0"
-        },
-        "require-dev": {
-            "phpunit/phpunit": "*"
-        },
-        "time": "2017-03-29T13:59:30+00:00",
-        "type": "library",
-        "installation-source": "dist",
-        "autoload": {
-            "classmap": [
-                "Mobile_Detect.php"
-            ],
-            "psr-0": {
-                "Detection": "namespaced/"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Serban Ghita",
-                "email": "serbanghita@gmail.com",
-                "homepage": "http://mobiledetect.net",
-                "role": "Developer"
-            }
-        ],
-        "description": "Mobile_Detect is a lightweight PHP class for detecting mobile devices. It uses the User-Agent string combined with specific HTTP headers to detect the mobile environment.",
-        "homepage": "https://github.com/serbanghita/Mobile-Detect",
-        "keywords": [
-            "detect mobile devices",
-            "mobile",
-            "mobile detect",
-            "mobile detector",
-            "php mobile detect"
-        ]
-    },
-    {
-        "name": "league/flysystem",
-        "version": "1.0.28",
-        "version_normalized": "1.0.28.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/thephpleague/flysystem.git",
-            "reference": "a9663643ff2d16d7f66ed1e0d3212c5491bc9044"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/a9663643ff2d16d7f66ed1e0d3212c5491bc9044",
-            "reference": "a9663643ff2d16d7f66ed1e0d3212c5491bc9044",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.4.0"
-        },
-        "conflict": {
-            "league/flysystem-sftp": "<1.0.6"
-        },
-        "require-dev": {
-            "ext-fileinfo": "*",
-            "mockery/mockery": "~0.9",
-            "phpspec/phpspec": "^2.2",
-            "phpunit/phpunit": "~4.8"
-        },
-        "suggest": {
-            "ext-fileinfo": "Required for MimeType",
-            "league/flysystem-aws-s3-v2": "Allows you to use S3 storage with AWS SDK v2",
-            "league/flysystem-aws-s3-v3": "Allows you to use S3 storage with AWS SDK v3",
-            "league/flysystem-azure": "Allows you to use Windows Azure Blob storage",
-            "league/flysystem-cached-adapter": "Flysystem adapter decorator for metadata caching",
-            "league/flysystem-copy": "Allows you to use Copy.com storage",
-            "league/flysystem-dropbox": "Allows you to use Dropbox storage",
-            "league/flysystem-eventable-filesystem": "Allows you to use EventableFilesystem",
-            "league/flysystem-rackspace": "Allows you to use Rackspace Cloud Files",
-            "league/flysystem-sftp": "Allows you to use SFTP server storage via phpseclib",
-            "league/flysystem-webdav": "Allows you to use WebDAV storage",
-            "league/flysystem-ziparchive": "Allows you to use ZipArchive adapter"
-        },
-        "time": "2016-10-07T12:20:37+00:00",
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "1.1-dev"
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "League\\Flysystem\\": "src/"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Frank de Jonge",
-                "email": "info@frenky.net"
-            }
-        ],
-        "description": "Filesystem abstraction: Many filesystems, one API.",
-        "keywords": [
-            "Cloud Files",
-            "WebDAV",
-            "abstraction",
-            "aws",
-            "cloud",
-            "copy.com",
-            "dropbox",
-            "file systems",
-            "files",
-            "filesystem",
-            "filesystems",
-            "ftp",
-            "rackspace",
-            "remote",
-            "s3",
-            "sftp",
-            "storage"
+            "database",
+            "dbal",
+            "persistence",
+            "queryobject"
         ]
     },
     {
@@ -2193,5 +1866,652 @@
         ],
         "description": "Symfony HttpFoundation Component",
         "homepage": "https://symfony.com"
+    },
+    {
+        "name": "symfony/event-dispatcher",
+        "version": "v2.8.21",
+        "version_normalized": "2.8.21.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/symfony/event-dispatcher.git",
+            "reference": "7fc8e2b4118ff316550596357325dfd92a51f531"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/symfony/event-dispatcher/zipball/7fc8e2b4118ff316550596357325dfd92a51f531",
+            "reference": "7fc8e2b4118ff316550596357325dfd92a51f531",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.9"
+        },
+        "require-dev": {
+            "psr/log": "~1.0",
+            "symfony/config": "^2.0.5|~3.0.0",
+            "symfony/dependency-injection": "~2.6|~3.0.0",
+            "symfony/expression-language": "~2.6|~3.0.0",
+            "symfony/stopwatch": "~2.3|~3.0.0"
+        },
+        "suggest": {
+            "symfony/dependency-injection": "",
+            "symfony/http-kernel": ""
+        },
+        "time": "2017-04-26T16:56:54+00:00",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "2.8-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Symfony\\Component\\EventDispatcher\\": ""
+            },
+            "exclude-from-classmap": [
+                "/Tests/"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Fabien Potencier",
+                "email": "fabien@symfony.com"
+            },
+            {
+                "name": "Symfony Community",
+                "homepage": "https://symfony.com/contributors"
+            }
+        ],
+        "description": "Symfony EventDispatcher Component",
+        "homepage": "https://symfony.com"
+    },
+    {
+        "name": "guzzle/guzzle",
+        "version": "v3.9.3",
+        "version_normalized": "3.9.3.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/guzzle/guzzle3.git",
+            "reference": "0645b70d953bc1c067bbc8d5bc53194706b628d9"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/guzzle/guzzle3/zipball/0645b70d953bc1c067bbc8d5bc53194706b628d9",
+            "reference": "0645b70d953bc1c067bbc8d5bc53194706b628d9",
+            "shasum": ""
+        },
+        "require": {
+            "ext-curl": "*",
+            "php": ">=5.3.3",
+            "symfony/event-dispatcher": "~2.1"
+        },
+        "replace": {
+            "guzzle/batch": "self.version",
+            "guzzle/cache": "self.version",
+            "guzzle/common": "self.version",
+            "guzzle/http": "self.version",
+            "guzzle/inflection": "self.version",
+            "guzzle/iterator": "self.version",
+            "guzzle/log": "self.version",
+            "guzzle/parser": "self.version",
+            "guzzle/plugin": "self.version",
+            "guzzle/plugin-async": "self.version",
+            "guzzle/plugin-backoff": "self.version",
+            "guzzle/plugin-cache": "self.version",
+            "guzzle/plugin-cookie": "self.version",
+            "guzzle/plugin-curlauth": "self.version",
+            "guzzle/plugin-error-response": "self.version",
+            "guzzle/plugin-history": "self.version",
+            "guzzle/plugin-log": "self.version",
+            "guzzle/plugin-md5": "self.version",
+            "guzzle/plugin-mock": "self.version",
+            "guzzle/plugin-oauth": "self.version",
+            "guzzle/service": "self.version",
+            "guzzle/stream": "self.version"
+        },
+        "require-dev": {
+            "doctrine/cache": "~1.3",
+            "monolog/monolog": "~1.0",
+            "phpunit/phpunit": "3.7.*",
+            "psr/log": "~1.0",
+            "symfony/class-loader": "~2.1",
+            "zendframework/zend-cache": "2.*,<2.3",
+            "zendframework/zend-log": "2.*,<2.3"
+        },
+        "suggest": {
+            "guzzlehttp/guzzle": "Guzzle 5 has moved to a new package name. The package you have installed, Guzzle 3, is deprecated."
+        },
+        "time": "2015-03-18T18:23:50+00:00",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "3.9-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-0": {
+                "Guzzle": "src/",
+                "Guzzle\\Tests": "tests/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Michael Dowling",
+                "email": "mtdowling@gmail.com",
+                "homepage": "https://github.com/mtdowling"
+            },
+            {
+                "name": "Guzzle Community",
+                "homepage": "https://github.com/guzzle/guzzle/contributors"
+            }
+        ],
+        "description": "PHP HTTP client. This library is deprecated in favor of https://packagist.org/packages/guzzlehttp/guzzle",
+        "homepage": "http://guzzlephp.org/",
+        "keywords": [
+            "client",
+            "curl",
+            "framework",
+            "http",
+            "http client",
+            "rest",
+            "web service"
+        ],
+        "abandoned": "guzzlehttp/guzzle"
+    },
+    {
+        "name": "omnipay/common",
+        "version": "2.5.2",
+        "version_normalized": "2.5.2.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/thephpleague/omnipay-common.git",
+            "reference": "54910f2ece6b1be64f5e53e2111dd1254d50ee49"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/thephpleague/omnipay-common/zipball/54910f2ece6b1be64f5e53e2111dd1254d50ee49",
+            "reference": "54910f2ece6b1be64f5e53e2111dd1254d50ee49",
+            "shasum": ""
+        },
+        "require": {
+            "guzzle/guzzle": "~3.9",
+            "php": ">=5.3.2",
+            "symfony/http-foundation": "~2.1|~3.0"
+        },
+        "require-dev": {
+            "omnipay/tests": "~2.0",
+            "squizlabs/php_codesniffer": "~1.5"
+        },
+        "time": "2016-11-07T06:10:23+00:00",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "2.5.x-dev"
+            },
+            "gateways": [
+                "AuthorizeNet_AIM",
+                "AuthorizeNet_SIM",
+                "Buckaroo_CreditCard",
+                "Buckaroo_Ideal",
+                "Buckaroo_PayPal",
+                "CardSave",
+                "Coinbase",
+                "Dummy",
+                "Eway_Rapid",
+                "FirstData_Connect",
+                "GoCardless",
+                "Manual",
+                "Migs_ThreeParty",
+                "Migs_TwoParty",
+                "Mollie",
+                "MultiSafepay",
+                "Netaxept",
+                "NetBanx",
+                "PayFast",
+                "Payflow_Pro",
+                "PaymentExpress_PxPay",
+                "PaymentExpress_PxPost",
+                "PayPal_Express",
+                "PayPal_Pro",
+                "Pin",
+                "SagePay_Direct",
+                "SagePay_Server",
+                "SecurePay_DirectPost",
+                "Stripe",
+                "TargetPay_Directebanking",
+                "TargetPay_Ideal",
+                "TargetPay_Mrcash",
+                "WorldPay"
+            ]
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-0": {
+                "Omnipay\\Common\\": "src/"
+            },
+            "classmap": [
+                "src/Omnipay/Omnipay.php"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Adrian Macneil",
+                "email": "adrian@adrianmacneil.com"
+            },
+            {
+                "name": "Omnipay Contributors",
+                "homepage": "https://github.com/thephpleague/omnipay-common/contributors"
+            }
+        ],
+        "description": "Common components for Omnipay payment processing library",
+        "homepage": "https://github.com/thephpleague/omnipay-common",
+        "keywords": [
+            "gateway",
+            "merchant",
+            "omnipay",
+            "pay",
+            "payment",
+            "purchase"
+        ]
+    },
+    {
+        "name": "omnipay/paypal",
+        "version": "v2.6.3",
+        "version_normalized": "2.6.3.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/thephpleague/omnipay-paypal.git",
+            "reference": "e06c8814deacc793715bb9fd3fcae5995b5d8d6b"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/thephpleague/omnipay-paypal/zipball/e06c8814deacc793715bb9fd3fcae5995b5d8d6b",
+            "reference": "e06c8814deacc793715bb9fd3fcae5995b5d8d6b",
+            "shasum": ""
+        },
+        "require": {
+            "omnipay/common": "~2.0"
+        },
+        "require-dev": {
+            "omnipay/tests": "~2.0"
+        },
+        "time": "2016-12-22T12:35:25+00:00",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "2.3.x-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Omnipay\\PayPal\\": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Adrian Macneil",
+                "email": "adrian@adrianmacneil.com"
+            },
+            {
+                "name": "Omnipay Contributors",
+                "homepage": "https://github.com/thephpleague/omnipay-paypal/contributors"
+            }
+        ],
+        "description": "PayPal gateway for Omnipay payment processing library",
+        "homepage": "https://github.com/thephpleague/omnipay-paypal",
+        "keywords": [
+            "gateway",
+            "merchant",
+            "omnipay",
+            "pay",
+            "payment",
+            "paypal",
+            "purchase"
+        ]
+    },
+    {
+        "name": "jaybizzle/crawler-detect",
+        "version": "v1.2.43",
+        "version_normalized": "1.2.43.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/JayBizzle/Crawler-Detect.git",
+            "reference": "75628e4606c0a6e8cdacac4ac190be7386408b5b"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/JayBizzle/Crawler-Detect/zipball/75628e4606c0a6e8cdacac4ac190be7386408b5b",
+            "reference": "75628e4606c0a6e8cdacac4ac190be7386408b5b",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.0"
+        },
+        "require-dev": {
+            "phpunit/phpunit": "4.*"
+        },
+        "time": "2017-05-29T20:35:19+00:00",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Jaybizzle\\CrawlerDetect\\": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Mark Beech",
+                "email": "m@rkbee.ch",
+                "role": "Developer"
+            }
+        ],
+        "description": "CrawlerDetect is a PHP class for detecting bots/crawlers/spiders via the user agent",
+        "homepage": "https://github.com/JayBizzle/Crawler-Detect/",
+        "keywords": [
+            "crawler",
+            "crawler detect",
+            "crawler detector",
+            "crawlerdetect",
+            "php crawler detect"
+        ]
+    },
+    {
+        "name": "symfony/translation",
+        "version": "v2.8.21",
+        "version_normalized": "2.8.21.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/symfony/translation.git",
+            "reference": "32b7c0bffc07772cf1a902e3464ef77117fa07c7"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/symfony/translation/zipball/32b7c0bffc07772cf1a902e3464ef77117fa07c7",
+            "reference": "32b7c0bffc07772cf1a902e3464ef77117fa07c7",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.9",
+            "symfony/polyfill-mbstring": "~1.0"
+        },
+        "conflict": {
+            "symfony/config": "<2.7"
+        },
+        "require-dev": {
+            "psr/log": "~1.0",
+            "symfony/config": "~2.8",
+            "symfony/intl": "~2.7.25|^2.8.18|~3.2.5",
+            "symfony/yaml": "~2.2|~3.0.0"
+        },
+        "suggest": {
+            "psr/log": "To use logging capability in translator",
+            "symfony/config": "",
+            "symfony/yaml": ""
+        },
+        "time": "2017-04-12T14:07:15+00:00",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "2.8-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Symfony\\Component\\Translation\\": ""
+            },
+            "exclude-from-classmap": [
+                "/Tests/"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Fabien Potencier",
+                "email": "fabien@symfony.com"
+            },
+            {
+                "name": "Symfony Community",
+                "homepage": "https://symfony.com/contributors"
+            }
+        ],
+        "description": "Symfony Translation Component",
+        "homepage": "https://symfony.com"
+    },
+    {
+        "name": "symfony/validator",
+        "version": "v2.8.21",
+        "version_normalized": "2.8.21.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/symfony/validator.git",
+            "reference": "e125c9ec86d615231817302115a1558cd74d9aa1"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/symfony/validator/zipball/e125c9ec86d615231817302115a1558cd74d9aa1",
+            "reference": "e125c9ec86d615231817302115a1558cd74d9aa1",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.9",
+            "symfony/polyfill-mbstring": "~1.0",
+            "symfony/translation": "~2.4|~3.0.0"
+        },
+        "require-dev": {
+            "doctrine/annotations": "~1.0",
+            "doctrine/cache": "~1.0",
+            "egulias/email-validator": "^1.2.1",
+            "symfony/config": "~2.2|~3.0.0",
+            "symfony/expression-language": "~2.4|~3.0.0",
+            "symfony/http-foundation": "~2.3|~3.0.0",
+            "symfony/intl": "~2.7.25|^2.8.18|~3.2.5",
+            "symfony/property-access": "~2.3|~3.0.0",
+            "symfony/yaml": "^2.0.5|~3.0.0"
+        },
+        "suggest": {
+            "doctrine/annotations": "For using the annotation mapping. You will also need doctrine/cache.",
+            "doctrine/cache": "For using the default cached annotation reader and metadata cache.",
+            "egulias/email-validator": "Strict (RFC compliant) email validation",
+            "symfony/config": "",
+            "symfony/expression-language": "For using the 2.4 Expression validator",
+            "symfony/http-foundation": "",
+            "symfony/intl": "",
+            "symfony/property-access": "For using the 2.4 Validator API",
+            "symfony/yaml": ""
+        },
+        "time": "2017-04-12T14:07:15+00:00",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "2.8-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Symfony\\Component\\Validator\\": ""
+            },
+            "exclude-from-classmap": [
+                "/Tests/"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Fabien Potencier",
+                "email": "fabien@symfony.com"
+            },
+            {
+                "name": "Symfony Community",
+                "homepage": "https://symfony.com/contributors"
+            }
+        ],
+        "description": "Symfony Validator Component",
+        "homepage": "https://symfony.com"
+    },
+    {
+        "name": "mindy/query_builder",
+        "version": "dev-master_5.4",
+        "version_normalized": "dev-master_5.4",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/tsukasa-mixer/QueryBuilder.git",
+            "reference": "c2f6c7fda065b3ec8da4a5280f0799b00f50b1d0"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/tsukasa-mixer/QueryBuilder/zipball/c2f6c7fda065b3ec8da4a5280f0799b00f50b1d0",
+            "reference": "c2f6c7fda065b3ec8da4a5280f0799b00f50b1d0",
+            "shasum": ""
+        },
+        "require": {
+            "doctrine/dbal": "^2.5"
+        },
+        "require-dev": {
+            "phpunit/php-code-coverage": "^4",
+            "phpunit/phpunit": "*"
+        },
+        "time": "2017-05-31T10:53:07+00:00",
+        "type": "library",
+        "installation-source": "source",
+        "autoload": {
+            "files": [
+                "src/Conditions.php"
+            ],
+            "psr-4": {
+                "Mindy\\QueryBuilder\\": "src/"
+            }
+        },
+        "autoload-dev": {
+            "psr-4": {
+                "Mindy\\Tests\\": "test/"
+            }
+        },
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Falaleev Maxim",
+                "email": "max@studio107.ru"
+            }
+        ],
+        "support": {
+            "source": "https://github.com/tsukasa-mixer/QueryBuilder/tree/master_5.4"
+        }
+    },
+    {
+        "name": "league/flysystem",
+        "version": "1.0.28",
+        "version_normalized": "1.0.28.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/thephpleague/flysystem.git",
+            "reference": "a9663643ff2d16d7f66ed1e0d3212c5491bc9044"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/a9663643ff2d16d7f66ed1e0d3212c5491bc9044",
+            "reference": "a9663643ff2d16d7f66ed1e0d3212c5491bc9044",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.4.0"
+        },
+        "conflict": {
+            "league/flysystem-sftp": "<1.0.6"
+        },
+        "require-dev": {
+            "ext-fileinfo": "*",
+            "mockery/mockery": "~0.9",
+            "phpspec/phpspec": "^2.2",
+            "phpunit/phpunit": "~4.8"
+        },
+        "suggest": {
+            "ext-fileinfo": "Required for MimeType",
+            "league/flysystem-aws-s3-v2": "Allows you to use S3 storage with AWS SDK v2",
+            "league/flysystem-aws-s3-v3": "Allows you to use S3 storage with AWS SDK v3",
+            "league/flysystem-azure": "Allows you to use Windows Azure Blob storage",
+            "league/flysystem-cached-adapter": "Flysystem adapter decorator for metadata caching",
+            "league/flysystem-copy": "Allows you to use Copy.com storage",
+            "league/flysystem-dropbox": "Allows you to use Dropbox storage",
+            "league/flysystem-eventable-filesystem": "Allows you to use EventableFilesystem",
+            "league/flysystem-rackspace": "Allows you to use Rackspace Cloud Files",
+            "league/flysystem-sftp": "Allows you to use SFTP server storage via phpseclib",
+            "league/flysystem-webdav": "Allows you to use WebDAV storage",
+            "league/flysystem-ziparchive": "Allows you to use ZipArchive adapter"
+        },
+        "time": "2016-10-07T12:20:37+00:00",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "1.1-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "League\\Flysystem\\": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Frank de Jonge",
+                "email": "info@frenky.net"
+            }
+        ],
+        "description": "Filesystem abstraction: Many filesystems, one API.",
+        "keywords": [
+            "Cloud Files",
+            "WebDAV",
+            "abstraction",
+            "aws",
+            "cloud",
+            "copy.com",
+            "dropbox",
+            "file systems",
+            "files",
+            "filesystem",
+            "filesystems",
+            "ftp",
+            "rackspace",
+            "remote",
+            "s3",
+            "sftp",
+            "storage"
+        ]
     }
 ]
