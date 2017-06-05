@@ -541,7 +541,7 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array("auth
         $paymentid = 5;
         if ($gw) {
             if ($pmVT = PaymentMethodModel::objects()
-                ->filter(['payment_method' => $gw->gateway->getName() . ' VT','active' => 'Y'])
+                ->filter(['payment_method' => $gw->gateway->getName() . ' VT'])
                 ->limit(1)
                 ->get())
             {
