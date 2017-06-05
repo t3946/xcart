@@ -115,7 +115,6 @@ class CategoryModel extends AutoMetaTreeModel
             $pcountSql = str_replace($ta, 'cp', $pcountSql);
             $pcountSql = str_replace("{{category}}", $ta, $pcountSql);
 
-            $qs->with(['products']);
             $qs->group(['categoryid']);
             $qs->select([
                 'pcount' => $pcountSql,
