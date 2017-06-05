@@ -2235,57 +2235,6 @@
         "homepage": "https://symfony.com"
     },
     {
-        "name": "mindy/query_builder",
-        "version": "dev-master_5.4",
-        "version_normalized": "dev-master_5.4",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/tsukasa-mixer/QueryBuilder.git",
-            "reference": "c2f6c7fda065b3ec8da4a5280f0799b00f50b1d0"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/tsukasa-mixer/QueryBuilder/zipball/c2f6c7fda065b3ec8da4a5280f0799b00f50b1d0",
-            "reference": "c2f6c7fda065b3ec8da4a5280f0799b00f50b1d0",
-            "shasum": ""
-        },
-        "require": {
-            "doctrine/dbal": "^2.5"
-        },
-        "require-dev": {
-            "phpunit/php-code-coverage": "^4",
-            "phpunit/phpunit": "*"
-        },
-        "time": "2017-05-31T10:53:07+00:00",
-        "type": "library",
-        "installation-source": "source",
-        "autoload": {
-            "files": [
-                "src/Conditions.php"
-            ],
-            "psr-4": {
-                "Mindy\\QueryBuilder\\": "src/"
-            }
-        },
-        "autoload-dev": {
-            "psr-4": {
-                "Mindy\\Tests\\": "test/"
-            }
-        },
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Falaleev Maxim",
-                "email": "max@studio107.ru"
-            }
-        ],
-        "support": {
-            "source": "https://github.com/tsukasa-mixer/QueryBuilder/tree/master_5.4"
-        }
-    },
-    {
         "name": "league/flysystem",
         "version": "1.0.28",
         "version_normalized": "1.0.28.0",
@@ -2513,5 +2462,56 @@
             "x.509",
             "x509"
         ]
+    },
+    {
+        "name": "mindy/query_builder",
+        "version": "dev-master_5.4",
+        "version_normalized": "dev-master_5.4",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/tsukasa-mixer/QueryBuilder.git",
+            "reference": "76ef28f7bda22ee4fe8e88026974cf30fbca2a7b"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/tsukasa-mixer/QueryBuilder/zipball/76ef28f7bda22ee4fe8e88026974cf30fbca2a7b",
+            "reference": "76ef28f7bda22ee4fe8e88026974cf30fbca2a7b",
+            "shasum": ""
+        },
+        "require": {
+            "doctrine/dbal": "^2.5"
+        },
+        "require-dev": {
+            "phpunit/php-code-coverage": "^4",
+            "phpunit/phpunit": "*"
+        },
+        "time": "2017-06-05T16:08:14+00:00",
+        "type": "library",
+        "installation-source": "source",
+        "autoload": {
+            "files": [
+                "src/Conditions.php"
+            ],
+            "psr-4": {
+                "Mindy\\QueryBuilder\\": "src/"
+            }
+        },
+        "autoload-dev": {
+            "psr-4": {
+                "Mindy\\Tests\\": "test/"
+            }
+        },
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Falaleev Maxim",
+                "email": "max@studio107.ru"
+            }
+        ],
+        "support": {
+            "source": "https://github.com/tsukasa-mixer/QueryBuilder/tree/master_5.4"
+        }
     }
 ]

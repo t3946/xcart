@@ -1108,9 +1108,37 @@ class QueryBuilder
         return empty($sql) ? '' : ' ORDER BY ' . $sql;
     }
 
+    /**
+     * @param $group
+     * @return string
+     */
+    protected function buildGroupJoin($group)
+    {
+        if (strpos($group, '.') === false) {
+            $group = $this->getLookupBuilder()->fetchColumnName($group);
+            $newGroup = $this->getLookupBuilder()->buildJoin($this, $group);
+
+            if ($newGroup === false) {
+                return $newGroup;
+            } else {
+                list($alias, $column) = $newGroup;
+                return $alias . '.' . $column;
+            }
+        }
+        return $group;
+    }
+
     public function buildGroup()
     {
-        $sql = $this->getAdapter()->sqlGroupBy($this->_group);
+        $group = [];
+        if ($this->_group) {
+            foreach ($this->_group as $key => $column) {
+                $newColumn = $this->buildGroupJoin($column);
+                $group[] = $this->applyTableAlias($newColumn);
+            }
+        }
+
+        $sql = $this->getAdapter()->sqlGroupBy($group);
         return empty($sql) ? '' : ' GROUP BY ' . $sql;
     }
 
