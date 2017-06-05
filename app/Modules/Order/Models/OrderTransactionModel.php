@@ -1,9 +1,11 @@
 <?php
 namespace Modules\Order\Models;
 
+use Modules\Payment\Models\PaymentMethodModel;
 use Xcart\App\Orm\AutoMetaModel;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\CharField;
+use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\SerializeField;
 
 class OrderTransactionModel extends AutoMetaModel
@@ -37,6 +39,12 @@ class OrderTransactionModel extends AutoMetaModel
             'transaction_response' => [
                 'class' => SerializeField::className(),
                 'null' => true,
+            ],
+            'payment_method_model' => [
+                'field' => 'paymentid',
+                'class' => ForeignField::className(),
+                'modelClass' => PaymentMethodModel::className(),
+                'null' => false,
             ]
         ];
     }
