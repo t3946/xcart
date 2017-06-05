@@ -748,7 +748,11 @@ class QuerySet extends QuerySetBase
 
     private function fieldAlias($field)
     {
-        if (!is_object($field) && !is_numeric($field) && strpos($field, '.') === false) {
+        if (!is_object($field)
+            && !is_numeric($field)
+            && strpos($field, '.') === false
+            && strpos($field, $this->getQueryBuilder()->getLookupBuilder()->getSeparator()) === false
+        ) {
             $field = $this->getTableAlias() .'.'. $field;
         }
         return $field;
