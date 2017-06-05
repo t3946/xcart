@@ -44,7 +44,7 @@
                 "amazon",
                 "mws"
             ],
-            "time": "2017-03-28T15:17:10+00:00"
+            "time": "2017-03-28 15:17:10"
         },
         {
             "name": "doctrine/annotations",
@@ -1174,16 +1174,16 @@
         },
         {
             "name": "jaybizzle/crawler-detect",
-            "version": "v1.2.43",
+            "version": "v1.2.44",
             "source": {
                 "type": "git",
                 "url": "https://github.com/JayBizzle/Crawler-Detect.git",
-                "reference": "75628e4606c0a6e8cdacac4ac190be7386408b5b"
+                "reference": "dd14c05b3aed6ca75acfc77fbd864e37d83777bc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/JayBizzle/Crawler-Detect/zipball/75628e4606c0a6e8cdacac4ac190be7386408b5b",
-                "reference": "75628e4606c0a6e8cdacac4ac190be7386408b5b",
+                "url": "https://api.github.com/repos/JayBizzle/Crawler-Detect/zipball/dd14c05b3aed6ca75acfc77fbd864e37d83777bc",
+                "reference": "dd14c05b3aed6ca75acfc77fbd864e37d83777bc",
                 "shasum": ""
             },
             "require": {
@@ -1218,7 +1218,7 @@
                 "crawlerdetect",
                 "php crawler detect"
             ],
-            "time": "2017-05-29T20:35:19+00:00"
+            "time": "2017-06-03T10:19:31+00:00"
         },
         {
             "name": "league/flysystem",
@@ -1689,16 +1689,16 @@
         },
         {
             "name": "phpseclib/phpseclib",
-            "version": "2.0.5",
+            "version": "2.0.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpseclib/phpseclib.git",
-                "reference": "f8dd0e18d2328c447dd4190fecd11ef52680d968"
+                "reference": "34a7699e6f31b1ef4035ee36444407cecf9f56aa"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/f8dd0e18d2328c447dd4190fecd11ef52680d968",
-                "reference": "f8dd0e18d2328c447dd4190fecd11ef52680d968",
+                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/34a7699e6f31b1ef4035ee36444407cecf9f56aa",
+                "reference": "34a7699e6f31b1ef4035ee36444407cecf9f56aa",
                 "shasum": ""
             },
             "require": {
@@ -1777,7 +1777,7 @@
                 "x.509",
                 "x509"
             ],
-            "time": "2017-05-08T05:58:35+00:00"
+            "time": "2017-06-05T06:31:10+00:00"
         },
         {
             "name": "psr/cache",
