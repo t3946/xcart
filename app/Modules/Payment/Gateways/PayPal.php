@@ -7,7 +7,7 @@ class PayPal extends Gateway
 {
     public static function getProcessorName()
     {
-        return 'PayPal_REST';
+        return 'PayPal_Rest';
     }
 
     public function init()
