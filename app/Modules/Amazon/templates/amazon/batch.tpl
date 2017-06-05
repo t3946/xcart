@@ -191,6 +191,8 @@
                     + 'Current Amazon Price' + colDelim
                     + 'Min FBA price' + colDelim
                     + 'AVG comp price' + colDelim
+                    + 'ADSa' + colDelim
+                    + 'ADSx' + colDelim
                     + 'Dx stock qty' + colDelim
                     + 'Total stock' + colDelim
                     + 'Restocking qty'
