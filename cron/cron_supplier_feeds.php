@@ -52,7 +52,7 @@ if ($config[$log_category] == "Y") {
     $oMail->subject = sprintf('Attention! Xcart cron %s Already launched', $log_category);
     $oMail->body = $log_category . ' already launched';
     $oMail->sendEmail();
-    //die("Already launched"); // ################################
+    die("Already launched"); // ################################
 }
 db_query_param('REPLACE xcart_config SET value=:value, name=:name', ['value' => 'Y', 'name' => $log_category]);
 
@@ -222,7 +222,10 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
                         $modelProduct->save();
                         break;
                     case 'P' :
-
+                        if (!isset($aProduct['cost_to_us'])) {
+                            $skippedProductsCount++;
+                            continue;
+                        }
                         if (!empty($modelProduct->fulldescr) && $supplierFeedModel->native_full_description != "Y") {
                             $modelProduct->fulldescr = ProductHelper::cleanProductFullDescription($modelProduct->fulldescr);
                         }
