@@ -1309,12 +1309,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/tsukasa-mixer/QueryBuilder.git",
-                "reference": "76ef28f7bda22ee4fe8e88026974cf30fbca2a7b"
+                "reference": "1d02a6f699daf5ee294e62e04d9ec06c29d40478"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tsukasa-mixer/QueryBuilder/zipball/76ef28f7bda22ee4fe8e88026974cf30fbca2a7b",
-                "reference": "76ef28f7bda22ee4fe8e88026974cf30fbca2a7b",
+                "url": "https://api.github.com/repos/tsukasa-mixer/QueryBuilder/zipball/1d02a6f699daf5ee294e62e04d9ec06c29d40478",
+                "reference": "1d02a6f699daf5ee294e62e04d9ec06c29d40478",
                 "shasum": ""
             },
             "require": {
@@ -1350,7 +1350,7 @@
             "support": {
                 "source": "https://github.com/tsukasa-mixer/QueryBuilder/tree/master_5.4"
             },
-            "time": "2017-06-05 16:08:14"
+            "time": "2017-06-05 16:26:23"
         },
         {
             "name": "mobiledetect/mobiledetectlib",

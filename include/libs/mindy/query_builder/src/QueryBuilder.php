@@ -1115,16 +1115,17 @@ class QueryBuilder
     protected function buildGroupJoin($group)
     {
         if (strpos($group, '.') === false) {
-            $group = $this->getLookupBuilder()->fetchColumnName($group);
-            $newGroup = $this->getLookupBuilder()->buildJoin($this, $group);
+            $newGroup = $this->getLookupBuilder()->fetchColumnName($group);
+            $newGroup = $this->getLookupBuilder()->buildJoin($this, $newGroup);
 
             if ($newGroup === false) {
-                return $newGroup;
+                return $group;
             } else {
                 list($alias, $column) = $newGroup;
                 return $alias . '.' . $column;
             }
         }
+
         return $group;
     }
 
