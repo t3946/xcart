@@ -291,7 +291,7 @@ function func_AJAX_authorize_PayPal() {
 {capture name=add_manual_transaction}
 
 <form action="order.php" method="post" name="vt_form03">
-<input type="hidden" name="mode" id="mode" value="" />
+<input type="hidden" name="mode" id="mode" value="add_manual_transaction" />
 <input type="hidden" name="orderid" value="{$orderid}" />
 
 <table>
