@@ -1,7 +1,6 @@
 <?php
 namespace Modules\Product\Models;
 
-use Xcart\App\Orm\AutoMetaModel;
 use Xcart\App\Orm\AutoMetaTreeModel;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\CharField;
@@ -11,7 +10,7 @@ use Xcart\App\Orm\Fields\IntField;
  * @property string categoryid_path
  * @property mixed categoryid
  */
-class CategoryModel extends AutoMetaModel
+class CategoryModel extends AutoMetaTreeModel
 {
     public static function tableName()
     {
@@ -28,9 +27,9 @@ class CategoryModel extends AutoMetaModel
                     'primary' => true,
                     'null' => false,
                 ],
-                /*'parent' => [
+                'parent' => [
                     'field' => 'parentid'
-                ],*/
+                ],
 
                 'storefrontid' => [
                     'class' => IntField::className(),
