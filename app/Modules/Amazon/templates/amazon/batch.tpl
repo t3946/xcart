@@ -31,7 +31,7 @@
                     </div>
                    {include 'amazon/_buttons.tpl'}
                 </form>
-            {elseif $batch_model->status == 'processing'}
+            {elseif $batch_model->status == 'processing' || $batch_model->status == 'lock'}
                 <div class="row" style="text-align: center">
                     <div class="columns large-12">
                         Processing Amazon data...
@@ -48,15 +48,16 @@
     {parent}
     <script type="text/javascript">
         (function(){
-            {if $batch_model && $batch_model->status == 'processing'}
+            {if $batch_model}
                 var url_restocking_batch_processing = '{url 'amazon:batch_processing'}';
                 var url_restocking_batch_processing_check = '{url 'amazon:batch_processing_check'}';
                 var url_batch_redirect = '{url 'amazon:batch' id=$batch_id}';
-                $.get(url_restocking_batch_processing, {
-                    batch_id: {$batch_id}
-                });
-
-
+                {if $batch_model->status == 'processing'}
+                    $.get(url_restocking_batch_processing, {
+                        batch_id: {$batch_id}
+                    });
+                {/if}
+                {if $batch_model->status == 'processing' || $batch_model->status == 'lock'}
                 var interval = setInterval(function () {
                     $.get(url_restocking_batch_processing_check, {
                             batch_id: {$batch_id}
@@ -68,6 +69,7 @@
                         }, 'json'
                     );
                 }, 40000);
+                {/if}
             {/if}
 
             function exportToFile(obj, filename, txt) {
@@ -191,6 +193,8 @@
                     + 'Current Amazon Price' + colDelim
                     + 'Min FBA price' + colDelim
                     + 'AVG comp price' + colDelim
+                    + 'ADSa' + colDelim
+                    + 'ADSx' + colDelim
                     + 'Dx stock qty' + colDelim
                     + 'Total stock' + colDelim
                     + 'Restocking qty'
