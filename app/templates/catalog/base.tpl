@@ -22,7 +22,7 @@
                 {block "catalog-sidebar"}
 
                 {/block}
-                {*{include "demo/blocks/_category_filter.tpl"}*}
+                {include "catalog/_parts/_filter.tpl" qs=$pager}
             </div>
 
             <div class="columns large-10">

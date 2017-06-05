@@ -5,6 +5,7 @@ namespace Modules\Product\Controllers;
 use Modules\Product\Helpers\ProductSortHelper;
 use Modules\Product\Models\CategoryModel;
 use Modules\Product\Models\ProductModel;
+use Modules\Product\TemplateLibraries\FilterLibrary;
 use Xcart\App\Controller\Controller;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Pagination\DataSource\QuerySetDataSource;
@@ -103,6 +104,7 @@ class CategoryController extends Controller
                 'sort'  => $orderBy,
                 'sort_arr'  => ProductSortHelper::$orderBy,
                 'breadcrumbs' => $model->getBreadcrumbs(),
+                'filters' => FilterLibrary::getFilterStructure($pqs),
             ]);
         }
     }

@@ -156,8 +156,7 @@ class ProductModel extends AutoMetaModel
 
     public function getParamList()
     {
-        $values = $this->filter_values->filter(['fv_active' => 'Y'])->order(['f_id','fv_order_by'])->all();
-        if ($values) {
+        if ($values = $this->filter_values->filter(['fv_active' => 'Y'])->order(['f_id','fv_order_by'])->all()) {
 
             $filters = FilterModel::objects()->filter(['f_id__in' => array_map(function($value){ return $value->f_id; }, $values)])->order(['f_order_by'])->all();
 
