@@ -129,7 +129,7 @@ class CategoryModel extends AutoMetaTreeModel
         }
 
         if ($cache) {
-            $qs->cache(3600);
+            $qs->cache(300);
         }
 
         return $qs->all();

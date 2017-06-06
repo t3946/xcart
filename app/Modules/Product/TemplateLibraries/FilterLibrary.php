@@ -45,7 +45,7 @@ class FilterLibrary extends TemplateLibrary
             $brands = $tqs->select(['name' => 'brand__brand', 'value' => 'brandid', new Count('*', 'count')])
                           ->group(['brandid'])
                           ->order(['brand__brand'])
-                          ->asArray()->cache(18000)->all();
+                          ->asArray()->cache(300)->all();
             
             $list['__brand__'] = [
                 'type' => 'list',
@@ -63,7 +63,7 @@ class FilterLibrary extends TemplateLibrary
                               ->filter(['f_active' => 'Y',
                                         'f_id__in' => $tqs->select(['filter_values__f_id'])])
                               ->order(['f_order_by'])
-                              ->valuesList([]);
+                              ->cache(300)->valuesList([]);
         
         if ($filters) {
 
@@ -71,7 +71,7 @@ class FilterLibrary extends TemplateLibrary
                           ->select(['filter_values__fv_name', 'filter_values__fv_id', 'filter_values__f_id', new Count('*', 'count')])
                           ->order(['filter_values__f_id','filter_values__fv_order_by','filter_values__fv_name'])
                           ->group(['filter_values__fv_id'])
-                          ->asArray()->cache(18000)->all();
+                          ->asArray()->cache(300)->all();
 
 
             foreach ($filters as $filter)
