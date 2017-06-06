@@ -129,16 +129,7 @@ class CategoryModel extends AutoMetaTreeModel
         }
 
         if ($cache) {
-            $key = $qs->allSql();
-            $key .= ($tree) ? 'tree':'';
-
-            if ($sub_cat = Xcart::app()->cache->get($key)) {
-                return $sub_cat;
-            }
-
-            Xcart::app()->cache->set($key, $sub_cat = $qs->all());
-
-            return $sub_cat;
+            $qs->cache(3600);
         }
 
         return $qs->all();
