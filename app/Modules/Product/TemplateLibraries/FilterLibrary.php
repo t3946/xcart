@@ -124,7 +124,7 @@ class FilterLibrary extends TemplateLibrary
 
 
         if (!empty($form_data['filter'])) {
-            $pqs->filter(['filter_values__in' => $form_data['filter']]);
+            $pqs->filter(['filter_values__fv_id__in' => $form_data['filter']]);
         }
 
         return $pqs;
