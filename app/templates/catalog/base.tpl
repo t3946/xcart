@@ -19,10 +19,12 @@
         <section class="catalog-page">
         <div class="row">
             <div class="columns large-2 show-for-large">
-                {block "catalog-sidebar"}
+                <form action="" type="get" name="fform">
+                    {block "catalog-sidebar"}
 
-                {/block}
-                {include "catalog/_parts/_filter.tpl" qs=$pager}
+                    {/block}
+                    {include "catalog/_parts/_filter.tpl" qs=$pager}
+                </form>
             </div>
 
             <div class="columns large-10">

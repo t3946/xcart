@@ -16,10 +16,11 @@ class FilterLibrary extends TemplateLibrary
      * @kind accessorFunction
      * @name getFilterStructure
      *
-     * @param QuerySet|Manager $qs Manager or QuerySet of ProductModel
+     * @param QuerySet|Manager $qs    Manager or QuerySet of ProductModel
      * @param array            $types ['price', 'brand']
      *
      * @return array
+     * @throws \Exception
      */
     public static function getFilterStructure($qs, array $types = ['price', 'brand'])
     {
@@ -68,7 +69,7 @@ class FilterLibrary extends TemplateLibrary
 
             $values = $tqs->with(['filter_values'])
                           ->select(['filter_values__fv_name', 'filter_values__fv_id', 'filter_values__f_id', new Count('*', 'count')])
-                          ->order(['filter_values__f_id','filter_values__fv_order_by'])
+                          ->order(['filter_values__f_id','filter_values__fv_order_by','filter_values__fv_name'])
                           ->group(['filter_values__fv_id'])
                           ->asArray()->all();
 
@@ -89,6 +90,7 @@ class FilterLibrary extends TemplateLibrary
                     $list[$value['f_id']]['values'][] = [
                         'name' => $value['fv_name'],
                         'value' => $value['fv_id'],
+                        'count' => $value['count'],
                     ];
                 }
             }

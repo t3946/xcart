@@ -7,9 +7,6 @@
                 <img src="/static/frontend/demo_images/category/1280/image.png" alt="image" />
             </div>
         </div>
-
-
-        {include "demo/blocks/_search_departments.tpl"}
     {/block}
 
     {block "content-top"}

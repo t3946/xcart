@@ -59,7 +59,7 @@ class CategoryController extends Controller
         if ($this->getRequest()->get->has('fform')) {
             $pqs = FilterLibrary::getFiltrateQS($pqs, $this->getRequest()->get->get('fform'));
         }
-
+        $filters = [];
         $filters = FilterLibrary::getFilterStructure($pqs);
 
         $pqs = (new ProductSortHelper($pqs))
