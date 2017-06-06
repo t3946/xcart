@@ -51,7 +51,7 @@ class CacheMiddleware extends Middleware
                     }
                 });
 
-                Xcart::app()->cache->set($this->getCacheKey($request), [$output, $headers]);
+                Xcart::app()->cache->set($this->getCacheKey($request), [$output, $headers], $match['meta']['cache_time']?:null);
             }
         }
     }
