@@ -56,9 +56,10 @@ class CategoryController extends Controller
                  'categories__categoryid__in' => CategoryModel::objects($model)->descendants(true)->select('pk')->order([]),
             ]);
 
-        /**
-         * block for filtrate
-         */
+        if ($this->getRequest()->get->has('fform')) {
+            $pqs = FilterLibrary::getFiltrateQS($pqs, $this->getRequest()->get->get('fform'));
+        }
+
         $filters = FilterLibrary::getFilterStructure($pqs);
 
         $pqs = (new ProductSortHelper($pqs))

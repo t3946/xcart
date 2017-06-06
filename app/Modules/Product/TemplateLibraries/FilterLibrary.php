@@ -96,4 +96,35 @@ class FilterLibrary extends TemplateLibrary
 
         return $list;
     }
+
+    /**
+     * @param Manager|QuerySet $pqs ProductModel querySet or manager
+     * @param array            $form_data
+     *
+     * @return Manager|QuerySet
+     */
+    public static function getFiltrateQS($pqs, array $form_data)
+    {
+        if (!empty($form_data['price']))
+        {
+            if (!empty($form_data['price']['min'])) {
+                $pqs->filter(['quick_prices__price__gte' => $form_data['price']['min']]);
+            }
+            if (!empty($form_data['price']['max'])) {
+                $pqs->filter(['quick_prices__price__lte' => $form_data['price']['max']]);
+            }
+        }
+
+
+        if (!empty($form_data['brand'])) {
+            $pqs->filter(['brandid__in' => $form_data['brand']]);
+        }
+
+
+        if (!empty($form_data['filter'])) {
+            $pqs->filter(['filter_values__in' => $form_data['filter']]);
+        }
+
+        return $pqs;
+    }
 }
