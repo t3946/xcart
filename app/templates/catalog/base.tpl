@@ -24,7 +24,7 @@
 
                     {/block}
                     {include "catalog/_parts/_filter.tpl" qs=$pager}
-                    <button>APPLY</button>
+                    <button class="button">APPLY</button>
 
                 </form>
             </div>
