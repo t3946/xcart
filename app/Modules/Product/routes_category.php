@@ -4,16 +4,18 @@ return [
         'route' => '/{i:id}/{slug:slug}/',
         'target' => ['\Modules\Product\Controllers\CategoryController', 'view_old'],
         'name' => 'view:old',
-        'meta' => [
+//        'meta' => [
 //            'cache' => true,
-        ]
+//            'cache_time' => 60
+//        ]
     ],
     [
         'route' => '/{i:id}/{slug:slug}',
         'target' => ['\Modules\Product\Controllers\CategoryController', 'view_old'],
         'name' => 'view:old2',
-        'meta' => [
+//        'meta' => [
 //            'cache' => true,
-        ]
+//            'cache_time' => 60
+//        ]
     ],
 ];
