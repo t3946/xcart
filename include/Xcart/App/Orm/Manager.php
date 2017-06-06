@@ -261,4 +261,10 @@ class Manager extends ManyToManyManager
         $this->getQuerySet()->having($having);
         return $this;
     }
+    
+    public function cache($life_time = null)
+    {
+        $this->getQuerySet()->cache($life_time);
+        return $this;
+    }
 }

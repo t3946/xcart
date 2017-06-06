@@ -1,16 +1,18 @@
 <?php
-$local_config = __DIR__ . DIRECTORY_SEPARATOR .'settings_local.php';
+(defined('DS')?:define('DS', DIRECTORY_SEPARATOR));
+
+$local_config = __DIR__ . DS .'settings_local.php';
 
 return array_replace_recursive([
    'name' => 'Xcart',
    'exit_on_end' => true,
    'paths' => [
-       'base' => realpath(implode(DIRECTORY_SEPARATOR, [__DIR__, '..'])),
-       'www' => realpath(implode(DIRECTORY_SEPARATOR, [__DIR__, '..', '..'])),
+       'base' => realpath(implode(DS, [__DIR__, '..'])),
+       'www' => realpath(implode(DS, [__DIR__, '..', '..'])),
    ],
-   'modules' => include dirname(__FILE__) . DIRECTORY_SEPARATOR . 'modules.php',
+   'modules' => include __DIR__ . DS . 'modules.php',
    'locale' => [
-       'language' => 'ru',
+       'language' => 'en',
        'sourceLanguage' => 'en',
        'charset' => 'utf-8',
    ],
@@ -20,15 +22,19 @@ return array_replace_recursive([
            'connections' => [
                'default' => [
                    'memory' => true,
+                   'autoCommit' => true,
                    'driver' => 'pdo_mysql',
                    'dbname' => 'xcart_k',
                    'host' => '127.0.0.1',
                    'user' => 'xcart_k',
                    'password' => 'i250923lst',
                    'charset'  => 'utf8',
-//                   'prefix' => 'xcart_',
                    'mapping' => [
                        'enum' => 'string'
+                   ],
+                   'cache' => [
+                       'class' => '\\Xcart\\App\\Orm\\Cache\\FilesystemCache',
+                       'directory' => 'base.runtime.query_cache'
                    ]
                ]
            ]
@@ -40,7 +46,7 @@ return array_replace_recursive([
        ],
        'event' => [
            'class' => '\\Xcart\\App\\Event\\EventManager',
-           'events' => include dirname(__FILE__) . DIRECTORY_SEPARATOR .  'events.php'
+           'events' => include __DIR__ . DS .  'events.php'
        ],
 
        'middleware' => [
