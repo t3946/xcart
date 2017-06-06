@@ -5,6 +5,7 @@ namespace Modules\Product\TemplateLibraries;
 use Mindy\QueryBuilder\Aggregation\Count;
 use Mindy\QueryBuilder\Aggregation\Max;
 use Mindy\QueryBuilder\Aggregation\Min;
+use Mindy\QueryBuilder\Expression;
 use Modules\Product\Models\FilterModel;
 use Xcart\App\Orm\Manager;
 use Xcart\App\Orm\QuerySet;
@@ -22,7 +23,7 @@ class FilterLibrary extends TemplateLibrary
      * @return array
      * @throws \Exception
      */
-    public static function getFilterStructure($qs, array $types = ['price', 'brand'])
+    public static function getFilterStructure($qs, array $form_data = [], array $types = ['price', 'brand', 'filter'])
     {
         $list = [];
 
@@ -36,7 +37,10 @@ class FilterLibrary extends TemplateLibrary
                 'type' => 'price',
                 'key' => 'price',
                 'name' => 'Price',
-                'values' => $tqs->get()
+                'values' => [
+                    'prices' => $tqs->get(),
+//                    'selected' => $form_data['price'],
+                ],
             ];
         }
 
@@ -46,52 +50,58 @@ class FilterLibrary extends TemplateLibrary
                           ->group(['brandid'])
                           ->order(['brand__brand'])
                           ->asArray()->cache(300)->all();
-            
+
+            foreach ($brands as $key => $brand) {
+                $brands[$key]['checked'] = (!empty($form_data['brand']) && in_array($brand['value'],$form_data['brand']));
+            }
+
             $list['__brand__'] = [
                 'type' => 'list',
                 'key' => 'brand',
                 'name' => 'Brand',
-                'values' => $brands
+                'values' => $brands,
             ];
         }
 
 
+        if (in_array('filter', $types)) {
+            $tqs = clone $qs;
+            $tqs = $tqs->filter(['filter_values__fv_active' => 'Y'])->order([]);
+            $filters = FilterModel::objects()
+                                  ->filter(['f_active' => 'Y',
+                                            'f_id__in' => $tqs->select(['filter_values__f_id'])])
+                                  ->order(['f_order_by'])
+                                  ->cache(300)->valuesList([]);
 
-        $tqs = clone $qs;
-        $tqs = $tqs->filter(['filter_values__fv_active' => 'Y'])->order([]);
-        $filters = FilterModel::objects()
-                              ->filter(['f_active' => 'Y',
-                                        'f_id__in' => $tqs->select(['filter_values__f_id'])])
-                              ->order(['f_order_by'])
-                              ->cache(300)->valuesList([]);
-        
-        if ($filters) {
+            if ($filters) {
 
-            $values = $tqs->with(['filter_values'])
-                          ->select(['filter_values__fv_name', 'filter_values__fv_id', 'filter_values__f_id', new Count('*', 'count')])
-                          ->order(['filter_values__f_id','filter_values__fv_order_by','filter_values__fv_name'])
-                          ->group(['filter_values__fv_id'])
-                          ->asArray()->cache(300)->all();
+                $values = $tqs->with(['filter_values'])
+                              ->select(['filter_values__fv_name', 'filter_values__fv_id', 'filter_values__f_id', new Count('*', 'count')])
+                              ->order(['filter_values__f_id','filter_values__fv_order_by','filter_values__fv_name'])
+                              ->group(['filter_values__fv_id'])
+                              ->asArray()->cache(300)->all();
 
 
-            foreach ($filters as $filter)
-            {
-                $list[$filter['f_id']] = [
-                    'type' => 'list',
-                    'key' => 'filter',
-                    'name' =>$filter['f_name'],
-                    'values' => []
-                ];
-            }
-
-            foreach ($values as $value)
-            {
-                if ($list[$value['f_id']]) {
-                    $list[$value['f_id']]['values'][] = [
-                        'name' => $value['fv_name'],
-                        'value' => $value['fv_id'],
-                        'count' => $value['count'],
+                foreach ($filters as $filter)
+                {
+                    $list[$filter['f_id']] = [
+                        'type' => 'list',
+                        'key' => 'filter',
+                        'name' =>$filter['f_name'],
+                        'values' => []
                     ];
+                }
+
+                foreach ($values as $value)
+                {
+                    if ($list[$value['f_id']]) {
+                        $list[$value['f_id']]['values'][] = [
+                            'name' => $value['fv_name'],
+                            'value' => $value['fv_id'],
+                            'count' => $value['count'],
+                            'checked' => (!empty($form_data['filter']) && in_array($value['fv_id'],$form_data['filter'])),
+                        ];
+                    }
                 }
             }
         }
