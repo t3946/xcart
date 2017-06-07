@@ -56,8 +56,10 @@ use Modules\Order\Models\OrderGroupInvoiceModel;
 use Modules\Order\Models\OrderGroupInvoiceProductModel;
 use Modules\Order\Models\OrderGroupModel;
 use Modules\Order\Models\OrderModel;
+use Modules\Payment\Models\PaymentMethodModel;
 use Modules\Product\Helpers\ProductHelper;
 use Modules\Product\Models\ProductModel;
+use Modules\Shipping\Models\ShippingModel;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use SimpleXMLElement;
@@ -1460,24 +1462,23 @@ SQL;
                                             }
 
 
-                                            $oOrderGroup = OrderGroup::model(['orderid' => $oOrder->getOrderId(), 'manufacturerid' => $oProduct->getManufacturerId()]);
-                                            $oOrderGroup->setField('shipping', addslashes($aOrderInfo->getElementsByTagName('ShipmentServiceLevelCategory')->item(0)->nodeValue))->
-                                            setField('cb_status', ($sOrderStatus == 'Canceled' ? 'A' : 'P'))->
-                                            setField('dc_status', ($sOrderStatus == 'Unshipped' ? 'T' : 'S'))->
-                                            setField('acc_paymentid', PaymentMethod::model()->find(SQLBuilder::getInstance()->addCondition("order_tag_preference='$sFulfilmentChanel'"))->getField('paymentid'))->
-                                            setField('bd_status', 'W')->
-                                            setField('shipping_gross', $oOrderGroup->getShippingGross() + ($fShippingPrice - $fShippingDiscount));
-                                            if (!$oOrderGroup->getOrderId()) {
-                                                $oOrderGroup->setField('orderid', $oOrder->getOrderId())->
-                                                setField('manufacturerid', $oProduct->getManufacturerId())->_insert();
-                                            } else {
-                                                $oOrderGroup->_update();
+                                            /** @var OrderGroupModel $oOrderGroup */
+                                            $oOrderGroup = OrderGroupModel::objects()->get(['orderid' => $oOrder->getOrderId(), 'manufacturerid' => $oProduct->getManufacturerId()]);
+                                            if (!$oOrderGroup) {
+                                                $oOrderGroup = new OrderGroupModel(['orderid' => $oOrder->getOrderId(), 'manufacturerid' => $oProduct->getManufacturerId()]);
                                             }
+                                            $sShipping = $aOrderInfo->getElementsByTagName('ShipmentServiceLevelCategory')->item(0)->nodeValue;
+                                            $oOrderGroup->shippingid = ShippingModel::objects()->filter(['shipping' => 'AFN Delivery'])->limit(1)->get()->shippingid;
+                                            $oOrderGroup->shipping = $sShipping;
+                                            $oOrderGroup->cb_status = ($sOrderStatus == 'Canceled' ? 'A' : 'P');
+                                            $oOrderGroup->dc_status = ($sOrderStatus == 'Unshipped' ? 'T' : 'S');
+                                            $oOrderGroup->acc_paymentid = PaymentMethodModel::objects()->get(['order_tag_preference' => $sFulfilmentChanel])->paymentid;
+                                            $oOrderGroup->bd_status = 'W';
+                                            $oOrderGroup->shipping_gross = $oOrderGroup->getDataModel()->getShippingGross() + ($fShippingPrice - $fShippingDiscount);
+                                            $oOrderGroup->save();
                                         }
                                         $product_total += $oOrderDetail->getTotalProductPrice();
                                     }
-
-
                                 }
 
                                 $oOrder->updateVerificationStatus()->reCalculateTotals();

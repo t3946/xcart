@@ -6,6 +6,8 @@ use Modules\Shipping\Models\ShippingModel;
 use Xcart\App\Orm\AutoMetaModel;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\HasManyField;
+use Xcart\App\Orm\Fields\IntField;
+use Xcart\App\Orm\Fields\SerializeField;
 use Xcart\App\Traits\DataModelTrait;
 use Xcart\OrderGroup;
 
@@ -26,6 +28,14 @@ class OrderGroupModel extends AutoMetaModel
     public static function getFields()
     {
         return [
+            'orderid' => [
+                'class' => IntField::className(),
+                'primary' => true
+            ],
+            'manufacturerid' => [
+                'class' => IntField::className(),
+                'primary' => true
+            ],
             'order' => [
                 'name' => 'orderid',
                 'class' => ForeignField::className(),
@@ -57,6 +67,11 @@ class OrderGroupModel extends AutoMetaModel
                 'modelClass' => OrderGroupMemoModel::className(),
                 'link' => ['orderid'=>'orderid', 'manufacturerid'=>'manufacturerid'],
             ],
+            'tracking' => [
+                'class' => SerializeField::className(),
+                'null' => false,
+                'default' => '',
+            ]
         ];
     }
 
