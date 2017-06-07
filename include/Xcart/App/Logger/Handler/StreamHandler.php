@@ -16,8 +16,7 @@ class StreamHandler extends ProxyHandler
      */
     public $stream = 'php://stdout';
 
-//    public $alias = 'base.log.stdout';
-    public $alias;
+    public $alias = 'base.log.stdout';
 
     public $filePermission;
 

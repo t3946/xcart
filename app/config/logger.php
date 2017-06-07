@@ -55,7 +55,7 @@ return [
         ],
         'err' => [
             'class' => '\\Xcart\\App\\Logger\\Logger',
-            'handlers' => ['console']
+            'handlers' => ['err']
         ],
     ]
 ];

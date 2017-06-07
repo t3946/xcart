@@ -189,13 +189,13 @@ class Application
         register_shutdown_function([$this, 'end'], 0);
     }
 
-    public function end($status = 0, $response = null)
+    public function end($status = 0, $response = null, $force = false)
     {
         $this->_provideModuleEvent('onApplicationEnd', [$status, $response]);
 
         $this->event->trigger('app:end');
 
-        if ($this->exit_on_end) {
+        if ($this->exit_on_end || $force) {
             exit($status);
         }
     }

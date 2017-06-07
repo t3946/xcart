@@ -11,6 +11,11 @@ if (!function_exists('d')) {
 
 class Xcart
 {
+    public static function getVersion()
+    {
+        return '0.1';
+    }
+
     /** @var \Xcart\App\Application\Application */
     protected static $_app;
 
