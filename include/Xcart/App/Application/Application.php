@@ -27,6 +27,7 @@ use Xcart\App\Request\HttpRequest;
  * @property \Xcart\App\Cache\Cache $cache Cache component
  * @property \Xcart\App\Event\EventManager $event Event component
  * @property \Xcart\App\Storage\Storage $storage File storage component
+ * @property \Xcart\App\Logger\LoggerManager $logger Logging system component
  * @property \Modules\Mail\Components\MailComponent $mail Mail component
  * @property UserModel $user
  * 
@@ -110,7 +111,7 @@ class Application
         if (!isset($this->_modules[$name])) {
             $config = $this->getModuleConfig($name);
             if (!is_null($config)) {
-                $this->_modules[$name] = Creator::create($config);
+                $this->_modules[$name] = Creator::createObject($config);
             } else {
                 throw new UnknownPropertyException("Module with name" . $name . " not found");
             }

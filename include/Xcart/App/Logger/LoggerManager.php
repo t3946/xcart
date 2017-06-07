@@ -92,11 +92,11 @@ class LoggerManager
                 unset($data['handlers']);
             }
             $this->_loggers[$name] = Creator::createObject($data, $name);
-            foreach ($handlers as $name) {
+            foreach ($handlers as $hname) {
                 if (!isset($this->_handlers[$name])) {
-                    throw new Exception("Handler $name not initialized");
+                    throw new Exception("Handler $hname not initialized");
                 }
-                $this->_loggers[$name]->pushHandler($this->_handlers[$name]->handler);
+                $this->_loggers[$name]->pushHandler($this->_handlers[$hname]->handler);
             }
         }
     }

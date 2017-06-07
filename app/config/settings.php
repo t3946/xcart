@@ -43,6 +43,8 @@ return array_replace_recursive([
            'events' => include dirname(__FILE__) . DIRECTORY_SEPARATOR .  'events.php'
        ],
 
+       'logger' => include __DIR__. DIRECTORY_SEPARATOR . 'logger.php',
+
        'middleware' => [
            'class' => '\\Xcart\\App\\Middleware\\MiddlewareManager',
            'middleware' => [
@@ -119,6 +121,8 @@ return array_replace_recursive([
 //       ],
    ],
    'autoloadComponents' => [
+       'db',
+       'logger'
 //       'errorHandler'
    ]
 ],  (is_file($local_config)) ? include $local_config : []);
