@@ -28,14 +28,6 @@ class OrderGroupModel extends AutoMetaModel
     public static function getFields()
     {
         return [
-            'orderid' => [
-                'class' => IntField::className(),
-                'primary' => true
-            ],
-            'manufacturerid' => [
-                'class' => IntField::className(),
-                'primary' => true
-            ],
             'order' => [
                 'name' => 'orderid',
                 'class' => ForeignField::className(),
