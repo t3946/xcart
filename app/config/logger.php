@@ -3,21 +3,22 @@ return [
     'class' => '\\Xcart\\App\\Logger\\LoggerManager',
     'handlers' => [
         'default' => [
-//            'class' => defined('APP_DEBUG') ? '\\Xcart\\App\\Logger\\Handler\\RotatingFileHandler' : '\\Xcart\\App\\Logger\\Handler\\NullHandler',
             'class' => '\\Xcart\\App\\Logger\\Handler\\RotatingFileHandler' ,
-            'level' => defined('APP_DEBUG') ? "DEBUG" : "ERROR"
+            'level' => defined('APP_DEBUG') ? "DEBUG" : "ERROR",
+            'alias' => 'base.log.err',
+            'formatter' => 'log'
         ],
         'sql' => [
             'class' => '\\Xcart\\App\\Logger\\Handler\\RotatingFileHandler',
             'level' =>  "ERROR",
             'alias' => 'base.log.sql'
         ],
-        'err' => [
-            'class' => '\\Xcart\\App\\Logger\\Handler\\RotatingFileHandler',
-            'level' =>  "ERROR",
-            'alias' => 'base.log.err',
-            'formatter' => 'log'
-        ],
+//        'error' => [
+//            'class' => '\\Xcart\\App\\Logger\\Handler\\RotatingFileHandler',
+//            'level' =>  "ERROR",
+//            'alias' => 'base.log.err',
+//            'formatter' => 'log'
+//        ],
         'null' => [
             'class' => '\\Xcart\\App\\Logger\\Handler\\NullHandler',
             'level' => 'ERROR'
@@ -59,9 +60,9 @@ return [
             'class' => '\\Xcart\\App\\Logger\\Logger',
             'handlers' => ['sql']
         ],
-        'err' => [
-            'class' => '\\Xcart\\App\\Logger\\Logger',
-            'handlers' => ['err']
-        ],
+//        'error' => [
+//            'class' => '\\Xcart\\App\\Logger\\Logger',
+//            'handlers' => ['error', 'mail_admins']
+//        ],
     ]
 ];
