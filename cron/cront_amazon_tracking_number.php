@@ -22,7 +22,7 @@ if ($config[$log_category] == "Y") {
     $oMail->subject = sprintf('Attention! Xcart cron %s Already launched', $log_category);
     $oMail->body = $log_category . ' already launched';
     $oMail->sendEmail();
-   // die("Already launched"); // ################################
+    die("Already launched"); // ################################
 }
 
 db_query_param("REPLACE xcart_config SET value='Y', name=:log_category", ['log_category' => $log_category]);
@@ -67,6 +67,7 @@ if ($ogModels) {
                 }
             }
         } catch(FBAOutboundServiceMWS_Exception $e){
+            print($e->getMessage());
             func_backprocess_log($log_category, "callGetFulfillmentOrder error. OrderId: {$ogm->orderid}. " . $e->getMessage());
         }
     }
