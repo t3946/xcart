@@ -76,7 +76,7 @@ class BluePay extends Gateway
             ->authorize($params)
             ->send();
         $data = $this->result->getData();
-        if ($this->result->isSuccessful() && ($data['STATUS '] == 1)) {
+        if ($this->result->isSuccessful() && ($data['STATUS'] == 1)) {
             return true;
         } else {
             return false;
