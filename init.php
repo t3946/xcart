@@ -1095,6 +1095,3 @@ else {
 }
 
 header("Vary: User-Agent");
-
-
-throw new \Exception('Hello world !!!');
