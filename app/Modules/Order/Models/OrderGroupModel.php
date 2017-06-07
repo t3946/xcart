@@ -29,7 +29,7 @@ class OrderGroupModel extends AutoMetaModel
     {
         return [
             'order' => [
-                'name' => 'orderid',
+                'field' => 'orderid',
                 'class' => ForeignField::className(),
                 'modelClass' => OrderModel::className(),
                 'null' => false,
