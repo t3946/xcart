@@ -15,7 +15,8 @@ return [
         'err' => [
             'class' => '\\Xcart\\App\\Logger\\Handler\\RotatingFileHandler',
             'level' =>  "ERROR",
-            'alias' => 'base.log.err'
+            'alias' => 'base.log.err',
+            'formatter' => 'log'
         ],
         'null' => [
             'class' => '\\Xcart\\App\\Logger\\Handler\\NullHandler',
@@ -39,6 +40,11 @@ return [
         'users' => [
             'class' => '\\Xcart\\App\\Logger\\Formatters\\LineFormatter',
             'format' => "%datetime% %message%\\n"
+        ],
+        'log' => [
+            'class' => '\\Xcart\\App\\Logger\\Formatters\\LineFormatter',
+//            'allowInlineLineBreaks' => true,
+            'includeStacktrace' => true
         ],
         'console' => [
             'class' => '\\Monolog\\Formatter\\LineFormatter',

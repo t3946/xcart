@@ -176,7 +176,11 @@ class ErrorHandler
                 'traces' => $trace,
             ];
 
-            $app->logger->critical($exception->getMessage(), $this->_error, 'err');
+
+            $err = $this->_error;
+            unset($err['trace']);
+
+            $app->logger->critical($exception->getMessage(), $err, 'err');
 
             if (!headers_sent()) {
                 header("HTTP/1.0 {$code} " . $this->getHttpHeader($code, get_class($exception)));
@@ -284,49 +288,49 @@ class ErrorHandler
             // Tryhard
             switch ($code) {
                 case E_ERROR:
-                    $app->logger->critical($message, ['code' => $code, 'file' => $file, 'line' => $line]);
+                    $app->logger->critical($message, ['code' => $code, 'file' => $file, 'line' => $line], 'err');
                     throw new ErrorException($message, 0, $code, $file, $line);
                 case E_WARNING:
-                    $app->logger->critical($message, ['code' => $code, 'file' => $file, 'line' => $line]);
+                    $app->logger->critical($message, ['code' => $code, 'file' => $file, 'line' => $line], 'err');
                     throw new WarningException($message, 0, $code, $file, $line);
                 case E_PARSE:
-                    $app->logger->critical($message, ['code' => $code, 'file' => $file, 'line' => $line]);
+                    $app->logger->critical($message, ['code' => $code, 'file' => $file, 'line' => $line], 'err');
                     throw new ParseException($message, 0, $code, $file, $line);
                 case E_NOTICE:
-                    $app->logger->critical($message, ['code' => $code, 'file' => $file, 'line' => $line]);
+                    $app->logger->critical($message, ['code' => $code, 'file' => $file, 'line' => $line], 'err');
                     throw new NoticeException($message, 0, $code, $file, $line);
                 case E_CORE_ERROR:
-                    $app->logger->critical($message, ['code' => $code, 'file' => $file, 'line' => $line]);
+                    $app->logger->critical($message, ['code' => $code, 'file' => $file, 'line' => $line], 'err');
                     throw new CoreErrorException($message, 0, $code, $file, $line);
                 case E_CORE_WARNING:
-                    $app->logger->critical($message, ['code' => $code, 'file' => $file, 'line' => $line]);
+                    $app->logger->critical($message, ['code' => $code, 'file' => $file, 'line' => $line], 'err');
                     throw new CoreWarningException($message, 0, $code, $file, $line);
                 case E_COMPILE_ERROR:
-                    $app->logger->critical($message, ['code' => $code, 'file' => $file, 'line' => $line]);
+                    $app->logger->critical($message, ['code' => $code, 'file' => $file, 'line' => $line], 'err');
                     throw new CompileErrorException($message, 0, $code, $file, $line);
                 case E_COMPILE_WARNING:
-                    $app->logger->critical($message, ['code' => $code, 'file' => $file, 'line' => $line]);
+                    $app->logger->critical($message, ['code' => $code, 'file' => $file, 'line' => $line], 'err');
                     throw new CoreWarningException($message, 0, $code, $file, $line);
                 case E_USER_ERROR:
-                    $app->logger->critical($message, ['code' => $code, 'file' => $file, 'line' => $line]);
+                    $app->logger->critical($message, ['code' => $code, 'file' => $file, 'line' => $line], 'err');
                     throw new UserErrorException($message, 0, $code, $file, $line);
                 case E_USER_WARNING:
-                    $app->logger->critical($message, ['code' => $code, 'file' => $file, 'line' => $line]);
+                    $app->logger->critical($message, ['code' => $code, 'file' => $file, 'line' => $line], 'err');
                     throw new UserWarningException($message, 0, $code, $file, $line);
                 case E_USER_NOTICE:
-                    $app->logger->critical($message, ['code' => $code, 'file' => $file, 'line' => $line]);
+                    $app->logger->critical($message, ['code' => $code, 'file' => $file, 'line' => $line], 'err');
                     throw new UserNoticeException($message, 0, $code, $file, $line);
                 case E_STRICT:
-                    $app->logger->critical($message, ['code' => $code, 'file' => $file, 'line' => $line]);
+                    $app->logger->critical($message, ['code' => $code, 'file' => $file, 'line' => $line], 'err');
                     throw new StrictException($message, 0, $code, $file, $line);
                 case E_RECOVERABLE_ERROR:
-                    $app->logger->critical($message, ['code' => $code, 'file' => $file, 'line' => $line]);
+                    $app->logger->critical($message, ['code' => $code, 'file' => $file, 'line' => $line], 'err');
                     throw new RecoverableErrorException($message, 0, $code, $file, $line);
                 case E_DEPRECATED:
-                    $app->logger->critical($message, ['code' => $code, 'file' => $file, 'line' => $line]);
+                    $app->logger->critical($message, ['code' => $code, 'file' => $file, 'line' => $line], 'err');
                     throw new DeprecatedException($message, 0, $code, $file, $line);
                 case E_USER_DEPRECATED:
-                    $app->logger->critical($message, ['code' => $code, 'file' => $file, 'line' => $line]);
+                    $app->logger->critical($message, ['code' => $code, 'file' => $file, 'line' => $line], 'err');
                     throw new UserDeprecatedException($message, 0, $code, $file, $line);
             }
         } else {
@@ -395,7 +399,10 @@ class ErrorHandler
                     'traces' => $trace,
                 ];
 
-                $app->logger->error($type, $this->_error);
+                $err = $this->_error;
+                unset($err['trace']);
+
+                $app->logger->error($type, $err, 'err');
 
                 if (!headers_sent()) {
                     header("HTTP/1.0 500 Internal Server Error");

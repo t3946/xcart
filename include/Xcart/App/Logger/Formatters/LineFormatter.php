@@ -20,6 +20,7 @@ class LineFormatter
     public $formatter;
 
     public $allowInlineLineBreaks = false;
+    public $includeStacktrace = false;
 
     public $format = null;
 
@@ -28,5 +29,6 @@ class LineFormatter
     public function init()
     {
         $this->formatter = new MonologLineFormatter($this->format, $this->dateFormat, $this->allowInlineLineBreaks);
+        $this->formatter->includeStacktraces($this->includeStacktrace);
     }
 }
