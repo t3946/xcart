@@ -4,6 +4,7 @@ namespace Modules\Order\Models;
 use Modules\Distributor\Models\DistributorModel;
 use Modules\Shipping\Models\ShippingModel;
 use Xcart\App\Orm\AutoMetaModel;
+use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\HasManyField;
 use Xcart\App\Orm\Fields\IntField;
@@ -63,7 +64,28 @@ class OrderGroupModel extends AutoMetaModel
                 'class' => SerializeField::className(),
                 'null' => false,
                 'default' => '',
-            ]
+            ],
+            'accounting' => [
+                'class' => CharField::className(),
+                'null' => false,
+                'default' => '',
+            ],
+            'manufacturer_data' => [
+                'class' => CharField::className(),
+                'null' => false,
+                'default' => '',
+            ],
+            'OLD_accounting' => [
+                'class' => CharField::className(),
+                'null' => false,
+                'default' => '',
+            ],
+            'amz_customer_notes' => [
+                'class' => CharField::className(),
+                'null' => false,
+                'default' => '',
+            ],
+
         ];
     }
 
