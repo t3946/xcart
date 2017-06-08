@@ -130,7 +130,7 @@ return array_replace_recursive([
 //       ],
    ],
    'autoloadComponents' => [
-       'errorHandler'
+       'errorHandler',
        'db',
        'logger'
    ]
