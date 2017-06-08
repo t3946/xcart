@@ -56,15 +56,13 @@ if ($ogModels) {
                         }
                         $old[] = $newTrack;
                         $ogm->tracking = $old;
-
-                        if ($ogm->dc_status !='S') {
-                            func_send_order_status_notification($ogm->orderid, 'S');
-                        }
                         $ogm->dc_status = 'S';
 
                         func_backprocess_log($log_category, "Add tracking number {$amTrack['track_number']} in order {$ogm->orderid}");
 
                         $ogm->save();
+
+                        func_send_order_status_notification($ogm->orderid, 'S', true);
                     }
                 }
             }
