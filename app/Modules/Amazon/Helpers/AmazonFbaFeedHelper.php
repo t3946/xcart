@@ -15,13 +15,14 @@ class AmazonFbaFeedHelper
     {
         $result = null;
         if ($orderGroup && $feedContent = self::encodeOrderfulfillmentFeed($orderGroup, $trackNumberData)){
-            $feedHandle = fopen('php://temp', 'rw+');
+            $feedHandle = @fopen('php://temp', 'rw+');
             fwrite($feedHandle, $feedContent);
+            rewind($feedHandle);
             $amzPool = new AmazonPoolStore();
             $result = $amzPool->getFeedAndReportClientPack()
                 ->callSubmitFeed(MwsFeedAndReportClientPack::FEED_TYPE_ORDER_FULFILLMENT, $feedHandle)
                 ->getSubmitFeedResult();
-            fclose($feedHandle);
+            @fclose($feedHandle);
         }
         return $result;
     }
@@ -67,7 +68,7 @@ class AmazonFbaFeedHelper
                     ]
                 ]
             ];
-            return Xml::encode('AmazonEnvelope', $data, true);
+            return Xml::encode('AmazonEnvelope', $data, false);
         }
         return null;
     }
