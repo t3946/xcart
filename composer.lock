@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "73e34b190d262e49c3b02fa18a33be4f",
+    "content-hash": "fde279b0cfc83fb366b73e6bf1509d6d",
     "packages": [
         {
             "name": "caponica/amazon-mws-complete",
@@ -1350,7 +1350,7 @@
             "support": {
                 "source": "https://github.com/tsukasa-mixer/QueryBuilder/tree/master_5.4"
             },
-            "time": "2017-06-05 16:26:23"
+            "time": "2017-06-05T16:26:23+00:00"
         },
         {
             "name": "mobiledetect/mobiledetectlib",
