@@ -13,9 +13,9 @@
 
                 <div class="accordion-content" data-tab-content>
                 {if $item.type == 'price'}
-                    {include 'catalog/_parts/filters/price.tpl' values=$item.values key=$item.key}
+                    {include 'catalog/parts/filters/price.tpl' values=$item.values key=$item.key}
                 {elseif $item.type == 'list'}
-                    {include 'catalog/_parts/filters/list.tpl' values=$item.values key=$item.key}
+                    {include 'catalog/parts/filters/list.tpl' values=$item.values key=$item.key}
                 {/if}
                 </div>
             </li>

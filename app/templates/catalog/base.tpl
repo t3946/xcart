@@ -13,7 +13,7 @@
 {block "content"}
     {if $.request->getIsAjax()}
         {foreach $pager->paginate() as $item }
-            {include "catalog/_parts/_catalog_list_item.tpl" item=$item}
+            {include "catalog/parts/_catalog_list_item.tpl" item=$item}
         {/foreach}
     {else}
         <section class="catalog-page">
@@ -23,7 +23,7 @@
                     {block "catalog-sidebar"}
 
                     {/block}
-                    {include "catalog/_parts/_filter.tpl" qs=$pager}
+                    {include "catalog/parts/_filter.tpl" qs=$pager}
                     <button class="button">APPLY</button>
 
                 </form>
@@ -37,17 +37,17 @@
                 </div>
 
 
-                {include "catalog/_parts/_state_line.tpl"}
+                {include "catalog/parts/_state_line.tpl"}
                 <div class="page_count hide-for-large">
-                    {include 'catalog/_parts/_page_count.tpl'}
+                    {include 'catalog/parts/_page_count.tpl'}
                 </div>
 
                 <div class="product-items {if $.isBot}tile-view{/if}">
                     {foreach $pager->paginate() as $item }
-                        {include "catalog/_parts/_catalog_list_item.tpl" item=$item}
+                        {include "catalog/parts/_catalog_list_item.tpl" item=$item}
                     {/foreach}
                 </div>
-                {include "catalog/_parts/_state_line.tpl"}
+                {include "catalog/parts/_state_line.tpl"}
 
                 {raw $pager->render()}
             </div>
