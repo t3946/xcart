@@ -62,7 +62,7 @@ if ($ogModels) {
 
                         $ogm->save();
 
-                        func_send_order_status_notification($ogm->orderid, 'S');
+                        func_send_order_status_notification($ogm->orderid, 'S', true);
                     }
                 }
             }
