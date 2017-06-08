@@ -26,7 +26,6 @@ return array_replace_recursive([
                    'user' => 'xcart_k',
                    'password' => 'i250923lst',
                    'charset'  => 'utf8',
-//                   'prefix' => 'xcart_',
                    'mapping' => [
                        'enum' => 'string'
                    ]
