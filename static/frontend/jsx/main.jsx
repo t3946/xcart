@@ -105,5 +105,11 @@ import LazyImageLoad from "./components/LazyImageLoad";
 
     });
 
+    $(document).on('click', 'a.mmodal', function(e){
+        e.preventDefault();
+        e.stopPropagation();
+        $(this).mmodal({skin:'front'});
+    });
+
     $(document).foundation();
 })();

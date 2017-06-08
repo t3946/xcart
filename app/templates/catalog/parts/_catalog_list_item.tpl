@@ -11,6 +11,7 @@
                     <span class="splash splash-sale show-for-large">Sale</span>
                 {/if}
 
+                {set $site = $.getSite}
                 {set $image = $item->images->limit(1)->get()}
                 {if $image}
                     {if $.isBot}

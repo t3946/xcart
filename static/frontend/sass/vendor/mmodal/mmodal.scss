@@ -1,0 +1,16 @@
+@import "cds_animation";
+@import "jquery.mmodal.scss";
+
+body {
+  &.mmodal-opened {}
+
+  .mmodal-modal-bg {
+    z-index: 10;
+    background-color: rgba(0,0,0,.5);
+
+    .mmodal-container {
+      .mmodal-close{}
+      .mmodal-content {}
+    }
+  }
+}

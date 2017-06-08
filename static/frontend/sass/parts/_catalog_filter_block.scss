@@ -42,6 +42,10 @@
           border: none;
           padding: rem-calc(2) 0 rem-calc(10);
 
+          .full {
+            display:none;
+          }
+
           ul {
             li {
               label {
@@ -60,6 +64,18 @@
             }
           }
         }
+      }
+    }
+  }
+}
+
+.mmodal-content {
+  .filter.full {
+    ul {
+      column-count: 3;
+
+      li {
+
       }
     }
   }

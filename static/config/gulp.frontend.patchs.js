@@ -126,6 +126,29 @@ module.exports = {
                 'bower_components/what-input/dist/what-input.js'
             ]
         },
+        cds: {
+            scss_include: [
+                'components/cds'
+            ]
+        },
+
+        modal: {
+            js_include: [
+                'bower_components/mmodal/js/jquery.mindy.modal.js'
+            ],
+            scss_include: [
+                'bower_components/mmodal/scss/'
+            ]
+        },
+        pace: {
+            js_include: [
+                'bower_components/PACE/pace.js'
+            ],
+            css: [
+                // 'bower_components/PACE/themes/black/pace-theme-minimal.css'
+                // 'bower_components/PACE/themes/red/pace-theme-minimal.css'
+            ]
+        },
         foundation: {
             js_include: [
                 // 'bower_components/foundation-sites/dist/js/foundation.js', //all
