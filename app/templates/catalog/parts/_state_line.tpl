@@ -8,9 +8,9 @@
                 <div class="action_group">
                     <div class="action_block  filter">
                         <div class="action_button filter">
-                            <span class="action">
+                            <a class="action" href="#all_filter">
                                 Filter
-                            </span>
+                            </a>
                         </div>
                     </div>
                     <div class="action_block sort">

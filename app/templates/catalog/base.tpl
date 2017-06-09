@@ -23,7 +23,9 @@
                     {block "catalog-sidebar"}
 
                     {/block}
-                    {include "catalog/parts/_filter.tpl" qs=$pager}
+                    <section class="filter_container">
+                        {include "catalog/parts/_filter.tpl" qs=$pager}
+                    </section>
                     <button class="button">APPLY</button>
 
                 </form>

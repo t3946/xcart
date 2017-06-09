@@ -27,7 +27,7 @@
         {*<a href="#{$key}-f" class="mmodal">*}
             {*Show more*}
         {*</a>*}
-        <a href="#all_filter" class="mmodal show_all">
+        <a href="#all_filter" class="show_all short">
             Show more
         </a>
     {/if}

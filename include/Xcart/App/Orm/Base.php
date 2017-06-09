@@ -758,6 +758,7 @@ abstract class Base implements ModelInterface, ArrayAccess, Serializable
     /**
      * @return Connection
      * @throws Exception
+     * @TODO: fix __wakeup connection not restored and if connection not default maybe bug
      */
     public function getConnection()
     {
@@ -824,6 +825,7 @@ abstract class Base implements ModelInterface, ArrayAccess, Serializable
      * The string representation of the object.
      * </p>
      * @return void
+     * @throws \Exception
      * @since 5.1.0
      */
     public function unserialize($serialized)

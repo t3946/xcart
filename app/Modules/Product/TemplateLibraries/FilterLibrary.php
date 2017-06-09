@@ -120,6 +120,7 @@ class FilterLibrary extends TemplateLibrary
         if (!empty($form_data['price']))
         {
             //@TODO: from GREATEST(quick_prices__price, new_map_price)
+            //@TODO: Maybe $pqs->filter([ new GREATEST(['quick_prices__price', 'new_map_price'], 'gte', $form_data['price']['min']) ]);
             if (!empty($form_data['price']['min'])) {
                 $pqs->filter(['quick_prices__price__gte' => $form_data['price']['min']]);
             }
