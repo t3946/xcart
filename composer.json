@@ -22,6 +22,7 @@
         "true/punycode": "^2.1",
         "caponica/amazon-mws-complete": "dev-master",
         "mobiledetect/mobiledetectlib": "^2.8",
+        "omnipay/paypal": "v2.6.3",
         "league/flysystem": "^1.0",
         "symfony/http-foundation": "^2.8"
     },
@@ -30,7 +31,8 @@
             "Xcart\\": "include/Xcart",
             "Modules\\": "app/Modules",
             "Xcart\\External_Product_Verification\\": "modules/External_Product_Verification/include",
-            "Xcart\\External_Marketplaces\\": "modules/External_Marketplaces/include"
+            "Xcart\\External_Marketplaces\\": "modules/External_Marketplaces/include",
+            "Omnipay\\BluePay\\" : "app/Modules/Payment/Gateways/Omnipay/BluePay"
         },
         "classmap": [
             "include/libs/caponica/amazon-mws-complete/src/AmazonPhpClientLibrary/FBAOutboundServiceMWS",

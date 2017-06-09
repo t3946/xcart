@@ -76,6 +76,8 @@ class AmazonController extends PrototypeAdminController
         if (!empty($_GET) && is_numeric($_GET['batch_id'])) {
             $batch = AmazonReorderBatchModel::objects()->get(['batch_id' => $_GET['batch_id']]);
             if ($batch && $batch->status == 'processing') {
+                $batch->status = 'lock';
+                $batch->save();
                 $params = [
                     'day_reorder' => AmazonReorderingHelper::getDaysBeforeNextReorder(current(GlobalConfigModel::objects()->filter(['name' => 'reorder_weekday'])->valuesList(['value'], true))),
                     'tau' => current(GlobalConfigModel::objects()->filter(['name' => 'ads_back_in_time_period'])->valuesList(['value'], true)),

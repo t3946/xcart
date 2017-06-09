@@ -2,10 +2,14 @@
 namespace Modules\Order\Models;
 
 use Modules\Distributor\Models\DistributorModel;
+use Modules\Product\Models\ProductModel;
 use Modules\Shipping\Models\ShippingModel;
 use Xcart\App\Orm\AutoMetaModel;
+use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\HasManyField;
+use Xcart\App\Orm\Fields\IntField;
+use Xcart\App\Orm\Fields\SerializeField;
 use Xcart\App\Traits\DataModelTrait;
 use Xcart\OrderGroup;
 
@@ -27,7 +31,7 @@ class OrderGroupModel extends AutoMetaModel
     {
         return [
             'order' => [
-                'name' => 'orderid',
+                'field' => 'orderid',
                 'class' => ForeignField::className(),
                 'modelClass' => OrderModel::className(),
                 'null' => false,
@@ -57,6 +61,32 @@ class OrderGroupModel extends AutoMetaModel
                 'modelClass' => OrderGroupMemoModel::className(),
                 'link' => ['orderid'=>'orderid', 'manufacturerid'=>'manufacturerid'],
             ],
+            'tracking' => [
+                'class' => SerializeField::className(),
+                'null' => false,
+                'default' => '',
+            ],
+            'accounting' => [
+                'class' => CharField::className(),
+                'null' => false,
+                'default' => '',
+            ],
+            'manufacturer_data' => [
+                'class' => CharField::className(),
+                'null' => false,
+                'default' => '',
+            ],
+            'OLD_accounting' => [
+                'class' => CharField::className(),
+                'null' => false,
+                'default' => '',
+            ],
+            'amz_customer_notes' => [
+                'class' => CharField::className(),
+                'null' => false,
+                'default' => '',
+            ],
+
         ];
     }
 
@@ -83,5 +113,31 @@ class OrderGroupModel extends AutoMetaModel
     public function afterFetchDataModel($model)
     {
 
+    }
+
+    private $productModels = null;
+    public function getProductModels()
+    {
+        if (is_null($this->productModels)) {
+            $this->productModels = ProductModel::objects()
+                ->getQuerySet()
+                ->join('inner join', 'xcart_order_details', ['productid' => 'od.productid'], 'od')
+                ->filter(['manufacturerid' => $this->manufacturerid, 'od.orderid' => $this->orderid])
+                ->all();
+        }
+        return $this->productModels;
+    }
+
+    private $detailsModels = null;
+    public function getOrderDetailModels()
+    {
+        if (is_null($this->detailsModels)) {
+            $this->detailsModels = OrderDetailModel::objects()
+                ->getQuerySet()
+                ->join('inner join', 'xcart_products', ['productid' => 'p.productid'], 'p')
+                ->filter(['p.manufacturerid' => $this->manufacturerid, 'orderid' => $this->orderid])
+                ->all();
+        }
+        return $this->detailsModels;
     }
 }

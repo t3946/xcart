@@ -205,6 +205,7 @@ return array(
     'MarketplaceWebService_Model_UpdateReportAcknowledgementsResponse' => $vendorDir . '/caponica/amazon-mws-complete/src/AmazonPhpClientLibrary/MarketplaceWebService/Model/UpdateReportAcknowledgementsResponse.php',
     'MarketplaceWebService_Model_UpdateReportAcknowledgementsResult' => $vendorDir . '/caponica/amazon-mws-complete/src/AmazonPhpClientLibrary/MarketplaceWebService/Model/UpdateReportAcknowledgementsResult.php',
     'Mobile_Detect' => $vendorDir . '/mobiledetect/mobiledetectlib/Mobile_Detect.php',
+    'Omnipay\\Omnipay' => $vendorDir . '/omnipay/common/src/Omnipay/Omnipay.php',
     'RecursiveCallbackFilterIterator' => $vendorDir . '/symfony/polyfill-php54/Resources/stubs/RecursiveCallbackFilterIterator.php',
     'RequestType' => $vendorDir . '/caponica/amazon-mws-complete/src/AmazonPhpClientLibrary/MarketplaceWebService/RequestType.php',
     'SessionHandlerInterface' => $vendorDir . '/symfony/polyfill-php54/Resources/stubs/SessionHandlerInterface.php',

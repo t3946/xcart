@@ -39,7 +39,7 @@ function func_AJAX_authorize_PayPal() {
 
 					//alert(paypal_response);
 
-					if (paypal_response == "Authorized" || paypal_response == "Faild"){
+					if (paypal_response == "Authorized" || paypal_response == "Failed"){
 						$("#AJAX_Please_wait").show();
 						$("#AJAX_Authorize_button").hide();
 						$("#AJAX_Authorize_button_text").hide();
@@ -51,7 +51,7 @@ function func_AJAX_authorize_PayPal() {
 						$("#additional_shipping_status_"+m_id).val("A"); // Authorized
 						document.ordereditform1.submit();
 					}
-					else if (paypal_response == "Faild"){
+					else if (paypal_response == "Failed"){
 						$("#additional_shipping_status_"+m_id).val("A");
 //						window.location.reload();
 					}
@@ -93,33 +93,33 @@ function func_AJAX_authorize_PayPal() {
 
 <table cellspacing="5" cellpadding="0" align="center">
 
-  <tr>
-    <td align="right"><h3 style="color: #000000;">Amount and currency</h3></td>
-    <td></td>
-  </tr>
-  <tr>
-    <td align="right"><b>Currency:</b> </td>
-    <td>
-<select name="paypal_vt[currency]" id="paypal_vt_currency">
-<option value="USD">US Dollars</option>
-<option value="CAN">CA Dollars</option>
-</select>
-    </td>
-  </tr>
-  <tr>
-    <td align="right" style="font-size: 12px;"><b>Grand total:</b> </td>
-    <td><input style="font-size: 12px;" type="text" name="paypal_vt[grand_total]" value="{$order.total}" size="8" id="paypal_vt_grand_total" /></td>
-  </tr>
 
-
-  <tr>
-    <td align="right"><h3 style="color: #000000;">Credit card information</h3></td>
-    <td></td>
-  </tr>
-  <tr>
-    <td align="right"><b>Cardholder's name:</b> </td>
-    <td><input type="text" name="paypal_vt[cardholderl_name]" value="{$customer.b_firstname}" /></td>
-  </tr>
+    <tr>
+        <td align="right"><h3 style="color: #000000;">Amount and currency</h3></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td align="right"><b>Currency:</b></td>
+        <td>
+            <select name="paypal_vt[currency]" id="paypal_vt_currency">
+                <option value="USD">US Dollars</option>
+                <option value="CAN">CA Dollars</option>
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <td align="right" style="font-size: 12px;"><b>Grand total:</b></td>
+        <td><input style="font-size: 12px;" type="text" name="paypal_vt[grand_total]" value="{$order.total}" size="8" required pattern="^\d+(\.?\d+|)$"
+                   id="paypal_vt_grand_total"/></td>
+    </tr>
+    <tr>
+        <td align="right"><h3 style="color: #000000;">Credit card information</h3></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td align="right"><b>Cardholder's name:</b></td>
+        <td><input type="text" name="paypal_vt[cardholderl_name]" value="{$customer.b_firstname}"/></td>
+    </tr>
   <tr>
     <td align="right"><b>Card number:</b> </td>
     <td><input type="text" name="paypal_vt[card_number]" value="" autocomplete="off" id="paypal_vt_card_number" onkeyup="cidev_check_field_phone_ext('paypal_vt_card_number')" /></td>
@@ -175,28 +175,26 @@ function func_AJAX_authorize_PayPal() {
     <td align="right"><b>{$lng.lbl_zip_code}:</b> </td>
     <td>{if !$static}<input type="text" name="paypal_vt[b_zipcode]" value="{$customer.b_zipcode}" />{else}{$customer.b_zipcode}{/if}</td>
   </tr>
+    <tr>
+        <td>&nbsp;</td>
+    </tr>
   <tr>
-    <td></td>
-    <td>	
-	<br />
-
-	<div id="default_Authorize_button">
-		<input type="button" value="Authorize" onclick="javascript: submitForm(this, 'authorize');" />
-	</div>
-
-	
-        <div id="AJAX_Authorize_button" style="display: none;">
-{*
-<input type="hidden" name="VT_OPENED_FROM_func_check_for_paypal_vt_function" id="VT_OPENED_FROM_func_check_for_paypal_vt_function" value="" />
-*}
-
-	        <input type="button" id="btn_Authorize" value="Authorize" onclick="javascript: func_AJAX_authorize_PayPal();" />
+    <td align="right"><b>Processor:</b></td>
+    <td>
+        <select style="margin:1px 5px 0 0; float:left;" name="paypal_vt[processor]" id="paypal_vt_processor">
+            <option value="Paypal VT">Paypal VT</option>
+            <option value="BluePay VT">BluePay VT</option>
+        </select>
+        <div id="default_Authorize_button">
+            <input type="button" value="Authorize" onclick="javascript: submitForm(this, 'authorize');"/>
         </div>
-
-	<div id="AJAX_Please_wait" style="display: none;">
-		<h1>Please wait. <br >Page will be reloaded now ...</h1>
-	</div>
-
+        <div id="AJAX_Authorize_button" style="display: none;">
+            <input type="button" id="btn_Authorize" value="Authorize"
+                   onclick="javascript: func_AJAX_authorize_PayPal();"/>
+        </div>
+        <div id="AJAX_Please_wait" style="display: none;">
+            <h1>Please wait. <br>Page will be reloaded now ...</h1>
+        </div>
     </td>
   </tr>
 </table>
@@ -285,7 +283,7 @@ function func_AJAX_authorize_PayPal() {
 {capture name=add_manual_transaction}
 
 <form action="order.php" method="post" name="vt_form03">
-<input type="hidden" name="mode" id="mode" value="" />
+<input type="hidden" name="mode" id="mode" value="add_manual_transaction" />
 <input type="hidden" name="orderid" value="{$orderid}" />
 
 <table>
@@ -310,8 +308,8 @@ function func_AJAX_authorize_PayPal() {
      <tr>
        <td>
          <b>Payment method:</b><br />
-         <select name="paymentid" >
-         <option value="0"></option>
+         <select name="paymentid" required>
+         <option value=""></option>
          {foreach from=$all_vt_processors item=item_vt key=key_vt}
          <option {if $v.additional_vt_paymentid eq $item_vt.paymentid} selected="selected"{/if} value="{$item_vt.paymentid}">{$item_vt.payment_method}</option>
          {/foreach}
@@ -320,7 +318,7 @@ function func_AJAX_authorize_PayPal() {
        <td width="20">&nbsp;</td>
        <td>
            <b>Virtual terminal transaction ID:</b><br />
-           <input type="text" name="transaction_id" value="" size="40" />
+           <input type="text" name="transaction_id" value="" size="40" required />
        </td>
        <td width="20">&nbsp;</td>
        <td>
@@ -330,12 +328,12 @@ function func_AJAX_authorize_PayPal() {
        <td width="20">&nbsp;</td>
        <td>
            <b>Transaction amount:</b><br />
-           <input type="text" name="transaction_amount" value="0" size="8" />
+           <input name="transaction_amount" value="0" size="8" required pattern="^\d+(\.?\d+|)$" type="text" />
        </td>
      </tr>
 </table>
 
-<input type="button" value="Add transaction" onclick="javascript: submitForm(this, 'add_manual_transaction');" />
+<input type="submit" type="button" value="Add transaction" />
 
 </form>
 

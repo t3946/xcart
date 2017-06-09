@@ -48,6 +48,12 @@ abstract class ManagerBase implements ManagerInterface, IteratorAggregate, Array
         $this->init();
     }
 
+    public function __clone()
+    {
+        $this->qs = clone $this->qs;
+        $this->model = clone $this->model;
+    }
+
     protected function init()
     {
 

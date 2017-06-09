@@ -52,7 +52,7 @@ if ($config[$log_category] == "Y") {
     $oMail->subject = sprintf('Attention! Xcart cron %s Already launched', $log_category);
     $oMail->body = $log_category . ' already launched';
     $oMail->sendEmail();
-    //die("Already launched"); // ################################
+    die("Already launched"); // ################################
 }
 db_query_param('REPLACE xcart_config SET value=:value, name=:name', ['value' => 'Y', 'name' => $log_category]);
 
@@ -425,8 +425,11 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
                                     if (!empty($fv_name_arr) && is_array($fv_name_arr)) {
                                         $filterModel = FilterModel::objects()->getOrCreate(['f_name' => $f_name, 'storefrontid' => $supplierFeedModel->storefront_id]);
                                         foreach ($fv_name_arr as $fv_name) {
-                                            $filterValueModel = FilterValueModel::objects()->getOrCreate(['f_id' => $filterModel->f_id, 'fv_name' => $fv_name]);
-                                            FilterProductModel::objects()->getOrCreate(['fv_id' => $filterValueModel->fv_id, 'productid' => $modelProduct->productid, 'is_feed' => 1]);
+                                            $fv_name = trim($fv_name);
+                                            if (!empty($fv_name)) {
+                                                $filterValueModel = FilterValueModel::objects()->getOrCreate(['f_id' => $filterModel->f_id, 'fv_name' => $fv_name]);
+                                                FilterProductModel::objects()->getOrCreate(['fv_id' => $filterValueModel->fv_id, 'productid' => $modelProduct->productid, 'is_feed' => 1]);
+                                            }
                                         }
                                     }
                                 }

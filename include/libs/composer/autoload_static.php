@@ -9,10 +9,10 @@ class ComposerStaticInited1e2f7cb4425e4bdc0264910bb94e92
     public static $files = array (
         '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
         'ad155f8f1cf0d418fe49e248db8c661b' => __DIR__ . '/..' . '/react/promise/src/functions_include.php',
-        'a0edc8309cc5e1d60e3047b5df6b7052' => __DIR__ . '/..' . '/guzzlehttp/psr7/src/functions_include.php',
         'e40631d46120a9c38ea139981f8dab26' => __DIR__ . '/..' . '/ircmaxell/password-compat/lib/password.php',
         'edc6464955a37aa4d5fbf39d40fb6ee7' => __DIR__ . '/..' . '/symfony/polyfill-php55/bootstrap.php',
         '3e2471375464aac821502deb0ac64275' => __DIR__ . '/..' . '/symfony/polyfill-php54/bootstrap.php',
+        'a0edc8309cc5e1d60e3047b5df6b7052' => __DIR__ . '/..' . '/guzzlehttp/psr7/src/functions_include.php',
         'decc78cc4436b1292c6c0d151b19445c' => __DIR__ . '/..' . '/phpseclib/phpseclib/phpseclib/bootstrap.php',
         '68f9084e889ebf718663435970ab45e3' => __DIR__ . '/..' . '/mindy/query_builder/src/Conditions.php',
         '38aa9ffa312700065ceed8bf7bcb7a53' => __DIR__ . '/../../..' . '/include/func/func.core.php',
@@ -79,6 +79,7 @@ class ComposerStaticInited1e2f7cb4425e4bdc0264910bb94e92
             'Symfony\\Component\\Validator\\' => 28,
             'Symfony\\Component\\Translation\\' => 30,
             'Symfony\\Component\\HttpFoundation\\' => 33,
+            'Symfony\\Component\\EventDispatcher\\' => 34,
         ),
         'R' => 
         array (
@@ -89,6 +90,11 @@ class ComposerStaticInited1e2f7cb4425e4bdc0264910bb94e92
             'Psr\\Log\\' => 8,
             'Psr\\Http\\Message\\' => 17,
             'Psr\\Cache\\' => 10,
+        ),
+        'O' => 
+        array (
+            'Omnipay\\PayPal\\' => 15,
+            'Omnipay\\BluePay\\' => 16,
         ),
         'M' => 
         array (
@@ -171,6 +177,10 @@ class ComposerStaticInited1e2f7cb4425e4bdc0264910bb94e92
         array (
             0 => __DIR__ . '/..' . '/symfony/http-foundation',
         ),
+        'Symfony\\Component\\EventDispatcher\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/event-dispatcher',
+        ),
         'React\\Promise\\' => 
         array (
             0 => __DIR__ . '/..' . '/react/promise/src',
@@ -186,6 +196,14 @@ class ComposerStaticInited1e2f7cb4425e4bdc0264910bb94e92
         'Psr\\Cache\\' => 
         array (
             0 => __DIR__ . '/..' . '/psr/cache/src',
+        ),
+        'Omnipay\\PayPal\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/omnipay/paypal/src',
+        ),
+        'Omnipay\\BluePay\\' => 
+        array (
+            0 => __DIR__ . '/../../..' . '/app/Modules/Payment/Gateways/Omnipay/BluePay',
         ),
         'Monolog\\' => 
         array (
@@ -245,8 +263,23 @@ class ComposerStaticInited1e2f7cb4425e4bdc0264910bb94e92
                 0 => __DIR__ . '/..' . '/paypal/rest-api-sdk-php/lib',
             ),
         ),
+        'O' => 
+        array (
+            'Omnipay\\Common\\' => 
+            array (
+                0 => __DIR__ . '/..' . '/omnipay/common/src',
+            ),
+        ),
         'G' => 
         array (
+            'Guzzle\\Tests' => 
+            array (
+                0 => __DIR__ . '/..' . '/guzzle/guzzle/tests',
+            ),
+            'Guzzle' => 
+            array (
+                0 => __DIR__ . '/..' . '/guzzle/guzzle/src',
+            ),
             'Google_Service_' => 
             array (
                 0 => __DIR__ . '/..' . '/google/apiclient-services/src',
@@ -503,6 +536,7 @@ class ComposerStaticInited1e2f7cb4425e4bdc0264910bb94e92
         'MarketplaceWebService_Model_UpdateReportAcknowledgementsResponse' => __DIR__ . '/..' . '/caponica/amazon-mws-complete/src/AmazonPhpClientLibrary/MarketplaceWebService/Model/UpdateReportAcknowledgementsResponse.php',
         'MarketplaceWebService_Model_UpdateReportAcknowledgementsResult' => __DIR__ . '/..' . '/caponica/amazon-mws-complete/src/AmazonPhpClientLibrary/MarketplaceWebService/Model/UpdateReportAcknowledgementsResult.php',
         'Mobile_Detect' => __DIR__ . '/..' . '/mobiledetect/mobiledetectlib/Mobile_Detect.php',
+        'Omnipay\\Omnipay' => __DIR__ . '/..' . '/omnipay/common/src/Omnipay/Omnipay.php',
         'RecursiveCallbackFilterIterator' => __DIR__ . '/..' . '/symfony/polyfill-php54/Resources/stubs/RecursiveCallbackFilterIterator.php',
         'RequestType' => __DIR__ . '/..' . '/caponica/amazon-mws-complete/src/AmazonPhpClientLibrary/MarketplaceWebService/RequestType.php',
         'SessionHandlerInterface' => __DIR__ . '/..' . '/symfony/polyfill-php54/Resources/stubs/SessionHandlerInterface.php',

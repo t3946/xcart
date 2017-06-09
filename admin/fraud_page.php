@@ -385,7 +385,7 @@ if ($REQUEST_METHOD == "POST" && !($mode == "unlock_order" || $mode == "unlock_o
             ($mode == "apply_changes_and_update_fraud_scores" || $mode == "apply_changes_and_update_fraud_scores_and_change_fraud_check_status") &&
             ($overall_fraud_score > $config["Fraud_check"]["Overall_FC_threshold_for_Clear_status"]) &&
             ($old_fraud_status != "C") &&
-            (empty($manual_action_not_selected))
+            ($manual_action_not_selected == 'Y')
         ) {
             if ($orderid) {
                 $orderModel->getDataModel()->submitOrderEntry();
@@ -775,7 +775,7 @@ if (!empty($fraud_checks) && is_array($fraud_checks)) {
                 'MANUAL_PAYPAL_FULLNAME_EQUAL_TO_ORDER',
                 'MANUAL_PAYPAL_EMAIL_EQUAL_TO_ORDER',
                 'MANUAL_PAYPAL_FULLNAME_VERIFIED'])) {
-                if ($oPaymentMethod && $oPaymentMethod->paymentid == 21) {
+                if ($oPaymentMethod && in_array($oPaymentMethod->paymentid, [21, 102])) {
                     $fraud_checks[$k]["manual_action"] = "N";
                     $fraud_result = "negative";
                     $bare_fraud_score = $importance_factor_arr[0];
