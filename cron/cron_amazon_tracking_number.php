@@ -25,7 +25,7 @@ if ($config[$log_category] == "Y") {
     $oMail->subject = sprintf('Attention! Xcart cron %s Already launched', $log_category);
     $oMail->body = $log_category . ' already launched';
     $oMail->sendEmail();
-    //die("Already launched"); // ################################
+    die("Already launched"); // ################################
 }
 
 db_query_param("REPLACE xcart_config SET value='Y', name=:log_category", ['log_category' => $log_category]);
@@ -35,7 +35,7 @@ $log_text = " * * *  Cron started  * * * ";
 func_backprocess_log($log_category, $log_text);
 
 $ogModels = OrderGroupModel::objects()->filter(['amz_fullfilment_order_placed' => 'Y'])->all();
-if ($ogModels && false) {
+if ($ogModels) {
     func_backprocess_log($log_category, sprintf("Processing %d Send by Amazon orders", count($ogModels)));
     $amzPool = new AmazonPoolStore();
     $oClientPack = $amzPool->getFbaOutboundClientPack();
@@ -84,23 +84,27 @@ if ($ogModels) {
         if ($groups = $order->groups){
             /** @var OrderGroupModel $group */
             foreach($groups as $group){
-                if (!empty($group->tracking) && is_array($group->tracking)){
-                    $aTrackings = $group->tracking;
-                    foreach ($aTrackings as $key => $track){
-                        if (!isset($track['send_to_amazon'])) {
-                            $track['shipping_date'] = DateTime::createFromFormat('m/d/Y', $track['ship_date']);
-                            $cm = TrackingLinksCarrierModel::objects()->get(['carrier_id' => $track['carrier_id']]);
-                            $track['carrier'] = $cm ? $cm->carrier : '';
-                            if (isset($track['linkid']) && $track['linkid']) {
-                                $lm = TrackingLinksModel::objects()->get(['linkid' => $track['linkid']]);
-                                $track['shipping_method'] = $lm ? $lm->shipping : '';
+                try {
+                    if (!empty($group->tracking) && is_array($group->tracking)) {
+                        $aTrackings = $group->tracking;
+                        foreach ($aTrackings as $key => $track) {
+                            if (!isset($track['send_to_amazon'])) {
+                                $track['shipping_date'] = DateTime::createFromFormat('m/d/Y', $track['ship_date']);
+                                $cm = TrackingLinksCarrierModel::objects()->get(['carrier_id' => $track['carrier_id']]);
+                                $track['carrier'] = $cm ? $cm->carrier : '';
+                                if (isset($track['linkid']) && $track['linkid']) {
+                                    $lm = TrackingLinksModel::objects()->get(['linkid' => $track['linkid']]);
+                                    $track['shipping_method'] = $lm ? $lm->shipping : '';
+                                }
+                                //$feedResult = AmazonFbaFeedHelper::sendTrackingCodeToAmazon($group, $track);
+                                $aTrackings[$key]['send_to_amazon'] = 'Y';
                             }
-                            $feedResult = AmazonFbaFeedHelper::sendTrackingCodeToAmazon($group, $track);
-                            $aTrackings[$key]['send_to_amazon'] = 'Y';
                         }
+                        $group->tracking = $aTrackings;
+                        $group->save();
                     }
-                    $group->tracking = $aTrackings;
-                    $group->save();
+                } catch (MarketplaceWebService_Exception $e) {
+                    func_backprocess_log($log_category, $e->getMessage());
                 }
             }
         }

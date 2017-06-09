@@ -41,7 +41,7 @@ class AmazonFbaFeedHelper
                     $product = $detail->product_model;
                     $items[] = ['Item' => [
                         'MerchantOrderItemID' => $product->productcode,
-                        'MerchantFulfillmentItemID' => $product->productcode,
+                        //'MerchantFulfillmentItemID' => $product->productcode,
                         'Quantity' => $detail->amount
                     ]];
                 }
