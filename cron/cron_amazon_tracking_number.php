@@ -93,7 +93,7 @@ if ($ogModels) {
                         $aTrackings = $group->tracking;
                         foreach ($aTrackings as $key => $track) {
                             if (!isset($track['send_to_amazon'])) {
-                                //$feedResult = AmazonFbaFeedHelper::sendTrackingCodeToAmazon($group, $track);
+                                $feedResult = AmazonFbaFeedHelper::sendTrackingCodeToAmazon($group, $track);
                                 $aTrackings[$key]['send_to_amazon'] = 'Y';
                             }
                         }
