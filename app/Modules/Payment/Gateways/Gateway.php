@@ -4,13 +4,17 @@ namespace Modules\Payment\Gateways;
 
 use Modules\Payment\Models\PaymentMethodModel;
 use Modules\Payment\Models\PaymentProcessorModel;
+use Omnipay\Common\Message\ResponseInterface;
 use Omnipay\Omnipay;
+use Omnipay\PayPal\RestGateway;
 
-abstract class Gateway
+abstract class Gateway implements GatewayInterface
 {
+    /** @var \Omnipay\Common\AbstractGateway|RestGateway|\Omnipay\BluePay\Gateway $gateway */
     public $gateway;
     public $model;
     public $test_mode = false;
+    /** @var  ResponseInterface $result*/
     public $result;
 
     /**

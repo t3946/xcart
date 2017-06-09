@@ -82,4 +82,16 @@ class BluePay extends Gateway
             return false;
         }
     }
+
+    public function capture($params)
+    {
+        $this->result = $this->gateway
+            ->setToken($params['transaction_id'])
+            ->capture([
+                'amount' => $params['transaction_id'],
+                'transactionReference' => $params['transaction_id']
+            ])
+            ->send();
+        return $this->result->isSuccessful();
+    }
 }

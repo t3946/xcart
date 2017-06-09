@@ -4,6 +4,7 @@ namespace Modules\Order\Models;
 
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\CharField;
+use Xcart\App\Orm\Fields\DateTimeField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\TextField;
 use Xcart\App\Orm\Fields\TimestampField;
@@ -34,9 +35,9 @@ class OrderLogModel extends Model
                 'null' => false,
             ],
             'date' => [
-                'class' => TimestampField::className(),
-                'null' => false,
-                'default' => 0
+                'class' => DateTimeField::className(),
+                'autoNowAdd' => true,
+                'autoNow' => true,
             ],
             'login' => [
                 'class' => CharField::className(),

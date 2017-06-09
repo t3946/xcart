@@ -10,6 +10,14 @@ use Xcart\App\Orm\Fields\SerializeField;
 
 class OrderTransactionModel extends AutoMetaModel
 {
+    const STATUS_AUTHORIZED = 'authorized';
+    const STATUS_COMPLETED = 'completed';
+    const STATUS_PENDING = 'pending';
+    const STATUS_VOIDED = 'voided';
+    const STATUS_FILED = 'failed';
+    const STATUS_REFUNDED = 'refunded';
+    const STATUS_EXPIRED = 'expired';
+
     public static function tableName()
     {
         return 'xcart_order_transactions';

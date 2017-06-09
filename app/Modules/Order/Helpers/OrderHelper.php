@@ -7,6 +7,9 @@ use Mindy\QueryBuilder\Q\QAnd;
 use Mindy\QueryBuilder\Q\QOr;
 use Mindy\QueryBuilder\QueryBuilder;
 use Modules\Order\Models\OrderEventsModel;
+use Modules\Order\Models\OrderGroupModel;
+use Modules\Order\Models\OrderModel;
+use Modules\Order\Models\OrderStatusModel;
 use Modules\Order\Models\OrderUserLastActivityModel;
 use Modules\User\Models\UserModel;
 use Xcart\App\Main\Xcart;
@@ -137,5 +140,36 @@ class OrderHelper
             ->select(['order_id', 'count' => new Expression('count(*)')]);
 
         return $qs;
+    }
+
+    /**
+     * Return Log string
+     *
+     * @param OrderModel $model
+     * @param $status
+     *
+     * @return array
+     */
+    public static function changeOrderCBStatus($model, $status)
+    {
+        $log = null;
+        $send = false;
+        if ($model->groups) {
+            /** @var OrderGroupModel $group */
+            foreach ($model->groups as $group) {
+                if ($group->cb_status !=$status) {
+                    $log = "<br/><b>" . $group->manufacturer->code . ":</b> cb_status: " . $group->status_cb->name
+                        . " -> " . OrderStatusModel::objects()->get(['code' => $status])->name;
+                }
+                $group->cb_status = $status;
+                $group->save();
+            }
+            if ($model->cb_status != $status) {
+                $send = true;
+                $model->cb_status = $status;
+                $model->save();
+            }
+        }
+        return ['log' => $log, 'send_notification' => $send];
     }
 }
