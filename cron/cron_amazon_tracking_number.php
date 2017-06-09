@@ -6,7 +6,6 @@ use Modules\Amazon\Stores\AmazonPoolStore;
 use Modules\Order\Models\OrderGroupModel;
 use Modules\Order\Models\OrderModel;
 use Modules\Shipping\Models\TrackingLinksCarrierModel;
-use Modules\Shipping\Models\TrackingLinksModel;
 
 define("CIDEV_CRON_START", "CRON");
 
@@ -77,7 +76,12 @@ if ($ogModels) {
     }
 }
 
-$ogModels = OrderModel::objects()->filter(['amazon_fulfillment_channel' => 'MFN', 'orderid' => 80614])->all();
+$ogModels = OrderModel::objects()
+    ->getQuerySet()
+    ->join('inner join', 'xcart_order_groups', ['og.orderid' => 'orderid'], 'og')
+    ->exclude(['og.tracking__contains' => 'send_to_amazon'])
+    ->filter(['amazon_fulfillment_channel' => 'MFN'])
+    ->all();
 if ($ogModels) {
     func_backprocess_log($log_category, sprintf("Processing %d MFN orders", count($ogModels)));
     foreach($ogModels as $order) {
@@ -89,13 +93,6 @@ if ($ogModels) {
                         $aTrackings = $group->tracking;
                         foreach ($aTrackings as $key => $track) {
                             if (!isset($track['send_to_amazon'])) {
-                                $track['shipping_date'] = DateTime::createFromFormat('m/d/Y', $track['ship_date']);
-                                $cm = TrackingLinksCarrierModel::objects()->get(['carrier_id' => $track['carrier_id']]);
-                                $track['carrier'] = $cm ? $cm->carrier : '';
-                                if (isset($track['linkid']) && $track['linkid']) {
-                                    $lm = TrackingLinksModel::objects()->get(['linkid' => $track['linkid']]);
-                                    $track['shipping_method'] = $lm ? $lm->shipping : '';
-                                }
                                 //$feedResult = AmazonFbaFeedHelper::sendTrackingCodeToAmazon($group, $track);
                                 $aTrackings[$key]['send_to_amazon'] = 'Y';
                             }
@@ -104,6 +101,7 @@ if ($ogModels) {
                         $group->save();
                     }
                 } catch (MarketplaceWebService_Exception $e) {
+                    print($e->getMessage());
                     func_backprocess_log($log_category, $e->getMessage());
                 }
             }
