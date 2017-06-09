@@ -1,5 +1,5 @@
 {if $filters}
-<div class="filter-block">
+<div class="filter-block" id="all_filter">
     <div class="block-title">
         Filter by
     </div>

@@ -72,11 +72,19 @@
 .mmodal-content {
   .filter.full {
     ul {
-      column-count: 3;
+      @include breakpoint(large up) {
+        column-count: 3;
+      }
 
       li {
 
       }
     }
+  }
+  .filter.short {
+    display: none;
+  }
+  .show_all {
+    display: none;
   }
 }

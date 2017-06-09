@@ -5,7 +5,7 @@ body {
   &.mmodal-opened {}
 
   .mmodal-modal-bg {
-    z-index: 10;
+    z-index: 3;
     background-color: rgba(0,0,0,.5);
 
     .mmodal-container {

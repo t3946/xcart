@@ -1,5 +1,5 @@
 {if $values|count > 0}
-    <ul class="no-bullet short">
+    <ul class="no-bullet filter short">
             {set $citems = 0}
 
             {foreach $values as $val index=$index}
@@ -23,9 +23,14 @@
                 {/if}
             {/foreach}
     </ul>
-    <a href="#{$key}-f" class="mmodal">
-        Show more
-    </a>
+    {if $values|count > 7}
+        {*<a href="#{$key}-f" class="mmodal">*}
+            {*Show more*}
+        {*</a>*}
+        <a href="#all_filter" class="mmodal show_all">
+            Show more
+        </a>
+    {/if}
     <div id="{$key}-f" class="full filter">
         <ul class="no-bullet">
             {foreach $values as $val}

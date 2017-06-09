@@ -1,6 +1,7 @@
 <?php
 
 use Xcart\App\Main\VarDumper;
+use Xcart\App\Cli\Cli;
 
 function d()
 {
@@ -13,7 +14,7 @@ function d()
             'line' => isset($debug[0]['line']) ? $debug[0]['line'] : null,
         )
     );
-    VarDumper::dump($data);
+    echo VarDumper::dump($data);
     die();
 }
 
@@ -28,6 +29,12 @@ function dd()
             'line' => isset($debug[0]['line']) ? $debug[0]['line'] : null,
         )
     );
-    VarDumper::dump($data, 10, false);
+    if (!Cli::isCli()) {
+        echo '<pre>';
+    }
+    echo VarDumper::dump($data, 10, false);
+    if (!Cli::isCli()) {
+        echo '</pre>';
+    }
     die();
 }
