@@ -1,8 +1,10 @@
 <?php
 
+use Modules\Amazon\Helpers\AmazonFbaFeedHelper;
 use Modules\Amazon\Helpers\AmazonFbaOutboundHelper;
 use Modules\Amazon\Stores\AmazonPoolStore;
 use Modules\Order\Models\OrderGroupModel;
+use Modules\Order\Models\OrderModel;
 use Modules\Shipping\Models\TrackingLinksCarrierModel;
 
 define("CIDEV_CRON_START", "CRON");
@@ -33,6 +35,7 @@ func_backprocess_log($log_category, $log_text);
 
 $ogModels = OrderGroupModel::objects()->filter(['amz_fullfilment_order_placed' => 'Y'])->all();
 if ($ogModels) {
+    func_backprocess_log($log_category, sprintf("Processing %d Send by Amazon orders", count($ogModels)));
     $amzPool = new AmazonPoolStore();
     $oClientPack = $amzPool->getFbaOutboundClientPack();
     /** @var OrderGroupModel $ogm */
@@ -72,6 +75,41 @@ if ($ogModels) {
         }
     }
 }
+
+$ogModels = OrderModel::objects()
+    ->getQuerySet()
+    ->join('inner join', 'xcart_order_groups', ['og.orderid' => 'orderid'], 'og')
+    ->exclude(['og.tracking__contains' => 'send_to_amazon'])
+    ->filter(['amazon_fulfillment_channel' => 'MFN'])
+    ->all();
+if ($ogModels) {
+    func_backprocess_log($log_category, sprintf("Processing %d MFN orders", count($ogModels)));
+    foreach($ogModels as $order) {
+        if ($groups = $order->groups){
+            /** @var OrderGroupModel $group */
+            foreach($groups as $group){
+                try {
+                    if (!empty($group->tracking) && is_array($group->tracking)) {
+                        $aTrackings = $group->tracking;
+                        foreach ($aTrackings as $key => $track) {
+                            if (!isset($track['send_to_amazon'])) {
+                                //$feedResult = AmazonFbaFeedHelper::sendTrackingCodeToAmazon($group, $track);
+                                $aTrackings[$key]['send_to_amazon'] = 'Y';
+                            }
+                        }
+                        $group->tracking = $aTrackings;
+                        $group->save();
+                    }
+                } catch (MarketplaceWebService_Exception $e) {
+                    print($e->getMessage());
+                    func_backprocess_log($log_category, $e->getMessage());
+                }
+            }
+        }
+    }
+}
+
+
 
 Xcart\Config::model(['name' => $log_category])->setValue('N')->_update();
 
