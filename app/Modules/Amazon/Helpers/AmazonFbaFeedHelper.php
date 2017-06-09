@@ -43,26 +43,17 @@ class AmazonFbaFeedHelper
         if (!empty($trackNumberData)) {
             $orderModel = $orderGroup->order;
             $shipDate = ($trackNumberData['shipping_date']) ? $trackNumberData['shipping_date']->format(DATE_ISO8601): '';
-            if ($details = $orderGroup->getOrderDetailModels()) {
-                $items['CarrierName'] = $trackNumberData['carrier'];
-                $items['ShippingMethod'] = $trackNumberData['shipping_method'];
-                $items['ShipperTrackingNumber'] = $trackNumberData['tracknum'];
-                /*foreach ($details as $detail) {
+            /*if ($details = $orderGroup->getOrderDetailModels()) {
+                foreach ($details as $detail) {
                     $product = $detail->product_model;
                     $items[] = ['Item' => [
                         'AmazonOrderItemCode' => $product->productcode,
                         'MerchantFulfillmentItemID' => $product->productcode,
                         'Quantity' => $detail->amount
                     ]];
-                }*/
-            }
-            $data = [
-                '@attributes' => [
-                    'xmlns:xsi' => 'http://www.w3.org/2001/XMLSchema-instance',
-                    'xsi:noNamespaceSchemaLocation' => 'amzn-envelope.xsd',
-                ]
-            ];
-            $data[] = [
+                }
+            }*/
+            $data_0 = [
                 'Header' => [
                     'DocumentVersion' => '1.01',
                     'MerchantIdentifier' => 'S3 Stores'
@@ -74,9 +65,21 @@ class AmazonFbaFeedHelper
                         'AmazonOrderID' => $orderModel->amazonorderid,
                         'MerchantFulfillmentID' => $orderModel->orderid,
                         'FulfillmentDate' => $shipDate,
-                        'FulfillmentData' => $items
+                        'FulfillmentData' => [
+                            'CarrierName' => $trackNumberData['carrier'],
+                            'ShippingMethod' => $trackNumberData['shipping_method'],
+                            'ShipperTrackingNumber' => $trackNumberData['tracknum']
+                        ]
                     ]
                 ]
+            ];
+            $data_0['Message']['OrderFulfillment'] = array_merge($data_0['Message']['OrderFulfillment'], $items);
+            $data = [
+                '@attributes' => [
+                    'xmlns:xsi' => 'http://www.w3.org/2001/XMLSchema-instance',
+                    'xsi:noNamespaceSchemaLocation' => 'amzn-envelope.xsd',
+                ],
+                $data_0
             ];
             return Xml::encode('AmazonEnvelope', $data, false);
         }
