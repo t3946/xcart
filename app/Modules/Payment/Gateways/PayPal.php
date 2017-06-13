@@ -47,7 +47,7 @@ class PayPal extends Gateway
     public function capture($params)
     {
         $this->result = $this->gateway
-            ->capture(array_merge($params, ['transactionReference' => $params]))
+            ->capture($params)
             ->send();
         return $this->result->isSuccessful();
     }

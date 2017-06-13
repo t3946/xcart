@@ -5,6 +5,7 @@ use Modules\Payment\Models\PaymentMethodModel;
 use Xcart\App\Orm\AutoMetaModel;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\CharField;
+use Xcart\App\Orm\Fields\DateTimeField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\SerializeField;
 
@@ -53,6 +54,11 @@ class OrderTransactionModel extends AutoMetaModel
                 'class' => ForeignField::className(),
                 'modelClass' => PaymentMethodModel::className(),
                 'null' => false,
+            ],
+            'date' => [
+                'class' => DateTimeField::className(),
+                'autoNowAdd' => true,
+                'autoNow' => true,
             ]
         ];
     }
