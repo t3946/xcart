@@ -57,7 +57,7 @@ class Templater extends Smarty
         return self::$_instance;
     }
 
-	function Templater() {
+	function __construct() {
 		global $xcart_dir;
 
 		$this->strict_resources = array ();
@@ -70,7 +70,7 @@ class Templater extends Smarty
 
 		$this->compile_check_md5 = false;
 
-		return parent::Smarty();
+		return parent::__construct();
 	}
 
 	function fetch($resource_name, $cache_id = null, $compile_id = null, $display = false) {
@@ -142,4 +142,3 @@ class TemplateCompiler extends Smarty_Compiler {
 	}
 };
 
-?>

@@ -39,7 +39,7 @@ function func_AJAX_authorize_PayPal() {
 
 					//alert(paypal_response);
 
-					if (paypal_response == "Authorized" || paypal_response == "Faild"){
+					if (paypal_response == "Authorized" || paypal_response == "Failed"){
 						$("#AJAX_Please_wait").show();
 						$("#AJAX_Authorize_button").hide();
 						$("#AJAX_Authorize_button_text").hide();
@@ -51,7 +51,7 @@ function func_AJAX_authorize_PayPal() {
 						$("#additional_shipping_status_"+m_id).val("A"); // Authorized
 						document.ordereditform1.submit();
 					}
-					else if (paypal_response == "Faild"){
+					else if (paypal_response == "Failed"){
 						$("#additional_shipping_status_"+m_id).val("A");
 //						window.location.reload();
 					}
@@ -180,29 +180,21 @@ function func_AJAX_authorize_PayPal() {
     </tr>
   <tr>
     <td align="right"><b>Processor:</b></td>
-    <td>	
-	<div id="default_Authorize_button">
-
-          <select name="paypal_vt[processor]" id="paypal_vt_processor">
-              <option value="Paypal VT">Paypal VT</option>
-              <option value="BluePay VT">BluePay VT</option>
-          </select>
-      	<input type="button" value="Authorize" onclick="javascript: submitForm(this, 'authorize');" />
-	</div>
-
-	
-        <div id="AJAX_Authorize_button" style="display: none;">
-{*
-<input type="hidden" name="VT_OPENED_FROM_func_check_for_paypal_vt_function" id="VT_OPENED_FROM_func_check_for_paypal_vt_function" value="" />
-*}
-
-	        <input type="button" id="btn_Authorize" value="Authorize" onclick="javascript: func_AJAX_authorize_PayPal();" />
+    <td>
+        <select style="margin:1px 5px 0 0; float:left;" name="paypal_vt[processor]" id="paypal_vt_processor">
+            <option value="Paypal VT">Paypal VT</option>
+            <option value="BluePay VT">BluePay VT</option>
+        </select>
+        <div id="default_Authorize_button">
+            <input type="button" value="Authorize" onclick="javascript: submitForm(this, 'authorize');"/>
         </div>
-
-	<div id="AJAX_Please_wait" style="display: none;">
-		<h1>Please wait. <br >Page will be reloaded now ...</h1>
-	</div>
-
+        <div id="AJAX_Authorize_button" style="display: none;">
+            <input type="button" id="btn_Authorize" value="Authorize"
+                   onclick="javascript: func_AJAX_authorize_PayPal();"/>
+        </div>
+        <div id="AJAX_Please_wait" style="display: none;">
+            <h1>Please wait. <br>Page will be reloaded now ...</h1>
+        </div>
     </td>
   </tr>
 </table>

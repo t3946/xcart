@@ -38,9 +38,9 @@ class OrderTagEventHelper
             $model = AttentionTagModel::objects()->filter(['status_id' => $status_id])->get();
 
             if ($model) {
-                $link = OrderAdditionalTagLinkModel::objects()->getOrCreate(['status_id' => $status_id, 'orderid' => $order_id]);
+                list($link, $created) = OrderAdditionalTagLinkModel::objects()->getOrCreate(['status_id' => $status_id, 'orderid' => $order_id]);
 
-                if ($save_log && $link->getIsCreated()) {
+                if ($save_log && $created) {
                     Logs::_log('orders', $order_id, 'X', "Attention tag added: " . $model->status . "\n", Xcart::app()->user->login);
                 }
 

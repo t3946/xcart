@@ -65,7 +65,7 @@ class ctBlowfish {
 	var $m = array();
 	var $r = array();
 
-	function ctBlowfish() {
+	function __construct() {
 		$this->m = array (0x5c266859, 0x36623665, 0x63316162, 0x64346638,
 			0x64356631, 0x30306362, 0x62353734, 0x34623630,
 			0x32636134, 0x66633332, 0x38323731, 0x37643366,

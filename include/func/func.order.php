@@ -3559,7 +3559,7 @@ function func_order_details_translate($order_details, $force = false)
 #
 # Send order status notification
 #
-function func_send_order_status_notification($orderid, $status)
+function func_send_order_status_notification($orderid, $status, $force_send_email = false)
 {
     global $sql_tbl, $mail_smarty, $config, $statuses, $attach_pdf_invoice, $xcart_dir;
 
@@ -3610,7 +3610,7 @@ function func_send_order_status_notification($orderid, $status)
                 $from     = $order_data['userinfo']['firstname'] . "<" . $config['Company']['orders_department'] . ">";
                 $reply_to = $order_data['userinfo']['firstname'] . "<" . $order_data['userinfo']['email'] . ">";
 
-                if ($_POST["send_email"] == "Y") {
+                if ($_POST["send_email"] == "Y" || $force_send_email) {
                     $oMail = \Xcart\App\Main\Xcart::app()->mail;
                     $oMail->to = $to;
                     $oMail->from = $from;
