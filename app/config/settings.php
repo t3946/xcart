@@ -26,7 +26,6 @@ return array_replace_recursive([
                    'user' => 'xcart_k',
                    'password' => 'i250923lst',
                    'charset'  => 'utf8',
-//                   'prefix' => 'xcart_',
                    'mapping' => [
                        'enum' => 'string'
                    ]
@@ -42,6 +41,8 @@ return array_replace_recursive([
            'class' => '\\Xcart\\App\\Event\\EventManager',
            'events' => include dirname(__FILE__) . DIRECTORY_SEPARATOR .  'events.php'
        ],
+
+       'logger' => include __DIR__. DIRECTORY_SEPARATOR . 'logger.php',
 
        'middleware' => [
            'class' => '\\Xcart\\App\\Middleware\\MiddlewareManager',
@@ -119,6 +120,8 @@ return array_replace_recursive([
 //       ],
    ],
    'autoloadComponents' => [
+       'db',
+       'logger'
 //       'errorHandler'
    ]
 ],  (is_file($local_config)) ? include $local_config : []);

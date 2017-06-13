@@ -16,7 +16,7 @@ namespace Xcart\App\Template;
 
 use Fenom\ProviderInterface;
 
-class PhactFenomTemplateProvider implements ProviderInterface
+class FenomTemplateProvider implements ProviderInterface
 {
     private $_paths = [];
 

@@ -390,8 +390,8 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
                                 $aRelatedProducts = ProductModel::objects()->filter(new QOr($params))->all();
                                 if (!empty($aRelatedProducts)) {
                                     foreach ($aRelatedProducts as $relatedProductModel) {
-                                        $relatedModel = ProductLinksModel::objects()->getOrCreate(['productid1' => $modelProduct->productid, 'productid2' => $relatedProductModel->productid]);
-                                        $relatedModelBack = ProductLinksModel::objects()->getOrCreate(['productid1' => $relatedProductModel->productid, 'productid2' => $modelProduct->productid]);
+                                        list($relatedModel) = ProductLinksModel::objects()->getOrCreate(['productid1' => $modelProduct->productid, 'productid2' => $relatedProductModel->productid]);
+                                        list($relatedModelBack) = ProductLinksModel::objects()->getOrCreate(['productid1' => $relatedProductModel->productid, 'productid2' => $modelProduct->productid]);
                                     }
                                 }
                             }
@@ -424,11 +424,11 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
                             if (!empty($aAttributes)) {
                                 foreach ($aAttributes as $f_name => $fv_name_arr) {
                                     if (!empty($fv_name_arr) && is_array($fv_name_arr)) {
-                                        $filterModel = FilterModel::objects()->getOrCreate(['f_name' => $f_name, 'storefrontid' => $supplierFeedModel->storefront_id]);
+                                        list($filterModel) = FilterModel::objects()->getOrCreate(['f_name' => $f_name, 'storefrontid' => $supplierFeedModel->storefront_id]);
                                         foreach ($fv_name_arr as $fv_name) {
                                             $fv_name = trim($fv_name);
                                             if (!empty($fv_name)) {
-                                                $filterValueModel = FilterValueModel::objects()->getOrCreate(['f_id' => $filterModel->f_id, 'fv_name' => $fv_name]);
+                                                list($filterValueModel) = FilterValueModel::objects()->getOrCreate(['f_id' => $filterModel->f_id, 'fv_name' => $fv_name]);
                                                 FilterProductModel::objects()->getOrCreate(['fv_id' => $filterValueModel->fv_id, 'productid' => $modelProduct->productid, 'is_feed' => 1]);
                                             }
                                         }
@@ -611,7 +611,7 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
             "UPDATE xcart_manufacturer_feed_fields SET locked=:locked WHERE manufacturerid=:manufacturerid AND feed_id = :feed_id",
                 ['locked' => 'N', 'manufacturerid' => $supplierFeedModel->manufacturerid, 'feed_id' => $supplierFeedModel->feed_id]);
         foreach ($lastFeedFields as $fieldName) {
-            $FieldModel = DistributorFeedFieldModel::objects()->getOrCreate([
+            list($FieldModel) = DistributorFeedFieldModel::objects()->getOrCreate([
                 'field_name' => $fieldName,
                 'manufacturerid' => $supplierFeedModel->manufacturerid,
                 'feed_id' => $supplierFeedModel->feed_id
