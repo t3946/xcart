@@ -15,7 +15,9 @@ function dedupArray(arr)
 function dedupObj(obj)
 {
     for (let key in obj) {
-        obj[key] = dedup(obj[key]);
+        if (obj.hasOwnProperty(key)) {
+            obj[key] = dedup(obj[key]);
+        }
     }
 
     return obj;

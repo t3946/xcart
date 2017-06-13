@@ -20,6 +20,8 @@
                         <img data-original="//cdn.{$site->getBaseDomain()}{$image->getURL()}" width="{$image->image_x}" height="{$image->image_y}" alt="{$item.product}" class="loader lazyimg" itemprop="image">
                     {/if}
                 {else}
+                    
+                    {*<img src="http://via.placeholder.com/200x200/efefef/a6a6a6/?text=No+image" alt="Image not available">*}
                     <div class="not-avail">
                         <span class="text">
                             Image not available

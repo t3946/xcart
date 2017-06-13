@@ -10,6 +10,8 @@ export default class CatalogFilter
         this.options = {
             classes: {
                 'form': '.filter_form',
+                'blocks': '.accordion-item',
+                'clear': '.filter_reset .filter_item',
             }
         };
 
@@ -18,6 +20,8 @@ export default class CatalogFilter
 
     init() {
         this.elemets['form'] = $(this.options.classes['form']);
+        this.elemets['blocks'] = $(this.elemets['form'].find(this.options.classes['blocks']));
+        this.elemets['clear'] = $(this.options.classes['clear']);
 
         this._bind();
     }
@@ -69,6 +73,16 @@ export default class CatalogFilter
             if ($linked) {
                 $linked.prop('checked', $this.prop('checked'));
             }
+        });
+
+        this.elemets['clear'].on('click', (e) => {
+            let $this = $(e.target);
+
+            $('.' + $this.data('group'))
+                .removeClass('checked')
+                .prop('checked', false);
+
+            $this.remove();
         });
     }
 }

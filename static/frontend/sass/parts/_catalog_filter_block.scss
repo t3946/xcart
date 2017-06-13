@@ -1,4 +1,6 @@
 .filter-block {
+  .full { display:none; }
+
   .block-title {
     text-transform: uppercase;
     font-size: rem-calc(20);
@@ -28,9 +30,6 @@
         border: none;
         padding: rem-calc(2) 0 rem-calc(10);
 
-        .full {
-          display:none;
-        }
 
         ul {
           li {
@@ -104,6 +103,30 @@
       }
     }
   }
+
+  .buttons {
+
+    button {
+      border-radius: 2px;
+      background-color: #15303f;
+      height: 33px;
+      line-height: 35px;
+      color: #ffffff;
+      text-transform: uppercase;
+      text-align: center;
+
+      width: 94px;
+      font-size: 0.875rem;
+    }
+
+    .reset_filter {
+      color: #055a93;
+      border-bottom: 1px dashed #055a93;
+      font-size: rem-calc(14);
+      line-height: 1em;
+      display: inline-block;
+    }
+  }
 }
 
 .catalog-page {
@@ -147,16 +170,28 @@
       }
     }
 
-    button {
-      width: 50%;
-      font-size: 1em;
-      border-radius: 2px;
-      background-color: #15303f;
-      height: 33px;
-      line-height: 35px;
-      color: #ffffff;
-      text-transform: uppercase;
-      text-align: center;
+    .buttons {
+      @include justify-menu();
+
+      button {
+        width: 50%;
+        font-size: 1em;
+        border-radius: 2px;
+        background-color: #15303f;
+        height: 33px;
+        line-height: 35px;
+        color: #ffffff;
+        text-transform: uppercase;
+        text-align: center;
+      }
+
+      .reset_filter {
+        color: #055a93;
+        border-bottom: 1px dashed #055a93;
+        font-size: rem-calc(14);
+        line-height: 1em;
+        display: inline-block;
+      }
     }
   }
 }
@@ -174,7 +209,7 @@
 
     @include breakpoint(medium down) {
       width: 100vw !important;
-      height: 100vh;
+      min-height: 100vh;
       margin:0;
     }
   }
@@ -183,10 +218,13 @@
     padding: 0;
 
     @include breakpoint(medium down) {
-      height: 100vh;
+      min-height: 100vh;
     }
 
     .filter-block {
+      .full { display: block; }
+      .short { display: none; }
+
       .block-title {
         background-color: #1e3f51;
         color: #90a6b1;
@@ -205,17 +243,12 @@
           .accordion-content {
             padding: 0 10px;
 
-            .full { display: block; }
-            .short { display: none; }
-
             .filter {
               &.full {
                 ul {
                   margin: 10px 0;
-                  @include breakpoint(xsmall down) {
-                    column-count: 2;
-                  }
-                  @include breakpoint(medium down) {
+
+                  @include breakpoint(xsmall up) {
                     column-count: 2;
                   }
                   @include breakpoint(medium up) {
@@ -240,6 +273,10 @@
 
           }
         }
+      }
+
+      .buttons {
+        padding: 12px 32px 25px;
       }
     }
   }

@@ -10,7 +10,9 @@ body {
 
     .mmodal-container {
       .mmodal-close{}
-      .mmodal-content {}
+      .mmodal-content {
+        border-radius: 0;
+      }
     }
   }
 }

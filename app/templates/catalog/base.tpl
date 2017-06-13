@@ -16,7 +16,7 @@
             {include "catalog/parts/_catalog_list_item.tpl" item=$item}
         {/foreach}
     {else}
-        <section class="catalog-page">
+    <section class="catalog-page">
         <div class="row">
             <div class="columns large-2 show-for-large">
                 <form action="{$.request->getMatchingUrl()}" type="get" name="filter" class="filter_form">
@@ -24,9 +24,16 @@
 
                     {/block}
                     <section class="filter_container">
-                        {include "catalog/parts/_filter.tpl" qs=$pager}
+                        {include "catalog/parts/_filter.tpl"}
                     </section>
-                    <button class="button">APPLY</button>
+
+                    <section class="buttons">
+                        <button class="button">Apply</button>
+
+                        <a href="{$.request->getMatchingUrl()}" class="reset_filter" rel="nofollow">
+                            Reset filters
+                        </a>
+                    </section>
 
                 </form>
             </div>
@@ -40,6 +47,10 @@
 
 
                 {include "catalog/parts/_state_line.tpl"}
+                <div class="mobile-reset-filter hide-for-large">
+                    {include "catalog/parts/_filter_reset.tpl"}
+                </div>
+
                 <div class="page_count hide-for-large">
                     {include 'catalog/parts/_page_count.tpl'}
                 </div>
