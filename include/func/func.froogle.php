@@ -822,6 +822,7 @@ function SubmitBingInventoryBatch($binventory, $sEndpoint, $MerchantID, $Catalog
 	                $use_storefrontid = $current_storefront; // froogle.php
                     }
                 }
+    $sf_info = func_get_storefront_info($use_storefrontid, 'ID', true);
 
 	foreach ($binventory as $k => $v){
 				/*func_build_quick_prices($v["productid"]);*/
@@ -934,10 +935,20 @@ function SubmitBingInventoryBatch($binventory, $sEndpoint, $MerchantID, $Catalog
                 }
 
 
-                $tmp_image_link = $tmbn;
-                if (empty($tmp_image_link)){
-                    $tmp_image_link = $product['froogle_location'] . "/default_image.gif";
-                }
+				if ($sf_info["config"]["Appearance"]["Enable_CDN"]=="Y" && !empty($sf_info["config"]["Appearance"]["CDN_domain"])){
+					$imgurl = (($sf_info["config"]["Appearance"]['https_enabled']=='Y') ? 'https://' : 'http://') . $sf_info["config"]["Appearance"]["CDN_domain"];
+				} else {
+					$imgurl = ($sf_info["config"]["Appearance"]['https_enabled']=='Y') ? $https_location : $http_location;
+				}
+				if (!empty($tmbn)) {
+					$tmbn = $imgurl . $tmbn;
+				} else {
+					$tmbn = $imgurl . "/default_image.gif";
+				}
+				if (!empty($additional_image_link)) {
+					$additional_image_link = $imgurl . $additional_image_link;
+				}
+				$tmp_image_link = $tmbn;
 
                 $product['image_link'] = $tmp_image_link;
                 $postBody["entries"][$k]["product"]["imagelink"] = $product["image_link"];
