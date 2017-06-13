@@ -147,7 +147,7 @@ class XcartSession extends Session
 
             if (!$this->model) {
                 $id = $this->genSessId();
-                $this->model = SessionDataModel::objects()->getOrCreate(['sessid' => $id]);
+                list($this->model) = SessionDataModel::objects()->getOrCreate(['sessid' => $id]);
                 $this->data = [];
                 $this->unpacked = [];
             }

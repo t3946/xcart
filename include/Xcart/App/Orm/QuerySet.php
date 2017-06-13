@@ -156,24 +156,42 @@ class QuerySet extends QuerySetBase
     }
 
     /**
-     * Get model if exists. Else create model.
+     * Get model if exists. Else create model without save.
      *
      * @param array $attributes
      *
-     * @return \Xcart\App\Orm\Model
+     * @return array [\Xcart\App\Orm\Model, isNew]
      * @throws
      */
-    public function getOrCreate(array $attributes)
+    public function getOrNew(array $attributes)
     {
         $model = $this->get($attributes);
         if ($model === null) {
             $className = get_class($this->getModel());
             /** @var Model $model */
             $model = new $className($attributes);
+            return [$model, true];
+        }
+
+        return [$model, false];
+    }
+
+    /**
+     * Get model if exists. Else create model.
+     *
+     * @param array $attributes
+     *
+     * @return array[\Xcart\App\Orm\Model, boolean]
+     * @throws
+     */
+    public function getOrCreate(array $attributes)
+    {
+        list($model, $isNew) = $this->getOrNew($attributes);
+        if ($isNew) {
             $model->save();
         }
 
-        return $model;
+        return [$model, $isNew];
     }
 
     /**
@@ -182,20 +200,17 @@ class QuerySet extends QuerySetBase
      * @param array $attributes
      * @param array $updateAttributes
      *
-     * @return null|\Xcart\App\Orm\ModelInterface|\Xcart\App\Orm\Orm
+     * @return array [null|\Xcart\App\Orm\ModelInterface|\Xcart\App\Orm\Orm, isNew]
      * @throws
      */
     public function updateOrCreate(array $attributes, array $updateAttributes)
     {
-        $model = $this->get($attributes);
-        if ($model === null) {
-            $className = get_class($this->getModel());
-            /** @var Model $model */
-            $model = new $className($attributes);
-        }
+        list($model, $isNew) = $this->getOrNew($attributes);
+
         $model->setAttributes($updateAttributes);
         $model->save();
-        return $model;
+
+        return [$model, $isNew];
     }
 
     /**
