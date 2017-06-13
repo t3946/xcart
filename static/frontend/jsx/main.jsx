@@ -3,12 +3,14 @@ import DepartmentMenu from "./components/DepartmentMenu";
 import DottedText from "./components/DottedText";
 import CategoryViewType from "./components/CategoryViewType";
 import LazyImageLoad from "./components/LazyImageLoad";
+import CatalogFilter from "./components/CatalogFilter";
 
 (function(){
     new LazyImageLoad('.lazyimg');
     new CategoryViewType();
     new DepartmentMenu();
     new DottedText('.must-show-less');
+    new CatalogFilter();
 
     Waves.attach('.button');
     Waves.init();

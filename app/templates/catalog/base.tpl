@@ -19,7 +19,7 @@
         <section class="catalog-page">
         <div class="row">
             <div class="columns large-2 show-for-large">
-                <form action="" type="get" name="filter">
+                <form action="{$.request->getMatchingUrl()}" type="get" name="filter" class="filter_form">
                     {block "catalog-sidebar"}
 
                     {/block}
