@@ -19,7 +19,7 @@
         <section class="catalog-page">
         <div class="row">
             <div class="columns large-2 show-for-large">
-                <form action="" type="get" name="fform">
+                <form action="" type="get" name="filter">
                     {block "catalog-sidebar"}
 
                     {/block}

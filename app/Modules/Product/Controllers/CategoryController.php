@@ -57,10 +57,10 @@ class CategoryController extends Controller
             ]);
 
         $filters = [];
-        $form_data = $this->getRequest()->get->get('fform', []);
+        $form_data = $this->getRequest()->get->get('filter', []);
         $filters = FilterLibrary::getFilterStructure($pqs, $form_data);
 
-        if ($this->getRequest()->get->has('fform')) {
+        if ($this->getRequest()->get->has('filter')) {
             $pqs = FilterLibrary::getFiltrateQS($pqs, $form_data);
         }
 

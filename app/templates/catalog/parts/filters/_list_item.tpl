@@ -1,5 +1,5 @@
 <input type="checkbox"
-       name="fform[{$key}][]"
+       name="filter[{$key}][]"
        id="{$prefix}_lcb_{$val.value}"
        value="{$val.value}"
        data-group="{$val.value}"
