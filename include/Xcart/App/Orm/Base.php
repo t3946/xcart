@@ -25,6 +25,7 @@ abstract class Base implements ModelInterface, ArrayAccess, Serializable
      */
     protected $isNewRecord = true;
     /**
+     * @deprecated
      * @var bool
      */
     protected $isCreated = false;
@@ -621,6 +622,7 @@ abstract class Base implements ModelInterface, ArrayAccess, Serializable
     }
 
     /**
+     * @deprecated
      * @return bool
      */
     public function getIsCreated()
@@ -629,6 +631,7 @@ abstract class Base implements ModelInterface, ArrayAccess, Serializable
     }
 
     /**
+     * @deprecated
      * @param bool $value
      *
      * @return $this

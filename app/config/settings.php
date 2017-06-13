@@ -49,7 +49,7 @@ return array_replace_recursive([
            'events' => include __DIR__ . DS .  'events.php'
        ],
 
-       'logger' => include __DIR__. DIRECTORY_SEPARATOR . 'logger.php',
+       'logger' => include __DIR__. DS . 'logger.php',
 
        'middleware' => [
            'class' => '\\Xcart\\App\\Middleware\\MiddlewareManager',

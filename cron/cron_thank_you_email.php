@@ -11,10 +11,7 @@ global $config, $mail_smarty;
 require "../top.inc.php";
 require "../init.php";
 
-ini_set('memory_limit', '512M');
-set_time_limit(0);
-
-$log_category = 'cron_tracking_number_and_email';
+$log_category = 'cron_thank_you_email';
 $start_time = new DateTime('now');
 $log_text = " * * *  Cron started  * * * ";
 func_backprocess_log($log_category, $log_text);
