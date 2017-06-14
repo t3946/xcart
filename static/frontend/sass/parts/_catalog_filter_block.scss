@@ -129,8 +129,45 @@
   }
 }
 
+.filter_reset {
+  margin: rem-calc(15) 0;
+  .column-block {
+    margin: .3em 0;
+  }
+
+  .filter_item {
+    position: relative;
+    padding-left: 20px;
+    font-size: rem-calc(15);
+
+    @include breakpoint(medium up) {
+      font-size: rem-calc(16);
+    }
+
+
+    &:before {
+      content: '';
+      position: absolute;
+      display: block;
+      left: 0;
+      width: 15px;
+      height: 15px;
+      margin-top: -8px;
+      top: 50%;
+
+      background-image: url("../images/icons/filter/cancel.svg");
+      background-size: 15px 15px;
+    }
+
+    .filter_group {
+      color: #838383;
+      font-size: 14px;
+    }
+  }
+}
+
 .catalog-page {
-  .filter_form {
+  #filter_form {
     .accordion {
       .accordion-item {
         .accordion-title {
@@ -196,7 +233,7 @@
   }
 }
 
-.filter-modal {
+.filters {
   &.mmodal-modal-bg {
     z-index: 10!important;
   }
@@ -280,4 +317,29 @@
       }
     }
   }
+
+
+  #filter_form {
+    .filter {
+      &.default {
+        display: none;
+      }
+    }
+  }
+
+ &.filter {
+
+   &.default {
+     #filter_form {
+       .filter {
+         display: none;
+
+         &.default {
+           display: block;
+         }
+       }
+     }
+   }
+
+ }
 }

@@ -3,6 +3,7 @@
        id="{$prefix}_lcb_{$val.value}"
        value="{$val.value}"
        data-group="fv-group-{$val.value}"
+       data-remove="fv-remove-{$val.value}"
        data-fv-val="{$val.value}"
 
         {if $val.checked}

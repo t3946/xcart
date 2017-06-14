@@ -22,15 +22,6 @@
                 </li>
             {/foreach}
         </ul>
-
-        <section class="buttons full">
-            <button class="button">Apply</button>
-
-            <a href="{$.request->getMatchingUrl()}" class="reset_filter" rel="nofollow">
-                Reset filters
-            </a>
-        </section>
-
     </div>
 </section>
 {/if}

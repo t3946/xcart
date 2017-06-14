@@ -10,7 +10,7 @@ export default class CatalogFilter
         this.options = {
             classes: {
                 'form': '.filter_form',
-                'blocks': '.accordion-item',
+                'blocks': ' .accordion-item',
                 'clear': '.filter_reset .filter_item',
             }
         };
@@ -26,34 +26,38 @@ export default class CatalogFilter
         this._bind();
     }
 
+    formSend(form) {
+
+        let $this = $(form);
+        let fd = dedup(serialize(form, { hash: true }));
+
+        let action = ($this.prop('action') || window.location).split('#');
+
+        let link = action[0];
+        if (link.indexOf('?') === -1) {
+            link += '?';
+        }
+        else {
+            link += '&';
+        }
+
+        link += objToUri(fd);
+
+        if (action.length > 1) {
+            link = '#' + action[1];
+        }
+
+        window.location = link;
+    }
+
 
     _bind() {
         this.elemets['form'].on('submit', (e) => {
             e.preventDefault();
-            let $this = $(e.target);
-            let fd = dedup(serialize(e.target, { hash: true }));
-
-            let action = ($this.prop('action') || window.location).split('#');
-
-            let link = action[0];
-            if (link.indexOf('?') === -1) {
-                link += '?';
-            }
-            else {
-                link += '&';
-            }
-
-            link += objToUri(fd);
-
-            if (action.length > 1) {
-                link = '#' + action[1];
-            }
-
-            window.location = link;
-
+            this.formSend(e.target);
         });
 
-        this.elemets['form'].on('click', 'input[type=checkbox]', (e) => {
+        this.elemets['blocks'].on('click', 'input[type=checkbox]', (e) => {
             let $this = $(e.target);
             let $linked = null;
 
@@ -68,6 +72,11 @@ export default class CatalogFilter
                 if ($linked) {
                     $linked.removeClass('checked');
                 }
+
+                if ($this.data('remove')) {
+                    $('.' + $this.data('remove')).remove();
+                }
+
             }
 
             if ($linked) {
@@ -80,9 +89,19 @@ export default class CatalogFilter
 
             $('.' + $this.data('group'))
                 .removeClass('checked')
-                .prop('checked', false);
+                .prop('checked', false)
+                .closest('form').submit();
+
 
             $this.remove();
+        });
+
+        $(document).on('click', '.filter-block a.show_all, .state_line .action_button.filter a', function(e){
+            e.preventDefault();
+            e.stopPropagation();
+
+            let $this = $(this);
+            $this.mmodal({skin: 'filters ' + ($this.data('modal-class') || 'filter-modal')});
         });
     }
 }

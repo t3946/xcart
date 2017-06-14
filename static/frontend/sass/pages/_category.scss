@@ -237,6 +237,7 @@ $padding_container: rem-calc(18);
             .action {
               font-size: rem-calc(24);
               text-transform: uppercase;
+              color: inherit;
 
               @include breakpoint(xsmall down) {
                 font-size: rem-calc(15);

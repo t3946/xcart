@@ -3,7 +3,6 @@
             {set $citems = 0}
 
             {foreach $values as $val index=$index}
-                {if $citems >= 7}{break}{/if}
                 {if $val.checked}
                 <li>
                     {include 'catalog/parts/filters/_list_item.tpl' prefix="s"}
@@ -24,10 +23,7 @@
             {/foreach}
     </ul>
     {if $values|count > 7}
-        {*<a href="#{$key}-f" class="mmodal">*}
-            {*Show more*}
-        {*</a>*}
-        <a href="#all_filter" class="show_all short">
+        <a href="#filter_form" class="show_all short" {if $modal_class? }data-modal-class="{$modal_class}"{/if}>
             Show more
         </a>
     {/if}

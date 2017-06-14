@@ -17,35 +17,39 @@
         {/foreach}
     {else}
     <section class="catalog-page">
+        {block "content-top"}
+
+        {/block}
         <div class="row">
             <div class="columns large-2 show-for-large">
-                <form action="{$.request->getMatchingUrl()}" type="get" name="filter" class="filter_form">
-                    {block "catalog-sidebar"}
+                <div class="firm_cont">
+                    <form action="{$.request->getMatchingUrl()}" type="get"  id="filter_form">
+                        <div class="filter advanced">
+                            {block "catalog-filter"}
+                                {*{include "catalog/parts/_filter.tpl" modal_class='filter advanced' filters=[]}*}
+                            {/block}
+                        </div>
+                        <div class="filter default">
+                            {include "catalog/parts/_filter.tpl" modal_class='filter default'}
+                        </div>
 
-                    {/block}
-                    <section class="filter_container">
-                        {include "catalog/parts/_filter.tpl"}
-                    </section>
+                        <section class="buttons">
+                            <button class="button">Apply</button>
 
-                    <section class="buttons">
-                        <button class="button">Apply</button>
+                            <a href="{$.request->getMatchingUrl()}" class="reset_filter" rel="nofollow">
+                                Reset filters
+                            </a>
+                        </section>
 
-                        <a href="{$.request->getMatchingUrl()}" class="reset_filter" rel="nofollow">
-                            Reset filters
-                        </a>
-                    </section>
+                    </form>
+                </div>
 
-                </form>
+                {block "catalog-sidebar"}
+
+                {/block}
             </div>
 
             <div class="columns large-10">
-                <div class="top-block pcont">
-                {block "content-top"}
-
-                {/block}
-                </div>
-
-
                 {include "catalog/parts/_state_line.tpl"}
                 <div class="mobile-reset-filter hide-for-large">
                     {include "catalog/parts/_filter_reset.tpl"}
