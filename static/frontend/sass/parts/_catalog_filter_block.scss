@@ -320,7 +320,7 @@
 
 
   #filter_form {
-    .filter {
+    .filters_section {
       &.default {
         display: none;
       }
@@ -331,7 +331,7 @@
 
    &.default {
      #filter_form {
-       .filter {
+       .filters_section {
          display: none;
 
          &.default {

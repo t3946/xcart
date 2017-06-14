@@ -24,12 +24,12 @@
             <div class="columns large-2 show-for-large">
                 <div class="firm_cont">
                     <form action="{$.request->getMatchingUrl()}" type="get"  id="filter_form">
-                        <div class="filter advanced">
+                        <div class="filters_section advanced">
                             {block "catalog-filter"}
                                 {*{include "catalog/parts/_filter.tpl" modal_class='filter advanced' filters=[]}*}
                             {/block}
                         </div>
-                        <div class="filter default">
+                        <div class="filters_section default">
                             {include "catalog/parts/_filter.tpl" modal_class='filter default'}
                         </div>
 
