@@ -33,7 +33,8 @@
             "Modules\\": "app/Modules",
             "Xcart\\External_Product_Verification\\": "modules/External_Product_Verification/include",
             "Xcart\\External_Marketplaces\\": "modules/External_Marketplaces/include",
-            "Omnipay\\BluePay\\" : "app/Modules/Payment/Gateways/Omnipay/BluePay"
+            "Omnipay\\BluePay\\" : "app/Modules/Payment/Gateways/Omnipay/BluePay",
+            "Omnipay\\PayPal\\" : "app/Modules/Payment/Gateways/Omnipay/PayPal"
         },
         "classmap": [
             "include/libs/caponica/amazon-mws-complete/src/AmazonPhpClientLibrary/FBAOutboundServiceMWS",

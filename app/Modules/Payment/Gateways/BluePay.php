@@ -94,4 +94,9 @@ class BluePay extends Gateway
             ->send();
         return $this->result->isSuccessful();
     }
+
+    public function getState()
+    {
+        return $this->result['state'];
+    }
 }

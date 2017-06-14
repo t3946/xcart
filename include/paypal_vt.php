@@ -19,18 +19,21 @@ if (!defined('XCART_SESSION_START')) {
 
 global $REQUEST_METHOD, $mode, $top_message, $order_transaction_id, $paypal_vt, $transaction_status, $AJAX_SUBMIT, $login;
 
-$gw = $log = $orderTransaction = $result = $countTr = null;
+$gw = $log = $orderTransaction = $result = $countTr = $logStatus = null;
 $isAllowed = true;
 $params = [];
 
 if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array_keys(Gateway::$gatewayMethods))) {
+    $method = Gateway::$gatewayMethods[$mode]['method'];
+    $status = Gateway::$gatewayMethods[$mode]['status'];
 
     /** @var OrderModel $orderModel */
     $orderModel = OrderModel::objects()->get(['orderid' => $orderid]);
     if (!empty($order_transaction_id) && $orderTransaction = OrderTransactionModel::objects()->get(['id' => $order_transaction_id])) {
-        $pmModel = $orderTransaction->payment_method_model->get();
+        $pmModel = $orderTransaction->payment_method_model;
         $gw = Gateway::getGateway($orderTransaction->payment_method_model);
     }
+    $transaction_amount[$order_transaction_id] = number_format($transaction_amount[$order_transaction_id],2);
 
     switch ($mode) {
         case 'authorize' :
@@ -48,10 +51,13 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array_keys(
             }
             break;
         case 'void_transaction' :
+            $params = [
+                'transactionReference' => $orderTransaction->transaction_id,
+            ];
             break;
         case 'capture_transaction' :
             $params = [
-                'transactionReference' => $orderTransaction->transaction_id,
+                'transactionReference' => ($orderTransaction->transaction_status == OrderTransactionModel::STATUS_REFUNDED) ? $orderTransaction->parent_transaction_id : $orderTransaction->transaction_id,
                 'amount' => $transaction_amount[$order_transaction_id],
                 'currency' => $orderTransaction->transaction_currency,
             ];
@@ -59,27 +65,46 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array_keys(
         case 're_authorize_transaction' :
             break;
         case 'refund_transaction' :
+            $params = [
+                'transactionReference' => $orderTransaction->transaction_id,
+                'amount' => $transaction_amount[$order_transaction_id],
+                'currency' => $orderTransaction->transaction_currency,
+            ];
             break;
         case 'look_up_payment' :
+            $params = [
+                'transactionReference' => $orderTransaction->transaction_id,
+                'status' => $orderTransaction->transaction_status
+            ];
             break;
     }
     try {
         if ($isAllowed) {
-            if ($gw && isset(Gateway::$gatewayMethods[$mode])) {
-                $method = Gateway::$gatewayMethods[$mode]['method'];
-                $status = Gateway::$gatewayMethods[$mode]['status'];
+            if ($gw) {
                 $log .= Gateway::$gatewayMethods[$mode]['log'];
                 if ($res = $gw->$method($params)) {
                     if ($mode == 'authorize') {
                         $orderTransaction = new OrderTransactionModel(['orderid' => $orderModel->orderid]);
                     }
+                    $result = $gw->result->getData();
+                    $result['links'] = $gw->result->getLinksReference();
+                    if (!$amount = $gw->result->getAmount()){
+                        $amount = [
+                            'currency' => $orderTransaction->transaction_currency,
+                            'total' => $orderTransaction->transaction_amount
+                        ];
+                    }
+                    $params = $amount;
+                    if (in_array($mode, ["re_authorize_transaction", "capture_transaction", "refund_transaction"])) {
+                        $orderTransaction->parent_transaction_id = $orderTransaction->transaction_id;
+                    }
                     $orderTransaction->setAttributes(
                         [
                             'transaction_id' => $gw->result->getTransactionReference(),
-                            'transaction_status' => $status,
-                            'transaction_currency' => $params["currency"],
-                            'transaction_amount' => $params["amount"],
-                            'transaction_response' => $gw->result->getData(),
+                            'transaction_status' => $gw->getState($mode),
+                            'transaction_currency' => $amount["currency"],
+                            'transaction_amount' => abs($amount['total']),
+                            'transaction_response' => $result,
                             'login' => $login,
                             'paymentid' => $pmModel->paymentid
                         ]
@@ -95,9 +120,8 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array_keys(
                     }
                 } else {
                     $result = $gw->result->getData();
-                    if ($result['name'] == 'AUTHORIZATION_EXPIRED') {
-                        $transaction_status = 'Expired';
-                        $orderTransaction->transaction_status = $transaction_status;
+                    if ($state = $gw->getState()){
+                        $orderTransaction->transaction_status = $state;
                         $orderTransaction->transaction_response = $result;
                         $orderTransaction->save();
                     }
@@ -155,7 +179,7 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array_keys(
             }
         } else {
             if (!$countTr && (empty($AJAX_SUBMIT) || $AJAX_SUBMIT != "Y")) {
-                $section_name_top_message = [
+                $top_message = [
                     'type' => 'E',
                     'content' => func_get_langvar_by_name("lbl_first_transaction_in_order_exception")
                 ];
@@ -163,85 +187,29 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array_keys(
                 func_header_location("order.php?orderid=" . $orderid . "&tab=y#main_order_tabs-VT");
             }
         }
-    } catch (\Exctetption $e) {
-
+    } catch (\Exception $e) {
+        $log .= $e->getMessage();
+        $logStatus = OrderTransactionModel::STATUS_FILED;
     }
-
-
     $result["xcart_log"] = $log;
     $result["POST_params"] = $data_arr;
-    $serialize_result = $result;
-    if (empty($paymentid)) {
-        $paymentid = 5;
-        if ($gw) {
-            if ($pmVT = PaymentMethodModel::objects()
-                ->filter(['payment_method' => $gw->gateway->getName() . ' VT'])
-                ->limit(1)
-                ->get()
-            ) {
-                $paymentid = $pmVT->paymentid;
-            }
-        }
-    }
     $transactionLog = new TransactionLogModel;
     $transactionLog->setAttributes([
         'orderid' => $orderid,
-        'paymentid' => $paymentid,
-        'transaction_id' => (empty($transaction_id)) ? $orderTransaction->transaction_id : $transaction_id,
-        'transaction_status' => (empty($transaction_status)) ? $orderTransaction->transaction_status : $transaction_status,
-        'transaction_currency' => (empty($transaction_currency)) ? (empty($orderTransaction->transaction_currency) ? $paypal_vt["currency"] : null) : $transaction_currency,
-        'transaction_total' => (empty($transaction_total)) ? (empty($orderTransaction->transaction_amount) ? $paypal_vt["grand_total"] : null) : $transaction_total,
+        'paymentid' => $orderTransaction->paymentid,
+        'transaction_id' => $orderTransaction->transaction_id,
+        'transaction_status' => $logStatus ? $logStatus : $orderTransaction->transaction_status,
+        'transaction_currency' => $params['currency'],
+        'transaction_total' => $params['amount'],
         'date' => time(),
         'login' => $login,
-        'transaction_log' => $serialize_result
+        'transaction_log' => $result
     ]);
     if ($transactionLog->isValid()) {
         $transactionLog->save();
     }
-    func_log_order($orderid, 'PP', $serialize_result, $login);
-    if (!empty($transaction_id)) {
-        if (in_array($mode, ["authorize", "add_manual_transaction"])) {
-            $orderTransactionNew = new OrderTransactionModel;
-            if ($orderTransaction) {
-                $orderTransactionNew->setAttributes($orderTransaction->getAttributes());
-            }
-            $orderTransactionNew->setAttributes([
-                'transaction_id' => $transaction_id,
-                'transaction_response' => $serialize_result,
-                'transaction_status' => $transaction_status,
-                'login' => $login,
-                'date' => time()
-            ]);
-            $orderTransactionNew->id = null;
-            if ($mode == "add_manual_transaction") {
-                $orderTransactionNew->manual_transaction = "Y";
-            }
-            $orderTransactionNew->orderid = $orderid;
-            $orderTransactionNew->paymentid = $paymentid;
-            $orderTransactionNew->transaction_currency = $transaction_currency;
-            $orderTransactionNew->transaction_amount = $transaction_total;
-            if ($orderTransactionNew->isValid()) {
-                $orderTransactionNew->save();
-            }
-        } else {
-            if ($orderTransaction) {
-                if (in_array($mode, ["re_authorize_transaction", "capture_transaction", "refund_transaction"])) {
-                    $orderTransaction->transaction_amount = $transaction_amount[$order_transaction_id];
-                    $orderTransaction->parent_transaction_id = $orderTransaction->transaction_id;
-                }
-                $orderTransaction->setAttributes([
-                    'transaction_id' => $transaction_id,
-                    'transaction_response' => $serialize_result,
-                    'transaction_status' => $transaction_status,
-                    'login' => $login,
-                    'date' => time()
-                ]);
-                if ($orderTransaction->isValid()) {
-                    $orderTransaction->save();
-                }
-            }
-        }
-    }
+    func_log_order($orderid, 'PP', $result, $login);
+
     if (!($mode == "authorize" && $AJAX_SUBMIT == "Y")) {
         func_header_location("order.php?orderid=" . $orderid . "&tab=y#main_order_tabs-VT");
     }
