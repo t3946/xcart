@@ -1395,7 +1395,9 @@ function func_data_cache_get($name, $params = [], $force_rebuild = false)
     else {
         $data = call_user_func_array($data_caches[$name]['func'], $params);
         if (defined("USE_DATA_CACHE") && constant("USE_DATA_CACHE") && is_writable($var_dirs["cache"]) && is_dir($var_dirs["cache"]) && !$no_save) {
-            @unlink($path);
+            if (file_exists($path)) {
+                @unlink($path);
+            }
             $fp        = @fopen($path, "w");
             $is_unlink = false;
             if ($fp) {
@@ -1412,7 +1414,7 @@ function func_data_cache_get($name, $params = [], $force_rebuild = false)
                 fclose($fp);
             }
 
-            if ($is_unlink) {
+            if ($is_unlink && file_exists($path)) {
                 @unlink($path);
             }
         }
