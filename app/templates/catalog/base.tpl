@@ -23,7 +23,7 @@
         <div class="row">
             <div class="columns large-2 show-for-large">
                 <div class="firm_cont">
-                    <form action="{$.request->getMatchingUrl()}" type="get"  id="filter_form">
+                    <form action="{$.request->getMatchingUrl()}" type="get"  id="filter_form" data-ajax-send="off">
                         <div class="filters_section advanced">
                             {block "catalog-filter"}
                                 {*{include "catalog/parts/_filter.tpl" modal_class='filter advanced' filters=[]}*}

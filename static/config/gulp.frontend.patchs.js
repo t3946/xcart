@@ -132,6 +132,11 @@ module.exports = {
             ]
         },
 
+        jquery_form: {
+            js_include: [
+                'bower_components/jquery-form/dist/jquery.form.min.js'
+            ]
+        },
         modal: {
             js_include: [
                 'bower_components/mmodal/js/jquery.mindy.modal.js'
