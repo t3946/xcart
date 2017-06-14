@@ -1,3 +1,5 @@
+import MouseSpeed from './MouseSpeed';
+
 export default class DepartmentMenu
 {
     constructor() {
@@ -17,6 +19,7 @@ export default class DepartmentMenu
                 'submenu-container': '.submenu-container',
             }
         };
+        this.ms = new MouseSpeed();
 
         this.hasTouch = 'ontouchstart' in window || (typeof window.ontouchstart !== 'undefined');
 
