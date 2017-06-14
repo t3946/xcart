@@ -2,6 +2,7 @@
 
 namespace Xcart\App\Orm;
 
+use Doctrine\DBAL\Cache\QueryCacheProfile;
 use Mindy\QueryBuilder\Expression;
 use Mindy\QueryBuilder\Q\QAnd;
 use Xcart\App\Orm\Exception\MultipleObjectsReturned;
@@ -28,6 +29,7 @@ class QuerySet extends QuerySetBase
     protected $with = [];
     protected $_group = [];
     protected $sql;
+    protected $cache;
 
     protected $_data;
 
@@ -45,12 +47,9 @@ class QuerySet extends QuerySetBase
             $rows = $this->_data;
         }
         else {
-            $rows = [];
             $sql = $this->sql === null ? $this->allSql() : $this->sql;
 
-            if ($statement = $this->getConnection()->query($sql)) {
-                $rows = $statement->fetchAll();
-            }
+            $rows = $this->execute($sql);
         }
 
         if ($this->asArray) {
@@ -253,6 +252,21 @@ class QuerySet extends QuerySetBase
         return $qb->setTypeSelect()->toSQL();
     }
 
+    protected function execute($sql, array $params = [], $types = [])
+    {
+        $qcp = null;
+        if ($this->cache && $this->getConnection()->getConfiguration()->getResultCacheImpl()) {
+            $qcp = new QueryCacheProfile($this->cache);
+        }
+
+
+        $stmt = $this->getConnection()->executeQuery($sql, $params, $types, $qcp);
+        $rows = $stmt->fetchAll()?:[];
+        $stmt->closeCursor();
+
+        return $rows;
+    }
+
     /**
      * Executes query and returns a single row of result.
      *
@@ -265,7 +279,8 @@ class QuerySet extends QuerySetBase
      */
     public function get($filter = [])
     {
-        $rows = $this->getConnection()->query($this->getSql($filter))->fetchAll();
+        $rows = $this->execute($this->getSql($filter));
+
         if (count($rows) > 1) {
             throw new MultipleObjectsReturned();
         } elseif (count($rows) === 0) {
@@ -771,5 +786,12 @@ class QuerySet extends QuerySetBase
             $field = $this->getTableAlias() .'.'. $field;
         }
         return $field;
+    }
+
+    public function cache($life_time = null)
+    {
+//        $this->cache = ($life_time)?$life_time:$this->getConnection()->getConfiguration()->;
+        $this->cache = $life_time;
+        return $this;
     }
 }

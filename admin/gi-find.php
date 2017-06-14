@@ -26,7 +26,7 @@ if (curl_errno($ch) != 0 || curl_getinfo($ch, CURLINFO_HTTP_CODE) !== 200 || pre
 }
 curl_close($ch);
 if ($curl_err) {
-    $top_message["content"] = 'OTRS does not work. Please inform technical stuff about this message...';
+    $top_message["content"] = 'OTRS is NOT responding. Please report this problem to our programmers.';
     $top_message["type"] = 'E';
     return true;
 }
