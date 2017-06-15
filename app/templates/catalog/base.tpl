@@ -37,7 +37,9 @@
                             <button class="button">Apply</button>
 
                             <a href="{$.request->getMatchingUrl()}" class="reset_filter" rel="nofollow">
-                                Reset filters
+                                <span class="text">
+                                    Reset filters
+                                </span>
                             </a>
                         </section>
 
