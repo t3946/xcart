@@ -359,6 +359,10 @@
         }
         @include breakpoint(large up) {
           margin: 0 2em;
+
+          .button, .reset_filter {
+            border-radius: 5px;
+          }
         }
       }
 
