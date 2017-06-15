@@ -29,7 +29,7 @@ abstract class Gateway implements GatewayInterface
             'status' => OrderTransactionModel::STATUS_COMPLETED
         ],
         're_authorize_transaction' => [
-            'method' => 'authorize',
+            'method' => 'reauthorize',
             'log' => "'RE-authorize transaction' at 'Virtual Terminal'",
             'status' => OrderTransactionModel::STATUS_AUTHORIZED
         ],

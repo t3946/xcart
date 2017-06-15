@@ -33,4 +33,9 @@ interface GatewayInterface
      * @return bool
      */
     public function authorize($params);
+    /**
+     * @param $params
+     * @return bool
+     */
+    public function reauthorize($params);
 }

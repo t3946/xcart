@@ -2,6 +2,11 @@
 
 namespace Modules\Payment\Gateways;
 
+
+use DateInterval;
+use DateTime;
+use Modules\Order\Models\OrderTransactionModel;
+
 class BluePay extends Gateway
 {
     public static function getProcessorName()
@@ -26,47 +31,36 @@ class BluePay extends Gateway
     public function refund($params)
     {
         $this->result = $this->gateway
-            ->setToken($params['transaction_id'])
-            ->refund([
-                'amount' => $params['amount']
-            ])->send();
-        $data = $this->result->getData();
-        if ($this->result->isSuccessful() && ($data['STATUS'] == 1)) {
-            return true;
-        } else {
-            return false;
+            ->setToken($params['transactionReference'])
+            ->refund($params)->send();
+        if ($res = $this->result->isSuccessful()){
+            $res = $this->lookup(['transactionReference' => $this->result->getTransactionReference()]);
         }
+        return $res;
     }
 
     public function void($params)
     {
         $this->result = $this->gateway
-            ->setToken($params['transaction_id'])
-            ->void([])
+            ->setToken($params['transactionReference'])
+            ->void($params)
             ->send();
-        $data = $this->result->getData();
-        if ($this->result->isSuccessful() && ($data['STATUS'] == 1)) {
-            return true;
-        } else {
-            return false;
+        if ($res = $this->result->isSuccessful()){
+            $res = $this->lookup(['transactionReference' => $this->result->getTransactionReference()]);
         }
+        return $res;
     }
 
     public function lookup($params)
     {
-        $result = [];
-        if ($params['transaction_status'] == 'authorized') {
-            $result = ['links' => [
-                ['rel' => 'capture'],
-                ['rel' => 'void'],
-            ]];
-        }
-        if ($params['transaction_status'] == 'completed') {
-            $result = ['links' => [
-                ['rel' => 'refund']
-            ]];
-        }
-        return $result;
+        $params['transID'] = $params['transactionReference'];
+        $params['reportStart'] = (new DateTime())->sub(new DateInterval('P1Y'))->format('Y-m-d');
+        $params['reportEnd'] = (new DateTime())->add(new DateInterval('P1D'))->format('Y-m-d');
+        $this->result = $this->gateway
+            ->lookup($params)
+            ->send();
+        return $this->result->isSuccessful();
+
     }
 
     public function authorize($params)
@@ -75,28 +69,46 @@ class BluePay extends Gateway
         $this->result = $this->gateway
             ->authorize($params)
             ->send();
-        $data = $this->result->getData();
-        if ($this->result->isSuccessful() && ($data['STATUS'] == 1)) {
-            return true;
-        } else {
-            return false;
+        if ($res = $this->result->isSuccessful()){
+            $res = $this->lookup(['transactionReference' => $this->result->getTransactionReference()]);
         }
+        return $res;
     }
 
     public function capture($params)
     {
         $this->result = $this->gateway
-            ->setToken($params['transaction_id'])
-            ->capture([
-                'amount' => $params['transaction_id'],
-                'transactionReference' => $params['transaction_id']
-            ])
+            ->setToken($params['transactionReference'])
+            ->capture($params)
             ->send();
-        return $this->result->isSuccessful();
+        if ($res = $this->result->isSuccessful()){
+            $res = $this->lookup(['transactionReference' => $this->result->getTransactionReference()]);
+        }
+        return $res;
     }
 
-    public function getState()
+    public function getState($mode)
     {
-        return $this->result['state'];
+        $state = null;
+        if (isset(self::$gatewayMethods[$mode]) && $this->result->isSuccessful()){
+            $state = self::$gatewayMethods[$mode]['status'];
+        }
+        $data = $this->result->getData();
+        if (!$state && ($state = $data['state'])) {
+            $statuses = array_map(function ($a) {return $a['status'];}, self::$gatewayMethods);
+            if (!in_array($state, $statuses)) {
+                $state = null;
+            }
+        }
+        return $state;
+    }
+
+    /**
+     * @param $params
+     * @return bool
+     */
+    public function reauthorize($params)
+    {
+        // TODO: Implement reauthorize() method.
     }
 }

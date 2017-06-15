@@ -208,7 +208,7 @@ class Gateway extends AbstractGateway
      * credentials.
      *
      * @param string $value
-     * @return RestGateway provides a fluent interface
+     * @return Gateway
      */
     public function setClientId($value)
     {
@@ -237,7 +237,7 @@ class Gateway extends AbstractGateway
      * credentials.
      *
      * @param string $value
-     * @return RestGateway provides a fluent interface
+     * @return Gateway
      */
     public function setSecret($value)
     {
@@ -269,7 +269,7 @@ class Gateway extends AbstractGateway
     /**
      * Create OAuth 2.0 access token request.
      *
-     * @return \Omnipay\PayPal\Message\RestTokenRequest
+     * @return Message\AbstractRestRequest
      */
     public function createToken()
     {
@@ -280,7 +280,7 @@ class Gateway extends AbstractGateway
      * Set OAuth 2.0 access token.
      *
      * @param string $value
-     * @return RestGateway provides a fluent interface
+     * @return Gateway
      */
     public function setToken($value)
     {
@@ -301,7 +301,7 @@ class Gateway extends AbstractGateway
      * Set OAuth 2.0 access token expiry time.
      *
      * @param integer $value
-     * @return RestGateway provides a fluent interface
+     * @return Gateway
      */
     public function setTokenExpires($value)
     {
@@ -336,7 +336,7 @@ class Gateway extends AbstractGateway
      *
      * @param string $class
      * @param array $parameters
-     * @return \Omnipay\PayPal\Message\AbstractRestRequest
+     * @return \Omnipay\Common\Message\AbstractRequest
      */
     public function createRequest($class, array $parameters = array())
     {
@@ -365,7 +365,7 @@ class Gateway extends AbstractGateway
      *
      * @link https://developer.paypal.com/docs/api/#create-a-payment
      * @param array $parameters
-     * @return \Omnipay\PayPal\Message\RestPurchaseRequest
+     * @return \Omnipay\Common\Message\AbstractRequest
      */
     public function purchase(array $parameters = array())
     {
@@ -380,7 +380,7 @@ class Gateway extends AbstractGateway
      *
      * @link https://developer.paypal.com/docs/api/#look-up-a-payment-resource
      * @param array $parameters
-     * @return \Omnipay\PayPal\Message\RestFetchPurchaseRequest
+     * @return \Omnipay\Common\Message\AbstractRequest
      */
     public function fetchPurchase(array $parameters = array())
     {
@@ -401,7 +401,7 @@ class Gateway extends AbstractGateway
      *
      * @link https://developer.paypal.com/docs/api/#list-payment-resources
      * @param array $parameters
-     * @return \Omnipay\PayPal\Message\RestListPurchaseRequest
+     * @return \Omnipay\Common\Message\AbstractRequest
      */
     public function listPurchase(array $parameters = array())
     {
@@ -413,7 +413,7 @@ class Gateway extends AbstractGateway
      *
      * @link https://developer.paypal.com/docs/api/#execute-an-approved-paypal-payment
      * @param array $parameters
-     * @return Message\AbstractRestRequest
+     * @return \Omnipay\Common\Message\AbstractRequest
      */
     public function completePurchase(array $parameters = array())
     {
@@ -438,11 +438,16 @@ class Gateway extends AbstractGateway
      * @link https://developer.paypal.com/docs/integration/direct/capture-payment/#authorize-the-payment
      * @link https://developer.paypal.com/docs/api/#authorizations
      * @param array $parameters
-     * @return \Omnipay\PayPal\Message\RestAuthorizeRequest
+     * @return \Omnipay\Common\Message\AbstractRequest
      */
     public function authorize(array $parameters = array())
     {
         return $this->createRequest('\Omnipay\PayPal\Message\RestAuthorizeRequest', $parameters);
+    }
+
+    public function reauthorize(array $parameters = array())
+    {
+        return $this->createRequest('\Omnipay\PayPal\Message\RestReauthorizeRequest', $parameters);
     }
 
     /**
@@ -452,7 +457,7 @@ class Gateway extends AbstractGateway
      *
      * @link https://developer.paypal.com/docs/api/#void-an-authorization
      * @param array $parameters
-     * @return \Omnipay\PayPal\Message\RestVoidRequest
+     * @return \Omnipay\Common\Message\AbstractRequest
      */
     public function void(array $parameters = array())
     {
@@ -468,7 +473,7 @@ class Gateway extends AbstractGateway
      *
      * @link https://developer.paypal.com/docs/api/#capture-an-authorization
      * @param array $parameters
-     * @return \Omnipay\PayPal\Message\RestCaptureRequest
+     * @return \Omnipay\Common\Message\AbstractRequest
      */
     public function capture(array $parameters = array())
     {
@@ -484,7 +489,7 @@ class Gateway extends AbstractGateway
      *
      * @link https://developer.paypal.com/docs/api/#refund-a-captured-payment
      * @param array $parameters
-     * @return \Omnipay\PayPal\Message\RestRefundCaptureRequest
+     * @return \Omnipay\Common\Message\AbstractRequest
      */
     public function refundCapture(array $parameters = array())
     {
@@ -505,7 +510,7 @@ class Gateway extends AbstractGateway
      *
      * @link https://developer.paypal.com/docs/api/#sale-transactions
      * @param array $parameters
-     * @return \Omnipay\PayPal\Message\RestFetchTransactionRequest
+     * @return \Omnipay\Common\Message\AbstractRequest
      */
     public function fetchTransaction(array $parameters = array())
     {
@@ -521,7 +526,7 @@ class Gateway extends AbstractGateway
      *
      * @link https://developer.paypal.com/docs/api/#sale-transactions
      * @param array $parameters
-     * @return \Omnipay\PayPal\Message\RestRefundRequest
+     * @return \Omnipay\Common\Message\AbstractRequest
      */
     public function refund(array $parameters = array())
     {
@@ -544,7 +549,7 @@ class Gateway extends AbstractGateway
      *
      * @link https://developer.paypal.com/docs/api/#store-a-credit-card
      * @param array $parameters
-     * @return \Omnipay\PayPal\Message\RestCreateCardRequest
+     * @return \Omnipay\Common\Message\AbstractRequest
      */
     public function createCard(array $parameters = array())
     {
@@ -561,7 +566,7 @@ class Gateway extends AbstractGateway
      *
      * @link https://developer.paypal.com/docs/api/#delete-a-stored-credit-card
      * @param array $parameters
-     * @return \Omnipay\PayPal\Message\RestDeleteCardRequest
+     * @return \Omnipay\Common\Message\AbstractRequest
      */
     public function deleteCard(array $parameters = array())
     {
@@ -584,7 +589,7 @@ class Gateway extends AbstractGateway
      *
      * @link https://developer.paypal.com/docs/api/#create-a-plan
      * @param array $parameters
-     * @return \Omnipay\PayPal\Message\RestCreatePlanRequest
+     * @return \Omnipay\Common\Message\AbstractRequest
      */
     public function createPlan(array $parameters = array())
     {
@@ -599,7 +604,7 @@ class Gateway extends AbstractGateway
      *
      * @link https://developer.paypal.com/docs/api/#update-a-plan
      * @param array $parameters
-     * @return \Omnipay\PayPal\Message\RestUpdatePlanRequest
+     * @return \Omnipay\Common\Message\AbstractRequest
      */
     public function updatePlan(array $parameters = array())
     {
@@ -616,7 +621,7 @@ class Gateway extends AbstractGateway
      *
      * @link https://developer.paypal.com/docs/api/#create-an-agreement
      * @param array $parameters
-     * @return \Omnipay\PayPal\Message\RestCreateSubscriptionRequest
+     * @return \Omnipay\Common\Message\AbstractRequest
      */
     public function createSubscription(array $parameters = array())
     {
@@ -630,7 +635,7 @@ class Gateway extends AbstractGateway
      *
      * @link https://developer.paypal.com/docs/api/#execute-an-agreement
      * @param array $parameters
-     * @return \Omnipay\PayPal\Message\RestCompleteSubscriptionRequest
+     * @return \Omnipay\Common\Message\AbstractRequest
      */
     public function completeSubscription(array $parameters = array())
     {
@@ -644,7 +649,7 @@ class Gateway extends AbstractGateway
      *
      * @link https://developer.paypal.com/docs/api/#cancel-an-agreement
      * @param array $parameters
-     * @return \Omnipay\PayPal\Message\RestCancelSubscriptionRequest
+     * @return \Omnipay\Common\Message\AbstractRequest
      */
     public function cancelSubscription(array $parameters = array())
     {
@@ -658,7 +663,7 @@ class Gateway extends AbstractGateway
      *
      * @link https://developer.paypal.com/docs/api/#suspend-an-agreement
      * @param array $parameters
-     * @return \Omnipay\PayPal\Message\RestSuspendSubscriptionRequest
+     * @return \Omnipay\Common\Message\AbstractRequest
      */
     public function suspendSubscription(array $parameters = array())
     {
@@ -672,7 +677,7 @@ class Gateway extends AbstractGateway
      *
      * @link https://developer.paypal.com/docs/api/#reactivate-an-agreement
      * @param array $parameters
-     * @return \Omnipay\PayPal\Message\RestReactivateSubscriptionRequest
+     * @return \Omnipay\Common\Message\AbstractRequest
      */
     public function reactivateSubscription(array $parameters = array())
     {
@@ -692,7 +697,7 @@ class Gateway extends AbstractGateway
      *
      * @link https://developer.paypal.com/docs/api/#search-for-transactions
      * @param array $parameters
-     * @return \Omnipay\PayPal\Message\RestCompleteSubscriptionRequest
+     * @return \Omnipay\Common\Message\AbstractRequest
      */
     public function searchTransaction(array $parameters = array())
     {

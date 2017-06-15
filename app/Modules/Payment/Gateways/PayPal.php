@@ -87,11 +87,10 @@ class PayPal extends Gateway
     public function getState($mode)
     {
         $state = null;
-        $data = $this->result->getData();
-
         if (isset(self::$gatewayMethods[$mode])){
             $state = self::$gatewayMethods[$mode]['status'];
         }
+        $data = $this->result->getData();
         if (!$state && ($state = $data['state'])) {
             $statuses = array_map(function ($a) {return $a['status'];}, self::$gatewayMethods);
             if (!in_array($state, $statuses)) {
@@ -114,5 +113,17 @@ class PayPal extends Gateway
                 break;
         }
         return $state;
+    }
+
+    /**
+     * @param $params
+     * @return bool
+     */
+    public function reauthorize($params)
+    {
+        $this->result = $this->gateway
+            ->reauthorize($params)
+            ->send();
+        return $this->result->isSuccessful();
     }
 }

@@ -1,6 +1,5 @@
 <?php
 use Modules\Order\Helpers\OrderHelper;
-use Modules\Order\Models\OrderGroupModel;
 use Modules\Order\Models\OrderModel;
 use Modules\Order\Models\OrderStatusModel;
 use Modules\Order\Models\OrderTransactionModel;
@@ -8,108 +7,61 @@ use Modules\Order\Models\TransactionLogModel;
 use Modules\Payment\Gateways\Gateway;
 use Modules\Payment\Helpers\PaymentHelper;
 use Modules\Payment\Models\PaymentMethodModel;
-use Modules\Payment\Models\PaymentProcessorModel;
-use Omnipay\Common\CreditCard;
-use Xcart\Paypal;
 
-if (!defined('XCART_SESSION_START')) {
-    header("Location: ../");
-    die("Access denied");
-}
-
+if (!defined('XCART_SESSION_START')) { header("Location: ../"); die("Access denied");}
 global $REQUEST_METHOD, $mode, $top_message, $order_transaction_id, $paypal_vt, $transaction_status, $AJAX_SUBMIT, $login;
-
-$gw = $log = $orderTransaction = $result = $countTr = $logStatus = null;
+$gw = $log = $orderTransaction = $result = $countTr = $logStatus = $params = null;
 $isAllowed = true;
-$params = [];
 
 if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array_keys(Gateway::$gatewayMethods))) {
-    $method = Gateway::$gatewayMethods[$mode]['method'];
-    $status = Gateway::$gatewayMethods[$mode]['status'];
-
+    extract(Gateway::$gatewayMethods[$mode]);
     /** @var OrderModel $orderModel */
+    /** @var PaymentMethodModel $pmModel */
     $orderModel = OrderModel::objects()->get(['orderid' => $orderid]);
-    if (!empty($order_transaction_id) && $orderTransaction = OrderTransactionModel::objects()->get(['id' => $order_transaction_id])) {
+    if ($order_transaction_id && ($orderTransaction = OrderTransactionModel::objects()->get(['id' => $order_transaction_id]))) {
         $pmModel = $orderTransaction->payment_method_model;
-        $gw = Gateway::getGateway($orderTransaction->payment_method_model);
+        $amount = [
+            'amount' => number_format(trim($transaction_amount[$order_transaction_id]),2),
+            'currency' => $orderTransaction->transaction_currency
+        ];
+        $params = PaymentHelper::getPaymentParams($orderTransaction, $amount);
+    } else {
+        $pmModel = PaymentMethodModel::objects()->get(['payment_method' => $paypal_vt["processor"]]);
+        $countTr = OrderTransactionModel::objects()
+            ->filter(['orderid' => $orderid])
+            ->exclude(['transaction_status' => '', 'transaction_id' => ''])
+            ->count();
+        $isAllowed = PaymentHelper::isAuthorizeAllowed($orderModel, $countTr);
+        $params = PaymentHelper::prepareAuthorize($paypal_vt, $orderModel);
     }
-    $transaction_amount[$order_transaction_id] = number_format($transaction_amount[$order_transaction_id],2);
+    if (!$orderTransaction) {
+        $orderTransaction = new OrderTransactionModel(['orderid' => $orderModel->orderid]);
+    }
 
-    switch ($mode) {
-        case 'authorize' :
-            /** @var PaymentMethodModel $pmModel */
-            if ($pmModel = PaymentMethodModel::objects()->get(['payment_method' => $paypal_vt["processor"]])) {
-                $gw = Gateway::getGateway($pmModel);
-            }
-            if ($gw) {
-                $countTr = OrderTransactionModel::objects()
-                    ->filter(['orderid' => $orderid])
-                    ->exclude(['transaction_status' => '', 'transaction_id' => ''])
-                    ->count();
-                $isAllowed = PaymentHelper::isAuthorizeAllowed($orderModel, $countTr);
-                $params = PaymentHelper::prepareAuthorize($paypal_vt, $orderModel);
-            }
-            break;
-        case 'void_transaction' :
-            $params = [
-                'transactionReference' => $orderTransaction->transaction_id,
-            ];
-            break;
-        case 'capture_transaction' :
-            $params = [
-                'transactionReference' => ($orderTransaction->transaction_status == OrderTransactionModel::STATUS_REFUNDED) ? $orderTransaction->parent_transaction_id : $orderTransaction->transaction_id,
-                'amount' => $transaction_amount[$order_transaction_id],
-                'currency' => $orderTransaction->transaction_currency,
-            ];
-            break;
-        case 're_authorize_transaction' :
-            break;
-        case 'refund_transaction' :
-            $params = [
-                'transactionReference' => $orderTransaction->transaction_id,
-                'amount' => $transaction_amount[$order_transaction_id],
-                'currency' => $orderTransaction->transaction_currency,
-            ];
-            break;
-        case 'look_up_payment' :
-            $params = [
-                'transactionReference' => $orderTransaction->transaction_id,
-                'status' => $orderTransaction->transaction_status
-            ];
-            break;
-    }
     try {
         if ($isAllowed) {
-            if ($gw) {
-                $log .= Gateway::$gatewayMethods[$mode]['log'];
+            if ($gw = Gateway::getGateway($pmModel)) {
                 if ($res = $gw->$method($params)) {
-                    if ($mode == 'authorize') {
-                        $orderTransaction = new OrderTransactionModel(['orderid' => $orderModel->orderid]);
-                    }
                     $result = $gw->result->getData();
-                    $result['links'] = $gw->result->getLinksReference();
-                    if (!$amount = $gw->result->getAmount()){
-                        $amount = [
-                            'currency' => $orderTransaction->transaction_currency,
-                            'total' => $orderTransaction->transaction_amount
-                        ];
+                    if (!$result['amount']) {
+                        $result['amount'] = $amount;
                     }
-                    $params = $amount;
                     if (in_array($mode, ["re_authorize_transaction", "capture_transaction", "refund_transaction"])) {
                         $orderTransaction->parent_transaction_id = $orderTransaction->transaction_id;
                     }
                     $orderTransaction->setAttributes(
                         [
                             'transaction_id' => $gw->result->getTransactionReference(),
-                            'transaction_status' => $gw->getState($mode),
-                            'transaction_currency' => $amount["currency"],
-                            'transaction_amount' => abs($amount['total']),
+                            'transaction_status' => ($logStatus = $gw->getState($mode)),
+                            'transaction_currency' => $result['amount']["currency"],
+                            'transaction_amount' => abs($result['amount']['total']),
                             'transaction_response' => $result,
                             'login' => $login,
                             'paymentid' => $pmModel->paymentid
                         ]
                     );
                     $orderTransaction->save();
+
                     $log .= "<br />Transaction:" . $orderTransaction->transaction_id;
                     if (!$countTr && $mode == 'authorize') {
                         list ($o_log, $send_notification) = OrderHelper::changeOrderCBStatus($orderModel, OrderStatusModel::ORDER_STATUS_AUTHORIZED);
@@ -120,13 +72,13 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array_keys(
                     }
                 } else {
                     $result = $gw->result->getData();
-                    if ($state = $gw->getState()){
+                    if ($orderTransaction && ($state = $gw->getState($mode))){
                         $orderTransaction->transaction_status = $state;
                         $orderTransaction->transaction_response = $result;
                         $orderTransaction->save();
                     }
-                    $log .= "<br />{$result['name']}";
-                    $log .= "<br />{$result['message']}";
+                    $log .= "<br/>{$result['name']}";
+                    $log .= "<br/>{$result['message']}";
                 }
             } else {
                 if ($mode == 'add_manual_transaction') {
@@ -188,27 +140,24 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array_keys(
             }
         }
     } catch (\Exception $e) {
-        $log .= $e->getMessage();
-        $logStatus = OrderTransactionModel::STATUS_FILED;
+        $log .= "<br/>{$gw->getProcessorName()} Processing Error: {$e->getMessage()}";
+        $logStatus = OrderTransactionModel::STATUS_FAILED;
     }
     $result["xcart_log"] = $log;
-    $result["POST_params"] = $data_arr;
-    $transactionLog = new TransactionLogModel;
-    $transactionLog->setAttributes([
+    $transactionLog = new TransactionLogModel([
         'orderid' => $orderid,
-        'paymentid' => $orderTransaction->paymentid,
-        'transaction_id' => $orderTransaction->transaction_id,
-        'transaction_status' => $logStatus ? $logStatus : $orderTransaction->transaction_status,
-        'transaction_currency' => $params['currency'],
-        'transaction_total' => $params['amount'],
-        'date' => time(),
+        'paymentid' => $pmModel->paymentid,
+        'transaction_id' => isset($orderTransaction) ? $orderTransaction->transaction_id : '',
+        'transaction_status' => $logStatus,
+        'transaction_currency' => !isset($result['amount']) ? $params['currency'] : $result['amount']['currency'],
+        'transaction_total' => !isset($result['amount']) ? $params['amount'] : $result['amount']['total'],
         'login' => $login,
         'transaction_log' => $result
     ]);
     if ($transactionLog->isValid()) {
         $transactionLog->save();
     }
-    func_log_order($orderid, 'PP', $result, $login);
+    func_log_order($orderid, 'PP', $log, $login);
 
     if (!($mode == "authorize" && $AJAX_SUBMIT == "Y")) {
         func_header_location("order.php?orderid=" . $orderid . "&tab=y#main_order_tabs-VT");

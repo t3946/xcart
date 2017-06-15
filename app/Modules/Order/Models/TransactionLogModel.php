@@ -8,6 +8,7 @@ use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\FloatField;
 use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Fields\SerializeField;
+use Xcart\App\Orm\Fields\UnixTimestampField;
 
 class TransactionLogModel extends AutoMetaModel
 {
@@ -38,7 +39,9 @@ class TransactionLogModel extends AutoMetaModel
                 ]
             ],
             'date' => [
-                'class' => IntField::className(),
+                'class' => UnixTimestampField::className(),
+                'autoNowAdd' => true,
+                'autoNow' => true,
                 'null' => false
             ],
             'transaction_total' => [

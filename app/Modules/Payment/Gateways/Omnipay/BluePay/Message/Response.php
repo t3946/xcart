@@ -29,7 +29,7 @@ class Response extends AbstractResponse
 
     public function isSuccessful()
     {
-        return isset($this->data['STATUS']) && ('0' === $this->data['STATUS'] || '1' === $this->data['STATUS']);
+        return isset($this->data['STATUS']) && ('1' === $this->data['STATUS']);
     }
 
 
@@ -75,7 +75,7 @@ class Response extends AbstractResponse
     }
 
 
-    private function valueFor($key)
+    protected function valueFor($key)
     {
         return isset($this->data[$key]) ? $this->data[$key] : '';
     }

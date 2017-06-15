@@ -90,4 +90,12 @@ class RestResponse extends AbstractResponse
         }
         return $this->data['amount'];
     }
+
+    public function getData()
+    {
+        $data = parent::getData();
+        $data['links'] = $this->getLinksReference();
+        $data['amount'] = $this->getAmount();
+        return $data;
+    }
 }
