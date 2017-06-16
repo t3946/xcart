@@ -81,6 +81,7 @@ class AmazonProductHelper
                                                 } else {
                                                     $lPrice = $price->getLandedPrice();
                                                     $oAmazonProductModel->cpr_LandedPrice = $lPrice->getAmount();
+                                                    $oAmazonProductModel->cpr_belongs_LandedPrice = 0;
                                                     $oAmazonProductModel->buybox_out++;
                                                 }
                                             }
