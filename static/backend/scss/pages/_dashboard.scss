@@ -47,8 +47,10 @@
         &.index {
             .button {
                 height: auto;
-                background: rgba(244, 244, 244, .4);
-                border-color: #dadada;
+                //background: rgba(244, 244, 244, .4);
+                background: #fff;
+                //border-color: #dadada;
+                border-color: #ebebeb;
             }
 
             &.groups {
@@ -109,6 +111,7 @@
             }
 
             .tag {
+                //display: none;
                 position: absolute;
                 top: 0;
                 bottom: 0;
@@ -264,6 +267,51 @@
                 height: 10px;
                 background: darkred;
                 border-radius: 15px;
+            }
+        }
+    }
+
+    #dashboard {
+        fieldset {
+            border: none;
+            margin-bottom: 0;
+
+            legend {
+                display: block;
+                width: 100%;
+                padding: 5px 6px;
+                background: none;
+                background: {
+                    color: rgb(235, 235, 235);
+                };
+
+                &:before {
+                    content: '+';
+                    display: inline-block;
+                    font: {
+                        size: 8px;
+                    }
+                    width: 17px;
+                    height: 17px;
+                    background: {
+                        color: #fff;
+                    };
+                    text-align: center;
+                    line-height: 17px;
+                    margin-right: 5px;
+                    vertical-align: middle;
+                }
+            }
+
+            &.expanded {
+                legend {
+                    &:before {
+                        content: '—';
+                    }
+                }
+            }
+            &.collapsed {
+                margin-bottom: 0;
             }
         }
     }
