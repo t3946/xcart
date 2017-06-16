@@ -33,13 +33,16 @@ class FilterLibrary extends TemplateLibrary
                 ->select([new Min('xcart_pricing_1.price', 'min'),
                           new Max('xcart_pricing_1.price', 'max')]) //@TODO:FIX IT
                 ->asArray();
+            $prices = $tqs->get();
+            $fprice = empty($form_data['price'])?[]:$form_data['price'];
+
             $list['__price__'] = [
                 'type' => 'price',
                 'key' => 'price',
                 'name' => 'Price',
                 'values' => [
-                    'prices' => $tqs->get(),
-//                    'selected' => $form_data['price'],
+                    'prices' => $prices,
+                    'selected' => array_replace_recursive($fprice, $prices),
                 ],
             ];
         }

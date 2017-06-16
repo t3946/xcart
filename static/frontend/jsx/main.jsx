@@ -4,6 +4,7 @@ import DottedText from "./components/DottedText";
 import CategoryViewType from "./components/CategoryViewType";
 import LazyImageLoad from "./components/LazyImageLoad";
 import CatalogFilter from "./components/CatalogFilter";
+import FilterPriceSlider from "./components/FilterPriceSlider";
 
 (function(){
     new LazyImageLoad('.lazyimg');
@@ -11,6 +12,8 @@ import CatalogFilter from "./components/CatalogFilter";
     new DepartmentMenu();
     new DottedText('.must-show-less');
     new CatalogFilter();
+
+    window['FilterPriceSlider'] = FilterPriceSlider;
 
     Waves.attach('.button');
     Waves.init();

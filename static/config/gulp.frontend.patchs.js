@@ -86,8 +86,12 @@ module.exports = {
         },
         nouislider: {
             js_include: [
-                'bower_components/nouislider/distribute/nouislider.min.js'
-            ]
+                'bower_components/nouislider/distribute/nouislider.js',
+                // 'bower_components/nouislider/distribute/nouislider.js',
+            ],
+            // css: [
+            //     'bower_components/nouislider/distribute/nouislider.css'
+            // ]
         },
         sly: {
             js_include: [
@@ -115,11 +119,11 @@ module.exports = {
                 // 'bower_components/Waves/src/scss/waves.scss'
             ]
         },
-        jqlazy: {
-            js_include: [
-                'bower_components/jquery_lazyload/jquery.lazyload.js'
-            ]
-        },
+        // jqlazy: {
+        //     js_include: [
+        //         'bower_components/jquery_lazyload/jquery.lazyload.js'
+        //     ]
+        // },
 
         "what-input": {
             js_include: [

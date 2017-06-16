@@ -1,3 +1,6 @@
+$noUi-css-prefix: range;
+@import "../vendor/nouislider/nouislider.core";
+
 .filter-block {
   .full { display:none; }
 
@@ -30,12 +33,154 @@
         border: none;
         padding: rem-calc(2) 0 rem-calc(10);
 
+        .filter_price {
+          max-width: 680px;
+          text-align: center;
+          font-size: rem-calc(14);
+          margin: 0 auto;
+
+          .inputs {
+            line-height: rem-calc(26);
+
+            .currency {
+              padding-right: 5%;
+            }
+
+            input {
+              line-height: inherit;
+            }
+          }
+
+          .range_wrapper {
+            padding: 10px 5px 25px;
+
+            @include breakpoint(medium down) {
+              padding-bottom: 40px;
+            }
+
+            .prices {
+              position: relative;
+              font-size: 10px;
+              height: 1.8em;
+
+              @include breakpoint(medium down) {
+                font-size: 14px;
+              }
+
+              .price {
+                position: absolute;
+
+                &.min {
+                  left: 0;
+                }
+                &.max {
+                  right: 0;
+                }
+              }
+            }
+
+            .price_range {
+              border-radius: 0;
+              height: 9px;
+              //height: 19px;
+              border: 1px solid #c7c7c7;
+              background-color: #d8d8d8;
+              @include background-image(linear-gradient(to top, #eee 0%, #e6e6e6 100%));
+
+              @include breakpoint(medium down) {
+                height: 16px;
+              }
+
+              &:before, &:after {
+                top: -4px;
+                bottom: 0;
+                //height: 12px;
+                border-left: 1px solid #404040;
+                content: '';
+                display: block;
+                position: absolute;
+
+                @include breakpoint(medium down) {
+                  border-left-width: 2px;
+                }
+              }
+
+              &:before {
+                left: -1px;
+                @include breakpoint(medium down) {
+                  left: -2px;
+                }
+              }
+
+              &:after {
+                right: -1px;
+                @include breakpoint(medium down) {
+                  right: -2px;
+                }
+              }
+
+              .range-base {
+
+                .range-connect {
+                  background: #ff9c00;
+                  box-shadow: none;
+                }
+                .range-origin {
+                  .range-handle {
+                    position: absolute;
+                    background: url("../images/icons/filter/runner.svg") no-repeat; /* картинка изображающая ползунок. Или можно залить цветом, задать бордюр и скругления */
+                    cursor: pointer;
+                    border: none;
+                    box-shadow: none;
+
+                    width: 11px;
+                    height: 15px;
+                    left: -5px;
+                    top: 12px;
+
+                    @include breakpoint(medium down) {
+                      width: 19px;
+                      height: 26px;
+                      left: -9px;
+                      top: 21px;
+                    }
+
+
+
+                    &:hover, &:focus, &:active{
+                      outline: none;
+                    }
+
+                    &.range-active{
+                      //background: inline_image("../../images/category/1280/runner_mob_active.svg") no-repeat;
+                    }
+
+
+                    &:before, &:after {
+                      display: none;
+                    }
+
+                    &.range-handle-lower {}
+                    &.range-handle-upper {}
+
+                    .range-tooltip{}
+                  }
+                }
+              }
+            }
+          }
+        }
+
 
         ul {
           li {
             font-size: rem-calc(12);
             position: relative;
             margin: .5em 0;
+
+            @include breakpoint(medium down) {
+              font-size: rem-calc(14);
+            }
 
             &:first-child {
               margin-top: 0;
@@ -289,6 +434,10 @@
           }
           .accordion-content {
             padding: 0 10px;
+
+            .filter_price {
+              padding: 1em 0;
+            }
 
             .filter {
               &.full {
