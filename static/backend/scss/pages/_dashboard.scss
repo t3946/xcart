@@ -52,9 +52,13 @@
             }
 
             &.groups {
-                .button {
+                .dashboard-item {
                     margin: 3px;
+                    border-radius: 2px;
                 }
+                //.button {
+                //    margin: 3px;
+                //}
             }
         }
 
