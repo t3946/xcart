@@ -117,10 +117,10 @@
   .buttons {
 
     button {
-      border-radius: 2px;
+      border-radius: 5px;
       background-color: #15303f;
       height: 33px;
-      line-height: 35px;
+      //line-height: 35px;
       color: #ffffff;
       text-transform: uppercase;
       text-align: center;
@@ -223,10 +223,10 @@
       button {
         width: 50%;
         font-size: 1em;
-        border-radius: 2px;
+        border-radius: 5px;
         background-color: #15303f;
         height: 33px;
-        line-height: 35px;
+        //line-height: 35px;
         color: #ffffff;
         text-transform: uppercase;
         text-align: center;
@@ -360,9 +360,7 @@
         @include breakpoint(large up) {
           margin: 0 2em;
 
-          .button, .reset_filter {
-            border-radius: 5px;
-          }
+          border-radius: 5px;
         }
       }
 
