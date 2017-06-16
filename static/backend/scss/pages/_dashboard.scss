@@ -284,6 +284,10 @@
                 background: {
                     color: rgb(235, 235, 235);
                 };
+                font: {
+                    weight: 500;
+                };
+
 
                 &:before {
                     content: '+';
