@@ -73,7 +73,7 @@ class DashboardModule extends Module
             ],
             [
                 'icon' => 'fa fa-handshake-o',
-                'name' => 'Customer care dashboard',
+                'name' => 'Customer dashboard',
                 'route' => $router->url('dashboard:index'),
                 'items' => ($user && $user->getIsSuperuser()) ? [
                     [

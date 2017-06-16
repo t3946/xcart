@@ -81,6 +81,7 @@ if (empty($supplier_feeds) || !is_array($supplier_feeds)) {
 }
 
 foreach ($supplier_feeds as $k => $supplierFeedModel) {
+    clearstatcache();
     $local_file = null;
     $distributorModel = $supplierFeedModel->distributor;
     $start_supplier_time = new DateTime('now');
@@ -240,7 +241,10 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
 
                         } else {
 
-                            if ($supplierFeedModel->add_new_only == "Y") {continue;}
+                            if ($supplierFeedModel->add_new_only == "Y") {
+                                $skippedProductsCount++;
+                                continue;
+                            }
                             if (!empty($supplierFeed->dont_update_fields) && is_array($supplierFeed->dont_update_fields)) {
                                 foreach ($supplierFeed->dont_update_fields as $fieldUnset) {
                                     $trimDesc = trim($modelProduct->fulldescr);
