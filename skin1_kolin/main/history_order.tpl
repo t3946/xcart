@@ -244,8 +244,7 @@ function func_set_value_to_field(form, fefix_field, field, mnf_id){
                     value="empty"
                     name="type">
                 click this link to empty this order's 'Last CS message' in the order list
-            </button>
-            . <br/>
+            </button>. <br/>
 
             <div>
                 <p><b>Subject line:</b></p>
