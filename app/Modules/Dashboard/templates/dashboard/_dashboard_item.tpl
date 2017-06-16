@@ -1,5 +1,5 @@
 <a href="{$model->getAbsoluteUrl()}"
-   class="{if $model->getSearchStorage()->getCashedCount() == 0}empty{else}button{/if} dashboard-item"
+   class="{if $model->getSearchStorage()->getCashedCount() == 0}empty{else}button{/if} dashboard-item {if $check_owners?}check-owner {$model->getTextClassOwner()}{/if}"
    target="_blank"
    data-id="{$model->id}"
    data-tooltip-action="{url 'dashboard:filter_subscription' id=$model->id}"

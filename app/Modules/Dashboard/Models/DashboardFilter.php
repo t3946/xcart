@@ -191,4 +191,21 @@ class DashboardFilter extends Model
                    ->get();
     }
 
+    public function getTextClassOwner() {
+        if ($this->users->count() > 0) {
+
+            if ($currentUser = Xcart::app()->getUser()) {
+                foreach ($this->users as $user) {
+                    if ($user->id == $currentUser->id) {
+                        return 'own';
+                    }
+                }
+            }
+
+            return 'other';
+
+        }
+
+        return 'false';
+    }
 }

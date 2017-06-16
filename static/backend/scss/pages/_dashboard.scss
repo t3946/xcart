@@ -94,6 +94,16 @@
         .dashboard-item {
             position: relative;
 
+            &.check-owner {
+                &.other {}
+                &.own {
+                    background-color: rgb(230, 253, 228);
+                }
+                &.false {
+                    background-color: rgb(254, 227, 230);
+                }
+            }
+
             .tag {
                 position: absolute;
                 top: 0;
