@@ -67,7 +67,7 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array_keys(
                         list ($o_log, $send_notification) = OrderHelper::changeOrderCBStatus($orderModel, OrderStatusModel::ORDER_STATUS_AUTHORIZED);
                         $log .= $o_log;
                         if ($send_notification) {
-                            func_send_order_status_notification($orderModel->orderid, OrderStatusModel::ORDER_STATUS_AUTHORIZED);
+                            func_send_order_status_notification($orderModel->orderid, OrderStatusModel::ORDER_STATUS_AUTHORIZED, true);
                         }
                     }
                 } else {

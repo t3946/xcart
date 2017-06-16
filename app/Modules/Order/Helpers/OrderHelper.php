@@ -170,6 +170,6 @@ class OrderHelper
                 $model->save();
             }
         }
-        return ['log' => $log, 'send_notification' => $send];
+        return [$log, $send];
     }
 }
