@@ -81,6 +81,7 @@ if (empty($supplier_feeds) || !is_array($supplier_feeds)) {
 }
 
 foreach ($supplier_feeds as $k => $supplierFeedModel) {
+    clearstatcache();
     $local_file = null;
     $distributorModel = $supplierFeedModel->distributor;
     $start_supplier_time = new DateTime('now');
