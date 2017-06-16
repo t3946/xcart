@@ -7,11 +7,11 @@
             <div class="actions">
                 <div class="action_group">
                     <div class="action_block  filter">
-                        <div class="action_button filter">
-                            <a class="action" href="#all_filter">
+                        <a class="action_button filter" href="#filter_form" data-modal-class="filter default">
+                            <span class="action">
                                 Filter
-                            </a>
-                        </div>
+                            </span>
+                        </a>
                     </div>
                     <div class="action_block sort">
                         <div class="action_button sort">

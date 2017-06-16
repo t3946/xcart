@@ -83,7 +83,7 @@ gulp.task('backend:scss', function() {
 gulp.task('frontend:css', ['frontend:scss'], function () {
     let pipe = gulp.src(frontend.src.css)
         .pipe(autoprefixer({
-            browsers: ['last 2 versions'],
+            browsers: ["> 5%", "last 2 versions", "last 4 iOS versions"],
             cascade: false
         }));
 

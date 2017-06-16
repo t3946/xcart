@@ -96,7 +96,7 @@ export default class CatalogFilter
             $this.remove();
         });
 
-        $(document).on('click', '.filter-block a.show_all, .state_line .action_button.filter a', function(e){
+        $(document).on('click', '.filter-block a.show_all, .state_line a.action_button.filter', function(e){
             e.preventDefault();
             e.stopPropagation();
 

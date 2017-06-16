@@ -135,6 +135,7 @@
 
       .sku {
         margin: 5px 0;
+        line-height: 1.1;
         font: {
           size: rem-calc(16);
         };
@@ -359,7 +360,8 @@
     }
 
     .item {
-      flex: 0 0 100%;
+      //flex: 1 0 100%;
+      flex: 1 0;
       flex-wrap: nowrap;
       padding-bottom: 14px;
       margin: 15px 0;
@@ -374,11 +376,18 @@
         padding-bottom: 14px;
       }
 
+      @include breakpoint (xsmall down) {
+        margin-bottom: 0;
+      }
+
+
+
       @include breakpoint (small down) {
         padding-bottom: 12px;
 
         .image_container {
           img {
+            display: inline-block;
             max-height: rem-calc(120);
           }
         }
@@ -397,7 +406,8 @@
       }
 
       .info_container {
-        flex-grow: 3;
+        //flex-grow: 3;
+        flex: 0 0 60%;
         padding: 0 3%;
 
         @include breakpoint(medium) {
@@ -481,8 +491,12 @@
 
       .image_container {
         display: block;
-        height: rem-calc(190);
         padding-bottom: 2%;
+        height: rem-calc(190);
+
+        @include breakpoint(xsmall down) {
+          height: rem-calc(130);
+        }
 
         &, a {
           text-align: center;

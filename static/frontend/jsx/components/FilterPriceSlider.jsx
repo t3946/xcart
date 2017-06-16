@@ -6,8 +6,10 @@ export default class FilterPriceSlider {
         this.inputs = inputs;
         this.options = _.extend({
             cssPrefix: 'range-',
+            behaviour: 'drag-tap',
             start: [0, 100],
             connected: true,
+            connect: true,
             range: {
                 min: 0,
                 max: 100

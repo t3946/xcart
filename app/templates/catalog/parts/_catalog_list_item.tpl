@@ -71,7 +71,7 @@
                 </div>
 
                 <noindex>
-                    <div class="description show-for-small-only">
+                    <div class="description show-for-small hide-for-medium">
                         {raw $description|br2nl|strip_tags|truncate:70:'...'|nl2space}
                     </div>
                 </noindex>

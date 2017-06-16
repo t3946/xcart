@@ -43,8 +43,6 @@
         {ignore}
         new window.FilterPriceSlider(keypressSlider, inputs, {
             start: [start_min, start_max],
-            behaviour: 'drag-tap',
-            connect: true,
             range: {
                 min:price_min,
                 max:price_max

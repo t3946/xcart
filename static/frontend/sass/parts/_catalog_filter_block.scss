@@ -142,7 +142,7 @@ $noUi-css-prefix: range;
                       width: 19px;
                       height: 26px;
                       left: -9px;
-                      top: 21px;
+                      top: 16px;
                     }
 
 
@@ -285,7 +285,8 @@ $noUi-css-prefix: range;
 }
 
 .filter_reset {
-  margin: rem-calc(15) 0;
+  //margin: rem-calc(15) 0;
+
   .column-block {
     margin: .3em 0;
   }
@@ -437,6 +438,10 @@ $noUi-css-prefix: range;
 
             .filter_price {
               padding: 1em 0;
+
+              input {
+                width: 22.4%;
+              }
             }
 
             .filter {
@@ -484,6 +489,8 @@ $noUi-css-prefix: range;
         bottom: 0;
         left: 0;
         right: 0;
+
+        padding: 10px 0 5px;
       }
 
       button, .reset_filter {
@@ -503,8 +510,11 @@ $noUi-css-prefix: range;
 
 
         @include breakpoint(xsmall down) {
-          width: 35%;
-          margin: 0 .5em;
+          width: 45%;
+          margin: 0 .25em;
+        }
+        @include breakpoint(small down) {
+          font-size: rem-calc(16);
         }
         @include breakpoint(large up) {
           margin: 0 2em;
