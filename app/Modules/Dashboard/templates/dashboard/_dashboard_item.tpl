@@ -5,14 +5,10 @@
    data-tooltip-action="{url 'dashboard:filter_subscription' id=$model->id}"
    data-count="{$model->getSearchStorage()->getCashedCount()}">
     <div class="row">
-        <div class="columns large-2">
+        <div class="columns large-12">
             {if $model->tag}
-                <span style="background-color: {$model->color};" class="tag no-border">{$model->tag|upper}</span>
-            {else}
-                <span class="tag"></span>
+                <span style="background-color: {$model->color};" class="tag no-border"></span>
             {/if}
-        </div>
-        <div class="columns large-10">
             <span class="name_events">
                 <span class="name">
                     <span class="{if $model->bold}bold{/if} filter_name">{$model}</span>
