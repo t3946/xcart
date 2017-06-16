@@ -1772,10 +1772,10 @@ class Smarty
     {
         if(isset($exp_time)) {
             if(time() - @filemtime($resource) >= $exp_time) {
-                return @unlink($resource);
+                return file_exists($resource) ? @unlink($resource) : true;
             }
         } else {
-            return @unlink($resource);
+                return file_exists($resource) ? @unlink($resource) : true;
         }
     }
 

@@ -49,6 +49,11 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array("auth
                 $last_name = implode(" ", $cardholderl_name_arr);
                 $last_name = trim($last_name);
 
+                $count_transactions = OrderTransactionModel::objects()
+                    ->filter(['orderid' => $orderid])
+                    ->exclude(['transaction_status' => '', 'transaction_id' => ''])
+                    ->count();
+
                 switch ($gw->gateway->getName()) {
                     case 'BluePay' :
                         $paymentid = $gw->model->paymentid;
@@ -79,16 +84,49 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array("auth
                                 'shippingCountry' => $order["s_country"],
                             )),
                         );
+                        $allowed_statuses_flag = func_check_for_the_allowed_statuses_for_create_payment($order);
+                        if (($allowed_statuses_flag && empty($count_transactions) && (empty($AJAX_SUBMIT) || $AJAX_SUBMIT != "Y")) || $count_transactions >= 1) {
+                            if ($res = $gw->authorize($params)){
+                                $transaction_status = "authorized";
+                                $transaction_id = $gw->result->getTransactionReference();
+                                $transaction_currency = $paypal_vt["currency"];
+                                $transaction_total = $paypal_vt["grand_total"];
 
-                        if ($res = $gw->authorize($params)){
-                            $transaction_status = "authorized";
-                            $transaction_id = $gw->result->getTransactionReference();
-                            $transaction_currency = $paypal_vt["currency"];
-                            $transaction_total = $paypal_vt["grand_total"];
+                                if (empty($count_transactions) && !empty($order["shipping_groups"]) && is_array($order["shipping_groups"])) {
+                                    $new_cb_status_flag = false;
+                                    $new_cb_status_value = func_query_first_cell("SELECT name FROM $sql_tbl[order_statuses] WHERE code='AP'");
+                                    foreach ($order["shipping_groups"] as $ko => $vo) {
+                                        if (in_array($vo["cb_status"], array('Q', 'N', 'I'))) {
+                                            db_query("UPDATE $sql_tbl[order_groups] SET cb_status='AP' WHERE orderid='$orderid' AND manufacturerid='$ko'");
+                                            $current_cb_status_value = func_query_first_cell("SELECT name FROM $sql_tbl[order_statuses] WHERE code='" . $vo["cb_status"] . "'");
+                                            $log .= "<br /><B>" . $vo["all_distributor_info"]["code"] . ":</B> cb_status: " . $current_cb_status_value . " -> " . $new_cb_status_value;
+                                            $new_cb_status_flag = true;
+                                        }
+                                    }
+                                    if ($new_cb_status_flag) {
+                                        db_query("UPDATE $sql_tbl[orders] SET cb_status='AP' WHERE orderid='$orderid'");
+                                        func_send_order_status_notification($orderid, "AP");
+                                    }
+                                }
 
+
+                            } else {
+                                $transaction_status = "failed";
+                            }
                         } else {
-                            $transaction_status = "failed";
+                            $result = false;
+                            if (!$allowed_statuses_flag && empty($count_transactions) && (empty($AJAX_SUBMIT) || $AJAX_SUBMIT != "Y")) {
+                                $top_message = array(
+                                    'type' => 'E',
+                                    'content' => func_get_langvar_by_name("lbl_first_transaction_in_order_exception")
+                                );
+                                $section_name_top_message = $top_message;
+                                x_session_save("section_name_top_message");
+                                func_header_location("order.php?orderid=" . $orderid . "&tab=y#main_order_tabs-VT");
+                            }
                         }
+
+
 
                         $result = $gw->result->getData();
 
@@ -181,10 +219,7 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array("auth
 		                }
 		        ]
 		}';
-                            $count_transactions = OrderTransactionModel::objects()
-                                ->filter(['orderid' => $orderid])
-                                ->exclude(['transaction_status' => '', 'transaction_id' => ''])
-                                ->count();
+
                             $allowed_statuses_flag = func_check_for_the_allowed_statuses_for_create_payment($order);
                             if (($allowed_statuses_flag && empty($count_transactions) && (empty($AJAX_SUBMIT) || $AJAX_SUBMIT != "Y")) || $count_transactions >= 1) {
                                 $result = func_paypal_create_payment($Access_Token, $data_json);
