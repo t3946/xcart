@@ -43,6 +43,11 @@ abstract class Gateway implements GatewayInterface
             'log' => "'Look up payment (Get links)' at 'Virtual Terminal'",
             'status' => null
         ],
+        'add_manual_transaction' => [
+            'method' => 'lookup',
+            'log' => "'Add transaction' at 'Add manual transaction' section",
+            'status' => null
+        ],
     ];
 
     /** @var \Omnipay\Common\AbstractGateway|RestGateway|\Omnipay\BluePay\Gateway $gateway */

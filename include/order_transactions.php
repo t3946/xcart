@@ -2,23 +2,26 @@
 
 global $smarty, $order;
 
+use Modules\Order\Helpers\OrderTransactionHelper;
+use Modules\Order\Models\OrderModel;
 use Modules\Order\Models\OrderTransactionModel;
 
 if (!defined('XCART_SESSION_START')) {
     header("Location: ../");
     die("Access denied");
 }
-
-$order_transactions = func_query("SELECT $sql_tbl[order_transactions].*, $sql_tbl[payment_methods].payment_method, $sql_tbl[payment_methods].transaction_id_link, $sql_tbl[payment_methods].transaction_link_anchor, $sql_tbl[customers].firstname, $sql_tbl[customers].usertype FROM $sql_tbl[order_transactions] LEFT JOIN $sql_tbl[payment_methods] ON $sql_tbl[payment_methods].paymentid=$sql_tbl[order_transactions].paymentid LEFT JOIN $sql_tbl[customers] ON $sql_tbl[customers].login=$sql_tbl[order_transactions].login WHERE $sql_tbl[order_transactions].orderid='$orderid' ORDER BY $sql_tbl[order_transactions].date DESC");
-
-if (!empty($order_transactions)) {
+global $orderid;
+//$order_transactions = func_query("SELECT $sql_tbl[order_transactions].*, $sql_tbl[payment_methods].payment_method, $sql_tbl[payment_methods].transaction_id_link, $sql_tbl[payment_methods].transaction_link_anchor, $sql_tbl[customers].firstname, $sql_tbl[customers].usertype FROM $sql_tbl[order_transactions] LEFT JOIN $sql_tbl[payment_methods] ON $sql_tbl[payment_methods].paymentid=$sql_tbl[order_transactions].paymentid LEFT JOIN $sql_tbl[customers] ON $sql_tbl[customers].login=$sql_tbl[order_transactions].login WHERE $sql_tbl[order_transactions].orderid='$orderid' ORDER BY $sql_tbl[order_transactions].date DESC");
+$orderModel = OrderModel::objects()->get(['orderid' => $orderid]);
+if ($orderModel && $orderModel->transactions) {
     $captured_total = 0;
     $authorized_total = 0;
     $void_total = 0;
-    foreach ($order_transactions as $k_order_transaction => $v_order_transaction) {
-        $order_transactions[$k_order_transaction]['model'] = OrderTransactionModel::objects()->get(['id' => $v_order_transaction['id']]);
-        if (empty($v_order_transaction["transaction_response"]) && !empty($v_order_transaction["transaction_id"])) {
-            $transaction_type = "";
+    foreach ($orderModel->transactions as $k_order_transaction => $transactionModel) {
+        $order_transactions[$k_order_transaction]['model'] = $transactionModel;
+        if (empty($transactionModel->transaction_response) && !empty($transactionModel->transaction_id)) {
+            OrderTransactionHelper::action('lookup', $transactionModel);
+            /*$transaction_type = "";
             if (!isset($Access_Token)) {
                 $Access_Token = func_paypal_get_access_token();
             }
@@ -33,7 +36,7 @@ if (!empty($order_transactions)) {
                 $result = func_paypal_look_up_payment($Access_Token, $v_order_transaction["transaction_id"], $transaction_type);
                 $v_order_transaction["transaction_response"] = $order_transactions[$k_order_transaction]["transaction_response"] = serialize($result);
                 db_query($qqq = "UPDATE $sql_tbl[order_transactions] SET transaction_response='" . addslashes($v_order_transaction["transaction_response"]) . "' WHERE id='$v_order_transaction[id]'");
-            }
+            }*/
         }
         if (!empty($v_order_transaction["transaction_response"])) {
             $unserialized_transaction_response = unserialize($v_order_transaction["transaction_response"]);
