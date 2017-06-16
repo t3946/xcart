@@ -83,6 +83,11 @@ module.exports = {
                 'bower_components/jquery.cookie/jquery.cookie.js'
             ]
         },
+        'jquery-form': {
+            js: [
+                'bower_components/jquery-form/dist/jquery.form.min.js'
+            ]
+        },
 
         modal: {
             js: [
