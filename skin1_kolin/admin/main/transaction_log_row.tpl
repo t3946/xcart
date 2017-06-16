@@ -1,11 +1,11 @@
 <tr data-order-transaction="{$v.model->id}">
-    <td>{$v.payment_method}</td>
+    <td>{$v.model->payment_method_model->payment_method}</td>
     <td>{$v.model->date|date_format:'%d-%b-%Y<br />%H:%M:%S'}</td>
-    <td>{$v.firstname} ({$v.login})</td>
+    <td>{$v.model->user->firstname} ({$v.model->user->login})</td>
     <td>{if $v.model->transaction_id ne ""}
-            {if $v.transaction_id_link ne ""}<a target="_blank" style="color: #1411FF;" href="{$v.transaction_id_link|substitute:"trans-id":$v.model->transaction_id}">{/if}
-            {if $v.transaction_link_anchor ne ""}{$v.transaction_link_anchor}{else}{$v.model->transaction_id}{/if}{if $v.transaction_id_link ne ""}</a>{/if}
-            {if $v.transaction_link_anchor ne ""}({$v.model->transaction_id}){/if}
+            {if $v.model->payment_method_model->transaction_id_link}<a target="_blank" style="color: #1411FF;" href="{$v.model->payment_method_model->transaction_id_link|substitute:"trans-id":$v.model->transaction_id}">{/if}
+            {if $v.model->payment_method_model->transaction_link_anchor ne ""}{$v.model->payment_method_model->transaction_link_anchor}{else}{$v.model->transaction_id}{/if}{if $v.model->payment_method_model->transaction_id_link ne ""}</a>{/if}
+            {if $v.model->payment_method_model->transaction_link_anchor ne ""}({$v.model->transaction_id}){/if}
         {/if}
     </td>
         {assign var="tr_status" value=$v.model->getField('transaction_status')}
@@ -13,10 +13,10 @@
     <td>{if $main_transaction}{$v.model->transaction_amount}{else}{$v.model->transaction_total}{/if} {$v.model->transaction_currency}</td>
     <td>
         {if $main_transaction}
-            {assign var="tr_log" value=$v.transaction_response}
+            {assign var="tr_log" value=$v.model->transaction_response}
             {assign var="tr_log_message" value=$v.model->transaction_response.message}
         {else}
-            {assign var="tr_log" value=$v.transaction_log}
+            {assign var="tr_log" value=$v.model->transaction_log}
             {assign var="tr_log_message" value=$v.model->transaction_log.message}
         {/if}
 
@@ -28,8 +28,8 @@
             <B>message:</B> {$tr_log_message}
         {/if}
 
-        {if $tr_log ne ""}
-            <div class="transaction_log_div" style="display: none;"><B>Full log:</B><br />{$tr_log}</div>
+        {if $tr_log}
+            <div class="transaction_log_div" style="display: none;"><B>Full log:</B><br />{$tr_log|@serialize}</div>
             <a href="#" style="color: #1411FF;" class="show_hide_link">Show details</a>
         {/if}
 

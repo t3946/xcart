@@ -2,6 +2,7 @@
 namespace Modules\Order\Models;
 
 use Modules\Payment\Models\PaymentMethodModel;
+use Modules\User\Models\UserModel;
 use Xcart\App\Orm\AutoMetaModel;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\CharField;
@@ -59,7 +60,14 @@ class OrderTransactionModel extends AutoMetaModel
                 'class' => UnixTimestampField::className(),
                 'autoNowAdd' => true,
                 'autoNow' => true,
-            ]
+            ],
+            'user' => [
+                'field' => 'login',
+                'class' => ForeignField::className(),
+                'modelClass' => UserModel::className(),
+                'link' => ['login', 'login'],
+                'primary' => true,
+            ],
         ];
     }
 }
