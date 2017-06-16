@@ -2,6 +2,7 @@
 namespace Xcart\App\Orm;
 
 use Doctrine\DBAL\DriverManager;
+use ReflectionClass;
 use Xcart\App\Helpers\SmartProperties;
 
 class ConnectionManager
@@ -55,6 +56,23 @@ class ConnectionManager
                         ->getDatabasePlatform()
                         ->registerDoctrineTypeMapping($from_type, $to_type);
                 }
+            }
+
+            if (!empty($config['cache'])) {
+
+                $params = $config['cache'];
+                $class = $params['class'];
+                unset($params['class']);
+
+                if (count($params) == 0) {
+                    $adapter = new $class;
+                }
+                else {
+                    $r = new ReflectionClass($class);
+                    $adapter = $r->newInstanceArgs($params);
+                }
+
+                $this->connections[ $name ]->getConfiguration()->setResultCacheImpl($adapter);
             }
         }
     }

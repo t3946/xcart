@@ -288,7 +288,7 @@ if ($REQUEST_METHOD == "POST" && !($mode == "unlock_order" || $mode == "unlock_o
 
                 $overall_fraud_score += $fraud_score;
 
-                $orderFraudCheckModel = OrderFraudCheckModel::objects()->getOrCreate([
+                list($orderFraudCheckModel) = OrderFraudCheckModel::objects()->getOrCreate([
                     'orderid' => $orderid,
                     'question_code' => $question_code
                 ]);
@@ -305,7 +305,7 @@ if ($REQUEST_METHOD == "POST" && !($mode == "unlock_order" || $mode == "unlock_o
                     $aOrderDetails = OrderDetailModel::objects()->filter(['orderid' => $orderModel->orderid])->all();
                     if (!empty($aOrderDetails)) {
                         foreach ($aOrderDetails as $orderDetailModel) {
-                            $hardSellModel = ProductHardResellModel::objects()->getOrCreate(['product_id' => $orderDetailModel->productid]);
+                            list($hardSellModel) = ProductHardResellModel::objects()->getOrCreate(['product_id' => $orderDetailModel->productid]);
                             switch ($manual_action) {
                                 case 'Y':
                                     $hardSellModel->positive_count++;

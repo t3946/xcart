@@ -42,7 +42,7 @@ class TemplateManager
     public function init()
     {
         $paths = $this->collectTemplatesPaths();
-        $provider = new PhactFenomTemplateProvider($paths);
+        $provider = new FenomTemplateProvider($paths);
         $cacheFolder = Paths::get('runtime.' . $this->cacheFolder);
         if (!is_dir($cacheFolder)) {
             mkdir($cacheFolder, 0777, true);

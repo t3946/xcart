@@ -520,6 +520,10 @@ class AmazonHelper
         return $return_echo;
     }
 
+    /**
+     * @param $params
+     * @return AmazonFbaProductModel|null
+     */
     public static function getAmazonFbaProductModel($params)
     {
         $oAmazonFbaProductModel = null;

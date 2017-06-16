@@ -120,7 +120,11 @@ class Creator
         if (array_key_exists(Creator::className(), self::class_uses_deep($obj))) {
             return $obj;
         } else {
-            return self::configure($obj, $config);
+            $obj = self::configure($obj, $config);
+            if (method_exists($obj, 'init')) {
+                $obj->init();
+            }
+            return $obj;
         }
     }
 

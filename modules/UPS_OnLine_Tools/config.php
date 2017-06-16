@@ -73,7 +73,7 @@ if ($config["Shipping"]["realtime_shipping"] == "Y" and $config["Shipping"]["use
 else
 	$insert_trademark = false;
 
-@include $xcart_dir."/config.local.UPS_OnLine_Tools.php";
+//@include $xcart_dir."/config.local.UPS_OnLine_Tools.php";
 
 #
 # This table provides correct service codes for different origins

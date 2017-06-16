@@ -1,24 +1,21 @@
 <?php
-/**
- *
- *
- * All rights reserved.
- *
- * @author Okulov Anton
- * @email qantus@mail.ru
- * @version 1.0
- * @company HashStudio
- * @site http://hashstudio.ru
- * @date 10/04/16 10:20
- */
 
 namespace Xcart\App\Main;
 
 use Xcart\App\Application\Application;
 use Xcart\App\Helpers\Creator;
 
+if (!function_exists('d')) {
+    require_once __DIR__ . '/dump.php';
+}
+
 class Xcart
 {
+    public static function getVersion()
+    {
+        return '0.1';
+    }
+
     /** @var \Xcart\App\Application\Application */
     protected static $_app;
 

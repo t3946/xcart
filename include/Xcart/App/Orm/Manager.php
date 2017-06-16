@@ -255,4 +255,10 @@ class Manager extends ManyToManyManager
     {
         return $this->getQuerySet()->getQueryBuilder();
     }
+
+    public function cache($life_time = null)
+    {
+        $this->getQuerySet()->cache($life_time);
+        return $this;
+    }
 }

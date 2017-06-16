@@ -565,7 +565,7 @@ class Smarty
     /**
      * The class constructor.
      */
-    function Smarty()
+    function __construct()
     {
       $this->assign('SCRIPT_NAME', isset($_SERVER['SCRIPT_NAME']) ? $_SERVER['SCRIPT_NAME']
                     : @$GLOBALS['_SERVER']['SCRIPT_NAME']);
@@ -1772,10 +1772,10 @@ class Smarty
     {
         if(isset($exp_time)) {
             if(time() - @filemtime($resource) >= $exp_time) {
-                return @unlink($resource);
+                return file_exists($resource) ? @unlink($resource) : true;
             }
         } else {
-            return @unlink($resource);
+                return file_exists($resource) ? @unlink($resource) : true;
         }
     }
 

@@ -5,6 +5,7 @@ namespace Modules\Amazon\Stores;
 use CaponicaAmazonMwsComplete\ClientPool\MwsClientPool;
 use CaponicaAmazonMwsComplete\ClientPool\MwsClientPoolConfig;
 use Modules\Amazon\ClientPack\MwsFbaOutboundClient;
+use Modules\Amazon\ClientPack\MwsProductClientPackExt;
 
 class AmazonPoolStore extends MwsClientPool
 {
@@ -29,10 +30,19 @@ class AmazonPoolStore extends MwsClientPool
         ]);
     }
 
-    public function getFbaOutboundClientPack() {
-    if(empty($this->fbaOutboundClientPack)) {
-        $this->fbaOutboundClientPack = new MwsFbaOutboundClient($this->config);
+    public function getFbaOutboundClientPack()
+    {
+        if (empty($this->fbaOutboundClientPack)) {
+            $this->fbaOutboundClientPack = new MwsFbaOutboundClient($this->config);
+        }
+        return $this->fbaOutboundClientPack;
     }
-    return $this->fbaOutboundClientPack;
-}
+
+    public function getProductClientPackExt()
+    {
+        if(empty($this->productClientPack)) {
+            $this->productClientPack = new MwsProductClientPackExt($this->config);
+        }
+        return $this->productClientPack;
+    }
 }

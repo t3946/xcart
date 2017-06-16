@@ -1,6 +1,9 @@
 <?php
 
 use Mindy\QueryBuilder\Q\QOr;
+use Modules\Amazon\Helpers\AmazonProductHelper;
+use Modules\Amazon\Stores\AmazonPoolStore;
+use Xcart\Product;
 
 define("CIDEV_CRON_START", "CRON");
 session_start();
@@ -38,15 +41,36 @@ if (isset($argv) && is_array($argv) && !empty($argv[1])) {
     $start_time = new DateTime('now');
     $log_text = " * * *  Cron {$log} started  * * * ";
     func_backprocess_log(Xcart\AmazonMWS::BACK_PROCESS_LOG_NAME_ORDER_INFO, $log_text);
-
+    $amzPool = new AmazonPoolStore();
     switch ($p_arg) {
         case 'competitive_pricing':
+            $max_products = 20;
+            $client = $amzPool->getProductClientPackExt();
+            while ($aProductsBatch = Product::objects()
+                ->filter(['forsale' => 'Y', new QOr(['amazon_enabled' => 'Y', 'amazon_fba' => 'Y'])])
+                ->paginate($i++, $max_products)
+                ->all()) {
+                $aSKUs = array_map(function($a) {return $a->productcode;}, $aProductsBatch);
+                $aAmazonFbaProducts = AmazonProductHelper::getCompetitivePricingForSKU($client->callGetCompetitivePricingForSKU($aSKUs), $aProductsBatch);
+                if (!empty($aAmazonFbaProducts) && is_array($aAmazonFbaProducts)) {
+                    foreach ($aAmazonFbaProducts as $aAmazonFbaProduct) {
+                        $aAmazonFbaProduct->save();
+                    }
+                }
+                $aAmazonFbaProducts = AmazonProductHelper::getMyPriceForSKU($client->callGetMyPriceForSKU($aSKUs), $aProductsBatch);
+                if (!empty($aAmazonFbaProducts) && is_array($aAmazonFbaProducts)) {
+                    foreach ($aAmazonFbaProducts as $aAmazonFbaProduct) {
+                        $aAmazonFbaProduct->save();
+                    }
+                }
+            }
+            break;
         case 'lowest_offer':
             echo "Report {$param_reports[$p_arg]} start\n";
             $oAmazonProduct = new \Xcart\AmazonMWS('MarketplaceWebServiceProducts_Client', '/Products/2011-10-01');
             $max_products = 20;
             $i = 1;
-            while ($aProductsBatch = \Xcart\Product::objects()
+            while ($aProductsBatch = Product::objects()
                 ->filter(['forsale' => 'Y', new QOr(['amazon_enabled' => 'Y', 'amazon_fba' => 'Y'])])
                 ->paginate($i++, $max_products)
                 ->all()) {
@@ -61,7 +85,7 @@ if (isset($argv) && is_array($argv) && !empty($argv[1])) {
             $oAmazonProduct = new \Xcart\AmazonMWS('FBAInventoryServiceMWS_Client', '/FulfillmentInventory/2010-10-01');
             $max_products = 50;
             $i = 1;
-            while ($aProductsBatch = \Xcart\Product::objects()
+            while ($aProductsBatch = Product::objects()
                 ->filter(['forsale' => 'Y', new QOr(['amazon_enabled' => 'Y', 'amazon_fba' => 'Y'])])
                 ->paginate($i++, $max_products)
                 ->all()) {
