@@ -56,8 +56,10 @@ if (isset($argv) && is_array($argv) && !empty($argv[1])) {
 
                 try {
                     $pricing = $client->callGetCompetitivePricingForSKU($aSKUs);
-                    foreach (AmazonProductHelper::getCompetitivePricingForSKU($pricing, $aProductsBatch) as $aAmazonFbaProduct) {
-                        $aAmazonFbaProduct->save();
+                    if ($products = AmazonProductHelper::getCompetitivePricingForSKU($pricing, $aProductsBatch)) {
+                        foreach ($products as $aAmazonFbaProduct) {
+                            $aAmazonFbaProduct->save();
+                        }
                     }
                 }
                 catch (\Exception $e) {
@@ -66,8 +68,10 @@ if (isset($argv) && is_array($argv) && !empty($argv[1])) {
 
                 try {
                     $myPricing = $client->callGetMyPriceForSKU($aSKUs);
-                    foreach (AmazonProductHelper::getMyPriceForSKU($myPricing, $aProductsBatch) as $aAmazonFbaProduct) {
-                        $aAmazonFbaProduct->save();
+                    if ($products = AmazonProductHelper::getMyPriceForSKU($myPricing, $aProductsBatch)) {
+                        foreach ($products as $aAmazonFbaProduct) {
+                            $aAmazonFbaProduct->save();
+                        }
                     }
                 }
                 catch (\Exception $e) {

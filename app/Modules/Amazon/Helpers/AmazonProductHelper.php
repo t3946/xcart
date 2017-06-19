@@ -27,12 +27,13 @@ class AmazonProductHelper
 {
     /**
      * @param MarketplaceWebServiceProducts_Model_GetCompetitivePricingForSKUResponse $cpResult
-     * @param ProductModel[]                                                          $aProducts
-     *
-     * @return \Generator
+     * @param ProductModel[] $aProducts
+     * @return AmazonFbaProductModel[]
      */
     public static function getCompetitivePricingForSKU(MarketplaceWebServiceProducts_Model_GetCompetitivePricingForSKUResponse $cpResult, $aProducts)
-    {;
+    {
+        /** @var AmazonFbaProductModel[] $aResult */
+        $aResult = [];
         $iReportDate = mktime(0, 0, 0, date("n"), date("j"), date("Y"));
         if ($res = $cpResult->getGetCompetitivePricingForSKUResult()) {
             /** @var MarketplaceWebServiceProducts_Model_GetCompetitivePricingForSKUResult $r */
@@ -96,22 +97,19 @@ class AmazonProductHelper
                                     $oAmazonProductModel->ASIN = $sAsin;
                                 }
                             }
-                            yield $oAmazonProductModel;
+                            $aResult[] = $oAmazonProductModel;
                         }
                     }
                 }
             }
         }
+        return $aResult;
     }
 
-    /**
-     * @param \MarketplaceWebServiceProducts_Model_GetMyPriceForSKUResponse $cpResult
-     * @param ProductModel[]                                                $aProducts
-     *
-     * @return \Generator
-     */
     public static function getMyPriceForSKU(MarketplaceWebServiceProducts_Model_GetMyPriceForSKUResponse $cpResult, $aProducts)
     {
+        /** @var AmazonFbaProductModel[] $aResult */
+        $aResult = [];
         $iReportDate = mktime(0, 0, 0, date("n"), date("j"), date("Y"));
         if ($res = $cpResult->getGetMyPriceForSKUResult()) {
             /** @var MarketplaceWebServiceProducts_Model_GetMyPriceForSKUResult $r */
@@ -154,11 +152,12 @@ class AmazonProductHelper
                                     $oAmazonProductModel->ASIN = $sAsin;
                                 }
                             }
-                            yield $oAmazonProductModel;
+                            $aResult[] = $oAmazonProductModel;
                         }
                     }
                 }
             }
         }
+        return $aResult;
     }
 }
