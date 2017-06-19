@@ -23,11 +23,16 @@
     .main-menu-modules .menu-block .module {
         margin-bottom: .4em;
     }
+    .main-menu-modules .menu-block .module ul li {
+        line-height: 1.2;
+    }
+
     .main-menu-modules .menu-block .module ul li ul {
         padding-left: .8em;
     }
     .main-menu-modules .menu-block .module .name {
-        border-bottom: 2px;
+        border-bottom: 1px solid;
+        margin-bottom: .5em;
         font-size: 1em;
         font-weight: bold;
     }
