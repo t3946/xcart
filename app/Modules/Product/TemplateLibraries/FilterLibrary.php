@@ -34,7 +34,11 @@ class FilterLibrary extends TemplateLibrary
                           new Max('xcart_pricing_1.price', 'max')]) //@TODO:FIX IT
                 ->asArray();
             $prices = $tqs->get();
-            $prices = ['min' => floor($prices['min']), 'max' => ceil($prices['max'])];
+            $prices = [
+                'min' => floor($prices['min']),
+                'max' => ceil($prices['max']),
+                'step' => 1,
+            ];
 
             $fprice = empty($form_data['price'])?[]:$form_data['price'];
 

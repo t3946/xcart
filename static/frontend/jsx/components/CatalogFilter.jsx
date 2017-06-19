@@ -87,12 +87,32 @@ export default class CatalogFilter
         this.elemets['clear'].on('click', (e) => {
             let $this = $(e.target);
 
-            $('.' + $this.data('group'))
-                .removeClass('checked')
-                .prop('checked', false)
-                .closest('form').submit();
+            if (!$this.hasClass('filter_item')) {
+                $this = $this.closest('.filter_item');
+            }
+            let selGroup = "." + $this.data('group');
+            let $inputs = $(selGroup);
 
 
+            if ($this.data('type') == 'price') {
+                $inputs.each((n,el) => {
+                    let $el = $(el);
+
+                    if ($el.hasClass('min')) {
+                        $el.val($el.prop('min'));
+                    }
+                    else {
+                        $el.val($el.prop('max'));
+                    }
+                });
+            }
+            else {
+                $inputs
+                    .removeClass('checked')
+                    .prop('checked', false);
+            }
+
+            $inputs.closest('form').submit();
             $this.remove();
         });
 

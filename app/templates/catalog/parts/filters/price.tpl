@@ -4,18 +4,20 @@
 
         <input type="number"
                id="filter_{$key}_min"
+               class="min fv-group-{$key}"
                name="filter[{$key}][min]"
                min="{$values.prices.min}"
                max="{$values.prices.max}"
-               step="1"
+               step="{$values.prices.step}"
                value="{$values.selected.min}"/>
         &mdash;
         <input type="number"
                id="filter_{$key}_max"
+               class="max fv-group-{$key}"
                name="filter[{$key}][max]"
                min="{$values.prices.min}"
                max="{$values.prices.max}"
-               step="1"
+               step="{$values.prices.step}"
                value="{$values.selected.max}"/>
     </div>
 

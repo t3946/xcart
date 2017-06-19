@@ -9,7 +9,7 @@ export default class FilterPriceSlider {
             format: wNumb({
                 decimals: 0
             }),
-            // behaviour: 'drag-tap',
+            // behaviour: 'tap-snap-drag',
             start: [0, 100],
             connect: true,
             range: {
@@ -40,15 +40,14 @@ export default class FilterPriceSlider {
         });
 
         this.inputs.forEach((input, handle) => {
-
             input.addEventListener('change', (e) => {
                 this.setSliderHandle(handle, e.target.value);
             });
 
             input.addEventListener('keydown', (e) => {
-                let values = keypressSlider.noUiSlider.get();
+                let values = this.slider.noUiSlider.get();
                 let value = Number(values[handle]);
-                let steps = keypressSlider.noUiSlider.steps();
+                let steps = this.slider.noUiSlider.steps();
                 let step = steps[handle];
                 let position;
 

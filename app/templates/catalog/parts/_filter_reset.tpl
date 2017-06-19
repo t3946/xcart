@@ -5,15 +5,16 @@
         {if $item.type == 'price'}
             {if $item.values.prices.min != $item.values.selected.min || $item.values.prices.max != $item.values.selected.max}
                 {set $show = true}
+                {break}
             {/if}
         {elseif $item.type == 'list'}
             {foreach $item.values as $val}
                 {if $val.checked}
                     {set $show = true}
+                    {break}
                 {/if}
             {/foreach}
         {/if}
-
     {/foreach}
 
     {if $show}
@@ -23,8 +24,8 @@
 
             {if $item.type == 'price'}
                 {if $item.values.prices.min != $item.values.selected.min || $item.values.prices.max != $item.values.selected.max}
-                    <div class="column column-block fv-remove-{$val.value}">
-                        <div class="filter_item" data-group="fv-group-{$item.key}">
+                    <div class="column column-block filter_item fv-remove-{$item.key}" data-group="fv-group-{$item.key}" data-type="price">
+                        <div class="fi_container">
                             Price from {$item.values.selected.min} to {$item.values.selected.max}
                         </div>
                     </div>
@@ -32,8 +33,8 @@
             {elseif $item.type == 'list'}
                 {foreach $item.values as $val}
                     {if $val.checked}
-                    <div class="column column-block fv-remove-{$val.value}">
-                        <div class="filter_item" data-group="fv-group-{$val.value}" data-fv-val="{$val.value}">
+                    <div class="column column-block filter_item fv-remove-{$val.value}" data-group="fv-group-{$val.value}" data-fv-val="{$val.value}" data-type="list">
+                        <div class="fi_container">
                             {$val.name}
                             <span class="filter_group">
                                 ({$item.name})
