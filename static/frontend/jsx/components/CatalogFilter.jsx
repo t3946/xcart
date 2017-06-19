@@ -9,7 +9,7 @@ export default class CatalogFilter
         this.elemets = {};
         this.options = {
             classes: {
-                'form': '.filter_form',
+                'form': '#filter_form',
                 'blocks': ' .accordion-item',
                 'clear': '.filter_reset .filter_item',
             }
@@ -82,6 +82,13 @@ export default class CatalogFilter
             if ($linked) {
                 $linked.prop('checked', $this.prop('checked'));
             }
+
+            if ($this.closest('.accordion-item').find('input[type=checkbox]:checked').length) {
+                $this.closest('.accordion-item').addClass('changed');
+            }
+            else {
+                $this.closest('.accordion-item').removeClass('changed');
+            }
         });
 
         this.elemets['clear'].on('click', (e) => {
@@ -92,7 +99,6 @@ export default class CatalogFilter
             }
             let selGroup = "." + $this.data('group');
             let $inputs = $(selGroup);
-
 
             if ($this.data('type') == 'price') {
                 $inputs.each((n,el) => {

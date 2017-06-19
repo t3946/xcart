@@ -40,15 +40,17 @@ class FilterLibrary extends TemplateLibrary
                 'step' => 1,
             ];
 
-            $fprice = empty($form_data['price'])?[]:$form_data['price'];
+            $selected_price = empty($form_data['price'])?[]:$form_data['price'];
+            $selected_price = array_replace_recursive($prices, $selected_price);
 
             $list['__price__'] = [
                 'type' => 'price',
                 'key' => 'price',
                 'name' => 'Price',
+                'changed' => ($selected_price['min'] != $prices['min'] || $selected_price['max'] != $prices['max']),
                 'values' => [
                     'prices' => $prices,
-                    'selected' => array_replace_recursive($prices, $fprice),
+                    'selected' => array_replace_recursive($prices, $selected_price),
                 ],
             ];
         }
@@ -60,14 +62,17 @@ class FilterLibrary extends TemplateLibrary
                           ->order(['brand__brand'])
                           ->asArray()->cache(300)->all();
 
+            $changed = false;
             foreach ($brands as $key => $brand) {
                 $brands[$key]['checked'] = (!empty($form_data['brand']) && in_array($brand['value'],$form_data['brand']));
+                $changed = $changed ?: $brands[$key]['checked'];
             }
 
             $list['__brand__'] = [
                 'type' => 'list',
                 'key' => 'brand',
                 'name' => 'Brand',
+                'changed' => $changed,
                 'values' => $brands,
             ];
         }
@@ -97,6 +102,7 @@ class FilterLibrary extends TemplateLibrary
                         'type' => 'list',
                         'key' => 'filter',
                         'name' =>$filter['f_name'],
+                        'changed' => false,
                         'values' => []
                     ];
                 }
@@ -104,12 +110,16 @@ class FilterLibrary extends TemplateLibrary
                 foreach ($values as $value)
                 {
                     if ($list[$value['f_id']]) {
+                        $checked = (!empty($form_data['filter']) && in_array($value['fv_id'],$form_data['filter']));
+
+                        $list[$value['f_id']]['changed'] = $list[$value['f_id']]['changed'] ?: $checked;
                         $list[$value['f_id']]['values'][] = [
                             'name' => $value['fv_name'],
                             'value' => $value['fv_id'],
                             'count' => $value['count'],
-                            'checked' => (!empty($form_data['filter']) && in_array($value['fv_id'],$form_data['filter'])),
+                            'checked' => $checked,
                         ];
+
                     }
                 }
             }

@@ -58,6 +58,7 @@ import FilterPriceSlider from "./components/FilterPriceSlider";
 
     $(document).on('click', '.action_block.sort .options li', function(e){
         e.preventDefault();
+        e.stopPropagation();
         let $this = $(this);
 
         if (!$this.hasClass('active')) {
