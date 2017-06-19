@@ -7,7 +7,7 @@
                name="filter[{$key}][min]"
                min="{$values.prices.min}"
                max="{$values.prices.max}"
-               step="0.01"
+               step="1"
                value="{$values.selected.min}"/>
         &mdash;
         <input type="number"
@@ -15,7 +15,7 @@
                name="filter[{$key}][max]"
                min="{$values.prices.min}"
                max="{$values.prices.max}"
-               step="0.01"
+               step="1"
                value="{$values.selected.max}"/>
     </div>
 
@@ -23,8 +23,8 @@
 
     <div class="range_wrapper">
         <div class="prices">
-            <span class="price min">{$values.selected.min}</span>
-            <span class="price max">{$values.selected.max}</span>
+            <span class="price min">{$values.prices.min}</span>
+            <span class="price max">{$values.prices.max}</span>
         </div>
 
         <div id="filter_{$key}_range" class="price_range"></div>
@@ -43,6 +43,7 @@
         {ignore}
         new window.FilterPriceSlider(keypressSlider, inputs, {
             start: [start_min, start_max],
+            step: 1,
             range: {
                 min:price_min,
                 max:price_max

@@ -93,7 +93,7 @@ $noUi-css-prefix: range;
 
               &:before, &:after {
                 top: -4px;
-                bottom: 0;
+                bottom: -1px;
                 //height: 12px;
                 border-left: 1px solid #404040;
                 content: '';
@@ -285,7 +285,7 @@ $noUi-css-prefix: range;
 }
 
 .filter_reset {
-  //margin: rem-calc(15) 0;
+  margin: rem-calc(15) 0;
 
   .column-block {
     margin: .3em 0;
@@ -430,7 +430,7 @@ $noUi-css-prefix: range;
             &:before {
               //display: none;
               font-size: 1.2em;
-              margin-top: -.6em;
+              margin-top: -.57em;
             }
           }
           .accordion-content {
@@ -441,6 +441,14 @@ $noUi-css-prefix: range;
 
               input {
                 width: 22.4%;
+              }
+
+              .range-base {
+                .range-origin {
+                  .range-handle {
+                    z-index: 40 !important;
+                  }
+                }
               }
             }
 

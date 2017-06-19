@@ -5,19 +5,18 @@
         {if $item.type == 'price'}
             {if $item.values.prices.min != $item.values.selected.min || $item.values.prices.max != $item.values.selected.max}
                 {set $show = true}
-                {break}
             {/if}
         {elseif $item.type == 'list'}
             {foreach $item.values as $val}
                 {if $val.checked}
                     {set $show = true}
-                    {break}
                 {/if}
             {/foreach}
         {/if}
 
     {/foreach}
 
+    {if $show}
     <section class="filter_reset">
         <div class="row small-up-1 medium-up-2">
         {foreach $filters as $item}
@@ -49,4 +48,5 @@
         {/foreach}
         </div>
     </section>
+    {/if}
 {/if}

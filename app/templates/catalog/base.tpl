@@ -57,7 +57,7 @@
                     {include "catalog/parts/_filter_reset.tpl"}
                 </div>
 
-                <div class="page_count hide-for-large">
+                <div class="mobile_page_count hide-for-large">
                     {include 'catalog/parts/_page_count.tpl'}
                 </div>
 

@@ -76,7 +76,7 @@
             size: 1.5rem
           };
 
-          @include breakpoint(xmall down) {
+          @include breakpoint(xsmall down) {
             margin-top: -.6rem;
             font: {
               size: 1.3rem

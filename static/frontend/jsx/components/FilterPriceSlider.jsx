@@ -6,9 +6,11 @@ export default class FilterPriceSlider {
         this.inputs = inputs;
         this.options = _.extend({
             cssPrefix: 'range-',
-            behaviour: 'drag-tap',
+            format: wNumb({
+                decimals: 0
+            }),
+            // behaviour: 'drag-tap',
             start: [0, 100],
-            connected: true,
             connect: true,
             range: {
                 min: 0,
