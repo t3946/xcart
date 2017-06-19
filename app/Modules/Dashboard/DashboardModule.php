@@ -68,7 +68,7 @@ class DashboardModule extends Module
         return [
             [
                 'icon' => 'fa fa-search',
-                'name' => 'Search',
+                'name' => 'Order search',
                 'route' => $router->url('dashboard:search'),
             ],
             [
