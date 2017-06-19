@@ -49,19 +49,33 @@ if (isset($argv) && is_array($argv) && !empty($argv[1])) {
             while ($aProductsBatch = Product::objects()
                 ->filter(['forsale' => 'Y', new QOr(['amazon_enabled' => 'Y', 'amazon_fba' => 'Y'])])
                 ->paginate($i++, $max_products)
-                ->all()) {
+                ->all())
+            {
                 $aSKUs = array_map(function($a) {return $a->productcode;}, $aProductsBatch);
-                $aAmazonFbaProducts = AmazonProductHelper::getCompetitivePricingForSKU($client->callGetCompetitivePricingForSKU($aSKUs), $aProductsBatch);
-                if (!empty($aAmazonFbaProducts) && is_array($aAmazonFbaProducts)) {
-                    foreach ($aAmazonFbaProducts as $aAmazonFbaProduct) {
-                        $aAmazonFbaProduct->save();
+                $log_text = 'ERROR in competitive_pricing cron for SKU\'s: ' . implode(', ', $aSKUs) . "\n";
+
+                try {
+                    $pricing = $client->callGetCompetitivePricingForSKU($aSKUs);
+                    if ($products = AmazonProductHelper::getCompetitivePricingForSKU($pricing, $aProductsBatch)) {
+                        foreach ($products as $aAmazonFbaProduct) {
+                            $aAmazonFbaProduct->save();
+                        }
                     }
                 }
-                $aAmazonFbaProducts = AmazonProductHelper::getMyPriceForSKU($client->callGetMyPriceForSKU($aSKUs), $aProductsBatch);
-                if (!empty($aAmazonFbaProducts) && is_array($aAmazonFbaProducts)) {
-                    foreach ($aAmazonFbaProducts as $aAmazonFbaProduct) {
-                        $aAmazonFbaProduct->save();
+                catch (\Exception $e) {
+                    func_backprocess_log(Xcart\AmazonMWS::BACK_PROCESS_LOG_NAME_ORDER_INFO, $log_text . $e->getMessage());
+                }
+
+                try {
+                    $myPricing = $client->callGetMyPriceForSKU($aSKUs);
+                    if ($products = AmazonProductHelper::getMyPriceForSKU($myPricing, $aProductsBatch)) {
+                        foreach ($products as $aAmazonFbaProduct) {
+                            $aAmazonFbaProduct->save();
+                        }
                     }
+                }
+                catch (\Exception $e) {
+                    func_backprocess_log(Xcart\AmazonMWS::BACK_PROCESS_LOG_NAME_ORDER_INFO, $log_text . $e->getMessage());
                 }
             }
             break;

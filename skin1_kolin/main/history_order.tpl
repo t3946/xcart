@@ -243,7 +243,7 @@ function func_set_value_to_field(form, fefix_field, field, mnf_id){
             <button style="display: inline; border: none; padding: 0; background: none; color: inherit; text-decoration: underline; cursor: pointer; word-wrap: break-word;"
                     value="empty"
                     name="type">
-                click this link to empty this order's 'Last CS message' in the order list
+                click this link to empty 'Last CS message' in the order list
             </button>. <br/>
 
             <div>
