@@ -33,7 +33,7 @@
     }
 </style>
 
-<table class="VertMenuBorder main-menu-modules" cellspacing="1">
+<table class="VertMenuBorder main-menu-modules" width="100%" cellspacing="1">
     <tr>
         <td width="100%" class="VertMenuTitle">
             <table width="100%" cellpadding="0" cellspacing="0">

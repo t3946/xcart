@@ -145,7 +145,7 @@ class DashboardController extends PrototypeAdminController
         {
 
             $user = Xcart::app()->user;
-            $model = UserFiltersLinkModel::objects()->getOrCreate(['filter_id' => $filter_model->id, 'user_id' => $user->id]);
+            list($model) = UserFiltersLinkModel::objects()->getOrCreate(['filter_id' => $filter_model->id, 'user_id' => $user->id]);
 
             unset($_POST['id']);
             $model->setAttributes($_POST);
