@@ -112,8 +112,6 @@ if (isset($argv) && is_array($argv) && !empty($argv[1])) {
                 if (!empty($counter_dropped)) {
                     func_backprocess_log(Xcart\AmazonMWS::BACK_PROCESS_LOG_NAME_ORDER_INFO, "Skipped SKU's in MyPrice: ".implode(', ', $counter_dropped));
                 }
-
-                break;
             }
             break;
         case 'lowest_offer':
