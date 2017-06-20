@@ -1,4 +1,3 @@
-
 import serialize from "form-serialize";
 import dedup from "../utils/deduplicate"
 import objToUri from "../utils/objToUri"
@@ -118,8 +117,10 @@ export default class CatalogFilter
                     .prop('checked', false);
             }
 
-            $inputs.closest('form').submit();
-            $this.remove();
+            window.loader.load(()=>{
+                $inputs.closest('form').submit();
+                $this.remove();
+            });
         });
 
         $(document).on('click', '.filter-block a.show_all, .state_line a.action_button.filter', function(e){

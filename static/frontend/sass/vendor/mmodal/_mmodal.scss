@@ -9,7 +9,25 @@ body {
     background-color: rgba(0,0,0,.5);
 
     .mmodal-container {
-      .mmodal-close{}
+      .mmodal-close{
+        overflow: hidden;
+        text-indent: -999px;
+        display: block;
+        width: 27px;
+        height: 27px;
+        opacity: .7;
+        top: 9px;
+        right: 9px;
+
+        background: {
+          image: url("../images/icons/modal/close_white.svg");
+          size: 27px 27px;
+        };
+
+        &:hover {
+          opacity: 1;
+        }
+      }
       .mmodal-content {
         border-radius: 0;
       }

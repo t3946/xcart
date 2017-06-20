@@ -5,6 +5,7 @@ import CategoryViewType from "./components/CategoryViewType";
 import LazyImageLoad from "./components/LazyImageLoad";
 import CatalogFilter from "./components/CatalogFilter";
 import FilterPriceSlider from "./components/FilterPriceSlider";
+import Loader from "./components/Loader";
 
 (function(){
     new LazyImageLoad('.lazyimg');
@@ -14,6 +15,7 @@ import FilterPriceSlider from "./components/FilterPriceSlider";
     new CatalogFilter();
 
     window['FilterPriceSlider'] = FilterPriceSlider;
+    window['loader'] = new Loader;
 
     Waves.attach('.button');
     Waves.init();
@@ -70,14 +72,14 @@ import FilterPriceSlider from "./components/FilterPriceSlider";
                 $this.closest('.action_block.sort').removeClass('active');
             }, 500);
 
-            $.ajax({
+            window.loader.load($.ajax({
                 url: window.location,
                 method: 'POST',
                 data: {sort: $(this).data('value')},
                 success : (data)=>{
                     window.location = window.location;
                 }
-            });
+            }));
         }
         else {
             $this.closest('.action_block.sort').removeClass('active');
@@ -92,16 +94,19 @@ import FilterPriceSlider from "./components/FilterPriceSlider";
         let $container = $('.product-items');
 
 
-        $.ajax($this.attr('href'), {
-            'success' : (data)=>{
-                $container.append(data.content);
-                $parent.html(data.pager);
-                $('.page_count').html(data.page_count);
+        window.loader.load(
+            $.ajax($this.attr('href'), {
+                'success' : (data)=>{
+                    $container.append(data.content);
+                    $parent.html(data.pager);
+                    $('.page_count').html(data.page_count);
 
-                $(window).trigger('resize');
-                Waves.attach('.button');
-            }
-        });
+                    $(window).trigger('resize');
+                    Waves.attach('.button');
+                }
+            })
+        );
+
 
         let classes = $this.attr('class');
         let text_loading = $this.data('text-loading');
