@@ -3,6 +3,7 @@ import _ from "lodash";
 export default class Loader
 {
     constructor(options = {}) {
+        this.loaders = 0;
         this.elements = {};
         this.options = _.extend({
             'timeout': 200
@@ -48,16 +49,24 @@ export default class Loader
     }
 
     attach() {
-        this.elements['container'].addClass('loading');
-        this.elements['container'].append(this.elements['bg']);
+        if (!this.loaders) {
+            this.elements['container'].addClass('loading');
+            this.elements['container'].append(this.elements['bg']);
+
+            this.loaders++;
+        }
     }
 
     detach() {
-        this.elements['container'].removeClass('loading-active');
+        this.loaders--;
 
-        setTimeout(()=>{
-            this.elements['container'].removeClass('loading');
-            this.elements['bg'].detach();
-        }, this.options.timeout)
+        if (this.loaders === 0) {
+            this.elements['container'].removeClass('loading-active');
+
+            setTimeout(()=>{
+                this.elements['container'].removeClass('loading');
+                this.elements['bg'].detach();
+            }, this.options.timeout)
+        }
     }
 }

@@ -125,6 +125,35 @@ import Loader from "./components/Loader";
         $(this).mmodal({skin: $(this).data('modal-class') || 'front'});
     });
 
+    $(window).on('beforeunload unload', ()=>{
+        loader.load();
+    });
+
+    // $(window).on('popstate', ()=>{
+    //     loader.load();
+    // });
+    //
+    // let handlePushState = function() {
+    //     loader.load();
+    // };
+    //
+    //
+    // if (window.history.pushState != null) {
+    //     var _pushState = window.history.pushState;
+    //     window.history.pushState = function() {
+    //         handlePushState();
+    //         return _pushState.apply(window.history, arguments);
+    //     };
+    // }
+    //
+    //
+    // if (window.history.replaceState != null) {
+    //     var _replaceState = window.history.replaceState;
+    //     window.history.replaceState = function() {
+    //         handlePushState();
+    //         return _replaceState.apply(window.history, arguments);
+    //     };
+    // }
 
 
     $(document).foundation();
