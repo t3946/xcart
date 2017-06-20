@@ -31,9 +31,17 @@ body {
         right: 9px;
 
         background: {
+          repeat: no-repeat;
           image: url("../images/icons/modal/close_white.svg");
+          position: center center;
           size: 27px 27px;
         };
+
+        @include breakpoint(xsmall down) {
+          background: {
+            size: 20px 20px;
+          };
+        }
 
         &:hover {
           opacity: 1;
@@ -68,6 +76,13 @@ body {
             font: {
               size: 1.25rem;
               weight: 600;
+            }
+
+            @include breakpoint(xsmall down) {
+              font: {
+                size: 1rem;
+                weight: 500;
+              }
             }
           }
         }

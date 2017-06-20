@@ -43,6 +43,14 @@ $padding_container: rem-calc(18);
         color: #e7edf0;
       };
 
+      @include breakpoint(xsmall down) {
+
+        line-height: 48px;
+        font: {
+          size: 1rem;
+        }
+      }
+
       &:before, &:after {
         content: '';
         display: inline-block;
@@ -190,7 +198,7 @@ $padding_container: rem-calc(18);
             display: block;
             position: absolute;
             top: 100%;
-            z-index: 100;
+            z-index: 3;
             background: #fff;
           }
         }

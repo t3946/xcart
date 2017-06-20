@@ -70,16 +70,18 @@ import Loader from "./components/Loader";
 
             setTimeout(()=>{
                 $this.closest('.action_block.sort').removeClass('active');
-            }, 500);
+            }, 2000);
 
-            window.loader.load($.ajax({
-                url: window.location,
-                method: 'POST',
-                data: {sort: $(this).data('value')},
-                success : (data)=>{
-                    window.location = window.location;
-                }
-            }));
+            window.loader.load(()=>{
+                $.ajax({
+                    url: window.location,
+                    method: 'POST',
+                    data: {sort: $(this).data('value')},
+                    success : (data)=>{
+                        window.location = window.location;
+                    }
+                })
+            });
         }
         else {
             $this.closest('.action_block.sort').removeClass('active');
