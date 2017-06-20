@@ -38,6 +38,9 @@ if (isset($argv) && is_array($argv) && !empty($argv[1])) {
     db_query_param(/** @lang MySQL */
         "REPLACE xcart_config SET value='Y', name=:name", ['name' => $log]);
 
+    $counter_received = [];
+    $counter_send = 0;
+
     $start_time = new DateTime('now');
     $log_text = " * * *  Cron {$log} started  * * * ";
     func_backprocess_log(Xcart\AmazonMWS::BACK_PROCESS_LOG_NAME_ORDER_INFO, $log_text);
@@ -46,19 +49,33 @@ if (isset($argv) && is_array($argv) && !empty($argv[1])) {
         case 'competitive_pricing':
             $max_products = 20;
             $client = $amzPool->getProductClientPackExt();
+            $counter_received = [
+                'CompetitivePricing' => 0,
+                'MyPrice' => 0,
+            ];
+
             while ($aProductsBatch = Product::objects()
                 ->filter(['forsale' => 'Y', new QOr(['amazon_enabled' => 'Y', 'amazon_fba' => 'Y'])])
                 ->paginate($i++, $max_products)
                 ->all())
             {
+                $counter_send += count($aProductsBatch);
+
                 $aSKUs = array_map(function($a) {return $a->productcode;}, $aProductsBatch);
                 $log_text = 'ERROR in competitive_pricing cron for SKU\'s: ' . implode(', ', $aSKUs) . "\n";
 
                 try {
+                    $counter_dropped = $aSKUs;
                     $pricing = $client->callGetCompetitivePricingForSKU($aSKUs);
                     if ($products = AmazonProductHelper::getCompetitivePricingForSKU($pricing, $aProductsBatch)) {
                         foreach ($products as $aAmazonFbaProduct) {
                             $aAmazonFbaProduct->save();
+                            $counter_received['CompetitivePricing']++;
+
+                            $key = array_search($aAmazonFbaProduct->productcode, $counter_dropped);
+                            if ($key !== false) {
+                                unset($counter_dropped[$key]);
+                            }
                         }
                     }
                 }
@@ -66,16 +83,34 @@ if (isset($argv) && is_array($argv) && !empty($argv[1])) {
                     func_backprocess_log(Xcart\AmazonMWS::BACK_PROCESS_LOG_NAME_ORDER_INFO, $log_text . $e->getMessage());
                 }
 
+                if (!empty($counter_dropped)) {
+                    func_backprocess_log(Xcart\AmazonMWS::BACK_PROCESS_LOG_NAME_ORDER_INFO, "Skipped SKU's in CompetitivePricing: ".implode(', ', $counter_dropped));
+                }
+
+
                 try {
+                    $counter_dropped = $aSKUs;
                     $myPricing = $client->callGetMyPriceForSKU($aSKUs);
                     if ($products = AmazonProductHelper::getMyPriceForSKU($myPricing, $aProductsBatch)) {
                         foreach ($products as $aAmazonFbaProduct) {
                             $aAmazonFbaProduct->save();
+                            $counter_received['MyPrice']++;
+
+                            $counter_dropped3[] = $aAmazonFbaProduct->productcode;
+
+                            $key = array_search($aAmazonFbaProduct->productcode, $counter_dropped);
+                            if ( $key !== false) {
+                                unset($counter_dropped[$key]);
+                            }
                         }
                     }
                 }
                 catch (\Exception $e) {
                     func_backprocess_log(Xcart\AmazonMWS::BACK_PROCESS_LOG_NAME_ORDER_INFO, $log_text . $e->getMessage());
+                }
+
+                if (!empty($counter_dropped)) {
+                    func_backprocess_log(Xcart\AmazonMWS::BACK_PROCESS_LOG_NAME_ORDER_INFO, "Skipped SKU's in MyPrice: ".implode(', ', $counter_dropped));
                 }
             }
             break;
@@ -102,11 +137,18 @@ if (isset($argv) && is_array($argv) && !empty($argv[1])) {
             while ($aProductsBatch = Product::objects()
                 ->filter(['forsale' => 'Y', new QOr(['amazon_enabled' => 'Y', 'amazon_fba' => 'Y'])])
                 ->paginate($i++, $max_products)
-                ->all()) {
+                ->all())
+            {
+                $counter_send += count($aProductsBatch);
+
                 $oAmazonProduct
                     ->setProducts($aProductsBatch)
                     //->enableLog($log)
                     ->_Request('ListInventorySupply');
+
+                $counter_received = [
+                    'ListInventorySupply' => $oAmazonProduct->getCountSaved(),
+                ];
             }
             break;
         case 'reserved_inventory' :
@@ -128,6 +170,17 @@ if (isset($argv) && is_array($argv) && !empty($argv[1])) {
     Xcart\Config::model(['name' => $log])->setValue('N')->_update();
     $str_time = (new DateTime('now'))->diff($start_time)->format('%H:%I:%S');
     $log_text = "Cron {$log} completed. Processing time: {$str_time}";
+
+    if ($counter_send) {
+        $log_text .= ". Sended: {$counter_send}.";
+
+        if (!empty($counter_received)) {
+            foreach ($counter_received as $name => $received) {
+                $log_text .= " Received {$name}: {$received}";
+            }
+        }
+    }
+
     func_backprocess_log(Xcart\AmazonMWS::BACK_PROCESS_LOG_NAME_ORDER_INFO, $log_text);
 }
 die("DONE!");
