@@ -23,6 +23,14 @@ $noUi-css-prefix: range;
         border-top: 1px solid #dcdcdc;
         font-weight: bold;
 
+        //background: linear-gradient(90deg, rgba(235, 235, 235, 0) 0%, rgba(235, 235, 235, .85) 65%, rgba(235, 235, 235, 0) 100%);
+        background: radial-gradient(ellipse farthest-corner at 50% -10%,  rgba(225, 225, 225, 1), rgba(235, 235, 235, .3) 40%, rgba(235, 235, 235, 0) 80%);
+        background: {
+          repeat: no-repeat;
+          position: center top -100px;
+        };
+        transition: all 0.4s linear;
+
         &:hover {
           background: none;
         }
@@ -139,10 +147,17 @@ $noUi-css-prefix: range;
                     top: 12px;
 
                     @include breakpoint(medium down) {
-                      width: 19px;
-                      height: 26px;
-                      left: -9px;
-                      top: 16px;
+                      //width: 19px;
+                      width: 40px;
+                      height: 70px;
+                      //left: -9px;
+                      left: -20px;
+                      top: -5px;
+
+                      background: {
+                        size: 19px 26px;
+                        position: center bottom 20px;
+                      };
                     }
 
 
@@ -235,7 +250,8 @@ $noUi-css-prefix: range;
                     &:before {
                       background-image: url("../images/icons/filter/cancel.svg");
                       border: none !important;
-                      background-size: 1.3em 1.3em;
+                      //background-size: 1.3em 1.3em;
+                      background-size: 100% 100%;
                     }
                   }
                 }
@@ -261,7 +277,7 @@ $noUi-css-prefix: range;
         position: relative;
 
         .accordion-title {
-          background: linear-gradient(90deg, rgba(235, 235, 235, 0) 0%, rgba(235, 235, 235, 1) 65%, rgba(235, 235, 235, 0) 100%);
+          background-position: 0 0;
         }
       }
     }
@@ -449,6 +465,11 @@ $noUi-css-prefix: range;
 
             .filter_price {
               padding: 1em 0;
+
+              .range_wrapper {
+                padding-left: 15px;
+                padding-right: 15px;
+              }
 
               input {
                 width: 22.4%;
