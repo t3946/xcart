@@ -120,7 +120,7 @@ import Loader from "./components/Loader";
     $(document).on('click', 'a.mmodal', function(e){
         e.preventDefault();
         e.stopPropagation();
-        $(this).mmodal({skin:'front'});
+        $(this).mmodal({skin: $(this).data('modal-class') || 'front'});
     });
 
 

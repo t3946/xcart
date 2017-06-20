@@ -33,12 +33,29 @@
 
                 {if $subcategories|count > 0}
                 <section class="subcategories">
-                    <div class="row small-up-1 medium-up-2 large-up-4">
-                        {foreach $subcategories as $item index=$index}
-                            <div class="column {if $index > 11}more_items{/if}">
-                                <a href="{$item->getAbsoluteUrl()}" class="subcategory_item">{$item->category} ({$item->getFromQueryAttribute('pcount')})</a>
+                    <a href="#subdepartmens" class="hide-for-large mmodal sub-dep_button">
+                        See subdepartments
+                    </a>
+                    <div class="show-for-large" >
+                        <div id="subdepartmens">
+                            <div class="block-title show-for-modal">
+                                All subdepartments
                             </div>
-                        {/foreach}
+
+                            <div class="row small-up-1 medium-up-2 large-up-4 sub_list">
+                                {foreach $subcategories as $item index=$index}
+                                    <div class="column {if $index > 11}more_items{/if}">
+                                        <a href="{$item->getAbsoluteUrl()}" class="subcategory_item">
+                                            {$item->category}
+                                            <span class="count">
+                                                ({$item->getFromQueryAttribute('pcount')})
+                                            </span>
+                                        </a>
+                                    </div>
+                                {/foreach}
+                            </div>
+                        </div>
+
                     </div>
                 </section>
                 {/if}

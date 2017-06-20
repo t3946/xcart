@@ -5,10 +5,21 @@ body {
   &.mmodal-opened {}
 
   .mmodal-modal-bg {
-    z-index: 3;
+    z-index: 10 !important;
     background-color: rgba(0,0,0,.5);
 
     .mmodal-container {
+      @include breakpoint(medium up) {
+        width: 90vw !important;
+        max-width: map_get($breakpoints, xxlarge);
+      }
+
+      @include breakpoint(medium down) {
+        width: 100vw !important;
+        min-height: 100vh;
+        margin:0;
+      }
+
       .mmodal-close{
         overflow: hidden;
         text-indent: -999px;
@@ -30,7 +41,41 @@ body {
       }
       .mmodal-content {
         border-radius: 0;
+
+        @include breakpoint(medium down) {
+          min-height: 100vh;
+        }
+
+        .show-for-modal {
+          display: inherit;
+        }
+      }
+    }
+
+    &.front, &.filters {
+      .mmodal-container {
+        .mmodal-close {}
+        .mmodal-content {
+          padding: 0;
+
+          .block-title {
+            padding: 0 rem-calc(30);
+            text-transform: uppercase;
+            text-align: left;
+            background-color: #1e3f51;
+            color: #90a6b1;
+            line-height: 3rem;
+            font: {
+              size: 1.25rem;
+              weight: 600;
+            }
+          }
+        }
       }
     }
   }
+}
+
+.show-for-modal {
+  display: none;
 }

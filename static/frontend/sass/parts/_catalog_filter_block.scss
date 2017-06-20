@@ -416,39 +416,12 @@ $noUi-css-prefix: range;
 }
 
 .filters {
-  &.mmodal-modal-bg {
-    z-index: 10!important;
-  }
-
-  .mmodal-container {
-    @include breakpoint(medium up) {
-      width: 90vw !important;
-      max-width: map_get($breakpoints, xxlarge);
-    }
-
-    @include breakpoint(medium down) {
-      width: 100vw !important;
-      min-height: 100vh;
-      margin:0;
-    }
-  }
-
   .mmodal-content {
     padding: 0;
-
-    @include breakpoint(medium down) {
-      min-height: 100vh;
-    }
 
     .filter-block {
       .full { display: block; }
       .short { display: none; }
-
-      .block-title {
-        background-color: #1e3f51;
-        color: #90a6b1;
-        line-height: 3rem;
-      }
 
       .accordion {
         .accordion-item {
