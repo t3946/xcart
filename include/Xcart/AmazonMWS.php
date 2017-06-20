@@ -2031,6 +2031,13 @@ SQL;
         return $this;
     }
 
+    private $_saved = 0;
+
+    public function getCountSaved()
+    {
+        return $this->_saved;
+    }
+
     public function doListInventorySupply()
     {
         $this->dom_xml_arr = null;
@@ -2074,7 +2081,9 @@ SQL;
                             }
                             $oAmazonProductModel->report_date = $iReportDate;
                             if ($oAmazonProductModel->productid) {
-                                $oAmazonProductModel->save();
+                                if ($oAmazonProductModel->save()) {
+                                    $this->_saved++;
+                                }
                             }
                         }
                     }
