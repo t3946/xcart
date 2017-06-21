@@ -11,7 +11,6 @@
                     <span class="splash splash-sale show-for-large">Sale</span>
                 {/if}
 
-                {set $site = $.getSite}
                 {set $image = $item->images->limit(1)->get()}
                 {if $image}
                     {if $.isBot}
@@ -53,7 +52,12 @@
             </div>
 
             <div class="brand show-for-small">
-                Brand: <span class="value" itemprop="brand">{$item->brand->brand}</span>
+                {if $brand_page!}
+                    {set $brand = $brand_page}
+                {else}
+                    {set $brand = $item->brand}
+                {/if}
+                Brand: <a class="value" itemprop="brand" href="{$.app->router->url('brand:view:old', ['id' => $brand->brandid, 'slug' => 'TEMP'])}">{$brand->brand}</a>
             </div>
             {if $item.descr || $item.fulldescr || $item.seo_fulldescr}
                 {if $item.descr}

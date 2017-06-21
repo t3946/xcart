@@ -18,9 +18,11 @@ export default class Loader
         this.elements['container'] = $(element || "body");
         this.elements['bg'] = $('<div />').addClass('loader-bg');
         this.elements['wrapper'] = $('<div />').addClass('loader-wrapper');
+        this.elements['spinner'] = $('<div />').addClass('loader-spinner');
         this.elements['content'] = $('<div />').addClass('loader-container');
 
         this.elements['bg'].append(this.elements['wrapper']);
+        this.elements['wrapper'].append(this.elements['spinner']);
         this.elements['wrapper'].append(this.elements['content']);
     }
 

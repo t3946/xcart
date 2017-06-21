@@ -29,9 +29,9 @@
     "foundation-sites": "^6.3.1",
     "jQuery.dotdotdot": "dotdotdot#^1.8.3",
     "Waves": "waves#^0.7.5",
-    "materialize": "^0.98.2"
+    "materialize": "^0.98.2",
+    "PACE": "pace#^1.0.2",
+    "bourbon": "^4.3.4"
   },
-  "devDependencies": {
-    "PACE": "pace#^1.0.2"
-  }
+  "devDependencies": {}
 }

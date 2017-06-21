@@ -26,6 +26,11 @@ return [
         'namespace' => 'category'
     ],
     [
+        'route' => '/brand',
+        'path' => 'Modules.Brand.routes',
+        'namespace' => 'brand'
+    ],
+    [
         'route' => '/admin/reports',
         'path' => 'Modules.Reports.routes_admin',
         'namespace' => 'reports'

@@ -118,9 +118,13 @@ class ProductSortHelper
             }
         }
 
-        $oldOrder[] = 'categories__order_by';
-        $oldOrder[] = 'categories_link__orderby';
-        $qs->with(['categories_link']) ->order($oldOrder);
+        if ($this->category) {
+            $oldOrder[] = 'categories__order_by';
+            $oldOrder[] = 'categories_link__orderby';
+            $qs->with(['categories_link']);
+        }
+
+        $qs->order($oldOrder);
 
         return $qs;
     }

@@ -2,10 +2,10 @@
 
 namespace Modules\Product\Controllers;
 
+use Modules\Product\Helpers\ProductFilterHelper;
 use Modules\Product\Helpers\ProductSortHelper;
 use Modules\Product\Models\CategoryModel;
 use Modules\Product\Models\ProductModel;
-use Modules\Product\TemplateLibraries\FilterLibrary;
 use Xcart\App\Controller\Controller;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Pagination\DataSource\QuerySetDataSource;
@@ -13,6 +13,9 @@ use Xcart\App\Pagination\Pagination;
 
 class CategoryController extends Controller
 {
+    public $view = 'catalog/category.tpl';
+    public $filters = ['price', 'brand', 'filter'];
+
     public function beforeAction($action, $params)
     {
         if ( $this->getRequest()->getIsPost() && !empty($_POST['sort'])) {
@@ -24,22 +27,32 @@ class CategoryController extends Controller
         parent::beforeAction($action, $params);
     }
 
-    public function view_old($id, $slug)
+    public function actionViewOld($id, $slug)
     {
         $this->view_internal(CategoryModel::objects()->filter(['categoryid' => $id])->get());
     }
 
-    public function view($sku)
+    public function actionView($sku)
     {
         $this->view_internal(CategoryModel::objects()->filter(['productcode' => $sku])->get());
+    }
+
+    public function getQS($data)
+    {
+        return ProductModel::objects()
+                           ->filter([
+                                        'forsale' => 'Y',
+                                        'categories__categoryid__in' => CategoryModel::objects($data)->descendants(true)->select('pk')->order([]),
+                                    ]);
     }
 
     /**
      * @param CategoryModel|null $model
      *
+     * @throws \Exception
      * @throws \Xcart\App\Exceptions\HttpException
      */
-    private function view_internal($model = null)
+    protected function view_internal($model = null)
     {
         //@TODO: Если категория отключена, редирект на редирект на первую включенную категорию
 
@@ -50,22 +63,16 @@ class CategoryController extends Controller
         $orderBy = Xcart::app()->request->session->get('category_sort', ProductSortHelper::$default);
 
         /** @var \Xcart\App\Orm\QuerySet $pqs */
-        $pqs = ProductModel::objects()
-            ->filter([
-                 'forsale' => 'Y',
-                 'categories__categoryid__in' => CategoryModel::objects($model)->descendants(true)->select('pk')->order([]),
-            ]);
+        $pqs = $this->getQS($model);
 
-        $filters = [];
-        $form_data = $this->getRequest()->get->get('filter', []);
-        $filters = FilterLibrary::getFilterStructure($pqs, $form_data);
+        $filters = (new ProductFilterHelper($pqs, $this->getRequest()->get->get('filter', [])))->getFilterStructure($this->filters);
 
         if ($this->getRequest()->get->has('filter')) {
-            $pqs = FilterLibrary::getFiltrateQS($pqs, $form_data);
+            $pqs = (new ProductFilterHelper($pqs, $this->getRequest()->get->get('filter', [])))->getFiltrateQS();
         }
 
         $pqs = (new ProductSortHelper($pqs))
-            ->setCategory($model)
+            ->setCategory(($model instanceof  CategoryModel ? $model : null))
             ->getSortedQS($orderBy);
 
         $pager = new Pagination($pqs, ['pageSize' => 100, 'view' => 'core/pager/front_endless.tpl'], new QuerySetDataSource());
@@ -73,13 +80,13 @@ class CategoryController extends Controller
         if ($this->getRequest()->getIsAjax())
         {
             $this->jsonResponse([
-                'content' => $this->render('catalog/category.tpl', [ 'model' => $model, 'pager' => $pager,]),
+                'content' => $this->render($this->view, [ 'model' => $model, 'pager' => $pager,]),
                 'pager' => $pager->render(),
                 'page_count' => $this->render('catalog/parts/_page_count.tpl', [ 'model' => $model, 'pager' => $pager,]),
             ]);
         }
         else {
-            echo $this->render('catalog/category.tpl', [
+            echo $this->render($this->view, [
                 'model' => $model,
                 'pager' => $pager,
                 'sort'  => $orderBy,

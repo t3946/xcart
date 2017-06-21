@@ -1,5 +1,7 @@
 {extends  $.request->getIsAjax() ? "ajax.tpl" : "base.tpl"}
 
+{set $site = $.getSite}
+
 {block "before-content"}
     {if !$.request->getIsAjax()}
     <div class="row">

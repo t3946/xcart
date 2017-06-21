@@ -10,12 +10,12 @@ use Xcart\App\Main\Xcart;
 
 class DefaultController extends Controller
 {
-    public function view_old($id, $slug)
+    public function actionViewOld($id, $slug)
     {
         $this->view_internal(ProductModel::objects()->filter(['productid' => $id])->get());
     }
     
-    public function view($sku)
+    public function actionView($sku)
     {
         $this->view_internal(ProductModel::objects()->filter(['productcode' => $sku])->get());
     }

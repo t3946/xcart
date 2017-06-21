@@ -2,7 +2,7 @@
 return [
     [
         'route' => '/{i:id}/{slug:slug}/',
-        'target' => ['\Modules\Product\Controllers\CategoryController', 'view_old'],
+        'target' => ['\Modules\Product\Controllers\CategoryController', 'actionViewOld'],
         'name' => 'view:old',
 //        'meta' => [
 //            'cache' => true,
@@ -11,7 +11,7 @@ return [
     ],
     [
         'route' => '/{i:id}/{slug:slug}',
-        'target' => ['\Modules\Product\Controllers\CategoryController', 'view_old'],
+        'target' => ['\Modules\Product\Controllers\CategoryController', 'actionViewOld'],
         'name' => 'view:old2',
 //        'meta' => [
 //            'cache' => true,

@@ -149,6 +149,11 @@ module.exports = {
                 'bower_components/mmodal/scss/'
             ]
         },
+        bourbon: {
+            scss_include: [
+                'bower_components/bourbon/app/assets/stylesheets/'
+            ]
+        },
         pace: {
             js_include: [
                 'bower_components/PACE/pace.js'
