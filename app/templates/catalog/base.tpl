@@ -2,16 +2,6 @@
 
 {set $site = $.getSite}
 
-{block "before-content"}
-    {if !$.request->getIsAjax()}
-    <div class="row">
-        <div class="columns large-12">
-            {include "base/_breadcrumbs.tpl"}
-        </div>
-    </div>
-    {/if}
-{/block}
-
 {block "content"}
     {if $.request->getIsAjax()}
         {foreach $pager->paginate() as $item }

@@ -3,6 +3,7 @@ namespace Modules\Product\Models;
 
 use Modules\Brand\Models\BrandModel;
 use Modules\Distributor\Models\DistributorModel;
+use Modules\Sites\Models\SiteModel;
 use Xcart\App\Components\Breadcrumbs;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\AutoMetaModel;
@@ -78,6 +79,12 @@ class ProductModel extends AutoMetaModel
                 'class' => HasManyField::className(),
                 'modelClass' => PricingModel::className(),
                 'link' => ['productid' => 'productid']
+            ],
+
+            'sites' => [
+                'class' => ManyToManyField::className(),
+                'modelClass' => SiteModel::className(),
+                'through' => ProductStorefrontModel::className(),
             ],
 
             'quick_prices' => [

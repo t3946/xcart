@@ -42,7 +42,7 @@ body {
       .loader-spinner {
         position: absolute;
         opacity: .5;
-        animation: load 1s infinite linear;
+        animation: load 1.5s infinite linear;
         background: {
           image: linear-gradient(to top, $loader-color 10%, rgba(255, 255, 255, 0) 100%)
         };

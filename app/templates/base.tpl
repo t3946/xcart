@@ -107,7 +107,13 @@
 
             <section id="content">
                 <section class="before-content">
-                    {block "before-content"}{/block}
+                    {block "before-content"}
+                        <div class="row">
+                            <div class="columns large-12">
+                                {include "base/_breadcrumbs.tpl"}
+                            </div>
+                        </div>
+                    {/block}
                 </section>
 
                 {block "content"}{/block}

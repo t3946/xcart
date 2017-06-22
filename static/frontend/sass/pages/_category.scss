@@ -9,8 +9,13 @@ $padding_container: rem-calc(18);
   }
 
   .top-block {
-    min-height: rem-calc(225);
     margin-bottom: rem-calc(10);
+  }
+
+  .top-block {
+    .image {
+      text-align: center;
+    }
   }
 
   .description {

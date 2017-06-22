@@ -6,7 +6,6 @@ use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\AutoMetaModel;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\CharField;
-use Xcart\App\Orm\Fields\IntField;
 
 /**
  * @property mixed brandid
@@ -53,7 +52,7 @@ class BrandModel extends AutoMetaModel
     {
         $bread = new Breadcrumbs();
 
-        $bread->add('Brands');
+        $bread->add('Brands', 'brand:list');
         $bread->add($this->brand, $this->getAbsoluteUrl());
         return $bread;
     }

@@ -11,7 +11,7 @@ body {
     .mmodal-container {
       @include breakpoint(medium up) {
         width: 90vw !important;
-        max-width: map_get($breakpoints, xxlarge);
+        max-width: 80rem;
       }
 
       @include breakpoint(medium down) {
