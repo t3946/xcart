@@ -208,7 +208,7 @@ class ProductModel extends AutoMetaModel
 
     public function getAbsoluteUrl()
     {
-        return Xcart::app()->router->url('product:view', ['sku' => $this->productcode]);
+        return Xcart::app()->router->url('catalog:product:view', ['sku' => $this->productcode]);
     }
     public function getBreadcrumbs()
     {

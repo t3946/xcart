@@ -6,34 +6,21 @@ return [
         'namespace' => 'main'
     ],
     [
-        'route' => '/admin/dashboard',
-        'path' => 'Modules.Dashboard.routes_admin',        
-        'namespace' => 'dashboard'
-    ],
-    [
-        'route' => '/demo',
-        'path' => 'Modules.Demo.routes',
-        'namespace' => 'demo'
-    ],
-    [
-        'route' => '/product',
+        'route' => '',
         'path' => 'Modules.Product.routes',
-        'namespace' => 'product'
+        'namespace' => 'catalog'
     ],
-    [
-        'route' => '/category',
-        'path' => 'Modules.Product.routes_category',
-        'namespace' => 'category'
-    ],
-    [
-        'route' => '/search',
-        'path' => 'Modules.Product.routes_search',
-        'namespace' => 'search'
-    ],
+
     [
         'route' => '/brand',
         'path' => 'Modules.Brand.routes',
         'namespace' => 'brand'
+    ],
+
+    [
+        'route' => '/admin/dashboard',
+        'path' => 'Modules.Dashboard.routes_admin',        
+        'namespace' => 'dashboard'
     ],
     [
         'route' => '/admin/reports',
@@ -44,5 +31,11 @@ return [
         'route' => '/admin/amazon',
         'path' => 'Modules.Amazon.routes_admin',
         'namespace' => 'amazon'
+    ],
+
+    [
+        'route' => '/demo',
+        'path' => 'Modules.Demo.routes',
+        'namespace' => 'demo'
     ],
 ];

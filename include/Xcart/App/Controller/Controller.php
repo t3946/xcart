@@ -89,9 +89,9 @@ class Controller
         return Xcart::app()->template->render($template, $params);
     }
 
-    public function redirect($url, $data = [], $status = 302)
+    public function redirect($url, $data = [], $status = 302, $query = [])
     {
-        $this->_request->redirect($url, $data, $status);
+        $this->_request->redirect($url, $data, $status, $query);
     }
 
     public function refresh()

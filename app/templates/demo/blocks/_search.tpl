@@ -1,5 +1,5 @@
 <div class="search-form-container">
-    <form action="/search" method="get">
+    <form action="{$.app->router->url('catalog:search')}" method="get">
         <input type="text" name='q' class="search" placeholder="Search art supply items, brands and categories"/>
 
         <button class="button-search show-for-large"></button>

@@ -87,7 +87,7 @@ class CategoryModel extends AutoMetaTreeModel
     {
         if ($this->categoryid)
         {
-            return Xcart::app()->router->url('category:view:old', ['id' => $this->categoryid, 'slug' => 'TEMP']);
+            return Xcart::app()->router->url('catalog:view:old', ['id' => $this->categoryid, 'slug' => 'TEMP']);
         }
 
         return false;

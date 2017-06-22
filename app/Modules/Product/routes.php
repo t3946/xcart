@@ -1,13 +1,43 @@
 <?php
 return [
+    /** PRODUCTS ROUTES */
     [
-        'route' => '/{slug:sku}',
+        'route' => '/product/{slug:sku}',
         'target' => ['\Modules\Product\Controllers\DefaultController', 'actionView'],
-        'name' => 'view'
+        'name' => 'product:view'
     ],
     [
-        'route' => '/{i:id}/{slug:slug}',
+        'route' => '/product/{i:id}/{slug:slug}',
         'target' => ['\Modules\Product\Controllers\DefaultController', 'actionViewOld'],
-        'name' => 'view:old'
+    ],
+
+
+    /** CATEGORY ROUTES */
+
+    [
+        'route' => '/category/{i:id}/{slug:slug}/',
+        'target' => ['\Modules\Product\Controllers\CategoryController', 'actionViewOld'],
+        'name' => 'view:old',
+//        'meta' => [
+//            'cache' => true,
+//            'cache_time' => 60
+//        ]
+    ],
+
+
+    /** SEARCH ROUTES */
+    [
+        'route' => '/search',
+        'target' => ['\Modules\Product\Controllers\SearchController', 'actionSearch'],
+        'name' => 'search',
+    ],
+
+    [
+        'route' => '/keyword/{slug:q}',
+        'target' => ['\Modules\Product\Controllers\SearchController', 'actionKeywords'],
+    ],
+    [
+        'route' => '/keyword/{slug:q}/',
+        'target' => ['\Modules\Product\Controllers\SearchController', 'actionKeywords'],
     ],
 ];
