@@ -3,23 +3,11 @@
 namespace Modules\Product\Controllers;
 
 use Modules\Product\Models\CategoryModel;
-use Xcart\App\Main\Xcart;
 
 class CategoryController extends AbstractCatalogController
 {
     public $view = 'catalog/category.tpl';
     public $filters = ['price', 'brand', 'filter'];
-
-    public function beforeAction($action, $params)
-    {
-        if ( $this->getRequest()->getIsPost() && !empty($_POST['sort'])) {
-            $this->getRequest()->session->add('category_sort', $_POST['sort']);
-            echo "OK";
-            Xcart::app()->end();
-        }
-
-        parent::beforeAction($action, $params);
-    }
 
     public function actionViewOld($id, $slug)
     {

@@ -26,6 +26,11 @@ return [
         'namespace' => 'category'
     ],
     [
+        'route' => '/search',
+        'path' => 'Modules.Product.routes_search',
+        'namespace' => 'search'
+    ],
+    [
         'route' => '/brand',
         'path' => 'Modules.Brand.routes',
         'namespace' => 'brand'
