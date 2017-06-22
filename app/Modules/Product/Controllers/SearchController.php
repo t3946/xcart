@@ -16,7 +16,7 @@ class SearchController extends AbstractCatalogController
     }
     public function actionSearch()
     {
-        echo $this->getRequest()->get->get('q', '');
+        echo $this->render($this->view, ['q' => $this->getRequest()->get->get('q', '')]);
 
 //        $this->view_internal(CategoryModel::objects()->filter(['productcode' => $sku])->get());
     }
