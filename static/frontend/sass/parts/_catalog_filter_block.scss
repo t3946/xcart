@@ -417,7 +417,8 @@ $noUi-css-prefix: range;
 
 .filters {
   .mmodal-content {
-    padding: 0;
+    padding-bottom: 85px !important;
+    min-height: 80vh;
 
     .filter-block {
       .full { display: block; }
@@ -497,11 +498,17 @@ $noUi-css-prefix: range;
       text-align: center;
       background-color: #fff;
 
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+
+      @include breakpoint(large up) {
+        margin-top: rem-calc(30);
+      }
+
       @include breakpoint(medium down) {
         position: fixed;
-        bottom: 0;
-        left: 0;
-        right: 0;
 
         padding: 10px 0;
       }

@@ -141,7 +141,7 @@ import Loader from "./components/Loader";
         $(this).mmodal({skin: $(this).data('modal-class') || 'front'});
     });
 
-    $(window).on('beforeunload unload', ()=>{
+    $(window).on('beforeunload unload pagehide', ()=>{
         loader.load();
     });
 
