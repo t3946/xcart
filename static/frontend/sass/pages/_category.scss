@@ -34,6 +34,23 @@ $padding_container: rem-calc(18);
       border-top: 1px solid #dcdcdc;
     }
 
+    .sub_list {
+      .more_items {
+        display: none;
+      }
+
+      &.full {
+        .more_items {
+          display: block;
+        }
+      }
+    }
+    .show_more {
+      font: {
+        size: 1.1em;
+      }
+    }
+
     .sub-dep_button {
       position: relative;
       display: inline-block;

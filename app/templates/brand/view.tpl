@@ -44,7 +44,7 @@
                                 All departments
                             </div>
 
-                            <div class="row small-up-1 medium-up-2 large-up-4 sub_list">
+                            <div class="row small-up-1 medium-up-2 large-up-4 sub_list" id="sub_list">
                                 {foreach $categories as $item index=$index}
                                     <div class="column {if $index > 11}more_items{/if}">
                                         <a href="{$item->getAbsoluteUrl()}" class="subcategory_item">
@@ -55,6 +55,14 @@
                                         </a>
                                     </div>
                                 {/foreach}
+                            </div>
+                            <div class="row align-right">
+                                <div class="columns large-3">
+
+                                    <span class="hide-for-modal show_more" data-target="#sub_list" data-text-more="More categories" data-text-less="Less categories">
+                                        More categories
+                                    </span>
+                                </div>
                             </div>
                         </div>
 

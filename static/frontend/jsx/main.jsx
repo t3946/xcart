@@ -119,6 +119,22 @@ import Loader from "./components/Loader";
     });
 
 
+    $(document).on('click', '.show_more', function(e){
+        let $this = $(this);
+        let $target = $($this.data('target'));
+
+        if (!$target.hasClass('full')) {
+            $target.addClass('full');
+
+            $this.html($this.data('text-less'));
+        }
+        else {
+            $target.removeClass('full');
+
+            $this.html($this.data('text-more'));
+        }
+    });
+
     $(document).on('click', 'a.mmodal', function(e){
         e.preventDefault();
         e.stopPropagation();
