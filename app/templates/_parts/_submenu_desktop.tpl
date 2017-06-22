@@ -1,7 +1,3 @@
-{set $has_banner = rand(0,1)}
-{*{set $has_banner = false}*}
-{set $menus = $.getDepartmentSubmenu($model, $has_banner)}
-
 {if $menus|count > 0}
     <div class="submenu-container">
         {*<nav class="has-column-{if $menus.columns > 3}3{else}{$menus.columns}{/if}">*}

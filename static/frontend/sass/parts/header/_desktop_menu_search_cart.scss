@@ -6,10 +6,24 @@ $view_all_height: rem-calc(22);
   padding-right: 10px;
 }
 
+.category-menu-list-wrapper {
+  position: absolute;
+  width: 100%;
+  max-width: 80rem;
+
+  @include breakpoint(large up) {
+    //max-width: 100%;
+    @include grid-row-size();
+    @include grid-column-gutter();
+    @include grid-row-nest();
+  }
+}
+
 .desktop_menu_search_cart {
   width: 100%; //foundation sticky
   height: rem-calc(50);
   line-height: rem-calc(50);
+  position: relative;
 
   @include breakpoint(large up) {
     background: #0d2431;
@@ -135,25 +149,29 @@ $view_all_height: rem-calc(22);
   .category-menu-list-container {
     position: relative;
     z-index: 100;
+    //padding-right: 15px;
+    //@include grid-column-gutter();
+    //max-width: grid-column(3);
 
-    .bg-container {
-      @include main-menu-container();
-      position: absolute;
-      min-height: 100%;
-      width: 100%;
-
-      .bg-color {
-        position: absolute;
-        background-color: #f5f5f5;
-        min-height: 100%;
-        right: 10px;
-        left: 0;
-      }
-    }
+    //.bg-container {
+    //  @include main-menu-container();
+    //  position: absolute;
+    //  min-height: 100%;
+    //  width: 100%;
+    //
+    //  .bg-color {
+    //    position: absolute;
+    //    background-color: #f5f5f5;
+    //    min-height: 100%;
+    //    right: 10px;
+    //    left: 0;
+    //  }
+    //}
 
   }
 
   .category-menu-list {
+    background-color: #f5f5f5;
     border: none;
     position: relative;
     min-height: 420px;
@@ -164,7 +182,9 @@ $view_all_height: rem-calc(22);
     }
 
     .category-menu-item {
-      @include main-menu-container();
+      //@include main-menu-container();
+      //@include grid-column-gutter();
+      //max-width: grid-column(3);
 
       .item-container {
         text-align: left;
@@ -205,6 +225,10 @@ $view_all_height: rem-calc(22);
       &:hover {
         .submenu-container {
           display: block;
+
+          width: 323%;
+          left: 100%;
+          //max-width: grid-column(9);
         }
       }
     }
@@ -214,7 +238,7 @@ $view_all_height: rem-calc(22);
       position: absolute;
       width: 100%;
       bottom: 0;
-      @include main-menu-container();
+      //@include main-menu-container();
     }
 
     .view-all {
@@ -249,7 +273,7 @@ $view_all_height: rem-calc(22);
     right: 0;
     left: 24.6%;
     top: 0;
-    margin-left: -10px;
+    //margin-left: -10px;
     min-height: 100%;
 
     nav {

@@ -3,10 +3,6 @@ import MouseSpeed from './MouseSpeed';
 export default class DepartmentMenu
 {
     constructor() {
-        this.init();
-    }
-
-    init() {
         this.timers = {};
         this.elemets = {};
         this.options = {
@@ -14,24 +10,32 @@ export default class DepartmentMenu
             classes: {
                 'main-button': '.category-menu',
                 'menu-wrapper': '.category-menu-list-wrapper',
+                'menu-row': '.category-menu-list-row',
                 'menu-container': '.category-menu-list-container',
-                'menu-item': '.category-menu-item',
+                'menu-item': '.category-menu-list-container .item-container',
                 'submenu-container': '.submenu-container',
             }
         };
-        this.ms = new MouseSpeed();
 
-        this.hasTouch = 'ontouchstart' in window || (typeof window.ontouchstart !== 'undefined');
+        this.ms = new MouseSpeed();
+        this.hasTouch = this.checkTouch();
+
+        this.init();
+    }
+
+    init() {
+        this.elemets['button'] = $(this.options.classes['main-button']);
+        this.elemets['container'] = $(this.options.classes['menu-container']);
+        this.elemets['wrapper'] = $(this.options.classes['menu-wrapper']);
+        this.elemets['row'] = $(this.options.classes['menu-row']);
+        this.elemets['submenu-container'] = $(this.options.classes['submenu-container']);
+        this.elemets['items'] = $(this.options.classes['menu-item']);
 
         this._bind();
     }
 
     _bind() {
-        this.elemets['button'] = $(this.options.classes['main-button']);
-        this.elemets['container'] = $(this.options.classes['menu-container']);
-        this.elemets['wrapper'] = $(this.options.classes['menu-wrapper']);
-        this.elemets['submenu-container'] = $(this.options.classes['submenu-container']);
-        this.elemets['items'] = this.elemets['container'].find(this.options.classes['menu-item']);
+        let self = this;
 
         this.elemets['button'].on('mouseenter touchstart', (e) => {
             clearTimeout(this.timers['_hide']);
@@ -42,27 +46,23 @@ export default class DepartmentMenu
             clearTimeout(this.timers['_hide']);
         });
 
-        if (!this.hasTouch) {
-            this.elemets['submenu-container'].on('click', (e)=> {
+        this.elemets['row'].on('click', (e)=>{
+            let str = this.options.classes['menu-row'].substr(1);
+
+            if ($(e.target).hasClass(str)) {
+                clearTimeout(this.timers['_hide']);
+                this._hide();
+            }
+        });
+
+
+        this.elemets['items'].on('click', function(e) {
+
+            if ($(this).hasClass('has-child') || self.checkTouch()) {
                 e.preventDefault();
                 e.stopPropagation();
-            });
-
-            this.elemets['wrapper'].on('click', (e) => {
-                clearTimeout(this.timers['_hide']);
-                this._hide();
-            });
-            this.elemets['container'].on('click', (e) => {
-                clearTimeout(this.timers['_hide']);
-                this._hide();
-            });
-
-        }
-        else {
-            this.elemets['items'].on('click', (e) => {
-                e.preventDefault();
-            });
-        }
+            }
+        });
 
         this.elemets['button'].on('mouseleave', (e) => {
             this.timers['_hide'] = setTimeout(()=> {
@@ -88,22 +88,16 @@ export default class DepartmentMenu
             this.elemets['container'].addClass('submenu-active');
         });
 
-
-        // this.elemets['wrapper'].on('click', () => {
-        //     clearTimeout(this.timers['_hide']);
-        //     this._hide();
-        // });
-
         $(document).on('click:shadow', (e)=>{
             clearTimeout(this.timers['_hide']);
             this._hide();
         });
+    }
 
-        // if (this.hasTouch) {
-        //     this.elemets['button'].on('click', (e) => { e.preventDefault()});
-        //     this.elemets['items'].on('click', (e) => { e.preventDefault()});
-        // }
+    checkTouch() {
+        let $doc = $('html');
 
+        return ($doc.attr('data-whatintent') === 'touch' || $doc.attr('data-whatinput') === 'touch');
     }
 
     _show_menu() {
