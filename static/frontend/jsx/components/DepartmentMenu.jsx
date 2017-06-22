@@ -95,9 +95,7 @@ export default class DepartmentMenu
     }
 
     checkTouch() {
-        let $doc = $('html');
-
-        return ($doc.attr('data-whatintent') === 'touch' || $doc.attr('data-whatinput') === 'touch');
+        return (window.whatInput.ask('loose') === 'touch' || window.whatInput.ask() === 'touch' );
     }
 
     _show_menu() {

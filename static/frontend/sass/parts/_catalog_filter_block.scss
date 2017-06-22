@@ -14,6 +14,8 @@ $noUi-css-prefix: range;
   }
 
   .accordion {
+    border-bottom: 1px solid #dcdcdc;
+
     .accordion-item {
       .accordion-title {
         border: none;
@@ -32,7 +34,7 @@ $noUi-css-prefix: range;
         transition: all 0.4s linear;
 
         &:hover {
-          background: none;
+          //background: none;
         }
       }
 
@@ -269,7 +271,7 @@ $noUi-css-prefix: range;
       }
       &:last-child {
         .accordion-title {
-          border-bottom: 1px solid #dcdcdc;
+          //border-bottom: 1px solid #dcdcdc;
         }
       }
 
