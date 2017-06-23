@@ -1878,7 +1878,7 @@ if ($mode == "search") {
 
                     if ($cidev_warning_code > 0) {
                         if ($v["warning_code"] != $cidev_warning_code) {
-                            db_query("UPDATE $sql_tbl[products] SET warning_code='$cidev_warning_code' WHERE productid='$v[productid]'");
+//                            db_query("UPDATE $sql_tbl[products] SET warning_code='$cidev_warning_code' WHERE productid='$v[productid]'");
                             $products[$k]["warning_code"] = $cidev_warning_code;
                         }
                         $products[$k]["avail"] = 0;
