@@ -11,12 +11,21 @@ class CategoryController extends AbstractCatalogController
 
     public function actionViewOld($id, $slug)
     {
-        $this->view_internal(CategoryModel::objects()->filter(['categoryid' => $id])->get());
+        $this->preView(CategoryModel::objects()->filter(['categoryid' => $id])->get());
     }
 
     public function actionView($sku)
     {
-        $this->view_internal(CategoryModel::objects()->filter(['productcode' => $sku])->get());
+        $this->preView(CategoryModel::objects()->filter(['productcode' => $sku])->get());
+    }
+
+    public function preView($model)
+    {
+        if (!$model) {
+            $this->error();
+        }
+
+        $this->view_internal($model);
     }
 
     public function getQS($data)
