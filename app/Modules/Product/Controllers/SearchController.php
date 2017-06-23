@@ -36,13 +36,17 @@ class SearchController extends AbstractCatalogController
         $this->getProductFromElastic($q);
 
         if (empty($this->ids)) {
-
+            echo $this->render('catalog/search_empty.tpl', [
+                'model' => $q,
+                'breadcrumbs' => $this->getBreadcrumbs($q),
+            ]);
+            die();
         }
 
         $this->view_internal($q);
     }
 
-    public function getProductFromElastic($search)
+    public function getProductFromElastic($search, $min_score = null)
     {
         /** @var \Modules\Sites\SitesModule $siteModule */
         /** @var \Modules\Core\CoreModule $coreModule */
@@ -52,12 +56,16 @@ class SearchController extends AbstractCatalogController
 
         $classElastic = new ElasticSearch($config["ElasticSearch_options"], $siteModule->getSite()->domain);
         $classElastic->setSource("*._id");
-        $classElastic->setMinScore($config["ElasticSearch_options"]["search_results_minimum_score_value"]);
+        $classElastic->setMinScore($min_score ?: $config["ElasticSearch_options"]["search_results_minimum_score_value"]);
         $classElastic->setType('product');
         $classElastic->setQueryParams($search);
 
         $result = $classElastic->query(['from' => 0, 'size' => 1000]);
         $items = $result["hits"]["hits"];
+
+        if ($items) {
+            $items = $this->getProductFromElastic($search, .01);
+        }
 
         usort($items, function($a, $b){
             if ($a['_score'] == $b['_score']) {
