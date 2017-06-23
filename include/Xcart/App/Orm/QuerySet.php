@@ -439,6 +439,9 @@ class QuerySet extends QuerySetBase
                 else if ($value instanceof Manager || $value instanceof QuerySet) {
                     return $value->getQueryBuilder();
                 }
+//                else if ($value instanceof Expression) {
+//                    return $value->toSQL($this->getQueryBuilder());
+//                }
                 else if (is_string($value)) {
                     $direction = substr($value, 0, 1) === '-' ? '-' : '';
 

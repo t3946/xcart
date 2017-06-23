@@ -1,8 +1,7 @@
 {extends  $.request->getIsAjax() ? "ajax.tpl" : "base.tpl"}
 
-{set $site = $.getSite}
-
 {block "content"}
+    {set $site = $.getSite}
     {if $.request->getIsAjax()}
         {foreach $pager->paginate() as $item }
             {include "catalog/parts/_catalog_list_item.tpl" item=$item}
@@ -15,7 +14,7 @@
         <div class="row">
             <div class="columns large-2 show-for-large">
                 <div class="firm_cont">
-                    <form action="{$.request->getMatchingUrl()}" type="get"  id="filter_form" data-ajax-send="off">
+                    <form action="{$.request->getMatchingUrl(['q' => $.request->get->get('q')])}" type="get"  id="filter_form" data-ajax-send="off">
                         <div class="filters_section advanced">
                             {block "catalog-filter"}
                                 {*{include "catalog/parts/_filter.tpl" modal_class='filter advanced' filters=[]}*}

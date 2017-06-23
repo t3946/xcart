@@ -15,6 +15,7 @@ abstract class AbstractCatalogController extends Controller
 {
     public $view = '';
     public $model = null;
+    public $sort = null;
     public $filters = ['price', 'brand', 'filter'];
 
     public function beforeAction($action, $params)
@@ -24,6 +25,8 @@ abstract class AbstractCatalogController extends Controller
             echo "OK";
             Xcart::app()->end();
         }
+
+        $this->sort = Xcart::app()->request->session->get('category_sort', ProductSortHelper::$default);
 
         parent::beforeAction($action, $params);
     }
@@ -38,6 +41,34 @@ abstract class AbstractCatalogController extends Controller
         return ProductModel::objects()->filter([ 'forsale' => 'Y' ]);
     }
 
+    /**
+     * @param \Xcart\App\Orm\QuerySet $qs
+     * @param CategoryModel|[] $qs
+     *
+     * @return \Xcart\App\Orm\Manager|\Xcart\App\Orm\QuerySet
+     */
+    public function getSortedQS($qs, $model = null)
+    {
+        return (new ProductSortHelper($qs))
+            ->setCategory(($model instanceof CategoryModel ? $model : null))
+            ->getSortedQS($this->sort);
+    }
+
+    /**
+     * @param \Xcart\App\Orm\QuerySet $qs
+     *
+     * @return \Xcart\App\Pagination\Pagination
+     */
+    public function getPager($qs)
+    {
+        return new Pagination($qs, ['pageSize' => 100, 'view' => 'core/pager/front_endless.tpl'], new QuerySetDataSource());
+    }
+
+    /**
+     * @param $data
+     *
+     * @return \Xcart\App\Components\Breadcrumbs|array|null
+     */
     public function getBreadcrumbs($data)
     {
         return $data->getBreadcrumbs();
@@ -66,11 +97,8 @@ abstract class AbstractCatalogController extends Controller
             $pqs = (new ProductFilterHelper($pqs, $this->getRequest()->get->get('filter', [])))->getFiltrateQS();
         }
 
-        $pqs = (new ProductSortHelper($pqs))
-            ->setCategory(($model instanceof  CategoryModel ? $model : null))
-            ->getSortedQS($orderBy);
-
-        $pager = new Pagination($pqs, ['pageSize' => 100, 'view' => 'core/pager/front_endless.tpl'], new QuerySetDataSource());
+        $pqs = $this->getSortedQS($pqs);
+        $pager = $this->getPager($pqs);
 
         if ($this->getRequest()->getIsAjax())
         {

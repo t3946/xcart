@@ -9,6 +9,16 @@ use Xcart\App\Module\Module;
 
 class CoreModule extends Module
 {
+    private static $config;
+
+    public static function getGlobalConfig()
+    {
+        if (!self::$config) {
+            self::$config = GlobalConfig::getInstance()->setOldMode();
+        }
+
+        return self::$config;
+    }
 
     public static function onApplicationRun()
     {
@@ -37,7 +47,7 @@ class CoreModule extends Module
 
 
         $template->addAccessorSmart("global_config", "config", Fenom::ACCESSOR_PROPERTY);
-        $template->global_config = GlobalConfig::getInstance()->setOldMode();
+        $template->global_config = self::getGlobalConfig();
 
         $template->addAccessorSmart("detector", "detector", Fenom::ACCESSOR_PROPERTY);
         $template->detector = new MobileDetect();

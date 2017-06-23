@@ -11,7 +11,7 @@
 
             </div>
             <div class="columns large-10">
-                <h1 class="title">{$model}</h1>
+                <h1 class="title">Showing result for "{$model}"</h1>
             </div>
         </div>
     {/block}

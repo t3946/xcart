@@ -22,6 +22,7 @@ class ProductFilterHelper
      */
     public function __construct($qs, array $form_data = []) {
         $this->qs = clone $qs;
+        $this->qs->order([]);
         $this->form_data = $form_data;
         return $this;
     }

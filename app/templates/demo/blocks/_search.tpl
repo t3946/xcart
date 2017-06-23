@@ -1,9 +1,9 @@
 <div class="search-form-container">
     <form action="{$.app->router->url('catalog:search')}" method="get">
-        <input type="text" name='q' class="search" placeholder="Search art supply items, brands and categories"/>
+        <input type="text" name='q' class="search" placeholder="Search art supply items, brands and categories" value="{$.app->request->get->get('q', '')}"/>
 
         <button class="button-search show-for-large"></button>
-        <a class="button-clear"></a>
+        <a class="button-clear {if $.app->request->get->get('q')}active{/if}"></a>
 
 
         <div class="hide hidden-search">

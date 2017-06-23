@@ -696,10 +696,10 @@ class HttpRequest extends Request
         $this->redirect($this->getUrl());
     }
 
-    public function getMatchingUrl()
+    public function getMatchingUrl($query = [])
     {
         if ($match = $this->getMatchRouting()) {
-            return Xcart::app()->router->url($match['name'], $match['params']);
+            return Xcart::app()->router->url($match['name'], $match['params'], $query);
         }
 
         return $this->getUrl();
