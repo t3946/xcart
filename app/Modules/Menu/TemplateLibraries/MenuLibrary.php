@@ -114,7 +114,7 @@ class MenuLibrary extends TemplateLibrary
      */
     public static function getDepartmentSubmenu(CategoryModel $category ,$has_banner = false)
     {
-        $collection = $category->getSubcategories(false, 2);
+        $collection = $category->getSubcategories(true, 2);
 
         // Trees mapped
         $items = [];

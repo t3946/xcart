@@ -38,6 +38,11 @@ abstract class AbstractCatalogController extends Controller
         return ProductModel::objects()->filter([ 'forsale' => 'Y' ]);
     }
 
+    public function getBreadcrumbs($data)
+    {
+        return $data->getBreadcrumbs();
+    }
+
     public function getAdvancedData($data = null) { return []; }
 
     /**
@@ -48,12 +53,6 @@ abstract class AbstractCatalogController extends Controller
      */
     protected function view_internal($model = null)
     {
-        //@TODO: Если категория отключена, редирект на редирект на первую включенную категорию
-
-        if (!$model) {
-            $this->error();
-        }
-
         $this->model = $model;
 
         $orderBy = Xcart::app()->request->session->get('category_sort', ProductSortHelper::$default);
@@ -82,12 +81,12 @@ abstract class AbstractCatalogController extends Controller
             ]);
         }
         else {
-            echo $this->render($this->view, array_merge([
+            echo $this->render($this->view, array_replace([
                 'model' => $model,
                 'pager' => $pager,
                 'sort'  => $orderBy,
                 'sort_arr'  => ProductSortHelper::$orderBy,
-                'breadcrumbs' => $model->getBreadcrumbs(),
+                'breadcrumbs' => $this->getBreadcrumbs($model),
                 'filters' => $filters,
             ], $this->getAdvancedData($model)));
         }

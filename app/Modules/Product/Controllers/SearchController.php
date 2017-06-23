@@ -2,6 +2,8 @@
 
 namespace Modules\Product\Controllers;
 
+use Xcart\App\Components\Breadcrumbs;
+
 class SearchController extends AbstractCatalogController
 {
     public $view = 'catalog/search.tpl';
@@ -16,7 +18,10 @@ class SearchController extends AbstractCatalogController
     }
     public function actionSearch()
     {
-        echo $this->render($this->view, ['q' => $this->getRequest()->get->get('q', '')]);
+        echo $this->render($this->view, [
+            'q' => $this->getRequest()->get->get('q', ''),
+            'breadcrumbs' => $this->getBreadcrumbs([]),
+        ]);
 
 //        $this->view_internal(CategoryModel::objects()->filter(['productcode' => $sku])->get());
     }
@@ -24,5 +29,13 @@ class SearchController extends AbstractCatalogController
     public function getQS($data)
     {
 //        return parent::getQS($data)->filter(['categories__categoryid__in' => CategoryModel::objects($data)->descendants(true)->select('pk')->order([])]);
+    }
+
+    public function getBreadcrumbs($data)
+    {
+        $bread = new Breadcrumbs();
+        $bread->add('Search');
+
+        return $bread;
     }
 }
