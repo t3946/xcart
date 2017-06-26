@@ -299,6 +299,15 @@ function send_question_email_form(){
         {elseif $tab.tpl eq "_Brand_"}
 
 <br />
+{php}
+    $this->assign("arr_schemas", [
+        'brand' => [
+            'id' => 'so_brand',
+            'itemtype' => 'http://schema.org/Brand',
+            'itemprop' => 'brand',
+        ]
+    ]);
+{/php}
 {capture name=dialog}
 
 {if $brand_image.filename ne ""}
@@ -316,7 +325,7 @@ function send_question_email_form(){
 </p>
 
 {/capture}
-{include file="dialog.tpl" title=$brandid_brands_info[$product.brandid].brand content=$smarty.capture.dialog title_itemprop='brand' title_id="so_brand" extra='width="100%"' use_h2="Y" }
+{include file="dialog.tpl" title=$brandid_brands_info[$product.brandid].brand content=$smarty.capture.dialog title_itemprop='brand' extra='width="100%"' use_h2="Y" }
 
         {elseif $tab.tpl eq "_product_question_tpl_"}
 {* --------------------------------------------------*}
