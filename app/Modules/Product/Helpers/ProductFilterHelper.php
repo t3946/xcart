@@ -138,6 +138,13 @@ class ProductFilterHelper
 
                         }
                     }
+
+                    foreach ($list as $key => $filter)
+                    {
+                        if (count($filter['values']) < 2) {
+                            unset($list[$key]);
+                        }
+                    }
                 }
             }
 
