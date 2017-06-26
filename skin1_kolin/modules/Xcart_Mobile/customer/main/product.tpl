@@ -40,11 +40,6 @@ vim: set ts=2 sw=2 sts=2 et:
 
 {assign var="oStorefront" value=$oProduct->getStoreFront()}
 
-<span id="so_brand" itemprop="brand" itemscope="" itemtype="//schema.org/Brand">
-    <span itemprop="name" content="{$product.cidev_brand_name}">    </span>
-    <span itemprop="url" content="{$oStorefront->getStoreFrontURL()}/brand/{$product.brandid}/">    </span>
-</span>
-
 <span id="so_manuf" itemprop="manufacturer" itemscope="" itemtype="//schema.org/Organization">
 	<span itemprop="name" content="{$product.manufacturer}">
 	</span>
@@ -321,7 +316,7 @@ function send_question_email_form(){
 </p>
 
 {/capture}
-{include file="dialog.tpl" title=$brandid_brands_info[$product.brandid].brand content=$smarty.capture.dialog extra='width="100%"' use_h2="Y" }
+{include file="dialog.tpl" title=$brandid_brands_info[$product.brandid].brand content=$smarty.capture.dialog title_itemprop='brand' title_id="so_brand" extra='width="100%"' use_h2="Y" }
 
         {elseif $tab.tpl eq "_product_question_tpl_"}
 {* --------------------------------------------------*}
