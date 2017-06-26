@@ -19,16 +19,14 @@ class SearchSuggestionHelper
 
         $this->search = $search;
         $this->elastic = new ElasticSearch($config["ElasticSearch_options"], $siteModule->getSite()->domain);
-        $this->elastic->setSource("*._id");
+//        $this->elastic->setSource("*._id");
         $this->elastic->setMinScore($config_min_scope);
-        $this->elastic->setType('product');
+//        $this->elastic->setType('product');
         $this->elastic->setQueryParams($search);
     }
 
     public function elastic_suggestion($count, array $html = [])
     {
-
-
         $query = /** @lang JSON */ <<<JSON
 {
     "suggest" : {
@@ -36,8 +34,8 @@ class SearchSuggestionHelper
         "simple_phrase" : {
             "phrase" : {
                 "highlight": {
-                  "pre_tag": "<em>",
-                  "post_tag": "</em>"
+                  "pre_tag": "<span class='higlight'>",
+                  "post_tag": "</span>"
                 },
                 "field" :  "productname",
                 "size" :   5,
@@ -57,19 +55,17 @@ class SearchSuggestionHelper
                                   }
                             } ,
                             {
-                             "query_string": {
-                                "query": "{{suggestion}}",
-                                "analyzer": "snowball",
-                               "fields": ["productname.productname^1.5","sku","upc","brand.brand^0.5","description.description"]
-                                                     }
+                                "query_string": {
+                                  "query": "{{suggestion}}",
+                                  "analyzer": "snowball",
+                                  "fields": ["productname.productname^1.5","sku","upc","brand.brand^0.5","description.description"]
+                                }
                             },
-                                {
-                            "match_phrase_prefix": {
-                                "sku_original": "{{suggestion}}"
-                                           }
-                                 }
-                        
-                            ]
+                            {
+                                "match_phrase_prefix": {
+                                  "sku_original": "{{suggestion}}"
+                                }
+                            }]
                         }
                     }
                 }
@@ -78,6 +74,11 @@ class SearchSuggestionHelper
     }
 }
 JSON;
+        $result = $this->elastic->query(['size' => 5, 'from' => 0]);
+
+        func_dump($result);
+        die();
+
 
         $suggests = array();
 
@@ -92,6 +93,9 @@ JSON;
                 }
             }
         }
+
+
+        return $suggests;
     }
 
 }

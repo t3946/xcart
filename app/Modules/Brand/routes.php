@@ -26,11 +26,11 @@ return [
     [
         'route' => '/{slug:sku}',
         'target' => ['\Modules\Brand\Controllers\DefaultController', 'actionView'],
-        'name' => 'view'
+        'name' => 'view:new'
     ],
     [
         'route' => '/{i:id}/{slug:slug}',
         'target' => ['\Modules\Brand\Controllers\DefaultController', 'actionViewOld'],
-        'name' => 'view:old'
+        'name' => 'view'
     ],
 ];

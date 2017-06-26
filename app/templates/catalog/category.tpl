@@ -47,9 +47,11 @@
                                     <div class="column {if $index > 11}more_items{/if}">
                                         <a href="{$item->getAbsoluteUrl()}" class="subcategory_item">
                                             {$item->category}
-                                            <span class="count">
-                                                ({$item->getFromQueryAttribute('pcount')})
-                                            </span>
+                                            {if $item->getFromQueryAttribute('pcount')}
+                                                <span class="count">
+                                                    ({$item->getFromQueryAttribute('pcount')})
+                                                </span>
+                                            {/if}
                                         </a>
                                     </div>
                                 {/foreach}

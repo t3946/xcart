@@ -94,48 +94,54 @@ class ProductFilterHelper
         if (in_array('filter', $types)) {
             $tqs = clone $this->qs;
             $tqs = $tqs->filter(['filter_values__fv_active' => 'Y'])->order([]);
-            $filters = FilterModel::objects()
-                                  ->filter(['f_active' => 'Y',
-                                            'f_id__in' => $tqs->select(['filter_values__f_id'])])
-                                  ->order(['f_order_by'])
-                                  ->cache(300)->valuesList([]);
+            $f_ids = $tqs->cache(300)->group(['filter_values__f_id'])->valuesList(['filter_values__f_id'], true);
 
-            if ($filters) {
+            if ($f_ids) {
+                $filters = FilterModel::objects()
+                                      ->filter(['f_active' => 'Y',
+                                                'f_id__in' => $f_ids])
+                                      ->order(['f_order_by'])
+                                      ->cache(300)->valuesList([]);
 
-                $values = $tqs->with(['filter_values'])
-                              ->select(['filter_values__fv_name', 'filter_values__fv_id', 'filter_values__f_id', new Count('*', 'count')])
-                              ->order(['filter_values__f_id','filter_values__fv_order_by','filter_values__fv_name'])
-                              ->group(['filter_values__fv_id'])
-                              ->asArray()->cache(300)->all();
+                if ($filters) {
+
+                    $values = $tqs->with(['filter_values'])
+                                  ->select(['filter_values__fv_name', 'filter_values__fv_id', 'filter_values__f_id', new Count('*', 'count')])
+                                  ->order(['filter_values__f_id','filter_values__fv_order_by','filter_values__fv_name'])
+                                  ->group(['filter_values__fv_id'])
+                                  ->asArray()->cache(300)->all();
 
 
-                foreach ($filters as $filter)
-                {
-                    $list[$filter['f_id']] = [
-                        'type' => 'list',
-                        'key' => 'filter',
-                        'name' =>$filter['f_name'],
-                        'changed' => false,
-                        'values' => []
-                    ];
-                }
-
-                foreach ($values as $value)
-                {
-                    if ($list[$value['f_id']]) {
-                        $checked = (!empty($this->form_data['filter']) && in_array($value['fv_id'],$this->form_data['filter']));
-
-                        $list[$value['f_id']]['changed'] = $list[$value['f_id']]['changed'] ?: $checked;
-                        $list[$value['f_id']]['values'][] = [
-                            'name' => $value['fv_name'],
-                            'value' => $value['fv_id'],
-                            'count' => $value['count'],
-                            'checked' => $checked,
+                    foreach ($filters as $filter)
+                    {
+                        $list[$filter['f_id']] = [
+                            'type' => 'list',
+                            'key' => 'filter',
+                            'name' =>$filter['f_name'],
+                            'changed' => false,
+                            'values' => []
                         ];
+                    }
 
+                    foreach ($values as $value)
+                    {
+                        if ($list[$value['f_id']]) {
+                            $checked = (!empty($this->form_data['filter']) && in_array($value['fv_id'],$this->form_data['filter']));
+
+                            $list[$value['f_id']]['changed'] = $list[$value['f_id']]['changed'] ?: $checked;
+                            $list[$value['f_id']]['values'][] = [
+                                'name' => $value['fv_name'],
+                                'value' => $value['fv_id'],
+                                'count' => $value['count'],
+                                'checked' => $checked,
+                            ];
+
+                        }
                     }
                 }
             }
+
+
         }
 
         return $list;

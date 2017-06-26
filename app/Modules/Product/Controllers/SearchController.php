@@ -41,7 +41,7 @@ class SearchController extends AbstractCatalogController
 //                'model' => $q,
 //                'breadcrumbs' => $this->getBreadcrumbs($q),
 //            ]);
-//            die();
+            die();
         }
 
         $this->view_internal($q);

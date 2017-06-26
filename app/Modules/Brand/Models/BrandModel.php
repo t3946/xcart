@@ -61,7 +61,7 @@ class BrandModel extends AutoMetaModel
     {
         if ($this->brandid)
         {
-            return Xcart::app()->router->url('brand:view:old', ['id' => $this->brandid, 'slug' => 'TEMP']);
+            return Xcart::app()->router->url('brand:view', ['id' => $this->brandid, 'slug' => 'TEMP']);
         }
 
         return false;

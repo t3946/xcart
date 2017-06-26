@@ -1,7 +1,5 @@
 <div class="item {if $item->isOutOfStock()}out_of_stock{/if}" data-product="{$item->productid}" itemscope itemtype="http://schema.org/Product" itemprop="itemListElement">
 
-    <meta name="link" content="{$item->getAbsoluteUrl()}" itemscope itemprop="url">
-
         <div class="image_container container">
             <a href="{$item->getAbsoluteUrl()}" title="{$item.product}" class="link">
 
@@ -57,9 +55,11 @@
                 {if $brand_page!}
                     {set $brand = $brand_page}
                 {else}
-                    {set $brand = $item->brand}
+                    {set $brand = $item->cache()->brand}
                 {/if}
-                Brand: <a class="value" itemprop="brand"  href="{$.app->router->url('brand:view:old', ['id' => $brand->brandid, 'slug' => 'TEMP'])}">
+
+                Brand:
+                <a class="value" itemprop="brand"  href="{$brand->getAbsoluteUrl()}">
                     {$brand->brand}
                 </a>
             </div>
