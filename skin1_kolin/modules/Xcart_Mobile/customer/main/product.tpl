@@ -325,7 +325,7 @@ function send_question_email_form(){
 </p>
 
 {/capture}
-{include file="dialog.tpl" title=$brandid_brands_info[$product.brandid].brand content=$smarty.capture.dialog title_itemprop='brand' extra='width="100%"' use_h2="Y" }
+{include file="dialog.tpl" title=$brandid_brands_info[$product.brandid].brand content=$smarty.capture.dialog schema='brand' title_itemprop='brand' extra='width="100%"' use_h2="Y" }
 
         {elseif $tab.tpl eq "_product_question_tpl_"}
 {* --------------------------------------------------*}
