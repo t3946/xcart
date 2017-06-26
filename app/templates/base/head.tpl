@@ -15,9 +15,12 @@
     {set $site = $.getSite}
     {set $sconfig = $.getSiteConfig}
 
+    <meta name="url" itemprop="url" content="https://{$site.domain}/" >
+    <meta name="name" itemprop='name' content="{$sconfig.company_name.value}">
+
     {block 'seo'}
-        <title itemprop='name'>{$sconfig.company_name.value}</title>
-        <link rel="canonical" href="https://{$site.domain}/" itemprop="url">
+        <title>{$sconfig.company_name.value}</title>
+        {*<link rel="canonical" href="https://{$site.domain}/" itemprop="url">*}
     {/block}
     {block 'head'}{/block}
     <link rel="stylesheet" href="/static/frontend/dist/css/main.css?v={frontend_css_version}">
@@ -37,7 +40,7 @@
     }
     </script>
 </head>
-<body>
+<body itemscope {block 'schema_page_type'}itemtype="http://schema.org/WebPage"{/block}>
 
 {filter|strip:true}
 {block "wrapper"}

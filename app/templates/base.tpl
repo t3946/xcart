@@ -5,7 +5,7 @@
         {include "_parts/_menu_mobile.tpl"}
     </div>
     <div class="off-canvas-content" data-off-canvas-content>
-        <header>
+        <header itemscope itemtype="http://schema.org/WPHeader">
             <section class="top-header hide-for-small-only">
                 <div class="row">
                     <div class="columns small-4">

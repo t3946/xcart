@@ -42,7 +42,7 @@ class ProductFilterHelper
 
         if (in_array('price', $types)) {
             $tqs = clone $this->qs;
-            $tqs->with(['quick_prices'])
+            $tqs->filter(['quick_prices__price__isnull' => false])
                 ->select([new Min('xcart_pricing_1.price', 'min'),
                           new Max('xcart_pricing_1.price', 'max')]) //@TODO:FIX IT
                 ->asArray();

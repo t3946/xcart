@@ -22,6 +22,8 @@ class SearchController extends AbstractCatalogController
 
 //        $this->view_internal(CategoryModel::objects()->filter(['productcode' => $sku])->get());
     }
+
+
     public function actionSearch()
     {
         $q = $this->getRequest()->get->get('q', '');
@@ -33,14 +35,13 @@ class SearchController extends AbstractCatalogController
             $this->redirect($product->getAbsoluteUrl());
         }
 
-        $this->getProductFromElastic($q);
-
-        if (empty($this->ids)) {
-            echo $this->render('catalog/search_empty.tpl', [
-                'model' => $q,
-                'breadcrumbs' => $this->getBreadcrumbs($q),
-            ]);
-            die();
+        if (!$this->getProductFromElastic($q)) {
+            $this->view = 'catalog/search_empty.tpl';
+//            echo $this->render('catalog/search_empty.tpl', [
+//                'model' => $q,
+//                'breadcrumbs' => $this->getBreadcrumbs($q),
+//            ]);
+//            die();
         }
 
         $this->view_internal($q);
@@ -53,10 +54,11 @@ class SearchController extends AbstractCatalogController
         $siteModule = Xcart::app()->getModule('Sites');
         $coreModule = Xcart::app()->getModule('Core');
         $config = $coreModule::getGlobalConfig();
+        $config_min_scope = $config["ElasticSearch_options"]["search_results_minimum_score_value"];
 
         $classElastic = new ElasticSearch($config["ElasticSearch_options"], $siteModule->getSite()->domain);
         $classElastic->setSource("*._id");
-        $classElastic->setMinScore($min_score ?: $config["ElasticSearch_options"]["search_results_minimum_score_value"]);
+        $classElastic->setMinScore($min_score ?: $config_min_scope);
         $classElastic->setType('product');
         $classElastic->setQueryParams($search);
 
@@ -64,17 +66,20 @@ class SearchController extends AbstractCatalogController
         $items = $result["hits"]["hits"];
 
         if ($items) {
-            $items = $this->getProductFromElastic($search, .01);
+            usort($items, function($a, $b){
+                if ($a['_score'] == $b['_score']) {
+                    return 0;
+                }
+                return $a['_score'] < $b['_score'] ?  -1 : 1;
+            });
+
+            $this->ids = array_map(function($item) {return $item['_id']; }, $items);
+        }
+        else if (!$items && !$min_score) {
+            $this->getProductFromElastic($search, .01);
         }
 
-        usort($items, function($a, $b){
-            if ($a['_score'] == $b['_score']) {
-                return 0;
-            }
-            return $a['_score'] < $b['_score'] ?  -1 : 1;
-        });
-
-        return $this->ids = array_map(function($item) {return $item['_id']; }, $items);
+        return (bool)(count($items));
     }
 
     public function getQS($data)

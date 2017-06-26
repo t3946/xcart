@@ -13,10 +13,10 @@
         $e_search_data_substring = $twotabsearchtextbox;
        	$e_search_data_substring = trim($e_search_data_substring);
 
-	$query = '
+	$query = /** @lang JSON */'
 {
    "suggest" : {
-     "text" : "'.$e_search_data_substring.'",
+     "text" : "' . $e_search_data_substring . '",
      "simple_phrase" : {
        "phrase" : {
          "highlight": {

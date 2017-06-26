@@ -1,5 +1,7 @@
 {extends  $.request->getIsAjax() ? "ajax.tpl" : "base.tpl"}
 
+
+{block 'schema_page_type'}itemtype="http://schema.org/CollectionPage"{/block}
 {block "content"}
     {set $site = $.getSite}
     {if $.request->getIsAjax()}
@@ -12,7 +14,7 @@
 
         {/block}
         <div class="row">
-            <div class="columns large-2 show-for-large">
+            <div class="columns large-2 show-for-large" itemscope itemtype="http://schema.org/WPSideBar">
                 <div class="firm_cont">
                     <form action="{$.request->getMatchingUrl(['q' => $.request->get->get('q')])}" type="get"  id="filter_form" data-ajax-send="off">
                         <div class="filters_section advanced">
@@ -52,7 +54,7 @@
                     {include 'catalog/parts/_page_count.tpl'}
                 </div>
 
-                <div class="product-items {if $.isBot}tile-view{/if}">
+                <div class="product-items {if $.isBot}tile-view{/if}" itemscope itemprop="mainEntity" itemtype="http://schema.org/OfferCatalog">
                     {foreach $pager->paginate() as $item }
                         {include "catalog/parts/_catalog_list_item.tpl" item=$item}
                     {/foreach}

@@ -6,7 +6,7 @@
         {*</a>*}
     {*</section>*}
 
-    <ol class="breadcrumb-list no-bullet" itemscope itemtype="http://schema.org/BreadcrumbList">
+    <ol class="breadcrumb-list no-bullet" itemscope itemtype="http://schema.org/BreadcrumbList" itemprop="breadcrumb">
         <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
             <a itemscope itemtype="http://schema.org/Thing" itemprop="item" href="/">
                 <span itemprop="name">

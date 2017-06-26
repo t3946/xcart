@@ -1,5 +1,7 @@
+<div class="item {if $item->isOutOfStock()}out_of_stock{/if}" data-product="{$item->productid}" itemscope itemtype="http://schema.org/Product" itemprop="itemListElement">
 
-<div class="item {if $item->isOutOfStock()}out_of_stock{/if}" data-product="{$item->productid}" itemscope itemtype="http://schema.org/Product">
+    <meta name="link" content="{$item->getAbsoluteUrl()}" itemscope itemprop="url">
+
         <div class="image_container container">
             <a href="{$item->getAbsoluteUrl()}" title="{$item.product}" class="link">
 
@@ -14,7 +16,7 @@
                 {set $image = $item->images->limit(1)->get()}
                 {if $image}
                     {if $.isBot}
-                        <img src="//cdn.{$site->getBaseDomain()}{$image->getURL()}" width="{$image->image_x}" height="{$image->image_y}" alt="{$item.product}" itemprop="image">
+                        <img src="//cdn.{$site->getBaseDomain()}{$image->getURL()}" width="{$image->image_x}" height="{$image->image_y}" alt="{$item.product}" itemscope itemprop="image">
                     {else}
                         <img data-original="//cdn.{$site->getBaseDomain()}{$image->getURL()}" width="{$image->image_x}" height="{$image->image_y}" alt="{$item.product}" class="loader lazyimg" itemprop="image">
                     {/if}
@@ -57,7 +59,9 @@
                 {else}
                     {set $brand = $item->brand}
                 {/if}
-                Brand: <a class="value" itemprop="brand" href="{$.app->router->url('brand:view:old', ['id' => $brand->brandid, 'slug' => 'TEMP'])}">{$brand->brand}</a>
+                Brand: <a class="value" itemprop="brand"  href="{$.app->router->url('brand:view:old', ['id' => $brand->brandid, 'slug' => 'TEMP'])}">
+                    {$brand->brand}
+                </a>
             </div>
             {if $item.descr || $item.fulldescr || $item.seo_fulldescr}
                 {if $item.descr}
@@ -68,8 +72,10 @@
                     {set $description = $item.fulldescr}
                 {/if}
 
-                <div class="description show-for-medium" itemprop="description">
-                    {raw $description|br2nl|strip_tags|truncate:140:'...'|nl2space}
+                <div class="description show-for-medium" >
+                    <span itemprop="description">
+                        {raw $description|br2nl|strip_tags|truncate:140:'...'|nl2space}
+                    </span>
 
                     <a href="{$item->getAbsoluteUrl()}" class="show-for-medium see">See details</a>
                 </div>
@@ -104,7 +110,7 @@
 
 
         <div class="cart_price_container container">
-            <div class="price_container">
+            <div class="price_container" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
                 {if $item->list_price > $item->getFrontendPrice()}
                     <span class="old">
                         <span class="title">List Price:</span>
@@ -113,10 +119,17 @@
                 {/if}
                 <span class="current">
                     <span class="title">Price:</span>
-                    <span class="price" itemprop="price">US$ {$item->getFrontendPrice()|number_format:2}</span>
-                </span>
+                    <span class="price">
+                        <span itemprop="priceCurrency" content="USD">US$</span>
+                        <span itemprop="price">{$item->getFrontendPrice()|number_format:2}</span>
+                        {if $item->isOutOfStock()}
+                            <link itemprop="availability" href="http://schema.org/OutOfStock" />
+                        {else}
+                            <link itemprop="availability" href="http://schema.org/InStock" />
+                        {/if}
 
-                <meta itemprop="priceCurrency" content="USD" />
+                    </span>
+                </span>
             </div>
 
             <div class="overflow_container">
@@ -155,7 +168,7 @@
                                 {/if}
 
                                 {if $item->min_amount >= $item->avail}
-                                    <div class="last-items icon info">
+                                <div class="last-items icon info">
                                     Order at least {$item->avail} items
                                 </div>
                                 {/if}
