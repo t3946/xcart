@@ -5,6 +5,7 @@
        data-group="fv-group-{$val.value}"
        data-remove="fv-remove-{$val.value}"
        data-fv-val="{$val.value}"
+       {if $val.disabled! && $val.disabled && !$val.checked}disabled readonly{/if}
 
         {if $val.checked}
             class="fv-group-{$val.value} checked" checked

@@ -91,11 +91,9 @@ abstract class AbstractCatalogController extends Controller
         /** @var \Xcart\App\Orm\QuerySet $pqs */
         $pqs = $this->getQS($model);
 
-        $filters = (new ProductFilterHelper($pqs, $this->getRequest()->get->get('filter', [])))->getFilterStructure($this->filters);
+        $fh = new ProductFilterHelper($pqs, $this->getRequest()->get->get('filter', []), $this->filters);
 
-        if ($this->getRequest()->get->has('filter')) {
-            $pqs = (new ProductFilterHelper($pqs, $this->getRequest()->get->get('filter', [])))->getFiltrateQS();
-        }
+        $pqs = $fh->getFiltrateQS();
 
         $pqs = $this->getSortedQS($pqs);
         $pager = $this->getPager($pqs);
@@ -115,7 +113,7 @@ abstract class AbstractCatalogController extends Controller
                 'sort'  => $orderBy,
                 'sort_arr'  => ProductSortHelper::$orderBy,
                 'breadcrumbs' => $this->getBreadcrumbs($model),
-                'filters' => $filters,
+                'filters' => $fh->getFilterStructure($this->filters),
             ], $this->getAdvancedData($model)));
         }
     }

@@ -1,9 +1,11 @@
 <?php
 namespace Modules\Product\Helpers;
 
+use Mindy\QueryBuilder\Aggregation\Aggregation;
 use Mindy\QueryBuilder\Aggregation\Count;
 use Mindy\QueryBuilder\Aggregation\Max;
 use Mindy\QueryBuilder\Aggregation\Min;
+use Mindy\QueryBuilder\Expression;
 use Modules\Product\Models\FilterModel;
 use Xcart\App\Orm\Manager;
 use Xcart\App\Orm\QuerySet;
@@ -19,8 +21,9 @@ class ProductFilterHelper
      *
      * @param QuerySet|Manager $qs    Manager or QuerySet of ProductModel
      * @param array $form_data
+     * @param array $filter_types ['price', 'brand', 'filter']
      */
-    public function __construct($qs, array $form_data = []) {
+    public function __construct($qs, array $form_data = [], $filter_types = ['price', 'brand', 'filter']) {
         $this->qs = clone $qs;
         $this->qs->order([]);
         $this->form_data = $form_data;
@@ -31,7 +34,7 @@ class ProductFilterHelper
      * @kind accessorFunction
      * @name getFilterStructure
      *
-     * @param array            $types ['price', 'brand']
+     * @param array            $types ['price', 'brand', 'filter']
      *
      * @return array
      * @throws \Exception
@@ -92,6 +95,7 @@ class ProductFilterHelper
 
 
         if (in_array('filter', $types)) {
+            $ftqs = clone $this->getFiltrateQS();
             $tqs = clone $this->qs;
             $tqs = $tqs->filter(['filter_values__fv_active' => 'Y'])->order([]);
             $f_ids = $tqs->cache(300)->group(['filter_values__f_id'])->valuesList(['filter_values__f_id'], true);
@@ -104,12 +108,21 @@ class ProductFilterHelper
                                       ->cache(300)->valuesList([]);
 
                 if ($filters) {
+                    $fv_count = [];
+                    $fvalues = $ftqs->filter(['filter_values__fv_active' => 'Y'])
+                                  ->select(['filter_values__fv_id', new Count('*', 'count')])
+                                  ->group(['filter_values__fv_id'])
+                                  ->asArray()->cache(300)->all();
+
+                    foreach ($fvalues as $value) {
+                        $fv_count[$value['fv_id']] = $value['count'];
+                    }
 
                     $values = $tqs->with(['filter_values'])
                                   ->select(['filter_values__fv_name', 'filter_values__fv_id', 'filter_values__f_id', new Count('*', 'count')])
                                   ->order(['filter_values__f_id','filter_values__fv_order_by','filter_values__fv_name'])
                                   ->group(['filter_values__fv_id'])
-                                  ->asArray()->cache(300)->all();
+                                  ->asArray()->cache(600)->all();
 
 
                     foreach ($filters as $filter)
@@ -132,10 +145,10 @@ class ProductFilterHelper
                             $list[$value['f_id']]['values'][] = [
                                 'name' => $value['fv_name'],
                                 'value' => $value['fv_id'],
-                                'count' => $value['count'],
+                                'count' =>  !empty($fv_count[$value['fv_id']]) ? $fv_count[$value['fv_id']] : $value['count'],
+                                'disabled' => empty($fv_count[$value['fv_id']]),
                                 'checked' => $checked,
                             ];
-
                         }
                     }
 

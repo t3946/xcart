@@ -256,6 +256,10 @@ $noUi-css-prefix: range;
                     }
                   }
                 }
+
+                &:disabled + label {
+                  color: gray;
+                }
               }
             }
           }
