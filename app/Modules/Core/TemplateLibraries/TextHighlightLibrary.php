@@ -14,9 +14,9 @@ class TextHighlightLibrary extends TemplateLibrary
     public static function textHighlight($str, $search, $tag = 'em')
     {
 
-        $founden = self::searchSubstring($str, $search);
+        $founden = self::searchSubstring($str, trim($search));
 
-        $str = substr($str, strlen($founden)+1);
+        $str = substr($str, strlen($founden));
         $founden = str_replace('{content}', $founden, self::parseTag($tag));
 
         return $founden . $str;
