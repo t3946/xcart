@@ -2,7 +2,6 @@
 
 namespace Modules\User\Middleware;
 
-use function GuzzleHttp\Psr7\parse_query;
 use Modules\User\Helpers\SurfingHelper;
 use Modules\User\Models\SurfPathModel;
 use Xcart\App\Cli\Cli;
@@ -18,7 +17,7 @@ class ReferrerSearchMiddleware extends Middleware
 
             $url = parse_url($url);
             if ($url && !empty($url['query'])) {
-                $query = parse_query($url['query']);
+                $query = \GuzzleHttp\Psr7\parse_query($url['query']);
 
                 if ($query && (!empty($query['q']) || !empty($query['qpvt']))) {
 
