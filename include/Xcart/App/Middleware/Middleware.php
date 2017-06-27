@@ -6,6 +6,9 @@ use Xcart\App\Request\Request;
 
 abstract class Middleware implements IMiddleware
 {
+    /**
+     * @param \Xcart\App\Request\Request|\Xcart\App\Request\HttpRequest $request
+     */
     public function processRequest($request)
     {
 
