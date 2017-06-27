@@ -1,6 +1,6 @@
 <!doctype html>
-<html lang="en" class="no-js {if $.detector->isMobile()} mobile {/if}{if $.detector->isTablet()} tablet {/if}">
-<head itemscope itemtype="http://schema.org/WebSite">
+<html lang="en" class="no-js {if $.detector->isMobile()} mobile {/if}{if $.detector->isTablet()} tablet {/if}" itemscope itemtype="http://schema.org/WebSite">
+<head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
     {*<meta name="viewport" content="width=device-width, initial-scale=1.0" />*}
@@ -24,7 +24,7 @@
     {/block}
     {block 'head'}{/block}
     <link rel="stylesheet" href="/static/frontend/dist/css/main.css?v={frontend_css_version}">
-    <script src="/static/frontend/dist/js/vendors.js?v={frontend_js_version}"></script>
+    <script src="/static/frontend/dist/js/vendors.js?v={frontend_vendor_js_version}"></script>
     <script src="/static/frontend/dist/js/main.js?v={frontend_js_version}" defer></script>
 
     <script type="application/ld+json">
@@ -40,7 +40,7 @@
     }
     </script>
 </head>
-<body itemscope {block 'schema_page_type'}itemtype="http://schema.org/WebPage"{/block}>
+<body itemscope itemprop="mainEntity" {block 'schema_page_type'}itemtype="http://schema.org/WebPage"{/block}>
 
 {filter|strip:true}
 {block "wrapper"}

@@ -154,6 +154,7 @@ gulp.task('frontend:js:includes', function(done){
 
         return pipe
             .pipe(concat('vendors.js'))
+            .pipe(hashsum({filename: 'frontend/versions/vendor_js.yml', hash: 'md5'}))
             .pipe(gulp.dest(frontend.dst.js));
     }
 

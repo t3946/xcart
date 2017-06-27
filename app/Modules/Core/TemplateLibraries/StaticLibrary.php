@@ -56,6 +56,16 @@ class StaticLibrary extends TemplateLibrary
 
     /**
      * @kind function
+     * @name frontend_vendor_js_version
+     * @return int|void
+     */
+    public static function getFrontendVendorJsVersion()
+    {
+        return self::getVersion(self::getFrontendVersionsDir() . DIRECTORY_SEPARATOR . 'vendor_js.yml');
+    }
+
+    /**
+     * @kind function
      * @name backend_css_version
      * @return int|void
      */
