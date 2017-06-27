@@ -25,7 +25,7 @@ class TextHighlightLibrary extends TemplateLibrary
     private static function searchSubstring($str, $search)
     {
         if (strpos($str, $search) === false) {
-            return self::searchSubstring($str, substr($search,1,-1));
+            return self::searchSubstring($str, substr($search, 0, -1));
         }
         else {
             return $search;
