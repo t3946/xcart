@@ -64,8 +64,12 @@ class ElasticSearch
         $this->curl_info = curl_getinfo($ch);
         curl_close($ch);
         $result = json_decode($result_json, true);
-        $this->hitsCount = count($result["hits"]["hits"]);
-        $this->hitsTotal = $result["hits"]["total"];
+
+        if (!empty($result["hits"])) {
+            $this->hitsCount = count($result["hits"]["hits"]);
+            $this->hitsTotal = $result["hits"]["total"];
+        }
+
         return $result;
     }
 

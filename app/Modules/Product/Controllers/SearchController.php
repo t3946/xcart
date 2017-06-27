@@ -3,6 +3,7 @@
 namespace Modules\Product\Controllers;
 
 use Mindy\QueryBuilder\Expression;
+use Modules\Product\Helpers\SearchSuggestionHelper;
 use Modules\Product\Models\ProductModel;
 use Xcart\App\Components\Breadcrumbs;
 use Xcart\App\Main\Xcart;
@@ -13,38 +14,63 @@ class SearchController extends AbstractCatalogController
     public $view = 'catalog/search.tpl';
     public $filters = ['price', 'brand', 'filter'];
 
-    public $ids;
+    private $ids;
+    private $suggestion;
+    private $searched;
+    private $q_original;
+    private $q;
+
 
     public function actionKeywords($q)
     {
         $q = str_replace(['_', '-'], ' ', $q);
         $this->redirect('catalog:search', [], 301, ['q' => $q]);
-
-//        $this->view_internal(CategoryModel::objects()->filter(['productcode' => $sku])->get());
     }
-
 
     public function actionSearch()
     {
-        $q = $this->getRequest()->get->get('q', '');
-        if (!$q) {
+        $this->q = $this->q_original = $this->getRequest()->get->get('q', '');
+        if (!$this->q) {
             $this->redirect('/');
         }
 
-        if ($product = ProductModel::objects()->filter(['productcode' => $q])->get()) {
+        if ($product = ProductModel::objects()->filter(['productcode' => $this->q])->get()) {
             $this->redirect($product->getAbsoluteUrl());
         }
 
-        if (!$this->getProductFromElastic($q)) {
-            $this->view = 'catalog/search_empty.tpl';
-//            echo $this->render('catalog/search_empty.tpl', [
-//                'model' => $q,
-//                'breadcrumbs' => $this->getBreadcrumbs($q),
-//            ]);
-            die();
+        $this->suggestion = (new SearchSuggestionHelper($this->q))->mixed_suggestion(5);
+
+        if (!$this->searched = $this->getProductFromElastic($this->q))
+        {
+            if ($this->suggestion)
+            {
+                $this->q = $this->suggestion[0];
+
+                $this->suggestion = (new SearchSuggestionHelper($this->q))->mixed_suggestion(5);
+
+                if (!$this->getProductFromElastic($this->q))
+                {
+                    echo $this->render('catalog/search_empty.tpl', [
+                        'model' => $this->q,
+                        'breadcrumbs' => $this->getBreadcrumbs($this->q),
+                    ]);
+                    die();
+                }
+            }
         }
 
-        $this->view_internal($q);
+        $this->view_internal($this->q);
+    }
+
+
+    public function getAdvancedData($data = null)
+    {
+        return [
+            'suggestion' => $this->suggestion,
+            'searched' => $this->searched,
+            'q_original' => $this->q_original,
+            'q' => $this->q,
+        ];
     }
 
     public function getProductFromElastic($search, $min_score = null)
@@ -63,7 +89,8 @@ class SearchController extends AbstractCatalogController
         $classElastic->setQueryParams($search);
 
         $result = $classElastic->query(['from' => 0, 'size' => 1000]);
-        $items = $result["hits"]["hits"];
+
+        $items = empty($result["hits"]["hits"]) ? [] : $result["hits"]["hits"];
 
         if ($items) {
             usort($items, function($a, $b){

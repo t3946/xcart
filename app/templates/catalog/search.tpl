@@ -11,7 +11,24 @@
 
             </div>
             <div class="columns large-10">
-                <h1 class="title">Showing result for "{$model}"</h1>
+                <div class="search-header">
+                    {if $searched}
+                        <h1 class="title">Showing result for "<span class="highlight">{$q}</span>"</h1>
+                    {else}
+                        <h1 class="title">Your search "<span class="bad">{$q_original}</span>" did NOT match any products</h1>
+                        <h2 class="subtitle">Showing results for "<span class="highlight">{$q}</span>"</h2>
+                    {/if}
+
+                    {if $suggestion}
+                        Related searches:
+                        {foreach $suggestion as $suggest}
+                            <a href="{$.app->router->url('catalog:search', [], ['q' => $suggest])}" class="related">
+                                {raw $suggest|text_highlight:$q:'span.bold'}
+                            </a>
+                        {/foreach}
+                    {/if}
+
+                </div>
             </div>
         </div>
     {/block}

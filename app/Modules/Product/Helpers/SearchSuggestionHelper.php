@@ -17,15 +17,15 @@ class SearchSuggestionHelper
         $config = $coreModule::getGlobalConfig();
         $config_min_scope = $config["ElasticSearch_options"]["search_results_minimum_score_value"];
 
-        $this->search = $search;
+        $this->search = trim($search);
         $this->elastic = new ElasticSearch($config["ElasticSearch_options"], $siteModule->getSite()->domain);
-//        $this->elastic->setSource("*._id");
+        $this->elastic->setSource("*._id");
         $this->elastic->setMinScore($config_min_scope);
-//        $this->elastic->setType('product');
+        $this->elastic->setType('product');
         $this->elastic->setQueryParams($search);
     }
 
-    public function elastic_suggestion($count, array $html = [])
+    public function elastic_suggestion($count = 5, array $html = [])
     {
         $query = /** @lang JSON */ <<<JSON
 {
@@ -34,8 +34,8 @@ class SearchSuggestionHelper
         "simple_phrase" : {
             "phrase" : {
                 "highlight": {
-                  "pre_tag": "<span class='higlight'>",
-                  "post_tag": "</span>"
+                  "pre_tag": "",
+                  "post_tag": ""
                 },
                 "field" :  "productname",
                 "size" :   5,
@@ -74,13 +74,11 @@ class SearchSuggestionHelper
     }
 }
 JSON;
+        $this->elastic->setQueryParam(json_decode($query));
         $result = $this->elastic->query(['size' => 5, 'from' => 0]);
 
-        func_dump($result);
-        die();
 
-
-        $suggests = array();
+        $suggests = [];
 
         if (!empty($result["suggest"]["simple_phrase"]) && is_array($result["suggest"]["simple_phrase"])){
             foreach ($result["suggest"]["simple_phrase"] as $k => $v){
@@ -94,8 +92,47 @@ JSON;
             }
         }
 
+        return $suggests;
+    }
+
+    public function suggestion_phrase($count = 5)
+    {
+        $suggests = [];
+
+        /** @var \Modules\Sites\SitesModule $siteModule */
+        /** @var \Modules\Core\CoreModule $coreModule */
+        $siteModule = Xcart::app()->getModule('Sites');
+        $coreModule = Xcart::app()->getModule('Core');
+
+        $spaces = substr_count($this->search, ' ') + 2;
+
+        $search_phrase_updated = ltrim($this->search);
+
+        $query = "select LOWER(SUBSTRING_INDEX(SS.search_phrase,' ', {$spaces})) As suggester
+       from xcart_search_stats SS 
+       where SS.storefrontid = '{$siteModule->getSite()->storefrontid}' and SS.hits>0 and SS.search_phrase like '{$search_phrase_updated}%'
+       group By Suggester
+       Order By COUNT(SS.id) desc
+        Limit {$count}";
+
+        $query_result = func_query($query);
+
+        if (!empty($query_result)){
+            foreach ($query_result as $k => $v){
+
+                $suggests[] = $v["suggester"];
+            }
+        }
 
         return $suggests;
     }
 
+    public function mixed_suggestion($count = 5)
+    {
+        if ($result = $this->elastic_suggestion($count)) {
+            return $result;
+        }
+
+        return $this->suggestion_phrase($count);
+    }
 }
