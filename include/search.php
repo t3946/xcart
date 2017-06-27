@@ -1297,6 +1297,9 @@ if ($mode == "search") {
                         $push = true;
                     }
                 }
+                else {
+                    $push = true;
+                }
 
                 if ($push) {
                     $t_ids_product_arr[] = $push_el;
