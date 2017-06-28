@@ -581,12 +581,15 @@ var lbl_error = "{$lng.lbl_error}";
 <div id="similar_products" style="display: none;">{include file="customer/main/ajax_carousel_products.tpl" section_name="similar_products" section_title=$lng.lbl_similar_products}</div>
 
 <br />
+<div id="similar_products_ob" style="display: none;">{include file="customer/main/ajax_carousel_products.tpl" section_name="similar_products_ob" section_title="Similar products other brands"}</div>
+
+<br />
 
 <div id="recently_viewed_products" style="display: none;">{include file="customer/main/ajax_carousel_products.tpl" section_name="recently_viewed_products" section_title=$lng.lbl_recently_viewed_products}</div>
 
 <script type="text/javascript">
 //<![CDATA[
-func_load_ALL_ajax_carousels("products_also_bought_with_this_product,related_products,similar_products,recently_viewed_products", 0);
+func_load_ALL_ajax_carousels("products_also_bought_with_this_product,related_products,similar_products,similar_products_ob,recently_viewed_products", 0);
 //]]>
 </script>
 {* ------------------------- *}

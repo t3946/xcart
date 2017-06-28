@@ -1,6 +1,8 @@
 <?php
 namespace Xcart\Helpers;
 
+use Mindy\QueryBuilder\Expression;
+use Mindy\QueryBuilder\Q\QAndNot;
 use Xcart\Brands;
 use Xcart\ElasticSearch;
 use Xcart\Product;
@@ -31,6 +33,8 @@ class SliderData
         x_session_register("cart");
 
         $section_name = $mode;
+        $saveOrder = false;
+        $extendFilter = [];
 
 
         $productids = array();
@@ -118,70 +122,40 @@ SQL;
             }
 
         }
-        elseif ($section_name == "similar_products"){
+        elseif ( in_array($section_name, ['similar_products', 'similar_products_ob'])) {
+
+            $saveOrder = true;
 
             $classElastic = new ElasticSearch($config["ElasticSearch_options"],$site_domain);
             $classElastic->setSource("*._id");
             $classElastic->setType("product");
             $classElastic->setSize(100);
             $classElastic->setProductId($productid);
-            x_session_register("variant_id_for_point9");
-            $variant_id = $variant_id_for_point9;
-            if ($is_robot == 'Y' || defined("IS_ROBOT")) {
-                $variant_id = Get_AB_Variant(9);
+
+            if ($section_name == 'similar_products')
+            {
+                $sGoogleAnaliticsParam = 'similar_products_all_carousel';
+                $classElastic->setSearchQuery($classElastic->getQuerySimilarProductsBrands());
             }
-            switch ($variant_id) {
-                case 0:
-                    $similar_productids = func_query_first_cell("SELECT similar_productids FROM $sql_tbl[products] WHERE productid='$productid'");
+            elseif ($section_name == 'similar_products_ob')
+            {
+                $sGoogleAnaliticsParam = 'similar_products_other_brands_carousel';
+                $classBrands = new Brands();
+                $aBrand = $classBrands->getBrandByProductId($productid);
+                $extendFilter[] = new QAndNot(['brandid' => $aBrand['brandid']]);
 
-                    if (!empty($similar_productids)){
+                $classElastic->setSearchQuery($classElastic->getQuerySimilarProductsBrands($aBrand['brand']));
+                $classElastic->setSize(200);
+            }
 
-                        $similar_productids_arr = explode(",", $similar_productids);
+            $res = $classElastic->query();
 
-                        if (!empty($similar_productids_arr) && is_array($similar_productids_arr)){
-                            foreach ($similar_productids_arr as $k => $v){
-
-                                $needed_resource_id = trim($v);
-                                if (!in_array($needed_resource_id, $productids)){
-                                    $pids[$k]["needed_resource_id"] = $needed_resource_id;
-                                }
-                            }
-                        }
-                    }
-                    $sGoogleAnaliticsParam = 'similar_products_carousel';
-                    break;
-                case 1:
-                    $classElastic->setSearchQuery($classElastic->getQuerySimilarProductsBrands());
-                    $res = $classElastic->query();
-                    if (!empty($res["hits"]["hits"])) {
-                        foreach ($res["hits"]["hits"] as $key => $sValue){
-                            if ($sValue["_id"] != $productid) {
-                                $pids[]["needed_resource_id"] = $sValue["_id"];
-                            }
-                        }
-                    }
-                    $sGoogleAnaliticsParam = 'similar_products_all_carousel';
-                    break;
-                case 2:
-                    $classBrands = new Brands();
-                    $aBrand = $classBrands->getBrandByProductId($productid);
-                    $classElastic->setSearchQuery($classElastic->getQuerySimilarProductsBrands($aBrand['brand']));
-                    $res = $classElastic->query();
-                    if (!empty($res["hits"]["hits"])) {
-                        foreach ($res["hits"]["hits"] as $key => $sValue){
-                            if ($sValue["_id"] != $productid) {
-                                $pids[]["needed_resource_id"] = $sValue["_id"];
-                            }
-                        }
-                    }
-                    unset($aBrand);
-                    $sGoogleAnaliticsParam = 'similar_products_other_brands_carousel';
-                    break;
-
+            if (!empty($res["hits"]["hits"])) {
+                $pids = array_map(function($item){ return ['needed_resource_id' => $item["_id"]]; }, $res["hits"]["hits"]);
             }
         }
 
-        $isInStock = in_array($section_name, ['similar_products']);
+        $isInStock = in_array($section_name, ['similar_products', 'similar_products_ob']);
 
         $p_ids = [];
         $products = [];
@@ -202,8 +176,14 @@ SQL;
             if (($key = array_search($productid, $i_ids)) !== false) {
                 unset($i_ids[$key]);
             }
+            $qs = Product::objects()->filter(array_merge(['productid__in' => $i_ids], $extendFilter));
 
-            $oProducts = Product::objects()->filter(['productid__in' => $i_ids])->all();
+            if ($saveOrder) {
+                $qs = $qs->order([new Expression("FIELD({$qs->getTableAlias()}.productid, " . implode(',', $i_ids) . ") ASC")]);
+            }
+
+            $oProducts = $qs->all();
+
             foreach ($oProducts as $oProduct)
             {
                 if ($isInStock && $oProduct->isProductOutOfStock()) {

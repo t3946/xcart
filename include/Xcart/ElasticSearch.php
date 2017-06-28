@@ -195,7 +195,7 @@ JSON;
                     'should' => [],
                     'must_not' => [
                         'regexp' => [
-                            'brand.brand_original' => '.*'.$this->escapeReservedCharacters($sExcludeBrand).'.*'
+                            'brand' => '.*'.$this->escapeReservedCharacters($sExcludeBrand).'.*'
                         ]
                     ]
                 ]
