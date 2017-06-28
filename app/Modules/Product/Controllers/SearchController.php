@@ -97,7 +97,7 @@ class SearchController extends AbstractCatalogController
                 if ($a['_score'] == $b['_score']) {
                     return 0;
                 }
-                return $a['_score'] < $b['_score'] ?  -1 : 1;
+                return $a['_score'] < $b['_score'] ?  1 : -1;
             });
 
             $this->ids = array_map(function($item) {return $item['_id']; }, $items);
@@ -123,7 +123,6 @@ class SearchController extends AbstractCatalogController
         if ($this->sort == 'relevance') {
             $ta = $qs->getTableAlias();
             return $qs->order([
-//                new Expression("IF(FIELD( {$ta}.productid, " . implode(',', $this->ids) . ") = 0,1,0) ASC"),
                 new Expression("FIELD({$ta}.productid, " . implode(',', $this->ids) . ") ASC"),
             ]);
         }
