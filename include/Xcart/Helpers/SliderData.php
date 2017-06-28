@@ -22,7 +22,7 @@ class SliderData
         $smarty->assign($params['assign'], $products);
     }
 
-    public static function getSliderData ($mode, $productid = null, $fba_limit = 2)
+    public static function getSliderData ($mode, $productid = null, $fba_limit = 1, $max_products = 30)
     {
         global $config, $sql_tbl, $site_domain;
         global $variant_id_for_point9, $is_robot;
@@ -123,7 +123,7 @@ SQL;
             $classElastic = new ElasticSearch($config["ElasticSearch_options"],$site_domain);
             $classElastic->setSource("*._id");
             $classElastic->setType("product");
-            $classElastic->setSize(30);
+            $classElastic->setSize(100);
             $classElastic->setProductId($productid);
             x_session_register("variant_id_for_point9");
             $variant_id = $variant_id_for_point9;
@@ -181,39 +181,45 @@ SQL;
             }
         }
 
+        $isInStock = in_array($section_name, ['similar_products']);
 
         $p_ids = [];
         $products = [];
         if (!empty($pids))
         {
+            $i_ids = array_map(function($item){ return $item['needed_resource_id']; }, $pids);
+
             if (!in_array($section_name, ['related_products', 'recently_viewed_products']))
             {
-                $i_ids = [$productid];
-
-                foreach ($pids as $pid) {
-                    $i_ids[] = $pid['needed_resource_id'];
-                }
-
-                if ($fba_pids = Product::getRandFbaProducts($fba_limit, $i_ids))
+                if ($fba_pids = Product::getRandFbaProducts($fba_limit, array_merge($i_ids, [$productid])))
                 {
-                    $pids = array_merge($fba_pids, $pids);
+                    $fba_pids = array_map(function($item){ return $item['needed_resource_id']; }, $fba_pids);
+
+                    $i_ids = array_merge($fba_pids, $i_ids);
                 }
             }
 
-            foreach ($pids as $k => $v)
+            if (($key = array_search($productid, $i_ids)) !== false) {
+                unset($i_ids[$key]);
+            }
+
+            $oProducts = Product::objects()->filter(['productid__in' => $i_ids])->all();
+            foreach ($oProducts as $oProduct)
             {
-                if (!empty($productid) && $v["needed_resource_id"] == $productid) {
+                if ($isInStock && $oProduct->isProductOutOfStock()) {
                     continue;
                 }
-                $oProduct = Product::objects()->get(['productid' => $v["needed_resource_id"]]);
-                if ($oProduct)
-                {
-                    $p_ids[] = $oProduct->productid;
-                    $oProduct->product = str_replace("'", "&#39;", $oProduct->product);
-                    $products[] = $oProduct;
+
+                $p_ids[] = $oProduct->productid;
+                $oProduct->product = str_replace("'", "&#39;", $oProduct->product);
+                $products[] = $oProduct;
+
+                if (count($p_ids) >= $max_products) {
+                    break;
                 }
             }
         }
+
 
         Product::updateShowInLists($p_ids);
 
