@@ -122,7 +122,10 @@ class SearchController extends AbstractCatalogController
     {
         if ($this->sort == 'relevance') {
             $ta = $qs->getTableAlias();
-            return $qs->order([new Expression("FIELD({$ta}.productid, " . implode(',', $this->ids) . ") ASC")]);
+            return $qs->order([
+//                new Expression("IF(FIELD( {$ta}.productid, " . implode(',', $this->ids) . ") = 0,1,0) ASC"),
+                new Expression("FIELD({$ta}.productid, " . implode(',', $this->ids) . ") ASC"),
+            ]);
         }
 
         return parent::getSortedQS($qs, $model);
