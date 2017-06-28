@@ -29,6 +29,8 @@ class SearchController extends AbstractCatalogController
 
     public function actionSearch()
     {
+        $show_empty = false;
+
         $this->q = $this->q_original = $this->getRequest()->get->get('q', '');
         if (!$this->q) {
             $this->redirect('/');
@@ -42,21 +44,22 @@ class SearchController extends AbstractCatalogController
 
         if (!$this->searched = $this->getProductFromElastic($this->q))
         {
+            $show_empty = true;
+
             if ($this->suggestion)
             {
                 $this->q = $this->suggestion[0];
-
                 $this->suggestion = (new SearchSuggestionHelper($this->q))->mixed_suggestion(5);
-
-                if (!$this->getProductFromElastic($this->q))
-                {
-                    echo $this->render('catalog/search_empty.tpl', [
-                        'model' => $this->q,
-                        'breadcrumbs' => $this->getBreadcrumbs($this->q),
-                    ]);
-                    die();
-                }
+                $show_empty = !$this->getProductFromElastic($this->q);
             }
+        }
+
+        if ($show_empty) {
+            echo $this->render('catalog/search_empty.tpl', [
+                'model' => $this->q,
+                'breadcrumbs' => $this->getBreadcrumbs($this->q),
+            ]);
+            die();
         }
 
         $this->view_internal($this->q);
