@@ -82,6 +82,7 @@ class ErrorHandler
 
     public function setHandlers()
     {
+        error_reporting(E_ALL ^ E_DEPRECATED);
 //        ini_set('display_errors', false);
 
         if ($this->errHandler) {
@@ -94,6 +95,7 @@ class ErrorHandler
 
     public function unsetHandlers()
     {
+        error_reporting(E_ALL);
         restore_error_handler();
         restore_exception_handler();
     }
