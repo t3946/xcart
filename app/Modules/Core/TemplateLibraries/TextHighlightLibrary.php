@@ -22,6 +22,27 @@ class TextHighlightLibrary extends TemplateLibrary
         return $founden . $str;
     }
 
+
+    /**
+     * @name words_highlight
+     * @kind modifier
+     * @return string
+     */
+    public static function wordsHighlight($str, $search, $tag = 'em')
+    {
+
+        if (is_string($search)) {
+
+        }
+
+        $founden = self::searchSubstring($str, trim($search));
+
+        $str = substr($str, strlen($founden));
+        $founden = str_replace('{content}', $founden, self::parseTag($tag));
+
+        return $founden . $str;
+    }
+
     private static function searchSubstring($str, $search)
     {
         if (strpos($str, $search) === false) {
