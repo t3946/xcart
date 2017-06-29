@@ -78,6 +78,8 @@ SQL;
             }
             elseif ($section_name == "recently_viewed_products" && !defined('IS_ROBOT')){
 
+                $saveOrder = true;
+
                 $meta_id = \Modules\User\Models\SurfMetaModel::getInstance()->id;
 
                 $p_query = <<<SQL
@@ -129,6 +131,7 @@ SQL;
             $classElastic = new ElasticSearch($config["ElasticSearch_options"],$site_domain);
             $classElastic->setSource("*._id");
             $classElastic->setType("product");
+            $classElastic->setMinScore(0.5);
             $classElastic->setSize(100);
             $classElastic->setProductId($productid);
 
@@ -151,7 +154,14 @@ SQL;
             $res = $classElastic->query();
 
             if (!empty($res["hits"]["hits"])) {
-                $pids = array_map(function($item){ return ['needed_resource_id' => $item["_id"]]; }, $res["hits"]["hits"]);
+                $hits = $res["hits"]["hits"];
+                usort($hits, function($a, $b){
+                    if ($a['_score'] == $b['_score']) {
+                        return 0;
+                    }
+                    return $a['_score'] < $b['_score'] ?  1 : -1;
+                });
+                $pids = array_map(function($item){ return ['needed_resource_id' => $item["_id"]]; }, $hits);
             }
         }
 
