@@ -61,7 +61,7 @@ abstract class AbstractCatalogController extends Controller
      */
     public function getPager($qs)
     {
-        return new Pagination($qs, ['pageSize' => 100, 'view' => 'core/pager/front_endless.tpl'], new QuerySetDataSource());
+        return new Pagination($qs, ['pageSize' => 20, 'view' => 'core/pager/front_endless.tpl'], new QuerySetDataSource());
     }
 
     /**

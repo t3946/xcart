@@ -208,7 +208,9 @@ class Router
                     $delimiter = '&';
                 }
 
-                $url .= $delimiter . http_build_query($query);
+                if ($query = http_build_query($query)) {
+                    $url .= $delimiter . $query;
+                }
             }
         }
 
