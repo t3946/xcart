@@ -1,7 +1,4 @@
 <?php
-//@TODO: remove this -> add logger
-error_reporting(E_ALL ^ E_DEPRECATED);
-
 //define('AREA_TYPE' , 'C');
 date_default_timezone_set('US/Pacific'); //Magic;
 
