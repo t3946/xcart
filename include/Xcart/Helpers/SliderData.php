@@ -171,6 +171,7 @@ SQL;
         $products = [];
         if (!empty($pids))
         {
+            $fba_pids = [];
             $i_ids = array_map(function($item){ return $item['needed_resource_id']; }, $pids);
 
             if (!in_array($section_name, ['related_products', 'recently_viewed_products']))
@@ -193,6 +194,10 @@ SQL;
             }
 
             $oProducts = $qs->all();
+
+            if (count($oProducts) <= $fba_limit && in_array($oProducts[0]->productid, $fba_pids)) {
+                return [$products, $sGoogleAnaliticsParam];
+            }
 
             foreach ($oProducts as $oProduct)
             {
