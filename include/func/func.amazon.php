@@ -462,5 +462,3 @@ $oAmazon = new \Xcart\AmazonMWS();
 
 
 $marketplaceIdArray = array("Id" => array('ATVPDKIKX0DER'));
-
-?>
