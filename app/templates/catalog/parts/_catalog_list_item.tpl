@@ -40,7 +40,11 @@
                 {/if}
 
                 <a href="{$item->getAbsoluteUrl()}" title="{$title}">
-                    {raw $title}
+                    {if $q!}
+                        {raw $title|words_highlight:$q:"span.highlight"}
+                    {else}
+                        {raw $title}
+                    {/if}
                 </a>
             </h4>
             {*<div class="sku show-for-large">*}

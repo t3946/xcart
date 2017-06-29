@@ -6,6 +6,8 @@ use Xcart\App\Template\TemplateLibrary;
 
 class TextHighlightLibrary extends TemplateLibrary
 {
+    private static $tag_prebuild = [];
+
     /**
      * @name text_highlight
      * @kind modifier
@@ -13,13 +15,24 @@ class TextHighlightLibrary extends TemplateLibrary
      */
     public static function textHighlight($str, $search, $tag = 'em')
     {
+        if ($founden = self::searchSubstring($str, trim($search)))
+        {
+            $len = strlen($founden);
+            $pos = strpos(strtolower($str), strtolower($founden));
 
-        $founden = self::searchSubstring($str, trim($search));
+            $founden = str_replace('{content}', $founden, self::parseTag($tag));
 
-        $str = substr($str, strlen($founden));
-        $founden = str_replace('{content}', $founden, self::parseTag($tag));
+            $str1 = substr($str, 0, $pos);
+            $str2 = substr($str, $pos + $len);
 
-        return $founden . $str;
+            if (!empty($str2)) {
+                $str2 = self::textHighlight($str2, $search, $tag);
+            }
+
+            return $str1 . $founden . $str2;
+        }
+
+        return $str;
     }
 
 
@@ -27,34 +40,45 @@ class TextHighlightLibrary extends TemplateLibrary
      * @name words_highlight
      * @kind modifier
      * @return string
+     * @throws \Exception
      */
     public static function wordsHighlight($str, $search, $tag = 'em')
     {
-
         if (is_string($search)) {
-
+            $search = preg_split('/[\s+\n\r\t]/', $search);
         }
 
-        $founden = self::searchSubstring($str, trim($search));
+        if (empty($search) || !is_array($search)) {
+            throw new \Exception('search words in not array');
+        }
 
-        $str = substr($str, strlen($founden));
-        $founden = str_replace('{content}', $founden, self::parseTag($tag));
+        foreach ($search as $s) {
+            $str = self::textHighlight($str, $s, $tag);
+        }
 
-        return $founden . $str;
+        return $str;
     }
 
     private static function searchSubstring($str, $search)
     {
-        if (strpos($str, $search) === false) {
-            return self::searchSubstring($str, substr($search, 0, -1));
-        }
-        else {
+        if ($str && $search  && strlen($str) > 3 && strlen($search) > 3) {
+
+            if (strpos(strtolower($str), strtolower($search)) === false) {
+                return self::searchSubstring($str, substr($search, 0, -1));
+            }
+
             return $search;
         }
+
+        return false;
     }
 
-    private static function parseTag($str, $content = '')
+    private static function parseTag($str)
     {
+        if (!empty(self::$tag_prebuild[$str])) {
+            return self::$tag_prebuild;
+        }
+
         $id = '';
         $property = [];
         $classes = [];
@@ -92,6 +116,7 @@ class TextHighlightLibrary extends TemplateLibrary
         }
         $tag .= ">{content}</{$str}>";
 
+        self::$tag_prebuild[$str] = $tag;
         return $tag;
     }
 }
