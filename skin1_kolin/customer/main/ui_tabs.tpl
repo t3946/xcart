@@ -126,11 +126,6 @@ function send_question_email_form(){
 
 {assign var="oStorefront" value=$oProduct->getStoreFront()}
 
-<span id="so_brand" itemprop="brand" itemscope="" itemtype="http://schema.org/Brand">
-    <span itemprop="name" content="{$product.cidev_brand_name}">    </span>
-    <span itemprop="url" content="{$oStorefront->getStoreFrontURL()}/brand/{$product.brandid}/">    </span>
-</span>
-
 <span id="so_manuf" itemprop="manufacturer" itemscope="" itemtype="http://schema.org/Organization">
 	<span itemprop="name" content="{$product.manufacturer}">
 	</span>
@@ -195,24 +190,33 @@ function send_question_email_form(){
         {elseif $tab.tpl eq "_Brand_"}
 
 <br />
+{php}
+  $this->assign("arr_schemas", [
+          'brand' => [
+              'id' => 'so_brand',
+              'itemtype' => 'http://schema.org/Brand',
+              'itemprop' => 'brand',
+          ]
+  ]);
+{/php}
 {capture name=dialog}
 
-{if $brand_image.filename ne ""}
-    {assign var="imagePath" value=$xcart_web_dir}
-    {if $config.Appearance.CDN_domain ne "" && $config.Appearance.Enable_CDN eq "Y"}
-        {assign var="imagePath" value="//`$config.Appearance.CDN_domain`"}
-    {/if}
-<img src="{$imagePath}/images/B/{$brand_image.filename}" style="float: left; margin: 10px 10px 10px 0;" />
-{/if}
+  {if $brand_image.filename ne ""}
+      {assign var="imagePath" value=$xcart_web_dir}
+      {if $config.Appearance.CDN_domain ne "" && $config.Appearance.Enable_CDN eq "Y"}
+          {assign var="imagePath" value="//`$config.Appearance.CDN_domain`"}
+      {/if}
+      <img src="{$imagePath}/images/B/{$brand_image.filename}" style="float: left; margin: 10px 10px 10px 0;" />
+  {/if}
 
 <p align="justify">
 {$brandid_brands_info[$product.brandid].descr}
-<br />
-<a href="/brands.php?brandid={$product.brandid}" class="NavigationPath">All {$brandid_brands_info[$product.brandid].brand} products</a>
+              <br />
+<a href="{$oStorefront->getStoreFrontURL()}/brand/{$product.brandid}/" class="NavigationPath">All {$brandid_brands_info[$product.brandid].brand} products</a>
 </p>
 
 {/capture}
-{include file="dialog.tpl" title=$brandid_brands_info[$product.brandid].brand content=$smarty.capture.dialog extra='width="100%"' use_h2="Y" }
+{include file="dialog.tpl" title=$brandid_brands_info[$product.brandid].brand content=$smarty.capture.dialog schema='brand' title_itemprop='brand' extra='width="100%"' use_h2="Y" }
 
 	{elseif $tab.tpl eq "_product_queries_tpl_"}
 

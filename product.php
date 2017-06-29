@@ -749,7 +749,7 @@ if ($product_info["cost_to_us"] > $product_info["price"]){
 
 if ($cidev_warning_code > 0){
 	if ($product_info["warning_code"] != $cidev_warning_code){
-	        db_query("UPDATE $sql_tbl[products] SET warning_code='$cidev_warning_code' WHERE productid='$product_info[productid]'");
+//	        db_query("UPDATE $sql_tbl[products] SET warning_code='$cidev_warning_code' WHERE productid='$product_info[productid]'");
 		$product_info["warning_code"] = $cidev_warning_code;
 	}
 

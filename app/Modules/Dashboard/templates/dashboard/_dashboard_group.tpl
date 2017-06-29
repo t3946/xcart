@@ -11,7 +11,7 @@
                         {foreach 1..$row_col.row as $row}
                             {foreach $models as $model}
                                 {if ($model->position_row == $row && $model->position_column == $col && !$my_position) || ($my_position && $model->getMyPositionRow() == $row && $model->getMyPositionColumn() == $col )}
-                                    {include 'dashboard/_dashboard_item.tpl' model=$model}
+                                    {include 'dashboard/_dashboard_item.tpl' model=$model check_owners=true}
                                 {/if}
                             {/foreach}
                         {/foreach}

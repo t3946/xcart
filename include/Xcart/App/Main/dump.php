@@ -13,7 +13,12 @@ function d()
             'line' => isset($debug[0]['line']) ? $debug[0]['line'] : null,
         )
     );
-    VarDumper::dump($data);
+    if (Xcart\App\Cli\Cli::isCli()) {
+        print_r($data);
+    }
+    else {
+        echo VarDumper::dump($data);
+    }
     die();
 }
 
@@ -28,6 +33,11 @@ function dd()
             'line' => isset($debug[0]['line']) ? $debug[0]['line'] : null,
         )
     );
-    VarDumper::dump($data, 10, false);
+    if (Xcart\App\Cli\Cli::isCli()) {
+        print_r($data);
+    }
+    else {
+        echo VarDumper::dump($data, 10, false);
+    }
     die();
 }

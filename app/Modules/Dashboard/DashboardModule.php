@@ -68,12 +68,12 @@ class DashboardModule extends Module
         return [
             [
                 'icon' => 'fa fa-search',
-                'name' => 'Search',
+                'name' => 'Order search',
                 'route' => $router->url('dashboard:search'),
             ],
             [
                 'icon' => 'fa fa-handshake-o',
-                'name' => 'Customer care dashboard',
+                'name' => 'Customer dashboard',
                 'route' => $router->url('dashboard:index'),
                 'items' => ($user && $user->getIsSuperuser()) ? [
                     [

@@ -184,9 +184,22 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
                 $last_feed_fields_arr_vals = $aProduct;
 
                 $modelProduct = ProductModel::objects()->filter(['productcode' => $aProduct['productcode']])->get();
+
                 if (!$modelProduct) {
-                    $modelProduct= new ProductModel();
+                    $attributes = [
+                        'source_sfid' => $supplierFeedModel->storefront_id,
+                        'manufacturerid' => $supplierFeedModel->manufacturerid,
+                        'add_date' => time(),
+                        'mod_date' => time(),
+                    ];
+
+                    if (!empty($supplierFeed->defaults) && is_array($supplierFeed->defaults)) {
+                        $attributes = array_merge($attributes, $supplierFeed->defaults);
+                    }
+
+                    $modelProduct= new ProductModel($attributes);
                 }
+
                 $modelProduct->setAttributes($aProduct);
 
                 $all_feed_productcodes[] = $modelProduct->productcode;
@@ -217,9 +230,11 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
                             continue;
                         }
                         $modelProduct->controlled_by_feed = $supplierFeedModel->feed_file_name;
+
                         if ($modelProduct->getChangedAttributes()) {
                             $updated_products_count++;
                         }
+
                         $modelProduct->save();
                         break;
                     case 'P' :
@@ -227,21 +242,17 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
                             $skippedProductsCount++;
                             continue;
                         }
+
                         if (!empty($modelProduct->fulldescr) && $supplierFeedModel->native_full_description != "Y") {
                             $modelProduct->fulldescr = ProductHelper::cleanProductFullDescription($modelProduct->fulldescr);
                         }
-                        if ($modelProduct->getIsNewRecord()) {
 
-                            if (!empty($supplierFeed->defaults) && is_array($supplierFeed->defaults)) {
-                                $modelProduct->setAttributes($supplierFeed->defaults);
+                        if (!$modelProduct->getIsNewRecord())
+                        {
+                            if ($supplierFeedModel->add_new_only == "Y") {
+                                $skippedProductsCount++;
+                                continue;
                             }
-                            $modelProduct->source_sfid = $supplierFeedModel->storefront_id;
-                            $modelProduct->manufacturerid = $supplierFeedModel->manufacturerid;
-                            $modelProduct->add_date = $modelProduct->mod_date = time();
-
-                        } else {
-
-                            if ($supplierFeedModel->add_new_only == "Y") {continue;}
                             if (!empty($supplierFeed->dont_update_fields) && is_array($supplierFeed->dont_update_fields)) {
                                 foreach ($supplierFeed->dont_update_fields as $fieldUnset) {
                                     $trimDesc = trim($modelProduct->fulldescr);

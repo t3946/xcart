@@ -47,14 +47,20 @@
         &.index {
             .button {
                 height: auto;
-                background: rgba(244, 244, 244, .4);
-                border-color: #dadada;
+                //background: rgba(244, 244, 244, .4);
+                background: #fff;
+                //border-color: #dadada;
+                border-color: #ebebeb;
             }
 
             &.groups {
-                .button {
+                .dashboard-item {
                     margin: 3px;
+                    border-radius: 2px;
                 }
+                //.button {
+                //    margin: 3px;
+                //}
             }
         }
 
@@ -92,23 +98,45 @@
         }
 
         .dashboard-item {
-            .tag {
-                display: inline-block;
-                min-width: 1.45em;
-                min-height: 1.45em;
-                padding: 0 0.2em;
-                text-align: center;
-                color: #fff;
-                font-weight: bold;
-                border-radius: 2px;
-                /*box-sizing: content-box !important;*/
-                line-height: 14px;
-                border: 1px solid #bbbbbb;
+            position: relative;
 
-                &.no-border {
-                    border: none;
+            &.check-owner {
+                &.other {}
+                &.own {
+                    background-color: rgb(230, 253, 228);
+                }
+                &.false {
+                    background-color: rgb(254, 227, 230);
                 }
             }
+
+            .tag {
+                //display: none;
+                position: absolute;
+                top: 0;
+                bottom: 0;
+                left: 0;
+                width: 2px;
+                overflow: hidden;
+                text-indent: -9999px;
+            }
+            //.tag {
+            //    display: inline-block;
+            //    min-width: 1.45em;
+            //    min-height: 1.45em;
+            //    padding: 0 0.2em;
+            //    text-align: center;
+            //    color: #fff;
+            //    font-weight: bold;
+            //    border-radius: 2px;
+            //    /*box-sizing: content-box !important;*/
+            //    line-height: 14px;
+            //    border: 1px solid #bbbbbb;
+            //
+            //    &.no-border {
+            //        border: none;
+            //    }
+            //}
 
             .events,
             .priority {
@@ -148,12 +176,15 @@
                 }
 
                 .tag {
-                    background-color: transparent !important;
-                    border: 1px solid #bbbbbb;
-                    width: 1.45em;
-                    height: 1.45em;
-                    color: transparent;
+                    display: none;
                 }
+                //.tag {
+                //    background-color: transparent !important;
+                //    border: 1px solid #bbbbbb;
+                //    width: 1.45em;
+                //    height: 1.45em;
+                //    color: transparent;
+                //}
             }
         }
     }
@@ -236,6 +267,55 @@
                 height: 10px;
                 background: darkred;
                 border-radius: 15px;
+            }
+        }
+    }
+
+    #dashboard {
+        fieldset {
+            border: none;
+            margin-bottom: 0;
+
+            legend {
+                display: block;
+                width: 100%;
+                padding: 5px 6px;
+                background: none;
+                background: {
+                    color: rgb(235, 235, 235);
+                };
+                font: {
+                    weight: 500;
+                };
+
+
+                &:before {
+                    content: '+';
+                    display: inline-block;
+                    font: {
+                        size: 8px;
+                    }
+                    width: 17px;
+                    height: 17px;
+                    background: {
+                        color: #fff;
+                    };
+                    text-align: center;
+                    line-height: 17px;
+                    margin-right: 5px;
+                    vertical-align: middle;
+                }
+            }
+
+            &.expanded {
+                legend {
+                    &:before {
+                        content: '—';
+                    }
+                }
+            }
+            &.collapsed {
+                margin-bottom: 0;
             }
         }
     }

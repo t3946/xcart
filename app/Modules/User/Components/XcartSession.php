@@ -3,6 +3,7 @@ namespace Modules\User\Components;
 
 use Modules\User\Helpers\BotsHelper;
 use Modules\User\Models\SessionDataModel;
+use Xcart\App\Cli\Cli;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Request\Session;
 
@@ -64,7 +65,7 @@ class XcartSession extends Session
     {
         $this->save();
 
-        if ($this->autoGc) {
+        if ($this->autoGc && !Cli::isCli()) {
             $this->gc();
         }
     }

@@ -1,6 +1,8 @@
 <?php
 namespace Xcart\Helpers;
 
+use Mindy\QueryBuilder\Expression;
+use Mindy\QueryBuilder\Q\QAndNot;
 use Xcart\Brands;
 use Xcart\ElasticSearch;
 use Xcart\Product;
@@ -22,7 +24,7 @@ class SliderData
         $smarty->assign($params['assign'], $products);
     }
 
-    public static function getSliderData ($mode, $productid = null, $fba_limit = 2)
+    public static function getSliderData ($mode, $productid = null, $fba_limit = 1, $max_products = 30)
     {
         global $config, $sql_tbl, $site_domain;
         global $variant_id_for_point9, $is_robot;
@@ -31,6 +33,8 @@ class SliderData
         x_session_register("cart");
 
         $section_name = $mode;
+        $saveOrder = false;
+        $extendFilter = [];
 
 
         $productids = array();
@@ -73,6 +77,8 @@ limit 30
 SQL;
             }
             elseif ($section_name == "recently_viewed_products" && !defined('IS_ROBOT')){
+
+                $saveOrder = true;
 
                 $meta_id = \Modules\User\Models\SurfMetaModel::getInstance()->id;
 
@@ -118,102 +124,97 @@ SQL;
             }
 
         }
-        elseif ($section_name == "similar_products"){
+        elseif ( in_array($section_name, ['similar_products', 'similar_products_ob'])) {
+
+            $saveOrder = true;
 
             $classElastic = new ElasticSearch($config["ElasticSearch_options"],$site_domain);
             $classElastic->setSource("*._id");
             $classElastic->setType("product");
-            $classElastic->setSize(30);
+            $classElastic->setMinScore(0.5);
+            $classElastic->setSize(100);
             $classElastic->setProductId($productid);
-            x_session_register("variant_id_for_point9");
-            $variant_id = $variant_id_for_point9;
-            if ($is_robot == 'Y' || defined("IS_ROBOT")) {
-                $variant_id = Get_AB_Variant(9);
+
+            if ($section_name == 'similar_products')
+            {
+                $sGoogleAnaliticsParam = 'similar_products_all_carousel';
+                $classElastic->setSearchQuery($classElastic->getQuerySimilarProductsBrands());
             }
-            switch ($variant_id) {
-                case 0:
-                    $similar_productids = func_query_first_cell("SELECT similar_productids FROM $sql_tbl[products] WHERE productid='$productid'");
+            elseif ($section_name == 'similar_products_ob')
+            {
+                $sGoogleAnaliticsParam = 'similar_products_other_brands_carousel';
+                $classBrands = new Brands();
+                $aBrand = $classBrands->getBrandByProductId($productid);
+                $extendFilter[] = new QAndNot(['brandid' => $aBrand['brandid']]);
 
-                    if (!empty($similar_productids)){
+                $classElastic->setSearchQuery($classElastic->getQuerySimilarProductsBrands($aBrand['brand']));
+                $classElastic->setSize(200);
+            }
 
-                        $similar_productids_arr = explode(",", $similar_productids);
+            $res = $classElastic->query();
 
-                        if (!empty($similar_productids_arr) && is_array($similar_productids_arr)){
-                            foreach ($similar_productids_arr as $k => $v){
-
-                                $needed_resource_id = trim($v);
-                                if (!in_array($needed_resource_id, $productids)){
-                                    $pids[$k]["needed_resource_id"] = $needed_resource_id;
-                                }
-                            }
-                        }
+            if (!empty($res["hits"]["hits"])) {
+                $hits = $res["hits"]["hits"];
+                usort($hits, function($a, $b){
+                    if ($a['_score'] == $b['_score']) {
+                        return 0;
                     }
-                    $sGoogleAnaliticsParam = 'similar_products_carousel';
-                    break;
-                case 1:
-                    $classElastic->setSearchQuery($classElastic->getQuerySimilarProductsBrands());
-                    $res = $classElastic->query();
-                    if (!empty($res["hits"]["hits"])) {
-                        foreach ($res["hits"]["hits"] as $key => $sValue){
-                            if ($sValue["_id"] != $productid) {
-                                $pids[]["needed_resource_id"] = $sValue["_id"];
-                            }
-                        }
-                    }
-                    $sGoogleAnaliticsParam = 'similar_products_all_carousel';
-                    break;
-                case 2:
-                    $classBrands = new Brands();
-                    $aBrand = $classBrands->getBrandByProductId($productid);
-                    $classElastic->setSearchQuery($classElastic->getQuerySimilarProductsBrands($aBrand['brand']));
-                    $res = $classElastic->query();
-                    if (!empty($res["hits"]["hits"])) {
-                        foreach ($res["hits"]["hits"] as $key => $sValue){
-                            if ($sValue["_id"] != $productid) {
-                                $pids[]["needed_resource_id"] = $sValue["_id"];
-                            }
-                        }
-                    }
-                    unset($aBrand);
-                    $sGoogleAnaliticsParam = 'similar_products_other_brands_carousel';
-                    break;
-
+                    return $a['_score'] < $b['_score'] ?  1 : -1;
+                });
+                $pids = array_map(function($item){ return ['needed_resource_id' => $item["_id"]]; }, $hits);
             }
         }
 
+        $isInStock = in_array($section_name, ['similar_products', 'similar_products_ob']);
 
         $p_ids = [];
         $products = [];
         if (!empty($pids))
         {
+            $fba_pids = [];
+            $i_ids = array_map(function($item){ return $item['needed_resource_id']; }, $pids);
+
             if (!in_array($section_name, ['related_products', 'recently_viewed_products']))
             {
-                $i_ids = [$productid];
-
-                foreach ($pids as $pid) {
-                    $i_ids[] = $pid['needed_resource_id'];
-                }
-
-                if ($fba_pids = Product::getRandFbaProducts($fba_limit, $i_ids))
+                if ($fba_pids = Product::getRandFbaProducts($fba_limit, array_merge($i_ids, [$productid])))
                 {
-                    $pids = array_merge($fba_pids, $pids);
+                    $fba_pids = array_map(function($item){ return $item['needed_resource_id']; }, $fba_pids);
+
+                    $i_ids = array_merge($fba_pids, $i_ids);
                 }
             }
 
-            foreach ($pids as $k => $v)
+            if (($key = array_search($productid, $i_ids)) !== false) {
+                unset($i_ids[$key]);
+            }
+            $qs = Product::objects()->filter(array_merge(['productid__in' => $i_ids], $extendFilter));
+
+            if ($saveOrder) {
+                $qs = $qs->order([new Expression("FIELD({$qs->getTableAlias()}.productid, " . implode(',', $i_ids) . ") ASC")]);
+            }
+
+            $oProducts = $qs->all();
+
+            if (count($oProducts) <= $fba_limit && in_array($oProducts[0]->productid, $fba_pids)) {
+                return [$products, $sGoogleAnaliticsParam];
+            }
+
+            foreach ($oProducts as $oProduct)
             {
-                if (!empty($productid) && $v["needed_resource_id"] == $productid) {
+                if ($isInStock && $oProduct->isProductOutOfStock()) {
                     continue;
                 }
-                $oProduct = Product::objects()->get(['productid' => $v["needed_resource_id"]]);
-                if ($oProduct)
-                {
-                    $p_ids[] = $oProduct->productid;
-                    $oProduct->product = str_replace("'", "&#39;", $oProduct->product);
-                    $products[] = $oProduct;
+
+                $p_ids[] = $oProduct->productid;
+                $oProduct->product = str_replace("'", "&#39;", $oProduct->product);
+                $products[] = $oProduct;
+
+                if (count($p_ids) >= $max_products) {
+                    break;
                 }
             }
         }
+
 
         Product::updateShowInLists($p_ids);
 
