@@ -589,7 +589,8 @@ var lbl_error = "{$lng.lbl_error}";
 
 <script type="text/javascript">
 //<![CDATA[
-func_load_ALL_ajax_carousels("products_also_bought_with_this_product,related_products,similar_products,similar_products_ob,recently_viewed_products", 0);
+//func_load_ALL_ajax_carousels("products_also_bought_with_this_product,related_products,similar_products,similar_products_ob,recently_viewed_products", 0);
+func_load_ALL_ajax_carousels("products_also_bought_with_this_product,related_products,similar_products,recently_viewed_products", 0);
 //]]>
 </script>
 {* ------------------------- *}
