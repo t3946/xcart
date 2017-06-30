@@ -62,8 +62,8 @@ export default class LazyImageLoad
 
                                 setTimeout(()=>{
                                     $target.addClass('lazy-loaded');
-                                }, 100);
-                            }, 100);
+                                }, 200);
+                            }, 20);
 
                             this.inLoad--;
                             if (!this.inLoad) {

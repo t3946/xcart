@@ -10,6 +10,7 @@ export default class Loader
         }, options);
 
         this.timer = null;
+        this.timerDetach = null;
 
         this.init();
     }
@@ -25,10 +26,16 @@ export default class Loader
         this.elements['bg'].append(this.elements['wrapper']);
         this.elements['wrapper'].append(this.elements['spinner']);
         this.elements['wrapper'].append(this.elements['content']);
+
+        this._bind();
     }
 
-    load(callback = null) {
-        this.attach();
+    _bind() {
+        this.elements['bg'].on('click', this.allDetach());
+    }
+
+    load(callback = null, max_time = 10000) {
+        this.attach(max_time);
 
         if (callback) {
             if (typeof callback === 'function') {
@@ -48,7 +55,7 @@ export default class Loader
         }
     }
 
-    attach() {
+    attach(max_time = 10000) {
         if (!this.loaders) {
             this.timer = setTimeout(_=>{
                 this.elements['container'].addClass('loading');
@@ -57,6 +64,11 @@ export default class Loader
                 setTimeout(()=>{
                     this.elements['container'].addClass('loading-active');
                 }, 20);
+
+                clearTimeout(this.timerDetach);
+                this.timerDetach = setTimeout(()=>{
+                    this.detach();
+                }, max_time);
             },1000);
 
             this.loaders++;
@@ -66,7 +78,7 @@ export default class Loader
     detach() {
         this.loaders--;
 
-        if (this.loaders === 0) {
+        if (this.loaders <= 0) {
             clearTimeout(this.timer);
 
             this.elements['container'].removeClass('loading-active');
@@ -74,7 +86,16 @@ export default class Loader
             setTimeout(()=>{
                 this.elements['container'].removeClass('loading');
                 this.elements['bg'].detach();
-            }, this.options.timeout)
+            }, this.options.timeout);
+
+            if (this.loaders < 0) {
+                this.loaders = 0;
+            }
         }
+    }
+
+    allDetach() {
+        this.loaders = 1;
+        this.detach();
     }
 }

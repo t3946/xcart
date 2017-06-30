@@ -79,7 +79,13 @@
 
                 <div class="description show-for-medium" >
                     <span itemprop="description">
-                        {raw $description|br2nl|strip_tags|truncate:140:'...'|nl2space}
+                        {set $description = $description|br2nl|strip_tags|truncate:140:'...'|nl2space}
+
+                        {if $q!}
+                            {raw $description|words_highlight:$q:"span.highlight"}
+                        {else}
+                            {raw $description}
+                        {/if}
                     </span>
 
                     <a href="{$item->getAbsoluteUrl()}" class="show-for-medium see">See details</a>
@@ -87,7 +93,13 @@
 
                 <noindex>
                     <div class="description show-for-small hide-for-medium">
-                        {raw $description|br2nl|strip_tags|truncate:70:'...'|nl2space}
+                        {set $description = $description|br2nl|strip_tags|truncate:70:'...'|nl2space}
+
+                        {if $q!}
+                            {raw $description|words_highlight:$q:"span.highlight"}
+                        {else}
+                            {raw $description}
+                        {/if}
                     </div>
                 </noindex>
             {/if}

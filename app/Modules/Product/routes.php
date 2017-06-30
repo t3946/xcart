@@ -31,6 +31,11 @@ return [
         'target' => ['\Modules\Product\Controllers\SearchController', 'actionSearch'],
         'name' => 'search',
     ],
+    [
+        'route' => '/search/suggestion',
+        'target' => ['\Modules\Product\Controllers\SearchController', 'actionSuggestion'],
+        'name' => 'search:suggestion',
+    ],
 
     [
         'route' => '/keyword/{slug:q}',

@@ -4,7 +4,7 @@
     {if !$.request->getIsAjax()}
     <div class="row">
         <div class="columns large-12">
-            {include "base/_breadcrumbs.tpl"}
+            {insert "base/_breadcrumbs.tpl"}
         </div>
     </div>
     {/if}

@@ -2,7 +2,7 @@
 {block "wrapper"}
 <section id="main_wrapper" class="off-canvas-wrapper">
     <div class="off-canvas position-left" id="offCanvasLeft" data-off-canvas data-transition="push">
-        {include "_parts/_menu_mobile.tpl"}
+        {insert "_parts/_menu_mobile.tpl"}
     </div>
     <div class="off-canvas-content" data-off-canvas-content>
         <header itemscope itemtype="http://schema.org/WPHeader">
@@ -18,7 +18,7 @@
                     </div>
                     <div class="columns small-8">
                         <section class="call_lang">
-                            {include "demo/blocks/_call_in_hours.tpl"}
+                            {insert "demo/blocks/_call_in_hours.tpl"}
                             {*{include "demo/blocks/_call_after_hours.tpl"}*}
 
                             <a href="#" class="lang"> </a>
@@ -89,13 +89,10 @@
                                     </div>
                                 </section>
 
-
-                                {include "_parts/_menu_desktop.tpl"}
-
-
+                                {insert "_parts/_menu_desktop.tpl"}
                             </div>
                             <div class="columns small-12 large-7">
-                                {include "demo/blocks/_search.tpl"}
+                                {insert "_parts/_search.tpl"}
                             </div>
 
                             <div class="columns large-2 show-for-large">
@@ -112,7 +109,7 @@
                     {block "before-content"}
                         <div class="row">
                             <div class="columns large-12">
-                                {include "base/_breadcrumbs.tpl"}
+                                {insert "base/_breadcrumbs.tpl"}
                             </div>
                         </div>
                     {/block}

@@ -27,6 +27,11 @@ class SearchController extends AbstractCatalogController
         $this->redirect('catalog:search', [], 301, ['q' => $q]);
     }
 
+    public function actionSuggestion()
+    {
+        echo 123;
+    }
+
     public function actionSearch()
     {
         $show_empty = false;

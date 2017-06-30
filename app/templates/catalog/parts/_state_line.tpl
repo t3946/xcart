@@ -1,7 +1,7 @@
 <section class="state_line pcont">
     <div class="row">
         <div class="columns large-3 show-for-large">
-            {include 'catalog/parts/_page_count.tpl'}
+            {insert 'catalog/parts/_page_count.tpl'}
         </div>
         <div class="columns small-12 large-9">
             <div class="actions">

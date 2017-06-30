@@ -5,9 +5,11 @@ import CategoryViewType from "./components/CategoryViewType";
 import LazyImageLoad from "./components/LazyImageLoad";
 import CatalogFilter from "./components/CatalogFilter";
 import FilterPriceSlider from "./components/FilterPriceSlider";
+import SearchSuggestion from "./components/SearchSuggestion";
 import Loader from "./components/Loader";
 
 (function(){
+    new SearchSuggestion();
     new LazyImageLoad();
     new CategoryViewType();
     new DepartmentMenu();
@@ -72,12 +74,16 @@ import Loader from "./components/Loader";
                 $this.closest('.action_block.sort').removeClass('active');
             }, 2000);
 
+
+            window.loader.load();
             window.loader.load(()=>{
                 $.ajax({
                     url: window.location,
                     method: 'POST',
                     data: {sort: $(this).data('value')},
                     success : (data)=>{
+
+                        window.loader.load();
                         window.location = window.location;
                     }
                 })
@@ -141,7 +147,15 @@ import Loader from "./components/Loader";
         $(this).mmodal({skin: $(this).data('modal-class') || 'front'});
     });
 
-    $(window).on('beforeunload unload pagehide', ()=>{
+    $(window).on('beforeunload unload pagehide', (e)=>{
+        console.log(e);
+
+    });
+
+    // $(window).on('pageshow', (e)=>{
+    //     console.log(e);
+    // });
+    $(window).on('pagehide', (e)=>{
         loader.load();
     });
 

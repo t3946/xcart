@@ -44,13 +44,13 @@
             </div>
 
             <div class="columns large-10">
-                {include "catalog/parts/_state_line.tpl"}
+                {insert "catalog/parts/_state_line.tpl"}
                 <div class="mobile-reset-filter hide-for-large">
-                    {include "catalog/parts/_filter_reset.tpl"}
+                    {insert "catalog/parts/_filter_reset.tpl"}
                 </div>
 
                 <div class="mobile_page_count hide-for-large">
-                    {include 'catalog/parts/_page_count.tpl'}
+                    {insert 'catalog/parts/_page_count.tpl'}
                 </div>
 
                 <div class="product-items {if $.isBot}tile-view{/if}" itemscope itemprop="mainEntity" itemtype="http://schema.org/OfferCatalog">
@@ -58,7 +58,7 @@
                         {include "catalog/parts/_catalog_list_item.tpl" item=$item}
                     {/foreach}
                 </div>
-                {include "catalog/parts/_state_line.tpl"}
+                {insert "catalog/parts/_state_line.tpl"}
 
                 {raw $pager->render()}
             </div>
