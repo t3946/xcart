@@ -8,7 +8,7 @@ import FilterPriceSlider from "./components/FilterPriceSlider";
 import Loader from "./components/Loader";
 
 (function(){
-    new LazyImageLoad('.lazyimg');
+    new LazyImageLoad();
     new CategoryViewType();
     new DepartmentMenu();
     new DottedText('.must-show-less');

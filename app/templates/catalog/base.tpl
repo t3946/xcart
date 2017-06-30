@@ -3,7 +3,6 @@
 
 {block 'schema_page_type'}itemtype="http://schema.org/CollectionPage"{/block}
 {block "content"}
-    {set $site = $.getSite}
     {if $.request->getIsAjax()}
         {foreach $pager->paginate() as $item }
             {include "catalog/parts/_catalog_list_item.tpl" item=$item}

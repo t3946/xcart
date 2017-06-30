@@ -61,7 +61,7 @@ abstract class AbstractCatalogController extends Controller
      */
     public function getPager($qs)
     {
-        return new Pagination($qs, ['pageSize' => 20, 'view' => 'core/pager/front_endless.tpl'], new QuerySetDataSource());
+        return new Pagination($qs, ['pageSize' => 20, 'view' => 'core/pager/front_endless.tpl', 'pageKey' => 'page'], new QuerySetDataSource());
     }
 
     /**
@@ -101,7 +101,7 @@ abstract class AbstractCatalogController extends Controller
         if ($this->getRequest()->getIsAjax())
         {
             $this->jsonResponse([
-                'content' => $this->render($this->view, [ 'model' => $model, 'pager' => $pager,]),
+                'content' => $this->render($this->view, array_replace([ 'model' => $model, 'pager' => $pager,], $this->getAdvancedData($model))),
                 'pager' => $pager->render(),
                 'page_count' => $this->render('catalog/parts/_page_count.tpl', [ 'model' => $model, 'pager' => $pager,]),
             ]);

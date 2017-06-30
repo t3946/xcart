@@ -1,9 +1,9 @@
 {extends  "catalog/base.tpl"}
 
 {if !$.request->getIsAjax()}
-    {block "catalog-filter"}
+    {*{block "catalog-filter"}*}
 
-    {/block}
+    {*{/block}*}
 
     {block "content-top"}
         <div class="row">

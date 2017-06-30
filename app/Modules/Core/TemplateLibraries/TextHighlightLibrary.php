@@ -61,7 +61,7 @@ class TextHighlightLibrary extends TemplateLibrary
 
     private static function searchSubstring($str, $search)
     {
-        if ($str && $search  && strlen($str) > 3 && strlen($search) > 3) {
+        if ($str && $search  && strlen($str) >= 3 && strlen($search) >= 3) {
 
             if (strpos(strtolower($str), strtolower($search)) === false) {
                 return self::searchSubstring($str, substr($search, 0, -1));

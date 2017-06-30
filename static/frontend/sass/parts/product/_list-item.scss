@@ -502,6 +502,10 @@
 
         @include breakpoint(xsmall down) {
           height: rem-calc(130);
+
+          img {
+            max-height: rem-calc(125);
+          }
         }
 
         &, a {

@@ -9,6 +9,7 @@ export default class Loader
             'timeout': 200
         }, options);
 
+        this.timer = null;
 
         this.init();
     }
@@ -29,31 +30,34 @@ export default class Loader
     load(callback = null) {
         this.attach();
 
-        setTimeout(()=>{
-            this.elements['container'].addClass('loading-active');
-            if (callback) {
-                if (typeof callback === 'function') {
-                    $
-                        .when(callback())
-                        .done((args)=>{ if (args) { this.detach(); } })
-                        .fail(()=>{ this.detach(); })
-                        .then(()=>{  });
-                }
-                else {
-                    $
-                        .when(callback)
-                        .done((args)=>{  })
-                        .fail(()=>{  })
-                        .then(()=>{ setTimeout(()=>{ this.detach(); }, this.options.timeout) });
-                }
+        if (callback) {
+            if (typeof callback === 'function') {
+                $
+                    .when(callback())
+                    .done((args)=>{ if (args) { this.detach(); } })
+                    .fail(()=>{ this.detach(); })
+                    .then(()=>{  });
             }
-        }, 20);
+            else {
+                $
+                    .when(callback)
+                    .done((args)=>{  })
+                    .fail(()=>{  })
+                    .then(()=>{ setTimeout(()=>{ this.detach(); }, this.options.timeout) });
+            }
+        }
     }
 
     attach() {
         if (!this.loaders) {
-            this.elements['container'].addClass('loading');
-            this.elements['container'].append(this.elements['bg']);
+            this.timer = setTimeout(_=>{
+                this.elements['container'].addClass('loading');
+                this.elements['container'].append(this.elements['bg']);
+
+                setTimeout(()=>{
+                    this.elements['container'].addClass('loading-active');
+                }, 20);
+            },1000);
 
             this.loaders++;
         }
@@ -63,6 +67,8 @@ export default class Loader
         this.loaders--;
 
         if (this.loaders === 0) {
+            clearTimeout(this.timer);
+
             this.elements['container'].removeClass('loading-active');
 
             setTimeout(()=>{

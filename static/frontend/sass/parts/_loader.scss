@@ -3,14 +3,35 @@ $loader-color: #27a3e5;
 //$loader-color: rgba(#27a3e5, .5);
 
 
+img {
+  &.lazy {
+    transition: all 1s;
+    opacity: 0;
 
-body {
-  &:before {
-    content: '';
+    min-width: 100px !important;
+    min-height: 100px !important;
+
     background: {
+      position: center center;
       repeat: no-repeat;
+      size: contain;
       image: url("../images/s3logo.png");
     };
+
+    &.lazy-img {
+
+      text-indent: -9999px;
+      display: inline-block;
+
+      opacity: .3;
+      filter: grayscale(100%);
+    }
+
+    &.lazy-loaded {
+      min-width: inherit !important;
+      min-height: inherit !important;
+      opacity: 1;
+    }
   }
 }
 

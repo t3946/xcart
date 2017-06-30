@@ -2,7 +2,7 @@ import inViewport from '../utils/inViewport';
 
 export default class LazyImageLoad
 {
-    constructor(elements = '.lazyimg') {
+    constructor(elements = '.lazy-img') {
         this.attached = [];
         this.timer = null;
         this.interval = null;
@@ -51,17 +51,32 @@ export default class LazyImageLoad
 
                 let $target = $(target);
                 if ($target.data('original') && (all || inViewport(target))) {
-                    $target.removeClass('lazyimg');
 
                     if (!$target.attr('src')) {
-                        $target.onLoad = () => {
+                        let $tload = $(document.createElement('img'));
+
+                        $tload.on('load', () => {
+                            $target.removeClass('lazy-img');
+                            setTimeout(()=>{
+                                $target.attr('src', $target.data('original'));
+
+                                setTimeout(()=>{
+                                    $target.addClass('lazy-loaded');
+                                }, 100);
+                            }, 100);
+
                             this.inLoad--;
                             if (!this.inLoad) {
                                 $(document).trigger('lil.empty_inload');
                             }
-                        };
-                        $target.attr('src', $target.data('original'));
+                        });
+
+                        $tload.attr('src', $target.data('original'));
+
                         this.inLoad++;
+                    }
+                    else {
+                        $target.removeClass('lazy-img');
                     }
                 }
             });

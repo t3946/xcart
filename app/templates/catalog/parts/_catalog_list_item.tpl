@@ -3,20 +3,13 @@
         <div class="image_container container">
             <a href="{$item->getAbsoluteUrl()}" title="{$item.product}" class="link">
 
-                {if $item->isNewProduct()}
-                    <span class="splash splash-new show-for-large">New</span>
-                {/if}
-
-                {if $item->isSaleSticker()}
-                    <span class="splash splash-sale show-for-large">Sale</span>
-                {/if}
 
                 {set $image = $item->images->limit(1)->get()}
                 {if $image}
                     {if $.isBot}
                         <img src="//cdn.{$site->getBaseDomain()}{$image->getURL()}" width="{$image->image_x}" height="{$image->image_y}" alt="{$item.product}" itemscope itemprop="image">
                     {else}
-                        <img data-original="//cdn.{$site->getBaseDomain()}{$image->getURL()}" width="{$image->image_x}" height="{$image->image_y}" alt="{$item.product}" class="loader lazyimg" itemprop="image">
+                        <img data-original="//cdn.{$site->getBaseDomain()}{$image->getURL()}" width="{$image->image_x}" height="{$image->image_y}" alt="{$item.product}" class="lazy lazy-img" itemprop="image">
                     {/if}
                 {else}
                     
@@ -26,6 +19,14 @@
                             Image not available
                         </span>
                     </div>
+                {/if}
+
+                {if $item->isNewProduct()}
+                    <span class="splash splash-new show-for-large">New</span>
+                {/if}
+
+                {if $item->isSaleSticker()}
+                    <span class="splash splash-sale show-for-large">Sale</span>
                 {/if}
 
             </a>
