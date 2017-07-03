@@ -27,6 +27,9 @@ export default class Loader
             this.cleanUp();
             this.createElements();
         }
+        else {
+            this.loaders++;
+        }
     }
 
     checkExist(container, cls = '.loader-bg', elKey = 'bg') {

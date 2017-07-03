@@ -72,6 +72,13 @@ gulp.task('frontend:scss', function() {
         .pipe(gulp.dest(frontend.dst.scss));
 });
 
+gulp.task('frontend:css:raw', function() {
+    let pipe = gulp.src(frontend.src.css_raw);
+
+    return pipe.pipe(concat(frontend.config.name + '.css'))
+        .pipe(gulp.dest(frontend.dst.scss));
+});
+
 gulp.task('backend:scss', function() {
     return gulp.src(backend.src.scss)
         .pipe(sass({
@@ -81,7 +88,7 @@ gulp.task('backend:scss', function() {
         .pipe(gulp.dest(backend.dst.scss));
 });
 
-gulp.task('frontend:css', ['frontend:scss'], function () {
+gulp.task('frontend:css', ['frontend:scss', 'frontend:css:raw'], function () {
     let pipe = gulp.src(frontend.src.css)
         .pipe(autoprefixer({
             browsers: ["> 5%", "last 2 versions", "last 4 iOS versions"],
@@ -92,8 +99,7 @@ gulp.task('frontend:css', ['frontend:scss'], function () {
         pipe = pipe.pipe(cssnano())
     }
 
-    return pipe.pipe(concat(frontend.config.name + '.css'))
-        .pipe(gulp.dest(frontend.dst.css))
+    return pipe.pipe(gulp.dest(frontend.dst.css))
         .pipe(hashsum({filename: 'frontend/versions/css.yml', hash: 'md5'}))
         .pipe(livereload());
 });

@@ -1,22 +1,4 @@
 .off-canvas {
-
-  &.position-left {
-    transform: translateX(-100%);
-
-    &.is-transition-push {
-      &:after {
-        height: auto;
-        min-height: 100%;
-        bottom: 0;
-      }
-    }
-  }
-
-  &.is-open {
-    transform: translate(0, 0);
-    padding-bottom: 1.5em;
-  }
-
   .menu-title {
     background: #1e3f51;
     color: #90a6b1;

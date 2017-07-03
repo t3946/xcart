@@ -40,8 +40,10 @@ module.exports = {
             'bower_components/compass-mixins/lib/',
         ],
         css: [
-            'frontend/css/*',
             'temp/frontend/css/**/*'
+        ],
+        css_raw: [
+            'frontend/css/*',
         ],
         images: [
             'frontend/images/**/*.*'
@@ -101,8 +103,8 @@ module.exports = {
             fonts: [
                 'bower_components/lato-webfont/fonts/*'
             ],
-            scss: [
-                'bower_components/lato-webfont/scss/lato-webfont.scss'
+            scss_include: [
+                'bower_components/lato-webfont/scss/'
             ]
         },
         dotdotdot: {

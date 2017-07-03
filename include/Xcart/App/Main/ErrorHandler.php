@@ -161,7 +161,7 @@ class ErrorHandler
                 unset($trace[$i]['object']);
             }
 
-            $code = ($exception instanceof HttpException) ? $exception->statusCode : 500;
+            $code = ($exception instanceof HttpException) ? $exception->status : 500;
 
             $this->_exception = $exception;
 

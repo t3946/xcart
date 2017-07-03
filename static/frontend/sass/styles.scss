@@ -1,4 +1,5 @@
 @import 'compass';
+@import 'lato-webfont';
 
 @import 'settings/colors';
 @import 'settings/icons';
@@ -12,7 +13,8 @@
 //@import 'mixins/bootstrap_mixins';
 
 //@import "mindy/global";
-@import 'base/base';
+//@import 'base/base';
+@import 'base/global';
 @import 'base/typography';
 
 @import 'mixins/gen';
