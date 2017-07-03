@@ -33,6 +33,10 @@
     </div>
 </div>
 
+{use 'base.tpl'}
+{block 'js'}
+{parent}
+
 <script type="text/javascript">
     $(document).ready(function(){
         var price_min = {$values.prices.min};
@@ -54,3 +58,4 @@
         {/ignore}
     });
 </script>
+{/block}

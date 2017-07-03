@@ -15,24 +15,9 @@ class TextHighlightLibrary extends TemplateLibrary
      */
     public static function textHighlight($str, $search, $tag = 'em')
     {
-        if ($founden = self::searchSubstring($str, trim($search)))
-        {
-            $len = strlen($founden);
-            $pos = strpos(strtolower($str), strtolower($founden));
+        list($result) = self::coreHighlight($str, $search, $tag);
 
-            $founden = str_replace('{content}', $founden, self::parseTag($tag));
-
-            $str1 = substr($str, 0, $pos);
-            $str2 = substr($str, $pos + $len);
-
-            if (!empty($str2)) {
-                $str2 = self::textHighlight($str2, $search, $tag);
-            }
-
-            return $str1 . $founden . $str2;
-        }
-
-        return $str;
+        return $result;
     }
 
 
@@ -44,19 +29,51 @@ class TextHighlightLibrary extends TemplateLibrary
      */
     public static function wordsHighlight($str, $search, $tag = 'em')
     {
+        $words = [];
+
         if (is_string($search)) {
-            $search = preg_split('/[\s+\n\r\t]/', $search);
+            $words = preg_split('/[\s+\n\r\t]/', $search);
+        }
+        
+        if (is_array($search)) {
+            $words = $search;
         }
 
-        if (empty($search) || !is_array($search)) {
+        if (empty($words) || !is_array($words)) {
             throw new \Exception('search words in not array');
         }
 
-        foreach ($search as $s) {
-            $str = self::textHighlight($str, $s, $tag);
+        list($str, $founded) = self::coreHighlight($str, implode(' ', $words), $tag);
+
+        if (!$founded) {
+            foreach ($words as $s) {
+                list($str) = self::coreHighlight($str, $s, $tag);
+            }
         }
 
         return $str;
+    }
+
+    private static function coreHighlight($str, $search, $tag = 'em')
+    {
+        if ($founded = self::searchSubstring($str, trim($search)))
+        {
+            $len = strlen($founded);
+            $pos = strpos(strtolower($str), strtolower($founded));
+
+            $founded = str_replace('{content}', substr($str, $pos, $len), self::parseTag($tag));
+
+            $str1 = substr($str, 0, $pos);
+            $str2 = substr($str, $pos + $len);
+
+            if (!empty($str2)) {
+                $str2 = self::textHighlight($str2, $search, $tag);
+            }
+
+            return [$str1 . $founded . $str2, true];
+        }
+
+        return [$str, false];
     }
 
     private static function searchSubstring($str, $search)

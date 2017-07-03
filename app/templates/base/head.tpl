@@ -40,7 +40,7 @@
 </head>
 <body itemscope itemprop="mainEntity" {block 'schema_page_type'}itemtype="http://schema.org/WebPage"{/block} class="loading loading-active">
 
-{filter|strip:true}
+{*{filter|strip:true}*}
     <div class="loader-bg">
         <div class="loader-wrapper">
             <div class="loader-spinner"></div>
@@ -49,7 +49,7 @@
     </div>
 
 {block "wrapper"}{/block}
-{/filter}
+{*{/filter}*}
 
 <script src="/static/frontend/dist/js/vendors.js?v={frontend_vendor_js_version}" defer></script>
 <script src="/static/frontend/dist/js/main.js?v={frontend_js_version}" defer></script>

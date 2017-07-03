@@ -29,7 +29,11 @@ class SearchController extends AbstractCatalogController
 
     public function actionSuggestion()
     {
-        echo 123;
+
+
+        echo $this->render('catalog/search_suggestion.tpl',[
+
+        ]);
     }
 
     public function actionSearch()
@@ -81,7 +85,7 @@ class SearchController extends AbstractCatalogController
         ];
     }
 
-    public function getProductFromElastic($search, $min_score = null)
+    public function getProductFromElastic($search, $min_score = null, $max_size = 1000)
     {
         /** @var \Modules\Sites\SitesModule $siteModule */
         /** @var \Modules\Core\CoreModule $coreModule */
@@ -96,7 +100,7 @@ class SearchController extends AbstractCatalogController
         $classElastic->setType('product');
         $classElastic->setQueryParams($search);
 
-        $result = $classElastic->query(['from' => 0, 'size' => 1000]);
+        $result = $classElastic->query(['from' => 0, 'size' => $max_size]);
 
         $items = empty($result["hits"]["hits"]) ? [] : $result["hits"]["hits"];
 
@@ -111,7 +115,7 @@ class SearchController extends AbstractCatalogController
             $this->ids = array_map(function($item) {return $item['_id']; }, $items);
         }
         else if (!$items && !$min_score) {
-            $this->getProductFromElastic($search, .01);
+            $this->getProductFromElastic($search, .01, $max_size);
         }
 
         return (bool)(count($items));

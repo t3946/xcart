@@ -49,7 +49,7 @@
                 </a>
             </h4>
             {*<div class="sku show-for-large">*}
-            <div class="sku">
+            <div class="sku show-for-large">
                 <span class="value">
                     SKU: <span class="style" itemprop="sku">{$item.productcode}</span>
                 </span>
