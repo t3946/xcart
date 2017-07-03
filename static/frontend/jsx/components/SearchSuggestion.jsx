@@ -3,7 +3,7 @@ export default class SearchSuggestion
 {
     constructor(elements = ".search-form-container .search") {
         this.elements = {};
-        this.suggestions = {};
+        this.suggestions = '';
         this.suggestionNumber = 0;
         this.timer = null;
         this.timeout = 400;
@@ -36,14 +36,23 @@ export default class SearchSuggestion
             this.timer = setTimeout(()=>{
                 $.ajax(this.elements['search'].data('suggestion-url'), {
                     'success' : (data)=>{
-                        if (currentNumber === this.suggestionNumber) {
-
-                            console.log(data);
-
+                        if (currentNumber === this.suggestionNumber && data.content) {
+                            this.setSuggestion(data.content)
                         }
                     }
                 });
             }, this.timeout);
+        }
+    }
+
+    setSuggestion(data) {
+        this.suggestions = data;
+
+        if (data) {
+            this.show();
+        }
+        else {
+            this.hide();
         }
     }
 

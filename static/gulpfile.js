@@ -11,11 +11,8 @@ const uglify = require('gulp-uglify');
 const autoprefixer = require('gulp-autoprefixer');
 const babel = require('gulp-babel');
 const browserify = require('gulp-browserify');
-const cp = require('child_process');
 const spawn = require('child_process').spawn;
 // const inlineimage = require('gulp-inline-image');
-const webpackStream = require('webpack-stream');
-const webpack2 = require('webpack');
 const pump = require('pump');
 
 let watch = false;
@@ -265,16 +262,16 @@ gulp.task('backend:raw', function() {
 gulp.task('watch:frontend', ['build:frontend'], function() {
     watch = true;
     livereload({ start: true });
-    const js_watch = frontend.src.js.concat(frontend.src.jsx);
+    // const js_watch = frontend.src.js.concat(frontend.src.jsx);
 
     gulp.watch(frontend.src.raw, ['frontend:raw']);
     gulp.watch(frontend.src.scss, ['frontend:css']);
     gulp.watch(frontend.src.css, ['frontend:css']);
-    gulp.watch(js_watch, ['frontend:js']);
+    gulp.watch(frontend.src.js, ['frontend:js']);
     gulp.watch(frontend.src.images, ['frontend:images']);
     gulp.watch(frontend.src.fonts, ['frontend:fonts']);
 
-    gulp.start('frontend:jsx')
+    gulp.start('frontend:jsx');
 });
 
 gulp.task('watch:backend', ['build:backend'], function() {
@@ -289,7 +286,7 @@ gulp.task('watch:backend', ['build:backend'], function() {
     gulp.watch(backend.src.fonts, ['backend:fonts']);
 });
 
-gulp.task('prepare:frontend', ['clear:frontend', 'frontend:jsx'], function(done){
+gulp.task('prepare:frontend', ['clear:frontend' , 'frontend:jsx'], function(done){
 
     if (!fs.existsSync(frontend.dst.scss)){
         fs.mkdirSync(frontend.dst.scss);
