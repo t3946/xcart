@@ -20,7 +20,7 @@ module.exports = {
         raw: 'frontend/dist/raw'
     },
     modules: {
-        jsx: 'frontend/jsx',
+        jsx: 'frontend/jsx/**/*',
     },
     src: {
         jsx_bundles: {
@@ -31,8 +31,7 @@ module.exports = {
         ],
         js: [
             'frontend/js/**/*',
-            // 'frontend/temp/js/**/*.js'
-            'temp/frontend/js/**/*'
+            'temp/frontend/js/**/*.js'
         ],
         scss: [
             'frontend/sass/**/*.scss'

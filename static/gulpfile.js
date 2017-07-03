@@ -11,10 +11,14 @@ const uglify = require('gulp-uglify');
 const autoprefixer = require('gulp-autoprefixer');
 const babel = require('gulp-babel');
 const browserify = require('gulp-browserify');
+const cp = require('child_process');
+const spawn = require('child_process').spawn;
 // const inlineimage = require('gulp-inline-image');
 const webpackStream = require('webpack-stream');
 const webpack2 = require('webpack');
 const pump = require('pump');
+
+let watch = false;
 
 let frontend = require('./config/gulp.frontend');
 let backend = require('./config/gulp.backend');
@@ -92,15 +96,6 @@ gulp.task('frontend:css', ['frontend:scss'], function () {
     }
 
     return pipe.pipe(concat(frontend.config.name + '.css'))
-        // .pipe(inlineimage(frontend.config.inline_image || {}))
-        // .on('error',  function(err) {
-        //     console.log('[Compilation Error]');
-        //     console.log(err.fileName + ( err.loc ? `( ${err.loc.line}, ${err.loc.column} ): ` : ': '));
-        //     console.log('error Babel: ' + err.message + '\n');
-        //     console.log(err.codeFrame);
-        //
-        //     this.emit('end');
-        // })
         .pipe(gulp.dest(frontend.dst.css))
         .pipe(hashsum({filename: 'frontend/versions/css.yml', hash: 'md5'}))
         .pipe(livereload());
@@ -132,14 +127,29 @@ gulp.task('backend:css', ['backend:scss'], function () {
         .pipe(livereload());
 });
 
-gulp.task('frontend:jsx', function(done) {
-    pump([
-            gulp.src(frontend.src.jsx),
-            webpackStream(frontend.config.webpack, webpack2),
-            gulp.dest(frontend.dst.jsx)
-        ],
-        done
-    );
+// gulp.task('frontend:jsx', function(done) {
+//     pump([
+//             gulp.src(frontend.src.jsx),
+//             webpackStream(frontend.config.webpack, webpack2),
+//             gulp.dest(frontend.dst.jsx)
+//         ],
+//         done
+//     );
+// });
+
+gulp.task('frontend:jsx', function(done){
+
+    let args = ['./node_modules/webpack/bin/webpack.js', '--config', './config/webpack.frontend.js'];
+    if (watch) {
+        args.push('--progress');
+        args.push('-w');
+    }
+
+    let cmd = spawn('node', args, {stdio: 'inherit'});
+    cmd.on('close', function (code) {
+        console.log('frontend:jsx exited with code ' + code);
+        done(code);
+    });
 });
 
 let fjsinc_builded = false;
@@ -161,7 +171,7 @@ gulp.task('frontend:js:includes', function(done){
     done();
 });
 
-gulp.task('frontend:js', ['frontend:js:includes','frontend:jsx'], function() {
+gulp.task('frontend:js', ['frontend:js:includes'], function() {
     let pipe = gulp.src(frontend.src.js);
 
     return pipe
@@ -253,6 +263,7 @@ gulp.task('backend:raw', function() {
 });
 
 gulp.task('watch:frontend', ['build:frontend'], function() {
+    watch = true;
     livereload({ start: true });
     const js_watch = frontend.src.js.concat(frontend.src.jsx);
 
@@ -262,6 +273,8 @@ gulp.task('watch:frontend', ['build:frontend'], function() {
     gulp.watch(js_watch, ['frontend:js']);
     gulp.watch(frontend.src.images, ['frontend:images']);
     gulp.watch(frontend.src.fonts, ['frontend:fonts']);
+
+    gulp.start('frontend:jsx')
 });
 
 gulp.task('watch:backend', ['build:backend'], function() {
@@ -274,6 +287,19 @@ gulp.task('watch:backend', ['build:backend'], function() {
     gulp.watch(backend.src.css, ['backend:css']);
     gulp.watch(backend.src.images, ['backend:images']);
     gulp.watch(backend.src.fonts, ['backend:fonts']);
+});
+
+gulp.task('prepare:frontend', ['clear:frontend', 'frontend:jsx'], function(done){
+
+    if (!fs.existsSync(frontend.dst.scss)){
+        fs.mkdirSync(frontend.dst.scss);
+    }
+
+    if (!fs.existsSync(frontend.dst.jsx)){
+        fs.mkdirSync(frontend.dst.jsx);
+    }
+
+    done();
 });
 
 gulp.task('watch', ['build'], function() {
@@ -297,7 +323,7 @@ gulp.task('clear', function() {
     );
 });
 
-gulp.task('build:frontend', ['clear:frontend'], function(){
+gulp.task('build:frontend', ['clear:frontend', 'prepare:frontend'], function(){
     gulp.start(
         'frontend:raw', 'frontend:css', 'frontend:js', 'frontend:images', 'frontend:fonts'
     );

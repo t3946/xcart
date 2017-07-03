@@ -7,7 +7,7 @@ module.exports = {
     // devtool: 'source-map',
     entry: paths.src.jsx_bundles,
     output: {
-        path: path.resolve(__dirname, './' + paths.dst.jsx),
+        path: path.resolve('./' + paths.dst.jsx),
         filename: '[name]-bundle.js'
     },
     target: "web",
@@ -16,7 +16,7 @@ module.exports = {
             modernizr$: path.resolve(__dirname, "./support/modernizrrc.js")
         },
         modules: [
-            path.resolve(__dirname, './' + paths.modules.jsx),
+            path.resolve('./' + paths.modules.jsx),
             'node_modules'
         ],
         extensions: ['.js', '.jsx', '.json']
@@ -42,7 +42,7 @@ module.exports = {
                 use: [
                     {
                         loader: 'modernizr-loader',
-                        options: require('./support/modernizrrc.js'),
+                        options: require(__dirname + '/support/modernizrrc.js'),
                     },
                 ]
             },
