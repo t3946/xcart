@@ -32,7 +32,7 @@ import Loader from "./components/Loader";
             $bclear.addClass('active');
         }
         else {
-            $bclear.removeClass('active1');
+            $bclear.removeClass('active');
         }
     });
 
