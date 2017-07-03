@@ -16,8 +16,30 @@ export default class Loader
     }
 
     init(element) {
-
         this.elements['container'] = $(element || "body");
+
+        if (
+            !this.checkExist(this.elements['container'], '.loader-bg', 'bg')
+            || !this.checkExist(this.elements['bg'], '.loader-wrapper', 'wrapper')
+            || !this.checkExist(this.elements['wrapper'], '.loader-spinner', 'spinner')
+            || !this.checkExist(this.elements['wrapper'], '.loader-container', 'content')
+        ) {
+            this.cleanUp();
+            this.createElements();
+        }
+    }
+
+    checkExist(container, cls = '.loader-bg', elKey = 'bg') {
+        let el = container.find(cls);
+        if (el.length) {
+            this.elements[elKey] = el;
+            return true;
+        }
+
+        return false;
+    }
+
+    createElements() {
         this.elements['bg'] = $('<div />').addClass('loader-bg');
         this.elements['wrapper'] = $('<div />').addClass('loader-wrapper');
         this.elements['spinner'] = $('<div />').addClass('loader-spinner');
@@ -31,7 +53,7 @@ export default class Loader
     }
 
     _bind() {
-        this.elements['bg'].on('click', this.allDetach());
+        this.elements['bg'].on('click load.detach', this.allDetach);
     }
 
     load(callback = null, max_time = 10000) {
@@ -97,5 +119,10 @@ export default class Loader
     allDetach() {
         this.loaders = 1;
         this.detach();
+    }
+
+    cleanUp() {
+        this.elements['container'].removeClass('loading-active');
+        this.elements['container'].find('.loader-bg').remove();
     }
 }

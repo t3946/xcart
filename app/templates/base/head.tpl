@@ -24,8 +24,6 @@
     {/block}
     {block 'head'}{/block}
     <link rel="stylesheet" href="/static/frontend/dist/css/main.css?v={frontend_css_version}">
-    <script src="/static/frontend/dist/js/vendors.js?v={frontend_vendor_js_version}"></script>
-    <script src="/static/frontend/dist/js/main.js?v={frontend_js_version}" defer></script>
 
     <script type="application/ld+json">
     {
@@ -40,13 +38,21 @@
     }
     </script>
 </head>
-<body itemscope itemprop="mainEntity" {block 'schema_page_type'}itemtype="http://schema.org/WebPage"{/block}>
+<body itemscope itemprop="mainEntity" {block 'schema_page_type'}itemtype="http://schema.org/WebPage"{/block} class="loading loading-active">
 
 {filter|strip:true}
-{block "wrapper"}
-{/block}
+    <div class="loader-bg">
+        <div class="loader-wrapper">
+            <div class="loader-spinner"></div>
+            <div class="loader-container"></div>
+        </div>
+    </div>
+
+{block "wrapper"}{/block}
 {/filter}
 
+<script src="/static/frontend/dist/js/vendors.js?v={frontend_vendor_js_version}" defer></script>
+<script src="/static/frontend/dist/js/main.js?v={frontend_js_version}" defer></script>
 
 {block 'js'}{/block}
 </body>

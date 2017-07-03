@@ -12,18 +12,18 @@ export default class SearchSuggestion
     }
 
     init(elements) {
-
         this.elements['search'] = $(elements);
+        this.elements['container'] = $(this.elements['search'].parent());
 
         this._bind();
     }
 
     show() {
-
+        this.elements['container'].addClass('suggestion-active');
     }
 
     hide() {
-
+        this.elements['container'].removeClass('suggestion-active');
     }
 
     getSuggestions(str) {

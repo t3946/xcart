@@ -187,4 +187,5 @@ import Loader from "./components/Loader";
 
 
     $(document).foundation();
+    loader.detach();
 })();

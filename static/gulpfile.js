@@ -12,7 +12,7 @@ const autoprefixer = require('gulp-autoprefixer');
 const babel = require('gulp-babel');
 const browserify = require('gulp-browserify');
 const spawn = require('child_process').spawn;
-// const inlineimage = require('gulp-inline-image');
+const inlineimage = require('gulp-inline-image');
 const pump = require('pump');
 
 let watch = false;
@@ -68,7 +68,7 @@ gulp.task('frontend:scss', function() {
         .pipe(sass({
             includePaths: frontend.src.scss_include ? frontend.src.scss_include : []
         }).on('error', sass.logError))
-        // .pipe(inlineimage())
+        .pipe(inlineimage())
         .pipe(gulp.dest(frontend.dst.scss));
 });
 
