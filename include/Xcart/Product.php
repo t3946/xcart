@@ -803,12 +803,12 @@ SQL;
         }
     }
 
-    public static function getRandFbaProducts($limit = 2, array $no_ids = null)
+    public static function getRandFbaProducts($limit = 2, array $no_ids = null, $sfid = null)
     {
         global $current_storefront_info;
 
-        $sfid = 0;
-        if (!empty($current_storefront_info)) {
+
+        if (empty($sfid) && !empty($current_storefront_info)) {
             $sfid = $current_storefront_info['storefrontid'];
         }
 
@@ -824,7 +824,7 @@ SQL;
                            ->select(['needed_resource_id' => 'p.productid'])
                            ->from('xcart_products')
                            ->setAlias('p')
-                           ->join('inner join', 'xcart_products_sf', ['ps.productid' => 'p.productid'], 'ps')
+                           ->join('inner join', 'xcart_products_sf', ['ps.productid' => 'p.productid' , 'ps.sfid' => new Expression($sfid)], 'ps')
                            ->join('left join',  'xcart_products_showed', ['p.productid' => 's.productid'], 's')
                            ->order(['s.in_list_showed', '?'])
                            ->where($where)

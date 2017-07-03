@@ -27,7 +27,6 @@ class SliderData
     public static function getSliderData ($mode, $productid = null, $fba_limit = 1, $max_products = 30)
     {
         global $config, $sql_tbl, $site_domain;
-        global $variant_id_for_point9, $is_robot;
         global $current_storefront;
 
         x_session_register("cart");
@@ -188,6 +187,13 @@ SQL;
                 unset($i_ids[$key]);
             }
             $qs = Product::objects()->filter(array_merge(['productid__in' => $i_ids], $extendFilter));
+            $ta = $qs->getTableAlias();
+
+            if (isset($current_storefront)) {
+                $qs->getQueryBuilder()
+                   ->join('inner join', 'xcart_products_sf', ['ps.productid' => $ta.'.productid' , 'ps.sfid' => new Expression($current_storefront)], 'ps');
+            }
+
 
             if ($saveOrder) {
                 $qs = $qs->order([new Expression("FIELD({$qs->getTableAlias()}.productid, " . implode(',', $i_ids) . ") ASC")]);
