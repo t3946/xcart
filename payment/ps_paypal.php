@@ -72,7 +72,7 @@ elseif ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['payment_type'])) 
 			if ($payment_status == 'Refunded') {
 				$payment_status = strtolower($payment_status);
 			}
-			$orderTransaction = OrderTransactionModel::objects()->get(['transaction_id' => $txn_id]);
+			$orderTransaction = OrderTransactionModel::objects()->filter(['transaction_id' => $txn_id])->limit(1)->get();
 			if ($orderTransaction && $orderTransaction->transaction_status != $payment_status) {
 				$orderTransaction->transaction_status = $payment_status;
 				$orderTransaction->transaction_response = null;
