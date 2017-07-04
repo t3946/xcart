@@ -2,7 +2,6 @@
 use Modules\Core\Helpers\CoreHelper;
 use Xcart\StoreFront;
 
-if ( !defined('XCART_START') ) { header("Location: ../"); die("Access denied"); }
 
 #
 # Translation string to frogle-compatibility-string
@@ -1825,6 +1824,3 @@ function Submit_expirationDate_ToGBFeed($productid, $MerchantID, $client_id, $ke
 		}
 	}
 }
-
-
-?>

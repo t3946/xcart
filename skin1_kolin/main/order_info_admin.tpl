@@ -621,14 +621,20 @@ function check_r_fields(){
         {if $item.options ne ""}
           <br /> {$item.classtext}
           <select name="items[{$product.itemid}][classid_optionid][{$item.classid}]" {if $refunded_option_found eq "Y" || $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}disabled="disabled"{/if}>
-          {foreach from=$item.options key=optionid item=option_values}
-          {assign var="tmp_optionid_key" value=`$option_values.classid`}
-          {assign var="tmp_optionid" value=`$product.product_options[$tmp_optionid_key].optionid`}
-            <option value="{$optionid}"
-              {if $tmp_optionid eq $optionid}
-                selected="selected"
+              {if (isset($product.extra_data.product_options[$item.classid].option_name) && !$product.extra_data.product_options[$item.classid].optionid|array_key_exists:$item.options)}
+                  <option value="{$product.extra_data.product_options[$item.classid].optionid}" selected="selected">{$product.extra_data.product_options[$item.classid].option_name}</option>
               {/if}
-            >{$option_values.option_name}</option>
+          {foreach from=$item.options key=optionid item=option_values}
+              {assign var="tmp_optionid_key" value=`$option_values.classid`}
+              {if $product.product_options[$tmp_optionid_key]}
+                  {assign var="tmp_optionid" value=`$product.product_options[$tmp_optionid_key].optionid`}
+              {/if}
+                <option value="{$optionid}"
+                  {if $tmp_optionid eq $optionid}
+                    selected="selected"
+                  {/if}
+                >{$option_values.option_name}</option>
+
           {/foreach}
           </select>
         {elseif $item.is_modifier eq "T"}

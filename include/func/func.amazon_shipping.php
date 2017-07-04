@@ -1,8 +1,4 @@
 <?php
-if ( !defined('XCART_START') ) { header("Location: ../"); die("Access denied"); }
-
-
-
 function func_amazon_all_FBA_products_flag($cart){
 
 	$all_FBA_products_flag = false;
@@ -482,5 +478,3 @@ SQL;
 	}
 	return $amazon_shippings_arr;
 }
-
-?>
