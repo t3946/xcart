@@ -594,11 +594,12 @@ function func_check_product_options ($productid, $options, $trusted_options = fa
 
 	$where = array();
 	$oids = array();
-	foreach ($options as $_cid => $oid) {
+	foreach ($options as $_cid => $option) {
 		$cid = intval($_cid);
 		if (empty($cid))
 			return false;
 
+        $oid = is_array($option) ? $option['optionid'] : $option;
 		if (!is_numeric($oid) || empty($oid)) {
 			$where[] = "$sql_tbl[classes].classid = '$cid' AND $sql_tbl[class_options].optionid IS NULL AND $sql_tbl[classes].is_modifier = 'T'";
 
@@ -676,7 +677,8 @@ function func_get_product_options_data($productid, $options, $membershipid = 0, 
 	$classes = func_query_hash("SELECT classid, is_modifier FROM $sql_tbl[classes] WHERE productid = '".intval($productid)."' AND classid IN ('".implode("','", $ids)."')", "classid", false, true);
 
 	$ret = array();
-	foreach ($options as $k => $v) {
+	foreach ($options as $k => $opt) {
+        $v = is_array($opt) ? $opt['optionid'] : $opt;
 		if (!isset($classes[$k]))
 			continue;
 
