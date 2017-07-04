@@ -29,11 +29,13 @@ class SearchController extends AbstractCatalogController
 
     public function actionSuggestion()
     {
+        if ($this->getRequest()->getIsAjax()) {
+            $this->jsonResponse([
+                'content' => $this->render('catalog/search_suggestion.tpl',[
 
-
-        echo $this->render('catalog/search_suggestion.tpl',[
-
-        ]);
+                ])
+            ]);
+        }
     }
 
     public function actionSearch()

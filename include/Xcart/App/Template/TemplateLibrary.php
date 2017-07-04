@@ -31,7 +31,7 @@ class TemplateLibrary
     {
         $reflection = new ReflectionClass(static::className());
         $methods = $reflection->getMethods(ReflectionMethod::IS_STATIC | ReflectionMethod::IS_PUBLIC);
-        $kinds = ['function', 'functionSmart', 'modifier', 'compiler', 'accessorProperty', 'accessorFunction'];
+        $kinds = ['function', 'functionSmart', 'modifier', 'compiler', 'accessorProperty', 'accessorFunction', 'block'];
 
         static::$excludedMethods = array_merge(self::$excludedMethods, self::$excludedMethodsInternal);
 
@@ -96,6 +96,9 @@ class TemplateLibrary
                 break;
             case 'functionSmart':
                 $renderer->addFunctionSmart($name, $callable);
+                break;
+            case 'block':
+                $renderer->addBlockFunction($name, $callable);
                 break;
             case 'modifier':
                 $renderer->addModifier($name, $callable);

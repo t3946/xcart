@@ -38,6 +38,7 @@ export default class SearchSuggestion
             clearTimeout(this.timer);
             this.timer = setTimeout(()=>{
                 $.ajax(this.elements['search'].data('suggestion-url'), {
+                    'data': {'q': str},
                     'success' : (data)=>{
                         if (currentNumber === this.suggestionNumber && data.content) {
                             this.setSuggestion(data.content)
@@ -50,6 +51,7 @@ export default class SearchSuggestion
 
     setSuggestion(data) {
         this.suggestions = data;
+        this.elements['container'].html(this.suggestions);
 
         if (data) {
             this.show();

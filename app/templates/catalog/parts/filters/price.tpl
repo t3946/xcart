@@ -33,12 +33,10 @@
     </div>
 </div>
 
-{use 'base.tpl'}
-{block 'js'}
-{parent}
 
-<script type="text/javascript">
-    $(document).ready(function(){
+{set_asset_block type="js"}
+<script type="text/javascript" defer>
+    document.addEventListener('DOMContentLoaded', function() {
         var price_min = {$values.prices.min};
         var price_max = {$values.prices.max};
         var start_min = {$values.selected.min};
@@ -58,4 +56,4 @@
         {/ignore}
     });
 </script>
-{/block}
+{/set_asset_block}

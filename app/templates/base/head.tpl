@@ -63,5 +63,12 @@
 <script src="/static/frontend/dist/js/main.js?v={frontend_version resource="js/main.js"}" defer></script>
 
 {block 'js'}{/block}
+
+{filter|unescape}
+{get_assets type="css"}
+{get_assets type="js"}
+{get_assets}
+{/filter}
+
 </body>
 </html>
