@@ -5,8 +5,10 @@ namespace Modules\Core\Helpers;
 
 use Modules\Core\Models\CountryModel;
 use Modules\Core\Models\GeoipLitecityLocationModel;
+use Modules\Core\Models\GlobalConfigModel;
 use Modules\Core\Models\StateModel;
 use Modules\Core\Models\TelephoneAreaModel;
+use Modules\Sites\Models\SiteConfigModel;
 use Xcart\App\Orm\QuerySet;
 
 class GeoipHelper
@@ -71,5 +73,27 @@ class GeoipHelper
         }
 
         return $model;
+    }
+
+    public static function getPhones($params)
+    {
+        $state = StateModel::objects()->get(
+            [
+                'code' => $params['state'],
+                'country_code' => $params['country']
+            ]
+        );
+
+        $orderState = static::getStateByPhone($params['phone']);
+
+        $phones = ($state ? $state->phone : '') . ($orderState ? ($state->phone && $orderState->phone ? ', ' : '') . $orderState->phone : '');
+
+        if (empty($phones)) {
+            $phones = $params['storefrontid']
+                ? SiteConfigModel::objects()->get(['name' => 'cidev_top_header_code', 'storefrontid' => $params['storefrontid']])->value
+                : GlobalConfigModel::objects()->get(['name' => 'cidev_top_header_code'])->value;
+        }
+
+        return $phones;
     }
 }

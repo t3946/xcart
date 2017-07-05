@@ -2,7 +2,9 @@
 namespace Xcart;
 
 use Modules\Core\Helpers\GeoipHelper;
+use Modules\Core\Models\GlobalConfigModel;
 use Modules\Core\Models\StateModel;
+use Modules\Sites\Models\SiteConfigModel;
 
 class OrderStatusNotification extends Mail
 {
@@ -56,14 +58,14 @@ class OrderStatusNotification extends Mail
     {
         if (!empty($this->oOrder)) {
 
-            $state = StateModel::objects()->get(
-                [
-                    'code' => $this->oOrder->getShippingState(),
-                    'country_code' => $this->oOrder->getShippingCountry()
-                ]
-            );
+            $params = [
+                'state' => $this->oOrder->s_state,
+                'country' => $this->oOrder->s_country,
+                'phone' => $this->oOrder->phone,
+                'storefrontid' => $this->oOrder->storefrontid,
+            ];
 
-            $orderState = GeoipHelper::getStateByPhone($this->oOrder->phone);
+            $phones = GeoipHelper::getPhones($params);
 
             $this->aReplaceRules = array_merge(
                 $this->aReplaceRules,
@@ -71,7 +73,7 @@ class OrderStatusNotification extends Mail
                     '{{c-fullname}}' => $this->oOrder->getFirstName(),
                     '{{orderid}}' => $this->oOrder->getDisplayOrderNumber(),
                     '{{site_url}}' => $this->oOrder->getOrderStoreFront()->getStoreFrontURL(),
-                    '{{customer_service_local_phone_number}}' => $state ? $state->phone : '' . $orderState ? ($state ? ', ' : '') .$orderState->phone : ''
+                    '{{customer_service_local_phone_number}}' => $phones
                 ]);
         }
 

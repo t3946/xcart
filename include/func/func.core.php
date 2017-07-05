@@ -1,6 +1,7 @@
 <?php
 
 use Modules\Core\Helpers\CoreHelper;
+use Modules\Core\Helpers\GeoipHelper;
 
 #
 # Use this function to load code of functions on demand (include/func/func.*.php)
@@ -3352,7 +3353,7 @@ function AB_Goal_Hit($point_id_arr, $orderid = "")
     x_session_save('pointid_ab_testing_arr');
 }
 
-function func_get_signature($sfid = false, $products = false)
+function func_get_signature($sfid = false, $products = false, $order = null)
 {
     global $sql_tbl, $current_storefront, $config, $login;
 
@@ -3373,10 +3374,27 @@ function func_get_signature($sfid = false, $products = false)
 
     $cur_storefront_info = func_get_storefront_info($use_storefrontid);
 
-    $signature = $config["Company"]["signature"];
-    $signature = str_replace("{{storefront-url}}", "http://" . $cur_storefront_info["domain"], $signature);
-    $signature = str_replace("{{position}}", $customer_info["position"], $signature);
-    $signature = str_replace("{{ext}}", $customer_info["phone_ext"], $signature);
+    $params = null;
+
+    if ($order) {
+        $params = [
+            'state' => $order['s_state'],
+            'country' => $order['s_country'],
+            'phone' => $order['phone'],
+        ];
+    }
+
+    $params['storefrontid'] =  $use_storefrontid;
+    $phones = GeoipHelper::getPhones($params);
+
+    $search = [
+        "{{storefront-url}}" => "https://" . $cur_storefront_info["domain"],
+        "{{position}}" => $customer_info["position"],
+        "{{ext}}" => $customer_info["phone_ext"],
+        "{{customer_service_local_phone_number}}" => $phones
+    ];
+
+    $signature = str_replace (array_keys($search), array_values($search), $config["Company"]["signature"]);
 
     return $signature;
 }
