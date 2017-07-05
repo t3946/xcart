@@ -505,7 +505,7 @@ if ($REQUEST_METHOD == "POST" && ($mode == "rma_send_email_to_customer" || $mode
 
     if ($mode == "rma_send_email_to_customer" && !empty($post_rma["order_email"]))
     {
-        $signature           = func_get_signature($order_data["order"]["storefrontid"]);
+        $signature           = func_get_signature($order_data["order"]["storefrontid"], false, $order_data["order"]);
         $cur_storefront_info = func_get_storefront_info($order_data["order"]["storefrontid"]);
         $crypt_orderid       = text_crypt($orderid);
         $rma_form_link       = "<a href='http://" . $cur_storefront_info["domain"] . "/rma_request.php?step=2&o=$crypt_orderid&rma_id=$rma_id&prefilled=Y' target='_blank' style='color: blue;'>link</a>";
@@ -2699,7 +2699,7 @@ if (!empty($productids_for_outofstock_disc_cat_urls)) {
 
 $backorder_decision_request_message = str_replace("{{outofstock_disc_cat_urls}}", $outofstock_disc_cat_urls, $backorder_decision_request_message);
 
-$signature                          = func_get_signature(false, $products);
+$signature                          = func_get_signature(false, $products, $order_data["order"]);
 $backorder_decision_request_message = str_replace("{{signature}}", $signature, $backorder_decision_request_message);
 
 $firstname       = trim($userinfo["firstname"]);
