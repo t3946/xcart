@@ -1,6 +1,9 @@
 <?php
 namespace Xcart;
 
+use Modules\Core\Helpers\GeoipHelper;
+use Modules\Core\Models\StateModel;
+
 class OrderStatusNotification extends Mail
 {
     /**
@@ -51,12 +54,28 @@ class OrderStatusNotification extends Mail
 
     public function replaceBody()
     {
-        parent::replaceBody();
         if (!empty($this->oOrder)) {
-            $this->setBody(str_replace("{{c-fullname}}", $this->oOrder->getFirstName(), $this->getEmailBody()))->
-            setBody(str_replace("{{orderid}}", $this->oOrder->getDisplayOrderNumber(), $this->getEmailBody()))->
-            setBody(str_replace("{{site_url}}", $this->oOrder->getOrderStoreFront()->getStoreFrontURL(), $this->getEmailBody()));
+
+            $state = StateModel::objects()->get(
+                [
+                    'code' => $this->oOrder->getShippingState(),
+                    'country_code' => $this->oOrder->getShippingCountry()
+                ]
+            );
+
+            $orderState = GeoipHelper::getStateByPhone($this->oOrder->phone);
+
+            $this->aReplaceRules = array_merge(
+                $this->aReplaceRules,
+                [
+                    '{{c-fullname}}' => $this->oOrder->getFirstName(),
+                    '{{orderid}}' => $this->oOrder->getDisplayOrderNumber(),
+                    '{{site_url}}' => $this->oOrder->getOrderStoreFront()->getStoreFrontURL(),
+                    '{{customer_service_local_phone_number}}' => $state ? $state->phone : '' . $orderState ? ($state ? ', ' : '') .$orderState->phone : ''
+                ]);
         }
+
+        parent::replaceBody();
     }
 
     public function setOrder($oOrder)

@@ -60,18 +60,19 @@ $(function(){
 
 {/if}
   </td>
-  <td width="*" align="right" style="padding-right: 20px;">
-<span class="top_text_1">
- Place order online or call
-</span>
-<span class="top_text_2">
-{if $geo_litecity_location.phone ne ""}
-&nbsp; {$geo_litecity_location.phone}
-{else}
-&nbsp; {$config.Company.cidev_top_header_code}
-{/if}
-</span>
-  </td>
+     <td width="*" align="right">
+        <span class="top_text_1">
+         Place order online or call
+        </span>
+     </td>
+     <td align="right" style="padding-right: 20px;" width="22%">
+        <span class="top_text_2">
+            {if $geo_litecity_location.phone ne ""}
+                {$geo_litecity_location.phone}<br/>
+            {/if}
+            {$config.Company.cidev_top_header_code}
+        </span>
+     </td>
  </tr>
 </table>
 
