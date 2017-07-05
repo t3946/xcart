@@ -3374,8 +3374,6 @@ function func_get_signature($sfid = false, $products = false, $order = null)
 
     $cur_storefront_info = func_get_storefront_info($use_storefrontid);
 
-    $params = null;
-
     if ($order) {
         $params = [
             'state' => $order['s_state'],
