@@ -181,10 +181,11 @@ JSON;
                                                '_type' => $this->type,
                                                '_id' => $this->_id
                                            ]],
-                                "min_doc_freq"=> 7,
-                                "min_term_freq" => 1,
-                                "min_word_length"=> 2,
-//                                'max_query_terms' => 240,
+                                "min_doc_freq"=> 2,
+                                "min_term_freq" => 2,
+                                "min_word_length"=> 3,
+                                "max_query_terms" => 580,
+                                "stop_words" => ['and','for','is','it','of','an','in','this','best','with'],
                             ]
                         ],
 
