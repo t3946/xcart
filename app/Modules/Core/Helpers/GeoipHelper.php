@@ -77,14 +77,20 @@ class GeoipHelper
 
     public static function getPhones($params)
     {
-        $state = StateModel::objects()->get(
-            [
-                'code' => $params['state'],
-                'country_code' => $params['country']
-            ]
-        );
+        $state = $orderState = null;
+		
+		if ($params['state'] && $params['country']) {
+			$state = StateModel::objects()->get(
+				[
+					'code' => $params['state'],
+					'country_code' => $params['country']
+				]
+			);
+		}
 
-        $orderState = static::getStateByPhone($params['phone']);
+        if ($params['phone']) {
+			$orderState = static::getStateByPhone($params['phone']);
+		}
 
         $phones = ($state ? $state->phone : '') . ($orderState ? ($state->phone && $orderState->phone ? ', ' : '') . $orderState->phone : '');
 
