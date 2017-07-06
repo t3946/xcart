@@ -69,12 +69,6 @@ class ProductModel extends AutoMetaModel
                 'through' => ProductCategoriesModel::className(),
             ],
 
-            'categories_link' => [
-                'class' => HasManyField::className(),
-                'modelClass' => ProductCategoriesModel::className(),
-                'link' => ['productid' => 'productid']
-            ],
-
             'prices' => [
                 'class' => HasManyField::className(),
                 'modelClass' => PricingModel::className(),
@@ -213,7 +207,7 @@ class ProductModel extends AutoMetaModel
     public function getBreadcrumbs()
     {
         /** @var CategoryModel $category */
-        if ($category = CategoryModel::objects()->filter(['products_link__main' => 'Y', 'products_link__productid' => $this->productid])->limit(1)->get()) {
+        if ($category = CategoryModel::objects()->filter(['products__through__main' => 'Y', 'products_link__productid' => $this->productid])->limit(1)->get()) {
             $bread = $category->getBreadcrumbs();
         }
         else {

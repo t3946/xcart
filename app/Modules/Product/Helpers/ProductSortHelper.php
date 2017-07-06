@@ -120,7 +120,7 @@ class ProductSortHelper
 
         if ($this->category) {
             $oldOrder[] = 'categories__order_by';
-            $oldOrder[] = 'categories_link__orderby';
+            $oldOrder[] = 'categories__through__orderby';
             $qs->with(['categories_link']);
         }
 
