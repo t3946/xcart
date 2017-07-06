@@ -57,7 +57,7 @@ class TransactionLogModel extends AutoMetaModel
                 'null' => false,
                 'default' => ''
             ],
-            'login' => [
+            'user' => [
                 'field' => 'login',
                 'class' => ForeignField::className(),
                 'modelClass' => UserModel::className(),

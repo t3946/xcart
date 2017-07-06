@@ -1,7 +1,7 @@
 <tr data-order-transaction="{$v.model->id}">
     <td>{$v.model->payment_method_model->payment_method}</td>
     <td>{$v.model->date|date_format:'%d-%b-%Y<br />%H:%M:%S'}</td>
-    <td>{$v.model->login->firstname} ({$v.model->login->login})</td>
+    <td>{$v.model->user->firstname} ({$v.model->user->login})</td>
     <td>{if $v.model->transaction_id ne ""}
             {if $v.model->payment_method_model->transaction_id_link}<a target="_blank" style="color: #1411FF;" href="{$v.model->payment_method_model->transaction_id_link|substitute:"trans-id":$v.model->transaction_id}">{/if}
             {if $v.model->payment_method_model->transaction_link_anchor ne ""}{$v.model->payment_method_model->transaction_link_anchor}{else}{$v.model->transaction_id}{/if}{if $v.model->payment_method_model->transaction_id_link ne ""}</a>{/if}

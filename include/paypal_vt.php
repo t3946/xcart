@@ -21,11 +21,14 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array_keys(
     /** @var OrderModel $orderModel */
     /** @var PaymentMethodModel $pmModel */
     if ($orderModel = OrderModel::objects()->get(['orderid' => $orderid])) {
+
         extract(Gateway::$gatewayMethods[$mode]);
+
         $countTr = OrderTransactionModel::objects()
             ->filter(['orderid' => $orderid])
             ->exclude(['transaction_status' => '', 'transaction_id' => ''])
             ->count();
+
         $isAllowed = PaymentHelper::isAuthorizeAllowed($orderModel, $countTr);
         if ($order_transaction_id && ($orderTransaction = OrderTransactionModel::objects()->get(['id' => $order_transaction_id]))) {
             $pmModel = $orderTransaction->payment_method_model;
@@ -57,15 +60,21 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array_keys(
 
         try {
             if ($isAllowed) {
+
                 if ($gw = Gateway::getGateway($pmModel)) {
                     if ($res = $gw->$method($params)) {
+
                         $orderTransaction = OrderTransactionHelper::prepareOrderTransaction($orderTransaction, $gw, $orderModel, $pmModel, $amount, $mode);
                         $orderTransaction->login = $login;
                         $orderTransaction->save();
+
+                        $result = $orderTransaction->transaction_response;
                         $log .= "<br />Transaction:" . $orderTransaction->transaction_id;
+
                         if (!$countTr) {
                             list ($o_log, $send_notification) = OrderHelper::changeOrderCBStatus($orderModel, OrderStatusModel::ORDER_STATUS_AUTHORIZED);
                             $log .= $o_log;
+
                             if ($send_notification) {
                                 func_send_order_status_notification($orderModel->orderid, OrderStatusModel::ORDER_STATUS_AUTHORIZED, true);
                             }
@@ -77,10 +86,13 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array_keys(
                             $orderTransaction->transaction_response = $result;
                             $orderTransaction->save();
                         }
+
                         $log .= "<br/>{$result['name']}<br/>{$result['message']}";
+
                     }
                     $logStatus = $orderTransaction->transaction_status;
                 }
+
             } else {
                 if (!$countTr && (empty($AJAX_SUBMIT) || $AJAX_SUBMIT != "Y")) {
                     $top_message = [
@@ -91,10 +103,12 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array_keys(
                     func_header_location("order.php?orderid=" . $orderid . "&tab=y#main_order_tabs-VT");
                 }
             }
+
         } catch (\Exception $e) {
             $log .= "<br/>{$gw->getProcessorName()} Processing Error: {$e->getMessage()}";
             $logStatus = OrderTransactionModel::STATUS_FAILED;
         }
+
         $result["xcart_log"] = $log;
         $transactionLog = new TransactionLogModel(
             [
@@ -108,9 +122,11 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array_keys(
                 'transaction_log' => $result
             ]
         );
+
         if ($transactionLog->isValid()) {
             $transactionLog->save();
         }
+
         func_log_order($orderid, 'PP', $log, $login);
 
         if (!($mode == "authorize" && $AJAX_SUBMIT == "Y")) {

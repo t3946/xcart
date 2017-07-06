@@ -61,7 +61,7 @@ class OrderTransactionModel extends AutoMetaModel
                 'autoNowAdd' => true,
                 'autoNow' => true,
             ],
-            'login' => [
+            'user' => [
                 'field' => 'login',
                 'class' => ForeignField::className(),
                 'modelClass' => UserModel::className(),
