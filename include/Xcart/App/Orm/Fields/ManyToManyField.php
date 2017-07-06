@@ -203,39 +203,10 @@ class ManyToManyField extends RelatedField
 
     public function getSelectThroughJoin(QueryBuilder $qb, $topAlias)
     {
-        $on_owner = [];
-        $on_related = [];
-
-        $throughAlias = $qb->makeAliasKey($this->getTableName());
-        $alias = $qb->makeAliasKey($this->getRelatedTable());
-
-        $through = call_user_func([$this->through, 'create']);
-
-        foreach ($through->getFields() as $fieldName => $params) {
-            if (isset($params['modelClass']) && $params['modelClass'] == $this->ownerClassName) {
-                if ($params['link'])
-                {
-                    foreach ($params['link'] as $from => $to)
-                    {
-                        $on_owner[$throughAlias . '.' . $from] = $topAlias . '.' . $to;
-                    }
-                }
-            }
-
-            if (isset($params['modelClass']) && $params['modelClass'] == $this->modelClass) {
-                if ($params['link'])
-                {
-                    foreach ($params['link'] as $from => $to)
-                    {
-                        $on_related[$throughAlias . '.' . $from] = $alias . '.' . $to;
-                    }
-                }
-            }
-        }
+        $joins = $this->getJoin($qb, $topAlias);
 
         return [
-            ['LEFT OUTER JOIN', $this->getTableName(), $on_owner, $throughAlias],
-            ['LEFT OUTER JOIN', $this->getRelatedTable(), $on_related, $alias],
+            $joins[0]
         ];
     }
 
@@ -248,7 +219,7 @@ class ManyToManyField extends RelatedField
         $className = get_class($this->getRelatedModel()->objects());
         $config = [
             'modelColumn' => $this->getRelatedModelColumn(),
-//            'primaryModelColumn' => $this->getModelColumn(),
+            //            'primaryModelColumn' => $this->getModelColumn(),
             'primaryModel' => $this->getModel(),
             'relatedTable' => $this->getTableName(),
             'extra' => $this->extra,
@@ -257,10 +228,10 @@ class ManyToManyField extends RelatedField
 
         /** @var \Xcart\App\Orm\Manager $manager */
         $manager = (new \ReflectionClass($className))->newInstanceArgs([
-            $this->getRelatedModel(),
-            $this->getRelatedModel()->getConnection(),
-            $config
-        ]);
+                                                                           $this->getRelatedModel(),
+                                                                           $this->getRelatedModel()->getConnection(),
+                                                                           $config
+                                                                       ]);
 
 
         $throughAlias = $manager->getQueryBuilder()->makeAliasKey($this->getTableName());
@@ -422,9 +393,40 @@ class ManyToManyField extends RelatedField
 
     public function getJoin(QueryBuilder $qb, $topAlias)
     {
-        // @TODO: maybe changed query
+        $on_owner = [];
+        $on_related = [];
 
-        return $this->getSelectThroughJoin($qb, $topAlias);
+        $throughAlias = $qb->makeAliasKey($this->getTableName());
+        $alias = $qb->makeAliasKey($this->getRelatedTable());
+
+        $through = call_user_func([$this->through, 'create']);
+
+        foreach ($through->getFields() as $fieldName => $params) {
+            if (isset($params['modelClass']) && $params['modelClass'] == $this->ownerClassName) {
+                if ($params['link'])
+                {
+                    foreach ($params['link'] as $from => $to)
+                    {
+                        $on_owner[$throughAlias . '.' . $from] = $topAlias . '.' . $to;
+                    }
+                }
+            }
+
+            if (isset($params['modelClass']) && $params['modelClass'] == $this->modelClass) {
+                if ($params['link'])
+                {
+                    foreach ($params['link'] as $from => $to)
+                    {
+                        $on_related[$throughAlias . '.' . $from] = $alias . '.' . $to;
+                    }
+                }
+            }
+        }
+
+        return [
+            ['LEFT OUTER JOIN', $this->getTableName(), $on_owner, $throughAlias],
+            ['LEFT OUTER JOIN', $this->getRelatedTable(), $on_related, $alias],
+        ];
     }
 
     public function fetch($value)
