@@ -24,10 +24,8 @@ class GeoipHelper
         if ($iIp = ip2long($ip)) {
             /** @var QuerySet $qs */
             $model = GeoipLitecityLocationModel::objects()
-                ->getQuerySet()
-                ->join('inner join', 'xcart_geo_litecity_blocks', ['locId' => 'b.locId'], 'b')
-                ->filter(['b.startIpNum__lt' => $iIp])
-                ->order(['-b.startIpNum'])
+                ->filter(['blocks__startIpNum__lt' => $iIp])
+                ->order(['-blocks__startIpNum'])
                 ->limit(1)
                 ->get();
         }
