@@ -39,7 +39,8 @@ class GeoipLitecityLocationModel extends AutoMetaModel
                 'link' => ['country' => 'code'],
             ],
             'state_model' => [
-                'class' => HasManyField::className(),
+                'field' => 'region',
+                'class' => ForeignField::className(),
                 'modelClass' => StateModel::className(),
                 'link' => [
                     'region' => 'code',
