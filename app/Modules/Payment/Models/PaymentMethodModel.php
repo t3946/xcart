@@ -2,6 +2,7 @@
 
 namespace Modules\Payment\Models;
 
+use Modules\User\Models\UserModel;
 use Xcart\App\Orm\AutoMetaModel;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\ForeignField;

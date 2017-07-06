@@ -79,6 +79,7 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array_keys(
                         }
                         $log .= "<br/>{$result['name']}<br/>{$result['message']}";
                     }
+                    $logStatus = $orderTransaction->transaction_status;
                 }
             } else {
                 if (!$countTr && (empty($AJAX_SUBMIT) || $AJAX_SUBMIT != "Y")) {

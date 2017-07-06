@@ -61,12 +61,11 @@ class OrderTransactionModel extends AutoMetaModel
                 'autoNowAdd' => true,
                 'autoNow' => true,
             ],
-            'user' => [
+            'login' => [
                 'field' => 'login',
                 'class' => ForeignField::className(),
                 'modelClass' => UserModel::className(),
-                'link' => ['login', 'login'],
-                'primary' => true,
+                'link' => ['login' => 'login'],
             ],
         ];
     }
