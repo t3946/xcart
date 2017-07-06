@@ -159,8 +159,8 @@ class DefaultConnection extends DBALConnection
             $login = '';
             $session = Xcart::app()->request->session;
 
-            if (Xcart::app()->isRun() && $session) {
-                $login = $session->get('admin_login') ?: $session->get('login');
+            if ($session) {
+                $login = $session->get('admin_login') ?: $session->get('admin_login');
             }
 
             $msg .= "Site        : ".(($_SERVER['HTTPS']) ? 'https://' : 'http://') . $_SERVER["HTTP_HOST"]. $_SERVER['REQUEST_URI']."\n";
