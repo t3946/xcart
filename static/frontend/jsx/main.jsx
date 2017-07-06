@@ -23,6 +23,15 @@ import Loader from "./components/Loader";
     Waves.init();
 
 
+    $(document).ajaxComplete(function (e, xhr, settings) {
+        if (xhr.status == 278) {
+            let location = xhr.getResponseHeader("Location");
+            if (location) {
+                window.location.href = xhr.getResponseHeader("Location");
+            }
+        }
+    });
+
     $('.search-form-container .search').on('keyup', function (e){
         let $bclear = $('.search-form-container .button-clear');
         let $this = $(this);
@@ -155,9 +164,9 @@ import Loader from "./components/Loader";
     // $(window).on('pageshow', (e)=>{
     //     console.log(e);
     // });
-    $(window).on('pagehide', (e)=>{
-        loader.load();
-    });
+    // $(window).on('pagehide', (e)=>{
+    //     loader.load();
+    // });
 
     // $(window).on('popstate', ()=>{
     //     loader.load();
@@ -185,7 +194,11 @@ import Loader from "./components/Loader";
     //     };
     // }
 
-
     $(document).foundation();
     loader.detach();
+
+    // setTimeout(()=>{
+    //     loader.detach();
+    //     $(document).foundation();
+    // }, 300);
 })();

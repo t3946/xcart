@@ -155,6 +155,11 @@ module.exports = {
                 'bower_components/bourbon/app/assets/stylesheets/'
             ]
         },
+        wNumb: {
+            js_include: [
+                'vendors/wNumb.js'
+            ]
+        },
         pace: {
             js_include: [
                 'bower_components/PACE/pace.js'

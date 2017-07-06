@@ -90,7 +90,8 @@ return array_replace_recursive([
        'template' => [
            'class' => '\\Xcart\\App\\Template\\TemplateManager',
            'forceCompile' => false,
-           'autoReload' => false
+           'autoReload' => false,
+           'autoEscape' => false,
        ],
 
        'storage' => [

@@ -16,10 +16,15 @@ return [
         'path' => 'Modules.Brand.routes',
         'namespace' => 'brand'
     ],
+    [
+        'route' => '/cart',
+        'path' => 'Modules.Cart.routes',
+        'namespace' => 'cart'
+    ],
 
     [
         'route' => '/admin/dashboard',
-        'path' => 'Modules.Dashboard.routes_admin',        
+        'path' => 'Modules.Dashboard.routes_admin',
         'namespace' => 'dashboard'
     ],
     [

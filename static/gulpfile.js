@@ -96,7 +96,11 @@ gulp.task('frontend:css', ['frontend:scss', 'frontend:css:raw'], function () {
         }));
 
     if (frontend.config.compress) {
-        pipe = pipe.pipe(cssnano())
+        pipe = pipe.pipe(cssnano({
+            preset: ['default'],
+            discardComments: { removeAll: true, },
+            reduceIdents: false
+        }))
     }
 
     return pipe.pipe(gulp.dest(frontend.dst.css))

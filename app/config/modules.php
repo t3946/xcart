@@ -1,6 +1,7 @@
 <?php
 return [
     'Core',
+    'Cart',
     'Main',
     'Menu',
     'Demo',

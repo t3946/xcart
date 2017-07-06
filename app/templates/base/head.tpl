@@ -22,7 +22,6 @@
         <title>{$sconfig.company_name.value}</title>
         {*<link rel="canonical" href="https://{$site.domain}/" itemprop="url">*}
     {/block}
-    {block 'head'}{/block}
 
     <script type="application/ld+json">
     {
@@ -36,14 +35,17 @@
       }
     }
     </script>
-    <style type="text/css">
-{filter|unescape}{inline file="static/frontend/dist/css/base.css"}{/filter}
-    </style>
-    {*<link rel="stylesheet" href="/static/frontend/dist/css/base.css?v={frontend_version resource='css/base.css'}">*}
+    <style type="text/css">{inline file="static/frontend/dist/css/base.css"}</style>
+
+    <link rel="stylesheet" href="/static/frontend/dist/css/styles.css?v={frontend_version resource='css/styles.css'}" media="none" onload="if(media!='all')media='all'">
+    <noscript><link rel="stylesheet" href="/static/frontend/dist/css/styles.css?v={frontend_version resource='css/styles.css'}"></noscript>
+    <script src="/static/frontend/dist/js/vendors.js?v={frontend_version resource='js/vendors.js'}"></script>
+    {block 'head'}{/block}
 </head>
 <body itemscope itemprop="mainEntity" {block 'schema_page_type'}itemtype="http://schema.org/WebPage"{/block} class="loading loading-active">
 
 {filter|strip:true}
+{autoescape true}
     <div class="loader-bg">
         <div class="loader-wrapper">
             <div class="loader-spinner"></div>
@@ -52,14 +54,11 @@
     </div>
 
 {block "wrapper"}{/block}
+{/autoescape}
 {/filter}
 
-<link rel="stylesheet" href="/static/frontend/dist/css/styles.css?v={frontend_version resource='css/styles.css'}" media="none" onload="if(media!='all')media='all'">
-<noscript><link rel="stylesheet" href="/static/frontend/dist/css/styles.css?v={frontend_version resource='css/styles.css'}"></noscript>
 
-{*<link rel="stylesheet" href="/static/frontend/dist/css/styles.css?v={frontend_version resource='css/styles.css'}">*}
-<script src="/static/frontend/dist/js/vendors.js?v={frontend_version resource='js/vendors.js'}" defer></script>
-<script src="/static/frontend/dist/js/main.js?v={frontend_version resource="js/main.js"}" defer></script>
+<script src="/static/frontend/dist/js/main.js?v={frontend_version resource="js/main.js"}"></script>
 
 {block 'js'}{/block}
 

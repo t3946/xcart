@@ -33,6 +33,7 @@ class CoreModule extends Module
         {
             return preg_replace("/(\r\n|\n|\r)/", " ", $str);
         });
+
         $template->addModifier('instanceof', function($obj, $class_name)
         {
             return $obj instanceof $class_name;

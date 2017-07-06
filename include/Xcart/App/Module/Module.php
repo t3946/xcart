@@ -50,6 +50,16 @@ abstract class Module
         return [];
     }
 
+    public static function setComponent($name, $component)
+    {
+        Xcart::app()->setComponent($name, $component);
+    }
+
+    public static function getComponent($name)
+    {
+        return Xcart::app()->getComponent($name);
+    }
+
     public static function t($str, $params = [], $dic = 'main')
     {
 //        return Xcart::t(get_called_class() . "." . $dic, $str, $params);

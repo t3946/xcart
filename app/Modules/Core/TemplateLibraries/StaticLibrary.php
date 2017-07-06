@@ -117,7 +117,26 @@ class StaticLibrary extends TemplateLibrary
     {
         $resource = $params['file'];
 
-        return file_get_contents($resource);
+        if (is_file($resource)) {
+            return file_get_contents($resource);
+        }
+
+        return '';
+    }
+
+    /**
+     * @kind modifier
+     * @name base64
+     * @return string
+     */
+    public static function base64($data, $type = 'encode')
+    {
+        if ($type == 'decode') {
+            return base64_decode($data);
+        }
+        else if ($type == 'encode') {
+            return base64_encode($data);
+        }
     }
 
     /**
