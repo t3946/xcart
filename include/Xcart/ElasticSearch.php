@@ -174,15 +174,18 @@ JSON;
                     'filtered' => [
                         'query' => [
                             'more_like_this' => [
-                                'fields' => ['productname'],
+                                'fields' => ['productname', 'description'],
                                 'analyzer' => 'snowball',
                                 'docs' => [[
-                                    '_index' => $this->index,
-                                    '_type' => $this->type,
-                                    '_id' => $this->_id
-                                ]],
-                                'min_term_freq' => 1,
-                                'max_query_terms' => 240
+                                               '_index' => $this->index,
+                                               '_type' => $this->type,
+                                               '_id' => $this->_id
+                                           ]],
+                                "min_doc_freq"=> 2,
+                                "min_term_freq" => 2,
+                                "min_word_length"=> 3,
+                                "max_query_terms" => 580,
+                                "stop_words" => ['and','for','is','it','of','an','in','this','best','with'],
                             ]
                         ],
 
@@ -195,7 +198,7 @@ JSON;
                     'should' => [],
                     'must_not' => [
                         'regexp' => [
-                            'brand.brand_original' => '.*'.$this->escapeReservedCharacters($sExcludeBrand).'.*'
+                            'brand' => '.*'.$this->escapeReservedCharacters($sExcludeBrand).'.*'
                         ]
                     ]
                 ]

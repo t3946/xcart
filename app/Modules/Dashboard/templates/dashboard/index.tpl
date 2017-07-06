@@ -73,6 +73,10 @@
             <input type="button" value="Search cart" onclick="javascript: window.open('customers_cart.php?cart_number='+$('#cart_number').val());" />
         </form>
     {/smarty_admin_block}
+
+    {smarty_admin_block name= 'Inquiries dashboard'}
+        <a href="//admin/send_W9_form.php" target="_blank">Send W-9 form</a>
+    {/smarty_admin_block}
 {/block}
 
 {block 'js'}

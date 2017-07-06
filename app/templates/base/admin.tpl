@@ -39,7 +39,7 @@
                     {/block}
 
                     {block 'menu_block'}
-                        {include 'base/_admin_menu.tpl'}
+                        {*{include 'base/_admin_menu.tpl'}*}
                     {/block}
                 </div>
             {/block}

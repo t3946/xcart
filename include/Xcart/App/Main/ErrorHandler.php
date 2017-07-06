@@ -583,8 +583,14 @@ class ErrorHandler
     protected function renderSourceCode($file, $errorLine, $maxLines)
     {
         $errorLine--; // adjust line number to 0-based from 1-based
-        if ($errorLine < 0 || ($lines = @file($file)) === false || ($lineCount = count($lines)) <= $errorLine)
+        $lines = false;
+
+        if ($errorLine < 0
+            || (file_exists($file) && ($lines = @file($file)) === false)
+            || ($lineCount = count($lines)) <= $errorLine
+        ){
             return '';
+        }
 
         $halfLines = (int)($maxLines / 2);
         $beginLine = $errorLine - $halfLines > 0 ? $errorLine - $halfLines : 0;

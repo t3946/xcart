@@ -1115,6 +1115,10 @@ SQL;
                         $aAggregateRows[$iProductId][$iReportTimeStamp]->setField('cpr_LandedPrice', floatval($aAggregateRows[$iProductId][$iReportTimeStamp]->getField('cpr_LandedPrice')) + floatval($oFbaProduct->getField('cpr_LandedPrice')));
                         $aAggregateStat[$iProductId][$iReportTimeStamp]['cpr_LandedPrice']++;
                     }
+                    if ($oFbaProduct->getField('cpr_OurLandedPrice') > 0) {
+                        $aAggregateRows[$iProductId][$iReportTimeStamp]->setField('cpr_OurLandedPrice', floatval($aAggregateRows[$iProductId][$iReportTimeStamp]->getField('cpr_OurLandedPrice')) + floatval($oFbaProduct->getField('cpr_OurLandedPrice')));
+                        $aAggregateStat[$iProductId][$iReportTimeStamp]['cpr_OurLandedPrice']++;
+                    }
                     if ($oFbaProduct->getField('cpr_belongs_LandedPrice') > 0) {
                         $aAggregateRows[$iProductId][$iReportTimeStamp]->setField('cpr_belongs_LandedPrice', floatval($aAggregateRows[$iProductId][$iReportTimeStamp]->getField('cpr_belongs_LandedPrice')) + floatval($oFbaProduct->getField('cpr_belongs_LandedPrice')));
                         $aAggregateStat[$iProductId][$iReportTimeStamp]['cpr_belongs_LandedPrice']++;
@@ -1180,6 +1184,8 @@ SQL;
                     foreach ($aAggregateRow as $iPeriod => $oAggregateRow) {
                         if ($aAggregateStat[$iProductId][$iPeriod]['cpr_LandedPrice'])
                             $oAggregateRow->setField('cpr_LandedPrice', round($oAggregateRow->getField('cpr_LandedPrice') / $aAggregateStat[$iProductId][$iPeriod]['cpr_LandedPrice'], 2));
+                        if ($aAggregateStat[$iProductId][$iPeriod]['cpr_OurLandedPrice'])
+                            $oAggregateRow->setField('cpr_OurLandedPrice', round($oAggregateRow->getField('cpr_OurLandedPrice') / $aAggregateStat[$iProductId][$iPeriod]['cpr_OurLandedPrice'], 2));
                         if ($aAggregateStat[$iProductId][$iPeriod]['cpr_belongs_LandedPrice'])
                             $oAggregateRow->setField('cpr_belongs_LandedPrice', round($oAggregateRow->getField('cpr_belongs_LandedPrice') / $aAggregateStat[$iProductId][$iPeriod]['cpr_belongs_LandedPrice'], 2));
                         $oAggregateRow->setField('cpr_SalesRank', round($oAggregateRow->getField('cpr_SalesRank') / $aAggregateStat[$iProductId][$iPeriod]['cpr_SalesRank']));
@@ -1995,7 +2001,7 @@ SQL;
                                                         $oAmazonProductModel->cpr_belongs_LandedPrice = $lPrice->getAmount();
                                                         $oAmazonProductModel->buybox_in++;
                                                     } else {
-                                                        $lPrice = $price->getListingPrice();
+                                                        $lPrice = $price->getLandedPrice();
                                                         $oAmazonProductModel->cpr_LandedPrice = $lPrice->getAmount();
                                                         $oAmazonProductModel->buybox_out++;
                                                     }
@@ -2023,6 +2029,13 @@ SQL;
             }
         }
         return $this;
+    }
+
+    private $_saved = 0;
+
+    public function getCountSaved()
+    {
+        return $this->_saved;
     }
 
     public function doListInventorySupply()
@@ -2068,7 +2081,9 @@ SQL;
                             }
                             $oAmazonProductModel->report_date = $iReportDate;
                             if ($oAmazonProductModel->productid) {
-                                $oAmazonProductModel->save();
+                                if ($oAmazonProductModel->save()) {
+                                    $this->_saved++;
+                                }
                             }
                         }
                     }

@@ -238,7 +238,14 @@ function func_set_value_to_field(form, fefix_field, field, mnf_id){
             <input type="hidden" name="mode" value="submit_message"/>
             <input type="hidden" name="send_email" value="N"/>
             <input type="hidden" name="orderid" value="{$order.orderid}"/>
-            {$cidev_firstname} ({$login}) notes:<br/>
+            {$cidev_firstname} ({$login}) note:<br/>
+            Write a note below or
+            <button style="font-size: 1em; display: inline; border: none; padding: 0; background: none; color: inherit; text-decoration: underline; cursor: pointer; word-wrap: break-word;"
+                    value="empty"
+                    name="type">
+                click this link to empty 'Last CS message' in the order list
+            </button>. <br/>
+
             <div>
                 <p><b>Subject line:</b></p>
                 <input style="width: 100%;" type="text" name="subject_line"/>
@@ -256,7 +263,6 @@ function func_set_value_to_field(form, fefix_field, field, mnf_id){
                     Post message
                 </button>
 
-                <button value="empty" name="type">Post empty message</button>
             </div>
         </form>
     </div>

@@ -63,6 +63,9 @@ return array_replace_recursive([
                 'BotsMiddleware' => [
                    'class' => '\\Modules\\User\\Middleware\\BotsMiddleware'
                ],
+               'ReferrerSearch' => [
+                   'class' => '\\Modules\\User\\Middleware\\ReferrerSearchMiddleware'
+               ],
            ]
        ],
        'request' => [

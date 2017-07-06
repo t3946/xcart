@@ -1044,7 +1044,7 @@ class QueryBuilder
 
     /**
      * @param $order
-     * @return string
+     * @return array
      */
     protected function buildOrderJoin($order)
     {
@@ -1082,7 +1082,10 @@ class QueryBuilder
         $order = [];
         if (is_array($this->_order)) {
             foreach ($this->_order as $column) {
-                if ($column === '?') {
+                if ($column instanceof Expression) {
+                    $order[$column->toSQL($this)] = '';
+                }
+                else if ($column === '?') {
                     $order[] = $this->getAdapter()->getRandomOrder();
                 } else {
                     list($newColumn, $direction) = $this->buildOrderJoin($column);
