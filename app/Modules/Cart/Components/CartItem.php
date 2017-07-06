@@ -1,22 +1,8 @@
 <?php
-/**
- *
- *
- * All rights reserved.
- *
- * @author Falaleev Maxim
- * @email max@studio107.ru
- * @version 1.0
- * @company Studio107
- * @site http://studio107.ru
- * @date 16/11/14.11.2014 13:07
- */
-
 namespace Modules\Cart\Components;
 
-use Mindy\Helper\Traits\Accessors;
-use Mindy\Helper\Traits\Configurator;
 use Modules\Cart\Interfaces\ICartItem;
+use Xcart\App\Helpers\Accessors;
 
 class CartItem
 {
@@ -152,6 +138,7 @@ class CartItem
     }
 
     /**
+     * @param Cart $cart
      * @param IDiscount[] $discounts
      */
     public function applyDiscount(Cart $cart, array $discounts)

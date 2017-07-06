@@ -37,7 +37,7 @@
     </script>
     <style type="text/css">{inline file="static/frontend/dist/css/base.css"}</style>
 
-    <link rel="stylesheet" href="/static/frontend/dist/css/styles.css?v={frontend_version resource='css/styles.css'}" media="none" onload="if(media!='all')media='all'">
+    <link rel="stylesheet" href="/static/frontend/dist/css/styles.css?v={frontend_version resource='css/styles.css'}" media="all" onload="if(media!='all')media='all'">
     <noscript><link rel="stylesheet" href="/static/frontend/dist/css/styles.css?v={frontend_version resource='css/styles.css'}"></noscript>
     <script src="/static/frontend/dist/js/vendors.js?v={frontend_version resource='js/vendors.js'}"></script>
     {block 'head'}{/block}

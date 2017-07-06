@@ -2,11 +2,13 @@
 
 namespace Modules\Cart\Components;
 
+use Xcart\App\Main\Xcart;
+
 /**
  * Class SessionStorage
  * @package Modules\Cart\Components
  */
-class SessionStorage
+class XSessionStorage
 {
     /**
      * @var Cart
@@ -16,14 +18,18 @@ class SessionStorage
      * @var string
      */
     protected $key;
+    protected $data;
+    protected $session;
 
     public function __construct(Cart $cart, $key = 'cart')
     {
         $this->key = $key;
         $this->cart = $cart;
+        $this->session = Xcart::app()->request->session;
 
-        if (!isset($_SESSION[$this->key])) {
-            $_SESSION[$this->key] = [];
+        $this->data = $this->session->get($this->key, []);
+        if (!is_array($this->data)) {
+            $this->data = [];
         }
     }
 
@@ -33,8 +39,10 @@ class SessionStorage
      */
     public function get($key)
     {
-        $data = $this->getData();
-        return unserialize($data[$key]);
+        if ($this->has($key)) {
+            return unserialize($this->data[$key]);
+        }
+        return null;
     }
 
     /**
@@ -44,8 +52,9 @@ class SessionStorage
     public function remove($key)
     {
         if ($this->has($key)) {
-            $this->cart->getEventManager()->trigger('cart:removeItem', unserialize($_SESSION[$this->key][$key]), $this->cart);
-            unset($_SESSION[$this->key][$key]);
+            $this->cart->getEventManager()->trigger('cart:removeItem', [unserialize($this->data[$key])], $this->cart);
+            unset($this->data[$key]);
+            $this->sync();
             return true;
         }
         return false;
@@ -58,8 +67,9 @@ class SessionStorage
      */
     public function add($key, $value)
     {
-        $this->cart->getEventManager()->trigger('cart:addItem', $value, $this->cart);
-        $_SESSION[$this->key][$key] = serialize($value);
+        $this->cart->getEventManager()->trigger('cart:addItem', [$value], $this->cart);
+        $this->data[$key] = serialize($value);
+        $this->sync();
         return $this;
     }
 
@@ -68,7 +78,7 @@ class SessionStorage
      */
     public function count()
     {
-        return count($_SESSION[$this->key]);
+        return count($this->data);
     }
 
     /**
@@ -76,7 +86,8 @@ class SessionStorage
      */
     public function clear()
     {
-        $_SESSION[$this->key] = [];
+        $this->data = [];
+        $this->sync();
         return $this;
     }
 
@@ -106,6 +117,11 @@ class SessionStorage
      */
     public function getData()
     {
-        return $_SESSION[$this->key];
+        return $this->data ?: [];
+    }
+
+    public function sync()
+    {
+        $this->session->add($this->key, $this->getData());
     }
 }

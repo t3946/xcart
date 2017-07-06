@@ -1,7 +1,7 @@
 <?php
 return [
     'Core',
-    'Cart',
+    'Cart' => ['cartConfig' => ['class' => '\Modules\Cart\Components\XCart']],
     'Main',
     'Menu',
     'Demo',

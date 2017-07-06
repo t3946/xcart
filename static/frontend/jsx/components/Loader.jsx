@@ -100,7 +100,7 @@ export default class Loader
         }
     }
 
-    detach() {
+    detach(callback = null) {
         this.loaders--;
 
         if (this.loaders <= 0) {
@@ -111,6 +111,9 @@ export default class Loader
             setTimeout(()=>{
                 this.elements['container'].removeClass('loading');
                 this.elements['bg'].detach();
+                if (typeof callback === 'function') {
+                    callback();
+                }
             }, this.options.timeout);
 
             if (this.loaders < 0) {

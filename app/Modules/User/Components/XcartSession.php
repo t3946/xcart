@@ -14,6 +14,7 @@ class XcartSession extends Session
     public $registerGlobals = true;
     public $fullUnpackGlobals = false;
     private $session_key;
+    private $data = [];
     private $unpacked = [];
     /**
      * @var \Modules\User\Models\SessionDataModel
@@ -24,7 +25,7 @@ class XcartSession extends Session
     {
         $this->open();
 
-        $_SESSION[ $key ] = $value;
+        $this->data[ $key ] = $value;
 
         if ($this->registerGlobals) {
             $GLOBALS[ $key ] = $value;
@@ -36,12 +37,12 @@ class XcartSession extends Session
     {
         $this->open();
 
-        return array_key_exists($key, isset($_SESSION) ? $_SESSION : []);
+        return array_key_exists($key, isset($this->data) ? $this->data : []);
     }
 
     public function get($key, $default = null)
     {
-        $value = $this->has($key) ? $_SESSION[ $key ] : $default;
+        $value = $this->has($key) ? $this->data[ $key ] : $default;
 
         if ($this->registerGlobals && isset($GLOBALS[ $key ]) && isset($this->unpacked[ $key ])) {
             return $GLOBALS[ $key ];
@@ -57,7 +58,7 @@ class XcartSession extends Session
     public function all()
     {
         $this->open();
-        return $_SESSION;
+        return $this->data;
     }
 
     public function close()
@@ -75,7 +76,7 @@ class XcartSession extends Session
             if ($this->registerGlobals) {
                 $this->collectFromGlobals();
             }
-            $this->model->data = $_SESSION;
+            $this->model->data = $this->data;
             $this->model->save();
         }
     }
@@ -87,7 +88,7 @@ class XcartSession extends Session
         if (!empty($vars)) {
             foreach ($vars as $key) {
                 if (isset($GLOBALS[ $key ])) {
-                    $_SESSION[ $key ] = $GLOBALS[ $key ];
+                    $this->data[ $key ] = $GLOBALS[ $key ];
                 }
             }
         }
@@ -98,10 +99,10 @@ class XcartSession extends Session
 
     private function collectFromGlobals()
     {
-        if (is_array($_SESSION)) {
-            foreach ($_SESSION as $key => $value) {
+        if (is_array($this->data)) {
+            foreach ($this->data as $key => $value) {
                 if (isset($GLOBALS[ $key ]) && isset($this->unpacked[ $key ] )) {
-                    $_SESSION[ $key ] = $GLOBALS[ $key ];
+                    $this->data[ $key ] = $GLOBALS[ $key ];
                 }
             }
         }
@@ -109,10 +110,10 @@ class XcartSession extends Session
 
     private function unpackToGlobals()
     {
-        if (is_array($_SESSION)) {
+        if (is_array($this->data)) {
             $this->unpacked = [];
 
-            foreach ($_SESSION as $key => $value) {
+            foreach ($this->data as $key => $value) {
                 $GLOBALS[ $key ] = $value;
                 $this->unpacked[ $key ] = $key;
             }
@@ -137,7 +138,7 @@ class XcartSession extends Session
         if (!BotsHelper::IsBot() || $id) {
             if ($id || $id = $this->getSessionId()) {
                 if ($this->model = SessionDataModel::objects()->get(['pk' => $id])) {
-                    $_SESSION = $this->model->data;
+                    $this->data = $this->model->data;
 
                     if ($this->registerGlobals && $this->fullUnpackGlobals) {
                         $this->unpackToGlobals();
@@ -148,7 +149,7 @@ class XcartSession extends Session
             if (!$this->model) {
                 $id = $this->genSessId();
                 list($this->model) = SessionDataModel::objects()->getOrCreate(['sessid' => $id]);
-                $_SESSION = [];
+                $this->data = [];
                 $this->unpacked = [];
             }
 
@@ -219,7 +220,7 @@ class XcartSession extends Session
     public function remove($key)
     {
         if ($this->has($key)) {
-            unset($_SESSION[ $key ]);
+            unset($this->data[ $key ]);
 
             if ($this->registerGlobals) {
                 unset($GLOBALS[ $key ]);
@@ -230,17 +231,17 @@ class XcartSession extends Session
 
     public function clear()
     {
-        $_SESSION = [];
+        $this->data = [];
     }
 
     public function offsetExists($offset)
     {
-        return array_key_exists($offset, $_SESSION);
+        return array_key_exists($offset, $this->data);
     }
 
     public function count()
     {
-        return count($_SESSION);
+        return count($this->data);
     }
 
     public function getId()

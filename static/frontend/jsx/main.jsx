@@ -198,7 +198,9 @@ import Loader from "./components/Loader";
     loader.detach();
 
     // setTimeout(()=>{
-    //     loader.detach();
-    //     $(document).foundation();
+    //
+    //     loader.detach(()=>{
+    //         $(window).trigger('resize');
+    //     });
     // }, 300);
 })();

@@ -5,6 +5,7 @@ use Doctrine\DBAL\Connection;
 use Exception;
 use ArrayAccess;
 use Xcart\App\Helpers\ClassNames;
+use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\Field;
 use Xcart\App\Orm\Fields\HasManyField;
@@ -468,25 +469,13 @@ abstract class Base implements ModelInterface, ArrayAccess, Serializable
 
     abstract public function insert(array $fields = []);
 
-    public function beforeSave($owner, $isNew)
-    {
+    public function beforeSave($owner, $isNew) { }
 
-    }
+    public function afterSave($owner, $isNew) { }
 
-    public function afterSave($owner, $isNew)
-    {
+    public function beforeDelete($owner) { }
 
-    }
-
-    public function beforeDelete($owner)
-    {
-
-    }
-
-    public function afterDelete($owner)
-    {
-
-    }
+    public function afterDelete($owner) { }
 
     protected function beforeInsertInternal()
     {
@@ -749,32 +738,26 @@ abstract class Base implements ModelInterface, ArrayAccess, Serializable
     }
 
     /**
-     * @param $connection
+     * @param string|null $connection Connection name from config
      * @return $this
      */
-    public function using($connection)
+    public function using($connection = null)
     {
-        $this->using($connection);
+        $this->using = $connection;
         return $this;
     }
 
     /**
      * @return Connection
      * @throws Exception
-     * @TODO: fix __wakeup connection not restored and if connection not default maybe bug
      */
     public function getConnection()
     {
         if ($this->connection === null) {
-            $connection = Orm::getDefaultConnection();
-
-            /*
-            $app = App::getInstance();
-            $connection = $app->db->getConnection($this->using);
+            $connection = Xcart::app()->db->getConnection($this->using);
             if (($connection instanceof Connection) === false) {
                 throw new Exception('Unknown connection ' . $this->using);
             }
-            */
 
             $this->connection = $connection;
         }

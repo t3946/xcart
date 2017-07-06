@@ -2,6 +2,7 @@
 namespace Modules\Product\Models;
 
 use Modules\Brand\Models\BrandModel;
+use Modules\Cart\Interfaces\ICartItem;
 use Modules\Distributor\Models\DistributorModel;
 use Modules\Sites\Models\SiteModel;
 use Xcart\App\Components\Breadcrumbs;
@@ -46,7 +47,7 @@ use Xcart\Product;
  * @property int mod_date
  * @property mixed|string upc
  */
-class ProductModel extends AutoMetaModel
+class ProductModel extends AutoMetaModel implements ICartItem
 {
     use DataModelTrait;
 
@@ -217,5 +218,25 @@ class ProductModel extends AutoMetaModel
         $bread->add($this->product, $this->getAbsoluteUrl());
 
         return $bread;
+    }
+
+    public function getPrice($quantity = 1)
+    {
+        return $this->getFrontendPrice($quantity);
+    }
+
+    public function recalculate($quantity, $type, $data)
+    {
+        return $quantity * $this->getPrice($quantity);
+    }
+
+    public function getUniqueId($data = [])
+    {
+        return $this->productid;
+    }
+
+    public function __toString()
+    {
+        return "[{$this->productid}] {$this->product} ({$this->productcode})";
     }
 }

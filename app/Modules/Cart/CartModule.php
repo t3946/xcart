@@ -25,11 +25,15 @@ class CartModule extends Module
         $tpl->addAccessorCallback('cart', function () {
             return Xcart::app()->getModule('Cart')->getCart();
         });
+
+        Xcart::app()->getModule('Cart');
     }
 
     public function init()
     {
-        $this->setComponent('cart', $this->cartConfig);
+        if (!Xcart::app()->hasComponent('cart')) {
+            $this->setComponent('cart', $this->cartConfig);
+        }
     }
 
     public function getCart()

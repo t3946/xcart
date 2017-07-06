@@ -28,7 +28,9 @@ use Xcart\App\Request\HttpRequest;
  * @property \Xcart\App\Event\EventManager $event Event component
  * @property \Xcart\App\Storage\Storage $storage File storage component
  * @property \Xcart\App\Logger\LoggerManager $logger Logging system component
+ *
  * @property \Modules\Mail\Components\MailComponent $mail Mail component
+ * @property \Modules\Cart\Components\Cart $cart Customer cart component
  * @property UserModel $user
  * 
  * @package Xcart\App\Application

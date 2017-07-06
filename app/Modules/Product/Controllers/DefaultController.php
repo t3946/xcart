@@ -37,6 +37,17 @@ class DefaultController extends Controller
             'breadcrumbs' => $model->getBreadcrumbs(),
         ]);
 
+        Xcart::app()->cart->add($model);
+
+        foreach (Xcart::app()->cart->getItems() as $cartItem) {
+            func_dump((string)$cartItem->getObject());
+        }
+
+
+        func_dump(Xcart::app()->cart->getQuantity());
+        func_dump(Xcart::app()->cart->getTotal());
+
+
         func_dump($model);
 
         SurfingHelper::logSurfPath(['resource_type' => SurfPathModel::GOAL_TYPE_PRODUCT, 'resource_id' => $model->pk]);

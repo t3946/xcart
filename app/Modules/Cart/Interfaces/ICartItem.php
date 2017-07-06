@@ -4,9 +4,11 @@ namespace Modules\Cart\Interfaces;
 interface ICartItem
 {
     /**
+     * @param array $data Selected attributes
+     *
      * @return mixed unique product identification
      */
-    public function getUniqueId();
+    public function getUniqueId($data = []);
 
     /**
      * @return int|float

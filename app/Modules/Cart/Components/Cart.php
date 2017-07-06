@@ -39,8 +39,8 @@ class Cart
     public function init()
     {
         $signal = $this->getEventManager();
-        $signal->on('addItem', [$this, 'onAddItem']);
-        $signal->on('removeItem', [$this, 'onRemoveItem']);
+        $signal->on('cart:addItem', [$this, 'onAddItem']);
+        $signal->on('cart:removeItem', [$this, 'onRemoveItem']);
     }
 
     public function getEventManager()
@@ -48,15 +48,9 @@ class Cart
         return Xcart::app()->event;
     }
 
-    public function onAddItem($item)
-    {
+    public function onAddItem($item) {}
 
-    }
-
-    public function onRemoveItem($item)
-    {
-
-    }
+    public function onRemoveItem($item) {}
 
     /**
      * @return SessionStorage
@@ -267,7 +261,8 @@ class Cart
      */
     public function clear()
     {
-        return $this->getStorage()->clear();
+        $this->getStorage()->clear();
+        return $this;
     }
 
     /**
