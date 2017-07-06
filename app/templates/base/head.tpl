@@ -57,8 +57,7 @@
 <link rel="stylesheet" href="/static/frontend/dist/css/styles.css?v={frontend_version resource='css/styles.css'}" media="none" onload="if(media!='all')media='all'">
 <noscript><link rel="stylesheet" href="/static/frontend/dist/css/styles.css?v={frontend_version resource='css/styles.css'}"></noscript>
 
-<link rel="stylesheet" href="/static/frontend/dist/css/styles.css?v={frontend_version resource='css/styles.css'
-}">
+{*<link rel="stylesheet" href="/static/frontend/dist/css/styles.css?v={frontend_version resource='css/styles.css'}">*}
 <script src="/static/frontend/dist/js/vendors.js?v={frontend_version resource='js/vendors.js'}" defer></script>
 <script src="/static/frontend/dist/js/main.js?v={frontend_version resource="js/main.js"}" defer></script>
 
