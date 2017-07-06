@@ -7,7 +7,6 @@ use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\HasManyField;
-use Xcart\App\Orm\Fields\OneToOneField;
 
 class GeoipLitecityLocationModel extends AutoMetaModel
 {
@@ -39,13 +38,20 @@ class GeoipLitecityLocationModel extends AutoMetaModel
                 'link' => ['country' => 'code'],
             ],
             'state_model' => [
-                'class' => HasManyField::className(),
+                'field' => 'region',
+                'class' => ForeignField::className(),
                 'modelClass' => StateModel::className(),
                 'link' => [
                     'region' => 'code',
                     'country' => 'country_code'
                 ],
-            ]
+            ],
+            'blocks' => [
+                'field' => 'locId',
+                'class' => HasManyField::className(),
+                'modelClass' => GeoLitecityBlocks::className(),
+                'link' => ['locId' => 'locId'],
+            ],
         ];
     }
 }
