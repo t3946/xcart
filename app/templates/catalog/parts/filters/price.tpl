@@ -34,7 +34,7 @@
 </div>
 
 
-{set_asset_block type="js"}
+{add_asset_block type="js"}
 <script type="text/javascript" defer>
     document.addEventListener('DOMContentLoaded', function() {
         var price_min = {$values.prices.min};
@@ -56,4 +56,4 @@
         {/ignore}
     });
 </script>
-{/set_asset_block}
+{/add_asset_block}

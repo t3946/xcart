@@ -15,10 +15,10 @@ class AssetsLibrary extends TemplateLibrary
 
     /**
      * @kind block
-     * @name set_asset_block
+     * @name add_asset_block
      * @return void
      */
-    public static function setAsset(array $params = [], $data)
+    public static function addAsset(array $params = [], $data)
     {
         $type = 'unknown';
         if (!empty($params['type']) && key_exists($params['type'], self::$assets)) {
