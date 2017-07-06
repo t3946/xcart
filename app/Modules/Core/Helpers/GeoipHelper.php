@@ -27,7 +27,6 @@ class GeoipHelper
                 ->getQuerySet()
                 ->join('inner join', 'xcart_geo_litecity_blocks', ['locId' => 'b.locId'], 'b')
                 ->filter(['b.startIpNum__lt' => $iIp])
-                ->with(['state_model'])
                 ->order(['-b.startIpNum'])
                 ->limit(1)
                 ->get();

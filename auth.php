@@ -447,19 +447,15 @@ if (!empty($config["Appearance"]["Google_Trusted_Store_ID"])){
 		$GTS_badge_code = str_replace('gts.push(["google_base_offer_id", ""]);', "", $GTS_badge_code);
 
 		$smarty->assign("GTS_badge_code", $GTS_badge_code);
-//	}
 }
-###
-##
-#
-/*if ($geoipModel = GeoipHelper::getGeoipLocation($CLIENT_IP)){
-    $geo_litecity_location = array_merge($geoipModel->getAttributes(), ['phone' => $geoipModel->state_model->limit(1)->get()->phone]);
-    $smarty->assign('geo_litecity_location', $geo_litecity_location);
-}*/
 
-$geo_litecity_location = func_get_geoip_locations($CLIENT_IP, $geo_litecity_location_debug);
-if (!empty($geo_litecity_location)) {
-	$smarty->assign('geo_litecity_location', $geo_litecity_location);
+if ($geoipModel = GeoipHelper::getGeoipLocation($CLIENT_IP)) {
+    $smarty->assign('geo_litecity_location',
+        array_merge(
+            $geoipModel->getAttributes(),
+            ['phone' => $geoipModel->state_model->phone]
+        )
+    );
 }
 
 func_detect_working_hours();
