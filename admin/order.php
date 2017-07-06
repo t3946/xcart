@@ -31,6 +31,7 @@
  * \*****************************************************************************/
 
 use Modules\Order\Models\OrderTransactionModel;
+use Modules\Product\Models\ProductOptionModel;
 use Xcart\Paypal;
 
 global $login;
@@ -504,7 +505,7 @@ if ($REQUEST_METHOD == "POST" && ($mode == "rma_send_email_to_customer" || $mode
 
     if ($mode == "rma_send_email_to_customer" && !empty($post_rma["order_email"]))
     {
-        $signature           = func_get_signature($order_data["order"]["storefrontid"]);
+        $signature           = func_get_signature($order_data["order"]["storefrontid"], false, $order_data["order"]);
         $cur_storefront_info = func_get_storefront_info($order_data["order"]["storefrontid"]);
         $crypt_orderid       = text_crypt($orderid);
         $rma_form_link       = "<a href='http://" . $cur_storefront_info["domain"] . "/rma_request.php?step=2&o=$crypt_orderid&rma_id=$rma_id&prefilled=Y' target='_blank' style='color: blue;'>link</a>";
@@ -831,7 +832,8 @@ if ($REQUEST_METHOD == "POST") {
                         if (!empty($extra_data["product_options"]) && is_array($extra_data["product_options"])) {
                             $log = "<B>" . $product_code . "</B><br /><B>Before:</B><br />" . $log . "<B>Now:</B><br />";
 
-                            foreach ($extra_data["product_options"] as $classid => $optionid) {
+                            foreach ($extra_data["product_options"] as $classid => $option) {
+                                $optionid = is_array($option) ? $option['optionid'] : $option;
                                 $class       = func_query_first_cell("SELECT class FROM $sql_tbl[classes] WHERE classid='$classid'");
                                 $option_name = func_query_first_cell("SELECT option_name FROM $sql_tbl[class_options] WHERE classid='$classid' AND optionid='$optionid'");
                                 $option_line = $class . ": " . $option_name;
@@ -844,6 +846,14 @@ if ($REQUEST_METHOD == "POST") {
 
                         if (!empty($options_diff)) {
                             func_log_order($orderid, 'X', $log, $login);
+                        }
+
+                        if (!empty($v["classid_optionid"]) && is_array($v["classid_optionid"])){
+                            foreach ($v["classid_optionid"] as $class_id => $option_id) {
+                                if ($optionModel = ProductOptionModel::objects()->get(['optionid' => $option_id])) {
+                                    $v["classid_optionid"][$class_id] = $optionModel->getAttributes();
+                                }
+                            }
                         }
 
                         $extra_data["product_options"] = $v["classid_optionid"];
@@ -2689,7 +2699,7 @@ if (!empty($productids_for_outofstock_disc_cat_urls)) {
 
 $backorder_decision_request_message = str_replace("{{outofstock_disc_cat_urls}}", $outofstock_disc_cat_urls, $backorder_decision_request_message);
 
-$signature                          = func_get_signature(false, $products);
+$signature                          = func_get_signature(false, $products, $order_data["order"]);
 $backorder_decision_request_message = str_replace("{{signature}}", $signature, $backorder_decision_request_message);
 
 $firstname       = trim($userinfo["firstname"]);

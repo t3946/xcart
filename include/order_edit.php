@@ -1475,7 +1475,7 @@ if ($REQUEST_METHOD == "POST")
             $attach_pdf_invoice = "Y";
             $mail_smarty->assign("attach_pdf_invoice", $attach_pdf_invoice);
 
-            $signature       = func_get_signature(false, $order['products']);
+            $signature       = func_get_signature(false, $order['products'], $order_data["order"]);
             $po_instructions = str_replace("{{signature}}", $signature, $po_instructions);
 
             $firstname       = trim($order['userinfo']['firstname']);

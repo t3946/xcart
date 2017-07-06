@@ -39,7 +39,7 @@ $(function(){
 
 <table border="0" cellpadding="0" cellspacing="0" width="984" align="center" class="header_line1">
  <tr>
-  <td width="58%" style="padding-left: 20px;">
+  <td width="50%" style="padding-left: 20px;">
 {if $top_pages_menu ne "" && !(($smarty.get.mode eq "checkout") || ($smarty.get.mode eq "update" && $smarty.get.action eq "cart")) }
   {section name=top_page loop=$top_pages_menu}
     {if $top_pages_menu[top_page].image.filename ne ""}
@@ -60,18 +60,19 @@ $(function(){
 
 {/if}
   </td>
-  <td width="*" align="right" style="padding-right: 20px;">
-<span class="top_text_1">
- Place order online or call
-</span>
-<span class="top_text_2">
-{if $geo_litecity_location.phone ne ""}
-&nbsp; {$geo_litecity_location.phone}
-{else}
-&nbsp; {$config.Company.cidev_top_header_code}
-{/if}
-</span>
-  </td>
+     <td width="*" align="right" style="padding-right: 20px;">
+        <span class="top_text_1" style="margin-right: 8px;">
+         Place order online or call
+        </span>
+         {if $geo_litecity_location.phone ne ""}
+         <span class="top_text_2">
+             {$geo_litecity_location.phone} <span style="color: #939393;">/</span>
+         </span>
+         {/if}
+         <span class="top_text_2">
+            {$config.Company.cidev_top_header_code}
+        </span>
+     </td>
  </tr>
 </table>
 

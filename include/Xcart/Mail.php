@@ -9,7 +9,7 @@ class Mail extends Data
     private $sReplyTo = null;
     private $aAttachments = null;
 
-    private $aReplaceRules = null;
+    protected $aReplaceRules = [];
 
     public function __construct($aParams = [])
     {
@@ -56,9 +56,7 @@ class Mail extends Data
     public function replaceBody()
     {
         if (!empty($this->aReplaceRules)) {
-            foreach ($this->aReplaceRules as $key => $sRule) {
-                $this->setBody(str_replace($key, $sRule, $this->getEmailBody()));
-            }
+            $this->setBody(str_replace(array_keys($this->aReplaceRules), array_values($this->aReplaceRules), $this->getEmailBody()));
         }
         $this->setBody(func_eol2br($this->getEmailBody()));
     }

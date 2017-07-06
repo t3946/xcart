@@ -1966,7 +1966,7 @@ function func_get_order_manufacturers($orderid)
 
             foreach ($mnfs as $m_id => $mv)
             {
-                $signature = func_get_signature($mnfs[$m_id]["d_main_sf"]);
+                $signature = func_get_signature($mnfs[$m_id]["d_main_sf"], false, $order);
 
                 $mnfs[$m_id]['notify_sent'] = $order['shipping_groups'][$m_id]['notify_sent'];
 

@@ -1,6 +1,11 @@
 <?php
 namespace Xcart;
 
+use Modules\Core\Helpers\GeoipHelper;
+use Modules\Core\Models\GlobalConfigModel;
+use Modules\Core\Models\StateModel;
+use Modules\Sites\Models\SiteConfigModel;
+
 class OrderStatusNotification extends Mail
 {
     /**
@@ -51,12 +56,28 @@ class OrderStatusNotification extends Mail
 
     public function replaceBody()
     {
-        parent::replaceBody();
         if (!empty($this->oOrder)) {
-            $this->setBody(str_replace("{{c-fullname}}", $this->oOrder->getFirstName(), $this->getEmailBody()))->
-            setBody(str_replace("{{orderid}}", $this->oOrder->getDisplayOrderNumber(), $this->getEmailBody()))->
-            setBody(str_replace("{{site_url}}", $this->oOrder->getOrderStoreFront()->getStoreFrontURL(), $this->getEmailBody()));
+
+            $params = [
+                'state' => $this->oOrder->s_state,
+                'country' => $this->oOrder->s_country,
+                'phone' => $this->oOrder->phone,
+                'storefrontid' => $this->oOrder->storefrontid,
+            ];
+
+            $phones = GeoipHelper::getPhones($params);
+
+            $this->aReplaceRules = array_merge(
+                $this->aReplaceRules,
+                [
+                    '{{c-fullname}}' => $this->oOrder->getFirstName(),
+                    '{{orderid}}' => $this->oOrder->getDisplayOrderNumber(),
+                    '{{site_url}}' => $this->oOrder->getOrderStoreFront()->getStoreFrontURL(),
+                    '{{customer_service_local_phone_number}}' => $phones
+                ]);
         }
+
+        parent::replaceBody();
     }
 
     public function setOrder($oOrder)

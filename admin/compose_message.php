@@ -277,7 +277,7 @@ if (!empty($order["alt_products"])){
 }
 ###
 
-$signature = func_get_signature(false, $products);
+$signature = func_get_signature(false, $products, $order);
 $body = str_replace("{{signature}}", $signature, $body);
 
 $firstname = trim($userinfo["firstname"]);
