@@ -57,12 +57,12 @@ class StaticLibrary extends TemplateLibrary
 
     protected static function initBackend()
     {
-        if (empty(self::$frontend))
+        if (empty(self::$backend))
         {
             $dir = self::getBackendVersionsDir() . DIRECTORY_SEPARATOR;
 
-            self::$frontend = array_merge(self::$frontend, self::getVersions($dir . 'css.yml'));
-            self::$frontend = array_merge(self::$frontend, self::getVersions($dir . 'js.yml'));
+            self::$backend = array_merge(self::$backend, self::getVersions($dir . 'css.yml'));
+            self::$backend = array_merge(self::$backend, self::getVersions($dir . 'js.yml'));
         }
     }
 
@@ -79,6 +79,27 @@ class StaticLibrary extends TemplateLibrary
         $resource = strtolower($resource);
 
         foreach (self::$frontend as $version => $file) {
+            if (strpos($file, $resource) !== false) {
+                return $version;
+            }
+        }
+
+        return 1;
+    }
+
+    /**
+     * @kind function
+     * @name backend_version
+     * @return int
+     */
+    public static function getBackendVersion($params)
+    {
+        $resource = $params['resource'];
+
+        self::initBackend();
+        $resource = strtolower($resource);
+
+        foreach (self::$backend as $version => $file) {
             if (strpos($file, $resource) !== false) {
                 return $version;
             }
@@ -106,7 +127,7 @@ class StaticLibrary extends TemplateLibrary
      */
     public static function getBackendCssVersion()
     {
-        return self::getVersion(self::getBackendVersionsDir() . DIRECTORY_SEPARATOR . 'css.yml');
+        return self::getBackendVersion(['resource' => 'css']);
     }
 
     /**
@@ -116,6 +137,6 @@ class StaticLibrary extends TemplateLibrary
      */
     public static function getBackendJsVersion()
     {
-        return self::getVersion(self::getBackendVersionsDir() . DIRECTORY_SEPARATOR . 'js.yml');
+        return self::getBackendVersion(['resource' => 'js']);
     }
 }
