@@ -78,11 +78,10 @@ abstract class Gateway implements GatewayInterface
     {
         $gateway = null;
         if ($model) {
-            $ccp = $model->processor_models->limit(1)->get();
-            if ($ccp) {
-                $class = "Modules\\Payment\\Gateways\\" . $ccp->module_name;
+            if ($model->processor) {
+                $class = "Modules\\Payment\\Gateways\\" . $model->processor->processor_name;
                 if (class_exists($class)) {
-                    $gateway = new $class($ccp);
+                    $gateway = new $class($model->cc_processor_models->limit(1)->get());
                 }
             }
         }
