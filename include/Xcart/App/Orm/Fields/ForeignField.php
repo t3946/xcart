@@ -95,7 +95,7 @@ class ForeignField extends RelatedField
             $filter = [];
 
             foreach ($this->link as $from => $to) {
-                $filter[$to] = $value;
+                $filter[$to] = $this->getModel()->getAttribute($from);
             }
         }
 
