@@ -9,7 +9,6 @@ use Modules\Core\Models\GlobalConfigModel;
 use Modules\Core\Models\StateModel;
 use Modules\Core\Models\TelephoneAreaModel;
 use Modules\Sites\Models\SiteConfigModel;
-use Xcart\App\Orm\QuerySet;
 
 class GeoipHelper
 {
@@ -22,7 +21,6 @@ class GeoipHelper
         $model = null;
 
         if ($iIp = ip2long($ip)) {
-            /** @var QuerySet $qs */
             $model = GeoipLitecityLocationModel::objects()
                 ->filter(['blocks__startIpNum__lt' => $iIp])
                 ->order(['-blocks__startIpNum'])
