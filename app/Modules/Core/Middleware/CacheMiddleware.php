@@ -3,6 +3,7 @@
 namespace Modules\Core\Middleware;
 
 use Xcart\App\Cli\Cli;
+use Xcart\App\Controller\FrontendController;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Middleware\Middleware;
 
@@ -12,16 +13,15 @@ class CacheMiddleware extends Middleware
 
     public function processRequest($request)
     {
-        if (Cli::isCli() == false) {
-            /** @var \Xcart\App\Request\HttpRequest $request */
+        /** @var \Xcart\App\Request\HttpRequest $request */
 
-//            if (!headers_sent() && !($request->getIsAjax() || $request->getIsPjax()) ) {
+        if (Cli::isCli() == false) {
             if (!headers_sent()) {
 
                 $match = Xcart::app()->router->match($request->getUrl(), $request->getMethod());
 
-                if (!empty($match['config']) && !empty($match['config']['cache']) && $match['config']['cache']) {
-                    if ($a_output = Xcart::app()->cache->get($this->getCacheKey($request))) {
+                if ($cacheTime = $this->getCacheTime($match)) {
+                    if ($a_output = Xcart::app()->cache->get($this->getCacheKey($request, $match))) {
                         list($output, $headers, $etag, $modTime) = $a_output;
 
                         if ($request->getHeaderValue('IF_NONE_MATCH') == "\"{$etag}\"") {
@@ -33,9 +33,7 @@ class CacheMiddleware extends Middleware
                             header($header);
                         }
 
-                        header("Last-Modified: {$modTime} GMT");
-                        header("Cache-Control: max-age={$this->globalCacheTime}");
-                        header("ETag: \"{$etag}\"");
+                        $this->setCacheHeaders($modTime, $cacheTime, $etag);
 
                         echo $output;
                         Xcart::app()->end();
@@ -52,7 +50,7 @@ class CacheMiddleware extends Middleware
             /** @var \Xcart\App\Request\HttpRequest $request */
             $match = Xcart::app()->router->match($request->getUrl(), $request->getMethod());
 
-            if (!empty($match['config']) && !empty($match['config']['cache']) && $match['config']['cache']) {
+            if ($cacheTime = $this->getCacheTime($match)) {
 
                 $headers = array_filter(headers_list(), function($header) {
 
@@ -68,25 +66,54 @@ class CacheMiddleware extends Middleware
                 $data[] = $etag;
                 $data[] = $modTime;
 
-                if (!empty($match['config']['cache']['time'])) {
-                    $cacheTime = $match['config']['cache']['time'];
-                }
-                else {
-                    $cacheTime = $this->globalCacheTime;
-                }
+                $this->setCacheHeaders($modTime, $cacheTime, $etag);
 
-                header("Last-Modified: {$modTime} GMT");
-                header("Cache-Control: max-age={$cacheTime}");
-                header("ETag: \"{$etag}\"");
-
-                Xcart::app()->cache->set($this->getCacheKey($request), $data, $cacheTime?:null);
+                Xcart::app()->cache->set($this->getCacheKey($request, $match), $data, $cacheTime?:null);
             }
         }
     }
 
-    private function getCacheKey($request)
+
+    private function getCacheKey($request, $match)
     {
+        $advanced = [];
+
+        if (is_array($match['target']) && isset($match['target'][0])) {
+            $class = $match['target'][0];
+
+            if ( is_subclass_of($class, FrontendController::class) ) {
+                /** @var FrontendController $controller */
+                $controller = new $class($request);
+                $advanced = $controller->getAdvancedCacheData();
+            }
+        }
+
         /**  @var \Xcart\App\Request\HttpRequest $request*/
-        return $request->getServerName() .$request->getUrl().$request->getMethod().$request->getQueryString();
+        return implode('-', $advanced) . $request->getServerName() .$request->getUrl().$request->getMethod().$request->getQueryString();
+    }
+
+    private function getCacheTime($match)
+    {
+        if (!empty($match['config']) && !empty($match['config']['cache']) && $match['config']['cache'])
+        {
+            if (!empty($match['config']['cache']['time'])) {
+                return $match['config']['cache']['time'];
+            }
+            else {
+                return $this->globalCacheTime;
+            }
+        }
+
+        return null;
+    }
+
+
+    private function setCacheHeaders($modTime, $lifeTime, $etag)
+    {
+        if (!headers_sent()) {
+            header("Last-Modified: {$modTime} GMT");
+            header("Cache-Control: max-age={$lifeTime}");
+            header("ETag: \"{$etag}\"");
+        }
     }
 }

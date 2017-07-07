@@ -7,16 +7,22 @@ use Modules\Product\Helpers\ProductSortHelper;
 use Modules\Product\Models\CategoryModel;
 use Modules\Product\Models\ProductModel;
 use Xcart\App\Controller\Controller;
+use Xcart\App\Controller\FrontendController;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Pagination\DataSource\QuerySetDataSource;
 use Xcart\App\Pagination\Pagination;
 
-abstract class AbstractCatalogController extends Controller
+abstract class AbstractCatalogController extends FrontendController
 {
     public $view = '';
     public $model = null;
     public $sort = null;
     public $filters = ['price', 'brand', 'filter'];
+
+    public function getAdvancedCacheData()
+    {
+        return ['category_sort' => Xcart::app()->request->session->get('category_sort', ProductSortHelper::$default)];
+    }
 
     public function beforeAction($action, $params)
     {
@@ -30,6 +36,7 @@ abstract class AbstractCatalogController extends Controller
 
         parent::beforeAction($action, $params);
     }
+
 
     /**
      * @param mixed $data
