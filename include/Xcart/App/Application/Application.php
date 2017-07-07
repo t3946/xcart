@@ -30,7 +30,7 @@ use Xcart\App\Request\HttpRequest;
  * @property \Xcart\App\Logger\LoggerManager $logger Logging system component
  *
  * @property \Modules\Mail\Components\MailComponent $mail Mail component
- * @property \Modules\Cart\Components\Cart $cart Customer cart component
+ * @property \Modules\Cart\Components\XCart $cart Customer cart component
  * @property UserModel $user
  * 
  * @package Xcart\App\Application

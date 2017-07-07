@@ -1,16 +1,9 @@
 <?php
-/**
- * All rights reserved.
- *
- * @author Falaleev Maxim
- * @email max@studio107.ru
- * @version 1.0
- * @company Studio107
- * @site http://studio107.ru
- * @date 10/12/14 17:50
- */
 
-namespace Modules\Cart\Components;
+namespace Modules\Cart\Interfaces;
+
+use Modules\Cart\Components\Cart;
+use Modules\Cart\Components\CartItem;
 
 /**
  * Interface IDiscount

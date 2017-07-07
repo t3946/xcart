@@ -2,14 +2,15 @@
 namespace Modules\Cart\Components;
 
 use Modules\Cart\Interfaces\ICartItem;
+use Serializable;
 use Xcart\App\Helpers\Accessors;
 
-class CartItem
+class CartItem implements Serializable
 {
     use Accessors;
 
     /**
-     * @var \Mindy\Orm\Model|\Modules\Cart\Interfaces\ICartItem
+     * @var \Xcart\App\Orm\Model|\Modules\Cart\Interfaces\ICartItem
      */
     private $_object;
     /**
@@ -106,7 +107,7 @@ class CartItem
     }
 
     /**
-     * @return \Mindy\Orm\Model|ICartItem
+     * @return \Xcart\App\Orm\Model|ICartItem
      */
     public function getObject()
     {
@@ -146,5 +147,27 @@ class CartItem
         foreach ($discounts as $discount) {
             $this->_discountPrice = $discount->applyDiscount($cart, $this);
         }
+    }
+
+    public function serialize()
+    {
+        return serialize([
+            'data' => $this->getData(),
+            'pk' => $this->_object->getUniqueId(),
+            'class' => get_class($this->_object),
+            'quantity' => $this->getQuantity()
+         ]);
+    }
+
+    public function unserialize($serialized)
+    {
+        $data = unserialize($serialized);
+        $this->_data = $data['data'];
+        $this->_quantity = $data['quantity'];
+
+        /** @var \Xcart\App\Orm\Model $class */
+        $class = $data['class'];
+        $this->_object = $class::objects()->get(['pk' => $data['pk']]);
+        $this->fetchPrice();
     }
 }

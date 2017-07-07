@@ -12,6 +12,8 @@ class DefaultConnection extends DBALConnection
     private $__enableErrHandler = true;
     private $__ignoreErrors = false;
 
+    private $__countQueries = 0;
+
     public function setErrorHandler($handlerLink)
     {
         $this->__errHandler = $handlerLink;
@@ -83,6 +85,7 @@ class DefaultConnection extends DBALConnection
      */
     public function executeQuery($query, array $params = array(), $types = array(), QueryCacheProfile $qcp = null)
     {
+        $this->__countQueries++;
         return $this->__internalCall(__FUNCTION__, func_get_args());
     }
 
@@ -99,6 +102,7 @@ class DefaultConnection extends DBALConnection
      */
     public function query()
     {
+        $this->__countQueries++;
         return $this->__internalCall(__FUNCTION__, func_get_args());
     }
 
@@ -107,6 +111,7 @@ class DefaultConnection extends DBALConnection
      */
     public function executeUpdate($query, array $params = array(), array $types = array())
     {
+        $this->__countQueries++;
         return $this->__internalCall(__FUNCTION__, func_get_args());
     }
 
@@ -115,6 +120,7 @@ class DefaultConnection extends DBALConnection
      */
     public function exec($statement)
     {
+        $this->__countQueries++;
         return $this->__internalCall(__FUNCTION__, func_get_args());
     }
 
@@ -132,6 +138,11 @@ class DefaultConnection extends DBALConnection
         }
 
         return null;
+    }
+
+    public function getCountQueries()
+    {
+        return $this->__countQueries;
     }
 
     /**

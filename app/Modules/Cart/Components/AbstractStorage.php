@@ -34,7 +34,7 @@ abstract class AbstractStorage implements ICartStorage
     public function get($key)
     {
         if ($this->has($key)) {
-            return unserialize($this->data[$key]);
+            return $this->data[$key];
         }
         return null;
     }
@@ -46,7 +46,7 @@ abstract class AbstractStorage implements ICartStorage
     public function remove($key)
     {
         if ($this->has($key)) {
-            $this->cart->getEventManager()->trigger('cart:removeItem', [unserialize($this->data[$key])], $this->cart);
+            $this->cart->getEventManager()->trigger('cart:removeItem', [$this->data[$key]], $this->cart);
             unset($this->data[$key]);
             return true;
         }
@@ -61,7 +61,7 @@ abstract class AbstractStorage implements ICartStorage
     public function add($key, $value)
     {
         $this->cart->getEventManager()->trigger('cart:addItem', [$value], $this->cart);
-        $this->data[$key] = serialize($value);
+        $this->data[$key] = clone $value;
         return $this;
     }
 
@@ -89,7 +89,7 @@ abstract class AbstractStorage implements ICartStorage
     {
         $items = [];
         foreach ($this->getData() as $item) {
-            $items[] = unserialize($item);
+            $items[] = $item;
         }
         return $items;
     }

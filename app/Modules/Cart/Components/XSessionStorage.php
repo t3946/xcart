@@ -35,7 +35,7 @@ class XSessionStorage extends AbstractStorage
     public function get($key)
     {
         if ($this->has($key)) {
-            return unserialize($this->data[$key]);
+            return $this->data[$key];
         }
         return null;
     }

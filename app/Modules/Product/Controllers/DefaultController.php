@@ -50,8 +50,8 @@ class DefaultController extends Controller
         func_dump(Xcart::app()->cart->getTotal());
 
 
-        func_dump($model);
+//        func_dump($model);
 
-        SurfingHelper::logSurfPath(['resource_type' => SurfPathModel::GOAL_TYPE_PRODUCT, 'resource_id' => $model->pk]);
+//        SurfingHelper::logSurfPath(['resource_type' => SurfPathModel::GOAL_TYPE_PRODUCT, 'resource_id' => $model->pk]);
     }
 }

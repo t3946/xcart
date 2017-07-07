@@ -123,14 +123,16 @@ class XcartSession extends Session
     public function open($ssid = null)
     {
         if ($this->getIsActive() && !$ssid ) {
-            return;
+            return $this;
         }
 
         if ($this->getIsActive() && $this->getId() == $ssid) {
-            return;
+            return $this;
         }
 
         $this->start($ssid);
+
+        return $this;
     }
 
     public function start($id = null)

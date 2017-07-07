@@ -3,6 +3,7 @@
 namespace Modules\Cart\Components;
 
 use Xcart\App\Helpers\Accessors;
+use Modules\Cart\Interfaces\IDiscount;
 use Modules\Cart\Interfaces\ICartItem;
 use Xcart\App\Helpers\Creator;
 use Xcart\App\Main\Xcart;
@@ -53,7 +54,7 @@ class Cart
     public function onRemoveItem($item) {}
 
     /**
-     * @return SessionStorage
+     * @return \Modules\Cart\Interfaces\ICartStorage
      */
     public function getStorage()
     {

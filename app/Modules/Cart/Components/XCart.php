@@ -11,8 +11,18 @@ class XCart extends Cart
 
     public function init()
     {
-
-
         parent::init();
+
+        $this->getEventManager()->on('app:end', [$this, 'save']);
+    }
+
+    public function getCartNumber()
+    {
+        $this->getStorage()->getCartNumber();
+    }
+
+    public function save()
+    {
+        $this->getStorage()->save();
     }
 }
