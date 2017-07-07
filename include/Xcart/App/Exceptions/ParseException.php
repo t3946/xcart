@@ -11,7 +11,7 @@
  * @date 05/12/14 11:36
  */
 
-namespace Xcart\App\Exception;
+namespace Xcart\App\Exceptions;
 
 use ErrorException;
 
