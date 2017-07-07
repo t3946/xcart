@@ -32,10 +32,6 @@ class OrderTransactionHelper
                 $result['amount'] = $amount;
             }
 
-            if (in_array($mode, ["re_authorize_transaction", "capture_transaction", "refund_transaction"])) {
-                $model->parent_transaction_id = $model->transaction_id;
-            }
-
             if ($mode == 'add_manual_transaction') {
                 $model->manual_transaction = 'Y';
             }
@@ -56,7 +52,7 @@ class OrderTransactionHelper
 
     /**
      * @param string $method
-     * @param OrderTransactionModel$model
+     * @param OrderTransactionModel $model
      */
     public static function action($method, $model)
     {
@@ -69,10 +65,29 @@ class OrderTransactionHelper
                     ];
                 $params = PaymentHelper::getPaymentParams($model, $amount);
                 if ($res = $gw->$method($params)) {
-                    $model = OrderTransactionHelper::prepareOrderTransaction($model, $gw, $orderModel, $pmModel, $amount, $mode);
+                    $model = OrderTransactionHelper::prepareOrderTransaction($model, $gw, null, $model->payment_method_model, $amount);
                 }
             }
         }
         return $model;
+    }
+
+    public static function getOrderTransactionsGroupsValues(OrderModel $order)
+    {
+        $trs = [];
+        if ($order) {
+            foreach ($order->transactions as $transaction) {
+                $trs[$transaction->transaction_status] += $transaction->transaction_amount;
+            }
+        }
+
+        return [
+            'authorized_PLUS_captured_totals' => floatval($trs[OrderTransactionModel::STATUS_COMPLETED]
+                + $trs[OrderTransactionModel::STATUS_AUTHORIZED]
+                + $trs[OrderTransactionModel::STATUS_PENDING]),
+            'void_total' => floatval($trs[OrderTransactionModel::STATUS_VOIDED]),
+            'authorized_total' => floatval($trs[OrderTransactionModel::STATUS_AUTHORIZED]),
+            'captured_total' => floatval($trs[OrderTransactionModel::STATUS_COMPLETED])
+        ];
     }
 }

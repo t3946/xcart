@@ -15,7 +15,9 @@ if (!defined('XCART_SESSION_START')) {
 }
 global $REQUEST_METHOD, $mode, $top_message, $order_transaction_id, $paypal_vt, $transaction_status, $AJAX_SUBMIT;
 global $paymentid, $login, $transaction_currency, $transaction_amount;
-$gw = $log = $orderTransaction = $result = $countTr = $logStatus = $params = null;
+
+$gw = $log = $orderTransaction = $countTr = $logStatus = $params = null;
+$result = [];
 
 if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array_keys(Gateway::$gatewayMethods))) {
     /** @var OrderModel $orderModel */
@@ -31,22 +33,29 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array_keys(
 
         $isAllowed = PaymentHelper::isAuthorizeAllowed($orderModel, $countTr);
         if ($order_transaction_id && ($orderTransaction = OrderTransactionModel::objects()->get(['id' => $order_transaction_id]))) {
+
+            $isAllowed = true;
             $pmModel = $orderTransaction->payment_method_model;
+
             $amount =
                 [
                     'amount' => number_format(trim($transaction_amount[$order_transaction_id]), 2),
                     'currency' => $orderTransaction->transaction_currency
                 ];
+
             $params = PaymentHelper::getPaymentParams($orderTransaction, $amount);
-            $isAllowed = true;
+
         } elseif (!empty($transaction_id) && $paymentid) { //manual transaction
+
             $orderTransaction = new OrderTransactionModel(
                 [
                     'orderid' => $orderModel->orderid,
                     'transaction_id' => trim($transaction_id),
                     'transaction_status' => $transaction_status
                 ]);
+
             $pmModel = PaymentMethodModel::objects()->get(['paymentid' => $paymentid]);
+
             $amount =
                 [
                     'amount' => number_format(trim($transaction_amount), 2),
@@ -54,14 +63,17 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array_keys(
                 ];
             $params = PaymentHelper::getPaymentParams($orderTransaction, $amount);
         } else {  //authorize
+
             $pmModel = PaymentMethodModel::objects()->get(['payment_method' => $paypal_vt["processor"]]);
             $params = PaymentHelper::prepareAuthorize($paypal_vt, $orderModel);
+
         }
 
         try {
             if ($isAllowed) {
 
                 if ($gw = Gateway::getGateway($pmModel)) {
+
                     if ($res = $gw->$method($params)) {
 
                         $orderTransaction = OrderTransactionHelper::prepareOrderTransaction($orderTransaction, $gw, $orderModel, $pmModel, $amount, $mode);
@@ -69,17 +81,16 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array_keys(
                         $orderTransaction->save();
 
                         $result = $orderTransaction->transaction_response;
+
+                        list ($o_log, $send_notification) = OrderHelper::changeOrderCBStatus($orderModel, OrderStatusModel::ORDER_STATUS_AUTHORIZED);
                         $log .= "<br />Transaction:" . $orderTransaction->transaction_id;
+                        $log .= $o_log;
 
-                        if (!$countTr) {
-                            list ($o_log, $send_notification) = OrderHelper::changeOrderCBStatus($orderModel, OrderStatusModel::ORDER_STATUS_AUTHORIZED);
-                            $log .= $o_log;
-
-                            if ($send_notification) {
-                                func_send_order_status_notification($orderModel->orderid, OrderStatusModel::ORDER_STATUS_AUTHORIZED, true);
-                            }
+                        if (!$countTr && $send_notification) {
+                            func_send_order_status_notification($orderModel->orderid, OrderStatusModel::ORDER_STATUS_AUTHORIZED, true);
                         }
                     } else {
+
                         $result = $gw->result->getData();
                         if ($orderTransaction && ($state = $gw->getState($mode))) {
                             $orderTransaction->transaction_status = $state;
@@ -95,12 +106,15 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array_keys(
 
             } else {
                 if (!$countTr && (empty($AJAX_SUBMIT) || $AJAX_SUBMIT != "Y")) {
+
                     $top_message = [
                         'type' => 'E',
                         'content' => func_get_langvar_by_name("lbl_first_transaction_in_order_exception")
                     ];
+
                     x_session_save("section_name_top_message");
                     func_header_location("order.php?orderid=" . $orderid . "&tab=y#main_order_tabs-VT");
+
                 }
             }
 
@@ -109,17 +123,17 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array_keys(
             $logStatus = OrderTransactionModel::STATUS_FAILED;
         }
 
-        $result["xcart_log"] = $log;
         $transactionLog = new TransactionLogModel(
             [
                 'orderid' => $orderid,
                 'paymentid' => $pmModel->paymentid,
+                'order_transaction_id' => isset($orderTransaction) ? $orderTransaction->id : null,
                 'transaction_id' => isset($orderTransaction) ? $orderTransaction->transaction_id : '',
                 'transaction_status' => $logStatus,
                 'transaction_currency' => !isset($result['amount']) ? $params['currency'] : $result['amount']['currency'],
                 'transaction_total' => !isset($result['amount']) ? $params['amount'] : $result['amount']['total'],
                 'login' => $login,
-                'transaction_log' => $result
+                'transaction_log' => array_merge($result, ['xcart_log' => $log])
             ]
         );
 
