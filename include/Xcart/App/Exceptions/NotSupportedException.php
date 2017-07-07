@@ -12,7 +12,7 @@
  * @date 06/01/14.01.2014 18:45
  */
 
-namespace Xcart\App\Exception;
+namespace Xcart\App\Exceptions;
 
 
 class NotSupportedException extends Exception

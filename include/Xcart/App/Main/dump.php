@@ -1,6 +1,7 @@
 <?php
 
 use Xcart\App\Main\VarDumper;
+use Xcart\App\Cli\Cli;
 
 function d()
 {
