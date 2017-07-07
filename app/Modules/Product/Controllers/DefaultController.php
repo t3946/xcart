@@ -37,10 +37,12 @@ class DefaultController extends Controller
             'breadcrumbs' => $model->getBreadcrumbs(),
         ]);
 
-        Xcart::app()->cart->add($model);
+        if (!Xcart::app()->cart->has($model)) {
+            Xcart::app()->cart->add($model);
+        }
 
         foreach (Xcart::app()->cart->getItems() as $cartItem) {
-            func_dump((string)$cartItem->getObject());
+            func_dump((string)"{{$cartItem->getQuantity()}}" . $cartItem->getObject() );
         }
 
 

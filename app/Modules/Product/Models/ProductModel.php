@@ -222,7 +222,7 @@ class ProductModel extends AutoMetaModel implements ICartItem
 
     public function getPrice($quantity = 1)
     {
-        return $this->getFrontendPrice($quantity);
+        return $this->getDataModel()->getPrice($quantity);
     }
 
     public function recalculate($quantity, $type, $data)
