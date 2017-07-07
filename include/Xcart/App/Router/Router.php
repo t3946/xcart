@@ -4,9 +4,11 @@ namespace Xcart\App\Router;
 
 use Exception;
 use InvalidArgumentException;
+use Xcart\App\Cli\Cli;
 use Xcart\App\Helpers\Paths;
 use Xcart\App\Helpers\SmartProperties;
 use Traversable;
+use Xcart\App\Main\Xcart;
 
 class Router
 {
@@ -142,6 +144,17 @@ class Router
         }
 
         return;
+    }
+
+    public function absoluteUrl($routeName, array $params = [], array $query = [])
+    {
+        $host = '';
+
+        if (!Cli::isCli()) {
+            $host = Xcart::app()->request->getHostInfo();
+        }
+
+        return $host . $this->url($routeName, $params, $query);
     }
 
     /**
