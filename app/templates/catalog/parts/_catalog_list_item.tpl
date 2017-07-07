@@ -5,7 +5,7 @@
 
 
                 {set $image = $item->images->limit(1)->get()}
-                {if $image}
+                {if $image!}
                     {if $.isBot}
                         <img src="//cdn.{$site->getBaseDomain()}{$image->getURL()}" width="{$image->image_x}" height="{$image->image_y}" alt="{$item.product}" itemscope itemprop="image">
                     {else}
@@ -105,23 +105,23 @@
             {/if}
 
 
-            {set $p_list = $item->getParamList()}
-            {if $p_list}
-                <div class="parameters show-for-medium">
-                    <ul class="no-bullet">
-                        {foreach $p_list as $param index=$index}
-                            <li>
-                                {$param.name}: {raw $param.values|join}
-                            </li>
+            {*{set $p_list = $item->getParamList()}*}
+            {*{if $p_list}*}
+                {*<div class="parameters show-for-medium">*}
+                    {*<ul class="no-bullet">*}
+                        {*{foreach $p_list as $param index=$index}*}
+                            {*<li>*}
+                                {*{$param.name}: {raw $param.values|join}*}
+                            {*</li>*}
 
-                            {if $index >= 3}
-                                {break}
-                            {/if}
-                        {/foreach}
+                            {*{if $index >= 3}*}
+                                {*{break}*}
+                            {*{/if}*}
+                        {*{/foreach}*}
 
-                    </ul>
-                </div>
-            {/if}
+                    {*</ul>*}
+                {*</div>*}
+            {*{/if}*}
 
         </div>
 

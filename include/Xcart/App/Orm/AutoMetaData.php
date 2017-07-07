@@ -69,7 +69,10 @@ class AutoMetaData extends MetaData
     {
         if (!isset(self::$_tables[$className]))
         {
-            self::$_tables[$className] = Orm::getDefaultConnection()->getSchemaManager()->listTableColumns(call_user_func([$className, 'tableName']));
+            self::$_tables[$className] = Xcart::app()->db
+                ->getConnection()
+                ->getSchemaManager()
+                ->listTableColumns(call_user_func([$className, 'tableName']));
         }
 
         return self::$_tables[$className];
@@ -163,7 +166,7 @@ class AutoMetaData extends MetaData
     public static function saveCache()
     {
         if (self::$_tables) {
-            Xcart::app()->cache->set('auto_meta_data_tables', self::$_tables, 35);
+            Xcart::app()->cache->set('auto_meta_data_tables', self::$_tables, 360);
         }
     }
 }

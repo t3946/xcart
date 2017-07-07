@@ -96,7 +96,7 @@ class MenuLibrary extends TemplateLibrary
 
             $qs->having(['pcount__gt' => 0]);
 
-            self::$root_categories = $qs->cache(60)->all();
+            self::$root_categories = $qs->cache(300)->all();
         }
 
         return self::$root_categories;
@@ -115,6 +115,7 @@ class MenuLibrary extends TemplateLibrary
     public static function getDepartmentSubmenu(CategoryModel $category ,$has_banner = false)
     {
         $collection = $category->getSubcategories(true, 2);
+//        $collection = [];
 
         // Trees mapped
         $items = [];

@@ -10,20 +10,13 @@ use Xcart\App\Middleware\Middleware;
 class StatisticMiddleware extends Middleware
 {
 
-    private $start;
-
-    public function processRequest($request)
-    {
-        if (!Cli::isCli() || !$request->getIsAjax()) {
-            $this->start = time();
-        }
-    }
-
     public function processView($request, &$output)
     {
-        if (!Cli::isCli() || !$request->getIsAjax()) {
+        /** @var \Xcart\App\Request\HttpRequest $request */
+        if (!Cli::isCli() && !$request->getIsAjax()) {
             $cq = Xcart::app()->db->getConnection()->getCountQueries();
             $memory = HumanizeLibrary::humanizeSize(memory_get_usage());
+            $time = microtime(true) - $_SERVER['REQUEST_TIME_FLOAT'];
 
 
             $output .= <<<HTML
@@ -34,6 +27,9 @@ class StatisticMiddleware extends Middleware
         </div>
         <div class="columns large-3">
             Query count: {$cq}
+        </div>
+        <div class="columns large-3">
+            Speed: {$time}s
         </div>
     </div>
 </section>

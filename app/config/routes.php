@@ -8,18 +8,31 @@ return [
     [
         'route' => '',
         'path' => 'Modules.Product.routes',
-        'namespace' => 'catalog'
+        'namespace' => 'catalog',
+        'config' => [
+            'cache' => [
+                'time' => 360,
+            ]
+        ]
     ],
 
     [
         'route' => '/brand',
         'path' => 'Modules.Brand.routes',
-        'namespace' => 'brand'
+        'namespace' => 'brand',
+        'config' => [
+            'cache' => [
+                'time' => 3600,
+            ]
+        ]
     ],
     [
         'route' => '/cart',
         'path' => 'Modules.Cart.routes',
-        'namespace' => 'cart'
+        'namespace' => 'cart',
+        'config' => [
+            'cache' => false
+        ]
     ],
 
     [

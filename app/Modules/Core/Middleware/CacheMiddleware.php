@@ -8,6 +8,8 @@ use Xcart\App\Middleware\Middleware;
 
 class CacheMiddleware extends Middleware
 {
+    public $globalCacheTime = 360;
+
     public function processRequest($request)
     {
         if (Cli::isCli() == false) {
@@ -18,16 +20,25 @@ class CacheMiddleware extends Middleware
 
                 $match = Xcart::app()->router->match($request->getUrl(), $request->getMethod());
 
-                if (!empty($match['meta']) && !empty($match['meta']['cache']) && $match['meta']['cache']) {
+                if (!empty($match['config']) && !empty($match['config']['cache']) && $match['config']['cache']) {
                     if ($a_output = Xcart::app()->cache->get($this->getCacheKey($request))) {
-                        list($output, $headers) = $a_output;
+                        list($output, $headers, $etag, $modTime) = $a_output;
+
+                        if ($request->getHeaderValue('IF_NONE_MATCH') == "\"{$etag}\"") {
+                            header("HTTP/1.1 304 Not Modified");
+                            Xcart::app()->end();
+                        }
 
                         foreach ($headers as $header) {
                             header($header);
                         }
-                        
+
+                        header("Last-Modified: {$modTime} GMT");
+                        header("Cache-Control: max-age={$this->globalCacheTime}");
+                        header("ETag: \"{$etag}\"");
+
                         echo $output;
-                        die();
+                        Xcart::app()->end();
                     }
                 }
             }
@@ -41,7 +52,7 @@ class CacheMiddleware extends Middleware
             /** @var \Xcart\App\Request\HttpRequest $request */
             $match = Xcart::app()->router->match($request->getUrl(), $request->getMethod());
 
-            if (!empty($match['meta']) && !empty($match['meta']['cache']) && $match['meta']['cache']) {
+            if (!empty($match['config']) && !empty($match['config']['cache']) && $match['config']['cache']) {
 
                 $headers = array_filter(headers_list(), function($header) {
 
@@ -51,7 +62,24 @@ class CacheMiddleware extends Middleware
                     }
                 });
 
-                Xcart::app()->cache->set($this->getCacheKey($request), [$output, $headers], $match['meta']['cache_time']?:null);
+                $data = [$output, $headers];
+                $etag = md5(serialize($data));
+                $modTime = gmdate("D, d M Y H:i:s", time());
+                $data[] = $etag;
+                $data[] = $modTime;
+
+                if (!empty($match['config']['cache']['time'])) {
+                    $cacheTime = $match['config']['cache']['time'];
+                }
+                else {
+                    $cacheTime = $this->globalCacheTime;
+                }
+
+                header("Last-Modified: {$modTime} GMT");
+                header("Cache-Control: max-age={$cacheTime}");
+                header("ETag: \"{$etag}\"");
+
+                Xcart::app()->cache->set($this->getCacheKey($request), $data, $cacheTime?:null);
             }
         }
     }
