@@ -8,7 +8,7 @@ use Modules\Cart\Interfaces\ICartStorage;
  * Class SessionStorage
  * @package Modules\Cart\Components
  */
-class SessionStorage implements ICartStorage
+abstract class AbstractStorage implements ICartStorage
 {
     /**
      * @var Cart
@@ -18,15 +18,13 @@ class SessionStorage implements ICartStorage
      * @var string
      */
     protected $key;
+    protected $data;
 
     public function __construct(Cart $cart, $key = 'cart')
     {
         $this->key = $key;
         $this->cart = $cart;
-
-        if (!isset($_SESSION[$this->key])) {
-            $_SESSION[$this->key] = [];
-        }
+        $this->data = [];
     }
 
     /**
@@ -35,8 +33,10 @@ class SessionStorage implements ICartStorage
      */
     public function get($key)
     {
-        $data = $this->getData();
-        return unserialize($data[$key]);
+        if ($this->has($key)) {
+            return unserialize($this->data[$key]);
+        }
+        return null;
     }
 
     /**
@@ -46,8 +46,8 @@ class SessionStorage implements ICartStorage
     public function remove($key)
     {
         if ($this->has($key)) {
-            $this->cart->getEventManager()->trigger('cart:removeItem', unserialize($_SESSION[$this->key][$key]), $this->cart);
-            unset($_SESSION[$this->key][$key]);
+            $this->cart->getEventManager()->trigger('cart:removeItem', [unserialize($this->data[$key])], $this->cart);
+            unset($this->data[$key]);
             return true;
         }
         return false;
@@ -60,8 +60,8 @@ class SessionStorage implements ICartStorage
      */
     public function add($key, $value)
     {
-        $this->cart->getEventManager()->trigger('cart:addItem', $value, $this->cart);
-        $_SESSION[$this->key][$key] = serialize($value);
+        $this->cart->getEventManager()->trigger('cart:addItem', [$value], $this->cart);
+        $this->data[$key] = serialize($value);
         return $this;
     }
 
@@ -70,7 +70,7 @@ class SessionStorage implements ICartStorage
      */
     public function count()
     {
-        return count($_SESSION[$this->key]);
+        return count($this->data);
     }
 
     /**
@@ -78,7 +78,7 @@ class SessionStorage implements ICartStorage
      */
     public function clear()
     {
-        $_SESSION[$this->key] = [];
+        $this->data = [];
         return $this;
     }
 
@@ -108,6 +108,6 @@ class SessionStorage implements ICartStorage
      */
     public function getData()
     {
-        return $_SESSION[$this->key];
+        return $this->data ?: [];
     }
 }

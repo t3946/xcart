@@ -2,29 +2,24 @@
 
 namespace Modules\Cart\Components;
 
+use Modules\Cart\Interfaces\ICartStorage;
 use Xcart\App\Main\Xcart;
 
 /**
  * Class SessionStorage
  * @package Modules\Cart\Components
  */
-class XSessionStorage
+class XSessionStorage extends AbstractStorage
 {
-    /**
-     * @var Cart
-     */
-    protected $cart;
     /**
      * @var string
      */
-    protected $key;
-    protected $data;
     protected $session;
 
     public function __construct(Cart $cart, $key = 'cart')
     {
-        $this->key = $key;
-        $this->cart = $cart;
+        parent::__construct($cart, $key);
+
         $this->session = Xcart::app()->request->session;
 
         $this->data = $this->session->get($this->key, []);
@@ -51,9 +46,8 @@ class XSessionStorage
      */
     public function remove($key)
     {
-        if ($this->has($key)) {
-            $this->cart->getEventManager()->trigger('cart:removeItem', [unserialize($this->data[$key])], $this->cart);
-            unset($this->data[$key]);
+        if (parent::remove($key))
+        {
             $this->sync();
             return true;
         }
@@ -67,57 +61,18 @@ class XSessionStorage
      */
     public function add($key, $value)
     {
-        $this->cart->getEventManager()->trigger('cart:addItem', [$value], $this->cart);
-        $this->data[$key] = serialize($value);
+        parent::add($key, $value);
         $this->sync();
         return $this;
     }
-
-    /**
-     * @return int
-     */
-    public function count()
-    {
-        return count($this->data);
-    }
-
     /**
      * @return $this
      */
     public function clear()
     {
-        $this->data = [];
+        parent::clear();
         $this->sync();
         return $this;
-    }
-
-    /**
-     * @return \Modules\Cart\Components\CartItem[]
-     */
-    public function getItems()
-    {
-        $items = [];
-        foreach ($this->getData() as $item) {
-            $items[] = unserialize($item);
-        }
-        return $items;
-    }
-
-    /**
-     * @param $key
-     * @return bool
-     */
-    public function has($key)
-    {
-        return array_key_exists($key, $this->getData());
-    }
-
-    /**
-     * @return array
-     */
-    public function getData()
-    {
-        return $this->data ?: [];
     }
 
     public function sync()
