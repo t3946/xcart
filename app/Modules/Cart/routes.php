@@ -7,27 +7,27 @@ return [
         'name' => 'list'
     ],
     [
-        'route' => '/delete/{slug:key}',
+        'route' => '/delete/{a:key}',
         'target' => ['\Modules\Cart\Controllers\CartController', 'actionDelete'],
         'name' => 'delete'
     ],
     [
-        'route' => '/add/{slug:key}-{i:quantity}',
+        'route' => '/add/{a:key}-{i:quantity}',
         'target' => ['\Modules\Cart\Controllers\CartController', 'actionAdd'],
         'name' => 'add'
     ],
     [
-        'route' => '/quantity/{slug:key}-{i:quantity}',
+        'route' => '/quantity/{a:key}-{i:quantity}',
         'target' => ['\Modules\Cart\Controllers\CartController', 'actionQuantity'],
         'name' => 'quantity'
     ],
     [
-        'route' => '/quantity/{slug:key}-inc',
+        'route' => '/quantity/{a:key}-inc',
         'target' => ['\Modules\Cart\Controllers\CartController', 'actionIncrease'],
         'name' => 'quantity_increase'
     ],
     [
-        'route' => '/quantity/{slug:key}-dev',
+        'route' => '/quantity/{a:key}-deс',
         'target' => ['\Modules\Cart\Controllers\CartController', 'actionDecrease'],
         'name' => 'quantity_decrease'
     ],

@@ -37,7 +37,14 @@ class XTableStorage extends AbstractStorage
             $this->session->add($this->session_keyName, $this->getCartNumber());
         }
 
-        $this->data = $this->model->data ?: [];
+        if ($data = $this->model->data) {
+            if ($data['discounts']) {
+                $this->cart->setDiscounts($data['discounts']);
+            }
+            if ($data['cart']) {
+                $this->data = $data['cart'];
+            }
+        }
     }
 
     public function getCartNumber()
@@ -45,7 +52,10 @@ class XTableStorage extends AbstractStorage
         return $this->model->id;
     }
 
-    public function save()
+    /**
+     * @param \Modules\Cart\Interfaces\IDiscount[] $discounts
+     */
+    public function save($discounts = [])
     {
 //        $data = [];
 //
@@ -60,7 +70,11 @@ class XTableStorage extends AbstractStorage
 //            ];
 //        }
 
-        $this->model->data = $this->data;
+        $this->model->data = [
+            'cart' => $this->data,
+            'discounts' => $this->cart->getDiscounts()
+        ];
+
         $this->model->save(['data']);
     }
 }

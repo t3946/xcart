@@ -35,11 +35,11 @@ abstract class BaseCartController extends Controller
         return Xcart::app()->getModule('Cart')->getComponent('cart');
     }
 
-    public function actionAdd($uniqueId, $quantity = 1, $type = null)
+    public function actionAdd($uniqueId, $quantity = 1)
     {
         $isAjax = $this->getRequest()->getIsAjax();
         $cart = $this->getCart();
-        if ($this->addInternal($uniqueId, $quantity, $type)) {
+        if ($this->addInternal($uniqueId, $quantity)) {
             if ($isAjax) {
                 $this->jsonResponse([
                     'status' => true,
@@ -50,8 +50,8 @@ abstract class BaseCartController extends Controller
                 ]);
                 Xcart::app()->end();
             } else {
-                $this->request->flash->success(CartModule::t('Product added'));
-                $this->request->redirect($this->getListRoute());
+//                $this->getRequest()->flash->success(CartModule::t('Product added'));
+                $this->getRequest()->redirect($this->getListRoute());
             }
         } else {
             if ($isAjax) {
@@ -64,8 +64,8 @@ abstract class BaseCartController extends Controller
                 ]);
                 Xcart::app()->end();
             } else {
-                $this->get->flash->success(CartModule::t('Error has occurred'));
-                $this->request->redirect($this->getListRoute());
+//                $this->getRequest()->flash->success(CartModule::t('Error has occurred'));
+                $this->getRequest()->redirect($this->getListRoute());
             }
         }
     }
@@ -73,9 +73,9 @@ abstract class BaseCartController extends Controller
     public function actionList()
     {
         $listRoute = $this->getListRoute();
-        $url = Xcart::app()->urlManager->reverse($listRoute);
-        if ($listRoute && strpos($this->request->path, $url) === false) {
-            $this->request->redirect($listRoute);
+        $url = Xcart::app()->router->url($listRoute);
+        if ($listRoute && strpos($this->getRequest()->getPath(), $url) === false) {
+            $this->getRequest()->redirect($listRoute);
         }
         $cart = $this->getCart();
         echo $this->render($this->listTemplate, [
@@ -99,8 +99,8 @@ abstract class BaseCartController extends Controller
                 ]);
                 Xcart::app()->end();
             } else {
-                $this->request->flash->success(CartModule::t('Quantity updated'));
-                $this->request->redirect($this->getListRoute());
+//                $this->getRequest()->flash->success(CartModule::t('Quantity updated'));
+                $this->getRequest()->redirect($this->getListRoute());
             }
         } else {
             if ($isAjax) {
@@ -113,8 +113,8 @@ abstract class BaseCartController extends Controller
                 ]);
                 Xcart::app()->end();
             } else {
-                $this->request->flash->success(CartModule::t('Error has occurred'));
-                $this->request->redirect($this->getListRoute());
+//                $this->getRequest()->flash->success(CartModule::t('Error has occurred'));
+                $this->getRequest()->redirect($this->getListRoute());
             }
         }
     }
@@ -134,8 +134,8 @@ abstract class BaseCartController extends Controller
                 ]);
                 Xcart::app()->end();
             } else {
-                $this->request->flash->success(CartModule::t('Quantity updated'));
-                $this->request->redirect($this->getListRoute());
+//                $this->getRequest()->flash->success(CartModule::t('Quantity updated'));
+                $this->getRequest()->redirect($this->getListRoute());
             }
         } else {
             if ($isAjax) {
@@ -148,8 +148,8 @@ abstract class BaseCartController extends Controller
                 ]);
                 Xcart::app()->end();
             } else {
-                $this->request->flash->success(CartModule::t('Error has occurred'));
-                $this->request->redirect($this->getListRoute());
+//                $this->getRequest()->flash->success(CartModule::t('Error has occurred'));
+                $this->getRequest()->redirect($this->getListRoute());
             }
         }
     }
@@ -169,8 +169,8 @@ abstract class BaseCartController extends Controller
                 ]);
                 Xcart::app()->end();
             } else {
-                $this->request->flash->success(CartModule::t('Quantity updated'));
-                $this->request->redirect($this->getListRoute());
+//                $this->getRequest()->flash->success(CartModule::t('Quantity updated'));
+                $this->getRequest()->redirect($this->getListRoute());
             }
         } else {
             if ($isAjax) {
@@ -183,8 +183,8 @@ abstract class BaseCartController extends Controller
                 ]);
                 Xcart::app()->end();
             } else {
-                $this->request->flash->success(CartModule::t('Error has occurred'));
-                $this->request->redirect($this->getListRoute());
+//                $this->getRequest()->flash->success(CartModule::t('Error has occurred'));
+                $this->getRequest()->redirect($this->getListRoute());
             }
         }
     }
@@ -205,8 +205,8 @@ abstract class BaseCartController extends Controller
                 ]);
                 Xcart::app()->end();
             } else {
-                $this->request->flash->success(CartModule::t('Position sucessfully removed'));
-                $this->request->redirect($this->getListRoute());
+//                $this->getRequest()->flash->success(CartModule::t('Position sucessfully removed'));
+                $this->getRequest()->redirect($this->getListRoute());
             }
         } else {
             if ($isAjax) {
@@ -219,11 +219,11 @@ abstract class BaseCartController extends Controller
                 ]);
                 Xcart::app()->end();
             } else {
-                $this->request->flash->error(CartModule::t('Error has occurred'));
-                $this->request->redirect($this->getListRoute());
+//                $this->getRequest()->flash->error(CartModule::t('Error has occurred'));
+                $this->getRequest()->redirect($this->getListRoute());
             }
         }
     }
 
-    abstract protected function addInternal($uniqueId, $quantity, $type);
+    abstract protected function addInternal($uniqueId, $quantity);
 }

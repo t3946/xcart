@@ -23,6 +23,6 @@ class XCart extends Cart
 
     public function save()
     {
-        $this->getStorage()->save();
+        $this->getStorage()->save($this->discounts);
     }
 }

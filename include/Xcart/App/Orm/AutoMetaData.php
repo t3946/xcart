@@ -36,18 +36,20 @@ class AutoMetaData extends MetaData
             $name = $column->getName();
 
             if (!isset($this->fields[$name])) {
-                $config = $this->getConfigFromDBAL($column);
 
-                $field = $this->createField($config);
-                $field->setName($name);
-                $field->setModelClass($className);
+                if ($config = $this->getConfigFromDBAL($column)) {
+                    $field = $this->createField($config);
+                    $field->setName($name);
+                    $field->setModelClass($className);
 
-                $this->fields[$name] = $field;
-                $this->mapping[$field->getAttributeName()] = $name;
+                    $this->fields[$name] = $field;
+                    $this->mapping[$field->getAttributeName()] = $name;
 
-                if ($field->primary) {
-                    $primaryFields[] = $field->getAttributeName();
+                    if ($field->primary) {
+                        $primaryFields[] = $field->getAttributeName();
+                    }
                 }
+
             }
         }
         if (empty($primaryFields) && empty($this->primaryKeys)) {
@@ -80,72 +82,79 @@ class AutoMetaData extends MetaData
 
     private function getConfigFromDBAL(Column $column)
     {
-        $config = [
-            'null'    => !$column->getNotnull(),
-            'default' => $column->getDefault(),
-        ];
+        if ($type = $column->getType())
+        {
+            $config = [
+                'null'    => !$column->getNotnull(),
+                'default' => $column->getDefault(),
+            ];
 
-        if ($column->getLength()) {
-            $config['length'] = $column->getLength();
-        }
-
-        switch ($column->getType()->getName()) {
-            case 'smallint' :
-            case 'integer' : {
-                $config['class'] = IntField::className();
-                break;
-            }
-            case 'bigint' : {
-                $config['class'] = BigIntField::className();
-                break;
-            }
-            case 'decimal' : {
-                $config['class'] = DecimalField::className();
-                $config['precision'] = $column->getPrecision();
-                $config['scale'] = $column->getScale();
-                break;
-            }
-            case 'float' : {
-                $config['class'] = FloatField::className();
-                break;
+            if ($column->getLength()) {
+                $config['length'] = $column->getLength();
             }
 
-            case 'blob' : {
-                $config['class'] = BlobField::className();
-                unset($config['length']);
-                break;
-            }
-            case 'date' : {
-                $config['class'] = DateField::className();
-                break;
-            }
-            case 'datetime' : {
-                $config['class'] = DateTimeField::className();
-                break;
-            }
-            case 'time' : {
-                $config['class'] = TimeField::className();
-                break;
-            }
+            switch ($type->getName()) {
+                case 'smallint' :
+                case 'integer' : {
+                    $config['class'] = IntField::className();
+                    break;
+                }
+                case 'bigint' : {
+                    $config['class'] = BigIntField::className();
+                    break;
+                }
+                case 'decimal' : {
+                    $config['class'] = DecimalField::className();
+                    $config['precision'] = $column->getPrecision();
+                    $config['scale'] = $column->getScale();
+                    break;
+                }
+                case 'float' : {
+                    $config['class'] = FloatField::className();
+                    break;
+                }
+
+                case 'blob' : {
+                    $config['class'] = BlobField::className();
+                    unset($config['length']);
+                    break;
+                }
+                case 'date' : {
+                    $config['class'] = DateField::className();
+                    break;
+                }
+                case 'datetime' : {
+                    $config['class'] = DateTimeField::className();
+                    break;
+                }
+                case 'time' : {
+                    $config['class'] = TimeField::className();
+                    break;
+                }
 //            case 'timeshtamp' : {
 //                $config['class'] = TimestampField::className();
 //                break;
 //            }
 
-            case 'string' : {
-                $config['class'] = CharField::className();
-                break;
+                case 'string' : {
+                    $config['class'] = CharField::className();
+                    break;
+                }
+                case 'longtext' :
+                case 'text' : {
+                    unset($config['length']);
+                }
+                default: {
+                    $config['class'] = TextField::className();
+                }
             }
-            case 'longtext' :
-            case 'text' : {
-                unset($config['length']);
-            }
-            default: {
-                $config['class'] = TextField::className();
-            }
+
+            return $config;
         }
 
-        return $config;
+        func_dump($column);
+
+        return null;
     }
 
     public function initTableData()
@@ -155,7 +164,7 @@ class AutoMetaData extends MetaData
             if (Xcart::app()->hasComponent('event') && Xcart::app()->hasComponent('cache'))
             {
                 self::$_tables = Xcart::app()->cache->get('auto_meta_data_tables', []);
-                Xcart::app()->event->on('app:end', [$this, 'saveCache']);
+//                Xcart::app()->event->on('app:end', [$this, 'saveCache']);
             }
             else {
                 self::$_tables = [];

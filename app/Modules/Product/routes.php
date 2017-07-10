@@ -45,4 +45,11 @@ return [
         'route' => '/keyword/{slug:q}/',
         'target' => ['\Modules\Product\Controllers\SearchController', 'actionKeywords'],
     ],
+
+    /** PRODUCT CART ADD */
+    [
+        'route' => '/cart-add/{slug:key}',
+        'target' => ['\Modules\Product\Controllers\SearchController', 'actionAdd'],
+        'name' => 'cart:add'
+    ],
 ];

@@ -69,11 +69,21 @@ class Cart
      * @param array $data
      * @return string
      */
-    protected function makeKey(ICartItem $object, array $data)
+    protected function makeKey(ICartItem $object, array $data = [])
     {
-        return strtr("{class}{unique_id}", [
-            "{class}" => get_class($object),
-            "{unique_id}" => serialize(['unique_id', $object->getUniqueId(), 'data' => $data])
+        $prefix = '';
+        $clss = get_class($object);
+        $clss = explode('\\', $clss);
+
+        foreach ($clss as $cls) {
+            $prefix .= substr($cls,0, 1);
+        }
+        $prefix .= substr($cls, -1, 1);
+
+        return strtr("{prefix}{unique_id}{data}", [
+            "{prefix}" => $prefix,
+            "{unique_id}" => $object->getUniqueId(),
+            "{data}"=> (empty($data)?:'-') . implode('-', $data),
         ]);
     }
 
@@ -126,8 +136,7 @@ class Cart
      */
     public function getPositionByKey($key)
     {
-        $data = array_values(array_flip($this->getStorage()->getData()));
-        return isset($data[$key]) ? $data[$key] : null;
+        return $this->getStorage()->has($key)?$key:null;
     }
 
     /**
@@ -295,14 +304,14 @@ class Cart
      */
     public function getItems()
     {
-        $items = $this->getStorage()->getItems();
+        $items = $this->getStorage()->getData();
         if ($this->forceFetch) {
             $newItems = [];
-            foreach ($items as $item) {
+            foreach ($items as $key =>$item) {
                 $object = $item->getObject();
                 if ($newObject = $object->objects()->get(['pk' => $object->pk])) {
                     $item->setObject($newObject);
-                    $newItems[] = $item;
+                    $newItems[$key] = $item;
                 } else {
                     $this->remove($object, []);
                 }
@@ -336,11 +345,32 @@ class Cart
     {
         if ($this->_discounts === null) {
             $this->_discounts = [];
-            foreach ($this->discounts as $className) {
-                $this->_discounts[] = Creator::createObject($className);
-            }
+
+            $this->setDiscounts($this->discounts);
         }
 
         return $this->_discounts;
+    }
+
+    /**
+     * @param IDiscount[] $discounts
+     */
+    public function setDiscounts($discounts = [])
+    {
+        foreach ($discounts as $discount) {
+            if (in_array('Modules\Cart\Interfaces\IDiscount',class_implements($discount))) {
+                $this->setDiscount($discount);
+            }
+        }
+    }
+
+    public function setDiscount(IDiscount $discount)
+    {
+        if (is_object($discount)) {
+            $this->_discounts[] = $discount;
+        }
+        else if (is_string($discount)) {
+            $this->_discounts[] = Creator::createObject($discount);
+        }
     }
 }

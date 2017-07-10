@@ -18,7 +18,7 @@ abstract class AbstractStorage implements ICartStorage
      * @var string
      */
     protected $key;
-    protected $data;
+    protected $data = [];
 
     public function __construct(Cart $cart, $key = 'cart')
     {
@@ -61,7 +61,7 @@ abstract class AbstractStorage implements ICartStorage
     public function add($key, $value)
     {
         $this->cart->getEventManager()->trigger('cart:addItem', [$value], $this->cart);
-        $this->data[$key] = clone $value;
+        $this->data[$key] = $value;
         return $this;
     }
 

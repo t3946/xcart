@@ -13,5 +13,6 @@ interface ICartStorage
     public function clear();
     public function count();
     public function getItems();
+    public function getData();
 
 }
