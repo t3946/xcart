@@ -121,25 +121,39 @@ class TemplateManager
         });
 
         $this->_renderer->addFunction('url', function($params) {
-            $route = isset($params['route']) ? $params['route'] : null;
-            if (!$route) {
-                $route = isset($params[0]) ? $params[0] : null;
-            }
+            list($route, $attributes) =$this->prepareUrlTag($params);
 
-            $attributes = isset($params['params']) ? $params['params'] : [];
-            if (!$attributes) {
-                $attributes = (isset($params[1]) && is_array($params[1])) ? $params[1] : [];
+            return Xcart::app()->router->url($route, $attributes);
+        });
 
-                if (!$attributes && count($params) > 1) {
-                    foreach ($params as $k => $v) {
-                        if (!is_numeric($k)) {
-                            $attributes[$k] = $v;
-                        }
+        $this->_renderer->addFunction('absoluteUrl', function($params) {
+            list($route, $attributes) =$this->prepareUrlTag($params);
+
+            return Xcart::app()->router->absoluteUrl($route, $attributes);
+        });
+    }
+
+    public function prepareUrlTag($params)
+    {
+        $route = isset($params['route']) ? $params['route'] : null;
+        if (!$route) {
+            $route = isset($params[0]) ? $params[0] : null;
+        }
+
+        $attributes = isset($params['params']) ? $params['params'] : [];
+        if (!$attributes) {
+            $attributes = (isset($params[1]) && is_array($params[1])) ? $params[1] : [];
+
+            if (!$attributes && count($params) > 1) {
+                foreach ($params as $k => $v) {
+                    if (!is_numeric($k)) {
+                        $attributes[$k] = $v;
                     }
                 }
             }
-            return Xcart::app()->router->url($route, $attributes);
-        });
+        }
+
+        return [$route, $attributes];
     }
 
     public function loadLibraries()
