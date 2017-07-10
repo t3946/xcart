@@ -34,11 +34,7 @@
         </div>
         <div class="info_container container">
             <h4 class="title " itemprop="name">
-                {if $item.seo_product_name}
-                    {set $title = $item.seo_product_name}
-                {else}
-                    {set $title = $item.product}
-                {/if}
+                {set $title = $item->getFrontendName()}
 
                 <a href="{$item->getAbsoluteUrl()}" title="{$title}">
                     {if $q!}
@@ -68,14 +64,8 @@
                     {$brand->brand}
                 </a>
             </div>
-            {if $item.descr || $item.fulldescr || $item.seo_fulldescr}
-                {if $item.descr}
-                    {set $description = $item.descr}
-                {elseif $item.seo_fulldescr}
-                    {set $description = $item.seo_fulldescr}
-                {elseif $item.fulldescr}
-                    {set $description = $item.fulldescr}
-                {/if}
+            {if $item->getFrontendDescription()}
+                {set $description = $item->getFrontendDescription()}
 
                 <div class="description show-for-medium" >
                     <span itemprop="description">
@@ -171,28 +161,28 @@
                         </div>
                     </div>
 
-                        <div class="info_container">
-                            {if $item.lead_time_message|trim}
-                                <div class="lead-time icon info">
-                                    {$item.lead_time_message}
-                                </div>
-                            {/if}
+                    <div class="info_container">
+                        {if $item.lead_time_message|trim}
+                            <div class="lead-time icon info">
+                                {$item.lead_time_message}
+                            </div>
+                        {/if}
 
-                                {if $item->mult_order_quantity == 'Y'}
-                                    <div class="multiply-quantity icon info padding">
-                                    Order in multiples of {$item->min_amount} items
-                                </div>
-                                {/if}
+                        {if $item->mult_order_quantity == 'Y'}
+                            <div class="multiply-quantity icon info padding">
+                                Order in multiples of {$item->min_amount} items
+                            </div>
+                        {/if}
 
-                                {if $item->min_amount >= $item->avail}
-                                <div class="last-items icon info">
-                                    Order at least {$item->avail} items
-                                </div>
-                                {/if}
-                        </div>
+                        {if $item->min_amount >= $item->avail}
+                            <div class="last-items icon info">
+                                Order at least {$item->avail} items
+                            </div>
+                        {/if}
+                    </div>
 
-                        <div class="cart_add">
-                        <span class="add button yellow">
+                    <div class="cart_add">
+                        <span class="add button yellow" data-url="{url 'catalog:cart:add' key=$item->getUniqueId()}">
                             <span class="text">
                                 Add to cart
                             </span>

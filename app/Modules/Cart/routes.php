@@ -17,6 +17,11 @@ return [
         'name' => 'add'
     ],
     [
+        'route' => '/quantity',
+        'target' => ['\Modules\Cart\Controllers\CartController', 'actionGetQuantity'],
+        'name' => 'quantity_decrease'
+    ],
+    [
         'route' => '/quantity/{a:key}-{i:quantity}',
         'target' => ['\Modules\Cart\Controllers\CartController', 'actionQuantity'],
         'name' => 'quantity'

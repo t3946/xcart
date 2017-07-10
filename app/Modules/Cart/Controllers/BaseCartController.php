@@ -29,10 +29,28 @@ abstract class BaseCartController extends Controller
 
     /**
      * @return \Modules\Cart\Components\Cart
+     * @throws \Xcart\App\Exceptions\UnknownPropertyException
      */
     protected function getCart()
     {
         return Xcart::app()->getModule('Cart')->getComponent('cart');
+    }
+
+    public function actionGetQuantity()
+    {
+        $isAjax = $this->getRequest()->getIsAjax();
+        $cart = $this->getCart();
+
+        if ($isAjax) {
+            $this->jsonResponse([
+                'status' => true,
+                'total' => $cart->getTotal(),
+                'quantity' => $cart->getQuantity(),
+            ]);
+            Xcart::app()->end();
+        } else {
+            echo $cart->getQuantity();
+        }
     }
 
     public function actionAdd($uniqueId, $quantity = 1)
@@ -44,6 +62,7 @@ abstract class BaseCartController extends Controller
                 $this->jsonResponse([
                     'status' => true,
                     'total' => $cart->getTotal(),
+                    'quantity' => $cart->getQuantity(),
                     'message' => [
                         'title' => CartModule::t('Product added')
                     ]
@@ -58,6 +77,7 @@ abstract class BaseCartController extends Controller
                 echo $this->json([
                     'status' => false,
                     'total' => $cart->getTotal(),
+                    'quantity' => $cart->getQuantity(),
                     'message' => [
                         'title' => CartModule::t('Error has occurred')
                     ]
@@ -81,6 +101,7 @@ abstract class BaseCartController extends Controller
         echo $this->render($this->listTemplate, [
             'items' => $cart->getItems(),
             'total' => $cart->getTotal(),
+            'quantity' => $cart->getQuantity(),
         ]);
     }
 
@@ -93,6 +114,7 @@ abstract class BaseCartController extends Controller
                 $this->jsonResponse([
                     'status' => true,
                     'total' => $cart->getTotal(),
+                    'quantity' => $cart->getQuantity(),
                     'message' => [
                         'title' => CartModule::t('Quantity updated')
                     ]
@@ -107,6 +129,7 @@ abstract class BaseCartController extends Controller
                 $this->jsonResponse([
                     'status' => false,
                     'total' => $cart->getTotal(),
+                    'quantity' => $cart->getQuantity(),
                     'message' => [
                         'title' => CartModule::t('Error has occurred')
                     ]
@@ -128,6 +151,7 @@ abstract class BaseCartController extends Controller
                 $this->jsonResponse([
                     'status' => true,
                     'total' => $cart->getTotal(),
+                    'quantity' => $cart->getQuantity(),
                     'message' => [
                         'title' => CartModule::t('Quantity updated')
                     ]
@@ -142,6 +166,7 @@ abstract class BaseCartController extends Controller
                 $this->jsonResponse([
                     'status' => false,
                     'total' => $cart->getTotal(),
+                    'quantity' => $cart->getQuantity(),
                     'error' => [
                         'title' => CartModule::t('Error has occurred')
                     ]
@@ -163,6 +188,7 @@ abstract class BaseCartController extends Controller
                 echo $this->json([
                     'status' => true,
                     'total' => $cart->getTotal(),
+                    'quantity' => $cart->getQuantity(),
                     'message' => [
                         'title' => CartModule::t('Quantity updated')
                     ]
@@ -177,6 +203,7 @@ abstract class BaseCartController extends Controller
                 $this->jsonResponse([
                     'status' => false,
                     'total' => $cart->getTotal(),
+                    'quantity' => $cart->getQuantity(),
                     'error' => [
                         'title' => CartModule::t('Error has occurred')
                     ]
@@ -199,6 +226,7 @@ abstract class BaseCartController extends Controller
                 $this->jsonResponse([
                     'status' => true,
                     'total' => $cart->getTotal(),
+                    'quantity' => $cart->getQuantity(),
                     'message' => [
                         'title' => CartModule::t('Position sucessfully removed'),
                     ]
@@ -213,6 +241,7 @@ abstract class BaseCartController extends Controller
                 $this->jsonResponse([
                     'status' => false,
                     'total' => $cart->getTotal(),
+                    'quantity' => $cart->getQuantity(),
                     'error' => [
                         'title' => CartModule::t('Error has occurred'),
                     ]

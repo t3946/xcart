@@ -4,8 +4,8 @@ export default class Cart
         this.elemets = {};
         this.options = {
             classes: {
-                'cart': '.header_cart',
-                'item': ''
+                'cart-count': '.header_cart',
+                'quantity-group': ''
             }
         };
 

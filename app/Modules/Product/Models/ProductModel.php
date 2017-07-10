@@ -239,4 +239,14 @@ class ProductModel extends AutoMetaModel implements ICartItem
     {
         return "[{$this->productid}] {$this->product} ({$this->productcode})";
     }
+
+    public function getFrontendName()
+    {
+        return $this->seo_product_name ?: $this->product;
+    }
+
+    public function getFrontendDescription()
+    {
+        return $this->descr ?: $this->seo_fulldescr ?: $this->fulldescr;
+    }
 }

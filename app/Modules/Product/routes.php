@@ -48,8 +48,11 @@ return [
 
     /** PRODUCT CART ADD */
     [
-        'route' => '/cart-add/{slug:key}',
+        'route' => '/cart/add/product-{slug:key}',
         'target' => ['\Modules\Product\Controllers\SearchController', 'actionAdd'],
-        'name' => 'cart:add'
+        'name' => 'cart:add',
+        'config' => [
+            'cache' => false,
+        ]
     ],
 ];
