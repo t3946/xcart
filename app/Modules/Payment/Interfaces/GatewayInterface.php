@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Payment\Gateways;
+namespace Modules\Payment\Interfaces;
 
 
 interface GatewayInterface
@@ -38,4 +38,14 @@ interface GatewayInterface
      * @return bool
      */
     public function reauthorize($params);
+    /**
+     * @param $params
+     * @return bool
+     */
+    public function purchase($params);
+    /**
+     * @param $params
+     * @return bool
+     */
+    public function complete($params);
 }

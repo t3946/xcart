@@ -72,7 +72,7 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array_keys(
         try {
             if ($isAllowed) {
 
-                if ($gw = Gateway::getGateway($pmModel)) {
+                if ($gw = Gateway::getGateway($pmModel->processor)) {
 
                     if ($res = $gw->$method($params)) {
 

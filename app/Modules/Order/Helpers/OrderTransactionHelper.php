@@ -57,7 +57,7 @@ class OrderTransactionHelper
     public static function action($method, $model)
     {
         if ($model) {
-            if ($gw = Gateway::getGateway($model->payment_method_model)) {
+            if ($gw = Gateway::getGateway($model->payment_method_model->processor)) {
                 $amount =
                     [
                         'amount' => $model->transaction_amount,

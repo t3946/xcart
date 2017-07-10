@@ -4,6 +4,7 @@ namespace Modules\Payment\Models;
 
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\CharField;
+use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Model;
 
 class ProcessorModel extends Model
@@ -29,6 +30,13 @@ class ProcessorModel extends Model
                 'default' => '',
                 'null' => false
             ],
+            'cc_processor' => [
+                'field' => 'processor_name',
+                'class' => ForeignField::className(),
+                'modelClass' => PaymentProcessorModel::className(),
+                'link' => ['processor_name' => 'module_name'],
+            ]
+
         ];
     }
 }

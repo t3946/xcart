@@ -31,8 +31,6 @@ class PayPal extends Gateway
                 break;
         }
 
-        $this->gateway->getHttp;
-
     }
 
     public function refund($params)
@@ -125,6 +123,26 @@ class PayPal extends Gateway
         $this->result = $this->gateway
             ->reauthorize($params)
             ->send();
+        return $this->result->isSuccessful();
+    }
+
+    public function purchase($params)
+    {
+        $this->result = $this->gateway
+            ->purchase($params)
+            ->send();
+
+        if ($this->result->isRedirect()) {
+            $this->result->redirect();
+        } else {
+            exit($this->result->getMessage());
+        }
+    }
+
+    public function complete($params)
+    {
+        $this->result = $this->gateway->completePurchase($params)->send();
+
         return $this->result->isSuccessful();
     }
 }

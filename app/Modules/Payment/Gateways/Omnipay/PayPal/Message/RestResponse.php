@@ -79,7 +79,7 @@ class RestResponse extends AbstractResponse
                 }
             }
         }
-        return $this->data['links'];
+        return isset($this->data['links']) ? $this->data['links'] : null;
     }
 
     public function getAmount()
@@ -88,7 +88,7 @@ class RestResponse extends AbstractResponse
             $amount = reset($this->data['transactions']);
             return $amount['amount'];
         }
-        return $this->data['amount'];
+        return isset($this->data['amount']) ? $this->data['amount'] : null;
     }
 
     public function getData()

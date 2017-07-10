@@ -4,8 +4,10 @@ namespace Modules\Payment\Gateways;
 
 
 use Modules\Order\Models\OrderTransactionModel;
+use Modules\Payment\Interfaces\GatewayInterface;
 use Modules\Payment\Models\PaymentMethodModel;
 use Modules\Payment\Models\PaymentProcessorModel;
+use Modules\Payment\Models\ProcessorModel;
 use Omnipay\Common\Message\ResponseInterface;
 use Omnipay\Omnipay;
 use Omnipay\PayPal\RestGateway;
@@ -52,7 +54,10 @@ abstract class Gateway implements GatewayInterface
 
     /** @var \Omnipay\Common\AbstractGateway|RestGateway|\Omnipay\BluePay\Gateway $gateway */
     public $gateway;
+
+    /** @var PaymentProcessorModel $model */
     public $model;
+
     public $test_mode = false;
     /** @var  ResponseInterface $result */
     public $result;
@@ -71,18 +76,15 @@ abstract class Gateway implements GatewayInterface
     }
 
     /**
-     * @param PaymentMethodModel $model
+     * @param ProcessorModel $model
      * @return null|Gateway
      */
     public static function getGateway($model)
     {
         $gateway = null;
         if ($model) {
-            if ($model->processor) {
-                $class = "Modules\\Payment\\Gateways\\" . $model->processor->processor_name;
-                if (class_exists($class)) {
-                    $gateway = new $class($model->cc_processor_models->limit(1)->get());
-                }
+            if (class_exists($class = "Modules\\Payment\\Gateways\\" . $model->processor_name)) {
+                $gateway = new $class($model->cc_processor);
             }
         }
         return $gateway;
