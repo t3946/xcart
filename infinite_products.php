@@ -333,4 +333,3 @@ if ($REQUEST_METHOD == 'POST' || $REQUEST_METHOD == 'GET') {
         func_display('customer/main/infinite_products.tpl', $smarty);
     }
 }
-?>

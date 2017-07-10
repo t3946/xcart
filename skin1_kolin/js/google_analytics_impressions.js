@@ -75,7 +75,7 @@ function sendGoogleAnalitics()
     }
 
     if (counter > 0) {
-        ga('send', 'event', listtype);
+        ga('send', 'event', listtype, 'scroll', listtype + ' item');
     }
 
 }
