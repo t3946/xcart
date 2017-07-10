@@ -82,18 +82,24 @@ header {
       .count {
         @include border-radius(10px);
         background: #F12D2D;
-        font-size: 0.75em;
+        font: {
+          size: .75em;
+          weight: 800;
+        }
         padding: 0 5px;
         color: $white;
         position: absolute;
         left: -3px;
         top: -1px;
         line-height: 1.2;
+        width: 1.5em;
+        text-align: center;
+
 
         .mc_block {
           display: inline-block;
           padding-top: 0.12em;
-          line-height: 14px;
+          line-height: rem-calc(14);
           vertical-align: top;
         }
       }

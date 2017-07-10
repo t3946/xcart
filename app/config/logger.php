@@ -5,7 +5,7 @@ return [
         'default' => [
             'class' => '\\Xcart\\App\\Logger\\Handler\\RotatingFileHandler' ,
             'level' => defined('APP_DEBUG') ? "DEBUG" : "ERROR",
-            'alias' => 'base.log.err',
+            'alias' => 'base.runtime.log.err',
             'formatter' => 'log'
         ],
         'sql' => [

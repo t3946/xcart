@@ -56,10 +56,10 @@
                     </div>
 
                     <div class="columns hide-for-large small-2 medium-1">
-                        <a href="/cart" class="mobile__cart middle-inline-block">
+                        <a href="{url "cart:list"}" class="mobile__cart middle-inline-block">
                             <span class="count">
                                 <span class="mc_block">
-                                    15
+                                    {$.app->cart->getQuantity()}
                                 </span>
                             </span>
                         </a>

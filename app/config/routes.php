@@ -9,11 +9,11 @@ return [
         'route' => '',
         'path' => 'Modules.Product.routes',
         'namespace' => 'catalog',
-        'config' => [
-            'cache' => [
-                'time' => 360,
-            ]
-        ]
+//        'config' => [
+//            'cache' => [
+//                'time' => 360,
+//            ]
+//        ]
     ],
 
     [
