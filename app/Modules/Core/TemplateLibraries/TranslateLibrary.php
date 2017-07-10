@@ -14,4 +14,18 @@ class TranslateLibrary extends TemplateLibrary
     {
         return $trn;
     }
+
+
+    /**
+     * @name t
+     * @kind function
+     * @return string
+     */
+    public static function t_func($params)
+    {
+        $trn = reset($params);
+        $dict = empty($params['dict']) ? 'main' : $params['dict'];
+
+        return self::trn($trn, $dict);
+    }
 }
