@@ -2,7 +2,7 @@
 error_reporting(E_ALL ^ E_DEPRECATED);
 
 //define('AREA_TYPE' , 'C');
-date_default_timezone_set('US/Pacific'); //Magic;
+date_default_timezone_set('EST'); //Magic;
 
 require_once 'xcart_tables.php';
 require_once './include/libs/autoload.php';
