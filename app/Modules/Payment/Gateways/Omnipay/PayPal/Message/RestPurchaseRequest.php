@@ -226,7 +226,7 @@ class RestPurchaseRequest extends RestAuthorizeRequest
     public function getData()
     {
         $data = parent::getData();
-        $data['intent'] = 'sale';
+        $data['intent'] = 'authorize';
         return $data;
     }
 }

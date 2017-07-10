@@ -18,7 +18,7 @@ return [
     ],
     [
         'route' => '/return/{slug:gateway}',
-        'target' => ['\Modules\Payment\Controllers\PaymentController', 'return'],
+        'target' => ['\Modules\Payment\Controllers\PaymentController', 'ret'],
         'name' => 'return'
     ],
     [

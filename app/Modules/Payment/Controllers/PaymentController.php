@@ -19,14 +19,21 @@ class PaymentController extends Controller
 
                 try {
                     $params = [
-                        'cancelUrl' => Xcart::app()->router->url("payment:cancel", ['gateway' => strtolower($pm->processor_name)]),
-                        'returnUrl' => Xcart::app()->router->url("payment:return", ['gateway' => strtolower($pm->processor_name)]),
-                        'noticeUrl' => Xcart::app()->router->url("payment:success", ['gateway' => strtolower($pm->processor_name)]),
+                        'cancelUrl' => Xcart::app()->router->absoluteUrl("payment:cancel", ['gateway' => strtolower($pm->processor_name)]),
+                        'returnUrl' => Xcart::app()->router->absoluteUrl("payment:return", ['gateway' => strtolower($pm->processor_name)]),
+                        'notifyUrl' => Xcart::app()->router->absoluteUrl("payment:success", ['gateway' => strtolower($pm->processor_name)]),
                         'amount' => '1.11',
                         'currency' => 'USD'
                     ];
 
-                    $response = $gw->purchase($params);
+                    if ($response = $gw->purchase($params)) {
+
+                        //create order here
+
+                        if ($gw->result->isRedirect()) {
+                            $gw->result->redirect();
+                        }
+                    }
 
                 } catch (Exception $e){
                     exit('Sorry, there was an error processing your payment. Please try again later.');
@@ -54,6 +61,16 @@ class PaymentController extends Controller
                 }
             }
         }
+    }
+
+    public function cancel($gateway)
+    {
+        var_dump($gateway);
+    }
+
+    public function ret($gateway)
+    {
+        var_dump($gateway);
     }
 
     public function endpoint($gateway)

@@ -59,11 +59,11 @@ class PayPal extends Gateway
 
     public function lookup($params)
     {
-        switch(strtolower($params['status'])) {
+        switch (strtolower($params['status'])) {
             case OrderTransactionModel::STATUS_AUTHORIZED :
             case OrderTransactionModel::STATUS_PENDING :
                 $params['statusLookup'] = 'authorization';
-            break;
+                break;
             case OrderTransactionModel::STATUS_COMPLETED :
             case OrderTransactionModel::STATUS_REFUNDED :
                 $params['statusLookup'] = 'capture';
@@ -86,12 +86,14 @@ class PayPal extends Gateway
     public function getState($mode)
     {
         $state = null;
-        if (isset(self::$gatewayMethods[$mode])){
+        if (isset(self::$gatewayMethods[$mode])) {
             $state = self::$gatewayMethods[$mode]['status'];
         }
         $data = $this->result->getData();
         if (!$state && ($state = $data['state'])) {
-            $statuses = array_map(function ($a) {return $a['status'];}, self::$gatewayMethods);
+            $statuses = array_map(function ($a) {
+                return $a['status'];
+            }, self::$gatewayMethods);
             if (!in_array($state, $statuses)) {
                 switch ($data['intent']) {
                     case 'authorize':
@@ -103,7 +105,7 @@ class PayPal extends Gateway
                 }
             }
         }
-        switch ($data['name']){
+        switch ($data['name']) {
             case 'AUTHORIZATION_EXPIRED' :
                 return OrderTransactionModel::STATUS_EXPIRED;
                 break;
@@ -132,11 +134,8 @@ class PayPal extends Gateway
             ->purchase($params)
             ->send();
 
-        if ($this->result->isRedirect()) {
-            $this->result->redirect();
-        } else {
-            exit($this->result->getMessage());
-        }
+        return $this->result->isSuccessful();
+
     }
 
     public function complete($params)
