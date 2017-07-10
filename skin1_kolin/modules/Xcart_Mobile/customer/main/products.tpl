@@ -7,7 +7,7 @@ vim: set ts=2 sw=2 sts=2 et:
     {include file="modules/Feature_Comparison/compare_selected_button.tpl"}
   {/if}
   <div class="content-secondary">
-    <ul data-role="listview" data-type="products-list" data-divider-theme="c">
+    <ul data-role="listview" data-type="products-list" data-divider-theme="c" class="mobile_products_list">
       {if $title}
         <li data-role="list-divider" role="heading">
           <h2>{$title}</h2>
@@ -79,7 +79,7 @@ vim: set ts=2 sw=2 sts=2 et:
 
                                 var tmp_rand = Math.random();
 
-//alert(tmp_rand);
+                                ga('send', {hitType: 'pageview', location: location.href});
 
                                 cidev_xmlHttp.open('POST','infinite_products.php?rand='+tmp_rand,true);
                                 cidev_xmlHttp.setRequestHeader('Content-type','application/x-www-form-urlencoded');
@@ -207,7 +207,8 @@ func_load_more_next_productids('','Y');
         {/if}
 {/if}
 
-        <li>
+        <li class="google_impression_object" data-productid="{$product.productid}" data-name="{$product.product|escape}"
+            data-category="{$product.category|escape}" data-brand="{$product.brand|escape}" data-list="{$ga_page_name}" data-price="{$product.price}" data-position="{$N_key}">
           <a {include file="on_product_click.tpl"} href="{$current_location}/product.php?productid={$product.productid}">
             <span class="product-thumbnail">
               {include file="product_thumbnail.tpl" productid=$product.productid product=$product.product tmbn_url=$product.tmbn_url splash=$product.oSplash}
