@@ -81,12 +81,9 @@ function sendGoogleAnalitics()
 }
 
 function checkCarouselsVisibility() {
-    $('#similar_products .jcarousel, ' +
-      '#similar_products_ob .jcarousel, ' +
-      '#related_products .jcarousel, ' +
-      '#products_also_bought_with_this_product .jcarousel, ' +
-      '#recently_viewed_products .jcarousel, .product_list_row').find('.google_impression_object').each(function () {
-         collectVisibleElements($(this))
+    $('.jcarousel, .product_list_row, .mobile_products_list')
+        .find('.google_impression_object').each(function () {
+            collectVisibleElements($(this))
     });
     sendGoogleAnalitics();
 }
