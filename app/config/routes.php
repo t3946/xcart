@@ -15,4 +15,10 @@ return [
         'path' => 'Modules.Amazon.routes_admin',
         'namespace' => 'amazon'
     ],
+    [
+        'route' => '/payment',
+        'path' => 'Modules.Payment.routes',
+        'namespace' => 'payment'
+    ],
+
 ];

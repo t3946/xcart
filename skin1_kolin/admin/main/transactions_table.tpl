@@ -9,7 +9,7 @@
         <td width="10%"><B>Log</B></td>
         <td width="1%"></td>
     </tr>
-    {foreach from=$order_transactions item=v key=k}
-        {include file="admin/main/transaction_log_row.tpl"}
+    {foreach from=$order_transactions item=model}
+        {include file="admin/main/transaction_log_row.tpl" model=$model}
     {/foreach}
 </table>

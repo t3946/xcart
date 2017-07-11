@@ -1,23 +1,23 @@
-<tr data-order-transaction="{$v.model->id}">
-    <td>{$v.payment_method}</td>
-    <td>{$v.model->date|date_format:'%d-%b-%Y<br />%H:%M:%S'}</td>
-    <td>{$v.firstname} ({$v.login})</td>
-    <td>{if $v.model->transaction_id ne ""}
-            {if $v.transaction_id_link ne ""}<a target="_blank" style="color: #1411FF;" href="{$v.transaction_id_link|substitute:"trans-id":$v.model->transaction_id}">{/if}
-            {if $v.transaction_link_anchor ne ""}{$v.transaction_link_anchor}{else}{$v.model->transaction_id}{/if}{if $v.transaction_id_link ne ""}</a>{/if}
-            {if $v.transaction_link_anchor ne ""}({$v.model->transaction_id}){/if}
+<tr data-order-transaction="{$model->id}">
+    <td>{$model->payment_method_model->payment_method}</td>
+    <td>{$model->date|date_format:'%d-%b-%Y<br />%H:%M:%S'}</td>
+    <td>{$model->user->firstname} ({$model->user->login})</td>
+    <td>{if $model->transaction_id ne ""}
+            {if $model->payment_method_model->transaction_id_link}<a target="_blank" style="color: #1411FF;" href="{$model->payment_method_model->transaction_id_link|substitute:"trans-id":$model->transaction_id}">{/if}
+            {if $model->payment_method_model->transaction_link_anchor ne ""}{$model->payment_method_model->transaction_link_anchor}{else}{$model->transaction_id}{/if}{if $model->payment_method_model->transaction_id_link ne ""}</a>{/if}
+            {if $model->payment_method_model->transaction_link_anchor ne ""}({$model->transaction_id}){/if}
         {/if}
     </td>
-        {assign var="tr_status" value=$v.model->getField('transaction_status')}
+        {assign var="tr_status" value=$model->getField('transaction_status')}
         <td align="center">{$tr_status->toText()}</td>
-    <td>{if $main_transaction}{$v.model->transaction_amount}{else}{$v.model->transaction_total}{/if} {$v.model->transaction_currency}</td>
+    <td>{if $main_transaction}{$model->transaction_amount}{else}{$model->transaction_total}{/if} {$model->transaction_currency}</td>
     <td>
         {if $main_transaction}
-            {assign var="tr_log" value=$v.transaction_response}
-            {assign var="tr_log_message" value=$v.model->transaction_response.message}
+            {assign var="tr_log" value=$model->transaction_response}
+            {assign var="tr_log_message" value=$model->transaction_response.message}
         {else}
-            {assign var="tr_log" value=$v.transaction_log}
-            {assign var="tr_log_message" value=$v.model->transaction_log.message}
+            {assign var="tr_log" value=$model->transaction_log}
+            {assign var="tr_log_message" value=$model->transaction_log.message}
         {/if}
 
         {if $v.issue ne ""}
@@ -28,8 +28,8 @@
             <B>message:</B> {$tr_log_message}
         {/if}
 
-        {if $tr_log ne ""}
-            <div class="transaction_log_div" style="display: none;"><B>Full log:</B><br />{$tr_log}</div>
+        {if $tr_log}
+            <div class="transaction_log_div" style="display: none;"><B>Full log:</B><br />{$tr_log|@serialize}</div>
             <a href="#" style="color: #1411FF;" class="show_hide_link">Show details</a>
         {/if}
 
@@ -43,16 +43,16 @@
 </tr>
 {if $main_transaction}
 <tr>
-    <td class="transaction_action" colspan="7" data-transaction-id="{$v.model->id}">
+    <td class="transaction_action" colspan="7" data-transaction-id="{$model->id}">
         <span style="float: left; line-height: 22px;"><b>Available actions:</b></span>&nbsp;
-        <input type="text" name="transaction_amount[{$v.model->id}]" id="transaction_amount_{$v.model->id}" size="6" value="{$v.model->transaction_amount}" required pattern="^\d+(\.?\d+|)$"/>
+        <input type="text" name="transaction_amount[{$model->id}]" id="transaction_amount_{$model->id}" size="6" value="{$model->transaction_amount}" required pattern="^\d+(\.?\d+|)$"/>
         <div class="ui xcart buttons">
             <div data-action="look_up_payment" class="ui button lookup" style="border: 1px solid #808080;">Look up payment (Get links)</div>
-            {if $v.model->transaction_response.links ne ""}
+            {if $model->transaction_response.links ne ""}
                 <div style="border-color: #808080; border-image: none; border-style: solid solid solid none; border-width: 1px 1px 1px 0;" class="ui combo top right dropdown icon button">
                     <i class="dropdown icon"></i>
                     <div class="menu" style="min-width: 200px;">
-                        {foreach from=$v.model->transaction_response.links item=link key=k_link}
+                        {foreach from=$model->transaction_response.links item=link key=k_link}
                             {if $link.rel eq "self"}
                             {elseif $link.rel eq "refund"}
                                 <div data-action="refund_transaction" class="item" style="padding: 10px !important;">Refund transaction</div>

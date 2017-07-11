@@ -54,6 +54,11 @@ class OrderModel extends AutoMetaModel
                 'class' => HasManyField::className(),
                 'modelClass' => OrderTransactionModel::className(),
                 'link' => ['orderid' => 'orderid']
+            ],
+            'transactions_log' => [
+                'class' => HasManyField::className(),
+                'modelClass' => TransactionLogModel::className(),
+                'link' => ['orderid' => 'orderid']
             ]
         ];
     }
