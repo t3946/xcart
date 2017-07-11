@@ -175,7 +175,7 @@ onclick="javascript: $('#orderform-{$product.productid}').submit();"
       {if $active_modules.Detailed_Product_Images and $images ne ''}
         <ul data-role="listview" data-inset="true">
           <li data-icon="false">
-            <a href="{$current_location}/product.php?productid={$product.productid}&mobile_mode=get_detailed_images">
+            <a href="{$current_location}/product.php?productid={$product.productid}&mobile_mode=get_detailed_images" class="ga_click" data-label="More Images">
             {/if}
                 {include file="product_thumbnail.tpl" productid=$product.productid image_x=$product.image_x image_y=$product.image_y product=$producttitle tmbn_url=$product.tmbn_url id="product_thumbnail" type="P" splash=$product.oSplash}
             {if $active_modules.Detailed_Product_Images and $images ne ''}
@@ -185,7 +185,7 @@ onclick="javascript: $('#orderform-{$product.productid}').submit();"
 
         {if $active_modules.Detailed_Product_Images and $images ne ''}
           <li data-icon="plus" data-theme="b">
-            <a href="{$current_location}/product.php?productid={$product.productid}&mobile_mode=get_detailed_images" >{$lng.lbl_more_images}</a>
+            <a href="{$current_location}/product.php?productid={$product.productid}&mobile_mode=get_detailed_images" class="ga_click" data-label="More Images">{$lng.lbl_more_images}</a>
           </li>
         </ul>
       {/if}
@@ -277,7 +277,7 @@ function send_question_email_form(){
 
 
   {foreach from=$product_tabs item=tab key=ind}
-    <div data-role="collapsible" data-collapsed="true">
+    <div data-role="collapsible" data-collapsed="true" class="ga_click">
       <h3>{$tab.title}</h3>
       <div>
 {*

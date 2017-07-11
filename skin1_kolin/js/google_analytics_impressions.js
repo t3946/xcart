@@ -96,7 +96,20 @@ $( document ).ready(function() {
 });
 
 $(function() {
-    $('.ga_click').click(function(){
+    $('a.ga_click').click(function(){
         ga('send', 'event', 'click', $(this).data('label'));
-    })
+    });
+});
+
+//for mobile version
+$(document).on('pageload ready', function(){
+    $('div.ga_click > h3 > a')
+        .unbind('click')
+        .click(function(){
+            var label = $(this).data('label');
+            if (label === undefined) {
+                label = $(this).text();
+            }
+            ga('send', 'event', 'click', label);
+    });
 });
