@@ -103,7 +103,7 @@ $(function() {
 
 //for mobile version
 $(document).on('pageload ready', function(){
-    $('div.ga_click > h3 > a')
+    $('a.ga_click, div.ga_click > h3 > a')
         .unbind('click')
         .click(function(){
             var label = $(this).data('label');
