@@ -94,3 +94,9 @@ $(window).scroll(function(){
 $( document ).ready(function() {
     requestAnimationFrame(checkCarouselsVisibility);
 });
+
+$(function() {
+    $('.ga_click').click(function(){
+        ga('send', 'event', 'click', $(this).data('label'));
+    })
+});
