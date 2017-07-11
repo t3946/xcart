@@ -1595,7 +1595,7 @@ if ($mode == 'ref_notify')
                         foreach ($completed_transactions as $ref_tr) {
                             $params = [
                                 'amount' => number_format(min($ref_sum, $ref_tr->transaction_amount), 2),
-                                'currency' => 'USD',
+                                'currency' => $ref_tr->transaction_currency,
                                 'transactionReference' => $ref_tr->transaction_id
                             ];
                             if ($gw->refund($params)) {
@@ -1609,6 +1609,7 @@ if ($mode == 'ref_notify')
                                 x_session_save("section_name_top_message");
                                 func_header_location("order.php?orderid=" . $orderid);
                             }
+
                             $ref_sum -= $ref_tr->transaction_amount;
 
                             if ($ref_sum <= 0) {
