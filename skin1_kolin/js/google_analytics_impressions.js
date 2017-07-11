@@ -81,7 +81,7 @@ function sendGoogleAnalitics()
 }
 
 function checkCarouselsVisibility() {
-    $('.jcarousel, .product_list_row, .mobile_products_list')
+    $('.jcarousel, .product_list_row')
         .find('.google_impression_object').each(function () {
             collectVisibleElements($(this))
     });

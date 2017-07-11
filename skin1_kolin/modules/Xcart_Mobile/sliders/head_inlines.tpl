@@ -109,6 +109,8 @@
 			});
 
 			$('.slider-head').addClass('initialized');
+
+            ga('send', {hitType: 'pageview', location: location.href});
 		});
 	})();
     {/literal}
