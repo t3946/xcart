@@ -82,7 +82,7 @@ function send_question_email_form(){
   <ul>
   {foreach from=$tabs item=tab key=ind}
 {*    {inc value=$ind assign="ti"} *}
-    <li><a {if $count_product_tabs gte "7"}style="padding: 0.5em 10px;"{/if} href="{if $tab.url}{$tab.url|amp}{else}#{$prefix}{$tab.anchor|default:$ti}{/if}">{$tab.title}</a></li>
+    <li><a class="ga_click" data-label="{$tab.title}" {if $count_product_tabs gte "7"}style="padding: 0.5em 10px;"{/if} href="{if $tab.url}{$tab.url|amp}{else}#{$prefix}{$tab.anchor|default:$ti}{/if}">{$tab.title}</a></li>
   {/foreach}
   </ul>
 
