@@ -7,6 +7,8 @@ import CatalogFilter from "./components/CatalogFilter";
 import FilterPriceSlider from "./components/FilterPriceSlider";
 import SearchSuggestion from "./components/SearchSuggestion";
 import Loader from "./components/Loader";
+import isTouch from "./utils/isTouch";
+import isMedia from "./utils/isMedia";
 
 (function(){
     new SearchSuggestion();
@@ -15,6 +17,8 @@ import Loader from "./components/Loader";
     new DepartmentMenu();
     new DottedText('.must-show-less');
     new CatalogFilter();
+
+    isMedia('medium', '(max-width: 1023px)');
 
     window['FilterPriceSlider'] = FilterPriceSlider;
     window['loader'] = new Loader;
@@ -134,6 +138,19 @@ import Loader from "./components/Loader";
     });
 
 
+    $(document).on('swipe', function(e, Dx, Dy) {
+        if (isMedia('medium') && isTouch()) {
+
+            if (Dx === 1) { //right
+                $('#offCanvasLeft').foundation('open');
+            }
+            else if (Dx === -1) {
+                $('#offCanvasLeft').foundation('close');
+            }
+        }
+    });
+
+
     $(document).on('click', '.show_more', function(e){
         let $this = $(this);
         let $target = $($this.data('target'));
@@ -156,10 +173,10 @@ import Loader from "./components/Loader";
         $(this).mmodal({skin: $(this).data('modal-class') || 'front'});
     });
 
-    $(window).on('beforeunload unload pagehide', (e)=>{
-        console.log(e);
-
-    });
+    // $(window).on('beforeunload unload pagehide', (e)=>{
+    //     console.log(e);
+    //
+    // });
 
     // $(window).on('pageshow', (e)=>{
     //     console.log(e);

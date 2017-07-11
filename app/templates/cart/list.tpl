@@ -23,9 +23,9 @@
                             {$position->object}
                         </td>
                         <td>
-                            <a href="{url 'cart:quantity_decrease' key=$key}">-</a>
-                            <a href="{url 'cart:quantity' key=$key quantity=2}">{$position->quantity}</a>
-                            <a href="{url 'cart:quantity_increase' key=$key}">+</a>
+                            <a href="{url 'cart:quantity:dec' key=$key}">-</a>
+                            <a href="{url 'cart:quantity:set' key=$key quantity=2}">{$position->quantity}</a>
+                            <a href="{url 'cart:quantity:inc' key=$key}">+</a>
                         </td>
                         <td>
                             {foreach $position->data as $name => $value}
