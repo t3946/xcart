@@ -33,8 +33,8 @@
                         <a href="#" data-toggle="offCanvasLeft" class="mobile_menu middle-inline-block hamburger"></a>
                     </div>
                     <div class="columns small-3 medium-2">
-                        <img src="/static/frontend/demo_images/home/1280/artist_supply_sourсe_logo.svg" alt="Artist Supply Source" class="show-for-large logo-big">
-                        <img src="/static/frontend/demo_images/home/768/logo.svg" alt="Artist Supply Source" class="show-for-small hide-for-large logo-small">
+                        <img src="/static/frontend/demo_images/home/1280/artist_supply_sourсe_logo.svg" alt="{$sconfig.company_name.value}" class="show-for-large logo-big">
+                        <img src="/static/frontend/demo_images/home/768/logo.svg" alt="{$sconfig.company_name.value}" class="show-for-small hide-for-large logo-small">
                     </div>
 
                     <div class="columns small-3 medium-7 large-push-3">
@@ -96,7 +96,7 @@
                             </div>
 
                             <div class="columns large-2 show-for-large">
-                                {*{include "demo/blocks/_cart.tpl"}*}
+                                {include "_parts/_cart.tpl"}
                             </div>
                         </div>
                     </section>
