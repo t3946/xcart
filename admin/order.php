@@ -1576,15 +1576,6 @@ if ($mode == 'ref_notify')
             }
         }
 
-        foreach ($order['refund_groups'][$notify_mid]['products'] as $pk => $product) {
-            $order['refund_groups'][$notify_mid]['products'][$pk]['fee'] = func_calculate_fee($product['extra_data']['price'], $product['ref_price']);
-        }
-
-        func_update_refunded_groups($order['refund_groups'], $orderid, true, true);
-        $tmp_cb_status = func_query_first_cell("SELECT cb_status FROM $sql_tbl[order_groups] WHERE orderid='$orderid' AND manufacturerid='$notify_mid'");
-
-        $order["shipping_groups"][$notify_mid]["cb_status"] = $tmp_cb_status;
-
         if ($ref_notify_button_clicked == "Update_C2B_status_and_Send_refund_notification") {
             if ($orderModel = OrderModel::objects()->get(['orderid' => $orderid])) {
                 /** @var ProcessorModel $gateway */
@@ -1597,30 +1588,37 @@ if ($mode == 'ref_notify')
                     }
 
                     $completed_transactions = array_filter($orderModel->transactions->all(), function($a) use ($ref_sum) {
-                        return (($a->transaction_status == OrderTransactionModel::STATUS_COMPLETED) && ($a->transaction_amount >= $ref_sum));
+                        return (($a->transaction_status == OrderTransactionModel::STATUS_COMPLETED));
                     });
 
                     if ($completed_transactions) {
-                        $ref_tr = reset($completed_transactions);
-                        $params = [
-                            'amount' => number_format($ref_sum, 2),
-                            'currency' => 'USD',
-                            'transactionReference' => $ref_tr->transaction_id
-                        ];
-                        if ($gw->refund($params)){
-                            // do something
-                        } else {
-                            $top_message = [
-                                'content' => 'Refund error',
-                                'type'    => 'E',
+                        foreach ($completed_transactions as $ref_tr) {
+                            $params = [
+                                'amount' => number_format(min($ref_sum, $ref_tr->transaction_amount), 2),
+                                'currency' => 'USD',
+                                'transactionReference' => $ref_tr->transaction_id
                             ];
-                            $section_name_top_message = $top_message;
-                            x_session_save("section_name_top_message");
-                            func_header_location("order.php?orderid=" . $orderid);
+                            if ($gw->refund($params)) {
+                                // do something
+                            } else {
+                                $top_message = [
+                                    'content' => 'Refund error',
+                                    'type' => 'E',
+                                ];
+                                $section_name_top_message = $top_message;
+                                x_session_save("section_name_top_message");
+                                func_header_location("order.php?orderid=" . $orderid);
+                            }
+                            $ref_sum -= $ref_tr->transaction_amount;
+
+                            if ($ref_sum <= 0) {
+                                break;
+                            }
                         }
+
                     } else {
                         $top_message = [
-                            'content' => 'Transactions to refund not found',
+                            'content' => 'Transactions to refund does not exists',
                             'type'    => 'E',
                         ];
                         $section_name_top_message = $top_message;
@@ -1630,6 +1628,15 @@ if ($mode == 'ref_notify')
                 }
             }
         }
+
+        foreach ($order['refund_groups'][$notify_mid]['products'] as $pk => $product) {
+            $order['refund_groups'][$notify_mid]['products'][$pk]['fee'] = func_calculate_fee($product['extra_data']['price'], $product['ref_price']);
+        }
+
+        func_update_refunded_groups($order['refund_groups'], $orderid, true, true);
+        $tmp_cb_status = func_query_first_cell("SELECT cb_status FROM $sql_tbl[order_groups] WHERE orderid='$orderid' AND manufacturerid='$notify_mid'");
+
+        $order["shipping_groups"][$notify_mid]["cb_status"] = $tmp_cb_status;
 
         $aorder_notification = func_get_order_notification($tmp_cb_status, $order_data);
         if (!empty($aorder_notification)) {
