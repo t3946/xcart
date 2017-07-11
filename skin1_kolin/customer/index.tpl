@@ -115,6 +115,7 @@ var arg_sku = '{$smarty.get.sku}';
                                                 }
                                         }
                                 };
+                            ga('send', {hitType: 'pageview', location: location.href});
 
                                 cidev_xmlHttp.open('POST','infinite_products.php',true);
                                 cidev_xmlHttp.setRequestHeader('Content-type','application/x-www-form-urlencoded');
