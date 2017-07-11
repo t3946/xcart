@@ -30,7 +30,7 @@
                 {/if}
 
             </a>
-            <a href="#" class="button yellow-white button-quick-view hide">quick view</a>
+            <a href="#" class="button yellow-white button-quick-view hide waves">quick view</a>
         </div>
         <div class="info_container container">
             <h4 class="title " itemprop="name">
@@ -182,7 +182,7 @@
                     </div>
 
                     <div class="cart_add">
-                        <span class="add button yellow" data-url="{url 'catalog:cart:add' key=$item->getUniqueId()}">
+                        <span class="add button waves waves-orange yellow" data-url="{url 'catalog:cart:add' key=$item->getUniqueId()}">
                             <span class="text">
                                 Add to cart
                             </span>

@@ -23,7 +23,7 @@ import isMedia from "./utils/isMedia";
     window['FilterPriceSlider'] = FilterPriceSlider;
     window['loader'] = new Loader;
 
-    Waves.attach('.button');
+    Waves.attach('.waves');
     Waves.init();
 
 
@@ -118,12 +118,13 @@ import isMedia from "./utils/isMedia";
         window.loader.load(
             $.ajax($this.attr('href'), {
                 'success' : (data)=>{
+                    $this.remove();
                     $container.append(data.content);
                     $parent.html(data.pager);
                     $('.page_count').html(data.page_count);
 
                     $(window).trigger('resize');
-                    Waves.attach('.button');
+                    Waves.attach('.waves');
                 }
             })
         );
@@ -132,8 +133,8 @@ import isMedia from "./utils/isMedia";
         let classes = $this.attr('class');
         let text_loading = $this.data('text-loading');
 
-        $this.remove();
-        $parent.append('<span class="'+classes+'"><span class="text">' + text_loading + '</span></span>');
+        $this.attr('disable', 'disable');
+        $this.find('.text').html(text_loading);
 
     });
 

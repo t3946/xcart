@@ -46,7 +46,7 @@
 
 {filter|strip:true}
 {autoescape true}
-    <div class="loader-bg">
+    <div class="loader-bg waves waves-orange">
         <div class="loader-wrapper">
             <div class="loader-spinner"></div>
             <div class="loader-container"></div>

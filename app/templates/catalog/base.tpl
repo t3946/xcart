@@ -26,9 +26,9 @@
                         </div>
 
                         <section class="buttons">
-                            <button class="button">Apply</button>
+                            <button class="button waves">Apply</button>
 
-                            <a href="{$.request->getMatchingUrl(['q' => $.request->get->get('q')])}" class="reset_filter" rel="nofollow">
+                            <a href="{$.request->getMatchingUrl(['q' => $.request->get->get('q')])}" class="reset_filter waves waves-dark" rel="nofollow">
                                 <span class="text">
                                     Reset filters
                                 </span>
