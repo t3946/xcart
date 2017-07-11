@@ -30,7 +30,10 @@
  * +-----------------------------------------------------------------------------+
  * \*****************************************************************************/
 
+use Modules\Order\Models\OrderModel;
 use Modules\Order\Models\OrderTransactionModel;
+use Modules\Payment\Gateways\Gateway;
+use Modules\Payment\Models\ProcessorModel;
 use Modules\Product\Models\ProductOptionModel;
 use Xcart\Paypal;
 
@@ -1581,6 +1584,52 @@ if ($mode == 'ref_notify')
         $tmp_cb_status = func_query_first_cell("SELECT cb_status FROM $sql_tbl[order_groups] WHERE orderid='$orderid' AND manufacturerid='$notify_mid'");
 
         $order["shipping_groups"][$notify_mid]["cb_status"] = $tmp_cb_status;
+
+        if ($ref_notify_button_clicked == "Update_C2B_status_and_Send_refund_notification") {
+            if ($orderModel = OrderModel::objects()->get(['orderid' => $orderid])) {
+                /** @var ProcessorModel $gateway */
+                $gateway = ProcessorModel::objects()->get(['processor_name' => 'PayPal']);
+                if ($gw = Gateway::getGateway($gateway)){
+                    $ref_sum = null;
+
+                    foreach ($ref_products[$notify_mid] as $refund_item) {
+                        $ref_sum += floatval($refund_item['ref_price']);
+                    }
+
+                    $completed_transactions = array_filter($orderModel->transactions->all(), function($a) use ($ref_sum) {
+                        return (($a->transaction_status == OrderTransactionModel::STATUS_COMPLETED) && ($a->transaction_amount >= $ref_sum));
+                    });
+
+                    if ($completed_transactions) {
+                        $ref_tr = reset($completed_transactions);
+                        $params = [
+                            'amount' => number_format($ref_sum, 2),
+                            'currency' => 'USD',
+                            'transactionReference' => $ref_tr->transaction_id
+                        ];
+                        if ($gw->refund($params)){
+                            // do something
+                        } else {
+                            $top_message = [
+                                'content' => 'Refund error',
+                                'type'    => 'E',
+                            ];
+                            $section_name_top_message = $top_message;
+                            x_session_save("section_name_top_message");
+                            func_header_location("order.php?orderid=" . $orderid);
+                        }
+                    } else {
+                        $top_message = [
+                            'content' => 'Transactions to refund not found',
+                            'type'    => 'E',
+                        ];
+                        $section_name_top_message = $top_message;
+                        x_session_save("section_name_top_message");
+                        func_header_location("order.php?orderid=" . $orderid);
+                    }
+                }
+            }
+        }
 
         $aorder_notification = func_get_order_notification($tmp_cb_status, $order_data);
         if (!empty($aorder_notification)) {
