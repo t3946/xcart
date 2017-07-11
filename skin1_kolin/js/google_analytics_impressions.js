@@ -88,23 +88,12 @@ function checkCarouselsVisibility() {
     sendGoogleAnalitics();
 }
 
-$(window).scroll(function(){
-    requestAnimationFrame(checkCarouselsVisibility);
-});
-$( document ).ready(function() {
-    requestAnimationFrame(checkCarouselsVisibility);
-});
-
-$(function() {
-    $('a.ga_click').click(function(){
-        ga('send', 'event', 'click', $(this).data('label'));
-    });
-});
-
-//for mobile version
 $(document).on('pageload ready', function(){
+    $(window).scroll(function(){
+        requestAnimationFrame(checkCarouselsVisibility);
+    });
+    $('div.ga_click > h3 > a').unbind('click');
     $('a.ga_click, div.ga_click > h3 > a')
-        .unbind('click')
         .click(function(){
             var label = $(this).data('label');
             if (label === undefined) {
@@ -112,4 +101,5 @@ $(document).on('pageload ready', function(){
             }
             ga('send', 'event', 'click', label);
     });
+    requestAnimationFrame(checkCarouselsVisibility);
 });
