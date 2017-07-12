@@ -25,7 +25,7 @@
             function onTouchMove(e) {
                 var Dx = startX - e.touches[0].pageX,
                     Dy = startY - e.touches[0].pageY,
-                    minPath = window['swipe_min_path'] | 30;
+                    minPath = window['swipe_min_path'] | 100;
 
 
                 if (Math.abs(Dx) >= minPath) {
