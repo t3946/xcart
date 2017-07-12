@@ -352,7 +352,7 @@ if (!$fatal) {
 
 			$result["script_info"] = "Script: payment/payment_ccmid.php . Function: func_paypal_look_up_payment";
 
-			$transaction_log = $result;
+			$transaction_log = serialize($result);
 		}
 
 		$param =

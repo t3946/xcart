@@ -60,7 +60,7 @@ class OrderTransactionHelper
                     'transaction_amount' => $result['amount']['total'],
                     'transaction_response' => $result,
                     'paymentid' => $pmModel->paymentid,
-                    'transaction_fee' => $result['transaction_fee'],
+                    'transaction_fee' => isset($result['transaction_fee']) ? $result['transaction_fee']['value'] : null,
                 ]
             );
         }
