@@ -16,7 +16,6 @@
     "browser-sync": "^2.18.12",
     "browserify": "^14.3.0",
     "child_process": "^1.0.2",
-    "form-serialize": "^0.7.2",
     "gulp": "^3.9.1",
     "gulp-autoprefixer": "^3.1.1",
     "gulp-babel": "^6.1.2",
@@ -31,13 +30,18 @@
     "gulp-rimraf": "^0.2.1",
     "gulp-sass": "^3.1.0",
     "gulp-uglify": "^2.1.0",
-    "js-cookie": "^2.1.4",
     "json-loader": "^0.5.4",
-    "modernizr": "^3.5.0",
     "modernizr-loader": "^1.0.1",
     "path": "^0.12.7",
     "pump": "^1.0.2",
     "webpack": "^2.6.0",
     "webpack-stream": "^3.2.0"
+  },
+  "dependencies": {
+    "preact": "^8.2.1",
+    "redux": "^3.7.1",
+    "form-serialize": "^0.7.2",
+    "js-cookie": "^2.1.4",
+    "modernizr": "^3.5.0"
   }
 }
