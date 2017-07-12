@@ -1,4 +1,7 @@
 .off-canvas {
+  @include breakpoint(large up) {
+    display: none;
+  }
 
   &.position-left {
     transform: translateX(-100%);

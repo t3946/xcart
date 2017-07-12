@@ -131,11 +131,6 @@ module.exports = {
                 'bower_components/what-input/dist/what-input.js'
             ]
         },
-        "jq-swipe": {
-            js_include: [
-                'bower_components/jq-swipe/dist/jq-swipe.min.js'
-            ]
-        },
         cds: {
             scss_include: [
                 'components/cds'

@@ -9,6 +9,7 @@ import SearchSuggestion from "./components/SearchSuggestion";
 import Loader from "./components/Loader";
 import isTouch from "./utils/isTouch";
 import isMedia from "./utils/isMedia";
+import  "./ext/jq-swipe";
 
 (function(){
     new SearchSuggestion();
@@ -113,27 +114,33 @@ import isMedia from "./utils/isMedia";
         let $this = $(this);
         let $parent = $(this).parent();
         let $container = $('.product-items');
+        let text_loading = $this.data('text-loading');
+        let text_default = $this.data('text-default');
 
 
         window.loader.load(
             $.ajax($this.attr('href'), {
                 'success' : (data)=>{
-                    $this.remove();
                     $container.append(data.content);
-                    $parent.html(data.pager);
+
+                    if (data.href) {
+                        $this.find('.text').html(text_default);
+                        $this.attr('href', data.href);
+                        $this.removeAttr('disabled')
+                    }
+                    else {
+                        $this.remove();
+                    }
+
                     $('.page_count').html(data.page_count);
 
                     $(window).trigger('resize');
-                    Waves.attach('.waves');
                 }
             })
         );
 
 
-        let classes = $this.attr('class');
-        let text_loading = $this.data('text-loading');
-
-        $this.attr('disable', 'disable');
+        $this.attr('disabled', 'disabled');
         $this.find('.text').html(text_loading);
 
     });

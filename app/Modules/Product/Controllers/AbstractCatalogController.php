@@ -107,9 +107,11 @@ abstract class AbstractCatalogController extends FrontendController
 
         if ($this->getRequest()->getIsAjax())
         {
+            $pagerView = $pager->createView();
+
             $this->jsonResponse([
+                'href' => $pagerView->hasNextPage() ? $pagerView->getUrl($pagerView->getPage() + 1) : false,
                 'content' => $this->render($this->view, array_replace([ 'model' => $model, 'pager' => $pager,], $this->getAdvancedData($model))),
-                'pager' => $pager->render(),
                 'page_count' => $this->render('catalog/parts/_page_count.tpl', [ 'model' => $model, 'pager' => $pager,]),
             ]);
         }

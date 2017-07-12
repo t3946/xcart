@@ -4,7 +4,7 @@
         <a href="#" class="cart-lg__link">Cart</a>
     </div>
 </div>
-<div class="cart_hide">
+<div class="cart_hide hide">
     <div class="cart__scroll-block">
         <div class="cart__outer">
             <div class="cart__block">
