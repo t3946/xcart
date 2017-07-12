@@ -35,11 +35,11 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array_keys(
         if ($order_transaction_id && ($orderTransaction = OrderTransactionModel::objects()->get(['id' => $order_transaction_id]))) {
 
             $isAllowed = true;
-            $pmModel = $orderTransaction->payment_method_model;
+            $pmModel = PaymentMethodModel::objects()->get(['payment_method' => $orderTransaction->payment_method_model->processor->processor_name . ' VT']);
 
             $amount =
                 [
-                    'amount' => number_format(trim($transaction_amount[$order_transaction_id]), 2),
+                    'amount' => number_format(trim($transaction_amount[$order_transaction_id]), 2, '.', ''),
                     'currency' => $orderTransaction->transaction_currency
                 ];
 
@@ -58,7 +58,7 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array_keys(
 
             $amount =
                 [
-                    'amount' => number_format(trim($transaction_amount), 2),
+                    'amount' => number_format(trim($transaction_amount), 2, '.', ''),
                     'currency' => $transaction_currency
                 ];
             $params = PaymentHelper::getPaymentParams($orderTransaction, $amount);

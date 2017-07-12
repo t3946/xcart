@@ -111,4 +111,22 @@ class BluePay extends Gateway
     {
         // TODO: Implement reauthorize() method.
     }
+
+    /**
+     * @param $params
+     * @return bool
+     */
+    public function purchase($params)
+    {
+        // TODO: Implement purchase() method.
+    }
+
+    /**
+     * @param $params
+     * @return bool
+     */
+    public function complete($params)
+    {
+        // TODO: Implement complete() method.
+    }
 }

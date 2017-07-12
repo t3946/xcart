@@ -20,6 +20,7 @@ class OrderTransactionModel extends AutoMetaModel
     const STATUS_FAILED = 'failed';
     const STATUS_REFUNDED = 'refunded';
     const STATUS_EXPIRED = 'expired';
+    const STATUS_PARTIALLY_RUFUNDED = 'partially_refunded';
 
     public static function tableName()
     {
@@ -45,6 +46,7 @@ class OrderTransactionModel extends AutoMetaModel
                     'expired' => 'Expired',
                     'failed' => 'Failed',
                     'refunded' => 'Refunded',
+                    'partially_refunded' => 'Partially Refunded',
                 ]
             ],
             'transaction_response' => [

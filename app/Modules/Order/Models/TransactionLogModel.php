@@ -39,6 +39,7 @@ class TransactionLogModel extends AutoMetaModel
                     'Expired' => 'Expired',
                     'failed' => 'Failed',
                     'refunded' => 'Refunded',
+                    'partially_refunded' => 'Partially Refunded',
                 ]
             ],
             'date' => [

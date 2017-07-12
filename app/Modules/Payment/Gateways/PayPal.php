@@ -66,6 +66,7 @@ class PayPal extends Gateway
                 break;
             case OrderTransactionModel::STATUS_COMPLETED :
             case OrderTransactionModel::STATUS_REFUNDED :
+            case OrderTransactionModel::STATUS_PARTIALLY_RUFUNDED :
                 $params['statusLookup'] = 'capture';
                 break;
         }

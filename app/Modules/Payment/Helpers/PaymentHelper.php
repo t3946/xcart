@@ -24,7 +24,7 @@ class PaymentHelper
     {
         list(, , $first_name, $last_name) = PaymentHelper::getCardHolderName($input["cardholderl_name"]);
         $params = [
-            'amount' => number_format(trim($input["grand_total"]), 2),
+            'amount' => number_format(trim($input["grand_total"]), 2, '.', ''),
             'currency' => $input["currency"],
             'card' => new CreditCard([
                 'firstName' => $first_name,

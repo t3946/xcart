@@ -23,11 +23,13 @@ class OrderTransactionHelper
      */
     public static function prepareOrderTransaction($model, $gw, $orderModel = null, $pmModel, $amount = null, $mode = '')
     {
-        if (!$model && $orderModel) {
+        if ((!$model && $orderModel) || in_array($mode, ['refund_transaction'])) {
             $model = new OrderTransactionModel(['orderid' => $orderModel->orderid]);
         }
         if ($model) {
+
             $result = $gw->result->getData();
+
             if (!$result['amount']) {
                 $result['amount'] =
                     [
@@ -40,14 +42,25 @@ class OrderTransactionHelper
                 $model->manual_transaction = 'Y';
             }
 
+            if ($mode == 'refund_transaction') {
+                $result['amount']['total'] = -abs($result['amount']['total']);
+            }
+
+            if (isset($result['capture_id'])) {
+                if ($parent = OrderTransactionModel::objects()->get(['transaction_id' => $result['capture_id']])){
+                    $model->parent_transaction_id = $parent->id;
+                }
+            }
+
             $model->setAttributes(
                 [
                     'transaction_id' => $gw->result->getTransactionReference(),
                     'transaction_status' => ($logStatus = $gw->getState($mode)),
                     'transaction_currency' => $result['amount']["currency"],
-                    'transaction_amount' => abs($result['amount']['total']),
+                    'transaction_amount' => $result['amount']['total'],
                     'transaction_response' => $result,
-                    'paymentid' => $pmModel->paymentid
+                    'paymentid' => $pmModel->paymentid,
+                    'transaction_fee' => $result['transaction_fee'],
                 ]
             );
         }
@@ -81,17 +94,20 @@ class OrderTransactionHelper
         $trs = [];
         if ($order) {
             foreach ($order->transactions as $transaction) {
-                $trs[$transaction->transaction_status] += $transaction->transaction_amount;
+                $trs[strtolower($transaction->transaction_status)] += $transaction->transaction_amount;
             }
         }
 
         return [
-            'authorized_PLUS_captured_totals' => floatval($trs[OrderTransactionModel::STATUS_COMPLETED]
+            'authorized_PLUS_captured_totals' => floatval(
+                $trs[OrderTransactionModel::STATUS_COMPLETED]
                 + $trs[OrderTransactionModel::STATUS_AUTHORIZED]
-                + $trs[OrderTransactionModel::STATUS_PENDING]),
+                + $trs[OrderTransactionModel::STATUS_PENDING]
+                + $trs[OrderTransactionModel::STATUS_PARTIALLY_RUFUNDED]
+            ),
             'void_total' => floatval($trs[OrderTransactionModel::STATUS_VOIDED]),
-            'authorized_total' => floatval($trs[OrderTransactionModel::STATUS_AUTHORIZED]),
-            'captured_total' => floatval($trs[OrderTransactionModel::STATUS_COMPLETED])
+            'authorized_total' => floatval($trs[OrderTransactionModel::STATUS_AUTHORIZED] + $trs[OrderTransactionModel::STATUS_PENDING]),
+            'captured_total' => floatval($trs[OrderTransactionModel::STATUS_COMPLETED] + $trs[OrderTransactionModel::STATUS_PARTIALLY_RUFUNDED])
         ];
     }
 }
