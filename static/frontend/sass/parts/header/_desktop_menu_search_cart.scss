@@ -1,4 +1,5 @@
 $view_all_height: rem-calc(22);
+$default_height: rem-calc(50);
 
 .category-menu-list-wrapper {
   position: absolute;
@@ -19,7 +20,7 @@ $view_all_height: rem-calc(22);
   position: relative;
 
   @include breakpoint(large up) {
-    background: #0d2431;
+    background: $dark_blue;
   }
 
   .search-form-container {
@@ -119,6 +120,8 @@ $view_all_height: rem-calc(22);
     height: rem-calc(50);
     text-align: center;
 
+    @include active-triangle(6px, 6px, #fff, true, $dark_blue, is-active);
+
     .category-menu-title {
       color: #fff;
       font-size: rem-calc(14);
@@ -133,13 +136,13 @@ $view_all_height: rem-calc(22);
 
       .menu-icon {
         &:after {
-          background: #0d2431;
-          box-shadow: 0 6px 0 #0d2431, 0 12px 0 #0d2431;
+          background: $dark_blue;
+          box-shadow: 0 6px 0 $dark_blue, 0 12px 0 $dark_blue;
         }
       }
 
       .category-menu-title {
-        color: #0d2431;
+        color: $dark_blue;
       }
     }
 
@@ -345,6 +348,61 @@ $view_all_height: rem-calc(22);
     }
   }
 
+  .minicart {
+    height: $default_height;
+    background: {
+      color: #ffb400;
+    };
 
+    .cart_info {
+      @include active-triangle(5px, 5px);
+      width: 100%;
+      text-align: center;
+      cursor: pointer;
+      //line-height: 1;
+      height: $default_height;
+      font: {
+        size: 1rem;
+        weight: bold;
+      }
+
+      .count {
+        position: relative;
+        display: inline-block;
+        width: 44px;
+        //height: $default_height;
+        height: 30px;
+        vertical-align: middle;
+
+        background: {
+          image: url('../images/icons/header/cart.svg');
+          repeat: no-repeat;
+          position: center center;
+        };
+
+        .mc_count {
+          position: absolute;
+          top: -1em;
+          text-align: center;
+          left: 0; right: 5px;
+          font: {
+            size: rem-calc(19);
+          };
+        }
+      }
+
+      .text {
+        height: $default_height;
+        text-transform: uppercase;
+        //vertical-align: middle;
+        display: inline-block;
+
+      }
+    }
+
+    .fullcart {
+      position: absolute;
+    }
+  }
 }
 

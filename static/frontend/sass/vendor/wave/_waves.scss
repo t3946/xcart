@@ -64,8 +64,8 @@
     }
 
     &.waves-dark .waves-ripple {
-        background: rgba(0,0,0,0.2);
-        $gradient: rgba(0,0,0,0.2) 0,rgba(0,0,0,.3) 40%,rgba(0,0,0,.4) 50%,rgba(0,0,0,.5) 60%,rgba(255,255,255,0) 70%;
+        background: rgba(13, 36, 48, .2);
+        $gradient: rgba(13, 36, 48, .2) 0, rgba(13, 36, 48, .3) 40%,rgba(13, 36, 48, .4) 50%,rgba(13, 36, 48, .5) 60%, rgba(13, 36, 48, 0) 70%;
         background: radial-gradient($gradient);
     }
     

@@ -1,4 +1,8 @@
 import 'modernizr';
+import  "./ext/jq-swipe";
+import { h, render } from 'preact';
+import MiniCart from "./components/MiniCart";
+import QuantityGroup from "./components/QuantityGroup";
 import DepartmentMenu from "./components/DepartmentMenu";
 import DottedText from "./components/DottedText";
 import CategoryViewType from "./components/CategoryViewType";
@@ -9,10 +13,14 @@ import SearchSuggestion from "./components/SearchSuggestion";
 import Loader from "./components/Loader";
 import isTouch from "./utils/isTouch";
 import isMedia from "./utils/isMedia";
-import  "./ext/jq-swipe";
+
+require('preact/devtools');
 
 (function(){
+    let minicart = document.querySelector('body #search_container .minicart');
+
     new SearchSuggestion();
+    new QuantityGroup();
     new LazyImageLoad();
     new CategoryViewType();
     new DepartmentMenu();
@@ -67,6 +75,10 @@ import  "./ext/jq-swipe";
     $('.shadow').on('click touchstart', ()=> {
         $(document).trigger('click:shadow');
     });
+
+    if (minicart) {
+        render(<MiniCart />, minicart);
+    }
 
 
     $(document).on('click', '.action_block.sort', function(e){

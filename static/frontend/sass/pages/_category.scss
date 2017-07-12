@@ -341,7 +341,7 @@ $padding_container: rem-calc(18);
               position: relative;
 
               .options {
-                border: 2px solid #0d2431;
+                border: 2px solid $dark_blue;
                 border-top: none;
                 width: 99%;
                 left: 0;
@@ -369,7 +369,7 @@ $padding_container: rem-calc(18);
                 @include breakpoint(xsmall down) {
                   width: 137%;
                   left: -38%;
-                  border: 1px solid #0d2431;
+                  border: 1px solid $dark_blue;
 
                   li {
                     line-height: 31px;
