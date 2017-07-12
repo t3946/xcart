@@ -1,4 +1,4 @@
-<div class="item {if $item->isOutOfStock()}out_of_stock{/if}" data-product="{$item->productid}" itemscope itemtype="http://schema.org/Product" itemprop="itemListElement">
+<div class="item product{if $item->isOutOfStock()} out_of_stock{/if}" data-product="{$item->productid}" itemscope itemtype="http://schema.org/Product" itemprop="itemListElement">
 
         <div class="image_container container">
             <a href="{$item->getAbsoluteUrl()}" title="{$item.product}" class="link">

@@ -17,6 +17,7 @@ abstract class AbstractCatalogController extends FrontendController
     public $view = '';
     public $model = null;
     public $sort = null;
+    public $pageSize = 40;
     public $filters = ['price', 'brand', 'filter'];
 
     public function getAdvancedCacheData()
@@ -68,7 +69,7 @@ abstract class AbstractCatalogController extends FrontendController
      */
     public function getPager($qs)
     {
-        return new Pagination($qs, ['pageSize' => 20, 'view' => 'core/pager/front_endless.tpl', 'pageKey' => 'page'], new QuerySetDataSource());
+        return new Pagination($qs, ['pageSize' => $this->pageSize, 'view' => 'core/pager/front_endless.tpl', 'pageKey' => 'page'], new QuerySetDataSource());
     }
 
     /**

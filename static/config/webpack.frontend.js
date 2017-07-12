@@ -34,6 +34,11 @@ module.exports = {
                             [ "es2016" ],
                             [ "babili" ]
                         ],
+                        plugins: [
+                            ["transform-react-jsx", {
+                                "pragma":"h" // default pragma is React.createElement
+                            }]
+                        ]
                     }
                 }
             },
