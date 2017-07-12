@@ -29,7 +29,11 @@ class OrderTransactionHelper
         if ($model) {
             $result = $gw->result->getData();
             if (!$result['amount']) {
-                $result['amount'] = $amount;
+                $result['amount'] =
+                    [
+                        'total' => $amount['amount'],
+                        'currency' => $amount['currency']
+                    ];
             }
 
             if ($mode == 'add_manual_transaction') {

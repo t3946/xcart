@@ -32,7 +32,7 @@ class TransactionLogModel extends AutoMetaModel
                 'null' => false,
                 'choices' => [
                     'AP' => 'Authorized',
-                    'Pending' => 'Pending',
+                    'pending' => 'Pending',
                     'authorized' => 'Authorized',
                     'voided' => 'Voided',
                     'completed' => 'Completed',

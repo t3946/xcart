@@ -32,6 +32,7 @@
 
 use Modules\Order\Models\OrderModel;
 use Modules\Order\Models\OrderTransactionModel;
+use Modules\Order\Models\TransactionLogModel;
 use Modules\Payment\Gateways\Gateway;
 use Modules\Payment\Models\ProcessorModel;
 use Modules\Product\Models\ProductOptionModel;
@@ -1578,6 +1579,7 @@ if ($mode == 'ref_notify')
 
         if ($ref_notify_button_clicked == "Update_C2B_status_and_Send_refund_notification") {
             if ($orderModel = OrderModel::objects()->get(['orderid' => $orderid])) {
+                $error_message = null;
                 /** @var ProcessorModel $gateway */
                 $gateway = ProcessorModel::objects()->get(['processor_name' => 'PayPal']);
                 if ($gw = Gateway::getGateway($gateway)){
@@ -1600,14 +1602,27 @@ if ($mode == 'ref_notify')
                             ];
                             if ($gw->refund($params)) {
                                 // do something
+                                $result = $gw->result->getData();
+                                $transactionLog = new TransactionLogModel(
+                                    [
+                                        'orderid' => $orderid,
+                                        'paymentid' => $ref_tr->paymentid,
+                                        'order_transaction_id' => isset($ref_tr) ? $ref_tr->id : null,
+                                        'transaction_id' => $ref_tr->transaction_id,
+                                        'transaction_status' => $gw->getState('refund_transaction'),
+                                        'transaction_currency' => !isset($result['amount']) ? $params['currency'] : $result['amount']['currency'],
+                                        'transaction_total' => !isset($result['amount']) ? $params['amount'] : $result['amount']['total'],
+                                        'login' => $login,
+                                        'transaction_log' => array_merge($result, ['xcart_log' => $log])
+                                    ]
+                                );
+
+                                if ($transactionLog->isValid()) {
+                                    $transactionLog->save();
+                                }
                             } else {
-                                $top_message = [
-                                    'content' => 'Refund error',
-                                    'type' => 'E',
-                                ];
-                                $section_name_top_message = $top_message;
-                                x_session_save("section_name_top_message");
-                                func_header_location("order.php?orderid=" . $orderid);
+                                $result = $gw->result->getData();
+                                $error_message = 'Refund error. '.$result['message'];
                             }
 
                             $ref_sum -= $ref_tr->transaction_amount;
@@ -1616,11 +1631,15 @@ if ($mode == 'ref_notify')
                                 break;
                             }
                         }
-
                     } else {
+                        $error_message = 'Transactions to refund does not exists';
+                    }
+
+                    if ($error_message) {
+                        func_log_order($orderid, 'PP', $error_message, $login);
                         $top_message = [
-                            'content' => 'Transactions to refund does not exists',
-                            'type'    => 'E',
+                            'content' => $error_message,
+                            'type' => 'E',
                         ];
                         $section_name_top_message = $top_message;
                         x_session_save("section_name_top_message");

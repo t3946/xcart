@@ -157,15 +157,17 @@ class OrderHelper
         if ($model->groups) {
             /** @var OrderGroupModel $group */
             foreach ($model->groups as $group) {
-                if ($group->cb_status !=$status) {
-                    $log = "<br/><b>" . $group->manufacturer->code . ":</b> cb_status: " . $group->status_cb->name
-                        . " -> " . OrderStatusModel::objects()->get(['code' => $status])->name;
+                if (in_array($group->cb_status, ['Q', 'N', 'I'])) {
+                    if ($group->cb_status != $status) {
+                        $log = "<br/><b>" . $group->manufacturer->code . ":</b> cb_status: " . $group->status_cb->name
+                            . " -> " . OrderStatusModel::objects()->get(['code' => $status])->name;
+                    }
+                    $send = true;
+                    $group->cb_status = $status;
+                    $group->save();
                 }
-                $group->cb_status = $status;
-                $group->save();
             }
-            if ($model->cb_status != $status) {
-                $send = true;
+            if ($send && $model->cb_status != $status) {
                 $model->cb_status = $status;
                 $model->save();
             }
