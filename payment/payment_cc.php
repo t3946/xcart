@@ -38,7 +38,6 @@
 
 require "../include/payment_method.php";
 
-x_load('cart','crypt','order','payment','tests');
 
 x_session_unregister('logged_paymentid');
 
@@ -231,5 +230,3 @@ else {
 
 	func_header_location($xcart_catalogs['customer']."/cart.php?mode=order_message&orderids=$_orderids");
 }
-
-?>

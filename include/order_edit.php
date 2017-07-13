@@ -628,7 +628,7 @@ if ($REQUEST_METHOD == "POST")
                     && $v["cb_status"] == "AP"
                 ) {
                     $bRefundPresent                = false;
-                    $authorized_transactions_info  = func_query("SELECT transaction_id, transaction_amount FROM $sql_tbl[order_transactions] WHERE orderid='$orderid' AND transaction_status IN ('AP','Pending','authorized')");
+                    $authorized_transactions_info  = func_query("SELECT id, transaction_id, transaction_amount FROM $sql_tbl[order_transactions] WHERE orderid='$orderid' AND transaction_status IN ('AP','Pending','authorized')");
                     $authorized_transaction_amount = func_query_first_cell("SELECT SUM(transaction_amount) FROM $sql_tbl[order_transactions] WHERE orderid='$orderid' AND transaction_status IN ('AP','Pending','authorized')");
 
                     $count_shipping_groups = count($order["shipping_groups"]);
@@ -706,7 +706,7 @@ if ($REQUEST_METHOD == "POST")
                                                 'login' => $login,
                                                 'transaction_status' => $result['state'],
                                                 'transaction_response' => serialize($result),
-                                                'parent_transaction_id' => $result['id'],
+                                                'parent_id' => $authorized_transaction['id'],
                                             ]);
                                             $orderTransaction->save();
                                         }

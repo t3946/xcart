@@ -30,7 +30,14 @@
  * +-----------------------------------------------------------------------------+
  * \*****************************************************************************/
 
+use Modules\Order\Helpers\OrderTransactionHelper;
+use Modules\Order\Models\OrderGroupRefundModel;
+use Modules\Order\Models\OrderModel;
 use Modules\Order\Models\OrderTransactionModel;
+use Modules\Order\Models\TransactionLogModel;
+use Modules\Payment\Gateways\Gateway;
+use Modules\Payment\Helpers\PaymentHelper;
+use Modules\Payment\Models\ProcessorModel;
 use Modules\Product\Models\ProductOptionModel;
 use Xcart\Paypal;
 
@@ -1573,6 +1580,104 @@ if ($mode == 'ref_notify')
             }
         }
 
+        if ($ref_notify_button_clicked == "Update_C2B_status_and_Send_refund_notification" && in_array($login, ['sergey2', 'igor', 'roman_n'])) {
+            if ($orderModel = OrderModel::objects()->get(['orderid' => $orderid])) {
+                $error_message = $ref_sum = null;
+
+                    if ($refund_model = OrderGroupRefundModel::objects()->get(['orderid' => $orderid, 'manufacturerid' => $notify_mid])){
+                        $ref_sum = $refund_model->total_gross;
+                    }
+
+                    $completed_transactions = array_filter($orderModel->transactions->all(), function($a) use ($ref_sum) {
+                        return (in_array($a->transaction_status,
+                            [
+                                OrderTransactionModel::STATUS_COMPLETED,
+                                OrderTransactionModel::STATUS_PARTIALLY_RUFUNDED
+                            ]
+                        ));
+                    });
+
+                    if ($completed_transactions) {
+                        try {
+                            foreach ($completed_transactions as $ref_tr) {
+
+                                if ($gw = Gateway::getGateway($ref_tr->payment_method_model->processor)) {
+
+                                    $amount = [
+                                        'amount' => number_format(min($ref_sum, $ref_tr->transaction_amount), 2),
+                                        'currency' => $ref_tr->transaction_currency,
+                                    ];
+                                    $params = array_merge($amount,
+                                        [
+                                            'transactionReference' => $ref_tr->transaction_id
+                                        ]
+                                    );
+
+                                    if ($gw->refund($params)) {
+                                        $result = $gw->result->getData();
+
+                                        if ($r_tr = OrderTransactionHelper::action('lookup', $ref_tr, PaymentHelper::getPaymentParams($ref_tr))) {
+                                            $r_tr->save();
+                                        }
+
+                                        $orderTransaction = OrderTransactionHelper::prepareOrderTransaction($r_tr, $gw, $orderModel, $ref_tr->payment_method_model, $amount, 'refund_transaction');
+                                        $orderTransaction->login = $login;
+                                        $orderTransaction->save();
+
+
+                                        $transactionLog = new TransactionLogModel(
+                                            [
+                                                'orderid' => $orderid,
+                                                'paymentid' => $orderTransaction->paymentid,
+                                                'order_transaction_id' => isset($orderTransaction) ? $orderTransaction->id : null,
+                                                'transaction_id' => $orderTransaction->transaction_id,
+                                                'transaction_status' => $gw->getState('refund_transaction'),
+                                                'transaction_currency' => !isset($result['amount']) ? $params['currency'] : $result['amount']['currency'],
+                                                'transaction_total' => $orderTransaction->transaction_amount,
+                                                'login' => $login,
+                                                'transaction_log' => array_merge($result, ['xcart_log' => $log])
+                                            ]
+                                        );
+
+                                        if ($transactionLog->isValid()) {
+                                            $transactionLog->save();
+                                        }
+
+                                    } else {
+                                        $result = $gw->result->getData();
+                                        $error_message = 'Refund error. ' . $result['message'];
+                                        break;
+                                    }
+
+                                    $ref_sum -= $ref_tr->transaction_amount;
+
+                                    if ($ref_sum <= 0) {
+                                        break;
+                                    }
+                                }
+
+                            }
+                        } catch (Exception $e) {
+                            $error_message = 'Refund error. ' . $e->getMessage();
+                        }
+                    } else {
+                        $error_message = 'Transactions to refund does not exists';
+                    }
+
+                    if ($error_message) {
+                        func_log_order($orderid, 'PP', $error_message, $login);
+                        $top_message = [
+                            'content' => $error_message,
+                            'type' => 'E',
+                        ];
+                        $section_name_top_message = $top_message;
+                        x_session_save("section_name_top_message");
+                        func_header_location("order.php?orderid=" . $orderid);
+                    }
+
+            }
+        }
+
         foreach ($order['refund_groups'][$notify_mid]['products'] as $pk => $product) {
             $order['refund_groups'][$notify_mid]['products'][$pk]['fee'] = func_calculate_fee($product['extra_data']['price'], $product['ref_price']);
         }
@@ -1718,7 +1823,7 @@ if ($mode == 'mnf_notify' || $mode == "cidev_send_email_to_operator")
 
         if ($current_cb_status == "AP")
         {
-            $authorized_transactions_info  = func_query("SELECT transaction_id, transaction_amount FROM $sql_tbl[order_transactions] WHERE orderid='$orderid' AND transaction_status IN ('AP','Pending','authorized')");
+            $authorized_transactions_info  = func_query("SELECT id, transaction_id, transaction_amount FROM $sql_tbl[order_transactions] WHERE orderid='$orderid' AND transaction_status IN ('AP','Pending','authorized')");
             $authorized_transaction_amount = func_query_first_cell("SELECT SUM(transaction_amount) FROM $sql_tbl[order_transactions] WHERE orderid='$orderid' AND transaction_status IN ('AP','Pending','authorized')");
 
             if (!empty($order["shipping_groups"][$mnf_id]))
@@ -1789,7 +1894,7 @@ if ($mode == 'mnf_notify' || $mode == "cidev_send_email_to_operator")
                                         $orderTransaction->login = $login;
                                         $orderTransaction->transaction_status = $result['state'];
                                         $orderTransaction->transaction_response = serialize($result);
-                                        $orderTransaction->parent_transaction_id = $authorized_transaction_id;
+                                        $orderTransaction->parent_id = $authorized_transaction['id'];
                                         $orderTransaction->save();
                                     }
                                 }

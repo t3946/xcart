@@ -23,7 +23,7 @@ return array(
     'Psr\\Log\\' => array($vendorDir . '/psr/log/Psr/Log'),
     'Psr\\Http\\Message\\' => array($vendorDir . '/psr/http-message/src'),
     'Psr\\Cache\\' => array($vendorDir . '/psr/cache/src'),
-    'Omnipay\\PayPal\\' => array($vendorDir . '/omnipay/paypal/src'),
+    'Omnipay\\PayPal\\' => array($baseDir . '/app/Modules/Payment/Gateways/Omnipay/PayPal', $vendorDir . '/omnipay/paypal/src'),
     'Omnipay\\BluePay\\' => array($baseDir . '/app/Modules/Payment/Gateways/Omnipay/BluePay'),
     'Monolog\\' => array($vendorDir . '/monolog/monolog/src/Monolog'),
     'Modules\\' => array($baseDir . '/app/Modules'),

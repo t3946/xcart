@@ -199,7 +199,8 @@ class ComposerStaticInited1e2f7cb4425e4bdc0264910bb94e92
         ),
         'Omnipay\\PayPal\\' => 
         array (
-            0 => __DIR__ . '/..' . '/omnipay/paypal/src',
+            0 => __DIR__ . '/../../..' . '/app/Modules/Payment/Gateways/Omnipay/PayPal',
+            1 => __DIR__ . '/..' . '/omnipay/paypal/src',
         ),
         'Omnipay\\BluePay\\' => 
         array (

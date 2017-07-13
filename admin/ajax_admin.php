@@ -641,39 +641,10 @@ function getTransactionLog($aParams = [])
 {
     global $smarty;
     $result = null;
-    $tableTransactions = [];
-    if (!empty($aParams['order_transaction_id'])) {
-        $orderTransaction = OrderTransactionModel::objects()->get(['id' => $aParams['order_transaction_id']]);
-        if ($orderTransaction) {
-            $in = [$orderTransaction->transaction_id];
-            if ($orderTransaction->parent_transaction_id) {
-                $in[] = $orderTransaction->parent_transaction_id;
-            }
-            $aTransactionLogs = TransactionLogModel::objects()
-                ->filter([
-                    'orderid' => $orderTransaction->orderid,
-                    'transaction_id__in' => $in])
-                ->order('date DESC')
-                ->all();
-            if (!empty($aTransactionLogs)) {
-                /** @var TransactionLogModel $transactionLog */
-                foreach ($aTransactionLogs as $transactionLog) {
-                    $aV = $transactionLog->getAttributes();
-                    if (!empty($transactionLog->login)) {
-                        if ($customerModel = Customer::objects()->filter(['login' => $transactionLog->login])->get()) {
-                            $aV['firstname'] = $customerModel->firstname;
-                        }
-                    }
-                    if ($paymentModel = PaymentMethod::objects()->get(['paymentid' => $transactionLog->paymentid])) {
-                        $aV['payment_method'] = $paymentModel->payment_method;
-                    }
-                    $aV['model'] = $transactionLog;
-                    $tableTransactions[] = $aV;
-                }
-                $smarty->assign('order_transactions',$tableTransactions);
-                $result = $smarty->fetch('admin/main/transactions_table.tpl');
-            }
-        }
+    if ((!empty($aParams['order_transaction_id'])) && ($orderTransaction = OrderTransactionModel::objects()->get(['id' => $aParams['order_transaction_id']]))) {
+        $smarty->assign('order_transactions', $orderTransaction->transaction_logs->order(['-id']));
+        $smarty->assign('main_transaction', false);
+        $result = $smarty->fetch('admin/main/transactions_table.tpl');
     }
     print $result;
 }

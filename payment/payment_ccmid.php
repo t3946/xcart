@@ -34,6 +34,9 @@
 # $Id: payment_ccmid.php,v 1.17.2.4 2007/01/05 13:20:34 max Exp $
 #
 
+use Modules\Order\Models\OrderTransactionModel;
+use Modules\Order\Models\TransactionLogModel;
+
 if (!defined('XCART_START')) { header("Location: ../"); die("Access denied"); }
 
 x_load('http','order','payment','tests');
@@ -303,18 +306,6 @@ if (!$fatal) {
 
 	func_change_order_status($orderids, $order_status, join("\n", $advinfo));
 
-
-#
-##
-###
-	//func_check_and_send_request_availability_email($check_orderid);
-###
-##
-#
-
-#
-## 
-### 
 	$transaction_total = $order_info["total"];
 
 	if (!empty($login)){
@@ -334,6 +325,8 @@ if (!$fatal) {
 	} else {
 		$transaction_status = $order_status;
 	}
+
+	$transaction_status = strtolower($transaction_status);
 
         if (!empty($txn_id)){ # PayPal uses txn_id
 		$transaction_id = $txn_id;
@@ -362,9 +355,31 @@ if (!$fatal) {
 			$transaction_log = serialize($result);
 		}
 
-		db_query("INSERT INTO $sql_tbl[transaction_logs] (orderid, paymentid, transaction_id, transaction_status, transaction_currency, transaction_total, date, login, transaction_log) VALUE ('$check_orderid', '$order_paymentid', '$transaction_id', '$transaction_status', '$transaction_currency', '$transaction_total', '".time()."', '$transaction_login', '".addslashes($transaction_log)."')");
+		$param =
+            [
+                'orderid' => $check_orderid,
+                'paymentid' => $order_paymentid,
+                'transaction_id' => $transaction_id,
+                'transaction_status' => $transaction_status,
+                'transaction_currency' => $transaction_currency,
+                'transaction_amount' => $transaction_total,
+                'login' => $transaction_login,
+                'transaction_response' => $transaction_log,
+            ];
 
-		db_query("INSERT INTO $sql_tbl[order_transactions] (orderid, paymentid, transaction_id, transaction_status, transaction_currency, transaction_amount, date, login, transaction_response) VALUE ('$check_orderid', '$order_paymentid', '$transaction_id', '$transaction_status', '$transaction_currency', '$transaction_total', '".time()."', '$transaction_login', '".addslashes($transaction_log)."')");
+		$model = new OrderTransactionModel($param);
+        $model->save();
+
+        $param = array_merge($param,
+            [
+                'transaction_total' => $transaction_total,
+                'order_transaction_id' => $model->id,
+                'transaction_log' => $transaction_log,
+            ]
+        );
+
+        $log_model = new TransactionLogModel($param);
+        $log_model->save();
 
 		func_log_order($check_orderid, 'PP', $transaction_log, $login);
         }
