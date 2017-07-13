@@ -74,11 +74,21 @@ class PaymentHelper
         return true;
     }
 
-    public static function getPaymentParams($orderTransaction, $amount)
+    public static function getPaymentParams($orderTransaction, $amount = null)
     {
-        return array_merge([
-            'transactionReference' => $orderTransaction->transaction_id,
-            'status' => $orderTransaction->transaction_status
-        ], $amount);
+        if (!$amount) {
+            $amount =
+                [
+                    'amount' => $orderTransaction->transaction_amount,
+                    'currency' => $orderTransaction->transaction_currency
+                ];
+        }
+        return array_merge(
+            [
+                'transactionReference' => $orderTransaction->transaction_id,
+                'status' => $orderTransaction->transaction_status
+            ],
+            $amount
+        );
     }
 }

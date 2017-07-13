@@ -84,7 +84,7 @@ elseif ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['payment_type'])) 
                         'id' => null,
                         'transaction_amount' => $mc_gross,
                         'transaction_fee' => $mc_fee,
-                        'parent_transaction_id' => $orderTransaction->id,
+                        'parent_id' => $orderTransaction->id,
                         'transaction_id' => $_POST['txn_id'],
                         'transaction_status' => null,
                         'login' => null,

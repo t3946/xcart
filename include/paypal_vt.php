@@ -74,11 +74,17 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array_keys(
 
                 if ($gw = Gateway::getGateway($pmModel->processor)) {
 
-                    if ($res = $gw->$method($params)) {
+                    if ($gw->$method($params)) {
 
-                        $orderTransaction = OrderTransactionHelper::prepareOrderTransaction($orderTransaction, $gw, $orderModel, $pmModel, $amount, $mode);
-                        $orderTransaction->login = $login;
-                        $orderTransaction->save();
+                        if ($orderTransaction = OrderTransactionHelper::action('lookup', $orderTransaction, PaymentHelper::getPaymentParams($orderTransaction))) {
+                            $orderTransaction->save();
+                        }
+
+                        if ($orderTransaction->transaction_status != OrderTransactionModel::STATUS_REFUNDED) {
+                            $orderTransaction = OrderTransactionHelper::prepareOrderTransaction($orderTransaction, $gw, $orderModel, $pmModel, $amount, $mode);
+                            $orderTransaction->login = $login;
+                            $orderTransaction->save();
+                        }
 
                         $result = $orderTransaction->transaction_response;
 

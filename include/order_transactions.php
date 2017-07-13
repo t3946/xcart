@@ -4,6 +4,7 @@ global $smarty, $order, $orderid;
 
 use Modules\Order\Helpers\OrderTransactionHelper;
 use Modules\Order\Models\OrderModel;
+use Modules\Payment\Helpers\PaymentHelper;
 
 if (!defined('XCART_SESSION_START')) {
     header("Location: ../");
@@ -14,7 +15,8 @@ if ($orderModel = OrderModel::objects()->get(['orderid' => $orderid])) {
 
     foreach ($orderModel->transactions->order(['-id']) as $transactionModel) {
         if (empty($transactionModel->transaction_response)) {
-            if ($transactionModel = OrderTransactionHelper::action('lookup', $transactionModel)) {
+
+            if ($transactionModel = OrderTransactionHelper::action('lookup', $transactionModel, PaymentHelper::getPaymentParams($transactionModel))) {
                 $transactionModel->save();
             }
         }

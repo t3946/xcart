@@ -14,16 +14,16 @@ class OrderTransactionHelper
 
     /**
      * @param OrderTransactionModel $model
-     * @param $gw
+     * @param Gateway $gw
      * @param OrderModel $orderModel
      * @param PaymentMethodModel $pmModel
-     * @param array $amount
+     * @param array $params
      * @param string $mode
      * @return OrderTransactionModel
      */
-    public static function prepareOrderTransaction($model, $gw, $orderModel = null, $pmModel, $amount = null, $mode = '')
+    public static function prepareOrderTransaction($model, $gw, $orderModel = null, $pmModel, $params = null, $mode = '')
     {
-        if ((!$model && $orderModel) || in_array($mode, ['refund_transaction'])) {
+        if ((!$model && $orderModel) || (in_array($mode, ['refund_transaction']) && $model->transaction_status != OrderTransactionModel::STATUS_REFUNDED)) {
             $model = new OrderTransactionModel(['orderid' => $orderModel->orderid]);
         }
         if ($model) {
@@ -33,8 +33,8 @@ class OrderTransactionHelper
             if (!$result['amount']) {
                 $result['amount'] =
                     [
-                        'total' => $amount['amount'],
-                        'currency' => $amount['currency']
+                        'total' => $params['amount'],
+                        'currency' => $params['currency']
                     ];
             }
 
@@ -48,7 +48,7 @@ class OrderTransactionHelper
 
             if (isset($result['capture_id'])) {
                 if ($parent = OrderTransactionModel::objects()->get(['transaction_id' => $result['capture_id']])){
-                    $model->parent_transaction_id = $parent->id;
+                    $model->parent_id = $parent->id;
                 }
             }
 
@@ -70,19 +70,14 @@ class OrderTransactionHelper
     /**
      * @param string $method
      * @param OrderTransactionModel $model
+     * @param array $params
      */
-    public static function action($method, $model)
+    public static function action($method, $model, $params)
     {
         if ($model) {
             if ($gw = Gateway::getGateway($model->payment_method_model->processor)) {
-                $amount =
-                    [
-                        'amount' => $model->transaction_amount,
-                        'currency' => $model->transaction_currency
-                    ];
-                $params = PaymentHelper::getPaymentParams($model, $amount);
                 if ($res = $gw->$method($params)) {
-                    $model = OrderTransactionHelper::prepareOrderTransaction($model, $gw, null, $model->payment_method_model, $amount);
+                    $model = OrderTransactionHelper::prepareOrderTransaction($model, $gw, null, $model->payment_method_model, $params);
                 }
             }
         }

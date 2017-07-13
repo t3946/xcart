@@ -29,7 +29,7 @@
         {/if}
 
         {if $tr_log}
-            <div class="transaction_log_div" style="display: none;"><B>Full log:</B><br />{$tr_log|@serialize}</div>
+            <div class="transaction_log_div" style="display: none;"><B>Full log:</B><br /><pre>{$tr_log|@print_r}</pre></div>
             <a href="#" style="color: #1411FF;" class="show_hide_link">Show details</a>
         {/if}
 

@@ -36,6 +36,7 @@ use Modules\Order\Models\OrderModel;
 use Modules\Order\Models\OrderTransactionModel;
 use Modules\Order\Models\TransactionLogModel;
 use Modules\Payment\Gateways\Gateway;
+use Modules\Payment\Helpers\PaymentHelper;
 use Modules\Payment\Models\ProcessorModel;
 use Modules\Product\Models\ProductOptionModel;
 use Xcart\Paypal;
@@ -1579,7 +1580,7 @@ if ($mode == 'ref_notify')
             }
         }
 
-        if ($ref_notify_button_clicked == "Update_C2B_status_and_Send_refund_notification") {
+        if ($ref_notify_button_clicked == "Update_C2B_status_and_Send_refund_notification" && in_array($login, ['sergey2', 'igor', 'roman_n'])) {
             if ($orderModel = OrderModel::objects()->get(['orderid' => $orderid])) {
                 $error_message = $ref_sum = null;
 
@@ -1615,9 +1616,14 @@ if ($mode == 'ref_notify')
                                     if ($gw->refund($params)) {
                                         $result = $gw->result->getData();
 
-                                        $orderTransaction = OrderTransactionHelper::prepareOrderTransaction(null, $gw, $orderModel, $ref_tr->payment_method_model, $amount, 'refund_transaction');
+                                        if ($r_tr = OrderTransactionHelper::action('lookup', $ref_tr, PaymentHelper::getPaymentParams($ref_tr))) {
+                                            $r_tr->save();
+                                        }
+
+                                        $orderTransaction = OrderTransactionHelper::prepareOrderTransaction($r_tr, $gw, $orderModel, $ref_tr->payment_method_model, $amount, 'refund_transaction');
                                         $orderTransaction->login = $login;
                                         $orderTransaction->save();
+
 
                                         $transactionLog = new TransactionLogModel(
                                             [
@@ -1635,10 +1641,6 @@ if ($mode == 'ref_notify')
 
                                         if ($transactionLog->isValid()) {
                                             $transactionLog->save();
-                                        }
-
-                                        if ($r_tr = OrderTransactionHelper::action('lookup', $ref_tr)) {
-                                            $r_tr->save();
                                         }
 
                                     } else {
@@ -1821,7 +1823,7 @@ if ($mode == 'mnf_notify' || $mode == "cidev_send_email_to_operator")
 
         if ($current_cb_status == "AP")
         {
-            $authorized_transactions_info  = func_query("SELECT transaction_id, transaction_amount FROM $sql_tbl[order_transactions] WHERE orderid='$orderid' AND transaction_status IN ('AP','Pending','authorized')");
+            $authorized_transactions_info  = func_query("SELECT id, transaction_id, transaction_amount FROM $sql_tbl[order_transactions] WHERE orderid='$orderid' AND transaction_status IN ('AP','Pending','authorized')");
             $authorized_transaction_amount = func_query_first_cell("SELECT SUM(transaction_amount) FROM $sql_tbl[order_transactions] WHERE orderid='$orderid' AND transaction_status IN ('AP','Pending','authorized')");
 
             if (!empty($order["shipping_groups"][$mnf_id]))
@@ -1892,7 +1894,7 @@ if ($mode == 'mnf_notify' || $mode == "cidev_send_email_to_operator")
                                         $orderTransaction->login = $login;
                                         $orderTransaction->transaction_status = $result['state'];
                                         $orderTransaction->transaction_response = serialize($result);
-                                        $orderTransaction->parent_transaction_id = $authorized_transaction_id;
+                                        $orderTransaction->parent_id = $authorized_transaction['id'];
                                         $orderTransaction->save();
                                     }
                                 }
