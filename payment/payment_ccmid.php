@@ -323,7 +323,11 @@ if (!$fatal) {
 	if (!empty($payment_status)){
 		$transaction_status = $payment_status;
 	} else {
-		$transaction_status = $order_status;
+		if ($order_status == 'AP') {
+            $transaction_status = 'authorized';
+		} else {
+            $transaction_status = $order_status;
+		}
 	}
 
 	$transaction_status = strtolower($transaction_status);
