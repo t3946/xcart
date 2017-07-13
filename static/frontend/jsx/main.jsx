@@ -1,8 +1,14 @@
 import 'modernizr';
+import  "./_binds/response_status_278";
+import  "./_binds/product_quantity_group";
+import  "./_binds/endless_pagination";
+import  "./_binds/click_mmodal";
+import  "./_binds/search";
+
 import  "./ext/jq-swipe";
+
 import { h, render } from 'preact';
 import MiniCart from "./components/MiniCart";
-import QuantityGroup from "./components/QuantityGroup";
 import DepartmentMenu from "./components/DepartmentMenu";
 import DottedText from "./components/DottedText";
 import CategoryViewType from "./components/CategoryViewType";
@@ -20,7 +26,6 @@ require('preact/devtools');
     let minicart = document.querySelector('body #search_container .minicart');
 
     new SearchSuggestion();
-    new QuantityGroup();
     new LazyImageLoad();
     new CategoryViewType();
     new DepartmentMenu();
@@ -34,34 +39,6 @@ require('preact/devtools');
 
     Waves.attach('.waves');
     Waves.init();
-
-
-    $(document).ajaxComplete(function (e, xhr, settings) {
-        if (xhr.status == 278) {
-            let location = xhr.getResponseHeader("Location");
-            if (location) {
-                window.location.href = xhr.getResponseHeader("Location");
-            }
-        }
-    });
-
-    $('.search-form-container .search').on('keyup', function (e){
-        let $bclear = $('.search-form-container .button-clear');
-        let $this = $(this);
-        let string = $this.val();
-
-        if (string) {
-            $bclear.addClass('active');
-        }
-        else {
-            $bclear.removeClass('active');
-        }
-    });
-
-    $('.search-form-container .button-clear').on('click', function(){
-        $('.search-form-container .search').val('');
-        $(this).removeClass('active');
-    });
 
 
     $(document).on('show:dm', ()=> {
@@ -79,84 +56,6 @@ require('preact/devtools');
     if (minicart) {
         render(<MiniCart />, minicart);
     }
-
-
-    $(document).on('click', '.action_block.sort', function(e){
-        e.preventDefault();
-        $(this).toggleClass('active');
-    });
-
-    $(document).on('click', '.action_block.sort .options li', function(e){
-        e.preventDefault();
-        e.stopPropagation();
-        let $this = $(this);
-
-        if (!$this.hasClass('active')) {
-            $('.action_block.sort .options li').removeClass('active');
-            $this.addClass('active');
-            $this.closest('.action_block.sort').find('.active_value').html($this.text());
-
-            setTimeout(()=>{
-                $this.closest('.action_block.sort').removeClass('active');
-            }, 2000);
-
-
-            window.loader.load();
-            window.loader.load(()=>{
-                $.ajax({
-                    url: window.location,
-                    method: 'POST',
-                    data: {sort: $(this).data('value')},
-                    success : (data)=>{
-
-                        window.loader.load();
-                        window.location = window.location;
-                    }
-                })
-            });
-        }
-        else {
-            $this.closest('.action_block.sort').removeClass('active');
-        }
-    });
-
-    $(document).on('click', '.front-endless-pager a.show-more', function(e){
-        e.preventDefault();
-
-        let $this = $(this);
-        let $parent = $(this).parent();
-        let $container = $('.product-items');
-        let text_loading = $this.data('text-loading');
-        let text_default = $this.data('text-default');
-
-
-        window.loader.load(
-            $.ajax($this.attr('href'), {
-                'success' : (data)=>{
-                    $container.append(data.content);
-
-                    if (data.href) {
-                        $this.find('.text').html(text_default);
-                        $this.attr('href', data.href);
-                        $this.removeAttr('disabled')
-                    }
-                    else {
-                        $this.remove();
-                    }
-
-                    $('.page_count').html(data.page_count);
-
-                    $(window).trigger('resize');
-                }
-            })
-        );
-
-
-        $this.attr('disabled', 'disabled');
-        $this.find('.text').html(text_loading);
-
-    });
-
 
     $(document).on('swipe', function(e, Dx, Dy) {
         if (isMedia('medium') && isTouch()) {
@@ -187,11 +86,6 @@ require('preact/devtools');
         }
     });
 
-    $(document).on('click', 'a.mmodal', function(e){
-        e.preventDefault();
-        e.stopPropagation();
-        $(this).mmodal({skin: $(this).data('modal-class') || 'front'});
-    });
 
     // $(window).on('beforeunload unload pagehide', (e)=>{
     //     console.log(e);
@@ -233,11 +127,4 @@ require('preact/devtools');
 
     $(document).foundation();
     loader.detach();
-
-    // setTimeout(()=>{
-    //
-    //     loader.detach(()=>{
-    //         $(window).trigger('resize');
-    //     });
-    // }, 300);
 })();
