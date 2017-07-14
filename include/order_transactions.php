@@ -5,6 +5,7 @@ global $smarty, $order, $orderid;
 use Modules\Order\Helpers\OrderTransactionHelper;
 use Modules\Order\Models\OrderModel;
 use Modules\Payment\Helpers\PaymentHelper;
+use Xcart\App\Main\Xcart;
 
 if (!defined('XCART_SESSION_START')) {
     header("Location: ../");
@@ -26,6 +27,7 @@ if ($orderModel = OrderModel::objects()->get(['orderid' => $orderid])) {
     $smarty->assign("transactions_log", $orderModel->transactions_log->order(['-id']));
     $smarty->assign("order_transactions_totals", OrderTransactionHelper::getOrderTransactionsGroupsValues($orderModel));
     $smarty->assign("count_shipping_groups", $orderModel->groups->count());
+    $smarty->assign("user_login",  Xcart::app()->user->login);
 
 }
 
