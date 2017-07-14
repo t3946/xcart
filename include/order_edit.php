@@ -827,6 +827,9 @@ if ($REQUEST_METHOD == "POST")
                 if (isset($v_cart_tmp["cb_status"]) && isset($groups[$k_cart_tmp]["cb_status"])){
                     if (in_array($groups[$k_cart_tmp]["cb_status"], ['D', 'A']) && in_array($v_cart_tmp["cb_status"], ['AP', 'Q', 'O'])) {
                         $sendAnalyticsRefund = true;
+                    } else {
+                        $sendAnalyticsRefund = false;
+                        break;
                     }
                 }
             }
