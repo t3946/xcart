@@ -706,7 +706,6 @@ if ($REQUEST_METHOD == "POST")
                                                 'login' => $login,
                                                 'transaction_status' => $result['state'],
                                                 'transaction_response' => serialize($result),
-                                                'parent_id' => $authorized_transaction['id'],
                                             ]);
                                             $orderTransaction->save();
                                         }

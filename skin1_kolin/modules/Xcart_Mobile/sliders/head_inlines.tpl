@@ -83,6 +83,7 @@
 							}.bind(slick), 10000)
 						}
 					});
+                ga('send', {hitType: 'pageview', location: location.href});
 			}, 200);
 
 			$('.slider-head').not('.initialized').on('click', function(){
@@ -109,6 +110,8 @@
 			});
 
 			$('.slider-head').addClass('initialized');
+
+
 		});
 	})();
     {/literal}

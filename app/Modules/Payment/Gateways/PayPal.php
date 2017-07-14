@@ -62,6 +62,8 @@ class PayPal extends Gateway
         switch (strtolower($params['status'])) {
             case OrderTransactionModel::STATUS_AUTHORIZED :
             case OrderTransactionModel::STATUS_PENDING :
+            case OrderTransactionModel::STATUS_VOIDED :
+            case OrderTransactionModel::STATUS_EXPIRED :
                 $params['statusLookup'] = 'authorization';
                 break;
             case OrderTransactionModel::STATUS_COMPLETED :
