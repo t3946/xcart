@@ -81,7 +81,8 @@ if (cb_status_current == "3" || cb_status_current == "H"){
 }
 
 ga('ec:setAction', 'refund', {
-  'id': '{/literal}{$order.order_prefix}{$order.orderid}{literal}'    // Transaction ID is only required field for full/partial refund.
+  'id': '{/literal}{$order.order_prefix}{$order.orderid}{literal}',    // Transaction ID is only required field for full/partial refund.
+  'affiliation': '{/literal}{$site_domain}{literal}'
 });
 ga('send', 'event', 'Ecommerce', 'Refund', {'nonInteraction': 1});
 
