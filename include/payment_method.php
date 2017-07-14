@@ -40,7 +40,6 @@
 if (!defined('XCART_START')) die("ERROR: Can not initiate application! Please check configuration.");
 include_once $xcart_dir."/payment/auth.php";
 
-x_load('cart','user');
 
 #
 ##
@@ -120,5 +119,3 @@ if (!empty($customer_notes))
 {
 	x_session_save("customer_notes");
 }
-
-?>

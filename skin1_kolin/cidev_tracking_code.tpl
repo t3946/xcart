@@ -48,7 +48,7 @@ function ga_onRefundClick(mid)  {
 var cb_status_current = $('#groups_cb_status_'+mid).val();
 
 if (cb_status_current == "3" || cb_status_current == "H"){
-
+    ga('require', 'ec');
 {/literal}
 {if $order.refund_groups ne ""}
 {foreach from=$order.refund_groups item=v key=k}
@@ -81,7 +81,8 @@ if (cb_status_current == "3" || cb_status_current == "H"){
 }
 
 ga('ec:setAction', 'refund', {
-  'id': '{/literal}{$order.order_prefix}{$order.orderid}{literal}'    // Transaction ID is only required field for full/partial refund.
+  'id': '{/literal}{$order.order_prefix}{$order.orderid}{literal}',    // Transaction ID is only required field for full/partial refund.
+  'affiliation': '{/literal}{$site_domain}{literal}'
 });
 ga('send', 'event', 'Ecommerce', 'Refund', {'nonInteraction': 1});
 

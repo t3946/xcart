@@ -54,7 +54,7 @@ ga('ec:addImpression', {ldelim}
 		{$lng.txt_N_results_found|substitute:"items":0}
 	{/if}
 
-<ul data-role="listview" data-type="products-list" data-divider-theme="c" class="ui-listview">
+<ul data-role="listview" data-type="products-list" data-divider-theme="c" class="ui-listview mobile_products_list">
       {foreach from=$products item=product}
 
 {if $product.new_notify_in_stock_price ne ""}
@@ -67,7 +67,9 @@ ga('ec:addImpression', {ldelim}
         {/if}
 {/if}
 
-        <li data-corners="false" data-shadow="false" data-iconshadow="true" data-wrapperels="div" data-icon="arrow-r" data-iconpos="right" data-theme="c" class="ui-btn ui-btn-up-c ui-btn-icon-right ui-li-has-arrow ui-li">
+        <li data-corners="false" data-shadow="false" data-iconshadow="true" data-wrapperels="div" data-icon="arrow-r" data-iconpos="right" data-theme="c" class="ui-btn ui-btn-up-c ui-btn-icon-right ui-li-has-arrow ui-li google_impression_object"
+            data-productid="{$product.productid}" data-name="{$product.product|escape}"
+            data-category="{$product.category|escape}" data-brand="{$product.brand|escape}" data-list="{$ga_page_name}" data-price="{$product.price}" data-position="{$N_key}">
 
 	<div class="ui-btn-inner ui-li"><div class="ui-btn-text">
 
