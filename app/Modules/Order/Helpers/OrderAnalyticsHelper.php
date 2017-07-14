@@ -27,8 +27,6 @@ class OrderAnalyticsHelper
                     $UA = GlobalConfigModel::objects()->get(['name' => 'cidev_ga_code_number'])->value;
                 }
 
-                $site = SiteModel::objects()->get(['storefrontid' => $model->storefrontid]);
-
                 $clientId = time() . "." . time();
 
                 if (($ga_cookie = Xcart::app()->request->cookie->get('_ga')) && ($ga_cla = explode('.', $ga_cookie))) {
@@ -36,7 +34,6 @@ class OrderAnalyticsHelper
                 }
 
                 $analytics
-                    ->setAffiliation($site->domain)
                     ->setTransactionId($model->getOrderNumber())
                     ->setProductActionToRefund()
                     ->setEventCategory('Ecommerce')
@@ -46,7 +43,6 @@ class OrderAnalyticsHelper
                     ->setTrackingId($UA)
                     ->setClientId($clientId)
                     ->sendEvent();
-
             }
 
             catch (Exception $e) {
