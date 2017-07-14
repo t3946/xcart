@@ -48,7 +48,7 @@ function ga_onRefundClick(mid)  {
 var cb_status_current = $('#groups_cb_status_'+mid).val();
 
 if (cb_status_current == "3" || cb_status_current == "H"){
-
+    ga('require', 'ec');
 {/literal}
 {if $order.refund_groups ne ""}
 {foreach from=$order.refund_groups item=v key=k}
