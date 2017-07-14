@@ -34,6 +34,7 @@
  * +-----------------------------------------------------------------------------+
  * \*****************************************************************************/
 
+use Modules\Payment\Models\PaymentMethodModel;
 use Modules\User\Helpers\SurfingHelper;
 use Xcart\CidevSurfPath;
 require "./auth.php";
@@ -1261,6 +1262,11 @@ if ($mode == "checkout" && empty($login) && !$func_is_cart_empty) {
     $cart["paymentid"] = $paymentid;
 
     $payment_data["payment_script_url"] = ($payment_data["protocol"] == "https" ? $https_location : $http_location) . "/payment/" . $payment_data["payment_script"];
+    /*if ($paymentid) {
+        if ($pmodel = PaymentMethodModel::objects()->get(['paymentid' => $paymentid])) {
+            $payment_data["payment_script_url"] = Xcart\App\Main\Xcart::app()->router->url("payment:process", ['gateway' => strtolower($pmodel->processor->processor_name)]);
+        }
+    }*/
 
     if (!empty($payment_cc_fields)) {
         $userinfo = func_array_merge($userinfo, $payment_cc_fields);

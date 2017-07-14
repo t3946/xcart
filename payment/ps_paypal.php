@@ -71,22 +71,49 @@ elseif ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['payment_type'])) 
 		if (!empty($txn_id)) {
 			if ($payment_status == 'Refunded') {
 				$payment_status = strtolower($payment_status);
+				if (isset($parent_txn_id)) {
+                    $txn_id = $parent_txn_id;
+                }
 			}
 			$orderTransaction = OrderTransactionModel::objects()->filter(['transaction_id' => $txn_id])->limit(1)->get();
+			if ($orderTransaction && $payment_status == 'refunded') {
+                if (!$new_txn = OrderTransactionModel::objects()->get(['transaction_id' => $_POST['txn_id']])) {
+                    $new_txn = new OrderTransactionModel($orderTransaction->getAttributes());
+
+                    $params = [
+                        'id' => null,
+                        'transaction_amount' => $mc_gross,
+                        'transaction_fee' => $mc_fee,
+                        'parent_id' => $orderTransaction->id,
+                        'transaction_id' => $_POST['txn_id'],
+                        'transaction_status' => null,
+                        'login' => null,
+                    ];
+                    $new_txn->setAttributes($params);
+
+                    $orderTransaction = $new_txn;
+                } else {
+                    $orderTransaction = null;
+				}
+			}
 			if ($orderTransaction && $orderTransaction->transaction_status != $payment_status) {
 				$orderTransaction->transaction_status = $payment_status;
-				$orderTransaction->transaction_response = null;
+				$orderTransaction->transaction_response = $op_message;
 
-				$transactionLog = new TransactionLogModel;
-				$transactionLog->date = time();
-				$transactionLog->orderid = $orderTransaction->orderid;
-				$transactionLog->paymentid = $orderTransaction->paymentid;
-				$transactionLog->transaction_id = $orderTransaction->transaction_id;
-				$transactionLog->transaction_status = $orderTransaction->transaction_status;
-				$transactionLog->transaction_log = $op_message;
-				$transactionLog->transaction_currency = $_POST['mc_currency'];
-				$transactionLog->transaction_total = $orderTransaction->transaction_amount;
+				$prm = [
+					'date' => time(),
+					'orderid' => $orderTransaction->orderid,
+					'order_transaction_id' => $orderTransaction->id,
+					'paymentid' => $orderTransaction->paymentid,
+					'transaction_id' => $orderTransaction->transaction_id,
+					'transaction_status' => $orderTransaction->transaction_status,
+					'transaction_log' => $op_message,
+					'transaction_currency' => $_POST['mc_currency'],
+					'transaction_total' => $orderTransaction->transaction_amount,
+				];
+				$transactionLog = new TransactionLogModel($prm);
 				$transactionLog->save();
+
 				if ($orderTransaction->isValid()){
 					$orderTransaction->save();
 				}

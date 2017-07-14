@@ -668,7 +668,7 @@ SQL;
                                         if (!empty($vv["ItemPriceAdjustments"]) && is_array($vv["ItemPriceAdjustments"])) {
                                             foreach ($vv["ItemPriceAdjustments"] as $kkk => $vvv) {
                                                 $field_name = $vvv["Type"];
-                                                if (($field_name == "Principal" || $field_name == "Shipping") && !empty($vvv["Amount"])) {
+                                                if (($field_name == "Principal") && !empty($vvv["Amount"])) {
                                                     $RefundSum += $vvv["Amount"];
                                                     $aOrderDetails[$v["AmazonOrderID"]][$v["ShipmentID"]][$vv['AmazonOrderItemCode']]['Refund'] += floatval($vvv["Amount"]);
                                                     $aOrderDetails[$v["AmazonOrderID"]][$v["ShipmentID"]][$vv['AmazonOrderItemCode']]['SKU'] = addslashes($vv['SKU']);

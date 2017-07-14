@@ -75,25 +75,31 @@ function sendGoogleAnalitics()
     }
 
     if (counter > 0) {
-        ga('send', 'event', listtype);
+        ga('send', 'event', listtype, 'scroll', listtype + ' item');
     }
 
 }
 
 function checkCarouselsVisibility() {
-    $('#similar_products .jcarousel, ' +
-      '#similar_products_ob .jcarousel, ' +
-      '#related_products .jcarousel, ' +
-      '#products_also_bought_with_this_product .jcarousel, ' +
-      '#recently_viewed_products .jcarousel, .product_list_row').find('.google_impression_object').each(function () {
-         collectVisibleElements($(this))
+    $('.jcarousel, .product_list_row')
+        .find('.google_impression_object').each(function () {
+            collectVisibleElements($(this))
     });
     sendGoogleAnalitics();
 }
 
-$(window).scroll(function(){
-    requestAnimationFrame(checkCarouselsVisibility);
-});
-$( document ).ready(function() {
+$(document).on('pageload ready', function(){
+    $(window).scroll(function(){
+        requestAnimationFrame(checkCarouselsVisibility);
+    });
+    $('div.ga_click > h3 > a').unbind('click');
+    $('a.ga_click, div.ga_click > h3 > a')
+        .click(function(){
+            var label = $(this).data('label');
+            if (label === undefined) {
+                label = $(this).text();
+            }
+            ga('send', 'event', 'click', label);
+    });
     requestAnimationFrame(checkCarouselsVisibility);
 });

@@ -56,4 +56,10 @@ return [
         'path' => 'Modules.Demo.routes',
         'namespace' => 'demo'
     ],
+    [
+        'route' => '/payment',
+        'path' => 'Modules.Payment.routes',
+        'namespace' => 'payment'
+    ],
+
 ];
