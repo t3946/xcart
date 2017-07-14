@@ -941,7 +941,7 @@ class OrderSearchStore extends BaseStore
         return $count;
     }
 
-    public function getCacheLifeTime($min = 40)
+    public function getCacheLifeTime($min = 20)
     {
         return $min + rand(1, $min * rand(1, round($min/2)));
     }
