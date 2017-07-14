@@ -4,12 +4,9 @@ namespace Modules\Order\Helpers;
 
 
 use Modules\Core\Models\GlobalConfigModel;
-use Modules\Order\Models\OrderGroupModel;
 use Modules\Order\Models\OrderModel;
 use Modules\Sites\Models\SiteConfigModel;
-use Modules\Sites\Models\SiteModel;
 use TheIconic\Tracking\GoogleAnalytics\Analytics;
-use Xcart\App\Exceptions\Exception;
 use Xcart\App\Main\Xcart;
 
 class OrderAnalyticsHelper
@@ -45,8 +42,8 @@ class OrderAnalyticsHelper
                     ->sendEvent();
             }
 
-            catch (Exception $e) {
-                func_log_order($model->orderid, 'X', $e->getMessage(), Xcart::app()->user->login);
+            catch (\Exception $e) {
+                func_log_order($model->orderid, 'X', 'GA Error: ' . $e->getMessage(), Xcart::app()->user->login);
             }
         }
     }
