@@ -19,7 +19,7 @@ require '../include/paypal_vt.php';
 //func_print_r($_POST);
 
 if ($mode == "authorize" && $AJAX_SUBMIT == "Y"){
-	if (!empty($transaction_id)){
+	if ($orderTransaction && $orderTransaction->id){
 		print("Authorized");
 	} else {
 		print("Failed");

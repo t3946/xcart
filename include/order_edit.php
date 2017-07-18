@@ -30,7 +30,9 @@
  * +-----------------------------------------------------------------------------+
  * \*****************************************************************************/
 
+use Modules\Order\Helpers\OrderAnalyticsHelper;
 use Modules\Order\Models\OrderGroupInvoiceProductModel;
+use Modules\Order\Models\OrderModel;
 use Modules\Order\Models\OrderTransactionModel;
 use Xcart\OrderGroupInvoices;
 use Xcart\Manufacturer;
@@ -628,7 +630,7 @@ if ($REQUEST_METHOD == "POST")
                     && $v["cb_status"] == "AP"
                 ) {
                     $bRefundPresent                = false;
-                    $authorized_transactions_info  = func_query("SELECT transaction_id, transaction_amount FROM $sql_tbl[order_transactions] WHERE orderid='$orderid' AND transaction_status IN ('AP','Pending','authorized')");
+                    $authorized_transactions_info  = func_query("SELECT id, transaction_id, transaction_amount FROM $sql_tbl[order_transactions] WHERE orderid='$orderid' AND transaction_status IN ('AP','Pending','authorized')");
                     $authorized_transaction_amount = func_query_first_cell("SELECT SUM(transaction_amount) FROM $sql_tbl[order_transactions] WHERE orderid='$orderid' AND transaction_status IN ('AP','Pending','authorized')");
 
                     $count_shipping_groups = count($order["shipping_groups"]);
@@ -706,7 +708,6 @@ if ($REQUEST_METHOD == "POST")
                                                 'login' => $login,
                                                 'transaction_status' => $result['state'],
                                                 'transaction_response' => serialize($result),
-                                                'parent_transaction_id' => $result['id'],
                                             ]);
                                             $orderTransaction->save();
                                         }
@@ -807,7 +808,7 @@ if ($REQUEST_METHOD == "POST")
                 }
             }
 
-            $make_paypal_void = false;
+            $make_paypal_void = $sendAnalyticsRefund = false;
             foreach ($cart_tmp["shipping_groups"] as $k_cart_tmp => $v_cart_tmp) {
                 if (isset($v_cart_tmp["cb_status"]) && isset($groups[$k_cart_tmp]["cb_status"])
                     && ($groups[$k_cart_tmp]["cb_status"] == "D" || $groups[$k_cart_tmp]["cb_status"] == "A")
@@ -819,6 +820,23 @@ if ($REQUEST_METHOD == "POST")
                     $make_paypal_void = false;
                     break;
                 }
+
+            }
+
+            foreach ($cart_tmp["shipping_groups"] as $k_cart_tmp => $v_cart_tmp) {
+                if (isset($v_cart_tmp["cb_status"]) && isset($groups[$k_cart_tmp]["cb_status"])){
+                    if (in_array($groups[$k_cart_tmp]["cb_status"], ['D', 'A']) && in_array($v_cart_tmp["cb_status"], ['AP', 'Q', 'O'])) {
+                        $sendAnalyticsRefund = true;
+                    } else {
+                        $sendAnalyticsRefund = false;
+                        break;
+                    }
+                }
+            }
+
+            /** @var OrderModel $orderModel */
+            if (($sendAnalyticsRefund) && ($orderModel = OrderModel::objects()->get(['orderid' => $orderid]))) {
+                OrderAnalyticsHelper::sendRefund($orderModel);
             }
 
             if ($make_paypal_void) {
@@ -879,6 +897,9 @@ if ($REQUEST_METHOD == "POST")
                         }
                     }
                 }
+
+
+
             }
 
             if (!empty($order["shipping_groups"]) && is_array($order["shipping_groups"])) {
@@ -1475,7 +1496,7 @@ if ($REQUEST_METHOD == "POST")
             $attach_pdf_invoice = "Y";
             $mail_smarty->assign("attach_pdf_invoice", $attach_pdf_invoice);
 
-            $signature       = func_get_signature(false, $order['products']);
+            $signature       = func_get_signature(false, $order['products'], $order_data["order"]);
             $po_instructions = str_replace("{{signature}}", $signature, $po_instructions);
 
             $firstname       = trim($order['userinfo']['firstname']);

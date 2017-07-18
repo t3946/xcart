@@ -5,6 +5,7 @@ namespace Modules\Amazon\ClientPack;
 
 use CaponicaAmazonMwsComplete\ClientPack\CaponicaClientPack;
 use CaponicaAmazonMwsComplete\ClientPack\MwsProductClientPack;
+use CaponicaAmazonMwsComplete\ClientPool\MwsClientPoolConfig;
 use CaponicaAmazonMwsComplete\Domain\Throttle\ThrottledRequestLogCollection;
 use CaponicaAmazonMwsComplete\Domain\Throttle\ThrottledRequestManager;
 
@@ -14,6 +15,17 @@ class MwsProductClientPackExt extends MwsProductClientPack
     const METHOD_GET_MY_PRICE_FOR_SKU   = 'getMyPriceForSKU';
 
     private $throttleManager;
+
+    public function __construct(MwsClientPoolConfig $poolConfig) {
+        $this->marketplaceId    = $poolConfig->getMarketplaceId();
+        $this->sellerId         = $poolConfig->getSellerId();
+
+        $this->initThrottleManager();
+
+        parent::__construct(
+            $poolConfig
+        );
+    }
 
     public function callGetCompetitivePricingForSKU($skuList)
     {

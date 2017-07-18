@@ -1065,6 +1065,7 @@ if ($tab == "unreconciled" || $tab == "reconciled" || $tab == "dropped" || $tab 
 
 	                $unreconciled_order_search_condition = "$sql_tbl[orders].date>='".($search_data["reconciliation_tab_".$tab]["date"]["start_date"])."'";
         	        $unreconciled_order_search_condition .= " AND $sql_tbl[orders].date<='".($search_data["reconciliation_tab_".$tab]["date"]["end_date"])."'";
+        	        $unreconciled_order_search_condition .= " AND $sql_tbl[orders].amazon_fulfillment_channel != 'AFN' ";
 
 	                $unreconciled_orders = func_query("SELECT $sql_tbl[order_groups].orderid, $sql_tbl[order_groups].manufacturerid, $sql_tbl[orders].date, $sql_tbl[order_groups].manufacturerid, $sql_tbl[orders].order_prefix FROM $sql_tbl[order_groups] LEFT JOIN $sql_tbl[orders] ON $sql_tbl[orders].orderid=$sql_tbl[order_groups].orderid WHERE $unreconciled_order_search_condition $tmp_manufacturers_search_condition AND $sql_tbl[order_groups].cb_status IN ('O','P','3','H') ORDER BY $sql_tbl[order_groups].orderid desc");
 

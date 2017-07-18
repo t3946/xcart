@@ -70,6 +70,7 @@ class ComposerStaticInited1e2f7cb4425e4bdc0264910bb94e92
         'T' => 
         array (
             'TrueBV\\' => 7,
+            'TheIconic\\Tracking\\GoogleAnalytics\\' => 35,
         ),
         'S' => 
         array (
@@ -79,6 +80,7 @@ class ComposerStaticInited1e2f7cb4425e4bdc0264910bb94e92
             'Symfony\\Component\\Validator\\' => 28,
             'Symfony\\Component\\Translation\\' => 30,
             'Symfony\\Component\\HttpFoundation\\' => 33,
+            'Symfony\\Component\\Finder\\' => 25,
             'Symfony\\Component\\EventDispatcher\\' => 34,
         ),
         'R' => 
@@ -153,6 +155,10 @@ class ComposerStaticInited1e2f7cb4425e4bdc0264910bb94e92
         array (
             0 => __DIR__ . '/..' . '/true/punycode/src',
         ),
+        'TheIconic\\Tracking\\GoogleAnalytics\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/theiconic/php-ga-measurement-protocol/src',
+        ),
         'Symfony\\Polyfill\\Php55\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-php55',
@@ -177,6 +183,10 @@ class ComposerStaticInited1e2f7cb4425e4bdc0264910bb94e92
         array (
             0 => __DIR__ . '/..' . '/symfony/http-foundation',
         ),
+        'Symfony\\Component\\Finder\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/finder',
+        ),
         'Symfony\\Component\\EventDispatcher\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/event-dispatcher',
@@ -199,7 +209,8 @@ class ComposerStaticInited1e2f7cb4425e4bdc0264910bb94e92
         ),
         'Omnipay\\PayPal\\' => 
         array (
-            0 => __DIR__ . '/..' . '/omnipay/paypal/src',
+            0 => __DIR__ . '/../../..' . '/app/Modules/Payment/Gateways/Omnipay/PayPal',
+            1 => __DIR__ . '/..' . '/omnipay/paypal/src',
         ),
         'Omnipay\\BluePay\\' => 
         array (

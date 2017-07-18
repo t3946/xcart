@@ -183,7 +183,7 @@ function func_load_ajax_carousel_products(section_name)
 
             var ga_page_name = '{/literal}{$ga_page_name}{literal}';
 
-            if (obj) {
+            if (obj !== undefined) {
                 $.each(obj.items, function () {
                     if (this.clean_url != '') {
                         a_href = this.clean_url;

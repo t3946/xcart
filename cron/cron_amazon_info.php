@@ -62,7 +62,7 @@ if (isset($argv) && is_array($argv) && !empty($argv[1])) {
                 $counter_send += count($aProductsBatch);
 
                 $aSKUs = array_map(function($a) {return $a->productcode;}, $aProductsBatch);
-                $log_text = 'ERROR in competitive_pricing cron for SKU\'s: ' . implode(', ', $aSKUs) . "\n";
+                $log_text = 'ERROR in getCompetitivePricingForSKU competitive_pricing cron for SKU\'s: ' . implode(', ', $aSKUs) . "\n";
 
                 try {
                     $counter_dropped = $aSKUs;
@@ -87,7 +87,7 @@ if (isset($argv) && is_array($argv) && !empty($argv[1])) {
                     func_backprocess_log(Xcart\AmazonMWS::BACK_PROCESS_LOG_NAME_ORDER_INFO, "Skipped SKU's in CompetitivePricing: ".implode(', ', $counter_dropped));
                 }
 
-
+                $log_text = 'ERROR in getMyPriceForSKU competitive_pricing cron for SKU\'s: ' . implode(', ', $aSKUs) . "\n";
                 try {
                     $counter_dropped = $aSKUs;
                     $myPricing = $client->callGetMyPriceForSKU($aSKUs);

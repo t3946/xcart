@@ -6,19 +6,19 @@ use ErrorException;
 use Exception;
 use Xcart\App\Application\Application;
 use Xcart\App\Cli\Cli;
-use Xcart\App\Exception\CompileErrorException;
-use Xcart\App\Exception\CoreErrorException;
-use Xcart\App\Exception\CoreWarningException;
-use Xcart\App\Exception\DeprecatedException;
-use Xcart\App\Exception\NoticeException;
-use Xcart\App\Exception\ParseException;
-use Xcart\App\Exception\RecoverableErrorException;
-use Xcart\App\Exception\StrictException;
-use Xcart\App\Exception\UserDeprecatedException;
-use Xcart\App\Exception\UserErrorException;
-use Xcart\App\Exception\UserNoticeException;
-use Xcart\App\Exception\UserWarningException;
-use Xcart\App\Exception\WarningException;
+use Xcart\App\Exceptions\CompileErrorException;
+use Xcart\App\Exceptions\CoreErrorException;
+use Xcart\App\Exceptions\CoreWarningException;
+use Xcart\App\Exceptions\DeprecatedException;
+use Xcart\App\Exceptions\NoticeException;
+use Xcart\App\Exceptions\ParseException;
+use Xcart\App\Exceptions\RecoverableErrorException;
+use Xcart\App\Exceptions\StrictException;
+use Xcart\App\Exceptions\UserDeprecatedException;
+use Xcart\App\Exceptions\UserErrorException;
+use Xcart\App\Exceptions\UserNoticeException;
+use Xcart\App\Exceptions\UserWarningException;
+use Xcart\App\Exceptions\WarningException;
 use Xcart\App\Exceptions\HttpException;
 use Xcart\App\Helpers\Console;
 use Xcart\App\Helpers\SmartProperties;
@@ -161,7 +161,7 @@ class ErrorHandler
                 unset($trace[$i]['object']);
             }
 
-            $code = ($exception instanceof HttpException) ? $exception->statusCode : 500;
+            $code = ($exception instanceof HttpException) ? $exception->status : 500;
 
             $this->_exception = $exception;
 
@@ -583,8 +583,14 @@ class ErrorHandler
     protected function renderSourceCode($file, $errorLine, $maxLines)
     {
         $errorLine--; // adjust line number to 0-based from 1-based
-        if ($errorLine < 0 || ($lines = @file($file)) === false || ($lineCount = count($lines)) <= $errorLine)
+        $lines = false;
+
+        if ($errorLine < 0
+            || (file_exists($file) && ($lines = @file($file)) === false)
+            || ($lineCount = count($lines)) <= $errorLine
+        ){
             return '';
+        }
 
         $halfLines = (int)($maxLines / 2);
         $beginLine = $errorLine - $halfLines > 0 ? $errorLine - $halfLines : 0;

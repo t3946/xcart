@@ -170,26 +170,24 @@ JSON;
 
     public function getQuerySimilarProductsBrands ($sExcludeBrand = '') {
         $Similar_products_other_brands =
-                [
-                    'filtered' => [
-                        'query' => [
-                            'more_like_this' => [
-                                'fields' => ['productname', 'description'],
-                                'analyzer' => 'snowball',
-                                'docs' => [[
-                                               '_index' => $this->index,
-                                               '_type' => $this->type,
-                                               '_id' => $this->_id
-                                           ]],
-                                "min_doc_freq"=> 7,
-                                "min_term_freq" => 1,
-                                "min_word_length"=> 2,
-//                                'max_query_terms' => 240,
-                            ]
-                        ],
+            [
+                'filtered' => [
+                    'query' => [
+                        'more_like_this' => [
+                            'fields' => ['productname'],
+                            'analyzer' => 'snowball',
+                            'docs' => [[
+                                           '_index' => $this->index,
+                                           '_type' => $this->type,
+                                           '_id' => $this->_id
+                                       ]],
+                            'min_term_freq' => 1,
+                            'max_query_terms' => 240
+                        ]
+                    ],
 
-                    ]
-                ];
+                ]
+            ];
         if (!empty($sExcludeBrand)) {
             $Similar_products_other_brands['filtered']['filter'] = [
                 'bool' => [

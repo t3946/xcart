@@ -923,7 +923,7 @@ class OrderGroup extends Data
                     setAccountingGrossShipping($this->getOrderGroupInvoices()->getOrderGroupInvoicesShippingTotal())->
                     setAccountingHSTCostToUs($this->getOrderGroupInvoices()->getOrderGroupInvoicesHST());
                 }
-                $this->setAccountingGrossRefundToUs(abs($fRefund + $fPrincipalRefund) + abs($fShippingRefund));
+                $this->setAccountingGrossRefundToUs(abs($fRefund + $fPrincipalRefund));
                 if ($this->getOrderGroupMemos()->countOrderGroupMemos() > 0) {
                     $this->addAccountingHSTRefundToUs($this->getOrderGroupMemos()->getOrderGroupMemoRefToUsHST())->
                     addAccountingGrossRefundToUs($this->getOrderGroupMemos()->getOrderGroupMemoRefToUsTotal());
@@ -939,7 +939,7 @@ class OrderGroup extends Data
                         $ShippingFee)->initAccountingGrossCostToUs()
                     ->setAccountingGrossShipping($fShipping + abs($FBATransportationFee));
                 if ($this->getOrderAmazonDetails()->isRefundExists()) {
-                    $this->setAccountingGrossRefundToUs($this->getAccountingGrossCostToUs() + abs($fRefund + $fPrincipalRefund) + abs($fShippingRefund));
+                    $this->setAccountingGrossRefundToUs($this->getAccountingGrossCostToUs() + abs($fRefund + $fPrincipalRefund));
                 }
                 else {
                     $this->addAccountingGrossRefundToUs(abs($fRefund));

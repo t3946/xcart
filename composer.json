@@ -25,7 +25,8 @@
         "omnipay/paypal": "v2.6.3",
         "league/flysystem": "^1.0",
         "symfony/http-foundation": "^2.8",
-        "monolog/monolog": "^1.22"
+        "monolog/monolog": "^1.22",
+        "theiconic/php-ga-measurement-protocol": "^1.2"
     },
     "autoload": {
         "psr-4": {
@@ -33,7 +34,8 @@
             "Modules\\": "app/Modules",
             "Xcart\\External_Product_Verification\\": "modules/External_Product_Verification/include",
             "Xcart\\External_Marketplaces\\": "modules/External_Marketplaces/include",
-            "Omnipay\\BluePay\\" : "app/Modules/Payment/Gateways/Omnipay/BluePay"
+            "Omnipay\\BluePay\\" : "app/Modules/Payment/Gateways/Omnipay/BluePay",
+            "Omnipay\\PayPal\\" : "app/Modules/Payment/Gateways/Omnipay/PayPal"
         },
         "classmap": [
             "include/libs/caponica/amazon-mws-complete/src/AmazonPhpClientLibrary/FBAOutboundServiceMWS",

@@ -34,6 +34,8 @@
 # $Id: auth.php,v 1.30.2.4 2006/11/01 12:37:40 twice Exp $
 #
 
+use Modules\Core\Helpers\GeoipHelper;
+
 define('AREA_TYPE', 'C');
 
 @include_once "./top.inc.php";
@@ -445,15 +447,15 @@ if (!empty($config["Appearance"]["Google_Trusted_Store_ID"])){
 		$GTS_badge_code = str_replace('gts.push(["google_base_offer_id", ""]);', "", $GTS_badge_code);
 
 		$smarty->assign("GTS_badge_code", $GTS_badge_code);
-//	}
 }
-###
-##
-#
 
-$geo_litecity_location = func_get_geoip_locations($CLIENT_IP, $geo_litecity_location_debug);
-if (!empty($geo_litecity_location)) {
-	$smarty->assign('geo_litecity_location', $geo_litecity_location);
+if ($geoipModel = GeoipHelper::getGeoipLocation($CLIENT_IP)) {
+    $smarty->assign('geo_litecity_location',
+        array_merge(
+            $geoipModel->getAttributes(),
+            ['phone' => $geoipModel->state_model->phone]
+        )
+    );
 }
 
 func_detect_working_hours();

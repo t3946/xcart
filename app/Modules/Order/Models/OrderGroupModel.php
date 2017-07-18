@@ -50,7 +50,18 @@ class OrderGroupModel extends AutoMetaModel
                 'modelClass' => ShippingModel::className(),
                 'null' => false,
             ],
-
+            'status_cb' => [
+                'field' => 'cb_status',
+                'class' => ForeignField::className(),
+                'modelClass' => OrderStatusModel::className(),
+                'null' => false,
+            ],
+            'status_dc' => [
+                'field' => 'cb_status',
+                'class' => ForeignField::className(),
+                'modelClass' => OrderStatusModel::className(),
+                'null' => false,
+            ],
             'invoices' => [
                 'class' => HasManyField::className(),
                 'modelClass' => OrderGroupInvoiceModel::className(),
