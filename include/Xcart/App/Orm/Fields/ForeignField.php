@@ -46,7 +46,7 @@ class ForeignField extends RelatedField
     public function getJoin(QueryBuilder $qb, $topAlias)
     {
         $on = [];
-        $alias = $qb->makeAliasKey($this->getRelatedModel()->tableName());
+        $alias = $qb->makeMappedAliasKey($this->getRelatedModel()->tableName(), $this->getPrefixMappedKey(), $topAlias);
 
         if ($this->link) {
             foreach ($this->link as $from => $to) {
@@ -99,7 +99,10 @@ class ForeignField extends RelatedField
             }
         }
 
-        return $this->getManager()->get(array_merge($filter, $this->extra));
+        $result = $this->getManager()->cache($this->getModel()->getCache())->get(array_merge($filter, $this->extra));
+        $this->getModel()->noCache();
+
+        return $result;
     }
 
     public function toArray()
@@ -170,7 +173,7 @@ class ForeignField extends RelatedField
     }
 
     /**
-     * @return ManagerInterface
+     * @return \Xcart\App\Orm\Manager|\Xcart\App\Orm\QuerySet
      */
     public function getManager()
     {
