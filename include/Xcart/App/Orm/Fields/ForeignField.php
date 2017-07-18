@@ -46,7 +46,7 @@ class ForeignField extends RelatedField
     public function getJoin(QueryBuilder $qb, $topAlias)
     {
         $on = [];
-        $alias = $qb->makeAliasKey($this->getRelatedModel()->tableName());
+        $alias = $qb->makeMappedAliasKey($this->getRelatedModel()->tableName(), $this->getPrefixMappedKey(), $topAlias);
 
         if ($this->link) {
             foreach ($this->link as $from => $to) {

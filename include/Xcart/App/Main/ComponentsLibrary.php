@@ -1,7 +1,6 @@
 <?php
 namespace Xcart\App\Main;
 
-
 use Xcart\App\Exceptions\UnknownPropertyException;
 use Xcart\App\Helpers\Creator;
 use Xcart\App\Helpers\SmartProperties;
@@ -21,19 +20,19 @@ trait ComponentsLibrary
 
     public function getComponent($name)
     {
-        if (!isset($this->_components[$name])) {
-            if (isset($this->_componentsConfig[$name])
-                || isset($this->_componentsAppendedConfig[$name]))
+        if ($this->hasComponent($name))
+        {
+            if (!isset($this->_components[$name]))
             {
                 if (isset($this->_componentsConfig[$name])) {
                     $this->_components[$name] = Creator::create($this->_componentsConfig[$name]);
                 }
-                else {
+                else if (isset($this->_componentsAppendedConfig[$name])) {
                     $this->_components[$name] = Creator::create($this->_componentsAppendedConfig[$name]);
                 }
-            }
-            else {
-                throw new UnknownPropertyException("Component with name " . $name . " not found");
+                else {
+                    throw new UnknownPropertyException("Component with name " . $name . " not found");
+                }
             }
         }
 
@@ -52,14 +51,17 @@ trait ComponentsLibrary
 
     public function hasComponent($name)
     {
-        return isset($this->_componentsConfig[$name]) || isset($this->_components[$name]) || isset($this->_componentsAppendedConfig);
+        return isset($this->_components[$name])
+               || isset($this->_componentsConfig[$name])
+               || isset($this->_componentsAppendedConfig[$name]);
     }
 
     public function __get($name)
     {
         if ($this->hasComponent($name)) {
             return $this->getComponent($name);
-        } else {
+        }
+        else {
             return $this->__smartGet($name);
         }
     }
