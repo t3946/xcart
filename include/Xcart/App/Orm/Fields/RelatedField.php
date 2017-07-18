@@ -42,6 +42,11 @@ abstract class RelatedField extends IntField
         return Type::getType($this->sqlType);
     }
 
+    public function getPrefixMappedKey()
+    {
+        return static::getClassAbbr();
+    }
+
     abstract public function getJoin(QueryBuilder $qb, $topAlias);
     
     abstract public function getSelectJoin(QueryBuilder $qb, $topAlias);
