@@ -21,6 +21,7 @@ var google_conversion_format = "3";
 var google_conversion_color = "ffffff";
 var google_conversion_label = "9T_YCJXjmXMQ_sKu_wM";
 var google_conversion_value = {/literal}{$orders[0].order.total}{literal};
+var google_conversion_order_id = {/literal}{$orders[0].order.orderid}{literal};
 var google_conversion_currency = "USD";
 var google_remarketing_only = false;
 {/literal}
