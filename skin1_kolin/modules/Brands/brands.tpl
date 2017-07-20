@@ -41,7 +41,7 @@ var requiredFields = [
 
 {capture name=dialog}
 
-<table>
+<table width="100%">
     <tr>
         <td>{$lng.lbl_alphabetic}:</td>
         <td>
@@ -58,9 +58,12 @@ var requiredFields = [
                 {/if}
             {/foreach}
         </td>
+        <td align="right">
+            <a target="_blank" href="{$xcartApp->router->url('brand:brand_list')}">Group brands</a>
+        </td>
     </tr>
 </table>
- 
+
 <br />
 
 {include file="customer/main/navigation.tpl"}
@@ -405,9 +408,3 @@ checkboxes = new Array({foreach from=$brands item=v key=k}{if $k > 0},{/if}'{if 
 *}
 
 {/if}
-
-<script type="text/javascript">
-    $( document ).ready(function() {ldelim}
-        document.title = "{$brand.brand}: (Brand) " + document.title;
-    {rdelim});
-</script>

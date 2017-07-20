@@ -7,6 +7,11 @@ return [
         'name' => 'brand_list'
     ],
     [
+        'route' => '/list/{slug:slug}',
+        'target' => ['\Modules\Brand\Controllers\BrandController', 'brand_list'],
+        'name' => 'brand_list_letter'
+    ],
+    [
         'route' => '/group/{i:id}',
         'target' => ['\Modules\Brand\Controllers\BrandController', 'brand_group'],
         'name' => 'brand_group'

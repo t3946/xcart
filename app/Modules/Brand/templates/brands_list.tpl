@@ -1,6 +1,7 @@
 {extends 'base/admin.tpl'}
 
 {block 'content'}
+
     {smarty_admin_block name='Brands search'}
         <form action="{url 'brand:brand_list'}" method="get" name="search_brand">
             <table width="100%" cellspacing="1" cellpadding="3">
@@ -17,6 +18,11 @@
     {/smarty_admin_block}
 
     {smarty_admin_block name='Brands list'}
+        <div class="row">
+            <div class="columns large-12">
+                {include 'base/char_navigation.tpl' url='brand:brand_list' selected=$letter}
+            </div>
+        </div>
         <div class="row">
             <div class="columns large-12">
                 {raw $pager}

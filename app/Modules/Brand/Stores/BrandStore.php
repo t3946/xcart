@@ -3,6 +3,7 @@
 namespace Modules\Brand\Stores;
 
 
+use Mindy\QueryBuilder\Expression;
 use Mindy\QueryBuilder\Q\QAnd;
 use Mindy\QueryBuilder\Q\QOr;
 use Modules\Brand\Models\BrandModel;
@@ -53,6 +54,10 @@ class BrandStore extends BaseStore
                     'b2.brand__contains' => $data['search']
                 ]
             ));
+        }
+
+        if (!empty($data['letter'])) {
+            $data['letter'] != '0-9' ? $filter['brand__startswith'] = $data['letter'] : $filter['brand__raw'] = "REGEXP '^[0-9]'";
         }
 
         $qs->filter($filter);

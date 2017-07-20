@@ -41,8 +41,8 @@ class BrandController extends PrototypeAdminController
 
                 $mgr->update(['parent_brand_id' => $id]);
 
-                foreach ($br = $mgr->all() as $brand){
-                    if ($b_products = $brand->products){
+                foreach ($br = $mgr->all() as $brand) {
+                    if ($b_products = $brand->products) {
                         foreach ($b_products as $product) {
                             $product->brandid = $id;
                             $product->save();
@@ -66,16 +66,20 @@ class BrandController extends PrototypeAdminController
         );
     }
 
-    public function brand_list()
+    public function brand_list($slug = null)
     {
-        $brandStore = new BrandStore($_GET);
+        $letter = ['letter' => $slug];
+
+        $brandStore = new BrandStore(array_merge($_GET, $letter));
 
         echo $this->renderInternal('brands_list.tpl',
-            [
-                'brands' => $brandStore->getModels(),
-                'pager' => $brandStore->getPager(),
-                'search' => $_GET['search']
-            ]
+            array_merge(
+                [
+                    'brands' => $brandStore->getModels(),
+                    'pager' => $brandStore->getPager(),
+                    'search' => $_GET['search'],
+                ],
+                $letter)
         );
     }
 
