@@ -12,7 +12,7 @@ const autoprefixer = require('gulp-autoprefixer');
 const babel = require('gulp-babel');
 const browserify = require('gulp-browserify');
 // const inlineimage = require('gulp-inline-image');
-const modernizr = require('modernizr');
+// const modernizr = require('modernizr');
 
 let frontend = require('./config/gulp.frontend');
 let backend = require('./config/gulp.backend');

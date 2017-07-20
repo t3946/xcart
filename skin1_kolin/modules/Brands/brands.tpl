@@ -408,7 +408,6 @@ checkboxes = new Array({foreach from=$brands item=v key=k}{if $k > 0},{/if}'{if 
 
 <script type="text/javascript">
     $( document ).ready(function() {ldelim}
-        var curTitle = document.title;
-        document.title = "{$brand.brand}: (Brand) " + curTitle;
-        {rdelim});
+        document.title = "{$brand.brand}: (Brand) " + document.title;
+    {rdelim});
 </script>

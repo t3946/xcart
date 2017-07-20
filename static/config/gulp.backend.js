@@ -97,6 +97,14 @@ module.exports = {
             //     'bower_components/mmodal/scss/jquery.mmodal.scss'
             // ]
         },
+        mouse_wheel: {
+            js: [
+                'bower_components/jquery-mousewheel/jquery.mousewheel.js'
+            ]
+            // scss: [
+            //     'bower_components/mmodal/scss/jquery.mmodal.scss'
+            // ]
+        },
 
         select2: {
             js: [

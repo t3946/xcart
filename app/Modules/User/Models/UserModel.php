@@ -80,4 +80,9 @@ class UserModel extends AutoMetaModel
 
         return false;
     }
+
+    public function getAdminUrl()
+    {
+        return "/admin/user_modify.php?user={$this->login}&usertype={$this->usertype}";
+    }
 }

@@ -956,11 +956,11 @@ class QueryBuilder
      * @param bool $increment
      * @return string
      */
-    public function makeAliasKey($table, $increment = true)
+    public function makeAliasKey($table, $increment = false)
     {
-//        if ($increment) {
-//            $this->_aliasesCount += 1;
-//        }
+        if ($increment) {
+            $this->_aliasesCount += 1;
+        }
         return strtr('{table}_{count}', [
             '{table}' => $this->getAdapter()->getRawTableName($table),
             '{count}' => $this->_aliasesCount + 1

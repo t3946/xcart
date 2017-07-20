@@ -11,4 +11,5 @@ return [
     'Amazon',
     'Order',
     'Reports',
+    'Brand',
 ];
