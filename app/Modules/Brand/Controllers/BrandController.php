@@ -7,6 +7,7 @@ use Modules\Brand\BrandModule;
 use Modules\Brand\Helpers\BrandHelper;
 use Modules\Brand\Models\BrandModel;
 use Modules\Brand\Stores\BrandStore;
+use Modules\Core\Models\HistoryDataModel;
 use Xcart\App\Controller\PrototypeAdminController;
 use Xcart\External_Marketplaces\DisabledMarketPlace;
 use Xcart\App\Orm\Model;
@@ -34,9 +35,21 @@ class BrandController extends PrototypeAdminController
         $model = BrandModel::objects()->get(['brandid' => $id]);
         if ($model) {
             if (!empty($_POST['brand_group'][$id])) {
-                BrandModel::objects()
-                    ->filter(['brandid__in' => $_POST['brand_group'][$id]])
-                    ->update(['parent_brand_id' => $id]);
+
+                $mgr = BrandModel::objects()
+                    ->filter(['brandid__in' => $_POST['brand_group'][$id]]);
+
+                $mgr->update(['parent_brand_id' => $id]);
+
+                foreach ($br = $mgr->all() as $brand){
+                    if ($b_products = $brand->products){
+                        foreach ($b_products as $product) {
+                            $product->brandid = $id;
+                            $product->save();
+                        }
+                    }
+                }
+
                 $this->jsonResponse(true);
                 return;
             }

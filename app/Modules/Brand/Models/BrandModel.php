@@ -3,6 +3,7 @@
 namespace Modules\Brand\Models;
 
 use Modules\Brand\BrandModule;
+use Modules\Product\Models\ProductModel;
 use Modules\Sites\Models\SiteModel;
 use Modules\User\Models\UserModel;
 use Xcart\App\Main\Xcart;
@@ -105,6 +106,11 @@ class BrandModel extends AutoMetaModel
                 'class' => HasManyField::className(),
                 'modelClass' => BrandModel::className(),
                 'link' => ['parent_brand_id' => 'brandid']
+            ],
+            'products' => [
+                'class' => HasManyField::className(),
+                'modelClass' => ProductModel::className(),
+                'link' => ['brandid' => 'brandid']
             ],
             'parent' => [
                 'field' => 'parent_brand_id',
