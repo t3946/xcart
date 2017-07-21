@@ -51,7 +51,7 @@ if (!empty($cidev_storefronts) && is_array($cidev_storefronts)){
             $config['XML_Sitemap']['items'][2]['items_query'] = "SELECT SQL_NO_CACHE CONCAT('%s', $sql_tbl[brands].brandid) as url, $sql_tbl[brands].brandid as id, IFNULL($sql_tbl[xmlmap_lastmod].date, '%s') as date"
                 . " FROM $sql_tbl[brands] LEFT JOIN $sql_tbl[xmlmap_lastmod] ON $sql_tbl[xmlmap_lastmod].id = $sql_tbl[brands].brandid AND $sql_tbl[xmlmap_lastmod].type = 'B'"
                 . " LEFT JOIN $sql_tbl[brands_sf] ON $sql_tbl[brands_sf].brandid = $sql_tbl[brands].brandid"
-                . " WHERE $sql_tbl[brands].avail='Y' AND $sql_tbl[brands_sf].sfid = $storefrontid";
+                . " WHERE $sql_tbl[brands].avail='Y' AND $sql_tbl[brands].parent_brand_id IS NULL  AND $sql_tbl[brands_sf].sfid = $storefrontid";
 
             xmlmap_generate("Y", $storefrontid);
         }

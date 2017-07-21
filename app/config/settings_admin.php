@@ -2,6 +2,8 @@
 $base_config = __DIR__ . DIRECTORY_SEPARATOR .'settings.php';
 $local_config = __DIR__ . DIRECTORY_SEPARATOR .'settings_admin_local.php';
 
+
+
 $config = array_replace_recursive([
     'exit_on_end' => true,
     'components' => [

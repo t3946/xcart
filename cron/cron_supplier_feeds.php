@@ -428,6 +428,9 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
                                         $clean_url = func_clean_url_autogenerate('M', $brandModel->brandid, array('brand' => $brandName));
                                         func_clean_url_add($clean_url, 'M', $brandModel->brandid);
                                     }
+                                    if ($brandModel->parent_brand_id) {
+                                        $brandModel = $brandModel->parent;
+                                    }
                                     $modelProduct->brandid = $brandModel->brandid;
                                 }
                             }
