@@ -19,8 +19,6 @@ class BrandStorefrontModel extends Model
         return [
             'id' => [
                 'class' => AutoField::className(),
-                'primary' => true,
-                'null' => false,
             ],
             'brand' => [
                 'field' => 'brandid',
