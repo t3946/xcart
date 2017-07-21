@@ -12,6 +12,8 @@ class Model extends AbstractModel
 {
 //    use LegacyMethodsTrait;
 
+    private $cache_time = 0;
+
     /**
      * @return string
      */
@@ -57,5 +59,19 @@ class Model extends AbstractModel
     public function __toString()
     {
         return (string)$this->getShortName();
+    }
+
+    public function getCache() {
+        return $this->cache_time;
+    }
+
+    public function cache($life_time = 30) {
+        $this->cache_time = $life_time;
+        return $this;
+    }
+
+    public function noCache() {
+        $this->cache_time = 0;
+        return $this;
     }
 }
