@@ -42,12 +42,7 @@ class BrandController extends PrototypeAdminController
                 $mgr->update(['parent_brand_id' => $id]);
 
                 foreach ($br = $mgr->all() as $brand) {
-                    if ($b_products = $brand->products) {
-                        foreach ($b_products as $product) {
-                            $product->brandid = $id;
-                            $product->save();
-                        }
-                    }
+                    $brand->products->update(['brandid' => $id]);
                 }
 
                 $this->jsonResponse(true);
