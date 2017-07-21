@@ -6,9 +6,18 @@ use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\DateTimeField;
 use Xcart\App\Orm\Fields\IntField;
+use Xcart\App\Traits\DataModelTrait;
+use Xcart\Customer;
 
 class UserModel extends AutoMetaModel
 {
+    use DataModelTrait;
+
+    public static function getDataModelClass()
+    {
+        return Customer::className();
+    }
+
     public static function tableName()
     {
         return 'xcart_customers';
