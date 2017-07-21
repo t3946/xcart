@@ -65,63 +65,6 @@ if ($REQUEST_METHOD == "POST" || ($mode == "delete_image" && $brandid)) {
 		);
 
 	} elseif ($mode == "details") {
-	#
-	# Modify brand details
-	#
-
-/*
-            $clean_url = trim(stripslashes($clean_url));
-
-            $current_clean_url = NULL;
-
-            if (!empty($brandid)) {
-
-                $current_clean_url = func_clean_url_get_raw_resource_url('M', $brandid);
-
-            }
-
-            if (
-                $config['SEO']['clean_urls_enabled'] == 'N'
-                || !empty($provider_condition)
-                || (
-                    !empty($brandid)
-                    && !zerolen($current_clean_url)
-                    && $current_clean_url == $clean_url
-                )
-            ) {
-
-                $clean_url_check_result = true;
-
-            } else {
-
-                list(
-                    $clean_url_check_result,
-                    $check_url_error_code
-                ) = func_clean_url_validate($clean_url);
-
-            }
-
-            if ($clean_url_check_result == false) {
-
-                $top_message = array(
-                    'content'               => func_get_langvar_by_name('err_' . strtolower($check_url_error_code)),
-                    'type'                  => 'E',
-                    'clean_url_fill_error'  => true
-                );
-
-                if (empty($brandid)) {
-
-                    func_header_location("brands.php?mode=add");
-
-                } else {
-
-                    func_header_location("brands.php?brandid=" . $brandid);
-
-                }
-
-            }
-
-*/
 
 		$orderby = intval($orderby);
 
@@ -463,20 +406,20 @@ else {
 		$searchValue = addslashes($search);
 		if (empty($where))
 			$sqlPrefix = 'WHERE'; else $sqlPrefix = 'AND';
-		$where.= " $sqlPrefix (b.brand LIKE '%$searchValue%')";
+		$where.= " {$sqlPrefix} (b.brand LIKE '%{$searchValue}%')";
 		$word = 'search=' . $search;
 	}
 
 	if (!empty($active_modules['Multiple_Storefronts']) && $current_area == 'C') {
-		if (empty($where)) {
-			$where = " WHERE $sql_tbl[brands_sf].sfid = $current_storefront";
-	} else {
-			$where .= " AND $sql_tbl[brands_sf].sfid = $current_storefront";
-		}
-		$total_items = func_query_first_cell ("SELECT COUNT(*) FROM $sql_tbl[brands_sf] b $where");
-	} else {
-		$total_items = func_query_first_cell ("SELECT COUNT(*) FROM $sql_tbl[brands] b $where");
-	}
+        if (empty($where)) {
+            $where = " WHERE xcart_brands_sf.sfid = {$current_storefront} AND parent_brand_id ISNULL";
+        } else {
+            $where .= " AND xcart_brands_sf.sfid = {$current_storefront} AND parent_brand_id ISNULL";
+        }
+        $total_items = func_query_first_cell("SELECT COUNT(*) FROM xcart_brands_sf b {$where}");
+    } else {
+        $total_items = func_query_first_cell("SELECT COUNT(*) FROM xcart_brands b {$where}");
+    }
 
 	if ($total_items > 0) {
 
@@ -513,47 +456,35 @@ else {
                 . " ORDER BY b.orderby, b.brand LIMIT $first_page, $objects_per_page");
 		}
 
-		if (is_array($brands)) {
-			$products_in_brands = func_query_hash("SELECT COUNT(*), brandid FROM $sql_tbl[products] GROUP BY brandid", 'brandid', false, true);
-        
-			foreach ($brands as $k=>$v) {
-				//$brands[$k]["products_count"] = func_query_first_cell ("SELECT COUNT(*) FROM $sql_tbl[products] WHERE brandid='$v[brandid]'");
-				if (isset($products_in_brands[$v['brandid']])) {
-					$brands[$k]["products_count"] = $products_in_brands[$v['brandid']];
-				}
-                
-				$brands[$k]["used_by_others"] = func_brand_is_used($v["brandid"], $v["provider"]);
+        if (is_array($brands)) {
+            $products_in_brands = func_query_hash("SELECT COUNT(*), brandid FROM xcart_products GROUP BY brandid", 'brandid', false, true);
 
-#
-##
-###
-                              if (substr($v["provider_name"], 0, 2) == ", "){
-                                      $brands[$k]["provider_name"] = substr_replace($v["provider_name"], '', 0, 2);
-                              }
-###
-##
-#
+            foreach ($brands as $k => $v) {
 
-			}
+            	if (isset($products_in_brands[$v['brandid']])) {
+                    $brands[$k]["products_count"] = $products_in_brands[$v['brandid']];
+                }
 
-			$smarty->assign("navigation_script","brands.php?");
-			$smarty->assign("brands", $brands);
-			$smarty->assign("first_item", $first_page+1);
-			$smarty->assign("last_item", min($first_page+$objects_per_page, $total_items));
+                $brands[$k]["used_by_others"] = func_brand_is_used($v["brandid"], $v["provider"]);
 
-		}
+                if (substr($v["provider_name"], 0, 2) == ", ") {
+                    $brands[$k]["provider_name"] = substr_replace($v["provider_name"], '', 0, 2);
+                }
+            }
 
+            $smarty->assign("navigation_script", "brands.php?");
+            $smarty->assign("brands", $brands);
+            $smarty->assign("first_item", $first_page + 1);
+            $smarty->assign("last_item", min($first_page + $objects_per_page, $total_items));
+
+        }
 	}
 
 	$smarty->assign('words', range('a', 'z'));
-    
 	$smarty->assign('navigation_script', 'brands.php?' . $word);
-
 	$smarty->assign("total_items",$total_items);
 
 }
 
 if (!empty($page))
 	$smarty->assign("page", $page);
-
-?>

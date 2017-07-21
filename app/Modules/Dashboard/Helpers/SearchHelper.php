@@ -1,6 +1,7 @@
 <?php
 namespace Modules\Dashboard\Helpers;
 
+use Modules\Brand\Models\BrandModel;
 use Modules\Dashboard\Sqls\SearchSql;
 use Modules\Dashboard\Stores\OrderSearchStore;
 use Modules\Order\Models\OrderTransactionModel;
@@ -214,6 +215,13 @@ class SearchHelper
         switch ($from) {
             case 'distributor' :
                 $stmt = $connection->executeQuery(SearchSql::getDistributorSql(), ['like' => $like]);
+                break;
+            case 'brand' :
+                $data = BrandModel::objects()
+                    ->select(['id' => 'brandid', 'text' => 'brand'])
+                    ->filter(['brand__contains' => $query, 'parent_brand_id__isnull' => true])
+                    ->asArray()
+                    ->all();
                 break;
             case 'operator' :
                 $stmt = $connection->executeQuery(SearchSql::getOperatorSql(), ['like' => $like]);

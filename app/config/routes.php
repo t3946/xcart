@@ -20,5 +20,10 @@ return [
         'path' => 'Modules.Payment.routes',
         'namespace' => 'payment'
     ],
+    [
+        'route' => '/admin/brand',
+        'path' => 'Modules.Brand.routes_admin',
+        'namespace' => 'brand'
+    ],
 
 ];
