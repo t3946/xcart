@@ -1,6 +1,8 @@
 <?php
 namespace Xcart;
 
+use Modules\Distributor\Models\DistributorModel;
+use Modules\User\Models\UserModel;
 use Xcart\Shipping\ShippingProcessor;
 
 class Shipping extends Data
@@ -109,7 +111,12 @@ class Shipping extends Data
         return Shipping::model()->findAll(SQLBuilder::getInstance()->addCondition("code = '$sCode'"));
     }
 
-    public function getShippingZones(Customer $oCustomer, Manufacturer $oManufacturer)
+    /**
+     * @param Customer|UserModel $oCustomer
+     * @param Manufacturer|DistributorModel $oManufacturer
+     * @return array|null
+     */
+    public function getShippingZones($oCustomer, $oManufacturer)
     {
         if (is_null($this->aShippingZones)) {
             if ($oCustomer->getField("s_country")) {
@@ -143,7 +150,7 @@ SQL;
         $this->aShippingZones = $aShippingZone;
     }
 
-    public function getZoneShippingMethodsByZone(Manufacturer $oManufacturer, $iShippingZone)
+    public function getZoneShippingMethodsByZone($oManufacturer, $iShippingZone)
     {
         if (empty($this->aShippingMethods[$iShippingZone])) {
             $this->aShippingMethods[$iShippingZone] = Shipping::model()->findAll(
@@ -176,7 +183,7 @@ SQL;
      * @param Cart $oCart
      * @return ShippingProcessor[]
      */
-    public function getShippingZonesProcessors(Customer $oCustomer, Manufacturer $oManufacturer, $oCart)
+    public function getShippingZonesProcessors($oCustomer, $oManufacturer, $oCart)
     {
         $aShippingMethods = null;
         $aShippingZones = $this->getShippingZones($oCustomer, $oManufacturer);
@@ -292,14 +299,14 @@ SQL;
     }
 
     /**
-     * @param Customer $oCustomer
-     * @param Manufacturer $oManufacturer
+     * @param Customer|UserModel $oCustomer
+     * @param Manufacturer|DistributorModel $oManufacturer
      * @param Cart $oCart
      * @param bool $bGetOnlyApproximationRates
      * @return ShippingRate[]|null
      * @throws \Exception
      */
-    public function getShippingRates(Customer $oCustomer, Manufacturer $oManufacturer, Cart $oCart, $bGetOnlyApproximationRates = false)
+    public function getShippingRates($oCustomer, $oManufacturer, Cart $oCart, $bGetOnlyApproximationRates = false)
     {
         $aResult = null;
         $aShippingZoneRatesPriority = [];
