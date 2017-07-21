@@ -633,7 +633,9 @@ abstract class Base implements ModelInterface, ArrayAccess, Serializable
     public function setIsNewRecord($value)
     {
         $this->isNewRecord = $value;
-        $this->attributes->resetOldAttributes();
+        if ($value) {
+            $this->attributes->resetOldAttributes();
+        }
     }
 
     /**
