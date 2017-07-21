@@ -22,10 +22,11 @@ class BrandStorefrontModel extends Model
                 'primary' => true,
                 'null' => false,
             ],
-            'brandid' => [
-                'class' => IntField::className(),
-                'null' => false,
-                'default' => 0
+            'brand' => [
+                'field' => 'brandid',
+                'class' => ForeignField::className(),
+                'modelClass' => BrandModel::className(),
+                'link' => ['brandid' => 'brandid'],
             ],
             'products_count' => [
                 'class' => IntField::className(),
