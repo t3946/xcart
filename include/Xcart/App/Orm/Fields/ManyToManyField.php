@@ -396,8 +396,8 @@ class ManyToManyField extends RelatedField
         $on_owner = [];
         $on_related = [];
 
-        $throughAlias = $qb->makeAliasKey($this->getTableName());
-        $alias = $qb->makeAliasKey($this->getRelatedTable());
+        $throughAlias = $qb->makeMappedAliasKey($this->getTableName(), $this->getPrefixMappedKey(), $topAlias);
+        $alias = $qb->makeMappedAliasKey($this->getRelatedTable(), $this->getPrefixMappedKey(), $throughAlias);
 
         $through = call_user_func([$this->through, 'create']);
 

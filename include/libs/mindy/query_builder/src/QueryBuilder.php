@@ -40,6 +40,7 @@ class QueryBuilder
      * @var array|string
      */
     private $_join = [];
+    private $_join_map = [];
     /**
      * @var array|string
      */
@@ -965,6 +966,34 @@ class QueryBuilder
             '{table}' => $this->getAdapter()->getRawTableName($table),
             '{count}' => $this->_aliasesCount + 1
         ]);
+    }
+
+    /**
+     * @param string $table
+     * @param string $code
+     * @param string $topAlias
+     *
+     * @return string
+     */
+    public function makeMappedAliasKey($table, $code, $topAlias = null)
+    {
+        $key = $topAlias . '_' . $code;
+
+        if (empty($this->_joinAlias[$table])) {
+            $this->_joinAlias[$table]['__alias_count__'] = 1;
+        }
+
+
+        if (!empty($this->_joinAlias[$table][$key])) {
+            return $this->_joinAlias[$table][$key];
+        }
+
+        $this->_joinAlias[$table][$key] = strtr('{table}_{count}', [
+            '{table}' => $this->getAdapter()->getRawTableName($table),
+            '{count}' => $this->_joinAlias[$table]['__alias_count__'] += 1
+        ]);
+
+        return $this->_joinAlias[$table][$key];
     }
 
     public function getJoin($tableName)

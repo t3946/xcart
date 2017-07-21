@@ -1,20 +1,6 @@
 <?php
-/**
- *
- *
- * All rights reserved.
- *
- * @author Okulov Anton
- * @email qantus@mail.ru
- * @version 1.0
- * @company HashStudio
- * @site http://hashstudio.ru
- * @date 09/04/16 10:35
- */
-
 namespace Xcart\App\Helpers;
 
-use Xcart\App\Exceptions\UnknownPropertyException;
 
 trait ClassNames
 {
@@ -43,5 +29,18 @@ trait ClassNames
             return $classParts[1];
         }
         return null;
+    }
+
+    public static function getClassAbbr()
+    {
+        $result = '';
+
+        $class = get_called_class();
+        $classParts = explode('\\', $class);
+        foreach ($classParts as $v) {
+            $result .=  $v[0];
+        }
+
+        return $result;
     }
 }

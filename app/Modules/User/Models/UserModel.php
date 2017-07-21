@@ -51,7 +51,7 @@ class UserModel extends AutoMetaModel
                 ]
             ],
         ];
-}
+    }
 
     public function __toString()
     {

@@ -298,6 +298,11 @@
         vertical-align: middle;
     }
 
+    input[placeholder]::-webkit-input-placeholder {color: rgb(191, 191, 191);}
+    input[placeholder]::-moz-placeholder          {color: rgb(191, 191, 191);}/* Firefox 19+ */
+    input[placeholder]:-moz-placeholder           {color: rgb(191, 191, 191);}/* Firefox 18- */
+    input[placeholder]:-ms-input-placeholder      {color: rgb(191, 191, 191);}
+
     .ui-mobile-viewport form[name=cartform] .cidev_checkout_descr,
     .ui-mobile-viewport form[name=checkout_form] .cidev_checkout_descr,
     .ui-mobile-viewport form[name=registerform] .cidev_checkout_descr,

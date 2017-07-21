@@ -114,6 +114,9 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
             $log_text .= "md5file: " . $md5 . " - md5db: " . $supplierFeedModel->last_md5;
             func_backprocess_log("supplier feeds errors", $log_text);
             continue;
+        } else {
+            $log_text = "md5file: " . $md5 . " - md5db: " . $supplierFeedModel->last_md5;
+            func_backprocess_log($log_category, $log_text);
         }
     } else {
         $log_text = "manufacturerid: " . $supplierFeedModel->manufacturerid . ". md5 file is not found. Skipped.";
