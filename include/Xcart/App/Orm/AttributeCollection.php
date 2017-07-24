@@ -66,9 +66,9 @@ class AttributeCollection
      */
     public function setAttribute($name, $value)
     {
-        if (empty($this->oldAttributes[$name])) {
-            $this->oldAttributes[$name] = $this->getAttribute($name);
-        }
+//        if (empty($this->oldAttributes[$name])) {
+//            $this->oldAttributes[$name] = $this->getAttribute($name);
+//        }
 
         $this->attributes[$name] = $value;
     }

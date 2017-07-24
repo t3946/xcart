@@ -77,6 +77,10 @@ class HasManyField extends RelatedField
 
         $on = [];
 
+        if ($alias == $topAlias) {
+            $alias = $qb->makeAliasKey($tableName, true);
+        }
+
         if ($this->link) {
             foreach ($this->link as $from => $to) {
                 $on[$topAlias . '.' . $from] = $alias . '.' . $to;

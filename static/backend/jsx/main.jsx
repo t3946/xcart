@@ -94,8 +94,9 @@
             });
         }
 
-        $('a.mmodal').on('click', function () {
+        $('a.mmodal').on('click', function (e) {
             $(this).mmodal();
+            e.preventDefault();
         });
 
         $('.tabs .tabs-title a').on('click', function (e) {

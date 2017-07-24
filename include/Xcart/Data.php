@@ -296,4 +296,14 @@ class Data extends OrmLegacy
         if (!empty($aResult)) $oSearchResult->fill($aResult);
         return $oSearchResult;
     }
+
+    public function getCache()
+    {
+        return false;
+    }
+
+    public function noCache()
+    {
+        return false;
+    }
 }

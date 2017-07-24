@@ -1606,7 +1606,7 @@ SQL;
      * @return array|null
      * @throws \Exception
      */
-    public function getGetFulfillmentRates(Customer $oCustomer, Cart $oShippingCart, $aShippingRates)
+    public function getGetFulfillmentRates($oCustomer, Cart $oShippingCart, $aShippingRates)
     {
         $aShippingRatesCalc = null;
         $aProductsCart = $oShippingCart->getElements();

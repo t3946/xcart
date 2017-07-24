@@ -219,13 +219,24 @@ abstract class Base implements ModelInterface, ArrayAccess, Serializable
         }
     }
 
-    public function getFromQueryAttribute($name)
-    {
+    public function getNotModelAttribute($name) {
+
         if (isset($this->attributesNotField[$name])) {
             return $this->attributesNotField[$name];
         }
 
         return null;
+    }
+
+    /**
+     * @param $name
+     *
+     * @return mixed
+     * @deprecated use getNotModelAttribute
+     */
+    public function getFromQueryAttribute($name)
+    {
+        return $this->getNotModelAttribute($name);
     }
 
     /**
@@ -268,6 +279,11 @@ abstract class Base implements ModelInterface, ArrayAccess, Serializable
     public function getOldAttributes()
     {
         return $this->attributes->getOldAttributes();
+    }
+
+    public function reflectOldAttributes()
+    {
+        $this->attributes->reflectOldAttributes();
     }
 
     /**
@@ -497,6 +513,7 @@ abstract class Base implements ModelInterface, ArrayAccess, Serializable
         }
 
         $this->afterSave($this, true);
+        $this->attributes->reflectOldAttributes();
     }
 
     protected function beforeUpdateInternal()
@@ -519,6 +536,7 @@ abstract class Base implements ModelInterface, ArrayAccess, Serializable
         }
 
         $this->afterSave($this, false);
+        $this->attributes->reflectOldAttributes();
     }
 
     /**
@@ -575,9 +593,10 @@ abstract class Base implements ModelInterface, ArrayAccess, Serializable
     public static function create(array $attributes = [])
     {
         $className = get_called_class();
-        /** @var ModelInterface $model */
+        /** @var \Xcart\App\Orm\Model $model */
         $model = new $className($attributes);
         $model->setIsNewRecord(false);
+        $model->reflectOldAttributes();
         return $model;
     }
 
@@ -603,10 +622,8 @@ abstract class Base implements ModelInterface, ArrayAccess, Serializable
     public function setIsNewRecord($value)
     {
         $this->isNewRecord = $value;
-        $this->attributes->resetOldAttributes();
-
-        if ($value === false) {
-            $this->attributes->reflectOldAttributes();
+        if ($value) {
+            $this->attributes->resetOldAttributes();
         }
     }
 
