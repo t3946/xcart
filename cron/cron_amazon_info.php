@@ -137,7 +137,7 @@ if (isset($argv) && is_array($argv) && !empty($argv[1])) {
             $client = $amzPool->getFbaInventoryClientPack();
 
             $max_products = 50;
-            $i = 1;
+            /*$i = 1;
             while ($aProductsBatch = ProductModel::objects()
                 ->filter(['forsale' => 'Y', new QOr(['amazon_enabled' => 'Y', 'amazon_fba' => 'Y'])])
                 ->exclude(['missing_products__missing_productcode__isnull' => false])
@@ -169,27 +169,35 @@ if (isset($argv) && is_array($argv) && !empty($argv[1])) {
                 if (!empty($counter_dropped)) {
                     func_backprocess_log(Xcart\AmazonMWS::BACK_PROCESS_LOG_NAME_ORDER_INFO, "Skipped SKU's in ListInventory: ".implode(', ', $counter_dropped));
                 }
-            }
+            }*/
 
             $i = 1;
+            $max_products = 25;
             $groupInventory = [];
             while ($missings = AmazonFbaMissingSkuModel::objects()->paginate($i++, $max_products)->all())
             {
                 $aProductsBatch = [];
                 foreach ($missings as $mis) {
+                    if ($mis->product) {
+                        $aProductsBatch[] = $mis->product;
+                    }
                     $aProductsBatch[] = new ProductModel(['productcode' => $mis->missing_productcode, 'productid' => $mis->productid]);
                 }
+
                 $aSKUs = array_map(function ($a) { return $a->productcode;}, $aProductsBatch);
+
                 try {
                     $inventory = $client->callGetListInventory($aSKUs);
 
                     if ($products = AmazonProductHelper::getListInventory($inventory, $aProductsBatch)) {
                         foreach ($products as $aAmazonFbaProduct) {
-                            if (array_key_exists($aAmazonFbaProduct->getNotModelAttribute('FNSKU'), $groupInventory)) {
-                                $groupInventory[$aAmazonFbaProduct->getNotModelAttribute('FNSKU')]->lis_TotalSupplyQuantity = max($groupInventory[$aAmazonFbaProduct->getNotModelAttribute('FNSKU')]->lis_TotalSupplyQuantity, $aAmazonFbaProduct->lis_TotalSupplyQuantity);
-                                $groupInventory[$aAmazonFbaProduct->getNotModelAttribute('FNSKU')]->lis_InStockSupplyQuantity = max($groupInventory[$aAmazonFbaProduct->getNotModelAttribute('FNSKU')]->lis_InStockSupplyQuantity, $aAmazonFbaProduct->lis_TotalSupplyQuantity);
-                            } else {
-                                $groupInventory[$aAmazonFbaProduct->getNotModelAttribute('FNSKU')] = $aAmazonFbaProduct;
+                            if ($fnsku = $aAmazonFbaProduct->getNotModelAttribute('FNSKU')) {
+                                if (array_key_exists($fnsku, $groupInventory)) {
+                                    $groupInventory[$fnsku]->lis_TotalSupplyQuantity = max($groupInventory[$fnsku]->lis_TotalSupplyQuantity, $aAmazonFbaProduct->lis_TotalSupplyQuantity);
+                                    $groupInventory[$fnsku]->lis_InStockSupplyQuantity = max($groupInventory[$fnsku]->lis_InStockSupplyQuantity, $aAmazonFbaProduct->lis_TotalSupplyQuantity);
+                                } else {
+                                    $groupInventory[$fnsku] = $aAmazonFbaProduct;
+                                }
                             }
                         }
                     }
