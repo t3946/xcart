@@ -3,6 +3,10 @@
 namespace Modules\Amazon\Helpers;
 
 
+use FBAInventoryServiceMWS_Model_InventorySupply;
+use FBAInventoryServiceMWS_Model_InventorySupplyList;
+use FBAInventoryServiceMWS_Model_ListInventorySupplyResponse;
+use FBAInventoryServiceMWS_Model_ListInventorySupplyResult;
 use MarketplaceWebServiceProducts_Model_ASINIdentifier;
 use MarketplaceWebServiceProducts_Model_CompetitivePriceList;
 use MarketplaceWebServiceProducts_Model_CompetitivePriceType;
@@ -155,6 +159,45 @@ class AmazonProductHelper
                             $aResult[] = $oAmazonProductModel;
                         }
                     }
+                }
+            }
+        }
+        return $aResult;
+    }
+
+    public static function getListInventory(FBAInventoryServiceMWS_Model_ListInventorySupplyResponse $cpResult, $aProducts)
+    {
+        /** @var AmazonFbaProductModel[] $aResult */
+        $aResult = [];
+        $iReportDate = mktime(0, 0, 0, date("n"), date("j"), date("Y"));
+        if ($res = $cpResult->getListInventorySupplyResult()->getInventorySupplyList()->getmember()) {
+            /** @var FBAInventoryServiceMWS_Model_InventorySupply $item */
+            foreach ($res as $item) {
+                $totalSupplyQuantity = $item->getTotalSupplyQuantity();
+                $inStockSupplyQuantity = $item->getInStockSupplyQuantity();
+                $sASIN = $item->getASIN();
+                $sSKU = $item->getSellerSKU();
+
+                $aProductModels = array_filter($aProducts, function ($e) use ($sSKU) {
+                    return $e->productcode == $sSKU;
+                });
+
+                if (!empty($aProductModels)) {
+                    $oProductModel = reset($aProductModels);
+                    $params = ['productid' => $oProductModel->productid, 'report_date' => $iReportDate];
+                    $oAmazonProductModel = AmazonHelper::getAmazonFbaProductModel($params);
+                    if (!empty($sASIN)) {
+                        $oAmazonProductModel->ASIN = $sASIN;
+                    }
+                    if (!is_null($totalSupplyQuantity)) {
+                        $oAmazonProductModel->lis_TotalSupplyQuantity = $totalSupplyQuantity;
+                    }
+                    if (!is_null($inStockSupplyQuantity)) {
+                        $oAmazonProductModel->lis_InStockSupplyQuantity = $inStockSupplyQuantity;
+                    }
+                    $oAmazonProductModel->report_date = $iReportDate;
+                    $oAmazonProductModel->productcode = $sSKU;
+                    $aResult[] = $oAmazonProductModel;
                 }
             }
         }
