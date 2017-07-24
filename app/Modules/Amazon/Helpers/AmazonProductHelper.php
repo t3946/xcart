@@ -178,6 +178,7 @@ class AmazonProductHelper
                 $totalSupplyQuantity = $item->getTotalSupplyQuantity();
                 $inStockSupplyQuantity = $item->getInStockSupplyQuantity();
                 $sASIN = $item->getASIN();
+                $sFNSKU = $item->getFNSKU();
                 $sSKU = $item->getSellerSKU();
 
                 $aProductModels = array_filter($aProducts, function ($e) use ($sSKU) {
@@ -190,6 +191,9 @@ class AmazonProductHelper
                     $oAmazonProductModel = AmazonHelper::getAmazonFbaProductModel($params);
                     if (!empty($sASIN)) {
                         $oAmazonProductModel->ASIN = $sASIN;
+                    }
+                    if (!empty($sFNSKU)) {
+                        $oAmazonProductModel->FNSKU = $sFNSKU;
                     }
                     if (!is_null($totalSupplyQuantity)) {
                         $oAmazonProductModel->lis_TotalSupplyQuantity = $totalSupplyQuantity;

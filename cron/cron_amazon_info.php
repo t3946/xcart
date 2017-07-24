@@ -184,11 +184,11 @@ if (isset($argv) && is_array($argv) && !empty($argv[1])) {
 
                     if ($products = AmazonProductHelper::getListInventory($inventory, $aProductsBatch)) {
                         foreach ($products as $aAmazonFbaProduct) {
-                            if (array_key_exists($aAmazonFbaProduct->productid, $groupInventory)) {
-                                $groupInventory[$aAmazonFbaProduct->productid]->lis_TotalSupplyQuantity += $groupInventory[$aAmazonFbaProduct->productid]->lis_TotalSupplyQuantity;
-                                $groupInventory[$aAmazonFbaProduct->productid]->lis_InStockSupplyQuantity += $groupInventory[$aAmazonFbaProduct->productid]->lis_InStockSupplyQuantity;
+                            if (array_key_exists($aAmazonFbaProduct->FNSKU, $groupInventory)) {
+                                $groupInventory[$aAmazonFbaProduct->FNSKU]->lis_TotalSupplyQuantity = max($groupInventory[$aAmazonFbaProduct->FNSKU]->lis_TotalSupplyQuantity, $aAmazonFbaProduct->lis_TotalSupplyQuantity);
+                                $groupInventory[$aAmazonFbaProduct->FNSKU]->lis_InStockSupplyQuantity = max($groupInventory[$aAmazonFbaProduct->FNSKU]->lis_InStockSupplyQuantity, $aAmazonFbaProduct->lis_TotalSupplyQuantity);
                             } else {
-                                $groupInventory[$aAmazonFbaProduct->productid] = $aAmazonFbaProduct;
+                                $groupInventory[$aAmazonFbaProduct->FNSKU] = $aAmazonFbaProduct;
                             }
                         }
                     }
