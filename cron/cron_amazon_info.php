@@ -36,7 +36,7 @@ if (isset($argv) && is_array($argv) && !empty($argv[1])) {
         $oMail->subject = sprintf('Attention! Xcart cron %s Already launched', $log);
         $oMail->body = $log . ' already launched';
         $oMail->sendEmail();
-        //die("Already launched"); // ################################
+        die("Already launched"); // ################################
     }
     db_query_param(/** @lang MySQL */
         "REPLACE xcart_config SET value='Y', name=:name", ['name' => $log]);
