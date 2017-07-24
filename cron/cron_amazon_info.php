@@ -36,7 +36,7 @@ if (isset($argv) && is_array($argv) && !empty($argv[1])) {
         $oMail->subject = sprintf('Attention! Xcart cron %s Already launched', $log);
         $oMail->body = $log . ' already launched';
         $oMail->sendEmail();
-        die("Already launched"); // ################################
+        //die("Already launched"); // ################################
     }
     db_query_param(/** @lang MySQL */
         "REPLACE xcart_config SET value='Y', name=:name", ['name' => $log]);
@@ -138,8 +138,9 @@ if (isset($argv) && is_array($argv) && !empty($argv[1])) {
 
             $max_products = 50;
             $i = 1;
-            while ($aProductsBatch = Product::objects()
+            while ($aProductsBatch = ProductModel::objects()
                 ->filter(['forsale' => 'Y', new QOr(['amazon_enabled' => 'Y', 'amazon_fba' => 'Y'])])
+                ->exclude(['missing_products__missing_productcode__isnull' => false])
                 ->paginate($i++, $max_products)
                 ->all())
             {
@@ -184,11 +185,11 @@ if (isset($argv) && is_array($argv) && !empty($argv[1])) {
 
                     if ($products = AmazonProductHelper::getListInventory($inventory, $aProductsBatch)) {
                         foreach ($products as $aAmazonFbaProduct) {
-                            if (array_key_exists($aAmazonFbaProduct->FNSKU, $groupInventory)) {
-                                $groupInventory[$aAmazonFbaProduct->FNSKU]->lis_TotalSupplyQuantity = max($groupInventory[$aAmazonFbaProduct->FNSKU]->lis_TotalSupplyQuantity, $aAmazonFbaProduct->lis_TotalSupplyQuantity);
-                                $groupInventory[$aAmazonFbaProduct->FNSKU]->lis_InStockSupplyQuantity = max($groupInventory[$aAmazonFbaProduct->FNSKU]->lis_InStockSupplyQuantity, $aAmazonFbaProduct->lis_TotalSupplyQuantity);
+                            if (array_key_exists($aAmazonFbaProduct->getNotModelAttribute('FNSKU'), $groupInventory)) {
+                                $groupInventory[$aAmazonFbaProduct->getNotModelAttribute('FNSKU')]->lis_TotalSupplyQuantity = max($groupInventory[$aAmazonFbaProduct->getNotModelAttribute('FNSKU')]->lis_TotalSupplyQuantity, $aAmazonFbaProduct->lis_TotalSupplyQuantity);
+                                $groupInventory[$aAmazonFbaProduct->getNotModelAttribute('FNSKU')]->lis_InStockSupplyQuantity = max($groupInventory[$aAmazonFbaProduct->getNotModelAttribute('FNSKU')]->lis_InStockSupplyQuantity, $aAmazonFbaProduct->lis_TotalSupplyQuantity);
                             } else {
-                                $groupInventory[$aAmazonFbaProduct->FNSKU] = $aAmazonFbaProduct;
+                                $groupInventory[$aAmazonFbaProduct->getNotModelAttribute('FNSKU')] = $aAmazonFbaProduct;
                             }
                         }
                     }

@@ -193,7 +193,7 @@ class AmazonProductHelper
                         $oAmazonProductModel->ASIN = $sASIN;
                     }
                     if (!empty($sFNSKU)) {
-                        $oAmazonProductModel->FNSKU = $sFNSKU;
+                        $oAmazonProductModel->setAttribute('FNSKU',  $sFNSKU);
                     }
                     if (!is_null($totalSupplyQuantity)) {
                         $oAmazonProductModel->lis_TotalSupplyQuantity = $totalSupplyQuantity;
