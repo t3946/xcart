@@ -13,6 +13,7 @@ class MwsFbaInventoryClient extends FBAInventoryServiceMWS_Client implements Thr
     const PARAM_MERCHANT                    = 'SellerId';
     const PARAM_MARKETPLACE_ID              = 'MarketplaceId';
     const PARAM_SELLER_SKU_IDS              = 'SellerSkus';
+    const PARAM_RESPONSE_GROUP              = 'ResponseGroup';
 
     const METHOD_GET_INVENTORY_SUPPLY       = 'listInventorySupply';
 

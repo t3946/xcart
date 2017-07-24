@@ -170,9 +170,11 @@ class AmazonProductHelper
         /** @var AmazonFbaProductModel[] $aResult */
         $aResult = [];
         $iReportDate = mktime(0, 0, 0, date("n"), date("j"), date("Y"));
+
         if ($res = $cpResult->getListInventorySupplyResult()->getInventorySupplyList()->getmember()) {
             /** @var FBAInventoryServiceMWS_Model_InventorySupply $item */
             foreach ($res as $item) {
+
                 $totalSupplyQuantity = $item->getTotalSupplyQuantity();
                 $inStockSupplyQuantity = $item->getInStockSupplyQuantity();
                 $sASIN = $item->getASIN();
@@ -195,6 +197,7 @@ class AmazonProductHelper
                     if (!is_null($inStockSupplyQuantity)) {
                         $oAmazonProductModel->lis_InStockSupplyQuantity = $inStockSupplyQuantity;
                     }
+
                     $oAmazonProductModel->report_date = $iReportDate;
                     $oAmazonProductModel->productcode = $sSKU;
                     $aResult[] = $oAmazonProductModel;
