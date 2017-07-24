@@ -155,7 +155,7 @@ class BrandController extends PrototypeAdminController
         } else if (array_key_exists('save_create', $_POST)) {
             return ['brand:create_brand', []];
         } else {
-            return ['brand:list', []];
+            return ['brand:brand_list', []];
         }
     }
 }
