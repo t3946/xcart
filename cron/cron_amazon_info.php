@@ -38,7 +38,7 @@ if (isset($argv) && is_array($argv) && !empty($argv[1])) {
         $oMail->subject = sprintf('Attention! Xcart cron %s Already launched', $log);
         $oMail->body = $log . ' already launched';
         $oMail->sendEmail();
-        //die("Already launched"); // ################################
+        die("Already launched"); // ################################
     }
     db_query_param(/** @lang MySQL */
         "REPLACE xcart_config SET value='Y', name=:name", ['name' => $log]);
@@ -139,7 +139,8 @@ if (isset($argv) && is_array($argv) && !empty($argv[1])) {
             $client = $amzPool->getFbaInventoryClientPack();
 
             $max_products = 50;
-            /*$i = 1;
+            $i = 1;
+
             while ($aProductsBatch = ProductModel::objects()
                 ->filter(['forsale' => 'Y', new QOr(['amazon_enabled' => 'Y', 'amazon_fba' => 'Y'])])
                 ->exclude(['missing_products__missing_productcode__isnull' => false])
@@ -171,13 +172,9 @@ if (isset($argv) && is_array($argv) && !empty($argv[1])) {
                 if (!empty($counter_dropped)) {
                     func_backprocess_log(Xcart\AmazonMWS::BACK_PROCESS_LOG_NAME_ORDER_INFO, "Skipped SKU's in ListInventory: ".implode(', ', $counter_dropped));
                 }
-            }*/
+            }
 
-            $max_products = 25;
-
-            $amazonStore = new AmazonInventoryStore(['max_products' => $max_products], $client);
-
-            $amazonStore->groupByProductId();
+            $amazonStore = new AmazonInventoryStore($client);
 
             if (!empty($amazonStore->groupProductsById)) {
                 foreach ($amazonStore->groupProductsById as $amzProduct) {

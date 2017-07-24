@@ -16,16 +16,23 @@ class AmazonInventoryStore extends BaseStore
     public $groupInventory = [];
     public $groupProductsById = [];
 
-    public function __construct($data, $client)
+    public function __construct($client)
     {
         $this->client = $client;
-        $this->populate($data);
+        $this->populate([]);
     }
 
     public function populate(array $data)
     {
+        $this->groupByFNSKU();
+        $this->groupByProductId();
+    }
+
+    public function groupByFNSKU()
+    {
         $i = 1;
-        while ($missings = AmazonFbaMissingSkuModel::objects()->paginate($i++, $data['max_products'])->all())
+        $max_products = 25;
+        while ($missings = AmazonFbaMissingSkuModel::objects()->paginate($i++, $max_products)->all())
         {
             $aProductsBatch = [];
             foreach ($missings as $mis) {
@@ -69,8 +76,6 @@ class AmazonInventoryStore extends BaseStore
 
     public function groupByProductId()
     {
-        $iReportDate = mktime(0, 0, 0, date("n"), date("j"), date("Y"));
-
         if (!empty($this->groupInventory)) {
 
             foreach ($this->groupInventory as $aAmazonFbaProduct){
