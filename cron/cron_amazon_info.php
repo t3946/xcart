@@ -4,7 +4,9 @@ use Mindy\QueryBuilder\Q\QOr;
 use Modules\Amazon\Helpers\AmazonProductHelper;
 use Modules\Amazon\Models\AmazonFbaMissingSkuModel;
 use Modules\Amazon\Models\AmazonFbaProductModel;
+use Modules\Amazon\Stores\AmazonInventoryStore;
 use Modules\Amazon\Stores\AmazonPoolStore;
+use Modules\Amazon\Stores\AmazonStore;
 use Modules\Product\Models\ProductModel;
 use Xcart\Product;
 
@@ -171,57 +173,14 @@ if (isset($argv) && is_array($argv) && !empty($argv[1])) {
                 }
             }*/
 
-            $i = 1;
             $max_products = 25;
-            $groupInventory = [];
-            while ($missings = AmazonFbaMissingSkuModel::objects()->paginate($i++, $max_products)->all())
-            {
-                $aProductsBatch = [];
-                foreach ($missings as $mis) {
-                    if ($mis->product) {
-                        $aProductsBatch[] = $mis->product;
-                    }
-                    $aProductsBatch[] = new ProductModel(['productcode' => $mis->missing_productcode, 'productid' => $mis->productid]);
-                }
 
-                $aSKUs = array_map(function ($a) { return $a->productcode;}, $aProductsBatch);
+            $amazonStore = new AmazonInventoryStore(['max_products' => $max_products], $client);
 
-                try {
-                    $inventory = $client->callGetListInventory($aSKUs);
+            $amazonStore->groupByProductId();
 
-                    if ($products = AmazonProductHelper::getListInventory($inventory, $aProductsBatch)) {
-                        foreach ($products as $aAmazonFbaProduct) {
-                            if ($fnsku = $aAmazonFbaProduct->getNotModelAttribute('FNSKU')) {
-                                if (array_key_exists($fnsku, $groupInventory)) {
-                                    $groupInventory[$fnsku]->lis_TotalSupplyQuantity = max($groupInventory[$fnsku]->lis_TotalSupplyQuantity, $aAmazonFbaProduct->lis_TotalSupplyQuantity);
-                                    $groupInventory[$fnsku]->lis_InStockSupplyQuantity = max($groupInventory[$fnsku]->lis_InStockSupplyQuantity, $aAmazonFbaProduct->lis_TotalSupplyQuantity);
-                                } else {
-                                    $groupInventory[$fnsku] = $aAmazonFbaProduct;
-                                }
-                            }
-                        }
-                    }
-                } catch (\Exception $e) {
-                    $log_text = 'ERROR in getFbaInventory list_inventory cron for SKU\'s: ' . implode(', ', $aSKUs) . "\n";
-                    func_backprocess_log(Xcart\AmazonMWS::BACK_PROCESS_LOG_NAME_ORDER_INFO, $log_text . $e->getMessage());
-                }
-            }
-
-            if (!empty($groupInventory)) {
-
-                $iReportDate = mktime(0, 0, 0, date("n"), date("j"), date("Y"));
-
-                foreach ($groupInventory as $aAmazonFbaProduct){
-                    $params = ['productid' => $aAmazonFbaProduct->productid, 'report_date' => $iReportDate];
-
-                    /** @var AmazonFbaProductModel $amzProduct */
-                    if (!($amzProduct = AmazonFbaProductModel::objects()->get($params))){
-                        $amzProduct = new AmazonFbaProductModel($params);
-                    }
-
-                    $amzProduct->lis_TotalSupplyQuantity += $aAmazonFbaProduct->lis_TotalSupplyQuantity;
-                    $amzProduct->lis_InStockSupplyQuantity += $aAmazonFbaProduct->lis_InStockSupplyQuantity;
-
+            if (!empty($amazonStore->groupProductsById)) {
+                foreach ($amazonStore->groupProductsById as $amzProduct) {
                     if ($amzProduct->save()) {
                         $counter_received['ListInventorySupplyMissing']++;
                     }
