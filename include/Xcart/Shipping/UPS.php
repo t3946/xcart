@@ -120,22 +120,22 @@ class UPS extends ShippingProcessor
                         /*get aproximation rates for UPS Ground*/
                         $oApproximationRates = ApproximationShippingRates::model()->find(
                             SQLBuilder::getInstance()->
-                            addCondition('manufacturerid = ' . $this->getManufacturer()->getManufacturerId())->
+                            addCondition('manufacturerid = ' . $this->getManufacturer()->manufacturerid)->
                             addCondition('last_updated_date >= ' . (time() - self::APPROXIMATION_MAX_VALID_TIME))->
-                            addCondition("state = '{$this->getCustomer()->getShippingStateEntity()->getCode()}'")
+                            addCondition("state = '{$this->getCustomer()->s_state}'")
                         );
-                        if ($oApproximationRates->getField('manufacturerid')) {
+                        if ($oApproximationRates->manufacturerid) {
                             $weight = ceil($oShippingRate->getCartShippingWeight());
                             $shippingCharge = 0;
                             switch ($weight) {
                                 case ($weight > 0 && $weight <= 1):
-                                    $shippingCharge = $oApproximationRates->getField('bw_1');
+                                    $shippingCharge = $oApproximationRates->bw_1;
                                     break;
                                 case ($weight > 1 && $weight <= 75):
-                                    $shippingCharge = $oApproximationRates->getField('bw_1') + ($oApproximationRates->getField('bw_75') - $oApproximationRates->getField('bw_1')) / (75 - 1) * ($weight - 1);
+                                    $shippingCharge = $oApproximationRates->bw_1 + ($oApproximationRates->bw_75 - $oApproximationRates->bw_1) / (75 - 1) * ($weight - 1);
                                     break;
                                 case ($weight > 75):
-                                    $shippingCharge = $oApproximationRates->getField('bw_75') + ($oApproximationRates->getField('bw_150') - $oApproximationRates->getField('bw_75')) / (150 - 75) * ($weight - 75);
+                                    $shippingCharge = $oApproximationRates->bw_75 + ($oApproximationRates->bw_150 - $oApproximationRates->bw_75) / (150 - 75) * ($weight - 75);
                                     break;
                             }
                             $this->aShippingRates[$oShippingRate->getShippingId()] = $oShippingRate->setShippingChargeQuote(round($shippingCharge, 2));

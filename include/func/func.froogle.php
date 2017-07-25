@@ -361,10 +361,11 @@ if ($sExtraLog=='Y')
 	if (!empty($newShipping) && $newShipping == 'Y') {
 		$shippings_str_arr = $shippings_google_arr = $aShippingCarrier = [];
 		$shipping_currency = "USD";
-		$oManufacturer = $distributorModel;
+
 		foreach ($xcart_states_US as $k => $v) {
-			$oCart = new Xcart\Cart();
-			$oCart->addObjectToCart(new \Xcart\CartElement($productModel));
+
+            $oCart = new Xcart\Cart();
+            $oCart->addObjectToCart(new \Xcart\CartElement($productModel));
             $oCustomer = new UserModel(
                 [
                     's_country' => $v["country_code"],
