@@ -55,7 +55,7 @@
                         {foreach from=$model->transaction_response.links item=link key=k_link}
                             {if $link.rel eq "self"}
                             {elseif $link.rel eq "refund"}
-                                {if in_array($user_login, array('sergey2', 'igor', 'roman_n'))}
+                                {if in_array($user_login, array('sergey2', 'igor', 'roman_n', 'dmitry_s'))}
                                     <div data-action="refund_transaction" class="item" style="padding: 10px !important;">Refund transaction</div>
                                 {/if}
                             {elseif $link.rel eq "void"}

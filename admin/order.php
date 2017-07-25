@@ -1580,7 +1580,7 @@ if ($mode == 'ref_notify')
             }
         }
 
-        if ($ref_notify_button_clicked == "Update_C2B_status_and_Send_refund_notification" && in_array($login, ['sergey2', 'igor', 'roman_n'])) {
+        if ($ref_notify_button_clicked == "Update_C2B_status_and_Send_refund_notification" && in_array($login, ['sergey2', 'igor', 'roman_n', 'dmitry_s'])) {
             if ($orderModel = OrderModel::objects()->get(['orderid' => $orderid])) {
                 $error_message = $ref_sum = null;
 
