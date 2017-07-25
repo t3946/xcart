@@ -360,7 +360,7 @@ if (!$fatal) {
 		}
 
 		/** @var OrderTransactionModel $model */
-        $model = OrderTransactionModel::objects()->getOrNew(['orderid' => $check_orderid, 'transaction_id' => $transaction_id]);
+        list($model) = OrderTransactionModel::objects()->getOrNew(['orderid' => $check_orderid, 'transaction_id' => $transaction_id]);
 
         $param =
             [
