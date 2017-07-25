@@ -359,7 +359,10 @@ if (!$fatal) {
 			$transaction_log = serialize($result);
 		}
 
-		$param =
+		/** @var OrderTransactionModel $model */
+        $model = OrderTransactionModel::objects()->getOrNew(['orderid' => $check_orderid, 'transaction_id' => $transaction_id]);
+
+        $param =
             [
                 'orderid' => $check_orderid,
                 'paymentid' => $order_paymentid,
@@ -371,7 +374,8 @@ if (!$fatal) {
                 'transaction_response' => $transaction_log,
             ];
 
-		$model = new OrderTransactionModel($param);
+		$model->setAttributes($param);
+
         $model->save();
 
         $param = array_merge($param,
