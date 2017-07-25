@@ -1364,7 +1364,7 @@ function SubmitGoogleProductsBatch($gproducts, $service, $MerchantID, $debug_mod
                 $postBody["entries"][$k_counter]["product"]["targetCountry"] = "US";
                 $postBody["entries"][$k_counter]["product"]["channel"] = "online";
 
-                $postBody["entries"][$k_counter]["product"]["shippinglabel"] = $product_info["product"]["shipping_label"];
+                $postBody["entries"][$k_counter]["product"]["shippingLabel"] = $product_info["product"]["shipping_label"];
 
 
 				$product_availability = func_product_availability(false,$product_info["product"]);
