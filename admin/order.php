@@ -1731,8 +1731,8 @@ if ($mode == 'ref_notify')
                             $oMail = \Xcart\App\Main\Xcart::app()->mail;
                             $oMail->init();
                             $oMail->to = $config['Company']['orders_department'];
-                            $oMail->from = $userinfo['email'];
-                            $oMail->reply_to = null;
+                            $oMail->from = $config['Company']['orders_department'];
+                            $oMail->reply_to = $userinfo['email'];
                             $oMail->subject_template = 'mail/refund_notification_subj.tpl';
                             $oMail->body_template = 'mail/refund_notification.tpl';
                             $oMail->addHeader(['X-Xcart-Label' => 'order-communication']);
