@@ -86,7 +86,8 @@ class PaymentHelper
         return array_merge(
             [
                 'transactionReference' => $orderTransaction->transaction_id,
-                'status' => $orderTransaction->transaction_status
+                'status' => $orderTransaction->transaction_status,
+                'processor' => $orderTransaction->payment_method_model->processor
             ],
             $amount
         );

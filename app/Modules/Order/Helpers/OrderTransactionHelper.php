@@ -8,6 +8,7 @@ use Modules\Order\Models\OrderTransactionModel;
 use Modules\Payment\Gateways\Gateway;
 use Modules\Payment\Helpers\PaymentHelper;
 use Modules\Payment\Models\PaymentMethodModel;
+use Xcart\App\Main\Xcart;
 
 class OrderTransactionHelper
 {
@@ -21,50 +22,49 @@ class OrderTransactionHelper
      * @param string $mode
      * @return OrderTransactionModel
      */
-    public static function prepareOrderTransaction($model, $gw, $orderModel = null, $pmModel, $params = null, $mode = '')
+    public static function prepareOrderTransaction($gw, $params = null)
     {
-        if ((!$model && $orderModel) || (in_array($mode, ['refund_transaction']) && $model->transaction_status != OrderTransactionModel::STATUS_REFUNDED)) {
-            $model = new OrderTransactionModel(['orderid' => $orderModel->orderid]);
-        }
-        if ($model) {
 
-            $result = $gw->result->getData();
+        $response = null;
 
-            if (!$result['amount']) {
-                $result['amount'] =
-                    [
-                        'total' => $params['amount'],
-                        'currency' => $params['currency']
-                    ];
-            }
+        $result = $gw->result->getData();
 
-            if ($mode == 'add_manual_transaction') {
-                $model->manual_transaction = 'Y';
-            }
-
-            if ($mode == 'refund_transaction') {
-                $result['amount']['total'] = -abs($result['amount']['total']);
-            }
-
-            if (isset($result['capture_id'])) {
-                if ($parent = OrderTransactionModel::objects()->get(['transaction_id' => $result['capture_id']])){
-                    $model->parent_id = $parent->id;
-                }
-            }
-
-            $model->setAttributes(
+        if (!$result['amount']) {
+            $result['amount'] =
                 [
-                    'transaction_id' => $gw->result->getTransactionReference(),
-                    'transaction_status' => ($logStatus = $gw->getState($mode)),
-                    'transaction_currency' => $result['amount']["currency"],
-                    'transaction_amount' => $result['amount']['total'],
-                    'transaction_response' => $result,
-                    'paymentid' => $pmModel->paymentid,
-                    'transaction_fee' => isset($result['transaction_fee']) ? $result['transaction_fee']['value'] : null,
-                ]
-            );
+                    'total' => $params['amount'],
+                    'currency' => $params['currency']
+                ];
         }
-        return $model;
+
+        /*if ($mode == 'add_manual_transaction') {
+            $response['manual_transaction'] = 'Y';
+        }*/
+
+        if ($params['mode'] == 'refund_transaction') {
+            $result['amount']['total'] = -abs($result['amount']['total']);
+        }
+
+        if (isset($result['capture_id'])) {
+            if ($parent = OrderTransactionModel::objects()->get(['transaction_id' => $result['capture_id']])) {
+                $response['parent_id'] = $parent->id;
+            }
+        }
+
+        $response = array_merge($response,
+            [
+                'transaction_id' => $gw->result->getTransactionReference(),
+                'transaction_status' => $gw->getState($params['mode']),
+                'transaction_currency' => $result['amount']["currency"],
+                'transaction_amount' => $result['amount']['total'],
+                'transaction_response' => $result,
+                'login' => Xcart::app()->user->login,
+                'paymentid' => $params['payment-method_model']->paymentid,
+                'transaction_fee' => isset($result['transaction_fee']) ? $result['transaction_fee']['value'] : null,
+            ]
+        );
+
+        return $response;
     }
 
     /**
@@ -72,16 +72,17 @@ class OrderTransactionHelper
      * @param OrderTransactionModel $model
      * @param array $params
      */
-    public static function action($method, $model, $params)
+    public static function action($method, $params)
     {
-        if ($model) {
-            if ($gw = Gateway::getGateway($model->payment_method_model->processor)) {
-                if ($res = $gw->$method($params)) {
-                    $model = OrderTransactionHelper::prepareOrderTransaction($model, $gw, null, $model->payment_method_model, $params);
-                }
+        $model = null;
+
+        if ($gw = Gateway::getGateway($params['processor'])) {
+            if ($res = $gw->$method($params)) {
+                $model = OrderTransactionHelper::prepareOrderTransaction($gw, $params);
             }
         }
-        return $model;
+
+        return [$model, $gw];
     }
 
     public static function getOrderTransactionsGroupsValues(OrderModel $order)
