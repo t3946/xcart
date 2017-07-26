@@ -78,7 +78,11 @@ class OrderTransactionHelper
 
         if ($gw = Gateway::getGateway($params['processor'])) {
             if ($res = $gw->$method($params)) {
-                $model = OrderTransactionHelper::prepareOrderTransaction($gw, $params);
+                if ($result = OrderTransactionHelper::prepareOrderTransaction($gw, $params)){
+                    if ($result['transaction_id'] != $params['']) {
+
+                    }
+                }
             }
         }
 

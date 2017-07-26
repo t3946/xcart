@@ -9,6 +9,7 @@ use Modules\Order\Models\OrderModel;
 use Modules\Order\Models\OrderStatusModel;
 use Modules\Order\Models\OrderTransactionModel;
 use Modules\Order\Models\TransactionLogModel;
+use Modules\Order\OrderModule;
 use Modules\Payment\Gateways\Gateway;
 use Modules\Payment\Helpers\PaymentHelper;
 use Modules\Payment\Models\PaymentMethodModel;
@@ -17,7 +18,7 @@ use Xcart\App\Main\Xcart;
 
 class OrderTransactionsController extends Controller
 {
-    public function transaction_process($order_id, $mode, $transaction_id)
+    public function transaction_process($order_id, $mode, $id)
     {
         $method = $order_log = $result = null;
 
@@ -26,20 +27,20 @@ class OrderTransactionsController extends Controller
 
             extract(Gateway::$gatewayMethods[$mode]);
 
-            if ($transaction_id && $orderTransaction = $orderModel->transactions->get(['transaction_id' => $transaction_id])) {
+            if ($id && $orderTransaction = $orderModel->transactions->get(['id' => $id])) {
 
                 $pmModel = PaymentMethodModel::objects()->get(['payment_method' => $orderTransaction->payment_method_model->processor->processor_name . ' VT']);
 
                 $amount =
                     [
-                        'amount' => number_format(trim($_POST["transaction_amount[{$transaction_id}]"]), 2, '.', ''),
+                        'amount' => number_format(trim($_POST["transaction_amount[{$id}]"]), 2, '.', ''),
                         'currency' => $orderTransaction->transaction_currency
                     ];
 
                 $params = array_merge(PaymentHelper::getPaymentParams($orderTransaction, $amount), ['mode' => $mode, 'payment_method_model' => $orderTransaction->payment_method_model]);
 
                 try {
-                    if ($model = OrderTransactionHelper::action(Gateway::$gatewayMethods['look_up_payment']['method'], $orderTransaction, PaymentHelper::getPaymentParams($orderTransaction))) {
+                    if ($model = OrderTransactionHelper::action(Gateway::$gatewayMethods['look_up_payment']['method'], PaymentHelper::getPaymentParams($orderTransaction))) {
                         $model->save();
                     }
 
@@ -91,6 +92,35 @@ class OrderTransactionsController extends Controller
                     $transactionLog->save();
                 }
             }
+        }
+    }
+
+    public function authorise($order_id)
+    {
+        /** @var OrderModel $model */
+        if (isset($_POST['paypal_vt']) && $order_id && $model = OrderModel::objects()->get(['orderid' => $order_id])) {
+
+            $count = $model->transactions->count();
+
+            if (!($isAllowed = PaymentHelper::isAuthorizeAllowed($model, $count))) {
+                if (!$count && (empty($AJAX_SUBMIT) || $AJAX_SUBMIT != "Y")) {
+
+                    $top_message = [
+                        'type' => 'E',
+                        'content' => OrderModule::t("Error: First transaction in order exception")
+                    ];
+
+                    Xcart::app()->request->session->add('section_name_top_message', $top_message);
+                    Xcart::app()->request->redirect("order.php?orderid={$model->orderid}&tab=y#main_order_tabs-VT");
+
+                }
+            }
+
+            $pmModel = PaymentMethodModel::objects()->get(['payment_method' => $_POST['paypal_vt']['processor']]);
+
+            $params = PaymentHelper::prepareAuthorize($_POST['paypal_vt'], $model);
+
+
         }
     }
 }

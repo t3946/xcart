@@ -3369,5 +3369,7 @@ if (!empty($orderid)) {
 # Assign the current location line
 $smarty->assign("location", $location);
 
+$smarty->assign('authorise_url', Xcart\App\Main\Xcart::app()->router->url('order:authorise', ['order_id' => $orderid]));
+
 @include $xcart_dir . "/modules/gold_display.php";
 func_display("admin/home.tpl", $smarty);

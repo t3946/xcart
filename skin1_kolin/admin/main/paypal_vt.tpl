@@ -80,7 +80,7 @@
     <div id="AJAX_Authorize_button_text" style="display: none; background-color: #f4cccc;">
         {$lng.lb_additional_payment_authorize_message}
     </div>
-    <form action="order.php" method="post" name="vt_form1">
+    <form action="{$authorise_url}" method="post" name="vt_form1">
         <input type="hidden" name="mode" id="mode" value=""/>
         <input type="hidden" name="orderid" value="{$orderid}"/>
 

@@ -26,7 +26,7 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array_keys(
 
         extract(Gateway::$gatewayMethods[$mode]);
 
-        $countTr->transactions->exclude(['transaction_status' => '', 'transaction_id' => ''])->count();
+        $orderModel->transactions->exclude(['transaction_status' => '', 'transaction_id' => ''])->count();
 
         $isAllowed = PaymentHelper::isAuthorizeAllowed($orderModel, $countTr);
 
