@@ -4,6 +4,7 @@ global $smarty, $order, $orderid;
 
 use Modules\Order\Helpers\OrderTransactionHelper;
 use Modules\Order\Models\OrderModel;
+use Modules\Payment\Gateways\Gateway;
 use Modules\Payment\Helpers\PaymentHelper;
 use Xcart\App\Main\Xcart;
 
@@ -17,13 +18,14 @@ if ($orderModel = OrderModel::objects()->get(['orderid' => $orderid])) {
     foreach ($orderModel->transactions->order(['-id']) as $transactionModel) {
         if (empty($transactionModel->transaction_response)) {
 
-            if ($transactionModel = OrderTransactionHelper::action('lookup', $transactionModel, PaymentHelper::getPaymentParams($transactionModel))) {
+            list($transactionModel) = OrderTransactionHelper::action(Gateway::$gatewayMethods['lookup']['method'], PaymentHelper::getPaymentParams($transactionModel));
+            if ($transactionModel) {
                 $transactionModel->save();
             }
         }
     }
 
-    $smarty->assign("order_transactions", $orderModel->transactions);
+    $smarty->assign("order_transactions", $orderModel->transactions->filter(['parent_id__isnull' => true])->all());
     $smarty->assign("transactions_log", $orderModel->transactions_log->order(['-id']));
     $smarty->assign("order_transactions_totals", OrderTransactionHelper::getOrderTransactionsGroupsValues($orderModel));
     $smarty->assign("count_shipping_groups", $orderModel->groups->count());

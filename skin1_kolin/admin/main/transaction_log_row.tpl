@@ -44,32 +44,34 @@
 {if $main_transaction}
 <tr>
     <td class="transaction_action" colspan="7" data-transaction-id="{$model->id}">
-        <span style="float: left; line-height: 22px;"><b>Available actions:</b></span>&nbsp;
-        <input type="text" name="transaction_amount[{$model->id}]" id="transaction_amount_{$model->id}" size="6" value="{$model->transaction_amount|abs}" required pattern="^\d+(\.?\d+|)$"/>
-        <div class="ui xcart buttons">
-            <div data-action="look_up_payment" class="ui button lookup" style="border: 1px solid #808080;">Look up payment (Get links)</div>
-            {if $model->transaction_response.links ne ""}
-                <div style="border-color: #808080; border-image: none; border-style: solid solid solid none; border-width: 1px 1px 1px 0;" class="ui combo top right dropdown icon button">
-                    <i class="dropdown icon"></i>
-                    <div class="menu" style="min-width: 200px;">
-                        {foreach from=$model->transaction_response.links item=link key=k_link}
-                            {if $link.rel eq "self"}
-                            {elseif $link.rel eq "refund"}
-                                {if in_array($user_login, array('sergey2', 'igor', 'roman_n', 'dmitry_s'))}
-                                    <div data-action="refund_transaction" class="item" style="padding: 10px !important;">Refund transaction</div>
-                                {/if}
-                            {elseif $link.rel eq "void"}
-                                <div data-action="void_transaction" class="item" style="padding: 10px !important;">Void authorized transaction</div>
-                            {elseif $link.rel eq "capture"}
-                                <div data-action="capture_transaction" class="item" style="padding: 10px !important;">Capture selected authorized transaction</div>
-                            {elseif $link.rel eq "reauthorize"}
-                                <div data-action="re_authorize_transaction" class="item" style="padding: 10px !important;">RE-authorize selected transaction</div>
-                            {/if}
-                        {/foreach}
+        <form action="{$model->getProcessUrl('lookup')}" method="post">
+            <span style="float: left; line-height: 22px;"><b>Available actions:</b></span>&nbsp;
+            <input type="text" name="transaction_amount[{$model->id}]" id="transaction_amount_{$model->id}" size="6" value="{$model->transaction_amount|abs}" required pattern="^\d+(\.?\d+|)$"/>
+            <div class="ui xcart buttons">
+                <div data-action="{$model->getProcessUrl('lookup')}" class="ui button lookup" style="border: 1px solid #808080;">Look up payment</div>
+                {if $model->transaction_response.links ne ""}
+                    <div style="border-color: #808080; border-image: none; border-style: solid solid solid none; border-width: 1px 1px 1px 0;" class="ui combo top right dropdown icon button">
+                        <i class="dropdown icon"></i>
+                        <div class="menu" style="min-width: 200px;">
+                                {foreach from=$model->transaction_response.links item=link key=k_link}
+                                    {if $link.rel eq "self"}
+                                    {elseif $link.rel eq "refund"}
+                                        {if in_array($user_login, array('sergey2', 'igor', 'roman_n', 'dmitry_s'))}
+                                            <div data-action="{$model->getProcessUrl('refund')}" class="item" style="padding: 10px !important;">Refund transaction</div>
+                                        {/if}
+                                    {elseif $link.rel eq "void"}
+                                            <div data-action="{$model->getProcessUrl('void')}" class="item" style="padding: 10px !important;">Void authorized transaction</div>
+                                    {elseif $link.rel eq "capture"}
+                                            <div data-action="{$model->getProcessUrl('capture')}" class="item" style="padding: 10px !important;">Capture selected authorized transaction</div>
+                                    {elseif $link.rel eq "reauthorize"}
+                                            <div data-action="{$model->getProcessUrl('reauthorize')}" class="item" style="padding: 10px !important;">RE-authorize selected transaction</div>
+                                    {/if}
+                                {/foreach}
+                        </div>
                     </div>
-                </div>
-            {/if}
-        </div>
+                {/if}
+            </div>
+        </form>
     </td>
 </tr>
 {/if}

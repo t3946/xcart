@@ -17,37 +17,37 @@ abstract class Gateway implements GatewayInterface
     public static $gatewayMethods = [
         'authorize' => [
             'method' => 'authorize',
-            'log' => "'Authorize' at 'Authorization'",
+            'order_log' => "'Authorize' at 'Authorization'",
             'status' => OrderTransactionModel::STATUS_AUTHORIZED
         ],
-        'void_transaction' => [
+        'void' => [
             'method' => 'void',
-            'log' => "'Void authorized transaction' at 'Virtual Terminal'",
+            'order_log' => "'Void authorized transaction' at 'Virtual Terminal'",
             'status' => OrderTransactionModel::STATUS_VOIDED
         ],
-        'capture_transaction' => [
+        'capture' => [
             'method' => 'capture',
-            'log' => "'Capture authorized transaction' at 'Virtual Terminal'",
+            'order_log' => "'Capture authorized transaction' at 'Virtual Terminal'",
             'status' => OrderTransactionModel::STATUS_COMPLETED
         ],
-        're_authorize_transaction' => [
+        'reauthorize' => [
             'method' => 'reauthorize',
-            'log' => "'RE-authorize transaction' at 'Virtual Terminal'",
+            'order_log' => "'RE-authorize transaction' at 'Virtual Terminal'",
             'status' => OrderTransactionModel::STATUS_AUTHORIZED
         ],
-        'refund_transaction' => [
+        'refund' => [
             'method' => 'refund',
-            'log' => "'Refund transaction' at 'Virtual Terminal'",
+            'order_log' => "'Refund transaction' at 'Virtual Terminal'",
             'status' => OrderTransactionModel::STATUS_REFUNDED
         ],
-        'look_up_payment' => [
+        'lookup' => [
             'method' => 'lookup',
-            'log' => "'Look up payment (Get links)' at 'Virtual Terminal'",
+            'order_log' => "'Look up payment (Get links)' at 'Virtual Terminal'",
             'status' => null
         ],
         'add_manual_transaction' => [
             'method' => 'lookup',
-            'log' => "'Add transaction' at 'Add manual transaction' section",
+            'order_log' => "'Add transaction' at 'Add manual transaction' section",
             'status' => null
         ],
     ];

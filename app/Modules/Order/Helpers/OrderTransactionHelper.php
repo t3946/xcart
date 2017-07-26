@@ -13,19 +13,16 @@ use Xcart\App\Main\Xcart;
 class OrderTransactionHelper
 {
 
+
     /**
-     * @param OrderTransactionModel $model
      * @param Gateway $gw
-     * @param OrderModel $orderModel
-     * @param PaymentMethodModel $pmModel
      * @param array $params
-     * @param string $mode
-     * @return OrderTransactionModel
+     * @return array
      */
-    public static function prepareOrderTransaction($gw, $params = null)
+    public static function prepareOrderTransaction($gw, $params = [])
     {
 
-        $response = null;
+        $response = [];
 
         $result = $gw->result->getData();
 
@@ -59,7 +56,7 @@ class OrderTransactionHelper
                 'transaction_amount' => $result['amount']['total'],
                 'transaction_response' => $result,
                 'login' => Xcart::app()->user->login,
-                'paymentid' => $params['payment-method_model']->paymentid,
+                'paymentid' => $params['payment_method_model']->paymentid,
                 'transaction_fee' => isset($result['transaction_fee']) ? $result['transaction_fee']['value'] : null,
             ]
         );
@@ -67,20 +64,24 @@ class OrderTransactionHelper
         return $response;
     }
 
+
     /**
-     * @param string $method
-     * @param OrderTransactionModel $model
+     * @param $method
      * @param array $params
+     * @return array
      */
     public static function action($method, $params)
     {
         $model = null;
 
         if ($gw = Gateway::getGateway($params['processor'])) {
-            if ($res = $gw->$method($params)) {
+            if ($gw->$method($params)) {
                 if ($result = OrderTransactionHelper::prepareOrderTransaction($gw, $params)){
-                    if ($result['transaction_id'] != $params['']) {
-
+                    if (empty($params['transactionReference']) || $result['transaction_id'] != $params['transactionReference']) {
+                        $model = new OrderTransactionModel($result);
+                    } else {
+                        $model = OrderTransactionModel::objects()->get(['transaction_id' => $result['transaction_id']]);
+                        $model->setAttributes($result);
                     }
                 }
             }
@@ -102,6 +103,7 @@ class OrderTransactionHelper
             'authorized_PLUS_captured_totals' => floatval(
                 $trs[OrderTransactionModel::STATUS_COMPLETED]
                 + $trs[OrderTransactionModel::STATUS_AUTHORIZED]
+                + $trs[OrderTransactionModel::STATUS_CAPTURED]
                 + $trs[OrderTransactionModel::STATUS_PENDING]
                 + $trs[OrderTransactionModel::STATUS_PARTIALLY_RUFUNDED]
             ),

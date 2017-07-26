@@ -150,7 +150,7 @@ class OrderHelper
      *
      * @return array
      */
-    public static function changeOrderCBStatus($model, $status)
+    public static function changeOrderCBStatus(OrderModel $model, $status)
     {
         $log = null;
         $send = false;

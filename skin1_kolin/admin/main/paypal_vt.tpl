@@ -213,13 +213,8 @@
 {if $order_transactions ne ""}
     <br/>
     {capture name=virtual_terminal_transactions}
-        <form action="order.php" method="post" name="vt_form01">
-            <input type="hidden" name="mode" id="mode" value=""/>
-            <input type="hidden" name="order_transaction_id" id="order_transaction_id" value=""/>
-            <input type="hidden" name="orderid" value="{$orderid}"/>
-            {assign var='main_transaction' value=true}
-            {include file="admin/main/transactions_table.tpl"}
-        </form>
+        {assign var='main_transaction' value=true}
+        {include file="admin/main/transactions_table.tpl"}
         <table align="right" cellspacing="1" cellpadding="1">
             {assign var=oPaymentProcessor value=$oOrder->getPaymentMethodInstance()}
             {math assign="transaction_with_multiplier" equation="x*y" x=$order_transactions_totals.authorized_PLUS_captured_totals y=$oPaymentProcessor->getMaximumReAuthorizationMultiplier()}
@@ -381,9 +376,8 @@
         );
         $('.transaction_info_table .dropdown .item, .transaction_info_table .lookup').click(function () {
             var form = $(this).closest('form');
-            form.find('#order_transaction_id').val($(this).closest('td.transaction_action').data('transaction-id'))
-                .end().find('#mode').val($(this).data('action'))
-                .end().submit();
+            form.attr('action', $(this).data('action'));
+            form.submit();
         })
     </script>
 {/literal}

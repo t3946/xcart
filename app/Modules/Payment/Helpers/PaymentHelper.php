@@ -20,7 +20,7 @@ class PaymentHelper
      * @param OrderModel $model
      * @return array
      */
-    public static function prepareAuthorize($input, $model)
+    public static function prepareAuthorize($input, OrderModel $model)
     {
         list(, , $first_name, $last_name) = PaymentHelper::getCardHolderName($input["cardholderl_name"]);
         $params = [
@@ -48,7 +48,8 @@ class PaymentHelper
                 'shippingPostcode' => $model->s_zipcode,
                 'shippingState' => $model->s_state,
                 'shippingCountry' => $model->s_country,
-            ])];
+            ]),
+        ];
         return $params;
     }
 
@@ -87,7 +88,9 @@ class PaymentHelper
             [
                 'transactionReference' => $orderTransaction->transaction_id,
                 'status' => $orderTransaction->transaction_status,
-                'processor' => $orderTransaction->payment_method_model->processor
+                'payment_method_model' => $pm = $orderTransaction->payment_method_model,
+                'processor' => $pm->processor,
+
             ],
             $amount
         );
