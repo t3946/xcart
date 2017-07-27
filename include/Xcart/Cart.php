@@ -34,7 +34,7 @@ class Cart
         return $this;
     }
 
-    public function removeProductFromCart(Product $oProduct)
+    public function removeProductFromCart($oProduct)
     {
         $iterator = $this->aArrayOfObjects->getIterator();
         if (!empty($iterator)) {

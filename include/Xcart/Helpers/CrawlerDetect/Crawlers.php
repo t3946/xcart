@@ -121,6 +121,13 @@ class Crawlers extends AbstractProvider
            "Qwantify"                        => ["Qwantify"],
            "Hyperic"                         => ["Hyperic"],
            "DigitEyes"                       => ["DigitEyes"],
+//           "AhrefsBot"                       => ["AhrefsBot"],
+//           "adidxbot"                        => ["adidxbot"],
+           "AtomicReach"                     => ["AtomicReach"],
+//           "BlexBot"                         => ["BlexBot"],
+//           "SemrushBot"                      => ["SemrushBot"],
+//           "faceBot"                         => ["faceBot"],
+//           "PinterestBot"                    => ["PinterestBot"],
         ];
 
     private function clearData($data)

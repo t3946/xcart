@@ -1580,7 +1580,7 @@ if ($mode == 'ref_notify')
             }
         }
 
-        if ($ref_notify_button_clicked == "Update_C2B_status_and_Send_refund_notification" && in_array($login, ['sergey2', 'igor', 'roman_n'])) {
+        if ($ref_notify_button_clicked == "Update_C2B_status_and_Send_refund_notification" && in_array($login, ['sergey2', 'igor', 'roman_n', 'dmitry_s'])) {
             if ($orderModel = OrderModel::objects()->get(['orderid' => $orderid])) {
                 $error_message = $ref_sum = null;
 
@@ -1731,8 +1731,8 @@ if ($mode == 'ref_notify')
                             $oMail = \Xcart\App\Main\Xcart::app()->mail;
                             $oMail->init();
                             $oMail->to = $config['Company']['orders_department'];
-                            $oMail->from = $userinfo['email'];
-                            $oMail->reply_to = null;
+                            $oMail->from = $config['Company']['orders_department'];
+                            $oMail->reply_to = $userinfo['email'];
                             $oMail->subject_template = 'mail/refund_notification_subj.tpl';
                             $oMail->body_template = 'mail/refund_notification.tpl';
                             $oMail->addHeader(['X-Xcart-Label' => 'order-communication']);
