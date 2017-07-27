@@ -62,6 +62,7 @@ class PayPal extends Gateway
         switch (strtolower($params['status'])) {
             case OrderTransactionModel::STATUS_AUTHORIZED :
             case OrderTransactionModel::STATUS_CAPTURED :
+            case OrderTransactionModel::STATUS_PARTIALLY_CAPTURED :
             case OrderTransactionModel::STATUS_PENDING :
             case OrderTransactionModel::STATUS_VOIDED :
             case OrderTransactionModel::STATUS_EXPIRED :
@@ -90,6 +91,11 @@ class PayPal extends Gateway
     public function getState($mode)
     {
         $state = null;
+
+        if (!$this->result->isSuccessful()){
+            return OrderTransactionModel::STATUS_FAILED;
+        }
+
         if (isset(self::$gatewayMethods[$mode])) {
             $state = self::$gatewayMethods[$mode]['status'];
         }

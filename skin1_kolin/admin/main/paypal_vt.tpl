@@ -339,23 +339,24 @@
 <link rel="stylesheet" href="{$SkinDir}/js/semantic/components/transition.min.css">
 <link rel="stylesheet" href="{$SkinDir}/js/semantic/components/button.min.css">
 {literal}
-    <script>
-        $('.dropdown').dropdown();
-        $('.toggle_transaction_multiple').click(function () {
+<script>
+    $('.dropdown').dropdown();
+
+    $('.transaction_info_table').on('click', '.toggle_transaction_multiple',
+        function () {
             var button = $(this);
+            var url = '{/literal}{$xcartApp->router->url('order:child_transactions_list')}{literal}';
             var tr_id = $(this).closest('tr').data('order-transaction');
             if (button.parent().hasClass('opened')) {
                 button.closest('tr').siblings('tr.transaction_log_' + tr_id).remove();
             } else {
-                $.post('ajax_admin.php', {
-                        ajax_action: 'get_transactions_log',
-                        order_transaction_id: tr_id
-                    },
+                $.get(url + '/' + tr_id,
                     function (data) {
                         if (data) {
                             if (button.parent().hasClass('opened')) {
-                                button.closest('tr')
+                                button.closest('tr').next('tr').next('tr')
                                     .after($('<tr class="transaction_log_' + tr_id + '"/>').html($('<td colspan="8"/>').css('padding-left', '20px').html(data)));
+                                $('.dropdown').dropdown();
                             }
                         }
                     });
@@ -364,20 +365,18 @@
             button.siblings('.toggle_transaction_multiple').show();
             button.parent().toggleClass('opened');
             return false;
-        });
-        $('.transaction_info_table').on('click', '.show_hide_link',
-            function () {
-                $(this).text(function (i, text) {
-                    return (text == 'Show details') ? 'Hide details' : 'Show details';
-                });
-                $(this).prev('.transaction_log_div').toggle('slow');
-                return false;
-            }
-        );
-        $('.transaction_info_table .dropdown .item, .transaction_info_table .lookup').click(function () {
+        }).on('click', '.show_hide_link',
+        function () {
+            $(this).text(function (i, text) {
+                return (text == 'Show details') ? 'Hide details' : 'Show details';
+            });
+            $(this).prev('.transaction_log_div').toggle('slow');
+            return false;
+        }).on('click', '.transaction_info_table .dropdown .item, .transaction_info_table .lookup',
+        function () {
             var form = $(this).closest('form');
             form.attr('action', $(this).data('action'));
             form.submit();
         })
-    </script>
+</script>
 {/literal}

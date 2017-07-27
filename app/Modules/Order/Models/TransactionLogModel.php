@@ -40,6 +40,7 @@ class TransactionLogModel extends AutoMetaModel
                     OrderTransactionModel::STATUS_FAILED => 'Failed',
                     OrderTransactionModel::STATUS_REFUNDED => 'Refunded',
                     OrderTransactionModel::STATUS_PARTIALLY_RUFUNDED => 'Partially Refunded',
+                    OrderTransactionModel::STATUS_PARTIALLY_CAPTURED => 'Partially Captured',
                 ]
             ],
             'date' => [

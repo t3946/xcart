@@ -14,13 +14,14 @@ use Modules\Payment\Gateways\Gateway;
 use Modules\Payment\Helpers\PaymentHelper;
 use Modules\Payment\Models\PaymentMethodModel;
 use Xcart\App\Controller\Controller;
+use Xcart\App\Controller\PrototypeAdminController;
 use Xcart\App\Main\Xcart;
 
-class OrderTransactionsController extends Controller
+class OrderTransactionsController extends PrototypeAdminController
 {
     public function transaction_process($order_id, $mode, $id)
     {
-        $method = $order_log = null;
+        $method = $order_log = $type = null;
         $result = [];
 
         /** @var OrderModel $orderModel */
@@ -50,7 +51,8 @@ class OrderTransactionsController extends Controller
                             $model->setAttributes(
                                 [
                                     'orderid' => $orderModel->orderid,
-                                    'parent_id' => $orderTransaction->id
+                                    'parent_id' => $orderTransaction->id,
+                                    'type' => $type
                                 ]
                             );
                             $order_log .= "<br />".OrderModule::t('Transaction:')." $orderTransaction->transaction_id --> $model->transaction_id";
@@ -74,17 +76,23 @@ class OrderTransactionsController extends Controller
                         }
                     } else {
 
+                        $state = $gw->getState($mode);
                         $result = $gw->result->getData();
 
-                        if ($orderTransaction && ($state = $gw->getState($mode))) {
-                            $orderTransaction->transaction_status = $state;
-                            $orderTransaction->transaction_response = $result;
-                            $orderTransaction->save();
+                        if ($gw->result->isSuccessful()) {
+
+                            if ($orderTransaction && $state) {
+                                $orderTransaction->transaction_status = $state;
+                                $orderTransaction->transaction_response = $result;
+                                $orderTransaction->save();
+                            }
+
+                            $logStatus = $orderTransaction->transaction_status;
+
+                            $order_log .= "<br/>{$result['name']}<br/>{$result['message']}";
+                        } else {
+                            $logStatus =  $state;
                         }
-
-                        $logStatus = $orderTransaction->transaction_status;
-
-                        $order_log .= "<br/>{$result['name']}<br/>{$result['message']}";
 
                     }
 
@@ -119,7 +127,7 @@ class OrderTransactionsController extends Controller
 
     public function authorise($order_id)
     {
-        $method = $order_log = null;
+        $method = $order_log = $type = null;
         $result = [];
 
         /** @var OrderModel $model */
@@ -155,7 +163,12 @@ class OrderTransactionsController extends Controller
                 list($transaction_model, $gw) = OrderTransactionHelper::action($method, $params);
 
                 if ($transaction_model) {
-                    $transaction_model->orderid = $model->orderid;
+
+                    $transaction_model->setAttributes(
+                        [
+                            'orderid' => $model->orderid,
+                            'type' => $type,
+                        ]);
 
                     $transaction_model->save();
 
@@ -168,15 +181,16 @@ class OrderTransactionsController extends Controller
                         func_send_order_status_notification($model->orderid, OrderStatusModel::ORDER_STATUS_AUTHORIZED, true);
                     }
 
+                    $logStatus = $transaction_model->transaction_status;
+
                 } else {
 
                     $result = $gw->result->getData();
 
                     $order_log .= "<br/>{$result['name']}<br/>{$result['message']}";
+
+                    $logStatus = OrderTransactionModel::STATUS_FAILED;
                 }
-
-                $logStatus = $transaction_model->transaction_status;
-
 
             } catch (\Exception $e) {
                 $order_log .= "<br/>{$pmModel->payment_method} Processing Error: {$e->getMessage()}";
@@ -205,5 +219,18 @@ class OrderTransactionsController extends Controller
         func_log_order($order_id, 'PP', $order_log, Xcart::app()->user->login);
 
         Xcart::app()->request->redirect("/admin/order.php?orderid={$order_id}&tab=y#main_order_tabs-VT");
+    }
+
+    public function child_transactions($id)
+    {
+        if ($id && ($orderTransaction = OrderTransactionModel::objects()->filter(['parent_id' => $id])->all())) {
+            echo $this->renderSmarty('admin/main/transactions_table.tpl',
+                [
+                    'order_transactions' => $orderTransaction,
+                    'main_transaction' => true,
+                    'user_login' => Xcart::app()->user->login,
+                ]
+            );
+        }
     }
 }

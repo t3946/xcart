@@ -18,27 +18,32 @@ abstract class Gateway implements GatewayInterface
         'authorize' => [
             'method' => 'authorize',
             'order_log' => "'Authorize' at 'Authorization'",
-            'status' => OrderTransactionModel::STATUS_AUTHORIZED
+            'status' => OrderTransactionModel::STATUS_AUTHORIZED,
+            'type' => OrderTransactionModel::TYPE_AUTHORIZATION
         ],
         'void' => [
             'method' => 'void',
             'order_log' => "'Void authorized transaction' at 'Virtual Terminal'",
-            'status' => OrderTransactionModel::STATUS_VOIDED
+            'status' => OrderTransactionModel::STATUS_VOIDED,
+            'type' => OrderTransactionModel::TYPE_AUTHORIZATION
         ],
         'capture' => [
             'method' => 'capture',
             'order_log' => "'Capture authorized transaction' at 'Virtual Terminal'",
-            'status' => OrderTransactionModel::STATUS_COMPLETED
+            'status' => OrderTransactionModel::STATUS_COMPLETED,
+            'type' => OrderTransactionModel::TYPE_CAPTURE
         ],
         'reauthorize' => [
             'method' => 'reauthorize',
             'order_log' => "'RE-authorize transaction' at 'Virtual Terminal'",
-            'status' => OrderTransactionModel::STATUS_AUTHORIZED
+            'status' => OrderTransactionModel::STATUS_AUTHORIZED,
+            'type' => OrderTransactionModel::TYPE_AUTHORIZATION
         ],
         'refund' => [
             'method' => 'refund',
             'order_log' => "'Refund transaction' at 'Virtual Terminal'",
-            'status' => OrderTransactionModel::STATUS_REFUNDED
+            'status' => OrderTransactionModel::STATUS_REFUNDED,
+            'type' => OrderTransactionModel::TYPE_REFUND
         ],
         'lookup' => [
             'method' => 'lookup',

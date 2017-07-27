@@ -10,4 +10,14 @@ return [
         'target' => ['\Modules\Order\Controllers\OrderTransactionsController', 'authorise'],
         'name' => 'authorise'
     ],
+    [
+        'route' => '/child_transactions/{i:id}',
+        'target' => ['\Modules\Order\Controllers\OrderTransactionsController', 'child_transactions'],
+        'name' => 'child_transactions'
+    ],
+    [
+        'route' => '/child_transactions',
+        'target' => ['\Modules\Order\Controllers\OrderTransactionsController', 'child_transactions_list'],
+        'name' => 'child_transactions_list'
+    ],
 ];

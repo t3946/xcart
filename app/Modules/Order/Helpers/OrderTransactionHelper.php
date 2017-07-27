@@ -68,7 +68,7 @@ class OrderTransactionHelper
     /**
      * @param $method
      * @param array $params
-     * @return array
+     * @return array|null
      */
     public static function action($method, $params)
     {
