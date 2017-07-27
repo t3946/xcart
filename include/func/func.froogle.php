@@ -1,5 +1,7 @@
 <?php
 use Modules\Core\Helpers\CoreHelper;
+use Modules\Product\Models\ProductModel;
+use Modules\User\Models\UserModel;
 use Xcart\StoreFront;
 
 
@@ -52,34 +54,42 @@ function GetGooglePrice($fproduct){
 }
 
 function GetGoogleBaseOneRow($productid, $scrip_name="", $sExtraLog = "N"){
-	global $sql_tbl, $xcart_dir, $active_modules, $config, $https_location, $http_location, $xcart_states_US, $aManufacturerZones, $HTTPS;
+	global $sql_tbl, $xcart_dir, $active_modules, $config, $https_location, $http_location, $xcart_states_US, $aManufacturerZones, $HTTPS,
+    $storefrontid, $current_storefront;
 
-$start_time = round(microtime(true) * 1000);
+    $productModel = null;
 
-        global $storefrontid, $current_storefront;
+    $start_time = round(microtime(true) * 1000);
 
-        if ($storefrontid !=""){
-                $use_storefrontid = $storefrontid;
-        } else {
-		if (isset($current_storefront)){
-	                $use_storefrontid = $current_storefront; // froogle.php
-		}
+    if ($storefrontid != "") {
+        $use_storefrontid = $storefrontid;
+    } else {
+        if (isset($current_storefront)) {
+            $use_storefrontid = $current_storefront; // froogle.php
         }
+    }
 
 if ($sExtraLog=='Y')
-	echo 'Storefrontid: '.$use_storefrontid;
+	echo 'Storefrontid: ' . $use_storefrontid;
 
-	if (empty($productid)) {
+    if ($productid)  {
+        /** @var ProductModel $productModel */
+        $productModel = ProductModel::objects()->get(['productid' => $productid]);
+    }
+
+    if (!$productModel) {
 //		$row = "title\tdescription\tlink\tadwords_redirect\tadwords_grouping\tadwords_labels\timage link\tadditional image link\tid\tprice\tpayment accepted\tpayment notes\tquantity\tweight\texpiration date\tbrand\tcondition\tproduct type\tmpn\tmodel number\tgtin\tcompatible with\tonline only\tshipping\tavailability\tmultipack\tgoogle product category\n";
 		$row = "title\tdescription\tlink\tadwords_redirect\timage link\tadditional image link\tid\tprice\tshipping weight\texpiration date\tbrand\tcondition\tproduct type\tmpn\tgtin\tshipping\tavailability\tmultipack\tgoogle product category\n";
 		return $row;
 	}
-	$classProduct = Xcart\Product::model(['productid' => $productid]);
+
+    $distributorModel = $productModel->distributor;
 
 	$froogle_location = $config['Froogle']['froogle_used_https_links'] == 'Y' ? $https_location : $http_location;
 	$froogle_scheme = $config['Froogle']['froogle_used_https_links'] == 'Y' ? 'https://' : 'http://';
-	if ($classProduct->getProductId()) {
-		$froogle_scheme = ($classProduct->getStoreFront()->getConfigValue('https_enabled') == 'Y') ? 'https://' : 'http://';
+
+	if ($productModel) {
+		$froogle_scheme = ($productModel->getStoreFront()->getConfigValue('https_enabled') == 'Y') ? 'https://' : 'http://';
 	}
 
 	$where = "";
@@ -308,8 +318,8 @@ if ($sExtraLog=='Y')
 	}
 
 
-	$mpn = $classProduct->getMPN();
-	$product['custom_label_3'] = $classProduct->getManfacturerClass()->getField("manufacturer");
+	$mpn = $productModel->getMPN();
+	$product['custom_label_3'] = $distributorModel->manufacturer;
 
 	# Define "compatible with"
 	$upselling_products = func_query("SELECT p.product_froogle, p.productcode, p.upc, b.brand FROM $sql_tbl[product_links] as pl, $sql_tbl[products] as p LEFT JOIN $sql_tbl[brands] b ON b.brandid=p.brandid WHERE pl.productid1=$product[productid] AND p.productid=pl.productid2");
@@ -324,7 +334,7 @@ if ($sExtraLog=='Y')
 				$up['upc'] = "";
 			}
 
-			$up_mpn = $classProduct->getMPN();
+			$up_mpn = $productModel->getMPN();
 			if ($compatible_with != '') {
 				$compatible_with .= ', ';
 			}
@@ -346,35 +356,42 @@ if ($sExtraLog=='Y')
 		$online_only = 'y';
 		$product["onlineOnly"] = "1";
 	}
-	$newShipping = $classProduct->getStoreFront()->getConfigValue('new_shipping_calculation');
+	$newShipping = $productModel->getStoreFront()->getConfigValue('new_shipping_calculation');
+
 	if (!empty($newShipping) && $newShipping == 'Y') {
 		$shippings_str_arr = $shippings_google_arr = $aShippingCarrier = [];
 		$shipping_currency = "USD";
-		$oManufacturer = $classProduct->getManfacturerClass();
+
 		foreach ($xcart_states_US as $k => $v) {
-			$oCart = new Xcart\Cart();
-			$oCart->addObjectToCart(new \Xcart\CartElement($classProduct));
-			$oCustomer = new Xcart\Customer();
-			$oCustomer->setField('s_country', $v["country_code"]);
-			$oCustomer->setField('s_state', $v["code"]);
-			$oCustomer->setField('s_city', $v["city"]);
-			$oCustomer->setField('s_zipcode', $v["base_state_zipcode"]);
+
+            $oCart = new Xcart\Cart();
+            $oCart->addObjectToCart(new \Xcart\CartElement($productModel));
+            $oCustomer = new UserModel(
+                [
+                    's_country' => $v["country_code"],
+                    's_state' => $v["code"],
+                    's_city' => $v["city"],
+                    's_zipcode' => $v["base_state_zipcode"]
+                ]
+            );
+
 			$oShipping = Xcart\Shipping::model();
 
-			if (!empty($aManufacturerZones['zones'][$oManufacturer->getManufacturerId()][$oCustomer->getField('s_country')][$oCustomer->getField('s_state')])) {
-				$oShipping->setShippingZones($aManufacturerZones['zones'][$oManufacturer->getManufacturerId()][$oCustomer->getField('s_country')][$oCustomer->getField('s_state')]);
+			if (!empty($aManufacturerZones['zones'][$distributorModel->manufacturerid][$oCustomer->s_country][$oCustomer->s_state])) {
+				$oShipping->setShippingZones($aManufacturerZones['zones'][$distributorModel->manufacturerid][$oCustomer->s_country][$oCustomer->s_state]);
 			}
-			if (!empty($aManufacturerZones['methods'][$oManufacturer->getManufacturerId()][$oCustomer->getField('s_country')][$oCustomer->getField('s_state')])) {
-				$oShipping->setZoneShippingMethods($aManufacturerZones['methods'][$oManufacturer->getManufacturerId()][$oCustomer->getField('s_country')][$oCustomer->getField('s_state')]);
+			if (!empty($aManufacturerZones['methods'][$distributorModel->manufacturerid][$oCustomer->s_country][$oCustomer->s_state])) {
+				$oShipping->setZoneShippingMethods($aManufacturerZones['methods'][$distributorModel->manufacturerid][$oCustomer->s_country][$oCustomer->s_state]);
 			}
 
-			try {
-				$aShippingZoneRates = $oShipping->getShippingRates($oCustomer, $oManufacturer, $oCart, true);
-			} catch (\Exception $e) {
-				$aShippingZoneRates = [];
-			}
-			$aManufacturerZones['zones'][$oManufacturer->getManufacturerId()][$oCustomer->getField('s_country')][$oCustomer->getField('s_state')] = $oShipping->getShippingZones($oCustomer, $oManufacturer);
-			$aManufacturerZones['methods'][$oManufacturer->getManufacturerId()][$oCustomer->getField('s_country')][$oCustomer->getField('s_state')] = $oShipping->getZoneShippingMethods();
+            try {
+                $aShippingZoneRates = $oShipping->getShippingRates($oCustomer, $distributorModel, $oCart, true);
+            } catch (\Exception $e) {
+                $aShippingZoneRates = [];
+            }
+
+			$aManufacturerZones['zones'][$distributorModel->manufacturerid][$oCustomer->s_country][$oCustomer->s_state] = $oShipping->getShippingZones($oCustomer, $distributorModel);
+			$aManufacturerZones['methods'][$distributorModel->manufacturerid][$oCustomer->s_country][$oCustomer->s_state] = $oShipping->getZoneShippingMethods();
 
 			if (!empty($aShippingZoneRates)) {
 				foreach ($aShippingZoneRates as $aShippingRates) {
@@ -402,7 +419,7 @@ if ($sExtraLog=='Y')
 			$product['custom_label_2'] = 'Amazon rates';
 		}
 	} else {
-		if ($classProduct->isProductFBAAvail()) {
+		if ($productModel->isProductFBAAvail()) {
 			$start_time_amazon_shipping = round(microtime(true) * 1000);
 			$amazon_shippings_arr = func_get_amazon_shippings_for_all_states($product);
 			$diff_end_time_amazon_shipping = (round(microtime(true) * 1000) - $start_time_amazon_shipping);
@@ -616,6 +633,14 @@ if ($sExtraLog=='Y')
 	$product['google_descr'] = iconv("UTF-8", "ISO-8859-1//TRANSLIT",func_froogle_convert(trim($product['descr']), 5000));
 	$product['google_brand'] = iconv("UTF-8", "ISO-8859-1//TRANSLIT",func_froogle_convert(trim($product['brand']), 256));
 	$product['google_product'] = iconv("UTF-8", "ISO-8859-1//TRANSLIT",func_froogle_convert((trim($product['product_froogle']) ? trim($product['product_froogle']) : trim($product['product'])), 80));
+
+    if (($distributorModel->d_minimum_order_amount == 'applies_to_all_orders')
+        && (($m_order_amount = floatval($distributorModel->d_minimum_order_amount_in_us)) > 0)
+        && (floatval($product['price']) < $m_order_amount)
+    ) {
+        $m_order_amount = number_format($m_order_amount, 2);
+        $product['shipping_label'] = "Minimum order value {$m_order_amount} USD";
+    }
 
 
 	if ($product['shipping_weight']) {
@@ -1340,6 +1365,8 @@ function SubmitGoogleProductsBatch($gproducts, $service, $MerchantID, $debug_mod
                 $postBody["entries"][$k_counter]["product"]["targetCountry"] = "US";
                 $postBody["entries"][$k_counter]["product"]["channel"] = "online";
 
+                $postBody["entries"][$k_counter]["product"]["shippingLabel"] = $product_info["product"]["shipping_label"];
+
 
 				$product_availability = func_product_availability(false,$product_info["product"]);
 
@@ -1374,13 +1401,13 @@ function SubmitGoogleProductsBatch($gproducts, $service, $MerchantID, $debug_mod
 ##
 				if ($product_info["product"]["dim_z"] > 0 && $product_info["product"]["dim_x"] > 0 && $product_info["product"]["dim_y"] > 0){
 	                $postBody["entries"][$k_counter]["product"]["shippingHeight"]["unit"] = "in";
-        	        $postBody["entries"][$k_counter]["product"]["shippingHeight"]["value"] = $product_info["product"]["dim_z"];
+        	        $postBody["entries"][$k_counter]["product"]["shippingHeight"]["value"] = min($product_info["product"]["dim_z"],150);
 
 	                $postBody["entries"][$k_counter]["product"]["shippingLength"]["unit"] = "in";
-	                $postBody["entries"][$k_counter]["product"]["shippingLength"]["value"] = max($product_info["product"]["dim_x"], $product_info["product"]["dim_y"]);
+	                $postBody["entries"][$k_counter]["product"]["shippingLength"]["value"] = min(max($product_info["product"]["dim_x"], $product_info["product"]["dim_y"]), 150);
 
 	                $postBody["entries"][$k_counter]["product"]["shippingWidth"]["unit"] = "in";
-        	        $postBody["entries"][$k_counter]["product"]["shippingWidth"]["value"] = min($product_info["product"]["dim_x"], $product_info["product"]["dim_y"]);
+        	        $postBody["entries"][$k_counter]["product"]["shippingWidth"]["value"] = min(min($product_info["product"]["dim_x"], $product_info["product"]["dim_y"]),150);
 			}
 ##
 #

@@ -4,6 +4,7 @@ namespace Modules\Amazon\Stores;
 
 use CaponicaAmazonMwsComplete\ClientPool\MwsClientPool;
 use CaponicaAmazonMwsComplete\ClientPool\MwsClientPoolConfig;
+use Modules\Amazon\ClientPack\MwsFbaInventoryClient;
 use Modules\Amazon\ClientPack\MwsFbaOutboundClient;
 use Modules\Amazon\ClientPack\MwsProductClientPackExt;
 
@@ -17,6 +18,7 @@ class AmazonPoolStore extends MwsClientPool
     const MARKETPLACE_ID = 'ATVPDKIKX0DER';
 
     protected $fbaOutboundClientPack;
+    protected $fbaInventoryClientPack;
 
     public function __construct()
     {
@@ -36,6 +38,14 @@ class AmazonPoolStore extends MwsClientPool
             $this->fbaOutboundClientPack = new MwsFbaOutboundClient($this->config);
         }
         return $this->fbaOutboundClientPack;
+    }
+
+    public function getFbaInventoryClientPack()
+    {
+        if (empty($this->fbaInventoryClientPack)) {
+            $this->fbaInventoryClientPack = new MwsFbaInventoryClient($this->config);
+        }
+        return $this->fbaInventoryClientPack;
     }
 
     public function getProductClientPackExt()

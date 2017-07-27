@@ -1,12 +1,12 @@
 <div class="form-model-field-block">
     <div class="row">
-        <div class="columns large-4">
+        <div class="columns large-{if $lcw}{$lcw}{else}4{/if}">
             <label for="m_{$field}">{$model->getField($field)->getVerboseName()}:</label>
         </div>
 
-        <div class="columns large-6">
+        <div class="columns large-{if $rcw}{$rcw}{else}6{/if}">
             {if $type == 'textarea'}
-                <textarea name="{$model->classNameShort()}[{$field}]" id="m_{$field}" {if $model->getField($field)->isRequired()}required{/if}>{$model.$field}</textarea>
+                <textarea class="{$class}" name="{$model->classNameShort()}[{$field}]" id="m_{$field}" {if $model->getField($field)->isRequired()}required{/if}>{$model.$field}</textarea>
             {elseif $type == 'select'}
                 <select name="{$model->classNameShort()}[{$field}]" id="m_{$field}" {if $multiple}multiple{/if} class="{$class}">
                     <option value=""></option>

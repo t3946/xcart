@@ -633,7 +633,7 @@ SQL;
                                     $order_info['orderid'] = $orderModel->orderid;
                                 }
                             }
-                            if (!empty($order_info)) {
+                            if (!empty($order_info) && $order_info['orderid']) {
                                 $log_text = "order processed: " . $v["AmazonOrderID"];
                                 func_backprocess_log(self::BACK_PROCESS_LOG_NAME_SETTLEMENT, $log_text);
                                 foreach ($v["Fulfillment"] as $kk => $vv) {
@@ -679,9 +679,9 @@ SQL;
                                                     case "Principal":
                                                         $aOrderDetails[$v["AmazonOrderID"]][$v["ShipmentID"]][$vv['AmazonOrderItemCode']]['PrincipalRefund'] = floatval($vvv["Amount"]);
                                                         break;
-                                                    case "Shipping":
+                                                    /*case "Shipping":
                                                         $aOrderDetails[$v["AmazonOrderID"]][$v["ShipmentID"]][$vv['AmazonOrderItemCode']]['ShippingRefund'] = floatval($vvv["Amount"]);
-                                                        break;
+                                                        break;*/
                                                 }
                                             }
                                         }
@@ -699,6 +699,7 @@ SQL;
                                         }
                                     }
                                 }
+
                                 if (!empty($v["ShipmentFees"])) {
                                     foreach ($v["ShipmentFees"] as $kkk => $vvv) {
                                         if (in_array($vvv["Type"], array("FBATransportationFee"))) {
@@ -1606,7 +1607,7 @@ SQL;
      * @return array|null
      * @throws \Exception
      */
-    public function getGetFulfillmentRates(Customer $oCustomer, Cart $oShippingCart, $aShippingRates)
+    public function getGetFulfillmentRates($oCustomer, Cart $oShippingCart, $aShippingRates)
     {
         $aShippingRatesCalc = null;
         $aProductsCart = $oShippingCart->getElements();

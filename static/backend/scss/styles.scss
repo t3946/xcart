@@ -12,6 +12,22 @@
         min-width: 335px;
     }
 
+    .s-big {
+        width: 440px;
+        min-width: 440px;
+    }
+
+    textarea {
+
+        &.s-big {
+            height: 175px;
+        }
+    }
+
+    .required {
+        color: #FF0000;
+    }
+
     .ul-main {
         list-style: none;
         padding: 0;

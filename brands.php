@@ -24,8 +24,14 @@ if (
 
 
 
-if($active_modules["Brands"])
-    include $xcart_dir."/modules/Brands/customer_brands_list.php";
+if($active_modules["Brands"]) {
+    if ($brandid && ($brand_model = \Modules\Brand\Models\BrandModel::objects()->get(['brandid' => $brandid]))) {
+        if ($brand_model->parent_brand_id) {
+            func_clean_url_permanent_redirect('M', $brand_model->parent_brand_id);
+        }
+    }
+    include $xcart_dir . "/modules/Brands/customer_brands_list.php";
+}
 else
 	func_header_location("home.php");
 

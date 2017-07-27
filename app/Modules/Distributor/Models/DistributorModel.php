@@ -5,9 +5,18 @@ namespace Modules\Distributor\Models;
 use Modules\Product\Models\ProductModel;
 use Xcart\App\Orm\AutoMetaModel;
 use Xcart\App\Orm\Fields\AutoField;
+use Xcart\App\Traits\DataModelTrait;
+use Xcart\Manufacturer;
 
 class DistributorModel extends AutoMetaModel
 {
+    use DataModelTrait;
+
+    public static function getDataModelClass()
+    {
+        return Manufacturer::className();
+    }
+
     public static function tableName()
     {
         return 'xcart_manufacturers';

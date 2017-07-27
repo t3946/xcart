@@ -3,6 +3,7 @@
 namespace Xcart\Shipping;
 
 
+use Modules\User\Models\UserModel;
 use Xcart\CartElement;
 use Xcart\Manufacturer;
 use Xcart\Shipping;
@@ -22,7 +23,7 @@ abstract class ShippingProcessor
     private $oShippingZone = null;
     private $sShippingType = null;
     /**
-     * @var Customer
+     * @var UserModel
      */
     private $oCustomer = null;
 
@@ -179,7 +180,7 @@ abstract class ShippingProcessor
                     $aResults = ShippingRate::model()->findAll(
                         SQLBuilder::getInstance()->addSelect('*')->
                         addFromTable('shipping_rates')->
-                        addCondition('zoneid = ' . $this->getShippingZone()->getField('zoneid'))->
+                        addCondition('zoneid = ' . $this->getShippingZone()->zoneid)->
                         addCondition('shippingid = ' . $oShipping->getShippingId())->
                         addCondition('manufacturerid = ' . $this->getManufacturer()->getManufacturerId())->
                         addCondition($this->getShippingRateFilterValues($oShipping)));
@@ -221,7 +222,7 @@ abstract class ShippingProcessor
     }
 
     /**
-     * @return Customer
+     * @return UserModel
      */
     public function getCustomer()
     {
@@ -229,7 +230,7 @@ abstract class ShippingProcessor
     }
 
     /**
-     * @param Customer $oCustomer
+     * @param UserModel $oCustomer
      */
     public function setCustomer($oCustomer)
     {
