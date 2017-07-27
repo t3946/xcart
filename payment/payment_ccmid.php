@@ -367,11 +367,11 @@ if (!$fatal) {
                 'orderid' => $check_orderid,
                 'paymentid' => $order_paymentid,
                 'transaction_id' => $transaction_id,
+                'type' => OrderTransactionModel::TYPE_AUTHORIZATION,
                 'transaction_status' => $transaction_status,
                 'transaction_currency' => $transaction_currency,
                 'transaction_amount' => $transaction_total,
                 'login' => $transaction_login,
-                'transaction_response' => $transaction_log,
             ];
 
 		$model->setAttributes($param);

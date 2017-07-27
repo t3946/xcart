@@ -96,9 +96,9 @@ class PayPal extends Gateway
             return OrderTransactionModel::STATUS_FAILED;
         }
 
-        if (isset(self::$gatewayMethods[$mode])) {
+        /*if (isset(self::$gatewayMethods[$mode])) {
             $state = self::$gatewayMethods[$mode]['status'];
-        }
+        }*/
         $data = $this->result->getData();
         if (!$state && ($state = $data['state'])) {
             $statuses = array_map(function ($a) {

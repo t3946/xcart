@@ -31,6 +31,7 @@
  * \*****************************************************************************/
 
 use Modules\Order\Helpers\OrderTransactionHelper;
+use Modules\Order\Models\OrderGroupModel;
 use Modules\Order\Models\OrderGroupRefundModel;
 use Modules\Order\Models\OrderModel;
 use Modules\Order\Models\OrderTransactionModel;
@@ -1616,7 +1617,9 @@ if ($mode == 'ref_notify')
                                     if ($gw->refund($params)) {
                                         $result = $gw->result->getData();
 
-                                        if ($r_tr = OrderTransactionHelper::action('lookup', $ref_tr, PaymentHelper::getPaymentParams($ref_tr))) {
+                                        list($r_tr) = OrderTransactionHelper::action('lookup', PaymentHelper::getPaymentParams($ref_tr));
+
+                                        if ($r_tr) {
                                             $r_tr->save();
                                         }
 
@@ -1819,13 +1822,11 @@ if ($mode == 'mnf_notify' || $mode == "cidev_send_email_to_operator")
             $log .= "'Send (Off-hours dispatch to distributor)' at '" . $manufacturer_name . ": Dispatch to distributor'";
         }
 
-        $current_cb_status = func_query_first_cell("SELECT cb_status FROM $sql_tbl[order_groups] WHERE orderid = '$orderid' AND manufacturerid='$mnf_id'");
+        $order_model = OrderModel::objects()->get(['orderid' => $orderid]);
+        $group_model = $order_model->groups->get(['manufacturerid' => $mnf_id]);
 
-        if ($current_cb_status == "AP")
+        if ($group_model && $group_model->cb_status == "AP")
         {
-            $authorized_transactions_info  = func_query("SELECT id, transaction_id, transaction_amount FROM $sql_tbl[order_transactions] WHERE orderid='$orderid' AND transaction_status IN ('AP','Pending','authorized')");
-            $authorized_transaction_amount = func_query_first_cell("SELECT SUM(transaction_amount) FROM $sql_tbl[order_transactions] WHERE orderid='$orderid' AND transaction_status IN ('AP','Pending','authorized')");
-
             if (!empty($order["shipping_groups"][$mnf_id]))
             {
                 $bRefundPresent        = false;

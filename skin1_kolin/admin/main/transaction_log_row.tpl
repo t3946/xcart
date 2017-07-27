@@ -3,7 +3,7 @@
     <td>
         {if ($main_transaction && $model->type)}
             {assign var=tr_type value=$model->getField('type')}
-            <b>{$tr_type->toText()}</b><br/>
+            <b style="color:#1411FF;">{$tr_type->toText()}</b><br/>
         {/if}
         {$payment_method->payment_method}
     </td>
