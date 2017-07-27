@@ -361,10 +361,11 @@ if ($sExtraLog=='Y')
 	if (!empty($newShipping) && $newShipping == 'Y') {
 		$shippings_str_arr = $shippings_google_arr = $aShippingCarrier = [];
 		$shipping_currency = "USD";
-		$oManufacturer = $distributorModel;
+
 		foreach ($xcart_states_US as $k => $v) {
-			$oCart = new Xcart\Cart();
-			$oCart->addObjectToCart(new \Xcart\CartElement($productModel));
+
+            $oCart = new Xcart\Cart();
+            $oCart->addObjectToCart(new \Xcart\CartElement($productModel));
             $oCustomer = new UserModel(
                 [
                     's_country' => $v["country_code"],
@@ -1364,7 +1365,7 @@ function SubmitGoogleProductsBatch($gproducts, $service, $MerchantID, $debug_mod
                 $postBody["entries"][$k_counter]["product"]["targetCountry"] = "US";
                 $postBody["entries"][$k_counter]["product"]["channel"] = "online";
 
-                $postBody["entries"][$k_counter]["product"]["shippinglabel"] = $product_info["product"]["shipping_label"];
+                $postBody["entries"][$k_counter]["product"]["shippingLabel"] = $product_info["product"]["shipping_label"];
 
 
 				$product_availability = func_product_availability(false,$product_info["product"]);

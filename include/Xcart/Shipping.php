@@ -112,29 +112,29 @@ class Shipping extends Data
     }
 
     /**
-     * @param Customer|UserModel $oCustomer
+     * @param UserModel $oCustomer
      * @param Manufacturer|DistributorModel $oManufacturer
      * @return array|null
      */
     public function getShippingZones($oCustomer, $oManufacturer)
     {
         if (is_null($this->aShippingZones)) {
-            if ($oCustomer->getField("s_country")) {
-                $cs_state = $oCustomer->getField("s_state");
-                $cs_country = $oCustomer->getField("s_country");
+            if ($oCustomer->s_country) {
+                $cs_state = $oCustomer->s_state;
+                $cs_country = $oCustomer->s_country;
                 $sCA_ST = $cs_country . "_" . $cs_state;
 
                 $sSQL = <<<SQL
 SELECT ZE.zoneid, COUNT(DISTINCT ZES.field) cnt
 FROM xcart_zone_element AS ZE
 INNER JOIN xcart_zone_element AS ZES USING (zoneid, field_type)
-INNER JOIN xcart_shipping_rates SR ON SR.manufacturerid = {$oManufacturer->getManufacturerId()} AND ZE.zoneid = SR.zoneid
+INNER JOIN xcart_shipping_rates SR ON SR.manufacturerid = {$oManufacturer->manufacturerid} AND ZE.zoneid = SR.zoneid
 WHERE ZE.field_type = 'S' AND ZE.field ='{$sCA_ST}'
 GROUP BY ZE.zoneid 
 UNION
 SELECT zoneid, 999999999
 FROM xcart_shipping_rates
-WHERE manufacturerid = {$oManufacturer->getManufacturerId()} AND zoneid = 0 
+WHERE manufacturerid = {$oManufacturer->manufacturerid} AND zoneid = 0 
 GROUP BY zoneid
 ORDER BY cnt
 SQL;
@@ -158,7 +158,7 @@ SQL;
                 addInnerJoin('shipping_carrier', 'sc', 'main.code = sc.carrier_code OR (main.code = "" AND sc.carrier_code = "Flat") ')->
                 addInnerJoin('shipping_rates', 'sr', 'main.shippingid = sr.shippingid')->
                 addCondition("active = 'Y'")->
-                addCondition('manufacturerid = ' . $oManufacturer->getManufacturerId())->
+                addCondition('manufacturerid = ' . $oManufacturer->manufacturerid)->
                 addCondition('zoneid = ' . $iShippingZone)->
                 addGroupBy('shippingid')->
                 addOrderBy('sc.priority DESC')
@@ -178,7 +178,7 @@ SQL;
     }
 
     /**
-     * @param Customer $oCustomer
+     * @param UserModel $oCustomer
      * @param Manufacturer $oManufacturer
      * @param Cart $oCart
      * @return ShippingProcessor[]
@@ -193,7 +193,7 @@ SQL;
                 $aShippingsMethods = $this->getZoneShippingMethodsByZone($oManufacturer, $aShippingZone['zoneid']);
                 if (!empty($aShippingsMethods)) {
                     foreach ($aShippingsMethods as $oShippingMethod) {
-                        $sShippingCode = $oShippingMethod->getField('code');
+                        $sShippingCode = $oShippingMethod->code;
                         if (empty($sShippingCode)) {
                             $sShippingCode = 'Flat';
                         }
@@ -219,87 +219,9 @@ SQL;
         return $aShippingMethods;
     }
 
-    /**
-     * @param Customer $oCustomer
-     * @param Manufacturer $oManufacturer
-     * @param Cart $oCart
-     * @return ShippingProcessor[]
-     */
-    public function getShippingZonesProcessorsOpt(Customer $oCustomer, Manufacturer $oManufacturer, $oCart)
-    {
-        /** @var ShippingProcessor[] $aShippingProcessor */
-        $aShippingMethods =  $aShippingProcessor = null;
-        if ($oCustomer->getField("s_country")) {
-            $cs_state = $oCustomer->getField("s_state");
-            $cs_country = $oCustomer->getField("s_country");
-            $sCA_ST = $cs_country . "_" . $cs_state;
-            $sSql = <<<SQL
-SELECT sc.*, zc.zoneid, zc.cnt, main.*, sr.*
-FROM xcart_shipping AS main
-INNER JOIN xcart_shipping_carrier AS sc ON main.code = sc.carrier_code OR (main.code = '' AND sc.carrier_code = 'Flat')
-INNER JOIN xcart_shipping_rates AS sr ON main.shippingid = sr.shippingid,
-	(SELECT ZE.zoneid, COUNT(DISTINCT ZES.field) cnt, manufacturerid
-	FROM xcart_zone_element AS ZE
-	INNER JOIN xcart_zone_element AS ZES USING (zoneid, field_type)
-	INNER JOIN xcart_shipping_rates SR ON SR.manufacturerid = {$oManufacturer->getManufacturerId()} AND ZE.zoneid = SR.zoneid
-	WHERE ZE.field_type = 'S' AND ZE.field ='{$sCA_ST}'
-	GROUP BY ZE.zoneid 
-	UNION
-	SELECT zoneid, 999999999, manufacturerid
-	FROM xcart_shipping_rates
-	WHERE manufacturerid = {$oManufacturer->getManufacturerId()} AND zoneid = 0 
-	GROUP BY zoneid
-	ORDER BY cnt) zc
-WHERE main.active = 'Y' AND sr.manufacturerid = zc.manufacturerid AND sr.zoneid = zc.zoneid
-ORDER BY sc.priority DESC, cnt, orderby
-SQL;
-            $aResults = SQLBuilder::getInstance()->setQuery($sSql)->Execute()->getQueryResult();
-            if (!empty($aResults)) {
-                foreach ($aResults as $aResult) {
-
-                    if (empty($aShippingProcessor[$aResult['carrier_code']])) {
-                        $sProcessor = __NAMESPACE__ . '\\Shipping\\' . $aResult['carrier_code'];
-                        if (class_exists($sProcessor)) {
-                            /** @var ShippingProcessor $oProcessor */
-                            $oProcessor = new $sProcessor($oCart);
-                            $oProcessor->setManufacturer($oManufacturer);
-                            $oProcessor->setCustomer($oCustomer);
-                            $oShippingZone = ShippingZone::model();
-                            $oShippingZone->setField('zoneid', $aResult['zoneid']); // for 0 zoneid
-                            $oProcessor->setShippingZone($oShippingZone);
-                            $aShippingProcessor[$aResult['carrier_code']] = $oProcessor;
-                        }
-                    }
-                    $oShippingRate = ShippingRate::model()->fill([
-                        'rateid' => $aResult['rateid'],
-                        'shippingid' => $aResult['shippingid'],
-                        'zoneid' => $aResult['zoneid'],
-                        'maxamount' => $aResult['maxamount'],
-                        'minweight' => $aResult['minweight'],
-                        'maxweight' => $aResult['maxweight'],
-                        'mintotal' => $aResult['mintotal'],
-                        'maxtotal' => $aResult['maxtotal'],
-                        'rate' => $aResult['rate'],
-                        'item_rate' => $aResult['item_rate'],
-                        'weight_rate' => $aResult['weight_rate'],
-                        'rate_p' => $aResult['rate_p'],
-                        'provider' => $aResult['provider'],
-                        'type' => $aResult['type'],
-                        'manufacturerid' => $aResult['manufacturerid'],
-                        'cost_marcup' => $aResult['cost_marcup'],
-                        'real_drop_ship_fee' => $aResult['real_drop_ship_fee'],
-                    ]);
-                    $aShippingProcessor[$aResult['carrier_code']]->addShippingRate($oShippingRate);
-                    $aShippingMethods[$aResult['zoneid']] = $aShippingProcessor;
-                }
-
-            }
-        }
-        return $aShippingMethods;
-    }
 
     /**
-     * @param Customer|UserModel $oCustomer
+     * @param UserModel $oCustomer
      * @param Manufacturer|DistributorModel $oManufacturer
      * @param Cart $oCart
      * @param bool $bGetOnlyApproximationRates
@@ -312,10 +234,10 @@ SQL;
         $aShippingZoneRatesPriority = [];
         $iMinProcessorPriority = 0;
 
-        if (!$oCustomer->getField('s_zipcode') && !$oCustomer->getField('s_country')) {
+        if (!$oCustomer->s_zipcode && !$oCustomer->s_country) {
             throw new \Exception('Shipping rates error: Customers country or state not set');
         }
-        if (!$oManufacturer->getManufacturerId()) {
+        if (!$oManufacturer->manufacturerid) {
             throw new \Exception('Shipping rates error: Manufacturer not set');
         }
 

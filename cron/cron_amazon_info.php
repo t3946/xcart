@@ -2,7 +2,12 @@
 
 use Mindy\QueryBuilder\Q\QOr;
 use Modules\Amazon\Helpers\AmazonProductHelper;
+use Modules\Amazon\Models\AmazonFbaMissingSkuModel;
+use Modules\Amazon\Models\AmazonFbaProductModel;
+use Modules\Amazon\Stores\AmazonInventoryStore;
 use Modules\Amazon\Stores\AmazonPoolStore;
+use Modules\Amazon\Stores\AmazonStore;
+use Modules\Product\Models\ProductModel;
 use Xcart\Product;
 
 define("CIDEV_CRON_START", "CRON");
@@ -131,25 +136,54 @@ if (isset($argv) && is_array($argv) && !empty($argv[1])) {
             break;
         case 'list_inventory':
             echo "Report {$param_reports[$p_arg]} start\n";
-            $oAmazonProduct = new \Xcart\AmazonMWS('FBAInventoryServiceMWS_Client', '/FulfillmentInventory/2010-10-01');
+            $client = $amzPool->getFbaInventoryClientPack();
+
             $max_products = 50;
             $i = 1;
-            while ($aProductsBatch = Product::objects()
+
+            while ($aProductsBatch = ProductModel::objects()
                 ->filter(['forsale' => 'Y', new QOr(['amazon_enabled' => 'Y', 'amazon_fba' => 'Y'])])
+                ->exclude(['missing_products__missing_productcode__isnull' => false])
                 ->paginate($i++, $max_products)
                 ->all())
             {
                 $counter_send += count($aProductsBatch);
 
-                $oAmazonProduct
-                    ->setProducts($aProductsBatch)
-                    //->enableLog($log)
-                    ->_Request('ListInventorySupply');
+                $aSKUs = array_map(function ($a) { return $a->productcode;}, $aProductsBatch);
+                $counter_dropped = $aSKUs;
+                try {
+                    $inventory = $client->callGetListInventory($aSKUs);
 
-                $counter_received = [
-                    'ListInventorySupply' => $oAmazonProduct->getCountSaved(),
-                ];
+                    if ($products = AmazonProductHelper::getListInventory($inventory, $aProductsBatch)) {
+                        foreach ($products as $aAmazonFbaProduct) {
+                            $aAmazonFbaProduct->save();
+                            $counter_received['ListInventorySupply']++;
+
+                            $key = array_search($aAmazonFbaProduct->productcode, $counter_dropped);
+                            if ($key !== false) {
+                                unset($counter_dropped[$key]);
+                            }
+                        }
+                    }
+                } catch (\Exception $e) {
+                    $log_text = 'ERROR in getMyPriceForSKU competitive_pricing cron for SKU\'s: ' . implode(', ', $aSKUs) . "\n";
+                    func_backprocess_log(Xcart\AmazonMWS::BACK_PROCESS_LOG_NAME_ORDER_INFO, $log_text . $e->getMessage());
+                }
+                if (!empty($counter_dropped)) {
+                    func_backprocess_log(Xcart\AmazonMWS::BACK_PROCESS_LOG_NAME_ORDER_INFO, "Skipped SKU's in ListInventory: ".implode(', ', $counter_dropped));
+                }
             }
+
+            $amazonStore = new AmazonInventoryStore($client);
+
+            if (!empty($amazonStore->groupProductsById)) {
+                foreach ($amazonStore->groupProductsById as $amzProduct) {
+                    if ($amzProduct->save()) {
+                        $counter_received['ListInventorySupplyMissing']++;
+                    }
+                }
+            }
+
             break;
         case 'reserved_inventory' :
             echo "Report {$param_reports[$p_arg]} start\n";
