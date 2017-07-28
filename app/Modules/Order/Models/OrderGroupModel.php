@@ -72,6 +72,11 @@ class OrderGroupModel extends AutoMetaModel
                 'modelClass' => OrderGroupMemoModel::className(),
                 'link' => ['orderid'=>'orderid', 'manufacturerid'=>'manufacturerid'],
             ],
+            'refunds' => [
+                'class' => HasManyField::className(),
+                'modelClass' => OrderGroupRefundModel::className(),
+                'link' => ['orderid'=>'orderid', 'manufacturerid'=>'manufacturerid'],
+            ],
             'tracking' => [
                 'class' => SerializeField::className(),
                 'null' => false,
@@ -150,5 +155,10 @@ class OrderGroupModel extends AutoMetaModel
                 ->all();
         }
         return $this->detailsModels;
+    }
+
+    public function getRefunds()
+    {
+        return array_sum(array_map(function($a){return $a->total_gross;}, $this->refunds));
     }
 }

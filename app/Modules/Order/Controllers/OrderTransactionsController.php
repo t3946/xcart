@@ -10,6 +10,7 @@ use Modules\Order\Models\OrderStatusModel;
 use Modules\Order\Models\OrderTransactionModel;
 use Modules\Order\Models\TransactionLogModel;
 use Modules\Order\OrderModule;
+use Modules\Order\Stores\OrderTransactionStore;
 use Modules\Payment\Gateways\Gateway;
 use Modules\Payment\Helpers\PaymentHelper;
 use Modules\Payment\Models\PaymentMethodModel;
@@ -21,17 +22,14 @@ class OrderTransactionsController extends PrototypeAdminController
 {
     public function transaction_process($order_id, $mode, $id)
     {
-        $method = $order_log = $type = null;
-        $result = [];
+        $order_log = $type = null;
+
+        $method = $mode;
 
         /** @var OrderModel $orderModel */
         if ($orderModel = OrderModel::objects()->get(['orderid' => $order_id])) {
 
-            extract(Gateway::$gatewayMethods[$mode]);
-
             if ($id && $orderTransaction = $orderModel->transactions->get(['id' => $id])) {
-
-                $pmModel = PaymentMethodModel::objects()->get(['payment_method' => $orderTransaction->payment_method_model->processor->processor_name . ' VT']);
 
                 $amount =
                     [
@@ -39,86 +37,22 @@ class OrderTransactionsController extends PrototypeAdminController
                         'currency' => $orderTransaction->transaction_currency
                     ];
 
-                $params = array_merge(PaymentHelper::getPaymentParams($orderTransaction, $amount), ['mode' => $mode, 'payment_method_model' => $orderTransaction->payment_method_model]);
-
-                try {
-                    /** @var OrderTransactionModel $model */
-                    list($model, $gw) = OrderTransactionHelper::action($method, $params);
-
-                    if ($model) {
-
-                        if ($model->getIsNewRecord()) {
-                            $model->setAttributes(
-                                [
-                                    'orderid' => $orderModel->orderid,
-                                    'parent_id' => $orderTransaction->id,
-                                    'type' => $type
-                                ]
-                            );
-                            $order_log .= "<br />".OrderModule::t('Transaction:')." $orderTransaction->transaction_id --> $model->transaction_id";
-                        }
-
-                        $model->save();
-
-                        $result = $model->transaction_response;
-
-                        list ($o_log) = OrderHelper::changeOrderCBStatus($orderModel, OrderStatusModel::ORDER_STATUS_AUTHORIZED);
-                        $order_log .= "<br />". OrderModule::t('Transaction:')." {$model->transaction_id} {$o_log}";
-
-                        $logStatus = $model->transaction_status;
-
-                        $parent = $model;
-                        while ($parent->parent_id && $parent = $parent->parent) {
-                            list($model_o) = OrderTransactionHelper::action(Gateway::$gatewayMethods['lookup']['method'], PaymentHelper::getPaymentParams($parent));
-                            if ($model_o) {
-                                $model_o->save();
-                            }
-                        }
-                    } else {
-
-                        $state = $gw->getState($mode);
-                        $result = $gw->result->getData();
-
-                        if ($gw->result->isSuccessful()) {
-
-                            if ($orderTransaction && $state) {
-                                $orderTransaction->transaction_status = $state;
-                                $orderTransaction->transaction_response = $result;
-                                $orderTransaction->save();
-                            }
-
-                            $logStatus = $orderTransaction->transaction_status;
-
-                            $order_log .= "<br/>{$result['name']}<br/>{$result['message']}";
-                        } else {
-                            $logStatus =  $state;
-                        }
-
-                    }
-
-                } catch (\Exception $e) {
-                    $order_log .= "<br/>{$pmModel->payment_method} Processing Error: {$e->getMessage()}";
-                    $logStatus = OrderTransactionModel::STATUS_FAILED;
-                }
-
-                $transactionLog = new TransactionLogModel(
+                $params = array_merge(
+                    PaymentHelper::getPaymentParams($orderTransaction, $amount),
                     [
-                        'orderid' => $orderModel->orderid,
-                        'paymentid' => $pmModel->paymentid,
-                        'order_transaction_id' => isset($model) ? $model->id : (isset($orderTransaction) ? $orderTransaction->id : null),
-                        'transaction_id' => isset($model) ? $model->transaction_id : (isset($orderTransaction) ? $orderTransaction->transaction_id : ''),
-                        'transaction_status' => $logStatus,
-                        'transaction_currency' => !isset($result['amount']) ? $params['currency'] : $result['amount']['currency'],
-                        'transaction_total' => !isset($result['amount']) ? $params['amount'] : $result['amount']['total'],
-                        'login' => Xcart::app()->user->login,
-                        'transaction_log' => array_merge($result, ['xcart_log' => $order_log])
+                        'mode' => $mode,
+                        'payment_method_model' => $orderTransaction->payment_method_model,
+                        'new_method_model' => $pmModel = PaymentMethodModel::objects()->get(['payment_method' => $orderTransaction->payment_method_model->processor->processor_name . ' VT']),
+                        'order' => $orderModel,
+                        'orderTransaction' => $orderTransaction,
                     ]
                 );
 
-                if ($transactionLog->isValid()) {
-                    $transactionLog->save();
-                }
+                $store = new OrderTransactionStore($params);
+                $store->$method();
+                $order_log .= $store->log;
             }
+
             func_log_order($order_id, 'PP', $order_log, Xcart::app()->user->login);
         }
 
@@ -130,17 +64,16 @@ class OrderTransactionsController extends PrototypeAdminController
         $method = $order_log = $type = null;
         $result = [];
 
-        /** @var OrderModel $model */
-        if (isset($_POST['paypal_vt']) && $order_id && $model = OrderModel::objects()->get(['orderid' => $order_id])) {
+        /** @var OrderModel $orderModel */
+        if (isset($_POST['paypal_vt']) && $order_id && $orderModel = OrderModel::objects()->get(['orderid' => $order_id])) {
 
-            extract(Gateway::$gatewayMethods['authorize']);
+            $count = $orderModel->transactions->count();
 
-            $count = $model->transactions->count();
-
-            if (!($isAllowed = PaymentHelper::isAuthorizeAllowed($model, $count))) {
+            if (!($isAllowed = PaymentHelper::isAuthorizeAllowed($orderModel, $count))) {
                 if (!$count && (empty($AJAX_SUBMIT) || $AJAX_SUBMIT != "Y")) {
 
                     $order_log .= $f_order = OrderModule::t("Error: First transaction in order exception");
+                    func_log_order($order_id, 'PP', $order_log, Xcart::app()->user->login);
 
                     $top_message = [
                         'type' => 'E',
@@ -148,71 +81,31 @@ class OrderTransactionsController extends PrototypeAdminController
                     ];
 
                     Xcart::app()->request->session->add('top_message', $top_message);
-                    Xcart::app()->request->redirect("/admin/order.php?orderid={$model->orderid}&tab=y#main_order_tabs-VT");
+                    Xcart::app()->request->redirect("/admin/order.php?orderid={$orderModel->orderid}&tab=y#main_order_tabs-VT");
 
                 }
             }
 
             $pmModel = PaymentMethodModel::objects()->get(['payment_method' => $_POST['paypal_vt']['processor']]);
 
-            $params = array_merge(PaymentHelper::prepareAuthorize($_POST['paypal_vt'], $model), ['processor' => $pmModel->processor, 'payment_method_model' => $pmModel]);
-
-            try {
-
-                /** @var OrderTransactionModel $transaction_model */
-                list($transaction_model, $gw) = OrderTransactionHelper::action($method, $params);
-
-                if ($transaction_model) {
-
-                    $transaction_model->setAttributes(
-                        [
-                            'orderid' => $model->orderid,
-                            'type' => $type,
-                        ]);
-
-                    $transaction_model->save();
-
-                    $result = $transaction_model->transaction_response;
-
-                    list ($o_log, $send_notification) = OrderHelper::changeOrderCBStatus($model, OrderStatusModel::ORDER_STATUS_AUTHORIZED);
-                    $order_log .= "<br />Transaction:" . $transaction_model->transaction_id . $o_log;
-
-                    if (!$count && $send_notification) {
-                        func_send_order_status_notification($model->orderid, OrderStatusModel::ORDER_STATUS_AUTHORIZED, true);
-                    }
-
-                    $logStatus = $transaction_model->transaction_status;
-
-                } else {
-
-                    $result = $gw->result->getData();
-
-                    $order_log .= "<br/>{$result['name']}<br/>{$result['message']}";
-
-                    $logStatus = OrderTransactionModel::STATUS_FAILED;
-                }
-
-            } catch (\Exception $e) {
-                $order_log .= "<br/>{$pmModel->payment_method} Processing Error: {$e->getMessage()}";
-                $logStatus = OrderTransactionModel::STATUS_FAILED;
-            }
-
-            $transactionLog = new TransactionLogModel(
+            $params = array_merge(PaymentHelper::prepareAuthorize($_POST['paypal_vt'], $orderModel),
                 [
-                    'orderid' => $model->orderid,
-                    'paymentid' => $pmModel->paymentid,
-                    'order_transaction_id' => isset($transaction_model) ? $transaction_model->id : null,
-                    'transaction_id' => isset($transaction_model) ? $transaction_model->transaction_id : '',
-                    'transaction_status' => $logStatus,
-                    'transaction_currency' => !isset($result['amount']) ? $params['currency'] : $result['amount']['currency'],
-                    'transaction_total' => !isset($result['amount']) ? $params['amount'] : $result['amount']['total'],
-                    'login' => Xcart::app()->user->login,
-                    'transaction_log' => array_merge($result, ['xcart_log' => $order_log])
+                    'processor' => $pmModel->processor,
+                    'payment_method_model' => $pmModel,
+                    'order' => $orderModel,
                 ]
             );
 
-            if ($transactionLog->isValid()) {
-                $transactionLog->save();
+            /** @var OrderTransactionModel $transaction_model */
+            $store = new OrderTransactionStore($params);
+            $transaction_model = $store->authorize();
+            $order_log .= $store->log;
+
+            list ($o_log, $send_notification) = OrderHelper::changeOrderCBStatus($orderModel, OrderStatusModel::ORDER_STATUS_AUTHORIZED);
+            $order_log .= "<br />Transaction:" . $transaction_model->transaction_id . $o_log;
+
+            if (!$count && $send_notification) {
+                func_send_order_status_notification($orderModel->orderid, OrderStatusModel::ORDER_STATUS_AUTHORIZED, true);
             }
         }
 

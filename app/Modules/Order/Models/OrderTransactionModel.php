@@ -2,6 +2,7 @@
 
 namespace Modules\Order\Models;
 
+use Modules\Order\Stores\OrderTransactionStore;
 use Modules\Payment\Gateways\Gateway;
 use Modules\Payment\Models\PaymentMethodModel;
 use Modules\User\Models\UserModel;
@@ -13,6 +14,7 @@ use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\HasManyField;
 use Xcart\App\Orm\Fields\SerializeField;
 use Xcart\App\Orm\Fields\UnixTimestampField;
+use Xcart\OrderTransaction;
 
 class OrderTransactionModel extends AutoMetaModel
 {
@@ -119,7 +121,7 @@ class OrderTransactionModel extends AutoMetaModel
         $result = [];
         if ($this->transaction_response['links']) {
             $result = array_filter($this->transaction_response['links'], function ($a) {
-                return ($a['method'] == 'POST' && array_key_exists($a['rel'], Gateway::$gatewayMethods));
+                return ($a['method'] == 'POST' && array_key_exists($a['rel'], OrderTransactionStore::$gatewayMethods));
             });
         }
         return $result;

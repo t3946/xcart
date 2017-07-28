@@ -4,7 +4,10 @@ namespace Modules\Order\Helpers;
 
 
 use Modules\Order\Models\OrderModel;
+use Modules\Order\Models\OrderStatusModel;
 use Modules\Order\Models\OrderTransactionModel;
+use Modules\Order\Models\TransactionLogModel;
+use Modules\Order\OrderModule;
 use Modules\Payment\Gateways\Gateway;
 use Modules\Payment\Helpers\PaymentHelper;
 use Modules\Payment\Models\PaymentMethodModel;
@@ -76,7 +79,7 @@ class OrderTransactionHelper
 
         if ($gw = Gateway::getGateway($params['processor'])) {
             if ($gw->$method($params)) {
-                if ($result = OrderTransactionHelper::prepareOrderTransaction($gw, $params)){
+                if ($result = OrderTransactionHelper::prepareOrderTransaction($gw, $params)) {
                     if (empty($params['transactionReference']) || $result['transaction_id'] != $params['transactionReference']) {
                         $model = new OrderTransactionModel($result);
                     } else {

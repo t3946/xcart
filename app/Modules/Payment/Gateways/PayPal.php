@@ -4,6 +4,8 @@ namespace Modules\Payment\Gateways;
 
 use Modules\Core\Models\GlobalConfigModel;
 use Modules\Order\Models\OrderTransactionModel;
+use Modules\Order\Stores\OrderTransactionStore;
+use Xcart\OrderTransaction;
 
 class PayPal extends Gateway
 {
@@ -103,7 +105,7 @@ class PayPal extends Gateway
         if (!$state && ($state = $data['state'])) {
             $statuses = array_map(function ($a) {
                 return $a['status'];
-            }, self::$gatewayMethods);
+            }, OrderTransactionStore::$gatewayMethods);
             if (!in_array($state, $statuses)) {
                 switch ($data['intent']) {
                     case 'authorize':
