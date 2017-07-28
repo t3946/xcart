@@ -84,7 +84,7 @@ abstract class ShippingProcessor
                     foreach ($this->aShippingRates as $oShippingRate) {
                         $oShippingRate->setCart($this->getCart());
                     }
-                    usort($this->aShippingRates, [get_called_class(), 'sortShippingRatesByCostAsc']);
+                    usort($this->aShippingRates, ['\Xcart\Shipping\ShippingProcessor', 'sortShippingRatesByCostAsc']);
                     $this->removeFromCart();
                 }
             }
