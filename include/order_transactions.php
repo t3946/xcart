@@ -18,11 +18,7 @@ if ($orderModel = OrderModel::objects()->get(['orderid' => $orderid])) {
 
     foreach ($orderModel->transactions->order(['-id']) as $transactionModel) {
         if (empty($transactionModel->transaction_response)) {
-
-            list($transactionModel) = OrderTransactionHelper::action(OrderTransactionStore::$gatewayMethods['lookup']['method'], PaymentHelper::getPaymentParams($transactionModel));
-            if ($transactionModel) {
-                $transactionModel->save();
-            }
+            OrderTransactionStore::lookupSelf($transactionModel);
         }
     }
 

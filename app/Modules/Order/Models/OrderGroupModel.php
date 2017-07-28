@@ -159,6 +159,7 @@ class OrderGroupModel extends AutoMetaModel
 
     public function getRefunds()
     {
-        return array_sum(array_map(function($a){return $a->total_gross;}, $this->refunds));
+        $refs = $this->refunds->all();
+        return $refs ? array_sum(array_map(function($a){return $a->total_gross;}, $refs)) : 0;
     }
 }

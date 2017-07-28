@@ -21,7 +21,7 @@ class OrderTransactionStore extends BaseStore
     public $gateway = null;
     public $order = null;
     public $log = null;
-    public $fail = false;
+    public $failed = false;
 
     public static $gatewayMethods = [
         'authorize' => [
@@ -81,9 +81,13 @@ class OrderTransactionStore extends BaseStore
 
     public function populate(array $data)
     {
-
+        $this->order = $data['order'];
     }
 
+    /**
+     * @param string $method
+     * @return OrderTransactionModel
+     */
     private function execute($method)
     {
         $type = null;
@@ -112,18 +116,14 @@ class OrderTransactionStore extends BaseStore
 
                 $result = $model->transaction_response;
 
+
                 list ($o_log) = OrderHelper::changeOrderCBStatus($this->params['order'], OrderStatusModel::ORDER_STATUS_AUTHORIZED);
                 $this->log .= OrderModule::t('Transaction:') . " {$model->transaction_id} {$o_log}\n";
 
                 $logStatus = $model->transaction_status;
 
-                $parent = $model;
-                while ($parent->parent_id && $parent = $parent->parent) {
-                    list($model_o) = OrderTransactionHelper::action('lookup', PaymentHelper::getPaymentParams($parent));
-                    if ($model_o) {
-                        $model_o->save();
-                    }
-                }
+                self::lookupParentTransactions($model);
+
             } else {
 
                 $state = $this->gateway->getState($this->params['mode']);
@@ -139,15 +139,16 @@ class OrderTransactionStore extends BaseStore
 
                     $logStatus = $this->params['orderTransaction']->transaction_status;
 
-                    $this->log .= "<br/>{$result['name']}<br/>{$result['message']}";
                 } else {
-                    $this->fail = true;
+                    $this->failed = true;
                     $logStatus = $state;
+                    self::lookupParentTransactions($this->params['orderTransaction']);
                 }
+                $this->log .= "<br/>{$result['name']}<br/>{$result['message']}";
             }
         } catch (\Exception $e) {
             $this->log .= $e->getMessage()."\n";
-            $this->fail =true;
+            $this->failed =true;
             $logStatus = OrderTransactionModel::STATUS_FAILED;
         }
 
@@ -158,8 +159,8 @@ class OrderTransactionStore extends BaseStore
                 'order_transaction_id' => isset($model) ? $model->id : (isset($this->params['orderTransaction']) ? $this->params['orderTransaction']->id : null),
                 'transaction_id' => isset($model) ? $model->transaction_id : (isset($params['orderTransaction']) ? $this->params['orderTransaction']->transaction_id : ''),
                 'transaction_status' => $logStatus,
-                'transaction_currency' => !isset($result['amount']) ? $this->params['currency'] : $result['amount']['currency'],
-                'transaction_total' => !isset($result['amount']) ? $this->params['amount'] : $result['amount']['total'],
+                'transaction_currency' => isset($result['amount']) ? $result['amount']['currency'] : $this->params['currency'],
+                'transaction_total' => isset($result['amount']) ? $result['amount']['total'] : $this->params['amount'],
                 'login' => Xcart::app()->user->login,
                 'transaction_log' => array_merge($result, ['xcart_log' => $this->log])
             ]
@@ -169,7 +170,11 @@ class OrderTransactionStore extends BaseStore
             $transactionLog->save();
         }
 
-        if ($this->fail) {
+        if (isset($result['reason_code']) && $result['reason_code'] == 'PAYMENT_REVIEW') {
+            $this->failed = true;
+        }
+
+        if ($this->failed) {
             switch($method) {
                 case 'capture' :
                     OrderTagEventHelper::orderTagEvent(37, $this->order->orderid);
@@ -179,6 +184,21 @@ class OrderTransactionStore extends BaseStore
 
         return $model;
 
+    }
+
+    public static function lookupSelf($model) {
+        list($model_o) = OrderTransactionHelper::action('lookup', PaymentHelper::getPaymentParams($model));
+        if ($model_o) {
+            $model_o->save();
+        }
+
+    }
+
+    public static function lookupParentTransactions($model)
+    {
+        while ($model->parent_id && $model = $model->parent) {
+            self::lookupSelf($model);
+        }
     }
 
 }

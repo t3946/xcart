@@ -126,4 +126,15 @@ class OrderTransactionModel extends AutoMetaModel
         }
         return $result;
     }
+
+    public function getAvailAmount()
+    {
+        $avail = abs($this->transaction_amount);
+
+        foreach ($models = $this->child->all() as $model) {
+            $avail -= abs($model->transaction_amount);
+        }
+
+        return $avail;
+    }
 }

@@ -56,7 +56,7 @@
         <form action="{$model->getProcessUrl('lookup')}" method="post">
             <span style="float: left; line-height: 22px;"><b>Available actions:</b></span>&nbsp;
             {if $model->getLinks()}
-                <input type="text" name="transaction_amount[{$model->id}]" id="transaction_amount_{$model->id}" size="6" value="{$model->transaction_amount|abs}" required pattern="^\d+(\.?\d+|)$"/>
+                <input type="text" name="transaction_amount[{$model->id}]" id="transaction_amount_{$model->id}" size="6" value="{$model->getAvailAmount()|abs}" required pattern="^\d+(\.?\d+|)$"/>
             {/if}
             <div class="ui xcart buttons">
                 <div data-action="{$model->getProcessUrl('lookup')}" class="ui button lookup" style="border: 1px solid #808080;">Look up payment</div>

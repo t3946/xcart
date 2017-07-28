@@ -5,6 +5,7 @@ use Modules\Order\Models\OrderModel;
 use Modules\Order\Models\OrderStatusModel;
 use Modules\Order\Models\OrderTransactionModel;
 use Modules\Order\Models\TransactionLogModel;
+use Modules\Order\Stores\OrderTransactionStore;
 use Modules\Payment\Gateways\Gateway;
 use Modules\Payment\Helpers\PaymentHelper;
 use Modules\Payment\Models\PaymentMethodModel;
@@ -19,12 +20,12 @@ global $paymentid, $login, $transaction_currency, $transaction_amount;
 $gw = $log = $orderTransaction = $countTr = $logStatus = $params = null;
 $result = [];
 
-if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array_keys(Gateway::$gatewayMethods))) {
+if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array_keys(OrderTransactionStore::$gatewayMethods))) {
     /** @var OrderModel $orderModel */
     /** @var PaymentMethodModel $pmModel */
     if ($orderModel = OrderModel::objects()->get(['orderid' => $orderid])) {
 
-        extract(Gateway::$gatewayMethods[$mode]);
+        extract(OrderTransactionStore::$gatewayMethods[$mode]);
 
         $orderModel->transactions->exclude(['transaction_status' => '', 'transaction_id' => ''])->count();
 

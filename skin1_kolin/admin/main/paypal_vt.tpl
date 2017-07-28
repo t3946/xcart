@@ -216,44 +216,36 @@
         {assign var='main_transaction' value=true}
         {include file="admin/main/transactions_table.tpl"}
         <table align="right" cellspacing="1" cellpadding="1">
-            {assign var=oPaymentProcessor value=$oOrder->getPaymentMethodInstance()}
-            {math assign="transaction_with_multiplier" equation="x*y" x=$order_transactions_totals.authorized_PLUS_captured_totals y=$oPaymentProcessor->getMaximumReAuthorizationMultiplier()}
+
             <tr{cycle values=", class='TableSubHead'" name="cycle_totals"}>
-                <td>Transactions amount (authorized/pending +captured )</td>
+                <td>Order total</td>
                 <td>&nbsp;</td>
-                <td align="right"
-                    style="font-size: 10px; background-color: {if $oOrder->getOrderTotalGross() == $order_transactions_totals.authorized_PLUS_captured_totals}#d9ead3;
-                    {elseif $oOrder->getOrderTotalGross() > $order_transactions_totals.authorized_PLUS_captured_totals && $oOrder->getOrderTotalGross() <= $transaction_with_multiplier}
-                            yellow
-                            {else}red
-                    {/if};">{include file="currency2.tpl" value=$order_transactions_totals.authorized_PLUS_captured_totals}</td>
+                <td align="right">{include file="currency2.tpl" value=$order_store->getTotal()}</td>
+            </tr>
+            <tr{cycle values=", class='TableSubHead'" name="cycle_totals"}>
+                <td>Captured</td>
+                <td>&nbsp;</td>
+                <td align="right">{include file="currency2.tpl" value=$order_store->getCapturedAvail()}</td>
+            </tr>
+            <tr{cycle values=", class='TableSubHead'" name="cycle_totals"}>
+                <td>Available to capture</td>
+                <td>&nbsp;</td>
+                <td align="right">{include file="currency2.tpl" value=$order_store->getAmountToCapture()}</td>
             </tr>
 
             <tr{cycle values=", class='TableSubHead'" name="cycle_totals"}>
-                <td>Void total</td>
+                <td>Deficit</td>
                 <td>&nbsp;</td>
-                <td align="right"
-                    style="font-size: 10px;">{include file="currency2.tpl" value=$order_transactions_totals.void_total}</td>
+                <td align="right">{include file="currency2.tpl" value=$order_store->getAmountDeficit()}</td>
             </tr>
+            {if $order_store->getAmountDeficit() > 0}
+            <tr{cycle values=", class='TableSubHead'" name="cycle_totals"}>
+                <td>Ask from Cx</td>
+                <td>&nbsp;</td>
+                <td align="right">{include file="currency2.tpl" value=$order_store->getAskFromCx()}</td>
+            </tr>
+            {/if}
 
-            <tr{cycle values=", class='TableSubHead'" name="cycle_totals"}>
-                <td>Authorized total</td>
-                <td>&nbsp;</td>
-                <td align="right"
-                    style="font-size: 10px;">{include file="currency2.tpl" value=$order_transactions_totals.authorized_total}</td>
-            </tr>
-            {math assign="transaction_capture_with_multiplier" equation="x*y" x=$order_transactions_totals.captured_total y=$oPaymentProcessor->getMaximumReAuthorizationMultiplier()}
-            <tr{cycle values=", class='TableSubHead'" name="cycle_totals"}>
-                <td>Captured total</td>
-                <td>&nbsp;</td>
-                <td align="right"
-                    style="font-size: 10px; background-color: {if $oOrder->getOrderTotalGross() eq $order_transactions_totals.captured_total}
-                            green
-                            {elseif $oOrder->getOrderTotalGross() > $order_transactions_totals.captured_total && $oOrder->getOrderTotalGross() <= $transaction_capture_with_multiplier}
-                            yellow
-                            {else}
-                            red{/if};">{include file="currency2.tpl" value=$order_transactions_totals.captured_total}</td>
-            </tr>
         </table>
     {/capture}
     {include file="dialog.tpl" title="Transactions" content=$smarty.capture.virtual_terminal_transactions extra='width="100%"'}

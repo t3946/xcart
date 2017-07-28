@@ -115,4 +115,29 @@ class OrderTransactionHelper
             'captured_total' => floatval($trs[OrderTransactionModel::STATUS_COMPLETED] + $trs[OrderTransactionModel::STATUS_PARTIALLY_RUFUNDED])
         ];
     }
+
+    /**
+     * @param OrderModel $order
+     * @return float
+     */
+    public static function getCaptureAmountAvail(OrderModel $order)
+    {
+        $result = 0;
+        if ($order) {
+            foreach ($order->transactions as $transaction) {
+                if ($transaction->type == OrderTransactionModel::TYPE_AUTHORIZATION
+                    && in_array($transaction->transaction_status,
+                        [
+                            OrderTransactionModel::STATUS_AUTHORIZED,
+                            OrderTransactionModel::STATUS_PENDING,
+                            OrderTransactionModel::STATUS_PARTIALLY_CAPTURED,
+
+                        ])) {
+                    $result += $transaction->transaction_amount;
+                }
+            }
+            /**TODO +15% Paypal capture amount */
+        }
+        return $result;
+    }
 }

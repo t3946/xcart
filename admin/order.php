@@ -1527,7 +1527,6 @@ if (!empty($attention_tags_values) && is_array($attention_tags_values)) {
 }
 
 require $xcart_dir . "/include/order_edit.php";
-require $xcart_dir . "/include/paypal_vt.php";
 require $xcart_dir . "/include/transaction_logs.php";
 require $xcart_dir . "/include/order_transactions.php";
 
@@ -1794,6 +1793,7 @@ if ($mode == 'mnf_notify' || $mode == "cidev_send_email_to_operator")
             $log .= "'Send (Off-hours dispatch to distributor)' at '" . $manufacturer_name . ": Dispatch to distributor'";
         }
 
+        /** @var OrderModel $order_model */
         $order_model = OrderModel::objects()->get(['orderid' => $orderid]);
 
         /** @var OrderGroupModel $group_model */
@@ -1803,11 +1803,12 @@ if ($mode == 'mnf_notify' || $mode == "cidev_send_email_to_operator")
 
             $groupRefunds = $group_model->getRefunds();
             $toCaptureAmount = $group_model->total_gross - $groupRefunds;
+            $toCaptureAmountAvail = OrderTransactionHelper::getCaptureAmountAvail($order_model);
 
-            if ($toCaptureAmount <= $authorized_transaction_amount) {
+            if ($toCaptureAmount <= $toCaptureAmountAvail) {
 
                 $auth_transactions = array_filter($order_model->transactions->all(), function ($a) {
-                    return ($a->type == OrderTransactionModel::STATUS_AUTHORIZED && in_array($a->transaction_status,
+                    return ($a->type == OrderTransactionModel::TYPE_AUTHORIZATION && in_array($a->transaction_status,
                             [
                                 OrderTransactionModel::STATUS_AUTHORIZED,
                                 OrderTransactionModel::STATUS_PARTIALLY_CAPTURED,
@@ -1821,13 +1822,11 @@ if ($mode == 'mnf_notify' || $mode == "cidev_send_email_to_operator")
                         'amount' => number_format(min($toCaptureAmount, $auth_tr->transaction_amount), 2),
                         'currency' => $auth_tr->transaction_currency,
                     ];
-                    $params = array_merge($amount,
+                    $params = array_merge(PaymentHelper::getPaymentParams($auth_tr, $amount),
                         [
                             'mode' => 'capture',
-                            'transactionReference' => $auth_tr->transaction_id,
-                            'payment_method_model' => $pmModel = $orderTransaction->payment_method_model,
-                            'new_method_model' => $pmModel,
-                            'order' => $orderModel,
+                            'new_method_model' => $auth_tr->payment_method_model,
+                            'order' => $order_model,
                             'orderTransaction' => $auth_tr,
                         ]
                     );
@@ -3283,6 +3282,7 @@ if (!empty($orderid)) {
 $smarty->assign("location", $location);
 
 $smarty->assign('authorise_url', Xcart\App\Main\Xcart::app()->router->url('order:authorise', ['order_id' => $orderid]));
+$smarty->assign('order_store', new \Modules\Order\Stores\OrderStore(OrderModel::objects()->get(['orderid' => $orderid])));
 
 @include $xcart_dir . "/modules/gold_display.php";
 func_display("admin/home.tpl", $smarty);
