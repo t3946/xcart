@@ -104,6 +104,9 @@ class ShippingRate extends Data
                 $this->fShippingCharge -= $oCart->getExtraMarginValue();
                 $this->fShippingCharge = max($this->fShippingCharge, 0);
             }
+
+            $this->fShippingCharge = min(max($this->fShippingCharge, $this->min_shipping_charge),  $this->max_shipping_charge);
+
             $this->fShippingCharge = round($this->fShippingCharge, 2);
         }
         return $this->fShippingCharge;

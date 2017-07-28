@@ -267,11 +267,22 @@ checkboxes{$zones_list[zone].zone.zoneid}_{$shipid} = new Array({section name=ra
 <input type="text" name="posted_data[{$shipping_rate.rateid}][cost_marcup]" size="9" value="{$shipping_rate.cost_marcup|default:0}" />
 {/if}
         </td>
+        <td></td>
         <td>{$lng.lbl_per_item_charge} ({$config.General.currency_symbol}):</td>
         <td nowrap="nowrap"><input type="text" name="posted_data[{$shipping_rate.rateid}][item_rate]" size="5" value="{$shipping_rate.item_rate|formatprice}" /></td>
-        <td></td>
         <td nowrap="nowrap"></td>
 </tr>
+{if $type eq "D"}
+	<tr>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td>Min shipping charge (US$ ):</td>
+		<td><input type="text" name="posted_data[{$shipping_rate.rateid}][min_shipping_charge]" size="5" value="{$shipping_rate.min_shipping_charge|formatprice}" /></td>
+		<td>Max shipping charge (US$ ):</td>
+		<td><input type="text" name="posted_data[{$shipping_rate.rateid}][max_shipping_charge]" size="8" value="{$shipping_rate.max_shipping_charge|formatprice}" /></td>
+	</tr>
+{/if}
 
 
 {if not %rate.last%}
@@ -412,6 +423,16 @@ checkboxes{$zones_list[zone].zone.zoneid}_{$shipid} = new Array({section name=ra
         <td></td>
         <td nowrap="nowrap"></td>
 </tr>
+{if $type eq "D"}
+<tr>
+	<td></td>
+	<td></td>
+	<td>Min shipping charge (US$ ):</td>
+	<td><input type="text" name="min_shipping_charge" size="5" value="{'0'|formatprice}" /></td>
+	<td>Max shipping charge (US$ ):</td>
+	<td><input type="text" name="max_shipping_charge" size="8" value="{$maxvalue|formatprice}" /></td>
+</tr>
+{/if}
 
 </table>
 

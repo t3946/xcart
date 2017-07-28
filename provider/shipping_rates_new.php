@@ -76,6 +76,8 @@ if ($REQUEST_METHOD=="POST") {
 						"maxweight" => func_convert_number($v['maxweight']),
 						"mintotal" => func_convert_number($v['mintotal']),
 						"maxtotal" => func_convert_number($v['maxtotal']),
+                        "min_shipping_charge" => func_convert_number($v['min_shipping_charge']),
+                        "max_shipping_charge" => func_convert_number($v['max_shipping_charge']),
 						"rate" => func_convert_number($v['rate']),
 						"item_rate" => func_convert_number($v['item_rate']),
 						"rate_p" => func_convert_number($v['rate_p']),
@@ -108,6 +110,8 @@ if ($REQUEST_METHOD=="POST") {
 					"maxtotal" => func_convert_number($maxtotal_new),
 					"rate" => func_convert_number($rate_new),
 					"item_rate" => func_convert_number($item_rate_new),
+					"min_shipping_charge" => func_convert_number($min_shipping_charge),
+					"max_shipping_charge" => func_convert_number($max_shipping_charge),
 					"rate_p" => func_convert_number($rate_p_new),
 					"weight_rate" => func_convert_number($weight_rate_new),
 # START: random:1073746882_1073747063 [2008 Dec 24 16:25] 
