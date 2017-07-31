@@ -219,6 +219,7 @@ class MailComponent
             }
         }
 
+        $mail_message = wordwrap($mail_message, 500, "\r\n", false);
 
         if (preg_match('/([^ @,;<>]+@[^ @,;<>]+)/S', $this->from, $m)) {
             return @mail($this->to, $mail_subject, $mail_message, $headers, "-f" . $m[1]);
