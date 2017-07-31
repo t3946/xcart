@@ -147,6 +147,9 @@ class MailComponent
             if (file_exists($mail_smarty->template_dir . "/mail/html/" . basename($body_template))) {
                 $mail_smarty->assign("mail_body_template", "mail/html/" . basename($body_template));
                 $mail_message = func_display("mail/html/html_message_template.tpl", $mail_smarty, false);
+
+                $mail_message = wordwrap($mail_message, 500, "\r\n", false);
+
                 list($mail_message, $files) = func_attach_images($mail_message);
 
                 $files_counter = count($files);
@@ -176,7 +179,7 @@ class MailComponent
                         }
 
 
-                        $files[$files_counter]["name"] = $sName;
+                        $files[$files_counter]["name"] = str_replace(' ', '_', $sName);
                         $files[$files_counter]["type"] = mime_content_type($sFile);
                         $files[$files_counter]["data"] = $data;
                     }
@@ -193,9 +196,11 @@ class MailComponent
                     foreach ($files as $v) {
                         $msgs['content'][] = array(
                             "header" => array(
-                                "Content-Type" => "$v[type];$lend\tname=\"$v[name]\"",
+                                "Content-Type" => "{$v['type']};\tname=\"{$v['name']}\"",
                                 "Content-Transfer-Encoding" => "base64",
-                                "Content-ID" => "<$v[name]>"
+                                "Content-Description" => "inline",
+                                "Content-Disposition" => "attachment; filename=\"{$v['name']}\"",
+                                "Content-ID" => "<{$v['name']}>"
                             ),
                             "content" => chunk_split(base64_encode($v['data']))
                         );
@@ -219,7 +224,6 @@ class MailComponent
             }
         }
 
-        $mail_message = wordwrap($mail_message, 500, "\r\n", false);
 
         if (preg_match('/([^ @,;<>]+@[^ @,;<>]+)/S', $this->from, $m)) {
             return @mail($this->to, $mail_subject, $mail_message, $headers, "-f" . $m[1]);
