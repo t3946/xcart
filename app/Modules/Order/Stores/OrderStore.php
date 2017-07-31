@@ -151,4 +151,29 @@ class OrderStore extends BaseStore
     {
         return $this->getAmountDeficit() - $this->getAmountToCapture();
     }
+
+    private $additionalCaptureAmount = null;
+    public function getAdditionalCaptureAmount()
+    {
+        if (is_null($this->additionalCaptureAmount)) {
+            $this->additionalCaptureAmount = array_sum(array_map(function ($model) {
+                /** @var OrderTransactionModel $model */
+                $value = 0;
+                if ($model->type == OrderTransactionModel::TYPE_AUTHORIZATION && in_array($model->transaction_status,
+                        [
+                            OrderTransactionModel::STATUS_AUTHORIZED,
+                            OrderTransactionModel::STATUS_PENDING,
+                            OrderTransactionModel::STATUS_PARTIALLY_CAPTURED,
+                            OrderTransactionModel::STATUS_CAPTURED,
+                            OrderTransactionModel::STATUS_COMPLETED,
+                        ]
+                    )) {
+                    if ($model->payment_method_model->maximum_re_authorization_multiplier > 0) {
+                        $value = $model->getAvailAmount() * $model->payment_method_model->maximum_re_authorization_multiplier - $model->getAvailAmount();
+                    }
+                }
+                return $value;
+            }, $this->transactions));
+        }
+    }
 }

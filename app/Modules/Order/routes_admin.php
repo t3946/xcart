@@ -11,6 +11,11 @@ return [
         'name' => 'authorise'
     ],
     [
+        'route' => '/{i:order_id}/manual_transaction',
+        'target' => ['\Modules\Order\Controllers\OrderTransactionsController', 'manual_transaction'],
+        'name' => 'manual_transaction'
+    ],
+    [
         'route' => '/child_transactions/{i:id}',
         'target' => ['\Modules\Order\Controllers\OrderTransactionsController', 'child_transactions'],
         'name' => 'child_transactions'

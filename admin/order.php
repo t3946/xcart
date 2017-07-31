@@ -3282,6 +3282,7 @@ if (!empty($orderid)) {
 $smarty->assign("location", $location);
 
 $smarty->assign('authorise_url', Xcart\App\Main\Xcart::app()->router->url('order:authorise', ['order_id' => $orderid]));
+$smarty->assign('manual_url', Xcart\App\Main\Xcart::app()->router->url('order:manual_transaction', ['order_id' => $orderid]));
 $smarty->assign('order_store', new \Modules\Order\Stores\OrderStore(OrderModel::objects()->get(['orderid' => $orderid])));
 
 @include $xcart_dir . "/modules/gold_display.php";

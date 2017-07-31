@@ -230,7 +230,7 @@
             <tr{cycle values=", class='TableSubHead'" name="cycle_totals"}>
                 <td>Available to capture</td>
                 <td>&nbsp;</td>
-                <td align="right">{include file="currency2.tpl" value=$order_store->getAmountToCapture()}</td>
+                <td align="right">{include file="currency2.tpl" value=$order_store->getAmountToCapture()} {if ($order_store->getAdditionalCaptureAmount())}(+{$order_store->getAdditionalCaptureAmount()}){/if}</td>
             </tr>
 
             <tr{cycle values=", class='TableSubHead'" name="cycle_totals"}>
@@ -267,7 +267,7 @@
 
 <br/>
 {capture name=add_manual_transaction}
-    <form action="order.php" method="post" name="vt_form03">
+    <form action="{$manual_url}" method="post" name="vt_form03">
         <input type="hidden" name="mode" id="mode" value="add_manual_transaction"/>
         <input type="hidden" name="orderid" value="{$orderid}"/>
 
