@@ -115,6 +115,8 @@
                     {/block}
                 </section>
 
+                {render_flash:raw template='_flash.tpl'}
+
                 {block "content"}{/block}
 
                 <section class="after-content">
