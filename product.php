@@ -874,7 +874,6 @@ if ($config["Appearance"]["Enable_surf_stats"] == "Y"){
     ]);
 }
 
-$CLIENT_IP = '96.31.66.233';
 $oManufacturer = DistributorModel::objects()->get(['manufacturerid' => $product_info['manufacturerid']]);
 if (($geo_ip = GeoipHelper::getGeoipLocation($CLIENT_IP))
     && ($state_model = $geo_ip->state_model)
