@@ -17,6 +17,7 @@ use Modules\Payment\Models\PaymentMethodModel;
 use Xcart\App\Controller\Controller;
 use Xcart\App\Controller\PrototypeAdminController;
 use Xcart\App\Main\Xcart;
+use Xcart\OrderTransaction;
 
 class OrderTransactionsController extends PrototypeAdminController
 {
@@ -124,6 +125,41 @@ class OrderTransactionsController extends PrototypeAdminController
                     'user_login' => Xcart::app()->user->login,
                 ]
             );
+        }
+    }
+
+    public function manual_transaction($order_id)
+    {
+        $order_log = OrderTransactionStore::$gatewayMethods['add_manual_transaction']['oredr_log'];
+
+        if (($pmModel = PaymentMethodModel::objects()->get(['paymentid' => $_POST['paymentid']]))
+            && ($orderModel = OrderModel::objects()->get(['orderid' => $order_id]))) {
+
+            /** @var OrderTransactionModel $model */
+             list($model, $isNew) = OrderTransactionModel::objects()->getOrNew(['orderid' => $orderModel->orderid, 'transaction_id' => trim($_POST['transaction_id'])]);
+
+             $model->setAttributes(
+                [
+                    'orderid' => $orderModel->orderid,
+                    'paymentid' => $pmModel->paymentid,
+                    'type' => OrderTransactionModel::TYPE_AUTHORIZATION,
+                    'transaction_id' => trim($_POST['transaction_id']),
+                    'transaction_status' => $_POST['transaction_status'],
+                    'transaction_amount' => number_format(trim($_POST['transaction_amount']), 2, '.', ''),
+                    'transaction_currency' => $_POST['transaction_currency'],
+                    'login' => Xcart::app()->user->login,
+                ]
+             );
+
+            if ($isNew) {
+                $model->save();
+            }
+
+            OrderTransactionStore::lookupSelf($model);
+
+            func_log_order($order_id, 'PP', $order_log, Xcart::app()->user->login);
+
+            Xcart::app()->request->redirect("/admin/order.php?orderid={$orderModel->orderid}&tab=y#main_order_tabs-VT");
         }
     }
 }
