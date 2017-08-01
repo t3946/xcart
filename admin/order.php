@@ -30,6 +30,7 @@
  * +-----------------------------------------------------------------------------+
  * \*****************************************************************************/
 
+use Modules\Order\Helpers\OrderGroupHelper;
 use Modules\Order\Helpers\OrderTransactionHelper;
 use Modules\Order\Models\OrderGroupModel;
 use Modules\Order\Models\OrderGroupRefundModel;
@@ -1590,7 +1591,7 @@ if ($mode == 'ref_notify')
                     }
 
                     $completed_transactions = array_filter($orderModel->transactions->all(), function($a) use ($ref_sum) {
-                        return (in_array($a->transaction_status,
+                        return ($a->type == OrderTransactionModel::TYPE_CAPTURE && in_array($a->transaction_status,
                             [
                                 OrderTransactionModel::STATUS_COMPLETED,
                                 OrderTransactionModel::STATUS_PARTIALLY_RUFUNDED
@@ -1600,18 +1601,18 @@ if ($mode == 'ref_notify')
 
                 if ($completed_transactions) {
                     try {
+                        $order_log = null;
                         foreach ($completed_transactions as $ref_tr) {
 
                             $amount = [
                                 'amount' => number_format(min($ref_sum, $ref_tr->transaction_amount), 2),
                                 'currency' => $ref_tr->transaction_currency,
                             ];
-                            $params = array_merge($amount,
+                            $params = array_merge(PaymentHelper::getPaymentParams($ref_tr, $amount),
                                 [
                                     'mode' => 'refund',
                                     'transactionReference' => $ref_tr->transaction_id,
-                                    'payment_method_model' => $pmModel = $orderTransaction->payment_method_model,
-                                    'new_method_model' => $pmModel,
+                                    'new_method_model' => $ref_tr->payment_method_model,
                                     'order' => $orderModel,
                                     'orderTransaction' => $ref_tr,
                                 ]
@@ -1622,6 +1623,7 @@ if ($mode == 'ref_notify')
                             if ($model->type == OrderTransactionModel::TYPE_REFUND && $model->transaction_status == OrderTransactionModel::STATUS_COMPLETED) {
                                 $ref_sum -= $model->transaction_amount;
                             }
+                            $order_log .= $trStore->log."\n";
 
                             if ($ref_sum <= 0) {
                                 break;
@@ -1629,7 +1631,7 @@ if ($mode == 'ref_notify')
                         }
 
                         if ($ref_sum > 0) {
-                            $error_message = 'Refund error. See order logs for details';
+                            $error_message = 'Refund error. ' . $order_log;
                         }
 
                     } catch (\Exception $e) {
@@ -1793,91 +1795,12 @@ if ($mode == 'mnf_notify' || $mode == "cidev_send_email_to_operator")
             $log .= "'Send (Off-hours dispatch to distributor)' at '" . $manufacturer_name . ": Dispatch to distributor'";
         }
 
-        /** @var OrderModel $order_model */
-        $order_model = OrderModel::objects()->get(['orderid' => $orderid]);
-
-        /** @var OrderGroupModel $group_model */
-        $group_model = $order_model->groups->get(['manufacturerid' => $mnf_id]);
-
-        if ($group_model && $group_model->cb_status == "AP") {
-
-            $groupRefunds = $group_model->getRefunds();
-            $toCaptureAmount = $group_model->total_gross - $groupRefunds;
-            $toCaptureAmountAvail = OrderTransactionHelper::getCaptureAmountAvail($order_model);
-
-            if ($toCaptureAmount <= $toCaptureAmountAvail) {
-
-                $auth_transactions = array_filter($order_model->transactions->all(), function ($a) {
-                    return ($a->type == OrderTransactionModel::TYPE_AUTHORIZATION && in_array($a->transaction_status,
-                            [
-                                OrderTransactionModel::STATUS_AUTHORIZED,
-                                OrderTransactionModel::STATUS_PARTIALLY_CAPTURED,
-                                OrderTransactionModel::STATUS_PENDING
-                            ]
-                        ));
-                });
-                foreach ($auth_transactions as $auth_tr) {
-
-                    $amount = [
-                        'amount' => number_format(min($toCaptureAmount, $auth_tr->transaction_amount), 2),
-                        'currency' => $auth_tr->transaction_currency,
-                    ];
-                    $params = array_merge(PaymentHelper::getPaymentParams($auth_tr, $amount),
-                        [
-                            'mode' => 'capture',
-                            'new_method_model' => $auth_tr->payment_method_model,
-                            'order' => $order_model,
-                            'orderTransaction' => $auth_tr,
-                        ]
-                    );
-
-                    $trStore = new OrderTransactionStore($params, $auth_tr);
-                    $model = $trStore->capture();
-
-                    $log .= $trStore->log;
-
-                    if ($model->type == OrderTransactionModel::TYPE_CAPTURE && $model->transaction_status == OrderTransactionModel::STATUS_COMPLETED) {
-                        $toCaptureAmount -= $model->transaction_amount;
-                    }
-
-                    if ($toCaptureAmount <= 0) {
-                        break;
-                    }
-                }
-                if ($toCaptureAmount > 0) {
-
-                    $top_message["content"] = func_get_langvar_by_name("txt_capture_failed");
-                    $top_message["type"] = "I";
-
-                    $log .= "<br />" . $top_message["content"];
-                    func_log_order($orderid, 'X', $log, $login);
-
-                    Xcart\App\Main\Xcart::app()->request->session->add('top_message', $top_message);
-                    Xcart\App\Main\Xcart::app()->request->redirect("/admin/order.php?orderid={$orderModel->orderid}");
-
-                }
-
-                $new_status = \Modules\Order\Models\OrderStatusModel::objects()->get(['code' => 'P']);
-
-                $log .= "<B>" . $group_model->manufacturer->code . ":</B> cb_status: " . $group_model->status_cb->name . " -> " . $new_status->name;
-
-                $group_model->cb_status = $new_status->code;
-
-                $group_model->save();
-
-            } else {
-
-                $top_message["content"] = func_get_langvar_by_name("lbl_captureamount_not_equal_order_amount");
-                $top_message["type"] = "R";
-
-                $log .= "<br />" . $top_message["content"];
-                func_log_order($orderid, 'X', $log, $login);
-
-                Xcart\App\Main\Xcart::app()->request->session->add('top_message', $top_message);
-                Xcart\App\Main\Xcart::app()->request->redirect("/admin/order.php?orderid={$orderModel->orderid}");
-
-            }
-        }
+        $log .= OrderGroupHelper::dispatchGroup(
+            [
+                'orderid' => $orderid,
+                'mnf_id' => $mnf_id,
+            ]
+        );
 
         if ($bad_time_do_not_send_email == "Y")
         {
