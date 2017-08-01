@@ -401,117 +401,132 @@ var product_avail = 1;
 <td rowspan="3" class="save_td">&nbsp;</td>
 </tr>
 
-<tr>
-<td colspan="2" style="padding-left: 16px;"><div class="line_subtotal"></div></td>
-</tr>
+	<tr>
+		<td colspan="2" style="padding-left: 16px;">
+			<div class="line_subtotal"></div>
+		</td>
+	</tr>
 
-<tr>
- <td valign="top" style="padding-left: 16px;">
-  <table cellspacing="0" cellpadding="0" border="0">
+	<tr>
+		<td valign="top" style="padding-left: 16px;">
+			<table cellspacing="0" cellpadding="0" border="0">
 
-{if $product.min_amount gte 1 && $product.product_availability eq "in stock"}
-<tr><td colspan="2">&nbsp;</td></tr>
-<tr>
-<td width="93" class="subtotal_class1">
-{if $product_subtotal_value eq ""}
-{math equation="price*quantity" price=$current_price quantity=$product.min_amount format="%3.5f" assign=product_subtotal_value}
-{/if}
-Subtotal:
-</td>
-<td>
-<div class="subtotal_class2" id="product_subtotal_value">{include file="currency.tpl" value=$product_subtotal_value plain_text_message=true price_type="product_subtotal_value"}</div>
-</td>
-</tr>
-{/if}
+                {if $product.min_amount gte 1 && $product.product_availability eq "in stock"}
+					<tr>
+						<td colspan="2">&nbsp;</td>
+					</tr>
+					<tr>
+						<td width="93" class="subtotal_class1">
+                            {if $product_subtotal_value eq ""}
+                                {math equation="price*quantity" price=$current_price quantity=$product.min_amount format="%3.5f" assign=product_subtotal_value}
+                            {/if}
+							Subtotal:
+						</td>
+						<td>
+							<div class="subtotal_class2"
+								 id="product_subtotal_value">{include file="currency.tpl" value=$product_subtotal_value plain_text_message=true price_type="product_subtotal_value"}</div>
+						</td>
+					</tr>
+                {/if}
 
-{*
-</table>
-<table width="100%" cellspacing="0" cellpadding="0">
-*}
+				<tr>
+					<td colspan="2">
+						<input type="hidden" name="mode" value="add"/>
 
-<tr><td colspan="2">
-<input type="hidden" name="mode" value="add" />
-
-<input type="hidden" name="pbrand" id="pbrand" value="{$product.brand|escape:quotes}" />
-<input type="hidden" name="pname" id="pname" value="{$product.product|escape:quotes}" />
-<input type="hidden" name="pcategory" id="pcategory" value="{$product.category|escape:quotes}" />
-<input type="hidden" name="pcategory" id="pcategory" value="{$product.category|escape:quotes}" />
-<input type="hidden" name="ga_page_name" id="ga_page_name" value="{$ga_page_name}" />
-
-
-{if $config.General.unlimited_products eq "Y" or ($product.avail gt 0 and $product.avail ge $product.min_amount)}
-{if $js_enabled}
-{*
-<!-- igor_async {include file="main/include_js.tpl" src="ajax_add_to_cart.js"} -->
-*}
-
-<script type="text/javascript">
-var lbl_added = "{$lng.lbl_added}";
-var lbl_error = "{$lng.lbl_error}";
-</script>
+						<input type="hidden" name="pbrand" id="pbrand" value="{$product.brand|escape:quotes}"/>
+						<input type="hidden" name="pname" id="pname" value="{$product.product|escape:quotes}"/>
+						<input type="hidden" name="pcategory" id="pcategory" value="{$product.category|escape:quotes}"/>
+						<input type="hidden" name="pcategory" id="pcategory" value="{$product.category|escape:quotes}"/>
+						<input type="hidden" name="ga_page_name" id="ga_page_name" value="{$ga_page_name}"/>
 
 
-<br />
-{if $product.forsale ne "B"}
-<table cellspacing="0" cellpadding="0" border="0" {* height="42" width="203"*}>
-<tr>
-<td id="add2cart_{$product.productid}" nowrap="nowrap">
-{if $product.lead_time_message ne ""}
-{include file="buttons/buy_now.tpl" style="button" href="javascript: if ('`$config.General.opt_ajax_cart`' == 'Y') if (confirm('`$product.lead_time_message`')) ajax_add_to_cart(`$product.productid`, `$product.add_date`, 'product'); if (!('`$config.General.opt_ajax_cart`' == 'Y')) document.orderform.submit();" b=1 class="ajax_button" add_to_cart_btn="big"}
-{else}
-{include file="buttons/buy_now.tpl" style="button" href="javascript: if ('`$config.General.opt_ajax_cart`' == 'Y') ajax_add_to_cart(`$product.productid`, `$product.add_date`, 'product'); else document.orderform.submit();" b=1 class="ajax_button" add_to_cart_btn="big"}
-{/if}
-</td>
-</tr>
-</table>
-{else}
-{$lng.txt_pconf_product_is_bundled}
-{/if}
-{if $smarty.get.pconf ne "" && $active_modules.Product_Configurator}
-<br /><br />
-<input type="hidden" name="slot" value="{$smarty.get.slot}" />
-<input type="hidden" name="addproductid" value="{$product.productid}" />
-{include file="buttons/button.tpl" button_title=$lng.lbl_pconf_add_to_configuration style="button" href="javascript:if (FormValidation()) `$ldelim`document.orderform.productid.value='`$smarty.get.pconf`';document.orderform.action='pconf.php';document.orderform.submit()`$rdelim`"}
-{if $config.General.unlimited_products ne "Y" && $product.pconf_avail le 0}
-<br />
-<font class="Message"><b>{$lng.lbl_note}:</b> {$lng.lbl_pconf_slot_out_of_stock_note}</font><br />
-{/if}
-<br />
-{$lng.txt_add_to_configuration_note}
-<br />
-{/if}
-{else}
-{include file="submit_wo_js.tpl" value=$lng.lbl_add_to_cart}
-{/if}
-{/if}
-{if $active_modules.Feature_Comparison ne ""}
-{include file="modules/Feature_Comparison/product_buttons.tpl"}
-{/if}
+                        {if $config.General.unlimited_products eq "Y" or ($product.avail gt 0 and $product.avail ge $product.min_amount)}
+                            {if $js_enabled}
+								<script type="text/javascript">
+                                    var lbl_added = "{$lng.lbl_added}";
+                                    var lbl_error = "{$lng.lbl_error}";
+								</script>
+								<br/>
+                            {if $product.forsale ne "B"}
+								<table cellspacing="0" cellpadding="0" border="0" {* height="42" width="203"*}>
+									<tr>
+										<td id="add2cart_{$product.productid}" nowrap="nowrap">
+                                            {if $product.lead_time_message ne ""}
+                                                {include file="buttons/buy_now.tpl" style="button" href="javascript: if ('`$config.General.opt_ajax_cart`' == 'Y') if (confirm('`$product.lead_time_message`')) ajax_add_to_cart(`$product.productid`, `$product.add_date`, 'product'); if (!('`$config.General.opt_ajax_cart`' == 'Y')) document.orderform.submit();" b=1 class="ajax_button" add_to_cart_btn="big"}
+                                            {else}
+                                                {include file="buttons/buy_now.tpl" style="button" href="javascript: if ('`$config.General.opt_ajax_cart`' == 'Y') ajax_add_to_cart(`$product.productid`, `$product.add_date`, 'product'); else document.orderform.submit();" b=1 class="ajax_button" add_to_cart_btn="big"}
+                                            {/if}
+										</td>
+									</tr>
+								</table>
+                            {else}
+                                {$lng.txt_pconf_product_is_bundled}
+                            {/if}
+                            {if $smarty.get.pconf ne "" && $active_modules.Product_Configurator}
+							<br/><br/>
+							<input type="hidden" name="slot" value="{$smarty.get.slot}"/>
+							<input type="hidden" name="addproductid" value="{$product.productid}"/>
+                                {include file="buttons/button.tpl" button_title=$lng.lbl_pconf_add_to_configuration style="button" href="javascript:if (FormValidation()) `$ldelim`document.orderform.productid.value='`$smarty.get.pconf`';document.orderform.action='pconf.php';document.orderform.submit()`$rdelim`"}
+                            {if $config.General.unlimited_products ne "Y" && $product.pconf_avail le 0}
+							<br/>
+								<font class="Message"><b>{$lng.lbl_note}:</b> {$lng.lbl_pconf_slot_out_of_stock_note}
+								</font>
+							<br/>
+                            {/if}
+							<br/>
+                                {$lng.txt_add_to_configuration_note}
+							<br/>
+                            {/if}
+                            {else}
+                                {include file="submit_wo_js.tpl" value=$lng.lbl_add_to_cart}
+                            {/if}
+                        {/if}
+                        {if $active_modules.Feature_Comparison ne ""}
+                            {include file="modules/Feature_Comparison/product_buttons.tpl"}
+                        {/if}
 
-{if $config.Security.ssl_seal ne ""}
-<br />{$config.Security.ssl_seal}
-{/if}
+                        {if $config.Security.ssl_seal ne ""}
+							<br/>
+                            {$config.Security.ssl_seal}
+                        {/if}
 
-{if $variant_id_for_point5 eq "0"}
-<br />
-<br />
-{assign var="social_buttons_data_services" value=$config.Appearance.social_buttons_data_services}
-{$config.Appearance.social_buttons_script_code|replace:"[data-services]":"$social_buttons_data_services"|replace:"[size]":"big"}
-{/if}
+                        {if $variant_id_for_point5 eq "0"}
+							<br/>
+							<br/>
+                            {assign var="social_buttons_data_services" value=$config.Appearance.social_buttons_data_services}
+                            {$config.Appearance.social_buttons_script_code|replace:"[data-services]":"$social_buttons_data_services"|replace:"[size]":"big"}
+                        {/if}
 
-</td>
-</tr>
-</table>
-</td>
+					</td>
+				</tr>
+			</table>
+		</td>
 
-<td width="196">
-{*
-{if $variant_id_for_point3 eq "1"}
-{$config.Appearance.product_advantages_code}
-{/if}
-*}
-</td>
-</tr>
+		<td width="196">
+            {if $shipping_rate}
+				<script type="text/javascript">
+                    ga('send', 'event', 'calculate shipping', 'showed');
+				</script>
+				<span id="calculate_shipping_button" style="margin-top: -5px;" class="cidev_new_button cidev_new_white">Calculate shipping</span>
+			{/if}
+		</td>
+	</tr>
+	<tr id="calculate_shipping_text" class="hidden">
+		<td colspan="2" ></td>
+		<td colspan="2">
+            {if $shipping_rate}
+			<table>
+				<tr>
+					{assign var=shipping_model value=$shipping_rate->getShippingEntity()}
+					<td>The cost of shipping 1 item to {$shipping_rate_state->state}, {$shipping_rate_state->country_code}:<br><b>US$ {$shipping_rate->getShippingCharge()|price_format} ({$shipping_model->getFrontendName()} - {$shipping_model->shipping_time})</b></td>
+				</tr>
+				<tr>
+					<td><i>Shipping cost of all your cart items can be obtained at the checkout.</i></td>
+				</tr>
+			</table>
+			{/if}
+		</td>
+	</tr>
 
 </table>
 <input type="hidden" name="productid" value="{$product.productid}" />
@@ -629,3 +644,11 @@ check_options();
 -->
 </script>
 {/if}
+{literal}
+<script type="text/javascript">
+	$('#calculate_shipping_button').on('click', function(){
+        ga('send', 'event', 'click', 'Shipping calculation');
+        $('#calculate_shipping_text').fadeIn();
+	});
+</script>
+{/literal}

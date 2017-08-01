@@ -21,6 +21,7 @@ class GeoipHelper
         $model = null;
 
         if ($iIp = ip2long($ip)) {
+            /** @var GeoipLitecityLocationModel $model */
             $model = GeoipLitecityLocationModel::objects()
                 ->filter(['blocks__startIpNum__lt' => $iIp])
                 ->order(['-blocks__startIpNum'])
