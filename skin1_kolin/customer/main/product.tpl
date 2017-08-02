@@ -407,7 +407,7 @@ var product_avail = 1;
 		</td>
 	</tr>
 
-	<tr>
+	<tr style="height: 165px;">
 		<td valign="top" style="padding-left: 16px;">
 			<table cellspacing="0" cellpadding="0" border="0">
 
