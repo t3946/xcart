@@ -875,6 +875,7 @@ if ($config["Appearance"]["Enable_surf_stats"] == "Y"){
 }
 
 $ip = Xcart\App\Main\Xcart::app()->request->getUserIP();
+//$ip = '173.234.204.152';
 /** @var DistributorModel $oManufacturer */
 $oManufacturer = DistributorModel::objects()->get(['manufacturerid' => $product_info['manufacturerid']]);
 if (($geo_ip = GeoipHelper::getGeoipLocation($ip))
