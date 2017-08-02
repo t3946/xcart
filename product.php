@@ -904,7 +904,7 @@ if (($geo_ip = GeoipHelper::getGeoipLocation($CLIENT_IP))
             $shipping_rate = reset($shipping_zone);
         }
         catch(\Exception $e){
-            $shipping_zone = null;
+            $shipping_rate = null;
         }
         $smarty->assign('shipping_rate', $shipping_rate);
         $smarty->assign('shipping_rate_state', $state_model);
