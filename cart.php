@@ -34,7 +34,7 @@
  * +-----------------------------------------------------------------------------+
  * \*****************************************************************************/
 
-use Modules\Payment\Models\PaymentMethodModel;
+use Modules\Product\Models\ProductModel;
 use Modules\User\Helpers\SurfingHelper;
 use Xcart\CidevSurfPath;
 require "./auth.php";
@@ -864,16 +864,17 @@ if (!$func_is_cart_empty) {
                 }
                 if (!empty($config['Shipping']['new_shipping_calculation']) && $config['Shipping']['new_shipping_calculation'] == 'Y') {
                     if (!empty($_products)) {
-                        $oManufacturer = Xcart\Manufacturer::model(['manufacturerid' => $k]);
+                        /** @var \Modules\Distributor\Models\DistributorModel $oManufacturer */
+                        $oManufacturer = \Modules\Distributor\Models\DistributorModel::objects()->get(['manufacturerid' => $k]);
                         $oCart = new Xcart\Cart();
                         foreach ($_products as $_product) {
-                            $oProduct = Xcart\Product::model(['productid' => $_product['productid']]);
+                            $oProduct = ProductModel::objects()->get(['productid' => $_product['productid']]);
                             $oProduct->setPrice($_product['price']); //calculate regarding cart product price
                             if ($oProduct->getManufacturerId() == $k) {
                                 $oCart->addObjectToCart(new \Xcart\CartElement($oProduct, $_product['amount']));
                             }
                         }
-                        $oCustomer = (new Xcart\Customer())->fill($userinfo);
+                        $oCustomer = new \Modules\User\Models\UserModel($userinfo);
                         try {
                             $aShippingZones = Xcart\Shipping::model()->getShippingRates($oCustomer, $oManufacturer, $oCart);
                         }

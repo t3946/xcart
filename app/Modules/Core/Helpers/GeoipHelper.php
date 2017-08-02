@@ -20,7 +20,7 @@ class GeoipHelper
     {
         $model = null;
 
-        if ($iIp = ip2long($ip)) {
+        if ($iIp = sprintf("%u", ip2long($ip))) {
             /** @var GeoipLitecityLocationModel $model */
             $model = GeoipLitecityLocationModel::objects()
                 ->filter(['blocks__startIpNum__lt' => $iIp])
