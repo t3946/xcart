@@ -10,6 +10,7 @@ use Modules\Shipping\Models\ShippingModel;
 use Modules\Shipping\Models\ShippingRateModel;
 use Modules\Shipping\Models\ZoneElementModel;
 use Modules\User\Models\UserModel;
+use Xcart\App\Main\Xcart;
 use Xcart\Cart;
 use Xcart\ShippingRate;
 
@@ -63,12 +64,11 @@ class ShippingHelper
     public static function getProductShippingData($product_id, $qty)
     {
         $result = [];
-        $CLIENT_IP = '96.31.66.233';
 
         if ($product_model = ProductModel::objects()->get(['productid' => $product_id])) {
             /** @var DistributorModel $oManufacturer */
             $oManufacturer = $product_model->distributor;
-            if (($geo_ip = GeoipHelper::getGeoipLocation($CLIENT_IP))
+            if (($geo_ip = GeoipHelper::getGeoipLocation(Xcart::app()->request->getUserIP()))
                 && ($state_model = $geo_ip->state_model)
                 && ($oManufacturer->calculate_shipping == 'Y' || 1 == 1 || (($product_model->amazon_fba == 'Y') && ($product_model->amazon_fba_avail > 0)))
             ) {
