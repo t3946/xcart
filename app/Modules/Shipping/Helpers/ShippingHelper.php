@@ -69,6 +69,7 @@ class ShippingHelper
             /** @var DistributorModel $oManufacturer */
             $oManufacturer = $product_model->distributor;
             $ip = Xcart::app()->request->getUserIP();
+            //$ip = '173.234.204.152';
             if (($geo_ip = GeoipHelper::getGeoipLocation($ip))
                 && ($state_model = $geo_ip->state_model)
                 && ($oManufacturer->calculate_shipping == 'Y' || (($product_model->amazon_fba == 'Y') && ($product_model->amazon_fba_avail > 0)))
