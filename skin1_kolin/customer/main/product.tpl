@@ -503,28 +503,18 @@ var product_avail = 1;
 		</td>
 
 		<td width="196">
-            {if $shipping_rate}
+            {if $shipping_rate_show}
 				<script type="text/javascript">
                     ga('send', 'event', 'calculate shipping', 'showed');
 				</script>
-				<span id="calculate_shipping_button" style="margin-top: -5px;" class="cidev_new_button cidev_new_white">Calculate shipping</span>
+				<span id="calculate_shipping_button" data-product-id="{$product.productid}" style="margin-top: -5px;" class="cidev_new_button cidev_new_white">Calculate shipping</span>
 			{/if}
 		</td>
 	</tr>
 	<tr id="calculate_shipping_text" class="hidden">
 		<td colspan="2" ></td>
-		<td colspan="2">
-            {if $shipping_rate}
-			<table>
-				<tr>
-					{assign var=shipping_model value=$shipping_rate->getShippingEntity()}
-					<td>The cost of shipping 1 item to {$shipping_rate_state->state}, {$shipping_rate_state->country_code}:<br><b>US$ {$shipping_rate->getShippingCharge()|price_format} ({$shipping_model->getFrontendName()} - {$shipping_model->shipping_time})</b></td>
-				</tr>
-				<tr>
-					<td><i>Shipping cost of all your cart items can be obtained at the checkout.</i></td>
-				</tr>
-			</table>
-			{/if}
+		<td colspan="2" class="shipping_info">
+
 		</td>
 	</tr>
 
@@ -646,9 +636,37 @@ check_options();
 {/if}
 {literal}
 <script type="text/javascript">
-	$('#calculate_shipping_button').on('click', function(){
-        ga('send', 'event', 'click', 'Shipping calculation');
-        $('#calculate_shipping_text').fadeIn();
+	$('#calculate_shipping_button').on('click', function(e){
+
+	    $('#calculate_shipping_text').find('.shipping_info').html('Please wait...').attr('align', 'center').end().fadeIn();
+
+        var qty = parseInt($('#product_avail').val());
+
+        if (!e.ctrlKey) {
+            ga('send', 'event', 'click', 'Shipping calculation', 'Quantity', qty);
+        }
+        $.get(
+            '/cidev_ajax_suggestions.php',
+            {
+                product_id: $(this).data('product-id'),
+                qty: qty,
+                section_name: 'shipping'
+			},
+            function (data) {
+                $('#calculate_shipping_text')
+					.find('.shipping_info')
+					.html(data)
+					.attr('align', 'left')
+					.end();
+            });
+
 	});
+	$('#qty-inc, #qty-dec').on('click', function(){
+        $('#calculate_shipping_text').fadeOut();
+	});
+
+	$('#product_avail').on('keyup', function(){
+        $('#calculate_shipping_text').fadeOut();
+	})
 </script>
 {/literal}

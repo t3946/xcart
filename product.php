@@ -874,8 +874,9 @@ if ($config["Appearance"]["Enable_surf_stats"] == "Y"){
     ]);
 }
 
+/** @var DistributorModel $oManufacturer */
 $oManufacturer = DistributorModel::objects()->get(['manufacturerid' => $product_info['manufacturerid']]);
-if (($geo_ip = GeoipHelper::getGeoipLocation($CLIENT_IP))
+if (($geo_ip = GeoipHelper::getGeoipLocation(Xcart\App\Main\Xcart::app()->request->getUserIP()))
     && ($state_model = $geo_ip->state_model)
     && ($oManufacturer->calculate_shipping == 'Y' || (($oProduct->amazon_fba == 'Y') && ($oProduct->amazon_fba_avail > 0)))
 ) {
@@ -885,29 +886,7 @@ if (($geo_ip = GeoipHelper::getGeoipLocation($CLIENT_IP))
             'zone__zone_name' => 'USA: Contiguous'
         ])->count()) {
 
-        /** @var DistributorModel $oManufacturer */
-
-        $oCart = new Xcart\Cart();
-        $oCart->addObjectToCart(new \Xcart\CartElement($oProduct, 1));
-        $userModel = new \Modules\User\Models\UserModel();
-        $userModel->setAttributes([
-            's_country' => $state_model->country_code,
-            's_state' => $state_model->code,
-            's_zipcode' => $state_model->base_state_zipcode,
-            's_city' => 'New City'
-        ]);
-
-        $shipping_rate = null;
-        try {
-            $aShippingZones = Xcart\Shipping::model()->getShippingRates($userModel, $oManufacturer, $oCart);
-            $shipping_zone = reset($aShippingZones);
-            $shipping_rate = reset($shipping_zone);
-        }
-        catch(\Exception $e){
-            $shipping_rate = null;
-        }
-        $smarty->assign('shipping_rate', $shipping_rate);
-        $smarty->assign('shipping_rate_state', $state_model);
+        $smarty->assign('shipping_rate_show', true);
     }
 }
 
