@@ -68,9 +68,10 @@ class ShippingHelper
         if ($product_model = ProductModel::objects()->get(['productid' => $product_id])) {
             /** @var DistributorModel $oManufacturer */
             $oManufacturer = $product_model->distributor;
-            if (($geo_ip = GeoipHelper::getGeoipLocation(Xcart::app()->request->getUserIP()))
+            $ip = Xcart::app()->request->getUserIP();
+            if (($geo_ip = GeoipHelper::getGeoipLocation($ip))
                 && ($state_model = $geo_ip->state_model)
-                && ($oManufacturer->calculate_shipping == 'Y' || 1 == 1 || (($product_model->amazon_fba == 'Y') && ($product_model->amazon_fba_avail > 0)))
+                && ($oManufacturer->calculate_shipping == 'Y' || (($product_model->amazon_fba == 'Y') && ($product_model->amazon_fba_avail > 0)))
             ) {
                 if ($z = ZoneElementModel::objects()->filter(
                     [

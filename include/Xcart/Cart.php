@@ -82,14 +82,13 @@ class Cart
 
     public function getExtraMarginValue()
     {
-        if (is_null($this->fExtraMarginValue)) {
-            $iterator = $this->aArrayOfObjects->getIterator();
+        $fExtraMarginValue = null;
+        $iterator = $this->aArrayOfObjects->getIterator();
             if (!empty($iterator)) {
                 foreach ($iterator as $k => $v) {
-                    $this->fExtraMarginValue += $v->getProduct()->getExtraMarginValue($v->getQuantity());
+                    $fExtraMarginValue += $v->getProduct()->getExtraMarginValue($v->getQuantity());
                 }
             }
-        }
-        return $this->fExtraMarginValue;
+        return $fExtraMarginValue;
     }
 }
