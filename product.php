@@ -880,7 +880,12 @@ $ip = Xcart\App\Main\Xcart::app()->request->getUserIP();
 $oManufacturer = DistributorModel::objects()->get(['manufacturerid' => $product_info['manufacturerid']]);
 if (($geo_ip = GeoipHelper::getGeoipLocation($ip))
     && ($state_model = $geo_ip->state_model)
-    && ($oManufacturer->calculate_shipping == 'Y' || (($oProduct->amazon_fba == 'Y') && ($oProduct->amazon_fba_avail > 0)))
+    && ($oManufacturer->calculate_shipping == 'Y'
+        || (
+            ($oProduct->amazon_fba == 'Y' && $oProduct->getAmazonFBAAvailExcludedProcessing() > 0)
+            || count($oProduct->getProductsAvailOnAmazonParentWithChild(1))
+        )
+    )
 ) {
     if ($z = ZoneElementModel::objects()->filter(
         [

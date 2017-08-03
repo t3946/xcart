@@ -57,7 +57,7 @@ class ShippingHelper
     }
 
     /**
-     * @param integer  $product_id
+     * @param integer $product_id
      * @param integer $qty
      * @return array
      */
@@ -72,7 +72,12 @@ class ShippingHelper
             //$ip = '173.234.204.152';
             if (($geo_ip = GeoipHelper::getGeoipLocation($ip))
                 && ($state_model = $geo_ip->state_model)
-                && ($oManufacturer->calculate_shipping == 'Y' || (($product_model->amazon_fba == 'Y') && ($product_model->amazon_fba_avail > 0)))
+                && ($oManufacturer->calculate_shipping == 'Y'
+                    || (
+                        ($product_model->amazon_fba == 'Y' && $product_model->getAmazonFBAAvailExcludedProcessing() > 0)
+                        || count($product_model->getProductsAvailOnAmazonParentWithChild(1))
+                    )
+                )
             ) {
                 if ($z = ZoneElementModel::objects()->filter(
                     [
