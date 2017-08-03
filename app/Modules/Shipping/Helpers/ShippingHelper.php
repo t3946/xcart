@@ -56,8 +56,34 @@ class ShippingHelper
         return $shipping_rate;
     }
 
+    public static function isCalcShippingEnabled($product, $qty = 1)
+    {
+        $oManufacturer = $product->distributor;
+        $ip = Xcart::app()->request->getUserIP();
+        //$ip = '173.234.204.152';
+        if (($geo_ip = GeoipHelper::getGeoipLocation($ip))
+            && ($state_model = $geo_ip->state_model)
+            && ($oManufacturer->calculate_shipping == 'Y'
+                || (
+                    ($product->amazon_fba == 'Y' && $product->getAmazonFBAAvailExcludedProcessing() >= $qty)
+                    || count($product->getProductsAvailOnAmazonParentWithChild($qty))
+                )
+            )
+        ) {
+            if ($z = ZoneElementModel::objects()->filter(
+                [
+                    'field' => $state_model->country_code . '_' . $state_model->code,
+                    'zone__zone_name' => 'USA: Contiguous'
+                ])->count()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     /**
-     * @param integer  $product_id
+     * @param integer $product_id
      * @param integer $qty
      * @return array
      */
@@ -66,35 +92,21 @@ class ShippingHelper
         $result = [];
 
         if ($product_model = ProductModel::objects()->get(['productid' => $product_id])) {
-            /** @var DistributorModel $oManufacturer */
-            $oManufacturer = $product_model->distributor;
-            $ip = Xcart::app()->request->getUserIP();
-            //$ip = '173.234.204.152';
-            if (($geo_ip = GeoipHelper::getGeoipLocation($ip))
-                && ($state_model = $geo_ip->state_model)
-                && ($oManufacturer->calculate_shipping == 'Y' || (($product_model->amazon_fba == 'Y') && ($product_model->amazon_fba_avail > 0)))
-            ) {
-                if ($z = ZoneElementModel::objects()->filter(
-                    [
-                        'field' => $state_model->country_code . '_' . $state_model->code,
-                        'zone__zone_name' => 'USA: Contiguous'
-                    ])->count()) {
 
-                    $userModel = new UserModel();
-                    $userModel->setAttributes([
-                        's_country' => $state_model->country_code,
-                        's_state' => $state_model->code,
-                        's_zipcode' => $state_model->base_state_zipcode,
-                        's_city' => 'New City'
-                    ]);
+            $state_model = GeoipHelper::getGeoipLocation(Xcart::app()->request->getUserIP())->state_model;
+            $userModel = new UserModel();
+            $userModel->setAttributes([
+                's_country' => $state_model->country_code,
+                's_state' => $state_model->code,
+                's_zipcode' => $state_model->base_state_zipcode,
+                's_city' => 'New City'
+            ]);
 
-                    $result =
-                        [
-                            ShippingHelper::getMinShippingRate($userModel, $oManufacturer, [['model' => $product_model, 'qty' => intval($qty)]]),
-                            $state_model
-                        ];
-                }
-            }
+            $result =
+                [
+                    ShippingHelper::getMinShippingRate($userModel, $product_model->distributor, [['model' => $product_model, 'qty' => intval($qty)]]),
+                    $state_model
+                ];
         }
         return $result;
     }

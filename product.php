@@ -874,22 +874,8 @@ if ($config["Appearance"]["Enable_surf_stats"] == "Y"){
     ]);
 }
 
-$ip = Xcart\App\Main\Xcart::app()->request->getUserIP();
-//$ip = '173.234.204.152';
-/** @var DistributorModel $oManufacturer */
-$oManufacturer = DistributorModel::objects()->get(['manufacturerid' => $product_info['manufacturerid']]);
-if (($geo_ip = GeoipHelper::getGeoipLocation($ip))
-    && ($state_model = $geo_ip->state_model)
-    && ($oManufacturer->calculate_shipping == 'Y' || (($oProduct->amazon_fba == 'Y') && ($oProduct->amazon_fba_avail > 0)))
-) {
-    if ($z = ZoneElementModel::objects()->filter(
-        [
-            'field' => $state_model->country_code . '_' . $state_model->code,
-            'zone__zone_name' => 'USA: Contiguous'
-        ])->count()) {
-
+if (\Modules\Shipping\Helpers\ShippingHelper::isCalcShippingEnabled($oProduct)) {
         $smarty->assign('shipping_rate_show', true);
-    }
 }
 
 
