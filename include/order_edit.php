@@ -644,7 +644,7 @@ if ($REQUEST_METHOD == "POST")
                             'orderid' => $orderid
                         ]
                     )) {
-                        $groups[$m_id]["cb_status"] = $group_model->cb_status;
+                        $order["shipping_groups"][$m_id]["cb_status"] = $group_model->cb_status;
                     }
                     if (!empty($log)) {
                         func_log_order($orderid, 'X', $log, $login);
