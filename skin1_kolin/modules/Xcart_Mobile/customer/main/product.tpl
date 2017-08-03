@@ -202,6 +202,19 @@ onclick="javascript: $('#orderform-{$product.productid}').submit();"
     {/if}
   </div>
 </div>
+<div>
+    {if $shipping_rate_show}
+        <script type="text/javascript">
+            ga('send', 'event', 'calculate shipping', 'showed');
+        </script>
+        <span id="calculate_shipping_button" data-product-id="{$product.productid}" style="margin-top: -5px;" class="cidev_new_button cidev_new_white">Calculate shipping</span>
+    {/if}
+    <div id="calculate_shipping_text" class="hidden">
+        <div colspan="2" class="shipping_info" style="padding: 20px 0;">
+
+        </div>
+    </div>
+</div>
 
 {if $product_tabs}
 <script src="{$SkinDir}/check_email_script.js" type="text/javascript"></script>
@@ -500,3 +513,35 @@ function send_question_email_form(){
 {include file="customer/main/similar_products.tpl"}
 {/if}
 
+{literal}
+<script type="text/javascript">
+    $('#calculate_shipping_button').on('click', function(e){
+
+        $('#calculate_shipping_text').find('.shipping_info').html('Please wait...').attr('align', 'center').end().fadeIn();
+
+        var qty = parseInt($('#product_avail').val());
+
+        if (!e.ctrlKey) {
+            ga('send', 'event', 'click', 'Shipping calculation', 'Quantity', qty);
+        }
+        $.get(
+            '/cidev_ajax_suggestions.php',
+            {
+                product_id: $(this).data('product-id'),
+                qty: qty,
+                section_name: 'shipping'
+            },
+            function (data) {
+                $('#calculate_shipping_text')
+                    .find('.shipping_info')
+                    .html(data)
+                    .attr('align', 'left')
+                    .end();
+            });
+
+    });
+    $('#product_avail').on('change', function(){
+        $('#calculate_shipping_text').fadeOut();
+    })
+</script>
+{/literal}

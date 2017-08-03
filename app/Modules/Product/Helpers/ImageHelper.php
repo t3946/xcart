@@ -27,6 +27,7 @@ class ImageHelper
         global $xcart_dir;
         /** @var ImageDModel $imageModel */
         $imageModel = null;
+        $image = html_entity_decode($image);
         $SET_IMAGE_URL = self::getImageFileNameFromDownloadLink($image);
         if (empty($SET_IMAGE_URL)) {
             $img_path_arr = explode("//", $image);

@@ -1401,13 +1401,13 @@ function SubmitGoogleProductsBatch($gproducts, $service, $MerchantID, $debug_mod
 ##
 				if ($product_info["product"]["dim_z"] > 0 && $product_info["product"]["dim_x"] > 0 && $product_info["product"]["dim_y"] > 0){
 	                $postBody["entries"][$k_counter]["product"]["shippingHeight"]["unit"] = "in";
-        	        $postBody["entries"][$k_counter]["product"]["shippingHeight"]["value"] = $product_info["product"]["dim_z"];
+        	        $postBody["entries"][$k_counter]["product"]["shippingHeight"]["value"] = min($product_info["product"]["dim_z"],150);
 
 	                $postBody["entries"][$k_counter]["product"]["shippingLength"]["unit"] = "in";
-	                $postBody["entries"][$k_counter]["product"]["shippingLength"]["value"] = max($product_info["product"]["dim_x"], $product_info["product"]["dim_y"]);
+	                $postBody["entries"][$k_counter]["product"]["shippingLength"]["value"] = min(max($product_info["product"]["dim_x"], $product_info["product"]["dim_y"]), 150);
 
 	                $postBody["entries"][$k_counter]["product"]["shippingWidth"]["unit"] = "in";
-        	        $postBody["entries"][$k_counter]["product"]["shippingWidth"]["value"] = min($product_info["product"]["dim_x"], $product_info["product"]["dim_y"]);
+        	        $postBody["entries"][$k_counter]["product"]["shippingWidth"]["value"] = min(min($product_info["product"]["dim_x"], $product_info["product"]["dim_y"]),150);
 			}
 ##
 #
