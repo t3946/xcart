@@ -93,6 +93,7 @@ class OrderTransactionsController extends PrototypeAdminController
                 [
                     'processor' => $pmModel->processor,
                     'payment_method_model' => $pmModel,
+                    'new_method_model' => $pmModel,
                     'order' => $orderModel,
                 ]
             );

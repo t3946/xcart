@@ -47,7 +47,7 @@ class OrderStore extends BaseStore
     public function getCapturedAmount()
     {
         if (is_null($this->capturedAmount)) {
-            $this->capturedAmount = array_sum(array_map(function ($model) {
+            $this->capturedAmount = round(array_sum(array_map(function ($model) {
                 /** @var OrderTransactionModel $model */
                 $value = 0;
                 if ($model->type == OrderTransactionModel::TYPE_CAPTURE && in_array($model->transaction_status,
@@ -59,7 +59,7 @@ class OrderStore extends BaseStore
                     $value = $model->transaction_amount;
                 }
                 return $value;
-            }, $this->transactions));
+            }, $this->transactions)),2);
         }
 
         return $this->capturedAmount;
@@ -69,7 +69,7 @@ class OrderStore extends BaseStore
     public function getCapturedAvail()
     {
         if (is_null($this->capturedAvail)) {
-            $this->capturedAvail = array_sum(array_map(function ($model) {
+            $this->capturedAvail = round(array_sum(array_map(function ($model) {
                 /** @var OrderTransactionModel $model */
                 $value = 0;
                 if ($model->type == OrderTransactionModel::TYPE_CAPTURE && in_array($model->transaction_status,
@@ -81,7 +81,7 @@ class OrderStore extends BaseStore
                     $value = $model->getAvailAmount();
                 }
                 return $value;
-            }, $this->transactions));
+            }, $this->transactions)),2);
         }
 
         return $this->capturedAvail;
@@ -91,7 +91,7 @@ class OrderStore extends BaseStore
     public function getAuthorizedAmount()
     {
         if (is_null($this->authorizedAmount)) {
-            $this->authorizedAmount = array_sum(array_map(function ($model) {
+            $this->authorizedAmount = round(array_sum(array_map(function ($model) {
                 /** @var OrderTransactionModel $model */
                 $value = 0;
                 if ($model->type == OrderTransactionModel::TYPE_AUTHORIZATION && in_array($model->transaction_status,
@@ -106,7 +106,7 @@ class OrderStore extends BaseStore
                     $value = $model->transaction_amount;
                 }
                 return $value;
-            }, $this->transactions));
+            }, $this->transactions)),2);
         }
 
         return $this->authorizedAmount;
@@ -116,7 +116,7 @@ class OrderStore extends BaseStore
     public function getAuthAvailAmount()
     {
         if (is_null($this->authAvailAmount)) {
-            $this->authAvailAmount = array_sum(array_map(function ($model) {
+            $this->authAvailAmount = round(array_sum(array_map(function ($model) {
                 /** @var OrderTransactionModel $model */
                 $value = 0;
                 if ($model->type == OrderTransactionModel::TYPE_AUTHORIZATION && in_array($model->transaction_status,
@@ -131,7 +131,7 @@ class OrderStore extends BaseStore
                     $value = $model->getAvailAmount();
                 }
                 return $value;
-            }, $this->transactions));
+            }, $this->transactions)),2);
         }
 
         return $this->authAvailAmount;
@@ -156,7 +156,7 @@ class OrderStore extends BaseStore
     public function getAdditionalCaptureAmount()
     {
         if (is_null($this->additionalCaptureAmount)) {
-            $this->additionalCaptureAmount = array_sum(array_map(function ($model) {
+            $this->additionalCaptureAmount = round(array_sum(array_map(function ($model) {
                 /** @var OrderTransactionModel $model */
                 $value = 0;
                 if ($model->type == OrderTransactionModel::TYPE_AUTHORIZATION && in_array($model->transaction_status,
@@ -173,7 +173,7 @@ class OrderStore extends BaseStore
                     }
                 }
                 return $value;
-            }, $this->transactions));
+            }, $this->transactions)),2);
         }
     }
 }
