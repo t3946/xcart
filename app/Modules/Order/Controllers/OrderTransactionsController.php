@@ -103,7 +103,9 @@ class OrderTransactionsController extends PrototypeAdminController
             $order_log .= $store->log;
 
             list ($o_log, $send_notification) = OrderHelper::changeOrderCBStatus($orderModel, OrderStatusModel::ORDER_STATUS_AUTHORIZED);
-            $order_log .= "<br />Transaction:" . $transaction_model->transaction_id . $o_log;
+            if ($o_log) {
+                $order_log .= "<br />" . $o_log;
+            }
 
             if (!$count && $send_notification) {
                 func_send_order_status_notification($orderModel->orderid, OrderStatusModel::ORDER_STATUS_AUTHORIZED, true);
