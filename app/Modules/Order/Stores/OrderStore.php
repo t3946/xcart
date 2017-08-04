@@ -144,7 +144,8 @@ class OrderStore extends BaseStore
 
     public function getAmountToCapture()
     {
-        return $this->getAuthorizedAmount() - $this->getCapturedAmount();
+        $amount = $this->getAuthorizedAmount() - $this->getCapturedAmount();
+        return ($amount >= 0) ? $amount : 0;
     }
 
     public function getAskFromCx()
