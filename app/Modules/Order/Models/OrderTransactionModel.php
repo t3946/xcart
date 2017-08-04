@@ -84,7 +84,7 @@ class OrderTransactionModel extends AutoMetaModel
             'date' => [
                 'class' => UnixTimestampField::className(),
                 'autoNowAdd' => true,
-                'autoNow' => true,
+                'autoNow' => false,
             ],
             'user' => [
                 'field' => 'login',

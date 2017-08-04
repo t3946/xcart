@@ -45,6 +45,10 @@ class OrderTransactionHelper
             $result['amount']['total'] = -abs($result['amount']['total']);
         }
 
+        if ($params['mode'] != 'lookup') {
+            $response['login'] = Xcart::app()->user->login;
+        }
+
         if (isset($result['capture_id'])) {
             if ($parent = OrderTransactionModel::objects()->get(['transaction_id' => $result['capture_id']])) {
                 $response['parent_id'] = $parent->id;
@@ -58,7 +62,6 @@ class OrderTransactionHelper
                 'transaction_currency' => $result['amount']["currency"],
                 'transaction_amount' => $result['amount']['total'],
                 'transaction_response' => $result,
-                'login' => Xcart::app()->user->login,
                 'paymentid' => $params['payment_method_model']->paymentid,
                 'transaction_fee' => isset($result['transaction_fee']) ? $result['transaction_fee']['value'] : null,
             ]
@@ -76,6 +79,8 @@ class OrderTransactionHelper
     public static function action($method, $params)
     {
         $model = null;
+
+        $params['mode'] = $method;
 
         if ($gw = Gateway::getGateway($params['processor'])) {
             if ($gw->$method($params)) {

@@ -145,6 +145,7 @@ class OrderTransactionsController extends PrototypeAdminController
                     'orderid' => $orderModel->orderid,
                     'paymentid' => $pmModel->paymentid,
                     'type' => OrderTransactionModel::TYPE_AUTHORIZATION,
+                    'manual_transaction' => 'Y',
                     'transaction_id' => trim($_POST['transaction_id']),
                     'transaction_status' => $_POST['transaction_status'],
                     'transaction_amount' => number_format(trim($_POST['transaction_amount']), 2, '.', ''),
