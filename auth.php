@@ -38,9 +38,9 @@ use Modules\Core\Helpers\GeoipHelper;
 
 define('AREA_TYPE', 'C');
 
-@include_once "./top.inc.php";
-@include_once "../top.inc.php";
-@include_once "../../top.inc.php";
+if (file_exists("./top.inc.php")) {@include_once "./top.inc.php";}
+if (file_exists("../top.inc.php")) {@include_once "../top.inc.php";}
+if (file_exists("../../top.inc.php")) {@include_once "../../top.inc.php";}
 if (!defined('DIR_CUSTOMER')) die("ERROR: Can not initiate application! Please check configuration.");
 
 include_once $xcart_dir."/init.php";
