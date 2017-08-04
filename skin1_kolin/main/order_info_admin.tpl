@@ -1433,49 +1433,11 @@ Total Product Cost to us
   <td align="right" style="font-size: 12px;">{include file="currency2.tpl" value=$oOrder->getOrderTotalGross()}</td>
   <td>&nbsp;</td>
 </tr>
-
-{if $order_transactions_totals ne ""}
-<tr{cycle values=", class='TableSubHead'" name="cycle_totals"}>
-  <td>Total transaction amount <br> (authorized + captured )</td>
-  <td colspan="8">&nbsp;</td>
-  {assign var=oPaymentProcessor value=$oOrder->getPaymentMethodInstance()}
-  {math assign="transaction_with_multiplier" equation="x*y" x=$order_transactions_totals.authorized_PLUS_captured_totals y=$oPaymentProcessor->getMaximumReAuthorizationMultiplier()}
-  <td align="right" style="font-size: 10px; background-color: {if $oOrder->getOrderTotalGross() == $order_transactions_totals.authorized_PLUS_captured_totals}#d9ead3;
-          {elseif $oOrder->getOrderTotalGross() > $order_transactions_totals.authorized_PLUS_captured_totals && $oOrder->getOrderTotalGross() <= $transaction_with_multiplier}
-          yellow
-          {else}red
-          {/if};">{include file="currency2.tpl" value=$order_transactions_totals.authorized_PLUS_captured_totals}</td>
-  <td>&nbsp;</td>
+<tr>
+    <td colspan="10">
+        {include file="admin/main/transactions_summary.tpl" order_store=$order_store}
+    </td>
 </tr>
-
-<tr{cycle values=", class='TableSubHead'" name="cycle_totals"}>
-  <td>Void total</td>
-  <td colspan="8">&nbsp;</td>
-  <td align="right" style="font-size: 10px;">{include file="currency2.tpl" value=$order_transactions_totals.void_total}</td>
-  <td>&nbsp;</td>
-</tr>
-
-<tr{cycle values=", class='TableSubHead'" name="cycle_totals"}>
-  <td>Authorized total</td>
-  <td colspan="8">&nbsp;</td>
-  <td align="right" style="font-size: 10px;">{include file="currency2.tpl" value=$order_transactions_totals.authorized_total}</td>
-  <td>&nbsp;</td>
-</tr>
-
-<tr{cycle values=", class='TableSubHead'" name="cycle_totals"}>
-  <td>Captured total</td>
-  <td colspan="8">&nbsp;</td>
-  {math assign="transaction_capture_with_multiplier" equation="x*y" x=$order_transactions_totals.captured_total y=$oPaymentProcessor->getMaximumReAuthorizationMultiplier()}
-  <td align="right" style="font-size: 10px; background-color: {if $oOrder->getOrderTotalGross() eq $order_transactions_totals.captured_total}
-          green
-          {elseif $oOrder->getOrderTotalGross() > $order_transactions_totals.captured_total && $oOrder->getOrderTotalGross() <= $transaction_capture_with_multiplier}
-          yellow
-          {else}
-          red{/if};">{include file="currency2.tpl" value=$order_transactions_totals.captured_total}</td>
-  <td>&nbsp;</td>
-</tr>
-{/if}
-
 
 <tr>
 <td colspan="11">
