@@ -10,7 +10,10 @@ use Modules\Order\Models\OrderEventsModel;
 use Modules\Order\Models\OrderGroupModel;
 use Modules\Order\Models\OrderModel;
 use Modules\Order\Models\OrderStatusModel;
+use Modules\Order\Models\OrderTransactionModel;
 use Modules\Order\Models\OrderUserLastActivityModel;
+use Modules\Order\Stores\OrderTransactionStore;
+use Modules\Payment\Helpers\PaymentHelper;
 use Modules\User\Models\UserModel;
 use Xcart\App\Main\Xcart;
 
@@ -173,5 +176,43 @@ class OrderHelper
             }
         }
         return [$log, $send];
+    }
+
+    public static function cancelOrder($order_id)
+    {
+        $log = null;
+
+        $order_model = OrderModel::objects()->get(['orderid' => $order_id]);
+
+        $auth_transactions = array_filter($order_model->transactions->all(), function ($a) {
+            return ($a->type == OrderTransactionModel::TYPE_AUTHORIZATION && in_array($a->transaction_status,
+                    [
+                        OrderTransactionModel::STATUS_AUTHORIZED,
+                        OrderTransactionModel::STATUS_PARTIALLY_CAPTURED,
+                        OrderTransactionModel::STATUS_PENDING
+                    ]
+                ));
+        });
+        foreach ($auth_transactions as $auth_tr) {
+            $amount = [
+                'amount' => number_format($auth_tr->transaction_amount, 2),
+                'currency' => $auth_tr->transaction_currency,
+            ];
+            $params = array_merge(PaymentHelper::getPaymentParams($auth_tr, $amount),
+                [
+                    'mode' => 'void',
+                    'new_method_model' => $auth_tr->payment_method_model,
+                    'order' => $order_model,
+                    'orderTransaction' => $auth_tr,
+                ]
+            );
+
+            $trStore = new OrderTransactionStore($params, $auth_tr);
+            $model = $trStore->void();
+
+            $log .= "<br />".$trStore->log;
+        }
+
+        return $log;
     }
 }

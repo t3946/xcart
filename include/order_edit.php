@@ -32,6 +32,7 @@
 
 use Modules\Order\Helpers\OrderAnalyticsHelper;
 use Modules\Order\Helpers\OrderGroupHelper;
+use Modules\Order\Helpers\OrderHelper;
 use Modules\Order\Models\OrderGroupInvoiceProductModel;
 use Modules\Order\Models\OrderGroupModel;
 use Modules\Order\Models\OrderModel;
@@ -712,66 +713,7 @@ if ($REQUEST_METHOD == "POST")
             }
 
             if ($make_paypal_void) {
-                $void_transaction_ids = func_query("SELECT transaction_id FROM $sql_tbl[order_transactions] WHERE orderid='$orderid'");
-
-                if (!empty($void_transaction_ids)) {
-                    foreach ($void_transaction_ids as $void_transaction) {
-                        $transaction_log     = "";
-                        $void_transaction_id = $void_transaction["transaction_id"];
-
-                        if (empty($Access_Token) || !isset($Access_Token)) {
-                            $Access_Token = func_paypal_get_access_token();
-
-                            if (empty($Access_Token)) {
-                                $transaction_log .= "'Access_Token' - failed <br />";
-                            }
-                        }
-
-                        if (!empty($Access_Token)) {
-
-                            $result = func_paypal_void($Access_Token, $void_transaction_id);
-
-                            if (!empty($result["id"])) {
-                                $transaction_log .= "<br />Transaction: " . $void_transaction_id . " -> " . $result["id"];
-                            }
-
-                            $transaction_id = $result["id"];
-
-                            $transaction_status   = $result["state"];
-                            $transaction_currency = $result["amount"]["currency"];
-                            $transaction_total    = $result["amount"]["total"];
-
-                            $result["xcart_log"] = $transaction_log;
-                            $serialize_result    = serialize($result);
-
-                            db_query("INSERT INTO $sql_tbl[transaction_logs] (orderid, paymentid, transaction_id, transaction_status, transaction_currency, transaction_total, date, login, transaction_log) VALUE ('$orderid', '5', '$transaction_id', '$transaction_status', '$transaction_currency', '$transaction_total', '" . time() . "', '$login', '" . addslashes($serialize_result) . "')");
-
-                            if (!empty($transaction_log)) {
-                                func_log_order($orderid, 'PP', $transaction_log, $login);
-                            }
-
-                            if (empty($transaction_id)) {
-
-                                if (!isset($top_message["content"])) {
-                                    $top_message["content"] = "";
-                                }
-                                else {
-                                    $top_message["content"] .= "<br />";
-                                }
-                                $top_message["content"] .= func_get_langvar_by_name("txt_void_failed");
-                                $top_message["type"]      = "I";
-                                $section_name_top_message = $top_message;
-                                x_session_save("section_name_top_message");
-                            }
-                            else {
-                                db_query("UPDATE $sql_tbl[order_transactions] SET transaction_id='$result[id]', transaction_amount='$transaction_total', date='" . time() . "', login='$login', transaction_status='$result[state]', transaction_response='" . addslashes($result_serialized) . "' WHERE orderid='$orderid' AND transaction_id='$void_transaction_id'");
-                            }
-                        }
-                    }
-                }
-
-
-
+                $log .= OrderHelper::cancelOrder($orderid);
             }
 
             if (!empty($order["shipping_groups"]) && is_array($order["shipping_groups"])) {
