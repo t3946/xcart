@@ -23,9 +23,7 @@ class OrderTransactionsController extends PrototypeAdminController
 {
     public function transaction_process($order_id, $mode, $id)
     {
-        $order_log = $type = null;
-
-        $method = $mode;
+        $order_log = OrderTransactionStore::$gatewayMethods[$mode]['order_log']."<br>";
 
         /** @var OrderModel $orderModel */
         if ($orderModel = OrderModel::objects()->get(['orderid' => $order_id])) {
@@ -50,7 +48,7 @@ class OrderTransactionsController extends PrototypeAdminController
                 );
 
                 $store = new OrderTransactionStore($params);
-                $store->$method();
+                $store->$mode();
                 $order_log .= $store->log;
             }
 
@@ -62,8 +60,9 @@ class OrderTransactionsController extends PrototypeAdminController
 
     public function authorise($order_id)
     {
-        $method = $order_log = $type = null;
-        $result = [];
+        $method = null;
+
+        $order_log = OrderTransactionStore::$gatewayMethods['authorize']['order_log']."<br>";
 
         /** @var OrderModel $orderModel */
         if (isset($_POST['paypal_vt']) && $order_id && $orderModel = OrderModel::objects()->get(['orderid' => $order_id])) {
@@ -131,7 +130,7 @@ class OrderTransactionsController extends PrototypeAdminController
 
     public function manual_transaction($order_id)
     {
-        $order_log = OrderTransactionStore::$gatewayMethods['add_manual_transaction']['oredr_log'];
+        $order_log = OrderTransactionStore::$gatewayMethods['add_manual_transaction']['oredr_log']."<br>";
 
         if (($pmModel = PaymentMethodModel::objects()->get(['paymentid' => $_POST['paymentid']]))
             && ($orderModel = OrderModel::objects()->get(['orderid' => $order_id]))) {
