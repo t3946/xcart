@@ -874,7 +874,9 @@ if (!$func_is_cart_empty) {
                                 $oCart->addObjectToCart(new \Xcart\CartElement($oProduct, $_product['amount']));
                             }
                         }
-                        $oCustomer = new \Modules\User\Models\UserModel($userinfo);
+                        if (!empty($userinfo)) {
+                            $oCustomer = new \Modules\User\Models\UserModel($userinfo);
+                        }
                         try {
                             $aShippingZones = Xcart\Shipping::model()->getShippingRates($oCustomer, $oManufacturer, $oCart);
                         }

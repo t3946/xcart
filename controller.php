@@ -1,6 +1,6 @@
 <?php
 
-date_default_timezone_set('US/Pacific'); //Magic;
+date_default_timezone_set('EST');
 
 require_once './include/libs/autoload.php';
 use Xcart\App\Main\Xcart;

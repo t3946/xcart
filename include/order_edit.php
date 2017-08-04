@@ -31,7 +31,9 @@
  * \*****************************************************************************/
 
 use Modules\Order\Helpers\OrderAnalyticsHelper;
+use Modules\Order\Helpers\OrderGroupHelper;
 use Modules\Order\Models\OrderGroupInvoiceProductModel;
+use Modules\Order\Models\OrderGroupModel;
 use Modules\Order\Models\OrderModel;
 use Modules\Order\Models\OrderTransactionModel;
 use Xcart\OrderGroupInvoices;
@@ -626,156 +628,26 @@ if ($REQUEST_METHOD == "POST")
 
                 $log                          = "";
                 $authorized_transactions_info = "";
-                if ($v["dc_status"] == "L" && $cart_tmp['shipping_groups'][$m_id]["dc_status"] != "L"
+                if ($v["dc_status"] == "L"
+                    && $cart_tmp['shipping_groups'][$m_id]["dc_status"] != "L"
                     && $v["cb_status"] == "AP"
                 ) {
-                    $bRefundPresent                = false;
-                    $authorized_transactions_info  = func_query("SELECT id, transaction_id, transaction_amount FROM $sql_tbl[order_transactions] WHERE orderid='$orderid' AND transaction_status IN ('AP','Pending','authorized')");
-                    $authorized_transaction_amount = func_query_first_cell("SELECT SUM(transaction_amount) FROM $sql_tbl[order_transactions] WHERE orderid='$orderid' AND transaction_status IN ('AP','Pending','authorized')");
-
-                    $count_shipping_groups = count($order["shipping_groups"]);
-
-                    $transaction_log = "";
-
-                    if ((empty($Access_Token) || !isset($Access_Token)) && $count_shipping_groups == "1") {
-                        try {
-                            $oPaypal = new Paypal();
-                            $Access_Token = $oPaypal->getAccessToken();
-                        } catch (\Exception $e) {
-                            $oPaypal = null;
-                            $Access_Token = null;
-                        }
-
-                        if (empty($Access_Token)) {
-                            $transaction_log .= "'Access_Token' - failed <br />";
-                        }
+                    $log .= OrderGroupHelper::dispatchGroup(
+                        [
+                            'orderid' => $orderid,
+                            'mnf_id' => $m_id,
+                        ]
+                    );
+                    if ($group_model = OrderGroupModel::objects()->get(
+                        [
+                            'manufacturerid' => $m_id,
+                            'orderid' => $orderid
+                        ]
+                    )) {
+                        $order["shipping_groups"][$m_id]["cb_status"] = $group_model->cb_status;
                     }
-
-                    if (!empty($cart_tmp["shipping_groups"][$m_id]["products"]) && !empty($items) && is_array($items)) {
-                        $total_prod_price = 0;
-                        foreach ($cart_tmp["shipping_groups"][$m_id]["products"] as $k_prod => $v_prod) {
-                            $total_prod_price += $items[$k_prod]["price"] * $v_prod["amount"];
-                        }
-
-                        $CaptureAmount  = $total_prod_price + $v["shipping_cost_net"];
-                        $OriginalAmount = $CaptureAmount;
-
-                        if (isset($ref_products[$m_id])) {
-                            foreach ($ref_products[$m_id] as $kk_r => $vv_r) {
-                                $CaptureAmount -= $vv_r["ref_price"] * $vv_r["ref_qty"];
-                            }
-                            $bRefundPresent = true;
-                        }
-
-                        if (isset($ref_groups[$m_id]["ref_ship"])) {
-                            $CaptureAmount -= $ref_groups[$m_id]["ref_ship"];
-                            $bRefundPresent = true;
-                        }
-
-                        $CaptureAmount = price_format($CaptureAmount);
-
-                        if ($CaptureAmount <= $authorized_transaction_amount)
-                        {
-                            if (!empty($Access_Token) && $count_shipping_groups == "1" && !empty($authorized_transactions_info))
-                            {
-                                $capture_failed_flag = false;
-                                $tCaptureAmount      = $CaptureAmount;
-
-                                foreach ($authorized_transactions_info as $authorized_transaction)
-                                {
-                                    $authorized_transaction_id = $authorized_transaction["transaction_id"];
-
-                                    $data_arr["amount"]["currency"] = $order["currency"];
-                                    if ($authorized_transaction["transaction_amount"] < $tCaptureAmount) {
-                                        $data_arr["amount"]["total"] = $authorized_transaction["transaction_amount"];
-                                    }
-                                    else {
-                                        $data_arr["amount"]["total"] = $tCaptureAmount;
-                                    }
-
-                                    $data_arr["is_final_capture"] = true;
-
-                                    $result = $oPaypal->captureTransaction($authorized_transaction_id, $data_arr);
-
-                                    if (!empty($result["id"])) {
-                                        $transaction_log .= "<br />Transaction: " . $authorized_transaction_id . " -> " . $result["id"];
-                                        $orderTransaction = OrderTransactionModel::objects()->get(['orderid' => $orderid, 'transaction_id' => $authorized_transaction_id]);
-                                        if ($orderTransaction){
-                                            $orderTransaction->setAttributes([
-                                                'transaction_id' => $result['id'],
-                                                'transaction_amount' => $result['amount']['total'],
-                                                'date' => time(),
-                                                'login' => $login,
-                                                'transaction_status' => $result['state'],
-                                                'transaction_response' => serialize($result),
-                                            ]);
-                                            $orderTransaction->save();
-                                        }
-                                    }
-                                    else {
-                                        $capture_failed_flag = true;
-                                    }
-
-                                    $transaction_id = $result["id"];
-
-                                    $transaction_status   = $result["state"];
-                                    $transaction_currency = $result["amount"]["currency"];
-                                    $transaction_total    = $result["amount"]["total"];
-
-                                    $result["xcart_log"] = $transaction_log;
-                                    $serialize_result    = serialize($result);
-
-                                    db_query("INSERT INTO $sql_tbl[transaction_logs] (orderid, paymentid, transaction_id, transaction_status, transaction_currency, transaction_total, date, login, transaction_log) VALUE ('$orderid', '5', '$transaction_id', '$transaction_status', '$transaction_currency', '$transaction_total', '" . time() . "', '$login', '" . addslashes($serialize_result) . "')");
-
-                                    if (!empty($transaction_log)) {
-                                        func_log_order($orderid, 'PP', $transaction_log, $login);
-                                    }
-
-                                    if (empty($transaction_id)) { // $capture_failed_flag
-                                        $v['dc_status'] = $groups[$m_id]['dc_status'] = $order["shipping_groups"][$m_id]['dc_status'] = $cart_tmp['shipping_groups'][$m_id]["dc_status"];
-
-                                        if (!isset($top_message["content"])) {
-                                            $top_message["content"] = "";
-                                        }
-                                        else {
-                                            $top_message["content"] .= "<br />";
-                                        }
-                                        $top_message["content"] .= func_get_langvar_by_name("txt_capture_failed");
-                                        $top_message["type"]      = "I";
-                                        $section_name_top_message = $top_message;
-                                        x_session_save("section_name_top_message");
-
-                                        $set_new_additional_tag = '37';
-                                        $is_such_tag_in_db      = func_query_first_cell("SELECT status_id FROM $sql_tbl[orders_additional_tags] WHERE orderid='$orderid' AND status_id='$set_new_additional_tag'");
-                                        if (empty($is_such_tag_in_db)) {
-                                            Modules\Order\Helpers\OrderTagEventHelper::orderTagEvent($set_new_additional_tag, $orderid);
-                                        }
-                                    }
-                                    else {
-                                        $v['cb_status'] = $groups[$m_id]['cb_status'] = $order["shipping_groups"][$m_id]['cb_status'] = "P";
-                                        db_query("UPDATE $sql_tbl[order_groups] SET order_entry_flag='Y' WHERE manufacturerid='$m_id' AND orderid='$orderid'");
-                                        func_log_order($orderid, 'X', $code . ": order_entry_flag='Y'", $login);
-                                    }
-
-                                    $tCaptureAmount = $tCaptureAmount - $authorized_transaction["transaction_amount"];
-                                    if ($tCaptureAmount <= 0) break;
-                                }
-                            }
-                        }
-                        else {
-                            $top_message["content"]   = func_get_langvar_by_name("lbl_captureamount_not_equal_order_amount");
-                            $top_message["type"]      = "R";
-                            $section_name_top_message = $top_message;
-                            x_session_save("section_name_top_message");
-
-                            $log = "<br />" . $top_message["content"];
-                            func_log_order($orderid, 'X', $log, $login);
-                            $log = "";
-
-                            if ($count_shipping_groups > 1) {
-                                $v["dc_status"] = $groups[$m_id]['dc_status'] = $order["shipping_groups"][$m_id]['dc_status'] = $cart_tmp['shipping_groups'][$m_id]["dc_status"];
-                            }
-                        }
+                    if (!empty($log)) {
+                        func_log_order($orderid, 'X', $log, $login);
                     }
                 }
 

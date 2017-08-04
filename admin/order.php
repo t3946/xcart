@@ -30,11 +30,14 @@
  * +-----------------------------------------------------------------------------+
  * \*****************************************************************************/
 
+use Modules\Order\Helpers\OrderGroupHelper;
 use Modules\Order\Helpers\OrderTransactionHelper;
+use Modules\Order\Models\OrderGroupModel;
 use Modules\Order\Models\OrderGroupRefundModel;
 use Modules\Order\Models\OrderModel;
 use Modules\Order\Models\OrderTransactionModel;
 use Modules\Order\Models\TransactionLogModel;
+use Modules\Order\Stores\OrderTransactionStore;
 use Modules\Payment\Gateways\Gateway;
 use Modules\Payment\Helpers\PaymentHelper;
 use Modules\Payment\Models\ProcessorModel;
@@ -1525,7 +1528,6 @@ if (!empty($attention_tags_values) && is_array($attention_tags_values)) {
 }
 
 require $xcart_dir . "/include/order_edit.php";
-require $xcart_dir . "/include/paypal_vt.php";
 require $xcart_dir . "/include/transaction_logs.php";
 require $xcart_dir . "/include/order_transactions.php";
 
@@ -1589,7 +1591,7 @@ if ($mode == 'ref_notify')
                     }
 
                     $completed_transactions = array_filter($orderModel->transactions->all(), function($a) use ($ref_sum) {
-                        return (in_array($a->transaction_status,
+                        return ($a->type == OrderTransactionModel::TYPE_CAPTURE && in_array($a->transaction_status,
                             [
                                 OrderTransactionModel::STATUS_COMPLETED,
                                 OrderTransactionModel::STATUS_PARTIALLY_RUFUNDED
@@ -1597,84 +1599,58 @@ if ($mode == 'ref_notify')
                         ));
                     });
 
-                    if ($completed_transactions) {
-                        try {
-                            foreach ($completed_transactions as $ref_tr) {
+                if ($completed_transactions) {
+                    try {
+                        $order_log = null;
+                        foreach ($completed_transactions as $ref_tr) {
 
-                                if ($gw = Gateway::getGateway($ref_tr->payment_method_model->processor)) {
+                            $amount = [
+                                'amount' => number_format(min($ref_sum, $ref_tr->transaction_amount), 2),
+                                'currency' => $ref_tr->transaction_currency,
+                            ];
+                            $params = array_merge(PaymentHelper::getPaymentParams($ref_tr, $amount),
+                                [
+                                    'mode' => 'refund',
+                                    'transactionReference' => $ref_tr->transaction_id,
+                                    'new_method_model' => $ref_tr->payment_method_model,
+                                    'order' => $orderModel,
+                                    'orderTransaction' => $ref_tr,
+                                ]
+                            );
 
-                                    $amount = [
-                                        'amount' => number_format(min($ref_sum, $ref_tr->transaction_amount), 2),
-                                        'currency' => $ref_tr->transaction_currency,
-                                    ];
-                                    $params = array_merge($amount,
-                                        [
-                                            'transactionReference' => $ref_tr->transaction_id
-                                        ]
-                                    );
-
-                                    if ($gw->refund($params)) {
-                                        $result = $gw->result->getData();
-
-                                        if ($r_tr = OrderTransactionHelper::action('lookup', $ref_tr, PaymentHelper::getPaymentParams($ref_tr))) {
-                                            $r_tr->save();
-                                        }
-
-                                        $orderTransaction = OrderTransactionHelper::prepareOrderTransaction($r_tr, $gw, $orderModel, $ref_tr->payment_method_model, $amount, 'refund_transaction');
-                                        $orderTransaction->login = $login;
-                                        $orderTransaction->save();
-
-
-                                        $transactionLog = new TransactionLogModel(
-                                            [
-                                                'orderid' => $orderid,
-                                                'paymentid' => $orderTransaction->paymentid,
-                                                'order_transaction_id' => isset($orderTransaction) ? $orderTransaction->id : null,
-                                                'transaction_id' => $orderTransaction->transaction_id,
-                                                'transaction_status' => $gw->getState('refund_transaction'),
-                                                'transaction_currency' => !isset($result['amount']) ? $params['currency'] : $result['amount']['currency'],
-                                                'transaction_total' => $orderTransaction->transaction_amount,
-                                                'login' => $login,
-                                                'transaction_log' => array_merge($result, ['xcart_log' => $log])
-                                            ]
-                                        );
-
-                                        if ($transactionLog->isValid()) {
-                                            $transactionLog->save();
-                                        }
-
-                                    } else {
-                                        $result = $gw->result->getData();
-                                        $error_message = 'Refund error. ' . $result['message'];
-                                        break;
-                                    }
-
-                                    $ref_sum -= $ref_tr->transaction_amount;
-
-                                    if ($ref_sum <= 0) {
-                                        break;
-                                    }
-                                }
-
+                            $trStore = new OrderTransactionStore($params, $ref_tr);
+                            $model = $trStore->refund();
+                            if ($model->type == OrderTransactionModel::TYPE_REFUND && $model->transaction_status == OrderTransactionModel::STATUS_COMPLETED) {
+                                $ref_sum -= $model->transaction_amount;
                             }
-                        } catch (Exception $e) {
-                            $error_message = 'Refund error. ' . $e->getMessage();
+                            $order_log .= $trStore->log."\n";
+
+                            if ($ref_sum <= 0) {
+                                break;
+                            }
                         }
-                    } else {
+
+                        if ($ref_sum > 0) {
+                            $error_message = 'Refund error. ' . $order_log;
+                        }
+
+                    } catch (\Exception $e) {
+                        $error_message = 'Refund error. ' . $e->getMessage();
+                    }
+                } else {
                         $error_message = 'Transactions to refund does not exists';
                     }
 
-                    if ($error_message) {
-                        func_log_order($orderid, 'PP', $error_message, $login);
-                        $top_message = [
-                            'content' => $error_message,
-                            'type' => 'E',
-                        ];
-                        $section_name_top_message = $top_message;
-                        x_session_save("section_name_top_message");
-                        func_header_location("order.php?orderid=" . $orderid);
-                    }
-
+                if ($error_message) {
+                    func_log_order($orderid, 'PP', $error_message, $login);
+                    $top_message = [
+                        'content' => $error_message,
+                        'type' => 'E',
+                    ];
+                    $section_name_top_message = $top_message;
+                    x_session_save("section_name_top_message");
+                    func_header_location("order.php?orderid=" . $orderid);
+                }
             }
         }
 
@@ -1819,153 +1795,12 @@ if ($mode == 'mnf_notify' || $mode == "cidev_send_email_to_operator")
             $log .= "'Send (Off-hours dispatch to distributor)' at '" . $manufacturer_name . ": Dispatch to distributor'";
         }
 
-        $current_cb_status = func_query_first_cell("SELECT cb_status FROM $sql_tbl[order_groups] WHERE orderid = '$orderid' AND manufacturerid='$mnf_id'");
-
-        if ($current_cb_status == "AP")
-        {
-            $authorized_transactions_info  = func_query("SELECT id, transaction_id, transaction_amount FROM $sql_tbl[order_transactions] WHERE orderid='$orderid' AND transaction_status IN ('AP','Pending','authorized')");
-            $authorized_transaction_amount = func_query_first_cell("SELECT SUM(transaction_amount) FROM $sql_tbl[order_transactions] WHERE orderid='$orderid' AND transaction_status IN ('AP','Pending','authorized')");
-
-            if (!empty($order["shipping_groups"][$mnf_id]))
-            {
-                $bRefundPresent        = false;
-                $count_shipping_groups = count($order["shipping_groups"]);
-
-                if ($count_shipping_groups == "1") {
-                    try {
-                        $oPaypal = new Paypal();
-                        $Access_Token = $oPaypal->getAccessToken();
-                    } catch (\Exception $e) {
-                        $oPaypal = null;
-                        $Access_Token = null;
-                    }
-                }
-
-                if (empty($Access_Token) && $count_shipping_groups == "1") {
-                    $transaction_log     = "'Access_Token' - failed <br />";
-                    $result["xcart_log"] = $transaction_log;
-                    $serialize_result    = serialize($result);
-                }
-                else {
-                    $data_arr["amount"]["currency"] = $order["currency"];
-                    $OriginalAmount = $order["shipping_groups"][$mnf_id]["total"]["gross"];
-                    $CaptureAmount  = $OriginalAmount;
-
-                    if (isset($order["refund_groups"][$mnf_id]["total_gross"])) {
-                        $CaptureAmount -= $order["refund_groups"][$mnf_id]["total_gross"];
-                        $bRefundPresent = true;
-                    }
-
-                    $CaptureAmount = price_format($CaptureAmount);
-
-                    if ($CaptureAmount <= $authorized_transaction_amount)
-                    {
-                        if ($count_shipping_groups == "1" && !empty($authorized_transactions_info))
-                        {
-                            $transaction_log     = "";
-                            $capture_failed_flag = false;
-
-                            $tCaptureAmount = $CaptureAmount;
-
-                            foreach ($authorized_transactions_info as $authorized_transaction) {
-                                $authorized_transaction_id = $authorized_transaction["transaction_id"];
-
-                                if ($authorized_transaction["transaction_amount"] < $tCaptureAmount) {
-                                    $data_arr["amount"]["total"] = $authorized_transaction["transaction_amount"];
-                                }
-                                else {
-                                    $data_arr["amount"]["total"] = $tCaptureAmount;
-                                }
-
-                                $data_arr["is_final_capture"] = true;
-                                $result = $oPaypal->captureTransaction($authorized_transaction_id, $data_arr);
-
-                                if (!empty($result["id"]))
-                                {
-                                    $transaction_log = "<br />Transaction: " . $authorized_transaction_id . " -> " . $result["id"];
-
-                                    $result["script_info"] = "Script: admin/order.php . " . $log;
-
-                                    $orderTransaction = OrderTransactionModel::objects()->get(['orderid' => $orderid, 'transaction_id' => $authorized_transaction_id]);
-                                    if ($orderTransaction) {
-                                        $orderTransaction->transaction_id = $result['id'];
-                                        $orderTransaction->transaction_amount = $result["amount"]["total"];
-                                        $orderTransaction->date = time();
-                                        $orderTransaction->login = $login;
-                                        $orderTransaction->transaction_status = $result['state'];
-                                        $orderTransaction->transaction_response = serialize($result);
-                                        $orderTransaction->save();
-                                    }
-                                }
-                                else {
-                                    $capture_failed_flag = true;
-                                }
-
-                                $transaction_id       = $result["id"];
-                                $transaction_status   = $result["state"];
-                                $transaction_currency = $result["amount"]["currency"];
-                                $transaction_total    = $result["amount"]["total"];
-
-                                $result["xcart_log"]                  = $transaction_log;
-                                $result["FIELD_transaction_id"]       = $transaction_id;
-                                $result["FIELD_transaction_status"]   = $transaction_status;
-                                $result["FIELD_transaction_currency"] = $transaction_currency;
-                                $result["FIELD_transaction_total"]    = $transaction_total;
-
-                                $serialize_result = serialize($result);
-
-                                db_query("INSERT INTO $sql_tbl[transaction_logs] (orderid, paymentid, transaction_id, transaction_status, transaction_currency, transaction_total, date, login, transaction_log) VALUE ('$orderid', '5', '$transaction_id', '$transaction_status', '$transaction_currency', '$transaction_total', '" . time() . "', '$login', '" . addslashes($serialize_result) . "')");
-
-                                if (!empty($transaction_log)) {
-                                    func_log_order($orderid, 'PP', $serialize_result, $login);
-                                }
-
-                                $tCaptureAmount = $tCaptureAmount - $authorized_transaction["transaction_amount"];
-                                if ($tCaptureAmount <= 0) break;
-                            } // foreach ($authorized_transactions_info as $authorized_transaction_id)
-
-                            if ($capture_failed_flag) {
-
-                                $top_message["content"]   = func_get_langvar_by_name("txt_capture_failed");
-                                $top_message["type"]      = "I";
-                                $section_name_top_message = $top_message;
-                                x_session_save("section_name_top_message");
-
-                                $set_new_additional_tag = '37';
-                                $is_such_tag_in_db      = func_query_first_cell("SELECT status_id FROM $sql_tbl[orders_additional_tags] WHERE orderid='$orderid' AND status_id='$set_new_additional_tag'");
-                                if (empty($is_such_tag_in_db)) {
-                                    Modules\Order\Helpers\OrderTagEventHelper::orderTagEvent($set_new_additional_tag, $orderid);
-                                }
-
-                                func_header_location("order.php?orderid=" . $orderid);
-                            }
-                            else {
-                                $current_cb_status_value = func_query_first_cell("SELECT name FROM $sql_tbl[order_statuses] WHERE code='$current_cb_status'");
-
-                                $new_value = func_query_first_cell("SELECT name FROM $sql_tbl[order_statuses] WHERE code='P'");
-                                $log .= "<B>" . $code . ":</B> cb_status: " . $current_cb_status_value . " -> " . $new_value;
-
-                                db_query("UPDATE $sql_tbl[order_groups] SET cb_status='P' WHERE orderid = '$orderid' AND manufacturerid='$mnf_id'");
-                            }
-                        } // if ($count_shipping_groups == "1" && !empty($authorized_transactions_info))
-                    } // if ($CaptureAmount == $authorized_transaction_amount)
-                    else {
-                        $top_message["content"]   = func_get_langvar_by_name("lbl_captureamount_not_equal_order_amount");
-                        $top_message["type"]      = "R";
-                        $section_name_top_message = $top_message;
-                        x_session_save("section_name_top_message");
-
-                        $log .= "<br />" . $top_message["content"];
-
-                        if ($count_shipping_groups > 1) {
-                            func_log_order($orderid, 'X', $log, $login);
-                            func_header_location("order.php?orderid=" . $orderid);
-                        }
-                    }
-                } //else if (empty($Access_Token))
-            } // if (!empty($order["shipping_groups"][$mnf_id]))
-
-        } // if ($current_cb_status == "AP")
+        $log .= OrderGroupHelper::dispatchGroup(
+            [
+                'orderid' => $orderid,
+                'mnf_id' => $mnf_id,
+            ]
+        );
 
         if ($bad_time_do_not_send_email == "Y")
         {
@@ -3368,6 +3203,10 @@ if (!empty($orderid)) {
 
 # Assign the current location line
 $smarty->assign("location", $location);
+
+$smarty->assign('authorise_url', Xcart\App\Main\Xcart::app()->router->url('order:authorise', ['order_id' => $orderid]));
+$smarty->assign('manual_url', Xcart\App\Main\Xcart::app()->router->url('order:manual_transaction', ['order_id' => $orderid]));
+$smarty->assign('order_store', new \Modules\Order\Stores\OrderStore(OrderModel::objects()->get(['orderid' => $orderid])));
 
 @include $xcart_dir . "/modules/gold_display.php";
 func_display("admin/home.tpl", $smarty);

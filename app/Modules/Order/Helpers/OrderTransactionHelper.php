@@ -4,84 +4,93 @@ namespace Modules\Order\Helpers;
 
 
 use Modules\Order\Models\OrderModel;
+use Modules\Order\Models\OrderStatusModel;
 use Modules\Order\Models\OrderTransactionModel;
+use Modules\Order\Models\TransactionLogModel;
+use Modules\Order\OrderModule;
 use Modules\Payment\Gateways\Gateway;
 use Modules\Payment\Helpers\PaymentHelper;
 use Modules\Payment\Models\PaymentMethodModel;
+use Xcart\App\Main\Xcart;
 
 class OrderTransactionHelper
 {
 
+
     /**
-     * @param OrderTransactionModel $model
      * @param Gateway $gw
-     * @param OrderModel $orderModel
-     * @param PaymentMethodModel $pmModel
      * @param array $params
-     * @param string $mode
-     * @return OrderTransactionModel
+     * @return array
      */
-    public static function prepareOrderTransaction($model, $gw, $orderModel = null, $pmModel, $params = null, $mode = '')
+    public static function prepareOrderTransaction($gw, $params = [])
     {
-        if ((!$model && $orderModel) || (in_array($mode, ['refund_transaction']) && $model->transaction_status != OrderTransactionModel::STATUS_REFUNDED)) {
-            $model = new OrderTransactionModel(['orderid' => $orderModel->orderid]);
-        }
-        if ($model) {
 
-            $result = $gw->result->getData();
+        $response = [];
 
-            if (!$result['amount']) {
-                $result['amount'] =
-                    [
-                        'total' => $params['amount'],
-                        'currency' => $params['currency']
-                    ];
-            }
+        $result = $gw->result->getData();
 
-            if ($mode == 'add_manual_transaction') {
-                $model->manual_transaction = 'Y';
-            }
-
-            if ($mode == 'refund_transaction') {
-                $result['amount']['total'] = -abs($result['amount']['total']);
-            }
-
-            if (isset($result['capture_id'])) {
-                if ($parent = OrderTransactionModel::objects()->get(['transaction_id' => $result['capture_id']])){
-                    $model->parent_id = $parent->id;
-                }
-            }
-
-            $model->setAttributes(
+        if (!$result['amount']) {
+            $result['amount'] =
                 [
-                    'transaction_id' => $gw->result->getTransactionReference(),
-                    'transaction_status' => ($logStatus = $gw->getState($mode)),
-                    'transaction_currency' => $result['amount']["currency"],
-                    'transaction_amount' => $result['amount']['total'],
-                    'transaction_response' => $result,
-                    'paymentid' => $pmModel->paymentid,
-                    'transaction_fee' => isset($result['transaction_fee']) ? $result['transaction_fee']['value'] : null,
-                ]
-            );
+                    'total' => $params['amount'],
+                    'currency' => $params['currency']
+                ];
         }
-        return $model;
+
+        /*if ($mode == 'add_manual_transaction') {
+            $response['manual_transaction'] = 'Y';
+        }*/
+
+        if ($params['mode'] == 'refund_transaction') {
+            $result['amount']['total'] = -abs($result['amount']['total']);
+        }
+
+        if (isset($result['capture_id'])) {
+            if ($parent = OrderTransactionModel::objects()->get(['transaction_id' => $result['capture_id']])) {
+                $response['parent_id'] = $parent->id;
+            }
+        }
+
+        $response = array_merge($response,
+            [
+                'transaction_id' => $gw->result->getTransactionReference(),
+                'transaction_status' => $gw->getState($params['mode']),
+                'transaction_currency' => $result['amount']["currency"],
+                'transaction_amount' => $result['amount']['total'],
+                'transaction_response' => $result,
+                'login' => Xcart::app()->user->login,
+                'paymentid' => $params['payment_method_model']->paymentid,
+                'transaction_fee' => isset($result['transaction_fee']) ? $result['transaction_fee']['value'] : null,
+            ]
+        );
+
+        return $response;
     }
 
+
     /**
-     * @param string $method
-     * @param OrderTransactionModel $model
+     * @param $method
      * @param array $params
+     * @return array|null
      */
-    public static function action($method, $model, $params)
+    public static function action($method, $params)
     {
-        if ($model) {
-            if ($gw = Gateway::getGateway($model->payment_method_model->processor)) {
-                if ($res = $gw->$method($params)) {
-                    $model = OrderTransactionHelper::prepareOrderTransaction($model, $gw, null, $model->payment_method_model, $params);
+        $model = null;
+
+        if ($gw = Gateway::getGateway($params['processor'])) {
+            if ($gw->$method($params)) {
+                if ($result = OrderTransactionHelper::prepareOrderTransaction($gw, $params)) {
+                    if (empty($params['transactionReference']) || $result['transaction_id'] != $params['transactionReference']) {
+                        $model = new OrderTransactionModel($result);
+                    } else {
+                        $model = OrderTransactionModel::objects()->get(['transaction_id' => $result['transaction_id']]);
+                        $model->setAttributes($result);
+                    }
                 }
             }
         }
-        return $model;
+
+        return [$model, $gw];
     }
 
     public static function getOrderTransactionsGroupsValues(OrderModel $order)
@@ -97,6 +106,7 @@ class OrderTransactionHelper
             'authorized_PLUS_captured_totals' => floatval(
                 $trs[OrderTransactionModel::STATUS_COMPLETED]
                 + $trs[OrderTransactionModel::STATUS_AUTHORIZED]
+                + $trs[OrderTransactionModel::STATUS_CAPTURED]
                 + $trs[OrderTransactionModel::STATUS_PENDING]
                 + $trs[OrderTransactionModel::STATUS_PARTIALLY_RUFUNDED]
             ),
@@ -104,5 +114,30 @@ class OrderTransactionHelper
             'authorized_total' => floatval($trs[OrderTransactionModel::STATUS_AUTHORIZED] + $trs[OrderTransactionModel::STATUS_PENDING]),
             'captured_total' => floatval($trs[OrderTransactionModel::STATUS_COMPLETED] + $trs[OrderTransactionModel::STATUS_PARTIALLY_RUFUNDED])
         ];
+    }
+
+    /**
+     * @param OrderModel $order
+     * @return float
+     */
+    public static function getCaptureAmountAvail(OrderModel $order)
+    {
+        $result = 0;
+        if ($order) {
+            foreach ($order->transactions as $transaction) {
+                if ($transaction->type == OrderTransactionModel::TYPE_AUTHORIZATION
+                    && in_array($transaction->transaction_status,
+                        [
+                            OrderTransactionModel::STATUS_AUTHORIZED,
+                            OrderTransactionModel::STATUS_PENDING,
+                            OrderTransactionModel::STATUS_PARTIALLY_CAPTURED,
+
+                        ])) {
+                    $result += $transaction->transaction_amount;
+                }
+            }
+            /**TODO +15% Paypal capture amount */
+        }
+        return $result;
     }
 }

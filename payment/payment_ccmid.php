@@ -359,7 +359,10 @@ if (!$fatal) {
 			$transaction_log = serialize($result);
 		}
 
-		$param =
+		/** @var OrderTransactionModel $model */
+        list($model) = OrderTransactionModel::objects()->getOrNew(['orderid' => $check_orderid, 'transaction_id' => $transaction_id]);
+
+        $param =
             [
                 'orderid' => $check_orderid,
                 'paymentid' => $order_paymentid,
@@ -368,10 +371,14 @@ if (!$fatal) {
                 'transaction_currency' => $transaction_currency,
                 'transaction_amount' => $transaction_total,
                 'login' => $transaction_login,
-                'transaction_response' => $transaction_log,
             ];
 
-		$model = new OrderTransactionModel($param);
+        if ($model->getIsNewRecord()) {
+            $param['type'] = OrderTransactionModel::TYPE_AUTHORIZATION;
+		}
+
+		$model->setAttributes($param);
+
         $model->save();
 
         $param = array_merge($param,
