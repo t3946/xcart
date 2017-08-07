@@ -140,11 +140,21 @@ class OrderTransactionsController extends PrototypeAdminController
             /** @var OrderTransactionModel $model */
              list($model, $isNew) = OrderTransactionModel::objects()->getOrNew(['orderid' => $orderModel->orderid, 'transaction_id' => trim($_POST['transaction_id'])]);
 
+            $tr_type = OrderTransactionModel::TYPE_AUTHORIZATION;
+             switch($_POST['transaction_status']){
+                 case 'authorized' :
+                     $tr_type = OrderTransactionModel::TYPE_AUTHORIZATION;
+                     break;
+                 case 'completed' :
+                     $tr_type = OrderTransactionModel::TYPE_CAPTURE;
+                     break;
+             }
+
              $model->setAttributes(
                 [
                     'orderid' => $orderModel->orderid,
                     'paymentid' => $pmModel->paymentid,
-                    'type' => OrderTransactionModel::TYPE_AUTHORIZATION,
+                    'type' => $tr_type,
                     'manual_transaction' => 'Y',
                     'transaction_id' => trim($_POST['transaction_id']),
                     'transaction_status' => $_POST['transaction_status'],
