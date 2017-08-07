@@ -27,7 +27,7 @@ class OrderTransactions extends Data
 
         $oSQL->addSelect('*')->addFromTable('order_transactions')->addCondition("orderid = " . $iOrderId);
         if (!empty($Status) && is_array($Status)) {
-            $oSQL->addCondition("transaction_status IN ('" . implode("','", $Status)."')");
+            $oSQL->addCondition("type IN ('" . implode("','", $Status)."')");
         }
         $aRes = $oSQL->Execute()->getQueryResult();
         if (!empty($aRes)) {

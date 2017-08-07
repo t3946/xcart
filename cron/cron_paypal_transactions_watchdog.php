@@ -1,5 +1,6 @@
 <?php
 
+use Mindy\QueryBuilder\Expression;
 use Modules\Order\Models\OrderGroupModel;
 use \Xcart\OrderGroup;
 use \Xcart\SQLBuilder;
@@ -45,12 +46,32 @@ $aOrderGroups = OrderGroup::model()->findAll(
         ->addGroupBy('orderid')
         ->addOrderBy('cb_update_datetime DESC'));
 
+/*$params = [
+    'cb_status' => 'P',
+    'cb_update_datetime__lt' => new Expression('DATE_SUB(NOW(), INTERVAL 1 MONTH)'),
+];
+if ($groups = OrderGroupModel::objects()->getQuerySet()
+    ->join('inner join', 'order_transactions', ['orderid' => 'ot.orderid'], 'ot')
+    ->filter($params)
+    ->group(['orderid'])
+    ->order(['-cb_update_datetime'])
+    ->all()){
+
+    $countOrders = count($groups);
+    func_backprocess_log(LOG_CATEGORY, "Processing {$countOrders} orders.");
+
+    foreach ($groups as $group) {
+        $group->
+    }
+}
+exit;*/
+
 if (!empty($aOrderGroups)) {
     $countOrders = count($aOrderGroups);
     func_backprocess_log(LOG_CATEGORY, "Processing {$countOrders} orders.");
     foreach ($aOrderGroups as $oOrderGroup) {
         $fOrderGroupTotalAmount = 0;
-        $aTransactions = OrderTransactions::getOrderTransactionsByOrderIdAndStatus($oOrderGroup->getOrderId(), ['completed']);
+        $aTransactions = OrderTransactions::getOrderTransactionsByOrderIdAndStatus($oOrderGroup->getOrderId(), ['capture']);
         if (!empty($aTransactions)) {
             foreach ($aTransactions as $oTransaction) {
                 try {
@@ -59,11 +80,11 @@ if (!empty($aOrderGroups)) {
                         $fOrderGroupTotalAmount += floatval($oPayPalTransaction->getAmount()->total);
                     }
                 } catch (Exception $ex) {
-                    func_backprocess_log(LOG_CATEGORY, "Get transaction error. Order ID:{$oOrderGroup->getOrderId()}. ".$ex->getMessage());
+                    func_backprocess_log(LOG_CATEGORY, "Get transaction error. Order ID:{$oOrderGroup->getOrderId()}. " . $ex->getMessage());
                 }
             }
         }
-        if (round($fOrderGroupTotalAmount, 2) != $oOrderGroup->getOrderInstance()->getOrderTotalGross()){
+        if (round($fOrderGroupTotalAmount, 2) != $oOrderGroup->getOrderInstance()->getOrderTotalGross()) {
             $oAttentionTag = new AttentionTag(['status_id' => 44]);
             if (!($oOrderGroup->getOrderInstance()->isAttentionTagSet($oAttentionTag->getStatusId()))) {
                 Modules\Order\Helpers\OrderTagEventHelper::orderTagEvent($oAttentionTag->getStatusId(), $oOrderGroup->getOrderId());
