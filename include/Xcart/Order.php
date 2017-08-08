@@ -451,19 +451,6 @@ class Order extends Data
         return $this->getField('orderid');
     }
 
-    public function captureOrderAmount()
-    {
-        global $login;
-        $aOrderTransactions = new OrderTransactions();
-        try {
-            $aOrderTransactions->captureOrderAmount($this);
-        } catch (\Exception $ex) {
-            func_log_order($this->getOrderId(), 'X', $ex->getMessage(), $login);
-            return false;
-        }
-        return $this;
-    }
-
     public function getOrderCurrency()
     {
         return $this->getField('currency');

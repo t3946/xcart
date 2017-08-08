@@ -51,6 +51,7 @@ use Modules\Amazon\Models\AmazonFbaProductsQuickModel;
 use Modules\Amazon\Models\AmazonListInboundShipment;
 use Modules\Amazon\Models\AmazonListInboundShipmentItemModel;
 use Modules\Amazon\Models\AmazonProductsFieldsModel;
+use Modules\Order\Helpers\OrderGroupHelper;
 use Modules\Order\Models\OrderDetailModel;
 use Modules\Order\Models\OrderGroupInvoiceModel;
 use Modules\Order\Models\OrderGroupInvoiceProductModel;
@@ -920,11 +921,13 @@ SQL;
         $oOrder = $oOrderGroup->getOrderInstance();
         $log = "Try to place order shipping by Amazon\n";
 
-        if ($oOrder->getOrderGroupsCount() == 1 && $oOrderGroup->getOrderGroupStatusCB() == 'AP') {
-            if (!$oOrder->captureOrderAmount()) {
-                func_log_order($oOrderGroup->getOrderId(), 'X', nl2br($log), $login);
-                return false;
-            }
+        if ($oOrderGroup->getOrderGroupStatusCB() == 'AP') {
+            $log .= OrderGroupHelper::dispatchGroup(
+                [
+                    'orderid' => $oOrderGroup->orderid,
+                    'mnf_id' => $oOrderGroup->manufacturerid,
+                ]
+            );
         }
         $oOrderGroup->_refresh();
         if ($oOrderGroup->getOrderGroupStatusCB() != 'P') {
