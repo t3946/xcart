@@ -92,6 +92,12 @@ class OrderTransactionModel extends AutoMetaModel
                 'modelClass' => UserModel::className(),
                 'link' => ['login' => 'login'],
             ],
+            'order' => [
+                'field' => 'orderid',
+                'class' => ForeignField::className(),
+                'modelClass' => OrderModel::className(),
+                'link' => ['orderid' => 'orderid'],
+            ],
             'transaction_logs' => [
                 'class' => HasManyField::className(),
                 'modelClass' => TransactionLogModel::className(),

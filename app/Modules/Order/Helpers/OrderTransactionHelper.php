@@ -37,10 +37,6 @@ class OrderTransactionHelper
                 ];
         }
 
-        /*if ($mode == 'add_manual_transaction') {
-            $response['manual_transaction'] = 'Y';
-        }*/
-
         if ($params['mode'] == 'refund_transaction') {
             $result['amount']['total'] = -abs($result['amount']['total']);
         }
@@ -72,7 +68,7 @@ class OrderTransactionHelper
 
 
     /**
-     * @param $method
+     * @param string $method
      * @param array $params
      * @return array|null
      */
@@ -85,12 +81,14 @@ class OrderTransactionHelper
         if ($gw = Gateway::getGateway($params['processor'])) {
             if ($gw->$method($params)) {
                 if ($result = OrderTransactionHelper::prepareOrderTransaction($gw, $params)) {
-                    if (empty($params['transactionReference']) || $result['transaction_id'] != $params['transactionReference']) {
-                        $model = new OrderTransactionModel($result);
-                    } else {
-                        $model = OrderTransactionModel::objects()->get(['transaction_id' => $result['transaction_id']]);
-                        $model->setAttributes($result);
-                    }
+                    /** @var OrderTransactionModel $model */
+                    list($model) = OrderTransactionModel::objects()->getOrNew(
+                        [
+                            'transaction_id' => $result['transaction_id'],
+                            'orderid' => $params['order']->orderid
+                        ]
+                    );
+                    $model->setAttributes($result);
                 }
             }
         }

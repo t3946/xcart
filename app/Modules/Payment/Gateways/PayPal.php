@@ -18,11 +18,10 @@ class PayPal extends Gateway
     {
         parent::init();
 
-        $mode = current(GlobalConfigModel::objects()->filter(['name' => 'debug_mode'])->valuesList(['value'], true));
         $this->gateway->initialize([
-            'testMode' => ($mode == 'Y')
+            'testMode' => $this->test_mode
         ]);
-        switch ($mode) {
+        switch ($this->test_mode) {
             case 'Y' :
                 $this->gateway->setClientId(current(GlobalConfigModel::objects()->filter(['name' => 'sandbox_client_id'])->valuesList(['value'], true)));
                 $this->gateway->setSecret(current(GlobalConfigModel::objects()->filter(['name' => 'sandbox_secret_key'])->valuesList(['value'], true)));

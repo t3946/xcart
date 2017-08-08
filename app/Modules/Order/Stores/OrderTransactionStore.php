@@ -186,6 +186,9 @@ class OrderTransactionStore extends BaseStore
 
     }
 
+    /**
+     * @param OrderTransactionModel $model
+     */
     public static function lookupSelf($model) {
         list($model_o) = OrderTransactionHelper::action('lookup', PaymentHelper::getPaymentParams($model));
         if ($model_o) {
@@ -194,6 +197,9 @@ class OrderTransactionStore extends BaseStore
 
     }
 
+    /**
+     * @param OrderTransactionModel $model
+     */
     public static function lookupParentTransactions($model)
     {
         while ($model->parent_id && $model = $model->parent) {

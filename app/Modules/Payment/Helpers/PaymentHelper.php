@@ -75,6 +75,11 @@ class PaymentHelper
         return true;
     }
 
+    /**
+     * @param OrderTransactionModel $orderTransaction
+     * @param null|array $amount
+     * @return array
+     */
     public static function getPaymentParams($orderTransaction, $amount = null)
     {
         if (!$amount) {
@@ -90,7 +95,7 @@ class PaymentHelper
                 'status' => $orderTransaction->transaction_status,
                 'payment_method_model' => $pm = $orderTransaction->payment_method_model,
                 'processor' => $pm->processor,
-
+                'order' => $orderTransaction->order
             ],
             $amount
         );

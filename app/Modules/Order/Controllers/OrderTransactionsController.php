@@ -32,7 +32,7 @@ class OrderTransactionsController extends PrototypeAdminController
 
                 $amount =
                     [
-                        'amount' => number_format(trim($_POST['transaction_amount'][$id]), 2, '.', ''),
+                        'amount' => number_format(floatval(trim($_POST['transaction_amount'][$id])), 2, '.', ''),
                         'currency' => $orderTransaction->transaction_currency
                     ];
 
@@ -65,7 +65,7 @@ class OrderTransactionsController extends PrototypeAdminController
         $order_log = OrderTransactionStore::$gatewayMethods['authorize']['order_log']."<br>";
 
         /** @var OrderModel $orderModel */
-        if (isset($_POST['paypal_vt']) && $order_id && $orderModel = OrderModel::objects()->get(['orderid' => $order_id])) {
+        if (isset($_POST['paypal_vt']) && $order_id && ($orderModel = OrderModel::objects()->get(['orderid' => $order_id]))) {
 
             $count = $orderModel->transactions->count();
 
