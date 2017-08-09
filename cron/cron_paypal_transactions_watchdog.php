@@ -72,13 +72,12 @@ if ($groups = OrderGroupModel::objects()->getQuerySet()
         }
 
         $store = new OrderStore($order);
-        if ($store->getAmountDeficit() > 0) {
+        if ($store->getAmountDeficit() != 0) {
             OrderTagEventHelper::orderTagEvent(44, $order->orderid);
             func_backprocess_log(LOG_CATEGORY, "Difference in OrderId: " . $order->orderid . " Order Deficit: {$store->getAmountDeficit()}");
         }
     }
 }
-
 
 $aOrderGroups = OrderGroup::model()->findAll(
     SQLBuilder::getInstance()
