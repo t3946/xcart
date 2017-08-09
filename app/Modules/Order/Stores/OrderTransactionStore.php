@@ -116,11 +116,10 @@ class OrderTransactionStore extends BaseStore
 
                 $result = $model->transaction_response;
 
+                $logStatus = $model->transaction_status;
 
                 list ($o_log) = OrderHelper::changeOrderCBStatus($this->params['order'], OrderStatusModel::ORDER_STATUS_AUTHORIZED);
-                $this->log .= OrderModule::t('Transaction:') . " {$model->transaction_id} {$o_log}\n";
-
-                $logStatus = $model->transaction_status;
+                $this->log .= OrderModule::t('Transaction:') . " {$model->transaction_id} {$o_log} {$logStatus}\n";
 
                 self::lookupParentTransactions($model);
 

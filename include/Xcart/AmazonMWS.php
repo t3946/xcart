@@ -944,12 +944,10 @@ SQL;
         $address->setStateOrProvinceCode($oOrder->getField('s_state'));
         $address->setCountryCode($oOrder->getField('s_country'));
         $address->setPostalCode($oOrder->getField('s_zipcode'));
-        $sPhone = $oOrder->getField('phone');
-        if (!empty($sPhone))
-            $address->setPhoneNumber($sPhone);
+        if ($oOrder->phone)
+            $address->setPhoneNumber($oOrder->phone);
 
-        $aProducts = $oOrderGroup->getOrderGroupProducts();
-        if (!empty($aProducts)) {
+        if ($aProducts = $oOrderGroup->getOrderGroupProducts()) {
             $list = new FBAOutboundServiceMWS_Model_CreateFulfillmentOrderItemList();
 
             foreach ($aProducts as $oProduct) {
@@ -960,8 +958,7 @@ SQL;
                 foreach ($aOrderDetails as $oOrderDetail) {
                     $iAmount += $oOrderDetail->getAmount();
                 }
-                $aProductsQty = $oProduct->getProductsAvailOnAmazonParentWithChild($iAmount);
-                if (!empty($aProductsQty)) {
+                if ($aProductsQty = $oProduct->getProductsAvailOnAmazonParentWithChild($iAmount)) {
                     foreach ($aProductsQty as $aFBAAvail) {
                         $item->setSellerSKU($aFBAAvail['oProduct']->getSKU());
                         $item->setSellerFulfillmentOrderItemId($aFBAAvail['oProduct']->getSKU());

@@ -26,8 +26,8 @@ class OrderGroupHelper
         if ($group_model && $group_model->cb_status == "AP") {
 
             $groupRefunds = $group_model->getRefunds();
-            $toCaptureAmount = $group_model->total_gross - $groupRefunds;
-            $toCaptureAmountAvail = OrderTransactionHelper::getCaptureAmountAvail($order_model);
+            $toCaptureAmount = round($group_model->total_gross - $groupRefunds, 2);
+            $toCaptureAmountAvail = round(OrderTransactionHelper::getCaptureAmountAvail($order_model), 2);
 
             if ($toCaptureAmount <= $toCaptureAmountAvail) {
 
@@ -61,7 +61,7 @@ class OrderGroupHelper
                     $log .= "<br />".$trStore->log;
 
                     if ($model->type == OrderTransactionModel::TYPE_CAPTURE && $model->transaction_status == OrderTransactionModel::STATUS_COMPLETED) {
-                        $toCaptureAmount -= $model->transaction_amount;
+                        $toCaptureAmount -= round($model->transaction_amount,2);
                     }
 
                     if ($toCaptureAmount <= 0) {
