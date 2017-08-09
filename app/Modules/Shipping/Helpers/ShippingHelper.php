@@ -4,6 +4,7 @@ namespace Modules\Shipping\Helpers;
 
 
 use Modules\Core\Helpers\GeoipHelper;
+use Modules\Core\Models\StateModel;
 use Modules\Distributor\Models\DistributorModel;
 use Modules\Product\Models\ProductModel;
 use Modules\Shipping\Models\ShippingModel;
@@ -70,13 +71,7 @@ class ShippingHelper
                 )
             )
         ) {
-            if ($z = ZoneElementModel::objects()->filter(
-                [
-                    'field' => $state_model->country_code . '_' . $state_model->code,
-                    'zone__zone_name' => 'USA: Contiguous'
-                ])->count()) {
-                return true;
-            }
+            return static::isUSAContiguous($state_model);
         }
 
         return false;
@@ -109,5 +104,16 @@ class ShippingHelper
                 ];
         }
         return $result;
+    }
+
+    public static function isUSAContiguous(StateModel $model)
+    {
+        return (ZoneElementModel::objects()
+                ->filter(
+                    [
+                        'field' => $model->country_code . '_' . $model->code,
+                        'zone__zone_name' => 'USA: Contiguous'
+                    ])
+                ->count() > 0);
     }
 }

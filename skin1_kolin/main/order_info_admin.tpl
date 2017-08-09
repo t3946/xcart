@@ -787,17 +787,15 @@ Cost to us accurate
   </td>
 
   {assign var="oOrder" value=$oOrderGroup->getOrderInstance()}
-  {if (!empty($oOrderGroup) && (($oOrder->isOrderAmazon() == false) || ($oOrder->isOrderAmazon() && $oOrder->getAmazonChanell() == 'MFN')) && $oOrder->getField('fraud_status') == 'C' &&
-      ($oOrderGroup->getOrderGroupStatusCB() == 'P' ||
-       $oOrderGroup->getOrderGroupStatusCB() =='O' ||
-       ($oOrderGroup->getOrderGroupStatusCB() =='AP' && $oOrder->getOrderGroupsCount()==1 && ($order_transactions_totals.authorized_PLUS_captured_totals == $oOrder->getOrderTotalGross() || $oOrder->getAmazonChanell() == 'MFN'))
-      ) &&
-        ($oOrderGroup->getOrderGroupStatusDC() == 'E' || $oOrderGroup->getOrderGroupStatusDC() == 'M' || $oOrderGroup->getOrderGroupStatusDC() == 'T' || $oOrderGroup->getOrderGroupStatusDC() == 'K') &&
-        $oOrderGroup->checkFBAProductsAvailToShipping() &&
-        $oOrderGroup->getField('amz_fullfilment_order_placed') !='Y')
-  }
+  {if ((($oOrder->isOrderAmazon() == false) || ($oOrder->isOrderAmazon() && $oOrder->amazon_fulfillment_channel == 'MFN'))
+        && $oOrder->fraud_status == 'C'
+        && ($oOrderGroup->cb_status == 'P' || $oOrderGroup->cb_status =='O' || ($oOrderGroup->cb_status =='AP' && ($order_transactions_totals.authorized_PLUS_captured_totals == $oOrder->getOrderTotalGross() || $oOrder->getAmazonChanell() == 'MFN')))
+        && ($oOrderGroup->dc_status == 'E' || $oOrderGroup->dc_status == 'M' || $oOrderGroup->dc_status == 'T' || $oOrderGroup->dc_status == 'K')
+        && $oOrderGroup->checkFBAProductsAvailToShipping()
+        && $oOrderGroup->amz_fullfilment_order_placed !='Y'
+  )}
     <td colspan="2" align="center">
-      <input data-orderid="{$oOrderGroup->getOrderId()}" data-manufacturerid="{$oOrderGroup->getManufacturerId()}" id="submit_amazon_shipment" name="submit_amazon_shipment" type="button"  value="{if ($oOrderGroup->getField('cb_status') =='AP' && $oOrder->getOrderGroupsCount()==1 && $order_transactions_totals.authorized_PLUS_captured_totals == $oOrder->getOrderTotalGross())}Capture & {/if}Ship now by Amazon" />
+      <input data-orderid="{$oOrderGroup->getOrderId()}" data-manufacturerid="{$oOrderGroup->getManufacturerId()}" id="submit_amazon_shipment" name="submit_amazon_shipment" type="button"  value="{if ($oOrderGroup->getField('cb_status') =='AP' && $order_transactions_totals.authorized_PLUS_captured_totals == $oOrder->getOrderTotalGross())}Capture & {/if}Ship now by Amazon" />
       <select {if $oOrderShipping->isAmazonShipping()} disabled="disabled" {/if}style="margin-top: 7px; width: 88%;" name="amazon_shipping_method_select" id="amazon_shipping_method_select">
         <option value=""></option>
         {html_options options=$aAmazonShippingMethods selected=$oOrderGroup->getShippingMethodName()}
