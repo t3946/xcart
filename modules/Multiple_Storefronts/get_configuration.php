@@ -105,6 +105,7 @@ if (!empty($configuration)) {
 	  'show_seed_cats'   => 70,
 	  'search_all_website_show' => 80,
 	  'shop_closed'      => 90,
+      'shop_closed_method'      => 95,
 	  'new_shipping_calculation' => 990,
 	  'enable_https' => 2000,
 	);
