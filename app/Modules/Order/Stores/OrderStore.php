@@ -10,6 +10,7 @@ use Xcart\App\Store\BaseStore;
 
 class OrderStore extends BaseStore
 {
+    /** @var OrderModel $model */
     public $model = null;
     public $transactions = [];
 

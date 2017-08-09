@@ -94,11 +94,11 @@ class OrderTransactionStore extends BaseStore
         $result = [];
 
         extract(self::$gatewayMethods[$method]);
-        
-        /** @var OrderTransactionModel $model */
-        list($model, $this->gateway) = OrderTransactionHelper::action($method, $this->params);
 
         try {
+            /** @var OrderTransactionModel $model */
+            list($model, $this->gateway) = OrderTransactionHelper::action($method, $this->params);
+
             if ($model) {
 
                 if ($model->getIsNewRecord()) {
@@ -146,8 +146,8 @@ class OrderTransactionStore extends BaseStore
                 $this->log .= "<br/>{$result['name']}<br/>{$result['message']}";
             }
         } catch (\Exception $e) {
-            $this->log .= $e->getMessage()."\n";
-            $this->failed =true;
+            $this->log .= $e->getMessage() . "\n";
+            $this->failed = true;
             $logStatus = OrderTransactionModel::STATUS_FAILED;
         }
 
@@ -174,7 +174,7 @@ class OrderTransactionStore extends BaseStore
         }
 
         if ($this->failed) {
-            switch($method) {
+            switch ($method) {
                 case 'capture' :
                     OrderTagEventHelper::orderTagEvent(37, $this->order->orderid);
                     break;
@@ -188,12 +188,12 @@ class OrderTransactionStore extends BaseStore
     /**
      * @param OrderTransactionModel $model
      */
-    public static function lookupSelf($model) {
+    public static function lookupSelf($model)
+    {
         list($model_o) = OrderTransactionHelper::action('lookup', PaymentHelper::getPaymentParams($model));
         if ($model_o) {
             $model_o->save();
         }
-
     }
 
     /**

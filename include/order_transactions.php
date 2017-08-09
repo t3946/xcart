@@ -5,8 +5,6 @@ global $smarty, $order, $orderid;
 use Modules\Order\Helpers\OrderTransactionHelper;
 use Modules\Order\Models\OrderModel;
 use Modules\Order\Stores\OrderTransactionStore;
-use Modules\Payment\Gateways\Gateway;
-use Modules\Payment\Helpers\PaymentHelper;
 use Xcart\App\Main\Xcart;
 
 if (!defined('XCART_SESSION_START')) {
@@ -18,7 +16,11 @@ if ($orderModel = OrderModel::objects()->get(['orderid' => $orderid])) {
 
     foreach ($orderModel->transactions->order(['-id']) as $transactionModel) {
         if (empty($transactionModel->transaction_response)) {
-            OrderTransactionStore::lookupSelf($transactionModel);
+            try {
+                OrderTransactionStore::lookupSelf($transactionModel);
+            } catch (Exception $e){
+
+            }
         }
     }
 
