@@ -16,7 +16,7 @@
     </tr>
     <tr{cycle values=", class='TableSubHead'" name="cycle_totals"}>
         <td>Available to capture</td>
-        <td width="1%" align="right" {if ($order_store->getTotal() > 0 && $order_store->getAmountToCapture() == $order_store->getTotal())}style="background-color: #d9ead3;"{/if}>{include file="currency2.tpl" value=$order_store->getAmountToCapture()} {if ($order_store->getAdditionalCaptureAmount())}(+{$order_store->getAdditionalCaptureAmount()}){/if}</td>
+        <td width="1%" align="right" {if ($order_store->getTotal() > 0 && $order_store->getAmountToCapture() == $order_store->getTotal())}style="background-color: #d9ead3;"{/if}>{include file="currency2.tpl" value=$order_store->getAmountToCapture()} {if ($order_store->getAdditionalCaptureAmount())}(+{include file="currency2.tpl" value=$order_store->getAdditionalCaptureAmount()}){/if}</td>
     </tr>
 
     <tr{cycle values=", class='TableSubHead'" name="cycle_totals"}>

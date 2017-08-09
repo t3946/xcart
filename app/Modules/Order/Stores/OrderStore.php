@@ -18,9 +18,8 @@ class OrderStore extends BaseStore
     {
         if ($model) {
             $this->model = $model;
+            $this->populate([]);
         }
-
-        $this->populate([]);
     }
 
     public function populate(array $data)
@@ -166,16 +165,16 @@ class OrderStore extends BaseStore
                             OrderTransactionModel::STATUS_AUTHORIZED,
                             OrderTransactionModel::STATUS_PENDING,
                             OrderTransactionModel::STATUS_PARTIALLY_CAPTURED,
-                            OrderTransactionModel::STATUS_CAPTURED,
-                            OrderTransactionModel::STATUS_COMPLETED,
                         ]
                     )) {
-                    if ($model->payment_method_model->maximum_re_authorization_multiplier > 0) {
-                        $value = $model->getAvailAmount() * $model->payment_method_model->maximum_re_authorization_multiplier - $model->getAvailAmount();
+                    if (($payment = $model->payment_method_model) && $payment->maximum_re_authorization_multiplier > 0) {
+                        $value = min($payment->maximum_re_authorization_increase, $model->getAvailAmount() * $payment->maximum_re_authorization_multiplier - $model->getAvailAmount());
                     }
                 }
                 return $value;
             }, $this->transactions)),2);
         }
+
+        return $this->additionalCaptureAmount;
     }
 }
