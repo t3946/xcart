@@ -27,7 +27,7 @@ require "../init.php";
 global $config, $xcart_dir;
 
 set_time_limit(0);
-ini_set('memory_limit', '512M');
+ini_set('memory_limit', '1024M');
 
 $feed_types = ["I" => "inventory", "P" => "product"];
 $log_category = "supplier_feeds_v_2";
