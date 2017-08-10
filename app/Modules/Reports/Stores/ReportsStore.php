@@ -175,8 +175,14 @@ class ReportsStore extends OrderSearchStore
                 break;
         }
 
-        $qs->group([]);
+        if ($this->form_data['report_mode'] == 'html') {
+            $qs->group(['orderid']);
+        } else {
+            $qs->group([]);
+        }
+
         if (!empty($this->form_data['report']['group_settings'])) {
+
             $qs->select([]);
             ksort($this->form_data['report']['group_settings']);
             foreach ($this->form_data['report']['group_settings'] as $group_index => $group) {
@@ -219,7 +225,7 @@ class ReportsStore extends OrderSearchStore
         }
 
         if (!empty($this->form_data['report']['aggregate_settings'])) {
-            $agg_oreder = [];
+            $agg_order = [];
             $agg = self::getAggregatesFields();
             foreach ($this->form_data['report']['aggregate_settings'] as $aggregate_index => $aggregate_settings) {
                 $aggr_enable = true;
@@ -234,16 +240,16 @@ class ReportsStore extends OrderSearchStore
                 }
                 if ($aggr_enable) {
                     $qs->addSelect([$aggregate_settings => $agg[$aggregate_settings]]);
-                    $agg_oreder[] = "-" . $aggregate_settings;
+                    $agg_order[] = "-" . $aggregate_settings;
                 }
                 if ($aggregate_settings == 'profit'){
                     $qs->join('left join', 'xcart_order_group_invoices', ['orderid' => 'inv.orderid', 'group.manufacturerid' => 'inv.manufacturerid'], 'inv');
                 }
             }
-            if ($agg_oreder) {
-                krsort($agg_oreder);
+            if ($agg_order) {
+                krsort($agg_order);
             }
-            $order = array_merge($order, $agg_oreder);
+            $order = array_merge($order, $agg_order);
         }
 
         if ($filter) {
