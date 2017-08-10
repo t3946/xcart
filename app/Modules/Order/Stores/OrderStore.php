@@ -94,15 +94,18 @@ class OrderStore extends BaseStore
             $this->authorizedAmount = round(array_sum(array_map(function ($model) {
                 /** @var OrderTransactionModel $model */
                 $value = 0;
-                if ($model->type == OrderTransactionModel::TYPE_AUTHORIZATION && in_array($model->transaction_status,
-                        [
-                            OrderTransactionModel::STATUS_AUTHORIZED,
-                            OrderTransactionModel::STATUS_PENDING,
-                            OrderTransactionModel::STATUS_PARTIALLY_CAPTURED,
-                            OrderTransactionModel::STATUS_CAPTURED,
-                            OrderTransactionModel::STATUS_COMPLETED,
-                        ]
-                    )) {
+                if ($model->type == OrderTransactionModel::TYPE_AUTHORIZATION
+                    || (
+                        $model->type == OrderTransactionModel::TYPE_CAPTURE
+                        && $model->parent_id == null
+                        && in_array($model->transaction_status,
+                            [
+                                OrderTransactionModel::STATUS_COMPLETED,
+                                OrderTransactionModel::STATUS_PARTIALLY_RUFUNDED,
+                            ]
+                        )
+                    )
+                ) {
                     $value = $model->transaction_amount;
                 }
                 return $value;
@@ -110,31 +113,6 @@ class OrderStore extends BaseStore
         }
 
         return $this->authorizedAmount;
-    }
-
-    private $authAvailAmount = null;
-    public function getAuthAvailAmount()
-    {
-        if (is_null($this->authAvailAmount)) {
-            $this->authAvailAmount = round(array_sum(array_map(function ($model) {
-                /** @var OrderTransactionModel $model */
-                $value = 0;
-                if ($model->type == OrderTransactionModel::TYPE_AUTHORIZATION && in_array($model->transaction_status,
-                        [
-                            OrderTransactionModel::STATUS_AUTHORIZED,
-                            OrderTransactionModel::STATUS_PENDING,
-                            OrderTransactionModel::STATUS_PARTIALLY_CAPTURED,
-                            OrderTransactionModel::STATUS_CAPTURED,
-                            OrderTransactionModel::STATUS_COMPLETED,
-                        ]
-                    )) {
-                    $value = $model->getAvailAmount();
-                }
-                return $value;
-            }, $this->transactions)),2);
-        }
-
-        return $this->authAvailAmount;
     }
 
     public function getAmountDeficit()
