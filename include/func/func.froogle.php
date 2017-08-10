@@ -233,11 +233,11 @@ if ($sExtraLog=='Y')
 
 	$cats_path = func_froogle_convert($cats_path, 1000);
 	$cats_path = func_cidev_check_froogle_field($cats_path);
-	$cats_path = iconv("UTF-8", "ISO-8859-1//TRANSLIT", $cats_path);
+	//$cats_path = iconv("UTF-8", "ISO-8859-1//TRANSLIT", $cats_path);
 
 	$cats_path_for_thefind = func_froogle_convert($cats_path_for_thefind, 1000);
 	$cats_path_for_thefind = func_cidev_check_froogle_field($cats_path_for_thefind);
-	$cats_path_for_thefind = iconv("UTF-8", "ISO-8859-1//TRANSLIT", $cats_path_for_thefind);
+	//$cats_path_for_thefind = iconv("UTF-8", "ISO-8859-1//TRANSLIT", $cats_path_for_thefind);
 
 	# Define full description
 	if (!empty($product['fulldescr']))
@@ -250,11 +250,11 @@ if ($sExtraLog=='Y')
 
 	$product['descr'] = func_froogle_convert($product['descr'], 10000);
 	$product['descr'] = func_cidev_check_froogle_field($product['descr']);
-	$product['descr'] = iconv("UTF-8", "ISO-8859-1//TRANSLIT", $product['descr']);
+	//$product['descr'] = iconv("UTF-8", "ISO-8859-1//TRANSLIT", $product['descr']);
 
 	$product['product'] = func_froogle_convert($product['product'], 70);
 	$product['product'] = func_cidev_check_froogle_field($product['product']);
-	$product['product'] = iconv("UTF-8", "ISO-8859-1//TRANSLIT", $product['product']);
+	//$product['product'] = iconv("UTF-8", "ISO-8859-1//TRANSLIT", $product['product']);
 
 	# Define product image
 	$tmp = func_query_first("SELECT id, image_path FROM $sql_tbl[images_P] WHERE $sql_tbl[images_P].id = '$product[productid]'");
@@ -630,9 +630,9 @@ if ($sExtraLog=='Y')
 	$product['mpn'] = $mpn;
 	$product['gpc'] = $gpc;
 	$product['cats_path'] = $cats_path;
-	$product['google_descr'] = iconv("UTF-8", "ISO-8859-1//TRANSLIT",func_froogle_convert(trim($product['descr']), 5000));
-	$product['google_brand'] = iconv("UTF-8", "ISO-8859-1//TRANSLIT",func_froogle_convert(trim($product['brand']), 256));
-	$product['google_product'] = iconv("UTF-8", "ISO-8859-1//TRANSLIT",func_froogle_convert((trim($product['product_froogle']) ? trim($product['product_froogle']) : trim($product['product'])), 80));
+	$product['google_descr'] = func_froogle_convert(trim($product['descr']), 5000);
+	$product['google_brand'] = func_froogle_convert(trim($product['brand']), 256);
+	$product['google_product'] = func_froogle_convert((trim($product['product_froogle']) ? trim($product['product_froogle']) : trim($product['product'])), 80);
 
     if (($distributorModel->d_minimum_order_amount == 'applies_to_all_orders')
         && (($m_order_amount = floatval($distributorModel->d_minimum_order_amount_in_us)) > 0)
