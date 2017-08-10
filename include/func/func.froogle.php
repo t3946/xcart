@@ -643,7 +643,7 @@ if ($sExtraLog=='Y')
     }
 
 
-	if ($product['shipping_weight']) {
+	if (isset($product['shipping_weight']) && floatval($product['shipping_weight']) > 0) {
 		$product['weight'] = $product['shipping_weight'];
 	}
 	if ($product['shipping_dim_x']||$product['shipping_dim_y']||$product['shipping_dim_z']) {
