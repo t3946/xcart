@@ -62,6 +62,11 @@ class OrderGroupModel extends AutoMetaModel
                 'modelClass' => OrderStatusModel::className(),
                 'null' => false,
             ],
+            'detail_models' => [
+                'class' => HasManyField::className(),
+                'modelClass' => OrderDetailModel::className(),
+                'link' => ['orderid'=>'orderid', 'product_model__manufacturerid'=>'manufacturerid']
+            ],
             'invoices' => [
                 'class' => HasManyField::className(),
                 'modelClass' => OrderGroupInvoiceModel::className(),
@@ -142,19 +147,6 @@ class OrderGroupModel extends AutoMetaModel
                 ->all();
         }
         return $this->productModels;
-    }
-
-    private $detailsModels = null;
-    public function getOrderDetailModels()
-    {
-        if (is_null($this->detailsModels)) {
-            $this->detailsModels = OrderDetailModel::objects()
-                ->getQuerySet()
-                ->join('inner join', 'xcart_products', ['productid' => 'p.productid'], 'p')
-                ->filter(['p.manufacturerid' => $this->manufacturerid, 'orderid' => $this->orderid])
-                ->all();
-        }
-        return $this->detailsModels;
     }
 
     public function getRefunds()
