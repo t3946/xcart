@@ -135,7 +135,7 @@ class OrderTransactionsController extends PrototypeAdminController
 
     public function manual_transaction($order_id)
     {
-        $order_log = OrderTransactionStore::$gatewayMethods['add_manual_transaction']['oredr_log']."<br>";
+        $order_log = OrderTransactionStore::$gatewayMethods['add_manual_transaction']['order_log']."<br>";
 
         if (($pmModel = PaymentMethodModel::objects()->get(['paymentid' => $_POST['paymentid']]))
             && ($orderModel = OrderModel::objects()->get(['orderid' => $order_id]))) {
