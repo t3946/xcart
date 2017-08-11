@@ -275,11 +275,10 @@ abstract class ShippingProcessor
                     'state_from' => $oManufacturer->getField('m_state'),
                     'country_to' => $oCustomer->getField('s_country'),
                     'country_from' => $oManufacturer->getField('m_country'),
-                    //'shipping_rates' => base64_encode(addslashes(gzcompress(serialize($this->aShippingRates)))),
-                    'compressed' => 0]
+                ]
             )->_insert();
             if ($iShippingCacheId) {
-                foreach ($this->aShippingRates as $oShippingRate){
+                foreach ($this->aShippingRates as $oShippingRate) {
                     $aCacheQutes = $oShippingRate->getDataToSave();
                     ShippingCacheQuotes::model()->fill([
                         'shipping_cache_id' => $iShippingCacheId,
@@ -349,27 +348,24 @@ abstract class ShippingProcessor
                     'shipping_rates' => $res['shipping_rates'],
                     'shipping_carrier' => $res['shipping_carrier'],
                     'cache_date' => $res['cache_date'],
-                    'compressed' => $res['compressed']
                 ]);
 
                 if ($oShippingCache && $oShippingCache->getField('shipping_cache_id')) {
-                    if ($oShippingCache->getField('compressed')) {
-                        $this->aShippingRates = unserialize(gzuncompress(stripslashes(base64_decode($oShippingCache->getField('shipping_rates')))));
-                    } else {
-                        $aShippingCacheQuotes = ShippingCacheQuotes::model()->findAll(SQLBuilder::getInstance()->addCondition('shipping_cache_id = '.$oShippingCache->getField('shipping_cache_id')));
-                        if (!empty($aShippingCacheQuotes)) {
-                            foreach ($aShippingCacheQuotes as $oShippingCacheQuotes){
-                                $oShippingRate = ShippingRate::model(['rateid' => $oShippingCacheQuotes->getField('rate_id')]);
-                                if ($oShippingRate->getField('rateid')) {
-                                    $oShippingRate->setShippingChargeQuote($oShippingCacheQuotes->getField('shipping_quote'));
-                                    //$oShippingRate->setShippingCharge($oShippingCacheQuotes->getField('shipping_charge'));
-                                    //$oShippingRate->setShippingChargeBeforeMap($oShippingCacheQuotes->getField('shipping_charge_before_map'));
-                                    $oShippingRate->setCart($this->getCart());
-                                    $this->aShippingRates[] = $oShippingRate;
-                                }
+
+                    $aShippingCacheQuotes = ShippingCacheQuotes::model()->findAll(SQLBuilder::getInstance()->addCondition('shipping_cache_id = ' . $oShippingCache->getField('shipping_cache_id')));
+                    if (!empty($aShippingCacheQuotes)) {
+                        foreach ($aShippingCacheQuotes as $oShippingCacheQuotes) {
+                            $oShippingRate = ShippingRate::model(['rateid' => $oShippingCacheQuotes->getField('rate_id')]);
+                            if ($oShippingRate->getField('rateid')) {
+                                $oShippingRate->setShippingChargeQuote($oShippingCacheQuotes->getField('shipping_quote'));
+                                //$oShippingRate->setShippingCharge($oShippingCacheQuotes->getField('shipping_charge'));
+                                //$oShippingRate->setShippingChargeBeforeMap($oShippingCacheQuotes->getField('shipping_charge_before_map'));
+                                $oShippingRate->setCart($this->getCart());
+                                $this->aShippingRates[] = $oShippingRate;
                             }
                         }
                     }
+
                 }
 
                 if (!empty($this->aShippingRates) && !$this->bGetOnlyApproximationRates) {
@@ -386,7 +382,7 @@ abstract class ShippingProcessor
                                 $aR2[] = $oShippingRate->getField('rateid');
                             }
                             $aDiff = array_diff($aR1, $aR2);
-                            if (!empty($aDiff)){
+                            if (!empty($aDiff)) {
                                 $this->aShippingRates = null;
                             }
                         }
