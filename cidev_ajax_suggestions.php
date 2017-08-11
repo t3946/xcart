@@ -4,6 +4,7 @@
  */
 global $REQUEST_METHOD, $smarty, $config, $productid, $section_name;
 
+use Modules\Core\Helpers\GeoipHelper;
 use Modules\Shipping\Helpers\ShippingHelper;
 
 #
@@ -57,10 +58,12 @@ if ($REQUEST_METHOD == 'GET' && $section_name == 'shipping') {
     if ($_GET['product_id']) {
         $qty = intval($_GET['qty']);
 
-        list ($shipping_rate, $shipping_state) = ShippingHelper::getProductShippingData($_GET['product_id'], $qty);
+        $state_model = GeoipHelper::getGeoipLocation(Xcart\App\Main\Xcart::app()->request->getUserIP())->state_model;
+
+        $shipping_rate = ShippingHelper::getStateMinShipping($_GET['product_id'], $qty, $state_model);
 
         $smarty->assign('shipping_rate', $shipping_rate);
-        $smarty->assign('shipping_state', $shipping_state);
+        $smarty->assign('shipping_state', $state_model);
         $smarty->assign('qty', $qty);
 
         echo $smarty->fetch('customer/main/product_shipping.tpl');

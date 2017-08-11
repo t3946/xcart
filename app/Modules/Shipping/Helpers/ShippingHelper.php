@@ -80,29 +80,50 @@ class ShippingHelper
     /**
      * @param integer $product_id
      * @param integer $qty
-     * @return array
+     * @param StateModel $stateModel
+     * @return ShippingRate|null
      */
-    public static function getProductShippingData($product_id, $qty)
+    public static function getStateMinShipping($product_id, $qty, $stateModel)
+    {
+        $result = null;
+
+        if ($product_model = ProductModel::objects()->get(['productid' => $product_id])) {
+
+            $userModel = new UserModel([
+                's_country' => $stateModel->country_code,
+                's_state' => $stateModel->code,
+                's_zipcode' => $stateModel->base_state_zipcode,
+                's_city' => 'New City'
+            ]);
+
+            $result = ShippingHelper::getMinShippingRate($userModel, $product_model->distributor, [['model' => $product_model, 'qty' => intval($qty)]]);
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param integer $product_id
+     * @param integer $qty
+     * @param StateModel $stateModel
+     * @return ShippingRate[]
+     */
+    public static function getStateShipping($product_id, $qty, $stateModel)
     {
         $result = [];
 
         if ($product_model = ProductModel::objects()->get(['productid' => $product_id])) {
 
-            $state_model = GeoipHelper::getGeoipLocation(Xcart::app()->request->getUserIP())->state_model;
-            $userModel = new UserModel();
-            $userModel->setAttributes([
-                's_country' => $state_model->country_code,
-                's_state' => $state_model->code,
-                's_zipcode' => $state_model->base_state_zipcode,
+            $userModel = new UserModel([
+                's_country' => $stateModel->country_code,
+                's_state' => $stateModel->code,
+                's_zipcode' => $stateModel->base_state_zipcode,
                 's_city' => 'New City'
             ]);
 
-            $result =
-                [
-                    ShippingHelper::getMinShippingRate($userModel, $product_model->distributor, [['model' => $product_model, 'qty' => intval($qty)]]),
-                    $state_model
-                ];
+            $result = ShippingHelper::getShippingRates($userModel, $product_model->distributor, [['model' => $product_model, 'qty' => intval($qty)]]);
         }
+
         return $result;
     }
 

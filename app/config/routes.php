@@ -30,5 +30,10 @@ return [
         'path' => 'Modules.Order.routes_admin',
         'namespace' => 'order'
     ],
+    [
+        'route' => '/admin/product',
+        'path' => 'Modules.Product.routes_admin',
+        'namespace' => 'product'
+    ],
 
 ];
