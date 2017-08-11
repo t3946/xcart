@@ -61,7 +61,7 @@ class OrderGroupHelper
                     $log .= "<br />".$trStore->log;
 
                     if ($model->type == OrderTransactionModel::TYPE_CAPTURE && $model->transaction_status == OrderTransactionModel::STATUS_COMPLETED) {
-                        $toCaptureAmount -= round($model->transaction_amount,2);
+                        $toCaptureAmount = round ($toCaptureAmount - $model->transaction_amount, 2);
                     }
 
                     if ($toCaptureAmount <= 0) {
