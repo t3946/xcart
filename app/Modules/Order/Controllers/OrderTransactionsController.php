@@ -61,6 +61,7 @@ class OrderTransactionsController extends PrototypeAdminController
     public function authorise($order_id)
     {
         $method = null;
+        $send_notification = false;
 
         $order_log = OrderTransactionStore::$gatewayMethods['authorize']['order_log']."<br>";
 
@@ -102,9 +103,11 @@ class OrderTransactionsController extends PrototypeAdminController
             $transaction_model = $store->authorize();
             $order_log .= $store->log;
 
-            list ($o_log, $send_notification) = OrderHelper::changeOrderCBStatus($orderModel, OrderStatusModel::ORDER_STATUS_AUTHORIZED);
-            if ($o_log) {
-                $order_log .= "<br />" . $o_log;
+            if (in_array($transaction_model->transaction_status, [OrderTransactionModel::STATUS_AUTHORIZED])) {
+                list ($o_log, $send_notification) = OrderHelper::changeOrderCBStatus($orderModel, OrderStatusModel::ORDER_STATUS_AUTHORIZED);
+                if ($o_log) {
+                    $order_log .= "<br />" . $o_log;
+                }
             }
 
             if (!$count && $send_notification) {
