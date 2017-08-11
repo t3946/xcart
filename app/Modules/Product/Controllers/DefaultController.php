@@ -2,6 +2,7 @@
 
 namespace Modules\Product\Controllers;
 
+use Modules\Brand\Models\BrandModel;
 use Modules\Product\Models\ProductModel;
 use Modules\User\Helpers\SurfingHelper;
 use Modules\User\Models\SurfPathModel;
@@ -41,13 +42,13 @@ class DefaultController extends Controller
             Xcart::app()->cart->add($model);
         }
 
-        foreach (Xcart::app()->cart->getItems() as $cartItem) {
-            func_dump((string)"{{$cartItem->getQuantity()}}" . $cartItem->getObject() );
-        }
-
-
-        func_dump(Xcart::app()->cart->getQuantity());
-        func_dump(Xcart::app()->cart->getTotal());
+//        foreach (Xcart::app()->cart->getItems() as $cartItem) {
+//            func_dump((string)"{{$cartItem->getQuantity()}}" . $cartItem->getObject() );
+//        }
+//
+//
+//        func_dump(Xcart::app()->cart->getQuantity());
+//        func_dump(Xcart::app()->cart->getTotal());
 
 
 //        func_dump($model);

@@ -32,6 +32,8 @@ class TemplateManager
     protected $_renderer;
 
     public $forceCompile = false;
+    public $forceInclude = false;
+    public $forceVerify = false;
     public $autoReload = true;
     public $autoEscape = true;
 
@@ -51,6 +53,8 @@ class TemplateManager
         $this->_renderer->setCompileDir($cacheFolder);
         $this->_renderer->setOptions([
             'force_compile' => $this->forceCompile,
+            'force_include' => $this->forceInclude,
+            'force_verify' => $this->forceVerify,
             'auto_reload' => $this->autoReload,
             'auto_escape' => $this->autoEscape
         ]);

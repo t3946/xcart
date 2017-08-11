@@ -1,14 +1,15 @@
 <?php
 error_reporting(E_ALL ^ E_DEPRECATED);
 
-//define('AREA_TYPE' , 'C');
 date_default_timezone_set('EST'); //Magic;
 
-require_once 'xcart_tables.php';
 require_once './include/libs/autoload.php';
+
+include_once './app/config/xcart_tables.php';
+$config = include './app/config/settings.php';
+
 use Xcart\App\Main\Xcart;
 
-$config = include './app/config/settings.php';
 
 Xcart::init($config);
 Xcart::app()->run();

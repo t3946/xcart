@@ -18,6 +18,7 @@ use Xcart\App\Orm\Fields\TimeField;
 class AutoMetaData extends MetaData
 {
     private static $_tables;
+    private static $_configs;
 
     protected function init($className)
     {
@@ -32,26 +33,22 @@ class AutoMetaData extends MetaData
         $primaryFields = [];
 
 
-        foreach ($this->getTableColumns($className) as $column) {
-            $name = $column->getName();
-
+        foreach ($this->getTableConfig($className) as $name => $config)
+        {
             if (!isset($this->fields[$name])) {
+                $field = $this->createField($config);
+                $field->setName($name);
+                $field->setModelClass($className);
 
-                if ($config = $this->getConfigFromDBAL($column)) {
-                    $field = $this->createField($config);
-                    $field->setName($name);
-                    $field->setModelClass($className);
+                $this->fields[$name] = $field;
+                $this->mapping[$field->getAttributeName()] = $name;
 
-                    $this->fields[$name] = $field;
-                    $this->mapping[$field->getAttributeName()] = $name;
-
-                    if ($field->primary) {
-                        $primaryFields[] = $field->getAttributeName();
-                    }
+                if ($field->primary) {
+                    $primaryFields[] = $field->getAttributeName();
                 }
-
             }
         }
+
         if (empty($primaryFields) && empty($this->primaryKeys)) {
             $this->primaryKeys = call_user_func([$className, 'getPrimaryKeyName']);
         }
@@ -78,6 +75,30 @@ class AutoMetaData extends MetaData
         }
 
         return self::$_tables[$className];
+    }
+
+    /**
+     * @param string $className
+     *
+     * @return array Config fields as $name => $config
+     * @throws \Doctrine\DBAL\DBALException
+     */
+    private function getTableConfig($className)
+    {
+        if (!isset(self::$_configs[$className]))
+        {
+            foreach ($this->getTableColumns($className) as $column) {
+                $name = $column->getName();
+
+                if (!isset($this->fields[$name])) {
+                    if ($config = $this->getConfigFromDBAL($column)) {
+                        self::$_configs[$className][$name] = $config;
+                    }
+                }
+            }
+        }
+
+        return self::$_configs[$className];
     }
 
     private function getConfigFromDBAL(Column $column)
@@ -152,30 +173,31 @@ class AutoMetaData extends MetaData
             return $config;
         }
 
-        func_dump($column);
-
         return null;
     }
 
     public function initTableData()
     {
-        if (is_null(self::$_tables))
+
+        self::$_tables = [];
+
+        if (is_null(self::$_configs))
         {
             if (Xcart::app()->hasComponent('event') && Xcart::app()->hasComponent('cache'))
             {
-                self::$_tables = Xcart::app()->cache->get('auto_meta_data_tables', []);
-//                Xcart::app()->event->on('app:end', [$this, 'saveCache']);
+                self::$_configs = Xcart::app()->cache->get('auto_meta_data_configs', []);
+                Xcart::app()->event->on('app:end', [$this, 'saveCache']);
             }
             else {
-                self::$_tables = [];
+                self::$_configs = [];
             }
         }
     }
 
-    public static function saveCache()
+    public static function saveCache($owner)
     {
-        if (self::$_tables) {
-            Xcart::app()->cache->set('auto_meta_data_tables', self::$_tables, 360);
+        if (self::$_configs) {
+            Xcart::app()->cache->set('auto_meta_data_configs', self::$_configs, 360);
         }
     }
 }

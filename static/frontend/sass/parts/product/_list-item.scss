@@ -265,11 +265,9 @@
       }
 
       .info {
-        padding: 3% 0;
-        padding-left: rem-calc(24);
-        background-size: rem-calc(20);
-        background-repeat: no-repeat;
-        background-position: left center;
+        padding: 3% 0 3% rem-calc(24);
+        background-size: rem-calc(20) !important;
+        background: no-repeat left center;
         line-height: 1;
       }
 

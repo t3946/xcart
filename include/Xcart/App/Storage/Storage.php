@@ -9,7 +9,7 @@ use League\Flysystem\FilesystemInterface;
 class Storage
 {
     /**
-     * @var FilesystemInterface[]|null
+     * @var Filesystem[]|null
      */
     protected static $filesystems = [];
 
@@ -41,7 +41,7 @@ class Storage
     /**
      * @param string|null $name Name of adapter
      *
-     * @return \League\Flysystem\FilesystemInterface|null
+     * @return \League\Flysystem\Filesystem|null
      * @throws \Xcart\App\Exceptions\UnknownPropertyException|\Exception
      */
     public function getFilesystem($name = null)
@@ -59,7 +59,7 @@ class Storage
             $config = $this->adapters[$name];
             unset($config['class']);
             
-            self::$filesystems[$name] = new Filesystem((new $class($config))->getAdapter());
+            self::$filesystems[$name] = new Filesystem((new $class($config)));
         }
 
         return self::$filesystems[$name];

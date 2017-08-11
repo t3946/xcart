@@ -9,6 +9,8 @@
 namespace Xcart\App\Helpers;
 
 
+use Xcart\App\Exceptions\Exception;
+
 class FileHelper
 {
     public static function fixMultiFile(array $files = [], $removeEmpty = true)
@@ -134,24 +136,27 @@ class FileHelper
     /**
      * Copies a directory recursively as another.
      * If the destination directory does not exist, it will be created recursively.
-     * @param string $src the source directory
-     * @param string $dst the destination directory
-     * @param array $options options for directory copy. Valid options are:
-     * <ul>
-     * <li>fileTypes: array, list of file name suffix (without dot). Only files with these suffixes will be copied.</li>
-     * <li>exclude: array, list of directory and file exclusions. Each exclusion can be either a name or a path.
-     * If a file or directory name or path matches the exclusion, it will not be copied. For example, an exclusion of
-     * '.svn' will exclude all files and directories whose name is '.svn'. And an exclusion of '/a/b' will exclude
-     * file or directory '$src/a/b'. Note, that '/' should be used as separator regardless of the value of the DIRECTORY_SEPARATOR constant.
-     * </li>
-     * <li>level: integer, recursion depth, default=-1.
-     * Level -1 means copying all directories and files under the directory;
-     * Level 0 means copying only the files DIRECTLY under the directory;
-     * level N means copying those directories that are within N levels.
-     * </li>
-     * <li>newDirMode - the permission to be set for newly copied directories (defaults to 0777);</li>
-     * <li>newFileMode - the permission to be set for newly copied files (defaults to the current environment setting).</li>
-     * </ul>
+     *
+     * @param string $src     the source directory
+     * @param string $dst     the destination directory
+     * @param array  $options options for directory copy. Valid options are:
+     *                        <ul>
+     *                        <li>fileTypes: array, list of file name suffix (without dot). Only files with these suffixes will be copied.</li>
+     *                        <li>exclude: array, list of directory and file exclusions. Each exclusion can be either a name or a path.
+     *                        If a file or directory name or path matches the exclusion, it will not be copied. For example, an exclusion of
+     *                        '.svn' will exclude all files and directories whose name is '.svn'. And an exclusion of '/a/b' will exclude
+     *                        file or directory '$src/a/b'. Note, that '/' should be used as separator regardless of the value of the DIRECTORY_SEPARATOR constant.
+     *                        </li>
+     *                        <li>level: integer, recursion depth, default=-1.
+     *                        Level -1 means copying all directories and files under the directory;
+     *                        Level 0 means copying only the files DIRECTLY under the directory;
+     *                        level N means copying those directories that are within N levels.
+     *                        </li>
+     *                        <li>newDirMode - the permission to be set for newly copied directories (defaults to 0777);</li>
+     *                        <li>newFileMode - the permission to be set for newly copied files (defaults to the current environment setting).</li>
+     *                        </ul>
+     *
+     * @throws \Xcart\App\Exceptions\Exception
      */
     public static function copyDirectory($src, $dst, $options = array())
     {
@@ -192,23 +197,26 @@ class FileHelper
 
     /**
      * Returns the files found under the specified directory and subdirectories.
-     * @param string $dir the directory under which the files will be looked for
-     * @param array $options options for file searching. Valid options are:
-     * <ul>
-     * <li>fileTypes: array, list of file name suffix (without dot). Only files with these suffixes will be returned.</li>
-     * <li>exclude: array, list of directory and file exclusions. Each exclusion can be either a name or a path.
-     * If a file or directory name or path matches the exclusion, it will not be copied. For example, an exclusion of
-     * '.svn' will exclude all files and directories whose name is '.svn'. And an exclusion of '/a/b' will exclude
-     * file or directory '$src/a/b'. Note, that '/' should be used as separator regardless of the value of the DIRECTORY_SEPARATOR constant.
-     * </li>
-     * <li>level: integer, recursion depth, default=-1.
-     * Level -1 means searching for all directories and files under the directory;
-     * Level 0 means searching for only the files DIRECTLY under the directory;
-     * level N means searching for those directories that are within N levels.
-     * </li>
-     * <li>absolutePaths: boolean, whether to return absolute paths or relative ones, defaults to true.</li>
-     * </ul>
+     *
+     * @param string $dir     the directory under which the files will be looked for
+     * @param array  $options options for file searching. Valid options are:
+     *                        <ul>
+     *                        <li>fileTypes: array, list of file name suffix (without dot). Only files with these suffixes will be returned.</li>
+     *                        <li>exclude: array, list of directory and file exclusions. Each exclusion can be either a name or a path.
+     *                        If a file or directory name or path matches the exclusion, it will not be copied. For example, an exclusion of
+     *                        '.svn' will exclude all files and directories whose name is '.svn'. And an exclusion of '/a/b' will exclude
+     *                        file or directory '$src/a/b'. Note, that '/' should be used as separator regardless of the value of the DIRECTORY_SEPARATOR constant.
+     *                        </li>
+     *                        <li>level: integer, recursion depth, default=-1.
+     *                        Level -1 means searching for all directories and files under the directory;
+     *                        Level 0 means searching for only the files DIRECTLY under the directory;
+     *                        level N means searching for those directories that are within N levels.
+     *                        </li>
+     *                        <li>absolutePaths: boolean, whether to return absolute paths or relative ones, defaults to true.</li>
+     *                        </ul>
+     *
      * @return array files found under the directory. The file list is sorted.
+     * @throws \Xcart\App\Exceptions\Exception
      */
     public static function findFiles($dir, $options = array())
     {
@@ -225,21 +233,24 @@ class FileHelper
     /**
      * Copies a directory.
      * This method is mainly used by {@link copyDirectory}.
-     * @param string $src the source directory
-     * @param string $dst the destination directory
-     * @param string $base the path relative to the original source directory
-     * @param array $fileTypes list of file name suffix (without dot). Only files with these suffixes will be copied.
-     * @param array $exclude list of directory and file exclusions. Each exclusion can be either a name or a path.
-     * If a file or directory name or path matches the exclusion, it will not be copied. For example, an exclusion of
-     * '.svn' will exclude all files and directories whose name is '.svn'. And an exclusion of '/a/b' will exclude
-     * file or directory '$src/a/b'. Note, that '/' should be used as separator regardless of the value of the DIRECTORY_SEPARATOR constant.
-     * @param integer $level recursion depth. It defaults to -1.
-     * Level -1 means copying all directories and files under the directory;
-     * Level 0 means copying only the files DIRECTLY under the directory;
-     * level N means copying those directories that are within N levels.
-     * @param array $options additional options. The following options are supported:
-     * newDirMode - the permission to be set for newly copied directories (defaults to 0777);
-     * newFileMode - the permission to be set for newly copied files (defaults to the current environment setting).
+     *
+     * @param string  $src       the source directory
+     * @param string  $dst       the destination directory
+     * @param string  $base      the path relative to the original source directory
+     * @param array   $fileTypes list of file name suffix (without dot). Only files with these suffixes will be copied.
+     * @param array   $exclude   list of directory and file exclusions. Each exclusion can be either a name or a path.
+     *                           If a file or directory name or path matches the exclusion, it will not be copied. For example, an exclusion of
+     *                           '.svn' will exclude all files and directories whose name is '.svn'. And an exclusion of '/a/b' will exclude
+     *                           file or directory '$src/a/b'. Note, that '/' should be used as separator regardless of the value of the DIRECTORY_SEPARATOR constant.
+     * @param integer $level     recursion depth. It defaults to -1.
+     *                           Level -1 means copying all directories and files under the directory;
+     *                           Level 0 means copying only the files DIRECTLY under the directory;
+     *                           level N means copying those directories that are within N levels.
+     * @param array   $options   additional options. The following options are supported:
+     *                           newDirMode - the permission to be set for newly copied directories (defaults to 0777);
+     *                           newFileMode - the permission to be set for newly copied files (defaults to the current environment setting).
+     *
+     * @throws \Xcart\App\Exceptions\Exception
      */
     protected static function copyDirectoryRecursive($src, $dst, $base, $fileTypes, $exclude, $level, $options)
     {
@@ -286,7 +297,7 @@ class FileHelper
      * Level 0 means searching for only the files DIRECTLY under the directory;
      * level N means searching for those directories that are within N levels.
      * @param boolean $absolutePaths whether to return absolute paths or relative ones
-     * @throws \Mindy\Exception\Exception
+     * @throws \Xcart\App\Exceptions\Exception
      * @return array files found under the directory.
      */
     protected static function findFilesRecursive($dir, $base, $fileTypes, $exclude, $level, $absolutePaths)

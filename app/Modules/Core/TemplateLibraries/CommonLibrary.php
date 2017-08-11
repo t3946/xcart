@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Base\TemplateLibraries;
+namespace Modules\Core\TemplateLibraries;
 
 use Xcart\App\Main\Xcart;
 use Xcart\App\Template\Renderer;
@@ -43,11 +43,13 @@ class CommonLibrary extends TemplateLibrary
      * @name build_url
      * @kind function
      * @return string
+     * @throws \Xcart\App\Exceptions\InvalidConfigException
      */
     public static function buildUrl($params)
     {
         $data = isset($params['data']) ? $params['data'] : [];
         $query = Xcart::app()->request->getQueryArray();
+        $query = array_replace_recursive($query, $data);
         foreach ($data as $key => $value) {
             $query[$key] = $value;
         }

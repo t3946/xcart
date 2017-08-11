@@ -4,12 +4,14 @@ namespace Xcart\App\Controller;
 use ReflectionMethod;
 use Xcart\App\Exceptions\HttpException;
 use Xcart\App\Exceptions\InvalidConfigException;
+use Xcart\App\Helpers\ClassNames;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Request\HttpRequest;
 use Xcart\App\Request\RequestManager;
 
 class Controller
 {
+    use ClassNames;
     /**
      * @var HttpRequest
      */
@@ -27,6 +29,13 @@ class Controller
     }
 
     public function init() { }
+
+    /**
+     * For global caching keys
+     */
+    public function getAdvancedCacheData() {
+        return [];
+    }
 
     public function getRequest()
     {
@@ -86,7 +95,8 @@ class Controller
      */
     public function render($template, $params = [])
     {
-        return Xcart::app()->template->render($template, $params);
+        $data = ['this' => $this];
+        return Xcart::app()->template->render($template, array_replace($data, $params));
     }
 
     public function redirect($url, $data = [], $status = 302, $query = [])

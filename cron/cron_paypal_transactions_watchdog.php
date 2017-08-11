@@ -22,7 +22,7 @@ const LOG_CATEGORY = 'cron_paypal_transactions_watchdog';
 
 if ($config[LOG_CATEGORY] == "Y") {
     func_backprocess_log(LOG_CATEGORY, 'Already launched');
-    $oMail = \Xcart\App\Main\Xcart::app()->mail;
+    $oMail = \Xcart\App\Main\Xcart::app()->oldMail;
     $oMail->to = 'team@s3stores.com';
     $oMail->from = ('team@s3stores.com');
     $oMail->body = LOG_CATEGORY . ' already launched';
@@ -84,7 +84,7 @@ if (!empty($aOrderGroups)) {
     $countOrders = count($aOrderGroups);
     $message = "Found CB: AP; DC: C,S,G,L {$countOrders} orders.";
     func_backprocess_log(LOG_CATEGORY, $message);
-    $oMail = \Xcart\App\Main\Xcart::app()->mail;
+    $oMail = \Xcart\App\Main\Xcart::app()->oldMail;
     $oMail->init();
     $oMail->to = 'team@s3stores.com';
     $oMail->from = 'team@s3stores.com';

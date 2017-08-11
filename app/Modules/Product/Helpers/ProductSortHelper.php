@@ -94,7 +94,9 @@ class ProductSortHelper
 
                 if ($this->category && !empty($categories) && !empty($product['categoryid']))
                 {
-                    if (!empty(array_intersect($categories, $product['categoryid']))) {
+                    $cids = array_intersect($categories, $product['categoryid']);
+
+                    if (!empty($cids)) {
                         $push = true;
                     }
                 }

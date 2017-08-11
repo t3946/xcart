@@ -174,13 +174,12 @@ class DefaultConnection extends DBALConnection
                 $login = $session->get('admin_login') ?: $session->get('admin_login');
             }
 
-            $msg .= "Site        : ".(($_SERVER['HTTPS']) ? 'https://' : 'http://') . $_SERVER["HTTP_HOST"]. $_SERVER['REQUEST_URI']."\n";
+            $msg .= "Site        : " . $_SERVER["HTTP_HOST"]. $_SERVER['REQUEST_URI']."\n";
             $msg .= "Remote IP   : {$_SERVER['REMOTE_ADDR']}\n";
             $msg .= "Logged as   : {$login}\n";
         }
 
         if (!empty($query)) {
-
             $msg .= "SQL query   : {$query}\n";
         }
 
@@ -190,11 +189,12 @@ class DefaultConnection extends DBALConnection
         $msg .= $exception->getTraceAsString();
 
         $oMail = Xcart::app()->mail;
-        $oMail->to = 'team@s3stores.com';
-        $oMail->from = ('team@s3stores.com');
-        $oMail->subject = 'S3 Stores, Inc.: SQL error notification';
-        $oMail->body = $msg;
-        $oMail->sendEmail();
+        $oMail->template(
+            'team@s3stores.com',
+            'S3 Stores, Inc.: SQL error notification',
+            'mail/sql_exception.tpl',
+            [ 'msg' => $msg, ]
+        );
 
         if (function_exists('x_log_add')) {
             x_log_add('SQL', $msg);

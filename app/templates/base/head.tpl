@@ -37,9 +37,7 @@
     </script>
     <style type="text/css">{inline file="static/frontend/dist/css/base.css"}</style>
 
-    <link rel="stylesheet" href="/static/frontend/dist/css/styles.css?v={frontend_version resource='css/styles.css'}" media="all" onload="if(media!='all')media='all'">
-    <noscript><link rel="stylesheet" href="/static/frontend/dist/css/styles.css?v={frontend_version resource='css/styles.css'}"></noscript>
-    <script src="/static/frontend/dist/js/vendors.js?v={frontend_version resource='js/vendors.js'}"></script>
+    <link rel="stylesheet" href="/static/frontend/dist/css/styles.css?v={frontend_version resource='css/styles.css'}" media="all">
     {block 'head'}{/block}
 </head>
 <body itemscope itemprop="mainEntity" {block 'schema_page_type'}itemtype="http://schema.org/WebPage"{/block} class="loading loading-active">
@@ -58,14 +56,14 @@
 {/filter}
 
 
-<script src="/static/frontend/dist/js/main.js?v={frontend_version resource="js/main.js"}"></script>
+<script src="/static/frontend/dist/js/vendors.js?v={frontend_version resource='js/vendors.js'}" defer></script>
+<script src="/static/frontend/dist/js/main.js?v={frontend_version resource="js/main.js"}" defer></script>
 
 {block 'js'}{/block}
 
 {filter|unescape}
 {get_assets type="css"}
 {get_assets type="js"}
-{get_assets}
 {/filter}
 
 </body>

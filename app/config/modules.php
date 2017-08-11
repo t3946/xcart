@@ -4,6 +4,7 @@ return [
     'Cart' => ['cartConfig' => ['class' => '\Modules\Cart\Components\XCart']],
     'Main',
     'Menu',
+    'Mail',
     'Demo',
     'Dashboard',
     'Distributor',

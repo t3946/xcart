@@ -5,6 +5,7 @@ namespace Modules\Product\Controllers;
 use Mindy\QueryBuilder\Expression;
 use Modules\Product\Helpers\SearchSuggestionHelper;
 use Modules\Product\Models\ProductModel;
+use Modules\Sites\Models\SiteModel;
 use Xcart\App\Components\Breadcrumbs;
 use Xcart\App\Main\Xcart;
 use Xcart\ElasticSearch;
@@ -13,8 +14,12 @@ class SearchController extends AbstractCatalogController
 {
     public $view = 'catalog/search.tpl';
     public $filters = ['price', 'brand', 'filter'];
+    public $excluded_indexes = [
+        'www.s3stores.com'
+    ];
 
-    private $ids;
+    public $ids;
+    public $count;
     private $suggestion;
     private $searched;
     private $q_original;
@@ -27,15 +32,35 @@ class SearchController extends AbstractCatalogController
         $this->redirect('catalog:search', [], 301, ['q' => $q]);
     }
 
-    public function actionSuggestion()
+    public function actionApiSuggestion()
     {
         if ($this->getRequest()->getIsAjax()) {
             $this->jsonResponse([
-                'content' => $this->render('catalog/search_suggestion.tpl',[
-
-                ])
+                'suggests' => (new SearchSuggestionHelper($this->getRequest()->get->get('q'), $this->getSearchIndex()))->mixed_suggestion(5),
+                'q' => $this->getRequest()->get->get('q'),
             ]);
         }
+    }
+
+    public function getSearchIndex()
+    {
+        /** @var \Modules\Sites\SitesModule $siteModule */
+        $siteModule = Xcart::app()->getModule('Sites');
+
+        if ($siteModel = $siteModule->getSite(false)) {
+            return $siteModel->domain;
+        }
+
+        $sites = SiteModel::getAllEnabled();
+        $indexes = [];
+        foreach ($sites as $site) {
+            $index = strtolower($site->domain);
+            if (!in_array($index, $this->excluded_indexes)) {
+                $indexes[] = $index;
+            }
+        }
+
+        return implode(',', $indexes);
     }
 
     public function actionSearch()
@@ -51,7 +76,7 @@ class SearchController extends AbstractCatalogController
             $this->redirect($product->getAbsoluteUrl());
         }
 
-        $this->suggestion = (new SearchSuggestionHelper($this->q))->mixed_suggestion(5);
+        $this->suggestion = (new SearchSuggestionHelper($this->q, $this->getSearchIndex()))->mixed_suggestion(5);
 
         if (!$this->searched = $this->getProductFromElastic($this->q))
         {
@@ -60,7 +85,7 @@ class SearchController extends AbstractCatalogController
             if ($this->suggestion)
             {
                 $this->q = $this->suggestion[0];
-                $this->suggestion = (new SearchSuggestionHelper($this->q))->mixed_suggestion(5);
+                $this->suggestion = (new SearchSuggestionHelper($this->q, $this->getSearchIndex()))->mixed_suggestion(5);
                 $show_empty = !$this->getProductFromElastic($this->q);
             }
         }
@@ -68,7 +93,7 @@ class SearchController extends AbstractCatalogController
         if ($show_empty) {
             echo $this->render('catalog/search_empty.tpl', [
                 'model' => $this->q,
-                'breadcrumbs' => $this->getBreadcrumbs($this->q),
+                'breadcrumbs' => $this->getBreadcrumbsFromData($this->q),
             ]);
             die();
         }
@@ -87,24 +112,29 @@ class SearchController extends AbstractCatalogController
         ];
     }
 
-    public function getProductFromElastic($search, $min_score = null, $max_size = 1000)
+    public function getElastic($search, $min_score = null)
     {
-        /** @var \Modules\Sites\SitesModule $siteModule */
         /** @var \Modules\Core\CoreModule $coreModule */
-        $siteModule = Xcart::app()->getModule('Sites');
         $coreModule = Xcart::app()->getModule('Core');
         $config = $coreModule::getGlobalConfig();
         $config_min_scope = $config["ElasticSearch_options"]["search_results_minimum_score_value"];
 
-        $classElastic = new ElasticSearch($config["ElasticSearch_options"], $siteModule->getSite()->domain);
+        $classElastic = new ElasticSearch($config["ElasticSearch_options"], $this->getSearchIndex());
         $classElastic->setSource("*._id");
         $classElastic->setMinScore($min_score ?: $config_min_scope);
         $classElastic->setType('product');
         $classElastic->setQueryParams($search);
 
-        $result = $classElastic->query(['from' => 0, 'size' => $max_size]);
+        return $classElastic;
+    }
+
+    public function getProductFromElastic($search, $min_score = null, $max_size = 1000, $page = 1)
+    {
+        $elastic = $this->getElastic($search, $min_score);
+        $result = $elastic->query(['from' => ($page-1) * $max_size, 'size' => $max_size]);
 
         $items = empty($result["hits"]["hits"]) ? [] : $result["hits"]["hits"];
+        $count = empty($result["hits"]["total"]) ? 0 : $result["hits"]["total"];
 
         if ($items) {
             usort($items, function($a, $b){
@@ -116,11 +146,11 @@ class SearchController extends AbstractCatalogController
 
             $this->ids = array_map(function($item) {return $item['_id']; }, $items);
         }
-        else if (!$items && !$min_score) {
+        else if (!$items && is_null($min_score)) {
             $this->getProductFromElastic($search, .01, $max_size);
         }
 
-        return (bool)(count($items));
+        return $count;
     }
 
     public function getQS($data)
@@ -144,7 +174,7 @@ class SearchController extends AbstractCatalogController
         return parent::getSortedQS($qs, $model);
     }
 
-    public function getBreadcrumbs($data)
+    public function getBreadcrumbsFromData($data)
     {
         $bread = new Breadcrumbs();
         $bread->add('Search: '. strip_tags($data));

@@ -8,6 +8,7 @@ use Xcart\App\Helpers\ClassNames;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\Field;
+use Xcart\App\Orm\Fields\FileField;
 use Xcart\App\Orm\Fields\HasManyField;
 use Xcart\App\Orm\Fields\ManyToManyField;
 use Xcart\App\Orm\Fields\ModelFieldInterface;
@@ -86,7 +87,8 @@ abstract class Base implements ModelInterface, ArrayAccess, Serializable
         if ($this->hasField($name)) {
             if ($this->getField($name) instanceof ManyToManyField) {
                 $this->related[$name] = $value;
-            } else {
+            }
+            else {
                 $this->setAttribute($name, $value);
             }
         } else {
@@ -130,8 +132,15 @@ abstract class Base implements ModelInterface, ArrayAccess, Serializable
     {
         $name = $this->convertToPrimaryKeyName($name);
         if ($this->hasField($name)) {
+            $field = $this->getField($name);
+
+            if ($field instanceof FileField) {
+                return $field;
+            }
+
             return $this->getFieldValue($name);
-        } else {
+        }
+        else {
             throw new Exception("Setting unknown property " . get_class($this) . "::" . $name);
         }
     }
@@ -166,7 +175,8 @@ abstract class Base implements ModelInterface, ArrayAccess, Serializable
         if (self::getMeta()->hasField($name) === false) {
             if ($throw) {
                 throw new Exception('Unknown field');
-            } else {
+            }
+            else {
                 return null;
             }
         }
@@ -174,6 +184,19 @@ abstract class Base implements ModelInterface, ArrayAccess, Serializable
         $field = self::getMeta()->getField($name);
         $field->setModel($this);
         return $field;
+    }
+
+    public function getFieldsInit()
+    {
+        $result = [];
+        if ($fields = static::getFields()) {
+            $fields = array_keys($fields);
+            foreach ($fields as $field) {
+                $result[$field] = $this->getField($field);
+            }
+        }
+
+        return $result;
     }
 
     /**
@@ -219,24 +242,13 @@ abstract class Base implements ModelInterface, ArrayAccess, Serializable
         }
     }
 
-    public function getNotModelAttribute($name) {
-
+    public function getFromQueryAttribute($name)
+    {
         if (isset($this->attributesNotField[$name])) {
             return $this->attributesNotField[$name];
         }
 
         return null;
-    }
-
-    /**
-     * @param $name
-     *
-     * @return mixed
-     * @deprecated use getNotModelAttribute
-     */
-    public function getFromQueryAttribute($name)
-    {
-        return $this->getNotModelAttribute($name);
     }
 
     /**
@@ -279,11 +291,6 @@ abstract class Base implements ModelInterface, ArrayAccess, Serializable
     public function getOldAttributes()
     {
         return $this->attributes->getOldAttributes();
-    }
-
-    public function reflectOldAttributes()
-    {
-        $this->attributes->reflectOldAttributes();
     }
 
     /**
@@ -536,7 +543,6 @@ abstract class Base implements ModelInterface, ArrayAccess, Serializable
         }
 
         $this->afterSave($this, false);
-        $this->attributes->reflectOldAttributes();
     }
 
     /**
@@ -593,10 +599,9 @@ abstract class Base implements ModelInterface, ArrayAccess, Serializable
     public static function create(array $attributes = [])
     {
         $className = get_called_class();
-        /** @var \Xcart\App\Orm\Model $model */
+        /** @var ModelInterface $model */
         $model = new $className($attributes);
         $model->setIsNewRecord(false);
-        $model->reflectOldAttributes();
         return $model;
     }
 
@@ -622,8 +627,10 @@ abstract class Base implements ModelInterface, ArrayAccess, Serializable
     public function setIsNewRecord($value)
     {
         $this->isNewRecord = $value;
-        if ($value) {
-            $this->attributes->resetOldAttributes();
+        $this->attributes->resetOldAttributes();
+
+        if ($value === false) {
+            $this->attributes->reflectOldAttributes();
         }
     }
 
@@ -674,10 +681,12 @@ abstract class Base implements ModelInterface, ArrayAccess, Serializable
 
             if ($name == $field->getAttributeName()) {
                 return $field->convertToPHPValueSQL($attributeValue, $platform);
-            } else {
+            }
+            else {
                 return $field->convertToPHPValue($attributeValue, $platform);
             }
-        } else {
+        }
+        else {
             return $field->getValue();
         }
     }
@@ -704,6 +713,7 @@ abstract class Base implements ModelInterface, ArrayAccess, Serializable
     public static function tableName()
     {
         $shortName = (new \ReflectionClass(get_called_class()))->getShortName();
+        $shortName = str_replace('Model', '', $shortName);
         return self::normalizeTableName($shortName);
     }
 

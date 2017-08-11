@@ -17,7 +17,7 @@ class StaticLibrary extends TemplateLibrary
 
     protected static function getBackendVersionsDir()
     {
-        return Paths::get('www.static.backend.versions');
+        return Paths::get('www.static_admin.versions');
     }
 
     protected static function getVersionFromContent($content)

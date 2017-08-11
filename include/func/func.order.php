@@ -1679,7 +1679,7 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
                             $mail_smarty->assign("products", func_translate_products($order_data["products"], $to_customer));
                             $mail_smarty->assign('type', 'C');
                             $attach_pdf_invoice = $oOrderNotification->getField('customer_attach_pdf_invoice');
-                            $oMail = \Xcart\App\Main\Xcart::app()->mail;
+                            $oMail = \Xcart\App\Main\Xcart::app()->oldMail;
                             $oMail->to = $userinfo['email'];
                             $oMail->from = $config['Company']['orders_department'];
                             $oMail->reply_to = null;
@@ -1714,7 +1714,7 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
 
                             $attach_pdf_invoice = $oOrderNotification->getField('admin_attach_pdf_invoice');
 
-                            $oMail = \Xcart\App\Main\Xcart::app()->mail;
+                            $oMail = \Xcart\App\Main\Xcart::app()->oldMail;
                             $oMail->to = $to;
                             $oMail->reply_to = $reply_to;
                             $oMail->from = $from;
@@ -1723,7 +1723,7 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
                             $oMail->addHeader(['X-Xcart-Label' => 'order-status-init']);
                             $oMail->sendEmail();
 
-                            $oMail = \Xcart\App\Main\Xcart::app()->mail;
+                            $oMail = \Xcart\App\Main\Xcart::app()->oldMail;
                             $oMail->to = "igor@s3stores.com";
                             $oMail->from = "orders@s3stores.com";
                             $oMail->reply_to = $reply_to;
@@ -1919,7 +1919,7 @@ function func_check_and_send_request_availability_email($orderid, $sent_by = '')
 
                 func_log_order($orderid, 'S', $order_notes);
 
-                $oMail = \Xcart\App\Main\Xcart::app()->mail;
+                $oMail = \Xcart\App\Main\Xcart::app()->oldMail;
                 $oMail->to = $to;
                 $oMail->from = $from;
                 $oMail->reply_to = null;
@@ -2670,7 +2670,7 @@ function func_process_order($orderids)
                             $from     = $userinfo["firstname"] . "<" . $config['Company']['orders_department'] . ">";
                             $reply_to = $userinfo["firstname"] . "<" . $userinfo['email'] . ">";
 
-                            $oMail = \Xcart\App\Main\Xcart::app()->mail;
+                            $oMail = \Xcart\App\Main\Xcart::app()->oldMail;
                             $oMail->to = $to;
                             $oMail->reply_to = $reply_to;
                             $oMail->from = $from;
@@ -3576,7 +3576,7 @@ function func_send_order_status_notification($orderid, $status, $force_send_emai
                 $reply_to = $order_data['userinfo']['firstname'] . "<" . $order_data['userinfo']['email'] . ">";
 
                 if ($_POST["send_email"] == "Y" || $force_send_email) {
-                    $oMail = \Xcart\App\Main\Xcart::app()->mail;
+                    $oMail = \Xcart\App\Main\Xcart::app()->oldMail;
                     $oMail->to = $to;
                     $oMail->from = $from;
                     $oMail->reply_to = $reply_to;

@@ -36,10 +36,16 @@ trait ValidationTrait
      */
     public function isValid()
     {
+        $this->beforeValidate();
         $errors = $this->getValidator()->validate($this->getValue(), $this->getValidationConstraints());
         $this->setErrors($errors);
+        $this->afterValidate();
+
         return count($errors) === 0;
     }
+
+    public function beforeValidate() {}
+    public function afterValidate() {}
 
     /**
      * @param ConstraintViolationListInterface $errors

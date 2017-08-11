@@ -420,6 +420,13 @@ class QuerySet extends QuerySetBase
         return $this->getConnection()->quoteIdentifier($name);
     }
 
+    public function getOrder()
+    {
+        list($order, $options) = $this->getQueryBuilder()->getOrder();
+
+        return $order;
+    }
+
     /**
      * Order by alias
      *

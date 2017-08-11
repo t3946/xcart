@@ -1,6 +1,7 @@
 <?php
 namespace Modules\Product\Helpers;
 
+use Modules\Sites\Models\SiteModel;
 use Xcart\App\Main\Xcart;
 use Xcart\ElasticSearch;
 
@@ -9,20 +10,33 @@ class SearchSuggestionHelper
     private $elastic;
     private $search;
 
-    public function __construct($search) {
-        /** @var \Modules\Sites\SitesModule $siteModule */
+    public function __construct($search, $indexes=null) {
         /** @var \Modules\Core\CoreModule $coreModule */
-        $siteModule = Xcart::app()->getModule('Sites');
         $coreModule = Xcart::app()->getModule('Core');
         $config = $coreModule::getGlobalConfig();
         $config_min_scope = $config["ElasticSearch_options"]["search_results_minimum_score_value"];
 
         $this->search = trim($search);
-        $this->elastic = new ElasticSearch($config["ElasticSearch_options"], $siteModule->getSite()->domain);
+        $this->elastic = new ElasticSearch($config["ElasticSearch_options"], $indexes ?: $this->getSearchIndex());
         $this->elastic->setSource("*._id");
         $this->elastic->setMinScore($config_min_scope);
         $this->elastic->setType('product');
         $this->elastic->setQueryParams($search);
+    }
+
+    public function getSearchIndex()
+    {
+        /** @var \Modules\Sites\SitesModule $siteModule */
+        $siteModule = Xcart::app()->getModule('Sites');
+
+        if ($siteModel = $siteModule->getSite(false)) {
+            return $siteModel->domain;
+        }
+
+        $sites = SiteModel::getAllEnabled();
+        $indexes = array_map(function($model) { return $model->domain; }, $sites);
+
+        return implode(',', $indexes);
     }
 
     public function elastic_suggestion($count = 5, array $html = [])
@@ -115,7 +129,7 @@ JSON;
        Order By COUNT(SS.id) desc
         Limit {$count}";
 
-        $query_result = func_query($query);
+        $query_result = Xcart::app()->db->getConnection()->fetchAll($query);
 
         if (!empty($query_result)){
             foreach ($query_result as $k => $v){

@@ -2,7 +2,7 @@
 {block "wrapper"}
 <section id="main_wrapper" class="off-canvas-wrapper">
     <div class="off-canvas position-left" id="offCanvasLeft" data-off-canvas data-transition="push">
-        {insert "_parts/_menu_mobile.tpl"}
+        {*{insert "_parts/_menu_mobile.tpl"}*}
     </div>
     <div class="off-canvas-content" data-off-canvas-content>
         <header itemscope itemtype="http://schema.org/WPHeader">
@@ -39,15 +39,9 @@
 
                     <div class="columns small-3 medium-7 large-push-3">
                         <section class="main-menu-wrap">
-                            <menu class="main-menu no-bullet show-for-medium">
-                                {foreach $.getMenu('main-menu') as $item index=$index}
-                                    <li class="{$item.class} {if $index > 1}hide-in-medium{/if}">
-                                        <a href="{$item.link}">
-                                            {$item.name}
-                                        </a>
-                                    </li>
-                                {/foreach}
-                            </menu>
+                            <ul class="main-menu no-bullet show-for-medium">
+                                {get_menu code='main-menu'}
+                            </ul>
                         </section>
                     </div>
 
@@ -89,7 +83,7 @@
                                     </div>
                                 </section>
 
-                                {insert "_parts/_menu_desktop.tpl"}
+                                {*{insert "_parts/_menu_desktop.tpl"}*}
                             </div>
                             <div class="columns small-12 large-7">
                                 {insert "_parts/_search.tpl"}

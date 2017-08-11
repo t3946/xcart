@@ -2,12 +2,13 @@
 
 namespace Xcart\App\Components;
 
+use Xcart\App\Helpers\ClassNames;
 use Xcart\App\Helpers\SmartProperties;
 use Xcart\App\Main\Xcart;
 
 class Flash
 {
-    use SmartProperties;
+    use SmartProperties, ClassNames;
 
     const SESSION_KEY = 'FLASH';
 

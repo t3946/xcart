@@ -18,7 +18,7 @@ $aSendLines = [];
 
 if ($config[LOG_CATEGORY] == "Y") {
     func_backprocess_log(LOG_CATEGORY, 'Already launched');
-    $oMail = \Xcart\App\Main\Xcart::app()->mail;
+    $oMail = \Xcart\App\Main\Xcart::app()->oldMail;
     $oMail->to = 'team@s3stores.com';
     $oMail->from = ('team@s3stores.com');
     $oMail->subject = LOG_CATEGORY . ' already launched';
@@ -52,7 +52,7 @@ if (!empty($aStoreFronts)) {
     }
 }
 if (!empty($aSendLines) && is_array($aSendLines)) {
-    $oMail = \Xcart\App\Main\Xcart::app()->mail;
+    $oMail = \Xcart\App\Main\Xcart::app()->oldMail;
     $oMail->to = $config['Company']['product_categoryzation'];
     $oMail->from = ('team@s3stores.com');
     $oMail->body = implode("\n", $aSendLines);

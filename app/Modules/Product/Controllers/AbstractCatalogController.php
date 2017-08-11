@@ -6,7 +6,6 @@ use Modules\Product\Helpers\ProductFilterHelper;
 use Modules\Product\Helpers\ProductSortHelper;
 use Modules\Product\Models\CategoryModel;
 use Modules\Product\Models\ProductModel;
-use Xcart\App\Controller\Controller;
 use Xcart\App\Controller\FrontendController;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Pagination\DataSource\QuerySetDataSource;
@@ -77,7 +76,7 @@ abstract class AbstractCatalogController extends FrontendController
      *
      * @return \Xcart\App\Components\Breadcrumbs|array|null
      */
-    public function getBreadcrumbs($data)
+    public function getBreadcrumbsFromData($data)
     {
         return $data->getBreadcrumbs();
     }
@@ -122,7 +121,7 @@ abstract class AbstractCatalogController extends FrontendController
                 'pager' => $pager,
                 'sort'  => $orderBy,
                 'sort_arr'  => ProductSortHelper::$orderBy,
-                'breadcrumbs' => $this->getBreadcrumbs($model),
+                'breadcrumbs' => $this->getBreadcrumbsFromData($model),
                 'filters' => $fh->getFilterStructure($this->filters),
             ], $this->getAdvancedData($model)));
         }

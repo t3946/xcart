@@ -9,6 +9,28 @@ use Xcart\App\Orm\Model;
 
 class SiteModel extends Model
 {
+    private $_config = [];
+
+
+    public function __toString()
+    {
+        $str = '';
+        $attr = [];
+        if (!$this->showInLists()) {
+            $attr[] = 'Hidden from stores list';
+        }
+        if (!$this->isWork()) {
+            $attr[] = 'Closed';
+        }
+
+        if ($attr) {
+            $str = implode(', ', $attr);
+            $str = " ({$str})";
+        }
+
+        return "[{$this->code}] {$this->domain}{$str}";
+    }
+
     public static function tableName()
     {
         return 'xcart_storefronts';
@@ -19,8 +41,8 @@ class SiteModel extends Model
         return [
             'config' => [
                 'class' => HasManyField::className(),
+                'modelClass' => SiteConfigModel::className(),
                 'link' => ['storefrontid' => 'storefrontid'],
-                'modelClass' => SiteConfigModel::className()
             ],
 
             'storefrontid' => [
@@ -59,6 +81,20 @@ class SiteModel extends Model
         ];
     }
 
+    public function getConfig()
+    {
+        if (!$this->_config) {
+
+            $config = $this->config->valuesList(['name', 'value']);
+            foreach ($config as $item) {
+                $this->_config[$item['name']] = $item['value'];
+            }
+        }
+
+        return $this->_config;
+    }
+
+
     public function getBaseDomain()
     {
         $domain = strtolower($this->domain);
@@ -70,4 +106,33 @@ class SiteModel extends Model
 
         return $domain;
     }
+
+    public function isWork()
+    {
+        if ($config = $this->getConfig()) {
+            return (empty($config['shop_closed']) || $config['shop_closed'] == 'N');
+        }
+
+        return ($this->status != 'D');
+    }
+
+    public function showInLists()
+    {
+        if ($this->isWork()) {
+            if ($config = $this->getConfig()) {
+                return (empty($config['search_all_website_show']) || $config['search_all_website_show'] == 'Y');
+            }
+        }
+
+        return false;
+    }
+
+    public static function getAllEnabled()
+    {
+        $models = static::objects()->all();
+        $models = array_filter($models , function($model){ return $model->isWork(); });
+
+        return $models;
+    }
+
 }

@@ -1,6 +1,9 @@
 const webpack = require('webpack');
+const _ = require('lodash');
 const path = require('path');
 const paths = require('./gulp.frontend.patchs');
+// const conf_dev = require('./webpack/webpack.develop');
+// const conf_base = require('./webpack/webpack.base');
 
 
 module.exports = {
@@ -13,9 +16,15 @@ module.exports = {
     target: "web",
     resolve: {
         alias: {
-            modernizr$: path.resolve(__dirname, "./support/modernizrrc.js")
+            modernizr$: path.resolve(__dirname, "./support/modernizrrc.js"),
+            'react': 'preact-compat',
+            'react-dom': 'preact-compat',
+            // Not necessary unless you consume a module using `createClass`
+            'create-react-class': 'preact-compat/lib/create-react-class'
         },
         modules: [
+            'frontend/jsx',
+            paths.modules.jsx,
             path.resolve('./' + paths.modules.jsx),
             'node_modules'
         ],
@@ -32,12 +41,23 @@ module.exports = {
                         presets: [
                             [ "es2015", { "modules": false }],
                             [ "es2016" ],
-                            [ "babili" ]
+                            // [ "babili" ],
+                            [ "react" ]
                         ],
                         plugins: [
                             ["transform-react-jsx", {
                                 "pragma":"h" // default pragma is React.createElement
+                            }],
+                            ["module-resolver", {
+                                "root": ["."],
+                                "alias": {
+                                    "react": "preact-compat",
+                                    "react-dom": "preact-compat",
+                                    // Not necessary unless you consume a module using `createClass`
+                                    "create-react-class": "preact-compat/lib/create-react-class"
+                                }
                             }]
+
                         ]
                     }
                 }
@@ -79,11 +99,11 @@ module.exports = {
             options: {
                 context: __dirname
             }
-        })
-        // new webpack.DefinePlugin({
-        //     'process.env': {
-        //         NODE_ENV: JSON.stringify(process.env.NODE_ENV || 'development')
-        //     }
-        // }),
+        }),
+        new webpack.DefinePlugin({
+            'process.env': {
+                NODE_ENV: JSON.stringify(process.env.NODE_ENV || 'development')
+            }
+        }),
     ]
 };

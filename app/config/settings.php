@@ -42,14 +42,21 @@ return array_replace_recursive([
        'errorHandler' => [
            'class' => '\\Xcart\\App\\Main\\ErrorHandler',
            'debug' => true,
-           'errHandler' => true
+           'errHandler' => true,
+           'ignoreDeprecated' => true,
        ],
        'event' => [
            'class' => '\\Xcart\\App\\Event\\EventManager',
            'events' => include __DIR__ . DS .  'events.php'
        ],
 
+       'oldMail' => '\Modules\Mail\Components\MailComponent',
+
        'logger' => include __DIR__. DS . 'logger.php',
+
+       'breadcrumbs' => ['class' => 'Xcart\App\Components\Breadcrumbs'],
+       'flash' => ['class' => '\Xcart\App\Components\Flash'],
+       'finder' => ['class' => '\Xcart\App\Finder\FinderFactory'],
 
        'middleware' => [
            'class' => '\\Xcart\\App\\Middleware\\MiddlewareManager',
@@ -124,7 +131,9 @@ return array_replace_recursive([
            ]
        ],
        'mail' => [
-           'class' => '\\Modules\\Mail\\Components\\MailComponent'
+           'class' => '\Modules\Mail\Components\Mailer',
+           'defaultFrom' => 'robot@{domain}',
+//           'defaultFrom' => 'robot@s3stores.com',
        ],
        'auth' => [
            'class' => '\\Modules\\User\\Components\\Auth'

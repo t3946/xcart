@@ -73,13 +73,8 @@ class HasManyField extends RelatedField
     public function getJoin(QueryBuilder $qb, $topAlias)
     {
         $tableName = $this->getRelatedTable();
-        $alias = $qb->makeMappedAliasKey($tableName, $this->getPrefixMappedKey(), $topAlias);
-
+        $alias = $qb->makeAliasKey($tableName);
         $on = [];
-
-        if ($alias == $topAlias) {
-            $alias = $qb->makeAliasKey($tableName, true);
-        }
 
         if ($this->link) {
             foreach ($this->link as $from => $to) {

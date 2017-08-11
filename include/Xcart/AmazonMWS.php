@@ -1529,7 +1529,7 @@ SQL;
                                                 $attach_pdf_invoice = $order_notification["admin_attach_pdf_invoice"];
                                                 $mail_smarty->assign('attach_pdf_invoice', $attach_pdf_invoice);
 
-                                                $oMail = \Xcart\App\Main\Xcart::app()->mail;
+                                                $oMail = \Xcart\App\Main\Xcart::app()->oldMail;
                                                 $oMail->to = $to;
                                                 $oMail->reply_to = $reply_to;
                                                 $oMail->from = $from;

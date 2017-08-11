@@ -28,9 +28,10 @@ use Xcart\App\Request\HttpRequest;
  * @property \Xcart\App\Event\EventManager $event Event component
  * @property \Xcart\App\Storage\Storage $storage File storage component
  * @property \Xcart\App\Logger\LoggerManager $logger Logging system component
+ * @property \Xcart\App\Components\Breadcrumbs $breadcrumbs
+ * @property \Xcart\App\Components\Flash $flash
+ * @property \Modules\Mail\Components\Mailer $mail Mailer
  *
- * @property \Modules\Mail\Components\MailComponent $mail Mail component
- * @property \Modules\Cart\Components\XCart $cart Customer cart component
  * @property UserModel $user
  * 
  * @package Xcart\App\Application
@@ -41,6 +42,7 @@ class Application
 
     public $name = 'Application';
     public $exit_on_end = true;
+    public $globals = [];
     public $locale = [
         'language' => 'ru',
         'sourceLanguage' => 'en',
@@ -55,9 +57,18 @@ class Application
 
     public function init()
     {
+        $this->registerGlobals();
         $this->_provideModuleEvent('onApplicationInit');
         $this->setUpPaths();
         $this->autoload();
+    }
+
+    public function registerGlobals()
+    {
+        foreach ($this->globals as $var => $val)
+        {
+            $GLOBALS[$var] = $val;
+        }
     }
 
     public function setPaths($paths)
@@ -153,7 +164,6 @@ class Application
     {
         $basePath = Paths::get('base');
         if (!is_dir($basePath)) {
-            func_dump($basePath);
             throw new InvalidConfigException('Base path must be a valid directory. Please, set up correct base path in "paths" section of configuration.');
         }
 

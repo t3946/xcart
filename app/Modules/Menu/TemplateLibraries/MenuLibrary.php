@@ -8,15 +8,56 @@ use Modules\Product\Models\CategoryModel;
 use Modules\Product\Models\ProductModel;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Template\TemplateLibrary;
+use Xcart\App\Traits\RenderTrait;
 
 class MenuLibrary extends TemplateLibrary
 {
+    use RenderTrait;
+
+    public static $template = 'menu/menu.tpl';
+
+    /**
+     * @kind function
+     * @name get_menu
+     * @return string
+     */
+    public static function getMenu($params)
+    {
+        if (empty($params['code'])) {
+            return '';
+        }
+
+        $code = $params['code'];
+        $template = self::$template;
+
+        if (!empty($params['template'])) {
+            $template = $params['template'];
+        }
+
+        if ($items = self::getData($code)) {
+            return self::renderTemplate($template, [
+                'items' => $items
+            ]);
+        }
+
+        return '';
+    }
+
     /**
      * @kind accessorFunction
-     * @name getMenu
+     * @name get_menu_items
      * @return array
      */
-    public static function getMenu($code)
+    public static function getMenuItems($code)
+    {
+        if (!$code) {
+            return [];
+        }
+
+        return self::getData($code);
+    }
+
+    public static function getData($code)
     {
         if ($code == 'main-menu') {
             return [
@@ -47,7 +88,20 @@ class MenuLibrary extends TemplateLibrary
                 ],
             ];
         }
-
+        else if ('footer-menu') {
+            return [
+                [
+                    'url' => '/terms-of-use',
+                    'name' => 'Terms of use',
+                    'items' => []
+                ],
+                [
+                    'url' => '/privacy-policy',
+                    'name' => 'Privacy policy',
+                    'items' => [],
+                ],
+            ];
+        }
         return [];
     }
 
@@ -196,7 +250,7 @@ class MenuLibrary extends TemplateLibrary
                         }
 
                         $show = count($item['items']) > $max_show_lvl3 ? $max_show_lvl3 : count($item['items']);
-                        
+
                         for ($i = 0; $i < $show; $i++ )
                         {
                             $menu[ $key ]['items'][] = $item['items'][$i];
@@ -211,6 +265,4 @@ class MenuLibrary extends TemplateLibrary
 
         return ['menu' => $menu, 'columns' => ceil($points / self::MAX_POINTS_IN_COLUMN)];
     }
-
-
 }

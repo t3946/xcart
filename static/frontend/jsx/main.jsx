@@ -125,6 +125,14 @@ require('preact/devtools');
     //     };
     // }
 
-    $(document).foundation();
-    loader.detach();
+    if (document.readyState !== 'complete') {
+        $(document).ready(()=>{
+            $(document).foundation();
+            loader.detach();
+        })
+    }
+    else {
+        $(document).foundation();
+        loader.detach();
+    }
 })();

@@ -67,7 +67,7 @@ if ($storefrontsModels = SiteModel::objects()->all()){
                     }
 
                     if (!empty($defaultSubject->value) && !empty($defaultMessage->value)) {
-                        $oMail = \Xcart\App\Main\Xcart::app()->mail;
+                        $oMail = \Xcart\App\Main\Xcart::app()->oldMail;
                         $oMail->init();
                         $oMail->addReplaceRule('{{orderid}}', $orderModel->getOrderNumber());
                         $oMail->addReplaceRule('{{c-fullname}}', $orderModel->firstname);

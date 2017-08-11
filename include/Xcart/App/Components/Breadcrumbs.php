@@ -2,13 +2,14 @@
 
 namespace Xcart\App\Components;
 
+use Xcart\App\Helpers\ClassNames;
 use Xcart\App\Helpers\SmartProperties;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\Model;
 
 class Breadcrumbs
 {
-    use SmartProperties;
+    use SmartProperties, ClassNames;
 
     const DEFAULT_LIST = 'DEFAULT';
 
