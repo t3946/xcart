@@ -177,9 +177,9 @@ class ShippingRate extends Data
                     $this->fCartShippingWeight +=
                         $this->getShippingEntity()
                             ->getShippingWeightN(
-                                $oCartElement->getProduct()->getShippingWeight($oCartElement->getQuantity()) * $weightRatio,
+                                $oCartElement->getProduct()->getShippingWeight($oCartElement->getQuantity()),
                                 $oCartElement->getProduct()->getShippingVolume($oCartElement->getQuantity())
-                            );
+                            ) * $weightRatio;
                 }
             }
         }
