@@ -205,7 +205,7 @@ onclick="javascript: $('#orderform-{$product.productid}').submit();"
 <div>
     {if $shipping_rate_show}
         <script type="text/javascript">
-            ga('send', 'event', 'calculate shipping', 'showed');
+            ga('send', 'event', 'calculate shipping', 'showed', {nonInteraction: true});
         </script>
         <span id="calculate_shipping_button" data-product-id="{$product.productid}" style="margin-top: -5px;" class="cidev_new_button cidev_new_white">Calculate shipping</span>
     {/if}
