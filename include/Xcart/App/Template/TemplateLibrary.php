@@ -25,16 +25,16 @@ class TemplateLibrary
     use ClassNames;
 
     public static $excludedMethods = [];
-    public static $excludedMethodsInternal = ['load', 'getExtensionName', 'getPrefix', 'getModuleName', 'addExtension', 'className', 'classNameShort', 'classNameUnderscore'];
+    public static $excludedMethodsInternal = ['getExtensions', 'getExtensionName', 'getPrefix', 'getModuleName', 'addExtension', 'className', 'classNameShort', 'classNameUnderscore'];
 
-    public static function load($renderer)
+    public static function getExtensions()
     {
-        $reflection = new ReflectionClass(static::className());
+        $extensions = [];
+        $class = static::className();
+        $reflection = new ReflectionClass($class);
         $methods = $reflection->getMethods(ReflectionMethod::IS_STATIC | ReflectionMethod::IS_PUBLIC);
         $kinds = ['function', 'functionSmart', 'modifier', 'compiler', 'accessorProperty', 'accessorFunction', 'block'];
-
         static::$excludedMethods = array_merge(self::$excludedMethods, self::$excludedMethodsInternal);
-
         foreach ($methods as $method) {
             if (!in_array($method->name, static::$excludedMethods)) {
                 $kind = null;
@@ -44,7 +44,6 @@ class TemplateLibrary
                     if (preg_match('/\@kind\s+(.*?)(?:\s|\*)/', $doc, $rawKind)) {
                         $kind = $rawKind[1];
                     };
-
                     if (preg_match('/\@name\s+(.*?)(?:\s|\*)/', $doc, $rawName)) {
                         $name = $rawName[1];
                     };
@@ -55,9 +54,16 @@ class TemplateLibrary
                 if (!$name) {
                     $name = static::getExtensionName($method->name);
                 }
-                static::addExtension($renderer, $method->name, $name, $kind);
+                $extensions[] = [
+                    'method' => $method->name,
+                    'name' => $name,
+                    'kind' => $kind,
+                    'class' => $class
+                ];
             }
         }
+
+        return $extensions;
     }
 
     public static function getExtensionName($methodName = null)
@@ -79,39 +85,5 @@ class TemplateLibrary
             return $classParts[1];
         }
         return null;
-    }
-
-    /**
-     * @param $renderer Fenom
-     * @param $methodName
-     * @param $name
-     * @param $kind
-     */
-    public static function addExtension($renderer, $methodName, $name, $kind)
-    {
-        $callable = [static::className(), $methodName];
-        switch ($kind) {
-            case 'function':
-                $renderer->addFunction($name, $callable);
-                break;
-            case 'functionSmart':
-                $renderer->addFunctionSmart($name, $callable);
-                break;
-            case 'block':
-                $renderer->addBlockFunction($name, $callable);
-                break;
-            case 'modifier':
-                $renderer->addModifier($name, $callable);
-                break;
-            case 'compiler':
-                $renderer->addCompiler($name, $callable);
-                break;
-            case 'accessorProperty':
-                $renderer->addAccessorCallback($name, $callable);
-                break;
-            case 'accessorFunction':
-                $renderer->addAccessorSmart($name, implode('::', $callable), $renderer::ACCESSOR_CALL);
-                break;
-        }
     }
 }

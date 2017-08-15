@@ -29,7 +29,7 @@
                 </section>
                 {/if}
 
-                {cache key = "category"~$model->categoryid }
+                {cache key = 'category:' ~ $model->categoryid}
                 {set $subcategories = $model->getSubcategories()}
 
                 {if $subcategories|count > 0}

@@ -4,6 +4,7 @@ namespace Modules\Core;
 use Detection\MobileDetect;
 use Fenom;
 use Modules\Core\Components\GlobalConfig;
+use Modules\Core\TemplateLibraries\CacheCompiler;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Module\Module;
 
@@ -45,6 +46,9 @@ class CoreModule extends Module
 
             echo Xcart::app()->template->render('smarty_like/admin_block.tpl', $params);
         });
+
+
+        $template->addBlockCompiler('cache', CacheCompiler::className()."::blockCacheOpen", CacheCompiler::className()."::blockCacheClose", []);
 
 
         $template->addAccessorSmart("global_config", "config", Fenom::ACCESSOR_PROPERTY);

@@ -6,6 +6,7 @@ import  "./_binds/click_mmodal";
 import  "./_binds/search";
 import  "./_binds/minicart";
 import  "./_binds/shadow";
+import  "./_binds/catalog_actionblock_sort";
 
 import  "./ext/jq-swipe";
 

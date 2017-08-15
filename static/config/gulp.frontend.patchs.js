@@ -29,6 +29,9 @@ module.exports = {
         jsx: [ // for watching
             'frontend/jsx/**/*'
         ],
+        js_include: [
+            'frontend/js_include/**/*',
+        ],
         js: [
             'frontend/js/**/*',
             'temp/frontend/js/**/*.js'

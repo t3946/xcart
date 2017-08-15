@@ -3,7 +3,7 @@
 <section id="main_wrapper" class="off-canvas-wrapper">
     <div class="off-canvas position-left" id="offCanvasLeft" data-off-canvas data-transition="push">
 
-    {cache key = '_parts/_menu_mobile.tpl'}
+    {cache key = "_parts/_menu_mobile.tpl"}
         {insert "_parts/_menu_mobile.tpl"}
     {/cache}
     </div>
@@ -113,7 +113,7 @@
                     {/block}
                 </section>
 
-                {render_flash:raw template='_flash.tpl'}
+                {render_flash:raw template='base/_flash.tpl'}
 
                 {block "content"}{/block}
 

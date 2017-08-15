@@ -15,22 +15,30 @@ class CacheCompiler
 
     public static function blockCacheOpen(Tokenizer $tokens, Tag $tag)
     {
-        $time = null;
-        $key = '';
-        $forDomain = true;
         $params = $tag->tpl->parseParams($tokens);
 
         if (empty($params['key'])) {
             throw new \RuntimeException("Invalid block cache key");
         }
 
-        if (isset(self::$_keys[$params['key']])) {
-            throw new \RuntimeException("Cache key already used");
+        $time = null;
+        $forDomain = true;
+        $key = $params['key'];
+
+        if (isset($params['forDomain'])) {
+            $forDomain = (bool)$params['forDomain'];
         }
 
-        $key = str_replace("'",'',$params['key']);
+        if ($forDomain) {
+            /** @var SitesModule $module */
+            $module = Xcart::app()->getModule('Sites');
+            $key .= ".':site=".$module->getSite()->storefrontid ."'";
+        }
 
-        self::$_keys[$key] = true;
+        //@TODO: Multiple block run
+//        if (isset(self::$_keys[$key])) {
+//            throw new \RuntimeException("Cache key already used");
+//        }
 
         if (!empty($params['time'])) {
             if (is_integer($params['time'])) {
@@ -41,34 +49,27 @@ class CacheCompiler
             }
         }
 
-        if (isset($params['forDomain'])) {
-            $forDomain = (bool)$params['forDomain'];
-        }
-
-        if ($forDomain) {
-            /** @var SitesModule $module */
-            $module = Xcart::app()->getModule('Sites');
-            $key .= ':site='.$module->getSite()->storefrontid;
-            $key = "'{$key}'";
-        }
-
         $tag['key'] = $key;
         $tag['time'] = $time ?: 'null';
+
+        self::$_keys[$key] = true;
 
         return '';
     }
 
     public static function blockCacheClose(Tokenizer $tokens, Tag $tag)
     {
-        return '
+        $code = /** @lang PHP */'
+<?php
 if (!$output = \Xcart\App\Main\Xcart::app()->cache->get('. $tag['key'] .')) {
     ob_start();
     ?>'. $tag->getContent() .'<?php
-    $output = ob_get_clean();
-    \Xcart\App\Main\Xcart::app()->cache->set('. $tag['key'] .', $output, ' . $tag['time'] . ');
+    \Xcart\App\Main\Xcart::app()->cache->set('. $tag['key'] .', $output = ob_get_clean(), ' . $tag['time'] . ');
 }
-echo $output;
+echo $output; ?>
 ';
-    }
 
+        $tag->replaceContent($code);
+        return;
+    }
 }

@@ -55,15 +55,4 @@ class CommonLibrary extends TemplateLibrary
         }
         return Xcart::app()->request->getPath() . '?' . http_build_query($query);
     }
-
-    /**
-     * @param \Fenom $renderer
-     */
-    public static function load($renderer)
-    {
-        parent::load($renderer);
-
-        $renderer->addBlockCompiler('cache', CacheCompiler::className()."::blockCacheOpen", CacheCompiler::className()."::blockCacheClose", []);
-    }
-
 }
