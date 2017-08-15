@@ -3,12 +3,14 @@ namespace Modules\Product\Models;
 
 use Modules\Amazon\Models\AmazonFbaMissingSkuModel;
 use Modules\Distributor\Models\DistributorModel;
+use Modules\Sites\Models\SiteModel;
 use Xcart\App\Orm\AutoMetaModel;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\HasManyField;
 use Xcart\App\Orm\Fields\IntField;
+use Xcart\App\Orm\Fields\ManyToManyField;
 use Xcart\App\Traits\DataModelTrait;
 use Xcart\Product;
 
