@@ -57,16 +57,16 @@
 
 {filter|strip:true}
 {autoescape true}
-    {block "wrapper"}{/block}
-
-    {block 'preloader'}
-        <div class="loader-bg waves waves-dark">
+{block 'preloader'}
+    <div class="loader-bg waves waves-dark">
             <div class="loader-wrapper">
                 <div class="loader-spinner"></div>
                 <div class="loader-container"></div>
             </div>
         </div>
-    {/block}
+{/block}
+
+{block "wrapper"}{/block}
 {/autoescape}
 {/filter}
 
