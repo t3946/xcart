@@ -17,6 +17,7 @@
                 that = this,
                 Dxy = {};
 
+
             event = $.event.fix(event);
 
             function cancelTouch() {

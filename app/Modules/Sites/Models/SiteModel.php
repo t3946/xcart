@@ -1,6 +1,7 @@
 <?php
 namespace Modules\Sites\Models;
 
+use Xcart\App\Helpers\Text;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\HasManyField;
@@ -133,6 +134,27 @@ class SiteModel extends Model
         $models = array_filter($models , function($model){ return $model->isWork(); });
 
         return $models;
+    }
+
+    public function getName()
+    {
+        $name = '';
+
+        $config = $this->getConfig();
+
+        if (!empty($config['company_name'])) {
+            $name = $config['company_name'];
+
+            if (strpos($name, '.') !== false ) {
+                $name = substr($name, 0 , strpos($name, '.'));
+            }
+
+            $name = Text::camelCaseToUnderscores($name);
+            $name = str_replace('_', ' ', ucfirst($name));
+            $name = ucwords($name);
+        }
+
+        return $name;
     }
 
 }

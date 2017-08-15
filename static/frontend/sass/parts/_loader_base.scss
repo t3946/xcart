@@ -6,7 +6,7 @@ $loader-color: #27a3e5;
 
 .loading {
   position: relative;
-  overflow: hidden;
+  //overflow: hidden;
 
   .loader-bg {
     z-index: 1000 !important;
@@ -67,8 +67,8 @@ $loader-color: #27a3e5;
         height: 110px;
         background: {
           repeat: no-repeat;
-          //image: url("../images/s3logo.png");
-          image: inline-image("../images/s3logo.png");
+          image: url("/static/frontend/dist/images/s3logo.png");
+          //image: inline-image("../images/s3logo.png");
           size: cover;
           position: center center;
         };

@@ -4,6 +4,7 @@ namespace Modules\Meta\Helpers;
 
 use Modules\Meta\Models\Meta;
 use Modules\Meta\Models\MetaTemplate;
+use Modules\Sites\Models\SiteModel;
 use Xcart\App\Main\ErrorHandler;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Traits\RenderTrait;
@@ -73,12 +74,12 @@ class MetaHelper
     /**
      * @param $controller
      * @param null $title
-     * @param null $site
+     * @param SiteModel|null $site
      * @return string
      */
     protected static function formatTitle($controller, $title = null, $site = null, $metaModel = null)
     {
-        $data = ['S3 Stores'];
+        $data = [];
 
         if ($metaModel && $metaModel->is_custom) {
             $data = [];
@@ -95,7 +96,7 @@ class MetaHelper
 
         $data = array_reverse($data);
 
-//        $data[] = $site ? (string)$site : ParamsHelper::get('meta.meta.sitename');
+        $data[] = $site ? (string)$site->getName() : '';
         return implode(' - ', $data);
     }
 

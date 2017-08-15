@@ -1,4 +1,4 @@
-import inViewport from '../utils/inViewport';
+import 'intersection-observer';
 
 export default class LazyImageLoad
 {
@@ -6,9 +6,9 @@ export default class LazyImageLoad
         this.attached = [];
         this.timer = null;
         this.interval = null;
-        this.inLoad = 0;
-        this.maxInLoad = 3;
+        this.observer = null;
 
+        this.setObserver();
         this.init(elements);
     }
 
@@ -19,74 +19,97 @@ export default class LazyImageLoad
         setTimeout(this.each(), 200);
     }
 
+    setObserver()
+    {
+        this.observer = new IntersectionObserver(entries => {
+            for (let i = 0, len = entries.length; i < len; i++) {
+                if (entries[i].intersectionRatio <= 0) continue;
+
+                let target = entries[i].target;
+                let $target = $(target);
+
+                if ($target.attr('data-background')) {
+                    let $tload = $(document.createElement('img'));
+                    let background = $target.attr('data-background');
+
+                    $target.attr('data-background', null);
+                    $target.addClass('lazy-bg');
+
+                    $tload.on('load', () => {
+                        setTimeout(()=>{
+                            $target.css({'background-image': 'url('+background+')'});
+
+                            setTimeout(()=>{
+                                $target.addClass('lazy-bg-loaded');
+                            }, 200);
+                        }, 20);
+
+                    });
+
+                    $tload.attr('src', background);
+                }
+
+                if ($target.attr('data-original')) {
+                    $target.removeClass('lazy-img');
+
+                    let original = $target.attr('data-original');
+                    let hasUpdate = ($target.src !== original);
+
+                    if (hasUpdate) {
+                        $target.attr('src', '');
+                        $target.attr('data-original', null);
+                        let $tload = $(document.createElement('img'));
+
+                        $tload.on('load', () => {
+                            setTimeout(()=>{
+                                $target.attr('src', original);
+
+                                setTimeout(()=>{
+                                    $target.addClass('lazy-loaded');
+
+                                    if (typeof($target.attr('usemap')) !== 'undefined' && $.fn.rwdImageMaps) {
+                                        $target.rwdImageMaps();
+                                    }
+                                }, 200);
+                            }, 20);
+                        });
+
+                        $tload.attr('src', original);
+                    }
+                }
+
+                this.observer.unobserve(target.element);
+            }
+        });
+    }
+
     attach(elements) {
         this.attached.push(elements);
     }
 
     _bind() {
-        $([document,window]).on('scroll resize', ()=>{this.runTimer(false)});
-        $(document).on('lil.empty_inload', ()=>{this.runTimer(false)});
-        $(document).on('lil.tick', ()=>{
-            this.interval = setInterval(()=>{
-                this.runTimer(true)
-            }, 2000);
-        });
+        $([document,window]).on('scroll resize', ()=>{this.runTimer()});
+        $(document) .on('lil.empty_inload, lil.tick, lil.recheck', ()=>{this.runTimer()});
+
+        this.interval = setInterval(()=>{ this.runTimer(); }, 2000);
     }
 
-    runTimer(load_all = false, time_out = 200) {
+    runTimer(load_all = false, time_out = 200, recheck = false) {
         clearTimeout(this.timer);
         this.timer = setTimeout(()=>{
-            this.each(load_all);
+            this.each(load_all, recheck);
         }, time_out);
     }
 
-    each(all = false) {
-        let $items = $(this.attached.join(','));
-        if ($items.length)
+    each() {
+        let query = this.attached.join(',');
+        let items = document.querySelectorAll(query);
+
+        if (items.length)
         {
-            $items.each(function (n, target) {
-                if (this.inLoad >= this.maxInLoad) {
-                    return false;
-                }
-
-                let $target = $(target);
-                if ($target.data('original') && (all || inViewport(target))) {
-
-                    if (!$target.attr('src')) {
-                        let $tload = $(document.createElement('img'));
-
-                        $tload.on('load', () => {
-                            $target.removeClass('lazy-img');
-                            setTimeout(()=>{
-                                $target.attr('src', $target.data('original'));
-
-                                setTimeout(()=>{
-                                    $target.addClass('lazy-loaded');
-                                }, 200);
-                            }, 20);
-
-                            this.inLoad--;
-                            if (!this.inLoad) {
-                                $(document).trigger('lil.empty_inload');
-                            }
-                        });
-
-                        $tload.attr('src', $target.data('original'));
-
-                        this.inLoad++;
-                    }
-                    else {
-                        $target.removeClass('lazy-img');
-                    }
-                }
-            });
-
-            if (!this.inLoad && !this.interval) {
-                $(document).trigger('lil.tick');
+            for (let i = 0, len = items.length; i < len; i++) {
+                this.observer.observe(items[i]);
             }
-        }
-        else {
-            clearInterval(this.interval);
         }
     }
 }

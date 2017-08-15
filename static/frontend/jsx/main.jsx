@@ -4,11 +4,11 @@ import  "./_binds/product_quantity_group";
 import  "./_binds/endless_pagination";
 import  "./_binds/click_mmodal";
 import  "./_binds/search";
+import  "./_binds/minicart";
+import  "./_binds/shadow";
 
 import  "./ext/jq-swipe";
 
-import { h, render } from 'preact';
-import MiniCart from "./components/MiniCart";
 import DepartmentMenu from "./components/DepartmentMenu";
 import DottedText from "./components/DottedText";
 import CategoryViewType from "./components/CategoryViewType";
@@ -19,11 +19,11 @@ import SearchSuggestion from "./components/SearchSuggestion";
 import Loader from "./components/Loader";
 import isTouch from "./utils/isTouch";
 import isMedia from "./utils/isMedia";
+import documentReady from "./utils/documentReady";
 
 require('preact/devtools');
 
 (function(){
-    let minicart = document.querySelector('body #search_container .minicart');
 
     new SearchSuggestion();
     new LazyImageLoad();
@@ -39,23 +39,6 @@ require('preact/devtools');
 
     Waves.attach('.waves');
     Waves.init();
-
-
-    $(document).on('show:dm', ()=> {
-        $('.shadow').addClass('active');
-    });
-
-    $(document).on('hide:dm', ()=> {
-        $('.shadow').removeClass('active');
-    });
-
-    $('.shadow').on('click touchstart', ()=> {
-        $(document).trigger('click:shadow');
-    });
-
-    if (minicart) {
-        render(<MiniCart />, minicart);
-    }
 
     $(document).on('swipe', function(e, Dx, Dy) {
         if (isMedia('medium') && isTouch()) {
@@ -86,53 +69,16 @@ require('preact/devtools');
         }
     });
 
+    documentReady(()=>{
+        setTimeout(()=>{
+            WebFont.load({
+                google: {
+                    families: ['Lato:300,300i,400,400i,700,700i,900']
+                }
+            });
 
-    // $(window).on('beforeunload unload pagehide', (e)=>{
-    //     console.log(e);
-    //
-    // });
-
-    // $(window).on('pageshow', (e)=>{
-    //     console.log(e);
-    // });
-    // $(window).on('pagehide', (e)=>{
-    //     loader.load();
-    // });
-
-    // $(window).on('popstate', ()=>{
-    //     loader.load();
-    // });
-    //
-    // let handlePushState = function() {
-    //     loader.load();
-    // };
-    //
-    //
-    // if (window.history.pushState != null) {
-    //     var _pushState = window.history.pushState;
-    //     window.history.pushState = function() {
-    //         handlePushState();
-    //         return _pushState.apply(window.history, arguments);
-    //     };
-    // }
-    //
-    //
-    // if (window.history.replaceState != null) {
-    //     var _replaceState = window.history.replaceState;
-    //     window.history.replaceState = function() {
-    //         handlePushState();
-    //         return _replaceState.apply(window.history, arguments);
-    //     };
-    // }
-
-    if (document.readyState !== 'complete') {
-        $(document).ready(()=>{
             $(document).foundation();
             loader.detach();
-        })
-    }
-    else {
-        $(document).foundation();
-        loader.detach();
-    }
+        }, 100);
+    })
 })();

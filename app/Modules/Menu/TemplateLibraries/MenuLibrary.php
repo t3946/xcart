@@ -36,7 +36,7 @@ class MenuLibrary extends TemplateLibrary
 
         if ($items = self::getData($code)) {
             return self::renderTemplate($template, [
-                'items' => $items
+                'items' => $items,
             ]);
         }
 
@@ -62,29 +62,34 @@ class MenuLibrary extends TemplateLibrary
         if ($code == 'main-menu') {
             return [
                 [
-                    'link' => '/',
+                    'url' => '/',
                     'name' => 'Shipping & Delivery',
                     'class' => '',
+                    'items' => [],
                 ],
                 [
-                    'link' => '/',
+                    'url' => '/',
                     'name' => 'Purchase Orders',
                     'class' => '',
+                    'items' => [],
                 ],
                 [
-                    'link' => '/',
+                    'url' => '/',
                     'name' => 'About Us',
                     'class' => '',
+                    'items' => [],
                 ],
                 [
-                    'link' => '/',
+                    'url' => '/',
                     'name' => 'Contact Us',
                     'class' => '',
+                    'items' => [],
                 ],
                 [
-                    'link' => '/',
+                    'url' => '/',
                     'name' => 'Testimonials',
                     'class' => '',
+                    'items' => [],
                 ],
             ];
         }

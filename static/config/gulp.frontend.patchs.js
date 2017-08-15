@@ -142,6 +142,11 @@ module.exports = {
                 'bower_components/jquery-form/dist/jquery.form.min.js'
             ]
         },
+        webfontloader: {
+            js_include: [
+                'bower_components/webfontloader/webfontloader.js'
+            ]
+        },
         modal: {
             js_include: [
                 'bower_components/mmodal/js/jquery.mindy.modal.js'

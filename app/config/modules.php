@@ -3,6 +3,7 @@ return [
     'Core',
     'Cart' => ['cartConfig' => ['class' => '\Modules\Cart\Components\XCart']],
     'Main',
+    'Meta',
     'Menu',
     'Mail',
     'Demo',

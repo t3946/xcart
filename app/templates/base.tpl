@@ -83,7 +83,7 @@
                                     </div>
                                 </section>
 
-                                {*{insert "_parts/_menu_desktop.tpl"}*}
+                                {insert "_parts/_menu_desktop.tpl"}
                             </div>
                             <div class="columns small-12 large-7">
                                 {insert "_parts/_search.tpl"}
