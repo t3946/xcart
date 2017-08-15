@@ -8,10 +8,36 @@ module.exports = {
     },
     webpack: require('./webpack.frontend'),
     imagemin: [
-        imagemin.gifsicle({interlaced: true}),
-        imagemin.jpegtran({progressive: true}),
-        imagemin.optipng({optimizationLevel: 5}),
-        imagemin.svgo({plugins: [{removeViewBox: true, removeComments: true, removeMetadata: true}]})
+        imagemin.gifsicle({
+            interlaced: true
+        }),
+        imagemin.jpegtran({
+            progressive: true,
+            optimize: true,
+        }),
+        imagemin.optipng({
+            optimizationLevel: 7,
+            bitDepthReduction: true,
+            colorTypeReduction: true,
+            paletteReduction: true,
+            buffer: true
+        }),
+        imagemin.svgo({plugins: [{
+            removeViewBox: false,
+            removeComments: true,
+            removeMetadata: true,
+            removeUselessDefs: true,
+            removeDimensions: true,
+            removeEditorsNSData: true,
+            removeEmptyAttrs: true,
+            removeHiddenElems: true,
+            removeEmptyContainers: true,
+            cleanupEnableBackground: true,
+            cleanupIDs: true,
+            minifyStyles: true,
+            collapseGroups: true,
+            convertPathData: true
+        }]})
     ],
     uglify: {
         compress: {
