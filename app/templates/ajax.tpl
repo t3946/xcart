@@ -1,6 +1,3 @@
-{set $site = $.getSite}
-{set $sconfig = $.getSiteConfig}
-
 {filter|strip:true}
 {block 'heading'}{/block}
 

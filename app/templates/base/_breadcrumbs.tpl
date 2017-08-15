@@ -10,8 +10,7 @@
         <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
             <a itemscope itemtype="http://schema.org/Thing" itemprop="item" href="/">
                 <span itemprop="name">
-                    {set $sconfig = $.getSiteConfig}
-                    {$sconfig.company_name.value}
+                    {$.getSiteConfig->company_name->value}
                 </span>
             </a>
             <meta itemprop="position" content="0" />

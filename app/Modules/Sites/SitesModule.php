@@ -6,6 +6,8 @@ use Modules\Admin\Traits\AdminTrait;
 use Modules\Sites\Helpers\CurrentSiteHelper;
 use Modules\Sites\Models\SiteModel;
 use Xcart\App\Cli\Cli;
+use Xcart\App\DataClasses\ArrayClass;
+use Xcart\App\Helpers\Collection;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Module\Module;
 
@@ -26,7 +28,7 @@ class SitesModule extends Module
     /**
      * @var \Modules\Sites\Models\SiteConfigModel
      */
-    private $_config;
+    private $_config = [];
 
     public function setSite(SiteModel $model)
     {
@@ -58,16 +60,16 @@ class SitesModule extends Module
 
     public function getSiteConfig()
     {
-        if (!$this->_config) {
-            $SiteModel = $this->getSite();
-            $this->_config = [];
+        $key = $this->getSite()->storefrontid;
+        if (empty($this->_config[$key])) {
+            $this->_config[$key] = new Collection();
 
-            foreach ($SiteModel->config->all() as $item) {
-                $this->_config[$item->name] = $item;
+            foreach ($this->getSite()->config->all() as $item) {
+                $this->_config[$key][$item->name] = $item;
             }
         }
 
-        return $this->_config;
+        return $this->_config[$key];
     }
 
     public function initDefaultSite()

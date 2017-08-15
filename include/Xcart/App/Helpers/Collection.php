@@ -18,6 +18,16 @@ class Collection implements IteratorAggregate, ArrayAccess, Countable, Serializa
         $this->_data = $data;
     }
 
+    public function __get($name)
+    {
+        return $this->get($name);
+    }
+
+    public function __set($name, $value)
+    {
+        $this->add($name, $value);
+    }
+
     public function add($key, $value)
     {
         $this->_data[$key] = $value;

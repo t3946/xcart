@@ -7,9 +7,9 @@
                 {set $image = $item->images->limit(1)->get()}
                 {if $image!}
                     {if $.isBot}
-                        <img src="//cdn.{$site->getBaseDomain()}{$image->getURL()}" width="{$image->image_x}" height="{$image->image_y}" alt="{$item.product}" itemscope itemprop="image">
+                        <img src="//cdn.{$.getSite->getBaseDomain()}{$image->getURL()}" width="{$image->image_x}" height="{$image->image_y}" alt="{$item.product}" itemscope itemprop="image">
                     {else}
-                        <img data-original="//cdn.{$site->getBaseDomain()}{$image->getURL()}" width="{$image->image_x}" height="{$image->image_y}" alt="{$item.product}" class="lazy lazy-img" itemprop="image">
+                        <img data-original="//cdn.{$.getSite->getBaseDomain()}{$image->getURL()}" width="{$image->image_x}" height="{$image->image_y}" alt="{$item.product}" class="lazy lazy-img" itemprop="image">
                     {/if}
                 {else}
                     

@@ -13,7 +13,7 @@
                     {set $image = $model->getImage()}
                     {if $image}
                     <div class="image">
-                        <img src="//cdn.{$site->getBaseDomain()}{$image->getURL()}" alt="{$model.brand}" itemprop="image">
+                        <img src="//cdn.{$.getSite->getBaseDomain()}{$image->getURL()}" alt="{$model.brand}" itemprop="image">
                     </div>
                     {/if}
                 </div>

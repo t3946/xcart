@@ -27,17 +27,15 @@
 
     {block 'seo'}{meta controller=$this!:null}{/block}
 
-    {set $site = $.getSite}
-    {set $sconfig = $.getSiteConfig}
 
     <script type="application/ld+json">
     {
       "@context": "http://schema.org",
       "@type": "WebSite",
-      "url": "https://{$site.domain}/",
+      "url": "https://{$.getSite->domain}/",
       "potentialAction": {
         "@type": "SearchAction",
-        "target": "https://{$site.domain}/search?q={ignore}{search_term_string}{/ignore}",
+        "target": "https://{$.getSite->domain}/search?q={ignore}{search_term_string}{/ignore}",
         "query-input": "required name=search_term_string"
       }
     }
