@@ -789,7 +789,7 @@ Cost to us accurate
   {assign var="oOrder" value=$oOrderGroup->getOrderInstance()}
   {if ((($oOrder->isOrderAmazon() == false) || ($oOrder->isOrderAmazon() && $oOrder->amazon_fulfillment_channel == 'MFN'))
         && $oOrder->fraud_status == 'C'
-        && ($oOrderGroup->cb_status == 'P' || $oOrderGroup->cb_status =='O' || ($oOrderGroup->cb_status =='AP' && ($order_transactions_totals.authorized_PLUS_captured_totals == $oOrder->getOrderTotalGross() || $oOrder->getAmazonChanell() == 'MFN')))
+        && ($oOrderGroup->cb_status == 'P' || $oOrderGroup->cb_status =='O' || ($oOrderGroup->cb_status =='AP' && ($order_store->getAmountToCapture() >= $oOrderGroup->total_gross || $oOrder->getAmazonChanell() == 'MFN')))
         && ($oOrderGroup->dc_status == 'E' || $oOrderGroup->dc_status == 'M' || $oOrderGroup->dc_status == 'T' || $oOrderGroup->dc_status == 'K')
         && $oOrderGroup->checkFBAProductsAvailToShipping()
         && $oOrderGroup->amz_fullfilment_order_placed !='Y'
