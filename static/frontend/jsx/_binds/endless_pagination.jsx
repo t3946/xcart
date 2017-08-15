@@ -26,6 +26,13 @@ $(document).on('click', '.front-endless-pager a.show-more', function(e){
                 $('.page_count').html(data.page_count);
 
                 $(window).trigger('resize');
+            },
+            'error': ()=>{
+                window.loader.detach();
+                $this.find('.text').html(text_default);
+                $this.removeAttr('disabled');
+
+                window.addFlashMessage('An error has occurred. Please try again later.', 'error');
             }
         })
     );

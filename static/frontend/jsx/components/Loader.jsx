@@ -6,7 +6,7 @@ export default class Loader
         this.loaders = 0;
         this.elements = {};
         this.options = _.extend({
-            'timeout': 200
+            'timeout': 1000
         }, options);
 
         this.timer = null;
@@ -94,7 +94,7 @@ export default class Loader
                 this.timerDetach = setTimeout(()=>{
                     this.detach();
                 }, max_time);
-            },1000);
+            },this.options.timeout);
 
             this.loaders++;
         }
@@ -106,7 +106,9 @@ export default class Loader
         if (this.loaders <= 0) {
             clearTimeout(this.timer);
 
-            this.elements['container'].removeClass('loading-active');
+            setTimeout(()=>{
+                this.elements['container'].removeClass('loading-active');
+            }, this.options.timeout/2);
 
             setTimeout(()=>{
                 this.elements['container'].removeClass('loading');
