@@ -3,10 +3,10 @@
 namespace Modules\Cart\Controllers;
 
 use Modules\Cart\CartModule;
-use Xcart\App\Controller\Controller;
+use Xcart\App\Controller\FrontendController;
 use Xcart\App\Main\Xcart;
 
-abstract class BaseCartController extends Controller
+abstract class BaseCartController extends FrontendController
 {
     /**
      * @var string

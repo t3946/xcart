@@ -134,16 +134,6 @@ gulp.task('backend:css', ['backend:scss'], function () {
         .pipe(livereload());
 });
 
-// gulp.task('frontend:jsx', function(done) {
-//     pump([
-//             gulp.src(frontend.src.jsx),
-//             webpackStream(frontend.config.webpack, webpack2),
-//             gulp.dest(frontend.dst.jsx)
-//         ],
-//         done
-//     );
-// });
-
 gulp.task('frontend:jsx', function(done){
 
     let args = ['./node_modules/webpack/bin/webpack.js', '--config', './config/webpack.frontend.js'];

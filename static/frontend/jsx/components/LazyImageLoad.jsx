@@ -29,75 +29,86 @@ export default class LazyImageLoad
             for (let i = 0, len = entries.length; i < len; i++) {
                 if (entries[i].intersectionRatio <= 0) continue;
 
-                let target = entries[i].target;
-                let $target = $(target);
-
-                if ($target.attr('data-background')) {
-                    this.stack.push({'callback': (callback)=>{
-                        let $tload = $(document.createElement('img'));
-                        let background = $target.attr('data-background');
-
-                        $target.attr('data-background', null);
-                        $target.addClass('lazy-bg');
-
-                        $tload.on('load', () => {
-                            setTimeout(()=>{
-                                $target.css({'background-image': 'url('+background+')'});
-
-                                setTimeout(()=>{
-                                    $target.addClass('lazy-bg-loaded');
-
-                                    if (callback) {
-                                        callback($target);
-                                    }
-                                }, 200);
-                            }, 20);
-
-                        });
-
-                        $tload.attr('src', background);
-                    }});
-
-                }
-
-                if ($target.attr('data-original')) {
-                    this.stack.push({'callback': (callback)=>{
-                        $target.removeClass('lazy-img');
-
-                        let original = $target.attr('data-original');
-                        let hasUpdate = ($target.src !== original);
-
-                        if (hasUpdate) {
-                            $target.attr('src', '');
-                            $target.attr('data-original', null);
-                            let $tload = $(document.createElement('img'));
-
-                            $tload.on('load', () => {
-                                setTimeout(()=>{
-                                    $target.attr('src', original);
-
-                                    setTimeout(()=>{
-                                        $target.addClass('lazy-loaded');
-
-                                        if (typeof($target.attr('usemap')) !== 'undefined' && $.fn.rwdImageMaps) {
-                                            $target.rwdImageMaps();
-                                        }
-
-                                        if (callback) {
-                                            callback($target);
-                                        }
-                                    }, 200);
-                                }, 20);
-                            });
-
-                            $tload.attr('src', original);
-                        }
-                    }});
-                }
-
-                this.observer.unobserve(target.element);
+                this.load(entries[i].target);
             }
         });
+
+        // this.observer.POLL_INTERVAL = 50;
+    }
+
+    /**
+     *
+     * @param target Element
+     */
+    load(target)
+    {
+        let $target = $(target);
+
+        if ($target.attr('data-background')) {
+            this.stack.push(()=>{
+
+                let $tload = $(document.createElement('img'));
+                let background = $target.attr('data-background');
+
+                $target.attr('data-background', null);
+                $target.addClass('lazy-bg');
+
+                $tload.on('load', () => {
+                    setTimeout(()=>{
+                        $target.css({'background-image': 'url('+background+')'});
+                        this.inLoad--;
+
+                        setTimeout(()=>{
+                            $target.addClass('lazy-bg-loaded');
+                        }, 200);
+                    }, 20);
+
+                });
+
+
+                this.observer.unobserve(target.element);
+                this.inLoad++;
+                $tload.attr('src', background);
+            });
+
+        }
+
+        if ($target.attr('data-original')) {
+            this.stack.push(()=>{
+
+                $target.removeClass('lazy-img');
+
+                let original = $target.attr('data-original');
+                let hasUpdate = ($target.src !== original);
+
+                if (hasUpdate) {
+                    $target.attr('src', '');
+                    $target.attr('data-original', null);
+                    let $tload = $(document.createElement('img'));
+
+                    $tload.on('load', () => {
+                        setTimeout(()=>{
+                            $target.attr('src', original);
+                            this.inLoad--;
+
+                            setTimeout(()=>{
+                                $target.addClass('lazy-loaded');
+
+                                if (typeof($target.attr('usemap')) !== 'undefined' && $.fn.rwdImageMaps) {
+                                    $target.rwdImageMaps();
+                                }
+                            }, 200);
+                        }, 20);
+                    });
+
+                    this.observer.unobserve(target.element);
+                    this.inLoad++;
+                    $tload.attr('src', original);
+                }
+            });
+        }
+
+        $(document).trigger('lil.tick');
     }
 
     attach(elements) {
@@ -114,13 +125,14 @@ export default class LazyImageLoad
         this.intervalSearch = setInterval(()=>{ this.search(); }, 3000);
     }
 
-    runTimer(load_all = false, time_out = 100) {
-        if (this.stack.length) {
+    runTimer(load_all = false, time_out = 20) {
+        if (this.stack.length && !this.intervalLoad) {
             this.intervalLoad = setInterval(()=>{
                 this.each(load_all);
 
                 if (!this.stack.length) {
                     clearTimeout(this.intervalLoad);
+                    this.intervalLoad = null;
                 }
             }, time_out);
         }
@@ -144,10 +156,9 @@ export default class LazyImageLoad
     each(load_all = false)
     {
         while (this.stack.length) {
-            if (this.maxLoad > this.inLoad || load_all) {
-                this.inLoad++;
-                let el = this.stack.shift();
-                el.callback(($target)=>{ this.inLoad--; });
+            if (this.maxLoad >= this.inLoad || load_all) {
+                let el = (this.inLoad % 2) ? this.stack.pop():this.stack.shift();
+                el();
             }
             else {
                 break;

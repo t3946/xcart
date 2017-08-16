@@ -46,10 +46,8 @@
 
     {block 'head'}{/block}
 
-    {filter|unescape}
-    {get_assets type="css" position='head'}
-    {get_assets type="js" position='head'}
-    {/filter}
+    {get_assets:raw type='css' position='head'}
+    {get_assets:raw type='js' position='head'}
 </head>
 <body itemscope itemprop="mainEntity" {block 'schema_page_type'}itemtype="http://schema.org/WebPage"{/block} class="loading loading-active">
 
@@ -57,11 +55,11 @@
 {autoescape true}
 {block 'preloader'}
     <div class="loader-bg waves waves-dark">
-            <div class="loader-wrapper">
-                <div class="loader-spinner"></div>
-                <div class="loader-container"></div>
-            </div>
+        <div class="loader-wrapper">
+            <div class="loader-spinner"></div>
+            <div class="loader-container"></div>
         </div>
+    </div>
 {/block}
 
 {block "wrapper"}{/block}
@@ -73,10 +71,8 @@
 
 {block 'js'}{/block}
 
-{filter|unescape}
-{get_assets type="css"}
-{get_assets type="js"}
-{/filter}
+{get_assets:raw type='css'}
+{get_assets:raw type='js'}
 
 </body>
 </html>

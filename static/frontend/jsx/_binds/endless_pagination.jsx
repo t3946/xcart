@@ -1,9 +1,11 @@
-
 $(document).on('click', '.front-endless-pager a.show-more', function(e){
     e.preventDefault();
+    endless_paginate()
+});
 
-    let $this = $(this);
-    let $parent = $(this).parent();
+window.endless_paginate = ()=>{
+    let $this = $('.front-endless-pager a.show-more');
+    let $parent = $this.parent();
     let $container = $('.product-items');
     let text_loading = $this.data('text-loading');
     let text_default = $this.data('text-default');
@@ -40,5 +42,4 @@ $(document).on('click', '.front-endless-pager a.show-more', function(e){
 
     $this.attr('disabled', 'disabled');
     $this.find('.text').html(text_loading);
-
-});
+};

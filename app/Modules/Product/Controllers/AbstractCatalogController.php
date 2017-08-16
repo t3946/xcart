@@ -116,6 +116,7 @@ abstract class AbstractCatalogController extends FrontendController
             ]);
         }
         else {
+            $pager->setPage(0);
             echo $this->render($this->view, array_replace([
                 'model' => $model,
                 'pager' => $pager,

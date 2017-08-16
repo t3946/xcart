@@ -54,9 +54,9 @@
                 </div>
 
                 <div class="product-items tile-view" itemscope itemprop="mainEntity" itemtype="http://schema.org/OfferCatalog">
-                    {foreach $pager->paginate() as $item }
-                        {include "catalog/parts/_catalog_list_item.tpl" item=$item}
-                    {/foreach}
+                    {*{foreach $pager->paginate() as $item }*}
+                        {*{include "catalog/parts/_catalog_list_item.tpl" item=$item}*}
+                    {*{/foreach}*}
                 </div>
                 {insert "catalog/parts/_state_line.tpl"}
 
@@ -71,4 +71,14 @@
 
 {block 'after-content'}
     {*{include "demo/blocks/sliders/_recently_viewed.tpl"}*}
+{/block}
+
+{block 'js'}
+    <script type="text/javascript">
+        (function(){
+            document.addEventListener('DOMContentLoaded', function(){
+                endless_paginate();
+            })
+        })();
+    </script>
 {/block}
