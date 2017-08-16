@@ -119,7 +119,7 @@ class ShippingHelper
      * @param StateModel $stateModel
      * @return ShippingRate[]
      */
-    public static function getStateShipping($product_id, $qty, $stateModel)
+    public static function getStateShipping($product_id, $qty, $stateModel, $weight_ratio = null, $use_cache = true)
     {
         $result = [];
 
@@ -132,7 +132,7 @@ class ShippingHelper
                 's_city' => 'New City'
             ]);
 
-            $result = ShippingHelper::getShippingRates($userModel, $product_model->distributor, [['model' => $product_model, 'qty' => intval($qty)]]);
+            $result = ShippingHelper::getShippingRates($userModel, $product_model->distributor, [['model' => $product_model, 'qty' => intval($qty)]], $weight_ratio, $use_cache);
         }
 
         return $result;
