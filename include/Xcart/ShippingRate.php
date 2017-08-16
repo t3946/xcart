@@ -157,30 +157,6 @@ class ShippingRate extends Data
         return $this->oCart;
     }
 
-    public function getShippingWeightRatio($oCartElement)
-    {
-        $weightRatio = null;
-
-        if (!is_null($this->oProcessor)) {
-            $weightRatio = $this->oProcessor->weightRatio;
-        }
-
-        if (is_null($weightRatio)) {
-            if ($productShipping = ShippingProductModel::objects()->get(
-                [
-                    'product_id' => $oCartElement->getProduct()->productid,
-                    'shipping_rate_id' => $this->rateid
-                ]
-            )) {
-                $weightRatio = $productShipping->weight_ratio;
-            }
-        }
-        if (is_null($weightRatio)) {
-            $weightRatio = 1;
-        }
-
-        return $weightRatio;
-    }
 
     /**
      * @return float
@@ -194,14 +170,12 @@ class ShippingRate extends Data
                 /** @var CartElement $oCartElement */
                 foreach ($aCartObjects as $oCartElement) {
 
-                    $weightRatio = $this->getShippingWeightRatio($oCartElement);
-
                     $this->fCartShippingWeight +=
                         $this->getShippingEntity()
                             ->getShippingWeightN(
                                 $oCartElement->getProduct()->getShippingWeight($oCartElement->getQuantity()),
                                 $oCartElement->getProduct()->getShippingVolume($oCartElement->getQuantity())
-                            ) * $weightRatio;
+                            ) * $oCartElement->getShippingWeightRatio($this->rateid);
                 }
             }
         }

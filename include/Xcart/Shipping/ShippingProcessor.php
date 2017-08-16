@@ -59,7 +59,6 @@ abstract class ShippingProcessor
     protected $bGetOnlyApproximationRates = false;
 
     protected $useCache = true;
-    public $weightRatio = null;
 
     /**
      * @return boolean
@@ -162,6 +161,7 @@ abstract class ShippingProcessor
     {
         $fCartShippingWeight = 0;
         $aCartObjects = $this->getCart()->getElements();
+
         if (!empty($aCartObjects)) {
             /** @var CartElement $oCartElement */
             foreach ($aCartObjects as $oCartElement) {
@@ -417,11 +417,6 @@ abstract class ShippingProcessor
             $this->aShippingMethods[$oShipping->getShippingId()] = $oShipping;
         }
         return $this;
-    }
-
-    public function setWeigtRatio($value)
-    {
-        $this->weightRatio = $value;
     }
 
     public function setUseCache($value)

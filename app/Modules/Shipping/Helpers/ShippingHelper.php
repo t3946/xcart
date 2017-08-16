@@ -34,10 +34,12 @@ class ShippingHelper
         if ($products) {
             $oCart = new Cart();
             foreach ($products as $product) {
-                $oCart->addObjectToCart(new \Xcart\CartElement($product['model'], $product['qty']));
+                $element = new \Xcart\CartElement($product['model'], $product['qty']);
+                $element->setWeightRation($weight_ratio);
+                $oCart->addObjectToCart($element);
             }
             try {
-                if ($aShippingZones = (new ShippingModel())->getShippingRates($user, $distributor, $oCart, false, $weight_ratio, $use_cache)) {
+                if ($aShippingZones = (new ShippingModel())->getShippingRates($user, $distributor, $oCart, false, $use_cache)) {
                     $shipping_rates = reset($aShippingZones);
                 }
             } catch (\Exception $e) {
