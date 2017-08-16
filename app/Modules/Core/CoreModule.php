@@ -51,8 +51,8 @@ class CoreModule extends Module
         $template->addBlockCompiler('cache', CacheCompiler::className()."::blockCacheOpen", CacheCompiler::className()."::blockCacheClose", []);
 
 
-        $template->addAccessorSmart("global_config", "config", Fenom::ACCESSOR_PROPERTY);
-        $template->global_config = self::getGlobalConfig();
+//        $template->addAccessorSmart("global_config", "config", Fenom::ACCESSOR_PROPERTY);
+//        $template->global_config = self::getGlobalConfig();
 
         $template->addAccessorSmart("detector", "detector", Fenom::ACCESSOR_PROPERTY);
         $template->detector = new MobileDetect();

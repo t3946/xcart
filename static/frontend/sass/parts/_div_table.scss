@@ -1,0 +1,15 @@
+.table {
+  width: 100%;
+  table-layout: auto;
+  display: table;
+
+  .trow {
+    display: table-row;
+  }
+  .tcell {
+    display: table-cell;
+  }
+
+  .thead {}
+  .tbody {}
+}

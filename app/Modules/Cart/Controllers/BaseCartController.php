@@ -23,8 +23,7 @@ abstract class BaseCartController extends FrontendController
 
     protected function getListRoute()
     {
-        $module = Xcart::app()->getModule('Cart');
-        return $module->listRoute ? $module->listRoute : $this->defaultListRoute;
+        return $this->listRoute ?: $this->defaultListRoute;
     }
 
     /**
@@ -69,12 +68,12 @@ abstract class BaseCartController extends FrontendController
                 ]);
                 Xcart::app()->end();
             } else {
-//                $this->getRequest()->flash->success(CartModule::t('Product added'));
+                Xcart::app()->flash->success(CartModule::t('Product added'));
                 $this->getRequest()->redirect($this->getListRoute());
             }
         } else {
             if ($isAjax) {
-                echo $this->json([
+                $this->jsonResponse([
                     'status' => false,
                     'total' => $cart->getTotal(),
                     'quantity' => $cart->getQuantity(),
@@ -84,7 +83,7 @@ abstract class BaseCartController extends FrontendController
                 ]);
                 Xcart::app()->end();
             } else {
-//                $this->getRequest()->flash->success(CartModule::t('Error has occurred'));
+                Xcart::app()->flash->success(CartModule::t('Error has occurred'));
                 $this->getRequest()->redirect($this->getListRoute());
             }
         }
@@ -105,6 +104,16 @@ abstract class BaseCartController extends FrontendController
         ]);
     }
 
+    public function actionSetQuantity($uniqueId)
+    {
+        if ( $this->getRequest()->getIsPost() ) {
+            $cart = $this->getCart();
+            /** @var \Modules\Cart\Components\CartItem $item */
+            $item = $cart->getStorage()->get($uniqueId);
+            $this->actionQuantity($uniqueId, $this->getRequest()->post->get('quantity', $item->getQuantity()));
+        }
+    }
+
     public function actionQuantity($key, $quantity)
     {
         $isAjax = $this->getRequest()->getIsAjax();
@@ -121,7 +130,7 @@ abstract class BaseCartController extends FrontendController
                 ]);
                 Xcart::app()->end();
             } else {
-//                $this->getRequest()->flash->success(CartModule::t('Quantity updated'));
+                Xcart::app()->flash->success(CartModule::t('Quantity updated'));
                 $this->getRequest()->redirect($this->getListRoute());
             }
         } else {
@@ -136,7 +145,7 @@ abstract class BaseCartController extends FrontendController
                 ]);
                 Xcart::app()->end();
             } else {
-//                $this->getRequest()->flash->success(CartModule::t('Error has occurred'));
+                Xcart::app()->flash->success(CartModule::t('Error has occurred'));
                 $this->getRequest()->redirect($this->getListRoute());
             }
         }
@@ -158,7 +167,7 @@ abstract class BaseCartController extends FrontendController
                 ]);
                 Xcart::app()->end();
             } else {
-//                $this->getRequest()->flash->success(CartModule::t('Quantity updated'));
+                Xcart::app()->flash->success(CartModule::t('Quantity updated'));
                 $this->getRequest()->redirect($this->getListRoute());
             }
         } else {
@@ -173,7 +182,7 @@ abstract class BaseCartController extends FrontendController
                 ]);
                 Xcart::app()->end();
             } else {
-//                $this->getRequest()->flash->success(CartModule::t('Error has occurred'));
+                Xcart::app()->flash->success(CartModule::t('Error has occurred'));
                 $this->getRequest()->redirect($this->getListRoute());
             }
         }
@@ -185,7 +194,7 @@ abstract class BaseCartController extends FrontendController
         $cart = $this->getCart();
         if ($cart->decreaseQuantityByKey($key)) {
             if ($isAjax) {
-                echo $this->json([
+                $this->jsonResponse([
                     'status' => true,
                     'total' => $cart->getTotal(),
                     'quantity' => $cart->getQuantity(),
@@ -195,7 +204,7 @@ abstract class BaseCartController extends FrontendController
                 ]);
                 Xcart::app()->end();
             } else {
-//                $this->getRequest()->flash->success(CartModule::t('Quantity updated'));
+                Xcart::app()->flash->success(CartModule::t('Quantity updated'));
                 $this->getRequest()->redirect($this->getListRoute());
             }
         } else {
@@ -210,7 +219,7 @@ abstract class BaseCartController extends FrontendController
                 ]);
                 Xcart::app()->end();
             } else {
-//                $this->getRequest()->flash->success(CartModule::t('Error has occurred'));
+                Xcart::app()->flash->success(CartModule::t('Error has occurred'));
                 $this->getRequest()->redirect($this->getListRoute());
             }
         }
@@ -233,7 +242,7 @@ abstract class BaseCartController extends FrontendController
                 ]);
                 Xcart::app()->end();
             } else {
-//                $this->getRequest()->flash->success(CartModule::t('Position sucessfully removed'));
+                Xcart::app()->flash->success(CartModule::t('Position sucessfully removed'));
                 $this->getRequest()->redirect($this->getListRoute());
             }
         } else {
@@ -248,7 +257,7 @@ abstract class BaseCartController extends FrontendController
                 ]);
                 Xcart::app()->end();
             } else {
-//                $this->getRequest()->flash->error(CartModule::t('Error has occurred'));
+                Xcart::app()->flash->error(CartModule::t('Error has occurred'));
                 $this->getRequest()->redirect($this->getListRoute());
             }
         }

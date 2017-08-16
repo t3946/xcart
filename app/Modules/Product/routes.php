@@ -46,11 +46,11 @@ return [
         'target' => ['\Modules\Product\Controllers\SearchController', 'actionKeywords'],
     ],
 
-    /** PRODUCT CART ADD */
+    /** PRODUCT CART */
     [
-        'route' => '/cart/add/product-{slug:key}',
-        'target' => ['\Modules\Product\Controllers\SearchController', 'actionAdd'],
-        'name' => 'cart:add',
+        'route' => '/cart',
+        'path' => 'Modules.Product.routes_cart',
+        'namespace' => 'cart',
         'config' => [
             'cache' => false,
         ]

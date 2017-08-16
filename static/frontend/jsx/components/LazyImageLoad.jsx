@@ -125,7 +125,7 @@ export default class LazyImageLoad
         this.intervalSearch = setInterval(()=>{ this.search(); }, 3000);
     }
 
-    runTimer(load_all = false, time_out = 20) {
+    runTimer(load_all = false, time_out = 100) {
         if (this.stack.length && !this.intervalLoad) {
             this.intervalLoad = setInterval(()=>{
                 this.each(load_all);

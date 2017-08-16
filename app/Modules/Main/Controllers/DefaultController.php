@@ -2,10 +2,10 @@
 namespace Modules\Main\Controllers;
 
 use Modules\Sites\SitesModule;
-use Xcart\App\Controller\Controller;
+use Xcart\App\Controller\FrontendController;
 use Xcart\App\Main\Xcart;
 
-class DefaultController extends Controller
+class DefaultController extends FrontendController
 {
     public $defaultAction= 'index';
 

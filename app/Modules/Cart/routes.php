@@ -22,17 +22,22 @@ return [
         'name' => 'quantity:get'
     ],
     [
+        'route' => '/quantity/{a:key}',
+        'target' => ['\Modules\Cart\Controllers\CartController', 'actionSetQuantity'],
+        'name' => 'quantity:set:post'
+    ],
+    [
         'route' => '/quantity/{a:key}-{i:quantity}',
         'target' => ['\Modules\Cart\Controllers\CartController', 'actionQuantity'],
         'name' => 'quantity:set'
     ],
     [
-        'route' => '/quantity/{a:key}-inc',
+        'route' => '/quantity/inc-{a:key}',
         'target' => ['\Modules\Cart\Controllers\CartController', 'actionIncrease'],
         'name' => 'quantity:inc'
     ],
     [
-        'route' => '/quantity/{a:key}-deс',
+        'route' => '/quantity/dec-{a:key}',
         'target' => ['\Modules\Cart\Controllers\CartController', 'actionDecrease'],
         'name' => 'quantity:dec'
     ],

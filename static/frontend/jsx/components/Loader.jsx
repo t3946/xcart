@@ -75,7 +75,7 @@ export default class Loader
                     .when(callback)
                     .done((args)=>{  })
                     .fail(()=>{  })
-                    .then(()=>{ setTimeout(()=>{ this.detach(); }, this.options.timeout) });
+                    .then(()=>{ this.detach(); });
             }
         }
     }

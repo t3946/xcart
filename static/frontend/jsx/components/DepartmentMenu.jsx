@@ -1,4 +1,4 @@
-import MouseSpeed from './MouseSpeed';
+// import MouseSpeed from './MouseSpeed';
 
 export default class DepartmentMenu
 {
@@ -17,7 +17,7 @@ export default class DepartmentMenu
             }
         };
 
-        this.ms = new MouseSpeed();
+        // this.ms = new MouseSpeed();
         this.hasTouch = this.checkTouch();
 
         this.init();

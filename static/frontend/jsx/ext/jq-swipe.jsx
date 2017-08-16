@@ -1,12 +1,12 @@
 (function($) {
     $.event.special.swipe = {
         setup: function () {
-            $(this).bind('touchstart', $.event.special.swipe.handler);
-            $(this).bind('touchend', $.event.special.swipe.handler);
+            $(this).on('touchstart', $.event.special.swipe.handler);
+            $(this).on('touchend', $.event.special.swipe.handler);
         },
 
         teardown: function () {
-            $(this).unbind('touchstart', $.event.special.swipe.handler);
+            $(this).off('touchstart', $.event.special.swipe.handler);
         },
 
         handler: function (event) {

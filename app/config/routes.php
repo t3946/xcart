@@ -26,14 +26,14 @@ return [
 //            ]
 //        ]
     ],
-    [
-        'route' => '/cart',
-        'path' => 'Modules.Cart.routes',
-        'namespace' => 'cart',
-        'config' => [
-            'cache' => false
-        ]
-    ],
+//    [
+//        'route' => '/cart',
+//        'path' => 'Modules.Cart.routes',
+//        'namespace' => 'cart',
+//        'config' => [
+//            'cache' => false
+//        ]
+//    ],
 
     [
         'route' => '/admin/dashboard',

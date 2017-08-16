@@ -15,35 +15,16 @@
  * the License.
  */
 
-class Google_Service_Script_JoinAsyncRequest extends Google_Collection
+class Google_Service_DLP_GooglePrivacyDlpV2beta1TableLocation extends Google_Model
 {
-  protected $collection_key = 'names';
-  public $names;
-  public $scriptId;
-  public $timeout;
+  public $rowIndex;
 
-  public function setNames($names)
+  public function setRowIndex($rowIndex)
   {
-    $this->names = $names;
+    $this->rowIndex = $rowIndex;
   }
-  public function getNames()
+  public function getRowIndex()
   {
-    return $this->names;
-  }
-  public function setScriptId($scriptId)
-  {
-    $this->scriptId = $scriptId;
-  }
-  public function getScriptId()
-  {
-    return $this->scriptId;
-  }
-  public function setTimeout($timeout)
-  {
-    $this->timeout = $timeout;
-  }
-  public function getTimeout()
-  {
-    return $this->timeout;
+    return $this->rowIndex;
   }
 }

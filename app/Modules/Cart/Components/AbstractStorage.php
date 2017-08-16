@@ -29,7 +29,7 @@ abstract class AbstractStorage implements ICartStorage
 
     /**
      * @param $key
-     * @return mixed
+     * @return \Modules\Cart\Components\CartItem
      */
     public function get($key)
     {

@@ -8,6 +8,9 @@ use Xcart\App\Main\Xcart;
 
 class CartController extends BaseCartController
 {
+    public $defaultListRoute = 'catalog:cart:list';
+    public $listRoute = 'catalog:cart:list';
+
     public function actionAdd($uniqueId, $quantity = 1)
     {
         $quantity = $this->getRequest()->post->get('quantity', 1);

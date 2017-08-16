@@ -5,9 +5,10 @@ namespace Modules\Demo\Controllers;
 use Modules\Product\Models\ProductModel;
 use Xcart\App\Components\Breadcrumbs;
 use Xcart\App\Controller\Controller;
+use Xcart\App\Controller\FrontendController;
 use Xcart\Manufacturer;
 
-class DefaultController extends Controller
+class DefaultController extends FrontendController
 {
     public $defaultAction = 'index';
 

@@ -15,23 +15,25 @@
  * the License.
  */
 
-class Google_Service_Script_JoinAsyncResponse extends Google_Model
+class Google_Service_ServiceUser_AuthorizationRule extends Google_Model
 {
-  protected $resultsType = 'Google_Service_Script_Operation';
-  protected $resultsDataType = 'map';
+  public $permissions;
+  public $selector;
 
-  /**
-   * @param Google_Service_Script_Operation
-   */
-  public function setResults($results)
+  public function setPermissions($permissions)
   {
-    $this->results = $results;
+    $this->permissions = $permissions;
   }
-  /**
-   * @return Google_Service_Script_Operation
-   */
-  public function getResults()
+  public function getPermissions()
   {
-    return $this->results;
+    return $this->permissions;
+  }
+  public function setSelector($selector)
+  {
+    $this->selector = $selector;
+  }
+  public function getSelector()
+  {
+    return $this->selector;
   }
 }
