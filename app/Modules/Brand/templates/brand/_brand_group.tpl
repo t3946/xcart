@@ -11,7 +11,7 @@
         {foreach $brand->brand_storefront as $bsf}
             {set $sf = $bsf->storefront}
             {if $bsf->products_count}
-                <a href="//{$sf->domain}{$brand->getUrl()}" target="_blank">{$sf->code}
+                <a href="//{$sf->domain}{$brand->getUrl()}/" target="_blank">{$sf->code}
                     - {$bsf->products_count}</a>
                 <br/>
             {/if}

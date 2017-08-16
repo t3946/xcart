@@ -787,17 +787,15 @@ Cost to us accurate
   </td>
 
   {assign var="oOrder" value=$oOrderGroup->getOrderInstance()}
-  {if (!empty($oOrderGroup) && (($oOrder->isOrderAmazon() == false) || ($oOrder->isOrderAmazon() && $oOrder->getAmazonChanell() == 'MFN')) && $oOrder->getField('fraud_status') == 'C' &&
-      ($oOrderGroup->getOrderGroupStatusCB() == 'P' ||
-       $oOrderGroup->getOrderGroupStatusCB() =='O' ||
-       ($oOrderGroup->getOrderGroupStatusCB() =='AP' && $oOrder->getOrderGroupsCount()==1 && ($order_transactions_totals.authorized_PLUS_captured_totals == $oOrder->getOrderTotalGross() || $oOrder->getAmazonChanell() == 'MFN'))
-      ) &&
-        ($oOrderGroup->getOrderGroupStatusDC() == 'E' || $oOrderGroup->getOrderGroupStatusDC() == 'M' || $oOrderGroup->getOrderGroupStatusDC() == 'T' || $oOrderGroup->getOrderGroupStatusDC() == 'K') &&
-        $oOrderGroup->checkFBAProductsAvailToShipping() &&
-        $oOrderGroup->getField('amz_fullfilment_order_placed') !='Y')
-  }
+  {if ((($oOrder->isOrderAmazon() == false) || ($oOrder->isOrderAmazon() && $oOrder->amazon_fulfillment_channel == 'MFN'))
+        && $oOrder->fraud_status == 'C'
+        && ($oOrderGroup->cb_status == 'P' || $oOrderGroup->cb_status =='O' || ($oOrderGroup->cb_status =='AP' && ($order_store->getAmountToCapture() >= $oOrderGroup->total_gross || $oOrder->getAmazonChanell() == 'MFN')))
+        && ($oOrderGroup->dc_status == 'E' || $oOrderGroup->dc_status == 'M' || $oOrderGroup->dc_status == 'T' || $oOrderGroup->dc_status == 'K')
+        && $oOrderGroup->checkFBAProductsAvailToShipping()
+        && $oOrderGroup->amz_fullfilment_order_placed !='Y'
+  )}
     <td colspan="2" align="center">
-      <input data-orderid="{$oOrderGroup->getOrderId()}" data-manufacturerid="{$oOrderGroup->getManufacturerId()}" id="submit_amazon_shipment" name="submit_amazon_shipment" type="button"  value="{if ($oOrderGroup->getField('cb_status') =='AP' && $oOrder->getOrderGroupsCount()==1 && $order_transactions_totals.authorized_PLUS_captured_totals == $oOrder->getOrderTotalGross())}Capture & {/if}Ship now by Amazon" />
+      <input data-orderid="{$oOrderGroup->getOrderId()}" data-manufacturerid="{$oOrderGroup->getManufacturerId()}" id="submit_amazon_shipment" name="submit_amazon_shipment" type="button"  value="{if ($oOrderGroup->getField('cb_status') =='AP' && $order_transactions_totals.authorized_PLUS_captured_totals == $oOrder->getOrderTotalGross())}Capture & {/if}Ship now by Amazon" />
       <select {if $oOrderShipping->isAmazonShipping()} disabled="disabled" {/if}style="margin-top: 7px; width: 88%;" name="amazon_shipping_method_select" id="amazon_shipping_method_select">
         <option value=""></option>
         {html_options options=$aAmazonShippingMethods selected=$oOrderGroup->getShippingMethodName()}
@@ -1433,49 +1431,11 @@ Total Product Cost to us
   <td align="right" style="font-size: 12px;">{include file="currency2.tpl" value=$oOrder->getOrderTotalGross()}</td>
   <td>&nbsp;</td>
 </tr>
-
-{if $order_transactions_totals ne ""}
-<tr{cycle values=", class='TableSubHead'" name="cycle_totals"}>
-  <td>Total transaction amount <br> (authorized + captured )</td>
-  <td colspan="8">&nbsp;</td>
-  {assign var=oPaymentProcessor value=$oOrder->getPaymentMethodInstance()}
-  {math assign="transaction_with_multiplier" equation="x*y" x=$order_transactions_totals.authorized_PLUS_captured_totals y=$oPaymentProcessor->getMaximumReAuthorizationMultiplier()}
-  <td align="right" style="font-size: 10px; background-color: {if $oOrder->getOrderTotalGross() == $order_transactions_totals.authorized_PLUS_captured_totals}#d9ead3;
-          {elseif $oOrder->getOrderTotalGross() > $order_transactions_totals.authorized_PLUS_captured_totals && $oOrder->getOrderTotalGross() <= $transaction_with_multiplier}
-          yellow
-          {else}red
-          {/if};">{include file="currency2.tpl" value=$order_transactions_totals.authorized_PLUS_captured_totals}</td>
-  <td>&nbsp;</td>
+<tr>
+    <td colspan="10">
+        {include file="admin/main/transactions_summary.tpl" order_store=$order_store}
+    </td>
 </tr>
-
-<tr{cycle values=", class='TableSubHead'" name="cycle_totals"}>
-  <td>Void total</td>
-  <td colspan="8">&nbsp;</td>
-  <td align="right" style="font-size: 10px;">{include file="currency2.tpl" value=$order_transactions_totals.void_total}</td>
-  <td>&nbsp;</td>
-</tr>
-
-<tr{cycle values=", class='TableSubHead'" name="cycle_totals"}>
-  <td>Authorized total</td>
-  <td colspan="8">&nbsp;</td>
-  <td align="right" style="font-size: 10px;">{include file="currency2.tpl" value=$order_transactions_totals.authorized_total}</td>
-  <td>&nbsp;</td>
-</tr>
-
-<tr{cycle values=", class='TableSubHead'" name="cycle_totals"}>
-  <td>Captured total</td>
-  <td colspan="8">&nbsp;</td>
-  {math assign="transaction_capture_with_multiplier" equation="x*y" x=$order_transactions_totals.captured_total y=$oPaymentProcessor->getMaximumReAuthorizationMultiplier()}
-  <td align="right" style="font-size: 10px; background-color: {if $oOrder->getOrderTotalGross() eq $order_transactions_totals.captured_total}
-          green
-          {elseif $oOrder->getOrderTotalGross() > $order_transactions_totals.captured_total && $oOrder->getOrderTotalGross() <= $transaction_capture_with_multiplier}
-          yellow
-          {else}
-          red{/if};">{include file="currency2.tpl" value=$order_transactions_totals.captured_total}</td>
-  <td>&nbsp;</td>
-</tr>
-{/if}
-
 
 <tr>
 <td colspan="11">

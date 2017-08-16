@@ -2082,6 +2082,11 @@ onclick="javasript:{literal} if (this.checked){$('#tr_d_send_to_email_14').show(
                                         value="Y"{if $manufacturer.allow_pre_orders eq 'Y'} checked="checked"{/if} />
             </td>
         </tr>
+        <tr>
+            <td colspan="3" class="FormButton">
+                Show shipping cost on the product page <input type="checkbox" name="calculate_shipping" value="Y"{if $manufacturer.calculate_shipping eq 'Y'} checked="checked"{/if} />
+            </td>
+        </tr>
 
     </table>
 {elseif $d_section.distributor_section eq "40"}

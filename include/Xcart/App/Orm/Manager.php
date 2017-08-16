@@ -165,6 +165,11 @@ class Manager extends ManyToManyManager
         return $this->getQuerySet()->getOrCreate($attributes);
     }
 
+    public function getOrNew(array $attributes)
+    {
+        return $this->getQuerySet()->getOrNew($attributes);
+    }
+
     public function setSql($sql)
     {
         $this->getQuerySet()->setSql($sql);

@@ -6,6 +6,7 @@ namespace Modules\Payment\Gateways;
 use DateInterval;
 use DateTime;
 use Modules\Order\Models\OrderTransactionModel;
+use Modules\Order\Stores\OrderTransactionStore;
 
 class BluePay extends Gateway
 {
@@ -90,12 +91,12 @@ class BluePay extends Gateway
     public function getState($mode)
     {
         $state = null;
-        if (isset(self::$gatewayMethods[$mode]) && $this->result->isSuccessful()){
-            $state = self::$gatewayMethods[$mode]['status'];
+        if (isset(OrderTransactionStore::$gatewayMethods[$mode]) && $this->result->isSuccessful()){
+            $state = OrderTransactionStore::$gatewayMethods[$mode]['status'];
         }
         $data = $this->result->getData();
         if (!$state && ($state = $data['state'])) {
-            $statuses = array_map(function ($a) {return $a['status'];}, self::$gatewayMethods);
+            $statuses = array_map(function ($a) {return $a['status'];}, OrderTransactionStore::$gatewayMethods);
             if (!in_array($state, $statuses)) {
                 $state = null;
             }

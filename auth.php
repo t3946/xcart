@@ -38,9 +38,9 @@ use Modules\Core\Helpers\GeoipHelper;
 
 define('AREA_TYPE', 'C');
 
-@include_once "./top.inc.php";
-@include_once "../top.inc.php";
-@include_once "../../top.inc.php";
+if (file_exists("./top.inc.php")) {@include_once "./top.inc.php";}
+if (file_exists("../top.inc.php")) {@include_once "../top.inc.php";}
+if (file_exists("../../top.inc.php")) {@include_once "../../top.inc.php";}
 if (!defined('DIR_CUSTOMER')) die("ERROR: Can not initiate application! Please check configuration.");
 
 include_once $xcart_dir."/init.php";
@@ -72,13 +72,12 @@ if (!empty($_GET['shopkey'])) {
 }
 
 if ($config["General"]["shop_closed"] == "Y" && !$always_allow_shop){
-	#
-	# Close store front
-	# Thanks to rubyaryat for the Shop Closed mod
-	#
-	if (!func_readfile($xcart_dir.DIRECTORY_SEPARATOR.$shop_closed_file, true))
-		echo func_get_langvar_by_name("txt_shop_temporarily_unaccessible",false,false,true);
-	exit();
+	if (!$config["General"]["shop_closed_method"]) {
+        if (!func_readfile($xcart_dir.DIRECTORY_SEPARATOR.$shop_closed_file, true)) {
+            echo func_get_langvar_by_name("txt_shop_temporarily_unaccessible",false,false,true);
+            exit();
+        }
+    }
 }
 
 ###

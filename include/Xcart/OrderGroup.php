@@ -1,7 +1,9 @@
 <?php
 namespace Xcart;
 
+use Modules\Core\Models\StateModel;
 use Modules\Order\Helpers\OrderTagEventHelper;
+use Modules\Shipping\Helpers\ShippingHelper;
 
 class OrderGroup extends Data
 {
@@ -1000,6 +1002,20 @@ class OrderGroup extends Data
     public function checkFBAProductsAvailToShipping()
     {
         $bResult = false;
+
+        $order = $this->getOrderInstance();
+        /** @var StateModel $state */
+        if ($state = StateModel::objects()->get(
+            [
+                'code' => $order->s_state,
+                'country_code' => $order->s_country,
+            ])
+        ) {
+            if (!ShippingHelper::isUSAContiguous($state)){
+                return false;
+            }
+        }
+
         $this->getOrderGroupProducts();
         if (!empty($this->oOrderGroupProducts)) {
             foreach ($this->oOrderGroupProducts as $oProduct) {

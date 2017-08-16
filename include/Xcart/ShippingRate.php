@@ -2,6 +2,9 @@
 
 namespace Xcart;
 
+use Modules\Shipping\Models\ShippingProductModel;
+use Xcart\Shipping\ShippingProcessor;
+
 class ShippingRate extends Data
 {
     private $fShippingQuote = null;
@@ -12,7 +15,11 @@ class ShippingRate extends Data
     private $fCartShippingWeight = null;
     private $fAdditionalShippingCharge = 0;
     /**
-     * @var ShippingRate[]
+     * @var ShippingProcessor $oProcessor
+     */
+    private $oProcessor = null;
+    /**
+     * @var ShippingRate[] $aAddedShippingRates
      */
     private $aAddedShippingRates = null;
 
@@ -93,10 +100,12 @@ class ShippingRate extends Data
                 $this->fShippingCharge *= $this->getCostMarcup();
             }
             $oCart = $this->getCart();
+
             $this->fShippingCharge += $this->getRate();
             $this->fShippingCharge += $oCart->getProductCount() * $this->getItemRate();
             $this->fShippingCharge += $oCart->getCost() * $this->getRateP()/100;
             $this->fShippingCharge += $this->getCartShippingWeight() * $this->getWeightRate();
+
             //$this->fShippingCharge += $this->fAdditionalShippingCharge;
             $this->fShippingCharge += $this->getCartShippingFreight();
             if ($oCart->getExtraMarginValue() > 0) {
@@ -104,6 +113,9 @@ class ShippingRate extends Data
                 $this->fShippingCharge -= $oCart->getExtraMarginValue();
                 $this->fShippingCharge = max($this->fShippingCharge, 0);
             }
+
+            $this->fShippingCharge = min(max($this->fShippingCharge, $this->min_shipping_charge),  $this->max_shipping_charge);
+
             $this->fShippingCharge = round($this->fShippingCharge, 2);
         }
         return $this->fShippingCharge;
@@ -145,6 +157,7 @@ class ShippingRate extends Data
         return $this->oCart;
     }
 
+
     /**
      * @return float
      */
@@ -156,9 +169,13 @@ class ShippingRate extends Data
             if (!empty($aCartObjects)) {
                 /** @var CartElement $oCartElement */
                 foreach ($aCartObjects as $oCartElement) {
-                    $this->fCartShippingWeight += $this->getShippingEntity()->getShippingWeightN(
-                        $oCartElement->getProduct()->getShippingWeight($oCartElement->getQuantity()),
-                        $oCartElement->getProduct()->getShippingVolume($oCartElement->getQuantity()));
+
+                    $this->fCartShippingWeight +=
+                        $this->getShippingEntity()
+                            ->getShippingWeightN(
+                                $oCartElement->getProduct()->getShippingWeight($oCartElement->getQuantity()),
+                                $oCartElement->getProduct()->getShippingVolume($oCartElement->getQuantity())
+                            ) * $oCartElement->getShippingWeightRatio($this->rateid);
                 }
             }
         }
@@ -199,7 +216,7 @@ class ShippingRate extends Data
     }
 
     /**
-     * @param ShippingRate[] $aMinPriorityShippingRates\
+     * @param ShippingRate[] $aMinPriorityShippingRates
      * @return int|null
      */
     public function getTimeDeliveryDiff($aMinPriorityShippingRates)
@@ -209,8 +226,10 @@ class ShippingRate extends Data
             foreach ($aMinPriorityShippingRates as $key => $oMinPriorityShippingRate) {
                 $oShipping = $oMinPriorityShippingRate->getShippingEntity();
                 $oShippingThis = $this->getShippingEntity();
-                $aResults [(abs(floatval($oShipping->getField('days_min')) - floatval($oShippingThis->getField('days_min'))) +
-                    abs(floatval($oShipping->getField('days_max')) - floatval($oShippingThis->getField('days_max'))))] = $key;
+                $aResults [
+                    abs(floatval($oShipping->days_min) - floatval($oShippingThis->days_min))
+                    + abs(floatval($oShipping->days_max) - floatval($oShippingThis->days_max))
+                ] = $key;
             }
             ksort($aResults);
             $i = array_shift($aResults);
@@ -224,9 +243,17 @@ class ShippingRate extends Data
     }
 
     public function getDataToSave(){
-        return ['rate_id' => $this->getField('rateid'),
-            'shipping_quote' => $this->getShippingQuote(),
-            'shipping_charge' => $this->getShippingCharge(),
-            'shipping_charge_before_map' => $this->getShippingChargeBeforeMap()];
+        return
+            [
+                'rate_id' => $this->getField('rateid'),
+                'shipping_quote' => $this->getShippingQuote(),
+                'shipping_charge' => $this->getShippingCharge(),
+                'shipping_charge_before_map' => $this->getShippingChargeBeforeMap()
+            ];
+    }
+
+    public function setProcessor($processor)
+    {
+        $this->oProcessor = $processor;
     }
 }

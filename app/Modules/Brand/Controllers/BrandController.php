@@ -42,7 +42,11 @@ class BrandController extends PrototypeAdminController
                 $mgr->update(['parent_brand_id' => $id]);
 
                 foreach ($br = $mgr->all() as $brand) {
-                    $brand->products->update(['brandid' => $id]);
+                    $brand->products->update(
+                        [
+                            'brandid' => $id,
+                            'sub_brand_id' => $brand->brandid,
+                        ]);
                 }
 
                 $this->jsonResponse(true);
@@ -151,7 +155,7 @@ class BrandController extends PrototypeAdminController
         } else if (array_key_exists('save_create', $_POST)) {
             return ['brand:create_brand', []];
         } else {
-            return ['brand:list', []];
+            return ['brand:brand_list', []];
         }
     }
 }

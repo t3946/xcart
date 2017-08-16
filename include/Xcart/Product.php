@@ -341,25 +341,30 @@ SQL;
 
     public function getPrice($forQuantity = 1)
     {
-        if (is_null($this->fPrice)) {
-            $this->fPrice = 0;
-            if (is_null($this->aPricing)) {
-                $this->getPricing();
-            }
-            if (!empty($this->aPricing)) {
-                foreach ($this->aPricing as $oPrice) {
-                    if ($forQuantity >= floatval($oPrice->getQuantity())) {
-                        $this->fPrice = floatval($oPrice->getPrice());
-                        break;
-                    }
-
-                }
-            }
-            $fMapPrice = $this->getMapPrice();
-            $this->fPrice = max($this->fPrice, $fMapPrice);
+        if (!is_null($this->fPrice)) {
+            return $this->fPrice;
         }
 
-        return $this->fPrice;
+        $fPrice = 0;
+
+        if (is_null($this->aPricing)) {
+            $this->getPricing();
+        }
+
+        if (!empty($this->aPricing)) {
+            foreach ($this->aPricing as $oPrice) {
+                if ($forQuantity >= floatval($oPrice->getQuantity())) {
+                    $fPrice = floatval($oPrice->getPrice());
+                } else {
+                    break;
+                }
+            }
+        }
+
+        $fMapPrice = $this->getMapPrice();
+        $fPrice = max($fPrice, $fMapPrice);
+
+        return $fPrice;
     }
 
     public function setPrice($fPrice)
@@ -747,16 +752,15 @@ SQL;
 
     public function getExtraMarginValue($forQuantity = 1)
     {
-        if (is_null($this->fExtraMarginValue)) {
-            $oManufacturer = $this->getManfacturerClass();
+        $fExtraMarginValue = null;
+        $oManufacturer = $this->getManfacturerClass();
             if ($oManufacturer->getField('reduce_extra_margin') == 'Y') {
                 if (floatval($oManufacturer->getField('price_coef_z') != 0) && $this->getProductCostToUs() > 0) {
                     $fExpectedMargin = round(($this->getProductCostToUs() * floatval($oManufacturer->getField('price_coef_x')) + floatval($oManufacturer->getField('price_coef_y'))) / floatval($oManufacturer->getField('price_coef_z')), 2);
-                    $this->fExtraMarginValue = ($this->getPrice($forQuantity) - $fExpectedMargin) * $forQuantity;
+                    $fExtraMarginValue = ($this->getPrice($forQuantity) - $fExpectedMargin) * $forQuantity;
                 }
             }
-        }
-        return $this->fExtraMarginValue;
+        return $fExtraMarginValue;
     }
 
     public static function updateShowInLists(array $ids)

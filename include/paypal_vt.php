@@ -5,6 +5,7 @@ use Modules\Order\Models\OrderModel;
 use Modules\Order\Models\OrderStatusModel;
 use Modules\Order\Models\OrderTransactionModel;
 use Modules\Order\Models\TransactionLogModel;
+use Modules\Order\Stores\OrderTransactionStore;
 use Modules\Payment\Gateways\Gateway;
 use Modules\Payment\Helpers\PaymentHelper;
 use Modules\Payment\Models\PaymentMethodModel;
@@ -19,19 +20,17 @@ global $paymentid, $login, $transaction_currency, $transaction_amount;
 $gw = $log = $orderTransaction = $countTr = $logStatus = $params = null;
 $result = [];
 
-if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array_keys(Gateway::$gatewayMethods))) {
+if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array_keys(OrderTransactionStore::$gatewayMethods))) {
     /** @var OrderModel $orderModel */
     /** @var PaymentMethodModel $pmModel */
     if ($orderModel = OrderModel::objects()->get(['orderid' => $orderid])) {
 
-        extract(Gateway::$gatewayMethods[$mode]);
+        extract(OrderTransactionStore::$gatewayMethods[$mode]);
 
-        $countTr = OrderTransactionModel::objects()
-            ->filter(['orderid' => $orderid])
-            ->exclude(['transaction_status' => '', 'transaction_id' => ''])
-            ->count();
+        $orderModel->transactions->exclude(['transaction_status' => '', 'transaction_id' => ''])->count();
 
         $isAllowed = PaymentHelper::isAuthorizeAllowed($orderModel, $countTr);
+
         if ($order_transaction_id && ($orderTransaction = OrderTransactionModel::objects()->get(['id' => $order_transaction_id]))) {
 
             $isAllowed = true;
@@ -69,60 +68,59 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array_keys(
 
         }
 
-        try {
-            if ($isAllowed) {
+        if (!$isAllowed) {
+            if (!$countTr && (empty($AJAX_SUBMIT) || $AJAX_SUBMIT != "Y")) {
 
-                if ($gw = Gateway::getGateway($pmModel->processor)) {
+                $top_message = [
+                    'type' => 'E',
+                    'content' => func_get_langvar_by_name("lbl_first_transaction_in_order_exception")
+                ];
 
-                    if ($gw->$method($params)) {
+                x_session_save("section_name_top_message");
+                func_header_location("order.php?orderid=" . $orderid . "&tab=y#main_order_tabs-VT");
 
-                        if ($orderTransaction = OrderTransactionHelper::action('lookup', $orderTransaction, PaymentHelper::getPaymentParams($orderTransaction))) {
-                            $orderTransaction->save();
-                        }
-
-                        if ($orderTransaction->transaction_status != OrderTransactionModel::STATUS_REFUNDED) {
-                            $orderTransaction = OrderTransactionHelper::prepareOrderTransaction($orderTransaction, $gw, $orderModel, $pmModel, $amount, $mode);
-                            $orderTransaction->login = $login;
-                            $orderTransaction->save();
-                        }
-
-                        $result = $orderTransaction->transaction_response;
-
-                        list ($o_log, $send_notification) = OrderHelper::changeOrderCBStatus($orderModel, OrderStatusModel::ORDER_STATUS_AUTHORIZED);
-                        $log .= "<br />Transaction:" . $orderTransaction->transaction_id;
-                        $log .= $o_log;
-
-                        if (!$countTr && $send_notification) {
-                            func_send_order_status_notification($orderModel->orderid, OrderStatusModel::ORDER_STATUS_AUTHORIZED, true);
-                        }
-                    } else {
-
-                        $result = $gw->result->getData();
-                        if ($orderTransaction && ($state = $gw->getState($mode))) {
-                            $orderTransaction->transaction_status = $state;
-                            $orderTransaction->transaction_response = $result;
-                            $orderTransaction->save();
-                        }
-
-                        $log .= "<br/>{$result['name']}<br/>{$result['message']}";
-
-                    }
-                    $logStatus = $orderTransaction->transaction_status;
-                }
-
-            } else {
-                if (!$countTr && (empty($AJAX_SUBMIT) || $AJAX_SUBMIT != "Y")) {
-
-                    $top_message = [
-                        'type' => 'E',
-                        'content' => func_get_langvar_by_name("lbl_first_transaction_in_order_exception")
-                    ];
-
-                    x_session_save("section_name_top_message");
-                    func_header_location("order.php?orderid=" . $orderid . "&tab=y#main_order_tabs-VT");
-
-                }
             }
+        }
+
+        try {
+            if ($gw = Gateway::getGateway($pmModel->processor)) {
+
+                if ($gw->$method($params)) {
+
+                    if ($orderTransaction = OrderTransactionHelper::action('lookup', $orderTransaction, PaymentHelper::getPaymentParams($orderTransaction))) {
+                        $orderTransaction->save();
+                    }
+
+                    if ($orderTransaction->transaction_status != OrderTransactionModel::STATUS_REFUNDED) {
+                        $orderTransaction = OrderTransactionHelper::prepareOrderTransaction($orderTransaction, $gw, $orderModel, $pmModel, $amount, $mode);
+                        $orderTransaction->login = $login;
+                        $orderTransaction->save();
+                    }
+
+                    $result = $orderTransaction->transaction_response;
+
+                    list ($o_log, $send_notification) = OrderHelper::changeOrderCBStatus($orderModel, OrderStatusModel::ORDER_STATUS_AUTHORIZED);
+                    $log .= "<br />Transaction:" . $orderTransaction->transaction_id;
+                    $log .= $o_log;
+
+                    if (!$countTr && $send_notification) {
+                        func_send_order_status_notification($orderModel->orderid, OrderStatusModel::ORDER_STATUS_AUTHORIZED, true);
+                    }
+                } else {
+
+                    $result = $gw->result->getData();
+                    if ($orderTransaction && ($state = $gw->getState($mode))) {
+                        $orderTransaction->transaction_status = $state;
+                        $orderTransaction->transaction_response = $result;
+                        $orderTransaction->save();
+                    }
+
+                    $log .= "<br/>{$result['name']}<br/>{$result['message']}";
+
+                }
+                $logStatus = $orderTransaction->transaction_status;
+            }
+
 
         } catch (\Exception $e) {
             $log .= "<br/>{$gw->getProcessorName()} Processing Error: {$e->getMessage()}";

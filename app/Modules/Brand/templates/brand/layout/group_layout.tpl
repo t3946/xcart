@@ -12,6 +12,21 @@
 </head>
 <body>
     <div id="main">
+        {block 'content-header'}
+            <div class="content-header">
+                <div class="row">
+                    <div class="column large-12">
+                        {block 'breadcrumbs'}
+
+                        {/block}
+
+                        {block 'heading'}
+
+                        {/block}
+                    </div>
+                </div>
+            </div>
+        {/block}
         {block 'main'}
             <div class="main-content">
                 {block 'before-content'}

@@ -1,6 +1,6 @@
 <table class="transaction_info_table" width="100%">
     <tr>
-        <td width="12%"><B>Type</B></td>
+        <td width="12%"><B>Type/Processor</B></td>
         <td width="10%"><B>Date</B></td>
         <td width="15%"><B>Name</B></td>
         <td width="*%"><B>Transaction</B></td>

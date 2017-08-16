@@ -80,21 +80,18 @@ class ReportsController extends PrototypeAdminController
             ];
         }
 
-        $reportStore = new ReportsStore($form_data);
-
         if (!empty($form_data['report']['group_settings'])) {
-            $report_mode = 'group';
+            $form_data['report_mode'] = 'group';
         } else {
-            $report_mode = 'html';
+            $form_data['report_mode'] = 'html';
         }
 
-        //echo $reportStore->getQuerySet()->getSql();
-        //var_dump($reportStore->getReport());
+        $reportStore = new ReportsStore($form_data);
 
         $orderModels = $reportStore->getModels();
         $pager = $reportStore->getPager();
 
-        switch ($report_mode) {
+        switch ($form_data['report_mode']) {
             case 'group':
                 echo $this->render('reports/view_group.tpl', array_merge(
                         SearchHelper::getFormAndListData(),

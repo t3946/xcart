@@ -81,6 +81,8 @@ if ($oProduct && $oProduct->splash_id){
 	$smarty->assign('oProductSplash', \Xcart\Images\Splash::objects()->filter(['id' => $oProduct->splash_id])->get());
 }
 
+$smarty->assign('url_calculate_shipping', Xcart\App\Main\Xcart::app()->router->url('product:calculate_shipping', ['id' => $productid]));
+
 # Assign the current location line
 $smarty->assign("location", $location);
 

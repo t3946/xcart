@@ -51,6 +51,7 @@ use Modules\Amazon\Models\AmazonFbaProductsQuickModel;
 use Modules\Amazon\Models\AmazonListInboundShipment;
 use Modules\Amazon\Models\AmazonListInboundShipmentItemModel;
 use Modules\Amazon\Models\AmazonProductsFieldsModel;
+use Modules\Order\Helpers\OrderGroupHelper;
 use Modules\Order\Models\OrderDetailModel;
 use Modules\Order\Models\OrderGroupInvoiceModel;
 use Modules\Order\Models\OrderGroupInvoiceProductModel;
@@ -633,7 +634,7 @@ SQL;
                                     $order_info['orderid'] = $orderModel->orderid;
                                 }
                             }
-                            if (!empty($order_info)) {
+                            if (!empty($order_info) && $order_info['orderid']) {
                                 $log_text = "order processed: " . $v["AmazonOrderID"];
                                 func_backprocess_log(self::BACK_PROCESS_LOG_NAME_SETTLEMENT, $log_text);
                                 foreach ($v["Fulfillment"] as $kk => $vv) {
@@ -679,9 +680,9 @@ SQL;
                                                     case "Principal":
                                                         $aOrderDetails[$v["AmazonOrderID"]][$v["ShipmentID"]][$vv['AmazonOrderItemCode']]['PrincipalRefund'] = floatval($vvv["Amount"]);
                                                         break;
-                                                    case "Shipping":
+                                                    /*case "Shipping":
                                                         $aOrderDetails[$v["AmazonOrderID"]][$v["ShipmentID"]][$vv['AmazonOrderItemCode']]['ShippingRefund'] = floatval($vvv["Amount"]);
-                                                        break;
+                                                        break;*/
                                                 }
                                             }
                                         }
@@ -699,6 +700,7 @@ SQL;
                                         }
                                     }
                                 }
+
                                 if (!empty($v["ShipmentFees"])) {
                                     foreach ($v["ShipmentFees"] as $kkk => $vvv) {
                                         if (in_array($vvv["Type"], array("FBATransportationFee"))) {
@@ -919,11 +921,13 @@ SQL;
         $oOrder = $oOrderGroup->getOrderInstance();
         $log = "Try to place order shipping by Amazon\n";
 
-        if ($oOrder->getOrderGroupsCount() == 1 && $oOrderGroup->getOrderGroupStatusCB() == 'AP') {
-            if (!$oOrder->captureOrderAmount()) {
-                func_log_order($oOrderGroup->getOrderId(), 'X', nl2br($log), $login);
-                return false;
-            }
+        if ($oOrderGroup->getOrderGroupStatusCB() == 'AP') {
+            $log .= OrderGroupHelper::dispatchGroup(
+                [
+                    'orderid' => $oOrderGroup->orderid,
+                    'mnf_id' => $oOrderGroup->manufacturerid,
+                ]
+            );
         }
         $oOrderGroup->_refresh();
         if ($oOrderGroup->getOrderGroupStatusCB() != 'P') {
@@ -940,12 +944,10 @@ SQL;
         $address->setStateOrProvinceCode($oOrder->getField('s_state'));
         $address->setCountryCode($oOrder->getField('s_country'));
         $address->setPostalCode($oOrder->getField('s_zipcode'));
-        $sPhone = $oOrder->getField('phone');
-        if (!empty($sPhone))
-            $address->setPhoneNumber($sPhone);
+        if ($oOrder->phone)
+            $address->setPhoneNumber($oOrder->phone);
 
-        $aProducts = $oOrderGroup->getOrderGroupProducts();
-        if (!empty($aProducts)) {
+        if ($aProducts = $oOrderGroup->getOrderGroupProducts()) {
             $list = new FBAOutboundServiceMWS_Model_CreateFulfillmentOrderItemList();
 
             foreach ($aProducts as $oProduct) {
@@ -956,8 +958,7 @@ SQL;
                 foreach ($aOrderDetails as $oOrderDetail) {
                     $iAmount += $oOrderDetail->getAmount();
                 }
-                $aProductsQty = $oProduct->getProductsAvailOnAmazonParentWithChild($iAmount);
-                if (!empty($aProductsQty)) {
+                if ($aProductsQty = $oProduct->getProductsAvailOnAmazonParentWithChild($iAmount)) {
                     foreach ($aProductsQty as $aFBAAvail) {
                         $item->setSellerSKU($aFBAAvail['oProduct']->getSKU());
                         $item->setSellerFulfillmentOrderItemId($aFBAAvail['oProduct']->getSKU());

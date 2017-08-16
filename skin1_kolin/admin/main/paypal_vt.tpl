@@ -80,7 +80,7 @@
     <div id="AJAX_Authorize_button_text" style="display: none; background-color: #f4cccc;">
         {$lng.lb_additional_payment_authorize_message}
     </div>
-    <form action="order.php" method="post" name="vt_form1">
+    <form action="{$authorise_url}" method="post" name="vt_form1">
         <input type="hidden" name="mode" id="mode" value=""/>
         <input type="hidden" name="orderid" value="{$orderid}"/>
 
@@ -213,53 +213,9 @@
 {if $order_transactions ne ""}
     <br/>
     {capture name=virtual_terminal_transactions}
-        <form action="order.php" method="post" name="vt_form01">
-            <input type="hidden" name="mode" id="mode" value=""/>
-            <input type="hidden" name="order_transaction_id" id="order_transaction_id" value=""/>
-            <input type="hidden" name="orderid" value="{$orderid}"/>
-            {assign var='main_transaction' value=true}
-            {include file="admin/main/transactions_table.tpl"}
-        </form>
-        <table align="right" cellspacing="1" cellpadding="1">
-            {assign var=oPaymentProcessor value=$oOrder->getPaymentMethodInstance()}
-            {math assign="transaction_with_multiplier" equation="x*y" x=$order_transactions_totals.authorized_PLUS_captured_totals y=$oPaymentProcessor->getMaximumReAuthorizationMultiplier()}
-            <tr{cycle values=", class='TableSubHead'" name="cycle_totals"}>
-                <td>Transactions amount (authorized/pending +captured )</td>
-                <td>&nbsp;</td>
-                <td align="right"
-                    style="font-size: 10px; background-color: {if $oOrder->getOrderTotalGross() == $order_transactions_totals.authorized_PLUS_captured_totals}#d9ead3;
-                    {elseif $oOrder->getOrderTotalGross() > $order_transactions_totals.authorized_PLUS_captured_totals && $oOrder->getOrderTotalGross() <= $transaction_with_multiplier}
-                            yellow
-                            {else}red
-                    {/if};">{include file="currency2.tpl" value=$order_transactions_totals.authorized_PLUS_captured_totals}</td>
-            </tr>
-
-            <tr{cycle values=", class='TableSubHead'" name="cycle_totals"}>
-                <td>Void total</td>
-                <td>&nbsp;</td>
-                <td align="right"
-                    style="font-size: 10px;">{include file="currency2.tpl" value=$order_transactions_totals.void_total}</td>
-            </tr>
-
-            <tr{cycle values=", class='TableSubHead'" name="cycle_totals"}>
-                <td>Authorized total</td>
-                <td>&nbsp;</td>
-                <td align="right"
-                    style="font-size: 10px;">{include file="currency2.tpl" value=$order_transactions_totals.authorized_total}</td>
-            </tr>
-            {math assign="transaction_capture_with_multiplier" equation="x*y" x=$order_transactions_totals.captured_total y=$oPaymentProcessor->getMaximumReAuthorizationMultiplier()}
-            <tr{cycle values=", class='TableSubHead'" name="cycle_totals"}>
-                <td>Captured total</td>
-                <td>&nbsp;</td>
-                <td align="right"
-                    style="font-size: 10px; background-color: {if $oOrder->getOrderTotalGross() eq $order_transactions_totals.captured_total}
-                            green
-                            {elseif $oOrder->getOrderTotalGross() > $order_transactions_totals.captured_total && $oOrder->getOrderTotalGross() <= $transaction_capture_with_multiplier}
-                            yellow
-                            {else}
-                            red{/if};">{include file="currency2.tpl" value=$order_transactions_totals.captured_total}</td>
-            </tr>
-        </table>
+        {assign var='main_transaction' value=true}
+        {include file="admin/main/transactions_table.tpl"}
+        {include file="admin/main/transactions_summary.tpl" order_store=$order_store}
     {/capture}
     {include file="dialog.tpl" title="Transactions" content=$smarty.capture.virtual_terminal_transactions extra='width="100%"'}
 {/if}
@@ -280,7 +236,7 @@
 
 <br/>
 {capture name=add_manual_transaction}
-    <form action="order.php" method="post" name="vt_form03">
+    <form action="{$manual_url}" method="post" name="vt_form03">
         <input type="hidden" name="mode" id="mode" value="add_manual_transaction"/>
         <input type="hidden" name="orderid" value="{$orderid}"/>
 
@@ -344,23 +300,24 @@
 <link rel="stylesheet" href="{$SkinDir}/js/semantic/components/transition.min.css">
 <link rel="stylesheet" href="{$SkinDir}/js/semantic/components/button.min.css">
 {literal}
-    <script>
-        $('.dropdown').dropdown();
-        $('.toggle_transaction_multiple').click(function () {
+<script>
+    $('.dropdown').dropdown();
+
+    $('.transaction_info_table').on('click', '.toggle_transaction_multiple',
+        function () {
             var button = $(this);
+            var url = '{/literal}{$xcartApp->router->url('order:child_transactions_list')}{literal}';
             var tr_id = $(this).closest('tr').data('order-transaction');
             if (button.parent().hasClass('opened')) {
                 button.closest('tr').siblings('tr.transaction_log_' + tr_id).remove();
             } else {
-                $.post('ajax_admin.php', {
-                        ajax_action: 'get_transactions_log',
-                        order_transaction_id: tr_id
-                    },
+                $.get(url + '/' + tr_id,
                     function (data) {
                         if (data) {
                             if (button.parent().hasClass('opened')) {
-                                button.closest('tr')
+                                button.closest('tr').next('tr').next('tr')
                                     .after($('<tr class="transaction_log_' + tr_id + '"/>').html($('<td colspan="8"/>').css('padding-left', '20px').html(data)));
+                                $('.dropdown').dropdown();
                             }
                         }
                     });
@@ -369,21 +326,18 @@
             button.siblings('.toggle_transaction_multiple').show();
             button.parent().toggleClass('opened');
             return false;
-        });
-        $('.transaction_info_table').on('click', '.show_hide_link',
-            function () {
-                $(this).text(function (i, text) {
-                    return (text == 'Show details') ? 'Hide details' : 'Show details';
-                });
-                $(this).prev('.transaction_log_div').toggle('slow');
-                return false;
-            }
-        );
-        $('.transaction_info_table .dropdown .item, .transaction_info_table .lookup').click(function () {
+        }).on('click', '.show_hide_link',
+        function () {
+            $(this).text(function (i, text) {
+                return (text == 'Show details') ? 'Hide details' : 'Show details';
+            });
+            $(this).prev('.transaction_log_div').toggle('slow');
+            return false;
+        }).on('click', '.transaction_info_table .dropdown .item, .transaction_info_table .lookup',
+        function () {
             var form = $(this).closest('form');
-            form.find('#order_transaction_id').val($(this).closest('td.transaction_action').data('transaction-id'))
-                .end().find('#mode').val($(this).data('action'))
-                .end().submit();
+            form.attr('action', $(this).data('action'));
+            form.submit();
         })
-    </script>
+</script>
 {/literal}

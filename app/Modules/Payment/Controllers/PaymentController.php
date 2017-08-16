@@ -7,6 +7,7 @@ use Exception;
 use Modules\Payment\Gateways\Gateway;
 use Modules\Payment\Models\ProcessorModel;
 use Xcart\App\Controller\Controller;
+use Xcart\App\Logger\Logger;
 use Xcart\App\Main\Xcart;
 
 class PaymentController extends Controller
@@ -45,7 +46,7 @@ class PaymentController extends Controller
 
     public function success($gateway)
     {
-        x_log_flag('log_payment_paypal_processing', 'PAYPAL', $_REQUEST, true);
+        //x_log_flag('log_payment_paypal_processing', 'PAYPAL', $_REQUEST, true);
 
         if(isset($_GET['success'])) {
             /** @var ProcessorModel $pm */
@@ -75,6 +76,6 @@ class PaymentController extends Controller
 
     public function endpoint($gateway)
     {
-        var_dump($gateway);
+        Xcart::app()->logger->error(serialize($_REQUEST));
     }
 }

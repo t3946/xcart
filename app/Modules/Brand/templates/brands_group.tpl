@@ -1,5 +1,11 @@
 {extends 'brand/layout/group_layout.tpl'}
 
+{block 'heading'}
+    <h1 align="center">
+        Parent Brand: {$parent->brand}
+    </h1>
+{/block}
+
 {block 'content'}
     {smarty_admin_block name='Brands search'}
         <form action="{url 'brand:brand_group' id = $parent->brandid}" method="get" name="search_brand">

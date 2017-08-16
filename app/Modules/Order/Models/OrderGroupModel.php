@@ -62,6 +62,11 @@ class OrderGroupModel extends AutoMetaModel
                 'modelClass' => OrderStatusModel::className(),
                 'null' => false,
             ],
+            'detail_models' => [
+                'class' => HasManyField::className(),
+                'modelClass' => OrderDetailModel::className(),
+                'link' => ['orderid'=>'orderid', 'product_model__manufacturerid'=>'manufacturerid']
+            ],
             'invoices' => [
                 'class' => HasManyField::className(),
                 'modelClass' => OrderGroupInvoiceModel::className(),
@@ -70,6 +75,11 @@ class OrderGroupModel extends AutoMetaModel
             'memos' => [
                 'class' => HasManyField::className(),
                 'modelClass' => OrderGroupMemoModel::className(),
+                'link' => ['orderid'=>'orderid', 'manufacturerid'=>'manufacturerid'],
+            ],
+            'refunds' => [
+                'class' => HasManyField::className(),
+                'modelClass' => OrderGroupRefundModel::className(),
                 'link' => ['orderid'=>'orderid', 'manufacturerid'=>'manufacturerid'],
             ],
             'tracking' => [
@@ -139,16 +149,9 @@ class OrderGroupModel extends AutoMetaModel
         return $this->productModels;
     }
 
-    private $detailsModels = null;
-    public function getOrderDetailModels()
+    public function getRefunds()
     {
-        if (is_null($this->detailsModels)) {
-            $this->detailsModels = OrderDetailModel::objects()
-                ->getQuerySet()
-                ->join('inner join', 'xcart_products', ['productid' => 'p.productid'], 'p')
-                ->filter(['p.manufacturerid' => $this->manufacturerid, 'orderid' => $this->orderid])
-                ->all();
-        }
-        return $this->detailsModels;
+        $refs = $this->refunds->all();
+        return $refs ? array_sum(array_map(function($a){return $a->total_gross;}, $refs)) : 0;
     }
 }

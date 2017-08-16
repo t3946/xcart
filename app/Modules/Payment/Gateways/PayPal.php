@@ -4,6 +4,8 @@ namespace Modules\Payment\Gateways;
 
 use Modules\Core\Models\GlobalConfigModel;
 use Modules\Order\Models\OrderTransactionModel;
+use Modules\Order\Stores\OrderTransactionStore;
+use Xcart\OrderTransaction;
 
 class PayPal extends Gateway
 {
@@ -16,11 +18,10 @@ class PayPal extends Gateway
     {
         parent::init();
 
-        $mode = current(GlobalConfigModel::objects()->filter(['name' => 'debug_mode'])->valuesList(['value'], true));
         $this->gateway->initialize([
-            'testMode' => ($mode == 'Y')
+            'testMode' => $this->test_mode
         ]);
-        switch ($mode) {
+        switch ($this->test_mode) {
             case 'Y' :
                 $this->gateway->setClientId(current(GlobalConfigModel::objects()->filter(['name' => 'sandbox_client_id'])->valuesList(['value'], true)));
                 $this->gateway->setSecret(current(GlobalConfigModel::objects()->filter(['name' => 'sandbox_secret_key'])->valuesList(['value'], true)));
@@ -61,6 +62,8 @@ class PayPal extends Gateway
     {
         switch (strtolower($params['status'])) {
             case OrderTransactionModel::STATUS_AUTHORIZED :
+            case OrderTransactionModel::STATUS_CAPTURED :
+            case OrderTransactionModel::STATUS_PARTIALLY_CAPTURED :
             case OrderTransactionModel::STATUS_PENDING :
             case OrderTransactionModel::STATUS_VOIDED :
             case OrderTransactionModel::STATUS_EXPIRED :
@@ -89,14 +92,19 @@ class PayPal extends Gateway
     public function getState($mode)
     {
         $state = null;
-        if (isset(self::$gatewayMethods[$mode])) {
-            $state = self::$gatewayMethods[$mode]['status'];
+
+        if (!$this->result->isSuccessful()){
+            return OrderTransactionModel::STATUS_FAILED;
         }
+
+        /*if (isset(self::$gatewayMethods[$mode])) {
+            $state = self::$gatewayMethods[$mode]['status'];
+        }*/
         $data = $this->result->getData();
         if (!$state && ($state = $data['state'])) {
             $statuses = array_map(function ($a) {
                 return $a['status'];
-            }, self::$gatewayMethods);
+            }, OrderTransactionStore::$gatewayMethods);
             if (!in_array($state, $statuses)) {
                 switch ($data['intent']) {
                     case 'authorize':

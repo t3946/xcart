@@ -233,11 +233,11 @@ if ($sExtraLog=='Y')
 
 	$cats_path = func_froogle_convert($cats_path, 1000);
 	$cats_path = func_cidev_check_froogle_field($cats_path);
-	$cats_path = iconv("UTF-8", "ISO-8859-1//TRANSLIT", $cats_path);
+	//$cats_path = iconv("UTF-8", "ISO-8859-1//TRANSLIT", $cats_path);
 
 	$cats_path_for_thefind = func_froogle_convert($cats_path_for_thefind, 1000);
 	$cats_path_for_thefind = func_cidev_check_froogle_field($cats_path_for_thefind);
-	$cats_path_for_thefind = iconv("UTF-8", "ISO-8859-1//TRANSLIT", $cats_path_for_thefind);
+	//$cats_path_for_thefind = iconv("UTF-8", "ISO-8859-1//TRANSLIT", $cats_path_for_thefind);
 
 	# Define full description
 	if (!empty($product['fulldescr']))
@@ -250,11 +250,11 @@ if ($sExtraLog=='Y')
 
 	$product['descr'] = func_froogle_convert($product['descr'], 10000);
 	$product['descr'] = func_cidev_check_froogle_field($product['descr']);
-	$product['descr'] = iconv("UTF-8", "ISO-8859-1//TRANSLIT", $product['descr']);
+	//$product['descr'] = iconv("UTF-8", "ISO-8859-1//TRANSLIT", $product['descr']);
 
 	$product['product'] = func_froogle_convert($product['product'], 70);
 	$product['product'] = func_cidev_check_froogle_field($product['product']);
-	$product['product'] = iconv("UTF-8", "ISO-8859-1//TRANSLIT", $product['product']);
+	//$product['product'] = iconv("UTF-8", "ISO-8859-1//TRANSLIT", $product['product']);
 
 	# Define product image
 	$tmp = func_query_first("SELECT id, image_path FROM $sql_tbl[images_P] WHERE $sql_tbl[images_P].id = '$product[productid]'");
@@ -361,10 +361,11 @@ if ($sExtraLog=='Y')
 	if (!empty($newShipping) && $newShipping == 'Y') {
 		$shippings_str_arr = $shippings_google_arr = $aShippingCarrier = [];
 		$shipping_currency = "USD";
-		$oManufacturer = $distributorModel;
+
 		foreach ($xcart_states_US as $k => $v) {
-			$oCart = new Xcart\Cart();
-			$oCart->addObjectToCart(new \Xcart\CartElement($productModel));
+
+            $oCart = new Xcart\Cart();
+            $oCart->addObjectToCart(new \Xcart\CartElement($productModel));
             $oCustomer = new UserModel(
                 [
                     's_country' => $v["country_code"],
@@ -629,9 +630,9 @@ if ($sExtraLog=='Y')
 	$product['mpn'] = $mpn;
 	$product['gpc'] = $gpc;
 	$product['cats_path'] = $cats_path;
-	$product['google_descr'] = iconv("UTF-8", "ISO-8859-1//TRANSLIT",func_froogle_convert(trim($product['descr']), 5000));
-	$product['google_brand'] = iconv("UTF-8", "ISO-8859-1//TRANSLIT",func_froogle_convert(trim($product['brand']), 256));
-	$product['google_product'] = iconv("UTF-8", "ISO-8859-1//TRANSLIT",func_froogle_convert((trim($product['product_froogle']) ? trim($product['product_froogle']) : trim($product['product'])), 80));
+	$product['google_descr'] = func_froogle_convert(trim($product['descr']), 5000);
+	$product['google_brand'] = func_froogle_convert(trim($product['brand']), 256);
+	$product['google_product'] = func_froogle_convert((trim($product['product_froogle']) ? trim($product['product_froogle']) : trim($product['product'])), 80);
 
     if (($distributorModel->d_minimum_order_amount == 'applies_to_all_orders')
         && (($m_order_amount = floatval($distributorModel->d_minimum_order_amount_in_us)) > 0)
@@ -642,7 +643,7 @@ if ($sExtraLog=='Y')
     }
 
 
-	if ($product['shipping_weight']) {
+	if (isset($product['shipping_weight']) && floatval($product['shipping_weight']) > 0) {
 		$product['weight'] = $product['shipping_weight'];
 	}
 	if ($product['shipping_dim_x']||$product['shipping_dim_y']||$product['shipping_dim_z']) {
@@ -1364,6 +1365,8 @@ function SubmitGoogleProductsBatch($gproducts, $service, $MerchantID, $debug_mod
                 $postBody["entries"][$k_counter]["product"]["targetCountry"] = "US";
                 $postBody["entries"][$k_counter]["product"]["channel"] = "online";
 
+                $postBody["entries"][$k_counter]["product"]["shippingLabel"] = $product_info["product"]["shipping_label"];
+
 
 				$product_availability = func_product_availability(false,$product_info["product"]);
 
@@ -1398,13 +1401,13 @@ function SubmitGoogleProductsBatch($gproducts, $service, $MerchantID, $debug_mod
 ##
 				if ($product_info["product"]["dim_z"] > 0 && $product_info["product"]["dim_x"] > 0 && $product_info["product"]["dim_y"] > 0){
 	                $postBody["entries"][$k_counter]["product"]["shippingHeight"]["unit"] = "in";
-        	        $postBody["entries"][$k_counter]["product"]["shippingHeight"]["value"] = $product_info["product"]["dim_z"];
+        	        $postBody["entries"][$k_counter]["product"]["shippingHeight"]["value"] = min($product_info["product"]["dim_z"],150);
 
 	                $postBody["entries"][$k_counter]["product"]["shippingLength"]["unit"] = "in";
-	                $postBody["entries"][$k_counter]["product"]["shippingLength"]["value"] = max($product_info["product"]["dim_x"], $product_info["product"]["dim_y"]);
+	                $postBody["entries"][$k_counter]["product"]["shippingLength"]["value"] = min(max($product_info["product"]["dim_x"], $product_info["product"]["dim_y"]), 150);
 
 	                $postBody["entries"][$k_counter]["product"]["shippingWidth"]["unit"] = "in";
-        	        $postBody["entries"][$k_counter]["product"]["shippingWidth"]["value"] = min($product_info["product"]["dim_x"], $product_info["product"]["dim_y"]);
+        	        $postBody["entries"][$k_counter]["product"]["shippingWidth"]["value"] = min(min($product_info["product"]["dim_x"], $product_info["product"]["dim_y"]),150);
 			}
 ##
 #

@@ -1,6 +1,12 @@
 <?php
 
+use Mindy\QueryBuilder\Expression;
+use Modules\Order\Helpers\OrderTagEventHelper;
+use Modules\Order\Helpers\OrderTransactionHelper;
 use Modules\Order\Models\OrderGroupModel;
+use Modules\Order\Stores\OrderStore;
+use Modules\Order\Stores\OrderTransactionStore;
+use Modules\Payment\Helpers\PaymentHelper;
 use \Xcart\OrderGroup;
 use \Xcart\SQLBuilder;
 use \Xcart\OrderTransactions;
@@ -36,40 +42,39 @@ $start_time = new DateTime('now');
 $log_text = " * * *  Cron started  * * * ";
 func_backprocess_log(LOG_CATEGORY, $log_text);
 
-$aOrderGroups = OrderGroup::model()->findAll(
-    SQLBuilder::getInstance()
-        ->addCondition("cb_status ='P'")
-        ->addCondition("cb_update_datetime > DATE_SUB(NOW(), INTERVAL 1 MONTH)")
-        ->addInnerJoin('order_transactions', 'ot', 'main.orderid = ot.orderid')
-        ->addCondition("ot.paymentid IN (5, 17, 21, 100)")
-        ->addGroupBy('orderid')
-        ->addOrderBy('cb_update_datetime DESC'));
+$params = [
+    'cb_status' => 'P',
+    'cb_update_datetime__gt' => new Expression('DATE_SUB(NOW(), INTERVAL 1 MONTH)'),
+    'ot.paymentid__in' => [5, 17, 21, 100]
+];
+if ($groups = OrderGroupModel::objects()->getQuerySet()
+    ->join('inner join', 'xcart_order_transactions', ['orderid' => 'ot.orderid'], 'ot')
+    ->filter($params)
+    ->group(['orderid'])
+    ->order(['-cb_update_datetime'])
+    ->all()) {
 
-if (!empty($aOrderGroups)) {
-    $countOrders = count($aOrderGroups);
-    func_backprocess_log(LOG_CATEGORY, "Processing {$countOrders} orders.");
-    foreach ($aOrderGroups as $oOrderGroup) {
-        $fOrderGroupTotalAmount = 0;
-        $aTransactions = OrderTransactions::getOrderTransactionsByOrderIdAndStatus($oOrderGroup->getOrderId(), ['completed']);
-        if (!empty($aTransactions)) {
-            foreach ($aTransactions as $oTransaction) {
-                try {
-                    $oPayPalTransaction = (new Paypal())->getTransaction($oTransaction->getField('transaction_id'));
-                    if ($oPayPalTransaction->getState() == 'completed') {
-                        $fOrderGroupTotalAmount += floatval($oPayPalTransaction->getAmount()->total);
-                    }
-                } catch (Exception $ex) {
-                    func_backprocess_log(LOG_CATEGORY, "Get transaction error. Order ID:{$oOrderGroup->getOrderId()}. ".$ex->getMessage());
-                }
+    $countOrders = count($groups);
+    func_backprocess_log(LOG_CATEGORY, "Processing {$countOrders} order groups.");
+
+    foreach ($groups as $group) {
+
+        $order = $group->order;
+
+        foreach ($order->transactions as $trx) {
+            try {
+                OrderTransactionStore::lookupSelf($trx);
+            } catch (Exception $ex) {
+
+                func_backprocess_log(LOG_CATEGORY, "Lookup transaction error. TXN_ID: {$trx->transaction_id} Order ID:{$group->orderid}. " . $ex->getMessage());
+
             }
         }
-        if (round($fOrderGroupTotalAmount, 2) != $oOrderGroup->getOrderInstance()->getOrderTotalGross()){
-            $oAttentionTag = new AttentionTag(['status_id' => 44]);
-            if (!($oOrderGroup->getOrderInstance()->isAttentionTagSet($oAttentionTag->getStatusId()))) {
-                Modules\Order\Helpers\OrderTagEventHelper::orderTagEvent($oAttentionTag->getStatusId(), $oOrderGroup->getOrderId());
-                $sLog = "Difference in OrderId: " . $oOrderGroup->getOrderId() . ". TransactionsTotal(" . $fOrderGroupTotalAmount . ") - OrderTotal(" . $oOrderGroup->getOrderInstance()->getOrderTotalGross() . ")";
-                func_backprocess_log(LOG_CATEGORY, $sLog);
-            }
+
+        $store = new OrderStore($order);
+        if ($store->getAmountDeficit() != 0) {
+            OrderTagEventHelper::orderTagEvent(44, $order->orderid);
+            func_backprocess_log(LOG_CATEGORY, "Difference in OrderId: " . $order->orderid . " Order Deficit: {$store->getAmountDeficit()}");
         }
     }
 }

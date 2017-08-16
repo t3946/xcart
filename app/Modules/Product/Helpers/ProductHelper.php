@@ -32,7 +32,7 @@ class ProductHelper
     public static function getFileNameFromDownloadLink($imgLink, $allowExtensions = [], $defaultExtension)
     {
         $result = null;
-        $path = parse_url($imgLink);
+        $path = parse_url(strtolower($imgLink));
         if (!empty($path)) {
             $fileName = basename($path['path']);
             $filename = pathinfo($fileName);

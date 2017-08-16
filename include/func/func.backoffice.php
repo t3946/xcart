@@ -462,11 +462,12 @@ function func_cidev_check_froogle_field($field){
 	global $config;
 
 //	$field = str_replace('&nbsp;', ' ', $field);
-	$field = htmlspecialchars_decode($field);
-	$field = str_replace('”', '"', $field);
-	$field = str_replace('™', '&trade;', $field);
+	$field = htmlentities($field);
+	//$field = str_replace('”', '"', $field);
+	//$field = str_replace('™', '&trade;', $field);
 	$field = preg_replace('/[^\w\s\~\'\"\!\@\#\$\%\^\&\*\(\)\[\]\-\=\+\.\,\:\;\|\/\?\<\>\\\]/', '', $field);
-	$field = str_replace('&trade;', '™', $field);
+	//$field = str_replace('&trade;', '™', $field);
+    $field = html_entity_decode($field);
 
 	if (!empty($config["Froogle"]["cidev_froogle_del_char"])){
 		$cidev_froogle_del_char_arr = explode(",", $config["Froogle"]["cidev_froogle_del_char"]);

@@ -1,6 +1,7 @@
 <?php
 namespace Modules\Product\Models;
 
+use Modules\Amazon\Models\AmazonFbaMissingSkuModel;
 use Modules\Brand\Models\BrandModel;
 use Modules\Cart\Interfaces\ICartItem;
 use Modules\Distributor\Models\DistributorModel;
@@ -141,6 +142,11 @@ class ProductModel extends AutoMetaModel implements ICartItem
                 'class' => IntField::className(),
                 'null' => false,
                 'default' => 0
+            ],
+            'missing_products' => [
+                'class' => HasManyField::className(),
+                'modelClass' => AmazonFbaMissingSkuModel::className(),
+                'link' => ['productid' => 'productid']
             ],
         ];
     }

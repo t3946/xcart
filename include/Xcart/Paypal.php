@@ -16,6 +16,7 @@ class Paypal
 {
     private $sAccessToken = null;
     private $apiContext = null;
+    private $paypalEmail = null;
 
     public function __construct()
     {
@@ -27,9 +28,11 @@ class Paypal
         global $config;
         $USERPWD_username_ClientId = $config['Paypal_API']['live_client_id'];
         $USERPWD_password_Secret = $config['Paypal_API']['live_secret_key'];
+        $this->paypalEmail = "paypal@s3stores.com";
         if ($config['Paypal_API']['debug_mode'] == "Y") {
             $USERPWD_username_ClientId = $config['Paypal_API']['sandbox_client_id'];
             $USERPWD_password_Secret = $config['Paypal_API']['sandbox_secret_key'];
+            $this->paypalEmail = "igor@s3stores.com";
         }
         $this->apiContext = new ApiContext(
             new OAuthTokenCredential(
@@ -73,7 +76,7 @@ class Paypal
                 ->setNote($aParams['paypal_request_subject']);
 
             $invoice->getMerchantInfo()
-                ->setEmail("paypal@s3stores.com")
+                ->setEmail($this->paypalEmail)
                 ->setBusinessName("S3 Stores, Inc.")
                 ->setPhone(new Phone())
                 ->setAddress(new InvoiceAddress());
