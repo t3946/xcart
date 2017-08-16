@@ -11,5 +11,10 @@ return [
         'target' => ['\Modules\Product\Controllers\GroupController', 'group_list'],
         'name' => 'group_list'
     ],
+    [
+        'route' => '/group/{i:id}',
+        'target' => ['\Modules\Product\Controllers\GroupController', 'group'],
+        'name' => 'group'
+    ],
 
 ];

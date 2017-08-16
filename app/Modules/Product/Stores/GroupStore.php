@@ -15,6 +15,15 @@ class GroupStore extends BaseStore
     public $defaultPagerPageSize = 50;
     private $data = null;
     private $pager = null;
+    private $model = null;
+
+    public function __construct(BrandModel $model = null)
+    {
+
+        if ($model) {
+            $this->model = $model;
+        }
+    }
 
     public function populate(array $data)
     {
@@ -41,6 +50,11 @@ class GroupStore extends BaseStore
             'p.forsale' => 'Y',
             'sf.sfid' => 0,
         ];
+
+        if ($this->model) {
+            $filter['brandid'] = $this->model->brandid;
+        }
+
         $qs->filter($filter);
 
         $qs->join('inner join', 'xcart_products', ['brandid' => 'p.brandid'], 'p');
@@ -56,6 +70,11 @@ class GroupStore extends BaseStore
     public function getModels()
     {
         return $this->prepareModels($this->getPager()->paginate());
+    }
+
+    public function getLevels()
+    {
+        return $this->prepareModels($this->getBrandQuerySet()->all());
     }
 
     public function getBrands()
