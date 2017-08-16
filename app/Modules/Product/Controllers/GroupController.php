@@ -12,8 +12,10 @@ class GroupController extends PrototypeAdminController
     {
         $store = new GroupStore();
 
-        $brands = $store->getBrands();
-
-        var_dump($brands);
+        echo $this->renderInternal('group/group_list.tpl',
+            [
+                'brands' => $store->getBrands(),
+            ]
+        );
     }
 }

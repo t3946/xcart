@@ -14,6 +14,7 @@ class GroupStore extends BaseStore
 {
     public $defaultPagerPageSize = 50;
     private $data = null;
+    private $pager = null;
 
     public function populate(array $data)
     {
@@ -32,16 +33,20 @@ class GroupStore extends BaseStore
     {
         $qs = BrandModel::objects()->getQuerySet();
 
-        $qs->select(['*', 'count' => new Expression('count(p.productid)')]);
+        $phrase = new Expression("SUBSTRING_INDEX (p.product,' ',1)");
 
-        $filter['p.forsale'] = 'Y';
-        $filter['sf.sfid'] = 0;
+        $qs->select(['*', 'count' => new Expression('count(p.productid)'), 'group_phrase' => $phrase]);
+
+        $filter = [
+            'p.forsale' => 'Y',
+            'sf.sfid' => 0,
+        ];
         $qs->filter($filter);
 
         $qs->join('inner join', 'xcart_products', ['brandid' => 'p.brandid'], 'p');
         $qs->join('inner join', 'xcart_products_sf', ['p.productid' => 'sf.productid'], 'sf');
 
-        $qs->group(['brandid', (new Expression("SUBSTRING_INDEX (p.product,' ',1)"))->toSql()]);
+        $qs->group(['brandid', $phrase->toSql()]);
         $qs->order(['-count']);
 
 
@@ -55,7 +60,7 @@ class GroupStore extends BaseStore
 
     public function getBrands()
     {
-        return $this->prepareModels(new Pagination($this->getBrandQuerySet(), ['pageSize' => $this->defaultPagerPageSize], new QuerySetDataSource()));
+        return $this->prepareModels($this->getPager()->paginate());
     }
 
     public function prepareModels($models)
@@ -69,7 +74,7 @@ class GroupStore extends BaseStore
     public function getPager()
     {
         if (!$this->pager) {
-            $this->pager = new Pagination($this->getQuerySet(), ['pageSize' => $this->defaultPagerPageSize], new QuerySetDataSource());
+            $this->pager = new Pagination($this->getBrandQuerySet(), ['pageSize' => $this->defaultPagerPageSize], new QuerySetDataSource());
         }
 
         return $this->pager;
