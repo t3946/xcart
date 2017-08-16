@@ -116,6 +116,7 @@ class UPS extends ShippingProcessor
             $aShippingRates = $this->getShippingRatesEntities();
             if (!empty($aShippingRates)) {
                 foreach ($aShippingRates as $oShippingRate) {
+                    $oShippingRate->setProcessor($this);
                     if ($oShippingRate->getShippingId() == $this->ups_approximation_shipping_methods[$this->oManufacturer->m_country]) {
                         /*get aproximation rates for UPS Ground*/
                         $oApproximationRates = ApproximationShippingRates::model()->find(

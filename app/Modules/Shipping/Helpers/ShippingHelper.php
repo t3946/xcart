@@ -22,9 +22,11 @@ class ShippingHelper
      * @param UserModel $user
      * @param DistributorModel $distributor
      * @param array $products
+     * @param null|float $weight_ratio
+     * @param bool $use_cache
      * @return ShippingRate[]
      */
-    public static function getShippingRates(UserModel $user, DistributorModel $distributor, $products)
+    public static function getShippingRates(UserModel $user, DistributorModel $distributor, $products, $weight_ratio = null, $use_cache = true)
     {
         /** @var ShippingRate[] $shipping_rates */
         $shipping_rates = [];
@@ -35,7 +37,7 @@ class ShippingHelper
                 $oCart->addObjectToCart(new \Xcart\CartElement($product['model'], $product['qty']));
             }
             try {
-                if ($aShippingZones = (new ShippingModel())->getShippingRates($user, $distributor, $oCart)) {
+                if ($aShippingZones = (new ShippingModel())->getShippingRates($user, $distributor, $oCart, false, $weight_ratio, $use_cache)) {
                     $shipping_rates = reset($aShippingZones);
                 }
             } catch (\Exception $e) {
@@ -47,11 +49,19 @@ class ShippingHelper
         return $shipping_rates;
     }
 
-    public static function getMinShippingRate(UserModel $user, DistributorModel $distributor, $products)
+    /**
+     * @param UserModel $user
+     * @param DistributorModel $distributor
+     * @param array $products
+     * @param null|float $weight_ratio
+     * @param bool $use_cache
+     * @return null|ShippingRate
+     */
+    public static function getMinShippingRate(UserModel $user, DistributorModel $distributor, $products, $weight_ratio = null, $use_cache = true)
     {
         /** @var ShippingRate $shipping_rate */
         $shipping_rate = null;
-        if ($shipping_rates = static::getShippingRates($user, $distributor, $products)) {
+        if ($shipping_rates = static::getShippingRates($user, $distributor, $products, $weight_ratio, $use_cache)) {
             $shipping_rate = reset($shipping_rates);
         }
         return $shipping_rate;
@@ -81,9 +91,10 @@ class ShippingHelper
      * @param integer $product_id
      * @param integer $qty
      * @param StateModel $stateModel
+     * @param float $weight_ratio
      * @return ShippingRate|null
      */
-    public static function getStateMinShipping($product_id, $qty, $stateModel)
+    public static function getStateMinShipping($product_id, $qty, $stateModel, $weight_ratio = null, $use_cache = true)
     {
         $result = null;
 
@@ -96,7 +107,7 @@ class ShippingHelper
                 's_city' => 'New City'
             ]);
 
-            $result = ShippingHelper::getMinShippingRate($userModel, $product_model->distributor, [['model' => $product_model, 'qty' => intval($qty)]]);
+            $result = ShippingHelper::getMinShippingRate($userModel, $product_model->distributor, [['model' => $product_model, 'qty' => intval($qty)]], $weight_ratio, $use_cache);
         }
 
         return $result;

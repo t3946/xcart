@@ -3,6 +3,7 @@
 namespace Xcart;
 
 use Modules\Shipping\Models\ShippingProductModel;
+use Xcart\Shipping\ShippingProcessor;
 
 class ShippingRate extends Data
 {
@@ -13,6 +14,10 @@ class ShippingRate extends Data
     private $oCart = null;
     private $fCartShippingWeight = null;
     private $fAdditionalShippingCharge = 0;
+    /**
+     * @var ShippingProcessor $oProcessor
+     */
+    private $oProcessor = null;
     /**
      * @var ShippingRate[] $aAddedShippingRates
      */
@@ -152,6 +157,31 @@ class ShippingRate extends Data
         return $this->oCart;
     }
 
+    public function getShippingWeightRatio($oCartElement)
+    {
+        $weightRatio = null;
+
+        if (!is_null($this->oProcessor)) {
+            $weightRatio = $this->oProcessor->weightRatio;
+        }
+
+        if (is_null($weightRatio)) {
+            if ($productShipping = ShippingProductModel::objects()->get(
+                [
+                    'product_id' => $oCartElement->getProduct()->productid,
+                    'shipping_rate_id' => $this->rateid
+                ]
+            )) {
+                $weightRatio = $productShipping->weight_ratio;
+            }
+        }
+        if (is_null($weightRatio)) {
+            $weightRatio = 1;
+        }
+
+        return $weightRatio;
+    }
+
     /**
      * @return float
      */
@@ -164,15 +194,7 @@ class ShippingRate extends Data
                 /** @var CartElement $oCartElement */
                 foreach ($aCartObjects as $oCartElement) {
 
-                    $weightRatio = 1;
-                    if ($productShipping = ShippingProductModel::objects()->get(
-                        [
-                            'product_id' => $oCartElement->getProduct()->productid,
-                            'shipping_rate_id' => $this->rateid
-                        ]
-                    )){
-                        $weightRatio = $productShipping->weight_ratio;
-                    }
+                    $weightRatio = $this->getShippingWeightRatio($oCartElement);
 
                     $this->fCartShippingWeight +=
                         $this->getShippingEntity()
@@ -254,5 +276,10 @@ class ShippingRate extends Data
                 'shipping_charge' => $this->getShippingCharge(),
                 'shipping_charge_before_map' => $this->getShippingChargeBeforeMap()
             ];
+    }
+
+    public function setProcessor($processor)
+    {
+        $this->oProcessor = $processor;
     }
 }

@@ -225,10 +225,12 @@ SQL;
      * @param Manufacturer|DistributorModel $oManufacturer
      * @param Cart $oCart
      * @param bool $bGetOnlyApproximationRates
-     * @return ShippingRate[]|null
+     * @param null $weight_ratio
+     * @param bool $use_cache
+     * @return null|ShippingRate[]
      * @throws \Exception
      */
-    public function getShippingRates($oCustomer, $oManufacturer, Cart $oCart, $bGetOnlyApproximationRates = false)
+    public function getShippingRates($oCustomer, $oManufacturer, Cart $oCart, $bGetOnlyApproximationRates = false, $weight_ratio = null, $use_cache = true)
     {
         $aResult = null;
         $aShippingZoneRatesPriority = [];
@@ -249,6 +251,8 @@ SQL;
                         /** @var ShippingProcessor $oShippingProcessor */
                         foreach ($aShippingZonesArr as $oShippingProcessor) {
                             $oShippingProcessor->setGetOnlyApproximationRates($bGetOnlyApproximationRates);
+                            $oShippingProcessor->setWeigtRatio($weight_ratio);
+                            $oShippingProcessor->setUseCache($use_cache);
                             $aRates = $oShippingProcessor->getShippingRates();
                             if (!empty($aRates)) {
                                 $aShippingZoneRatesPriority[$oShippingProcessor->getPriority()][] = $aRates;
