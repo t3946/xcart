@@ -58,6 +58,8 @@ abstract class ShippingProcessor
 
     protected $bGetOnlyApproximationRates = false;
 
+    protected $useCache = true;
+
     /**
      * @return boolean
      */
@@ -83,6 +85,7 @@ abstract class ShippingProcessor
                 if (!empty($this->aShippingRates)) {
                     foreach ($this->aShippingRates as $oShippingRate) {
                         $oShippingRate->setCart($this->getCart());
+                        $oShippingRate->setProcessor($this);
                     }
                     usort($this->aShippingRates, ['\Xcart\Shipping\ShippingProcessor', 'sortShippingRatesByCostAsc']);
                     $this->removeFromCart();
@@ -158,6 +161,7 @@ abstract class ShippingProcessor
     {
         $fCartShippingWeight = 0;
         $aCartObjects = $this->getCart()->getElements();
+
         if (!empty($aCartObjects)) {
             /** @var CartElement $oCartElement */
             foreach ($aCartObjects as $oCartElement) {
@@ -263,6 +267,10 @@ abstract class ShippingProcessor
 
     protected function saveShippingQuotesCached()
     {
+        if (!$this->useCache) {
+            return;
+        }
+
         if (!empty($this->aShippingRates)) {
             $oCustomer = $this->getCustomer();
             $oManufacturer = $this->getManufacturer();
@@ -308,6 +316,8 @@ abstract class ShippingProcessor
 
     protected function getShippingQuotesCached()
     {
+        if (!$this->useCache) {return;}
+
         $aProductFilter = [];
         $oCustomer = $this->getCustomer();
         $oManufacturer = $this->getManufacturer();
@@ -393,7 +403,7 @@ abstract class ShippingProcessor
                 }
             }
         }
-        return $this->aShippingRates;
+        return;
     }
 
     public function setGetOnlyApproximationRates($bValue)
@@ -407,5 +417,10 @@ abstract class ShippingProcessor
             $this->aShippingMethods[$oShipping->getShippingId()] = $oShipping;
         }
         return $this;
+    }
+
+    public function setUseCache($value)
+    {
+        $this->useCache = $value;
     }
 }
