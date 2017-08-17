@@ -1,0 +1,16 @@
+.tree_cell {
+
+  width: 12px;
+  height: 12px;
+  background-repeat: no-repeat;
+  cursor: pointer;
+  background-image: url('/skin1_kolin/images/plus.gif');
+
+  &.open {
+    background-image: url('/skin1_kolin/images/minus.gif');
+  }
+
+  a {
+    text-decoration: none;
+  }
+}
