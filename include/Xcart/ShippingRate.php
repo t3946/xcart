@@ -14,10 +14,7 @@ class ShippingRate extends Data
     private $oCart = null;
     private $fCartShippingWeight = null;
     private $fAdditionalShippingCharge = 0;
-    /**
-     * @var ShippingProcessor $oProcessor
-     */
-    private $oProcessor = null;
+    private $useMapPrice = true;
     /**
      * @var ShippingRate[] $aAddedShippingRates
      */
@@ -108,7 +105,7 @@ class ShippingRate extends Data
 
             //$this->fShippingCharge += $this->fAdditionalShippingCharge;
             $this->fShippingCharge += $this->getCartShippingFreight();
-            if ($oCart->getExtraMarginValue() > 0) {
+            if ($this->useMapPrice && $oCart->getExtraMarginValue() > 0) {
                 $this->fShippingChargeBeforeMAP = $this->fShippingCharge;
                 $this->fShippingCharge -= $oCart->getExtraMarginValue();
                 $this->fShippingCharge = max($this->fShippingCharge, 0);
@@ -252,8 +249,8 @@ class ShippingRate extends Data
             ];
     }
 
-    public function setProcessor($processor)
+    public function setUseMapPRice($value)
     {
-        $this->oProcessor = $processor;
+        $this->useMapPrice = $value;
     }
 }
