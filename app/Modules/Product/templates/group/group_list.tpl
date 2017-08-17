@@ -10,7 +10,7 @@
 
         {if $brands}
             {foreach $brands as $brand}
-                {include 'group/product/_group.tpl' brand=$brand index=$brand@index}
+                {include 'group/product/group.tpl' brand=$brand group_phrase=$brand->getNotModelAttribute('group_phrase') count=$brand->getNotModelAttribute('count') index=$brand@index}
             {/foreach}
         {else}
             <tr>
@@ -23,11 +23,22 @@
 {block 'js'}
     <script type="text/javascript">
         $('.product_group').on('click', '.tree_cell', function(){
-            var url_group_level = '{url 'product:group' id=$batch_id}';
+            var th = $(this);
 
-            $(this).toggleClass('open');
-            if ($(this).hasClass('open')) {
-                $.get()
+            th.toggleClass('open');
+
+            if (th.hasClass('open')) {
+                $.get(
+                    th.data('url'),
+                    {
+                        level: parseInt(th.data('level')) + 1,
+                        group_phrase: th.data('group-phrase'),
+                        ajax: true
+                    },
+                    function(data) {
+                        console.log(data)
+                    }
+                );
             }
         })
     </script>

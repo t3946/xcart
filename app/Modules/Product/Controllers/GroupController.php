@@ -24,14 +24,24 @@ class GroupController extends PrototypeAdminController
     {
         if ($brand = BrandModel::objects()->get(['brandid' => $id])) {
 
-            $store = new GroupStore($brand);
+            $store = new GroupStore($_GET, $brand);
 
-            echo $this->renderInternal('group/group_list.tpl',
-                [
-                    'brands' => $store->getLevels(),
-                ]
-            );
-
+            if (isset($store->data['ajax'])) {
+                $brand = $store->getLevel();
+                echo $this->render('group/product/group.tpl',
+                    [
+                        'brand' => $brand,
+                        'group_phrase' => $brand->getNotModelAttribute('group_phrase'),
+                        'count' => $brand->getNotModelAttribute('count'),
+                    ]
+                );
+            } else {
+                echo $this->renderInternal('group/group_list.tpl',
+                    [
+                        'brands' => $store->getLevels(),
+                    ]
+                );
+            }
         }
     }
 }

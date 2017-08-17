@@ -13,21 +13,26 @@ use Xcart\App\Store\BaseStore;
 class GroupStore extends BaseStore
 {
     public $defaultPagerPageSize = 50;
-    private $data = null;
+    public $data = null;
     private $pager = null;
     private $model = null;
 
-    public function __construct(BrandModel $model = null)
+    public function __construct($data = null, BrandModel $model = null)
     {
-
         if ($model) {
             $this->model = $model;
         }
+
+        $this->populate($data);
     }
 
     public function populate(array $data)
     {
         $this->data = $data;
+
+        if (!isset($data['level'])) {
+            $this->data['level'] = 1;
+        }
     }
 
     public function getQuerySet()
@@ -42,7 +47,7 @@ class GroupStore extends BaseStore
     {
         $qs = BrandModel::objects()->getQuerySet();
 
-        $phrase = new Expression("SUBSTRING_INDEX (p.product,' ',1)");
+        $phrase = new Expression("SUBSTRING_INDEX (p.product,' ', {$this->data['level']})");
 
         $qs->select(['*', 'count' => new Expression('count(p.productid)'), 'group_phrase' => $phrase]);
 
@@ -53,6 +58,11 @@ class GroupStore extends BaseStore
 
         if ($this->model) {
             $filter['brandid'] = $this->model->brandid;
+        }
+
+        if ($this->data['level'] > 1) {
+            $lmo = $this->data['level']-1;
+            $filter[(new Expression("SUBSTRING_INDEX(p.product, ' ', {$lmo})"))->toSQL()] = $this->data['group_phrase'];
         }
 
         $qs->filter($filter);
@@ -70,6 +80,11 @@ class GroupStore extends BaseStore
     public function getModels()
     {
         return $this->prepareModels($this->getPager()->paginate());
+    }
+
+    public function getLevel()
+    {
+        return $this->prepareModels($this->getBrandQuerySet()->limit(1)->get());
     }
 
     public function getLevels()
