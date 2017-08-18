@@ -25,7 +25,7 @@ window.endless_paginate = ()=>{
                     $this.remove();
                 }
 
-                $('.page_count').html(data.page_count);
+                $('.page_count_wrap').html(data.page_count);
 
                 $(window).trigger('resize');
             },

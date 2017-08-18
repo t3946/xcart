@@ -49,8 +49,8 @@
                     {insert "catalog/parts/_filter_reset.tpl"}
                 </div>
 
-                <div class="mobile_page_count hide-for-large">
-                    {insert 'catalog/parts/_page_count.tpl'}
+                <div class="mobile_page_count hide-for-large page_count_wrap">
+                    {*{insert 'catalog/parts/_page_count.tpl'}*}
                 </div>
 
                 <div class="product-items tile-view" itemscope itemprop="mainEntity" itemtype="http://schema.org/OfferCatalog">

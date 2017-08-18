@@ -100,9 +100,12 @@ abstract class AbstractCatalogController extends FrontendController
 
         $fh = new ProductFilterHelper($pqs, $this->getRequest()->get->get('filter', []), $this->filters);
 
-        $pqs = $fh->getFiltrateQS();
 
-        $pqs = $this->getSortedQS($pqs);
+        if ($this->getRequest()->getIsAjax()) {
+            $pqs = $fh->getFiltrateQS();
+            $pqs = $this->getSortedQS($pqs);
+        }
+
         $pager = $this->getPager($pqs);
 
         if ($this->getRequest()->getIsAjax())

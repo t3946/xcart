@@ -55,7 +55,7 @@
                             </div>
                             <div class="tcell cart_quantity_extended">
                                 <div class="tcell cart_quantity">
-                                    <div>
+                                    <div class="inline-block">
                                         <div class="quantity-group">
                                             <a href="{url 'catalog:cart:quantity:dec' key=$key}" class="btn dec">-</a>
                                             <input type="number" name="quantity"
