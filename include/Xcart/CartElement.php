@@ -12,7 +12,6 @@ class CartElement
      */
     private $oProduct = null;
     private $iQty = 0;
-    private $weightRatio = null;
 
     public function __construct($oProduct, $iQty = 1)
     {
@@ -47,20 +46,17 @@ class CartElement
 
     public function getShippingWeightRatio($rate_id)
     {
-        if (is_null($this->weightRatio)) {
+        $weightRatio = 1;
 
-            $this->weightRatio = 1;
-
-            if ($productShipping = ShippingProductModel::objects()->get(
-                [
-                    'product_id' => $this->getProduct()->productid,
-                    'shipping_rate_id' => $rate_id
-                ]
-            )) {
-                $this->weightRatio = $productShipping->weight_ratio;
-            }
+        if ($productShipping = ShippingProductModel::objects()->get(
+            [
+                'product_id' => $this->getProduct()->productid,
+                'shipping_rate_id' => $rate_id
+            ]
+        )) {
+            $weightRatio = $productShipping->weight_ratio;
         }
 
-        return $this->weightRatio;
+        return $weightRatio;
     }
 }
