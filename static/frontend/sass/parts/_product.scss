@@ -11,6 +11,7 @@ $default_qg_lheight: #{$default_qg_height - 1};
   flex-wrap: nowrap;
   display: flex;
   align-items: center;
+  max-width: rem-calc(126);
 
   .btn {
     flex: 0 0 rem-calc(22);

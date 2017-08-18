@@ -46,69 +46,59 @@ export default class LazyImageLoad
 
         if ($target.attr('data-background')) {
             this.stack.push(()=>{
-
-                let $tload = $(document.createElement('img'));
                 let background = $target.attr('data-background');
 
                 $target.attr('data-background', null);
                 $target.addClass('lazy-bg');
 
-                $tload.on('load', () => {
-                    setTimeout(()=>{
-                        $target.css({'background-image': 'url('+background+')'});
-                        this.inLoad--;
-
-                        setTimeout(()=>{
-                            $target.addClass('lazy-bg-loaded');
-                        }, 200);
-                    }, 20);
-
-                });
-
-
-                this.observer.unobserve(target.element);
-                this.inLoad++;
-                $tload.attr('src', background);
+                this.onLoad(background,
+                    ()=>{ $target.css({'background-image': 'url('+background+')'}); },
+                    ()=>{ $target.addClass('lazy-bg-loaded'); }
+                );
             });
 
         }
 
         if ($target.attr('data-original')) {
             this.stack.push(()=>{
-
                 $target.removeClass('lazy-img');
-
                 let original = $target.attr('data-original');
                 let hasUpdate = ($target.src !== original);
 
                 if (hasUpdate) {
                     $target.attr('src', '');
                     $target.attr('data-original', null);
-                    let $tload = $(document.createElement('img'));
 
-                    $tload.on('load', () => {
-                        setTimeout(()=>{
-                            $target.attr('src', original);
-                            this.inLoad--;
-
-                            setTimeout(()=>{
-                                $target.addClass('lazy-loaded');
-
-                                if (typeof($target.attr('usemap')) !== 'undefined' && $.fn.rwdImageMaps) {
-                                    $target.rwdImageMaps();
-                                }
-                            }, 200);
-                        }, 20);
-                    });
-
-                    this.observer.unobserve(target.element);
-                    this.inLoad++;
-                    $tload.attr('src', original);
+                    this.onLoad(original,
+                        ()=>{ $target.attr('src', original); },
+                        ()=>{ $target.addClass('lazy-loaded');
+                            if (typeof($target.attr('usemap')) !== 'undefined' && $.fn.rwdImageMaps) {
+                                $target.rwdImageMaps();
+                            }
+                        }
+                    );
                 }
             });
         }
 
+        this.observer.unobserve(target.element);
         $(document).trigger('lil.tick');
+    }
+
+    onLoad(image, call1, call2)
+    {
+        let element = document.createElement('img');
+
+        element.onload = () => {
+            setTimeout(()=>{call1()}, 20);
+            setTimeout(()=>{call2()}, 200);
+
+            this.inLoad--;
+            element.remove();
+        };
+
+        this.inLoad++;
+        element.src = image;
     }
 
     attach(elements) {
@@ -122,10 +112,10 @@ export default class LazyImageLoad
             this.runTimer();
         });
 
-        this.intervalSearch = setInterval(()=>{ this.search(); }, 3000);
+        this.intervalSearch = setInterval(()=>{ $(document).trigger('lil.observe'); }, 3000);
     }
 
-    runTimer(load_all = false, time_out = 100) {
+    runTimer(load_all = false, time_out = 50) {
         if (this.stack.length && !this.intervalLoad) {
             this.intervalLoad = setInterval(()=>{
                 this.each(load_all);
@@ -149,16 +139,13 @@ export default class LazyImageLoad
                 this.observer.observe(items[i]);
             }
         }
-
-        $(document).trigger('lil.tick');
     }
 
     each(load_all = false)
     {
         while (this.stack.length) {
             if (this.maxLoad >= this.inLoad || load_all) {
-                let el = (this.inLoad % 2) ? this.stack.pop():this.stack.shift();
-                el();
+                ((this.inLoad % 2) ? this.stack.pop():this.stack.shift())();
             }
             else {
                 break;

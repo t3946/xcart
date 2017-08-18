@@ -41,14 +41,16 @@ import documentReady from "./utils/documentReady";
     Waves.attach('.waves');
     Waves.init();
 
-    $(document).on('swipe', function(e, Dx, Dy) {
+    $(document).on('swipe', function(e, Dx, Dy, angle) {
         if (isMedia('medium') && isTouch()) {
 
-            if (Dx === 1) { //right
-                $('#offCanvasLeft').foundation('open');
-            }
-            else if (Dx === -1) {
-                $('#offCanvasLeft').foundation('close');
+            if (angle < 15) {
+                if (Dx === 1 && Dy === 0) { //right
+                    $('#offCanvasLeft').foundation('open');
+                }
+                else if (Dx === -1 && Dy === 0) {
+                    $('#offCanvasLeft').foundation('close');
+                }
             }
         }
     });

@@ -11,7 +11,14 @@ class CacheCompiler
 {
     use ClassNames;
 
+    private static $instance;
     private static $_keys = [];
+
+
+    public static function getInstance()
+    {
+        return self::$instance ?: self::$instance = new static();
+    }
 
     public static function blockCacheOpen(Tokenizer $tokens, Tag $tag)
     {
@@ -27,12 +34,6 @@ class CacheCompiler
 
         if (isset($params['forDomain'])) {
             $forDomain = (bool)$params['forDomain'];
-        }
-
-        if ($forDomain) {
-            /** @var SitesModule $module */
-            $module = Xcart::app()->getModule('Sites');
-            $key .= ".':site=".$module->getSite()->storefrontid ."'";
         }
 
         //@TODO: Multiple block run
@@ -51,6 +52,7 @@ class CacheCompiler
 
         $tag['key'] = $key;
         $tag['time'] = $time ?: 'null';
+        $tag['forDomain'] = $forDomain ? 'true' : 'false';
 
         self::$_keys[$key] = true;
 
@@ -61,13 +63,21 @@ class CacheCompiler
     {
         $code = /** @lang PHP */'
 <?php
-if (!$output = \Xcart\App\Main\Xcart::app()->cache->get('. $tag['key'] .')) {
+$app = \Xcart\App\Main\Xcart::app();
+$key = '.$tag['key'].';
+if ('.$tag['forDomain'].' && $module = $app->getModule("Sites"))
+{
+    $key .= ":site" .$module->getSite()->storefrontid;
+}
+
+if (!$output = $app->cache->get($key)) {
     ob_start();
     ?>'. $tag->getContent() .'<?php
-    \Xcart\App\Main\Xcart::app()->cache->set('. $tag['key'] .', $output = ob_get_clean(), ' . $tag['time'] . ');
+    $app->cache->set('. $tag['key'] .', $output = ob_get_clean(), ' . $tag['time'] . ');
 }
 echo $output; ?>
 ';
+//        d($code);
 
         $tag->replaceContent($code);
         return;

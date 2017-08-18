@@ -10,15 +10,9 @@ use Xcart\App\Module\Module;
 
 class CoreModule extends Module
 {
-    private static $config;
-
     public static function getGlobalConfig()
     {
-        if (!self::$config) {
-            self::$config = GlobalConfig::getInstance()->setOldMode();
-        }
-
-        return self::$config;
+        return GlobalConfig::getInstance()->setOldMode();
     }
 
     public static function onApplicationRun()
