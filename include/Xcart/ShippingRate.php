@@ -176,7 +176,7 @@ class ShippingRate extends Data
                 }
             }
         }
-        return $this->fCartShippingWeight;
+        return round($this->fCartShippingWeight, 2);
     }
 
     public function getCartShippingFreight()
