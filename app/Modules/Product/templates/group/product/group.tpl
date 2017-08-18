@@ -1,11 +1,14 @@
 <tr class="{cycle ["", "TableSubHead"] index=$index}" data-brand-id="{$brand->brandid}">
-    <td align="center">
-        <div data-group-phrase="{$group_phrase}" data-level="1" data-url="{url 'product:group' id=$brand->brandid}" class="tree_cell"></div>
+    <td class="tree" align="center">
+        {if $count > 1}
+          <div data-group-phrase="{$group_phrase}" data-level="{$level}" data-url="{url 'product:group' id=$brand->brandid}" class="tree_cell"></div>
+        {/if}
     </td>
-    <td>
+    <td class="checkbox"></td>
+    <td class="phrase">
         {$group_phrase}
     </td>
-    <td>
+    <td class="count">
         {$count}
     </td>
 </tr>

@@ -27,18 +27,26 @@ class GroupController extends PrototypeAdminController
             $store = new GroupStore($_GET, $brand);
 
             if (isset($store->data['ajax'])) {
-                $brand = $store->getLevel();
-                echo $this->render('group/product/group.tpl',
+
+                echo $this->render('group/product/group_rows.tpl',
                     [
-                        'brand' => $brand,
-                        'group_phrase' => $brand->getNotModelAttribute('group_phrase'),
-                        'count' => $brand->getNotModelAttribute('count'),
+                        'brands' => $store->getLevels(),
+                        'level' => $store->data['level']
                     ]
                 );
+
+                echo  $this->render('group/group_products.tpl',
+                    [
+                        'products' => $store->getModels(),
+                        'parent_level' => $store->data['level'] - 1
+                    ]
+                );
+
             } else {
                 echo $this->renderInternal('group/group_list.tpl',
                     [
                         'brands' => $store->getLevels(),
+                        'level' => $store->data['level']
                     ]
                 );
             }

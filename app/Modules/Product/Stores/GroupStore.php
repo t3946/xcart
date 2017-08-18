@@ -16,6 +16,7 @@ class GroupStore extends BaseStore
     public $data = null;
     private $pager = null;
     private $model = null;
+    private $qs = null;
 
     public function __construct($data = null, BrandModel $model = null)
     {
@@ -39,6 +40,24 @@ class GroupStore extends BaseStore
     {
         if (!$this->qs) {
             $this->qs = ProductModel::objects()->getQuerySet();
+
+            $this->qs->join('inner join', 'xcart_products_sf', ['productid' => 'sf.productid'], 'sf');
+
+            $filter = [
+                'forsale' => 'Y',
+                'sf.sfid' => 0
+            ];
+
+            if ($this->model) {
+                $filter['brandid'] = $this->model->brandid;
+            }
+
+            if ($this->data['level'] > 1) {
+                $lmo = $this->data['level'] - 1;
+                $filter[(new Expression("SUBSTRING_INDEX({$this->qs->getTableAlias()}.product, ' ', {$lmo})"))->toSQL()] = $this->data['group_phrase'];
+            }
+
+            $this->qs->filter($filter);
         }
         return $this->qs;
     }
@@ -61,7 +80,7 @@ class GroupStore extends BaseStore
         }
 
         if ($this->data['level'] > 1) {
-            $lmo = $this->data['level']-1;
+            $lmo = $this->data['level'] - 1;
             $filter[(new Expression("SUBSTRING_INDEX(p.product, ' ', {$lmo})"))->toSQL()] = $this->data['group_phrase'];
         }
 
@@ -71,6 +90,7 @@ class GroupStore extends BaseStore
         $qs->join('inner join', 'xcart_products_sf', ['p.productid' => 'sf.productid'], 'sf');
 
         $qs->group(['brandid', $phrase->toSql()]);
+        $qs->having(['count__gt' => 1]);
         $qs->order(['-count']);
 
 
@@ -82,11 +102,6 @@ class GroupStore extends BaseStore
         return $this->prepareModels($this->getPager()->paginate());
     }
 
-    public function getLevel()
-    {
-        return $this->prepareModels($this->getBrandQuerySet()->limit(1)->get());
-    }
-
     public function getLevels()
     {
         return $this->prepareModels($this->getBrandQuerySet()->all());
@@ -94,7 +109,7 @@ class GroupStore extends BaseStore
 
     public function getBrands()
     {
-        return $this->prepareModels($this->getPager()->paginate());
+        return $this->prepareModels($this->getBrandPager()->paginate());
     }
 
     public function prepareModels($models)
@@ -108,9 +123,16 @@ class GroupStore extends BaseStore
     public function getPager()
     {
         if (!$this->pager) {
-            $this->pager = new Pagination($this->getBrandQuerySet(), ['pageSize' => $this->defaultPagerPageSize], new QuerySetDataSource());
+            $this->pager = new Pagination($this->getQuerySet(), ['pageSize' => $this->defaultPagerPageSize], new QuerySetDataSource());
         }
 
         return $this->pager;
+    }
+
+    public function getBrandPager()
+    {
+        $pager = new Pagination($this->getBrandQuerySet(), ['pageSize' => $this->defaultPagerPageSize], new QuerySetDataSource());
+
+        return $pager;
     }
 }

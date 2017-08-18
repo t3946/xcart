@@ -3,20 +3,14 @@
 {block 'group_list'}
     <table class="product_group" width="100%" cellspacing="1" cellpadding="3">
         <tr class="TableHead">
-            <td width="1%"></td>
-            <td width="20%" align="center">Group phrase</td>
-            <td width="20%" align="center">Products</td>
+            <td class="tree"></td>
+            <td class="checkbox"></td>
+            <td class="phrase">Group phrase</td>
+            <td class="count">Products</td>
         </tr>
 
-        {if $brands}
-            {foreach $brands as $brand}
-                {include 'group/product/group.tpl' brand=$brand group_phrase=$brand->getNotModelAttribute('group_phrase') count=$brand->getNotModelAttribute('count') index=$brand@index}
-            {/foreach}
-        {else}
-            <tr>
-                <td align="center" colspan="5">No data found</td>
-            </tr>
-        {/if}
+        {include 'group/product/group_rows.tpl' brands = $brands}
+
     </table>
 {/block}
 
@@ -28,18 +22,30 @@
             th.toggleClass('open');
 
             if (th.hasClass('open')) {
+                $('.product_group').css('opacity', 0.4);
+                var level = parseInt(th.data('level')) + 1;
                 $.get(
                     th.data('url'),
                     {
-                        level: parseInt(th.data('level')) + 1,
+                        level: level,
                         group_phrase: th.data('group-phrase'),
                         ajax: true
                     },
                     function(data) {
-                        console.log(data)
+                        th.closest('tr')
+                            .find('.checkbox').html($('<input class="tree-checkbox" type="checkbox">')).end()
+                            .after($('<tr>')
+                            .html($('<td colspan="4" class="level" data-level="'+level+'">').html($('<table cellpadding="3" cellspacing="1" width="100%">').html(data))));
+                        $('.product_group').css('opacity', 1);
                     }
                 );
+            } else {
+                th.closest('tr').next('tr').hide().remove();
             }
+        }).on('change', '.tree-checkbox', function() {
+            var th = $(this);
+            th.closest('tr').next('tr').find('.products input[type=checkbox]').attr('checked', th.is(':checked'));
         })
+
     </script>
 {/block}

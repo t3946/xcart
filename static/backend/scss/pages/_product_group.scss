@@ -1,16 +1,42 @@
-.tree_cell {
+.product_group {
 
-  width: 12px;
-  height: 12px;
-  background-repeat: no-repeat;
-  cursor: pointer;
-  background-image: url('/skin1_kolin/images/plus.gif');
 
-  &.open {
-    background-image: url('/skin1_kolin/images/minus.gif');
-  }
+    td {
 
-  a {
-    text-decoration: none;
-  }
+      &.tree {
+        width: 1%;
+
+        .tree_cell {
+
+          width: 12px;
+          height: 12px;
+          cursor: pointer;
+          background: url('/skin1_kolin/images/plus.gif') no-repeat;
+
+          &.open {
+            background-image: url('/skin1_kolin/images/minus.gif');
+          }
+
+          a {
+            text-decoration: none;
+          }
+        }
+      }
+
+      &.checkbox {
+        width: 1%;
+      }
+
+      &.count {
+
+        width: 100px;
+        text-align: center;
+      }
+
+      &.level {
+
+        padding-left: 20px;
+        padding-right: 0;
+      }
+    }
 }
