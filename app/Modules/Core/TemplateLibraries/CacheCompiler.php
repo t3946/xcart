@@ -61,23 +61,26 @@ class CacheCompiler
 
     public static function blockCacheClose(Tokenizer $tokens, Tag $tag)
     {
+        $var1 = $tag->tpl->tmpVar();
+        $var2 = $tag->tpl->tmpVar();
+        $var3 = $tag->tpl->tmpVar();
+
         $code = /** @lang PHP */'
 <?php
-$app = \Xcart\App\Main\Xcart::app();
-$key = '.$tag['key'].';
-if ('.$tag['forDomain'].' && $module = $app->getModule("Sites"))
+'.$var1.' = \Xcart\App\Main\Xcart::app();
+'.$var2.' = '.$tag['key'].';
+if ('.$tag['forDomain'].' && $module = '.$var1.'->getModule("Sites"))
 {
-    $key .= ":site" .$module->getSite()->storefrontid;
+    '.$var2.' .= ":site" .$module->getSite()->storefrontid;
 }
 
-if (!$output = $app->cache->get($key)) {
+if (!'.$var3.' = '.$var1.'->cache->get('.$var2.')) {
     ob_start();
     ?>'. $tag->getContent() .'<?php
-    $app->cache->set('. $tag['key'] .', $output = ob_get_clean(), ' . $tag['time'] . ');
+    '.$var1.'->cache->set('.$var2.', '.$var3.' = ob_get_clean(), ' . $tag['time'] . ');
 }
-echo $output; ?>
+echo '.$var3.'; ?>
 ';
-//        d($code);
 
         $tag->replaceContent($code);
         return;
