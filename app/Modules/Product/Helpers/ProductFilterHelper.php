@@ -7,6 +7,7 @@ use Mindy\QueryBuilder\Aggregation\Max;
 use Mindy\QueryBuilder\Aggregation\Min;
 use Mindy\QueryBuilder\Expression;
 use Modules\Product\Models\FilterModel;
+use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\Manager;
 use Xcart\App\Orm\QuerySet;
 
@@ -41,13 +42,18 @@ class ProductFilterHelper
      */
     public function getFilterStructure(array $types = ['price', 'brand', 'filter'])
     {
-        $list = [];
+        $cache_key = implode('-',$types) .';sql:' . (clone $this->qs)->allSql();
+
+        if ($list = Xcart::app()->cache->get($cache_key, []))
+        {
+            return $list;
+        }
 
         if (in_array('price', $types)) {
             $tqs = clone $this->qs;
             $tqs->filter(['quick_prices__price__isnull' => false])
-                ->select([new Min('xcart_pricing_1.price', 'min'),
-                          new Max('xcart_pricing_1.price', 'max')]) //@TODO:FIX IT
+                ->select([new Min('quick_prices__price', 'min'),
+                          new Max('quick_prices__price', 'max')])
                 ->asArray();
             $prices = $tqs->get();
             $prices = [
@@ -163,6 +169,8 @@ class ProductFilterHelper
 
 
         }
+
+        Xcart::app()->cache->set($cache_key, $list, 8600);
 
         return $list;
     }
