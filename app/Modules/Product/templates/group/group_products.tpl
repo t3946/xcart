@@ -6,7 +6,7 @@
             </tr>
             {if $products}
                 {foreach $products as $product}
-                    <tr>
+                    <tr data-description="{$product->fulldescr}">
                         <td class="checkbox">
                             <input type="checkbox" name="" />
                         </td>

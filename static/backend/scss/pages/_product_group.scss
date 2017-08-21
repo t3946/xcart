@@ -1,6 +1,5 @@
 .product_group {
 
-
     td {
 
       &.tree {
@@ -39,4 +38,24 @@
         padding-right: 0;
       }
     }
+}
+
+#new-group {
+
+  .columns {
+    padding: 0;
+  }
+
+  .big {
+    width: 100%;
+  }
+
+  .selected-products {
+
+    width:100%;
+
+    input {
+      min-height: inherit;
+    }
+  }
 }
