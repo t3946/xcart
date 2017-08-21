@@ -58,10 +58,11 @@
             var check_box = $(this);
             $('.selected-products .product-title').find('a').each(function () {
                 if (check_box.is(':checked')) {
-                    console.log($(this).closest('tr').data('product'));
-                    $(this).text($(this).closest('tr').data('product'));
+                    var regex = new RegExp("^" + $('#o-group-truncate').val(), "g");
+                    console.log(regex);
+                    $(this).text($(this).closest('td').data('product').replace(regex, ''));
                 } else {
-                    $(this).text('');
+                    $(this).text($(this).closest('td').data('product'));
                 }
             })
         });
