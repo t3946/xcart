@@ -1,0 +1,15 @@
+.sku {
+  margin: 5px 0;
+  line-height: 1.1;
+  font: {
+    size: rem-calc(16);
+  };
+
+  .value {
+    color: #28862f;
+    text-transform: uppercase;
+    font: {
+      weight: 400;
+    }
+  }
+}

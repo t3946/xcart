@@ -21,6 +21,7 @@
                             <div class="tcell cart_name">
                                 {t 'Item name'  dict='cart'}
                             </div>
+
                             <div class="tcell cart_price">
                                 {t 'Price'  dict='cart'}
                             </div>
@@ -44,11 +45,22 @@
                         {foreach $items as $key=>$position}
                             <div class="trow">
                             <div class="tcell cart_name">
-                                {$position->object}
+                                <div class="tcell-value">
+                                    <div class="name">
+                                        {$position->object}
+                                    </div>
 
-                                {foreach $position->data as $name => $value}
-                                    <p>{$name}: {$value}</p>
-                                {/foreach}
+                                    <div class="code sku">
+                                        <div class="value">
+                                            {t 'SKU'  dict='cart'}:
+                                            {$position->object->productcode}
+                                        </div>
+                                    </div>
+
+                                        {foreach $position->data as $name => $value}
+                                            <p>{$name}: {$value}</p>
+                                        {/foreach}
+                                </div>
                             </div>
                             <div class="tcell cart_price">
                                 ${$position->object->getFrontendPrice()}
@@ -68,7 +80,7 @@
                                     </div>
                                 </div>
                                 <div class="tcell cart_x">
-                                    X
+                                    х
                                 </div>
                                 <div class="tcell cart_extended">
                                     ${$position->getPrice()}
