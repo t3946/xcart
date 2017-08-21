@@ -6,6 +6,7 @@ use Modules\Product\Helpers\ProductFilterHelper;
 use Modules\Product\Helpers\ProductSortHelper;
 use Modules\Product\Models\CategoryModel;
 use Modules\Product\Models\ProductModel;
+use Xcart\App\Components\Breadcrumbs;
 use Xcart\App\Controller\FrontendController;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Pagination\DataSource\QuerySetDataSource;
@@ -16,7 +17,7 @@ abstract class AbstractCatalogController extends FrontendController
     public $view = '';
     public $model = null;
     public $sort = null;
-    public $pageSize = 40;
+    public $pageSize = 20;
     public $filters = ['price', 'brand', 'filter'];
 
     public function getAdvancedCacheData()
@@ -78,7 +79,12 @@ abstract class AbstractCatalogController extends FrontendController
      */
     public function getBreadcrumbsFromData($data)
     {
-        return $data->getBreadcrumbs();
+        if (is_object($data) && method_exists($data, 'getBreadcrumbs'))
+        {
+            return $data->getBreadcrumbs();
+        }
+
+        return $this->getBreadcrumbs();
     }
 
     public function getAdvancedData($data = null) { return []; }
