@@ -18,7 +18,7 @@ abstract class Gateway implements GatewayInterface
     /** @var \Omnipay\Common\AbstractGateway|RestGateway|\Omnipay\BluePay\Gateway $gateway */
     public $gateway;
 
-    /** @var PaymentProcessorModel $model */
+    /** @var ProcessorModel $model */
     public $model;
 
     public $test_mode = false;
@@ -27,7 +27,7 @@ abstract class Gateway implements GatewayInterface
 
     /**
      * Gateway constructor.
-     * @param PaymentProcessorModel $model
+     * @param ProcessorModel $model
      */
     public function __construct($model)
     {
@@ -47,7 +47,7 @@ abstract class Gateway implements GatewayInterface
         $gateway = null;
         if ($model) {
             if (class_exists($class = "Modules\\Payment\\Gateways\\" . $model->processor_name)) {
-                $gateway = new $class($model->cc_processor);
+                $gateway = new $class($model);
             }
         }
         return $gateway;
@@ -55,7 +55,7 @@ abstract class Gateway implements GatewayInterface
 
     public function init()
     {
-        $this->test_mode = ($this->model->testmode == 'Y');
+        $this->test_mode = ($this->model->test_mode == 'Y');
     }
 
     public static function getProcessorName()
