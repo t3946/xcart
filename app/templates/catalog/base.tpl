@@ -15,6 +15,7 @@
         <div class="row">
             <div class="columns large-2 show-for-large" itemscope itemtype="http://schema.org/WPSideBar">
                 <div class="firm_cont">
+                    {if $filters!}
                     <form action="{$.request->getMatchingUrl(['q' => $.request->get->get('q')])}" type="get"  id="filter_form" data-ajax-send="off">
                         <div class="filters_section advanced">
                             {block "catalog-filter"}
@@ -36,6 +37,7 @@
                         </section>
 
                     </form>
+                    {/if}
                 </div>
 
                 {block "catalog-sidebar"}

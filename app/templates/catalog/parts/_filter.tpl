@@ -1,4 +1,4 @@
-{if $filters}
+{if $filters!}
 <section class="filter_container">
     <div class="filter-block" id="all_filter">
         <div class="block-title">

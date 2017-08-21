@@ -1,4 +1,4 @@
-{if $filters}
+{if $filters!}
     {set $show = false}
     {foreach $filters as $item}
 
