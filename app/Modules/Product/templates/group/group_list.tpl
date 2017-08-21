@@ -39,7 +39,7 @@
                         th.closest('tr')
                             .find('.checkbox').html($('<input class="tree-checkbox" type="checkbox">')).end()
                             .after($('<tr class="group-detail">')
-                            .html($('<td colspan="4" class="level" data-level="' + level + '">').html($('<table cellpadding="3" cellspacing="1" width="100%">').html(data))));
+                                .html($('<td colspan="4" class="level" data-level="' + level + '">').html($('<table cellpadding="3" cellspacing="1" width="100%">').html(data))));
                         $('.product_group').css('opacity', 1);
                     }
                 );
@@ -49,21 +49,44 @@
         }).on('change', '.tree-checkbox', function () {
             var th = $(this);
             th.closest('tr').next('tr').find('.products input[type=checkbox]').prop('checked', th.is(':checked')).change();
-        }).on('change', '.products input[type=checkbox]', function(){
+        }).on('change', '.products input[type=checkbox]', function () {
             var th = $(this);
             th.closest('.group-detail').prev('tr').attr('data-selected', th.is(':checked'));
         });
 
+        $(document).on('change', '#new-group .group-truncate-checkbox', function () {
+            var check_box = $(this);
+            $('.selected-products .product-title').find('a').each(function () {
+                if (check_box.is(':checked')) {
+                    console.log($(this).closest('tr').data('product'));
+                    $(this).text($(this).closest('tr').data('product'));
+                } else {
+                    $(this).text('');
+                }
+            })
+        });
+
         $('input.button[name=group]').on('click', function (e) {
             e.preventDefault();
+            var arrP = [];
 
             var selected_phrase = $('.product_group tr[data-selected=true]').first().find('.tree_cell').data('group-phrase');
-
-            var selected_products = $.uniqueSort($('.product_group .products tr').has('td input:checked').clone());
+            var selected_products = $('.product_group .products tr')
+                .has('td input:checked')
+                .clone()
+                .filter(function (i) {
+                    if (arrP.indexOf($(this).data('product-id')) < 0) {
+                        arrP.push($(this).data('product-id'));
+                        return true;
+                    } else {
+                        return false;
+                    }
+                });
 
             $('#new-group')
                 .find('textarea.description').html(selected_products.first().data('description')).end()
-                .find('.selected-products tr:last-child').after(selected_products).end()
+                .find('.selected-products tr:not(.TableHead)').remove().end()
+                .find('.selected-products tr.TableHead').after(selected_products).end()
                 .find('#o-group-title').val(selected_phrase).end()
                 .find('#o-group-truncate').val(selected_phrase).end()
                 .mmodal({
@@ -87,6 +110,7 @@
                             convert_urls: false,
                             relative_urls: false
                         });
+
 
                     },
                     onAfterClose: function () {

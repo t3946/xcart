@@ -6,11 +6,11 @@
             </tr>
             {if $products}
                 {foreach $products as $product}
-                    <tr data-description="{$product->fulldescr}">
+                    <tr data-description="{$product->fulldescr}" data-product-id="{$product->productid}">
                         <td class="checkbox">
                             <input type="checkbox" name="" />
                         </td>
-                        <td>
+                        <td class="product-title" data-product="{$product->product}">
                             <a href="{$product->getUrl()}" target="_blank">{$product->product}</a>
                         </td>
                     </tr>
