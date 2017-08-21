@@ -58,8 +58,7 @@
             var check_box = $(this);
             $('.selected-products .product-title').find('a').each(function () {
                 if (check_box.is(':checked')) {
-                    var regex = new RegExp("^" + $('#o-group-truncate').val(), "g");
-                    console.log(regex);
+                    var regex = new RegExp("^" + $('#o-group-truncate').val(), "");
                     $(this).text($(this).closest('td').data('product').replace(regex, ''));
                 } else {
                     $(this).text($(this).closest('td').data('product'));
