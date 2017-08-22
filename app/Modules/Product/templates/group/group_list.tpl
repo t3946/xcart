@@ -54,11 +54,18 @@
             th.closest('.group-detail').prev('tr').attr('data-selected', th.is(':checked'));
         });
 
-        $(document).on('change', '#new-group .group-truncate-checkbox', function () {
-            var check_box = $(this);
-            $('.selected-products .product-title').find('a').each(function () {
-                if (check_box.is(':checked')) {
-                    var regex = new RegExp("^" + $('#o-group-truncate').val(), "");
+        $(document).on('change', '.mmodal-content .group-truncate-checkbox', function () {
+                $('.mmodal-content')
+                    .find('#o-group-truncate')
+                    .prop('disabled', !$(this).is(':checked'))
+                    .change();
+            }
+        ).on('change', '.mmodal-content #o-group-truncate', function () {
+            var regex = new RegExp("^" + $(this).val(), ""),
+                checkbox = $('.mmodal-content').find('.group-truncate-checkbox');
+
+            $('.mmodal-content .selected-products .product-title').find('a').each(function () {
+                if (checkbox.is(':checked')) {
                     $(this).text($(this).closest('td').data('product').replace(regex, ''));
                 } else {
                     $(this).text($(this).closest('td').data('product'));

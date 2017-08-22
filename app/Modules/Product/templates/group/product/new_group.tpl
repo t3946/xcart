@@ -20,12 +20,21 @@
                 <li>
                     <div class="row">
                         <div class="columns large-4">
-                            <label for="o-group-truncate">Truncate general product name part of sibling products with
-                                mask</label>
-                            <input class="group-truncate-checkbox" type="checkbox"/>
+                            <label for="o-group-truncate">Truncate general product name</label>
+
                         </div>
                         <div class="columns large-8">
-                            <input id="o-group-truncate" type="text" class="big"/>
+                            <input class="group-truncate-checkbox" type="checkbox"/>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <div class="row">
+                        <div class="columns large-4">
+                            <label for="o-group-truncate">Truncate mask</label>
+                        </div>
+                        <div class="columns large-8">
+                            <input disabled id="o-group-truncate" type="text" class="big"/>
                         </div>
                     </div>
                 </li>
