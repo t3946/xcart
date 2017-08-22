@@ -1113,7 +1113,15 @@ function SubmitBingProductsBatch($bproducts, $sEndpoint, $MerchantID, $CatalogID
 			$postBody["entries"][$k_counter]["productId"] = "online:en:US:".$v["productid"];
 			$postBody["entries"][$k_counter]["product"]["kind"] = "content#product";
 			$postBody["entries"][$k_counter]["product"]["offerId"] = $v["productid"];
+
 			$postBody["entries"][$k_counter]["product"]["title"] = $product_info["product"]["google_product"];
+            if ($v["productid"] == 130794) {
+                $postBody["entries"][$k_counter]["product"]["title"] = "Watercolor 5ml Ultramarine Green Shade";
+            }
+            if ($v["productid"] == 690335) {
+                $postBody["entries"][$k_counter]["product"]["title"] = "Field Book Gridded (model CVB68G2), price per each";
+            }
+
 			$postBody["entries"][$k_counter]["product"]["description"] = $product_info["product"]["google_descr"];
 			$postBody["entries"][$k_counter]["product"]["link"] = $product_info["product"]["link"];
 			$postBody["entries"][$k_counter]["product"]["imageLink"] = $product_info["product"]["image_link"];
@@ -1194,6 +1202,10 @@ function SubmitBingProductsBatch($bproducts, $sEndpoint, $MerchantID, $CatalogID
 			$postBody["entries"][$k_counter]["product"]["customAttributes"][7]["name"] = "model number";
 			$postBody["entries"][$k_counter]["product"]["customAttributes"][7]["type"] = "text";
 			$postBody["entries"][$k_counter]["product"]["customAttributes"][7]["value"] = $product_info["product"]["mpn"];
+
+            if ($v["productid"] == 130794) {
+                func_backprocess_log('incremental feeds', serialize($postBody));
+            }
 
 			$k_counter++;
 		}
