@@ -33,15 +33,13 @@ class XTableStorage extends AbstractStorage
 
         if (!$this->model) {
             $this->model = new CartModel();
-            $this->model->save();
-            $this->session->add($this->session_keyName, $this->getCartNumber());
         }
 
         if ($data = $this->model->data) {
-            if ($data['discounts']) {
+            if (!empty($data['discounts'])) {
                 $this->cart->setDiscounts($data['discounts']);
             }
-            if ($data['cart']) {
+            if (!empty($data['cart'])) {
                 $this->data = $data['cart'];
             }
         }
@@ -70,11 +68,21 @@ class XTableStorage extends AbstractStorage
 //            ];
 //        }
 
-        $this->model->data = [
-            'cart' => $this->data,
-            'discounts' => $this->cart->getDiscounts()
-        ];
+        $data = [];
+        if ($discounts = $this->cart->getDiscounts())
+        {
+            $data['discounts'] = $discounts;
+        }
 
-        $this->model->save(['data']);
+        if ($this->data) {
+            $data['cart'] = $this->data;
+        }
+
+        if ($data) {
+            $this->model->data = $data;
+            $this->model->save();
+
+            $this->session->add($this->session_keyName, $this->getCartNumber());
+        }
     }
 }

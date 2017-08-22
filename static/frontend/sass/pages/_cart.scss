@@ -38,7 +38,7 @@ $quantity_extended: $quantity + $x + $extended;
           align-items: center;
 
           .tcell-value {
-            //display: flex;
+            //display: block;
           }
         }
       }
@@ -69,13 +69,23 @@ $quantity_extended: $quantity + $x + $extended;
             }
           }
 
-          .cart_name { text-align: left; }
+          .cart_name {
+            justify-content: flex-start;
+            text-align: left;
+          }
           .cart_extended { text-align: left; }
         }
       }
 
       .cart_name {
         max-width: $name;
+
+        .image {
+          margin-right: rem-calc(20);
+          width: rem-calc(85);
+          height: rem-calc(85);
+          float: left;
+        }
       }
 
       .cart_price {
@@ -113,6 +123,7 @@ $quantity_extended: $quantity + $x + $extended;
 
       .tbody {
         .tcell {
+          font-size: rem-calc(14);
           justify-content: center;
         }
 
@@ -126,5 +137,66 @@ $quantity_extended: $quantity + $x + $extended;
       }
     }
 
+    .warehouse_subtotal {
+      padding-top: rem-calc(20);
+      margin-bottom: rem-calc(40);
+      display: flex;
+      align-items: center;
+
+      .from, .subtotal {
+        display: flex;
+        flex: 0 0 100%;
+      }
+
+      .from {
+        padding-right: rem-calc(5);
+        max-width: $name + $price + $quantity + $x;
+        justify-content: flex-end;
+      }
+
+      .subtotal {
+        font-size: rem-calc(16);
+        max-width: $extended + $remove;
+      }
+    }
+
+  }
+
+  .hr {
+    background-color: #8a8a8a;
+  }
+
+  .grand_subtotal {
+    display: flex;
+    padding: rem-calc(20) 0;
+
+    .memo, .subtotal_title, .subtotal {
+      display: flex;
+      flex: 0 0 100%;
+    }
+
+    .memo {
+      font-size: rem-calc(14);
+
+      @include breakpoint(large up) {
+        max-width: $name + $price;
+      }
+    }
+
+    .subtotal_title, .subtotal {
+      color: #010101;
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    .subtotal_title {
+      justify-content: flex-end;
+      padding-right: rem-calc(5);
+      max-width: $quantity + $x;
+    }
+
+    .subtotal {
+      max-width: $extended + $remove;
+    }
   }
 }
