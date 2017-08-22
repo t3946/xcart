@@ -105,7 +105,8 @@ gulp.task('frontend:css', ['frontend:scss', 'frontend:css:raw'], function () {
         }))
     }
 
-    return pipe.pipe(gulp.dest(frontend.dst.css))
+    return pipe
+        .pipe(gulp.dest(frontend.dst.css))
         .pipe(hashsum({filename: 'frontend/versions/css.yml', hash: 'md5'}))
         .pipe(livereload());
 });
