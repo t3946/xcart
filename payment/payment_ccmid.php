@@ -339,26 +339,7 @@ if (!$fatal) {
 	if (!empty($transaction_id)){
 
 		$transaction_log = "";
-		$Access_Token = func_paypal_get_access_token();
-		if (!empty($Access_Token)){
-
-			$transaction_type = "authorization";
-			if (in_array(strtolower($transaction_status), array('completed', 'p'))) {
-				$transaction_type = "capture";
-			}
-
-			$result = func_paypal_look_up_payment($Access_Token, $transaction_id, $transaction_type);
-
-			$result["FIELD_transaction_id"] = $transaction_id;
-			$result["FIELD_transaction_status"] = $transaction_status;
-			$result["FIELD_transaction_currency"] = $transaction_currency;
-			$result["FIELD_transaction_total"] = $transaction_total;
-
-			$result["script_info"] = "Script: payment/payment_ccmid.php . Function: func_paypal_look_up_payment";
-
-			$transaction_log = serialize($result);
-		}
-
+		
 		/** @var OrderTransactionModel $model */
         list($model) = OrderTransactionModel::objects()->getOrNew(['orderid' => $check_orderid, 'transaction_id' => $transaction_id]);
 
