@@ -325,7 +325,10 @@ if (!$fatal) {
 	} else {
 		if ($order_status == 'AP') {
             $transaction_status = 'authorized';
-		} else {
+		} else if ($order_status == 'F') {
+            $transaction_status = 'failed';
+		}
+		else {
             $transaction_status = $order_status;
 		}
 	}
