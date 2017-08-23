@@ -7,7 +7,7 @@ class Bing extends StoreFrontMarketPlace
 {
     public function addProductToBatch(ProductModel $oProduct, $update_type, $googleOneRow = "", $sExtraLog = "N")
     {
-        if ($this->checkProductExcludedMarketPlace($oProduct->productid) && $this->checkMarketplaceRestrictions($oProduct)) {
+        if ($this->checkProductExcludedMarketPlace($oProduct->productid) && $this->checkMarketplaceRestrictions($oProduct, $update_type)) {
                 $batchid = $this->iProductsBatchCount;
                 $count_bproducts = count($this->aProducts);
                 $this->aProducts[$count_bproducts]["productid"] = $oProduct->productid;
@@ -19,7 +19,7 @@ class Bing extends StoreFrontMarketPlace
         return $this;
     }
 
-    public function checkMarketplaceRestrictions(ProductModel $oProduct)
+    public function checkMarketplaceRestrictions(ProductModel $oProduct, $update_type)
     {
         $bResult = true;
 
@@ -32,7 +32,7 @@ class Bing extends StoreFrontMarketPlace
         $last_date = (new \DateTime())->setTimestamp($oProduct->last_incremental_update);
         $diff = (new \DateTime())->diff($last_date);
 
-        if ($diff->days*24 + $diff->h < 24) {
+        if ($update_type == 2 && $diff->days*24 + $diff->h < 24) {
             return false;
         }
 

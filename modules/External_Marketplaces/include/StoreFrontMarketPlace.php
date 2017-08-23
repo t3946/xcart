@@ -26,7 +26,7 @@ abstract class StoreFrontMarketPlace extends Data
     abstract public function addProductToBatch(ProductModel $oProduct, $update_type, $googleOneRow = "", $sExtraLog = "N");
     abstract public function submitInventoryBatch($debug_mode = 'N', $extra_log = 'N');
     abstract public function submitProductsBatch($debug_mode = 'N', $extra_log = 'N');
-    abstract public function checkMarketplaceRestrictions(ProductModel $oProduct);
+    abstract public function checkMarketplaceRestrictions(ProductModel $oProduct, $update_type);
 
     private function fetchExternalMarketPlace()
     {
