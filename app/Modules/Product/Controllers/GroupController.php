@@ -23,17 +23,39 @@ class GroupController extends PrototypeAdminController
 
     public function group($id)
     {
-        if ($this->getRequest()->getIsPost() && isset($_POST['group']['submit'])) {
+        $mask = null;
+
+        if ($this->getRequest()->getIsPost()) {
+
+            $data = $_POST['group'];
+
+            $params = [
+                'productcode' => trim($data['sku']),
+                'product' => trim($data['title']),
+                'fulldescr' => $data['description'],
+                'forsale' => 'Y',
+                'brandid' => $id,
+                'manufacturerid' => 0,
+            ];
+            if (isset($data['truncate_checkbox'])) {
+                $params['group_option'] = $mask = trim($data['truncate_mask']);
+            }
+
+            $root = new ProductModel($params);
+            $root->save();
+            $root->group_root = $root->productid;
+            $root->save();
+            
             if ($_POST['group']['products']) {
-                foreach ($_POST['group']['products'] as $product_id => $product) {
-                    $params = [
-                        'productcode' => $_POST['group']['sku'],
-                        'product' => $_POST['group']['title'],
-                        'fulldescr' => $_POST['group']['description'],
-                        'forsale' => 'Y',
-                        'brandid' => $id,
-                        'manufacturerid' => 0
-                    ];
+                /** @var ProductModel[] $products */
+                if ($products = ProductModel::objects()->filter(['productid__in' => array_keys($data['products'])])) {
+                    foreach ($products as $product) {
+                        $product->group_root = $root->productid;
+                        if (isset($data['truncate_checkbox'])) {
+                            $product->product = trim(preg_replace("/^({$mask})/", '', $product->product));
+                        }
+                        $product->save();
+                    }
                 }
             }
 
@@ -62,6 +84,7 @@ class GroupController extends PrototypeAdminController
             } else {
                 echo $this->renderInternal('group/group_list.tpl',
                     [
+                        'id' => $id,
                         'brands' => $store->getLevels(),
                         'level' => $store->data['level']
                     ]

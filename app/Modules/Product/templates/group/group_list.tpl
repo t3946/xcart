@@ -79,6 +79,7 @@
         $('input.button[name=group]').on('click', function (e) {
             e.preventDefault();
             var arrP = [];
+            var editor_id = null;
 
             var selected_phrase = $('.product_group tr[data-selected=true]').first().find('.tree_cell').data('group-phrase');
             var selected_products = $('.product_group .products tr')
@@ -102,10 +103,11 @@
                 .find('#o-group-sku').val(selected_products.first().data('prefix')).end()
                 .mmodal({
                     width: 1008,
-                    onBeforeStart: function () {
+                    onSubmit: function (s) {
+                        $(s).closest('form').off().submit();
                     },
                     onAfterOpen: function () {
-                        tinymce.init({
+                        editor_id = tinymce.init({
                             selector: ".mmodal-content textarea.new_editor",
                             height: 200,
                             resize: "both",
@@ -122,9 +124,9 @@
                             relative_urls: false
                         });
 
-
                     },
                     onAfterClose: function () {
+                        tinymce.remove();
                     }
                 });
         });

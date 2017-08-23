@@ -106,7 +106,7 @@ class ProductModel extends AutoMetaModel
                 'class' => DateTimeField::className(),
                 'autoNowAdd' => true,
             ],
-            'mode_date' => [
+            'mod_date' => [
                 'class' => DateTimeField::className(),
                 'autoNow' => true,
                 'autoNowAdd' => true,
