@@ -6,6 +6,7 @@
             </div>
         </div>
         <form method="post" name="group_form" action="{url 'product:group' id = $id}">
+            <input id="o-group-manufacturer" type="hidden" name="group[manufacturerid]" value="">
             <ul class="ul-main">
                 <li>
                     <div class="row">

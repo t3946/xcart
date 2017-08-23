@@ -6,7 +6,10 @@
             </tr>
             {if $products}
                 {foreach $products as $product}
-                    <tr data-prefix="{$product->getNotModelAttribute('prefix')}-GROUP-{$product->getNotModelAttribute('g_max')}" data-description="{$product->fulldescr}" data-product-id="{$product->productid}">
+                    <tr data-prefix="{$product->getNotModelAttribute('prefix')}-GROUP-{$product->getNotModelAttribute('g_max')}"
+                        data-description="{$product->fulldescr}"
+                        data-product-id="{$product->productid}"
+                        data-manufacturer-id="{$product->manufacturerid}">
                         <td class="checkbox">
                             <input type="checkbox" name="group[products][{$product->productid}]" />
                         </td>

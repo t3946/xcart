@@ -7,6 +7,7 @@ use Modules\Brand\Models\BrandModel;
 use Modules\Product\Models\ProductModel;
 use Modules\Product\Stores\GroupStore;
 use Xcart\App\Controller\PrototypeAdminController;
+use Xcart\App\Main\Xcart;
 
 class GroupController extends PrototypeAdminController
 {
@@ -33,9 +34,10 @@ class GroupController extends PrototypeAdminController
                 'productcode' => trim($data['sku']),
                 'product' => trim($data['title']),
                 'fulldescr' => $data['description'],
+                'original_provider' => Xcart::app()->user->login,
                 'forsale' => 'Y',
                 'brandid' => $id,
-                'manufacturerid' => 0,
+                'manufacturerid' => $data['manufactuerid'],
             ];
             if (isset($data['truncate_checkbox'])) {
                 $params['group_option'] = $mask = trim($data['truncate_mask']);
