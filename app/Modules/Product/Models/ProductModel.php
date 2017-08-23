@@ -7,6 +7,7 @@ use Modules\Sites\Models\SiteModel;
 use Xcart\App\Orm\AutoMetaModel;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\CharField;
+use Xcart\App\Orm\Fields\DateTimeField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\HasManyField;
 use Xcart\App\Orm\Fields\IntField;
@@ -101,6 +102,15 @@ class ProductModel extends AutoMetaModel
                 'modelClass' => AmazonFbaMissingSkuModel::className(),
                 'link' => ['productid' => 'productid']
             ],
+            'add_date' => [
+                'class' => DateTimeField::className(),
+                'autoNowAdd' => true,
+            ],
+            'mode_date' => [
+                'class' => DateTimeField::className(),
+                'autoNow' => true,
+                'autoNowAdd' => true,
+            ]
         ];
     }
 

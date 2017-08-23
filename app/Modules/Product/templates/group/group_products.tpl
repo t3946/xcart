@@ -6,9 +6,9 @@
             </tr>
             {if $products}
                 {foreach $products as $product}
-                    <tr data-description="{$product->fulldescr}" data-product-id="{$product->productid}">
+                    <tr data-prefix="{$product->getNotModelAttribute('prefix')}-GROUP-{$product->getNotModelAttribute('g_max')}" data-description="{$product->fulldescr}" data-product-id="{$product->productid}">
                         <td class="checkbox">
-                            <input type="checkbox" name="" />
+                            <input type="checkbox" name="group['products'][{$product->productid}]" />
                         </td>
                         <td class="product-title" data-product="{$product->product}">
                             <a href="{$product->getUrl()}" target="_blank">{$product->product}</a>

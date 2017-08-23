@@ -26,14 +26,15 @@
             th.toggleClass('open');
 
             if (th.hasClass('open')) {
-                $('.product_group').css('opacity', 0.4);
                 var level = parseInt(th.data('level')) + 1;
+
+                $('.product_group').css('opacity', 0.4);
+
                 $.get(
                     th.data('url'),
                     {
                         level: level,
-                        group_phrase: th.data('group-phrase'),
-                        ajax: true
+                        group_phrase: th.data('group-phrase')
                     },
                     function (data) {
                         th.closest('tr')
@@ -44,7 +45,9 @@
                     }
                 );
             } else {
-                th.closest('tr').next('tr').hide().remove();
+                var row = th.closest('tr');
+                row.attr('data-selected', false).next('tr').hide().remove();
+                row.find('.tree-checkbox').prop('checked', false);
             }
         }).on('change', '.tree-checkbox', function () {
             var th = $(this);
@@ -60,7 +63,7 @@
                     .prop('disabled', !$(this).is(':checked'))
                     .change();
             }
-        ).on('change', '.mmodal-content #o-group-truncate', function () {
+        ).on('change keyup', '.mmodal-content #o-group-truncate', function () {
             var regex = new RegExp("^" + $(this).val(), ""),
                 checkbox = $('.mmodal-content').find('.group-truncate-checkbox');
 
@@ -96,6 +99,7 @@
                 .find('.selected-products tr.TableHead').after(selected_products).end()
                 .find('#o-group-title').val(selected_phrase).end()
                 .find('#o-group-truncate').val(selected_phrase).end()
+                .find('#o-group-sku').val(selected_products.first().data('prefix')).end()
                 .mmodal({
                     width: 1008,
                     onBeforeStart: function () {

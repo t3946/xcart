@@ -3,6 +3,7 @@
 namespace Modules\Product\Stores;
 
 
+use Mindy\QueryBuilder\Aggregation\Max;
 use Mindy\QueryBuilder\Expression;
 use Modules\Brand\Models\BrandModel;
 use Modules\Product\Models\ProductModel;
@@ -40,6 +41,17 @@ class GroupStore extends BaseStore
     {
         if (!$this->qs) {
             $this->qs = ProductModel::objects()->getQuerySet();
+
+            $qs = ProductModel::objects()->getQuerySet()
+                ->select(['max_code' => (new Expression("COALESCE(MAX(CAST(SUBSTRING_INDEX(productcode, '-', -1) AS UNSIGNED))+1, 1)"))->toSQL()])
+                ->filter([new Expression("productcode LIKE CONCAT(prefix , '-GROUP%')")]);
+
+            $this->qs->select(
+                [
+                    '*',
+                    'prefix' => $this->qs->getTableAlias() . '__distributor__code',
+                    'g_max' => new Expression($qs->getSql())
+                ]);
 
             $this->qs->join('inner join', 'xcart_products_sf', ['productid' => 'sf.productid'], 'sf');
 

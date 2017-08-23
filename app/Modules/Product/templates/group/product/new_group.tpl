@@ -5,7 +5,7 @@
                 <h1>New Group Product</h1>
             </div>
         </div>
-        <form action="">
+        <form method="post">
             <ul class="ul-main">
                 <li>
                     <div class="row">
@@ -13,7 +13,17 @@
                             <label for="o-group-title">Group product title</label>
                         </div>
                         <div class="columns large-8">
-                            <input id="o-group-title" type="text" placeholder="Group title" class="big"/>
+                            <input id="o-group-title" name="group['title']" type="text" placeholder="Group product title" class="big"/>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <div class="row">
+                        <div class="columns large-4">
+                            <label for="o-group-sku">Group product SKU</label>
+                        </div>
+                        <div class="columns large-8">
+                            <input id="o-group-sku" name="group['sku']" type="text" placeholder="Group product SKU" class="big"/>
                         </div>
                     </div>
                 </li>
@@ -24,7 +34,7 @@
 
                         </div>
                         <div class="columns large-8">
-                            <input class="group-truncate-checkbox" type="checkbox"/>
+                            <input class="group-truncate-checkbox" name="group['truncate_checkbox']" type="checkbox"/>
                         </div>
                     </div>
                 </li>
@@ -34,7 +44,7 @@
                             <label for="o-group-truncate">Truncate mask</label>
                         </div>
                         <div class="columns large-8">
-                            <input disabled id="o-group-truncate" type="text" class="big"/>
+                            <input disabled id="o-group-truncate" name="group['truncate_mask']" type="text" class="big"/>
                         </div>
                     </div>
                 </li>
@@ -65,7 +75,7 @@
                     </div>
                 </li>
                 <li>
-                    <input type="submit" value="Confirm and group"/>
+                    <input name="group['submit']" type="submit" value="Confirm and group"/>
                 </li>
             </ul>
         </form>
