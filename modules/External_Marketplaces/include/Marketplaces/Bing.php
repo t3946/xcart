@@ -22,9 +22,20 @@ class Bing extends StoreFrontMarketPlace
     public function checkMarketplaceRestrictions(ProductModel $oProduct)
     {
         $bResult = true;
+
         $aDetailedImages = $oProduct->getDetailedImages();
-        if (empty($aDetailedImages))
-            $bResult = false;
+
+        if (empty($aDetailedImages)) {
+            return false;
+        }
+
+        $last_date = (new \DateTime())->setTimestamp($oProduct->last_incremental_update);
+        $diff = (new \DateTime())->diff($last_date);
+
+        if ($diff->days*24 + $diff->h < 24) {
+            return false;
+        }
+
         return $bResult;
     }
 
