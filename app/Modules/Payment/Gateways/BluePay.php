@@ -97,7 +97,7 @@ class BluePay extends Gateway
         $data = $this->result->getData();
         if (!$state && ($state = $data['state'])) {
             $statuses = array_map(function ($a) {return $a['status'];}, OrderTransactionStore::$gatewayMethods);
-            if (!in_array($state, $statuses)) {
+            if (!in_array($state, $statuses) || !$data['status']) {
                 $state = null;
             }
         }

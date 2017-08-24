@@ -1,6 +1,8 @@
 <?php
 namespace Xcart\External_Marketplaces\Marketplaces;
-use Xcart\Product;
+use Modules\Product\Models\ProductModel;
+use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
 use Xcart\External_Marketplaces\StoreFrontMarketPlace;
 use Xcart\External_Marketplaces\IssuesProcessingRules;
 use Xcart\External_Marketplaces\GMCQualityIssues;
@@ -15,18 +17,19 @@ global $xcart_dir;
 class GMC extends StoreFrontMarketPlace
 {
     /**
-     * @param Product $oProduct
+     * @param ProductModel $oProduct
      * @param int $update_type
+     * @param string $googleOneRow
      * @param string $sExtraLog
      * @return GMC
      */
-    public function addProductToBatch(Product $oProduct, $update_type, $googleOneRow = "", $sExtraLog = "N")
+    public function addProductToBatch(ProductModel $oProduct, $update_type, $googleOneRow = "", $sExtraLog = "N")
     {
-        if ($this->checkProductExcludedMarketPlace($oProduct->getProductId()) && $this->checkMarketplaceRestrictions($oProduct)) {
+        if ($this->checkProductExcludedMarketPlace($oProduct->productid) && $this->checkMarketplaceRestrictions($oProduct, $update_type)) {
             if ($update_type == "1" || $update_type == "1,2" || (($update_type == "2" && $oProduct->getField('forsale') == "N"))) {
                 $batchid = $this->iProductsBatchCount;
                 $count_bproducts = count($this->aProducts);
-                $this->aProducts[$count_bproducts]["productid"] = $oProduct->getProductId();
+                $this->aProducts[$count_bproducts]["productid"] = $oProduct->productid;
                 $this->aProducts[$count_bproducts]["Batchid"] = $batchid;
                 $this->aProducts[$count_bproducts]["product_info"] = $googleOneRow;
                 $this->iProductsBatchCount++;
@@ -34,7 +37,7 @@ class GMC extends StoreFrontMarketPlace
             } elseif ($update_type == "2" && $oProduct->getField('forsale') == "Y") {
                 $batchid = $this->iInventoryBatchCount;
                 $count_binventory = count($this->aInventory);
-                $this->aInventory[$count_binventory]["productid"] = $oProduct->getProductId();
+                $this->aInventory[$count_binventory]["productid"] = $oProduct->productid;
                 $this->aInventory[$count_binventory]["Batchid"] = $batchid;
                 $this->iInventoryBatchCount++;
             }
@@ -43,7 +46,7 @@ class GMC extends StoreFrontMarketPlace
         return $this;
     }
 
-    public function checkMarketplaceRestrictions(Product $oProduct)
+    public function checkMarketplaceRestrictions(ProductModel $oProduct, $update_type)
     {
         $bResult = true;
         $aDetailedImages = $oProduct->getDetailedImages();
@@ -90,9 +93,9 @@ class GMC extends StoreFrontMarketPlace
     {
         $iUpdateProductCount = $iNewIssues = $totalCounter = 0;
         $pageToken = null;
-        $log = new \Monolog\Logger('gmc_info');
+        $log = new Logger('gmc_info');
         $logFile = sprintf("../var/log/gmc_products-{$iStoreFrontId}-%s.php", date('ymd'));
-        $log->pushHandler(new \Monolog\Handler\StreamHandler($logFile, \Monolog\Logger::INFO));
+        $log->pushHandler(new StreamHandler($logFile, Logger::INFO));
         do {
             $oResponse = null;
             if (!empty($pageToken)) {

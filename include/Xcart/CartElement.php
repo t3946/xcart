@@ -47,20 +47,21 @@ class CartElement
 
     public function getShippingWeightRatio($rate_id)
     {
-        if (is_null($this->weightRatio)) {
-
-            $this->weightRatio = 1;
-
-            if ($productShipping = ShippingProductModel::objects()->get(
-                [
-                    'product_id' => $this->getProduct()->productid,
-                    'shipping_rate_id' => $rate_id
-                ]
-            )) {
-                $this->weightRatio = $productShipping->weight_ratio;
-            }
+        if (!is_null($this->weightRatio)) {
+            return $this->weightRatio;
         }
 
-        return $this->weightRatio;
+        $weightRatio = 1;
+
+        if ($productShipping = ShippingProductModel::objects()->get(
+            [
+                'product_id' => $this->getProduct()->productid,
+                'shipping_rate_id' => $rate_id
+            ]
+        )) {
+            $weightRatio = $productShipping->weight_ratio;
+        }
+
+        return $weightRatio;
     }
 }

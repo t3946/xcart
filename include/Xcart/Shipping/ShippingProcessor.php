@@ -60,6 +60,8 @@ abstract class ShippingProcessor
 
     protected $useCache = true;
 
+    protected $useMapPrice = true;
+
     /**
      * @return boolean
      */
@@ -85,19 +87,14 @@ abstract class ShippingProcessor
                 if (!empty($this->aShippingRates)) {
                     foreach ($this->aShippingRates as $oShippingRate) {
                         $oShippingRate->setCart($this->getCart());
-                        $oShippingRate->setProcessor($this);
+                        $oShippingRate->setUseMapPRice($this->useMapPrice);
                     }
-                    usort($this->aShippingRates, ['\Xcart\Shipping\ShippingProcessor', 'sortShippingRatesByCostAsc']);
+                    usort($this->aShippingRates, function(ShippingRate $a, ShippingRate $b){return $a->getShippingCharge() > $b->getShippingCharge();});
                     $this->removeFromCart();
                 }
             }
         }
         return $this->aShippingRates;
-    }
-
-    public function sortShippingRatesByCostAsc(ShippingRate $a, ShippingRate $b)
-    {
-        return $a->getShippingCharge() > $b->getShippingCharge();
     }
 
     /**
@@ -422,5 +419,10 @@ abstract class ShippingProcessor
     public function setUseCache($value)
     {
         $this->useCache = $value;
+    }
+
+    public function setUseMapPrice($value)
+    {
+        $this->useMapPrice = $value;
     }
 }

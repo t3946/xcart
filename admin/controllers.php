@@ -17,7 +17,7 @@ use \Xcart\App\Main\Xcart;
 /**
  * Change storefront
  */
-if (!empty($_POST['cur_sf']) && $_POST['mode'] = 'change_storefront') {
+if (isset($_POST['cur_sf']) && $_POST['mode'] == 'change_storefront') {
 //    $current_storefront = intval($_POST['cur_sf']);
     Xcart::app()->request->session->add('current_storefront', intval( $_POST['cur_sf']));
 //    Xcart::app()->request->session->close();

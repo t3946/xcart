@@ -1,14 +1,14 @@
 <?php
 namespace Xcart\External_Marketplaces\Marketplaces;
-use Xcart\Product;
+use Modules\Product\Models\ProductModel;
 use Xcart\External_Marketplaces\StoreFrontMarketPlace;
 
 class Amazon extends StoreFrontMarketPlace
 {
-    public function addProductToBatch(Product $oProduct, $update_type, $googleOneRow = "", $sExtraLog = "N")
+    public function addProductToBatch(ProductModel $oProduct, $update_type, $googleOneRow = "", $sExtraLog = "N")
     {
         //$this->checkProductExcludedMarketPlace($oProduct->getProductId())
-        if ($this->checkMarketplaceRestrictions($oProduct)) {
+        if ($this->checkMarketplaceRestrictions($oProduct, $update_type)) {
             if ($update_type == "2" || $update_type == "1,2" || $update_type == "1") {
                 $count_ainventory = count($this->aInventory);
                 $this->aInventory[$count_ainventory]["productid"] = $oProduct->getField('productid');
@@ -35,7 +35,7 @@ class Amazon extends StoreFrontMarketPlace
         $this->setProductsBatchCount(0)->setProducts([]);
     }
 
-    public function checkMarketplaceRestrictions(Product $oProduct)
+    public function checkMarketplaceRestrictions(ProductModel $oProduct, $update_type)
     {
         $bResult = true;
         if ($oProduct->getField("amazon_enabled") != "Y")
@@ -43,7 +43,7 @@ class Amazon extends StoreFrontMarketPlace
         return $bResult;
     }
 
-    public function getGoogleOneRow(Product $oProduct, $sExtraLog)
+    public function getGoogleOneRow(ProductModel $oProduct, $type, $sExtraLog)
     {
         return null;
     }

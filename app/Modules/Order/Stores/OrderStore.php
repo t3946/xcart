@@ -94,7 +94,15 @@ class OrderStore extends BaseStore
             $this->authorizedAmount = round(array_sum(array_map(function ($model) {
                 /** @var OrderTransactionModel $model */
                 $value = 0;
-                if ($model->type == OrderTransactionModel::TYPE_AUTHORIZATION
+                if (
+                    (
+                        $model->type == OrderTransactionModel::TYPE_AUTHORIZATION
+                        && !in_array($model->transaction_status,
+                            [
+                                OrderTransactionModel::STATUS_FAILED,
+                            ]
+                        )
+                    )
                     || (
                         $model->type == OrderTransactionModel::TYPE_CAPTURE
                         && $model->parent_id == null
