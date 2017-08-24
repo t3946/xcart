@@ -57,6 +57,13 @@ class Bing extends StoreFrontMarketPlace
 
     public function getGoogleOneRow(ProductModel $oProduct, $type, $sExtraLog)
     {
-        return GetGoogleBaseOneRow($oProduct->productid, "main_google", $sExtraLog);
+        $result = null;
+
+        if ($this->checkMarketplaceRestrictions($oProduct, $type)) {
+            $result = GetGoogleBaseOneRow($oProduct->productid, "main_google", $sExtraLog);
+        }
+
+        return $result;
+
     }
 }
