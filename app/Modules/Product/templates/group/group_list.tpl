@@ -2,7 +2,7 @@
 
 {block 'group_list'}
     <form method="post">
-        <table class="product_group" width="100%" cellspacing="1" cellpadding="3">
+        <table class="product_group" width="100%" cellspacing="1" cellpadding="3" data-storefront="{$sfid}">
             <tr class="TableHead">
                 <td class="tree"></td>
                 <td class="checkbox"></td>
@@ -115,6 +115,7 @@
                 .find('#o-group-truncate').val(selected_phrase).end()
                 .find('#o-group-sku').val(selected_products.first().data('prefix')).end()
                 .find('#o-group-manufacturer').val(arrDist[0]).end()
+                .find('#o-group-storefront').val().end()
                 .mmodal({
                     width: 1008,
                     onSubmit: function (s) {

@@ -88,7 +88,8 @@ class GroupController extends PrototypeAdminController
                     [
                         'id' => $id,
                         'brands' => $store->getLevels(),
-                        'level' => $store->data['level']
+                        'level' => $store->data['level'],
+                        'sfid' => Xcart::app()->request->session->get('current_storefront')
                     ]
                 );
             }
