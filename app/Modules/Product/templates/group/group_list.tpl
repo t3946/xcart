@@ -113,7 +113,7 @@
                 .find('.selected-products tr.TableHead').after(selected_products).end()
                 .find('#o-group-title').val(selected_phrase).end()
                 .find('#o-group-truncate').val(selected_phrase).end()
-                .find('#o-group-phrase').val(selected_phrase).end()
+                .find('#o-group-option').val(selected_phrase).end()
                 .find('#o-group-sku').val(selected_products.first().data('prefix')).end()
                 .find('#o-group-manufacturer').val(arrDist[0]).end()
                 .find('#o-group-storefront').val($('.product_group').data('storefront')).end()

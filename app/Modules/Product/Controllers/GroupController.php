@@ -48,7 +48,7 @@ class GroupController extends PrototypeAdminController
 
             (new ProductCategoriesModel(
                 [
-                    'categoryid' => $data['categoryid'],
+                    'categoryid' => $data['category'],
                     'productid' => $root->productid,
                     'main' => 'Y'
                 ]
@@ -62,6 +62,15 @@ class GroupController extends PrototypeAdminController
                         if (isset($data['truncate_checkbox'])) {
                             $product->product = trim(preg_replace("/^({$params['group_mask']})/", '', $product->product));
                         }
+
+                        /** @var ProductCategoriesModel $p_cat */
+                        if ($p_cat = $product->category_main->all()) {
+                            foreach($p_cat as $cat) {
+                                $cat->categoryid = $data['category'];
+                                $cat->save();
+                            }
+                        }
+
                         $product->save();
                     }
                 }

@@ -86,6 +86,7 @@ class GroupStore extends BaseStore
         $filter = [
             'p.forsale' => 'Y',
             'sf.sfid' => 0,
+            'p.group_root__isnull' => true
         ];
 
         if ($this->model) {
