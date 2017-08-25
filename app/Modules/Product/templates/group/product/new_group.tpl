@@ -8,17 +8,8 @@
         <form method="post" name="group_form" action="{url 'product:group' id = $id}">
             <input id="o-group-manufacturer" type="hidden" name="group[manufacturerid]" value="">
             <input id="o-group-storefront" type="hidden" name="group[sfid]" value="">
+            <input id="o-group-option" type="hidden" name="group[group_option]" value="">
             <ul class="ul-main">
-                <li>
-                    <div class="row">
-                        <div class="columns large-4">
-                            <label for="o-group-title">Group product title</label>
-                        </div>
-                        <div class="columns large-8">
-                            <input id="o-group-title" name="group[title]" type="text" placeholder="Group product title" class="big"/>
-                        </div>
-                    </div>
-                </li>
                 <li>
                     <div class="row">
                         <div class="columns large-4">
@@ -26,6 +17,16 @@
                         </div>
                         <div class="columns large-8">
                             <input id="o-group-sku" name="group[sku]" type="text" placeholder="Group product SKU" class="big"/>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <div class="row">
+                        <div class="columns large-4">
+                            <label for="o-group-title">Group product title</label>
+                        </div>
+                        <div class="columns large-8">
+                            <input id="o-group-title" name="group[title]" type="text" placeholder="Group product title" class="big"/>
                         </div>
                     </div>
                 </li>
@@ -50,6 +51,17 @@
                         </div>
                     </div>
                 </li>
+                <li>
+                    <div class="row">
+                        <div class="columns large-4">
+                            <label for="o-group-truncate">Category</label>
+                        </div>
+                        <div class="columns large-8" id="o-category-selector">
+                            <select></select>
+                        </div>
+                    </div>
+                </li>
+
                 <li>
                     <div class="row">
                         <div class="columns large-4">

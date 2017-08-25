@@ -7,6 +7,7 @@ use Mindy\QueryBuilder\Aggregation\Max;
 use Mindy\QueryBuilder\Expression;
 use Modules\Brand\Models\BrandModel;
 use Modules\Product\Models\ProductModel;
+use Xcart\App\Main\Xcart;
 use Xcart\App\Pagination\DataSource\QuerySetDataSource;
 use Xcart\App\Pagination\Pagination;
 use Xcart\App\Store\BaseStore;
@@ -146,5 +147,25 @@ class GroupStore extends BaseStore
         $pager = new Pagination($this->getBrandQuerySet(), ['pageSize' => $this->defaultPagerPageSize], new QuerySetDataSource());
 
         return $pager;
+    }
+
+    public function groupParams()
+    {
+        $params = [
+            'productcode' => trim($this->data['sku']),
+            'product' => trim($this->data['title']),
+            'fulldescr' => $this->data['description'],
+            'original_provider' => Xcart::app()->user->login,
+            'forsale' => 'Y',
+            'brandid' => $this->data['brandid'],
+            'manufacturerid' => $this->data['manufactuerid'],
+            'group_option' => $this->data['group_option']
+        ];
+
+        if (isset($this->data['truncate_checkbox'])) {
+            $params['group_mask'] = trim($this->data['truncate_mask']);
+        }
+
+        return $params;
     }
 }

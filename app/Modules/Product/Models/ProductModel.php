@@ -9,6 +9,7 @@ use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\HasManyField;
 use Xcart\App\Orm\Fields\IntField;
+use Xcart\App\Orm\Fields\ManyToManyField;
 use Xcart\App\Orm\Fields\UnixTimestampField;
 use Xcart\App\Traits\DataModelTrait;
 use Xcart\Product;
@@ -108,7 +109,18 @@ class ProductModel extends AutoMetaModel
                 'class' => UnixTimestampField::className(),
                 'autoNow' => true,
                 'autoNowAdd' => true,
-            ]
+            ],
+            'category_main' => [
+                'class' => HasManyField::className(),
+                'modelClass' => ProductCategoriesModel::className(),
+                'link' => ['productid' => 'productid'],
+                'extra' => ['main' => 'Y']
+            ],
+            'categories' => [
+                'class' => ManyToManyField::className(),
+                'modelClass' => CategoryModel::className(),
+                'through' => ProductCategoriesModel::className(),
+            ],
         ];
     }
 

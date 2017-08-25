@@ -12,6 +12,11 @@ return [
         'name' => 'group_list'
     ],
     [
+        'route' => '/group_categories',
+        'target' => ['\Modules\Product\Controllers\GroupController', 'categories'],
+        'name' => 'group_categories'
+    ],
+    [
         'route' => '/group/{i:id}',
         'target' => ['\Modules\Product\Controllers\GroupController', 'group'],
         'name' => 'group'

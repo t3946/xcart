@@ -6,6 +6,8 @@ use Xcart\App\Orm\AutoMetaTreeModel;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\IntField;
+use Xcart\App\Traits\DataModelTrait;
+use Xcart\Category;
 
 /**
  * @property string categoryid_path
@@ -13,6 +15,13 @@ use Xcart\App\Orm\Fields\IntField;
  */
 class CategoryModel extends AutoMetaModel
 {
+    use DataModelTrait;
+
+    public static function getDataModelClass()
+    {
+        return Category::className();
+    }
+
     public static function tableName()
     {
         return 'xcart_categories';
