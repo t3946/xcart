@@ -16,7 +16,11 @@ class GroupController extends PrototypeAdminController
 {
     public function group_list()
     {
-        $store = new GroupStore();
+        $store = new GroupStore(
+            [
+                'sfid' => Xcart::app()->request->session->get('current_storefront')
+            ]
+        );
 
         echo $this->renderInternal('group/brand_list.tpl',
             [
@@ -25,56 +29,57 @@ class GroupController extends PrototypeAdminController
         );
     }
 
+    public function group_products($id = null)
+    {
+        $model = null;
+
+        if ($id) {
+            $model = ProductModel::objects()->get(['productid' => $id]);
+        }
+
+        if ($this->getRequest()->getIsPost() & $model) {
+            $store = new GroupStore(array_merge($_POST['group'],
+                [
+                    'brandid' => $model->brandid,
+                ]
+            ), $model);
+
+            $store->updateGroupProduct();
+
+            $this->redirect('product:group_products', [], 303);
+        }
+
+        $store = new GroupStore($_GET, $model);
+
+        if ($this->getRequest()->getIsAjax()) {
+
+            echo $this->render('group/group_products.tpl',
+                [
+                    'products' => $store->getGroupNewProducts(),
+                ]
+            );
+
+        } else {
+
+            echo $this->renderInternal('group/group_product_list.tpl',
+                [
+                    'products' => $store->getGroupProducts(),
+                    'level' => $store->data['level'],
+                    'sfid' => Xcart::app()->request->session->get('current_storefront')
+                ]
+            );
+        }
+    }
+
     public function group($id)
     {
         if ($this->getRequest()->getIsPost()) {
 
-            $data = $_POST['group'];
+            $store = new GroupStore(array_merge($_POST['group'], ['brandid' => $id]));
 
-            $store = new GroupStore(array_merge($data, ['brandid' => $id]));
-            $params = $store->groupParams();
+            $store->createGroupProduct();
 
-            $root = new ProductModel($params);
-            $root->save();
-            $root->group_root = $root->productid;
-            $root->save();
-
-            (new ProductStorefrontModel(
-                [
-                    'productid' => $root->productid,
-                    'sfid' => $data['sfid']
-                ])
-            )->save();
-
-            (new ProductCategoriesModel(
-                [
-                    'categoryid' => $data['category'],
-                    'productid' => $root->productid,
-                    'main' => 'Y'
-                ]
-            ))->save();
-
-            if ($_POST['group']['products']) {
-                /** @var ProductModel[] $products */
-                if ($products = ProductModel::objects()->filter(['productid__in' => array_keys($data['products'])])) {
-                    foreach ($products as $product) {
-                        $product->group_root = $root->productid;
-                        if (isset($data['truncate_checkbox'])) {
-                            $product->product = trim(preg_replace("/^({$params['group_mask']})/", '', $product->product));
-                        }
-
-                        /** @var ProductCategoriesModel $p_cat */
-                        if ($p_cat = $product->category_main->all()) {
-                            foreach($p_cat as $cat) {
-                                $cat->categoryid = $data['category'];
-                                $cat->save();
-                            }
-                        }
-
-                        $product->save();
-                    }
-                }
-            }
+            $this->redirect('product:group', ['id' => $id], 303);
         }
 
         if ($brand = BrandModel::objects()->get(['brandid' => $id])) {
@@ -117,7 +122,7 @@ class GroupController extends PrototypeAdminController
 
     public function categories()
     {
-        /** @var CategoryModel $cat */
+        /** @var CategoryModel[] $cat */
         $cat = [];
         if ($this->getRequest()->getIsAjax()) {
             if (isset($_GET['products'])) {

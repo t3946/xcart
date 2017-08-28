@@ -5,7 +5,7 @@
                 <h1>New Group Product</h1>
             </div>
         </div>
-        <form method="post" name="group_form" action="{url 'product:group' id = $id}">
+        <form method="post" name="group_form" action="{url $url id=$id}">
             <input id="o-group-manufacturer" type="hidden" name="group[manufacturerid]" value="">
             <input id="o-group-storefront" type="hidden" name="group[sfid]" value="">
             <input id="o-group-option" type="hidden" name="group[group_option]" value="">

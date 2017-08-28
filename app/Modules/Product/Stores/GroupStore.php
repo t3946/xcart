@@ -6,7 +6,9 @@ namespace Modules\Product\Stores;
 use Mindy\QueryBuilder\Aggregation\Max;
 use Mindy\QueryBuilder\Expression;
 use Modules\Brand\Models\BrandModel;
+use Modules\Product\Models\ProductCategoriesModel;
 use Modules\Product\Models\ProductModel;
+use Modules\Product\Models\ProductStorefrontModel;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Pagination\DataSource\QuerySetDataSource;
 use Xcart\App\Pagination\Pagination;
@@ -20,7 +22,7 @@ class GroupStore extends BaseStore
     private $model = null;
     private $qs = null;
 
-    public function __construct($data = null, BrandModel $model = null)
+    public function __construct($data = [], $model = null)
     {
         if ($model) {
             $this->model = $model;
@@ -58,7 +60,8 @@ class GroupStore extends BaseStore
 
             $filter = [
                 'forsale' => 'Y',
-                'sf.sfid' => 0
+                'sf.sfid' => $this->data['sfid'],
+                'group_root__isnull' => true
             ];
 
             if ($this->model) {
@@ -75,6 +78,47 @@ class GroupStore extends BaseStore
         return $this->qs;
     }
 
+    public function getGroupNewPager()
+    {
+        $qs = ProductModel::objects()->getQuerySet();
+
+        $qs->filter(
+            [
+                (new Expression("SUBSTRING_INDEX({$qs->getTableAlias()}.product, ' ', 1)"))->toSQL() => (new Expression($this->model->group_option))->toSQL(),
+                'group_root__isnull' => true,
+                'brandid' => $this->model->brandid
+            ]
+        );
+
+        $pager = new Pagination($qs, ['pageSize' => $this->defaultPagerPageSize], new QuerySetDataSource());
+
+        return $pager;
+    }
+
+    public function getGroupPager()
+    {
+        $qs = ProductModel::objects()->getQuerySet();
+
+        $qs->select(['*', 'count' => new Expression('count(p2.productid)'), 'group_phrase' => 'group_option']);
+        $qs->join('inner join', 'xcart_products',
+            [
+                'group_option' => new Expression("SUBSTRING_INDEX(p2.product, ' ', 1)"),
+                'brandid' => 'p2.brandid'
+            ], 'p2');
+        $qs->filter(
+            [
+                'productid' => new Expression($qs->getTableAlias().".group_root"),
+                'group_root__isnull' => false
+            ]
+        );
+        $qs->group(['productid']);
+        $qs->order(['-count']);
+
+        $pager = new Pagination($qs, ['pageSize' => $this->defaultPagerPageSize], new QuerySetDataSource());
+
+        return $pager;
+    }
+
     public function getBrandQuerySet()
     {
         $qs = BrandModel::objects()->getQuerySet();
@@ -85,7 +129,7 @@ class GroupStore extends BaseStore
 
         $filter = [
             'p.forsale' => 'Y',
-            'sf.sfid' => 0,
+            'sf.sfid' => $this->data['sfid'],
             'p.group_root__isnull' => true
         ];
 
@@ -114,6 +158,16 @@ class GroupStore extends BaseStore
     public function getModels()
     {
         return $this->prepareModels($this->getPager()->paginate());
+    }
+
+    public function getGroupProducts()
+    {
+        return $this->prepareModels($this->getGroupPager()->paginate());
+    }
+
+    public function getGroupNewProducts()
+    {
+        return $this->prepareModels($this->getGroupNewPager()->paginate());
     }
 
     public function getLevels()
@@ -159,7 +213,7 @@ class GroupStore extends BaseStore
             'original_provider' => Xcart::app()->user->login,
             'forsale' => 'Y',
             'brandid' => $this->data['brandid'],
-            'manufacturerid' => $this->data['manufactuerid'],
+            'manufacturerid' => $this->data['manufacturerid'],
             'group_option' => $this->data['group_option']
         ];
 
@@ -168,5 +222,70 @@ class GroupStore extends BaseStore
         }
 
         return $params;
+    }
+
+    public function createGroupProduct()
+    {
+        $params = $this->groupParams();
+
+        if (!$this->model) {
+            $this->model = new ProductModel;
+        }
+
+        $this->model->setAttributes($params);
+
+        $this->model->save();
+        $this->model->group_root = $this->model->productid;
+        $this->model->save();
+
+        if ($this->model->getIsNewRecord()) {
+            (new ProductStorefrontModel(
+                [
+                    'productid' => $this->model->productid,
+                    'sfid' => $this->data['sfid']
+                ])
+            )->save();
+
+            (new ProductCategoriesModel(
+                [
+                    'categoryid' => $this->data['category'],
+                    'productid' => $this->model->productid,
+                    'main' => 'Y'
+                ]
+            ))->save();
+        }
+
+        if ($_POST['group']['products']) {
+            /** @var ProductModel[] $products */
+            if ($products = ProductModel::objects()->filter(['productid__in' => array_keys($this->data['products'])])) {
+                foreach ($products as $product) {
+                    $product->group_root = $this->model->productid;
+                    if (isset($this->data['truncate_checkbox'])) {
+                        $product->product = trim(preg_replace("/^({$params['group_mask']})/", '', $product->product));
+                    }
+
+                    /** @var ProductCategoriesModel $p_cat */
+                    if ($p_cat = $product->category_main->all()) {
+                        foreach ($p_cat as $cat) {
+                            $new_cat = new ProductCategoriesModel($cat->getAttributes());
+                            $new_cat->categoryid = $this->data['category'];
+                            $new_cat->save();
+                            ProductCategoriesModel::objects()->delete([
+                                'categoryid' => $cat->categoryid,
+                                'productid' => $cat->productid,
+                                'main' => 'Y'
+                            ]);
+                        }
+                    }
+
+                    $product->save();
+                }
+            }
+        }
+    }
+
+    public function updateGroupProduct()
+    {
+        $this->createGroupProduct();
     }
 }

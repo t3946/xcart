@@ -2,6 +2,7 @@
 namespace Modules\Product\Models;
 
 use Modules\Amazon\Models\AmazonFbaMissingSkuModel;
+use Modules\Brand\Models\BrandModel;
 use Modules\Distributor\Models\DistributorModel;
 use Xcart\App\Orm\AutoMetaModel;
 use Xcart\App\Orm\Fields\AutoField;
@@ -69,6 +70,13 @@ class ProductModel extends AutoMetaModel
                 'class' => ForeignField::className(),
                 'modelClass' => DistributorModel::className(),
                 'link' => ['manufacturerid' => 'manufacturerid'],
+                'null' => false,
+            ],
+            'brand' => [
+                'field' => 'brandid',
+                'class' => ForeignField::className(),
+                'modelClass' => BrandModel::className(),
+                'link' => ['brandid' => 'brandid'],
                 'null' => false,
             ],
             'descr' => [
