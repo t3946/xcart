@@ -798,6 +798,10 @@ if ($mode == "search") {
     if (!empty($data["forsale"]))
         $where[] = "$sql_tbl[products].forsale = '" . $data["forsale"] . "'";
 
+    if (isset($data['group_root']) && $data['group_root']) {
+        $where[] = "({$sql_tbl['products']}.group_root IS NULL OR {$sql_tbl['products']}.group_root = {$sql_tbl['products']}.productid)";
+    }
+
     if (!empty($data["flag_free_ship"]))
         $where[] = "$sql_tbl[products].free_shipping = '" . $data["flag_free_ship"] . "'";
 

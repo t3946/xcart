@@ -77,6 +77,8 @@ if ($brandid) {
         $search_data["products"]['sort_direction'] = $sort_direction;
     }
 
+    $search_data["products"]['group_root'] = true;
+
     $mode = "search";
 
 

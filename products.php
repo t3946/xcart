@@ -69,7 +69,7 @@ $search_data["products"]["categoryid"] = $cat;
 $search_data["products"]["search_in_subcategories"] = "";
 $search_data["products"]["category_extra"] = "Y";
 $search_data["products"]["forsale"] = "Y";
-
+$search_data["products"]['group_root'] = true;
 
 #
 ##

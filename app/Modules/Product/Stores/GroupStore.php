@@ -103,12 +103,13 @@ class GroupStore extends BaseStore
         $qs->join('inner join', 'xcart_products',
             [
                 'group_option' => new Expression("SUBSTRING_INDEX(p2.product, ' ', 1)"),
-                'brandid' => 'p2.brandid'
+                'brandid' => 'p2.brandid',
             ], 'p2');
         $qs->filter(
             [
                 'productid' => new Expression($qs->getTableAlias().".group_root"),
-                'group_root__isnull' => false
+                'group_root__isnull' => false,
+                'p2.group_root__isnull' => true
             ]
         );
         $qs->group(['productid']);
