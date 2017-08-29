@@ -1,6 +1,3 @@
-{* $Id: products.tpl,v 3.72.2.3 2006/11/27 11:40:25 max Exp $ *}
-
-{* --- *}
 {if $e_search_data.substring ne ""}
     {$e_search_data.total} {if $e_search_data.total eq "1"}product{else}products{/if} found for "{if $e_search_data.orig_substring ne ""}{$e_search_data.orig_substring}{else}{$e_search_data.substring}{/if}"
 {/if}
@@ -16,10 +13,8 @@
     <br/>
     <br/>
 {/if}
-{* --- *}
 
 {include file="check_email_script.tpl"}
-
 
 {if $active_modules.Feature_Comparison ne '' && $products && $printable ne 'Y' && $products_has_fclasses}
     {include file="modules/Feature_Comparison/compare_selected_button.tpl"}
@@ -37,7 +32,6 @@
     {if $products}
 
         {section name=product loop=$products}
-
 
             {if $N_key eq ""}
                 {if $first_item ne "" && $first_item gt 0}
@@ -60,6 +54,13 @@
             {/if}
 
             {assign var="discount" value=0}
+
+            {if ($products[product].group_root == $products[product].productid)}
+                {assign var="is_group" value=true}
+            {else}
+                {assign var="is_group" value=false}
+            {/if}
+
             <table width="100%" class="product_list_row">
                 <tr class="google_impression_object" data-productid="{$products[product].productid}"
                     data-name="{$products[product].product|escape}"
@@ -109,35 +110,37 @@
                                 {if $config.General.unlimited_products ne "Y" && ($products[product].avail le 0 or $products[product].avail lt $products[product].min_amount) && $products[product].variantid}
                                     &nbsp;
                                 {elseif $current_price ne 0}
-                                    {if $products[product].list_price gt 0 and $current_price lt $products[product].list_price}
-                                        {math equation="100-(price/lprice)*100" price=$current_price lprice=$products[product].list_price format="%3.0f" assign=discount}
-                                        {if $discount gt 0}
-                                            <span class="MarketPrice">{$lng.lbl_market_price}:
-<s>{include file="currency.tpl" value=$products[product].list_price}</s>
-</span>
-                                            <br/>
+                                    {if !$is_group}
+                                        {if $products[product].list_price gt 0 and $current_price lt $products[product].list_price}
+                                            {math equation="100-(price/lprice)*100" price=$current_price lprice=$products[product].list_price format="%3.0f" assign=discount}
+                                            {if $discount gt 0}
+                                                <span class="MarketPrice">{$lng.lbl_market_price}
+                                                    :<s>{include file="currency.tpl" value=$products[product].list_price}</s></span>
+                                                <br/>
+                                            {/if}
                                         {/if}
+                                        {if $active_modules.Special_Offers ne "" and $products[product].use_special_price ne ""}
+                                            <s>
+                                        {/if}
+                                        <span class="ProductPrice">{$lng.lbl_our_price}
+                                            : {include file="currency.tpl" value=$current_price}</span>
+                                        <span class="MarketPrice">{include file="customer/main/alter_currency_value.tpl" alter_currency_value=$current_price}</span>{if $discount gt 0}{if $config.General.alter_currency_symbol ne ""},{/if}
+                                        <font class="ProductPrice">, {$lng.lbl_save_price} {$discount}%</font>
                                     {/if}
-                                    {if $active_modules.Special_Offers ne "" and $products[product].use_special_price ne ""}
-                                        <s>
-                                    {/if}
-                                    <span class="ProductPrice">{$lng.lbl_our_price}
-                                        : {include file="currency.tpl" value=$current_price}</span>
-                                    <span class="MarketPrice">{include file="customer/main/alter_currency_value.tpl" alter_currency_value=$current_price}</span>{if $discount gt 0}{if $config.General.alter_currency_symbol ne ""},{/if}
-                                <font class="ProductPrice">, {$lng.lbl_save_price} {$discount}%</font>{/if}
-                                    {if $products[product].map_price gt $products[product].taxed_price}
-                                        <br/>
-                                        <span class="map_price_help">{$config.Product_Page.map_bridge_text}</span>
-                                    {/if}
-                                    {if $active_modules.Special_Offers ne "" and $products[product].use_special_price ne ""}
-                                        </s>
-                                    {/if}
-                                    {if $products[product].taxes}
-                                        <br/>
-                                        <div class="PListTaxBox">{include file="customer/main/taxed_price.tpl" taxes=$products[product].taxes}</div>
-                                    {/if}
-                                    {if $active_modules.Special_Offers ne "" and $products[product].use_special_price ne ""}
-                                        {include file="modules/Special_Offers/customer/product_special_price.tpl" product=$products[product]}
+                                        {if $products[product].map_price gt $products[product].taxed_price}
+                                            <br/>
+                                            <span class="map_price_help">{$config.Product_Page.map_bridge_text}</span>
+                                        {/if}
+                                        {if $active_modules.Special_Offers ne "" and $products[product].use_special_price ne ""}
+                                            </s>
+                                        {/if}
+                                        {if $products[product].taxes}
+                                            <br/>
+                                            <div class="PListTaxBox">{include file="customer/main/taxed_price.tpl" taxes=$products[product].taxes}</div>
+                                        {/if}
+                                        {if $active_modules.Special_Offers ne "" and $products[product].use_special_price ne ""}
+                                            {include file="modules/Special_Offers/customer/product_special_price.tpl" product=$products[product]}
+                                        {/if}
                                     {/if}
                                 {else}
                                     <span class="ProductPrice">{$lng.lbl_enter_your_price}</span>
@@ -147,13 +150,12 @@
                             {if $products[product].eta_date_in_future eq "Y"}
                                 <br/>
                                 <br/>
-                                <span style="color:#000000">
-Expected availability: {$products[product].eta_date_mm_dd_yyyy|date_format:'%d-%b-%Y'}
+                                <span style="color:#000000">Expected availability: {$products[product].eta_date_mm_dd_yyyy|date_format:'%d-%b-%Y'}
                                     {if $products[product].allow_pre_orders ne "Y"}
                                         <br/>
                                         Sorry we don't take pre-orders.
                                     {/if}
-</span>
+                                </span>
                             {/if}
 
                             {if $usertype eq "C" and $config.Appearance.buynow_button_enabled eq "Y"}
@@ -210,10 +212,6 @@ Expected availability: {$products[product].eta_date_mm_dd_yyyy|date_format:'%d-%
                     </td>
                 </tr>
             </table>
-            {*
-            <br />
-            <br />
-            *}
             {if $search_all_website ne 'Y'}
                 <br/>
             {/if}
@@ -225,11 +223,7 @@ Expected availability: {$products[product].eta_date_mm_dd_yyyy|date_format:'%d-%
             {include file="modules/Feature_Comparison/compare_selected_button.tpl" no_form=true}
         {/if}
 
-
-        {* --- *}
         {include file="customer/main/infinite_products.tpl" show_next_products="N"}
-        {* --- *}
-
 
     {else}
 

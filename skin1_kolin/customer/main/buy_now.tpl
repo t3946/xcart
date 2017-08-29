@@ -42,92 +42,94 @@
                 </td>
             </tr>
         {else}
-            {if $product.is_product_options ne 'Y' || $buynow_enabled}
-                <tr>
-                {if $config.General.unlimited_products ne "Y" && ($product.avail le 0 or $product.avail lt $product.min_amount) && $product.variantid}
-
-                {elseif $product.distribution eq "" && !($active_modules.Subscriptions ne "" and $products[product].catalogprice)}
-
-                    {if $new_three_columns_template ne "Y"}
-                        <td class="BuyNowQuantity">{$lng.lbl_quantity}:</td>
-                    {/if}
-                    <td {if $new_three_columns_template ne "Y"} class="BuyNowMiddle" {/if} nowrap="nowrap">
-                        {if $config.General.unlimited_products ne "Y" && ($product.avail le 0 or $product.avail lt $product.min_amount)}
-                            <b>{$lng.txt_out_of_stock}</b>
-                        {else}
-                            {if $config.General.unlimited_products eq "Y"}
-                                {assign var="mq" value=$config.Appearance.max_select_quantity}
-                            {else}
-                                {math equation="x/y" x=$config.Appearance.max_select_quantity y=$product.min_amount assign="tmp"}
-                                {*if $tmp<2*}
-                                {assign var="minamount" value=$product.min_amount}
-                                {*else*}
-                                {*assign var="minamount" value=1*}
-                                {*/if*}
-                                {assign var="step" value="1"}
-                                {if $product.mult_order_quantity eq "Y"}
-                                    {assign var="step" value=$product.min_amount}
-                                {/if}
-                                {math equation="min(maxquantity*step+minamount, productquantity+1)" assign="mq" maxquantity=$config.Appearance.max_select_quantity minamount=$minamount productquantity=$product.avail step=$step}
-                            {/if}
-                            {if $product.min_amount le 1}
-                                {assign var="start_quantity" value=1}
-                            {else}
-                                {assign var="start_quantity" value=$product.min_amount}
-                            {/if}
-                            {if $config.General.unlimited_products eq "Y"}
-                                {math equation="x+y" assign="mq" x=$mq y=$start_quantity}
-                            {/if}
-                            <select name="amount">
-                                {section name=quantity loop=$mq start=$start_quantity step=$step}
-                                    <option value="{%quantity.index%}"{if $smarty.get.quantity eq %quantity.index%} selected="selected"{/if}>{%quantity.index%}</option>
-                                {/section}
-                            </select>
-                        {/if}
-                    </td>
-                    {if $new_three_columns_template eq "Y"}
-
-                        {if $config.General.unlimited_products eq "Y" || ($product.avail gt 0 and $product.avail ge $product.min_amount) || $product.variantid}
-
-                            {if $special_offers_add_to_cart eq 'Y'}
-                                <td>{include file="buttons/add_to_cart.tpl" style="button" href="javascript: document.orderform_`$product.productid`_`$product.add_date`.submit();" b=1}</td>
-                            {else}
-                                <td id="add2cart_{$product.productid}"
-                                    {if $new_three_columns_template eq "Y"}align="right"{/if}>
-
-                                    {if $product.lead_time_message ne ""}
-                                        {include file="buttons/buy_now.tpl" style="button" href="javascript:  if ('`$config.General.opt_ajax_cart`' == 'Y' &amp;&amp; !('`$product.is_product_options`' == 'Y' &amp;&amp; !'`$buynow_enabled`')) if (confirm('`$product.lead_time_message`')) ajax_add_to_cart(`$product.productid`, `$product.add_date`, 'list'); if (!('`$config.General.opt_ajax_cart`' == 'Y' &amp;&amp; !('`$product.is_product_options`' == 'Y' &amp;&amp; !'`$buynow_enabled`'))) document.orderform_`$product.productid`_`$product.add_date`.submit();" b=1 class="ajax_button" add_to_cart_btn="small"}
-                                    {else}
-                                        {include file="buttons/buy_now.tpl" style="button" href="javascript: if ('`$config.General.opt_ajax_cart`' == 'Y' &amp;&amp; !('`$product.is_product_options`' == 'Y' &amp;&amp; !'`$buynow_enabled`')) ajax_add_to_cart(`$product.productid`, `$product.add_date`, 'list'); else document.orderform_`$product.productid`_`$product.add_date`.submit();" b=1 class="ajax_button" add_to_cart_btn="small"}
-                                    {/if}
-
-
-                                </td>
-                            {/if}
-                        {/if}
-                    {/if}
-
-                {else}
-                    <tr style="display: none;">
-                        <td><input type="hidden" name="amount" value="1"/></td>
-                    </tr>
-                {/if}
-                <td {if $new_three_columns_template ne "Y"}class="BuyNowPrices"{/if}>
-                    <input type="hidden" name="mode" value="add"/>
-                    {include file="customer/main/product_prices.tpl" no_span=true}
-                </td>
-                </tr>
-                {if $product.min_amount gt 1}
+            {if !$is_group}
+                {if $product.is_product_options ne 'Y' || $buynow_enabled}
                     <tr>
-                        <td colspan="3"><font
-                                    class="ProductDetailsTitleWithoutBold">{if $product.mult_order_quantity eq "Y"}{$lng.txt_need_min_amount_mult|substitute:"items":$product.min_amount}{else}{$lng.txt_need_min_amount|substitute:"items":$product.min_amount}{/if}</font>
+                    {if $config.General.unlimited_products ne "Y" && ($product.avail le 0 or $product.avail lt $product.min_amount) && $product.variantid}
+
+                    {elseif $product.distribution eq "" && !($active_modules.Subscriptions ne "" and $products[product].catalogprice)}
+
+                        {if $new_three_columns_template ne "Y"}
+                            <td class="BuyNowQuantity">{$lng.lbl_quantity}:</td>
+                        {/if}
+                        <td {if $new_three_columns_template ne "Y"} class="BuyNowMiddle" {/if} nowrap="nowrap">
+                            {if $config.General.unlimited_products ne "Y" && ($product.avail le 0 or $product.avail lt $product.min_amount)}
+                                <b>{$lng.txt_out_of_stock}</b>
+                            {else}
+                                {if $config.General.unlimited_products eq "Y"}
+                                    {assign var="mq" value=$config.Appearance.max_select_quantity}
+                                {else}
+                                    {math equation="x/y" x=$config.Appearance.max_select_quantity y=$product.min_amount assign="tmp"}
+                                    {*if $tmp<2*}
+                                    {assign var="minamount" value=$product.min_amount}
+                                    {*else*}
+                                    {*assign var="minamount" value=1*}
+                                    {*/if*}
+                                    {assign var="step" value="1"}
+                                    {if $product.mult_order_quantity eq "Y"}
+                                        {assign var="step" value=$product.min_amount}
+                                    {/if}
+                                    {math equation="min(maxquantity*step+minamount, productquantity+1)" assign="mq" maxquantity=$config.Appearance.max_select_quantity minamount=$minamount productquantity=$product.avail step=$step}
+                                {/if}
+                                {if $product.min_amount le 1}
+                                    {assign var="start_quantity" value=1}
+                                {else}
+                                    {assign var="start_quantity" value=$product.min_amount}
+                                {/if}
+                                {if $config.General.unlimited_products eq "Y"}
+                                    {math equation="x+y" assign="mq" x=$mq y=$start_quantity}
+                                {/if}
+                                <select name="amount">
+                                    {section name=quantity loop=$mq start=$start_quantity step=$step}
+                                        <option value="{%quantity.index%}"{if $smarty.get.quantity eq %quantity.index%} selected="selected"{/if}>{%quantity.index%}</option>
+                                    {/section}
+                                </select>
+                            {/if}
                         </td>
+                        {if $new_three_columns_template eq "Y"}
+
+                            {if $config.General.unlimited_products eq "Y" || ($product.avail gt 0 and $product.avail ge $product.min_amount) || $product.variantid}
+
+                                {if $special_offers_add_to_cart eq 'Y'}
+                                    <td>{include file="buttons/add_to_cart.tpl" style="button" href="javascript: document.orderform_`$product.productid`_`$product.add_date`.submit();" b=1}</td>
+                                {else}
+                                    <td id="add2cart_{$product.productid}"
+                                        {if $new_three_columns_template eq "Y"}align="right"{/if}>
+
+                                        {if $product.lead_time_message ne ""}
+                                            {include file="buttons/buy_now.tpl" style="button" href="javascript:  if ('`$config.General.opt_ajax_cart`' == 'Y' &amp;&amp; !('`$product.is_product_options`' == 'Y' &amp;&amp; !'`$buynow_enabled`')) if (confirm('`$product.lead_time_message`')) ajax_add_to_cart(`$product.productid`, `$product.add_date`, 'list'); if (!('`$config.General.opt_ajax_cart`' == 'Y' &amp;&amp; !('`$product.is_product_options`' == 'Y' &amp;&amp; !'`$buynow_enabled`'))) document.orderform_`$product.productid`_`$product.add_date`.submit();" b=1 class="ajax_button" add_to_cart_btn="small"}
+                                        {else}
+                                            {include file="buttons/buy_now.tpl" style="button" href="javascript: if ('`$config.General.opt_ajax_cart`' == 'Y' &amp;&amp; !('`$product.is_product_options`' == 'Y' &amp;&amp; !'`$buynow_enabled`')) ajax_add_to_cart(`$product.productid`, `$product.add_date`, 'list'); else document.orderform_`$product.productid`_`$product.add_date`.submit();" b=1 class="ajax_button" add_to_cart_btn="small"}
+                                        {/if}
+
+
+                                    </td>
+                                {/if}
+                            {/if}
+                        {/if}
+
+                    {else}
+                        <tr style="display: none;">
+                            <td><input type="hidden" name="amount" value="1"/></td>
+                        </tr>
+                    {/if}
+                    <td {if $new_three_columns_template ne "Y"}class="BuyNowPrices"{/if}>
+                        <input type="hidden" name="mode" value="add"/>
+                        {include file="customer/main/product_prices.tpl" no_span=true}
+                    </td>
+                    </tr>
+                    {if $product.min_amount gt 1}
+                        <tr>
+                            <td colspan="3"><font
+                                        class="ProductDetailsTitleWithoutBold">{if $product.mult_order_quantity eq "Y"}{$lng.txt_need_min_amount_mult|substitute:"items":$product.min_amount}{else}{$lng.txt_need_min_amount|substitute:"items":$product.min_amount}{/if}</font>
+                            </td>
+                        </tr>
+                    {/if}
+                {elseif $product.distribution eq "" && !($active_modules.Subscriptions ne "" and $products[product].catalogprice) && $config.General.unlimited_products ne "Y" && ($product.avail le 0 or $product.avail lt $product.min_amount) && !$product.variantid}
+                    <tr>
+                        <td colspan="3" height="25"><b>{$lng.txt_out_of_stock}</b></td>
                     </tr>
                 {/if}
-            {elseif $product.distribution eq "" && !($active_modules.Subscriptions ne "" and $products[product].catalogprice) && $config.General.unlimited_products ne "Y" && ($product.avail le 0 or $product.avail lt $product.min_amount) && !$product.variantid}
-                <tr>
-                    <td colspan="3" height="25"><b>{$lng.txt_out_of_stock}</b></td>
-                </tr>
             {/if}
             <tr>
                 <td colspan="3">
@@ -135,10 +137,6 @@
                     {if $new_three_columns_template ne "Y"}
                     <br/>
                     {/if}
-
-                        {*
-                        <!--igor_async {include file="main/include_js.tpl" src="ajax_add_to_cart.js"} -->
-                        *}
                         <script type="text/javascript">
                             <!--
                             var lbl_added = "{$lng.lbl_added}";
@@ -149,7 +147,7 @@
                             <tr>
                                 {if $js_enabled}
 
-                                    {if $new_three_columns_template ne "Y"}
+                                    {if $new_three_columns_template ne "Y" && !$is_group}
 
                                         {if $special_offers_add_to_cart eq 'Y'}
                                             <td>{include file="buttons/add_to_cart.tpl" style="button" href="javascript: document.orderform_`$product.productid`_`$product.add_date`.submit();" b=1}</td>
@@ -182,7 +180,7 @@
                                     {else}
                                         {assign var="button_href" value="product.php?productid=`$products[product].productid`"}
                                     {/if}
-                                    <td style="padding-left: 20px;">
+                                    <td style="{if !$is_group}padding-left: 20px;{/if}">
                                         <span {include file="on_product_click.tpl"}>{include file="buttons/button.tpl" style="button" href="$button_href" button_title=$lng.lbl_more_info}</span>
                                     </td>
                                 {/if}
