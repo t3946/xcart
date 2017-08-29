@@ -746,14 +746,6 @@ global $xcart_dir;
 $smarty->assign("cidev_mpn", $oProduct->getMPN());
 $smarty->assign("oProduct", $oProduct);
 
-/*$pos = strpos($product_info['productcode'], '-');
-$mpn = '';
-
-if ($pos && is_numeric($pos) && $pos + 1 != strlen($product_info['productcode'])) {
-	$mpn = substr($product_info['productcode'], $pos + 1);
-	$smarty->assign("cidev_mpn", $mpn);
-}*/
-
 if (!empty($location) && is_array($location)){
 	$tmp_count_location = count($location);
 	$cat_for_itemscope1 = $tmp_count_location - 2;

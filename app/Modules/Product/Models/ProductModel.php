@@ -1,6 +1,7 @@
 <?php
 namespace Modules\Product\Models;
 
+use Mindy\QueryBuilder\Expression;
 use Modules\Amazon\Models\AmazonFbaMissingSkuModel;
 use Modules\Brand\Models\BrandModel;
 use Modules\Distributor\Models\DistributorModel;
@@ -129,6 +130,12 @@ class ProductModel extends AutoMetaModel
                 'modelClass' => CategoryModel::className(),
                 'through' => ProductCategoriesModel::className(),
             ],
+            'childs' => [
+                'class' => HasManyField::className(),
+                'modelClass' => ProductModel::className(),
+                'link' => ['group_root' => 'productid'],
+                'extra' => ['productid__isnt' => new Expression('group_root')]
+            ]
         ];
     }
 
@@ -140,5 +147,10 @@ class ProductModel extends AutoMetaModel
             $sMPN = preg_replace("/^(" . $model->code . "-)/i", "", $this->productcode);
         }
         return $sMPN;
+    }
+
+    public function isGroup()
+    {
+        return ($this->productid == $this->group_root);
     }
 }
