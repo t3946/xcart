@@ -24,9 +24,10 @@ class ShippingHelper
      * @param array $products
      * @param null|float $weight_ratio
      * @param bool $use_cache
+     * @param bool $use_map_price
      * @return ShippingRate[]
      */
-    public static function getShippingRates(UserModel $user, DistributorModel $distributor, $products, $weight_ratio = null, $use_cache = true)
+    public static function getShippingRates(UserModel $user, DistributorModel $distributor, $products, $weight_ratio = null, $use_cache = true, $use_map_price = true)
     {
         /** @var ShippingRate[] $shipping_rates */
         $shipping_rates = [];
@@ -39,7 +40,7 @@ class ShippingHelper
                 $oCart->addObjectToCart($element);
             }
             try {
-                if ($aShippingZones = (new ShippingModel())->getShippingRates($user, $distributor, $oCart, false, $use_cache)) {
+                if ($aShippingZones = (new ShippingModel())->getShippingRates($user, $distributor, $oCart, false, $use_cache, $use_map_price)) {
                     $shipping_rates = reset($aShippingZones);
                 }
             } catch (\Exception $e) {
@@ -119,9 +120,12 @@ class ShippingHelper
      * @param integer $product_id
      * @param integer $qty
      * @param StateModel $stateModel
+     * @param null $weight_ratio
+     * @param bool $use_cache
+     * @param bool $use_map_price
      * @return ShippingRate[]
      */
-    public static function getStateShipping($product_id, $qty, $stateModel, $weight_ratio = null, $use_cache = true)
+    public static function getStateShipping($product_id, $qty, $stateModel, $weight_ratio = null, $use_cache = true, $use_map_price = true)
     {
         $result = [];
 
@@ -134,7 +138,7 @@ class ShippingHelper
                 's_city' => 'New City'
             ]);
 
-            $result = ShippingHelper::getShippingRates($userModel, $product_model->distributor, [['model' => $product_model, 'qty' => intval($qty)]], $weight_ratio, $use_cache);
+            $result = ShippingHelper::getShippingRates($userModel, $product_model->distributor, [['model' => $product_model, 'qty' => intval($qty)]], $weight_ratio, $use_cache, $use_map_price);
         }
 
         return $result;

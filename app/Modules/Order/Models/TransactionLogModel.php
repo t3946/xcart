@@ -65,6 +65,12 @@ class TransactionLogModel extends AutoMetaModel
                 'modelClass' => UserModel::className(),
                 'link' => ['login' => 'login'],
             ],
+            'transaction' => [
+                'field' => 'order_transaction_id',
+                'class' => ForeignField::className(),
+                'modelClass' => OrderTransactionModel::className(),
+                'link' => ['order_transaction_id' => 'id'],
+            ],
             'payment_method_model' => [
                 'field' => 'paymentid',
                 'class' => ForeignField::className(),

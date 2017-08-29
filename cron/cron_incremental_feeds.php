@@ -134,11 +134,11 @@ SQL;
                     $oProduct->save();
                     $googleOneRow = null;
                     foreach ($aExternalMarketPlaces as $oExternalMarketPlace) {
-                        if (is_null($googleOneRow) && in_array($product["utype"], ['1', '1,2', '2,1'])) {
-                            $googleOneRow = $oExternalMarketPlace->getGoogleOneRow($oProduct->getDataModel(), EXTRA_LOG);
+                        if (is_null($googleOneRow)) {
+                            $googleOneRow = $oExternalMarketPlace->getGoogleOneRow($oProduct,  $product["utype"], EXTRA_LOG);
                         }
                         if ($oExternalMarketPlace->getExternalMarketPlaceEntity()->getMarketPlaceStatus() == 'Y') {
-                            $oExternalMarketPlace->addProductToBatch($oProduct->getDataModel(), $product["utype"], $googleOneRow, EXTRA_LOG);
+                            $oExternalMarketPlace->addProductToBatch($oProduct, $product["utype"], $googleOneRow, EXTRA_LOG);
                         }
                         if ($oExternalMarketPlace->getCurrentInventoryBatchCount() == $oExternalMarketPlace->getInventoryBatchCount()) {
                             $oExternalMarketPlace->submitInventoryBatch(SUBMIT_DISABLE, EXTRA_LOG);
