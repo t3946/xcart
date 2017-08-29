@@ -36,37 +36,35 @@ class LookupCallback
         $connection = $ownerModel->getConnection();
 
         reset($lookupNodes);
-        $prevField = $ownerModel->getField(current($lookupNodes));
-        if (!$prevField instanceof RelatedField) {
-            $prevField = null;
-        }
+        $field = $ownerModel->getField(current($lookupNodes));
+        $prevField = null;
 
-        $prevThrough = false;
         foreach ($lookupNodes as $i => $node) {
+            /** @var \Xcart\App\Orm\Fields\RelatedField $prevField */
+            /** @var \Xcart\App\Orm\Fields\RelatedField $field */
 
-            if ($prevField instanceof RelatedField) {
-                $relatedModel = $prevField->getRelatedModel();
-
+            if ($prevField)
+            {
                 if ($node == 'through') {
-                    $prevThrough = true;
+                    if ($prevField instanceof ManyToManyField) {
+                        $joinAlias = $prevField
+                            ->setConnection($connection)
+                            ->buildThroughQuery($queryBuilder, $joinAlias);
+                    }
                 }
                 else {
-                    /** @var \Xcart\App\Orm\Fields\RelatedField $prevField */
-                    if ($prevThrough && $prevField instanceof ManyToManyField) {
-                        $joinAlias = $prevField
-                            ->setConnection($connection)
-                            ->buildThroughQuery($queryBuilder, $queryBuilder->getAlias());
-                    }
-                    else {
-                        $joinAlias = $prevField
-                            ->setConnection($connection)
-                            ->buildQuery($queryBuilder, $queryBuilder->getAlias()); //@TODO: Testings? maybe bug
-                    }
-
-                    if (($nextField = $relatedModel->getField($node)) instanceof RelatedField) {
-                        $prevField = $nextField;
-                    }
+                    $joinAlias = $prevField
+                        ->setConnection($connection)
+                        ->buildQuery($queryBuilder, $joinAlias);
                 }
+
+                $relatedModel = $prevField->getRelatedModel();
+                $field = $relatedModel->getField($node);
+            }
+
+            $prevField = null;
+            if ($field instanceof RelatedField) {
+                $prevField = $field;
             }
 
             if (count($lookupNodes) == $i + 1) {
