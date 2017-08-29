@@ -3,8 +3,10 @@
 namespace Modules\Distributor\Models;
 
 use Modules\Product\Models\ProductModel;
+use Modules\Shipping\Models\ShippingRateModel;
 use Xcart\App\Orm\AutoMetaModel;
 use Xcart\App\Orm\Fields\AutoField;
+use Xcart\App\Orm\Fields\HasManyField;
 use Xcart\App\Traits\DataModelTrait;
 use Xcart\Manufacturer;
 
@@ -32,7 +34,12 @@ class DistributorModel extends AutoMetaModel
         return [
             'manufacturerid' => [
                 'class' => AutoField::className()
-            ]
+            ],
+            'shipping_rates' => [
+                'class' => HasManyField::className(),
+                'modelClass' => ShippingRateModel::className(),
+                'link' => ['manufacturerid' => 'manufacturerid']
+            ],
         ];
     }
 

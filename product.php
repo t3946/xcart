@@ -625,12 +625,21 @@ if ($config['product_queries']['product_queries_enable'] == 'Y' && url_exists($c
 
 if (!empty($product_tabs) && is_array($product_tabs)) {
 
-	$count_shipping_rates_for_canada = func_query_first_cell("SELECT manufacturerid FROM $sql_tbl[shipping_rates] WHERE manufacturerid='$product_info[manufacturerid]' AND (type='R' OR type='D') AND zoneid='12'");
+    $default_zone_count = \Modules\Distributor\Models\DistributorModel::objects()
+        ->getQuerySet()
+        ->filter(
+            [
+                'manufacturerid' => $product_info['manufacturerid'],
+                'shipping_rates__zoneid' => 0
+            ]
+        )->count();
 
-	if (empty($count_shipping_rates_for_canada)){
+	if (!$default_zone_count){
+
+
 		foreach ($product_tabs as $k => $v){
 			if ($v["title"] == "Shipping"){
-				$product_tabs[$k]["tpl"] .= "<font class='ErrorMessage'>" . func_get_langvar_by_name("lbl_we_dont_ship_to_Canada_product_page") . "</font>"; 
+				$product_tabs[$k]["tpl"] .= "<span class='ErrorMessage'>" . func_get_langvar_by_name("lbl_we_dont_ship_to_Canada_product_page") . "</span>";
 			}
 		}
 	}
