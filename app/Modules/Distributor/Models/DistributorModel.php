@@ -56,4 +56,15 @@ class DistributorModel extends AutoMetaModel
         }
         return $price;
     }
+
+    public function hasDefaultShippingZone()
+    {
+        return ShippingRateModel::objects()
+                ->filter(
+                    [
+                        'manufacturerid' => $this->manufacturerid,
+                        'zoneid' => 0
+                    ]
+                )->count() > 0;
+    }
 }

@@ -1,6 +1,8 @@
 <?php
 
 
+use Modules\Distributor\Helpers\DistributorHelper;
+
 define('OFFERS_DONT_SHOW_NEW',1);
 require "./auth.php";
 
@@ -625,23 +627,17 @@ if ($config['product_queries']['product_queries_enable'] == 'Y' && url_exists($c
 
 if (!empty($product_tabs) && is_array($product_tabs)) {
 
-    $default_zone_count = \Modules\Distributor\Models\DistributorModel::objects()
-        ->getQuerySet()
-        ->filter(
-            [
-                'manufacturerid' => $product_info['manufacturerid'],
-                'shipping_rates__zoneid' => 0
-            ]
-        )->count();
+	if (!$oProduct->distributor->hasDefaultShippingZone()){
+        if ($ca = DistributorHelper::getShippingCountries($oProduct->manufacturerid)) {
 
-	if (!$default_zone_count){
+            $c_str = implode(array_map(function($a){return $a->code;}, $ca), ' or ');
 
-
-		foreach ($product_tabs as $k => $v){
-			if ($v["title"] == "Shipping"){
-				$product_tabs[$k]["tpl"] .= "<span class='ErrorMessage'>" . func_get_langvar_by_name("lbl_we_dont_ship_to_Canada_product_page") . "</span>";
-			}
-		}
+            foreach ($product_tabs as $k => $v){
+                if ($v["title"] == "Shipping"){
+                    $product_tabs[$k]["tpl"] .= "<span class='ErrorMessage'>This product can only be shipped to a {$c_str} address.</span>";
+                }
+            }
+        }
 	}
 
 	$smarty->assign('product_tabs', $product_tabs);
