@@ -65,7 +65,7 @@ $padding_container: rem-calc(18);
         color: #e7edf0;
       };
 
-      @include breakpoint(xsmall down) {
+      @include breakpoint(sm down) {
 
         line-height: 48px;
         font: {
@@ -114,7 +114,7 @@ $padding_container: rem-calc(18);
       line-height: rem-calc(40);
     }
 
-    @include breakpoint(xsmall down) {
+    @include breakpoint(sm down) {
       //background-color: #ebebeb;
       height: rem-calc(45);
       line-height: rem-calc(45);
@@ -249,7 +249,7 @@ $padding_container: rem-calc(18);
             background-size: rem-calc(37);
           }
 
-          @include breakpoint(xsmall down) {
+          @include breakpoint(sm down) {
 
             width: rem-calc(45);
             height: rem-calc(45);
@@ -316,7 +316,7 @@ $padding_container: rem-calc(18);
               font-size: rem-calc(24);
               text-transform: uppercase;
 
-              @include breakpoint(xsmall down) {
+              @include breakpoint(sm down) {
                 font-size: rem-calc(15);
               }
             }
@@ -366,7 +366,7 @@ $padding_container: rem-calc(18);
                   }
                 }
 
-                @include breakpoint(xsmall down) {
+                @include breakpoint(sm down) {
                   width: 137%;
                   left: -38%;
                   border: 1px solid $dark_blue;
@@ -398,7 +398,7 @@ $padding_container: rem-calc(18);
       }
     }
 
-    @include breakpoint(xsmall down) {
+    @include breakpoint(sm down) {
       .actions {
         .action_block {
 

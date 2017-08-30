@@ -469,7 +469,7 @@ $noUi-css-prefix: range;
                 ul {
                   margin: 10px 0;
 
-                  @include breakpoint(xsmall up) {
+                  @include breakpoint(sm up) {
                     column-count: 2;
                   }
                   @include breakpoint(medium up) {
@@ -535,7 +535,7 @@ $noUi-css-prefix: range;
         border: 2px solid #15303f;
 
 
-        @include breakpoint(xsmall down) {
+        @include breakpoint(sm down) {
           width: 45%;
           margin: 0 .25em;
         }

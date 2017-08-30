@@ -58,7 +58,7 @@
             size: 1.5rem
           };
 
-          @include breakpoint(xsmall down) {
+          @include breakpoint(sm down) {
             margin-top: -.6rem;
             font: {
               size: 1.3rem
@@ -81,7 +81,7 @@
           background: url('../images/icons/link_arrow_right_dark.svg') right rem-calc(16) center no-repeat;
           background-size: rem-calc(11);
 
-          @include breakpoint(xsmall down) {
+          @include breakpoint(sm down) {
             background-size: rem-calc(9);
             font-size: rem-calc(13);
           }

@@ -37,7 +37,7 @@ header {
         margin: 0;
         padding: 0;
 
-        @media #{$hidden-in-medium} {
+        @include breakpoint(ml down) {
           max-width: 300px;
         }
 
@@ -47,6 +47,12 @@ header {
 
           @include breakpoint(large up) {
             line-height: rem-calc(62);
+          }
+
+          @include breakpoint(ml down) {
+            &:nth-child(1n+3) {
+              display: none;
+            }
           }
 
           a {

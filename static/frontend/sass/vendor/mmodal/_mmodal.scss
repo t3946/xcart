@@ -39,7 +39,7 @@ body {
           size: 27px 27px;
         };
 
-        @include breakpoint(xsmall down) {
+        @include breakpoint(sm down) {
           background: {
             size: 20px 20px;
           };
@@ -83,7 +83,7 @@ body {
               weight: 600;
             }
 
-            @include breakpoint(xsmall down) {
+            @include breakpoint(sm down) {
               font: {
                 size: 1rem;
                 weight: 500;

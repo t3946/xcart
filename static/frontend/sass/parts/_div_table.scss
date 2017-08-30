@@ -1,17 +1,219 @@
-.table {
+/*
+ * Define the widths: play around with these 
+ * to get a best fit.
+ */
+//$index-width: 25px;
+//$title-width: 220px;
+//$comment-width: 120px;
+//$module-width: 110px;
+//$reporter-width: 85px;
+//$status-width: 95px;
+//$owner-width: 75px;
+//$severity-width: 80px;
+//$icon-width: 18px;
+//$date-width: 110px;
+//$margin-width: 30px;
+
+/*
+ * Basic styles, good for a large display. Everything fits in
+ * one row, no wrapping. All text based cells grow equally.
+ */
+// Main container - row container
+.table-row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
   width: 100%;
-  table-layout: auto;
-  display: table;
-
-  .trow {
-    display: table-row;
-    width: 100%;
-  }
-  .tcell {
-    display: table-cell;
-    width: 100%;
-  }
-
-  .thead {}
-  .tbody {}
+  //padding-left: 15px;
+  //padding-right: 15px;
 }
+
+// Wrappers around cells and other wrappers
+.table-wrapper {
+  display: flex;
+  flex-direction: row;
+}
+
+// leaf level containers (cells): common properties 
+.table-column {
+  flex-grow: 0;
+  flex-shrink: 0;
+  vertical-align: top;
+}
+//
+//// leaf level containers: widths
+//.index {
+//  width: $index-width;
+//}
+//
+//.title {
+//  width: $title-width;
+//}
+//
+//.module {
+//  width: $module-width;
+//}
+//
+//.reporter {
+//  width: $reporter-width;
+//}
+//
+//.status {
+//  width: $status-width;
+//}
+//
+//.owner {
+//  width: $owner-width;
+//}
+//
+//.severity {
+//  width: $severity-width;
+//}
+//
+//.watch, .add-comment {
+//  width: $icon-width;
+//}
+//
+//.date {
+//  width: $date-width;
+//}
+//
+//// leaf level containers (cells): special properties
+//.index {
+//  text-align: center;
+//}
+//
+//.comment {
+//  width: $comment-width;
+//}
+//
+//// these are growable text containers, with ellipsis to show truncated text
+//.title, .comment {
+//  flex-grow: 1;
+//  overflow: hidden;
+//  white-space: nowrap;
+//  text-overflow: ellipsis;
+//  padding-right: 4px;
+//}
+//
+//.date {
+//  width: $date-width;
+//  text-align: right;
+//  padding-right: 4px;
+//}
+
+/* growable wrappers */
+//.title-comment, .title-comment-module-reporter, .attributes {
+//  flex-grow: 1;
+//}
+
+/*
+ * Media queries: optimize for different screen widths.
+ */
+
+// Wrapper widths
+//$title-comment-width: max($title-width, $comment-width);
+//$module-reporter-width: max($module-width, $reporter-width);
+//$status-owner-width: max($status-width, $owner-width);
+//$title-comment-module-reporter-width: max($title-width, $comment-width, ($module-width + $reporter-width));
+//$status-owner-severity-width: max($status-width, $owner-width, $severity-width);
+//$all-attributes-width: max($title-width, $comment-width, ($module-width + $reporter-width), ($status-width + $owner-width));
+
+@mixin direction-horizontal() {
+  flex-direction: row;
+}
+
+@mixin direction-vertical() {
+  // Let the wrapper flex direction-vertically, so we get 2 rows
+  flex-direction: column;
+
+  // can't have the children grow, since this now means direction-vertical growth
+  div {
+    flex-grow: 0;
+  }
+}
+
+@mixin direction-vertical-growing() {
+  @include direction-vertical();
+
+  & > div {
+    // Let immediate child divs grow direction-horizontally, 100% to fill the wrapper
+    width: 100%;
+  }
+}
+
+/*
+ * Media breaks.
+ */
+
+// First break: as many 2-row fields as possible. This will leave Severity
+// and Dates still direction-horizontal, as they are odd numbered
+//@media all and (max-width: ($margin-width * 2 + $index-width + $title-width + $comment-width + $module-width + $reporter-width + $status-width + $owner-width + $severity-width + $icon-width * 2 + $date-width * 3)) {
+//  .title-comment {
+//    @extend .direction-vertical-growing;
+//    width: $title-comment-width;
+//  }
+//  .module-reporter, .status-owner {
+//    @extend .direction-vertical;
+//  }
+//}
+
+// Next: as many 3-rows as possible
+//@media all and (max-width: ($margin-width * 2 + $index-width
+//+ $title-comment-width + $module-reporter-width
+//+ $status-owner-width  + $severity-width
+//+ $icon-width * 2 + $date-width * 3)) {
+//
+//  // Change module-report back to direction-horizontal, keep it under title and comment
+//  // So, we have 3 rows: title, comment, module-reporter
+//  .module-reporter {
+//    @extend .direction-horizontal;
+//  }
+//  .title-comment-module-reporter {
+//    @extend .direction-vertical-growing;
+//    width: $title-comment-module-reporter-width;
+//  }
+//
+//  // Line up status, owner, severity into the next column
+//  .status-owner-severity {
+//    @extend.direction-vertical;
+//  }
+//  // Line up all icons in one column, even though there's only two of them
+//  .icons {
+//    @extend .direction-vertical;
+//  }
+//  // Line up all dates in one column
+//  .dates {
+//    @extend .direction-vertical;
+//  }
+//}
+
+//// Last break: 4 columns: index, attributes, icons, dates
+//@media all and (max-width: ($margin-width * 2 + $index-width + $title-comment-module-reporter-width + $status-owner-severity-width + $icon-width + $date-width)) {
+//
+//  // looks better with a little padding on mobile devices
+//  .table-row {
+//    padding-left: 4px;
+//    padding-right: 4px;
+//  }
+//
+//  // All attributes: title, comment, module-reporter, status-owner, severity
+//  .attributes {
+//    @extend .direction-vertical-growing;
+//
+//    width: $all-attributes-width;
+//  }
+//  .module-reporter, .status-owner {
+//    @extend .direction-horizontal;
+//  }
+//}
+
+///*
+// * General good-look styles
+// */
+//.table-row {
+//  border-bottom: 1px solid #e0e0e0;
+//  border-collapse: collapse;
+//  padding-top: 2px;
+//}
+

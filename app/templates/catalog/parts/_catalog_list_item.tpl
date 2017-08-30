@@ -3,23 +3,7 @@
         <div class="image_container container">
             <a href="{$item->getAbsoluteUrl()}" title="{$item.product}" class="link">
 
-
-                {set $image = $item->images->limit(1)->get()}
-                {if $image!}
-                    {if $.isBot}
-                        <img src="//cdn.{$.getSite->getBaseDomain()}{$image->getURL()}" width="{$image->image_x}" height="{$image->image_y}" alt="{$item.product}" itemscope itemprop="image">
-                    {else}
-                        <img data-original="//cdn.{$.getSite->getBaseDomain()}{$image->getURL()}" width="{$image->image_x}" height="{$image->image_y}" alt="{$item.product}" class="lazy lazy-img" itemprop="image">
-                    {/if}
-                {else}
-                    
-                    {*<img src="http://via.placeholder.com/200x200/efefef/a6a6a6/?text=No+image" alt="Image not available">*}
-                    <div class="not-avail">
-                        <span class="text">
-                            Image not available
-                        </span>
-                    </div>
-                {/if}
+                {include 'catalog/parts/_item_image.tpl' model=$item}
 
                 {if $item->isNewProduct()}
                     <span class="splash splash-new show-for-large">New</span>

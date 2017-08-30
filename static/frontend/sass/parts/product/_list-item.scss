@@ -381,7 +381,7 @@
         }
       }
 
-      @include breakpoint (xsmall down) {
+      @include breakpoint (sm down) {
         margin-bottom: 0;
       }
 
@@ -465,7 +465,7 @@
       margin-left: -#{map-safe-get($grid-column-gutter, medium) / 2};
       margin-right: -#{map-safe-get($grid-column-gutter, medium) / 4};
     }
-    @include breakpoint(xlarge up) {
+    @include breakpoint(xl up) {
       margin-left: -#{map-safe-get($grid-column-gutter, medium) / 2};
       margin-right: -#{map-safe-get($grid-column-gutter, medium) / 2};
     }
@@ -490,7 +490,7 @@
         flex: 0 0 25%;
       }
 
-      @include breakpoint(xlarge up) {
+      @include breakpoint(xl up) {
         flex: 0 0 20%;
       }
 
@@ -499,7 +499,7 @@
         padding-bottom: 2%;
         height: rem-calc(190);
 
-        @include breakpoint(xsmall down) {
+        @include breakpoint(sm down) {
           height: rem-calc(130);
 
           img {
@@ -626,7 +626,7 @@
           //display: inline-block;
           margin: 0;
 
-          @include breakpoint(xsmall down) {
+          @include breakpoint(sm down) {
             display: none;
           }
 

@@ -1,10 +1,4 @@
 
-.hide-in-medium {
-  @media #{$hidden-in-medium} {
-    display: none !important;
-  }
-}
-
 .middle-inline-block {
   display: inline-block;
   vertical-align: middle;

@@ -19,7 +19,7 @@
 
     {if $show}
     <section class="filter_reset">
-        <div class="row small-up-1 xsmall-up-2 medium-up-3">
+        <div class="row small-up-1 sm-up-2 medium-up-3">
         {foreach $filters as $item}
 
             {if $item.type == 'price'}

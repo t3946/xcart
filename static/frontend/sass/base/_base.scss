@@ -28,12 +28,6 @@ img {
   min-height: 100%;
 }
 
-.hide-in-medium {
-  @media #{$hidden-in-medium} {
-    display: none !important;
-  }
-}
-
 .hr {
   height: 1px;
   background-color: rgb(205, 205, 205);

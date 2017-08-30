@@ -48,7 +48,7 @@ header {
       }
 
       .text {
-        @media #{$hidden-in-medium} {
+        @include breakpoint(ml down) {
           display: none;
         }
       }
