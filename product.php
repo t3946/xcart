@@ -630,7 +630,7 @@ if (!empty($product_tabs) && is_array($product_tabs)) {
 	if (!$oProduct->distributor->hasDefaultShippingZone()){
         if ($ca = DistributorHelper::getShippingCountries($oProduct->manufacturerid)) {
 
-            $c_str = implode(array_map(function($a){return $a->code;}, $ca), ' or ');
+            $c_str = implode(array_map(function($a){return func_get_langvar_by_name('country_'.$a->code);}, $ca), ' or ');
 
             foreach ($product_tabs as $k => $v){
                 if ($v["title"] == "Shipping"){

@@ -470,8 +470,11 @@ Use my trucking account #
         {$lng.lbl_we_dont_ship_to_Canada_checkout}
         {assign var="disable_continue" value="Y"}
     {else}
-        {$v.shipping_countries|var_dump}
-        The items from this warehouse can only be shipped to a {$shipping_countries} address. Please remove these items from your shopping cart before continuing.
+    	{if $userinfo.s_country ne "US"}
+        	The items from this warehouse can only be shipped to a {$shipping_groups.$k.shipping_countries} address. Please remove these items from your shopping cart before continuing.
+		{else}
+            {$lng.lbl_no_shipping_for_location}
+		{/if}
     {/if}
     </span>
     <br/>
