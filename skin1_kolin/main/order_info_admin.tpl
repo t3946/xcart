@@ -796,7 +796,7 @@ Cost to us accurate
   )}
     <td colspan="2" align="center">
       <input data-orderid="{$oOrderGroup->getOrderId()}" data-manufacturerid="{$oOrderGroup->getManufacturerId()}" id="submit_amazon_shipment" name="submit_amazon_shipment" type="button"  value="{if ($oOrderGroup->getField('cb_status') =='AP' && $order_transactions_totals.authorized_PLUS_captured_totals == $oOrder->getOrderTotalGross())}Capture & {/if}Ship now by Amazon" />
-      <select {if $oOrderShipping->isAmazonShipping()} disabled="disabled" {/if}style="margin-top: 7px; width: 88%;" name="amazon_shipping_method_select" id="amazon_shipping_method_select">
+      <select {if $oOrderShipping->isAmazonShipping() && $oOrder->amazon_fulfillment_channel == 'AFN'} disabled="disabled" {/if}style="margin-top: 7px; width: 88%;" name="amazon_shipping_method_select" id="amazon_shipping_method_select">
         <option value=""></option>
         {html_options options=$aAmazonShippingMethods selected=$oOrderGroup->getShippingMethodName()}
       </select>
