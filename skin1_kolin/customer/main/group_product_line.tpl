@@ -77,7 +77,7 @@
                 <td class="strike">{if floatval($child->list_price) > 0}{include file="currency.tpl" value=$child->list_price}{/if}</td>
                 <td>{include file="currency.tpl" value=$child->getFrontendPrice()}</td>
                 <td data-price="{$child->getFrontendPrice()}">{include file="customer/main/add_to_cart_input.tpl"}</td>
-                <td class="extended"></td>
+                <td class="extended"><span class="currency">US$ </span><span class="value"></span></td>
             </tr>
         {/foreach}
     </table>
@@ -95,7 +95,7 @@
         $(".spinner").spinner('changing', function(e, newVal, oldVal) {
             var spinner = $(this).closest('.spinner').parent();
             var sub = spinner.data('price') * newVal;
-            spinner.next('.extended').html('US$ '+sub.toFixed(2));
+            spinner.next('.extended').find('span.currency').show().end().find('span.value').html(sub.toFixed(2));
         });
     </script>
 {/literal}

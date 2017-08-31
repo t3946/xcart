@@ -621,7 +621,7 @@
     {include file="modules/Customer_Reviews/vote_reviews.tpl" }
 {/if}
 {if $active_modules.Product_Options ne ''}
-    <script type="text/javascript" language="JavaScript 1.2">
+    <script type="text/javascript">
         check_options();
     </script>
 {/if}
