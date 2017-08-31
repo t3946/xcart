@@ -44,10 +44,13 @@ module.exports = {
                     loader: 'babel-loader',
                     options: {
                         presets: [
+                            [ "react" ],
                             [ "es2015", { "modules": false }],
-                            [ "es2016" ],
-                            // [ "babili" ],
-                            [ "react" ]
+                            [ "env", {
+                                "targets": {
+                                    "browsers": ["last 10 versions", "safari >= 7"]
+                                }
+                            }],
                         ],
                         plugins: [
                             ["transform-react-jsx", {
@@ -83,11 +86,26 @@ module.exports = {
             ie8: false,
             ecma: 5,
             sourceMap: false,
+            mangle: {
+                // safari10: true,
+                toplevel: true,
+                eval: true,
+            },
             output: {
                 comments: false,
                 beautify: false,
             },
             compress: {
+                passes: 2,
+                unsafe_math: true,
+                unsafe_proto: true,
+
+                reduce_vars: true,
+                cascade: true,
+
+                loops: true,
+                // typeofs: true,
+                comparisons: true,
                 sequences: true,
                 properties: true,
                 drop_debugger: true,
@@ -104,6 +122,8 @@ module.exports = {
                 cache: true,
                 workers: 2 // for e.g
             },
+
+            warningsFilter: (src) => true
         }),
         new webpack.ProvidePlugin({
         //     'Promise': 'bluebird'

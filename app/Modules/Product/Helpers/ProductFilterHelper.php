@@ -43,11 +43,12 @@ class ProductFilterHelper
     public function getFilterStructure(array $types = ['price', 'brand', 'filter'])
     {
         $cache_key = implode('-',$types) .';sql:' . (clone $this->qs)->allSql();
+        $list = [];
 
-        if ($list = Xcart::app()->cache->get($cache_key, []))
-        {
-            return $list;
-        }
+//        if ($list = Xcart::app()->cache->get($cache_key, []))
+//        {
+//            return $list;
+//        }
 
         if (in_array('price', $types)) {
             $tqs = clone $this->qs;
@@ -170,7 +171,7 @@ class ProductFilterHelper
 
         }
 
-        Xcart::app()->cache->set($cache_key, $list, 8600);
+//        Xcart::app()->cache->set($cache_key, $list, 8600);
 
         return $list;
     }

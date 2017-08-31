@@ -11,18 +11,18 @@
     <link rel="dns-prefetch" href="https://www.google-analytics.com">
     <link rel="dns-prefetch" href="https://fonts.googleapis.com">
 
-    <link rel="manifest" href="manifest.json">
+    {*<link rel="manifest" href="/manifest.json">*}
 
     <meta name="apple-touch-fullscreen" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
-    <meta name="apple-mobile-web-app-title" content="S3 Stores">
+    {*<meta name="apple-mobile-web-app-title" content="S3 Stores">*}
 
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="application-name" content="S3 Stores">
 
-    <meta name="url" itemprop="url" content="https://s3stores.com/" >
-    <meta name="name" itemprop='name' content="S3 Stores">
+    {*<meta name="url" itemprop="url" content="https://s3stores.com/" >*}
+    {*<meta name="name" itemprop='name' content="S3 Stores">*}
     <link rel="shortcut icon" href="/favicon.png" type="image/png" />
 
     {block 'seo'}{meta controller=$this!:null}{/block}
