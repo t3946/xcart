@@ -51,15 +51,27 @@ x_session_register('last_categoryid');
 # Get the payment methods list
 #
 function check_payment_methods($membershipid) {
-	global $sql_tbl, $config, $cart, $shop_language;
-
-	x_load('tests');
+	global $sql_tbl, $current_storefront, $cart, $shop_language;
 
 	$condition = "";
 	if	(@empty($cart["products"]) && @!empty($cart["giftcerts"]))
 		$condition .= " AND pm.paymentid != 14 ";
 
-	$payment_methods = func_query("SELECT pm.*,cc.module_name,cc.processor,cc.type, pm.payment_method as payment_method_orig, IFNULL(l1.value, pm.payment_method) as payment_method, IFNULL(l2.value, pm.payment_details) as payment_details FROM $sql_tbl[payment_methods] as pm LEFT JOIN $sql_tbl[ccprocessors] as cc ON pm.paymentid = cc.paymentid LEFT JOIN $sql_tbl[pmethod_memberships] ON $sql_tbl[pmethod_memberships].paymentid = pm.paymentid LEFT JOIN $sql_tbl[languages_alt] as l1 ON l1.name = CONCAT('payment_method_', pm.paymentid) AND l1.code = '$shop_language' LEFT JOIN $sql_tbl[languages_alt] as l2 ON l2.name = CONCAT('payment_details_', pm.paymentid) AND l2.code = '$shop_language' WHERE pm.active='Y' AND ($sql_tbl[pmethod_memberships].membershipid ='$membershipid' OR $sql_tbl[pmethod_memberships].membershipid IS NULL) $condition ORDER BY pm.is_cod, pm.orderby");
+	$payment_methods = func_query(/** @lang MySQL */
+        <<<SQL
+SELECT pm.*, 
+	   cc.module_name, cc.processor, cc.type, pm.payment_method as payment_method_orig, 
+	   IFNULL(l1.value, pm.payment_method) as payment_method, IFNULL(l2.value, pm.payment_details) as payment_details 
+  FROM xcart_payment_methods as pm
+  INNER JOIN xcart_payment_methods_storefronts pms ON pm.paymentid = pms.paymentid AND pms.storefrontid = $current_storefront 
+  LEFT JOIN xcart_ccprocessors as cc ON pm.paymentid = cc.paymentid 
+  LEFT JOIN $sql_tbl[pmethod_memberships] ON $sql_tbl[pmethod_memberships].paymentid = pm.paymentid 
+  LEFT JOIN $sql_tbl[languages_alt] as l1 ON l1.name = CONCAT('payment_method_', pm.paymentid) AND l1.code = '$shop_language' 
+  LEFT JOIN $sql_tbl[languages_alt] as l2 ON l2.name = CONCAT('payment_details_', pm.paymentid) AND l2.code = '$shop_language' 
+  WHERE pm.active='Y' AND ({$sql_tbl['pmethod_memberships']}.membershipid ='$membershipid' OR {$sql_tbl['pmethod_memberships']}.membershipid IS NULL) $condition 
+  ORDER BY pm.is_cod, pm.orderby
+SQL
+);
 
 	$payment_methods = test_payment_methods($payment_methods,true);
 
