@@ -18,7 +18,7 @@ module.exports = {
     // "testStyles"
   ],
   "feature-detects": [
-    "a/download",
+    // "a/download",
    //  "ambientlight",
    //  "applicationcache",
    //  "audio",

@@ -1,6 +1,7 @@
 const webpack = require('webpack');
 const _ = require('lodash');
 const path = require('path');
+const BowerResolvePlugin = require("bower-resolve-webpack-plugin");
 const paths = require('./gulp.frontend.patchs');
 // const conf_dev = require('./webpack/webpack.develop');
 // const conf_base = require('./webpack/webpack.base');
@@ -26,8 +27,12 @@ module.exports = {
             'frontend/jsx',
             paths.modules.jsx,
             path.resolve('./' + paths.modules.jsx),
-            'node_modules'
+            'node_modules',
+            'bower_components'
         ],
+        plugins: [new BowerResolvePlugin()],
+        descriptionFiles: ['bower.json', 'package.json'],
+        mainFields: ['browser', 'main'],
         extensions: ['.js', '.jsx', '.json']
     },
     module: {
@@ -75,7 +80,8 @@ module.exports = {
     },
     plugins: [
         new webpack.optimize.UglifyJsPlugin({
-            sourceMap: true,
+            sourceMap: false,
+            output: {comments: false},
             compress: {
                 sequences: true,
                 properties: true,
@@ -91,7 +97,10 @@ module.exports = {
             }
         }),
         new webpack.ProvidePlugin({
-            'Promise': 'bluebird'
+        //     'Promise': 'bluebird'
+            $: "jquery",
+            jQuery: "jquery",
+            "window.jQuery": "jquery"
         }),
         new webpack.LoaderOptionsPlugin({
             minimize: true,

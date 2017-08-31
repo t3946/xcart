@@ -1,14 +1,5 @@
-import 'modernizr';
-import  "./_binds/response_status_278";
-import  "./_binds/product_quantity_group";
-import  "./_binds/endless_pagination";
-import  "./_binds/click_mmodal";
-import  "./_binds/search";
-import  "./_binds/minicart";
-import  "./_binds/shadow";
-import  "./_binds/catalog_actionblock_sort";
+import 'head';
 
-import  "./ext/jq-swipe";
 
 import DepartmentMenu from "./components/DepartmentMenu";
 import DottedText from "./components/DottedText";

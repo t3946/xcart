@@ -3,7 +3,7 @@
         <div class="image_container container">
             <a href="{$item->getAbsoluteUrl()}" title="{$item.product}" class="link">
 
-                {include 'catalog/parts/_item_image.tpl' model=$item}
+                {include "catalog/parts/_item_image.tpl" model=$item}
 
                 {if $item->isNewProduct()}
                     <span class="splash splash-new show-for-large">New</span>

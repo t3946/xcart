@@ -44,7 +44,7 @@
     <style type="text/css">{inline file="static/frontend/dist/css/base.css"}</style>
     <link rel="stylesheet" href="/static/frontend/dist/css/styles.css?v={frontend_version resource='css/styles.css'}" media="all">
 
-    <script src="/static/frontend/dist/js/vendors.js?v={frontend_version resource='vendors.js'}" defer></script>
+    {*<script src="/static/frontend/dist/js/vendors.js?v={frontend_version resource='vendors.js'}" defer></script>*}
 
     {block 'head'}{/block}
 

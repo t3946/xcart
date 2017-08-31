@@ -171,7 +171,8 @@ gulp.task('frontend:js:includes', function(done){
     done();
 });
 
-gulp.task('frontend:js', ['frontend:js:includes'], function() {
+// gulp.task('frontend:js', ['frontend:js:includes'], function() {
+gulp.task('frontend:js', function() {
     let pipe = gulp.src(frontend.src.js);
 
     return pipe

@@ -10,6 +10,40 @@ $quantity_extended: $quantity + $x + $extended;
 
 .cart-page {
   .table {
+
+    .table-row, .table-wrapper {
+      align-items: center;
+    }
+
+    .table-head {
+      line-height: rem-calc(40);
+      background: #ebebeb;
+
+      .image-name {
+        text-align: center;
+      }
+    }
+
+    .table-body {
+      font-size: rem-calc(15);
+
+      @include breakpoint(medium up) {
+        font-size: rem-calc(16);
+      }
+
+      @include breakpoint(large up) {
+        font-size: rem-calc(14);
+      }
+
+      .table-row {
+        padding: rem-calc(12) 0;
+        min-height: rem-calc(105);
+        border-top: 1px solid #e1e1e1;
+        border-bottom: 1px solid #e1e1e1;
+        border-collapse: collapse;
+      }
+    }
+
     .image-name {
       //width: $image + $name;
       flex-grow: 1;
@@ -19,10 +53,16 @@ $quantity_extended: $quantity + $x + $extended;
     .image {
       width: $image;
       text-align: center;
+
+      @include breakpoint(ml down) {
+        width: rem-calc(83);
+      }
+      @include breakpoint(sm down) {
+        width: rem-calc(70);
+      }
     }
 
     .name {
-      padding-left: rem-calc(20);
       //width: $name;
       flex-grow: 1;
       flex-shrink: 1;
@@ -41,6 +81,10 @@ $quantity_extended: $quantity + $x + $extended;
         flex-shrink: 1;
         text-indent: -9999px;
       }
+
+      @include breakpoint(sm down) {
+        width: rem-calc(36);
+      }
     }
 
     .quantity {
@@ -50,48 +94,65 @@ $quantity_extended: $quantity + $x + $extended;
       @include breakpoint(medium down) {
         width: rem-calc(135);
       }
+
+      @include breakpoint(sm down) {
+        width: rem-calc(70);
+
+        .quantity-group {
+          border: 1px solid #aaa;
+
+          .btn { display: none; }
+          input {
+            width: 61px;
+            height: 38px;
+          }
+        }
+      }
     }
 
     .extended {
       width: $extended;
       text-align: left;
+
+      @include breakpoint(sm down) {
+        width: auto;
+        font-weight: 700;
+      }
     }
 
     .remove {
       width: $remove;
       text-align: center;
+
+      @include breakpoint(ml down) {
+        width: rem-calc(73);
+      }
+
+      @include breakpoint(sm down) {
+        align-self: flex-start;
+      }
     }
 
 
     .name-quantity {
       flex-grow: 1;
       flex-shrink: 1;
+      padding-left: rem-calc(20);
+
+      @include breakpoint(sm down) {
+        flex-direction: column;
+        align-items: flex-start;
+        padding-left: rem-calc(16);
+      }
     }
 
     .quantity-extended {
       width: $quantity + $x + $extended;
-    }
 
-    .table-head {
-      line-height: rem-calc(40);
-      background: #ebebeb;
-
-      .image-name {
-        text-align: center;
-      }
-    }
-
-    .table-body {
-      .table-row {
-        padding: rem-calc(12) 0;
-        min-height: rem-calc(105);
-        border-top: 1px solid #e1e1e1;
-        border-bottom: 1px solid #e1e1e1;
-        border-collapse: collapse;
-      }
-
-      .table-row, .table-wrapper {
-        align-items: center;
+      @include breakpoint(sm down) {
+        padding-top: rem-calc(10);
+        width: 100%;
+        flex-shrink: 1;
       }
     }
   }

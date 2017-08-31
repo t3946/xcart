@@ -4,12 +4,18 @@ $default_height: rem-calc(50);
 .category-menu-list-wrapper {
   position: absolute;
   width: 100%;
-  max-width: 80rem;
+  //max-width: 80rem;
+  //max-width: $global-width;
+  @include grid-row-size($size: $global-width);
 
   @include breakpoint(large up) {
-    @include grid-row-size();
-    @include grid-column-gutter();
+    //@include grid-row-size();
+    //@include grid-column-gutter();
+    //@include grid-column-gutter($gutters: $grid-column-gutter);
     @include grid-row-nest();
+
+    //margin-right: 0 !important;
+    //margin-left: 0 !important;
   }
 }
 
@@ -208,8 +214,7 @@ $default_height: rem-calc(50);
       &:hover {
         .submenu-container {
           display: block;
-
-          width: 323%;
+          width: 350%;
           left: 100%;
         }
       }

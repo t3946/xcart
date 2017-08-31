@@ -49,7 +49,6 @@
 
                                 <div class="table-column name">
 
-
                                     <div class="title">
                                         {$position->object}
                                     </div>
@@ -123,17 +122,17 @@
 
             <div class="hr"></div>
 
-            <div class="grand_subtotal">
-                <div class="memo">
-                    Your merchandise subtotal does not include shipping charges and taxes, which will be reflected on the 'order review' page.
-                </div>
-                <div class="subtotal_title">
-                    Subtotal:
-                </div>
-                <div class="subtotal">
-                    US${$total}
-                </div>
-            </div>
+            {*<div class="grand_subtotal">*}
+                {*<div class="memo">*}
+                    {*Your merchandise subtotal does not include shipping charges and taxes, which will be reflected on the 'order review' page.*}
+                {*</div>*}
+                {*<div class="subtotal_title">*}
+                    {*Subtotal:*}
+                {*</div>*}
+                {*<div class="subtotal">*}
+                    {*US${$total}*}
+                {*</div>*}
+            {*</div>*}
         </div>
     </div>
 </section>
