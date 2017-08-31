@@ -100,6 +100,7 @@ class OrderStore extends BaseStore
                         && !in_array($model->transaction_status,
                             [
                                 OrderTransactionModel::STATUS_FAILED,
+                                OrderTransactionModel::STATUS_VOIDED,
                             ]
                         )
                     )
