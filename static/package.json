@@ -40,7 +40,7 @@
     "modernizr-loader": "^1.0.1",
     "path": "^0.12.7",
     "pump": "^1.0.2",
-    "webpack": "^2.6.0",
+    "webpack": "^3.5.5",
     "webpack-stream": "^3.2.0"
   },
   "dependencies": {

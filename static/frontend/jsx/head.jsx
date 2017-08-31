@@ -17,7 +17,7 @@ import 'bower_components/foundation-sites/dist/js/plugins/foundation.accordion.j
 // import 'bower_components/foundation-sites/dist/js/plugins/foundation.toggler.js';
 
 import 'bower_components/foundation-sites/dist/js/plugins/foundation.util.keyboard.js';
-import 'bower_components/foundation-sites/dist/js/plugins/foundation.util.box.js';
+// import 'bower_components/foundation-sites/dist/js/plugins/foundation.util.box.js';
 // // import 'bower_components/foundation-sites/dist/js/plugins/foundation.util.nest.js';
 // // import 'bower_components/foundation-sites/dist/js/plugins/foundation.util.motion.js';
 import 'bower_components/foundation-sites/dist/js/plugins/foundation.util.triggers.js';

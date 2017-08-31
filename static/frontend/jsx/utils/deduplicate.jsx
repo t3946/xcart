@@ -1,4 +1,5 @@
-import _ from 'lodash';
+import isArray from 'lodash/isArray';
+import isObject from 'lodash/isObject';
 
 function dedupArray(arr)
 {
@@ -26,10 +27,10 @@ function dedupObj(obj)
 export default function dedup(val)
 {
     if (val) {
-        if (_.isArray(val)) {
+        if (isArray(val)) {
             val = dedupArray(val);
         }
-        else if (_.isObject(val)) {
+        else if (isObject(val)) {
             val = dedupObj(val);
         }
     }

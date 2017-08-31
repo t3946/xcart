@@ -35,7 +35,7 @@ import documentReady from "./utils/documentReady";
     $(document).on('swipe', function(e, Dx, Dy, angle) {
         if (isMedia('medium') && isTouch()) {
 
-            if (angle < 15) {
+            if (angle < 10) {
                 if (Dx === 1 && Dy === 0) { //right
                     $('#offCanvasLeft').foundation('open');
                 }

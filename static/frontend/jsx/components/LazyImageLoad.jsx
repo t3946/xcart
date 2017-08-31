@@ -86,7 +86,7 @@ export default class LazyImageLoad
             });
         }
 
-        this.observer.unobserve(target.element);
+        this.observer.unobserve(target);
         $(document).trigger('lil.tick');
     }
 

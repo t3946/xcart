@@ -80,8 +80,13 @@ module.exports = {
     },
     plugins: [
         new webpack.optimize.UglifyJsPlugin({
+            ie8: false,
+            ecma: 5,
             sourceMap: false,
-            output: {comments: false},
+            output: {
+                comments: false,
+                beautify: false,
+            },
             compress: {
                 sequences: true,
                 properties: true,
@@ -94,7 +99,11 @@ module.exports = {
                 join_vars: true,
                 // drop_console: true,
                 warnings: true
-            }
+            },
+            parallel: {
+                cache: true,
+                workers: 2 // for e.g
+            },
         }),
         new webpack.ProvidePlugin({
         //     'Promise': 'bluebird'

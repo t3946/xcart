@@ -51,7 +51,9 @@
                 }
 
                 if (deltaX !== 0) {
-                    e.preventDefault();
+                    if (e.cancelable) {
+                        e.preventDefault();
+                    }
                 }
 
                 event.type = "swipe";
