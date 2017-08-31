@@ -45,11 +45,13 @@ module.exports = {
                     options: {
                         presets: [
                             [ "react" ],
-                            [ "es2015", { "modules": false }],
+                            // [ "es2015", { "modules": false }],
                             [ "env", {
                                 "targets": {
                                     "browsers": ["last 10 versions", "safari >= 7"]
-                                }
+                                },
+                                "modules": false,
+                                "loose": true,
                             }],
                         ],
                         plugins: [
