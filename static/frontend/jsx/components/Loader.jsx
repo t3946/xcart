@@ -1,11 +1,11 @@
-import _ from "lodash";
+import extend from "lodash/extend";
 
 export default class Loader
 {
     constructor(options = {}) {
         this.loaders = 0;
         this.elements = {};
-        this.options = _.extend({
+        this.options = extend({
             'timeout': 1000
         }, options);
 

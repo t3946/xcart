@@ -1,15 +1,29 @@
-$image: rem-calc(85);
+$image: (
+        small: rem-calc(70),
+        medium: rem-calc(83),
+        large: rem-calc(85),
+);
 $name: rem-calc(555);
 $price: rem-calc(160);
 $quantity: rem-calc(177);
 $x: rem-calc(53);
-$extended: rem-calc(123);
-$remove: rem-calc(107);
-$quantity_extended: $quantity + $x + $extended;
+$extended: (
+        small: auto,
+        medium: rem-calc(103),
+        ml: rem-calc(192),
+        large: rem-calc(123),
+);
+$remove: (
+        small: rem-calc(42),
+        medium: rem-calc(84),
+        ml: rem-calc(72),
+        large: rem-calc(107),
+);
 
 
 .cart-page {
   .table {
+    width: 100%;
 
     .table-row, .table-wrapper {
       align-items: center;
@@ -45,25 +59,21 @@ $quantity_extended: $quantity + $x + $extended;
     }
 
     .image-name {
-      //width: $image + $name;
       flex-grow: 1;
       flex-shrink: 1;
     }
 
     .image {
-      width: $image;
       text-align: center;
 
-      @include breakpoint(ml down) {
-        width: rem-calc(83);
-      }
-      @include breakpoint(sm down) {
-        width: rem-calc(70);
+      @each $key, $val in $image {
+        @include breakpoint($key up) {
+          width: $val;
+        }
       }
     }
 
     .name {
-      //width: $name;
       flex-grow: 1;
       flex-shrink: 1;
     }
@@ -111,25 +121,36 @@ $quantity_extended: $quantity + $x + $extended;
     }
 
     .extended {
-      width: $extended;
+      width: auto;
       text-align: left;
 
       @include breakpoint(sm down) {
-        width: auto;
         font-weight: 700;
+      }
+
+      @each $key, $val in $extended {
+        @include breakpoint($key up) {
+          width: $val;
+        }
       }
     }
 
     .remove {
-      width: $remove;
       text-align: center;
-
-      @include breakpoint(ml down) {
-        width: rem-calc(73);
-      }
 
       @include breakpoint(sm down) {
         align-self: flex-start;
+
+        .icon:after {
+          width: rem-calc(21);
+          height: rem-calc(27);
+        }
+      }
+
+      @each $key, $val in $remove {
+        @include breakpoint($key up) {
+          width: $val;
+        }
       }
     }
 
@@ -147,12 +168,43 @@ $quantity_extended: $quantity + $x + $extended;
     }
 
     .quantity-extended {
-      width: $quantity + $x + $extended;
-
       @include breakpoint(sm down) {
         padding-top: rem-calc(10);
         width: 100%;
         flex-shrink: 1;
+      }
+
+      @each $key, $val in $extended {
+        @if is-number($val) {
+          @include breakpoint($key up) {
+            width: $quantity + $x + $val;
+          }
+        }
+      }
+    }
+
+    .auto {
+      flex-grow: 1;
+      flex-shrink: 1;
+    }
+
+    .extended_remove {
+      width: auto;
+
+      @include breakpoint(sm down) {
+        min-width: rem-calc(100);
+      }
+
+      @include breakpoint(medium up) {
+        text-align: left !important;
+      }
+
+      @each $key, $val in array_merge_sum($remove, $extended) {
+        @if is-number($val) {
+          @include breakpoint($key up) {
+            width: $val;
+          }
+        }
       }
     }
   }
@@ -167,26 +219,34 @@ $quantity_extended: $quantity + $x + $extended;
     }
 
     .warehouse_subtotal {
-      padding-top: rem-calc(20);
-      margin-bottom: rem-calc(40);
-      display: flex;
-      justify-content: flex-end;
-      align-items: center;
+      font-size: rem-calc(14);
 
-      .from, .subtotal {
-        display: flex;
-        flex: 0 0 100%;
+      @include breakpoint(medium up) {
+        font-size: rem-calc(18);
       }
 
-      .from {
-        padding-right: rem-calc(5);
-        //max-width: $name + $price + $quantity + $x;
-        justify-content: flex-end;
-      }
-
-      .subtotal {
+      @include breakpoint(large up) {
         font-size: rem-calc(16);
-        max-width: $extended + $remove;
+      }
+
+      .table-row {
+        border: none;
+        min-height: rem-calc(40);
+        padding: rem-calc(10) 0;
+
+        .table-column {
+          text-align: right;
+        }
+
+        .from {
+          padding-right: rem-calc(5);
+        }
+
+        .extended_remove {
+          @include breakpoint(sm down) {
+            font-size: 1.08em;
+          }
+        }
       }
     }
 
@@ -196,39 +256,4 @@ $quantity_extended: $quantity + $x + $extended;
     background-color: #8a8a8a;
   }
 
-  .grand_subtotal {
-    display: flex;
-    padding: rem-calc(20) 0;
-
-    .memo, .subtotal_title, .subtotal {
-      display: flex;
-      flex: 0 0 100%;
-    }
-
-    .memo {
-      font-size: rem-calc(14);
-      order: 1;
-      flex-direction: column;
-
-      @include breakpoint(large up) {
-        max-width: $name + $price;
-      }
-    }
-
-    .subtotal_title, .subtotal {
-      color: #010101;
-      font-size: 20px;
-      font-weight: 700;
-    }
-
-    .subtotal_title {
-      justify-content: flex-end;
-      padding-right: rem-calc(5);
-      max-width: $quantity + $x;
-    }
-
-    .subtotal {
-      max-width: $extended + $remove;
-    }
-  }
 }

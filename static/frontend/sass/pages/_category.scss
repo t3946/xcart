@@ -242,7 +242,7 @@ $padding_container: rem-calc(18);
             margin: 0 .3em;
           }
 
-          @include breakpoint(medium down) {
+          @include breakpoint(ml down) {
             width: rem-calc(60);
             height: rem-calc(60);
             background: no-repeat center center;
@@ -271,7 +271,7 @@ $padding_container: rem-calc(18);
           &.active {
             opacity: 1;
 
-            @include breakpoint(medium down) {
+            @include breakpoint(ml down) {
               display: none;
             }
           }
@@ -281,7 +281,7 @@ $padding_container: rem-calc(18);
     }
 
 
-    @include breakpoint(medium down) {
+    @include breakpoint(ml down) {
       .actions {
         display: flex;
 

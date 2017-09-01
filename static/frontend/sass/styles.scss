@@ -17,6 +17,7 @@
 @import 'base/typography';
 
 @import 'mixins/gen';
+@import 'mixins/array_maps';
 @import 'mixins/menu';
 
 
@@ -24,6 +25,7 @@
 @import 'vendor/pace/pace';
 @import 'vendor/mmodal/mmodal';
 
+@import 'parts/icons';
 @import 'parts/fe_pager';
 @import 'parts/img_notavail';
 @import 'parts/off-canvas';

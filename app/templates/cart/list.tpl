@@ -66,7 +66,7 @@
 
                                 </div>
 
-                                <div class="table-column price show-for-large">
+                                <div class="table-column price show-for-large format_price">
                                     US$ {$position->object->getFrontendPrice()|number_format:2}
                                 </div>
 
@@ -89,7 +89,7 @@
 
                                     <div class="table-column x">x</div>
 
-                                    <div class="table-column extended">
+                                    <div class="table-column extended format_price">
                                         US$ {$position->getPrice()|number_format:2}
                                     </div>
                                 </div>
@@ -97,7 +97,7 @@
                             </div>
 
                             <div class="table-column remove">
-                                <a href="{url 'catalog:cart:delete' key=$key}" title="{t 'Delete' dict='cart'}" class="remove">{t 'Delete' dict='cart'}</a>
+                                <a href="{url 'catalog:cart:delete' key=$key}" title="{t 'Delete' dict='cart'}" class="icon cart_remove"></a>
                             </div>
 
                         </div>
@@ -106,15 +106,22 @@
                 </div>
 
                 <div class="warehouse_subtotal">
-                    <div class="from">
+                    <div class="table">
+                        <div class="table-body">
 
-                        {$waregouse->m_city},
-                        {$waregouse->m_state},
-                        {$waregouse->m_country}
-                        warehouse subtotal:
-                    </div>
-                    <div class="subtotal">
-                        US${$group.subtotal}
+                            <div class="table-row">
+                                <div class="table-column auto from">
+                                    {$waregouse->m_city},
+                                    {$waregouse->m_state},
+                                    {$waregouse->m_country}
+                                    warehouse subtotal:
+                                </div>
+                                <div class="table-column extended_remove format_price">
+                                    US$ {$group.subtotal|number_format:2}
+                                </div>
+                            </div>
+
+                        </div>
                     </div>
                 </div>
                 {/foreach}

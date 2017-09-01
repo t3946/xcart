@@ -1,0 +1,18 @@
+.icon {
+  text-indent: -9999px;
+
+  &:after {
+    content: '';
+    display: inline-block;
+    background: no-repeat center center;
+    background-size: contain;
+  }
+
+  &.cart_remove {
+    &:after {
+      width: rem-calc(18);
+      height: rem-calc(22);
+      background-image: url('../images/icons/cart/remove.svg');
+    }
+  }
+}

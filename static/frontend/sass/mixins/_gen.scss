@@ -1,20 +1,20 @@
 
-@mixin flex() {
-  display: -webkit-box;
-  display: -moz-box;
-}
+//@mixin flex() {
+//  display: -webkit-box;
+//  display: -moz-box;
+//}
 
-@mixin flex_grow($grow) {
-  -moz-box-flex: $grow;
-  -webkit-box-flex: $grow;
-  box-flex: $grow;
-}
-
-@mixin box_orient($orient) {
-  -webkit-box-orient: $orient;
-  -moz-box-orient: $orient;
-  box-orient: $orient;
-}
+//@mixin flex_grow($grow) {
+//  -moz-box-flex: $grow;
+//  -webkit-box-flex: $grow;
+//  box-flex: $grow;
+//}
+//
+//@mixin box_orient($orient) {
+//  -webkit-box-orient: $orient;
+//  -moz-box-orient: $orient;
+//  box-orient: $orient;
+//}
 
 @mixin css3-prefix($property, $value) {
   -webkit-#{$property}: #{$value};
@@ -23,43 +23,6 @@
   -ms-#{$property}: #{$value};
   -o-#{$property}: #{$value};
   #{$property}: #{$value};
-}
-
-@mixin view_all_departments($color, $bg, $bg-hover, $bg-focus){
-  line-height: 22px;
-  height: 22px;
-  color: $color;
-  background-color: $bg;
-  font-size: 0.875em;
-  padding-right: 10px;
-  text-align: center;
-  &:before{
-    content: '';
-    display: inline-block;
-    @if $color == $white {
-      background-image: url("../images/home/1280/view_all_departments.svg");
-    } @else {
-      background-image: url("../images/home/1280/view_all_artist_brush.svg");
-    }
-    background-repeat: no-repeat;
-    background-size: 100% 100%;
-    vertical-align: top;
-    margin: 3px 0 0 0;
-    width: 16px;
-    height: 15px;
-    padding-right: 40px;
-  }
-  &:hover{
-    text-decoration: none;
-    background-color: $bg-hover;
-  }
-  &:focus{
-    text-decoration: none;
-    background-color: $bg-focus;
-    &:before{
-
-    }
-  }
 }
 
 @mixin button_action($height, $fsz){
