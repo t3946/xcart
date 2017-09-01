@@ -7,7 +7,7 @@ const paths = require('./gulp.frontend.patchs');
 // const conf_base = require('./webpack/webpack.base');
 
 
-module.exports = {
+config = {
     // devtool: 'source-map',
     entry: paths.src.jsx_bundles,
     output: {
@@ -45,10 +45,12 @@ module.exports = {
                     options: {
                         presets: [
                             [ "react" ],
-                            // [ "es2015", { "modules": false }],
                             [ "env", {
                                 "targets": {
                                     "browsers": ["last 10 versions", "safari >= 7"]
+                                },
+                                "production": {
+                                    "presets": ["minify"]
                                 },
                                 "modules": false,
                                 "loose": true,
@@ -84,9 +86,32 @@ module.exports = {
         ]
     },
     plugins: [
+        new webpack.ProvidePlugin({
+        //     'Promise': 'bluebird'
+            $: "jquery",
+            jQuery: "jquery",
+            "window.jQuery": "jquery"
+        }),
+        new webpack.LoaderOptionsPlugin({
+            minimize: true,
+            debug: false,
+            options: {
+                context: __dirname
+            }
+        }),
+        new webpack.DefinePlugin({
+            'process.env': {
+                NODE_ENV: JSON.stringify(process.env.NODE_ENV || 'development')
+            }
+        }),
+    ]
+};
+
+if (process.env.NODE_ENV == 'production') {
+    config.plugins.push(
         new webpack.optimize.UglifyJsPlugin({
             ie8: false,
-            ecma: 5,
+            ecma: 6,
             sourceMap: false,
             mangle: {
                 // safari10: true,
@@ -122,28 +147,12 @@ module.exports = {
             },
             parallel: {
                 cache: true,
-                workers: 2 // for e.g
             },
 
             warningsFilter: (src) => true
-        }),
-        new webpack.ProvidePlugin({
-        //     'Promise': 'bluebird'
-            $: "jquery",
-            jQuery: "jquery",
-            "window.jQuery": "jquery"
-        }),
-        new webpack.LoaderOptionsPlugin({
-            minimize: true,
-            debug: false,
-            options: {
-                context: __dirname
-            }
-        }),
-        new webpack.DefinePlugin({
-            'process.env': {
-                NODE_ENV: JSON.stringify(process.env.NODE_ENV || 'development')
-            }
-        }),
-    ]
-};
+        })
+    );
+}
+
+
+module.exports = config;

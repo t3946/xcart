@@ -3,11 +3,16 @@ import 'modernizr';
 // import 'jScrollPane';
 import 'jquery-form';
 import 'mmodal';
+// import 'PACE';
+// import 'jQuery.dotdotdot';
 
 import WebFont from 'webfontloader';
 import Waves from 'Waves';
 import whatInput from 'what-input';
 import noUiSlider from 'noUiSlider';
+
+// import 'bower_components/PACE/pace.js';
+import 'bower_components/jQuery.dotdotdot/src/jquery.dotdotdot.js';
 
 // import 'foundation-sites';
 import 'bower_components/foundation-sites/dist/js/plugins/foundation.core.js';
