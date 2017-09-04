@@ -2,6 +2,7 @@
 
 namespace Modules\Order\Models;
 
+use Modules\Order\Helpers\OrderTransactionHelper;
 use Modules\Order\Stores\OrderTransactionStore;
 use Modules\Payment\Gateways\Gateway;
 use Modules\Payment\Models\PaymentMethodModel;
@@ -140,8 +141,9 @@ class OrderTransactionModel extends AutoMetaModel
     {
         $avail = round(abs($this->transaction_amount), 2);
 
+        /** @var OrderTransactionModel $model */
         foreach ($models = $this->child->all() as $model) {
-            $avail -= round(abs($model->transaction_amount), 2);
+            $avail -= round(abs($model->getAvailAmount()), 2);
         }
 
         return $avail;

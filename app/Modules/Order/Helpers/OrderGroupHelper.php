@@ -27,7 +27,7 @@ class OrderGroupHelper
 
             $groupRefunds = $group_model->getRefunds();
             $toCaptureAmount = round($group_model->total_gross - $groupRefunds, 2);
-            $toCaptureAmountAvail = round(OrderTransactionHelper::getCaptureAmountAvail($order_model), 2);
+            $toCaptureAmountAvail = round(OrderTransactionHelper::getToCapture($order_model->transactions), 2);
 
             if ($toCaptureAmount <= $toCaptureAmountAvail) {
 
