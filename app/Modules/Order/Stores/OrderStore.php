@@ -6,6 +6,7 @@ namespace Modules\Order\Stores;
 use Modules\Order\Models\OrderGroupModel;
 use Modules\Order\Models\OrderModel;
 use Modules\Order\Models\OrderTransactionModel;
+use Modules\Payment\Gateways\Gateway;
 use Xcart\App\Store\BaseStore;
 
 class OrderStore extends BaseStore
@@ -116,6 +117,14 @@ class OrderStore extends BaseStore
                     )
                 ) {
                     $value = $model->transaction_amount;
+                    if (!Gateway::getGateway($model->payment_method_model->processor)->isPartiallyCaptureEnabled() && $model->type == OrderTransactionModel::TYPE_AUTHORIZATION) {
+                        if ($captures = $model->child->filter(['type' => OrderTransactionModel::TYPE_CAPTURE])->all()) {
+                            $value = 0;
+                            foreach ($captures as $capture) {
+                                $value += $capture->transaction_amount;
+                            }
+                        }
+                    }
                 }
                 return $value;
             }, $this->transactions)),2);

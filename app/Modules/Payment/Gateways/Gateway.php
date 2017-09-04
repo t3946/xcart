@@ -62,4 +62,9 @@ abstract class Gateway implements GatewayInterface
     {
         return null;
     }
+
+    public static function isPartiallyCaptureEnabled()
+    {
+        return true;
+    }
 }
