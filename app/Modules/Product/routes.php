@@ -4,11 +4,12 @@ return [
     [
         'route' => '/product/{slug:sku}',
         'target' => ['\Modules\Product\Controllers\DefaultController', 'actionView'],
-        'name' => 'product:view'
+        //        'name' => 'product:view'
     ],
     [
         'route' => '/product/{i:id}/{slug:slug}',
         'target' => ['\Modules\Product\Controllers\DefaultController', 'actionViewOld'],
+        'name' => 'product:view',
     ],
 
 

@@ -5,6 +5,7 @@ use Modules\Amazon\Models\AmazonFbaMissingSkuModel;
 use Modules\Brand\Models\BrandModel;
 use Modules\Cart\Interfaces\ICartItem;
 use Modules\Distributor\Models\DistributorModel;
+use Modules\Menu\Models\CleanUrlModel;
 use Modules\Sites\Models\SiteModel;
 use Xcart\App\Components\Breadcrumbs;
 use Xcart\App\Main\Xcart;
@@ -16,6 +17,7 @@ use Xcart\App\Orm\Fields\HasManyField;
 use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Fields\ManyToManyField;
 use Xcart\App\Traits\DataModelTrait;
+use Xcart\App\Traits\SlugifyTrait;
 use Xcart\Product;
 
 /**
@@ -50,7 +52,7 @@ use Xcart\Product;
  */
 class ProductModel extends AutoMetaModel implements ICartItem
 {
-    use DataModelTrait;
+    use DataModelTrait, SlugifyTrait;
 
     public static function getDataModelClass()
     {
@@ -87,6 +89,14 @@ class ProductModel extends AutoMetaModel implements ICartItem
                 'class' => ManyToManyField::className(),
                 'modelClass' => PricingModel::className(),
                 'through' => QuickPricingModel::className(),
+            ],
+
+            'url' => [
+                'field' => 'productid',
+                'class' => ForeignField::className(),
+                'modelClass' => CleanUrlModel::className(),
+                'link' => ['productid' => 'resource_id'],
+                'extra' => ['resource_type' => 'P']
             ],
 
 
@@ -207,10 +217,42 @@ class ProductModel extends AutoMetaModel implements ICartItem
         return $this->isProductOutOfStock();
     }
 
-    public function getAbsoluteUrl()
+    public function getAbsoluteUrl($full = false)
     {
-        return Xcart::app()->router->url('catalog:product:view', ['sku' => $this->productcode]);
+        $path = '';
+
+        if ($full) {
+            if ($site = $this->sites->limit(1)->get()) {
+                $path .= $site->domain . '/';
+            }
+        }
+
+        if ($this->url) {
+            $path .= $this->url->clean_url;
+        }
+        else {
+            $path = Xcart::app()->router->url(
+                'catalog:product:view',
+                [
+                    'id' => $this->productid,
+                    'slug' => $this->createSlug($this->product)
+                ]
+            );
+        }
+
+
+        if ($full) {
+            $path = '//' . $path;
+        }
+        else {
+            $path = '/' . $path;
+        }
+
+        return $path;
+
+//        return Xcart::app()->router->url('catalog:product:view', ['sku' => $this->productcode]);
     }
+
     public function getBreadcrumbs()
     {
         /** @var CategoryModel $category */

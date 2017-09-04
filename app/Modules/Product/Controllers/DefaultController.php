@@ -2,14 +2,14 @@
 
 namespace Modules\Product\Controllers;
 
-use Modules\Brand\Models\BrandModel;
 use Modules\Product\Models\ProductModel;
 use Modules\User\Helpers\SurfingHelper;
 use Modules\User\Models\SurfPathModel;
 use Xcart\App\Controller\Controller;
+use Xcart\App\Controller\FrontendController;
 use Xcart\App\Main\Xcart;
 
-class DefaultController extends Controller
+class DefaultController extends FrontendController
 {
     public function actionViewOld($id, $slug)
     {

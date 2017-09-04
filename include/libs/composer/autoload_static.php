@@ -129,6 +129,10 @@ class ComposerStaticInited1e2f7cb4425e4bdc0264910bb94e92
         array (
             'Doctrine\\Common\\Cache\\' => 22,
         ),
+        'C' => 
+        array (
+            'Cocur\\Slugify\\' => 14,
+        ),
     );
 
     public static $prefixDirsPsr4 = array (
@@ -264,6 +268,10 @@ class ComposerStaticInited1e2f7cb4425e4bdc0264910bb94e92
         'Doctrine\\Common\\Cache\\' => 
         array (
             0 => __DIR__ . '/..' . '/doctrine/cache/lib/Doctrine/Common/Cache',
+        ),
+        'Cocur\\Slugify\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/cocur/slugify/src',
         ),
     );
 

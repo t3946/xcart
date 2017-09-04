@@ -24,6 +24,8 @@ class SearchController extends AbstractCatalogController
     private $searched;
     private $q_original;
     private $q;
+    private $isSKU = false;
+
 
 
     public function actionKeywords($q)
@@ -71,23 +73,21 @@ class SearchController extends AbstractCatalogController
         if (!$this->q) {
             $this->redirect('/');
         }
-//
-//        $qs = ProductModel::objects()->filter(['forsale' => 'Y']);
-//
-//        if (preg_match('/^([a-z0-9]{3,4}-).++/i', $this->q)) {
-//            $tqs = clone $qs;
-//            $tqs->filter(['productcode__contains' => $this->q]);
-//            $count = $tqs->count();
-//
-//            if ($count && $count == 1) {
-//                /** @var ProductModel $product */
-//                $product = $tqs->get();
-//                $this->redirect($product->getAbsoluteUrl(true));
-//            }
-//            else if ($count) {
-//                $products = $tqs->paginate($page, $this->products_per_page)->all();
-//            }
-//        }
+
+        $qs = ProductModel::objects()->filter(['forsale' => 'Y']);
+
+        if (preg_match('/^([a-z0-9]{3,4}-).++/i', $this->q)) {
+            $this->isSKU = true;
+            $tqs = clone $qs;
+            $tqs->filter(['productcode__contains' => $this->q]);
+            $count = $tqs->count();
+
+            if ($count && $count == 1) {
+                /** @var ProductModel $product */
+                $product = $tqs->get();
+                $this->redirect($product->getAbsoluteUrl());
+            }
+        }
 
         if ($product = ProductModel::objects()->filter(['productcode' => $this->q])->get()) {
             $this->redirect($product->getAbsoluteUrl());
@@ -175,8 +175,14 @@ class SearchController extends AbstractCatalogController
         /** @var \Modules\Sites\SitesModule $siteModule */
         $siteModule = Xcart::app()->getModule('Sites');
 
-        return parent::getQS($data)
-                     ->filter(['sites__storefrontid' => $siteModule->getSite()->storefrontid, 'productid__in' => $this->ids]);
+        $qs = parent::getQS($data)
+                    ->filter(['sites__storefrontid' => $siteModule->getSite()->storefrontid]);
+
+        if ($this->isSKU) {
+            return $qs->filter(['productcode__contains' => $this->q]);
+        }
+
+        return $qs->filter(['productid__in' => $this->ids]);
     }
 
     public function getSortedQS($qs, $model = null)
