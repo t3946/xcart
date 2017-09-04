@@ -8,6 +8,13 @@ use Xcart\App\Orm\Fields\HasManyField;
 use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Model;
 
+/**
+ * Class SiteModel
+ *
+ * @package Modules\Sites\Models
+ *
+ * @property int|null storefrontid
+ */
 class SiteModel extends Model
 {
     private $_config = [];

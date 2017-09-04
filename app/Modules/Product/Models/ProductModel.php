@@ -49,6 +49,9 @@ use Xcart\Product;
  * @property int add_date
  * @property int mod_date
  * @property mixed|string upc
+ * @property null|\Xcart\App\Orm\Manager sites
+ *
+ * @method bool isForSale
  */
 class ProductModel extends AutoMetaModel implements ICartItem
 {
@@ -211,6 +214,9 @@ class ProductModel extends AutoMetaModel implements ICartItem
         return ($this->list_price > ($fp + $fp * .3));
     }
 
+    public function checkSite($id) {
+        return (bool)($this->sites->filter(['storefrontid' => $id])->count());
+    }
 
     public function isOutOfStock()
     {
@@ -296,5 +302,10 @@ class ProductModel extends AutoMetaModel implements ICartItem
     public function getFrontendDescription()
     {
         return $this->descr ?: $this->seo_fulldescr ?: $this->fulldescr;
+    }
+
+    public function checkSF($sfid)
+    {
+
     }
 }

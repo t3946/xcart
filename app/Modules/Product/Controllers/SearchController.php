@@ -49,7 +49,7 @@ class SearchController extends AbstractCatalogController
         /** @var \Modules\Sites\SitesModule $siteModule */
         $siteModule = Xcart::app()->getModule('Sites');
 
-        if ($siteModel = $siteModule->getSite(false)) {
+        if ($siteModel = $siteModule->getSite()) {
             return $siteModel->domain;
         }
 

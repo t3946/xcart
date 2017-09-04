@@ -25,12 +25,24 @@ class DefaultController extends FrontendController
      * @param ProductModel|null $model
      *
      * @throws \Xcart\App\Exceptions\HttpException
+     * @throws \Xcart\App\Exceptions\UnknownPropertyException
      */
     private function view_internal($model = null)
     {
-        if (!$model)
-        {
+        /** @var \Modules\Sites\Models\SiteModel $site */
+        $site = Xcart::app()->getModule('Sites')->getSite();
+
+        if (!$model) {
             $this->error();
+        }
+
+        if ($model->isForSale()) {
+            $this->error(410);
+        }
+
+
+        if (!$model->checkSite($site->storefrontid)) {
+            $this->redirect($model->getAbsoluteUrl(true));
         }
 
         echo $this->render('product/product.tpl', [
