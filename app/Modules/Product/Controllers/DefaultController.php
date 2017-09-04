@@ -36,7 +36,7 @@ class DefaultController extends FrontendController
             $this->error();
         }
 
-        if ($model->isForSale()) {
+        if (!$model->isForSale()) {
             $this->error(410);
         }
 
