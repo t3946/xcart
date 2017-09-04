@@ -102,14 +102,14 @@ module.exports = {
                 'bower_components/sly/dist/sly.min.js'
             ]
         },
-        lato: {
-            fonts: [
-                'bower_components/lato-webfont/fonts/*'
-            ],
-            scss_include: [
-                'bower_components/lato-webfont/scss/'
-            ]
-        },
+        // lato: {
+        //     fonts: [
+        //         'bower_components/lato-webfont/fonts/*'
+        //     ],
+        //     scss_include: [
+        //         'bower_components/lato-webfont/scss/'
+        //     ]
+        // },
         dotdotdot: {
             js_include: [
                 'bower_components/jQuery.dotdotdot/src/jquery.dotdotdot.js'

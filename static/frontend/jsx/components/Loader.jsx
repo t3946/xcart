@@ -74,7 +74,7 @@ export default class Loader
                 $
                     .when(callback)
                     .done((args)=>{  })
-                    .fail(()=>{  })
+                    .fail(()=>{ this.detach(); })
                     .then(()=>{ this.detach(); });
             }
         }
@@ -95,9 +95,9 @@ export default class Loader
                     this.detach();
                 }, max_time);
             },this.options.timeout);
-
-            this.loaders++;
         }
+
+        this.loaders++;
     }
 
     detach(callback = null) {

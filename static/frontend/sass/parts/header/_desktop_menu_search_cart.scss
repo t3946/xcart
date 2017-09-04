@@ -6,13 +6,17 @@ $default_height: rem-calc(50);
   width: 100%;
   //max-width: 80rem;
   //max-width: $global-width;
-  @include grid-row-size($size: $global-width);
+  @include grid-row-size();
 
   @include breakpoint(large up) {
     //@include grid-row-size();
     //@include grid-column-gutter();
     //@include grid-column-gutter($gutters: $grid-column-gutter);
-    @include grid-row-nest();
+    @include grid-row-nest($gutters: (small:40));
+    //@include grid-row-nest();
+
+    //@include grid-row;
+    //@include grid-column();
 
     //margin-right: 0 !important;
     //margin-left: 0 !important;
@@ -214,7 +218,8 @@ $default_height: rem-calc(50);
       &:hover {
         .submenu-container {
           display: block;
-          width: 350%;
+          //width: 350%;
+          width: calc(300% + 120px);
           left: 100%;
         }
       }

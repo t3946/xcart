@@ -1,5 +1,5 @@
 import 'head';
-
+import foundationRegisterCustomEvents from "./_binds/foundation_events";
 
 import DepartmentMenu from "./components/DepartmentMenu";
 import DottedText from "./components/DottedText";
@@ -64,6 +64,8 @@ import documentReady from "./utils/documentReady";
     });
 
     documentReady(()=>{
+        $(document).foundation();
+
         setTimeout(()=>{
             WebFont.load({
                 google: {
@@ -71,7 +73,7 @@ import documentReady from "./utils/documentReady";
                 }
             });
 
-            $(document).foundation();
+            foundationRegisterCustomEvents();
             loader.detach();
         }, 100);
     })

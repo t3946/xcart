@@ -74,7 +74,14 @@
         <section id="content-wrapper">
             <div class="shadow"></div>
             <div data-sticky-container class="sticky-container">
-                <div class="sticky def-zi2" data-sticky data-sticky-on="large" data-options="marginTop:0; anchor:content-wrapper;" data-btm-anchor="content:bottom">
+                <div class="sticky def-zi2"
+                     style="width: 100%"
+                     data-sticky
+                     data-sticky-on="large"
+                     data-margin-top="0"
+                     data-top-anchor="content-wrapper"
+                     {*data-btm-anchor="content:bottom"*}
+                >
                     <section id="search_container" class="desktop_menu_search_cart show-for-large" data-toggler="show-for-large" >
                         <div class="row" >
                             <div class="columns large-3 show-for-large">
@@ -85,9 +92,9 @@
                                         <span class="category-menu-title" >Departments</span>
                                     </div>
                                 </section>
-                                {cache key = '_parts/_menu_desktop.tpl'}
+                                {*{cache key = '_parts/_menu_desktop.tpl'}*}
                                     {insert "_parts/_menu_desktop.tpl"}
-                                {/cache}
+                                {*{/cache}*}
                             </div>
                             <div class="columns small-12 large-7">
                                 {insert "_parts/_search.tpl"}

@@ -26,8 +26,6 @@ window.endless_paginate = ()=>{
                 }
 
                 $('.page_count_wrap').html(data.page_count);
-
-                $(window).trigger('resize');
             },
             'error': ()=>{
                 window.loader.detach();

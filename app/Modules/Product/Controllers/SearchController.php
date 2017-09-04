@@ -29,7 +29,7 @@ class SearchController extends AbstractCatalogController
     public function actionKeywords($q)
     {
         $q = str_replace(['_', '-'], ' ', $q);
-        $this->redirect('catalog:search', [], 301, ['q' => $q]);
+        $this->redirect('catalog:search', [], 302, ['q' => $q]);
     }
 
     public function actionApiSuggestion()
@@ -71,6 +71,23 @@ class SearchController extends AbstractCatalogController
         if (!$this->q) {
             $this->redirect('/');
         }
+//
+//        $qs = ProductModel::objects()->filter(['forsale' => 'Y']);
+//
+//        if (preg_match('/^([a-z0-9]{3,4}-).++/i', $this->q)) {
+//            $tqs = clone $qs;
+//            $tqs->filter(['productcode__contains' => $this->q]);
+//            $count = $tqs->count();
+//
+//            if ($count && $count == 1) {
+//                /** @var ProductModel $product */
+//                $product = $tqs->get();
+//                $this->redirect($product->getAbsoluteUrl(true));
+//            }
+//            else if ($count) {
+//                $products = $tqs->paginate($page, $this->products_per_page)->all();
+//            }
+//        }
 
         if ($product = ProductModel::objects()->filter(['productcode' => $this->q])->get()) {
             $this->redirect($product->getAbsoluteUrl());

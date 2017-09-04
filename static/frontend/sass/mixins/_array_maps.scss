@@ -32,12 +32,24 @@
   @return $t;
 }
 
-@function breakpoint_array_merge_sum($breakpoints: $breakpoints, $args...) {
-  $t: ();
-
-  @each $name, $size in $breakpoints {
-    $t: map-merge($t, ($name: 0));
-  }
-
-
-}
+//@function breakpoint_array_merge_sum($breakpoints: $breakpoints, $args...) {
+//  $t: ();
+//
+//  @each $name, $size in $breakpoints {
+//    $t: map-merge($t, ($name: 0));
+//  }
+//
+//
+//  @each $arg in $args {
+//    @if is-map($arg) {
+//
+//      @each $name, $sum in $t {
+//        $last: $sum;
+//
+//      }
+//    }
+//
+//
+//  }
+//
+//}

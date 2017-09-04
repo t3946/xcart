@@ -18,10 +18,11 @@ import 'bower_components/jQuery.dotdotdot/src/jquery.dotdotdot.js';
 import 'bower_components/foundation-sites/dist/js/plugins/foundation.core.js';
 import 'bower_components/foundation-sites/dist/js/plugins/foundation.offcanvas.js';
 import 'bower_components/foundation-sites/dist/js/plugins/foundation.accordion.js';
-// import 'bower_components/foundation-sites/dist/js/plugins/foundation.sticky.js';
+import 'bower_components/foundation-sites/dist/js/plugins/foundation.sticky.js';
 // import 'bower_components/foundation-sites/dist/js/plugins/foundation.toggler.js';
 
 import 'bower_components/foundation-sites/dist/js/plugins/foundation.util.keyboard.js';
+import 'bower_components/foundation-sites/dist/js/plugins/foundation.util.triggers.js';
 // import 'bower_components/foundation-sites/dist/js/plugins/foundation.util.box.js';
 // // import 'bower_components/foundation-sites/dist/js/plugins/foundation.util.nest.js';
 // // import 'bower_components/foundation-sites/dist/js/plugins/foundation.util.motion.js';
@@ -40,6 +41,7 @@ import  "./_binds/shadow";
 import  "./_binds/catalog_actionblock_sort";
 
 import  "./ext/jq-swipe";
+import  "../js_include/flash";
 
 
 (function(){

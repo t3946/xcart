@@ -21,6 +21,10 @@ let watch = false;
 let frontend = require('./config/gulp.frontend');
 let backend = require('./config/gulp.backend');
 
+function isProduction() {
+    return (process.env.NODE_ENV == 'production');
+}
+
 function buildVendorsData(vendors) {
     let vendorsData = {};
     for (let vendor in vendors) {
@@ -97,7 +101,7 @@ gulp.task('frontend:css', ['frontend:scss', 'frontend:css:raw'], function () {
             cascade: false
         }));
 
-    if (frontend.config.compress) {
+    if (isProduction && frontend.config.compress) {
         pipe = pipe.pipe(cssnano({
             preset: ['default'],
             discardComments: { removeAll: true, },
@@ -118,7 +122,7 @@ gulp.task('backend:css', ['backend:scss'], function () {
             cascade: false
         }));
 
-    if (backend.config.compress) {
+    if (isProduction && backend.config.compress) {
         pipe = pipe.pipe(cssnano())
     }
 
@@ -152,14 +156,12 @@ gulp.task('frontend:jsx', function(done){
     });
 });
 
-let fjsinc_builded = false;
 gulp.task('frontend:js:includes', function(done){
     if (!fjsinc_builded) {
         let pipe = gulp.src(frontend.src.js_include);
 
-        if (frontend.config.compress) {
+        if (isProduction && frontend.config.compress) {
             pipe = pipe.pipe(uglify(frontend.config.uglify));
-            fjsinc_builded = true;
         }
 
         return pipe
@@ -224,7 +226,7 @@ gulp.task('backend:js', ['backend:jsx'], function() {
 gulp.task('frontend:images', function() {
     let pipe = gulp.src(frontend.src.images);
 
-    if (frontend.config.compress) {
+    if (isProduction() && frontend.config.compress) {
         pipe = pipe.pipe(imagemin(frontend.config.imagemin || {}));
     }
     return pipe
@@ -235,7 +237,7 @@ gulp.task('frontend:images', function() {
 gulp.task('backend:images', function() {
     let pipe = gulp.src(backend.src.images);
 
-    if (backend.config.compress) {
+    if (isProduction() && backend.config.compress) {
         pipe = pipe.pipe(imagemin(backend.config.imagemin || {}));
     }
     return pipe
