@@ -149,11 +149,28 @@ class OrderTransactionHelper
                         $value = min(
                             $payment->maximum_re_authorization_increase, $value * $payment->maximum_re_authorization_multiplier - $value
                         );
+                    } else {
+                        $value = 0;
                     }
                 }
             }
             return $value;
         }, $models)), 2);
 
+    }
+
+    /**
+     * @param OrderTransactionModel[] $models
+     * @return bool
+     */
+    public static function isPartiallyCaptureEnabled($models)
+    {
+        /** @var bool $result */
+        $result = true;
+
+        foreach($models as $model) {
+            $result = $result & Gateway::getGateway($model->payment_method_model->processor)->isPartiallyCaptureEnabled();
+        }
+        return $result ;
     }
 }
