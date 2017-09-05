@@ -1312,6 +1312,7 @@ SQL;
 
     private function processOrderList()
     {
+        $discountOrders = [];
         if (!empty($this->dom_xml_arr)) {
             $docOrders = new \DOMDocument;
             $this->dom_xml_arr = str_replace($this->sServiceUrl, '', $this->dom_xml_arr);
@@ -1445,11 +1446,24 @@ SQL;
 
                                     $iOrderQuantity = intval($oOrderItem->getElementsByTagName('QuantityOrdered')->item(0)->nodeValue);
                                     if ($iOrderQuantity > 0) {
+
+                                        $price = floatval($oOrderItem->getElementsByTagName('ItemPrice')->item(0)->getElementsByTagName('Amount')->item(0)->nodeValue) / $iOrderQuantity;
+
+                                        if ($sFulfilmentChanel == 'AFN' && $price < $oProduct->getZeroPrice()) {
+                                            $product_amazon = AmazonProductsFieldsModel::objects()->getOrNew(['productid' => $oProduct->productid]);
+                                            $product_amazon->amazon_fba_restricted = 'Y';
+                                            $product_amazon->amazon_fba_restricted_reason = 'Discounted sale';
+                                            $product_amazon->save();
+                                            if (!isset($discountOrders[$oOrder->orderid])) {
+                                                $discountOrders[$oOrder->orderid] = $oOrder;
+                                            }
+                                        }
+
                                         $oOrderDetail = OrderDetail::model()->
-                                        setField('orderid', $oOrder->getOrderId())->
-                                        setField('productid', $oProduct->getProductId())->
+                                        setField('orderid', $oOrder->orderid)->
+                                        setField('productid', $oProduct->productid)->
                                         setField('item_cost_to_us', $oProduct->getProductCostToUs())->
-                                        setField('price', floatval($oOrderItem->getElementsByTagName('ItemPrice')->item(0)->getElementsByTagName('Amount')->item(0)->nodeValue) / $iOrderQuantity)->
+                                        setField('price', $price)->
                                         setField('amount', $iOrderQuantity)->
                                         setField('productcode', $oProduct->getSKU())->
                                         setField('AmazonOrderItemCode', addslashes($oOrderItem->getElementsByTagName('OrderItemId')->item(0)->nodeValue))->
@@ -1587,6 +1601,21 @@ SQL;
                         }
                     }
 
+                }
+
+                if ($discountOrders) {
+                    $mail_body = '';
+                    foreach ($discountOrders as $order) {
+                        $mail_body .= "<a target='_blank' href='{$order->getAdminUrl()}'>{$order->getDisplayOrderNumber()}</a>\n";
+                    }
+
+                    $oMail = \Xcart\App\Main\Xcart::app()->mail;
+                    $oMail->init();
+                    $oMail->to = 'igor@s3stores.com';
+                    $oMail->from = "<" . $config['Company']['orders_department'] . ">";
+                    $oMail->subject_template = 'Amazon orders with Discounted sale';
+                    $oMail->body_template = $mail_body;
+                    $oMail->sendEmail();
                 }
             }
 
