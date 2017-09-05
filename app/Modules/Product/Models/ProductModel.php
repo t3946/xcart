@@ -141,7 +141,11 @@ class ProductModel extends AutoMetaModel
                 'modelClass' => ImageTModel::className(),
                 'link' => ['id' => 'productid']
             ],
-
+            'pricing' => [
+                'class' => HasManyField::className(),
+                'modelClass' => PricingModel::className(),
+                'link' => ['productid' => 'productid']
+            ],
         ];
     }
 

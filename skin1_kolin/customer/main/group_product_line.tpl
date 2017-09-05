@@ -90,7 +90,9 @@
                 <td>{$child->product}</td>
                 <td class="strike">{if floatval($child->list_price) > 0}{include file="currency.tpl" value=$child->list_price}{/if}</td>
                 <td>{include file="currency.tpl" value=$child->getFrontendPrice()}</td>
-                <td class="spinner_cell" data-price="{$child->getFrontendPrice()}">{include file="customer/main/add_to_cart_input.tpl"}</td>
+                <td class="spinner_cell" data-price='{getPricingArray pricing=$child->pricing json=true}'>
+                    {include file="customer/main/add_to_cart_input.tpl"}
+                </td>
                 <td class="extended"><span class="currency">US$ </span><span class="value"></span></td>
             </tr>
         {/foreach}
@@ -107,15 +109,41 @@
 {literal}
     <script type="text/javascript">
         (function() {
+
+            function getPrice(aprice, newVal){
+                var cur_price = 0;
+                for(var index in aprice) {
+                    if (newVal > 0 && newVal >= index) {
+                        cur_price = index;
+                    }
+                }
+                return cur_price;
+            }
+
             $(".spinner").spinner('changing', function (e, newVal, oldVal) {
                 var spinner = $(this).closest('.spinner').parent();
-                var sub = spinner.data('price') * newVal;
-                spinner.next('.extended').find('span').show().end().find('span.value').html(sub.toFixed(2));
-
+                var aprice = spinner.data('price');
+                var sub = '';
                 var subtotal = 0;
+
+                var cur_price = getPrice(aprice, newVal);
+
+                if (newVal === 0) {
+                    sub = '';
+                    spinner.next('.extended').find('span').hide().end().find('span.value').html(sub);
+                } else {
+                    sub = aprice[cur_price].price * newVal;
+                    spinner.next('.extended').find('span').show().end().find('span.value').html(sub.toFixed(2));
+                }
+
+
                 $('.group_product .row').each(function(){
                     var spinner = $(this).find('.spinner_cell');
-                    subtotal += spinner.data('price') * parseInt(spinner.find('input.quantity').val());
+                    var val = parseInt(spinner.find('input.quantity').val());
+                    var ap = spinner.data('price');
+                    if (val > 0) {
+                        subtotal += ap[getPrice(ap, val)].price * val;
+                    }
                 });
 
                 $('table.subtotal .subtotal_class2').find('.value').html(subtotal.toFixed(2)).end().show();
