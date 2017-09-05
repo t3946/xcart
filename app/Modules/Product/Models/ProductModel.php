@@ -135,7 +135,13 @@ class ProductModel extends AutoMetaModel
                 'modelClass' => ProductModel::className(),
                 'link' => ['group_root' => 'productid'],
                 'extra' => ['productid__isnt' => new Expression('group_root')]
-            ]
+            ],
+            'thumbnail' => [
+                'class' => HasManyField::className(),
+                'modelClass' => ImageTModel::className(),
+                'link' => ['id' => 'productid']
+            ],
+
         ];
     }
 

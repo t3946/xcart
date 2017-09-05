@@ -26,6 +26,18 @@
                 font-size: 14px;
             }
 
+            table.group_product .extended {
+                min-width: 100px;
+            }
+
+            table.group_product .extended span {
+                display: none;
+            }
+
+            table.group_product img {
+                width: 60px;
+            }
+
             table.group_product td.sku > a {
                 color: #28842F;
                 text-decoration: none;
@@ -70,13 +82,15 @@
             <th>Extended</th>
         </tr>
         {foreach from=$oProduct->childs->all() item=child}
-            <tr>
+            <tr class="row">
                 <td class="sku"><a href="{$child->getUrl()}" target="_blank">{$child->productcode}</a></td>
-                <td></td>
+                {assign var=thumbnail_m value=$child->thumbnail}
+                {assign var=thumbnail value=$thumbnail_m->get()}
+                <td><img src="{$thumbnail->getURL()}" /></td>
                 <td>{$child->product}</td>
                 <td class="strike">{if floatval($child->list_price) > 0}{include file="currency.tpl" value=$child->list_price}{/if}</td>
                 <td>{include file="currency.tpl" value=$child->getFrontendPrice()}</td>
-                <td data-price="{$child->getFrontendPrice()}">{include file="customer/main/add_to_cart_input.tpl"}</td>
+                <td class="spinner_cell" data-price="{$child->getFrontendPrice()}">{include file="customer/main/add_to_cart_input.tpl"}</td>
                 <td class="extended"><span class="currency">US$ </span><span class="value"></span></td>
             </tr>
         {/foreach}
@@ -84,7 +98,7 @@
     <table width="100%" cellspacing="0" cellpadding="3" class="subtotal">
         <tr>
             <td align="right">
-                <div class="subtotal_class2"><span class="subtotal_class1">Subtotal:</span><span class="value"></span></div>
+                <div class="subtotal_class2"><span class="subtotal_class1">Subtotal:</span><span>US$ </span><span class="value"></span></div>
             </td>
         </tr>
     </table>
@@ -92,10 +106,21 @@
 </div>
 {literal}
     <script type="text/javascript">
-        $(".spinner").spinner('changing', function(e, newVal, oldVal) {
-            var spinner = $(this).closest('.spinner').parent();
-            var sub = spinner.data('price') * newVal;
-            spinner.next('.extended').find('span.currency').show().end().find('span.value').html(sub.toFixed(2));
-        });
+        (function() {
+            $(".spinner").spinner('changing', function (e, newVal, oldVal) {
+                var spinner = $(this).closest('.spinner').parent();
+                var sub = spinner.data('price') * newVal;
+                spinner.next('.extended').find('span').show().end().find('span.value').html(sub.toFixed(2));
+
+                var subtotal = 0;
+                $('.group_product .row').each(function(){
+                    var spinner = $(this).find('.spinner_cell');
+                    subtotal += spinner.data('price') * parseInt(spinner.find('input.quantity').val());
+                });
+
+                $('table.subtotal .subtotal_class2').find('.value').html(subtotal.toFixed(2)).end().show();
+            });
+
+        })();
     </script>
 {/literal}
