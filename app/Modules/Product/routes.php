@@ -18,7 +18,7 @@ return [
     [
         'route' => '/category/{i:id}/{slug:slug}/',
         'target' => ['\Modules\Product\Controllers\CategoryController', 'actionViewOld'],
-        'name' => 'view:old',
+        'name' => 'view',
 //        'meta' => [
 //            'cache' => true,
 //            'cache_time' => 60

@@ -50,12 +50,13 @@ use Xcart\Product;
  * @property int mod_date
  * @property mixed|string upc
  * @property null|\Xcart\App\Orm\Manager sites
+ * @property null|CleanUrlModel url
  *
  * @method bool isForSale
  */
 class ProductModel extends AutoMetaModel implements ICartItem
 {
-    use DataModelTrait, SlugifyTrait;
+    use DataModelTrait;
 
     public static function getDataModelClass()
     {
@@ -225,37 +226,11 @@ class ProductModel extends AutoMetaModel implements ICartItem
 
     public function getAbsoluteUrl($full = false)
     {
-        $path = '';
-
-        if ($full) {
-            if ($site = $this->sites->limit(1)->get()) {
-                $path .= $site->domain . '/';
-            }
+        if ($this->productid) {
+            return $this->url->urlFromCode('catalog:product:view');
         }
 
-        if ($this->url) {
-            $path .= $this->url->clean_url;
-        }
-        else {
-            $path = Xcart::app()->router->url(
-                'catalog:product:view',
-                [
-                    'id' => $this->productid,
-                    'slug' => $this->createSlug($this->product)
-                ]
-            );
-        }
-
-
-        if ($full) {
-            $path = '//' . $path;
-        }
-        else {
-            $path = '/' . $path;
-        }
-
-        return $path;
-
+        return false;
 //        return Xcart::app()->router->url('catalog:product:view', ['sku' => $this->productcode]);
     }
 

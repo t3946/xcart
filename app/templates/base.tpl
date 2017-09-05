@@ -81,7 +81,7 @@
                      data-margin-top="0"
                      data-check-every="0"
                      data-top-anchor="content-wrapper"
-                     data-btm-anchor="content"
+                     {*data-btm-anchor="content"*}
                 >
                     <section id="search_container" class="desktop_menu_search_cart show-for-large" data-toggler="show-for-large" >
                         <div class="row" >

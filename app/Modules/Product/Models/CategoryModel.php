@@ -2,18 +2,28 @@
 namespace Modules\Product\Models;
 
 use Mindy\QueryBuilder\Expression;
+use Modules\Menu\Models\CleanUrlModel;
+use Modules\Sites\Models\SiteModel;
 use Xcart\App\Components\Breadcrumbs;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\AutoMetaTreeModel;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\CharField;
+use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\HasManyField;
 use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Fields\ManyToManyField;
 
 /**
+ * Class CategoryModel
+ *
+ * @package Modules\Product\Models
+ *
  * @property string categoryid_path
  * @property mixed categoryid
+ * @property string category Name of category
+ * @property null|CleanUrlModel url
+ * @property null|\Modules\Sites\Models\SiteModel site
  */
 class CategoryModel extends AutoMetaTreeModel
 {
@@ -30,14 +40,30 @@ class CategoryModel extends AutoMetaTreeModel
                  'products' => [
                      'class' => ManyToManyField::className(),
                      'modelClass' => ProductModel::className(),
-                     'through' => ProductCategoriesModel::className()
+                     'through' => ProductCategoriesModel::className(),
                  ],
 
                  'products_link' => [
                      'class' => HasManyField::className(),
                      'modelClass' => ProductCategoriesModel::className(),
-                     'link' => ['categoryid' => 'categoryid']
+                     'link' => ['categoryid' => 'categoryid'],
                  ],
+
+                 'url' => [
+                     'field' => 'categoryid',
+                     'class' => ForeignField::className(),
+                     'modelClass' => CleanUrlModel::className(),
+                     'link' => ['categoryid' => 'resource_id'],
+                     'extra' => ['resource_type' => 'C'],
+                 ],
+
+                'site' => [
+                    'field' => 'storefrontid',
+                    'class' => ForeignField::className(),
+                    'modelClass' => SiteModel::className(),
+                    'link' => ['storefrontid' => 'storefrontid'],
+                    'null' => false,
+                ],
 
                 'categoryid' => [
                     'class' => AutoField::className(),
@@ -45,23 +71,18 @@ class CategoryModel extends AutoMetaTreeModel
                     'null' => false,
                 ],
                 'parent' => [
-                    'field' => 'parentid'
+                    'field' => 'parentid',
                 ],
 
-                'storefrontid' => [
-                    'class' => IntField::className(),
-                    'primary' => false,
-                    'null' => false,
-                ],
                 'description' => [
                     'class' => CharField::className(),
                     'null' => false,
-                    'default' => ''
+                    'default' => '',
                 ],
                 'google_product_category' => [
                     'class' => CharField::className(),
                     'null' => false,
-                    'default' => ''
+                    'default' => '',
                 ],
             ]
         );
@@ -73,6 +94,7 @@ class CategoryModel extends AutoMetaTreeModel
 
         if ($parents = self::objects($this)->ancestors()->order(['lft'])->all())
         {
+            /** @var self $model */
             foreach ($parents as $model) {
                 $bread->add($model->category, $model->getAbsoluteUrl());
             }
@@ -83,11 +105,13 @@ class CategoryModel extends AutoMetaTreeModel
         return $bread;
     }
 
-    public function getAbsoluteUrl()
+    public function getAbsoluteUrl($full = false)
     {
-        if ($this->categoryid)
+        if ($this->categoryid && $this->url)
         {
-            return Xcart::app()->router->url('catalog:view:old', ['id' => $this->categoryid, 'slug' => 'TEMP']);
+            return $this->url->urlFromCode('catalog:view', $full, $this->site);
+
+//            return Xcart::app()->router->url('catalog:view:old', ['id' => $this->categoryid, 'slug' => 'TEMP']);
         }
 
         return false;
