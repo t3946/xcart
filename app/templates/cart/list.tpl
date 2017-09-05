@@ -129,17 +129,18 @@
 
             <div class="hr"></div>
 
-            {*<div class="grand_subtotal">*}
-                {*<div class="memo">*}
-                    {*Your merchandise subtotal does not include shipping charges and taxes, which will be reflected on the 'order review' page.*}
-                {*</div>*}
-                {*<div class="subtotal_title">*}
-                    {*Subtotal:*}
-                {*</div>*}
-                {*<div class="subtotal">*}
-                    {*US${$total}*}
-                {*</div>*}
-            {*</div>*}
+            <div class="memo_subtotal">
+                <div class="grand-subtotal">
+                    Subtotal:
+                    <div class="subtotal">
+                        US$ {$total|number_format:2}
+                    </div>
+                </div>
+
+                <div class="memo">
+                    Your merchandise subtotal does not include shipping charges and taxes, which will be reflected on the 'order review' page.
+                </div>
+            </div>
         </div>
     </div>
 </section>

@@ -256,4 +256,82 @@ $remove: (
     background-color: #8a8a8a;
   }
 
+  .memo {
+    font-size: rem-calc(14);
+
+
+    @include breakpoint(medium up) {
+      font-size: rem-calc(16);
+    }
+
+    @include breakpoint(large up) {
+      font-size: rem-calc(14)
+    }
+  }
+
+  .grand-subtotal {
+    width: rem-calc(320);
+    font-weight: 700;
+    font-size: rem-calc(20);
+
+
+    @include breakpoint(medium up) {
+      font-size: rem-calc(22);
+    }
+
+    @include breakpoint(large up) {
+      font-size: rem-calc(20)
+    }
+
+    .subtotal {
+      margin-left: rem-calc(15);
+
+      @include breakpoint(large up) {
+        margin-left: rem-calc(5);
+      }
+
+      //display: inline-block;
+      @each $key, $val in array_merge_sum($remove, $extended) {
+        @if is-number($val) {
+          @include breakpoint($key up) {
+            width: $val;
+          }
+        }
+      }
+    }
+
+  }
+
+  .memo_subtotal {
+    padding: rem-calc(20) 0;
+    display: flex;
+    flex: 0 0 100%;
+    flex-direction: column;
+
+    @include breakpoint(large up) {
+      flex-direction: row;
+    }
+
+    .memo {
+      padding-top: rem-calc(20);
+      flex: 1 1 auto;
+      @include breakpoint(large up) {
+        padding-top: 0;
+        order: 0;
+      }
+    }
+
+    .grand-subtotal {
+      display: flex;
+      flex: 1 1;
+      flex-direction: row;
+      justify-content: flex-end;
+      align-self: flex-end;
+
+      @include breakpoint(large up) {
+        order: 1;
+      }
+    }
+  }
+
 }
