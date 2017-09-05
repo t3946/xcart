@@ -144,6 +144,9 @@ gulp.task('backend:css', ['backend:scss'], function () {
 gulp.task('frontend:jsx', function(done){
 
     let args = ['./node_modules/webpack/bin/webpack.js', '--config', './config/webpack.frontend.js'];
+    if (isProduction()) {
+        args.push('-p');
+    }
     if (watch) {
         args.push('--progress');
         args.push('-w');

@@ -43,6 +43,7 @@ config = {
                 use: {
                     loader: 'babel-loader',
                     options: {
+                        comments: false,
                         presets: [
                             [ "react" ],
                             [ "env", {
@@ -111,13 +112,13 @@ if (process.env.NODE_ENV == 'production') {
     config.plugins.push(
         new webpack.optimize.UglifyJsPlugin({
             ie8: false,
-            ecma: 6,
+            ecma: 5,
             sourceMap: false,
-            mangle: {
-                // safari10: true,
-                toplevel: true,
-                eval: true,
-            },
+            // mangle: {
+            //     // safari10: true,
+            //     toplevel: true,
+            //     eval: true,
+            // },
             output: {
                 comments: false,
                 beautify: false,

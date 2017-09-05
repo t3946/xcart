@@ -20,7 +20,7 @@ export default class MiniCart extends Component
     }
 
     render() {
-        console.log (this);
+        // console.log (this);
 
         return (<div className="fullcart">
 
