@@ -11,7 +11,7 @@ class Amazon extends StoreFrontMarketPlace
         if ($this->checkMarketplaceRestrictions($oProduct, $update_type)) {
             if ($update_type == "2" || $update_type == "1,2" || $update_type == "1") {
                 $count_ainventory = count($this->aInventory);
-                $this->aInventory[$count_ainventory]["productid"] = $oProduct->getField('productid');
+                $this->aInventory[$count_ainventory]["productid"] = $oProduct->productid;
                 $this->iInventoryBatchCount++;
             }
         }
@@ -38,7 +38,7 @@ class Amazon extends StoreFrontMarketPlace
     public function checkMarketplaceRestrictions(ProductModel $oProduct, $update_type)
     {
         $bResult = true;
-        if ($oProduct->getField("amazon_enabled") != "Y")
+        if ($oProduct->amazon_enabled != "Y")
             $bResult = false;
         return $bResult;
     }
