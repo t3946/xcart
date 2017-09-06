@@ -1613,8 +1613,8 @@ SQL;
                     $oMail->init();
                     $oMail->to = 'igor@s3stores.com';
                     $oMail->from = "<" . $config['Company']['orders_department'] . ">";
-                    $oMail->subject_template = 'Amazon orders with Discounted sale';
-                    $oMail->body_template = $mail_body;
+                    $oMail->subject = 'Amazon orders with Discounted sale';
+                    $oMail->body = $mail_body;
                     $oMail->sendEmail();
                 }
             }
