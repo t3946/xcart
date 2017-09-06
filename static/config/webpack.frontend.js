@@ -18,6 +18,8 @@ config = {
     resolve: {
         alias: {
             modernizr$: path.resolve(__dirname, "./support/modernizrrc.js"),
+            // 'jquery': 'jQuery',
+            'jQuery': 'jquery',
             'react': 'preact-compat',
             'react-dom': 'preact-compat',
             // Not necessary unless you consume a module using `createClass`
@@ -28,9 +30,14 @@ config = {
             paths.modules.jsx,
             path.resolve('./' + paths.modules.jsx),
             'node_modules',
-            'bower_components'
+            'bower_components',
         ],
-        plugins: [new BowerResolvePlugin()],
+        plugins: [new BowerResolvePlugin({
+            modulesDirectories: ["bower_components"],
+            includes:           /.*/,
+            excludes:           [],
+            searchResolveModulesDirectories: true
+        })],
         descriptionFiles: ['bower.json', 'package.json'],
         mainFields: ['browser', 'main'],
         extensions: ['.js', '.jsx', '.json']
@@ -48,12 +55,13 @@ config = {
                             [ "react" ],
                             [ "env", {
                                 "targets": {
-                                    "browsers": ["last 10 versions", "safari >= 7"]
+                                    "browsers": ["last 10 versions", "safari >= 7"],
+                                    "uglify": true,
                                 },
                                 "production": {
                                     "presets": ["minify"]
                                 },
-                                "modules": false,
+                                // "modules": false,
                                 "loose": true,
                             }],
                         ],
@@ -89,9 +97,9 @@ config = {
     plugins: [
         new webpack.ProvidePlugin({
         //     'Promise': 'bluebird'
-            $: "jquery",
-            jQuery: "jquery",
-            "window.jQuery": "jquery"
+            $: 'jquery',
+            jQuery: 'jquery',
+            'window.jQuery': 'jquery'
         }),
         new webpack.LoaderOptionsPlugin({
             minimize: true,
@@ -112,7 +120,7 @@ if (process.env.NODE_ENV == 'production') {
     config.plugins.push(
         new webpack.optimize.UglifyJsPlugin({
             ie8: false,
-            ecma: 5,
+            ecma: 6,
             sourceMap: false,
             // mangle: {
             //     // safari10: true,

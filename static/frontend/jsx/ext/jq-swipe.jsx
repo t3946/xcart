@@ -10,7 +10,7 @@
         },
 
         handler: function (event) {
-            var args = [].slice.call(arguments, 1),
+            let args = [].slice.call(arguments, 1),
                 touches = event.originalEvent.touches,
                 startX, startY,
                 deltaX = 0, deltaY = 0,
@@ -28,7 +28,7 @@
 
             function onTouchEnd(e)
             {
-                var rad = null,
+                let rad = null,
                     minPath = window['swipe_min_path'] | 100,
                     Dx = Dxy.Dx,
                     Dy = Dxy.Dy;
@@ -62,7 +62,7 @@
             }
 
             function onTouchMove(e) {
-                var Dx = startX - e.touches[0].pageX,
+                let Dx = startX - e.touches[0].pageX,
                     Dy = startY - e.touches[0].pageY;
 
                 Dxy = {

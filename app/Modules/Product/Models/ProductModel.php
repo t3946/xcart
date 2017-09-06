@@ -80,7 +80,7 @@ class ProductModel extends AutoMetaModel implements ICartItem
             'prices' => [
                 'class' => HasManyField::className(),
                 'modelClass' => PricingModel::className(),
-                'link' => ['productid' => 'productid']
+                'link' => ['productid' => 'productid'],
             ],
 
             'sites' => [
@@ -100,7 +100,7 @@ class ProductModel extends AutoMetaModel implements ICartItem
                 'class' => ForeignField::className(),
                 'modelClass' => CleanUrlModel::className(),
                 'link' => ['productid' => 'resource_id'],
-                'extra' => ['resource_type' => 'P']
+                'extra' => ['resource_type' => 'P'],
             ],
 
 
@@ -135,32 +135,32 @@ class ProductModel extends AutoMetaModel implements ICartItem
             'descr' => [
                 'class' => CharField::className(),
                 'null' => false,
-                'default' => ''
+                'default' => '',
             ],
             'fulldescr' => [
                 'class' => CharField::className(),
                 'null' => false,
-                'default' => ''
+                'default' => '',
             ],
             'seo_fulldescr' => [
                 'class' => CharField::className(),
                 'null' => false,
-                'default' => ''
+                'default' => '',
             ],
             'source_sfid' => [
                 'class' => IntField::className(),
                 'null' => false,
-                'default' => 0
+                'default' => 0,
             ],
             'clone_parent_productid' => [
                 'class' => IntField::className(),
                 'null' => false,
-                'default' => 0
+                'default' => 0,
             ],
             'missing_products' => [
                 'class' => HasManyField::className(),
                 'modelClass' => AmazonFbaMissingSkuModel::className(),
-                'link' => ['productid' => 'productid']
+                'link' => ['productid' => 'productid'],
             ],
         ];
     }
@@ -279,8 +279,14 @@ class ProductModel extends AutoMetaModel implements ICartItem
         return $this->descr ?: $this->seo_fulldescr ?: $this->fulldescr;
     }
 
-    public function checkSF($sfid)
+    public function getPrices()
     {
+        $t = [];
+        /** @var \Xcart\Pricing $price */
+        foreach ($this->getPricing() as $price) {
+            $t[$price->getQuantity()] = $price->getPrice();
+        }
 
+        return $t;
     }
 }

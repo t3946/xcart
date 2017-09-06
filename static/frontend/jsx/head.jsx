@@ -1,10 +1,8 @@
 import 'modernizr';
-
+import $ from 'jquery';
 // import 'jScrollPane';
 import 'jquery-form';
 import 'mmodal';
-// import 'PACE';
-// import 'jQuery.dotdotdot';
 
 import WebFont from 'webfontloader';
 import Waves from 'Waves';
@@ -14,21 +12,6 @@ import noUiSlider from 'noUiSlider';
 // import 'bower_components/PACE/pace.js';
 import 'bower_components/jQuery.dotdotdot/src/jquery.dotdotdot.js';
 
-// import 'foundation-sites';
-import 'bower_components/foundation-sites/dist/js/plugins/foundation.core.js';
-import 'bower_components/foundation-sites/dist/js/plugins/foundation.offcanvas.js';
-import 'bower_components/foundation-sites/dist/js/plugins/foundation.accordion.js';
-import 'bower_components/foundation-sites/dist/js/plugins/foundation.sticky.js';
-// import 'bower_components/foundation-sites/dist/js/plugins/foundation.toggler.js';
-
-import 'bower_components/foundation-sites/dist/js/plugins/foundation.util.keyboard.js';
-import 'bower_components/foundation-sites/dist/js/plugins/foundation.util.triggers.js';
-// import 'bower_components/foundation-sites/dist/js/plugins/foundation.util.box.js';
-// // import 'bower_components/foundation-sites/dist/js/plugins/foundation.util.nest.js';
-// // import 'bower_components/foundation-sites/dist/js/plugins/foundation.util.motion.js';
-import 'bower_components/foundation-sites/dist/js/plugins/foundation.util.triggers.js';
-import 'bower_components/foundation-sites/dist/js/plugins/foundation.util.mediaQuery.js';
-import '../../vendors/wNumb.js'
 // import 'sly';
 
 import  "./_binds/response_status_278";
@@ -45,8 +28,28 @@ import  "../js_include/flash";
 
 
 (function(){
+    window['$'] = $;
     window['whatInput'] = whatInput;
     window['Waves'] = Waves;
     window['WebFont'] = WebFont;
     window['noUiSlider'] = noUiSlider;
 })();
+
+import './ext/foundation_init';
+
+// import 'foundation-sites';
+// import 'bower_components/foundation-sites/dist/js/plugins/foundation.core.js';
+// import 'bower_components/foundation-sites/dist/js/plugins/foundation.offcanvas.js';
+// import 'bower_components/foundation-sites/dist/js/plugins/foundation.accordion.js';
+// import 'bower_components/foundation-sites/dist/js/plugins/foundation.sticky.js';
+// // import 'bower_components/foundation-sites/dist/js/plugins/foundation.toggler.js';
+//
+// import 'bower_components/foundation-sites/dist/js/plugins/foundation.util.keyboard.js';
+// import 'bower_components/foundation-sites/dist/js/plugins/foundation.util.triggers.js';
+// // import 'bower_components/foundation-sites/dist/js/plugins/foundation.util.box.js';
+// // // import 'bower_components/foundation-sites/dist/js/plugins/foundation.util.nest.js';
+// // // import 'bower_components/foundation-sites/dist/js/plugins/foundation.util.motion.js';
+// import 'bower_components/foundation-sites/dist/js/plugins/foundation.util.triggers.js';
+// import 'bower_components/foundation-sites/dist/js/plugins/foundation.util.mediaQuery.js';
+
+import '../../vendors/wNumb.js'

@@ -1,4 +1,9 @@
-<div class="item product{if $item->isOutOfStock()} out_of_stock{/if}" data-product="{$item->productid}" itemscope itemtype="http://schema.org/Product" itemprop="itemListElement">
+<div class="item product{if $item->isOutOfStock()} out_of_stock{/if}"
+     data-product="{$item->productid}"
+     data-price='{$item->getPrices()|json_encode}'
+     itemscope
+     itemtype="http://schema.org/Product"
+     itemprop="itemListElement">
 
         <div class="image_container container">
             <a href="{$item->getAbsoluteUrl()}" title="{$item.product}" class="link">
@@ -175,7 +180,10 @@
 
                     <div class="subtotal_container">
                         <div class="subtotal">
-                            Subtotal: US$ 400.01
+                            Subtotal: US$
+                            <div class="price">
+                                400.01
+                            </div>
                         </div>
                         <div class="safe">
                             Save 41% (US$ 5.27 per unit)

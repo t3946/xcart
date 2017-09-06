@@ -76,6 +76,7 @@
 {/block}
 
 {block 'js'}
+    {if !$.request->getIsAjax() }
     <script type="text/javascript">
         (function(){
             document.addEventListener('DOMContentLoaded', function(){
@@ -83,4 +84,5 @@
             })
         })();
     </script>
+    {/if}
 {/block}

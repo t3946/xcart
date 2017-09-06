@@ -1,6 +1,5 @@
 (()=>{
-    $(document).on('click', '.quantity-group .btn', function(e){
-        e.preventDefault();
+    let getValues = (e) => {
 
         let $this = $(e.target);
         let $container = $this.closest('.quantity-group');
@@ -9,23 +8,56 @@
         let max = parseInt($input.attr('max'));
         let min = parseInt($input.attr('min'));
 
-        if ($this.hasClass('inc') && val < max) {
-            val += parseInt($input.attr('step'));
+        return {
+            '$this': $this,
+            '$container': $container,
+            '$input': $input,
+            'val': val,
+            'max': max,
+            'min': min,
+        }
+    };
+
+    let recheckActives = (e, params = getValues(e))=>{
+        params.$container.find('.btn').removeClass('active');
+
+        if (params.val < params.max) {
+            params.$container.find('.btn.inc').addClass('active');
         }
 
-        if ($this.hasClass('dec') && val > min) {
-            val -= parseInt($input.attr('step'));
+        if (params.val > params.min) {
+            params.$container.find('.btn.dec').addClass('active');
         }
 
-        $input.val(val);
+        $(window).trigger('qg.change', {e:e, val: params.val});
+    };
 
-        $container.find('.btn').removeClass('active');
+    $(document)
+        .on('click', '.quantity-group .btn', (e) => {
+            e.preventDefault();
 
-        if (val < max) {
-            $container.find('.btn.inc').addClass('active');
-        }
-        if (val > min) {
-            $container.find('.btn.dec').addClass('active');
-        }
-    });
+            let params = getValues(e);
+
+            if (params.$this.hasClass('inc') && params.val < params.max) {
+                params.val += parseInt(params.$input.attr('step'));
+            }
+
+            if (params.$this.hasClass('dec') && params.val > params.min) {
+                params.val -= parseInt(params.$input.attr('step'));
+            }
+
+            params.$input.val(params.val);
+
+            recheckActives(e, params);
+
+        })
+        .on('change blur propertychange mousewheel', '.quantity-group input', (e) => {
+            clearTimeout($.data(e.target, 'timer'));
+
+            $.data(e.target, 'timer', setTimeout(() => {
+                recheckActives(e);
+            }, 50));
+        })
+
+
 })();
