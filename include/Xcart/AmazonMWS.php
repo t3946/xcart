@@ -1450,7 +1450,7 @@ SQL;
                                         $price = floatval($oOrderItem->getElementsByTagName('ItemPrice')->item(0)->getElementsByTagName('Amount')->item(0)->nodeValue) / $iOrderQuantity;
 
                                         if ($sFulfilmentChanel == 'AFN' && $price < $oProduct->getZeroPrice()) {
-                                            $product_amazon = AmazonProductsFieldsModel::objects()->getOrNew(['productid' => $oProduct->productid]);
+                                            list($product_amazon) = AmazonProductsFieldsModel::objects()->getOrNew(['productid' => $oProduct->productid]);
                                             $product_amazon->amazon_fba_restricted = 'Y';
                                             $product_amazon->amazon_fba_restricted_reason = 'Discounted sale';
                                             $product_amazon->save();
