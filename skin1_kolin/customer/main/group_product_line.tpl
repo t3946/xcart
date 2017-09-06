@@ -93,14 +93,14 @@
                 <td class="spinner_cell" data-price='{getPricingArray pricing=$child->pricing json=true}'>
                     {include file="customer/main/add_to_cart_input.tpl"}
                 </td>
-                <td class="extended"><span class="currency">US$ </span><span class="value"></span></td>
+                <td class="extended"><span class="currency">US </span><span class="value"></span></td>
             </tr>
         {/foreach}
     </table>
     <table width="100%" cellspacing="0" cellpadding="3" class="subtotal">
         <tr>
             <td align="right">
-                <div class="subtotal_class2"><span class="subtotal_class1">Subtotal:</span><span>US$ </span><span class="value"></span></div>
+                <div class="subtotal_class2"><span class="subtotal_class1">Subtotal:</span><span>US </span><span class="value"></span></div>
             </td>
         </tr>
     </table>
@@ -133,7 +133,13 @@
                     spinner.next('.extended').find('span').hide().end().find('span.value').html(sub);
                 } else {
                     sub = aprice[cur_price].price * newVal;
-                    spinner.next('.extended').find('span').show().end().find('span.value').html(sub.toFixed(2));
+                    spinner.next('.extended').find('span').show().end()
+                        .find('span.value').html(sub
+                        .toLocaleString('en-US', {
+                        style: 'currency',
+                        currency: 'USD'
+                        })
+                    );
                 }
 
 
@@ -146,7 +152,14 @@
                     }
                 });
 
-                $('table.subtotal .subtotal_class2').find('.value').html(subtotal.toFixed(2)).end().show();
+                $('table.subtotal .subtotal_class2').find('.value')
+                    .html(
+                        subtotal.toLocaleString('en-US', {
+                        style: 'currency',
+                        currency: 'USD'})
+                    )
+                    .end()
+                    .show();
             });
 
         })();
