@@ -114,6 +114,16 @@ abstract class BaseCartController extends FrontendController
         }
     }
 
+    public function actionSetPostQuantity()
+    {
+        if ( $this->getRequest()->getIsPost() ) {
+
+            if ( $uniqueId = $this->getRequest()->post->get('uid') ) {
+                $this->actionSetQuantity($uniqueId);
+            }
+        }
+    }
+
     public function actionQuantity($key, $quantity)
     {
         $isAjax = $this->getRequest()->getIsAjax();

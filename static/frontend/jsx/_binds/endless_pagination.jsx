@@ -13,7 +13,9 @@ window.endless_paginate = ()=>{
 
     window.loader.load(
         $.ajax($this.attr('href'), {
+            'dataType': 'json',
             'success' : (data)=>{
+                let old_uri = $this.attr('href');
                 $container.append(data.content);
 
                 if (data.href) {
@@ -26,6 +28,7 @@ window.endless_paginate = ()=>{
                 }
 
                 $('.page_count_wrap').html(data.page_count);
+                // history.replaceState({pageUrl: old_uri}, document.title, old_uri);
             },
             'error': ()=>{
                 window.loader.detach();

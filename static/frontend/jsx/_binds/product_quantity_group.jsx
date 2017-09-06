@@ -7,6 +7,7 @@
         let val = parseInt($input.val());
         let max = parseInt($input.attr('max'));
         let min = parseInt($input.attr('min'));
+        let data_min = parseInt($input.data('min'));
 
         return {
             '$this': $this,
@@ -14,7 +15,7 @@
             '$input': $input,
             'val': val,
             'max': max,
-            'min': min,
+            'min': min | data_min,
         }
     };
 
@@ -29,7 +30,8 @@
             params.$container.find('.btn.dec').addClass('active');
         }
 
-        $(window).trigger('qg.change', {e:e, val: params.val});
+        params.$this.closest('[data-product]').data('quantity', params.val);
+        $(window).trigger('component.quantity.change', {e:e, val: params.val});
     };
 
     $(document)

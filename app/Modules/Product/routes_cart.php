@@ -24,13 +24,20 @@ return [
     [
         'route' => '/quantity',
         'target' => ['\Modules\Product\Controllers\CartController', 'actionGetQuantity'],
+        'methods' => ['GET'],
         'name' => 'quantity:get'
     ],
     [
-        'route' => '/quantity/{a:key}',
-        'target' => ['\Modules\Product\Controllers\CartController', 'actionSetQuantity'],
+        'route' => '/quantity',
+        'target' => ['\Modules\Product\Controllers\CartController', 'actionSetPostQuantity'],
+        'methods' => ['POST'],
         'name' => 'quantity:set:post'
     ],
+//    [
+//        'route' => '/quantity/{a:key}',
+//        'target' => ['\Modules\Product\Controllers\CartController', 'actionSetQuantity'],
+//        'name' => 'quantity:set:post'
+//    ],
     [
         'route' => '/quantity/{a:key}-{i:quantity}',
         'target' => ['\Modules\Product\Controllers\CartController', 'actionQuantity'],

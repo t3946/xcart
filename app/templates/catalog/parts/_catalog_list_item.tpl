@@ -1,6 +1,10 @@
 <div class="item product{if $item->isOutOfStock()} out_of_stock{/if}"
      data-product="{$item->productid}"
-     data-price='{$item->getPrices()|json_encode}'
+     data-uid="{$item->getUniqueId()}"
+     data-prices='{$item->getPrices()|json_encode}'
+     data-list-price="{$item->list_price}"
+     data-price-precalc
+     data-cart-action="{url 'catalog:cart:quantity:set:post' key=$item->getUniqueId()}"
      itemscope
      itemtype="http://schema.org/Product"
      itemprop="itemListElement">
@@ -18,6 +22,10 @@
                     <span class="splash splash-sale show-for-large">Sale</span>
                 {/if}
 
+                {if $item->isOutOfStock()}
+                    <span class="splash splash-out">Out of stock</span>
+                {/if}
+
             </a>
             <a href="#" class="button yellow-white button-quick-view hide waves">quick view</a>
         </div>
@@ -33,7 +41,7 @@
                     {/if}
                 </a>
             </h4>
-            {*<div class="sku show-for-large">*}
+
             <div class="sku show-for-large">
                 <span class="value">
                     SKU: <span class="style" itemprop="sku">{$item.productcode}</span>
@@ -142,6 +150,7 @@
                                    name="quantity"
                                    min="{$item->min_amount}"
                                    max="{$item->avail}"
+                                   data-min="{$item->min_amount}"
                                    step="{if $item->mult_order_quantity == 'Y'}{$item->min_amount}{else}1{/if}"
                                    value="{$item->min_amount}"
                                    id="quantity-{$item.productid}"
@@ -157,7 +166,7 @@
                             </div>
                         {/if}
 
-                        {if $item->mult_order_quantity == 'Y'}
+                        {if $item->mult_order_quantity == 'Y' && $item->min_amount > 1}
                             <div class="multiply-quantity icon info padding">
                                 Order in multiples of {$item->min_amount} items
                             </div>
@@ -171,19 +180,19 @@
                     </div>
 
                     <div class="cart_add">
-                        <span class="add button waves waves-orange yellow" data-url="{url 'catalog:cart:add' key=$item->getUniqueId()}">
+                        <a class="add button waves waves-orange yellow">
                             <span class="text">
                                 Add to cart
                             </span>
-                        </span>
+                        </a>
                     </div>
 
                     <div class="subtotal_container">
                         <div class="subtotal">
                             Subtotal: US$
-                            <div class="price">
+                            <span class="price">
                                 400.01
-                            </div>
+                            </span>
                         </div>
                         <div class="safe">
                             Save 41% (US$ 5.27 per unit)

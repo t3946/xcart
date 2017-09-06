@@ -1,7 +1,7 @@
-$(function () {
-    var flashOutTime = 7000;
+(()=> {
+    let flashOutTime = 7000;
 
-    var $flashList = $('.flash-messages-block .flash-list');
+    let $flashList = $('.flash-messages-block .flash-list');
 
     $(document).on('click', '.close-flash', function (e) {
         e.preventDefault();
@@ -11,13 +11,13 @@ $(function () {
         return false;
     });
 
-    window.addFlashMessage = function (message, type, time) {
+    window.addFlashMessage = (message, type, time) => {
         type = type ? type : 'success';
-        var outTime = (time && time > flashOutTime) ? time : flashOutTime;
+        let outTime = (time && time > flashOutTime) ? time : flashOutTime;
 
-        var $item = $('<div class="flash-message"></div>').addClass(type);
-        var $closer = $('<a class="close-flash right"><i class="icon-delete_in_filter"></i></a>');
-        var $text = $('<span/>').addClass('message').text(message);
+        let $item = $('<div class="flash-message"></div>').addClass(type);
+        let $closer = $('<a class="close-flash right"><i class="icon-delete_in_filter"></i></a>');
+        let $text = $('<span/>').addClass('message').text(message);
 
         $item.append([$closer, $text]);
         $flashList.append($item);
@@ -32,9 +32,9 @@ $(function () {
     };
 
     if (window['flashStack'] && window['flashStack'].length) {
-        for (var i in window['flashStack']) {
-            var f = window['flashStack'][i];
+        for (let i in window['flashStack']) {
+            let f = window['flashStack'][i];
             addFlashMessage(f.message, f.type);
         }
     }
-});
+})();

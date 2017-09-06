@@ -16,6 +16,7 @@ import 'bower_components/jQuery.dotdotdot/src/jquery.dotdotdot.js';
 
 import  "./_binds/response_status_278";
 import  "./_binds/product_quantity_group";
+import  "./_binds/add_to_cart";
 import  "./_binds/endless_pagination";
 import  "./_binds/click_mmodal";
 import  "./_binds/search";
@@ -26,6 +27,8 @@ import  "./_binds/catalog_actionblock_sort";
 import  "./ext/jq-swipe";
 import  "../js_include/flash";
 
+import './ext/foundation-init';
+import '../../vendors/wNumb.js'
 
 (function(){
     window['$'] = $;
@@ -34,22 +37,3 @@ import  "../js_include/flash";
     window['WebFont'] = WebFont;
     window['noUiSlider'] = noUiSlider;
 })();
-
-import './ext/foundation_init';
-
-// import 'foundation-sites';
-// import 'bower_components/foundation-sites/dist/js/plugins/foundation.core.js';
-// import 'bower_components/foundation-sites/dist/js/plugins/foundation.offcanvas.js';
-// import 'bower_components/foundation-sites/dist/js/plugins/foundation.accordion.js';
-// import 'bower_components/foundation-sites/dist/js/plugins/foundation.sticky.js';
-// // import 'bower_components/foundation-sites/dist/js/plugins/foundation.toggler.js';
-//
-// import 'bower_components/foundation-sites/dist/js/plugins/foundation.util.keyboard.js';
-// import 'bower_components/foundation-sites/dist/js/plugins/foundation.util.triggers.js';
-// // import 'bower_components/foundation-sites/dist/js/plugins/foundation.util.box.js';
-// // // import 'bower_components/foundation-sites/dist/js/plugins/foundation.util.nest.js';
-// // // import 'bower_components/foundation-sites/dist/js/plugins/foundation.util.motion.js';
-// import 'bower_components/foundation-sites/dist/js/plugins/foundation.util.triggers.js';
-// import 'bower_components/foundation-sites/dist/js/plugins/foundation.util.mediaQuery.js';
-
-import '../../vendors/wNumb.js'
