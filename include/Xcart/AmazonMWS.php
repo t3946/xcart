@@ -1609,6 +1609,7 @@ SQL;
                         $mail_body .= "<a target='_blank' href='{$order->getAdminUrl()}'>{$order->getDisplayOrderNumber()}</a>\n";
                     }
 
+                    $t_smarty = $mail_smarty;
                     unset($mail_smarty);
                     $oMail = \Xcart\App\Main\Xcart::app()->mail;
                     $oMail->init();
@@ -1617,6 +1618,7 @@ SQL;
                     $oMail->subject = 'Amazon orders with Discounted sale';
                     $oMail->body = $mail_body;
                     $oMail->sendEmail();
+                    $mail_smarty = $t_smarty;
                 }
             }
 
