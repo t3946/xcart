@@ -233,11 +233,9 @@ if ($sExtraLog=='Y')
 
 	$cats_path = func_froogle_convert($cats_path, 1000);
 	$cats_path = func_cidev_check_froogle_field($cats_path);
-	//$cats_path = iconv("UTF-8", "ISO-8859-1//TRANSLIT", $cats_path);
 
 	$cats_path_for_thefind = func_froogle_convert($cats_path_for_thefind, 1000);
 	$cats_path_for_thefind = func_cidev_check_froogle_field($cats_path_for_thefind);
-	//$cats_path_for_thefind = iconv("UTF-8", "ISO-8859-1//TRANSLIT", $cats_path_for_thefind);
 
 	# Define full description
 	if (!empty($product['fulldescr']))
@@ -250,11 +248,9 @@ if ($sExtraLog=='Y')
 
 	$product['descr'] = func_froogle_convert($product['descr'], 10000);
 	$product['descr'] = func_cidev_check_froogle_field($product['descr']);
-	//$product['descr'] = iconv("UTF-8", "ISO-8859-1//TRANSLIT", $product['descr']);
 
 	$product['product'] = func_froogle_convert($product['product'], 70);
 	$product['product'] = func_cidev_check_froogle_field($product['product']);
-	//$product['product'] = iconv("UTF-8", "ISO-8859-1//TRANSLIT", $product['product']);
 
 	# Define product image
 	$tmp = func_query_first("SELECT id, image_path FROM $sql_tbl[images_P] WHERE $sql_tbl[images_P].id = '$product[productid]'");
@@ -491,7 +487,8 @@ if ($sExtraLog=='Y')
 	#
 	# Define Detailed product image
 	#
-	$tmp_all = func_query("SELECT id, imageid, image_path FROM $sql_tbl[images_D] WHERE $sql_tbl[images_D].id = '$product[productid]' AND $sql_tbl[images_D].avail='Y' ORDER BY orderby");
+	$tmp_all = func_query_param(/** @lang MySQL */
+        "SELECT id, imageid, image_path FROM xcart_images_D WHERE id = :id AND avail='Y' AND ((image_x >= 100 AND image_y >= 100) OR (image_x = 0 AND image_y = 0)) ORDER BY orderby", ['id' => $product['productid']]);
 
 	if (!empty($tmp_all) && is_array($tmp_all)){
 		foreach($tmp_all as $k_tmp => $tmp){
