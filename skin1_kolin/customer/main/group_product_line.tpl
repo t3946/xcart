@@ -114,6 +114,10 @@
                 margin-right: 16px;
             }
 
+            table.subtotal td.sub {
+               height: 30px;
+            }
+
             table.group_product div.quantity {
                 width: 105px;
                 margin: 0 auto;
@@ -153,7 +157,7 @@
                 <td>{include file="currency.tpl" value=$child->getFrontendPrice()}</td>
                 <td class="spinner_cell" data-price='{getPricingArray pricing=$child->pricing json=true}'>
                     {if !$child->isProductOutOfStock()}
-                        {if $child->mult_order_quantity == 'Y' && $child->min_amount > 1}
+                        {if $child->min_amount > 1}
                             {assign var=step value=$child->min_amount}
                          {else}
                             {assign var=step value=1}
@@ -173,9 +177,14 @@
     </table>
     <table width="100%" cellspacing="0" cellpadding="3" class="subtotal">
         <tr>
-            <td align="right">
+            <td class="sub" align="right">
                 <div class="subtotal_class2"><span class="subtotal_class1">Subtotal:</span><span>US$ </span><span
                             class="value"></span></div>
+            </td>
+        </tr>
+        <tr>
+            <td align="right">
+                {include file="buttons/buy_now.tpl" style="button" href="javascript: if ('`$config.General.opt_ajax_cart`' == 'Y') ajax_add_to_cart(`$product.productid`, `$product.add_date`, 'product'); else document.orderform.submit();" b=1 class="ajax_button" add_to_cart_btn="big"}
             </td>
         </tr>
     </table>
