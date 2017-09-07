@@ -18,6 +18,17 @@ class CartController extends BaseCartController
         parent::actionAdd($uniqueId, $quantity);
     }
 
+    public function actionProductsAdd()
+    {
+        if ($items = $this->getRequest()->post->get('items', [])) {
+            foreach ( $items as $item) {
+                $this->addInternal($item['id'], $item['quantity']);
+            }
+        }
+
+        $this->actionGetQuantity();
+    }
+
     protected function addInternal($uniqueId, $quantity = 1)
     {
         /** @var ProductModel $model */

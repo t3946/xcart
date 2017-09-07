@@ -14,9 +14,8 @@ import 'bower_components/jQuery.dotdotdot/src/jquery.dotdotdot.js';
 
 // import 'sly';
 
+import "./_binds/cart"
 import  "./_binds/response_status_278";
-import  "./_binds/product_quantity_group";
-import  "./_binds/add_to_cart";
 import  "./_binds/endless_pagination";
 import  "./_binds/click_mmodal";
 import  "./_binds/search";
@@ -25,7 +24,7 @@ import  "./_binds/shadow";
 import  "./_binds/catalog_actionblock_sort";
 
 import  "./ext/jq-swipe";
-import  "../js_include/flash";
+import  "./components/Flash";
 
 import './ext/foundation-init';
 import '../../vendors/wNumb.js'

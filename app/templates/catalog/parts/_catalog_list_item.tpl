@@ -2,9 +2,11 @@
      data-product="{$item->productid}"
      data-uid="{$item->getUniqueId()}"
      data-prices='{$item->getPrices()|json_encode}'
+     {if $item->getFrontendPrice() < $item->list_price}
      data-list-price="{$item->list_price}"
+     {/if}
      data-price-precalc
-     data-cart-action="{url 'catalog:cart:quantity:set:post' key=$item->getUniqueId()}"
+     {*data-cart-action="{url 'catalog:cart:quantity:set:post' key=$item->getUniqueId()}"*}
      itemscope
      itemtype="http://schema.org/Product"
      itemprop="itemListElement">
@@ -187,15 +189,12 @@
                         </a>
                     </div>
 
-                    <div class="subtotal_container">
+                    <div class="subtotal_container hide">
                         <div class="subtotal">
-                            Subtotal: US$
-                            <span class="price">
-                                400.01
-                            </span>
+                            Subtotal: US$ <span class="price">400.01</span>
                         </div>
                         <div class="safe">
-                            Save 41% (US$ 5.27 per unit)
+                            Save <span class="percentage">41</span>% (US$ <span class="price">5.27</span> per unit)
                         </div>
                     </div>
                 {else}

@@ -7,6 +7,11 @@ return [
         'name' => 'add'
     ],
     [
+        'route' => '/add/products',
+        'target' => ['\Modules\Product\Controllers\CartController', 'actionProductsAdd'],
+        'name' => 'products:add'
+    ],
+    [
         'route' => '/',
         'target' => ['\Modules\Product\Controllers\CartController', 'actionList'],
         'name' => 'list'

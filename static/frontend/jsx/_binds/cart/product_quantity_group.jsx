@@ -31,7 +31,10 @@
         }
 
         params.$this.closest('[data-product]').data('quantity', params.val);
-        $(window).trigger('component.quantity.change', {e:e, val: params.val});
+        $(window).trigger('component.quantity.change', {
+            target: e.target,
+            val: params.val
+        });
     };
 
     $(document)

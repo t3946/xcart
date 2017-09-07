@@ -284,7 +284,7 @@ class ProductModel extends AutoMetaModel implements ICartItem
         $t = [];
         /** @var \Xcart\Pricing $price */
         foreach ($this->getPricing() as $price) {
-            $t[$price->getQuantity()] = $price->getPrice();
+            $t[$price->getQuantity()] = $this->getFrontendPrice($price->getQuantity());
         }
 
         return $t;

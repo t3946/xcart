@@ -9515,11 +9515,9 @@ var _noUiSlider2 = _interopRequireDefault(_noUiSlider);
 
 __webpack_require__(34);
 
+__webpack_require__(112);
+
 __webpack_require__(35);
-
-__webpack_require__(36);
-
-__webpack_require__(109);
 
 __webpack_require__(37);
 
@@ -9535,7 +9533,7 @@ __webpack_require__(43);
 
 __webpack_require__(44);
 
-__webpack_require__(45);
+__webpack_require__(111);
 
 __webpack_require__(46);
 
@@ -14638,77 +14636,7 @@ $(document).ajaxComplete(function (e, xhr, settings) {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 36 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/* WEBPACK VAR INJECTION */(function($) {
-
-(function () {
-    var getValues = function getValues(e) {
-
-        var $this = $(e.target);
-        var $container = $this.closest('.quantity-group');
-        var $input = $container.find('input');
-        var val = parseInt($input.val());
-        var max = parseInt($input.attr('max'));
-        var min = parseInt($input.attr('min'));
-        var data_min = parseInt($input.data('min'));
-
-        return {
-            '$this': $this,
-            '$container': $container,
-            '$input': $input,
-            'val': val,
-            'max': max,
-            'min': min | data_min
-        };
-    };
-
-    var recheckActives = function recheckActives(e) {
-        var params = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : getValues(e);
-
-        params.$container.find('.btn').removeClass('active');
-
-        if (params.val < params.max) {
-            params.$container.find('.btn.inc').addClass('active');
-        }
-
-        if (params.val > params.min) {
-            params.$container.find('.btn.dec').addClass('active');
-        }
-
-        params.$this.closest('[data-product]').data('quantity', params.val);
-        $(window).trigger('component.quantity.change', { e: e, val: params.val });
-    };
-
-    $(document).on('click', '.quantity-group .btn', function (e) {
-        e.preventDefault();
-
-        var params = getValues(e);
-
-        if (params.$this.hasClass('inc') && params.val < params.max) {
-            params.val += parseInt(params.$input.attr('step'));
-        }
-
-        if (params.$this.hasClass('dec') && params.val > params.min) {
-            params.val -= parseInt(params.$input.attr('step'));
-        }
-
-        params.$input.val(params.val);
-
-        recheckActives(e, params);
-    }).on('change blur propertychange mousewheel', '.quantity-group input', function (e) {
-        clearTimeout($.data(e.target, 'timer'));
-
-        $.data(e.target, 'timer', setTimeout(function () {
-            recheckActives(e);
-        }, 50));
-    });
-})();
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
-
-/***/ }),
+/* 36 */,
 /* 37 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -15018,55 +14946,7 @@ $(document).on('click', '.action_block.sort .options li', function (e) {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 45 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/* WEBPACK VAR INJECTION */(function($) {
-
-(function () {
-    var flashOutTime = 7000;
-
-    var $flashList = $('.flash-messages-block .flash-list');
-
-    $(document).on('click', '.close-flash', function (e) {
-        e.preventDefault();
-        $(this).closest('.flash-message').fadeOut(400, function () {
-            $(this).remove();
-        });
-        return false;
-    });
-
-    window.addFlashMessage = function (message, type, time) {
-        type = type ? type : 'success';
-        var outTime = time && time > flashOutTime ? time : flashOutTime;
-
-        var $item = $('<div class="flash-message"></div>').addClass(type);
-        var $closer = $('<a class="close-flash right"><i class="icon-delete_in_filter"></i></a>');
-        var $text = $('<span/>').addClass('message').text(message);
-
-        $item.append([$closer, $text]);
-        $flashList.append($item);
-
-        setTimeout(function () {
-            if ($item && $item.length > 0) {
-                $item.fadeOut(400, function () {
-                    $(this).remove();
-                });
-            }
-        }, outTime);
-    };
-
-    if (window['flashStack'] && window['flashStack'].length) {
-        for (var i in window['flashStack']) {
-            var f = window['flashStack'][i];
-            addFlashMessage(f.message, f.type);
-        }
-    }
-})();
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
-
-/***/ }),
+/* 45 */,
 /* 46 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -38130,7 +38010,145 @@ function documentReady(callback) {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 109 */
+/* 109 */,
+/* 110 */,
+/* 111 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function($) {
+
+(function () {
+    var flashOutTime = 7000;
+
+    var $flashList = $('.flash-messages-block .flash-list');
+
+    $(document).on('click', '.close-flash', function (e) {
+        e.preventDefault();
+        $(this).closest('.flash-message').fadeOut(400, function () {
+            $(this).remove();
+        });
+        return false;
+    });
+
+    window.addFlashMessage = function (message, type, time) {
+        type = type ? type : 'success';
+        var outTime = time && time > flashOutTime ? time : flashOutTime;
+
+        var $item = $('<div class="flash-message"></div>').addClass(type);
+        var $closer = $('<a class="close-flash right"><i class="icon-delete_in_filter"></i></a>');
+        var $text = $('<span/>').addClass('message').text(message);
+
+        $item.append([$closer, $text]);
+        $flashList.append($item);
+
+        setTimeout(function () {
+            if ($item && $item.length > 0) {
+                $item.fadeOut(400, function () {
+                    $(this).remove();
+                });
+            }
+        }, outTime);
+    };
+
+    if (window['flashStack'] && window['flashStack'].length) {
+        for (var i in window['flashStack']) {
+            var f = window['flashStack'][i];
+            addFlashMessage(f.message, f.type);
+        }
+    }
+})();
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
+
+/***/ }),
+/* 112 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+__webpack_require__(113);
+
+__webpack_require__(114);
+
+__webpack_require__(115);
+
+/***/ }),
+/* 113 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function($) {
+
+(function () {
+    var getValues = function getValues(e) {
+
+        var $this = $(e.target);
+        var $container = $this.closest('.quantity-group');
+        var $input = $container.find('input');
+        var val = parseInt($input.val());
+        var max = parseInt($input.attr('max'));
+        var min = parseInt($input.attr('min'));
+        var data_min = parseInt($input.data('min'));
+
+        return {
+            '$this': $this,
+            '$container': $container,
+            '$input': $input,
+            'val': val,
+            'max': max,
+            'min': min | data_min
+        };
+    };
+
+    var recheckActives = function recheckActives(e) {
+        var params = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : getValues(e);
+
+        params.$container.find('.btn').removeClass('active');
+
+        if (params.val < params.max) {
+            params.$container.find('.btn.inc').addClass('active');
+        }
+
+        if (params.val > params.min) {
+            params.$container.find('.btn.dec').addClass('active');
+        }
+
+        params.$this.closest('[data-product]').data('quantity', params.val);
+        $(window).trigger('component.quantity.change', {
+            target: e.target,
+            val: params.val
+        });
+    };
+
+    $(document).on('click', '.quantity-group .btn', function (e) {
+        e.preventDefault();
+
+        var params = getValues(e);
+
+        if (params.$this.hasClass('inc') && params.val < params.max) {
+            params.val += parseInt(params.$input.attr('step'));
+        }
+
+        if (params.$this.hasClass('dec') && params.val > params.min) {
+            params.val -= parseInt(params.$input.attr('step'));
+        }
+
+        params.$input.val(params.val);
+
+        recheckActives(e, params);
+    }).on('change blur propertychange mousewheel', '.quantity-group input', function (e) {
+        clearTimeout($.data(e.target, 'timer'));
+
+        $.data(e.target, 'timer', setTimeout(function () {
+            recheckActives(e);
+        }, 50));
+    });
+})();
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
+
+/***/ }),
+/* 114 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -38138,10 +38156,76 @@ function documentReady(callback) {
 
 (function () {
     $(document).on('click', '.cart_add .button', function (e) {
+        e.preventDefault();
+
         var quantity = $(e.target).closest('[data-product]').data('quantity') | 1;
 
         console.log(quantity);
     });
+})();
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
+
+/***/ }),
+/* 115 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function($) {
+
+(function () {
+    var catalog_container = $('.catalog-page');
+    if (catalog_container.length) {
+        $(window).on('component.quantity.change', function (e, data) {
+            var show = false;
+            var $product = $(data.target).closest('[data-product]');
+            var $subtotal_container = $product.find('.subtotal_container');
+            var quantity = $product.data('quantity');
+
+            if (quantity) {
+                var list_price = parseFloat($product.data('list-price'));
+
+                if (list_price) {
+                    var prices = $product.data('prices');
+                    var count = 0;
+                    var price = 0;
+                    var extended = 0;
+                    var safe_percentage = 0;
+                    var safe_price = 0;
+                    var per_unit = 0;
+
+                    for (count in prices) {
+                        if (count >= quantity) {
+                            break;
+                        }
+                    }
+
+                    price = prices[count];
+                    extended = (quantity * price).toFixed(2);
+
+                    var $price = $product.find('.price_container .current [itemprop=price]');
+
+                    $price.html(price.toFixed(2));
+
+                    if (quantity > 1) {
+                        show = true;
+                        safe_price = (list_price * quantity - extended).toFixed(2);
+                        safe_percentage = Math.floor(safe_price / (extended * .01));
+                        per_unit = (safe_price / quantity).toFixed(2);
+
+                        $subtotal_container.find('.subtotal .price').html(extended);
+                        $subtotal_container.find('.safe .percentage').html(safe_percentage);
+                        $subtotal_container.find('.safe .price').html(per_unit);
+                    }
+                }
+            }
+
+            if (show) {
+                $subtotal_container.removeClass('hide');
+            } else {
+                $subtotal_container.addClass('hide');
+            }
+        });
+    }
 })();
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
