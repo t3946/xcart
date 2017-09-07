@@ -53,7 +53,7 @@ function GetGooglePrice($fproduct){
 	return $product_price;
 }
 
-function GetGoogleBaseOneRow($productid, $scrip_name="", $sExtraLog = "N"){
+function GetGoogleBaseOneRow($productid, $scrip_name="", $sExtraLog = "N", $withShipping = true){
 	global $sql_tbl, $xcart_dir, $active_modules, $config, $https_location, $http_location, $xcart_states_US, $aManufacturerZones, $HTTPS,
     $storefrontid, $current_storefront;
 
@@ -356,9 +356,8 @@ if ($sExtraLog=='Y')
 		$online_only = 'y';
 		$product["onlineOnly"] = "1";
 	}
-	$newShipping = $productModel->getStoreFront()->getConfigValue('new_shipping_calculation');
 
-	if (!empty($newShipping) && $newShipping == 'Y') {
+	if ($withShipping) {
 		$shippings_str_arr = $shippings_google_arr = $aShippingCarrier = [];
 		$shipping_currency = "USD";
 
@@ -418,42 +417,8 @@ if ($sExtraLog=='Y')
 		if (in_array('Amazon', $aShippingCarrier)) {
 			$product['custom_label_2'] = 'Amazon rates';
 		}
-	} else {
-		if ($productModel->isProductFBAAvail()) {
-			$start_time_amazon_shipping = round(microtime(true) * 1000);
-			$amazon_shippings_arr = func_get_amazon_shippings_for_all_states($product);
-			$diff_end_time_amazon_shipping = (round(microtime(true) * 1000) - $start_time_amazon_shipping);
-		}
-
-		$start_time_approximate_shipping = round(microtime(true) * 1000);
-		$shipping_arr = func_define_approximate_shippings($product["productid"], $product);
-		$diff_end_time_approximate_shipping = (round(microtime(true) * 1000) - $start_time_approximate_shipping);
-
-		if ($sExtraLog == 'Y') {
-			func_print_r($shipping_arr);
-		}
-
-		$product['custom_label_2'] = 'UPS rates';
-
-		if (!empty($amazon_shippings_arr)) {
-
-			$shipping_ground_arr = $shipping_arr;
-			$shipping_arr = $amazon_shippings_arr;
-
-			if (is_array($shipping_arr["not_found_rates_for_state"]) && !empty($shipping_ground_arr["shippings_google_arr"])) {
-
-				foreach ($shipping_arr["not_found_rates_for_state"] as $k_n => $v_n) {
-					foreach ($shipping_ground_arr["shippings_google_arr"] as $k_g => $v_g) {
-						if ($v_g["region"] == $v_n) {
-							$shipping_arr["shippings_google_arr"][] = $v_g;
-							$shipping_arr["shippings_str"] .= ",US:" . $v_n . ":Ground:" . $v_g["price"]["value"] . "USD";
-							$product['custom_label_2'] = 'FBA rates';
-						}
-					}
-				}
-			}
-		}
 	}
+
 	$shipping = $shipping_arr["shippings_str"];
 	$custom_label_0 = '';
 	$custom_label_1 = '';
