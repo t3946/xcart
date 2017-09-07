@@ -1609,6 +1609,7 @@ SQL;
                         $mail_body .= "<a target='_blank' href='{$order->getAdminUrl()}'>{$order->getDisplayOrderNumber()}</a>\n";
                     }
 
+                    global $mail_smarty;
                     $t_smarty = $mail_smarty;
                     unset($mail_smarty);
                     $oMail = \Xcart\App\Main\Xcart::app()->mail;
