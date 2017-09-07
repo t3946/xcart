@@ -26,6 +26,7 @@
         this.options = $.extend({}, Spinning.rules.defaults, Spinning.rules[options.rule] || {}, options);
         this.min = Number(this.options.min) || 0;
         this.max = Number(this.options.max) || 0;
+        this.start = Number(this.options.start) || 0;
 
         this.$el.on({
             'focus.spinner': $.proxy(function(e) {
@@ -88,6 +89,14 @@
             v = this.numeric(v);
 
             var valid = this.validate(v);
+            if (valid === -1 && this.start !== null && v > this.min) {
+                valid = 0;
+                if (this.oldValue > v) {
+                    v = this.min;
+                } else {
+                    v = this.start;
+                }
+            }
             if (valid !== 0) {
                 v = (valid === -1) ? this.min : this.max;
             }
@@ -117,6 +126,10 @@
         },
 
         validate: function(val) {
+            if (this.options.start !== null && val < this.start) {
+                return -1;
+            }
+
             if (this.options.min !== null && val < this.min) {
                 return -1;
             }
