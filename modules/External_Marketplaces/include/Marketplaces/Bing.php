@@ -29,13 +29,6 @@ class Bing extends StoreFrontMarketPlace
             return false;
         }
 
-        $last_date = (new \DateTime())->setTimestamp($oProduct->last_incremental_update);
-        $diff = (new \DateTime())->diff($last_date);
-
-        if ($update_type == 2 && $diff->days*24 + $diff->h < 24) {
-            return false;
-        }
-
         return $bResult;
     }
 
