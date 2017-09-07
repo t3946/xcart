@@ -1044,7 +1044,7 @@ function SubmitBingProductsBatch($bproducts, $sEndpoint, $MerchantID, $CatalogID
 
 
 
-		if ( $pforsale == 'Y' && empty($product_info["product"]["shippings_google_arr"])){
+		/*if ( $pforsale == 'Y' && empty($product_info["product"]["shippings_google_arr"])){
 			print("\nProduct skipped - $v[productid] \n");
 
 			$log_text = "Product skipped shipping null for sale item - ".$v["productid"];
@@ -1053,7 +1053,7 @@ function SubmitBingProductsBatch($bproducts, $sEndpoint, $MerchantID, $CatalogID
 			$count_skipped++;
 
 			continue;
-		}
+		}*/
 
 
 		if ($pforsale == 'N' || (empty($product_info["product"]) || !is_array($product_info["product"])) ) {
