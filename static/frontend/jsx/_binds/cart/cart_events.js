@@ -19,7 +19,7 @@ import CountUp from 'countUp.js';
         $('.mc_count').html(data.quantity);
         $(document).trigger('component.cart.update', data);
 
-        if (typeof data.oldQuantity !== 'undefinde') {
+        if (typeof data.old_quantity !== 'undefinde') {
 
             let iter = new CountUp('desktop-cart-quantity', data.old_quantity, data.quantity,0, 2, {useEasing: true});
             iter.start();

@@ -38249,7 +38249,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
         $('.mc_count').html(data.quantity);
         $(document).trigger('component.cart.update', data);
 
-        if (typeof data.oldQuantity !== 'undefinde') {
+        if (typeof data.old_quantity !== 'undefinde') {
 
             var iter = new _countUp2.default('desktop-cart-quantity', data.old_quantity, data.quantity, 0, 2, { useEasing: true });
             iter.start();
