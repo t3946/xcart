@@ -38115,7 +38115,8 @@ __webpack_require__(115);
         }
 
         params.$this.closest('[data-product]').data('quantity', params.val);
-        $(window).trigger('component.quantity.change', {
+
+        $(document).trigger('component.quantity.change', {
             target: e.target,
             val: params.val
         });
@@ -38155,12 +38156,72 @@ __webpack_require__(115);
 /* WEBPACK VAR INJECTION */(function($) {
 
 (function () {
+    window['addToCart'] = function (data, callback) {
+        $.ajax(options.urls.cart_add, {
+            dataType: 'json',
+            type: 'POST',
+            data: { items: data },
+            success: function success(data) {
+                console.log(data);
+
+                $('#search_container .minicart .mc_count').html(data.quantity);
+
+                $(document).trigger('component.cart.update', data);
+
+                callback();
+            }
+        });
+    };
+
+    var productItemResetState = function productItemResetState($products) {
+        var $input = $products.find('.quantity-group input');
+        var val = $input.attr('min');
+
+        $input.val(val);
+        $products.data('quantity', val);
+
+        for (var i = 0, len = $products.length; i < len; i++) {
+
+            $(document).trigger('component.quantity.change', {
+                target: $products[i],
+                val: val
+            });
+        }
+    };
+
     $(document).on('click', '.cart_add .button', function (e) {
         e.preventDefault();
 
-        var quantity = $(e.target).closest('[data-product]').data('quantity') | 1;
+        var $product = $(e.target).closest('[data-product]');
+        if ($product.length) {
+            var data = [{ id: $product.data('product'), quantity: $product.data('quantity') | 1 }];
 
-        console.log(quantity);
+            window.addToCart(data, function () {
+                productItemResetState($product);
+            });
+        }
+    }).on('click', '.group_cart_add .button', function (e) {
+        e.preventDefault();
+
+        var $products = $(e.target).closest('[data-product-group]').find('[data-product]');
+
+        if ($products.length) {
+
+            var data = [];
+
+            for (var i = 0, len = $products.length; i < len; i++) {
+                if ($products[i].data('quantity')) {
+                    data.push({
+                        id: $products[i].data('product'),
+                        quantity: $products[i].data('quantity')
+                    });
+                }
+            }
+
+            window.addToCart(data, function () {
+                productItemResetState($products);
+            });
+        }
     });
 })();
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
@@ -38175,36 +38236,41 @@ __webpack_require__(115);
 (function () {
     var catalog_container = $('.catalog-page');
     if (catalog_container.length) {
-        $(window).on('component.quantity.change', function (e, data) {
+        $(document).on('component.quantity.change', function (e, data) {
             var show = false;
-            var $product = $(data.target).closest('[data-product]');
+            var $product = $(data.target);
+
+            if (!$product.data('product')) {
+                $product = $(data.target).closest('[data-product]');
+            }
+
             var $subtotal_container = $product.find('.subtotal_container');
+            var $price = $product.find('.price_container .current [itemprop=price]');
+
             var quantity = $product.data('quantity');
+            var prices = $product.data('prices');
+            var count = 0;
+            var price = 0;
+
+            for (count in prices) {
+                if (count >= (quantity | 1)) {
+                    break;
+                }
+            }
+
+            price = prices[count];
+            $price.html(price.toFixed(2));
 
             if (quantity) {
                 var list_price = parseFloat($product.data('list-price'));
 
                 if (list_price) {
-                    var prices = $product.data('prices');
-                    var count = 0;
-                    var price = 0;
                     var extended = 0;
                     var safe_percentage = 0;
                     var safe_price = 0;
                     var per_unit = 0;
 
-                    for (count in prices) {
-                        if (count >= quantity) {
-                            break;
-                        }
-                    }
-
-                    price = prices[count];
                     extended = (quantity * price).toFixed(2);
-
-                    var $price = $product.find('.price_container .current [itemprop=price]');
-
-                    $price.html(price.toFixed(2));
 
                     show = true;
                     safe_price = (list_price * quantity - extended).toFixed(2);

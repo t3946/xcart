@@ -208,6 +208,16 @@ class ProductModel extends AutoMetaModel implements ICartItem
         return ($this->add_date + $sInDay * 30)  >= time();
     }
 
+    /**
+     * @return ImagePModel[]
+     */
+    public function getImages()
+    {
+        /** @var ImagePModel[] $images */
+        $images = $this->images->filter(['avail' => 'Y'])->order(['orderby'])->all();
+        return $images ?: [];
+    }
+
     public function isSaleSticker()
     {
         $fp = $this->getFrontendPrice();
