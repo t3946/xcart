@@ -23,7 +23,6 @@
                 }
             }
 
-
             price = (prices[count]);
             $price.html(price.toFixed(2));
 
