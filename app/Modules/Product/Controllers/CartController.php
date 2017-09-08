@@ -21,6 +21,8 @@ class CartController extends BaseCartController
 
     public function actionProductsAdd()
     {
+        $oldQuantity = $this->getCart()->getQuantity();
+
         if ($items = $this->getRequest()->post->get('items', [])) {
             foreach ( $items as $item) {
                 $this->addInternal($item['id'], $item['quantity']);
@@ -35,10 +37,29 @@ class CartController extends BaseCartController
                 'status' => true,
                 'total' => $cart->getTotal(),
                 'quantity' => $cart->getQuantity(),
+                'old_quantity' => $oldQuantity,
                 'items' => $this->getCartProductsArray(),
                 'message' => [
                     'title' => CartModule::t('Product(s) added')
                 ],
+            ]);
+            Xcart::app()->end();
+        } else {
+            echo $cart->getQuantity();
+        }
+    }
+
+    public function actionProductsGet()
+    {
+        $isAjax = $this->getRequest()->getIsAjax();
+        $cart = $this->getCart();
+
+        if ($isAjax) {
+            $this->jsonResponse([
+                'status' => true,
+                'total' => $cart->getTotal(),
+                'quantity' => $cart->getQuantity(),
+                'items' => $this->getCartProductsArray(),
             ]);
             Xcart::app()->end();
         } else {

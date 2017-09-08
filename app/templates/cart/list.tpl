@@ -69,7 +69,7 @@
                                 </div>
 
                                 <div class="table-column price show-for-large format_price">
-                                    US$ {$position->object->getFrontendPrice()|number_format:2}
+                                    US$ <span class="price">{$position->object->getFrontendPrice()|number_format:2}</span>
                                 </div>
 
                                 <div class="table-wrapper quantity-extended">
@@ -91,7 +91,7 @@
                                     <div class="table-column x">x</div>
 
                                     <div class="table-column extended format_price">
-                                        US$ {$position->getPrice()|number_format:2}
+                                        US$ <span class="price">{$position->getPrice()|number_format:2}</span>
                                     </div>
                                 </div>
 

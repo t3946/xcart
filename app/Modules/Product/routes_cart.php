@@ -12,6 +12,12 @@ return [
         'name' => 'products:add'
     ],
     [
+        'route' => '/get/products',
+        'target' => ['\Modules\Product\Controllers\CartController', 'actionProductsGet'],
+        'name' => 'products:get'
+    ],
+
+    [
         'route' => '',
         'target' => ['\Modules\Product\Controllers\CartController', 'actionList'],
     ],

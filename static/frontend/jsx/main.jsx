@@ -74,6 +74,7 @@ import documentReady from "./utils/documentReady";
 
             foundationRegisterCustomEvents();
             loader.detach();
+            $(document).trigger('component.cart.check');
         }, 100);
     })
 })();

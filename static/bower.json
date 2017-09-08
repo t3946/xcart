@@ -31,7 +31,8 @@
     "Waves": "waves#^0.7.5",
     "PACE": "pace#^1.0.2",
     "bourbon": "^4.3.4",
-    "webfontloader": "^1.6.28"
+    "webfontloader": "^1.6.28",
+    "countUp.js": "^1.9.2"
   },
   "devDependencies": {}
 }

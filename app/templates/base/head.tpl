@@ -32,6 +32,7 @@
         window['options'] = {
             'urls': {
                 cart_add: '{url "cart:products:add"}',
+                cart_get: '{url "cart:products:get"}',
             }
         };
     </script>

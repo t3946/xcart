@@ -1,7 +1,7 @@
 <div class="minicart">
     <div class="cart_info">
         <div class="count">
-            <div class="mc_count">
+            <div id="desktop-cart-quantity" class="mc_count">
                 {$.app->cart->getQuantity()}
             </div>
         </div>

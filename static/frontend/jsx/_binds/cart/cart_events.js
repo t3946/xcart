@@ -1,3 +1,5 @@
+import CountUp from 'countUp.js';
+
 (()=>{
     window['addToCart'] = (data, callback) => {
         $.ajax( options.urls.cart_add, {
@@ -5,15 +7,24 @@
             type: 'POST',
             data: {items:data},
             success: (data) => {
-                console.log(data);
-
-                $('#search_container .minicart .mc_count').html(data.quantity);
-
-                $(document).trigger('component.cart.update', data);
+                cartUpdateQuantity(data);
 
                 callback();
             },
         });
+    };
+
+    let cartUpdateQuantity = (data) => {
+
+        $('.mc_count').html(data.quantity);
+        $(document).trigger('component.cart.update', data);
+
+        if (typeof data.oldQuantity !== 'undefinde') {
+
+            let iter = new CountUp('desktop-cart-quantity', data.old_quantity, data.quantity,0, 2, {useEasing: true});
+            iter.start();
+        }
+
     };
 
     let productItemResetState = ($products) => {
@@ -73,5 +84,14 @@
                 window.addToCart(data, ()=>{ productItemResetState($products); });
             }
 
+        })
+        .on('component.cart.check', () => {
+            $.ajax( options.urls.cart_get, {
+                dataType: 'json',
+                type: 'POST',
+                success: (data) => {
+                    cartUpdateQuantity(data);
+                },
+            });
         });
 })();

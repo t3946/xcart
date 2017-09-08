@@ -9475,6 +9475,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
             (0, _foundation_events2.default)();
             loader.detach();
+            $(document).trigger('component.cart.check');
         }, 100);
     });
 })();
@@ -38069,7 +38070,7 @@ function documentReady(callback) {
 
 __webpack_require__(113);
 
-__webpack_require__(114);
+__webpack_require__(116);
 
 __webpack_require__(115);
 
@@ -38149,84 +38150,7 @@ __webpack_require__(115);
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 114 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/* WEBPACK VAR INJECTION */(function($) {
-
-(function () {
-    window['addToCart'] = function (data, callback) {
-        $.ajax(options.urls.cart_add, {
-            dataType: 'json',
-            type: 'POST',
-            data: { items: data },
-            success: function success(data) {
-                console.log(data);
-
-                $('#search_container .minicart .mc_count').html(data.quantity);
-
-                $(document).trigger('component.cart.update', data);
-
-                callback();
-            }
-        });
-    };
-
-    var productItemResetState = function productItemResetState($products) {
-        var $input = $products.find('.quantity-group input');
-        var val = $input.attr('min');
-
-        $input.val(val);
-        $products.data('quantity', val);
-
-        for (var i = 0, len = $products.length; i < len; i++) {
-
-            $(document).trigger('component.quantity.change', {
-                target: $products[i],
-                val: val
-            });
-        }
-    };
-
-    $(document).on('click', '.cart_add .button', function (e) {
-        e.preventDefault();
-
-        var $product = $(e.target).closest('[data-product]');
-        if ($product.length) {
-            var data = [{ id: $product.data('product'), quantity: $product.data('quantity') | 1 }];
-
-            window.addToCart(data, function () {
-                productItemResetState($product);
-            });
-        }
-    }).on('click', '.group_cart_add .button', function (e) {
-        e.preventDefault();
-
-        var $products = $(e.target).closest('[data-product-group]').find('[data-product]');
-
-        if ($products.length) {
-
-            var data = [];
-
-            for (var i = 0, len = $products.length; i < len; i++) {
-                if ($products[i].data('quantity')) {
-                    data.push({
-                        id: $products[i].data('product'),
-                        quantity: $products[i].data('quantity')
-                    });
-                }
-            }
-
-            window.addToCart(data, function () {
-                productItemResetState($products);
-            });
-        }
-    });
-})();
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
-
-/***/ }),
+/* 114 */,
 /* 115 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -38292,6 +38216,171 @@ __webpack_require__(115);
     }
 })();
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
+
+/***/ }),
+/* 116 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function($) {
+
+var _countUp = __webpack_require__(117);
+
+var _countUp2 = _interopRequireDefault(_countUp);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+(function () {
+    window['addToCart'] = function (data, callback) {
+        $.ajax(options.urls.cart_add, {
+            dataType: 'json',
+            type: 'POST',
+            data: { items: data },
+            success: function success(data) {
+                cartUpdateQuantity(data);
+
+                callback();
+            }
+        });
+    };
+
+    var cartUpdateQuantity = function cartUpdateQuantity(data) {
+
+        $('.mc_count').html(data.quantity);
+        $(document).trigger('component.cart.update', data);
+
+        if (typeof data.oldQuantity !== 'undefinde') {
+
+            var iter = new _countUp2.default('desktop-cart-quantity', data.old_quantity, data.quantity, 0, 2, { useEasing: true });
+            iter.start();
+        }
+    };
+
+    var productItemResetState = function productItemResetState($products) {
+        var $input = $products.find('.quantity-group input');
+        var val = $input.attr('min');
+
+        $input.val(val);
+        $products.data('quantity', val);
+
+        for (var i = 0, len = $products.length; i < len; i++) {
+
+            $(document).trigger('component.quantity.change', {
+                target: $products[i],
+                val: val
+            });
+        }
+    };
+
+    $(document).on('click', '.cart_add .button', function (e) {
+        e.preventDefault();
+
+        var $product = $(e.target).closest('[data-product]');
+        if ($product.length) {
+            var data = [{ id: $product.data('product'), quantity: $product.data('quantity') | 1 }];
+
+            window.addToCart(data, function () {
+                productItemResetState($product);
+            });
+        }
+    }).on('click', '.group_cart_add .button', function (e) {
+        e.preventDefault();
+
+        var $products = $(e.target).closest('[data-product-group]').find('[data-product]');
+
+        if ($products.length) {
+
+            var data = [];
+
+            for (var i = 0, len = $products.length; i < len; i++) {
+                if ($products[i].data('quantity')) {
+                    data.push({
+                        id: $products[i].data('product'),
+                        quantity: $products[i].data('quantity')
+                    });
+                }
+            }
+
+            window.addToCart(data, function () {
+                productItemResetState($products);
+            });
+        }
+    }).on('component.cart.check', function () {
+        $.ajax(options.urls.cart_get, {
+            dataType: 'json',
+            type: 'POST',
+            success: function success(data) {
+                cartUpdateQuantity(data);
+            }
+        });
+    });
+})();
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
+
+/***/ }),
+/* 117 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+!function (a, n) {
+   true ? !(__WEBPACK_AMD_DEFINE_FACTORY__ = (n),
+				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
+				(__WEBPACK_AMD_DEFINE_FACTORY__.call(exports, __webpack_require__, exports, module)) :
+				__WEBPACK_AMD_DEFINE_FACTORY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__)) : "object" == (typeof exports === "undefined" ? "undefined" : _typeof(exports)) ? module.exports = n(require, exports, module) : a.CountUp = n();
+}(undefined, function (a, n, t) {
+  var e = function e(a, n, t, _e, i, r) {
+    function o(a) {
+      a = a.toFixed(l.decimals), a += "";var n, t, e, i, r, o;if (n = a.split("."), t = n[0], e = n.length > 1 ? l.options.decimal + n[1] : "", l.options.useGrouping) {
+        for (i = "", r = 0, o = t.length; r < o; ++r) {
+          0 !== r && r % 3 === 0 && (i = l.options.separator + i), i = t[o - r - 1] + i;
+        }t = i;
+      }return l.options.numerals.length && (t = t.replace(/[0-9]/g, function (a) {
+        return l.options.numerals[+a];
+      }), e = e.replace(/[0-9]/g, function (a) {
+        return l.options.numerals[+a];
+      })), l.options.prefix + t + e + l.options.suffix;
+    }function u(a, n, t, e) {
+      return t * (-Math.pow(2, -10 * a / e) + 1) * 1024 / 1023 + n;
+    }function s(a) {
+      return "number" == typeof a && !isNaN(a);
+    }var l = this;if (l.version = function () {
+      return "1.9.2";
+    }, l.options = { useEasing: !0, useGrouping: !0, separator: ",", decimal: ".", easingFn: u, formattingFn: o, prefix: "", suffix: "", numerals: [] }, r && "object" == (typeof r === "undefined" ? "undefined" : _typeof(r))) for (var m in l.options) {
+      r.hasOwnProperty(m) && null !== r[m] && (l.options[m] = r[m]);
+    }"" === l.options.separator ? l.options.useGrouping = !1 : l.options.separator = "" + l.options.separator;for (var d = 0, c = ["webkit", "moz", "ms", "o"], f = 0; f < c.length && !window.requestAnimationFrame; ++f) {
+      window.requestAnimationFrame = window[c[f] + "RequestAnimationFrame"], window.cancelAnimationFrame = window[c[f] + "CancelAnimationFrame"] || window[c[f] + "CancelRequestAnimationFrame"];
+    }window.requestAnimationFrame || (window.requestAnimationFrame = function (a, n) {
+      var t = new Date().getTime(),
+          e = Math.max(0, 16 - (t - d)),
+          i = window.setTimeout(function () {
+        a(t + e);
+      }, e);return d = t + e, i;
+    }), window.cancelAnimationFrame || (window.cancelAnimationFrame = function (a) {
+      clearTimeout(a);
+    }), l.initialize = function () {
+      return !!l.initialized || (l.error = "", l.d = "string" == typeof a ? document.getElementById(a) : a, l.d ? (l.startVal = Number(n), l.endVal = Number(t), s(l.startVal) && s(l.endVal) ? (l.decimals = Math.max(0, _e || 0), l.dec = Math.pow(10, l.decimals), l.duration = 1e3 * Number(i) || 2e3, l.countDown = l.startVal > l.endVal, l.frameVal = l.startVal, l.initialized = !0, !0) : (l.error = "[CountUp] startVal (" + n + ") or endVal (" + t + ") is not a number", !1)) : (l.error = "[CountUp] target is null or undefined", !1));
+    }, l.printValue = function (a) {
+      var n = l.options.formattingFn(a);"INPUT" === l.d.tagName ? this.d.value = n : "text" === l.d.tagName || "tspan" === l.d.tagName ? this.d.textContent = n : this.d.innerHTML = n;
+    }, l.count = function (a) {
+      l.startTime || (l.startTime = a), l.timestamp = a;var n = a - l.startTime;l.remaining = l.duration - n, l.options.useEasing ? l.countDown ? l.frameVal = l.startVal - l.options.easingFn(n, 0, l.startVal - l.endVal, l.duration) : l.frameVal = l.options.easingFn(n, l.startVal, l.endVal - l.startVal, l.duration) : l.countDown ? l.frameVal = l.startVal - (l.startVal - l.endVal) * (n / l.duration) : l.frameVal = l.startVal + (l.endVal - l.startVal) * (n / l.duration), l.countDown ? l.frameVal = l.frameVal < l.endVal ? l.endVal : l.frameVal : l.frameVal = l.frameVal > l.endVal ? l.endVal : l.frameVal, l.frameVal = Math.round(l.frameVal * l.dec) / l.dec, l.printValue(l.frameVal), n < l.duration ? l.rAF = requestAnimationFrame(l.count) : l.callback && l.callback();
+    }, l.start = function (a) {
+      l.initialize() && (l.callback = a, l.rAF = requestAnimationFrame(l.count));
+    }, l.pauseResume = function () {
+      l.paused ? (l.paused = !1, delete l.startTime, l.duration = l.remaining, l.startVal = l.frameVal, requestAnimationFrame(l.count)) : (l.paused = !0, cancelAnimationFrame(l.rAF));
+    }, l.reset = function () {
+      l.paused = !1, delete l.startTime, l.initialized = !1, l.initialize() && (cancelAnimationFrame(l.rAF), l.printValue(l.startVal));
+    }, l.update = function (a) {
+      if (l.initialize()) {
+        if (a = Number(a), !s(a)) return void (l.error = "[CountUp] update() - new endVal is not a number: " + a);l.error = "", a !== l.frameVal && (cancelAnimationFrame(l.rAF), l.paused = !1, delete l.startTime, l.startVal = l.frameVal, l.endVal = a, l.countDown = l.startVal > l.endVal, l.rAF = requestAnimationFrame(l.count));
+      }
+    }, l.initialize() && l.printValue(l.startVal);
+  };return e;
+});
 
 /***/ })
 /******/ ]);
