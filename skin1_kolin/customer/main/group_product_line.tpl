@@ -48,7 +48,7 @@
                 height: 18px;
             }
 
-            table.group_product td div.info.clock .icon{
+            table.group_product td div.info.clock .icon {
                 background: url(/skin1_kolin/images/group/out_of_stock.svg) no-repeat;
             }
 
@@ -73,7 +73,6 @@
             table.group_product td .clock span.subline {
                 margin-left: 10px;
             }
-
 
             table.group_product .extended {
                 min-width: 100px;
@@ -115,13 +114,17 @@
             }
 
             table.subtotal td.sub {
-               height: 30px;
+                height: 30px;
             }
 
             table.group_product div.quantity {
                 width: 105px;
                 margin: 0 auto;
                 height: 30px;
+            }
+
+            .btn_atcart_big {
+                cursor: pointer;
             }
         </style>
     {/literal}
@@ -136,7 +139,7 @@
             <th>Extended</th>
         </tr>
         {foreach from=$oProduct->childs->all() item=child}
-            <tr class="row">
+            <tr class="row" data-product-id="{$child->productid}">
                 <td class="sku"><a href="{$child->getUrl()}" target="_blank">{$child->productcode}</a></td>
                 {assign var=thumbnail_m value=$child->thumbnail}
                 {assign var=thumbnail value=$thumbnail_m->get()}
@@ -159,7 +162,7 @@
                     {if !$child->isProductOutOfStock()}
                         {if $child->min_amount > 1}
                             {assign var=step value=$child->min_amount}
-                         {else}
+                        {else}
                             {assign var=step value=1}
                         {/if}
                         {include file="customer/main/add_to_cart_input.tpl" min=$child->min_amount max=$child->avail step=$step}
@@ -178,13 +181,13 @@
     <table width="100%" cellspacing="0" cellpadding="3" class="subtotal">
         <tr>
             <td class="sub" align="right">
-                <div class="subtotal_class2"><span class="subtotal_class1">Subtotal:</span><span>US$ </span><span
-                            class="value"></span></div>
+                <div class="subtotal_class2"><span class="subtotal_class1">Subtotal:</span><span>US$ </span>
+                    <span class="value"></span></div>
             </td>
         </tr>
         <tr>
             <td align="right">
-                {include file="buttons/buy_now.tpl" style="button" href="javascript: if ('`$config.General.opt_ajax_cart`' == 'Y') ajax_add_to_cart(`$product.productid`, `$product.add_date`, 'product'); else document.orderform.submit();" b=1 class="ajax_button" add_to_cart_btn="big"}
+                <a class="btn_atcart_big" href="#"></a>
             </td>
         </tr>
     </table>
@@ -250,6 +253,38 @@
                     .end()
                     .show();
             });
+
+            $( '.subtotal a.btn_atcart_big').click( function (e) {
+
+                e.preventDefault();
+
+                var pr = {};
+
+                $(this).removeClass('btn_atcart_big');
+                //console.log());//removeClass('btn_atcart_big').addClass('btn_atcart_big_wait');
+
+                $(this).closest('.subtotal')
+                    .siblings('.group_product')
+                    .find('.row')
+                    .each(function () {
+                        var q = parseInt($(this).find('input.quantity').val()) || 0;
+                        if (q > 0) {
+                            pr[$(this).data('product-id')] = q;
+                        }
+                    });
+                if (Object.keys(pr).length > 0) {
+                    $(this).removeClass('btn_atcart_big_wait').addClass('btn_atcart_big');
+                    /*$.post('ajax_admin.php', {
+                            user_status_id: new_status,
+                            customer_id: customer_id,
+                            ajax_action: 'change_verificator_status'
+                        },
+                        function (data) {
+                            clickbutton.removeClass('loading');
+                            clickbutton.parent().empty();
+                        }, 'json');*/
+                }
+            })
 
         })();
     </script>
