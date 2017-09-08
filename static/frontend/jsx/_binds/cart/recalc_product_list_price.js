@@ -18,7 +18,7 @@
             let price = 0;
 
             for ( count in prices ) {
-                if ( count >= (quantity | 1) ) {
+                if ( count >= (quantity || 1) ) {
                     break;
                 }
             }

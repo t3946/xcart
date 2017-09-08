@@ -99,7 +99,9 @@ class CartController extends BaseCartController
         $model = ProductModel::objects()->get(['pk' => $uniqueId]);
 
         if (!$model->isOutOfStock()) {
-            Xcart::app()->cart->add($model, $quantity, null, $this->getRequest()->post->get('data', []));
+            $cart = $this->getCart();
+//            $cart->add($model, $quantity, null, $this->getRequest()->post->get('data', []));
+            $cart->add($model, $quantity);
 
             return true;
         }

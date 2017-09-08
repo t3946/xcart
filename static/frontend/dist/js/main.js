@@ -38177,7 +38177,7 @@ __webpack_require__(115);
             var price = 0;
 
             for (count in prices) {
-                if (count >= (quantity | 1)) {
+                if (count >= (quantity || 1)) {
                     break;
                 }
             }
@@ -38277,7 +38277,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
         var $product = $(e.target).closest('[data-product]');
         if ($product.length) {
-            var data = [{ id: $product.data('product'), quantity: $product.data('quantity') | 1 }];
+            var data = [{ id: $product.data('product'), quantity: $product.data('quantity') || 1 }];
 
             window.addToCart(data, function () {
                 productItemResetState($product);

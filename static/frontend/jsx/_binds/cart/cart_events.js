@@ -54,7 +54,7 @@ import CountUp from 'countUp.js';
 
             let $product = $(e.target).closest('[data-product]');
             if ( $product.length ) {
-                let data = [{id: $product.data('product'), quantity: $product.data('quantity') | 1}];
+                let data = [{id: $product.data('product'), quantity: $product.data('quantity') || 1}];
 
                 window.addToCart(data, ()=>{ productItemResetState($product); });
             }
