@@ -40,5 +40,19 @@ switch ($ajax_action) {
             print(json_encode($aResult));
         }
         break;
+    case 'add_cart_group':
+        if (isset($_POST['products'])) {
+            $res = [];
+            foreach ($_POST['products'] as $product_id => $product_info) {
+                $action = "cart.php";
+                $is_group = true;
+                $productid = $product_id;
+                $amount = $product_info['quantity'];
+                include "ajax_add_to_cart.php";
+                $res[] = $return;
+            }
+        }
+        print(json_encode(end($res)));
+        break;
 
 }

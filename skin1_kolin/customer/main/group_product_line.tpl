@@ -123,6 +123,11 @@
                 height: 30px;
             }
 
+            #add_cart_group.disable {
+                pointer-events: none;
+                cursor: pointer;
+            }
+
             .btn_atcart_big {
                 cursor: pointer;
             }
@@ -139,7 +144,10 @@
             <th>Extended</th>
         </tr>
         {foreach from=$oProduct->childs->all() item=child}
-            <tr class="row" data-product-id="{$child->productid}">
+            {assign var=amc value=$child->category_main->limit(1)}
+            {assign var=main_cat value=$amc->get()}
+            <tr class="row" data-product-id="{$child->productid}" data-brand="{$child->brand->brand}"
+                data-title="{$child->product}" data-category="{$main_cat->category->category}">
                 <td class="sku"><a href="{$child->getUrl()}" target="_blank">{$child->productcode}</a></td>
                 {assign var=thumbnail_m value=$child->thumbnail}
                 {assign var=thumbnail value=$thumbnail_m->get()}
@@ -187,7 +195,7 @@
         </tr>
         <tr>
             <td align="right">
-                <a class="btn_atcart_big" href="#"></a>
+                <div id="add_cart_group" class="btn_atcart_big disable"></div>
             </td>
         </tr>
     </table>
@@ -204,43 +212,18 @@
                         cur_price = index;
                     }
                 }
-                return cur_price;
+                return aprice[cur_price].price * newVal;
             }
 
-            $(".spinner").spinner('changing', function (e, newVal, oldVal) {
-                var spinner = $(this).closest('.spinner').parent();
-                var aprice = spinner.data('price');
-                var sub = '';
+            function calcSubtotoal() {
                 var subtotal = 0;
-
-                var cur_price = getPrice(aprice, newVal);
-
-                if (newVal === 0) {
-                    sub = '';
-                    spinner.next('.extended').find('span').hide().end().find('span.value').html(sub);
-                } else {
-                    sub = aprice[cur_price].price * newVal;
-                    spinner.next('.extended').find('span').show().end()
-                        .find('span.value').html(sub
-                        .toLocaleString('en-US', {
-                            style: 'decimal',
-                            minimumFractionDigits: 2,
-                            maximumFractionDigits: 2,
-                            currency: 'USD'
-                        })
-                    );
-                }
-
-
                 $('.group_product .row').each(function () {
                     var spinner = $(this).find('.spinner_cell');
                     var val = parseInt(spinner.find('input.quantity').val());
-                    var ap = spinner.data('price');
                     if (val > 0) {
-                        subtotal += ap[getPrice(ap, val)].price * val;
+                        subtotal += getPrice(spinner.data('price'), val);
                     }
                 });
-
                 $('table.subtotal .subtotal_class2').find('.value')
                     .html(
                         subtotal.toLocaleString('en-US', {
@@ -252,37 +235,89 @@
                     )
                     .end()
                     .show();
+                return subtotal;
+            }
+
+            $(".spinner").spinner('changing', function (e, newVal, oldVal) {
+                var spinner = $(this).closest('.spinner').parent();
+                var aprice = spinner.data('price');
+
+                if (newVal === 0) {
+                    spinner.next('.extended').find('span').hide().end().find('span.value').html('');
+                } else {
+                    spinner.next('.extended').find('span').show().end()
+                        .find('span.value').html(getPrice(aprice, newVal)
+                        .toLocaleString('en-US', {
+                            style: 'decimal',
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2,
+                            currency: 'USD'
+                        })
+                    );
+                }
+
+                var subtotal = calcSubtotoal() || 0;
+                if (subtotal > 0) {
+                    $('#add_cart_group').removeClass('disable').removeClass().addClass('btn_atcart_big');
+                } else {
+                    $('#add_cart_group').addClass('disable');
+                }
+
             });
 
-            $( '.subtotal a.btn_atcart_big').click( function (e) {
-
-                e.preventDefault();
+            $('#add_cart_group').click(function () {
 
                 var pr = {};
-
-                $(this).removeClass('btn_atcart_big');
-                //console.log());//removeClass('btn_atcart_big').addClass('btn_atcart_big_wait');
-
-                $(this).closest('.subtotal')
+                var $this = $(this);
+                var rows = $(this).closest('.subtotal')
                     .siblings('.group_product')
-                    .find('.row')
-                    .each(function () {
-                        var q = parseInt($(this).find('input.quantity').val()) || 0;
-                        if (q > 0) {
-                            pr[$(this).data('product-id')] = q;
-                        }
-                    });
+                    .find('.row');
+
+
+                rows.each(function () {
+                    var price_table = $(this).find('.spinner_cell').data('price');
+                    var q = parseInt($(this).find('input.quantity').val()) || 0;
+                    if (q > 0) {
+                        pr[$(this).data('product-id')] = {
+                            quantity: q,
+                            price: getPrice(price_table, q),
+                            brand: $(this).data('brand'),
+                            title: $(this).data('title'),
+                            category: $(this).data('category')
+                        };
+                    }
+                });
                 if (Object.keys(pr).length > 0) {
-                    $(this).removeClass('btn_atcart_big_wait').addClass('btn_atcart_big');
-                    /*$.post('ajax_admin.php', {
-                            user_status_id: new_status,
-                            customer_id: customer_id,
-                            ajax_action: 'change_verificator_status'
+
+                    $this.removeClass('btn_atcart_big').addClass('btn_atcart_big_wait disable');
+
+                    $.post('ajax.php', {
+                            ajax_action: 'add_cart_group',
+                            products: pr
                         },
                         function (data) {
-                            clickbutton.removeClass('loading');
-                            clickbutton.parent().empty();
-                        }, 'json');*/
+                            $this.removeClass('disable btn_atcart_big_wait').addClass('btn_atcart_big_added');
+                            if (data.display) {
+                                $('#ajax_minicart').html(data.display);
+                            }
+                            rows.find('input.quantity').val(0).change();
+
+                        }, 'json');
+
+                    $.each(pr, function (key, p) {
+                        console.log(p);
+                        ga('ec:addProduct', {
+                            'id': key,
+                            'name': p.title,
+                            'category': p.category,
+                            'brand': p.title,
+                            'price': p.price,
+                            'quantity': p.quantity
+                        });
+                    });
+
+                    ga('ec:setAction', 'add', {list: 'detail_page'});
+                    ga('send', 'event', 'UX', 'click', 'Add to cart group');
                 }
             })
 
