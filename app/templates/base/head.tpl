@@ -28,6 +28,14 @@
     {block 'seo'}{meta controller=$this!:null}{/block}
 
 
+    <script type="text/javascript">
+        window['options'] = {
+            'urls': {
+                cart_add: '{url "cart:products:add"}',
+            }
+        };
+    </script>
+
     <script type="application/ld+json">
     {
       "@context": "http://schema.org",

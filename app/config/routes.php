@@ -8,7 +8,7 @@ return [
     [
         'route' => '',
         'path' => 'Modules.Product.routes',
-        'namespace' => 'catalog',
+//        'namespace' => 'catalog',
 //        'config' => [
 //            'cache' => [
 //                'time' => 360,

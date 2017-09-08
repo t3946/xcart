@@ -8,8 +8,8 @@ use Xcart\App\Main\Xcart;
 
 class CartController extends BaseCartController
 {
-    public $defaultListRoute = 'catalog:cart:list';
-    public $listRoute = 'catalog:cart:list';
+    public $defaultListRoute = 'cart:list';
+    public $listRoute = 'cart:list';
 
     public function actionAdd($uniqueId, $quantity = 1)
     {

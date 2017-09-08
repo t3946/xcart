@@ -35,7 +35,7 @@
 
                     $price.html(price.toFixed(2));
 
-                    if (quantity > 1) {
+                    // if (quantity > 1) {
                         show = true;
                         safe_price = ((list_price * quantity) - extended).toFixed(2);
                         safe_percentage = Math.floor(safe_price / (extended * .01));
@@ -44,7 +44,7 @@
                         $subtotal_container.find('.subtotal .price').html(extended);
                         $subtotal_container.find('.safe .percentage').html(safe_percentage);
                         $subtotal_container.find('.safe .price').html(per_unit);
-                    }
+                    // }
                 }
             }
 

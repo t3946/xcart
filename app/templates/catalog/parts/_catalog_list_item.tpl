@@ -6,7 +6,7 @@
      data-list-price="{$item->list_price}"
      {/if}
      data-price-precalc
-     {*data-cart-action="{url 'catalog:cart:quantity:set:post' key=$item->getUniqueId()}"*}
+     {*data-cart-action="{url 'cart:quantity:set:post' key=$item->getUniqueId()}"*}
      itemscope
      itemtype="http://schema.org/Product"
      itemprop="itemListElement">
