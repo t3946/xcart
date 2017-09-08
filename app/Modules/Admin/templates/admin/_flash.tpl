@@ -6,6 +6,6 @@
     window['flashStack'] = [];
 
     {foreach $messages as $item}
-    window['flashStack'].push({ 'message': {$item['message']}, 'type': {$item['type']} });
+    window['flashStack'].push({ 'message': "{$item['message']|escape}", 'type': "{$item['type']|escape}" });
     {/foreach}
 </script>

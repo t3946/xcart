@@ -62,6 +62,8 @@ export default class Loader
     load(callback = null, max_time = 10000) {
         this.attach(max_time);
 
+        console.log(typeof callback === 'object' , callback.tagName === 'A', callback.tagName);
+
         if (callback) {
             if (typeof callback === 'function') {
                 $
@@ -69,6 +71,11 @@ export default class Loader
                     .done((args)=>{ if (args) { this.detach(); } })
                     .fail(()=>{ this.detach(); })
                     .then(()=>{  });
+            }
+            else if (typeof callback === 'object' && callback.tagName === 'A') {
+                window.event.stopPropagation();
+                window.event.preventDefault();
+                setTimeout(()=>{  window.location = callback.href; }, 200);
             }
             else {
                 $

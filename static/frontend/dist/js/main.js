@@ -36629,6 +36629,8 @@ exports.default = SearchSuggestion;
 
 exports.__esModule = true;
 
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
 var _extend = __webpack_require__(71);
 
 var _extend2 = _interopRequireDefault(_extend);
@@ -36704,6 +36706,8 @@ var Loader = function () {
 
         this.attach(max_time);
 
+        console.log((typeof callback === 'undefined' ? 'undefined' : _typeof(callback)) === 'object', callback.tagName === 'A', callback.tagName);
+
         if (callback) {
             if (typeof callback === 'function') {
                 $.when(callback()).done(function (args) {
@@ -36713,6 +36717,12 @@ var Loader = function () {
                 }).fail(function () {
                     _this.detach();
                 }).then(function () {});
+            } else if ((typeof callback === 'undefined' ? 'undefined' : _typeof(callback)) === 'object' && callback.tagName === 'A') {
+                window.event.stopPropagation();
+                window.event.preventDefault();
+                setTimeout(function () {
+                    window.location = callback.href;
+                }, 200);
             } else {
                 $.when(callback).done(function (args) {}).fail(function () {
                     _this.detach();

@@ -98,7 +98,7 @@
                             </div>
 
                             <div class="table-column remove">
-                                <a href="{url 'cart:delete' key=$key}" title="{t 'Delete' dict='cart'}" class="icon cart_remove text-hide"></a>
+                                <a href="{url 'cart:delete' key=$key}" title="{t 'Delete' dict='cart'}" class="icon cart_remove text-hide" onclick="loader.load(this)"></a>
                             </div>
 
                         </div>
