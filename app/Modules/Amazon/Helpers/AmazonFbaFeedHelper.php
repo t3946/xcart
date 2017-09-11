@@ -23,7 +23,7 @@ class AmazonFbaFeedHelper
             $lm = TrackingLinksModel::objects()->get(['linkid' => $trackNumberData['linkid']]);
             $trackNumberData['shipping_method'] = $lm ? $lm->shipping : '';
         }
-        if ($orderGroup && $feedContent = self::encodeOrderfulfillmentFeed($orderGroup, $trackNumberData)){
+        if ($orderGroup && $feedContent = self::encodeOrderfulfillmentFeed($orderGroup, $trackNumberData)) {
             func_dump($feedContent);
             $feedHandle = @fopen('php://temp', 'rw+');
             fwrite($feedHandle, $feedContent);
@@ -42,7 +42,7 @@ class AmazonFbaFeedHelper
         $items = [];
         if (!empty($trackNumberData)) {
             $orderModel = $orderGroup->order;
-            $shipDate = ($trackNumberData['shipping_date']) ? $trackNumberData['shipping_date']->format(DATE_ISO8601): '';
+            $shipDate = ($trackNumberData['shipping_date']) ? $trackNumberData['shipping_date']->format(DATE_ISO8601) : '';
             /*if ($details = $orderGroup->getOrderDetailModels()) {
                 foreach ($details as $detail) {
                     $product = $detail->product_model;
@@ -85,4 +85,102 @@ class AmazonFbaFeedHelper
         }
         return null;
     }
+
+    public static function encodeInventoryFeed($messages)
+    {
+        $center = [
+            'MFN' => 'DEFAULT',
+            'AFN' => 'AMAZON_NA'
+        ];
+
+        $num = 0;
+        $feeds = [];
+
+        foreach ($messages as $message) {
+            $invenory = [
+                'SKU' => $message['sku'],
+                'FulfillmentCenterID' => $center[$message['channel']],
+                'SwitchFulfillmentTo' => $message['channel']
+            ];
+
+            switch ($message['channel']) {
+                case 'AFN':
+                    $invenory['Lookup'] = 'FulfillmentNetwork';
+                    break;
+                case 'MFN':
+                    $invenory['Quantity'] = $message['quantity'];
+                    $invenory['FulfillmentLatency'] = $message['latency'];
+                    break;
+            }
+
+            $feeds[] = ['Message' => [
+                'MessageID' => ++$num,
+                'OperationType' => 'Update',
+                'Inventory' => $invenory
+            ]];
+        }
+
+        $data_0 = [
+            'Header' => [
+                'DocumentVersion' => '1.01',
+                'MerchantIdentifier' => 'S3 Stores'
+            ],
+            'MessageType' => 'Inventory',
+        ];
+
+        $data = array_merge([
+            '@attributes' => [
+                'xmlns:xsi' => 'http://www.w3.org/2001/XMLSchema-instance',
+                'xsi:noNamespaceSchemaLocation' => 'amzn-envelope.xsd',
+            ],
+            $data_0,
+        ], $feeds);
+
+        return Xml::encode('AmazonEnvelope', $data, true);
+    }
+
+    public static function encodePriceFeed($messages)
+    {
+        $num = 0;
+        $feeds = [];
+
+        foreach ($messages as $message) {
+
+            $feeds[] = ['Message' => [
+                'MessageID' => ++$num,
+                'Price' => [
+                    'SKU' => $message['sku'],
+                    'StandardPrice' =>
+                        [
+                            '@attributes' => ['currency' => 'USD'],
+                            '@value' => floatval($message['price'])
+                        ],
+                    'MinimumSellerAllowedPrice' =>
+                        [
+                            '@attributes' => ['currency' => 'USD'],
+                            '@value' => floatval($message['min_price'])
+                        ]
+                ]
+            ]];
+        }
+
+        $data_0 = [
+            'Header' => [
+                'DocumentVersion' => '1.01',
+                'MerchantIdentifier' => 'S3 Stores'
+            ],
+            'MessageType' => 'Price',
+        ];
+
+        $data = array_merge([
+            '@attributes' => [
+                'xmlns:xsi' => 'http://www.w3.org/2001/XMLSchema-instance',
+                'xsi:noNamespaceSchemaLocation' => 'amzn-envelope.xsd',
+            ],
+            $data_0,
+        ], $feeds);
+
+        return Xml::encode('AmazonEnvelope', $data, true);
+    }
+
 }

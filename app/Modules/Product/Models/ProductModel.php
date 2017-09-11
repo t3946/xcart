@@ -2,6 +2,7 @@
 namespace Modules\Product\Models;
 
 use Modules\Amazon\Models\AmazonFbaMissingSkuModel;
+use Modules\Amazon\Models\AmazonProductsFieldsModel;
 use Modules\Distributor\Models\DistributorModel;
 use Xcart\App\Orm\AutoMetaModel;
 use Xcart\App\Orm\Fields\AutoField;
@@ -9,6 +10,7 @@ use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\HasManyField;
 use Xcart\App\Orm\Fields\IntField;
+use Xcart\App\Orm\Fields\OneToOneField;
 use Xcart\App\Traits\DataModelTrait;
 use Xcart\Product;
 
@@ -99,6 +101,11 @@ class ProductModel extends AutoMetaModel
                 'modelClass' => AmazonFbaMissingSkuModel::className(),
                 'link' => ['productid' => 'productid']
             ],
+            'amazon_fields' => [
+                'class' => OneToOneField::className(),
+                'modelClass' => AmazonProductsFieldsModel::className(),
+                'link' => ['productid' => 'productid']
+            ],
         ];
     }
 
@@ -110,5 +117,10 @@ class ProductModel extends AutoMetaModel
             $sMPN = preg_replace("/^(" . $model->code . "-)/i", "", $this->productcode);
         }
         return $sMPN;
+    }
+
+    public function isAmazonFBAEnabled()
+    {
+        return $this->amazon_fba == 'Y';
     }
 }
