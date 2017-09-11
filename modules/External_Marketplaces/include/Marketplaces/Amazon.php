@@ -99,6 +99,7 @@ class Amazon extends StoreFrontMarketPlace
                 ->getSubmitFeedResult();
             @fclose($feedHandle);
         } catch (\Exception $e) {
+            print("\n".$e->getCode());
             print("\n".$e->getMessage());
             func_backprocess_log('incremental feeds', $e->getMessage());
         }
@@ -117,6 +118,7 @@ class Amazon extends StoreFrontMarketPlace
                 ->getSubmitFeedResult();
             @fclose($feedHandle);
         } catch (\Exception $e) {
+            print("\n".$e->getCode());
             print("\n".$e->getMessage());
             func_backprocess_log('incremental feeds', $e->getMessage());
         }
