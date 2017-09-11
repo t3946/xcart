@@ -276,7 +276,8 @@ class ProductModel extends AutoMetaModel implements ICartItem
 
     public function __toString()
     {
-        return "[{$this->productid}] {$this->product} ({$this->productcode})";
+//        return "[{$this->productid}] {$this->product} ({$this->productcode})";
+        return $this->getFrontendName();
     }
 
     public function getFrontendName()

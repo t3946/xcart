@@ -43,6 +43,7 @@
                         {foreach $items as $key=>$position}
                         <div class="table-row"
                              data-product
+                             data-key="{$key}"
                              data-cart-action="{url 'cart:quantity:set:post' key=$key}">
                             <div class="table-column image">
                                 {include 'catalog/parts/_item_image.tpl' model=$position->object}

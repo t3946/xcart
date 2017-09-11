@@ -14,22 +14,22 @@
                 touches = event.originalEvent.touches,
                 startX, startY,
                 deltaX = 0, deltaY = 0,
-                that = this,
+                self = this,
                 Dxy = {};
 
 
             event = $.event.fix(event);
 
             function cancelTouch() {
-                that.removeEventListener('touchmove', onTouchMove);
-                that.removeEventListener('touchend', onTouchEnd);
+                self.removeEventListener('touchmove', onTouchMove);
+                self.removeEventListener('touchend', onTouchEnd);
                 startX = startY = null;
             }
 
             function onTouchEnd(e)
             {
                 let rad = null,
-                    minPath = window['swipe_min_path'] | 100,
+                    minPath = window['swipe_min_path'] || 100,
                     Dx = Dxy.Dx,
                     Dy = Dxy.Dy;
 
@@ -58,7 +58,7 @@
 
                 event.type = "swipe";
                 args.unshift(event, deltaX, deltaY, rad); // add back the new event to the front of the arguments with the delatas
-                return ($.event.dispatch || $.event.handle).apply(that, args);
+                return ($.event.dispatch || $.event.handle).apply(self, args);
             }
 
             function onTouchMove(e) {

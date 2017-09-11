@@ -39,11 +39,13 @@ class XCart extends Cart
                 $groups[$gi] = [
                     'items' => [],
                     'subtotal' => 0,
+                    'discount' => 0,
                 ];
             }
 
             $groups[$gi]['items'][$key] = $cartItem;
             $groups[$gi]['subtotal'] += $cartItem->getPrice();
+            $groups[$gi]['discount'] += $cartItem->getDiscountSum();
         }
 
         return $groups;

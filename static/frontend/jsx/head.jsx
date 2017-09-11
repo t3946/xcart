@@ -14,7 +14,7 @@ import 'bower_components/jQuery.dotdotdot/src/jquery.dotdotdot.js';
 
 // import 'sly';
 
-import "./_binds/cart"
+import  "./_binds/cart"
 import  "./_binds/response_status_278";
 import  "./_binds/endless_pagination";
 import  "./_binds/click_mmodal";

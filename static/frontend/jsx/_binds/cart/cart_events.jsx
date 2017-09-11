@@ -1,30 +1,9 @@
 import CountUp from 'countUp.js';
+import storeCart from '../../stores/StoreCart';
 
 (()=>{
     window['addToCart'] = (data, callback) => {
-        $.ajax( options.urls.cart_add, {
-            dataType: 'json',
-            type: 'POST',
-            data: {items:data},
-            success: (data) => {
-                cartUpdateQuantity(data);
-
-                callback();
-            },
-        });
-    };
-
-    let cartUpdateQuantity = (data) => {
-
-        $('.mc_count').html(data.quantity);
-        $(document).trigger('component.cart.update', data);
-
-        if (typeof data.old_quantity !== 'undefinde') {
-
-            let iter = new CountUp('desktop-cart-quantity', data.old_quantity, data.quantity,0, 2, {useEasing: true});
-            iter.start();
-        }
-
+        storeCart.dispatch({type:'PUSH', callback:callback, data:data});
     };
 
     let productItemResetState = ($products) => {
@@ -85,13 +64,15 @@ import CountUp from 'countUp.js';
             }
 
         })
+        .on('store.cart.update', (e, data) => {
+            let qNew = data.state.cart.quantity;
+            let qPrev = data.prevState.cart.quantity;
+
+            $('.mc_count').html(data.state.cart.quantity);
+
+            (new CountUp('desktop-cart-quantity', qPrev, qNew,0, 2, {useEasing: true})).start();
+        })
         .on('component.cart.check', () => {
-            $.ajax( options.urls.cart_get, {
-                dataType: 'json',
-                type: 'POST',
-                success: (data) => {
-                    cartUpdateQuantity(data);
-                },
-            });
+            storeCart.dispatch({type:"FETCH"});
         });
 })();

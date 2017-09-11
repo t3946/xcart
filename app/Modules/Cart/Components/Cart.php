@@ -69,7 +69,7 @@ class Cart
      * @param array $data
      * @return string
      */
-    protected function makeKey(ICartItem $object, array $data = [])
+    public function makeKey(ICartItem $object, array $data = [])
     {
         $prefix = '';
         $clss = get_class($object);
@@ -90,7 +90,7 @@ class Cart
     /**
      * @param ICartItem $object
      * @param array $data
-     * @return mixed
+     * @return CartItem|null
      */
     public function get(ICartItem $object, array $data = [])
     {
@@ -115,8 +115,10 @@ class Cart
                 'quantity' => $oldItem->quantity + $quantity,
                 'type' => $type,
             ]);
+
             $this->getStorage()->remove($key);
-        } else {
+        }
+        else {
             $item = new CartItem([
                 'object' => $object,
                 'data' => $data,
@@ -296,6 +298,17 @@ class Cart
         foreach ($this->getItems() as $item) {
             $total += $item->getPrice();
         }
+
+        return $total;
+    }
+
+    public function getDiscountSum()
+    {
+        $total = 0;
+        foreach ($this->getItems() as $item) {
+            $total += $item->getDiscountSum();
+        }
+
         return $total;
     }
 

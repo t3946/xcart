@@ -2,6 +2,7 @@
 namespace Modules\Cart\Components;
 
 use Modules\Cart\Interfaces\ICartItem;
+use Modules\Cart\Interfaces\IDiscount;
 use Serializable;
 use Xcart\App\Helpers\Accessors;
 
@@ -135,7 +136,16 @@ class CartItem implements Serializable
      */
     public function getPrice()
     {
-        return (float)str_replace(',', '', $this->_discountPrice ? $this->_discountPrice : $this->_price);
+        return (float)str_replace(',', '', $this->_discountPrice ?: $this->_price);
+    }
+
+    public function getDiscountSum()
+    {
+        if ($this->_discountPrice && $this->_discountPrice > 0) {
+            return $this->_price - $this->_discountPrice;
+        }
+
+        return 0;
     }
 
     /**

@@ -13,7 +13,7 @@ import isTouch from "./utils/isTouch";
 import isMedia from "./utils/isMedia";
 import documentReady from "./utils/documentReady";
 
-// require('preact/devtools');
+require('preact/devtools');
 
 (function(){
 

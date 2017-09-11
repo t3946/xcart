@@ -66,6 +66,7 @@ config = {
                             }],
                         ],
                         plugins: [
+                            ["transform-object-rest-spread", { "useBuiltIns": true }],
                             ["transform-react-jsx", {
                                 "pragma":"h" // default pragma is React.createElement
                             }],

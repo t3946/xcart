@@ -1,4 +1,5 @@
 import { h, Component } from 'preact';
+import { Provider, connect } from 'preact-redux';
 
 export default class MiniCart extends Component
 {
@@ -20,8 +21,6 @@ export default class MiniCart extends Component
     }
 
     render() {
-        // console.log (this);
-
         return (<div className="fullcart">
 
         </div>);
