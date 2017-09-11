@@ -21,7 +21,7 @@ export default class MiniCart extends Component
     }
 
     render() {
-        return (<div className="fullcart">
+        return (<div className="minicart-items">
 
         </div>);
     }

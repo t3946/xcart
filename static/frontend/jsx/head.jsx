@@ -9,6 +9,7 @@ import Waves from 'Waves';
 import whatInput from 'what-input';
 import noUiSlider from 'noUiSlider';
 
+import 'pace';
 // import 'bower_components/PACE/pace.js';
 import 'bower_components/jQuery.dotdotdot/src/jquery.dotdotdot.js';
 
