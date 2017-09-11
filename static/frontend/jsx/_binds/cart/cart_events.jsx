@@ -70,9 +70,6 @@ import storeCart from '../../stores/StoreCart';
 
             $('.mc_count').html(data.state.cart.quantity);
 
-            (new CountUp('desktop-cart-quantity', qPrev, qNew,0, 2, {useEasing: true})).start();
+            (new CountUp('desktop-cart-quantity', qPrev, qNew,0, 1, {useEasing: true})).start();
         });
-        // .on('component.cart.check', () => {
-        //     storeCart.dispatch({type:"FETCH"});
-        // });
 })();

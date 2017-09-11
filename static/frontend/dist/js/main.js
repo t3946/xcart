@@ -15248,7 +15248,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
         $('.mc_count').html(data.state.cart.quantity);
 
-        new _countUp2.default('desktop-cart-quantity', qPrev, qNew, 0, 2, { useEasing: true }).start();
+        new _countUp2.default('desktop-cart-quantity', qPrev, qNew, 0, 1, { useEasing: true }).start();
     });
 })();
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
