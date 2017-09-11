@@ -65,17 +65,23 @@ class Amazon extends StoreFrontMarketPlace
             }
         }
 
-        $feed = AmazonFbaFeedHelper::encodeInventoryFeed($items);
+        if ($items) {
 
-        print("INVENTORY pull\n\n");
+            $log_text = "AMZ: tried to submit ".count($items)." items as inventory feed";
+            func_backprocess_log("incremental feeds", $log_text);
 
-        $feedResult = $this->submitInventoryFeed($feed);
+            $feed = AmazonFbaFeedHelper::encodeInventoryFeed($items);
 
-        $feed = AmazonFbaFeedHelper::encodePriceFeed($items);
+            print("INVENTORY pull\n\n");
 
-        print("PRICE pull\n\n");
+            $feedResult = $this->submitInventoryFeed($feed);
 
-        $feedResult = $this->submitPriceFeed($feed);
+            $feed = AmazonFbaFeedHelper::encodePriceFeed($items);
+
+            print("PRICE pull\n\n");
+
+            $feedResult = $this->submitPriceFeed($feed);
+        }
 
         $this->setInventoryBatchCount(0)->setInventory([]);
     }
@@ -92,7 +98,7 @@ class Amazon extends StoreFrontMarketPlace
                 ->callSubmitFeed(MwsFeedAndReportClientPack::FEED_TYPE_PAI_PRICING, $feedHandle)
                 ->getSubmitFeedResult();
             @fclose($feedHandle);
-        } catch (MarketplaceWebService_Exception $e) {
+        } catch (\Exception $e) {
             print("\n".$e->getMessage());
             func_backprocess_log('incremental feeds', $e->getMessage());
         }
@@ -110,7 +116,7 @@ class Amazon extends StoreFrontMarketPlace
                 ->callSubmitFeed(MwsFeedAndReportClientPack::FEED_TYPE_PAI_INVENTORY, $feedHandle)
                 ->getSubmitFeedResult();
             @fclose($feedHandle);
-        } catch (MarketplaceWebService_Exception $e) {
+        } catch (\Exception $e) {
             print("\n".$e->getMessage());
             func_backprocess_log('incremental feeds', $e->getMessage());
         }
