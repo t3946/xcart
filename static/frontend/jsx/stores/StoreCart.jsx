@@ -2,6 +2,8 @@ import { createStore } from 'redux'
 import ajax from '../utils/ajax';
 import trigger from '../utils/trigger';
 
+const _INIT_ACTION_TYPE = "@@redux/INIT";
+
 let ACTIONS = {
     SET: (state, action) => {
         let new_state = {
@@ -11,7 +13,7 @@ let ACTIONS = {
 
         let data = {state: new_state, prevState: {...state}};
 
-        if (action.from === 'FETCH') {
+        if (action.from === 'INIT') {
             trigger('store.cart.fetch', data);
         }
         else {
@@ -21,9 +23,9 @@ let ACTIONS = {
         return new_state;
     },
 
-    FETCH: (state, action) => {
+    INIT: (state, action) => {
         ajax(options.urls.cart_get, {}, (data) => {
-            store.dispatch({type:'SET', data: data, from: 'FETCH'});
+            store.dispatch({type:'SET', data: data, from: 'INIT'});
         });
 
         return state;
@@ -41,6 +43,14 @@ let ACTIONS = {
         return state;
     },
 
+    default: (state, action) => {
+        if (action.type === _INIT_ACTION_TYPE) {
+            return ACTIONS['INIT'](state, action);
+        }
+
+        return state;
+    }
+
 };
 
 const INITIAL = {
@@ -53,6 +63,10 @@ const INITIAL = {
     },
 };
 
-const store = createStore( (state, action) => (action && ACTIONS[action.type] ? ACTIONS[action.type](state, action) : state), INITIAL);
+const store = createStore(
+    (state, action) => (action && ACTIONS[action.type] ? ACTIONS[action.type](state, action) : ACTIONS['default'](state, action)),
+    INITIAL,
+    window.devToolsExtension && window.devToolsExtension()
+);
 
 export default store;

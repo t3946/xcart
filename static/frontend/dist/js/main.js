@@ -15190,7 +15190,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 (function () {
     window['addToCart'] = function (data, callback) {
-        _StoreCart2.default.dispatch({ type: 'PUSH', callback: callback, data: data });
+        _StoreCart2.default.dispatch({ type: 'PUSH', callback: callback, data: { items: data } });
     };
 
     var productItemResetState = function productItemResetState($products) {
@@ -15249,8 +15249,6 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
         $('.mc_count').html(data.state.cart.quantity);
 
         new _countUp2.default('desktop-cart-quantity', qPrev, qNew, 0, 2, { useEasing: true }).start();
-    }).on('component.cart.check', function () {
-        _StoreCart2.default.dispatch({ type: "FETCH" });
     });
 })();
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
@@ -15957,16 +15955,26 @@ $('.search-form-container .button-clear').on('click', function () {
 
 var _preact = __webpack_require__(7);
 
+var _preactRedux = __webpack_require__(62);
+
 var _MiniCart = __webpack_require__(61);
 
 var _MiniCart2 = _interopRequireDefault(_MiniCart);
+
+var _StoreCart = __webpack_require__(131);
+
+var _StoreCart2 = _interopRequireDefault(_StoreCart);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var minicart = document.querySelector('body #search_container .minicart');
 
 if (minicart) {
-    (0, _preact.render)((0, _preact.h)(_MiniCart2.default, null), minicart);
+    (0, _preact.render)((0, _preact.h)(
+        _preactRedux.Provider,
+        { store: _StoreCart2.default },
+        (0, _preact.h)(_MiniCart2.default, null)
+    ), minicart);
 }
 
 /***/ }),
@@ -15980,8 +15988,6 @@ exports.__esModule = true;
 
 var _preact = __webpack_require__(7);
 
-var _preactRedux = __webpack_require__(62);
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
@@ -15991,21 +15997,29 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var MiniCart = function (_Component) {
     _inherits(MiniCart, _Component);
 
-    function MiniCart() {
+    function MiniCart(state, props) {
         _classCallCheck(this, MiniCart);
 
         var _this = _possibleConstructorReturn(this, _Component.call(this));
 
-        _this.state = {};
+        _this.state = props.store.getState();
+        _this.unsubscribe = props.store.subscribe(function () {
+            _this.setState(props.store.getState());
+        });
         return _this;
     }
 
-    MiniCart.prototype.componentDidMount = function componentDidMount() {};
-
-    MiniCart.prototype.componentWillUnmount = function componentWillUnmount() {};
+    MiniCart.prototype.componentWillUnmount = function componentWillUnmount() {
+        this.unsubscribe();
+    };
 
     MiniCart.prototype.render = function render() {
-        return (0, _preact.h)('div', { className: 'minicart-items' });
+        return (0, _preact.h)(
+            "div",
+            { className: "minicart-items" },
+            "Total : ",
+            this.state.cart.total
+        );
     };
 
     return MiniCart;
@@ -40889,6 +40903,8 @@ var _trigger2 = _interopRequireDefault(_trigger);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+var _INIT_ACTION_TYPE = "@@redux/INIT";
+
 var ACTIONS = {
     SET: function SET(state, action) {
         var new_state = Object.assign({}, state, {
@@ -40897,7 +40913,7 @@ var ACTIONS = {
 
         var data = { state: new_state, prevState: Object.assign({}, state) };
 
-        if (action.from === 'FETCH') {
+        if (action.from === 'INIT') {
             (0, _trigger2.default)('store.cart.fetch', data);
         } else {
             (0, _trigger2.default)('store.cart.update', data);
@@ -40906,9 +40922,9 @@ var ACTIONS = {
         return new_state;
     },
 
-    FETCH: function FETCH(state, action) {
+    INIT: function INIT(state, action) {
         (0, _ajax2.default)(options.urls.cart_get, {}, function (data) {
-            store.dispatch({ type: 'SET', data: data, from: 'FETCH' });
+            store.dispatch({ type: 'SET', data: data, from: 'INIT' });
         });
 
         return state;
@@ -40922,6 +40938,14 @@ var ACTIONS = {
                 action.callback();
             }
         });
+
+        return state;
+    },
+
+    default: function _default(state, action) {
+        if (action.type === _INIT_ACTION_TYPE) {
+            return ACTIONS['INIT'](state, action);
+        }
 
         return state;
     }
@@ -40939,8 +40963,8 @@ var INITIAL = {
 };
 
 var store = (0, _redux.createStore)(function (state, action) {
-    return action && ACTIONS[action.type] ? ACTIONS[action.type](state, action) : state;
-}, INITIAL);
+    return action && ACTIONS[action.type] ? ACTIONS[action.type](state, action) : ACTIONS['default'](state, action);
+}, INITIAL, window.devToolsExtension && window.devToolsExtension());
 
 exports.default = store;
 

@@ -3,7 +3,7 @@ import storeCart from '../../stores/StoreCart';
 
 (()=>{
     window['addToCart'] = (data, callback) => {
-        storeCart.dispatch({type:'PUSH', callback:callback, data:data});
+        storeCart.dispatch({type:'PUSH', callback:callback, data:{items: data}});
     };
 
     let productItemResetState = ($products) => {
@@ -71,8 +71,8 @@ import storeCart from '../../stores/StoreCart';
             $('.mc_count').html(data.state.cart.quantity);
 
             (new CountUp('desktop-cart-quantity', qPrev, qNew,0, 2, {useEasing: true})).start();
-        })
-        .on('component.cart.check', () => {
-            storeCart.dispatch({type:"FETCH"});
         });
+        // .on('component.cart.check', () => {
+        //     storeCart.dispatch({type:"FETCH"});
+        // });
 })();

@@ -1,28 +1,25 @@
 import { h, Component } from 'preact';
-import { Provider, connect } from 'preact-redux';
+// import { Provider, connect } from 'preact-redux';
 
 export default class MiniCart extends Component
 {
-    constructor() {
+    constructor(state, props) {
         super();
 
-        this.state = {
-
-        };
+        this.state = props.store.getState();
+        this.unsubscribe = props.store.subscribe(()=>{
+            this.setState(props.store.getState());
+        });
     }
 
-
-    componentDidMount() {
-
-    }
 
     componentWillUnmount() {
-
+        this.unsubscribe();
     }
 
     render() {
         return (<div className="minicart-items">
-
+            Total : {this.state.cart.total}
         </div>);
     }
 }
