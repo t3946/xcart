@@ -296,11 +296,18 @@
                             products: pr
                         },
                         function (data) {
-                            $this.removeClass('disable btn_atcart_big_wait').addClass('btn_atcart_big_added');
-                            if (data.display) {
-                                $('#ajax_minicart').html(data.display);
+                            if (data.error == 'Y') {
+                                $this.removeClass('btn_atcart_big_wait').addClass('btn_atcart_big_error');
+                            } else {
+                                $this.removeClass('btn_atcart_big_wait').addClass('btn_atcart_big_added');
+                                if (data.display) {
+                                    $('#ajax_minicart').html(data.display);
+                                }
+                                rows.find('input.quantity').val(0).change();
                             }
-                            rows.find('input.quantity').val(0).change();
+                            setTimeout(function () {
+                                $('#add_cart_group').removeClass('btn_atcart_big_added btn_atcart_big_error').addClass('btn_atcart_big');
+                            }, 3000)
 
                         }, 'json');
 

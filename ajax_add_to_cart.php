@@ -8,7 +8,7 @@ x_session_register('added_catalogs');
 x_session_register('ajax_error');
 x_session_register('ajax_redirect');
 x_session_register('ajax_mode', 'Y');
-require $xcart_dir."/include/cart_process.php";
+require_once $xcart_dir."/include/cart_process.php";
 
 $result = array();
 

@@ -50,6 +50,9 @@ switch ($ajax_action) {
                 $amount = $product_info['quantity'];
                 include "ajax_add_to_cart.php";
                 $res[] = $return;
+                if (isset($return['error']) && $return['error'] == 'Y') {
+                    break;
+                }
             }
         }
         print(json_encode(end($res)));
