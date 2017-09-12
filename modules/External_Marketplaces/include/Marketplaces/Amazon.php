@@ -99,9 +99,14 @@ class Amazon extends StoreFrontMarketPlace
                 ->getSubmitFeedResult();
             @fclose($feedHandle);
         } catch (\Exception $e) {
-            print("\n".$e->getCode());
+            if (method_exists($e, 'getErrorCode')) {
+                $error_code = $e->getErrorCode();
+            } else {
+                $error_code = $e->getCode();
+            }
+            print("\n".$error_code);
             print("\n".$e->getMessage());
-            func_backprocess_log('incremental feeds', $e->getMessage());
+            func_backprocess_log('incremental feeds', $e->getMessage(). " - ". $error_code);
         }
     }
 
@@ -118,9 +123,14 @@ class Amazon extends StoreFrontMarketPlace
                 ->getSubmitFeedResult();
             @fclose($feedHandle);
         } catch (\Exception $e) {
-            print("\n".$e->getCode());
+            if (method_exists($e, 'getErrorCode')) {
+                $error_code = $e->getErrorCode();
+            } else {
+                $error_code = $e->getCode();
+            }
+            print("\n".$error_code);
             print("\n".$e->getMessage());
-            func_backprocess_log('incremental feeds', $e->getMessage());
+            func_backprocess_log('incremental feeds', $e->getMessage(). " - ". $error_code);
         }
     }
 
