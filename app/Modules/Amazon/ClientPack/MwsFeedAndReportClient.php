@@ -56,8 +56,8 @@ class MwsFeedAndReportClient extends MwsFeedAndReportClientPack implements Throt
             $clientPack->getThrottleManager()->addRequestLogForMethod($method, $weight);
             return $clientPack->$method($options);
         } catch (\Exception $e) {
-            if (method_exists($e, 'getErrorCode') && 'RequestThrottled' == $e->getErrorCode()) {
-                echo "\nThe request was throttled";
+            if (method_exists($e, 'getErrorCode') && ('RequestThrottled' == $e->getErrorCode() || 'QuotaExceeded' == $e->getErrorCode())) {
+                echo "\nThe request was throttled ".$e->getErrorCode();
                 $snoozeLength = $clientPack->getThrottleManager()->getRestoreInterval($method, $weight);
                 $clientPack->getThrottleManager()->exhaustRequestQuotaForMethod($method);
                 self::snooze(ceil($snoozeLength) * 2); // Double the normal snooze since we bounced off the server limit
