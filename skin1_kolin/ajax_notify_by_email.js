@@ -34,3 +34,19 @@ function submit_product_notify_form(obj) {
             }, 'json');
         return false;
 }
+
+function submit_group_product_notify_form(row, callback) {
+
+    var email = row.find('.email').find('input[name=notify_email]');
+
+    $.post('ajax_notify_by_email.php',{
+            productid : row.data('product-id'),
+            notify_email: email.val(),
+            current_storefront: row.data('sfid')
+        },
+        function (data) {
+            if (data) {
+                callback(row, data.content);
+            }
+        }, 'json');
+}

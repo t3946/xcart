@@ -102,6 +102,7 @@
 {* igor_async *}
 <script type="text/javascript" src="{$SkinDir}/lib/jqueryui/jquery-ui.custom.min.js"></script>
 <script type="text/javascript" src="{$SkinDir}/js/spinner.js"></script>
+<script type="text/javascript" src="{$SkinDir}/js/group.js"></script>
 {/if}
 <script type="text/javascript" src="{$SkinDir}/js/jquery.visible.min.js"></script>
 <script src="{$SkinDir}/js/google_analytics_impressions.js" type="text/javascript"></script>

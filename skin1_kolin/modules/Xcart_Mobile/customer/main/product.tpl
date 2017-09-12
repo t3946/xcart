@@ -6,6 +6,7 @@ vim: set ts=2 sw=2 sts=2 et:
 
 {include file="main/include_js.tpl" src="ajax_add_to_cart.js"}
 
+{assign var="is_group" value=$oProduct->isGroup()}
 
 {if $use_schema_org eq "Y"}
 {if $current_storefront eq "0"}
@@ -204,9 +205,11 @@ onclick="javascript: $('#orderform-{$product.productid}').submit();"
 </div>
 <div>
     {if $shipping_rate_show}
+    {literal}
         <script type="text/javascript">
             ga('send', 'event', 'calculate shipping', 'showed', {nonInteraction: true});
         </script>
+    {/literal}
         <span id="calculate_shipping_button" data-product-id="{$product.productid}" style="margin-top: -5px;" class="cidev_new_button cidev_new_white">Calculate shipping</span>
     {/if}
     <div id="calculate_shipping_text" class="hidden">
@@ -495,6 +498,9 @@ function send_question_email_form(){
   </script>
 {/if}
 
+{if $is_group}
+    {include file="modules/Xcart_Mobile/customer/main/group_product_line.tpl"}
+{/if}
 
 {if $config.Security.ssl_seal ne ""}
 <br />{$config.Security.ssl_seal}

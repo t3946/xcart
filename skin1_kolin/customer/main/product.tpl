@@ -392,8 +392,15 @@
                         </td>
                         <td rowspan="3" class="save_td">&nbsp;</td>
                     {else}
-                        <td valign="top" width="*" style="padding-left: 20px;">
-                            <span class="cidev_new_button cidev_new_white">Full product line</span>
+                        <td valign="top" width="*" style="padding-left: 20px; vertical-align: middle" class="full_product_cell">
+                            <div class="btn_full_product_line"></div>
+                            <div class="full_line_info">Click here to see full product line</div>
+                            {if $config.Security.ssl_seal ne ""}
+                            <div class="seal">
+                               {$config.Security.ssl_seal}
+                            </div>
+                            {/if}
+
                         </td>
                     {/if}
                 </tr>
