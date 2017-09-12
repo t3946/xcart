@@ -1,3 +1,5 @@
+'use strict';
+
 import 'head';
 import foundationRegisterCustomEvents from "./_binds/foundation_events";
 

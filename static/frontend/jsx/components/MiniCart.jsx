@@ -18,8 +18,16 @@ export default class MiniCart extends Component
     }
 
     render() {
-        return (<div className="minicart-items">
-            Total : {this.state.cart.total}
+        return (
+        <div className="minicart-items">
+            <div className="product-list">
+                Total: {this.state.cart.total}
+            </div>
+            <div className="buttons">
+                <a href="/cart/" className="button yellow waves waves-orange">
+                    View cart
+                </a>
+            </div>
         </div>);
     }
 }

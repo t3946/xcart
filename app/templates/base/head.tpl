@@ -30,6 +30,7 @@
 
     <script type="text/javascript">
         window['options'] = {
+            'session_key': '{$.sessionKey}',
             'urls': {
                 cart_add: '{url "cart:products:add"}',
                 cart_get: '{url "cart:products:get"}',

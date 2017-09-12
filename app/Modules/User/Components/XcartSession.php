@@ -178,7 +178,7 @@ class XcartSession extends Session
         return $id;
     }
 
-    private function getSessionKey()
+    public function getSessionKey()
     {
         $key = 'xid';
 

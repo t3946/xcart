@@ -16,6 +16,8 @@ class UserModule extends Module
         $template = Xcart::app()->template->getRenderer();
 
         $template->addAccessorSmart("isBot", "isBot", Fenom::ACCESSOR_PROPERTY);
+        $template->addAccessorSmart("sessionKey", "sessionKey", Fenom::ACCESSOR_PROPERTY);
         $template->isBot = BotsHelper::IsBot();
+        $template->sessionKey = Xcart::app()->request->session->getSessionKey();
     }
 }

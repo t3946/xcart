@@ -1,0 +1,42 @@
+.minicart {
+  position: relative;
+}
+
+.minicart-items {
+  position: absolute;
+  width: rem-calc(345);
+  height: rem-calc(420);
+  background: #fff;
+
+  right: rem-calc(-20);
+  //outline: 1px solid black;
+  border: 1px solid #0e2431;
+  border-top: none;
+  padding-bottom: rem-calc(58);
+
+  .product-list {
+    height: 100%;
+    max-height: rem-calc(420 - 58);
+    overflow-y: scroll;
+  }
+
+
+  .buttons {
+    position: absolute;
+    bottom: 0;
+    border-top: 1px solid #0e2431;
+    width: 100%;
+    height: rem-calc(58);
+    text-align: center;
+    line-height: rem-calc(58);
+
+    .button {
+      width: rem-calc(157);
+      height: rem-calc(37);
+      line-height: rem-calc(37);
+      vertical-align: middle;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+  }
+}
