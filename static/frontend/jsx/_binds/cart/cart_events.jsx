@@ -3,7 +3,7 @@ import storeCart from '../../stores/StoreCart';
 
 (()=>{
     window['addToCart'] = (data, callback) => {
-        storeCart.dispatch({type:'PUSH', callback:callback, data:{items: data}});
+        storeCart.dispatch({type:'PUSH', action: 'ADD', callback:callback, data:{items: data}});
     };
 
     let productItemResetState = ($products) => {

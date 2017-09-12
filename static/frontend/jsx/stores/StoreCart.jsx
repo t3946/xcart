@@ -43,7 +43,7 @@ let ACTIONS = {
     },
 
     FETCH: (state, action) => {
-        ajax(options.urls.cart_get, {}, (data) => {
+        ajax(options.urls.cart.get, {}, (data) => {
             store.dispatch({type:'SET', data: data, triggers: 'ignore'});
         });
 
@@ -51,13 +51,35 @@ let ACTIONS = {
     },
 
     PUSH: (state, action) => {
-        ajax(options.urls.cart_add, action.data, (data) => {
-            store.dispatch({type:'SET', data: data});
+        let url = null;
 
-            if (typeof action.callback === 'function') {
-                action.callback();
+        switch (action.action) {
+            case 'ADD': {
+                url = options.urls.cart.add;
+                break;
             }
-        });
+            case 'SET': {
+                url = options.urls.cart.set;
+                break;
+            }
+            case 'DEL': {
+                url = options.urls.cart.del;
+                break;
+            }
+            case 'GET':
+            default:
+                url = options.urls.cart.get;
+        }
+
+        if (url) {
+            ajax(url, action.data, (data) => {
+                store.dispatch({type:'SET', data: data});
+
+                if (typeof action.callback === 'function') {
+                    action.callback();
+                }
+            });
+        }
 
         return state;
     },

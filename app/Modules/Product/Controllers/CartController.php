@@ -20,10 +20,32 @@ class CartController extends BaseCartController
         parent::actionAdd($uniqueId, $quantity);
     }
 
+    public function actionProductsDel()
+    {
+        $cart = $this->getCart();
+
+        if ($items = $this->getRequest()->post->get('items', [])) {
+            foreach ( $items as $item) {
+                $cart->removeByKey($item);
+            }
+        }
+
+        $this->actionProductsGet();
+    }
+
+    public function actionProductsSet()
+    {
+        if ($items = $this->getRequest()->post->get('items', [])) {
+            foreach ( $items as $item) {
+                $this->setInternal($item['id'], $item['quantity']);
+            }
+        }
+
+        $this->actionProductsGet();
+    }
+
     public function actionProductsAdd()
     {
-        $oldQuantity = $this->getCart()->getQuantity();
-
         if ($items = $this->getRequest()->post->get('items', [])) {
             foreach ( $items as $item) {
                 $this->addInternal($item['id'], $item['quantity']);
@@ -37,7 +59,6 @@ class CartController extends BaseCartController
             $this->jsonResponse(array_replace_recursive(
                 $this->getCartStateArray(),
                 [
-                     'old_quantity' => $oldQuantity,
                      'message' => [
                          'title' => CartModule::t('Product(s) added')
                      ],
@@ -90,7 +111,7 @@ class CartController extends BaseCartController
             foreach ($group['items'] as $key => $item)
             {
                 if ($with_items) {
-                    $p_items[$key] = $this->getProductStructure($item);
+                    $p_items[$key] = $this->getProductStructure($item, $key);
                 }
                 else {
                     $p_items[] = $key;
@@ -103,13 +124,17 @@ class CartController extends BaseCartController
         return $items;
     }
 
-    protected function getProductStructure(CartItem $item) {
+    protected function getProductStructure(CartItem $item, $key) {
 
         /** @var ProductModel $product */
         $product = $item->getObject();
         $image = null;
         if ($images = $product->getImages()) {
             $image = $images[0]->getUrl();
+
+            /** @var \Modules\Sites\Models\SiteModel $site */
+            $site = $product->sites->limit(1)->get();
+            $image = '//cdn.' . $site->getBaseDomain() . $image;
         }
 
         $price = $product->getPrice($item->getQuantity());
@@ -118,6 +143,7 @@ class CartController extends BaseCartController
         $discount = $item->getDiscountSum();
 
         return [
+            'key' => $key,
             'image' => $image,
             'name' => $product->getFrontendName(),
             'id' => $product->productid,
@@ -146,7 +172,7 @@ class CartController extends BaseCartController
 
         if ($cart_items) {
             foreach ($cart_items as $key => $item) {
-                $items[$key] = $this->getProductStructure($item);
+                $items[$key] = $this->getProductStructure($item, $key);
             }
         }
 
@@ -185,6 +211,31 @@ class CartController extends BaseCartController
             }
 
             return true;
+        }
+
+        return false;
+    }
+
+    protected function setInternal($uniqueId, $quantity)
+    {
+        /** @var ProductModel $model */
+        $model = ProductModel::objects()->get(['pk' => $uniqueId]);
+
+        if ($model && !$model->isOutOfStock()) {
+            $cart = $this->getCart();
+
+            if ($cart->has($model)) {
+                $item = $cart->get($model);
+
+                if ( $model->avail >= $quantity) {
+                    $item->setQuantity($quantity);
+                }
+                else {
+                    $item->setQuantity($model->avail);
+                }
+
+                return true;
+            }
         }
 
         return false;

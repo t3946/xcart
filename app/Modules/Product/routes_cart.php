@@ -16,6 +16,16 @@ return [
         'target' => ['\Modules\Product\Controllers\CartController', 'actionProductsGet'],
         'name' => 'products:get'
     ],
+    [
+        'route' => '/set/products',
+        'target' => ['\Modules\Product\Controllers\CartController', 'actionProductsSet'],
+        'name' => 'products:set'
+    ],
+    [
+        'route' => '/del/products',
+        'target' => ['\Modules\Product\Controllers\CartController', 'actionProductsDel'],
+        'name' => 'products:del'
+    ],
 
     [
         'route' => '',

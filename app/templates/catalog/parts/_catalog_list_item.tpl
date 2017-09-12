@@ -1,11 +1,11 @@
 <div class="item product{if $item->isOutOfStock()} out_of_stock{/if}"
      data-product="{$item->productid}"
-     data-uid="{$item->getUniqueId()}"
+     {*data-uid="{$item->getUniqueId()}"*}
      data-prices='{$item->getPrices()|json_encode}'
      {if $item->getFrontendPrice() < $item->list_price}
      data-list-price="{$item->list_price}"
      {/if}
-     data-price-precalc
+     {*data-price-precalc*}
      {*data-cart-action="{url 'cart:quantity:set:post' key=$item->getUniqueId()}"*}
      itemscope
      itemtype="http://schema.org/Product"

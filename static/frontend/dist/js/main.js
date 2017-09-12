@@ -10053,7 +10053,7 @@ var ACTIONS = {
     },
 
     FETCH: function FETCH(state, action) {
-        (0, _ajax2.default)(options.urls.cart_get, {}, function (data) {
+        (0, _ajax2.default)(options.urls.cart.get, {}, function (data) {
             store.dispatch({ type: 'SET', data: data, triggers: 'ignore' });
         });
 
@@ -10061,13 +10061,38 @@ var ACTIONS = {
     },
 
     PUSH: function PUSH(state, action) {
-        (0, _ajax2.default)(options.urls.cart_add, action.data, function (data) {
-            store.dispatch({ type: 'SET', data: data });
+        var url = null;
 
-            if (typeof action.callback === 'function') {
-                action.callback();
-            }
-        });
+        switch (action.action) {
+            case 'ADD':
+                {
+                    url = options.urls.cart.add;
+                    break;
+                }
+            case 'SET':
+                {
+                    url = options.urls.cart.set;
+                    break;
+                }
+            case 'DEL':
+                {
+                    url = options.urls.cart.del;
+                    break;
+                }
+            case 'GET':
+            default:
+                url = options.urls.cart.get;
+        }
+
+        if (url) {
+            (0, _ajax2.default)(url, action.data, function (data) {
+                store.dispatch({ type: 'SET', data: data });
+
+                if (typeof action.callback === 'function') {
+                    action.callback();
+                }
+            });
+        }
 
         return state;
     },
@@ -16308,7 +16333,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 (function () {
     window['addToCart'] = function (data, callback) {
-        _StoreCart2.default.dispatch({ type: 'PUSH', callback: callback, data: { items: data } });
+        _StoreCart2.default.dispatch({ type: 'PUSH', action: 'ADD', callback: callback, data: { items: data } });
     };
 
     var productItemResetState = function productItemResetState($products) {
@@ -16906,8 +16931,15 @@ var _jquery2 = _interopRequireDefault(_jquery);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+var prepareUrl = function prepareUrl(url) {
+
+    url += (url.indexOf('?') ? '?' : '&') + '__=' + new Date().getTime();
+
+    return url;
+};
+
 exports.default = function (url, data, success, error) {
-    _jquery2.default.ajax(url, {
+    _jquery2.default.ajax(prepareUrl(url), {
         dataType: 'json',
         type: 'POST',
         cache: false,
@@ -18284,6 +18316,12 @@ exports.__esModule = true;
 
 var _preact = __webpack_require__(7);
 
+var _lodash = __webpack_require__(92);
+
+var _lodash2 = _interopRequireDefault(_lodash);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
@@ -18298,6 +18336,9 @@ var MiniCart = function (_Component) {
 
         var _this = _possibleConstructorReturn(this, _Component.call(this));
 
+        _this.changes = [];
+        _this.timers = {};
+
         _this.state = props.store.getState();
         _this.unsubscribe = props.store.subscribe(function () {
             _this.setState(props.store.getState());
@@ -18309,23 +18350,120 @@ var MiniCart = function (_Component) {
         this.unsubscribe();
     };
 
+    MiniCart.prototype.handleRemove = function handleRemove(e, key, item) {
+        e.preventDefault();
+
+        this.context.store.dispatch({ type: 'PUSH', action: 'DEL', data: { items: [key] } });
+    };
+
+    MiniCart.prototype.handleInput = function handleInput(e, key, item) {
+        var _this2 = this;
+
+        if (e.target.value) {
+            clearTimeout(this.timers.change);
+            this.timers.change = setTimeout(function () {
+                _this2.context.store.dispatch({
+                    type: 'PUSH',
+                    action: 'SET',
+                    data: { items: _this2.changes }
+                });
+            }, 500);
+
+            this.changes.push({ id: item.id, quantity: e.target.value });
+        }
+    };
+
+    MiniCart.prototype.renderImage = function renderImage(item) {
+        if (item.image) {
+            return (0, _preact.h)('img', { 'data-original': item.image, alt: item.name, className: 'lazy lazy-img', itemprop: 'image' });
+        }
+
+        return (0, _preact.h)(
+            'div',
+            { className: 'not-avail' },
+            (0, _preact.h)(
+                'span',
+                { className: 'text' },
+                'Image not available'
+            )
+        );
+    };
+
+    MiniCart.prototype.renderProducts = function renderProducts() {
+        var _this3 = this;
+
+        if (this.state.cart.items) {
+
+            return _lodash2.default.map(this.state.cart.items, function (item, key) {
+                return (0, _preact.h)(
+                    'div',
+                    { className: 'item', key: key, 'data-product': item.id },
+                    (0, _preact.h)(
+                        'div',
+                        { className: 'image' },
+                        _this3.renderImage(item)
+                    ),
+                    (0, _preact.h)(
+                        'div',
+                        { className: 'name-quantity' },
+                        (0, _preact.h)(
+                            'div',
+                            { className: 'name' },
+                            item.name
+                        ),
+                        (0, _preact.h)(
+                            'div',
+                            { className: 'quantity-extended' },
+                            (0, _preact.h)(
+                                'div',
+                                { className: 'quantity' },
+                                (0, _preact.h)('input', { type: 'number', value: item.quantity, onInput: function onInput(e) {
+                                        _this3.handleInput(e, key, item);
+                                    } })
+                            ),
+                            (0, _preact.h)(
+                                'div',
+                                { className: 'x' },
+                                'x'
+                            ),
+                            (0, _preact.h)(
+                                'div',
+                                { className: 'price' },
+                                'US$ ',
+                                item.price
+                            )
+                        )
+                    ),
+                    (0, _preact.h)(
+                        'div',
+                        { className: 'actions' },
+                        (0, _preact.h)('a', { href: '#', className: 'icon cart_remove text-hide', onClick: function onClick(e) {
+                                _this3.handleRemove(e, key, item);
+                            }, title: 'Remove' })
+                    )
+                );
+            });
+        }
+
+        return;
+    };
+
     MiniCart.prototype.render = function render() {
         return (0, _preact.h)(
-            "div",
-            { className: "minicart-items" },
+            'div',
+            { className: 'minicart-items' },
             (0, _preact.h)(
-                "div",
-                { className: "product-list" },
-                "Total: ",
-                this.state.cart.total
+                'div',
+                { className: 'product-list' },
+                this.renderProducts()
             ),
             (0, _preact.h)(
-                "div",
-                { className: "buttons" },
+                'div',
+                { className: 'buttons' },
                 (0, _preact.h)(
-                    "a",
-                    { href: "/cart/", className: "button yellow waves waves-orange" },
-                    "View cart"
+                    'a',
+                    { href: '/cart/', className: 'button yellow waves waves-orange' },
+                    'View cart'
                 )
             )
         );

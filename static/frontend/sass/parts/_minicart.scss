@@ -18,6 +18,109 @@
     height: 100%;
     max-height: rem-calc(420 - 58);
     overflow-y: scroll;
+    background-color: #e1e1e1;
+    //padding-right: rem-calc(20);
+
+    @include scrollbar() {
+      width: 20px; //--webkit-test
+    }
+
+    .item {
+      padding: rem-calc(20) 0 rem-calc(20) rem-calc(13);
+      margin-bottom: 1px;
+      background-color: #fff;
+      display: flex;
+      flex: 0 0;
+      flex-direction: row;
+      flex-wrap: nowrap;
+
+
+      align-content: stretch;
+
+      //& > div {
+      //  flex: 0 0;
+      //}
+
+      .image {
+        align-self: center;
+        width: rem-calc(109 - 13*2);
+        padding-right: rem-calc(13);
+
+        max-height: rem-calc(70);
+
+        .not-avail {
+          line-height: 1.3;
+          font-size: rem-calc(13);
+          padding: rem-calc(5);
+        }
+      }
+
+      .name {
+        color: black;
+        font-size: rem-calc(14);
+        font-weight: 400;
+        line-height: 1.2;
+      }
+
+      .name-quantity {
+        flex: 1 1;
+      }
+
+
+      .quantity-extended {
+        display: flex;
+        flex: 0 0 auto;
+        flex-direction: row;
+        flex-wrap: nowrap;
+
+        align-content: center;
+
+        //& > div {
+        //  flex: 1 1;
+        //}
+
+        .x {
+          text-align: center;
+          width: rem-calc(46);
+          //padding: 0 rem-calc(5)
+        }
+
+
+        .quantity {
+          input {
+            width: 45px;
+            height: 28px;
+            background-color: white;
+            border: 1px solid #cacaca;
+            text-align: center;
+            color: #3b3b3b;
+            font-size: rem-calc(18);
+            font-weight: 400;
+            //vertical-align: middle;
+          }
+        }
+
+        .price {
+          font-size: rem-calc(14);
+          font-weight: 700;
+        }
+
+      }
+
+      .actions {
+        width: rem-calc(38);
+        text-align: center;
+
+        .cart_remove {
+          width: rem-calc(17);
+
+          &:after {
+            vertical-align: top;
+          }
+
+        }
+      }
+    }
   }
 
 

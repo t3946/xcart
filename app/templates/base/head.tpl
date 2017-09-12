@@ -32,8 +32,12 @@
         window['options'] = {
             'session_key': '{$.sessionKey}',
             'urls': {
-                cart_add: '{url "cart:products:add"}',
-                cart_get: '{url "cart:products:get"}',
+                cart: {
+                    add: '{url "cart:products:add"}',
+                    get: '{url "cart:products:get"}',
+                    set: '{url "cart:products:set"}',
+                    del: '{url "cart:products:del"}',
+                }
             }
         };
     </script>

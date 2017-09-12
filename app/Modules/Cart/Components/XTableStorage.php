@@ -94,7 +94,7 @@ class XTableStorage extends AbstractStorage
             $data['cart'] = $this->data;
         }
 
-        if ($data) {
+        if ($this->model->data != $data) {
             $this->model->data = $data;
             $this->model->save();
         }
