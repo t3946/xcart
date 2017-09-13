@@ -50,11 +50,7 @@ let ACTIONS = {
     },
 
     FETCH: (state, action) => {
-        ajax(options.urls.cart.get, {}, (data) => {
-            store.dispatch({type:'SET', data: data});
-        });
-
-        return state;
+        return ACTIONS['PUSH'](state, action);
     },
 
     PUSH: (state, action) => {

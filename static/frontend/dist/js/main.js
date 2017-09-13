@@ -8780,11 +8780,7 @@ var ACTIONS = {
     },
 
     FETCH: function FETCH(state, action) {
-        (0, _ajax2.default)(options.urls.cart.get, {}, function (data) {
-            store.dispatch({ type: 'SET', data: data });
-        });
-
-        return state;
+        return ACTIONS['PUSH'](state, action);
     },
 
     PUSH: function PUSH(state, action) {
@@ -33481,24 +33477,19 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
             $('.minicart').addClass('enabled');
         } else {
             _StoreApp2.default.dispatch({ type: 'SET', data: { frontend: {
-                        active: null,
-                        darkness: false
+                        darkness: false,
+                        header: { active: null }
                     } } });
 
             $('.minicart').removeClass('enabled');
 
-            if (state.frontend.active === 'cart') {
-                $('.minicart').removeClass('active');
-            }
+            if (state.frontend.active === 'cart') {}
         }
     };
 
     checkEnableMinicart();
 
-    var unsubscribeCart = _StoreCart2.default.subscribe(function () {
-        checkEnableMinicart();
-    });
-
+    var unsubscribeCart = _StoreCart2.default.subscribe(checkEnableMinicart);
     var unsubscribeApp = _StoreApp2.default.subscribe(function () {
         var state = _StoreApp2.default.getState();
 
@@ -33570,17 +33561,23 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
     }).on('click', '.minicart.enabled .cart_info', function (e) {
         var $this = $('.minicart');
 
+        console.log(123);
+
         if ($this.hasClass('active')) {
             $this.removeClass('active');
             _StoreApp2.default.dispatch({ type: 'SET', data: { frontend: {
-                        active: null,
-                        darkness: false
+                        darkness: false,
+                        header: {
+                            active: null
+                        }
                     } } });
         } else {
             $this.addClass('active');
             _StoreApp2.default.dispatch({ type: 'SET', data: { frontend: {
-                        active: 'cart',
-                        darkness: true
+                        darkness: true,
+                        header: {
+                            active: 'cart'
+                        }
                     } } });
         }
     });

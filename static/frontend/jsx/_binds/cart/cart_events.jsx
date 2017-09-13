@@ -12,24 +12,21 @@ import storeApp from '../../stores/StoreApp';
         }
         else {
             storeApp.dispatch({type:'SET', data: {frontend: {
-                active: null,
                 darkness: false,
+                header: { active: null, }
             }}});
 
             $('.minicart').removeClass('enabled');
 
             if (state.frontend.active === 'cart') {
-                $('.minicart').removeClass('active');
+                // $('.minicart').removeClass('active');
             }
         }
     };
 
     checkEnableMinicart();
 
-    let unsubscribeCart = storeCart.subscribe(()=>{
-        checkEnableMinicart()
-    });
-
+    let unsubscribeCart = storeCart.subscribe(checkEnableMinicart);
     let unsubscribeApp = storeApp.subscribe(()=>{
         let state = storeApp.getState();
 
@@ -124,18 +121,24 @@ import storeApp from '../../stores/StoreApp';
         .on('click', '.minicart.enabled .cart_info', (e) => {
             let $this = $('.minicart');
 
+            console.log(123);
+
             if ($this.hasClass('active')) {
                 $this.removeClass('active');
                 storeApp.dispatch({type:'SET', data: {frontend: {
-                    active: null,
                     darkness:false,
+                    header: {
+                        active: null,
+                    }
                 }}});
             }
             else {
                 $this.addClass('active');
                 storeApp.dispatch({type:'SET', data: {frontend: {
-                    active: 'cart',
                     darkness:true,
+                    header: {
+                        active: 'cart',
+                    }
                 }}});
             }
         });
