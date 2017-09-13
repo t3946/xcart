@@ -84,91 +84,98 @@ vim: set ts=2 sw=2 sts=2 et:
 {/if}
 
 <div class="product-details">
-  {if $active_modules.Special_Offers || ($product.appearance.has_market_price and $product.appearance.market_price_discount gt 0)}
-    {assign var="custom_top_info" value="true"}
-  {/if}
-  <div class="top-info ui-body ui-body-b ui-overlay-shadow">
-    <div class="ui-grid-{if $active_modules.Special_Offers && $product.bonus_points gt 0}a{else}solo{/if}">
-      <div class="ui-block-a">
-        <h1 {if $main eq "product"}{if $use_schema_org eq "Y"} id="so_name" itemprop="name"{/if}{/if}>{$product.producttitle}</h1>
-      </div>
-      {if $active_modules.Special_Offers && $product.bonus_points gt 0}
-        <div class="ui-block-b">
-          <div class="right-block bp-info">
-            <ul data-role="listview" data-inset="true">
-              <li data-theme="e" class="bp-info">
-                +{$product.bonus_points}&nbsp;{$lng.lbl_sp_ttl_bonus_points}
-              </li>
-            </ul>
-          </div>     
-        </div>
-      {/if}
-    </div>
-    <div class="ui-grid-a">
-      <div class="ui-block-a">
-        <div class="sku{if $product.appearance.has_market_price and $product.appearance.market_price_discount gt 0} save-mark-here{/if}"> {if $main eq "product"}{if $use_schema_org eq "Y"}<span id="so_sku" itemprop="sku">{/if}{/if}{$product.productcode|escape}{if $main eq "product"}{if $use_schema_org eq "Y"}</span>{/if}{/if}</div>
-        {if $product.distribution eq "" && !($product.product_type eq "C" and $active_modules.Product_Configurator)}
-          <div id="so_o_stock" itemprop="availability" content="{if $product.product_availability eq "in stock"}InStock{else}OutOfStock{/if}" class="product-quantity-text-top{if $product.avail gt 0 or $config.General.unlimited_products eq "Y"} in-stock{/if}">
-
-            {if $product.avail gt 0 or $config.General.unlimited_products eq "Y"}
-              {$lng.lbl_in_stock_top}
-            {else}
-              {$lng.lbl_out_stock}
+    {if $active_modules.Special_Offers || ($product.appearance.has_market_price and $product.appearance.market_price_discount gt 0)}
+        {assign var="custom_top_info" value="true"}
+    {/if}
+    <div class="top-info ui-body ui-body-b ui-overlay-shadow">
+        <div class="ui-grid-{if $active_modules.Special_Offers && $product.bonus_points gt 0}a{else}solo{/if}">
+            <div class="ui-block-a">
+                <h1 {if $main eq "product"}{if $use_schema_org eq "Y"} id="so_name" itemprop="name"{/if}{/if}>{$product.producttitle}</h1>
+            </div>
+            {if $active_modules.Special_Offers && $product.bonus_points gt 0}
+                <div class="ui-block-b">
+                    <div class="right-block bp-info">
+                        <ul data-role="listview" data-inset="true">
+                            <li data-theme="e" class="bp-info">
+                                +{$product.bonus_points}&nbsp;{$lng.lbl_sp_ttl_bonus_points}
+                            </li>
+                        </ul>
+                    </div>
+                </div>
             {/if}
+        </div>
+        <div class="ui-grid-a">
+            <div class="ui-block-a">
+                <div class="sku{if $product.appearance.has_market_price and $product.appearance.market_price_discount gt 0} save-mark-here{/if}"> {if $main eq "product"}{if $use_schema_org eq "Y"}
+                    <span id="so_sku"
+                          itemprop="sku">{/if}{/if}{$product.productcode|escape}{if $main eq "product"}{if $use_schema_org eq "Y"}</span>{/if}{/if}
+                </div>
+                {if $product.distribution eq "" && !($product.product_type eq "C" and $active_modules.Product_Configurator)}
+                    <div id="so_o_stock" itemprop="availability"
+                         content="{if $product.product_availability eq "in stock"}InStock{else}OutOfStock{/if}"
+                         class="product-quantity-text-top{if $product.avail gt 0 or $config.General.unlimited_products eq "Y"} in-stock{/if}">
 
-          </div>
-        {/if}
-      </div>
+                        {if $product.avail gt 0 or $config.General.unlimited_products eq "Y"}
+                            {$lng.lbl_in_stock_top}
+                        {else}
+                            {$lng.lbl_out_stock}
+                        {/if}
 
-      {if !($product.product_type eq "C" and $active_modules.Product_Configurator)}
-        <div class="ui-block-b">
-          <div class="right-block">
-            <ul data-role="listview" data-inset="true">
-              {if $product.appearance.has_market_price and $product.appearance.market_price_discount gt 0}
-                {strip}
-                  <li data-theme="c" class="save-percent-container" id="save_percent_box">
+                    </div>
+                {/if}
+            </div>
+
+            {if !($product.product_type eq "C" and $active_modules.Product_Configurator)}
+                <div class="ui-block-b">
+                    <div class="right-block">
+                        <ul data-role="listview" data-inset="true">
+                            {if $product.appearance.has_market_price and $product.appearance.market_price_discount gt 0}
+                                {strip}
+                                    <li data-theme="c" class="save-percent-container" id="save_percent_box">
                     <span class="save">
                       {$lng.lbl_save}&nbsp;
                       <span id="save_percent">{$product.appearance.market_price_discount}</span>%
                     </span>
-                  </li>
-                {/strip}
-              {/if}
+                                    </li>
+                                {/strip}
+                            {/if}
 
-{if 
-($config.General.unlimited_products eq "N" and ($product.avail le 0 or $product.avail lt $product.min_amount) and $variants eq '' && $product_feed_enabled eq "Y" && $notify_when_in_stock[$product.productid] ne "Y")
-||
-!($product.avail gt 0 or $config.General.unlimited_products eq "Y")
-}
+                            {if
+                                ($config.General.unlimited_products eq "N" and ($product.avail le 0 or $product.avail lt $product.min_amount) and $variants eq '' && $product_feed_enabled eq "Y" && $notify_when_in_stock[$product.productid] ne "Y")
+                            ||
+                                !($product.avail gt 0 or $config.General.unlimited_products eq "Y")
+                            }
 
-{else}
-              <li data-theme="b" id="top-cart-button">
-                {strip}
-                  <a href="{$catalogs.customer}/cart.php" 
+                            {else}
+                                {if !$is_group}
+                                <li data-theme="b" id="top-cart-button">
+                                    {strip}
+                                        <a href="{$catalogs.customer}/cart.php"
 
-{if $product.lead_time_message ne ""}
-onclick="javascript: if (confirm('{$product.lead_time_message}')) {ldelim}  ajax_add_to_cart('{$product.productid}', '{$product.add_date}', 'product'); $('#orderform-{$product.productid}').submit(); {rdelim}"
-{else}
-onclick="javascript: $('#orderform-{$product.productid}').submit();"
-{/if}
+                                                {if $product.lead_time_message ne ""}
+                                                    onclick="javascript: if (confirm('{$product.lead_time_message}')) {ldelim}  ajax_add_to_cart('{$product.productid}', '{$product.add_date}', 'product'); $('#orderform-{$product.productid}').submit(); {rdelim}"
+                                                {else}
+                                                    onclick="javascript: $('#orderform-{$product.productid}').submit();"
+                                                {/if}
 
-                  >
-                    {currency value=$product.taxed_price tag_id=""}
-                    {if $product.appearance.added_to_cart}
-                      {$lng.lbl_add_more}
-                    {else}
-                      {$lng.lbl_add_to_cart}
-                    {/if}
-                  </a>
-                {/strip}
-              </li>
-{/if}
-            </ul>
-          </div>
-        </div>	   
-      {/if}
+                                        >
+                                            {currency value=$product.taxed_price tag_id=""}
+                                            {if $product.appearance.added_to_cart}
+                                                {$lng.lbl_add_more}
+                                            {else}
+                                                {$lng.lbl_add_to_cart}
+                                            {/if}
+                                        </a>
+                                    {/strip}
+                                </li>
+                                {/if}
+                            {/if}
+                        </ul>
+                    </div>
+                </div>
+            {/if}
+        </div>
     </div>
-  </div>
 </div>
 <div class="product-details">
   <div class="image">
@@ -193,14 +200,16 @@ onclick="javascript: $('#orderform-{$product.productid}').submit();"
     </div>
   </div>
   <div class="details">
-    {if $product.product_type eq "C" and $active_modules.Product_Configurator}
-      {include file="modules/Product_Configurator/pconf_customer_product.tpl"}
-    {else}
-      {include file="customer/main/product_details.tpl"}
-      {if $active_modules.Feature_Comparison ne ""}
-        {include file="modules/Feature_Comparison/product_buttons.tpl"}
+      {if !$is_group}
+          {if $product.product_type eq "C" and $active_modules.Product_Configurator}
+              {include file="modules/Product_Configurator/pconf_customer_product.tpl"}
+          {else}
+              {include file="customer/main/product_details.tpl"}
+              {if $active_modules.Feature_Comparison ne ""}
+                  {include file="modules/Feature_Comparison/product_buttons.tpl"}
+              {/if}
+          {/if}
       {/if}
-    {/if}
   </div>
 </div>
 <div>
@@ -279,7 +288,7 @@ function send_question_email_form(){
 <script type="text/javascript" language="JavaScript 1.2">
 //<![CDATA[
 {literal}
-  $(document).ready(function() {  
+  $(document).ready(function() {
         $('#email').focusout(function() {
 
                 if ($('#email').val() != ""){
@@ -421,7 +430,7 @@ function send_question_email_form(){
 {literal}
     /* * * CONFIGURATION VARIABLES * * */
     var disqus_shortname = 's3stores';
-    
+
     /* * * DON'T EDIT BELOW THIS LINE * * */
     (function() {
         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;

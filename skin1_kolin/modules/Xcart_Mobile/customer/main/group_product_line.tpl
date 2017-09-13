@@ -60,6 +60,10 @@
                 background: url(/skin1_kolin/images/group/least.svg) no-repeat;
             }
 
+            table.group_product td div.info.mult .icon {
+                background: url(/skin1_kolin/images/group/mult.svg) no-repeat;
+            }
+
             table.group_product td div.info span {
                 line-height: 24px;
                 vertical-align: bottom;
@@ -78,8 +82,6 @@
 
             table.group_product td div.info.notify {
                 margin: 0 10px;
-                text-decoration: underline;
-                text-decoration-style: dotted;
             }
 
             table.group_product td div.info.notify .subline {
@@ -89,6 +91,8 @@
             table.group_product td div.info.notify .subline.subscribe {
                 color: #065B94;
                 cursor: pointer;
+                text-decoration: underline;
+                text-decoration-style: dotted;
             }
 
             table.group_product td span.subline {
@@ -232,7 +236,7 @@
                         </div>
                     {/if}
                     {if !$child->isProductOutOfStock()}
-                        {if $child->min_amount > 1}
+                        {if $child->min_amount > 1  && $child->mult_order_quantity == 'Y'}
                             {assign var=step value=$child->min_amount}
                         {else}
                             {assign var=step value=1}
@@ -243,10 +247,17 @@
                                     class="value">{include file="currency.tpl" value=$child->getFrontendPrice()}</span>
                         </div>
                         {if $child->min_amount > 1}
-                            <div class="info least">
-                                <i class="icon"></i>
-                                <span class="subline">Order at least {$child->min_amount}</span>
-                            </div>
+                            {if $child->mult_order_quantity == 'Y'}
+                                <div class="info mult">
+                                    <i class="icon"></i>
+                                    <span class="subline">Order multiples of {$child->min_amount} items</span>
+                                </div>
+                            {else}
+                                <div class="info least">
+                                    <i class="icon"></i>
+                                    <span class="subline">Order at least {$child->min_amount}</span>
+                                </div>
+                            {/if}
                         {/if}
                     {else}
                         <div class="info notify">
@@ -276,7 +287,7 @@
                         <ul data-role="listview" data-inset="true">
                             <li data-theme="b" id="top-cart-button">
                                 {strip}
-                                    <a id="add_cart_group" class="disable" href="#">
+                                    <a id="add_cart_group" class="disable" href="#" data-device="mobile">
                                         {$lng.lbl_add_to_cart}
                                     </a>
                                 {/strip}

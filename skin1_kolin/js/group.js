@@ -1,5 +1,21 @@
 $(function() {
 
+    function submit_group_product_notify_form(row, callback) {
+
+        var email = row.find('.email').find('input[name=notify_email]');
+
+        $.post('ajax_notify_by_email.php',{
+                productid : row.data('product-id'),
+                notify_email: email.val(),
+                current_storefront: row.data('sfid')
+            },
+            function (data) {
+                if (data) {
+                    callback(row, data.content);
+                }
+            }, 'json');
+    }
+
     function getPrice(aprice, newVal) {
         var cur_price = 0;
         for (var index in aprice) {
@@ -119,9 +135,12 @@ $(function() {
                     products: pr
                 },
                 function (data) {
-                    if (data.error == 'Y') {
+                    if (data.error === 'Y') {
                         $this.removeClass('btn_atcart_big_wait').addClass('btn_atcart_big_error');
                     } else {
+                        if ($this.data('device') === 'mobile') {
+                            location.href = '/cart.php';
+                        }
                         $this.removeClass('btn_atcart_big_wait').addClass('btn_atcart_big_added');
                         if (data.display) {
                             $('#ajax_minicart').html(data.display);

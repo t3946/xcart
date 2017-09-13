@@ -44,8 +44,8 @@
             table.group_product td div.info .icon {
                 display: inline-block;
                 text-indent: -9999px;
-                width: 18px;
-                height: 18px;
+                width: 20px;
+                height: 20px;
             }
 
             table.group_product td div.info.clock .icon {
@@ -54,6 +54,12 @@
 
             table.group_product td div.info.least .icon {
                 background: url(/skin1_kolin/images/group/least.svg) no-repeat;
+            }
+
+            table.group_product td div.info.mult .icon {
+                background: url(/skin1_kolin/images/group/mult.svg) no-repeat;
+                position: relative;
+                top: 10px;
             }
 
             table.group_product td div.info span {
@@ -67,17 +73,19 @@
 
             table.group_product td div.info {
                 text-align: center;
-
+                line-height: 16px;
             }
 
             table.group_product td div.info.clock {
                 text-align: left;
             }
 
+            table.group_product td div.info.mult span {
+                line-height: 16px;
+            }
+
             table.group_product td div.info.notify {
                 margin: 0 10px;
-                text-decoration: underline;
-                text-decoration-style: dotted;
             }
 
             table.group_product td div.info.notify .subline {
@@ -87,6 +95,8 @@
             table.group_product td div.info.notify .subline.subscribe{
                 color:#065B94;
                 cursor: pointer;
+                text-decoration: underline;
+                text-decoration-style: dotted;
             }
 
 
@@ -231,17 +241,24 @@
                 <td>{include file="currency.tpl" value=$child->getFrontendPrice()}</td>
                 <td class="spinner_cell">
                     {if !$child->isProductOutOfStock()}
-                        {if $child->min_amount > 1}
+                        {if $child->min_amount > 1 && $child->mult_order_quantity == 'Y'}
                             {assign var=step value=$child->min_amount}
                         {else}
                             {assign var=step value=1}
                         {/if}
                         {include file="customer/main/add_to_cart_input.tpl" min=$child->min_amount max=$child->avail step=$step}
                         {if $child->min_amount > 1}
-                            <div class="info least">
-                                <i class="icon"></i>
-                                <span class="subline">Order at least {$child->min_amount}</span>
-                            </div>
+                            {if $child->mult_order_quantity == 'Y'}
+                                <div class="info mult">
+                                    <i class="icon"></i>
+                                    <span class="subline">Order multiples of {$child->min_amount} items</span>
+                                </div>
+                            {else}
+                                <div class="info least">
+                                    <i class="icon"></i>
+                                    <span class="subline">Order at least {$child->min_amount}</span>
+                                </div>
+                            {/if}
                         {/if}
                     {else}
                     <div class="info notify">
