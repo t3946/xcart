@@ -62,7 +62,7 @@ class MwsFeedAndReportClient extends MwsFeedAndReportClientPack implements Throt
                 $clientPack->getThrottleManager()->exhaustRequestQuotaForMethod($method);
                 self::snooze(ceil($snoozeLength) * 2); // Double the normal snooze since we bounced off the server limit
                     // try again. If there's another exception it will bubble up to the caller.
-                return $clientPack->$method($options);
+                return self::throttledCall($clientPack, $method, $options, $weight);
 
             }
             throw $e;
