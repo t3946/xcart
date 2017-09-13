@@ -6,6 +6,7 @@ namespace Modules\Amazon\Stores;
 use Modules\Amazon\ClientPack\MwsFbaInventoryClient;
 use Modules\Amazon\Helpers\AmazonProductHelper;
 use Modules\Amazon\Models\AmazonFbaMissingSkuModel;
+use Modules\Amazon\Models\AmazonFbaProductModel;
 use Modules\Product\Models\ProductModel;
 use Xcart\App\Store\BaseStore;
 
@@ -13,7 +14,9 @@ class AmazonInventoryStore extends BaseStore
 {
     /** @var MwsFbaInventoryClient client */
     public $client = null;
+    /** @var AmazonFbaProductModel[] */
     public $groupInventory = [];
+    /** @var AmazonFbaProductModel[] */
     public $groupProductsById = [];
 
     public function __construct($client)
@@ -76,7 +79,7 @@ class AmazonInventoryStore extends BaseStore
 
     public function groupByProductId()
     {
-        if (!empty($this->groupInventory)) {
+        if ($this->groupInventory) {
 
             foreach ($this->groupInventory as $aAmazonFbaProduct){
                 if (array_key_exists($aAmazonFbaProduct->productid, $this->groupProductsById)) {
