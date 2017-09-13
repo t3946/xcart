@@ -38,7 +38,9 @@ if (isset($argv) && is_array($argv) && !empty($argv[1])) {
         $oMail->subject = sprintf('Attention! Xcart cron %s Already launched', $log);
         $oMail->body = $log . ' already launched';
         $oMail->sendEmail();
-        die("Already launched"); // ################################
+        if (isset($argv) && !in_array('--force-flag', $argv)) {
+            die("Already launched"); // ################################
+        }
     }
     db_query_param(/** @lang MySQL */
         "REPLACE xcart_config SET value='Y', name=:name", ['name' => $log]);
@@ -142,7 +144,7 @@ if (isset($argv) && is_array($argv) && !empty($argv[1])) {
             $i = 1;
 
             while ($aProductsBatch = ProductModel::objects()
-                ->filter(['forsale' => 'Y', new QOr(['amazon_enabled' => 'Y', 'amazon_fba' => 'Y'])])
+                ->filter(['forsale' => 'Y','productcode' => 'ALV-MT37-GR', new QOr(['amazon_enabled' => 'Y', 'amazon_fba' => 'Y'])])
                 ->exclude(['missing_products__missing_productcode__isnull' => false])
                 ->paginate($i++, $max_products)
                 ->all())
