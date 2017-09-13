@@ -8,12 +8,13 @@ let prepareUrl = (url) => {
 };
 
 export default (url, data, success, error) => {
-    $.ajax( prepareUrl(url), {
+    return $.ajax( prepareUrl(url), {
         dataType: 'json',
         type: 'POST',
         cache: false,
         data: data,
         success: success,
         error: error,
-    });
+    })
+    .promise();
 }

@@ -68,7 +68,14 @@ import storeCart from '../../stores/StoreCart';
             let qNew = data.state.cart.quantity;
             let qPrev = data.prevState.cart.quantity;
 
-            $('.mc_count').html(data.state.cart.quantity);
+            if (qNew > 99) {
+                $('.mc_count').addClass('small');
+            }
+            else {
+                $('.mc_count').removeClass('small');
+            }
+
+            $('.mc_count').html(qNew);
 
             (new CountUp('desktop-cart-quantity', qPrev, qNew,0, 1, {useEasing: true})).start();
         });

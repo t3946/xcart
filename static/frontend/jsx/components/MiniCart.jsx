@@ -7,7 +7,7 @@ export default class MiniCart extends Component
     constructor(state, props) {
         super();
 
-        this.changes = [];
+        this.changes = {};
         this.timers = {};
 
         this.state = props.store.getState();
@@ -29,19 +29,25 @@ export default class MiniCart extends Component
 
     handleInput(e, key, item)
     {
-        // e.preventDefault();
+        let val = e.target.value;
 
-        if (e.target.value) {
-            clearTimeout(this.timers.change);
+        // e.preventDefault();
+        clearTimeout(this.timers.change);
+
+        if (val && val > 0) {
             this.timers.change = setTimeout(()=>{
+                this.changes[key] = e.target.value;
+
                 this.context.store.dispatch({
                     type:'PUSH',
                     action: 'SET',
-                    data: { items:this.changes }
+                    data: { items: [{ id:item.id, quantity: e.target.value }] },
+
+                    callback: ()=> {
+                        this.changes[key] = null;
+                    }
                 });
             }, 500);
-
-            this.changes.push({ id:item.id, quantity: e.target.value });
         }
     }
 
@@ -77,7 +83,7 @@ export default class MiniCart extends Component
 
                         <div className="quantity-extended">
                             <div className="quantity">
-                                <input type="number" value={item.quantity} onInput={(e)=>{ this.handleInput(e, key, item); }}/>
+                                <input type="number" value={this.changes[key] || item.quantity} onInput={(e)=>{ this.handleInput(e, key, item); }}/>
                             </div>
                             <div className="x">
                                 x

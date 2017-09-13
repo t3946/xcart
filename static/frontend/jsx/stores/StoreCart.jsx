@@ -1,10 +1,14 @@
-import { createStore } from 'redux'
+import { createStore, applyMiddleware } from 'redux'
+import { createLogger }  from 'redux-logger'
+import thunkMiddleware from 'redux-thunk'
 import ajax from '../utils/ajax';
 import trigger from '../utils/trigger';
 import ls from '../utils/localStorage/storage';
 
 const _INIT_ACTION_TYPE = "@@redux/INIT";
 const ls_key = window.options.session_key + '__store_cart_state';
+
+const loggerMiddleware = createLogger();
 
 let ACTIONS = {
     SET: (state, action) => {
@@ -27,7 +31,7 @@ let ACTIONS = {
         return new_state;
     },
 
-    INIT: (state, action) => {
+    INIT: (state = INITIAL, action) => {
         let t_state = ls.get(ls_key);
         if (t_state) {
             state = JSON.parse(t_state);
@@ -35,8 +39,9 @@ let ACTIONS = {
 
         ls.on(ls_key, (value)=>{
             let data = JSON.parse(value);
-
             store.dispatch({type:'SET', data: data.cart});
+
+            state = data;
         });
 
         return state;
@@ -89,8 +94,7 @@ let ACTIONS = {
             state = ACTIONS['INIT'](state, action);
 
             if (!state.cart) {
-                state = INITIAL;
-                ACTIONS['FETCH'](state, action)
+                state = ACTIONS['FETCH'](state, action)
             }
         }
 
@@ -111,8 +115,10 @@ const INITIAL = {
 
 const store = createStore(
     (state, action) => (action && ACTIONS[action.type] ? ACTIONS[action.type](state, action) : ACTIONS['default'](state, action)),
-    {},
-    window.devToolsExtension && window.devToolsExtension()
+    applyMiddleware(
+        thunkMiddleware, // позволяет нам отправлять функции
+        loggerMiddleware // аккуратно логируем действия
+    )
 );
 
 export default store;

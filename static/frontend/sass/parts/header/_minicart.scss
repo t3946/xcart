@@ -1,15 +1,23 @@
 .minicart {
   position: relative;
+
+  &.active {
+    .minicart-items {
+      display: block;
+    }
+  }
 }
 
+
+
 .minicart-items {
+  //display: none;
   position: absolute;
   width: rem-calc(345);
-  height: rem-calc(420);
+  //height: rem-calc(420);
   background: #fff;
 
   right: rem-calc(-20);
-  //outline: 1px solid black;
   border: 1px solid #0e2431;
   border-top: none;
   padding-bottom: rem-calc(58);
@@ -19,11 +27,6 @@
     max-height: rem-calc(420 - 58);
     overflow-y: scroll;
     background-color: #e1e1e1;
-    //padding-right: rem-calc(20);
-
-    @include scrollbar() {
-      width: 20px; //--webkit-test
-    }
 
     .item {
       padding: rem-calc(20) 0 rem-calc(20) rem-calc(13);
@@ -37,9 +40,6 @@
 
       align-content: stretch;
 
-      //& > div {
-      //  flex: 0 0;
-      //}
 
       .image {
         align-self: center;
@@ -75,14 +75,9 @@
 
         align-content: center;
 
-        //& > div {
-        //  flex: 1 1;
-        //}
-
         .x {
           text-align: center;
           width: rem-calc(46);
-          //padding: 0 rem-calc(5)
         }
 
 
