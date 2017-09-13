@@ -144,7 +144,7 @@ if (isset($argv) && is_array($argv) && !empty($argv[1])) {
             $i = 1;
 
             while ($aProductsBatch = ProductModel::objects()
-                ->filter(['forsale' => 'Y','productcode' => 'ALV-MT37-GR', new QOr(['amazon_enabled' => 'Y', 'amazon_fba' => 'Y'])])
+                ->filter(['forsale' => 'Y', new QOr(['amazon_enabled' => 'Y', 'amazon_fba' => 'Y'])])
                 ->exclude(['missing_products__missing_productcode__isnull' => false])
                 ->paginate($i++, $max_products)
                 ->all())
