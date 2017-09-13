@@ -1,7 +1,48 @@
 import CountUp from 'countUp.js';
 import storeCart from '../../stores/StoreCart';
+import storeApp from '../../stores/StoreApp';
 
 (()=>{
+    let checkEnableMinicart = () => {
+        let state = storeApp.getState();
+        let stateCart = storeCart.getState();
+
+        if (stateCart.cart.quantity > 0) {
+            $('.minicart').addClass('enabled');
+        }
+        else {
+            storeApp.dispatch({type:'SET', data: {frontend: {
+                active: null,
+                darkness: false,
+            }}});
+
+            $('.minicart').removeClass('enabled');
+
+            if (state.frontend.active === 'cart') {
+                $('.minicart').removeClass('active');
+            }
+        }
+    };
+
+    checkEnableMinicart();
+
+    let unsubscribeCart = storeCart.subscribe(()=>{
+        checkEnableMinicart()
+    });
+
+    let unsubscribeApp = storeApp.subscribe(()=>{
+        let state = storeApp.getState();
+
+        if (state.frontend.active !== 'cart') {
+            $('.minicart').removeClass('active');
+
+            // storeApp.dispatch({type:'SET', data: {frontend: {
+            //     active: null,
+            //     darkness: false,
+            // }}});
+        }
+    });
+
     window['addToCart'] = (data, callback) => {
         storeCart.dispatch({type:'PUSH', action: 'ADD', callback:callback, data:{items: data}});
     };
@@ -64,19 +105,40 @@ import storeCart from '../../stores/StoreCart';
             }
 
         })
-        .on('store.cart.update', (e, data) => {
+        .on('update.cart.store', (e, data) => {
             let qNew = data.state.cart.quantity;
             let qPrev = data.prevState.cart.quantity;
 
-            if (qNew > 99) {
-                $('.mc_count').addClass('small');
-            }
-            else {
-                $('.mc_count').removeClass('small');
-            }
+            // if (qNew > 99) {
+            //     $('.mc_count').addClass('small');
+            // }
+            // else {
+            //     $('.mc_count').removeClass('small');
+            // }
 
             $('.mc_count').html(qNew);
 
             (new CountUp('desktop-cart-quantity', qPrev, qNew,0, 1, {useEasing: true})).start();
+
+        })
+        .on('click', '.minicart.enabled .cart_info', (e) => {
+            let $this = $('.minicart');
+
+            if ($this.hasClass('active')) {
+                $this.removeClass('active');
+                storeApp.dispatch({type:'SET', data: {frontend: {
+                    active: null,
+                    darkness:false,
+                }}});
+            }
+            else {
+                $this.addClass('active');
+                storeApp.dispatch({type:'SET', data: {frontend: {
+                    active: 'cart',
+                    darkness:true,
+                }}});
+            }
         });
+
+
 })();

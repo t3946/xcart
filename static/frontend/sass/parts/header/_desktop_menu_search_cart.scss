@@ -365,7 +365,8 @@ $default_height: rem-calc(50);
     };
 
     .cart_info {
-      @include active-triangle(5px, 5px);
+      //@include active-triangle(5px, 5px);
+
       width: 100%;
       text-align: center;
       cursor: pointer;

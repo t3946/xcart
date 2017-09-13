@@ -1,9 +1,42 @@
 .minicart {
   position: relative;
 
-  &.active {
-    .minicart-items {
-      display: block;
+  .text {
+    position: relative;
+
+    &:after {
+      position: absolute;
+      bottom: rem-calc(15);
+      left: 50%;
+      width: 0;
+      height: 2px;
+      content: "";
+      //transition: 0.25s;
+      transition: all .5s;
+      //background: rgba(245,245,245,0);
+      background: rgba(10,10,10,0);
+    }
+  }
+
+  &.enabled {
+    .cart_info {
+      @include active-triangle(6px, 6px);
+
+      .text {
+        &:after {
+          left: 0;
+          width: 100%;
+          background: rgb(10, 10, 10);
+        }
+      }
+    }
+
+
+
+    &.active {
+      .minicart-items {
+        display: block;
+      }
     }
   }
 }
@@ -11,11 +44,12 @@
 
 
 .minicart-items {
-  //display: none;
+  display: none;
   position: absolute;
   width: rem-calc(345);
   //height: rem-calc(420);
   background: #fff;
+  z-index: 100;
 
   right: rem-calc(-20);
   border: 1px solid #0e2431;

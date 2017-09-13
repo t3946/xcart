@@ -1,5 +1,7 @@
 // import MouseSpeed from './MouseSpeed';
 
+import storeApp from '../stores/StoreApp';
+
 export default class DepartmentMenu
 {
     constructor() {
@@ -7,6 +9,7 @@ export default class DepartmentMenu
         this.elemets = {};
         this.options = {
             hoverDelay: 1500,
+            hoverEnterDelay: 500,
             classes: {
                 'main-button': '.category-menu',
                 'menu-wrapper': '.category-menu-list-wrapper',
@@ -36,11 +39,34 @@ export default class DepartmentMenu
 
     _bind() {
         let self = this;
+        let unsubscribe = storeApp.subscribe(()=>{
+            let state = storeApp.getState();
 
-        this.elemets['button'].on('mouseenter touchstart', (e) => {
-            clearTimeout(this.timers['_hide']);
-            this._show_menu();
+            if ( state.frontend.header.active !== 'menu' ) {
+                this._hide();
+            }
         });
+
+        this.elemets['button']
+            .on('mouseenter touchstart', (e) => {
+                clearTimeout(this.timers['_hide']);
+                clearTimeout(this.timers['_show']);
+
+                this.timers['_show'] = setTimeout(()=>{
+                    this._show_menu();
+                }, this.options.hoverEnterDelay);
+            })
+            .on('click', (e)=>{
+                e.preventDefault();
+
+                if (this.elemets['button'].hasClass('is-active')) {
+                    this._hide_menu();
+                }
+                else {
+                    this._show_menu();
+                }
+
+            });
 
         this.elemets['container'].on('mouseenter touchstart', (e) => {
             clearTimeout(this.timers['_hide']);
@@ -51,7 +77,7 @@ export default class DepartmentMenu
 
             if ($(e.target).hasClass(str)) {
                 clearTimeout(this.timers['_hide']);
-                this._hide();
+                this._hide_menu();
             }
         });
 
@@ -65,14 +91,17 @@ export default class DepartmentMenu
         });
 
         this.elemets['button'].on('mouseleave', (e) => {
+            clearTimeout(this.timers['_show']);
+
             this.timers['_hide'] = setTimeout(()=> {
-                this._hide();
+                this._hide_menu();
             }, this.options.hoverDelay)
+
         });
 
         this.elemets['container'].on('mouseleave', (e) => {
             this.timers['_hide'] = setTimeout(()=> {
-                this._hide();
+                this._hide_menu();
             }, this.options.hoverDelay)
         });
 
@@ -87,11 +116,6 @@ export default class DepartmentMenu
             $('#' + $target.data('hover-toggle')).removeClass('hide');
             this.elemets['container'].addClass('submenu-active');
         });
-
-        $(document).on('click:shadow', (e)=>{
-            clearTimeout(this.timers['_hide']);
-            this._hide();
-        });
     }
 
     checkTouch() {
@@ -103,7 +127,7 @@ export default class DepartmentMenu
         this.elemets.wrapper.addClass('is-active');
         this.elemets.button.addClass('is-active');
 
-        $(document).trigger('show:dm');
+        this.storeMenuShow();
     }
 
     _hide_items() {
@@ -115,12 +139,41 @@ export default class DepartmentMenu
     }
 
     _hide() {
+        clearTimeout(this.timers['_hide']);
+        clearTimeout(this.timers['_show']);
+
         this.elemets.wrapper.addClass('hide');
         this.elemets.wrapper.removeClass('is-active');
         this.elemets.button.removeClass('is-active');
         this.elemets.container.removeClass('submenu-active');
         this._hide_items();
+    }
 
-        $(document).trigger('hide:dm');
+    _hide_menu() {
+        this._hide();
+        this.storeMenuHide();
+    }
+
+
+    storeMenuHide() {
+        storeApp.dispatch({type:'SET', data: {
+            frontend: {
+                darkness: false,
+                header: {
+                    active: null
+                }
+            }
+        }});
+    }
+
+    storeMenuShow() {
+        storeApp.dispatch({type:'SET', data: {
+            frontend: {
+                darkness: true,
+                header: {
+                    active: 'menu'
+                }
+            }
+        }});
     }
 }

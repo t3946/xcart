@@ -105,7 +105,8 @@ gulp.task('frontend:css', ['frontend:scss', 'frontend:css:raw'], function () {
         pipe = pipe.pipe(cssnano({
             preset: ['default'],
             discardComments: { removeAll: true, },
-            reduceIdents: false
+            reduceIdents: false,
+            zindex: false,
         }))
     }
 

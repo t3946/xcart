@@ -5,8 +5,10 @@ import ajax from '../utils/ajax';
 import trigger from '../utils/trigger';
 import ls from '../utils/localStorage/storage';
 
+import storeApp from './StoreApp';
+
 const _INIT_ACTION_TYPE = "@@redux/INIT";
-const ls_key = window.options.session_key + '__store_cart_state';
+const ls_key = storeApp.getState().options.session_key + '__store_cart_state';
 
 const loggerMiddleware = createLogger();
 
@@ -20,10 +22,10 @@ let ACTIONS = {
         let data = {state: new_state, prevState: {...state}};
 
         if (action.triggers === 'ignore') {
-            trigger('store.cart.fetch', data);
+            trigger('fetch.cart.store', data);
         }
         else {
-            trigger('store.cart.update', data);
+            trigger('update.cart.store', data);
         }
 
         ls.set(ls_key, JSON.stringify(new_state));
@@ -49,7 +51,7 @@ let ACTIONS = {
 
     FETCH: (state, action) => {
         ajax(options.urls.cart.get, {}, (data) => {
-            store.dispatch({type:'SET', data: data, triggers: 'ignore'});
+            store.dispatch({type:'SET', data: data});
         });
 
         return state;
@@ -57,23 +59,24 @@ let ACTIONS = {
 
     PUSH: (state, action) => {
         let url = null;
+        let app_state = storeApp.getState();
 
         switch (action.action) {
             case 'ADD': {
-                url = options.urls.cart.add;
+                url = app_state.options.urls.cart.add;
                 break;
             }
             case 'SET': {
-                url = options.urls.cart.set;
+                url = app_state.options.urls.cart.set;
                 break;
             }
             case 'DEL': {
-                url = options.urls.cart.del;
+                url = app_state.options.urls.cart.del;
                 break;
             }
             case 'GET':
             default:
-                url = options.urls.cart.get;
+                url = app_state.options.urls.cart.get;
         }
 
         if (url) {
@@ -117,7 +120,7 @@ const store = createStore(
     (state, action) => (action && ACTIONS[action.type] ? ACTIONS[action.type](state, action) : ACTIONS['default'](state, action)),
     applyMiddleware(
         thunkMiddleware, // позволяет нам отправлять функции
-        loggerMiddleware // аккуратно логируем действия
+        // loggerMiddleware // аккуратно логируем действия
     )
 );
 

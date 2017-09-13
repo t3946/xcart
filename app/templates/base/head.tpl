@@ -29,14 +29,16 @@
 
 
     <script type="text/javascript">
-        window['options'] = {
-            'session_key': '{$.sessionKey}',
-            'urls': {
-                cart: {
-                    add: '{url "cart:products:add"}',
-                    get: '{url "cart:products:get"}',
-                    set: '{url "cart:products:set"}',
-                    del: '{url "cart:products:del"}',
+        window['app'] = {
+            options: {
+                'session_key': '{$.sessionKey}',
+                'urls': {
+                    cart: {
+                        add: '{url "cart:products:add"}',
+                        get: '{url "cart:products:get"}',
+                        set: '{url "cart:products:set"}',
+                        del: '{url "cart:products:del"}',
+                    }
                 }
             }
         };
