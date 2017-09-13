@@ -63,7 +63,7 @@
             }
 
             table.group_product td div.info span {
-                line-height: 24px;
+                line-height: 28px;
                 vertical-align: bottom;
             }
 
