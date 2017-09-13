@@ -58,7 +58,7 @@ class AmazonInventoryStore extends BaseStore
                             if (array_key_exists($fnsku, $this->groupInventory)) {
 
                                 $this->groupInventory[$fnsku]->lis_TotalSupplyQuantity = max($this->groupInventory[$fnsku]->lis_TotalSupplyQuantity, $aAmazonFbaProduct->lis_TotalSupplyQuantity);
-                                $this->groupInventory[$fnsku]->lis_InStockSupplyQuantity = max($this->groupInventory[$fnsku]->lis_InStockSupplyQuantity, $aAmazonFbaProduct->lis_TotalSupplyQuantity);
+                                $this->groupInventory[$fnsku]->lis_InStockSupplyQuantity = max($this->groupInventory[$fnsku]->lis_InStockSupplyQuantity, $aAmazonFbaProduct->lis_InStockSupplyQuantity);
 
                             } else {
 
