@@ -3,7 +3,6 @@
 namespace Xcart\External_Marketplaces\Marketplaces;
 
 use CaponicaAmazonMwsComplete\ClientPack\MwsFeedAndReportClientPack;
-use MarketplaceWebService_Exception;
 use Modules\Amazon\Helpers\AmazonFbaFeedHelper;
 use Modules\Amazon\Stores\AmazonPoolStore;
 use Modules\Product\Models\ProductModel;
@@ -94,6 +93,7 @@ class Amazon extends StoreFrontMarketPlace
 
     private function submitFeed($feed, $type)
     {
+        $result = null;
         func_dump($feed);
         $feedHandle = @fopen('php://temp', 'rw+');
         fwrite($feedHandle, $feed);
@@ -101,7 +101,7 @@ class Amazon extends StoreFrontMarketPlace
         $amzPool = new AmazonPoolStore();
 
         try {
-            $amzPool->getFeedAndReportClientPack()
+            $result = $amzPool->getFeedAndReportClientPack()
                 ->callSubmitFeed($type, $feedHandle)
                 ->getSubmitFeedResult();
 
@@ -116,16 +116,18 @@ class Amazon extends StoreFrontMarketPlace
         }
 
         @fclose($feedHandle);
+
+        return $result;
     }
 
     private function submitPriceFeed($feed)
     {
-        $this->submitFeed($feed, MwsFeedAndReportClientPack::FEED_TYPE_PAI_PRICING);
+        return $this->submitFeed($feed, MwsFeedAndReportClientPack::FEED_TYPE_PAI_PRICING);
     }
 
     private function submitInventoryFeed($feed)
     {
-        $this->submitFeed($feed, MwsFeedAndReportClientPack::FEED_TYPE_PAI_INVENTORY);
+        return $this->submitFeed($feed, MwsFeedAndReportClientPack::FEED_TYPE_PAI_INVENTORY);
     }
 
     public function submitProductsBatch($debug_mode = 'N', $extra_log = 'N')
