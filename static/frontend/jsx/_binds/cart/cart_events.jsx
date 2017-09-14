@@ -102,12 +102,12 @@ import { hideAll, action } from "../../redusers/appHeadReduser";
             let qNew = data.state.cart.quantity;
             let qPrev = data.prevState.cart.quantity;
 
-            // if (qNew > 99) {
-            //     $('.mc_count').addClass('small');
-            // }
-            // else {
-            //     $('.mc_count').removeClass('small');
-            // }
+            if (qNew > 99) {
+                $('.mc_count').addClass('small');
+            }
+            else {
+                $('.mc_count').removeClass('small');
+            }
 
             $('.mc_count').html(qNew);
 

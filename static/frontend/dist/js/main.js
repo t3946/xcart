@@ -33556,6 +33556,12 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
         var qNew = data.state.cart.quantity;
         var qPrev = data.prevState.cart.quantity;
 
+        if (qNew > 99) {
+            $('.mc_count').addClass('small');
+        } else {
+            $('.mc_count').removeClass('small');
+        }
+
         $('.mc_count').html(qNew);
 
         new _countUp2.default('desktop-cart-quantity', qPrev, qNew, 0, 1, { useEasing: true }).start();

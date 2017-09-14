@@ -187,6 +187,7 @@ class CartController extends BaseCartController
 
         if ($model && !$model->isOutOfStock()) {
             $cart = $this->getCart();
+            $item = null;
             $inCart = 0;
 
             if ($cart->has($model)) {
@@ -194,23 +195,20 @@ class CartController extends BaseCartController
                 $inCart = $item->getQuantity();
             }
 
-            if ( $model->avail >= ($inCart + $quantity))
-            {
-                $cart->add($model, $quantity);
-            }
-            else {
-                $avail = $model->avail;
+            $tq = ($model->getActualQuantity($quantity + $inCart) - $inCart);
 
-                if ($cart->has($model)) {
-                    $item = $cart->get($model);
-                    $avail -= $item->getQuantity();
+            if ($tq) {
+                if ($item) {
+                    $item->setQuantity($tq + $inCart);
+                }
+                else {
+                    $cart->add($model, $tq);
                 }
 
-                if ($avail > 0) {
-                    $cart->add($model, $avail);
+                if ($tq != $quantity) {
+                    return $tq;
                 }
 
-                return $avail;
             }
 
             return true;
@@ -219,7 +217,7 @@ class CartController extends BaseCartController
         return false;
     }
 
-    protected function setInternal($uniqueId, $quantity)
+    protected function setInternal($uniqueId, $quantity = 1)
     {
         /** @var ProductModel $model */
         $model = ProductModel::objects()->get(['pk' => $uniqueId]);
@@ -230,17 +228,20 @@ class CartController extends BaseCartController
             if ($cart->has($model)) {
                 $item = $cart->get($model);
 
-                if ( $model->avail >= $quantity) {
-                    $item->setQuantity($quantity);
-                }
-                else {
-                    $item->setQuantity($model->avail);
+                $tq = $model->getActualQuantity($quantity);
+
+                if ($tq) {
+                    $item->setQuantity($tq);
+
+                    if ($tq != $quantity) {
+                        return $tq;
+                    }
                 }
 
                 return true;
             }
         }
 
-        return false;
+        return $this->addInternal($uniqueId, $quantity);
     }
 }

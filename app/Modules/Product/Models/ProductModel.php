@@ -304,4 +304,23 @@ class ProductModel extends AutoMetaModel implements ICartItem
 
         return $t;
     }
+
+    public function getActualQuantity($quantity)
+    {
+        $tq = $quantity;
+        $min = $this->min_amount;
+
+        if ($this->mult_order_quantity == 'Y' && $min > 1) {
+            $tq = ceil($tq / $min) * $min;
+        }
+        else if ($tq < $min) {
+            $tq = $min;
+        }
+
+        if ($tq > $this->avail) {
+            $tq = $this->avail;
+        }
+
+        return $tq;
+    }
 }
