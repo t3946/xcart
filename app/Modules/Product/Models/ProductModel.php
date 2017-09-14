@@ -220,6 +220,10 @@ class ProductModel extends AutoMetaModel implements ICartItem
 
     public function isSaleSticker()
     {
+        if ($this->isOutOfStock()) {
+            return false;
+        }
+
         $fp = $this->getFrontendPrice();
 
         return ($this->list_price > ($fp + $fp * .3));

@@ -24,9 +24,9 @@
                     <span class="splash splash-sale show-for-large">Sale</span>
                 {/if}
 
-                {if $item->isOutOfStock()}
-                    <span class="splash splash-out">Out of stock</span>
-                {/if}
+                {*{if $item->isOutOfStock()}*}
+                    {*<span class="splash splash-out">Out of stock</span>*}
+                {*{/if}*}
 
             </a>
             <a href="#" class="button yellow-white button-quick-view hide waves">quick view</a>
