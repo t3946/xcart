@@ -36,7 +36,9 @@ if ($config[LOG_CATEGORY] == "Y") {
     $oMail->subject = sprintf('Attention! Xcart cron %s Already launched', LOG_CATEGORY);
     $oMail->body = LOG_CATEGORY . ' already launched';
     $oMail->sendEmail();
-    die("Already launched");
+    if (isset($argv) && !in_array('--force-flag', $argv)) {
+        die("Already launched"); // ################################
+    }
 }
 
 $xcart_states_US = func_query_param(/** @lang MySQL */

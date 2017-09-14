@@ -104,31 +104,39 @@ function cidev_save_payment(paymentid, checkout_step){
 </script>
 
 <table cellspacing="0" cellpadding="2" width="100%">
-{foreach from=$payment_methods item=payment}
-{if $show_only_phone_method ne "Y" || $payment.paymentid eq "4"}
-<tr{cycle values=' class="TableSubHead", '}{if $payment.is_cod eq "Y"} id="cod_tr{$payment.paymentid}"{/if}>
-{* <td width="1"><input type="radio" name="paymentid" id="pm{$payment.paymentid}" value="{$payment.paymentid}"{if $payment.is_default eq "1"} checked="checked"{/if} /></td> *}
-{if $show_only_phone_method eq "Y"}
-<input type="hidden" name="paymentid" value="{$payment.paymentid}" />
-{else}
-<td width="1"><input type="radio" name="paymentid" onclick="cidev_save_payment('{$payment.paymentid}', '{$checkout_step}');" id="pm{$payment.paymentid}" value="{$payment.paymentid}"{if ($payment.paymentid eq $cart.paymentid && empty($purchase_order_selected))|| (!empty($purchase_order_selected) && $payment.payment_method=='Purchase Order')} checked="checked"{/if} /></td>
-{/if}
-{if $payment.processor eq "ps_paypal_pro.php"}
-<td colspan="2">
-<table cellpadding="0" cellspacing="0"><tr>
-	<td>{include file="payments/ps_paypal_pro_express_checkout.tpl" paypal_express_link="logo"}</td>
-	<td>&nbsp;&nbsp;</td>
-	<td><label for="pm{$payment.paymentid}">{include file="payments/ps_paypal_pro_express_checkout.tpl" paypal_express_link="text"}</label></td>
-</tr>
-</table>
-</td>
-{else}
-<td width="20%" nowrap="nowrap" style="padding-right: 15px;"><label for="pm{$payment.paymentid}"><b>{$payment.payment_method}</b></label></td>
-<td width="80%">{$payment.payment_details}</td>
-{/if}
-</tr>
-{/if}
-{/foreach}
+    {foreach from=$payment_methods item=payment}
+        {if $show_only_phone_method ne "Y" || $payment.paymentid eq "4"}
+			<tr{cycle values=' class="TableSubHead", '}{if $payment.is_cod eq "Y"} id="cod_tr{$payment.paymentid}"{/if}>
+                {* <td width="1"><input type="radio" name="paymentid" id="pm{$payment.paymentid}" value="{$payment.paymentid}"{if $payment.is_default eq "1"} checked="checked"{/if} /></td> *}
+                {if $show_only_phone_method eq "Y"}
+					<input type="hidden" name="paymentid" value="{$payment.paymentid}"/>
+                {else}
+					<td width="1"><input type="radio" name="paymentid"
+										 onclick="cidev_save_payment('{$payment.paymentid}', '{$checkout_step}');"
+										 id="pm{$payment.paymentid}"
+										 value="{$payment.paymentid}"{if ($payment.paymentid eq $cart.paymentid && empty($purchase_order_selected))|| (!empty($purchase_order_selected) && $payment.payment_method=='Purchase Order')} checked="checked"{/if} />
+					</td>
+                {/if}
+                {if $payment.processor eq "ps_paypal_pro.php"}
+					<td colspan="2">
+						<table cellpadding="0" cellspacing="0">
+							<tr>
+								<td>{include file="payments/ps_paypal_pro_express_checkout.tpl" paypal_express_link="logo"}</td>
+								<td>&nbsp;&nbsp;</td>
+								<td>
+									<label for="pm{$payment.paymentid}">{include file="payments/ps_paypal_pro_express_checkout.tpl" paypal_express_link="text"}</label>
+								</td>
+							</tr>
+						</table>
+					</td>
+                {else}
+					<td width="20%" nowrap="nowrap" style="padding-right: 15px;"><label
+								for="pm{$payment.paymentid}"><b>{$payment.payment_method}</b></label></td>
+					<td width="80%">{$payment.payment_details}</td>
+                {/if}
+			</tr>
+        {/if}
+    {/foreach}
 </table>
 
 </td>

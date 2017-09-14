@@ -618,7 +618,7 @@ function check_r_fields(){
 
 
       {foreach from=$product.orig_product_classes item=item key=key}
-        {if $item.options ne ""}
+        {if $item.options ne "" && $item.avail}
           <br /> {$item.classtext}
           <select name="items[{$product.itemid}][classid_optionid][{$item.classid}]" {if $refunded_option_found eq "Y" || $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}disabled="disabled"{/if}>
               {if (isset($product.extra_data.product_options[$item.classid].option_name) && !$product.extra_data.product_options[$item.classid].optionid|array_key_exists:$item.options)}
@@ -796,7 +796,7 @@ Cost to us accurate
   )}
     <td colspan="2" align="center">
       <input data-orderid="{$oOrderGroup->getOrderId()}" data-manufacturerid="{$oOrderGroup->getManufacturerId()}" id="submit_amazon_shipment" name="submit_amazon_shipment" type="button"  value="{if ($oOrderGroup->getField('cb_status') =='AP' && $order_transactions_totals.authorized_PLUS_captured_totals == $oOrder->getOrderTotalGross())}Capture & {/if}Ship now by Amazon" />
-      <select {if $oOrderShipping->isAmazonShipping()} disabled="disabled" {/if}style="margin-top: 7px; width: 88%;" name="amazon_shipping_method_select" id="amazon_shipping_method_select">
+      <select {if $oOrderShipping->isAmazonShipping() && $oOrder->amazon_fulfillment_channel == 'AFN'} disabled="disabled" {/if}style="margin-top: 7px; width: 88%;" name="amazon_shipping_method_select" id="amazon_shipping_method_select">
         <option value=""></option>
         {html_options options=$aAmazonShippingMethods selected=$oOrderGroup->getShippingMethodName()}
       </select>

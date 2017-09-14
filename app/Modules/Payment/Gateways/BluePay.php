@@ -130,4 +130,9 @@ class BluePay extends Gateway
     {
         // TODO: Implement complete() method.
     }
+
+    public static function isPartiallyCaptureEnabled()
+    {
+        return false;
+    }
 }

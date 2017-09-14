@@ -3,6 +3,7 @@ namespace Modules\Product\Models;
 
 use Mindy\QueryBuilder\Expression;
 use Modules\Amazon\Models\AmazonFbaMissingSkuModel;
+use Modules\Amazon\Models\AmazonProductsFieldsModel;
 use Modules\Brand\Models\BrandModel;
 use Modules\Distributor\Models\DistributorModel;
 use Xcart\App\Orm\AutoMetaModel;
@@ -13,6 +14,7 @@ use Xcart\App\Orm\Fields\HasManyField;
 use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Fields\ManyToManyField;
 use Xcart\App\Orm\Fields\UnixTimestampField;
+use Xcart\App\Orm\Fields\OneToOneField;
 use Xcart\App\Traits\DataModelTrait;
 use Xcart\Product;
 
@@ -146,6 +148,11 @@ class ProductModel extends AutoMetaModel
                 'modelClass' => PricingModel::className(),
                 'link' => ['productid' => 'productid']
             ],
+            'amazon_fields' => [
+                'class' => OneToOneField::className(),
+                'modelClass' => AmazonProductsFieldsModel::className(),
+                'link' => ['productid' => 'productid']
+            ],
         ];
     }
 
@@ -162,5 +169,10 @@ class ProductModel extends AutoMetaModel
     public function isGroup()
     {
         return ($this->productid == $this->group_root);
+    }
+
+    public function isAmazonFBAEnabled()
+    {
+        return $this->amazon_fba == 'Y';
     }
 }

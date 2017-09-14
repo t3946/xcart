@@ -26,7 +26,7 @@ class GMC extends StoreFrontMarketPlace
     public function addProductToBatch(ProductModel $oProduct, $update_type, $googleOneRow = "", $sExtraLog = "N")
     {
         if ($this->checkProductExcludedMarketPlace($oProduct->productid) && $this->checkMarketplaceRestrictions($oProduct, $update_type)) {
-            if ($update_type == "1" || $update_type == "1,2" || (($update_type == "2" && $oProduct->getField('forsale') == "N"))) {
+            if ($update_type == "1" || $update_type == "1,2" || (($update_type == "2" && $oProduct->forsale == "N"))) {
                 $batchid = $this->iProductsBatchCount;
                 $count_bproducts = count($this->aProducts);
                 $this->aProducts[$count_bproducts]["productid"] = $oProduct->productid;
@@ -34,7 +34,7 @@ class GMC extends StoreFrontMarketPlace
                 $this->aProducts[$count_bproducts]["product_info"] = $googleOneRow;
                 $this->iProductsBatchCount++;
 
-            } elseif ($update_type == "2" && $oProduct->getField('forsale') == "Y") {
+            } elseif ($update_type == "2" && $oProduct->forsale == "Y") {
                 $batchid = $this->iInventoryBatchCount;
                 $count_binventory = count($this->aInventory);
                 $this->aInventory[$count_binventory]["productid"] = $oProduct->productid;

@@ -3,19 +3,12 @@
 namespace Modules\Order\Helpers;
 
 
-use Modules\Order\Models\OrderModel;
-use Modules\Order\Models\OrderStatusModel;
 use Modules\Order\Models\OrderTransactionModel;
-use Modules\Order\Models\TransactionLogModel;
-use Modules\Order\OrderModule;
 use Modules\Payment\Gateways\Gateway;
-use Modules\Payment\Helpers\PaymentHelper;
-use Modules\Payment\Models\PaymentMethodModel;
 use Xcart\App\Main\Xcart;
 
 class OrderTransactionHelper
 {
-
 
     /**
      * @param Gateway $gw
@@ -66,7 +59,6 @@ class OrderTransactionHelper
         return $response;
     }
 
-
     /**
      * @param string $method
      * @param array $params
@@ -96,51 +88,89 @@ class OrderTransactionHelper
         return [$model, $gw];
     }
 
-    public static function getOrderTransactionsGroupsValues(OrderModel $order)
+    /**
+     * @param OrderTransactionModel[] $models
+     * @return float
+     */
+    public static function getToCapture($models)
     {
-        $trs = [];
-        if ($order) {
-            foreach ($order->transactions as $transaction) {
-                $trs[strtolower($transaction->transaction_status)] += $transaction->transaction_amount;
-            }
-        }
-
-        return [
-            'authorized_PLUS_captured_totals' => floatval(
-                $trs[OrderTransactionModel::STATUS_COMPLETED]
-                + $trs[OrderTransactionModel::STATUS_AUTHORIZED]
-                + $trs[OrderTransactionModel::STATUS_CAPTURED]
-                + $trs[OrderTransactionModel::STATUS_PENDING]
-                + $trs[OrderTransactionModel::STATUS_PARTIALLY_RUFUNDED]
-            ),
-            'void_total' => floatval($trs[OrderTransactionModel::STATUS_VOIDED]),
-            'authorized_total' => floatval($trs[OrderTransactionModel::STATUS_AUTHORIZED] + $trs[OrderTransactionModel::STATUS_PENDING]),
-            'captured_total' => floatval($trs[OrderTransactionModel::STATUS_COMPLETED] + $trs[OrderTransactionModel::STATUS_PARTIALLY_RUFUNDED])
-        ];
+        return static::getAuthorized($models) + static::getAuthorized($models, true);
     }
 
     /**
-     * @param OrderModel $order
+     * @param OrderTransactionModel[] $models
      * @return float
      */
-    public static function getCaptureAmountAvail(OrderModel $order)
+    public static function getCaptured($models)
     {
-        $result = 0;
-        if ($order) {
-            foreach ($order->transactions as $transaction) {
-                if ($transaction->type == OrderTransactionModel::TYPE_AUTHORIZATION
-                    && in_array($transaction->transaction_status,
-                        [
-                            OrderTransactionModel::STATUS_AUTHORIZED,
-                            OrderTransactionModel::STATUS_PENDING,
-                            OrderTransactionModel::STATUS_PARTIALLY_CAPTURED,
+        return round(array_sum(array_map(function ($model) {
+            /** @var OrderTransactionModel $model */
+            $value = 0;
+            if ($model->type == OrderTransactionModel::TYPE_CAPTURE && in_array($model->transaction_status,
+                    [
+                        OrderTransactionModel::STATUS_COMPLETED,
+                        OrderTransactionModel::STATUS_PARTIALLY_RUFUNDED,
+                    ]
+                )) {
+                $value = $model->getAvailAmount();
+            }
+            return $value;
+        }, $models)), 2);
 
-                        ])) {
-                    $result += $transaction->transaction_amount;
+    }
+
+    /**
+     * @param OrderTransactionModel[] $models
+     * @param bool $isAdditional
+     * @return float
+     */
+    public static function getAuthorized($models, $isAdditional = false)
+    {
+        return round(array_sum(array_map(function ($model) use ($isAdditional) {
+            /** @var OrderTransactionModel $model */
+            $value = 0;
+            if ($model->type == OrderTransactionModel::TYPE_AUTHORIZATION && !in_array($model->transaction_status,
+                    [
+                        OrderTransactionModel::STATUS_FAILED,
+                        OrderTransactionModel::STATUS_VOIDED,
+                    ]
+                ))
+            {
+                $value = $model->getAvailAmount();
+
+                if (!Gateway::getGateway($model->payment_method_model->processor)->isPartiallyCaptureEnabled()) {
+                    if ($value < $model->transaction_amount) {
+                        $value = 0;
+                    }
+                }
+
+                if ($isAdditional) {
+                    if (($payment = $model->payment_method_model) && $payment->maximum_re_authorization_multiplier > 0) {
+                        $value = min(
+                            $payment->maximum_re_authorization_increase, $value * $payment->maximum_re_authorization_multiplier - $value
+                        );
+                    } else {
+                        $value = 0;
+                    }
                 }
             }
-            /**TODO +15% Paypal capture amount */
+            return $value;
+        }, $models)), 2);
+
+    }
+
+    /**
+     * @param OrderTransactionModel[] $models
+     * @return bool
+     */
+    public static function isPartiallyCaptureEnabled($models)
+    {
+        /** @var bool $result */
+        $result = true;
+
+        foreach($models as $model) {
+            $result = $result & Gateway::getGateway($model->payment_method_model->processor)->isPartiallyCaptureEnabled();
         }
-        return $result;
+        return $result ;
     }
 }

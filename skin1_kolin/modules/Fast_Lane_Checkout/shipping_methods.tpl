@@ -465,19 +465,20 @@ Use my trucking account #
 	{/foreach}
 
 {if $found_any_shipping ne "Y" and $need_shipping}
-<font class="ErrorMessage">
-{if $v.count_shipping_rates_for_canada eq "0" && $userinfo.s_country eq "CA"}
-	{$lng.lbl_we_dont_ship_to_Canada_checkout}
-	{assign var="disable_continue" value="Y"}
-{else}
-	{if $userinfo.s_country ne "US"}
-		{$lng.lbl_we_ship_to_US_only}
-	{else}
-		{$lng.lbl_no_shipping_for_location}
-	{/if}
-{/if}
-</font><br />
-<br />
+    <span class="ErrorMessage">
+    {if $v.count_shipping_rates_for_canada eq "0" && $userinfo.s_country eq "CA"}
+        {$lng.lbl_we_dont_ship_to_Canada_checkout}
+        {assign var="disable_continue" value="Y"}
+    {else}
+    	{if $userinfo.s_country ne "US"}
+        	The items from this warehouse can only be shipped to a {$shipping_groups.$k.shipping_countries} address. Please remove these items from your shopping cart before continuing.
+		{else}
+            {$lng.lbl_no_shipping_for_location}
+		{/if}
+    {/if}
+    </span>
+    <br/>
+    <br/>
 {/if}
 
 <br /><br />

@@ -26,7 +26,6 @@ if ($orderModel = OrderModel::objects()->get(['orderid' => $orderid])) {
 
     $smarty->assign("order_transactions", $orderModel->transactions->filter(['parent_id__isnull' => true])->all());
     $smarty->assign("transactions_log", $orderModel->transactions_log->order(['-id']));
-    $smarty->assign("order_transactions_totals", OrderTransactionHelper::getOrderTransactionsGroupsValues($orderModel));
     $smarty->assign("count_shipping_groups", $orderModel->groups->count());
     $smarty->assign("user_login",  Xcart::app()->user->login);
 

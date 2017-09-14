@@ -6,6 +6,7 @@ namespace Modules\Payment\Interfaces;
 interface GatewayInterface
 {
     public static function getProcessorName();
+    public static function isPartiallyCaptureEnabled();
     public function init();
 
     /**
