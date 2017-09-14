@@ -35,7 +35,7 @@ class MwsFeedAndReportClient extends MwsFeedAndReportClientPack implements Throt
             self::PARAM_MARKETPLACE_ID_LIST => array('Id' => $this->marketplaceId),
             self::PARAM_MERCHANT            => $this->sellerId,
         ];
-        return self::throttledCall($this, self::METHOD_SUBMIT_FEED, $parameters, 1);
+        return CaponicaClientPack::throttledCall($this, self::METHOD_SUBMIT_FEED, $parameters, 1);
     }
 
     public function initThrottleManager() {
@@ -48,38 +48,5 @@ class MwsFeedAndReportClient extends MwsFeedAndReportClientPack implements Throt
 
     public function getThrottleManager() {
         return $this->throttleManager;
-    }
-
-    public static function throttledCall(ThrottleAwareClientPackInterface $clientPack, $method, $options, $weight=null) {
-        try {
-            self::snooze($clientPack->getThrottleManager()->snoozeRequiredBeforeNewRequest($method, $weight));
-            $clientPack->getThrottleManager()->addRequestLogForMethod($method, $weight);
-            return $clientPack->$method($options);
-        } catch (\Exception $e) {
-            if (method_exists($e, 'getErrorCode') && ('RequestThrottled' == $e->getErrorCode() || 'QuotaExceeded' == $e->getErrorCode())) {
-                echo "\nThe request was throttled ".$e->getErrorCode();
-                $snoozeLength = $clientPack->getThrottleManager()->getRestoreInterval($method, $weight);
-                $clientPack->getThrottleManager()->exhaustRequestQuotaForMethod($method);
-                self::snooze(ceil($snoozeLength) * 2); // Double the normal snooze since we bounced off the server limit
-                    // try again. If there's another exception it will bubble up to the caller.
-                return self::throttledCall($clientPack, $method, $options, $weight);
-
-            }
-            throw $e;
-        }
-    }
-
-    /**
-     * @param int|float $snoozeLength
-     */
-    private static function snooze($snoozeLength) {
-        if ($snoozeLength > 0) {
-            echo "\nSnoozing for $snoozeLength seconds";
-            if (is_int($snoozeLength)) {
-                sleep($snoozeLength);
-            } else {
-                usleep($snoozeLength * 1000000);
-            }
-        }
     }
 }

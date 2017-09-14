@@ -90,52 +90,44 @@ class Amazon extends StoreFrontMarketPlace
         $this->setInventoryBatchCount(0)->setInventory([]);
     }
 
-    private function submitPriceFeed($feed)
+    private function submitFeed($feed, $type)
     {
+        func_dump($feed);
+        $feedHandle = @fopen('php://temp', 'rw+');
+        fwrite($feedHandle, $feed);
+        rewind($feedHandle);
+        $amzPool = new AmazonPoolStore();
+
         try {
-            func_dump($feed);
-            $feedHandle = @fopen('php://temp', 'rw+');
-            fwrite($feedHandle, $feed);
-            rewind($feedHandle);
-            $amzPool = new AmazonPoolStore();
-            $result = $amzPool->getFeedAndReportClientPack()
-                ->callSubmitFeed(MwsFeedAndReportClientPack::FEED_TYPE_PAI_PRICING, $feedHandle)
+            $amzPool->getFeedAndReportClientPack()
+                ->callSubmitFeed($type, $feedHandle)
                 ->getSubmitFeedResult();
-            @fclose($feedHandle);
+
         } catch (\Exception $e) {
             if (method_exists($e, 'getErrorCode')) {
                 $error_code = $e->getErrorCode();
+                if ('RequestThrottled' == $e->getErrorCode() || 'QuotaExceeded' == $e->getErrorCode()) {
+                    @fclose($feedHandle);
+                    func_backprocess_log('incremental feeds', $e->getMessage(). " - ". $error_code);
+                    $this->submitFeed($feed, $type);
+                }
             } else {
                 $error_code = $e->getCode();
+                func_backprocess_log('incremental feeds', $e->getMessage(). " - ". $error_code);
             }
-            print("\n".$error_code);
-            print("\n".$e->getMessage());
-            func_backprocess_log('incremental feeds', $e->getMessage(). " - ". $error_code);
         }
+
+        @fclose($feedHandle);
+    }
+
+    private function submitPriceFeed($feed)
+    {
+        $this->submitFeed($feed, MwsFeedAndReportClientPack::FEED_TYPE_PAI_PRICING);
     }
 
     private function submitInventoryFeed($feed)
     {
-        try {
-            func_dump($feed);
-            $feedHandle = @fopen('php://temp', 'rw+');
-            fwrite($feedHandle, $feed);
-            rewind($feedHandle);
-            $amzPool = new AmazonPoolStore();
-            $result = $amzPool->getFeedAndReportClientPack()
-                ->callSubmitFeed(MwsFeedAndReportClientPack::FEED_TYPE_PAI_INVENTORY, $feedHandle)
-                ->getSubmitFeedResult();
-            @fclose($feedHandle);
-        } catch (\Exception $e) {
-            if (method_exists($e, 'getErrorCode')) {
-                $error_code = $e->getErrorCode();
-            } else {
-                $error_code = $e->getCode();
-            }
-            print("\n".$error_code);
-            print("\n".$e->getMessage());
-            func_backprocess_log('incremental feeds', $e->getMessage(). " - ". $error_code);
-        }
+        $this->submitFeed($feed, MwsFeedAndReportClientPack::FEED_TYPE_PAI_INVENTORY);
     }
 
     public function submitProductsBatch($debug_mode = 'N', $extra_log='N') {
