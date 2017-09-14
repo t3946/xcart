@@ -38,22 +38,15 @@ class Amazon extends StoreFrontMarketPlace
                     (intval($product->amazon_fba_avail) > 0 || $product->getAmazonFBAStockReservedTransfers() > 0) &&
                     !in_array($product->amazon_fields->prevent_selling_on_amazon, ['FBA', 'MFN']))
                 {
-                    $items[] = [
+                    $item = [
                         'sku' => $product->productcode,
                         'channel' => 'AFN',
                         'price' => $price,
                         'min_price' => $min_price
                     ];
-                    foreach ($product->missing_products as $missing) {
-                        $items[] = [
-                            'sku' => $missing->missing_productcode,
-                            'channel' => 'AFN',
-                            'price' => $price,
-                            'min_price' => $min_price
-                        ];
-                    }
+
                 } else {
-                    $items[] = [
+                    $item = [
                         'sku' => $product->productcode,
                         'channel' => 'MFN',
                         'quantity' => $product->getAmazonQuantity(),
@@ -61,6 +54,16 @@ class Amazon extends StoreFrontMarketPlace
                         'price' => $price,
                         'min_price' => $min_price
                     ];
+                }
+
+                $items[] = $item;
+
+                foreach ($product->missing_products as $missing) {
+                    $items[] = array_merge(
+                        [
+                            'sku' => $missing->missing_productcode
+                        ], $item
+                    );
                 }
             }
         }
