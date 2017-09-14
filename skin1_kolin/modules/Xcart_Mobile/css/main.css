@@ -1931,3 +1931,175 @@ body.xpc_iframe,
   font-weight: bold;
   color: #000000;
 }
+
+table.group_product {
+  border-collapse: collapse;
+}
+
+table.group_product th {
+  font-size: 14px;
+  font-weight: inherit;
+}
+
+table.group_product td.title {
+  text-align: left;
+  padding-left: 5px;
+}
+
+table.group_product td, table.group_product td div {
+  font-size: 14px;
+}
+
+table.group_product td div.info {
+  text-align: left;
+  font-size: 11px;
+  margin-top: 4px;
+}
+
+table.group_product td div.info.least {
+  clear: left;
+}
+
+table.group_product td div.info .icon {
+  display: inline-block;
+  text-indent: -9999px;
+  width: 18px;
+  height: 18px;
+}
+
+table.group_product td div.info.clock .icon {
+  background: url(../../../images/group/out_of_stock.svg) no-repeat;
+}
+
+table.group_product td div.info.least .icon {
+  background: url(../../../images/group/least.svg) no-repeat;
+}
+
+table.group_product td div.info.mult .icon {
+  background: url(../../../images/group/mult.svg) no-repeat;
+}
+
+table.group_product td div.info span {
+  line-height: 24px;
+  vertical-align: bottom;
+}
+
+table.group_product td div.info span.title {
+  color: red;
+}
+
+table.group_product td div.info {
+}
+
+table.group_product td div.info.clock {
+  text-align: left;
+}
+
+table.group_product td div.info.notify {
+  margin: 0 10px;
+}
+
+table.group_product td div.info.notify .subline {
+  line-height: 18px;
+}
+
+table.group_product td div.info.notify .subline.subscribe {
+  color: #065B94;
+  cursor: pointer;
+  text-decoration: underline;
+  text-decoration-style: dotted;
+}
+
+table.group_product td span.subline {
+  color: #5D5B5C;
+  font-size: 11px;
+}
+
+table.group_product td .clock span.subline {
+  margin-left: 10px;
+}
+
+table.group_product .extended {
+  min-width: 100px;
+  margin-left: 105px;
+  line-height: 30px;
+}
+
+table.group_product .extended span {
+  display: none;
+}
+
+table.group_product .extended span.value, table.group_product .extended span.value span {
+  display: inline;
+}
+
+table.group_product img {
+  width: 60px;
+}
+
+table.group_product .sku > a {
+  color: #28842F !important;
+  text-decoration: none;
+}
+
+table.group_product .sku > a:hover {
+  text-decoration: underline;
+}
+
+table.group_product td.strike {
+  color: #5D5B5C;
+  text-decoration: line-through;
+}
+
+table.group_product, table.group_product th, table.group_product td {
+  border: 2px solid #B4B4B4;
+  text-align: center;
+}
+
+table.subtotal .subtotal_class2 {
+  display: none;
+}
+
+table.subtotal .subtotal_class1 {
+  margin-right: 16px;
+}
+
+table.subtotal td.sub {
+  height: 30px;
+}
+
+table.group_product div.quantity {
+  width: 105px;
+  height: 30px;
+  float: left;
+}
+
+table.group_product .notify_form {
+  display: none;
+}
+
+table.group_product .notify_form .email {
+  margin-bottom: 10px;
+}
+
+table.group_product .notify_form .email input {
+  border: solid 1px #dacf9c;
+}
+
+#add_cart_group.disable {
+  pointer-events: none;
+  cursor: pointer;
+}
+
+.btn_atcart_big {
+  cursor: pointer;
+}
+
+.full_product_cell .seal {
+  margin-top: 20px;
+}
+
+.full_product_cell .full_line_info {
+  color: #5D5B5C;
+  padding: 5px 10px;
+}
