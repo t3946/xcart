@@ -1,17 +1,10 @@
 import storeApp from "../stores/StoreApp";
+import {hideAll} from '../redusers/appHeadReduser';
 
-$('.shadow').on('click touchstart', ()=> {
-    storeApp.dispatch({type:'SET', data: {
-        frontend: {
-            darkness: false,
-            header: {
-                active: null,
-            }
-        }
-    }});
-});
 
 (()=>{
+    $('.shadow').on('click touchstart', hideAll);
+
     let unsubscribe = storeApp.subscribe(()=>{
         let state = storeApp.getState();
 

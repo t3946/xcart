@@ -2,25 +2,23 @@ import CountUp from 'countUp.js';
 import storeCart from '../../stores/StoreCart';
 import storeApp from '../../stores/StoreApp';
 
+import { hideAll, action } from "../../redusers/appHeadReduser";
+
 (()=>{
+    let $minicart = $('.minicart');
+
     let checkEnableMinicart = () => {
-        let state = storeApp.getState();
+        // let state = storeApp.getState();
         let stateCart = storeCart.getState();
 
         if (stateCart.cart.quantity > 0) {
-            $('.minicart').addClass('enabled');
+            $minicart.addClass('enabled');
         }
         else {
-            storeApp.dispatch({type:'SET', data: {frontend: {
-                darkness: false,
-                header: { active: null, }
-            }}});
+            hideAll();
 
-            $('.minicart').removeClass('enabled');
-
-            if (state.frontend.active === 'cart') {
-                // $('.minicart').removeClass('active');
-            }
+            $minicart.removeClass('enabled');
+            $minicart.removeClass('active');
         }
     };
 
@@ -30,13 +28,8 @@ import storeApp from '../../stores/StoreApp';
     let unsubscribeApp = storeApp.subscribe(()=>{
         let state = storeApp.getState();
 
-        if (state.frontend.active !== 'cart') {
-            $('.minicart').removeClass('active');
-
-            // storeApp.dispatch({type:'SET', data: {frontend: {
-            //     active: null,
-            //     darkness: false,
-            // }}});
+        if (state.frontend.header.active !== 'cart') {
+            $minicart.removeClass('active');
         }
     });
 
@@ -119,27 +112,15 @@ import storeApp from '../../stores/StoreApp';
 
         })
         .on('click', '.minicart.enabled .cart_info', (e) => {
-            let $this = $('.minicart');
+            e.preventDefault();
 
-            console.log(123);
-
-            if ($this.hasClass('active')) {
-                $this.removeClass('active');
-                storeApp.dispatch({type:'SET', data: {frontend: {
-                    darkness:false,
-                    header: {
-                        active: null,
-                    }
-                }}});
+            if ($minicart.hasClass('active')) {
+                $minicart.removeClass('active');
+                hideAll()
             }
             else {
-                $this.addClass('active');
-                storeApp.dispatch({type:'SET', data: {frontend: {
-                    darkness:true,
-                    header: {
-                        active: 'cart',
-                    }
-                }}});
+                $minicart.addClass('active');
+                action('cart');
             }
         });
 

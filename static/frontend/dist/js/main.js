@@ -33466,24 +33466,23 @@ var _StoreApp = __webpack_require__(138);
 
 var _StoreApp2 = _interopRequireDefault(_StoreApp);
 
+var _appHeadReduser = __webpack_require__(139);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 (function () {
+    var $minicart = $('.minicart');
+
     var checkEnableMinicart = function checkEnableMinicart() {
-        var state = _StoreApp2.default.getState();
         var stateCart = _StoreCart2.default.getState();
 
         if (stateCart.cart.quantity > 0) {
-            $('.minicart').addClass('enabled');
+            $minicart.addClass('enabled');
         } else {
-            _StoreApp2.default.dispatch({ type: 'SET', data: { frontend: {
-                        darkness: false,
-                        header: { active: null }
-                    } } });
+            (0, _appHeadReduser.hideAll)();
 
-            $('.minicart').removeClass('enabled');
-
-            if (state.frontend.active === 'cart') {}
+            $minicart.removeClass('enabled');
+            $minicart.removeClass('active');
         }
     };
 
@@ -33493,8 +33492,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
     var unsubscribeApp = _StoreApp2.default.subscribe(function () {
         var state = _StoreApp2.default.getState();
 
-        if (state.frontend.active !== 'cart') {
-            $('.minicart').removeClass('active');
+        if (state.frontend.header.active !== 'cart') {
+            $minicart.removeClass('active');
         }
     });
 
@@ -33559,26 +33558,14 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
         new _countUp2.default('desktop-cart-quantity', qPrev, qNew, 0, 1, { useEasing: true }).start();
     }).on('click', '.minicart.enabled .cart_info', function (e) {
-        var $this = $('.minicart');
+        e.preventDefault();
 
-        console.log(123);
-
-        if ($this.hasClass('active')) {
-            $this.removeClass('active');
-            _StoreApp2.default.dispatch({ type: 'SET', data: { frontend: {
-                        darkness: false,
-                        header: {
-                            active: null
-                        }
-                    } } });
+        if ($minicart.hasClass('active')) {
+            $minicart.removeClass('active');
+            (0, _appHeadReduser.hideAll)();
         } else {
-            $this.addClass('active');
-            _StoreApp2.default.dispatch({ type: 'SET', data: { frontend: {
-                        darkness: true,
-                        header: {
-                            active: 'cart'
-                        }
-                    } } });
+            $minicart.addClass('active');
+            (0, _appHeadReduser.action)('cart');
         }
     });
 })();
@@ -36150,20 +36137,13 @@ var _StoreApp = __webpack_require__(138);
 
 var _StoreApp2 = _interopRequireDefault(_StoreApp);
 
+var _appHeadReduser = __webpack_require__(139);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-$('.shadow').on('click touchstart', function () {
-    _StoreApp2.default.dispatch({ type: 'SET', data: {
-            frontend: {
-                darkness: false,
-                header: {
-                    active: null
-                }
-            }
-        } });
-});
-
 (function () {
+    $('.shadow').on('click touchstart', _appHeadReduser.hideAll);
+
     var unsubscribe = _StoreApp2.default.subscribe(function () {
         var state = _StoreApp2.default.getState();
 
@@ -42543,6 +42523,53 @@ var store = (0, _redux.createStore)(function (state, action) {
 });
 
 exports.default = store;
+
+/***/ }),
+/* 139 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+exports.__esModule = true;
+exports.hideAll = hideAll;
+exports.action = action;
+
+var _StoreApp = __webpack_require__(138);
+
+var _StoreApp2 = _interopRequireDefault(_StoreApp);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var setTtype = {
+    type: 'SET'
+};
+
+function hideAll() {
+    _StoreApp2.default.dispatch(Object.assign({}, setTtype, {
+        data: {
+            frontend: {
+                darkness: false,
+                header: {
+                    active: null
+                }
+            }
+        }
+    }));
+}
+
+function action(action) {
+    _StoreApp2.default.dispatch(Object.assign({}, setTtype, {
+        data: {
+            frontend: {
+                darkness: action !== null,
+                header: {
+                    active: action
+                }
+            }
+        }
+    }));
+}
 
 /***/ })
 /******/ ]);
