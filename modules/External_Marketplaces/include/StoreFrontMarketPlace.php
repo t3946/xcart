@@ -1,8 +1,8 @@
 <?php
 namespace Xcart\External_Marketplaces;
+use Modules\Product\Models\ProductModel;
 use Xcart\Connection;
 use Xcart\Data;
-use Xcart\Product;
 
 abstract class StoreFrontMarketPlace extends Data
 {
@@ -23,10 +23,10 @@ abstract class StoreFrontMarketPlace extends Data
         $this->fetchExternalMarketPlace();
     }
 
-    abstract public function addProductToBatch(Product $oProduct, $update_type, $googleOneRow = "", $sExtraLog = "N");
+    abstract public function addProductToBatch(ProductModel $oProduct, $update_type, $googleOneRow = "", $sExtraLog = "N");
     abstract public function submitInventoryBatch($debug_mode = 'N', $extra_log = 'N');
     abstract public function submitProductsBatch($debug_mode = 'N', $extra_log = 'N');
-    abstract public function checkMarketplaceRestrictions(Product $oProduct);
+    abstract public function checkMarketplaceRestrictions(ProductModel $oProduct, $update_type);
 
     private function fetchExternalMarketPlace()
     {
@@ -195,9 +195,14 @@ abstract class StoreFrontMarketPlace extends Data
         return $this->getField('update_max_expired_products_per_day');
     }
 
-    public function getGoogleOneRow(Product $oProduct, $sExtraLog)
+    public function getGoogleOneRow(ProductModel $oProduct, $type, $sExtraLog)
     {
-        return GetGoogleBaseOneRow($oProduct->getProductId(), "main_google", $sExtraLog);
+        $result = null;
+
+        if (in_array($type, ['1', '1,2', '2,1'])) {
+            $result = GetGoogleBaseOneRow($oProduct->productid, "main_google", $sExtraLog);
+        }
+        return $result;
     }
 
 }

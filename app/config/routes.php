@@ -25,5 +25,15 @@ return [
         'path' => 'Modules.Brand.routes_admin',
         'namespace' => 'brand'
     ],
+    [
+        'route' => '/admin/order',
+        'path' => 'Modules.Order.routes_admin',
+        'namespace' => 'order'
+    ],
+    [
+        'route' => '/admin/product',
+        'path' => 'Modules.Product.routes_admin',
+        'namespace' => 'product'
+    ],
 
 ];

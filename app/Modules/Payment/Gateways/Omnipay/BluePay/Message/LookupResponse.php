@@ -27,14 +27,23 @@ class LookupResponse extends Response
                 case 'AUTH' :
                     $result['state'] = 'authorized';
                     $result['links'] = [
-                        ['rel' => 'capture'],
-                        ['rel' => 'void'],
+                        [
+                            'rel' => 'capture',
+                            'method' => 'POST'
+                        ],
+                        [
+                            'rel' => 'void',
+                            'method' => 'POST'
+                        ],
                     ];
                     break;
                 case 'CAPTURE' :
                     $result['state'] = 'completed';
                     $result['links'] = [
-                        ['rel' => 'refund'],
+                        [
+                            'rel' => 'refund',
+                            'method' => 'POST'
+                        ],
                     ];
                     break;
                 case 'VOID' :

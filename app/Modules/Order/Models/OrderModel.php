@@ -3,10 +3,12 @@ namespace Modules\Order\Models;
 
 use Mindy\QueryBuilder\Expression;
 use Mindy\QueryBuilder\QueryBuilder;
+use Modules\Core\Models\StateModel;
 use Modules\Order\Helpers\OrderHelper;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\AutoMetaModel;
 use Xcart\App\Orm\Fields\AutoField;
+use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\HasManyField;
 use Xcart\App\Orm\Fields\ManyToManyField;
 use Xcart\App\Orm\Fields\TimestampField;
@@ -59,7 +61,16 @@ class OrderModel extends AutoMetaModel
                 'class' => HasManyField::className(),
                 'modelClass' => TransactionLogModel::className(),
                 'link' => ['orderid' => 'orderid']
-            ]
+            ],
+            'shipping_state' => [
+                'field' => 's_state',
+                'class' => ForeignField::className(),
+                'modelClass' => StateModel::className(),
+                'link' => [
+                    's_state' => 'code',
+                    's_country' => 'country_code'
+                ]
+            ],
         ];
     }
 

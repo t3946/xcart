@@ -316,9 +316,9 @@ No data
 	<table cellpadding="1" cellspacing="0" width="100%" {cycle values=" class='TableSubHead', "}>
 	<tr>
 	  {if $Maxshippings eq "1"}
-		<input type="hidden" id="shippingid{$s.shippingid}" name="shippingids[{$k}]" value="{$s.shippingid}">
+		<input type="hidden" id="shippingid{$s.shippingid}{$k}" name="shippingids[{$k}]" value="{$s.shippingid}">
 	  {else}
-		<td width="5"><input onclick="cidev_save_shippingid(document.cartform, 'shippingids');" type="radio" id="shippingid{$s.shippingid}" name="shippingids[{$k}]" value="{$s.shippingid}"{if $s.shippingid eq $cart.shippingids[$k] || ($cart.shippingids[$k] eq "" && $selected_any eq "N")}{assign var="selected_any" value="Y"} checked="checked"{/if}{if $allow_cod} onclick="javascript: display_cod({if $s.is_cod eq 'Y'}true{else}false{/if});"{/if} /></td>
+		<td width="5"><input onclick="cidev_save_shippingid(document.cartform, 'shippingids');" type="radio" id="shippingid{$s.shippingid}{$k}" name="shippingids[{$k}]" value="{$s.shippingid}"{if $s.shippingid eq $cart.shippingids[$k] || ($cart.shippingids[$k] eq "" && $selected_any eq "N")}{assign var="selected_any" value="Y"} checked="checked"{/if}{if $allow_cod} onclick="javascript: display_cod({if $s.is_cod eq 'Y'}true{else}false{/if});"{/if} /></td>
 	  {/if}
 		<td>
 			{if $s.shipping eq "_USE_MY_UPS_FEDEX_ACCOUNT_"}
@@ -349,7 +349,7 @@ $(function(){
 <table cellspacing="0" cellpadding="0">
 <tr>
 <td>
-<label for="shippingid{$s.shippingid}">
+<label for="shippingid{$s.shippingid}{$k}">
 Use my
 </label>
 </td>
@@ -363,7 +363,7 @@ Use my
 <input type="text" id="use_my_account_number_{$k}" name="use_my_account_number[{$k}]" value="{$cart.use_my_account_number[$k]}" size="10" placeholder="{$lng.lbl_use_my_account_number}">
 </td>
 <td>
-<label for="shippingid{$s.shippingid}">and ship by</label>
+<label for="shippingid{$s.shippingid}{$k}">and ship by</label>
 </td>
 <td>
 <input type="text" id="ship_by_shipping_method_{$k}" name="ship_by_shipping_method[{$k}]" value="{$cart.ship_by_shipping_method[$k]}" placeholder="{$lng.lbl_ship_by_shipping_method}">:
@@ -372,14 +372,14 @@ Use my
 
 <tr>
 <td colspan="2"></td>
-<td align="center"><label for="shippingid{$s.shippingid}"><div class="cidev_checkout_descr" style="float: left;">{$lng.lbl_use_my_account_number_under}</div><div style="float: left; color: #FF0000; margin-top: -3px; margin-left: 2px;">*</div></label></td>
+<td align="center"><label for="shippingid{$s.shippingid}{$k}"><div class="cidev_checkout_descr" style="float: left;">{$lng.lbl_use_my_account_number_under}</div><div style="float: left; color: #FF0000; margin-top: -3px; margin-left: 2px;">*</div></label></td>
 <td></td>
-<td align="center"><label for="shippingid{$s.shippingid}"><div class="cidev_checkout_descr" style="float: left;">{$lng.lbl_ship_by_shipping_method_under}</div><div style="float: left; color: #FF0000; margin-top: -3px; margin-left: 2px;">*</div></label></td>
+<td align="center"><label for="shippingid{$s.shippingid}{$k}"><div class="cidev_checkout_descr" style="float: left;">{$lng.lbl_ship_by_shipping_method_under}</div><div style="float: left; color: #FF0000; margin-top: -3px; margin-left: 2px;">*</div></label></td>
 </tr>
 
 <tr>
 <td colspan="5">
-<label for="shippingid{$s.shippingid}">$5.00 handling fee will apply</label>
+<label for="shippingid{$s.shippingid}{$k}">$5.00 handling fee will apply</label>
 </td>
 </tr>
 </table>
@@ -415,7 +415,7 @@ $(function(){
 <table cellspacing="0" cellpadding="0">
 <tr>
 <td>
-<label for="shippingid{$s.shippingid}">
+<label for="shippingid{$s.shippingid}{$k}">
 Use my trucking account #
 </label>
 </td>
@@ -423,7 +423,7 @@ Use my trucking account #
 <span style="color: red;"> *</span><input type="text" id="t_use_my_account_number_{$k}" name="t_use_my_account_number[{$k}]" value="{$cart.t_use_my_account_number[$k]}" size="10" placeholder="123456">
 </td>
 <td>
-<label for="shippingid{$s.shippingid}"> with </label>
+<label for="shippingid{$s.shippingid}{$k}"> with </label>
 </td>
 <td>
 <span style="color: red;"> *</span><input type="text" id="t_ship_by_shipping_method_{$k}" name="t_ship_by_shipping_method[{$k}]" value="{$cart.t_ship_by_shipping_method[$k]}" placeholder="AFB Freight"> trucking company:
@@ -432,7 +432,7 @@ Use my trucking account #
 
 <tr>
 <td colspan="5">
-<label for="shippingid{$s.shippingid}">$5.00 handling fee will apply</label>
+<label for="shippingid{$s.shippingid}{$k}">$5.00 handling fee will apply</label>
 </td>
 </tr>
 </table>
@@ -441,11 +441,11 @@ Use my trucking account #
 
 
 			{elseif $s.shipping eq "_SHIP_BY_FASTEST_METHOD_"}
-				<label for="shippingid{$s.shippingid}">
+				<label for="shippingid{$s.shippingid}{$k}">
 					Ship by the fastest possible shipping method upon your discretion and add shipping charge to my order's total
 				</label>
 			{else}
-				<label for="shippingid{$s.shippingid}">
+				<label for="shippingid{$s.shippingid}{$k}">
 				{$s.frontend_name|default:$s.shipping|trademark:$insert_trademark}{if $s.shipping_time ne ""} - {$s.shipping_time}{/if}{if $config.Appearance.display_shipping_cost eq "Y" and ($login ne "" or $config.General.apply_default_country eq "Y" or $cart.shipping_cost gt 0)}: {include file="currency.tpl" value=$s.rate}{/if}
 				</label>
 			{/if}
@@ -465,19 +465,20 @@ Use my trucking account #
 	{/foreach}
 
 {if $found_any_shipping ne "Y" and $need_shipping}
-<font class="ErrorMessage">
-{if $v.count_shipping_rates_for_canada eq "0" && $userinfo.s_country eq "CA"}
-	{$lng.lbl_we_dont_ship_to_Canada_checkout}
-	{assign var="disable_continue" value="Y"}
-{else}
-	{if $userinfo.s_country ne "US"}
-		{$lng.lbl_we_ship_to_US_only}
-	{else}
-		{$lng.lbl_no_shipping_for_location}
-	{/if}
-{/if}
-</font><br />
-<br />
+    <span class="ErrorMessage">
+    {if $v.count_shipping_rates_for_canada eq "0" && $userinfo.s_country eq "CA"}
+        {$lng.lbl_we_dont_ship_to_Canada_checkout}
+        {assign var="disable_continue" value="Y"}
+    {else}
+    	{if $userinfo.s_country ne "US"}
+        	The items from this warehouse can only be shipped to a {$shipping_groups.$k.shipping_countries} address. Please remove these items from your shopping cart before continuing.
+		{else}
+            {$lng.lbl_no_shipping_for_location}
+		{/if}
+    {/if}
+    </span>
+    <br/>
+    <br/>
 {/if}
 
 <br /><br />

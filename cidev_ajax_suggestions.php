@@ -2,7 +2,11 @@
 /**
  * @var \Xcart\Product $oProduct
  */
-global $REQUEST_METHOD, $smarty, $config, $productid;
+global $REQUEST_METHOD, $smarty, $config, $productid, $section_name;
+
+use Modules\Core\Helpers\GeoipHelper;
+use Modules\Shipping\Helpers\ShippingHelper;
+
 #
 ## ALWAYS USE IT if you do not require auth.php
 ###
@@ -16,10 +20,12 @@ require "./init.php"; #uses xid.X
 $current_area="C";
 $aResult = [];
 
-list($products, $sGoogleAnaliticsParam) = Xcart\Helpers\SliderData::getSliderData($section_name, $productid);
 
 if ($REQUEST_METHOD == 'POST') {
-	if (!empty($products)){
+
+    list($products, $sGoogleAnaliticsParam) = Xcart\Helpers\SliderData::getSliderData($section_name, $productid);
+
+    if (!empty($products)){
 
         foreach ($products as $k => $oProduct){
             $oThumb = $oProduct->getThumbnail();
@@ -47,4 +53,19 @@ if ($REQUEST_METHOD == 'POST') {
 		}
 	}
     echo json_encode($aResult);
+}
+if ($REQUEST_METHOD == 'GET' && $section_name == 'shipping') {
+    if ($_GET['product_id']) {
+        $qty = intval($_GET['qty']);
+
+        $state_model = GeoipHelper::getGeoipLocation(Xcart\App\Main\Xcart::app()->request->getUserIP())->state_model;
+
+        $shipping_rate = ShippingHelper::getStateMinShipping($_GET['product_id'], $qty, $state_model);
+
+        $smarty->assign('shipping_rate', $shipping_rate);
+        $smarty->assign('shipping_state', $state_model);
+        $smarty->assign('qty', $qty);
+
+        echo $smarty->fetch('customer/main/product_shipping.tpl');
+    }
 }

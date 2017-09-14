@@ -81,14 +81,12 @@ function send_question_email_form(){
 
   <ul>
   {foreach from=$tabs item=tab key=ind}
-{*    {inc value=$ind assign="ti"} *}
     <li><a class="ga_click" data-label="{$tab.title}" {if $count_product_tabs gte "7"}style="padding: 0.5em 10px;"{/if} href="{if $tab.url}{$tab.url|amp}{else}#{$prefix}{$tab.anchor|default:$ti}{/if}">{$tab.title}</a></li>
   {/foreach}
   </ul>
 
   {foreach from=$tabs item=tab key=ind}
     {if $tab.tpl}
-{*      {inc value=$ind assign="ti"} *}
       <div id="{$prefix}{$tab.anchor|default:$ti}">
 
 	{if $tab.tpl eq "_product_description_"}
@@ -113,7 +111,6 @@ function send_question_email_form(){
 </span>
 
 {if $product.weight ne "0.00" || $variants ne '' || $show_dimensions || $product.upc_ean_isbn}
-{* <br /> *}
 <br />
 {/if}
 
@@ -156,14 +153,6 @@ function send_question_email_form(){
 {if $product_wholesale.0.price ne "" && $product.new_notify_in_stock_price eq "" && $product.map_price lte $product.taxed_price}
 	{assign var="current_price" value=$product_wholesale.0.price}
 {/if}
-
-{*
-{if $product.min_amount gt 1 && $product.mult_order_quantity eq "Y"}
-	{math assign="itemprop_price" equation="y*x" y=$product.min_amount x=$current_price}
-{else}
-	{assign var="itemprop_price" value=$current_price}
-{/if}
-*}
 
 <div id="so_o_seller" itemprop="seller" itemscope="" itemtype="http://schema.org/Organization">
 	<meta itemprop="logo" content="{$current_location}/skin1_kolin/images/S3-Stores-Logo-S2.png"/>

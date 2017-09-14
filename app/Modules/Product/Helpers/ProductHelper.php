@@ -114,4 +114,20 @@ class ProductHelper
         }
         return $model;
     }
+
+    public static function getPricingArray($params)
+    {
+        $res = [];
+        if ($params['pricing']) {
+            foreach ($params['pricing'] as $price) {
+                $res[$price->quantity] = [
+                    'price' => $price->price
+                ];
+            }
+        }
+        if (isset($params['json']) && $params['json']) {
+            return json_encode($res);
+        }
+        return $res;
+    }
 }

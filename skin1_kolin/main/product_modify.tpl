@@ -171,12 +171,23 @@ window.name="prodmodwin";
 {/if}
 <br/>
 <br/>
+
 	{capture name=excluded_marketplaces}
 			<form  method="post" enctype="multipart/form-data" name="excluded_marketplace">
 				{include file="modules/External_Marketplaces/excluded_marketplaces_admin.tpl" show_button=true}
 			</form>
 	{/capture}
+
 	{include file="dialog.tpl" title='Excluded marketplaces' content=$smarty.capture.excluded_marketplaces extra='width="100%"'}
+
+	<br/>
+	<br/>
+
+    {capture name=excluded_marketplaces}
+		{include file="admin/main/estimate_product_shipping.tpl" product_id=$productid}
+    {/capture}
+
+    {include file="dialog.tpl" title='Estimated shipping' content=$smarty.capture.excluded_marketplaces extra='width="100%"'}
 
 {if $active_modules.Magnifier ne ""}
 {if $section eq "zoomer" || $config.General.display_all_products_on_1_page eq 'Y'}

@@ -1,39 +1,34 @@
 <?php
 namespace Xcart\External_Marketplaces\Marketplaces;
-use Xcart\Product;
+use Modules\Product\Models\ProductModel;
 use Xcart\External_Marketplaces\StoreFrontMarketPlace;
 
 class Bing extends StoreFrontMarketPlace
 {
-    public function addProductToBatch(Product $oProduct, $update_type, $googleOneRow = "", $sExtraLog = "N")
+    public function addProductToBatch(ProductModel $oProduct, $update_type, $googleOneRow = "", $sExtraLog = "N")
     {
-        if ($this->checkProductExcludedMarketPlace($oProduct->getProductId()) && $this->checkMarketplaceRestrictions($oProduct)) {
-            if ($update_type == "1" || $update_type == "1,2" || (($update_type == "2" && $oProduct->getField('forsale') == "N"))) {
+        if ($this->checkProductExcludedMarketPlace($oProduct->productid) && $this->checkMarketplaceRestrictions($oProduct, $update_type)) {
                 $batchid = $this->iProductsBatchCount;
                 $count_bproducts = count($this->aProducts);
-                $this->aProducts[$count_bproducts]["productid"] = $oProduct->getProductId();
+                $this->aProducts[$count_bproducts]["productid"] = $oProduct->productid;
                 $this->aProducts[$count_bproducts]["Batchid"] = $batchid;
                 $this->aProducts[$count_bproducts]["product_info"] = $googleOneRow;
                 $this->iProductsBatchCount++;
-
-            } elseif ($update_type == "2" && $oProduct->getField('forsale') == "Y") {
-                $batchid =  $this->iInventoryBatchCount;
-                $count_binventory = count($this->aInventory);
-                $this->aInventory[$count_binventory]["productid"] = $oProduct->getProductId();
-                $this->aInventory[$count_binventory]["Batchid"] = $batchid;
-                $this->iInventoryBatchCount++;
-            }
         }
 
         return $this;
     }
 
-    public function checkMarketplaceRestrictions(Product $oProduct)
+    public function checkMarketplaceRestrictions(ProductModel $oProduct, $update_type)
     {
         $bResult = true;
+
         $aDetailedImages = $oProduct->getDetailedImages();
-        if (empty($aDetailedImages))
-            $bResult = false;
+
+        if (empty($aDetailedImages)) {
+            return false;
+        }
+
         return $bResult;
     }
 
@@ -51,5 +46,17 @@ class Bing extends StoreFrontMarketPlace
             $this->RestoreQueue($this->getProducts(), 1);
 
         $this->setProductsBatchCount(0)->setProducts([]);
+    }
+
+    public function getGoogleOneRow(ProductModel $oProduct, $type, $sExtraLog)
+    {
+        $result = null;
+
+        if ($this->checkMarketplaceRestrictions($oProduct, $type)) {
+            $result = GetGoogleBaseOneRow($oProduct->productid, "main_google", $sExtraLog, false);
+        }
+
+        return $result;
+
     }
 }

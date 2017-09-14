@@ -84,6 +84,7 @@ $domain_specific_config = array(
     ),
     'General' => array(
         'shop_closed' => '115',
+        'shop_closed_method' => '116',
         'opt_order_prefix' => '72',
     ),
     'Search_products' => array(

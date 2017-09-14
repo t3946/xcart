@@ -237,36 +237,36 @@ if ($REQUEST_METHOD == "POST" || ($mode == "delete_image" && $manufacturerid)) {
 #
 ##
 ###
-			$current_manufacturer_info = func_query_first("SELECT * FROM $sql_tbl[manufacturers] WHERE manufacturerid = '$manufacturerid'");
+            $current_manufacturer_info = func_query_first("SELECT * FROM $sql_tbl[manufacturers] WHERE manufacturerid = '$manufacturerid'");
 
-			if (!empty($products_quantity_behavior) && $distributor_section == "20"){
+            if (!empty($products_quantity_behavior) && $distributor_section == "20") {
 
-				if ($display_quantity_of != ""){
-					$display_quantity_of = abs(intval($display_quantity_of));
-				}
+                if ($display_quantity_of != "") {
+                    $display_quantity_of = abs(intval($display_quantity_of));
+                }
 
-				$current_products_quantity_behavior = $current_manufacturer_info["products_quantity_behavior"];
-				$current_display_quantity_of = $current_manufacturer_info["display_quantity_of"];
+                $current_products_quantity_behavior = $current_manufacturer_info["products_quantity_behavior"];
+                $current_display_quantity_of = $current_manufacturer_info["display_quantity_of"];
 
-				if ($products_quantity_behavior != $current_products_quantity_behavior && $products_quantity_behavior == "R"){
-				// use real quantity on storefront
-					db_query("UPDATE $sql_tbl[products] SET avail = r_avail WHERE manufacturerid='$manufacturerid' AND r_avail>0");
-					db_query("UPDATE $sql_tbl[variants] v LEFT JOIN $sql_tbl[products] p ON p.productid = v.productid SET v.avail = p.r_avail WHERE p.manufacturerid='$manufacturerid' AND p.r_avail>0");
+                if ($products_quantity_behavior != $current_products_quantity_behavior && $products_quantity_behavior == "R") {
+                    // use real quantity on storefront
+                    db_query("UPDATE $sql_tbl[products] SET avail = r_avail WHERE manufacturerid='$manufacturerid' AND r_avail>0");
+                    db_query("UPDATE $sql_tbl[variants] v LEFT JOIN $sql_tbl[products] p ON p.productid = v.productid SET v.avail = p.r_avail WHERE p.manufacturerid='$manufacturerid' AND p.r_avail>0");
 
-				}
+                }
 
 
-                                if (
-					$products_quantity_behavior == "D" && $display_quantity_of > 0
-					&&
-					($products_quantity_behavior != $current_products_quantity_behavior || $current_display_quantity_of != $display_quantity_of)
-				){
-					db_query("UPDATE $sql_tbl[products] SET avail = '$display_quantity_of' WHERE manufacturerid='$manufacturerid' AND r_avail>0");
-					db_query("UPDATE $sql_tbl[variants] v LEFT JOIN $sql_tbl[products] p ON p.productid = v.productid SET v.avail = '$display_quantity_of' WHERE p.manufacturerid='$manufacturerid' AND p.r_avail>0");
-                                }
+                if (
+                    $products_quantity_behavior == "D" && $display_quantity_of > 0
+                    &&
+                    ($products_quantity_behavior != $current_products_quantity_behavior || $current_display_quantity_of != $display_quantity_of)
+                ) {
+                    db_query("UPDATE $sql_tbl[products] SET avail = '$display_quantity_of' WHERE manufacturerid='$manufacturerid' AND r_avail>0");
+                    db_query("UPDATE $sql_tbl[variants] v LEFT JOIN $sql_tbl[products] p ON p.productid = v.productid SET v.avail = '$display_quantity_of' WHERE p.manufacturerid='$manufacturerid' AND p.r_avail>0");
+                }
 
-				db_query("UPDATE $sql_tbl[products] SET avail='0' WHERE r_avail='0' AND manufacturerid='$manufacturerid'");
-			}
+                db_query("UPDATE $sql_tbl[products] SET avail='0' WHERE r_avail='0' AND manufacturerid='$manufacturerid'");
+            }
 ###
 ##
 #
@@ -424,7 +424,8 @@ if ($REQUEST_METHOD == "POST" || ($mode == "delete_image" && $manufacturerid)) {
 				"days_before_verify" => trim($products_days_before_verify),
 				"code" => trim($code),
 				"descr" => $descr,
-				"reduce_extra_margin" => $reduce_extra_margin
+				"reduce_extra_margin" => $reduce_extra_margin,
+				"calculate_shipping" => $calculate_shipping
 			);
 			$query_data_lng = array(
 				"manufacturerid" => $manufacturerid,

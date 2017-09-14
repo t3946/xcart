@@ -23,28 +23,16 @@ else {
     $search_query = ["size" => $e_search_data["products_per_page"], "from" => $from];
 }
 
-$url = $config["ElasticSearch_options"]["es_url"] . $site_domain . "/product/_search?" . http_build_query($search_query);
+$shop_domain = \Xcart\App\Main\Xcart::app()->getModule('Sites')->getSite()->domain;
 
-//    if (!empty($cat) && !empty($search_query)){
-//
-//        $tmp_search_query_arr = explode("ORDER BY", $search_query);
-//        $tmp_search_query_arr = explode("FROM", $tmp_search_query_arr[0]);
-//
-//        $new_search_query_productids = "SELECT xcart_products.productid FROM ".$tmp_search_query_arr[1];
-//        $new_search_query_productids_result = db_query($new_search_query_productids);
-//
-//        $all_productids_arr = array();
-//        while ($v = db_fetch_array($new_search_query_productids_result)) {
-//                $all_productids_arr[] = $v["productid"];
-//        }
-//    }
+$url = $config["ElasticSearch_options"]["es_url"] . $shop_domain . "/product/_search?" . http_build_query($search_query);
 
 if (!$load_all_e_products) {
     $e_search_data_substring = preg_replace("/[^0-9a-zA-Z\.\'\-]/S", " ", $e_search_data["substring"]);
     $e_search_data_substring = trim($e_search_data_substring);
 }
 
-$classElastic = new Xcart\ElasticSearch($config["ElasticSearch_options"], $site_domain);
+$classElastic = new Xcart\ElasticSearch($config["ElasticSearch_options"], $shop_domain);
 $classElastic->setSource("*._id");
 $classElastic->setMinScore($config["ElasticSearch_options"]["search_results_minimum_score_value"]);
 $classElastic->setType('product');
@@ -70,8 +58,6 @@ $manufacturer_product_feed_enabled = [];
 
 if (!empty($result["hits"]["hits"]) && is_array($result["hits"]["hits"]))
 {
-    x_load("product");
-
     foreach ($result["hits"]["hits"] as $k => $v) {
         $founded_ids = ['productid' => $v["_id"], 'categoryid' => [], 'score' => $v['_score']];
 

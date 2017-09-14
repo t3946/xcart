@@ -1,7 +1,10 @@
 <?php
 namespace Modules\Product\Models;
 
+use Mindy\QueryBuilder\Expression;
 use Modules\Amazon\Models\AmazonFbaMissingSkuModel;
+use Modules\Amazon\Models\AmazonProductsFieldsModel;
+use Modules\Brand\Models\BrandModel;
 use Modules\Distributor\Models\DistributorModel;
 use Xcart\App\Orm\AutoMetaModel;
 use Xcart\App\Orm\Fields\AutoField;
@@ -9,6 +12,9 @@ use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\HasManyField;
 use Xcart\App\Orm\Fields\IntField;
+use Xcart\App\Orm\Fields\ManyToManyField;
+use Xcart\App\Orm\Fields\UnixTimestampField;
+use Xcart\App\Orm\Fields\OneToOneField;
 use Xcart\App\Traits\DataModelTrait;
 use Xcart\Product;
 
@@ -69,6 +75,13 @@ class ProductModel extends AutoMetaModel
                 'link' => ['manufacturerid' => 'manufacturerid'],
                 'null' => false,
             ],
+            'brand' => [
+                'field' => 'brandid',
+                'class' => ForeignField::className(),
+                'modelClass' => BrandModel::className(),
+                'link' => ['brandid' => 'brandid'],
+                'null' => false,
+            ],
             'descr' => [
                 'class' => CharField::className(),
                 'null' => false,
@@ -99,6 +112,47 @@ class ProductModel extends AutoMetaModel
                 'modelClass' => AmazonFbaMissingSkuModel::className(),
                 'link' => ['productid' => 'productid']
             ],
+            'add_date' => [
+                'class' => UnixTimestampField::className(),
+                'autoNowAdd' => true,
+            ],
+            'mod_date' => [
+                'class' => UnixTimestampField::className(),
+                'autoNow' => true,
+                'autoNowAdd' => true,
+            ],
+            'category_main' => [
+                'class' => HasManyField::className(),
+                'modelClass' => ProductCategoriesModel::className(),
+                'link' => ['productid' => 'productid'],
+                'extra' => ['main' => 'Y']
+            ],
+            'categories' => [
+                'class' => ManyToManyField::className(),
+                'modelClass' => CategoryModel::className(),
+                'through' => ProductCategoriesModel::className(),
+            ],
+            'childs' => [
+                'class' => HasManyField::className(),
+                'modelClass' => ProductModel::className(),
+                'link' => ['group_root' => 'productid'],
+                'extra' => ['productid__isnt' => new Expression('group_root')]
+            ],
+            'thumbnail' => [
+                'class' => HasManyField::className(),
+                'modelClass' => ImageTModel::className(),
+                'link' => ['id' => 'productid']
+            ],
+            'pricing' => [
+                'class' => HasManyField::className(),
+                'modelClass' => PricingModel::className(),
+                'link' => ['productid' => 'productid']
+            ],
+            'amazon_fields' => [
+                'class' => OneToOneField::className(),
+                'modelClass' => AmazonProductsFieldsModel::className(),
+                'link' => ['productid' => 'productid']
+            ],
         ];
     }
 
@@ -110,5 +164,15 @@ class ProductModel extends AutoMetaModel
             $sMPN = preg_replace("/^(" . $model->code . "-)/i", "", $this->productcode);
         }
         return $sMPN;
+    }
+
+    public function isGroup()
+    {
+        return ($this->productid == $this->group_root);
+    }
+
+    public function isAmazonFBAEnabled()
+    {
+        return $this->amazon_fba == 'Y';
     }
 }

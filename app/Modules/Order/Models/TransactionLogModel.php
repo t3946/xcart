@@ -31,15 +31,16 @@ class TransactionLogModel extends AutoMetaModel
                 'default' => 'failed',
                 'null' => false,
                 'choices' => [
-                    'AP' => 'Authorized',
-                    'pending' => 'Pending',
-                    'authorized' => 'Authorized',
-                    'voided' => 'Voided',
-                    'completed' => 'Completed',
-                    'Expired' => 'Expired',
-                    'failed' => 'Failed',
-                    'refunded' => 'Refunded',
-                    'partially_refunded' => 'Partially Refunded',
+                    OrderTransactionModel::STATUS_PENDING => 'Pending',
+                    OrderTransactionModel::STATUS_AUTHORIZED => 'Authorized',
+                    OrderTransactionModel::STATUS_CAPTURED => 'Captured',
+                    OrderTransactionModel::STATUS_VOIDED => 'Voided',
+                    OrderTransactionModel::STATUS_COMPLETED => 'Completed',
+                    OrderTransactionModel::STATUS_EXPIRED => 'Expired',
+                    OrderTransactionModel::STATUS_FAILED => 'Failed',
+                    OrderTransactionModel::STATUS_REFUNDED => 'Refunded',
+                    OrderTransactionModel::STATUS_PARTIALLY_RUFUNDED => 'Partially Refunded',
+                    OrderTransactionModel::STATUS_PARTIALLY_CAPTURED => 'Partially Captured',
                 ]
             ],
             'date' => [
@@ -63,6 +64,12 @@ class TransactionLogModel extends AutoMetaModel
                 'class' => ForeignField::className(),
                 'modelClass' => UserModel::className(),
                 'link' => ['login' => 'login'],
+            ],
+            'transaction' => [
+                'field' => 'order_transaction_id',
+                'class' => ForeignField::className(),
+                'modelClass' => OrderTransactionModel::className(),
+                'link' => ['order_transaction_id' => 'id'],
             ],
             'payment_method_model' => [
                 'field' => 'paymentid',
