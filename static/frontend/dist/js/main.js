@@ -33488,7 +33488,9 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
     checkEnableMinicart();
 
-    var unsubscribeCart = _StoreCart2.default.subscribe(checkEnableMinicart);
+    var unsubscribeCart = _StoreCart2.default.subscribe(function () {
+        checkEnableMinicart();
+    });
     var unsubscribeApp = _StoreApp2.default.subscribe(function () {
         var state = _StoreApp2.default.getState();
 
@@ -36238,7 +36240,6 @@ $(document).on('click', '.action_block.sort .options li', function (e) {
             function cancelTouch() {
                 self.removeEventListener('touchmove', onTouchMove);
                 self.removeEventListener('touchend', onTouchEnd);
-                startX = startY = null;
             }
 
             function onTouchEnd(e) {
@@ -36373,6 +36374,10 @@ var _foundation4 = __webpack_require__(85);
 
 var _foundation5 = __webpack_require__(86);
 
+var _foundation6 = __webpack_require__(140);
+
+var _foundation7 = __webpack_require__(141);
+
 (function () {
     _foundation.Foundation.addToJquery($);
 
@@ -36393,7 +36398,9 @@ var _foundation5 = __webpack_require__(86);
 
     _foundation.Foundation.plugin(_foundation4.Sticky, 'Sticky');
     _foundation.Foundation.plugin(_foundation5.Tabs, 'Tabs');
+    _foundation.Foundation.plugin(_foundation6.Toggler, 'Toggler');
 
+    _foundation.Foundation.plugin(_foundation7.ResponsiveAccordionTabs, 'ResponsiveAccordionTabs');
 
     window.Foundation = _foundation.Foundation;
 })($);
@@ -42570,6 +42577,359 @@ function action(action) {
         }
     }));
 }
+
+/***/ }),
+/* 140 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+exports.__esModule = true;
+exports.Toggler = undefined;
+
+var _jquery = __webpack_require__(0);
+
+var _jquery2 = _interopRequireDefault(_jquery);
+
+var _foundationUtil = __webpack_require__(82);
+
+var _foundation = __webpack_require__(10);
+
+var _foundationUtil2 = __webpack_require__(13);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Toggler = function (_Plugin) {
+  _inherits(Toggler, _Plugin);
+
+  function Toggler() {
+    _classCallCheck(this, Toggler);
+
+    return _possibleConstructorReturn(this, _Plugin.apply(this, arguments));
+  }
+
+  Toggler.prototype._setup = function _setup(element, options) {
+    this.$element = element;
+    this.options = _jquery2.default.extend({}, Toggler.defaults, element.data(), options);
+    this.className = '';
+    this.className = 'Toggler';
+    _foundationUtil2.Triggers.init(_jquery2.default);
+
+    this._init();
+    this._events();
+  };
+
+  Toggler.prototype._init = function _init() {
+    var input;
+
+    if (this.options.animate) {
+      input = this.options.animate.split(' ');
+
+      this.animationIn = input[0];
+      this.animationOut = input[1] || null;
+    } else {
+        input = this.$element.data('toggler');
+
+        this.className = input[0] === '.' ? input.slice(1) : input;
+      }
+
+    var id = this.$element[0].id;
+    (0, _jquery2.default)('[data-open="' + id + '"], [data-close="' + id + '"], [data-toggle="' + id + '"]').attr('aria-controls', id);
+
+    this.$element.attr('aria-expanded', this.$element.is(':hidden') ? false : true);
+  };
+
+  Toggler.prototype._events = function _events() {
+    this.$element.off('toggle.zf.trigger').on('toggle.zf.trigger', this.toggle.bind(this));
+  };
+
+  Toggler.prototype.toggle = function toggle() {
+    this[this.options.animate ? '_toggleAnimate' : '_toggleClass']();
+  };
+
+  Toggler.prototype._toggleClass = function _toggleClass() {
+    this.$element.toggleClass(this.className);
+
+    var isOn = this.$element.hasClass(this.className);
+    if (isOn) {
+      this.$element.trigger('on.zf.toggler');
+    } else {
+      this.$element.trigger('off.zf.toggler');
+    }
+
+    this._updateARIA(isOn);
+    this.$element.find('[data-mutate]').trigger('mutateme.zf.trigger');
+  };
+
+  Toggler.prototype._toggleAnimate = function _toggleAnimate() {
+    var _this = this;
+
+    if (this.$element.is(':hidden')) {
+      _foundationUtil.Motion.animateIn(this.$element, this.animationIn, function () {
+        _this._updateARIA(true);
+        this.trigger('on.zf.toggler');
+        this.find('[data-mutate]').trigger('mutateme.zf.trigger');
+      });
+    } else {
+      _foundationUtil.Motion.animateOut(this.$element, this.animationOut, function () {
+        _this._updateARIA(false);
+        this.trigger('off.zf.toggler');
+        this.find('[data-mutate]').trigger('mutateme.zf.trigger');
+      });
+    }
+  };
+
+  Toggler.prototype._updateARIA = function _updateARIA(isOn) {
+    this.$element.attr('aria-expanded', isOn ? true : false);
+  };
+
+  Toggler.prototype._destroy = function _destroy() {
+    this.$element.off('.zf.toggler');
+  };
+
+  return Toggler;
+}(_foundation.Plugin);
+
+Toggler.defaults = {
+  animate: false
+};
+
+exports.Toggler = Toggler;
+
+/***/ }),
+/* 141 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+exports.__esModule = true;
+exports.ResponsiveAccordionTabs = undefined;
+
+var _jquery = __webpack_require__(0);
+
+var _jquery2 = _interopRequireDefault(_jquery);
+
+var _foundationUtil = __webpack_require__(8);
+
+var _foundationUtil2 = __webpack_require__(2);
+
+var _foundation = __webpack_require__(10);
+
+var _foundation2 = __webpack_require__(83);
+
+var _foundation3 = __webpack_require__(86);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var MenuPlugins = {
+  tabs: {
+    cssClass: 'tabs',
+    plugin: _foundation3.Tabs
+  },
+  accordion: {
+    cssClass: 'accordion',
+    plugin: _foundation2.Accordion
+  }
+};
+
+var ResponsiveAccordionTabs = function (_Plugin) {
+  _inherits(ResponsiveAccordionTabs, _Plugin);
+
+  function ResponsiveAccordionTabs() {
+    _classCallCheck(this, ResponsiveAccordionTabs);
+
+    return _possibleConstructorReturn(this, _Plugin.apply(this, arguments));
+  }
+
+  ResponsiveAccordionTabs.prototype._setup = function _setup(element, options) {
+    this.$element = (0, _jquery2.default)(element);
+    this.options = _jquery2.default.extend({}, this.$element.data(), options);
+    this.rules = this.$element.data('responsive-accordion-tabs');
+    this.currentMq = null;
+    this.currentPlugin = null;
+    this.className = 'ResponsiveAccordionTabs';
+    if (!this.$element.attr('id')) {
+      this.$element.attr('id', (0, _foundationUtil2.GetYoDigits)(6, 'responsiveaccordiontabs'));
+    };
+
+    this._init();
+    this._events();
+  };
+
+  ResponsiveAccordionTabs.prototype._init = function _init() {
+    _foundationUtil.MediaQuery._init();
+
+    if (typeof this.rules === 'string') {
+      var rulesTree = {};
+
+      var rules = this.rules.split(' ');
+
+      for (var i = 0; i < rules.length; i++) {
+        var rule = rules[i].split('-');
+        var ruleSize = rule.length > 1 ? rule[0] : 'small';
+        var rulePlugin = rule.length > 1 ? rule[1] : rule[0];
+
+        if (MenuPlugins[rulePlugin] !== null) {
+          rulesTree[ruleSize] = MenuPlugins[rulePlugin];
+        }
+      }
+
+      this.rules = rulesTree;
+    }
+
+    this._getAllOptions();
+
+    if (!_jquery2.default.isEmptyObject(this.rules)) {
+      this._checkMediaQueries();
+    }
+  };
+
+  ResponsiveAccordionTabs.prototype._getAllOptions = function _getAllOptions() {
+    var _this = this;
+    _this.allOptions = {};
+    for (var key in MenuPlugins) {
+      if (MenuPlugins.hasOwnProperty(key)) {
+        var obj = MenuPlugins[key];
+        try {
+          var dummyPlugin = (0, _jquery2.default)('<ul></ul>');
+          var tmpPlugin = new obj.plugin(dummyPlugin, _this.options);
+          for (var keyKey in tmpPlugin.options) {
+            if (tmpPlugin.options.hasOwnProperty(keyKey) && keyKey !== 'zfPlugin') {
+              var objObj = tmpPlugin.options[keyKey];
+              _this.allOptions[keyKey] = objObj;
+            }
+          }
+          tmpPlugin.destroy();
+        } catch (e) {}
+      }
+    }
+  };
+
+  ResponsiveAccordionTabs.prototype._events = function _events() {
+    var _this = this;
+
+    (0, _jquery2.default)(window).on('changed.zf.mediaquery', function () {
+      _this._checkMediaQueries();
+    });
+  };
+
+  ResponsiveAccordionTabs.prototype._checkMediaQueries = function _checkMediaQueries() {
+    var matchedMq,
+        _this = this;
+
+    _jquery2.default.each(this.rules, function (key) {
+      if (_foundationUtil.MediaQuery.atLeast(key)) {
+        matchedMq = key;
+      }
+    });
+
+    if (!matchedMq) return;
+
+    if (this.currentPlugin instanceof this.rules[matchedMq].plugin) return;
+
+    _jquery2.default.each(MenuPlugins, function (key, value) {
+      _this.$element.removeClass(value.cssClass);
+    });
+
+    this.$element.addClass(this.rules[matchedMq].cssClass);
+
+    if (this.currentPlugin) {
+      if (!this.currentPlugin.$element.data('zfPlugin') && this.storezfData) this.currentPlugin.$element.data('zfPlugin', this.storezfData);
+      this.currentPlugin.destroy();
+    }
+    this._handleMarkup(this.rules[matchedMq].cssClass);
+    this.currentPlugin = new this.rules[matchedMq].plugin(this.$element, {});
+    this.storezfData = this.currentPlugin.$element.data('zfPlugin');
+  };
+
+  ResponsiveAccordionTabs.prototype._handleMarkup = function _handleMarkup(toSet) {
+    var _this = this,
+        fromString = 'accordion';
+    var $panels = (0, _jquery2.default)('[data-tabs-content=' + this.$element.attr('id') + ']');
+    if ($panels.length) fromString = 'tabs';
+    if (fromString === toSet) {
+      return;
+    };
+
+    var tabsTitle = _this.allOptions.linkClass ? _this.allOptions.linkClass : 'tabs-title';
+    var tabsPanel = _this.allOptions.panelClass ? _this.allOptions.panelClass : 'tabs-panel';
+
+    this.$element.removeAttr('role');
+    var $liHeads = this.$element.children('.' + tabsTitle + ',[data-accordion-item]').removeClass(tabsTitle).removeClass('accordion-item').removeAttr('data-accordion-item');
+    var $liHeadsA = $liHeads.children('a').removeClass('accordion-title');
+
+    if (fromString === 'tabs') {
+      $panels = $panels.children('.' + tabsPanel).removeClass(tabsPanel).removeAttr('role').removeAttr('aria-hidden').removeAttr('aria-labelledby');
+      $panels.children('a').removeAttr('role').removeAttr('aria-controls').removeAttr('aria-selected');
+    } else {
+      $panels = $liHeads.children('[data-tab-content]').removeClass('accordion-content');
+    };
+
+    $panels.css({ display: '', visibility: '' });
+    $liHeads.css({ display: '', visibility: '' });
+    if (toSet === 'accordion') {
+      $panels.each(function (key, value) {
+        (0, _jquery2.default)(value).appendTo($liHeads.get(key)).addClass('accordion-content').attr('data-tab-content', '').removeClass('is-active').css({ height: '' });
+        (0, _jquery2.default)('[data-tabs-content=' + _this.$element.attr('id') + ']').after('<div id="tabs-placeholder-' + _this.$element.attr('id') + '"></div>').detach();
+        $liHeads.addClass('accordion-item').attr('data-accordion-item', '');
+        $liHeadsA.addClass('accordion-title');
+      });
+    } else if (toSet === 'tabs') {
+      var $tabsContent = (0, _jquery2.default)('[data-tabs-content=' + _this.$element.attr('id') + ']');
+      var $placeholder = (0, _jquery2.default)('#tabs-placeholder-' + _this.$element.attr('id'));
+      if ($placeholder.length) {
+        $tabsContent = (0, _jquery2.default)('<div class="tabs-content"></div>').insertAfter($placeholder).attr('data-tabs-content', _this.$element.attr('id'));
+        $placeholder.remove();
+      } else {
+        $tabsContent = (0, _jquery2.default)('<div class="tabs-content"></div>').insertAfter(_this.$element).attr('data-tabs-content', _this.$element.attr('id'));
+      };
+      $panels.each(function (key, value) {
+        var tempValue = (0, _jquery2.default)(value).appendTo($tabsContent).addClass(tabsPanel);
+        var hash = $liHeadsA.get(key).hash.slice(1);
+        var id = (0, _jquery2.default)(value).attr('id') || (0, _foundationUtil2.GetYoDigits)(6, 'accordion');
+        if (hash !== id) {
+          if (hash !== '') {
+            (0, _jquery2.default)(value).attr('id', hash);
+          } else {
+            hash = id;
+            (0, _jquery2.default)(value).attr('id', hash);
+            (0, _jquery2.default)($liHeadsA.get(key)).attr('href', (0, _jquery2.default)($liHeadsA.get(key)).attr('href').replace('#', '') + '#' + hash);
+          };
+        };
+        var isActive = (0, _jquery2.default)($liHeads.get(key)).hasClass('is-active');
+        if (isActive) {
+          tempValue.addClass('is-active');
+        };
+      });
+      $liHeads.addClass(tabsTitle);
+    };
+  };
+
+  ResponsiveAccordionTabs.prototype._destroy = function _destroy() {
+    if (this.currentPlugin) this.currentPlugin.destroy();
+    (0, _jquery2.default)(window).off('.zf.ResponsiveAccordionTabs');
+  };
+
+  return ResponsiveAccordionTabs;
+}(_foundation.Plugin);
+
+ResponsiveAccordionTabs.defaults = {};
+
+exports.ResponsiveAccordionTabs = ResponsiveAccordionTabs;
 
 /***/ })
 /******/ ]);

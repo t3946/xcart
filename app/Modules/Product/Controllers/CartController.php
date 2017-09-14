@@ -60,7 +60,8 @@ class CartController extends BaseCartController
                 $this->getCartStateArray(),
                 [
                      'message' => [
-                         'title' => CartModule::t('Product(s) added')
+                         'title' => CartModule::t('Product(s) added'),
+                         'type' => 'success'
                      ],
                 ]));
             Xcart::app()->end();
@@ -208,6 +209,8 @@ class CartController extends BaseCartController
                 if ($avail > 0) {
                     $cart->add($model, $avail);
                 }
+
+                return $avail;
             }
 
             return true;

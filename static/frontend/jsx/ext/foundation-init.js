@@ -29,9 +29,9 @@ import { OffCanvas } from 'bower_components/foundation-sites/js/foundation.offca
 // import { SmoothScroll } from 'bower_components/foundation-sites/js/foundation.smoothScroll';
 import { Sticky } from 'bower_components/foundation-sites/js/foundation.sticky';
 import { Tabs } from 'bower_components/foundation-sites/js/foundation.tabs';
-// import { Toggler } from 'bower_components/foundation-sites/js/foundation.toggler';
+import { Toggler } from 'bower_components/foundation-sites/js/foundation.toggler';
+import { ResponsiveAccordionTabs } from 'bower_components/foundation-sites/js/foundation.responsiveAccordionTabs';
 // import { Tooltip } from 'bower_components/foundation-sites/js/foundation.tooltip';
-// import { ResponsiveAccordionTabs } from 'bower_components/foundation-sites/js/foundation.responsiveAccordionTabs';
 
 (()=>{
     Foundation.addToJquery($);
@@ -76,9 +76,9 @@ import { Tabs } from 'bower_components/foundation-sites/js/foundation.tabs';
     // Foundation.plugin(SmoothScroll, 'SmoothScroll');
     Foundation.plugin(Sticky, 'Sticky');
     Foundation.plugin(Tabs, 'Tabs');
-    // Foundation.plugin(Toggler, 'Toggler');
+    Foundation.plugin(Toggler, 'Toggler');
     // Foundation.plugin(Tooltip, 'Tooltip');
-    // Foundation.plugin(ResponsiveAccordionTabs, 'ResponsiveAccordionTabs');
+    Foundation.plugin(ResponsiveAccordionTabs, 'ResponsiveAccordionTabs');
 
     window.Foundation = Foundation;
 })($);

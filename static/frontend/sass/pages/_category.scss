@@ -353,7 +353,7 @@ $padding_container: rem-calc(18);
                   border-bottom: 1px solid #e2e2e2;
                   color: black;
                   text-decoration: none;
-                  padding: 0 10px 0 4em;
+                  padding: 0 10px 0 3em;
                   cursor: pointer;
 
                   &.active, &:hover {
@@ -361,7 +361,7 @@ $padding_container: rem-calc(18);
                   }
 
                   &.active {
-                    background: #edf0f2 url(../images/icons/state_line/point.svg) 8% center no-repeat;
+                    background: #edf0f2 url(../images/icons/state_line/point.svg) .7em center no-repeat;
                     background-size: rem-calc(26);
                   }
                 }

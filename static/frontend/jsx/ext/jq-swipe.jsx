@@ -23,7 +23,7 @@
             function cancelTouch() {
                 self.removeEventListener('touchmove', onTouchMove);
                 self.removeEventListener('touchend', onTouchEnd);
-                startX = startY = null;
+                // startX = startY = null;
             }
 
             function onTouchEnd(e)

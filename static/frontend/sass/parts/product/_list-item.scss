@@ -482,6 +482,7 @@
     .item {
       flex-direction: column;
       flex: 0 0 50%;
+      width: 50%;
       align-items: stretch;
       //padding: 15px 1.75% ;
       padding: 15px ;
@@ -489,14 +490,17 @@
 
       @media screen and (min-width: rem-calc(600)) {
         flex: 0 0 33%;
+        width: 33%;
       }
 
       @media screen and (min-width: rem-calc(765)) {
         flex: 0 0 25%;
+        width: 25%;
       }
 
       @include breakpoint(xl up) {
         flex: 0 0 20%;
+        width: 20%;
       }
 
       .image_container {
@@ -670,6 +674,13 @@
           flex: 0 0 30%;
           line-height: 1;
 
+          @include breakpoint(sm down) {
+            //flex: 0 0 50%;
+            //text-align: center;
+            //justify-content: center;
+            display: none;
+          }
+
 
           .add {
             height: 37px;
@@ -710,13 +721,14 @@
           .overflow_container {
 
             display: flex;
-            z-index: 100;
+            z-index: 10;
             background: #fff;
             top: 98%;
             left: 0;
             right:0;
             position: absolute;
-            padding: 8.7%;
+            //padding: 8.7%;
+            padding: 15px;
             padding-top: 0;
             box-shadow: 1px 5px 3px rgba(0,0,0,.3);
           }
@@ -728,12 +740,18 @@
   }
 }
 
-.mobile, .tablet {
-  &.touchevents {
+//.mobile, .tablet {
+html{
+  &.touchevents,
+  &[data-whatinput="touch"] {
     .product-items {
       &.tile-view {
         .item {
           box-shadow: none;
+
+          .overflow_container {
+            padding-top: rem-calc(5);
+          }
 
           .overflow_container {
             box-shadow: none;

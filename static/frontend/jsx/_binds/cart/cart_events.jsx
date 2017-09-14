@@ -24,7 +24,10 @@ import { hideAll, action } from "../../redusers/appHeadReduser";
 
     checkEnableMinicart();
 
-    let unsubscribeCart = storeCart.subscribe(checkEnableMinicart);
+    let unsubscribeCart = storeCart.subscribe(() => {
+        checkEnableMinicart();
+
+    });
     let unsubscribeApp = storeApp.subscribe(()=>{
         let state = storeApp.getState();
 
