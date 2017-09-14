@@ -420,16 +420,18 @@ if ($sExtraLog=='Y')
 	$custom_label_1 = '';
 	$base_rel = 12/17;
 	$product["shippings_google_arr"] = $shipping_arr["shippings_google_arr"];
-	foreach ($shipping_arr["shippings_google_arr"] as $cl_k => $cl_sh) {
-		if ($cl_sh['region'] == "CA") {
-			if ($cl_sh['price']['value'] / $product['price'] > $base_rel) {
-				$product["custom_label_0"] = "junk";
-			} else {
-				$product["custom_label_0"] = "normal";
-			}
-			break;
-		}
-	}
+	if ($shipping_arr["shippings_google_arr"]) {
+        foreach ($shipping_arr["shippings_google_arr"] as $cl_k => $cl_sh) {
+            if ($cl_sh['region'] == "CA") {
+                if ($cl_sh['price']['value'] / $product['price'] > $base_rel) {
+                    $product["custom_label_0"] = "junk";
+                } else {
+                    $product["custom_label_0"] = "normal";
+                }
+                break;
+            }
+        }
+    }
 
     $price_group_label = '0';
     $cmp_price = $product['price'];
