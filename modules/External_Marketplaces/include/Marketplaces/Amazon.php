@@ -60,9 +60,10 @@ class Amazon extends StoreFrontMarketPlace
 
                 foreach ($product->missing_products as $missing) {
                     $items[] = array_merge(
+                        $item,
                         [
                             'sku' => $missing->missing_productcode
-                        ], $item
+                        ]
                     );
                 }
             }
