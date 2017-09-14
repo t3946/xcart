@@ -251,7 +251,7 @@
                             {if $child->mult_order_quantity == 'Y'}
                                 <div class="info mult">
                                     <i class="icon"></i>
-                                    <span class="subline">Order multiples of {$child->min_amount} items</span>
+                                    <span class="subline">Order multiples <br>of {$child->min_amount} items</span>
                                 </div>
                             {else}
                                 <div class="info least">
