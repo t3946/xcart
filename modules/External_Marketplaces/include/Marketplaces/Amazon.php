@@ -1,5 +1,7 @@
 <?php
+
 namespace Xcart\External_Marketplaces\Marketplaces;
+
 use CaponicaAmazonMwsComplete\ClientPack\MwsFeedAndReportClientPack;
 use MarketplaceWebService_Exception;
 use Modules\Amazon\Helpers\AmazonFbaFeedHelper;
@@ -21,7 +23,8 @@ class Amazon extends StoreFrontMarketPlace
         return $this;
     }
 
-    public function submitInventoryBatch($debug_mode = 'N', $extra_log='N') {
+    public function submitInventoryBatch($debug_mode = 'N', $extra_log = 'N')
+    {
 
         $items = [];
 
@@ -36,8 +39,7 @@ class Amazon extends StoreFrontMarketPlace
 
                 if ($product->isAmazonFBAEnabled() &&
                     (intval($product->amazon_fba_avail) > 0 || $product->getAmazonFBAStockReservedTransfers() > 0) &&
-                    !in_array($product->amazon_fields->prevent_selling_on_amazon, ['FBA', 'MFN']))
-                {
+                    !in_array($product->amazon_fields->prevent_selling_on_amazon, ['FBA', 'MFN'])) {
                     $item = [
                         'sku' => $product->productcode,
                         'channel' => 'AFN',
@@ -71,7 +73,7 @@ class Amazon extends StoreFrontMarketPlace
 
         if ($items) {
 
-            $log_text = "AMZ: tried to submit ".count($items)." items as inventory feed";
+            $log_text = "AMZ: tried to submit " . count($items) . " items as inventory feed";
             func_backprocess_log("incremental feeds", $log_text);
 
             $feed = AmazonFbaFeedHelper::encodeInventoryFeed($items);
@@ -104,17 +106,13 @@ class Amazon extends StoreFrontMarketPlace
                 ->getSubmitFeedResult();
 
         } catch (\Exception $e) {
-            if (method_exists($e, 'getErrorCode')) {
+            if (method_exists($e, 'getErrorCode') && ('RequestThrottled' == $e->getErrorCode() || 'QuotaExceeded' == $e->getErrorCode())) {
                 $error_code = $e->getErrorCode();
-                if ('RequestThrottled' == $e->getErrorCode() || 'QuotaExceeded' == $e->getErrorCode()) {
-                    @fclose($feedHandle);
-                    func_backprocess_log('incremental feeds', $e->getMessage(). " - ". $error_code);
-                    $this->submitFeed($feed, $type);
-                }
             } else {
                 $error_code = $e->getCode();
-                func_backprocess_log('incremental feeds', $e->getMessage(). " - ". $error_code);
             }
+
+            func_backprocess_log('incremental feeds', $e->getMessage() . " - " . $error_code);
         }
 
         @fclose($feedHandle);
@@ -130,7 +128,8 @@ class Amazon extends StoreFrontMarketPlace
         $this->submitFeed($feed, MwsFeedAndReportClientPack::FEED_TYPE_PAI_INVENTORY);
     }
 
-    public function submitProductsBatch($debug_mode = 'N', $extra_log='N') {
+    public function submitProductsBatch($debug_mode = 'N', $extra_log = 'N')
+    {
         $this->setProductsBatchCount(0)->setProducts([]);
     }
 

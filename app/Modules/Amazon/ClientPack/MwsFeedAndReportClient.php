@@ -35,7 +35,7 @@ class MwsFeedAndReportClient extends MwsFeedAndReportClientPack implements Throt
             self::PARAM_MARKETPLACE_ID_LIST => array('Id' => $this->marketplaceId),
             self::PARAM_MERCHANT            => $this->sellerId,
         ];
-        return CaponicaClientPack::throttledCall($this, self::METHOD_SUBMIT_FEED, $parameters, 1);
+        return AmazonClientPack::throttledCall($this, self::METHOD_SUBMIT_FEED, $parameters, 1);
     }
 
     public function initThrottleManager() {
