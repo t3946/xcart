@@ -92,7 +92,12 @@
                                     <div class="table-column x">x</div>
 
                                     <div class="table-column extended format_price">
-                                        US$ <span class="price">{$position->getPrice()|number_format:2}</span>
+                                        <span class="show-for-large">
+                                            US$ <span class="price">{$position->getPrice()|number_format:2}</span>
+                                        </span>
+                                        <span class="hide-for-large">
+                                            US$ <span class="price">{$position->object->getFrontendPrice()|number_format:2}</span>
+                                        </span>
                                     </div>
                                 </div>
 

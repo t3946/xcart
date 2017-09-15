@@ -98,15 +98,20 @@ $remove: (
     }
 
     .quantity {
-      width: $quantity;
+      //width: rem-calc(70);
       text-align: center;
 
-      @include breakpoint(medium down) {
+      @include breakpoint(medium up) {
         width: rem-calc(135);
       }
 
-      @include breakpoint(sm down) {
-        width: rem-calc(70);
+      @include breakpoint(large up) {
+        width: $quantity;
+      }
+
+      @include breakpoint(560 down) {
+        width: auto;
+        //width: rem-calc(135);
 
         .quantity-group {
           border: 1px solid #aaa;
@@ -165,6 +170,10 @@ $remove: (
         align-items: flex-start;
         padding-left: rem-calc(16);
       }
+
+      @include breakpoint(medium up) {
+        justify-content: space-between;
+      }
     }
 
     .quantity-extended {
@@ -172,6 +181,10 @@ $remove: (
         padding-top: rem-calc(10);
         width: 100%;
         flex-shrink: 1;
+      }
+
+      @include breakpoint(medium up) {
+        justify-content: flex-end;
       }
 
       @each $key, $val in $extended {
