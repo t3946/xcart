@@ -1,7 +1,7 @@
 {if $menus|count > 0}
     <div class="submenu-container">
         {*<nav class="has-column-{if $menus.columns > 3}3{else}{$menus.columns}{/if}">*}
-        <nav class="has-column-3">
+        <div class="nav has-column-3">
 
             {foreach $menus.menu as $menu}
                 {*<div class="menu-block {if !$has_banner && ($menus.columns > 1)}liquid{/if}">*}
@@ -35,7 +35,7 @@
                 </div>
             {/if}
 
-        </nav>
+        </div>
 
         <a href="#" class="view-all">
             View all {$menu_name} departments
