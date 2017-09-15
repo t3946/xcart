@@ -11,14 +11,23 @@
 {/block}
 
 {block "content"}
-<section class="catalog-page page">
-    <div class="row">
-        <div class="column large-12">
-            <h1>{$model->product}</h1>
+<section class="product-page page">
 
-
+    <section class="title">
+        <div class="row">
+            <div class="column large-12">
+                <h1>{$model->product} </h1>
+            </div>
         </div>
-    </div>
+    </section>
+
+    <section class="images">images</section>
+    <section class="title">title</section>
+    <section class="prices">prices</section>
+
+    <section class="descriptions"></section>
+
+    <section class="groupped-products">groupped products</section>
 </section>
 {/block}
 
