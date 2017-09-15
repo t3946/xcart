@@ -3,6 +3,7 @@ import storeCart from '../../stores/StoreCart';
 import storeApp from '../../stores/StoreApp';
 
 import { hideAll, action } from "../../redusers/appHeadReduser";
+import { cartAdd } from "../../redusers/appCartRediser";
 
 (()=>{
     let $minicart = $('.minicart');
@@ -36,9 +37,6 @@ import { hideAll, action } from "../../redusers/appHeadReduser";
         }
     });
 
-    window['addToCart'] = (data, callback) => {
-        storeCart.dispatch({type:'PUSH', action: 'ADD', callback:callback, data:{items: data}});
-    };
 
     let productItemResetState = ($products) => {
         let $input = $products.find('.quantity-group input');
@@ -69,7 +67,7 @@ import { hideAll, action } from "../../redusers/appHeadReduser";
             if ( $product.length ) {
                 let data = [{id: $product.data('product'), quantity: $product.data('quantity') || 1}];
 
-                window.addToCart(data, ()=>{ productItemResetState($product); });
+                cartAdd(data, ()=>{ productItemResetState($product); });
             }
 
         })
@@ -94,7 +92,7 @@ import { hideAll, action } from "../../redusers/appHeadReduser";
                 }
 
 
-                window.addToCart(data, ()=>{ productItemResetState($products); });
+                cartAdd(data, ()=>{ productItemResetState($products); });
             }
 
         })

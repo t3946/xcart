@@ -33468,6 +33468,8 @@ var _StoreApp2 = _interopRequireDefault(_StoreApp);
 
 var _appHeadReduser = __webpack_require__(139);
 
+var _appCartRediser = __webpack_require__(142);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 (function () {
@@ -33499,10 +33501,6 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
         }
     });
 
-    window['addToCart'] = function (data, callback) {
-        _StoreCart2.default.dispatch({ type: 'PUSH', action: 'ADD', callback: callback, data: { items: data } });
-    };
-
     var productItemResetState = function productItemResetState($products) {
         var $input = $products.find('.quantity-group input');
         var val = $input.attr('min');
@@ -33526,7 +33524,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
         if ($product.length) {
             var data = [{ id: $product.data('product'), quantity: $product.data('quantity') || 1 }];
 
-            window.addToCart(data, function () {
+            (0, _appCartRediser.cartAdd)(data, function () {
                 productItemResetState($product);
             });
         }
@@ -33548,7 +33546,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
                 }
             }
 
-            window.addToCart(data, function () {
+            (0, _appCartRediser.cartAdd)(data, function () {
                 productItemResetState($products);
             });
         }
@@ -42936,6 +42934,36 @@ var ResponsiveAccordionTabs = function (_Plugin) {
 ResponsiveAccordionTabs.defaults = {};
 
 exports.ResponsiveAccordionTabs = ResponsiveAccordionTabs;
+
+/***/ }),
+/* 142 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+exports.__esModule = true;
+exports.cartAdd = cartAdd;
+
+var _StoreCart = __webpack_require__(11);
+
+var _StoreCart2 = _interopRequireDefault(_StoreCart);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function cartAdd() {
+    var items = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+    var callback = arguments[1];
+
+    if (items && items.length) {
+        _StoreCart2.default.dispatch({
+            type: 'PUSH',
+            action: 'ADD',
+            data: { items: items },
+            callback: callback
+        });
+    }
+}
 
 /***/ })
 /******/ ]);
