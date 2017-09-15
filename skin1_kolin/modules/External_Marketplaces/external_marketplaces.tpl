@@ -12,6 +12,8 @@
             <th></th>
             <th>Marketplace name</th>
             <th>Processor class</th>
+            <th>Mask</th>
+            <th>Binary mask</th>
             <th>Active</th>
             <th></th>
         </tr>
@@ -32,6 +34,14 @@
                         <input class="processor_class" style="width:98%;" type="text"
                                               name="external_marketplace[{$oMarketPlace->getMarketPlaceId()}][processor_class]"
                                               value="{$oMarketPlace->getMarketPlaceProcessorClassName()}"/>
+                    </td>
+                    <td align="center">
+                        <input class="mask" style="width:98%;" type="text"
+                               name="external_marketplace[{$oMarketPlace->id}][mask]"
+                               value="{$oMarketPlace->mask}"/>
+                    </td>
+                    <td class="binary_mask" align="center">
+                        {"%016b"|sprintf:$oMarketPlace->mask}
                     </td>
                     <td align="center">
                         <select class="marketplace_active" style="width:98%;"
@@ -236,6 +246,8 @@
                 $(clone_row).attr('data-marketplace-id', new_marketplace_id);
                 $("input.marketplace_name", clone_row).val('').attr('name', 'external_marketplace[' + new_marketplace_id + '][marketplace_name]');
                 $("input.processor_class", clone_row).val('').attr('name', 'external_marketplace[' + new_marketplace_id + '][processor_class]');
+                $("input.mask", clone_row).val('').attr('name', 'external_marketplace[' + new_marketplace_id + '][mask]');
+                $(".binary_mask", clone_row).html('');
                 $("select.marketplace_active", clone_row).val('Y').attr('name', 'external_marketplace[' + new_marketplace_id + '][active]');
 
                 clone_row_sub.attr('data-marketplace-id',0);

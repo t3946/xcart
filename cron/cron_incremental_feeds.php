@@ -1,6 +1,8 @@
 <?php
+
 use Mindy\QueryBuilder\Expression;
 use Modules\Product\Models\ProductModel;
+use Modules\Product\Models\UpdatedProductModel;
 use Xcart\Connection;
 use Xcart\External_Marketplaces\StoreFrontMarketPlace;
 
@@ -72,19 +74,15 @@ if ($start_time->format('G') == "0") {
     }
 }
 
-$two_shippings = func_query_hash("SELECT shippingid, shipping, vol_threshold, dim_factor FROM $sql_tbl[shipping] WHERE shippingid='1' OR shippingid='65'", "shippingid", false);
-
-$all_froogle_options = func_query_hash(" SELECT storefrontid, MerchantID, ClientID, BingMerchantID, BingCatalogID, enable_incremental_feed_updates FROM $sql_tbl[froogle_options]", 'storefrontid', false);
-
-
-if (!empty($all_froogle_options) && is_array($all_froogle_options)) {
-    foreach ($all_froogle_options as $k => $v) {
-        $all_froogle_options[$k]["ClientID"] = text_decrypt($v["ClientID"]);
-    }
-}
 
 $cidev_storefronts = $storefronts;
 ksort($cidev_storefronts);
+
+UpdatedProductModel::objects()->delete(
+    [
+        'mask' => 0
+    ]
+);
 
 if (!empty($cidev_storefronts) && is_array($cidev_storefronts)) {
 
@@ -98,55 +96,74 @@ if (!empty($cidev_storefronts) && is_array($cidev_storefronts)) {
     $BingMerchantID = $BingCatalogID = '';
 
     foreach ($cidev_storefronts as $storefrontid => $sf_info) {
+
+        $cnt = 0;
+
         print("\n " . strftime("%X") . " --- storefront: " . $storefrontid . " --- \n");
+
         /** @var StoreFrontMarketPlace[] $aExternalMarketPlaces */
         $aExternalMarketPlaces = StoreFrontMarketPlace::getMarketPlacesByStoreFront($storefrontid);
-        $cnt = 0;
-        $sqlProductUpdate = /** @lang MySQL */
-            <<<SQL
-SELECT p.productid, pp.time_stamp, p.forsale, GROUP_CONCAT(pp.type ORDER BY pp.type) utype
-  FROM xcart_cidev_updated_products pp
-  INNER JOIN xcart_products p ON p.productid = pp.resourceid
-  INNER JOIN xcart_products_sf PS ON PS.productid = p.productid
-WHERE PS.sfid = :sfid AND pp.type <= :type 
-GROUP BY p.productid
-ORDER BY utype DESC, forsale DESC
-SQL;
-        $aUpdatedProducts = Connection::getInstance()->fetchAll($sqlProductUpdate. " LIMIT 3000", ['sfid' => $storefrontid, 'type' => 2]);
+
+        $deafultMask = 0;
+        foreach ($aExternalMarketPlaces as $market) {
+            $deafultMask += $market->getExternalMarketPlaceEntity()->mask;
+        }
+
+        $queues = UpdatedProductModel::objects()
+            ->select(['*', 'product__forsale', 'utype' => new Expression('GROUP_CONCAT(type ORDER BY type)')])
+            ->filter(
+                [
+                    'product__sites__sfid' => $storefrontid,
+                    'type__lte' => 2
+                ])
+            ->group(['resourceid'])
+            ->order(['-utype', '-product__forsale'])
+            ->all();
+
         $timeout = 60 * 20;
         $storefront_time_start = time();
 
-        if (!empty($aUpdatedProducts)) {
+        if ($queues) {
+
             $log_text = "Storefront: " . $sf_info["domain"] . " Storefrontid: " . $sf_info["storefrontid"];
             func_backprocess_log("incremental feeds", $log_text);
-            foreach ($aUpdatedProducts as $product) {
+
+            foreach ($queues as $queue) {
+
+                if (is_null($queue->mask)) {
+                    $queue->mask = $deafultMask;
+                }
+
                 if ((time() - $storefront_time_start) > $timeout) {
                     func_backprocess_log("incremental feeds", "Time out processing {$timeout} sec. StorefrontID: {$storefrontid} ...");
                     break;
                 }
-                /** @var $oProduct ProductModel */
-                $oProduct = ProductModel::objects()->get(['productid' => $product['productid']]);
-                //if ($storefrontid == $product["maxsf"])
-                db_query_param(/** @lang MySQL */
-                    "DELETE FROM xcart_cidev_updated_products WHERE resourceid=:productid AND time_stamp <= :started_at AND (type='2' || type='1')",
-                    ['productid' => $product['productid'], 'started_at' => $started_at]
-                );
-                if ($oProduct) {
+
+                if ($oProduct = $queue->product) {
+
+                    /** @var $oProduct ProductModel */
                     $oProduct->last_incremental_update = time();
                     $oProduct->save();
+
                     $googleOneRow = null;
+
                     foreach ($aExternalMarketPlaces as $oExternalMarketPlace) {
                         if (is_null($googleOneRow)) {
-                            $googleOneRow = $oExternalMarketPlace->getGoogleOneRow($oProduct,  $product["utype"], EXTRA_LOG);
+                            $googleOneRow = $oExternalMarketPlace->getGoogleOneRow($oProduct, $queue, EXTRA_LOG);
                         }
+
                         if ($oExternalMarketPlace->getExternalMarketPlaceEntity()->getMarketPlaceStatus() == 'Y') {
-                            $oExternalMarketPlace->addProductToBatch($oProduct, $product["utype"], $googleOneRow, EXTRA_LOG);
+                            $oExternalMarketPlace->addProductToBatch($queue, $googleOneRow, EXTRA_LOG);
                         }
                         if ($oExternalMarketPlace->getCurrentInventoryBatchCount() == $oExternalMarketPlace->getInventoryBatchCount()) {
-                            $oExternalMarketPlace->submitInventoryBatch(SUBMIT_DISABLE, EXTRA_LOG);
+                            if ($oExternalMarketPlace->submitInventoryBatch(SUBMIT_DISABLE, EXTRA_LOG)) {
+                                $oExternalMarketPlace->successInventory();
+                            }
                         }
                         if ($oExternalMarketPlace->getCurrentProductsBatchCount() == $oExternalMarketPlace->getProductsBatchCount()) {
-                            $oExternalMarketPlace->submitProductsBatch(SUBMIT_DISABLE, EXTRA_LOG);
+                            if ($oExternalMarketPlace->submitProductsBatch(SUBMIT_DISABLE, EXTRA_LOG)) {
+                                $oExternalMarketPlace->successProduct();
+                            }
                         }
                     }
                 }
@@ -157,11 +174,15 @@ SQL;
         foreach ($aExternalMarketPlaces as $oExternalMarketPlace) {
             $aInventory = $oExternalMarketPlace->getInventory();
             if ($oExternalMarketPlace->getCurrentInventoryBatchCount() > 0 && !empty($aInventory) && is_array($aInventory)) {
-                $oExternalMarketPlace->submitInventoryBatch(SUBMIT_DISABLE, EXTRA_LOG);
+                if ($oExternalMarketPlace->submitInventoryBatch(SUBMIT_DISABLE, EXTRA_LOG)) {
+                    $oExternalMarketPlace->successInventory();
+                }
             }
             $aProducts = $oExternalMarketPlace->getProducts();
             if ($oExternalMarketPlace->getCurrentProductsBatchCount() > 0 && !empty($aProducts) && is_array($aProducts)) {
-                $oExternalMarketPlace->submitProductsBatch(SUBMIT_DISABLE, EXTRA_LOG);
+                if ($oExternalMarketPlace->submitProductsBatch(SUBMIT_DISABLE, EXTRA_LOG)) {
+                    $oExternalMarketPlace->successProduct();
+                }
             }
         }
 
@@ -174,8 +195,19 @@ SQL;
         }
     }
 
-    db_query_param(/** @lang MySQL */
-        "DELETE FROM xcart_cidev_updated_products WHERE type='3' AND time_stamp <= :started_at", ['started_at' => $started_at]);
+    UpdatedProductModel::objects()->delete(
+        [
+            'type' => 3,
+            'time_stamp__lte' => $started_at
+        ]
+    );
+
+    UpdatedProductModel::objects()->delete(
+        [
+            'mask' => 0
+        ]
+    );
+
 }
 
 db_query_param(/** @lang MySQL */
