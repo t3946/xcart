@@ -241,7 +241,7 @@ class ProductModel extends AutoMetaModel implements ICartItem
     public function getAbsoluteUrl($full = false)
     {
         if ($this->productid) {
-            return $this->url->urlFromCode('catalog:product:view');
+            return $this->url->urlFromCode('catalog:product:view', $full, ($full ? $this->sites->limit(1)->get() : null));
         }
 
         return false;

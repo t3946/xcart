@@ -1,3 +1,155 @@
 .product-page {
+  .block__title_price {
 
+    @include breakpoint(large up) {
+      padding-left: 0;
+    }
+
+  }
+
+  .info_tabs {
+
+    @include breakpoint(large up) {
+      @include grid-row();
+      @include flex-grid-column();
+    }
+
+    .tabs {
+      border: none;
+
+      .tabs-title {
+        position: relative;
+        border: 1px solid #b2b8bc;
+        border-bottom: 1px solid #e7eaeb;
+        margin-right: 2px;
+
+
+        &, &:active {
+          a {
+            background-color: #e7eaeb;
+            //padding: rem-calc(18) rem-calc(23) rem-calc(14);
+            padding: 0 rem-calc(23);
+            padding-top: rem-calc(3);
+            color: #505050;
+            font-size: 1rem;
+            font-weight: 600;
+            height: rem-calc(40);
+            line-height: rem-calc(40);
+
+            &:after {
+              content: '';
+              position: absolute;
+
+              bottom: rem-calc(5);
+              border-bottom: 1px dashed #505050;
+              left: rem-calc(23);
+              right: rem-calc(23);
+            }
+          }
+        }
+
+        &:after {
+          //transition: all .5s;
+          content: '';
+          position: absolute;
+          height: 2px;
+          background: #fff;
+          left: 50%;
+          width: 0;
+          bottom: -2px;
+        }
+
+        &.is-active {
+          border: 2px solid #c2c2c2;
+          border-bottom: none;
+
+          a {
+            text-decoration: none;
+            background: #fff;
+
+            &:after {
+              display: none;
+            }
+          }
+
+          &:after {
+            left: 0;
+            width: 100%;
+          }
+        }
+      }
+    }
+
+
+    .tabs-content {
+      border: 2px solid #c2c2c2;
+      border-collapse: collapse;
+
+      .tabs-panel {
+        padding: rem-calc(38) rem-calc(58);
+      }
+    }
+
+    .accordion {
+      margin-bottom: 0;
+
+      .accordion-item {
+        .accordion-title {
+          font-size: rem-calc(20);
+          font-weight: 400;
+          background-color: rgb(245, 245, 245);
+
+          &, &:hover, &:focus {
+            color: inherit;
+          }
+        }
+
+        .accordion-content {
+          border: none;
+          margin-bottom: rem-calc(40);
+        }
+
+        &.is-active {
+          .accordion-title {
+            background-color: #dfe5e8;
+            color: inherit;
+          }
+        }
+      }
+
+    }
+
+    .options {
+      .option {
+        //line-height: rem-calc(38);
+        min-height: rem-calc(38);
+        border-bottom: 1px solid #e1e1e1;
+        padding: rem-calc(12) 0;
+
+        &:after{
+          content: '';
+          clear: both;
+        }
+
+        .title {
+          display: inline-block;
+          font-weight: 700;
+          width: 44%;
+          color: black;
+          float: left;
+        }
+
+        .value {
+          max-width: 55%;
+
+          display: inline-block;
+          color: #3a3a3a;
+        }
+      }
+    }
+
+    .content {
+      color: #262626;
+    }
+  }
 }

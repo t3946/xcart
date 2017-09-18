@@ -2,6 +2,7 @@
 
 namespace Modules\Product\Controllers;
 
+use Modules\Product\Helpers\TabDataHelper;
 use Modules\Product\Models\ProductModel;
 use Modules\User\Helpers\SurfingHelper;
 use Modules\User\Models\SurfPathModel;
@@ -48,6 +49,7 @@ class DefaultController extends FrontendController
         echo $this->render('product/product.tpl', [
             'model' => $model,
             'breadcrumbs' => $model->getBreadcrumbs(),
+            'tabs' => TabDataHelper::getTabsFromManufacturer($model->manufacturerid),
         ]);
 
         if (!Xcart::app()->cart->has($model)) {
@@ -67,4 +69,5 @@ class DefaultController extends FrontendController
 
 //        SurfingHelper::logSurfPath(['resource_type' => SurfPathModel::GOAL_TYPE_PRODUCT, 'resource_id' => $model->pk]);
     }
+
 }

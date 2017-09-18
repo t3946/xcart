@@ -33,7 +33,8 @@
     "bourbon": "^4.3.4",
     "webfontloader": "^1.6.28",
     "countUp.js": "^1.9.2",
-    "fotorama": "^4.6.4"
+    "fotorama": "^4.6.4",
+    "swiper": "nolimits4web/Swiper#^3.4.2"
   },
   "devDependencies": {}
 }
