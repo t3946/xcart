@@ -213,8 +213,20 @@ abstract class StoreFrontMarketPlace extends Data
     {
         if ($inv = $this->getInventory()) {
             foreach ($inv as $inventory) {
-                $inventory['queue']->mask &= ~intval($this->getExternalMarketPlaceEntity()->mask); //Not bitwise operation
-                $inventory['queue']->save();
+                $inventory['queue']->mask = intval($inventory['queue']->mask & ~intval($this->getExternalMarketPlaceEntity()->mask)); //Not bitwise operation
+                if ($inventory['queue']->mask === 0) {
+                    $q = UpdatedProductModel::objects()->get([
+                        'resourceid' => $inventory['queue']->resourceid,
+                        'type' => $inventory['queue']->type
+                    ]);
+                    if ($q) {
+                        $q->mask = 0;
+                        $q->save();
+                    }
+                } else {
+                    $inventory['queue']->save();
+                }
+
             }
         }
         $this->setInventoryBatchCount(0)->setInventory([]);
@@ -224,8 +236,20 @@ abstract class StoreFrontMarketPlace extends Data
     {
         if ($inv = $this->getProducts()) {
             foreach ($inv as $inventory) {
-                $inventory['queue']->mask &= ~intval($this->getExternalMarketPlaceEntity()->mask); //Not bitwise operation
-                $inventory['queue']->save();
+                $inventory['queue']->mask = intval($inventory['queue']->mask & ~intval($this->getExternalMarketPlaceEntity()->mask)); //Not bitwise operation
+                if ($inventory['queue']->mask === 0) {
+                    $q = UpdatedProductModel::objects()->get([
+                        'resourceid' => $inventory['queue']->resourceid,
+                        'type' => $inventory['queue']->type
+                    ]);
+                    if ($q) {
+                        $q->mask = 0;
+                        $q->save();
+                    }
+                } else {
+                    $inventory['queue']->save();
+                }
+
             }
         }
         $this->setProductsBatchCount(0)->setProducts([]);

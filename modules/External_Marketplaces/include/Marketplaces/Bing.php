@@ -1,5 +1,7 @@
 <?php
+
 namespace Xcart\External_Marketplaces\Marketplaces;
+
 use Modules\Product\Models\ProductModel;
 use Modules\Product\Models\UpdatedProductModel;
 use Xcart\External_Marketplaces\StoreFrontMarketPlace;
@@ -8,23 +10,27 @@ class Bing extends StoreFrontMarketPlace
 {
     public function addProductToBatch($queue, $googleOneRow = "", $sExtraLog = "N")
     {
+        $result = false;
         $oProduct = $queue->product;
         if ($this->checkProductExcludedMarketPlace($oProduct->productid) && $this->checkMarketplaceRestrictions($queue)) {
-                $batchid = $this->iProductsBatchCount;
-                $count_bproducts = count($this->aProducts);
-                $this->aProducts[$count_bproducts]["productid"] = $oProduct->productid;
-                $this->aProducts[$count_bproducts]["Batchid"] = $batchid;
-                $this->aProducts[$count_bproducts]["product_info"] = $googleOneRow;
-                $this->aProducts[$count_bproducts]["queue"] = $queue;
-                $this->iProductsBatchCount++;
+            $batchid = $this->iProductsBatchCount;
+            $count_bproducts = count($this->aProducts);
+            $this->aProducts[$count_bproducts]["productid"] = $oProduct->productid;
+            $this->aProducts[$count_bproducts]["Batchid"] = $batchid;
+            $this->aProducts[$count_bproducts]["product_info"] = $googleOneRow;
+            $this->aProducts[$count_bproducts]["queue"] = $queue;
+            $this->iProductsBatchCount++;
+            $result = true;
+        } else {
+            $queue->mask &= ~intval($this->getExternalMarketPlaceEntity()->mask);
+            $queue->save();
         }
-
-        return $this;
+        return $result;
     }
 
     public function checkMarketplaceRestrictions($queue)
     {
-        $bResult = parent::checkMarketplaceRestrictions( $queue);
+        $bResult = parent::checkMarketplaceRestrictions($queue);
 
         $aDetailedImages = $queue->product->getDetailedImages();
 
@@ -35,8 +41,9 @@ class Bing extends StoreFrontMarketPlace
         return $bResult;
     }
 
-    public function submitInventoryBatch($debug_mode = 'N', $extra_log='N') {
-        $error = SubmitBingInventoryBatch($this->getInventory(),$this->getP0(), $this->getP1(), $this->getP2(), $this->getFTPLogin(), $this->getFTPPassword(), $this->getFTPPath(), $debug_mode);
+    public function submitInventoryBatch($debug_mode = 'N', $extra_log = 'N')
+    {
+        $error = SubmitBingInventoryBatch($this->getInventory(), $this->getP0(), $this->getP1(), $this->getP2(), $this->getFTPLogin(), $this->getFTPPassword(), $this->getFTPPath(), $debug_mode);
 
         if ($error == 500 || $error == 100) {
             return false;
@@ -45,8 +52,9 @@ class Bing extends StoreFrontMarketPlace
         return true;
     }
 
-    public function submitProductsBatch($debug_mode = 'N', $extra_log='N') {
-        $error = SubmitBingProductsBatch($this->getProducts(),$this->getP0(), $this->getP1(), $this->getP2(), $this->getFTPLogin(), $this->getFTPPassword(), $this->getFTPPath(), $debug_mode);
+    public function submitProductsBatch($debug_mode = 'N', $extra_log = 'N')
+    {
+        $error = SubmitBingProductsBatch($this->getProducts(), $this->getP0(), $this->getP1(), $this->getP2(), $this->getFTPLogin(), $this->getFTPPassword(), $this->getFTPPath(), $debug_mode);
 
         if ($error == 500 || $error == 100) {
             return false;

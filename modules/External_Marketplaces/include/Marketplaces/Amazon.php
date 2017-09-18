@@ -13,14 +13,18 @@ class Amazon extends StoreFrontMarketPlace
 {
     public function addProductToBatch($queue, $googleOneRow = "", $sExtraLog = "N")
     {
-        //$this->checkProductExcludedMarketPlace($oProduct->getProductId())
+        $result = false;
         if ($this->checkMarketplaceRestrictions($queue)) {
             if ($queue->type == "2" || $queue->type == "1,2" || $queue->type == "1") {
                 $this->aInventory[] = ['queue' => $queue];
                 $this->iInventoryBatchCount++;
+                $result = true;
             }
+        } else {
+            $queue->mask &= ~intval($this->getExternalMarketPlaceEntity()->mask);
+            $queue->save();
         }
-        return $this;
+        return $result;
     }
 
     public function submitInventoryBatch($debug_mode = 'N', $extra_log = 'N')

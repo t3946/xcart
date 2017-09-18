@@ -21,10 +21,11 @@ class GMC extends StoreFrontMarketPlace
      * @param int $update_type
      * @param string $googleOneRow
      * @param string $sExtraLog
-     * @return GMC
+     * @return bool
      */
     public function addProductToBatch($queue, $googleOneRow = "", $sExtraLog = "N")
     {
+        $result = false;
         $oProduct = $queue->product;
         if ($this->checkProductExcludedMarketPlace($oProduct->productid) && $this->checkMarketplaceRestrictions($queue)) {
             if ($queue->type == "1" || $queue->type == "1,2" || (($queue->type == "2" && $oProduct->forsale == "N"))) {
@@ -35,6 +36,7 @@ class GMC extends StoreFrontMarketPlace
                 $this->aProducts[$count_bproducts]["product_info"] = $googleOneRow;
                 $this->aProducts[$count_bproducts]["queue"] = $queue;
                 $this->iProductsBatchCount++;
+                $result = true;
 
             } elseif ($queue->type == "2" && $oProduct->forsale == "Y") {
                 $batchid = $this->iInventoryBatchCount;
@@ -43,10 +45,14 @@ class GMC extends StoreFrontMarketPlace
                 $this->aInventory[$count_binventory]["Batchid"] = $batchid;
                 $this->aInventory[$count_binventory]["queue"] = $queue;
                 $this->iInventoryBatchCount++;
+                $result = true;
             }
 
+        } else {
+            $queue->mask &= ~intval($this->getExternalMarketPlaceEntity()->mask);
+            $queue->save();
         }
-        return $this;
+        return $result;
     }
 
     public function checkMarketplaceRestrictions($queue)

@@ -153,7 +153,9 @@ if (!empty($cidev_storefronts) && is_array($cidev_storefronts)) {
                         }
 
                         if ($oExternalMarketPlace->getExternalMarketPlaceEntity()->getMarketPlaceStatus() == 'Y') {
-                            $oExternalMarketPlace->addProductToBatch($queue, $googleOneRow, EXTRA_LOG);
+                            if (!($oExternalMarketPlace->addProductToBatch($queue, $googleOneRow, EXTRA_LOG))) {
+
+                            }
                         }
                         if ($oExternalMarketPlace->getCurrentInventoryBatchCount() == $oExternalMarketPlace->getInventoryBatchCount()) {
                             if ($oExternalMarketPlace->submitInventoryBatch(SUBMIT_DISABLE, EXTRA_LOG)) {

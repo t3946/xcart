@@ -33,6 +33,10 @@ class UpdatedProductModel extends AutoMetaModel
                 'modelClass' => ProductModel::className(),
                 'link' => ['resourceid' => 'productid'],
             ],
+            'mask' => [
+                'class' => IntField::className(),
+                'null' => true,
+            ],
 
         ];
     }
