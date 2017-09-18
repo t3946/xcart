@@ -109,6 +109,7 @@ if (!empty($cidev_storefronts) && is_array($cidev_storefronts)) {
             $deafultMask += $market->getExternalMarketPlaceEntity()->mask;
         }
 
+        /** @var UpdatedProductModel[] $queues */
         $queues = UpdatedProductModel::objects()
             ->select(['*', 'product__forsale', 'utype' => new Expression('GROUP_CONCAT(type ORDER BY type)')])
             ->filter(
@@ -133,6 +134,11 @@ if (!empty($cidev_storefronts) && is_array($cidev_storefronts)) {
 
                 if (is_null($queue->mask)) {
                     $queue->mask = $deafultMask;
+                    if ($queue->mask === 0) {
+                        $queue->delete();
+                        continue;
+                    }
+                    $queue->save();
                 }
 
                 if ((time() - $storefront_time_start) > $timeout) {

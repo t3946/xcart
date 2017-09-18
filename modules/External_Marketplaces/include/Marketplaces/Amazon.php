@@ -23,18 +23,7 @@ class Amazon extends StoreFrontMarketPlace
         } else {
 
             $queue->mask &= ~intval($this->getExternalMarketPlaceEntity()->mask);
-            if ($queue->mask === 0) {
-                $q = UpdatedProductModel::objects()->get([
-                    'resourceid' => $queue->resourceid,
-                    'type' => $queue->type
-                ]);
-                if ($q) {
-                    $q->mask = 0;
-                    $q->save();
-                }
-            } else {
-                $queue->save();
-            }
+            $queue->save();
         }
         return $result;
     }
