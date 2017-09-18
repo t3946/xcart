@@ -115,10 +115,10 @@
                                     <input class="external_storefront_export_filename_suffix" name="external_storefront_marketplace[{$oMarketPlace->getMarketPlaceId()}][{$oStoreFrontMarketPlace->getStoreFrontId()}][export_filename_suffix]" type="text" size="15" value="{$oStoreFrontMarketPlace->getFileNameSuffix()}"/>
                                 </td>
                                 <td align="center">
-                                    <input class="external_storefront_update_expired_before" name="external_storefront_marketplace[{$oMarketPlace->getMarketPlaceId()}][{$oStoreFrontMarketPlace->getStoreFrontId()}][update_expired_before]" type="text" size="15" value="{$oStoreFrontMarketPlace->getUpdateExpiredBeforeDays()}"/>
+                                    <input class="external_storefront_update_expired_before" name="external_storefront_marketplace[{$oMarketPlace->getMarketPlaceId()}][{$oStoreFrontMarketPlace->getStoreFrontId()}][update_expired_before]" type="text" size="15" value="{$oStoreFrontMarketPlace->update_expired_before}"/>
                                 </td>
                                 <td align="center">
-                                    <input class="external_storefront_update_max_expired_products" name="external_storefront_marketplace[{$oMarketPlace->getMarketPlaceId()}][{$oStoreFrontMarketPlace->getStoreFrontId()}][update_max_expired_products_per_day]" type="text" size="15" value="{$oStoreFrontMarketPlace->getUpdateMaxExpiredProductsPerDay()}"/>
+                                    <input class="external_storefront_update_max_expired_products" name="external_storefront_marketplace[{$oMarketPlace->getMarketPlaceId()}][{$oStoreFrontMarketPlace->getStoreFrontId()}][update_max_expired_products_per_day]" type="text" size="15" value="{$oStoreFrontMarketPlace->update_max_expired_products_per_day}"/>
                                 </td>
                                 <td>
                                     <input class="delete_checkbox" type="checkbox" name="external_storefront_marketplace_to_delete[{$oMarketPlace->getMarketPlaceId()}][{$oStoreFrontMarketPlace->getStoreFrontId()}]"/>
