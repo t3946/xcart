@@ -268,14 +268,20 @@ class GroupStore extends BaseStore
                     /** @var ProductCategoriesModel $p_cat */
                     if ($p_cat = $product->category_main->all()) {
                         foreach ($p_cat as $cat) {
-                            $new_cat = new ProductCategoriesModel($cat->getAttributes());
-                            $new_cat->categoryid = $this->data['category'];
-                            $new_cat->save();
                             ProductCategoriesModel::objects()->delete([
                                 'categoryid' => $cat->categoryid,
                                 'productid' => $cat->productid,
                                 'main' => 'Y'
                             ]);
+
+                            list($new_cat) = ProductCategoriesModel::objects()->getOrNew(
+                                [
+                                    'categoryid' =>  $this->data['category'],
+                                    'productid' => $cat->productid,
+                                    'main' => 'Y'
+                                ]);
+                            $new_cat->save();
+
                         }
                     }
 
