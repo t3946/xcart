@@ -106,7 +106,7 @@
 
         .accordion-content {
           border: none;
-          margin-bottom: rem-calc(40);
+          //margin-bottom: rem-calc(40);
         }
 
         &.is-active {
@@ -147,9 +147,24 @@
         }
       }
     }
+    
+    h2 {
+      text-align: left;
+    }
 
-    .content {
-      color: #262626;
+    .block {
+
+      &:nth-child(1n+2) {
+        margin-top: rem-calc(39);
+
+        @include breakpoint(large up) {
+          margin-top: 0;
+        }
+      }
+
+      .content {
+        color: #262626;
+      }
     }
   }
 }

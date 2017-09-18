@@ -62,7 +62,6 @@
                         </li>
                     {/foreach}
 
-
                     <li class="tabs-title">
                       <a href="#questions" aria-selected="false">Product questions</a>
                     </li>
@@ -72,73 +71,7 @@
                 <div class="tabs-content" data-tabs-content="product_tabs">
 
                     <div class="tabs-panel is-active" id="description">
-                        <div class="row">
-                            <div class="column small-12 large-4">
-
-                                <div class="options">
-                                    <h2>Options</h2>
-                                    <div class="content">
-
-                                        <div class="option">
-                                            <div class="title">Production</div>
-                                            <div class="value">
-                                                <div class="multiline">
-                                                    {$model->distributor->manufacturer}
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="option">
-                                            <div class="title">Brand</div>
-                                            <div class="value">
-                                                <div class="multiline">
-                                                    {$model->brand->brand}
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        {if $model->upc}
-                                        <div class="option">
-                                            <div class="title">Barcode</div>
-                                            <div class="value">
-                                                <div class="multiline">
-                                                    UPC:
-                                                    {$model->upc}
-                                                </div>
-                                            </div>
-                                        </div>
-                                        {/if}
-
-                                        {foreach $model->getParamList() as $item}
-                                        <div class="option">
-                                            <div class="title">{$item.name}</div>
-                                            <div class="value">
-                                                <div class="multiline">
-
-                                                    {$item.values|implode:', '}
-                                                    {*{foreach $item.values as $value last=$last}*}
-                                                        {*{$value} {if !$last},{/if}*}
-                                                    {*{/foreach}*}
-                                                </div>
-                                            </div>
-                                        </div>
-                                        {/foreach}
-
-                                    </div>
-                                </div>
-
-                            </div>
-                            <div class="column small-12 large-8">
-
-                                <div class="description">
-                                    <h2>Description</h2>
-                                    <div class="content">
-                                        {raw $model->getFrontendDescription()}
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
+                        {include 'product/tabs/_description.tpl' model=$model}
                     </div>
 
                     <div class="tabs-panel" id="brand">
