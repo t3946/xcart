@@ -6,6 +6,7 @@ namespace Modules\Product\Models;
 use Xcart\App\Orm\AutoMetaModel;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\IntField;
+use Xcart\App\Orm\Fields\UnixTimestampField;
 
 class UpdatedProductModel extends AutoMetaModel
 {
@@ -26,6 +27,10 @@ class UpdatedProductModel extends AutoMetaModel
                 'class' => IntField::className(),
                 'primary' => true,
                 'null' => false,
+            ],
+            'time_stamp' => [
+                'class' => UnixTimestampField::className(),
+                'autoNowAdd' => true,
             ],
             'product' => [
                 'field' => 'resourceid',

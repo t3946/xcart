@@ -1,5 +1,7 @@
 <?php
 
+use Mindy\QueryBuilder\Aggregation\Count;
+use Mindy\QueryBuilder\Aggregation\Min;
 use Mindy\QueryBuilder\Expression;
 use Modules\Product\Models\ProductModel;
 use Modules\Product\Models\UpdatedProductModel;
@@ -104,13 +106,58 @@ if (!empty($cidev_storefronts) && is_array($cidev_storefronts)) {
         /** @var StoreFrontMarketPlace[] $aExternalMarketPlaces */
         $aExternalMarketPlaces = StoreFrontMarketPlace::getMarketPlacesByStoreFront($storefrontid);
 
-        $deafultMask = 0;
+        $defaultMask = 0;
         foreach ($aExternalMarketPlaces as $market) {
-            $deafultMask += $market->getExternalMarketPlaceEntity()->mask;
+            $defaultMask += $market->getExternalMarketPlaceEntity()->mask;
+        }
+
+        if ($doubles = UpdatedProductModel::objects()
+            ->getQuerySet()
+            ->select(
+                [
+                    'resourceid',
+                    'cnt' => new Count('*'),
+                    'utype' => new Min('type'),
+                    'gtype' => new Expression('GROUP_CONCAT(type ORDER BY type)'),
+                    'gmask' => new Expression("GROUP_CONCAT(IFNULL(mask, 'null'))")
+                ])
+            ->filter(
+                [
+                    'product__sites__sfid' => $storefrontid,
+                    'type__lte' => 2
+                ])
+            ->group(['resourceid'])
+            ->having(['cnt__gte' => 1])
+            ->all()) {
+            /** @var UpdatedProductModel[] $doubles */
+            /** @var UpdatedProductModel $new */
+            foreach ($doubles as $double) {
+                UpdatedProductModel::objects()->delete(['resourceid' => $double->resourceid, 'type__in' => $double->getNotModelAttribute('gtype')]);
+                list($new) = UpdatedProductModel::objects()->getOrNew(['resourceid' => $double->resourceid, 'type' => $double->getNotModelAttribute('utype')]);
+
+                $or_mask = array_reduce(
+                    explode(',', $double->getNotModelAttribute('gmask')),
+                    function($a, $b) use ($defaultMask) {
+                        if ($a === 'null') {
+                            $a = $defaultMask;
+                        }
+                        if ($b === 'null') {
+                            $b = $defaultMask;
+                        }
+                        return $a | $b;
+                        }, 0
+                );
+
+                $new->setAttributes([
+                    'source' => 'cron_group',
+                    'mask' => $or_mask
+                ]);
+                $new->save();
+            }
         }
 
         /** @var UpdatedProductModel[] $queues */
-        $queues = UpdatedProductModel::objects()
+        if ($queues = UpdatedProductModel::objects()
             ->select(['*', 'product__forsale', 'utype' => new Expression('GROUP_CONCAT(type ORDER BY type)')])
             ->filter(
                 [
@@ -120,63 +167,68 @@ if (!empty($cidev_storefronts) && is_array($cidev_storefronts)) {
             ->group(['resourceid'])
             ->order(['-utype', '-product__forsale'])
             ->limit(3000)
-            ->all();
-
-        $timeout = 60 * 20;
-        $storefront_time_start = time();
-
-        if ($queues) {
-
+            ->all()) {
+            $timeout = 60 * 20;
+            $storefront_time_start = time();
             $log_text = "Storefront: " . $sf_info["domain"] . " Storefrontid: " . $sf_info["storefrontid"];
             func_backprocess_log("incremental feeds", $log_text);
 
-            foreach ($queues as $queue) {
+            foreach ($queues as $queue_o) {
 
-                if (is_null($queue->mask)) {
-                    $queue->mask = $deafultMask;
-                    if ($queue->mask === 0) {
-                        $queue->delete();
-                        continue;
+                if ($queue = UpdatedProductModel::objects()
+                    ->get(
+                        [
+                            'resourceid' => $queue_o->resourceid,
+                            'type' => $queue_o->type
+                        ])
+                ) {
+
+                    if (is_null($queue->mask)) {
+                        $queue->mask = $defaultMask;
+                        if ($queue->mask === 0) {
+                            $queue->delete();
+                            continue;
+                        }
+                        $queue->save();
                     }
-                    $queue->save();
-                }
 
-                if ((time() - $storefront_time_start) > $timeout) {
-                    func_backprocess_log("incremental feeds", "Time out processing {$timeout} sec. StorefrontID: {$storefrontid} ...");
-                    break;
-                }
+                    if ((time() - $storefront_time_start) > $timeout) {
+                        func_backprocess_log("incremental feeds", "Time out processing {$timeout} sec. StorefrontID: {$storefrontid} ...");
+                        break;
+                    }
 
-                if ($oProduct = $queue->product) {
+                    if ($oProduct = $queue->product) {
 
-                    /** @var $oProduct ProductModel */
-                    $oProduct->last_incremental_update = time();
-                    $oProduct->save();
+                        /** @var $oProduct ProductModel */
+                        $oProduct->last_incremental_update = time();
+                        $oProduct->save();
 
-                    $googleOneRow = null;
+                        $googleOneRow = null;
 
-                    foreach ($aExternalMarketPlaces as $oExternalMarketPlace) {
-                        if (is_null($googleOneRow)) {
-                            $googleOneRow = $oExternalMarketPlace->getGoogleOneRow($oProduct, $queue, EXTRA_LOG);
-                        }
-
-                        if ($oExternalMarketPlace->getExternalMarketPlaceEntity()->getMarketPlaceStatus() == 'Y') {
-                            if (!($oExternalMarketPlace->addProductToBatch($queue, $googleOneRow, EXTRA_LOG))) {
-
+                        foreach ($aExternalMarketPlaces as $oExternalMarketPlace) {
+                            if (is_null($googleOneRow)) {
+                                $googleOneRow = $oExternalMarketPlace->getGoogleOneRow($oProduct, $queue, EXTRA_LOG);
                             }
-                        }
-                        if ($oExternalMarketPlace->getCurrentInventoryBatchCount() == $oExternalMarketPlace->getInventoryBatchCount()) {
-                            if ($oExternalMarketPlace->submitInventoryBatch(SUBMIT_DISABLE, EXTRA_LOG)) {
-                                $oExternalMarketPlace->successInventory();
+
+                            if ($oExternalMarketPlace->getExternalMarketPlaceEntity()->getMarketPlaceStatus() == 'Y') {
+                                if (!($oExternalMarketPlace->addProductToBatch($queue, $googleOneRow, EXTRA_LOG))) {
+
+                                }
                             }
-                        }
-                        if ($oExternalMarketPlace->getCurrentProductsBatchCount() == $oExternalMarketPlace->getProductsBatchCount()) {
-                            if ($oExternalMarketPlace->submitProductsBatch(SUBMIT_DISABLE, EXTRA_LOG)) {
-                                $oExternalMarketPlace->successProduct();
+                            if ($oExternalMarketPlace->getCurrentInventoryBatchCount() == $oExternalMarketPlace->getInventoryBatchCount()) {
+                                if ($oExternalMarketPlace->submitInventoryBatch(SUBMIT_DISABLE, EXTRA_LOG)) {
+                                    $oExternalMarketPlace->successInventory();
+                                }
+                            }
+                            if ($oExternalMarketPlace->getCurrentProductsBatchCount() == $oExternalMarketPlace->getProductsBatchCount()) {
+                                if ($oExternalMarketPlace->submitProductsBatch(SUBMIT_DISABLE, EXTRA_LOG)) {
+                                    $oExternalMarketPlace->successProduct();
+                                }
                             }
                         }
                     }
+                    $cnt++;
                 }
-                $cnt++;
             }
         }
 

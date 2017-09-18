@@ -24,6 +24,12 @@ abstract class StoreFrontMarketPlace extends Data
         $this->fetchExternalMarketPlace();
     }
 
+    /**
+     * @param UpdatedProductModel $queue
+     * @param string $googleOneRow
+     * @param string $sExtraLog
+     * @return mixed
+     */
     abstract public function addProductToBatch($queue, $googleOneRow = "", $sExtraLog = "N");
     abstract public function submitInventoryBatch($debug_mode = 'N', $extra_log = 'N');
     abstract public function submitProductsBatch($debug_mode = 'N', $extra_log = 'N');

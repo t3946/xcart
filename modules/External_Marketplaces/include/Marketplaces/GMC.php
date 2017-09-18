@@ -49,8 +49,15 @@ class GMC extends StoreFrontMarketPlace
             }
 
         } else {
-            $queue->mask &= ~intval($this->getExternalMarketPlaceEntity()->mask);
-            $queue->save();
+            list($queue_n) = UpdatedProductModel::objects()->getOrNew(
+                [
+                    'resourceid' => $queue->resourceid,
+                    'type' => $queue->type
+                ]);
+            if ($queue_n) {
+                $queue_n->mask &= ~intval($this->getExternalMarketPlaceEntity()->mask);
+                $queue_n->save();
+            }
         }
         return $result;
     }
