@@ -118,6 +118,7 @@ if (!empty($cidev_storefronts) && is_array($cidev_storefronts)) {
                 ])
             ->group(['resourceid'])
             ->order(['-utype', '-product__forsale'])
+            ->limit(3000)
             ->all();
 
         $timeout = 60 * 20;
