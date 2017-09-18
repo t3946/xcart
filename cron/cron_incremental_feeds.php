@@ -127,7 +127,7 @@ if (!empty($cidev_storefronts) && is_array($cidev_storefronts)) {
                     'type__lte' => 2
                 ])
             ->group(['resourceid'])
-            ->having(['cnt__gte' => 1])
+            ->having(['cnt__gt' => 1])
             ->all()) {
             /** @var UpdatedProductModel[] $doubles */
             /** @var UpdatedProductModel $new */
