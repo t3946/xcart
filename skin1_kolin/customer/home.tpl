@@ -93,6 +93,9 @@
     {include file="meta.tpl" }
 
 {if ($main eq "product")}
+    {if $product && $product.productid == 346536}
+        <link rel="amphtml" href="https://www.artistsupplysource.com/static/products/346536/sienna-horizon-counterweight-studio-easel-craftech-amp.html">
+    {/if}
 {* igor_async *}
 <script src="{$SkinDir}/jquery.tooltip.js" type="text/javascript"></script>
 
