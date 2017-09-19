@@ -191,6 +191,7 @@ class ProductModel extends AutoMetaModel implements ICartItem
     public function isAmazonFBAEnabled()
     {
         return $this->amazon_fba == 'Y';
+    }
 
     public function getParamList()
     {
