@@ -191,13 +191,12 @@ abstract class StoreFrontMarketPlace extends Data
     {
         foreach ($products as $item) {
             /** @var UpdatedProductModel $model */
-            $model = UpdatedProductModel::objects()->getOrNew([
+            list($model) = UpdatedProductModel::objects()->getOrNew([
                 'resourceid' => $item['productid'],
                 'type' => $mode
             ]);
             $model->setAttributes(
                 [
-                    'time_stamp' => time(),
                     'source' => 're-queue'
                 ]);
             $model->save();
