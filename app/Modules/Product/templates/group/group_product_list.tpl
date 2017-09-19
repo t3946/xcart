@@ -67,7 +67,7 @@
                     .mmodal({
                         width: 1008,
                         onSubmit: function (s) {
-                            $(s).closest('form').off().submit();
+                            //$(s).closest('form').off().submit();
                         },
                         onAfterOpen: function () {
                             tinymce.init({
