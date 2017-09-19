@@ -92,7 +92,7 @@
             </td>
             <td colspan="1">
                 {set $zip_code = '-'|explode:$order->s_zipcode}
-                <a href="{url 'dashboard:search'}&search[customer][zip_code]={$zip_code.0}" target="_blank">
+                <a href="{url 'dashboard:search'}?search[customer][zip_code]={$zip_code.0}" target="_blank">
                     {$order->s_zipcode}
                 </a>
             </td>
