@@ -2,9 +2,11 @@
 namespace Modules\Product\Models;
 
 use Modules\Amazon\Models\AmazonFbaMissingSkuModel;
+use Modules\Amazon\Models\AmazonProductsFieldsModel;
 use Modules\Brand\Models\BrandModel;
 use Modules\Cart\Interfaces\ICartItem;
 use Modules\Distributor\Models\DistributorModel;
+use Modules\Sites\Models\SiteModel;
 use Modules\Menu\Models\CleanUrlModel;
 use Modules\Sites\Models\SiteModel;
 use Xcart\App\Components\Breadcrumbs;
@@ -15,6 +17,7 @@ use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\HasManyField;
 use Xcart\App\Orm\Fields\IntField;
+use Xcart\App\Orm\Fields\OneToOneField;
 use Xcart\App\Orm\Fields\ManyToManyField;
 use Xcart\App\Traits\DataModelTrait;
 use Xcart\App\Traits\SlugifyTrait;
@@ -157,10 +160,20 @@ class ProductModel extends AutoMetaModel implements ICartItem
                 'null' => false,
                 'default' => 0,
             ],
+            'sites' => [
+                'class' => HasManyField::className(),
+                'modelClass' => ProductStorefrontModel::className(),
+                'link' => ['productid' => 'productid']
+            ],
             'missing_products' => [
                 'class' => HasManyField::className(),
                 'modelClass' => AmazonFbaMissingSkuModel::className(),
                 'link' => ['productid' => 'productid'],
+            ],
+            'amazon_fields' => [
+                'class' => OneToOneField::className(),
+                'modelClass' => AmazonProductsFieldsModel::className(),
+                'link' => ['productid' => 'productid']
             ],
         ];
     }
@@ -175,6 +188,9 @@ class ProductModel extends AutoMetaModel implements ICartItem
         return $sMPN;
     }
 
+    public function isAmazonFBAEnabled()
+    {
+        return $this->amazon_fba == 'Y';
 
     public function getParamList()
     {

@@ -6,6 +6,7 @@ use CaponicaAmazonMwsComplete\ClientPool\MwsClientPool;
 use CaponicaAmazonMwsComplete\ClientPool\MwsClientPoolConfig;
 use Modules\Amazon\ClientPack\MwsFbaInventoryClient;
 use Modules\Amazon\ClientPack\MwsFbaOutboundClient;
+use Modules\Amazon\ClientPack\MwsFeedAndReportClient;
 use Modules\Amazon\ClientPack\MwsProductClientPackExt;
 
 class AmazonPoolStore extends MwsClientPool
@@ -54,5 +55,13 @@ class AmazonPoolStore extends MwsClientPool
             $this->productClientPack = new MwsProductClientPackExt($this->config);
         }
         return $this->productClientPack;
+    }
+
+    public function getFeedAndReportClientPack()
+    {
+        if(empty($this->feedAndReportClientPack)) {
+            $this->feedAndReportClientPack = new MwsFeedAndReportClient($this->config);
+        }
+        return $this->feedAndReportClientPack;
     }
 }

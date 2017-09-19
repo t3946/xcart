@@ -4,9 +4,9 @@
 {/block}
 
 {block 'before-content'}
-    {autoescape false}
-    {orders_test_checkout}
-    {/autoescape}
+    {*{autoescape false}*}
+    {*{orders_test_checkout}*}
+    {*{/autoescape}*}
 {/block}
 
 {block 'content'}

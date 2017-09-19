@@ -2019,13 +2019,26 @@ function func_get_order_manufacturers($orderid)
                         $product_model = $detail_model->product_model;
                         $v = $product_model->getAttributes();
                         $selected_product_options = "";
+
                         if (!empty($detail_model->product_options)) {
-                            if (is_array($detail_model->product_options)) {
-                                foreach ($detail_model->product_options as $kk => $vv) {
+
+                            $options = $detail_model->product_options;
+
+                        } else {
+
+                            $extra_data = unserialize($detail_model->extra_data);
+                            if (!empty($extra_data['product_options'])) {
+                                list($variant, $options) = func_get_product_options_data($product_model->productid, $extra_data['product_options']);
+                            }
+                        }
+
+                        if (!empty($options)) {
+                            if (is_array($options)) {
+                                foreach ($options as $kk => $vv) {
                                     $selected_product_options .= "<br />" . $vv["classtext"] . " " . $vv["option_name"];
                                 }
                             } else {
-                                $selected_product_options .= "<br />" . $detail_model->product_options;
+                                $selected_product_options .= "<br />" . $options;
                             }
                         }
 

@@ -245,5 +245,6 @@ class MailComponent
         $this->attachments = [];
         $this->body = null;
         $this->subject = null;
+        $this->header = [];
     }
 }

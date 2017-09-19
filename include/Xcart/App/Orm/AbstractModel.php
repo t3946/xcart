@@ -267,10 +267,10 @@ class AbstractModel extends Base
             if (in_array($name, $fields) && in_array($name, $dirty) && $meta->hasField($name)) {
                 $field = $this->getField($name);
 
-                if ($field->getSqlType() && $attribute != $this->getOldAttribute($name)) {
+                if ($field->getSqlType() && $attribute !== $this->getOldAttribute($name)) {
                     $value = $field->convertToDatabaseValue($attribute, $platform);
 
-                    if ($value != $this->getOldAttribute($name)) {
+                    if ($value !== $this->getOldAttribute($name)) {
                         $changed[$name] = $value === null ? $field->convertToDatabaseValue($field->default, $platform) : $value;
 //                        $changed[$name] = $value === null ? $field->default : $value;
                     }

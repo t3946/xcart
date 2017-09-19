@@ -701,6 +701,16 @@ SQL;
         return $this->iAmazonQuantity;
     }
 
+    public function getZeroPrice()
+    {
+        $aResult = SQLBuilder::getInstance()->
+        addSelect("cidev_get_FBA_zero_margin_price({$this->getProductId()}, 'Y')", 'zprice')->
+        addFromTable('products')->
+        addCondition('productid=' . $this->getProductId())->
+        query_first()->getQueryResult();
+        return floatval($aResult['zprice']);
+    }
+
     public function getAmazonPrice()
     {
         if (is_null($this->fAmazonPrice)) {

@@ -419,6 +419,10 @@ class OrderSearchStore extends BaseStore
                 $this->where['l_icx.orderid__isnull'] = ($data['order']['has_icx'] == 'N');
             }
 
+            if (!empty($data['order']['po'])) {
+                $this->getQ(['po_number' => $data['order']['po']], 'order.po');
+            }
+
         }
 
         if (!empty($data["features"])) {

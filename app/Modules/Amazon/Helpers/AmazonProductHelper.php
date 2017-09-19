@@ -140,9 +140,16 @@ class AmazonProductHelper
                             /** @var MarketplaceWebServiceProducts_Model_OfferType $oOffer */
                             /** @var MarketplaceWebServiceProducts_Model_MoneyType $lPrice */
                             if (($aOffers = $p->getOffers()) && $offerList = $aOffers->getOffer()) {
+
+                                if ($oAmazonProductModel->lis_InStockSupplyQuantity > 0) {
+                                    $sChannel = 'AMAZON';
+                                } else {
+                                    $sChannel = 'MERCHANT';
+                                }
+
                                 foreach ($offerList as $oOffer) {
                                     /** @var MarketplaceWebServiceProducts_Model_PriceType $buyingPrice */
-                                    if ($buyingPrice = $oOffer->getBuyingPrice()) {
+                                    if (($buyingPrice = $oOffer->getBuyingPrice()) && ($oOffer->getFulfillmentChannel() == $sChannel)) {
                                         $lPrice = $buyingPrice->getLandedPrice();
                                         $oAmazonProductModel->cpr_OurLandedPrice = $lPrice->getAmount();
                                     }
