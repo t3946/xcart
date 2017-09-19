@@ -8,7 +8,6 @@ use Modules\Cart\Interfaces\ICartItem;
 use Modules\Distributor\Models\DistributorModel;
 use Modules\Sites\Models\SiteModel;
 use Modules\Menu\Models\CleanUrlModel;
-use Modules\Sites\Models\SiteModel;
 use Xcart\App\Components\Breadcrumbs;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\AutoMetaModel;
@@ -159,11 +158,6 @@ class ProductModel extends AutoMetaModel implements ICartItem
                 'class' => IntField::className(),
                 'null' => false,
                 'default' => 0,
-            ],
-            'sites' => [
-                'class' => HasManyField::className(),
-                'modelClass' => ProductStorefrontModel::className(),
-                'link' => ['productid' => 'productid']
             ],
             'missing_products' => [
                 'class' => HasManyField::className(),
