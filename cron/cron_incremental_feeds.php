@@ -186,7 +186,7 @@ if (!empty($cidev_storefronts) && is_array($cidev_storefronts)) {
                     if (is_null($queue->mask)) {
                         $queue->mask = $defaultMask;
                         if ($queue->mask === 0) {
-                            $queue->delete();
+                            UpdatedProductModel::objects()->delete(['resourceid' => $queue->resourceid, 'type' => $queue->type]);
                             continue;
                         }
                         $queue->save();
