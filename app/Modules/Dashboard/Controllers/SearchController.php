@@ -16,22 +16,10 @@ class SearchController extends PrototypeAdminController
         $session       = Xcart::app()->request->session;
         $form_collapse = false;
 
-//        if (!empty($_GET['search']['reset']) == 'reset') {
-//            $session->remove('search_order_form');
-//            $this->refresh();
-//        }
-
-        if (!empty($_GET['search'])) {
+        if (!empty($_REQUEST['search'])) {
             $form_collapse = true;
-            $form_data = OrderSearchStore::getClearedData($_GET['search']);
-//            $session->add('search_order_form', OrderSearchStore::getClearedData($_GET['search']));
+            $form_data = OrderSearchStore::getClearedData($_REQUEST['search']);
         }
-
-//        $form_data = $session->get('search_order_form', [
-//            'order'    => [
-//                'date' => SearchHelper::getDefaultSearchDate(),
-//            ],
-//        ]);
 
         if (!is_array($form_data)) {
             $form_data = [
@@ -41,12 +29,24 @@ class SearchController extends PrototypeAdminController
             ];
         }
 
-
         $orderStore = new OrderSearchStore($form_data);
         $orderStore->setOrder(['-date', '-orderid']);
 
         $models = $orderStore->getModels();
         $pager = $orderStore->getPager();
+
+        if ( $orderStore->getQuerySet()->count() == 1 && !empty($_REQUEST['fast_search'])) {
+            /** @var \Modules\Order\Models\OrderModel $model */
+            $model = $models[0];
+            $this->redirect( $model->getAdminUrl() );
+        }
+        else {
+            if ($this->getRequest()->getIsPost()) {
+                $url = Xcart::app()->router->url('dashboard:search', [], ['search' => $form_data]);
+                $this->getRequest()->redirect($url);
+//                $this->getRequest()->redirect('dashboard:search', ['search' => $form_data]);
+            }
+        }
 
         if (empty($models)) {
             $form_collapse = false;

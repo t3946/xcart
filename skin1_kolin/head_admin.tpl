@@ -44,43 +44,47 @@
 
 <td width="34%" align="center" class="HeadLine">
 {if $usertype eq 'A' && $login}
-                <form method="post" action="/admin/orders.php" name="productsearchform">
-                <input type="hidden" name="fast_search" value="Y" />
-                <input type="hidden" name="mode" value="" />
+    <form method="post" action="{$xcartApp->router->url('dashboard:search')}" name="productsearchform">
+        <input type="hidden" name="fast_search" value="Y"/>
+        {*<input type="hidden" name="mode" value=""/>*}
 
 <script type="text/javascript">
 //<![CDATA[
 {literal}
 
-$(document).ready(function() {
-        $('#select_searchstring_by').change(function() {
-                var select_searchstring_by = $('#select_searchstring_by').val();
-                        $('#searchstring').attr("name", "posted_data["+select_searchstring_by+"]");
-        });
+$(document).ready(function () {
+    $('#select_searchstring_by').change(function () {
+        var select_searchstring_by = $('#select_searchstring_by').val();
+        $('#searchstring').attr("name", "search" + select_searchstring_by);
+    });
 });
 
 {/literal}
 //]]>
 </script>
 
-                                <table cellpadding="0" cellspacing="0">
-                                <tr>
-                                        <td>
-                                                <select name="select_searchstring_by" id ="select_searchstring_by">
-                                                        <option value="orderid">Order # / Amazon order ID</option>
-                                                        <option value="po_number">PO #</option>
-                                                        <option value="s_zipcode">Zip code</option>
-                                                </select>
-                                        </td>
-                                        <td>
-                                                <input type="text" id="searchstring" name="posted_data[orderid]" size="18" value="" />
-                                        </td>
-                                        <td>
-                                                <input type="submit" value="{$lng.lbl_search}" />
-                                        </td>
-                                </tr>
-                                </table>
-                </form>
+        <table cellpadding="0" cellspacing="0">
+            <tr>
+                <td>
+                    <select id="select_searchstring_by">
+                        <option value="[order][id][from]">Order # / Amazon order ID</option>
+                        <option value="[order][po]">PO #</option>
+                        <option value="[customer][zip_code]">Zip code</option>
+                    </select>
+                </td>
+                <td>
+                    <input type="text"
+                        id="searchstring"
+                        name="search[order][id][from]"
+                        size="18"
+                        value=""/>
+                </td>
+                <td>
+                    <input type="submit" value="{$lng.lbl_search}"/>
+                </td>
+            </tr>
+        </table>
+    </form>
 {/if}
 </td>
 
