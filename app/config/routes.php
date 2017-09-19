@@ -57,6 +57,11 @@ return [
         'namespace' => 'demo'
     ],
     [
+        'route' => '/images',
+        'path' => 'Modules.Image.routes',
+        'namespace' => 'images'
+    ],
+    [
         'route' => '/payment',
         'path' => 'Modules.Payment.routes',
         'namespace' => 'payment'

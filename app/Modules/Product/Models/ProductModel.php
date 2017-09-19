@@ -127,7 +127,7 @@ class ProductModel extends AutoMetaModel implements ICartItem
             ],
             'images' => [
                 'class' => HasManyField::className(),
-                'modelClass' => ImagePModel::className(),
+                'modelClass' => ImageDModel::className(),
                 'link' => ['id' => 'productid'],
 //                'extra' => ['avail' => 'Y']
             ],

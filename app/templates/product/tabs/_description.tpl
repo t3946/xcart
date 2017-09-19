@@ -5,14 +5,14 @@
             <h2>Options</h2>
             <div class="content">
 
-                <div class="option">
-                    <div class="title">Production</div>
-                    <div class="value">
-                        <div class="multiline">
-                            {$model->distributor->manufacturer}
-                        </div>
-                    </div>
-                </div>
+                {*<div class="option">*}
+                    {*<div class="title">Production</div>*}
+                    {*<div class="value">*}
+                        {*<div class="multiline">*}
+                            {*{$model->distributor->manufacturer}*}
+                        {*</div>*}
+                    {*</div>*}
+                {*</div>*}
 
                 <div class="option">
                     <div class="title">Brand</div>

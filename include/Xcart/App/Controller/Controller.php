@@ -63,28 +63,37 @@ class Controller
     {
         $method = new ReflectionMethod($this, $action);
         $ps = [];
-        if ($method->getNumberOfParameters() > 0) {
+        if ($method->getNumberOfParameters() > 0)
+        {
             foreach ($method->getParameters() as $param) {
                 $name = $param->getName();
+
                 if (isset($params[$name])) {
                     if ($param->isArray()) {
                         $ps[] = is_array($params[$name]) ? $params[$name] : [$params[$name]];
-                    } elseif (!is_array($params[$name])) {
+                    }
+                    elseif (!is_array($params[$name])) {
                         $ps[] = $params[$name];
-                    } else {
+                    }
+                    else {
                         return false;
                     }
-                } elseif ($param->isDefaultValueAvailable()) {
+                }
+                elseif ($param->isDefaultValueAvailable()) {
                     $ps[] = $param->getDefaultValue();
-                } else {
+                }
+                else {
                     $class = get_class();
                     throw new InvalidConfigException("Param {$name} for action {$action} in controller {$class} must be defined. Please, check your routes.");
                 }
             }
             $method->invokeArgs($this, $ps);
-        } else {
-            $this->{$action}();
         }
+        else {
+            $method->invokeArgs($this, $params);//temp
+//            $this->{$action}();
+        }
+
         return true;
     }
 

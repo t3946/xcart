@@ -246,7 +246,8 @@ class Router
         // set Request Url if it isn't passed as parameter
         if ($requestUrl === null) {
             $requestUrl = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '/';
-        } elseif ($requestUrl === '') {
+        }
+        elseif ($requestUrl === '') {
             $requestUrl = '/';
         }
 
@@ -285,10 +286,12 @@ class Router
             // Check for a wildcard (matches all)
             if ($_route === '*') {
                 $match = true;
-            } elseif (isset($_route[0]) && $_route[0] === '@') {
+            }
+            elseif (isset($_route[0]) && $_route[0] === '@') {
                 $pattern = '`' . substr($_route, 1) . '`u';
                 $match = preg_match($pattern, $requestUrl, $params);
-            } else {
+            }
+            else {
                 $route = null;
                 $regex = false;
                 $j = 0;
@@ -299,16 +302,20 @@ class Router
                 while (true) {
                     if (!isset($_route[$i])) {
                         break;
-                    } elseif (false === $regex) {
+                    }
+                    elseif (false === $regex) {
                         $c = $n;
                         $regex = $c === '[' || $c === '(' || $c === '.';
+
                         if (false === $regex && false !== isset($_route[$i + 1])) {
                             $n = $_route[$i + 1];
                             $regex = $n === '?' || $n === '+' || $n === '*' || $n === '{';
                         }
+
                         if (false === $regex && $c !== '/' && (!isset($requestUrl[$j]) || $c !== $requestUrl[$j])) {
                             continue 2;
                         }
+
                         $j++;
                     }
                     $route .= $_route[$i++];
@@ -318,8 +325,8 @@ class Router
                 $match = preg_match($regex, $requestUrl, $params);
             }
 
-            if (($match == true || $match > 0)) {
-
+            if (($match == true || $match > 0))
+            {
                 if ($params) {
                     foreach ($params as $key => $value) {
                         if (is_numeric($key)) unset($params[$key]);
@@ -403,7 +410,8 @@ class Router
 
             if (isset($item['route']) && isset($item['path'])) {
                 $this->appendRoutes($item, $namespace, $route, $config);
-            } elseif (isset($item['route']) && isset($item['target'])) {
+            }
+            elseif (isset($item['route']) && isset($item['target'])) {
                 $this->appendRoute($item, $namespace, $route, $config);
             }
         }

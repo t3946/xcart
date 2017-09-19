@@ -75,7 +75,7 @@
                     </div>
 
                     <div class="tabs-panel" id="brand">
-                        {include 'product/tabs/brand.tpl' model=$model}
+                        {include 'product/tabs/_brand.tpl' model=$model}
                     </div>
 
                     <div class="tabs-panel" id="questions">

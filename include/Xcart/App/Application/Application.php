@@ -273,7 +273,8 @@ class Application
             /** @var Controller $controller */
             $controller = new $controllerClass($this->request);
             $controller->run($action, $params);
-        } elseif (is_callable($match['target'])) {
+        }
+        elseif (is_callable($match['target'])) {
             $fn = $match['target'];
             $fn($this->request, $match['params']);
         }
