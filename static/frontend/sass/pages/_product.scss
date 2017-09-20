@@ -86,7 +86,7 @@
       border-collapse: collapse;
 
       .tabs-panel {
-        padding: rem-calc(38) rem-calc(58);
+        padding: rem-calc(38);
       }
     }
 
@@ -164,6 +164,31 @@
 
       .content {
         color: #262626;
+      }
+
+
+    }
+
+    .tab-brand {
+
+      .image {
+        float: left;
+      }
+
+      @include breakpoint(large up) {
+        .image {
+          text-align: center;
+          float: none;
+        }
+      }
+
+      .link-to-all {
+        display: inline-block;
+        padding-top: rem-calc(19);
+
+        @include breakpoint(large up) {
+          text-align: center;
+        }
       }
     }
   }
