@@ -54,12 +54,7 @@ class SearchController extends PrototypeAdminController
 
         if (!empty($_REQUEST['fast_search'])) {
 
-
             $qs = $orderStore->getQuerySet();
-
-//                $qs = $orderStore->getQuerySet()->orFilter(['amazonorderid' => $oid]);
-//                $orderStore->setQuerySet($qs);
-//                $form_data['order']['amazon_order'] = $_REQUEST['search']['order']['id']['from'];
 
             if ($qs->count() == 1) {
                 $model = $qs->limit(1)->get();
