@@ -2,7 +2,7 @@
     <div class="column small-12 large-4 block">
 
         <div class="options">
-            <h2>Options</h2>
+            <h2 class="title">Options</h2>
             <div class="content">
 
                 {*<div class="option">*}
@@ -53,7 +53,7 @@
     <div class="column small-12 large-8 block">
 
         <div class="description">
-            <h2>Description</h2>
+            <h2 class="title">Description</h2>
             <div class="content">
                 {raw $model->getFrontendDescription()}
             </div>

@@ -657,6 +657,7 @@ class QuerySet extends QuerySetBase
     {
         $clone = clone $this;
         $clone->limit(null);
+        $clone->order([]);
 
         if (!empty($this->_group))
         {

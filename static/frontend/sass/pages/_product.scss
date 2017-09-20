@@ -87,6 +87,14 @@
 
       .tabs-panel {
         padding: rem-calc(38);
+
+        h2 {
+          &.title {
+            @include breakpoint(large up) {
+              margin-bottom: rem-calc(21);
+            }
+          }
+        }
       }
     }
 
@@ -171,11 +179,44 @@
 
     .tab-brand {
 
+      .image-title {
+        //text-align: center;
+      }
+
       .image {
-        float: left;
+        //float: left;
+        display: inline-block;
+      }
+
+      @include breakpoint(ml down ) {
+        .image {
+          max-width: rem-calc(130);
+          max-height: rem-calc(80);
+
+          margin-right: rem-calc(20);
+        }
+
+        .image-title {
+          line-height: 80px;
+          //margin-left: rem-calc(20);
+
+          h2 {
+            display: inline-block;
+            font-size: rem-calc(19);
+          }
+        }
+
+        .small-title {
+          //line-height: ;
+        }
       }
 
       @include breakpoint(large up) {
+
+        .image-title {
+          text-align: center;
+        }
+
         .image {
           text-align: center;
           float: none;
@@ -189,6 +230,12 @@
         @include breakpoint(large up) {
           text-align: center;
         }
+      }
+    }
+
+    .tab-shipping {
+      .raw-content {
+        padding-top: rem-calc(30);
       }
     }
   }

@@ -32,11 +32,6 @@ class TabDataHelper
         return $tabs;
     }
 
-    public static function getShippingTab($src)
-    {
-
-    }
-
     public static function parseS3TabTags($src)
     {
         $tabs = [];
@@ -50,7 +45,7 @@ class TabDataHelper
                     $code = '__' . self::getSlug()->slugify($t[0]) . '__';
 
                     if (count($t) == 2) {
-                        $tabs[] = [
+                        $tabs[$code] = [
                             'name' => ProductModule::t($t[0], [], 'tabs'),
                             'code' => $code,
                             'content' => trim($t[1]),

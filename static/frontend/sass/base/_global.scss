@@ -102,3 +102,11 @@
 .bad {
   color: #ed1c24;
 }
+
+.tab-title {
+  a {
+    &:focus {
+      outline: none;
+    }
+  }
+}

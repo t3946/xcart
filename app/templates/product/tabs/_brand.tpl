@@ -2,7 +2,7 @@
 
 <div class="tab-brand">
     <div class="row">
-        <div class="column small-12 large-3 block">
+        <div class="column small-12 large-3 block image-title">
             {set $image = $brand->getImage()}
             {if $image}
                 <div class="image">
@@ -10,21 +10,31 @@
                 </div>
             {/if}
 
-            <h2 class="hide-for-large">{$brand->brand}</h2>
+            <h2 class="hide-for-large small-title title">
+                <span class="multiline">
+                    {$brand->brand}
+                </span>
+            </h2>
 
             <a href="{$brand->getAbsoluteUrl()}" class="show-for-large link-to-all">
                 See all {$brand->brand} products
             </a>
         </div>
         <div class="column small-12 large-9 block">
-            <h2 class="show-for-large">{$brand->brand}</h2>
+            <h2 class="show-for-large title">
+                <span class="multiline">
+                    {$brand->brand}
+                </span>
+            </h2>
 
             <div class="content">
                 {raw $brand->descr}
 
-                <a href="{$brand->getAbsoluteUrl()}" class="hide-for-large link-to-all">
-                    See all {$brand->brand} products
-                </a>
+                <div>
+                    <a href="{$brand->getAbsoluteUrl()}" class="hide-for-large link-to-all">
+                        See all {$brand->brand} products
+                    </a>
+                </div>
             </div>
         </div>
     </div>

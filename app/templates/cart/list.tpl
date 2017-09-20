@@ -8,11 +8,11 @@
 
             {foreach $.app->cart->getItemsGroupedBy() as $gi => $group}
             {set $items = $group.items}
-            {set $waregouse = $.get_warehouse($gi) }
+            {set $warehouse  = $.get_warehouse($gi) }
 
             <div class="warehouse_products">
                 <div class="shipped_from">
-                    The items below will be shipped from warehouse in {$waregouse->m_city}, {$waregouse->m_state}, {$waregouse->m_country}
+                    The items below will be shipped from warehouse in {$warehouse->m_city}, {$warehouse->m_state}, {$warehouse->m_country}
                 </div>
 
                 <div class="table">
@@ -118,9 +118,9 @@
 
                             <div class="table-row">
                                 <div class="table-column auto from">
-                                    {$waregouse->m_city},
-                                    {$waregouse->m_state},
-                                    {$waregouse->m_country}
+                                    {$warehouse->m_city},
+                                    {$warehouse->m_state},
+                                    {$warehouse->m_country}
                                     warehouse subtotal:
                                 </div>
                                 <div class="table-column extended_remove format_price">
