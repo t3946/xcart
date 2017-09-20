@@ -27,7 +27,8 @@
                 var arrP = [],
                     arrDist = [];
 
-                var selected_phrase = $('.product_group tr[data-selected=true]').first().find('.tree_cell').data('group-phrase');
+                var selected_block = $('.product_group tr[data-selected=true]').first();
+                var selected_phrase = selected_block.find('.tree_cell').data('group-phrase');
                 var selected_products = $('.product_group .products tr')
                     .has('td input:checked')
                     .clone()
@@ -48,6 +49,8 @@
                     alert('You trying to group products of different distributors');
                     return;
                 }
+
+                selected_block.css('opacity', 0.4).next('.group-detail').css('opacity', 0.4);
 
                 $('#new-group')
                     .find('textarea.description').html(selected_products.first().data('description')).end()
@@ -91,13 +94,17 @@
                             var $form = $(s).closest('form');
                             var $data = $form.serialize();
                             $form.off();
+                            self.close();
                             $.ajax({
                                 url: $form.attr('action'),
                                 type: "post",
                                 cache: false,
                                 data: $data,
                                 success: function (data, textStatus, jqXHR) {
-                                    return self.close();
+                                    for (var p in arrP) {
+                                        $('.product_group').find('tr[data-product-id=' + arrP[p] + ']').remove();
+                                    }
+                                    selected_block.css('opacity', 1).find('.tree_cell').click();
                                 },
                                 error: function (jqXHR, textStatus, errorThrown) {
                                     $.mnotify({
