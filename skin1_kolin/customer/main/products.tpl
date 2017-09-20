@@ -142,8 +142,6 @@
                                             {include file="modules/Special_Offers/customer/product_special_price.tpl" product=$products[product]}
                                         {/if}
                                     {/if}
-                                {else}
-                                    <span class="ProductPrice">{$lng.lbl_enter_your_price}</span>
                                 {/if}
                             {/if}
 

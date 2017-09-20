@@ -32,12 +32,12 @@
 <link rel="stylesheet" href="{$SkinDir}/skin1.css" />
 </head>
 <body style="margin: 0 auto; width: 960px;">
-{if $oProduct->getField('seo_product_name') ne ""}
-    {assign var="producttitle" value=$oProduct->getField('seo_product_name')}
-{elseif $oProduct->getField('producttitle') ne ""}
-    {assign var="producttitle" value=$oProduct->getField('producttitle')}
+{if $oProduct->seo_product_name}
+    {assign var="producttitle" value=$oProduct->seo_product_name}
+{elseif $oProduct->producttitle}
+    {assign var="producttitle" value=$oProduct->producttitle}
 {else}
-    {assign var="producttitle" value=$oProduct->getField('product')}
+    {assign var="producttitle" value=$oProduct->product}
 {/if}
 
 {assign var="current_price" value=$oProduct->getPrice()}

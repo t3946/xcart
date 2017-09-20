@@ -182,4 +182,19 @@ class ProductModel extends AutoMetaModel
     {
         return $this->amazon_fba == 'Y';
     }
+
+    public function getTitle()
+    {
+        if ($this->seo_product_name) {
+            $title = $this->seo_product_name;
+        } else {
+            $title = $this->product;
+        }
+
+        if ($this->group_root) {
+            return ($this->isGroup()) ?  $title : $this->parent->getTitle();
+        }
+
+        return $title;
+    }
 }

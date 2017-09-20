@@ -16,13 +16,7 @@
 {/if}
 <br>
 
-{if $product.seo_product_name ne ""}
-    {assign var="producttitle" value=$product.seo_product_name}
-{elseif $product.producttitle ne ""}
-    {assign var="producttitle" value=$product.producttitle}
-{else}
-    {assign var="producttitle" value=$product.product}
-{/if}
+    {assign var="producttitle" value=$oProduct->getTitle()}
 
 {if $product.new_notify_in_stock_price ne ""}
     {assign var="current_price" value=$product.new_notify_in_stock_price}

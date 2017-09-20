@@ -21,22 +21,18 @@
     {/if}
 
     <table width="100%" cellpadding="0" cellspacing="0">
-        {if $product.price eq 0}
+        {if $is_group}
             <tr>
                 <td height="25">
                     <table cellpadding="0" cellspacing="0">
                         <tr>
-                            <td>
-                                {assign var="button_href" value=$smarty.get.page|escape:"html"}
-                                {include file="buttons/buy_now.tpl" style="button" href="/product.php?productid=`$product.productid`" b=1}
-                            </td>
                             {if $products[product].clean_url ne ""}
                                 {assign var="button_href" value="`$products[product].clean_url`"}
                             {else}
                                 {assign var="button_href" value="product.php?productid=`$products[product].productid`"}
                             {/if}
 
-                            <td style="padding-left: 20px;">{include file="buttons/button.tpl" style="button" href=$button_href button_title=$lng.lbl_more_info}</td>
+                            <td>{include file="buttons/button.tpl" style="button" href=$button_href button_title=$lng.lbl_more_info}</td>
                         </tr>
                     </table>
                 </td>
