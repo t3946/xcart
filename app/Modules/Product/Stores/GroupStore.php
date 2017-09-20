@@ -236,8 +236,6 @@ class GroupStore extends BaseStore
         $this->model->setAttributes($params);
 
         $this->model->save();
-        $this->model->group_root = $this->model->productid;
-        $this->model->save();
 
         if ($this->model->getIsNewRecord()) {
             (new ProductStorefrontModel(
@@ -255,6 +253,9 @@ class GroupStore extends BaseStore
                 ]
             ))->save();
         }
+
+        $this->model->group_root = $this->model->productid;
+        $this->model->save();
 
         if ($_POST['group']['products']) {
             /** @var ProductModel[] $products */

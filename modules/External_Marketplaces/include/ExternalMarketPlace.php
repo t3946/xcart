@@ -48,8 +48,11 @@ class ExternalMarketPlace extends Data
         $aMarketPlace = func_query_first("SELECT * FROM " . self::$sql_tbl['products_external_marketplaces'] . " WHERE id = $iMarketPlaceId");
         if (!empty($aMarketPlace)) {
             $sProcessorClass = __NAMESPACE__. '\\Marketplaces\\' . $aMarketPlace['processor_class'];
-            if (class_exists($sProcessorClass))
+            if (class_exists($sProcessorClass)) {
                 $oProcessor = new $sProcessorClass(['marketplace_id' => $iMarketPlaceId, 'storefront_id' => $iStoreFrontId]);
+            } else {
+                throw new \Exception("External Marketplace class {$sProcessorClass} not found");
+            }
         }
         return $oProcessor;
     }

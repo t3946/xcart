@@ -27,7 +27,8 @@
                 var arrP = [],
                     arrDist = [];
 
-                var selected_phrase = $('.product_group tr[data-selected=true]').first().find('.tree_cell').data('group-phrase');
+                var selected_block = $('.product_group tr[data-selected=true]').first();
+                var selected_phrase = selected_block.find('.tree_cell').data('group-phrase');
                 var selected_products = $('.product_group .products tr')
                     .has('td input:checked')
                     .clone()
@@ -49,6 +50,8 @@
                     return;
                 }
 
+                selected_block.css('opacity', 0.4).next('.group-detail').css('opacity', 0.4);
+
                 $('#new-group')
                     .find('textarea.description').html(selected_products.first().data('description')).end()
                     .find('.selected-products tr:not(.TableHead)').remove().end()
@@ -61,9 +64,6 @@
                     .find('#o-group-storefront').val($('.product_group').data('storefront')).end()
                     .mmodal({
                         width: 1008,
-                        onSubmit: function (s) {
-                            $(s).closest('form').off().submit();
-                        },
                         onAfterOpen: function () {
                             tinymce.init({
                                 selector: ".mmodal-content textarea.new_editor",
@@ -88,6 +88,32 @@
                                     $('.mmodal-content #o-category-selector').html(data)
                                 }
                             );
+                        },
+                        onSubmit: function (s) {
+                            var self = this;
+                            var $form = $(s).closest('form');
+                            var $data = $form.serialize();
+                            $form.off();
+                            self.close();
+                            $.ajax({
+                                url: $form.attr('action'),
+                                type: "post",
+                                cache: false,
+                                data: $data,
+                                success: function (data, textStatus, jqXHR) {
+                                    for (var p in arrP) {
+                                        $('.product_group').find('tr[data-product-id=' + arrP[p] + ']').remove();
+                                    }
+                                    selected_block.css('opacity', 1).find('.tree_cell').click();
+                                },
+                                error: function (jqXHR, textStatus, errorThrown) {
+                                    $.mnotify({
+                                        title: 'Group product error',
+                                        message: jqXHR.responseText
+                                    });
+                                    return self.close();
+                                }
+                            });
                         },
                         onAfterClose: function () {
                             tinymce.remove();

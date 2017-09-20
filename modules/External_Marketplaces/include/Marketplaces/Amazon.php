@@ -3,24 +3,35 @@
 namespace Xcart\External_Marketplaces\Marketplaces;
 
 use CaponicaAmazonMwsComplete\ClientPack\MwsFeedAndReportClientPack;
-use MarketplaceWebService_Exception;
 use Modules\Amazon\Helpers\AmazonFbaFeedHelper;
 use Modules\Amazon\Stores\AmazonPoolStore;
 use Modules\Product\Models\ProductModel;
+use Modules\Product\Models\UpdatedProductModel;
 use Xcart\External_Marketplaces\StoreFrontMarketPlace;
 
 class Amazon extends StoreFrontMarketPlace
 {
-    public function addProductToBatch(ProductModel $oProduct, $update_type, $googleOneRow = "", $sExtraLog = "N")
+    public function addProductToBatch($queue, $googleOneRow = "", $sExtraLog = "N")
     {
-        //$this->checkProductExcludedMarketPlace($oProduct->getProductId())
-        if ($this->checkMarketplaceRestrictions($oProduct, $update_type)) {
-            if ($update_type == "2" || $update_type == "1,2" || $update_type == "1") {
-                $this->aInventory[] = $oProduct;
+        $result = false;
+        if ($this->checkMarketplaceRestrictions($queue)) {
+            if ($queue->type == "2" || $queue->type == "1,2" || $queue->type == "1") {
+                $this->aInventory[] = ['queue' => $queue];
                 $this->iInventoryBatchCount++;
+                $result = true;
+            }
+        } else {
+            list($queue_n) = UpdatedProductModel::objects()->getOrNew(
+                [
+                    'resourceid' => $queue->resourceid,
+                    'type' => $queue->type
+                ]);
+            if ($queue_n) {
+                $queue_n->mask &= ~intval($this->getExternalMarketPlaceEntity()->mask);
+                $queue_n->save();
             }
         }
-        return $this;
+        return $result;
     }
 
     public function submitInventoryBatch($debug_mode = 'N', $extra_log = 'N')
@@ -29,9 +40,11 @@ class Amazon extends StoreFrontMarketPlace
         $items = [];
 
         if ($products = $this->getInventory()) {
-            /** @var ProductModel $product */
 
-            foreach ($products as $product) {
+            /** @var ProductModel[] $products */
+            foreach ($products as $queue) {
+
+                $product = $queue['queue']->product;
 
                 $price = $product->getAmazonPrice();
                 $zero_price = $product->getZeroPrice();
@@ -80,20 +93,25 @@ class Amazon extends StoreFrontMarketPlace
 
             print("INVENTORY pull\n\n");
 
-            $feedResult = $this->submitInventoryFeed($feed);
+            if (!$this->submitInventoryFeed($feed)) {
+                return false;
+            }
 
             $feed = AmazonFbaFeedHelper::encodePriceFeed($items);
 
             print("PRICE pull\n\n");
 
-            $feedResult = $this->submitPriceFeed($feed);
+            if (!$this->submitPriceFeed($feed)) {
+                return false;
+            }
         }
 
-        $this->setInventoryBatchCount(0)->setInventory([]);
+        return true;
     }
 
     private function submitFeed($feed, $type)
     {
+        $result = true;
         func_dump($feed);
         $feedHandle = @fopen('php://temp', 'rw+');
         fwrite($feedHandle, $feed);
@@ -107,41 +125,45 @@ class Amazon extends StoreFrontMarketPlace
 
         } catch (\Exception $e) {
             if (method_exists($e, 'getErrorCode') && ('RequestThrottled' == $e->getErrorCode() || 'QuotaExceeded' == $e->getErrorCode())) {
-                $error_code = $e->getErrorCode();
-            } else {
-                $error_code = $e->getCode();
-            }
 
-            func_backprocess_log('incremental feeds', $e->getMessage() . " - " . $error_code);
+            } else {
+                func_backprocess_log('incremental feeds', $e->getMessage() . " - " . $e->getCode());
+            }
+            $result = false;
         }
 
         @fclose($feedHandle);
+
+        return $result;
     }
 
     private function submitPriceFeed($feed)
     {
-        $this->submitFeed($feed, MwsFeedAndReportClientPack::FEED_TYPE_PAI_PRICING);
+        return $this->submitFeed($feed, MwsFeedAndReportClientPack::FEED_TYPE_PAI_PRICING);
     }
 
     private function submitInventoryFeed($feed)
     {
-        $this->submitFeed($feed, MwsFeedAndReportClientPack::FEED_TYPE_PAI_INVENTORY);
+        return $this->submitFeed($feed, MwsFeedAndReportClientPack::FEED_TYPE_PAI_INVENTORY);
     }
 
     public function submitProductsBatch($debug_mode = 'N', $extra_log = 'N')
     {
-        $this->setProductsBatchCount(0)->setProducts([]);
+        return true;
     }
 
-    public function checkMarketplaceRestrictions(ProductModel $oProduct, $update_type)
+    public function checkMarketplaceRestrictions($queue)
     {
-        $bResult = true;
-        if ($oProduct->amazon_enabled != "Y")
+        $bResult = parent::checkMarketplaceRestrictions($queue);
+
+        if ($queue->product->amazon_enabled != "Y") {
             $bResult = false;
+        }
+
         return $bResult;
     }
 
-    public function getGoogleOneRow(ProductModel $oProduct, $type, $sExtraLog)
+    public function getGoogleOneRow(ProductModel $oProduct, $queue, $sExtraLog)
     {
         return null;
     }
