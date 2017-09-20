@@ -235,9 +235,11 @@ class GroupStore extends BaseStore
 
         $this->model->setAttributes($params);
 
+        $new_product = $this->model->getIsNewRecord();
+
         $this->model->save();
 
-        if ($this->model->getIsNewRecord()) {
+        if ($new_product) {
             (new ProductStorefrontModel(
                 [
                     'productid' => $this->model->productid,
