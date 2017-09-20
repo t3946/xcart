@@ -254,6 +254,10 @@ class GroupStore extends BaseStore
                     'main' => 'Y'
                 ]
             ))->save();
+
+            $clean_url = func_clean_url_autogenerate('P', $this->model->productid, array('product' => $this->model->product, 'productcode' => $this->model->productcode));
+            func_clean_url_add($clean_url, 'P', $this->model->productid);
+
         }
 
         $this->model->group_root = $this->model->productid;
