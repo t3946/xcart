@@ -42,10 +42,6 @@
 
 {assign var="current_price" value=$oProduct->getPrice()}
 
-{* igor_async
-{include file="main/include_js.tpl" src="main/popup_image.js"}
-*}
-
 {if $active_modules.Special_Offers}
     {include file="modules/Special_Offers/customer/product_offers_short_list.tpl" product=$product}
 {/if}
@@ -83,13 +79,9 @@
                         {/if}
                     </td>
                     <td valign="top" width="140" style="padding-left: 20px;" rowspan="3">
-
-
                         {if $oProduct->getMapPrice() lt $current_price}
                             {include file="customer/main/product_prices.tpl"}
                         {/if}
-
-
                     </td>
                     <td valign="top" width="*" style="padding-left: 16px;">
 
@@ -124,12 +116,10 @@
 
                                         {if $current_price ne 0 || $variant_price_no_empty}
 
-                                            {* --- *}
                                             {if $product.new_notify_in_stock_price ne "" && $current_price eq $product.new_notify_in_stock_price}
                                                 <input type="hidden" name="new_notify_in_stock_price"
                                                        id="new_notify_in_stock_price"/>
                                             {/if}
-                                            {* --- *}
                                             <font class="ProductPriceConverting2"><span id="product_price"
                                                                                         style="white-space: nowrap;">{include file="currency.tpl" value=$current_price plain_text_message=true price_type="product_price"}</span></font>
                                             <font class="MarketPrice"> <span id="product_alt_price"
@@ -144,9 +134,7 @@
                                     </td>
                                 </tr>
                                 {if $product.taxes}
-                                    {* <tr><td colspan="2" nowrap="nowrap"> *}
                                     {include file="customer/main/taxed_price.tpl" taxes=$product.taxes product_page_tax="Y"}
-                                    {* </td></tr> *}
                                 {/if}
 
 
@@ -194,12 +182,10 @@
                                 <td height="25" class="BlackT">{$lng.lbl_quantity}:</td>
                                 <td style="text-align:left;font-size: 16px;" width="*">
                                     {if $config.General.unlimited_products eq "N" and ($product.avail le 0 or $product.avail lt $product.min_amount) and $variants eq ''}
-                                        <script type="text/javascript" language="JavaScript 1.2">
-                                            <!--
+                                        <script type="text/javascript">
                                             var min_avail = 1;
                                             var avail = 0;
                                             var product_avail = 0;
-                                            -->
                                         </script>
                                         <b>{$lng.txt_out_of_stock}</b>
                                     {else}
@@ -231,8 +217,7 @@
                                         {if $config.General.unlimited_products eq "Y"}
                                             {math equation="x+y" assign="mq" x=$mq y=$start_quantity}
                                         {/if}
-                                        <script type="text/javascript" language="JavaScript 1.2">
-                                            <!--
+                                        <script type="text/javascript">
                                             var min_avail = {$start_quantity|default:1};
                                             var avail = {$mq|default:1}-1;
                                             var product_avail = {$product.avail|default:"0"};
@@ -311,26 +296,16 @@
                                             }
 
                                             {/literal}
-                                            -->
                                         </script>
-                                        {* <select id="product_avail" name="amount"{if $active_modules.Product_Options ne '' && $product_options ne ''} onchange="check_wholesale(this.value);"{/if}> *}
-                                        {*
-                                        <select id="product_avail" name="amount" onchange="check_wholesale(this.value);" style="font-size: 16px;">
-                                        {section name=quantity loop=$mq start=$start_quantity step=$step}
-                                        <option value="{%quantity.index%}" {if $smarty.get.quantity eq %quantity.index%}selected{/if}>{%quantity.index%}</option>
-                                        {/section}
-                                        </select>
-                                        *}
+
                                         <div class="product_attr quantity clearfix">
                                             <a rel="nofollow"
                                                class="oper reduce{if $start_quantity|default:1 eq "1"} disabled{/if}"
                                                href="javascript:void(0);" id="qty-dec"
-                                               onclick="javascript: func_dec_inc_qty('dec', '{$step}');"></a>
-                                            <input type="text" value="{$start_quantity|default:1}" class="quantity"
-                                                   id="product_avail" name="amount"
+                                               onclick="func_dec_inc_qty('dec', '{$step}');"></a>
+                                            <input type="text" value="{$start_quantity|default:1}" class="quantity" id="product_avail" name="amount"
                                                    onkeyup="check_wholesale(this.value); check_min_amount_step('{$product.mult_order_quantity}', '{$product.min_amount}');">
-                                            <a rel="nofollow" class="oper add" href="javascript:void(0);" id="qty-inc"
-                                               onclick="javascript: func_dec_inc_qty('inc', '{$step}');"></a>
+                                            <a rel="nofollow" class="oper add" href="javascript:void(0);" id="qty-inc" onclick="func_dec_inc_qty('inc', '{$step}');"></a>
                                         </div>
                                     {else}
                                         <script type="text/javascript" language="JavaScript 1.2">

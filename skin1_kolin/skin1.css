@@ -4266,6 +4266,10 @@ table.group_product td.title {
 	padding-left: 5px;
 }
 
+table.group_product td.spinner_cell {
+	width: 150px;
+}
+
 table.group_product td, table.group_product td div {
 	font-size: 14px;
 }

@@ -175,7 +175,7 @@
                                     <td height="25" class="BlackT">{$lng.lbl_quantity}:</td>
                                     <td style="text-align:left;font-size: 16px;" width="*">
                                         {if $config.General.unlimited_products eq "N" and ($product.avail le 0 or $product.avail lt $product.min_amount || $product.product_availability == 'out of stock') and $variants eq '' }
-                                            <script type="text/javascript" language="JavaScript 1.2">
+                                            <script type="text/javascript">
                                                 var min_avail = 1;
                                                 var avail = 0;
                                                 var product_avail = 0;
@@ -206,11 +206,12 @@
                                             {if $config.General.unlimited_products eq "Y"}
                                                 {math equation="x+y" assign="mq" x=$mq y=$start_quantity}
                                             {/if}
-                                        {literal}
-                                            <script type="text/javascript" language="JavaScript 1.2">
-                                                var min_avail =;
-                                                var avail = -1;
-                                                var product_avail =;
+
+                                            <script type="text/javascript">
+                                                var min_avail = {$start_quantity|default:1};
+                                                var avail = {$mq|default:1}-1;
+                                                var product_avail = {$product.avail|default:"0"};
+                                                {literal}
 
                                                 function func_dec_inc_qty(type_of_action, qty_step) {
 
@@ -281,22 +282,23 @@
                                                         }
                                                     }
                                                 }
+                                                {/literal}
                                             </script>
-                                        {/literal}
+
                                             <div class="product_attr quantity clearfix">
                                                 <a rel="nofollow"
                                                    class="oper reduce{if $start_quantity|default:1 eq "1"} disabled{/if}"
                                                    href="javascript:void(0);" id="qty-dec"
-                                                   onclick="javascript: func_dec_inc_qty('dec', '{$step}');"></a>
+                                                   onclick="func_dec_inc_qty('dec', '{$step}');"></a>
                                                 <input type="text" value="{$start_quantity|default:1}" class="quantity"
                                                        id="product_avail" name="amount"
                                                        onkeyup="check_wholesale(this.value); check_min_amount_step('{$product.mult_order_quantity}', '{$product.min_amount}');">
                                                 <a rel="nofollow" class="oper add" href="javascript:void(0);"
                                                    id="qty-inc"
-                                                   onclick="javascript: func_dec_inc_qty('inc', '{$step}');"></a>
+                                                   onclick="func_dec_inc_qty('inc', '{$step}');"></a>
                                             </div>
                                         {else}
-                                            <script type="text/javascript" language="JavaScript 1.2">
+                                            <script type="text/javascript">
                                                 var min_avail = 1;
                                                 var avail = 1;
                                                 var product_avail = 1;
