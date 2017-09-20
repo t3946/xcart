@@ -97,26 +97,29 @@ class AmazonFbaFeedHelper
         $feeds = [];
 
         foreach ($messages as $message) {
-            $invenory = [
+            $inventory = [
                 'SKU' => $message['sku'],
-                'FulfillmentCenterID' => $center[$message['channel']],
-                'SwitchFulfillmentTo' => $message['channel']
+                'FulfillmentCenterID' => $center[$message['channel']]
             ];
 
             switch ($message['channel']) {
                 case 'AFN':
-                    $invenory['Lookup'] = 'FulfillmentNetwork';
+                    $inventory['Lookup'] = 'FulfillmentNetwork';
                     break;
                 case 'MFN':
-                    $invenory['Quantity'] = $message['quantity'];
-                    $invenory['FulfillmentLatency'] = $message['latency'];
+                    $inventory['Quantity'] = $message['quantity'];
+                    $inventory['FulfillmentLatency'] = $message['latency'];
                     break;
             }
+
+            $inventory = array_merge($inventory, [
+                'SwitchFulfillmentTo' => $message['channel']
+            ]);
 
             $feeds[] = ['Message' => [
                 'MessageID' => ++$num,
                 'OperationType' => 'Update',
-                'Inventory' => $invenory
+                'Inventory' => $inventory
             ]];
         }
 

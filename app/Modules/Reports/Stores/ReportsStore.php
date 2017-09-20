@@ -272,6 +272,11 @@ class ReportsStore extends OrderSearchStore
 
     public function getTotals()
     {
+        /*TODO remove has invoice order filter from report total header */
+        if (isset($this->form_data['order']['all_dx'])) {
+            return [];
+        }
+
         $qsum = clone $this->getQuerySet();
         $qsum->join('inner join', 'xcart_manufacturers', ['m.manufacturerid' => 'group.manufacturerid'], 'm');
         $qsum->group([]);

@@ -6,6 +6,7 @@ use Modules\Amazon\Models\AmazonFbaMissingSkuModel;
 use Modules\Amazon\Models\AmazonProductsFieldsModel;
 use Modules\Brand\Models\BrandModel;
 use Modules\Distributor\Models\DistributorModel;
+use Modules\Sites\Models\SiteModel;
 use Xcart\App\Orm\AutoMetaModel;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\CharField;
@@ -106,6 +107,11 @@ class ProductModel extends AutoMetaModel
                 'class' => IntField::className(),
                 'null' => false,
                 'default' => 0
+            ],
+            'sites' => [
+                'class' => HasManyField::className(),
+                'modelClass' => ProductStorefrontModel::className(),
+                'link' => ['productid' => 'productid']
             ],
             'missing_products' => [
                 'class' => HasManyField::className(),
