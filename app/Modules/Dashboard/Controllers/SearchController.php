@@ -29,30 +29,51 @@ class SearchController extends PrototypeAdminController
             ];
         }
 
+
         if (!empty($_REQUEST['fast_search'])) {
-            if ( !empty($_REQUEST['search']['order']['id']['from']) ) {
-                $form_data['order']['amazon_order'] = $_REQUEST['search']['order']['id']['from'];
+
+            if ( !empty($form_data['order']['id']['from']) ) {
+
+                $oid = $form_data['order']['id']['from'];
+
+                if (strpos($oid, '-') !== false) {
+                    if (preg_match('/^([a-zA-Z]{2,4}-).++/i', $oid)) {
+                        $oid = substr($oid, 3);
+                        $form_data['order']['id']['from'] = $oid;
+                    }
+                    else {
+                        $form_data['order']['id']['from'] = null;
+                        $form_data['order']['amazon_order'] = $oid;
+                    }
+                }
             }
         }
 
         $orderStore = new OrderSearchStore($form_data);
         $orderStore->setOrder(['-date', '-orderid']);
 
-        $models = $orderStore->getModels();
-        $pager = $orderStore->getPager();
+        if (!empty($_REQUEST['fast_search'])) {
 
-        if ( $orderStore->getQuerySet()->count() == 1 && !empty($_REQUEST['fast_search'])) {
-            /** @var \Modules\Order\Models\OrderModel $model */
-            $model = $models[0];
-            $this->redirect( $model->getAdminUrl() );
-        }
-        else {
-            if ($this->getRequest()->getIsPost()) {
-                $url = Xcart::app()->router->url('dashboard:search', [], ['search' => $form_data]);
-                $this->getRequest()->redirect($url);
-//                $this->getRequest()->redirect('dashboard:search', ['search' => $form_data]);
+
+            $qs = $orderStore->getQuerySet();
+
+//                $qs = $orderStore->getQuerySet()->orFilter(['amazonorderid' => $oid]);
+//                $orderStore->setQuerySet($qs);
+//                $form_data['order']['amazon_order'] = $_REQUEST['search']['order']['id']['from'];
+
+            if ($qs->count() == 1) {
+                $model = $qs->limit(1)->get();
+                $this->redirect( $model->getAdminUrl() );
             }
         }
+
+        if ($this->getRequest()->getIsPost()) {
+            $url = Xcart::app()->router->url('dashboard:search', [], ['search' => $form_data]);
+            $this->getRequest()->redirect($url);
+        }
+
+        $models = $orderStore->getModels();
+        $pager = $orderStore->getPager();
 
         if (empty($models)) {
             $form_collapse = false;

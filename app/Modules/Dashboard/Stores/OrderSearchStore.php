@@ -816,6 +816,10 @@ class OrderSearchStore extends BaseStore
         return $this->qs;
     }
 
+    public function setQuerySet($qs) {
+        $this->qs = $qs;
+    }
+
     public function getQSWithSorting()
     {
         $qs = clone $this->qs;
