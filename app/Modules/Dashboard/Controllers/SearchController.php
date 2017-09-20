@@ -29,6 +29,12 @@ class SearchController extends PrototypeAdminController
             ];
         }
 
+        if (!empty($_REQUEST['fast_search'])) {
+            if ( !empty($_REQUEST['search']['order']['id']['from']) ) {
+                $form_data['order']['amazon_order'] = $_REQUEST['search']['order']['id']['from'];
+            }
+        }
+
         $orderStore = new OrderSearchStore($form_data);
         $orderStore->setOrder(['-date', '-orderid']);
 

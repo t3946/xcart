@@ -422,6 +422,9 @@ class OrderSearchStore extends BaseStore
             if (!empty($data['order']['po'])) {
                 $this->getQ(['po_number' => $data['order']['po']], 'order.po');
             }
+            if (!empty($data['order']['amazon_order'])) {
+                $this->getQ(['amazonorderid' => $data['order']['amazon_order']], 'order.amazon_order');
+            }
 
         }
 
