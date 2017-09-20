@@ -109,8 +109,9 @@ class ProductModel extends AutoMetaModel
                 'default' => 0
             ],
             'sites' => [
-                'class' => HasManyField::className(),
-                'modelClass' => ProductStorefrontModel::className(),
+                'class' => ManyToManyField::className(),
+                'modelClass' => SiteModel::className(),
+                'through' => ProductStorefrontModel::className(),
                 'link' => ['productid' => 'productid']
             ],
             'missing_products' => [
