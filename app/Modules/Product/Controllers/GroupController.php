@@ -79,7 +79,12 @@ class GroupController extends PrototypeAdminController
 
             $store->createGroupProduct();
 
-            $this->redirect('product:group', ['id' => $id], 303);
+            //$this->redirect('product:group', ['id' => $id], 303);
+            if ($this->getRequest()->getIsAjax()) {
+
+                $this->jsonResponse(['result' => 'ok']);
+                return;
+            }
         }
 
         if ($brand = BrandModel::objects()->get(['brandid' => $id])) {

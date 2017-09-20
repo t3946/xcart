@@ -89,7 +89,7 @@
                     </div>
                 </li>
                 <li>
-                    <input name="group[submit]" type="button" value="Confirm and group"/>
+                    <input name="group[submit]" type="submit" value="Confirm and group"/>
                 </li>
             </ul>
         </form>

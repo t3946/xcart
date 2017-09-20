@@ -61,9 +61,6 @@
                     .find('#o-group-storefront').val($('.product_group').data('storefront')).end()
                     .mmodal({
                         width: 1008,
-                        onSubmit: function (s) {
-                            $(s).closest('form').off().submit();
-                        },
                         onAfterOpen: function () {
                             tinymce.init({
                                 selector: ".mmodal-content textarea.new_editor",
@@ -88,6 +85,28 @@
                                     $('.mmodal-content #o-category-selector').html(data)
                                 }
                             );
+                        },
+                        onSubmit: function (s) {
+                            var self = this;
+                            var $form = $(s).closest('form');
+                            var $data = $form.serialize();
+                            $form.off();
+                            $.ajax({
+                                url: $form.attr('action'),
+                                type: "post",
+                                cache: false,
+                                data: $data,
+                                success: function (data, textStatus, jqXHR) {
+                                    return self.close();
+                                },
+                                error: function (jqXHR, textStatus, errorThrown) {
+                                    $.mnotify({
+                                        title: 'Group product error',
+                                        message: jqXHR.responseText
+                                    });
+                                    return self.close();
+                                }
+                            });
                         },
                         onAfterClose: function () {
                             tinymce.remove();
