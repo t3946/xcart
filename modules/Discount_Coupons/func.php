@@ -51,7 +51,9 @@ if (!empty($active_modules['Multiple_Storefronts'])) {
 # Status: A - active, D - disabled, U - used
 #
 function func_is_valid_coupon ($coupon) {
-	global $cart, $products, $single_mode, $sql_tbl, $login, $anonymous_login, $sf_condition;
+	global $cart, $products, $single_mode, $sql_tbl, $login, $anonymous_login, $sf_condition, $current_storefront;
+
+    $sf_condition = "AND storefrontid=$current_storefront";
 
 	$my_coupon = func_query_first("SELECT * FROM $sql_tbl[discount_coupons] WHERE coupon='$coupon' AND status='A' AND expire>".time() . ' ' . $sf_condition);
 	if (!$my_coupon)
