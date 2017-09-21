@@ -1,8 +1,10 @@
 <div class="tab-shipping">
 
     {add $warehouse = $model->distributor}
+    {add $is_specs = ($model->weight > 0 || $model->shipping_weight > 0 || $model->dim_x || $model->shipping_dim_x)}
 
     <div class="row">
+        {if $is_specs}
         <div class="columns small-12 large-4 block">
             <h2 class="title">Shipping specs</h2>
             <div class="options">
@@ -34,7 +36,8 @@
                 </div>
             </div>
         </div>
-        <div class="columns small-12 large-8 block">
+        {/if}
+        <div class="columns small-12 {if $is_specs}large-8{else}large-12{/if} block">
             <h2 class="title">Shipping from</h2>
             <div class="content">
                 This product is shipped from our warehouse in

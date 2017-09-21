@@ -42,9 +42,9 @@ class DefaultController extends FrontendController
         }
 
 
-        if (!$model->checkSite($site->storefrontid)) {
-            $this->redirect($model->getAbsoluteUrl(true));
-        }
+//        if (!$model->checkSite($site->storefrontid)) {
+//            $this->redirect($model->getAbsoluteUrl(true));
+//        }
 
         echo $this->render('product/product.tpl', [
             'model' => $model,

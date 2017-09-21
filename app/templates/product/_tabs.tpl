@@ -32,31 +32,46 @@
     <div class="tabs-content" data-tabs-content="product_tabs">
 
         <div class="tabs-panel is-active" id="description">
-            {include 'product/tabs/_description.tpl' model=$model}
+            <div class="tab-description tab-content">
+                {include 'product/tabs/_description.tpl' model=$model}
+            </div>
         </div>
 
-        <div class="tabs-panel" id="brand">
-            {include 'product/tabs/_brand.tpl' model=$model}
+        <div class="tabs-panel " id="brand">
+            <div class="tab-brand tab-content">
+                {include 'product/tabs/_brand.tpl' model=$model}
+            </div>
         </div>
 
         <div class="tabs-panel" id="shipping">
-            {include 'product/tabs/_shipping.tpl' model=$model tab=$tabs['__shipping__']!:null}
+            <div class="tab-shipping tab-content">
+                {include 'product/tabs/_shipping.tpl' model=$model tab=$tabs['__shipping__']!:null}
+            </div>
         </div>
 
         {foreach $tabs as $tab}
             {if $tab.code == '__shipping__'}{continue}{/if}
 
             <div class="tabs-panel tab-{$tab.code}" id="{$tab.code}">
-                {raw $tab.content}
+                <div class="tab-s3 tab-content">
+                    <h2>{$tab.name}</h2>
+                    <div class="content">
+                        {raw $tab.content}
+                    </div>
+                </div>
             </div>
         {/foreach}
 
         <div class="tabs-panel" id="reviews">
-            {include 'product/tabs/_reviews.tpl' model=$model}
+            <div class="tab-content tab-reviews">
+                {include 'product/tabs/_reviews.tpl' model=$model}
+            </div>
         </div>
 
         <div class="tabs-panel" id="questions">
-            {include 'product/tabs/_questions.tpl' model=$model}
+            <div class="tab-content tab-questions">
+                {include 'product/tabs/_questions.tpl' model=$model}
+            </div>
         </div>
     </div>
 

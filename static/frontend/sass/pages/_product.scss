@@ -29,7 +29,7 @@
             background-color: #e7eaeb;
             //padding: rem-calc(18) rem-calc(23) rem-calc(14);
             padding: 0 rem-calc(23);
-            padding-top: rem-calc(3);
+            //padding-top: rem-calc(3);
             color: #505050;
             font-size: 1rem;
             font-weight: 600;
@@ -40,7 +40,7 @@
               content: '';
               position: absolute;
 
-              bottom: rem-calc(5);
+              bottom: rem-calc(7);
               border-bottom: 1px dashed #505050;
               left: rem-calc(23);
               right: rem-calc(23);
@@ -127,115 +127,117 @@
 
     }
 
-    .options {
-      .option {
-        //line-height: rem-calc(38);
-        min-height: rem-calc(38);
-        border-bottom: 1px solid #e1e1e1;
-        padding: rem-calc(12) 0;
-
-        &:after{
-          content: '';
-          clear: both;
-        }
-
-        .title {
-          display: inline-block;
-          font-weight: 700;
-          width: 44%;
-          color: black;
-          float: left;
-        }
-
-        .value {
-          max-width: 55%;
-
-          display: inline-block;
-          color: #3a3a3a;
-        }
-      }
-    }
-    
-    h2 {
-      text-align: left;
-    }
-
-    .block {
-
-      &:nth-child(1n+2) {
-        margin-top: rem-calc(39);
+    .tab-content {
+      h2 {
+        text-align: left;
 
         @include breakpoint(large up) {
-          margin-top: 0;
+          margin-bottom: rem-calc(20);
         }
       }
-
       .content {
-        color: #262626;
       }
 
+      .options {
+        .option {
+          //line-height: rem-calc(38);
+          min-height: rem-calc(38);
+          border-bottom: 1px solid #e1e1e1;
+          padding: rem-calc(12) 0;
 
-    }
+          &:after{
+            content: '';
+            clear: both;
+          }
 
-    .tab-brand {
-
-      .image-title {
-        //text-align: center;
-      }
-
-      .image {
-        //float: left;
-        display: inline-block;
-      }
-
-      @include breakpoint(ml down ) {
-        .image {
-          max-width: rem-calc(130);
-          max-height: rem-calc(80);
-
-          margin-right: rem-calc(20);
-        }
-
-        .image-title {
-          line-height: 80px;
-          //margin-left: rem-calc(20);
-
-          h2 {
+          .title {
             display: inline-block;
-            font-size: rem-calc(19);
+            font-weight: 700;
+            width: 44%;
+            color: black;
+            float: left;
+          }
+
+          .value {
+            max-width: 55%;
+
+            display: inline-block;
+            color: #3a3a3a;
+          }
+        }
+      }
+
+
+
+      .block {
+
+        &:nth-child(1n+2) {
+          margin-top: rem-calc(39);
+
+          @include breakpoint(large up) {
+            margin-top: 0;
           }
         }
 
-        .small-title {
-          //line-height: ;
+        .content {
+          color: #262626;
         }
+
+
       }
 
-      @include breakpoint(large up) {
-
-        .image-title {
-          text-align: center;
-        }
-
+      &.tab-brand {
         .image {
-          text-align: center;
-          float: none;
+          display: inline-block;
         }
-      }
 
-      .link-to-all {
-        display: inline-block;
-        padding-top: rem-calc(19);
+        @include breakpoint(ml down ) {
+          .image {
+            max-width: rem-calc(130);
+            max-height: rem-calc(80);
+
+            margin-right: rem-calc(20);
+          }
+
+          .image-title {
+            line-height: 80px;
+            //margin-left: rem-calc(20);
+
+            h2 {
+              display: inline-block;
+              word-wrap: break-word;
+              font-size: rem-calc(19);
+            }
+          }
+
+        }
 
         @include breakpoint(large up) {
-          text-align: center;
+
+          .image-title {
+            text-align: center;
+          }
+
+          .image {
+            text-align: center;
+            float: none;
+          }
+        }
+
+        .link-to-all {
+          display: inline-block;
+          padding-top: rem-calc(19);
+
+          @include breakpoint(large up) {
+            text-align: center;
+          }
         }
       }
-    }
 
-    .tab-shipping {
-      .raw-content {
-        padding-top: rem-calc(30);
+      &.tab-shipping {
+        .raw-content {
+          padding-top: rem-calc(30);
+        }
       }
     }
   }

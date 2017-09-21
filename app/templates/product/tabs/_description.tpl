@@ -4,29 +4,30 @@
         <div class="options">
             <h2 class="title">Options</h2>
             <div class="content">
-
+{*
                 {include 'product/tabs/__option.tpl'
                     title='Production'
                     value=$model->distributor->manufacturer
                 }
+*}
 
                 {include 'product/tabs/__option.tpl'
-                    title='Brand'
-                    value=$model->brand->brand
+                title='Brand'
+                value=$model->brand->brand
                 }
 
 
                 {foreach $model->getParamList() as $item}
                     {include 'product/tabs/__option.tpl'
-                        title=$item.name
-                        value=$item.values|implode:', '
+                    title=$item.name
+                    value=$item.values|implode:', '
                     }
                 {/foreach}
 
                 {if $model->upc}
                     {include 'product/tabs/__option.tpl'
-                        title="Barcode"
-                        value=$model->upc
+                    title="Barcode"
+                    value=$model->upc
                     }
                 {/if}
 

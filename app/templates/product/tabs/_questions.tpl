@@ -1,3 +1,1 @@
-<div class="tab-questions">
-    Product questions in development
-</div>
+Product questions in development
