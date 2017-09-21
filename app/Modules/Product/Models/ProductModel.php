@@ -145,6 +145,12 @@ class ProductModel extends AutoMetaModel
                 'link' => ['group_root' => 'productid'],
                 'extra' => ['productid__isnt' => new Expression('group_root')]
             ],
+            'parent' => [
+                'field' => 'group_root',
+                'class' => ForeignField::className(),
+                'modelClass' => ProductModel::className(),
+                'link' => ['group_root' => 'productid'],
+            ],
             'thumbnail' => [
                 'class' => HasManyField::className(),
                 'modelClass' => ImageTModel::className(),
@@ -192,7 +198,7 @@ class ProductModel extends AutoMetaModel
         }
 
         if ($this->group_root) {
-            return ($this->isGroup()) ?  $title : $this->parent->getTitle();
+            return ($this->isGroup()) ?  $title : $this->parent->group_mask . $title;
         }
 
         return $title;
