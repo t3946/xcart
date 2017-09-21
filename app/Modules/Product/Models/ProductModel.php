@@ -334,17 +334,4 @@ class ProductModel extends AutoMetaModel implements ICartItem
 
         return $tq;
     }
-
-    /**
-     * @return mixed|null
-     */
-    public function getWeight()
-    {
-        return $this->weight;
-    }
-
-    public function getStringDimension()
-    {
-        return
-    }
 }

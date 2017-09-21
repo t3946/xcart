@@ -17,6 +17,20 @@
                         value="{$model->dim_x}\" x {$model->dim_y}\" x {$model->dim_z}\" "
                     }
 
+                    {if $model->shipping_weight > 0}
+                        {include 'product/tabs/__option.tpl'
+                            title='Shipping weight'
+                            value="{$model->shipping_weight} Lbs"
+                        }
+                    {/if}
+
+                    {if $model->shipping_dim_x}
+                        {include  'product/tabs/__option.tpl'
+                            title='Shipping dimensions'
+                            value="{$model->shipping_dim_x}\" x {$model->shipping_dim_y}\" x {$model->shipping_dim_z}\" "
+                        }
+                    {/if}
+
                 </div>
             </div>
         </div>

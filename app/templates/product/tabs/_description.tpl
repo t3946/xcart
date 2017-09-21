@@ -5,45 +5,29 @@
             <h2 class="title">Options</h2>
             <div class="content">
 
-                {*<div class="option">*}
-                    {*<div class="title">Production</div>*}
-                    {*<div class="value">*}
-                        {*<div class="multiline">*}
-                            {*{$model->distributor->manufacturer}*}
-                        {*</div>*}
-                    {*</div>*}
-                {*</div>*}
+                {include 'product/tabs/__option.tpl'
+                    title='Production'
+                    value=$model->distributor->manufacturer
+                }
 
-                <div class="option">
-                    <div class="title">Brand</div>
-                    <div class="value">
-                        <div class="multiline">
-                            {$model->brand->brand}
-                        </div>
-                    </div>
-                </div>
+                {include 'product/tabs/__option.tpl'
+                    title='Brand'
+                    value=$model->brand->brand
+                }
+
 
                 {foreach $model->getParamList() as $item}
-                    <div class="option">
-                    <div class="title">{$item.name}</div>
-                    <div class="value">
-                        <div class="multiline">
-                            {$item.values|implode:', '}
-                        </div>
-                    </div>
-                </div>
+                    {include 'product/tabs/__option.tpl'
+                        title=$item.name
+                        value=$item.values|implode:', '
+                    }
                 {/foreach}
 
                 {if $model->upc}
-                    <div class="option">
-                    <div class="title">Barcode</div>
-                    <div class="value">
-                        <div class="multiline">
-                            UPC:
-                            {$model->upc}
-                        </div>
-                    </div>
-                </div>
+                    {include 'product/tabs/__option.tpl'
+                        title="Barcode"
+                        value=$model->upc
+                    }
                 {/if}
 
             </div>
