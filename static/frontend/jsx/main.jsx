@@ -77,6 +77,13 @@ require('preact/devtools');
             foundationRegisterCustomEvents();
             loader.detach();
             $(document).trigger('component.cart.check');
+
+            if (window.app.afterReady && window.app.afterReady.length) {
+                let ar = window.app.afterReady;
+                for (let i = 0, len =ar.length; i < len; i++) {
+                    ar[i]();
+                }
+            }
         }, 100);
     })
 })();

@@ -4,6 +4,8 @@ import $ from 'jquery';
 import 'jquery-form';
 import 'mmodal';
 
+// import Fotorama from 'fotorama';
+import 'swiper';
 import WebFont from 'webfontloader';
 import Waves from 'Waves';
 import whatInput from 'what-input';
@@ -36,4 +38,5 @@ import '../../vendors/wNumb.js'
     window['Waves'] = Waves;
     window['WebFont'] = WebFont;
     window['noUiSlider'] = noUiSlider;
+    // window['Fotorama'] = Fotorama;
 })();

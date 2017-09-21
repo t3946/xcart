@@ -57,6 +57,12 @@ module.exports = {
         raw: []
     },
     vendors: {
+        bower: {
+            scss_include: [
+                'bower_components/'
+            ]
+        },
+
         jquery: {
             js_include: [
                 'bower_components/jquery/dist/jquery.min.js'
@@ -102,6 +108,14 @@ module.exports = {
                 'bower_components/sly/dist/sly.min.js'
             ]
         },
+        // swiper: {
+        //     // css: [
+        //     //     'bower_components/swiper/dist/css/swiper.min.css'
+        //     // ],
+        //     scss_include: [
+        //         'bower_components/swiper/src/less/'
+        //     ],
+        // },
         // lato: {
         //     fonts: [
         //         'bower_components/lato-webfont/fonts/*'

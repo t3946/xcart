@@ -30,6 +30,7 @@
 
     <script type="text/javascript">
         window['app'] = {
+            afterReady:[],
             options: {
                 'session_key': '{$.sessionKey}',
                 'urls': {
