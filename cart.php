@@ -1362,7 +1362,7 @@ if ($mode == "checkout" && empty($login) && !$func_is_cart_empty) {
             $orders[] = $order_data;
             if ($config["Appearance"]["Enable_surf_stats"] == "Y") {
                 SurfingHelper::logSurfPath([
-                    'resource_type' => SurfPathModel::GOAL_TYPE_ORDER,
+                    'resource_type' => SurfPathModel::GOAL_TYPE_ORDER_MESSAGE,
                     'resource_id' => $orderid
                 ]);
             }
