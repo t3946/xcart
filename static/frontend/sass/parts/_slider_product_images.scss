@@ -1,0 +1,36 @@
+.product__images-slider {
+  width: rem-calc(458);
+  height: rem-calc(462);
+
+  &:after {
+    content:'';
+    clear: both;
+  }
+
+  .slider-thumbs {
+    float: left;
+    width: rem-calc(53);
+    height: 100%;
+    margin-left: rem-calc(5);
+    overflow: hidden;
+
+    .swiper-wrapper {
+      height: 100%;
+    }
+
+    .swiper-slide {
+      height: auto;
+      //margin: rem-calc(5) 0;
+    }
+  }
+
+  .slider {
+    width: rem-calc(458 - 53 - 5);
+    height: 100%;
+    overflow: hidden;
+  }
+
+  .swiper-wrapper {
+
+  }
+}

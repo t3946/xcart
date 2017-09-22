@@ -24,37 +24,38 @@
     <section class="images_prices">
         <div class="row">
             <div class="column small-12 large-5 block__image">
-                <div class="slider-container">
+                <div class="product__images-slider">
                     {add $site = $model->sites->limit(1)->get()}
+                    {set $images = $model->images->order(['orderby'])->all()}
+
+
+                    <div class="slider-thumbs">
+                        <div class="swiper-wrapper">
+
+                            {foreach $images as $image}
+                                <div class="swiper-slide active">
+                                    {add $image_displayed = $image}
+                                    <img src="//cdn.{$site->getBaseDomain()}{$image->getUrl()}" alt="">
+                                </div>
+                            {/foreach}
+                        </div>
+                    </div>
 
                     <div class="slider">
                         <div class="swiper-wrapper">
 
-
-                            {foreach $model->images->order(['orderby'])->all() as $image}
-                                <div class="swiper-slide">
-                                    <img src="//cdn.{$site->getBaseDomain()}{$image->getUrl()}" alt="">
-                                </div>
-                            {/foreach}
+                            {*<img data-original="//cdn.{$site->getBaseDomain()}{$image_displayed->getUrl()}" alt="" class="layz lazy-img">*}
+                            {*{foreach $images as $image}*}
+                                {*<div class="swiper-slide">*}
+                                    {*<img src="//cdn.{$site->getBaseDomain()}{$image->getUrl()}" alt="">*}
+                                {*</div>*}
+                            {*{/foreach}*}
                         </div>
                                         <!-- Add Arrows -->
                         <div class="swiper-button-next swiper-button-white"></div>
                         <div class="swiper-button-prev swiper-button-white"></div>
                     </div>
-                    {*<div class="swiper-container gallery-thumbs">*}
-                        {*<div class="swiper-wrapper">*}
-                            {*<div class="swiper-slide" style="background-image:url(http://lorempixel.com/1200/1200/nature/1)"></div>*}
-                            {*<div class="swiper-slide" style="background-image:url(http://lorempixel.com/1200/1200/nature/2)"></div>*}
-                            {*<div class="swiper-slide" style="background-image:url(http://lorempixel.com/1200/1200/nature/3)"></div>*}
-                            {*<div class="swiper-slide" style="background-image:url(http://lorempixel.com/1200/1200/nature/4)"></div>*}
-                            {*<div class="swiper-slide" style="background-image:url(http://lorempixel.com/1200/1200/nature/5)"></div>*}
-                            {*<div class="swiper-slide" style="background-image:url(http://lorempixel.com/1200/1200/nature/6)"></div>*}
-                            {*<div class="swiper-slide" style="background-image:url(http://lorempixel.com/1200/1200/nature/7)"></div>*}
-                            {*<div class="swiper-slide" style="background-image:url(http://lorempixel.com/1200/1200/nature/8)"></div>*}
-                            {*<div class="swiper-slide" style="background-image:url(http://lorempixel.com/1200/1200/nature/9)"></div>*}
-                            {*<div class="swiper-slide" style="background-image:url(http://lorempixel.com/1200/1200/nature/10)"></div>*}
-                        {*</div>*}
-                    {*</div>*}
+
 
                 </div>
             </div>
@@ -91,11 +92,39 @@
     <script>
         (function(){
             window.app.afterReady.push(function () {
-                var galleryTop = new Swiper('.images_prices .slider', {
-                    nextButton: '.swiper-button-next',
-                    prevButton: '.swiper-button-prev',
-                    spaceBetween: 10,
+//                var galleryTop = new Swiper('.images_prices .slider', {
+//                    controlBy:'container',
+//                    nextButton: '.swiper-button-next',
+//                    prevButton: '.swiper-button-prev',
+//                    direction: 'vertical',
+//                    spaceBetween: 10,
+//                });
+
+                var galleryThumbs = new Swiper('.images_prices .slider-thumbs', {
+                    spaceBetween: 5,
+//                    centeredSlides: true,
+                    slidesPerView: 'auto',
+                    direction: 'vertical',
+                    slidesPerColumnFill: 'column',
+                    touchRatio: 0.2,
+                    slideToClickedSlide: true,
+                    paginationClickable: true,
+                    autoHeight: true,
+                    onClick: function(swiper, e) {
+
+//                        console.log(swiper, e);
+                        console.log(swiper.clickedIndex);
+                        swiper.slideTo(swiper.clickedIndex);
+                    },
+                    onSlideChangeEnd: function(swiper) {
+                        console.log(swiper.realIndex)
+                    },
+                    onInit: function(swiper) {
+                        console.log(swiper.realIndex);
+                    }
                 });
+//                galleryTop.params.control = galleryThumbs;
+//                galleryThumbs.params.control = galleryTop;
             });
         })();
     </script>
