@@ -37,6 +37,7 @@
 use Modules\Distributor\Helpers\DistributorHelper;
 use Modules\Product\Models\ProductModel;
 use Modules\User\Helpers\SurfingHelper;
+use Modules\User\Models\SurfPathModel;
 use Xcart\CidevSurfPath;
 require "./auth.php";
 
@@ -1359,6 +1360,12 @@ if ($mode == "checkout" && empty($login) && !$func_is_cart_empty) {
             }
 
             $orders[] = $order_data;
+            if ($config["Appearance"]["Enable_surf_stats"] == "Y") {
+                SurfingHelper::logSurfPath([
+                    'resource_type' => SurfPathModel::GOAL_TYPE_ORDER,
+                    'resource_id' => $orderid
+                ]);
+            }
         }
     }
 
