@@ -130,4 +130,27 @@ class ProductHelper
         }
         return $res;
     }
+
+    /**
+     * @param ProductModel[] $oProducts
+     * @return mixed
+     */
+    public static function groupRootProducts($oProducts)
+    {
+        $res = [];
+        if ($oProducts) {
+            foreach ($oProducts as $oProduct) {
+                if (!$oProduct->isGroup() && !is_null($oProduct->group_root)) {
+                    if (!array_key_exists($oProduct->group_root, $res)) {
+                        $parent = $oProduct->parent;
+                        $res[$parent->productid] = $parent;
+                    }
+                } else {
+                    $res[$oProduct->productid] = $oProduct;
+                }
+            }
+        }
+
+        return $res;
+    }
 }
