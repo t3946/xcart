@@ -59,7 +59,11 @@
                             {if $active_modules.Detailed_Product_Images ne "" && $images ne ''}
                                 <a style="font-size: 0px;" href="#dp_images" class="ga_click" data-label="More Images">
                             {/if}
-                            {include file="product_thumbnail.tpl" productid=$product.productid image_x=$product.image_x image_y=$product.image_y product=$producttitle tmbn_url=$product.tmbn_url id="product_thumbnail" type="P" splash=$product.oSplash}
+                            {if $oProduct->isGroup() && $oProduct->getThumbnails()|@count >=4}
+                                {include file="group_thumbnail.tpl" product=$oProduct}
+                            {else}
+                                {include file="product_thumbnail.tpl" productid=$product.productid image_x=$product.image_x image_y=$product.image_y product=$producttitle tmbn_url=$product.tmbn_url id="product_thumbnail" type="P" splash=$product.oSplash}
+                            {/if}
                             {if $active_modules.Detailed_Product_Images ne "" && $images ne ''}
                                 </a>
                             {/if}

@@ -66,9 +66,14 @@
                     data-category="{$products[product].category|escape}" data-brand="{$products[product].brand|escape}"
                     data-list="{$ga_page_name}" data-price="{$products[product].price}" data-position="{$N_key}">
                     <td class="PListImgBox">
-                        <div class="PListImgBox">
+                        <div class="PListImgBox" {if $products[product].oProduct->isGroup()}style="width:150px; height:150px;"{/if}">
                             <a {include file="on_product_click.tpl"} href="{$products[product].oProduct->getUrl()}" {if $search_all_website eq 'Y'}target="_blank"{/if}>
-                                {include file="product_thumbnail.tpl" productid=$products[product].productid image_x=$config.Appearance.thumbnail_width product=$products[product].product tmbn_url=$products[product].tmbn_url splash=$products[product].oSplash}</a>
+                                {if $products[product].oProduct->isGroup() && $products[product].oProduct->getThumbnails()|@count >=4}
+                                    {include file="group_thumbnail.tpl" product=$products[product].oProduct}
+                                {else}
+                                    {include file="product_thumbnail.tpl" productid=$products[product].productid image_x=$config.Appearance.thumbnail_width product=$products[product].oProduct->getTitle() tmbn_url=$products[product].tmbn_url splash=$products[product].oSplash}
+                                {/if}
+                            </a>
                             {if $active_modules.Special_Offers ne "" and $products[product].have_offers}
                                 {include file="modules/Special_Offers/customer/product_offer_thumb.tpl" product=$products[product]}
                             {/if}

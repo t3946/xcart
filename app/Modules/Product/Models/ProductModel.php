@@ -203,4 +203,21 @@ class ProductModel extends AutoMetaModel
 
         return $title;
     }
+
+    /**
+     * @return ImageTModel[]
+     */
+    public function getThumbnails()
+    {
+        $thumbs = [];
+        if ($this->isGroup()) {
+            foreach ($this->childs as $child) {
+                $thumbs[] = $child->thumbnail->limit(1)->get();
+            }
+        } else {
+            $thumbs[] = $this->thumbnail->limit(1)->get();
+        }
+        return $thumbs;
+    }
+
 }
