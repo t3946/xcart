@@ -5,7 +5,7 @@
         {set $image = $brand->getImage()}
         {if $image}
             <div class="image">
-                <img data-original="//cdn.{$.getSite->getBaseDomain()}{$image->getURL()}" alt="{$brand.brand}" itemprop="image" class="lazy lazy-img">
+                <img data-src="//cdn.{$.getSite->getBaseDomain()}{$image->getURL()}" alt="{$brand.brand}" itemprop="image" class="lazy lazy-img">
             </div>
         {/if}
 

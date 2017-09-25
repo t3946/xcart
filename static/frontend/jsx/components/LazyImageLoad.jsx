@@ -65,14 +65,14 @@ export default class LazyImageLoad
 
         }
 
-        if ($target.attr('data-original')) {
+        if ($target.attr('data-src')) {
             this.stack.push(()=>{
-                let original = $target.attr('data-original');
+                let original = $target.attr('data-src');
                 let hasUpdate = ($target.src !== original);
 
                 if (hasUpdate) {
                     $target.attr('src', '');
-                    $target.attr('data-original', null);
+                    $target.attr('data-src', null);
 
                     this.onLoad(original,
                         ()=>{ $target.attr('src', original); },

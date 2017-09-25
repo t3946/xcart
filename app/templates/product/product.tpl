@@ -28,33 +28,57 @@
                     {add $site = $model->sites->limit(1)->get()}
                     {set $images = $model->images->order(['orderby'])->all()}
 
+                    <datalist>
+                        {foreach $images as $image}
+                            <option value="//cdn.{$site->getBaseDomain()}{$image->getUrl()}"
+                                    data-thumb="//cdn.{$site->getBaseDomain()}{$image->getUrl()}"
+                                    data-id="{$image->imageid}"
+                                    type="image">
+                            </option>
+                        {/foreach}
 
-                    <div class="slider-thumbs">
-                        <div class="swiper-wrapper">
+                        <option value="https://www.youtube.com/watch?v=dQw4w9WgXcQ" type="video"></option>
+                        <option value="https://www.youtube.com/watch?v=yPYZpwSpKmA" type="video"></option>
+                        <option value="" type="html">
+                            <div class="test">
+                                <h1>{$model->getFrontendName()} </h1>
+                                <h1>{$model->getFrontendName()} </h1>
+                                <h1>{$model->getFrontendName()} </h1>
 
-                            {foreach $images as $image}
-                                <div class="swiper-slide active">
-                                    {add $image_displayed = $image}
-                                    <img src="//cdn.{$site->getBaseDomain()}{$image->getUrl()}" alt="">
+                                <div class="a">
+                                    <a href="#">test</a>
                                 </div>
-                            {/foreach}
-                        </div>
-                    </div>
+                            </div>
+                        </option>
+                    </datalist>
 
-                    <div class="slider">
-                        <div class="swiper-wrapper">
 
-                            {*<img data-original="//cdn.{$site->getBaseDomain()}{$image_displayed->getUrl()}" alt="" class="layz lazy-img">*}
+                    {*<div class="slider-thumbs">*}
+                        {*<div class="swiper-wrapper">*}
+
+                            {*{foreach $images as $image}*}
+                                {*<div class="swiper-slide active">*}
+                                    {*{add $image_displayed = $image}*}
+                                    {*<img src="//cdn.{$site->getBaseDomain()}{$image->getUrl()}" alt="">*}
+                                {*</div>*}
+                            {*{/foreach}*}
+                        {*</div>*}
+                    {*</div>*}
+
+                    {*<div class="slider">*}
+                        {*<div class="swiper-wrapper">*}
+
+                            {*<img data-src="//cdn.{$site->getBaseDomain()}{$image_displayed->getUrl()}" alt="" class="layz lazy-img">*}
                             {*{foreach $images as $image}*}
                                 {*<div class="swiper-slide">*}
                                     {*<img src="//cdn.{$site->getBaseDomain()}{$image->getUrl()}" alt="">*}
                                 {*</div>*}
                             {*{/foreach}*}
-                        </div>
-                                        <!-- Add Arrows -->
-                        <div class="swiper-button-next swiper-button-white"></div>
-                        <div class="swiper-button-prev swiper-button-white"></div>
-                    </div>
+                        {*</div>*}
+                                        {*<!-- Add Arrows -->*}
+                        {*<div class="swiper-button-next swiper-button-white"></div>*}
+                        {*<div class="swiper-button-prev swiper-button-white"></div>*}
+                    {*</div>*}
 
 
                 </div>
@@ -91,7 +115,11 @@
 {block 'js'}
     <script>
         (function(){
+
+
             window.app.afterReady.push(function () {
+
+
 //                var galleryTop = new Swiper('.images_prices .slider', {
 //                    controlBy:'container',
 //                    nextButton: '.swiper-button-next',
@@ -100,29 +128,29 @@
 //                    spaceBetween: 10,
 //                });
 
-                var galleryThumbs = new Swiper('.images_prices .slider-thumbs', {
-                    spaceBetween: 5,
-//                    centeredSlides: true,
-                    slidesPerView: 'auto',
-                    direction: 'vertical',
-                    slidesPerColumnFill: 'column',
-                    touchRatio: 0.2,
-                    slideToClickedSlide: true,
-                    paginationClickable: true,
-                    autoHeight: true,
-                    onClick: function(swiper, e) {
-
-//                        console.log(swiper, e);
-                        console.log(swiper.clickedIndex);
-                        swiper.slideTo(swiper.clickedIndex);
-                    },
-                    onSlideChangeEnd: function(swiper) {
-                        console.log(swiper.realIndex)
-                    },
-                    onInit: function(swiper) {
-                        console.log(swiper.realIndex);
-                    }
-                });
+//                var galleryThumbs = new Swiper('.images_prices .slider-thumbs', {
+//                    spaceBetween: 5,
+////                    centeredSlides: true,
+//                    slidesPerView: 'auto',
+//                    direction: 'vertical',
+//                    slidesPerColumnFill: 'column',
+//                    touchRatio: 0.2,
+//                    slideToClickedSlide: true,
+//                    paginationClickable: true,
+//                    autoHeight: true,
+//                    onClick: function(swiper, e) {
+//
+////                        console.log(swiper, e);
+//                        console.log(swiper.clickedIndex);
+//                        swiper.slideTo(swiper.clickedIndex);
+//                    },
+//                    onSlideChangeEnd: function(swiper) {
+//                        console.log(swiper.realIndex)
+//                    },
+//                    onInit: function(swiper) {
+//                        console.log(swiper.realIndex);
+//                    }
+//                });
 //                galleryTop.params.control = galleryThumbs;
 //                galleryThumbs.params.control = galleryTop;
             });

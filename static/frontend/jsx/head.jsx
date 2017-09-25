@@ -25,6 +25,7 @@ import  "./_binds/search";
 import  "./_binds/minicart";
 import  "./_binds/shadow";
 import  "./_binds/catalog_actionblock_sort";
+import  "./_binds/productSlider";
 
 import  "./ext/jq-swipe";
 import  "./components/Flash";

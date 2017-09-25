@@ -54,7 +54,7 @@ export default class MiniCart extends Component
     renderImage(item)
     {
         if (item.image) {
-            return <img data-original={item.image}  alt={item.name} className="lazy lazy-img" itemprop="image" />;
+            return <img data-src={item.image}  alt={item.name} className="lazy lazy-img" itemprop="image" />;
         }
 
         return (
