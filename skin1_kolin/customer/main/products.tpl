@@ -60,16 +60,20 @@
             {else}
                 {assign var="is_group" value=false}
             {/if}
-
             <table width="100%" class="product_list_row">
                 <tr class="google_impression_object" data-productid="{$products[product].productid}"
                     data-name="{$products[product].product|escape}"
                     data-category="{$products[product].category|escape}" data-brand="{$products[product].brand|escape}"
                     data-list="{$ga_page_name}" data-price="{$products[product].price}" data-position="{$N_key}">
                     <td class="PListImgBox">
-                        <div class="PListImgBox">
-                            <a {include file="on_product_click.tpl"}
-                                    href="{if $search_all_website eq 'Y'}{if $products[product].clean_url ne ""}{$products[product].clean_url}{else}//{$products[product].domain}/product.php?productid={$products[product].productid}{/if}{else}/product.php?productid={$products[product].productid}{/if}" {if $search_all_website eq 'Y'}target="_blank"{/if}>{include file="product_thumbnail.tpl" productid=$products[product].productid image_x=$config.Appearance.thumbnail_width product=$products[product].product tmbn_url=$products[product].tmbn_url splash=$products[product].oSplash}</a>
+                        <div class="PListImgBox" {if $products[product].oProduct->isGroup()}style="width:150px; height:150px;"{/if}">
+                            <a {include file="on_product_click.tpl"} href="{$products[product].oProduct->getUrl()}" {if $search_all_website eq 'Y'}target="_blank"{/if}>
+                                {if $products[product].oProduct->isGroup() && $products[product].oProduct->getThumbnails()|@count >=4}
+                                    {include file="group_thumbnail.tpl" product=$products[product].oProduct}
+                                {else}
+                                    {include file="product_thumbnail.tpl" productid=$products[product].productid image_x=$config.Appearance.thumbnail_width product=$products[product].oProduct->getTitle() tmbn_url=$products[product].tmbn_url splash=$products[product].oSplash}
+                                {/if}
+                            </a>
                             {if $active_modules.Special_Offers ne "" and $products[product].have_offers}
                                 {include file="modules/Special_Offers/customer/product_offer_thumb.tpl" product=$products[product]}
                             {/if}
@@ -142,8 +146,6 @@
                                             {include file="modules/Special_Offers/customer/product_special_price.tpl" product=$products[product]}
                                         {/if}
                                     {/if}
-                                {else}
-                                    <span class="ProductPrice">{$lng.lbl_enter_your_price}</span>
                                 {/if}
                             {/if}
 

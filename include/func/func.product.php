@@ -764,23 +764,7 @@ function func_select_product($id, $membershipid, $redirect_if_error=true, $clear
 ##
 #
 
-/* speed optimizations no such conditions
-	if ($current_area == 'C' && empty($active_modules['Product_Configurator'])) {
-	
-		$login_condition .= " AND $sql_tbl[products].product_type <> 'C' AND $sql_tbl[products].forsale <> 'B' ";
-		
-	}
-*/
-
-	if ($current_area == "C") {
-        if ($product_model = ProductModel::objects()->get(['productid' => $id])) {
-            $product = $product_model->getAttributes();
-            $product['price'] = $product_model->getPrice();
-            $product['avail'] = $product_model->avail - $in_cart;
-        }
-    } else {
-        $product = func_query_first("SELECT $sql_tbl[products].*, $sql_tbl[products].avail-$in_cart AS avail, $sql_tbl[pricing].price as price $add_fields FROM $sql_tbl[pricing], $sql_tbl[products] $join WHERE $sql_tbl[products].productid='$id' ".$login_condition.$p_membershipid_condition.$price_condition.$sf_condition." GROUP BY $sql_tbl[products].productid");
-    }
+    $product = func_query_first("SELECT $sql_tbl[products].*, $sql_tbl[products].avail-$in_cart AS avail, $sql_tbl[pricing].price as price $add_fields FROM $sql_tbl[pricing], $sql_tbl[products] $join WHERE $sql_tbl[products].productid='$id' ".$login_condition.$p_membershipid_condition.$price_condition.$sf_condition." GROUP BY $sql_tbl[products].productid");
 
 /*speed optimization*/
 //	print("l:".$membershipid_condition);

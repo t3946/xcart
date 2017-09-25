@@ -6,6 +6,7 @@ namespace Modules\Product\Stores;
 use Mindy\QueryBuilder\Aggregation\Max;
 use Mindy\QueryBuilder\Expression;
 use Modules\Brand\Models\BrandModel;
+use Modules\Product\Models\PricingModel;
 use Modules\Product\Models\ProductCategoriesModel;
 use Modules\Product\Models\ProductModel;
 use Modules\Product\Models\ProductStorefrontModel;
@@ -254,6 +255,16 @@ class GroupStore extends BaseStore
                     'main' => 'Y'
                 ]
             ))->save();
+
+            (new PricingModel(
+                [
+                    'productid' => $this->model->productid,
+                    'quantity' => 1,
+                    'price' => 0
+                ]
+            ))->save();
+
+            func_build_quick_prices($this->model->productid);
 
             $clean_url = func_clean_url_autogenerate('P', $this->model->productid, array('product' => $this->model->product, 'productcode' => $this->model->productcode));
             func_clean_url_add($clean_url, 'P', $this->model->productid);

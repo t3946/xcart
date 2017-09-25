@@ -145,6 +145,12 @@ class ProductModel extends AutoMetaModel
                 'link' => ['group_root' => 'productid'],
                 'extra' => ['productid__isnt' => new Expression('group_root')]
             ],
+            'parent' => [
+                'field' => 'group_root',
+                'class' => ForeignField::className(),
+                'modelClass' => ProductModel::className(),
+                'link' => ['group_root' => 'productid'],
+            ],
             'thumbnail' => [
                 'class' => HasManyField::className(),
                 'modelClass' => ImageTModel::className(),
@@ -182,4 +188,36 @@ class ProductModel extends AutoMetaModel
     {
         return $this->amazon_fba == 'Y';
     }
+
+    public function getTitle()
+    {
+        if ($this->seo_product_name) {
+            $title = $this->seo_product_name;
+        } else {
+            $title = $this->product;
+        }
+
+        if ($this->group_root) {
+            return ($this->isGroup()) ?  $title : $this->parent->group_mask . $title;
+        }
+
+        return $title;
+    }
+
+    /**
+     * @return ImageTModel[]
+     */
+    public function getThumbnails()
+    {
+        $thumbs = [];
+        if ($this->isGroup()) {
+            foreach ($this->childs as $child) {
+                $thumbs[] = $child->thumbnail->limit(1)->get();
+            }
+        } else {
+            $thumbs[] = $this->thumbnail->limit(1)->get();
+        }
+        return $thumbs;
+    }
+
 }

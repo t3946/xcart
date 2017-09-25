@@ -25,7 +25,7 @@
                 data-price='{getPricingArray pricing=$child->pricing json=true}'>
                 {assign var=thumbnail_m value=$child->thumbnail}
                 {assign var=thumbnail value=$thumbnail_m->get()}
-                <td><img src="{$thumbnail->getURL()}"/></td>
+                <td><img src="{include file="product_image_src.tpl" tmbn_url=$thumbnail->getUrl()}"/></td>
                 <td class="title">
                     <div><a href="{$child->getUrl()}">{$child->product}</a></div>
                     <div class="sku"><a href="{$child->getUrl()}" target="_blank">{$child->productcode}</a></div>

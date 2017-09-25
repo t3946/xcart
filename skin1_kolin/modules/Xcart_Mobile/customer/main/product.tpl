@@ -110,7 +110,7 @@ vim: set ts=2 sw=2 sts=2 et:
                     <span id="so_sku"
                           itemprop="sku">{/if}{/if}{$product.productcode|escape}{if $main eq "product"}{if $use_schema_org eq "Y"}</span>{/if}{/if}
                 </div>
-                {if $product.distribution eq "" && !($product.product_type eq "C" and $active_modules.Product_Configurator)}
+                {if !$is_group && $product.distribution eq "" && !($product.product_type eq "C" and $active_modules.Product_Configurator)}
                     <div id="so_o_stock" itemprop="availability"
                          content="{if $product.product_availability eq "in stock"}InStock{else}OutOfStock{/if}"
                          class="product-quantity-text-top{if $product.avail gt 0 or $config.General.unlimited_products eq "Y"} in-stock{/if}">
@@ -179,14 +179,19 @@ vim: set ts=2 sw=2 sts=2 et:
 </div>
 <div class="product-details">
   <div class="image">
-    <div class="image-box"{if $active_modules.Detailed_Product_Images and $images ne ''} style="display: block;"{/if}>
+    <div class="image-box" style="width:300px; height:300px; {if $active_modules.Detailed_Product_Images and $images ne ''}display: block;{/if}">
       {if $active_modules.Detailed_Product_Images and $images ne ''}
         <ul data-role="listview" data-inset="true">
           <li data-icon="false">
             <a href="{$current_location}/product.php?productid={$product.productid}&mobile_mode=get_detailed_images" class="ga_click" data-label="More Images">
             {/if}
-                {include file="product_thumbnail.tpl" productid=$product.productid image_x=$product.image_x image_y=$product.image_y product=$producttitle tmbn_url=$product.tmbn_url id="product_thumbnail" type="P" splash=$product.oSplash}
-            {if $active_modules.Detailed_Product_Images and $images ne ''}
+                {if $oProduct->isGroup()}
+                    {include file="group_thumbnail.tpl" product=$oProduct}
+                {else}
+                    {include file="product_thumbnail.tpl" productid=$product.productid image_x=$product.image_x image_y=$product.image_y product=$producttitle tmbn_url=$product.tmbn_url id="product_thumbnail" type="P" splash=$product.oSplash}
+                {/if}
+
+                {if $active_modules.Detailed_Product_Images and $images ne ''}
             </a>
           </li>
         {/if}

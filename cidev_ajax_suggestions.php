@@ -37,18 +37,25 @@ if ($REQUEST_METHOD == 'POST') {
                 $smarty->assign('tmbn_url', $oThumb->getURL());
             }
             $smarty->assign('product', $oProduct->product);
+            if ($oProduct->isGroup()) {
+                $smarty->assign('product', $oProduct);
+            }
 
-            $aResult['items'][] = [
-                'productid' => $oProduct->productid,
-                'clean_url' => $oProduct->getRelativeURL(),
-                'price' => $oProduct->getFrontendPrice(),
-                'category' => $oProduct->getMainCategory()->category,
-                'brand' => $oBrand->brand,
-                'product' => $oProduct->product,
-                'thumb' => $smarty->fetch('product_thumbnail.tpl'),
-                'N_key' => $k + 1,
-                'ga_param' => $sGoogleAnaliticsParam,
-                'title' => $oProduct->product];
+
+            $aResult['items'][] =
+                [
+                    'productid' => $oProduct->productid,
+                    'clean_url' => $oProduct->getRelativeURL(),
+                    'price' => $oProduct->getFrontendPrice(),
+                    'category' => $oProduct->getMainCategory()->category,
+                    'brand' => $oBrand->brand,
+                    'product' => $oProduct->getTitle(),
+                    'thumb' => $oProduct->isGroup() ? $smarty->fetch('group_thumbnail.tpl') : $smarty->fetch('product_thumbnail.tpl'),
+                    'N_key' => $k + 1,
+                    'ga_param' => $sGoogleAnaliticsParam,
+                    'title' => $oProduct->getTitle(),
+                    'is_group' => $oProduct->isGroup()
+                ];
 
 		}
 	}
