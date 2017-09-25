@@ -418,7 +418,9 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
                                     if (!$brandModel) {
                                         $brandModel = (new BrandModel([
                                             'brand' => $brandName,
-                                            'orderby' => 10
+                                            'orderby' => 10,
+                                            'prevent_search_indexing_of_all_brand_products' => $modelProduct->prevent_search_indexing_this_product_page == 'Y' ? 'Y' : 'N',
+                                            'prevent_search_indexing_brand_page' => $modelProduct->prevent_search_indexing_this_product_page == 'Y' ? 'Y' : 'N'
                                         ]));
                                         $brandModel->save();
                                         (new BrandStorefrontModel([
@@ -471,6 +473,8 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
                                                 'parentid' => $parentid,
                                                 'category' => $v_cat,
                                                 'storefrontid' => $supplierFeedModel->storefront_id,
+                                                'prevent_index_products' => $modelProduct->prevent_search_indexing_this_product_page == 'Y' ? 'Y' : 'N',
+                                                'prevent_index_category_page' => $modelProduct->prevent_search_indexing_this_product_page == 'Y' ? 'Y' : 'N',
                                                 'is_bold' => 'Y',
                                                 'order_by' => 10
                                             ]);

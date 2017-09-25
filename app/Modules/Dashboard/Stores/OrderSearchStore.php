@@ -422,6 +422,9 @@ class OrderSearchStore extends BaseStore
             if (!empty($data['order']['po'])) {
                 $this->getQ(['po_number' => $data['order']['po']], 'order.po');
             }
+            if (!empty($data['order']['amazon_order'])) {
+                $this->getQ(['amazonorderid' => $data['order']['amazon_order']], 'order.amazon_order');
+            }
 
         }
 
@@ -811,6 +814,10 @@ class OrderSearchStore extends BaseStore
             $this->qs = OrderModel::objects()->getQuerySet();
         }
         return $this->qs;
+    }
+
+    public function setQuerySet($qs) {
+        $this->qs = $qs;
     }
 
     public function getQSWithSorting()
