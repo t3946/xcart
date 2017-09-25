@@ -98,6 +98,26 @@ class ProductModel extends AutoMetaModel
                 'null' => false,
                 'default' => ''
             ],
+            'seo_product_name' => [
+                'class' => CharField::className(),
+                'null' => false,
+                'default' => ''
+            ],
+            'product' => [
+                'class' => CharField::className(),
+                'null' => false,
+                'default' => ''
+            ],
+            'group_mask' => [
+                'class' => CharField::className(),
+                'null' => true,
+                'default' => null
+            ],
+            'group_option' => [
+                'class' => CharField::className(),
+                'null' => true,
+                'default' => null
+            ],
             'source_sfid' => [
                 'class' => IntField::className(),
                 'null' => false,
