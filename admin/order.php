@@ -1620,9 +1620,15 @@ if ($mode == 'ref_notify')
 
                             $trStore = new OrderTransactionStore($params, $ref_tr);
                             $model = $trStore->refund();
-                            if ($model->type == OrderTransactionModel::TYPE_REFUND && $model->transaction_status == OrderTransactionModel::STATUS_COMPLETED) {
+                            if ($model->type == OrderTransactionModel::TYPE_REFUND
+                                && in_array($model->transaction_status, [OrderTransactionModel::STATUS_COMPLETED, OrderTransactionModel::STATUS_REFUNDED]))
+                            {
                                 $ref_sum -= $model->transaction_amount;
+                            } else {
+                                $error_message = "Transaction {$ref_tr->transaction_id} in wrong status after refund";
+                                break;
                             }
+
                             $order_log .= $trStore->log."\n";
 
                             if ($ref_sum <= 0) {
