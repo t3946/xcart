@@ -1426,6 +1426,8 @@ if (!empty($login) || $mode != "checkout") {
 if (@$products)
     usort($products, "cart_num");
 
+$products = array_map(function($a){$a['oProduct'] = new ProductModel($a); $a['oProduct']->setIsNewRecord(false); return $a;}, $products);
+
 $smarty->assign("products", @$products);
 $smarty->assign("giftcerts", $giftcerts);
 
