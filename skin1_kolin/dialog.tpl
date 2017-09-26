@@ -105,7 +105,7 @@
             {else}align="center"{/if}
             valign="center"
             nowrap="nowrap"
-            style="padding-right: 88px; height: 10px;float:right; position: relative; top: 5px; width:392px; ">
+            style="padding-right: 22px; float:right; position: relative; ">
 <table id="minimum_order_amount_label"
        style="transition: opacity 0.5s ease-in-out;"
        border="0"
@@ -127,10 +127,10 @@
 
     {if $product_free_ship ne ""}
         <tr>
-<td height="20"
-    style="background-color: #006600; color: white; font-size: 15px; font-weight: bold; padding-left: 4px; padding-right: 4px;"
+<td colspan="2" height="20"
+    style="background-color: #006600; color: white; font-size: 15px; font-weight: bold; padding-left: 4px; padding-right: 4px; line-height: 21px;"
     align="center">
-{$product_free_ship}
+<img style="vertical-align: middle; padding: 1px;" width="20" height="20" src="{$ImagesDir}/icons/free-shipping.svg"/>{$product_free_ship}
 </td>
 </tr>
     {/if}
