@@ -90,7 +90,7 @@ vim: set ts=2 sw=2 sts=2 et:
     <div class="top-info ui-body ui-body-b ui-overlay-shadow">
         <div class="ui-grid-{if $active_modules.Special_Offers && $product.bonus_points gt 0}a{else}solo{/if}">
             <div class="ui-block-a">
-                <h1 {if $main eq "product"}{if $use_schema_org eq "Y"} id="so_name" itemprop="name"{/if}{/if}>{$product.producttitle}</h1>
+                <h1 {if $main eq "product"}{if $use_schema_org eq "Y"} id="so_name" itemprop="name"{/if}{/if}>{$oProduct->getTitle()}</h1>
             </div>
             {if $active_modules.Special_Offers && $product.bonus_points gt 0}
                 <div class="ui-block-b">
@@ -179,7 +179,7 @@ vim: set ts=2 sw=2 sts=2 et:
 </div>
 <div class="product-details">
   <div class="image">
-    <div class="image-box" style="width:300px; height:300px; {if $active_modules.Detailed_Product_Images and $images ne ''}display: block;{/if}">
+    <div class="image-box" style="width:300px; height:300px; {if $active_modules.Detailed_Product_Images and $images ne ''}display: inline-block;{/if}">
       {if $active_modules.Detailed_Product_Images and $images ne ''}
         <ul data-role="listview" data-inset="true">
           <li data-icon="false">
