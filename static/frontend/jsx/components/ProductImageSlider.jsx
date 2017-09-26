@@ -1,6 +1,7 @@
-import PhotoSwipe from "PhotoSwipe";
-import {h, Component} from "preact";
+import {h, render, Component} from "preact";
+import rendeToStringr from 'preact-render-to-string';
 import { videoLinkToObject } from "../utils/video";
+import PhotoSwipe from "./PhotoSwipeContainer";
 import _ from 'lodash';
 
 export default class ProductImageSlider extends Component
@@ -8,27 +9,19 @@ export default class ProductImageSlider extends Component
     constructor( props ) {
         super();
 
-        // let objects = [];
-        // if (props.images) {
-        //     objects = _.concat(objects, props.images)
-        // }
-        // if (props.videos) {
-        //     objects = _.concat(objects, props.videos)
-        // }
-
         let len = 0, wait = 0;
         if (props.items) {
             len = props.items.length;
         }
 
-        this.ps = new PhotoSwipe();
-        // this.ps.init();
+        this.preparedItems = null;
 
         this.state = {
             loading: true,
             items: props.items || [],
             count: len,
             wait: wait,
+            isVideo: false,
             index: 0,
         };
 
@@ -39,17 +32,10 @@ export default class ProductImageSlider extends Component
     {
         let wait = this.state.wait;
 
-        console.log(this.ps);
-
         for (let i in items) {
             let item = items[i];
 
-            if (item.type === 'image') {
-
-                // this.ps.items.push({
-                //     src: item.src,
-                // });
-            }
+            // if (item.type === 'image') { }
 
             if (item.type === 'video') {
                 wait += 1;
@@ -70,13 +56,46 @@ export default class ProductImageSlider extends Component
     clickHndl(e, n, item) {
         e.preventDefault();
 
-        this.setState({index: n});
+        if (this.state.index !== n) {
+            this.setState({
+                index: n,
+                isVideo: false,
+            });
+        }
     }
 
     zoomHndl(e, item) {
         e.preventDefault();
 
-        // this.ps.goTo(this.state.index);
+        if (!this.preparedItems) {
+            let items = [];
+            for (let i in this.state.items) {
+                let item = this.state.items[i];
+
+                if (item.type === 'image') {
+                    items.push({src: item.src, w: null, h: null});
+                }
+                else if (item.type === 'html') {
+                    items.push({html: item.html});
+                }
+                else if (item.type === 'video') {
+
+                    items.push({html: rendeToStringr(
+                        <div className="slide-wrapper">
+                    <div className="video-wrapper">
+                        {this.renderVideoItem(item, true, false)}
+                    </div>
+                </div>)});
+                }
+            }
+
+            this.preparedItems = items;
+        }
+
+        let pswp = PhotoSwipe;
+        pswp.options.index = this.state.index;
+        pswp.setImages(this.preparedItems);
+        pswp.init();
     }
 
     prevHndl(e) {
@@ -89,19 +108,10 @@ export default class ProductImageSlider extends Component
 
     }
 
-    renderImage(item)
-    {
-        if (item.src) {
-            return <img data-src={item.src}  alt={item.name} className="lazy lazy-img" itemprop="image" />;
-        }
+    videoShowHndl(e) {
+        e.preventDefault();
 
-        return (
-            <div className="not-avail">
-                <span className="text">
-                    Image not available
-                </span>
-            </div>
-        );
+        this.setState({isVideo: true})
     }
 
     renderThumbs() {
@@ -146,6 +156,31 @@ export default class ProductImageSlider extends Component
         });
     }
 
+    renderVideoItem(item, forceVideo = false, autolay = true)
+    {
+        if (item.meta.type === 'youtube') {
+
+            if (this.state.isVideo || forceVideo) {
+                return (
+                    <iframe
+                        src={item.meta.p + "www.youtube.com/embed/" + item.meta.id + '?autoplay=' + (autolay ? 1:0)}
+                        type={"text/html"}
+                        frameborder="0"
+                        width={640}
+                        height={360}
+                        allowfullscreen></iframe>
+                );
+            }
+            else {
+                let image = item.img || item.meta.images.img;
+                return (
+                    <img src={image} alt="" className={""}/>
+                );
+            }
+
+        }
+    }
+
     renderDetail()
     {
         if (this.state.count) {
@@ -168,13 +203,13 @@ export default class ProductImageSlider extends Component
                 }
 
                 if (item.type === 'video') {
-                    let content = null;
+                    let content = this.renderVideoItem(item);
+                    let clName = "slide type-video ";
 
-                    if (item.meta.type === 'youtube') {
-                        content = <iframe src={item.meta.p + "www.youtube.com/embed/" + item.meta.id} type={"text/html"} frameborder="0" width={640} height={360}></iframe>;
-                    }
+                    clName += this.state.isVideo? "video-show" : "video-hide";
 
-                    return <div className="slide type-video">{content}</div>;
+
+                    return <div className={clName} onClick={(e)=>{ this.videoShowHndl(e);}} key={key}>{content}</div>;
                 }
             }
         }

@@ -14,6 +14,8 @@ import noUiSlider from 'noUiSlider';
 import 'pace';
 // import 'bower_components/PACE/pace.js';
 import 'bower_components/jQuery.dotdotdot/src/jquery.dotdotdot.js';
+// import PhotoSwipe from 'bower_components/photoswipe/dist/photoswipe.js';
+// import PhotoSwipeUI_Default from 'bower_components/photoswipe/dist/photoswipe-ui-default';
 
 // import 'sly';
 
@@ -39,5 +41,7 @@ import '../../vendors/wNumb.js'
     window['Waves'] = Waves;
     window['WebFont'] = WebFont;
     window['noUiSlider'] = noUiSlider;
+    // window['PhotoSwipe'] = PhotoSwipe;
+    // window['PhotoSwipeUI_Default'] = PhotoSwipeUI_Default;
     // window['Fotorama'] = Fotorama;
 })();

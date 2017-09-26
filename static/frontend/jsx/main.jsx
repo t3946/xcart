@@ -34,14 +34,19 @@ require('preact/devtools');
     Waves.attach('.waves');
     Waves.init();
 
+    let $offCanvas = $('#offCanvasLeft');
+
     $(document).on('swipe', function(e, Dx, Dy, angle) {
-        if (isMedia('medium') && isTouch()) {
-            if (angle < 10) {
-                if (Dx === 1 && Dy === 0) { //right
-                    $('#offCanvasLeft').foundation('open', e);
-                }
-                else if (Dx === -1 && Dy === 0) {
-                    $('#offCanvasLeft').foundation('close');
+
+        if (e.target.closest('#main_wrapper')) {
+            if (isMedia('medium') && isTouch()) {
+                if (angle < 10) {
+                    if (Dx === 1 && Dy === 0) { //right
+                        $offCanvas.foundation('open', e);
+                    }
+                    else if (Dx === -1 && Dy === 0) {
+                        $offCanvas.foundation('close');
+                    }
                 }
             }
         }

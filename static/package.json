@@ -55,6 +55,7 @@
     "preact-compat": "^3.16.0",
     "preact-markup": "^1.6.0",
     "preact-redux": "^2.0.2",
+    "preact-render-to-string": "^3.6.3",
     "redux": "^3.7.1",
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.2.0"
