@@ -59,7 +59,7 @@
                                 {/foreach}
                             </div>
                             <div class="row align-right">
-                                <div class="columns large-3">
+                                <div class="columns large-12">
 
                                     <span class="hide-for-modal show_more" data-target="#sub_list" data-text-more="More categories" data-text-less="Less categories">
                                         More categories

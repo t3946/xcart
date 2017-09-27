@@ -1,5 +1,5 @@
 import {h, render, Component} from "preact";
-import rendeToStringr from 'preact-render-to-string';
+import renderToStringr from 'preact-render-to-string';
 import { videoLinkToObject } from "../utils/video";
 import PhotoSwipe from "./PhotoSwipeContainer";
 import _ from 'lodash';
@@ -80,12 +80,17 @@ export default class ProductImageSlider extends Component
                 }
                 else if (item.type === 'video') {
 
-                    items.push({html: rendeToStringr(
-                        <div className="slide-wrapper">
-                    <div className="video-wrapper">
-                        {this.renderVideoItem(item, true, false)}
-                    </div>
-                </div>)});
+                    items.push({
+                        html: renderToStringr(
+                            <div className="slide-wrapper">
+                                <div className="video-wrapper" onClick={"this.innerHTML = '"+ renderToStringr(this.renderVideoItem(item, true, true))+"'"} >
+                                    {this.renderVideoItem(item)}
+                                </div>
+                            </div>),
+                        onTap: (e) => {
+                            alert('hello');
+                        }
+                    });
                 }
             }
 
@@ -121,8 +126,8 @@ export default class ProductImageSlider extends Component
 
             if (item.type === 'image') {
                 return (
-                    <div className={"slide type-image" + is_active} key={"image.thumb." + n} onClick={(e)=>{this.clickHndl(e, n, item)}}>
-                        <img data-src={item.src} className="lazy lazy-img"/>
+                    <div className={"slide type-image" + is_active} key={"image.thumb." + n} onClick={(e)=>{this.clickHndl(e, n, item)}}
+                         style={"background-image: url("+item.src+")"}>
                     </div>
                 );
             }
@@ -132,8 +137,11 @@ export default class ProductImageSlider extends Component
 
                 if (src) {
                     return (
-                        <div className={"slide type-video" + is_active} key={"video.thumb." + n} onClick={(e)=>{this.clickHndl(e, n, item)}}>
-                            <img data-src={src} alt="" className="lazy lazy-img"/>
+                        <div className={"slide type-video" + is_active}
+                             key={"video.thumb." + n}
+                             onClick={(e)=>{this.clickHndl(e, n, item)}}
+                             style={"background-image: url("+src+")"}
+                        >
                         </div>
                     );
                 }
@@ -173,12 +181,15 @@ export default class ProductImageSlider extends Component
             }
             else {
                 let image = item.img || item.meta.images.img;
-                return (
-                    <img src={image} alt="" className={""}/>
-                );
+                return this.renderImage(image);
             }
 
         }
+    }
+
+    renderImage(src)
+    {
+        return <div className="image" style={"background-image: url("+src+")"}></div>
     }
 
     renderDetail()
@@ -193,7 +204,8 @@ export default class ProductImageSlider extends Component
                 if (item.type === 'image') {
                     return (
                         <div className="slide type-image" key={key} onClick={(e)=>{this.zoomHndl(e, item)}}>
-                            <img src={item.src} alt={item.alt} title={item.title} className="" itemprop="image"/>
+                            {/*<img src={item.src} alt={item.alt} title={item.title} className="" itemprop="image"/>*/}
+                            {this.renderImage(item.src)}
                         </div>
                     );
                 }

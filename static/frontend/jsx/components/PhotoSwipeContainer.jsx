@@ -31,6 +31,14 @@ const cont = new class PhotoSwipeContainer
             this.pswp = null;
         });
 
+        this.pswp.listen('beforeChange', (d) => {
+            if (!!d) {
+                let item = this.pswp.currItem;
+
+            }
+        });
+
+
         this.pswp.listen('gettingData', (index, item)  =>{
 
             if (item.src) {
@@ -81,6 +89,13 @@ const cont = new class PhotoSwipeContainer
         // });
 
         this.pswp.init();
+
+        this.pswp.framework.bind( this.pswp.scrollWrap /* bind on any element of gallery */, 'pswpTap', (e) => {
+            let item = this.pswp.currItem;
+            if (item.onTap) {
+                item.onTap(item, this.pswp);
+            }
+        });
     }
 
 

@@ -41900,15 +41900,20 @@ var ProductImageSlider = function (_Component) {
                     items.push({ html: _item.html });
                 } else if (_item.type === 'video') {
 
-                    items.push({ html: (0, _preactRenderToString2.default)((0, _preact.h)(
+                    items.push({
+                        html: (0, _preactRenderToString2.default)((0, _preact.h)(
                             "div",
                             { className: "slide-wrapper" },
                             (0, _preact.h)(
                                 "div",
-                                { className: "video-wrapper" },
-                                this.renderVideoItem(_item, true, false)
+                                { className: "video-wrapper", onClick: "this.innerHTML = '" + (0, _preactRenderToString2.default)(this.renderVideoItem(_item, true, true)) + "'" },
+                                this.renderVideoItem(_item)
                             )
-                        )) });
+                        )),
+                        onTap: function onTap(e) {
+                            alert('hello');
+                        }
+                    });
                 }
             }
 
@@ -41943,26 +41948,23 @@ var ProductImageSlider = function (_Component) {
             var is_active = _this3.state.index == n ? ' active' : '';
 
             if (item.type === 'image') {
-                return (0, _preact.h)(
-                    "div",
-                    { className: "slide type-image" + is_active, key: "image.thumb." + n, onClick: function onClick(e) {
-                            _this3.clickHndl(e, n, item);
-                        } },
-                    (0, _preact.h)("img", { "data-src": item.src, className: "lazy lazy-img" })
-                );
+                return (0, _preact.h)("div", { className: "slide type-image" + is_active, key: "image.thumb." + n, onClick: function onClick(e) {
+                        _this3.clickHndl(e, n, item);
+                    },
+                    style: "background-image: url(" + item.src + ")" });
             }
             if (item.type === 'video') {
 
                 var src = item.thumb || item.meta.images.thumb || null;
 
                 if (src) {
-                    return (0, _preact.h)(
-                        "div",
-                        { className: "slide type-video" + is_active, key: "video.thumb." + n, onClick: function onClick(e) {
-                                _this3.clickHndl(e, n, item);
-                            } },
-                        (0, _preact.h)("img", { "data-src": src, alt: "", className: "lazy lazy-img" })
-                    );
+                    return (0, _preact.h)("div", { className: "slide type-video" + is_active,
+                        key: "video.thumb." + n,
+                        onClick: function onClick(e) {
+                            _this3.clickHndl(e, n, item);
+                        },
+                        style: "background-image: url(" + src + ")"
+                    });
                 } else {
                     return (0, _preact.h)(
                         "div",
@@ -42006,9 +42008,13 @@ var ProductImageSlider = function (_Component) {
                     allowfullscreen: true });
             } else {
                 var image = item.img || item.meta.images.img;
-                return (0, _preact.h)("img", { src: image, alt: "", className: "" });
+                return this.renderImage(image);
             }
         }
+    };
+
+    ProductImageSlider.prototype.renderImage = function renderImage(src) {
+        return (0, _preact.h)("div", { className: "image", style: "background-image: url(" + src + ")" });
     };
 
     ProductImageSlider.prototype.renderDetail = function renderDetail() {
@@ -42027,7 +42033,7 @@ var ProductImageSlider = function (_Component) {
                         { className: "slide type-image", key: key, onClick: function onClick(e) {
                                 _this4.zoomHndl(e, _item2);
                             } },
-                        (0, _preact.h)("img", { src: _item2.src, alt: _item2.alt, title: _item2.title, className: "", itemprop: "image" })
+                        this.renderImage(_item2.src)
                     );
                 }
 
@@ -42539,6 +42545,12 @@ var cont = new (function () {
             _this.pswp = null;
         });
 
+        this.pswp.listen('beforeChange', function (d) {
+            if (!!d) {
+                var item = _this.pswp.currItem;
+            }
+        });
+
         this.pswp.listen('gettingData', function (index, item) {
 
             if (item.src) {
@@ -42564,6 +42576,13 @@ var cont = new (function () {
         });
 
         this.pswp.init();
+
+        this.pswp.framework.bind(this.pswp.scrollWrap, 'pswpTap', function (e) {
+            var item = _this.pswp.currItem;
+            if (item.onTap) {
+                item.onTap(item, _this.pswp);
+            }
+        });
     };
 
     PhotoSwipeContainer.prototype.getPhotoSwipe = function getPhotoSwipe() {
