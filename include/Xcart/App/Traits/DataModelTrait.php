@@ -26,7 +26,8 @@ trait DataModelTrait
 
         if (!$this->dataModel) {
             $class = static::getDataModelClass();
-            $this->dataModel = new $class($this->getAttributes());
+            $this->dataModel = new $class();
+            $this->dataModel->fill($this->getAttributes());
 
             $this->afterFetchDataModel($this->dataModel);
         }

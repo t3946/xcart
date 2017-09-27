@@ -44,7 +44,7 @@ class OrderEntryMail extends Mail
 
             $mail_smarty->assign('email_is_sent_to_operator', 'Y');
 
-            $oMail = \Xcart\App\Main\Xcart::app()->mail;
+            $oMail = \Xcart\App\Main\Xcart::app()->oldMail;
             $oMail->init();
             $oMail->to = $this->getTo();
             $oMail->from = $this->getFrom();

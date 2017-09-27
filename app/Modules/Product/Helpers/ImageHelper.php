@@ -15,7 +15,6 @@ class ImageHelper
         return ProductHelper::getFileNameFromDownloadLink($imgLink, self::$__extensions, $defaultExtension);
     }
 
-
     /**
      * @param string $image
      * @param string $name
@@ -29,6 +28,7 @@ class ImageHelper
         $imageModel = null;
         $image = html_entity_decode($image);
         $SET_IMAGE_URL = self::getImageFileNameFromDownloadLink($image);
+
         if (empty($SET_IMAGE_URL)) {
             $img_path_arr = explode("//", $image);
             $img_path_arr2 = explode("/", $img_path_arr[1]);
@@ -38,9 +38,9 @@ class ImageHelper
             $ext = array_pop($img_path_after_arr);
             $Prod_ID = $prefix . "_" . implode("_", $img_path_after_arr);
             $image_file_name = $Prod_ID . "." . $ext;
-        } else {
+        }
+        else {
             $image_file_name = $prefix . "_" . $SET_IMAGE_URL;
-
         }
         $image_file_name = str_replace(' ', '', rawurldecode($image_file_name));
         $image_file_name = str_replace('/', '_', rawurldecode($image_file_name));
@@ -49,9 +49,12 @@ class ImageHelper
         $imageModel = ImageDModel::objects()->filter(['image_path' => '.' . $image_file_path, 'id' => $product_id])->limit(1)->get();
         if (!$imageModel) {
             $sDataImage = file_get_contents_curl($image);
+
             if (!empty($sDataImage)) {
-                if (file_put_contents($xcart_dir . $image_file_path, $sDataImage)) {
+                if (file_put_contents($xcart_dir . $image_file_path, $sDataImage))
+                {
                     $img_info = getimagesize($xcart_dir . $image_file_path);
+
                     if ($img_info) {
                         $imageModel = new ImageDModel([
                             'date' => time(),

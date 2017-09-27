@@ -1,8 +1,10 @@
 <?php
 namespace Modules\Product\Models;
 
+use Modules\Sites\Models\SiteModel;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\CharField;
+use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Model;
 
@@ -37,7 +39,10 @@ class FilterModel extends Model
                 'default' => 'Y'
             ],
             'storefrontid' => [
-                'class' => IntField::className(),
+                'field' => 'storefrontid',
+                'class' => ForeignField::className(),
+                'modelClass' => SiteModel::className(),
+                'link' => ['storefrontid' => 'storefrontid'],
                 'null' => false,
                 'default' => 0
             ],

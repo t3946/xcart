@@ -53,6 +53,11 @@ class Model extends AbstractModel
         return '';
     }
 
+    public function getObjects($instance = null)
+    {
+        return static::objects(($instance) ? $instance : $this);
+    }
+
     /**
      * @return string
      */

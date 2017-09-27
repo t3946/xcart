@@ -63,7 +63,7 @@ if (($REQUEST_METHOD == "POST") && ($mode == "send_message")) {
 	$mail_smarty->assign("tracking_links", $tracking_links);
 	$mail_smarty->assign("tracking_links_carrier", $tracking_links_carrier);
 
-	$oMail = \Xcart\App\Main\Xcart::app()->mail;
+	$oMail = \Xcart\App\Main\Xcart::app()->oldMail;
 	$oMail->init();
     $oMail->to = $to;
 	$oMail->from = $from;

@@ -26,7 +26,10 @@
         "league/flysystem": "^1.0",
         "symfony/http-foundation": "^2.8",
         "monolog/monolog": "^1.22",
-        "theiconic/php-ga-measurement-protocol": "^1.2"
+        "theiconic/php-ga-measurement-protocol": "^1.2",
+        "imagine/imagine": "^0.7.1",
+        "swiftmailer/swiftmailer": "^5.4",
+        "cocur/slugify": "^1.4"
     },
     "autoload": {
         "psr-4": {

@@ -32,7 +32,7 @@ if (isset($argv) && is_array($argv) && !empty($argv[1])) {
     $p_arg = $argv[1];
     $log = LOG_CATEGORY.'_'.$p_arg;
     if ($config[$log] == "Y") {
-        $oMail = \Xcart\App\Main\Xcart::app()->mail;
+        $oMail = \Xcart\App\Main\Xcart::app()->oldMail;
         $oMail->to = 'team@s3stores.com';
         $oMail->from = 'team@s3stores.com';
         $oMail->subject = sprintf('Attention! Xcart cron %s Already launched', $log);

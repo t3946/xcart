@@ -50,7 +50,7 @@ class Router
     protected $_matchTypes = array(
         'i' => '[0-9]++',
         'a' => '[0-9A-Za-z]++',
-        'slug' => '[0-9A-Za-z_\-]++',
+        'slug' => '[0-9A-Za-z_\-]+',
         'h' => '[0-9A-Fa-f]++',
         '*' => '.+?',
         '**' => '.++',
@@ -122,17 +122,17 @@ class Router
      * @param string $route The route regex, custom regex must start with an @. You can use multiple pre-set regex filters, like [i:id]
      * @param mixed $target The target where this route should point to. Can be anything.
      * @param string $name Optional name of this route. Supply if you want to reverse route this url in your application.
-     * @param string $meta Optional data of this route. For custom data save.
+     * @param string $config Optional data of this route. For custom data save.
      * @throws Exception
      */
-    public function map($method, $route, $target, $name = null, $meta = null)
+    public function map($method, $route, $target, $name = null, $config = null)
     {
 
         if ($route == '') {
             $route = '/';
         }
 
-        $this->_routes[] = array($method, $route, $target, $name, $meta);
+        $this->_routes[] = array($method, $route, $target, $name, $config);
 
         if ($name) {
             if (isset($this->_namedRoutes[$name])) {
@@ -140,7 +140,6 @@ class Router
             } else {
                 $this->_namedRoutes[$name] = $route;
             }
-
         }
 
         return;
@@ -221,7 +220,9 @@ class Router
                     $delimiter = '&';
                 }
 
-                $url .= $delimiter . http_build_query($query);
+                if ($query = http_build_query($query)) {
+                    $url .= $delimiter . $query;
+                }
             }
         }
 
@@ -245,7 +246,8 @@ class Router
         // set Request Url if it isn't passed as parameter
         if ($requestUrl === null) {
             $requestUrl = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '/';
-        } elseif ($requestUrl === '') {
+        }
+        elseif ($requestUrl === '') {
             $requestUrl = '/';
         }
 
@@ -265,7 +267,7 @@ class Router
         }
 
         foreach ($this->_routes as $handler) {
-            list($method, $_route, $target, $name, $meta) = $handler;
+            list($method, $_route, $target, $name, $config) = $handler;
 
             $methods = explode('|', $method);
             $method_match = false;
@@ -284,10 +286,12 @@ class Router
             // Check for a wildcard (matches all)
             if ($_route === '*') {
                 $match = true;
-            } elseif (isset($_route[0]) && $_route[0] === '@') {
+            }
+            elseif (isset($_route[0]) && $_route[0] === '@') {
                 $pattern = '`' . substr($_route, 1) . '`u';
                 $match = preg_match($pattern, $requestUrl, $params);
-            } else {
+            }
+            else {
                 $route = null;
                 $regex = false;
                 $j = 0;
@@ -298,16 +302,20 @@ class Router
                 while (true) {
                     if (!isset($_route[$i])) {
                         break;
-                    } elseif (false === $regex) {
+                    }
+                    elseif (false === $regex) {
                         $c = $n;
                         $regex = $c === '[' || $c === '(' || $c === '.';
+
                         if (false === $regex && false !== isset($_route[$i + 1])) {
                             $n = $_route[$i + 1];
                             $regex = $n === '?' || $n === '+' || $n === '*' || $n === '{';
                         }
+
                         if (false === $regex && $c !== '/' && (!isset($requestUrl[$j]) || $c !== $requestUrl[$j])) {
                             continue 2;
                         }
+
                         $j++;
                     }
                     $route .= $_route[$i++];
@@ -317,8 +325,8 @@ class Router
                 $match = preg_match($regex, $requestUrl, $params);
             }
 
-            if (($match == true || $match > 0)) {
-
+            if (($match == true || $match > 0))
+            {
                 if ($params) {
                     foreach ($params as $key => $value) {
                         if (is_numeric($key)) unset($params[$key]);
@@ -329,7 +337,7 @@ class Router
                     'target' => $target,
                     'params' => $params,
                     'name' => $name,
-                    'meta' => $meta
+                    'config' => $config
                 );
             }
         }
@@ -376,6 +384,8 @@ class Router
      * Append routes from file
      *
      * @param $path
+     *
+     * @throws \Exception
      */
     public function collectFromFile($path)
     {
@@ -387,18 +397,22 @@ class Router
     /**
      * Append routes from array
      *
-     * @param array $configuration
+     * @param array  $configuration
      * @param string $namespace
      * @param string $route
+     * @param array  $config
+     *
+     * @throws \Exception
      */
-    public function collect($configuration = [], $namespace = '', $route = '')
+    public function collect($configuration = [], $namespace = '', $route = '', $config = [])
     {
         foreach ($configuration as $item) {
 
             if (isset($item['route']) && isset($item['path'])) {
-                $this->appendRoutes($item, $namespace, $route);
-            } elseif (isset($item['route']) && isset($item['target'])) {
-                $this->appendRoute($item, $namespace, $route);
+                $this->appendRoutes($item, $namespace, $route, $config);
+            }
+            elseif (isset($item['route']) && isset($item['target'])) {
+                $this->appendRoute($item, $namespace, $route, $config);
             }
         }
     }
@@ -406,50 +420,67 @@ class Router
     /**
      * Append routes
      *
-     * @param $item
+     * @param        $item
      * @param string $namespace
      * @param string $route
+     * @param array  $config
+     *
+     * @throws \Exception
      */
-    public function appendRoutes($item, $namespace = '', $route = '')
+    public function appendRoutes($item, $namespace = '', $route = '', $config = [])
     {
         if (isset($item['path'])) {
             $itemNamespace = isset($item['namespace']) ? $item['namespace'] : '';
+            $config = (empty($item['config']) ? $config : array_replace_recursive($config, $item['config']));
+
             if ($itemNamespace && $namespace) {
                 $itemNamespace = $namespace . ':' . $itemNamespace;
             }
+
             $path = isset($item['route']) ? $item['route'] : '';
+
             if ($path && $route) {
                 $path = $route . $path;
             }
+
             $routesFile = Paths::file($item['path'], 'php');
+
             if (!$routesFile) {
                 return;
             }
+
             $routes = include $routesFile;
-            $this->collect($routes, $itemNamespace, $path);
+            $this->collect($routes, $itemNamespace, $path, $config);
         }
     }
 
     /**
      * Append single route
+     * 
      * @param $item
      * @param string $namespace
      * @param string $route
+     * @param array $config
+     * 
      * @throws Exception
      */
-    public function appendRoute($item, $namespace = '', $route = '/')
+    public function appendRoute($item, $namespace = '', $route = '/', $config = [])
     {
         $methods = isset($item['methods']) ? $item['methods'] : ["GET", "POST"];
         $method = implode('|', $methods);
         $name = isset($item['name']) ? $item['name'] : '';
+
         if ($name && $namespace) {
             $name = $namespace . ':' . $name;
         }
+
         $path = isset($item['route']) ? $item['route'] : '';
+
         if ($route || $path) {
             $path = $route . $path;
         }
+
         $target = isset($item['target']) ? $item['target'] : null;
-        $this->map($method, $path, $target, $name, (empty($item['meta']) ?: $item['meta']));
+        $this->map($method, $path, $target, $name, (empty($item['config']) ? $config : array_replace_recursive($config, $item['config'])));
     }
 }

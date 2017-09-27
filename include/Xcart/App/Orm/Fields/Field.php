@@ -8,6 +8,7 @@ use Doctrine\DBAL\Schema\Column;
 use Doctrine\DBAL\Schema\Index;
 use Doctrine\DBAL\Types\Type;
 use Xcart\App\Helpers\ClassNames;
+use Xcart\App\Helpers\Creator;
 use Xcart\App\Orm\Model;
 use Xcart\App\Orm\ModelInterface;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -72,10 +73,6 @@ abstract class Field implements ModelFieldInterface
      * @var mixed
      */
     protected $value;
-    /**
-     * @var mixed
-     */
-    protected $dbValue;
 
     /**
      * Field constructor.
@@ -101,12 +98,19 @@ abstract class Field implements ModelFieldInterface
         }
 
         if ($this->unique) {
-            $constraints[] = new Assert\Callback(function ($value, ExecutionContextInterface $context, $payload) {
+            $constraints[] = new Assert\Callback(function ($value, ExecutionContextInterface $context) {
                 if ($value === null && $this->null === true) {
                     return;
                 }
 
-                if ($this->getModel()->objects()->filter([$this->name => $value])->count() > 0) {
+                if (!$value) {
+                    $context->buildViolation('This value should not be blank.')->addViolation();
+                    return;
+                }
+
+                $maxCount = $this->getModel()->getIsNewRecord() ? 0 : 1;
+
+                if ($this->getModel()->objects()->filter([$this->name => $value])->count() > $maxCount) {
                     $context->buildViolation('The value must be unique')->addViolation();
                 }
             });
@@ -213,7 +217,7 @@ abstract class Field implements ModelFieldInterface
     public function setValue($value)
     {
         $this->value = $value;
-        $this->setDbValue($value);
+        $this->getModel()->setAttribute($this->getAttributeName(), $value);
     }
 
     public function __toString()
@@ -222,27 +226,31 @@ abstract class Field implements ModelFieldInterface
     }
 
     /**
-     * @return int|mixed|null|string
+     * @return int|mixed|null|strin
      */
     public function getValue()
     {
-        /** @TODO: MAYBE BUG - TEST IT */
-        if ($this->getModel() && $value = $this->getModel()->getAttribute($this->getName())) {
+        if ($this->getModel() && $value = $this->getModel()->getAttribute($this->getAttributeName())) {
             return $value;
         }
         else if (empty($this->value)) {
-            return $this->null === true ? null : $this->default;
+            $this->value = $this->null === true ? null : $this->default;
         }
+
         return $this->value;
     }
+
     /**
-     * @param $value
-     * @return $this
+     * @return int|mixed|null|string
      */
-    public function setDbValue($value)
+    public function getOldValue()
     {
-        $this->dbValue = $value;
-        return $this;
+        if (!$this->getModel()->getIsNewRecord() && $value = $this->getModel()->getOldAttribute($this->getAttributeName())) {
+            return $value;
+        }
+        else {
+            return null;
+        }
     }
 
     public function cleanValue()
@@ -416,5 +424,62 @@ abstract class Field implements ModelFieldInterface
         }
 
         return $this->getSqlType()->convertToDatabaseValueSQL($sqlExpr, $platform);
+    }
+
+    /**
+     * @param \Xcart\App\Form\Form      $form
+     * @param null  $fieldClass
+     * @param array $extra
+     *
+     * @return mixed|null
+     */
+    public function getFormField($form, $fieldClass = null, array $extra = [])
+    {
+        if ($this->primary || $this->editable === false) {
+            return null;
+        }
+
+        if ($fieldClass === null) {
+            $fieldClass = $this->choices ? \Xcart\App\Form\Fields\DropDownField::className() : \Xcart\App\Form\Fields\CharField::className();
+        } elseif ($fieldClass === false) {
+            return null;
+        }
+
+        $validators = [];
+        if ($form->hasField($this->name)) {
+            $field = $form->getField($this->name);
+            $validators = $field->validators;
+        }
+//
+//        if (($this->null === false || $this->required) && $this->autoFetch === false && ($this instanceof BooleanField) === false) {
+//            $validator = new RequiredValidator;
+//            $validator->setName($this->name);
+//            $validator->setModel($this);
+//            $validators[] = $validator;
+//        }
+//
+//        if ($this->unique) {
+//            $validator = new UniqueValidator;
+//            $validator->setName($this->name);
+//            $validator->setModel($this);
+//            $validators[] = $validator;
+//        }
+
+        return Creator::createObject(array_merge([
+             'class' => $fieldClass,
+             'required' => $this->isRequired(),
+             'form' => $form,
+             'choices' => $this->choices,
+             'name' => $this->name,
+             'label' => $this->verboseName,
+             'hint' => $this->helpText,
+             'validators' => array_merge($validators, $this->getValidationConstraints()),
+//             'validators' => array_merge($validators, []),
+             'value' => $this->default ? $this->default : null
+
+//            'html' => [
+//                'multiple' => $this->value instanceof RelatedManager
+//            ]
+        ], $extra));
     }
 }

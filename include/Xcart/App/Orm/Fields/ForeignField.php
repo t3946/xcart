@@ -28,6 +28,9 @@ class ForeignField extends RelatedField
 
     public $link;
 
+    public $to;
+    public $from;
+
     public function getOnDelete()
     {
         return $this->onDelete;
@@ -43,10 +46,45 @@ class ForeignField extends RelatedField
         return call_user_func([$this->modelClass, 'getPkName']);
     }
 
+    public function getTo()
+    {
+        if ($this->to) {
+            return $this->to;
+        }
+
+        if (count($this->link) == 1) {
+            return reset($this->link);
+        }
+
+        if (count($this->getRelatedModel()->getPrimaryKeyName(true)) == 1) {
+            return $this->getRelatedModel()->getPrimaryKeyName();
+        }
+
+        return false;
+    }
+
+    public function getFrom()
+    {
+        if ($this->from) {
+            return $this->from;
+        }
+
+        if (count($this->link) == 1) {
+            $link = array_keys($this->link);
+            return reset($link);
+        }
+
+        if ($name = $this->getAttributeName()) {
+            return $name;
+        }
+
+        return false;
+    }
+
     public function getJoin(QueryBuilder $qb, $topAlias)
     {
         $on = [];
-        $alias = $qb->makeMappedAliasKey($this->getRelatedModel()->tableName(), $this->getPrefixMappedKey(), $topAlias);
+        $alias = $qb->makeAliasKey($this->getRelatedModel()->tableName());
 
         if ($this->link) {
             foreach ($this->link as $from => $to) {
@@ -54,8 +92,8 @@ class ForeignField extends RelatedField
             }
         }
         else {
-            if (count($this->getRelatedModel()->getPrimaryKeyName(true)) == 1) {
-                $on = [$topAlias . '.' . $this->getAttributeName() => $alias . '.' . $this->getRelatedModel()->getPrimaryKeyName()];
+            if ($to = $this->getTo()) {
+                $on = [$topAlias . '.' . $this->getAttributeName() => $alias . '.' . $to];
             }
             else {
                 OrmExceptions::FailCreateLink();
@@ -89,7 +127,7 @@ class ForeignField extends RelatedField
 
     protected function fetchModel($value)
     {
-        $filter = ['pk' => $value];
+        $filter = [$this->getTo() => $value];
 
         if ($this->link) {
             $filter = [];
@@ -109,7 +147,7 @@ class ForeignField extends RelatedField
     {
         $value = $this->getValue();
         if ($value instanceof ModelInterface) {
-            return $value->pk;
+            return $value->{$this->getTo()};
         }
 
         return $value;
@@ -147,7 +185,7 @@ class ForeignField extends RelatedField
     public function convertToPHPValueSQL($value, AbstractPlatform $platform)
     {
         if ($value instanceof ModelInterface) {
-            return $value->pk;
+            return $value->{$this->getTo()};
         }
 
         return $value;
@@ -156,7 +194,7 @@ class ForeignField extends RelatedField
     public function setValue($value)
     {
         if ($value instanceof ModelInterface) {
-            $value = $value->pk;
+            $value = $value->{$this->getTo()};
         }
         parent::setValue($value);
     }
@@ -169,7 +207,7 @@ class ForeignField extends RelatedField
      */
     public function convertToDatabaseValueSql($value, AbstractPlatform $platform)
     {
-        return parent::convertToDatabaseValueSQL($value instanceof ModelInterface ? $value->pk : $value, $platform);
+        return parent::convertToDatabaseValueSQL($value instanceof ModelInterface ? $value->{$this->getTo()} : $value, $platform);
     }
 
     /**

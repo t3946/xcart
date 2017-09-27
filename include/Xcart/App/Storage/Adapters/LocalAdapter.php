@@ -4,16 +4,50 @@ namespace Xcart\App\Storage\Adapters;
 use League\Flysystem\Adapter\Local;
 use Xcart\App\Helpers\Paths;
 
-class LocalAdapter extends AbstractAdapter
+class LocalAdapter extends Local implements AdapterExtInterface
 {
-    private $adapter;
+    private $config = [];
 
-    public function getAdapter()
+    private $relativeBase;
+
+    protected static $permissions = [
+        'file' => [
+            'public' => 0664,
+            'private' => 0600,
+        ],
+        'dir' => [
+            'public' => 0775,
+            'private' => 0700,
+        ]
+    ];
+
+
+    public function __construct($config = [])
     {
-        if (!$this->adapter) {
-            $this->adapter = new Local(Paths::get($this->config['root']));
+        $this->config = $config;
+
+        $permissions = self::$permissions;
+        if (!empty($config['permissions'])) {
+            $permissions = array_replace_recursive($permissions, $config['permissions']);
         }
 
-        return $this->adapter;
+        $base = Paths::get($config['root']);
+        $www = Paths::get('www');
+
+        if (strpos($base, $www) === 0) {
+            $this->relativeBase = substr($base, strlen($www));
+        }
+
+        parent::__construct($base, LOCK_EX, Local::DISALLOW_LINKS, $permissions);
+    }
+
+    public function getUrl($path)
+    {
+        if ($this->relativeBase)
+        {
+            return $this->relativeBase .'/'. $path;
+        }
+
+        return false;
     }
 }

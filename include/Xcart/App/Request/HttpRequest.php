@@ -654,17 +654,20 @@ class HttpRequest extends Request
      * @param integer $statusCode the HTTP status code. Defaults to 302. See {@link http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html}
      *                            for details about HTTP status code.
      *
+     *
+     * @param array $query         Data for create get params
+     *
      * @throws \Exception
      * @throws \Xcart\App\Exceptions\InvalidConfigException
      * @throws \Xcart\App\Exceptions\UnknownPropertyException
      */
-    public function redirect($url, $data = [], $statusCode = 302)
+    public function redirect($url, $data = [], $statusCode = 302, $query = [])
     {
         if (is_object($url) && method_exists($url, 'getAbsoluteUrl')) {
             $url = $url->getAbsoluteUrl();
         }
         elseif (strpos($url, ':') !== false) {
-            $url = Xcart::app()->router->url($url, $data);
+            $url = Xcart::app()->router->url($url, $data, $query);
         }
 
         header('Location: ' . $url, true, $statusCode);
@@ -691,5 +694,14 @@ class HttpRequest extends Request
         }
 
         $this->redirect($this->getUrl());
+    }
+
+    public function getMatchingUrl($query = [])
+    {
+        if ($match = $this->getMatchRouting()) {
+            return Xcart::app()->router->url($match['name'], $match['params'], $query);
+        }
+
+        return $this->getUrl();
     }
 }

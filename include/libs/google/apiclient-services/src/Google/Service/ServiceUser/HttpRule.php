@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright 2016 Google Inc.
+ * Copyright 2014 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -17,9 +17,11 @@
 
 class Google_Service_ServiceUser_HttpRule extends Google_Collection
 {
-  protected $collection_key = 'additionalBindings';
+  protected $collection_key = 'authorizations';
   protected $additionalBindingsType = 'Google_Service_ServiceUser_HttpRule';
   protected $additionalBindingsDataType = 'array';
+  protected $authorizationsType = 'Google_Service_ServiceUser_AuthorizationRule';
+  protected $authorizationsDataType = 'array';
   public $body;
   protected $customType = 'Google_Service_ServiceUser_CustomHttpPattern';
   protected $customDataType = '';
@@ -33,15 +35,37 @@ class Google_Service_ServiceUser_HttpRule extends Google_Collection
   public $post;
   public $put;
   public $responseBody;
+  public $restCollection;
+  public $restMethodName;
   public $selector;
 
+  /**
+   * @param Google_Service_ServiceUser_HttpRule
+   */
   public function setAdditionalBindings($additionalBindings)
   {
     $this->additionalBindings = $additionalBindings;
   }
+  /**
+   * @return Google_Service_ServiceUser_HttpRule
+   */
   public function getAdditionalBindings()
   {
     return $this->additionalBindings;
+  }
+  /**
+   * @param Google_Service_ServiceUser_AuthorizationRule
+   */
+  public function setAuthorizations($authorizations)
+  {
+    $this->authorizations = $authorizations;
+  }
+  /**
+   * @return Google_Service_ServiceUser_AuthorizationRule
+   */
+  public function getAuthorizations()
+  {
+    return $this->authorizations;
   }
   public function setBody($body)
   {
@@ -51,10 +75,16 @@ class Google_Service_ServiceUser_HttpRule extends Google_Collection
   {
     return $this->body;
   }
+  /**
+   * @param Google_Service_ServiceUser_CustomHttpPattern
+   */
   public function setCustom(Google_Service_ServiceUser_CustomHttpPattern $custom)
   {
     $this->custom = $custom;
   }
+  /**
+   * @return Google_Service_ServiceUser_CustomHttpPattern
+   */
   public function getCustom()
   {
     return $this->custom;
@@ -75,18 +105,30 @@ class Google_Service_ServiceUser_HttpRule extends Google_Collection
   {
     return $this->get;
   }
+  /**
+   * @param Google_Service_ServiceUser_MediaDownload
+   */
   public function setMediaDownload(Google_Service_ServiceUser_MediaDownload $mediaDownload)
   {
     $this->mediaDownload = $mediaDownload;
   }
+  /**
+   * @return Google_Service_ServiceUser_MediaDownload
+   */
   public function getMediaDownload()
   {
     return $this->mediaDownload;
   }
+  /**
+   * @param Google_Service_ServiceUser_MediaUpload
+   */
   public function setMediaUpload(Google_Service_ServiceUser_MediaUpload $mediaUpload)
   {
     $this->mediaUpload = $mediaUpload;
   }
+  /**
+   * @return Google_Service_ServiceUser_MediaUpload
+   */
   public function getMediaUpload()
   {
     return $this->mediaUpload;
@@ -122,6 +164,22 @@ class Google_Service_ServiceUser_HttpRule extends Google_Collection
   public function getResponseBody()
   {
     return $this->responseBody;
+  }
+  public function setRestCollection($restCollection)
+  {
+    $this->restCollection = $restCollection;
+  }
+  public function getRestCollection()
+  {
+    return $this->restCollection;
+  }
+  public function setRestMethodName($restMethodName)
+  {
+    $this->restMethodName = $restMethodName;
+  }
+  public function getRestMethodName()
+  {
+    return $this->restMethodName;
   }
   public function setSelector($selector)
   {

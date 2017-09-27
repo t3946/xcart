@@ -123,14 +123,16 @@ class XcartSession extends Session
     public function open($ssid = null)
     {
         if ($this->getIsActive() && !$ssid ) {
-            return;
+            return $this;
         }
 
         if ($this->getIsActive() && $this->getId() == $ssid) {
-            return;
+            return $this;
         }
 
         $this->start($ssid);
+
+        return $this;
     }
 
     public function start($id = null)
@@ -176,7 +178,7 @@ class XcartSession extends Session
         return $id;
     }
 
-    private function getSessionKey()
+    public function getSessionKey()
     {
         $key = 'xid';
 
@@ -254,6 +256,12 @@ class XcartSession extends Session
         return $this->getId() ? true : false;
     }
 
+
+    public function getStorage()
+    {
+        $this->open();
+        return $this->model;
+    }
 
     public function gc()
     {

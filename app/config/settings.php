@@ -10,6 +10,11 @@ return array_replace_recursive([
        'base' => realpath(implode(DS, [__DIR__, '..'])),
        'www' => realpath(implode(DS, [__DIR__, '..', '..'])),
    ],
+   'globals' => [
+//       'blowfish_key' => '8d5db63ada15e11643a0b1c3477c2c5c',
+//       'blowfish' => new \ctBlowfish(),
+       'sql_tabes' => include "xcart_tables.php",
+   ],
    'modules' => include __DIR__ . DS . 'modules.php',
    'locale' => [
        'language' => 'en',
@@ -42,14 +47,21 @@ return array_replace_recursive([
 //       'errorHandler' => [
 //           'class' => '\\Xcart\\App\\Main\\ErrorHandler',
 //           'debug' => true,
-//           'errHandler' => false
+//           'errHandler' => true,
+//           'ignoreDeprecated' => true,
 //       ],
        'event' => [
            'class' => '\\Xcart\\App\\Event\\EventManager',
            'events' => include __DIR__ . DS .  'events.php'
        ],
 
+       'oldMail' => '\Modules\Mail\Components\MailComponent',
+
        'logger' => include __DIR__. DS . 'logger.php',
+
+       'breadcrumbs' => ['class' => 'Xcart\App\Components\Breadcrumbs'],
+       'flash' => ['class' => '\Xcart\App\Components\Flash'],
+       'finder' => ['class' => '\Xcart\App\Finder\FinderFactory'],
 
        'middleware' => [
            'class' => '\\Xcart\\App\\Middleware\\MiddlewareManager',
@@ -57,16 +69,19 @@ return array_replace_recursive([
 //               'RedirectMiddleware' => [
 //                   'class' => '\Modules\Redirect\Middleware\RedirectMiddleware'
 //               ],
+//               'AutoCacheMiddleware' => [
+//                   'class' => '\\Modules\\Core\\Middleware\\CacheMiddleware',
+//               ],
                'CurrentSiteMiddleware' => [
-                   'class' => '\\Modules\\Sites\\Middleware\\CurrentSiteMiddleware'
+                   'class' => '\\Modules\\Sites\\Middleware\\CurrentSiteMiddleware',
                ],
-                'BotsMiddleware' => [
-                   'class' => '\\Modules\\User\\Middleware\\BotsMiddleware'
+               'BotsMiddleware' => [
+                   'class' => '\\Modules\\User\\Middleware\\BotsMiddleware',
                ],
                'ReferrerSearch' => [
                    'class' => '\\Modules\\User\\Middleware\\ReferrerSearchMiddleware'
                ],
-           ]
+           ],
        ],
        'request' => [
            'class' => '\\Xcart\\App\\Request\\RequestManager',
@@ -87,7 +102,9 @@ return array_replace_recursive([
        'template' => [
            'class' => '\\Xcart\\App\\Template\\TemplateManager',
            'forceCompile' => false,
-           'autoReload' => false
+           'forceInclude' => true,
+           'autoReload' => false,
+           'autoEscape' => false,
        ],
 
        'storage' => [
@@ -120,7 +137,9 @@ return array_replace_recursive([
            ]
        ],
        'mail' => [
-           'class' => '\\Modules\\Mail\\Components\\MailComponent'
+           'class' => '\Modules\Mail\Components\Mailer',
+           'defaultFrom' => 'robot@{domain}',
+//           'defaultFrom' => 'robot@s3stores.com',
        ],
        'auth' => [
            'class' => '\\Modules\\User\\Components\\Auth'
@@ -130,8 +149,8 @@ return array_replace_recursive([
 //       ],
    ],
    'autoloadComponents' => [
+//       'errorHandler',
        'db',
        'logger'
-//       'errorHandler'
    ]
 ],  (is_file($local_config)) ? include $local_config : []);
