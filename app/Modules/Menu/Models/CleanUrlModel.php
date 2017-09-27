@@ -40,7 +40,7 @@ class CleanUrlModel extends Model
                 'null' => false,
                 'primary' => true,
                 'length' => 1,
-                'chosen' => [
+                'choices' => [
                     'P' => 'Product',
                     'M' => 'Brand',
                     'C' => 'Category',
