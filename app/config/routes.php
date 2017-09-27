@@ -1,6 +1,10 @@
 <?php
 return [
     [
+        'route' => '',
+        'path' => 'Modules.Product.routes',
+    ],
+    [
         'route' => '/brand',
         'path' => 'Modules.Brand.routes',
         'namespace' => 'brand',
