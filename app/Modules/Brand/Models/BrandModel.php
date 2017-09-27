@@ -3,6 +3,7 @@
 namespace Modules\Brand\Models;
 
 use Modules\Brand\BrandModule;
+use Modules\Menu\Models\CleanUrlModel;
 use Modules\Product\Models\ProductModel;
 use Modules\Sites\Models\SiteModel;
 use Modules\User\Models\UserModel;
@@ -125,6 +126,13 @@ class BrandModel extends AutoMetaModel
                 'modelClass' => UserModel::className(),
                 'link' => ['provider' => 'login']
             ],
+            'clean_url' => [
+                'field' => 'brandid',
+                'class' => ForeignField::className(),
+                'modelClass' => CleanUrlModel::className(),
+                'link' => ['brandid' => 'resource_id'],
+                'extra' => ['resource_type' => 'M'],
+            ],
 
         ];
     }
@@ -143,11 +151,12 @@ class BrandModel extends AutoMetaModel
         return $bread;
     }
 
-    public function getAbsoluteUrl()
+    public function getAbsoluteUrl($full = false)
     {
         if ($this->brandid)
         {
-            return Xcart::app()->router->url('brand:view', ['id' => $this->brandid, 'slug' => 'TEMP']);
+            return $this->clean_url->urlFromCode('brand:view', $full, $this->storefront->limit(1)->get());
+//            return Xcart::app()->router->url('brand:view', ['id' => $this->brandid, 'slug' => 'TEMP']);
         }
 
         return false;
