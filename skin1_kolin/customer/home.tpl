@@ -96,6 +96,9 @@
     {if $product && $product.productid == 346536}
         <link rel="amphtml" href="https://www.artistsupplysource.com/static/products/346536/sienna-horizon-counterweight-studio-easel-craftech-amp.html">
     {/if}
+    {if $product && $product.productid == 29794}
+        <link rel="amphtml" href="https://www.artistsupplysource.com/static/products/29794/fairgate-r-aluminum-english-metric-ruler-metallic-aluminum-40-ruler-model-ms-100-price-per-each-amp.html">
+    {/if}
 {* igor_async *}
 <script src="{$SkinDir}/jquery.tooltip.js" type="text/javascript"></script>
 
