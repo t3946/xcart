@@ -44,7 +44,7 @@
                     {/if}
                 </td>
                 <td class="strike">{if floatval($child->list_price) > 0}{include file="currency.tpl" value=$child->list_price}{/if}</td>
-                <td>{include file="currency.tpl" value=$child->getFrontendPrice()}</td>
+                <td class="price" style="white-space: nowrap"><span class="currency">US$ </span><span class="value">{$child->getFrontendPrice()|abs_value|formatprice}</td>
                 <td class="spinner_cell">
                     {if !$child->isProductOutOfStock()}
                         {if $child->min_amount > 1 && $child->mult_order_quantity == 'Y'}

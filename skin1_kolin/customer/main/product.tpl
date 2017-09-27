@@ -71,6 +71,21 @@
                         {if $active_modules.Magnifier ne "" && $config.Magnifier.magnifier_image_popup eq 'Y' && $zoomer_images ne '' && $js_enabled eq 'Y'}
                             {include file="modules/Magnifier/popup_magnifier.tpl"}
                         {/if}
+                        {if $config.Appearance.code_below_thumb}
+                            <table width="300">
+                                <tr>
+                                    <td align="right">
+                                        <div style="margin-top: -35px;">
+                                            <table cellpadding="0" cellspacing="0">
+                                                <tr>
+                                                    <td>{$config.Appearance.code_below_thumb|substitute:"prn":"`$product.product`"|substitute:"url":"`$current_location`/product.php?productid=`$product.productid`"}</td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        {/if}
                     </td>
                     {if !$is_group}
                         <td valign="top" width="140" style="padding-left: 20px;" rowspan="3">
@@ -523,10 +538,21 @@
                             {/if}
                         </td>
                     </tr>
-                    <tr id="calculate_shipping_text" class="hidden">
-                        <td colspan="2"></td>
-                        <td colspan="2" class="shipping_info"></td>
-                    </tr>
+                    {if $shipping_rate_show}
+                        <tr id="calculate_shipping_text" class="hidden">
+                            <td colspan="2"></td>
+                            <td colspan="2" class="shipping_info"></td>
+                        </tr>
+                    {/if}
+                    {if !$is_group && !is_null($oProduct->group_root)}
+                        <tr>
+                            <td colspan="4" style="line-height: 18px;">&nbsp;</td>
+                        </tr>
+                        <tr class="full_product_line_button">
+                            <td colspan="4" align="center">
+                                <span style="font-size: 19px" class="cidev_new_button cidev_new_white" onclick="self.location = '{$oProduct->parent->getUrl()}'">This product has several different variations - click to see all</span></td>
+                        </tr>
+                    {/if}
                 {/if}
             </table>
             <input type="hidden" name="productid" value="{$product.productid}"/>
@@ -535,21 +561,6 @@
         </form>
     {/capture}
     {include file="dialog.tpl" title=$producttitle content=$smarty.capture.dialog extra='width="100%"' product=$product save_label="true" product_sku=$product.productcode product_free_ship=$product.free_ship_text use_h1="Y" lbl_minimum_order_amount_message_product=$product.lbl_minimum_order_amount_message_product d_minimum_order_amount_in_us=$product.d_minimum_order_amount_in_us}
-{/if}
-{if $config.Appearance.code_below_thumb}
-    <table width="300">
-        <tr>
-            <td align="right">
-                <div style="margin-top: -56px; margin-left: -39px;">
-                    <table cellpadding="0" cellspacing="0">
-                        <tr>
-                            <td>{$config.Appearance.code_below_thumb|substitute:"prn":"`$product.product`"|substitute:"url":"`$current_location`/product.php?productid=`$product.productid`"}</td>
-                        </tr>
-                    </table>
-                </div>
-            </td>
-        </tr>
-    </table>
 {/if}
 {if $product.upc_ean_isbn}
     <br/>
@@ -589,6 +600,11 @@
 {/if}
 
 <br/>
+{if !$is_group && !is_null($oProduct->group_root)}
+    <div style="text-align: center;" class="full_product_line_button">
+            <span style="font-size: 19px" class="cidev_new_button cidev_new_white" onclick="self.location = '{$oProduct->parent->getUrl()}'">This product has several different variations - click to see all</span>
+    </div>
+{/if}
 
 <div id="products_also_bought_with_this_product"
      style="display: none;">{include file="customer/main/ajax_carousel_products.tpl" section_name="products_also_bought_with_this_product" section_title=$lng.lbl_products_also_bought_with_this_product}</div>

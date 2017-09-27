@@ -2102,17 +2102,6 @@ elseif ($mode == 'request_additional_shipping_charge') {
     $log = "<B>From: </B>" . $config['Company']['orders_department'] . "<br /><B>To: </B>" . $mnf_to . "<br /><B>Subject: </B>" . $d_email_subject_14;
     func_log_order($orderid, 'X', $log, $login);
 
-    $current_dc_status       = func_query_first_cell("SELECT dc_status FROM $sql_tbl[order_groups] WHERE orderid = '$orderid' AND manufacturerid='$mnf_id'");
-    $current_dc_status_value = func_query_first_cell("SELECT name FROM $sql_tbl[order_statuses] WHERE code='$current_dc_status'");
-
-    if ($current_dc_status != "M") {
-        $new_value = func_query_first_cell("SELECT name FROM $sql_tbl[order_statuses] WHERE code='M'");
-        $log       = "<B>" . $code . ":</B> dc_status: " . $current_dc_status_value . " -> " . $new_value;
-        func_log_order($orderid, 'X', $log, $login);
-    }
-
-    db_query("UPDATE $sql_tbl[order_groups] SET dc_status='M' WHERE orderid = '$orderid' AND manufacturerid='$mnf_id'");
-
     func_header_location("order.php?orderid=" . $orderid);
 }
 elseif ($mode == 'request_missing_information')

@@ -23,7 +23,10 @@ $(function() {
                 cur_price = index;
             }
         }
-        return aprice[cur_price].price * newVal;
+        if (cur_price === 0) {
+            cur_price = 1;
+        }
+        return aprice[cur_price].price;
     }
 
     function calcSubtotoal() {
@@ -32,7 +35,7 @@ $(function() {
             var spinner = $(this).find('.spinner');
             var val = parseInt(spinner.find('input.quantity').val());
             if (val > 0) {
-                subtotal += getPrice($(this).data('price'), val);
+                subtotal += getPrice($(this).data('price'), val) * val;
             }
         });
         $('table.subtotal .subtotal_class2').find('.value')
@@ -85,7 +88,7 @@ $(function() {
             row.find('.extended').find('span').hide().end().find('span.value').html('');
         } else {
             row.find('.extended').find('span').show().end()
-                .find('span.value').html(getPrice(aprice, newVal)
+                .find('span.value').html((getPrice(aprice, newVal) * newVal)
                 .toLocaleString('en-US', {
                     style: 'decimal',
                     minimumFractionDigits: 2,
@@ -94,6 +97,12 @@ $(function() {
                 })
             );
         }
+        row.find('.price .value').html(getPrice(aprice, newVal).toLocaleString('en-US', {
+            style: 'decimal',
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+            currency: 'USD'
+        }));
 
         var subtotal = calcSubtotoal() || 0;
         if (subtotal > 0) {
@@ -119,7 +128,7 @@ $(function() {
             if (q > 0) {
                 pr[$(this).data('product-id')] = {
                     quantity: q,
-                    price: getPrice(price_table, q),
+                    price: getPrice(price_table, q) * q,
                     brand: $(this).data('brand'),
                     title: $(this).data('title'),
                     category: $(this).data('category')
