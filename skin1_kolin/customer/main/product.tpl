@@ -544,7 +544,7 @@
                             <td colspan="2" class="shipping_info"></td>
                         </tr>
                     {/if}
-                    {if !$is_group}
+                    {if !$is_group && !is_null($oProduct->group_root)}
                         <tr>
                             <td colspan="4" style="line-height: 18px;">&nbsp;</td>
                         </tr>
@@ -600,7 +600,7 @@
 {/if}
 
 <br/>
-{if !$is_group}
+{if !$is_group && !is_null($oProduct->group_root)}
     <div style="text-align: center;" class="full_product_line_button">
             <span style="font-size: 19px" class="cidev_new_button cidev_new_white" onclick="self.location = '{$oProduct->parent->getUrl()}'">This product has several different variations - click to see all</span>
     </div>
