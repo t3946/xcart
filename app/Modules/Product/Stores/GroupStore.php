@@ -280,7 +280,8 @@ class GroupStore extends BaseStore
                 foreach ($products as $product) {
                     $product->group_root = $this->model->productid;
                     if (isset($this->data['truncate_checkbox'])) {
-                        $product->product = trim(preg_replace("/^({$params['group_mask']})/", '', $product->product));
+                        $mask = preg_quote($params['group_mask'], '/');
+                        $product->product = trim(preg_replace("/^({$mask})/", '', preg_quote($product->product, '/')));
                     }
 
                     /** @var ProductCategoriesModel $p_cat */
