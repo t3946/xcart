@@ -208,7 +208,9 @@ SQL;
                 return [$products, $sGoogleAnaliticsParam];
             }
 
-            $oProducts = ProductHelper::groupRootProducts($oProducts);
+            if (in_array($section_name, ['similar_products', 'similar_products_ob', 'related_products'])) {
+                $oProducts = ProductHelper::groupRootProducts($oProducts);
+            }
 
             foreach ($oProducts as $oProduct)
             {
