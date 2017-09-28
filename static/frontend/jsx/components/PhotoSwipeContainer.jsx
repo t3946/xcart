@@ -6,16 +6,14 @@ const cont = new class PhotoSwipeContainer
 {
     constructor()
     {
-        this.cachedValues = {
-            img: {}
-        };
-
         this.container = null;
         this.pswp = null;
         this.images = [ ];
         this.options = {
             index: 0,
             history: false,
+            bgOpacity: 0.85,
+            showHideOpacity: true
         };
     }
 
@@ -26,50 +24,71 @@ const cont = new class PhotoSwipeContainer
 
 
         this.pswp.listen('close', () => {
+            let item = this.pswp.currItem;
+            if (item.onBlur) {
+                item.onBlur(item, this.pswp);
+            }
+
             this.options.index = 0;
             this.images = [];
             this.pswp = null;
+
+            // this.container.remove();
+            // this.container = null;
         });
 
         this.pswp.listen('beforeChange', (d) => {
             if (!!d) {
-                let item = this.pswp.currItem;
+                let pswp = this.pswp;
+                let cIndex = pswp.getCurrentIndex();
+                let maxPos = pswp.items.length -1;
+                let pIndex = null;
 
+                if (d === -1 && cIndex === maxPos) {
+                    pIndex = 0;
+                }
+                else if (d === 1 && cIndex === maxPos) {
+                    pIndex = maxPos -1;
+                }
+                else if (d === 1 && cIndex === 0) {
+                    pIndex = maxPos;
+                }
+                else if (d === -1) {
+                    pIndex = cIndex +1;
+                }
+                else if (d === 1) {
+                    pIndex = cIndex -1;
+                }
+
+                let prevItem = pswp.items[pIndex];
+
+                if (prevItem.onBlur) {
+                    prevItem.onBlur(prevItem, this.pswp);
+                }
             }
         });
-
+        this.pswp.listen('afterChange', () => {
+            let item = this.pswp.currItem;
+            if (item.onShow) {
+                item.onShow(item, this.pswp);
+            }
+        });
 
         this.pswp.listen('gettingData', (index, item)  =>{
 
             if (item.src) {
                 if (item.w < 1 || item.h < 1) { // unknown size
-                    // if (this.cachedValues.img[item.src]) {
-                    //     let cache = this.cachedValues.img[item.src];
-                    //
-                    //     item.w = cache.w;
-                    //     item.h = cache.h;
-                    //
-                    //     this.pswp.invalidateCurrItems(); // reinit Items
-                    //     this.pswp.updateSize(true); // reinit Items
-                    // }
-                    // else {
-                        let img = new Image();
+                    let img = new Image();
 
-                        img.onload = () => { // will get size after load
-                            item.w = img.width; // set image width
-                            item.h = img.height; // set image height
+                    img.onload = () => { // will get size after load
+                        item.w = img.width; // set image width
+                        item.h = img.height; // set image height
 
-                            this.cachedValues.img[item.src] = {
-                                w: item.w,
-                                h: item.h,
-                            };
+                        this.pswp.invalidateCurrItems(); // reinit Items
+                        this.pswp.updateSize(true); // reinit Items
+                    };
 
-                            this.pswp.invalidateCurrItems(); // reinit Items
-                            this.pswp.updateSize(true); // reinit Items
-                        };
-
-                        img.src = item.src; // let's download image
-                    // }
+                    img.src = item.src; // let's download image
                 }
             }
         });
@@ -90,7 +109,8 @@ const cont = new class PhotoSwipeContainer
 
         this.pswp.init();
 
-        this.pswp.framework.bind( this.pswp.scrollWrap /* bind on any element of gallery */, 'pswpTap', (e) => {
+        this.pswp.framework.bind( this.pswp.scrollWrap, 'pswpTap',
+        (e) => {
             let item = this.pswp.currItem;
             if (item.onTap) {
                 item.onTap(item, this.pswp);
@@ -144,13 +164,8 @@ const cont = new class PhotoSwipeContainer
                             <div className="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
                                 <div className="pswp__share-tooltip"></div>
                             </div>
-
-                            <button className="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
-                            </button>
-
-                            <button className="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
-                            </button>
-
+                            <button className="pswp__button pswp__button--arrow--left" title="Previous (arrow left)"></button>
+                            <button className="pswp__button pswp__button--arrow--right" title="Next (arrow right)"></button>
                             <div className="pswp__caption">
                                 <div className="pswp__caption__center"></div>
                             </div>

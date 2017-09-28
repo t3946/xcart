@@ -41791,7 +41791,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-
+/* WEBPACK VAR INJECTION */(function($) {
 
 exports.__esModule = true;
 
@@ -41887,6 +41887,8 @@ var ProductImageSlider = function (_Component) {
     };
 
     ProductImageSlider.prototype.zoomHndl = function zoomHndl(e, item) {
+        var _this3 = this;
+
         e.preventDefault();
 
         if (!this.preparedItems) {
@@ -41899,19 +41901,24 @@ var ProductImageSlider = function (_Component) {
                 } else if (_item.type === 'html') {
                     items.push({ html: _item.html });
                 } else if (_item.type === 'video') {
-
                     items.push({
+                        originalItem: _item,
                         html: (0, _preactRenderToString2.default)((0, _preact.h)(
                             "div",
                             { className: "slide-wrapper" },
                             (0, _preact.h)(
                                 "div",
-                                { className: "video-wrapper", onClick: "this.innerHTML = '" + (0, _preactRenderToString2.default)(this.renderVideoItem(_item, true, true)) + "'" },
+                                { className: "video-wrapper" },
                                 this.renderVideoItem(_item)
                             )
                         )),
-                        onTap: function onTap(e) {
-                            alert('hello');
+                        onTap: function onTap(item, pswp) {
+                            $(item.container).find('.video-wrapper')[0].innerHTML = (0, _preactRenderToString2.default)(_this3.renderVideoItem(item.originalItem, true, true));
+                        },
+                        onBlur: function onBlur(item, pswp) {
+                            if (item.container) {
+                                $(item.container).find('.video-wrapper')[0].innerHTML = (0, _preactRenderToString2.default)(_this3.renderVideoItem(item.originalItem));
+                            }
                         }
                     });
                 }
@@ -41941,15 +41948,15 @@ var ProductImageSlider = function (_Component) {
     };
 
     ProductImageSlider.prototype.renderThumbs = function renderThumbs() {
-        var _this3 = this;
+        var _this4 = this;
 
         return _lodash2.default.map(this.state.items, function (item, n) {
 
-            var is_active = _this3.state.index == n ? ' active' : '';
+            var is_active = _this4.state.index == n ? ' active' : '';
 
             if (item.type === 'image') {
                 return (0, _preact.h)("div", { className: "slide type-image" + is_active, key: "image.thumb." + n, onClick: function onClick(e) {
-                        _this3.clickHndl(e, n, item);
+                        _this4.clickHndl(e, n, item);
                     },
                     style: "background-image: url(" + item.src + ")" });
             }
@@ -41961,7 +41968,7 @@ var ProductImageSlider = function (_Component) {
                     return (0, _preact.h)("div", { className: "slide type-video" + is_active,
                         key: "video.thumb." + n,
                         onClick: function onClick(e) {
-                            _this3.clickHndl(e, n, item);
+                            _this4.clickHndl(e, n, item);
                         },
                         style: "background-image: url(" + src + ")"
                     });
@@ -41969,7 +41976,7 @@ var ProductImageSlider = function (_Component) {
                     return (0, _preact.h)(
                         "div",
                         { className: "slide type-video" + is_active, key: "video.thumb." + n, onClick: function onClick(e) {
-                                _this3.clickHndl(e, n, item);
+                                _this4.clickHndl(e, n, item);
                             } },
                         (0, _preact.h)(
                             "span",
@@ -41984,7 +41991,7 @@ var ProductImageSlider = function (_Component) {
                 return (0, _preact.h)(
                     "div",
                     { className: "slide type-html" + is_active, key: "html.thumb." + n, onClick: function onClick(e) {
-                            _this3.clickHndl(e, n, item);
+                            _this4.clickHndl(e, n, item);
                         } },
                     "HTML"
                 );
@@ -42018,7 +42025,7 @@ var ProductImageSlider = function (_Component) {
     };
 
     ProductImageSlider.prototype.renderDetail = function renderDetail() {
-        var _this4 = this;
+        var _this5 = this;
 
         if (this.state.count) {
             var position = this.state.index;
@@ -42031,7 +42038,7 @@ var ProductImageSlider = function (_Component) {
                     return (0, _preact.h)(
                         "div",
                         { className: "slide type-image", key: key, onClick: function onClick(e) {
-                                _this4.zoomHndl(e, _item2);
+                                _this5.zoomHndl(e, _item2);
                             } },
                         this.renderImage(_item2.src)
                     );
@@ -42050,7 +42057,7 @@ var ProductImageSlider = function (_Component) {
                     return (0, _preact.h)(
                         "div",
                         { className: clName, onClick: function onClick(e) {
-                                _this4.videoShowHndl(e);
+                                _this5.videoShowHndl(e);
                             }, key: key },
                         content
                     );
@@ -42094,6 +42101,7 @@ var ProductImageSlider = function (_Component) {
 }(_preact.Component);
 
 exports.default = ProductImageSlider;
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
 /* 86 */
@@ -42520,16 +42528,14 @@ var cont = new (function () {
     function PhotoSwipeContainer() {
         _classCallCheck(this, PhotoSwipeContainer);
 
-        this.cachedValues = {
-            img: {}
-        };
-
         this.container = null;
         this.pswp = null;
         this.images = [];
         this.options = {
             index: 0,
-            history: false
+            history: false,
+            bgOpacity: 0.85,
+            showHideOpacity: true
         };
     }
 
@@ -42540,6 +42546,11 @@ var cont = new (function () {
         this.pswp = new _photoswipe2.default(this.container, _photoswipeUiDefault2.default, this.images, this.options);
 
         this.pswp.listen('close', function () {
+            var item = _this.pswp.currItem;
+            if (item.onBlur) {
+                item.onBlur(item, _this.pswp);
+            }
+
             _this.options.index = 0;
             _this.images = [];
             _this.pswp = null;
@@ -42547,7 +42558,34 @@ var cont = new (function () {
 
         this.pswp.listen('beforeChange', function (d) {
             if (!!d) {
-                var item = _this.pswp.currItem;
+                var pswp = _this.pswp;
+                var cIndex = pswp.getCurrentIndex();
+                var maxPos = pswp.items.length - 1;
+                var pIndex = null;
+
+                if (d === -1 && cIndex === maxPos) {
+                    pIndex = 0;
+                } else if (d === 1 && cIndex === maxPos) {
+                    pIndex = maxPos - 1;
+                } else if (d === 1 && cIndex === 0) {
+                    pIndex = maxPos;
+                } else if (d === -1) {
+                    pIndex = cIndex + 1;
+                } else if (d === 1) {
+                    pIndex = cIndex - 1;
+                }
+
+                var prevItem = pswp.items[pIndex];
+
+                if (prevItem.onBlur) {
+                    prevItem.onBlur(prevItem, _this.pswp);
+                }
+            }
+        });
+        this.pswp.listen('afterChange', function () {
+            var item = _this.pswp.currItem;
+            if (item.onShow) {
+                item.onShow(item, _this.pswp);
             }
         });
 
@@ -42560,11 +42598,6 @@ var cont = new (function () {
                     img.onload = function () {
                         item.w = img.width;
                         item.h = img.height;
-
-                        _this.cachedValues.img[item.src] = {
-                            w: item.w,
-                            h: item.h
-                        };
 
                         _this.pswp.invalidateCurrItems();
                         _this.pswp.updateSize(true);

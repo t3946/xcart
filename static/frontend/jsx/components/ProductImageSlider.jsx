@@ -79,16 +79,25 @@ export default class ProductImageSlider extends Component
                     items.push({html: item.html});
                 }
                 else if (item.type === 'video') {
-
                     items.push({
+                        originalItem: item,
                         html: renderToStringr(
                             <div className="slide-wrapper">
-                                <div className="video-wrapper" onClick={"this.innerHTML = '"+ renderToStringr(this.renderVideoItem(item, true, true))+"'"} >
+                                <div className="video-wrapper">
                                     {this.renderVideoItem(item)}
                                 </div>
                             </div>),
-                        onTap: (e) => {
-                            alert('hello');
+                        onTap: (item, pswp) => {
+                            $(item.container)
+                                .find('.video-wrapper')[0]
+                                .innerHTML = renderToStringr(this.renderVideoItem(item.originalItem, true, true));
+                        },
+                        onBlur: (item, pswp) => {
+                            if (item.container) {
+                                $(item.container)
+                                    .find('.video-wrapper')[0]
+                                    .innerHTML = renderToStringr(this.renderVideoItem(item.originalItem));
+                            }
                         }
                     });
                 }
