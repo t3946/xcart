@@ -15,19 +15,19 @@ class HumanizeLibrary extends TemplateLibrary
     {
         if ($size < 1024) {
             $converted = $size;
-            $message = ' Б';
+            $message = ' B';
         } elseif ($size < pow(1024, 2)) {
             $converted = round($size / 1024);
-            $message = ' Кб';
+            $message = ' Kb';
         } elseif ($size < pow(1024, 3)) {
             $converted = round($size / pow(1024, 2));
-            $message = ' Мб';
+            $message = ' Mb';
         } elseif ($size < pow(1024, 4)) {
             $converted = round($size / pow(1024, 3));
-            $message = ' Гб';
+            $message = ' Gb';
         } else {
             $converted = round($size / pow(1024, 4));
-            $message = ' Тб';
+            $message = ' Tb';
         }
         return $converted . $message;
     }

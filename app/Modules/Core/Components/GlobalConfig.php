@@ -46,7 +46,7 @@ class GlobalConfig implements ArrayAccess, Iterator
             foreach ($data as $row) {
                 if (!empty($row['category'])) {
 
-                    if (!$this->offsetExists($row['category'])) {
+                    if (!isset($this->data[$row['category']])) {
                         $this->data[$row['category']] = new self();
                     }
 
