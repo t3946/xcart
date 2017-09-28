@@ -48,7 +48,10 @@ class GroupStore extends BaseStore
 
             $qs = ProductModel::objects()->getQuerySet()
                 ->select(['max_code' => (new Expression("COALESCE(MAX(CAST(SUBSTRING_INDEX(productcode, '-', -1) AS UNSIGNED))+1, 1)"))->toSQL()])
-                ->filter([new Expression("productcode LIKE CONCAT(prefix , '-GROUP%')")]);
+                ->filter([
+                    'group_root__isnull' => false,
+                    'group_root' => new Expression('productid')
+                    ]);
 
             $this->qs->select(
                 [
@@ -281,7 +284,7 @@ class GroupStore extends BaseStore
                     $product->group_root = $this->model->productid;
                     if (isset($this->data['truncate_checkbox'])) {
                         $mask = preg_quote($params['group_mask'], '/');
-                        $product->product = trim(preg_replace("/^({$mask})/", '', preg_quote($product->product, '/')));
+                        $product->product = trim(preg_replace("/^({$mask})/", '', $product->product));
                     }
 
                     /** @var ProductCategoriesModel $p_cat */
