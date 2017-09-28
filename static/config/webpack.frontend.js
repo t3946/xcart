@@ -55,7 +55,7 @@ config = {
                             [ "react" ],
                             [ "env", {
                                 "targets": {
-                                    "browsers": ["last 10 versions", "safari >= 7"],
+                                    "browsers": ["last 10 versions", "safari >= 8"],
                                     "uglify": true,
                                 },
                                 "production": {

@@ -3,6 +3,7 @@ import renderToStringr from 'preact-render-to-string';
 import { videoLinkToObject } from "../utils/video";
 import PhotoSwipe from "./PhotoSwipeContainer";
 import _ from 'lodash';
+import Swiper from 'react-id-swiper';
 
 export default class ProductImageSlider extends Component
 {
@@ -27,6 +28,8 @@ export default class ProductImageSlider extends Component
 
         this.prepareItems(this.state.items);
     }
+
+
 
     prepareItems(items)
     {
@@ -88,12 +91,19 @@ export default class ProductImageSlider extends Component
                                 </div>
                             </div>),
                         onTap: (item, pswp) => {
-                            $(item.container)
-                                .find('.video-wrapper')[0]
-                                .innerHTML = renderToStringr(this.renderVideoItem(item.originalItem, true, true));
+                            if (!item.videoShow)
+                            {
+                                $(item.container)
+                                    .find('.video-wrapper')[0]
+                                    .innerHTML = renderToStringr(this.renderVideoItem(item.originalItem, true, true));
+                            }
+
+                            item.videoShow = true;
+
                         },
                         onBlur: (item, pswp) => {
-                            if (item.container) {
+                            if (item.container && item.videoShow) {
+                                item.videoShow = false;
                                 $(item.container)
                                     .find('.video-wrapper')[0]
                                     .innerHTML = renderToStringr(this.renderVideoItem(item.originalItem));
@@ -247,7 +257,17 @@ export default class ProductImageSlider extends Component
         <div className="images-slider">
             <div className="slider-thumbs">
                 <div className="wrap">
-                    {this.renderThumbs()}
+                    {/*{this.renderThumbs()}*/}
+                    <Swiper {...{
+                        direction: 'vertical',
+                        slidesPerView: 'auto',
+                        mousewheelControl: true,
+                        paginationClickable: false,
+                        freeMode: true,
+                        freeModeSticky: false,
+                    }}>
+                        {this.renderThumbs()}
+                    </Swiper>
                 </div>
             </div>
             <div className="slider-detail">

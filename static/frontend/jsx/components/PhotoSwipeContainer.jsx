@@ -12,7 +12,7 @@ const cont = new class PhotoSwipeContainer
         this.options = {
             index: 0,
             history: false,
-            bgOpacity: 0.85,
+            bgOpacity: 0.91,
             showHideOpacity: true
         };
     }
@@ -42,7 +42,7 @@ const cont = new class PhotoSwipeContainer
                 let pswp = this.pswp;
                 let cIndex = pswp.getCurrentIndex();
                 let maxPos = pswp.items.length -1;
-                let pIndex = null;
+                let pIndex = d;
 
                 if (d === -1 && cIndex === maxPos) {
                     pIndex = 0;
@@ -60,6 +60,7 @@ const cont = new class PhotoSwipeContainer
                     pIndex = cIndex -1;
                 }
 
+                // console.log(d, cIndex, pIndex);
                 let prevItem = pswp.items[pIndex];
 
                 if (prevItem.onBlur) {

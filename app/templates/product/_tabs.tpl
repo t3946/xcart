@@ -20,9 +20,9 @@
             </li>
         {/foreach}
 
-        <li class="tabs-title">
-          <a href="#reviews" aria-selected="false">Product reviews</a>
-        </li>
+        {*<li class="tabs-title">*}
+          {*<a href="#reviews" aria-selected="false">Product reviews</a>*}
+        {*</li>*}
 
         <li class="tabs-title">
           <a href="#questions" aria-selected="false">Product questions</a>
@@ -62,11 +62,11 @@
             </div>
         {/foreach}
 
-        <div class="tabs-panel" id="reviews">
-            <div class="tab-content tab-reviews">
-                {include 'product/tabs/_reviews.tpl' model=$model}
-            </div>
-        </div>
+        {*<div class="tabs-panel" id="reviews">*}
+            {*<div class="tab-content tab-reviews">*}
+                {*{include 'product/tabs/_reviews.tpl' model=$model}*}
+            {*</div>*}
+        {*</div>*}
 
         <div class="tabs-panel" id="questions">
             <div class="tab-content tab-questions">

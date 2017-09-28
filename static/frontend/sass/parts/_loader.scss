@@ -10,12 +10,12 @@ img {
     min-width: 100px !important;
     min-height: 100px !important;
 
-    background: {
-      position: center center;
-      repeat: no-repeat;
-      size: contain;
-      //image: url("../images/s3logo.png");
-    };
+    //background: {
+    //  position: center center;
+    //  repeat: no-repeat;
+    //  size: contain;
+    //  image: url("../images/s3logo.png");
+    //};
 
     &.lazy-img {
       opacity: 0;

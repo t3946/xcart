@@ -39,6 +39,26 @@
 
                         <option value="https://www.youtube.com/watch?v=dQw4w9WgXcQ" type="video"></option>
                         <option value="https://www.youtube.com/watch?v=yPYZpwSpKmA" type="video"></option>
+                        {foreach $images as $image}
+                            <option value="//cdn.{$site->getBaseDomain()}{$image->getUrl()}"
+                                    data-thumb="//cdn.{$site->getBaseDomain()}{$image->getUrl()}"
+                                    data-id="{$image->imageid}"
+                                    type="image">
+                            </option>
+                        {/foreach}
+
+                        <option value="https://www.youtube.com/watch?v=dQw4w9WgXcQ" type="video"></option>
+                        <option value="https://www.youtube.com/watch?v=yPYZpwSpKmA" type="video"></option>
+                        {foreach $images as $image}
+                            <option value="//cdn.{$site->getBaseDomain()}{$image->getUrl()}"
+                                    data-thumb="//cdn.{$site->getBaseDomain()}{$image->getUrl()}"
+                                    data-id="{$image->imageid}"
+                                    type="image">
+                            </option>
+                        {/foreach}
+
+                        <option value="https://www.youtube.com/watch?v=dQw4w9WgXcQ" type="video"></option>
+                        <option value="https://www.youtube.com/watch?v=yPYZpwSpKmA" type="video"></option>
                     </datalist>
 
                 </div>
