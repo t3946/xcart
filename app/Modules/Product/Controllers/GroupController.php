@@ -106,9 +106,21 @@ class GroupController extends PrototypeAdminController
                     ]
                 );
 
+                if ($products = $store->getModels()) {
+
+                    /*$titles = array_map(function($p) {
+                        return $p->product;
+                    }, $products);
+
+                    $search = $store->data['group_phrase'];
+
+                    $matches = array_filter($titles, function($var) use ($search) { return preg_match("/^{$search}/", $var); });*/
+                }
+
+
                 echo $this->render('group/group_products.tpl',
                     [
-                        'products' => $store->getModels(),
+                        'products' => $products,
                         'parent_level' => $store->data['level'] - 1
                     ]
                 );

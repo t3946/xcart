@@ -13,12 +13,12 @@ class ProductModule extends Module
 
         return [
             [
-                'icon' => 'fa fa-file-text-o',
+                'icon' => 'fa fa-list',
                 'name' => 'Group products',
                 'route' => $router->url('product:group_products'),
                 'items' => ($user && $user->getIsSuperuser()) ? [
                     [
-                        'icon' => 'fa fa-pencil-square-o',
+                        'icon' => 'fa fa-object-group',
                         'name' => 'Grouping products',
                         'route' => $router->url('product:group_list'),
                     ],

@@ -50,8 +50,6 @@
                     return;
                 }
 
-                selected_block.css('opacity', 0.4).next('.group-detail').css('opacity', 0.4);
-
                 $('#new-group')
                     .find('textarea.description').html(selected_products.first().data('description')).end()
                     .find('.selected-products tr:not(.TableHead)').remove().end()
@@ -94,6 +92,7 @@
                             var $form = $(s).closest('form');
                             var $data = $form.serialize();
                             $form.off();
+                            selected_block.css('opacity', 0.4).next('.group-detail').css('opacity', 0.4);
                             self.close();
                             $.ajax({
                                 url: $form.attr('action'),
