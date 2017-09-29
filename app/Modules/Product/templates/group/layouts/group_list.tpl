@@ -54,8 +54,9 @@
                             var tr = th.closest('tr');
                                 tr.find('.checkbox').html($('<input class="tree-checkbox" type="checkbox">')).end()
                                 .after($('<tr class="group-detail">')
-                                    .html($('<td colspan="'+tr.find('td').length+'" class="level" data-level="' + level + '">').html($('<table cellpadding="3" cellspacing="1" width="100%">').html(data))));
+                                .html($('<td colspan="'+tr.find('td').length+'" class="level" data-level="' + level + '">').html($('<table cellpadding="3" cellspacing="1" width="100%">').html(data.html))));
                             $('.product_group').css('opacity', 1);
+                            th.data('group-phrase', data.group_phrase);
                         }
                     );
                 } else {

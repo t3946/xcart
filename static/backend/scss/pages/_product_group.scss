@@ -58,4 +58,21 @@
       min-height: inherit;
     }
   }
+
+  .thumbnails {
+
+    width:300px;
+    height:300px;
+    border: 2px dotted #CCC;
+    margin-top:10px;
+
+    img {
+
+      cursor: pointer;
+
+      &.not {
+        opacity: 0.2;
+      }
+    }
+  }
 }

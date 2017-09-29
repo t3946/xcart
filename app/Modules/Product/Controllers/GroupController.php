@@ -4,6 +4,7 @@ namespace Modules\Product\Controllers;
 
 
 use Modules\Brand\Models\BrandModel;
+use Modules\Product\Helpers\ProductHelper;
 use Modules\Product\Models\CategoryModel;
 use Modules\Product\Models\ProductCategoriesModel;
 use Modules\Product\Models\ProductModel;
@@ -53,9 +54,13 @@ class GroupController extends PrototypeAdminController
 
         if ($this->getRequest()->getIsAjax()) {
 
-            echo $this->render('group/group_products.tpl',
+            $this->jsonResponse(
                 [
-                    'products' => $store->getGroupNewProducts(),
+                    'html' => $this->render('group/group_products.tpl',
+                        [
+                            'products' => $store->getGroupNewProducts(),
+                        ]
+                    )
                 ]
             );
 
@@ -99,31 +104,54 @@ class GroupController extends PrototypeAdminController
 
             if ($this->getRequest()->getIsAjax()) {
 
-                echo $this->render('group/product/group_rows.tpl',
-                    [
-                        'brands' => $store->getLevels(),
-                        'level' => $store->data['level']
-                    ]
-                );
+                $res = '';
+
+                $store->level = $store->data['level'];
+
+                $brands = $store->getLevels();
+
+                if ($store->level > 3) {
+                    $store->defaultPagerPageSize = 200;
+                } else {
+                    $store->defaultPagerPageSize = 50;
+                }
 
                 if ($products = $store->getModels()) {
 
-                    /*$titles = array_map(function($p) {
-                        return $p->product;
-                    }, $products);
+                    if (count($brands) === 1) {
 
-                    $search = $store->data['group_phrase'];
-
-                    $matches = array_filter($titles, function($var) use ($search) { return preg_match("/^{$search}/", $var); });*/
+                        if ($store->data['group_phrase'] = ProductHelper::getFirstSame(
+                            array_map(
+                                function ($p) {
+                                    return $p->product;
+                                },
+                            $products)
+                        ))
+                        {
+                            $store->level = substr_count($store->data['group_phrase'], ' ') + 2;
+                            $brands = $store->getLevels();
+                            $products = $store->getModels();
+                        }
+                    }
                 }
 
-
-                echo $this->render('group/group_products.tpl',
+                $res .= $this->render('group/product/group_rows.tpl',
                     [
-                        'products' => $products,
-                        'parent_level' => $store->data['level'] - 1
+                        'brands' => $brands,
+                        'level' => $store->level
                     ]
                 );
+
+                $res .= $this->render('group/group_products.tpl',
+                    [
+                        'products' => $products,
+                        'parent_level' => $store->level - 1
+                    ]
+                );
+                $this->jsonResponse([
+                    'html' => $res,
+                    'group_phrase' => $store->data['group_phrase']
+                ]);
 
             } else {
                 echo $this->renderInternal('group/group_list.tpl',
@@ -136,6 +164,31 @@ class GroupController extends PrototypeAdminController
                 );
             }
         }
+    }
+
+    public function images()
+    {
+        $res = '';
+        if ($this->getRequest()->getIsAjax()) {
+            if (isset($_GET['products'])) {
+                if ($products = ProductModel::objects()->filter(
+                    [
+                        'productid__in' => $_GET['products']
+                    ])->all())
+                {
+                    foreach ($products as $key => $product) {
+                        /*if ($key > 3) {
+                            break;
+                        }*/
+                        $res .= $this->renderSmarty(
+                            'group_thumbnail.tpl',
+                            ['product' => $product]
+                        );
+                    }
+                }
+            }
+        }
+        echo $res;
     }
 
     public function categories()

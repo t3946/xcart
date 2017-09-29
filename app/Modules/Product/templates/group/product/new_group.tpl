@@ -76,6 +76,7 @@
                     <div class="row">
                         <div class="columns large-4">
                             <label>Selected products</label>
+                            <div class="thumbnails"></div>
                         </div>
                         <div class="columns large-8">
                             <table class="selected-products">

@@ -27,6 +27,11 @@ return [
         'name' => 'group_categories'
     ],
     [
+        'route' => '/group_images',
+        'target' => ['\Modules\Product\Controllers\GroupController', 'images'],
+        'name' => 'group_images'
+    ],
+    [
         'route' => '/group/{i:id}',
         'target' => ['\Modules\Product\Controllers\GroupController', 'group'],
         'name' => 'group'

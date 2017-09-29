@@ -22,6 +22,12 @@
     {parent}
     <script type="text/javascript">
         (function () {
+
+            $(document).on('click', '.thumbnails > img:not(.not)', function() {
+                $(this).after($(this).siblings('img.not').first().removeClass('not'));
+                $(this).siblings('img').last().after($(this).addClass('not'));
+            });
+
             $('input.button[name=group]').on('click', function (e) {
                 e.preventDefault();
                 var arrP = [],
@@ -84,6 +90,16 @@
                                     products: arrP
                                 }, function (data) {
                                     $('.mmodal-content #o-category-selector').html(data)
+                                }
+                            );
+                            $.get('{url 'product:group_images'}',
+                                {
+                                    products: arrP
+                                }, function (data) {
+                                    $('.mmodal-content .thumbnails').html(data)
+                                        .find('img').addClass('not').end()
+                                        .find('img:nth-child(-n+4)').removeClass('not').end()
+                                        .fadeIn();
                                 }
                             );
                         },

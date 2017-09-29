@@ -19,6 +19,7 @@ class GroupStore extends BaseStore
 {
     public $defaultPagerPageSize = 50;
     public $data = null;
+    public $level = null;
     private $pager = null;
     private $model = null;
     private $qs = null;
@@ -39,6 +40,7 @@ class GroupStore extends BaseStore
         if (!isset($data['level'])) {
             $this->data['level'] = 1;
         }
+        $this->level = $this->data['level'];
     }
 
     public function getQuerySet()
@@ -72,8 +74,8 @@ class GroupStore extends BaseStore
                 $filter['brandid'] = $this->model->brandid;
             }
 
-            if ($this->data['level'] > 1) {
-                $lmo = $this->data['level'] - 1;
+            if ($this->level > 1) {
+                $lmo = $this->level - 1;
                 $filter[(new Expression("SUBSTRING_INDEX({$this->qs->getTableAlias()}.product, ' ', {$lmo})"))->toSQL()] = $this->data['group_phrase'];
             }
 
@@ -128,7 +130,7 @@ class GroupStore extends BaseStore
     {
         $qs = BrandModel::objects()->getQuerySet();
 
-        $phrase = new Expression("SUBSTRING_INDEX (p.product,' ', {$this->data['level']})");
+        $phrase = new Expression("SUBSTRING_INDEX (p.product,' ', {$this->level})");
 
         $qs->select(['*', 'count' => new Expression('count(p.productid)'), 'group_phrase' => $phrase]);
 
@@ -142,8 +144,8 @@ class GroupStore extends BaseStore
             $filter['brandid'] = $this->model->brandid;
         }
 
-        if ($this->data['level'] > 1) {
-            $lmo = $this->data['level'] - 1;
+        if ($this->level > 1) {
+            $lmo = $this->level - 1;
             $filter[(new Expression("SUBSTRING_INDEX(p.product, ' ', {$lmo})"))->toSQL()] = $this->data['group_phrase'];
         }
 
