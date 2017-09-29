@@ -57,7 +57,7 @@ export default class ProductImageSlider extends Component
 
 
     clickHndl(e, n, item) {
-        e.preventDefault();
+        // e.preventDefault();
 
         if (this.state.index !== n) {
             this.setState({
@@ -257,14 +257,18 @@ export default class ProductImageSlider extends Component
         <div className="images-slider">
             <div className="slider-thumbs">
                 <div className="wrap">
-                    {/*{this.renderThumbs()}*/}
                     <Swiper {...{
                         direction: 'vertical',
                         slidesPerView: 'auto',
+                        // slidesPerView: 15,
                         mousewheelControl: true,
                         paginationClickable: false,
                         freeMode: true,
+                        height: 460,
+                        freeModeFluid:  true,
                         freeModeSticky: false,
+                        followFinger:   true,
+                        // autoHeight: true,
                     }}>
                         {this.renderThumbs()}
                     </Swiper>
