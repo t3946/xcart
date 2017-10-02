@@ -13,7 +13,7 @@ return array_replace_recursive([
    'globals' => [
 //       'blowfish_key' => '8d5db63ada15e11643a0b1c3477c2c5c',
 //       'blowfish' => new \ctBlowfish(),
-       'sql_tabes' => include "xcart_tables.php",
+       'sql_tbl' => include "xcart_tables.php",
    ],
    'modules' => include __DIR__ . DS . 'modules.php',
    'locale' => [
