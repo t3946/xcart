@@ -75,7 +75,7 @@ class MetaHelper
     }
 
     /**
-     * @param $controller
+     * @param \Xcart\App\Controller\FrontendController $controller
      * @param null $title
      * @param SiteModel|null $site
      * @return string
