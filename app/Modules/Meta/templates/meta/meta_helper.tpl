@@ -1,6 +1,4 @@
 <title>{$title}</title>
-<meta name="keywords" content="{$keywords}">
-<meta name="description" content="{$description}">
-{if $canonical}
-<link rel="canonical" href="{$canonical}">
-{/if}
+{if $keywords}<meta name="keywords" content="{$keywords}">{/if}
+{if $description}<meta name="description" content="{$description}">{/if}
+{if $canonical}<link rel="canonical" href="{$canonical}">{/if}

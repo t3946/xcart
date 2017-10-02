@@ -4,6 +4,7 @@ namespace Modules\Sites\Models;
 use Xcart\App\Helpers\Text;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\CharField;
+use Xcart\App\Orm\Fields\ForeignCharField;
 use Xcart\App\Orm\Fields\HasManyField;
 use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Model;
@@ -51,6 +52,13 @@ class SiteModel extends Model
                 'class' => HasManyField::className(),
                 'modelClass' => SiteConfigModel::className(),
                 'link' => ['storefrontid' => 'storefrontid'],
+            ],
+
+            'list_config' => [
+                'field' => 'code',
+                'class' => ForeignCharField::className(),
+                'modelClass' => ListConfigModel::className(),
+                'link' => ['code' => 'sf_code'],
             ],
 
             'storefrontid' => [
