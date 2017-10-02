@@ -43807,6 +43807,8 @@ var ProductImageSlider = function (_Component) {
     };
 
     ProductImageSlider.prototype.render = function render() {
+        var _this6 = this;
+
         if (this.state.loading) {
             return (0, _preact.h)("div", { className: "slider loading" });
         }
@@ -43820,6 +43822,9 @@ var ProductImageSlider = function (_Component) {
                 (0, _preact.h)(
                     "div",
                     { className: "wrap" },
+                    (0, _preact.h)("a", { href: "#", className: "prev", onClick: function onClick(e) {
+                            _this6.prevHndl(e);
+                        } }),
                     (0, _preact.h)(
                         _reactIdSwiper2.default,
                         {
@@ -43835,7 +43840,10 @@ var ProductImageSlider = function (_Component) {
                             followFinger: true
                         },
                         this.renderThumbs()
-                    )
+                    ),
+                    (0, _preact.h)("a", { href: "#", className: "next", onClick: function onClick(e) {
+                            _this6.nextHndl(e);
+                        } })
                 )
             ),
             (0, _preact.h)(

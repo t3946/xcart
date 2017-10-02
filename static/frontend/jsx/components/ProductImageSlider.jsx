@@ -257,6 +257,7 @@ export default class ProductImageSlider extends Component
         <div className="images-slider">
             <div className="slider-thumbs">
                 <div className="wrap">
+                    <a href="#" className="prev" onClick={(e)=>{this.prevHndl(e)}}></a>
                     <Swiper {...{
                         direction: 'vertical',
                         slidesPerView: 'auto',
@@ -272,6 +273,7 @@ export default class ProductImageSlider extends Component
                     }}>
                         {this.renderThumbs()}
                     </Swiper>
+                    <a href="#" className="next" onClick={(e)=>{this.nextHndl(e)}}></a>
                 </div>
             </div>
             <div className="slider-detail">
