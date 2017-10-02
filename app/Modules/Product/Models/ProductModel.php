@@ -53,6 +53,7 @@ use Xcart\Product;
  * @property mixed|string upc
  * @property null|\Xcart\App\Orm\Manager sites
  * @property null|CleanUrlModel url
+ * @property \Xcart\App\Orm\Manager categories
  *
  * @method bool isForSale
  */
@@ -198,7 +199,7 @@ class ProductModel extends AutoMetaModel implements ICartItem
             {
                 $list[$filter->f_id] = ['name' =>$filter->f_name, 'values' => []];
             }
-            
+
             foreach ($values as $value)
             {
                 if ($list[$value->f_id]) {
@@ -259,10 +260,18 @@ class ProductModel extends AutoMetaModel implements ICartItem
 //        return Xcart::app()->router->url('catalog:product:view', ['sku' => $this->productcode]);
     }
 
+    public function getMainCategory()
+    {
+        return CategoryModel::objects()->filter([
+            'products__through__main' => 'Y',
+            'products_link__productid' => $this->productid
+        ])->limit(1)->get();
+    }
+
     public function getBreadcrumbs()
     {
         /** @var CategoryModel $category */
-        if ($category = CategoryModel::objects()->filter(['products__through__main' => 'Y', 'products_link__productid' => $this->productid])->limit(1)->get()) {
+        if ($category = $this->getMainCategory()) {
             $bread = $category->getBreadcrumbs();
         }
         else {
