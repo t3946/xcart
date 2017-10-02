@@ -329,10 +329,16 @@ class ErrorHandler
                     throw new RecoverableErrorException($message, 0, $code, $file, $line);
                 case E_DEPRECATED:
                     $app->logger->critical($message, ['code' => $code, 'file' => $file, 'line' => $line], 'error');
-                    throw new DeprecatedException($message, 0, $code, $file, $line);
+                    if (!$this->ignoreDeprecated) {
+                        throw new DeprecatedException($message, 0, $code, $file, $line);
+                    }
+                    break;
                 case E_USER_DEPRECATED:
                     $app->logger->critical($message, ['code' => $code, 'file' => $file, 'line' => $line], 'error');
-                    throw new UserDeprecatedException($message, 0, $code, $file, $line);
+                    if (!$this->ignoreDeprecated) {
+                        throw new UserDeprecatedException($message, 0, $code, $file, $line);
+                    }
+                    break;
             }
         }
         else {
