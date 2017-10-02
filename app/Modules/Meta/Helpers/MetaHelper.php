@@ -53,7 +53,7 @@ class MetaHelper
         }
         elseif ($metaTemplate) {
             echo self::renderTemplate('meta/meta_helper.tpl', [
-                'title' => self::formatTitle($controller, $metaTemplate->renderTitle(), $site),
+                'title' => self::formatTitle($controller, $metaTemplate->renderTitle()),
                 'canonical' => $canonical,
                 'description' => $metaTemplate->renderDescription(),
                 'keywords' => $metaTemplate->renderKeywords(),
@@ -96,7 +96,10 @@ class MetaHelper
 
         $data = array_reverse($data);
 
-        $data[] = $site ? (string)$site->getName() : '';
+        if ($site) {
+            $data[] = $site->getName();
+        }
+
         return implode(' - ', $data);
     }
 
