@@ -52,6 +52,7 @@ use Xcart\Product;
  * @property int mod_date
  * @property mixed|string upc
  * @property null|\Xcart\App\Orm\Manager sites
+ * @property null|\Xcart\App\Orm\Manager categories
  * @property null|CleanUrlModel url
  * @property \Xcart\App\Orm\Manager categories
  *

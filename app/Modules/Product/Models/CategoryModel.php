@@ -6,6 +6,7 @@ use Modules\Menu\Models\CleanUrlModel;
 use Modules\Sites\Models\SiteModel;
 use Xcart\App\Components\Breadcrumbs;
 use Xcart\App\Main\Xcart;
+use Xcart\App\Orm\AutoMetaModel;
 use Xcart\App\Orm\AutoMetaTreeModel;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\CharField;
@@ -25,7 +26,8 @@ use Xcart\App\Orm\Fields\ManyToManyField;
  * @property null|CleanUrlModel url
  * @property null|\Modules\Sites\Models\SiteModel site
  */
-class CategoryModel extends AutoMetaTreeModel
+//class CategoryModel extends AutoMetaTreeModel
+class CategoryModel extends AutoMetaModel
 {
     public static function tableName()
     {
@@ -70,9 +72,9 @@ class CategoryModel extends AutoMetaTreeModel
                     'primary' => true,
                     'null' => false,
                 ],
-                'parent' => [
-                    'field' => 'parentid',
-                ],
+//                'parent' => [
+//                    'field' => 'parentid',
+//                ],
 
                 'description' => [
                     'class' => CharField::className(),

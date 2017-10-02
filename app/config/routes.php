@@ -5,6 +5,11 @@ return [
         'path' => 'Modules.Product.routes',
     ],
     [
+        'route' => '/amp',
+        'path' => 'Modules.AMP.routes',
+        'namespace' => 'amp',
+    ],
+    [
         'route' => '/brand',
         'path' => 'Modules.Brand.routes',
         'namespace' => 'brand',
