@@ -241,7 +241,12 @@ class ManyToManyField extends RelatedField
         $adapter = $manager->getQueryBuilder()->getAdapter();
 
         foreach ($through->getFields() as $fieldName => $params) {
-            if (isset($params['modelClass']) && $params['modelClass'] == $this->ownerClassName) {
+            if (isset($params['modelClass'])
+                && (
+                    $this->ownerClassName == $params['modelClass']
+                    || is_subclass_of($this->ownerClassName, $params['modelClass']))
+                )
+            {
                 if ($params['link'])
                 {
                     foreach ($params['link'] as $from => $to)
