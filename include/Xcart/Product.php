@@ -298,6 +298,10 @@ class Product extends Data
             return true;
         }
 
+        if (($this->list_price > 0) && ($this->getPrice() / $this->list_price < 0.1)) {
+            return true;
+        }
+
         if ($this->cost_to_us >= $this->getPrice()) {
             return true;
         }
