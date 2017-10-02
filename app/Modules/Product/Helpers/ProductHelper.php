@@ -194,4 +194,9 @@ class ProductHelper
         }
         return trim(substr($b, 0, strrpos ($b, ' ')));
     }
+
+    public static function getGroupLevel($title)
+    {
+        return substr_count($title, ' ');
+    }
 }

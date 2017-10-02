@@ -231,11 +231,15 @@ class ProductModel extends AutoMetaModel
     {
         $thumbs = [];
         if ($this->isGroup()) {
-            foreach ($this->childs as $child) {
-                $thumbs[] = $child->thumbnail->limit(1)->get();
+            foreach ($this->childs->order(['group_order']) as $child) {
+                if ($thumb = $child->thumbnail->limit(1)->get()) {
+                    $thumbs[] = $thumb;
+                }
             }
         } else {
-            $thumbs[] = $this->thumbnail->limit(1)->get();
+            if ($thumb = $this->thumbnail->limit(1)->get()) {
+                $thumbs[] = $thumb;
+            }
         }
         return $thumbs;
     }

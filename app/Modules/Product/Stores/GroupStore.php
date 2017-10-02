@@ -90,7 +90,7 @@ class GroupStore extends BaseStore
 
         $qs->filter(
             [
-                (new Expression("SUBSTRING_INDEX({$qs->getTableAlias()}.product, ' ', 1)"))->toSQL() => (new Expression($this->model->group_option))->toSQL(),
+                (new Expression("SUBSTRING_INDEX({$qs->getTableAlias()}.product, ' ', {$this->level})"))->toSQL() => (new Expression($this->model->group_option))->toSQL(),
                 'group_root__isnull' => true,
                 'brandid' => $this->model->brandid
             ]
@@ -108,14 +108,14 @@ class GroupStore extends BaseStore
         $qs->select(['*', 'count' => new Expression('count(p2.productid)'), 'group_phrase' => 'group_option']);
         $qs->join('inner join', 'xcart_products',
             [
-                'group_option' => new Expression("SUBSTRING_INDEX(p2.product, ' ', 1)"),
                 'brandid' => 'p2.brandid',
             ], 'p2');
         $qs->filter(
             [
                 'productid' => new Expression($qs->getTableAlias().".group_root"),
                 'group_root__isnull' => false,
-                'p2.group_root__isnull' => true
+                'p2.group_root__isnull' => true,
+                'p2.product__raw' => "LIKE CONCAT({$qs->getTableAlias()}.group_option, '%')"
             ]
         );
         $qs->group(['productid']);
@@ -279,7 +279,7 @@ class GroupStore extends BaseStore
         $this->model->group_root = $this->model->productid;
         $this->model->save();
 
-        if ($_POST['group']['products']) {
+        if ($this->data['products'] && is_array($this->data['products'])) {
             /** @var ProductModel[] $products */
             if ($products = ProductModel::objects()->filter(['productid__in' => array_keys($this->data['products'])])) {
                 foreach ($products as $product) {
@@ -317,10 +317,20 @@ class GroupStore extends BaseStore
                 }
             }
         }
+
+        if ($this->data['group_image'] && is_array($this->data['group_image'])) {
+            foreach ($this->data['group_image'] as $key => $i_product) {
+                if ($p = ProductModel::objects()->get(['productid' => $i_product])) {
+                    $p->group_order = ($key + 1) * 10;
+                    $p->save();
+                }
+            }
+        }
     }
 
     public function updateGroupProduct()
     {
+        //$this->model = ProductModel()
         $this->createGroupProduct();
     }
 }

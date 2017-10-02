@@ -8,7 +8,6 @@ use Modules\Product\Helpers\ProductHelper;
 use Modules\Product\Models\CategoryModel;
 use Modules\Product\Models\ProductCategoriesModel;
 use Modules\Product\Models\ProductModel;
-use Modules\Product\Models\ProductStorefrontModel;
 use Modules\Product\Stores\GroupStore;
 use Xcart\App\Controller\PrototypeAdminController;
 use Xcart\App\Main\Xcart;
@@ -19,7 +18,7 @@ class GroupController extends PrototypeAdminController
     {
         $store = new GroupStore(
             [
-                'sfid' => Xcart::app()->request->session->get('current_storefront')
+                'sfid' => Xcart::app()->getModule('Sites')->getSite()->storefrontid
             ]
         );
 
@@ -50,7 +49,12 @@ class GroupController extends PrototypeAdminController
             $this->redirect('product:group_products', [], 303);
         }
 
-        $store = new GroupStore($_GET, $model);
+        $store = new GroupStore(
+            array_merge($_GET,
+                [
+                    'sfid' => Xcart::app()->getModule('Sites')->getSite()->storefrontid
+                ]
+            ), $model);
 
         if ($this->getRequest()->getIsAjax()) {
 
@@ -59,6 +63,7 @@ class GroupController extends PrototypeAdminController
                     'html' => $this->render('group/group_products.tpl',
                         [
                             'products' => $store->getGroupNewProducts(),
+                            'level' => $store->data['level'],
                         ]
                     )
                 ]
@@ -70,7 +75,7 @@ class GroupController extends PrototypeAdminController
                 [
                     'products' => $store->getGroupProducts(),
                     'level' => $store->data['level'],
-                    'sfid' => Xcart::app()->request->session->get('current_storefront')
+                    'sfid' => Xcart::app()->getModule('Sites')->getSite()->storefrontid
                 ]
             );
         }
@@ -98,7 +103,7 @@ class GroupController extends PrototypeAdminController
             $store = new GroupStore(
                 array_merge($_GET,
                     [
-                        'sfid' => Xcart::app()->request->session->get('current_storefront')
+                        'sfid' => Xcart::app()->getModule('Sites')->getSite()->storefrontid
                     ]
                 ), $brand);
 
@@ -128,7 +133,7 @@ class GroupController extends PrototypeAdminController
                             $products)
                         ))
                         {
-                            $store->level = substr_count($store->data['group_phrase'], ' ') + 2;
+                            $store->level = ProductHelper::getGroupLevel($store->data['group_phrase']) + 2;
                             $brands = $store->getLevels();
                             $products = $store->getModels();
                         }
