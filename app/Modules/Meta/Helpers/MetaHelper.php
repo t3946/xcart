@@ -30,16 +30,19 @@ class MetaHelper
             $meta = self::fetchMeta(substr($uri, 0, $pos));
         }
 
+        $site = null;
+        if (Xcart::app()->getModule('Meta')->onSite) {
+            $site = Xcart::app()->getModule('Sites')->getSite();
+        }
+
         $metaTemplateName = $controller->getMetaTemplate();
         /** @var \Modules\Meta\Models\MetaTemplate $metaTemplate */
         $metaTemplate = MetaTemplate::objects()->filter(['code' => $metaTemplateName])->limit(1)->get();
         if ($metaTemplate) {
             $metaTemplate->params = $controller->getMetaTemplateParams();
-        }
-
-        $site = null;
-        if (Xcart::app()->getModule('Meta')->onSite) {
-            $site = Xcart::app()->getModule('Sites')->getSite();
+            if ($site && !isset($metaTemplate->params['site'])) {
+                $metaTemplate->params['site'] = $site;
+            }
         }
 
         if ($meta) {
