@@ -106,6 +106,10 @@
                         onSubmit: function (s) {
                             var self = this;
                             var $form = $(s).closest('form');
+                            var product = $('.thumbnails img', $form).not('.not').map(function(i,v){
+                                $form.append($('<input name="group[group_image][]" type="hidden" />').val($(v).data('product-id')));
+                            }).get();
+
                             var $data = $form.serialize();
                             $form.off();
                             selected_block.css('opacity', 0.4).next('.group-detail').css('opacity', 0.4);

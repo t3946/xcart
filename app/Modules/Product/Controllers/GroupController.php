@@ -177,9 +177,6 @@ class GroupController extends PrototypeAdminController
                     ])->all())
                 {
                     foreach ($products as $key => $product) {
-                        /*if ($key > 3) {
-                            break;
-                        }*/
                         $res .= $this->renderSmarty(
                             'group_thumbnail.tpl',
                             ['product' => $product]

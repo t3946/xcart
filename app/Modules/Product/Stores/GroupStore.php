@@ -309,6 +309,10 @@ class GroupStore extends BaseStore
                         }
                     }
 
+                    if ($this->data['group_image'] && in_array($product->productid, $this->data['group_image'])) {
+                        $product->group_order = (array_search($product->productid, $this->data['group_image']) + 1) * 10;
+                    }
+
                     $product->save();
                 }
             }
