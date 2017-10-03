@@ -77,7 +77,7 @@ if (!empty($result["hits"]["hits"]) && is_array($result["hits"]["hits"]))
                 $product_model = new ProductModel($e_product_info);
                 $product_model->setIsNewRecord(false);
 
-                if (!$product_model->isGroup() && !is_null($product_model->group_root)) {
+                if (!$product_model->isGroupRoot() && !is_null($product_model->group_root)) {
                     if (!array_key_exists($product_model->group_root, $e_products)) {
                         $parent = $product_model->parent;
                         $e_products[$product_model->group_root] = $parent->getAttributes();

@@ -34,7 +34,7 @@
                                     {assign var='splash' value=$item->getSplash()}
                                     {if $config.Appearance.show_thumbnails eq "Y"}
                                         {include file="product_splash.tpl"}
-                                        {if !$item->isGroup()}
+                                        {if !$item->isGroupRoot()}
                                             <img data-lazy="{include file="product_image_src.tpl"}" {if $image_x ne 0} width="{$image_x}"{/if}{if $image_y ne 0} height="{$image_y}"{/if} alt="{$product|escape}"/>
                                         {else}
                                             {if $item->getThumbnails()}
@@ -52,7 +52,7 @@
                                     {$item->getTitle()}
                                     <span class="grad">&nbsp;</span>
                                 </span>
-                                {if !$item->isGroup()}
+                                {if !$item->isGroupRoot()}
                                 <span class="price row">
                                     Price: US$ {$item->getFrontendPrice()}
                                 </span>

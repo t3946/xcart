@@ -28,7 +28,7 @@
     {/if}
 {/if}
 
-{assign var="is_group" value=$oProduct->isGroup()}
+{assign var="is_group" value=$oProduct->isGroupRoot()}
 
 {if $active_modules.Special_Offers}
     {include file="modules/Special_Offers/customer/product_offers_short_list.tpl" product=$product}
@@ -59,7 +59,7 @@
                             {if $active_modules.Detailed_Product_Images ne "" && $images ne ''}
                                 <a style="font-size: 0px;" href="#dp_images" class="ga_click" data-label="More Images">
                             {/if}
-                            {if $oProduct->isGroup() && $oProduct->getThumbnails()|@count >=4}
+                            {if $oProduct->isGroupRoot() && $oProduct->getThumbnails()|@count >=4}
                                 {include file="group_thumbnail.tpl" product=$oProduct}
                             {else}
                                 {include file="product_thumbnail.tpl" productid=$product.productid image_x=$product.image_x image_y=$product.image_y product=$producttitle tmbn_url=$product.tmbn_url id="product_thumbnail" type="P" splash=$product.oSplash}

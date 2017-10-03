@@ -211,7 +211,7 @@ func_load_more_next_productids('','Y');
             data-category="{$product.category|escape}" data-brand="{$product.brand|escape}" data-list="{$ga_page_name}" data-price="{$product.price}" data-position="{$N_key}">
           <a {include file="on_product_click.tpl"} href="{$current_location}/product.php?productid={$product.productid}">
             <span class="product-thumbnail">
-                {if $product.oProduct->isGroup() && $product.oProduct->getThumbnails()|@count >=4}
+                {if $product.oProduct->isGroupRoot() && $product.oProduct->getThumbnails()|@count >=4}
                     {include file="group_thumbnail.tpl" product=$product.oProduct}
                 {else}
                     {include file="product_thumbnail.tpl" productid=$product.productid product=$product.product tmbn_url=$product.tmbn_url splash=$product.oSplash}
@@ -239,7 +239,7 @@ func_load_more_next_productids('','Y');
                 {if $config.Appearance.display_productcode_in_list eq "Y" && $product.productcode}
                   <span class="sku">{$lng.lbl_sku}: {$product.productcode|escape}</span>
                 {/if}
-                {if !$product.oProduct->isGroup()}
+                {if !$product.oProduct->isGroupRoot()}
                 {if $product.product_type ne "C"}
                   {if $product.appearance.is_auction}
                     <span class="price">{$lng.lbl_enter_your_price}</span><br />

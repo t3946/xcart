@@ -8,6 +8,7 @@ use Modules\Product\Helpers\ProductHelper;
 use Modules\Product\Models\CategoryModel;
 use Modules\Product\Models\ProductCategoriesModel;
 use Modules\Product\Models\ProductModel;
+use Modules\Product\ProductModule;
 use Modules\Product\Stores\GroupStore;
 use Xcart\App\Controller\PrototypeAdminController;
 use Xcart\App\Main\Xcart;
@@ -220,5 +221,66 @@ class GroupController extends PrototypeAdminController
                 }
             }
         }
+    }
+
+    public function group_remove()
+    {
+        if ($this->getRequest()->getIsAjax()) {
+            if (isset($_POST['product_id'])) {
+                if ($model = ProductModel::objects()->get(
+                    [
+                        'productid' => $_POST['product_id']
+                    ]
+                ))
+                {
+                    $model->group_root = null;
+                    $model->group_order = 255;
+                    $model->save();
+                }
+            }
+        }
+    }
+
+    public function group_add()
+    {
+        $res = [];
+
+        if ($this->getRequest()->getIsAjax()) {
+            if (isset($_POST['product_id'])) {
+
+                /** @var ProductModel $model */
+
+                if ($model = ProductModel::objects()->get(
+                    [
+                        'productid' => $_POST['product_id']
+                    ]
+                ))
+                {
+                    /** @var ProductModel $add_model */
+
+                    if ($add_model = ProductModel::objects()->get(['productcode' => $_POST['add_sku']])) {
+                        if ($model->isGroupRoot()) {
+
+                            if (!$add_model->isGroupRoot() && !$add_model->isGroupChild()) {
+                                $add_model->group_root = $model->productid;
+                                $add_model->save();
+                            } else {
+                                $res['error'] = ProductModule::t('SKU is Group Root or Child');
+                            }
+
+                        } elseif (!$model->isGroupRoot() && !$model->isGroupChild()) {
+
+                            if ($add_model->isGroupRoot()) {
+                                $model->group_root = $add_model->productid;
+                                $model->save();
+                            } else {
+                                $res['error'] = ProductModule::t('SKU is not Group Root');
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        $this->jsonResponse($res);
     }
 }

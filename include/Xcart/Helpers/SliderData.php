@@ -214,7 +214,7 @@ SQL;
 
             foreach ($oProducts as $oProduct)
             {
-                if ($isInStock && $oProduct->isProductOutOfStock() && !$oProduct->isGroup()) {
+                if ($isInStock && $oProduct->isProductOutOfStock() && !$oProduct->isGroupRoot()) {
                     continue;
                 }
 
