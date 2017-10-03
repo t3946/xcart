@@ -81,7 +81,7 @@ class CleanUrlModel extends Model
 
         if ($absolute) {
             if ($site) {
-                $path .= $site->domain . '/';
+                $path .= $site->domain;
             }
         }
 
@@ -89,7 +89,7 @@ class CleanUrlModel extends Model
             $ta = explode('/', $this->clean_url);
             $last = end($ta);
 
-            $path = Xcart::app()->router->url(
+            $path .= Xcart::app()->router->url(
                 $code,
                 [
                     'id' => $this->resource_id,
