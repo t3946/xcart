@@ -195,8 +195,8 @@ class ProductHelper
         return trim(substr($b, 0, strrpos ($b, ' ')));
     }
 
-    public static function getGroupLevel($title)
+    public static function getGroupLevel($option)
     {
-        return substr_count($title, ' ');
+        return substr_count($option, ' ');
     }
 }
