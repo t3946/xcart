@@ -29,6 +29,12 @@
 {block 'js'}
     <script src="/skin1_kolin/tinymce/js/tinymce/tinymce.min.js" type="text/javascript"></script>
     <script type="text/javascript">
+
+        $(document).on('click', '.thumbnails > img:not(.not)', function() {
+            $(this).after($(this).siblings('img.not').first().removeClass('not'));
+            $(this).siblings('img').last().after($(this).addClass('not'));
+        });
+
         $('.product_group')
             .on('click', '.tree_cell', function () {
                 var th = $(this);
@@ -57,6 +63,7 @@
                                 .html($('<td colspan="'+tr.find('td').length+'" class="level" data-level="' + level + '">').html($('<table cellpadding="3" cellspacing="1" width="100%">').html(data.html))));
                             $('.product_group').css('opacity', 1);
                             th.data('group-phrase', data.group_phrase);
+                            tr.find('.phrase').text(data.group_phrase);
                         }
                     );
                 } else {

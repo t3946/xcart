@@ -22,12 +22,6 @@
     {parent}
     <script type="text/javascript">
         (function () {
-
-            $(document).on('click', '.thumbnails > img:not(.not)', function() {
-                $(this).after($(this).siblings('img.not').first().removeClass('not'));
-                $(this).siblings('img').last().after($(this).addClass('not'));
-            });
-
             $('input.button[name=group]').on('click', function (e) {
                 e.preventDefault();
                 var arrP = [],
