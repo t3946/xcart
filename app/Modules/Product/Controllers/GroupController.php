@@ -265,7 +265,7 @@ class GroupController extends PrototypeAdminController
                                 $add_model->group_root = $model->productid;
                                 $add_model->save();
                             } else {
-                                $res['error'] = ProductModule::t('SKU is Group Root or Child');
+                                $res['error'] = ProductModule::t('SKU is group root or child');
                             }
 
                         } elseif (!$model->isGroupRoot() && !$model->isGroupChild()) {
@@ -274,7 +274,7 @@ class GroupController extends PrototypeAdminController
                                 $model->group_root = $add_model->productid;
                                 $model->save();
                             } else {
-                                $res['error'] = ProductModule::t('SKU is not Group Root');
+                                $res['error'] = ProductModule::t('SKU is not group root');
                             }
                         }
                     }
