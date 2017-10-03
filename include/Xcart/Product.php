@@ -78,20 +78,20 @@ class Product extends Data
 
     public function getManufacturerId()
     {
-        return $this->getField('manufacturerid');
+        return $this->manufacturerid;
     }
 
     public function getMPN()
     {
         $sMPN = '';
-        if (strpos($this->getSKU(), $this->getManfacturerClass()->getField('code')) == 0)
-            $sMPN = preg_replace("/^(" . $this->getManfacturerClass()->getField('code') . "-)/i", "", $this->getSKU());
+        if (strpos($this->getSKU(), $this->getManfacturerClass()->code) == 0)
+            $sMPN = preg_replace("/^(" . $this->getManfacturerClass()->code . "-)/i", "", $this->getSKU());
         return $sMPN;
     }
 
     public function getSKU()
     {
-        return $this->getField('productcode');
+        return $this->productcode;
     }
 
 
@@ -113,7 +113,7 @@ class Product extends Data
 
     public function getAdminUrl()
     {
-        return sprintf(self::ADMIN_PRODUCT_MODIFY_URL, $this->getProductId(), $this->getStoreFront()->getField('storefrontid'));
+        return sprintf(self::ADMIN_PRODUCT_MODIFY_URL, $this->getProductId(), $this->getStoreFront()->storefrontid);
     }
 
     public function getURL($http = '//')
@@ -229,7 +229,7 @@ class Product extends Data
 
     public function getProductId()
     {
-        return $this->getField('productid');
+        return $this->productid;
     }
 
 
@@ -272,12 +272,12 @@ class Product extends Data
 
     public function isParent()
     {
-        return ($this->getField('clone_parent_productid') == 0);
+        return ($this->clone_parent_productid == 0);
     }
 
     public function isForSale()
     {
-        return ($this->getField('forsale') == 'Y' ? true : false);
+        return ($this->forsale == 'Y' ? true : false);
     }
 
     public function isProductOutOfStock()
@@ -315,12 +315,12 @@ class Product extends Data
 
     public function getMapPrice()
     {
-        return floatval($this->getField('new_map_price'));
+        return floatval($this->new_map_price);
     }
 
     public function getProductCostToUs(\DateTime $oDate = null)
     {
-        $fResult = floatval($this->getField('cost_to_us'));
+        $fResult = floatval($this->cost_to_us);
         if (!is_null($oDate) && $oDate instanceof \DateTime) {
             $sSQL = <<<SQL
 SELECT value
@@ -450,7 +450,7 @@ SQL;
 
     public function getAmazonFBAAvailReal()
     {
-        return intval($this->getField('amazon_fba_avail'));
+        return intval($this->amazon_fba_avail);
     }
 
     public function getAmazonFBAAvailExcludedProcessing()
@@ -478,12 +478,12 @@ SQL;
 
     public function isAmazonFBAEnabled()
     {
-        return ($this->getField('amazon_fba') == 'Y');
+        return ($this->amazon_fba == 'Y');
     }
 
     public function isAmazonEnabled()
     {
-        return ($this->getField('amazon_enabled') == 'Y');
+        return ($this->amazon_enabled == 'Y');
     }
 
     public function isAmazonFBARestricted()
@@ -491,24 +491,24 @@ SQL;
         $bResult = false;
         if ($this->getProductId()) {
             $oProductAmazon = ProductsAmazonFields::model(['productid' => $this->getProductId()]);
-            $bResult = ($oProductAmazon->getField('amazon_fba_restricted') == 'Y');
+            $bResult = ($oProductAmazon->amazon_fba_restricted == 'Y');
         }
         return $bResult;
     }
 
     public function getUPC()
     {
-        return $this->getField('upc');
+        return $this->upc;
     }
 
     public function getProductName()
     {
-        return $this->getField('product');
+        return $this->product;
     }
 
     public function isRetailTrustEnabled()
     {
-        return ($this->getField('retail_trust_enabled') == 'Y') ? true : false;
+        return ($this->retail_trust_enabled == 'Y') ? true : false;
     }
 
     /**
@@ -866,7 +866,7 @@ SQL;
             if (!empty($aCats)) {
                 foreach ($aCats as $oCat) {
                     if ($oCat->isMain()) {
-                        $this->oMainCategory = Category::model(['categoryid' => $oCat->getField('categoryid')]);
+                        $this->oMainCategory = Category::model(['categoryid' => $oCat->categoryid]);
                         break;
                     }
                 }
@@ -885,7 +885,7 @@ SQL;
         if (!empty($aCats)) {
             foreach ($aCats as $oCat) {
                 if (!($oCat->isMain())) {
-                    $oCategory = Category::model(['categoryid' => $oCat->getField('categoryid')]);
+                    $oCategory = Category::model(['categoryid' => $oCat->categoryid]);
                     if ($oCategory->getCategoryId()) {
                         $aRes[] = $oCategory;
                     }

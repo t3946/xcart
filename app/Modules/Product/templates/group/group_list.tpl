@@ -22,6 +22,12 @@
     {parent}
     <script type="text/javascript">
         (function () {
+
+            $(document).on('click', '.thumbnails > img:not(.not)', function() {
+                $(this).after($(this).siblings('img.not').first().removeClass('not'));
+                $(this).siblings('img').last().after($(this).addClass('not'));
+            });
+
             $('input.button[name=group]').on('click', function (e) {
                 e.preventDefault();
                 var arrP = [],
@@ -86,10 +92,24 @@
                                     $('.mmodal-content #o-category-selector').html(data)
                                 }
                             );
+                            $.get('{url 'product:group_images'}',
+                                {
+                                    products: arrP
+                                }, function (data) {
+                                    $('.mmodal-content .thumbnails').html(data)
+                                        .find('img').addClass('not').end()
+                                        .find('img:nth-child(-n+4)').removeClass('not').end()
+                                        .fadeIn();
+                                }
+                            );
                         },
                         onSubmit: function (s) {
                             var self = this;
                             var $form = $(s).closest('form');
+                            var product = $('.thumbnails img', $form).not('.not').map(function(i,v){
+                                $form.append($('<input name="group[group_image][]" type="hidden" />').val($(v).data('product-id')));
+                            }).get();
+
                             var $data = $form.serialize();
                             $form.off();
                             selected_block.css('opacity', 0.4).next('.group-detail').css('opacity', 0.4);

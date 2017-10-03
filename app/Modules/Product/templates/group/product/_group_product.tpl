@@ -6,7 +6,7 @@
     data-sku="{$model->productcode}"
     data-manufacturer-id="{$model->manufacturerid}">
     <td class="tree" align="center">
-        <div data-url="{url 'product:group_product' id=$model->productid}" data-level="{$level}" class="tree_cell single"></div>
+        <div data-url="{url 'product:group_product' id=$model->productid}" data-level="{Modules\Product\Helpers\ProductHelper::getGroupLevel($model->group_option)}" class="tree_cell single"></div>
     </td>
     <td class="checkbox">
         <input type="checkbox" class="tree-checkbox"/>

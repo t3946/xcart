@@ -19,6 +19,7 @@ class GroupStore extends BaseStore
 {
     public $defaultPagerPageSize = 50;
     public $data = null;
+    public $level = null;
     private $pager = null;
     private $model = null;
     private $qs = null;
@@ -39,6 +40,7 @@ class GroupStore extends BaseStore
         if (!isset($data['level'])) {
             $this->data['level'] = 1;
         }
+        $this->level = $this->data['level'];
     }
 
     public function getQuerySet()
@@ -72,8 +74,8 @@ class GroupStore extends BaseStore
                 $filter['brandid'] = $this->model->brandid;
             }
 
-            if ($this->data['level'] > 1) {
-                $lmo = $this->data['level'] - 1;
+            if ($this->level > 1) {
+                $lmo = $this->level - 1;
                 $filter[(new Expression("SUBSTRING_INDEX({$this->qs->getTableAlias()}.product, ' ', {$lmo})"))->toSQL()] = $this->data['group_phrase'];
             }
 
@@ -88,7 +90,7 @@ class GroupStore extends BaseStore
 
         $qs->filter(
             [
-                (new Expression("SUBSTRING_INDEX({$qs->getTableAlias()}.product, ' ', 1)"))->toSQL() => (new Expression($this->model->group_option))->toSQL(),
+                (new Expression("SUBSTRING_INDEX({$qs->getTableAlias()}.product, ' ', {$this->level})"))->toSQL() => (new Expression($this->model->group_option))->toSQL(),
                 'group_root__isnull' => true,
                 'brandid' => $this->model->brandid
             ]
@@ -106,14 +108,14 @@ class GroupStore extends BaseStore
         $qs->select(['*', 'count' => new Expression('count(p2.productid)'), 'group_phrase' => 'group_option']);
         $qs->join('inner join', 'xcart_products',
             [
-                'group_option' => new Expression("SUBSTRING_INDEX(p2.product, ' ', 1)"),
                 'brandid' => 'p2.brandid',
             ], 'p2');
         $qs->filter(
             [
                 'productid' => new Expression($qs->getTableAlias().".group_root"),
                 'group_root__isnull' => false,
-                'p2.group_root__isnull' => true
+                'p2.group_root__isnull' => true,
+                'p2.product__raw' => "LIKE CONCAT({$qs->getTableAlias()}.group_option, '%')"
             ]
         );
         $qs->group(['productid']);
@@ -128,7 +130,7 @@ class GroupStore extends BaseStore
     {
         $qs = BrandModel::objects()->getQuerySet();
 
-        $phrase = new Expression("SUBSTRING_INDEX (p.product,' ', {$this->data['level']})");
+        $phrase = new Expression("SUBSTRING_INDEX (p.product,' ', {$this->level})");
 
         $qs->select(['*', 'count' => new Expression('count(p.productid)'), 'group_phrase' => $phrase]);
 
@@ -142,8 +144,8 @@ class GroupStore extends BaseStore
             $filter['brandid'] = $this->model->brandid;
         }
 
-        if ($this->data['level'] > 1) {
-            $lmo = $this->data['level'] - 1;
+        if ($this->level > 1) {
+            $lmo = $this->level - 1;
             $filter[(new Expression("SUBSTRING_INDEX(p.product, ' ', {$lmo})"))->toSQL()] = $this->data['group_phrase'];
         }
 
@@ -277,7 +279,7 @@ class GroupStore extends BaseStore
         $this->model->group_root = $this->model->productid;
         $this->model->save();
 
-        if ($_POST['group']['products']) {
+        if ($this->data['products'] && is_array($this->data['products'])) {
             /** @var ProductModel[] $products */
             if ($products = ProductModel::objects()->filter(['productid__in' => array_keys($this->data['products'])])) {
                 foreach ($products as $product) {
@@ -307,7 +309,20 @@ class GroupStore extends BaseStore
                         }
                     }
 
+                    if ($this->data['group_image'] && in_array($product->productid, $this->data['group_image'])) {
+                        $product->group_order = (array_search($product->productid, $this->data['group_image']) + 1) * 10;
+                    }
+
                     $product->save();
+                }
+            }
+        }
+
+        if ($this->data['group_image'] && is_array($this->data['group_image'])) {
+            foreach ($this->data['group_image'] as $key => $i_product) {
+                if ($p = ProductModel::objects()->get(['productid' => $i_product])) {
+                    $p->group_order = ($key + 1) * 10;
+                    $p->save();
                 }
             }
         }
@@ -315,6 +330,7 @@ class GroupStore extends BaseStore
 
     public function updateGroupProduct()
     {
+        //$this->model = ProductModel()
         $this->createGroupProduct();
     }
 }

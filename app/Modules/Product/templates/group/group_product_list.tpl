@@ -37,11 +37,20 @@
         (function () {
             $('input.button[name=group]').on('click', function (e) {
                 e.preventDefault();
-                var arrDist = [];
+                var arrP = [],
+                    arrDist = [];
 
                 var selected_products = $('.product_group .products tr')
                     .has('td input:checked')
                     .clone()
+                    .filter(function (i) {
+                        if (arrP.indexOf($(this).data('product-id')) < 0) {
+                            arrP.push($(this).data('product-id'));
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    })
                     .each(function () {
                         if (arrDist.indexOf($(this).data('manufacturer-id')) < 0) {
                             arrDist.push($(this).data('manufacturer-id'));
@@ -67,7 +76,14 @@
                     .mmodal({
                         width: 1008,
                         onSubmit: function (s) {
-                            $(s).closest('form').off().submit();
+                            var $form = $(s).closest('form');
+                            var product = $('.thumbnails img', $form)
+                                .not('.not')
+                                .map(function(i,v){
+                                    $form.append($('<input name="group[group_image][]" type="hidden" />').val($(v).data('product-id')));
+                                })
+                                .get();
+                            $form.off().submit();
                         },
                         onAfterOpen: function () {
                             tinymce.init({
@@ -93,6 +109,18 @@
                                     $('.mmodal-content #o-category-selector').html(data)
                                 }
                             );
+                            $.get('{url 'product:group_images'}',
+                                {
+                                    products: [selected_group_product.data('product-id')].concat(arrP)
+                                }, function (data) {
+                                    $('.mmodal-content .thumbnails').html(data)
+                                        .find('img').addClass('not').end()
+                                        .find('img:nth-child(-n+4)').removeClass('not').end()
+                                        .fadeIn();
+                                }
+                            );
+                            var $form = $('.mmodal-content form[name=group_form]');
+                            $form.attr('action', selected_group_product.find('.tree_cell').data('url'));
                         },
                         onAfterClose: function () {
                             tinymce.remove();
