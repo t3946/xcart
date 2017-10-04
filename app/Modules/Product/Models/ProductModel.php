@@ -223,7 +223,7 @@ class ProductModel extends AutoMetaModel
         }
 
         if ($this->group_root) {
-            return ($this->isGroupRoot()) ?  $title : $this->parent->group_mask . $title;
+            return ($this->isGroupRoot()) ?  $title : $this->parent->group_mask . " ". $title;
         }
 
         return $title;
