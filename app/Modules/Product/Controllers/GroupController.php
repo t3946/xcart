@@ -131,9 +131,8 @@ class GroupController extends PrototypeAdminController
                                 function ($p) {
                                     return $p->product;
                                 },
-                            $products)
-                        ))
-                        {
+                                $products)
+                        )) {
                             $store->level = ProductHelper::getGroupLevel($store->data['group_phrase']) + 2;
                             $brands = $store->getLevels();
                             $products = $store->getModels();
@@ -181,8 +180,7 @@ class GroupController extends PrototypeAdminController
                 if ($products = ProductModel::objects()->filter(
                     [
                         'productid__in' => $_GET['products']
-                    ])->all())
-                {
+                    ])->all()) {
                     foreach ($products as $key => $product) {
                         $res .= $this->renderSmarty(
                             'group_thumbnail.tpl',
@@ -227,18 +225,18 @@ class GroupController extends PrototypeAdminController
     public function group_remove()
     {
         if ($this->getRequest()->getIsAjax()) {
-            if (isset($_POST['product_id'])) {
-                if ($model = ProductModel::objects()->get(
+            if (isset($_POST['product_id']) && $model = ProductModel::objects()->get(
                     [
                         'productid' => $_POST['product_id']
                     ]
-                ))
-                {
-                    $model->group_root = null;
-                    $model->group_order = 255;
-                    $model->save();
-                }
+                )) {
+                $model->setAttributes([
+                    'group_root' => null,
+                    'group_order' => 255
+                ]);
+                $model->save();
             }
+
         }
     }
 
@@ -255,8 +253,7 @@ class GroupController extends PrototypeAdminController
                     [
                         'productid' => $_POST['product_id']
                     ]
-                ))
-                {
+                )) {
                     /** @var ProductModel $add_model */
 
                     if ($add_model = ProductModel::objects()->get(['productcode' => $_POST['add_sku']])) {

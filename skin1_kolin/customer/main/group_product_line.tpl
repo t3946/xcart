@@ -30,7 +30,7 @@
                 <td class="sku"><a href="{$child->getUrl()}" target="_blank">{$child->productcode}</a></td>
                 {assign var=thumbnail_m value=$child->thumbnail}
                 {assign var=thumbnail value=$thumbnail_m->get()}
-                <td><img src="{include file="product_image_src.tpl" tmbn_url=$thumbnail->getUrl()}"/></td>
+                <td>{if $thumbnail}<img src="{include file="product_image_src.tpl" tmbn_url=$thumbnail->getUrl()}"/>{/if}</td>
                 <td class="title">
                     <div>{$child->product}</div>
                     {if $child->isProductOutOfStock()}
