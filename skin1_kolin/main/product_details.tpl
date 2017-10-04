@@ -668,7 +668,7 @@
                 {/if}
                 <td class="FormButton" nowrap="nowrap">{$lng.lbl_det_description}* :</td>
                 <td class="ProductDetails">
-                    {if $manufacturer_feed_fields.fulldescr.disable eq "Y"}
+                    {if $manufacturer_feed_fields.fulldescr.disable eq "Y" && !$oProduct->isGroupRoot()}
                         {include file="main/textarea.tpl" name="fulldescr" cols=45 rows=12 class="InputWidth" data=$product.fulldescr width="80%" btn_rows=4 readonly="Y"}
                     {else}
                         {include file="main/textarea.tpl" name="fulldescr" cols=45 rows=12 class="InputWidth" data=$product.fulldescr width="80%" btn_rows=4}

@@ -586,7 +586,7 @@ if (($REQUEST_METHOD == "POST") && ($mode == "product_modify")) {
 		$sku_is_exist);
 
 
-	if (!$fillerror) {
+	if (!$fillerror || $oProduct->isGroupRoot()) {
 	#
 	# If no errors
 	#
