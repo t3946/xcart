@@ -67,8 +67,13 @@
     <!--[if IE]>
     <link rel="stylesheet" href="{$SkinDir}/skin1.IE.css" type="text/css" media="all" />
     <![endif]-->
+
     {if $canonical_url}
-        <link rel="canonical" href="{$xcartApp->request->getHostInfo()}/{$canonical_url}" />
+        {if $oProduct && $oProduct->isGroupChild()}
+            <link rel="canonical" href="{$oProduct->parent->getUrl()}" />
+        {else}
+            <link rel="canonical" href="{$xcartApp->request->getHostInfo()}/{$canonical_url}" />
+        {/if}
     {/if}
     {if $main eq "catalog" && $current_category.category eq "" && $clean_url_data.resource_type ne "K"}
         <link rel="canonical" href="{$xcartApp->request->getHostInfo()}/"/>

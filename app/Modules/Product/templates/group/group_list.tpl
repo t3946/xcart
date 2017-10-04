@@ -77,7 +77,12 @@
                                 force_br_newlines: true,
                                 force_p_newlines: false,
                                 convert_urls: false,
-                                relative_urls: false
+                                relative_urls: false,
+                                setup: function (editor) {
+                                    editor.on('change', function () {
+                                        tinymce.triggerSave();
+                                    });
+                                }
                             });
                             $.get('{url 'product:group_categories'}',
                                 {
@@ -103,6 +108,7 @@
                             var product = $('.thumbnails img', $form).not('.not').map(function(i,v){
                                 $form.append($('<input name="group[group_image][]" type="hidden" />').val($(v).data('product-id')));
                             }).get();
+
 
                             var $data = $form.serialize();
                             $form.off();
