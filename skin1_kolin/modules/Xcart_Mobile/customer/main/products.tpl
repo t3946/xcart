@@ -239,7 +239,7 @@ func_load_more_next_productids('','Y');
                 {if $config.Appearance.display_productcode_in_list eq "Y" && $product.productcode}
                   <span class="sku">{$lng.lbl_sku}: {$product.productcode|escape}</span>
                 {/if}
-                {if !$product.oProduct->isGroupRoot()}
+                {if !$product.oProduct || !$product.oProduct->isGroupRoot()}
                 {if $product.product_type ne "C"}
                   {if $product.appearance.is_auction}
                     <span class="price">{$lng.lbl_enter_your_price}</span><br />
