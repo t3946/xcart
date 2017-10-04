@@ -5,50 +5,50 @@
 {if $config.SEO.clean_urls_enabled eq "Y"}
 <base href="{$xcartApp->request->getHostInfo()}/" />
 {/if}
-<title>{strip}
-{if $brand.title ne "" && $main eq "brand_products"}
-{$brand.title}
-{else}
-{if $main eq "product" && $product.title_tag ne ""}
-{$product.title_tag}
-{else}
-{if $clean_url_data.resource_type eq "K" && $e_search_data.substring ne ""}
-{if $e_search_data.orig_substring ne ""}{$e_search_data.orig_substring|stripslashes|escape}{else}{$e_search_data.substring|stripslashes|escape}{/if} at&nbsp;
-{/if}
-{if $config.Company.config_title_meta_tag ne "" && (($main eq "catalog" && $current_category.category eq ""))}
-{$config.Company.config_title_meta_tag}
-{elseif $current_category.title_tag ne "" && $main eq "catalog"}
-{$current_category.title_tag} {*| {$location[0].0*}
-{else}
-{if $current_storefront == 41}
-{capture name=title}
-{assign var="seo_product_title" value="`$product.product` Online | `$config.Company.company_name`"}
-{$seo_product_title|truncate:"80":"":false|escape|strip}
-{/capture}
-{else}
-{capture name=title}
-{if $config.SEO.page_title_format eq "A"}
-{section name=position loop=$location}
-{if not %position.first%}&nbsp;::&nbsp;{/if}
-{$location[position].0|strip_tags|escape}
-{/section}
-{else}
-{section name=position loop=$location step=-1}
-{if not %position.first%}&nbsp;::&nbsp;{/if}
-{$location[position].0|strip_tags|escape}
-{/section}
-{/if}
-{/capture}
-{/if}
-{if $config.SEO.page_title_limit <= 0}
-{$smarty.capture.title|replace:"&amp;":"&"}
-{else}
-{$smarty.capture.title|replace:"&nbsp;":" "|truncate:$config.SEO.page_title_limit|replace:" ":"&nbsp;"}
-{/if}
-{/if}
-{/if}
-{/if}
-{/strip}</title>
+    <title>{strip}
+            {if $brand.title ne "" && $main eq "brand_products"}
+                {$brand.title}
+            {else}
+                {if $main eq "product" && $product.title_tag ne ""}
+                    {$product.title_tag}
+                {else}
+                    {if $clean_url_data.resource_type eq "K" && $e_search_data.substring ne ""}
+                        {if $e_search_data.orig_substring ne ""}{$e_search_data.orig_substring|stripslashes|escape}{else}{$e_search_data.substring|stripslashes|escape}{/if} at&nbsp;
+                    {/if}
+                    {if $config.Company.config_title_meta_tag ne "" && (($main eq "catalog" && $current_category.category eq ""))}
+                        {$config.Company.config_title_meta_tag}
+                    {elseif $current_category.title_tag ne "" && $main eq "catalog"}
+                        {$current_category.title_tag} {*| {$location[0].0*}
+                    {else}
+                        {if $current_storefront == 41}
+                            {capture name=title}
+                                {assign var="seo_product_title" value="`$product.product` Online | `$config.Company.company_name`"}
+                                {$seo_product_title|truncate:"80":"":false|escape|strip}
+                            {/capture}
+                        {else}
+                            {capture name=title}
+                                {if $config.SEO.page_title_format eq "A"}
+                                    {section name=position loop=$location}
+                                        {if not %position.first%}&nbsp;::&nbsp;{/if}
+                                        {$location[position].0|strip_tags|escape}
+                                    {/section}
+                                {else}
+                                    {section name=position loop=$location step=-1}
+                                        {if not %position.first%}&nbsp;::&nbsp;{/if}
+                                        {$location[position].0|strip_tags|escape}
+                                    {/section}
+                                {/if}
+                            {/capture}
+                        {/if}
+                        {if $config.SEO.page_title_limit <= 0}
+                            {$smarty.capture.title|replace:"&amp;":"&"}
+                        {else}
+                            {$smarty.capture.title|replace:"&nbsp;":" "|truncate:$config.SEO.page_title_limit|replace:" ":"&nbsp;"}
+                        {/if}
+                    {/if}
+                {/if}
+            {/if}
+        {/strip}</title>
     {if $current_storefront_info.storefrontid ne ""}
 <link rel="shortcut icon" href="{$xcart_web_dir}/image.php?id={$current_storefront_info.storefrontid}&amp;type=F" type="image/vnd.microsoft.icon"/>
     {else}
@@ -107,6 +107,8 @@
 {if ($main eq "product")}
 {* igor_async *}
 <script type="text/javascript" src="{$SkinDir}/lib/jqueryui/jquery-ui.custom.min.js"></script>
+<script type="text/javascript" src="{$SkinDir}/js/spinner.js"></script>
+<script type="text/javascript" src="{$SkinDir}/js/group.js"></script>
 {/if}
 <script type="text/javascript" src="{$SkinDir}/js/jquery.visible.min.js"></script>
 <script src="{$SkinDir}/js/google_analytics_impressions.js" type="text/javascript"></script>
@@ -198,15 +200,15 @@ function func_load_ajax_carousel_products(section_name)
                     }
                     ga_page_name = this.ga_param;
                     html += '<li class="google_impression_object" data-productid="'+this.productid+'" data-name="'+this.product+'" data-category="'+this.category+'" data-brand="'+this.brand+'" data-list="'+ga_page_name+'" data-price="'+this.price.toFixed(2)+'" data-position="'+this.N_key+'" class="active">' +
-                        '<div style="text-align: center;">' +
+                        '<div style="text-align: center;"><div style="width:150px;height:150px; margin:0 auto;">' +
                         '<a href="' + a_href + '" onclick="onProductClick(\'' + this.productid + '\',\'' + this.product + '\',\'' + this.category + '\',\'' + this.brand + '\',\'' + this.N_key + '\',\'' + ga_page_name + '\',\'' + this.price + '\'); return !ga.loaded;">';
                     if (this.thumb && this.thumb.length) {
                         html += this.thumb;
                     }
-                    html += '</a>' +
-                        '<br />' + '<a href="' + a_href + '" onclick="onProductClick(\'' + this.productid + '\',\'' + this.product + '\',\'' + this.category + '\',\'' + this.brand + '\',\'' + this.N_key + '\',\'' + ga_page_name + '\',\'' + this.price.toFixed(2) + '\'); return !ga.loaded;">' + this.title + '</a>' +
-                        '<br /> <font class="ProductPrice">Our Price: US$ ' + this.price.toFixed(2) + '</font>' +
-                        '</div>' +
+                    html += '</a></div>' +
+                        '<br />' + '<a href="' + a_href + '" onclick="onProductClick(\'' + this.productid + '\',\'' + this.product + '\',\'' + this.category + '\',\'' + this.brand + '\',\'' + this.N_key + '\',\'' + ga_page_name + '\',\'' + this.price.toFixed(2) + '\'); return !ga.loaded;">' + this.title + '</a>';
+                    if (this.is_group === 'false') {html += '<br /> <font class="ProductPrice">Our Price: US$ ' + this.price.toFixed(2) + '</font>';}
+                    html += '</div>' +
                         '</li>';
                 });
             }
@@ -509,7 +511,7 @@ $(document).ready(function() {
 {literal}
 <script type="text/javascript">
 
-function downloadJSAtOnload() 
+function downloadJSAtOnload()
 {
 {/literal}
 {if !($main eq "fast_lane_checkout")}

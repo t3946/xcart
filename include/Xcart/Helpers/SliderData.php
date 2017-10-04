@@ -3,6 +3,8 @@ namespace Xcart\Helpers;
 
 use Mindy\QueryBuilder\Expression;
 use Mindy\QueryBuilder\Q\QAndNot;
+use Modules\Product\Helpers\ProductHelper;
+use Modules\Product\Models\ProductModel;
 use Xcart\Brands;
 use Xcart\ElasticSearch;
 use Xcart\Product;
@@ -63,7 +65,7 @@ class SliderData
                 $p_query = <<<SQL
 select RO.related_resource_id as needed_resource_id
 from xcart_cidev_related_objects RO
-inner join xcart_products P ON P.productid = RO.related_resource_id and P.forsale = 'Y'
+inner join xcart_products P ON P.productid = RO.related_resource_id and P.forsale = 'Y' AND P.productid != P.group_root
 inner join xcart_products_sf SF ON P.productid = SF.productid
 where RO.resource_id = '{$productid}' 
   and RO.resource_type = 'OP' 
@@ -127,7 +129,7 @@ SQL;
 
             $saveOrder = true;
 
-            $classElastic = new ElasticSearch($config["ElasticSearch_options"],$site_domain);
+            $classElastic = new ElasticSearch($config["ElasticSearch_options"], \Xcart\App\Main\Xcart::app()->getModule('Sites')->getSite()->domain);
             $classElastic->setSource("*._id");
             $classElastic->setType("product");
             $classElastic->setMinScore(0.5);
@@ -186,7 +188,8 @@ SQL;
             if (($key = array_search($productid, $i_ids)) !== false) {
                 unset($i_ids[$key]);
             }
-            $qs = Product::objects()->filter(array_merge(['productid__in' => $i_ids], $extendFilter));
+
+            $qs = ProductModel::objects()->filter(array_merge(['productid__in' => $i_ids], $extendFilter));
             $ta = $qs->getTableAlias();
 
             if (isset($current_storefront)) {
@@ -205,9 +208,13 @@ SQL;
                 return [$products, $sGoogleAnaliticsParam];
             }
 
+            if (in_array($section_name, ['similar_products', 'similar_products_ob', 'related_products'])) {
+                $oProducts = ProductHelper::groupRootProducts($oProducts);
+            }
+
             foreach ($oProducts as $oProduct)
             {
-                if ($isInStock && $oProduct->isProductOutOfStock()) {
+                if ($isInStock && $oProduct->isProductOutOfStock() && !$oProduct->isGroupRoot()) {
                     continue;
                 }
 

@@ -68,6 +68,10 @@ while ($record = db_fetch_array($cidev_updated_products)) {
 
         foreach ($products as $product)
         {
+            $product_model = \Modules\Product\Models\ProductModel::objects()->get(['productid' => $product['productid']]);
+            if ($product_model->isGroupRoot()) {
+                continue;
+            }
             if ($product["forsale"] == "Y") {
                 if ($record["type"] == "6")
                 {
@@ -78,7 +82,7 @@ while ($record = db_fetch_array($cidev_updated_products)) {
                     $product["fulldescr"] = str_replace("/r/n", " ", $product["fulldescr"]);
                     $product["fulldescr"] = str_replace("\r\n", " ", $product["fulldescr"]);
 
-                    $data_arr["productname"] = $product["product"];
+                    $data_arr["productname"] = $product_model->getTitle();
                     $data_arr["sku"]         = $product["productcode"];
                     $data_arr["upc"]         = $product["upc"];
                     $data_arr["brand"]       = $product["brand"];
@@ -134,7 +138,7 @@ while ($record = db_fetch_array($cidev_updated_products)) {
                     $product["fulldescr"] = str_replace("/r/n", " ", $product["fulldescr"]);
                     $product["fulldescr"] = str_replace("\r\n", " ", $product["fulldescr"]);
 
-                    $data_arr["productname"] = $product["product"];
+                    $data_arr["productname"] = $product_model->getTitle();
                     $data_arr["sku"]         = $product["productcode"];
                     $data_arr["upc"]         = $product["upc"];
                     $data_arr["brand"]       = $product["brand"];

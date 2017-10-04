@@ -3,6 +3,8 @@
 //print_r($_POST);
 //print_r($_GET);
 
+use Modules\Product\Models\ProductModel;
+
 if (!empty($_POST["cidev_filter_mode"]) && $_POST["cidev_filter_mode"] == "load_more_products_SKU") {
 
     /*
@@ -137,6 +139,14 @@ if ($REQUEST_METHOD == 'POST' || $REQUEST_METHOD == 'GET') {
 
         if (empty($products) || $mode_load_next_productids == "Y") {
             include $xcart_dir . "/include/search.php";
+
+            if ($products) {
+                $products = array_map(function ($a) {
+                    $a['oProduct'] = new ProductModel($a);
+                    $a['oProduct']->setIsNewRecord(false);
+                    return $a;
+                }, $products);
+            }
 
             if ($mode_load_next_productids == "Y") {
 
@@ -282,6 +292,7 @@ if ($REQUEST_METHOD == 'POST' || $REQUEST_METHOD == 'GET') {
             x_session_save("search_data");
 
             $page = $ajax_navigation_page;
+            $from = $ajax_navigation_from;
             include $xcart_dir . "/elastic_search.php";
 
             if ($mode_load_next_productids == "Y") {

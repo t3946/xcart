@@ -1,0 +1,78 @@
+.product_group {
+
+    td {
+
+      &.tree {
+        width: 1%;
+
+        .tree_cell {
+
+          width: 12px;
+          height: 12px;
+          cursor: pointer;
+          background: url('/skin1_kolin/images/plus.gif') no-repeat;
+
+          &.open {
+            background-image: url('/skin1_kolin/images/minus.gif');
+          }
+
+          a {
+            text-decoration: none;
+          }
+        }
+      }
+
+      &.checkbox {
+        width: 1%;
+      }
+
+      &.count {
+
+        width: 100px;
+        text-align: center;
+      }
+
+      &.level {
+
+        padding-left: 20px;
+        padding-right: 0;
+      }
+    }
+}
+
+#new-group {
+
+  .columns {
+    padding: 0;
+  }
+
+  .big {
+    width: 100%;
+  }
+
+  .selected-products {
+
+    width:100%;
+
+    input {
+      min-height: inherit;
+    }
+  }
+
+  .thumbnails {
+
+    width:300px;
+    height:300px;
+    border: 2px dotted #CCC;
+    margin-top:10px;
+
+    img {
+
+      cursor: pointer;
+
+      &.not {
+        opacity: 0.2;
+      }
+    }
+  }
+}

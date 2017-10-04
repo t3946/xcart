@@ -7,6 +7,8 @@
 #       supplier_feeds_enabled  ('Y'|'N')
 #       cost_to_us      DECIMAL
 #       price   DECIMAL    price corrected with min_amount quantity
+use Modules\Product\Models\ProductModel;
+
 /**
  * @deprecated
  */
@@ -762,16 +764,7 @@ function func_select_product($id, $membershipid, $redirect_if_error=true, $clear
 ##
 #
 
-/* speed optimizations no such conditions
-	if ($current_area == 'C' && empty($active_modules['Product_Configurator'])) {
-	
-		$login_condition .= " AND $sql_tbl[products].product_type <> 'C' AND $sql_tbl[products].forsale <> 'B' ";
-		
-	}
-*/
-
-	
-	$product = func_query_first("SELECT $sql_tbl[products].*, $sql_tbl[products].avail-$in_cart AS avail, $sql_tbl[pricing].price as price $add_fields FROM $sql_tbl[pricing], $sql_tbl[products] $join WHERE $sql_tbl[products].productid='$id' ".$login_condition.$p_membershipid_condition.$price_condition.$sf_condition." GROUP BY $sql_tbl[products].productid");
+    $product = func_query_first("SELECT $sql_tbl[products].*, $sql_tbl[products].avail-$in_cart AS avail, $sql_tbl[pricing].price as price $add_fields FROM $sql_tbl[pricing], $sql_tbl[products] $join WHERE $sql_tbl[products].productid='$id' ".$login_condition.$p_membershipid_condition.$price_condition.$sf_condition." GROUP BY $sql_tbl[products].productid");
 
 /*speed optimization*/
 //	print("l:".$membershipid_condition);

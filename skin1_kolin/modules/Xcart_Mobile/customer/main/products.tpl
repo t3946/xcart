@@ -211,8 +211,13 @@ func_load_more_next_productids('','Y');
             data-category="{$product.category|escape}" data-brand="{$product.brand|escape}" data-list="{$ga_page_name}" data-price="{$product.price}" data-position="{$N_key}">
           <a {include file="on_product_click.tpl"} href="{$current_location}/product.php?productid={$product.productid}">
             <span class="product-thumbnail">
-              {include file="product_thumbnail.tpl" productid=$product.productid product=$product.product tmbn_url=$product.tmbn_url splash=$product.oSplash}
-              <img src="{$ImagesDir}/spacer.gif" class="leveler" alt="" />
+                {if $product.oProduct->isGroupRoot() && $product.oProduct->getThumbnails()|@count >=4}
+                    {include file="group_thumbnail.tpl" product=$product.oProduct}
+                {else}
+                    {include file="product_thumbnail.tpl" productid=$product.productid product=$product.product tmbn_url=$product.tmbn_url splash=$product.oSplash}
+                {/if}
+
+                <img src="{$ImagesDir}/spacer.gif" class="leveler" alt="" />
               <span class="labels">
                 {if $active_modules.On_Sale}
                   {include file="modules/On_Sale/on_sale_icon_products_list.tpl" product=$product}
@@ -234,32 +239,14 @@ func_load_more_next_productids('','Y');
                 {if $config.Appearance.display_productcode_in_list eq "Y" && $product.productcode}
                   <span class="sku">{$lng.lbl_sku}: {$product.productcode|escape}</span>
                 {/if}
+                {if !$product.oProduct->isGroupRoot()}
                 {if $product.product_type ne "C"}
                   {if $product.appearance.is_auction}
                     <span class="price">{$lng.lbl_enter_your_price}</span><br />
                     {$lng.lbl_enter_your_price_note}
                   {else}
-
-{*
-                    {if $product.appearance.has_price || !$product.appearance}
-                      {if $product.appearance.has_market_price and $product.appearance.market_price_discount gt 0}
-                        <span class="market-price">
-                          {strip}
-                            <span class="market-price-value">{currency value=$product.list_price}</span>
-                            {if $product.appearance.market_price_discount gt 0}
-                              {if $config.General.alter_currency_symbol ne ""}
-                                ,
-                              {/if}
-                              <span class="price-save">&nbsp;{$lng.lbl_save_price} {$product.appearance.market_price_discount}%</span>
-                            {/if}
-                          {/strip}
-                        </span>
-                      {/if}
-*}
                       <span class="price">
-{*                        <span class="price-value">{currency value=$product.taxed_price}</span> *}
                         Price: <span class="price-value">{include file="currency.tpl" value=$current_price}</span>
-{*                        <span class="market-price">{alter_currency value=$product.taxed_price}</span> *}
                       </span>
 
 <span class="sku">
@@ -273,13 +260,11 @@ func_load_more_next_productids('','Y');
                       {if $product.taxes}
                         <span class="taxes">{include file="customer/main/taxed_price.tpl" taxes=$product.taxes is_subtax=true}</span>
                       {/if}
-{*
-                    {/if}
-*}
                     {if $active_modules.Special_Offers and $product.use_special_price}
                       {include file="modules/Special_Offers/customer/product_special_price.tpl"}
                     {/if}
                   {/if}
+                {/if}
                 {/if}
               </span>
             </span>

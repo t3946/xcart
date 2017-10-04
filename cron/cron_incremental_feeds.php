@@ -123,7 +123,7 @@ if (!empty($cidev_storefronts) && is_array($cidev_storefronts)) {
                 ])
             ->filter(
                 [
-                    'product__sites__sfid' => $storefrontid,
+                    'product__sites__storefrontid' => $storefrontid,
                     'type__lte' => 2
                 ])
             ->group(['resourceid'])
@@ -161,7 +161,7 @@ if (!empty($cidev_storefronts) && is_array($cidev_storefronts)) {
             ->select(['*', 'product__forsale', 'utype' => new Expression('GROUP_CONCAT(type ORDER BY type)')])
             ->filter(
                 [
-                    'product__sites__sfid' => $storefrontid,
+                    'product__sites__storefrontid' => $storefrontid,
                     'type__lte' => 2
                 ])
             ->group(['resourceid'])

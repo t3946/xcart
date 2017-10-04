@@ -3,12 +3,13 @@
 namespace Xcart;
 
 
+use Modules\Product\Models\ProductModel;
 use Modules\Shipping\Models\ShippingProductModel;
 
 class CartElement
 {
     /**
-     * @var Product
+     * @var ProductModel Product
      */
     private $oProduct = null;
     private $iQty = 0;

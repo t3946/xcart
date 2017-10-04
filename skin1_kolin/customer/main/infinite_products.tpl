@@ -33,7 +33,8 @@
 	{if $last_item lt $total_items}
 		<div class="load_more_wrapper">
 			<span class="infinte_scroll_span cidev_new_button cidev_new_white">
-				<div data-page="{$ajax_navigation_page_next}" class="infinte_scroll_link" data-infinite="infinite_products.php?ajax_navigation_page_next={$ajax_navigation_page_next}&cat={$cat}&e_search_data_substring={$e_search_data_substring|escape:"url"}&cidev_filter_mode={$cidev_filter_mode}&ga_page_name={$ga_page_name}" id="lb_LoadMore_button_text_{$ajax_navigation_page_next}">
+				<div data-page="{$ajax_navigation_page_next}" data-from="{$ajax_navigation_from}" class="infinte_scroll_link"
+					 data-infinite="infinite_products.php?ajax_navigation_page_next={$ajax_navigation_page_next}&ajax_navigation_from={$ajax_navigation_from}&cat={$cat}&e_search_data_substring={$e_search_data_substring|escape:"url"}&cidev_filter_mode={$cidev_filter_mode}&ga_page_name={$ga_page_name}" id="lb_LoadMore_button_text_{$ajax_navigation_page_next}">
 					{$lng.lb_LoadMore_button_text}
 				</div>
 			</span>
