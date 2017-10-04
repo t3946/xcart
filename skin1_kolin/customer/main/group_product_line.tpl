@@ -15,7 +15,7 @@
         <tr>
             <th>SKU</th>
             <th>Thumbnail</th>
-            <th>Title</th>
+            <th>Product name</th>
             <th>List price</th>
             <th>Price</th>
             <th>Quantity</th>
@@ -30,9 +30,14 @@
                 <td class="sku"><a href="{$child->getUrl()}" target="_blank">{$child->productcode}</a></td>
                 {assign var=thumbnail_m value=$child->thumbnail}
                 {assign var=thumbnail value=$thumbnail_m->get()}
-                <td>{if $thumbnail}<img src="{include file="product_image_src.tpl" tmbn_url=$thumbnail->getUrl()}"/>{/if}</td>
+                <td>{if $thumbnail}
+                        <a href="{$child->getUrl()}" target="_blank">
+                            <img src="{include file="product_image_src.tpl" tmbn_url=$thumbnail->getUrl()}"/>
+                        </a>
+                    {/if}
+                </td>
                 <td class="title">
-                    <div>{$child->product}</div>
+                    <div><a href="{$child->getUrl()}" target="_blank">{$child->product}</a></div>
                     {if $child->isProductOutOfStock()}
                         <div class="info clock">
                             <i class="icon"></i>
@@ -43,7 +48,7 @@
                         </div>
                     {/if}
                 </td>
-                <td class="strike">{if floatval($child->list_price) > 0}{include file="currency.tpl" value=$child->list_price}{/if}</td>
+                <td class="strike">{if floatval($child->list_price) > $child->getFrontendPrice()}{include file="currency.tpl" value=$child->list_price}{/if}</td>
                 <td class="price" style="white-space: nowrap"><span class="currency">US$ </span><span class="value">{$child->getFrontendPrice()|abs_value|formatprice}</td>
                 <td class="spinner_cell">
                     {if !$child->isProductOutOfStock()}

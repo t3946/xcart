@@ -59,7 +59,7 @@
                             {if $active_modules.Detailed_Product_Images ne "" && $images ne ''}
                                 <a style="font-size: 0px;" href="#dp_images" class="ga_click" data-label="More Images">
                             {/if}
-                            {if $oProduct && $oProduct->isGroupRoot() && $oProduct->getThumbnails()|@count >=4}
+                            {if $oProduct && $oProduct->isGroupRoot()}
                                 {include file="group_thumbnail.tpl" product=$oProduct}
                             {else}
                                 {include file="product_thumbnail.tpl" productid=$product.productid image_x=$product.image_x image_y=$product.image_y product=$producttitle tmbn_url=$product.tmbn_url id="product_thumbnail" type="P" splash=$product.oSplash}
@@ -550,7 +550,7 @@
                         </tr>
                         <tr class="full_product_line_button">
                             <td colspan="4" align="center">
-                                <span style="font-size: 19px" class="cidev_new_button cidev_new_white" onclick="self.location = '{$oProduct->parent->getUrl()}'">This product has several different variations - click to see all</span></td>
+                                <span style="font-size: 19px" class="cidev_new_button cidev_new_white" onclick="self.location = '{$oProduct->parent->getUrl()}'">See other product variations</span></td>
                         </tr>
                     {/if}
                 {/if}
@@ -602,7 +602,7 @@
 <br/>
 {if !$is_group && !is_null($oProduct->group_root)}
     <div style="text-align: center;" class="full_product_line_button">
-            <span style="font-size: 19px" class="cidev_new_button cidev_new_white" onclick="self.location = '{$oProduct->parent->getUrl()}'">This product has several different variations - click to see all</span>
+            <span style="font-size: 19px" class="cidev_new_button cidev_new_white" onclick="self.location = '{$oProduct->parent->getUrl()}'">See other product variations</span>
     </div>
 {/if}
 

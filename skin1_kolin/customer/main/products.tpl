@@ -68,7 +68,7 @@
                     <td class="PListImgBox">
                         <div class="PListImgBox" {if $products[product].oProduct && $products[product].oProduct->isGroupRoot()}style="width:150px; height:150px;"{/if}">
                             <a {include file="on_product_click.tpl"} href="{$products[product].oProduct->getUrl()}" {if $search_all_website eq 'Y'}target="_blank"{/if}>
-                                {if $products[product].oProduct && $products[product].oProduct->isGroupRoot() && $products[product].oProduct->getThumbnails()|@count >=4}
+                                {if $products[product].oProduct && $products[product].oProduct->isGroupRoot()}
                                     {include file="group_thumbnail.tpl" product=$products[product].oProduct}
                                 {else}
                                     {include file="product_thumbnail.tpl" productid=$products[product].productid image_x=$config.Appearance.thumbnail_width product=$products[product].oProduct->getTitle() tmbn_url=$products[product].tmbn_url splash=$products[product].oSplash}

@@ -61,7 +61,7 @@ $(function() {
     $('.btn_full_product_line').click(function(){
         var to = $("#group_product_line");
         $('html, body').animate({
-            scrollTop: to.offset().top - to.height() / 2
+            scrollTop: to.offset().top
         }, 1000);
     });
 
