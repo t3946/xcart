@@ -6,7 +6,9 @@ vim: set ts=2 sw=2 sts=2 et:
 
 {include file="main/include_js.tpl" src="ajax_add_to_cart.js"}
 
+{if $oProduct}
 {assign var="is_group" value=$oProduct->isGroupRoot()}
+{/if}
 
 {if $use_schema_org eq "Y"}
 {if $current_storefront eq "0"}
@@ -185,7 +187,7 @@ vim: set ts=2 sw=2 sts=2 et:
           <li data-icon="false">
             <a href="{$current_location}/product.php?productid={$product.productid}&mobile_mode=get_detailed_images" class="ga_click" data-label="More Images">
             {/if}
-                {if $oProduct->isGroupRoot()}
+                {if $oProduct && $oProduct->isGroupRoot()}
                     {include file="group_thumbnail.tpl" product=$oProduct}
                 {else}
                     {include file="product_thumbnail.tpl" productid=$product.productid image_x=$product.image_x image_y=$product.image_y product=$producttitle tmbn_url=$product.tmbn_url id="product_thumbnail" type="P" splash=$product.oSplash}
