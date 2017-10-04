@@ -199,9 +199,14 @@ class ProductModel extends AutoMetaModel
         return $sMPN;
     }
 
-    public function isGroup()
+    public function isGroupRoot()
     {
         return ($this->productid == $this->group_root);
+    }
+
+    public function isGroupChild()
+    {
+        return (!is_null($this->group_root) && ($this->productid != $this->group_root));
     }
 
     public function isAmazonFBAEnabled()
@@ -218,7 +223,7 @@ class ProductModel extends AutoMetaModel
         }
 
         if ($this->group_root) {
-            return ($this->isGroup()) ?  $title : $this->parent->group_mask . $title;
+            return ($this->isGroupRoot()) ?  $title : $this->parent->group_mask . $title;
         }
 
         return $title;
@@ -230,7 +235,7 @@ class ProductModel extends AutoMetaModel
     public function getThumbnails()
     {
         $thumbs = [];
-        if ($this->isGroup()) {
+        if ($this->isGroupRoot()) {
             foreach ($this->childs->order(['group_order']) as $child) {
                 if ($thumb = $child->thumbnail->limit(1)->get()) {
                     $thumbs[] = $thumb;

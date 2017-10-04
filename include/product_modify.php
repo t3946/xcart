@@ -223,7 +223,7 @@ if ($productid != "") {
 	$product_languages = func_query_first ("SELECT $sql_tbl[products_lng].* FROM $sql_tbl[products_lng] WHERE $sql_tbl[products_lng].productid='$productid' AND $sql_tbl[products_lng].code = '$edit_lng'");
 
 	$smarty->assign("page_title", func_get_langvar_by_name("lbl_adm_product_management"));
-	$oProduct = \Xcart\Product::model(['productid' => $productid]);
+	$oProduct = \Modules\Product\Models\ProductModel::objects()->get(['productid' => $productid]);
 	$smarty->assign("oProduct", $oProduct);
 
 }

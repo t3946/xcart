@@ -78,20 +78,20 @@ class Product extends Data
 
     public function getManufacturerId()
     {
-        return $this->manufacturerid;
+        return $this->getField('manufacturerid');
     }
 
     public function getMPN()
     {
         $sMPN = '';
-        if (strpos($this->getSKU(), $this->getManfacturerClass()->code) == 0)
-            $sMPN = preg_replace("/^(" . $this->getManfacturerClass()->code . "-)/i", "", $this->getSKU());
+        if (strpos($this->getSKU(), $this->getManfacturerClass()->getField('code')) == 0)
+            $sMPN = preg_replace("/^(" . $this->getManfacturerClass()->getField('code') . "-)/i", "", $this->getSKU());
         return $sMPN;
     }
 
     public function getSKU()
     {
-        return $this->productcode;
+        return $this->getField('productcode');
     }
 
 
@@ -113,7 +113,7 @@ class Product extends Data
 
     public function getAdminUrl()
     {
-        return sprintf(self::ADMIN_PRODUCT_MODIFY_URL, $this->getProductId(), $this->getStoreFront()->storefrontid);
+        return sprintf(self::ADMIN_PRODUCT_MODIFY_URL, $this->getProductId(), $this->getStoreFront()->getField('storefrontid'));
     }
 
     public function getURL($http = '//')
@@ -229,7 +229,7 @@ class Product extends Data
 
     public function getProductId()
     {
-        return $this->productid;
+        return $this->getField('productid');
     }
 
 
@@ -272,12 +272,12 @@ class Product extends Data
 
     public function isParent()
     {
-        return ($this->clone_parent_productid == 0);
+        return ($this->getField('clone_parent_productid') == 0);
     }
 
     public function isForSale()
     {
-        return ($this->forsale == 'Y' ? true : false);
+        return ($this->getField('forsale') == 'Y' ? true : false);
     }
 
     public function isProductOutOfStock()
@@ -298,6 +298,10 @@ class Product extends Data
             return true;
         }
 
+        if (($this->list_price > 0) && ($this->getPrice() / $this->list_price < 0.1)) {
+            return true;
+        }
+
         if ($this->cost_to_us >= $this->getPrice()) {
             return true;
         }
@@ -315,12 +319,12 @@ class Product extends Data
 
     public function getMapPrice()
     {
-        return floatval($this->new_map_price);
+        return floatval($this->getField('new_map_price'));
     }
 
     public function getProductCostToUs(\DateTime $oDate = null)
     {
-        $fResult = floatval($this->cost_to_us);
+        $fResult = floatval($this->getField('cost_to_us'));
         if (!is_null($oDate) && $oDate instanceof \DateTime) {
             $sSQL = <<<SQL
 SELECT value
@@ -450,7 +454,7 @@ SQL;
 
     public function getAmazonFBAAvailReal()
     {
-        return intval($this->amazon_fba_avail);
+        return intval($this->getField('amazon_fba_avail'));
     }
 
     public function getAmazonFBAAvailExcludedProcessing()
@@ -478,12 +482,12 @@ SQL;
 
     public function isAmazonFBAEnabled()
     {
-        return ($this->amazon_fba == 'Y');
+        return ($this->getField('amazon_fba') == 'Y');
     }
 
     public function isAmazonEnabled()
     {
-        return ($this->amazon_enabled == 'Y');
+        return ($this->getField('amazon_enabled') == 'Y');
     }
 
     public function isAmazonFBARestricted()
@@ -491,24 +495,24 @@ SQL;
         $bResult = false;
         if ($this->getProductId()) {
             $oProductAmazon = ProductsAmazonFields::model(['productid' => $this->getProductId()]);
-            $bResult = ($oProductAmazon->amazon_fba_restricted == 'Y');
+            $bResult = ($oProductAmazon->getField('amazon_fba_restricted') == 'Y');
         }
         return $bResult;
     }
 
     public function getUPC()
     {
-        return $this->upc;
+        return $this->getField('upc');
     }
 
     public function getProductName()
     {
-        return $this->product;
+        return $this->getField('product');
     }
 
     public function isRetailTrustEnabled()
     {
-        return ($this->retail_trust_enabled == 'Y') ? true : false;
+        return ($this->getField('retail_trust_enabled') == 'Y') ? true : false;
     }
 
     /**
@@ -866,7 +870,7 @@ SQL;
             if (!empty($aCats)) {
                 foreach ($aCats as $oCat) {
                     if ($oCat->isMain()) {
-                        $this->oMainCategory = Category::model(['categoryid' => $oCat->categoryid]);
+                        $this->oMainCategory = Category::model(['categoryid' => $oCat->getField('categoryid')]);
                         break;
                     }
                 }
@@ -885,7 +889,7 @@ SQL;
         if (!empty($aCats)) {
             foreach ($aCats as $oCat) {
                 if (!($oCat->isMain())) {
-                    $oCategory = Category::model(['categoryid' => $oCat->categoryid]);
+                    $oCategory = Category::model(['categoryid' => $oCat->getField('categoryid')]);
                     if ($oCategory->getCategoryId()) {
                         $aRes[] = $oCategory;
                     }

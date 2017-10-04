@@ -1,4 +1,3 @@
-{* $Id: product_modify.tpl,v 1.106.2.3 2006/10/25 06:39:34 max Exp $ *}
 <a name="main"></a>
 {if $product}
 {assign var="page_title" value="`$page_title`</span>"}
@@ -116,12 +115,14 @@ window.name="prodmodwin";
 {/if}
 {/if}
 
-{if $product.is_variants ne 'Y' && ($section eq "wholesale" || $config.General.display_all_products_on_1_page eq 'Y')}
-<div {if $usertype eq "P"}style="display: none;"{/if}>
-<a name="section_wholesale"></a>
-{include file="modules/Wholesale_Trading/product_wholesale.tpl"}
-<br />
-</div>
+{if !$oProduct->isGroupRoot() && !$oProduct->isParent()}
+    {if $product.is_variants ne 'Y' && ($section eq "wholesale" || $config.General.display_all_products_on_1_page eq 'Y')}
+		<div {if $usertype eq "P"}style="display: none;"{/if}>
+			<a name="section_wholesale"></a>
+            {include file="modules/Wholesale_Trading/product_wholesale.tpl"}
+			<br/>
+		</div>
+    {/if}
 {/if}
 
 {if $section eq "upselling" || $config.General.display_all_products_on_1_page eq 'Y'}
@@ -151,10 +152,12 @@ window.name="prodmodwin";
 {* end_modification_CIDEV -> CDEV_Best_Search_Filter *}
 
 
-{if $section eq "clone" || $config.General.display_all_products_on_1_page eq 'Y'}
-<a name="section_clone"></a>
-{include file="main/product_clone.tpl"}
-<br />
+{if !$oProduct->isGroupRoot() && !$oProduct->isParent()}
+	{if $section eq "clone" || $config.General.display_all_products_on_1_page eq 'Y'}
+	<a name="section_clone"></a>
+	{include file="main/product_clone.tpl"}
+	<br />
+	{/if}
 {/if}
 
 {*
@@ -223,6 +226,9 @@ window.name="prodmodwin";
 {include file="dialog.tpl" content=$smarty.capture.dialog title=$lng.lbl_warning extra="width='100%'"}
 
 {/if}
+
+{include file="admin/main/group_product.tpl"}
+
 	<script type="text/javascript">
 		$( document ).ready(function() {ldelim}
 			var curTitle = document.title;

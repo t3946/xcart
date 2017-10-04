@@ -140,7 +140,7 @@ class ProductHelper
         $res = [];
         if ($oProducts) {
             foreach ($oProducts as $oProduct) {
-                if (!$oProduct->isGroup() && !is_null($oProduct->group_root)) {
+                if (!$oProduct->isGroupRoot() && !is_null($oProduct->group_root)) {
                     if (!array_key_exists($oProduct->group_root, $res)) {
                         $parent = $oProduct->parent;
                         $res[$parent->productid] = $parent;

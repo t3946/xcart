@@ -36,5 +36,15 @@ return [
         'target' => ['\Modules\Product\Controllers\GroupController', 'group'],
         'name' => 'group'
     ],
+    [
+        'route' => '/group_remove',
+        'target' => ['\Modules\Product\Controllers\GroupController', 'group_remove'],
+        'name' => 'group_remove'
+    ],
+    [
+        'route' => '/group_add',
+        'target' => ['\Modules\Product\Controllers\GroupController', 'group_add'],
+        'name' => 'group_add'
+    ],
 
 ];

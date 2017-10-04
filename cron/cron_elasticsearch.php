@@ -69,7 +69,7 @@ while ($record = db_fetch_array($cidev_updated_products)) {
         foreach ($products as $product)
         {
             $product_model = \Modules\Product\Models\ProductModel::objects()->get(['productid' => $product['productid']]);
-            if ($product_model->isGroup()) {
+            if ($product_model->isGroupRoot()) {
                 continue;
             }
             if ($product["forsale"] == "Y") {
