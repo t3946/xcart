@@ -208,6 +208,10 @@ if (!empty($cidev_storefronts) && is_array($cidev_storefronts)) {
 
                         $oProduct->save();
 
+                        if ($oProduct->isGroupRoot()) {
+                            continue;
+                        }
+
                         $googleOneRow = null;
 
                         foreach ($aExternalMarketPlaces as $oExternalMarketPlace) {
