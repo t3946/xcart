@@ -202,13 +202,11 @@ if (!empty($cidev_storefronts) && is_array($cidev_storefronts)) {
                         /** @var $oProduct ProductModel */
                         $oProduct->last_incremental_update = time();
 
-                        if ($oProduct->isGroupRoot()) {
-                            $oProduct->mask = 0;
-                        }
-
                         $oProduct->save();
 
                         if ($oProduct->isGroupRoot()) {
+                            $queue->mask = 0;
+                            $queue->save();
                             continue;
                         }
 
