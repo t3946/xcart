@@ -151,7 +151,8 @@ class GroupController extends PrototypeAdminController
                 $res .= $this->render('group/group_products.tpl',
                     [
                         'products' => $products,
-                        'parent_level' => $store->level - 1
+                        'parent_level' => $store->level - 1,
+                        'site' => Xcart::app()->getModule('Sites')->getSite()
                     ]
                 );
                 $this->jsonResponse([

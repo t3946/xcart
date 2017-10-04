@@ -14,7 +14,7 @@
                             <input type="checkbox" name="group[products][{$product->productid}]" />
                         </td>
                         <td class="product-title" data-product="{$product->product}">
-                            ({$product->productcode}) <a href="/product/{$product->productid}" target="_blank">{$product->product}</a>
+                            ({$product->productcode}) <a href="//{$site->domain}/product/{$product->productid}/" target="_blank">{$product->product}</a>
                         </td>
                     </tr>
                 {/foreach}
