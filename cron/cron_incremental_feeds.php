@@ -203,6 +203,10 @@ if (!empty($cidev_storefronts) && is_array($cidev_storefronts)) {
                         $oProduct->last_incremental_update = time();
                         $oProduct->save();
 
+                        if ($oProduct->isGroupRoot()) {
+                            continue;
+                        }
+
                         $googleOneRow = null;
 
                         foreach ($aExternalMarketPlaces as $oExternalMarketPlace) {
