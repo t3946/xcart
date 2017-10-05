@@ -153,7 +153,7 @@ class GroupController extends PrototypeAdminController
                     [
                         'products' => $products,
                         'parent_level' => $store->level - 1,
-                        'site' => SiteModel::objects()->get(['sfid' => Xcart::app()->request->session->get('current_storefront')])
+                        'site' => SiteModel::objects()->get(['storefrontid' => Xcart::app()->request->session->get('current_storefront')])
                     ]
                 );
                 $this->jsonResponse([
