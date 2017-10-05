@@ -51,6 +51,8 @@ use Xcart\Product;
  */
 class ProductModel extends AutoMetaModel
 {
+    const ADMIN_PRODUCT_MODIFY_URL = '/admin/product_modify.php?productid=%d&sf=%d';
+
     use DataModelTrait;
 
     public static function getDataModelClass()
@@ -247,6 +249,11 @@ class ProductModel extends AutoMetaModel
             }
         }
         return $thumbs;
+    }
+
+    public function getAdminUrl()
+    {
+        return sprintf(self::ADMIN_PRODUCT_MODIFY_URL, $this->productid, $this->sites->limit(1)->get()->storefrontid);
     }
 
 }

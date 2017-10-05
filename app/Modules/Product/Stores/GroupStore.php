@@ -62,11 +62,9 @@ class GroupStore extends BaseStore
                     'g_max' => new Expression($qs->getSql())
                 ]);
 
-            $this->qs->join('inner join', 'xcart_products_sf', ['productid' => 'sf.productid'], 'sf');
-
             $filter = [
                 'forsale' => 'Y',
-                'sf.sfid' => $this->data['sfid'],
+                'sites__storefrontid' => $this->data['sfid'],
                 'group_root__isnull' => true
             ];
 
@@ -114,6 +112,7 @@ class GroupStore extends BaseStore
             [
                 'productid' => new Expression($qs->getTableAlias().".group_root"),
                 'group_root__isnull' => false,
+                'sites__storefrontid' => $this->data['sfid'],
                 'p2.group_root__isnull' => true,
                 'p2.product__raw' => "LIKE CONCAT({$qs->getTableAlias()}.group_option, '%')"
             ]
