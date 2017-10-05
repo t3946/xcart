@@ -2,6 +2,7 @@
 
 namespace Modules\AMP\Models;
 
+use Modules\AMP\Helpers\AMPHelper;
 use Modules\Core\Models\GlobalConfigModel;
 use Modules\Product\Models\CategoryModel;
 use Modules\Product\Models\ProductModel;
@@ -61,25 +62,4 @@ class AmpProductModel extends ProductModel
             return json_encode($images);
         }
     }
-
-    public function tmpBread()
-    {
-        $categories = [];
-
-
-        if($categories_model = $this->categories->all()){
-            echo "good";
-        } else {
-            echo "bad";
-        }
-
-        foreach ($categories_model as $cat_model){
-            $categories[] = $cat_model->category;
-        }
-        return $categories;
-//        $bread = $category->getBreadcrumbs();
-
-//        return $bread;
-    }
-
 }

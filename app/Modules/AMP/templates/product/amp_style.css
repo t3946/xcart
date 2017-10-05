@@ -130,7 +130,7 @@ p {
     display: inline-block;
     font-family: "Roboto", "Helvetica", "Arial", sans-serif;
     font-size: 14px;
-    font-weight: 500;
+    font-weight: bold;
     text-transform: uppercase;
     letter-spacing: 0;
     overflow: hidden;
@@ -164,10 +164,11 @@ p {
     background-color: rgba(0, 0, 0, .12)
 }
 
-.mdl-button--raised {
-    background: rgba(158, 158, 158, .2);
-    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, .14), 0 3px 1px -2px rgba(0, 0, 0, .2), 0 1px 5px 0 rgba(0, 0, 0, .12)
-}
+/*тень кнопки
+/*.mdl-button--raised {*/
+    /*background: rgba(158, 158, 158, .2);*/
+    /*box-shadow: 0 2px 2px 0 rgba(0, 0, 0, .14), 0 3px 1px -2px rgba(0, 0, 0, .2), 0 1px 5px 0 rgba(0, 0, 0, .12)*/
+/*}*/
 
 .mdl-button--raised:active {
     box-shadow: 0 4px 5px 0 rgba(0, 0, 0, .14), 0 1px 10px 0 rgba(0, 0, 0, .12), 0 2px 4px -1px rgba(0, 0, 0, .2);
@@ -197,8 +198,8 @@ p {
 }
 
 .mdl-button--accent.mdl-button--accent.mdl-button--raised {
-    color: rgb(255, 255, 255);
-    background-color: rgb(255, 64, 129)
+    color: #000;
+    background-color: #ffb400
 }
 
 .mdl-button[disabled][disabled] {
@@ -253,13 +254,13 @@ body {
 
 /* custom css */
 #header {
-    height: 24px;
     padding: 16px;
     margin: 0;
     text-align: center;
     text-transform: uppercase;
     letter-spacing: 2px;
     line-height: 24px;
+    background-color: white;
 }
 
 .menu {
@@ -270,14 +271,18 @@ body {
     float: right;
 }
 
-#container {
+.container {
     max-width: 500px;
-    padding: 32px 16px 64px 16px;
+    min-width: 320px;
     margin: auto;
+}
+.main_content{
+    padding: 0px 16px 64px 16px;
 }
 
 .title {
     text-align: center;
+    color: #055a93;
 }
 
 .rating {
@@ -371,4 +376,26 @@ table {
 
 .hidden {
     display: none;
+}
+
+td.about {
+    vertical-align: top;
+}
+
+a.telephon{
+    color: #2c2c2c;
+}
+
+hr.between {
+    border-top: none;
+    background-color: #cecece;
+    width: 100%;
+}
+
+.amp_logo {
+    margin: 0 auto;
+    width: 250px;
+    /*max-width: 250px;*/
+    /*height: auto;*/
+    height: 62px;
 }

@@ -1,18 +1,20 @@
 <!doctype html>
-<html lang="en">
-<meta charset="utf-8">
+<html ⚡ lang="en">
 <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
+        {block 'seo'}{meta controller=$this!:null}{/block}
+
+<link rel="canonical" href="{$model->getAbsoluteUrl(true)}">
 {block 'head'}
 
 {/block}
 </head>
 <body>
 <div id="main">
-
     {block 'main'}
         <div class="main-content">
             {block 'content'}
-
             {/block}
 
 

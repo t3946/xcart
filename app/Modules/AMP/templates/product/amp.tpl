@@ -1,10 +1,6 @@
 {extends 'layout/product_amp.tpl'}
 
 {block 'head'}
-    {*<title>{$model->title}</title>*}
-    {*<meta name="description" content={$model->getMetaDescr()} />*}
-    {*<link rel="canonical" href={$model->getUrl()}>*}
-    <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
     {ignore}
         <style amp-boilerplate>body
 
@@ -36,62 +32,9 @@
 
 {block 'content'}
     {set $site = $.getSite}
-    <script type="application/ld+json">
-{
-  "@context": "http://schema.org/",
-  "@type": "Product",
-  "name": "{$model->product}",
-  "image": {raw $model->getJsonImages(1)},
-  "description": "{$model->getFrontendDescription()}",
-  "mpn": "{$model->getMPN()}",
-  "brand": {
-    "@type": "Thing",
-    "name": "{$model->product}"
-  },
-  "offers": {
-    "@type": "Offer",
-    "priceCurrency": "USD",
-    "price": "{$model->getFrontendPrice()}",
-    "itemCondition": "http://schema.org/NewCondition",
-    {if ($model->avail > 0)}
-        "availability": "http://schema.org/InStock",
-    {else}
-        "availability": "http://schema.org/OutOfStock",
-    {/if}
-    "seller": {
-      "@type": "Organization",
-      "name": "S3Stores, Inc."
-    }
-  }
-}
+    <script type="application/ld+json">{$helper->getDataJsonSchema()}</script>
+    <script type="application/ld+json">{$helper->getDataJsonBread($categories)}</script>
 
-    </script>
-
-    {$breadc = $model->tmpBread()}
-    <script type="application/ld+json">
-{
-  "@context": "http://schema.org",
-  "@type": "BreadcrumbList",
-  {$breadc = $model->tmpBread()}
-  {$breadc|print_r}
-
-  "itemListElement": [{
-    "@type": "ListItem",
-    "position": 1,
-    "item": {
-      "@id": "https://www.artistsupplysource.com/category/37460/easels/",
-      "name": "Easels"    }
-  },{
-    "@type": "ListItem",
-    "position": 2,
-    "item": {
-      "@id": "https://www.artistsupplysource.com/category/50370/studio-easels/",
-      "name": "Studio Easels"
-    }
-  }]
-}
-
-    </script>
     <amp-analytics type="googleanalytics">
         <script type="application/json">
             {
@@ -103,7 +46,7 @@
                         "on": "visible",
                         "request": "pageview",
                         "vars": {
-                            "title": "{$model->seo_h2}"
+                            "title": "{$model->getFrontendName()}"
                         }
                     }
                 }
@@ -111,22 +54,15 @@
         </script>
     </amp-analytics>
     <header id="header" class="mdl-color--black mdl-color-text--white">
-
-
-
-
-        <a href="//{$site->domain}">
-        {add $names = $site->list_config->getName()|split:" "}
-        {foreach $names as $n}
-            <span class="{cycle ["mdl-color-text--red", "mdl-color-text--white"]}">
-                {$n}
-            </span>
-        {/foreach}</a>
-        <amp-img class="search" src="./img/ic_search_white_24dp_1x.png" width=24 height=24></amp-img>
+        <div class="container" >
+            <a href="//{$site->domain}">
+                <amp-img class="amp_logo" src="{$helper->getLogoImage()}" ></amp-img>
+            </a>
+        </div>
+        <hr class="between">
     </header>
-    <div id="container">
-        <a href="{$model->getAbsoluteUrl()}"><h5 class="title">{$model->product}</h5></a>
-        {*<h6 class="rating"><span class="mdl-color-text--red">★★★★☆</span> <span class="mdl-color-text--grey">(14)</span></h6>*}
+    <div class="container main_content" >
+        <a class="title" href="{$model->getAbsoluteUrl()}"><h5 class="title">{$model->product}</h5></a>
 
 
         <amp-carousel type="slides" layout="fixed-height" height=250 id="carousel"
@@ -178,9 +114,9 @@
 
         </form>
 
-        <p class="description">
+        <div class="description">
             {$model->getFrontendDescription()}
-        </p>
+        </div>
 
         {*<amp-youtube
                 data-videoid="AjvbqVlxYOs"
@@ -192,31 +128,32 @@
             </div>
         </amp-youtube>*}
 
-        <p class="description">
-            <b>Web Orders</b><br>
-            24 hours a day, 7 days a week<br>
-            Email Support
-            <br><br><br>
-            <b>Contact Us:</b><br>
+        <footer>
+            <table class="about">
+                <tr>
+                    <td class="about">
+                        <h4>Telephone Customer Service</h4>
+                    </td>
+                    <td class="about">
+                        <h4>Web Orders</h4>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="about">
+                        <p>
+                            Mon-Fri: 9 a.m. to 5 p.m. EST<br>
+                            <a class="telephon" href="tel:1-800-929-2431">Toll Free: 1-800-929-2431</a><br>
+                            Tel: (616) 259-5711<br>
+                            Fax: (813) 944-4516
+                        </p>
+                    </td>
+                    <td class="about">
+                        <p>24 hours a day, 7 days a week<br>
+                            Email Support</p>
+                    </td>
+                </tr>
+            </table>
 
-            Telephone Customer Service<br>
-            Mon-Fri: 9 a.m. to 5 p.m. EST<br>
-            Toll Free: 1-800-929-2431<br>
-            Tel: (616) 259-5711<br>
-            Fax: (813) 944-4516<br>
-            <br><br>
-
-
-            <b>USA Address</b><br>
-            S3 Stores, Inc.<br>
-            2885 Sanford Ave SW #12717<br>
-            Grandville, MI 49418<br>
-            USA<br>
-            <br><br>
-            <b>Canadian Address</b><br>
-            S3 Stores, Inc.<br>
-            27 Joseph St.<br>
-            Chatham, Ontario N7L 3G4<br>
-            Canada<br>
+        </footer>
     </div>
 {/block}
