@@ -6,6 +6,7 @@ namespace Modules\Product\Stores;
 use Mindy\QueryBuilder\Aggregation\Max;
 use Mindy\QueryBuilder\Expression;
 use Modules\Brand\Models\BrandModel;
+use Modules\Product\Helpers\ProductHelper;
 use Modules\Product\Models\PricingModel;
 use Modules\Product\Models\ProductCategoriesModel;
 use Modules\Product\Models\ProductModel;
@@ -325,11 +326,11 @@ class GroupStore extends BaseStore
                 }
             }
         }
+        return $this->model;
     }
 
     public function updateGroupProduct()
     {
-        //$this->model = ProductModel()
         $this->createGroupProduct();
     }
 }

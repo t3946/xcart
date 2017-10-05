@@ -3,7 +3,9 @@
 namespace Modules\Product\Helpers;
 
 
+use Mindy\QueryBuilder\Expression;
 use Modules\Amazon\Models\AmazonFbaMissingSkuModel;
+use Modules\Distributor\Models\DistributorModel;
 use Modules\Product\Models\ProductFileModel;
 use Modules\Product\Models\ProductModel;
 
@@ -142,8 +144,9 @@ class ProductHelper
             foreach ($oProducts as $oProduct) {
                 if (!$oProduct->isGroupRoot() && !is_null($oProduct->group_root)) {
                     if (!array_key_exists($oProduct->group_root, $res)) {
-                        $parent = $oProduct->parent;
-                        $res[$parent->productid] = $parent;
+                        if ($parent = $oProduct->parent) {
+                            $res[$parent->productid] = $parent;
+                        }
                     }
                 } else {
                     $res[$oProduct->productid] = $oProduct;
@@ -198,5 +201,30 @@ class ProductHelper
     public static function getGroupLevel($option)
     {
         return substr_count($option, ' ');
+    }
+
+    public static function getNewGroupSKU($manufacturer_id)
+    {
+        $new_sku = null;
+
+        $format = '%s-GROUP-%d';
+
+        if ($last = ProductModel::objects()->filter(
+            [
+                'group_root__isnull' => false,
+                'group_root' => new Expression('productid')
+            ])
+            ->order([new Expression("-COALESCE(CAST(SUBSTRING_INDEX(productcode, '-', -1) AS UNSIGNED), 1)")])
+            ->limit(1)
+            ->get()
+        ) {
+            if (preg_match('/-(\d+)$/', $last->productcode, $m)) {
+                if ($model = DistributorModel::objects()->get(['manufacturerid' => $manufacturer_id])) {
+                    $new_sku = sprintf($format, $model->code, intval($m[1]) + 1);
+                }
+            }
+        }
+
+        return $new_sku;
     }
 }

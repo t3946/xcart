@@ -124,6 +124,8 @@
                                         $('.product_group').find('tr[data-product-id=' + arrP[p] + ']').remove();
                                     }
                                     selected_block.css('opacity', 1).find('.tree_cell').click();
+
+                                    $(data.result).mmodal();
                                 },
                                 error: function (jqXHR, textStatus, errorThrown) {
                                     $.mnotify({

@@ -549,7 +549,8 @@
                             <td colspan="4" style="line-height: 18px;">&nbsp;</td>
                         </tr>
                         <tr class="full_product_line_button">
-                            <td colspan="4" align="center">
+                            <td colspan="2"></td>
+                            <td colspan="2" style="padding-left: 16px;">
                                 <span style="font-size: 19px" class="cidev_new_button cidev_new_white" onclick="self.location = '{$oProduct->parent->getUrl()}'">See other product variations</span></td>
                         </tr>
                     {/if}

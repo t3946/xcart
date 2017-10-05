@@ -89,7 +89,7 @@
                     .change();
             })
             .on('change keyup', '.mmodal-content #o-group-truncate', function () {
-                var regex = new RegExp("^" + $(this).val(), ""),
+                var regex = new RegExp("^" + $(this).val().replace(/[.?*+^$[\]\\(){}|-]/g, "\\$&"), ""),
                     checkbox = $('.mmodal-content').find('.group-truncate-checkbox');
 
                 $('.mmodal-content .selected-products .product-title').find('a').each(function () {

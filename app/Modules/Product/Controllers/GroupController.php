@@ -88,13 +88,37 @@ class GroupController extends PrototypeAdminController
     {
         if ($this->getRequest()->getIsPost()) {
 
-            $store = new GroupStore(array_merge($_POST['group'], ['brandid' => $id]));
+            $store = new GroupStore(array_merge($_POST['group'],
+                [
+                    'brandid' => $id,
+                    'sku' => ProductHelper::getNewGroupSKU($_POST['group']['manufacturerid'])
+                ])
+            );
 
-            $store->createGroupProduct();
+            $model = $store->createGroupProduct();
 
             if ($this->getRequest()->getIsAjax()) {
 
-                $this->jsonResponse(['result' => 'ok']);
+                if ($model) {
+                    $images = null;
+
+                    foreach ($model->childs->order(['group_order'])->limit(4) as $key => $product) {
+                        $images .= $this->renderSmarty(
+                            'group_thumbnail.tpl',
+                            ['product' => $product]
+                        );
+                    }
+
+                    $this->jsonResponse(
+                        [
+                            'result' => $this->render('group/product/_group_result.tpl',
+                                [
+                                    'images' => $images,
+                                    'model' => $model
+                                ]
+                            )
+                        ]);
+                }
                 return;
             }
 

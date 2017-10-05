@@ -19,7 +19,7 @@
             <th>List price</th>
             <th>Price</th>
             <th>Quantity</th>
-            <th>Extended</th>
+            <th>Extended price</th>
         </tr>
         {foreach from=$oProduct->childs->all() item=child}
             {assign var=amc value=$child->category_main->limit(1)}
