@@ -66,7 +66,7 @@ class GroupController extends PrototypeAdminController
                         [
                             'products' => $store->getGroupNewProducts(),
                             'level' => $store->data['level'],
-                            'site' => Xcart::app()->getModule('Sites')->getSite(),
+                            'site' => SiteModel::objects()->get(['storefrontid' => Xcart::app()->request->session->get('current_storefront')]),
                         ]
                     )
                 ]

@@ -91,6 +91,7 @@ class GroupStore extends BaseStore
             [
                 (new Expression("SUBSTRING_INDEX({$qs->getTableAlias()}.product, ' ', {$this->level})"))->toSQL() => (new Expression($this->model->group_option))->toSQL(),
                 'group_root__isnull' => true,
+                'sites__storefrontid' => $this->data['sfid'],
                 'brandid' => $this->model->brandid
             ]
         );
