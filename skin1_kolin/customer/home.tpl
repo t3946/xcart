@@ -70,7 +70,7 @@
 
     {if $canonical_url}
         {if $oProduct && $oProduct->isGroupChild()}
-            <link rel="canonical" href="{$oProduct->parent->getUrl()}" />
+            <link rel="canonical" href="{if $oProduct->parent}{$oProduct->parent->getUrl()}{/if}" />
         {else}
             <link rel="canonical" href="{$xcartApp->request->getHostInfo()}/{$canonical_url}" />
         {/if}

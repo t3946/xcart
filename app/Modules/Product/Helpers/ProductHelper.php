@@ -175,14 +175,14 @@ class ProductHelper
 
             $u = 0;
 
-            for ($i = 0; $i < strlen($a) - 1; $i++) {
-                    if ($a[$i] == $b[$i]) {
+            for ($i = 0; $i < mb_strlen($a) - 1; $i++) {
+                    if (mb_substr($a, $i, 1) == mb_substr($b, $i, 1)) {
                         $u = $i + 1;
                     } else {
-                        return substr($a, 0, $u + 1);
+                        return mb_substr($a, 0, $u);
                     }
             }
-            return substr($a, 0, $u + 1);
+            return mb_substr($a, 0, $u + 1);
         }
 
         $b = null;
@@ -195,12 +195,12 @@ class ProductHelper
                 $b = longestCS($b, $s);
             }
         }
-        return trim(substr($b, 0, strrpos ($b, ' ')));
+        return trim(mb_substr($b, 0, mb_strrpos($b, ' ')));
     }
 
     public static function getGroupLevel($option)
     {
-        return substr_count($option, ' ');
+        return mb_substr_count($option, ' ');
     }
 
     public static function getNewGroupSKU($manufacturer_id)

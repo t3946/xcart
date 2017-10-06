@@ -79,9 +79,10 @@ if (!empty($result["hits"]["hits"]) && is_array($result["hits"]["hits"]))
 
                 if (!$product_model->isGroupRoot() && !is_null($product_model->group_root)) {
                     if (!array_key_exists($product_model->group_root, $e_all_products)) {
-                        $parent = $product_model->parent;
-                        $e_all_products[$product_model->group_root] = $parent->getAttributes();
-                        $e_all_products[$product_model->group_root]['oProduct'] = $parent;
+                        if ($parent = $product_model->parent) {
+                            $e_all_products[$product_model->group_root] = $parent->getAttributes();
+                            $e_all_products[$product_model->group_root]['oProduct'] = $parent;
+                        }
                     }
                 } else {
                     $e_all_products[$v["_id"]] = $e_product_info;

@@ -62,7 +62,7 @@
                                 .after($('<tr class="group-detail">')
                                 .html($('<td colspan="'+tr.find('td').length+'" class="level" data-level="' + level + '">').html($('<table cellpadding="3" cellspacing="1" width="100%">').html(data.html))));
                             $('.product_group').css('opacity', 1);
-                            th.data('group-phrase', data.group_phrase);
+                            th.data('group-phrase', data.group_phrase).data('level', data.level);
                             tr.find('.phrase').text(data.group_phrase);
                         }
                     );
@@ -92,7 +92,7 @@
                 var regex = new RegExp("^" + $(this).val().replace(/[.?*+^$[\]\\(){}|-]/g, "\\$&"), ""),
                     checkbox = $('.mmodal-content').find('.group-truncate-checkbox');
 
-                $('.mmodal-content .selected-products .product-title').find('a').each(function () {
+                $('.mmodal-content .selected-products .product-title').find('a.title').each(function () {
                     if (checkbox.is(':checked')) {
                         $(this).text($(this).closest('td').data('product').replace(regex, ''));
                     } else {

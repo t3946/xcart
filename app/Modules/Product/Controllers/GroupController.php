@@ -152,16 +152,22 @@ class GroupController extends PrototypeAdminController
 
                     if (count($brands) === 1) {
 
-                        if ($store->data['group_phrase'] = ProductHelper::getFirstSame(
+                        if ($new_group_phrase = ProductHelper::getFirstSame(
                             array_map(
                                 function ($p) {
                                     return $p->product;
                                 },
                                 $products)
                         )) {
-                            $store->level = ProductHelper::getGroupLevel($store->data['group_phrase']) + 2;
-                            $brands = $store->getLevels();
-                            $products = $store->getModels();
+                            $new_level = ProductHelper::getGroupLevel($new_group_phrase) + 2;
+                            if ($new_level >= $store->level) {
+                                $store->data['group_phrase'] = $new_group_phrase;
+                                $store->level = $new_level;
+                                $brands = $store->getLevels();
+                                $products = $store->getModels();
+                            } else {
+                                unset($brands);
+                            }
                         }
                     }
                 }
@@ -177,12 +183,14 @@ class GroupController extends PrototypeAdminController
                     [
                         'products' => $products,
                         'parent_level' => $store->level - 1,
+                        'group_phrase' => $store->data['group_phrase'],
                         'site' => SiteModel::objects()->get(['storefrontid' => Xcart::app()->request->session->get('current_storefront')])
                     ]
                 );
                 $this->jsonResponse([
                     'html' => $res,
-                    'group_phrase' => $store->data['group_phrase']
+                    'group_phrase' => $store->data['group_phrase'],
+                    'level' => $store->level - 1
                 ]);
 
             } else {
