@@ -569,7 +569,7 @@
                 <td class="ProductDetails"><input type="text" name="productcode" size="20"
                                                   value="{$product.productcode}" class="InputWidth"/></td>
             </tr>
-            {if !$oProduct->isGroupRoot() && !$oProduct->isGroupChild()}
+            {if !$oProduct->isGroupRoot()}
             <tr>
                 {if $geid ne ''}
                     <td width="15" class="TableSubHead">&nbsp;</td>
@@ -634,7 +634,7 @@
             {if $active_modules.Egoods ne ""}
                 {include file="modules/Egoods/egoods.tpl"}
             {/if}
-            {if !$oProduct->isGroupRoot() && !$oProduct->isGroupChild()}
+            {if !$oProduct->isGroupRoot()}
                 <tr>
                     {if $geid ne ''}
                         <td width="15" class="TableSubHead"><input type="checkbox" value="Y"
@@ -742,7 +742,7 @@
                     {/if}
                 </td>
             </tr>
-            {if !$oProduct->isGroupRoot() && !$oProduct->isGroupChild()}
+            {if !$oProduct->isGroupRoot()}
                 <tr>
                     {if $geid ne ''}
                         <td width="15" class="TableSubHead">&nbsp;</td>
