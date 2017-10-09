@@ -12,6 +12,7 @@ class SurfPathModel extends AutoMetaModel
     const GOAL_TYPE_CHECKOUT         = 'K';
     const GOAL_TYPE_SEARCH           = 'S';
     const GOAL_TYPE_ORDER            = 'O';
+    const GOAL_TYPE_ORDER_MESSAGE    = 'M';
     const GOAL_TYPE_REFERER          = 'R';
     const GOAL_TYPE_PRODUCT          = 'P';
     const GOAL_TYPE_BRAND            = 'B';

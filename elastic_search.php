@@ -1,4 +1,7 @@
 <?php
+
+use Modules\Product\Models\ProductModel;
+
 if (!empty($page)) {
     $page = abs(intval($page));
 }
@@ -19,32 +22,24 @@ if ($load_all_e_products) {
     $search_query = ["size" => $e_search_data["total"], "from" => 0];
 }
 else {
-    $from         = $e_search_data["products_per_page"] * ($page - 1);
-    $search_query = ["size" => $e_search_data["products_per_page"], "from" => $from];
+    if (isset($from)) {
+        $from = intval($from);
+    } else {
+        $from = $e_search_data["products_per_page"] * ($page - 1);
+    }
+    $search_query = ["size" => $e_search_data["products_per_page"] * 10, "from" => $from];
 }
 
-$url = $config["ElasticSearch_options"]["es_url"] . $site_domain . "/product/_search?" . http_build_query($search_query);
+$shop_domain = \Xcart\App\Main\Xcart::app()->getModule('Sites')->getSite()->domain;
 
-//    if (!empty($cat) && !empty($search_query)){
-//
-//        $tmp_search_query_arr = explode("ORDER BY", $search_query);
-//        $tmp_search_query_arr = explode("FROM", $tmp_search_query_arr[0]);
-//
-//        $new_search_query_productids = "SELECT xcart_products.productid FROM ".$tmp_search_query_arr[1];
-//        $new_search_query_productids_result = db_query($new_search_query_productids);
-//
-//        $all_productids_arr = array();
-//        while ($v = db_fetch_array($new_search_query_productids_result)) {
-//                $all_productids_arr[] = $v["productid"];
-//        }
-//    }
+$url = $config["ElasticSearch_options"]["es_url"] . $shop_domain . "/product/_search?" . http_build_query($search_query);
 
 if (!$load_all_e_products) {
     $e_search_data_substring = preg_replace("/[^0-9a-zA-Z\.\'\-]/S", " ", $e_search_data["substring"]);
     $e_search_data_substring = trim($e_search_data_substring);
 }
 
-$classElastic = new Xcart\ElasticSearch($config["ElasticSearch_options"], $site_domain);
+$classElastic = new Xcart\ElasticSearch($config["ElasticSearch_options"], $shop_domain);
 $classElastic->setSource("*._id");
 $classElastic->setMinScore($config["ElasticSearch_options"]["search_results_minimum_score_value"]);
 $classElastic->setType('product');
@@ -64,14 +59,13 @@ if ($classElastic->hitsTotal < $config["ElasticSearch_options"]["results_count_i
     $result = $classElastic->query($search_query);
 }
 
-$e_products = [];
+$e_products = $e_all_products = [];
 
 $manufacturer_product_feed_enabled = [];
 
 if (!empty($result["hits"]["hits"]) && is_array($result["hits"]["hits"]))
 {
-    x_load("product");
-
+    $next_from = $from;
     foreach ($result["hits"]["hits"] as $k => $v) {
         $founded_ids = ['productid' => $v["_id"], 'categoryid' => [], 'score' => $v['_score']];
 
@@ -80,10 +74,25 @@ if (!empty($result["hits"]["hits"]) && is_array($result["hits"]["hits"]))
 
             if (!empty($e_product_info)) {
 
-                $e_products[$k] = $e_product_info;
-                if (!empty($e_products[$k]["clean_url"])) {
-                    if (substr($e_products[$k]["clean_url"], -1) != "/") {
-                        $e_products[$k]["clean_url"] .= "/";
+                $product_model = new ProductModel($e_product_info);
+                $product_model->setIsNewRecord(false);
+
+                if (!$product_model->isGroupRoot() && !is_null($product_model->group_root)) {
+                    if (!array_key_exists($product_model->group_root, $e_all_products)) {
+                        if ($parent = $product_model->parent) {
+                            $e_all_products[$product_model->group_root] = $parent->getAttributes();
+                            $e_all_products[$product_model->group_root]['oProduct'] = $parent;
+                        }
+                    }
+                } else {
+                    $e_all_products[$v["_id"]] = $e_product_info;
+                    $e_all_products[$v["_id"]]['oProduct'] = $product_model;
+
+                }
+
+                if (!empty($e_products[$v["_id"]]["clean_url"])) {
+                    if (substr($e_all_products[$v["_id"]]["clean_url"], -1) != "/") {
+                        $e_all_products[$v["_id"]]["clean_url"] .= "/";
                     }
                 }
             }
@@ -92,10 +101,13 @@ if (!empty($result["hits"]["hits"]) && is_array($result["hits"]["hits"]))
         if ($load_all_e_products)
         {
             $categories                   = func_query_column("SELECT categoryid FROM $sql_tbl[products_categories] WHERE productid='$v[_id]' ORDER BY FIELD(main, 'Y', 'N')");
-            $e_products[$k]["categoryid"] = (!empty($categories)) ? $categories[0] : '';
+            $e_all_products[$k]["categoryid"] = (!empty($categories)) ? $categories[0] : '';
         }
+
     }
-    $e_products = array_values($e_products);
+
+    $e_products = array_values(array_slice($e_all_products, $next_from, $e_search_data["products_per_page"]));
+    $next_from += count($e_products);
 }
 
 if (!$load_all_e_products) {
@@ -190,6 +202,7 @@ if (!$load_all_e_products) {
     $smarty->assign('first_item', $first_item);
     $smarty->assign('last_item', $last_item);
     $smarty->assign('total_items', $e_search_data["total"]);
+    $smarty->assign('ajax_navigation_from', $next_from);
 
     $e_search_data["current_categoryid"] = $cat;
 

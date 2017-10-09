@@ -23,7 +23,7 @@ class ProductStorefrontModel extends Model
                 'primary' => true,
                 'null' => false,
             ],
-            'sf' => [
+            'storefront' => [
                 'field' => 'sfid',
                 'class' => ForeignField::className(),
                 'modelClass' => SiteModel::className(),

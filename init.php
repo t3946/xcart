@@ -825,6 +825,7 @@ if (false && !function_exists('fn_shutdown')) {
 
 $smarty->register_function('getBanners', ['Xcart\Helpers\Banners', 'getBannerSmarty']);
 $smarty->register_function('getSliderData', ['Xcart\Helpers\SliderData', 'getSliderDataSmarty']);
+$smarty->register_function('getPricingArray', ['Modules\Product\Helpers\ProductHelper', 'getPricingArray']);
 
 $smarty->assign('recaptcha_enable', $recaptcha_enable);
 $smarty->assign('key_recaptcha_public', $key_recaptcha_public);

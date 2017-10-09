@@ -13,6 +13,8 @@ use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\HasManyField;
 use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Fields\ManyToManyField;
+use Xcart\App\Traits\DataModelTrait;
+use Xcart\Category;
 
 /**
  * Class CategoryModel
@@ -27,6 +29,13 @@ use Xcart\App\Orm\Fields\ManyToManyField;
  */
 class CategoryModel extends AutoMetaTreeModel
 {
+    use DataModelTrait;
+
+    public static function getDataModelClass()
+    {
+        return Category::className();
+    }
+
     public static function tableName()
     {
         return 'xcart_categories';
@@ -71,7 +80,13 @@ class CategoryModel extends AutoMetaTreeModel
                     'null' => false,
                 ],
                 'parent' => [
-                    'field' => 'parentid',
+                    'field' => 'parentid'
+                ],
+
+                'storefrontid' => [
+                    'class' => IntField::className(),
+                    'primary' => false,
+                    'null' => false,
                 ],
 
                 'description' => [

@@ -694,7 +694,7 @@ function func_order_data($orderid)
         }
 
         global $xcart_dir;
-        $classProduct      = \Xcart\Product::model(['productid' => $v['productid']]);
+        $classProduct      = ProductModel::objects()->get(['productid' => $v['productid']]);
         $mpn               = $classProduct->getMPN();
         $v["mpn"]          = $mpn;
         $v["oProduct"]     = $classProduct;
