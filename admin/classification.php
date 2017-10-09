@@ -267,7 +267,7 @@ $products_minimum_number_of_autoclassify_product_per_turn = func_query_param($qu
 	   c.google_product_category, 
 	   p.pc_most_relevant_categories, 
 	   p.pc_delta 
-FROM (SELECT * FROM xcart_products WHERE group_root != productid AND forsale='Y' AND pc_classify_status='AC' GROUP BY group_root) as p 
+FROM (SELECT * FROM xcart_products WHERE (group_root != productid OR group_root IS NULL) AND forsale='Y' AND pc_classify_status='AC' GROUP BY IFNULL(group_root, productid)) as p 
 LEFT JOIN xcart_products_sf as sf ON sf.productid = p.productid 
 LEFT JOIN xcart_products_categories pc ON pc.productid = p.productid 
 LEFT JOIN xcart_categories as c ON c.categoryid = pc.categoryid 
