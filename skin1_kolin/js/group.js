@@ -79,6 +79,12 @@ $(function() {
         }
     });
 
+    $(document).on('pageload ready', function(){
+        setTimeout(function(){
+            $('[data-trigger="spinner"]').spinner();
+        }, 200);
+    });
+
     $(".spinner").spinner('changing', function (e, newVal, oldVal) {
         var row = $(this).closest('.row');
         var spinner = $(this).closest('.spinner').parent();
@@ -113,7 +119,7 @@ $(function() {
 
     });
 
-    $('#add_cart_group').click(function () {
+    $(document).on('click', '#add_cart_group',function () {
 
         var pr = {};
         var $this = $(this);

@@ -282,6 +282,10 @@ class Product extends Data
 
     public function isProductOutOfStock()
     {
+        if ($this->group_root == $this->productid) {
+            return false;
+        }
+
         if (!$this->isForSale()) {
             return true;
         }
