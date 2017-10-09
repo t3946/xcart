@@ -31,7 +31,7 @@ use Xcart\Product;
  * @property mixed eta_date_mm_dd_yyyy
  * @property mixed eta_date_lock
  * @property mixed productid
- * @property mixed distributor
+ * @property null|DistributorModel distributor
  * @property mixed|null dim_x
  * @property mixed|null dim_y
  * @property mixed|null dim_z
@@ -44,8 +44,8 @@ use Xcart\Product;
  * @property mixed|null shipping_dim_x
  * @property mixed|null shipping_dim_y
  * @property mixed|null shipping_dim_z
- * @property mixed product
- * @property mixed fulldescr
+ * @property string product
+ * @property string fulldescr
  * @property string controlled_by_feed
  * @property mixed brandid
  * @property integer source_sfid
@@ -53,9 +53,10 @@ use Xcart\Product;
  * @property int add_date
  * @property int mod_date
  * @property mixed|string upc
- * @property null|\Xcart\App\Orm\Manager sites
+ * @property null|\Xcart\App\Orm\Manager|\Modules\Sites\Models\SiteModel sites
  * @property null|CleanUrlModel url
- * @property \Xcart\App\Orm\Manager categories
+ * @property null|\Xcart\App\Orm\Manager|\Modules\Product\Models\CategoryModel[] categories
+ * @property null|\Xcart\App\Orm\Manager|ProductModel[] childs
  *
  * @method bool isForSale
  */
@@ -185,12 +186,6 @@ class ProductModel extends AutoMetaModel implements ICartItem
                 'null' => false,
                 'default' => 0,
             ],
-            'sites' => [
-                'class' => ManyToManyField::className(),
-                'modelClass' => SiteModel::className(),
-                'through' => ProductStorefrontModel::className(),
-                'link' => ['productid' => 'productid']
-            ],
             'missing_products' => [
                 'class' => HasManyField::className(),
                 'modelClass' => AmazonFbaMissingSkuModel::className(),
@@ -210,11 +205,6 @@ class ProductModel extends AutoMetaModel implements ICartItem
                 'modelClass' => ProductCategoriesModel::className(),
                 'link' => ['productid' => 'productid'],
                 'extra' => ['main' => 'Y']
-            ],
-            'categories' => [
-                'class' => ManyToManyField::className(),
-                'modelClass' => CategoryModel::className(),
-                'through' => ProductCategoriesModel::className(),
             ],
             'childs' => [
                 'class' => HasManyField::className(),
