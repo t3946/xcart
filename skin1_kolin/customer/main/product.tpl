@@ -544,7 +544,7 @@
                             <td colspan="2" class="shipping_info"></td>
                         </tr>
                     {/if}
-                    {if $oProduct && $oProduct->isGroupChild()}
+                    {if $oProduct && $oProduct->isGroupChild() && $oProduct->parent}
                         <tr>
                             <td colspan="4" style="line-height: 18px;">&nbsp;</td>
                         </tr>
@@ -601,7 +601,7 @@
 {/if}
 
 <br/>
-{if $oProduct && $oProduct->isGroupChild()}
+{if $oProduct && $oProduct->isGroupChild() && $oProduct->parent}
     <div style="text-align: center;" class="full_product_line_button">
             <span style="font-size: 19px" class="cidev_new_button cidev_new_white" onclick="self.location = '{$oProduct->parent->getUrl()}'">See other product variations</span>
     </div>

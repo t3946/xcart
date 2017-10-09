@@ -85,7 +85,7 @@ $(function() {
         }, 200);
     });
 
-    $(".spinner").spinner('changing', function (e, newVal, oldVal) {
+    $(document).on('changed.spinner', '.spinner', function (e, newVal, oldVal) {
         var row = $(this).closest('.row');
         var spinner = $(this).closest('.spinner').parent();
         var aprice = spinner.closest('.row').data('price');
