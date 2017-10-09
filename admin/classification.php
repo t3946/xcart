@@ -58,6 +58,16 @@ if ($REQUEST_METHOD == "POST") {
 
                     if ($oProduct->isGroupChild()) {
                         if ($parent = $oProduct->parent) {
+
+                            db_query_param("UPDATE $sql_tbl[products_categories] SET categoryid=:cid WHERE productid=:pid AND main='Y'", ['pid' => $parent->productid, 'cid' => $correct_categoryid]);
+                            $parent->setAttributes(
+                                [
+                                    'pc_classify_status' => 'MC',
+                                    'pc_acc_operator' => Xcart::app()->user->login
+                                ]
+                            );
+                            $parent->save();
+
                             /** @var ProductModel $child */
                             foreach ($parent->childs as $child) {
                                 $child->setAttributes(
@@ -84,6 +94,14 @@ if ($REQUEST_METHOD == "POST") {
 					$count_skipped_products++;
                     if ($oProduct->isGroupChild()) {
                         if ($parent = $oProduct->parent) {
+                            $parent->setAttributes(
+                                [
+                                    'pc_classify_status' => 'NC',
+                                    'pc_acc_operator' => Xcart::app()->user->login
+                                ]
+                            );
+                            $parent->save();
+
                             /** @var ProductModel $child */
                             foreach ($parent->childs as $child) {
                                 $child->setAttributes(
@@ -109,6 +127,7 @@ if ($REQUEST_METHOD == "POST") {
 								db_query("UPDATE $sql_tbl[products_categories] SET categoryid='$correct_categoryid' WHERE productid='$v[productid]' AND main='Y'");
                                 if ($oProduct->isGroupChild()) {
                                     if ($parent = $oProduct->parent) {
+                                        db_query("UPDATE $sql_tbl[products_categories] SET categoryid='$correct_categoryid' WHERE productid={$parent->productid} AND main='Y'");
                                         /** @var ProductModel $child */
                                         foreach ($parent->childs as $child) {
                                             db_query("UPDATE $sql_tbl[products_categories] SET categoryid='$correct_categoryid' WHERE productid={$child->productid} AND main='Y'");
@@ -122,6 +141,14 @@ if ($REQUEST_METHOD == "POST") {
 
 					if ($oProduct->isGroupChild()) {
                         if ($parent = $oProduct->parent) {
+                            $parent->setAttributes(
+                                [
+                                    'pc_classify_status' => 'ACC',
+                                    'pc_acc_operator' => Xcart::app()->user->login
+                                ]
+                            );
+                            $parent->save();
+
 							/** @var ProductModel $child */
                             foreach ($parent->childs as $child) {
                                 $child->setAttributes(
