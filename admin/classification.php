@@ -1,4 +1,8 @@
 <?php
+
+use Modules\Product\Models\ProductModel;
+use Xcart\App\Main\Xcart;
+
 require "./auth.php";
 require $xcart_dir."/include/security.php";
 
@@ -36,6 +40,9 @@ if ($REQUEST_METHOD == "POST") {
 
 
 		foreach ($posted_data as $k => $v){
+			/** @var ProductModel $oProduct */
+
+            $oProduct = ProductModel::objects()->get(['productid' => $v['productid']]);
 
 			$correct_categoryid = isset($v["correct_categoryid"]) ? abs(intval($v["correct_categoryid"])) : 0;
 
@@ -49,6 +56,22 @@ if ($REQUEST_METHOD == "POST") {
 					db_query("UPDATE $sql_tbl[products] SET pc_classify_status='MC', pc_mc_operator='$login' WHERE productid='$v[productid]'");
 					$correct_categoryid_counter++;
 
+                    if ($oProduct->isGroupChild()) {
+                        if ($parent = $oProduct->parent) {
+                            /** @var ProductModel $child */
+                            foreach ($parent->childs as $child) {
+                                $child->setAttributes(
+                                    [
+                                        'pc_classify_status' => 'MC',
+                                        'pc_acc_operator' => Xcart::app()->user->login
+                                    ]
+                                );
+                                $child->save();
+                                db_query_param("UPDATE $sql_tbl[products_categories] SET categoryid=:cid WHERE productid=:pid AND main='Y'", ['pid' => $child->productid, 'cid' => $correct_categoryid]);
+                            }
+                        }
+                    }
+
 				} else {
 					$category_not_ready_to_classification[] = $correct_categoryid;
 					$products_incorrect_assigned++;
@@ -59,38 +82,60 @@ if ($REQUEST_METHOD == "POST") {
 				if ($v["skip"] == "Y"){
 					db_query("UPDATE $sql_tbl[products] SET pc_classify_status='NC', pc_acc_operator='$login' WHERE productid='$v[productid]'");
 					$count_skipped_products++;
+                    if ($oProduct->isGroupChild()) {
+                        if ($parent = $oProduct->parent) {
+                            /** @var ProductModel $child */
+                            foreach ($parent->childs as $child) {
+                                $child->setAttributes(
+                                    [
+                                        'pc_classify_status' => 'NC',
+                                        'pc_acc_operator' => Xcart::app()->user->login
+                                    ]
+                                );
+                                $child->save();
+                            }
+                        }
+                    }
 				}
 				else {
 					//Approve ACC
 					$count_approved_products++;
-					$oProduct = \Xcart\Product::model(['productid' => $v['productid']]);
-					$sMostRelefantCats = $oProduct->getField('pc_most_relevant_categories');
+					$sMostRelefantCats = $oProduct->pc_most_relevant_categories;
 					if (!empty($sMostRelefantCats)) {
 						$aRelCats = explode(';', $sMostRelefantCats);
 						if (!empty($aRelCats)) {
 							$aR = explode(',', $sMostRelefantCats);
 							if (!empty($aR[1]) && ($correct_categoryid = (int) $aR[1])) {
-									db_query("UPDATE $sql_tbl[products_categories] SET categoryid='$correct_categoryid' WHERE productid='$v[productid]' AND main='Y'");
+								db_query("UPDATE $sql_tbl[products_categories] SET categoryid='$correct_categoryid' WHERE productid='$v[productid]' AND main='Y'");
+                                if ($oProduct->isGroupChild()) {
+                                    if ($parent = $oProduct->parent) {
+                                        /** @var ProductModel $child */
+                                        foreach ($parent->childs as $child) {
+                                            db_query("UPDATE $sql_tbl[products_categories] SET categoryid='$correct_categoryid' WHERE productid={$child->productid} AND main='Y'");
+                                        }
+                                    }
+                                }
 							}
 						}
 					}
 					db_query("UPDATE $sql_tbl[products] SET pc_classify_status='ACC', pc_acc_operator='$login' WHERE productid='$v[productid]'");
-				}
-			}
 
-/*
-###
-                        if (!empty($v["google_product_category"]) && is_array($v["google_product_category"])){
-				foreach ($v["google_product_category"] as $cur_categoryid => $google_product_category){
-					$google_product_category = trim($google_product_category);
-					if (!empty($google_product_category)){
-			                        db_query("UPDATE $sql_tbl[categories] SET google_product_category='$google_product_category' WHERE categoryid='$cur_categoryid'");
+					if ($oProduct->isGroupChild()) {
+                        if ($parent = $oProduct->parent) {
+							/** @var ProductModel $child */
+                            foreach ($parent->childs as $child) {
+                                $child->setAttributes(
+                                	[
+                                		'pc_classify_status' => 'ACC',
+                                		'pc_acc_operator' => Xcart::app()->user->login
+									]
+								);
+                                $child->save();
+							}
+						}
 					}
 				}
 			}
-###
-*/
-
 		}
 
 		x_session_save("category_not_ready_to_classification");
@@ -107,7 +152,7 @@ if ($REQUEST_METHOD == "POST") {
 ##
 		$run = func_query_first_cell("SELECT MAX(run) FROM $sql_tbl[pc_runs_log]");
 		$run += 1;
-		
+
 		db_query("INSERT INTO $sql_tbl[pc_runs_log] (run, login, date_time_start, date_time_end, products_assigned, products_skipped, products_approved, storefrontid, products_incorrect_assigned) VALUES ('$run', '$login', '$date_time_start', '".time()."', '$correct_categoryid_counter', '$count_skipped_products', '$count_approved_products', '".$current_storefront_info["storefrontid"]."', '$products_incorrect_assigned') ");
 ##
 #
@@ -177,7 +222,7 @@ if (!empty($productids_in_pc_locks_arr)){
 		$productids_in_pc_locks[] = $v["productid"];
 	}
 
-	$where1 = " AND $sql_tbl[products].productid NOT IN ('".implode("','", $productids_in_pc_locks)."')";
+	$where1 = " AND p.productid NOT IN ('".implode("','", $productids_in_pc_locks)."')";
 }
 ##
 #
@@ -186,14 +231,31 @@ if (!empty($productids_in_pc_locks_arr)){
 //$where1 .= " AND $sql_tbl[products].pc_most_relevant_categories != '' "; //////////////////////////////////////////////////// <----------
 ############################
 
-$products_minimum_number_of_autoclassify_product_per_turn = func_query($query="SELECT $sql_tbl[products].productid, $sql_tbl[products].product, $sql_tbl[products].pc_classify_status, $sql_tbl[categories].categoryid, $sql_tbl[categories].categoryid_path, $sql_tbl[categories].google_product_category, $sql_tbl[products].pc_most_relevant_categories, $sql_tbl[products].pc_delta FROM $sql_tbl[products]  LEFT JOIN $sql_tbl[products_sf] ON $sql_tbl[products_sf].productid=$sql_tbl[products].productid LEFT JOIN $sql_tbl[products_categories] ON $sql_tbl[products_categories].productid=$sql_tbl[products].productid LEFT JOIN $sql_tbl[categories] ON $sql_tbl[categories].categoryid=$sql_tbl[products_categories].categoryid WHERE $sql_tbl[products_sf].sfid='".$current_storefront_info["storefrontid"]."' AND $sql_tbl[products].pc_classify_status='AC' AND $sql_tbl[products].forsale='Y' $where1 GROUP BY $sql_tbl[products].productid ORDER BY $sql_tbl[products].pc_delta LIMIT ".$limit);
+$products_minimum_number_of_autoclassify_product_per_turn = func_query_param($query =
+"SELECT p.productid, 
+	   p.product, 
+	   p.pc_classify_status, 
+	   c.categoryid, 
+	   c.categoryid_path, 
+	   c.google_product_category, 
+	   p.pc_most_relevant_categories, 
+	   p.pc_delta 
+FROM (SELECT * FROM xcart_products WHERE group_root != productid AND forsale='Y' AND pc_classify_status='AC' GROUP BY group_root) as p 
+LEFT JOIN xcart_products_sf as sf ON sf.productid = p.productid 
+LEFT JOIN xcart_products_categories pc ON pc.productid = p.productid 
+LEFT JOIN xcart_categories as c ON c.categoryid = pc.categoryid 
+WHERE sf.sfid = :sfid {$where1}
+GROUP BY p.productid 
+ORDER BY p.pc_delta LIMIT {$limit}", ['sfid' => $current_storefront_info["storefrontid"]]);
 
 if (!empty($products_minimum_number_of_autoclassify_product_per_turn)){
 	foreach ($products_minimum_number_of_autoclassify_product_per_turn as $k => $product){
-	
+
 		$categoryid_path_arr = func_categoryid_path2category_path($product["categoryid_path"]);
 		$products_minimum_number_of_autoclassify_product_per_turn[$k]["categoryid_path_arr"] = $categoryid_path_arr;
 		$products_minimum_number_of_autoclassify_product_per_turn[$k]["categoryid_path_arr_count"] = count($categoryid_path_arr);
+
+		$products_minimum_number_of_autoclassify_product_per_turn[$k]['oProduct'] = ProductModel::objects()->get(['productid' => $product['productid']]);
 #
 ##
         $relevant_cats = array();

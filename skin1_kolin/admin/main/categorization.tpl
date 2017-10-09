@@ -249,7 +249,19 @@ Category {$v} is not ready to classification!<br />
 {foreach from=$products_minimum_number_of_autoclassify_product_per_turn item=v key=k}
 <tr {cycle values=", class='TableSubHead'" name="cycle_totals"}>
 <td>
-<a href="http://{$current_storefront_info.domain}/product.php?productid={$v.productid}" target="_blank" style="color: blue;">{$v.product}</a>
+	{if $v.oProduct}
+		{assign var=product value=$v.oProduct}
+		{if $product->isGroupChild()}
+            {assign var=product value=$v.oProduct->parent}
+		{/if}
+		<a href="http://{$current_storefront_info.domain}/product.php?productid={$product->productid}" target="_blank" style="color: blue;">
+        	{$product->getTitle()}
+		</a>
+	{else}
+		<a href="http://{$current_storefront_info.domain}/product.php?productid={$v.productid}" target="_blank" style="color: blue;">
+			{$v.product}
+		</a>
+	{/if}
 <input type="hidden" name="posted_data[{$k}][productid]" value="{$v.productid}" />
 
 <input id="form1_skip_id_{$k}" type="hidden" name="posted_data[{$k}][skip]" value="" />

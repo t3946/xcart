@@ -278,6 +278,7 @@ class GroupStore extends BaseStore
         }
 
         $this->model->group_root = $this->model->productid;
+        $this->model->pc_classify_status = 'ACC';
         $this->model->save();
 
         if ($this->data['products'] && is_array($this->data['products'])) {
