@@ -6,12 +6,8 @@ namespace Modules\AMP\Controllers;
 use Mindy\QueryBuilder\Expression;
 use Modules\AMP\Models\AmpProductModel;
 use Modules\Product\Models\CategoryModel;
-use Modules\Product\Models\ProductModel;
-use Modules\Sites\Helpers\CurrentSiteHelper;
 use Xcart\App\Controller\FrontendController;
-use Modules\Sites\SitesModule;
 use Xcart\App\Main\Xcart;
-use Xcart\Category;
 use Modules\AMP\Helpers\AMPHelper;
 
 class AmpController extends FrontendController

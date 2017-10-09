@@ -35,32 +35,17 @@
     <script type="application/ld+json">{$helper->getDataJsonSchema()}</script>
     <script type="application/ld+json">{$helper->getDataJsonBread($categories)}</script>
 
-    <amp-analytics type="googleanalytics">
-        <script type="application/json">
-            {
-                "vars": {
-                    "account": "{$model->getUniqueIdSf()}"
-                },
-                "triggers": {
-                    "default pageview": {
-                        "on": "visible",
-                        "request": "pageview",
-                        "vars": {
-                            "title": "{$model->getFrontendName()}"
-                        }
-                    }
-                }
-            }
-        </script>
-    </amp-analytics>
+
+
     <header id="header" class="mdl-color--black mdl-color-text--white">
         <div class="container" >
             <a href="//{$site->domain}">
-                <amp-img class="amp_logo" src="{$helper->getLogoImage()}" ></amp-img>
+                <amp-img class="amp_logo" layout="fixed-height" height="62" src="{$helper->getLogoImage()}" ></amp-img>
             </a>
         </div>
         <hr class="between">
     </header>
+
     <div class="container main_content" >
         <a class="title" href="{$model->getAbsoluteUrl()}"><h5 class="title">{$model->product}</h5></a>
 
@@ -76,7 +61,7 @@
 
         <!-- The <span> element corresponding to the current displayed slide
              will have the 'current' CSS class. -->
-        <p class="dots">
+        <p class="dots" >
             {set $images = ($model->getJsonImages())}
             {if $images|count > 1}
                 {foreach $model->getImages() as $image index=$index first=$first}
@@ -107,7 +92,7 @@
                      1. There is no selected size, OR
                      2. The available sizes for the selected SKU haven’t been fetched yet
                 -->
-                <input type="submit" value="PLACE AN ORDER"
+                <input type="submit" id="place_order" value="PLACE AN ORDER"
                        class="mdl-button mdl-button--raised mdl-button--accent">
             </div>
 
@@ -156,4 +141,58 @@
 
         </footer>
     </div>
+
+    <amp-analytics type="googleanalytics" id="analytics1">
+        <script type="application/json">
+            {
+                "vars": {
+                    "account": "{$model->getUniqueIdSf()}"
+                },
+                "triggers": {
+                    "default pageview":
+                    {
+                        "on": "visible",
+                        "request": "pageview",
+                        "vars": {
+                            "title": "{$model->getFrontendName()|escape}"
+                        }
+                    },
+
+                    "trackClickOnSlider" :
+                    {
+                        "on": "click",
+                        "selector": "#carousel",
+                        "request": "event",
+                        "vars": {
+                            "eventCategory": "images-scroll",
+                            "eventAction": "slider-click"
+                        }
+                    },
+
+                    "trackClickOnOrder" :
+                    {
+                        "on": "click",
+                        "selector": "#place_order",
+                        "request": "event",
+                        "vars": {
+                            "eventCategory": "place-order",
+                            "eventAction": "button-click"
+                        }
+                    },
+
+                    "trackClickOnPage" :
+                    {
+                        "on": "click",
+                        "selector": "#main",
+                        "request": "event",
+                        "vars": {
+                            "eventCategory": "page",
+                            "eventAction": "page-click"
+                        }
+                    }
+                }
+            }
+        </script>
+    </amp-analytics>
+
 {/block}

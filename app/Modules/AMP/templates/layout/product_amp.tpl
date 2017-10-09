@@ -14,13 +14,8 @@
 <div id="main">
     {block 'main'}
         <div class="main-content">
-            {block 'content'}
-            {/block}
-
-
-            {block 'after-content'}
-
-            {/block}
+            {block 'content'}{/block}
+            {block 'after-content'}{/block}
         </div>
     {/block}
 </div>

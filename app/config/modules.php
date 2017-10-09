@@ -14,4 +14,5 @@ return [
     'Brand',
     'AMP',
     'Mail',
+    'Meta',
 ];
