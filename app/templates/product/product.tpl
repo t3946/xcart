@@ -11,7 +11,12 @@
 {/block}
 
 {block "content"}
-<section class="product-page page">
+<section class="product-page page"
+         data-product="{$model->productid}"
+         data-prices='{$model->getPrices()|json_encode}'
+         {if $model->getFrontendPrice() < $model->list_price}
+         data-list-price="{$model->list_price}"
+         {/if}>
 
     <section class="title hide-for-large">
         <div class="row">
@@ -47,26 +52,24 @@
                             </option>
                         {/foreach}
 
-                        <option value="https://www.youtube.com/watch?v=dQw4w9WgXcQ" type="video"></option>
-                        <option value="https://www.youtube.com/watch?v=yPYZpwSpKmA" type="video"></option>
-                        {foreach $images as $image}
-                            <option value="//cdn.{$site->getBaseDomain()}{$image->getUrl()}"
-                                    data-thumb="//cdn.{$site->getBaseDomain()}{$image->getUrl()}"
-                                    data-id="{$image->imageid}"
-                                    type="image">
-                            </option>
-                        {/foreach}
-
-                        <option value="https://www.youtube.com/watch?v=dQw4w9WgXcQ" type="video"></option>
-                        <option value="https://www.youtube.com/watch?v=yPYZpwSpKmA" type="video"></option>
                     </datalist>
 
                 </div>
             </div>
             <div class="column small-12 large-7 block__title_price">
                 <div class="title show-for-large">
-                    <h1>{$model->getFrontendName()} </h1>
+                    <noindex>
+                        <h1>{$model->getFrontendName()} </h1>
+                    </noindex>
                 </div>
+
+                <div class="sku">
+                    <span class="value">
+                        SKU: <span class="style" itemprop="sku">{$model->productcode}</span>
+                    </span>
+                    {*<a data-tooltip class="has-tip right " title="What is SKU">?</a>*}
+                </div>
+
 
                 <div class="notifications">
                     notifications
