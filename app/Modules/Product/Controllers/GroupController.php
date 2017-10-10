@@ -143,9 +143,9 @@ class GroupController extends PrototypeAdminController
                 $brands = $store->getLevels();
 
                 if ($store->level > 3) {
-                    $store->defaultPagerPageSize = 200;
+                    $store->defaultPagerPageSize = 20000;
                 } else {
-                    $store->defaultPagerPageSize = 50;
+                    $store->defaultPagerPageSize = 500;
                 }
 
                 if ($products = $store->getModels()) {
