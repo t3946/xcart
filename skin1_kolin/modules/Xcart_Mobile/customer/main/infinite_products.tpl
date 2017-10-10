@@ -75,7 +75,11 @@ ga('ec:addImpression', {ldelim}
 
           <a href="{$current_location}/product.php?productid={$product.productid}" class="ui-link-inherit">
             <span class="product-thumbnail">
-              {include file="product_thumbnail.tpl" productid=$product.productid product=$product.product tmbn_url=$product.tmbn_url splash=$product.oSplash}
+                {if $product.oProduct && $product.oProduct->isGroupRoot()}
+                    {include file="group_thumbnail.tpl" product=$product.oProduct}
+                {else}
+                    {include file="product_thumbnail.tpl" productid=$product.productid product=$product.product tmbn_url=$product.tmbn_url splash=$product.oSplash}
+                {/if}
               <img src="{$ImagesDir}/spacer.gif" class="leveler" alt="" />
               <span class="labels">
                 {if $active_modules.On_Sale}
@@ -103,38 +107,21 @@ ga('ec:addImpression', {ldelim}
                     <span class="price">{$lng.lbl_enter_your_price}</span><br />
                     {$lng.lbl_enter_your_price_note}
                   {else}
-
-{*
-                    {if $product.appearance.has_price || !$product.appearance}
-                      {if $product.appearance.has_market_price and $product.appearance.market_price_discount gt 0}
-                        <span class="market-price">
-                          {strip}
-                            <span class="market-price-value">{currency value=$product.list_price}</span>
-                            {if $product.appearance.market_price_discount gt 0}
-                              {if $config.General.alter_currency_symbol ne ""}
-                                ,
-                              {/if}
-                              <span class="price-save">&nbsp;{$lng.lbl_save_price} {$product.appearance.market_price_discount}%</span>
-                            {/if}
-                          {/strip}
-                        </span>
-                      {/if}
-*}
+                      {if !$product.oProduct || !$product.oProduct->isGroupRoot()}
                       <span class="price">
-{*                        <span class="price-value">{currency value=$product.taxed_price}</span> *}
                         Price: <span class="price-value">{include file="currency.tpl" value=$current_price}</span>
-{*                        <span class="market-price">{alter_currency value=$product.taxed_price}</span> *}
                       </span>
+                      <span class="sku">
+                        {if $product.avail gt 0 or $config.General.unlimited_products eq "Y"}
+                            {$lng.lbl_in_stock_top}
+                        {else}
+                            {$lng.lbl_out_stock}
+                        {/if}
+                      </span>
+                      {/if}
 
-<span class="sku">
-            {if $product.avail gt 0 or $config.General.unlimited_products eq "Y"}
-              {$lng.lbl_in_stock_top}
-            {else}
-              {$lng.lbl_out_stock}
-            {/if}
-</span>
 
-                      {if $product.taxes}
+{if $product.taxes}
                         <span class="taxes">{include file="customer/main/taxed_price.tpl" taxes=$product.taxes is_subtax=true}</span>
                       {/if}
 {*
