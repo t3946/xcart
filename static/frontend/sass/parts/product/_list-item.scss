@@ -271,26 +271,10 @@
       }
 
       .info {
-        padding: 3% 0 3% rem-calc(24);
+        padding: 5px 0 5px rem-calc(24);
         background-size: rem-calc(20) !important;
-        background: no-repeat left center;
         line-height: 1;
       }
-
-      .lead-time {
-        background-image: url("../images/icons/item_product/lead_time.svg");
-      }
-
-      .multiply-quantity {
-        background-image: url("../images/icons/item_product/multiples_items.svg") ;
-      }
-
-      .last-items {
-        background-image: url("../images/icons/item_product/last_items.svg");
-      }
-
-
-
 
       .cart_add {
         .add {
@@ -326,12 +310,8 @@
       }
 
       .out-of-stock {
-        .title {
+        .p-label {
           color: red;
-
-          i {
-            background: url("../images/icons/item_product/out_of_stock.svg") center center no-repeat;
-          }
         }
 
         .eta-date {
@@ -488,7 +468,7 @@
       padding: 15px ;
       box-sizing: border-box;
       border: 1px solid transparent;
-      border-bottom: none;
+      border-bottom: 1px solid transparent;
 
 
       @media screen and (min-width: rem-calc(600)) {
@@ -757,6 +737,10 @@ html{
         .item {
           box-shadow: none;
 
+          &:hover {
+            //border-bottom: 1px solid;
+          }
+
           .overflow_container {
             padding-top: rem-calc(5);
           }
@@ -767,6 +751,7 @@ html{
             display: flex;
             width: 100%;
             padding: 0;
+            border: none;
           }
         }
       }

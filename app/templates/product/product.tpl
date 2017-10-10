@@ -30,12 +30,17 @@
 
                 </h1>
 
+                <div class="float-right show-for-medium-only show-for-ml-only godaddy">
+                    <img src="/static/frontend/dist/images/icons/item_product/gd_label.png" alt="GODADDY Verified & secured" class="gd">
+                </div>
+
                 <div class="sku">
                     <span class="value">
                         SKU: <span class="style" itemprop="sku">{$model->productcode}</span>
                     </span>
                 </div>
 
+                <span class="clearfix"></span>
             </div>
         </div>
     </section>
@@ -67,30 +72,41 @@
                 <noindex>
                 <div class="product-title show-for-large">
 
-                        <h1>
-                            {$model->getFrontendName()}
-                            {if $model->retail_trust_enabled}
-                                <i class="icon retailTrust"></i>
-                            {/if}
-
+                    <h1>
+                        {$model->getFrontendName()}
+                        {if $model->retail_trust_enabled}
                             <i class="icon retailTrust"></i>
-                        </h1>
+                        {/if}
+                    </h1>
+
                 </div>
 
-                <div class="sku">
+                <div class="float-right show-for-large godaddy">
+                    <img src="/static/frontend/dist/images/icons/item_product/gd_label.png" alt="GODADDY Verified & secured" class="gd">
+                </div>
+                <div class="sku show-for-large">
                     <span class="value">
                         SKU: <span class="style" itemprop="sku">{$model->productcode}</span>
                     </span>
                 </div>
+                <span class="clearfix"></span>
                 </noindex>
 
 
                 <div class="notifications">
-                    notifications
+
+                    <div class="row">
+                        <div class="column small-12 medium-10 large-9">
+                            {include "product/messages/_messages.tpl" model=$model fill=true}
+                        </div>
+                    </div>
                 </div>
 
                 <div class="prices">
                     table prices
+                </div>
+                <div class="godaddy hide-for-medium hide-for-large text-align--center">
+                    <img src="/static/frontend/dist/images/icons/item_product/gd_label.png" alt="GODADDY Verified & secured" class="gd">
                 </div>
             </div>
         </div>
@@ -111,11 +127,6 @@
     <script>
         (function(){
 
-
-//            window.app.afterReady.push(function () {
-//
-//
-//            });
         })();
     </script>
 {/block}

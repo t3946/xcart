@@ -162,23 +162,7 @@
                     </div>
 
                     <div class="info_container">
-                        {if $item.lead_time_message|trim}
-                            <div class="lead-time icon info">
-                                {$item.lead_time_message}
-                            </div>
-                        {/if}
-
-                        {if $item->mult_order_quantity == 'Y' && $item->min_amount > 1}
-                            <div class="multiply-quantity icon info padding">
-                                Order in multiples of {$item->min_amount} items
-                            </div>
-                        {/if}
-
-                        {if $item->min_amount >= $item->avail}
-                            <div class="last-items icon info">
-                                Order at least {$item->avail} items
-                            </div>
-                        {/if}
+                        {include "product/messages/_messages.tpl" model=$item}
                     </div>
 
                     <div class="cart_add">
@@ -199,18 +183,7 @@
                     </div>
                 {else}
                     <div class="out-of-stock">
-                        <div class="title icon">
-                            <i></i> Out of stock
-                        </div>
-
-                        {if $item.eta_date_mm_dd_yyyy && $item.eta_date_mm_dd_yyyy > time()}
-                            <div class="eta-date">
-                            Eta date: {$item.eta_date_mm_dd_yyyy|date_format:"%d %b %Y"}
-                        </div>
-                        {/if}
-                        <div class="notify">
-
-                        </div>
+                        {include "product/messages/_messages.tpl" model=$item}
                     </div>
                 {/if}
             </div>

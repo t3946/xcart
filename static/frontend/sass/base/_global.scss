@@ -1,4 +1,5 @@
 
+
 .middle-inline-block {
   display: inline-block;
   vertical-align: middle;
@@ -108,5 +109,17 @@
     &:focus {
       outline: none;
     }
+  }
+}
+
+.text-align {
+  @include bem_modifier(left) {
+    text-align: left;
+  }
+  @include bem_modifier(center) {
+    text-align: center;
+  }
+  @include bem_modifier(right) {
+    text-align: right;
   }
 }
