@@ -102,9 +102,17 @@
                     </div>
                 </div>
 
+
+                {if !$model->isGroupRoot()}
                 <div class="prices">
-                    table prices
+                    {include "product/price/_table_prices.tpl" model=$model}
+                    {if $model->isOutOfStock()}
+                        {*{}*}
+                    {else}
+
+                    {/if}
                 </div>
+                {/if}
                 <div class="godaddy hide-for-medium hide-for-large text-align--center">
                     <img src="/static/frontend/dist/images/icons/item_product/gd_label.png" alt="GODADDY Verified & secured" class="gd">
                 </div>
@@ -115,7 +123,7 @@
 
     {include 'product/_tabs.tpl' model=$model}
 
-    <section class="groupped-products">groupped products</section>
+    <section class="groupped-products" id="products">groupped products</section>
 </section>
 {/block}
 
