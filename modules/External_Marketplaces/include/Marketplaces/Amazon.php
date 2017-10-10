@@ -52,7 +52,7 @@ class Amazon extends StoreFrontMarketPlace
 
                 if ($product->isAmazonFBAEnabled() &&
                     (intval($product->amazon_fba_avail) > 0 || $product->getAmazonFBAStockReservedTransfers() > 0) &&
-                    !in_array($product->amazon_fields->prevent_selling_on_amazon, ['FBA', 'MFN'])) {
+                    !in_array($product->amazon_fields->limit(1)->get()->prevent_selling_on_amazon, ['FBA', 'MFN'])) {
                     $item = [
                         'sku' => $product->productcode,
                         'channel' => 'AFN',

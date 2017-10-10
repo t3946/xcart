@@ -184,7 +184,7 @@ class ProductModel extends AutoMetaModel
                 'link' => ['productid' => 'productid']
             ],
             'amazon_fields' => [
-                'class' => OneToOneField::className(),
+                'class' => HasManyField::className(),
                 'modelClass' => AmazonProductsFieldsModel::className(),
                 'link' => ['productid' => 'productid']
             ],
