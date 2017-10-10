@@ -18,10 +18,24 @@
          data-list-price="{$model->list_price}"
          {/if}>
 
-    <section class="title hide-for-large">
+    <section class="product-title product-title-small hide-for-large">
         <div class="row">
             <div class="column large-12">
-                <h1>{$model->getFrontendName()} </h1>
+                <h1>
+                    {$model->getFrontendName()}
+
+                    {if $model->retail_trust_enabled}
+                        <i class="icon retailTrust"></i>
+                    {/if}
+
+                </h1>
+
+                <div class="sku">
+                    <span class="value">
+                        SKU: <span class="style" itemprop="sku">{$model->productcode}</span>
+                    </span>
+                </div>
+
             </div>
         </div>
     </section>
@@ -44,31 +58,31 @@
 
                         <option value="https://www.youtube.com/watch?v=dQw4w9WgXcQ" type="video"></option>
                         <option value="https://www.youtube.com/watch?v=yPYZpwSpKmA" type="video"></option>
-                        {foreach $images as $image}
-                            <option value="//cdn.{$site->getBaseDomain()}{$image->getUrl()}"
-                                    data-thumb="//cdn.{$site->getBaseDomain()}{$image->getUrl()}"
-                                    data-id="{$image->imageid}"
-                                    type="image">
-                            </option>
-                        {/foreach}
 
                     </datalist>
 
                 </div>
             </div>
             <div class="column small-12 large-7 block__title_price">
-                <div class="title show-for-large">
-                    <noindex>
-                        <h1>{$model->getFrontendName()} </h1>
-                    </noindex>
+                <noindex>
+                <div class="product-title show-for-large">
+
+                        <h1>
+                            {$model->getFrontendName()}
+                            {if $model->retail_trust_enabled}
+                                <i class="icon retailTrust"></i>
+                            {/if}
+
+                            <i class="icon retailTrust"></i>
+                        </h1>
                 </div>
 
                 <div class="sku">
                     <span class="value">
                         SKU: <span class="style" itemprop="sku">{$model->productcode}</span>
                     </span>
-                    {*<a data-tooltip class="has-tip right " title="What is SKU">?</a>*}
                 </div>
+                </noindex>
 
 
                 <div class="notifications">
@@ -84,8 +98,6 @@
 
 
     {include 'product/_tabs.tpl' model=$model}
-
-    <section class="descriptions"></section>
 
     <section class="groupped-products">groupped products</section>
 </section>

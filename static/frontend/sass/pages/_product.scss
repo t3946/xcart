@@ -241,4 +241,36 @@
       }
     }
   }
+
+  .product-title {
+    h1 {
+      font-weight: 700;
+      text-align: left;
+
+      .retailTrust {
+        &:after {
+          vertical-align: middle;
+          width: rem-calc(33);
+          height: rem-calc(31);
+        }
+
+
+
+        @include breakpoint(large up) {
+          margin-left: rem-calc(15);
+
+          &:after {
+            vertical-align: baseline;
+            width: rem-calc(29);
+            height: rem-calc(26);
+          }
+        }
+      }
+    }
+  }
+
+  .product-title-small {
+    padding-bottom: rem-calc(25);
+  }
+
 }
