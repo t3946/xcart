@@ -9,6 +9,9 @@
         let min = parseInt($input.attr('min'));
         let data_min = parseInt($input.data('min'));
 
+        if (val > max) {val = max;}
+        if (val < min) {val = min;}
+
         return {
             '$this': $this,
             '$container': $container,
@@ -30,11 +33,23 @@
             params.$container.find('.btn.dec').addClass('active');
         }
 
-        params.$this.closest('[data-product]').data('quantity', params.val);
+        let product = params.$this.closest('[data-product]');
+        if (product.length) {
+            product = product[0];
+            product.dataset.quantity = params.val;
+            // product.data('quantity', params.val);
+        }
+        else {
+            product = null;
+        }
+
+        params.$input.val(params.val);
 
         $(document).trigger('component.quantity.change', {
             target: e.target,
-            val: params.val
+            val: params.val,
+            params: params,
+            product: product,
         });
     };
 
@@ -52,12 +67,12 @@
                 params.val -= parseInt(params.$input.attr('step'));
             }
 
-            params.$input.val(params.val);
+            // params.$input.val(params.val);
 
             recheckActives(e, params);
 
         })
-        .on('change blur propertychange mousewheel', '.quantity-group input', (e) => {
+        .on('change blur propertychange mousewheel keyup', '.quantity-group input', (e) => {
             clearTimeout($.data(e.target, 'timer'));
 
             $.data(e.target, 'timer', setTimeout(() => {

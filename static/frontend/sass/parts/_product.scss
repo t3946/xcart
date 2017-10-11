@@ -65,3 +65,30 @@ $default_qg_lheight: #{$default_qg_height - 1};
     }
   }
 }
+
+.cart_add {
+  .add {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 100%;
+    text-align: center;
+    text-transform: uppercase;
+    line-height: rem-calc(42);
+    height: rem-calc(42);
+    font: {
+      size: rem-calc(18);
+      weight: 900;
+    }
+
+    &:before {
+      content: '';
+      display: inline-block;
+      width: 35px;
+      height: 27px;
+      background: url("../images/icons/add_to_cart.svg") center center no-repeat;
+      background-size: 90%;
+    }
+  }
+}

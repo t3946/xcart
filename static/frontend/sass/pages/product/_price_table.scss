@@ -1,0 +1,82 @@
+@mixin getPricesTable()
+{
+  .prices__container {
+    .price__quantity {
+
+      .table {
+        display: flex;
+        flex-direction: row;
+
+        .column {
+          display: flex;
+          flex-direction: column;
+
+          &.auto {
+            flex: auto;
+          }
+
+          .title {
+            display: flex;
+            text-align: center;
+            height: rem-calc(36);
+            line-height: rem-calc(36);
+            align-content: center;
+            justify-content: center;
+          }
+
+          .value {
+            display: flex;
+            align-content: center;
+            align-items: center;
+          }
+        }
+      }
+
+      .table__prices {
+
+        .column {
+          .title { text-align: center; }
+          .value { text-align: center; }
+        }
+
+        @include bem_modifier(down) {
+          display: flex;
+          flex-direction: column;
+        }
+
+        @include bem_modifier(row) {
+          display: flex;
+          flex-direction: row;
+          flex: auto;
+
+        }
+
+
+        @include bem_modifier(top) {
+          .column {
+            .value {
+              height: rem-calc(63);
+              line-height: rem-calc(63);
+
+              .cart_add {
+                width: 100%;
+              }
+            }
+          }
+        }
+
+        .price-row {
+          transition: all .4s ease-in-out;
+          height: rem-calc(30);
+
+          &.hidden {
+            //display: none;
+            height: 0;
+            overflow: hidden;
+          }
+        }
+      }
+
+    }
+  }
+}

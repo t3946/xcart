@@ -106,11 +106,10 @@
                 {if !$model->isGroupRoot()}
                 <div class="prices">
                     {include "product/price/_table_prices.tpl" model=$model}
-                    {if $model->isOutOfStock()}
-                        {*{}*}
-                    {else}
 
-                    {/if}
+                    {*{if $model->isOutOfStock()}*}
+                    {*{else}*}
+                    {*{/if}*}
                 </div>
                 {/if}
                 <div class="godaddy hide-for-medium hide-for-large text-align--center">
@@ -134,6 +133,10 @@
 {block 'js'}
     <script>
         (function(){
+            window.app.afterReady.push(function(){
+
+
+            });
 
         })();
     </script>

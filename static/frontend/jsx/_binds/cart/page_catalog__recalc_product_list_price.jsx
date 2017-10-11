@@ -1,7 +1,21 @@
 (()=>{
-    let catalog_container = $('.catalog-page');
-    if (catalog_container.length) {
+    let toHtml = ($parent, find, value) => {
+        let cont = $parent.find(find);
+        if (cont) {
+            let old_val = cont.html();
+            if (old_val !== value) {
+                cont.html(value);
+            }
+        }
+    };
+
+    // let catalog_container = $('.catalog-page');
+    // if (catalog_container.length) {
         $(document).on('component.quantity.change', (e, data) => {
+            if (!data.val) {
+                return;
+            }
+
             let show = false;
             let $product = $(data.target);
 
@@ -10,7 +24,7 @@
             }
 
             let $subtotal_container = $product.find('.subtotal_container');
-            let $price = $product.find('.price_container .current [itemprop=price]');
+            // let $price = $product.find('.price_container .current [itemprop=price]');
 
             let quantity = $product.data('quantity');
             let prices = $product.data('prices');
@@ -24,18 +38,21 @@
             }
 
             price = (prices[count]);
-            $price.html(price.toFixed(2));
+
+            let extended  = (quantity * price);
+
+            toHtml($product, '[var-price]', price.toFixed(2));
+            toHtml($product, '[var-price-extended]', extended.toFixed(2));
 
             if (quantity) {
                 let list_price = parseFloat($product.data('list-price'));
 
                 if (list_price) {
-                    let extended = 0;
                     let safe_percentage = 0;
                     let safe_price = 0;
                     let per_unit = 0;
 
-                    extended = (quantity * price).toFixed(2);
+
 
                     // if (quantity > 1) {
                         show = true;
@@ -43,9 +60,10 @@
                         safe_percentage = Math.floor(safe_price / (extended * .01));
                         per_unit = (safe_price / quantity).toFixed(2);
 
-                        $subtotal_container.find('.subtotal .price').html(extended);
-                        $subtotal_container.find('.safe .percentage').html(safe_percentage);
-                        $subtotal_container.find('.safe .price').html(per_unit);
+
+                        toHtml($product, '[var-price-extended]', extended);
+                        toHtml($product, '[var-percentage-safe]', safe_percentage);
+                        toHtml($product, '[var-price-perunit-safe]', per_unit);
                     // }
                 }
             }
@@ -57,5 +75,5 @@
                 $subtotal_container.addClass('hide');
             }
         });
-    }
+    // }
 })();

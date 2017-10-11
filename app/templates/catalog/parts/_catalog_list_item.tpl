@@ -127,7 +127,7 @@
                     <span class="title">Price:</span>
                     <span class="price">
                         <span itemprop="priceCurrency" content="USD">US$</span>
-                        <span itemprop="price">{$item->getFrontendPrice()|number_format:2}</span>
+                        <span itemprop="price" var-price>{$item->getFrontendPrice()|number_format:2}</span>
                         {if $item->isOutOfStock()}
                             <link itemprop="availability" href="http://schema.org/OutOfStock" />
                         {else}
@@ -146,19 +146,7 @@
                             <span class="show-for-large-only">Qty:</span>
                         </label>
 
-                        <div class="quantity-group">
-                            <span class="btn dec">-</span>
-                            <input type="number"
-                                   name="quantity"
-                                   min="{$item->min_amount}"
-                                   max="{$item->avail}"
-                                   data-min="{$item->min_amount}"
-                                   step="{if $item->mult_order_quantity == 'Y'}{$item->min_amount}{else}1{/if}"
-                                   value="{$item->min_amount}"
-                                   id="quantity-{$item.productid}"
-                            />
-                            <span class="btn inc active">+</span>
-                        </div>
+                        {include "product/parts/_quantity_group.tpl" model=$item}
                     </div>
 
                     <div class="info_container">
@@ -175,10 +163,10 @@
 
                     <div class="subtotal_container hide">
                         <div class="subtotal">
-                            Subtotal: US$ <span class="price">400.01</span>
+                            Subtotal: US$ <span class="price" var-price-extended>400.01</span>
                         </div>
                         <div class="safe">
-                            Save <span class="percentage">41</span>% (US$ <span class="price">5.27</span> per unit)
+                            Save <span class="percentage" var-percent-safe>41</span>% (US$ <span class="price" var-price-perunit-safe>5.27</span> per unit)
                         </div>
                     </div>
                 {else}

@@ -29,6 +29,8 @@ import  "./_binds/shadow";
 import  "./_binds/catalog_actionblock_sort";
 import  "./_binds/productSlider";
 
+import  "./_binds/pages/product";
+
 import  "./ext/jq-swipe";
 import  "./components/Flash";
 

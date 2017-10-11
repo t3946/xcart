@@ -35521,6 +35521,8 @@ __webpack_require__(90);
 
 __webpack_require__(91);
 
+__webpack_require__(162);
+
 __webpack_require__(102);
 
 __webpack_require__(103);
@@ -40641,6 +40643,13 @@ __webpack_require__(81);
         var min = parseInt($input.attr('min'));
         var data_min = parseInt($input.data('min'));
 
+        if (val > max) {
+            val = max;
+        }
+        if (val < min) {
+            val = min;
+        }
+
         return {
             '$this': $this,
             '$container': $container,
@@ -40664,11 +40673,21 @@ __webpack_require__(81);
             params.$container.find('.btn.dec').addClass('active');
         }
 
-        params.$this.closest('[data-product]').data('quantity', params.val);
+        var product = params.$this.closest('[data-product]');
+        if (product.length) {
+            product = product[0];
+            product.dataset.quantity = params.val;
+        } else {
+            product = null;
+        }
+
+        params.$input.val(params.val);
 
         $(document).trigger('component.quantity.change', {
             target: e.target,
-            val: params.val
+            val: params.val,
+            params: params,
+            product: product
         });
     };
 
@@ -40685,10 +40704,8 @@ __webpack_require__(81);
             params.val -= parseInt(params.$input.attr('step'));
         }
 
-        params.$input.val(params.val);
-
         recheckActives(e, params);
-    }).on('change blur propertychange mousewheel', '.quantity-group input', function (e) {
+    }).on('change blur propertychange mousewheel keyup', '.quantity-group input', function (e) {
         clearTimeout($.data(e.target, 'timer'));
 
         $.data(e.target, 'timer', setTimeout(function () {
@@ -41740,62 +41757,74 @@ function cartAdd() {
 /* WEBPACK VAR INJECTION */(function($) {
 
 (function () {
-    var catalog_container = $('.catalog-page');
-    if (catalog_container.length) {
-        $(document).on('component.quantity.change', function (e, data) {
-            var show = false;
-            var $product = $(data.target);
-
-            if (!$product.data('product')) {
-                $product = $(data.target).closest('[data-product]');
+    var toHtml = function toHtml($parent, find, value) {
+        var cont = $parent.find(find);
+        if (cont) {
+            var old_val = cont.html();
+            if (old_val !== value) {
+                cont.html(value);
             }
+        }
+    };
 
-            var $subtotal_container = $product.find('.subtotal_container');
-            var $price = $product.find('.price_container .current [itemprop=price]');
+    $(document).on('component.quantity.change', function (e, data) {
+        if (!data.val) {
+            return;
+        }
 
-            var quantity = $product.data('quantity');
-            var prices = $product.data('prices');
-            var count = 0;
-            var price = 0;
+        var show = false;
+        var $product = $(data.target);
 
-            for (count in prices) {
-                if (count >= (quantity || 1)) {
-                    break;
-                }
+        if (!$product.data('product')) {
+            $product = $(data.target).closest('[data-product]');
+        }
+
+        var $subtotal_container = $product.find('.subtotal_container');
+
+
+        var quantity = $product.data('quantity');
+        var prices = $product.data('prices');
+        var count = 0;
+        var price = 0;
+
+        for (count in prices) {
+            if (count >= (quantity || 1)) {
+                break;
             }
+        }
 
-            price = prices[count];
-            $price.html(price.toFixed(2));
+        price = prices[count];
 
-            if (quantity) {
-                var list_price = parseFloat($product.data('list-price'));
+        var extended = quantity * price;
 
-                if (list_price) {
-                    var extended = 0;
-                    var safe_percentage = 0;
-                    var safe_price = 0;
-                    var per_unit = 0;
+        toHtml($product, '[var-price]', price.toFixed(2));
+        toHtml($product, '[var-price-extended]', extended.toFixed(2));
 
-                    extended = (quantity * price).toFixed(2);
+        if (quantity) {
+            var list_price = parseFloat($product.data('list-price'));
 
-                    show = true;
-                    safe_price = (list_price * quantity - extended).toFixed(2);
-                    safe_percentage = Math.floor(safe_price / (extended * .01));
-                    per_unit = (safe_price / quantity).toFixed(2);
+            if (list_price) {
+                var safe_percentage = 0;
+                var safe_price = 0;
+                var per_unit = 0;
 
-                    $subtotal_container.find('.subtotal .price').html(extended);
-                    $subtotal_container.find('.safe .percentage').html(safe_percentage);
-                    $subtotal_container.find('.safe .price').html(per_unit);
-                }
+                show = true;
+                safe_price = (list_price * quantity - extended).toFixed(2);
+                safe_percentage = Math.floor(safe_price / (extended * .01));
+                per_unit = (safe_price / quantity).toFixed(2);
+
+                toHtml($product, '[var-price-extended]', extended);
+                toHtml($product, '[var-percentage-safe]', safe_percentage);
+                toHtml($product, '[var-price-perunit-safe]', per_unit);
             }
+        }
 
-            if (show) {
-                $subtotal_container.removeClass('hide');
-            } else {
-                $subtotal_container.addClass('hide');
-            }
-        });
-    }
+        if (show) {
+            $subtotal_container.removeClass('hide');
+        } else {
+            $subtotal_container.addClass('hide');
+        }
+    });
 })();
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
@@ -55373,6 +55402,35 @@ initDevTools();
 })));
 //# sourceMappingURL=devtools.js.map
 
+
+/***/ }),
+/* 162 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function($) {
+
+(function () {
+    var page = document.querySelector('.product-page');
+    if (page) {
+        var prices_row = page.querySelectorAll('.price-row');
+
+        $(document).on('component.quantity.change', function (e, data) {
+            if (data.product && data.product.dataset.product === page.dataset.product) {
+
+                for (var i = 0, len = prices_row.length; len > i; i++) {
+                    var price = prices_row[i];
+                    if (price.dataset.quantity <= data.val) {
+                        price.classList.add('hidden');
+                    } else {
+                        price.classList.remove('hidden');
+                    }
+                }
+            }
+        });
+    }
+})();
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ })
 /******/ ]);
