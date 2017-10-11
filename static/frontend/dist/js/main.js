@@ -41816,7 +41816,6 @@ function cartAdd() {
                 safe_percentage = Math.floor(safe_price / (extended * .01));
                 per_unit = (safe_price / quantity).toFixed(2);
 
-                toHtml(product, '[var-price-extended]', extended);
                 toHtml(product, '[var-percentage-safe]', safe_percentage);
                 toHtml(product, '[var-price-perunit-safe]', per_unit);
             }
