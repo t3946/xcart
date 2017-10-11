@@ -300,14 +300,15 @@ class GroupStore extends BaseStore
                                 'main' => 'Y'
                             ]);
 
-                            list($new_cat) = ProductCategoriesModel::objects()->getOrNew(
-                                [
-                                    'categoryid' =>  $this->data['category'],
-                                    'productid' => $cat->productid,
-                                    'main' => 'Y'
-                                ]);
-                            $new_cat->save();
-
+                            if ($this->data['category'] && $cat->productid) {
+                                list($new_cat) = ProductCategoriesModel::objects()->getOrNew(
+                                    [
+                                        'categoryid' => $this->data['category'],
+                                        'productid' => $cat->productid,
+                                        'main' => 'Y'
+                                    ]);
+                                $new_cat->save();
+                            }
                         }
                     }
 
