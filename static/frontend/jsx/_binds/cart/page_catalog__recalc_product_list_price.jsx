@@ -1,51 +1,54 @@
 (()=>{
-    let toHtml = ($parent, find, value) => {
-        let cont = $parent.find(find);
-        if (cont) {
-            let old_val = cont.html();
-            if (old_val !== value) {
-                cont.html(value);
+    let toHtml = (parent, find, value) => {
+        if (parent) {
+            let cont = parent.querySelector(find);
+            if (cont) {
+                let old_val = cont.innerHTML;
+                if (old_val !== value) {
+                    cont.innerHTML = value;
+                }
             }
         }
     };
 
     // let catalog_container = $('.catalog-page');
     // if (catalog_container.length) {
+        let cache = {};
         $(document).on('component.quantity.change', (e, data) => {
             if (!data.val) {
                 return;
             }
 
             let show = false;
-            let $product = $(data.target);
+            let product = data.product;
 
-            if (!$product.data('product')) {
-                $product = $(data.target).closest('[data-product]');
-            }
+            let subtotal_container = product.querySelector('.subtotal_container');
 
-            let $subtotal_container = $product.find('.subtotal_container');
-            // let $price = $product.find('.price_container .current [itemprop=price]');
-
-            let quantity = $product.data('quantity');
-            let prices = $product.data('prices');
-            let count = 0;
+            let id = product.dataset.product;
+            let quantity = product.dataset.quantity || 1;
             let price = 0;
 
-            for ( count in prices ) {
-                if ( count >= (quantity || 1) ) {
-                    break;
-                }
+            if (!cache[id]) {
+                cache[id] = JSON.parse(product.dataset.prices);
             }
 
-            price = (prices[count]);
+            let prices = cache[id];
+
+            for ( let count in prices ) {
+                if ( parseInt(count) > quantity ) {
+                    break;
+                }
+
+                price = prices[count];
+            }
 
             let extended  = (quantity * price);
 
-            toHtml($product, '[var-price]', price.toFixed(2));
-            toHtml($product, '[var-price-extended]', extended.toFixed(2));
+            toHtml(product, '[var-price]', price.toFixed(2));
+            toHtml(product, '[var-price-extended]', extended.toFixed(2));
 
             if (quantity) {
-                let list_price = parseFloat($product.data('list-price'));
+                let list_price = parseFloat(product.dataset.listprice);
 
                 if (list_price) {
                     let safe_percentage = 0;
@@ -61,18 +64,20 @@
                         per_unit = (safe_price / quantity).toFixed(2);
 
 
-                        toHtml($product, '[var-price-extended]', extended);
-                        toHtml($product, '[var-percentage-safe]', safe_percentage);
-                        toHtml($product, '[var-price-perunit-safe]', per_unit);
+                        toHtml(product, '[var-price-extended]', extended);
+                        toHtml(product, '[var-percentage-safe]', safe_percentage);
+                        toHtml(product, '[var-price-perunit-safe]', per_unit);
                     // }
                 }
             }
 
-            if (show) {
-                $subtotal_container.removeClass('hide');
-            }
-            else {
-                $subtotal_container.addClass('hide');
+            if (subtotal_container) {
+                if (show) {
+                    subtotal_container.classList.remove('hide');
+                }
+                else {
+                    subtotal_container.classList.add('hide');
+                }
             }
         });
     // }

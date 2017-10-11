@@ -41757,51 +41757,54 @@ function cartAdd() {
 /* WEBPACK VAR INJECTION */(function($) {
 
 (function () {
-    var toHtml = function toHtml($parent, find, value) {
-        var cont = $parent.find(find);
-        if (cont) {
-            var old_val = cont.html();
-            if (old_val !== value) {
-                cont.html(value);
+    var toHtml = function toHtml(parent, find, value) {
+        if (parent) {
+            var cont = parent.querySelector(find);
+            if (cont) {
+                var old_val = cont.innerHTML;
+                if (old_val !== value) {
+                    cont.innerHTML = value;
+                }
             }
         }
     };
 
+    var cache = {};
     $(document).on('component.quantity.change', function (e, data) {
         if (!data.val) {
             return;
         }
 
         var show = false;
-        var $product = $(data.target);
+        var product = data.product;
 
-        if (!$product.data('product')) {
-            $product = $(data.target).closest('[data-product]');
-        }
+        var subtotal_container = product.querySelector('.subtotal_container');
 
-        var $subtotal_container = $product.find('.subtotal_container');
-
-
-        var quantity = $product.data('quantity');
-        var prices = $product.data('prices');
-        var count = 0;
+        var id = product.dataset.product;
+        var quantity = product.dataset.quantity || 1;
         var price = 0;
 
-        for (count in prices) {
-            if (count >= (quantity || 1)) {
-                break;
-            }
+        if (!cache[id]) {
+            cache[id] = JSON.parse(product.dataset.prices);
         }
 
-        price = prices[count];
+        var prices = cache[id];
+
+        for (var count in prices) {
+            if (parseInt(count) > quantity) {
+                break;
+            }
+
+            price = prices[count];
+        }
 
         var extended = quantity * price;
 
-        toHtml($product, '[var-price]', price.toFixed(2));
-        toHtml($product, '[var-price-extended]', extended.toFixed(2));
+        toHtml(product, '[var-price]', price.toFixed(2));
+        toHtml(product, '[var-price-extended]', extended.toFixed(2));
 
         if (quantity) {
-            var list_price = parseFloat($product.data('list-price'));
+            var list_price = parseFloat(product.dataset.listprice);
 
             if (list_price) {
                 var safe_percentage = 0;
@@ -41813,16 +41816,18 @@ function cartAdd() {
                 safe_percentage = Math.floor(safe_price / (extended * .01));
                 per_unit = (safe_price / quantity).toFixed(2);
 
-                toHtml($product, '[var-price-extended]', extended);
-                toHtml($product, '[var-percentage-safe]', safe_percentage);
-                toHtml($product, '[var-price-perunit-safe]', per_unit);
+                toHtml(product, '[var-price-extended]', extended);
+                toHtml(product, '[var-percentage-safe]', safe_percentage);
+                toHtml(product, '[var-price-perunit-safe]', per_unit);
             }
         }
 
-        if (show) {
-            $subtotal_container.removeClass('hide');
-        } else {
-            $subtotal_container.addClass('hide');
+        if (subtotal_container) {
+            if (show) {
+                subtotal_container.classList.remove('hide');
+            } else {
+                subtotal_container.classList.add('hide');
+            }
         }
     });
 })();
@@ -55415,19 +55420,20 @@ initDevTools();
     if (page) {
         var prices_row = page.querySelectorAll('.price-row');
 
-        $(document).on('component.quantity.change', function (e, data) {
-            if (data.product && data.product.dataset.product === page.dataset.product) {
+        if (prices_row) {
+            $(document).on('component.quantity.change', function (e, data) {
+                if (data.product && data.product.dataset.product === page.dataset.product) {
 
-                for (var i = 0, len = prices_row.length; len > i; i++) {
-                    var price = prices_row[i];
-                    if (price.dataset.quantity <= data.val) {
-                        price.classList.add('hidden');
-                    } else {
-                        price.classList.remove('hidden');
-                    }
+                    prices_row.forEach(function (price) {
+                        if (price.dataset.quantity <= data.val) {
+                            price.classList.add('hidden');
+                        } else {
+                            price.classList.remove('hidden');
+                        }
+                    });
                 }
-            }
-        });
+            });
+        }
     }
 })();
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
