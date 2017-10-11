@@ -41778,7 +41778,7 @@ function cartAdd() {
         var show = false;
         var product = data.product;
 
-        var subtotal_container = product.querySelector('.subtotal_container');
+        var subtotal_container = product.querySelector('[cont-subtotal]');
 
         var id = product.dataset.product;
         var quantity = product.dataset.quantity || 1;
@@ -41804,7 +41804,7 @@ function cartAdd() {
         toHtml(product, '[var-price-extended]', extended.toFixed(2));
 
         if (quantity) {
-            var list_price = parseFloat(product.dataset.listprice);
+            var list_price = parseFloat(product.dataset.listPrice);
 
             if (list_price) {
                 var safe_percentage = 0;
@@ -41812,12 +41812,13 @@ function cartAdd() {
                 var per_unit = 0;
 
                 show = true;
-                safe_price = (list_price * quantity - extended).toFixed(2);
+                safe_price = list_price * quantity - extended;
                 safe_percentage = Math.floor(safe_price / (extended * .01));
-                per_unit = (safe_price / quantity).toFixed(2);
+                per_unit = safe_price / quantity;
 
                 toHtml(product, '[var-percentage-safe]', safe_percentage);
-                toHtml(product, '[var-price-perunit-safe]', per_unit);
+                toHtml(product, '[var-price-safe]', safe_price.toFixed(2));
+                toHtml(product, '[var-price-perunit-safe]', per_unit.toFixed(2));
             }
         }
 

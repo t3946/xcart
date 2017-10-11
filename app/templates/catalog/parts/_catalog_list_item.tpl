@@ -161,7 +161,7 @@
                         </a>
                     </div>
 
-                    <div class="subtotal_container hide">
+                    <div class="subtotal_container hide" cont-subtotal>
                         <div class="subtotal">
                             Subtotal: US$ <span class="price" var-price-extended>400.01</span>
                         </div>
