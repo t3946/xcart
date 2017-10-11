@@ -173,16 +173,14 @@ class ProductHelper
                 return $a;
             }
 
-            $u = 0;
+            $b = trim(mb_substr($b, 0, mb_strrpos($b, ' ')));
 
             for ($i = 0; $i < mb_strlen($a) - 1; $i++) {
-                    if (mb_substr($a, $i, 1) == mb_substr($b, $i, 1)) {
-                        $u = $i + 1;
-                    } else {
-                        return mb_substr($a, 0, $u);
-                    }
+                if (mb_substr($a, $i, 1) != mb_substr($b, $i, 1)) {
+                    return mb_substr($a, 0, $i);
+                }
             }
-            return mb_substr($a, 0, $u + 1);
+            return mb_substr($a, 0, ++$i);
         }
 
         $b = null;
@@ -195,7 +193,7 @@ class ProductHelper
                 $b = longestCS($b, $s);
             }
         }
-        return trim(mb_substr($b, 0, mb_strrpos($b, ' ')));
+        return trim($b);
     }
 
     public static function getGroupLevel($option)

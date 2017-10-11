@@ -164,7 +164,12 @@ class GroupController extends PrototypeAdminController
                                 $store->data['group_phrase'] = $new_group_phrase;
                                 $store->level = $new_level;
                                 $brands = $store->getLevels();
+
                                 $products = $store->getModels();
+
+                                if (count($brands) === 1 && $brands[0]->getNotModelAttribute('group_phrase') == $new_group_phrase) {
+                                    unset($brands);
+                                }
                             } else {
                                 unset($brands);
                             }
