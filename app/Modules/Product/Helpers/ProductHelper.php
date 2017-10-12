@@ -177,7 +177,15 @@ class ProductHelper
 
             for ($i = 0; $i < mb_strlen($a) - 1; $i++) {
                 if (mb_substr($a, $i, 1) != mb_substr($b, $i, 1)) {
-                    return mb_substr($a, 0, $i);
+                    if (!$i) {
+                        return '';
+                    }
+                    if (($ls = mb_strpos($a, ' ', $i)) > $i) {
+                        $s = mb_substr($a, 0, $ls);
+                    } else {
+                        $s = $a;
+                    }
+                    return trim(mb_substr($s, 0, mb_strrpos($s, ' ')));
                 }
             }
             return mb_substr($a, 0, ++$i);
