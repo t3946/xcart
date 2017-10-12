@@ -291,10 +291,14 @@ function func_load_ajax_carousel_products(section_name)
 
 {/if}
 
-
-{* ------------------- *}
 {include file="cidev_tracking_code.tpl" }
-{* ------------------- *}
+
+{if !($usertype eq "A" || $usertype eq "P")}
+    <script type="text/javascript">
+        ga('send', 'pageview');
+    </script>
+{/if}
+
 
 {include file="head.tpl" }
 {include file="rectangle_top.tpl" }

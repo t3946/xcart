@@ -69,6 +69,10 @@
 	};
 
 	(function(){
+        $(document).on('pagechange', function() {
+            ga('send', {hitType: 'pageview', location: location.href});
+        });
+
 		$(document).on('pageload ready', function(){
 			setTimeout(function(){
 				$('.slider-products')
@@ -83,7 +87,6 @@
 							}.bind(slick), 10000)
 						}
 					});
-                ga('send', {hitType: 'pageview', location: location.href});
 			}, 200);
 
 			$('.slider-head').not('.initialized').on('click', function(){

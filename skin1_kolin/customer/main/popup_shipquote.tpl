@@ -374,6 +374,11 @@ $(document).ready(function() {
 
 {* ------------------- *}
 {include file="cidev_tracking_code.tpl" }
+{if !($usertype eq "A" || $usertype eq "P")}
+	<script type="text/javascript">
+        ga('send', 'pageview');
+	</script>
+{/if}
 {* ------------------- *}
 
 
