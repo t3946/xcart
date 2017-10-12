@@ -285,7 +285,9 @@ class GroupStore extends BaseStore
             /** @var ProductModel[] $products */
             if ($products = ProductModel::objects()->filter(['productid__in' => array_keys($this->data['products'])])) {
                 foreach ($products as $product) {
+
                     $product->group_root = $this->model->productid;
+
                     if (isset($this->data['truncate_checkbox'])) {
                         $mask = preg_quote($params['group_mask'], '/');
                         $product->product = trim(preg_replace("/^({$mask})/", '', $product->product));
@@ -314,6 +316,10 @@ class GroupStore extends BaseStore
 
                     if ($this->data['group_image'] && in_array($product->productid, $this->data['group_image'])) {
                         $product->group_order = (array_search($product->productid, $this->data['group_image']) + 1) * 10;
+                    }
+
+                    if (isset($params['group_mask'])) {
+                        $product->group_mask = $params['group_mask'];
                     }
 
                     $product->save();
