@@ -3,79 +3,35 @@
 
 {capture name=authorize}
     <script type="text/javascript">
-        //<![CDATA[
         {literal}
-
         function func_AJAX_authorize_PayPal() {
 
-            var f_name;
-            var f_value;
-            var cidev_parameters = 'AJAX_SUBMIT=Y';
+            var form = $("form[name='vt_form1']");
+            var params = form.serialize();
+            var orderid = form.find('input[name=orderid]').val();
 
-            $("form[name='vt_form1']").find("input,select,textarea").not('[type="button"]').each(function () {
-
-                f_name = $(this).attr('name');
-                f_value = $(this).attr('value');
-
-                if (f_name == "mode") {
-                    cidev_parameters = cidev_parameters + '&mode=authorize';
+            $.post(
+                '/admin/order/'+orderid+'/authorise',
+                params,
+            ).done(function (data) {
+                if (data === "Authorized" || data === "Failed") {
+                    $("#AJAX_Please_wait").show();
+                    $("#AJAX_Authorize_button").hide();
+                    $("#AJAX_Authorize_button_text").hide();
                 }
-                else if (f_name != "" && f_value != "") {
-                    cidev_parameters = cidev_parameters + '&' + f_name + '=' + f_value;
+
+                var m_id = $("#m_id_for_additional_shipping_status").val();
+
+                if (data === "Authorized") {
+                    $("#additional_shipping_status_" + m_id).val("A"); // Authorized
+                    document.ordereditform1.submit();
+                }
+                else if (data === "Failed") {
+                    $("#additional_shipping_status_" + m_id).val("A");
                 }
             });
-
-//	alert(cidev_parameters);
-
-            cidev_xmlHttp = cidev_createHttpRequestObject();
-            if (cidev_xmlHttp.readyState == 4 || cidev_xmlHttp.readyState == 0) {
-
-                cidev_xmlHttp.onreadystatechange = function () {
-                    if (cidev_xmlHttp.readyState == 4) {
-                        if (cidev_xmlHttp.status == 200) {
-                            var paypal_response = cidev_xmlHttp.responseText;
-
-                            //alert(paypal_response);
-
-                            if (paypal_response == "Authorized" || paypal_response == "Failed") {
-                                $("#AJAX_Please_wait").show();
-                                $("#AJAX_Authorize_button").hide();
-                                $("#AJAX_Authorize_button_text").hide();
-                            }
-
-                            var m_id = $("#m_id_for_additional_shipping_status").val();
-
-                            if (paypal_response == "Authorized") {
-                                $("#additional_shipping_status_" + m_id).val("A"); // Authorized
-                                document.ordereditform1.submit();
-                            }
-                            else if (paypal_response == "Failed") {
-                                $("#additional_shipping_status_" + m_id).val("A");
-//						window.location.reload();
-                            }
-
-                        } else {
-                            cidev_Error('no_server', 'Y');
-                        }
-                    }
-                };
-
-                var tmp_rand = Math.random();
-
-                cidev_xmlHttp.open('POST', 'ajax_paypal_vt.php?rand=' + tmp_rand, true);
-                cidev_xmlHttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-                cidev_xmlHttp.setRequestHeader('Content-length', cidev_parameters.length);
-                cidev_xmlHttp.setRequestHeader('Cache-Control', 'no-cache');
-                cidev_xmlHttp.setRequestHeader('Cache-Control', 'no-store');
-                cidev_xmlHttp.setRequestHeader('Connection', 'close');
-                cidev_xmlHttp.send(cidev_parameters);
-            }
-            else {
-                setTimeout('func_AJAX_authorize_PayPal()', 1000);
-            }
         }
         {/literal}
-        //]]>
     </script>
     <div id="AJAX_Authorize_button_text" style="display: none; background-color: #f4cccc;">
         {$lng.lb_additional_payment_authorize_message}
