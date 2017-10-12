@@ -12,7 +12,7 @@ vim: set ts=2 sw=2 sts=2 et:
   {if $product and $images ne ''}
     <!-- dialog #detailed-images-{$product.productid} -->
 
-    <div data-role="page" data-url="{$php_url.url}{if $php_url.query_string}?{$php_url.query_string}{/if}" data-add-back-btn="true" data-dom-cache="true" id="detailed-images-{$product.productid}" class="gallery-page">
+    <div data-role="page" data-add-back-btn="true" data-dom-cache="true" id="detailed-images-{$product.productid}" class="gallery-page">
       <div data-role="header" data-inline="true">
         <a href="#" class="custom-arrow" data-role="button" data-rel="back" data-icon="custom-arrow-l" data-iconpos="notext">{$lng.lbl_back}</a>
         <h1>{$product.product}</h1>
