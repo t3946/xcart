@@ -569,7 +569,7 @@
                 <td class="ProductDetails"><input type="text" name="productcode" size="20"
                                                   value="{$product.productcode}" class="InputWidth"/></td>
             </tr>
-            {if !$oProduct->isGroupRoot()}
+            {if !$oProduct || !$oProduct->isGroupRoot()}
             <tr>
                 {if $geid ne ''}
                     <td width="15" class="TableSubHead">&nbsp;</td>
@@ -634,7 +634,7 @@
             {if $active_modules.Egoods ne ""}
                 {include file="modules/Egoods/egoods.tpl"}
             {/if}
-            {if !$oProduct->isGroupRoot()}
+            {if !$oProduct || !$oProduct->isGroupRoot()}
                 <tr>
                     {if $geid ne ''}
                         <td width="15" class="TableSubHead"><input type="checkbox" value="Y"
@@ -668,7 +668,7 @@
                 {/if}
                 <td class="FormButton" nowrap="nowrap">{$lng.lbl_det_description}* :</td>
                 <td class="ProductDetails">
-                    {if $manufacturer_feed_fields.fulldescr.disable eq "Y" && !$oProduct->isGroupRoot()}
+                    {if $manufacturer_feed_fields.fulldescr.disable eq "Y" && (!$oProduct || !$oProduct->isGroupRoot())}
                         {include file="main/textarea.tpl" name="fulldescr" cols=45 rows=12 class="InputWidth" data=$product.fulldescr width="80%" btn_rows=4 readonly="Y"}
                     {else}
                         {include file="main/textarea.tpl" name="fulldescr" cols=45 rows=12 class="InputWidth" data=$product.fulldescr width="80%" btn_rows=4}
@@ -742,7 +742,7 @@
                     {/if}
                 </td>
             </tr>
-            {if !$oProduct->isGroupRoot()}
+            {if !$oProduct || !$oProduct->isGroupRoot()}
                 <tr>
                     {if $geid ne ''}
                         <td width="15" class="TableSubHead">&nbsp;</td>
