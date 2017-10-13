@@ -69,11 +69,11 @@
 	};
 
 	(function(){
-        $(document).on('pagechange', function() {
-            ga('send', {hitType: 'pageview', location: location.href});
-        });
 
-		$(document).on('pageload ready', function(){
+	    $(document).on('pagechange', function(){
+            ga('set', 'page', location.pathname + window.location.search);
+            ga('send', 'pageview');
+
 			setTimeout(function(){
 				$('.slider-products')
 					.not('.slick-initialized')
