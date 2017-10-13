@@ -83,7 +83,7 @@ export default class MiniCart extends Component
 
                         <div className="quantity-extended">
                             <div className="quantity">
-                                <input type="number" value={this.changes[key] || item.quantity} onInput={(e)=>{ this.handleInput(e, key, item); }}/>
+                                <input type="number" min="1" max={item.avail} value={this.changes[key] || item.quantity} onInput={(e)=>{ this.handleInput(e, key, item); }}/>
                             </div>
                             <div className="x">
                                 x

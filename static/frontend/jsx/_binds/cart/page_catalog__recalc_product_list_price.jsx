@@ -11,6 +11,14 @@
         }
     };
 
+    let formatter = new Intl.NumberFormat("en-US", {
+        minimumFractionDigits: 2
+    });
+    let toLocaleCurrency = (number = 0) => (
+        formatter.format(number)
+        // number.toLocaleString('en-US', {style: 'currency', currency: 'USD', currencyDisplay: 'code'})
+    );
+
     let cache = {};
     $(document).on('component.quantity.change', (e, data) => {
         if (!data.val) {
@@ -31,49 +39,52 @@
         }
 
         let prices = cache[id];
+        let base_price = null;
 
         for ( let count in prices ) {
-            if ( parseInt(count) > quantity ) {
-                break;
-            }
+            let i_count = parseInt(count);
 
-            price = prices[count];
+            if (i_count) {
+                if (!base_price) {
+                    base_price = prices[i_count];
+                }
+
+                if ( i_count > quantity ) {
+                    break;
+                }
+
+                price = prices[i_count];
+            }
         }
 
         let extended  = (quantity * price);
 
-        toHtml(product, '[var-price]', price.toFixed(2));
-        toHtml(product, '[var-price-extended]', extended.toFixed(2));
+        toHtml(product, '[var-price]', toLocaleCurrency(price));
+        toHtml(product, '[var-price-extended]', toLocaleCurrency(extended));
 
         if (quantity) {
             let list_price = parseFloat(product.dataset.listPrice);
 
-            if (list_price) {
+            if (list_price && list_price !== price) {
                 let safe_percentage = 0;
                 let safe_price = 0;
                 let per_unit = 0;
 
+                show = true;
+                safe_price = ((list_price * quantity) - extended);
+                safe_percentage = Math.floor(safe_price / (extended * .01));
+                per_unit = (safe_price / quantity);
 
-                // if (quantity > 1) {
-                    show = true;
-                    safe_price = ((list_price * quantity) - extended);
-                    safe_percentage = Math.floor(safe_price / (extended * .01));
-                    per_unit = (safe_price / quantity);
-
-                    toHtml(product, '[var-percentage-safe]', safe_percentage);
-                    toHtml(product, '[var-price-safe]', safe_price.toFixed(2));
-                    toHtml(product, '[var-price-perunit-safe]', per_unit.toFixed(2));
-                // }
+                toHtml(product, '[var-percentage-safe]', safe_percentage);
+                toHtml(product, '[var-price-safe]', toLocaleCurrency(safe_price));
+                toHtml(product, '[var-price-perunit-safe]', toLocaleCurrency(per_unit));
             }
         }
 
+        console.log(subtotal_container, show);
+
         if (subtotal_container) {
-            if (show) {
-                subtotal_container.classList.remove('hide');
-            }
-            else {
-                subtotal_container.classList.add('hide');
-            }
+            subtotal_container.classList.toggle('hide', !show);
         }
     });
 })();

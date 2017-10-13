@@ -81,9 +81,9 @@
 
                 </div>
 
-                <div class="float-right show-for-large godaddy">
-                    <img src="/static/frontend/dist/images/icons/item_product/gd_label.png" alt="GODADDY Verified & secured" class="gd">
-                </div>
+                {*<div class="float-right show-for-large godaddy">*}
+                    {*<img src="/static/frontend/dist/images/icons/item_product/gd_label.png" alt="GODADDY Verified & secured" class="gd">*}
+                {*</div>*}
                 <div class="sku show-for-large">
                     <span class="value">
                         SKU: <span class="style" itemprop="sku">{$model->productcode}</span>
@@ -112,9 +112,9 @@
                     {*{/if}*}
                 </div>
                 {/if}
-                <div class="godaddy hide-for-medium hide-for-large text-align--center">
-                    <img src="/static/frontend/dist/images/icons/item_product/gd_label.png" alt="GODADDY Verified & secured" class="gd">
-                </div>
+                {*<div class="godaddy hide-for-medium hide-for-large text-align--center">*}
+                    {*<img src="/static/frontend/dist/images/icons/item_product/gd_label.png" alt="GODADDY Verified & secured" class="gd">*}
+                {*</div>*}
             </div>
         </div>
     </section>

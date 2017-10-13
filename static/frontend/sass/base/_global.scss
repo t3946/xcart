@@ -72,6 +72,10 @@
   padding-right: 0;
 }
 
+.paddings-free {
+  padding: 0 !important;
+}
+
 .def-zi2 {
   z-index: 2;
 }
@@ -121,5 +125,12 @@
   }
   @include bem_modifier(right) {
     text-align: right;
+  }
+}
+
+.column, .columns {
+  &.auto {
+    flex: auto;
+    max-width: 100%;
   }
 }

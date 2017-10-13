@@ -5,6 +5,18 @@
   @include getProductTabs();
   @include getPricesTable();
 
+  .price {
+    padding-left: 3px ;
+  }
+
+
+  .images_prices {
+    @include breakpoint(xl up) {
+      height: rem-calc(521);
+    }
+  }
+
+
   .block__image {
     @include breakpoint(large up) {
       padding-right: rem-calc(46);
@@ -14,9 +26,12 @@
 
   .block__title_price {
     @include breakpoint(large up) {
-      padding-left: 0;
       max-width: 100%;
       flex: auto;
+
+      .sku {
+        line-height: 2;
+      }
     }
   }
 
