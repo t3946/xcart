@@ -68,7 +68,7 @@ ga('ec:addImpression', {ldelim}
 {/if}
 
         <li data-corners="false" data-shadow="false" data-iconshadow="true" data-wrapperels="div" data-icon="arrow-r" data-iconpos="right" data-theme="c" class="ui-btn ui-btn-up-c ui-btn-icon-right ui-li-has-arrow ui-li google_impression_object"
-            data-productid="{$product.productid}" data-name="{$product.product|escape}"
+            data-product-id="{$product.productid}" data-name="{$product.product|escape}"
             data-category="{$product.category|escape}" data-brand="{$product.brand|escape}" data-list="{$ga_page_name}" data-price="{$product.price}" data-position="{$N_key}">
 
 	<div class="ui-btn-inner ui-li"><div class="ui-btn-text">

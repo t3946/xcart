@@ -204,7 +204,7 @@ function func_load_ajax_carousel_products(section_name)
                         a_href = 'product.php?productid=' + this.productid;
                     }
                     ga_page_name = this.ga_param;
-                    html += '<li class="google_impression_object" data-productid="'+this.productid+'" data-name="'+this.product+'" data-category="'+this.category+'" data-brand="'+this.brand+'" data-list="'+ga_page_name+'" data-price="'+this.price.toFixed(2)+'" data-position="'+this.N_key+'" class="active">' +
+                    html += '<li class="google_impression_object" data-product-id="'+this.productid+'" data-name="'+this.product+'" data-category="'+this.category+'" data-brand="'+this.brand+'" data-list="'+ga_page_name+'" data-price="'+this.price.toFixed(2)+'" data-position="'+this.N_key+'" class="active">' +
                         '<div style="text-align: center;"><div style="width:150px;height:150px; margin:0 auto;">' +
                         '<a href="' + a_href + '" onclick="onProductClick(\'' + this.productid + '\',\'' + this.product + '\',\'' + this.category + '\',\'' + this.brand + '\',\'' + this.N_key + '\',\'' + ga_page_name + '\',\'' + this.price + '\'); return !ga.loaded;">';
                     if (this.thumb && this.thumb.length) {

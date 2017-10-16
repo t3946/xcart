@@ -207,7 +207,7 @@ func_load_more_next_productids('','Y');
         {/if}
 {/if}
 
-        <li class="google_impression_object" data-productid="{$product.productid}" data-name="{$product.product|escape}"
+        <li class="google_impression_object" data-product-id="{$product.productid}" data-name="{$product.product|escape}"
             data-category="{$product.category|escape}" data-brand="{$product.brand|escape}" data-list="{$ga_page_name}" data-price="{$product.price}" data-position="{$N_key}">
           <a {include file="on_product_click.tpl"} href="{$current_location}/product.php?productid={$product.productid}">
             <span class="product-thumbnail">

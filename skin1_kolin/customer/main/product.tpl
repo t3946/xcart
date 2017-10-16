@@ -534,7 +534,7 @@
                                 </script>
                                 <span id="calculate_shipping_button" data-product-id="{$product.productid}"
                                       style="margin-top: -5px;"
-                                      class="cidev_new_button cidev_new_white">Calculate shipping</span>
+                                      class="cidev_new_button cidev_new_white">Show shipping</span>
                             {/if}
                         </td>
                     </tr>

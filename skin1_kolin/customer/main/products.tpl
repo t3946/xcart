@@ -61,7 +61,7 @@
                 {assign var="is_group" value=false}
             {/if}
             <table width="100%" class="product_list_row">
-                <tr class="google_impression_object" data-productid="{$products[product].productid}"
+                <tr class="google_impression_object" data-product-id="{$products[product].productid}"
                     data-name="{$products[product].product|escape}"
                     data-category="{$products[product].category|escape}" data-brand="{$products[product].brand|escape}"
                     data-list="{$ga_page_name}" data-price="{$products[product].price}" data-position="{$N_key}">

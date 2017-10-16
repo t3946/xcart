@@ -36,7 +36,7 @@ function collectVisibleElements(obj) {
         ul_left = Math.abs(po.position().left),
         el_left = obj.position().left;
         if ((el_left >= ul_left) && ((ul_left + wraper_width) > el_left)) {
-            var productid = obj.data('productid');
+            var productid = obj.data('product-id');
             if (sendItems.indexOf(productid) === -1 && sentItems.indexOf(productid) === -1) {
                 sendItems.push(productid);
                 sendItemsValues.push({
@@ -81,8 +81,7 @@ function sendGoogleAnalitics()
 }
 
 function checkCarouselsVisibility() {
-    $('.jcarousel, .product_list_row, .mobile_products_list')
-        .find('.google_impression_object').each(function () {
+    $('.google_impression_object').each(function () {
             collectVisibleElements($(this))
     });
     sendGoogleAnalitics();

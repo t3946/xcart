@@ -16,13 +16,15 @@
         {foreach from=$oProduct->childs->all() item=child}
             {assign var=amc value=$child->category_main->limit(1)}
             {assign var=main_cat value=$amc->get()}
-            <tr class="row"
+            <tr class="row google_impression_object"
                 data-product-id="{$child->productid}"
                 data-brand="{$child->brand->brand|escape}"
                 data-title="{$child->product|escape}"
+                data-name="{$child->product|escape}"
                 data-category="{$main_cat->category->category|escape}"
                 data-sfid="{$current_storefront}"
-                data-price='{getPricingArray pricing=$child->pricing json=true}'>
+                data-price='{getPricingArray pricing=$child->pricing json=true}'
+                data-list='group_product_item'>
                 {assign var=thumbnail_m value=$child->thumbnail}
                 {assign var=thumbnail value=$thumbnail_m->get()}
                 <td>{if $thumbnail}<img src="{include file="product_image_src.tpl" tmbn_url=$thumbnail->getUrl()}"/>{/if}</td>

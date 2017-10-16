@@ -185,7 +185,7 @@ vim: set ts=2 sw=2 sts=2 et:
       {if $active_modules.Detailed_Product_Images and $images ne ''}
         <ul data-role="listview" data-inset="true">
           <li data-icon="false">
-            <a href="{$current_location}/product.php?productid={$product.productid}&mobile_mode=get_detailed_images" class="ga_click" data-label="More Images">
+            <a href="{$current_location}/product.php?productid={$product.productid}&mobile_mode=get_detailed_images" class="ga_click google_impression_object" data-list="detailed_images" data-label="More Images">
             {/if}
                 {if $oProduct && $oProduct->isGroupRoot()}
                     {include file="group_thumbnail.tpl" product=$oProduct}
@@ -226,7 +226,7 @@ vim: set ts=2 sw=2 sts=2 et:
             ga('send', 'event', 'calculate shipping', 'showed', {nonInteraction: true});
         </script>
     {/literal}
-        <span id="calculate_shipping_button" data-product-id="{$product.productid}" style="margin-top: -5px;" class="cidev_new_button cidev_new_white">Calculate shipping</span>
+        <span id="calculate_shipping_button" data-product-id="{$product.productid}" style="margin-top: -5px;" class="cidev_new_button cidev_new_white">Show shipping</span>
     {/if}
     <div id="calculate_shipping_text" class="hidden">
         <div colspan="2" class="shipping_info" style="padding: 20px 0;">
