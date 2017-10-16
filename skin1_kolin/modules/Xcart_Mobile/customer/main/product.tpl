@@ -115,9 +115,8 @@ vim: set ts=2 sw=2 sts=2 et:
                 {if !$is_group && $product.distribution eq "" && !($product.product_type eq "C" and $active_modules.Product_Configurator)}
                     <div id="so_o_stock" itemprop="availability"
                          content="{if $product.product_availability eq "in stock"}InStock{else}OutOfStock{/if}"
-                         class="product-quantity-text-top{if $product.avail gt 0 or $config.General.unlimited_products eq "Y"} in-stock{/if}">
-
-                        {if $product.avail gt 0 or $config.General.unlimited_products eq "Y"}
+                         class="product-quantity-text-top{if $product.product_availability eq "in stock" && ($product.avail gt 0 or $config.General.unlimited_products eq "Y")} in-stock{/if}">
+                        {if $product.product_availability eq "in stock" && ($product.avail gt 0 or $config.General.unlimited_products eq "Y")}
                             {$lng.lbl_in_stock_top}
                         {else}
                             {$lng.lbl_out_stock}
@@ -150,26 +149,28 @@ vim: set ts=2 sw=2 sts=2 et:
 
                             {else}
                                 {if !$is_group}
-                                <li data-theme="b" id="top-cart-button">
-                                    {strip}
-                                        <a href="{$catalogs.customer}/cart.php"
+                                    {if $product.product_availability eq "in stock"}
+                                    <li data-theme="b" id="top-cart-button">
+                                        {strip}
+                                            <a href="{$catalogs.customer}/cart.php"
 
-                                                {if $product.lead_time_message ne ""}
-                                                    onclick="javascript: if (confirm('{$product.lead_time_message}')) {ldelim}  ajax_add_to_cart('{$product.productid}', '{$product.add_date}', 'product'); $('#orderform-{$product.productid}').submit(); {rdelim}"
+                                                    {if $product.lead_time_message ne ""}
+                                                        onclick="javascript: if (confirm('{$product.lead_time_message}')) {ldelim}  ajax_add_to_cart('{$product.productid}', '{$product.add_date}', 'product'); $('#orderform-{$product.productid}').submit(); {rdelim}"
+                                                    {else}
+                                                        onclick="javascript: $('#orderform-{$product.productid}').submit();"
+                                                    {/if}
+
+                                            >
+                                                {currency value=$product.taxed_price tag_id=""}
+                                                {if $product.appearance.added_to_cart}
+                                                    {$lng.lbl_add_more}
                                                 {else}
-                                                    onclick="javascript: $('#orderform-{$product.productid}').submit();"
+                                                    {$lng.lbl_add_to_cart}
                                                 {/if}
-
-                                        >
-                                            {currency value=$product.taxed_price tag_id=""}
-                                            {if $product.appearance.added_to_cart}
-                                                {$lng.lbl_add_more}
-                                            {else}
-                                                {$lng.lbl_add_to_cart}
-                                            {/if}
-                                        </a>
-                                    {/strip}
-                                </li>
+                                            </a>
+                                        {/strip}
+                                    </li>
+                                    {/if}
                                 {/if}
                             {/if}
                         </ul>
@@ -307,7 +308,9 @@ function send_question_email_form(){
 //]]>
 </script>
 
-
+    {if $product.product_availability ne "in stock"}
+        {include file="sliders/slider.tpl" productid=$product.productid mode='similar_products'  title="Similar products"}
+    {/if}
   {foreach from=$product_tabs item=tab key=ind}
     <div data-role="collapsible" data-collapsed="true" class="ga_click">
       <h3>{$tab.title}</h3>

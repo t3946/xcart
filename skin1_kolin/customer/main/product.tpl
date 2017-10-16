@@ -174,8 +174,7 @@
                                 </tr>
 
                                 {if $config.Appearance.show_in_stock eq "Y" and $config.General.unlimited_products ne "Y" and $product.distribution eq "" && $product.avail <= $config.Appearance.quantity_threshold && $product.avail gt 0}
-                                    <tr id="so_o_stock" itemprop="availability"
-                                        content="{if $product.product_availability eq "in stock"}InStock{else}OutOfStock{/if}">
+                                    <tr id="so_o_stock" itemprop="availability" content="{if $product.product_availability eq "in stock"}InStock{else}OutOfStock{/if}">
                                         <td width="10%" class="BlackT">{$lng.lbl_in_stock}:</td>
                                         <td nowrap="nowrap" id="product_avail_txt" class="BlackT">
                                             {if $product.avail gt 0}{$lng.txt_items_available|substitute:"items":$product.avail}{else}{$lng.lbl_no_items_available}{/if}
@@ -575,6 +574,16 @@
     </table>
 {/if}
 
+{if $product.product_availability ne "in stock"}
+    <br />
+    <br />
+
+    <div id="similar_products" style="display: none;">{include file="customer/main/ajax_carousel_products.tpl" section_name="similar_products" section_title=$lng.lbl_similar_products}</div>
+
+    <script type="text/javascript">
+        func_load_ALL_ajax_carousels("similar_products", 0);
+    </script>
+{/if}
 
 {if $product.cart_manufact_text_displayed ne ""}
     <br/>
@@ -632,7 +641,11 @@
      style="display: none;">{include file="customer/main/ajax_carousel_products.tpl" section_name="recently_viewed_products" section_title=$lng.lbl_recently_viewed_products}</div>
 
 <script type="text/javascript">
-    func_load_ALL_ajax_carousels("products_also_bought_with_this_product,related_products,similar_products,recently_viewed_products", 0);
+    {assign var=carousels value='products_also_bought_with_this_product,related_products,similar_products,recently_viewed_products'}
+    {if $product.product_availability ne "in stock"}
+        {assign var=carousels value='products_also_bought_with_this_product,related_products,recently_viewed_products'}
+    {/if}
+    func_load_ALL_ajax_carousels("{$carousels}", 0);
 </script>
 
 {if $active_modules.Recommended_Products ne ""}
