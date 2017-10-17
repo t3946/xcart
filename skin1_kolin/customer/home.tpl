@@ -211,8 +211,15 @@ function func_load_ajax_carousel_products(section_name)
                         html += this.thumb;
                     }
                     html += '</a></div>' +
-                        '<br />' + '<a href="' + a_href + '" onclick="onProductClick(\'' + this.productid + '\',\'' + this.product + '\',\'' + this.category + '\',\'' + this.brand + '\',\'' + this.N_key + '\',\'' + ga_page_name + '\',\'' + this.price.toFixed(2) + '\'); return !ga.loaded;">' + this.title + '</a>';
-                    if (this.is_group === 'false') {html += '<br /> <font class="ProductPrice">Our Price: US$ ' + this.price.toFixed(2) + '</font>';}
+                        '<br />' + '<a href="' + a_href + '" onclick="onProductClick(\'' + this.productid + '\',\'' + this.product + '\',\'' + this.category + '\',\'' + this.brand + '\',\'' + this.N_key + '\',\'' + ga_page_name + '\',\'' + this.price.toFixed(2) + '\'); return !ga.loaded;">' + this.product + '</a>';
+                    if (this.is_group === true) {
+                        if (this.price > 0) {
+                            html += '<br /> <span class="ProductPrice">US$ ' + this.price.toFixed(2) + ' - US$ ' + this.price_2.toFixed(2) + '</span>';
+                        }
+                    } else
+                    {
+                        html += '<br /> <span class="ProductPrice">US$ ' + this.price.toFixed(2) + '</span>';
+                    }
                     html += '</div>' +
                         '</li>';
                 });

@@ -47,13 +47,13 @@ if ($REQUEST_METHOD == 'POST') {
                     'productid' => $oProduct->productid,
                     'clean_url' => $oProduct->getRelativeURL(),
                     'price' => $oProduct->getFrontendPrice(),
+                    'price_2' => $oProduct->getFrontendPrice(2),
                     'category' => $oProduct->getMainCategory()->category,
                     'brand' => $oBrand->brand,
-                    'product' => $oProduct->getTitle(),
+                    'product' => htmlspecialchars($oProduct->getTitle()),
                     'thumb' => $oProduct->isGroupRoot() ? $smarty->fetch('group_thumbnail.tpl') : $smarty->fetch('product_thumbnail.tpl'),
                     'N_key' => $k + 1,
                     'ga_param' => $sGoogleAnaliticsParam,
-                    'title' => $oProduct->getTitle(),
                     'is_group' => $oProduct->isGroupRoot()
                 ];
 

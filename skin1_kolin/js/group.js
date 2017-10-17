@@ -142,7 +142,7 @@ $(function() {
                     quantity: q,
                     price: getPrice(price_table, q) * q,
                     brand: $(this).data('brand'),
-                    title: $(this).data('title'),
+                    title: $(this).data('name'),
                     category: $(this).data('category')
                 };
             }

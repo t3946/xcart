@@ -1,7 +1,11 @@
-{if $product->getThumbnails()}
-    {foreach from=$product->getThumbnails() item=thumb name=group}
-        {if $smarty.foreach.group.index < 4}
-            <img data-product-id="{$thumb->id}" style="width:50%; height: 50%; float:left; padding:0; border: 4px solid white; box-sizing: border-box;" src="{include file="product_image_src.tpl" tmbn_url=$thumb->getUrl()}" title="{$product->getTitle()|escape}" alt="{$product->getTitle()|escape}" />
+{foreach from=$product->getFrontendChilds() item=child name=group}
+   {if $smarty.foreach.group.index < 4}
+       {assign var=thumbnail value=$child->getThumbnail()}
+       {if $thumbnail}
+            <img {if $lazy}data-lazy="{include file="product_image_src.tpl" tmbn_url=$thumbnail->getUrl()}"{/if}
+                 style="width:50%; height: 50%; float:left; padding:0; border: 4px solid white; box-sizing: border-box;"
+                 {if !$lazy}src="{include file="product_image_src.tpl" tmbn_url=$thumbnail->getUrl()}"{/if}
+                 title="{$child->getTitle()|escape}" alt="{$child->getTitle()|escape}" data-product-id="{$child->productid}"  />
         {/if}
-    {/foreach}
-{/if}
+   {/if}
+{/foreach}

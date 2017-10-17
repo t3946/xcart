@@ -1,5 +1,6 @@
 <div id="group_product_line">
-    {assign var=count value=$oProduct->childs->count()}
+    {assign var=childs value=$oProduct->getFrontendChilds()}
+    {assign var=count value=$childs->count()}
     <br/>
     <table style="margin-top: -10px;" width="100%" cellspacing="0">
         <tr>
@@ -13,13 +14,12 @@
     <br/>
 
     <table width="100%" cellspacing="0" cellpadding="3" class="group_product">
-        {foreach from=$oProduct->childs->all() item=child}
+        {foreach from=$oProduct->getFrontendChilds() item=child}
             {assign var=amc value=$child->category_main->limit(1)}
             {assign var=main_cat value=$amc->get()}
             <tr class="row google_impression_object"
                 data-product-id="{$child->productid}"
                 data-brand="{$child->brand->brand|escape}"
-                data-title="{$child->product|escape}"
                 data-name="{$child->product|escape}"
                 data-category="{$main_cat->category->category|escape}"
                 data-sfid="{$current_storefront}"

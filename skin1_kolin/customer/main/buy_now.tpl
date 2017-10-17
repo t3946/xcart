@@ -34,8 +34,9 @@
 
                             {assign var=more_label value=$lng.lbl_more_info}
                             {if $is_group && $products[product].oProduct}
-                                {assign var=child_count value=$products[product].oProduct->childs->count()}
-                                {assign var=more_label value="See `$child_count` product variations..."}
+                                {assign var=childs value=$products[product].oProduct->getFrontendChilds()}
+                                {assign var=child_count value=$childs->count()}
+                                {assign var=more_label value="See `$child_count` product variations"}
                             {/if}
 
                             <td>{include file="buttons/button.tpl" style="button" href=$button_href button_title=$more_label}</td>

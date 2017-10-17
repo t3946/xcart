@@ -145,6 +145,12 @@
                                         {if $active_modules.Special_Offers ne "" and $products[product].use_special_price ne ""}
                                             {include file="modules/Special_Offers/customer/product_special_price.tpl" product=$products[product]}
                                         {/if}
+                                    {else}
+                                        {if $products[product].oProduct}
+                                            <span class="ProductPrice">Price range : {include file="currency.tpl" value=$products[product].oProduct->getFrontendPrice()} - {include file="currency.tpl" value=$products[product].oProduct->getFrontendPrice(2)}</span>
+                                            <br/>
+                                            <br/>
+                                        {/if}
                                     {/if}
                                 {/if}
                             {/if}
