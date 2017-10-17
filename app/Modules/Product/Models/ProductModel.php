@@ -324,6 +324,7 @@ class ProductModel extends AutoMetaModel implements ICartItem
 
     public function isOutOfStock()
     {
+//        return true;
         return $this->isProductOutOfStock();
     }
 

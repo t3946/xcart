@@ -62,10 +62,9 @@
             </div>
         </div>
 
+        {if !$model->isOutOfStock()}
         <div class="row">
             <div class="column small-12 large-7 price-row-width xl-6">
-
-                {if !$model->isOutOfStock()}
                 <div class="table table__prices table__prices--down price-row-width">
                     {foreach $model->getPrices() as $quantity => $price last=$last}
                         {if $quantity == 1}{continue}{/if}
@@ -87,9 +86,9 @@
                         {set $last_price = $price}
                     {/foreach}
                 </div>
-                {/if}
 
             </div>
+
 
 
             {set $subtotal_hide = ($model->list_price > $model->getFrontendPrice())}
@@ -129,8 +128,10 @@
                 </div>
             </div>
         </div>
+        {/if}
     </div>
 
+    {if !$model->isOutOfStock()}
     <div class="row">
         <div class="columns small-12 hide-for-medium">
             <div class="cart_add">
@@ -142,6 +143,7 @@
             </div>
         </div>
     </div>
+    {/if}
 
 </div>
 

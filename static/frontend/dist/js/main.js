@@ -43618,7 +43618,10 @@ var ProductImageSlider = function (_Component) {
 
         _this.preparedItems = null;
 
+        _this.onResize = _lodash2.default.throttle(_this.onResize, 200);
+
         _this.state = {
+            height: 400,
             loading: true,
             items: props.items || [],
             count: len,
@@ -43630,6 +43633,25 @@ var ProductImageSlider = function (_Component) {
         _this.prepareItems(_this.state.items);
         return _this;
     }
+
+    ProductImageSlider.prototype.componentDidMount = function componentDidMount() {
+        window.addEventListener("resize", this.onResize.bind(this));
+    };
+
+    ProductImageSlider.prototype.componentWillUnmount = function componentWillUnmount() {
+        window.removeEventListener("resize", this.onResize);
+    };
+
+    ProductImageSlider.prototype.onResize = function onResize() {
+
+        if (this._box) {
+            var height = this._box.getBoundingClientRect().height;
+
+            if (this.state.height !== height) {
+                this.setState({ height: height });
+            }
+        }
+    };
 
     ProductImageSlider.prototype.prepareItems = function prepareItems(items) {
         var _this2 = this;
@@ -43868,12 +43890,14 @@ var ProductImageSlider = function (_Component) {
             (0, _preact.h)(
                 "div",
                 { className: "slider-thumbs" },
+                (0, _preact.h)("a", { href: "#", className: "prev", onClick: function onClick(e) {
+                        _this6.prevHndl(e);
+                    } }),
                 (0, _preact.h)(
                     "div",
-                    { className: "wrap" },
-                    (0, _preact.h)("a", { href: "#", className: "prev", onClick: function onClick(e) {
-                            _this6.prevHndl(e);
-                        } }),
+                    { className: "wrap", ref: function ref(el) {
+                            return _this6._box = el;
+                        } },
                     (0, _preact.h)(
                         _reactIdSwiper2.default,
                         {
@@ -43883,17 +43907,17 @@ var ProductImageSlider = function (_Component) {
                             mousewheelControl: true,
                             paginationClickable: false,
                             freeMode: true,
-                            height: 460,
+                            height: this.state.height,
                             freeModeFluid: true,
                             freeModeSticky: false,
                             followFinger: true
                         },
                         this.renderThumbs()
-                    ),
-                    (0, _preact.h)("a", { href: "#", className: "next", onClick: function onClick(e) {
-                            _this6.nextHndl(e);
-                        } })
-                )
+                    )
+                ),
+                (0, _preact.h)("a", { href: "#", className: "next", onClick: function onClick(e) {
+                        _this6.nextHndl(e);
+                    } })
             ),
             (0, _preact.h)(
                 "div",

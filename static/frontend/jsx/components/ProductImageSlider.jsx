@@ -17,7 +17,10 @@ export default class ProductImageSlider extends Component
 
         this.preparedItems = null;
 
+        this.onResize = _.throttle(this.onResize, 200);
+
         this.state = {
+            height: 400,
             loading: true,
             items: props.items || [],
             count: len,
@@ -29,7 +32,23 @@ export default class ProductImageSlider extends Component
         this.prepareItems(this.state.items);
     }
 
+    componentDidMount() {
+        window.addEventListener("resize", this.onResize.bind(this));
+    }
+    componentWillUnmount() {
+        window.removeEventListener("resize", this.onResize);
+    }
 
+    onResize() {
+
+        if (this._box) {
+            let height = this._box.getBoundingClientRect().height;
+
+            if (this.state.height !== height) {
+                this.setState({ height: height });
+            }
+        }
+    };
 
     prepareItems(items)
     {
@@ -256,16 +275,16 @@ export default class ProductImageSlider extends Component
         return (
         <div className="images-slider">
             <div className="slider-thumbs">
-                <div className="wrap">
-                    <a href="#" className="prev" onClick={(e)=>{this.prevHndl(e)}}></a>
+                <a href="#" className="prev" onClick={(e)=>{this.prevHndl(e)}}></a>
+                <div className="wrap" ref={(el) => this._box = el }>
                     <Swiper {...{
                         direction: 'vertical',
                         slidesPerView: 'auto',
-                        // slidesPerView: 15,
+                        // slidesPerView: 5,
                         mousewheelControl: true,
                         paginationClickable: false,
                         freeMode: true,
-                        height: 460,
+                        height: this.state.height,
                         freeModeFluid:  true,
                         freeModeSticky: false,
                         followFinger:   true,
@@ -273,8 +292,8 @@ export default class ProductImageSlider extends Component
                     }}>
                         {this.renderThumbs()}
                     </Swiper>
-                    <a href="#" className="next" onClick={(e)=>{this.nextHndl(e)}}></a>
                 </div>
+                <a href="#" className="next" onClick={(e)=>{this.nextHndl(e)}}></a>
             </div>
             <div className="slider-detail">
                 <div className="wrap">
