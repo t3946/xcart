@@ -114,7 +114,7 @@
                                 {if $config.General.unlimited_products ne "Y" && ($products[product].avail le 0 or $products[product].avail lt $products[product].min_amount) && $products[product].variantid}
                                     &nbsp;
                                 {elseif $current_price ne 0}
-                                    {if !$is_group}
+                                    {if !$is_group || $products[product].oProduct->getFrontendPrice() == $products[product].oProduct->getFrontendPrice(2)}
                                         {if $products[product].list_price gt 0 and $current_price lt $products[product].list_price}
                                             {math equation="100-(price/lprice)*100" price=$current_price lprice=$products[product].list_price format="%3.0f" assign=discount}
                                             {if $discount gt 0}
@@ -148,8 +148,6 @@
                                     {else}
                                         {if $products[product].oProduct}
                                             <span class="ProductPrice">Price range : {include file="currency.tpl" value=$products[product].oProduct->getFrontendPrice()} - {include file="currency.tpl" value=$products[product].oProduct->getFrontendPrice(2)}</span>
-                                            <br/>
-                                            <br/>
                                         {/if}
                                     {/if}
                                 {/if}

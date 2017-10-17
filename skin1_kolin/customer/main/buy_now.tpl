@@ -34,6 +34,7 @@
 
                             {assign var=more_label value=$lng.lbl_more_info}
                             {if $is_group && $products[product].oProduct}
+                                <br/>
                                 {assign var=childs value=$products[product].oProduct->getFrontendChilds()}
                                 {assign var=child_count value=$childs->count()}
                                 {assign var=more_label value="See `$child_count` product variations"}

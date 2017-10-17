@@ -50,7 +50,7 @@
                                 <span class="price row">
                                     {if $item->isGroupRoot()}
                                         {if $item->getFrontendPrice() > 0}
-                                            US$ {$item->getFrontendPrice()|formatprice} - {$item->getFrontendPrice(2)|formatprice}
+                                            US$ {$item->getFrontendPrice()|formatprice}{if $item->getFrontendPrice() != $item->getFrontendPrice(2)} - US$ {$item->getFrontendPrice(2)|formatprice}{/if}
                                         {/if}
                                     {else}
                                         US$ {$item->getFrontendPrice()|formatprice}
