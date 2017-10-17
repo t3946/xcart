@@ -261,7 +261,7 @@ function cidev_update_product_amount_next(cartid, amount, manufacturerid){
 {/if}
 </td>
 <td valign="top">
-<a href="product.php?productid={$products[product].productid}"><font class="ProductTitle">{$products[product].oProduct->getTitle()}</font></a>
+<a href="product.php?productid={$products[product].productid}"><font class="ProductTitle">{if $products[product].oProduct}{$products[product].oProduct->getTitle()}{/if}</font></a>
 <br>
 <font color="#006600" class="DialogTitleT">SKU: {$products[product].productcode}</font>
 <br>

@@ -32,7 +32,13 @@
                                 {assign var="button_href" value="product.php?productid=`$products[product].productid`"}
                             {/if}
 
-                            <td>{include file="buttons/button.tpl" style="button" href=$button_href button_title=$lng.lbl_more_info}</td>
+                            {assign var=more_label value=$lng.lbl_more_info}
+                            {if $is_group && $products[product].oProduct}
+                                {assign var=child_count value=$products[product].oProduct->childs->count()}
+                                {assign var=more_label value="See `$child_count` product variations..."}
+                            {/if}
+
+                            <td>{include file="buttons/button.tpl" style="button" href=$button_href button_title=$more_label}</td>
                         </tr>
                     </table>
                 </td>
