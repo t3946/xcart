@@ -222,7 +222,7 @@ class GroupController extends PrototypeAdminController
                     ])->all()) {
                     foreach ($products as $key => $product) {
                         $res .= $this->renderSmarty(
-                            'group_thumbnail.tpl',
+                            'group_image.tpl',
                             ['product' => $product]
                         );
                     }
