@@ -107,17 +107,22 @@ ga('ec:addImpression', {ldelim}
                     <span class="price">{$lng.lbl_enter_your_price}</span><br />
                     {$lng.lbl_enter_your_price_note}
                   {else}
-                      {if !$product.oProduct || !$product.oProduct->isGroupRoot()}
-                      <span class="price">
-                        Price: <span class="price-value">{include file="currency.tpl" value=$current_price}</span>
-                      </span>
-                      <span class="sku">
-                        {if $product.avail gt 0 or $config.General.unlimited_products eq "Y"}
-                            {$lng.lbl_in_stock_top}
-                        {else}
-                            {$lng.lbl_out_stock}
+                      {if !$product.oProduct || !$product.oProduct->isGroupRoot() || ($product.oProduct->getFrontendPrice() > 0 && $product.oProduct->getFrontendPrice() == $product.oProduct->getFrontendPrice(2))}
+                          <span class="price">
+                            Price: <span class="price-value">{include file="currency.tpl" value=$current_price}</span>
+                          </span>
+                          <span class="sku">
+                            {if $product.avail gt 0 or $config.General.unlimited_products eq "Y"}
+                                {$lng.lbl_in_stock_top}
+                            {else}
+                                {$lng.lbl_out_stock}
+                            {/if}
+                          </span>
+                      {else}
+                        {if $product.oProduct && $product.oProduct->getFrontendPrice() > 0}
+                          <span class="price">Price range : <span class="price-value">{include file="currency.tpl" value=$product.oProduct->getFrontendPrice()}
+                                  - {include file="currency.tpl" value=$product.oProduct->getFrontendPrice(2)}</span></span>
                         {/if}
-                      </span>
                       {/if}
 
 
