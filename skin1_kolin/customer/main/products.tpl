@@ -114,7 +114,7 @@
                                 {if $config.General.unlimited_products ne "Y" && ($products[product].avail le 0 or $products[product].avail lt $products[product].min_amount) && $products[product].variantid}
                                     &nbsp;
                                 {elseif $current_price ne 0}
-                                    {if !$is_group || $products[product].oProduct->getFrontendPrice() == $products[product].oProduct->getFrontendPrice(2)}
+                                    {if !$is_group || ($products[product].oProduct->getFrontendPrice() > 0 && $products[product].oProduct->getFrontendPrice() == $products[product].oProduct->getFrontendPrice(2))}
                                         {if $products[product].list_price gt 0 and $current_price lt $products[product].list_price}
                                             {math equation="100-(price/lprice)*100" price=$current_price lprice=$products[product].list_price format="%3.0f" assign=discount}
                                             {if $discount gt 0}
@@ -128,9 +128,8 @@
                                         {/if}
                                         <span class="ProductPrice">{$lng.lbl_our_price}
                                             : {include file="currency.tpl" value=$current_price}</span>
-                                        <span class="MarketPrice">{include file="customer/main/alter_currency_value.tpl" alter_currency_value=$current_price}</span>{if $discount gt 0}{if $config.General.alter_currency_symbol ne ""},{/if}
-                                        <font class="ProductPrice">, {$lng.lbl_save_price} {$discount}%</font>
-                                    {/if}
+                                        <span class="MarketPrice">{include file="customer/main/alter_currency_value.tpl" alter_currency_value=$current_price}</span>
+                                        {if $discount gt 0}{if $config.General.alter_currency_symbol ne ""},{/if}<font class="ProductPrice">, {$lng.lbl_save_price} {$discount}%</font>{/if}
                                         {if $products[product].map_price gt $products[product].taxed_price}
                                             <br/>
                                             <span class="map_price_help">{$config.Product_Page.map_bridge_text}</span>
@@ -146,8 +145,9 @@
                                             {include file="modules/Special_Offers/customer/product_special_price.tpl" product=$products[product]}
                                         {/if}
                                     {else}
-                                        {if $products[product].oProduct}
-                                            <span class="ProductPrice">Price range : {include file="currency.tpl" value=$products[product].oProduct->getFrontendPrice()} - {include file="currency.tpl" value=$products[product].oProduct->getFrontendPrice(2)}</span>
+                                        {if $products[product].oProduct && $products[product].oProduct->getFrontendPrice() > 0}
+                                            <span class="ProductPrice">Price range : {include file="currency.tpl" value=$products[product].oProduct->getFrontendPrice()}
+                                                - {include file="currency.tpl" value=$products[product].oProduct->getFrontendPrice(2)}</span>
                                         {/if}
                                     {/if}
                                 {/if}
