@@ -173,7 +173,7 @@ class ProductHelper
                 return $a;
             }
 
-            $b = trim(mb_substr($b, 0, mb_strrpos($b, ' ')));
+            $b = trim(mb_substr($b, 0, mb_strrpos($b, ' '))). ' ';
 
             for ($i = 0; $i < mb_strlen($a) - 1; $i++) {
                 if (mb_substr($a, $i, 1) != mb_substr($b, $i, 1)) {
@@ -183,7 +183,7 @@ class ProductHelper
                     if (($ls = mb_strpos($a, ' ', $i)) > $i) {
                         $s = mb_substr($a, 0, $ls);
                     } else {
-                        $s = $a;
+                        $s = mb_substr($a, 0, $i);
                     }
                     return trim(mb_substr($s, 0, mb_strrpos($s, ' ')));
                 }
