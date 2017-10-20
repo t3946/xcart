@@ -377,7 +377,7 @@ class ProductModel extends AutoMetaModel implements ICartItem
     {
         $name = $this->seo_product_name ?: $this->product;
 
-        return ($this->isGroupChild()) ?  $this->parent->group_mask . " ". $name : $name;
+        return ($this->isGroupChild()) ?  $this->parent->group_mask . " ". $this->product : $name;
     }
 
     public function getFrontendDescription()
