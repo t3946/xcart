@@ -62,4 +62,5 @@ class AmpProductModel extends ProductModel
             return json_encode($images);
         }
     }
+
 }

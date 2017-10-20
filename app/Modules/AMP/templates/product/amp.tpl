@@ -20,11 +20,12 @@
     <script async src="https://cdn.ampproject.org/v0.js"></script>
     <script async custom-element="amp-bind" src="https://cdn.ampproject.org/v0/amp-bind-0.1.js"></script>
     <script async custom-element="amp-carousel" src="https://cdn.ampproject.org/v0/amp-carousel-0.1.js"></script>
-    <script async custom-element="amp-form" src="https://cdn.ampproject.org/v0/amp-form-0.1.js"></script>
+    {*<script async custom-element="amp-form" src="https://cdn.ampproject.org/v0/amp-form-0.1.js"></script>*}
     <script async custom-element="amp-selector" src="https://cdn.ampproject.org/v0/amp-selector-0.1.js"></script>
     <script async custom-template="amp-mustache" src="https://cdn.ampproject.org/v0/amp-mustache-0.1.js"></script>
     <script async custom-element="amp-youtube" src="https://cdn.ampproject.org/v0/amp-youtube-0.1.js"></script>
     <script async custom-element="amp-analytics" src="https://cdn.ampproject.org/v0/amp-analytics-0.1.js"></script>
+    <script async custom-element="amp-social-share" src="https://cdn.ampproject.org/v0/amp-social-share-0.1.js"></script>
     <style amp-custom>
         {include "product/amp_style.css"}
     </style>
@@ -47,10 +48,9 @@
     </header>
 
     <div class="container main_content" >
-        <a class="title" href="{$model->getAbsoluteUrl()}"><h5 class="title">{$model->product}</h5></a>
+        <a class="title" href="{$model->getAbsoluteUrl()}"><h5 id="original_url"  class="title">{$model->product}</h5></a>
 
-
-        <amp-carousel type="slides" layout="fixed-height" height=250 id="carousel"
+        <amp-carousel class="slide_images" type="slides" layout="fixed-height" height=250 id="carousel"
                       on="slideChange:AMP.setState({ignore}{selected: {slide: event.index}}{/ignore})">
             <!-- Update the `src` of each <amp-img> when the `selected.sku` variable changes. -->
             {foreach $model->getJsonImages() as $image}
@@ -70,34 +70,121 @@
             {/if}
         </p>
 
-        <form method="get" action="{$model->getAbsoluteUrl()}" target="_top">
+        <div class="social">
+            <amp-social-share type="facebook"
+                              data-param-app_id="254325784911610" width="30" height="30"></amp-social-share>
+            <amp-social-share type="twitter" width="30" height="30"></amp-social-share>
+            <amp-social-share type="pinterest"
+                              data-param-media="https://ampbyexample.com/img/amp.jpg" width="30" height="30"></amp-social-share>
+            <amp-social-share type="whatsapp" width="30" height="30"></amp-social-share>
+            <amp-social-share type="email" width="30" height="30"></amp-social-share>
+        </div>
 
-            <div class="options price">
-                <h6>SKU :
-                    <span><b>{$model->productcode}</b><span>
-                </h6>
-            </div>
+        {*<form method="post" action="/ajax_add_to_cart.php" >*}
+            {*<input type="hidden" name="amount" value="1">*}
+            {*<input type="hidden" name="mode" value="add">*}
+            {*<input type="hidden" name="productid" value="{$model->productid}">*}
+            {*<input type="hidden" name="action" value="/cart.php?mode=add">*}
+            {*<input type="hidden" name="relocate_to_cart" value="Yes">*}
+            {*<input type="hidden" name="pbrand" value="{$model->brand->brand|escape}">*}
+            {*<input type="hidden" name="pname" value="{$model->product|escape}">*}
+            {*<input type="hidden" name="pcatalog">*}
+
+            {*<div class="options price">*}
+                {*<h6 id="sku">SKU:*}
+                    {*<span>{$model->productcode}<span>*}
+                {*</h6>*}
+            {*</div>*}
+
+            {*<div>*}
+                {if $model->r_avail > 0}
+                <form method="post" action="/ajax_add_to_cart.php" >
+                    <input type="hidden" name="amount" value="1">
+                    <input type="hidden" name="mode" value="add">
+                    <input type="hidden" name="productid" value="{$model->productid}">
+                    <input type="hidden" name="action" value="/cart.php?mode=add">
+                    <input type="hidden" name="relocate_to_cart" value="Yes">
+
+                    <div class="options price">
+                        <h6 id="sku">SKU:
+                            <span>{$model->productcode}<span>
+                        </h6>
+                    </div>
+
+                    <p><b>In Stock</b></p>
+
+                    <div class="options price">
+                        <h6><b>PRICE:</b>
+                            <!-- Display the price of the selected shirt in the selected size if available.
+                                 Otherwise, display the placeholder text '---'. -->
+                            <span ><b>US$ <span class="mdl-color-text--red">{$model->getFrontendPrice()}</span></b><span>
+                        </h6>
+                    </div>
+
+                    <div class="options purchase">
+                        <!-- Disable the “ADD TO CART” button when:
+                             1. There is no selected size, OR
+                             2. The available sizes for the selected SKU haven’t been fetched yet
+                        -->
+
+                        <button id="place_order" class="mdl-button mdl-button--raised mdl-button--accent add_to_cart" >
+                            Add to cart
+                        </button>
 
 
-            <div class="options price">
-                <h6>PRICE :
-                    <!-- Display the price of the selected shirt in the selected size if available.
-                         Otherwise, display the placeholder text '---'. -->
-                    <span>USD <b><span class="mdl-color-text--red">{$model->getFrontendPrice()}</span></b><span>
-                </h6>
-            </div>
-
-            <div class="options purchase">
-                <!-- Disable the “ADD TO CART” button when:
-                     1. There is no selected size, OR
-                     2. The available sizes for the selected SKU haven’t been fetched yet
-                -->
-                <input type="submit" id="place_order" value="PLACE AN ORDER"
-                       class="mdl-button mdl-button--raised mdl-button--accent">
-            </div>
+                    </div>
 
 
-        </form>
+                </form>
+                {elseif $model->r_avail == 0 || $model->r_avail < 0 }
+                    <div class="similar">
+                        <div class="options price">
+                            <h6 id="sku">SKU:
+                                <span>{$model->productcode}<span>
+                            </h6>
+                        </div>
+
+                        <p><b>Out Of Stock</b></p>
+
+                        <div class="options price">
+                            <h6><b>PRICE:</b>
+                                <!-- Display the price of the selected shirt in the selected size if available.
+                                     Otherwise, display the placeholder text '---'. -->
+                                <span ><b>US$ <span class="mdl-color-text--red">{$model->getFrontendPrice()}</span></b><span>
+                            </h6>
+                        </div>
+                        <button id="sim_prod" class="similar_products" type="button" >
+                            <a id="similar_products" href="{$helper->getLastChildCategoryUrl()}">
+                                <b>FIND SIMILAR PRODUCTS</b>
+                            </a>
+                        </button>
+                    </div>
+                {/if}
+            {*</div>*}
+
+
+            {*<div class="options price">*}
+                {*<h6><b>PRICE:</b>*}
+                    {*<!-- Display the price of the selected shirt in the selected size if available.*}
+                         {*Otherwise, display the placeholder text '---'. -->*}
+                    {*<span ><b>US$ <span class="mdl-color-text--red">{$model->getFrontendPrice()}</span></b><span>*}
+                {*</h6>*}
+            {*</div>*}
+
+            {*<div class="options purchase">*}
+                {*<!-- Disable the “ADD TO CART” button when:*}
+                     {*1. There is no selected size, OR*}
+                     {*2. The available sizes for the selected SKU haven’t been fetched yet*}
+                {*-->*}
+
+                {*<input type="submit" id="place_order" value="ADD TO CART"*}
+                       {*class="mdl-button mdl-button--raised mdl-button--accent" >*}
+
+
+            {*</div>*}
+
+
+        {*</form>*}
 
         <div class="description">
             {$model->getFrontendDescription()}
@@ -113,30 +200,54 @@
             </div>
         </amp-youtube>*}
 
+
         <footer>
-            <table class="about">
-                <tr>
-                    <td class="about">
-                        <h4>Telephone Customer Service</h4>
-                    </td>
-                    <td class="about">
-                        <h4>Web Orders</h4>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="about">
-                        <p>
-                            Mon-Fri: 9 a.m. to 5 p.m. EST<br>
-                            <a class="telephon" href="tel:1-800-929-2431">Toll Free: 1-800-929-2431</a><br>
-                            Tel: (616) 259-5711<br>
-                            Fax: (813) 944-4516
-                        </p>
-                    </td>
-                    <td class="about">
-                        <p>24 hours a day, 7 days a week<br>
-                            Email Support</p>
-                    </td>
-                </tr>
+            <hr class="between" id="hr_footer">
+            <div class="about">
+                <div class="about_child">
+                    <h4>
+                        Telephone Customer Service
+                    </h4>
+                    <p class="about_text">
+                        Mon-Fri: 9 a.m. to 5 p.m. EST<br>
+                        <a class="telephon" href="tel:1-800-929-2431">Toll Free: 1-800-929-2431</a><br>
+                        Tel: (616) 259-5711<br>
+                        Fax: (813) 944-4516
+                    </p>
+                </div>
+                <div>
+                    <h4>
+                        Web Orders
+                    </h4>
+                    <p class="about_text">
+                        24 hours a day, 7 days a week<br>
+                        Email Support
+                    </p>
+                </div>
+                <div>
+                    <h4>
+                        USA Address
+                    </h4>
+                    <p class="about_text">
+                        S3 Stores, Inc.<br>
+                        2885 Sanford Ave SW #12717<br>
+                        Grandville, MI 49418<br>
+                        USA
+                    </p>
+                </div>
+                <div>
+                    <h4>
+                        Canadian Address
+                    </h4>
+                    <p class="about_text">
+                        S3 Stores, Inc.<br>
+                        27 Joseph St.<br>
+                        Chatham, Ontario N7L 3G4<br>
+                        Canada</p>
+                    </p>
+                </div>
+            </div>
+
             </table>
 
         </footer>
@@ -175,7 +286,18 @@
                         "selector": "#place_order",
                         "request": "event",
                         "vars": {
-                            "eventCategory": "place-order",
+                            "eventCategory": "add-to-cart",
+                            "eventAction": "button-click"
+                        }
+                    },
+
+                    "trackClickOnButton" :
+                    {
+                        "on": "click",
+                        "selector": "#sim_prod",
+                        "request": "event",
+                        "vars": {
+                            "eventCategory": "find-similar-products",
                             "eventAction": "button-click"
                         }
                     },

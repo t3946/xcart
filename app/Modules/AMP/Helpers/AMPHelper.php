@@ -7,8 +7,11 @@ namespace Modules\AMP\Helpers;
 use Mindy\QueryBuilder\Expression;
 use Modules\Product\Models\CategoryModel;
 use Modules\AMP\Models\AmpProductModel;
+use Modules\User\Helpers\SurfingHelper;
+use Modules\User\Models\SurfPathModel;
 use Xcart\App\Main\Xcart;
-
+use Xcart\Cart;
+use Xcart\CartElement;
 
 class AMPHelper
 {
@@ -109,6 +112,28 @@ class AMPHelper
 
     }
 
+    public function getLastChildCategoryUrl($category = null){
+
+        $last_category_url = null;
+
+        if (!$category) {
+            $category = $this->model->getMainCategory();
+            $cids = explode('/',$category->categoryid_path);
+            $last_cid = end($cids);
+            $category = CategoryModel::objects()->get(['categoryid' =>$last_cid]);
+        }
+
+        if($category){
+            $last_category_url = $category->getAbsoluteUrl(true);
+        }
+
+        if(empty($last_category_url)){
+            $last_category_url = $this->model->getAbsoluteUrl();
+        }
+
+        return $last_category_url;
+    }
+
     public function getLogoImage(){
 
         /** @var \Modules\Sites\Models\SiteModel $site */
@@ -125,4 +150,13 @@ class AMPHelper
 
         return $image;
     }
+
+    public function addToCart(){
+        $action = "cart.php";
+        $productid = $this->model->productid;
+        $amount = 1;
+        if (include "ajax_add_to_cart.php")
+        Xcart::app()->request->redirect('//dev07.artist/cart.php');
+    }
+
 }
