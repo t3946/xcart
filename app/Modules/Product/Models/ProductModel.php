@@ -202,11 +202,6 @@ class ProductModel extends AutoMetaModel implements ICartItem
                 'link' => ['productid' => 'productid'],
                 'extra' => ['main' => 'Y']
             ],
-            'categories' => [
-                'class' => ManyToManyField::className(),
-                'modelClass' => CategoryModel::className(),
-                'through' => ProductCategoriesModel::className(),
-            ],
             'childs' => [
                 'class' => HasManyField::className(),
                 'modelClass' => ProductModel::className(),
