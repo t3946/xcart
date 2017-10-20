@@ -10,7 +10,6 @@ use Modules\Distributor\Models\DistributorModel;
 use Modules\Sites\Models\SiteModel;
 use Modules\Menu\Models\CleanUrlModel;
 use Xcart\App\Components\Breadcrumbs;
-use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\AutoMetaModel;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\CharField;
@@ -19,10 +18,7 @@ use Xcart\App\Orm\Fields\HasManyField;
 use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Fields\ManyToManyField;
 use Xcart\App\Orm\Fields\UnixTimestampField;
-use Xcart\App\Orm\Fields\OneToOneField;
-use Xcart\App\Orm\Fields\ManyToManyField;
 use Xcart\App\Traits\DataModelTrait;
-use Xcart\App\Traits\SlugifyTrait;
 use Xcart\Product;
 
 /**
