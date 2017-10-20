@@ -92,7 +92,7 @@
 
                 {/if}
             {/if}
-            <a id="similar_products" href="{$model->getAbsoluteUrl()}">
+            <a class="button_redirect" id="group_prod" href="{$model->getAbsoluteUrl()}">
                 <b>FULL PRODUCT LINE</b>
             </a>
 
@@ -155,7 +155,7 @@
 
 
                         </div>
-                        <a id="similar_products" href="{$helper->getLastChildCategoryUrl()}">
+                        <a class="button_redirect" id="similar_prod" href="{$helper->getLastChildCategoryUrl()}">
                             <b>FIND SIMILAR PRODUCTS</b>
                         </a>
 
@@ -286,7 +286,7 @@
                         "selector": "#group_prod",
                         "request": "event",
                         "vars": {
-                            "eventCategory": "find-similar-products",
+                            "eventCategory": "full-product-line",
                             "eventAction": "button-click"
                         }
                     },

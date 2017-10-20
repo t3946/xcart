@@ -550,7 +550,7 @@ amp-carousel[controls] .amp-carousel-button{
     margin-right: 5px;
 }
 
-#similar_products{
+.button_redirect{
     color: black;
     text-decoration: none;
     padding: 8px 25px;
@@ -561,10 +561,10 @@ amp-carousel[controls] .amp-carousel-button{
     border: 0 solid #ffb400;
 }
 
-#similar_products:hover{
+.button_redirect:hover{
     background-color: #ff9c00;
 }
 
-#similar_products:active{
+.button_redirect:active{
     background-color: #ff8a00;
 }
