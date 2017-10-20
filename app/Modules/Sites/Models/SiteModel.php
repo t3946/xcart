@@ -15,6 +15,8 @@ use Xcart\App\Orm\Model;
  * @package Modules\Sites\Models
  *
  * @property int|null storefrontid
+ *
+ * @property null|\Xcart\App\Orm\Manager favicons
  */
 class SiteModel extends Model
 {
@@ -51,6 +53,13 @@ class SiteModel extends Model
             'images' => [
                 'class' => HasManyField::className(),
                 'modelClass' => ImageSModel::className(),
+                'link' => ['id' => 'storefrontid'],
+//                'extra' => ['avail' => 'Y']
+            ],
+
+            'favicons' => [
+                'class' => HasManyField::className(),
+                'modelClass' => ImageFModel::className(),
                 'link' => ['id' => 'storefrontid'],
 //                'extra' => ['avail' => 'Y']
             ],

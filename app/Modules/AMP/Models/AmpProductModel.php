@@ -32,6 +32,17 @@ class AmpProductModel extends ProductModel
         }
     }
 
+//    public function getFavicon(){
+//        $modul = Xcart::app()->getModule('Sites');
+//        $site = $modul->getSite();
+//
+//        /** @var \Modules\Sites\Models\ImageFModel $favoicons */
+//        $favoicons = $site->favicons->limit(1)->get();
+//
+//        return $favoicons->getURL();
+//
+//    }
+
     /**
      * @param int $flag
      * @var \Modules\Sites\Models\SiteModel $site
