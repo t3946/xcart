@@ -47,20 +47,50 @@ class AmpProductModel extends ProductModel
 
         /** @var \Modules\Sites\Models\SiteModel $site */
         $site = $this->sites->limit(1)->get();
-        $images_model = $this->getImages();
         $pref = ($site->getConfig()['Enable_CDN'] == "Y") ? 'cdn.': 'www.';
         $domain = $site->getBaseDomain();
         $domain = "//" .$pref . $domain;
 
-        foreach ($images_model as $image_model){
-            $for_image = substr($image_model->image_path, 1);
-            $images[] = $domain . $for_image;
+        if($this->isGroupRoot()){
+            $product_models = $this->getFrontendChilds();
+            foreach ($product_models as $p_model){
+                $images_model = $p_model->getImages();
+                if($images_model) {
+                    $image_model = reset($images_model);
+                    $for_image = ltrim($image_model->image_path, ".");
+                    $images[] = $domain . $for_image;
+                }
+            }
+            if(!$flag){
+                return $images;
+            }
+            else {
+                return json_encode($images);
+            }
         }
-        if(!$flag){
-            return $images;
-        } else {
-            return json_encode($images);
+
+        else {
+            $images_model = $this->getImages();
+
+            foreach ($images_model as $image_model) {
+                $for_image = ltrim($image_model->image_path, ".");
+                $images[] = $domain . $for_image;
+            }
+            if (!$flag) {
+                return $images;
+            }
+            else {
+                return json_encode($images);
+            }
         }
+    }
+
+    public function getJsonGroupImages($flag = 0){
+
+        $images = [];
+        $image = null;
+
+
     }
 
 }

@@ -48,7 +48,7 @@
     </header>
 
     <div class="container main_content" >
-        <a class="title" href="{$model->getAbsoluteUrl()}"><h5 id="original_url"  class="title">{$model->product}</h5></a>
+        <a class="title" href="{$model->getAbsoluteUrl()}"><h5 id="original_url"  class="title">{$model->getFrontendName()}</h5></a>
 
         <amp-carousel class="slide_images" type="slides" layout="fixed-height" height=250 id="carousel"
                       on="slideChange:AMP.setState({ignore}{selected: {slide: event.index}}{/ignore})">
@@ -80,23 +80,26 @@
             <amp-social-share type="email" width="30" height="30"></amp-social-share>
         </div>
 
-        {*<form method="post" action="/ajax_add_to_cart.php" >*}
-            {*<input type="hidden" name="amount" value="1">*}
-            {*<input type="hidden" name="mode" value="add">*}
-            {*<input type="hidden" name="productid" value="{$model->productid}">*}
-            {*<input type="hidden" name="action" value="/cart.php?mode=add">*}
-            {*<input type="hidden" name="relocate_to_cart" value="Yes">*}
-            {*<input type="hidden" name="pbrand" value="{$model->brand->brand|escape}">*}
-            {*<input type="hidden" name="pname" value="{$model->product|escape}">*}
-            {*<input type="hidden" name="pcatalog">*}
+        {if $model->isGroupRoot()}
+            <h6 id="sku">SKU:
+                <span>{$model->productcode}<span>
+            </h6>
+            {if $model->getFrontendPrice() > 0}
+                {if $model->getFrontendPrice() != $model->getFrontendPrice(2)}
+                    <h6><b>PRICE RANGE:</b>
+                        <span ><b>US$ <span class="mdl-color-text--red">{$model->getFrontendPrice()} - US$ {$model->getFrontendPrice(2)}</span></b></span>
+                    </h6>
 
-            {*<div class="options price">*}
-                {*<h6 id="sku">SKU:*}
-                    {*<span>{$model->productcode}<span>*}
-                {*</h6>*}
-            {*</div>*}
+                {/if}
+            {/if}
+            <button id="group_prod" class="similar_products" type="button" >
+                <a id="similar_products" href="{$model->getAbsoluteUrl()}">
+                    <b>full Product line</b>
+                </a>
+            </button>
+            <br><br>
 
-            {*<div>*}
+            {else}
                 {if $model->r_avail > 0}
                 <form method="post" action="/ajax_add_to_cart.php" >
                     <input type="hidden" name="amount" value="1">
@@ -110,9 +113,7 @@
                             <span>{$model->productcode}<span>
                         </h6>
                     </div>
-
-                    <p><b>In Stock</b></p>
-
+                        <p><b>In Stock</b></p>
                     <div class="options price">
                         <h6><b>PRICE:</b>
                             <!-- Display the price of the selected shirt in the selected size if available.
@@ -145,13 +146,15 @@
                         </div>
 
                         <p><b>Out Of Stock</b></p>
-
                         <div class="options price">
+
                             <h6><b>PRICE:</b>
                                 <!-- Display the price of the selected shirt in the selected size if available.
                                      Otherwise, display the placeholder text '---'. -->
-                                <span ><b>US$ <span class="mdl-color-text--red">{$model->getFrontendPrice()}</span></b><span>
+                                <span ><b>US$ <span class="mdl-color-text--red">{$model->getFrontendPrice()}</span></b></span>
                             </h6>
+
+
                         </div>
                         <button id="sim_prod" class="similar_products" type="button" >
                             <a id="similar_products" href="{$helper->getLastChildCategoryUrl()}">
@@ -160,31 +163,8 @@
                         </button>
                     </div>
                 {/if}
-            {*</div>*}
+        {/if}
 
-
-            {*<div class="options price">*}
-                {*<h6><b>PRICE:</b>*}
-                    {*<!-- Display the price of the selected shirt in the selected size if available.*}
-                         {*Otherwise, display the placeholder text '---'. -->*}
-                    {*<span ><b>US$ <span class="mdl-color-text--red">{$model->getFrontendPrice()}</span></b><span>*}
-                {*</h6>*}
-            {*</div>*}
-
-            {*<div class="options purchase">*}
-                {*<!-- Disable the “ADD TO CART” button when:*}
-                     {*1. There is no selected size, OR*}
-                     {*2. The available sizes for the selected SKU haven’t been fetched yet*}
-                {*-->*}
-
-                {*<input type="submit" id="place_order" value="ADD TO CART"*}
-                       {*class="mdl-button mdl-button--raised mdl-button--accent" >*}
-
-
-            {*</div>*}
-
-
-        {*</form>*}
 
         <div class="description">
             {$model->getFrontendDescription()}
@@ -295,6 +275,17 @@
                     {
                         "on": "click",
                         "selector": "#sim_prod",
+                        "request": "event",
+                        "vars": {
+                            "eventCategory": "find-similar-products",
+                            "eventAction": "button-click"
+                        }
+                    },
+
+                    "trackClickOnButtonGroup" :
+                    {
+                        "on": "click",
+                        "selector": "#group_prod",
                         "request": "event",
                         "vars": {
                             "eventCategory": "find-similar-products",

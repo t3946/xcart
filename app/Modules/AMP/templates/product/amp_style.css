@@ -83,7 +83,7 @@ h5 {
 
 h5, h6 {
     font-family: "Roboto", "Helvetica", "Arial", sans-serif;
-    margin: 24px 0 16px
+    margin: 0px 0 20px
 }
 
 h6 {
@@ -395,6 +395,10 @@ hr.between {
     width: 250px;
 }
 
+.social{
+    margin-bottom: 20px;
+}
+
 amp-social-share:not(:first-child) {
     margin-left: 5px;
 }
@@ -439,6 +443,7 @@ amp-social-share:not(:first-child) {
 
 #sku{
     color: #28862f;
+
 }
 
 .amp-carousel-button{
