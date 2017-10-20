@@ -92,11 +92,10 @@
 
                 {/if}
             {/if}
-            <button id="group_prod" class="similar_products" type="button" >
-                <a id="similar_products" href="{$model->getAbsoluteUrl()}">
-                    <b>full Product line</b>
-                </a>
-            </button>
+            <a id="similar_products" href="{$model->getAbsoluteUrl()}">
+                <b>FULL PRODUCT LINE</b>
+            </a>
+
             <br><br>
 
             {else}
@@ -156,11 +155,10 @@
 
 
                         </div>
-                        <button id="sim_prod" class="similar_products" type="button" >
-                            <a id="similar_products" href="{$helper->getLastChildCategoryUrl()}">
-                                <b>FIND SIMILAR PRODUCTS</b>
-                            </a>
-                        </button>
+                        <a id="similar_products" href="{$helper->getLastChildCategoryUrl()}">
+                            <b>FIND SIMILAR PRODUCTS</b>
+                        </a>
+
                     </div>
                 {/if}
         {/if}
@@ -274,7 +272,7 @@
                     "trackClickOnButton" :
                     {
                         "on": "click",
-                        "selector": "#sim_prod",
+                        "selector": "#similar_prod",
                         "request": "event",
                         "vars": {
                             "eventCategory": "find-similar-products",
