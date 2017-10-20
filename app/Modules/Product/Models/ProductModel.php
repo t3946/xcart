@@ -375,7 +375,9 @@ class ProductModel extends AutoMetaModel implements ICartItem
 
     public function getFrontendName()
     {
-        return $this->seo_product_name ?: $this->product;
+        $name = $this->seo_product_name ?: $this->product;
+
+        return ($this->isGroupChild()) ?  $this->parent->group_mask . " ". $name : $name;
     }
 
     public function getFrontendDescription()
@@ -413,15 +415,10 @@ class ProductModel extends AutoMetaModel implements ICartItem
         return $tq;
     }
 
+    /*TODO Remove this method*/
     public function getTitle()
     {
-        if ($this->seo_product_name) {
-            $title = $this->seo_product_name;
-        } else {
-            $title = $this->product;
-        }
-
-        return ($this->isGroupChild()) ?  $this->parent->group_mask . " ". $title : $title;
+        return $this->getFrontendName();
     }
 
     public function getFrontendChilds()
@@ -434,10 +431,7 @@ class ProductModel extends AutoMetaModel implements ICartItem
      */
     public function getThumbnail()
     {
-        if ($thumb = $this->thumbnail->limit(1)->get()) {
-            return $thumb;
-        }
-        return null;
+        return $this->thumbnail->limit(1)->get();
     }
 
     public function getAdminUrl()
