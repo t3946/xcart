@@ -64,7 +64,7 @@
         <p class="dots" >
             {set $images = ($model->getJsonImages())}
             {if $images|count > 1}
-                {foreach $model->getImages() as $image index=$index first=$first}
+                {foreach $images as $image index=$index first=$first}
                     <span [class]="selected.slide == {$index} ? 'current' : ''" {if $first} class="current"{/if}></span>
                 {/foreach}
             {/if}

@@ -84,13 +84,4 @@ class AmpProductModel extends ProductModel
             }
         }
     }
-
-    public function getJsonGroupImages($flag = 0){
-
-        $images = [];
-        $image = null;
-
-
-    }
-
 }
