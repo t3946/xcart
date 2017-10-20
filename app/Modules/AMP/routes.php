@@ -2,8 +2,8 @@
 
 return [
     [
-        'route' => '/product/{i:id}',
+        'route' => '/product/{i:id}/{slug:slug}',
         'target' => ['\Modules\Amp\Controllers\AmpController', 'amp'],
-        'name' => 'amp'
+        'name' => 'product'
     ]
 ];

@@ -12,16 +12,22 @@ use Modules\AMP\Helpers\AMPHelper;
 
 class AmpController extends FrontendController
 {
-    public function amp($id)
+    public function amp($id, $slug)
     {
         /** @var AmpProductModel $model */
         if ($model = AmpProductModel::objects()->get(['productid' => $id]) )
         {
+
             /** @var \Modules\Sites\Models\SiteModel $site */
             $site = Xcart::app()->getModule('Sites')->getSite();
 
             if (!$model->sites->filter(['storefrontid__in' => [$site->storefrontid]])->count()) {
                 $this->redirect('/');
+            }
+
+            $u_slug = $model->url->getSlugPart();
+            if ($slug != $u_slug) {
+                $this->redirect('amp:product', ['id' => $id, 'slug' => $u_slug],301);
             }
 
             $category = $model->getMainCategory();

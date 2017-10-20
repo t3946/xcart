@@ -108,4 +108,10 @@ class CleanUrlModel extends Model
 
         return $path;
     }
+
+    public function getSlugPart()
+    {
+        $ta = explode('/', $this->clean_url);
+        return end($ta);
+    }
 }
