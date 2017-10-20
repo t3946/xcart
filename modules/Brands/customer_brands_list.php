@@ -35,6 +35,8 @@
 # customer_brands_list.php, random
 #
 
+use Modules\Product\Models\ProductModel;
+
 if (!defined('XCART_START')) {
     header("Location: ../");
     die("Access denied");
@@ -76,6 +78,8 @@ if ($brandid) {
     } else {
         $search_data["products"]['sort_direction'] = $sort_direction;
     }
+
+    $search_data["products"]['group_root'] = true;
 
     $mode = "search";
 
@@ -133,6 +137,14 @@ if ($brandid) {
 
     if (!empty($active_modules["Subscriptions"]))
         include $xcart_dir . "/modules/Subscriptions/subscription.php";
+
+    if ($products) {
+        $products = array_map(function ($a) {
+            $a['oProduct'] = new ProductModel($a);
+            $a['oProduct']->setIsNewRecord(false);
+            return $a;
+        }, $products);
+    }
 
     $smarty->assign("products", $products);
 

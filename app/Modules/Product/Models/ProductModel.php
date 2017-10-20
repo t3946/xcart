@@ -1,6 +1,7 @@
 <?php
 namespace Modules\Product\Models;
 
+use Mindy\QueryBuilder\Expression;
 use Modules\Amazon\Models\AmazonFbaMissingSkuModel;
 use Modules\Amazon\Models\AmazonProductsFieldsModel;
 use Modules\Brand\Models\BrandModel;
@@ -16,6 +17,8 @@ use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\HasManyField;
 use Xcart\App\Orm\Fields\IntField;
+use Xcart\App\Orm\Fields\ManyToManyField;
+use Xcart\App\Orm\Fields\UnixTimestampField;
 use Xcart\App\Orm\Fields\OneToOneField;
 use Xcart\App\Orm\Fields\ManyToManyField;
 use Xcart\App\Traits\DataModelTrait;
@@ -59,6 +62,8 @@ use Xcart\Product;
  */
 class ProductModel extends AutoMetaModel implements ICartItem
 {
+    const ADMIN_PRODUCT_MODIFY_URL = '/admin/product_modify.php?productid=%d&sf=%d';
+
     use DataModelTrait;
 
     public static function getDataModelClass()
@@ -122,6 +127,7 @@ class ProductModel extends AutoMetaModel implements ICartItem
                 'class' => ForeignField::className(),
                 'modelClass' => BrandModel::className(),
                 'link' => ['brandid' => 'brandid'],
+                'null' => false,
             ],
             'filter_values' => [
                 'class' => ManyToManyField::className(),
@@ -150,6 +156,26 @@ class ProductModel extends AutoMetaModel implements ICartItem
                 'null' => false,
                 'default' => '',
             ],
+            'seo_product_name' => [
+                'class' => CharField::className(),
+                'null' => false,
+                'default' => ''
+            ],
+            'product' => [
+                'class' => CharField::className(),
+                'null' => false,
+                'default' => ''
+            ],
+            'group_mask' => [
+                'class' => CharField::className(),
+                'null' => true,
+                'default' => null
+            ],
+            'group_option' => [
+                'class' => CharField::className(),
+                'null' => true,
+                'default' => null
+            ],
             'source_sfid' => [
                 'class' => IntField::className(),
                 'null' => false,
@@ -165,8 +191,50 @@ class ProductModel extends AutoMetaModel implements ICartItem
                 'modelClass' => AmazonFbaMissingSkuModel::className(),
                 'link' => ['productid' => 'productid'],
             ],
+            'add_date' => [
+                'class' => UnixTimestampField::className(),
+                'autoNowAdd' => true,
+            ],
+            'mod_date' => [
+                'class' => UnixTimestampField::className(),
+                'autoNow' => true,
+                'autoNowAdd' => true,
+            ],
+            'category_main' => [
+                'class' => HasManyField::className(),
+                'modelClass' => ProductCategoriesModel::className(),
+                'link' => ['productid' => 'productid'],
+                'extra' => ['main' => 'Y']
+            ],
+            'categories' => [
+                'class' => ManyToManyField::className(),
+                'modelClass' => CategoryModel::className(),
+                'through' => ProductCategoriesModel::className(),
+            ],
+            'childs' => [
+                'class' => HasManyField::className(),
+                'modelClass' => ProductModel::className(),
+                'link' => ['group_root' => 'productid'],
+                'extra' => ['productid__isnt' => new Expression('group_root')]
+            ],
+            'parent' => [
+                'field' => 'group_root',
+                'class' => ForeignField::className(),
+                'modelClass' => ProductModel::className(),
+                'link' => ['group_root' => 'productid'],
+            ],
+            'thumbnail' => [
+                'class' => HasManyField::className(),
+                'modelClass' => ImageTModel::className(),
+                'link' => ['id' => 'productid']
+            ],
+            'pricing' => [
+                'class' => HasManyField::className(),
+                'modelClass' => PricingModel::className(),
+                'link' => ['productid' => 'productid']
+            ],
             'amazon_fields' => [
-                'class' => OneToOneField::className(),
+                'class' => HasManyField::className(),
                 'modelClass' => AmazonProductsFieldsModel::className(),
                 'link' => ['productid' => 'productid']
             ],
@@ -181,6 +249,16 @@ class ProductModel extends AutoMetaModel implements ICartItem
             $sMPN = preg_replace("/^(" . $model->code . "-)/i", "", $this->productcode);
         }
         return $sMPN;
+    }
+
+    public function isGroupRoot()
+    {
+        return ($this->productid == $this->group_root);
+    }
+
+    public function isGroupChild()
+    {
+        return (!is_null($this->group_root) && ($this->productid != $this->group_root));
     }
 
     public function isAmazonFBAEnabled()
@@ -342,5 +420,37 @@ class ProductModel extends AutoMetaModel implements ICartItem
         }
 
         return $tq;
+    }
+
+    public function getTitle()
+    {
+        if ($this->seo_product_name) {
+            $title = $this->seo_product_name;
+        } else {
+            $title = $this->product;
+        }
+
+        return ($this->isGroupChild()) ?  $this->parent->group_mask . " ". $title : $title;
+    }
+
+    public function getFrontendChilds()
+    {
+        return $this->childs->filter(['forsale' => 'Y'])->order(['group_order']);
+    }
+
+    /**
+     * @return ImageTModel|null
+     */
+    public function getThumbnail()
+    {
+        if ($thumb = $this->thumbnail->limit(1)->get()) {
+            return $thumb;
+        }
+        return null;
+    }
+
+    public function getAdminUrl()
+    {
+        return sprintf(self::ADMIN_PRODUCT_MODIFY_URL, $this->productid, $this->sites->limit(1)->get()->storefrontid);
     }
 }

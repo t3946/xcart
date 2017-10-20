@@ -1,5 +1,7 @@
 <?php
 
+use Modules\Product\Models\ProductModel;
+
 x_load('files','user','taxes');
 
 # START: random:20460 [2010 Mar 18 13:43] 
@@ -2336,7 +2338,8 @@ function func_products_from_scratch($scratch_products, $membershipid, $persisten
 	if (!empty($products)) {
 		uasort($products, "func_manufacturerid_sort");
 	}
-	
+
+
 # END: random:1073746882_1073747063 [2008 Dec 24 16:25] 
 	return $products;
 }

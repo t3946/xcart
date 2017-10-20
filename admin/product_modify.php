@@ -54,11 +54,12 @@ require $xcart_dir."/include/product_modify.php";
 //require  $xcart_dir."/include/categories.php";
 if ($oProduct){
 	$all_categories = [];
-	$oMainCategory = $oProduct->getMainCategory();
-	$all_categories[$oMainCategory->getCategoryId()] = [
-		'category_path' => $oMainCategory->getPathExploded(),
-		'categoryid' => $oMainCategory->getCategoryId(),
-	];
+	if ($oMainCategory = $oProduct->getMainCategory()) {
+        $all_categories[$oMainCategory->getCategoryId()] = [
+            'category_path' => $oMainCategory->getPathExploded(),
+            'categoryid' => $oMainCategory->getCategoryId(),
+        ];
+    }
 
 	$aAddCats = $oProduct->getAdditionalCategories();
 	if (!empty($aAddCats)) {
@@ -71,6 +72,7 @@ if ($oProduct){
 		}
 	}
 	$smarty->assign('allcategories', $all_categories);
+	$smarty->assign('oProduct', $oProduct);
 }
 $storefront_independant = 'N';
 
@@ -82,6 +84,8 @@ if ($oProduct && $oProduct->splash_id){
 }
 
 $smarty->assign('url_calculate_shipping', Xcart\App\Main\Xcart::app()->router->url('product:calculate_shipping', ['id' => $productid]));
+$smarty->assign('url_group_remove', Xcart\App\Main\Xcart::app()->router->url('product:group_remove'));
+$smarty->assign('url_group_add', Xcart\App\Main\Xcart::app()->router->url('product:group_add'));
 
 # Assign the current location line
 $smarty->assign("location", $location);

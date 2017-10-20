@@ -694,7 +694,7 @@ function func_order_data($orderid)
         }
 
         global $xcart_dir;
-        $classProduct      = \Xcart\Product::model(['productid' => $v['productid']]);
+        $classProduct      = ProductModel::objects()->get(['productid' => $v['productid']]);
         $mpn               = $classProduct->getMPN();
         $v["mpn"]          = $mpn;
         $v["oProduct"]     = $classProduct;
@@ -3038,28 +3038,28 @@ function func_update_quantity($products, $increase = true)
                 continue;
             }
 
+            if (!($model = ProductModel::objects()->get(['productid' => $product['productid']]))) {
+                continue;
+            }
+
             $variantid = "";
             if (!empty($active_modules['Product_Options']) && (!empty($product['extra_data']['product_options']) || !empty($product['options']))) {
-                $options   = (!empty($product['extra_data']['product_options']) ? $product['extra_data']['product_options'] : $product['options']);
+                $options = (!empty($product['extra_data']['product_options']) ? $product['extra_data']['product_options'] : $product['options']);
                 $variantid = func_get_variantid($options);
             }
 
             if (!empty($variantid)) {
                 db_query("UPDATE $sql_tbl[variants] SET avail=avail$symbol'$product[amount]' WHERE variantid = '$variantid'");
-            }
-            else {
-                $egoods_cond = $active_modules["Egoods"] ? " AND distribution=''" : "";
-
-                $products_quantity_behavior = func_query_first_cell("SELECT products_quantity_behavior FROM $sql_tbl[manufacturers] WHERE manufacturerid='$product[manufacturerid]'");
-
-                if ($products_quantity_behavior == "R") {
-                    db_query("UPDATE $sql_tbl[products] SET r_avail=r_avail$symbol'$product[amount]' WHERE productid='$product[productid]'" . $egoods_cond);
+            } else {
+                if ($increase) {
+                    if (!$model->isSupplierFeedsEnabled()) {
+                        $model->r_avail += $product['amount'];
+                    }
+                } else {
+                    $model->r_avail -= $product['amount'];
+                    $model->r_avail = max($model->r_avail, 0);
                 }
-                elseif ($products_quantity_behavior == "D") {
-                }
-                else {
-                    db_query("UPDATE $sql_tbl[products] SET avail=avail$symbol'$product[amount]' WHERE productid='$product[productid]'" . $egoods_cond);
-                }
+                $model->save();
             }
 
             $ids[$product['productid']] = true;

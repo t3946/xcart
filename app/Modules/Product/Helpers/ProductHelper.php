@@ -3,7 +3,9 @@
 namespace Modules\Product\Helpers;
 
 
+use Mindy\QueryBuilder\Expression;
 use Modules\Amazon\Models\AmazonFbaMissingSkuModel;
+use Modules\Distributor\Models\DistributorModel;
 use Modules\Product\Models\ProductFileModel;
 use Modules\Product\Models\ProductModel;
 
@@ -113,5 +115,122 @@ class ProductHelper
             }
         }
         return $model;
+    }
+
+    public static function getPricingArray($params)
+    {
+        $res = [];
+        if ($params['pricing']) {
+            foreach ($params['pricing'] as $price) {
+                $res[$price->quantity] = [
+                    'price' => $price->price
+                ];
+            }
+        }
+        if (isset($params['json']) && $params['json']) {
+            return json_encode($res);
+        }
+        return $res;
+    }
+
+    /**
+     * @param ProductModel[] $oProducts
+     * @return mixed
+     */
+    public static function groupRootProducts($oProducts)
+    {
+        $res = [];
+        if ($oProducts) {
+            foreach ($oProducts as $oProduct) {
+                if (!$oProduct->isGroupRoot() && !is_null($oProduct->group_root)) {
+                    if (!array_key_exists($oProduct->group_root, $res)) {
+                        if ($parent = $oProduct->parent) {
+                            $res[$parent->productid] = $parent;
+                        }
+                    }
+                } else {
+                    $res[$oProduct->productid] = $oProduct;
+                }
+            }
+        }
+
+        return $res;
+    }
+
+    /**
+     * @param string[] $a
+     * @return string
+     */
+    public static function getFirstSame($a)
+    {
+        function longestCS($a, $b)
+        {
+            if (empty($a) || empty($b)) {
+                return '';
+            }
+
+            if ($a === $b) {
+                return $a;
+            }
+
+            $b = trim(mb_substr($b, 0, mb_strrpos($b, ' '))). ' ';
+
+            for ($i = 0; $i < mb_strlen($a) - 1; $i++) {
+                if (mb_substr($a, $i, 1) != mb_substr($b, $i, 1)) {
+                    if (!$i) {
+                        return '';
+                    }
+                    if (($ls = mb_strpos($a, ' ', $i)) > $i) {
+                        $s = mb_substr($a, 0, $ls);
+                    } else {
+                        $s = mb_substr($a, 0, $i);
+                    }
+                    return trim(mb_substr($s, 0, mb_strrpos($s, ' ')));
+                }
+            }
+            return mb_substr($a, 0, ++$i);
+        }
+
+        $b = null;
+
+        if ($a) {
+
+            $b = array_shift($a);
+
+            foreach ($a as $s) {
+                $b = longestCS($b, $s);
+            }
+        }
+        return trim($b);
+    }
+
+    public static function getGroupLevel($option)
+    {
+        return mb_substr_count($option, ' ');
+    }
+
+    public static function getNewGroupSKU($manufacturer_id)
+    {
+        $new_sku = null;
+
+        $format = '%s-GROUP-%d';
+
+        if ($last = ProductModel::objects()->filter(
+            [
+                'group_root__isnull' => false,
+                'group_root' => new Expression('productid')
+            ])
+            ->order([new Expression("-COALESCE(CAST(SUBSTRING_INDEX(productcode, '-', -1) AS UNSIGNED), 1)")])
+            ->limit(1)
+            ->get()
+        ) {
+            if (preg_match('/-(\d+)$/', $last->productcode, $m)) {
+                if ($model = DistributorModel::objects()->get(['manufacturerid' => $manufacturer_id])) {
+                    $new_sku = sprintf($format, $model->code, intval($m[1]) + 1);
+                }
+            }
+        }
+
+        return $new_sku;
     }
 }

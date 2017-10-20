@@ -971,7 +971,7 @@ class OrderGroup extends Data
 
     public function updateAccounting()
     {
-        func_array2update($this->sPrimaryTable, $this->aPrimaryTableValue, 'orderid = ' . $this->getOrderId() . ' and manufacturerid = ' . $this->getManufacturerId());
+        $this->_update();
     }
 
     public function getReconciledStatus()

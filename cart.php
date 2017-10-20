@@ -959,7 +959,7 @@ if (!$func_is_cart_empty) {
                     if (!$shipping_matched)
                         $cart["shippingids"][$k] = $shipping[0]["shippingid"];
                 }
-                if ($ca = DistributorHelper::getShippingCountries($m_id)) {
+                if ($ca = DistributorHelper::getShippingCountries($k)) {
                     $cart["shipping_groups"][$k]['shipping_countries'] = implode(array_map(function($a){return func_get_langvar_by_name('country_'.$a->code);}, $ca), ' or ');
                 }
             }
@@ -1425,6 +1425,14 @@ if (!empty($login) || $mode != "checkout") {
 
 if (@$products)
     usort($products, "cart_num");
+
+if ($products) {
+    $products = array_map(function ($a) {
+        $a['oProduct'] = new ProductModel($a);
+        $a['oProduct']->setIsNewRecord(false);
+        return $a;
+    }, $products);
+}
 
 $smarty->assign("products", @$products);
 $smarty->assign("giftcerts", $giftcerts);
