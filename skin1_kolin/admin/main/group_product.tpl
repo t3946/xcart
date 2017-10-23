@@ -20,7 +20,7 @@
                 <td></td>
             </tr>
             {if $oProduct->isGroupRoot()}
-                {foreach from=$oProduct->getFrontendChilds() item=child}
+                {foreach from=$oProduct->childs item=child}
                     <tr data-product-id="{$child->productid}">
                         <td><a href="{$child->getAdminUrl()}" target="_blank">{$child->productcode}</a></td>
                         <td><a href="{$child->getUrl()}" target="_blank">{$child->product}</a></td>

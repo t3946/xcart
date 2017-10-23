@@ -135,14 +135,15 @@ class ProductHelper
 
     /**
      * @param ProductModel[] $oProducts
-     * @return mixed
+     * @return ProductModel[]
      */
     public static function groupRootProducts($oProducts)
     {
         $res = [];
         if ($oProducts) {
             foreach ($oProducts as $oProduct) {
-                if (!$oProduct->isGroupRoot() && !is_null($oProduct->group_root)) {
+
+                if ($oProduct->isGroupChild()) {
                     if (!array_key_exists($oProduct->group_root, $res)) {
                         if ($parent = $oProduct->parent) {
                             $res[$parent->productid] = $parent;

@@ -221,6 +221,10 @@ SQL;
                     continue;
                 }
 
+                if ($oProduct->isGroupRoot() && $oProduct->getFrontendChilds()->count() === 0) {
+                    continue;
+                }
+
                 $p_ids[] = $oProduct->productid;
                 $oProduct->product = str_replace("'", "&#39;", $oProduct->product);
                 $products[] = $oProduct;
