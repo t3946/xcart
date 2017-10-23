@@ -20,7 +20,7 @@
                     {elseif $current_category.title_tag ne "" && $main eq "catalog"}
                         {$current_category.title_tag} {*| {$location[0].0*}
                     {else}
-                        {if $current_storefront == 41}
+                        {if $current_storefront == 41 && $main eq "product"}
                             {capture name=title}
                                 {assign var="seo_product_title" value="`$product.product` Online | `$config.Company.company_name`"}
                                 {$seo_product_title|truncate:"80":"":false|escape|strip}
