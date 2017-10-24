@@ -298,6 +298,10 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
                             }
                         }
 
+                        if (!$modelProduct->getIsNewRecord() && $modelProduct->isGroupChild()) {
+                            $modelProduct->product = $modelProduct->getOldAttribute('product');
+                        }
+
                         $newUPC = Xcart\Product::calculateUPC($modelProduct->upc);
                         $oldUPC = $modelProduct->getOldAttribute('upc');
                         if ($oldUPC != $newUPC) {
