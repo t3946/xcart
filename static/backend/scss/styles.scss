@@ -146,7 +146,16 @@
         color: #550000;
         box-shadow: #f7f6f6 0 2px 1px 0 inset;
         font-size: 10px;
+        font-weight: normal;
         line-height: 18px;
+        height: auto;
+        vertical-align: middle;
+
+        i {
+          color: #550000;
+          vertical-align: middle;
+          line-height: 1;
+        }
 
         &:hover {
             border-color: royalblue;

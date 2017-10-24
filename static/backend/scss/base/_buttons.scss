@@ -30,6 +30,8 @@
 a {
   &.button {
     //@extend .button;
-    color: #fff !important;
+    &, &:visited, &:hover {
+      color: #fff;
+    }
   }
 }

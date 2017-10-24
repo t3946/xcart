@@ -24,6 +24,10 @@
 }
 
 .admin-page, .modal-content {
+  table {
+    border-collapse: collapse;
+  }
+
   ul.errors {
     margin-top: 8px;
     font-size: 12px;

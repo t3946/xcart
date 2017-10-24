@@ -36,12 +36,9 @@ module.exports = {
         ].concat(modules.map(function(dir) {
             return dir + '/static/scss/**/*.*'
         })),
-        scss_include: [
-            'bower_components/compass-mixins/lib/',
-        ],
+        scss_include: [],
         css: [
             'backend/css/*',
-            'backend/fonts/GothamPro/css/GothamPro.css',
             'temp/backend/css/**/*',
         ].concat(modules.map(function(dir) {
             return dir + '/static/css/**/*.*'
@@ -175,12 +172,27 @@ module.exports = {
             ]
         },
 
+        'font-gotham_pro': {
+            fonts: [
+                'backend/fonts/GothamPro/fonts/**/*'
+            ],
+            css: [
+                'backend/fonts/GothamPro/css/*',
+                'backend/fonts/gothampro/css/*',
+            ]
+        },
+
         cds: {
             scss_include: [
                 'components/cds'
             ]
         },
 
+        'compass-mixins': {
+            scss_include: [
+                'bower_components/compass-mixins/lib/'
+            ]
+        },
         'mindy-sass': {
             scss_include: [
                 'bower_components/mindy-sass/'
