@@ -93,6 +93,9 @@ $(function() {
 
     $('.btn_full_product_line').click(function(){
         var to = $("#group_product_line");
+
+        ga('send', 'event', 'UX', 'click', 'Full product line');
+
         $('html, body').animate({
             scrollTop: to.offset().top
         }, 1000);
