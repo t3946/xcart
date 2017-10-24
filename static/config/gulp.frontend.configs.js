@@ -39,6 +39,12 @@ module.exports = {
             convertPathData: true
         }]})
     ],
+    cssnano: {
+        preset: ['default'],
+        discardComments: { removeAll: true, },
+        reduceIdents: false,
+        zindex: false,
+    },
     uglify: {
         compress: {
             sequences: true,

@@ -104,12 +104,7 @@ gulp.task('frontend:css', ['frontend:scss', 'frontend:css:raw'], function () {
         }));
 
     if (isProduction && frontend.config.compress) {
-        pipe = pipe.pipe(cssnano({
-            preset: ['default'],
-            discardComments: { removeAll: true, },
-            reduceIdents: false,
-            zindex: false,
-        }))
+        pipe = pipe.pipe(cssnano(frontend.config.cssnano))
     }
 
     return pipe
@@ -120,13 +115,14 @@ gulp.task('frontend:css', ['frontend:scss', 'frontend:css:raw'], function () {
 
 gulp.task('backend:css', ['backend:scss'], function () {
     let pipe = gulp.src(backend.src.css)
+        // .pipe(gcmq())
         .pipe(autoprefixer({
-            browsers: ['last 2 versions'],
+            browsers: ["> 5%", "last 2 versions", "last 4 iOS versions"],
             cascade: false
         }));
 
     if (isProduction && backend.config.compress) {
-        pipe = pipe.pipe(cssnano())
+        pipe = pipe.pipe(cssnano(backend.config.cssnano))
     }
 
     return pipe.pipe(concat(backend.config.name + '.css'))
@@ -219,7 +215,7 @@ gulp.task('backend:js', ['backend:jsx'], function() {
     let pipe = gulp.src(backend.src.js);
 
     if (backend.config.compress) {
-        pipe = pipe.pipe(uglify())
+        pipe = pipe.pipe(uglify(backend.config.uglify))
     }
 
     return pipe

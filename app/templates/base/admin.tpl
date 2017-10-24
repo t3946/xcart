@@ -1,47 +1,63 @@
-<link rel="stylesheet" href="/static/backend/dist/css/main.css?v={backend_css_version}">
-<script type="text/javascript" src="/static/backend/dist/js/main.js?v={backend_js_version}"></script>
+{if !$.request->getIsAjax()}
+    <link rel="stylesheet" href="/static/backend/dist/css/main.css?v={backend_version resource='main.css'}">
+    <script src="/static/backend/dist/js/main.js?v={backend_version resource='main.js'}"></script>
+
+    {* Another head information *}
+    {block 'head'}{/block}
+
+    {filter|unescape}
+    {get_assets type="css" position='head'}
+    {get_assets type="js" position='head'}
+    {/filter}
+{/if}
 
 {block 'js-head'}
 
 {/block}
 
 {filter|strip:false}
-    <div id="wrapper" class="admin">
+    <div id="wrapper" class="wrapper {block 'wrapper_block_class'}{/block}">
         {block 'content-header'}
             <div class="content-header">
                 <div class="row">
                     <div class="column large-12">
                         {block 'breadcrumbs'}
-
+                            {render_breadcrumbs:raw template="admin/_breadcrumbs.tpl"}
                         {/block}
 
-                        {block 'heading'}
-
-                        {/block}
+                        {if $.block.heading}
+                            <div class="heading">
+                                {block 'heading'}{/block}
+                            </div>
+                        {/if}
                     </div>
                 </div>
             </div>
         {/block}
 
-        <div id="main">
-            {block 'main'}
-                <div class="main-content">
-                    {block 'before-content'}
+        <div id="main" class="main-block {block 'main_block_class'}{/block}">
+            {block 'main_block'}
+                {block 'main'}
+                    <div class="main-content">
+                        {block 'before-content'}
 
-                    {/block}
+                        {/block}
 
-                    {block 'content'}
+                        {*{smarty_admin_block}*}
+                        {block 'content'}
 
-                    {/block}
+                        {/block}
+                        {*{/smarty_admin_block}*}
 
-                    {block 'after-content'}
+                        {block 'after-content'}
 
-                    {/block}
+                        {/block}
 
-                    {block 'menu_block'}
-                        {*{include 'base/_admin_menu.tpl'}*}
-                    {/block}
+                        {block 'menu_block'}
+                            {*{include 'base/_admin_menu.tpl'}*}
+                        {/block}
                 </div>
+                {/block}
             {/block}
         </div>
 
@@ -52,3 +68,8 @@
 {block 'js'}
 
 {/block}
+
+{filter|unescape}
+{get_assets type="css"}
+{get_assets type="js"}
+{/filter}

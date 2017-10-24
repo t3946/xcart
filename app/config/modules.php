@@ -1,6 +1,9 @@
 <?php
 return [
     'Core',
+    'Admin',
+    'Editor',
+    'Files',
     'Cart' => ['cartConfig' => ['class' => '\Modules\Cart\Components\XCart']],
     'Main',
     'Meta',
@@ -18,4 +21,5 @@ return [
     'Order',
     'Reports',
     'Brand',
+    'Pages',
 ];

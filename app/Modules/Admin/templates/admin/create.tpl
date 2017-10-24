@@ -5,7 +5,7 @@
 {/block}
 
 {block 'main_block'}
-    <div class="form-page {block 'page_class'}create{/block}">
+    <div class="admin-page form-page {block 'page_class'}create{/block}">
         <form action="{$.request->getUrl()}" enctype="multipart/form-data" method="post">
             <div class="form-data">
                 {include 'admin/form/_form.tpl'}

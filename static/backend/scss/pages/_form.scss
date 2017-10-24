@@ -1,9 +1,11 @@
 .main-block .form-page {
-  padding: 0 $main-block-padding-width 110px;
+  //padding: 0 $main-block-padding-width 110px;
+  padding: 0 0 35px;
 
   .actions-panel {
     position: fixed;
-    left: $menu-width;
+    //left: $menu-width;
+    left: 0;
     right: 0;
     bottom: 0;
     background: #FFFFFF;
@@ -81,7 +83,8 @@
 
   fieldset {
     background: #FFFFFF;
-    border: 1px solid #DFDFDF;
+    border: none;
+    //border: 1px solid #DFDFDF;
 
     .fieldset-title {
       font-weight: 500;

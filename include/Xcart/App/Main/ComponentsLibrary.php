@@ -52,7 +52,7 @@ trait ComponentsLibrary
 
     public function hasComponent($name)
     {
-        return isset($this->_componentsConfig[$name]) || isset($this->_components[$name]) || isset($this->_componentsAppendedConfig);
+        return isset($this->_componentsConfig[$name]) || isset($this->_components[$name]) || isset($this->_componentsAppendedConfig[$name]);
     }
 
     public function __get($name)

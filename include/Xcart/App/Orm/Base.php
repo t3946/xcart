@@ -242,6 +242,17 @@ abstract class Base implements ModelInterface, ArrayAccess, Serializable
         }
     }
 
+    /**
+     * @param $name
+     *
+     * @return null
+     * @deprecated
+     */
+    public function getNotModelAttribute($name)
+    {
+        return $this->getFromQueryAttribute($name);
+    }
+
     public function getFromQueryAttribute($name)
     {
         if (isset($this->attributesNotField[$name])) {

@@ -458,12 +458,12 @@ class HttpRequest extends Request
      *
      * @return array part of the request URL that is after the question mark
      */
-    public function getQueryArray()
+    public function getQueryArray($query_string = null, $ignore_fg = true)
     {
-        $string = $this->getQueryString();
+        $string = $query_string ?: $this->getQueryString();
         parse_str($string, $data);
 
-        if ($this->from_get && !empty($data[$this->from_get])) {
+        if ($ignore_fg && $this->from_get && !empty($data[$this->from_get])) {
             unset($data[$this->from_get]);
         }
 

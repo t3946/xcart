@@ -18,10 +18,11 @@ use Xcart\App\Orm\QuerySet;
 use Xcart\App\Pagination\DataSource\QuerySetDataSource;
 use Xcart\App\Pagination\Pagination;
 use Xcart\App\Template\Renderer;
+use Xcart\App\Traits\SmartyRenderTrait;
 
 abstract class Admin
 {
-    use SmartProperties, ClassNames, Renderer;
+    use SmartProperties, ClassNames, Renderer, SmartyRenderTrait;
 
     public static $public = true;
 
@@ -523,7 +524,7 @@ abstract class Admin
             'pageSizes' => $this->pageSizes
         ], new QuerySetDataSource());
 
-        $this->render($this->allTemplate, [
+        $this->renderInternal($this->allTemplate, [
             'objects' => $pagination->paginate(),
             'pagination' => $pagination,
             'order' => $this->getOrder(),
@@ -558,7 +559,7 @@ abstract class Admin
 
     public function render($template, $data = [])
     {
-        echo $this->renderTemplate($template, array_merge($data, $this->getCommonData()));
+        return $this->renderTemplate($template, array_merge($data, $this->getCommonData()));
     }
 
     public function jsonResponse($data = [])
@@ -630,7 +631,7 @@ abstract class Admin
         }
         
         $template = $new ? $this->createTemplate : $this->updateTemplate;
-        $this->render($template, [
+        $this->renderInternal($template, [
             'form' => $form,
             'model' => $model,
             'new' => $new
@@ -690,5 +691,19 @@ abstract class Admin
     public static function getItemName()
     {
         return static::classNameShort();
+    }
+
+    public function renderInternal($view, $params)
+    {
+        if (Xcart::app()->request->getIsAjax()) {
+            echo $this->render($view, $params);
+        }
+        else {
+            echo $this->renderSmarty("admin/home.tpl", [
+                'single_mode' => true,
+                'main'        => 'raw_html',
+                'content'     =>  $this->render($view, $params),
+            ]);
+        }
     }
 }

@@ -6,7 +6,7 @@
 
 .wrapper {
   .menu-block {
-    width: $menu-width;
+    //width: $menu-width;
     position: fixed;
     top: 0;
     left: 0;
@@ -138,7 +138,7 @@
   }
 
   .main-block {
-    margin-left: $menu-width;
+    //margin-left: $menu-width;
 
     &.wide {
       margin: 0;

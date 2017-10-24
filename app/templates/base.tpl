@@ -1,4 +1,4 @@
-{extends "base/head.tpl"}
+{extends "wrapper.tpl"}
 {block "wrapper"}
 <section id="main_wrapper" class="off-canvas-wrapper">
     <div class="off-canvas position-left" id="offCanvasLeft" data-off-canvas data-transition="push">
@@ -133,4 +133,6 @@
 
     </div>
 </section>
+
+{insert "_parts/_footer.tpl"}
 {/block}
