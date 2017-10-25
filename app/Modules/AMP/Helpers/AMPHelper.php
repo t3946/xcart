@@ -22,42 +22,78 @@ class AMPHelper
         $this->model = $model;
     }
 
+
+
     public function getDataJsonSchema()
     {
         $model = $this->model;
         $json = [];
 
         if ($this->model->avail > 0) {
-            $itemCondition = "http://schema.org/InStock";
+            $availability = "http://schema.org/InStock";
         }
         else {
-            $itemCondition = "http://schema.org/OutOfStock";
+            $availability = "http://schema.org/OutOfStock";
         }
 
         $descript = strip_tags($model->getFrontendDescription());
 
-        $json = [
-            "@context" => "http://schema.org/",
-            "@type" => "Product",
-            "name" => $model->product,
-            "image" => $model->getJsonImages(1),
-            "description" => $descript,
-            "mpn" => $model->getMPN(),
-            "brand" => [
-                "@type" => "Thing",
-                "name" => $model->brand->brand
-            ],
-            "offers" => [
-                "@type" => "Offer",
-                "priceCurrency" => "USD",
-                "price" => $model->getFrontendPrice(),
-                "itemCondition" => $itemCondition,
-                "seller" => [
-                    "@type" => "Organization",
-                    "name" => "S3Stores, Inc."
+        if($this->model->isGroupRoot()){
+
+            $json = [
+                "@context" => "http://schema.org/",
+                "@type" => "Product",
+                "name" => $model->getFrontendName(),
+                "image" => $model->getJsonImages(1),
+                "description" => $descript,
+                "mpn" => $model->getMPN(),
+                "brand" => [
+                    "@type" => "Thing",
+                    "name" => $model->brand->brand
+                ],
+                "offers" => [
+                    "@type" => "Offer",
+                    "PriceSpecification" => [
+                        "@type" => "PriceSpecification",
+                        "priceCurrency" => "USD",
+                        "price" => $model->getFrontendPrice(),
+                        "minPrice" => $model->getFrontendPrice(),
+                        "maxPrice" => $model->getFrontendPrice(2),
+                    ],
+                    "itemCondition" => "NewCondition",
+                    "seller" => [
+                        "@type" => "Organization",
+                        "name" => "S3Stores, Inc."
+                    ]
                 ]
-            ]
-        ];
+            ];
+
+        } else {
+
+            $json = [
+                "@context" => "http://schema.org/",
+                "@type" => "Product",
+                "name" => $model->getFrontendName(),
+                "image" => $model->getJsonImages(1),
+                "description" => $descript,
+                "mpn" => $model->getMPN(),
+                "brand" => [
+                    "@type" => "Thing",
+                    "name" => $model->brand->brand
+                ],
+                "offers" => [
+                    "@type" => "Offer",
+                    "priceCurrency" => "USD",
+                    "price" => $model->getFrontendPrice(),
+                    'availability' => $availability,
+                    "itemCondition" => "NewCondition",
+                    "seller" => [
+                        "@type" => "Organization",
+                        "name" => "S3Stores, Inc."
+                    ]
+                ]
+            ];
+        }
 
         $json = json_encode($json);
 

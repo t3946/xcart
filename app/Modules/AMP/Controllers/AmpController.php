@@ -21,9 +21,9 @@ class AmpController extends FrontendController
             /** @var \Modules\Sites\Models\SiteModel $site */
             $site = Xcart::app()->getModule('Sites')->getSite();
 
-            if (!$model->sites->filter(['storefrontid__in' => [$site->storefrontid]])->count()) {
-                $this->redirect('/');
-            }
+//            if (!$model->sites->filter(['storefrontid__in' => [$site->storefrontid]])->count()) {
+//                $this->redirect('/');
+//            }
 
             $u_slug = $model->url->getSlugPart();
             if ($slug != $u_slug) {
