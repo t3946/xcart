@@ -319,10 +319,10 @@ class ProductModel extends AutoMetaModel implements ICartItem
         return $this->isProductOutOfStock();
     }
 
-    public function getAbsoluteUrl($full = false)
+    public function getAbsoluteUrl($full = false, $amp = false)
     {
         if ($this->productid) {
-            return $this->url->urlFromCode('catalog:product:view', $full, ($full ? $this->sites->limit(1)->get() : null));
+            return $this->url->urlFromCode($amp ? 'amp:product' : 'catalog:product:view', $full, ($full ? $this->sites->limit(1)->get() : null));
         }
 
         return false;
