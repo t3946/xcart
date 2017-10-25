@@ -151,16 +151,12 @@ abstract class BaseForm implements IteratorAggregate, Countable, ArrayAccess, IV
     /**
      * @param $owner BaseForm
      */
-    public function beforeValidate($owner)
-    {
-    }
+    public function beforeValidate($owner) {}
 
     /**
      * @param $owner BaseForm
      */
-    public function afterValidate($owner)
-    {
-    }
+    public function afterValidate($owner, $isValid) {}
 
     public function getName()
     {
@@ -404,7 +400,16 @@ abstract class BaseForm implements IteratorAggregate, Countable, ArrayAccess, IV
      */
     public function isValid()
     {
-        return $this->isValidInternal() && $this->isValidInlines();
+        $this->beforeValidate($this);
+        $result = $this->isValidInternal() && $this->isValidInlines();
+        $this->afterValidate($this, $result);
+
+        if ($result) {
+            $errors = $this->getErrors();
+            $result = count($errors) === 0;
+        }
+
+        return $result;
     }
 
     public function isValidInlines()

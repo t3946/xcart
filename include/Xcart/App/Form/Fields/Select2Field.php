@@ -73,10 +73,14 @@ class Select2Field extends DropDownField
         if (($instance = $this->getForm()->getInstance()) !== null) {
             $field = $instance->getField($this->name);
             if ($field instanceof ForeignField) {
-                $item = $field->getManager()->get();
-                if ($item) {
-                    $data = ['id' => $item->pk, 'text' => (string)$item];
+
+                if ($this->getValue()) {
+                    $item = $field->getModel()->{$this->name};
+                    if ($item) {
+                        $data = ['id' => $item->pk, 'text' => (string)$item];
+                    }
                 }
+
             } else {
                 foreach ($field->getManager()->all() as $item) {
                     $data[] = ['id' => $item->pk, 'text' => (string)$item];

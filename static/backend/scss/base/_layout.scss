@@ -4,6 +4,12 @@
 //  font-family: $font;
 //}
 
+.admin-body {
+    @include aal();
+    background-color: #F3F3F3;
+    font-family: $font;
+}
+
 .wrapper {
   .menu-block {
     //width: $menu-width;

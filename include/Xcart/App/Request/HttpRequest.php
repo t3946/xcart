@@ -377,6 +377,11 @@ class HttpRequest extends Request
         return $this->getHostInfo() . $this->getUrl();
     }
 
+    public function getDirtyUrl()
+    {
+        return $this->resolveRequestUri(false);
+    }
+
     /**
      * Returns the currently requested relative URL.
      * This refers to the portion of the URL that is after the [[hostInfo]] part.
@@ -414,9 +419,9 @@ class HttpRequest extends Request
      * Note that the URI returned is URL-encoded.
      * @throws InvalidConfigException if the request URI cannot be determined due to unusual server configuration
      */
-    protected function resolveRequestUri()
+    protected function resolveRequestUri($from_get_path = true)
     {
-        if ($this->from_get && !empty($_GET[$this->from_get])) {
+        if ($from_get_path && $this->from_get && !empty($_GET[$this->from_get])) {
             $requestUri = urldecode($_GET[$this->from_get]);
             unset ($_GET[$this->from_get]);
             unset ($_REQUEST[$this->from_get]);

@@ -182,7 +182,7 @@
 <script>
     $(function () {
         $('[data-id="{$id}-list"]').adminList({
-            url: "{$.request->getUrl()}",
+            url: "{$.request->getDirtyUrl()}",
             groupActionUrl: "{$admin->getGroupActionUrl()}",
             sortUrl: "{$admin->getSortUrl()}",
             columnsUrl: "{$admin->getColumnsUrl()}"
