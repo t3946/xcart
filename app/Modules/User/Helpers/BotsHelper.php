@@ -2,6 +2,7 @@
 
 namespace Modules\User\Helpers;
 
+use Xcart\App\Cli\Cli;
 use Xcart\Helpers\CrawlerDetect\CrawlerDetect;
 use Xcart\Helpers\CrawlerDetect\Crawlers;
 use Xcart\Helpers\CrawlerDetect\CrawlersIp;
@@ -12,6 +13,10 @@ class BotsHelper
 
     public static function IsBot()
     {
+        if (Cli::isCli()) {
+            return false;
+        }
+
         if (is_null(self::$isRobot)) {
             $cr = new CrawlerDetect;
             if ($cr->isCrawler()
