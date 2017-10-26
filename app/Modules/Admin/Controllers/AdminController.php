@@ -14,11 +14,11 @@ class AdminController extends BackendController
         $admin->all($id);
     }
 
-    public function create($module, $admin)
+    public function create($module, $admin, $id)
     {
         $admin = $this->getAdmin($module, $admin);
         $this->setBreadcrumbs($admin, 'Создание');
-        $admin->create();
+        $admin->create($id);
     }
 
     public function update($module, $admin, $pk)
@@ -98,7 +98,7 @@ class AdminController extends BackendController
     {
         $class = "Modules\\{$module}\\Admin\\{$admin}";
         if (class_exists($class)) {
-            return new $class;
+            return new $class($this);
         }
         $this->error(404);
     }

@@ -26,7 +26,7 @@ class SiteModel extends Model
         $str = '';
         $attr = [];
         if (!$this->showInLists()) {
-            $attr[] = 'Hidden from stores list';
+            $attr[] = 'Hidden';
         }
         if (!$this->isWork()) {
             $attr[] = 'Closed';
@@ -37,7 +37,7 @@ class SiteModel extends Model
             $str = " ({$str})";
         }
 
-        return "[{$this->code}] {$this->domain}{$str}";
+        return "[{$this->code}] {$this->getName()}{$str}";
     }
 
     public static function tableName()
@@ -153,7 +153,7 @@ class SiteModel extends Model
 
     public function getName()
     {
-        $name = '';
+        $name = $this->getBaseDomain();
 
         $config = $this->getConfig();
 

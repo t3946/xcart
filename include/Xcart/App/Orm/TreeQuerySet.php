@@ -98,9 +98,9 @@ class TreeQuerySet extends QuerySet
      * @return \Xcart\App\Orm\QuerySet
      * @throws \Exception
      */
-    public function parents($includeSelf = false)
+    public function parents($includeSelf = false, $depth = null)
     {
-        return $this->ancestors($includeSelf, 1);
+        return $this->ancestors($includeSelf, $depth);
     }
 
     /**

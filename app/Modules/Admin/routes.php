@@ -23,6 +23,11 @@ return [
         'name' => 'create'
     ],
     [
+        'route' => '/create/{:module}/{:admin}/{:id}',
+        'target' => ['\Modules\Admin\Controllers\AdminController', 'create'],
+        'name' => 'create_nested'
+    ],
+    [
         'route' => '/group_action/{:module}/{:admin}',
         'target' => ['\Modules\Admin\Controllers\AdminController', 'groupAction'],
         'name' => 'group_action'

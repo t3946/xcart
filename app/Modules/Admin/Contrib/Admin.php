@@ -38,6 +38,9 @@ abstract class Admin
     public $pageSize = 20;
     public $pageSizes = [20, 50, 100];
 
+    /** @var \Modules\Admin\Controllers\AdminController $controller */
+    public $controller = null;
+
     /**
      * Sorting column
      *
@@ -46,6 +49,10 @@ abstract class Admin
     public $sort = null;
 
     public $autoFixSort = true;
+
+    public function __construct($controller) {
+        $this->controller = $controller;
+    }
 
     /**
      * @return mixed
@@ -521,7 +528,7 @@ abstract class Admin
         return $value;
     }
 
-    public function all($id = null)
+    public function all()
     {
         $search = isset($_GET['search']) ? $_GET['search'] : null;
 
@@ -603,13 +610,17 @@ abstract class Admin
         $this->update(null);
     }
 
-    public function update($pk = null)
+    public function update($pk = null, $parent_id = null)
     {
         $new = false;
         if (is_null($pk)) {
             $new = true;
             $model = $this->newModel();
             $form = $this->getForm();
+            if ($parent_id) {
+                /** @var \Xcart\App\Orm\TreeModel $model */
+                $model->parent_id = $parent_id;
+            }
         } else {
             $model = $this->getModelOr404($pk);
             $form = $this->getUpdateForm();
