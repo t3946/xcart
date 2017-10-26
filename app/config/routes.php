@@ -6,7 +6,7 @@ return [
     ],
     [
         'route' => '/amp',
-        'path' => 'Modules.AMP.routes',
+        'path' => 'Modules.Amp.routes',
         'namespace' => 'amp',
     ],
     [
