@@ -118,7 +118,10 @@ class Product extends Data
 
     public function getURL($http = '//')
     {
-        return $http . $this->getStoreFront()->getDomain() . $this->getRelativeURL();
+        if ($this->getStoreFront()) {
+            return $http . $this->getStoreFront()->getDomain() . $this->getRelativeURL();
+        }
+        return '';
     }
 
     public function getRelativeURL()

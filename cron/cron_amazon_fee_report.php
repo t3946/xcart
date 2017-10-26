@@ -15,7 +15,7 @@ const LOG_CATEGORY = 'cidev_amazon_fee_report';
 
 if ($config[LOG_CATEGORY] == "Y") {
     func_backprocess_log(Xcart\AmazonMWS::BACK_PROCESS_LOG_NAME, 'Already launched');
-    $oMail = \Xcart\App\Main\Xcart::app()->mail;
+    $oMail = \Xcart\App\Main\Xcart::app()->oldMail;
     $oMail->to = 'team@s3stores.com';
     $oMail->from = ('team@s3stores.com');
     $oMail->subject = sprintf('Attention! Xcart cron %s Already launched', LOG_CATEGORY);

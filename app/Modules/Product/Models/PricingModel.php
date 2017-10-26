@@ -3,6 +3,7 @@ namespace Modules\Product\Models;
 
 use Xcart\App\Orm\AutoMetaModel;
 use Xcart\App\Orm\Fields\AutoField;
+use Xcart\App\Orm\Fields\HasManyField;
 use Xcart\App\Orm\Fields\IntField;
 
 /**
@@ -23,6 +24,13 @@ class PricingModel extends AutoMetaModel
                 'primary' => true,
                 'null' => false,
             ],
+
+            'product' => [
+                'field' => 'productid',
+                'class' => HasManyField::className(),
+                'modelClass' => ProductModel::className(),
+                'link' => ['productid' => 'productid']
+            ]
         ];
     }
 }

@@ -35,7 +35,12 @@ class Connection
     static public function getInstance($params = [])
     {
         if (!self::$_instance) {
-            self::$_instance = DriverManager::getConnection($params);
+            if ($params) {
+                self::$_instance = DriverManager::getConnection($params);
+            }
+            else {
+                self::getInstanceFromApp();
+            }
 
             self::$_instance
                 ->getDatabasePlatform()

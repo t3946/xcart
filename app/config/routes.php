@@ -1,6 +1,20 @@
 <?php
 return [
     [
+        'route' => '',
+        'path' => 'Modules.Product.routes',
+    ],
+    [
+        'route' => '/amp',
+        'path' => 'Modules.AMP.routes',
+        'namespace' => 'amp',
+    ],
+    [
+        'route' => '/brand',
+        'path' => 'Modules.Brand.routes',
+        'namespace' => 'brand',
+    ],
+    [
         'route' => '/admin/dashboard',
         'path' => 'Modules.Dashboard.routes_admin',
         'namespace' => 'dashboard'

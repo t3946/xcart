@@ -241,7 +241,12 @@ class ManyToManyField extends RelatedField
         $adapter = $manager->getQueryBuilder()->getAdapter();
 
         foreach ($through->getFields() as $fieldName => $params) {
-            if (isset($params['modelClass']) && $params['modelClass'] == $this->ownerClassName) {
+            if (isset($params['modelClass'])
+                && (
+                    $this->ownerClassName == $params['modelClass']
+                    || is_subclass_of($this->ownerClassName, $params['modelClass']))
+                )
+            {
                 if ($params['link'])
                 {
                     foreach ($params['link'] as $from => $to)
@@ -396,8 +401,8 @@ class ManyToManyField extends RelatedField
         $on_owner = [];
         $on_related = [];
 
-        $throughAlias = $qb->makeMappedAliasKey($this->getTableName(), $this->getPrefixMappedKey(), $topAlias);
-        $alias = $qb->makeMappedAliasKey($this->getRelatedTable(), $this->getPrefixMappedKey(), $throughAlias);
+        $throughAlias = $qb->makeAliasKey($this->getTableName());
+        $alias = $qb->makeAliasKey($this->getRelatedTable());
 
         $through = call_user_func([$this->through, 'create']);
 

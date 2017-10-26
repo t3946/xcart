@@ -1,16 +1,4 @@
 <?php
-/**
- *
- *
- * All rights reserved.
- *
- * @author Okulov Anton
- * @email qantus@mail.ru
- * @version 1.0
- * @company HashStudio
- * @site http://hashstudio.ru
- * @date 13/06/16 11:48
- */
 
 namespace Xcart\App\Helpers;
 
@@ -28,6 +16,16 @@ class Collection implements IteratorAggregate, ArrayAccess, Countable, Serializa
     public function __construct($data = [])
     {
         $this->_data = $data;
+    }
+
+    public function __get($name)
+    {
+        return $this->get($name);
+    }
+
+    public function __set($name, $value)
+    {
+        $this->add($name, $value);
     }
 
     public function add($key, $value)

@@ -3,6 +3,7 @@ namespace Modules\Product\Models;
 
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\CharField;
+use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Model;
 
@@ -21,8 +22,11 @@ class FilterValueModel extends Model
                 'primary' => true,
                 'null' => false,
             ],
-            'f_id' => [
-                'class' => IntField::className(),
+            'filter' => [
+                'field' => 'f_id',
+                'class' => ForeignField::className(),
+                'modelClass' => FilterModel::className(),
+                'link' => ['f_id' => 'f_id'],
                 'null' => false,
                 'default' => 0
             ],

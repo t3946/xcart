@@ -53,7 +53,7 @@ while ($order = db_fetch_array($orders)) {
         $mnf_to = $order_manufacturer["email"];
 
         if (!empty($mnf_to)) {
-            $oMail = \Xcart\App\Main\Xcart::app()->mail;
+            $oMail = \Xcart\App\Main\Xcart::app()->oldMail;
             $oMail->init();
             $oMail->to = $mnf_to;
             $oMail->from = $config['Company']['orders_department'];

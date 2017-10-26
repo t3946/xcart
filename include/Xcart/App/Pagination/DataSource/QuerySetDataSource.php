@@ -16,6 +16,7 @@ class QuerySetDataSource implements DataSourceInterface
             $source = $source->getQuerySet();
         }
         $clone = clone $source;
+        $clone->order([]);
         return $clone->count();
     }
 

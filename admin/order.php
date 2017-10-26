@@ -689,7 +689,7 @@ if ($REQUEST_METHOD == "POST") {
         $from = $userfullname . "<helpdesk@s3stores.com>";
         $to   = "orders@s3stores.com";
 
-        $oMail = \Xcart\App\Main\Xcart::app()->mail;
+        $oMail = \Xcart\App\Main\Xcart::app()->oldMail;
         $oMail->init();
         $oMail->to = $to;
         $oMail->from = $from;
@@ -1710,7 +1710,7 @@ if ($mode == 'ref_notify')
                             // Copy to Orders Department
                             $attach_pdf_invoice = $order_notification["admin_attach_pdf_invoice"];
                             $mail_smarty->assign('attach_pdf_invoice', $attach_pdf_invoice);
-                            $oMail = \Xcart\App\Main\Xcart::app()->mail;
+                            $oMail = \Xcart\App\Main\Xcart::app()->oldMail;
                             $oMail->init();
                             $oMail->to = $config['Company']['orders_department'];
                             $oMail->from = $config['Company']['orders_department'];
@@ -1911,7 +1911,7 @@ if ($mode == 'mnf_notify' || $mode == "cidev_send_email_to_operator")
         if ($submit_to_operator == 'through_distributor_website') {
             $mail_smarty->assign('order', $order);
             $mail_smarty->assign('mnf_operator_notify', 'Y');
-            $oMail = \Xcart\App\Main\Xcart::app()->mail;
+            $oMail = \Xcart\App\Main\Xcart::app()->oldMail;
             $oMail->init();
             $oMail->to = $mnf_to;
             $oMail->from = $config['Company']['orders_department'];
@@ -1943,7 +1943,7 @@ if ($mode == 'mnf_notify' || $mode == "cidev_send_email_to_operator")
 
                 $mail_smarty->assign('order', $order_after_refund);
 
-                $oMail = \Xcart\App\Main\Xcart::app()->mail;
+                $oMail = \Xcart\App\Main\Xcart::app()->oldMail;
                 $oMail->init();
                 $oMail->to = $mnf_to;
                 $oMail->from = $config['Company']['orders_department'];
@@ -2038,7 +2038,7 @@ if ($mode == 'mnf_notify' || $mode == "cidev_send_email_to_operator")
             $mail_smarty->assign('order', $order_after_refund);
         }
 
-        $oMail = \Xcart\App\Main\Xcart::app()->mail;
+        $oMail = \Xcart\App\Main\Xcart::app()->oldMail;
         $oMail->init();
         $oMail->to = $d_order_entry_operator_email;
         $oMail->from = $config['Company']['orders_department'];
@@ -2086,7 +2086,7 @@ elseif ($mode == 'request_additional_shipping_charge') {
     $mail_smarty->assign('cidev_hide_invoice', 'Y');
     $mail_smarty->assign('d_email_subject_14', $d_email_subject_14);
 
-    $oMail = \Xcart\App\Main\Xcart::app()->mail;
+    $oMail = \Xcart\App\Main\Xcart::app()->oldMail;
     $oMail->init();
     $oMail->to = $mnf_to;
     $oMail->from = $config['Company']['orders_department'];
@@ -2118,7 +2118,7 @@ elseif ($mode == 'request_missing_information')
     $mail_smarty->assign('cidev_hide_invoice', 'Y');
     $mail_smarty->assign('d_email_subject_14', $d_email_subject_14);
 
-    $oMail = \Xcart\App\Main\Xcart::app()->mail;
+    $oMail = \Xcart\App\Main\Xcart::app()->oldMail;
     $oMail->init();
     $oMail->to = $mnf_to;
     $oMail->from = $config['Company']['orders_department'];
@@ -2150,7 +2150,7 @@ elseif ($mode == 'backorder_decision_request') {
     $mail_smarty->assign('cidev_hide_invoice', 'Y');
     $mail_smarty->assign('d_email_subject_14', $d_email_subject_14);
 
-    $oMail = \Xcart\App\Main\Xcart::app()->mail;
+    $oMail = \Xcart\App\Main\Xcart::app()->oldMail;
     $oMail->init();
     $oMail->to = $mnf_to;
     $oMail->from = $config['Company']['orders_department'];

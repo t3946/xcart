@@ -33,12 +33,7 @@ class OrmLegacy extends BaseOrmLegacy
      */
     public function getConnection()
     {
-        if ($this->connection === null) {
-            $connection = static::getDefaultConnection();
-
-            $this->connection = $connection;
-        }
-        return $this->connection;
+        return static::getDefaultConnection();
     }
 
 

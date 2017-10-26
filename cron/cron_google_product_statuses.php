@@ -21,7 +21,7 @@ const BACK_PROCESS_LOG_NAME = 'google_product_statuses';
 
 if ($config[LOG_CATEGORY] == "Y") {
     func_backprocess_log(BACK_PROCESS_LOG_NAME, 'Already launched');
-    $oMail = Xcart::app()->mail;
+    $oMail = Xcart::app()->oldMail;
     $oMail->to = 'team@s3stores.com';
     $oMail->from = ('team@s3stores.com');
     $oMail->subject = sprintf('Attention! Xcart cron %s Already launched', LOG_CATEGORY);

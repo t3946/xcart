@@ -34,6 +34,7 @@ class ErrorHandler
     public $debug = false;
     public $errHandler = true;
     public $excHandler = true;
+    public $ignoreDeprecated = false;
 
 
     public $handlers = [];
@@ -328,12 +329,27 @@ class ErrorHandler
                     throw new RecoverableErrorException($message, 0, $code, $file, $line);
                 case E_DEPRECATED:
                     $app->logger->critical($message, ['code' => $code, 'file' => $file, 'line' => $line], 'error');
-                    throw new DeprecatedException($message, 0, $code, $file, $line);
+                    if (!$this->ignoreDeprecated) {
+                        throw new DeprecatedException($message, 0, $code, $file, $line);
+                    }
+                    break;
                 case E_USER_DEPRECATED:
                     $app->logger->critical($message, ['code' => $code, 'file' => $file, 'line' => $line], 'error');
-                    throw new UserDeprecatedException($message, 0, $code, $file, $line);
+                    if (!$this->ignoreDeprecated) {
+                        throw new UserDeprecatedException($message, 0, $code, $file, $line);
+                    }
+                    break;
             }
-        } else {
+        }
+        else {
+            if ($this->ignoreDeprecated) {
+                switch ($code) {
+                    case E_DEPRECATED:
+                    case E_USER_DEPRECATED:
+                        return false;
+                }
+            }
+
             $msg = "Error: {$message}\nFile: {$file}\nLine: {$line}";
 
             $trace = debug_backtrace();

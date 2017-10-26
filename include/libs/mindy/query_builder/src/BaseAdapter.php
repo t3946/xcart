@@ -300,10 +300,15 @@ abstract class BaseAdapter implements ISQLGenerator
     /**
      * @param $tableName
      * @param array $rows
+     * @param string $options Sql Options
      * @return string
      */
     public function sqlInsert($tableName, array $rows, $options = '')
     {
+        if (!is_string($options)) {
+            $options = '';
+        }
+
         if (isset($rows[0]) && is_array($rows)) {
             $columns = array_map(function ($column) {
                 return $this->quoteColumn($column);
@@ -910,9 +915,9 @@ abstract class BaseAdapter implements ISQLGenerator
         return $selectSql . implode(', ', $select);
     }
 
-    public function generateInsertSQL($tableName, $values)
+    public function generateInsertSQL($tableName, $values, $options = '')
     {
-        return $this->sqlInsert($tableName, $values);
+        return $this->sqlInsert($tableName, $values, $options);
     }
 
     public function generateDeleteSQL($from, $where)

@@ -5,13 +5,13 @@ return [
         'default' => [
             'class' => '\\Xcart\\App\\Logger\\Handler\\RotatingFileHandler' ,
             'level' => defined('APP_DEBUG') ? "DEBUG" : "ERROR",
-            'alias' => 'base.log.err',
+            'alias' => 'base.runtime.log.err',
             'formatter' => 'log'
         ],
         'sql' => [
             'class' => '\\Xcart\\App\\Logger\\Handler\\RotatingFileHandler',
             'level' =>  "ERROR",
-            'alias' => 'base.log.sql'
+            'alias' => 'base.runtime.log.sql'
         ],
 //        'error' => [
 //            'class' => '\\Xcart\\App\\Logger\\Handler\\RotatingFileHandler',
@@ -29,7 +29,7 @@ return [
         ],
         'users' => [
             'class' => '\\Xcart\\App\\Logger\\Handler\\RotatingFileHandler',
-            'alias' => 'base.logs.users',
+            'alias' => 'base.runtime.log.users',
             'level' => 'INFO',
             'formatter' => 'users'
         ],

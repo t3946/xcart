@@ -13,6 +13,8 @@ use Xcart\App\Traits\RenderTrait;
 class Pagination extends BasePagination
 {
     use RenderTrait;
+    
+    public $view = "core/pager/pager.tpl";
 
     /**
      * Pagination constructor.
@@ -23,6 +25,10 @@ class Pagination extends BasePagination
      */
     public function __construct($source, array $config = [], $dataSource)
     {
+        if (!empty($config['view'])) {
+            $this->view = $config['view'];
+        }
+        
         $handler = new NativePaginationHandler();
         parent::__construct($source, $config, $handler, $dataSource);
     }
@@ -45,8 +51,12 @@ class Pagination extends BasePagination
         ];
     }
 
-    public function render($view = "core/pager/pager.tpl")
+    public function render($view = null)
     {
+        if (!$view) {
+            $view = $this->view;
+        }
+
         return $this->renderTemplate($view, [
             'this' => $this,
             'pager' => $this,

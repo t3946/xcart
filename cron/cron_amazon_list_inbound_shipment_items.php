@@ -13,7 +13,7 @@ global $config;
 const LOG_CATEGORY = 'cron_amazon_list_inbound_shipment_items';
 
 if ($config[LOG_CATEGORY] == "Y") {
-    $oMail = \Xcart\App\Main\Xcart::app()->mail;
+    $oMail = \Xcart\App\Main\Xcart::app()->oldMail;
     $oMail->to = 'team@s3stores.com';
     $oMail->from = 'team@s3stores.com';
     $oMail->subject = sprintf('Attention! Xcart cron %s Already launched', LOG_CATEGORY);

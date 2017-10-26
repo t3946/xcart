@@ -103,6 +103,10 @@ if (!empty($action)) {
 			}
 		}
 
+        if($_POST['relocate_to_cart'] == "Yes"){
+            \Xcart\App\Main\Xcart::app()->request->redirect("/cart.php");
+        }
+
 		#
 		# Update minicart
 		#

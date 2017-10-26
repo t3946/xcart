@@ -32,12 +32,16 @@ class TemplateManager
     protected $_renderer;
 
     public $forceCompile = false;
+    public $forceInclude = false;
+    public $forceVerify = false;
     public $autoReload = true;
     public $autoEscape = true;
 
     public $templateFolder = 'templates';
     public $librariesFolder = 'TemplateLibraries';
     public $cacheFolder = 'templates_cache';
+
+    public $librariesCacheTimeout;
 
     public function init()
     {
@@ -51,6 +55,8 @@ class TemplateManager
         $this->_renderer->setCompileDir($cacheFolder);
         $this->_renderer->setOptions([
             'force_compile' => $this->forceCompile,
+            'force_include' => $this->forceInclude,
+            'force_verify' => $this->forceVerify,
             'auto_reload' => $this->autoReload,
             'auto_escape' => $this->autoEscape
         ]);
@@ -158,25 +164,73 @@ class TemplateManager
 
     public function loadLibraries()
     {
-        $modulesPath = Paths::get('Modules');
-        $activeModules = Xcart::app()->getModulesList();
-        $classes = [];
-        foreach ($activeModules as $module) {
-            $path = implode(DIRECTORY_SEPARATOR, [$modulesPath, $module, $this->librariesFolder]);
-            if (is_dir($path)) {
-                foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path)) as $filename)
-                {
-                    // filter out "." and ".."
-                    if ($filename->isDir()) continue;
-                    $name = $filename->getBasename('.php');
-                    $classes[] = implode('\\', ['Modules', $module, $this->librariesFolder, $name]);
+        $extensions = null;
+        $cacheKey = 'XCART__TEMPLATE_EXTENSIONS';
+        if ($this->librariesCacheTimeout) {
+            $extensions = Xcart::app()->cache->get($cacheKey);
+        }
+        if (is_null($extensions)) {
+            $extensions = [];
+            $modulesPath = Paths::get('Modules');
+            $activeModules = Xcart::app()->getModulesList();
+            $classes = [];
+            foreach ($activeModules as $module) {
+                $path = implode(DIRECTORY_SEPARATOR, [$modulesPath, $module, $this->librariesFolder]);
+                if (is_dir($path)) {
+                    foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path)) as $filename) {
+                        // filter out "." and ".."
+                        if ($filename->isDir()) continue;
+                        $name = $filename->getBasename('.php');
+                        $classes[] = implode('\\', ['Modules', $module, $this->librariesFolder, $name]);
+                    }
                 }
             }
-        }
-        foreach ($classes as $class) {
-            if (class_exists($class) && is_a($class, TemplateLibrary::className(), true)) {
-                $class::load($this->getRenderer());
+            foreach ($classes as $class) {
+                if (class_exists($class) && is_a($class, TemplateLibrary::className(), true)) {
+                    $extensions = array_merge($extensions, $class::getExtensions());
+                }
             }
+            if ($this->librariesCacheTimeout) {
+                Xcart::app()->cache->set($cacheKey, $extensions, $this->librariesCacheTimeout);
+            }
+        }
+        $renderer = $this->getRenderer();
+        foreach ($extensions as $extension) {
+            $this->addExtension($renderer, $extension['class'], $extension['method'], $extension['name'], $extension['kind']);
+        }
+    }
+
+    /**
+     * @param $renderer Fenom
+     * @param $methodName
+     * @param $name
+     * @param $kind
+     */
+    public function addExtension($renderer, $class, $methodName, $name, $kind)
+    {
+        $callable = [$class, $methodName];
+        switch ($kind) {
+            case 'function':
+                $renderer->addFunction($name, $callable);
+                break;
+            case 'functionSmart':
+                $renderer->addFunctionSmart($name, $callable);
+                break;
+            case 'block':
+                $renderer->addBlockFunction($name, $callable);
+                break;
+            case 'modifier':
+                $renderer->addModifier($name, $callable);
+                break;
+            case 'compiler':
+                $renderer->addCompiler($name, $callable);
+                break;
+            case 'accessorProperty':
+                $renderer->addAccessorCallback($name, $callable);
+                break;
+            case 'accessorFunction':
+                $renderer->addAccessorSmart($name, implode('::', $callable), $renderer::ACCESSOR_CALL);
+                break;
         }
     }
 }
