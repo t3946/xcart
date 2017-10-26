@@ -149,7 +149,13 @@ if (!empty($active_modules["Subscriptions"])) {
     include $xcart_dir . "/modules/Subscriptions/subscription.php";
 }
 
-$products = array_map(function($a){$a['oProduct'] = new ProductModel($a); $a['oProduct']->setIsNewRecord(false); return $a;}, $products);
+if ($products && is_array($products)) {
+    $products = array_map(function ($a) {
+        $a['oProduct'] = new ProductModel($a);
+        $a['oProduct']->setIsNewRecord(false);
+        return $a;
+    }, $products);
+}
 
 $smarty->assign("products", $products);
 //$smarty->assign("navigation_script","home.php?cat=$cat&sort=$sort&sort_direction=$sort_direction");

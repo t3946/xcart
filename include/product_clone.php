@@ -35,6 +35,8 @@
 # $Id: product_clone.php,v 1.39.2.4 2006/08/23 13:06:24 max Exp $
 #
 
+use Modules\Product\Models\ProductModel;
+
 if ( !defined('XCART_SESSION_START') ) { header("Location: ../"); die("Access denied"); }
 
 x_load('category');
@@ -202,8 +204,11 @@ function func_copy_tables($table, $key_field, $productid, $new_productid) {
 #
 # Get product info
 #
-if ($productid!="") {
-	$product_info = func_query_first("SELECT * FROM $sql_tbl[products] WHERE productid='$productid'");
+if ($productid) {
+	//$product_info = func_query_first("SELECT * FROM $sql_tbl[products] WHERE productid='$productid'");
+	if ($product_model = ProductModel::objects()->get(['productid' => $productid])) {
+        $product_info = $product_model->getAttributes();
+	}
 }
 
 //if ($product_info["provider"]==$login || $single_mode || $current_area == "A") {
@@ -273,52 +278,37 @@ if ($current_area == "P" || $single_mode || $current_area == "A") {
   }
 
 
+  	$new_product = new ProductModel();
+    $new_product->setAttributes(array_merge(
+    		$product_model->getAttributes(),
+			[
+				'provider' => $c_login,
+				'productcode' => $productcode
+			]
+		)
+	);
+    $new_product->productid = null;
+    $new_product->save();
+
 	#
 	# Create a new product
 	#
-	$query = "INSERT INTO $sql_tbl[products] (provider, add_date, productcode) VALUES ('$c_login', '".time()."', '$productcode')";
-	$res = db_query($query);
-	$new_productid = db_insert_id();
+	$new_productid = $new_product->productid;
 
 	if (!empty($active_modules["Magnifier"])) {
 		include $xcart_dir."/modules/Magnifier/clone.php";
 	}
 
-	if (db_affected_rows($res) < 0)
-		$error_string = "$query<br />";
-
 	if ($new_productid) {
 		#
 		# Update just created product by values from existing product
 		#
-		$product_info['shipping_freight'] = DEFAULT_SHIPPING_FREIGHT;
-		$query = "UPDATE $sql_tbl[products] SET ";
-		foreach ($product_info as $k=>$v) {
-			if (!is_numeric($k) && $k!="productid" && $k!="productcode" && $k!="provider" && $k!="add_date" && $k!="views_stats" && $k!="del_stats" && $k!="sales_stats" && $k!="avail" ) {
-				if ($k=="product") $v="$v (CLON)";
-
-#
-##
-###
-				if ($k=="upc") $v="";
-//                                if ($k=="avail") $v="0";
-                                if ($k=="r_avail") $v="1000000";
-                                if ($k=="low_avail_limit") $v="1000";
-###
-##
-#
-
-				$query .= "`$k`='".addslashes($v)."', ";
-			}
-		}
-
-		$query = preg_replace("/, $/", " WHERE productid='$new_productid'", $query);
-
-		$res = db_query($query);
-
-		if (db_affected_rows($res) < 0)
-			$error_string = "$query<br />";
-		else {
+        $new_product->shipping_freight = DEFAULT_SHIPPING_FREIGHT;
+        $new_product->product = $new_product->product . " (CLON)";
+        $new_product->upc = '';
+        $new_product->r_avail = 1000000;
+        $new_product->low_avail_limit = 1000;
+        if ($new_product->save()) {
 			#
 			# Update products counter for categories in which product is placed
 			#

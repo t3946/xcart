@@ -234,17 +234,6 @@ function onProductClick(pid, pname, pcategory, pbrand, pposition, plist, pprice)
 
 
 	{/if}
-
-
-{if !($usertype eq "A" || $usertype eq "P")}
-<script>
-//<![CDATA[
-ga('send', 'pageview');
-//]]>
-</script>
-{/if}
-
-
 {/if}
 
 {*

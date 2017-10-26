@@ -6,6 +6,7 @@ namespace Modules\Product\Stores;
 use Mindy\QueryBuilder\Aggregation\Max;
 use Mindy\QueryBuilder\Expression;
 use Modules\Brand\Models\BrandModel;
+use Modules\Product\Helpers\ProductHelper;
 use Modules\Product\Models\PricingModel;
 use Modules\Product\Models\ProductCategoriesModel;
 use Modules\Product\Models\ProductModel;
@@ -62,11 +63,9 @@ class GroupStore extends BaseStore
                     'g_max' => new Expression($qs->getSql())
                 ]);
 
-            $this->qs->join('inner join', 'xcart_products_sf', ['productid' => 'sf.productid'], 'sf');
-
             $filter = [
                 'forsale' => 'Y',
-                'sf.sfid' => $this->data['sfid'],
+                'sites__storefrontid' => $this->data['sfid'],
                 'group_root__isnull' => true
             ];
 
@@ -92,6 +91,7 @@ class GroupStore extends BaseStore
             [
                 (new Expression("SUBSTRING_INDEX({$qs->getTableAlias()}.product, ' ', {$this->level})"))->toSQL() => (new Expression($this->model->group_option))->toSQL(),
                 'group_root__isnull' => true,
+                'sites__storefrontid' => $this->data['sfid'],
                 'brandid' => $this->model->brandid
             ]
         );
@@ -114,6 +114,7 @@ class GroupStore extends BaseStore
             [
                 'productid' => new Expression($qs->getTableAlias().".group_root"),
                 'group_root__isnull' => false,
+                'sites__storefrontid' => $this->data['sfid'],
                 'p2.group_root__isnull' => true,
                 'p2.product__raw' => "LIKE CONCAT({$qs->getTableAlias()}.group_option, '%')"
             ]
@@ -277,13 +278,16 @@ class GroupStore extends BaseStore
         }
 
         $this->model->group_root = $this->model->productid;
+        $this->model->pc_classify_status = 'ACC';
         $this->model->save();
 
         if ($this->data['products'] && is_array($this->data['products'])) {
             /** @var ProductModel[] $products */
             if ($products = ProductModel::objects()->filter(['productid__in' => array_keys($this->data['products'])])) {
                 foreach ($products as $product) {
+
                     $product->group_root = $this->model->productid;
+
                     if (isset($this->data['truncate_checkbox'])) {
                         $mask = preg_quote($params['group_mask'], '/');
                         $product->product = trim(preg_replace("/^({$mask})/", '', $product->product));
@@ -298,19 +302,24 @@ class GroupStore extends BaseStore
                                 'main' => 'Y'
                             ]);
 
-                            list($new_cat) = ProductCategoriesModel::objects()->getOrNew(
-                                [
-                                    'categoryid' =>  $this->data['category'],
-                                    'productid' => $cat->productid,
-                                    'main' => 'Y'
-                                ]);
-                            $new_cat->save();
-
+                            if ($this->data['category'] && $cat->productid) {
+                                list($new_cat) = ProductCategoriesModel::objects()->getOrNew(
+                                    [
+                                        'categoryid' => $this->data['category'],
+                                        'productid' => $cat->productid,
+                                        'main' => 'Y'
+                                    ]);
+                                $new_cat->save();
+                            }
                         }
                     }
 
                     if ($this->data['group_image'] && in_array($product->productid, $this->data['group_image'])) {
                         $product->group_order = (array_search($product->productid, $this->data['group_image']) + 1) * 10;
+                    }
+
+                    if (isset($params['group_mask'])) {
+                        $product->group_mask = $params['group_mask'];
                     }
 
                     $product->save();
@@ -326,11 +335,11 @@ class GroupStore extends BaseStore
                 }
             }
         }
+        return $this->model;
     }
 
     public function updateGroupProduct()
     {
-        //$this->model = ProductModel()
         $this->createGroupProduct();
     }
 }

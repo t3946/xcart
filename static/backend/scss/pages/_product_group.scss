@@ -76,3 +76,24 @@
     }
   }
 }
+
+#group_result_block {
+
+  .columns{
+    box-sizing: border-box;
+  }
+
+  .info{
+
+    a {
+
+      font-size: 16px;
+    }
+
+    .message {
+
+      font-size: 24px;
+    }
+
+  }
+}

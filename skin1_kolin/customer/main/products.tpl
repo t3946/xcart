@@ -61,14 +61,14 @@
                 {assign var="is_group" value=false}
             {/if}
             <table width="100%" class="product_list_row">
-                <tr class="google_impression_object" data-productid="{$products[product].productid}"
+                <tr class="google_impression_object" data-product-id="{$products[product].productid}"
                     data-name="{$products[product].product|escape}"
                     data-category="{$products[product].category|escape}" data-brand="{$products[product].brand|escape}"
                     data-list="{$ga_page_name}" data-price="{$products[product].price}" data-position="{$N_key}">
                     <td class="PListImgBox">
-                        <div class="PListImgBox" {if $products[product].oProduct->isGroupRoot()}style="width:150px; height:150px;"{/if}">
+                        <div class="PListImgBox" {if $products[product].oProduct && $products[product].oProduct->isGroupRoot()}style="width:150px; height:150px;"{/if}">
                             <a {include file="on_product_click.tpl"} href="{$products[product].oProduct->getUrl()}" {if $search_all_website eq 'Y'}target="_blank"{/if}>
-                                {if $products[product].oProduct->isGroupRoot() && $products[product].oProduct->getThumbnails()|@count >=4}
+                                {if $products[product].oProduct && $products[product].oProduct->isGroupRoot()}
                                     {include file="group_thumbnail.tpl" product=$products[product].oProduct}
                                 {else}
                                     {include file="product_thumbnail.tpl" productid=$products[product].productid image_x=$config.Appearance.thumbnail_width product=$products[product].oProduct->getTitle() tmbn_url=$products[product].tmbn_url splash=$products[product].oSplash}
@@ -114,7 +114,7 @@
                                 {if $config.General.unlimited_products ne "Y" && ($products[product].avail le 0 or $products[product].avail lt $products[product].min_amount) && $products[product].variantid}
                                     &nbsp;
                                 {elseif $current_price ne 0}
-                                    {if !$is_group}
+                                    {if !$is_group || ($products[product].oProduct->getFrontendPrice() > 0 && $products[product].oProduct->getFrontendPrice() == $products[product].oProduct->getFrontendPrice(2))}
                                         {if $products[product].list_price gt 0 and $current_price lt $products[product].list_price}
                                             {math equation="100-(price/lprice)*100" price=$current_price lprice=$products[product].list_price format="%3.0f" assign=discount}
                                             {if $discount gt 0}
@@ -128,9 +128,8 @@
                                         {/if}
                                         <span class="ProductPrice">{$lng.lbl_our_price}
                                             : {include file="currency.tpl" value=$current_price}</span>
-                                        <span class="MarketPrice">{include file="customer/main/alter_currency_value.tpl" alter_currency_value=$current_price}</span>{if $discount gt 0}{if $config.General.alter_currency_symbol ne ""},{/if}
-                                        <font class="ProductPrice">, {$lng.lbl_save_price} {$discount}%</font>
-                                    {/if}
+                                        <span class="MarketPrice">{include file="customer/main/alter_currency_value.tpl" alter_currency_value=$current_price}</span>
+                                        {if $discount gt 0}{if $config.General.alter_currency_symbol ne ""},{/if}<font class="ProductPrice">, {$lng.lbl_save_price} {$discount}%</font>{/if}
                                         {if $products[product].map_price gt $products[product].taxed_price}
                                             <br/>
                                             <span class="map_price_help">{$config.Product_Page.map_bridge_text}</span>
@@ -144,6 +143,11 @@
                                         {/if}
                                         {if $active_modules.Special_Offers ne "" and $products[product].use_special_price ne ""}
                                             {include file="modules/Special_Offers/customer/product_special_price.tpl" product=$products[product]}
+                                        {/if}
+                                    {else}
+                                        {if $products[product].oProduct && $products[product].oProduct->getFrontendPrice() > 0}
+                                            <span class="ProductPrice">Price range : {include file="currency.tpl" value=$products[product].oProduct->getFrontendPrice()}
+                                                - {include file="currency.tpl" value=$products[product].oProduct->getFrontendPrice(2)}</span>
                                         {/if}
                                     {/if}
                                 {/if}

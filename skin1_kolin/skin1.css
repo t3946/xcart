@@ -4258,12 +4258,21 @@ table.group_product {
 
 table.group_product th {
 	font-size: 14px;
-	font-weight: inherit;
+	font-weight: bold;
+	white-space: nowrap;
 }
 
 table.group_product td.title {
 	text-align: left;
 	padding-left: 5px;
+}
+
+table.group_product td.title a {
+	text-decoration: none;
+}
+
+table.group_product td.title a:hover {
+	text-decoration: underline;
 }
 
 table.group_product td.spinner_cell {

@@ -58,30 +58,9 @@ $(function() {
             .find('.spinner_cell').css('opacity', 1);
     }
 
-    $('.btn_full_product_line').click(function(){
-        var to = $("#group_product_line");
-        $('html, body').animate({
-            scrollTop: to.offset().top - to.height() / 2
-        }, 1000);
-    });
-
-    $('.group_product .notify').click(function() {
-        $(this).off().find('.subscribe').hide().end().find('.notify_form').fadeIn();
-    });
-
-    $('.group_product').on('click', '.notify_form .submit', function() {
-        var row = $(this).closest('.row');
-        var email = row.find('.email').find('input[name=notify_email]');
-        row.find('.spinner_cell').css('opacity', 0.4);
-        if (checkEmailAddress(email[0], 'Y')) {
-            $('.group_product').find('input[name=notify_email]').val(email.val());
-            submit_group_product_notify_form(row, onNotify);
-        }
-    });
-
-    $(".spinner").spinner('changing', function (e, newVal, oldVal) {
-        var row = $(this).closest('.row');
-        var spinner = $(this).closest('.spinner').parent();
+    function changeSpinner(obj, e, newVal) {
+        var row = obj.closest('.row');
+        var spinner = obj.closest('.spinner').parent();
         var aprice = spinner.closest('.row').data('price');
 
         if (newVal === 0) {
@@ -110,10 +89,46 @@ $(function() {
         } else {
             $('#add_cart_group').addClass('disable');
         }
+    }
 
+    $('.btn_full_product_line').click(function(){
+        var to = $("#group_product_line");
+
+        ga('send', 'event', 'UX', 'click', 'Full product line');
+
+        $('html, body').animate({
+            scrollTop: to.offset().top
+        }, 1000);
     });
 
-    $('#add_cart_group').click(function () {
+    $('.group_product .notify').click(function() {
+        $(this).off().find('.subscribe').hide().end().find('.notify_form').fadeIn();
+    });
+
+    $('.group_product').on('click', '.notify_form .submit', function() {
+        var row = $(this).closest('.row');
+        var email = row.find('.email').find('input[name=notify_email]');
+        row.find('.spinner_cell').css('opacity', 0.4);
+        if (checkEmailAddress(email[0], 'Y')) {
+            $('.group_product').find('input[name=notify_email]').val(email.val());
+            submit_group_product_notify_form(row, onNotify);
+        }
+    });
+
+    $(document).on('pagechange', function(){
+        setTimeout(function(){
+            $('[data-trigger="spinner"]').spinner();
+            $(".spinner").spinner('changing', function (e, newVal, oldVal) {
+                changeSpinner($(this), e, newVal);
+            });
+        }, 200);
+    });
+
+    $(".spinner").spinner('changing', function (e, newVal, oldVal) {
+        changeSpinner($(this), e, newVal);
+    });
+
+    $(document).on('click', '#add_cart_group',function () {
 
         var pr = {};
         var $this = $(this);
@@ -130,7 +145,7 @@ $(function() {
                     quantity: q,
                     price: getPrice(price_table, q) * q,
                     brand: $(this).data('brand'),
-                    title: $(this).data('title'),
+                    title: $(this).data('name'),
                     category: $(this).data('category')
                 };
             }

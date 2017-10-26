@@ -196,8 +196,8 @@ if (is_array($e_search_data) && !empty($e_search_data["substring"])){
 	}
 
 	$found_cat_ids = array();
-	if (!empty($e_products) && is_array($e_products)){
-		foreach ($e_products as $k_e => $v_e){
+	if (!empty($e_all_products) && is_array($e_all_products)){
+		foreach ($e_all_products as $k_e => $v_e){
 
 			if (empty($v_e["categoryid"])){
 				continue;

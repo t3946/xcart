@@ -210,11 +210,18 @@ SQL;
 
             if (in_array($section_name, ['similar_products', 'similar_products_ob', 'related_products'])) {
                 $oProducts = ProductHelper::groupRootProducts($oProducts);
+                if (isset($oProducts[$productid])) {
+                    unset($oProducts[$productid]);
+                }
             }
 
             foreach ($oProducts as $oProduct)
             {
                 if ($isInStock && $oProduct->isProductOutOfStock() && !$oProduct->isGroupRoot()) {
+                    continue;
+                }
+
+                if ($oProduct->isGroupRoot() && $oProduct->getFrontendChilds()->count() === 0) {
                     continue;
                 }
 

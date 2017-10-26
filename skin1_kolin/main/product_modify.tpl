@@ -115,7 +115,7 @@ window.name="prodmodwin";
 {/if}
 {/if}
 
-{if !$oProduct->isGroupRoot() && !$oProduct->isParent()}
+{if !$oProduct->isGroupRoot()}
     {if $product.is_variants ne 'Y' && ($section eq "wholesale" || $config.General.display_all_products_on_1_page eq 'Y')}
 		<div {if $usertype eq "P"}style="display: none;"{/if}>
 			<a name="section_wholesale"></a>
@@ -152,7 +152,7 @@ window.name="prodmodwin";
 {* end_modification_CIDEV -> CDEV_Best_Search_Filter *}
 
 
-{if !$oProduct->isGroupRoot() && !$oProduct->isParent()}
+{if !$oProduct->isGroupRoot()}
 	{if $section eq "clone" || $config.General.display_all_products_on_1_page eq 'Y'}
 	<a name="section_clone"></a>
 	{include file="main/product_clone.tpl"}

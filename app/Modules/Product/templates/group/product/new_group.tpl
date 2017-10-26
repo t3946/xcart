@@ -16,7 +16,7 @@
                             <label for="o-group-sku">Group product SKU</label>
                         </div>
                         <div class="columns large-8">
-                            <input id="o-group-sku" name="group[sku]" type="text" placeholder="Group product SKU" class="big"/>
+                            <input disabled id="o-group-sku" name="group[sku]" type="text" placeholder="Group product SKU" class="big"/>
                         </div>
                     </div>
                 </li>

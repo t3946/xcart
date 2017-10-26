@@ -77,7 +77,12 @@
                                 force_br_newlines: true,
                                 force_p_newlines: false,
                                 convert_urls: false,
-                                relative_urls: false
+                                relative_urls: false,
+                                setup: function (editor) {
+                                    editor.on('change', function () {
+                                        tinymce.triggerSave();
+                                    });
+                                }
                             });
                             $.get('{url 'product:group_categories'}',
                                 {
@@ -104,6 +109,7 @@
                                 $form.append($('<input name="group[group_image][]" type="hidden" />').val($(v).data('product-id')));
                             }).get();
 
+
                             var $data = $form.serialize();
                             $form.off();
                             selected_block.css('opacity', 0.4).next('.group-detail').css('opacity', 0.4);
@@ -118,6 +124,8 @@
                                         $('.product_group').find('tr[data-product-id=' + arrP[p] + ']').remove();
                                     }
                                     selected_block.css('opacity', 1).find('.tree_cell').click();
+
+                                    $(data.result).mmodal();
                                 },
                                 error: function (jqXHR, textStatus, errorThrown) {
                                     $.mnotify({

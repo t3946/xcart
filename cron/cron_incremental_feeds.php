@@ -201,7 +201,14 @@ if (!empty($cidev_storefronts) && is_array($cidev_storefronts)) {
 
                         /** @var $oProduct ProductModel */
                         $oProduct->last_incremental_update = time();
+
                         $oProduct->save();
+
+                        if ($oProduct->isGroupRoot()) {
+                            $queue->mask = 0;
+                            $queue->save();
+                            continue;
+                        }
 
                         $googleOneRow = null;
 

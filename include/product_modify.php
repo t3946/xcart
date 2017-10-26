@@ -537,11 +537,13 @@ if (($REQUEST_METHOD == "POST") && ($mode == "product_modify")) {
 			$_POST["calculate_price_for_new_product"] = $price = (1.15 * $cost_to_us + 0.3)/0.97;
 
 		} else {
-			if ($cost_to_us <= 0 || $cost_to_us == "0.00"){
-	                        $top_message["content"] = "Not Saved. Check 'Cost to us' field.";
-        	                $top_message["type"] = "E";
-				func_header_location("product_modify.php?productid=".$productid);
-			}
+            if ($cost_to_us <= 0 || $cost_to_us == "0.00") {
+                if (!$oProduct->isGroupRoot()) {
+                    $top_message["content"] = "Not Saved. Check 'Cost to us' field.";
+                    $top_message["type"] = "E";
+                    func_header_location("product_modify.php?productid=" . $productid);
+                }
+            }
 		}
 	}
 ###
@@ -584,7 +586,7 @@ if (($REQUEST_METHOD == "POST") && ($mode == "product_modify")) {
 		$sku_is_exist);
 
 
-	if (!$fillerror) {
+	if (!$fillerror || $oProduct->isGroupRoot()) {
 	#
 	# If no errors
 	#
@@ -1159,8 +1161,10 @@ if (($REQUEST_METHOD == "POST") && ($mode == "product_modify")) {
                           $top_message['content'] = "Cost to us error";
  
 		} else {
-			$top_message['content'] = func_get_langvar_by_name("msg_adm_err_product_upd");
-			$top_message['fillerror'] = true;
+			if (!$oProduct->isGroupRoot()) {
+                $top_message['content'] = func_get_langvar_by_name("msg_adm_err_product_upd");
+                $top_message['fillerror'] = true;
+            }
 		}
 
 		$product_modified_data = $_POST;

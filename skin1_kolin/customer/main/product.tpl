@@ -59,7 +59,7 @@
                             {if $active_modules.Detailed_Product_Images ne "" && $images ne ''}
                                 <a style="font-size: 0px;" href="#dp_images" class="ga_click" data-label="More Images">
                             {/if}
-                            {if $oProduct->isGroupRoot() && $oProduct->getThumbnails()|@count >=4}
+                            {if $oProduct && $oProduct->isGroupRoot()}
                                 {include file="group_thumbnail.tpl" product=$oProduct}
                             {else}
                                 {include file="product_thumbnail.tpl" productid=$product.productid image_x=$product.image_x image_y=$product.image_y product=$producttitle tmbn_url=$product.tmbn_url id="product_thumbnail" type="P" splash=$product.oSplash}
@@ -174,8 +174,7 @@
                                 </tr>
 
                                 {if $config.Appearance.show_in_stock eq "Y" and $config.General.unlimited_products ne "Y" and $product.distribution eq "" && $product.avail <= $config.Appearance.quantity_threshold && $product.avail gt 0}
-                                    <tr id="so_o_stock" itemprop="availability"
-                                        content="{if $product.product_availability eq "in stock"}InStock{else}OutOfStock{/if}">
+                                    <tr id="so_o_stock" itemprop="availability" content="{if $product.product_availability eq "in stock"}InStock{else}OutOfStock{/if}">
                                         <td width="10%" class="BlackT">{$lng.lbl_in_stock}:</td>
                                         <td nowrap="nowrap" id="product_avail_txt" class="BlackT">
                                             {if $product.avail gt 0}{$lng.txt_items_available|substitute:"items":$product.avail}{else}{$lng.lbl_no_items_available}{/if}
@@ -534,7 +533,7 @@
                                 </script>
                                 <span id="calculate_shipping_button" data-product-id="{$product.productid}"
                                       style="margin-top: -5px;"
-                                      class="cidev_new_button cidev_new_white">Calculate shipping</span>
+                                      class="cidev_new_button cidev_new_white">Show shipping</span>
                             {/if}
                         </td>
                     </tr>
@@ -544,13 +543,14 @@
                             <td colspan="2" class="shipping_info"></td>
                         </tr>
                     {/if}
-                    {if !$is_group && !is_null($oProduct->group_root)}
+                    {if $oProduct && $oProduct->isGroupChild() && $oProduct->parent}
                         <tr>
                             <td colspan="4" style="line-height: 18px;">&nbsp;</td>
                         </tr>
                         <tr class="full_product_line_button">
-                            <td colspan="4" align="center">
-                                <span style="font-size: 19px" class="cidev_new_button cidev_new_white" onclick="self.location = '{$oProduct->parent->getUrl()}'">This product has several different variations - click to see all</span></td>
+                            <td colspan="2"></td>
+                            <td colspan="2" style="padding-left: 16px;">
+                                <span style="font-size: 19px" class="cidev_new_button cidev_new_white" onclick="self.location = '{$oProduct->parent->getUrl()}'">See other product variations</span></td>
                         </tr>
                     {/if}
                 {/if}
@@ -574,6 +574,16 @@
     </table>
 {/if}
 
+{if $product.product_availability ne "in stock"}
+    <br />
+    <br />
+
+    <div id="similar_products" style="display: none;">{include file="customer/main/ajax_carousel_products.tpl" section_name="similar_products" section_title=$lng.lbl_similar_products}</div>
+
+    <script type="text/javascript">
+        func_load_ALL_ajax_carousels("similar_products", 0);
+    </script>
+{/if}
 
 {if $product.cart_manufact_text_displayed ne ""}
     <br/>
@@ -600,10 +610,12 @@
 {/if}
 
 <br/>
-{if !$is_group && !is_null($oProduct->group_root)}
+{if $oProduct && $oProduct->isGroupChild() && $oProduct->parent}
     <div style="text-align: center;" class="full_product_line_button">
-            <span style="font-size: 19px" class="cidev_new_button cidev_new_white" onclick="self.location = '{$oProduct->parent->getUrl()}'">This product has several different variations - click to see all</span>
+            <span style="font-size: 19px" class="cidev_new_button cidev_new_white" onclick="self.location = '{$oProduct->parent->getUrl()}'">See other product variations</span>
     </div>
+    <br/>
+    <br/>
 {/if}
 
 <div id="products_also_bought_with_this_product"
@@ -629,7 +641,11 @@
      style="display: none;">{include file="customer/main/ajax_carousel_products.tpl" section_name="recently_viewed_products" section_title=$lng.lbl_recently_viewed_products}</div>
 
 <script type="text/javascript">
-    func_load_ALL_ajax_carousels("products_also_bought_with_this_product,related_products,similar_products,recently_viewed_products", 0);
+    {assign var=carousels value='products_also_bought_with_this_product,related_products,similar_products,recently_viewed_products'}
+    {if $product.product_availability ne "in stock"}
+        {assign var=carousels value='products_also_bought_with_this_product,related_products,recently_viewed_products'}
+    {/if}
+    func_load_ALL_ajax_carousels("{$carousels}", 0);
 </script>
 
 {if $active_modules.Recommended_Products ne ""}

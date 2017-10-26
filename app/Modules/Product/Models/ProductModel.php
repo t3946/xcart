@@ -51,6 +51,8 @@ use Xcart\Product;
  */
 class ProductModel extends AutoMetaModel
 {
+    const ADMIN_PRODUCT_MODIFY_URL = '/admin/product_modify.php?productid=%d&sf=%d';
+
     use DataModelTrait;
 
     public static function getDataModelClass()
@@ -182,7 +184,7 @@ class ProductModel extends AutoMetaModel
                 'link' => ['productid' => 'productid']
             ],
             'amazon_fields' => [
-                'class' => OneToOneField::className(),
+                'class' => HasManyField::className(),
                 'modelClass' => AmazonProductsFieldsModel::className(),
                 'link' => ['productid' => 'productid']
             ],
@@ -222,31 +224,28 @@ class ProductModel extends AutoMetaModel
             $title = $this->product;
         }
 
-        if ($this->group_root) {
-            return ($this->isGroupRoot()) ?  $title : $this->parent->group_mask . $title;
-        }
+        return ($this->isGroupChild()) ?  $this->parent->group_mask . " ". $title : $title;
+    }
 
-        return $title;
+    public function getFrontendChilds()
+    {
+        return $this->childs->filter(['forsale' => 'Y'])->order(['group_order']);
     }
 
     /**
-     * @return ImageTModel[]
+     * @return ImageTModel|null
      */
-    public function getThumbnails()
+    public function getThumbnail()
     {
-        $thumbs = [];
-        if ($this->isGroupRoot()) {
-            foreach ($this->childs->order(['group_order']) as $child) {
-                if ($thumb = $child->thumbnail->limit(1)->get()) {
-                    $thumbs[] = $thumb;
-                }
-            }
-        } else {
-            if ($thumb = $this->thumbnail->limit(1)->get()) {
-                $thumbs[] = $thumb;
-            }
+        if ($thumb = $this->thumbnail->limit(1)->get()) {
+            return $thumb;
         }
-        return $thumbs;
+        return null;
+    }
+
+    public function getAdminUrl()
+    {
+        return sprintf(self::ADMIN_PRODUCT_MODIFY_URL, $this->productid, $this->sites->limit(1)->get()->storefrontid);
     }
 
 }

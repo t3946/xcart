@@ -59,7 +59,7 @@ if ($classElastic->hitsTotal < $config["ElasticSearch_options"]["results_count_i
     $result = $classElastic->query($search_query);
 }
 
-$e_products = [];
+$e_products = $e_all_products = [];
 
 $manufacturer_product_feed_enabled = [];
 
@@ -77,20 +77,26 @@ if (!empty($result["hits"]["hits"]) && is_array($result["hits"]["hits"]))
                 $product_model = new ProductModel($e_product_info);
                 $product_model->setIsNewRecord(false);
 
-                if (!$product_model->isGroupRoot() && !is_null($product_model->group_root)) {
-                    if (!array_key_exists($product_model->group_root, $e_products)) {
-                        $parent = $product_model->parent;
-                        $e_products[$product_model->group_root] = $parent->getAttributes();
-                        $e_products[$product_model->group_root]['oProduct'] = $parent;
+                if ($product_model->isGroupRoot() && $product_model->getFrontendChilds()->count() === 0) {
+                    continue;
+                }
+
+                if ($product_model->isGroupChild()) {
+                    if (!array_key_exists($product_model->group_root, $e_all_products)) {
+                        if ($parent = $product_model->parent) {
+                            $e_all_products[$product_model->group_root] = $parent->getAttributes();
+                            $e_all_products[$product_model->group_root]['oProduct'] = $parent;
+                        }
                     }
                 } else {
-                    $e_products[$v["_id"]] = $e_product_info;
-                    $e_products[$v["_id"]]['oProduct'] = $product_model;
+                    $e_all_products[$v["_id"]] = $e_product_info;
+                    $e_all_products[$v["_id"]]['oProduct'] = $product_model;
+
                 }
 
                 if (!empty($e_products[$v["_id"]]["clean_url"])) {
-                    if (substr($e_products[$v["_id"]]["clean_url"], -1) != "/") {
-                        $e_products[$v["_id"]]["clean_url"] .= "/";
+                    if (substr($e_all_products[$v["_id"]]["clean_url"], -1) != "/") {
+                        $e_all_products[$v["_id"]]["clean_url"] .= "/";
                     }
                 }
             }
@@ -99,16 +105,13 @@ if (!empty($result["hits"]["hits"]) && is_array($result["hits"]["hits"]))
         if ($load_all_e_products)
         {
             $categories                   = func_query_column("SELECT categoryid FROM $sql_tbl[products_categories] WHERE productid='$v[_id]' ORDER BY FIELD(main, 'Y', 'N')");
-            $e_products[$k]["categoryid"] = (!empty($categories)) ? $categories[0] : '';
+            $e_all_products[$k]["categoryid"] = (!empty($categories)) ? $categories[0] : '';
         }
 
-        $next_from++;
-
-        if (count($e_products) >= $config["Appearance"]["products_per_page"]) {
-            break;
-        }
     }
-    $e_products = array_values($e_products);
+
+    $e_products = array_values(array_slice($e_all_products, $next_from, $e_search_data["products_per_page"]));
+    $next_from += count($e_products);
 }
 
 if (!$load_all_e_products) {

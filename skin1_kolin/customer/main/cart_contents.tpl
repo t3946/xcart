@@ -47,7 +47,12 @@
 {/if}
 <tr {$trstyle}>
 <td style="width: 110px">{$products[prod_num].productcode}</td>
-<td>{$products[prod_num].oProduct->getTitle()}
+<td>
+    {if $products[prod_num].oProduct}
+        {$products[prod_num].oProduct->getTitle()|escape}
+    {else}
+        {$products[prod_num].product|escape}
+    {/if}
 
 {if $products[prod_num].product_options}<br />Options:
 {include file="modules/Product_Options/display_options.tpl" options=$products[prod_num].product_options is_plain='Y'}

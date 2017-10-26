@@ -10,6 +10,7 @@ use Modules\Product\Models\ProductCategoriesModel;
 use Modules\Product\Models\ProductModel;
 use Modules\Product\ProductModule;
 use Modules\Product\Stores\GroupStore;
+use Modules\Sites\Models\SiteModel;
 use Xcart\App\Controller\PrototypeAdminController;
 use Xcart\App\Main\Xcart;
 
@@ -19,7 +20,7 @@ class GroupController extends PrototypeAdminController
     {
         $store = new GroupStore(
             [
-                'sfid' => Xcart::app()->getModule('Sites')->getSite()->storefrontid
+                'sfid' => Xcart::app()->request->session->get('current_storefront')
             ]
         );
 
@@ -53,7 +54,7 @@ class GroupController extends PrototypeAdminController
         $store = new GroupStore(
             array_merge($_GET,
                 [
-                    'sfid' => Xcart::app()->getModule('Sites')->getSite()->storefrontid
+                    'sfid' => Xcart::app()->request->session->get('current_storefront')
                 ]
             ), $model);
 
@@ -65,6 +66,7 @@ class GroupController extends PrototypeAdminController
                         [
                             'products' => $store->getGroupNewProducts(),
                             'level' => $store->data['level'],
+                            'site' => SiteModel::objects()->get(['storefrontid' => Xcart::app()->request->session->get('current_storefront')]),
                         ]
                     )
                 ]
@@ -76,7 +78,7 @@ class GroupController extends PrototypeAdminController
                 [
                     'products' => $store->getGroupProducts(),
                     'level' => $store->data['level'],
-                    'sfid' => Xcart::app()->getModule('Sites')->getSite()->storefrontid
+                    'sfid' => Xcart::app()->request->session->get('current_storefront')
                 ]
             );
         }
@@ -86,13 +88,37 @@ class GroupController extends PrototypeAdminController
     {
         if ($this->getRequest()->getIsPost()) {
 
-            $store = new GroupStore(array_merge($_POST['group'], ['brandid' => $id]));
+            $store = new GroupStore(array_merge($_POST['group'],
+                [
+                    'brandid' => $id,
+                    'sku' => ProductHelper::getNewGroupSKU($_POST['group']['manufacturerid'])
+                ])
+            );
 
-            $store->createGroupProduct();
+            $model = $store->createGroupProduct();
 
             if ($this->getRequest()->getIsAjax()) {
 
-                $this->jsonResponse(['result' => 'ok']);
+                if ($model) {
+                    $images = null;
+
+                    foreach ($model->childs->order(['group_order'])->limit(4) as $key => $product) {
+                        $images .= $this->renderSmarty(
+                            'group_thumbnail.tpl',
+                            ['product' => $product]
+                        );
+                    }
+
+                    $this->jsonResponse(
+                        [
+                            'result' => $this->render('group/product/_group_result.tpl',
+                                [
+                                    'images' => $images,
+                                    'model' => $model
+                                ]
+                            )
+                        ]);
+                }
                 return;
             }
 
@@ -104,7 +130,7 @@ class GroupController extends PrototypeAdminController
             $store = new GroupStore(
                 array_merge($_GET,
                     [
-                        'sfid' => Xcart::app()->getModule('Sites')->getSite()->storefrontid
+                        'sfid' => Xcart::app()->request->session->get('current_storefront')
                     ]
                 ), $brand);
 
@@ -117,26 +143,36 @@ class GroupController extends PrototypeAdminController
                 $brands = $store->getLevels();
 
                 if ($store->level > 3) {
-                    $store->defaultPagerPageSize = 200;
+                    $store->defaultPagerPageSize = 20000;
                 } else {
-                    $store->defaultPagerPageSize = 50;
+                    $store->defaultPagerPageSize = 500;
                 }
 
                 if ($products = $store->getModels()) {
 
                     if (count($brands) === 1) {
 
-                        if ($store->data['group_phrase'] = ProductHelper::getFirstSame(
+                        if ($new_group_phrase = ProductHelper::getFirstSame(
                             array_map(
                                 function ($p) {
                                     return $p->product;
                                 },
-                            $products)
-                        ))
-                        {
-                            $store->level = ProductHelper::getGroupLevel($store->data['group_phrase']) + 2;
-                            $brands = $store->getLevels();
-                            $products = $store->getModels();
+                                $products)
+                        )) {
+                            $new_level = ProductHelper::getGroupLevel($new_group_phrase) + 2;
+                            if ($new_level >= $store->level) {
+                                $store->data['group_phrase'] = $new_group_phrase;
+                                $store->level = $new_level;
+                                $brands = $store->getLevels();
+
+                                $products = $store->getModels();
+
+                                if (count($brands) === 1 && $brands[0]->getNotModelAttribute('group_phrase') == $new_group_phrase) {
+                                    unset($brands);
+                                }
+                            } else {
+                                unset($brands);
+                            }
                         }
                     }
                 }
@@ -152,12 +188,14 @@ class GroupController extends PrototypeAdminController
                     [
                         'products' => $products,
                         'parent_level' => $store->level - 1,
-                        'site' => Xcart::app()->getModule('Sites')->getSite()
+                        'group_phrase' => $store->data['group_phrase'],
+                        'site' => SiteModel::objects()->get(['storefrontid' => Xcart::app()->request->session->get('current_storefront')])
                     ]
                 );
                 $this->jsonResponse([
                     'html' => $res,
-                    'group_phrase' => $store->data['group_phrase']
+                    'group_phrase' => $store->data['group_phrase'],
+                    'level' => $store->level - 1
                 ]);
 
             } else {
@@ -181,11 +219,10 @@ class GroupController extends PrototypeAdminController
                 if ($products = ProductModel::objects()->filter(
                     [
                         'productid__in' => $_GET['products']
-                    ])->all())
-                {
+                    ])->all()) {
                     foreach ($products as $key => $product) {
                         $res .= $this->renderSmarty(
-                            'group_thumbnail.tpl',
+                            'group_image.tpl',
                             ['product' => $product]
                         );
                     }
@@ -227,18 +264,18 @@ class GroupController extends PrototypeAdminController
     public function group_remove()
     {
         if ($this->getRequest()->getIsAjax()) {
-            if (isset($_POST['product_id'])) {
-                if ($model = ProductModel::objects()->get(
+            if (isset($_POST['product_id']) && $model = ProductModel::objects()->get(
                     [
                         'productid' => $_POST['product_id']
                     ]
-                ))
-                {
-                    $model->group_root = null;
-                    $model->group_order = 255;
-                    $model->save();
-                }
+                )) {
+                $model->setAttributes([
+                    'group_root' => null,
+                    'group_order' => 255
+                ]);
+                $model->save();
             }
+
         }
     }
 
@@ -255,8 +292,7 @@ class GroupController extends PrototypeAdminController
                     [
                         'productid' => $_POST['product_id']
                     ]
-                ))
-                {
+                )) {
                     /** @var ProductModel $add_model */
 
                     if ($add_model = ProductModel::objects()->get(['productcode' => $_POST['add_sku']])) {

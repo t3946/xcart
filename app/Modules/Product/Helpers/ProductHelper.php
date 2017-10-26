@@ -3,7 +3,9 @@
 namespace Modules\Product\Helpers;
 
 
+use Mindy\QueryBuilder\Expression;
 use Modules\Amazon\Models\AmazonFbaMissingSkuModel;
+use Modules\Distributor\Models\DistributorModel;
 use Modules\Product\Models\ProductFileModel;
 use Modules\Product\Models\ProductModel;
 
@@ -133,17 +135,19 @@ class ProductHelper
 
     /**
      * @param ProductModel[] $oProducts
-     * @return mixed
+     * @return ProductModel[]
      */
     public static function groupRootProducts($oProducts)
     {
         $res = [];
         if ($oProducts) {
             foreach ($oProducts as $oProduct) {
-                if (!$oProduct->isGroupRoot() && !is_null($oProduct->group_root)) {
+
+                if ($oProduct->isGroupChild()) {
                     if (!array_key_exists($oProduct->group_root, $res)) {
-                        $parent = $oProduct->parent;
-                        $res[$parent->productid] = $parent;
+                        if ($parent = $oProduct->parent) {
+                            $res[$parent->productid] = $parent;
+                        }
                     }
                 } else {
                     $res[$oProduct->productid] = $oProduct;
@@ -170,16 +174,22 @@ class ProductHelper
                 return $a;
             }
 
-            $u = 0;
+            $b = trim(mb_substr($b, 0, mb_strrpos($b, ' '))). ' ';
 
-            for ($i = 0; $i < strlen($a) - 1; $i++) {
-                    if ($a[$i] == $b[$i]) {
-                        $u = $i + 1;
-                    } else {
-                        return substr($a, 0, $u + 1);
+            for ($i = 0; $i < mb_strlen($a) - 1; $i++) {
+                if (mb_strtolower(mb_substr($a, $i, 1)) != mb_strtolower(mb_substr($b, $i, 1))) {
+                    if (!$i) {
+                        return '';
                     }
+                    if (($ls = mb_strpos($a, ' ', $i)) > $i) {
+                        $s = mb_substr($a, 0, $ls);
+                    } else {
+                        $s = mb_substr($a, 0, $i);
+                    }
+                    return trim(mb_substr($s, 0, mb_strrpos($s, ' ')));
+                }
             }
-            return substr($a, 0, $u + 1);
+            return mb_substr($a, 0, ++$i);
         }
 
         $b = null;
@@ -192,11 +202,36 @@ class ProductHelper
                 $b = longestCS($b, $s);
             }
         }
-        return trim(substr($b, 0, strrpos ($b, ' ')));
+        return trim($b);
     }
 
     public static function getGroupLevel($option)
     {
-        return substr_count($option, ' ');
+        return mb_substr_count($option, ' ');
+    }
+
+    public static function getNewGroupSKU($manufacturer_id)
+    {
+        $new_sku = null;
+
+        $format = '%s-GROUP-%d';
+
+        if ($last = ProductModel::objects()->filter(
+            [
+                'group_root__isnull' => false,
+                'group_root' => new Expression('productid')
+            ])
+            ->order([new Expression("-COALESCE(CAST(SUBSTRING_INDEX(productcode, '-', -1) AS UNSIGNED), 1)")])
+            ->limit(1)
+            ->get()
+        ) {
+            if (preg_match('/-(\d+)$/', $last->productcode, $m)) {
+                if ($model = DistributorModel::objects()->get(['manufacturerid' => $manufacturer_id])) {
+                    $new_sku = sprintf($format, $model->code, intval($m[1]) + 1);
+                }
+            }
+        }
+
+        return $new_sku;
     }
 }

@@ -20,7 +20,7 @@
                     {elseif $current_category.title_tag ne "" && $main eq "catalog"}
                         {$current_category.title_tag} {*| {$location[0].0*}
                     {else}
-                        {if $current_storefront == 41}
+                        {if $current_storefront == 41 && $main eq "product"}
                             {capture name=title}
                                 {assign var="seo_product_title" value="`$product.product` Online | `$config.Company.company_name`"}
                                 {$seo_product_title|truncate:"80":"":false|escape|strip}
@@ -67,8 +67,13 @@
     <!--[if IE]>
     <link rel="stylesheet" href="{$SkinDir}/skin1.IE.css" type="text/css" media="all" />
     <![endif]-->
+
     {if $canonical_url}
-        <link rel="canonical" href="{$xcartApp->request->getHostInfo()}/{$canonical_url}" />
+        {if $oProduct && $oProduct->isGroupChild()}
+            <link rel="canonical" href="{if $oProduct->parent}{$oProduct->parent->getUrl()}{/if}" />
+        {else}
+            <link rel="canonical" href="{$xcartApp->request->getHostInfo()}/{$canonical_url}" />
+        {/if}
     {/if}
     {if $main eq "catalog" && $current_category.category eq "" && $clean_url_data.resource_type ne "K"}
         <link rel="canonical" href="{$xcartApp->request->getHostInfo()}/"/>
@@ -199,15 +204,26 @@ function func_load_ajax_carousel_products(section_name)
                         a_href = 'product.php?productid=' + this.productid;
                     }
                     ga_page_name = this.ga_param;
-                    html += '<li class="google_impression_object" data-productid="'+this.productid+'" data-name="'+this.product+'" data-category="'+this.category+'" data-brand="'+this.brand+'" data-list="'+ga_page_name+'" data-price="'+this.price.toFixed(2)+'" data-position="'+this.N_key+'" class="active">' +
+                    html += '<li class="google_impression_object" data-product-id="'+this.productid+'" data-name="'+this.product+'" data-category="'+this.category+'" data-brand="'+this.brand+'" data-list="'+ga_page_name+'" data-price="'+this.price.toFixed(2)+'" data-position="'+this.N_key+'" class="active">' +
                         '<div style="text-align: center;"><div style="width:150px;height:150px; margin:0 auto;">' +
                         '<a href="' + a_href + '" onclick="onProductClick(\'' + this.productid + '\',\'' + this.product + '\',\'' + this.category + '\',\'' + this.brand + '\',\'' + this.N_key + '\',\'' + ga_page_name + '\',\'' + this.price + '\'); return !ga.loaded;">';
                     if (this.thumb && this.thumb.length) {
                         html += this.thumb;
                     }
                     html += '</a></div>' +
-                        '<br />' + '<a href="' + a_href + '" onclick="onProductClick(\'' + this.productid + '\',\'' + this.product + '\',\'' + this.category + '\',\'' + this.brand + '\',\'' + this.N_key + '\',\'' + ga_page_name + '\',\'' + this.price.toFixed(2) + '\'); return !ga.loaded;">' + this.title + '</a>';
-                    if (this.is_group === 'false') {html += '<br /> <font class="ProductPrice">Our Price: US$ ' + this.price.toFixed(2) + '</font>';}
+                        '<br />' + '<a href="' + a_href + '" onclick="onProductClick(\'' + this.productid + '\',\'' + this.product + '\',\'' + this.category + '\',\'' + this.brand + '\',\'' + this.N_key + '\',\'' + ga_page_name + '\',\'' + this.price.toFixed(2) + '\'); return !ga.loaded;">' + this.product + '</a>';
+                    if (this.is_group === true) {
+                        if (this.price > 0) {
+                            var range = '';
+                            if (this.price !== this.price_2) {
+                                range = ' - US$ ' + this.price_2.toFixed(2);
+                            }
+                            html += '<br /> <span class="ProductPrice">US$ ' + this.price.toFixed(2) + range + '</span>';
+                        }
+                    } else
+                    {
+                        html += '<br /> <span class="ProductPrice">US$ ' + this.price.toFixed(2) + '</span>';
+                    }
                     html += '</div>' +
                         '</li>';
                 });
@@ -286,10 +302,14 @@ function func_load_ajax_carousel_products(section_name)
 
 {/if}
 
-
-{* ------------------- *}
 {include file="cidev_tracking_code.tpl" }
-{* ------------------- *}
+
+{if !($usertype eq "A" || $usertype eq "P")}
+    <script type="text/javascript">
+        ga('send', 'pageview');
+    </script>
+{/if}
+
 
 {include file="head.tpl" }
 {include file="rectangle_top.tpl" }
