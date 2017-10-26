@@ -357,7 +357,7 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
                             }
 
                             //Images section
-                            $aImages = $aProduct['images'];
+                            $aImages = $aProduct['supplier_images'];
                             $aAltImageNames = $aProduct['alt_names'];
                             if (!empty($aImages) && is_array($aImages)) {
                                 foreach ($aImages as $kImg => $IMAGE_URL) {

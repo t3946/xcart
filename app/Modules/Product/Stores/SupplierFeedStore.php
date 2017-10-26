@@ -69,6 +69,10 @@ class SupplierFeedStore extends BaseStore
                 if (isset($product['eta_date_mm_dd_yyyy'])) {
                     $product['eta_date_mm_dd_yyyy'] = strtotime($product['eta_date_mm_dd_yyyy']);
                 }
+                if (isset($product['images'])) {
+                    $product['supplier_images'] = $product['images'];
+                    unset($product['images']);
+                }
                 $this->products[] = $product;
             }
         }
