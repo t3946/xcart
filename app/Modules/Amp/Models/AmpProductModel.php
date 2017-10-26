@@ -1,8 +1,8 @@
 <?php
 
-namespace Modules\AMP\Models;
+namespace Modules\Amp\Models;
 
-use Modules\AMP\Helpers\AMPHelper;
+use Modules\Amp\Helpers\AmpHelper;
 use Modules\Core\Models\GlobalConfigModel;
 use Modules\Product\Models\CategoryModel;
 use Modules\Product\Models\ProductModel;
