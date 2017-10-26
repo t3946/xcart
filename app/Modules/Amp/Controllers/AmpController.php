@@ -1,14 +1,14 @@
 <?php
 
 
-namespace Modules\AMP\Controllers;
+namespace Modules\Amp\Controllers;
 
 use Mindy\QueryBuilder\Expression;
-use Modules\AMP\Models\AmpProductModel;
+use Modules\Amp\Models\AmpProductModel;
 use Modules\Product\Models\CategoryModel;
 use Xcart\App\Controller\FrontendController;
 use Xcart\App\Main\Xcart;
-use Modules\AMP\Helpers\AMPHelper;
+use Modules\Amp\Helpers\AmpHelper;
 
 class AmpController extends FrontendController
 {
@@ -50,7 +50,7 @@ class AmpController extends FrontendController
                 'model' => $model,
                 'category' => $category,
                 'categories' =>$categories,
-                'helper' => new AMPHelper($model),
+                'helper' => new AmpHelper($model),
             ]);
 
         } else {

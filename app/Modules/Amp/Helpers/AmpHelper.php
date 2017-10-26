@@ -1,19 +1,19 @@
 <?php
 
 
-namespace Modules\AMP\Helpers;
+namespace Modules\Amp\Helpers;
 
 
 use Mindy\QueryBuilder\Expression;
 use Modules\Product\Models\CategoryModel;
-use Modules\AMP\Models\AmpProductModel;
+use Modules\Amp\Models\AmpProductModel;
 use Modules\User\Helpers\SurfingHelper;
 use Modules\User\Models\SurfPathModel;
 use Xcart\App\Main\Xcart;
 use Xcart\Cart;
 use Xcart\CartElement;
 
-class AMPHelper
+class AmpHelper
 {
     /** @var AmpProductModel $model */
     private $model = null;
