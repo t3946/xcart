@@ -49,5 +49,10 @@ return [
         'path' => 'Modules.Product.routes_admin',
         'namespace' => 'product'
     ],
+    [
+        'route' => '/admin',
+        'path' => 'Modules.Admin.routes',
+        'namespace' => 'admin'
+    ],
 
 ];
