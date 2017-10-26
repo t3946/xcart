@@ -20,7 +20,6 @@
     <script async src="https://cdn.ampproject.org/v0.js"></script>
     <script async custom-element="amp-bind" src="https://cdn.ampproject.org/v0/amp-bind-0.1.js"></script>
     <script async custom-element="amp-carousel" src="https://cdn.ampproject.org/v0/amp-carousel-0.1.js"></script>
-    {*<script async custom-element="amp-form" src="https://cdn.ampproject.org/v0/amp-form-0.1.js"></script>*}
     <script async custom-element="amp-selector" src="https://cdn.ampproject.org/v0/amp-selector-0.1.js"></script>
     <script async custom-template="amp-mustache" src="https://cdn.ampproject.org/v0/amp-mustache-0.1.js"></script>
     <script async custom-element="amp-youtube" src="https://cdn.ampproject.org/v0/amp-youtube-0.1.js"></script>
@@ -100,7 +99,7 @@
 
             {else}
                 {if $model->r_avail > 0}
-                <form method="post" action="/cart.php?mode=add" >
+                <form method="get" action="/cart.php?mode=add" >
                     <input type="hidden" name="amount" value="1">
                     <input type="hidden" name="mode" value="add">
                     <input type="hidden" name="productid" value="{$model->productid}">
