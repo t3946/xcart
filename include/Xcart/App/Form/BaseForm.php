@@ -100,9 +100,9 @@ abstract class BaseForm implements IteratorAggregate, Countable, ArrayAccess, IV
 
     public function init()
     {
-        $this->initFields();
-        $this->initInlines();
-        $this->setRenderFields(array_keys($this->getFieldsInit()));
+//        $this->initFields();
+//        $this->initInlines();
+//        $this->setRenderFields(array_keys($this->getFieldsInit()));
     }
 
     /**
@@ -251,6 +251,10 @@ abstract class BaseForm implements IteratorAggregate, Countable, ArrayAccess, IV
 
     public function getFields()
     {
+        if (!$this->_fields) {
+            $this->initFields();
+        }
+
         return $this->_fields;
     }
 
@@ -343,6 +347,10 @@ abstract class BaseForm implements IteratorAggregate, Countable, ArrayAccess, IV
      */
     public function getInlinesInit()
     {
+        if (!$this->_inlines) {
+            $this->initInlines();
+        }
+
         return $this->_inlines;
     }
 
@@ -374,6 +382,10 @@ abstract class BaseForm implements IteratorAggregate, Countable, ArrayAccess, IV
 
     public function getRenderFields()
     {
+        if (!$this->_renderFields) {
+            $this->setRenderFields(array_keys($this->getFieldsInit()));
+        }
+
         return $this->_renderFields;
     }
 
@@ -383,6 +395,10 @@ abstract class BaseForm implements IteratorAggregate, Countable, ArrayAccess, IV
      */
     public function getFieldsInit()
     {
+        if (!$this->_fields) {
+            $this->initFields();
+        }
+
         return $this->_fields;
     }
 

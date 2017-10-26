@@ -131,6 +131,11 @@ module.exports = {
                 'components/ui-custom/jquery-ui.min.css'
             ]
         },
+        deparam: {
+            js: [
+                'components/deparam/jquery.deparam.js'
+            ]
+        },
         flow: {
             js: [
                 'bower_components/flow-js/dist/flow.js'

@@ -421,7 +421,7 @@ abstract class Field implements IValidateField
 
     public function renderInput()
     {
-        return $this->renderTemplate($this->inputTemplate, [
+        return $this->innerRender($this->inputTemplate, [
             'field' => $this,
 //            'html' => $this->getHtmlAttributes(),
             'html' => $this->buildAttributesInput(),
@@ -434,7 +434,7 @@ abstract class Field implements IValidateField
 
     public function renderErrors()
     {
-        return $this->renderTemplate($this->errorsTemplate, [
+        return $this->innerRender($this->errorsTemplate, [
             'field' => $this,
             'html' => $this->buildAttributesErrors(),
             'id' => $this->getHtmlId(),
@@ -444,7 +444,7 @@ abstract class Field implements IValidateField
 
     public function renderLabel()
     {
-        return $this->renderTemplate($this->labelTemplate, [
+        return $this->innerRender($this->labelTemplate, [
             'field' => $this,
             'html' => $this->buildAttributesLabel(),
             'id' => $this->getHtmlId(),
@@ -454,7 +454,7 @@ abstract class Field implements IValidateField
 
     public function renderHint()
     {
-        return $this->renderTemplate($this->hintTemplate, [
+        return $this->innerRender($this->hintTemplate, [
             'field' => $this,
             'html' => $this->buildAttributesHint(),
             'id' => $this->getHtmlId(),
@@ -464,12 +464,22 @@ abstract class Field implements IValidateField
 
     public function render()
     {
-        return $this->renderTemplate($this->fieldTemplate, [
+        return $this->innerRender($this->fieldTemplate, [
             'label' => $this->renderLabel(),
             'input' => $this->renderInput(),
             'errors' => $this->renderErrors(),
             'hint' => $this->renderHint()
         ]);
+    }
+
+    public function innerRender($template, $data)
+    {
+        return $this->renderTemplate($template, array_merge($data, $this->getCommonData()));
+    }
+
+    public function getCommonData()
+    {
+        return [];
     }
 
     public function getHtmlName()

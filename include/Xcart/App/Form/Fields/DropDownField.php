@@ -62,6 +62,13 @@ class DropDownField extends Field
 //        ]);
 //    }
 
+    public function getCommonData()
+    {
+        return [
+            'disabled' => $this->disabled,
+        ];
+    }
+
     public function getChoises()
     {
         $out = '';

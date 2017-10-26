@@ -259,15 +259,21 @@ class Application
         $request = $this->request;
         $router = $this->router;
 
-        $match = $router->match($request->getUrl(), $request->getMethod());
+        $match = $router->match($request->resolveRequestUri(), $request->getMethod());
 
         if (empty($match)) {
             throw new NotFoundHttpException("Page not found");
         }
 
         if (is_array($match['target']) && isset($match['target'][0])) {
-            $controllerClass = $match['target'][0];
-            $action = isset($match['target'][1]) ? $match['target'][1] : null;
+            if (is_array($match['target'])) {
+                $controllerClass = $match['target'][0];
+                $action = isset($match['target'][1]) ? $match['target'][1] : null;
+            }
+            elseif (is_string($match['target']) && strpos($match['target'], ':') !== -1) {
+                list($controllerClass, $action) = explode(':', $match['target']);
+            }
+
             $params = $match['params'];
 
             /** @var Controller $controller */

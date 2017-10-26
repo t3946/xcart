@@ -7,11 +7,11 @@ use Xcart\App\Main\Xcart;
 
 class AdminController extends BackendController
 {
-    public function all($module, $admin)
+    public function all($module, $admin, $id = null)
     {
         $admin = $this->getAdmin($module, $admin);
         $this->setBreadcrumbs($admin);
-        $admin->all();
+        $admin->all($id);
     }
 
     public function create($module, $admin)

@@ -13,6 +13,11 @@ return [
         'name' => 'all'
     ],
     [
+        'route' => '/all/{:module}/{:admin}/{:id}',
+        'target' => ['\Modules\Admin\Controllers\AdminController', 'all'],
+        'name' => 'list_nested'
+    ],
+    [
         'route' => '/create/{:module}/{:admin}',
         'target' => ['\Modules\Admin\Controllers\AdminController', 'create'],
         'name' => 'create'

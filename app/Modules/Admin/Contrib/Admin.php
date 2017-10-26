@@ -33,6 +33,7 @@ abstract class Admin
     public $createTemplate = 'admin/create.tpl';
     public $updateTemplate = 'admin/update.tpl';
     public $formTemplate = 'admin/form/_form.tpl';
+    public $columnDefaultTemplate = 'admin/list/columns/default.tpl';
 
     public $pageSize = 20;
     public $pageSizes = [20, 50, 100];
@@ -54,12 +55,12 @@ abstract class Admin
         return [
             'id' => [
                 'title' => 'ID',
-                'template' => 'admin/list/columns/default.tpl',
+                'template' => $this->columnDefaultTemplate,
                 'order' => 'id'
             ],
             '(string)' => [
                 'title' => $this->getItemName(),
-                'template' => 'admin/list/columns/default.tpl',
+                'template' => $this->columnDefaultTemplate,
                 'order' => 'id'
             ],
         ];
@@ -68,6 +69,11 @@ abstract class Admin
     public function getListColumns()
     {
         return ['id', '(string)'];
+    }
+
+    public function getExcludedColumns()
+    {
+        return [];
     }
 
     /**
@@ -226,6 +232,7 @@ abstract class Admin
 
         $availableColumns = $this->getAvailableListColumns();
         $fields = $this->getModel()->getFields();
+        $excluded = $this->getExcludedColumns();
 
         $config = [];
         $enabled = [];
@@ -246,6 +253,10 @@ abstract class Admin
             }
         }
         foreach ($fields as $name => $field) {
+            if (in_array($name, $excluded)) {
+                continue;
+            }
+
             if (is_array($field)) {
                 $columnConfig = isset($config[$name]) ? $config[$name] : [];
                 if (!isset($columnConfig['title']) && isset($field['label'])) {
@@ -259,7 +270,7 @@ abstract class Admin
                         $columnConfig['order'] = $attribute;
                     }
                 }
-                $columnConfig['template'] = 'admin/list/columns/default.tpl';
+                $columnConfig['template'] = $this->columnDefaultTemplate;
                 $config[$name] = $columnConfig;
             }
         }
@@ -510,7 +521,7 @@ abstract class Admin
         return $value;
     }
 
-    public function all()
+    public function all($id = null)
     {
         $search = isset($_GET['search']) ? $_GET['search'] : null;
 
@@ -530,7 +541,7 @@ abstract class Admin
             'order' => $this->getOrder(),
             'search' => $this->getSearchColumns(),
             'columns' => $this->buildListColumns(),
-            'canSort' => $this->getCanSort($qs)
+            'canSort' => $this->getCanSort($qs),
         ]);
     }
 
@@ -693,8 +704,11 @@ abstract class Admin
         return static::classNameShort();
     }
 
+    //@TODO: Remove after delete smarty
     public function renderInternal($view, $params)
     {
+        $params = array_replace($this->getCommonData(), $params);
+
         if (Xcart::app()->request->getIsAjax()) {
             echo $this->render($view, $params);
         }

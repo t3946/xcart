@@ -40,7 +40,7 @@ class PagesForm extends ModelForm
     public function getFields()
     {
         return [
-            'parent' => DropDownField::className(),
+//            'parent' => DropDownField::className(),
             'is_index' => CheckboxField::className(),
             'is_published' => CheckboxField::className(),
             'content_short' => [
