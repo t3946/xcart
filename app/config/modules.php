@@ -12,7 +12,7 @@ return [
     'Order',
     'Reports',
     'Brand',
-    'AMP',
+    'Amp',
     'Mail',
     'Meta',
 ];
