@@ -100,11 +100,10 @@
 
             {else}
                 {if $model->r_avail > 0}
-                <form method="post" action="/ajax_add_to_cart.php" >
+                <form method="post" action="/cart.php?mode=add" >
                     <input type="hidden" name="amount" value="1">
                     <input type="hidden" name="mode" value="add">
                     <input type="hidden" name="productid" value="{$model->productid}">
-                    <input type="hidden" name="action" value="/cart.php?mode=add">
                     <input type="hidden" name="relocate_to_cart" value="Yes">
 
                     <div class="options price">
