@@ -754,7 +754,7 @@ SQL;
 
     public function setWeight($value)
     {
-        $this->weight = $value;
+        $this->setField('weight', $value);
     }
 
     public function getShippingWeight($iAmount = 1)
