@@ -752,13 +752,18 @@ SQL;
         return $aVolume;
     }
 
+    public function setWeight($value)
+    {
+        $this->weight = $value;
+    }
+
     public function getShippingWeight($iAmount = 1)
     {
         $fProductWeight = 0.1;
-        if (floatval($this->getField('shipping_weight')) > 0) {
-            $fProductWeight = floatval($this->getField('shipping_weight'));
-        } elseif (floatval($this->getField('weight')) > 0) {
-            $fProductWeight = floatval($this->getField('weight'));
+        if (floatval($this->shipping_weight) > 0) {
+            $fProductWeight = floatval($this->shipping_weight);
+        } elseif (floatval($this->weight) > 0) {
+            $fProductWeight = floatval($this->weight);
         }
         return $fProductWeight * $iAmount;
     }
