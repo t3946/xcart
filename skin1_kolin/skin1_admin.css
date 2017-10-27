@@ -482,11 +482,11 @@ TD.OptionLabel {
 	margin-bottom: 1em;
 }
 .VertMenuTitle {
-	BACKGROUND-COLOR: #FF8600;
+	BACKGROUND-COLOR: #e27a2b;
 	/*COLOR: #330000;*/
 	COLOR: #fff;
 	FONT-WEIGHT: 500;
-	PADDING: 1px;
+	PADDING: 5px;
 }
 .VertMenuSubTitle {
 	BACKGROUND-COLOR: #FFA92F;
@@ -568,22 +568,23 @@ TD.DialogBox {
 	PADDING: 10px;
 }
 .DialogBorder {
-	BACKGROUND-COLOR: #FF8600;
+	BACKGROUND-COLOR: #e27a2b;
 	HEIGHT: 100%;
 	PADDING: 0px;
 }
 TD.DialogTitle {
 	COLOR: #FFFFFF;
+	background-color: #e27a2b;
 	FONT-WEIGHT: 500;
-	FONT-SIZE: 11px;
-	BACKGROUND-IMAGE: url(images/dialog_bg_n.gif);
-	VERTICAL-ALIGN: bottom;
-	HEIGHT: 15px;
-	PADDING-TOP: 0px;
-	PADDING-BOTTOM: 0px;
+	FONT-SIZE: 15px;
+	/*BACKGROUND-IMAGE: url(images/dialog_bg_n.gif);*/
+	/*VERTICAL-ALIGN: bottom;*/
+	/*HEIGHT: 15px;*/
+	/*PADDING-TOP: 0px;*/
+	/*PADDING-BOTTOM: 0px;*/
 	PADDING-LEFT: 10px;
-	PADDING-RIGHT: 0px;
-	TEXT-ALIGN: left;
+	/*PADDING-RIGHT: 0px;*/
+	/*TEXT-ALIGN: left;*/
 }
 FONT.DialogTitle {
 	COLOR: #FFFFFF;
@@ -615,13 +616,13 @@ TABLE.DialogInfo {
 	PADDING-RIGHT: 5px;
 }
 .DialogInfoTitleBorder {
-	BACKGROUND-COLOR: #FF8600;
+	BACKGROUND-COLOR: #e27a2b;
 	PADDING: 0px;
 	VERTICAL-ALIGN: bottom;
 	HEIGHT: 15px;
 }
 .DialogInfoBorder {
-	BACKGROUND-COLOR: #FF8600;
+	BACKGROUND-COLOR: #e27a2b;
 	PADDING: 0px;
 }
 .DialogInfoIcon {
@@ -638,13 +639,15 @@ TABLE.DialogInfo {
 */
 .NavDialogTitle {
 	WIDTH: 50%;
-    FONT-SIZE: 11px;
+	font-size: .95em;
+    /*FONT-SIZE: 11px;*/
     FONT-WEIGHT: 500;
     COLOR: #330000;
-	PADDING-LEFT: 8px;
+	PADDING: 2px 5px;
 }   
 .NavDialogBorder {
-	BACKGROUND-COLOR: #FFCC33;
+	/*BACKGROUND-COLOR: #FFCC33;*/
+	BACKGROUND-COLOR: #f1b731;
 }
 .NavDialogBox {
 	BACKGROUND-COLOR: #FFFFCC;
@@ -833,7 +836,7 @@ TABLE.ButtonTable TD {
 }
 TD.Button {								 
 	BACKGROUND: url(images/butbg.gif);
-	BACKGROUND-COLOR: #FF8600;
+	BACKGROUND-COLOR: #e27a2b;
 	BACKGROUND-REPEAT: repeat-x;
 	PADDING-LEFT: 5px;
 	PADDING-RIGHT: 5px;

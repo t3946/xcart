@@ -89,7 +89,9 @@
 
     .title-block {
         min-height: 15px;
-        background-image: url('/skin1_kolin/images/dialog_bg_n.gif');
+      //background-color: #FF8600;
+      background-color: $primary-color;
+        //background-image: url('/skin1_kolin/images/dialog_bg_n.gif');
 
         .title {
             padding-left: 20px;
