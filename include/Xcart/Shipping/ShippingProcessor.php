@@ -62,6 +62,8 @@ abstract class ShippingProcessor
 
     protected $useMapPrice = true;
 
+    protected $useApproximation = true;
+
     /**
      * @return boolean
      */
@@ -424,5 +426,10 @@ abstract class ShippingProcessor
     public function setUseMapPrice($value)
     {
         $this->useMapPrice = $value;
+    }
+
+    public function setUseApproximation($value)
+    {
+        $this->useApproximation = $value;
     }
 }

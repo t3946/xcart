@@ -27,7 +27,7 @@ class ShippingHelper
      * @param bool $use_map_price
      * @return ShippingRate[]
      */
-    public static function getShippingRates(UserModel $user, DistributorModel $distributor, $products, $weight_ratio = null, $use_cache = true, $use_map_price = true)
+    public static function getShippingRates(UserModel $user, DistributorModel $distributor, $products, $weight_ratio = null, $use_cache = true, $use_map_price = true, $use_approximation = true)
     {
         /** @var ShippingRate[] $shipping_rates */
         $shipping_rates = [];
@@ -40,7 +40,7 @@ class ShippingHelper
                 $oCart->addObjectToCart($element);
             }
             try {
-                if ($aShippingZones = (new ShippingModel())->getShippingRates($user, $distributor, $oCart, false, $use_cache, $use_map_price)) {
+                if ($aShippingZones = (new ShippingModel())->getShippingRates($user, $distributor, $oCart, false, $use_cache, $use_map_price, $use_approximation)) {
                     $shipping_rates = reset($aShippingZones);
                 }
             } catch (\Exception $e) {
@@ -125,7 +125,7 @@ class ShippingHelper
      * @param bool $use_map_price
      * @return ShippingRate[]
      */
-    public static function getStateShipping($product_id, $qty, $stateModel, $weight_ratio = null, $use_cache = true, $use_map_price = true)
+    public static function getStateShipping($product_id, $qty, $stateModel, $weight_ratio = null, $use_cache = true, $use_map_price = true, $use_approximation = true)
     {
         $result = [];
 
@@ -138,7 +138,7 @@ class ShippingHelper
                 's_city' => 'New City'
             ]);
 
-            $result = ShippingHelper::getShippingRates($userModel, $product_model->distributor, [['model' => $product_model, 'qty' => intval($qty)]], $weight_ratio, $use_cache, $use_map_price);
+            $result = ShippingHelper::getShippingRates($userModel, $product_model->distributor, [['model' => $product_model, 'qty' => intval($qty)]], $weight_ratio, $use_cache, $use_map_price, $use_approximation);
         }
 
         return $result;
