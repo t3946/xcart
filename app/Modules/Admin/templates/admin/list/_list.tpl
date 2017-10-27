@@ -112,7 +112,7 @@
                                 <td class="nested">
                                     {if !$item->getIsLeaf()}
                                         <a href="{url 'admin:list_nested' params=['id' => $item->pk, 'admin' => $adminClass, 'module' => $moduleClass]}"" class="">
-                                            <i class="fa fa-sitemap"></i>
+                                            <i class="fa fa-folder-open"></i>
                                         </a>
                                     {/if}
                                 </td>

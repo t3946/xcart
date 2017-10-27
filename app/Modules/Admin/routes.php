@@ -6,26 +6,25 @@ return [
         'target' => ['\Modules\Admin\Controllers\CommonController', 'index'],
         'name' => 'index'
     ],
-
     [
-        'route' => '/all/{:module}/{:admin}',
-        'target' => ['\Modules\Admin\Controllers\AdminController', 'all'],
-        'name' => 'all'
-    ],
-    [
-        'route' => '/all/{:module}/{:admin}/{:id}',
+        'route' => '/list/{:module}/{:admin}/{:id}',
         'target' => ['\Modules\Admin\Controllers\AdminController', 'all'],
         'name' => 'list_nested'
     ],
     [
-        'route' => '/create/{:module}/{:admin}',
-        'target' => ['\Modules\Admin\Controllers\AdminController', 'create'],
-        'name' => 'create'
+        'route' => '/list/{:module}/{:admin}',
+        'target' => ['\Modules\Admin\Controllers\AdminController', 'all'],
+        'name' => 'list'
     ],
     [
         'route' => '/create/{:module}/{:admin}/{:id}',
         'target' => ['\Modules\Admin\Controllers\AdminController', 'create'],
         'name' => 'create_nested'
+    ],
+    [
+        'route' => '/create/{:module}/{:admin}',
+        'target' => ['\Modules\Admin\Controllers\AdminController', 'create'],
+        'name' => 'create'
     ],
     [
         'route' => '/group_action/{:module}/{:admin}',

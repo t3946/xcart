@@ -24,6 +24,8 @@ abstract class Admin
 {
     use SmartProperties, ClassNames, Renderer, SmartyRenderTrait;
 
+    protected $parent_pk = null;
+
     public static $public = true;
 
     public $allTemplate = 'admin/all.tpl';
@@ -453,7 +455,7 @@ abstract class Admin
 
     public function getAllUrl()
     {
-        return Xcart::app()->router->url('admin:all', [
+        return Xcart::app()->router->url('admin:list', [
             'module' => static::getModuleName(),
             'admin' => static::classNameShort()
         ]);
@@ -530,6 +532,7 @@ abstract class Admin
 
     public function all()
     {
+        $this->setBreadcrumbs();
         $search = isset($_GET['search']) ? $_GET['search'] : null;
 
         $qs = $this->getQuerySet();
@@ -607,24 +610,27 @@ abstract class Admin
 
     public function create()
     {
-        $this->update(null);
+        $this->update();
     }
 
     public function update($pk = null, $parent_id = null)
     {
+        /** @var \Xcart\App\Orm\TreeModel $model */
         $new = false;
         if (is_null($pk)) {
             $new = true;
             $model = $this->newModel();
             $form = $this->getForm();
+
             if ($parent_id) {
-                /** @var \Xcart\App\Orm\TreeModel $model */
                 $model->parent_id = $parent_id;
             }
         } else {
             $model = $this->getModelOr404($pk);
             $form = $this->getUpdateForm();
         }
+
+        $this->parent_pk = $model->parent_id;
 
         $form->setInstance($model);
 
@@ -638,7 +644,7 @@ abstract class Admin
 
                     $next = isset($_POST['save']) ? $_POST['save']: 'save';
                     if ($next == 'save') {
-                        $request->redirect($this->getAllUrl());
+                        $request->redirect(($this->parent_pk) ? $this->getParentAllUrl():$this->getAllUrl());
                     } elseif ($next == 'save-stay') {
                         $request->redirect($this->getUpdateUrl($model->pk));
                     } else {
@@ -651,7 +657,8 @@ abstract class Admin
                 }
             }
         }
-        
+
+        $this->setBreadcrumbs(($pk)? 'Редактировать' : 'Создать');
         $template = $new ? $this->createTemplate : $this->updateTemplate;
         $this->renderInternal($template, [
             'form' => $form,
@@ -729,6 +736,27 @@ abstract class Admin
                 'main'        => 'raw_html',
                 'content'     =>  $this->render($view, $params),
             ]);
+        }
+    }
+
+
+    public function getBreadcrumbs()
+    {
+        return [[$this->getName(), $this->getAllUrl()]];
+    }
+
+    /**
+     * @param $admin Admin
+     */
+    public function setBreadcrumbs($last = null)
+    {
+        foreach ($this->getBreadcrumbs() as $bread) {
+            list ($name, $url) = $bread;
+            Xcart::app()->breadcrumbs->add($name, $url);
+        }
+
+        if ($last) {
+            Xcart::app()->breadcrumbs->add($last);
         }
     }
 }

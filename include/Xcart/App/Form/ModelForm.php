@@ -162,8 +162,10 @@ class ModelForm extends BaseForm
 
         if (!$model->getIsNewRecord()) {
             $this->setModel($model);
-            $this->populateFromInstance($model);
         }
+
+        $this->initFields();
+        $this->populateFromInstance($model);
     }
 
     /**
@@ -172,6 +174,7 @@ class ModelForm extends BaseForm
     public function clearInstance()
     {
         $this->_instance = null;
+        $this->init();
     }
 
     /**

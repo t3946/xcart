@@ -100,9 +100,9 @@ abstract class BaseForm implements IteratorAggregate, Countable, ArrayAccess, IV
 
     public function init()
     {
-//        $this->initFields();
-//        $this->initInlines();
-//        $this->setRenderFields(array_keys($this->getFieldsInit()));
+        $this->initFields();
+        $this->initInlines();
+        $this->setRenderFields(array_keys($this->getFieldsInit()));
     }
 
     /**
@@ -215,7 +215,6 @@ abstract class BaseForm implements IteratorAggregate, Countable, ArrayAccess, IV
 
     /**
      * Initialize fields
-     * @void
      */
     public function initFields()
     {
@@ -231,9 +230,9 @@ abstract class BaseForm implements IteratorAggregate, Countable, ArrayAccess, IV
             }
 
             $this->_fields[$name] = Creator::createObject(array_merge([
-                'name' => $name,
-                'form' => $this,
-                'prefix' => $prefix,
+                  'name' => $name,
+                  'form' => $this,
+                  'prefix' => $prefix,
             ], $config));
         }
     }
@@ -669,6 +668,9 @@ abstract class BaseForm implements IteratorAggregate, Countable, ArrayAccess, IV
 
     private function initInlines()
     {
+        $this->_inlines = [];
+        $this->_inlineClasses = [];
+
         $inlines = $this->getInlines();
 
         foreach ($inlines as $params) {

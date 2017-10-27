@@ -10,21 +10,18 @@ class AdminController extends BackendController
     public function all($module, $admin, $id = null)
     {
         $admin = $this->getAdmin($module, $admin);
-        $this->setBreadcrumbs($admin);
         $admin->all($id);
     }
 
     public function create($module, $admin, $id)
     {
         $admin = $this->getAdmin($module, $admin);
-        $this->setBreadcrumbs($admin, 'Создание');
         $admin->create($id);
     }
 
     public function update($module, $admin, $pk)
     {
         $admin = $this->getAdmin($module, $admin);
-        $this->setBreadcrumbs($admin, 'Редактирование');
         $admin->update($pk);
     }
 
@@ -71,21 +68,6 @@ class AdminController extends BackendController
             $admin->handleGroupAction($action, $pkList);
         } else {
             $this->error(404);
-        }
-    }
-
-    /**
-     * @param $admin Admin
-     */
-    public function setBreadcrumbs($admin, $last = null)
-    {
-        Xcart::app()->breadcrumbs->add(
-            $admin->getName(),
-            $admin->getAllUrl()
-        );
-
-        if ($last) {
-            Xcart::app()->breadcrumbs->add($last);
         }
     }
 
