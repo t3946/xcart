@@ -121,15 +121,15 @@ var runTests = function(editor) {
 				{ include file="admin/menu_affiliate.tpl" }
 			{/if}
 
-			{if !($membership_code eq "ADMIN_CUSTOMER_SERVICE" || $membership_code eq "ADMIN_PRODUCT_MANAGER" || $membership_code eq "ADMIN_CUSTOMER_SERVICE_AND_PRODUCT_MANAGER")}
-				{ include file="menu_profile.tpl" }
-			{/if}
+			{*{if !($membership_code eq "ADMIN_CUSTOMER_SERVICE" || $membership_code eq "ADMIN_PRODUCT_MANAGER" || $membership_code eq "ADMIN_CUSTOMER_SERVICE_AND_PRODUCT_MANAGER")}*}
+				{*{ include file="menu_profile.tpl" }*}
+			{*{/if}*}
 
 		{/if}
 
-		{if !($membership_code eq "ADMIN_CUSTOMER_SERVICE" || $membership_code eq "ADMIN_PRODUCT_MANAGER" || $membership_code eq "ADMIN_CUSTOMER_SERVICE_AND_PRODUCT_MANAGER")}
-			{ include file="admin/help.tpl" }
-		{/if}
+		{*{if !($membership_code eq "ADMIN_CUSTOMER_SERVICE" || $membership_code eq "ADMIN_PRODUCT_MANAGER" || $membership_code eq "ADMIN_CUSTOMER_SERVICE_AND_PRODUCT_MANAGER")}*}
+			{*{ include file="admin/help.tpl" }*}
+		{*{/if}*}
 	</div>
 </td>
 <td class="admin-main-content" valign="top">
