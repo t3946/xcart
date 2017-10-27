@@ -19,11 +19,11 @@
     <div id="wrapper" class="wrapper {block 'wrapper_block_class'}{/block}">
         {block 'content-header'}
             <div class="content-header">
+                {block 'breadcrumbs'}
+                    {render_breadcrumbs:raw template="admin/_breadcrumbs.tpl"}
+                {/block}
                 <div class="row">
                     <div class="column large-12">
-                        {block 'breadcrumbs'}
-                            {render_breadcrumbs:raw template="admin/_breadcrumbs.tpl"}
-                        {/block}
 
                         {if $.block.heading}
                             <div class="heading">

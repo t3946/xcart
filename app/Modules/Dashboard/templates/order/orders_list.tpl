@@ -42,8 +42,6 @@
 
     </tr>
 
-    {set $route =  $.request->getMatchRouting()}
-
     {foreach $orders as $order index=$index}
         <tr class="separator">
             <td colspan="12"></td>
@@ -92,7 +90,12 @@
             </td>
             <td colspan="1">
                 {set $zip_code = '-'|explode:$order->s_zipcode}
-                <a href="{url 'dashboard:search'}?search[customer][zip_code]={$zip_code.0}" target="_blank">
+
+                {*{set $query =  $.request->getQueryArray()}*}
+                {set $query = []}
+                {set $query['search']['customer']['zip_code'] = $zip_code.0 }
+
+                <a href="{build_url data=$query}" target="_blank">
                     {$order->s_zipcode}
                 </a>
             </td>
@@ -164,7 +167,7 @@
                     {set $query =  $.request->getQueryArray()}
                     {set $query['search']['order']['distributor'][] = $group->manufacturer->manufacturerid }
 
-                    <a href="{$.app->router->url($route.name, $route.params, $query)}" target="_blank">
+                    <a href="{extend_url data=$query}" target="_blank">
                         {$group->manufacturer->code}
                     </a>
                 </td>

@@ -64,8 +64,11 @@ class CommonLibrary extends TemplateLibrary
      */
     public static function extendUrl($params)
     {
+        $query = '';
+        $path = '';
+
         $url = isset($params['url']) ? $params['url'] : Xcart::app()->request->getUrl();
-        extract(parse_url($url));
+        extract(parse_url($url), EXTR_OVERWRITE);
         $query = Xcart::app()->request->getQueryArray($query, false);
 
         $data = isset($params['data']) ? $params['data'] : [];

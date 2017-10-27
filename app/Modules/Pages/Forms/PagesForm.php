@@ -11,7 +11,9 @@ use Xcart\App\Form\Fields\DateTimeField;
 use Xcart\App\Form\Fields\DropDownField;
 use Xcart\App\Form\Fields\ImageField;
 use Xcart\App\Form\Fields\TextAreaField;
+use Xcart\App\Form\Fields\TextField;
 use Xcart\App\Form\ModelForm;
+use Xcart\App\Orm\Fields\CharField;
 
 /**
  * Class PagesForm
@@ -40,7 +42,6 @@ class PagesForm extends ModelForm
     public function getFields()
     {
         return [
-//            'parent' => DropDownField::className(),
             'is_index' => CheckboxField::className(),
             'is_published' => CheckboxField::className(),
             'content_short' => [

@@ -378,11 +378,6 @@ class HttpRequest extends Request
         return $this->getHostInfo() . $this->getUrl();
     }
 
-    public function getDirtyUrl()
-    {
-        return $this->resolveRequestUri(false);
-    }
-
     /**
      * Returns the currently requested relative URL.
      * This refers to the portion of the URL that is after the [[hostInfo]] part.
@@ -414,7 +409,14 @@ class HttpRequest extends Request
 
     public function resolveRequestUri($from_get_path = true)
     {
-        if ($from_get_path && $this->from_get && !empty($_GET[$this->from_get])) {
+        $requestUri = '';
+
+        if ($from_get_path && is_bool($this->from_get)) {
+            if ($qs = $this->getQueryArray(null, false)) {
+                $requestUri = current(array_keys($qs));
+            }
+        }
+        elseif ($from_get_path && $this->from_get && !empty($_GET[$this->from_get])) {
             $requestUri = urldecode($_GET[$this->from_get]);
             unset ($_GET[$this->from_get]);
             unset ($_REQUEST[$this->from_get]);
@@ -484,6 +486,13 @@ class HttpRequest extends Request
         $string = $query_string ?: $this->getQueryString();
         parse_str($string, $data);
 
+        if ($ignore_fg && is_bool($this->from_get)) {
+            if ($data) {
+                $requestUri = current(array_keys($data));
+                unset($data[$requestUri]);
+            }
+        }
+        else
         if ($ignore_fg && $this->from_get && !empty($data[$this->from_get])) {
             unset($data[$this->from_get]);
         }

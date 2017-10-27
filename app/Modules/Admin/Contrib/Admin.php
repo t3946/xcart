@@ -630,7 +630,9 @@ abstract class Admin
             $form = $this->getUpdateForm();
         }
 
-        $this->parent_pk = $model->parent_id;
+        if (isset($model->parent_id)) {
+            $this->parent_pk = $model->parent_id;
+        }
 
         $form->setInstance($model);
 
