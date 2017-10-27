@@ -98,7 +98,7 @@ class UPS extends ShippingProcessor
 
                 $shipToAddress = $shipTo->getAddress();
 
-                $shipToAddress->setResidentialAddressIndicator(true);
+                //$shipToAddress->setResidentialAddressIndicator(true);
 
                 $shipToAddress->setPostalCode($oCustomer->s_zipcode);
                 if ($oCustomer->s_state) {

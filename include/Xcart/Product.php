@@ -434,7 +434,7 @@ SQL;
 
     public function getAmazonFBAAvail()
     {
-        if (is_null($this->iAmazonFbaAvail)) {
+        if (is_null($this->iAmazonFbaAvail) && $this->getProductId()) {
             $this->iAmazonFbaAvail = intval(func_query_first_cell("SELECT cidev_get_amazon_FBA_cloned_stock(" . $this->getProductId() . ") as amazon_fba_avail"));
         }
         return $this->iAmazonFbaAvail;
@@ -599,7 +599,7 @@ SQL;
                         $aChildProducts = $oParentProduct->getChildProducts();
                         if (!empty($aChildProducts)) {
                             foreach ($aChildProducts as $oChildProduct) {
-                                if ($oChildProduct->getProductId() != $this->getProductId() && $oChildProduct->getAmazonFBAAvailReal() > 0) {
+                                if ($oChildProduct->productid != $this->productid && $oChildProduct->getAmazonFBAAvailReal() > 0) {
                                     if ($oChildProduct->getAmazonFBAAvailReal() >= $iShipNeed) {
                                         $aProductAmazonArray[] = ['oProduct' => $oChildProduct, 'qty' => $iShipNeed];
                                         $iShipNeed -= $iShipNeed;
