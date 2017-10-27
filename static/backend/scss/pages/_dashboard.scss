@@ -210,12 +210,22 @@
         //margin-left: map-get(map-get($grid, 'large'), 'gutter') / 2 * -1px;
         //margin-right: map-get(map-get($grid, 'large'), 'gutter') / 2 * -1px;
 
+        .order_link {
+          font-weight: 500;
+          &, &:link {
+            color: blue;
+          }
+        }
+
         .TableHead {
-            font-weight: bold;
+            //font-weight: bold;
+          font-weight: 500;
         }
 
         .TableSubHead_new {
-            background-color: #e5e5e5;
+            //background-color: #e5e5e5;
+            background-color: rgba(183, 206, 226, .17);
+            //background-color: rgb(43,43,43);
         }
 
         tr {
@@ -288,7 +298,8 @@
                 padding: 5px 6px;
                 background: none;
                 background: {
-                    color: rgb(235, 235, 235);
+                    //color: rgb(235, 235, 235);
+                    color: #e9e9e9;
                 };
                 font: {
                     weight: 500;

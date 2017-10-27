@@ -54,7 +54,7 @@
 
         <tr class="{$cycle_class} title">
             <td>
-                <a href="{$order->getAdminUrl()}" style="color: blue; font-weight: bold;" target="_blank">
+                <a href="{$order->getAdminUrl()}" class="order_link" target="_blank">
                     {$order->order_prefix}{$order->orderid}
                 </a>
             </td>

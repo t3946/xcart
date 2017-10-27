@@ -3,6 +3,6 @@
 <table cellpadding="0" cellspacing="0" {if $usertype eq "A" || $usertype eq "P" || $usertype eq "V"} width="1280"{else}width="960"{/if} align="center" style="margin: 0 auto;">
     <tr>
         <td valign="top" width="50">
-            <table class="Container" cellpadding="0" cellspacing="0" {if $usertype eq "A" || $usertype eq "P" || $usertype eq "V"} width="1280" bgcolor=#E4E0C5 {else} bgcolor="#ffffff" width="960"{/if} align="center" >
+            <table class="Container" cellpadding="0" cellspacing="0" {if $usertype eq "A" || $usertype eq "P" || $usertype eq "V"} width="1280" {else} bgcolor="#ffffff" width="960"{/if} align="center" >
                 <tr>
                     <td class="Container">

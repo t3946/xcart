@@ -100,38 +100,39 @@ var runTests = function(editor) {
 <table width="100%" cellpadding="0" cellspacing="0" align="center">
 <tr>
 <td class="VertMenuLeftColumn">
-{if $login eq "" }
-{*
-{ include file="auth.tpl" }
-*}
-{else}
-{ include file="admin/menu.tpl" }
+	<div class="menu-changer hide">
+		<a href="#" class="" onclick="javascript: window.event.preventDefault(); $('.admin-menu').toggleClass('active') ">
+			<i class="fa fa-bars"></i>
+		</a>
+	</div>
+	<div class="admin-menu">
+		{if $login eq "" }
+			{*
+			{ include file="auth.tpl" }
+			*}
+		{else}
+			{ include file="admin/menu.tpl" }
 
-{if !($membership_code eq "ADMIN_CUSTOMER_SERVICE")}
-<br />
-{ include file="admin/menu_admin.tpl" }
-{/if}
+			{if !($membership_code eq "ADMIN_CUSTOMER_SERVICE")}
+				{ include file="admin/menu_admin.tpl" }
+			{/if}
 
-<br />
-{if $active_modules.XAffiliate ne ''}
-{ include file="admin/menu_affiliate.tpl" }
-{/if}
+			{if $active_modules.XAffiliate ne ''}
+				{ include file="admin/menu_affiliate.tpl" }
+			{/if}
 
-{if !($membership_code eq "ADMIN_CUSTOMER_SERVICE" || $membership_code eq "ADMIN_PRODUCT_MANAGER" || $membership_code eq "ADMIN_CUSTOMER_SERVICE_AND_PRODUCT_MANAGER")}
-{ include file="menu_profile.tpl" }
-{/if}
+			{if !($membership_code eq "ADMIN_CUSTOMER_SERVICE" || $membership_code eq "ADMIN_PRODUCT_MANAGER" || $membership_code eq "ADMIN_CUSTOMER_SERVICE_AND_PRODUCT_MANAGER")}
+				{ include file="menu_profile.tpl" }
+			{/if}
 
-{/if}
+		{/if}
 
-{if !($membership_code eq "ADMIN_CUSTOMER_SERVICE" || $membership_code eq "ADMIN_PRODUCT_MANAGER" || $membership_code eq "ADMIN_CUSTOMER_SERVICE_AND_PRODUCT_MANAGER")}
-<br />
-{ include file="admin/help.tpl" }
-{/if}
-
-<br />
-<img src="{$ImagesDir}/spacer.gif" width="150" height="1" alt="" />
+		{if !($membership_code eq "ADMIN_CUSTOMER_SERVICE" || $membership_code eq "ADMIN_PRODUCT_MANAGER" || $membership_code eq "ADMIN_CUSTOMER_SERVICE_AND_PRODUCT_MANAGER")}
+			{ include file="admin/help.tpl" }
+		{/if}
+	</div>
 </td>
-<td valign="top">
+<td class="admin-main-content" valign="top">
 <!-- central space -->
 {include file="location.tpl"}
 

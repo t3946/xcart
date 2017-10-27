@@ -171,7 +171,7 @@ $(document).ready(function () {
 	</td>
 </tr>
 **** Remove this line to display how much products there are online ********}
-<tr>
-	<td colspan="4">&nbsp;</td>
-</tr>
+{*<tr>*}
+	{*<td colspan="4">&nbsp;</td>*}
+{*</tr>*}
 </table>
