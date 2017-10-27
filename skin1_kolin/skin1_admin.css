@@ -99,7 +99,7 @@ TD.Container {
 */
 .AuthText {
 	FONT-SIZE: 10px;
-	FONT-WEIGHT: bold;
+	FONT-WEIGHT: 500;
 	PADDING-BOTTOM: 5px;
 }
 .HeadLogo {
@@ -115,7 +115,7 @@ TD.Container {
 }
 .HeadText {
 	FONT-SIZE: 12px;
-	FONT-WEIGHT: bold;
+	FONT-WEIGHT: 500;
 }
 .HeadLine {
 	BACKGROUND-COLOR: #FFD44C;
@@ -189,7 +189,7 @@ A.Bottom:active {
 	PADDING-BOTTOM: 10px;
 }
 .BottomPopup A {
-	FONT-WEIGHT: bold;
+	FONT-WEIGHT: 500;
 }
 .BottomDialogBox {
 	BACKGROUND-COLOR: #FFE591;
@@ -229,11 +229,11 @@ HR.GreyLine {
 }
 .NumberOfArticles {
 	COLOR: #000000;
-	FONT-WEIGHT: bold;
+	FONT-WEIGHT: 500;
 }
 .TopLabel {
 	COLOR: #000000;
-	FONT-WEIGHT: bold;
+	FONT-WEIGHT: 500;
 	FONT-SIZE: 12px;
 }
 .Message {
@@ -250,18 +250,18 @@ TD.ButtonsRow {
 }
 .CustomerMessage {
 	COLOR: #FF3300;
-	FONT-WEIGHT: bold;
+	FONT-WEIGHT: 500;
 }
 .ErrorMessage {
 	COLOR: #FF3300;
-	FONT-WEIGHT: bold;
+	FONT-WEIGHT: 500;
 }
 .Star {
 	COLOR: #FF0000;
 }
 .TableHead {
 	BACKGROUND-COLOR: #CCCCCC;
-	FONT-WEIGHT: bold;
+	FONT-WEIGHT: 500;
     HEIGHT: 20px;
     TEXT-ALIGN: center;
     TEXT-TRANSFORM: uppercase;
@@ -271,7 +271,7 @@ TD.ButtonsRow {
 	FONT-WEIGHT: normal;
 }
 .BoldRowText > td > span {
-	FONT-WEIGHT: bold;
+	FONT-WEIGHT: 500;
 }
 .Spc {
 	WIDTH: 1px;
@@ -288,7 +288,7 @@ table.customer-info-edit td {
 	padding-right: 5px;
 }
 tr.distributor-totals-line td, tr.distributor-totals-line td a {
-	font-weight: bold; 
+	font-weight: 500; 
 	color: green;
 	vertical-align: top;
 }
@@ -298,14 +298,14 @@ tr.group_total_price_row {
 tr.group_total_price_row td {
 	padding-top: 0;
 	padding-bottom: 0;
-	font-weight: bold;
+	font-weight: 500;
 }
 tr.distributor-totals-line td a {
 	text-decoration: none;
 	border-bottom: 1px dotted;
 }
 tr.refund-distr-totals-line td {
-	font-weight: bold; 
+	font-weight: 500; 
 	color: #FF0000;
 }
 tr.refund-distr-values-line td {
@@ -370,13 +370,13 @@ TABLE.EmptyBox TR TD {
 }
 .AdminTitle {
 	COLOR: #FF3300;
-	FONT-WEIGHT: bold;
+	FONT-WEIGHT: 500;
 	FONT-SIZE: 12px;
 }
 .TableHeadLevel2 {
     BACKGROUND-COLOR: #CCCCCC;
     COLOR: #000000;
-	FONT-WEIGHT: bold;
+	FONT-WEIGHT: 500;
     HEIGHT: 20px;
     TEXT-ALIGN: center;
 }
@@ -385,7 +385,7 @@ TABLE.EmptyBox TR TD {
 }
 .TableSeparator {
     COLOR: #000000;
-	FONT-WEIGHT: bold;
+	FONT-WEIGHT: 500;
     FONT-SIZE: 11px;
 }
 .InputWidth {
@@ -399,7 +399,7 @@ TABLE.EmptyBox TR TD {
 }
 .HightLightRow {
     BACKGROUND-COLOR: #B0B0B0;
-    FONT-WEIGHT: bold;
+    FONT-WEIGHT: 500;
 }
 TD.OptionLabel {
 	WHITE-SPACE: nowrap;
@@ -485,7 +485,7 @@ TD.OptionLabel {
 	BACKGROUND-COLOR: #FF8600;
 	/*COLOR: #330000;*/
 	COLOR: #fff;
-	FONT-WEIGHT: bold;
+	FONT-WEIGHT: 500;
 	PADDING: 1px;
 }
 .VertMenuSubTitle {
@@ -520,27 +520,27 @@ A.VertMenuItems:active  {
 }
 .VertMenuItemsHL{
 	COLOR: #330000;
-	FONT-WEIGHT: bold;
+	FONT-WEIGHT: 500;
 	TEXT-DECORATION: none;
 }
 A.VertMenuItemsHL:link {
 	COLOR: #330000;
-	FONT-WEIGHT: bold;
+	FONT-WEIGHT: 500;
 	TEXT-DECORATION: none;
 }
 A.VertMenuItemsHL:visited {
 	COLOR: #330000;
-	FONT-WEIGHT: bold;
+	FONT-WEIGHT: 500;
 	TEXT-DECORATION: none;
 }
 A.VertMenuItemsHL:hover {
 	COLOR: #550000;
-	FONT-WEIGHT: bold;
+	FONT-WEIGHT: 500;
 	TEXT-DECORATION: underline;
 }
 A.VertMenuItemsHL:active  {
 	COLOR: #330000;
-	FONT-WEIGHT: bold;
+	FONT-WEIGHT: 500;
 	TEXT-DECORATION: none;
 }
 .VertMenuHr {
@@ -574,7 +574,7 @@ TD.DialogBox {
 }
 TD.DialogTitle {
 	COLOR: #FFFFFF;
-	FONT-WEIGHT: bold;
+	FONT-WEIGHT: 500;
 	FONT-SIZE: 11px;
 	BACKGROUND-IMAGE: url(images/dialog_bg_n.gif);
 	VERTICAL-ALIGN: bottom;
@@ -587,7 +587,7 @@ TD.DialogTitle {
 }
 FONT.DialogTitle {
 	COLOR: #FFFFFF;
-	FONT-WEIGHT: bold;
+	FONT-WEIGHT: 500;
 	FONT-SIZE: 11px;
 	VERTICAL-ALIGN: bottom;
 	HEIGHT: 15px;
@@ -604,7 +604,7 @@ TABLE.DialogInfo {
 }
 .DialogInfoTitle {
 	COLOR: #FFFFFF;
-	FONT-WEIGHT: bold;
+	FONT-WEIGHT: 500;
 	FONT-SIZE: 11px;
 	VERTICAL-ALIGN: bottom;
 	TEXT-ALIGN: left;
@@ -639,7 +639,7 @@ TABLE.DialogInfo {
 .NavDialogTitle {
 	WIDTH: 50%;
     FONT-SIZE: 11px;
-    FONT-WEIGHT: bold;
+    FONT-WEIGHT: 500;
     COLOR: #330000;
 	PADDING-LEFT: 8px;
 }   
@@ -672,17 +672,17 @@ TABLE.DialogInfo {
 */
 .ProductTitle {
 	COLOR: #000000;
-	FONT-WEIGHT: bold;
+	FONT-WEIGHT: 500;
 	FONT-SIZE: 12px;
 }
 .ProductTitleHidden {
 	COLOR: #666666;
-	FONT-WEIGHT: bold;
+	FONT-WEIGHT: 500;
 	FONT-SIZE: 11px;
 }
 .ProductDetailsTitle {
 	COLOR: #FF3300;
-	FONT-WEIGHT: bold;
+	FONT-WEIGHT: 500;
 	FONT-SIZE: 12px;
 }
 .ProductDetails {
@@ -690,22 +690,22 @@ TABLE.DialogInfo {
 }
 .ProductPriceTitle {
 	COLOR: #000000;
-	FONT-WEIGHT: bold;
+	FONT-WEIGHT: 500;
 	FONT-SIZE: 12px;
 }
 .ProductPriceConverting {
 	COLOR: #000000;
-	FONT-WEIGHT: bold;
+	FONT-WEIGHT: 500;
 	FONT-SIZE: 12px;
 }
 .ProductPrice {
 	COLOR: #FF3300;
-	FONT-WEIGHT: bold;
+	FONT-WEIGHT: 500;
 	FONT-SIZE: 12px;
 }
 .ProductPriceSmall {
 	COLOR: #FF3300;
-	FONT-WEIGHT: bold;
+	FONT-WEIGHT: 500;
 }
 .SaveMoneyLabel {
 	WIDTH: 57px;
@@ -713,7 +713,7 @@ TABLE.DialogInfo {
 	TEXT-ALIGN: center;
 	VERTICAL-ALIGN: middle;
 	COLOR: #FFFFFF;
-	FONT-WEIGHT: bold;
+	FONT-WEIGHT: 500;
 	BACKGROUND-IMAGE: url(images/save_money.gif);
 }
 .MarketPrice {
@@ -755,29 +755,29 @@ HR.PListLine {
 */
 .ItemsList {
 	COLOR: #330000;
-	FONT-WEIGHT: bold;
+	FONT-WEIGHT: 500;
 }
 .ItemsListDisabled {
 	COLOR: #909090;
 }
 A.ItemsList:link {
 	COLOR: #330000;
-	FONT-WEIGHT: bold;
+	FONT-WEIGHT: 500;
 	TEXT-DECORATION: none;
 }
 A.ItemsList:visited {
 	COLOR: #330000;
-	FONT-WEIGHT: bold;
+	FONT-WEIGHT: 500;
 	TEXT-DECORATION: none;
 }
 A.ItemsList:hover {
 	COLOR: #330000;
-	FONT-WEIGHT: bold;
+	FONT-WEIGHT: 500;
 	TEXT-DECORATION: none;
 }
 A.ItemsList:active {
 	COLOR: #330000;
-	FONT-WEIGHT: bold;
+	FONT-WEIGHT: 500;
 	TEXT-DECORATION: none;
 }
 
@@ -786,27 +786,27 @@ A.ItemsList:active {
 */
 .NavigationPath {
 	COLOR: #CC6666;
-	FONT-WEIGHT: bold;
+	FONT-WEIGHT: 500;
 	TEXT-DECORATION: none;
 }
 .NavigationPath:link {
 	COLOR: #CC6666;
-	FONT-WEIGHT: bold;
+	FONT-WEIGHT: 500;
 	TEXT-DECORATION: underline;
 }
 .NavigationPath:visited {
 	COLOR: #CC6666;
-	FONT-WEIGHT: bold;
+	FONT-WEIGHT: 500;
 	TEXT-DECORATION: underline;
 }
 .NavigationPath:hover {
 	COLOR: #CC6666;
-	FONT-WEIGHT: bold;
+	FONT-WEIGHT: 500;
 	TEXT-DECORATION: none;
 }
 .NavigationPath:active  {
 	COLOR: #CC6666;
-	FONT-WEIGHT: bold;
+	FONT-WEIGHT: 500;
 	TEXT-DECORATION: underline;
 }
 
@@ -815,7 +815,7 @@ A.ItemsList:active {
 */
 .FormButton {
 	COLOR: #330000;
-	/*FONT-WEIGHT: bold;*/
+	/*FONT-WEIGHT: 500;*/
 	FONT-WEIGHT: 500;
 }
 
@@ -843,7 +843,7 @@ TD.Button {
 FONT.Button {								 
 	FONT-FAMILY: Arial;
 	COLOR: #FFFFFF;
-	FONT-WEIGHT: bold;
+	FONT-WEIGHT: 500;
 	FONT-SIZE: 11px;
 	TEXT-DECORATION: none;
 }
@@ -857,7 +857,7 @@ IMG.ButtonSide {
 }
 A.Button:link, A.Button:visited, A.Button:hover, A.Button:active {
 	COLOR: #330000;
-	FONT-WEIGHT: bold;
+	FONT-WEIGHT: 500;
 }
 .GoImage {
 	WIDTH: 21px;
@@ -916,7 +916,7 @@ A.Button:link, A.Button:visited, A.Button:hover, A.Button:active {
 	Search sort bar
 */
 .SearchSortTitle {
-	FONT-WEIGHT: bold;
+	FONT-WEIGHT: 500;
 	PADDING-RIGHT: 20px;
 }
 .SearchSortLink:link, .SearchSortLink:visited, .SearchSortLink:hover, .SearchSortLink:active {
@@ -945,7 +945,7 @@ A.Button:link, A.Button:visited, A.Button:hover, A.Button:active {
 */
 .Tab {
 	BACKGROUND-COLOR: #FFD44C;
-	FONT-WEIGHT: bold;
+	FONT-WEIGHT: 500;
 	TEXT-TRANSFORM: uppercase;
 	WIDTH: 85px;
 	HEIGHT: 30px;
@@ -1026,7 +1026,7 @@ IMG.TabSide {
 }
 .NavigationCellSel {
 	VERTICAL-ALIGN: middle;
-	FONT-WEIGHT: bold;
+	FONT-WEIGHT: 500;
 }
 
 /*
@@ -1039,7 +1039,7 @@ TABLE.SubHeaderGrey {
 .SubHeaderGrey {
 	COLOR: #666666;
 	FONT-SIZE: 11px;
-	FONT-WEIGHT: bold;
+	FONT-WEIGHT: 500;
 	PADDING: 0px;
 }
 .SubHeaderGreyLine {
@@ -1054,7 +1054,7 @@ TABLE.SubHeaderBlack {
 .SubHeaderBlack {
 	COLOR: #000000;
 	FONT-SIZE: 12px;
-	FONT-WEIGHT: bold;
+	FONT-WEIGHT: 500;
 	PADDING: 0px;
 }
 .SubHeaderBlackLine {
@@ -1068,7 +1068,7 @@ TABLE.SubHeaderRed {
 	MARGIN-BOTTOM: 10px;
 }
 .SubHeaderRed {
-	FONT-WEIGHT: bold;
+	FONT-WEIGHT: 500;
 	PADDING: 0px;
 }
 .SubHeaderRedLine {
@@ -1083,7 +1083,7 @@ TABLE.SubHeader {
 }
 .SubHeader {
 	COLOR: #FF3300;
-	FONT-WEIGHT: bold;
+	FONT-WEIGHT: 500;
 	FONT-SIZE: 12px;
 	PADDING: 0px;
 }
@@ -1100,7 +1100,7 @@ TABLE.SubHeader {
 .RegSectionTitle {
 	COLOR: #550000;
 	FONT-SIZE: 10px;
-	FONT-WEIGHT: bold;
+	FONT-WEIGHT: 500;
 }
 
 /*
@@ -1108,7 +1108,7 @@ TABLE.SubHeader {
 */
 SPAN.Lbl {
 	COLOR: green;
-	FONT-WEIGHT: bold;
+	FONT-WEIGHT: 500;
 }
 .Section {
 	MARGIN: 0px;
@@ -1142,7 +1142,7 @@ TABLE.DataSheet {
 TR.DataSheet {
     BACKGROUND-COLOR: #CCCCCC;
     COLOR: #000000;
-	FONT-WEIGHT: bold;
+	FONT-WEIGHT: 500;
     HEIGHT: 20px;
     TEXT-ALIGN: center;
     TEXT-TRANSFORM: uppercase;
@@ -1154,7 +1154,7 @@ TABLE.DataSheet TR TD {
 }
 TABLE.DataSheet TR.TableHead {
 	BACKGROUND-COLOR: #CCCCCC;
-	FONT-WEIGHT: bold;
+	FONT-WEIGHT: 500;
     HEIGHT: 20px;
     TEXT-ALIGN: center;
     TEXT-TRANSFORM: uppercase;
@@ -1219,7 +1219,7 @@ TABLE.DataSheet TR TH {
 }
 .AffiliateElmTitle {
 	TEXT-ALIGN: center;
-	FONT-WEIGHT: bold;
+	FONT-WEIGHT: 500;
 	BACKGROUND-COLOR: #FFD44C;
 	PADDING: 1px;
 }
@@ -1258,11 +1258,11 @@ DIV.SurveyAnswerComment {
 }
 .SurveyQuestion {
 	FONT-SIZE: 12px;
-	FONT-WEIGHT: bold;
+	FONT-WEIGHT: 500;
 	PADDING: 2px;
 }
 .SurveyQuestionMenu {
-	FONT-WEIGHT: bold;
+	FONT-WEIGHT: 500;
 	PADDING: 0px;
 }
 .SurveyAnswerTextLine_1 {
@@ -1309,7 +1309,7 @@ TD.SurveyTabSelected {
 	HEIGHT: 26px;
 	BACKGROUND-COLOR: #dddddd;
 	WHITE-SPACE: nowrap;
-	FONT-WEIGHT: bold;
+	FONT-WEIGHT: 500;
 	FONT-SIZE: 12px;
 	COLOR: #953e0e;
 }
@@ -1501,7 +1501,7 @@ span.override_name {
 	color: #f00;
 }
 .alp_selected {
-	font-weight: bold;
+	font-weight: 500;
 }
 .froogle_calc_size {
 	margin-left: -5px;
@@ -1533,7 +1533,7 @@ a.preset_back, a.preset_back:visited {
 	text-decoration: none;
 }
 .preset_bold {
-	font-weight: bold;
+	font-weight: 500;
 }
 .preset_table td {
 	text-align: center;
@@ -1560,7 +1560,7 @@ a.preset_back, a.preset_back:visited {
 	height: 145px;
 }
 .filter_bold a {
-	font-weight: bold;
+	font-weight: 500;
 }
 .filter_preset_edit .preset_title {
 	width: 600px;
@@ -1621,7 +1621,7 @@ div.survey_form {
 
 p.survey_form_header {
         font-size: 16px;
-        font-weight: bold;
+        font-weight: 500;
         margin-bottom: 50px;
 }
 
@@ -1701,7 +1701,7 @@ div.confirmation-hedgehog {
 }
 
 div.confirmation-hedgehog p {
-        font-weight: bold;
+        font-weight: 500;
         font-family: Arial, Helvetica, sans-serif;
         font-size: 15px;
 }
