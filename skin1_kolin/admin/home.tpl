@@ -107,9 +107,7 @@ var runTests = function(editor) {
 	</div>
 	<div class="admin-menu">
 		{if $login eq "" }
-			{*
-			{ include file="auth.tpl" }
-			*}
+			{*{ include file="auth.tpl" }*}
 		{else}
 			{ include file="admin/menu.tpl" }
 
@@ -127,9 +125,13 @@ var runTests = function(editor) {
 
 		{/if}
 
-		{*{if !($membership_code eq "ADMIN_CUSTOMER_SERVICE" || $membership_code eq "ADMIN_PRODUCT_MANAGER" || $membership_code eq "ADMIN_CUSTOMER_SERVICE_AND_PRODUCT_MANAGER")}*}
-			{*{ include file="admin/help.tpl" }*}
-		{*{/if}*}
+		{if $login eq "" && ($usertype eq "P" || $usertype eq "A")}
+        {capture name=menu}
+				<a href="error_message.php?antibot_error" class="VertMenuItems">Authentication</a>
+        {/capture}
+		{ include file="menu.tpl" dingbats="dingbats_help.gif" menu_title=$lng.lbl_help menu_content=$smarty.capture.menu link_href="help.php"}
+		{/if}
+
 	</div>
 </td>
 <td class="admin-main-content" valign="top">
