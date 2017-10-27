@@ -467,11 +467,17 @@ class ErrorHandler
             ]),
             'this' => $this
         ];
+
+
         if ($this->useTemplate) {
-            echo $this->renderTemplate($view . '.tpl', $data);
-        } else {
-            echo $this->renderInternal(__DIR__ . '/templates/' . $view . '.php', $data);
+            $output = $this->renderTemplate($view . '.tpl', $data);
         }
+        else {
+            $output = $this->renderInternal(__DIR__ . '/templates/' . $view . '.php', $data);
+        }
+
+        echo $output;
+
         Xcart::app()->end();
     }
 
@@ -484,7 +490,8 @@ class ErrorHandler
         $exception = $this->getException();
         if ($this->getIsAjax() || Console::isCli() || $this->shortOutput) {
             $this->displayException($exception);
-        } else {
+        }
+        else {
             if (defined('APP_DEBUG') && APP_DEBUG) {
                 $this->render('exception', $this->getError());
             } else {

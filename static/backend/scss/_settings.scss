@@ -20,8 +20,10 @@ $button-height: 40px;
 
 $t: transparent;
 
-$primary-color: #FC585E;
-$alert-color: #FC585E;
+$primary-color: #e27a2b;
+//$primary-color: #FC585E;
+//$alert-color: #FC585E;
+$alert-color: $primary-color;
 $border-color: #DFDFDF;
 
 $default-transition: all 0.4s;
