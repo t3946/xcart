@@ -44,7 +44,7 @@
                         {if $isNested }
                             <th class="nested full" data-nested-column>
                                 <span class="title">
-                                     {*<i class="fa fa-sitemap"></i>*}
+                                     <i class="fa fa-folder"></i>
                                 </span>
 
                                 {var $cols = $cols+1}
