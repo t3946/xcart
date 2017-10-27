@@ -11,7 +11,7 @@ class MetaTemplateForm extends ModelForm
     public function getFieldsets()
     {
         return [
-            'main' => [
+            'Main' => [
                 'code', 'title', 'description', 'keywords'
             ]
         ];
