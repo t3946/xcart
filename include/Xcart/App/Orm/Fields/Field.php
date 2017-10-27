@@ -56,6 +56,8 @@ abstract class Field implements ModelFieldInterface
 
     public $autoFetch = false;
 
+    public $formField = '\Xcart\App\Form\Fields\CharField';
+
     protected $name;
 
     protected $ownerClassName;
@@ -440,8 +442,9 @@ abstract class Field implements ModelFieldInterface
         }
 
         if ($fieldClass === null) {
-            $fieldClass = $this->choices ? \Xcart\App\Form\Fields\DropDownField::className() : \Xcart\App\Form\Fields\CharField::className();
-        } elseif ($fieldClass === false) {
+            $fieldClass = $this->choices ? \Xcart\App\Form\Fields\DropDownField::className() : $this->formField;
+        }
+        elseif ($fieldClass === false) {
             return null;
         }
 
