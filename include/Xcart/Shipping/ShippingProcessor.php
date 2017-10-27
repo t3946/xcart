@@ -86,7 +86,7 @@ abstract class ShippingProcessor
             if ($this->isProcessorApplicable()) {
                 $this->getShippingQuotesCached();
                 $this->getShippingQuotes();
-                if (!empty($this->aShippingRates)) {
+                if (!empty($this->aShippingRates) && $this->useApproximation) {
                     foreach ($this->aShippingRates as $oShippingRate) {
                         $oShippingRate->setCart($this->getCart());
                         $oShippingRate->setUseMapPRice($this->useMapPrice);
