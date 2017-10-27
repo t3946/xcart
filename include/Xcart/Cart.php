@@ -17,11 +17,11 @@ class Cart
 
     public function addObjectToCart(CartElement $oObject)
     {
-        if ($oObject->getProduct()->getProductId() && $oObject->getQuantity()) {
+        if ($oObject->getProduct() && $oObject->getQuantity()) {
             $iterator = $this->aArrayOfObjects->getIterator();
             if (!empty($iterator)) {
                 foreach ($iterator as $k => $v) {
-                    if ($v->getProduct()->getProductId() == $oObject->getProduct()->getProductId()) {
+                    if ($v->getProduct()->productid == $oObject->getProduct()->productid) {
                         $v->setQuantity($v->getQuantity() + $oObject->getQuantity());
                         $this->iProductCount = null;
                         return $this;
