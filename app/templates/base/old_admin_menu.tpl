@@ -1,20 +1,9 @@
-<table class="VertMenuBorder main-menu-modules" width="100%" cellspacing="1">
-    <tr>
-        <td width="100%" class="VertMenuTitle">
-            <table width="100%" cellpadding="0" cellspacing="0">
-                <tr>
-                    <td>
-                        <div class="name">
-                            Modules menu
-                        </div>
-                    </td>
-                </tr>
-            </table>
-        </td>
-    </tr>
-    <tr>
-        <td class="VertMenuBox">
-             <div class="menu-block">
+<div class="VertMenuBorder main-menu-modules">
+    <div class="VertMenuTitle">
+        Modules menu
+    </div>
+    <div class="VertMenuBox">
+        <div class="menu-block">
                 <div class="menu-wrapper">
                     <ul class="main-menu">
                         {foreach $.admin_menu as $module}
@@ -32,7 +21,5 @@
                     </ul>
                 </div>
             </div>
-        </td>
-    </tr>
-</table>
-
+    </div>
+</div>

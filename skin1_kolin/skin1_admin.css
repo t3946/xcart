@@ -483,6 +483,7 @@ TD.OptionLabel {
 .VertMenuBorder {
 	/*BACKGROUND-COLOR: #8E4B00;*/
 	BACKGROUND-COLOR: #d7d8db;
+	border:1px solid #d7d8db;
 	margin-bottom: 1em;
 }
 .VertMenuTitle {
