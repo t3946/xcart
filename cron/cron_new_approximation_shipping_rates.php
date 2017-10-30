@@ -67,7 +67,7 @@ if (!empty($manufacturers) && is_array($manufacturers) && !empty($states)) {
     foreach ($manufacturers as $manufacturerid) {
 
         $dx_fail_iterator = 0;
-        $dx_fail_mes = null;
+
 
         $manufacturer_info = func_query_first_param(/** @lang MySQL */
             "SELECT manufacturer, m_city, m_country, m_state, m_zipcode 
@@ -88,6 +88,8 @@ if (!empty($manufacturers) && is_array($manufacturers) && !empty($states)) {
         }
 
         foreach ($states as $state_info) {
+
+            $dx_fail_mes = null;
 
             $userinfo["s_country"] = $state_info["country_code"];
             $userinfo["s_state"] = $state_info["code"];
@@ -162,7 +164,7 @@ if (!empty($manufacturers) && is_array($manufacturers) && !empty($states)) {
 
                 if ( (!isset($found_shippings[$i])) ){
                     $dx_fail_iterator++;
-                    $dx_fail_mes .= " {$state_info["code"]} _-_-_-_ ";
+                    $dx_fail_mes .= " State {$state_info["code"]} with weight = {$weight} \t ";
                 }
             }
 
