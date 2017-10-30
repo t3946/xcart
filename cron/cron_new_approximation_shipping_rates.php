@@ -40,7 +40,7 @@ if (!empty($tmp_manufacturers)) {
 //		$date_shipping_rates_last_update_date = date("j", $shipping_rates_last_update_date);
 
         $m_val = ($manufacturerid - 1) / ($max_manufacturerid - 1);
-        $IDNorm = 30 * $m_val + 1;
+        $IDNorm = 27 * $m_val + 1;
         $IDNorm = intval($IDNorm);
 
 //func_print_r($IDNorm, $date_shipping_rates_last_update_date, $manufacturerid);
