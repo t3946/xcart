@@ -92,4 +92,4 @@
 {/if}
 
 {/capture}
-{ include file="menu.tpl" dingbats="dingbats_categorie.gif" menu_title=$lng.lbl_administration menu_content=$smarty.capture.menu }
+{ include file="menu_admin.tpl" dingbats="dingbats_categorie.gif" menu_title=$lng.lbl_administration menu_content=$smarty.capture.menu }

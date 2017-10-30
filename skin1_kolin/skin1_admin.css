@@ -35,6 +35,10 @@ body {
     text-rendering: optimizeLegibility;
 }
 
+input, textarea, select, button {
+    font-size: inherit;
+}
+
 a {
     color: #330000;
 	text-decoration: underline;

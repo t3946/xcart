@@ -171,6 +171,6 @@
 
 
 {/capture}
-{ include file="menu.tpl" dingbats="dingbats_categorie.gif" menu_title=$lng.lbl_management menu_content=$smarty.capture.menu }
+{ include file="menu_admin.tpl" dingbats="dingbats_categorie.gif" menu_title=$lng.lbl_management menu_content=$smarty.capture.menu }
 
 {$xcartApp->template->render('base/old_admin_menu.tpl')}
