@@ -2,11 +2,14 @@
 
 namespace Modules\Cart;
 
+use Modules\Admin\Traits\AdminTrait;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Module\Module;
 
 class CartModule extends Module
 {
+    use AdminTrait;
+
     /**
      * @var
      */

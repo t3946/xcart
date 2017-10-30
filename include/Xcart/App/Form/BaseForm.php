@@ -250,11 +250,13 @@ abstract class BaseForm implements IteratorAggregate, Countable, ArrayAccess, IV
 
     public function getFields()
     {
-        if (!$this->_fields) {
-            $this->initFields();
-        }
+        return [];
 
-        return $this->_fields;
+//        if (!$this->_fields) {
+//            $this->initFields();
+//        }
+//
+//        return $this->_fields;
     }
 
     public function __toString()

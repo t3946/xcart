@@ -88,11 +88,15 @@ class ModelForm extends BaseForm
             ], is_array($config) ? $config : ['class' => $config]));
 
             if ($instance && $instance->hasField($name)) {
-                $value = $instance->{$instance->getField($name)->getAttributeName()};
-                if ($value instanceof FileField) {
-                    $value = $value->path();
+                if ($instance->getField($name)->editable) {
+                    $value = $instance->{$instance->getField($name)->getAttributeName()};
+
+                    if ($value instanceof FileField) {
+                        $value = $value->path();
+                    }
+
+                    $this->_fields[$name]->setValue($value);
                 }
-                $this->_fields[$name]->setValue($value);
             }
         }
 

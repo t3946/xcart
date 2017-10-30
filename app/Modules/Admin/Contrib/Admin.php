@@ -640,16 +640,19 @@ abstract class Admin
         if ($request->getIsPost() && $form->populate($_POST, $_FILES)) {
             if ($form->isValid() && $form->save()) {
                 if ($request->getIsAjax()) {
-
-                } else {
+                    $this->jsonResponse(['state' => 'success']);
+                }
+                else {
                     Xcart::app()->flash->success('Изменения сохранены');
 
                     $next = isset($_POST['save']) ? $_POST['save']: 'save';
                     if ($next == 'save') {
                         $request->redirect(($this->parent_pk) ? $this->getParentAllUrl():$this->getAllUrl());
-                    } elseif ($next == 'save-stay') {
+                    }
+                    elseif ($next == 'save-stay') {
                         $request->redirect($this->getUpdateUrl($model->pk));
-                    } else {
+                    }
+                    else {
                         $request->redirect($this->getCreateUrl());
                     }
                 }

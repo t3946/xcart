@@ -83,7 +83,11 @@ trait ValidateField
 
             if ($instance->hasField($this->name) && $field = $instance->getField($this->name)) {
                 /** @var \Xcart\App\Orm\Fields\Field $field */
-                $field->setValue($value);
+                if ($field->editable) {
+                    $field->setValue($value);
+                }
+
+
 
                 if ($field->isValid() === false) {
                     $this->addErrors($field->getErrors());

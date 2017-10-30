@@ -53,11 +53,7 @@ class RadioField extends CharField
                 $input = $this->renderInputInternal($this->getHtmlId() . '_' . $i, $value,  ($checked ? " checked='checked'" : ''));
                 $i++;
                 $hint = $this->hint ? $this->renderHint() : '';
-                $inputs[] = implode("\n", [
-                    $input,
-                    $label,
-                    $hint
-                ]);
+                $inputs[] = "<div class='radio-container'>{$input}{$label}{$hint}</div>";
             }
             return implode("\n", $inputs);
         } else {
