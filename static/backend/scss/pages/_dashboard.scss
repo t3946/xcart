@@ -146,7 +146,7 @@
 
             .events,
             .priority {
-                font-weight: bold;
+                font-weight: 500;
                 line-height: 1.2;
 
                 &.empty {
@@ -155,7 +155,7 @@
             }
 
             .priority {
-                font-weight: bold;
+                font-weight: 500;
                 line-height: 1.2;
                 display: inline-block;
                 background-color: rgb(255, 233, 165);
@@ -266,7 +266,7 @@
         .events-container {
             .events {
                 color: rgb(0, 0, 255);
-                font-weight: bold;
+                font-weight: 500;
                 line-height: 1.2;
             }
         }
