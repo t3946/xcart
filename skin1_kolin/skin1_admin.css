@@ -41,30 +41,37 @@ input, textarea, select, button {
 
 a {
     color: #330000;
+    /*color: #2a5885;*/
 	text-decoration: underline;
 	font-weight: 400;
 }
 a:visited {
     color: #330000;
+    /*color: #2a5885;*/
 }
 a:hover {
     color: #550000;
+    /*color: #3570a8;*/
 }
 a:active  {
     color: #330000;
+    /*color: #2a5885;*/
 }
 H1 {
 	FONT-SIZE: 15px;
-    color: #330000;
 }
 H2 {
 	FONT-SIZE: 13px;
-    color: #330000;
 }
 H3 {
 	FONT-SIZE: 12px;
-    color: #330000;
 }
+
+h1,h2,h3 {
+    color: #330000;
+    color: black;
+}
+
 HR {
 	COLOR: #DDDDDD;
 	HEIGHT: 1px;
@@ -78,7 +85,8 @@ HTML,BODY {
 	/*BACKGROUND-COLOR: #eeeeee;*/
 	/*background-color: #fefeff;*/
     /*background-color: #F3F3F3;*/
-    background-color: #e7e7e7;
+    /*background-color: #e7e7e7;*/
+    background-color: #edeef0;
 }
 FORM {
 	MARGIN: 0px;
@@ -128,6 +136,10 @@ TD.Container {
 	padding: 5px;
 	/*margin: 5px;*/
 }
+.headSearchLine {
+	border: 1px solid #8E4B00;
+}
+
 .HeadThinLine {
 	BACKGROUND-COLOR: #8E4B00;
 	HEIGHT: 1px;
@@ -466,7 +478,7 @@ TD.OptionLabel {
 	/*BACKGROUND-COLOR: #efefef;*/
 	/*BACKGROUND-COLOR: #fff;*/
 	background-color: #fafafa;
-	PADDING: 1px;
+	PADDING: 5px 0;
 }
 .VertMenuBox td {
 	padding: 0;
@@ -488,6 +500,7 @@ TD.OptionLabel {
 }
 .VertMenuTitle {
 	BACKGROUND-COLOR: #e27a2b;
+	/*BACKGROUND-COLOR: #2a5885;*/
 	/*COLOR: #330000;*/
 	COLOR: #fff;
 	FONT-WEIGHT: 500;
@@ -505,46 +518,56 @@ TD.OptionLabel {
 }
 .VertMenuItems {
 	COLOR: #330000;
+	/*COLOR: #2a5885;*/
 	TEXT-DECORATION: none;
 }
-A.VertMenuItems:link {
-	COLOR: #330000;
-	TEXT-DECORATION: none;
-}
+/*A.VertMenuItems:link {*/
+	/*COLOR: #330000;*/
+	/*COLOR: #6387ac;*/
+	/*TEXT-DECORATION: none;*/
+/*}*/
 A.VertMenuItems:visited {
 	COLOR: #330000;
+	/*COLOR: #2a5885;*/
 	TEXT-DECORATION: none;
 }
 A.VertMenuItems:hover {
 	COLOR: #550000;
+	/*COLOR: #6b8eb4;*/
 	TEXT-DECORATION: underline;
 }
 A.VertMenuItems:active  {
 	COLOR: #330000;
+	/*COLOR: #2a5885;*/
 	TEXT-DECORATION: none;
 }
 .VertMenuItemsHL{
 	COLOR: #330000;
+	/*COLOR: #2a5885;*/
 	FONT-WEIGHT: 500;
 	TEXT-DECORATION: none;
 }
 A.VertMenuItemsHL:link {
 	COLOR: #330000;
+	/*COLOR: #2a5885;*/
 	FONT-WEIGHT: 500;
 	TEXT-DECORATION: none;
 }
 A.VertMenuItemsHL:visited {
 	COLOR: #330000;
+	/*COLOR: #2a5885;*/
 	FONT-WEIGHT: 500;
 	TEXT-DECORATION: none;
 }
 A.VertMenuItemsHL:hover {
 	COLOR: #550000;
+	/*COLOR: #2a5885;*/
 	FONT-WEIGHT: 500;
 	TEXT-DECORATION: underline;
 }
 A.VertMenuItemsHL:active  {
 	COLOR: #330000;
+	/*COLOR: #2a5885;*/
 	FONT-WEIGHT: 500;
 	TEXT-DECORATION: none;
 }
@@ -574,12 +597,14 @@ TD.DialogBox {
 }
 .DialogBorder {
 	BACKGROUND-COLOR: #e27a2b;
+	/*BACKGROUND-COLOR: #2a5885;*/
 	HEIGHT: 100%;
 	PADDING: 0px;
 }
 TD.DialogTitle {
 	COLOR: #FFFFFF;
 	background-color: #e27a2b;
+	/*background-color: #2a5885;*/
 	FONT-WEIGHT: 500;
 	FONT-SIZE: 15px;
 	/*BACKGROUND-IMAGE: url(images/dialog_bg_n.gif);*/
@@ -622,6 +647,7 @@ TABLE.DialogInfo {
 }
 .DialogInfoTitleBorder {
 	BACKGROUND-COLOR: #e27a2b;
+	BACKGROUND-COLOR: #2a5885;
 	PADDING: 0px;
 	VERTICAL-ALIGN: bottom;
 	HEIGHT: 15px;
@@ -822,13 +848,13 @@ A.ItemsList:active {
 	Buttons
 */
 .FormButton {
-	COLOR: #330000;
+	/*COLOR: #330000;*/
 	/*FONT-WEIGHT: 500;*/
 	FONT-WEIGHT: 500;
 }
 
 .FormButtonNotBold {
-	COLOR: #330000;
+	/*COLOR: #330000;*/
 }
 
 TABLE.ButtonTable {
@@ -842,6 +868,7 @@ TABLE.ButtonTable TD {
 TD.Button {								 
 	BACKGROUND: url(images/butbg.gif);
 	BACKGROUND-COLOR: #e27a2b;
+	BACKGROUND-COLOR: #6387ac;
 	BACKGROUND-REPEAT: repeat-x;
 	PADDING-LEFT: 5px;
 	PADDING-RIGHT: 5px;

@@ -25,10 +25,7 @@
     </tr>
 </table>
 
-<table cellpadding="0" cellspacing="0" width="100%" border="0">
-<tr> 
-	<td colspan="4" class="HeadThinLine"><img src="{$ImagesDir}/spacer.gif" class="Spc" alt=""/></td>
-</tr>
+<table cellpadding="0" cellspacing="0" width="100%" border="0" class="headSearchLine">
 <tr>
     <td class="HeadLine" height="22" width="33%">
             {include file="main/search.tpl"}
@@ -145,9 +142,6 @@
 
 
 
-</tr>
-<tr> 
-	<td colspan="4" class="HeadThinLine"><img src="{$ImagesDir}/spacer.gif" class="Spc" alt=""/></td>
 </tr>
 {******** Remove this line to display how much products there are online ****
 <tr>
