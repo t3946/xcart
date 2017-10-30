@@ -14,8 +14,8 @@ class ListViewField extends Field
     public $rowTemplate = 'forms/field/list_view/row.tpl';
     public $emptyTemplate = 'forms/field/list_view/empty.tpl';
 
-
-    public $actions = [];
+    /** @var \Modules\Admin\Contrib\Admin|null  */
+    public $adminClass = null;
 
     /**
      * @var array
@@ -68,6 +68,11 @@ class ListViewField extends Field
             return $this->innerRender($this->emptyTemplate, []);
         }
 
+        /** @var \Modules\Admin\Contrib\Admin $admin */
+        $admin = new $this->adminClass();
+//        $admin->innerRender = true;
+//        $admin->all();
+
 
         return $this->innerRender($this->listTemplate, [
             'field' => $this,
@@ -75,6 +80,7 @@ class ListViewField extends Field
             'id' => $this->getHtmlId(),
             'objects' => $this->getRenderValue(),
             'name' => $this->getHtmlName(),
+            'columns' => $admin->buildListColumns(),
         ]);
     }
 }

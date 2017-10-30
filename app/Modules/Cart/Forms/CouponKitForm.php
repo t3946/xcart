@@ -1,6 +1,7 @@
 <?php
 namespace Modules\Cart\Forms;
 
+use Modules\Cart\Admin\DiscountRestrictionAdmin;
 use Modules\Cart\Models\CouponKitModel;
 use Modules\Editor\Fields\EditorField;
 use Xcart\App\Form\Fields\DropDownField;
@@ -34,10 +35,7 @@ class CouponKitForm extends ModelForm
             'type' => RadioField::className(),
             'restrictions' => [
                 'class' => ListViewField::className(),
-                'columns' => [
-                    'id'
-                ],
-                'actions' => [],
+                'adminClass' => DiscountRestrictionAdmin::className(),
             ],
         ];
     }

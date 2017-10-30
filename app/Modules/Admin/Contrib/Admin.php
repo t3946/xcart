@@ -50,6 +50,8 @@ abstract class Admin
      */
     public $sort = null;
 
+    public $innerRender = false;
+
     public $autoFixSort = true;
 
     public function __construct($controller) {
@@ -732,7 +734,7 @@ abstract class Admin
     {
         $params = array_replace($this->getCommonData(), $params);
 
-        if (Xcart::app()->request->getIsAjax()) {
+        if (Xcart::app()->request->getIsAjax() || $this->innerRender) {
             echo $this->render($view, $params);
         }
         else {
