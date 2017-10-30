@@ -16,7 +16,7 @@
                             <tr>
                                 <td style="text-align: left; vertical-align: middle;">
                                     {block 'logo'}
-                                        <img src='{$.request->getHostInfo()}/static/frontend/dist/images/s3stores_logo.png'/>
+                                        {*<img src='{$.request->getHostInfo()}/static/frontend/dist/images/s3stores_logo.png'/>*}
                                     {/block}
                                 </td>
                             </tr>
@@ -54,10 +54,10 @@
                                             {*{param('core.core.email_owner')}*}
                                         {*</a><br/>*}
 
-                                        {t 'Website'}:
+                                        {*{t 'Website'}:
                                         <a href="{$.request->getHostInfo()}">
                                             {$.request->getHostInfo()}
-                                        </a>
+                                        </a>*}
                                     {/block}
                                 </td>
                             </tr>
