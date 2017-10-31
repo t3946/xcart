@@ -20,9 +20,11 @@
                         {t 'Save and continue'}
                     </button>
 
+                    {if !$.request->get->has('popup')}
                     <button type="submit" name="save" value="save-create" class="button transparent pad round">
                         {t 'Save and create'}
                     </button>
+                    {/if}
                 </div>
 
                 <div class="links">

@@ -1,6 +1,7 @@
 <?php
 namespace Modules\Cart\Models;
 
+use Modules\Cart\Forms\DiscountRestrictionForm;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\ForeignField;
@@ -42,7 +43,9 @@ class CouponRestrictionModel extends Model
             }
         }
 
-        $this->restrict->setData($this->data);
+        if ($this->restrict) {
+            $this->restrict->setData($this->data);
+        }
 
         return $this->restrict;
     }
@@ -54,5 +57,14 @@ class CouponRestrictionModel extends Model
         }
 
         return parent::__toString();
+    }
+
+    public function getFormClass()
+    {
+        if ($restrict = $this->getRestrict()) {
+            return $restrict->getFormClass();
+        }
+
+        return DiscountRestrictionForm::className();
     }
 }

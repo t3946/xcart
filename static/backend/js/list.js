@@ -237,11 +237,19 @@ $(function () {
         var list = getList($this);
         var hndl = window.open(list.extendUrl($this.attr('href'),'popup', true), document.title, "width="+w+", height="+h+", scrollbars=yes");
         hndl.moveTo(left, top);
-        hndl.onbeforeunload = function(e) {
-            e.preventDefault();
-            list.update();
-            hndl.close();
-        }
+
+        var fnc = function(e) {
+            setTimeout(()=>{
+                if (hndl.closed) {
+                    list.update();
+                }
+                else {
+                    hndl.onbeforeunload = fnc;
+                }
+            }, 1000);
+        };
+
+        hndl.onbeforeunload = fnc;
     }
 
     $(document).on('click', '.list-block .pagination-block a', function (e) {
@@ -255,7 +263,11 @@ $(function () {
     $(document).on('click', '.list-block a.ajax, .ajax a', function (e) {
         e.preventDefault();
         var $this = $(this);
-        showPopup($this);
+
+        if (typeof this.dataset.prevention === 'undefined') {
+            showPopup($this);
+        }
+
         return false;
     });
 

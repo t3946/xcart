@@ -63,9 +63,9 @@ class ModelForm extends BaseForm
             }
         }
 
-//        if ($instance) {
-//            $this->populateFromInstance($instance);
-//        }
+        if ($instance) {
+            $this->populateFromInstance($instance);
+        }
 
 
         foreach ($fields as $name => $config) {

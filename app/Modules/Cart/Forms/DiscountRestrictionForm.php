@@ -97,12 +97,15 @@ class DiscountRestrictionForm extends ModelForm
         return $classes;
     }
 
-
+    public function getRealFieldsList()
+    {
+        $model = $this->getInstance();
+        return array_keys($model::getFields());
+    }
 
     public function save()
     {
-        $model = $this->getModel();
-        $real_keys = array_keys($model::getFields());
+        $real_keys = $this->getRealFieldsList();
 
         $cleaned = [];
         foreach ($this->cleanedData as $key => $val)
@@ -124,5 +127,19 @@ class DiscountRestrictionForm extends ModelForm
         $this->cleanedData = $cleaned;
 
         return parent::save();
+    }
+
+    protected function populateFromInstance(\Xcart\App\Orm\Model $model)
+    {
+        parent::populateFromInstance($model);
+
+        $data = $model->data;
+
+        foreach ($data as $key => $val)
+        {
+            if ($field = $this->getField($key)) {
+                $this->getField($key)->setValue($val);
+            }
+        }
     }
 }

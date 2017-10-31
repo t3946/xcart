@@ -8,6 +8,16 @@ abstract class ListViewAdmin extends Admin
 {
     public $ownerPk = null;
     public $ownerField = null;
+    public $instance;
+
+    public function getInstance()
+    {
+        if ($this->instance) {
+            return $this->instance;
+        }
+
+        return $this->getModel();
+    }
 
     public function all($pk = null)
     {
@@ -32,9 +42,11 @@ abstract class ListViewAdmin extends Admin
         }
         else {
             $model = $this->getModelOr404($pk);
+            $this->instance = $model;
             $form = $this->getUpdateForm();
             $this->ownerPk = $model->{$this->ownerField};
         }
+
 
         if ($this->ownerPk) {
             $model->{$this->ownerField} = $this->ownerPk;

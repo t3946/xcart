@@ -26,18 +26,20 @@ class DiscountRestrictionAdmin extends ListViewAdmin
 
     public function getForm()
     {
+        $defClass = $this->getInstance()->getFormClass();
+
         if (!empty($_GET['form'])) {
             try {
                 $form = new $_GET['form'];
             }
             catch (\Exception $e) {
-                $form = new DiscountRestrictionForm();
+                $form = new $defClass();
             }
 
             return $form;
         }
 
-        return new DiscountRestrictionForm();
+        return new $defClass();
     }
 
     public static function getItemName()
@@ -47,6 +49,6 @@ class DiscountRestrictionAdmin extends ListViewAdmin
 
     public function getModel()
     {
-        return $this->getForm()->getModel();
+        return new CouponRestrictionModel();
     }
 }
