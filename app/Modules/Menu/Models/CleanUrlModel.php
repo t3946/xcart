@@ -68,6 +68,13 @@ class CleanUrlModel extends Model
         parent::beforeSave($owner, $isNew);
     }
 
+    public function getSlugPart()
+    {
+        $ta = explode('/', $this->clean_url);
+        $last = end($ta);
+        return $this->createSlug($last);
+    }
+
     public function urlFromCode($code = null, $absolute = false, $site = null)
     {
         $path = '';
@@ -86,14 +93,11 @@ class CleanUrlModel extends Model
         }
 
         if ($code) {
-            $ta = explode('/', $this->clean_url);
-            $last = end($ta);
-
             $path = Xcart::app()->router->url(
                 $code,
                 [
                     'id' => $this->resource_id,
-                    'slug' => $this->createSlug($last)
+                    'slug' => $this->getSlugPart()
                 ]
             );
         }

@@ -29,7 +29,7 @@ return [
         'name' => 'view:new'
     ],
     [
-        'route' => '/{i:id}/{slug:slug}',
+        'route' => '/{i:id}/{slug:slug}/',
         'target' => ['\Modules\Brand\Controllers\DefaultController', 'actionViewOld'],
         'name' => 'view'
     ],

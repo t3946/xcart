@@ -56,7 +56,7 @@ use Xcart\Product;
  * @property int mod_date
  * @property mixed|string upc
  * @property null|\Xcart\App\Orm\Manager|\Modules\Sites\Models\SiteModel sites
- * @property null|CleanUrlModel url
+ * @property null|CleanUrlModel clean_url
  * @property null|\Xcart\App\Orm\Manager|\Modules\Product\Models\CategoryModel[] categories
  * @property null|\Xcart\App\Orm\Manager|ProductModel[] childs
  *
@@ -105,7 +105,7 @@ class ProductModel extends AutoMetaModel implements ICartItem
                 'through' => QuickPricingModel::className(),
             ],
 
-            'url' => [
+            'clean_url' => [
                 'class' => HasToOneField::className(),
                 'modelClass' => CleanUrlModel::className(),
                 'link' => ['productid' => 'resource_id'],
@@ -331,11 +331,20 @@ class ProductModel extends AutoMetaModel implements ICartItem
     public function getAbsoluteUrl($full = false)
     {
         if ($this->productid) {
-            return $this->url->urlFromCode('catalog:product:view', $full, ($full ? $this->sites->limit(1)->get() : null));
+
+            $url = Xcart::app()->router->url('catalog:product:view', ['id' => $this->pk, 'slug' => $this->clean_url->getSlugPart()]);
+
+            if ($full) {
+                $site = $this->sites->limit(1)->get();
+
+                $url = '//' . $site->domain . $url;
+
+            }
+
+            return $url;
         }
 
         return false;
-//        return Xcart::app()->router->url('catalog:product:view', ['sku' => $this->productcode]);
     }
 
     public function getMainCategory()

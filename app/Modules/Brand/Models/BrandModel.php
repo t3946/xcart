@@ -153,10 +153,17 @@ class BrandModel extends AutoMetaModel
 
     public function getAbsoluteUrl($full = false)
     {
-        if ($this->brandid)
-        {
-            return $this->clean_url->urlFromCode('brand:view', $full, $this->storefront->limit(1)->get());
-//            return Xcart::app()->router->url('brand:view', ['id' => $this->brandid, 'slug' => 'TEMP']);
+        if ($this->brandid) {
+
+            $url = Xcart::app()->router->url('catalog:product:view', ['id' => $this->pk, 'slug' => $this->clean_url->getSlugPart()]);
+
+            if ($full) {
+                $site = $this->storefront->limit(1)->get();
+
+                $url = '//' . $site->domain . $url;
+            }
+
+            return $url;
         }
 
         return false;
