@@ -17,6 +17,7 @@ use Xcart\App\Orm\Fields\BooleanCharField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\HasManyField;
+use Xcart\App\Orm\Fields\HasToOneField;
 use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Fields\ManyToManyField;
 use Xcart\App\Orm\Fields\UnixTimestampField;
@@ -105,8 +106,7 @@ class ProductModel extends AutoMetaModel implements ICartItem
             ],
 
             'url' => [
-                'field' => 'productid',
-                'class' => ForeignField::className(),
+                'class' => HasToOneField::className(),
                 'modelClass' => CleanUrlModel::className(),
                 'link' => ['productid' => 'resource_id'],
                 'extra' => ['resource_type' => 'P'],
@@ -138,7 +138,7 @@ class ProductModel extends AutoMetaModel implements ICartItem
             'images' => [
                 'class' => HasManyField::className(),
                 'modelClass' => ImageDModel::className(),
-                'link' => ['id' => 'productid'],
+                'link' => ['productid' => 'id'],
 //                'extra' => ['avail' => 'Y']
             ],
 

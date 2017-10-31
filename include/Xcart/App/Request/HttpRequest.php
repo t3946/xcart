@@ -411,7 +411,7 @@ class HttpRequest extends Request
     {
         $requestUri = '';
 
-        if ($from_get_path && is_bool($this->from_get)) {
+        if ($from_get_path && is_bool($this->from_get) && $this->from_get) {
             if ($qs = $this->getQueryArray(null, false)) {
                 $requestUri = current(array_keys($qs));
             }

@@ -15,6 +15,7 @@ use Xcart\App\Orm\Fields\BooleanCharField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\HasManyField;
+use Xcart\App\Orm\Fields\HasToOneField;
 use Xcart\App\Orm\Fields\ManyToManyField;
 
 /**
@@ -127,8 +128,7 @@ class BrandModel extends AutoMetaModel
                 'link' => ['provider' => 'login']
             ],
             'clean_url' => [
-                'field' => 'brandid',
-                'class' => ForeignField::className(),
+                'class' => HasToOneField::className(),
                 'modelClass' => CleanUrlModel::className(),
                 'link' => ['brandid' => 'resource_id'],
                 'extra' => ['resource_type' => 'M'],

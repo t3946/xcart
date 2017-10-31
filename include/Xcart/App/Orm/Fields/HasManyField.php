@@ -53,7 +53,7 @@ class HasManyField extends RelatedField
         $where = [];
         if ($this->link) {
             foreach ($this->link as $from => $to) {
-                $where[$from] = $this->getModel()->getAttribute($from);
+                $where[$to] = $this->getModel()->getAttribute($from);
             }
         }
 
