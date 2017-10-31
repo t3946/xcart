@@ -16,6 +16,7 @@ use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\HasManyField;
 use Xcart\App\Orm\Fields\ManyToManyField;
+use Xcart\App\Orm\Fields\OneToOneField;
 
 /**
  * @property mixed brandid
@@ -127,8 +128,7 @@ class BrandModel extends AutoMetaModel
                 'link' => ['provider' => 'login']
             ],
             'clean_url' => [
-                'field' => 'brandid',
-                'class' => ForeignField::className(),
+                'class' => HasManyField::className(),
                 'modelClass' => CleanUrlModel::className(),
                 'link' => ['brandid' => 'resource_id'],
                 'extra' => ['resource_type' => 'M'],
@@ -155,8 +155,7 @@ class BrandModel extends AutoMetaModel
     {
         if ($this->brandid)
         {
-
-            return $this->clean_url->urlFromCode('brand:view', $full, $this->storefront->limit(1)->get());
+            return $this->clean_url->limit(1)->get()->urlFromCode('brand:view', $full, $this->storefront->limit(1)->get());
 //            return Xcart::app()->router->url('brand:view', ['id' => $this->brandid, 'slug' => 'TEMP']);
         }
 
