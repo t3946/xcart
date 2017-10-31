@@ -38,7 +38,7 @@
     }
   }
 
-  $input: "input[type=text], input[type=search], input[type=email]";
+  $input: "input[type=text], input[type=search], input[type=email], input[type=date], input[type=datetime-local]";
   #{$input}, textarea {
     background: #FFFFFF;
     border: 1px solid #DFDFDF;

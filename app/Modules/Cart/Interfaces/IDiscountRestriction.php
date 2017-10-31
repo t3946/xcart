@@ -5,7 +5,9 @@ interface IDiscountRestriction
 {
     public function getName();
 
-    public function getModel();
+    public function validate();
 
-    public function getForm();
+    public function getFormClass();
+
+    public function toString();
 }

@@ -58,6 +58,7 @@ class ListViewField extends Field
 
             return $manager->all();
         }
+        return [];
     }
 
     public function renderInput()
@@ -68,8 +69,10 @@ class ListViewField extends Field
             return $this->innerRender($this->emptyTemplate, []);
         }
 
-        /** @var \Modules\Admin\Contrib\Admin $admin */
+        /** @var \Modules\Admin\Contrib\ListViewAdmin $admin */
         $admin = new $this->adminClass();
+        $admin->ownerPk = $this->getForm()->getInstance()->pk;
+        $admin->ownerField = $this->getName();
 //        $admin->innerRender = true;
 //        $admin->all();
 
@@ -81,6 +84,7 @@ class ListViewField extends Field
             'objects' => $this->getRenderValue(),
             'name' => $this->getHtmlName(),
             'columns' => $admin->buildListColumns(),
+            'admin' => $admin
         ]);
     }
 }

@@ -61,15 +61,11 @@ class ModelForm extends BaseForm
                     $this->_fields[$name] = $modelField;
                 }
             }
-
-            if ($instance) {
-                $value = $instance->{$name};
-                if ($value instanceof FileField) {
-                    $value = $value->getUrl();
-                }
-                $this->_fields[$name]->setValue($value);
-            }
         }
+
+//        if ($instance) {
+//            $this->populateFromInstance($instance);
+//        }
 
 
         foreach ($fields as $name => $config) {
@@ -169,6 +165,7 @@ class ModelForm extends BaseForm
         }
 
         $this->initFields();
+
         $this->populateFromInstance($model);
     }
 

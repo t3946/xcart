@@ -1,9 +1,8 @@
-
 <div class="list-block" data-list data-id="{$id}-list">
     {if $admin}
     <div class="list-top clearfix">
         <div class="top-buttons-block left">
-            <a href="{$admin->getCreateUrl()}" class="button round upper pad">
+            <a href="{$admin->getCreateUrl()}" class="button round upper pad ajax">
                 <span class="text">
                     Создать
                 </span>
@@ -34,29 +33,29 @@
                             </th>
                         {/foreach}
 
-                        {*<th class="actions">*}
-                            {*<div class="columns-list-appender">*}
-                                {*<a href="#" class="button-appender appender-columns">*}
-                                    {*<i class="icon-plus"></i>*}
-                                {*</a>*}
-                                {*<div class="popup-block">*}
-                                    {*<ul class="columns-list">*}
-                                        {*{foreach $columns['config'] as $name => $column}*}
-                                            {*<li>*}
-                                                {*<div class="checker">*}
-                                                    {*<input type="checkbox" id="{$id}-{$name}-column" name="columns_list[]" value="{$name}" {if $name in $columns['enabled']}checked="checked"{/if}>*}
-                                                    {*<label for="{$id}-{$name}-column">*}
-                                                        {*{$column['title']}*}
-                                                    {*</label>*}
-                                                {*</div>*}
-                                            {*</li>*}
-                                        {*{/foreach}*}
-                                    {*</ul>*}
-                                {*</div>*}
-                            {*</div>*}
+                        <th class="actions">
+                            <div class="columns-list-appender">
+                                <a href="#" class="button-appender appender-columns">
+                                    <i class="icon-plus"></i>
+                                </a>
+                                <div class="popup-block">
+                                    <ul class="columns-list">
+                                        {foreach $columns['config'] as $name => $column}
+                                            <li>
+                                                <div class="checker">
+                                                    <input type="checkbox" id="{$id}-{$name}-column" name="columns_list[]" value="{$name}" {if $name in $columns['enabled']}checked="checked"{/if}>
+                                                    <label for="{$id}-{$name}-column">
+                                                        {$column['title']}
+                                                    </label>
+                                                </div>
+                                            </li>
+                                        {/foreach}
+                                    </ul>
+                                </div>
+                            </div>
 
-                            {*{var $cols = $cols+1}*}
-                        {*</th>*}
+                            {var $cols = $cols+1}
+                        </th>
                     </tr>
 
                     <tr class="delimiter">
@@ -66,41 +65,41 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {*{foreach $objects as $item}*}
-                        {*{var $pk = $item->pk}*}
-                        {*<tr data-pk="{$pk}">*}
+                    {foreach $objects as $item}
+                        {var $pk = $item->pk}
+                        <tr data-pk="{$pk}">
 
-                            {*{foreach $columns['enabled'] as $column}*}
-                                {*{var $config = $columns['config'][$column]}*}
-                                {*{var $template = $config['template']}*}
+                            {foreach $columns['enabled'] as $column}
+                                {var $config = $columns['config'][$column]}
+                                {var $template = $config['template']}
 
-                                {*<td class="col">*}
-                                    {*{include $template}*}
-                                {*</td>*}
-                            {*{/foreach}*}
+                                <td class="col">
+                                    {include $template}
+                                </td>
+                            {/foreach}
 
-                            {*<td class="actions">*}
-                                {*{include $admin->listItemActionsTemplate}*}
-                            {*</td>*}
-                        {*</tr>*}
-                    {*{foreachelse}*}
-                        {*<tr class="empty">*}
-                            {*<td colspan="{$cols}" class="text-center">*}
-                                {*Пока здесь нет ни одной записи*}
-                            {*</td>*}
-                        {*</tr>*}
-                    {*{/foreach}*}
+                            <td class="actions ajax">
+                                {include $admin->listItemActionsTemplate}
+                            </td>
+                        </tr>
+                    {foreachelse}
+                        <tr class="empty">
+                            <td colspan="{$cols}" class="text-center">
+                                Пока здесь нет ни одной записи
+                            </td>
+                        </tr>
+                    {/foreach}
                 </tbody>
             </table>
-            <div class="list-footer clearfix">
-                <div class="list-footer-block v-align right total">
-                    <div>
+            {*<div class="list-footer clearfix">*}
+                {*<div class="list-footer-block v-align right total">*}
+                    {*<div>*}
                         {*Всего записей: {$pagination->getTotal()}*}
-                    </div>
-                </div>
+                    {*</div>*}
+                {*</div>*}
 
-                <div class="list-footer-block v-align left group">
-                    <div>
+                {*<div class="list-footer-block v-align left group">*}
+                    {*<div>*}
                         {*<div class="checker-wrapper">*}
                             {*<input type="checkbox" id="{$id}-check-all-bottom" data-checkall-list>*}
                             {*<label for="{$id}-check-all-bottom">*}
@@ -141,9 +140,9 @@
                                 {*</button>*}
                             {*</div>*}
                         {*{/if}*}
-                    </div>
-                </div>
-            </div>
+                    {*</div>*}
+                {*</div>*}
+            {*</div>*}
 
             {*<div class="pagination-block">*}
                 {*{raw $pagination->render($admin->listPaginationTemplate)}*}
@@ -151,3 +150,14 @@
         </div>
     </div>
 </div>
+
+<script>
+    $(function () {
+        $('[data-id="{$id}-list"]').adminList({
+            url: "{$.request->getUrl()}",
+            groupActionUrl: "{$admin->getGroupActionUrl()}",
+            sortUrl: "{$admin->getSortUrl()}",
+            columnsUrl: "{$admin->getColumnsUrl()}"
+        });
+    });
+</script>

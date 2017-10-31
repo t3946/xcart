@@ -37,6 +37,20 @@ $(function () {
             paramsString = $.param(params);
             this.setUrl(cleanUrl + '?' + paramsString)
         },
+        extendUrl: function(url, key, value) {
+            var params = {};
+            var cleanUrl = url;
+
+            if (url.indexOf('?') !== -1) {
+                cleanUrl = url.substr(0, url.indexOf('?'));
+                var paramsString = url.substr(url.indexOf('?') + 1);
+                params = $.deparam(paramsString);
+            }
+            params[key] = value;
+            paramsString = $.param(params);
+
+            return cleanUrl + '?' + paramsString;
+        },
         setListBlock: function ($listBlock) {
             this.$listBlock = $listBlock;
         },
@@ -213,11 +227,35 @@ $(function () {
         return $listBlock.data('object');
     }
 
+    function showPopup($this)
+    {
+        var w = 900;
+        var h = 600;
+        var left = (window.screen.width/2)-(w/2);
+        var top = (window.screen.height/2)-(h/2);
+
+        var list = getList($this);
+        var hndl = window.open(list.extendUrl($this.attr('href'),'popup', true), document.title, "width="+w+", height="+h+", scrollbars=yes");
+        hndl.moveTo(left, top);
+        hndl.onbeforeunload = function(e) {
+            e.preventDefault();
+            list.update();
+            hndl.close();
+        }
+    }
+
     $(document).on('click', '.list-block .pagination-block a', function (e) {
         e.preventDefault();
         var $this = $(this);
         var list = getList($this);
         list.setUrl($this.attr('href'));
+        return false;
+    });
+
+    $(document).on('click', '.list-block a.ajax, .ajax a', function (e) {
+        e.preventDefault();
+        var $this = $(this);
+        showPopup($this);
         return false;
     });
 

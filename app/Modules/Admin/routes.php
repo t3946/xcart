@@ -7,6 +7,11 @@ return [
         'name' => 'index'
     ],
     [
+        'route' => '/list/{:module}/{:admin}/owner/{:id}',
+        'target' => ['\Modules\Admin\Controllers\AdminController', 'all'],
+        'name' => 'list_owned'
+    ],
+    [
         'route' => '/list/{:module}/{:admin}/{:id}',
         'target' => ['\Modules\Admin\Controllers\AdminController', 'all'],
         'name' => 'list_nested'
@@ -15,6 +20,11 @@ return [
         'route' => '/list/{:module}/{:admin}',
         'target' => ['\Modules\Admin\Controllers\AdminController', 'all'],
         'name' => 'list'
+    ],
+    [
+        'route' => '/create/{:module}/{:admin}/owner/{:id}',
+        'target' => ['\Modules\Admin\Controllers\AdminController', 'create'],
+        'name' => 'create_owned'
     ],
     [
         'route' => '/create/{:module}/{:admin}/{:id}',
@@ -40,6 +50,12 @@ return [
         'route' => '/columns/{:module}/{:admin}',
         'target' => ['\Modules\Admin\Controllers\AdminController', 'columns'],
         'name' => 'columns'
+    ],
+
+    [
+        'route' => '/update/{:module}/{:admin}/{:pk}/owner/{:owner}',
+        'target' => ['\Modules\Admin\Controllers\AdminController', 'update'],
+        'name' => 'update_owned'
     ],
     [
         'route' => '/update/{:module}/{:admin}/{:pk}',

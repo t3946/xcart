@@ -80,7 +80,7 @@ class AdminController extends BackendController
     {
         $class = "Modules\\{$module}\\Admin\\{$admin}";
         if (class_exists($class)) {
-            return new $class($this);
+            return new $class();
         }
         $this->error(404);
     }

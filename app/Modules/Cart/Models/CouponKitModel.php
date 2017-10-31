@@ -73,4 +73,9 @@ class CouponKitModel extends Model
             ]
         ];
     }
+
+    public function __toString()
+    {
+        return $this->name . " [{$this->code}]";
+    }
 }

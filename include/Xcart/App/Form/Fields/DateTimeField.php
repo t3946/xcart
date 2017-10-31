@@ -8,4 +8,5 @@ namespace Xcart\App\Form\Fields;
  */
 class DateTimeField extends CharField
 {
+    public $type = 'datetime-local';
 }

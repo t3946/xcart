@@ -2,7 +2,7 @@ const imagemin = require('gulp-imagemin');
 
 module.exports ={
     name: 'main',
-    compress: true,
+    compress: false,
     babel: {
         presets: [
             [ "env", {

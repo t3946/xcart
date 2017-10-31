@@ -8,10 +8,12 @@ namespace Xcart\App\Form\Fields;
  */
 class DateField extends CharField
 {
-    public function render()
-    {
-        $id = $this->getHtmlId();
-        $js = "<script type='text/javascript'>$('#$id').pickmeup({format  : 'Y-m-d'});</script>";
-        return parent::render() . $js;
-    }
+    public $type = 'date';
+
+//    public function render()
+//    {
+//        $id = $this->getHtmlId();
+//        $js = "<script type='text/javascript'>$('#$id').pickmeup({format  : 'Y-m-d'});</script>";
+//        return parent::render() . $js;
+//    }
 }

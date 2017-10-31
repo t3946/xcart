@@ -3,22 +3,29 @@
 namespace Modules\Cart\Discounts\Restrictions;
 
 use Modules\Cart\CartModule;
+use Modules\Cart\Forms\DiscountRestrictionForm;
 use Modules\Cart\Interfaces\IDiscountRestriction;
 
-class DateRestriction implements IDiscountRestriction
+class DateRestriction extends AbstractRestriction
 {
+
+    public function getFormClass()
+    {
+        return DiscountRestrictionForm::className();
+    }
+
     public function getName()
     {
-        return CartModule::t('Date');
+        return CartModule::t('Date restriction');
     }
 
-    public function getModel()
+    public function validate()
     {
-        // TODO: Implement getModel() method.
+
     }
 
-    public function getForm()
+    public function toString()
     {
-        // TODO: Implement getForm() method.
+        return "From: {$this->data['start']}, To: {$this->data['end']}";
     }
 }

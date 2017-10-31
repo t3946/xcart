@@ -40,8 +40,8 @@ abstract class Admin
     public $pageSize = 20;
     public $pageSizes = [20, 50, 100];
 
-    /** @var \Modules\Admin\Controllers\AdminController $controller */
-    public $controller = null;
+//    /** @var \Modules\Admin\Controllers\AdminController $controller */
+//    public $controller = null;
 
     /**
      * Sorting column
@@ -53,10 +53,6 @@ abstract class Admin
     public $innerRender = false;
 
     public $autoFixSort = true;
-
-    public function __construct($controller) {
-        $this->controller = $controller;
-    }
 
     /**
      * @return mixed
@@ -734,7 +730,11 @@ abstract class Admin
     {
         $params = array_replace($this->getCommonData(), $params);
 
-        if (Xcart::app()->request->getIsAjax() || $this->innerRender) {
+        if (
+            Xcart::app()->request->getIsAjax()
+            || $this->innerRender
+            || !empty($_GET['popup'])
+        ) {
             echo $this->render($view, $params);
         }
         else {
