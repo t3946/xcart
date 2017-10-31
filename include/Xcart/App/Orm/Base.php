@@ -232,7 +232,9 @@ abstract class Base implements ModelInterface, ArrayAccess, Serializable
                 }
 
                 $this->attributes->setAttribute($attributeName, $value);
-            } else {
+                $this->afterSetAttribute($attributeName, $value);
+            }
+            else {
                 $this->related[$name] = $value;
             }
         }
@@ -241,6 +243,8 @@ abstract class Base implements ModelInterface, ArrayAccess, Serializable
 //            throw new Exception(get_class($this) . ' has no attribute named "' . $name . '".');
         }
     }
+
+    public function afterSetAttribute($attributeName, $value) {}
 
     public function getFromQueryAttribute($name)
     {

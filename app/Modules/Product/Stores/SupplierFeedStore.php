@@ -47,6 +47,9 @@ class SupplierFeedStore extends BaseStore
 
         if (!empty($feed['dont_update_fields'])) {
             foreach ($feed['dont_update_fields'] as $doNotUpdateFiled){
+                if ($doNotUpdateFiled == "images"){
+                    $doNotUpdateFiled = "supplier_images";
+                }
                 $idx = array_search($doNotUpdateFiled, array_keys($product_cols_replace));
                 if ($idx !== false) {
                     $this->dont_update_fields[] = $product_cols_replace[$doNotUpdateFiled];
