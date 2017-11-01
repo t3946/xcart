@@ -164,45 +164,28 @@ class ProductHelper
      */
     public static function getFirstSame($a)
     {
-        function longestCS($a, $b)
-        {
-            if (empty($a) || empty($b)) {
-                return '';
-            }
-
-            if ($a === $b) {
-                return $a;
-            }
-
-            $b = trim(mb_substr($b, 0, mb_strrpos($b, ' '))). ' ';
-
-            for ($i = 0; $i < mb_strlen($a) - 1; $i++) {
-                if (mb_strtolower(mb_substr($a, $i, 1)) != mb_strtolower(mb_substr($b, $i, 1))) {
-                    if (!$i) {
-                        return '';
-                    }
-                    if (($ls = mb_strpos($a, ' ', $i)) > $i) {
-                        $s = mb_substr($a, 0, $ls);
-                    } else {
-                        $s = mb_substr($a, 0, $i);
-                    }
-                    return trim(mb_substr($s, 0, mb_strrpos($s, ' ')));
+        function intersect($arr1, $arr2) {
+            $res = [];
+            foreach ($arr1 as $key => $val) {
+                if (in_array($val, $arr2)){
+                    $res[] = $val;
+                } else {
+                    break;
                 }
             }
-            return mb_substr($b, 0, ++$i);
+            return $res;
         }
 
-        $b = null;
-
-        if ($a) {
-
-            $b = array_shift($a);
-
-            foreach ($a as $s) {
-                $b = longestCS($b, $s);
+        $arr = null;
+        foreach ($a as $w) {
+            $as = explode(' ', $w);
+            if (is_null($arr)) {
+                $arr = $as;
+            } else {
+                $arr = intersect($as, $arr);
             }
         }
-        return trim($b);
+        return $res = implode(' ', $arr);
     }
 
     public static function getGroupLevel($option)
