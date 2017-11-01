@@ -7,13 +7,13 @@
             {if $products}
                 {foreach $products as $product}
                     <tr data-prefix="{$product->getFromQueryAttribute('prefix')}-GROUP-{$product->getFromQueryAttribute('g_max')}"
-                        data-description="{$product->fulldescr}"
+                        data-description="{$product->fulldescr|escape}"
                         data-product-id="{$product->productid}"
                         data-manufacturer-id="{$product->manufacturerid}">
                         <td class="checkbox">
                             <input type="checkbox" name="group[products][{$product->productid}]" />
                         </td>
-                        <td class="product-title" data-product="{$product->product}">
+                        <td class="product-title" data-product="{$product->product|escape}">
                             <a target="_blank" href="{$product->getAdminUrl()}">(<b>{$product->productcode}</b>)</a>
                             <a class="title" href="//{$site->domain}/product/{$product->productid}/" target="_blank">... {$product->product|replace:$group_phrase:''}</a>
                         </td>
