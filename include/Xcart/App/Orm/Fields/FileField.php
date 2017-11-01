@@ -4,8 +4,12 @@ namespace Xcart\App\Orm\Fields;
 
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Exception;
+use League\Flysystem\Filesystem;
+use League\Flysystem\File as FlyFile;
 use League\Flysystem\FilesystemInterface;
+use Xcart\App\Form\PrepareData;
 use Xcart\App\Main\Xcart;
+use Xcart\App\Storage\Adapters\AdapterExtInterface;
 use Xcart\App\Storage\FileNameHasher\FileNameHasherInterface;
 use Xcart\App\Storage\FileNameHasher\MD5NameHasher;
 use Xcart\App\Storage\Files\File;
@@ -57,9 +61,10 @@ class FileField extends CharField
      * @var string
      */
     protected $basePath;
+    protected $relativePaths = [];
 
     /**
-     * @var FilesystemInterface
+     * @var Filesystem
      */
     protected $filesystem;
 
@@ -89,8 +94,8 @@ class FileField extends CharField
     public function getValidationConstraints()
     {
         $constraints = [];
-
         $currentValue = $this->getModel()->getAttribute($this->getAttributeName());
+
         if ($this->isRequired() && empty($currentValue)) {
             $constraints = [
                 new Assert\NotBlank(),
@@ -102,6 +107,32 @@ class FileField extends CharField
         }
 
         return $constraints;
+    }
+
+    public function getRelativePath()
+    {
+        if ($value = $this->getValue())
+        {
+            $key = $this->adapterName . $value;
+
+            if (empty($this->relativePaths[$key]))
+            {
+                $adapter = $this->getFilesystem()->getAdapter();
+
+                if ($adapter instanceof AdapterExtInterface) {
+                    $this->relativePaths[$key] = $adapter->getUrl($value);
+                }
+            }
+
+            return $this->relativePaths[$key];
+        }
+
+        return null;
+    }
+
+    public function getUrl()
+    {
+        return $this->getRelativePath();
     }
 
     /**
@@ -152,19 +183,22 @@ class FileField extends CharField
         }
     }
 
+    public function getValue()
+    {
+        if ($this->value instanceof File || $this->value instanceof UploadedFile) {
+            return $this->value;
+        }
+
+        return parent::getValue();
+    }
+
     public function setValue($value)
     {
-        if (
-            is_array($value) &&
-            isset($value['error']) &&
-            isset($value['tmp_name']) &&
-            isset($value['size']) &&
-            isset($value['name']) &&
-            isset($value['type'])
-        ) {
+        if ( PrepareData::checkFilesStruct($value) ) {
             if ($value['error'] === UPLOAD_ERR_NO_FILE) {
-                $value = null;
-            } else {
+                $value = $this->getOldValue();
+            }
+            else {
                 $value = new UploadedFile(
                     $value['tmp_name'],
                     $value['name'],
@@ -173,20 +207,27 @@ class FileField extends CharField
                     (int) $value['error']
                 );
             }
-        } elseif (is_string($value)) {
+        }
+        elseif (is_string($value))
+        {
             if (strpos($value, 'data:') !== false) {
                 list($type, $value) = explode(';', $value);
                 list(, $value) = explode(',', $value);
                 $value = base64_decode($value);
-                $value = new ResourceFile($value, null, null, $type);
-            } elseif (realpath($value)) {
+                $value = new ResourceFile($value, null, null);
+            }
+            elseif (realpath($value)) {
                 $value = new LocalFile(realpath($value));
+            }
+            elseif ($this->value != $value && $file = $this->getFilesystem()->has($value)) {
+                $this->value = $value;
             }
         }
 
         if ($value === null) {
             $this->value = null;
-        } elseif ($value instanceof File || $value instanceof UploadedFile) {
+        }
+        elseif ($value instanceof File || $value instanceof UploadedFile) {
             $this->value = $value;
         }
     }
@@ -196,7 +237,7 @@ class FileField extends CharField
      */
     public function toArray()
     {
-        return empty($this->value) ? null : $this->getValue();
+        return empty($this->value) ? null : $this->value;
     }
 
     /**
@@ -223,9 +264,15 @@ class FileField extends CharField
 
     public function convertToDatabaseValue($value, AbstractPlatform $platform)
     {
+        if (is_array($value)) {
+            $this->setValue($value);
+            $value = $this->value;
+        }
+
         if ($value instanceof UploadedFile) {
             $value = $this->saveUploadedFile($value);
-        } elseif ($value instanceof File) {
+        }
+        elseif ($value instanceof File) {
             $value = $this->saveFile($value);
         }
 
@@ -266,8 +313,18 @@ class FileField extends CharField
         if (!$this->getFilesystem()->write($path, $contents)) {
             throw new Exception('Failed to save file');
         }
+        elseif ($this->getOldValue()) {
+            $this->deleteOld();
+        }
 
         return $path;
+    }
+
+    public function deleteOld()
+    {
+        if ($this->getFilesystem()->has($this->getOldValue())) {
+            $this->getFilesystem()->delete($this->getOldValue());
+        }
     }
 
     public function saveFile(File $file)
@@ -279,6 +336,7 @@ class FileField extends CharField
             $this->getUploadTo(),
             $file->getFilename()
         );
+
         if (!$this->getFilesystem()->write($path, $contents)) {
             throw new Exception('Failed to save file');
         }
@@ -291,6 +349,11 @@ class FileField extends CharField
         $this->filesystem = $filesystem;
     }
 
+    /**
+     * @return \League\Flysystem\Filesystem
+     * @throws \Exception
+     * @throws \Xcart\App\Exceptions\UnknownPropertyException
+     */
     public function getFilesystem()
     {
         if (null === $this->filesystem) {
@@ -298,5 +361,11 @@ class FileField extends CharField
         }
 
         return $this->filesystem;
+    }
+
+
+    public function getFormField($form, $fieldClass = '\Xcart\App\Form\Fields\FileField', array $extra = [])
+    {
+        return parent::getFormField($form, $fieldClass, $extra);
     }
 }

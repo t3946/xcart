@@ -36,21 +36,31 @@ class Model extends AbstractModel
      */
     public static function getBundleName()
     {
+        $delim = '/';
+        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+            $delim = '\\';
+        }
+
         $object = new ReflectionClass(get_called_class());
 
         // For classical modules
         if ($pos = strpos($object->getFileName(), 'Modules')) {
             $shortPath = substr($object->getFileName(), $pos + 8);
-            return substr($shortPath, 0, strpos($shortPath, '/'));
+            return substr($shortPath, 0, strpos($shortPath, $delim));
         }
 
         // For symphony bundles
         if ($pos = strpos($object->getFileName(), 'Bundle')) {
             $shortPath = substr($object->getFileName(), $pos + 7);
-            return substr($shortPath, 0, strpos($shortPath, '/'));
+            return substr($shortPath, 0, strpos($shortPath, $delim));
         }
 
         return '';
+    }
+
+    public function getObjects($instance = null)
+    {
+        return static::objects(($instance) ? $instance : $this);
     }
 
     /**

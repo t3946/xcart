@@ -18,7 +18,9 @@ function d()
         print_r($data);
     }
     else {
+        echo "<pre>";
         echo VarDumper::dump($data);
+        echo "</pre>";
     }
     die();
 }
@@ -38,7 +40,9 @@ function dd()
         print_r($data);
     }
     else {
+        echo "<pre>";
         echo VarDumper::dump($data, 10, false);
+        echo "</pre>";
     }
     die();
 }

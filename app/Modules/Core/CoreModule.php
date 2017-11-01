@@ -1,18 +1,18 @@
 <?php
 namespace Modules\Core;
 
+use Detection\MobileDetect;
 use Fenom;
 use Modules\Core\Components\GlobalConfig;
+use Modules\Core\TemplateLibraries\CacheCompiler;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Module\Module;
-use Xcart\App\Orm\AutoMetaData;
 
 class CoreModule extends Module
 {
-
-    public static function onApplicationEnd()
+    public static function getGlobalConfig()
     {
-        AutoMetaData::saveCache();
+        return GlobalConfig::getInstance()->setOldMode();
     }
 
     public static function onApplicationRun()
@@ -29,6 +29,11 @@ class CoreModule extends Module
             return preg_replace("/(\r\n|\n|\r)/", " ", $str);
         });
 
+        $template->addModifier('instanceof', function($obj, $class_name)
+        {
+            return $obj instanceof $class_name;
+        });
+
         $template->addBlockFunction('smarty_admin_block', function ($params, $html) {
 
             $params['html'] = $html;
@@ -37,7 +42,13 @@ class CoreModule extends Module
         });
 
 
-        $template->addAccessorSmart("global_config", "config", Fenom::ACCESSOR_PROPERTY);
-        $template->global_config = GlobalConfig::getInstance()->setOldMode();
+        $template->addBlockCompiler('cache', CacheCompiler::className()."::blockCacheOpen", CacheCompiler::className()."::blockCacheClose", []);
+
+
+//        $template->addAccessorSmart("global_config", "config", Fenom::ACCESSOR_PROPERTY);
+//        $template->global_config = self::getGlobalConfig();
+
+        $template->addAccessorSmart("detector", "detector", Fenom::ACCESSOR_PROPERTY);
+        $template->detector = new MobileDetect();
     }
 }

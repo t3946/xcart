@@ -10,7 +10,7 @@ global $config;
 $log_category = "cron_request_availability";
 
 if ($config[$log_category] == "Y") {
-    $oMail = \Xcart\App\Main\Xcart::app()->mail;
+    $oMail = \Xcart\App\Main\Xcart::app()->oldMail;
     $oMail->to = 'team@s3stores.com';
     $oMail->from = ('team@s3stores.com');
     $oMail->subject = sprintf('Attention! Xcart cron %s Already launched', $log_category);

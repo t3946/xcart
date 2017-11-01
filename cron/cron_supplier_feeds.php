@@ -46,7 +46,7 @@ if (isset($argv) && is_array($argv)) {
 }
 
 if ($config[$log_category] == "Y") {
-    $oMail = \Xcart\App\Main\Xcart::app()->mail;
+    $oMail = \Xcart\App\Main\Xcart::app()->oldMail;
     $oMail->to = 'team@s3stores.com';
     $oMail->from = ('team@s3stores.com');
     $oMail->subject = sprintf('Attention! Xcart cron %s Already launched', $log_category);
@@ -357,7 +357,7 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
                             }
 
                             //Images section
-                            $aImages = $aProduct['images'];
+                            $aImages = $aProduct['supplier_images'];
                             $aAltImageNames = $aProduct['alt_names'];
                             if (!empty($aImages) && is_array($aImages)) {
                                 foreach ($aImages as $kImg => $IMAGE_URL) {

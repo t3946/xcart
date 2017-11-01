@@ -28,7 +28,11 @@ use Xcart\App\Request\HttpRequest;
  * @property \Xcart\App\Event\EventManager $event Event component
  * @property \Xcart\App\Storage\Storage $storage File storage component
  * @property \Xcart\App\Logger\LoggerManager $logger Logging system component
- * @property \Modules\Mail\Components\MailComponent $mail Mail component
+ * @property \Xcart\App\Components\Breadcrumbs $breadcrumbs
+ * @property \Xcart\App\Components\Flash $flash
+ * @property \Modules\Mail\Components\Mailer $mail Mailer
+ * @property \Modules\Mail\Components\MailComponent $oldMail Mailer
+ *
  * @property UserModel $user
  * 
  * @package Xcart\App\Application
@@ -39,6 +43,7 @@ class Application
 
     public $name = 'Application';
     public $exit_on_end = true;
+    public $globals = [];
     public $locale = [
         'language' => 'ru',
         'sourceLanguage' => 'en',
@@ -47,14 +52,24 @@ class Application
 
     protected $_modules = [];
     protected $_modulesConfig = [];
+    protected $_isRun = false;
 
     public $autoloadComponents = [];
 
     public function init()
     {
+        $this->registerGlobals();
         $this->_provideModuleEvent('onApplicationInit');
         $this->setUpPaths();
         $this->autoload();
+    }
+
+    public function registerGlobals()
+    {
+        foreach ($this->globals as $var => $val)
+        {
+            $GLOBALS[$var] = $val;
+        }
     }
 
     public function setPaths($paths)
@@ -150,7 +165,6 @@ class Application
     {
         $basePath = Paths::get('base');
         if (!is_dir($basePath)) {
-            func_dump($basePath);
             throw new InvalidConfigException('Base path must be a valid directory. Please, set up correct base path in "paths" section of configuration.');
         }
 
@@ -173,6 +187,11 @@ class Application
         }
     }
 
+    public function isRun()
+    {
+        return $this->_isRun;
+    }
+
     public function run()
     {
         $this->beforeRun();
@@ -187,6 +206,8 @@ class Application
 
         $this->_provideModuleEvent('onApplicationRun');
         register_shutdown_function([$this, 'end'], 0);
+
+        $this->_isRun = true;
     }
 
     public function end($status = 0, $response = null, $force = false)
@@ -253,7 +274,8 @@ class Application
             /** @var Controller $controller */
             $controller = new $controllerClass($this->request);
             $controller->run($action, $params);
-        } elseif (is_callable($match['target'])) {
+        }
+        elseif (is_callable($match['target'])) {
             $fn = $match['target'];
             $fn($this->request, $match['params']);
         }

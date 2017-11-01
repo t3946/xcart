@@ -18,7 +18,7 @@ $log_category = 'cron_amazon_tracking_number';
 
 if ($config[$log_category] == "Y") {
     func_backprocess_log($log_category, 'Already launched');
-    $oMail = \Xcart\App\Main\Xcart::app()->mail;
+    $oMail = \Xcart\App\Main\Xcart::app()->oldMail;
     $oMail->to = 'team@s3stores.com';
     $oMail->from = ('team@s3stores.com');
     $oMail->subject = sprintf('Attention! Xcart cron %s Already launched', $log_category);

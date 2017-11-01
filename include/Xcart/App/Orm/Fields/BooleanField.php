@@ -57,4 +57,9 @@ class BooleanField extends Field
     {
         return (bool)parent::getValue();
     }
+
+    public function getFormField($form, $fieldClass = '\Xcart\App\Form\Fields\CheckboxField', array $extra = [])
+    {
+        return parent::getFormField($form, $fieldClass, $extra);
+    }
 }

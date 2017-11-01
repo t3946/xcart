@@ -44,7 +44,7 @@ class SiteConfigModel extends Model
                 'class' => CharField::className(),
                 'null' => false,
                 'default' => 'text',
-                'choises' => [
+                'choices' => [
                     'numeric' => 'numeric',
                     'text' => 'text',
                     'textarea' => 'textarea',

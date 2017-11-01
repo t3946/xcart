@@ -420,6 +420,13 @@ class QuerySet extends QuerySetBase
         return $this->getConnection()->quoteIdentifier($name);
     }
 
+    public function getOrder()
+    {
+        list($order, $options) = $this->getQueryBuilder()->getOrder();
+
+        return $order;
+    }
+
     /**
      * Order by alias
      *
@@ -439,6 +446,9 @@ class QuerySet extends QuerySetBase
                 else if ($value instanceof Manager || $value instanceof QuerySet) {
                     return $value->getQueryBuilder();
                 }
+//                else if ($value instanceof Expression) {
+//                    return $value->toSQL($this->getQueryBuilder());
+//                }
                 else if (is_string($value)) {
                     $direction = substr($value, 0, 1) === '-' ? '-' : '';
 
@@ -647,6 +657,7 @@ class QuerySet extends QuerySetBase
     {
         $clone = clone $this;
         $clone->limit(null);
+        $clone->order([]);
 
         if (!empty($this->_group))
         {

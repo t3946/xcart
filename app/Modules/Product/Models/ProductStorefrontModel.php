@@ -3,7 +3,6 @@ namespace Modules\Product\Models;
 
 use Modules\Sites\Models\SiteModel;
 use Xcart\App\Orm\Fields\ForeignField;
-use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Model;
 
 class ProductStorefrontModel extends Model
@@ -24,7 +23,7 @@ class ProductStorefrontModel extends Model
                 'primary' => true,
                 'null' => false,
             ],
-            'storefront' => [
+            'sf' => [
                 'field' => 'sfid',
                 'class' => ForeignField::className(),
                 'modelClass' => SiteModel::className(),

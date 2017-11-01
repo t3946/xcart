@@ -44,8 +44,12 @@ class ConnectionManager
     public function setConnections(array $connections)
     {
         foreach ($connections as $name => $config) {
-            if (empty($config['wrapperClass'])) {
+
+            if (!isset($config['wrapperClass'])) {
                 $config['wrapperClass'] = $this->defaultWrapperClass;
+            }
+            else if($config['wrapperClass'] === false) {
+                unset($config['wrapperClass']);
             }
 
             $this->connections[$name] = DriverManager::getConnection($config, $this->configuration, $this->eventManager);

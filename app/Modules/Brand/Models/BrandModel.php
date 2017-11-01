@@ -3,9 +3,11 @@
 namespace Modules\Brand\Models;
 
 use Modules\Brand\BrandModule;
+use Modules\Menu\Models\CleanUrlModel;
 use Modules\Product\Models\ProductModel;
 use Modules\Sites\Models\SiteModel;
 use Modules\User\Models\UserModel;
+use Xcart\App\Components\Breadcrumbs;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\AutoMetaModel;
 use Xcart\App\Orm\Fields\AutoField;
@@ -14,6 +16,7 @@ use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\HasManyField;
 use Xcart\App\Orm\Fields\ManyToManyField;
+use Xcart\App\Orm\Fields\OneToOneField;
 
 /**
  * @property mixed brandid
@@ -124,8 +127,39 @@ class BrandModel extends AutoMetaModel
                 'modelClass' => UserModel::className(),
                 'link' => ['provider' => 'login']
             ],
+            'clean_url' => [
+                'class' => HasManyField::className(),
+                'modelClass' => CleanUrlModel::className(),
+                'link' => ['brandid' => 'resource_id'],
+                'extra' => ['resource_type' => 'M'],
+            ],
 
         ];
+    }
+
+    public function getImage()
+    {
+        return ImageBModel::objects()->limit(1)->get(['id' => $this->brandid]);
+    }
+
+    public function getBreadcrumbs()
+    {
+        $bread = new Breadcrumbs();
+
+        $bread->add('Brands', 'brand:list');
+        $bread->add($this->brand, $this->getAbsoluteUrl());
+        return $bread;
+    }
+
+    public function getAbsoluteUrl($full = false)
+    {
+        if ($this->brandid)
+        {
+            return $this->clean_url->limit(1)->get()->urlFromCode('brand:view', $full, $this->storefront->limit(1)->get());
+//            return Xcart::app()->router->url('brand:view', ['id' => $this->brandid, 'slug' => 'TEMP']);
+        }
+
+        return false;
     }
 
     public function getAdminUrl()

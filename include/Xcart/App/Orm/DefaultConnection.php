@@ -12,6 +12,8 @@ class DefaultConnection extends DBALConnection
     private $__enableErrHandler = true;
     private $__ignoreErrors = false;
 
+    private $__countQueries = 0;
+
     public function setErrorHandler($handlerLink)
     {
         $this->__errHandler = $handlerLink;
@@ -83,6 +85,7 @@ class DefaultConnection extends DBALConnection
      */
     public function executeQuery($query, array $params = array(), $types = array(), QueryCacheProfile $qcp = null)
     {
+        $this->__countQueries++;
         return $this->__internalCall(__FUNCTION__, func_get_args());
     }
 
@@ -99,6 +102,7 @@ class DefaultConnection extends DBALConnection
      */
     public function query()
     {
+        $this->__countQueries++;
         return $this->__internalCall(__FUNCTION__, func_get_args());
     }
 
@@ -107,6 +111,7 @@ class DefaultConnection extends DBALConnection
      */
     public function executeUpdate($query, array $params = array(), array $types = array())
     {
+        $this->__countQueries++;
         return $this->__internalCall(__FUNCTION__, func_get_args());
     }
 
@@ -115,6 +120,7 @@ class DefaultConnection extends DBALConnection
      */
     public function exec($statement)
     {
+        $this->__countQueries++;
         return $this->__internalCall(__FUNCTION__, func_get_args());
     }
 
@@ -132,6 +138,11 @@ class DefaultConnection extends DBALConnection
         }
 
         return null;
+    }
+
+    public function getCountQueries()
+    {
+        return $this->__countQueries;
     }
 
     /**
@@ -163,13 +174,12 @@ class DefaultConnection extends DBALConnection
                 $login = $session->get('admin_login') ?: $session->get('admin_login');
             }
 
-            $msg .= "Site        : ".(($_SERVER['HTTPS']) ? 'https://' : 'http://') . $_SERVER["HTTP_HOST"]. $_SERVER['REQUEST_URI']."\n";
+            $msg .= "Site        : " . $_SERVER["HTTP_HOST"]. $_SERVER['REQUEST_URI']."\n";
             $msg .= "Remote IP   : {$_SERVER['REMOTE_ADDR']}\n";
             $msg .= "Logged as   : {$login}\n";
         }
 
         if (!empty($query)) {
-
             $msg .= "SQL query   : {$query}\n";
         }
 
@@ -179,12 +189,12 @@ class DefaultConnection extends DBALConnection
         $msg .= $exception->getTraceAsString();
 
         $oMail = Xcart::app()->mail;
-        $oMail->to = 'team@s3stores.com';
-        $oMail->from = ('team@s3stores.com');
-        $oMail->subject = 'S3 Stores, Inc.: SQL error notification';
-        $oMail->body = $msg;
-        $oMail->sendEmail();
-
+        $oMail->template(
+            'team@s3stores.com',
+            'S3 Stores, Inc.: SQL error notification',
+            'mail/sql_exception.tpl',
+            [ 'msg' => $msg, ]
+        );
 
         if (function_exists('x_log_add')) {
             x_log_add('SQL', $msg);

@@ -10,6 +10,7 @@ class ComposerStaticInited1e2f7cb4425e4bdc0264910bb94e92
         '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
         'ad155f8f1cf0d418fe49e248db8c661b' => __DIR__ . '/..' . '/react/promise/src/functions_include.php',
         'e40631d46120a9c38ea139981f8dab26' => __DIR__ . '/..' . '/ircmaxell/password-compat/lib/password.php',
+        '2c102faa651ef8ea5874edb585946bce' => __DIR__ . '/..' . '/swiftmailer/swiftmailer/lib/swift_required.php',
         'edc6464955a37aa4d5fbf39d40fb6ee7' => __DIR__ . '/..' . '/symfony/polyfill-php55/bootstrap.php',
         '3e2471375464aac821502deb0ac64275' => __DIR__ . '/..' . '/symfony/polyfill-php54/bootstrap.php',
         'a0edc8309cc5e1d60e3047b5df6b7052' => __DIR__ . '/..' . '/guzzlehttp/psr7/src/functions_include.php',
@@ -127,6 +128,10 @@ class ComposerStaticInited1e2f7cb4425e4bdc0264910bb94e92
         'D' => 
         array (
             'Doctrine\\Common\\Cache\\' => 22,
+        ),
+        'C' => 
+        array (
+            'Cocur\\Slugify\\' => 14,
         ),
     );
 
@@ -264,6 +269,10 @@ class ComposerStaticInited1e2f7cb4425e4bdc0264910bb94e92
         array (
             0 => __DIR__ . '/..' . '/doctrine/cache/lib/Doctrine/Common/Cache',
         ),
+        'Cocur\\Slugify\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/cocur/slugify/src',
+        ),
     );
 
     public static $prefixesPsr0 = array (
@@ -279,6 +288,13 @@ class ComposerStaticInited1e2f7cb4425e4bdc0264910bb94e92
             'Omnipay\\Common\\' => 
             array (
                 0 => __DIR__ . '/..' . '/omnipay/common/src',
+            ),
+        ),
+        'I' => 
+        array (
+            'Imagine' => 
+            array (
+                0 => __DIR__ . '/..' . '/imagine/imagine/lib',
             ),
         ),
         'G' => 
@@ -384,6 +400,11 @@ class ComposerStaticInited1e2f7cb4425e4bdc0264910bb94e92
         'FBAOutboundServiceMWS_Model_CreateFulfillmentOrderItemList' => __DIR__ . '/..' . '/caponica/amazon-mws-complete/src/AmazonPhpClientLibrary/FBAOutboundServiceMWS/Model/CreateFulfillmentOrderItemList.php',
         'FBAOutboundServiceMWS_Model_CreateFulfillmentOrderRequest' => __DIR__ . '/..' . '/caponica/amazon-mws-complete/src/AmazonPhpClientLibrary/FBAOutboundServiceMWS/Model/CreateFulfillmentOrderRequest.php',
         'FBAOutboundServiceMWS_Model_CreateFulfillmentOrderResponse' => __DIR__ . '/..' . '/caponica/amazon-mws-complete/src/AmazonPhpClientLibrary/FBAOutboundServiceMWS/Model/CreateFulfillmentOrderResponse.php',
+        'FBAOutboundServiceMWS_Model_CreateFulfillmentReturnRequest' => __DIR__ . '/..' . '/caponica/amazon-mws-complete/src/AmazonPhpClientLibrary/FBAOutboundServiceMWS/Model/CreateFulfillmentReturnRequest.php',
+        'FBAOutboundServiceMWS_Model_CreateFulfillmentReturnResponse' => __DIR__ . '/..' . '/caponica/amazon-mws-complete/src/AmazonPhpClientLibrary/FBAOutboundServiceMWS/Model/CreateFulfillmentReturnResponse.php',
+        'FBAOutboundServiceMWS_Model_CreateFulfillmentReturnResult' => __DIR__ . '/..' . '/caponica/amazon-mws-complete/src/AmazonPhpClientLibrary/FBAOutboundServiceMWS/Model/CreateFulfillmentReturnResult.php',
+        'FBAOutboundServiceMWS_Model_CreateReturnItem' => __DIR__ . '/..' . '/caponica/amazon-mws-complete/src/AmazonPhpClientLibrary/FBAOutboundServiceMWS/Model/CreateReturnItem.php',
+        'FBAOutboundServiceMWS_Model_CreateReturnItemList' => __DIR__ . '/..' . '/caponica/amazon-mws-complete/src/AmazonPhpClientLibrary/FBAOutboundServiceMWS/Model/CreateReturnItemList.php',
         'FBAOutboundServiceMWS_Model_Currency' => __DIR__ . '/..' . '/caponica/amazon-mws-complete/src/AmazonPhpClientLibrary/FBAOutboundServiceMWS/Model/Currency.php',
         'FBAOutboundServiceMWS_Model_DeliveryWindow' => __DIR__ . '/..' . '/caponica/amazon-mws-complete/src/AmazonPhpClientLibrary/FBAOutboundServiceMWS/Model/DeliveryWindow.php',
         'FBAOutboundServiceMWS_Model_DeliveryWindowList' => __DIR__ . '/..' . '/caponica/amazon-mws-complete/src/AmazonPhpClientLibrary/FBAOutboundServiceMWS/Model/DeliveryWindowList.php',
@@ -420,15 +441,27 @@ class ComposerStaticInited1e2f7cb4425e4bdc0264910bb94e92
         'FBAOutboundServiceMWS_Model_GetServiceStatusRequest' => __DIR__ . '/..' . '/caponica/amazon-mws-complete/src/AmazonPhpClientLibrary/FBAOutboundServiceMWS/Model/GetServiceStatusRequest.php',
         'FBAOutboundServiceMWS_Model_GetServiceStatusResponse' => __DIR__ . '/..' . '/caponica/amazon-mws-complete/src/AmazonPhpClientLibrary/FBAOutboundServiceMWS/Model/GetServiceStatusResponse.php',
         'FBAOutboundServiceMWS_Model_GetServiceStatusResult' => __DIR__ . '/..' . '/caponica/amazon-mws-complete/src/AmazonPhpClientLibrary/FBAOutboundServiceMWS/Model/GetServiceStatusResult.php',
+        'FBAOutboundServiceMWS_Model_InvalidItemReason' => __DIR__ . '/..' . '/caponica/amazon-mws-complete/src/AmazonPhpClientLibrary/FBAOutboundServiceMWS/Model/InvalidItemReason.php',
+        'FBAOutboundServiceMWS_Model_InvalidReturnItem' => __DIR__ . '/..' . '/caponica/amazon-mws-complete/src/AmazonPhpClientLibrary/FBAOutboundServiceMWS/Model/InvalidReturnItem.php',
+        'FBAOutboundServiceMWS_Model_InvalidReturnItemList' => __DIR__ . '/..' . '/caponica/amazon-mws-complete/src/AmazonPhpClientLibrary/FBAOutboundServiceMWS/Model/InvalidReturnItemList.php',
         'FBAOutboundServiceMWS_Model_ListAllFulfillmentOrdersByNextTokenRequest' => __DIR__ . '/..' . '/caponica/amazon-mws-complete/src/AmazonPhpClientLibrary/FBAOutboundServiceMWS/Model/ListAllFulfillmentOrdersByNextTokenRequest.php',
         'FBAOutboundServiceMWS_Model_ListAllFulfillmentOrdersByNextTokenResponse' => __DIR__ . '/..' . '/caponica/amazon-mws-complete/src/AmazonPhpClientLibrary/FBAOutboundServiceMWS/Model/ListAllFulfillmentOrdersByNextTokenResponse.php',
         'FBAOutboundServiceMWS_Model_ListAllFulfillmentOrdersByNextTokenResult' => __DIR__ . '/..' . '/caponica/amazon-mws-complete/src/AmazonPhpClientLibrary/FBAOutboundServiceMWS/Model/ListAllFulfillmentOrdersByNextTokenResult.php',
         'FBAOutboundServiceMWS_Model_ListAllFulfillmentOrdersRequest' => __DIR__ . '/..' . '/caponica/amazon-mws-complete/src/AmazonPhpClientLibrary/FBAOutboundServiceMWS/Model/ListAllFulfillmentOrdersRequest.php',
         'FBAOutboundServiceMWS_Model_ListAllFulfillmentOrdersResponse' => __DIR__ . '/..' . '/caponica/amazon-mws-complete/src/AmazonPhpClientLibrary/FBAOutboundServiceMWS/Model/ListAllFulfillmentOrdersResponse.php',
         'FBAOutboundServiceMWS_Model_ListAllFulfillmentOrdersResult' => __DIR__ . '/..' . '/caponica/amazon-mws-complete/src/AmazonPhpClientLibrary/FBAOutboundServiceMWS/Model/ListAllFulfillmentOrdersResult.php',
+        'FBAOutboundServiceMWS_Model_ListReturnReasonCodesRequest' => __DIR__ . '/..' . '/caponica/amazon-mws-complete/src/AmazonPhpClientLibrary/FBAOutboundServiceMWS/Model/ListReturnReasonCodesRequest.php',
+        'FBAOutboundServiceMWS_Model_ListReturnReasonCodesResponse' => __DIR__ . '/..' . '/caponica/amazon-mws-complete/src/AmazonPhpClientLibrary/FBAOutboundServiceMWS/Model/ListReturnReasonCodesResponse.php',
+        'FBAOutboundServiceMWS_Model_ListReturnReasonCodesResult' => __DIR__ . '/..' . '/caponica/amazon-mws-complete/src/AmazonPhpClientLibrary/FBAOutboundServiceMWS/Model/ListReturnReasonCodesResult.php',
         'FBAOutboundServiceMWS_Model_NotificationEmailList' => __DIR__ . '/..' . '/caponica/amazon-mws-complete/src/AmazonPhpClientLibrary/FBAOutboundServiceMWS/Model/NotificationEmailList.php',
+        'FBAOutboundServiceMWS_Model_ReasonCodeDetails' => __DIR__ . '/..' . '/caponica/amazon-mws-complete/src/AmazonPhpClientLibrary/FBAOutboundServiceMWS/Model/ReasonCodeDetails.php',
+        'FBAOutboundServiceMWS_Model_ReasonCodeDetailsList' => __DIR__ . '/..' . '/caponica/amazon-mws-complete/src/AmazonPhpClientLibrary/FBAOutboundServiceMWS/Model/ReasonCodeDetailsList.php',
         'FBAOutboundServiceMWS_Model_ResponseHeaderMetadata' => __DIR__ . '/..' . '/caponica/amazon-mws-complete/src/AmazonPhpClientLibrary/FBAOutboundServiceMWS/Model/ResponseHeaderMetadata.php',
         'FBAOutboundServiceMWS_Model_ResponseMetadata' => __DIR__ . '/..' . '/caponica/amazon-mws-complete/src/AmazonPhpClientLibrary/FBAOutboundServiceMWS/Model/ResponseMetadata.php',
+        'FBAOutboundServiceMWS_Model_ReturnAuthorization' => __DIR__ . '/..' . '/caponica/amazon-mws-complete/src/AmazonPhpClientLibrary/FBAOutboundServiceMWS/Model/ReturnAuthorization.php',
+        'FBAOutboundServiceMWS_Model_ReturnAuthorizationList' => __DIR__ . '/..' . '/caponica/amazon-mws-complete/src/AmazonPhpClientLibrary/FBAOutboundServiceMWS/Model/ReturnAuthorizationList.php',
+        'FBAOutboundServiceMWS_Model_ReturnItem' => __DIR__ . '/..' . '/caponica/amazon-mws-complete/src/AmazonPhpClientLibrary/FBAOutboundServiceMWS/Model/ReturnItem.php',
+        'FBAOutboundServiceMWS_Model_ReturnItemList' => __DIR__ . '/..' . '/caponica/amazon-mws-complete/src/AmazonPhpClientLibrary/FBAOutboundServiceMWS/Model/ReturnItemList.php',
         'FBAOutboundServiceMWS_Model_ScheduledDeliveryInfo' => __DIR__ . '/..' . '/caponica/amazon-mws-complete/src/AmazonPhpClientLibrary/FBAOutboundServiceMWS/Model/ScheduledDeliveryInfo.php',
         'FBAOutboundServiceMWS_Model_ShippingSpeedCategoryList' => __DIR__ . '/..' . '/caponica/amazon-mws-complete/src/AmazonPhpClientLibrary/FBAOutboundServiceMWS/Model/ShippingSpeedCategoryList.php',
         'FBAOutboundServiceMWS_Model_StringList' => __DIR__ . '/..' . '/caponica/amazon-mws-complete/src/AmazonPhpClientLibrary/FBAOutboundServiceMWS/Model/StringList.php',

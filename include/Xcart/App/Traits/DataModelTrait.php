@@ -2,11 +2,16 @@
 namespace Xcart\App\Traits;
 
 use Exception;
-use Xcart\App\Orm\ModelInterface;
+use Xcart\App\Orm\Model;
 use Xcart\Data;
 
 trait DataModelTrait
 {
+    /**
+     * @var Data|null
+     */
+    private $dataModel = null;
+
     /**
      * @return string class of Data
      */
@@ -15,18 +20,17 @@ trait DataModelTrait
         return Data::className();
     }
 
-    private $dataModel = null;
-
     /**
      * @return Data
      */
     public function getDataModel()
     {
-        /** @var ModelInterface $this */
+        /** @var Model $this */
 
         if (!$this->dataModel) {
             $class = static::getDataModelClass();
-            $this->dataModel = new $class($this->getAttributes());
+            $this->dataModel = new $class();
+            $this->dataModel->setAttributes($this->getAttributes());
 
             $this->afterFetchDataModel($this->dataModel);
         }
@@ -37,9 +41,15 @@ trait DataModelTrait
     /**
      * @param Data $model
      */
-    public function afterFetchDataModel($model)
-    {
+    public function afterFetchDataModel($model) {}
 
+    public function afterSetAttribute($name, $value)
+    {
+        parent::afterSetAttribute($name, $value);
+
+        if ($this->dataModel) {
+            $this->dataModel->setAttribute($name, $value);
+        }
     }
 
 

@@ -4,12 +4,14 @@ namespace Xcart\App\Controller;
 use ReflectionMethod;
 use Xcart\App\Exceptions\HttpException;
 use Xcart\App\Exceptions\InvalidConfigException;
+use Xcart\App\Helpers\ClassNames;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Request\HttpRequest;
 use Xcart\App\Request\RequestManager;
 
 class Controller
 {
+    use ClassNames;
     /**
      * @var HttpRequest
      */
@@ -27,6 +29,13 @@ class Controller
     }
 
     public function init() { }
+
+    /**
+     * For global caching keys
+     */
+    public function getAdvancedCacheData() {
+        return [];
+    }
 
     public function getRequest()
     {
@@ -54,28 +63,37 @@ class Controller
     {
         $method = new ReflectionMethod($this, $action);
         $ps = [];
-        if ($method->getNumberOfParameters() > 0) {
+        if ($method->getNumberOfParameters() > 0)
+        {
             foreach ($method->getParameters() as $param) {
                 $name = $param->getName();
+
                 if (isset($params[$name])) {
                     if ($param->isArray()) {
                         $ps[] = is_array($params[$name]) ? $params[$name] : [$params[$name]];
-                    } elseif (!is_array($params[$name])) {
+                    }
+                    elseif (!is_array($params[$name])) {
                         $ps[] = $params[$name];
-                    } else {
+                    }
+                    else {
                         return false;
                     }
-                } elseif ($param->isDefaultValueAvailable()) {
+                }
+                elseif ($param->isDefaultValueAvailable()) {
                     $ps[] = $param->getDefaultValue();
-                } else {
+                }
+                else {
                     $class = get_class();
                     throw new InvalidConfigException("Param {$name} for action {$action} in controller {$class} must be defined. Please, check your routes.");
                 }
             }
             $method->invokeArgs($this, $ps);
-        } else {
-            $this->{$action}();
         }
+        else {
+            $method->invokeArgs($this, $params);//temp
+//            $this->{$action}();
+        }
+
         return true;
     }
 
@@ -86,12 +104,13 @@ class Controller
      */
     public function render($template, $params = [])
     {
-        return Xcart::app()->template->render($template, $params);
+        $data = ['this' => $this];
+        return Xcart::app()->template->render($template, array_replace($data, $params));
     }
 
-    public function redirect($url, $data = [], $status = 302)
+    public function redirect($url, $data = [], $status = 302, $query = [])
     {
-        $this->_request->redirect($url, $data, $status);
+        $this->_request->redirect($url, $data, $status, $query);
     }
 
     public function refresh()

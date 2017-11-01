@@ -7,6 +7,9 @@ use Xcart\App\Template\TemplateLibrary;
 
 class StaticLibrary extends TemplateLibrary
 {
+    static $frontend = [];
+    static $backend = [];
+
     protected static function getFrontendVersionsDir()
     {
         return Paths::get('www.static.frontend.versions');
@@ -14,44 +17,126 @@ class StaticLibrary extends TemplateLibrary
 
     protected static function getBackendVersionsDir()
     {
-        return Paths::get('www.static.backend.versions');
+        return Paths::get('www.static_admin.versions');
     }
 
     protected static function getVersionFromContent($content)
     {
-        $space = strpos($content, ' ');
-        if ($space !== false) {
-            return substr($content, 0, $space);
+        $result = [];
+
+        $rows = preg_split("/\n/", $content);
+        foreach ($rows as $row) {
+            $tmp = explode('  ', $row);
+            if (count($tmp) == 2) {
+                $result[trim($tmp[0])] = strtolower(trim($tmp[1], ". \t\n\r\0\x0B"));
+            }
         }
-        return null;
+
+        return $result;
     }
 
-    protected static function getVersion($file, $default = 1)
+    protected static function getVersions($file)
     {
-        if (is_file($file) && ($content = file_get_contents($file)) && ($version = self::getVersionFromContent($content))) {
-            return $version;
+        if (is_file($file) && ($content = file_get_contents($file)) && ($versions = self::getVersionFromContent($content))) {
+            return $versions;
         }
-        return $default;
+        return [];
+    }
+
+    protected static function initFrontend()
+    {
+        if (empty(self::$frontend))
+        {
+            $dir = self::getFrontendVersionsDir() . DIRECTORY_SEPARATOR;
+
+            self::$frontend = array_merge(self::$frontend, self::getVersions($dir . 'css.yml'));
+            self::$frontend = array_merge(self::$frontend, self::getVersions($dir . 'js.yml'));
+            self::$frontend = array_merge(self::$frontend, self::getVersions($dir . 'vendor_js.yml'));
+        }
+    }
+
+    protected static function initBackend()
+    {
+        if (empty(self::$backend))
+        {
+            $dir = self::getBackendVersionsDir() . DIRECTORY_SEPARATOR;
+
+            self::$backend = array_merge(self::$backend, self::getVersions($dir . 'css.yml'));
+            self::$backend = array_merge(self::$backend, self::getVersions($dir . 'js.yml'));
+        }
     }
 
     /**
      * @kind function
-     * @name frontend_css_version
-     * @return int|void
+     * @name frontend_version
+     * @return int
      */
-    public static function getFrontendCssVersion()
+    public static function getFrontendVersion($params)
     {
-        return self::getVersion(self::getFrontendVersionsDir() . DIRECTORY_SEPARATOR . 'css.yml');
+        $resource = $params['resource'];
+
+        self::initFrontend();
+        $resource = strtolower($resource);
+
+        foreach (self::$frontend as $version => $file) {
+            if (strpos($file, $resource) !== false) {
+                return $version;
+            }
+        }
+
+        return 1;
     }
 
     /**
      * @kind function
-     * @name frontend_js_version
-     * @return int|void
+     * @name backend_version
+     * @return int
      */
-    public static function getFrontendJsVersion()
+    public static function getBackendVersion($params)
     {
-        return self::getVersion(self::getFrontendVersionsDir() . DIRECTORY_SEPARATOR . 'js.yml');
+        $resource = $params['resource'];
+
+        self::initBackend();
+        $resource = strtolower($resource);
+
+        foreach (self::$backend as $version => $file) {
+            if (strpos($file, $resource) !== false) {
+                return $version;
+            }
+        }
+
+        return 1;
+    }
+
+    /**
+     * @kind function
+     * @name inline
+     * @return string
+     */
+    public static function getInline($params)
+    {
+        $resource = $params['file'];
+
+        if (is_file($resource)) {
+            return file_get_contents($resource);
+        }
+
+        return '';
+    }
+
+    /**
+     * @kind modifier
+     * @name base64
+     * @return string
+     */
+    public static function base64($data, $type = 'encode')
+    {
+        if ($type == 'decode') {
+            return base64_decode($data);
+        }
+        else if ($type == 'encode') {
+            return base64_encode($data);
+        }
     }
 
     /**
@@ -61,7 +146,7 @@ class StaticLibrary extends TemplateLibrary
      */
     public static function getBackendCssVersion()
     {
-        return self::getVersion(self::getBackendVersionsDir() . DIRECTORY_SEPARATOR . 'css.yml');
+        return self::getBackendVersion(['resource' => 'css']);
     }
 
     /**
@@ -71,6 +156,6 @@ class StaticLibrary extends TemplateLibrary
      */
     public static function getBackendJsVersion()
     {
-        return self::getVersion(self::getBackendVersionsDir() . DIRECTORY_SEPARATOR . 'js.yml');
+        return self::getBackendVersion(['resource' => 'js']);
     }
 }

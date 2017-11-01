@@ -98,11 +98,8 @@
     {include file="meta.tpl" }
 
 {if ($main eq "product")}
-    {if $product && $product.productid == 346536}
-        <link rel="amphtml" href="https://www.artistsupplysource.com/static/products/346536/sienna-horizon-counterweight-studio-easel-craftech-amp.html">
-    {/if}
-    {if $product && $product.productid == 29794}
-        <link rel="amphtml" href="https://www.artistsupplysource.com/static/products/29794/fairgate-r-aluminum-english-metric-ruler-metallic-aluminum-40-ruler-model-ms-100-price-per-each-amp.html">
+    {if $oProduct}
+        <link rel="amphtml" href="{$oProduct->getAbsoluteUrl(true, true)}">
     {/if}
 {* igor_async *}
 <script src="{$SkinDir}/jquery.tooltip.js" type="text/javascript"></script>
@@ -406,7 +403,7 @@ function func_load_ajax_carousel_products(section_name)
 {/if}
 
 {if $use_schema_org eq "Y" && $main eq "product"}
-<meta itemscope="" itemtype="http://schema.org/Product" itemref="so_image so_category so_name so_url so_description so_gtin so_weight so_brand so_manuf so_sku so_mpn so_model so_offer"/>
+<meta itemscope="" itemtype="http://schema.org/Product" itemref="{if !$oProduct->isGroupRoot()}so_image so_gtin so_weight{/if} so_category so_name so_url so_description so_brand so_manuf so_sku so_mpn so_model so_offer"/>
 {/if}
 <table cellpadding="0" cellspacing="0" width="100%">
 <tr><td colspan=3 height="10">&nbsp;</td></tr>

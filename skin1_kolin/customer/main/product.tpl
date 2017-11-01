@@ -414,7 +414,11 @@
                                {$config.Security.ssl_seal}
                             </div>
                             {/if}
-
+                            <span id="so_o_price_spec" itemprop="priceSpecification" itemscope itemtype="http://schema.org/PriceSpecification">
+                                <meta itemprop="price minPrice" content="{$oProduct->getFrontendPrice()}"/>
+                                <meta itemprop="maxPrice" content="{$oProduct->getFrontendPrice(2)}"/>
+                                <meta itemprop="priceCurrency" content="USD"/>
+                            </span>
                         </td>
                     {/if}
                 </tr>
