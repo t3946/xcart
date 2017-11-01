@@ -5,6 +5,7 @@ namespace Modules\Cart\Forms\CouponRestrictions;
 use Modules\Cart\Discounts\Restrictions\DateRestriction;
 use Modules\Cart\Forms\DiscountRestrictionForm;
 use Xcart\App\Form\Fields\DateField;
+use Xcart\App\Form\Fields\DateTimeField;
 
 class RestrictionDatesForm extends DiscountRestrictionForm
 {
@@ -19,7 +20,7 @@ class RestrictionDatesForm extends DiscountRestrictionForm
 
         return array_merge(parent::getFields(), [
             'start' => [
-                'class' => DateField::className(),
+                'class' => DateTimeField::className(),
                 'required' => true,
                 'value' => empty($data['start']) ? '': $data['start'],
             ],
