@@ -6,7 +6,7 @@
             </tr>
             {if $products}
                 {foreach $products as $product}
-                    <tr data-prefix="{$product->getNotModelAttribute('prefix')}-GROUP-{$product->getNotModelAttribute('g_max')}"
+                    <tr data-prefix="{$product->getFromQueryAttribute('prefix')}-GROUP-{$product->getFromQueryAttribute('g_max')}"
                         data-description="{$product->fulldescr}"
                         data-product-id="{$product->productid}"
                         data-manufacturer-id="{$product->manufacturerid}">

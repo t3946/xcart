@@ -132,11 +132,11 @@ if (!empty($cidev_storefronts) && is_array($cidev_storefronts)) {
             /** @var UpdatedProductModel[] $doubles */
             /** @var UpdatedProductModel $new */
             foreach ($doubles as $double) {
-                UpdatedProductModel::objects()->delete(['resourceid' => $double->resourceid, 'type__in' => $double->getNotModelAttribute('gtype')]);
-                list($new) = UpdatedProductModel::objects()->getOrNew(['resourceid' => $double->resourceid, 'type' => $double->getNotModelAttribute('utype')]);
+                UpdatedProductModel::objects()->delete(['resourceid' => $double->resourceid, 'type__in' => $double->getFromQueryAttribute('gtype')]);
+                list($new) = UpdatedProductModel::objects()->getOrNew(['resourceid' => $double->resourceid, 'type' => $double->getFromQueryAttribute('utype')]);
 
                 $or_mask = array_reduce(
-                    explode(',', $double->getNotModelAttribute('gmask')),
+                    explode(',', $double->getFromQueryAttribute('gmask')),
                     function($a, $b) use ($defaultMask) {
                         if ($a === 'null') {
                             $a = $defaultMask;
