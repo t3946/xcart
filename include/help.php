@@ -37,7 +37,7 @@ if (!defined('XCART_SESSION_START')) {
 
 x_load('crypt', 'mail', 'user');
 
-$location[] = [func_get_langvar_by_name("lbl_help_zone"), "help.php"];
+$location[] = [func_get_langvar_by_name("lbl_help_zone")];
 
 if (!empty($login)) {
     $userinfo = func_userinfo($login, $login_type);
