@@ -213,7 +213,7 @@ if (!empty($manufacturers) && is_array($manufacturers) && !empty($states)) {
         $list_of_updated_suppliers .= $manufacturer_info["manufacturer"] . "\n";
 
         if (!empty($failed_states)) {
-            $list_of_updated_suppliers .= "Failed states: \n" . $failed_states . "\n\n" . "Failed requests count {$dx_fail_iterator} \n";
+            $list_of_updated_suppliers .= "Failed states: \n" . $failed_states . "\n\n" . "Failed requests count {$dx_fail_iterator} \n\n\n";
         }
 
         unset($failed_states);
