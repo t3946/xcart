@@ -1,15 +1,9 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: maksim
- * Date: 31.10.17
- * Time: 17:57
- */
-
-namespace Modules\Cart\Forms;
+namespace Modules\Cart\Forms\CouponRestrictions;
 
 
 use Modules\Cart\Discounts\Restrictions\DateRestriction;
+use Modules\Cart\Forms\DiscountRestrictionForm;
 use Xcart\App\Form\Fields\DateField;
 
 class RestrictionDatesForm extends DiscountRestrictionForm
@@ -36,4 +30,6 @@ class RestrictionDatesForm extends DiscountRestrictionForm
             ],
         ]);
     }
+
+
 }

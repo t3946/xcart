@@ -9,5 +9,5 @@ interface IDiscountRestriction
 
     public function getFormClass();
 
-    public function toString();
+    public function dataToString();
 }

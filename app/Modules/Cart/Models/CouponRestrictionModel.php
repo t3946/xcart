@@ -53,7 +53,7 @@ class CouponRestrictionModel extends Model
     public function __toString()
     {
         if ($restrict = $this->getRestrict()) {
-            return $restrict->getName() ." [{$restrict->toString()}]";
+            return $restrict->getName() ." [{$restrict->dataToString()}]";
         }
 
         return parent::__toString();

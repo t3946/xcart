@@ -86,7 +86,7 @@ class DiscountRestrictionForm extends ModelForm
             {
                 if ($filename->isDir()) continue;
                 $name = $filename->getBasename('.php');
-                $class = implode('\\', [__NAMESPACE__,  $name]);
+                $class = implode('\\', [__NAMESPACE__, 'CouponRestrictions', $name]);
 
                 if (is_subclass_of($class, self::$class )) {
                     $classes[] = $class;

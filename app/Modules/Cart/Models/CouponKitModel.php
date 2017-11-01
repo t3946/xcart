@@ -78,4 +78,9 @@ class CouponKitModel extends Model
     {
         return $this->name . " [{$this->code}]";
     }
+
+    public function afterDelete($owner)
+    {
+        $owner->restrictions->delete();
+    }
 }

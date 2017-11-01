@@ -32627,8 +32627,8 @@ $(function () {
         var top = (window.screen.height/2)-(h/2);
 
         var list = getList($this);
-        var hndl = window.open(list.extendUrl($this.attr('href'),'popup', true), document.title, "width="+w+", height="+h+", scrollbars=yes");
-        hndl.moveTo(left, top);
+        var hndl = window.open(list.extendUrl($this.attr('href'),'popup', true), document.title, "width="+w+", height="+h+", left="+left+", top="+top+", scrollbars=yes");
+        // hndl.moveTo(left, top);
 
         var fnc = function(e) {
             setTimeout(()=>{

@@ -3,9 +3,7 @@
 namespace Modules\Cart\Discounts\Restrictions;
 
 use Modules\Cart\CartModule;
-use Modules\Cart\Forms\DiscountRestrictionForm;
-use Modules\Cart\Forms\RestrictionDatesForm;
-use Modules\Cart\Interfaces\IDiscountRestriction;
+use Modules\Cart\Forms\CouponRestrictions\RestrictionDatesForm;
 
 class DateRestriction extends AbstractRestriction
 {
@@ -25,8 +23,8 @@ class DateRestriction extends AbstractRestriction
 
     }
 
-    public function toString()
+    public function dataToString()
     {
-        return "From: {$this->data['start']}, To: {$this->data['end']}";
+        return "{$this->data['start']} - {$this->data['end']}";
     }
 }
