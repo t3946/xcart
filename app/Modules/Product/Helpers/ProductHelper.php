@@ -189,7 +189,7 @@ class ProductHelper
                     return trim(mb_substr($s, 0, mb_strrpos($s, ' ')));
                 }
             }
-            return mb_substr($a, 0, ++$i);
+            return mb_substr($b, 0, ++$i);
         }
 
         $b = null;
