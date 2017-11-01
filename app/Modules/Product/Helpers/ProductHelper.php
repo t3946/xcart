@@ -167,7 +167,7 @@ class ProductHelper
         function intersect($arr1, $arr2) {
             $res = [];
             foreach ($arr1 as $key => $val) {
-                if (in_array($val, $arr2)){
+                if (in_array(mb_strtolower($val), array_map('strtolower', $arr2))){
                     $res[] = $val;
                 } else {
                     break;
