@@ -33,6 +33,8 @@ class DiscountRestrictionAdmin extends ListViewAdmin
                 $form = new $_GET['form'];
             }
             catch (\Exception $e) {
+                dd($e->getTraceAsString());
+
                 $form = new $defClass();
             }
 

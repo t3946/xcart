@@ -3,14 +3,14 @@
 namespace Modules\Cart\Discounts\Restrictions;
 
 use Modules\Cart\CartModule;
-use Modules\Cart\Forms\CouponRestrictions\CountUsesForm;
+use Modules\Cart\Forms\CouponRestrictions\CountUsesRestrictionForm;
 
 class CountUsedRestriction extends AbstractRestriction
 {
 
     public function getFormClass()
     {
-        return CountUsesForm::className();
+        return CountUsesRestrictionForm::className();
     }
 
     public function getName()

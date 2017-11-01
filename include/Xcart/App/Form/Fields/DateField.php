@@ -13,7 +13,6 @@ class DateField extends CharField
     public function render()
     {
         $id = $this->getHtmlId();
-        $date = $this->getDateFromValue();
         $airOptions = $this->getAirDPOptions();
         $airOptions = json_encode($airOptions);
 
@@ -21,9 +20,19 @@ class DateField extends CharField
     $('#$id')
         .datepicker({$airOptions})
         .data('datepicker')
-        .selectDate(new Date({$date->format('Y')}, {$date->format('m')}-1, {$date->format('d')}, {$date->format('H')}, {$date->format('i')}));
+        .selectDate({$this->getJSDate()});
 })()</script>";
         return parent::render() . $js;
+    }
+
+    public function getJSDate()
+    {
+        if ($this->getValue()) {
+            $date = $this->getDateFromValue();
+            return "new Date({$date->format('Y')}, {$date->format('m')}-1, {$date->format('d')}, {$date->format('H')}, {$date->format('i')})";
+        }
+
+        return;
     }
 
     public function getAirDPOptions()

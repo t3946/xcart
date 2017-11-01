@@ -7,7 +7,7 @@ use Modules\Cart\Forms\DiscountRestrictionForm;
 use Xcart\App\Form\Fields\DateField;
 use Xcart\App\Form\Fields\DateTimeField;
 
-class RestrictionDatesForm extends DiscountRestrictionForm
+class DatesRestrictionForm extends DiscountRestrictionForm
 {
     public static function getRestrictClass()
     {

@@ -13,7 +13,7 @@ use Modules\Cart\Discounts\Restrictions\CountUsedRestriction;
 use Modules\Cart\Forms\DiscountRestrictionForm;
 use Xcart\App\Form\Fields\NumberField;
 
-class CountUsesForm extends DiscountRestrictionForm
+class CountUsesRestrictionForm extends DiscountRestrictionForm
 {
     public static function getRestrictClass()
     {

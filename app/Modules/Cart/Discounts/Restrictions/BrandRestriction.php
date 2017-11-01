@@ -3,19 +3,20 @@
 namespace Modules\Cart\Discounts\Restrictions;
 
 use Modules\Cart\CartModule;
+use Modules\Cart\Forms\CouponRestrictions\BrandRestrictionForm;
 use Modules\Cart\Forms\CouponRestrictions\DatesRestrictionForm;
 
-class DateRestriction extends AbstractRestriction
+class BrandRestriction extends AbstractRestriction
 {
 
     public function getFormClass()
     {
-        return DatesRestrictionForm::className();
+        return BrandRestrictionForm::className();
     }
 
     public function getName()
     {
-        return CartModule::t('Date restriction');
+        return CartModule::t('Brand restriction');
     }
 
     public function validate()
@@ -25,6 +26,6 @@ class DateRestriction extends AbstractRestriction
 
     public function dataToString()
     {
-        return "{$this->data['start']} - {$this->data['end']}";
+        return "";
     }
 }
