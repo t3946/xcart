@@ -40,29 +40,6 @@ class DropDownField extends Field
      */
     public $disabled = [];
 
-//    public function render()
-//    {
-//        $label = $this->renderLabel();
-//        $input = $this->renderInput();
-//
-//        $hint = $this->hint ? $this->renderHint() : '';
-//        $errors = $this->renderErrors();
-//
-//        $name = $this->getHtmlName();
-//        return implode("\n", ["<input type='hidden' value='' name='{$name}' />", $label, $input, $hint, $errors]);
-//    }
-//
-//    public function renderInput()
-//    {
-//        return strtr($this->template, [
-//            '{type}' => $this->type,
-//            '{id}' => $this->getHtmlId(),
-//            '{input}' => $this->getInputHtml(),
-//            '{name}' => $this->multiple ? $this->getHtmlName() . '[]' : $this->getHtmlName(),
-//            '{html}' => $this->getHtmlAttributes()
-//        ]);
-//    }
-
     public function getCommonData()
     {
         return [
@@ -75,9 +52,8 @@ class DropDownField extends Field
         return $this->_selected;
     }
 
-    public function getChoises()
+    public function getChoices()
     {
-        $out = '';
         $data = [];
         $selected = [];
         $choices = [];
@@ -140,7 +116,7 @@ class DropDownField extends Field
                     }
                 }
             }
-            elseif ($this->form instanceof Form) {
+            elseif ($this->getForm() instanceof Form) {
                 if (!is_array($this->value)) {
                     if ($this->value) {
                         $selected = [$this->value];
@@ -152,14 +128,10 @@ class DropDownField extends Field
             }
 
             if ($this->multiple) {
-                $this->html['multiple'] = 'multiple';
+                $this->_attributes['multiple'] = 'multiple';
             }
-
-            $this->_selected = $selected;
-            return $data;
         }
-
-        if ($this->form instanceof ModelForm && $this->form->getModel()->hasField($this->name)) {
+        elseif  ($this->form instanceof ModelForm && $this->form->getModel()->hasField($this->name)) {
             $model = $this->form->getModel();
             $field = $model->getField($this->name);
 
@@ -192,7 +164,7 @@ class DropDownField extends Field
                 $modelClass = $field->modelClass;
                 $models = $modelClass::objects()->all();
 
-                $this->html['multiple'] = 'multiple';
+                $this->_attributes['multiple'] = 'multiple';
 
                 foreach ($models as $item) {
                     $data[$item->pk] = (string)$item;

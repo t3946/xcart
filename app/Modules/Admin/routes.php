@@ -12,6 +12,11 @@ return [
         'name' => 'list_owned'
     ],
     [
+        'route' => '/suggestion/{:module}/{:admin}/{:entity}',
+        'target' => ['\Modules\Admin\Controllers\AdminController', 'suggestion'],
+        'name' => 'suggestion'
+    ],
+    [
         'route' => '/list/{:module}/{:admin}/{:id}',
         'target' => ['\Modules\Admin\Controllers\AdminController', 'all'],
         'name' => 'list_nested'

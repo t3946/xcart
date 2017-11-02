@@ -3,6 +3,7 @@ namespace Modules\Cart\Admin;
 
 use Modules\Admin\Contrib\Admin;
 use Modules\Admin\Contrib\ListViewAdmin;
+use Modules\Brand\Models\BrandModel;
 use Modules\Cart\Forms\CouponKitForm;
 use Modules\Cart\Forms\DiscountRestrictionForm;
 use Modules\Cart\Forms\RestrictionDatesForm;
@@ -23,20 +24,31 @@ class DiscountRestrictionAdmin extends ListViewAdmin
         return ['(string)'];
     }
 
+    public function getSuggestionColumns()
+    {
+        return [
+            'brand' => [
+                'class' => BrandModel::className(),
+                'columns' => [
+                    'brand', 'pk'
+                ]
+            ]
+        ];
+    }
 
     public function getForm()
     {
         $defClass = $this->getInstance()->getFormClass();
 
         if (!empty($_GET['form'])) {
-            try {
+//            try {
                 $form = new $_GET['form'];
-            }
-            catch (\Exception $e) {
-                dd($e->getTraceAsString());
+//            }
+//            catch (\Exception $e) {
+//                dd($e->getTraceAsString());
 
-                $form = new $defClass();
-            }
+//                $form = new $defClass();
+//            }
 
             return $form;
         }

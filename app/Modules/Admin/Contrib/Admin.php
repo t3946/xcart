@@ -310,6 +310,22 @@ abstract class Admin
     }
 
     /**
+     * @return array
+     *  Example: [
+     *      'brand' => [
+     *          'class' => 'Modules\Brand\Models\BrandModel',
+     *          'columns' => [
+     *              'name', 'code', 'pk'
+     *          ]
+     *      ]
+     *  ]
+     */
+    public function getSuggestionColumns()
+    {
+        return [];
+    }
+
+    /**
      * @return Model
      */
     abstract public function getModel();
@@ -387,6 +403,46 @@ abstract class Admin
             $qs = $qs->filter($filter);
         }
         return $qs;
+    }
+
+    /**
+     * @return QuerySet
+     */
+    public function handleSuggestion($entity, $search)
+    {
+        $entity = strtolower($entity);
+        $entitys = $this->getSuggestionColumns();
+
+        if (array_key_exists($entity, $entitys)) {
+            $class = $entitys[$entity]['class'];
+            $columns = $entitys[$entity]['columns'];
+
+            /** @var Model $model */
+            $model = new $class();
+            $qs = $model->objects()->getQuerySet();
+
+            if ($search && $columns) {
+                $orData = [];
+                foreach ($columns as $column) {
+                    $orData[] = [$column . '__contains' => $search];
+                }
+                $filter = [new QOr($orData)];
+                $qs = $qs->filter($filter);
+            }
+        }
+        else {
+            throw new \UnexpectedValueException("Entity: {$entity} not set in suggestion columns");
+        }
+
+        return $qs;
+    }
+
+    public function checkSuggestionEntity($entity)
+    {
+        $entity = strtolower($entity);
+        $entitys = $this->getSuggestionColumns();
+
+        return array_key_exists($entity, $entitys);
     }
 
     /**
@@ -469,11 +525,17 @@ abstract class Admin
 
     public function getUpdateUrl($pk = null)
     {
+        $query = [];
+
+        if (Xcart::app()->request->get->has('popup')) {
+            $query['popup'] = true;
+        }
+
         return Xcart::app()->router->url('admin:update', [
             'module' => static::getModuleName(),
             'admin' => static::classNameShort(),
             'pk' => $pk
-        ]);
+        ], $query);
     }
 
     public function getInfoUrl($pk = null)
@@ -518,6 +580,19 @@ abstract class Admin
         ]);
     }
 
+    public function getSuggestionUrl($entity)
+    {
+        if ($this->checkSuggestionEntity($entity)) {
+            return Xcart::app()->router->url('admin:suggestion', [
+                'module' => static::getModuleName(),
+                'admin' => static::classNameShort(),
+                'entity' => $entity,
+            ]);
+        }
+
+        return null;
+    }
+
     public function getItemProperty(Model $item, $property)
     {
         $value = $item;
@@ -551,6 +626,21 @@ abstract class Admin
             'columns' => $this->buildListColumns(),
             'canSort' => $this->getCanSort($qs),
         ]);
+    }
+
+    public function suggestions($entity)
+    {
+        $search = isset($_GET['term']) ? $_GET['term'] : null;
+
+        if ($qs = $this->handleSuggestion($entity, $search)) {
+            $data = [];
+            foreach ($qs->all() as $v)
+            {
+                $data[] = ['id' => $v->pk, 'text' => (string)$v];
+            }
+
+            $this->jsonResponse(['items' => $data]);
+        }
     }
 
     public function remove($pk)
@@ -732,8 +822,8 @@ abstract class Admin
 
         if (
             Xcart::app()->request->getIsAjax()
+            || Xcart::app()->request->get->has('popup')
             || $this->innerRender
-            || !empty($_GET['popup'])
         ) {
             echo $this->render($view, $params);
         }

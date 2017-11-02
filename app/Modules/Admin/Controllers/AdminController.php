@@ -71,6 +71,12 @@ class AdminController extends BackendController
         }
     }
 
+    public function suggestion($module, $admin, $entity)
+    {
+        $admin = $this->getAdmin($module, $admin);
+        $admin->suggestions($entity);
+    }
+
     /**
      * @param $module
      * @param $admin

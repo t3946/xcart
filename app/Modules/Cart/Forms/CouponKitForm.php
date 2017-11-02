@@ -36,6 +36,9 @@ class CouponKitForm extends ModelForm
             'restrictions' => [
                 'class' => ListViewField::className(),
                 'adminClass' => DiscountRestrictionAdmin::className(),
+                'defaultOrder' => [
+                    'class'
+                ]
             ],
         ];
     }

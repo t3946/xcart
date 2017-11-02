@@ -129,6 +129,16 @@ class DiscountRestrictionForm extends ModelForm
         return parent::save();
     }
 
+    public function getDataValue($name, $default = '') {
+        $data = $this->getInstance()->data;
+
+        if (isset($data[$name])) {
+            return $data[$name];
+        }
+
+        return $default;
+    }
+
     protected function populateFromInstance(\Xcart\App\Orm\Model $model)
     {
         parent::populateFromInstance($model);

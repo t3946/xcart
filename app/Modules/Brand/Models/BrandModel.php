@@ -184,4 +184,9 @@ class BrandModel extends AutoMetaModel
         return "/brand/{$this->brandid}";
     }
 
+    public function __toString()
+    {
+        $st = $this->storefront->limit(1)->get();
+        return "[{$this->pk}] {$this->brand} ({$st->code})";
+    }
 }

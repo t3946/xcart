@@ -17,6 +17,8 @@ class ListViewField extends Field
     /** @var \Modules\Admin\Contrib\Admin|null  */
     public $adminClass = null;
 
+    public $defaultOrder = [];
+
     /**
      * @var array
      *
@@ -56,7 +58,7 @@ class ListViewField extends Field
             /** @var  \Xcart\App\Orm\Fields\RelatedField $field */
             $manager = $field->getManager();
 
-            return $manager->all();
+            return $manager->order($this->defaultOrder)->all();
         }
         return [];
     }

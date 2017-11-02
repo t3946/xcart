@@ -57,7 +57,7 @@ module.exports = {
     vendors: {
         jquery: {
             js: [
-                'bower_components/jquery/dist/jquery.min.js'
+                'bower_components/jquery/dist/jquery.js'
             ]
         },
 
@@ -148,6 +148,7 @@ module.exports = {
         },
         select2: {
             js: [
+                // 'bower_components/select2/dist/js/select2.full.js'
                 'bower_components/select2/dist/js/select2.js'
             ],
             css: [

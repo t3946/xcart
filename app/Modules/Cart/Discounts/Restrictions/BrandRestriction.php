@@ -2,12 +2,13 @@
 
 namespace Modules\Cart\Discounts\Restrictions;
 
+use Modules\Brand\Models\BrandModel;
 use Modules\Cart\CartModule;
 use Modules\Cart\Forms\CouponRestrictions\BrandRestrictionForm;
-use Modules\Cart\Forms\CouponRestrictions\DatesRestrictionForm;
 
 class BrandRestriction extends AbstractRestriction
 {
+    private $brandModel;
 
     public function getFormClass()
     {
@@ -26,6 +27,17 @@ class BrandRestriction extends AbstractRestriction
 
     public function dataToString()
     {
-        return "";
+        $brand = $this->getBrand();
+
+        return "{$brand}";
+    }
+
+    public function getBrand()
+    {
+        if ($this->data && !$this->brandModel) {
+            $this->brandModel = BrandModel::objects()->get(['pk' => $this->data['brand']]);
+        }
+
+        return $this->brandModel;
     }
 }

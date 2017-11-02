@@ -164,8 +164,6 @@ class ModelForm extends BaseForm
             $this->setModel($model);
         }
 
-        $this->initFields();
-
         $this->populateFromInstance($model);
     }
 
@@ -328,7 +326,9 @@ class ModelForm extends BaseForm
 
     protected function populateFromInstance(\Xcart\App\Orm\Model $model)
     {
-        foreach ($this->getFieldsInit() as $name => $field) {
+        $fields = $this->getFieldsInit();
+
+        foreach ($fields as $name => $field) {
             if ($model->hasField($name)) {
                 $value = $model->getField($name)->getValue();
 
@@ -336,7 +336,7 @@ class ModelForm extends BaseForm
                     $value = $value->getValue();
                 }
 
-                $this->_fields[$name]->setValue($value);
+                $fields[$name]->setValue($value);
             }
         }
 

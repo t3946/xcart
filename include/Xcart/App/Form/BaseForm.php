@@ -76,11 +76,11 @@ abstract class BaseForm implements IteratorAggregate, Countable, ArrayAccess, IV
     /**
      * @var \Xcart\App\Form\Fields\Field[]
      */
-    protected $_fields = [];
+    protected $_fields = null;
     /**
      * @var array
      */
-    protected $_renderFields = [];
+    protected $_renderFields = null;
     /**
      * @var bool
      */
@@ -98,12 +98,12 @@ abstract class BaseForm implements IteratorAggregate, Countable, ArrayAccess, IV
      */
     private $_parentForm;
 
-    public function init()
-    {
-        $this->initFields();
-        $this->initInlines();
-        $this->setRenderFields(array_keys($this->getFieldsInit()));
-    }
+//    public function init()
+//    {
+//        $this->initFields();
+//        $this->initInlines();
+//        $this->setRenderFields(array_keys($this->getFieldsInit()));
+//    }
 
     /**
      * @param array $value
@@ -170,7 +170,7 @@ abstract class BaseForm implements IteratorAggregate, Countable, ArrayAccess, IV
 
     public function __get($name)
     {
-        if (array_key_exists($name, $this->_fields)) {
+        if ($this->hasField($name)) {
             return $this->_fields[$name];
         } else {
             return $this->__getInternal($name);
@@ -181,7 +181,7 @@ abstract class BaseForm implements IteratorAggregate, Countable, ArrayAccess, IV
     {
         $this->_id = null;
 
-        foreach ($this->_fields as $name => $field) {
+        foreach ($this->getFieldsInit() as $name => $field) {
             $newField = clone $field;
             $newField->setForm($this);
             $this->_fields[$name] = $newField;
@@ -190,7 +190,7 @@ abstract class BaseForm implements IteratorAggregate, Countable, ArrayAccess, IV
 
     public function __set($name, $value)
     {
-        if (array_key_exists($name, $this->_fields)) {
+        if ($this->hasField($name)) {
             $this->_fields[$name]->setValue($value);
         } else {
             $this->__setInternal($name, $value);
@@ -251,12 +251,6 @@ abstract class BaseForm implements IteratorAggregate, Countable, ArrayAccess, IV
     public function getFields()
     {
         return [];
-
-//        if (!$this->_fields) {
-//            $this->initFields();
-//        }
-//
-//        return $this->_fields;
     }
 
     public function __toString()
@@ -368,6 +362,7 @@ abstract class BaseForm implements IteratorAggregate, Countable, ArrayAccess, IV
         }
         $this->_renderFields = [];
         $initFields = $this->getFieldsInit();
+
         foreach ($fields as $name) {
             if (in_array($name, $this->exclude)) {
                 continue;
@@ -403,13 +398,22 @@ abstract class BaseForm implements IteratorAggregate, Countable, ArrayAccess, IV
         return $this->_fields;
     }
 
+//    public function __isset($name)
+//    {
+//        return $this->hasField($name) || $this->__issetInternal($name);
+//    }
+
     /**
      * @param string $attribute
      * @return bool
      */
-    public function hasField($attribute)
+    public function hasField($name)
     {
-        return array_key_exists($attribute, $this->_fields);
+        if (is_null($this->_fields)) {
+            $this->getFieldsInit();
+        }
+
+        return array_key_exists($name, $this->_fields);
     }
 
     /**
@@ -633,7 +637,7 @@ abstract class BaseForm implements IteratorAggregate, Countable, ArrayAccess, IV
     public function getIterator()
     {
         $fields = [];
-        foreach ($this->_renderFields as $key) {
+        foreach ($this->getRenderFields() as $key) {
             $fields[$key] = $this->_fields[$key];
         }
         return new ArrayIterator($fields);
