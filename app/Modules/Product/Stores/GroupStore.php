@@ -185,7 +185,29 @@ class GroupStore extends BaseStore
 
     public function getBrands()
     {
-        return $this->prepareModels($this->getBrandPager()->paginate());
+        return $this->prepareBrands($this->getBrandPager()->paginate());
+    }
+
+    public function prepareBrands($models)
+    {
+        if (!$models) {
+            return [];
+        }
+
+        $filter = [];
+        foreach ($models as $model) {
+            if (!array_key_exists($model->brandid, $filter)) {
+                $filter[$model->brandid] = $model;
+            } else {
+                $filter[$model->brandid]->setAttribute('count', $filter[$model->brandid]->getFromQueryAttribute('count') + $model->getFromQueryAttribute('count'));
+            }
+        }
+
+        uasort($filter, function($a, $b) {
+            return $a->getFromQueryAttribute('count') < $b->getFromQueryAttribute('count');
+        });
+
+        return $filter;
     }
 
     public function prepareModels($models)
@@ -207,7 +229,7 @@ class GroupStore extends BaseStore
 
     public function getBrandPager()
     {
-        $pager = new Pagination($this->getBrandQuerySet(), ['pageSize' => $this->defaultPagerPageSize], new QuerySetDataSource());
+        $pager = new Pagination($this->getBrandQuerySet(), ['pageSize' => 150], new QuerySetDataSource());
 
         return $pager;
     }
