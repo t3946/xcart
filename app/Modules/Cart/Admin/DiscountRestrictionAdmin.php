@@ -9,6 +9,7 @@ use Modules\Cart\Forms\DiscountRestrictionForm;
 use Modules\Cart\Forms\RestrictionDatesForm;
 use Modules\Cart\Models\CouponKitModel;
 use Modules\Cart\Models\CouponRestrictionModel;
+use Modules\Product\Models\CategoryModel;
 
 class DiscountRestrictionAdmin extends ListViewAdmin
 {
@@ -31,8 +32,20 @@ class DiscountRestrictionAdmin extends ListViewAdmin
                 'class' => BrandModel::className(),
                 'columns' => [
                     'brand', 'pk'
+                ],
+                'filter' => [
+                    'avail' => 'Y', 'parent__isnull' => true,
                 ]
-            ]
+            ],
+            'category' => [
+                'class' => CategoryModel::className(),
+                'columns' => [
+                    'category', 'pk'
+                ],
+                'filter' => [
+                    'avail' => 'Y'
+                ]
+            ],
         ];
     }
 

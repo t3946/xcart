@@ -103,6 +103,18 @@ class CategoryModel extends AutoMetaTreeModel
         );
     }
 
+    public function __toString()
+    {
+        $code = '';
+        if ($st = $this->site) {
+            $code .=  $st->code .":";
+        }
+
+        $code .= $this->pk;
+
+        return "[{$code}] {$this->category}";
+    }
+
     public function getBreadcrumbs()
     {
         $bread = new Breadcrumbs();

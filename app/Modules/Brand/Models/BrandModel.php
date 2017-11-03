@@ -186,7 +186,13 @@ class BrandModel extends AutoMetaModel
 
     public function __toString()
     {
-        $st = $this->storefront->limit(1)->get();
-        return "[{$this->pk}] {$this->brand} ({$st->code})";
+        $code = '';
+        if ($st = $this->storefront->limit(1)->get()) {
+            $code .=  $st->code .":";
+        }
+
+        $code .= $this->pk;
+
+        return "[{$code}] {$this->brand}";
     }
 }
