@@ -6,7 +6,7 @@ require_once './include/libs/autoload.php';
 use Xcart\App\Main\Xcart;
 
 
-$config = include './app/config/settings.php';
+$config = include './app/config/settings_controller.php';
 
 Xcart::init($config);
 Xcart::app()->run();

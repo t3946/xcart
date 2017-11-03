@@ -27,7 +27,7 @@ class ShippingHelper
      * @param bool $use_map_price
      * @return ShippingRate[]
      */
-    public static function getShippingRates(UserModel $user, DistributorModel $distributor, $products, $weight_ratio = null, $use_cache = true, $use_map_price = true)
+    public static function getShippingRates(UserModel $user, DistributorModel $distributor, $products, $weight_ratio = null, $use_cache = true, $use_map_price = true, $use_approximation = true)
     {
         /** @var ShippingRate[] $shipping_rates */
         $shipping_rates = [];
@@ -40,7 +40,7 @@ class ShippingHelper
                 $oCart->addObjectToCart($element);
             }
             try {
-                if ($aShippingZones = (new ShippingModel())->getShippingRates($user, $distributor, $oCart, false, $use_cache, $use_map_price)) {
+                if ($aShippingZones = (new ShippingModel())->getShippingRates($user, $distributor, $oCart, false, $use_cache, $use_map_price, $use_approximation)) {
                     $shipping_rates = reset($aShippingZones);
                 }
             } catch (\Exception $e) {
@@ -66,15 +66,6 @@ class ShippingHelper
         $shipping_rate = null;
         if ($shipping_rates = static::getShippingRates($user, $distributor, $products, $weight_ratio, $use_cache)) {
             $shipping_rate = reset($shipping_rates);
-        }
-        return $shipping_rate;
-    }
-    public static function getTmpMinShippingRate(UserModel $user, DistributorModel $distributor, $products, $weight_ratio = null, $use_cache = true)
-    {
-        /** @var ShippingRate $shipping_rate */
-        $shipping_rate = null;
-        if ($shipping_rates = static::getShippingRates($user, $distributor, $products, $weight_ratio, $use_cache)) {
-            $shipping_rate = $shipping_rates;
         }
         return $shipping_rate;
     }
@@ -125,22 +116,6 @@ class ShippingHelper
         return $result;
     }
 
-    public static function getTmpStateMinShipping($product_model, $qty, $state_mass, $weight_ratio = null, $use_cache = true)
-    {
-        $result = null;
-
-
-            $userModel = new UserModel([
-                                           's_country' => $state_mass['s_country'],
-                                           's_state' => $state_mass['s_state'],
-                                           's_zipcode' => $state_mass['s_zipcode'],
-                                           's_city' => 'New City'
-                                       ]);
-
-            $result = ShippingHelper::getTmpMinShippingRate($userModel, $product_model->distributor, [['model' => $product_model, 'qty' => intval($qty)]], $weight_ratio, $use_cache);
-
-        return $result;
-    }
 
     /**
      * @param integer $product_id
@@ -151,7 +126,7 @@ class ShippingHelper
      * @param bool $use_map_price
      * @return ShippingRate[]
      */
-    public static function getStateShipping($product_id, $qty, $stateModel, $weight_ratio = null, $use_cache = true, $use_map_price = true)
+    public static function getStateShipping($product_id, $qty, $stateModel, $weight_ratio = null, $use_cache = true, $use_map_price = true, $use_approximation = true)
     {
         $result = [];
 
@@ -164,7 +139,7 @@ class ShippingHelper
                 's_city' => 'New City'
             ]);
 
-            $result = ShippingHelper::getShippingRates($userModel, $product_model->distributor, [['model' => $product_model, 'qty' => intval($qty)]], $weight_ratio, $use_cache, $use_map_price);
+            $result = ShippingHelper::getShippingRates($userModel, $product_model->distributor, [['model' => $product_model, 'qty' => intval($qty)]], $weight_ratio, $use_cache, $use_map_price, $use_approximation);
         }
 
         return $result;
@@ -179,5 +154,32 @@ class ShippingHelper
                         'zone__zone_name' => 'USA: Contiguous'
                     ])
                 ->count() > 0);
+    }
+
+    public static function getTmpStateMinShipping($product_model, $qty, $state_mass, $weight_ratio = null, $use_cache = true)
+    {
+        $result = null;
+
+
+        $userModel = new UserModel([
+                                       's_country' => $state_mass['s_country'],
+                                       's_state' => $state_mass['s_state'],
+                                       's_zipcode' => $state_mass['s_zipcode'],
+                                       's_city' => 'New City'
+                                   ]);
+
+        $result = ShippingHelper::getTmpMinShippingRate($userModel, $product_model->distributor, [['model' => $product_model, 'qty' => intval($qty)]], $weight_ratio, $use_cache);
+
+        return $result;
+    }
+
+    public static function getTmpMinShippingRate(UserModel $user, DistributorModel $distributor, $products, $weight_ratio = null, $use_cache = true)
+    {
+        /** @var ShippingRate $shipping_rate */
+        $shipping_rate = null;
+        if ($shipping_rates = static::getShippingRates($user, $distributor, $products, $weight_ratio, $use_cache, false, false)) {
+            $shipping_rate = $shipping_rates;
+        }
+        return $shipping_rate;
     }
 }

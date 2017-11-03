@@ -18,9 +18,9 @@
         {$model->brand->brand}
     </td>
     <td>
-        {$model->getNotModelAttribute('group_phrase')}
+        {$model->getFromQueryAttribute('group_phrase')}
     </td>
     <td align="center">
-        {$model->getNotModelAttribute('count')}
+        {$model->getFromQueryAttribute('count')}
     </td>
 </tr>

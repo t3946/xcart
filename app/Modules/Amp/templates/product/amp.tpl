@@ -86,7 +86,7 @@
             {if $model->getFrontendPrice() > 0}
                 {if $model->getFrontendPrice() != $model->getFrontendPrice(2)}
                     <h6><b>PRICE RANGE:</b>
-                        <span ><b>US$ <span class="mdl-color-text--red">{$model->getFrontendPrice()} - US$ {$model->getFrontendPrice(2)}</span></b></span>
+                        <span ><b>US$ <span class="mdl-color-text--red">{$model->getFrontendPrice()|number_format:2} - US$ {$model->getFrontendPrice(2)|number_format:2}</span></b></span>
                     </h6>
 
                 {/if}
@@ -115,7 +115,7 @@
                         <h6><b>PRICE:</b>
                             <!-- Display the price of the selected shirt in the selected size if available.
                                  Otherwise, display the placeholder text '---'. -->
-                            <span ><b>US$ <span class="mdl-color-text--red">{$model->getFrontendPrice()}</span></b><span>
+                            <span ><b>US$ <span class="mdl-color-text--red">{$model->getFrontendPrice()|number_format:2}</span></b><span>
                         </h6>
                     </div>
 
@@ -148,7 +148,7 @@
                             <h6><b>PRICE:</b>
                                 <!-- Display the price of the selected shirt in the selected size if available.
                                      Otherwise, display the placeholder text '---'. -->
-                                <span ><b>US$ <span class="mdl-color-text--red">{$model->getFrontendPrice()}</span></b></span>
+                                <span ><b>US$ <span class="mdl-color-text--red">{$model->getFrontendPrice()|number_format:2}</span></b></span>
                             </h6>
 
 

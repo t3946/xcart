@@ -62,6 +62,8 @@ abstract class ShippingProcessor
 
     protected $useMapPrice = true;
 
+    protected $useApproximation = true;
+
     /**
      * @return boolean
      */
@@ -84,7 +86,7 @@ abstract class ShippingProcessor
             if ($this->isProcessorApplicable()) {
                 $this->getShippingQuotesCached();
                 $this->getShippingQuotes();
-                if (!empty($this->aShippingRates)) {
+                if (!empty($this->aShippingRates) && $this->useApproximation) {
                     foreach ($this->aShippingRates as $oShippingRate) {
                         $oShippingRate->setCart($this->getCart());
                         $oShippingRate->setUseMapPRice($this->useMapPrice);
@@ -424,5 +426,10 @@ abstract class ShippingProcessor
     public function setUseMapPrice($value)
     {
         $this->useMapPrice = $value;
+    }
+
+    public function setUseApproximation($value)
+    {
+        $this->useApproximation = $value;
     }
 }
