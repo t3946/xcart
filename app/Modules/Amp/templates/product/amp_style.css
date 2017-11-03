@@ -531,10 +531,6 @@ amp-carousel[controls] .amp-carousel-button{
     visibility: visible;
 }
 
-.i-amphtml-singledoc.i-amphtml-standalone{
-    cursor: default;
-}
-
 .add_to_cart{
     padding: 0 25px;
 }
