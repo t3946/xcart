@@ -84,7 +84,7 @@
 
             {else}
                 {if $model->r_avail > 0}
-                <form method="get" action="/cart.php?mode=add" target="_top">
+                <form method="get" action="/cart.php" target="_top">
                     <input type="hidden" name="amount" value="1">
                     <input type="hidden" name="mode" value="add">
                     <input type="hidden" name="productid" value="{$model->productid}">
