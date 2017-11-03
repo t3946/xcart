@@ -196,8 +196,9 @@
                         Web Orders
                     </h4>
                     <p class="about_text">
-                        24 hours a day, 7 days a week<br>
-                        Email Support
+                        24 hours a day, 7 days a week<br><br>
+                        <b>Email Support</b><br>
+                        <a class="telephon" href="/help.php?section=contactus&mode=update" >Contact us</a>
                     </p>
                 </div>
                 <div>
