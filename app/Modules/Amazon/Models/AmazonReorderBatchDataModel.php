@@ -2,11 +2,14 @@
 
 namespace Modules\Amazon\Models;
 
-use Xcart\App\Orm\AutoMetaModel;
+use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\IntField;
+use Xcart\App\Orm\Model;
 
-class AmazonReorderBatchDataModel extends AutoMetaModel
+class AmazonReorderBatchDataModel extends Model
 {
+    use AutoMetaTrait;
+
     public static function tableName()
     {
         return 'amazon_reorder_batch_data';

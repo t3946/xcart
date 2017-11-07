@@ -4,17 +4,19 @@ namespace Modules\Order\Models;
 
 use Modules\Payment\Models\PaymentMethodModel;
 use Modules\User\Models\UserModel;
-use Xcart\App\Orm\AutoMetaModel;
+use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\FloatField;
 use Xcart\App\Orm\Fields\ForeignField;
-use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Fields\SerializeField;
 use Xcart\App\Orm\Fields\UnixTimestampField;
+use Xcart\App\Orm\Model;
 
-class TransactionLogModel extends AutoMetaModel
+class TransactionLogModel extends Model
 {
+    use AutoMetaTrait;
+
     public static function tableName()
     {
         return 'xcart_transaction_logs';

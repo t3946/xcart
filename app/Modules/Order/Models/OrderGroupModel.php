@@ -4,18 +4,18 @@ namespace Modules\Order\Models;
 use Modules\Distributor\Models\DistributorModel;
 use Modules\Product\Models\ProductModel;
 use Modules\Shipping\Models\ShippingModel;
-use Xcart\App\Orm\AutoMetaModel;
+use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\HasManyField;
-use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Fields\SerializeField;
+use Xcart\App\Orm\Model;
 use Xcart\App\Traits\DataModelTrait;
 use Xcart\OrderGroup;
 
-class OrderGroupModel extends AutoMetaModel
+class OrderGroupModel extends Model
 {
-    use DataModelTrait;
+    use DataModelTrait, AutoMetaTrait;
 
     public static function getDataModelClass()
     {

@@ -10,14 +10,18 @@ use Modules\Distributor\Models\DistributorModel;
 use Modules\Sites\Models\SiteModel;
 use Modules\Menu\Models\CleanUrlModel;
 use Xcart\App\Components\Breadcrumbs;
-use Xcart\App\Orm\AutoMetaModel;
+use Xcart\App\Main\Xcart;
+use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
+use Xcart\App\Orm\Fields\BooleanCharField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\HasManyField;
+use Xcart\App\Orm\Fields\HasToOneField;
 use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Fields\ManyToManyField;
 use Xcart\App\Orm\Fields\UnixTimestampField;
+use Xcart\App\Orm\Model;
 use Xcart\App\Traits\DataModelTrait;
 use Xcart\Product;
 
@@ -28,7 +32,7 @@ use Xcart\Product;
  * @property mixed eta_date_mm_dd_yyyy
  * @property mixed eta_date_lock
  * @property mixed productid
- * @property mixed distributor
+ * @property null|DistributorModel distributor
  * @property mixed|null dim_x
  * @property mixed|null dim_y
  * @property mixed|null dim_z
@@ -41,8 +45,8 @@ use Xcart\Product;
  * @property mixed|null shipping_dim_x
  * @property mixed|null shipping_dim_y
  * @property mixed|null shipping_dim_z
- * @property mixed product
- * @property mixed fulldescr
+ * @property string product
+ * @property string fulldescr
  * @property string controlled_by_feed
  * @property mixed brandid
  * @property integer source_sfid
@@ -50,17 +54,18 @@ use Xcart\Product;
  * @property int add_date
  * @property int mod_date
  * @property mixed|string upc
- * @property null|\Xcart\App\Orm\Manager sites
- * @property null|\Xcart\App\Orm\Manager categories
- * @property null|CleanUrlModel url
+ * @property null|\Xcart\App\Orm\Manager|\Modules\Sites\Models\SiteModel sites
+ * @property null|CleanUrlModel clean_url
+ * @property null|\Xcart\App\Orm\Manager|\Modules\Product\Models\CategoryModel[] categories
+ * @property null|\Xcart\App\Orm\Manager|ProductModel[] childs
  *
  * @method bool isForSale
  */
-class ProductModel extends AutoMetaModel implements ICartItem
+class ProductModel extends Model implements ICartItem
 {
     const ADMIN_PRODUCT_MODIFY_URL = '/admin/product_modify.php?productid=%d&sf=%d';
 
-    use DataModelTrait;
+    use DataModelTrait, AutoMetaTrait;
 
     public static function getDataModelClass()
     {
@@ -99,13 +104,13 @@ class ProductModel extends AutoMetaModel implements ICartItem
                 'through' => QuickPricingModel::className(),
             ],
 
-            'url' => [
-                'field' => 'productid',
-                'class' => ForeignField::className(),
+            'clean_url' => [
+                'class' => HasToOneField::className(),
                 'modelClass' => CleanUrlModel::className(),
                 'link' => ['productid' => 'resource_id'],
                 'extra' => ['resource_type' => 'P'],
             ],
+
 
 
             'productid' => [
@@ -133,7 +138,7 @@ class ProductModel extends AutoMetaModel implements ICartItem
             'images' => [
                 'class' => HasManyField::className(),
                 'modelClass' => ImageDModel::className(),
-                'link' => ['id' => 'productid'],
+                'link' => ['productid' => 'id'],
 //                'extra' => ['avail' => 'Y']
             ],
 
@@ -205,7 +210,7 @@ class ProductModel extends AutoMetaModel implements ICartItem
             'childs' => [
                 'class' => HasManyField::className(),
                 'modelClass' => ProductModel::className(),
-                'link' => ['group_root' => 'productid'],
+                'link' => ['productid' => 'group_root'],
                 'extra' => ['productid__isnt' => new Expression('group_root')]
             ],
             'parent' => [
@@ -217,7 +222,7 @@ class ProductModel extends AutoMetaModel implements ICartItem
             'thumbnail' => [
                 'class' => HasManyField::className(),
                 'modelClass' => ImageTModel::className(),
-                'link' => ['id' => 'productid']
+                'link' => ['productid' => 'id']
             ],
             'pricing' => [
                 'class' => HasManyField::className(),
@@ -229,6 +234,9 @@ class ProductModel extends AutoMetaModel implements ICartItem
                 'modelClass' => AmazonProductsFieldsModel::className(),
                 'link' => ['productid' => 'productid']
             ],
+            'retail_trust_enabled' => [
+                'class' => BooleanCharField::className(),
+            ]
         ];
     }
 
@@ -268,7 +276,7 @@ class ProductModel extends AutoMetaModel implements ICartItem
             {
                 $list[$filter->f_id] = ['name' =>$filter->f_name, 'values' => []];
             }
-
+            
             foreach ($values as $value)
             {
                 if ($list[$value->f_id]) {
@@ -319,14 +327,21 @@ class ProductModel extends AutoMetaModel implements ICartItem
         return $this->isProductOutOfStock();
     }
 
-    public function getAbsoluteUrl($full = false, $amp = false)
+    public function getAbsoluteUrl($full = false)
     {
         if ($this->productid) {
-            return $this->url->urlFromCode($amp ? 'amp:product' : 'catalog:product:view', $full, ($full ? $this->sites->limit(1)->get() : null));
+            $url = Xcart::app()->router->url('catalog:product:view', ['id' => $this->pk, 'slug' => $this->clean_url->getSlugPart()]);
+
+            if ($full) {
+                $site = $this->sites->limit(1)->get();
+
+                $url = '//' . $site->domain . $url;
+            }
+
+            return $url;
         }
 
         return false;
-//        return Xcart::app()->router->url('catalog:product:view', ['sku' => $this->productcode]);
     }
 
     public function getMainCategory()
@@ -375,9 +390,7 @@ class ProductModel extends AutoMetaModel implements ICartItem
 
     public function getFrontendName()
     {
-        $name = $this->seo_product_name ?: $this->product;
-
-        return ($this->isGroupChild()) ?  $this->parent->group_mask . " ". $this->product : $name;
+        return $this->seo_product_name ?: $this->product;
     }
 
     public function getFrontendDescription()
@@ -415,9 +428,12 @@ class ProductModel extends AutoMetaModel implements ICartItem
         return $tq;
     }
 
-    /*TODO Remove this method*/
-    public function getTitle()
-    {
+    /**
+     * @TODO: Remove this method
+     * @deprecated
+     * @return string
+     */
+    public function getTitle() {
         return $this->getFrontendName();
     }
 
