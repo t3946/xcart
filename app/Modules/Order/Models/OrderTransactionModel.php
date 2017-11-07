@@ -2,23 +2,23 @@
 
 namespace Modules\Order\Models;
 
-use Modules\Order\Helpers\OrderTransactionHelper;
 use Modules\Order\Stores\OrderTransactionStore;
-use Modules\Payment\Gateways\Gateway;
 use Modules\Payment\Models\PaymentMethodModel;
 use Modules\User\Models\UserModel;
 use Xcart\App\Main\Xcart;
-use Xcart\App\Orm\AutoMetaModel;
+use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\HasManyField;
 use Xcart\App\Orm\Fields\SerializeField;
 use Xcart\App\Orm\Fields\UnixTimestampField;
-use Xcart\OrderTransaction;
+use Xcart\App\Orm\Model;
 
-class OrderTransactionModel extends AutoMetaModel
+class OrderTransactionModel extends Model
 {
+    use AutoMetaTrait;
+
     const STATUS_AUTHORIZED = 'authorized';
     const STATUS_COMPLETED = 'completed';
     const STATUS_CAPTURED = 'captured';

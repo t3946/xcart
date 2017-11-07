@@ -5,14 +5,14 @@ use Mindy\QueryBuilder\Expression;
 use Modules\Menu\Models\CleanUrlModel;
 use Modules\Sites\Models\SiteModel;
 use Xcart\App\Components\Breadcrumbs;
-use Xcart\App\Main\Xcart;
-use Xcart\App\Orm\AutoMetaTreeModel;
+use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\HasManyField;
 use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Fields\ManyToManyField;
+use Xcart\App\Orm\TreeModel;
 use Xcart\App\Traits\DataModelTrait;
 use Xcart\Category;
 
@@ -27,9 +27,9 @@ use Xcart\Category;
  * @property null|CleanUrlModel url
  * @property null|\Modules\Sites\Models\SiteModel site
  */
-class CategoryModel extends AutoMetaTreeModel
+class CategoryModel extends TreeModel
 {
-    use DataModelTrait;
+    use DataModelTrait, AutoMetaTrait;
 
     public static function getDataModelClass()
     {

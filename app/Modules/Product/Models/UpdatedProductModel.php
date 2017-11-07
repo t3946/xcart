@@ -3,13 +3,16 @@
 namespace Modules\Product\Models;
 
 
-use Xcart\App\Orm\AutoMetaModel;
+use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Fields\UnixTimestampField;
+use Xcart\App\Orm\Model;
 
-class UpdatedProductModel extends AutoMetaModel
+class UpdatedProductModel extends Model
 {
+    use AutoMetaTrait;
+
     public static function tableName()
     {
         return 'xcart_cidev_updated_products';

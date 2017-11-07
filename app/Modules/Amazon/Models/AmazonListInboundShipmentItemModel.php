@@ -2,12 +2,15 @@
 
 namespace Modules\Amazon\Models;
 
-use Xcart\App\Orm\AutoMetaModel;
+use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\IntField;
+use Xcart\App\Orm\Model;
 
-class AmazonListInboundShipmentItemModel extends AutoMetaModel
+class AmazonListInboundShipmentItemModel extends Model
 {
+    use AutoMetaTrait;
+
     public static function tableName()
     {
         return 'xcart_amazon_list_inbound_shipment_items';

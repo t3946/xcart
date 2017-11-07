@@ -1,7 +1,8 @@
 <?php
+
 namespace Xcart\App\Orm;
 
-class AutoMetaTreeModel extends TreeModel
+trait AutoMetaTrait
 {
     /**
      * @return MetaData

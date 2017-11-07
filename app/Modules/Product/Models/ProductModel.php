@@ -11,7 +11,7 @@ use Modules\Sites\Models\SiteModel;
 use Modules\Menu\Models\CleanUrlModel;
 use Xcart\App\Components\Breadcrumbs;
 use Xcart\App\Main\Xcart;
-use Xcart\App\Orm\AutoMetaModel;
+use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\BooleanCharField;
 use Xcart\App\Orm\Fields\CharField;
@@ -22,8 +22,8 @@ use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Fields\ManyToManyField;
 use Xcart\App\Orm\Fields\UnixTimestampField;
 use Xcart\App\Orm\Fields\OneToOneField;
+use Xcart\App\Orm\Model;
 use Xcart\App\Traits\DataModelTrait;
-use Xcart\App\Traits\SlugifyTrait;
 use Xcart\Product;
 
 /**
@@ -62,11 +62,11 @@ use Xcart\Product;
  *
  * @method bool isForSale
  */
-class ProductModel extends AutoMetaModel implements ICartItem
+class ProductModel extends Model implements ICartItem
 {
     const ADMIN_PRODUCT_MODIFY_URL = '/admin/product_modify.php?productid=%d&sf=%d';
 
-    use DataModelTrait;
+    use DataModelTrait, AutoMetaTrait;
 
     public static function getDataModelClass()
     {
