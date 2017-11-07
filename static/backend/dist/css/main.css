@@ -5221,7 +5221,7 @@ h1 {
     .pager-container .pager li {
       display: inline-block; }
       .pager-container .pager li a, .pager-container .pager li span {
-        padding: 0.15em 0.4em;
+        padding: .3em .4em;
         border-radius: 5px;
         border: 1px solid transparent; }
         .pager-container .pager li a.current, .pager-container .pager li a:hover, .pager-container .pager li span.current, .pager-container .pager li span:hover {
@@ -5936,8 +5936,8 @@ h1 {
   right: 0; }
 
 .buttons-block.fixed {
-  background-color: #E4E0C5;
-  min-width: 884px;
+  background-color: #edeef0;
+  min-width: 1048px;
   position: fixed;
   bottom: 0;
   padding: 10px 0;

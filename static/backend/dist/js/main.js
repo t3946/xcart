@@ -43634,8 +43634,6 @@ jQuery.fn.tablePositions = function (options) {
         init: function (element, options) {
             if (element === undefined) return;
 
-            console.log(options);
-
             this.element = element;
             this.$element = $(element);
             this.options = $.extend(this.options, options);

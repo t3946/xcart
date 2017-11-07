@@ -8,20 +8,14 @@
     </tr>
 
     <tr class="TableHead TableHeadAccounting TableHeadLight">
-        <td>Date <br /> Time</td>
-        <td>OTRS ticket</td>
+        <td colspan="2">OTRS ticket</td>
         <td colspan="1">ZIP code</td>
         <td colspan="2">Last activity</td>
-        <td colspan="3">Attention tag</td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
+        <td colspan="7">Attention tag</td>
     </tr>
 
     <tr class="TableHead TableHeadAccounting TableHeadLight">
-        <td></td>
-        <td></td>
+        <td colspan="2">Date <br /> Time</td>
         <td>Country</td>
         <td colspan="2">LATEST ETA DATE</td>
         <td colspan="2">Payment</td>
@@ -39,18 +33,14 @@
         <td colspan="2">Processor</td>
         <td>TOTAL</td>
         <td colspan="4">+</td>
-
     </tr>
 
     {foreach $orders as $order index=$index}
+        {set $cycle_class}{cycle ["OrderSheetDark","TableSubHead_new"]}{/set}
+
         <tr class="separator">
             <td colspan="12"></td>
         </tr>
-        {if $index % 2}
-            {set $cycle_class = 'TableSubHead_new'}
-        {else}
-            {set $cycle_class = 'OrderSheetDark'}
-        {/if}
 
         <tr class="{$cycle_class} title">
             <td>
@@ -78,10 +68,7 @@
         </tr>
 
         <tr class="{$cycle_class}">
-            <td>
-                {raw $order->date|date_format:'%d-%b-%Y %H:%M:%S'}
-            </td>
-            <td>
+            <td colspan="2">
                 {if $order->otrs_ticket}
                     <a style="color: blue;" href="{$order->otrs_ticket}" target="_blank">
                         OTRS ticket
@@ -102,7 +89,7 @@
             <td colspan="2">
                 {$order->last_activity|interval_string}
             </td>
-            <td colspan="3">
+            <td colspan="7">
                 {foreach $order->tags as $tag}
                     <div style="background-color: {if $tag->color}{$tag->color}{else}#F4CCCC{/if}; color: #000000; padding: 3px;">
                         <span title="{$tag->description}">
@@ -111,14 +98,12 @@
                     </div>
                 {/foreach}
             </td>
-            <td colspan="4">
-
-            </td>
         </tr>
 
         <tr class="{$cycle_class}">
-            <td></td>
-            <td></td>
+            <td colspan="2">
+                {raw $order->date|date_format:'%d-%b-%Y <br/>%H:%M:%S'}
+            </td>
             <td>
                 {set $c_showed = false}
                 {foreach $countries as $country}
