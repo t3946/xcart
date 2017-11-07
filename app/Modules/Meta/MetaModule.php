@@ -25,7 +25,8 @@ class MetaModule extends Module
         $tpl = Xcart::app()->template->getRenderer();
         $tpl->addFunction('meta', function($params){
             $c = !empty($params['controller']) ? $params['controller'] : null;
-            MetaHelper::getMeta($c);
+            $canonical = !empty($params['canonical']) ? $params['canonical'] : null;
+            MetaHelper::getMeta($c, $canonical);
         });
         $tpl->addFunction('meta_text', ['\Modules\Meta\Helpers\MetaTextHelper', 'getMetaText']);
 

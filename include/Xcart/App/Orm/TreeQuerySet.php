@@ -98,9 +98,9 @@ class TreeQuerySet extends QuerySet
      * @return \Xcart\App\Orm\QuerySet
      * @throws \Exception
      */
-    public function parents($includeSelf = false)
+    public function parents($includeSelf = false, $depth = null)
     {
-        return $this->ancestors($includeSelf, 1);
+        return $this->ancestors($includeSelf, $depth);
     }
 
     /**
@@ -218,19 +218,20 @@ class TreeQuerySet extends QuerySet
     protected function deleteBranchWithoutRoot($table)
     {
 
-        $id_attr = $this->getModel()->getField('pk');
-        $pid_attr = $this->getModel()->getField('parent');
+        $id_attr = $this->getModel()->getField('pk')->getAttributeName();
+        $pid_attr = $this->getModel()->getField('parent')->getAttributeName();
 
         $subQuery = clone $this->getQueryBuilder();
-        $subQuery->clear()->setTypeSelect()->from($table)->select('root')->where(new QOr(['parent__isnull' => true, 'parent' => 0]));
+        $subQuery->clear()->setTypeSelect()->from($table)->select('root')->where(new QOr(['parent_id__isnull' => true, 'parent_id' => 0]));
 
         $query = clone $this->getQueryBuilder();
         $query->clear()->setTypeSelect()->select([$id_attr => 'id'])->from($table)->where([
-            new QOr(['parent__isnull' => true, 'parent' => 0]),
+            new QOr(['parent_id__isnull' => true, 'parent_id' => 0]),
             new QAndNot(['root__in' => $subQuery]),
         ]);
 
-        $ids = $this->getConnection()->query($query->toSQL())->fetchColumn();
+        $stmt = $this->getConnection()->query($query->toSQL());
+        $ids = $stmt->fetchColumn();
         if ($ids && count($ids) > 0) {
             $deleteQuery = clone $this->getQueryBuilder();
             $deleteQuery->clear()->setTypeDelete()->from($table)->where([$id_attr.'__in' => $ids]);
@@ -257,8 +258,8 @@ class TreeQuerySet extends QuerySet
      */
     protected function deleteBranchWithoutParent($table)
     {
-        $id_attr = $this->getModel()->getField('pk');
-        $pid_attr = $this->getModel()->getField('parent');
+        $id_attr = $this->getModel()->getField('pk')->getAttributeName();
+        $pid_attr = $this->getModel()->getField('parent')->getAttributeName();
 
         /*
         $query = new Query([
@@ -272,7 +273,7 @@ class TreeQuerySet extends QuerySet
 
         $query = clone $this->getQueryBuilder();
         $query->clear()->setTypeSelect()->select([$id_attr => 'id', 'lft', 'rgt', 'root'])->from($table)->where([
-            new QAndNot(['parent__in' => $subQuery]),
+            new QAndNot(['parent_id__in' => $subQuery]),
         ]);
 
         $rows = $this->getConnection()->query($query->toSQL())->fetchAll();
@@ -307,8 +308,8 @@ class TreeQuerySet extends QuerySet
 //        $subQuery = "SELECT `tt`.`parent_id` FROM {$table} AS `tt` WHERE `tt`.`parent_id`=`t`.`id`";
 //        $where = 'NOT `lft`=(`rgt`-1) AND NOT `id` IN ('.$subQuery.')';
 //        $sql = 'SELECT `id`, `root`, `lft`, `rgt`, `rgt`-`lft`-1 AS `move` FROM '.$table.' AS `t` WHERE '.$where.' ORDER BY `rgt` ASC';
-        $id_attr = $this->getModel()->getField('pk');
-        $pid_attr = $this->getModel()->getField('parent');
+        $id_attr = $this->getModel()->getField('pk')->getAttributeName();
+        $pid_attr = $this->getModel()->getField('parent')->getAttributeName();
 
 
         $sql = <<<SQL

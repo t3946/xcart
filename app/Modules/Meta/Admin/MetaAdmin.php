@@ -10,7 +10,7 @@ use Xcart\App\Main\Xcart;
 
 class MetaAdmin extends Admin
 {
-    public function getSearchFields()
+    public function getSearchColumns()
     {
         return ['url', 'title', 'description', 'keywords'];
     }

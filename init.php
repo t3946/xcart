@@ -137,7 +137,7 @@ $sql_max_allowed_packet = intval($tmp['Value']);
 unset($tmp);
 
 if (preg_match("/^(\d+\.\d+\.\d+)/", db_mysql_get_server_info(), $match)) {
-        define("X_MYSQL_VERSION", $match[1]);
+    define("X_MYSQL_VERSION", $match[1]);
 
     if (func_version_compare(X_MYSQL_VERSION, "5.0.0") >= 0) {
         db_query("SET sql_mode = 'MYSQL40'");

@@ -2,26 +2,60 @@
 /*
 	General styles
 */
-BODY,DIV,TH,TD,P,INPUT,SELECT,TEXTAREA,TT {
-	FONT-FAMILY: Verdana, Arial, Helvetica, Sans-serif;
-	COLOR: #550000;
-	FONT-SIZE: 10px;
+/*html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {*/
+    /*margin: 0;*/
+    /*padding: 0;*/
+    /*border: 0;*/
+    /*font-size: 100%;*/
+    /*font: inherit;*/
+    /*vertical-align: baseline;*/
+/*}*/
+
+/*BODY,DIV,TH,TD,P,INPUT,SELECT,TEXTAREA,TT {*/
+* {
+	box-sizing: border-box;
+    outline: none;
 }
-A:link {
-	COLOR: #330000;
-	TEXT-DECORATION: underline;
+
+strong, b {
+	font-weight: 500;
 }
-A:visited {
-	COLOR: #330000;
-	TEXT-DECORATION: underline;
+
+
+
+body {
+    font-family: GothamPro, Verdana, Arial, Helvetica, sans-serif;
+    /*font-size: 11px;*/
+    font-size: 13px;
+    line-height: 1.3;
+    color: #000;
+
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
 }
-A:hover {
-	COLOR: #550000;
-	TEXT-DECORATION: none;
+
+input, textarea, select, button {
+    font-size: inherit;
 }
-A:active  {
-	COLOR: #330000;
-	TEXT-DECORATION: underline;
+
+a {
+    color: #330000;
+    /*color: #2a5885;*/
+	text-decoration: underline;
+	font-weight: 400;
+}
+a:visited {
+    color: #330000;
+    /*color: #2a5885;*/
+}
+a:hover {
+    color: #550000;
+    /*color: #3570a8;*/
+}
+a:active  {
+    color: #330000;
+    /*color: #2a5885;*/
 }
 H1 {
 	FONT-SIZE: 15px;
@@ -32,6 +66,12 @@ H2 {
 H3 {
 	FONT-SIZE: 12px;
 }
+
+h1,h2,h3 {
+    color: #330000;
+    color: black;
+}
+
 HR {
 	COLOR: #DDDDDD;
 	HEIGHT: 1px;
@@ -40,7 +80,13 @@ HTML,BODY {
 	HEIGHT: 100%;
 	MARGIN: 0px;
 	PADDING: 0px;
-	BACKGROUND-COLOR: #FFFBD3;
+	/*BACKGROUND-COLOR: #FFFBD3;*/
+	/*BACKGROUND-COLOR: #edeef0;*/
+	/*BACKGROUND-COLOR: #eeeeee;*/
+	/*background-color: #fefeff;*/
+    /*background-color: #F3F3F3;*/
+    /*background-color: #e7e7e7;*/
+    background-color: #edeef0;
 }
 FORM {
 	MARGIN: 0px;
@@ -65,7 +111,7 @@ TD.Container {
 */
 .AuthText {
 	FONT-SIZE: 10px;
-	FONT-WEIGHT: bold;
+	FONT-WEIGHT: 500;
 	PADDING-BOTTOM: 5px;
 }
 .HeadLogo {
@@ -81,11 +127,19 @@ TD.Container {
 }
 .HeadText {
 	FONT-SIZE: 12px;
-	FONT-WEIGHT: bold;
+	FONT-WEIGHT: 500;
 }
 .HeadLine {
 	BACKGROUND-COLOR: #FFD44C;
+	/*BACKGROUND-COLOR: #ffffcc;*/
+	/*BACKGROUND-COLOR: #F7F9FA;*/
+	padding: 5px;
+	/*margin: 5px;*/
 }
+.headSearchLine {
+	border: 1px solid #8E4B00;
+}
+
 .HeadThinLine {
 	BACKGROUND-COLOR: #8E4B00;
 	HEIGHT: 1px;
@@ -151,7 +205,7 @@ A.Bottom:active {
 	PADDING-BOTTOM: 10px;
 }
 .BottomPopup A {
-	FONT-WEIGHT: bold;
+	FONT-WEIGHT: 500;
 }
 .BottomDialogBox {
 	BACKGROUND-COLOR: #FFE591;
@@ -191,11 +245,11 @@ HR.GreyLine {
 }
 .NumberOfArticles {
 	COLOR: #000000;
-	FONT-WEIGHT: bold;
+	FONT-WEIGHT: 500;
 }
 .TopLabel {
 	COLOR: #000000;
-	FONT-WEIGHT: bold;
+	FONT-WEIGHT: 500;
 	FONT-SIZE: 12px;
 }
 .Message {
@@ -212,18 +266,18 @@ TD.ButtonsRow {
 }
 .CustomerMessage {
 	COLOR: #FF3300;
-	FONT-WEIGHT: bold;
+	FONT-WEIGHT: 500;
 }
 .ErrorMessage {
 	COLOR: #FF3300;
-	FONT-WEIGHT: bold;
+	FONT-WEIGHT: 500;
 }
 .Star {
 	COLOR: #FF0000;
 }
 .TableHead {
 	BACKGROUND-COLOR: #CCCCCC;
-	FONT-WEIGHT: bold;
+	FONT-WEIGHT: 500;
     HEIGHT: 20px;
     TEXT-ALIGN: center;
     TEXT-TRANSFORM: uppercase;
@@ -233,7 +287,7 @@ TD.ButtonsRow {
 	FONT-WEIGHT: normal;
 }
 .BoldRowText > td > span {
-	FONT-WEIGHT: bold;
+	FONT-WEIGHT: 500;
 }
 .Spc {
 	WIDTH: 1px;
@@ -250,7 +304,7 @@ table.customer-info-edit td {
 	padding-right: 5px;
 }
 tr.distributor-totals-line td, tr.distributor-totals-line td a {
-	font-weight: bold; 
+	font-weight: 500; 
 	color: green;
 	vertical-align: top;
 }
@@ -260,14 +314,14 @@ tr.group_total_price_row {
 tr.group_total_price_row td {
 	padding-top: 0;
 	padding-bottom: 0;
-	font-weight: bold;
+	font-weight: 500;
 }
 tr.distributor-totals-line td a {
 	text-decoration: none;
 	border-bottom: 1px dotted;
 }
 tr.refund-distr-totals-line td {
-	font-weight: bold; 
+	font-weight: 500; 
 	color: #FF0000;
 }
 tr.refund-distr-values-line td {
@@ -332,13 +386,13 @@ TABLE.EmptyBox TR TD {
 }
 .AdminTitle {
 	COLOR: #FF3300;
-	FONT-WEIGHT: bold;
+	FONT-WEIGHT: 500;
 	FONT-SIZE: 12px;
 }
 .TableHeadLevel2 {
     BACKGROUND-COLOR: #CCCCCC;
     COLOR: #000000;
-	FONT-WEIGHT: bold;
+	FONT-WEIGHT: 500;
     HEIGHT: 20px;
     TEXT-ALIGN: center;
 }
@@ -347,7 +401,7 @@ TABLE.EmptyBox TR TD {
 }
 .TableSeparator {
     COLOR: #000000;
-	FONT-WEIGHT: bold;
+	FONT-WEIGHT: 500;
     FONT-SIZE: 11px;
 }
 .InputWidth {
@@ -361,7 +415,7 @@ TABLE.EmptyBox TR TD {
 }
 .HightLightRow {
     BACKGROUND-COLOR: #B0B0B0;
-    FONT-WEIGHT: bold;
+    FONT-WEIGHT: 500;
 }
 TD.OptionLabel {
 	WHITE-SPACE: nowrap;
@@ -405,10 +459,13 @@ TD.OptionLabel {
 	Vertical menu
 */
 .VertMenuLeftColumn {
-	WIDTH: 150px;
+	/*WIDTH: 150px;*/
+	width: 190px;
 	VERTICAL-ALIGN: top;
-	PADDING-LEFT: 6px;
-	PADDING-RIGHT: 20px;
+	padding-top: 5px;
+	/*PADDING-LEFT: 6px;*/
+	/*PADDING-RIGHT: 20px;*/
+	border-collapse: collapse;
 }
 .VertMenuRightColumn {
 	WIDTH: 148px;
@@ -417,17 +474,37 @@ TD.OptionLabel {
 	PADDING-RIGHT: 6px;
 }
 .VertMenuBox {
-	BACKGROUND-COLOR: #FFD44C;
-	PADDING: 1px;
+	/*BACKGROUND-COLOR: #FFD44C;*/
+	/*BACKGROUND-COLOR: #efefef;*/
+	/*BACKGROUND-COLOR: #fff;*/
+	background-color: #fafafa;
+	PADDING: 5px 0;
 }
+.VertMenuBox td {
+	padding: 0;
+}
+
+.VertMenuBox a {
+	display: block;
+	padding: 2px 5px;
+}
+.VertMenuBox a:hover {
+	background-color: #f0f2f5;
+}
+
 .VertMenuBorder {
-	BACKGROUND-COLOR: #8E4B00;
+	/*BACKGROUND-COLOR: #8E4B00;*/
+	BACKGROUND-COLOR: #d7d8db;
+	border:1px solid #d7d8db;
+	margin-bottom: 1em;
 }
 .VertMenuTitle {
-	BACKGROUND-COLOR: #FF8600;
-	COLOR: #330000;
-	FONT-WEIGHT: bold;
-	PADDING: 1px;
+	BACKGROUND-COLOR: #e27a2b;
+	/*BACKGROUND-COLOR: #2a5885;*/
+	/*COLOR: #330000;*/
+	COLOR: #fff;
+	FONT-WEIGHT: 500;
+	PADDING: 5px;
 }
 .VertMenuSubTitle {
 	BACKGROUND-COLOR: #FFA92F;
@@ -441,47 +518,57 @@ TD.OptionLabel {
 }
 .VertMenuItems {
 	COLOR: #330000;
+	/*COLOR: #2a5885;*/
 	TEXT-DECORATION: none;
 }
-A.VertMenuItems:link {
-	COLOR: #330000;
-	TEXT-DECORATION: none;
-}
+/*A.VertMenuItems:link {*/
+	/*COLOR: #330000;*/
+	/*COLOR: #6387ac;*/
+	/*TEXT-DECORATION: none;*/
+/*}*/
 A.VertMenuItems:visited {
 	COLOR: #330000;
+	/*COLOR: #2a5885;*/
 	TEXT-DECORATION: none;
 }
 A.VertMenuItems:hover {
 	COLOR: #550000;
+	/*COLOR: #6b8eb4;*/
 	TEXT-DECORATION: underline;
 }
 A.VertMenuItems:active  {
 	COLOR: #330000;
+	/*COLOR: #2a5885;*/
 	TEXT-DECORATION: none;
 }
 .VertMenuItemsHL{
 	COLOR: #330000;
-	FONT-WEIGHT: bold;
+	/*COLOR: #2a5885;*/
+	FONT-WEIGHT: 500;
 	TEXT-DECORATION: none;
 }
 A.VertMenuItemsHL:link {
 	COLOR: #330000;
-	FONT-WEIGHT: bold;
+	/*COLOR: #2a5885;*/
+	FONT-WEIGHT: 500;
 	TEXT-DECORATION: none;
 }
 A.VertMenuItemsHL:visited {
 	COLOR: #330000;
-	FONT-WEIGHT: bold;
+	/*COLOR: #2a5885;*/
+	FONT-WEIGHT: 500;
 	TEXT-DECORATION: none;
 }
 A.VertMenuItemsHL:hover {
 	COLOR: #550000;
-	FONT-WEIGHT: bold;
+	/*COLOR: #2a5885;*/
+	FONT-WEIGHT: 500;
 	TEXT-DECORATION: underline;
 }
 A.VertMenuItemsHL:active  {
 	COLOR: #330000;
-	FONT-WEIGHT: bold;
+	/*COLOR: #2a5885;*/
+	FONT-WEIGHT: 500;
 	TEXT-DECORATION: none;
 }
 .VertMenuHr {
@@ -509,26 +596,29 @@ TD.DialogBox {
 	PADDING: 10px;
 }
 .DialogBorder {
-	BACKGROUND-COLOR: #FF8600;
+	BACKGROUND-COLOR: #e27a2b;
+	/*BACKGROUND-COLOR: #2a5885;*/
 	HEIGHT: 100%;
 	PADDING: 0px;
 }
 TD.DialogTitle {
 	COLOR: #FFFFFF;
-	FONT-WEIGHT: bold;
-	FONT-SIZE: 11px;
-	BACKGROUND-IMAGE: url(images/dialog_bg_n.gif);
-	VERTICAL-ALIGN: bottom;
-	HEIGHT: 15px;
-	PADDING-TOP: 0px;
-	PADDING-BOTTOM: 0px;
+	background-color: #e27a2b;
+	/*background-color: #2a5885;*/
+	FONT-WEIGHT: 500;
+	FONT-SIZE: 15px;
+	/*BACKGROUND-IMAGE: url(images/dialog_bg_n.gif);*/
+	/*VERTICAL-ALIGN: bottom;*/
+	/*HEIGHT: 15px;*/
+	/*PADDING-TOP: 0px;*/
+	/*PADDING-BOTTOM: 0px;*/
 	PADDING-LEFT: 10px;
-	PADDING-RIGHT: 0px;
-	TEXT-ALIGN: left;
+	/*PADDING-RIGHT: 0px;*/
+	/*TEXT-ALIGN: left;*/
 }
 FONT.DialogTitle {
 	COLOR: #FFFFFF;
-	FONT-WEIGHT: bold;
+	FONT-WEIGHT: 500;
 	FONT-SIZE: 11px;
 	VERTICAL-ALIGN: bottom;
 	HEIGHT: 15px;
@@ -545,7 +635,7 @@ TABLE.DialogInfo {
 }
 .DialogInfoTitle {
 	COLOR: #FFFFFF;
-	FONT-WEIGHT: bold;
+	FONT-WEIGHT: 500;
 	FONT-SIZE: 11px;
 	VERTICAL-ALIGN: bottom;
 	TEXT-ALIGN: left;
@@ -556,13 +646,14 @@ TABLE.DialogInfo {
 	PADDING-RIGHT: 5px;
 }
 .DialogInfoTitleBorder {
-	BACKGROUND-COLOR: #FF8600;
+	BACKGROUND-COLOR: #e27a2b;
+	BACKGROUND-COLOR: #2a5885;
 	PADDING: 0px;
 	VERTICAL-ALIGN: bottom;
 	HEIGHT: 15px;
 }
 .DialogInfoBorder {
-	BACKGROUND-COLOR: #FF8600;
+	BACKGROUND-COLOR: #e27a2b;
 	PADDING: 0px;
 }
 .DialogInfoIcon {
@@ -579,13 +670,15 @@ TABLE.DialogInfo {
 */
 .NavDialogTitle {
 	WIDTH: 50%;
-    FONT-SIZE: 11px;
-    FONT-WEIGHT: bold;
+	font-size: .95em;
+    /*FONT-SIZE: 11px;*/
+    FONT-WEIGHT: 500;
     COLOR: #330000;
-	PADDING-LEFT: 8px;
+	PADDING: 2px 5px;
 }   
 .NavDialogBorder {
-	BACKGROUND-COLOR: #FFCC33;
+	/*BACKGROUND-COLOR: #FFCC33;*/
+	BACKGROUND-COLOR: #f1b731;
 }
 .NavDialogBox {
 	BACKGROUND-COLOR: #FFFFCC;
@@ -613,17 +706,17 @@ TABLE.DialogInfo {
 */
 .ProductTitle {
 	COLOR: #000000;
-	FONT-WEIGHT: bold;
+	FONT-WEIGHT: 500;
 	FONT-SIZE: 12px;
 }
 .ProductTitleHidden {
 	COLOR: #666666;
-	FONT-WEIGHT: bold;
+	FONT-WEIGHT: 500;
 	FONT-SIZE: 11px;
 }
 .ProductDetailsTitle {
 	COLOR: #FF3300;
-	FONT-WEIGHT: bold;
+	FONT-WEIGHT: 500;
 	FONT-SIZE: 12px;
 }
 .ProductDetails {
@@ -631,22 +724,22 @@ TABLE.DialogInfo {
 }
 .ProductPriceTitle {
 	COLOR: #000000;
-	FONT-WEIGHT: bold;
+	FONT-WEIGHT: 500;
 	FONT-SIZE: 12px;
 }
 .ProductPriceConverting {
 	COLOR: #000000;
-	FONT-WEIGHT: bold;
+	FONT-WEIGHT: 500;
 	FONT-SIZE: 12px;
 }
 .ProductPrice {
 	COLOR: #FF3300;
-	FONT-WEIGHT: bold;
+	FONT-WEIGHT: 500;
 	FONT-SIZE: 12px;
 }
 .ProductPriceSmall {
 	COLOR: #FF3300;
-	FONT-WEIGHT: bold;
+	FONT-WEIGHT: 500;
 }
 .SaveMoneyLabel {
 	WIDTH: 57px;
@@ -654,7 +747,7 @@ TABLE.DialogInfo {
 	TEXT-ALIGN: center;
 	VERTICAL-ALIGN: middle;
 	COLOR: #FFFFFF;
-	FONT-WEIGHT: bold;
+	FONT-WEIGHT: 500;
 	BACKGROUND-IMAGE: url(images/save_money.gif);
 }
 .MarketPrice {
@@ -696,29 +789,29 @@ HR.PListLine {
 */
 .ItemsList {
 	COLOR: #330000;
-	FONT-WEIGHT: bold;
+	FONT-WEIGHT: 500;
 }
 .ItemsListDisabled {
 	COLOR: #909090;
 }
 A.ItemsList:link {
 	COLOR: #330000;
-	FONT-WEIGHT: bold;
+	FONT-WEIGHT: 500;
 	TEXT-DECORATION: none;
 }
 A.ItemsList:visited {
 	COLOR: #330000;
-	FONT-WEIGHT: bold;
+	FONT-WEIGHT: 500;
 	TEXT-DECORATION: none;
 }
 A.ItemsList:hover {
 	COLOR: #330000;
-	FONT-WEIGHT: bold;
+	FONT-WEIGHT: 500;
 	TEXT-DECORATION: none;
 }
 A.ItemsList:active {
 	COLOR: #330000;
-	FONT-WEIGHT: bold;
+	FONT-WEIGHT: 500;
 	TEXT-DECORATION: none;
 }
 
@@ -727,27 +820,27 @@ A.ItemsList:active {
 */
 .NavigationPath {
 	COLOR: #CC6666;
-	FONT-WEIGHT: bold;
+	FONT-WEIGHT: 500;
 	TEXT-DECORATION: none;
 }
 .NavigationPath:link {
 	COLOR: #CC6666;
-	FONT-WEIGHT: bold;
+	FONT-WEIGHT: 500;
 	TEXT-DECORATION: underline;
 }
 .NavigationPath:visited {
 	COLOR: #CC6666;
-	FONT-WEIGHT: bold;
+	FONT-WEIGHT: 500;
 	TEXT-DECORATION: underline;
 }
 .NavigationPath:hover {
 	COLOR: #CC6666;
-	FONT-WEIGHT: bold;
+	FONT-WEIGHT: 500;
 	TEXT-DECORATION: none;
 }
 .NavigationPath:active  {
 	COLOR: #CC6666;
-	FONT-WEIGHT: bold;
+	FONT-WEIGHT: 500;
 	TEXT-DECORATION: underline;
 }
 
@@ -755,12 +848,13 @@ A.ItemsList:active {
 	Buttons
 */
 .FormButton {
-	COLOR: #330000;
-	FONT-WEIGHT: bold;
+	/*COLOR: #330000;*/
+	/*FONT-WEIGHT: 500;*/
+	FONT-WEIGHT: 500;
 }
 
 .FormButtonNotBold {
-	COLOR: #330000;
+	/*COLOR: #330000;*/
 }
 
 TABLE.ButtonTable {
@@ -773,7 +867,8 @@ TABLE.ButtonTable TD {
 }
 TD.Button {								 
 	BACKGROUND: url(images/butbg.gif);
-	BACKGROUND-COLOR: #FF8600;
+	BACKGROUND-COLOR: #e27a2b;
+	BACKGROUND-COLOR: #6387ac;
 	BACKGROUND-REPEAT: repeat-x;
 	PADDING-LEFT: 5px;
 	PADDING-RIGHT: 5px;
@@ -783,7 +878,7 @@ TD.Button {
 FONT.Button {								 
 	FONT-FAMILY: Arial;
 	COLOR: #FFFFFF;
-	FONT-WEIGHT: bold;
+	FONT-WEIGHT: 500;
 	FONT-SIZE: 11px;
 	TEXT-DECORATION: none;
 }
@@ -797,7 +892,7 @@ IMG.ButtonSide {
 }
 A.Button:link, A.Button:visited, A.Button:hover, A.Button:active {
 	COLOR: #330000;
-	FONT-WEIGHT: bold;
+	FONT-WEIGHT: 500;
 }
 .GoImage {
 	WIDTH: 21px;
@@ -856,7 +951,7 @@ A.Button:link, A.Button:visited, A.Button:hover, A.Button:active {
 	Search sort bar
 */
 .SearchSortTitle {
-	FONT-WEIGHT: bold;
+	FONT-WEIGHT: 500;
 	PADDING-RIGHT: 20px;
 }
 .SearchSortLink:link, .SearchSortLink:visited, .SearchSortLink:hover, .SearchSortLink:active {
@@ -885,7 +980,7 @@ A.Button:link, A.Button:visited, A.Button:hover, A.Button:active {
 */
 .Tab {
 	BACKGROUND-COLOR: #FFD44C;
-	FONT-WEIGHT: bold;
+	FONT-WEIGHT: 500;
 	TEXT-TRANSFORM: uppercase;
 	WIDTH: 85px;
 	HEIGHT: 30px;
@@ -966,7 +1061,7 @@ IMG.TabSide {
 }
 .NavigationCellSel {
 	VERTICAL-ALIGN: middle;
-	FONT-WEIGHT: bold;
+	FONT-WEIGHT: 500;
 }
 
 /*
@@ -979,7 +1074,7 @@ TABLE.SubHeaderGrey {
 .SubHeaderGrey {
 	COLOR: #666666;
 	FONT-SIZE: 11px;
-	FONT-WEIGHT: bold;
+	FONT-WEIGHT: 500;
 	PADDING: 0px;
 }
 .SubHeaderGreyLine {
@@ -994,7 +1089,7 @@ TABLE.SubHeaderBlack {
 .SubHeaderBlack {
 	COLOR: #000000;
 	FONT-SIZE: 12px;
-	FONT-WEIGHT: bold;
+	FONT-WEIGHT: 500;
 	PADDING: 0px;
 }
 .SubHeaderBlackLine {
@@ -1008,7 +1103,7 @@ TABLE.SubHeaderRed {
 	MARGIN-BOTTOM: 10px;
 }
 .SubHeaderRed {
-	FONT-WEIGHT: bold;
+	FONT-WEIGHT: 500;
 	PADDING: 0px;
 }
 .SubHeaderRedLine {
@@ -1023,7 +1118,7 @@ TABLE.SubHeader {
 }
 .SubHeader {
 	COLOR: #FF3300;
-	FONT-WEIGHT: bold;
+	FONT-WEIGHT: 500;
 	FONT-SIZE: 12px;
 	PADDING: 0px;
 }
@@ -1040,7 +1135,7 @@ TABLE.SubHeader {
 .RegSectionTitle {
 	COLOR: #550000;
 	FONT-SIZE: 10px;
-	FONT-WEIGHT: bold;
+	FONT-WEIGHT: 500;
 }
 
 /*
@@ -1048,7 +1143,7 @@ TABLE.SubHeader {
 */
 SPAN.Lbl {
 	COLOR: green;
-	FONT-WEIGHT: bold;
+	FONT-WEIGHT: 500;
 }
 .Section {
 	MARGIN: 0px;
@@ -1082,7 +1177,7 @@ TABLE.DataSheet {
 TR.DataSheet {
     BACKGROUND-COLOR: #CCCCCC;
     COLOR: #000000;
-	FONT-WEIGHT: bold;
+	FONT-WEIGHT: 500;
     HEIGHT: 20px;
     TEXT-ALIGN: center;
     TEXT-TRANSFORM: uppercase;
@@ -1094,7 +1189,7 @@ TABLE.DataSheet TR TD {
 }
 TABLE.DataSheet TR.TableHead {
 	BACKGROUND-COLOR: #CCCCCC;
-	FONT-WEIGHT: bold;
+	FONT-WEIGHT: 500;
     HEIGHT: 20px;
     TEXT-ALIGN: center;
     TEXT-TRANSFORM: uppercase;
@@ -1159,7 +1254,7 @@ TABLE.DataSheet TR TH {
 }
 .AffiliateElmTitle {
 	TEXT-ALIGN: center;
-	FONT-WEIGHT: bold;
+	FONT-WEIGHT: 500;
 	BACKGROUND-COLOR: #FFD44C;
 	PADDING: 1px;
 }
@@ -1198,11 +1293,11 @@ DIV.SurveyAnswerComment {
 }
 .SurveyQuestion {
 	FONT-SIZE: 12px;
-	FONT-WEIGHT: bold;
+	FONT-WEIGHT: 500;
 	PADDING: 2px;
 }
 .SurveyQuestionMenu {
-	FONT-WEIGHT: bold;
+	FONT-WEIGHT: 500;
 	PADDING: 0px;
 }
 .SurveyAnswerTextLine_1 {
@@ -1249,7 +1344,7 @@ TD.SurveyTabSelected {
 	HEIGHT: 26px;
 	BACKGROUND-COLOR: #dddddd;
 	WHITE-SPACE: nowrap;
-	FONT-WEIGHT: bold;
+	FONT-WEIGHT: 500;
 	FONT-SIZE: 12px;
 	COLOR: #953e0e;
 }
@@ -1356,7 +1451,7 @@ td.mf_no_items {
 
 table.SearchTable {
 	width: 100%;
-	background-color: #ffd44c;
+	/*background-color: #ffd44c;*/
 }
 
 table.SearchTable td {
@@ -1441,7 +1536,7 @@ span.override_name {
 	color: #f00;
 }
 .alp_selected {
-	font-weight: bold;
+	font-weight: 500;
 }
 .froogle_calc_size {
 	margin-left: -5px;
@@ -1473,7 +1568,7 @@ a.preset_back, a.preset_back:visited {
 	text-decoration: none;
 }
 .preset_bold {
-	font-weight: bold;
+	font-weight: 500;
 }
 .preset_table td {
 	text-align: center;
@@ -1500,7 +1595,7 @@ a.preset_back, a.preset_back:visited {
 	height: 145px;
 }
 .filter_bold a {
-	font-weight: bold;
+	font-weight: 500;
 }
 .filter_preset_edit .preset_title {
 	width: 600px;
@@ -1561,7 +1656,7 @@ div.survey_form {
 
 p.survey_form_header {
         font-size: 16px;
-        font-weight: bold;
+        font-weight: 500;
         margin-bottom: 50px;
 }
 
@@ -1641,7 +1736,7 @@ div.confirmation-hedgehog {
 }
 
 div.confirmation-hedgehog p {
-        font-weight: bold;
+        font-weight: 500;
         font-family: Arial, Helvetica, sans-serif;
         font-size: 15px;
 }
@@ -1845,3 +1940,75 @@ div.ui.error.message ul.list li {
 .xcart.buttons .ui.dropdown .menu > .item {
 	font-size: 10px;
 }
+
+.admin-main-content {
+	padding-top: 10px;
+	padding-left: 20px;
+}
+
+.main-menu-modules {
+    line-height: 1.3;
+}
+.main-menu-modules a {
+    text-decoration: none;
+}
+
+.main-menu-modules a:hover {
+    text-decoration: underline;
+}
+
+.main-menu-modules .menu-block {
+    padding: .5em  .5em 0;
+}
+.main-menu-modules .menu-block ul {
+    margin:0;
+    padding:0;
+    list-style: none;
+}
+
+.main-menu-modules .menu-block .module {
+    margin-bottom: .4em;
+}
+.main-menu-modules .menu-block .module ul li {
+    line-height: 1.2;
+}
+
+.main-menu-modules .menu-block .module ul li ul {
+    padding-left: .8em;
+}
+.main-menu-modules .menu-block .module .name {
+    border-bottom: 1px solid;
+    margin-bottom: .5em;
+    font-size: 1em;
+    font-weight: 500;
+}
+
+.hide {
+	display: none;
+}
+
+/*.VertMenuLeftColumn {*/
+	/*position: relative;*/
+/*}*/
+
+/*.menu-changer {*/
+	/*font-size: 20px;*/
+/*}*/
+
+/*.VertMenuLeftColumn .admin-menu {*/
+	/*display: none;*/
+	/*position: absolute;*/
+    /*width: 900px;*/
+	/*!*width: 190px;*!*/
+	/*z-index: 100;*/
+/*}*/
+
+/*.VertMenuLeftColumn .admin-menu .VertMenuBorder {*/
+	/*float: left;*/
+	/*margin-right: 1em;*/
+	/*width: 200px;*/
+/*}*/
+
+/*.VertMenuLeftColumn .admin-menu.active {*/
+	/*display: block;*/
+/*}*/

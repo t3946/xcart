@@ -13,7 +13,7 @@ return array_replace_recursive([
    'globals' => [
 //       'blowfish_key' => '8d5db63ada15e11643a0b1c3477c2c5c',
 //       'blowfish' => new \ctBlowfish(),
-       'sql_tbl' => include "xcart_tables.php",
+       'sql_tbl' => include __DIR__ . DS . "xcart_tables.php",
    ],
    'modules' => include __DIR__ . DS . 'modules.php',
    'locale' => [
@@ -44,12 +44,12 @@ return array_replace_recursive([
                ]
            ]
        ],
-//       'errorHandler' => [
-//           'class' => '\\Xcart\\App\\Main\\ErrorHandler',
-//           'debug' => true,
-//           'errHandler' => true,
-//           'ignoreDeprecated' => true,
-//       ],
+       'errorHandler' => [
+           'class' => '\\Xcart\\App\\Main\\ErrorHandler',
+           'debug' => true,
+           'errHandler' => true,
+           'ignoreDeprecated' => true,
+       ],
        'event' => [
            'class' => '\\Xcart\\App\\Event\\EventManager',
            'events' => include __DIR__ . DS .  'events.php'

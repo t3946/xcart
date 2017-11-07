@@ -18,9 +18,12 @@
                         let el = document.createElement('input');
                         el.type = 'hidden';
                         el.name = vars[0];
-                        el.value = decodeURI(vars[1]);
 
-                        form.appendChild(el);
+                        if (vars.length > 1) {
+                            el.value = decodeURI(vars[1]);
+                        }
+
+                        form.prepend(el);
                     });
                 }
             }

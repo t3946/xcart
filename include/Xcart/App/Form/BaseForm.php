@@ -76,11 +76,11 @@ abstract class BaseForm implements IteratorAggregate, Countable, ArrayAccess, IV
     /**
      * @var \Xcart\App\Form\Fields\Field[]
      */
-    protected $_fields = [];
+    protected $_fields = null;
     /**
      * @var array
      */
-    protected $_renderFields = [];
+    protected $_renderFields = null;
     /**
      * @var bool
      */
@@ -98,12 +98,12 @@ abstract class BaseForm implements IteratorAggregate, Countable, ArrayAccess, IV
      */
     private $_parentForm;
 
-    public function init()
-    {
-        $this->initFields();
-        $this->initInlines();
-        $this->setRenderFields(array_keys($this->getFieldsInit()));
-    }
+//    public function init()
+//    {
+//        $this->initFields();
+//        $this->initInlines();
+//        $this->setRenderFields(array_keys($this->getFieldsInit()));
+//    }
 
     /**
      * @param array $value
@@ -151,16 +151,12 @@ abstract class BaseForm implements IteratorAggregate, Countable, ArrayAccess, IV
     /**
      * @param $owner BaseForm
      */
-    public function beforeValidate($owner)
-    {
-    }
+    public function beforeValidate($owner) {}
 
     /**
      * @param $owner BaseForm
      */
-    public function afterValidate($owner)
-    {
-    }
+    public function afterValidate($owner, $isValid) {}
 
     public function getName()
     {
@@ -174,7 +170,7 @@ abstract class BaseForm implements IteratorAggregate, Countable, ArrayAccess, IV
 
     public function __get($name)
     {
-        if (array_key_exists($name, $this->_fields)) {
+        if ($this->hasField($name)) {
             return $this->_fields[$name];
         } else {
             return $this->__getInternal($name);
@@ -185,7 +181,7 @@ abstract class BaseForm implements IteratorAggregate, Countable, ArrayAccess, IV
     {
         $this->_id = null;
 
-        foreach ($this->_fields as $name => $field) {
+        foreach ($this->getFieldsInit() as $name => $field) {
             $newField = clone $field;
             $newField->setForm($this);
             $this->_fields[$name] = $newField;
@@ -194,7 +190,7 @@ abstract class BaseForm implements IteratorAggregate, Countable, ArrayAccess, IV
 
     public function __set($name, $value)
     {
-        if (array_key_exists($name, $this->_fields)) {
+        if ($this->hasField($name)) {
             $this->_fields[$name]->setValue($value);
         } else {
             $this->__setInternal($name, $value);
@@ -219,7 +215,6 @@ abstract class BaseForm implements IteratorAggregate, Countable, ArrayAccess, IV
 
     /**
      * Initialize fields
-     * @void
      */
     public function initFields()
     {
@@ -235,9 +230,9 @@ abstract class BaseForm implements IteratorAggregate, Countable, ArrayAccess, IV
             }
 
             $this->_fields[$name] = Creator::createObject(array_merge([
-                'name' => $name,
-                'form' => $this,
-                'prefix' => $prefix,
+                  'name' => $name,
+                  'form' => $this,
+                  'prefix' => $prefix,
             ], $config));
         }
     }
@@ -255,7 +250,7 @@ abstract class BaseForm implements IteratorAggregate, Countable, ArrayAccess, IV
 
     public function getFields()
     {
-        return $this->_fields;
+        return [];
     }
 
     public function __toString()
@@ -347,6 +342,10 @@ abstract class BaseForm implements IteratorAggregate, Countable, ArrayAccess, IV
      */
     public function getInlinesInit()
     {
+        if (!$this->_inlines) {
+            $this->initInlines();
+        }
+
         return $this->_inlines;
     }
 
@@ -363,6 +362,7 @@ abstract class BaseForm implements IteratorAggregate, Countable, ArrayAccess, IV
         }
         $this->_renderFields = [];
         $initFields = $this->getFieldsInit();
+
         foreach ($fields as $name) {
             if (in_array($name, $this->exclude)) {
                 continue;
@@ -378,6 +378,10 @@ abstract class BaseForm implements IteratorAggregate, Countable, ArrayAccess, IV
 
     public function getRenderFields()
     {
+        if (!$this->_renderFields) {
+            $this->setRenderFields(array_keys($this->getFieldsInit()));
+        }
+
         return $this->_renderFields;
     }
 
@@ -387,16 +391,29 @@ abstract class BaseForm implements IteratorAggregate, Countable, ArrayAccess, IV
      */
     public function getFieldsInit()
     {
+        if (!$this->_fields) {
+            $this->initFields();
+        }
+
         return $this->_fields;
     }
+
+//    public function __isset($name)
+//    {
+//        return $this->hasField($name) || $this->__issetInternal($name);
+//    }
 
     /**
      * @param string $attribute
      * @return bool
      */
-    public function hasField($attribute)
+    public function hasField($name)
     {
-        return array_key_exists($attribute, $this->_fields);
+        if (is_null($this->_fields)) {
+            $this->getFieldsInit();
+        }
+
+        return array_key_exists($name, $this->_fields);
     }
 
     /**
@@ -404,7 +421,16 @@ abstract class BaseForm implements IteratorAggregate, Countable, ArrayAccess, IV
      */
     public function isValid()
     {
-        return $this->isValidInternal() && $this->isValidInlines();
+        $this->beforeValidate($this);
+        $result = $this->isValidInternal() && $this->isValidInlines();
+        $this->afterValidate($this, $result);
+
+        if ($result) {
+            $errors = $this->getErrors();
+            $result = count($errors) === 0;
+        }
+
+        return $result;
     }
 
     public function isValidInlines()
@@ -611,7 +637,7 @@ abstract class BaseForm implements IteratorAggregate, Countable, ArrayAccess, IV
     public function getIterator()
     {
         $fields = [];
-        foreach ($this->_renderFields as $key) {
+        foreach ($this->getRenderFields() as $key) {
             $fields[$key] = $this->_fields[$key];
         }
         return new ArrayIterator($fields);
@@ -648,6 +674,9 @@ abstract class BaseForm implements IteratorAggregate, Countable, ArrayAccess, IV
 
     private function initInlines()
     {
+        $this->_inlines = [];
+        $this->_inlineClasses = [];
+
         $inlines = $this->getInlines();
 
         foreach ($inlines as $params) {

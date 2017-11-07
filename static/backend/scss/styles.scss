@@ -45,12 +45,12 @@
                 width: 30%;
                 float: left;
                 display: inline-block;
-                font-weight: bold;
+                font-weight: 500;
 
             }
 
             label {
-                font-weight: bold;
+                font-weight: 500;
             }
         }
 
@@ -146,7 +146,16 @@
         color: #550000;
         box-shadow: #f7f6f6 0 2px 1px 0 inset;
         font-size: 10px;
+        font-weight: normal;
         line-height: 18px;
+        height: auto;
+        vertical-align: middle;
+
+        i {
+          color: #550000;
+          vertical-align: middle;
+          line-height: 1;
+        }
 
         &:hover {
             border-color: royalblue;
@@ -241,8 +250,8 @@
 
 .buttons-block {
     &.fixed {
-        background-color: #E4E0C5;
-        min-width: 884px;
+        background-color: #edeef0;
+        min-width: 1048px;
         position: fixed;
         bottom: 0;
         padding: 10px 0;
@@ -273,7 +282,7 @@
 
             & > li {
                 text-transform: capitalize;
-                font-weight: 700;
+                font-weight: 500;
             }
         }
     }

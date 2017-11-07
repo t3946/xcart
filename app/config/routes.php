@@ -1,9 +1,6 @@
 <?php
-return [
-    [
-        'route' => '',
-        'path' => 'Modules.Product.routes',
-    ],
+$admin_routes = include('routes_admin.php');
+return array_merge($admin_routes, [
     [
         'route' => '/amp',
         'path' => 'Modules.Amp.routes',
@@ -15,19 +12,9 @@ return [
         'namespace' => 'brand',
     ],
     [
-        'route' => '/admin/dashboard',
-        'path' => 'Modules.Dashboard.routes_admin',
-        'namespace' => 'dashboard'
-    ],
-    [
-        'route' => '/admin/reports',
-        'path' => 'Modules.Reports.routes_admin',
-        'namespace' => 'reports'
-    ],
-    [
-        'route' => '/admin/amazon',
-        'path' => 'Modules.Amazon.routes_admin',
-        'namespace' => 'amazon'
+        'route' => '/images',
+        'path' => 'Modules.Image.routes',
+        'namespace' => 'images'
     ],
     [
         'route' => '/payment',
@@ -35,24 +22,9 @@ return [
         'namespace' => 'payment'
     ],
     [
-        'route' => '/admin/brand',
-        'path' => 'Modules.Brand.routes_admin',
-        'namespace' => 'brand'
-    ],
-    [
-        'route' => '/admin/order',
-        'path' => 'Modules.Order.routes_admin',
-        'namespace' => 'order'
-    ],
-    [
-        'route' => '/admin/product',
-        'path' => 'Modules.Product.routes_admin',
-        'namespace' => 'product'
-    ],
-    [
-        'route' => '/admin',
-        'path' => 'Modules.Admin.routes',
-        'namespace' => 'admin'
+        'route' => '/',
+        'path' => 'Modules.Pages.routes',
+        'namespace' => 'page'
     ],
 
-];
+]);

@@ -28,28 +28,28 @@
     </fieldset>
 {/if}
 
-{set $inlines = $form->renderInlines()}
-{if $inlines}
-    <hr>
-    <h2>{t 'Inline forms'}</h2>
-    <br>
-    {foreach $inlines as $name => $iforms}
-        {foreach $iforms as $inline}
-            <fieldset>
-                <div class="fieldset-title">
-                    {$name}
-                </div>
+{*{set $inlines = $form->renderInlines()}*}
+{*{if $inlines}*}
+    {*<hr>*}
+    {*<h2>{t 'Inline forms'}</h2>*}
+    {*<br>*}
+    {*{foreach $inlines as $name => $iforms}*}
+        {*{foreach $iforms as $inline}*}
+            {*<fieldset>*}
+                {*<div class="fieldset-title">*}
+                    {*{$name}*}
+                {*</div>*}
 
-                {var $fields = $inline->getFieldsInit()}
-                <div class="fields">
-                    {foreach $fields as $field}
-                        <div class="form-field {$field->name}">
-                            {raw $field->render()}
-                        </div>
-                    {/foreach}
-                    </div>
-                </fieldset>
-        {/foreach}
+                {*{var $fields = $inline->getFieldsInit()}*}
+                {*<div class="fields">*}
+                    {*{foreach $fields as $field}*}
+                        {*<div class="form-field {$field->name}">*}
+                            {*{raw $field->render()}*}
+                        {*</div>*}
+                    {*{/foreach}*}
+                    {*</div>*}
+                {*</fieldset>*}
+        {*{/foreach}*}
 
-    {/foreach}
-{/if}
+    {*{/foreach}*}
+{*{/if}*}

@@ -28,7 +28,7 @@ class SiteModel extends Model
         $str = '';
         $attr = [];
         if (!$this->showInLists()) {
-            $attr[] = 'Hidden from stores list';
+            $attr[] = 'Hidden';
         }
         if (!$this->isWork()) {
             $attr[] = 'Closed';
@@ -39,7 +39,7 @@ class SiteModel extends Model
             $str = " ({$str})";
         }
 
-        return "[{$this->code}] {$this->domain}{$str}";
+        return "[{$this->code}] {$this->getName()}{$str}";
     }
 
     public static function tableName()
@@ -50,20 +50,6 @@ class SiteModel extends Model
     public static function getFields()
     {
         return [
-            'images' => [
-                'class' => HasManyField::className(),
-                'modelClass' => ImageSModel::className(),
-                'link' => ['id' => 'storefrontid'],
-//                'extra' => ['avail' => 'Y']
-            ],
-
-            'favicons' => [
-                'class' => HasManyField::className(),
-                'modelClass' => ImageFModel::className(),
-                'link' => ['id' => 'storefrontid'],
-//                'extra' => ['avail' => 'Y']
-            ],
-
             'config' => [
                 'class' => HasManyField::className(),
                 'modelClass' => SiteConfigModel::className(),
@@ -169,7 +155,7 @@ class SiteModel extends Model
 
     public function getName()
     {
-        $name = '';
+        $name = $this->getBaseDomain();
 
         $config = $this->getConfig();
 

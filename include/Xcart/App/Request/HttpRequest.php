@@ -35,6 +35,7 @@ class HttpRequest extends Request
     protected $_scriptUrl;
 
     protected $_url;
+    protected $_url_resolved;
 
     protected $_port;
 
@@ -388,7 +389,7 @@ class HttpRequest extends Request
     public function getUrl()
     {
         if ($this->_url === null) {
-            $this->_url = $this->resolveRequestUri();
+            $this->_url = $this->getRequestUri();
         }
 
         return $this->_url;
@@ -405,6 +406,28 @@ class HttpRequest extends Request
         return strtok($this->getUrl(), '?');
     }
 
+
+    public function resolveRequestUri($from_get_path = true)
+    {
+        $requestUri = '';
+
+        if ($from_get_path && is_bool($this->from_get) && $this->from_get) {
+            if ($qs = $this->getQueryArray(null, false)) {
+                $requestUri = current(array_keys($qs));
+            }
+        }
+        elseif ($from_get_path && $this->from_get && !empty($_GET[$this->from_get])) {
+            $requestUri = urldecode($_GET[$this->from_get]);
+            unset ($_GET[$this->from_get]);
+            unset ($_REQUEST[$this->from_get]);
+        }
+        else {
+            $requestUri = $this->getRequestUri();
+        }
+
+        return $requestUri;
+    }
+
     /**
      * Resolves the request URI portion for the currently requested URL.
      * This refers to the portion that is after the [[hostInfo]] part. It includes the [[queryString]] part if any.
@@ -414,33 +437,33 @@ class HttpRequest extends Request
      * Note that the URI returned is URL-encoded.
      * @throws InvalidConfigException if the request URI cannot be determined due to unusual server configuration
      */
-    protected function resolveRequestUri()
+    public function getRequestUri()
     {
-        if ($this->from_get && !empty($_GET[$this->from_get])) {
-            $requestUri = urldecode($_GET[$this->from_get]);
-            unset ($_GET[$this->from_get]);
-            unset ($_REQUEST[$this->from_get]);
-        }
-        elseif (isset($_SERVER['HTTP_X_REWRITE_URL'])) { // IIS
-            $requestUri = urldecode($_SERVER['HTTP_X_REWRITE_URL']);
-        }
-        elseif (isset($_SERVER['REQUEST_URI'])) {
-            $requestUri = $_SERVER['REQUEST_URI'];
-            if ($requestUri !== '' && $requestUri[0] !== '/') {
-                $requestUri = preg_replace('/^(http|https):\/\/[^\/]+/i', '', $requestUri);
+        if (!$this->_url_resolved) {
+            if (isset($_SERVER['HTTP_X_REWRITE_URL'])) { // IIS
+                $requestUri = urldecode($_SERVER['HTTP_X_REWRITE_URL']);
             }
-        }
-        elseif (isset($_SERVER['ORIG_PATH_INFO'])) { // IIS 5.0 CGI
-            $requestUri = $_SERVER['ORIG_PATH_INFO'];
-            if (!empty($_SERVER['QUERY_STRING'])) {
-                $requestUri .= '?' . $_SERVER['QUERY_STRING'];
+            elseif (isset($_SERVER['REQUEST_URI'])) {
+                $requestUri = $_SERVER['REQUEST_URI'];
+                if ($requestUri !== '' && $requestUri[0] !== '/') {
+                    $requestUri = preg_replace('/^(http|https):\/\/[^\/]+/i', '', $requestUri);
+                }
             }
-        }
-        else {
-            throw new InvalidConfigException('Unable to determine the request URI.');
+            elseif (isset($_SERVER['ORIG_PATH_INFO'])) { // IIS 5.0 CGI
+                $requestUri = $_SERVER['ORIG_PATH_INFO'];
+                if (!empty($_SERVER['QUERY_STRING'])) {
+                    $requestUri .= '?' . $_SERVER['QUERY_STRING'];
+                }
+            }
+            else {
+                throw new InvalidConfigException('Unable to determine the request URI.');
+            }
+
+            $this->_url_resolved = $requestUri;
         }
 
-        return $requestUri;
+
+        return $this->_url_resolved;
     }
 
     /**
@@ -458,12 +481,19 @@ class HttpRequest extends Request
      *
      * @return array part of the request URL that is after the question mark
      */
-    public function getQueryArray()
+    public function getQueryArray($query_string = null, $ignore_fg = true)
     {
-        $string = $this->getQueryString();
+        $string = $query_string ?: $this->getQueryString();
         parse_str($string, $data);
 
-        if ($this->from_get && !empty($data[$this->from_get])) {
+        if ($ignore_fg && is_bool($this->from_get)) {
+            if ($data) {
+                $requestUri = current(array_keys($data));
+                unset($data[$requestUri]);
+            }
+        }
+        else
+        if ($ignore_fg && $this->from_get && !empty($data[$this->from_get])) {
             unset($data[$this->from_get]);
         }
 

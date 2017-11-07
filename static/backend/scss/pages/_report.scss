@@ -10,7 +10,7 @@
 
   .TableHead {
     BACKGROUND-COLOR: #CCCCCC;
-    FONT-WEIGHT: bold;
+    FONT-WEIGHT: 500;
     HEIGHT: 20px;
     TEXT-ALIGN: center;
     TEXT-TRANSFORM: uppercase;
@@ -48,7 +48,7 @@
 
   .order-report-header {
     font-size: 16px;
-    font-weight: bold;
+    font-weight: 500;
     margin: 30px 0 10px;
   }
 
@@ -66,7 +66,7 @@
         text-align: center;
 
         & > td {
-          font-weight: bold;
+          font-weight: 500;
         }
       }
 
@@ -121,7 +121,7 @@
         }
 
         &.total-label{
-          font-weight: bold;
+          font-weight: 500;
         }
       }
 
