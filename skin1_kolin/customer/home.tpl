@@ -20,7 +20,7 @@
                     {elseif $current_category.title_tag ne "" && $main eq "catalog"}
                         {$current_category.title_tag} {*| {$location[0].0*}
                     {else}
-                        {if $current_storefront == 41}
+                        {if $current_storefront == 41 && $main eq "product"}
                             {capture name=title}
                                 {assign var="seo_product_title" value="`$product.product` Online | `$config.Company.company_name`"}
                                 {$seo_product_title|truncate:"80":"":false|escape|strip}
@@ -98,11 +98,8 @@
     {include file="meta.tpl" }
 
 {if ($main eq "product")}
-    {if $product && $product.productid == 346536}
-        <link rel="amphtml" href="https://www.artistsupplysource.com/static/products/346536/sienna-horizon-counterweight-studio-easel-craftech-amp.html">
-    {/if}
-    {if $product && $product.productid == 29794}
-        <link rel="amphtml" href="https://www.artistsupplysource.com/static/products/29794/fairgate-r-aluminum-english-metric-ruler-metallic-aluminum-40-ruler-model-ms-100-price-per-each-amp.html">
+    {if $oProduct}
+        <link rel="amphtml" href="{$oProduct->getAbsoluteUrl(true, true)}">
     {/if}
 {* igor_async *}
 <script src="{$SkinDir}/jquery.tooltip.js" type="text/javascript"></script>
@@ -204,15 +201,26 @@ function func_load_ajax_carousel_products(section_name)
                         a_href = 'product.php?productid=' + this.productid;
                     }
                     ga_page_name = this.ga_param;
-                    html += '<li class="google_impression_object" data-productid="'+this.productid+'" data-name="'+this.product+'" data-category="'+this.category+'" data-brand="'+this.brand+'" data-list="'+ga_page_name+'" data-price="'+this.price.toFixed(2)+'" data-position="'+this.N_key+'" class="active">' +
+                    html += '<li class="google_impression_object" data-product-id="'+this.productid+'" data-name="'+this.product+'" data-category="'+this.category+'" data-brand="'+this.brand+'" data-list="'+ga_page_name+'" data-price="'+this.price.toFixed(2)+'" data-position="'+this.N_key+'" class="active">' +
                         '<div style="text-align: center;"><div style="width:150px;height:150px; margin:0 auto;">' +
                         '<a href="' + a_href + '" onclick="onProductClick(\'' + this.productid + '\',\'' + this.product + '\',\'' + this.category + '\',\'' + this.brand + '\',\'' + this.N_key + '\',\'' + ga_page_name + '\',\'' + this.price + '\'); return !ga.loaded;">';
                     if (this.thumb && this.thumb.length) {
                         html += this.thumb;
                     }
                     html += '</a></div>' +
-                        '<br />' + '<a href="' + a_href + '" onclick="onProductClick(\'' + this.productid + '\',\'' + this.product + '\',\'' + this.category + '\',\'' + this.brand + '\',\'' + this.N_key + '\',\'' + ga_page_name + '\',\'' + this.price.toFixed(2) + '\'); return !ga.loaded;">' + this.title + '</a>';
-                    if (this.is_group === 'false') {html += '<br /> <font class="ProductPrice">Our Price: US$ ' + this.price.toFixed(2) + '</font>';}
+                        '<br />' + '<a href="' + a_href + '" onclick="onProductClick(\'' + this.productid + '\',\'' + this.product + '\',\'' + this.category + '\',\'' + this.brand + '\',\'' + this.N_key + '\',\'' + ga_page_name + '\',\'' + this.price.toFixed(2) + '\'); return !ga.loaded;">' + this.product + '</a>';
+                    if (this.is_group === true) {
+                        if (this.price > 0) {
+                            var range = '';
+                            if (this.price !== this.price_2) {
+                                range = ' - US$ ' + this.price_2.toFixed(2);
+                            }
+                            html += '<br /> <span class="ProductPrice">US$ ' + this.price.toFixed(2) + range + '</span>';
+                        }
+                    } else
+                    {
+                        html += '<br /> <span class="ProductPrice">US$ ' + this.price.toFixed(2) + '</span>';
+                    }
                     html += '</div>' +
                         '</li>';
                 });
@@ -291,10 +299,14 @@ function func_load_ajax_carousel_products(section_name)
 
 {/if}
 
-
-{* ------------------- *}
 {include file="cidev_tracking_code.tpl" }
-{* ------------------- *}
+
+{if !($usertype eq "A" || $usertype eq "P")}
+    <script type="text/javascript">
+        ga('send', 'pageview');
+    </script>
+{/if}
+
 
 {include file="head.tpl" }
 {include file="rectangle_top.tpl" }
@@ -391,7 +403,7 @@ function func_load_ajax_carousel_products(section_name)
 {/if}
 
 {if $use_schema_org eq "Y" && $main eq "product"}
-<meta itemscope="" itemtype="http://schema.org/Product" itemref="so_image so_category so_name so_url so_description so_gtin so_weight so_brand so_manuf so_sku so_mpn so_model so_offer"/>
+<meta itemscope="" itemtype="http://schema.org/Product" itemref="{if !$oProduct->isGroupRoot()}so_image so_gtin so_weight{/if} so_category so_name so_url so_description so_brand so_manuf so_sku so_mpn so_model so_offer"/>
 {/if}
 <table cellpadding="0" cellspacing="0" width="100%">
 <tr><td colspan=3 height="10">&nbsp;</td></tr>

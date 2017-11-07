@@ -94,6 +94,11 @@ var runTests = function(editor) {
 
 {if $login ne ""}
 	{include file="cidev_tracking_code.tpl" }
+    {if !($usertype eq "A" || $usertype eq "P")}
+		<script type="text/javascript">
+            ga('send', 'pageview');
+		</script>
+    {/if}
 {/if}
 
 <!-- main area -->

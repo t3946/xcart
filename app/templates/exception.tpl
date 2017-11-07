@@ -37,7 +37,7 @@
                 {set $hasCode = $trace.file and is_file($trace.file) }
 
                 <tr class="trace {$cssClass}">
-                  <td class="content">
+                    <td class="content">
                         <div class="trace-file">
                             #{$index} {$trace.file}({$trace.line}):
 
@@ -53,9 +53,9 @@
                             {/if}
                         </div>
 
-                      {if $hasCode}
+                        {if $hasCode}
                           {raw $this->renderSource($trace.file, $trace.line, $this->maxSourceLines)}
-                      {/if}
+                        {/if}
                     </td>
                 </tr>
             {/foreach}

@@ -10,6 +10,11 @@ return array_replace_recursive([
        'base' => realpath(implode(DS, [__DIR__, '..'])),
        'www' => realpath(implode(DS, [__DIR__, '..', '..'])),
    ],
+   'globals' => [
+//       'blowfish_key' => '8d5db63ada15e11643a0b1c3477c2c5c',
+//       'blowfish' => new \ctBlowfish(),
+       'sql_tbl' => include "xcart_tables.php",
+   ],
    'modules' => include __DIR__ . DS . 'modules.php',
    'locale' => [
        'language' => 'en',

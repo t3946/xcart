@@ -69,7 +69,11 @@
 	};
 
 	(function(){
-		$(document).on('pageload ready', function(){
+
+	    $(document).on('pagechange', function(){
+            ga('set', 'page', location.pathname + window.location.search);
+            ga('send', 'pageview');
+
 			setTimeout(function(){
 				$('.slider-products')
 					.not('.slick-initialized')
@@ -83,7 +87,6 @@
 							}.bind(slick), 10000)
 						}
 					});
-                ga('send', {hitType: 'pageview', location: location.href});
 			}, 200);
 
 			$('.slider-head').not('.initialized').on('click', function(){

@@ -1,12 +1,12 @@
 {capture name=dialog}
-    {if $oProduct->isGroupRoot()}
+    {if $oProduct && $oProduct->isGroupRoot()}
         <p><b>This product is group parent and has child products</b></p>
-    {elseif $oProduct->isGroupChild()}
+    {elseif $oProduct && $oProduct->isGroupChild()}
         <p><b>This product has group parent</b></p>
     {else}
         <p><b>This product has no any parent group products</b></p>
     {/if}
-    {if $oProduct->isGroupRoot() || $oProduct->isGroupChild()}
+    {if $oProduct && ($oProduct->isGroupRoot() || $oProduct->isGroupChild())}
         <table width="100%" class="group_product">
             <tr class="TableHead">
                 <td>SKU</td>
@@ -44,7 +44,7 @@
             {/if}
         </table>
     {/if}
-    {if $oProduct->isGroupRoot() || (!$oProduct->isGroupRoot() && !$oProduct->isGroupChild())}
+    {if $oProduct && ($oProduct->isGroupRoot() || (!$oProduct->isGroupRoot() && !$oProduct->isGroupChild()))}
     <br>
     <div class="new_group" data-product-id="{$oProduct->productid}">
         <input class="add_new_group" autocomplete="off" type="text" name="add_new_group" placeholder="Enter product SKU"/>

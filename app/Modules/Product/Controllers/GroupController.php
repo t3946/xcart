@@ -143,9 +143,9 @@ class GroupController extends PrototypeAdminController
                 $brands = $store->getLevels();
 
                 if ($store->level > 3) {
-                    $store->defaultPagerPageSize = 200;
+                    $store->defaultPagerPageSize = 20000;
                 } else {
-                    $store->defaultPagerPageSize = 50;
+                    $store->defaultPagerPageSize = 500;
                 }
 
                 if ($products = $store->getModels()) {
@@ -164,7 +164,12 @@ class GroupController extends PrototypeAdminController
                                 $store->data['group_phrase'] = $new_group_phrase;
                                 $store->level = $new_level;
                                 $brands = $store->getLevels();
+
                                 $products = $store->getModels();
+
+                                if (count($brands) === 1 && $brands[0]->getFromQueryAttribute('group_phrase') == $new_group_phrase) {
+                                    unset($brands);
+                                }
                             } else {
                                 unset($brands);
                             }
@@ -217,7 +222,7 @@ class GroupController extends PrototypeAdminController
                     ])->all()) {
                     foreach ($products as $key => $product) {
                         $res .= $this->renderSmarty(
-                            'group_thumbnail.tpl',
+                            'group_image.tpl',
                             ['product' => $product]
                         );
                     }

@@ -135,14 +135,15 @@ class ProductHelper
 
     /**
      * @param ProductModel[] $oProducts
-     * @return mixed
+     * @return ProductModel[]
      */
     public static function groupRootProducts($oProducts)
     {
         $res = [];
         if ($oProducts) {
             foreach ($oProducts as $oProduct) {
-                if (!$oProduct->isGroupRoot() && !is_null($oProduct->group_root)) {
+
+                if ($oProduct->isGroupChild()) {
                     if (!array_key_exists($oProduct->group_root, $res)) {
                         if ($parent = $oProduct->parent) {
                             $res[$parent->productid] = $parent;
@@ -163,39 +164,29 @@ class ProductHelper
      */
     public static function getFirstSame($a)
     {
-        function longestCS($a, $b)
-        {
-            if (empty($a) || empty($b)) {
-                return '';
+        function intersect($arr1, $arr2) {
+            $res = [];
+            foreach ($arr1 as $key => $val) {
+                $ar = array_map('strtolower', $arr2);
+                if (mb_strtolower($val) === $ar[$key]){
+                    $res[] = $val;
+                } else {
+                    break;
+                }
             }
-
-            if ($a === $b) {
-                return $a;
-            }
-
-            $u = 0;
-
-            for ($i = 0; $i < mb_strlen($a) - 1; $i++) {
-                    if (mb_substr($a, $i, 1) == mb_substr($b, $i, 1)) {
-                        $u = $i + 1;
-                    } else {
-                        return mb_substr($a, 0, $u);
-                    }
-            }
-            return mb_substr($a, 0, $u + 1);
+            return $res;
         }
 
-        $b = null;
-
-        if ($a) {
-
-            $b = array_shift($a);
-
-            foreach ($a as $s) {
-                $b = longestCS($b, $s);
+        $arr = null;
+        foreach ($a as $w) {
+            $as = explode(' ', $w);
+            if (is_null($arr)) {
+                $arr = $as;
+            } else {
+                $arr = intersect($as, $arr);
             }
         }
-        return trim(mb_substr($b, 0, mb_strrpos($b, ' ')));
+        return $res = implode(' ', $arr);
     }
 
     public static function getGroupLevel($option)

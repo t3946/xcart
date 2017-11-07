@@ -8,14 +8,17 @@ use Xcart\Data;
 trait DataModelTrait
 {
     /**
+     * @var Data|null
+     */
+    private $dataModel = null;
+
+    /**
      * @return string class of Data
      */
     public static function getDataModelClass()
     {
         return Data::className();
     }
-
-    private $dataModel = null;
 
     /**
      * @return Data
@@ -27,7 +30,7 @@ trait DataModelTrait
         if (!$this->dataModel) {
             $class = static::getDataModelClass();
             $this->dataModel = new $class();
-            $this->dataModel->fill($this->getAttributes());
+            $this->dataModel->setAttributes($this->getAttributes());
 
             $this->afterFetchDataModel($this->dataModel);
         }
@@ -38,9 +41,15 @@ trait DataModelTrait
     /**
      * @param Data $model
      */
-    public function afterFetchDataModel($model)
-    {
+    public function afterFetchDataModel($model) {}
 
+    public function afterSetAttribute($name, $value)
+    {
+        parent::afterSetAttribute($name, $value);
+
+        if ($this->dataModel) {
+            $this->dataModel->setAttribute($name, $value);
+        }
     }
 
 

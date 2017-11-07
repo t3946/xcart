@@ -1612,7 +1612,7 @@ SQL;
                     global $mail_smarty;
                     $t_smarty = $mail_smarty;
                     unset($mail_smarty);
-                    $oMail = \Xcart\App\Main\Xcart::app()->mail;
+                    $oMail = \Xcart\App\Main\Xcart::app()->oldMail;
                     $oMail->init();
                     $oMail->to = 'igor@s3stores.com';
                     $oMail->from = "<" . $config['Company']['orders_department'] . ">";

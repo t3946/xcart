@@ -31,12 +31,12 @@ function collectVisibleElements(obj) {
 
     var t = obj.visible(false, false);
     if (t) {
-        var po = obj.parent(),
-        wraper_width = po.parent().width(),
+        var po = obj,
+        wraper_width = po.width(),
         ul_left = Math.abs(po.position().left),
         el_left = obj.position().left;
         if ((el_left >= ul_left) && ((ul_left + wraper_width) > el_left)) {
-            var productid = obj.data('productid');
+            var productid = obj.data('product-id');
             if (sendItems.indexOf(productid) === -1 && sentItems.indexOf(productid) === -1) {
                 sendItems.push(productid);
                 sendItemsValues.push({
@@ -81,21 +81,20 @@ function sendGoogleAnalitics()
 }
 
 function checkCarouselsVisibility() {
-    $('.jcarousel, .product_list_row')
-        .find('.google_impression_object').each(function () {
+    $('.google_impression_object').each(function () {
             collectVisibleElements($(this))
     });
     sendGoogleAnalitics();
 }
 
 $(document).on('pageload ready', function(){
-    $(window).scroll(function(){
+    $(window).on('scroll touchmove', function(){
         requestAnimationFrame(checkCarouselsVisibility);
     });
     $('div.ga_click > h3 > a').unbind('click');
     $('a.ga_click, div.ga_click > h3 > a')
         .click(function(){
-            var label = $(this).data('label');
+            var label = $(this).data('label') || $(this).parent().parent().data('label');
             if (label === undefined) {
                 label = $(this).text();
             }

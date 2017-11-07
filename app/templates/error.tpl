@@ -1,5 +1,9 @@
 {extends 'base.tpl'}
 
+    <script>
+        window.location = '/';
+    </script>
+
 {block 'content'}
     <section class="page pages error-page">
         <div class="row w1280">
@@ -15,7 +19,7 @@
                             <section class="error-title">
                                 {block 'error_title'}
                                     {if $data.code == 404}
-                                        Page not found
+                                                Page not found
                                     {elseif $data.message}
                                         {$data.message}
                                     {else}

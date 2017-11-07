@@ -21,7 +21,6 @@ use Xcart\App\Orm\Fields\HasToOneField;
 use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Fields\ManyToManyField;
 use Xcart\App\Orm\Fields\UnixTimestampField;
-use Xcart\App\Orm\Fields\OneToOneField;
 use Xcart\App\Orm\Model;
 use Xcart\App\Traits\DataModelTrait;
 use Xcart\Product;
@@ -111,6 +110,7 @@ class ProductModel extends Model implements ICartItem
                 'link' => ['productid' => 'resource_id'],
                 'extra' => ['resource_type' => 'P'],
             ],
+
 
 
             'productid' => [
@@ -230,7 +230,7 @@ class ProductModel extends Model implements ICartItem
                 'link' => ['productid' => 'productid']
             ],
             'amazon_fields' => [
-                'class' => OneToOneField::className(),
+                'class' => HasManyField::className(),
                 'modelClass' => AmazonProductsFieldsModel::className(),
                 'link' => ['productid' => 'productid']
             ],
@@ -324,21 +324,18 @@ class ProductModel extends Model implements ICartItem
 
     public function isOutOfStock()
     {
-//        return true;
         return $this->isProductOutOfStock();
     }
 
     public function getAbsoluteUrl($full = false)
     {
         if ($this->productid) {
-
             $url = Xcart::app()->router->url('catalog:product:view', ['id' => $this->pk, 'slug' => $this->clean_url->getSlugPart()]);
 
             if ($full) {
                 $site = $this->sites->limit(1)->get();
 
                 $url = '//' . $site->domain . $url;
-
             }
 
             return $url;
@@ -431,44 +428,30 @@ class ProductModel extends Model implements ICartItem
         return $tq;
     }
 
-    public function getTitle()
+    /**
+     * @TODO: Remove this method
+     * @deprecated
+     * @return string
+     */
+    public function getTitle() {
+        return $this->getFrontendName();
+    }
+
+    public function getFrontendChilds()
     {
-        if ($this->seo_product_name) {
-            $title = $this->seo_product_name;
-        } else {
-            $title = $this->product;
-        }
-
-        if ($this->group_root) {
-            return ($this->isGroupRoot()) ?  $title : $this->parent->group_mask . " ". $title;
-        }
-
-        return $title;
+        return $this->childs->filter(['forsale' => 'Y'])->order(['group_order']);
     }
 
     /**
-     * @return ImageTModel[]
+     * @return ImageTModel|null
      */
-    public function getThumbnails()
+    public function getThumbnail()
     {
-        $thumbs = [];
-        if ($this->isGroupRoot()) {
-            foreach ($this->childs->order(['group_order']) as $child) {
-                if ($thumb = $child->thumbnail->limit(1)->get()) {
-                    $thumbs[] = $thumb;
-                }
-            }
-        } else {
-            if ($thumb = $this->thumbnail->limit(1)->get()) {
-                $thumbs[] = $thumb;
-            }
-        }
-        return $thumbs;
+        return $this->thumbnail->limit(1)->get();
     }
 
     public function getAdminUrl()
     {
         return sprintf(self::ADMIN_PRODUCT_MODIFY_URL, $this->productid, $this->sites->limit(1)->get()->storefrontid);
     }
-
 }

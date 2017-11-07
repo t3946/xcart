@@ -39,7 +39,12 @@ class Connection
         }
         
         if (!self::$_instance) {
-            self::$_instance = DriverManager::getConnection($params);
+            if ($params) {
+                self::$_instance = DriverManager::getConnection($params);
+            }
+            else {
+                self::getInstanceFromApp();
+            }
 
             self::$_instance
                 ->getDatabasePlatform()

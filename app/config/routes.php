@@ -7,6 +7,11 @@ return array_merge($admin_routes, [
         'namespace' => 'main'
     ],
     [
+        'route' => '/amp',
+        'path' => 'Modules.Amp.routes',
+        'namespace' => 'amp',
+    ],
+    [
         'route' => '',
         'path' => 'Modules.Product.routes',
         //        'namespace' => 'catalog',

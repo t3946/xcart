@@ -133,10 +133,12 @@ function send_question_email_form(){
 <meta id="so_model" itemprop="model" content="{$cidev_mpn}"/>
 {/if}
 
-<meta id="so_offer" itemprop="offers" itemscope="" itemtype="http://schema.org/Offer" itemref="so_o_stock so_o_condition so_o_currency so_o_price so_o_function so_o_delivery so_o_seller pm_1 pm_2 pm_3 pm_4"/>
+<meta id="so_offer" itemprop="offers" itemscope="" itemtype="http://schema.org/Offer" itemref="{if $oProduct->isGroupRoot()}so_o_price_spec{else}so_o_price so_o_stock{/if} so_o_condition so_o_currency so_o_function so_o_delivery so_o_seller pm_1 pm_2 pm_3 pm_4"/>
+{if !$oProduct->isGroupRoot()}
 <div id="so_weight" itemprop="weight" itemscope="" itemtype="http://schema.org/QuantitativeValue" itemref="so_weight_value">
 	<meta itemprop="unitCode" content="lbs">
 </div>
+{/if}
 {if $cat_name_for_itemprop ne ""}
 <meta id="so_category" itemprop="category" content="{$cat_name_for_itemprop}"/>
 {/if}

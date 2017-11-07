@@ -47,6 +47,9 @@ class SupplierFeedStore extends BaseStore
 
         if (!empty($feed['dont_update_fields'])) {
             foreach ($feed['dont_update_fields'] as $doNotUpdateFiled){
+                if ($doNotUpdateFiled == "images"){
+                    $doNotUpdateFiled = "supplier_images";
+                }
                 $idx = array_search($doNotUpdateFiled, array_keys($product_cols_replace));
                 if ($idx !== false) {
                     $this->dont_update_fields[] = $product_cols_replace[$doNotUpdateFiled];
@@ -68,6 +71,10 @@ class SupplierFeedStore extends BaseStore
                 });
                 if (isset($product['eta_date_mm_dd_yyyy'])) {
                     $product['eta_date_mm_dd_yyyy'] = strtotime($product['eta_date_mm_dd_yyyy']);
+                }
+                if (isset($product['images'])) {
+                    $product['supplier_images'] = $product['images'];
+                    unset($product['images']);
                 }
                 $this->products[] = $product;
             }

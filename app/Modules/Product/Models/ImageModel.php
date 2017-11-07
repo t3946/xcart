@@ -1,6 +1,7 @@
 <?php
 namespace Modules\Product\Models;
 
+use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\BlobField;
 use Xcart\App\Orm\Fields\CharField;
@@ -95,5 +96,13 @@ class ImageModel extends Model
     public function getURL()
     {
         return ltrim($this->image_path, '.');
+    }
+
+    public function getCdnURL()
+    {
+        $site = Xcart::app()->getModule('Sites')->getSite();
+        $pref = ($site->getConfig()['Enable_CDN'] == "Y") ? 'cdn.': 'www.';
+        $domain = $site->getBaseDomain();
+        return "//" .$pref . $domain . $this->getURL();
     }
 }

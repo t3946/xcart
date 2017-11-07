@@ -83,11 +83,6 @@ class CategoryModel extends TreeModel
                     'field' => 'parentid'
                 ],
 
-                'storefrontid' => [
-                    'class' => IntField::className(),
-                    'primary' => false,
-                    'null' => false,
-                ],
 
                 'description' => [
                     'class' => CharField::className(),

@@ -40,9 +40,11 @@ class MetaHelper
         $metaTemplate = MetaTemplate::objects()->filter(['code' => $metaTemplateName])->limit(1)->get();
         if ($metaTemplate) {
             $metaTemplate->params = $controller->getMetaTemplateParams();
-            if ($site && !isset($metaTemplate->params['site'])) {
-                $metaTemplate->params['site'] = $site;
             }
+
+        $site = null;
+        if (Xcart::app()->getModule('Meta')->onSite) {
+            $site = Xcart::app()->getModule('Sites')->getSite();
         }
 
         if ($meta) {

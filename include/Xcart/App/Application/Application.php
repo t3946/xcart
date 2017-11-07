@@ -31,6 +31,7 @@ use Xcart\App\Request\HttpRequest;
  * @property \Xcart\App\Components\Breadcrumbs $breadcrumbs
  * @property \Xcart\App\Components\Flash $flash
  * @property \Modules\Mail\Components\Mailer $mail Mailer
+ * @property \Modules\Mail\Components\MailComponent $oldMail Mailer
  *
  * @property UserModel $user
  * 

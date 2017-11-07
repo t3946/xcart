@@ -292,12 +292,14 @@ function func_query_param($query, array $params, array $types = [])
  */
 function func_query_first($query)
 {
+    $result = null;
+
     if ($p_result = db_query($query)) {
         $result = db_fetch_array($p_result);
         db_free_result($p_result);
     }
 
-    return is_array($result) ? $result : [];
+    return $result ? $result : [];
 }
 
 /**

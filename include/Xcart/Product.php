@@ -118,7 +118,10 @@ class Product extends Data
 
     public function getURL($http = '//')
     {
-        return $http . $this->getStoreFront()->getDomain() . $this->getRelativeURL();
+        if ($this->getStoreFront()) {
+            return $http . $this->getStoreFront()->getDomain() . $this->getRelativeURL();
+        }
+        return '';
     }
 
     public function getRelativeURL()
@@ -434,7 +437,7 @@ SQL;
 
     public function getAmazonFBAAvail()
     {
-        if (is_null($this->iAmazonFbaAvail)) {
+        if (is_null($this->iAmazonFbaAvail) && $this->getProductId()) {
             $this->iAmazonFbaAvail = intval(func_query_first_cell("SELECT cidev_get_amazon_FBA_cloned_stock(" . $this->getProductId() . ") as amazon_fba_avail"));
         }
         return $this->iAmazonFbaAvail;
@@ -599,7 +602,7 @@ SQL;
                         $aChildProducts = $oParentProduct->getChildProducts();
                         if (!empty($aChildProducts)) {
                             foreach ($aChildProducts as $oChildProduct) {
-                                if ($oChildProduct->getProductId() != $this->getProductId() && $oChildProduct->getAmazonFBAAvailReal() > 0) {
+                                if ($oChildProduct->productid != $this->productid && $oChildProduct->getAmazonFBAAvailReal() > 0) {
                                     if ($oChildProduct->getAmazonFBAAvailReal() >= $iShipNeed) {
                                         $aProductAmazonArray[] = ['oProduct' => $oChildProduct, 'qty' => $iShipNeed];
                                         $iShipNeed -= $iShipNeed;
@@ -752,13 +755,18 @@ SQL;
         return $aVolume;
     }
 
+    public function setWeight($value)
+    {
+        $this->setField('weight', $value);
+    }
+
     public function getShippingWeight($iAmount = 1)
     {
         $fProductWeight = 0.1;
-        if (floatval($this->getField('shipping_weight')) > 0) {
-            $fProductWeight = floatval($this->getField('shipping_weight'));
-        } elseif (floatval($this->getField('weight')) > 0) {
-            $fProductWeight = floatval($this->getField('weight'));
+        if (floatval($this->shipping_weight) > 0) {
+            $fProductWeight = floatval($this->shipping_weight);
+        } elseif (floatval($this->weight) > 0) {
+            $fProductWeight = floatval($this->weight);
         }
         return $fProductWeight * $iAmount;
     }

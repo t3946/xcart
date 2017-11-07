@@ -98,8 +98,6 @@ $file_temp_dir = $var_dirs["tmp"];
 define('THUMB_BGCOLOR', 0xFFFFFF);
 define('THUMB_QUALITY', 97);
 
-@require_once 'xcart_tables.php';
-
 $price_details_names = ["net", "gst", "pst", "gross"];
 
 define('FILTER_PRESET_PER_ROW', 5);

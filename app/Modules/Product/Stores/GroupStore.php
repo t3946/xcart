@@ -185,7 +185,29 @@ class GroupStore extends BaseStore
 
     public function getBrands()
     {
-        return $this->prepareModels($this->getBrandPager()->paginate());
+        return $this->prepareBrands($this->getBrandPager()->paginate());
+    }
+
+    public function prepareBrands($models)
+    {
+        if (!$models) {
+            return [];
+        }
+
+        $filter = [];
+        foreach ($models as $model) {
+            if (!array_key_exists($model->brandid, $filter)) {
+                $filter[$model->brandid] = $model;
+            } else {
+                $filter[$model->brandid]->setAttribute('count', $filter[$model->brandid]->getFromQueryAttribute('count') + $model->getFromQueryAttribute('count'));
+            }
+        }
+
+        uasort($filter, function($a, $b) {
+            return $a->getFromQueryAttribute('count') < $b->getFromQueryAttribute('count');
+        });
+
+        return $filter;
     }
 
     public function prepareModels($models)
@@ -207,7 +229,7 @@ class GroupStore extends BaseStore
 
     public function getBrandPager()
     {
-        $pager = new Pagination($this->getBrandQuerySet(), ['pageSize' => $this->defaultPagerPageSize], new QuerySetDataSource());
+        $pager = new Pagination($this->getBrandQuerySet(), ['pageSize' => 150], new QuerySetDataSource());
 
         return $pager;
     }
@@ -285,7 +307,9 @@ class GroupStore extends BaseStore
             /** @var ProductModel[] $products */
             if ($products = ProductModel::objects()->filter(['productid__in' => array_keys($this->data['products'])])) {
                 foreach ($products as $product) {
+
                     $product->group_root = $this->model->productid;
+
                     if (isset($this->data['truncate_checkbox'])) {
                         $mask = preg_quote($params['group_mask'], '/');
                         $product->product = trim(preg_replace("/^({$mask})/", '', $product->product));
@@ -300,19 +324,24 @@ class GroupStore extends BaseStore
                                 'main' => 'Y'
                             ]);
 
-                            list($new_cat) = ProductCategoriesModel::objects()->getOrNew(
-                                [
-                                    'categoryid' =>  $this->data['category'],
-                                    'productid' => $cat->productid,
-                                    'main' => 'Y'
-                                ]);
-                            $new_cat->save();
-
+                            if ($this->data['category'] && $cat->productid) {
+                                list($new_cat) = ProductCategoriesModel::objects()->getOrNew(
+                                    [
+                                        'categoryid' => $this->data['category'],
+                                        'productid' => $cat->productid,
+                                        'main' => 'Y'
+                                    ]);
+                                $new_cat->save();
+                            }
                         }
                     }
 
                     if ($this->data['group_image'] && in_array($product->productid, $this->data['group_image'])) {
                         $product->group_order = (array_search($product->productid, $this->data['group_image']) + 1) * 10;
+                    }
+
+                    if (isset($params['group_mask'])) {
+                        $product->group_mask = $params['group_mask'];
                     }
 
                     $product->save();

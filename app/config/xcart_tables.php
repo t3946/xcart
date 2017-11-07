@@ -2,7 +2,7 @@
 #
 # SQL tables aliases...
 #
-$sql_tbl = [
+return [
     "avs_codes"                               => "xcart_avs_codes",
     "benchmark_pages"                         => "xcart_benchmark_pages",
     "brands"                                  => "xcart_brands",

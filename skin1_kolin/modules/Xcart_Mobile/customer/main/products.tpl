@@ -207,9 +207,9 @@ func_load_more_next_productids('','Y');
         {/if}
 {/if}
 
-        <li class="google_impression_object" data-productid="{$product.productid}" data-name="{$product.product|escape}"
+        <li class="google_impression_object" data-product-id="{$product.productid}" data-name="{$product.product|escape}"
             data-category="{$product.category|escape}" data-brand="{$product.brand|escape}" data-list="{$ga_page_name}" data-price="{$product.price}" data-position="{$N_key}">
-          <a {include file="on_product_click.tpl"} href="{$current_location}/product.php?productid={$product.productid}">
+          <a  href="{$current_location}/product.php?productid={$product.productid}">
             <span class="product-thumbnail">
                 {if $product.oProduct && $product.oProduct->isGroupRoot()}
                     {include file="group_thumbnail.tpl" product=$product.oProduct}
@@ -239,32 +239,37 @@ func_load_more_next_productids('','Y');
                 {if $config.Appearance.display_productcode_in_list eq "Y" && $product.productcode}
                   <span class="sku">{$lng.lbl_sku}: {$product.productcode|escape}</span>
                 {/if}
-                {if !$product.oProduct || !$product.oProduct->isGroupRoot()}
-                {if $product.product_type ne "C"}
-                  {if $product.appearance.is_auction}
-                    <span class="price">{$lng.lbl_enter_your_price}</span><br />
-                    {$lng.lbl_enter_your_price_note}
-                  {else}
-                      <span class="price">
-                        Price: <span class="price-value">{include file="currency.tpl" value=$current_price}</span>
-                      </span>
+                {if !$product.oProduct || !$product.oProduct->isGroupRoot() || ($product.oProduct->getFrontendPrice() > 0 && $product.oProduct->getFrontendPrice() == $product.oProduct->getFrontendPrice(2))}
+                    {if $product.product_type ne "C"}
+                      {if $product.appearance.is_auction}
+                        <span class="price">{$lng.lbl_enter_your_price}</span><br />
+                        {$lng.lbl_enter_your_price_note}
+                      {else}
+                          <span class="price">
+                            Price: <span class="price-value">{include file="currency.tpl" value=$current_price}</span>
+                          </span>
 
-<span class="sku">
-            {if $product.avail gt 0 or $config.General.unlimited_products eq "Y"}
-              {$lng.lbl_in_stock_top}
-            {else}
-              {$lng.lbl_out_stock}
-            {/if}
-</span>
+                        <span class="sku">
+                                    {if $product.avail gt 0 or $config.General.unlimited_products eq "Y"}
+                                      {$lng.lbl_in_stock_top}
+                                    {else}
+                                      {$lng.lbl_out_stock}
+                                    {/if}
+                        </span>
 
-                      {if $product.taxes}
-                        <span class="taxes">{include file="customer/main/taxed_price.tpl" taxes=$product.taxes is_subtax=true}</span>
+                          {if $product.taxes}
+                            <span class="taxes">{include file="customer/main/taxed_price.tpl" taxes=$product.taxes is_subtax=true}</span>
+                          {/if}
+                        {if $active_modules.Special_Offers and $product.use_special_price}
+                          {include file="modules/Special_Offers/customer/product_special_price.tpl"}
+                        {/if}
                       {/if}
-                    {if $active_modules.Special_Offers and $product.use_special_price}
-                      {include file="modules/Special_Offers/customer/product_special_price.tpl"}
                     {/if}
-                  {/if}
-                {/if}
+                {else}
+                    {if $product.oProduct && $product.oProduct->getFrontendPrice() > 0}
+                    <span class="price">Price range : <span class="price-value">{include file="currency.tpl" value=$product.oProduct->getFrontendPrice()}
+                        - {include file="currency.tpl" value=$product.oProduct->getFrontendPrice(2)}</span></span>
+                    {/if}
                 {/if}
               </span>
             </span>

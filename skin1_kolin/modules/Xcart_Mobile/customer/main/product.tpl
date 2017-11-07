@@ -92,7 +92,7 @@ vim: set ts=2 sw=2 sts=2 et:
     <div class="top-info ui-body ui-body-b ui-overlay-shadow">
         <div class="ui-grid-{if $active_modules.Special_Offers && $product.bonus_points gt 0}a{else}solo{/if}">
             <div class="ui-block-a">
-                <h1 {if $main eq "product"}{if $use_schema_org eq "Y"} id="so_name" itemprop="name"{/if}{/if}>{$oProduct->getTitle()}</h1>
+                <h1 {if $main eq "product"}{if $use_schema_org eq "Y"} id="so_name" itemprop="name"{/if}{/if}>{$oProduct->getTitle()|escape}</h1>
             </div>
             {if $active_modules.Special_Offers && $product.bonus_points gt 0}
                 <div class="ui-block-b">
@@ -115,9 +115,8 @@ vim: set ts=2 sw=2 sts=2 et:
                 {if !$is_group && $product.distribution eq "" && !($product.product_type eq "C" and $active_modules.Product_Configurator)}
                     <div id="so_o_stock" itemprop="availability"
                          content="{if $product.product_availability eq "in stock"}InStock{else}OutOfStock{/if}"
-                         class="product-quantity-text-top{if $product.avail gt 0 or $config.General.unlimited_products eq "Y"} in-stock{/if}">
-
-                        {if $product.avail gt 0 or $config.General.unlimited_products eq "Y"}
+                         class="product-quantity-text-top{if $product.product_availability eq "in stock" && ($product.avail gt 0 or $config.General.unlimited_products eq "Y")} in-stock{/if}">
+                        {if $product.product_availability eq "in stock" && ($product.avail gt 0 or $config.General.unlimited_products eq "Y")}
                             {$lng.lbl_in_stock_top}
                         {else}
                             {$lng.lbl_out_stock}
@@ -150,26 +149,28 @@ vim: set ts=2 sw=2 sts=2 et:
 
                             {else}
                                 {if !$is_group}
-                                <li data-theme="b" id="top-cart-button">
-                                    {strip}
-                                        <a href="{$catalogs.customer}/cart.php"
+                                    {if $product.product_availability eq "in stock"}
+                                    <li data-theme="b" id="top-cart-button">
+                                        {strip}
+                                            <a href="{$catalogs.customer}/cart.php"
 
-                                                {if $product.lead_time_message ne ""}
-                                                    onclick="javascript: if (confirm('{$product.lead_time_message}')) {ldelim}  ajax_add_to_cart('{$product.productid}', '{$product.add_date}', 'product'); $('#orderform-{$product.productid}').submit(); {rdelim}"
+                                                    {if $product.lead_time_message ne ""}
+                                                        onclick="javascript: if (confirm('{$product.lead_time_message}')) {ldelim}  ajax_add_to_cart('{$product.productid}', '{$product.add_date}', 'product'); $('#orderform-{$product.productid}').submit(); {rdelim}"
+                                                    {else}
+                                                        onclick="javascript: $('#orderform-{$product.productid}').submit();"
+                                                    {/if}
+
+                                            >
+                                                {currency value=$product.taxed_price tag_id=""}
+                                                {if $product.appearance.added_to_cart}
+                                                    {$lng.lbl_add_more}
                                                 {else}
-                                                    onclick="javascript: $('#orderform-{$product.productid}').submit();"
+                                                    {$lng.lbl_add_to_cart}
                                                 {/if}
-
-                                        >
-                                            {currency value=$product.taxed_price tag_id=""}
-                                            {if $product.appearance.added_to_cart}
-                                                {$lng.lbl_add_more}
-                                            {else}
-                                                {$lng.lbl_add_to_cart}
-                                            {/if}
-                                        </a>
-                                    {/strip}
-                                </li>
+                                            </a>
+                                        {/strip}
+                                    </li>
+                                    {/if}
                                 {/if}
                             {/if}
                         </ul>
@@ -185,7 +186,7 @@ vim: set ts=2 sw=2 sts=2 et:
       {if $active_modules.Detailed_Product_Images and $images ne ''}
         <ul data-role="listview" data-inset="true">
           <li data-icon="false">
-            <a href="{$current_location}/product.php?productid={$product.productid}&mobile_mode=get_detailed_images" class="ga_click" data-label="More Images">
+            <a href="{$current_location}/product.php?productid={$product.productid}&mobile_mode=get_detailed_images" class="ga_click" data-list="detailed_images" data-label="More Images">
             {/if}
                 {if $oProduct && $oProduct->isGroupRoot()}
                     {include file="group_thumbnail.tpl" product=$oProduct}
@@ -226,7 +227,7 @@ vim: set ts=2 sw=2 sts=2 et:
             ga('send', 'event', 'calculate shipping', 'showed', {nonInteraction: true});
         </script>
     {/literal}
-        <span id="calculate_shipping_button" data-product-id="{$product.productid}" style="margin-top: -5px;" class="cidev_new_button cidev_new_white">Calculate shipping</span>
+        <span id="calculate_shipping_button" data-product-id="{$product.productid}" style="margin-top: -5px;" class="cidev_new_button cidev_new_white">Show shipping</span>
     {/if}
     <div id="calculate_shipping_text" class="hidden">
         <div colspan="2" class="shipping_info" style="padding: 20px 0;">
@@ -307,14 +308,13 @@ function send_question_email_form(){
 //]]>
 </script>
 
-
+    {if $product.product_availability ne "in stock"}
+        {include file="sliders/slider.tpl" productid=$product.productid mode='similar_products'  title="Similar products"}
+    {/if}
   {foreach from=$product_tabs item=tab key=ind}
-    <div data-role="collapsible" data-collapsed="true" class="ga_click">
-      <h3>{$tab.title}</h3>
-      <div>
-{*
-{include file=$tab.tpl nodialog='Y'}
-*}
+    <div data-role="collapsible" data-collapsed="true" class="ga_click" data-label="{$tab.title}">
+        <h3>{$tab.title}</h3>
+    <div>
 
         {if $tab.tpl eq "_product_description_"}
 

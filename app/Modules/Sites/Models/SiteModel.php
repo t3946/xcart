@@ -15,6 +15,8 @@ use Xcart\App\Orm\Model;
  * @package Modules\Sites\Models
  *
  * @property int|null storefrontid
+ *
+ * @property null|\Xcart\App\Orm\Manager favicons
  */
 class SiteModel extends Model
 {

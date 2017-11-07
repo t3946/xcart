@@ -40,7 +40,7 @@ class CleanUrlModel extends Model
                 'null' => false,
                 'primary' => true,
                 'length' => 1,
-                'chosen' => [
+                'choices' => [
                     'P' => 'Product',
                     'M' => 'Brand',
                     'C' => 'Category',
@@ -88,16 +88,19 @@ class CleanUrlModel extends Model
 
         if ($absolute) {
             if ($site) {
-                $path .= $site->domain . '/';
+                $path .= $site->domain;
             }
         }
 
         if ($code) {
-            $path = Xcart::app()->router->url(
+            $ta = explode('/', $this->clean_url);
+            $last = end($ta);
+
+            $path .= Xcart::app()->router->url(
                 $code,
                 [
                     'id' => $this->resource_id,
-                    'slug' => $this->getSlugPart()
+                    'slug' => $this->createSlug($last)
                 ]
             );
         }

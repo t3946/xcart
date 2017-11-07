@@ -53,7 +53,7 @@ class AmazonInventoryStore extends BaseStore
                 if ($products = AmazonProductHelper::getListInventory($inventory, $aProductsBatch)) {
                     foreach ($products as $aAmazonFbaProduct) {
 
-                        if ($fnsku = $aAmazonFbaProduct->getNotModelAttribute('FNSKU')) {
+                        if ($fnsku = $aAmazonFbaProduct->getFromQueryAttribute('FNSKU')) {
 
                             if (array_key_exists($fnsku, $this->groupInventory)) {
 

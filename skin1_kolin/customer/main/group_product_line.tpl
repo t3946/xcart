@@ -1,5 +1,6 @@
 <div id="group_product_line">
-    {assign var=count value=$oProduct->childs->count()}
+    {assign var=childs value=$oProduct->getFrontendChilds()}
+    {assign var=count value=$childs->count()}
     <br/>
     <table style="margin-top: -10px;" width="100%" cellspacing="0">
         <tr>
@@ -21,12 +22,14 @@
             <th>Quantity</th>
             <th>Extended price</th>
         </tr>
-        {foreach from=$oProduct->childs->all() item=child}
+        {foreach from=$oProduct->getFrontendChilds() item=child}
             {assign var=amc value=$child->category_main->limit(1)}
             {assign var=main_cat value=$amc->get()}
-            <tr class="row" data-product-id="{$child->productid}" data-brand="{$child->brand->brand|escape}"
-                data-title="{$child->product|escape}" data-category="{$main_cat->category->category|escape}" data-sfid="{$current_storefront}"
-                data-price='{getPricingArray pricing=$child->pricing json=true}'>
+            <tr class="row google_impression_object" data-product-id="{$child->productid}" data-brand="{$child->brand->brand|escape}"
+                data-category="{$main_cat->category->category|escape}" data-sfid="{$current_storefront}"
+                data-name="{$child->product|escape}"
+                data-price='{getPricingArray pricing=$child->pricing json=true}'
+                data-list='group_product_item'>
                 <td class="sku"><a href="{$child->getUrl()}" target="_blank">{$child->productcode}</a></td>
                 {assign var=thumbnail_m value=$child->thumbnail}
                 {assign var=thumbnail value=$thumbnail_m->get()}

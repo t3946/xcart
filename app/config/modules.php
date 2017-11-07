@@ -22,4 +22,5 @@ return [
     'Reports',
     'Brand',
     'Pages',
+    'Amp',
 ];

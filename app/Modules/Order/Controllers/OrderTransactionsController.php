@@ -60,7 +60,7 @@ class OrderTransactionsController extends PrototypeAdminController
 
     public function authorise($order_id)
     {
-        $method = null;
+        $method = $transaction_model = null;
         $send_notification = false;
 
         $order_log = OrderTransactionStore::$gatewayMethods['authorize']['order_log']."<br>";
@@ -117,7 +117,15 @@ class OrderTransactionsController extends PrototypeAdminController
 
         func_log_order($order_id, 'PP', $order_log, Xcart::app()->user->login);
 
-        Xcart::app()->request->redirect("/admin/order.php?orderid={$order_id}&tab=y#main_order_tabs-VT");
+        if (!$this->getRequest()->getIsAjax()) {
+            Xcart::app()->request->redirect("/admin/order.php?orderid={$order_id}&tab=y#main_order_tabs-VT");
+        } else {
+            if ($transaction_model && $transaction_model->id){
+                print("Authorized");
+            } else {
+                print("Failed");
+            }
+        }
     }
 
     public function child_transactions($id)

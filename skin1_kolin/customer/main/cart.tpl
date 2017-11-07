@@ -252,7 +252,7 @@ function cidev_update_product_amount_next(cartid, amount, manufacturerid){
 {/if}
 </td>
 <td valign="top">
-<a href="{if $from_admin_area eq "Y"}../{/if}product.php?productid={$products[product].productid}"><span class="ProductTitle">{$products[product].oProduct->getTitle()}</span></a>
+<a href="{if $from_admin_area eq "Y"}../{/if}product.php?productid={$products[product].productid}"><span class="ProductTitle">{if $products[product].oProduct}{$products[product].oProduct->getTitle()}{/if}</span></a>
 <br>
 <span color="#006600" class="DialogTitleT">SKU: {$products[product].productcode}</span>
 <br>

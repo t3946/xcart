@@ -3,9 +3,9 @@
         <a target="_blank" href="{url 'product:group' id = $brand->brandid}"><b>{$brand->brand}</b></a>
     </td>
     <td>
-        {$brand->getNotModelAttribute('group_phrase')}
+        {$brand->getFromQueryAttribute('group_phrase')}
     </td>
     <td>
-        {$brand->getNotModelAttribute('count')}
+        {$brand->getFromQueryAttribute('count')}
     </td>
 </tr>
