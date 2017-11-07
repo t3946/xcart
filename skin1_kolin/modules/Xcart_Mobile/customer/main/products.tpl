@@ -79,7 +79,7 @@ vim: set ts=2 sw=2 sts=2 et:
 
                                 var tmp_rand = Math.random();
 
-                                ga('send', {hitType: 'pageview', location: location.href});
+                                ga('send', 'event', 'UX', 'click', 'Load more');
 
                                 cidev_xmlHttp.open('POST','infinite_products.php?rand='+tmp_rand,true);
                                 cidev_xmlHttp.setRequestHeader('Content-type','application/x-www-form-urlencoded');
