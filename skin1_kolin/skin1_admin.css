@@ -461,6 +461,7 @@ TD.OptionLabel {
 .VertMenuLeftColumn {
 	/*WIDTH: 150px;*/
 	width: 190px;
+	min-width: 190px;
 	VERTICAL-ALIGN: top;
 	padding-top: 5px;
 	/*PADDING-LEFT: 6px;*/

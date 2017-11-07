@@ -3,6 +3,7 @@
 namespace Modules\Cart;
 
 use Modules\Admin\Traits\AdminTrait;
+use Modules\Cart\Admin\CouponKitAdmin;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Module\Module;
 
@@ -42,5 +43,21 @@ class CartModule extends Module
     public function getCart()
     {
         return $this->getComponent('cart');
+    }
+
+    public static function getAdminMenu()
+    {
+        $user = Xcart::app()->user;
+        $router = Xcart::app()->router;
+
+        return [
+            [
+                'name' => CouponKitAdmin::getName(),
+                'route' => $router->url('admin:list', [
+                    'module' => static::getModuleName(),
+                    'admin' => CouponKitAdmin::classNameShort()
+                ]),
+            ],
+        ];
     }
 }

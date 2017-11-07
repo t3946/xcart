@@ -130,11 +130,11 @@ var runTests = function(editor) {
 
 		{/if}
 
-		{if $login eq "" && ($usertype eq "P" || $usertype eq "A")}
+		{if $login eq ""}
         {capture name=menu}
 				<a href="error_message.php?antibot_error" class="VertMenuItems">Authentication</a>
         {/capture}
-		{ include file=menu_admin.tpl" dingbats="dingbats_help.gif" menu_title=$lng.lbl_help menu_content=$smarty.capture.menu link_href="help.php"}
+		{include file="menu_admin.tpl" dingbats="dingbats_help.gif" menu_title=$lng.lbl_help menu_content=$smarty.capture.menu}
 		{/if}
 
 	</div>
