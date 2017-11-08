@@ -606,7 +606,7 @@ class ErrorHandler
     protected function renderSourceCode($file, $errorLine, $maxLines)
     {
         $errorLine--; // adjust line number to 0-based from 1-based
-        $lines = false;
+        $lines = [];
 
         if ($errorLine < 0
             || (file_exists($file) && ($lines = @file($file)) === false)

@@ -4,6 +4,7 @@ namespace Modules\Product\Models;
 use Mindy\QueryBuilder\Expression;
 use Modules\Amazon\Models\AmazonFbaMissingSkuModel;
 use Modules\Amazon\Models\AmazonProductsFieldsModel;
+use Modules\Amp\Models\AmpProductModel;
 use Modules\Brand\Models\BrandModel;
 use Modules\Cart\Interfaces\ICartItem;
 use Modules\Distributor\Models\DistributorModel;
@@ -342,6 +343,12 @@ class ProductModel extends Model implements ICartItem
         }
 
         return false;
+    }
+
+    public function getAmpAbsoluteUrl($full = false)
+    {
+        $model = new AmpProductModel($this->getAttributes());
+        return $model->getAbsoluteUrl($full, true);
     }
 
     public function getMainCategory()

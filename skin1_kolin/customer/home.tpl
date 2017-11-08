@@ -99,7 +99,7 @@
 
 {if ($main eq "product")}
     {if $oProduct}
-        <link rel="amphtml" href="{$oProduct->getAbsoluteUrl(true, true)}">
+        <link rel="amphtml" href="{$oProduct->getAmpAbsoluteUrl(true)}">
     {/if}
 {* igor_async *}
 <script src="{$SkinDir}/jquery.tooltip.js" type="text/javascript"></script>

@@ -46,7 +46,7 @@ class AmpProductModel extends ProductModel
     public function getAbsoluteUrl($full = false, $amp = false)
     {
         if ($this->productid && $amp) {
-            return $this->url->urlFromCode('amp:product', $full, ($full ? $this->sites->limit(1)->get() : null));
+            return $this->clean_url->urlFromCode('amp:product', $full, ($full ? $this->sites->limit(1)->get() : null));
         }
 
         return parent::getAbsoluteUrl($full);

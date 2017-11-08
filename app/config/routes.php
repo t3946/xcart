@@ -2,6 +2,10 @@
 $admin_routes = include('routes_admin.php');
 return array_merge($admin_routes, [
     [
+        'route' => '',
+        'path' => 'Modules.Product.routes',
+    ],
+    [
         'route' => '/amp',
         'path' => 'Modules.Amp.routes',
         'namespace' => 'amp',
