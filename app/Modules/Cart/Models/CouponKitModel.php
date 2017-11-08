@@ -3,6 +3,7 @@
 namespace Modules\Cart\Models;
 
 use Xcart\App\Orm\Fields\AutoField;
+use Xcart\App\Orm\Fields\BooleanField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\DateTimeField;
 use Xcart\App\Orm\Fields\DecimalField;
@@ -24,9 +25,13 @@ class CouponKitModel extends Model
     {
         return [
             'id' => AutoField::className(),
+            'active' => [
+                'class' => BooleanField::className(),
+            ],
             'code' => [
                 'class' => CharField::className(),
                 'required' => true,
+                'unique' => true,
             ],
             'name' => [
                 'class' => CharField::className(),

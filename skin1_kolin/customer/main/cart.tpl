@@ -422,10 +422,9 @@ x {if $active_modules.Egoods and $products[product].distribution}1<input type="h
 <tr><td colspan="2"><hr size="1" noshade="noshade" /></td></tr>
 *}
 <hr size="1" noshade="noshade" />
-
-{if $active_modules.Gift_Certificates ne ""}
-{include file="modules/Gift_Certificates/gc_cart.tpl" giftcerts_data=$cart.giftcerts}
-{/if}
+{*{if $active_modules.Gift_Certificates ne ""}*}
+{*{include file="modules/Gift_Certificates/gc_cart.tpl" giftcerts_data=$cart.giftcerts}*}
+{*{/if}*}
 {if $main eq "fast_lane_checkout" || $from_admin_area eq "Y"}
 <div id="cidev_cart_subtotal">
 {include file="modules/Fast_Lane_Checkout/cart_subtotal.tpl"}
@@ -433,6 +432,31 @@ x {if $active_modules.Egoods and $products[product].distribution}1<input type="h
 {else}
 {include file="customer/main/cart_totals.tpl"}
 {/if}
+
+<div class="coupon" style="text-align: right">
+
+{if !$xcartApp->request->session->has('coupon_code')}
+	<label for="coupon-code" style="margin-right: 1em;">
+		Got a coupon code ?
+	</label>
+
+	<input type="text" name="coupon_code" id='coupon-code' value="" placeholder="Enter it here">
+	<button name="check-code" class="cidev_new_button cidev_new_white" style="font-size: 11px;">
+		Apply
+	</button>
+
+{else}
+	<span style="margin-right: 1em;">
+		Discard coupon code ?
+	</span>
+
+	<button name="discard-coupon" value="1" class="cidev_new_button cidev_new_white" style="font-size: 11px;">
+		Discard
+	</button>
+{/if}
+</div>
+<hr size="1" noshade="noshade" />
+
 {$lng.lbl_your_mer_subtotal}<br /><br />
 
 			{if $from_admin_area ne "Y"}

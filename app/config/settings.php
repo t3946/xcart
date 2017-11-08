@@ -65,23 +65,7 @@ return array_replace_recursive([
 
        'middleware' => [
            'class' => '\\Xcart\\App\\Middleware\\MiddlewareManager',
-           'middleware' => [
-//               'RedirectMiddleware' => [
-//                   'class' => '\Modules\Redirect\Middleware\RedirectMiddleware'
-//               ],
-//               'AutoCacheMiddleware' => [
-//                   'class' => '\\Modules\\Core\\Middleware\\CacheMiddleware',
-//               ],
-               'CurrentSiteMiddleware' => [
-                   'class' => '\\Modules\\Sites\\Middleware\\CurrentSiteMiddleware',
-               ],
-               'BotsMiddleware' => [
-                   'class' => '\\Modules\\User\\Middleware\\BotsMiddleware',
-               ],
-               'ReferrerSearch' => [
-                   'class' => '\\Modules\\User\\Middleware\\ReferrerSearchMiddleware'
-               ],
-           ],
+           'middleware' => include __DIR__ . DS . 'middleware.php',
        ],
        'request' => [
            'class' => '\\Xcart\\App\\Request\\RequestManager',

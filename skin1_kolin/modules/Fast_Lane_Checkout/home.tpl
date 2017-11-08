@@ -32,6 +32,8 @@
 </head>
 <body>
 
+{$xcartApp->template->render('raw_flash.tpl')}
+
 
 {* ------------------- *}
 {include file="cidev_tracking_code.tpl" }
