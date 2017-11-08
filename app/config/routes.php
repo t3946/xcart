@@ -11,6 +11,11 @@ return array_merge($admin_routes, [
         'namespace' => 'amp',
     ],
     [
+        'route' => '/coupon',
+        'path' => 'Modules.Cart.routes_coupon',
+        'namespace' => 'coupon',
+    ],
+    [
         'route' => '/brand',
         'path' => 'Modules.Brand.routes',
         'namespace' => 'brand',

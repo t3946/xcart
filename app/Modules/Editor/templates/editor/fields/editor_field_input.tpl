@@ -17,8 +17,10 @@
             window.file_browser_field = field_name;
             window.file_browser_url = url;
             window.file_browser_type = type;
+            var base_url = "{url route="editor:index"}";
+            base_url += (base_url.indexOf('?') !== -1) ? '&':'?';
 
-            $('<a/>').attr('href', "{url route="editor:index"}?field=" + field_name + "&url=" + url).modal();
+            $('<a/>').attr('href', base_url+ "field=" + field_name + "&url=" + url).modal();
             return false;
         },
         images_upload_handler: function(blobInfo, success, failure){

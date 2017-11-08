@@ -32,7 +32,7 @@
 </head>
 <body>
 
-{$xcartApp->template->render('raw_flash.tpl')}
+{$xcartApp->template->render('inSmarty/raw_flash.tpl')}
 
 
 {* ------------------- *}

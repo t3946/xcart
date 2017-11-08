@@ -433,29 +433,8 @@ x {if $active_modules.Egoods and $products[product].distribution}1<input type="h
 {include file="customer/main/cart_totals.tpl"}
 {/if}
 
-<div class="coupon" style="text-align: right">
 
-{if !$xcartApp->request->session->has('coupon_code')}
-	<label for="coupon-code" style="margin-right: 1em;">
-		Got a coupon code ?
-	</label>
-
-	<input type="text" name="coupon_code" id='coupon-code' value="" placeholder="Enter it here">
-	<button name="check-code" class="cidev_new_button cidev_new_white" style="font-size: 11px;">
-		Apply
-	</button>
-
-{else}
-	<span style="margin-right: 1em;">
-		Discard coupon code ?
-	</span>
-
-	<button name="discard-coupon" value="1" class="cidev_new_button cidev_new_white" style="font-size: 11px;">
-		Discard
-	</button>
-{/if}
-</div>
-<hr size="1" noshade="noshade" />
+{$xcartApp->template->render('inSmarty/coupon_cart_desktop.tpl')}
 
 {$lng.lbl_your_mer_subtotal}<br /><br />
 

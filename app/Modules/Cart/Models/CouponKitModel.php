@@ -2,6 +2,7 @@
 
 namespace Modules\Cart\Models;
 
+use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\BooleanField;
 use Xcart\App\Orm\Fields\CharField;
@@ -87,5 +88,10 @@ class CouponKitModel extends Model
     public function afterDelete($owner)
     {
         $owner->restrictions->delete();
+    }
+
+    public function getAbsoluteUrl()
+    {
+        return Xcart::app()->router->url('coupon:view', ['code' => $this->code]);
     }
 }

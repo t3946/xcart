@@ -146,7 +146,7 @@ window.attachEvent("onload", anchor_fix);
 </head>
 <body{$reading_direction_tag}{if $body_onload ne ''} onload="javascript: {$body_onload}"{/if}>
 
-{$xcartApp->template->render('raw_flash.tpl')}
+{$xcartApp->template->render('inSmarty/raw_flash.tpl')}
 
 {if !empty($config.Appearance.Facebook_pixel_code)}
     {$config.Appearance.Facebook_pixel_code}

@@ -4,6 +4,7 @@ namespace Modules\Cart;
 
 use Modules\Admin\Traits\AdminTrait;
 use Modules\Cart\Admin\CouponKitAdmin;
+use Modules\Cart\Models\CouponKitModel;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Module\Module;
 
@@ -15,6 +16,9 @@ class CartModule extends Module
      * @var
      */
     public $listRoute;
+
+    public $couponModel;
+
     /**
      * @var array
      */
@@ -30,7 +34,7 @@ class CartModule extends Module
             return Xcart::app()->getModule('Cart')->getCart();
         });
 
-        Xcart::app()->getModule('Cart');
+        Xcart::app()->getModule('Cart'); //Small hack for init class;
     }
 
     public function init()
@@ -59,5 +63,20 @@ class CartModule extends Module
                 ]),
             ],
         ];
+    }
+
+    public function getCouponModel()
+    {
+        if ( Xcart::app()->request->session->has('coupon_code') ) {
+            $code = Xcart::app()->request->session->get('coupon_code');
+
+            if (!$this->couponModel || $this->couponModel->code != $code) {
+                $this->couponModel = CouponKitModel::objects()->filter(['code' => $code, 'active' => true])->get();
+            }
+
+            return $this->couponModel;
+        }
+
+        return null;
     }
 }
