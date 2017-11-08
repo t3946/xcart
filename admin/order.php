@@ -1582,7 +1582,7 @@ if ($mode == 'ref_notify')
             }
         }
 
-        if ($ref_notify_button_clicked == "Update_C2B_status_and_Send_refund_notification" && in_array($login, ['sergey2', 'igor', 'roman_n', 'dmitry_s', 'alexandern'])) {
+        if ($ref_notify_button_clicked == "Update_C2B_status_and_Send_refund_notification" && in_array($login, ['sergey2', 'igor', 'roman_n', 'dmitry_s'])) {
             if ($orderModel = OrderModel::objects()->get(['orderid' => $orderid])) {
                 $error_message = $ref_sum = null;
 
@@ -1644,7 +1644,7 @@ if ($mode == 'ref_notify')
                         $error_message = 'Refund error. ' . $e->getMessage();
                     }
                 } else {
-                        $error_message = 'Transactions to refund does not exists';
+                        $error_message = 'This transaction(s) has already been refunded.';
                     }
 
                 if ($error_message) {
