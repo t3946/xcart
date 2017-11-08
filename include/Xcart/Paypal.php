@@ -48,6 +48,7 @@ class Paypal
                 'log.LogLevel' => ($config['Paypal_API']['debug_mode'] == "Y") ? 'DEBUG' : 'INFO',
                 'cache.enabled' => true,
                 'http.CURLOPT_SSLVERSION' => 1,
+                'http.CURLOPT_SSL_CIPHER_LIST' => 'TLSv1',
                 //'http.CURLOPT_CONNECTTIMEOUT' => 30
                 // 'http.headers.PayPal-Partner-Attribution-Id' => '123123123'
                 //'log.AdapterFactory' => '\PayPal\Log\DefaultLogFactory' // Factory class implementing \PayPal\Log\PayPalLogFactory
