@@ -2357,6 +2357,10 @@ function func_manufacturerid_sort($a, $b) {
 function func_generate_cartid($cart_products) {
 	global $cart;
 
+    if (!is_array($cart)) {
+        $cart = [];
+    }
+
 	if (empty($cart["max_cartid"]))
 		$cart["max_cartid"] = 0;
 

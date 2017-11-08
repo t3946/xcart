@@ -56,7 +56,7 @@ $filter_found_fv_ids_count = "";
 if ($f_mode == "clear") {
     $sorted_filter_values_id = "";
     $filter_selected_brandids = "";
-    $filter_prices = "";
+    $filter_prices = [];
     $filter_min_price_selected = "";
     $filter_max_price_selected = "";
     /* x_session_save("filter_min_price_selected");
@@ -354,7 +354,7 @@ include $xcart_dir . "/include/search.php";
 
 
     $filter_prices_old = $filter_prices;
-    $filter_prices = "";
+    $filter_prices = [];
 
 
 
