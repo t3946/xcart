@@ -293,13 +293,14 @@
         function () {
             var type = $(this).data('type');
             if (type === 'refund') {
-                if (confirm("It is our standard procedure to issue a refund using 'Order status' tab.\nDo you really want to issue a refund using Virtual Terminal ('VT' tab)?")) {
-                    var url = $(this).data('action');
-                    var form = $(this).closest('form');
-                    form.attr('action', url);
-                    form.submit();
+                if (!confirm("It is our standard procedure to issue a refund using 'Order status' tab.\nDo you really want to issue a refund using Virtual Terminal ('VT' tab)?")) {
+                    return false;
                 }
             }
+            var url = $(this).data('action');
+            var form = $(this).closest('form');
+            form.attr('action', url);
+            form.submit();
         })
 </script>
 {/literal}
