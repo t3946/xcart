@@ -444,10 +444,11 @@ class HttpRequest extends Request
                 $requestUri = urldecode($_SERVER['HTTP_X_REWRITE_URL']);
             }
             elseif (isset($_SERVER['REQUEST_URI']) || isset($_SERVER['DOCUMENT_URI'])) {
+                $requestUri = '';
                 if (!empty($_SERVER['REQUEST_URI'])) {
                     $requestUri = $_SERVER['REQUEST_URI'];
                 }
-                if (!empty($_SERVER['DOCUMENT_URI'])) {
+                if (!$requestUri && !empty($_SERVER['DOCUMENT_URI'])) {
                     $requestUri = $_SERVER['DOCUMENT_URI'];
                 }
 
