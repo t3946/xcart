@@ -62,7 +62,7 @@ if (isset($argv) && is_array($argv) && !empty($argv[1])) {
             ];
 
             while ($aProductsBatch = Product::objects()
-                ->filter(['forsale' => 'Y', new QOr(['amazon_enabled' => 'Y', 'amazon_fba' => 'Y'])])
+                ->filter(['forsale' => 'Y', 'amazon_enabled' => 'Y'])
                 ->paginate($i++, $max_products)
                 ->all())
             {
