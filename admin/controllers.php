@@ -26,11 +26,4 @@ if (isset($_POST['cur_sf']) && $_POST['mode'] == 'change_storefront') {
 
 require $xcart_dir."/include/security.php";
 
-//$configPath = $xcart_dir .'/app/config/settings_admin.php';
-//$config = include $configPath;
-//
-//Xcart::init($config);
-
-$smarty->assign('xcartApp', Xcart::app());
-//Xcart::app()->run();
 Xcart::app()->handleRequest();

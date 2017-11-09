@@ -118,9 +118,12 @@
 }
 
 .flash-messages-block {
-    position: relative;
-    max-width: 1280px;
-    margin: 0 auto;
+    width: 1280px;
+    position:fixed;
+    left:0;
+    right:0;
+    margin-left:auto;
+    margin-right:auto;
 }
 
 @-moz-keyframes bounceInDown {

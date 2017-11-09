@@ -443,8 +443,14 @@ class HttpRequest extends Request
             if (isset($_SERVER['HTTP_X_REWRITE_URL'])) { // IIS
                 $requestUri = urldecode($_SERVER['HTTP_X_REWRITE_URL']);
             }
-            elseif (isset($_SERVER['REQUEST_URI'])) {
-                $requestUri = $_SERVER['REQUEST_URI'];
+            elseif (isset($_SERVER['REQUEST_URI']) || isset($_SERVER['DOCUMENT_URI'])) {
+                if (!empty($_SERVER['REQUEST_URI'])) {
+                    $requestUri = $_SERVER['REQUEST_URI'];
+                }
+                if (!empty($_SERVER['DOCUMENT_URI'])) {
+                    $requestUri = $_SERVER['DOCUMENT_URI'];
+                }
+
                 if ($requestUri !== '' && $requestUri[0] !== '/') {
                     $requestUri = preg_replace('/^(http|https):\/\/[^\/]+/i', '', $requestUri);
                 }

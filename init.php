@@ -64,13 +64,23 @@ if ($cur_host == 'www.kolinskyartbrushes.com') {
 }
 
 
-$settings_path = $xcart_dir .'/app/config/settings_admin.php';
-if (!defined('AREA_TYPE') || AREA_TYPE == 'C') {
-    $settings_path = $xcart_dir .'/app/config/settings.php';
+if (!defined('XCART_APP_CONFIG')) {
+    $settings_path = $xcart_dir .'/app/config/settings_admin.php';
+    if (!defined('AREA_TYPE') || AREA_TYPE == 'C') {
+        $settings_path = $xcart_dir .'/app/config/settings.php';
+    }
+
+    $app_settings = include $settings_path;
+}
+else {
+    $app_settings = XCART_APP_CONFIG;
 }
 
-\Xcart\App\Main\Xcart::init(include $settings_path);
+
+\Xcart\App\Main\Xcart::init($app_settings);
 \Xcart\App\Main\Xcart::app()->beforeRun();
+
+global $sql_tbl;
 
 #
 # Initialize logging
