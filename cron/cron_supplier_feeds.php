@@ -52,7 +52,9 @@ if ($config[$log_category] == "Y") {
     $oMail->subject = sprintf('Attention! Xcart cron %s Already launched', $log_category);
     $oMail->body = $log_category . ' already launched';
     $oMail->sendEmail();
-    die("Already launched"); // ################################
+    if (isset($argv) && !in_array('--force-flag', $argv)) {
+        die("Already launched"); // ################################
+    }
 }
 db_query_param('REPLACE xcart_config SET value=:value, name=:name', ['value' => 'Y', 'name' => $log_category]);
 
@@ -554,19 +556,19 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
                     $provider_search_cond = "";
                 }
 
-                print("SELECT COUNT(*) FROM $sql_tbl[products] WHERE (productcode LIKE '" . $mc . "-%' or productcode like '" . $mc2 . "-%') AND group_root != productid AND forsale='Y' $provider_search_cond");
+                print("SELECT COUNT(*) FROM $sql_tbl[products] WHERE (productcode LIKE '" . $mc . "-%' or productcode like '" . $mc2 . "-%') AND (group_root != productid OR group_root IS NULL) AND forsale='Y' $provider_search_cond");
                 print("\r\n");
                 $count_products = func_query_first_cell("SELECT COUNT(*) FROM xcart_products xp1 
                                                                       INNER JOIN xcart_products_sf xp2 ON xp1.productid = xp2.productid 
                                                                       AND xp2.sfid = {$supplierFeedModel->storefront_id} 
                                                                       WHERE (productcode LIKE '" . $mc . "-%' OR productcode LIKE '" . $mc2 . "-%') 
-                                                                      AND xp1.group_root != xp1.productid AND forsale='Y' $provider_search_cond");
+                                                                      AND (group_root != productid OR group_root IS NULL) AND forsale='Y' $provider_search_cond");
                 print($count_products . " for sale = Y\r\n");
                 if ($count_products > 0) {
                     $manufacturer_code_products = db_query("SELECT xp1.productid, xp1.productcode, xp1.forsale, xp1.update_search_index, xp1.provider
 																	FROM xcart_products xp1
 																	INNER JOIN xcart_products_sf xp2 ON xp1.productid = xp2.productid AND xp2.sfid = {$supplierFeedModel->storefront_id}
-																	WHERE (productcode LIKE '" . $mc . "-%' OR productcode LIKE '" . $mc2 . "-%') AND xp1.group_root != xp1.productid AND forsale='Y' $provider_search_cond");
+																	WHERE (productcode LIKE '" . $mc . "-%' OR productcode LIKE '" . $mc2 . "-%') AND (group_root != productid OR group_root IS NULL) AND forsale='Y' $provider_search_cond");
                     $line_number = 0;
                     print "<br />Second iteration:<br />";
                     while ($prod = db_fetch_array($manufacturer_code_products)) {
