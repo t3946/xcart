@@ -56,6 +56,14 @@ x_session_register('purchase_order_selected');
 if (!empty($purchase_order_selected)) {
     $smarty->assign('purchase_order_selected', $purchase_order_selected);
 }
+
+d($cart, $user, $order);
+if (!empty($cart) && !empty($user)) {
+    d($cart, $user);
+    //VALIDATE COUPON
+    //SET COUPON DISCOUNT
+}
+
 if (!empty($orderids) && $_GET["mode"] == "order_message") {
 
     $orders = array();

@@ -10,13 +10,13 @@ class CouponController extends FrontendController
 {
     use SmartyFrontendRenderTrait;
 
-    public function actionView()
+    public function actionView($code)
     {
         if ($this->getRequest()->session->has('coupon_code'))
         {
+            $scode = $this->getRequest()->session->get('coupon_code');
 
-            $code =$this->getRequest()->session->get('coupon_code');
-            if ($model = CouponKitModel::objects()->filter(['code' => $code, 'active' => true])->get())
+            if (strtoupper($code) == strtoupper($scode) && $model = CouponKitModel::objects()->filter(['code' => $code, 'active' => true])->get())
             {
                 echo $this->renderInSmarty('coupon/view.tpl', [
                     'model' => $model

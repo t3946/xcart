@@ -19,6 +19,8 @@ abstract class AbstractRestriction implements IDiscountRestriction
 
     abstract public function getFormClass();
 
+    abstract public function getTypeValidationObject();
+
     public function setData($data) {
         $this->data = $data;
     }

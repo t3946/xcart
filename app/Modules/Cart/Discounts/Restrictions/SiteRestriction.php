@@ -20,7 +20,13 @@ class SiteRestriction extends AbstractRestriction
         return CartModule::t('Site restriction');
     }
 
-    public function validate()
+    public function getTypeValidationObject()
+    {
+        return self::VALIDATION_OTHER;
+    }
+
+
+    public function validate($object = null)
     {
 
     }

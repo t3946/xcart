@@ -20,7 +20,12 @@ class CategoryRestriction extends AbstractRestriction
         return CartModule::t('Category restriction');
     }
 
-    public function validate()
+    public function getTypeValidationObject()
+    {
+        return self::VALIDATION_PRODUCT;
+    }
+
+    public function validate($product = null)
     {
 
     }

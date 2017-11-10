@@ -18,7 +18,12 @@ class CountUsedRestriction extends AbstractRestriction
         return CartModule::t('Count uses');
     }
 
-    public function validate()
+    public function getTypeValidationObject()
+    {
+        return self::VALIDATION_CUSTOMER;
+    }
+
+    public function validate($user = null)
     {
 
     }

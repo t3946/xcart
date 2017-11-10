@@ -18,7 +18,13 @@ class DateRestriction extends AbstractRestriction
         return CartModule::t('Date restriction');
     }
 
-    public function validate()
+    public function getTypeValidationObject()
+    {
+        return self::VALIDATION_OTHER;
+    }
+
+
+    public function validate($object = null)
     {
 
     }
