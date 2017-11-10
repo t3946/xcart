@@ -54,14 +54,7 @@ class DiscountRestrictionAdmin extends ListViewAdmin
         $defClass = $this->getInstance()->getFormClass();
 
         if (!empty($_GET['form'])) {
-//            try {
-                $form = new $_GET['form'];
-//            }
-//            catch (\Exception $e) {
-//                dd($e->getTraceAsString());
-
-//                $form = new $defClass();
-//            }
+            $form = new $_GET['form'];
 
             return $form;
         }

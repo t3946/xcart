@@ -12,16 +12,9 @@
 	</button>
 
 {else}
-	<div class="coupon_info">
-		<a href="{$couponModel->getAbsoluteUrl()}" target="_blank">
-			Show me coupon polisy
-		</a>
-	</div>
-	<br>
-
 	<div class="discard">
 		<span style="margin-right: 1em;">
-			Discard coupon code ?
+			Appended coupon: <a href="{$couponModel->getAbsoluteUrl()}" target="_blank" title="Show coupon policy / description.">{$couponModel->code}</a>
 		</span>
 
 		<button name="discard-coupon" value="1" class="cidev_new_button cidev_new_white" style="font-size: 11px;">
