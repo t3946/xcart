@@ -7,6 +7,7 @@
     <script async custom-element="amp-analytics" src="https://cdn.ampproject.org/v0/amp-analytics-0.1.js"></script>
     <script async custom-element="amp-social-share" src="https://cdn.ampproject.org/v0/amp-social-share-0.1.js"></script>
     <script async custom-element="amp-form" src="https://cdn.ampproject.org/v0/amp-form-0.1.js"></script>
+    <meta name="amp-google-client-id-api" content="googleanalytics">
     <style amp-custom>
         {include "product/amp_style.css"}
     </style>
@@ -114,7 +115,6 @@
                             Add to cart
                         </button>
 
-
                     </div>
 
 
@@ -150,6 +150,14 @@
         <div class="description">
             {$model->getFrontendDescription()}
         </div>
+
+        {if $model->isGroupChild()}
+            <br>
+                <a class="button_redirect_2" id="group_prod_2" href="{$model->parent->getAbsoluteUrl()}">
+                    <b>See other product variations</b>
+                </a>
+            <br>
+        {/if}
 
         {*<amp-youtube
                 data-videoid="AjvbqVlxYOs"
