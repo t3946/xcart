@@ -38,7 +38,7 @@ if (isset($argv) && is_array($argv) && !empty($argv[1])) {
         $oMail->subject = sprintf('Attention! Xcart cron %s Already launched', $log);
         $oMail->body = $log . ' already launched';
         $oMail->sendEmail();
-        if (isset($argv) && !in_array('--force-flag', $argv)) {
+        if (!isset($argv) || (isset($argv) && !in_array('--force-flag', $argv))) {
             die("Already launched"); // ################################
         }
     }
