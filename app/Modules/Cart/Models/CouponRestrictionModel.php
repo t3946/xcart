@@ -8,6 +8,15 @@ use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\JsonField;
 use Xcart\App\Orm\Model;
 
+/**
+ * Class CouponRestrictionModel
+ *
+ * @property \Modules\Cart\Models\CouponKitModel coupon
+ * @property (string) class
+ * @property (array) data
+ *
+ * @package Modules\Cart\Models
+ */
 class CouponRestrictionModel extends Model
 {
     /** @var \Modules\Cart\Discounts\Restrictions\AbstractRestriction */

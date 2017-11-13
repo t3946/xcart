@@ -18,6 +18,17 @@ use Xcart\App\Orm\Model;
  *
  * For constructing custom discount
  *
+ * @property (bool) active
+ * @property (string) code
+ * @property (string) name
+ * @property (int) type [1 => summ, 2 => percentage]
+ * @property (float) discount
+ * @property (float) max_discount
+ * @property (string) description
+ * @property \DateTime created_at
+ * @property \DateTime updated_at
+ * @property CouponRestrictionModel[]|\Xcart\App\Orm\Manager|null restrictions
+ *
  * @package Modules\Cart\Models
  */
 class CouponKitModel extends Model

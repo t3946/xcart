@@ -1,7 +1,3 @@
-<?php /* MODIFIED: random:20341 [2010 Jul 29 14:46][Custom development (Accounting features for X-Cart orders management)] */ ?>
-<?php /* MODIFIED: random:18298_18304_18324 [2009 Jun 08 09:50][Custom development (����� ��� �������� ����������� "��������������" (X-Cart's Manufacturers) + Add new "Brands" module + Search URLs feature)] */ ?>
-<?php /* MODIFIED: random:17710_17631 [2009 Mar 26 09:25][Custom development ("Shipping quote" functionality and other modifications) + Other] */ ?>
-<?php /* MODIFIED: random:1073746882_1073747063 [2008 Dec 24 16:25][Custom development (Shipping Calculation for Several Providers in the USA)] */ ?>
 <?php
 /*****************************************************************************\
  * +-----------------------------------------------------------------------------+
@@ -34,6 +30,7 @@
  * +-----------------------------------------------------------------------------+
  * \*****************************************************************************/
 
+use Modules\Cart\Helpers\CouponOldCart;
 use Modules\Distributor\Helpers\DistributorHelper;
 use Modules\Product\Models\ProductModel;
 use Modules\User\Helpers\SurfingHelper;
@@ -57,11 +54,8 @@ if (!empty($purchase_order_selected)) {
     $smarty->assign('purchase_order_selected', $purchase_order_selected);
 }
 
-d($cart, $user, $order);
-if (!empty($cart) && !empty($user)) {
-    d($cart, $user);
-    //VALIDATE COUPON
-    //SET COUPON DISCOUNT
+if ($mode == "checkout" && !empty($paymentid)) {
+    $cart = CouponOldCart::getInstance()->appendCoupon();
 }
 
 if (!empty($orderids) && $_GET["mode"] == "order_message") {

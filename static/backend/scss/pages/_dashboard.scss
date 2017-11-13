@@ -98,9 +98,11 @@
         }
 
         .dashboard-item {
-            font-size: 11px;
+            font-size: .95em;
             font-weight: normal;
             position: relative;
+            text-transform: none;
+            //color: black;
 
             &:hover, &:visited {
               color: inherit;
@@ -309,9 +311,9 @@
                 &:before {
                     content: '+';
                     display: inline-block;
-                    font: {
-                        size: 8px;
-                    }
+                    //font: {
+                    //    size: 8px;
+                    //}
                     width: 17px;
                     height: 17px;
                     background: {

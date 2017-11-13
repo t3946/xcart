@@ -4008,7 +4008,7 @@ $grid: (
 
 */
 .row {
-  max-width: 1008px;
+  max-width: 1240px;
   margin: 0 auto; }
   .row:before, .row:after {
     content: " ";
@@ -5133,37 +5133,24 @@ h1 {
     letter-spacing: -4px;
     line-height: 15px;
     min-height: 15px;
-    background: url("../images/dialog_bg_line.gif") bottom left repeat-x; }
+    background-color: #e27a2b; }
     .smarty-admin-block .tabs .tabs-title .link {
       letter-spacing: normal;
       min-height: 15px;
       display: inline-block;
       background-color: #ffb86a;
-      border: 1px #ff8600 solid;
       border-bottom: none;
-      padding: 0 11px;
-      border-radius: 3px 3px 0 0;
+      padding: 5px 10px;
       color: #fff;
+      line-height: 15px;
       font-weight: 500;
       text-decoration: none;
-      font-size: 11px;
       min-width: 150px;
       position: relative; }
       .smarty-admin-block .tabs .tabs-title .link:hover {
         text-decoration: underline; }
-      .smarty-admin-block .tabs .tabs-title .link:nth-last-child(1):after {
-        content: ' ';
-        display: block;
-        background: url("../images/dialog_bg_after_n.gif") bottom left no-repeat;
-        width: 10px;
-        height: 15px;
-        position: absolute;
-        right: -9px;
-        bottom: 0; }
       .smarty-admin-block .tabs .tabs-title .link.active {
-        background-color: #ff8600; }
-        .smarty-admin-block .tabs .tabs-title .link.active:nth-last-child(1):after {
-          background-image: url("../images/dialog_bg_after.gif"); }
+        background-color: #e27a2b; }
   .smarty-admin-block .content-block {
     padding: 10px; }
   .smarty-admin-block .buttons-block {
@@ -5476,9 +5463,10 @@ h1 {
   .admin .dashboard-filters .gray {
     color: darkgray; }
   .admin .dashboard-filters .dashboard-item {
-    font-size: 11px;
+    font-size: .95em;
     font-weight: normal;
-    position: relative; }
+    position: relative;
+    text-transform: none; }
     .admin .dashboard-filters .dashboard-item:hover, .admin .dashboard-filters .dashboard-item:visited {
       color: inherit; }
     .admin .dashboard-filters .dashboard-item.check-owner.own {
@@ -5582,7 +5570,6 @@ h1 {
     .admin #dashboard fieldset legend:before {
       content: '+';
       display: inline-block;
-      font-size: 8px;
       width: 17px;
       height: 17px;
       background-color: #fff;
@@ -5903,7 +5890,8 @@ h1 {
   text-align: left;
   margin: 0 -15px; }
   .subscription-container .item {
-    padding-bottom: 3px; }
+    padding-bottom: 3px;
+    font-size: 12px; }
     .subscription-container .item input {
       vertical-align: middle; }
 
