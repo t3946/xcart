@@ -114,27 +114,13 @@ gulp.task('frontend:css', ['frontend:scss', 'frontend:css:raw'], function () {
 });
 
 gulp.task('backend:css', ['backend:scss'], function () {
-    let pipe = gulp.src(backend.src.css)
-        // .pipe(gcmq())
-        .pipe(autoprefixer({
-            browsers: ["> 5%", "last 2 versions", "last 4 iOS versions"],
-            cascade: false
-        }));
+    let pipe = gulp.src(backend.src.css);
 
     if (isProduction && backend.config.compress) {
         pipe = pipe.pipe(cssnano(backend.config.cssnano))
     }
 
     return pipe.pipe(concat(backend.config.name + '.css'))
-        // .pipe(inlineimage(backend.config.inline_image || {}))
-        // .on('error',  function(err) {
-        //     console.log('[Compilation Error]');
-        //     console.log(err.fileName + ( err.loc ? `( ${err.loc.line}, ${err.loc.column} ): ` : ': '));
-        //     console.log('error Babel: ' + err.message + '\n');
-        //     console.log(err.codeFrame);
-        //
-        //     this.emit('end');
-        // })
         .pipe(gulp.dest(backend.dst.css))
         .pipe(hashsum({filename: 'backend/versions/css.yml', hash: 'md5'}))
         .pipe(livereload());

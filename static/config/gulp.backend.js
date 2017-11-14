@@ -64,7 +64,13 @@ module.exports = {
         'jquery-ui': {
             js: [
                 'bower_components/jquery-ui/jquery-ui.js'
-            ]
+            ],
+            css: [
+                'bower_components/jquery-ui/themes/base/jquery-ui.css',
+                // 'bower_components/jquery-ui/themes/base/theme.css',
+                // 'bower_components/jquery-ui/themes/base/tabs.css',
+                // 'bower_components/jquery-ui/themes/base/datepicker.css',
+            ],
         },
 
         'jquery.shapeshift': {
@@ -158,11 +164,11 @@ module.exports = {
 
         'air-datepicker': {
             js: [
-                'bower_components/air-datepicker/dist/js/datepicker.js',
-                'bower_components/air-datepicker/dist/js/i18n/datepicker.en.js'
+                'components/air-datepicker/dist/js/datepicker.js',
+                'components/air-datepicker/dist/js/i18n/datepicker.en.js'
             ],
             css: [
-                'bower_components/air-datepicker/dist/css/datepicker.css'
+                'components/air-datepicker/dist/css/datepicker.css'
             ]
         },
 

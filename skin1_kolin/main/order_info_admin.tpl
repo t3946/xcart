@@ -3,7 +3,7 @@ $Id: order_info_admin.tpl, v 1.0.0 2010/03/23 15:16:14 random Exp $
 vim: set ts=2 sw=2 sts=2 et:
 Use $product.oProduct classProduct
 *}
-<script type="text/javascript" src="{$SkinDir}/lib/jqueryui/jquery-ui.custom.min.js"></script>
+{*<script type="text/javascript" src="{$SkinDir}/lib/jqueryui/jquery-ui.custom.min.js"></script>*}
 {include file="check_zipcode_js.tpl"}
 
 <a name="order_info"></a>
@@ -49,11 +49,11 @@ function func_check_for_paypal_vt(m_id){
                     {/literal}
                         {if $found_show_stock_availability_form eq "Y"}
                                 {literal}
-                                        {selected: 3}
+                                        {active: 3}
                                 {/literal}
                         {else}
                                 {literal}
-                                        {selected: 2}
+                                        {active: 2}
                                 {/literal}
                         {/if}
                     {literal}

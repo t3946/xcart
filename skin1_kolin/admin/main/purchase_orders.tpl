@@ -1,4 +1,4 @@
-<script type="text/javascript" src="{$SkinDir}/lib/jqueryui/jquery-ui.custom.min.js"></script>
+{*<script type="text/javascript" src="{$SkinDir}/lib/jqueryui/jquery-ui.custom.min.js"></script>*}
 {if $supplemental_category_section ne "Y"}
 
     {if ($smarty.get.mode ne "info")}

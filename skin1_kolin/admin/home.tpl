@@ -6,9 +6,11 @@
 
 <title>{if $login ne ""}{if $current_storefront_info.prefix eq "MAIN_SF_PREFIX"}AR-{else}{$current_storefront_info.prefix}{/if}Admin: {$cidev_firstname} ({$login}){else}{$lng.txt_site_title}{/if}</title>
 { include file="meta.tpl" }
-<link rel="stylesheet" href="{$SkinDir}/skin1_admin.css" />
 
-<link rel="stylesheet" href="{$SkinDir}/lib/jqueryui/jquery.ui.admin.css" />
+<script src="/static/backend/dist/js/main.js"></script>
+<link rel="stylesheet" href="/static/backend/dist/css/main.css" />
+
+{*<link rel="stylesheet" href="{$SkinDir}/lib/jqueryui/jquery.ui.admin.css" />*}
 {*<link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,500,500i,700,700i,900,900i&subset=cyrillic,cyrillic-ext,latin-ext" rel="stylesheet">*}
 <link href="/static/backend/production/gotham-pro.css" rel="stylesheet">
 
@@ -71,15 +73,6 @@ var initEditor = function(script) {
 	});
 };
 var runTests = function(editor) {
-/*
-	test('editor initialized with async load of tinyMCE', 1, function() {
-		editor.focus();
-		editor.setContent('test 123');
-		equal(editor.getContent(), '<p>test 123</p>');
-	});
-
-	QUnit.start();
-*/
 };
 
 {/literal}

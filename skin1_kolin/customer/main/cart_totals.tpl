@@ -24,7 +24,7 @@
 
 {if $cart.coupon_discount ne 0 and $cart.coupon_type ne "free_ship"}
 <tr>
-<td nowrap="nowrap"><font class="FormButton">{$lng.lbl_discount_coupon} <a href="cart.php?mode=unset_coupons" alt="{$lng.lbl_unset_coupon|escape}"><img src="{$ImagesDir}/clear.gif" width="11" height="11" border="0" valign="top" alt="{$lng.lbl_unset_coupon|escape}" /></a> :</font></td>
+<td nowrap="nowrap"><font class="FormButton">{$lng.lbl_discount_coupon}:</font></td>
 <td><img src="{$ImagesDir}/null.gif" width="5" height="1" alt="" /><br /></td>
 <td nowrap="nowrap" align="right"><font class="ProductPriceSmall">{include file="currency.tpl" value=$cart.coupon_discount}</font></td>
 <td nowrap="nowrap" align="right">{include file="customer/main/alter_currency_value.tpl" alter_currency_value=$cart.coupon_discount}</td>

@@ -2,7 +2,7 @@
     "use strict";
 
     $(document).ready(function() {
-        $('fieldset').mfieldset();
+        $('fieldset.collapsible').mfieldset();
 
         for (let form of $('form'))
         {
@@ -84,12 +84,12 @@
                         for_datepicker = [date, date];
                     }
                 }
-                if (typeof $input.datepicker === "function") {
+                if (typeof $input.airdate === "function") {
                     if (for_datepicker.length === 2) {
-                        $input.datepicker().data('datepicker').selectDate(for_datepicker);
+                        $input.airdate().data('airdate').selectDate(for_datepicker);
                     }
                     else {
-                        $input.datepicker().data('datepicker').clear();
+                        $input.airdate().data('airdate').clear();
                     }
                 }
 

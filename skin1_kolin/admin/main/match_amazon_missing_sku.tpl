@@ -98,7 +98,7 @@
 
 <script src="{$SkinDir}/js/semantic/components/dropdown.min.js" type="text/javascript"></script>
 <script src="{$SkinDir}/js/semantic/components/transition.min.js" type="text/javascript"></script>
-<script type="text/javascript" src="{$SkinDir}/lib/jqueryui/jquery-ui.custom.min.js"></script>
+{*<script type="text/javascript" src="{$SkinDir}/lib/jqueryui/jquery-ui.custom.min.js"></script>*}
 
 <script type="text/javascript">
     $('.dropdown').dropdown();

@@ -113,6 +113,10 @@
             .select2-search__field {
                 min-height: 15px;
             }
+
+            input {
+                width: auto !important;
+            }
         }
     }
 

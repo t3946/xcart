@@ -39813,7 +39813,7 @@ S2.define('jquery.select2',[
 
 ;(function (window, $, undefined) { ;(function () {
     var VERSION = '2.2.3',
-        pluginName = 'datepicker',
+        pluginName = 'airdate',
         autoInitSelector = '.datepicker-here',
         $body, $datepickersContainer,
         containerBuilt = false,
@@ -39984,7 +39984,7 @@ S2.define('jquery.select2',[
             }
 
             if (this.opts.timepicker) {
-                this.timepicker = new $.fn.datepicker.Timepicker(this, this.opts);
+                this.timepicker = new $.fn.airdate.Timepicker(this, this.opts);
                 this._bindTimepickerEvents();
             }
 
@@ -39992,9 +39992,9 @@ S2.define('jquery.select2',[
                 this.$datepicker.addClass('-only-timepicker-');
             }
 
-            this.views[this.currentView] = new $.fn.datepicker.Body(this, this.currentView, this.opts);
+            this.views[this.currentView] = new $.fn.airdate.Body(this, this.currentView, this.opts);
             this.views[this.currentView].show();
-            this.nav = new $.fn.datepicker.Navigation(this, this.opts);
+            this.nav = new $.fn.airdate.Navigation(this, this.opts);
             this.view = this.currentView;
 
             this.$el.on('clickCell.adp', this._onClickCell.bind(this));
@@ -40034,15 +40034,15 @@ S2.define('jquery.select2',[
 
         _defineLocale: function (lang) {
             if (typeof lang == 'string') {
-                this.loc = $.fn.datepicker.language[lang];
+                this.loc = $.fn.airdate.language[lang];
                 if (!this.loc) {
                     console.warn('Can\'t find language "' + lang + '" in Datepicker.language, will use "ru" instead');
-                    this.loc = $.extend(true, {}, $.fn.datepicker.language.ru)
+                    this.loc = $.extend(true, {}, $.fn.airdate.language.ru)
                 }
 
-                this.loc = $.extend(true, {}, $.fn.datepicker.language.ru, $.fn.datepicker.language[lang])
+                this.loc = $.extend(true, {}, $.fn.airdate.language.ru, $.fn.airdate.language[lang])
             } else {
-                this.loc = $.extend(true, {}, $.fn.datepicker.language.ru, lang)
+                this.loc = $.extend(true, {}, $.fn.airdate.language.ru, lang)
             }
 
             if (this.opts.dateFormat) {
@@ -41152,7 +41152,7 @@ S2.define('jquery.select2',[
 
             if (this.inited) {
                 if (!this.views[val]) {
-                    this.views[val] = new  $.fn.datepicker.Body(this, val, this.opts)
+                    this.views[val] = new  $.fn.airdate.Body(this, val, this.opts)
                 } else {
                     this.views[val]._render();
                 }
@@ -41268,7 +41268,7 @@ S2.define('jquery.select2',[
         return new Date(date.year, date.month, date.date)
     };
 
-    $.fn.datepicker = function ( options ) {
+    $.fn.airdate = function ( options ) {
         return this.each(function () {
             if (!$.data(this, pluginName)) {
                 $.data(this,  pluginName,
@@ -41282,9 +41282,9 @@ S2.define('jquery.select2',[
         });
     };
 
-    $.fn.datepicker.Constructor = Datepicker;
+    $.fn.airdate.Constructor = Datepicker;
 
-    $.fn.datepicker.language = {
+    $.fn.airdate.language = {
         ru: {
             days: ['Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота'],
             daysShort: ['Вос','Пон','Вто','Сре','Чет','Пят','Суб'],
@@ -41300,7 +41300,7 @@ S2.define('jquery.select2',[
     };
 
     $(function () {
-        $(autoInitSelector).datepicker();
+        $(autoInitSelector).airdate();
     })
 
 })();
@@ -41321,7 +41321,7 @@ S2.define('jquery.select2',[
         '<div class="datepicker--cells datepicker--cells-years"></div>' +
         '</div>'
         },
-        datepicker = $.fn.datepicker,
+        datepicker = $.fn.airdate,
         dp = datepicker.Constructor;
 
     datepicker.Body = function (d, type, opts) {
@@ -41624,7 +41624,7 @@ S2.define('jquery.select2',[
         '<div class="datepicker--nav-action" data-action="next">#{nextHtml}</div>',
         buttonsContainerTemplate = '<div class="datepicker--buttons"></div>',
         button = '<span class="datepicker--button" data-action="#{action}">#{label}</span>',
-        datepicker = $.fn.datepicker,
+        datepicker = $.fn.airdate,
         dp = datepicker.Constructor;
 
     datepicker.Navigation = function (d, opts) {
@@ -41779,7 +41779,7 @@ S2.define('jquery.select2',[
         '   </div>' +
         '</div>' +
         '</div>',
-        datepicker = $.fn.datepicker,
+        datepicker = $.fn.airdate,
         dp = datepicker.Constructor;
 
     datepicker.Timepicker = function (inst, opts) {
@@ -42047,7 +42047,7 @@ S2.define('jquery.select2',[
     };
 })();
  })(window, jQuery);
-;(function ($) { $.fn.datepicker.language['en'] = {
+;(function ($) { $.fn.airdate.language['en'] = {
     days: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
     daysShort: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
     daysMin: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'],
@@ -43446,7 +43446,7 @@ jQuery.fn.tablePositions = function (options) {
     "use strict";
 
     $(document).ready(function () {
-        $('fieldset').mfieldset();
+        $('fieldset.collapsible').mfieldset();
 
         var _loop = function _loop(form) {
             if ($(form).attr('method').toString().toLowerCase() != 'post') {
@@ -43550,11 +43550,11 @@ jQuery.fn.tablePositions = function (options) {
                             for_datepicker = [date, date];
                         }
                 }
-                if (typeof $input.datepicker === "function") {
+                if (typeof $input.airdate === "function") {
                     if (for_datepicker.length === 2) {
-                        $input.datepicker().data('datepicker').selectDate(for_datepicker);
+                        $input.airdate().data('airdate').selectDate(for_datepicker);
                     } else {
-                        $input.datepicker().data('datepicker').clear();
+                        $input.airdate().data('airdate').clear();
                     }
                 }
 
