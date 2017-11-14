@@ -9,6 +9,11 @@ interface IDiscountRestriction
 
     public function getName();
 
+    /**
+     * @param null $object
+     *
+     * @return boolean
+     */
     public function validate($object = null);
 
     public function getFormClass();

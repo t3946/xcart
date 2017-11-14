@@ -18,8 +18,8 @@ class DateField extends CharField
 
         $js = "<script type='text/javascript'>(function(){
     $('#$id')
-        .datepicker({$airOptions})
-        .data('datepicker')
+        .airdate({$airOptions})
+        .data('airdate')
         .selectDate({$this->getJSDate()});
 })()</script>";
         return parent::render() . $js;

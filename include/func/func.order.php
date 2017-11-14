@@ -1000,7 +1000,7 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
 
     $giftcert_id = @$cart["giftcert_id"];
 
-    $extra = "";
+    $extra = [];
     if (!empty($active_modules["Anti_Fraud"]) && defined("IS_AF_CHECK") && ($cart['total_cost'] > 0 || $config['Anti_Fraud']['check_zero_order'] == 'Y')) {
         include $xcart_dir . "/modules/Anti_Fraud/anti_fraud.php";
     }
@@ -1077,10 +1077,10 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
 
         $taxes_applied = addslashes(serialize($current_order["whole_taxes"]));
 
-        $discount_coupon = $current_order["coupon"];
-        if (!empty($current_order["coupon"])) {
-            $current_order["coupon"] = func_query_first_cell("SELECT coupon_type FROM $sql_tbl[discount_coupons] WHERE coupon='" . addslashes($current_order["coupon"]) . "'") . "``" . $current_order["coupon"];
-        }
+//        $discount_coupon = $current_order["coupon"];
+//        if (!empty($current_order["coupon"])) {
+//            $current_order["coupon"] = func_query_first_cell("SELECT coupon_type FROM $sql_tbl[discount_coupons] WHERE coupon='" . addslashes($current_order["coupon"]) . "'") . "``" . $current_order["coupon"];
+//        }
 
         $save_info = $userinfo;
         $userinfo["b_address"] .= "\n" . $userinfo["b_address_2"];
@@ -1156,6 +1156,8 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
             'tax_info_taxed_discounted_subtotal'       => $_extra["tax_info"]['taxed_discounted_subtotal'],
             'tax_info_taxed_shipping'                  => $_extra["tax_info"]['taxed_shipping'],
         ];
+
+//        d($insert_data);
 
         if (!empty($active_modules['Multiple_Storefronts'])) {
             if (isset($cart['source_sf']) && !empty($cart['source_sf'])) {

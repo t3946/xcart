@@ -54,10 +54,6 @@ if (!empty($purchase_order_selected)) {
     $smarty->assign('purchase_order_selected', $purchase_order_selected);
 }
 
-if ($mode == "checkout" && !empty($paymentid)) {
-    $cart = CouponOldCart::getInstance()->appendCoupon();
-}
-
 if (!empty($orderids) && $_GET["mode"] == "order_message") {
 
     $orders = array();
@@ -259,9 +255,7 @@ include $xcart_dir . "/shipping/shipping.php";
 
 x_session_register("cart");
 x_session_register("intershipper_rates");
-# START: random:1073746882_1073747063 [2008 Dec 24 16:25] 
 x_session_register("intershipper_rates_all");
-# END: random:1073746882_1073747063 [2008 Dec 24 16:25] 
 x_session_register("intershipper_recalc");
 x_session_unregister("secure_oid");
 x_session_register("anonymous_checkout");
@@ -1065,8 +1059,8 @@ if (!$func_is_cart_empty) {
     #
     # Discount coupons
     #
-    if ($active_modules["Discount_Coupons"])
-        include $xcart_dir . "/modules/Discount_Coupons/discount_coupons.php";
+//    if ($active_modules["Discount_Coupons"])
+//        include $xcart_dir . "/modules/Discount_Coupons/discount_coupons.php";
 
     if (!empty($active_modules['Multiple_Storefronts'])) {
         $sf_condition = "AND storefrontid=$current_storefront";
@@ -1074,15 +1068,18 @@ if (!$func_is_cart_empty) {
         $sf_condition = '';
     }
 
-    $active_discount_coupons = func_query_first_cell('SELECT COUNT(*) FROM ' . $sql_tbl['discount_coupons'] . ' WHERE status="A" ' . $sf_condition);
-    if ($active_discount_coupons && $active_discount_coupons > 0) {
-        $smarty->assign('show_discount_coupons', 'Y');
-    }
+//    $active_discount_coupons = func_query_first_cell('SELECT COUNT(*) FROM ' . $sql_tbl['discount_coupons'] . ' WHERE status="A" ' . $sf_condition);
+//    if ($active_discount_coupons && $active_discount_coupons > 0) {
+//        $smarty->assign('show_discount_coupons', 'Y');
+//    }
 
     #
     # Calculate all prices
     #
     $cart = func_array_merge($cart, func_calculate($cart, $products, $login, $current_area, (!empty($paymentid) ? intval($paymentid) : 0)));
+    if ($mode == "checkout" && !empty($paymentid)) {
+        $cart = CouponOldCart::getInstance()->appendCoupon($cart);
+    }
 
     if (func_is_cart_empty($cart)) {
         if (!empty($active_modules["SnS_connector"]))
@@ -1110,6 +1107,8 @@ if (!$func_is_cart_empty) {
     if ($allow_to_checkout == "N" & $mode == "checkout") {
         func_header_location("cart.php#warehouse");
     }
+
+
 
     $smarty->assign("allow_to_checkout", $allow_to_checkout);
     $smarty->assign("cart", $cart);

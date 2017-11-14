@@ -20,14 +20,14 @@ class BrandRestriction extends AbstractRestriction
         return CartModule::t('Brand restriction');
     }
 
-    public function getTypeValidationObject()
+    public function getTypeValidation()
     {
         return self::VALIDATION_PRODUCT;
     }
 
     public function validate($item = null)
     {
-
+        return true;
     }
 
     public function dataToString()

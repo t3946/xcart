@@ -65,7 +65,7 @@ class OrderGroupModel extends Model
             'detail_models' => [
                 'class' => HasManyField::className(),
                 'modelClass' => OrderDetailModel::className(),
-                'link' => ['orderid'=>'orderid', 'product_model__manufacturerid'=>'manufacturerid']
+                'link' => ['orderid'=>'orderid', 'manufacturerid'=>'product_model__manufacturerid'],
             ],
             'invoices' => [
                 'class' => HasManyField::className(),

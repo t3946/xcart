@@ -21,7 +21,7 @@ use Xcart\App\Orm\Model;
  * @property (bool) active
  * @property (string) code
  * @property (string) name
- * @property (int) type [1 => summ, 2 => percentage]
+ * @property (int) type [1 => percentage, 2 => summ]
  * @property (float) discount
  * @property (float) max_discount
  * @property (string) description
@@ -53,9 +53,10 @@ class CouponKitModel extends Model
             'type' => [
                 'class' => IntField::className(),
                 'required' => true,
+                'default' => 1,
                 'choices' => [
-                    1 => 'Discount summ.',
-                    2 => 'Discount percentage.'
+                    1 => 'Discount percentage.',
+                    2 => 'Discount summ.'
                 ],
             ],
 
@@ -104,5 +105,10 @@ class CouponKitModel extends Model
     public function getAbsoluteUrl()
     {
         return Xcart::app()->router->url('coupon:view', ['code' => $this->code]);
+    }
+
+    public function isPercentageCalc()
+    {
+        return $this->type == 1;
     }
 }
