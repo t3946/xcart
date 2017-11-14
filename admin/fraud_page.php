@@ -3,6 +3,7 @@ use Modules\Order\Models\FraudCheckModel;
 use Modules\Order\Models\OrderDetailModel;
 use Modules\Order\Models\OrderFraudCheckModel;
 use Modules\Order\Models\OrderModel;
+use Modules\Payment\Models\PaymentMethodModel;
 use Modules\Product\Helpers\ProductHelper;
 use Modules\Product\Models\ProductHardResellModel;
 
@@ -233,7 +234,7 @@ if ($REQUEST_METHOD == "POST" && !($mode == "unlock_order" || $mode == "unlock_o
                 }
             }
             if ($orderModel) {
-                $orderModel->getDataModel()->recalculateAccounting();
+                $orderModel->recalculateAccounting();
             }
         }
 
@@ -288,7 +289,7 @@ if ($REQUEST_METHOD == "POST" && !($mode == "unlock_order" || $mode == "unlock_o
 
                 $overall_fraud_score += $fraud_score;
 
-                list($orderFraudCheckModel) = OrderFraudCheckModel::objects()->getOrCreate([
+                list($orderFraudCheckModel, $is_created) = OrderFraudCheckModel::objects()->getOrNew([
                     'orderid' => $orderid,
                     'question_code' => $question_code
                 ]);
@@ -299,6 +300,7 @@ if ($REQUEST_METHOD == "POST" && !($mode == "unlock_order" || $mode == "unlock_o
                     'fraud_result' => $fraud_result,
                     'additional_info' => $additional_info
                 ]);
+
                 if ($orderModel && $question_code == 'MANUAL_IS_ORDER_ITEMS_EASY_TO_SELL'
                     && in_array('manual_action', array_keys($orderFraudCheckModel->getChangedAttributes()))
                 ) {
@@ -388,7 +390,7 @@ if ($REQUEST_METHOD == "POST" && !($mode == "unlock_order" || $mode == "unlock_o
             ($manual_action_not_selected == 'Y')
         ) {
             if ($orderid) {
-                $orderModel->getDataModel()->submitOrderEntry();
+                $orderModel->submitOrderEntry();
             }
         }
 
@@ -607,7 +609,7 @@ if ($orderModel) {
                 switch ($hts) {
                     case null :
                     case ProductHardResellModel::HARD_TO_RESELL_UNKNOWN :
-                        $aProductLinks[] = "<a href='{$productModel->getDataModel()->getUrl()}' target='_blank' style='color: #1F08F8;'>{$productModel->productcode}</a>";
+                        $aProductLinks[] = "<a href='{$productModel->getAbsoluteUrl(true)}' target='_blank' style='color: #1F08F8;'>{$productModel->productcode}</a>";
                         break;
                     case ProductHardResellModel::HARD_TO_RESELL_YES:
                         $aProductLinks[] = "<span style='background-color: #D9EAD3;'>{$productModel->productcode}</span> HARD TO RESELL";
@@ -655,8 +657,7 @@ if (!empty($fraud_checks) && is_array($fraud_checks)) {
         $sTransactionReplaceText = '';
         $sPaymentMethodReplaceText = '';
         if ($oTransaction) {
-            $oPaymentMethod = \Xcart\PaymentMethod::objects()->filter(['paymentid' => $oTransaction->paymentid])->get();
-            if ($oPaymentMethod) {
+            if ($oPaymentMethod = PaymentMethodModel::objects()->get(['paymentid' => $oTransaction->paymentid])) {
                 $sTransactionLink = str_replace('{{trans-id}}', $oTransaction->transaction_id, $oPaymentMethod->transaction_id_link);
                 $sTransactionReplaceText = "<a target='_blank' href='{$sTransactionLink}' style='color:#1F08F8;'>Link to transaction</a>";
                 $sPaymentMethodReplaceText = "{$oPaymentMethod->payment_method} ({$oPaymentMethod->transaction_link_anchor})";
