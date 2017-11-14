@@ -96,6 +96,8 @@ if (!empty($id) && is_numeric($id)) {
 # Assign the current location line
         $smarty->assign("location", $location);
 
+        $smarty->assign("no_group_root", true);
+
         func_display("customer/main/product_detail.tpl", $smarty);
     }
 }
