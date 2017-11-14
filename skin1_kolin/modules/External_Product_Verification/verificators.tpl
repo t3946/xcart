@@ -8,7 +8,9 @@
         <button data-status="all" class="ui left button {if $active=='all'}active{/if}">All</button>
         <button data-status="Y" class="ui button {if $active == 'Y'}active{/if}">Active</button>
         <button data-status="N" class="ui button {if $active == 'N'}active{/if}">Inactive</button>
+        <button data-status="B" class="ui button {if $active == 'B'}active{/if}">Blocked</button>
     </div>
+    <a style="float: right; line-height: 25px;" target="_blank" href="az_create_listings.php">Creating Product Listings on Amazon</a>
     <table width="100%" id="table_verificators" cellpadding="3" cellspacing="1">
         <tr>
             <td colspan="7">
@@ -31,11 +33,10 @@
                         {if $oCustomer->getCustomerURL()}
                         <a target="_blank"
                            href="{$oCustomer->getCustomerURL()}">{/if}{$oCustomer->getCustomerFullName()}{if $oCustomer->getCustomerURL()}</a>{/if}
-                        &nbsp;&nbsp;
                         {if $oCustomer->isAmazonAccountSuspended()}
                             <span style="white-space: nowrap;">
-                            <a class="verificator_status" style="color:red;" href="#">Blocked</a>
-                        </span>
+                                <a class="verificator_status" style="color:red;" href="#">Blocked</a>
+                            </span>
                         {/if}
                     </td>
                     <td>{if $oCustomer->getCustomerModifyLink()}<a href="{$oCustomer->getCustomerModifyLink()}"
@@ -74,7 +75,7 @@
 
 {include file="dialog.tpl" title='Verificators' content=$smarty.capture.dialog extra='width="100%"'}
 <br/>
-{include file="dialog.tpl" title='Verification results' content=$smarty.capture.verification_results extra='width="100%"'}
+{include file="dialog.tpl" title="Verification results: `$foundRows`" content=$smarty.capture.verification_results extra='width="100%"'}
 
 <script>
     {literal}
@@ -84,7 +85,7 @@
     }
     $(document).ready(function () {
         $('#batches-filter > button').on('click', '', function () {
-            location.href = "operators.php?active=" + $(this).data('status');
+            location.href = "az_operators.php?active=" + $(this).data('status');
         });
 
         $('#table_verificators').on('click', 'a.verificator_status', function () {

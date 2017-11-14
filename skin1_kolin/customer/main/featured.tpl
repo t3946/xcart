@@ -16,4 +16,8 @@
 {$lng.txt_no_featured}
 {/if}
 {/capture}
-{include file="dialog.tpl" title=$lng.lbl_featured_products content=$smarty.capture.dialog extra='width="100%"' new_design="Y"}
+{assign var=featured_caption value=$lng.lbl_featured_products}
+{if (!empty($config.seo_featured_products_caption))}
+    {assign var=featured_caption value=$config.seo_featured_products_caption|stripslashes}
+{/if}
+{include file="dialog.tpl" title="<h1 style='margin:0;'>"|cat:$featured_caption|cat:"</h1>" content=$smarty.capture.dialog extra='width="100%"' new_design="Y"}

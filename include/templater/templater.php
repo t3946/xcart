@@ -44,9 +44,20 @@ if (!class_exists('Smarty')) {
 	exit;
 }
 		
-class Templater extends Smarty {
+class Templater extends Smarty
+{
+    private static $_instance = null;
 
-	function Templater() {
+    public static function getInstance()
+    {
+        if (!self::$_instance) {
+            self::$_instance = new self();
+        }
+
+        return self::$_instance;
+    }
+
+	function __construct() {
 		global $xcart_dir;
 
 		$this->strict_resources = array ();
@@ -59,7 +70,7 @@ class Templater extends Smarty {
 
 		$this->compile_check_md5 = false;
 
-		return parent::Smarty();
+		return parent::__construct();
 	}
 
 	function fetch($resource_name, $cache_id = null, $compile_id = null, $display = false) {
@@ -131,4 +142,3 @@ class TemplateCompiler extends Smarty_Compiler {
 	}
 };
 
-?>

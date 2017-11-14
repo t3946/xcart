@@ -172,6 +172,8 @@ if ($remember_user && $remember_user_days > 0) {
 
 	if (!empty($login)) {
 
+		$admin_login = $login;
+        x_session_register("admin_login", $login);
 		# Check remember data
 		if (!empty($remember_data) && $remember_data['cnt']-- <= 0) {
 			$remember_data = false;

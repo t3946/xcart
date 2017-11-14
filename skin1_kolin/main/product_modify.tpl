@@ -1,4 +1,3 @@
-{* $Id: product_modify.tpl,v 1.106.2.3 2006/10/25 06:39:34 max Exp $ *}
 <a name="main"></a>
 {if $product}
 {assign var="page_title" value="`$page_title`</span>"}
@@ -116,12 +115,14 @@ window.name="prodmodwin";
 {/if}
 {/if}
 
-{if $product.is_variants ne 'Y' && ($section eq "wholesale" || $config.General.display_all_products_on_1_page eq 'Y')}
-<div {if $usertype eq "P"}style="display: none;"{/if}>
-<a name="section_wholesale"></a>
-{include file="modules/Wholesale_Trading/product_wholesale.tpl"}
-<br />
-</div>
+{if !$oProduct->isGroupRoot()}
+    {if $product.is_variants ne 'Y' && ($section eq "wholesale" || $config.General.display_all_products_on_1_page eq 'Y')}
+		<div {if $usertype eq "P"}style="display: none;"{/if}>
+			<a name="section_wholesale"></a>
+            {include file="modules/Wholesale_Trading/product_wholesale.tpl"}
+			<br/>
+		</div>
+    {/if}
 {/if}
 
 {if $section eq "upselling" || $config.General.display_all_products_on_1_page eq 'Y'}
@@ -141,6 +142,9 @@ window.name="prodmodwin";
 <br />
 {/if}
 
+{include file="main/product_splash_image.tpl"}
+<br />
+
 {* start_modification_CIDEV -> CIDEV_Best_Search_Filter *}
 {* {if $active_modules.CIDEV_Best_Search_Filter ne ""} *}
 {include file="modules/CIDEV_Best_Search_Filter/main/product_modify.tpl"}
@@ -148,10 +152,12 @@ window.name="prodmodwin";
 {* end_modification_CIDEV -> CDEV_Best_Search_Filter *}
 
 
-{if $section eq "clone" || $config.General.display_all_products_on_1_page eq 'Y'}
-<a name="section_clone"></a>
-{include file="main/product_clone.tpl"}
-<br />
+{if !$oProduct->isGroupRoot()}
+	{if $section eq "clone" || $config.General.display_all_products_on_1_page eq 'Y'}
+	<a name="section_clone"></a>
+	{include file="main/product_clone.tpl"}
+	<br />
+	{/if}
 {/if}
 
 {*
@@ -168,12 +174,23 @@ window.name="prodmodwin";
 {/if}
 <br/>
 <br/>
+
 	{capture name=excluded_marketplaces}
 			<form  method="post" enctype="multipart/form-data" name="excluded_marketplace">
 				{include file="modules/External_Marketplaces/excluded_marketplaces_admin.tpl" show_button=true}
 			</form>
 	{/capture}
+
 	{include file="dialog.tpl" title='Excluded marketplaces' content=$smarty.capture.excluded_marketplaces extra='width="100%"'}
+
+	<br/>
+	<br/>
+
+    {capture name=excluded_marketplaces}
+		{include file="admin/main/estimate_product_shipping.tpl" product_id=$productid}
+    {/capture}
+
+    {include file="dialog.tpl" title='Estimated shipping' content=$smarty.capture.excluded_marketplaces extra='width="100%"'}
 
 {if $active_modules.Magnifier ne ""}
 {if $section eq "zoomer" || $config.General.display_all_products_on_1_page eq 'Y'}
@@ -209,6 +226,9 @@ window.name="prodmodwin";
 {include file="dialog.tpl" content=$smarty.capture.dialog title=$lng.lbl_warning extra="width='100%'"}
 
 {/if}
+
+{include file="admin/main/group_product.tpl"}
+
 	<script type="text/javascript">
 		$( document ).ready(function() {ldelim}
 			var curTitle = document.title;

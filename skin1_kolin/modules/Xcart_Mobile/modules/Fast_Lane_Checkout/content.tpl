@@ -28,7 +28,7 @@ vim: set ts=2 sw=2 sts=2 et:
   {/if}
   {capture name="continue_button"}
 {*    {include file="customer/buttons/button.tpl" button_title=$lng.lbl_continue_shopping style="div_button" href=$stored_navigation_script data_inline="false"} *}
-    {include file="customer/buttons/button.tpl" button_title=$lng.lbl_continue_shopping style="div_button" href="home.php?cat=`$last_categoryid`" data_inline="false"}
+    {include file="customer/buttons/button.tpl" button_title=$lng.lbl_continue_shopping style="div_button" href=$shopMoreUrl data_inline="false"}
   {/capture}
 {/if}
 {include file="modules/Fast_Lane_Checkout/home_main.tpl"}

@@ -237,36 +237,36 @@ if ($REQUEST_METHOD == "POST" || ($mode == "delete_image" && $manufacturerid)) {
 #
 ##
 ###
-			$current_manufacturer_info = func_query_first("SELECT * FROM $sql_tbl[manufacturers] WHERE manufacturerid = '$manufacturerid'");
+            $current_manufacturer_info = func_query_first("SELECT * FROM $sql_tbl[manufacturers] WHERE manufacturerid = '$manufacturerid'");
 
-			if (!empty($products_quantity_behavior) && $distributor_section == "20"){
+            if (!empty($products_quantity_behavior) && $distributor_section == "20") {
 
-				if ($display_quantity_of != ""){
-					$display_quantity_of = abs(intval($display_quantity_of));
-				}
+                if ($display_quantity_of != "") {
+                    $display_quantity_of = abs(intval($display_quantity_of));
+                }
 
-				$current_products_quantity_behavior = $current_manufacturer_info["products_quantity_behavior"];
-				$current_display_quantity_of = $current_manufacturer_info["display_quantity_of"];
+                $current_products_quantity_behavior = $current_manufacturer_info["products_quantity_behavior"];
+                $current_display_quantity_of = $current_manufacturer_info["display_quantity_of"];
 
-				if ($products_quantity_behavior != $current_products_quantity_behavior && $products_quantity_behavior == "R"){
-				// use real quantity on storefront
-					db_query("UPDATE $sql_tbl[products] SET avail = r_avail WHERE manufacturerid='$manufacturerid' AND r_avail>0");
-					db_query("UPDATE $sql_tbl[variants] v LEFT JOIN $sql_tbl[products] p ON p.productid = v.productid SET v.avail = p.r_avail WHERE p.manufacturerid='$manufacturerid' AND p.r_avail>0");
+                if ($products_quantity_behavior != $current_products_quantity_behavior && $products_quantity_behavior == "R") {
+                    // use real quantity on storefront
+                    db_query("UPDATE $sql_tbl[products] SET avail = r_avail WHERE manufacturerid='$manufacturerid' AND r_avail>0");
+                    db_query("UPDATE $sql_tbl[variants] v LEFT JOIN $sql_tbl[products] p ON p.productid = v.productid SET v.avail = p.r_avail WHERE p.manufacturerid='$manufacturerid' AND p.r_avail>0");
 
-				}
+                }
 
 
-                                if (
-					$products_quantity_behavior == "D" && $display_quantity_of > 0
-					&&
-					($products_quantity_behavior != $current_products_quantity_behavior || $current_display_quantity_of != $display_quantity_of)
-				){
-					db_query("UPDATE $sql_tbl[products] SET avail = '$display_quantity_of' WHERE manufacturerid='$manufacturerid' AND r_avail>0");
-					db_query("UPDATE $sql_tbl[variants] v LEFT JOIN $sql_tbl[products] p ON p.productid = v.productid SET v.avail = '$display_quantity_of' WHERE p.manufacturerid='$manufacturerid' AND p.r_avail>0");
-                                }
+                if (
+                    $products_quantity_behavior == "D" && $display_quantity_of > 0
+                    &&
+                    ($products_quantity_behavior != $current_products_quantity_behavior || $current_display_quantity_of != $display_quantity_of)
+                ) {
+                    db_query("UPDATE $sql_tbl[products] SET avail = '$display_quantity_of' WHERE manufacturerid='$manufacturerid' AND r_avail>0");
+                    db_query("UPDATE $sql_tbl[variants] v LEFT JOIN $sql_tbl[products] p ON p.productid = v.productid SET v.avail = '$display_quantity_of' WHERE p.manufacturerid='$manufacturerid' AND p.r_avail>0");
+                }
 
-				db_query("UPDATE $sql_tbl[products] SET avail='0' WHERE r_avail='0' AND manufacturerid='$manufacturerid'");
-			}
+                db_query("UPDATE $sql_tbl[products] SET avail='0' WHERE r_avail='0' AND manufacturerid='$manufacturerid'");
+            }
 ###
 ##
 #
@@ -300,17 +300,10 @@ if ($REQUEST_METHOD == "POST" || ($mode == "delete_image" && $manufacturerid)) {
 				$do_not_touch = false;
 
 			$query_data = array(
-#
-##
-###
-                        "reverse_sku" => $reverse_sku,
-                        "remove_dashes" => $remove_dashes,
-
-			"products_quantity_behavior" => $products_quantity_behavior,
-			"display_quantity_of" => $display_quantity_of,
-###
-##
-#
+				"reverse_sku" => $reverse_sku,
+				"remove_dashes" => $remove_dashes,
+				"products_quantity_behavior" => $products_quantity_behavior,
+				"display_quantity_of" => $display_quantity_of,
 				"url" => trim($url),
 				'cost_to_us_coef_x' => floatval($cost_to_us_coef_x),
 				'map_price_coef_x' => floatval($map_price_coef_x),
@@ -321,21 +314,18 @@ if ($REQUEST_METHOD == "POST" || ($mode == "delete_image" && $manufacturerid)) {
 				"catalog_sku" => trim($catalog_sku),
 				"catalog_price" => $catalog_price != '' ? price_format($catalog_price) : '',
 				"catalog_text" => $catalog_text,
-#
-##
-###
 				"add_cost_to_us_column_to_dispatch_message" => $add_cost_to_us_column_to_dispatch_message,
-                                "d_pay_to_distributor_by" => addslashes($d_pay_to_distributor_by),
-                                "d_we_can_save" => addslashes($d_we_can_save),
-                                "d_pay_to_distributor_save_text" => addslashes($d_pay_to_distributor_save_text),
-
+				"d_pay_to_distributor_by" => addslashes($d_pay_to_distributor_by),
+				"d_we_can_save" => addslashes($d_we_can_save),
+				"d_pay_to_distributor_save_text" => addslashes($d_pay_to_distributor_save_text),
 				"d_product_catalog" => addslashes($d_product_catalog),
 				"d_price_list" => addslashes($d_price_list),
 				"d_map_policy" => addslashes($d_map_policy),
 				"d_map_prices" => addslashes($d_map_prices),
 				"d_shipping_weights_dimensions" => addslashes($d_shipping_weights_dimensions),
 				"d_website_search_for_sku_url" => addslashes($d_website_search_for_sku_url),
-
+				"amazon_leadtime_to_ship" => intval($amazon_leadtime_to_ship),
+				"amazon_leadtime_for_fba_loads" => intval($amazon_leadtime_for_fba_loads),
 				"d_ships_to_within" => addslashes($d_ships_to_within),
 				"d_shipping_methods_usps" => addslashes($d_shipping_methods_usps),
 				"d_shipping_methods_ups" => addslashes($d_shipping_methods_ups),
@@ -349,12 +339,10 @@ if ($REQUEST_METHOD == "POST" || ($mode == "delete_image" && $manufacturerid)) {
 				"d_for_orders_below_min_order_amount" => addslashes($d_for_orders_below_min_order_amount),
 				"d_dealer_discount_reduced_from" => addslashes($d_dealer_discount_reduced_from),
 				"d_dealer_discount_reduced_to" => addslashes($d_dealer_discount_reduced_to),
-			
-				"distributor_offers_free_shipping" => $distributor_offers_free_shipping,	
-				"free_shipping_on_orders_over_value" => $free_shipping_on_orders_over_value,	
-
-				"warehouse_pickups_are_allowed" => $warehouse_pickups_are_allowed,	
-				"d_our_dealer_account_n" => $d_our_dealer_account_n,	
+				"distributor_offers_free_shipping" => $distributor_offers_free_shipping,
+				"free_shipping_on_orders_over_value" => $free_shipping_on_orders_over_value,
+				"warehouse_pickups_are_allowed" => $warehouse_pickups_are_allowed,
+				"d_our_dealer_account_n" => $d_our_dealer_account_n,
 				"d_preferred_way_submit_orders" => addslashes($d_preferred_way_submit_orders),
 				"d_url_to_login_to_distributor_website" => addslashes($d_url_to_login_to_distributor_website),
 				"d_login" => addslashes($d_login),
@@ -363,20 +351,16 @@ if ($REQUEST_METHOD == "POST" || ($mode == "delete_image" && $manufacturerid)) {
 				"d_order_entry_operator_email" => addslashes($d_order_entry_operator_email),
 				"d_instructions_to_order_entry_operator" => $d_instructions_to_order_entry_operator,
 				"d_distributor_return_policy" => $d_distributor_return_policy,
-
 				"d_tax_policy_in_states" => addslashes($d_tax_policy_in_states),
 				"d_dispatch_instructions" => addslashes($d_dispatch_instructions),
-
 				"d_warranty_starts_when_order_is" => addslashes($d_warranty_starts_when_order_is),
 				"d_warranty_last_day" => addslashes($d_warranty_last_day),
 				"d_re_stocking_fee_for_authorized_returns" => addslashes($d_re_stocking_fee_for_authorized_returns),
 				"d_re_stocking_fee_for_unauthorized_returns" => addslashes($d_re_stocking_fee_for_unauthorized_returns),
-
 				"d_we_pay_to_distributor_by" => addslashes($d_we_pay_to_distributor_by),
 				"d_net_payment_terms_in_days" => addslashes($d_net_payment_terms_in_days),
 				"d_bulk_or_individual_order_payments" => addslashes($d_bulk_or_individual_order_payments),
-				"distributor_charges_for_each_order_twice_and_split_invoices" => (empty($distributor_charges_for_each_order_twice_and_split_invoices))?'N':$distributor_charges_for_each_order_twice_and_split_invoices,
-
+				"distributor_charges_for_each_order_twice_and_split_invoices" => (empty($distributor_charges_for_each_order_twice_and_split_invoices)) ? 'N' : $distributor_charges_for_each_order_twice_and_split_invoices,
 				"d_available_on_distributor_site_checkbox" => addslashes($d_available_on_distributor_site_checkbox),
 				"d_sent_by_email_to" => addslashes($d_sent_by_email_to),
 				"d_put_on_the_invoices" => addslashes($d_put_on_the_invoices),
@@ -388,14 +372,11 @@ if ($REQUEST_METHOD == "POST" || ($mode == "delete_image" && $manufacturerid)) {
 				"d_invoices_by_fax_sent_to" => addslashes($d_invoices_by_fax_sent_to),
 				"d_invoices_mailed_to_our" => addslashes($d_invoices_mailed_to_our),
 				"d_invoices_mailed_to_our_checkbox" => addslashes($d_invoices_mailed_to_our_checkbox),
-
 				"d_availability_must_be_checked" => addslashes($d_availability_must_be_checked),
 				"d_send_to_email_14" => addslashes($d_send_to_email_14),
 				"d_message_body_14" => $d_message_body_14,
 				"d_email_subject_14" => addslashes($d_email_subject_14),
-
 				"d_link_to_order_distributors_website" => addslashes($d_link_to_order_distributors_website),
-
 				"d_sec14_show_header" => $d_sec14_show_header,
 				"d_sec14_show_items_stock" => $d_sec14_show_items_stock,
 				"d_sec14_show_shipto" => $d_sec14_show_shipto,
@@ -404,20 +385,15 @@ if ($REQUEST_METHOD == "POST" || ($mode == "delete_image" && $manufacturerid)) {
 				"allow_pre_orders" => $allow_pre_orders,
 				"add_ca_status_id" => $add_ca_status_id,
 				"allow_dispatch_off_working_hours" => $allow_dispatch_off_working_hours,
-
 				"lead_time_message" => $lead_time_message,
 				"d_send_to_email_for_templates" => $d_send_to_email_for_templates,
 				"d_contact_name_for_templates" => $d_contact_name_for_templates,
 				"d_server_min_distributor_time" => $d_server_min_distributor_time,
-//				"d_product_questions_send_to_email" => $d_product_questions_send_to_email,
-//				"d_product_questions_send_to_name" => $d_product_questions_send_to_name,
-//				"d_product_questions_send_to_phone" => $d_product_questions_send_to_phone,
 				"d_shipping_options" => trim($d_shipping_options),
 				"d_specific_instructions" => trim($d_specific_instructions),
 				"d_subject_line_8" => trim($d_subject_line_8),
 				"d_order_entry_operator_subject_line_8" => trim($d_order_entry_operator_subject_line_8),
 				"d_main_sf" => trim($d_main_sf),
-
 				"d_enable_feed" => $d_enable_feed,
 				"d_feed_updation_frequency" => trim($d_feed_updation_frequency),
 				"d_ftp_host" => trim($d_ftp_host),
@@ -432,10 +408,8 @@ if ($REQUEST_METHOD == "POST" || ($mode == "delete_image" && $manufacturerid)) {
 				"supplier_products_price_multiplier" => trim($supplier_products_price_multiplier),
 				"d_search_keyphrase_for_reconciliation" => trim($d_search_keyphrase_for_reconciliation),
 				"update_approximation_shipping_rates" => trim($update_approximation_shipping_rates),
-//				"shipping_rates_last_update_date" => trim($shipping_rates_last_update_date),
 				"USE_MY_UPS_FEDEX_ACCOUNT_functionality" => trim($USE_MY_UPS_FEDEX_ACCOUNT_functionality),
 				"USE_MY_TRUCKING_ACCOUNT_functionality" => trim($USE_MY_TRUCKING_ACCOUNT_functionality),
-
 				"dcad_bank_name" => trim($dcad_bank_name),
 				"dcad_address" => trim($dcad_address),
 				"dcad_address_2" => trim($dcad_address_2),
@@ -446,17 +420,12 @@ if ($REQUEST_METHOD == "POST" || ($mode == "delete_image" && $manufacturerid)) {
 				"dcad_company_name" => trim($dcad_company_name),
 				"dcad_routing_number" => trim($dcad_routing_number),
 				"dcad_account_number" => trim($dcad_account_number),
-
 				"products_always_verify" => trim($products_always_verify),
 				"days_before_verify" => trim($products_days_before_verify),
-###
-##
-#
-
-# START: random:20341 [2010 Jul 29 14:46] 
 				"code" => trim($code),
-# END: random:20341 [2010 Jul 29 14:46] 
-				"descr" => $descr
+				"descr" => $descr,
+				"reduce_extra_margin" => $reduce_extra_margin,
+				"calculate_shipping" => $calculate_shipping
 			);
 			$query_data_lng = array(
 				"manufacturerid" => $manufacturerid,

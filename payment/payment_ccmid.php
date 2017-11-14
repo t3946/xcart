@@ -34,6 +34,9 @@
 # $Id: payment_ccmid.php,v 1.17.2.4 2007/01/05 13:20:34 max Exp $
 #
 
+use Modules\Order\Models\OrderTransactionModel;
+use Modules\Order\Models\TransactionLogModel;
+
 if (!defined('XCART_START')) { header("Location: ../"); die("Access denied"); }
 
 x_load('http','order','payment','tests');
@@ -303,18 +306,6 @@ if (!$fatal) {
 
 	func_change_order_status($orderids, $order_status, join("\n", $advinfo));
 
-
-#
-##
-###
-	func_check_and_send_request_availability_email($check_orderid);
-###
-##
-#
-
-#
-## 
-### 
 	$transaction_total = $order_info["total"];
 
 	if (!empty($login)){
@@ -332,8 +323,17 @@ if (!$fatal) {
 	if (!empty($payment_status)){
 		$transaction_status = $payment_status;
 	} else {
-		$transaction_status = $order_status;
+		if ($order_status == 'AP') {
+            $transaction_status = 'authorized';
+		} else if ($order_status == 'F') {
+            $transaction_status = 'failed';
+		}
+		else {
+            $transaction_status = $order_status;
+		}
 	}
+
+	$transaction_status = strtolower($transaction_status);
 
         if (!empty($txn_id)){ # PayPal uses txn_id
 		$transaction_id = $txn_id;
@@ -342,29 +342,39 @@ if (!$fatal) {
 	if (!empty($transaction_id)){
 
 		$transaction_log = "";
-		$Access_Token = func_paypal_get_access_token();
-		if (!empty($Access_Token)){
+		
+		/** @var OrderTransactionModel $model */
+        list($model) = OrderTransactionModel::objects()->getOrNew(['orderid' => $check_orderid, 'transaction_id' => $transaction_id]);
 
-			$transaction_type = "authorization";
-			if (in_array(strtolower($transaction_status), array('completed','p'))){
-				$transaction_type = "capture";
-			}
-			
-			$result = func_paypal_look_up_payment($Access_Token, $transaction_id, $transaction_type);
+        $param =
+            [
+                'orderid' => $check_orderid,
+                'paymentid' => $order_paymentid,
+                'transaction_id' => $transaction_id,
+                'transaction_status' => $transaction_status,
+                'transaction_currency' => $transaction_currency,
+                'transaction_amount' => $transaction_total,
+                'login' => $transaction_login,
+            ];
 
-                        $result["FIELD_transaction_id"] = $transaction_id;
-                        $result["FIELD_transaction_status"] = $transaction_status;
-                        $result["FIELD_transaction_currency"] = $transaction_currency;
-                        $result["FIELD_transaction_total"] = $transaction_total;
-
-			$result["script_info"] = "Script: payment/payment_ccmid.php . Function: func_paypal_look_up_payment"; 
-
-			$transaction_log = serialize($result);
+        if ($model->getIsNewRecord()) {
+            $param['type'] = OrderTransactionModel::TYPE_AUTHORIZATION;
 		}
 
-		db_query("INSERT INTO $sql_tbl[transaction_logs] (orderid, paymentid, transaction_id, transaction_status, transaction_currency, transaction_total, date, login, transaction_log) VALUE ('$check_orderid', '$order_paymentid', '$transaction_id', '$transaction_status', '$transaction_currency', '$transaction_total', '".time()."', '$transaction_login', '".addslashes($transaction_log)."')");
+		$model->setAttributes($param);
 
-		db_query("INSERT INTO $sql_tbl[order_transactions] (orderid, paymentid, transaction_id, transaction_status, transaction_currency, transaction_amount, date, login, transaction_response) VALUE ('$check_orderid', '$order_paymentid', '$transaction_id', '$transaction_status', '$transaction_currency', '$transaction_total', '".time()."', '$transaction_login', '".addslashes($transaction_log)."')");
+        $model->save();
+
+        $param = array_merge($param,
+            [
+                'transaction_total' => $transaction_total,
+                'order_transaction_id' => $model->id,
+                'transaction_log' => $transaction_log,
+            ]
+        );
+
+        $log_model = new TransactionLogModel($param);
+        $log_model->save();
 
 		func_log_order($check_orderid, 'PP', $transaction_log, $login);
         }

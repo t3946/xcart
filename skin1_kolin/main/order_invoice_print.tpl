@@ -21,7 +21,8 @@ BODY {ldelim}
 {assign var="separator" value="<br /><hr size='1' noshade='noshade' /><br />"}
 {/if}
 {section name=oi loop=$orders_data}
-{ include file="mail/html/order_invoice.tpl" order=$orders_data[oi].order customer=$orders_data[oi].customer products=$orders_data[oi].products giftcerts=$orders_data[oi].giftcerts}
+{assign var="oOrder" value=$orders_data[oi].order.oOrder}
+{include file="mail/html/order_invoice.tpl" order=$orders_data[oi].order customer=$orders_data[oi].customer products=$orders_data[oi].products giftcerts=$orders_data[oi].giftcerts}
 
 {if not %oi.last%}
 {$separator}

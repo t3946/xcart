@@ -44,6 +44,9 @@
 #
 # Successful return from PayPal
 #
+use Modules\Order\Models\OrderTransactionModel;
+use Modules\Order\Models\TransactionLogModel;
+
 if ($_GET['mode'] == 'success' || $_POST['mode'] == 'success') {
 	require "./auth.php";
 	$op_message = serialize($_GET);
@@ -77,6 +80,60 @@ elseif ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['payment_type'])) 
 ###
 ##
 #
+    if (in_array($payment_status, ["Expired", "Refunded"])) {
+        if (!empty($txn_id)) {
+            if ($payment_status == 'Refunded') {
+                $payment_status = strtolower($payment_status);
+                if (isset($parent_txn_id)) {
+                    $txn_id = $parent_txn_id;
+                }
+            }
+            $orderTransaction = OrderTransactionModel::objects()->filter(['transaction_id' => $txn_id])->limit(1)->get();
+            if ($orderTransaction && $payment_status == 'refunded') {
+                if (!$new_txn = OrderTransactionModel::objects()->get(['transaction_id' => $_POST['txn_id']])) {
+                    $new_txn = new OrderTransactionModel($orderTransaction->getAttributes());
+
+                    $params = [
+                        'id' => null,
+                        'transaction_amount' => $mc_gross,
+                        'transaction_fee' => $mc_fee,
+                        'parent_id' => $orderTransaction->id,
+                        'transaction_id' => $_POST['txn_id'],
+                        'transaction_status' => null,
+                        'login' => null,
+                    ];
+                    $new_txn->setAttributes($params);
+
+                    $orderTransaction = $new_txn;
+                } else {
+                    $orderTransaction = null;
+                }
+            }
+            if ($orderTransaction && $orderTransaction->transaction_status != $payment_status) {
+                $orderTransaction->transaction_status = $payment_status;
+                $orderTransaction->transaction_response = $op_message;
+
+                $prm = [
+                    'date' => time(),
+                    'orderid' => $orderTransaction->orderid,
+                    'order_transaction_id' => $orderTransaction->id,
+                    'paymentid' => $orderTransaction->paymentid,
+                    'transaction_id' => $orderTransaction->transaction_id,
+                    'transaction_status' => $orderTransaction->transaction_status,
+                    'transaction_log' => $op_message,
+                    'transaction_currency' => $_POST['mc_currency'],
+                    'transaction_total' => $orderTransaction->transaction_amount,
+                ];
+                $transactionLog = new TransactionLogModel($prm);
+                $transactionLog->save();
+
+                if ($orderTransaction->isValid()){
+                    $orderTransaction->save();
+                }
+            }
+            exit;
+        }
+    }
 
 
 	if (!strcasecmp($payment_status,"Refunded")) {
@@ -227,11 +284,11 @@ else {
 		"night_phone_b" => substr($u_phone, -7, -4),
 		"night_phone_c" => substr($u_phone, -4),
 		"business" => $pp_acc,
-		"item_name" => $pp_for,
+		"item_name" => $pp_for . " order # {$pp_ordr}",
 		"amount" => sprintf("%0.2f", $cart["total_cost"]),
 		"currency_code" => $pp_curr,
 		"return" => $_location."/payment/ps_paypal2.php?mode=success&secureid=$order_secureid",
-		"cancel_return" => $_location.DIR_CUSTOMER."/cart.php",
+		"cancel_return" => $_location.DIR_CUSTOMER."/cart.php?mode=checkout&paymentid={$paymentid}",
 		"notify_url" => $_location."/payment/ps_paypal2.php",
 		"bn" => "x-cart"
 	);

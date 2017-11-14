@@ -42,7 +42,7 @@
 {foreach from=$v.products item=product}
 <tr>
 <td align="center">{if $type eq 'A' || $type eq 'P'}<a href="{if $provider_notification eq 'Y'}{$product.links.provider}{else}{$product.links.admin}{/if}">{$product.productcode}</a>{else}{$product.productcode}{/if}</td>
-<td><font style="FONT-SIZE: 11px"><a href="{$product.links.customer}">{$product.product}</a></font>
+<td><font style="FONT-SIZE: 11px"><a href="{$product.links.customer}">{$product.oProduct->getTitle()}</a></font>
 {if $product.product_options ne '' && $active_modules.Product_Options}
 <table>
 
@@ -92,8 +92,10 @@
 {if $v.products}
 <tr>
     <td colspan="{$colspan}">
-        <b>{$lng.lbl_payment_status|cat:":"}</b>&nbsp;{include file="main/order_status.tpl" status=$v.cb_status|default:$order.cb_status mode="static" status_type="CB"}<br />
-        <b>{$lng.lbl_shipping_status|cat:":"}</b>&nbsp;{include file="main/order_status.tpl" status=$v.dc_status|default:$order.dc_status mode="static" status_type="DC"}
+        <b>{$lng.lbl_payment_status|cat:":"}</b>&nbsp;{include file="main/order_status.tpl" status=$v.oOrderGroup->getOrderGroupStatusCB()|default:$order.cb_status mode="static" status_type="CB"}<br />
+        {if ($v.oOrderGroup->getOrderGroupStatusCB() != 'A' &&  $v.oOrderGroup->getOrderGroupStatusCB() != 'D')}
+        <b>{$lng.lbl_shipping_status|cat:":"}</b>&nbsp;{include file="main/order_status.tpl" status=$v.oOrderGroup->getOrderGroupStatusDC()|default:$order.dc_status mode="static" status_type="DC"}
+        {/if}
     </td>
 </tr>
 {/if}
@@ -205,7 +207,7 @@
                 {assign var=oRetailTrustProduct value=$oRetailTrustOrderDetail->getOrderDetailProduct()}
                 <tr>
                 <td align="center">{$oRetailTrustProduct->getSKURetailTrust()}</td>
-                <td><a href="{$oRetailTrustProduct->getProductFrontURL()}" target="_blank" style="FONT-SIZE: 11px">{$oRetailTrustProduct->getProductName()}</a></td>
+                <td><a href="{$oRetailTrustProduct->getURL()}" target="_blank" style="FONT-SIZE: 11px">{$oRetailTrustProduct->getProductName()}</a></td>
                 <td align="center">{include file="currency.tpl" value=$oRetailTrustOrderDetail->calculateRetailTrustPricePerProduct()}</td>
                 <td align="center">{$oRetailTrustOrderDetail->getAmount()}</td>
                 <td align="center">{include file="currency.tpl" value=$oRetailTrustOrderDetail->getRetailTrustGross()}</td>
@@ -304,9 +306,11 @@
 
 <tr>
 <td align="right" width="100%" bgcolor="#cccccc" height="25"><b>{$lng.lbl_grand_total|capitalize}:</b>&nbsp;</td>
+<td align="right" bgcolor="#cccccc" height="25" nowrap="nowrap">
 {if $oOrder}
-<td align="right" bgcolor="#cccccc" height="25" nowrap="nowrap"><b>{include file="currency.tpl" value=$oOrder->getOrderTotalGross()}</b></td>
+    <b>{include file="currency.tpl" value=$oOrder->getOrderTotalGross()}</b>
 {/if}
+</td>
 </tr>
 
 {if $_userinfo.tax_exempt ne "Y"}

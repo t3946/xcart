@@ -38,7 +38,6 @@
 
 require "../include/payment_method.php";
 
-x_load('cart','crypt','order','payment','tests');
 
 x_session_unregister('logged_paymentid');
 
@@ -136,8 +135,6 @@ foreach (func_order_details_fields() as $_details_field => $_field_label) {
 
 $order_details = implode("\n", $_order_details_rval);
 
-$customer_notes = $Customer_Notes;
-
 #
 # Only logged users can submit orders
 #
@@ -233,5 +230,3 @@ else {
 
 	func_header_location($xcart_catalogs['customer']."/cart.php?mode=order_message&orderids=$_orderids");
 }
-
-?>

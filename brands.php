@@ -1,39 +1,10 @@
-<?php /* ADDED: random:18298_18304_18324 [2009 Jun 08 09:50][Custom development (����� ��� �������� ����������� "��������������" (X-Cart's Manufacturers) + Add new "Brands" module + Search URLs feature)] */ ?>
 <?php
-/*****************************************************************************\
-+-----------------------------------------------------------------------------+
-| X-Cart                                                                      |
-| Copyright (c) 2001-2009 Ruslan R. Fazliev <rrf@rrf.ru>                      |
-| All rights reserved.                                                        |
-+-----------------------------------------------------------------------------+
-| PLEASE READ  THE FULL TEXT OF SOFTWARE LICENSE AGREEMENT IN THE "COPYRIGHT" |
-| FILE PROVIDED WITH THIS DISTRIBUTION. THE AGREEMENT TEXT IS ALSO AVAILABLE  |
-| AT THE FOLLOWING URL: http://www.x-cart.com/license.php                     |
-|                                                                             |
-| THIS  AGREEMENT  EXPRESSES  THE  TERMS  AND CONDITIONS ON WHICH YOU MAY USE |
-| THIS SOFTWARE   PROGRAM   AND  ASSOCIATED  DOCUMENTATION   THAT  RUSLAN  R. |
-| FAZLIEV (hereinafter  referred to as "THE AUTHOR") IS FURNISHING  OR MAKING |
-| AVAILABLE TO YOU WITH  THIS  AGREEMENT  (COLLECTIVELY,  THE  "SOFTWARE").   |
-| PLEASE   REVIEW   THE  TERMS  AND   CONDITIONS  OF  THIS  LICENSE AGREEMENT |
-| CAREFULLY   BEFORE   INSTALLING   OR  USING  THE  SOFTWARE.  BY INSTALLING, |
-| COPYING   OR   OTHERWISE   USING   THE   SOFTWARE,  YOU  AND  YOUR  COMPANY |
-| (COLLECTIVELY,  "YOU")  ARE  ACCEPTING  AND AGREEING  TO  THE TERMS OF THIS |
-| LICENSE   AGREEMENT.   IF  YOU    ARE  NOT  WILLING   TO  BE  BOUND BY THIS |
-| AGREEMENT, DO  NOT INSTALL OR USE THE SOFTWARE.  VARIOUS   COPYRIGHTS   AND |
-| OTHER   INTELLECTUAL   PROPERTY   RIGHTS    PROTECT   THE   SOFTWARE.  THIS |
-| AGREEMENT IS A LICENSE AGREEMENT THAT GIVES  YOU  LIMITED  RIGHTS   TO  USE |
-| THE  SOFTWARE   AND  NOT  AN  AGREEMENT  FOR SALE OR FOR  TRANSFER OF TITLE.|
-| THE AUTHOR RETAINS ALL RIGHTS NOT EXPRESSLY GRANTED BY THIS AGREEMENT.      |
-|                                                                             |
-| The Initial Developer of the Original Code is Ruslan R. Fazliev             |
-| Portions created by Ruslan R. Fazliev are Copyright (C) 2001-2009           |
-| Ruslan R. Fazliev. All Rights Reserved.                                     |
-+-----------------------------------------------------------------------------+
-\*****************************************************************************/
-
 #
 # brands.php, random
 #
+
+use Modules\User\Helpers\SurfingHelper;
+use Modules\User\Models\SurfPathModel;
 
 require "./auth.php";
 
@@ -53,23 +24,29 @@ if (
 
 
 
-if($active_modules["Brands"])
-    include $xcart_dir."/modules/Brands/customer_brands_list.php";
+if($active_modules["Brands"]) {
+    if ($brandid && ($brand_model = \Modules\Brand\Models\BrandModel::objects()->get(['brandid' => $brandid]))) {
+        if ($brand_model->parent_brand_id) {
+            func_clean_url_permanent_redirect('M', $brand_model->parent_brand_id);
+        }
+    }
+    include $xcart_dir . "/modules/Brands/customer_brands_list.php";
+}
 else
 	func_header_location("home.php");
 
-#
-##
-###
 if ($config["Appearance"]["Enable_surf_stats"] == "Y"){
-        func_log_cidev_surf("B");
+    SurfingHelper::logSurfPath([
+        'resource_type' => SurfPathModel::GOAL_TYPE_BRAND,
+        'resource_id' => $brandid,
+        'additional_data' => SurfingHelper::getSurfPathAdditionalData([
+            'resource_type' => SurfPathModel::GOAL_TYPE_BRAND,
+            'cidev_filters_tree_sorted' => $cidev_filters_tree_sorted
+        ])
+    ]);
 }
-###
-##
-#
 
 # Assign the current location line
 $smarty->assign("location", $location);
 
 func_display("customer/home.tpl",$smarty);
-?>

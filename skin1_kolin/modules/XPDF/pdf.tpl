@@ -9,7 +9,7 @@ vim: set ts=2 sw=2 sts=2 et:
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 {*  <link rel="stylesheet" type="text/css" href="{$SkinDir}/{#CSSFile#}" /> *}
-  <link href="{$SkinDir}/modules/XPDF/pdf.css" type="text/css" rel="stylesheet" /> 
+  <link type="text/css" href="{$SkinDir}/modules/XPDF/pdf.css" rel="stylesheet" />
 </head>
 <body>
   {include file=$pdf_template this_is_printable_version="Y"}

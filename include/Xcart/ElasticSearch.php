@@ -19,15 +19,33 @@ class ElasticSearch
     function __construct($elasticConfig = array(),$index = ''){
         $this->server = $elasticConfig["es_url"];
         $this->index = $index;
-        //$this->queryParams["_source"] = "*._id";
         //$this->queryParams["min_score"] = $elasticConfig["search_results_minimum_score_value"];
-        $this->queryParams["query"] = array();
-        $this->queryParams["query"]["dis_max"] = array();
-        $this->queryParams["query"]["dis_max"]["queries"] = array();
+        $this->init();
     }
 
-    public function setSource($sSource) {
-        $this->queryParams["_source"] = "*._id";
+    private function init()
+    {
+        $this->setSource();
+        $this->queryParams["query"] = [];
+        $this->queryParams["query"]["dis_max"] = [];
+        $this->queryParams["query"]["dis_max"]["queries"] = [];
+        $this->queryParams["query"]["dis_max"]["tie_breaker"] = 0.4;
+    }
+
+    public function reinit()
+    {
+        $this->init();
+        $this->hitsCount = null;
+        $this->hitsTotal = null;
+        $this->curl_info = null;
+        $this->data_json = null;
+        $this->_id = null;
+        $this->queryParams = [];
+    }
+
+    public function setSource($sSource = "*._id")
+    {
+        $this->queryParams["_source"] = $sSource;
     }
 
     function call($path, $data_json = array()){
@@ -51,20 +69,89 @@ class ElasticSearch
         return $result;
     }
 
-    public function setQueryParamsDefault($sQuery){
-        $query = array();
+    public function setDisMaxBoost($boost)
+    {
+        $this->queryParams["query"]["dis_max"]['boost'] = $boost;
+    }
+
+    public function setQueryParamsDefault($sQuery)
+    {
+        $query = /** @lang JSON */ <<<JSON
+{
+    "query_string": {
+        "fields": [
+         "productname.productname_original^1.5",
+         "productname.title_tag^1.5",
+         "productname.seo_productname^1.5",
+         "productname.seo_h2^1.5",
+         "sku",
+         "upc",
+         "brand.brand_original^0.5",
+         "description.description_original",
+         "description.seo_description"
+        ],
+        "analyzer":  "english",
+        "query": ""
+    }
+}
+JSON;
+        $query = json_decode($query, true);
+
         $query["query_string"]["query"] = $sQuery;
-        $query["query_string"]["fields"] = array("productname.productname_original^1.5","sku","upc","brand.brand_original^0.5","description.description_original");
         $this->queryParams["query"]["dis_max"]["queries"][] = $query;
-        $query = array();
+
+        $query = /** @lang JSON */ <<<JSON
+{
+    "query_string": {
+        "analyzer": "snowball",
+        "fields": [
+             "productname.productname^1.5",
+             "productname.title_tag^1.5",
+             "productname.seo_productname^1.5",
+             "productname.seo_h2^1.5",
+             "sku",
+             "upc",
+             "brand.brand^0.5",
+             "description.description",
+             "description.seo_description"
+        ],
+        "query": ""
+    }
+}
+JSON;
+        $query = json_decode($query, true);
+
         $query["query_string"]["query"] = $sQuery;
-        $query["query_string"]["fields"] = array("productname.productname","sku","upc","brand.brand","description.description");
-        $query["query_string"]["fields"] = array("productname.productname^1.5","sku","upc","brand.brand^0.5","description.description");
-        $query["query_string"]["analyzer"] = "snowball";
         $this->queryParams["query"]["dis_max"]["queries"][] = $query;
-        $query = array();
-        $query["match_phrase_prefix"]["sku_original"] = $sQuery;
+
+        $query = /** @lang JSON */ <<<JSON
+{
+    "multi_match": {
+        "analyzer": "snowball",
+        "boost": 0.5,
+        "fields": [
+            "description.seo_description",
+            "description.description_original",
+            "productname.productname_original" ,
+            "productname.title_tag" ,
+            "productname.seo_productname" ,
+            "productname.seo_h2"
+        ],
+        "query": "",
+        "slop": 3,
+        "type": "phrase"
+    }
+}
+JSON;
+        $query = json_decode($query, true);
+
+        $query["multi_match"]["query"] = $sQuery;
         $this->queryParams["query"]["dis_max"]["queries"][] = $query;
+    }
+
+    public function getQuery()
+    {
+        return  $this->queryParams["query"];
     }
 
     public function setQueryParams($sQuery, $aDismax = array()){
@@ -83,24 +170,24 @@ class ElasticSearch
 
     public function getQuerySimilarProductsBrands ($sExcludeBrand = '') {
         $Similar_products_other_brands =
-                [
-                    'filtered' => [
-                        'query' => [
-                            'more_like_this' => [
-                                'fields' => ['productname'],
-                                'analyzer' => 'snowball',
-                                'docs' => [[
-                                    '_index' => $this->index,
-                                    '_type' => $this->type,
-                                    '_id' => $this->_id
-                                ]],
-                                'min_term_freq' => 1,
-                                'max_query_terms' => 240
-                            ]
-                        ],
+            [
+                'filtered' => [
+                    'query' => [
+                        'more_like_this' => [
+                            'fields' => ['productname'],
+                            'analyzer' => 'snowball',
+                            'docs' => [[
+                                           '_index' => $this->index,
+                                           '_type' => $this->type,
+                                           '_id' => $this->_id
+                                       ]],
+                            'min_term_freq' => 1,
+                            'max_query_terms' => 240
+                        ]
+                    ],
 
-                    ]
-                ];
+                ]
+            ];
         if (!empty($sExcludeBrand)) {
             $Similar_products_other_brands['filtered']['filter'] = [
                 'bool' => [
@@ -108,7 +195,7 @@ class ElasticSearch
                     'should' => [],
                     'must_not' => [
                         'regexp' => [
-                            'brand.brand_original' => '.*'.$this->escapeReservedCharacters($sExcludeBrand).'.*'
+                            'brand' => '.*'.$this->escapeReservedCharacters($sExcludeBrand).'.*'
                         ]
                     ]
                 ]
@@ -116,7 +203,7 @@ class ElasticSearch
         }
 
         return $Similar_products_other_brands;
-}
+    }
 
     public function setSearchQuery ($aQuery = array()) {
         $this->queryParams['query'] = $aQuery;

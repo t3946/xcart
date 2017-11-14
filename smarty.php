@@ -53,7 +53,7 @@ include_once($xcart_dir."/include/templater/templater.php");
 #
 # Smarty object for processing html templates
 #
-$smarty = new Templater;
+$smarty = Templater::getInstance();
 
 #
 # Store all compiled templates to the single directory
@@ -68,38 +68,43 @@ $smarty->cache_dir = $var_dirs["cache"];
 $smarty->secure_dir = $xcart_dir."/skin1_kolin";
 $smarty->debug_tpl = "file:debug_templates.tpl";
 
-if (!$HTTPS && AREA_TYPE == 'C') {
+if (defined('LOCAL_SF_ID')) {
+    $cidev_tmp_storefrontid = LOCAL_SF_ID;
+}
+
+if (AREA_TYPE == 'C') {
 	if ($cidev_tmp_storefrontid == 0){
 		$CDN_domain = func_query_first_cell("SELECT value FROM xcart_config WHERE name='CDN_domain'");
 		$Enable_CDN = func_query_first_cell("SELECT value FROM xcart_config WHERE name='Enable_CDN'");
 	} else {
-        	$CDN_domain = func_query_first_cell("SELECT value FROM xcart_storefronts_config WHERE name='CDN_domain' AND storefrontid='$cidev_tmp_storefrontid'");
-	        $Enable_CDN = func_query_first_cell("SELECT value FROM xcart_storefronts_config WHERE name='Enable_CDN' AND storefrontid='$cidev_tmp_storefrontid'");
+        $CDN_domain = func_query_first_cell("SELECT value FROM xcart_storefronts_config WHERE name='CDN_domain' AND storefrontid='$cidev_tmp_storefrontid'");
+	    $Enable_CDN = func_query_first_cell("SELECT value FROM xcart_storefronts_config WHERE name='Enable_CDN' AND storefrontid='$cidev_tmp_storefrontid'");
 	}
-	if (!empty($CDN_domain) && strpos($CDN_domain, "://") === false){
-		$CDN_domain = ($HTTPS ? "https://" : "http://").$CDN_domain;
-	}
+	if (!empty($CDN_domain)) {
+        $CDN_domain = '//' . $CDN_domain;
+    }
 }
 
 if ($HTTPS){
 	$smarty->assign("HTTPS_used", "Y");
 }
 
-$smarty->assign("ImagesDir",(!empty($CDN_domain) && $Enable_CDN == "Y" ? $CDN_domain : $xcart_web_dir)."/skin1_kolin/images");
-$smarty->assign("SkinDir",(!empty($CDN_domain) && $Enable_CDN == "Y" ? $CDN_domain : $xcart_web_dir)."/skin1_kolin");
-$smarty->assign("template_dir", $smarty->template_dir);
-
 $smarty_skin_dir = "/skin1_kolin";
 $smarty->assign("smarty_skin_dir", $smarty_skin_dir);
+
+$urlPath = (!empty($CDN_domain) && $Enable_CDN == "Y") ? $CDN_domain : $xcart_web_dir;
+
+$smarty->assign("ImagesDir", $urlPath . "{$smarty_skin_dir}/images");
+$smarty->assign("SkinDir", $urlPath . $smarty_skin_dir);
+
+$smarty->assign("template_dir", $smarty->template_dir);
 
 #
 # Smarty object for processing mail templates
 #
 $mail_smarty = $smarty;
 
-#
-# WARNING :
-# Please ensure that you have no whitespaces / empty lines below this message.
-# Adding a whitespace or an empty line below this line will cause a PHP error.
-#
-?>
+if (defined('SMARTY_AUTO_RECOMPILE') && SMARTY_AUTO_RECOMPILE)
+{
+    $smarty->compile_check = true;
+}

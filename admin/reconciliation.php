@@ -2,6 +2,9 @@
 require "./auth.php";
 require $xcart_dir."/include/security.php";
 
+use Mindy\QueryBuilder\QueryBuilder;
+use Xcart\Connection;
+
 x_load('backoffice','files', 'order');
 
 set_time_limit(0);
@@ -9,7 +12,7 @@ ini_set('memory_limit', '512M');
 
 x_session_register("search_data");
 
-$all_tabs = array("unreconciled", "reconciled", "dropped", "expense_report", "import", "calculation", "accounts_payable", "receivables", "rules");
+$all_tabs = array("unreconciled", "reconciled", "dropped", "expense_report", "import", "calculation", "accounts_payable", "receivables", "rules", "inventory");
 
 
 function func_find_reconciliations_orders($reconciliations_to_check, $orders_to_check)
@@ -304,10 +307,6 @@ if (!empty($config_reconciliation_search_keyphrases) && is_array($config_reconci
 	}
 }
 
-//func_print_r($manufacturerid_info);
-//func_print_r($config_reconciliation_search_keyphrases);
-//die();
-
 if ($tab == "rules"){
 
 	$search_keyphrase_list = array();
@@ -349,18 +348,9 @@ if ($tab == "rules"){
 		$search_keyphrase_list = array_values($search_keyphrase_list);
 	}
 
-//	func_print_r($search_keyphrase_list);
 }
 
 if ($REQUEST_METHOD == "POST") {
-
-
-#
-##
-###
-
-//func_print_r($_POST);
-//die();
 
 	if (!empty($data_orders_selectbox)){
 
@@ -442,32 +432,8 @@ if ($REQUEST_METHOD == "POST") {
 	}
 
 	x_session_save("search_data");
-###
-##
-#
-
-
-//func_print_r($_POST, $search_data);
-//die();
-
-
         if ($mode == "search") {
 
-/*
-                if (!empty($date_csv_Start)){
-			$posted_data["date_csv"]["start_date_str"] = $date_csv_Start;
-                        $start_date_arr = explode("/", $date_csv_Start);
-                        $posted_data["date_csv"]["start_date"] = mktime(0,0,0,$start_date_arr[0],$start_date_arr[1],$start_date_arr[2]);
-                }
-
-                if (!empty($date_csv_End)){
-                        $posted_data["date_csv"]["end_date_str"] = $date_csv_End;
-                        $end_date_arr = explode("/", $date_csv_End);
-                        $posted_data["date_csv"]["end_date"] = mktime(23,59,59,$end_date_arr[0],$end_date_arr[1],$end_date_arr[2]);
-                }
-
-                $search_data["reconciliation_tab_".$tab] = $posted_data;
-*/
         }
 	elseif ($mode == "import" && $_FILES["userfile"]["error"]=="0"){
 
@@ -482,9 +448,6 @@ if ($REQUEST_METHOD == "POST") {
 
 	                $handle = @func_fopen($userfile, "r", true);
 			if ($handle) {
-
-//				$config_reconciliation_search_keyphrases = func_query("SELECT * FROM $sql_tbl[reconciliation_search_keyphrases]");
-
 				$line_number = 0;
 				$count_added_rows = 0;
 				$amount_csv_total = 0;
@@ -519,7 +482,6 @@ if ($REQUEST_METHOD == "POST") {
 
 					} else {
 						$buffer[1] = trim($buffer[1]);
-//						$buffer[1] = str_replace(",", "", $buffer[1]);
 
 // https://basecamp.com/2070980/projects/1577907/messages/30895704
 						$buffer[1] = str_replace(",", ".", $buffer[1]);
@@ -527,9 +489,6 @@ if ($REQUEST_METHOD == "POST") {
 
 					if ( !($buffer[7] < 0 && $buffer[8]<=0) && $PayPal_file)
                                                 continue;
-
-//func_print_r($buffer, $PayPal_file, $line_number);
-//die();
 
 					if ($PayPal_file){
                                                 $description_csv = addslashes(trim($buffer[3]));
@@ -635,12 +594,7 @@ if ($REQUEST_METHOD == "POST") {
 		$reconciliation_search_condition .= " AND $sql_tbl[reconciliations].date_csv<='".($search_data["reconciliation_tab_calculation"]["date_csv"]["end_date"])."'";
 		$reconciliation_search_condition .= " AND $sql_tbl[reconciliations].action=''";
 
-// ex.5
-//		$reconciliation_search_condition .= " AND $sql_tbl[reconciliations].amount_csv<='0'";
 
-#
-##
-###
 		$check_reconciliations_for_mid = func_query("SELECT * FROM $sql_tbl[reconciliations] WHERE $reconciliation_search_condition AND manufacturerid='0'");
 
 		if (!empty($check_reconciliations_for_mid)){
@@ -693,12 +647,7 @@ if ($REQUEST_METHOD == "POST") {
 				db_query("UPDATE $sql_tbl[reconciliations] SET manufacturerid='$manufacturerid', action='$action' WHERE id='$v_c[id]'");
 			}
 		}
-###
-##
-#
 
-#
-##
                 $reconciliations_manufacturers_search_condition = "";
                 $orders_manufacturers_search_condition = "";
 
@@ -717,12 +666,9 @@ if ($REQUEST_METHOD == "POST") {
                         $orders_manufacturers_search_condition = " AND $sql_tbl[order_groups].manufacturerid IN ($tmp_manufacturers_str)";
 		}
 		else {
-			// select_distributors == "ALL"
 			$reconciliations_manufacturers_search_condition = " AND $sql_tbl[reconciliations].manufacturerid!='0'";
 			$orders_manufacturers_search_condition = " AND $sql_tbl[order_groups].manufacturerid!='0'";
 		}
-##
-#
 
 
 		$reconciliation_search_condition .= $reconciliations_manufacturers_search_condition;
@@ -915,34 +861,6 @@ if ($REQUEST_METHOD == "POST") {
                 $top_message["content"] = "Done.";
                 $top_message["type"] = "I";
         }
-/*
-	elseif ($mode == "clear_invoices_memos"){
-
-		if (!empty($clear_invoices_memos) && is_array($clear_invoices_memos)){
-			foreach ($clear_invoices_memos as $k => $v){
-				if ($v == "Y"){
-
-					$invoice_memo_arr = explode("_", $k);
-
-					$invoice_OR_memo = $invoice_memo_arr[0];
-					$reconciliation_id = $invoice_memo_arr[1];
-					$number = $invoice_memo_arr[2];
-					$manufacturerid = $invoice_memo_arr[3];
-					$orderid = $invoice_memo_arr[4];
-
-					if ($invoice_OR_memo == "I"){
-						db_query("UPDATE $sql_tbl[order_group_invoices] SET reconciliation_id='0' WHERE reconciliation_id='$reconciliation_id' AND invoice_number='$number' AND manufacturerid='$manufacturerid' AND orderid='$orderid'");
-					} else {
-						db_query("UPDATE $sql_tbl[order_group_memos] SET reconciliation_id='0' WHERE reconciliation_id='$reconciliation_id' AND memo_number='$number' AND manufacturerid='$manufacturerid' AND orderid='$orderid'");
-					}
-				}
-			}
-		}
-
-                $top_message["content"] = "Done.";
-                $top_message["type"] = "I";
-	}
-*/
 
 	func_header_location("reconciliation.php?tab=".$tab);
 }
@@ -978,8 +896,6 @@ if ($tab == "unreconciled" || $tab == "reconciled" || $tab == "dropped" || $tab 
                 $order_search_condition = "$sql_tbl[orders].date>='".($search_data["reconciliation_tab_".$tab]["date"]["start_date"])."'";
                 $order_search_condition .= " AND $sql_tbl[orders].date<='".($search_data["reconciliation_tab_".$tab]["date"]["end_date"])."'";
 
-//              $order_search_condition .= " AND $sql_tbl[order_groups].reconciliation_id='0'";
-
 		if ($tab == "receivables"){
 			 $order_search_condition .= " AND xcart_order_groups.cb_status IN ('O', 'IO') AND xcart_order_groups.dc_status IN ('S','G','L','C') AND xcart_order_groups.po_status IN ('PN', 'P1', 'P2')";
 
@@ -1001,13 +917,7 @@ if ($tab == "unreconciled" || $tab == "reconciled" || $tab == "dropped" || $tab 
 
 			foreach ($orders as $k => $v){
 
-
 				$accounting = func_make_accounting($v["orderid"], $v["manufacturerid"]);
-
-//				$accounting = unserialize($v["accounting"]);
-
-//func_print_r($v["total_gross"]);
-//die();
 
 				$v["accounting"] = $accounting;
 
@@ -1056,7 +966,6 @@ if ($tab == "unreconciled" || $tab == "reconciled" || $tab == "dropped" || $tab 
 			$smarty->assign("total_gross_accounting_0", $total_gross_accounting_0);
 			$smarty->assign("total_gross", $total_gross);
 
-//func_print_r($orders, $total_gross_accounting_1_2);
 
 		}
 
@@ -1108,7 +1017,12 @@ if ($tab == "unreconciled" || $tab == "reconciled" || $tab == "dropped" || $tab 
 			$smarty->assign("all_manufacturers_orders", $all_manufacturers_orders);
 		}
 
-//func_print_r($all_manufacturers_orders);
+		if ($tab == "receivables") {
+            $smarty->assign("aTotalReceivables", (new \Xcart\Reconciliation())->getReceivablesTotalReport());
+        }
+		if ($tab == "accounts_payable") {
+			$smarty->assign("aTotalPayable", (new \Xcart\Reconciliation())->getPayableTotalReport());
+		}
 
 	} else {
 
@@ -1151,6 +1065,7 @@ if ($tab == "unreconciled" || $tab == "reconciled" || $tab == "dropped" || $tab 
 
 	                $unreconciled_order_search_condition = "$sql_tbl[orders].date>='".($search_data["reconciliation_tab_".$tab]["date"]["start_date"])."'";
         	        $unreconciled_order_search_condition .= " AND $sql_tbl[orders].date<='".($search_data["reconciliation_tab_".$tab]["date"]["end_date"])."'";
+        	        $unreconciled_order_search_condition .= " AND $sql_tbl[orders].amazon_fulfillment_channel != 'AFN' ";
 
 	                $unreconciled_orders = func_query("SELECT $sql_tbl[order_groups].orderid, $sql_tbl[order_groups].manufacturerid, $sql_tbl[orders].date, $sql_tbl[order_groups].manufacturerid, $sql_tbl[orders].order_prefix FROM $sql_tbl[order_groups] LEFT JOIN $sql_tbl[orders] ON $sql_tbl[orders].orderid=$sql_tbl[order_groups].orderid WHERE $unreconciled_order_search_condition $tmp_manufacturers_search_condition AND $sql_tbl[order_groups].cb_status IN ('O','P','3','H') ORDER BY $sql_tbl[order_groups].orderid desc");
 
@@ -1182,11 +1097,8 @@ if ($tab == "unreconciled" || $tab == "reconciled" || $tab == "dropped" || $tab 
 	}
 }
 
-//func_print_r($reconciliations);
 
 if (!empty($reconciliations) && is_array($reconciliations)){
-
-//	$charged_twice_orders = array();
 
 	foreach ($reconciliations as $k => $v){
 
@@ -1206,7 +1118,7 @@ if (!empty($reconciliations) && is_array($reconciliations)){
 
 					if (strpos($v_description_csv_UPPER, $vv_s_r_UPPER) !== false) {
 						$manufacturerid = $kk;
-						$aManufacturersForReconciliation[$kk] = new Xcart\Manufacturer($kk);
+						$aManufacturersForReconciliation[$kk] = new Xcart\Manufacturer(['manufacturerid' => $manufacturerid]);
 						$reconciliations[$k]["description_csv"] = str_replace($vv_s_r_UPPER, "<B>" . $vv_s_r_UPPER . "</B>", $v_description_csv_UPPER);
 
 						//preg_match('',$v_description_csv_UPPER, $aMatches);
@@ -1261,8 +1173,6 @@ if (!empty($reconciliations) && is_array($reconciliations)){
 		    if (!empty($manufacturerid)){
 
 			$reconciliations[$k]["distr_code"] = $manufacturerid_info[$manufacturerid]["code"];
-
-//			$orderids = func_query("SELECT orderid, invoice_number, memo_number FROM $sql_tbl[reconciliation_orderid] WHERE reconciliation_id='$v[id]' OR reconciliation_id='$v[id]' ORDER BY orderid");
 
 			$invoices = func_query("SELECT * FROM $sql_tbl[order_group_invoices] WHERE reconciliation_id='$v[id]'");
 			$memos = func_query("SELECT * FROM $sql_tbl[order_group_memos] WHERE reconciliation_id='$v[id]'");
@@ -1324,7 +1234,6 @@ if (!empty($reconciliations) && is_array($reconciliations)){
 
 				$reconciliations[$k]["total_invoices_amounts"] = $total_invoices_amounts;
 				$reconciliations[$k]["tota_memos_amounts"] = $tota_memos_amounts;
-//				$reconciliations[$k]["total_invoices_amounts_MIN_memos_amounts"] = $total_invoices_amounts - $tota_memos_amounts;
 
 				$reconciliations[$k]["total_invoices_and_memos_amounts"] = $total_invoices_and_memos_amounts;
 				$reconciliations[$k]["total_invoices_and_memos_amounts_abs"] = abs($total_invoices_and_memos_amounts);
@@ -1351,7 +1260,6 @@ if (!empty($reconciliations) && is_array($reconciliations)){
 					$flag_config_search_keyphrase_found = false;
                                         $vv_search_keyphrase_UPPER_arr = explode("<OR>", $vv_search_keyphrase_UPPER);
 
-//func_print_r($vv_search_keyphrase_UPPER_arr);
                                         foreach ($vv_search_keyphrase_UPPER_arr as $vv_search_keyphrase_UPPER){
 						$vv_search_keyphrase_UPPER = trim($vv_search_keyphrase_UPPER);
 						if (strpos($v_description_csv_UPPER, $vv_search_keyphrase_UPPER) !== false){
@@ -1382,88 +1290,9 @@ if (!empty($reconciliations) && is_array($reconciliations)){
                                     }
                                 }
                         }
-/*
-#
-##
-###
-		if ($reconciliations[$k]["d_bulk_or_individual_order_payments"] == "distributor_charges_for_each_order_twice_one_charge_for_products_and_one_charge_for_shipping"){
-			if (!empty($reconciliations[$k]["invoices_and_memos"][0]["orderid"])){
 
-				$charged_twice_orders[] = $reconciliations[$k]["invoices_and_memos"][0]["orderid"];
-
-				$two_reconciliations = func_query("SELECT $sql_tbl[reconciliation_orderid].*, $sql_tbl[reconciliations].date_csv,  $sql_tbl[reconciliations].file_upload_date, $sql_tbl[reconciliations].description_csv, $sql_tbl[reconciliations].amount_csv,  $sql_tbl[reconciliations].action, $sql_tbl[reconciliations].transaction_type, $sql_tbl[reconciliations].manufacturerid FROM $sql_tbl[reconciliation_orderid] LEFT JOIN $sql_tbl[reconciliations] ON $sql_tbl[reconciliations].id=$sql_tbl[reconciliation_orderid].reconciliation_id WHERE $sql_tbl[reconciliation_orderid].orderid='".$reconciliations[$k]["invoices_and_memos"][0]["orderid"]."' ORDER BY $sql_tbl[reconciliations].date_csv");
-
-				if (!empty($two_reconciliations)){
-
-					foreach ($two_reconciliations as $k_r => $v_r){
-
-
-				                foreach ($manufacturerid_info as $kk => $vv){
-				                        if (!empty($v_r["description_csv"]) && !empty($vv["d_search_keyphrase_for_reconciliation"])){
-
-						                $d_search_keyphrase_for_reconciliation_arr = explode("<OR>", $vv["d_search_keyphrase_for_reconciliation"]);
-
-					                        foreach ($d_search_keyphrase_for_reconciliation_arr as $kk_s_r => $vv_s_r){
-
-        				                                $vv_s_r = trim($vv_s_r);
-	
-				                                        $v_description_csv_UPPER = strtoupper($v_r["description_csv"]);
-                				                        $vv_s_r_UPPER = strtoupper($vv_s_r);
-		
-
-                                				        if (strpos($v_description_csv_UPPER, $vv_s_r_UPPER) !== false){
-                                				                $two_reconciliations[$k_r]["description_csv"] = str_replace($vv_s_r_UPPER, "<B>".$vv_s_r_UPPER."</B>", $v_description_csv_UPPER);
-				                                        }
-                                				}
-				                        }
-				                }
-
-
-						if ($v_r["amount_csv"] < 0){
-							$two_reconciliations[$k_r]["amount_csv_abs"] = abs($v_r["amount_csv"]);
-						}
-					}
-
-					$reconciliations[$k]["two_reconciliations"] = $two_reconciliations;
-				}
-			}
-		}
-###
-##
-#
-*/
-	} // foreach ($reconciliations as $k => $v)
-
-/*
-	$charged_twice_orders_count = array_count_values($charged_twice_orders);
-
-	if (!empty($charged_twice_orders_count)){
-		foreach ($charged_twice_orders_count as $orderid => $count){
-			if ($count == "2"){
-				$cnt=1;
-				foreach ($reconciliations as $k => $v){
-
-					if ($v["invoices_and_memos"][0]["orderid"] == $orderid){
-						$reconciliations[$k]["row"] = $cnt;
-						$cnt++;
-					}
-				}
-			}
-		}
 	}
-
-
-	$smarty->assign("charged_twice_orders_count", $charged_twice_orders_count);
-	$smarty->assign("charged_twice_orders", $charged_twice_orders);
-*/
 }
-
-
-//func_print_r($reconciliations);
-
-//func_print_r($reconciliations, $charged_twice_orders, $charged_twice_orders_count);
-
-//func_print_r($config_reconciliation_search_keyphrases);
 
 $location[] = array("Reconciliation", "");
 
@@ -1480,32 +1309,37 @@ if ($tab == "expense_report"){
 				$expense_report_sum_total_amount_with_abs += $v["total_amount_with_abs"];
 			}
 		}
-/*
-		if ($expense_report_sum_total_amount < 0){
-			$expense_report_sum_total_amount_with_abs = abs($expense_report_sum_total_amount);
-			$smarty->assign("expense_report_sum_total_amount_with_abs", $expense_report_sum_total_amount_with_abs);
-		}
-*/
 	}
 
 	$smarty->assign("expense_report_sum_total_amount", $expense_report_sum_total_amount);
 	$smarty->assign("expense_report_sum_total_amount_with_abs", $expense_report_sum_total_amount_with_abs);
 }
 
+if ($tab == "inventory") {
+    $order_by = 'reportdate';
+    $order_direction = 'desc';
+
+    $o_direction = ($order_direction == 'desc') ? '-' : '';
+
+    $qb = QueryBuilder::getInstance(Connection::getInstance());
+    $sql = $qb
+        ->setTypeSelect()
+        ->from('xcart_cidev_daily_fba_stats')
+        ->order([$o_direction . $order_by])
+        ->toSQL();
+
+    $cidev_daily_fba_stats = Connection::getInstance()->fetchAll($sql);
+
+    $smarty->assign("cidev_daily_fba_stats", $cidev_daily_fba_stats);
+}
+
 $smarty->assign("tab", $tab);
 $smarty->assign("config_reconciliation_search_keyphrases", $config_reconciliation_search_keyphrases);
-//$smarty->assign("search_prefilled1", $search_data["find_orders"]);
 
 $smarty->assign("search_prefilled", $search_data["reconciliation_tab_".$tab]);
 
-#
-##
 $manufacturers = func_query_hash("SELECT manufacturerid, manufacturer, code FROM $sql_tbl[manufacturers] WHERE avail='Y' ORDER BY manufacturer, orderby","manufacturerid",false);
 $smarty->assign('manufacturers', $manufacturers);
-##
-#
-//func_print_r($manufacturers);
-//func_print_r($reconciliations);
 
 $smarty->assign("search_keyphrase_list", $search_keyphrase_list);
 $smarty->assign("reconciliations", $reconciliations);

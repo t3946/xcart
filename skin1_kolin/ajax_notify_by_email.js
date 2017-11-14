@@ -34,3 +34,4 @@ function submit_product_notify_form(obj) {
             }, 'json');
         return false;
 }
+

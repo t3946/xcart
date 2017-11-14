@@ -238,7 +238,14 @@ function func_set_value_to_field(form, fefix_field, field, mnf_id){
             <input type="hidden" name="mode" value="submit_message"/>
             <input type="hidden" name="send_email" value="N"/>
             <input type="hidden" name="orderid" value="{$order.orderid}"/>
-            {$cidev_firstname} ({$login}) notes:<br/>
+            {$cidev_firstname} ({$login}) note:<br/>
+            Write a note below or
+            <button style="font-size: 1em; display: inline; border: none; padding: 0; background: none; color: inherit; text-decoration: underline; cursor: pointer; word-wrap: break-word;"
+                    value="empty"
+                    name="type">
+                click this link to empty 'Last CS message' in the order list
+            </button>. <br/>
+
             <div>
                 <p><b>Subject line:</b></p>
                 <input style="width: 100%;" type="text" name="subject_line"/>
@@ -249,8 +256,13 @@ function func_set_value_to_field(form, fefix_field, field, mnf_id){
             {* <input type="submit" value="Post message" id="post_message" /> *}
 
             <div style="margin-top:10px">
-                <input type="button" value="Post message" id="post_message1"
-                       onclick="javascript: document.ordernotesformnewjs.submit();"/>
+
+                <button value="message" name="type" onclick="javascript:
+                {literal}if (!$('#notes').val().length) { alert('You try to send message with only subject! \nPlease explain your message in the message body field...'); return false;}{/literal}
+                        document.ordernotesformnewjs.submit();">
+                    Post message
+                </button>
+
             </div>
         </form>
     </div>
@@ -418,7 +430,7 @@ function func_set_value_to_field(form, fefix_field, field, mnf_id){
 
 	<td id="amazonorderid_contact_link" nowrap="nowrap" style="display: none;" align="right" width="200">
 {if $order.amazonorderid ne ""}
-	<a target="_blank" href="https://sellercentral.amazon.com/gp/orders-v2/contact?ie=UTF8&orderID={$order.amazonorderid}" style="color: #1411FF;">Contact customer through Amazon Seller Central</a>
+	<a target="_blank" href="https://sellercentral.amazon.com/gp/orders-v2/contact?ie=UTF8&orderID={$order.amazonorderid}" style="color: #1411FF;">Contact customer through<br/>Amazon Seller Central</a>
 {/if}
 	</td>
 
@@ -531,7 +543,6 @@ function func_set_value_to_field(form, fefix_field, field, mnf_id){
 <br />
 *}
 {/if}
-
 
 {if $usertype eq 'A' && $order_manufacturers && $current_membership_flag ne 'FS'}
 {assign var=found_show_stock_availability_form value=""}
@@ -939,6 +950,7 @@ $( document ).ready(function() {
 {assign var="oOrderGroups" value=$oOrder->getOrderGroups()}
 {foreach from=$oOrderGroups item=oOrderGroup}
     {assign var="key" value=$oOrderGroup->getManufacturerId()}
+    {assign var="mnf_id" value=$oOrderGroup->getManufacturerId()}
     {assign var="v" value=$order_manufacturers.$key}
 
     {assign var=show_to_order_entry_operator value=""}
@@ -1182,8 +1194,7 @@ $( document ).ready(function() {
   {/if}
 
   <td>
-
-   {if $v.good_time_to_send_email_to_distributor eq "N" && $allowed_elements.send_dispatch_to_distributor_btn ne "N" }
+   {if $v.good_time_to_send_email_to_distributor eq "N" && $allowed_elements.send_dispatch_to_distributor_btn ne "N" && $v.allow_dispatch_off_working_hours eq "Y"}
 	<input type="hidden" name="bad_time_do_not_send_email" value="Y" />
 
 	<input name="send_email_button" type="button" value="Send (Off-hours dispatch to distributor)" onclick="javascript: tinyMCE.triggerSave(); func_set_value_to_field(document.manuf_notifyform_{$mnf_id}, 'dispatch_to_distributor_', 'mnf_body', {$mnf_id});" style="background-color: #fff2cc;" />
@@ -1194,7 +1205,14 @@ $( document ).ready(function() {
 
    {/if}
 {assign var="oShipping" value=$oOrderGroup->getShippingInstance()}
-&nbsp;Requested shipping method: <span style="color: red;">{$oOrderGroup->getShippingMethodName()|trademark:$insert_trademark}</span>
+&nbsp;Requested shipping method:
+<span style="color: red;">
+{if ($oOrderGroup->getRealShippingMethod() eq '')}
+  {$oOrderGroup->getShippingMethodName()|trademark:$insert_trademark}
+{else}
+  {$oOrderGroup->getRealShippingMethod()}
+{/if}
+</span>
   </td>
   </tr>
   </table>
@@ -1322,6 +1340,10 @@ $(function() {ldelim}
 
 {capture name=VT}
 {include file="admin/main/paypal_vt.tpl"}
+{/capture}
+
+{capture name=paypal_request}
+{include file="admin/main/paypal_request.tpl"}
 {/capture}
 
 <div id="main_order_tabs-container">

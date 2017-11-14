@@ -1,8 +1,9 @@
-{* $Id: home.tpl,v 1.123.2.2 2006/11/08 14:38:26 svowl Exp $ *}
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 { config_load file="$skin_config" }
 <html>
 <head>
+	<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+
 <title>{if $login ne ""}{if $current_storefront_info.prefix eq "MAIN_SF_PREFIX"}AR-{else}{$current_storefront_info.prefix}{/if}Admin: {$cidev_firstname} ({$login}){else}{$lng.txt_site_title}{/if}</title>
 { include file="meta.tpl" }
 <link rel="stylesheet" href="{$SkinDir}/skin1_admin.css" />
@@ -91,6 +92,11 @@ var runTests = function(editor) {
 
 {if $login ne ""}
 	{include file="cidev_tracking_code.tpl" }
+    {if !($usertype eq "A" || $usertype eq "P")}
+		<script type="text/javascript">
+            ga('send', 'pageview');
+		</script>
+    {/if}
 {/if}
 
 <!-- main area -->
@@ -725,11 +731,26 @@ var runTests = function(editor) {
 {elseif $main eq "operators_activity_reports"}
 {include file="admin/main/operators_activity_reports.tpl"}
 
+{elseif $main eq "az_create_listings"}
+{include file="admin/main/az_create_listings.tpl"}
+
+{elseif $main eq "az_monitor_upload_status"}
+{include file="admin/main/az_monitor_upload_status.tpl"}
+
+{elseif $main eq "list_inventory_supply_report"}
+{include file="admin/main/list_inventory_supply_report.tpl"}
+
 {elseif $main eq "customers_cart"}
 {include file="admin/main/customers_cart.tpl"}
 
 {elseif $main eq "distributors_logins_view_log"}
 {include file="admin/main/distributors_logins_view_log.tpl"}
+
+{elseif $main eq "banners"}
+{include file="admin/main/banners.tpl"}
+
+{elseif $main eq "raw_html"}
+    {$content}
 
 {else}
 {include file="main/error_page_not_found.tpl"}

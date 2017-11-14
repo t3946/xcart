@@ -285,7 +285,7 @@ if ($REQUEST_METHOD == "POST") {
 			
 		if (!empty($active_modules['Multiple_Storefronts'])) {
 			$parent_sf = func_get_category_sf($cat_location);
-			if ($parent_sf != func_get_category_sf($cat) || $parent_sf != $current_storefront) {
+			if ($cat_location > 0 && ($parent_sf != func_get_category_sf($cat) || $parent_sf != $current_storefront)) {
 				$sf_error = true;
 			}
 		}
@@ -602,8 +602,13 @@ if ($REQUEST_METHOD == "GET" && $mode == "delete_icon" && !empty($cat)) {
 #
 $location[] = array(func_get_langvar_by_name("lbl_categories_management"), "categories.php");
 
-if ($mode == "add")
+if ($mode == "add") {
 	$location[] = array(func_get_langvar_by_name("lbl_add_category"), "category_modify.php?mode=add&cat=$cat");
+	if (!empty($current_category)) {
+		unset($current_category);
+		$smarty->assign('current_category', $current_category);
+	}
+}
 else {
 	$location[] = array(func_get_langvar_by_name("lbl_modify_category"), "category_modify.php?cat=$cat");
 	if ($section == 'lng') {

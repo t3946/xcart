@@ -5,6 +5,7 @@ class OrderTransaction extends Data
 {
     const TRANSACTION_FAILED_TEXT = "Capture transaction ID:%s - failed\n";
     private $aTransactionResult = [];
+    private $oTransactionLog = null;
 
     public function __construct($aParams = [])
     {

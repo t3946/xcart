@@ -1,7 +1,3 @@
-<?php /* MODIFIED: random:19530 [2009 Nov 12 13:25][Custom development (Add an option to search for duplicated SKUs)] */ ?>
-<?php /* MODIFIED: random:18591_18598 [2009 Jul 29 10:36][Custom development (��������� ��� ������ UPS + ��������� � ������ ����� Tracking numbers ��� �������)] */ ?>
-<?php /* MODIFIED: random:18298_18304_18324 [2009 Jun 08 09:50][Custom development (����� ��� �������� ����������� "��������������" (X-Cart's Manufacturers) + Add new "Brands" module + Search URLs feature)] */ ?>
-<?php /* MODIFIED: random:1073746882_1073747063 [2008 Dec 24 16:25][Custom development (Shipping Calculation for Several Providers in the USA)] */ ?>
 <?php
 /*****************************************************************************\
  * +-----------------------------------------------------------------------------+
@@ -34,9 +30,7 @@
  * +-----------------------------------------------------------------------------+
  * \*****************************************************************************/
 
-#
-# $Id: search.php,v 1.141.2.25 2007/01/25 07:04:50 max Exp $
-#
+use Xcart\Product;
 
 x_load('product');
 
@@ -75,7 +69,7 @@ $advanced_options = array(
     'flag_ship_freight', 'flag_global_disc', 'flag_free_tax', 'flag_min_amount', 'flag_low_avail_limit',
     'flag_list_price', 'flag_vat', 'flag_gstpst', 'manufacturers', 'empty_discount_slope', 'discount_table',
     'brands', 'duplicate_sku', 'outdated_discount_table', 'froogle_differs', 'date_period',
-    'StartDay', 'StartMonth', 'StartYear', 'EndDay', 'EndMonth', 'EndYear'
+    'StartDay', 'StartMonth', 'StartYear', 'EndDay', 'EndMonth', 'EndYear', 'splash_id'
 );
 # END: random:19530 [2009 Nov 12 13:25] 
 
@@ -360,7 +354,6 @@ if ($mode == "search") {
             $fields[] = "$sql_tbl[pc_options].disable_AC_products";
 
             $fields[] = "$sql_tbl[products_sf].sfid";
-//			$fields[] = "IF($sql_tbl[storefronts].domain IS NULL, '".MAIN_SF_DOMAIN."', $sql_tbl[storefronts].domain) AS domain";
 
             $where[] = "(($sql_tbl[pc_options].disable_AC_products='N') OR ($sql_tbl[pc_options].disable_AC_products='Y' AND $sql_tbl[products].pc_classify_status!='AC'))";
         }
@@ -389,45 +382,15 @@ if ($mode == "search") {
     $left_joins['quick_flags'] = array(
         "on" => "$sql_tbl[quick_flags].productid = $sql_tbl[products].productid"
     );
-    $fields[] = "$sql_tbl[quick_flags].*";
+    $fields[] = "{$sql_tbl['quick_flags']}.is_variants, {$sql_tbl['quick_flags']}.is_product_options, {$sql_tbl['quick_flags']}.is_taxes, {$sql_tbl['quick_flags']}.image_path_T";
 
     $inner_joins['quick_prices'] = array(
         "on" => "$sql_tbl[quick_prices].productid = $sql_tbl[products].productid /*AND $sql_tbl[quick_prices].membershipid $membershipid_string*/"
     );
-//	$where[] = "$sql_tbl[quick_prices].priceid = $sql_tbl[pricing].priceid and $sql_tbl[pricing].quantity = 1";
     $where[] = "$sql_tbl[quick_prices].priceid = $sql_tbl[pricing].priceid /*and $sql_tbl[pricing].quantity<=$sql_tbl[products].min_amount*/";
     $fields[] = "$sql_tbl[quick_prices].variantid";
-    /*
-        if ($user_account['membershipid'] == 0) {
-            $fields[] = "$sql_tbl[pricing].price";
-        } else {
-    //		$fields[] = "MIN($sql_tbl[pricing].price) as price";
-            $fields[] = "$sql_tbl[pricing].price";
-        }
-    */
 
     $fields[] = "$sql_tbl[pricing].price";
-
-
-    /* speed optimization
-        if ($current_area == 'C' && empty($active_modules['Product_Configurator'])) {
-            $where[] = "$sql_tbl[products].product_type <> 'C'";
-            $where[] = "$sql_tbl[products].forsale <> 'B'";
-        }
-        if ($current_area == 'C' && defined('SO_CUSTOMER_OFFERS')) {
-            # Display all products (including hidden)
-            $where[] = "$sql_tbl[products].forsale <> 'N'";
-        }
-    */
-
-    /*
-        if (!$single_mode && AREA_TYPE != 'A' && AREA_TYPE != 'P') {
-            $inner_joins['ACHECK'] = array(
-                "tblname" => 'customers',
-                "on" => "$sql_tbl[products].provider = ACHECK.login"
-            );
-        }
-    */
 
     $data["substring"] = trim($data["substring"]);
 
@@ -657,10 +620,14 @@ if ($mode == "search") {
         'on' => "$sql_tbl[products].manufacturerid = $sql_tbl[manufacturers].manufacturerid"
     );
 
-    if (!empty($data["categoryid"])) {
+    if (!empty($data["categoryid"]) || !empty($cat)) {
         # Search by category...
 
-        $data["categoryid"] = intval($data["categoryid"]);
+        if (!empty($cat)) {
+            $data["categoryid"] = intval($cat);
+        }elseif (!empty($data["categoryid"]) ) {
+            $data["categoryid"] = intval($data["categoryid"]);
+        }
 
         $category_sign = "";
 
@@ -830,6 +797,10 @@ if ($mode == "search") {
 
     if (!empty($data["forsale"]))
         $where[] = "$sql_tbl[products].forsale = '" . $data["forsale"] . "'";
+
+    if (isset($data['group_root']) && $data['group_root']) {
+        $where[] = "({$sql_tbl['products']}.group_root IS NULL OR {$sql_tbl['products']}.group_root = {$sql_tbl['products']}.productid)";
+    }
 
     if (!empty($data["flag_free_ship"]))
         $where[] = "$sql_tbl[products].free_shipping = '" . $data["flag_free_ship"] . "'";
@@ -1176,14 +1147,7 @@ if ($mode == "search") {
     $search_query .= func_generate_joins($joins);
     $search_query_count .= func_generate_joins($joins_count);
     $search_query_brandids .= func_generate_joins($joins_count);
-
-#
-## Search_Filter
-###
-//        $search_query_fv_ids .= func_generate_joins($joins_count);
-###
-##
-# 
+    $search_query_fba = $search_query . ' left join xcart_products_showed s on xcart_products.productid = s.productid';
 
 
     if (in_array($current_area, array('A', 'P'))) {
@@ -1275,21 +1239,103 @@ if ($mode == "search") {
     }
 
     $search_query .= " WHERE " . implode(" AND ", $where);
+    $search_query_fba .= " WHERE " . implode(" AND ", $where) . " and amazon_fba = 'Y' and amazon_fba_avail > 1";
     $search_query_count .= " WHERE " . implode(" AND ", $where);
     $search_query_brandids .= " WHERE " . implode(" AND ", $where);
     $search_query_brandids .= " AND $sql_tbl[products].brandid > 0 ";
 
     if (!empty($groupbys)) {
         $search_query .= " GROUP BY " . implode(", ", $groupbys);
+        $search_query_fba .= " GROUP BY " . implode(", ", $groupbys);
         $search_query_count .= " GROUP BY " . implode(", ", $groupbys);
         $search_query_brandids .= " GROUP BY " . implode(", ", $groupbys);
     }
     if (!empty($having)) {
         $search_query .= " HAVING " . implode(" AND ", $having);
+        $search_query_fba .= " HAVING " . implode(" AND ", $having);
         $search_query_count .= " HAVING " . implode(" AND ", $having);
         $search_query_brandids .= " HAVING " . implode(" AND ", $having);
     }
     $search_query_count_NEW = $search_query_count;
+
+    /***
+     * Если есть результаты последнего поиска и сортировка по умолчанию
+     * поднимаем 50 продуктов в выводе категории согластно последнегому поисковому результату,
+     * так-же поднимает товары похожие на уже просмотренные в данном разделе.
+     */
+    if (empty($data["sort_field"]) || $data["sort_field"] == 'orderby')
+    {
+        $t1_arr = array();
+        $t3_arr = array();
+
+        $search_related_products_ids = [];
+        $related_ids = [];
+        $related_like_text = null;
+
+        $related_products = new Xcart\Helpers\ViewedRelatedProducts();
+        $search_related_products_ids = $related_products->getRelated();
+
+        if (!empty($search_related_products_ids))
+        {
+            usort($search_related_products_ids, function($a, $b)
+            {
+                return ($a['score'] < $b['score']) ? -1 : 1;
+            });
+
+            $search_related_products_ids = array_reverse($search_related_products_ids);
+            $t_ids_product_arr = [];
+
+            foreach ($search_related_products_ids as $n => $product)
+            {
+                $push = false;
+                $push_el = "'{$product['productid']}'";
+
+                if (in_array($push_el, $t_ids_product_arr)) { continue; }
+                if (count($t_ids_product_arr) == 50) { break; }
+
+                if (!empty($categoryids) && !empty($product['categoryid']))
+                {
+                    $ai = array_intersect($categoryids, $product['categoryid']);
+
+                    if (!empty($ai)) {
+                        $push = true;
+                    }
+                }
+                else {
+                    $push = true;
+                }
+
+                if ($push) {
+                    $t_ids_product_arr[] = $push_el;
+                    $t3_arr[] = ['score' =>$product['score'], 'productid' => $product['productid']];
+                }
+            }
+
+
+            if (!empty($t_ids_product_arr))
+            {
+                $order_by_lastsearch_1 =  "IF(FIELD( xcart_products.productid, " . implode(',', $t_ids_product_arr) . ") = 0,1,0) ASC";
+                $order_by_lastsearch_2 =  "FIELD( xcart_products.productid, " . implode(',', $t_ids_product_arr) . ") ASC";
+
+                array_unshift($orderbys, $order_by_lastsearch_1, $order_by_lastsearch_2);
+            }
+        }
+
+        if (!empty($search_related_products_ids)) {
+            foreach ($search_related_products_ids as $founded) {
+                $t1_arr[(string)$founded['score']] = $founded['productid'];
+            }
+        }
+
+        $t1_arr_count = count($t1_arr);
+        $t1_arr = json_encode($t1_arr);
+        $t3_arr = json_encode($t3_arr);
+
+        $smarty->assign("t1_arr", $t1_arr);
+        $smarty->assign("t1_arr_count", $t1_arr_count);
+        $smarty->assign("t3_arr", $t3_arr);
+    }
+
     if (!empty($orderbys)) {
         $search_query .= " ORDER BY " . implode(", ", $orderbys);
         $search_query_count .= " ORDER BY " . implode(", ", $orderbys);
@@ -1583,30 +1629,51 @@ if ($mode == "search") {
                     }
                 }
 
-
-#
-##
-###
                 if ($current_area == "C" && $first_page >= 12 && $new_featured_functionality == "Y" && $page > 1) {
                     $first_page -= 12;
                 }
-###
-##
-#
 
-
-# https://basecamp.com/2070980/projects/1577907/messages/52794955
-## FIX: current php errors
-###
-                if (!isset($first_page) || $first_page == "") {
+                if (empty($first_page)) {
                     $first_page = 0;
                 }
-###
-##
-#
 
                 $search_query .= " LIMIT $first_page, $objects_per_page";
+
                 $products = func_query($search_query);
+
+                $max_fba = 5;
+                $sql_fba = "{$search_query_fba} order by s.in_list_showed ASC, RAND() ASC limit {$max_fba}";
+
+                if (!defined('IS_ROBOT') && $products_fba = func_query($sql_fba))
+                {
+                    foreach ($products as $product) {
+                        for ($i = 0; $i < count($products_fba); $i++) {
+                            if ($product['productid'] == $products_fba[$i]['productid']) {
+                                unset($products_fba[$i]);
+                            }
+                        }
+                    }
+
+                    if (count($products_fba) == $max_fba || ($page <= $max_fba && count($products_fba) >= $page))
+                    {
+                        $tmp_products = [];
+                        $fba_pos      = rand(1, 3);
+
+                        if (!empty($products_fba)) {
+                            foreach ($products as $pos => $product) {
+                                if ($pos == $fba_pos) {
+                                    $tmp_products[] = reset($products_fba);
+                                }
+
+                                $tmp_products[] = $product;
+                            }
+
+                            $products = $tmp_products;
+                        }
+
+                        unset($tmp_products, $products_fba);
+                    }
+                }
             }
 
             # Clear service arrays
@@ -1625,11 +1692,17 @@ if ($mode == "search") {
                 x_session_register("cart");
 
                 # Get tax rates cache
-                $ids = array();
-                foreach ($products as $v) {
+                $ids = [];
+                $pids = [];
+
+                foreach ($products as $v)
+                {
+                    $pids[] = $v['productid'];
                     if ($v['is_taxes'] == 'Y')
                         $ids[] = $v;
                 }
+
+                Product::updateShowInLists($pids);
 
                 $_taxes = array();
                 if (!empty($ids)) {
@@ -1812,7 +1885,7 @@ if ($mode == "search") {
 
                     if ($cidev_warning_code > 0) {
                         if ($v["warning_code"] != $cidev_warning_code) {
-                            db_query("UPDATE $sql_tbl[products] SET warning_code='$cidev_warning_code' WHERE productid='$v[productid]'");
+//                            db_query("UPDATE $sql_tbl[products] SET warning_code='$cidev_warning_code' WHERE productid='$v[productid]'");
                             $products[$k]["warning_code"] = $cidev_warning_code;
                         }
                         $products[$k]["avail"] = 0;
@@ -1862,7 +1935,7 @@ if ($mode == "search") {
 #
 ## Calculate correct price
 ###
-                    $products[$k]["product_availability"] = func_product_availability(false, false, false, false, false, $products[$k]);
+                    $products[$k]["product_availability"] = func_product_availability(false, $products[$k]);
                     $products[$k]["supplier_feeds_enabled"] = func_query_first_cell("SELECT enabled FROM $sql_tbl[supplier_feeds] WHERE manufacturerid='$v[manufacturerid]' AND feed_type = 'I' AND enabled='Y' AND (multiple_feed_destinations!='Y' OR (multiple_feed_destinations='Y' AND feed_file_name='" . $v["controlled_by_feed"] . "'))");
                     $products[$k]["price"] = $products[$k]["taxed_price"] = func_product_price($products[$k]);
 
@@ -1909,10 +1982,16 @@ if ($mode == "search") {
                         }
                         $sfids_of_products[$v["productid"]][] = $v["sfid"];
                     }
-##
-#
+                    if ($products[$k]['splash_id']) {
+                        $oSplash = \Xcart\Images\Splash::objects()->filter(['id' => (int) $products[$k]['splash_id']])->get();
+                        if ($oSplash) {
+                            $products[$k]['oSplash'] = $oSplash;
+                        }
+                    }
 
                     $products[$k]["brand"] = $brands_in_found_products[$v["brandid"]]["brand"];
+
+
 
                 } //foreach ($products as $k => $v)
 
@@ -1963,7 +2042,7 @@ if ($mode == "search") {
                 } else {
                     $smarty->assign("navigation_script", "search.php?mode=search");
                 }
-# END: random:18591_18598 [2009 Jul 29 10:36] 
+# END: random:18591_18598 [2009 Jul 29 10:36]
 
                 $smarty->assign("products", $products);
                 $smarty->assign("first_item", $first_page + 1);

@@ -1,4 +1,4 @@
-<?php /* MODIFIED: random:18298_18304_18324 [2009 Jun 08 09:50][Custom development (Форма для отправки нотификаций "производителям" (X-Cart's Manufacturers) + Add new "Brands" module + Search URLs feature)] */ ?>
+<?php /* MODIFIED: random:18298_18304_18324 [2009 Jun 08 09:50][Custom development (О©╫О©╫О©╫О©╫О©╫ О©╫О©╫О©╫ О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫ О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫ "О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫" (X-Cart's Manufacturers) + Add new "Brands" module + Search URLs feature)] */ ?>
 <?php
 /*****************************************************************************\
 +-----------------------------------------------------------------------------+
@@ -36,6 +36,9 @@
 #
 # This script show static page in customer zone
 
+use Modules\User\Helpers\SurfingHelper;
+use Modules\User\Models\SurfPathModel;
+
 require "./auth.php";
 
 if (
@@ -52,17 +55,21 @@ require $xcart_dir."/include/categories.php";
 
 x_load('files');
 
-# START: random:18298_18304_18324 [2009 Jun 08 09:50] 
+# START: random:18298_18304_18324 [2009 Jun 08 09:50]
 if ($active_modules["Brands"])
     include $xcart_dir."/modules/Brands/customer_brands.php";
 else
-# END: random:18298_18304_18324 [2009 Jun 08 09:50] 
+# END: random:18298_18304_18324 [2009 Jun 08 09:50]
 if ($active_modules["Manufacturers"])
     include $xcart_dir."/modules/Manufacturers/customer_manufacturers.php";
 
 if (!empty($active_modules["Xcart_Mobile"]) && $config["Appearance"]["Enable_Mobile_skin"] == "Y"){
 	if ($detect->isMobile()){
-		$pages_dir = $smarty->template_dir[1]."/pages/$store_language/";
+        if (is_array($smarty->template_dir)) {
+            $pages_dir = $smarty->template_dir[1] . "/pages/$store_language/";
+        } else {
+            $pages_dir = $smarty->template_dir."/pages/$store_language/";
+        }
 	} else {
 		$pages_dir = $smarty->template_dir."/pages/$store_language/";
 	}
@@ -76,10 +83,10 @@ if (isset($_GET['pageid'])) {
 # Prepare data for editing
 #
     $preview = ($mode=="preview" ? "" : "AND active='Y'");
-    $page_data = func_query_first("SELECT * FROM $sql_tbl[pages] WHERE pageid='$pageid' $preview AND level='E'");
+    $page_data = func_query_first("SELECT * FROM $sql_tbl[pages] WHERE pageid='$pageid' $preview AND level='E' AND (sfids = '' or sfids like '%{$current_storefront}%')");
 
 	if ($page_data["language"] != $store_language) {
-		$page_data = func_query_first("SELECT * FROM $sql_tbl[pages] WHERE filename='$page_data[filename]' $preview AND level='E' AND language='$store_language'");
+		$page_data = func_query_first("SELECT * FROM $sql_tbl[pages] WHERE filename='$page_data[filename]' $preview AND level='E' AND language='$store_language' AND (sfids = '' or sfids like '%{$current_storefront}%')");
 	}
 
     if ($page_data) {
@@ -162,18 +169,14 @@ Group By B.brandid");
     $smarty->assign("main", "pages");
 }
 
-#
-##
-###
 if ($config["Appearance"]["Enable_surf_stats"] == "Y"){
-        func_log_cidev_surf("T");
+    SurfingHelper::logSurfPath([
+        'resource_type' => SurfPathModel::GOAL_TYPE_STATIC_PAGE,
+        'resource_id' => $clean_url_data["resource_id"],
+    ]);
 }
-###
-##
-#
 
 # Assign the current location line
 $smarty->assign("location", $location);
 
 func_display("customer/home.tpl",$smarty);
-?>

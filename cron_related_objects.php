@@ -78,20 +78,18 @@ foreach ($storefronts as $storefrontid => $store_info){
 # STEP 1 START
 #
 
-		$sql_cat_prod_igor_query = "
-Select SQL_NO_CACHE
-        SP.resource_id,
-        (LENGTH(GROUP_CONCAT(SM.goal_order)) - LENGTH(REPLACE(GROUP_CONCAT(SM.goal_order),'Y','')))*P.cost_to_us As Sales
-From xcart_products_categories PC 
-        left join xcart_cidev_surf_path SP ON SP.resource_id = PC.productid and SP.resource_type  IN ('P')
-        left join xcart_cidev_surf_meta SM ON SP.meta_id = SM.id 
-	inner join xcart_products P ON P.productid = PC.productid and P.forsale = 'Y'
-Where 
-        PC.categoryid = '$categoryid'
-        $dynamic_settings and SM.storefrontid = '$storefrontid' and FROM_UNIXTIME(SM.`date`) > DATE_ADD(NOW(), INTERVAL - ".$related_objects_collector[$storefrontid]["collecting_period_backward_months"]." MONTH)
-Group By SP.resource_id
-Order By Sales desc, COUNT(SP.id) desc
-";
+		$sql_cat_prod_igor_query = <<<SQL
+SELECT P.productid, SUM(IFNULL(P2.cost_to_us, P.cost_to_us)) * COUNT(SM.id) AS Sales
+FROM xcart_products_categories PC 
+        INNER JOIN xcart_products P ON P.productid = PC.productid AND P.forsale = 'Y' AND (P.group_root IS NULL OR P.group_root = P.productid)
+		LEFT JOIN xcart_products P2 ON P.productid = P2.group_root AND P2.forsale = 'Y'
+        INNER JOIN xcart_cidev_surf_path SP ON SP.resource_id = IFNULL (P2.productid, P.productid) AND SP.resource_type IN ('P')
+		INNER JOIN xcart_cidev_surf_meta SM ON SP.meta_id = SM.id AND SM.goal_order = 'Y'
+WHERE PC.categoryid = {$categoryid}
+      {$dynamic_settings} and SM.storefrontid = {$storefrontid} and FROM_UNIXTIME(SM.`date`) > DATE_ADD(NOW(), INTERVAL - {$related_objects_collector[$storefrontid]["collecting_period_backward_months"]} MONTH)
+GROUP BY P.productid
+ORDER BY Sales DESC, COUNT(SP.id) DESC
+SQL;
 
 		$products = db_query($sql_cat_prod_igor_query);
 

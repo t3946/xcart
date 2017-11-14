@@ -3,6 +3,7 @@
    
 $().ready(function(){
   $.ajaxSetup({
+    cache: false,
     error:function(x,e){
       if (x.status == 0) {
 //        alert('You are offline!!\n Please Check Your Network.');
@@ -15,7 +16,7 @@ $().ready(function(){
       } else if (e == 'timeout') {
         alert('Request Time out.');
       } else {
-        alert('Unknown Error.\n' + x.responseText);
+        console.log('Unknown Error.\n' + x.responseText);
       }
     }
   });

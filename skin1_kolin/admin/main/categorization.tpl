@@ -156,24 +156,11 @@ function func_approve_button_clicked(code){
 
 	filled_or_not_arr[code] = "Y";
 
-        $('#form1_div_correct_categoryid_'+code).hide();
+    $('#form1_div_correct_categoryid_'+code).hide();
 	$('#form1_div_approve_button_'+code).hide();
 	$('#form1_div_skip_button_'+code).hide();
 
 	$('#form1_div_cancel_approve_button_'+code).show();
-
-
-/*
-        var button_value = $('#form1_approve_button_id_'+code).val();
-
-        if (button_value == "Approve"){
-                $('#form1_approve_button_id_'+code).val("Cancel approve");
-		filled_or_not_arr[code] = "Y";
-        } else {
-                $('#form1_approve_button_id_'+code).val("Approve");
-		filled_or_not_arr[code] = "N";
-        }
-*/
 
 	func_check_all_filled_or_not();
 }
@@ -262,7 +249,19 @@ Category {$v} is not ready to classification!<br />
 {foreach from=$products_minimum_number_of_autoclassify_product_per_turn item=v key=k}
 <tr {cycle values=", class='TableSubHead'" name="cycle_totals"}>
 <td>
-<a href="http://{$current_storefront_info.domain}/product.php?productid={$v.productid}" target="_blank" style="color: blue;">{$v.product}</a>
+	{if $v.oProduct}
+		{assign var=product value=$v.oProduct}
+		{if $product->isGroupChild()}
+            {assign var=product value=$v.oProduct->parent}
+		{/if}
+		<a href="http://{$current_storefront_info.domain}/product.php?productid={$product->productid}" target="_blank" style="color: blue;">
+        	{$product->getTitle()|escape}
+		</a>
+	{else}
+		<a href="http://{$current_storefront_info.domain}/product.php?productid={$v.productid}" target="_blank" style="color: blue;">
+			{$v.product}
+		</a>
+	{/if}
 <input type="hidden" name="posted_data[{$k}][productid]" value="{$v.productid}" />
 
 <input id="form1_skip_id_{$k}" type="hidden" name="posted_data[{$k}][skip]" value="" />

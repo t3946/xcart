@@ -253,7 +253,7 @@ function cidev_update_product_amount_next(cartid, amount, manufacturerid){
 	{include file="product_thumbnail.tpl" productid=$imageid image_x=$config.Appearance.thumbnail_width product=$products[product].product tmbn_url=$products[product].pimage_url type=$products[product].is_pimage}
 {else}
 	{assign var="imageid" value=$products[product].productid}
-	{include file="product_thumbnail.tpl" productid=$products[product].productid image_x=$config.Appearance.thumbnail_width product=$products[product].product tmbn_url=$products[product].tmbn_url}
+	{include file="product_thumbnail.tpl" productid=$products[product].productid image_x=$config.Appearance.thumbnail_width product=$products[product].product tmbn_url=$products[product].pimage_url}
 {/if}
 </a>
 {if $active_modules.Special_Offers ne "" and $products[product].have_offers}
@@ -261,7 +261,7 @@ function cidev_update_product_amount_next(cartid, amount, manufacturerid){
 {/if}
 </td>
 <td valign="top">
-<a href="product.php?productid={$products[product].productid}"><font class="ProductTitle">{$products[product].product}</font></a>
+<a href="product.php?productid={$products[product].productid}"><font class="ProductTitle">{if $products[product].oProduct}{$products[product].oProduct->getTitle()}{/if}</font></a>
 <br>
 <font color="#006600" class="DialogTitleT">SKU: {$products[product].productcode}</font>
 <br>

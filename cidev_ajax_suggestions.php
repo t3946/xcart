@@ -1,6 +1,11 @@
 <?php
+/**
+ * @var \Xcart\Product $oProduct
+ */
+global $REQUEST_METHOD, $smarty, $config, $productid, $section_name;
 
-//require './auth.php';  #uses xid
+use Modules\Core\Helpers\GeoipHelper;
+use Modules\Shipping\Helpers\ShippingHelper;
 
 #
 ## ALWAYS USE IT if you do not require auth.php
@@ -12,217 +17,62 @@ define('x_session_save_to_db__do_not_use', 'Y');
 require "./top.inc.php";
 require "./init.php"; #uses xid.X
 
-
 $current_area="C";
-###
-##
-#
+$aResult = [];
+
 
 if ($REQUEST_METHOD == 'POST') {
 
-//	x_session_start($$XCART_SESSION_NAME);
+    list($products, $sGoogleAnaliticsParam) = Xcart\Helpers\SliderData::getSliderData($section_name, $productid);
 
-	x_load("product");
+    if (!empty($products)){
 
-#
-##
-###
-//	/* x_session_register("cart"); */ <--- You need to use $XCART_SESSION_VARS["cart"] if you want just READ it 
+        foreach ($products as $k => $oProduct){
+            $oThumb = $oProduct->getThumbnail();
+            $oBrand = \Xcart\Brand::objects()->get(['brandid' => $oProduct->brandid]);
+            $smarty->assign('splash', $oProduct->getSplash());
+            $smarty->assign('config', $config);
+            $smarty->assign('tmbn_url',null);
+            if ($oThumb) {
+                $smarty->assign('tmbn_url', $oThumb->getURL());
+            }
+            $smarty->assign('product', $oProduct->product);
+            if ($oProduct->isGroupRoot()) {
+                $smarty->assign('product', $oProduct);
+            }
 
-	x_session_register("cart");
-###
-##
-#
 
-	$productids = array();
-	if (!empty($productid)){
-		$productids[] = $productid;
+            $aResult['items'][] =
+                [
+                    'productid' => $oProduct->productid,
+                    'clean_url' => $oProduct->getRelativeURL(),
+                    'price' => $oProduct->getFrontendPrice(),
+                    'price_2' => $oProduct->getFrontendPrice(2),
+                    'category' => $oProduct->getMainCategory()->category,
+                    'brand' => $oBrand->brand,
+                    'product' => $oProduct->getTitle(),
+                    'thumb' => $oProduct->isGroupRoot() ? $smarty->fetch('group_thumbnail.tpl') : $smarty->fetch('product_thumbnail.tpl'),
+                    'N_key' => $k + 1,
+                    'ga_param' => $sGoogleAnaliticsParam,
+                    'is_group' => $oProduct->isGroupRoot()
+                ];
+
+		}
 	}
+    echo json_encode($aResult);
+}
+if ($REQUEST_METHOD == 'GET' && $section_name == 'shipping') {
+    if ($_GET['product_id']) {
+        $qty = intval($_GET['qty']);
 
+        $state_model = GeoipHelper::getGeoipLocation(Xcart\App\Main\Xcart::app()->request->getUserIP())->state_model;
 
-//	if (!empty($XCART_SESSION_VARS["cart"]["products"]) && is_array($XCART_SESSION_VARS["cart"]["products"])){
-	if (!empty($cart["products"]) && is_array($cart["products"]) && ($section_name != "recently_viewed_products")){
-		foreach ($cart["products"] as $k => $v){
-			$productids[] = $v["productid"];
-		}
-	}
+        $shipping_rate = ShippingHelper::getStateMinShipping($_GET['product_id'], $qty, $state_model);
 
-	$sGoogleAnaliticsParam = "";
+        $smarty->assign('shipping_rate', $shipping_rate);
+        $smarty->assign('shipping_state', $state_model);
+        $smarty->assign('qty', $qty);
 
-	if (
-		$section_name == "products_also_bought_with_this_product"  ||
-		$section_name == "related_products"  ||
-		$section_name == "recently_viewed_products"
-	){
-
-		$productids = implode("','", $productids);
-
-		if ($section_name == "products_also_bought_with_this_product"){
-			$p_query = "select RO.related_resource_id as needed_resource_id
-                          from xcart_cidev_related_objects RO
-                          inner join xcart_products P ON P.productid = RO.related_resource_id and P.forsale = 'Y'
-                        where RO.resource_id = '$productid' and RO.resource_type = 'OP' and RO.related_resource_type = 'P'  and RO.related_resource_id NOT IN ('$productids')
-                        Order By RO.related_resource_orderby limit 20";
-		}
-		elseif ($section_name == "recently_viewed_products"){
-
-			$meta_id = func_query_first_cell("SELECT id FROM xcart_cidev_surf_meta WHERE sessid='".$$XCART_SESSION_NAME."'");
-
-			$p_query = "select SP.resource_id as needed_resource_id
-                          from xcart_cidev_surf_path SP
-                          inner join xcart_products P ON P.productid = SP.resource_id and P.forsale = 'Y'
-                        where SP.meta_id = '$meta_id' and SP.resource_type = 'P' and SP.resource_id NOT IN ('$productids')
-                        and SP.meta_id > 0
-                        Group By SP.resource_id
-                        Order By max(SP.`position`) desc";
-		}
-		elseif ($section_name == "related_products"){
-
-        	        $avail_condition = "";
-	                if ($config["General"]["unlimited_products"] == "N" && $config["General"]["disable_outofstock_products"] == "Y") {
-                	        $avail_condition = "AND $sql_tbl[products].avail > 0";
-        	        }
-
-	                $p_query = "SELECT $sql_tbl[products].productid as needed_resource_id FROM $sql_tbl[product_links], $sql_tbl[products] WHERE $sql_tbl[products].productid=$sql_tbl[product_links].productid2 AND $sql_tbl[product_links].productid1='$productid' AND $sql_tbl[products].forsale = 'Y' AND $sql_tbl[products].productid NOT IN ('$productids') $avail_condition GROUP BY $sql_tbl[products].productid ORDER BY $sql_tbl[product_links].orderby, product";
-		}
-
-		$pids = func_query($p_query);
-
-		switch ($section_name) {
-			case 'products_also_bought_with_this_product': $sGoogleAnaliticsParam = 'customer_also_bought_carousel';
-				break;
-			case 'related_products': $sGoogleAnaliticsParam = 'related_products_carousel';
-				break;
-			case 'recently_viewed_products': $sGoogleAnaliticsParam = 'recently_viewed_carousel';
-				break;
-		}
-
-	}
-	elseif ($section_name == "similar_products"){
-
-		$classElastic = new Xcart\ElasticSearch($config["ElasticSearch_options"],$site_domain);
-		$classElastic->setSource("*._id");
-		$classElastic->setType("product");
-		$classElastic->setSize(30);
-		$classElastic->setProductId($productid);
-		x_session_register("variant_id_for_point9");
-		$variant_id = $variant_id_for_point9;
-		if ($is_robot == 'Y' || defined("IS_ROBOT")) {
-			$variant_id = Get_AB_Variant(9);
-		}
-		switch ($variant_id) {
-			case 0:
-				$similar_productids = func_query_first_cell("SELECT similar_productids FROM $sql_tbl[products] WHERE productid='$productid'");
-
-				if (!empty($similar_productids)){
-
-					$similar_productids_arr = explode(",", $similar_productids);
-
-					if (!empty($similar_productids_arr) && is_array($similar_productids_arr)){
-						foreach ($similar_productids_arr as $k => $v){
-
-							$needed_resource_id = trim($v);
-							if (!in_array($needed_resource_id, $productids)){
-								$pids[$k]["needed_resource_id"] = $needed_resource_id;
-							}
-						}
-					}
-				}
-				$sGoogleAnaliticsParam = 'similar_products_carousel';
-			break;
-			case 1:
-				$classElastic->setSearchQuery($classElastic->getQuerySimilarProductsBrands());
-				$res = $classElastic->query();
-				foreach ($res["hits"]["hits"] as $key => $sValue){
-					if ($sValue["_id"] != $productid) {
-						$pids[]["needed_resource_id"] = $sValue["_id"];
-					}
-				}
-				$sGoogleAnaliticsParam = 'similar_products_all_carousel';
-				break;
-			case 2:
-				$classBrands = new Xcart\Brands();
-				$aBrand = $classBrands->getBrandByProductId($productid);
-				$classElastic->setSearchQuery($classElastic->getQuerySimilarProductsBrands($aBrand['brand']));
-				$res = $classElastic->query();
-				foreach ($res["hits"]["hits"] as $key => $sValue){
-					if ($sValue["_id"] != $productid) {
-						$pids[]["needed_resource_id"] = $sValue["_id"];
-					}
-				}
-				unset($aBrand);
-				$sGoogleAnaliticsParam = 'similar_products_other_brands_carousel';
-				break;
-
-		}
-
-		unset($classElastic);
-
-
-	}
-
-
-
-########################
-//if ($section_name == "products_also_bought_with_this_product"){
-//$pids="";
-//}
-########################
-
-//func_print_r($pids);
-
-	if (!empty($pids)){
-		$products = array();
-
-		foreach ($pids as $k => $v){
-
-			$productid = $v["needed_resource_id"];
-
-			$product_info = func_select_product($productid, 0, false);
-
-			if (!empty($product_info)){
-
-				$product_info["product"] = str_replace("'", "&#39;", $product_info["product"]);
-
-				$products[] = $product_info;
-
-			} // if (!empty($product_info))
-		} // foreach ($pids as $k => $v)
-	} // if (!empty($pids))
-
-
-	if (!empty($products)){
-
-		$count_products = count($products);
-
-		$products_str = '{"items": [';
-		foreach ($products as $k => $v){
-
-			$products_str .= '{';
-				$products_str .= '"productid": "'.$v["productid"].'",';
-				$products_str .= '"clean_url": "'.$v["clean_url"].'",';
-				$products_str .= '"src": "'.$v["tmbn_url"].'",';
-				$products_str .= '"price": "'.$v["price"].'",';
-
-				$products_str .= '"category": "'.func_add_slashes($v["category"]).'",';
-				$products_str .= '"brand": "'.func_add_slashes($v["brand"]).'",';
-
-				$products_str .= '"product": "'.func_add_slashes(str_replace(array("\r","\n"),"",$v["product"])).'",';
-
-				$N_key = $k + 1;
-				$products_str .= '"N_key": "'.$N_key.'",';
-				if (!empty($sGoogleAnaliticsParam)) $products_str .= '"ga_param": "'.$sGoogleAnaliticsParam.'",';
-
-				$products_str .= '"title": "'.addslashes(str_replace(array("\r","\n"),"",$v["product"])).'"';
-			$products_str .= '}';
-
-			if (($count_products -1)!= $k) $products_str .= ',';
-		}
-		$products_str .= ']}';
-
-		echo $products_str;
-
-	}
-
-} // if ($REQUEST_METHOD == 'POST')
-?>
+        echo $smarty->fetch('customer/main/product_shipping.tpl');
+    }
+}

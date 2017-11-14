@@ -244,7 +244,7 @@ function cidev_update_product_amount_next(cartid, amount, manufacturerid){
 	{include file="product_thumbnail.tpl" productid=$imageid image_x=$config.Appearance.thumbnail_width product=$products[product].product tmbn_url=$products[product].pimage_url type=$products[product].is_pimage}
 {else}
 	{assign var="imageid" value=$products[product].productid}
-	{include file="product_thumbnail.tpl" productid=$products[product].productid image_x=$config.Appearance.thumbnail_width product=$products[product].product tmbn_url=$products[product].tmbn_url}
+	{include file="product_thumbnail.tpl" productid=$products[product].productid image_x=$config.Appearance.thumbnail_width product=$products[product].product tmbn_url=$products[product].pimage_url}
 {/if}
 </a>
 {if $active_modules.Special_Offers ne "" and $products[product].have_offers}
@@ -252,9 +252,9 @@ function cidev_update_product_amount_next(cartid, amount, manufacturerid){
 {/if}
 </td>
 <td valign="top">
-<a href="{if $from_admin_area eq "Y"}../{/if}product.php?productid={$products[product].productid}"><font class="ProductTitle">{$products[product].product}</font></a>
+<a href="{if $from_admin_area eq "Y"}../{/if}product.php?productid={$products[product].productid}"><span class="ProductTitle">{if $products[product].oProduct}{$products[product].oProduct->getTitle()}{/if}</span></a>
 <br>
-<font color="#006600" class="DialogTitleT">SKU: {$products[product].productcode}</font>
+<span color="#006600" class="DialogTitleT">SKU: {$products[product].productcode}</span>
 <br>
 <br>
 <table cellpadding="0" cellspacing="0" width="100%"><tr><td>
@@ -443,7 +443,7 @@ x {if $active_modules.Egoods and $products[product].distribution}1<input type="h
 	<table cellpadding="0" cellspacing="0" width="100%">
 	<tr>
 		<td nowrap="nowrap">
-{include file="modules/Fast_Lane_Checkout/big_button.tpl" button_title=$lng.lbl_continue_shopping style="button" href="home.php`$last_categoryid`"}</td>
+{include file="modules/Fast_Lane_Checkout/big_button.tpl" button_title=$lng.lbl_continue_shopping style="button" href=$shopMoreUrl}</td>
 		<td nowrap="nowrap">
 {if $variant_id_for_point2 ne "" && $variant_id_for_point2 eq "0"}
 	{include file="modules/Fast_Lane_Checkout/big_button.tpl" button_title=$lng.lbl_shipping_quote bold="N" style="button" href="javascript: window.open('popup_shipquote.php','popup_shipquote','width=800,height=600,toolbar=no,status=no,scrollbars=yes,menubar=no,location=no,direction=no');" js_to_href="Y"}

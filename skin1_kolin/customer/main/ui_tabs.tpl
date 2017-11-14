@@ -81,24 +81,36 @@ function send_question_email_form(){
 
   <ul>
   {foreach from=$tabs item=tab key=ind}
-{*    {inc value=$ind assign="ti"} *}
-    <li><a {if $count_product_tabs gte "7"}style="padding: 0.5em 10px;"{/if} href="{if $tab.url}{$tab.url|amp}{else}#{$prefix}{$tab.anchor|default:$ti}{/if}">{$tab.title}</a></li>
+    <li><a class="ga_click" data-label="{$tab.title}" {if $count_product_tabs gte "7"}style="padding: 0.5em 10px;"{/if} href="{if $tab.url}{$tab.url|amp}{else}#{$prefix}{$tab.anchor|default:$ti}{/if}">{$tab.title}</a></li>
   {/foreach}
   </ul>
 
   {foreach from=$tabs item=tab key=ind}
     {if $tab.tpl}
-{*      {inc value=$ind assign="ti"} *}
       <div id="{$prefix}{$tab.anchor|default:$ti}">
 
 	{if $tab.tpl eq "_product_description_"}
 <br />
 {capture name=dialog}
 <div style="padding-left: 8px;">
-<span style="font-size: 13px; color: #000000;" class="SPItems-description">{if $use_schema_org eq "Y"}<span id="so_description" itemprop="description">{/if}{if $product.fulldescr ne ""}{$product.fulldescr}{else}{$product.descr}{/if}{if $use_schema_org eq "Y"}</span>{/if}</span>
+<span style="font-size: 13px; color: #000000;" class="SPItems-description">
+    {if $use_schema_org eq "Y"}
+        <span id="so_description" itemprop="description">
+    {/if}
+        {if $product.seo_fulldescr ne ""}
+            {$product.seo_fulldescr|stripslashes}
+        {elseif $product.fulldescr ne ""}
+            {$product.fulldescr|stripslashes}
+        {else}
+            {$product.descr|stripslashes}
+        {/if}
+
+    {if $use_schema_org eq "Y"}
+        </span>
+    {/if}
+</span>
 
 {if $product.weight ne "0.00" || $variants ne '' || $show_dimensions || $product.upc_ean_isbn}
-{* <br /> *}
 <br />
 {/if}
 
@@ -111,11 +123,6 @@ function send_question_email_form(){
 
 {assign var="oStorefront" value=$oProduct->getStoreFront()}
 
-<span id="so_brand" itemprop="brand" itemscope="" itemtype="http://schema.org/Brand">
-    <span itemprop="name" content="{$product.cidev_brand_name}">    </span>
-    <span itemprop="url" content="{$oStorefront->getStoreFrontURL()}/brand/{$product.brandid}/">    </span>
-</span>
-
 <span id="so_manuf" itemprop="manufacturer" itemscope="" itemtype="http://schema.org/Organization">
 	<span itemprop="name" content="{$product.manufacturer}">
 	</span>
@@ -126,10 +133,12 @@ function send_question_email_form(){
 <meta id="so_model" itemprop="model" content="{$cidev_mpn}"/>
 {/if}
 
-<meta id="so_offer" itemprop="offers" itemscope="" itemtype="http://schema.org/Offer" itemref="so_o_stock so_o_condition so_o_currency so_o_price so_o_function so_o_delivery so_o_seller pm_1 pm_2 pm_3 pm_4"/>
+<meta id="so_offer" itemprop="offers" itemscope="" itemtype="http://schema.org/Offer" itemref="{if !$no_group_root && $oProduct->isGroupRoot()}so_o_price_spec{else}so_o_price so_o_stock{/if} so_o_condition so_o_currency so_o_function so_o_delivery so_o_seller pm_1 pm_2 pm_3 pm_4"/>
+{if !$no_group_root && !$oProduct->isGroupRoot()}
 <div id="so_weight" itemprop="weight" itemscope="" itemtype="http://schema.org/QuantitativeValue" itemref="so_weight_value">
 	<meta itemprop="unitCode" content="lbs">
 </div>
+{/if}
 {if $cat_name_for_itemprop ne ""}
 <meta id="so_category" itemprop="category" content="{$cat_name_for_itemprop}"/>
 {/if}
@@ -147,16 +156,8 @@ function send_question_email_form(){
 	{assign var="current_price" value=$product_wholesale.0.price}
 {/if}
 
-{*
-{if $product.min_amount gt 1 && $product.mult_order_quantity eq "Y"}
-	{math assign="itemprop_price" equation="y*x" y=$product.min_amount x=$current_price}
-{else}
-	{assign var="itemprop_price" value=$current_price}
-{/if}
-*}
-
 <div id="so_o_seller" itemprop="seller" itemscope="" itemtype="http://schema.org/Organization">
-	<meta itemprop="logo" content="http://www.artistsupplysource.com/skin1_kolin/images/S3-Stores-Logo-S2.png"/>
+	<meta itemprop="logo" content="{$current_location}/skin1_kolin/images/S3-Stores-Logo-S2.png"/>
 	<meta itemprop="url" content="http://www.s3stores.com/"/>
 	<meta itemprop="name" content="S3 Stores Inc."/>
 </div>
@@ -180,20 +181,33 @@ function send_question_email_form(){
         {elseif $tab.tpl eq "_Brand_"}
 
 <br />
+{php}
+  $this->assign("arr_schemas", [
+          'brand' => [
+              'id' => 'so_brand',
+              'itemtype' => 'http://schema.org/Brand',
+              'itemprop' => 'brand',
+          ]
+  ]);
+{/php}
 {capture name=dialog}
 
-{if $brand_image.filename ne ""}
-<img src="images/B/{$brand_image.filename}" style="float: left; margin: 10px 10px 10px 0;" />
-{/if}
+  {if $brand_image.filename ne ""}
+      {assign var="imagePath" value=$xcart_web_dir}
+      {if $config.Appearance.CDN_domain ne "" && $config.Appearance.Enable_CDN eq "Y"}
+          {assign var="imagePath" value="//`$config.Appearance.CDN_domain`"}
+      {/if}
+      <img src="{$imagePath}/images/B/{$brand_image.filename}" style="float: left; margin: 10px 10px 10px 0;" />
+  {/if}
 
 <p align="justify">
 {$brandid_brands_info[$product.brandid].descr}
-<br />
-<a href="/brands.php?brandid={$product.brandid}" class="NavigationPath">All {$brandid_brands_info[$product.brandid].brand} products</a>
+              <br />
+<a href="{$oStorefront->getStoreFrontURL()}/brand/{$product.brandid}/" class="NavigationPath">All {$brandid_brands_info[$product.brandid].brand} products</a>
 </p>
 
 {/capture}
-{include file="dialog.tpl" title=$brandid_brands_info[$product.brandid].brand content=$smarty.capture.dialog extra='width="100%"' use_h2="Y" }
+{include file="dialog.tpl" title=$brandid_brands_info[$product.brandid].brand content=$smarty.capture.dialog schema='brand' title_itemprop='brand' extra='width="100%"' use_h2="Y" }
 
 	{elseif $tab.tpl eq "_product_queries_tpl_"}
 

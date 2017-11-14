@@ -99,5 +99,3 @@ function is_solo($num) {
 function is_delta($num) {
 	return false;
 }
-
-?>

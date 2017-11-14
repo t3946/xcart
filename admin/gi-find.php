@@ -1,122 +1,8 @@
 <?PHP
-
-//return true;
+use Xcart\OrderToTicketResolver;
 
 if ( !defined('XCART_SESSION_START') ) { header('Location: ../'); die('Access denied'); }
 
-//error_reporting(E_ALL);
-
-class OrderToTicketResolver {
-        protected $user;
-        protected $pass;
-        protected $url;
-        protected $ns;
-        protected $title_pattern;
-        protected $url_pattern;
-        protected $soap;
-
-        function __construct($user, $pass, $url, $ns, $title_pattern, $url_pattern) {
-                $this->user = $user;
-                $this->pass = $pass;
-                $this->url = $url;
-                $this->ns = $ns;
-                $this->title_pattern = $title_pattern;
-                $this->url_pattern = $url_pattern;
-
-                $this->soap = new SoapClient(null, array(
-                        'location'      => $this->url,
-                        'uri'           => $this->ns,
-                        'trace'         => 1,
-                        'style'         => SOAP_RPC,
-                        'use'           => SOAP_ENCODED,
-                ));
-        }
-
-        public function get_last_request_xml() {
-                return $this->soap->__getLastRequest();
-        }
-
-        public function fmt_title_pattern ($title) {
-                return '%' . sprintf($this->title_pattern, $title) . '%';
-        }
-
-        public function fmt_ticket_url($ticket_id) {
-                return sprintf($this->url_pattern, $ticket_id);
-        }
-
-        public function fetch_ticket_info_array_by_orderno($title) {
-
-            try {
-                $result = $this->soap->__SoapCall('CustomSearch', array(
-                        new SoapParam($this->user, 'UserLogin'),
-                        new SoapParam($this->pass, 'Password'),
-                        new SoapParam(array('Equals' => $title), 'DynamicField_OrderLink'),
-                        new SoapParam('AllTickets', 'SearchInArchive'),
-                ));
-            } catch(Exception $e){
-            }
-
-            if (isset($result)) {
-                    if (is_array($result) && is_array($result['Array'])) {
-                            $result = $result['Array'];
-                            return $result;
-                    }
-                    else {
-                            return array($result);
-                    }
-            }
-            else {
-                    return array();
-            }
-        }
-
-        public function fetch_ticket_info_array_by_title($title) {
-
-            try {
-                $result = $this->soap->__SoapCall('CustomSearch', array(
-                        new SoapParam($this->user, 'UserLogin'),
-                        new SoapParam($this->pass, 'Password'),
-                        new SoapParam($this->fmt_title_pattern($title), 'Title'),
-                        new SoapParam('AllTickets', 'SearchInArchive'),
-                ));
-            } catch(Exception $e){
-            }
-
-            if (isset($result)) {
-                    if (is_array($result) && is_array($result['Array'])) {
-                            $result = $result['Array'];
-                            return $result;
-                    }
-                    else {
-                            return array($result);
-                    }
-            }
-            else {
-                    return array();
-            }
-        }
-
-        public function fetch_ticket_info($title) {
-                $info = $this->fetch_ticket_info_array_by_orderno($title);
-                if (count($info) == 0) {
-                    $info = $this->fetch_ticket_info_array_by_title($title);
-                }
-                $count = count($info);
-                $result = array();
-                for ($i = 0; $i < $count; $i++) {
-                        $ticket_info = (array)$info[$i];
-                        array_push($result, array(
-                                'url'           => $this->fmt_ticket_url($ticket_info['TicketID']),
-                                'messages'      => $ticket_info['Articles'],
-                        ));
-                }
-                return $result;
-        }
-}
-
-#
-##
-###
 function check_url_exists($url) {
     $hdrs = @get_headers($url);
     return is_array($hdrs) ? preg_match('/^HTTP\\/\\d+\\.\\d+\\s+2\\d\\d\\s+.*$/',$hdrs[0]) : false;
@@ -127,9 +13,23 @@ $chech_domain = "http://helpdesk.s3stores.com/";
 if (!check_url_exists($chech_domain)){
 	return true;
 }
-###
-##
-#
+
+$url      = "http://helpdesk.s3stores.com/otrs/index.pl";
+$curl_err = false;
+$ch       = curl_init();
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+curl_setopt($ch, CURLOPT_URL, $url);
+curl_setopt($ch, CURLOPT_TIMEOUT_MS, 1000);
+$output = curl_exec($ch);
+if (curl_errno($ch) != 0 || curl_getinfo($ch, CURLINFO_HTTP_CODE) !== 200 || preg_match("/Can't connect to MySQL server/", $output)) {
+    $curl_err = true;
+}
+curl_close($ch);
+if ($curl_err) {
+    $top_message["content"] = 'OTRS is NOT responding. Please report this problem to our programmers.';
+    $top_message["type"] = 'E';
+    return true;
+}
 
 $TicketConnector_link = "http://helpdesk.s3stores.com/otrs/nph-genericinterface.pl/Webservice/TicketConnector";
 

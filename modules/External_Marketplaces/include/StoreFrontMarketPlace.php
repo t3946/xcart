@@ -1,13 +1,15 @@
 <?php
 namespace Xcart\External_Marketplaces;
+use Modules\Product\Models\ProductModel;
+use Modules\Product\Models\UpdatedProductModel;
+use Xcart\Connection;
 use Xcart\Data;
-use Xcart\Product;
 
 abstract class StoreFrontMarketPlace extends Data
 {
     protected $iProductsBatchCount = 0;
     protected $iInventoryBatchCount = 0;
-    protected $aProducts = [];
+    public $aProducts = [];
     protected $aInventory = [];
     private $oExternalMarketPlace = null;
     protected $oService = null;
@@ -22,15 +24,25 @@ abstract class StoreFrontMarketPlace extends Data
         $this->fetchExternalMarketPlace();
     }
 
-    abstract public function addProductToBatch(Product $oProduct, $update_type, $sExtraLog = "N");
+    /**
+     * @param UpdatedProductModel $queue
+     * @param string $googleOneRow
+     * @param string $sExtraLog
+     * @return mixed
+     */
+    abstract public function addProductToBatch($queue, $googleOneRow = "", $sExtraLog = "N");
     abstract public function submitInventoryBatch($debug_mode = 'N', $extra_log = 'N');
     abstract public function submitProductsBatch($debug_mode = 'N', $extra_log = 'N');
-    abstract public function checkMarketplaceRestrictions(Product $oProduct);
+
+    public function checkMarketplaceRestrictions($queue)
+    {
+        return (intval($this->getExternalMarketPlaceEntity()->mask) & intval($queue->mask)) !== 0;
+    }
 
     private function fetchExternalMarketPlace()
     {
         if (empty($this->oExternalMarketPlace)) {
-            $this->oExternalMarketPlace = new ExternalMarketPlace(['id'=>$this->getField('marketplace_id')]);
+            $this->oExternalMarketPlace = new ExternalMarketPlace(['id'=>$this->marketplace_id]);
         }
         return $this;
     }
@@ -117,20 +129,17 @@ abstract class StoreFrontMarketPlace extends Data
      */
     public static function getMarketPlacesByStoreFront($iStoreFrontId)
     {
-        global $sql_tbl;
-        self::$sql_tbl = $sql_tbl;
         $aMP = [];
-        $aMarketPlaces = func_query_column("SELECT marketplace_id FROM " . self::$sql_tbl['storefronts_external_marketplaces'] . " WHERE storefront_id = $iStoreFrontId ");
+        $aMarketPlaces = Connection::getInstance()->fetchAll("SELECT marketplace_id FROM xcart_storefronts_external_marketplaces WHERE storefront_id = {$iStoreFrontId}");
         if (!empty($aMarketPlaces)) {
-            foreach ($aMarketPlaces as $iMarketPlaceId) {
-                /** @var int $iMarketPlaceId */
-                $aMP[] = ExternalMarketPlace::getExternalMarketPlace($iMarketPlaceId, $iStoreFrontId);
+            foreach ($aMarketPlaces as $aMarketPlaceId) {
+                $aMP[] = ExternalMarketPlace::getExternalMarketPlace($aMarketPlaceId['marketplace_id'], $iStoreFrontId);
             }
         }
         return $aMP;
     }
 
-    protected function checkProductExcludedMarketPlace($iProductId)
+    public function checkProductExcludedMarketPlace($iProductId)
     {
         $bResult = true;
         $aFound = func_query_column("SELECT xp.marketplace_id
@@ -181,20 +190,62 @@ abstract class StoreFrontMarketPlace extends Data
     public function restoreQueue($products, $mode)
     {
         foreach ($products as $item) {
-            $count = func_query_first_cell("SELECT COUNT(*) as count FROM " . self::$sql_tbl['cidev_updated_products'] . " WHERE resourceid='" . $item['productid'] . "' AND type=" . $mode . ";");
-            if ($count == 0)
-                db_query("INSERT INTO " . self::$sql_tbl['cidev_updated_products'] . " (`resourceid`,`type`,`time_stamp`,`source`) VALUES( '" . $item['productid'] . "', " . $mode . ", " . time() . ", 're-queue' )");
+            /** @var UpdatedProductModel $model */
+            list($model) = UpdatedProductModel::objects()->getOrNew([
+                'resourceid' => $item['productid'],
+                'type' => $mode
+            ]);
+            $model->setAttributes(
+                [
+                    'source' => 're-queue'
+                ]);
+            $model->save();
         }
     }
 
-    public function getUpdateExpiredBeforeDays()
+
+    public function getGoogleOneRow(ProductModel $oProduct, $queue, $sExtraLog)
     {
-        return $this->getField('update_expired_before');
+        $result = null;
+
+        if (in_array($queue->type, ['1', '1,2', '2,1'])) {
+            $result = GetGoogleBaseOneRow($oProduct->productid, "main_google", $sExtraLog);
+        }
+        return $result;
     }
 
-    public function getUpdateMaxExpiredProductsPerDay()
+    public function successInventory()
     {
-        return $this->getField('update_max_expired_products_per_day');
+        if ($inv = $this->getInventory()) {
+            foreach ($inv as $inventory) {
+                $inventory['queue']->mask = intval($inventory['queue']->mask & ~intval($this->getExternalMarketPlaceEntity()->mask)); //Not bitwise operation
+                $inventory['queue']->save();
+            }
+        }
+        $this->setInventoryBatchCount(0)->setInventory([]);
+    }
+
+    public function successProduct()
+    {
+        if ($inv = $this->getProducts()) {
+            foreach ($inv as $inventory) {
+                $inventory['queue']->mask = intval($inventory['queue']->mask & ~intval($this->getExternalMarketPlaceEntity()->mask)); //Not bitwise operation
+                if ($inventory['queue']->mask === 0) {
+                    $q = UpdatedProductModel::objects()->get([
+                        'resourceid' => $inventory['queue']->resourceid,
+                        'type' => $inventory['queue']->type
+                    ]);
+                    if ($q) {
+                        $q->mask = 0;
+                        $q->save();
+                    }
+                } else {
+                    $inventory['queue']->save();
+                }
+
+            }
+        }
+        $this->setProductsBatchCount(0)->setProducts([]);
     }
 
 }

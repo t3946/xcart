@@ -1,6 +1,8 @@
 <?php
 namespace Xcart;
 
+use Modules\User\Models\ReferrerModel;
+
 class Order extends Data
 {
     const ORDER_VERIFICATION_STATUS_PRODUCT_VERIFIED = 'PV';
@@ -33,6 +35,9 @@ class Order extends Data
     private $aAdditionalFees = null;
     private $oPaymentMethod = null;
 
+    private $attension_tags = [];
+    private $tags = [];
+
     public function __construct($aOrderData = null)
     {
         $this->aPrimaryKeys = ['orderid'];
@@ -42,10 +47,17 @@ class Order extends Data
     }
 
 
+    public function __toString()
+    {
+        return $this->getDisplayOrderNumber();
+    }
+
     private function fetchOrderGroups()
     {
         if (is_null($this->aOrderGroups)) {
-            $this->aOrderGroups = OrderGroup::model()->findAll(SQLBuilder::getInstance()->addCondition('orderid = ' . $this->getOrderId()));
+            if ($this->getOrderId()) {
+                $this->aOrderGroups = OrderGroup::model()->findAll(SQLBuilder::getInstance()->addCondition('orderid = ' . $this->getOrderId()));
+            }
         }
         return $this;
     }
@@ -56,7 +68,9 @@ class Order extends Data
     public function getOrderDetails()
     {
         if (is_null($this->aOrderDetails)) {
-            $this->aOrderDetails = OrderDetail::model()->findAll(SQLBuilder::getInstance()->addCondition('orderid = ' . $this->getOrderId()));
+            if ($this->getOrderId()) {
+                $this->aOrderDetails = OrderDetail::model()->findAll(SQLBuilder::getInstance()->addCondition('orderid = ' . $this->getOrderId()));
+            }
         }
         return $this->aOrderDetails;
     }
@@ -132,45 +146,32 @@ class Order extends Data
         return count($this->aOrderGroups);
     }
 
-    private function fetchOrderProductsManufacturers()
+    public function setOrderGroup($value)
     {
-        if (!empty($this->aOrderProductsManufactueres) && is_array($this->aOrderProductsManufactueres)) {
-            $oManufacturers = new Manufacturers();
-            $aManufacturersInfo = $oManufacturers->getMainufacturersInfo($this->aOrderProductsManufactueres);
-            foreach ($this->aOrderProducts as &$oOrderProduct) {
-                $key = array_search($oOrderProduct->getField('manufacturerid'), array_column($aManufacturersInfo, 'manufacturerid'));
-                if ($key !== false) {
-                    $oOrderProduct->setProductManufacturer($aManufacturersInfo[$key]);
-                }
-            }
+        if (!$this->aOrderGroups) {
+            $this->aOrderGroups = [];
         }
+        $this->aOrderGroups[] = $value;
     }
 
-    private function fetchOrderProducts()
+    public function setTag($value)
     {
-        if (is_null($this->aOrderProducts)) {
-            $aProductIds = [];
-            $aOrderDetails = $this->getOrderDetails();
-            if (!empty($aOrderDetails) && is_array($aOrderDetails)) {
-                $oProducts = new Products();
-                foreach ($aOrderDetails as $oOrderDetail) {
-                    $aProductIds[] = $oOrderDetail->getField('productid');
-                }
-                $aProducts = $oProducts->getProductsInfo($aProductIds);
-                if (!empty($aProducts) && is_array($aProducts)) {
-                    $this->aOrderProductsManufactueres = [];
-                    foreach ($aProducts as $aProduct) {
-                        $oProduct = new Product();
-                        $oProduct->fill($aProduct);
-                        if (!in_array($oProduct->getField('manufacturerid'), $this->aOrderProductsManufactueres))
-                            $this->aOrderProductsManufactueres[] = $oProduct->getField('manufacturerid');
-                        $this->aOrderProducts[] = $oProduct;
-                    }
-                    $this->fetchOrderProductsManufacturers();
-                }
-            }
+        $this->tags[] = $value;
+    }
+
+    public function setTags($values)
+    {
+        if (!is_array($values))
+        {
+            $values = [$values];
         }
-        return $this;
+
+        $this->tags = $values;
+    }
+
+    public function getTags()
+    {
+        return $this->tags;
     }
 
     /**
@@ -178,7 +179,13 @@ class Order extends Data
      */
     public function getOrderProducts()
     {
-        $this->fetchOrderProducts();
+        if (is_null($this->aOrderProducts) && $this->orderid) {
+            $this->aOrderProducts = Product::objects()
+                                           ->getQuerySet()
+                                           ->join('inner join', 'xcart_order_details', ['productid' => 'details.productid'], 'details')
+                                           ->filter(['details.orderid' => $this->orderid])
+                                           ->all();
+        }
         return $this->aOrderProducts;
     }
 
@@ -186,9 +193,7 @@ class Order extends Data
     {
         if (!empty($this->aOrderProducts)) {
             foreach ($this->aOrderProducts as $key => $oProduct) {
-
                 if ($oProduct->getField('productid') == $iProductId) {
-                    // echo $oProduct->getField('productid')."\n".$iProductId."\n";
                     unset($this->aOrderProducts[$key]);
                 }
             }
@@ -200,7 +205,7 @@ class Order extends Data
         return $this->getField('order_prefix') . $this->getOrderId();
     }
 
-    public function getOrderModifyURL()
+    public function getAdminUrl()
     {
         return sprintf(self::ADMIN_ORDER_MODIFY_URL, $this->getOrderId());
     }
@@ -214,6 +219,9 @@ class Order extends Data
             $this->updateField('vn_status', $sNewStatus);
             $log = "vn_status: " . $oOldStatus->getField('name') . " -> " . $oNewStatus->getField('name');
             func_log_order($this->getOrderId(), 'X', $log);
+            if ($sNewStatus == self::ORDER_VERIFICATION_STATUS_PRODUCT_VERIFIED) {
+                $this->submitOrderEntry();
+            }
         }
         $this->setField('vn_status', $sNewStatus);
         return $bResult;
@@ -260,8 +268,7 @@ class Order extends Data
 
     public function isOrderAmazon()
     {
-        $sAmazonOrderId = $this->getField('amazonorderid');
-        return !empty($sAmazonOrderId);
+        return !empty($this->amazonorderid);
     }
 
     public function getAmazonChanell()
@@ -328,6 +335,15 @@ class Order extends Data
     public function getShippingCountry()
     {
         return $this->getField('s_country');
+    }
+
+    public function getShippingAddressFull()
+    {
+        $sResult = $this->s_address . ", " . $this->s_city . ", " . $this->s_state . "  " . $this->s_zipcode;
+        if ($this->s_country != "US") {
+            $sResult .= ", " . $this->s_countryname;
+        }
+        return $sResult;
     }
 
     public function getShippingAddress()
@@ -435,19 +451,6 @@ class Order extends Data
         return $this->getField('orderid');
     }
 
-    public function captureOrderAmount()
-    {
-        global $login;
-        $aOrderTransactions = new OrderTransactions();
-        try {
-            $aOrderTransactions->captureOrderAmount($this);
-        } catch (\Exception $ex) {
-            func_log_order($this->getOrderId(), 'X', $ex->getMessage(), $login);
-            return false;
-        }
-        return $this;
-    }
-
     public function getOrderCurrency()
     {
         return $this->getField('currency');
@@ -464,8 +467,10 @@ class Order extends Data
     {
         $fResult = 0;
         if (is_null($this->aAdditionalFees)) {
-            $oSQL = new SQLBuilder();
-            $this->aAdditionalFees = $oSQL->init()->addSelect('*')->addFromTable('order_additional_fee')->addCondition('orderid=' . $this->getOrderId())->Execute()->getQueryResult();
+            if ($this->getOrderId()) {
+                $oSQL = new SQLBuilder();
+                $this->aAdditionalFees = $oSQL->init()->addSelect('*')->addFromTable('order_additional_fee')->addCondition('orderid=' . $this->getOrderId())->Execute()->getQueryResult();
+            }
         }
         if (!empty($this->aAdditionalFees)) {
             foreach ($this->aAdditionalFees as $aAFee) {
@@ -568,7 +573,7 @@ class Order extends Data
                 $fResult += $oOrderGroup->getTotalGross();
             }
         }
-        return $fResult + $this->getOrderAdditionalFee();
+        return round($fResult + $this->getOrderAdditionalFee(), 2);
     }
 
     public function getOrderCostToUs()
@@ -637,20 +642,25 @@ class Order extends Data
         $aOrderGroups = $this->getOrderGroups();
         if (!empty($aOrderGroups)) {
             foreach ($aOrderGroups as $oOrderGroup) {
+                $oOrderGroup->reCalculateShipping();
                 $oOrderGroup->reCalculateTotals();
             }
         }
+        return $this;
     }
 
     public function getPOPipelineInstance()
     {
-        return POPipeline::model()->find(SQLBuilder::getInstance()->addCondition('order_id=' . $this->getOrderId()));
+        if ($this->getOrderId()) {
+            return POPipeline::model()->find(SQLBuilder::getInstance()->addCondition('order_id=' . $this->getOrderId()));
+        }
+        return null;
     }
 
     public function getCustomerEntity()
     {
         if (is_null($this->oCustomer)) {
-            $this->oCustomer = new Customer(['login'=>$this->getLogin()]);
+            $this->oCustomer = new Customer(['login' => $this->getLogin()]);
         }
         return $this->oCustomer;
     }
@@ -688,11 +698,7 @@ class Order extends Data
     public function getOrderStoreFront()
     {
         if (is_null($this->oStoreFront)) {
-            $aOrderProducts = $this->getOrderProducts();
-            if (!empty($aOrderProducts)) {
-                $oProduct = reset($aOrderProducts);
-                $this->oStoreFront = $oProduct->getStoreFront();
-            }
+            $this->oStoreFront = StoreFront::model(['storefrontid' => $this->getField('storefrontid')]);
         }
         return $this->oStoreFront;
     }
@@ -736,9 +742,8 @@ class Order extends Data
         $fSumma = 0;
         $oOrderDetails = $this->getOrderDetailsWithProductsRetailTrust();
         if (!empty($oOrderDetails)) {
-            foreach ($oOrderDetails as $oOrderDetail)
-            {
-                $fSumma+=$oOrderDetail->calculateRetailTrustPrice();
+            foreach ($oOrderDetails as $oOrderDetail) {
+                $fSumma += $oOrderDetail->calculateRetailTrustPrice();
             }
         }
         return $fSumma;
@@ -770,5 +775,239 @@ class Order extends Data
         $this->oPaymentMethod = null;
         $this->oCustomer = null;
 
+    }
+
+    public function isAllowSendToOrderEntry($order)
+    {
+        global $config;
+        $allow_send_to_operator = false;
+        if (!$this->isOrderAmazon()) {
+
+            $allow_send_to_operator = true;
+            if ($this->getField('fraud_status') != 'C') {
+                $allow_send_to_operator = false;
+            }
+
+            if ($config["Autosubmit_orderentry_operator"]["number_of_OTRS_messages"] == "Y" && $this->getOTRSTicketMessages() != $config["Autosubmit_orderentry_operator"]["number_of_OTRS_messages_is_NOT_equal_to_value"]) {
+                $allow_send_to_operator = false;
+            }
+
+            if ($config["Autosubmit_orderentry_operator"]["ETA_date_is_present_for_at_least_one_of_the_items"] == "Y") {
+                foreach ($order['shipping_groups'] as $k_group => $v_group) {
+                    foreach ($v_group["products"] as $kk_group => $vv_group) {
+                        if (!empty($vv_group["eta_date_mm_dd_yyyy"])) {
+                            if ($vv_group["eta_date_mm_dd_yyyy"] > time()) {
+                                $allow_send_to_operator = false;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            if ($config["Autosubmit_orderentry_operator"]["Order_shipping_method_carrier"] == "Y") {
+                foreach ($order['shipping_groups'] as $k_group => $v_group) {
+                    $classShipping = Shipping::model(['shippingid' => $v_group['shippingid']]);
+                    if ($classShipping->isAmazonShipping()) {
+                        $allow_send_to_operator = false;
+                        break;
+                    }
+                }
+            }
+
+            if ($config["Autosubmit_orderentry_operator"]["Customer_notes_field_is_NOT_empty"] == "Y" && !empty($order["customer_notes"])) {
+                $allow_send_to_operator = false;
+            }
+        }
+        return $allow_send_to_operator;
+    }
+
+
+    public function submitOrderEntry()
+    {
+        global $config, $login;
+        $aOrderGroups = $this->getOrderGroups();
+        $order_data = func_order_data($this->getOrderId());
+        $order = $order_data['order'];
+
+        foreach ($aOrderGroups as $oOrderGroup) {
+            if ($oOrderGroup->getManufacturerEntity()->getField('submit_to_operator') != 'through_distributor_website') {
+                return false;
+            }
+            if (!empty($order['shipping_groups'][$oOrderGroup->getManufacturerId()])) {
+                $order['shipping_groups'][$oOrderGroup->getManufacturerId()]['notify_sent'] = 'Y';
+            }
+        }
+
+        if (!$this->isAllowSendToOrderEntry($order)) {
+            return false;
+        }
+
+        $order_after_refund = $order;
+        if (!empty($order['refund_groups'])) {
+            foreach ($order['refund_groups'] as $ship_key => $refund_group) {
+
+                $refund_products = $refund_group['products'];
+                $order_products = $order_after_refund['shipping_groups'][$ship_key]['products'];
+
+                foreach ($order_products as $pr_key => $order_product) {
+
+                    if (!empty($refund_products[$order_product['productid']])) {
+
+                        $ref_product = $refund_products[$order_product['productid']];
+
+                        if ($ref_product['ref_qty'] == $order_product['amount']) {
+                            unset($order_after_refund['shipping_groups'][$ship_key]['products'][$pr_key]);
+                        } else {
+                            $order_after_refund['shipping_groups'][$ship_key]['products'][$pr_key]['amount'] -= $ref_product['ref_qty'];
+                        }
+                    }
+                }
+            }
+        }
+
+        $order_data['order'] = $order_after_refund;
+
+        foreach ($aOrderGroups as $oOrderGroup) {
+
+            if ($this->getOrderGroupsCount() == 1 && $oOrderGroup->checkFBAProductsAvailToShipping()) continue;
+
+            if (
+                in_array($oOrderGroup->getOrderGroupStatusCB(), ["P", "O", "3", "H", "AP"]) &&
+                in_array($oOrderGroup->getOrderGroupStatusDC(), ["T", "K", "M"]) &&
+                $this->getField('vn_status') == self::ORDER_VERIFICATION_STATUS_PRODUCT_VERIFIED
+            ) {
+                $d_instructions_to_order_entry_operator = $oOrderGroup->getManufacturerEntity()->getField('d_instructions_to_order_entry_operator');
+                $d_order_entry_operator_subject_line_8 = $oOrderGroup->getManufacturerEntity()->getField('d_order_entry_operator_subject_line_8');
+                $d_order_entry_operator_email = $oOrderGroup->getManufacturerEntity()->getField('d_order_entry_operator_email');
+
+                $message_body = func_eol2br(stripslashes($d_instructions_to_order_entry_operator));
+                $message_body .= "--\r\n";
+                $message_body = "<em><b>** This email has been AUTOMATICALLY sent by X-cart.</b> </em><br />\r\n" . $message_body . "\r\n(auto-sent by X-cart)";
+
+                $oMail = (new OrderEntryMail())->
+                setBody($message_body)->
+                setSubject($d_order_entry_operator_subject_line_8)->
+                setTo($d_order_entry_operator_email)->
+                setFrom($config['Company']['orders_department'])->
+                setOrderGroup($oOrderGroup)->
+                setOrderData($order_data);
+
+                $oCustomer = Customer::model(['login' => $login]);
+
+                $oMail->addReplaceRule('{{orderid}}', $this->getDisplayOrderNumber())->
+                addReplaceRule('{{userfullname}}', $oCustomer->getCustomerFullName())->
+                addReplaceRule('{{userfirstname}}', $oCustomer->getCustomerFullName())->
+                addReplaceRule('{{shipto_full_address}}', $this->getShippingAddressFull())->
+                addReplaceRule('{{shipping_method}}', $oOrderGroup->getShippingMethodName());
+
+                $oMail->sendEmail();
+
+                $log = "The order is AUTOMATICALLY sent to operator for order entry on distributor's website.<br /><B>From: </B>" . $config['Company']['orders_department'] . "<br /><B>To: </B>" . $d_order_entry_operator_email . "<br /><B>Subject: </B>" . $oMail->getSubject();
+                Logs::model()->_log('orders', $this->getOrderId(), 'S', $log, $login);
+
+                if ($oOrderGroup->getOrderGroupStatusDC() != "E") {
+                    $log = "<B>" . $oOrderGroup->getManufacturerEntity()->getManufacturerCode() . ":</B> dc_status: " . $oOrderGroup->getOrderGroupStatusDC() . " -> " . \Xcart\OrderStatus::model(['code' => 'E'])->getName();
+                    Logs::model()->_log('orders', $this->getOrderId(), 'X', $log, $login);
+                }
+
+                $oOrderGroup->updateField('dc_status', 'E');
+            }
+
+        }
+        return $this;
+    }
+
+    public function getOTRSTicketMessages()
+    {
+        $ticket_resolver_messages = 0;
+
+        if ($this->getOrderId()) {
+            $url = "http://helpdesk.s3stores.com/otrs/index.pl";
+            $curl_err = false;
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_TIMEOUT_MS, 1000);
+            curl_exec($ch);
+
+            if (curl_errno($ch) != 0 || curl_getinfo($ch, CURLINFO_HTTP_CODE) !== 200) {
+                $curl_err = true;
+            }
+            curl_close($ch);
+            if (!$curl_err) {
+                $TicketConnector_link = "http://helpdesk.s3stores.com/otrs/nph-genericinterface.pl/Webservice/TicketConnector";
+                $resolver = new OrderToTicketResolver(
+                    "xcart", "@Pp6Lcg^VNMC",
+                    $TicketConnector_link,
+                    "otrs-soap",
+                    "%s",
+                    "http://helpdesk.s3stores.com/otrs/index.pl?Action=AgentTicketZoom;TicketID=%d"
+                );
+                $ticket_resolver = $resolver->fetch_ticket_info($this->getDisplayOrderNumber());
+                if (!empty($ticket_resolver[0]["url"])) {
+                    $ticket_resolver_link = $ticket_resolver[0]["url"];
+
+                    if (!empty($ticket_resolver[0]["messages"])) {
+                        $ticket_resolver_messages = $ticket_resolver[0]["messages"];
+                    }
+                    $this->updateField('otrs_ticket', addslashes($ticket_resolver_link));
+                }
+            }
+        }
+        return $ticket_resolver_messages;
+    }
+
+    public function getDetails()
+    {
+        $po_details = [];
+        $details = text_decrypt($this->getField('details'));
+        $tmp = explode("\n", $details);
+
+        if ($tmp) {
+            $po_fields = array("po_number" => "PO Number", "company_name" => "Company name", "name_of_purchaser" => "Name of purchaser", "position" => "Position", "po_fax" => "po fax");
+            $po_details = array();
+            foreach ($tmp as $line) {
+                if (empty($po_fields)) {
+                    break;
+                }
+                foreach ($po_fields as $kk => $po_text) {
+                    if (($a = strpos($line, $po_text)) !== false) {
+                        $value = substr($line, $a + strlen($po_text) + 2);
+                        $po_details[$kk] = $value;
+                        unset($po_fields[$kk]);
+                        break;
+                    }
+                }
+            }
+        }
+        return $po_details;
+    }
+
+    public function getCustomerInvoiceNextNumber()
+    {
+        $i = 1;
+        if ($this->getOrderId()) {
+            $sSQL = <<<SQL
+SELECT MAX(invoice_order_number)+1 as next_inv_number FROM xcart_order_cx_invoices WHERE orderid = {$this->getOrderId()}
+SQL;
+            $aRes = Connection::getInstance()->executeQuery($sSQL)->fetch();
+            if (!empty($aRes['next_inv_number'])) {
+                $i = (int)$aRes['next_inv_number'];
+            }
+        }
+        return $i;
+    }
+
+    public function getLastRefererUrl()
+    {
+        $sRefererDomain = null;
+
+        if ($this->referer_id)
+        {
+            if ($oRefererDomain = ReferrerModel::objects()->filter(['referer_id' => $this->referer_id])->get()) {
+                $sRefererDomain = "//" . $oRefererDomain->referer;
+            }
+        }
+        return $sRefererDomain;
     }
 }

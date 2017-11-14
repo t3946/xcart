@@ -223,7 +223,7 @@ if ($productid != "") {
 	$product_languages = func_query_first ("SELECT $sql_tbl[products_lng].* FROM $sql_tbl[products_lng] WHERE $sql_tbl[products_lng].productid='$productid' AND $sql_tbl[products_lng].code = '$edit_lng'");
 
 	$smarty->assign("page_title", func_get_langvar_by_name("lbl_adm_product_management"));
-	$oProduct = \Xcart\Product::model(['productid' => $productid]);
+	$oProduct = \Modules\Product\Models\ProductModel::objects()->get(['productid' => $productid]);
 	$smarty->assign("oProduct", $oProduct);
 
 }
@@ -511,11 +511,12 @@ if (!empty($active_modules["Product_Configurator"]))
 #
 if (($REQUEST_METHOD == "POST") && ($mode == "product_modify")) {
 
-	$sku_is_exist = (func_query_first_cell("SELECT COUNT(*) FROM $sql_tbl[products] WHERE productcode='$productcode' AND productid!='$productid' AND provider = '".addslashes($login_type == "A" ? $provider : $login)."'") ? true : false);
+	$sku_is_exist = (func_query_first_cell_param(/** @lang MySQL */
+        "SELECT COUNT(*) FROM xcart_products WHERE productcode=:productcode AND productid!=:productid", ['productid' => $productid, 'productcode' => $productcode]) ? true : false);
 	# Check if form filled with errors
 	$is_variant = false;
 	if (!empty($productid) && !empty($active_modules["Product_Options"]))
-		$is_variant = (func_query_first_cell("SELECT COUNT(*) FROM $sql_tbl[variants] WHERE productid = '$productid'") > 0);
+		$is_variant = (func_query_first_cell("SELECT COUNT(*) FROM xcart_variants WHERE productid = '$productid'") > 0);
 
 	$_POST['price'] = $price = abs((float)$price);
 
@@ -536,11 +537,13 @@ if (($REQUEST_METHOD == "POST") && ($mode == "product_modify")) {
 			$_POST["calculate_price_for_new_product"] = $price = (1.15 * $cost_to_us + 0.3)/0.97;
 
 		} else {
-			if ($cost_to_us <= 0 || $cost_to_us == "0.00"){
-	                        $top_message["content"] = "Not Saved. Check 'Cost to us' field.";
-        	                $top_message["type"] = "E";
-				func_header_location("product_modify.php?productid=".$productid);
-			}
+            if ($cost_to_us <= 0 || $cost_to_us == "0.00") {
+                if (!$oProduct->isGroupRoot()) {
+                    $top_message["content"] = "Not Saved. Check 'Cost to us' field.";
+                    $top_message["type"] = "E";
+                    func_header_location("product_modify.php?productid=" . $productid);
+                }
+            }
 		}
 	}
 ###
@@ -575,25 +578,15 @@ if (($REQUEST_METHOD == "POST") && ($mode == "product_modify")) {
 	$fillerror = (($categoryid == "") ||
 		(!$category_exists) ||
 		empty($product) ||
-//		$clean_url_check_result == false ||
-		empty($fulldescr) ||
-//		($avail == "" && !$is_variant) ||
+		(empty($fulldescr) && !empty($product_info['fulldescr'])) ||
 		($r_avail == "" && !$is_variant) ||
 		empty($low_avail_limit) ||
 		($productcode == '') ||
-#
-##
-###
-//		empty($cost_to_us) || $cost_to_us == "" || $cost_to_us < 0 ||
 		$check_cost_to_us_result == false ||
-###
-##
-#
-
 		$sku_is_exist);
 
 
-	if (!$fillerror) {
+	if (!$fillerror || $oProduct->isGroupRoot()) {
 	#
 	# If no errors
 	#
@@ -839,6 +832,7 @@ if (($REQUEST_METHOD == "POST") && ($mode == "product_modify")) {
 			//"keywords" => $keywords,
 			"descr" => $descr,
 			"fulldescr" => $fulldescr,
+			"seo_fulldescr" => $seo_fulldescr,
 			"list_price" => $list_price,
 			'map_price' => $map_price,
 			'new_map_price' => $new_map_price,
@@ -1167,8 +1161,10 @@ if (($REQUEST_METHOD == "POST") && ($mode == "product_modify")) {
                           $top_message['content'] = "Cost to us error";
  
 		} else {
-			$top_message['content'] = func_get_langvar_by_name("msg_adm_err_product_upd");
-			$top_message['fillerror'] = true;
+			if (!$oProduct->isGroupRoot()) {
+                $top_message['content'] = func_get_langvar_by_name("msg_adm_err_product_upd");
+                $top_message['fillerror'] = true;
+            }
 		}
 
 		$product_modified_data = $_POST;

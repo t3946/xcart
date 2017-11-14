@@ -128,7 +128,11 @@ class Products extends CloneData
             'weight_lock',
             'verification_statusid',
             'last_verify_date',
-            'retail_trust_enabled'
+            'retail_trust_enabled',
+            'log_stock_history',
+            'seo_fulldescr',
+            'in_list_showed',
+            'splash_id',
         );
     }
 
@@ -516,6 +520,10 @@ class Products extends CloneData
                         "provider" => $this->changeProvider,
                         "original_provider" => $this->changeProvider,
                         "clone_parent_productid" => $aProduct['productid'],
+                        "product_froogle" => "",
+                        "seo_product_name" => "",
+                        "seo_meta_descr" => "",
+                        "seo_h2" => "",
                     );
 
                     $this->primaryKeyValue = $this->insertClonedProduct($aProduct, $aParamToClone);
@@ -829,7 +837,7 @@ class Products extends CloneData
     public function getManfacturerClass($iManufacurerId = null) {
         if (!is_null($iManufacurerId))
             return new Manufacturers($iManufacurerId);
-        else return  new Manufacturer($this->aPrimaryTableValue['manufacturerid']);
+        else return  new Manufacturer(['manufacturerid' => $this->aPrimaryTableValue['manufacturerid']]);
     }
 
 }

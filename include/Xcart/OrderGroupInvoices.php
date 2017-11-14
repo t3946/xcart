@@ -23,6 +23,12 @@ class OrderGroupInvoices extends Data
         return $count;
     }
 
+
+    public function getAsArray()
+    {
+        return $this->aGroupInvoices;
+    }
+
     public function countOrderGroupInvoicesReconciled()
     {
         $count = 0;

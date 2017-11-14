@@ -101,11 +101,7 @@
 {/if}
 {if $current_category.main_order_by le 500}
 
-{if $current_storefront eq "34"}
-	{include file="customer/main/products_new_style.tpl" products=$products}
-{else}
-	{include file="customer/main/products.tpl" products=$products}
-{/if}
+{include file="customer/main/products.tpl" products=$products}
 
 {/if}
 {/if}

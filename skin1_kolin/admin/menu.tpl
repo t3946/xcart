@@ -41,7 +41,7 @@
 <a href="{$catalogs.admin}/grandfathered_products.php" class="VertMenuItems">{$lng.lbl_grandfathered_products}</a><br />
 {/if}
 
-<a href="{$catalogs.admin}/operators.php" class="VertMenuItems">Amazon verification</a><br />
+<a href="{$catalogs.admin}/az_operators.php" class="VertMenuItems">Amazon verification</a><br />
 
 
 
@@ -52,9 +52,7 @@
 *}
 
 {if !($membership_code eq "ADMIN_PRODUCT_MANAGER")}
-<a href="{$catalogs.admin}/orders.php?page_name=dashboard" class="VertMenuItems">Customer Care dashboard</a><br />
 <a href="{$catalogs.admin}/checks_deposited.php" class="VertMenuItems">Checks deposited</a><br />
-<a href="{$catalogs.admin}/orders.php?page_name=search" class="VertMenuItems">Order search</a><br />
 {/if}
 
 {if !($membership_code eq "ADMIN_PRODUCT_MANAGER")}
@@ -174,3 +172,5 @@
 
 {/capture}
 { include file="menu.tpl" dingbats="dingbats_categorie.gif" menu_title=$lng.lbl_management menu_content=$smarty.capture.menu }
+
+{$xcartApp->template->render('base/old_admin_menu.tpl')}

@@ -152,7 +152,11 @@ SQL;
 
     public function getMoreFilterValues()
     {
-        if (is_null($this->aValueFound)) {
+        if (is_null($this->aValueFound))
+        {
+            if (!$this->getFilterId()) {
+                return [];
+            }
 
             $sSQL = <<<SQL
 SELECT xc2.fv_id, fv_name, count(1) as cnt FROM ({$this->getFilteredProductsQuery()}) pq                                                         

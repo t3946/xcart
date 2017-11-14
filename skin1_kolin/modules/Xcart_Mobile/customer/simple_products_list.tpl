@@ -8,7 +8,7 @@ vim: set ts=2 sw=2 sts=2 et:
       <div class="item ui-shadow ui-btn-corner-all ui-btn-up-c">
         <a href="{$current_location}/product.php?productid={$product.productid}">
           <span class="image-box">
-            {include file="product_thumbnail.tpl" productid=$product.productid product=$product.product tmbn_url=$product.tmbn_url}
+            {include file="product_thumbnail.tpl" productid=$product.productid product=$product.product tmbn_url=$product.tmbn_url splash=$product.oSplash}
           </span>
           <script type="text/javascript">
             //<![CDATA[

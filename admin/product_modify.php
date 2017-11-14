@@ -38,7 +38,7 @@
 define("NUMBER_VARS", "shipping_freight,price,list_price,weight,cost_to_us,price,map_price,new_map_price");
 define('USE_TRUSTED_POST_VARIABLES',1);
 # START: random:20460 [2010 Mar 18 13:43]
-$trusted_post_variables = array("product_lng","product_new_descr","product_new_full_descr","descr","fulldescr","posted_data","js_code","efields","free_ship_text");
+$trusted_post_variables = array("product_lng","product_new_descr","product_new_full_descr","descr","fulldescr","seo_fulldescr","posted_data","js_code","efields","free_ship_text");
 # END: random:20460 [2010 Mar 18 13:43]
 
 if ((isset($_POST['section']) && $_POST['section'] == 'lng') || (isset($_GET['section']) && $_GET['section'] == 'lng')) {
@@ -50,11 +50,42 @@ require $xcart_dir."/include/security.php";
 
 require $xcart_dir."/include/product_modify.php";
 
-$storefront_independant = 'Y';
-require  $xcart_dir."/include/categories.php";
+//$storefront_independant = 'Y';
+//require  $xcart_dir."/include/categories.php";
+if ($oProduct){
+	$all_categories = [];
+	if ($oMainCategory = $oProduct->getMainCategory()) {
+        $all_categories[$oMainCategory->getCategoryId()] = [
+            'category_path' => $oMainCategory->getPathExploded(),
+            'categoryid' => $oMainCategory->getCategoryId(),
+        ];
+    }
+
+	$aAddCats = $oProduct->getAdditionalCategories();
+	if (!empty($aAddCats)) {
+		foreach ($aAddCats as $oCat) {
+			$all_categories[$oCat->getCategoryId()] = [
+				'category_path' => "[{$oCat->getCategoryId()}] ".$oCat->getPathExploded(),
+				'categoryid' => $oCat->getCategoryId(),
+				'productid' => $oProduct->getProductId(),
+			];
+		}
+	}
+	$smarty->assign('allcategories', $all_categories);
+	$smarty->assign('oProduct', $oProduct);
+}
 $storefront_independant = 'N';
 
 $smarty->assign('abbreviations', preg_replace('/\s/','', $config['Product_Page']['features_abbreviations']));
+
+$smarty->assign('aSplashes', \Xcart\Images\Splash::objects()->filter(['active' => 'Y'])->order(['splash_name'])->all());
+if ($oProduct && $oProduct->splash_id){
+	$smarty->assign('oProductSplash', \Xcart\Images\Splash::objects()->filter(['id' => $oProduct->splash_id])->get());
+}
+
+$smarty->assign('url_calculate_shipping', Xcart\App\Main\Xcart::app()->router->url('product:calculate_shipping', ['id' => $productid]));
+$smarty->assign('url_group_remove', Xcart\App\Main\Xcart::app()->router->url('product:group_remove'));
+$smarty->assign('url_group_add', Xcart\App\Main\Xcart::app()->router->url('product:group_add'));
 
 # Assign the current location line
 $smarty->assign("location", $location);

@@ -12,7 +12,7 @@
 *}
 
 {if $membership_code eq ""}
-<a href="{$catalogs.admin}/amazon_fba_restocking_report.php" class="VertMenuItems">Amazon FBA restocking report</a><br />
+<a href="{$catalogs.admin}/amazon" class="VertMenuItems">Amazon FBA restocking report</a><br />
 
 <a href="{$catalogs.admin}/fba_roi_report.php" class="VertMenuItems">FBA ROI report (year based)</a><br />
 
@@ -21,6 +21,8 @@
 <a href="{$catalogs.admin}/distributors_logins_view_log.php?mode=search" class="VertMenuItems">Distributors logins view log</a><br />
 
 <a href="{$catalogs.admin}/operators_activity_reports.php" class="VertMenuItems">Operators activity report</a><br />
+
+<a href="{$catalogs.admin}/list_inventory_supply_reports.php" class="VertMenuItems">List Inventory Supply report</a><br />
 {/if}
 
 {/capture}

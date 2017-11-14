@@ -35,25 +35,14 @@
 if ( !defined('XCART_START') ) { header("Location: ../"); die("Access denied"); }
 
 function func_is_shipping_result_in_cache($md5_str) {
-	global $sql_tbl, $XCARTSESSID;
-	
-	if (func_query_first_cell("SELECT COUNT(*) FROM $sql_tbl[shipping_cache] WHERE md5_request='$md5_str' AND session_id='$XCARTSESSID'")) {
-		return true;
-	} else {
-		return false;
-	}
+    return false;
 }
 
 function func_save_shipping_result_to_cache($index, $result) {
-	global $sql_tbl, $XCARTSESSID;
-	
-	$expiry = func_query_first_cell("SELECT expiry FROM $sql_tbl[sessions_data] WHERE sessid='$XCARTSESSID'");
-	db_query("REPLACE INTO $sql_tbl[shipping_cache] VALUES ('$index','$XCARTSESSID','".serialize($result)."', '$expiry')");
+
 }
 
 function func_get_shipping_result_from_cache($md5_str) {
-	global $sql_tbl, $XCARTSESSID;
-	
-	return unserialize(func_query_first_cell("SELECT response FROM $sql_tbl[shipping_cache] WHERE md5_request='$md5_str' AND session_id='$XCARTSESSID'"));
+	return [];
 }
 ?>

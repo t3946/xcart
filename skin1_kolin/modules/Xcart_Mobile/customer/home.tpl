@@ -11,6 +11,10 @@ vim: set ts=2 sw=2 sts=2 et:
     {include file="customer/service_head_mobile.tpl"}
 
     <script src="{$SkinDir}/cidev_ajax.js" type="text/javascript"></script>
+    <script type="text/javascript" src="{$SkinDir}/js/jquery.visible.min.js"></script>
+    <script src="{$SkinDir}/js/google_analytics_impressions.js" type="text/javascript"></script>
+    <script type="text/javascript" src="{$SkinDir}/js/spinner.js"></script>
+    <script type="text/javascript" src="{$SkinDir}/js/group.js"></script>
 
   </head>
   <body>

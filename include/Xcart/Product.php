@@ -1,6 +1,10 @@
 <?php
 namespace Xcart;
 
+use Mindy\QueryBuilder\Expression;
+use Mindy\QueryBuilder\Q\QAndNot;
+use Mindy\QueryBuilder\QueryBuilder;
+
 class Product extends Data
 {
     const ADMIN_PRODUCT_MODIFY_URL = '/admin/product_modify.php?productid=%d&sf=%d';
@@ -21,6 +25,8 @@ class Product extends Data
     private $aImagesP = null;
     private $aImagesT = null;
 
+    private $aThumbNails = null;
+
     private $aPricing = null;
 
     private $iAmazonQuantity = null;
@@ -35,6 +41,21 @@ class Product extends Data
     private $iAmazonFbaStockTotal = null;
     private $iAmazonFbaStockReservedTransfers = null;
 
+    private $fExtraMarginValue = null;
+    private $fPrice = null;
+
+    private $bSupplierFeed = null;
+
+    /**
+     * @var ProductCategories[]
+     */
+    private $aProductCategories = null;
+
+    /**
+     * @var Category
+     */
+    private $oMainCategory = null;
+
     public function __construct($iId = null)
     {
         $this->sPrimaryTable = 'products';
@@ -46,10 +67,10 @@ class Product extends Data
     public function getManfacturerClass($iManufacurerId = null)
     {
         if (!is_null($iManufacurerId))
-            return new Manufacturer($iManufacurerId);
+            return new Manufacturer(['manufacturerid' => $iManufacurerId]);
         else {
             if (is_null($this->oManufacturer)) {
-                $this->oManufacturer = new Manufacturer($this->aPrimaryTableValue['manufacturerid']);
+                $this->oManufacturer = new Manufacturer(['manufacturerid' => $this->aPrimaryTableValue['manufacturerid']]);
             }
             return $this->oManufacturer;
         }
@@ -85,19 +106,27 @@ class Product extends Data
     public function setProductManufacturer($aManufacturerInfo)
     {
         if (!empty($aManufacturerInfo) && is_array($aManufacturerInfo)) {
-            $this->oManufacturer = new Manufacturer($aManufacturerInfo);
+            $this->oManufacturer = (new Manufacturer())->fill($aManufacturerInfo);
         }
         return $this;
     }
 
-    public function getProductModifyURL()
+    public function getAdminUrl()
     {
         return sprintf(self::ADMIN_PRODUCT_MODIFY_URL, $this->getProductId(), $this->getStoreFront()->getField('storefrontid'));
     }
 
-    public function getProductFrontURL($http = 'http://')
+    public function getURL($http = '//')
     {
-        return $http . $this->getStoreFront()->getDomain() . '/' . func_clean_url_get('P', $this->getProductId(), false);
+        if ($this->getStoreFront()) {
+            return $http . $this->getStoreFront()->getDomain() . $this->getRelativeURL();
+        }
+        return '';
+    }
+
+    public function getRelativeURL()
+    {
+        return '/' . func_clean_url_get('P', $this->getProductId(), false);
     }
 
     public function getHTMLShot($iOrderID)
@@ -208,14 +237,14 @@ class Product extends Data
 
 
     /**
-     * @param $type
+     * @param string $type
      * @return ProductImage[]
      */
     public function getImages($type)
     {
         $sImagesVar = "aImages" . $type;
         if (is_null($this->$sImagesVar)) {
-            $this->$sImagesVar = (new ProductImage($type))->findAll(SQLBuilder::getInstance()->addCondition('id = '. $this->getProductId())->addOrderBy('orderby ASC'));
+            $this->$sImagesVar = (new ProductImage($type))->findAll(SQLBuilder::getInstance()->addCondition('id = ' . $this->getProductId())->addOrderBy('orderby ASC'));
         }
         return $this->$sImagesVar;
     }
@@ -256,23 +285,43 @@ class Product extends Data
 
     public function isProductOutOfStock()
     {
-        $result = true;
-        if (intval($this->getField('r_avail')) <= 0)
-            $result = false;
-        $iEtaDate = $this->getField('eta_date_mm_dd_yyyy');
-        if ($result && !empty($iEtaDate)) {
-            $current_time = time();
-            if ($current_time < $iEtaDate) {
-                $result = false;
-            }
+        if ($this->group_root == $this->productid) {
+            return false;
         }
-        if ($result && $this->getProductCostToUs() > $this->getPrice())
-            $result = false;
 
-        if ($result && floatval($this->getField("shipping_freight")) == 0 && strpos($this->getField("productcode"), "ART-") === false)
-            $result = false;
+        if (!$this->isForSale()) {
+            return true;
+        }
 
-        return $result;
+        if ($this->cost_to_us <= 0) {
+            return true;
+        }
+
+        if ($this->avail <= 0) {
+            return true;
+        }
+
+        if ($this->avail < $this->min_amount) {
+            return true;
+        }
+
+        if (($this->list_price > 0) && ($this->getPrice() / $this->list_price < 0.1)) {
+            return true;
+        }
+
+        if ($this->cost_to_us >= $this->getPrice()) {
+            return true;
+        }
+
+        if ($this->eta_date_mm_dd_yyyy && time() < $this->eta_date_mm_dd_yyyy) {
+            return true;
+        }
+
+        if (floatval($this->shipping_freight) == 0 && strpos($this->productcode, "ART-") === false) {
+            return true;
+        }
+
+        return false;
     }
 
     public function getMapPrice()
@@ -280,46 +329,88 @@ class Product extends Data
         return floatval($this->getField('new_map_price'));
     }
 
-    public function getProductCostToUs()
+    public function getProductCostToUs(\DateTime $oDate = null)
     {
-        return floatval($this->getField('cost_to_us'));
+        $fResult = floatval($this->getField('cost_to_us'));
+        if (!is_null($oDate) && $oDate instanceof \DateTime) {
+            $sSQL = <<<SQL
+SELECT value
+FROM xcart_history_data
+WHERE     resource_type = 'product'
+      AND resourceid = :product_id
+      AND changedate < :date
+      ORDER BY changedate DESC
+LIMIT 1
+SQL;
+            $aResult = Connection::getInstance()->executeQuery($sSQL, ['product_id' => $this->getProductId(), 'date' => $oDate->format('Y-m-d')])->fetch();
+            if (!empty($aResult)) {
+                $fResult = floatval($aResult['value']);
+            }
+        }
+        return $fResult;
     }
 
     public function getPrice($forQuantity = 1)
     {
+        if (!is_null($this->fPrice)) {
+            return $this->fPrice;
+        }
+
         $fPrice = 0;
+
+        if (is_null($this->aPricing)) {
+            $this->getPricing();
+        }
+
         if (!empty($this->aPricing)) {
             foreach ($this->aPricing as $oPrice) {
                 if ($forQuantity >= floatval($oPrice->getQuantity())) {
                     $fPrice = floatval($oPrice->getPrice());
+                } else {
                     break;
                 }
-
             }
         }
+
         $fMapPrice = $this->getMapPrice();
-        if ($fPrice < $fMapPrice) $fPrice = $fMapPrice;
+        $fPrice = max($fPrice, $fMapPrice);
 
         return $fPrice;
+    }
+
+    public function setPrice($fPrice)
+    {
+        $this->fPrice = $fPrice;
     }
 
     public function getFrontendPrice($forQuantity = 1)
     {
         $fPrice = $this->getPrice($forQuantity);
 
-        if ($this->isSupplierFeedsEnabled() && !$this->isProductOutOfStock()) {
-            $fPrice = func_decreased_price($this->getProductCostToUs(), $fPrice, $this->getMapPrice());
+        if ($this->isSupplierFeedsEnabled() && $this->isProductOutOfStock() && $fPrice > $this->cost_to_us) {
+            $fPrice = round($this->cost_to_us + ($fPrice - $this->cost_to_us) / 3,2);
+            $fPrice = max($this->getMapPrice(), $fPrice);
         }
 
         return $fPrice;
     }
 
-    public function  isSupplierFeedsEnabled()
+    public function isSupplierFeedsEnabled()
     {
-        $result = false;
-        $sEnabled = func_query_first_cell("SELECT enabled FROM " . self::$sql_tbl['supplier_feeds'] . " WHERE manufacturerid=" . $this->getField('manufacturerid') . " AND feed_type = 'I' AND enabled='Y' AND (multiple_feed_destinations!='Y' OR (multiple_feed_destinations='Y' AND feed_file_name='" . $this->getField("controlled_by_feed") . "'))");
-        if ($sEnabled == 'Y') $result = true;
-        return $result;
+        if (is_null($this->bSupplierFeed)) {
+            $this->bSupplierFeed = false;
+            $sEnabled = func_query_first_cell_param(
+                "SELECT enabled 
+                         FROM xcart_supplier_feeds 
+                        WHERE manufacturerid=:manufacturer 
+                        AND feed_type = 'I' 
+                        AND enabled='Y' 
+                        AND (multiple_feed_destinations!='Y' OR (multiple_feed_destinations='Y' AND feed_file_name=:feed_file_name))",
+                ['manufacturer' => $this->manufacturerid,
+                 'feed_file_name' => $this->controlled_by_feed]);
+            if ($sEnabled == 'Y') $this->bSupplierFeed = true;
+        }
+        return $this->bSupplierFeed;
     }
 
     public function getPreviewImageURL()
@@ -346,7 +437,7 @@ class Product extends Data
 
     public function getAmazonFBAAvail()
     {
-        if (is_null($this->iAmazonFbaAvail)) {
+        if (is_null($this->iAmazonFbaAvail) && $this->getProductId()) {
             $this->iAmazonFbaAvail = intval(func_query_first_cell("SELECT cidev_get_amazon_FBA_cloned_stock(" . $this->getProductId() . ") as amazon_fba_avail"));
         }
         return $this->iAmazonFbaAvail;
@@ -384,7 +475,11 @@ class Product extends Data
         addCondition("OG.dc_status IN ('B','M','T','K','DP','E','G')")->
         addCondition('FROM_UNIXTIME(O.date) > DATE_ADD(NOW(),INTERVAL -4 WEEK)')->
         query_first()->getQueryResult();
-        return intval($this->getAmazonFBAAvail() * 0.8) - intval($aResult['AvailOnFBA']);
+        $avail = intval($this->getAmazonFBAAvail() * 0.8) - intval($aResult['AvailOnFBA']);
+        if ($avail <= 0 && $this->getAmazonFBAAvail() == 1 && intval($aResult['AvailOnFBA'] == 0)){
+            $avail = 1;
+        }
+        return $avail;
     }
 
     public function isProductFBAAvail()
@@ -395,6 +490,21 @@ class Product extends Data
     public function isAmazonFBAEnabled()
     {
         return ($this->getField('amazon_fba') == 'Y');
+    }
+
+    public function isAmazonEnabled()
+    {
+        return ($this->getField('amazon_enabled') == 'Y');
+    }
+
+    public function isAmazonFBARestricted()
+    {
+        $bResult = false;
+        if ($this->getProductId()) {
+            $oProductAmazon = ProductsAmazonFields::model(['productid' => $this->getProductId()]);
+            $bResult = ($oProductAmazon->getField('amazon_fba_restricted') == 'Y');
+        }
+        return $bResult;
     }
 
     public function getUPC()
@@ -427,8 +537,9 @@ class Product extends Data
     public function getChildProducts()
     {
         $aResult = [];
-        if ($this->getProductId())
-            $aResult = Product::model()->findAll(SQLBuilder::getInstance()->addCondition('clone_parent_productid = ' . $this->getProductId()));
+        if ($this->productid) {
+            $aResult = self::objects()->filter(['clone_parent_productid' => $this->productid])->all();
+        }
         return $aResult;
     }
 
@@ -437,9 +548,10 @@ class Product extends Data
      */
     public function getParentProduct()
     {
+        /** @var Product $oParentProduct */
         $oParentProduct = null;
-        if ($this->getField('clone_parent_productid')) {
-            $oParentProduct = Product::model(['productid' => $this->getField('clone_parent_productid')]);
+        if ($this->clone_parent_productid) {
+            $oParentProduct = self::objects()->filter(['productid' => $this->clone_parent_productid])->get();
         }
         return $oParentProduct;
     }
@@ -490,7 +602,7 @@ class Product extends Data
                         $aChildProducts = $oParentProduct->getChildProducts();
                         if (!empty($aChildProducts)) {
                             foreach ($aChildProducts as $oChildProduct) {
-                                if ($oChildProduct->getProductId() != $this->getProductId() && $oChildProduct->getAmazonFBAAvailReal() > 0) {
+                                if ($oChildProduct->productid != $this->productid && $oChildProduct->getAmazonFBAAvailReal() > 0) {
                                     if ($oChildProduct->getAmazonFBAAvailReal() >= $iShipNeed) {
                                         $aProductAmazonArray[] = ['oProduct' => $oChildProduct, 'qty' => $iShipNeed];
                                         $iShipNeed -= $iShipNeed;
@@ -584,7 +696,7 @@ class Product extends Data
 
     public function getSKURetailTrust()
     {
-        return self::RETAIL_TRUST_SKU_PREFIX.$this->getSKU();
+        return self::RETAIL_TRUST_SKU_PREFIX . $this->getSKU();
     }
 
     public function getAmazonQuantity()
@@ -593,11 +705,21 @@ class Product extends Data
             $aResult = SQLBuilder::getInstance()->
             addSelect('cidev_get_amazon_quantity(' . $this->getProductId() . ')', 'aquantity')->
             addFromTable('products')->
-            addCondition('productid='.$this->getProductId())->
+            addCondition('productid=' . $this->getProductId())->
             query_first()->getQueryResult();
             $this->iAmazonQuantity = $aResult['aquantity'];
         }
         return $this->iAmazonQuantity;
+    }
+
+    public function getZeroPrice()
+    {
+        $aResult = SQLBuilder::getInstance()->
+        addSelect("cidev_get_FBA_zero_margin_price({$this->getProductId()}, 'Y')", 'zprice')->
+        addFromTable('products')->
+        addCondition('productid=' . $this->getProductId())->
+        query_first()->getQueryResult();
+        return floatval($aResult['zprice']);
     }
 
     public function getAmazonPrice()
@@ -606,10 +728,203 @@ class Product extends Data
             $aResult = SQLBuilder::getInstance()->
             addSelect('cidev_get_amazon_price(' . $this->getProductId() . ')', 'aprice')->
             addFromTable('products')->
-            addCondition('productid='.$this->getProductId())->
+            addCondition('productid=' . $this->getProductId())->
             query_first()->getQueryResult();
-            $this->fAmazonPrice = $aResult['aprice'];
+            $this->fAmazonPrice = floatval($aResult['aprice']);
         }
         return $this->fAmazonPrice;
+    }
+
+    public function getMinimumAmazonPrice()
+    {
+        $aResult = SQLBuilder::getInstance()->
+        addSelect('cidev_get_minimum_amazon_price(' . $this->getProductId() . ')', 'aprice')->
+        addFromTable('products')->
+        addCondition('productid=' . $this->getProductId())->
+        query_first()->getQueryResult();
+        return floatval($aResult['aprice']);
+    }
+
+    public function getShippingVolume($iAmount = 1)
+    {
+        if (($this->getField('shipping_dim_x') || $this->getField('shipping_dim_y') || $this->getField('shipping_dim_z'))) {
+            $aVolume = $this->getField('shipping_dim_x') * $this->getField('shipping_dim_y') * $this->getField('shipping_dim_z') * $iAmount;
+        } else {
+            $aVolume = $this->getField('dim_x') * $this->getField('dim_y') * $this->getField('dim_z') * $iAmount;
+        }
+        return $aVolume;
+    }
+
+    public function setWeight($value)
+    {
+        $this->setField('weight', $value);
+    }
+
+    public function getShippingWeight($iAmount = 1)
+    {
+        $fProductWeight = 0.1;
+        if (floatval($this->shipping_weight) > 0) {
+            $fProductWeight = floatval($this->shipping_weight);
+        } elseif (floatval($this->weight) > 0) {
+            $fProductWeight = floatval($this->weight);
+        }
+        return $fProductWeight * $iAmount;
+    }
+
+    public function getShippingFreight()
+    {
+        return floatval($this->getField('shipping_freight'));
+    }
+
+    public function getExtraMarginValue($forQuantity = 1)
+    {
+        $fExtraMarginValue = null;
+        $oManufacturer = $this->getManfacturerClass();
+            if ($oManufacturer->getField('reduce_extra_margin') == 'Y') {
+                if (floatval($oManufacturer->getField('price_coef_z') != 0) && $this->getProductCostToUs() > 0) {
+                    $fExpectedMargin = round(($this->getProductCostToUs() * floatval($oManufacturer->getField('price_coef_x')) + floatval($oManufacturer->getField('price_coef_y'))) / floatval($oManufacturer->getField('price_coef_z')), 2);
+                    $fExtraMarginValue = ($this->getPrice($forQuantity) - $fExpectedMargin) * $forQuantity;
+                }
+            }
+        return $fExtraMarginValue;
+    }
+
+    public static function updateShowInLists(array $ids)
+    {
+        if (!empty($ids) && !defined('IS_ROBOT'))
+        {
+            $ids        = array_unique($ids);
+            $table      = 'xcart_products_showed';
+            $connection = Connection::getInstance();
+
+            $sql = QueryBuilder::getInstance($connection)
+                               ->setTypeUpdate()
+                               ->setOptions('LOW_PRIORITY')
+                               ->where(['productid__in' => $ids])
+                               ->update($table, ['in_list_showed' => new Expression('in_list_showed + 1')])
+                               ->toSQL();
+
+            if ($connection->exec($sql) != count($ids))
+            {
+                $e_ids = [];
+                $sql   = QueryBuilder::getInstance($connection)
+                                     ->setTypeSelect()
+                                     ->from($table)
+                                     ->select(['productid'])
+                                     ->where(['productid__in' => $ids])
+                                     ->toSQL();
+
+                foreach ($connection->fetchAll($sql) as $item) {
+                    $e_ids[] = $item['productid'];
+                }
+
+                $ids = array_diff($ids, $e_ids);
+
+                if (!empty($ids))
+                {
+                    $ids = array_unique($ids);
+                    $ids = array_map(function ($id) { return ['productid' => $id]; }, $ids);
+                    $ids = array_values($ids);
+
+                    $sql = QueryBuilder::getInstance($connection)->setOptions('ignore')->insert($table, $ids);
+                    $connection->exec($sql);
+                }
+            }
+        }
+    }
+
+    public static function getRandFbaProducts($limit = 2, array $no_ids = null, $sfid = null)
+    {
+        global $current_storefront_info;
+
+
+        if (empty($sfid) && !empty($current_storefront_info)) {
+            $sfid = $current_storefront_info['storefrontid'];
+        }
+
+        $where = ['amazon_fba' => 'Y', 'amazon_fba_avail__gt' => 1, 'forsale' => 'Y', 'ps.sfid' => $sfid];
+
+        if (!empty($no_ids)) {
+            $where[] = new QAndNot(['productid__in' => $no_ids]);
+        }
+
+        $connection = Connection::getInstance();
+        $sql = QueryBuilder::getInstance($connection)
+                           ->setTypeSelect()
+                           ->select(['needed_resource_id' => 'p.productid'])
+                           ->from('xcart_products')
+                           ->setAlias('p')
+                           ->join('inner join', 'xcart_products_sf', ['ps.productid' => 'p.productid' , 'ps.sfid' => new Expression($sfid)], 'ps')
+                           ->join('left join',  'xcart_products_showed', ['p.productid' => 's.productid'], 's')
+                           ->order(['s.in_list_showed', '?'])
+                           ->where($where)
+                           ->limit($limit)
+                           ->toSQL();
+
+        return $connection->fetchAll($sql);
+    }
+
+    public function getProductCategories()
+    {
+        if (is_null($this->aProductCategories)) {
+            $this->aProductCategories = ProductCategories::model()->findAll(SQLBuilder::getInstance()->addCondition('productid = ' . $this->getProductId())->addOrderBy('orderby'));
+        }
+        return $this->aProductCategories;
+    }
+
+    /**
+     * @return Category
+     */
+    public function getMainCategory()
+    {
+        if (is_null($this->oMainCategory)) {
+            $aCats = $this->getProductCategories();
+            if (!empty($aCats)) {
+                foreach ($aCats as $oCat) {
+                    if ($oCat->isMain()) {
+                        $this->oMainCategory = Category::model(['categoryid' => $oCat->getField('categoryid')]);
+                        break;
+                    }
+                }
+            }
+        }
+        return $this->oMainCategory;
+    }
+
+    /**
+     * @return Category[]
+     */
+    public function getAdditionalCategories()
+    {
+        $aRes = [];
+        $aCats = $this->getProductCategories();
+        if (!empty($aCats)) {
+            foreach ($aCats as $oCat) {
+                if (!($oCat->isMain())) {
+                    $oCategory = Category::model(['categoryid' => $oCat->getField('categoryid')]);
+                    if ($oCategory->getCategoryId()) {
+                        $aRes[] = $oCategory;
+                    }
+                }
+            }
+        }
+        return $aRes;
+    }
+
+    public function getThumbnail()
+    {
+        $oThumbImage = null;
+        if (is_null($this->aThumbNails)){
+            $this->aThumbNails = \Modules\Product\Models\ImageTModel::objects()->filter(['id' => $this->getProductId()])->all();
+        }
+        if (!empty($this->aThumbNails)) {
+            $oThumbImage = reset($this->aThumbNails);
+        }
+        return $oThumbImage;
+    }
+
+    public function getSplash()
+    {
+        return \Xcart\Images\Splash::objects()->filter(['id' => (int) $this->splash_id])->get();
     }
 }

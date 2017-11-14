@@ -510,55 +510,92 @@ function check_r_fields(){
 
 {foreach from=$order.shipping_groups item=v key=m_id}
 {if $m_id gt 0}
+    <tr class="distributor-totals-line">
+        <td>
+            <a target="_blank" style="color: green;"
+               href="manufacturers.php?manufacturerid={$m_id}&distributor_section=3">{$v.group_name}</a>
+            {if $order_manufacturers[$m_id].d_shipping_methods_usps eq "Y"}
+                <span style="color: #000000; font-weight: normal;">ships by USPS</span>
+            {/if}
+        </td>
+        <td>
+            <table cellpadding="0" cellspacing="0" width="100%">
+                <tr>
+                    <td width="*">
+                        {$v.code}
+                    </td>
+                    {if $v.all_distributor_info.d_specific_instructions ne ""}
+                        <td align="right" width="5" nowrap="nowrap">
+                            <div>
+                                <a onclick="javascript: $('#d_specific_instructions_note_{$m_id}').toggle();"
+                                   style="color: blue; border-bottom:1px dotted; text-decoration: none;"
+                                   href="javascript: void(0);">Dx&nbsp;notes</a>
 
-<tr class="distributor-totals-line">
-  <td>
-          <a target="_blank" style="color: green;" href="manufacturers.php?manufacturerid={$m_id}&distributor_section=3">{$v.group_name}</a>
-          {if $order_manufacturers[$m_id].d_shipping_methods_usps eq "Y"}
-            <span style="color: #000000; font-weight: normal;">ships by USPS</span>
-          {/if}
-  </td>
-  <td>
-    <table cellpadding="0" cellspacing="0" width="100%">
-    <tr>
-      <td width="*">
-{$v.code}
-      </td>
-      {if $v.all_distributor_info.d_specific_instructions ne ""}
-      <td align="right" width="5" nowrap="nowrap">
-<div>
-        <a onclick="javascript: $('#d_specific_instructions_note_{$m_id}').toggle();" style="color: blue; border-bottom:1px dotted; text-decoration: none;" href="javascript: void(0);">Dx&nbsp;notes</a>
+                                <div id="d_specific_instructions_note_{$m_id}" class="cidev_NoteBox"
+                                     style="display: none; margin-left: 0px; color: #550000; text-align: left; border: 1px solid #ff6600;">
+                                    {$v.all_distributor_info.d_specific_instructions}
+                                </div>
+                            </div>
 
-        <div id="d_specific_instructions_note_{$m_id}" class="cidev_NoteBox" style="display: none; margin-left: 0px; color: #550000; text-align: left; border: 1px solid #ff6600;">
-          {$v.all_distributor_info.d_specific_instructions}
-        </div>
-</div>
-
-      </td>
-      {/if}
+                        </td>
+                    {/if}
+                </tr>
+            </table>
+        </td>
+        <td colspan="5">
+            {if $order_manufacturers[$m_id].d_link_to_order_distributors_website ne ""}
+                <a style="color: #3A3AFF; font-weight: normal;"
+                   href='{$order_manufacturers[$m_id].d_link_to_order_distributors_website}' target="_blank">Order on
+                    distributor's website</a>
+            {/if}
+        </td>
+        <td align="right">
+            <a class="group_total_link" href="#">{include file="currency2.tpl" value=$v.total.net}</a>
+        </td>
+        <td align="right">{include file="currency2.tpl" value=$v.total.gst hide_zero='Y'}</td>
+        {*  <td align="right">{include file="currency2.tpl" value=$v.total.pst hide_zero='Y'}</td> *}
+        <td align="right">
+            <a class="group_total_link" href="#">{include file="currency2.tpl" value=$v.total.gross}</a>
+        </td>
+        <td>
+            {if $v.empty_products_list eq "Y"}
+                <input type="checkbox" value="Y" name="distributors_to_delete[{$m_id}][delete]"
+                {if $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}disabled="disabled"{/if} />{else}&nbsp;{/if}
+        </td>
     </tr>
-    </table>
-</td>
-  <td colspan="5">
-    {if $order_manufacturers[$m_id].d_link_to_order_distributors_website ne ""}
-    <a style="color: #3A3AFF; font-weight: normal;" href='{$order_manufacturers[$m_id].d_link_to_order_distributors_website}' target="_blank">Order on distributor's website</a>
-    {/if}
-  </td>
-  <td align="right">{include file="currency2.tpl" value=$v.total.net}</td>
-  <td align="right">{include file="currency2.tpl" value=$v.total.gst hide_zero='Y'}</td>
-{*  <td align="right">{include file="currency2.tpl" value=$v.total.pst hide_zero='Y'}</td> *}
-  <td align="right">{include file="currency2.tpl" value=$v.total.gross}</td>
-  <td>
-{if $v.empty_products_list eq "Y"}<input type="checkbox" value="Y" name="distributors_to_delete[{$m_id}][delete]" {if $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}disabled="disabled"{/if} />{else}&nbsp;{/if}
-  </td>
-</tr>
+    <tr class="group_total_price_row">
+        <td><b>Dx Totals</b></td>
+        <td></td>
+        <td></td>
+        <td align="center"><b>{$v.oOrderGroup->getTotalProductAmount()}</b></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td><div style="BACKGROUND-COLOR: #cccccc; color: #000000" align="right">{include file="currency2.tpl" value=$v.oOrderGroup->getTotalProductPrice()}</div></td>
+        <td></td>
+        <td><div style="BACKGROUND-COLOR: #cccccc; color: #000000" align="right">{include file="currency2.tpl" value=$v.oOrderGroup->getTotalProductPrice()}</td>
+        <td></td>
+    </tr>
+    <tr class="group_total_price_row">
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td><div style="BACKGROUND-COLOR: #FFD44C; color: #000000" align="right">{include file="currency2.tpl" value=$v.oOrderGroup->getTotalCostToUs()}</div></td>
+        <td></td>
+        <td><div style="BACKGROUND-COLOR: #FFD44C; color: #000000" align="right">{include file="currency2.tpl" value=$v.oOrderGroup->getTotalCostToUs()}</div></td>
+        <td></td>
+    </tr>
 
 {assign var="GROUP_cost_to_us" value="0"}
 
 {foreach from=$v.products item=product key=prod_num}
 <tr{cycle values=", class='TableSubHead'" name="cycle_`$m_id`"}>
   <td>
-    <a href="{$product.links.customer}{if $cats[$product.productid]}&cat={$cats[$product.productid]}{/if}" title="" target="_blank">{$product.product}</a>
+    <a href="{$product.oProduct->getUrl()}{if $cats[$product.productid]}&cat={$cats[$product.productid]}{/if}" title="" target="_blank">{$product.product}</a>
     {assign var='oHTMLShot' value = $product.oProduct->getHTMLShot($order.orderid)}
     {if (!empty($oHTMLShot) && $oHTMLShot->getId())}
       <a title="View HTML-Shot" target="_blanks" style="float:right; margin-top:3px;" href="/admin/view_html_shot.php?id={$oHTMLShot->getId()}" class="html-shot-view">
@@ -581,17 +618,23 @@ function check_r_fields(){
 
 
       {foreach from=$product.orig_product_classes item=item key=key}
-        {if $item.options ne ""}
+        {if $item.options ne "" && $item.avail}
           <br /> {$item.classtext}
           <select name="items[{$product.itemid}][classid_optionid][{$item.classid}]" {if $refunded_option_found eq "Y" || $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}disabled="disabled"{/if}>
-          {foreach from=$item.options key=optionid item=option_values}
-          {assign var="tmp_optionid_key" value=`$option_values.classid`}
-          {assign var="tmp_optionid" value=`$product.product_options[$tmp_optionid_key].optionid`}
-            <option value="{$optionid}"
-              {if $tmp_optionid eq $optionid}
-                selected="selected"
+              {if (isset($product.extra_data.product_options[$item.classid].option_name) && !$product.extra_data.product_options[$item.classid].optionid|array_key_exists:$item.options)}
+                  <option value="{$product.extra_data.product_options[$item.classid].optionid}" selected="selected">{$product.extra_data.product_options[$item.classid].option_name}</option>
               {/if}
-            >{$option_values.option_name}</option>
+          {foreach from=$item.options key=optionid item=option_values}
+              {assign var="tmp_optionid_key" value=`$option_values.classid`}
+              {if $product.product_options[$tmp_optionid_key]}
+                  {assign var="tmp_optionid" value=`$product.product_options[$tmp_optionid_key].optionid`}
+              {/if}
+                <option value="{$optionid}"
+                  {if $tmp_optionid eq $optionid}
+                    selected="selected"
+                  {/if}
+                >{$option_values.option_name}</option>
+
           {/foreach}
           </select>
         {elseif $item.is_modifier eq "T"}
@@ -717,31 +760,43 @@ Cost to us accurate
     {assign var="oOrderShipping" value= $oOrderGroup->getShippingInstance()}
 <tr{cycle values=", class='TableSubHead'" name="cycle_`$m_id`"}>
   <td nowrap="nowrap">
-    <div style="margin-bottom: 5px;">Carrier:
-    {if $v.shipping_code ne ""}{$v.shipping_code}{else}Flat rate{/if}</div>
-    <div>Method:
-    {if !$static}
-      <input type="text" maxlength="255" name="groups[{$m_id}][shipping]" value="{$v.shipping|trademark:''}"
-      {if $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}readonly="readonly"{/if} />{else}{$v.shipping}{/if}
-        {if ($v.shipping != $oOrderShipping->getName())}
-            <div style="margin-left: 50px;">{$oOrderShipping->getName()}</div>
-        {/if}
+    <div>
+        <p>Carrier: {if $v.shipping_code ne ""}{$v.shipping_code}{else}Flat rate{/if}</p>
+        <p>Customer's choice: <input style="width:92px" type="text" maxlength="255" name="groups[{$m_id}][shipping]" value="{$v.shipping|trademark:''}"/>
+        </p>
+        <p>Method:
+            {if !$static}
+                {if ($v.real_shipping_method eq '')}
+                    {assign var="shipping_method" value=$oOrderShipping->getName()}
+                {else}
+                    {assign var="shipping_method" value=$v.real_shipping_method}
+                {/if}
+
+                <input type="text" maxlength="255" name="groups[{$m_id}][real_shipping_method]" value="{$shipping_method|trademark:''}"
+                       {if $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}readonly="readonly"{/if}
+                />
+            {else}
+                {$v.real_shipping_method}
+            {/if}
+
+            {if ($v.real_shipping_method ne '') and ($v.real_shipping_method != $oOrderShipping->getName())}
+                <span style="margin-left: 50px; display: block;">{$oOrderShipping->getName()}</span>
+            {/if}
+        </p>
     </div>
   </td>
 
   {assign var="oOrder" value=$oOrderGroup->getOrderInstance()}
-  {if (!empty($oOrderGroup) && $oOrder->isOrderAmazon() == false && $oOrder->getField('fraud_status') == 'C' &&
-      ($oOrderGroup->getOrderGroupStatusCB() == 'P' ||
-       $oOrderGroup->getOrderGroupStatusCB() =='O' ||
-       ($oOrderGroup->getOrderGroupStatusCB() =='AP' && $oOrder->getOrderGroupsCount()==1 && $order_transactions_totals.authorized_PLUS_captured_totals == $order.extra.total.gross)
-      ) &&
-        ($oOrderGroup->getOrderGroupStatusDC() == 'E' || $oOrderGroup->getOrderGroupStatusDC() == 'M' || $oOrderGroup->getOrderGroupStatusDC() == 'T' || $oOrderGroup->getOrderGroupStatusDC() == 'K') &&
-        $oOrderGroup->checkFBAProductsAvailToShipping() &&
-        $oOrderGroup->getField('amz_fullfilment_order_placed') !='Y')
-  }
+  {if ((($oOrder->isOrderAmazon() == false) || ($oOrder->isOrderAmazon() && $oOrder->amazon_fulfillment_channel == 'MFN'))
+        && $oOrder->fraud_status == 'C'
+        && ($oOrderGroup->cb_status == 'P' || $oOrderGroup->cb_status =='O' || ($oOrderGroup->cb_status =='AP' && ($order_store->getAmountToCapture() >= $oOrderGroup->total_gross || $oOrder->getAmazonChanell() == 'MFN')))
+        && ($oOrderGroup->dc_status == 'E' || $oOrderGroup->dc_status == 'M' || $oOrderGroup->dc_status == 'T' || $oOrderGroup->dc_status == 'K')
+        && $oOrderGroup->checkFBAProductsAvailToShipping()
+        && $oOrderGroup->amz_fullfilment_order_placed !='Y'
+  )}
     <td colspan="2" align="center">
-      <input data-orderid="{$oOrderGroup->getOrderId()}" data-manufacturerid="{$oOrderGroup->getManufacturerId()}" id="submit_amazon_shipment" name="submit_amazon_shipment" type="button"  value="{if ($oOrderGroup->getField('cb_status') =='AP' && $oOrder->getOrderGroupsCount()==1 && $order_transactions_totals.authorized_PLUS_captured_totals == $order.extra.total.gross)}Capture & {/if}Ship now by Amazon" />
-      <select {if $oOrderShipping->isAmazonShipping()} disabled="disabled" {/if}style="margin-top: 7px; width: 88%;" name="amazon_shipping_method_select" id="amazon_shipping_method_select">
+      <input data-orderid="{$oOrderGroup->getOrderId()}" data-manufacturerid="{$oOrderGroup->getManufacturerId()}" id="submit_amazon_shipment" name="submit_amazon_shipment" type="button"  value="{if ($oOrderGroup->getField('cb_status') =='AP' && $order_transactions_totals.authorized_PLUS_captured_totals == $oOrder->getOrderTotalGross())}Capture & {/if}Ship now by Amazon" />
+      <select {if $oOrderShipping->isAmazonShipping() && $oOrder->amazon_fulfillment_channel == 'AFN'} disabled="disabled" {/if}style="margin-top: 7px; width: 88%;" name="amazon_shipping_method_select" id="amazon_shipping_method_select">
         <option value=""></option>
         {html_options options=$aAmazonShippingMethods selected=$oOrderGroup->getShippingMethodName()}
       </select>
@@ -1252,7 +1307,7 @@ C-{$key_memos}: {$invoice_memo_statuses[$item_memos.status]}<br />
         {if $aRetailTrustDetails}
         <tr class="distributor-totals-line">
           <td>
-            <a href="{$oManufacturer->getManufacturerModifyURL()}" target="_blank" style="color: green;">{$oManufacturer->getManufacturerName()}</a>
+            <a href="{$oManufacturer->getAdminUrl()}" target="_blank" style="color: green;">{$oManufacturer->getManufacturerName()}</a>
           </td>
           <td>
             {$oManufacturer->getManufacturerCode()}
@@ -1264,10 +1319,10 @@ C-{$key_memos}: {$invoice_memo_statuses[$item_memos.status]}<br />
           {assign var=oOrderDetailProduct value=$oRetailTrustDetail->getOrderDetailProduct()}
         <tr {cycle values=", class='TableSubHead'" name="cycle_totals"}>
           <td>
-            <a href="{$oOrderDetailProduct->getProductFrontURL()}">{$oOrderDetailProduct->getProductName()}</a>
+            <a href="{$oOrderDetailProduct->getURL()}">{$oOrderDetailProduct->getProductName()}</a>
           </td>
           <td>
-            <a href="{$oOrderDetailProduct->getProductModifyURL()}">{$oOrderDetailProduct->getSKURetailTrust()}</a>
+            <a href="{$oOrderDetailProduct->getAdminUrl()}">{$oOrderDetailProduct->getSKURetailTrust()}</a>
           </td>
           <td></td>
           <td align="center">
@@ -1376,49 +1431,11 @@ Total Product Cost to us
   <td align="right" style="font-size: 12px;">{include file="currency2.tpl" value=$oOrder->getOrderTotalGross()}</td>
   <td>&nbsp;</td>
 </tr>
-
-{if $order_transactions_totals ne ""}
-<tr{cycle values=", class='TableSubHead'" name="cycle_totals"}>
-  <td>Total transaction amount <br> (authorized + captured )</td>
-  <td colspan="8">&nbsp;</td>
-  {assign var=oPaymentProcessor value=$oOrder->getPaymentMethodInstance()}
-  {math assign="transaction_with_multiplier" equation="x*y" x=$order_transactions_totals.authorized_PLUS_captured_totals y=$oPaymentProcessor->getMaximumReAuthorizationMultiplier()}
-  <td align="right" style="font-size: 10px; background-color: {if $oOrder->getOrderTotalGross() == $order_transactions_totals.authorized_PLUS_captured_totals}#d9ead3;
-          {elseif $oOrder->getOrderTotalGross() > $order_transactions_totals.authorized_PLUS_captured_totals && $oOrder->getOrderTotalGross() <= $transaction_with_multiplier}
-          yellow
-          {else}red
-          {/if};">{include file="currency2.tpl" value=$order_transactions_totals.authorized_PLUS_captured_totals}</td>
-  <td>&nbsp;</td>
+<tr>
+    <td colspan="10">
+        {include file="admin/main/transactions_summary.tpl" order_store=$order_store}
+    </td>
 </tr>
-
-<tr{cycle values=", class='TableSubHead'" name="cycle_totals"}>
-  <td>Void total</td>
-  <td colspan="8">&nbsp;</td>
-  <td align="right" style="font-size: 10px;">{include file="currency2.tpl" value=$order_transactions_totals.void_total}</td>
-  <td>&nbsp;</td>
-</tr>
-
-<tr{cycle values=", class='TableSubHead'" name="cycle_totals"}>
-  <td>Authorized total</td>
-  <td colspan="8">&nbsp;</td>
-  <td align="right" style="font-size: 10px;">{include file="currency2.tpl" value=$order_transactions_totals.authorized_total}</td>
-  <td>&nbsp;</td>
-</tr>
-
-<tr{cycle values=", class='TableSubHead'" name="cycle_totals"}>
-  <td>Captured total</td>
-  <td colspan="8">&nbsp;</td>
-  {math assign="transaction_capture_with_multiplier" equation="x*y" x=$order_transactions_totals.captured_total y=$oPaymentProcessor->getMaximumReAuthorizationMultiplier()}
-  <td align="right" style="font-size: 10px; background-color: {if $oOrder->getOrderTotalGross() eq $order_transactions_totals.captured_total}
-          green
-          {elseif $oOrder->getOrderTotalGross() > $order_transactions_totals.captured_total && $oOrder->getOrderTotalGross() <= $transaction_capture_with_multiplier}
-          yellow
-          {else}
-          red{/if};">{include file="currency2.tpl" value=$order_transactions_totals.captured_total}</td>
-  <td>&nbsp;</td>
-</tr>
-{/if}
-
 
 <tr>
 <td colspan="11">
@@ -1540,6 +1557,10 @@ multirowInputSets['add_additional_fee_to_order'].noCloneContent = 1;
         }
       }
     });
+    $('.group_total_link').on('click', function(){
+        $(this).closest('tr').siblings('.group_total_price_row').toggle();
+        return false;
+    })
   });
 </script>
 {/literal}

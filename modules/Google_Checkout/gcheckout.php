@@ -52,8 +52,8 @@ if (defined('CHECKOUT_STARTED')) {
 	while (true) {
 		$_index++;
 		$unique_id = md5(uniqid(rand()));
-		@db_query("INSERT INTO $sql_tbl[cc_pp3_data] (ref,sessionid,trstat) VALUES ('$unique_id','".$XCARTSESSID."','GO|')");
-		if (db_affected_rows() > 0)
+		$res = @db_query("INSERT INTO $sql_tbl[cc_pp3_data] (ref,sessionid,trstat) VALUES ('$unique_id','".$XCARTSESSID."','GO|')");
+		if (db_affected_rows($res) > 0)
 			break;
 		if ($_index > 10) # Impossible error: just to avoid the potential infinite loop
 			die(func_get_langvar_by_name('txt_gcheckout_impossible_error', '', false, true));

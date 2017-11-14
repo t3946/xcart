@@ -1,6 +1,9 @@
 <?php
 namespace Xcart\External_Marketplaces\Marketplaces;
-use Xcart\Product;
+use Modules\Product\Models\ProductModel;
+use Modules\Product\Models\UpdatedProductModel;
+use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
 use Xcart\External_Marketplaces\StoreFrontMarketPlace;
 use Xcart\External_Marketplaces\IssuesProcessingRules;
 use Xcart\External_Marketplaces\GMCQualityIssues;
@@ -11,45 +14,64 @@ use Google_Service_ShoppingContent;
 use Google_Service_ShoppingContent_ProductStatusDataQualityIssue;
 
 global $xcart_dir;
-include_once $xcart_dir . "/include/libs/google/apiclient/examples/templates/base.php";
 
 class GMC extends StoreFrontMarketPlace
 {
     /**
-     * @param Product $oProduct
      * @param int $update_type
+     * @param string $googleOneRow
      * @param string $sExtraLog
-     * @return GMC
+     * @return bool
      */
-    public function addProductToBatch(Product $oProduct, $update_type, $sExtraLog = "N")
+    public function addProductToBatch($queue, $googleOneRow = "", $sExtraLog = "N")
     {
-        if ($this->checkProductExcludedMarketPlace($oProduct->getProductId()) && $this->checkMarketplaceRestrictions($oProduct)) {
-            if ($update_type == "1" || $update_type == "1,2" || (($update_type == "2" && $oProduct->getField('forsale') == "N"))) {
+        $result = false;
+        $oProduct = $queue->product;
+        if ($this->checkProductExcludedMarketPlace($oProduct->productid) && $this->checkMarketplaceRestrictions($queue)) {
+            if ($queue->type == "1" || $queue->type == "1,2" || (($queue->type == "2" && $oProduct->forsale == "N"))) {
                 $batchid = $this->iProductsBatchCount;
                 $count_bproducts = count($this->aProducts);
-                $this->aProducts[$count_bproducts]["productid"] = $oProduct->getProductId();
+                $this->aProducts[$count_bproducts]["productid"] = $oProduct->productid;
                 $this->aProducts[$count_bproducts]["Batchid"] = $batchid;
-                $this->aProducts[$count_bproducts]["product_info"] = GetGoogleBaseOneRow($oProduct->getProductId(), "main_google", $sExtraLog);
+                $this->aProducts[$count_bproducts]["product_info"] = $googleOneRow;
+                $this->aProducts[$count_bproducts]["queue"] = $queue;
                 $this->iProductsBatchCount++;
+                $result = true;
 
-            } elseif ($update_type == "2" && $oProduct->getField('forsale') == "Y") {
+            } elseif ($queue->type == "2" && $oProduct->forsale == "Y") {
                 $batchid = $this->iInventoryBatchCount;
                 $count_binventory = count($this->aInventory);
-                $this->aInventory[$count_binventory]["productid"] = $oProduct->getProductId();
+                $this->aInventory[$count_binventory]["productid"] = $oProduct->productid;
                 $this->aInventory[$count_binventory]["Batchid"] = $batchid;
+                $this->aInventory[$count_binventory]["queue"] = $queue;
                 $this->iInventoryBatchCount++;
+                $result = true;
             }
 
+        } else {
+            list($queue_n) = UpdatedProductModel::objects()->getOrNew(
+                [
+                    'resourceid' => $queue->resourceid,
+                    'type' => $queue->type
+                ]);
+            if ($queue_n) {
+                $queue_n->mask &= ~intval($this->getExternalMarketPlaceEntity()->mask);
+                $queue_n->save();
+            }
         }
-        return $this;
+        return $result;
     }
 
-    public function checkMarketplaceRestrictions(Product $oProduct)
+    public function checkMarketplaceRestrictions($queue)
     {
-        $bResult = true;
-        $aDetailedImages = $oProduct->getDetailedImages();
-        if (empty($aDetailedImages))
+        $bResult = parent::checkMarketplaceRestrictions($queue);
+
+        $aDetailedImages = $queue->product->getDetailedImages();
+
+        if (empty($aDetailedImages)) {
             $bResult = false;
+        }
+
         return $bResult;
     }
 
@@ -59,6 +81,7 @@ class GMC extends StoreFrontMarketPlace
             global $xcart_dir;
 
             $client = new Google_Client();
+            $client->getHttpClient()->setDefaultOption('verify',false);
             $client->setApplicationName("Client_Library_Examples");
             $client->setAuthConfig($xcart_dir . '/include/system/gapi-3c467d1a8e76.json');
             $client->addScope(Google_Service_ShoppingContent::CONTENT);
@@ -71,31 +94,39 @@ class GMC extends StoreFrontMarketPlace
     public function submitInventoryBatch($debug_mode = 'N', $extra_log = 'N')
     {
         $error = SubmitGoogleInventoryBatch($this->getInventory(), $this->getService($debug_mode), $this->getP1(), $debug_mode, $extra_log);
-        if ($error == 500)
-            $this->RestoreQueue($this->getInventory(), 2);
+        if ($error == 500) {
+            return false;
+        }
 
-        $this->setInventoryBatchCount(0)->setInventory([]);
+        return true;
     }
 
     public function submitProductsBatch($debug_mode = 'N', $extra_log = 'N')
     {
         $error = SubmitGoogleProductsBatch($this->getProducts(), $this->getService($debug_mode), $this->getP1(), $debug_mode);
-        if ($error == 500)
-            $this->RestoreQueue($this->getProducts(), 1);
 
-        $this->setProductsBatchCount(0)->setProducts([]);
+        if ($error == 500) {
+            return false;
+        }
+
+        return true;
     }
 
-    public function getProductStatuses()
+    public function getProductStatuses($iStoreFrontId)
     {
-        $iUpdateProductCount = $iNewIssues = 0;
+        $iUpdateProductCount = $iNewIssues = $totalCounter = 0;
+        $pageToken = null;
+        $log = new Logger('gmc_info');
+        $logFile = sprintf("../var/log/gmc_products-{$iStoreFrontId}-%s.php", date('ymd'));
+        $log->pushHandler(new StreamHandler($logFile, Logger::INFO));
         do {
+            $oResponse = null;
             if (!empty($pageToken)) {
                 $parameters['pageToken'] = $pageToken;
             }
             $parameters['includeInvalidInsertedItems'] = true;
             $parameters['maxResults'] = 250;
-            $aQueue = [];
+            $aQueue = $aLinks = [];
             try {
                 $oResponse = $this->getService()->productstatuses->listProductstatuses($this->getP1(), $parameters);
                 /** @var Google_Service_ShoppingContent_ProductStatus[] $aProducts */
@@ -154,19 +185,22 @@ class GMC extends StoreFrontMarketPlace
 
                         $oExpiredDate = \DateTime::createFromFormat(\DateTime::ISO8601, $oProduct->getGoogleExpirationDate());
                         $iDaysInterval = $oExpiredDate->diff(new \DateTime('now'))->days;
-                        if ($iDaysInterval <= $this->getUpdateExpiredBeforeDays() && $iUpdateProductCount < $this->getUpdateMaxExpiredProductsPerDay()) {
+                        if ($iDaysInterval <= $this->update_expired_before && $iUpdateProductCount < $this->update_max_expired_products_per_day) {
                             $aQueue[] = ['productid' => $iProductId];
                             $iUpdateProductCount++;
                         }
+                        $log->addInfo($oProduct->link);
                     }
                 }
             } catch (\Exception $e) {
                 func_backprocess_log('google_product_statuses', sprintf('Google_Service_Exception. %s', $e->getMessage()));
             }
             $this->restoreQueue($aQueue, 1);
-
+            $totalCounter++;
             try {
-                $pageToken = $oResponse->getNextPageToken();
+                if ($oResponse) {
+                    $pageToken = $oResponse->getNextPageToken();
+                }
             } catch (\Exception $e) {
                 func_backprocess_log('google_product_statuses', sprintf('Error Get Next Page Token. %s', $e->getMessage()));
                 $pageToken = false;
@@ -176,6 +210,9 @@ class GMC extends StoreFrontMarketPlace
 
         func_backprocess_log('google_product_statuses', sprintf('%d new issues found.', $iNewIssues));
         func_backprocess_log('google_product_statuses', sprintf('%d products added for update queue.', $iUpdateProductCount));
+        func_backprocess_log('google_product_statuses', sprintf('%d total products.', $totalCounter));
+
+
 
         return $this;
     }

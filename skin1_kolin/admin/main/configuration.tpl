@@ -132,6 +132,10 @@ tinymce.init({
 
 {include file="admin/main/templates_order_related_messages.tpl"}
 
+{elseif $option eq "thankyou_for_order"}
+
+{include file="admin/main/thankyou_for_order.tpl"}
+
 {elseif $option eq "Attention_tag_options"}
 
 {include file="admin/main/attention_tag_options.tpl"}
@@ -171,6 +175,10 @@ tinymce.init({
 {elseif $option eq "OTRS_options"}
 
 {include file="admin/main/otrs_options.tpl"}
+
+{elseif $option eq "Banners"}
+
+{include file="admin/main/banners.tpl"}
 
 {elseif $option eq "HTML_shots_options"}
 
@@ -212,6 +220,9 @@ tinymce.init({
 
 {include file="admin/main/filter_presets.tpl"}
 
+{elseif $option eq "Product_splashes"}
+
+{include file="admin/main/product_splashes.tpl"}
 
 {elseif $option eq "Autosubmit_orderentry_operator"}
 <table cellpadding="3" cellspacing="1" width="100%">
@@ -676,14 +687,11 @@ Highlight ETA date on the order list pages in pink if ETA date - <input type="te
 
 {assign var="first_row" value=1}
     {if $option eq "W9_Form"}
-        <tr>
+        <tr class="w9form_instructions">
             <td>
-
             </td>
-            <td>
-
+            <td colspan="2">
                 {$lng.w9_form_request_options_instructions}
-
             </td>
         </tr>
     {/if}
@@ -954,6 +962,8 @@ class="new_editor" rows="30" cols="60"
  name="{$configuration[cat_num].name}" cols="71" rows="5">
 {if $configuration[cat_num].name eq "thank_you_message_body" || $configuration[cat_num].name eq "po_instructions"}
 {$configuration[cat_num].value|replace:"\n":"<br />"}
+{elseif $configuration[cat_num].name eq "html_into_head" }
+{$configuration[cat_num].value}
 {else}
 {$configuration[cat_num].value|escape:html}
 {/if}

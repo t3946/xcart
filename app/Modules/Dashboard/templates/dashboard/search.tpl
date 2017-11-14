@@ -1,0 +1,1 @@
+{extends 'dashboard/layouts/search_layout.tpl'}

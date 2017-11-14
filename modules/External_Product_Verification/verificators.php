@@ -5,19 +5,36 @@ use Xcart\Customer;
 
 $smarty->assign("main", "verificators");
 
-if (empty($active)) {
-    $active = 'Y';
-}
-$oClassCustomer = new Customer();
-$aCustomers = $oClassCustomer->getCustomersByType('V', $active);
-$oBatches = new ExternalVerificationBatch();
+$active_p = $active;
 
-//usort($aCustomers, array($oClassCustomer, "sortByAmazonCompletedBatchesDesc"));
+if (empty($active) || $active == 'B') {
+    $active_p = 'Y';
+}
+if (empty($filter)) {$filter[] = 'asin';}
+$oClassCustomer = new Customer();
+$aCustomers = $oClassCustomer->getCustomersByType('V', $active_p);
+if (!empty($aCustomers)) {
+    foreach ($aCustomers as $key => $oCustomer) {
+        if ($active != 'B') {
+            if ($oCustomer->isAmazonAccountSuspended()) {
+                unset($aCustomers[$key]);
+            }
+        } else {
+            if (!$oCustomer->isAmazonAccountSuspended()) {
+                unset($aCustomers[$key]);
+            }
+        }
+    }
+}
+$oBatches = new ExternalVerificationBatch();
 
 $smarty->assign("aCustomers", $aCustomers);
 $smarty->assign("active", $active);
 
 
 $smarty->assign('oBatches', $oBatches);
-
-$smarty->assign('aVerifiactionResults', ExternalVerificationProductsQueue::getVerificationResultsProducts());
+$aParams['filter'] = $filter;
+$aParams['limit'] = 50;
+$smarty->assign('aVerifiactionResults', ExternalVerificationProductsQueue::getVerificationResultsProductsWithNotSameVariants($aParams));
+$smarty->assign('foundRows', (new Xcart\SQLBuilder())->getFoundRows());
+$smarty->assign('filter', $filter);

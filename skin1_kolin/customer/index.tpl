@@ -49,7 +49,7 @@ var arg_sku = '{$smarty.get.sku}';
     options.setAutoComplete(true);
     customSearchControl.setAutoCompletionId('{$config.Search_all.search_all_website_gcs_id}');
     customSearchControl.setSearchStartingCallback(this, function (control, searcher, query) {
-        var expSKU = /^[a-z]{3}-/i;
+        var expSKU = /^[a-z0-9]{3,4}-/i;
         if (inputQuery != query && expSKU.test(query)) { 
             control.cancelSearch();
             $.get('index.php', 'sku=' + query + '&mode=check_all', function (ans) {
@@ -115,6 +115,7 @@ var arg_sku = '{$smarty.get.sku}';
                                                 }
                                         }
                                 };
+                            ga('send', {hitType: 'pageview', location: location.href});
 
                                 cidev_xmlHttp.open('POST','infinite_products.php',true);
                                 cidev_xmlHttp.setRequestHeader('Content-type','application/x-www-form-urlencoded');

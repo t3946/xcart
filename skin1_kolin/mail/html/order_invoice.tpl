@@ -32,7 +32,7 @@
 			<td valign="top">
 <font style="FONT-SIZE: 28px"><b style="text-transform: uppercase;">{$lng.lbl_invoice}</b></font>
 <br /><br />
-<b>{$lng.lbl_date}:</b> {$order.date|date_format:$config.Appearance.datetime_format}<br /><b>{$lng.lbl_order_id}:</b> {if $type eq 'A'}<a href="http://www.artistsupplysource.com/admin/order.php?orderid={$order.orderid}">{$order.order_prefix}{$order.orderid}</a>{else}{$order.order_prefix}{$order.orderid}{/if}<br /><b>{$lng.lbl_order_status}:</b> {$lng.lbl_please_see_below}<br />
+<b>{$lng.lbl_date}:</b> {$order.date|date_format:$config.Appearance.datetime_format}<br /><b>{$lng.lbl_order_id}:</b> {if $type eq 'A'}<a href="https://www.artistsupplysource.com/admin/order.php?orderid={$order.orderid}">{$order.order_prefix}{$order.orderid}</a>{else}{$order.order_prefix}{$order.orderid}{/if}<br /><b>{$lng.lbl_order_status}:</b> {$lng.lbl_please_see_below}<br />
 <b>{$lng.lbl_payment_method}:</b><br />{$order.payment_method}<br /><b>{$lng.lbl_delivery}s:</b><br />{if $order.shipping_groups ne '' && $products|@count ne 0}{foreach from=$order.shipping_groups item=v}{if $v.shipping}{$v.frontend_name|default:$v.shipping|trademark:''}<br />{/if}{/foreach}{/if}
 {if $giftcerts}
     {foreach from=$giftcerts item="gc"}

@@ -1,0 +1,34 @@
+{
+  "name": "static",
+  "directory": "./vendors",
+  "license": "ISC",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "vendors"
+  ],
+  "dependencies": {
+    "jquery": "^3.1.1",
+    "jquery.cookie": "jquery-cookie#^1.4.1",
+    "font-awesome": "^4.7.0",
+    "select2": "^4.0.3",
+    "air-datepicker": "^2.2.3",
+    "mmodal": "git://github.com/tsukasa-mixer/mmodal.git",
+    "compass-mixins": "^v0.12",
+    "mindy-sass": "*",
+    "jScrollPane": "jscrollpane#^2.0.23",
+    "jquery-mousewheel": "^3.1.13",
+    "jquery.shapeshift": "^2.0.0",
+    "jquery-ui": "^1.12.1",
+    "sly": "^1.6.1",
+    "bootstrap-sass": "^3.3.7",
+    "nouislider": "^9.2.0",
+    "lato-webfont": "^1.1.2",
+    "foundation-sites": "^6.3.1",
+    "jQuery.dotdotdot": "dotdotdot#^1.8.3",
+    "Waves": "waves#^0.7.5"
+  },
+  "devDependencies": {}
+}

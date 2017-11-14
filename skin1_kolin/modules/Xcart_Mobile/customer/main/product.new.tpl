@@ -66,7 +66,7 @@
 {include file="modules/Detailed_Product_Images/popup_image.tpl"}
 {else}
 {if $active_modules.Detailed_Product_Images ne "" && $images ne ''}
-<a style="font-size: 0px;" href="http://{$site_domain|lower}/{$canonical_url}#dp_images">{/if}{include file="product_thumbnail.tpl" productid=$product.productid image_x=$product.image_x image_y=$product.image_y product=$producttitle tmbn_url=$product.tmbn_url id="product_thumbnail" type="P"}{if $active_modules.Detailed_Product_Images ne "" && $images ne ''}</a>{/if}
+<a style="font-size: 0;" href="#dp_images">{/if}{include file="product_thumbnail.tpl" productid=$product.productid image_x=$product.image_x image_y=$product.image_y product=$producttitle tmbn_url=$product.tmbn_url id="product_thumbnail" type="P" splash=$product.oSplash}{if $active_modules.Detailed_Product_Images ne "" && $images ne ''}</a>{/if}
 {/if}
 {if $active_modules.Magnifier ne "" && $config.Magnifier.magnifier_image_popup eq 'Y' && $zoomer_images ne '' && $js_enabled eq 'Y'}
 {include file="modules/Magnifier/popup_magnifier.tpl"}
@@ -496,7 +496,15 @@ var lbl_error = "{$lng.lbl_error}";
 <br />
 {capture name=dialog}
 <div style="padding-left: 8px;">
-<span style="font-size: 13px; color: #000000;" class="SPItems-description">{if $use_schema_org eq "Y"}<span itemprop="description">{/if}{if $product.fulldescr ne ""}{$product.fulldescr}{else}{$product.descr}{/if}{if $use_schema_org eq "Y"}</span>{/if}</span>
+<span style="font-size: 13px; color: #000000;" class="SPItems-description">{if $use_schema_org eq "Y"}<span itemprop="description">{/if}
+        {if $product.seo_fulldescr ne ""}
+            {$product.seo_fulldescr|stripslashes}
+        {elseif $product.fulldescr ne ""}
+            {$product.fulldescr|stripslashes}
+        {else}
+            {$product.descr|stripslashes}
+        {/if}
+        {if $use_schema_org eq "Y"}</span>{/if}</span>
 
 {if $product.weight ne "0.00" || $variants ne '' || $show_dimensions || $product.upc_ean_isbn}
 {* <br /> *}

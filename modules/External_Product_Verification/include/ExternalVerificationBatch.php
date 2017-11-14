@@ -264,9 +264,14 @@ class ExternalVerificationBatch extends Data
         }
         $aLinkArray = [];
         if (!empty($this->oVerifiedProduct)) {
-            $aLinkArray[] = [$this->oVerifiedProduct->getProductFrontURL('https://') . '?keep_https=yes', $this->oVerifiedProduct->getProductName()];
+            $aLinkArray[] = [$this->oVerifiedProduct->getURL('https://') . '?keep_https=yes', $this->oVerifiedProduct->getProductName()];
         }
         return json_encode($aLinkArray, JSON_PRETTY_PRINT);
+    }
+
+    public function getSearchByUPCOnAmazonLink()
+    {
+        return sprintf(self::LINK_SEARCH_BY_UPC, $this->oVerifiedProduct->getUPC());
     }
 
     public function getSearchLinksJson()
@@ -282,7 +287,7 @@ class ExternalVerificationBatch extends Data
             $sUPC = $this->oVerifiedProduct->getUPC();
 
             if (!empty($sASIN)) $aLinkArray[0] = ['https://' . $xcart_https_host . DIR_VERIFICATOR . '/view.php?' . sprintf(self::LINK_SEARCH_BY_ASIN, $sASIN), 'Open product by ASIN: ' . $sASIN];
-            if (!empty($sUPC)) $aLinkArray[1] = ['https://' . $xcart_https_host . DIR_VERIFICATOR . '/view.php?' . sprintf(self::LINK_SEARCH_BY_UPC, $sUPC), 'Search product by UPC: ' . $sUPC];
+            if (!empty($sUPC)) $aLinkArray[1] = ['https://' . $xcart_https_host . DIR_VERIFICATOR . '/view.php?' . $this->getSearchByUPCOnAmazonLink(), 'Search product by UPC: ' . $sUPC];
             $aLinkArray[2] = ['https://' . $xcart_https_host . DIR_VERIFICATOR . '/view.php?' . sprintf(self::LINK_SEARCH_BY_NAME, urlencode(html_entity_decode($this->oVerifiedProduct->getProductName()))), 'Search product by Product Name: ' . $this->oVerifiedProduct->getProductName()];
 
         }

@@ -1,6 +1,11 @@
 <?php
 namespace Xcart;
 
+use Modules\Core\Helpers\GeoipHelper;
+use Modules\Core\Models\GlobalConfigModel;
+use Modules\Core\Models\StateModel;
+use Modules\Sites\Models\SiteConfigModel;
+
 class OrderStatusNotification extends Mail
 {
     /**
@@ -51,12 +56,28 @@ class OrderStatusNotification extends Mail
 
     public function replaceBody()
     {
-        parent::replaceBody();
         if (!empty($this->oOrder)) {
-            $this->setBody(str_replace("{{c-fullname}}", $this->oOrder->getFirstName(), $this->getEmailBody()))->
-            setBody(str_replace("{{orderid}}", $this->oOrder->getDisplayOrderNumber(), $this->getEmailBody()))->
-            setBody(str_replace("{{site_url}}", $this->oOrder->getOrderStoreFront()->getStoreFrontURL(), $this->getEmailBody()));
+
+            $params = [
+                'state' => $this->oOrder->s_state,
+                'country' => $this->oOrder->s_country,
+                'phone' => $this->oOrder->phone,
+                'storefrontid' => $this->oOrder->storefrontid,
+            ];
+
+            $phones = GeoipHelper::getPhones($params);
+
+            $this->aReplaceRules = array_merge(
+                $this->aReplaceRules,
+                [
+                    '{{c-fullname}}' => $this->oOrder->getFirstName(),
+                    '{{orderid}}' => $this->oOrder->getDisplayOrderNumber(),
+                    '{{site_url}}' => $this->oOrder->getOrderStoreFront()->getStoreFrontURL(),
+                    '{{customer_service_local_phone_number}}' => $phones
+                ]);
         }
+
+        parent::replaceBody();
     }
 
     public function setOrder($oOrder)
@@ -69,7 +90,6 @@ class OrderStatusNotification extends Mail
     {
         $this->prepareMail();
         global $mail_smarty, $statuses, $config;
-        x_load('order');
         $order_data = func_order_data($this->oOrder->getOrderId());
         $mail_smarty->assign("products",$order_data["products"]);
         $mail_smarty->assign("giftcerts",$order_data["giftcerts"]);
@@ -85,7 +105,16 @@ class OrderStatusNotification extends Mail
         $mail_smarty->assign('order_notification',  $this->getFields());
         $mail_smarty->assign('oOrder', $this->oOrder);
 
-        func_send_mail($this->oOrder->getEmail(), 'mail/order_notification_subj.tpl', 'mail/order_notification.tpl', $config['Company']['orders_department'], false);
+        $oMail = \Xcart\App\Main\Xcart::app()->oldMail;
+        $oMail->init();
+        $oMail->to = $this->oOrder->getEmail();
+        $oMail->from = $config['Company']['orders_department'];
+        $oMail->reply_to = null;
+        $oMail->subject_template = 'mail/order_notification_subj.tpl';
+        $oMail->body_template = 'mail/order_notification.tpl';
+        $oMail->sendEmail();
+
+        //func_send_mail($this->oOrder->getEmail(), 'mail/order_notification_subj.tpl', 'mail/order_notification.tpl', $config['Company']['orders_department'], false);
 
         $mail_smarty->assign('type', 'A');
         $mail_smarty->assign("show_order_details", "Y");
@@ -93,6 +122,15 @@ class OrderStatusNotification extends Mail
         $from = $this->oOrder->getFirstName() . "<" . $config['Company']['orders_department'] . ">";
         $reply_to = $this->oOrder->getFirstName() . "<" . $this->oOrder->getEmail() . ">";
 
-        func_send_mail($to, 'mail/order_notification_subj.tpl', 'mail/order_notification.tpl', $from, true, true, false, false, $reply_to);
+        $oMail = \Xcart\App\Main\Xcart::app()->oldMail;
+        $oMail->to = $to;
+        $oMail->from = $from;
+        $oMail->reply_to = $reply_to;
+        $oMail->subject_template = 'mail/order_notification_subj.tpl';
+        $oMail->body_template = 'mail/order_notification.tpl';
+        $oMail->addHeader(['X-Xcart-Label' => 'order-status-changed']);
+        $oMail->sendEmail();
+
+        //func_send_mail($to, 'mail/order_notification_subj.tpl', 'mail/order_notification.tpl', $from, true, true, false, false, $reply_to);
     }
 }

@@ -1,42 +1,4 @@
-<?php /* MODIFIED: random:1073746882_1073747063 [2008 Dec 24 16:25][Custom development (Shipping Calculation for Several Providers in the USA)] */ ?>
 <?php
-/*****************************************************************************\
-+-----------------------------------------------------------------------------+
-| X-Cart                                                                      |
-| Copyright (c) 2001-2006 Ruslan R. Fazliev <rrf@rrf.ru>                      |
-| All rights reserved.                                                        |
-+-----------------------------------------------------------------------------+
-| PLEASE READ  THE FULL TEXT OF SOFTWARE LICENSE AGREEMENT IN THE "COPYRIGHT" |
-| FILE PROVIDED WITH THIS DISTRIBUTION. THE AGREEMENT TEXT IS ALSO AVAILABLE  |
-| AT THE FOLLOWING URL: http://www.x-cart.com/license.php                     |
-|                                                                             |
-| THIS  AGREEMENT  EXPRESSES  THE  TERMS  AND CONDITIONS ON WHICH YOU MAY USE |
-| THIS SOFTWARE   PROGRAM   AND  ASSOCIATED  DOCUMENTATION   THAT  RUSLAN  R. |
-| FAZLIEV (hereinafter  referred to as "THE AUTHOR") IS FURNISHING  OR MAKING |
-| AVAILABLE TO YOU WITH  THIS  AGREEMENT  (COLLECTIVELY,  THE  "SOFTWARE").   |
-| PLEASE   REVIEW   THE  TERMS  AND   CONDITIONS  OF  THIS  LICENSE AGREEMENT |
-| CAREFULLY   BEFORE   INSTALLING   OR  USING  THE  SOFTWARE.  BY INSTALLING, |
-| COPYING   OR   OTHERWISE   USING   THE   SOFTWARE,  YOU  AND  YOUR  COMPANY |
-| (COLLECTIVELY,  "YOU")  ARE  ACCEPTING  AND AGREEING  TO  THE TERMS OF THIS |
-| LICENSE   AGREEMENT.   IF  YOU    ARE  NOT  WILLING   TO  BE  BOUND BY THIS |
-| AGREEMENT, DO  NOT INSTALL OR USE THE SOFTWARE.  VARIOUS   COPYRIGHTS   AND |
-| OTHER   INTELLECTUAL   PROPERTY   RIGHTS    PROTECT   THE   SOFTWARE.  THIS |
-| AGREEMENT IS A LICENSE AGREEMENT THAT GIVES  YOU  LIMITED  RIGHTS   TO  USE |
-| THE  SOFTWARE   AND  NOT  AN  AGREEMENT  FOR SALE OR FOR  TRANSFER OF TITLE.|
-| THE AUTHOR RETAINS ALL RIGHTS NOT EXPRESSLY GRANTED BY THIS AGREEMENT.      |
-|                                                                             |
-| The Initial Developer of the Original Code is Ruslan R. Fazliev             |
-| Portions created by Ruslan R. Fazliev are Copyright (C) 2001-2006           |
-| Ruslan R. Fazliev. All Rights Reserved.                                     |
-+-----------------------------------------------------------------------------+
-\*****************************************************************************/
-
-#
-# $Id: func.product.php,v 1.32.2.26 2007/01/26 07:12:05 max Exp $
-#
-
-if ( !defined('XCART_START') ) { header("Location: ../"); die("Access denied"); }
-
 
 # core function to acquire price according it's MAP Price, Manufacturers Feed enabled and Stock status
 # array $product must contain fields:
@@ -45,6 +7,11 @@ if ( !defined('XCART_START') ) { header("Location: ../"); die("Access denied"); 
 #       supplier_feeds_enabled  ('Y'|'N')
 #       cost_to_us      DECIMAL
 #       price   DECIMAL    price corrected with min_amount quantity
+use Modules\Product\Models\ProductModel;
+
+/**
+ * @deprecated
+ */
 function func_product_price($fproduct) {
 	global $sql_tbl, $xcart_dir, $active_modules, $config, $https_location, $http_location;
 
@@ -797,16 +764,7 @@ function func_select_product($id, $membershipid, $redirect_if_error=true, $clear
 ##
 #
 
-/* speed optimizations no such conditions
-	if ($current_area == 'C' && empty($active_modules['Product_Configurator'])) {
-	
-		$login_condition .= " AND $sql_tbl[products].product_type <> 'C' AND $sql_tbl[products].forsale <> 'B' ";
-		
-	}
-*/
-
-	
-	$product = func_query_first("SELECT $sql_tbl[products].*, $sql_tbl[products].avail-$in_cart AS avail, $sql_tbl[pricing].price as price $add_fields FROM $sql_tbl[pricing], $sql_tbl[products] $join WHERE $sql_tbl[products].productid='$id' ".$login_condition.$p_membershipid_condition.$price_condition.$sf_condition." GROUP BY $sql_tbl[products].productid");
+    $product = func_query_first("SELECT $sql_tbl[products].*, $sql_tbl[products].avail-$in_cart AS avail, $sql_tbl[pricing].price as price $add_fields FROM $sql_tbl[pricing], $sql_tbl[products] $join WHERE $sql_tbl[products].productid='$id' ".$login_condition.$p_membershipid_condition.$price_condition.$sf_condition." GROUP BY $sql_tbl[products].productid");
 
 /*speed optimization*/
 //	print("l:".$membershipid_condition);
@@ -1098,10 +1056,6 @@ function func_select_product($id, $membershipid, $redirect_if_error=true, $clear
 	if (!empty($product["d_website_search_for_sku_url"]) && !empty($mpn) && ($current_area != 'C' && !empty($current_area))){
 		$product["d_website_search_for_sku_url"] = $classProduct->getProductURLOnDistributorWebSite();
 	}
-	unset($classProduct);
-###
-##
-#
 
 	$product["prevent_search_indexing"] = func_prevent_search_indexing($product);
 	if (strpos($product['prevent_search_indexing'], 'Y') !== false){
@@ -1112,7 +1066,7 @@ function func_select_product($id, $membershipid, $redirect_if_error=true, $clear
 #
 ## Calculate correct price for customer area
 ###
-	$product["product_availability"] = func_product_availability(false,false,false,false,false,$product);
+	$product["product_availability"] = func_product_availability(false,$product);
 
 	if ($current_area == 'C' || empty($current_area)){
 		$product["price"] = $product["taxed_price"] = func_product_price($product);
@@ -1127,21 +1081,9 @@ function func_select_product($id, $membershipid, $redirect_if_error=true, $clear
 
 	$product["brand"] = func_query_first_cell("SELECT brand FROM $sql_tbl[brands] WHERE brandid='$product[brandid]'");
 
-#
-##
-###
-	
-	/*if (empty($product["descr"])){
-		$product["descr"] = $product["fulldescr"];
+	if ($classProduct->splash_id) {
+		$product['oSplash'] = \Xcart\Images\Splash::objects()->filter(['id' => $classProduct->splash_id , 'active' => 'Y'])->get();
 	}
-
-	$product["descr"] = func_get_product_descr($product["descr"]);
-	
-	*/
-###
-##
-#
-
 	return $product;
 }
 
@@ -1477,11 +1419,11 @@ function func_get_product_link_sf($productid, $sfid = 0, $type = 'all') {
         $link_adm = $link;
     } else {
         if ($sfid == 0) {
-            $link = 'http://' . MAIN_SF_DOMAIN; 
+            $link = '//' . MAIN_SF_DOMAIN;
         } else {
-            $link = 'http://' . $sf_domain;
+            $link = '//' . $sf_domain;
         }
-        $link_adm = 'https://' . MAIN_SF_DOMAIN;
+        $link_adm = '//' . MAIN_SF_DOMAIN;
     }
 
     $result = array();
@@ -1741,5 +1683,3 @@ Where C.categoryid IN ('".implode("','", $categories)."')
 
 	return $prevent_search_indexing;
 }
-
-?>

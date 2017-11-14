@@ -6,13 +6,18 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname(dirname($vendorDir));
 
 return array(
+    '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => $vendorDir . '/symfony/polyfill-mbstring/bootstrap.php',
     'ad155f8f1cf0d418fe49e248db8c661b' => $vendorDir . '/react/promise/src/functions_include.php',
+    'e40631d46120a9c38ea139981f8dab26' => $vendorDir . '/ircmaxell/password-compat/lib/password.php',
+    '2c102faa651ef8ea5874edb585946bce' => $vendorDir . '/swiftmailer/swiftmailer/lib/swift_required.php',
+    'edc6464955a37aa4d5fbf39d40fb6ee7' => $vendorDir . '/symfony/polyfill-php55/bootstrap.php',
+    '3e2471375464aac821502deb0ac64275' => $vendorDir . '/symfony/polyfill-php54/bootstrap.php',
     'a0edc8309cc5e1d60e3047b5df6b7052' => $vendorDir . '/guzzlehttp/psr7/src/functions_include.php',
     'decc78cc4436b1292c6c0d151b19445c' => $vendorDir . '/phpseclib/phpseclib/phpseclib/bootstrap.php',
+    '68f9084e889ebf718663435970ab45e3' => $vendorDir . '/mindy/query_builder/src/Conditions.php',
     '38aa9ffa312700065ceed8bf7bcb7a53' => $baseDir . '/include/func/func.core.php',
     'f550ebde9e69876a00625883277835ce' => $baseDir . '/include/func/func.amazon.php',
     'dca41d7b610d234855ab845f35115f14' => $baseDir . '/include/func/func.amazon_shipping.php',
-    'a7463b49d5c2acfa9226540eacf141cb' => $baseDir . '/include/func/func.amazon_shipping_connecter.php',
     'c074bc0f3f52cf1c23cb50d0b4b45a7d' => $baseDir . '/include/func/func.backoffice.php',
     'c735e56e84931684b20d9a61359574fb' => $baseDir . '/include/func/func.cart.php',
     '4fe8cfc3c08ff324bbca0dc5a2183eb2' => $baseDir . '/include/func/func.category.php',

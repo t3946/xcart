@@ -3,45 +3,52 @@
 <html lang="en-US">
 <head>
 {if $config.SEO.clean_urls_enabled eq "Y"}
-<base href="{$catalogs.customer}/" />
+<base href="{$xcartApp->request->getHostInfo()}/" />
 {/if}
-<title>{strip}
-{if $brand.title ne "" && $main eq "brand_products"}
-{$brand.title}
-{else}
-{if $main eq "product" && $product.title_tag ne ""}
-{$product.title_tag}
-{else}
-{if $clean_url_data.resource_type eq "K" && $e_search_data.substring ne ""}
-{if $e_search_data.orig_substring ne ""}{$e_search_data.orig_substring|stripslashes|escape}{else}{$e_search_data.substring|stripslashes|escape}{/if} at&nbsp;
-{/if}
-{if $config.Company.config_title_meta_tag ne "" && (($main eq "catalog" && $current_category.category eq ""))}
-{$config.Company.config_title_meta_tag}
-{elseif $current_category.title_tag ne "" && $main eq "catalog"}
-{$current_category.title_tag} {*| {$location[0].0*}
-{else}
-{capture name=title}
-{if $config.SEO.page_title_format eq "A"}
-{section name=position loop=$location}
-{if not %position.first%}&nbsp;::&nbsp;{/if}
-{$location[position].0|strip_tags|escape}
-{/section}
-{else}
-{section name=position loop=$location step=-1}
-{if not %position.first%}&nbsp;::&nbsp;{/if}
-{$location[position].0|strip_tags|escape}
-{/section}
-{/if}
-{/capture}
-{if $config.SEO.page_title_limit <= 0}
-{$smarty.capture.title|replace:"&amp;":"&"}
-{else}
-{$smarty.capture.title|replace:"&nbsp;":" "|truncate:$config.SEO.page_title_limit|replace:" ":"&nbsp;"}
-{/if}
-{/if}
-{/if}
-{/if}
-{/strip}</title>
+    <title>{strip}
+            {if $brand.title ne "" && $main eq "brand_products"}
+                {$brand.title}
+            {else}
+                {if $main eq "product" && $product.title_tag ne ""}
+                    {$product.title_tag}
+                {else}
+                    {if $clean_url_data.resource_type eq "K" && $e_search_data.substring ne ""}
+                        {if $e_search_data.orig_substring ne ""}{$e_search_data.orig_substring|stripslashes|escape}{else}{$e_search_data.substring|stripslashes|escape}{/if} at&nbsp;
+                    {/if}
+                    {if $config.Company.config_title_meta_tag ne "" && (($main eq "catalog" && $current_category.category eq ""))}
+                        {$config.Company.config_title_meta_tag}
+                    {elseif $current_category.title_tag ne "" && $main eq "catalog"}
+                        {$current_category.title_tag} {*| {$location[0].0*}
+                    {else}
+                        {if $current_storefront == 41 && $main eq "product"}
+                            {capture name=title}
+                                {assign var="seo_product_title" value="`$product.product` Online | `$config.Company.company_name`"}
+                                {$seo_product_title|truncate:"80":"":false|escape|strip}
+                            {/capture}
+                        {else}
+                            {capture name=title}
+                                {if $config.SEO.page_title_format eq "A"}
+                                    {section name=position loop=$location}
+                                        {if not %position.first%}&nbsp;::&nbsp;{/if}
+                                        {$location[position].0|strip_tags|escape}
+                                    {/section}
+                                {else}
+                                    {section name=position loop=$location step=-1}
+                                        {if not %position.first%}&nbsp;::&nbsp;{/if}
+                                        {$location[position].0|strip_tags|escape}
+                                    {/section}
+                                {/if}
+                            {/capture}
+                        {/if}
+                        {if $config.SEO.page_title_limit <= 0}
+                            {$smarty.capture.title|replace:"&amp;":"&"}
+                        {else}
+                            {$smarty.capture.title|replace:"&nbsp;":" "|truncate:$config.SEO.page_title_limit|replace:" ":"&nbsp;"}
+                        {/if}
+                    {/if}
+                {/if}
+            {/if}
+        {/strip}</title>
     {if $current_storefront_info.storefrontid ne ""}
 <link rel="shortcut icon" href="{$xcart_web_dir}/image.php?id={$current_storefront_info.storefrontid}&amp;type=F" type="image/vnd.microsoft.icon"/>
     {else}
@@ -60,11 +67,16 @@
     <!--[if IE]>
     <link rel="stylesheet" href="{$SkinDir}/skin1.IE.css" type="text/css" media="all" />
     <![endif]-->
+
     {if $canonical_url}
-        <link rel="canonical" href="http://{$site_domain|lower}/{$canonical_url}" />
+        {if $oProduct && $oProduct->isGroupChild()}
+            <link rel="canonical" href="{if $oProduct->parent}{$oProduct->parent->getUrl()}{/if}" />
+        {else}
+            <link rel="canonical" href="{$xcartApp->request->getHostInfo()}/{$canonical_url}" />
+        {/if}
     {/if}
     {if $main eq "catalog" && $current_category.category eq "" && $clean_url_data.resource_type ne "K"}
-        <link rel="canonical" href="http://{$site_domain|lower}/"/>
+        <link rel="canonical" href="{$xcartApp->request->getHostInfo()}/"/>
     {/if}
     {if $config.Product_Page.map_bridge_text_background ne ''}
     {literal}
@@ -86,6 +98,9 @@
     {include file="meta.tpl" }
 
 {if ($main eq "product")}
+    {if $oProduct}
+        <link rel="amphtml" href="{$oProduct->getAbsoluteUrl(true, true)}">
+    {/if}
 {* igor_async *}
 <script src="{$SkinDir}/jquery.tooltip.js" type="text/javascript"></script>
 
@@ -94,6 +109,8 @@
 {if ($main eq "product")}
 {* igor_async *}
 <script type="text/javascript" src="{$SkinDir}/lib/jqueryui/jquery-ui.custom.min.js"></script>
+<script type="text/javascript" src="{$SkinDir}/js/spinner.js"></script>
+<script type="text/javascript" src="{$SkinDir}/js/group.js"></script>
 {/if}
 <script type="text/javascript" src="{$SkinDir}/js/jquery.visible.min.js"></script>
 <script src="{$SkinDir}/js/google_analytics_impressions.js" type="text/javascript"></script>
@@ -146,155 +163,125 @@ window.attachEvent("onload", anchor_fix);
 //<![CDATA[
 {literal}
 
-	function func_load_ALL_ajax_carousels(load_ajax_sections, ajax_counter){
-
+    function func_load_ALL_ajax_carousels(load_ajax_sections, ajax_counter)
+    {
         var load_ajax_sections_arr = load_ajax_sections.split(',');
-        var count_ajax_sections = load_ajax_sections_arr.length;
-        var load_ajax_carousel_flag;
 
         load_ajax_sections_arr.forEach(function (section_name, i, load_ajax_sections_arr) {
-
-            section_name.trim();
-
-            if ((ajax_counter - 1) == i) {
-                    func_load_ajax_carousel_products(section_name);
-            }
+            setTimeout(function(){section_name.trim(); func_load_ajax_carousel_products(section_name)}.bind(section_name), 1400);
         });
 
-//$("#test_text").val(ajax_counter);
+    }
 
-        ajax_counter++;
-        setTimeout("func_load_ALL_ajax_carousels('" + load_ajax_sections + "'," + ajax_counter + ")", 1400);
-	}
+function func_load_ajax_carousel_products(section_name)
+{
+    var tmp_rand = Math.random();
+    var options = {'section_name': section_name};
+    {/literal}
+    {if $product.productid ne ""}
+        {literal}options['productid'] = {/literal}{$product.productid}{literal};{/literal}
+    {/if}
+    {literal}
 
-function func_load_ajax_carousel_products(section_name) {
+    $.post('cidev_ajax_suggestions.php?rand=' + tmp_rand,options, function(data)
+    {
+        if (data)
+        {
+            var obj = $.parseJSON(data);
+            var html = '<ul>';
+            var a_href = '';
 
-    cidev_xmlHttp = cidev_createHttpRequestObject();
-    if (cidev_xmlHttp.readyState == 4 || cidev_xmlHttp.readyState == 0) {
+            var ga_page_name = '{/literal}{$ga_page_name}{literal}';
 
-        var cidev_parameters = 'section_name=' + section_name;
-
-        {/literal}
-        {if $product.productid ne ""}
-        {literal}
-        var productid = {/literal}{$product.productid}{literal};
-        cidev_parameters = cidev_parameters + '&productid=' + productid;
-        {/literal}
-        {/if}
-        {literal}
-
-
-        cidev_xmlHttp.onreadystatechange = function () {
-            if (cidev_xmlHttp.readyState == 4) {
-                if (cidev_xmlHttp.status == 200) {
-                    var data = cidev_xmlHttp.responseText;
-
-                    if (data != "") {
-                        $("#" + section_name).show();
+            if (obj !== undefined) {
+                $.each(obj.items, function () {
+                    if (this.clean_url != '') {
+                        a_href = this.clean_url;
+                    } else {
+                        a_href = 'product.php?productid=' + this.productid;
                     }
-
-                    var obj = jQuery.parseJSON(data);
-
-                    var html = '<ul>';
-                    var a_href = '';
-
-                    var ga_page_name = '{/literal}{$ga_page_name}{literal}';
-
-                    if (obj) {
-                        $.each(obj.items, function () {
-                            if (this.clean_url != '') {
-                                a_href = this.clean_url + '/';
-                            } else {
-                                a_href = 'product.php?productid=' + this.productid;
-                            }
-                            ga_page_name = this.ga_param;
-                            html += '<li class="google_impression_object" data-productid="'+this.productid+'" data-name="'+this.product+'" data-category="'+this.category+'" data-brand="'+this.brand+'" data-list="'+ga_page_name+'" data-price="'+this.price+'" data-position="'+this.N_key+'" class="active">' +
-                                    '<div style="text-align: center;">' +
-                                    '<a href="' + a_href + '" onclick="onProductClick(\'' + this.productid + '\',\'' + this.product + '\',\'' + this.category + '\',\'' + this.brand + '\',\'' + this.N_key + '\',\'' + ga_page_name + '\',\'' + this.price + '\'); return !ga.loaded;"><img src="' + this.src + '" alt="' + this.product + '"></a>' +
-                                    '<br />' + '<a href="' + a_href + '" onclick="onProductClick(\'' + this.productid + '\',\'' + this.product + '\',\'' + this.category + '\',\'' + this.brand + '\',\'' + this.N_key + '\',\'' + ga_page_name + '\',\'' + this.price + '\'); return !ga.loaded;">' + this.title + '</a>' +
-                                    '<br /> <font class="ProductPrice">Our Price: US$ ' + this.price + '</font>' +
-                                    '</div>' +
-                                    '</li>';
-                        });
+                    ga_page_name = this.ga_param;
+                    html += '<li class="google_impression_object" data-product-id="'+this.productid+'" data-name="'+this.product+'" data-category="'+this.category+'" data-brand="'+this.brand+'" data-list="'+ga_page_name+'" data-price="'+this.price.toFixed(2)+'" data-position="'+this.N_key+'" class="active">' +
+                        '<div style="text-align: center;"><div style="width:150px;height:150px; margin:0 auto;">' +
+                        '<a href="' + a_href + '" onclick="onProductClick(\'' + this.productid + '\',\'' + this.product + '\',\'' + this.category + '\',\'' + this.brand + '\',\'' + this.N_key + '\',\'' + ga_page_name + '\',\'' + this.price + '\'); return !ga.loaded;">';
+                    if (this.thumb && this.thumb.length) {
+                        html += this.thumb;
                     }
-
-                    html += '</ul>';
-
-                    $('#jcarousel_' + section_name).html(html).parent().after('<ul class="pages"></ul>');
-
-
-
-                    jQuery(function ($) {
-                        'use strict';
-
-                        // -------------------------------------------------------------
-                        //   Basic Navigation
-                        // -------------------------------------------------------------
-                        (function () {
-                            var $frame = $('#jcarousel_' + section_name);
-                            var $wrap = $frame.parent().parent();
-
-                            var options = {
-                                horizontal: 1,
-                                itemNav: 'basic',
-                                smart: 1,
-                                activateOn: 'click',
-                                mouseDragging: 1,
-                                touchDragging: 1,
-                                releaseSwing: 1,
-                                startAt: 0,
-                                scrollBar: $wrap.find('.scrollbar'),
-                                scrollBy: 0,
-                                pagesBar: $wrap.find('.pages'),
-                                activatePageOn: 'click',
-                                speed: 300,
-                                elasticBounds: 1,
-                                easing: 'easeOutExpo',
-                                dragHandle: 1,
-                                dynamicHandle: 1,
-                                clickBar: 1,
-
-                                // Buttons
-                                prevPage: $wrap.find('.jcarousel-control-prev'),
-                                nextPage: $wrap.find('.jcarousel-control-next')
-                            };
-                            try {
-                                var frame = new Sly('#jcarousel_' + section_name, options, {
-                                    load: checkCarouselsVisibility,
-                                    moveEnd: checkCarouselsVisibility
-                                }).init();
+                    html += '</a></div>' +
+                        '<br />' + '<a href="' + a_href + '" onclick="onProductClick(\'' + this.productid + '\',\'' + this.product + '\',\'' + this.category + '\',\'' + this.brand + '\',\'' + this.N_key + '\',\'' + ga_page_name + '\',\'' + this.price.toFixed(2) + '\'); return !ga.loaded;">' + this.product + '</a>';
+                    if (this.is_group === true) {
+                        if (this.price > 0) {
+                            var range = '';
+                            if (this.price !== this.price_2) {
+                                range = ' - US$ ' + this.price_2.toFixed(2);
                             }
-                            catch(err) {
-                                //
-                            }
-
-
-                        }());
-
-                    });
-
-
-                    /* ------------------------------------------------------------------------------------- */
-
-                } else {
-//                                                        cidev_Error('no_server', 'Y');
-                }
+                            html += '<br /> <span class="ProductPrice">US$ ' + this.price.toFixed(2) + range + '</span>';
+                        }
+                    } else
+                    {
+                        html += '<br /> <span class="ProductPrice">US$ ' + this.price.toFixed(2) + '</span>';
+                    }
+                    html += '</div>' +
+                        '</li>';
+                });
             }
-        };
 
-        var tmp_rand = Math.random();
+            html += '</ul>';
 
-        cidev_xmlHttp.open('POST', 'cidev_ajax_suggestions.php?rand=' + tmp_rand, true);
-        cidev_xmlHttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-        //cidev_xmlHttp.setRequestHeader('Content-length',cidev_parameters.length);
-        cidev_xmlHttp.setRequestHeader('Cache-Control', 'no-cache');
-        cidev_xmlHttp.setRequestHeader('Cache-Control', 'no-store');
-        //cidev_xmlHttp.setRequestHeader('Connection','close');
-        cidev_xmlHttp.send(cidev_parameters);
-    }
-    else {
-        setTimeout('func_load_ajax_carousel_products()', 1400);
-    }
+            if (data != "") {
+                $("#" + section_name).show();
+            }
+
+            $('#jcarousel_' + section_name).html(html).parent().after('<ul class="pages"></ul>');
+            jQuery(function ($) {
+                'use strict';
+
+                // -------------------------------------------------------------
+                //   Basic Navigation
+                // -------------------------------------------------------------
+                (function () {
+                    var $frame = $('#jcarousel_' + section_name);
+                    var $wrap = $frame.parent().parent();
+
+                    var options = {
+                        horizontal: 1,
+                        itemNav: 'basic',
+                        smart: 1,
+                        activateOn: 'click',
+                        mouseDragging: 1,
+                        touchDragging: 1,
+                        releaseSwing: 1,
+                        startAt: 0,
+                        scrollBar: $wrap.find('.scrollbar'),
+                        scrollBy: 0,
+                        pagesBar: $wrap.find('.pages'),
+                        activatePageOn: 'click',
+                        speed: 300,
+                        elasticBounds: 1,
+                        easing: 'easeOutExpo',
+                        dragHandle: 1,
+                        dynamicHandle: 1,
+                        clickBar: 1,
+
+                        // Buttons
+                        prevPage: $wrap.find('.jcarousel-control-prev'),
+                        nextPage: $wrap.find('.jcarousel-control-next')
+                    };
+                    try {
+                        var frame = new Sly('#jcarousel_' + section_name, options, {
+                            load: checkCarouselsVisibility,
+                            moveEnd: checkCarouselsVisibility
+                        }).init();
+                    }
+                    catch(err) {
+                    }
+
+
+                }());
+
+            });
+        }
+    });
 }
 {/literal}
 //]]>
@@ -312,10 +299,14 @@ function func_load_ajax_carousel_products(section_name) {
 
 {/if}
 
-
-{* ------------------- *}
 {include file="cidev_tracking_code.tpl" }
-{* ------------------- *}
+
+{if !($usertype eq "A" || $usertype eq "P")}
+    <script type="text/javascript">
+        ga('send', 'pageview');
+    </script>
+{/if}
+
 
 {include file="head.tpl" }
 {include file="rectangle_top.tpl" }
@@ -412,7 +403,7 @@ function func_load_ajax_carousel_products(section_name) {
 {/if}
 
 {if $use_schema_org eq "Y" && $main eq "product"}
-<meta itemscope="" itemtype="http://schema.org/Product" itemref="so_image so_category so_name so_url so_description so_gtin so_weight so_brand so_manuf so_sku so_mpn so_model so_offer"/>
+<meta itemscope="" itemtype="http://schema.org/Product" itemref="{if !$oProduct->isGroupRoot()}so_image so_gtin so_weight{/if} so_category so_name so_url so_description so_brand so_manuf so_sku so_mpn so_model so_offer"/>
 {/if}
 <table cellpadding="0" cellspacing="0" width="100%">
 <tr><td colspan=3 height="10">&nbsp;</td></tr>
@@ -444,9 +435,7 @@ function func_load_ajax_carousel_products(section_name) {
 <div id="recently_viewed_products" style="display: none;">{include file="customer/main/ajax_carousel_products.tpl" section_name="recently_viewed_products" section_title=$lng.lbl_recently_viewed_products}</div>
 
 <script type="text/javascript">
-//<![CDATA[
-func_load_ALL_ajax_carousels("recently_viewed_products", 0);
-//]]>
+    func_load_ALL_ajax_carousels("recently_viewed_products", 0);
 </script>
 {/if}
 {* ------------------------- *}
@@ -539,7 +528,7 @@ $(document).ready(function() {
 {literal}
 <script type="text/javascript">
 
-function downloadJSAtOnload() 
+function downloadJSAtOnload()
 {
 {/literal}
 {if !($main eq "fast_lane_checkout")}

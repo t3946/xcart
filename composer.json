@@ -1,27 +1,54 @@
 {
     "config": {
-        "vendor-dir": "include/libs"
+        "vendor-dir": "include/libs",
+        "platform": {
+            "php": "5.4.36"
+        }
     },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/tsukasa-mixer/QueryBuilder"
+        }
+    ],
     "require": {
-        "google/apiclient": "^2.0"
+        "google/apiclient": "^2.0",
+        "mindy/query_builder": "dev-master_5.4",
+        "gabrielbull/ups-api": "^0.4.0",
+        "jaybizzle/crawler-detect": "^1.2",
+        "fenom/fenom": "^2.11",
+        "paypal/rest-api-sdk-php": "*",
+        "symfony/validator": "^2.8",
+        "true/punycode": "^2.1",
+        "caponica/amazon-mws-complete": "dev-master",
+        "mobiledetect/mobiledetectlib": "^2.8",
+        "omnipay/paypal": "v2.6.3",
+        "league/flysystem": "^1.0",
+        "symfony/http-foundation": "^2.8",
+        "monolog/monolog": "^1.22",
+        "theiconic/php-ga-measurement-protocol": "^1.2",
+        "imagine/imagine": "^0.7.1",
+        "swiftmailer/swiftmailer": "^5.4",
+        "cocur/slugify": "^1.4"
     },
     "autoload": {
         "psr-4": {
             "Xcart\\": "include/Xcart",
+            "Modules\\": "app/Modules",
             "Xcart\\External_Product_Verification\\": "modules/External_Product_Verification/include",
-            "Xcart\\External_Marketplaces\\": "modules/External_Marketplaces/include"
+            "Xcart\\External_Marketplaces\\": "modules/External_Marketplaces/include",
+            "Omnipay\\BluePay\\" : "app/Modules/Payment/Gateways/Omnipay/BluePay",
+            "Omnipay\\PayPal\\" : "app/Modules/Payment/Gateways/Omnipay/PayPal"
         },
-        "classmap": ["MarketplaceWebService",
-            "src/FBAOutboundServiceMWS",
-            "MarketplaceWebServiceOrders",
-            "FBAInventoryServiceMWS",
-            "MarketplaceWebServiceProducts"
+        "classmap": [
+            "include/libs/caponica/amazon-mws-complete/src/AmazonPhpClientLibrary/FBAOutboundServiceMWS",
+            "include/libs/caponica/amazon-mws-complete/src/AmazonPhpClientLibrary/MarketplaceWebService",
+            "src/FBAInventoryServiceMWS"
         ],
         "files": [
             "include/func/func.core.php",
             "include/func/func.amazon.php",
             "include/func/func.amazon_shipping.php",
-            "include/func/func.amazon_shipping_connecter.php",
             "include/func/func.backoffice.php",
             "include/func/func.cart.php",
             "include/func/func.category.php",

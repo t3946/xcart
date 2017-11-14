@@ -1,55 +1,85 @@
 <?php
+
 namespace Xcart\External_Marketplaces\Marketplaces;
-use Xcart\Product;
+
+use Modules\Product\Models\ProductModel;
+use Modules\Product\Models\UpdatedProductModel;
 use Xcart\External_Marketplaces\StoreFrontMarketPlace;
 
 class Bing extends StoreFrontMarketPlace
 {
-    public function addProductToBatch(Product $oProduct, $update_type, $sExtraLog = "N")
+    public function addProductToBatch($queue, $googleOneRow = "", $sExtraLog = "N")
     {
-        if ($this->checkProductExcludedMarketPlace($oProduct->getProductId()) && $this->checkMarketplaceRestrictions($oProduct)) {
-            if ($update_type == "1" || $update_type == "1,2" || (($update_type == "2" && $oProduct->getField('forsale') == "N"))) {
-                $batchid = $this->iProductsBatchCount;
-                $count_bproducts = count($this->aProducts);
-                $this->aProducts[$count_bproducts]["productid"] = $oProduct->getProductId();
-                $this->aProducts[$count_bproducts]["Batchid"] = $batchid;
-                $this->aProducts[$count_bproducts]["product_info"] = GetGoogleBaseOneRow($oProduct->getProductId(), "main_google", $sExtraLog);
-                $this->iProductsBatchCount++;
-
-            } elseif ($update_type == "2" && $oProduct->getField('forsale') == "Y") {
-                $batchid =  $this->iInventoryBatchCount;
-                $count_binventory = count($this->aInventory);
-                $this->aInventory[$count_binventory]["productid"] = $oProduct->getProductId();
-                $this->aInventory[$count_binventory]["Batchid"] = $batchid;
-                $this->iInventoryBatchCount++;
+        $result = false;
+        $oProduct = $queue->product;
+        if ($this->checkProductExcludedMarketPlace($oProduct->productid) && $this->checkMarketplaceRestrictions($queue)) {
+            $batchid = $this->iProductsBatchCount;
+            $count_bproducts = count($this->aProducts);
+            $this->aProducts[$count_bproducts]["productid"] = $oProduct->productid;
+            $this->aProducts[$count_bproducts]["Batchid"] = $batchid;
+            $this->aProducts[$count_bproducts]["product_info"] = $googleOneRow;
+            $this->aProducts[$count_bproducts]["queue"] = $queue;
+            $this->iProductsBatchCount++;
+            $result = true;
+        } else {
+            list($queue_n) = UpdatedProductModel::objects()->getOrNew(
+                [
+                    'resourceid' => $queue->resourceid,
+                    'type' => $queue->type
+                ]);
+            if ($queue_n) {
+                $queue_n->mask &= ~intval($this->getExternalMarketPlaceEntity()->mask);
+                $queue_n->save();
             }
-        }
 
-        return $this;
+        }
+        return $result;
     }
 
-    public function checkMarketplaceRestrictions(Product $oProduct)
+    public function checkMarketplaceRestrictions($queue)
     {
-        $bResult = true;
-        $aDetailedImages = $oProduct->getDetailedImages();
-        if (empty($aDetailedImages))
-            $bResult = false;
+        $bResult = parent::checkMarketplaceRestrictions($queue);
+
+        $aDetailedImages = $queue->product->getDetailedImages();
+
+        if (empty($aDetailedImages)) {
+            return false;
+        }
+
         return $bResult;
     }
 
-    public function submitInventoryBatch($debug_mode = 'N', $extra_log='N') {
-        $error = SubmitBingInventoryBatch($this->getInventory(),$this->getP0(), $this->getP1(), $this->getP2(), $this->getFTPLogin(), $this->getFTPPassword(), $this->getFTPPath(), $debug_mode);
-        if ($error == 500)
-            $this->RestoreQueue($this->getInventory(), 2);
+    public function submitInventoryBatch($debug_mode = 'N', $extra_log = 'N')
+    {
+        $error = SubmitBingInventoryBatch($this->getInventory(), $this->getP0(), $this->getP1(), $this->getP2(), $this->getFTPLogin(), $this->getFTPPassword(), $this->getFTPPath(), $debug_mode);
 
-        $this->setInventoryBatchCount(0)->setInventory([]);
+        if ($error == 500 || $error == 100) {
+            return false;
+        }
+
+        return true;
     }
 
-    public function submitProductsBatch($debug_mode = 'N', $extra_log='N') {
-        $error = SubmitBingProductsBatch($this->getProducts(),$this->getP0(), $this->getP1(), $this->getP2(), $this->getFTPLogin(), $this->getFTPPassword(), $this->getFTPPath(), $debug_mode);
-        if ($error == 500)
-            $this->RestoreQueue($this->getProducts(), 1);
+    public function submitProductsBatch($debug_mode = 'N', $extra_log = 'N')
+    {
+        $error = SubmitBingProductsBatch($this->getProducts(), $this->getP0(), $this->getP1(), $this->getP2(), $this->getFTPLogin(), $this->getFTPPassword(), $this->getFTPPath(), $debug_mode);
 
-        $this->setProductsBatchCount(0)->setProducts([]);
+        if ($error == 500 || $error == 100) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public function getGoogleOneRow(ProductModel $oProduct, $queue, $sExtraLog)
+    {
+        $result = null;
+
+        if ($this->checkMarketplaceRestrictions($queue)) {
+            $result = GetGoogleBaseOneRow($oProduct->productid, "main_google", $sExtraLog, false);
+        }
+
+        return $result;
+
     }
 }

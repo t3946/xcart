@@ -5,13 +5,18 @@
 //<![CDATA[
 {literal}
 $(function(){
- document.onkeydown = function(e) {
-        if (e.keyCode == "81"){
-                if (document.getElementById('s3_logo')){
-			$('#s3_logo').attr('href', "javascript: window.open('popup_shipquote.php','popup_shipquote','width=800,height=600,toolbar=no,status=no,scrollbars=yes,menubar=no,location=no,direction=no'); void(0);");
-                }
+    document.onkeydown = function (e) {
+        if (e.keyCode == "81") {
+            if (document.getElementById('s3_logo')) {
+                $('#s3_logo').attr('href', "javascript: window.open('popup_shipquote.php','popup_shipquote','width=800,height=600,toolbar=no,status=no,scrollbars=yes,menubar=no,location=no,direction=no'); void(0);");
+            }
         }
- }
+        if (e.keyCode == "87") {
+            if (document.getElementById('s3_logo')) {
+                $('#s3_logo').attr('href', "javascript: window.open('popup_shipquote2.php','popup_shipquote2','width=800,height=600,toolbar=no,status=no,scrollbars=yes,menubar=no,location=no,direction=no'); void(0);");
+            }
+        }
+    }
 
  document.onkeyup = function(e) {
 	if (document.getElementById('s3_logo')){
@@ -34,7 +39,7 @@ $(function(){
 
 <table border="0" cellpadding="0" cellspacing="0" width="984" align="center" class="header_line1">
  <tr>
-  <td width="58%" style="padding-left: 20px;">
+  <td width="50%" style="padding-left: 20px;">
 {if $top_pages_menu ne "" && !(($smarty.get.mode eq "checkout") || ($smarty.get.mode eq "update" && $smarty.get.action eq "cart")) }
   {section name=top_page loop=$top_pages_menu}
     {if $top_pages_menu[top_page].image.filename ne ""}
@@ -55,18 +60,19 @@ $(function(){
 
 {/if}
   </td>
-  <td width="*" align="right" style="padding-right: 20px;">
-<span class="top_text_1">
- Place order online or call
-</span>
-<span class="top_text_2">
-{if $geo_litecity_location.phone ne ""}
-&nbsp; {$geo_litecity_location.phone}
-{else}
-&nbsp; {$config.Company.cidev_top_header_code}
-{/if}
-</span>
-  </td>
+     <td width="*" align="right" style="padding-right: 20px;">
+        <span class="top_text_1" style="margin-right: 8px;">
+         Place order online or call
+        </span>
+         {if $geo_litecity_location.phone ne ""}
+         <span class="top_text_2">
+             {$geo_litecity_location.phone} <span style="color: #939393;">/</span>
+         </span>
+         {/if}
+         <span class="top_text_2">
+            {$config.Company.cidev_top_header_code}
+        </span>
+     </td>
  </tr>
 </table>
 
@@ -79,7 +85,9 @@ $(function(){
         <tr>
 
         <td width="250" valign="middle">
-        {if !($main eq "catalog" && $current_category.category eq "") || $smarty.get.page ne "" || $search_keyword eq true}<a href="/">{/if}<img src="{if $HTTPS_url eq "N" && $config.Appearance.CDN_domain ne "" && $config.Appearance.Enable_CDN eq "Y"}{$config.Appearance.CDN_domain}{else}{$xcart_web_dir}{/if}/image.php?id={$current_storefront_info.storefrontid}&amp;type=S" {if $current_storefront_info.image.image_x gt "250"} width="250" {/if}  alt="Home page" />{if !($main eq "catalog" && $current_category.category eq "") || $smarty.get.page ne "" || $search_keyword eq true}</a>{/if}
+        {if !($main eq "catalog" && $current_category.category eq "") || $smarty.get.page ne "" || $search_keyword eq true}<a href="/">{/if}
+                <img src="{include file="product_image_path.tpl"}/image.php?id={$current_storefront_info.storefrontid}&amp;type=S" {if $current_storefront_info.image.image_x gt "250"} width="250" {/if}  alt="{if $config.Company.sf_top_image_alt ne "" }{$config.Company.sf_top_image_alt}{else}{$config.Company.company_name}{/if}" />
+        {if !($main eq "catalog" && $current_category.category eq "") || $smarty.get.page ne "" || $search_keyword eq true}</a>{/if}
         </td>
 
 {if $main eq "fast_lane_checkout" || $main eq "order_message"}
@@ -139,6 +147,14 @@ $(function(){
 {/if}
   </td>
  </tr>
+</table>
+
+<table width="960" cellpadding="0" cellspacing="0" align="center">
+    <tr>
+        <td align="center">
+            {getBanners position='top'}
+        </td>
+    </tr>
 </table>
 
 {if $main eq "order_message"}

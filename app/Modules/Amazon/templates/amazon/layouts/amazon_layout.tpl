@@ -1,0 +1,1 @@
+{extends 'amazon/layouts/admin.tpl'}

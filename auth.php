@@ -34,11 +34,13 @@
 # $Id: auth.php,v 1.30.2.4 2006/11/01 12:37:40 twice Exp $
 #
 
+use Modules\Core\Helpers\GeoipHelper;
+
 define('AREA_TYPE', 'C');
 
-@include_once "./top.inc.php";
-@include_once "../top.inc.php";
-@include_once "../../top.inc.php";
+if (file_exists("./top.inc.php")) {@include_once "./top.inc.php";}
+if (file_exists("../top.inc.php")) {@include_once "../top.inc.php";}
+if (file_exists("../../top.inc.php")) {@include_once "../../top.inc.php";}
 if (!defined('DIR_CUSTOMER')) die("ERROR: Can not initiate application! Please check configuration.");
 
 include_once $xcart_dir."/init.php";
@@ -65,27 +67,17 @@ x_session_register("add_to_cart_time");
 
 x_session_register("always_allow_shop");
 
-
-
-#
-# Clear/update shipping rates cache
-#
-db_query("DELETE FROM $sql_tbl[shipping_cache] WHERE expiration_date<'".time()."'");
-global $XCART_SESSION_EXPIRY;
-db_query("UPDATE $sql_tbl[shipping_cache] SET expiration_date='$XCART_SESSION_EXPIRY' WHERE session_id='$XCARTSESSID'");
-
 if (!empty($_GET['shopkey'])) {
     $always_allow_shop = (!empty($config['General']['shop_closed_key']) && $_GET['shopkey'] == $config['General']['shop_closed_key']);
 }
 
 if ($config["General"]["shop_closed"] == "Y" && !$always_allow_shop){
-	#
-	# Close store front
-	# Thanks to rubyaryat for the Shop Closed mod
-	#
-	if (!func_readfile($xcart_dir.DIRECTORY_SEPARATOR.$shop_closed_file, true))
-		echo func_get_langvar_by_name("txt_shop_temporarily_unaccessible",false,false,true);
-	exit();
+	if (!$config["General"]["shop_closed_method"]) {
+        if (!func_readfile($xcart_dir.DIRECTORY_SEPARATOR.$shop_closed_file, true)) {
+            echo func_get_langvar_by_name("txt_shop_temporarily_unaccessible",false,false,true);
+            exit();
+        }
+    }
 }
 
 ###
@@ -94,7 +86,6 @@ if (empty($Username) || empty($Password))
 require $xcart_dir."/include/nocookie_warning.php";
 
 if (!defined('HTTPS_CHECK_SKIP')) {
-//	@include $xcart_dir.DIR_CUSTOMER."/https.php";
 	include_once $xcart_dir.DIR_CUSTOMER."/https.php";
 }
 
@@ -161,6 +152,7 @@ if (!empty($top_message)) {
 
 $cat = intval(@$cat);
 $page = intval(@$page);
+$smarty->assign('cat', $cat);
 
 if (!empty($active_modules['XAffiliate'])) {
 	include $xcart_dir."/include/partner_info.php";
@@ -172,7 +164,6 @@ if (!empty($active_modules['Mailchimp_Subscription'])) {
 }
 
 
-include $xcart_dir.DIR_CUSTOMER."/referer.php";
 
 include $xcart_dir."/include/check_useraccount.php";
 
@@ -218,8 +209,18 @@ if (!empty($active_modules["Subscriptions"])) {
         $smarty->assign("user_subscription", is_user_subscribed($login));
     }
 }
+$pages_sql = /** @lang MySQL */ <<<SQL
+SELECT * 
+FROM {$sql_tbl['pages']} 
+WHERE language='{$store_language}' 
+  AND active='Y' 
+  AND level='E' 
+  AND orderby <= '500'
+  AND (sfids = '' or sfids like '%{$current_storefront}%')
+ORDER BY orderby, title
+SQL;
 
-$pages_menu = func_query("SELECT * FROM $sql_tbl[pages] WHERE language='$store_language' AND active='Y' AND level='E' AND orderby <= '500' ORDER BY orderby, title");
+$pages_menu = func_query($pages_sql);
 
 #
 ##
@@ -397,6 +398,17 @@ $variant_id_for_point9 = Get_AB_Variant(9);
 x_session_save("variant_id_for_point9");
 $smarty->assign("variant_id_for_point9", $variant_id_for_point9);
 
+x_session_register('variant_id_for_point10');
+$variant_id_for_point10 = (defined('LOCAL_SF_ID') ? 1 : Get_AB_Variant(10));
+x_session_save("variant_id_for_point10");
+$smarty->assign("variant_id_for_point10", $variant_id_for_point10);
+
+x_session_register('variant_id_for_point11');
+$variant_id_for_point11 = (defined('LOCAL_SF_ID') ? 1 : Get_AB_Variant(11));
+x_session_save("variant_id_for_point11");
+$smarty->assign("variant_id_for_point11", $variant_id_for_point11);
+
+
 
 //$smarty->assign("pointid_ab_testing_arr", $pointid_ab_testing_arr); // try to move to func_display
 ###
@@ -434,15 +446,15 @@ if (!empty($config["Appearance"]["Google_Trusted_Store_ID"])){
 		$GTS_badge_code = str_replace('gts.push(["google_base_offer_id", ""]);', "", $GTS_badge_code);
 
 		$smarty->assign("GTS_badge_code", $GTS_badge_code);
-//	}
 }
-###
-##
-#
 
-$geo_litecity_location = func_get_geoip_locations($CLIENT_IP, $geo_litecity_location_debug);
-if (!empty($geo_litecity_location)) {
-	$smarty->assign('geo_litecity_location', $geo_litecity_location);
+if ($geoipModel = GeoipHelper::getGeoipLocation($CLIENT_IP)) {
+    $smarty->assign('geo_litecity_location',
+        array_merge(
+            $geoipModel->getAttributes(),
+            ['phone' => $geoipModel->state_model->phone]
+        )
+    );
 }
 
 func_detect_working_hours();
@@ -456,4 +468,15 @@ $smarty->assign('viralmarketingbomb_shown', $viralmarketingbomb_shown);
 ##
 #
 
-?>
+$gPage_status = [
+    'match' => false
+];
+
+$matches = [];
+preg_match_all('/\/([\w\d-]+)/i', $_GET['request_uri'], $matches);
+
+if (!empty($matches[1]))
+{
+    $gPage_status['match'] = true;
+    list($gPage_status['type'], $gPage_status['page_id'], $gPage_status['slut']) = $matches[1];
+}

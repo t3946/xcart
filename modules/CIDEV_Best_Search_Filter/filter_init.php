@@ -1,5 +1,9 @@
 <?php
 
+if ($gPage_status['match'] && $gPage_status['type'] == 'brand') {
+    $b_ids = [$gPage_status['page_id'] => "Y"];
+}
+
 $aFilterSelected = null;
 if (!empty($fv_ids))
     $aFilterSelected = array_keys($fv_ids);
@@ -21,15 +25,25 @@ if (!empty($p_ids)) {
 }
 
 if (!empty($b_ids)) {
-    if (!empty($b_ids)) {
-        $oFilter->setBrandSelected(
-            \Xcart\Brand::model()->findAll(\Xcart\SQLBuilder::getInstance()->addCondition('brandid IN (' . implode(',', array_keys($b_ids)) . ')'))
-        );
-    }
+    $oFilter->setBrandSelected(
+        \Xcart\Brand::model()->findAll(\Xcart\SQLBuilder::getInstance()->addCondition('brandid IN (' . implode(',', array_keys($b_ids)) . ')'))
+    );
 }
 
 $aFilterValues = $oFilter->getMoreBrands();
 $smarty->assign("aBrandFilters", $aFilterValues);
+
+if ($gPage_status['match'] && $gPage_status['type'] == 'brand')
+{
+    $selected_brandids = [];
+    if (!empty($aFilterValues)) {
+        foreach ($aFilterValues as $aFilterValue) {
+            $selected_brandids[] = $aFilterValue->getBrandId();
+        }
+    }
+
+    $smarty->assign('filter_selected_brandids', $selected_brandids);
+}
 
 
 

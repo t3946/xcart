@@ -22,9 +22,9 @@ class StoreFront extends Data
     private function _init()
     {
         if ($this->getStoreFrontId() > 0) {
-            $this->sConfigTable = self::$sql_tbl['storefronts_config'];
+            $this->sConfigTable = 'xcart_storefronts_config';
         } else {
-            $this->sConfigTable = self::$sql_tbl['config'];
+            $this->sConfigTable = 'xcart_config';
             $this->fill(['storefrontid'=>0, 'domain'=>MAIN_SF_DOMAIN]);
         }
     }
@@ -83,7 +83,7 @@ class StoreFront extends Data
         return $this->getField('domain');
     }
 
-    public function getStoreFrontURL($protocol = 'http://')
+    public function getStoreFrontURL($protocol = '//')
     {
         return $protocol.$this->getDomain();
     }
@@ -109,5 +109,25 @@ class StoreFront extends Data
     {
         $this->fetchCompanyName();
         return $this->CompanyName;
+    }
+
+    public function getConfigValue($sName){
+        $addSQL = '';
+        $this->_init();
+        if ($this->getStoreFrontId() > 0) {
+            $addSQL = ' AND storefrontid=' . $this->getStoreFrontId();
+        }
+        $sValue = func_query_first_cell("SELECT value FROM " . $this->sConfigTable . " WHERE name='$sName' " . $addSQL);
+        return $sValue;
+    }
+
+    public function updateConfigValue($sName, $sValue)
+    {
+        $this->_init();
+        $aParam = ['name' => $sName];
+        if ($this->getStoreFrontId() > 0) {
+            $aParam['storefrontid'] = $this->getStoreFrontId();
+        }
+        Connection::getInstance()->update($this->sConfigTable, ['value' => $sValue], $aParam);
     }
 }

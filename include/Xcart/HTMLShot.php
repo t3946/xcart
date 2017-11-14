@@ -15,10 +15,12 @@ class HTMLShot extends Data
     public function createHTMLShot(Product $oProduct, $orderid)
     {
         global $xcart_dir;
-        $aImagesD = $oProduct->getImages('D');
+        $aImages = $oProduct->getImages('D');
         $aImagesP = $oProduct->getImages('P');
         /** @var ProductImage[] $aImages */
-        $aImages = array_merge($aImagesD, $aImagesP);
+        if (!empty($aImagesP) && is_array($aImagesP)) {
+            $aImages = array_merge($aImages, $aImagesP);
+        }
         $oStoreFront = $oProduct->getStoreFront();
 
         if (!empty($aImages)) {
@@ -62,8 +64,6 @@ class HTMLShot extends Data
      */
     public function getHTMLShot()
     {
-        global $xcart_dir;
-        require_once $xcart_dir . "/include/classProduct.php";
         return unserialize($this->getField('htmlshot'));
     }
 

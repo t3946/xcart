@@ -1,6 +1,10 @@
 <?php
 namespace Xcart;
 
+use Modules\Core\Models\StateModel;
+use Modules\Order\Helpers\OrderTagEventHelper;
+use Modules\Shipping\Helpers\ShippingHelper;
+
 class OrderGroup extends Data
 {
     const RECONCILED_NONE = 0;
@@ -39,7 +43,7 @@ class OrderGroup extends Data
     private $oShippingMethod = null;
 
     /**
-     * @var OrderDetail
+     * @var OrderDetail[]
      */
     private $aOrderDetails = null;
 
@@ -117,6 +121,17 @@ class OrderGroup extends Data
         return $this;
     }
 
+
+    public function getRealShippingMethod()
+    {
+        return $this->getField('real_shipping_method');
+    }
+
+    public function setRealShippingMethod($val)
+    {
+        $this->setField('real_shipping_method', $val);
+    }
+
     public function getShippingGross()
     {
         return floatval($this->getField('shipping_gross'));
@@ -141,8 +156,11 @@ class OrderGroup extends Data
     {
         if (is_null($this->fCostToUs)) {
             $this->fCostToUs = 0;
-            foreach ($this->getOrderDetails() as $oOrderDetails) {
-                $this->fCostToUs += $oOrderDetails->getCostToUs();
+            $orderDetails = $this->getOrderDetails();
+            if (!empty($orderDetails)) {
+                foreach ($this->getOrderDetails() as $oOrderDetails) {
+                    $this->fCostToUs += $oOrderDetails->getCostToUs();
+                }
             }
         }
         return $this->fCostToUs;
@@ -831,14 +849,17 @@ class OrderGroup extends Data
     {
         $this->initAccounting();
         if ($this->getPaymentMethodInstance()->isPaymentMethodSet()) {
-            if ($this->getOrderInstance()->isOrderAmazon() || $this->isOrderGroupShippedByAmazon()) $this->recalculateAccountingAmazon(); else {
-                $this
-                    ->setAccountingGross($this->getPaymentMethodInstance()->getSumAfterProcessorFee($this->getTotalGross()))
+            if ($this->getOrderInstance()->isOrderAmazon() || $this->isOrderGroupShippedByAmazon()) {
+                $this->recalculateAccountingAmazon();
+            } else {
+                $this->setAccountingGross($this->getPaymentMethodInstance()
+                    ->getSumAfterProcessorFee($this->getTotalGross()))
                     ->initAccountingHST()
                     ->initAccountingPST();
 
                 if ($this->getOrderGroupInvoices()->countOrderGroupInvoices() > 0) {
-                    $this->setAccountingGrossCostToUs($this->getOrderGroupInvoices()->getOrderGroupInvoicesProductTotal())->
+                    $this->setAccountingGrossCostToUs($this->getOrderGroupInvoices()->getOrderGroupInvoicesProductTotal() +
+                        $this->getOrderGroupInvoices()->getOrderGroupInvoicesHST())->
                     setAccountingGrossShipping($this->getOrderGroupInvoices()->getOrderGroupInvoicesShippingTotal())->
                     setAccountingHSTCostToUs($this->getOrderGroupInvoices()->getOrderGroupInvoicesHST());
                 }
@@ -871,10 +892,7 @@ class OrderGroup extends Data
         if ($this->getAccountingNetProfit() < 0 && !in_array($this->getOrderGroupStatusCB(), ['R'])) {
             if (!$this->getOrderInstance()->isAttentionTagSet($config["Attention_tags_invoices"]["tag_for_PROFIT_LT_0"])) {
                 $oAttentionTag = new AttentionTag(['status_id' => $config["Attention_tags_invoices"]["tag_for_PROFIT_LT_0"]]);
-                $aInsertArray = ['orderid' => $this->getOrderId(), 'status_id' => $oAttentionTag->getStatusId()];
-                func_array2insert('orders_additional_tags', $aInsertArray, true);
-                $sLog = "Attention tag added: " . $oAttentionTag->getStatus() . "\n";
-                Logs::_log('orders', $this->getOrderId(), 'X', $sLog);
+                OrderTagEventHelper::orderTagEvent($oAttentionTag->getStatusId(), $this->getOrderId());
             }
         }
     }
@@ -907,7 +925,7 @@ class OrderGroup extends Data
                     setAccountingGrossShipping($this->getOrderGroupInvoices()->getOrderGroupInvoicesShippingTotal())->
                     setAccountingHSTCostToUs($this->getOrderGroupInvoices()->getOrderGroupInvoicesHST());
                 }
-                $this->setAccountingGrossRefundToUs(abs($fRefund + $fPrincipalRefund) + abs($fShippingRefund));
+                $this->setAccountingGrossRefundToUs(abs($fRefund + $fPrincipalRefund));
                 if ($this->getOrderGroupMemos()->countOrderGroupMemos() > 0) {
                     $this->addAccountingHSTRefundToUs($this->getOrderGroupMemos()->getOrderGroupMemoRefToUsHST())->
                     addAccountingGrossRefundToUs($this->getOrderGroupMemos()->getOrderGroupMemoRefToUsTotal());
@@ -922,10 +940,12 @@ class OrderGroup extends Data
                         $AmazonCommission +
                         $ShippingFee)->initAccountingGrossCostToUs()
                     ->setAccountingGrossShipping($fShipping + abs($FBATransportationFee));
-                if ($this->getOrderAmazonDetails()->isRefundExists())
-                    $this->setAccountingGrossRefundToUs($this->getAccountingGrossCostToUs() + abs($fRefund + $fPrincipalRefund) + abs($fShippingRefund));
-                else $this->addAccountingGrossRefundToUs(abs($fRefund));
-
+                if ($this->getOrderAmazonDetails()->isRefundExists()) {
+                    $this->setAccountingGrossRefundToUs($this->getAccountingGrossCostToUs() + abs($fRefund + $fPrincipalRefund));
+                }
+                else {
+                    $this->addAccountingGrossRefundToUs(abs($fRefund));
+                }
                 break;
 
             default :
@@ -934,10 +954,12 @@ class OrderGroup extends Data
                             $FBAPerUnitFulfillmentFee +
                             $FBAWeightBasedFee +
                             $AmazonCommission + $FBATransportationFee) + $fShipping + $ShippingFee);
-                if ($this->getOrderAmazonDetails()->isRefundExists())
+                if ($this->getOrderAmazonDetails()->isRefundExists()) {
                     $this->setAccountingGrossRefundToUs($this->getAccountingGrossCostToUs() + abs($fRefund + $fPrincipalRefund) + abs($fShippingRefund));
-                else $this->addAccountingGrossRefundToUs(abs($fRefund));
-
+                }
+                else {
+                    $this->addAccountingGrossRefundToUs(abs($fRefund));
+                }
                 break;
         }
 
@@ -949,7 +971,7 @@ class OrderGroup extends Data
 
     public function updateAccounting()
     {
-        func_array2update($this->sPrimaryTable, $this->aPrimaryTableValue, 'orderid = ' . $this->getOrderId() . ' and manufacturerid = ' . $this->getManufacturerId());
+        $this->_update();
     }
 
     public function getReconciledStatus()
@@ -980,6 +1002,20 @@ class OrderGroup extends Data
     public function checkFBAProductsAvailToShipping()
     {
         $bResult = false;
+
+        $order = $this->getOrderInstance();
+        /** @var StateModel $state */
+        if ($state = StateModel::objects()->get(
+            [
+                'code' => $order->s_state,
+                'country_code' => $order->s_country,
+            ])
+        ) {
+            if (!ShippingHelper::isUSAContiguous($state)){
+                return false;
+            }
+        }
+
         $this->getOrderGroupProducts();
         if (!empty($this->oOrderGroupProducts)) {
             foreach ($this->oOrderGroupProducts as $oProduct) {
@@ -1069,8 +1105,9 @@ class OrderGroup extends Data
      */
     public function getManufacturerEntity()
     {
-        if (is_null($this->oManufacturer))
-            $this->oManufacturer = new Manufacturer($this->getManufacturerId());
+        if (is_null($this->oManufacturer)) {
+            $this->oManufacturer = new Manufacturer(['manufacturerid' => $this->getManufacturerId()]);
+        }
         return $this->oManufacturer;
     }
 
@@ -1112,6 +1149,9 @@ class OrderGroup extends Data
         return ($this->getField('amz_fullfilment_order_placed') == 'Y');
     }
 
+    /**
+     * @return OrderDetail[]
+     */
     public function getOrderDetails()
     {
         if (is_null($this->aOrderDetails)) {
@@ -1140,6 +1180,12 @@ class OrderGroup extends Data
             $this->_save();
         }
 
+    }
+
+    public function reCalculateShipping()
+    {
+        $this->setField('shipping_net', $this->getShippingGross() - floatval($this->getField('shipping_gst')) - floatval($this->getField('shipping_pst')));
+        $this->_save();
     }
 
     /**
@@ -1192,5 +1238,46 @@ class OrderGroup extends Data
     {
         $this->setField('total_gross', floatval($this->getField('total_gross')) + $fSumma);
         return $this;
+    }
+
+    public function getShippingRates()
+    {
+        $aShippingRates = [];
+        $oCart = new \Xcart\Cart();
+        $aOrderDetails = $this->getOrderDetails();
+        if (!empty($aOrderDetails)) {
+            foreach ($aOrderDetails as $oOrderDetail) {
+                $oCart->addObjectToCart(new \Xcart\CartElement($oOrderDetail->getOrderDetailProduct(), $oOrderDetail->getAmount()));
+            }
+            $aShippingRates = (new Shipping())->getShippingRates($this->getOrderInstance()->getCustomerEntity(), $this->getManufacturerEntity(), $oCart);
+
+        }
+        return $aShippingRates;
+    }
+
+    public function getTotalProductPrice()
+    {
+        $result = null;
+        $aOrderDetails = $this->getOrderDetails();
+        if (!empty($aOrderDetails)) {
+            foreach ($aOrderDetails as $oOrderDetail) {
+                $result += $oOrderDetail->getTotalProductPrice();
+            }
+
+        }
+        return $result;
+    }
+
+    public function getTotalProductAmount()
+    {
+        $result = null;
+        $aOrderDetails = $this->getOrderDetails();
+        if (!empty($aOrderDetails)) {
+            foreach ($aOrderDetails as $oOrderDetail) {
+                $result += $oOrderDetail->getAmount();
+            }
+
+        }
+        return $result;
     }
 }

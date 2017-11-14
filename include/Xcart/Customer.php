@@ -12,6 +12,8 @@ class Customer extends Data
     private $iAmazonBatchesInProgressCount = null;
     private $iAmazonBatchesProcessedCount = null;
 
+    private $oState = null;
+
     public function __construct($aParams = [])
     {
         $this->aPrimaryKeys = ['login'];
@@ -54,6 +56,11 @@ class Customer extends Data
         return sprintf(self::LINK_TO_MODIFY,$this->getCustomerLogin(),$this->getCustomerUserType());
     }
 
+    /**
+     * @param string $sType
+     * @param string $active
+     * @return Customer[]
+     */
     public static function getCustomersByType($sType, $active = 'Y')
     {
         $aOCustomers = [];
@@ -141,6 +148,10 @@ class Customer extends Data
         return $this->iAmazonBatchesInProgressCount;
     }
 
+    /**
+     * @param string $sStatus
+     * @return ExternalVerificationBatch[]
+     */
     public function getAmazonBatches($sStatus = null)
     {
         $aB = [];
@@ -232,5 +243,16 @@ class Customer extends Data
     public function getEmail()
     {
         return $this->getField('email');
+    }
+
+    /**
+     * @return State
+     */
+    public function getShippingStateEntity()
+    {
+        if (is_null($this->oState)) {
+            $this->oState = State::model()->find(SQLBuilder::getInstance()->addCondition("code = '".$this->getField("s_state")."'"));
+        }
+        return $this->oState;
     }
 }

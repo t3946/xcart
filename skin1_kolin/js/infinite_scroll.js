@@ -263,7 +263,9 @@ $( document ).ready(function() {
         loadingHtml: '<div class="infinte_scroll_link">Loading...</div>',
         nextSelector: 'div.infinte_scroll_link:last',
         callback: function () {
-            history.replaceState(null, null, replaceUrlParam(location.href,'p',$(this).data('page')));
+            var path = replaceUrlParam( location.href, 'p', $(this).data('page'));
+            history.replaceState(null, null, path);
+            ga('send', {hitType: 'pageview', location: path});
             checkCarouselsVisibility();
         }
     });

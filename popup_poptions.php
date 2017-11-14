@@ -34,6 +34,8 @@
 # $Id: popup_poptions.php,v 1.12.2.3 2006/11/17 11:37:59 max Exp $
 #
 
+use Modules\Product\Models\ProductOptionModel;
+
 require "./auth.php";
 
 #
@@ -81,8 +83,9 @@ if ($target == 'cart' && !func_is_cart_empty($cart)) {
 }
 
 if (!empty($options)) {
-	foreach ($options as $k => $v) {
-		$options[$k] = stripslashes($v);
+	foreach ($options as $k => $opt) {
+        $v = is_array($opt) ? $opt['optionid'] : $opt;
+		$options[$k] = $v;
 	}
 }
 
@@ -97,6 +100,12 @@ include $xcart_dir."/modules/Product_Options/customer_options.php";
 #
 if ($REQUEST_METHOD == 'POST' && $mode == 'update' && !empty($_POST['product_options'])) {
 	$poptions = $_POST['product_options'];
+
+    if (!empty($poptions)) {
+        if ($optionModel = ProductOptionModel::objects()->get(['optionid' => current($poptions)])){
+            $product_options[$optionModel->classid] = $optionModel->getAttributes();
+        }
+    }
 
 	if (!func_check_product_options($productid, $poptions))
 		func_header_location("popup_poptions.php?target=$target&id=$id&err=exception");

@@ -1,6 +1,8 @@
 {* $Id: meta.tpl,v 1.26.2.1 2006/10/10 07:35:18 max Exp $ *}
 <meta http-equiv="Content-Type" content="text/html; charset={$default_charset|default:"iso-8859-1"}" />
 
+{$config.Company.html_into_head}
+
 <!-- Google verification META tags -->
 <meta name="google-site-verification" content="PK6Exg58lxvKvOxDTtMymHgTCmUipFuJS9O9ZrYYiVg" />
 <meta name="google-site-verification" content="6k-TabU_BDiTSvqSlFcEi8vkUrUObseKUFaOWlJJ1E4" />
@@ -14,7 +16,7 @@
 <meta name="google-site-verification" content="vM3-Elmvi0TR9VO_WAvobjwmH4o7PhfppZ9BdKb1PDQ" />
 
 <!-- Pinterest verification META tags-->
-<meta name="p:domain_verify" content="543ab25e760af4e2b3d7bb2ed68e81b2"/>
+<meta name="p:domain_verify" content="5ff39d33efcb0710fb45e8addaf474e5"/>
 
 <!-- Google verification META tags -->
 
@@ -57,21 +59,21 @@ var usertype = "{$usertype}";
 {assign var="_meta_keywords" value="`$product.meta_keywords`"}
 {/if}
 {if $current_category.meta_descr ne "" and $config.SEO.include_meta_categories eq "Y" and !$product.productid}
-{assign var="_meta_descr" value="$_meta_descr`$current_category.meta_descr`"}
-{assign var="_meta_keywords" value="$_meta_keywords`$current_category.meta_keywords`"}
+{assign var="_meta_descr" value="`$_meta_descr``$current_category.meta_descr`"}
+{assign var="_meta_keywords" value="`$_meta_keywords``$current_category.meta_keywords`"}
 {/if}
 {if $brand.meta_descr ne "" && $config.Brands.include_meta_brands eq "Y"}
-{assign var="_meta_descr" value="$_meta_descr`$brand.meta_descr`"}
-{assign var="_meta_keywords" value="$_meta_keywords`$brand.meta_keywords`"}
+{assign var="_meta_descr" value="`$_meta_descr``$brand.meta_descr`"}
+{assign var="_meta_keywords" value="`$_meta_keywords``$brand.meta_keywords`"}
 {/if}
 {if $_meta_descr eq ''}
 {assign var="_meta_descr" value=" "}
 {/if}
 {if $_meta_keywords eq ''}
-{assign var="_meta_keywords" value="$_meta_keywords`$brand.meta_keywords` "}
+{assign var="_meta_keywords" value="`$_meta_keywords``$brand.meta_keywords` "}
 {/if}
-{assign var="_meta_descr" value="$_meta_descr`$config.SEO.meta_descr`"}
-{assign var="_meta_keywords" value="$_meta_keywords`$config.SEO.meta_keywords`"}
+{assign var="_meta_descr" value="`$_meta_descr``$config.SEO.meta_descr`"}
+{assign var="_meta_keywords" value="`$_meta_keywords``$config.SEO.meta_keywords`"}
 
 {if $config.Company.cidev_keywords ne "" && (($main eq "catalog" && $current_category.category eq "") || ($_meta_keywords eq "")) }
 {assign var="_meta_keywords" value=$config.Company.cidev_keywords}
@@ -89,11 +91,16 @@ var usertype = "{$usertype}";
 		{assign var="meta_current_price" value=$product.taxed_price}
 	{/if}
 
-        {if $product.seo_meta_descr ne ""}
-                <meta name="description" content="{$product.seo_meta_descr|truncate:"500":"...":false|escape|strip}" />
-        {else}
-                <meta name="description" content="Buy online or call {$config.Company.company_phone}. {$_meta_descr|truncate:"500":"...":false|escape|strip}" />
-        {/if}
+    {if $product.seo_meta_descr ne ""}
+        <meta name="description" content="{$product.seo_meta_descr|truncate:"500":"...":false|escape|strip}" />
+    {else}
+    {if $current_storefront == 41}
+        {assign var="seo_meta_descr" value="Buy `$product.product` online at `$config.Company.company_name`. `$current_category.category` at cheap prices. Sale up to 50%"}
+        <meta name="description" content="{$seo_meta_descr|truncate:"160":"...":false|escape|strip}" />
+    {else}
+        <meta name="description" content="Buy online or call {$config.Company.company_phone}. {$_meta_descr|truncate:"500":"...":false|escape|strip}" />
+    {/if}
+{/if}
 
 {elseif $main eq "catalog" && $current_category.category ne ""}
 
@@ -122,6 +129,7 @@ var usertype = "{$usertype}";
  *}
  {/if}
 {/if}
+
 {if $webmaster_mode eq "editor"}
 <script type="text/javascript" language="JavaScript 1.2">
 <!--

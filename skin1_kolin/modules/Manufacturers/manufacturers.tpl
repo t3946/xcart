@@ -917,7 +917,7 @@ function func_show_login_password_info(manufacturerid){
 <tr>
         <td class="FormButton">{$lng.lbl_price}&nbsp;=</td>
         <td>&nbsp;</td>
-        <td>(&nbsp;<input type="text" size="9" name="price_coef_x" value="{$manufacturer.price_coef_x}" />&nbsp;*&nbsp;{$lng.lbl_cost_to_us}&nbsp;+&nbsp;<input type="text" size="9" name="price_coef_y" value="{$manufacturer.price_coef_y}" />&nbsp;)&nbsp;/&nbsp;<input type="text" size="9" name="price_coef_z" value="{$manufacturer.price_coef_z}" /></td>
+        <td>(&nbsp;<input type="text" pattern="^[1-9][0-9\.]*$" title="Value must be greater than or equal to 1" size="9" name="price_coef_x" value="{$manufacturer.price_coef_x}" />&nbsp;*&nbsp;{$lng.lbl_cost_to_us}&nbsp;+&nbsp;<input type="text" size="9" name="price_coef_y" value="{$manufacturer.price_coef_y}" />&nbsp;)&nbsp;/&nbsp;<input type="text" size="9" name="price_coef_z" value="{$manufacturer.price_coef_z}" /></td>
 </tr>
 
 <tr>
@@ -960,6 +960,14 @@ onchange="javasript:{literal} if (this.value !=''){$('#tr_d_map_prices').show();
         <td><input type="text" size="9" name="supplier_products_price_multiplier" value="{$manufacturer.supplier_products_price_multiplier}" /></td>
 </tr>
 
+<tr>
+        <td nowrap="nowrap" class="FormButton">Reduce extra margin from shipping cost</td>
+        <td>&nbsp;</td>
+        <td><select name="reduce_extra_margin">
+                <option value="N">N</option>
+                <option value="Y" {if $manufacturer.reduce_extra_margin == 'Y'} selected="selected"{/if}>Y</option>
+            </select></td>
+ </tr>
 </table>
 
 
@@ -1005,7 +1013,20 @@ onchange="javasript:{literal} if (this.value !=''){$('#tr_d_map_prices').show();
 </select>
         </td>
 </tr>
-
+    <tr>
+        <td width="20%" class="FormButton">Amazon to Cx leadtime to ship for MFN orders (days):</td>
+        <td>&nbsp;</td>
+        <td width="80%">
+            <input type="text" size="3" name="amazon_leadtime_to_ship" value="{$manufacturer.amazon_leadtime_to_ship}" />
+        </td>
+    </tr>
+    <tr>
+        <td width="20%" class="FormButton">Dx to Amazon leadtime (DLT) for FBA loads (days):</td>
+        <td>&nbsp;</td>
+        <td width="80%">
+            <input type="text" size="3" name="amazon_leadtime_for_fba_loads" value="{$manufacturer.amazon_leadtime_for_fba_loads}" />
+        </td>
+    </tr>
 <tr><td colspan="3"><hr /><td></tr>
 
 <tr>
@@ -2059,6 +2080,11 @@ onclick="javasript:{literal} if (this.checked){$('#tr_d_send_to_email_14').show(
             <td colspan="3" class="FormButton">
                 Allow pre-orders <input type="checkbox" name="allow_pre_orders"
                                         value="Y"{if $manufacturer.allow_pre_orders eq 'Y'} checked="checked"{/if} />
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3" class="FormButton">
+                Show shipping cost on the product page <input type="checkbox" name="calculate_shipping" value="Y"{if $manufacturer.calculate_shipping eq 'Y'} checked="checked"{/if} />
             </td>
         </tr>
 

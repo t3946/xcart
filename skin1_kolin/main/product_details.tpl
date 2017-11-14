@@ -61,16 +61,12 @@
             -->
         </script>
     {/if}
-    <script type="text/javascript" language="JavaScript 1.2">
-        <!--
+    <script type="text/javascript">
+        var froogle_title_length = '{$FROOGLE_TITLE_LENGTH}';
         {literal}
 
         function copy_product_title_to_froogle() {
-            var froogle_title = $('#product_name').val().substring(0,70);
-            /*if (froogle_title.length > 70) {
-                var froogle_title = froogle_title.substring(0,67);
-                froogle_title = froogle_title + '...';
-            }*/
+            var froogle_title = $('#product_name').val().substring(0, froogle_title_length);
             $('#froogle_title').val(froogle_title);
         }
 
@@ -108,7 +104,6 @@
 
             $('#' + id).val(round(res, 2));
         {rdelim}
-        -->
     </script>
     {if $manufacturer_feed_fields.eta_date_mm_dd_yyyy.disable eq "Y"}
         <script type="text/javascript" language="JavaScript 1.2">
@@ -528,7 +523,7 @@
                     {/if}
                     <td class="FormButton" nowrap="nowrap">Title (&lt;title&gt;):</td>
                     <td class="ProductDetails"><input type="text" name="title_tag" size="20"
-                                                      value="{$product.title_tag}" class="InputWidth"/></td>
+                                                      value="{$product.title_tag|escape}" class="InputWidth"/></td>
                 </tr>
                 <tr>
                     {if $geid ne ''}
@@ -536,14 +531,14 @@
                     {/if}
                     <td class="FormButton" nowrap="nowrap">SEO product name (&lt;H1&gt;):</td>
                     <td class="ProductDetails"><input type="text" name="seo_product_name" size="20"
-                                                      value="{$product.seo_product_name}" class="InputWidth"/></td>
+                                                      value="{$product.seo_product_name|escape}" class="InputWidth"/></td>
                 </tr>
                 <tr>
                     {if $geid ne ''}
                         <td width="15" class="TableSubHead">&nbsp;</td>
                     {/if}
                     <td class="FormButton" nowrap="nowrap">SEO (&lt;H2&gt;):</td>
-                    <td class="ProductDetails"><input type="text" name="seo_h2" size="20" value="{$product.seo_h2}"
+                    <td class="ProductDetails"><input type="text" name="seo_h2" size="20" value="{$product.seo_h2|escape}"
                                                       class="InputWidth"/></td>
                 </tr>
                 <tr>
@@ -553,7 +548,7 @@
                     <td class="FormButton" nowrap="nowrap">SEO meta 'Description':</td>
                     <td class="ProductDetails">
                         <textarea style="width: 80%" name="seo_meta_descr" cols="60"
-                                  rows="4">{$product.seo_meta_descr}</textarea>
+                                  rows="4">{$product.seo_meta_descr|escape}</textarea>
                     </td>
                 </tr>
             {/if}
@@ -574,7 +569,7 @@
                 <td class="ProductDetails"><input type="text" name="productcode" size="20"
                                                   value="{$product.productcode}" class="InputWidth"/></td>
             </tr>
-
+            {if !$oProduct || !$oProduct->isGroupRoot()}
             <tr>
                 {if $geid ne ''}
                     <td width="15" class="TableSubHead">&nbsp;</td>
@@ -585,7 +580,7 @@
                                                   {if $manufacturer_feed_fields.upc.disable eq "Y"}readonly="readonly"{/if} />
                 </td>
             </tr>
-
+            {/if}
             <tr>
                 {if $geid ne ''}
                     <td width="15" class="TableSubHead"><input type="checkbox" value="Y" name="fields[product]"/></td>
@@ -603,8 +598,6 @@
                 {include file="main/clean_url_field.tpl" clean_url=$product.clean_url clean_urls_history=$product.clean_urls_history clean_url_fill_error=$top_message.clean_url_fill_error tooltip_id='clean_url_tooltip_link'}
             {/if}
 
-
-            {if $product.product|strlen > $FROOGLE_TITLE_LENGTH || $new_product eq 1}
                 <tr>
                     {if $geid ne ''}
                         <td width="15" class="TableSubHead"><input type="checkbox" value="Y" name="fields[product]"/>
@@ -612,14 +605,13 @@
                     {/if}
                     <td class="FormButton" nowrap="nowrap">{$lng.lbl_product_name_froogle}:</td>
                     <td class="ProductDetails">
-                        <input type="text" name="product_froogle" id="froogle_title" size="45" maxlength="70"
-                               class="InputWidth" value="{$product.product_froogle|escape}"
-                               {if $manufacturer_feed_fields.product_froogle.disable eq "Y"}readonly="readonly"{/if} />
-                        &nbsp;<input type="button" value=" {$lng.lbl_copy|strip_tags:false|escape} "
-                                     onclick="javascript: copy_product_title_to_froogle();"/>
+                        <textarea type="text" name="product_froogle" id="froogle_title" maxlength="{$FROOGLE_TITLE_LENGTH}" class="InputWidth"
+                               {if $manufacturer_feed_fields.product_froogle.disable eq "Y"}readonly="readonly"{/if}
+                        >{$product.product_froogle|escape}</textarea>
+                        &nbsp;
+                        <input type="button" value="{$lng.lbl_copy|strip_tags:false|escape}" onclick="javascript: copy_product_title_to_froogle();"/>
                     </td>
                 </tr>
-            {/if}
 
             <tr>
                 {if $geid ne ''}
@@ -642,31 +634,33 @@
             {if $active_modules.Egoods ne ""}
                 {include file="modules/Egoods/egoods.tpl"}
             {/if}
-
-            <tr>
-                {if $geid ne ''}
-                    <td width="15" class="TableSubHead"><input type="checkbox" value="Y" name="fields[amazon_enabled]"/>
-                    </td>
-                {/if}
-                <td class="FormButton" nowrap="nowrap">Amazon enabled:</td>
-                <td class="ProductDetails">
-                    <input type="checkbox" name="amazon_enabled"
-                           value="Y"{if $product.amazon_enabled eq "Y"} checked="checked"{/if} {if $manufacturer_feed_fields.amazon_enabled.disable eq "Y"}disabled="disabled"{/if} />
-                    {if $manufacturer_feed_fields.amazon_enabled.disable eq "Y"}
-                        <input type="hidden" name="amazon_enabled" value="{$product.amazon_enabled}"/>
+            {if !$oProduct || !$oProduct->isGroupRoot()}
+                <tr>
+                    {if $geid ne ''}
+                        <td width="15" class="TableSubHead"><input type="checkbox" value="Y"
+                                                                   name="fields[amazon_enabled]"/>
+                        </td>
                     {/if}
-                </td>
-            </tr>
-
-            <tr>
-                {if $geid ne ''}
-                    <td width="15" class="TableSubHead"></td>
-                {/if}
-                <td class="FormButton" nowrap="nowrap">Amazon specific details:</td>
-                <td class="ProductDetails"><a style="color: blue;"
-                                              href="amazon_specific_details.php?productid={$productid}" target="_blank">Opened
-                        in new window...</a></td>
-            </tr>
+                    <td class="FormButton" nowrap="nowrap">Amazon enabled:</td>
+                    <td class="ProductDetails">
+                        <input type="checkbox" name="amazon_enabled"
+                               value="Y"{if $product.amazon_enabled eq "Y"} checked="checked"{/if} {if $manufacturer_feed_fields.amazon_enabled.disable eq "Y"}disabled="disabled"{/if} />
+                        {if $manufacturer_feed_fields.amazon_enabled.disable eq "Y"}
+                            <input type="hidden" name="amazon_enabled" value="{$product.amazon_enabled}"/>
+                        {/if}
+                    </td>
+                </tr>
+                <tr>
+                    {if $geid ne ''}
+                        <td width="15" class="TableSubHead"></td>
+                    {/if}
+                    <td class="FormButton" nowrap="nowrap">Amazon specific details:</td>
+                    <td class="ProductDetails"><a style="color: blue;"
+                                                  href="amazon_specific_details.php?productid={$productid}"
+                                                  target="_blank">Opened
+                            in new window...</a></td>
+                </tr>
+            {/if}
 
             <tr>
                 {if $geid ne ''}
@@ -674,7 +668,7 @@
                 {/if}
                 <td class="FormButton" nowrap="nowrap">{$lng.lbl_det_description}* :</td>
                 <td class="ProductDetails">
-                    {if $manufacturer_feed_fields.fulldescr.disable eq "Y"}
+                    {if $manufacturer_feed_fields.fulldescr.disable eq "Y" && (!$oProduct || !$oProduct->isGroupRoot())}
                         {include file="main/textarea.tpl" name="fulldescr" cols=45 rows=12 class="InputWidth" data=$product.fulldescr width="80%" btn_rows=4 readonly="Y"}
                     {else}
                         {include file="main/textarea.tpl" name="fulldescr" cols=45 rows=12 class="InputWidth" data=$product.fulldescr width="80%" btn_rows=4}
@@ -682,6 +676,17 @@
                     {if $top_message.fillerror ne "" and $product.fulldescr eq ""}
                         <font class="Star">&lt;&lt;</font>
                     {/if}
+                </td>
+            </tr>
+
+
+            <tr>
+                {if $geid ne ''}
+                    <td width="15" class="TableSubHead"><input type="checkbox" value="Y" name="fields[seo_fulldescr]"/></td>
+                {/if}
+                <td class="FormButton" nowrap="nowrap">SEO {$lng.lbl_det_description}:</td>
+                <td class="ProductDetails">
+                    {include file="main/textarea.tpl" name="seo_fulldescr" cols=45 rows=12 class="InputWidth" data=$product.seo_fulldescr width="80%" btn_rows=4}
                 </td>
             </tr>
 
@@ -737,202 +742,175 @@
                     {/if}
                 </td>
             </tr>
-
-            <tr>
-                {if $geid ne ''}
-                    <td width="15" class="TableSubHead">&nbsp;</td>
-                {/if}
-                <td colspan="2"><br/>{include file="main/subheader.tpl" title=$lng.lbl_pricing}</td>
-            </tr>
-
-            <tr>
-                {if $geid ne ''}
-                    <td width="15" class="TableSubHead"><input type="checkbox" value="Y" name="fields[list_price]"/>
-                    </td>
-                {/if}
-                <td class="FormButton" nowrap="nowrap">{$lng.lbl_list_price} <span
-                            class="Text">({$config.General.currency_symbol})</span></td>
-                <td class="ProductDetails"><input type="text" name="list_price" id="list_price" size="18"
-                                                  value="{$product.list_price|formatprice|default:$zero}"
-                                                  {if $manufacturer_feed_fields.list_price.disable eq "Y"}readonly="readonly"{/if} />
-                </td>
-            </tr>
-
-            <tr>
-                {if $geid ne ''}
-                    <td width="15" class="TableSubHead"><input type="checkbox" value="Y" name="fields[cost_to_us]"/>
-                    </td>
-                {/if}
-                <td class="FormButton" nowrap="nowrap">{$lng.lbl_cost_to_us} ({$config.General.currency_symbol})</td>
-                <td class="ProductDetails">
-                    <input type="text" name="cost_to_us" id="cost_to_us" size="18"
-                           value="{$product.cost_to_us|formatprice|default:$zero}"
-                           {if $manufacturer_feed_fields.cost_to_us.disable eq "Y"}readonly="readonly"{/if} />&nbsp;
-                    {if $product.cost_to_us_coef_x ne 0}
-                        <input type="button"
-                               value="{$lng.lbl_copy_to_us_button|replace:"X":"`$product.cost_to_us_coef_x`"}"
-                               onclick="javascript: generate_price('cost_to_us');"/>
-                        &nbsp;
-                    {/if}
-                    {if $top_message.fillerror ne "" and $product.cost_to_us eq ""}
-                        <font class="Star">&lt;&lt;</font>
-                    {/if}
-                </td>
-            </tr>
-
-
-            {* {if $smarty.get.mode_add_product eq "y"} *}
-            {if $product.productid eq "" || $product.price eq 0}
-                <input type="hidden" name="calculate_price_for_new_product" value="Y"/>
-            {else}
+            {if !$oProduct || !$oProduct->isGroupRoot()}
                 <tr>
                     {if $geid ne ''}
-                        <td width="15" class="TableSubHead">{if $product.is_variants eq 'Y'}&nbsp;{else}
-                        <input type="checkbox" value="Y" name="fields[price]"/>
-                    {/if}</td>{/if}
-                    <td class="FormButton" nowrap="nowrap">{$lng.lbl_price} ({$config.General.currency_symbol})</td>
-                    <td {if $usertype eq "A"}class="ProductDetails"{else}{/if}>
-                        {if $product.is_variants eq 'Y'}
-                            <b>{$lng.lbl_note}:</b>
-                            {$lng.txt_pvariant_edit_note|substitute:"href":$variant_href}
-                        {else}
-
-                            {if $usertype eq "A"}
-                                <div id="cidev_box1">
-                                    &nbsp;<a style="text-decoration: none; border-bottom: 1px dashed #000000;"
-                                             href="javascript: void(0)"
-                                             onclick="javasctip: document.getElementById('cidev_box2').style.display=''; document.getElementById('cidev_box1').style.display='none';">{
-                                        $product.price|formatprice|default:$zero}</a>
-                                </div>
-                                <div id="cidev_box2" style="display: none;">
-                                <input type="text" name="price" id="price" size="18"
-                                       value="{ $product.price|formatprice|default:$zero}"
-                                       {if $manufacturer_feed_fields.price.disable eq "Y"}readonly="readonly"{/if} />
-                                &nbsp;
-                            {else}
-                                <font style="color: #580404">&nbsp;{ $product.price|formatprice|default:$zero}</font>
-                                <input type="hidden" name="price" id="price"
-                                       value="{ $product.price|formatprice|default:$zero}"/>
-                            {/if}
-
-
-                            {if $product.price_coef_x ne 0 &&  $product.price_coef_y ne 0 &&  $product.price_coef_z ne 0 && $usertype eq "A"}
-                                <input type="button"
-                                       value="{$lng.lbl_price_button|replace:"X":"`$product.price_coef_x`"|replace:"Y":"`$product.price_coef_y`"|replace:"Z":"`$product.price_coef_z`"}"
-                                       onclick="javascript: generate_price('price');"/>
-                                &nbsp;
-                            {/if}
-                            {if $top_message.fillerror ne "" and $product.price eq ""}
-                                <font class="Star">&lt;&lt;</font>
-                            {/if}
-
-                            {if $usertype eq "A"}
-                                </div>
-                            {/if}
-
+                        <td width="15" class="TableSubHead">&nbsp;</td>
+                    {/if}
+                    <td colspan="2"><br/>{include file="main/subheader.tpl" title=$lng.lbl_pricing}</td>
+                </tr>
+                <tr>
+                    {if $geid ne ''}
+                        <td width="15" class="TableSubHead"><input type="checkbox" value="Y" name="fields[list_price]"/>
+                        </td>
+                    {/if}
+                    <td class="FormButton" nowrap="nowrap">{$lng.lbl_list_price} <span
+                                class="Text">({$config.General.currency_symbol})</span></td>
+                    <td class="ProductDetails"><input type="text" name="list_price" id="list_price" size="18"
+                                                      value="{$product.list_price|formatprice|default:$zero}"
+                                                      {if $manufacturer_feed_fields.list_price.disable eq "Y"}readonly="readonly"{/if} />
+                    </td>
+                </tr>
+                <tr>
+                    {if $geid ne ''}
+                        <td width="15" class="TableSubHead"><input type="checkbox" value="Y" name="fields[cost_to_us]"/>
+                        </td>
+                    {/if}
+                    <td class="FormButton" nowrap="nowrap">{$lng.lbl_cost_to_us} ({$config.General.currency_symbol})
+                    </td>
+                    <td class="ProductDetails">
+                        <input type="text" name="cost_to_us" id="cost_to_us" size="18"
+                               value="{$product.cost_to_us|formatprice|default:$zero}"
+                               {if $manufacturer_feed_fields.cost_to_us.disable eq "Y"}readonly="readonly"{/if} />&nbsp;
+                        {if $product.cost_to_us_coef_x ne 0}
+                            <input type="button"
+                                   value="{$lng.lbl_copy_to_us_button|replace:"X":"`$product.cost_to_us_coef_x`"}"
+                                   onclick="javascript: generate_price('cost_to_us');"/>
+                            &nbsp;
+                        {/if}
+                        {if $top_message.fillerror ne "" and $product.cost_to_us eq ""}
+                            <font class="Star">&lt;&lt;</font>
                         {/if}
                     </td>
                 </tr>
-            {/if}
+                {if $product.productid eq "" || $product.price eq 0}
+                    <input type="hidden" name="calculate_price_for_new_product" value="Y"/>
+                {else}
+                    <tr>
+                        {if $geid ne ''}
+                            <td width="15" class="TableSubHead">{if $product.is_variants eq 'Y'}&nbsp;{else}
+                            <input type="checkbox" value="Y" name="fields[price]"/>
+                        {/if}</td>{/if}
+                        <td class="FormButton" nowrap="nowrap">{$lng.lbl_price} ({$config.General.currency_symbol})</td>
+                        <td {if $usertype eq "A"}class="ProductDetails"{else}{/if}>
+                            {if $product.is_variants eq 'Y'}
+                                <b>{$lng.lbl_note}:</b>
+                                {$lng.txt_pvariant_edit_note|substitute:"href":$variant_href}
+                            {else}
 
-            <tr>
-                {if $geid ne ''}
-                    <td width="15" class="TableSubHead"><input type="checkbox" value="Y"
-                                                               name="fields[product_price_multiplier]"/></td>
+                                {if $usertype eq "A"}
+                                    <div id="cidev_box1">
+                                        &nbsp;<a style="text-decoration: none; border-bottom: 1px dashed #000000;"
+                                                 href="javascript: void(0)"
+                                                 onclick="javasctip: document.getElementById('cidev_box2').style.display=''; document.getElementById('cidev_box1').style.display='none';">{
+                                            $product.price|formatprice|default:$zero}</a>
+                                    </div>
+                                    <div id="cidev_box2" style="display: none;">
+                                    <input type="text" name="price" id="price" size="18"
+                                           value="{ $product.price|formatprice|default:$zero}"
+                                           {if $manufacturer_feed_fields.price.disable eq "Y"}readonly="readonly"{/if} />
+                                    &nbsp;
+                                {else}
+                                    <font style="color: #580404">&nbsp;{
+                                        $product.price|formatprice|default:$zero}</font>
+                                    <input type="hidden" name="price" id="price"
+                                           value="{ $product.price|formatprice|default:$zero}"/>
+                                {/if}
+
+
+                                {if $product.price_coef_x ne 0 &&  $product.price_coef_y ne 0 &&  $product.price_coef_z ne 0 && $usertype eq "A"}
+                                    <input type="button"
+                                           value="{$lng.lbl_price_button|replace:"X":"`$product.price_coef_x`"|replace:"Y":"`$product.price_coef_y`"|replace:"Z":"`$product.price_coef_z`"}"
+                                           onclick="javascript: generate_price('price');"/>
+                                    &nbsp;
+                                {/if}
+                                {if $top_message.fillerror ne "" and $product.price eq ""}
+                                    <font class="Star">&lt;&lt;</font>
+                                {/if}
+
+                                {if $usertype eq "A"}
+                                    </div>
+                                {/if}
+
+                            {/if}
+                        </td>
+                    </tr>
                 {/if}
-                <td class="FormButton" nowrap="nowrap">Price multiplier</td>
-                <td class="ProductDetails">
+                <tr>
+                    {if $geid ne ''}
+                        <td width="15" class="TableSubHead"><input type="checkbox" value="Y"
+                                                                   name="fields[product_price_multiplier]"/></td>
+                    {/if}
+                    <td class="FormButton" nowrap="nowrap">Price multiplier</td>
+                    <td class="ProductDetails">
+                        {if $usertype eq "A"}
+                        <div id="cidev_box3">
+                            &nbsp;<a style="text-decoration: none; border-bottom: 1px dashed #000000;"
+                                     href="javascript: void(0)"
+                                     onclick="javasctip: document.getElementById('cidev_box4').style.display=''; document.getElementById('cidev_box3').style.display='none';">{$product.product_price_multiplier|formatprice|default:$zero}</a>
+                        </div>
+                        <div id="cidev_box4" style="display: none;">
+                            <input type="text" name="product_price_multiplier" id="product_price_multiplier" size="18"
+                                   value="{$product.product_price_multiplier|formatprice|default:$zero}"
+                                   {if $manufacturer_feed_fields.product_price_multiplier.disable eq "Y"}readonly="readonly"{/if} />&nbsp;
+                            {else}
+                            <font style="color: #580404">
+                                &nbsp;{$product.product_price_multiplier|formatprice|default:$zero}</font>
+                            <input type="hidden" name="product_price_multiplier" id="product_price_multiplier"
+                                   value="{$product.product_price_multiplier|formatprice|default:$zero}"/>
+                            {/if}
 
-                    {*
-                                    <input type="text" name="product_price_multiplier" id="product_price_multiplier" size="18" value="{$product.product_price_multiplier|formatprice|default:$zero}" />&nbsp;
-                    *}
-
-                    {if $usertype eq "A"}
-                    <div id="cidev_box3">
-                        &nbsp;<a style="text-decoration: none; border-bottom: 1px dashed #000000;"
-                                 href="javascript: void(0)"
-                                 onclick="javasctip: document.getElementById('cidev_box4').style.display=''; document.getElementById('cidev_box3').style.display='none';">{$product.product_price_multiplier|formatprice|default:$zero}</a>
-                    </div>
-
-                    <div id="cidev_box4" style="display: none;">
-                        <input type="text" name="product_price_multiplier" id="product_price_multiplier" size="18"
-                               value="{$product.product_price_multiplier|formatprice|default:$zero}"
-                               {if $manufacturer_feed_fields.product_price_multiplier.disable eq "Y"}readonly="readonly"{/if} />&nbsp;
-                        {else}
-                        <font style="color: #580404">
-                            &nbsp;{$product.product_price_multiplier|formatprice|default:$zero}</font>
-                        <input type="hidden" name="product_price_multiplier" id="product_price_multiplier"
-                               value="{$product.product_price_multiplier|formatprice|default:$zero}"/>
+                            {if $usertype eq "A"}
+                        </div>
                         {/if}
 
-                        {if $usertype eq "A"}
-                    </div>
-                    {/if}
-
-                </td>
-            </tr>
-
-            {* ----------------- *}
-            {*
-            <tr>
-                    {if $geid ne ''}<td width="15" class="TableSubHead"><input type="checkbox" value="Y" name="fields[new_map_price]" /></td>{/if}
-                    <td class="FormButton" nowrap="nowrap">{$lng.lbl_new_map_price} <span class="Text">({$config.General.currency_symbol})</span></td>
-                    <td class="ProductDetails"><input type="text" name="new_map_price" id="new_map_price" size="18" value="{$product.new_map_price|formatprice|default:$zero}" {if $manufacturer_feed_fields.new_map_price.disable eq "Y"}readonly="readonly"{/if} /></td>
-            </tr>
-            *}
-
-            <tr>
-                {if $geid ne ''}
-                    <td width="15" class="TableSubHead"><input type="checkbox" value="Y" name="fields[new_map_price]"/>
                     </td>
-                {/if}
-                <td class="FormButton" nowrap="nowrap">{$lng.lbl_new_map_price} <span
-                            class="Text">({$config.General.currency_symbol})</span></td>
-                <td class="ProductDetails">
-                    <input type="text" name="new_map_price" id="new_map_price" size="18"
-                           value="{$product.new_map_price|formatprice|default:$zero}"
-                           {if $manufacturer_feed_fields.new_map_price.disable eq "Y"}readonly="readonly"{/if} />&nbsp;
-                    {if $product.new_map_price_coef_x ne 0}
-                        <input type="button"
-                               value="{$lng.lbl_copy_to_us_button|replace:"X":"`$product.new_map_price_coef_x`"}"
-                               onclick="javascript: generate_price('new_map_price');"/>
-                        &nbsp;
+                </tr>
+                <tr>
+                    {if $geid ne ''}
+                        <td width="15" class="TableSubHead"><input type="checkbox" value="Y"
+                                                                   name="fields[new_map_price]"/>
+                        </td>
                     {/if}
-                    {if $top_message.fillerror ne "" and $product.new_map_price eq ""}
-                        <font class="Star">&lt;&lt;</font>
+                    <td class="FormButton" nowrap="nowrap">{$lng.lbl_new_map_price} <span
+                                class="Text">({$config.General.currency_symbol})</span></td>
+                    <td class="ProductDetails">
+                        <input type="text" name="new_map_price" id="new_map_price" size="18"
+                               value="{$product.new_map_price|formatprice|default:$zero}"
+                               {if $manufacturer_feed_fields.new_map_price.disable eq "Y"}readonly="readonly"{/if} />&nbsp;
+                        {if $product.new_map_price_coef_x ne 0}
+                            <input type="button"
+                                   value="{$lng.lbl_copy_to_us_button|replace:"X":"`$product.new_map_price_coef_x`"}"
+                                   onclick="javascript: generate_price('new_map_price');"/>
+                            &nbsp;
+                        {/if}
+                        {if $top_message.fillerror ne "" and $product.new_map_price eq ""}
+                            <font class="Star">&lt;&lt;</font>
+                        {/if}
+                    </td>
+                </tr>
+                <tr {if $usertype eq "P"}style="display: none;"{/if}>
+                    {if $geid ne ''}
+                        <td width="15" class="TableSubHead"><input type="checkbox" value="Y" name="fields[map_price]"/>
+                        </td>
                     {/if}
-                </td>
-            </tr>
-
-            {* ----------------- *}
-
-            <tr {if $usertype eq "P"}style="display: none;"{/if}>
-                {if $geid ne ''}
-                    <td width="15" class="TableSubHead"><input type="checkbox" value="Y" name="fields[map_price]"/></td>
-                {/if}
-                <td class="FormButton" nowrap="nowrap">{$lng.lbl_map_price} <span
-                            class="Text">({$config.General.currency_symbol})</span></td>
-                {*	<td class="ProductDetails"><input type="text" name="map_price" id="map_price" size="18" value="{$product.map_price|formatprice|default:$zero}" /></td>
-                 *}
-
-                <td class="ProductDetails">
-                    <input type="text" name="map_price" id="map_price" size="18"
-                           value="{$product.map_price|formatprice|default:$zero}"
-                           {if $manufacturer_feed_fields.map_price.disable eq "Y"}readonly="readonly"{/if} />&nbsp;
-                    {if $product.map_price_coef_x ne 0}
-                        <input type="button"
-                               value="{$lng.lbl_copy_to_us_button|replace:"X":"`$product.map_price_coef_x`"}"
-                               onclick="javascript: generate_price('map_price');"/>
-                        &nbsp;
-                    {/if}
-                    {if $top_message.fillerror ne "" and $product.map_price eq ""}
-                        <font class="Star">&lt;&lt;</font>
-                    {/if}
-                </td>
-
-
-            </tr>
-
+                    <td class="FormButton" nowrap="nowrap">{$lng.lbl_map_price} <span
+                                class="Text">({$config.General.currency_symbol})</span></td>
+                    <td class="ProductDetails">
+                        <input type="text" name="map_price" id="map_price" size="18"
+                               value="{$product.map_price|formatprice|default:$zero}"
+                               {if $manufacturer_feed_fields.map_price.disable eq "Y"}readonly="readonly"{/if} />&nbsp;
+                        {if $product.map_price_coef_x ne 0}
+                            <input type="button"
+                                   value="{$lng.lbl_copy_to_us_button|replace:"X":"`$product.map_price_coef_x`"}"
+                                   onclick="javascript: generate_price('map_price');"/>
+                            &nbsp;
+                        {/if}
+                        {if $top_message.fillerror ne "" and $product.map_price eq ""}
+                            <font class="Star">&lt;&lt;</font>
+                        {/if}
+                    </td>
+                </tr>
             <tr>
                 {if $geid ne ''}
                     <td width="15" class="TableSubHead">&nbsp;</td>
@@ -1024,14 +1002,6 @@
                     </td>
                 </tr>
             {/if}
-
-            {*<tr>
-                {if $geid ne ''}<td width="15" class="TableSubHead"><input type="checkbox" value="Y" name="fields[membershipids]" /></td>{/if}
-                <td class="FormButton" nowrap="nowrap">{$lng.lbl_membership}</td>
-                <td class="ProductDetails">{include file="main/membership_selector.tpl" data=$product}</td>
-            </tr>
-            *}
-
             <tr>
                 {if $geid ne ''}
                     <td width="15" class="TableSubHead">&nbsp;</td>
@@ -1076,19 +1046,6 @@
                     </td>
                 </tr>
             {/if}
-
-            {*
-            <tr>
-                {if $geid ne ''}<td width="15" class="TableSubHead"><input type="checkbox" value="Y" name="fields[free_shipping]" /></td>{/if}
-                <td class="FormButton" nowrap="nowrap">{$lng.lbl_free_shipping}</td>
-                <td class="ProductDetails">
-                <select name="free_shipping">
-                    <option value='N'{if $product.free_shipping eq 'N'} selected="selected"{/if}>{$lng.lbl_no}</option>
-                    <option value='Y'{if $product.free_shipping eq 'Y'} selected="selected"{/if}>{$lng.lbl_yes}</option>
-                </select>
-                </td>
-            </tr>
-            *}
 
             <tr>
                 {if $geid ne ''}
@@ -1404,6 +1361,7 @@
                         </p>
                     </td>
                 </tr>
+            {/if}
             {/if}
 
             <tr>
