@@ -3,7 +3,7 @@ namespace Modules\Order\Models;
 
 use Modules\Distributor\Models\DistributorModel;
 use Modules\Product\Models\ProductModel;
-use Xcart\App\Orm\menu_admin.tpl
+use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\IntField;
@@ -12,7 +12,7 @@ use Xcart\App\Orm\Model;
 
 class OrderGroupInvoiceProductModel extends Model
 {
-    use menu_admin.tpl
+    use AutoMetaTrait;
 
     public static function tableName()
     {
