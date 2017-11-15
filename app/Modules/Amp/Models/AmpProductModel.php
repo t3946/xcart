@@ -104,10 +104,21 @@ class AmpProductModel extends ProductModel
         else {
             $images_model = $this->getImages();
 
-            foreach ($images_model as $image_model) {
+            if ($images_model)
+            {
+                $image_model = reset($images_model);
+            }
+            else
+            {
+                $image_model = $this->getThumbnail();
+            }
+
+            if($image_model)
+            {
                 $for_image = ltrim($image_model->image_path, ".");
                 $images[] = $domain . $for_image;
             }
+
             if (!$flag) {
                 return $images;
             }

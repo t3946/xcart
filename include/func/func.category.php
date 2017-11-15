@@ -334,7 +334,7 @@ function func_recalc_subcat_count($categoryid = false, $tick = 0) {
 
 		} elseif (!empty($lvl)) {
 			# Category is limited by memberships
-			$subcat_count = func_query_hash("SELECT COUNT(*) as subcategory_count, IFNULL($sql_tbl[category_memberships].membershipid, 0) as membershipid FROM $sql_tbl[categories] USE INDEX (pa) LEFT JOIN $sql_tbl[category_memberships] ON $sql_tbl[category_memberships].categoryid = $sql_tbl[categories].categoryid WHERE $sql_tbl[categories].categoryid_path LIKE '$path' AND $sql_tbl[categories].avail = 'Y' GROUP BY $sql_tbl[category_memberships].membershipid", "membershipid", false, true);
+			$subcat_count = func_query_hash("SELECT COUNT(*) as subcategory_count, IFNULL($sql_tbl[category_memberships].membershipid, 0) as membershipid FROM $sql_tbl[categories] LEFT JOIN $sql_tbl[category_memberships] ON $sql_tbl[category_memberships].categoryid = $sql_tbl[categories].categoryid WHERE $sql_tbl[categories].categoryid_path LIKE '$path' AND $sql_tbl[categories].avail = 'Y' GROUP BY $sql_tbl[category_memberships].membershipid", "membershipid", false, true);
 			if (!empty($subcat_count)) {
 				$zero_count = intval($subcat_count[0]);
 				foreach ($lvl as $l) {

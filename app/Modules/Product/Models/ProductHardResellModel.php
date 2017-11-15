@@ -3,7 +3,7 @@
 namespace Modules\Product\Models;
 
 use Xcart\App\Orm\AutoMetaTrait;
-use Xcart\App\Orm\Fields\IntField;
+use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Model;
 
 class ProductHardResellModel extends Model
@@ -23,8 +23,7 @@ class ProductHardResellModel extends Model
     {
         return [
             'product_id' => [
-                'class' => IntField::className(),
-                'primary' => true
+                'class' => AutoField::className(),
             ],
         ];
     }

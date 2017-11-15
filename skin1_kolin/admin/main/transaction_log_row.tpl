@@ -74,14 +74,14 @@
                                         {if $link.rel eq "self"}
                                         {elseif $link.rel eq "refund"}
                                             {if in_array($user_login, array('sergey2', 'igor', 'roman_n', 'dmitry_s', 'alexandern'))}
-                                                <div data-action="{$model->getProcessUrl('refund')}" class="item" style="padding: 10px !important;">Refund transaction</div>
+                                                <div data-type="refund" data-action="{$model->getProcessUrl('refund')}" class="item" style="padding: 10px !important;">Refund transaction</div>
                                             {/if}
                                         {elseif $link.rel eq "void"}
-                                                <div data-action="{$model->getProcessUrl('void')}" class="item" style="padding: 10px !important;">Void authorized transaction</div>
+                                                <div data-type="void" data-action="{$model->getProcessUrl('void')}" class="item" style="padding: 10px !important;">Void authorized transaction</div>
                                         {elseif $link.rel eq "capture"}
-                                                <div data-action="{$model->getProcessUrl('capture')}" class="item" style="padding: 10px !important;">Capture selected authorized transaction</div>
+                                                <div data-type="capture" data-action="{$model->getProcessUrl('capture')}" class="item" style="padding: 10px !important;">Capture selected authorized transaction</div>
                                         {elseif $link.rel eq "reauthorize"}
-                                                <div data-action="{$model->getProcessUrl('reauthorize')}" class="item" style="padding: 10px !important;">RE-authorize selected transaction</div>
+                                                <div data-type="reauthorize" data-action="{$model->getProcessUrl('reauthorize')}" class="item" style="padding: 10px !important;">RE-authorize selected transaction</div>
                                         {/if}
                                 {/foreach}
                         </div>
