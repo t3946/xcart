@@ -143,7 +143,7 @@
                 {/foreach}
             </td>
             <td>
-                <b> {$order->getOrderTotalGross()|abs|formatprice:",":"."} </b>
+                <b> {$order->getOrderTotalGrossDiscounted()|abs|formatprice:",":"."} </b>
             </td>
             <td class="events-container" colspan="4">
                 {if $order->getCountEvents()}

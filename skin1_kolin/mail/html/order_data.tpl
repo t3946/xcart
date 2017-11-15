@@ -308,7 +308,7 @@
 <td align="right" width="100%" bgcolor="#cccccc" height="25"><b>{$lng.lbl_grand_total|capitalize}:</b>&nbsp;</td>
 <td align="right" bgcolor="#cccccc" height="25" nowrap="nowrap">
 {if $oOrder}
-    <b>{include file="currency.tpl" value=$oOrder->getOrderTotalGross()}</b>
+    <b>{include file="currency.tpl" value=$oOrder->getOrderTotalGrossDiscounted()}</b>
 {/if}
 </td>
 </tr>

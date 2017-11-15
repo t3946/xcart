@@ -2626,107 +2626,6 @@ a.ui-button:active,
     font-weight: 900;
 }
 
-/* font-family: "GothamProRegular"; */
-@font-face {
-    font-family: "GothamPro";
-    src: url("../fonts/GothamProRegular/GothamProRegular.eot");
-    src: url("../fonts/GothamProRegular/GothamProRegular.eot?#iefix")format("embedded-opentype"),
-    url("../fonts/GothamProRegular/GothamProRegular.woff") format("woff"),
-    url("../fonts/GothamProRegular/GothamProRegular.ttf") format("truetype");
-    font-style: normal;
-    font-weight: normal;
-}
-/* font-family: "GothamProBold"; */
-@font-face {
-    font-family: "GothamPro";
-    src: url("../fonts/GothamProBold/GothamProBold.eot");
-    src: url("../fonts/GothamProBold/GothamProBold.eot?#iefix")format("embedded-opentype"),
-    url("../fonts/GothamProBold/GothamProBold.woff") format("woff"),
-    url("../fonts/GothamProBold/GothamProBold.ttf") format("truetype");
-    font-style: normal;
-    font-weight: bold;
-}
-/* font-family: "GothamProBlack"; */
-@font-face {
-    font-family: "GothamPro";
-    src: url("../fonts/GothamProBlack/GothamProBlack.eot");
-    src: url("../fonts/GothamProBlack/GothamProBlack.eot?#iefix")format("embedded-opentype"),
-    url("../fonts/GothamProBlack/GothamProBlack.woff") format("woff"),
-    url("../fonts/GothamProBlack/GothamProBlack.ttf") format("truetype");
-    font-style: normal;
-    font-weight: 900;
-}
-/* font-family: "GothamProItalic"; */
-@font-face {
-    font-family: "GothamPro";
-    src: url("../fonts/GothamProItalic/GothamProItalic.eot");
-    src: url("../fonts/GothamProItalic/GothamProItalic.eot?#iefix")format("embedded-opentype"),
-    url("../fonts/GothamProItalic/GothamProItalic.woff") format("woff"),
-    url("../fonts/GothamProItalic/GothamProItalic.ttf") format("truetype");
-    font-style: italic;
-    font-weight: normal;
-}
-/* font-family: "GothamProMedium"; */
-@font-face {
-    font-family: "GothamPro";
-    src: url("../fonts/GothamProMedium/GothamProMedium.eot");
-    src: url("../fonts/GothamProMedium/GothamProMedium.eot?#iefix")format("embedded-opentype"),
-    url("../fonts/GothamProMedium/GothamProMedium.woff") format("woff"),
-    url("../fonts/GothamProMedium/GothamProMedium.ttf") format("truetype");
-    font-style: normal;
-    font-weight: 500;
-}
-/* font-family: "GothamProLight"; */
-@font-face {
-    font-family: "GothamPro";
-    src: url("../fonts/GothamProLight/GothamProLight.eot");
-    src: url("../fonts/GothamProLight/GothamProLight.eot?#iefix")format("embedded-opentype"),
-    url("../fonts/GothamProLight/GothamProLight.woff") format("woff"),
-    url("../fonts/GothamProLight/GothamProLight.ttf") format("truetype");
-    font-style: normal;
-    font-weight: 200;
-}
-/* font-family: "GothamProMediumItalic"; */
-@font-face {
-    font-family: "GothamPro";
-    src: url("../fonts/GothamProMediumItalic/GothamProMediumItalic.eot");
-    src: url("../fonts/GothamProMediumItalic/GothamProMediumItalic.eot?#iefix")format("embedded-opentype"),
-    url("../fonts/GothamProMediumItalic/GothamProMediumItalic.woff") format("woff"),
-    url("../fonts/GothamProMediumItalic/GothamProMediumItalic.ttf") format("truetype");
-    font-style: italic;
-    font-weight: 500;
-}
-/* font-family: "GothamProLightItalic"; */
-@font-face {
-    font-family: "GothamPro";
-    src: url("../fonts/GothamProLightItalic/GothamProLightItalic.eot");
-    src: url("../fonts/GothamProLightItalic/GothamProLightItalic.eot?#iefix")format("embedded-opentype"),
-    url("../fonts/GothamProLightItalic/GothamProLightItalic.woff") format("woff"),
-    url("../fonts/GothamProLightItalic/GothamProLightItalic.ttf") format("truetype");
-    font-style: italic;
-    font-weight: 200;
-}
-/* font-family: "GothamProBoldItalic"; */
-@font-face {
-    font-family: "GothamPro";
-    src: url("../fonts/GothamProBoldItalic/GothamProBoldItalic.eot");
-    src: url("../fonts/GothamProBoldItalic/GothamProBoldItalic.eot?#iefix")format("embedded-opentype"),
-    url("../fonts/GothamProBoldItalic/GothamProBoldItalic.woff") format("woff"),
-    url("../fonts/GothamProBoldItalic/GothamProBoldItalic.ttf") format("truetype");
-    font-style: italic;
-    font-weight: bold;
-}
-/* font-family: "GothamProBlackItalic"; */
-@font-face {
-    font-family: "GothamPro";
-    src: url("../fonts/GothamProBlackItalic/GothamProBlackItalic.eot");
-    src: url("../fonts/GothamProBlackItalic/GothamProBlackItalic.eot?#iefix")format("embedded-opentype"),
-    url("../fonts/GothamProBlackItalic/GothamProBlackItalic.woff") format("woff"),
-    url("../fonts/GothamProBlackItalic/GothamProBlackItalic.ttf") format("truetype");
-    font-style: italic;
-    font-weight: 900;
-}
-
 .file-manager {
   width: 800px;
   background-color: #fff;
@@ -5958,6 +5857,7 @@ html > body .mnotify {
 strong, b {
   font-weight: 500; }
 
+html,
 body {
   font-family: GothamPro, Arial, Helvetica, sans-serif;
   font-size: 13px;
@@ -5982,13 +5882,13 @@ a {
     color: #330000; }
 
 H1 {
-  FONT-SIZE: 15px; }
+  font-size: 1.1rem; }
 
 H2 {
-  FONT-SIZE: 13px; }
+  font-size: 1rem; }
 
 H3 {
-  FONT-SIZE: 12px; }
+  font-size: .9rem; }
 
 h1, h2, h3 {
   color: #330000;
@@ -6018,7 +5918,7 @@ TD.Container {
   HEIGHT: 90%; }
 
 .AuthText {
-  FONT-SIZE: 10px;
+  font-size: .80rem;
   FONT-WEIGHT: 500;
   PADDING-BOTTOM: 5px; }
 
@@ -6034,7 +5934,7 @@ TD.Container {
   TEXT-ALIGN: right; }
 
 .HeadText {
-  FONT-SIZE: 12px;
+  font-size: .9rem;
   FONT-WEIGHT: 500; }
 
 .HeadLine {
@@ -6138,7 +6038,7 @@ HR.GreyLine {
 .TopLabel {
   COLOR: #000000;
   FONT-WEIGHT: 500;
-  FONT-SIZE: 12px; }
+  font-size: .9rem; }
 
 .Message {
   COLOR: #FF3300; }
@@ -6269,7 +6169,7 @@ TABLE.EmptyBox {
 .AdminTitle {
   COLOR: #FF3300;
   FONT-WEIGHT: 500;
-  FONT-SIZE: 12px; }
+  font-size: .9rem; }
 
 .TableHeadLevel2 {
   BACKGROUND-COLOR: #CCCCCC;
@@ -6284,7 +6184,7 @@ TABLE.EmptyBox {
 .TableSeparator {
   COLOR: #000000;
   FONT-WEIGHT: 500;
-  FONT-SIZE: 11px; }
+  font-size: .85rem; }
 
 .InputWidth {
   WIDTH: 80%; }
@@ -6358,7 +6258,7 @@ TD.OptionLabel {
 .VertMenuBorder {
   BACKGROUND-COLOR: #d7d8db;
   border: 1px solid #d7d8db;
-  margin-bottom: 1em; }
+  margin-bottom: 1rem; }
 
 .VertMenuTitle {
   BACKGROUND-COLOR: #e27a2b;
@@ -6423,7 +6323,7 @@ A.VertMenuItemsHL:active {
   COLOR: #999999; }
 
 .CategoriesList {
-  FONT-SIZE: 12px; }
+  font-size: .9rem; }
 
 TABLE.DialogBox {
   WIDTH: 100%;
@@ -6443,13 +6343,13 @@ TD.DialogTitle {
   COLOR: #FFFFFF;
   background-color: #e27a2b;
   FONT-WEIGHT: 500;
-  FONT-SIZE: 15px;
+  font-size: 1.1rem;
   PADDING-LEFT: 10px; }
 
 FONT.DialogTitle {
   COLOR: #FFFFFF;
   FONT-WEIGHT: 500;
-  FONT-SIZE: 11px;
+  font-size: .85rem;
   VERTICAL-ALIGN: bottom;
   HEIGHT: 15px;
   TEXT-ALIGN: left;
@@ -6462,7 +6362,7 @@ TABLE.DialogInfo {
 .DialogInfoTitle {
   COLOR: #FFFFFF;
   FONT-WEIGHT: 500;
-  FONT-SIZE: 11px;
+  font-size: .85rem;
   VERTICAL-ALIGN: bottom;
   TEXT-ALIGN: left;
   HEIGHT: 15px;
@@ -6491,7 +6391,7 @@ TABLE.DialogInfo {
 
 .NavDialogTitle {
   WIDTH: 50%;
-  font-size: .95em;
+  font-size: .95rem;
   FONT-WEIGHT: 500;
   COLOR: #330000;
   PADDING: 2px 5px; }
@@ -6520,17 +6420,17 @@ TABLE.DialogInfo {
 .ProductTitle {
   COLOR: #000000;
   FONT-WEIGHT: 500;
-  FONT-SIZE: 12px; }
+  FONT-SIZE: .9rem; }
 
 .ProductTitleHidden {
   COLOR: #666666;
   FONT-WEIGHT: 500;
-  FONT-SIZE: 11px; }
+  FONT-SIZE: 9rem; }
 
 .ProductDetailsTitle {
   COLOR: #FF3300;
   FONT-WEIGHT: 500;
-  FONT-SIZE: 12px; }
+  FONT-SIZE: .9rem; }
 
 .ProductDetails {
   COLOR: #000000; }
@@ -6538,12 +6438,12 @@ TABLE.DialogInfo {
 .ProductPriceTitle, .ProductPriceConverting {
   COLOR: #000000;
   FONT-WEIGHT: 500;
-  FONT-SIZE: 12px; }
+  font-size: .9rem; }
 
 .ProductPrice {
   COLOR: #FF3300;
   FONT-WEIGHT: 500;
-  FONT-SIZE: 12px; }
+  font-size: .9rem; }
 
 .ProductPriceSmall {
   COLOR: #FF3300;
@@ -6559,7 +6459,7 @@ TABLE.DialogInfo {
   BACKGROUND-IMAGE: url(images/save_money.gif); }
 
 .MarketPrice {
-  FONT-SIZE: 14px;
+  font-size: 1.05rem;
   FONT-FAMILY: Times New Roman; }
 
 .PListImgBox {
@@ -6638,7 +6538,7 @@ TD.Button {
 FONT.Button {
   COLOR: #FFFFFF;
   FONT-WEIGHT: 500;
-  FONT-SIZE: 11px;
+  font-size: .85rem;
   TEXT-DECORATION: none; }
 
 IMG.ButtonSide {
@@ -6796,7 +6696,7 @@ TABLE.SubHeaderGrey {
 
 .SubHeaderGrey {
   COLOR: #666666;
-  FONT-SIZE: 11px;
+  font-size: .85rem;
   FONT-WEIGHT: 500;
   PADDING: 0px; }
 
@@ -6811,7 +6711,7 @@ TABLE.SubHeaderBlack {
 
 .SubHeaderBlack {
   COLOR: #000000;
-  FONT-SIZE: 12px;
+  font-size: .9rem;
   FONT-WEIGHT: 500;
   PADDING: 0px; }
 
@@ -6843,7 +6743,7 @@ TABLE.SubHeader {
   COLOR: #FF3300;
   FONT-WEIGHT: 500;
   PADDING: 0px;
-  font-size: 1.1em; }
+  font-size: 1.1rem; }
 
 .SubHeaderLine {
   HEIGHT: 1px;
@@ -6856,7 +6756,7 @@ TABLE.SubHeader {
 */
 .RegSectionTitle {
   COLOR: #550000;
-  FONT-SIZE: 10px;
+  font-size: .80rem;
   FONT-WEIGHT: 500; }
 
 /*
@@ -6984,7 +6884,7 @@ TABLE.DataSheet TR TH {
 
 .MediaElementProperties {
   COLOR: #666666;
-  FONT-SIZE: 10px; }
+  font-size: .80rem; }
 
 /*
 	Survey module
@@ -7004,7 +6904,7 @@ DIV.SurveyAnswerComment {
   BORDER: 1px solid #DDDDDD; }
 
 .SurveyQuestion {
-  FONT-SIZE: 12px;
+  font-size: .9rem;
   FONT-WEIGHT: 500;
   PADDING: 2px; }
 
@@ -7040,7 +6940,7 @@ TD.SurveyTab {
   PADDING-RIGHT: 10px;
   HEIGHT: 26px;
   WHITE-SPACE: nowrap;
-  FONT-SIZE: 12px;
+  font-size: .9rem;
   COLOR: #953e0e;
   TEXT-DECORATION: underline; }
 
@@ -7053,7 +6953,7 @@ TD.SurveyTabSelected {
   BACKGROUND-COLOR: #dddddd;
   WHITE-SPACE: nowrap;
   FONT-WEIGHT: 500;
-  FONT-SIZE: 12px;
+  font-size: .9rem;
   COLOR: #953e0e; }
 
 TD.SurveyTabLine {
@@ -7240,11 +7140,11 @@ span.override_name {
 
 a.preset_back {
   float: right;
-  font-size: 10px;
+  font-size: .80rem;
   text-decoration: none; }
   a.preset_back:visited {
     float: right;
-    font-size: 10px;
+    font-size: .80rem;
     text-decoration: none; }
 
 .preset_bold {
@@ -7327,12 +7227,12 @@ div.survey_form {
   width: auto; }
 
 p.survey_form_header {
-  font-size: 16px;
+  font-size: 1.15rem;
   font-weight: 500;
   margin-bottom: 50px; }
 
 p.survey_form_title {
-  font-size: 16px;
+  font-size: 1.15rem;
   font-weight: normal;
   text-decoration: none; }
 
@@ -7389,7 +7289,7 @@ div.confirmation-hedgehog {
   div.confirmation-hedgehog p {
     font-weight: 500;
     font-family: Arial, Helvetica, sans-serif;
-    font-size: 15px; }
+    font-size: 1.1rem; }
 
 .btn_send_info {
   background: transparent url(images/send-information-100.png) no-repeat 0px 0px;
@@ -7453,7 +7353,7 @@ div.confirmation-hedgehog {
 /* -- */
 .cidev_field_descr {
   margin-top: 0px;
-  font-size: .9em;
+  font-size: .9rem;
   font-style: italic; }
 
 .tablebordernone {
@@ -7554,16 +7454,16 @@ div.ui.error.message ul.list {
   background-color: #D9EAD3 !important; }
 
 .xcart.buttons .ui.button {
-  font-size: 10px;
+  font-size: .80rem;
   font-weight: inherit;
   font-family: inherit;
   color: inherit;
   text-shadow: none;
   background-image: none;
-  padding: 0.58571429em 0.88em; }
+  padding: 0.58571429rem 0.88rem; }
 
 .xcart.buttons .ui.dropdown .menu > .item {
-  font-size: 10px; }
+  font-size: .80rem; }
 
 .admin-main-content {
   padding-top: 10px;
@@ -7582,15 +7482,15 @@ div.ui.error.message ul.list {
       padding: 0;
       list-style: none; }
     .main-menu-modules .menu-block .module {
-      margin-bottom: .4em; }
+      margin-bottom: .4rem; }
       .main-menu-modules .menu-block .module ul li {
         line-height: 1.2; }
         .main-menu-modules .menu-block .module ul li ul {
-          padding-left: .8em; }
+          padding-left: .8rem; }
       .main-menu-modules .menu-block .module .name {
         border-bottom: 1px solid;
-        margin-bottom: .5em;
-        font-size: 1em;
+        margin-bottom: .5rem;
+        font-size: 1rem;
         font-weight: 500; }
 
 .hide {
@@ -8658,7 +8558,7 @@ h1 {
       border-right-color: #8596a8; }
   .admin .OrderSheet .separator td {
     border: none;
-    padding: 4px 0 0;
+    padding: .6rem 0 0;
     box-shadow: inset 0px 10px 4px -9px rgba(0, 0, 0, 0.55); }
   .admin .OrderSheet .events-container .events {
     color: blue;

@@ -295,11 +295,10 @@ $smarty->assign("xcart_web_dir", $xcart_web_dir);
 $smarty->assign("current_location", $current_location);
 $smarty->assign("php_url", $php_url);
 
-# START: random:20341 [2010 Jul 29 14:46] 
 $smarty->assign("artss_manufacturerid", $artss_manufacturerid);
 $smarty->assign("artss_code", $artss_code);
+$smarty->assign("AREA_TYPE", AREA_TYPE);
 
-# END: random:20341 [2010 Jul 29 14:46] 
 foreach ($var_dirs_web as $k => $v) {
     $var_dirs_web[$k] = $current_location . $v;
 }

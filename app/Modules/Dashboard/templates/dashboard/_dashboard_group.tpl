@@ -1,6 +1,6 @@
 {if $models|count > 0}
     {if $title}
-        <fieldset>
+        <fieldset class="collapsible">
         <legend>{$title}</legend>
     {/if}
 

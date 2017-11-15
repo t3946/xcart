@@ -116,9 +116,11 @@ gulp.task('frontend:css', ['frontend:scss', 'frontend:css:raw'], function () {
 gulp.task('backend:css', ['backend:scss'], function () {
     let pipe = gulp.src(backend.src.css);
 
-    if (isProduction && backend.config.compress) {
-        pipe = pipe.pipe(cssnano(backend.config.cssnano))
-    }
+    // if (isProduction && backend.config.compress) {
+    //     pipe = pipe.pipe(cssnano(backend.config.cssnano))
+    // }
+
+    // pipe = pipe.pipe(cssnano(backend.config.cssnano))
 
     return pipe.pipe(concat(backend.config.name + '.css'))
         .pipe(gulp.dest(backend.dst.css))

@@ -1157,8 +1157,6 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
             'tax_info_taxed_shipping'                  => $_extra["tax_info"]['taxed_shipping'],
         ];
 
-//        d($insert_data);
-
         if (!empty($active_modules['Multiple_Storefronts'])) {
             if (isset($cart['source_sf']) && !empty($cart['source_sf'])) {
                 $insert_data['storefrontid'] = $cart['source_sf'];

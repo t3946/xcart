@@ -319,7 +319,7 @@ function managedate(status) {
                 <script type="text/javascript">
                 <!--
                 {literal}
-                        $('input[name^="posted_data[extra_sku]"]').live('keydown', function () {
+                        $('input[name^="posted_data[extra_sku]"]').on('keydown', function () {
 //                                reset_form('searchform', searchform_def);
                         });
                 {/literal}

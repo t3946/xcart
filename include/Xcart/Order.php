@@ -540,6 +540,12 @@ class Order extends Data
         return $fResult + $this->getOrderAdditionalFee();
     }
 
+    public function getOrderTotalNetDiscounted()
+    {
+        $total = $this->getOrderTotalNet();
+        return $total - abs($this->coupon_discount);
+    }
+
     public function getOrderTotalHST()
     {
         $fResult = 0;
@@ -564,7 +570,7 @@ class Order extends Data
         return $fResult;
     }
 
-    public function getOrderTotalGross()
+    public function getOrderTotalGross($round = true)
     {
         $fResult = 0;
         $this->fetchOrderGroups();
@@ -573,7 +579,17 @@ class Order extends Data
                 $fResult += $oOrderGroup->getTotalGross();
             }
         }
-        return round($fResult + $this->getOrderAdditionalFee(), 2);
+
+        $fResult += $this->getOrderAdditionalFee();
+
+        return $round ? round($fResult, 2) : $fResult;
+    }
+
+    public function getOrderTotalGrossDiscounted()
+    {
+        $total = $this->getOrderTotalGross(false);
+
+        return round($total - abs($this->coupon_discount), 2);
     }
 
     public function getOrderCostToUs()
@@ -621,6 +637,12 @@ class Order extends Data
     public function getOrderGrandTotalNet()
     {
         return floatval($this->getOrderTotalNet() + $this->getOrderRetailTrustPrice());
+    }
+
+    public function getOrderGrandTotalNetDiscount()
+    {
+        $total = $this->getOrderGrandTotalNet();
+        return $total - abs($this->coupon_discount);
     }
 
     public function getPaymentMethodId()

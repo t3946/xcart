@@ -7,6 +7,7 @@ strong, b {
   font-weight: 500;
 }
 
+html,
 body {
   font-family: GothamPro, Arial, Helvetica, sans-serif;
   font-size: 13px;
@@ -38,15 +39,15 @@ a {
 }
 
 H1 {
-  FONT-SIZE: 15px;
+  font-size: 1.1rem;
 }
 
 H2 {
-  FONT-SIZE: 13px;
+  font-size: 1rem;
 }
 
 H3 {
-  FONT-SIZE: 12px;
+  font-size: .9rem;
 }
 
 h1, h2, h3 {
@@ -84,7 +85,7 @@ TD.Container {
 }
 
 .AuthText {
-  FONT-SIZE: 10px;
+  font-size: .80rem;
   FONT-WEIGHT: 500;
   PADDING-BOTTOM: 5px;
 }
@@ -104,7 +105,7 @@ TD.Container {
 }
 
 .HeadText {
-  FONT-SIZE: 12px;
+  font-size: .9rem;
   FONT-WEIGHT: 500;
 }
 
@@ -232,7 +233,7 @@ HR {
 .TopLabel {
   COLOR: #000000;
   FONT-WEIGHT: 500;
-  FONT-SIZE: 12px;
+  font-size: .9rem;
 }
 
 .Message {
@@ -398,7 +399,7 @@ TABLE.EmptyBox {
 .AdminTitle {
   COLOR: #FF3300;
   FONT-WEIGHT: 500;
-  FONT-SIZE: 12px;
+  font-size: .9rem;
 }
 
 .TableHeadLevel2 {
@@ -416,7 +417,7 @@ TABLE.EmptyBox {
 .TableSeparator {
   COLOR: #000000;
   FONT-WEIGHT: 500;
-  FONT-SIZE: 11px;
+  font-size: .85rem;
 }
 
 .InputWidth {
@@ -509,7 +510,7 @@ TD.OptionLabel {
 .VertMenuBorder {
   BACKGROUND-COLOR: #d7d8db;
   border: 1px solid #d7d8db;
-  margin-bottom: 1em;
+  margin-bottom: 1rem;
 }
 
 .VertMenuTitle {
@@ -587,7 +588,7 @@ A.VertMenuItemsHL {
 }
 
 .CategoriesList {
-  FONT-SIZE: 12px;
+  font-size: .9rem;
 }
 
 
@@ -612,14 +613,14 @@ TD.DialogTitle {
   COLOR: #FFFFFF;
   background-color: $primary-color;
   FONT-WEIGHT: 500;
-  FONT-SIZE: 15px;
+  font-size: 1.1rem;
   PADDING-LEFT: 10px;
 }
 
 FONT.DialogTitle {
   COLOR: #FFFFFF;
   FONT-WEIGHT: 500;
-  FONT-SIZE: 11px;
+  font-size: .85rem;
   VERTICAL-ALIGN: bottom;
   HEIGHT: 15px;
   TEXT-ALIGN: left;
@@ -635,7 +636,7 @@ TABLE.DialogInfo {
 .DialogInfoTitle {
   COLOR: #FFFFFF;
   FONT-WEIGHT: 500;
-  FONT-SIZE: 11px;
+  font-size: .85rem;
   VERTICAL-ALIGN: bottom;
   TEXT-ALIGN: left;
   HEIGHT: 15px;
@@ -671,7 +672,7 @@ TABLE.DialogInfo {
 
 .NavDialogTitle {
   WIDTH: 50%;
-  font-size: .95em;
+  font-size: .95rem;
   FONT-WEIGHT: 500;
   COLOR: #330000;
   PADDING: 2px 5px;
@@ -707,19 +708,19 @@ TABLE.DialogInfo {
 .ProductTitle {
   COLOR: #000000;
   FONT-WEIGHT: 500;
-  FONT-SIZE: 12px;
+  FONT-SIZE: .9rem;
 }
 
 .ProductTitleHidden {
   COLOR: #666666;
   FONT-WEIGHT: 500;
-  FONT-SIZE: 11px;
+  FONT-SIZE: 9rem;
 }
 
 .ProductDetailsTitle {
   COLOR: #FF3300;
   FONT-WEIGHT: 500;
-  FONT-SIZE: 12px;
+  FONT-SIZE: .9rem;
 }
 
 .ProductDetails {
@@ -729,13 +730,13 @@ TABLE.DialogInfo {
 .ProductPriceTitle, .ProductPriceConverting {
   COLOR: #000000;
   FONT-WEIGHT: 500;
-  FONT-SIZE: 12px;
+  font-size: .9rem;
 }
 
 .ProductPrice {
   COLOR: #FF3300;
   FONT-WEIGHT: 500;
-  FONT-SIZE: 12px;
+  font-size: .9rem;
 }
 
 .ProductPriceSmall {
@@ -754,7 +755,7 @@ TABLE.DialogInfo {
 }
 
 .MarketPrice {
-  FONT-SIZE: 14px;
+  font-size: 1.05rem;
   FONT-FAMILY: Times New Roman;
 }
 
@@ -856,7 +857,7 @@ FONT.Button {
   //FONT-FAMILY: Arial;
   COLOR: #FFFFFF;
   FONT-WEIGHT: 500;
-  FONT-SIZE: 11px;
+  font-size: .85rem;
   TEXT-DECORATION: none;
 }
 
@@ -1058,7 +1059,7 @@ TABLE.SubHeaderGrey {
 
 .SubHeaderGrey {
   COLOR: #666666;
-  FONT-SIZE: 11px;
+  font-size: .85rem;
   FONT-WEIGHT: 500;
   PADDING: 0px;
 }
@@ -1076,7 +1077,7 @@ TABLE.SubHeaderBlack {
 
 .SubHeaderBlack {
   COLOR: #000000;
-  FONT-SIZE: 12px;
+  font-size: .9rem;
   FONT-WEIGHT: 500;
   PADDING: 0px;
 }
@@ -1114,7 +1115,7 @@ TABLE.SubHeader {
   COLOR: #FF3300;
   FONT-WEIGHT: 500;
   PADDING: 0px;
-  font-size: 1.1em;
+  font-size: 1.1rem;
 }
 
 .SubHeaderLine {
@@ -1130,7 +1131,7 @@ TABLE.SubHeader {
 
 .RegSectionTitle {
   COLOR: #550000;
-  FONT-SIZE: 10px;
+  font-size: .80rem;
   FONT-WEIGHT: 500;
 }
 
@@ -1290,7 +1291,7 @@ TABLE.DataSheet TR {
 
 .MediaElementProperties {
   COLOR: #666666;
-  FONT-SIZE: 10px;
+  font-size: .80rem;
 }
 
 /*
@@ -1315,7 +1316,7 @@ DIV.SurveyAnswerComment {
 }
 
 .SurveyQuestion {
-  FONT-SIZE: 12px;
+  font-size: .9rem;
   FONT-WEIGHT: 500;
   PADDING: 2px;
 }
@@ -1359,7 +1360,7 @@ TD {
     PADDING-RIGHT: 10px;
     HEIGHT: 26px;
     WHITE-SPACE: nowrap;
-    FONT-SIZE: 12px;
+    font-size: .9rem;
     COLOR: #953e0e;
     TEXT-DECORATION: underline;
   }
@@ -1372,7 +1373,7 @@ TD {
     BACKGROUND-COLOR: #dddddd;
     WHITE-SPACE: nowrap;
     FONT-WEIGHT: 500;
-    FONT-SIZE: 12px;
+    font-size: .9rem;
     COLOR: #953e0e;
   }
   &.SurveyTabLine {
@@ -1622,11 +1623,11 @@ span.override_name {
 
 a.preset_back {
   float: right;
-  font-size: 10px;
+  font-size: .80rem;
   text-decoration: none;
   &:visited {
     float: right;
-    font-size: 10px;
+    font-size: .80rem;
     text-decoration: none;
   }
 }
@@ -1729,12 +1730,12 @@ div.survey_form {
 
 p {
   &.survey_form_header {
-    font-size: 16px;
+    font-size: 1.15rem;
     font-weight: 500;
     margin-bottom: 50px;
   }
   &.survey_form_title {
-    font-size: 16px;
+    font-size: 1.15rem;
     font-weight: normal;
     text-decoration: none;
   }
@@ -1810,7 +1811,7 @@ div.confirmation-hedgehog {
   p {
     font-weight: 500;
     font-family: Arial, Helvetica, sans-serif;
-    font-size: 15px;
+    font-size: 1.1rem;
   }
 }
 
@@ -1889,7 +1890,7 @@ div.confirmation-hedgehog {
 
 .cidev_field_descr {
   margin-top: 0px;
-  font-size: .9em;
+  font-size: .9rem;
   font-style: italic;
 }
 
@@ -2014,16 +2015,16 @@ div.ui.error.message ul.list {
 
 .xcart.buttons .ui {
   &.button {
-    font-size: 10px;
+    font-size: .80rem;
     font-weight: inherit;
     font-family: inherit;
     color: inherit;
     text-shadow: none;
     background-image: none;
-    padding: 0.58571429em 0.88em;
+    padding: 0.58571429rem 0.88rem;
   }
   &.dropdown .menu > .item {
-    font-size: 10px;
+    font-size: .80rem;
   }
 }
 
@@ -2048,17 +2049,17 @@ div.ui.error.message ul.list {
       list-style: none;
     }
     .module {
-      margin-bottom: .4em;
+      margin-bottom: .4rem;
       ul li {
         line-height: 1.2;
         ul {
-          padding-left: .8em;
+          padding-left: .8rem;
         }
       }
       .name {
         border-bottom: 1px solid;
-        margin-bottom: .5em;
-        font-size: 1em;
+        margin-bottom: .5rem;
+        font-size: 1rem;
         font-weight: 500;
       }
     }

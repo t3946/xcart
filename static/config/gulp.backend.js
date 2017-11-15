@@ -189,8 +189,7 @@ module.exports = {
                 'backend/fonts/GothamPro/fonts/**/*'
             ],
             css: [
-                'backend/fonts/GothamPro/css/*',
-                'backend/fonts/gothampro/css/*',
+                'backend/fonts/GothamPro/css/*'
             ]
         },
 
