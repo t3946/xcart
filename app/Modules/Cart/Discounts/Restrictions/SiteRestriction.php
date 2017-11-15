@@ -34,7 +34,12 @@ class SiteRestriction extends AbstractRestriction
         $site = $module->getSite();
 
         if ($site && $model = $this->getModel()) {
-            return $site->pk == $model->pk;
+            if ($this->data['not_in']) {
+                return $site->pk != $model->pk;
+            }
+            else {
+                return $site->pk == $model->pk;
+            }
         }
 
         return true;

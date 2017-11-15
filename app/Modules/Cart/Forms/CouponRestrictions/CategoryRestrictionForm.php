@@ -30,6 +30,7 @@ class CategoryRestrictionForm extends DiscountRestrictionForm
                 'value' => $bid,
                 'choices' => $choices,
                 'ajaxUrl' => (new DiscountRestrictionAdmin)->getSuggestionUrl('category'),
+                'label' => 'Category and subcategories',
             ],
         ]);
     }

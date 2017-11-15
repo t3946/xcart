@@ -24,6 +24,7 @@ class SiteRestrictionForm extends DiscountRestrictionForm
             'not_in' => [
                 'class' => CheckboxField::className(),
                 'value' => $nin,
+                'label' => 'Not for selected'
             ],
             'site' => [
                 'class' => DropDownField::className(),
