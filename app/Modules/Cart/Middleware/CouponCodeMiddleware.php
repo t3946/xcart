@@ -1,6 +1,7 @@
 <?php
 namespace Modules\Cart\Middleware;
 
+use Modules\Cart\Helpers\CouponOldCart;
 use Modules\Cart\Models\CouponKitModel;
 use Xcart\App\Cli\Cli;
 use Xcart\App\Main\Xcart;
@@ -21,6 +22,8 @@ class CouponCodeMiddleware extends Middleware
     {
         if (!Cli::isCli()) {
 
+            $flash = Xcart::app()->flash;
+
             if ( $code = $this->getCouponCode($request) ) {
 
                 if ( $model = CouponKitModel::objects()->filter(['code' => $code, 'active' => true])->get()) {
@@ -31,27 +34,29 @@ class CouponCodeMiddleware extends Middleware
                         $cc_appended = strtoupper($cc_appended);
 
                         if ($cc_appended != $code) {
-                            Xcart::app()->flash->info("Coupon code \"{$cc_appended}\" changed to \"{$code}\"");
+                            $flash->addWithCode(self::CODE_PARAM, "Coupon code \"{$cc_appended}\" changed to \"{$code}\"", $flash::TYPE_INFO);
                         }
 
                     }
                     else {
-                        Xcart::app()->flash->success("Appended coupon code: \"{$code}\"");
+                        $flash->addWithCode(self::CODE_PARAM, "Appended coupon code: \"{$code}\"", $flash::TYPE_SUCCESS);
                     }
-
 
                     $request->session->add(self::CODE_PARAM, $code);
                 }
                 else {
 
-                    Xcart::app()->flash->error("Incorrect coupon code");
+                    $flash->error("Incorrect coupon code");
                 }
+
+                CouponOldCart::getInstance()->appendCoupon();
+
+                $request->getIsGet()?: $request->refresh();
             }
-
-            if ($request->post->has('discard-coupon')) {
+            elseif ($request->post->has('discard-coupon')) {
                 $request->session->remove(self::CODE_PARAM);
-
-                Xcart::app()->flash->success("Coupon has been discarded");
+                $flash->success("Coupon has been discarded");
+                $request->refresh();
             }
         }
     }

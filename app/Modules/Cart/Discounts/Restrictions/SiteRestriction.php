@@ -5,6 +5,7 @@ namespace Modules\Cart\Discounts\Restrictions;
 use Modules\Cart\CartModule;
 use Modules\Cart\Forms\CouponRestrictions\SiteRestrictionForm;
 use Modules\Sites\Models\SiteModel;
+use Xcart\App\Main\Xcart;
 
 class SiteRestriction extends AbstractRestriction
 {
@@ -28,8 +29,15 @@ class SiteRestriction extends AbstractRestriction
 
     public function validate($object = null)
     {
-        return true;
+        /** @var \Modules\Sites\SitesModule $module */
+        $module = Xcart::app()->getModule('Sites');
+        $site = $module->getSite();
 
+        if ($site && $model = $this->getModel()) {
+            return $site->pk == $model->pk;
+        }
+
+        return true;
     }
 
     public function dataToString()

@@ -83,6 +83,10 @@ class CouponOldCart
                 /** @var  \Modules\Cart\Models\CouponRestrictionModel $restriction*/
                 static::$types_restrictions[$restriction->class] = false;
             }
+
+            foreach ($coupon::getDefaultRestrictions() as $restriction) {
+                static::$types_restrictions[$restriction::className()] = false;
+            }
         }
 
         return static::$restrictions;
@@ -125,13 +129,27 @@ class CouponOldCart
         return static::$products;
     }
 
-    public function checkRestrictions()
+    /**
+     * @return \Modules\Cart\Interfaces\IDiscountRestriction[]
+     */
+    public function getRestricts()
     {
-        $restrictions = $this->getRestrictions();
+        $coupon = $this->getCoupon();
+        $restricts = $coupon::getDefaultRestrictions();
 
         /** @var \Modules\Cart\Models\CouponRestrictionModel $restriction */
-        foreach ($restrictions as $restriction) {
-            $restrict = $restriction->getRestrict();
+        foreach ($this->getRestrictions() as $restriction) {
+            $restricts[] = $restriction->getRestrict();
+        }
+
+        return $restricts;
+    }
+
+    public function checkRestrictions()
+    {
+        /** @var \Modules\Cart\Discounts\Restrictions\AbstractRestriction $restrict */
+        foreach ($this->getRestricts() as $restrict) {
+            $restrict->setCoupon($this->getCoupon());
             $valid = false;
 
             switch ($restrict->getTypeValidation())
@@ -157,7 +175,7 @@ class CouponOldCart
                     $valid = $restrict->validate();
             }
 
-            $this->setRestrictTypeValidate($restriction->class, $valid);
+            $this->setRestrictTypeValidate($restrict::className(), $valid);
         }
 
         return $this->isAllTypesValid();
@@ -255,7 +273,8 @@ class CouponOldCart
 
                 }
                 else {
-                    //Coupon not set for this cart/user
+                    Xcart::app()->request->session->remove('coupon_code');
+                    Xcart::app()->flash->addWithCode('coupon_code', 'Coupon not be used in current cart.', 'error', 15000);
                 }
             }
         }

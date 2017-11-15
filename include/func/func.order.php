@@ -1254,6 +1254,13 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
         }
 
         $orderid = func_array2insert('orders', $insert_data);
+        if (!empty($insert_data['coupon'])) {
+            $model = new \Modules\Cart\Models\CouponOrderModel();
+            $model->code = $insert_data['coupon'];
+            $model->login = $insert_data['login'];
+            $model->order_id = $orderid;
+            $model->save();
+        }
 
         global $purchase_order_selected;
         x_session_register('purchase_order_selected');

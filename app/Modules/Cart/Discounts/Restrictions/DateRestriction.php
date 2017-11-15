@@ -26,8 +26,11 @@ class DateRestriction extends AbstractRestriction
 
     public function validate($object = null)
     {
-        return true;
+        $start = strtotime($this->data['start']);
+        $end = strtotime($this->data['end']);
+        $time = time();
 
+        return ($start <= $time && $time <= $end);
     }
 
     public function dataToString()

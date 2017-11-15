@@ -16,6 +16,27 @@ abstract class AbstractRestriction implements IDiscountRestriction
     use ClassNames;
 
     public $data = [];
+    /**
+     * @var \Modules\Cart\Models\CouponRestrictionModel|null
+     */
+    public $restrictModel = null;
+    /**
+     * @var \Modules\Cart\Models\CouponKitModel
+     */
+    public $couponModel = null;
+
+    /**
+     * AbstractRestriction constructor.
+     *
+     * @param \Modules\Cart\Models\CouponRestrictionModel $restrictModel
+     */
+    public function __construct($restrictModel = null) {
+        $this->restrictModel = $restrictModel;
+    }
+
+    public function setCoupon($model) {
+        $this->couponModel = $model;
+    }
 
     abstract public function getFormClass();
 

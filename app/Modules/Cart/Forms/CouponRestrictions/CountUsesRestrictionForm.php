@@ -30,19 +30,6 @@ class CountUsesRestrictionForm extends DiscountRestrictionForm
                 'required' => true,
                 'value' => empty($data['max_use']) ? 1: $data['max_use'],
             ],
-            'max_uses_per_user' => [
-                'class' => NumberField::className(),
-                'required' => true,
-                'value' => empty($data['max_uses_per_user']) ? 1: $data['max_uses_per_user'],
-            ],
-            'uses' => [
-                'class' => NumberField::className(),
-                'required' => true,
-                'value' => empty($data['uses']) ? 0: $data['uses'],
-                'html' => [
-                    'disabled' => 'disabled',
-                ]
-            ],
         ]);
     }
 

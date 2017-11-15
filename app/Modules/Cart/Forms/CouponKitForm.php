@@ -20,7 +20,7 @@ class CouponKitForm extends ModelForm
     {
         return [
             'Main' => [
-                'active','code',  'name', 'type', 'discount', 'max_discount', 'description'
+                'active','code', 'name', 'uses_per_user', 'type', 'discount', 'max_discount', 'description'
             ],
             'Restrictions' => [
                 'restrictions'

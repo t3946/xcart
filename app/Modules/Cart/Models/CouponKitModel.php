@@ -2,6 +2,7 @@
 
 namespace Modules\Cart\Models;
 
+use Modules\Cart\Discounts\Restrictions\DefaultRestriction;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\BooleanField;
@@ -24,6 +25,7 @@ use Xcart\App\Orm\Model;
  * @property (int) type [1 => percentage, 2 => summ]
  * @property (float) discount
  * @property (float) max_discount
+ * @property (int) uses_per_user
  * @property (string) description
  * @property \DateTime created_at
  * @property \DateTime updated_at
@@ -33,6 +35,13 @@ use Xcart\App\Orm\Model;
  */
 class CouponKitModel extends Model
 {
+    public static function getDefaultRestrictions()
+    {
+        return [
+            new DefaultRestriction(),
+        ];
+    }
+
     public static function getFields()
     {
         return [
@@ -68,6 +77,14 @@ class CouponKitModel extends Model
             'max_discount' => [
                 'class' => DecimalField::className(),
                 'required' => true,
+                'verboseName' => 'Max summ discount'
+            ],
+
+            'uses_per_user' => [
+                'class' => IntField::className(),
+                'null' => false,
+                'default' => 1,
+                'verboseName' => 'Max user per user'
             ],
 
             'description' => [

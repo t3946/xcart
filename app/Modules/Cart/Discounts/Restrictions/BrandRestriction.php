@@ -25,9 +25,18 @@ class BrandRestriction extends AbstractRestriction
         return self::VALIDATION_PRODUCT;
     }
 
+    /**
+     * @param \Modules\Product\Models\ProductModel $item
+     *
+     * @return bool
+     */
     public function validate($item = null)
     {
-        return true;
+        if ($item && $brand = $this->getBrand()) {
+            return $item->brandid == $brand->pk;
+        }
+
+        return false;
     }
 
     public function dataToString()

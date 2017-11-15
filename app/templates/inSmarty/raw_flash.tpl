@@ -4,7 +4,7 @@
     window['flashStack'] = [];
 
     {foreach $messages as $item}
-        window['flashStack'].push({ 'message': {$item['message']|json_encode}, 'type': {$item['type']|json_encode} });
+        window['flashStack'].push({ 'message': {$item['message']|json_encode}, 'type': {$item['type']|json_encode}, 'time': {$item['time']|json_encode} });
     {/foreach}
 
     {ignore}
@@ -45,7 +45,7 @@
         if (window['flashStack'] && window['flashStack'].length) {
             for (var i in window['flashStack']) {
                 var f = window['flashStack'][i];
-                addFlashMessage(f.message, f.type);
+                addFlashMessage(f.message, f.type, f.time);
             }
         }
     });
@@ -124,6 +124,7 @@
     right:0;
     margin-left:auto;
     margin-right:auto;
+    z-index: 1000;
 }
 
 @-moz-keyframes bounceInDown {

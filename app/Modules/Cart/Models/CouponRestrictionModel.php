@@ -48,7 +48,7 @@ class CouponRestrictionModel extends Model
     {
         if (!$this->restrict) {
             if (!$this->getIsNewRecord()) {
-                $this->restrict = new $this->class();
+                $this->restrict = new $this->class($this);
             }
         }
 

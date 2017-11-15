@@ -9,6 +9,7 @@ use Modules\Product\Models\CategoryModel;
 class CategoryRestriction extends AbstractRestriction
 {
     private $model;
+    private $ids;
 
     public function getFormClass()
     {
@@ -25,10 +26,34 @@ class CategoryRestriction extends AbstractRestriction
         return self::VALIDATION_PRODUCT;
     }
 
+    /**
+     * @param \Modules\Product\Models\ProductModel $product
+     *
+     * @return bool
+     */
     public function validate($product = null)
     {
-        return true;
+        if ($product && $ids = $this->getCategoriesIds()) {
+            $cids = $product->categories->valuesList('categoryid', true);
 
+            foreach ($cids as $cid) {
+                if (in_array($cid, $ids)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    public function getCategoriesIds()
+    {
+        if (!$this->ids && $model = $this->getModel()) {
+
+            $this->ids = CategoryModel::objects()->filter(['categoryid_path__startswith' => $model->categoryid_path])->valuesList(['categoryid'], true);
+        }
+
+        return $this->ids;
     }
 
     public function dataToString()
