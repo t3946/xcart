@@ -1423,6 +1423,7 @@ SQL;
 
                                 $aManufacturerid_arr = [];
                                 $product_total = 0;
+                                $c_flag = true;
 
                                 foreach ($aOrderItems as $oOrderItem) {
                                     $sAmazonSKU = addslashes($oOrderItem->getElementsByTagName('SellerSKU')->item(0)->nodeValue);
@@ -1441,6 +1442,8 @@ SQL;
                                                 $to = $config['Company']['product_management'];
                                                 $from = 'team@s3stores.com';
                                                 func_send_mail($to, 'mail/missing_sku_subj.tpl', 'mail/missing_sku.tpl', $from, true);
+                                                $c_flag = false;
+                                                break;
                                             }
                                     }
 
@@ -1500,6 +1503,10 @@ SQL;
                                         }
                                         $product_total += $oOrderDetail->getTotalProductPrice();
                                     }
+                                }
+
+                                if (!$c_flag) {
+                                    continue;
                                 }
 
                                 $oOrder->updateVerificationStatus()->reCalculateTotals();
