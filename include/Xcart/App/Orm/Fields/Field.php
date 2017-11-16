@@ -448,7 +448,7 @@ abstract class Field implements ModelFieldInterface
             return null;
         }
 
-//        $validators = [];
+        $validators = [];
 //        if ($form->hasField($this->name)) {
 //            $field = $form->getField($this->name);
 //            $validators = $field->validators;

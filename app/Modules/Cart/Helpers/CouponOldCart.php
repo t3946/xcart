@@ -227,7 +227,7 @@ class CouponOldCart
         $cart = $this->getCart();
         $discount = floatval($coupon->discount);
         $max_dict = floatval($coupon->max_discount);
-        $cost = $cart['total_cost'];
+        $cost = $cart['subtotal'];
 
         if ($this->isForProduct()) {
             $cost = $this->getSummProducts();
@@ -259,17 +259,18 @@ class CouponOldCart
                 if ($this->checkRestrictions()) {
                     $discount = $this->calcDiscount();
 
-                    $total = $cart['total_cost'];
+                    $total = $cart['subtotal'];
 
                     $cart['coupon'] = $coupon->code;
                     $cart['coupon_discount'] = -1 * $discount;
                     $cart['display_discounted_subtotal'] = $total - $discount;
-                    $cart['total_cost'] = $total - $discount;
+                    $cart['total_cost'] = $cart['total_cost'] - $discount;
 
-                    $cart['orders'][0]['coupon'] = $coupon->code;
-                    $cart['orders'][0]['coupon_discount'] = -1 * $discount;
-                    $cart['orders'][0]['total_cost'] = $total - $discount;
-                    $cart['orders'][0]['display_discounted_subtotal'] = $total - $discount;
+                    $cart['orders'][0]['coupon'] = $cart['coupon'];
+                    $cart['orders'][0]['coupon_discount'] =  $cart['coupon_discount'];
+                    $cart['orders'][0]['total_cost'] = $cart['total_cost'];
+                    $cart['orders'][0]['display_discounted_subtotal'] = $cart['display_discounted_subtotal'];
+
 
                 }
                 else {
