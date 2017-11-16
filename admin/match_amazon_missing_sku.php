@@ -10,13 +10,13 @@ $smarty->assign("main", "match_amazon_missing_sku");
 
 $smarty->assign('aMatchedProducts',
     \Xcart\FbaMissingSku::model()->findAll(\Xcart\SQLBuilder::getInstance()->
-    addCondition('main.productid != 0')->
+    addCondition('main.productid IS NOT NULL')->
     addInnerJoin('products_sf', 'psf', 'psf.productid = main.productid AND psf.sfid=' . $current_storefront)->
     addOrderBy('missing_productcode')));
 
 $smarty->assign('aNotMatchedProducts',
     \Xcart\FbaMissingSku::model()->findAll(\Xcart\SQLBuilder::getInstance()->
-    addCondition('main.productid = 0')->
+    addCondition('main.productid IS NULL')->
     addOrderBy('missing_productcode')));
 
 @include $xcart_dir . "/modules/gold_display.php";
