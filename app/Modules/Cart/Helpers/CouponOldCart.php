@@ -150,6 +150,7 @@ class CouponOldCart
         /** @var \Modules\Cart\Discounts\Restrictions\AbstractRestriction $restrict */
         foreach ($this->getRestricts() as $restrict) {
             $restrict->setCoupon($this->getCoupon());
+            $restrict->setCart($this->getCart());
             $valid = false;
 
             switch ($restrict->getTypeValidation())
@@ -274,7 +275,7 @@ class CouponOldCart
 
                 }
                 else {
-                    Xcart::app()->request->session->remove('coupon_code');
+//                    Xcart::app()->request->session->remove('coupon_code');
                     Xcart::app()->flash->addWithCode('coupon_code', 'Coupon not be used in current cart.', 'error', 15000);
                 }
             }

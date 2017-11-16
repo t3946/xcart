@@ -30,7 +30,6 @@ class BrandRestrictionForm extends DiscountRestrictionForm
                 'value' => $bid,
                 'choices' => $choices,
                 'ajaxUrl' => (new DiscountRestrictionAdmin)->getSuggestionUrl('brand'),
-                'Brand'
             ],
         ]);
     }

@@ -3,21 +3,20 @@
 namespace Modules\Cart\Discounts\Restrictions;
 
 use Modules\Cart\CartModule;
-use Modules\Cart\Forms\CouponRestrictions\CountUsesRestrictionForm;
+use Modules\Cart\Forms\CouponRestrictions\MinimalPriceRestrictionForm;
 use Modules\Cart\Models\CouponOrderModel;
-use Modules\User\Models\UserModel;
 
-class CountUsedRestriction extends AbstractRestriction
+class MinimalPriceRestriction extends AbstractRestriction
 {
 
     public function getFormClass()
     {
-        return CountUsesRestrictionForm::className();
+        return MinimalPriceRestrictionForm::className();
     }
 
     public function getName()
     {
-        return CartModule::t('Count uses');
+        return CartModule::t('Minimal price');
     }
 
     public function getTypeValidation()
@@ -32,11 +31,16 @@ class CountUsedRestriction extends AbstractRestriction
      */
     public function validate($user = null)
     {
-        return $this->data['max_use'] > CouponOrderModel::objects()->filter(['code' => $this->couponModel->code])->count();
+
+        if ($this->cart) {
+            return $this->cart['subtotal'] > $this->data['min_price'];
+        }
+
+        return false;
     }
 
     public function dataToString()
     {
-        return "Max uses: {$this->data['max_use']}";
+        return "Minimal price: {$this->data['min_price']}";
     }
 }
