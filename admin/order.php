@@ -2964,9 +2964,13 @@ $order_tabs[0]["title"]   = "Important messages";
 $order_tabs[0]["section"] = "important_messages";
 $order_tabs[0]["anchor"]  = "0";
 
-$order_tabs[1]["title"]   = "All logs and messages";
-$order_tabs[1]["section"] = "all_logs_and_messages";
+$order_tabs[1]["title"]   = "Calls";
+$order_tabs[1]["section"] = "order_calls";
 $order_tabs[1]["anchor"]  = "1";
+
+$order_tabs[2]["title"]   = "All logs and messages";
+$order_tabs[2]["section"] = "all_logs_and_messages";
+$order_tabs[2]["anchor"]  = "2";
 
 $smarty->assign('order_tabs', $order_tabs);
 
