@@ -1,35 +1,95 @@
 <?php
+
+use Modules\Anveo\Models\AnveoModel;
+
+define("CIDEV_CRON_START", "CRON");
+
 require_once "top.inc.php";
 require_once "init.php";
 
+
 $now = date('Y-m-d H:i:s');
 
-if (!empty($_GET['incoming_flow_start']) || !empty($_GET['start_out']))
+if (!empty($_GET['incoming_flow_start']) || !empty($_GET['outgoing_flow_start']))
 {
-    $direction = (!empty($_GET['incoming_flow_start'])) ? 0 : 1; // 0 - in | 1 - out
-    $session = getDecodedString($_GET['session']);
-    db_query("INSERT INTO anveo_calls (`session`, `start_at`) VALUES ('{$session}', '{$now}')");
+    if (!empty($_GET['outgoing_flow_start'])) {
+        $session = getDecodedString($_GET['ss']);
+        (new AnveoModel(['session' => $session, 'start_at' => $now, 'is_outgoing' => true]))->save();
+    } else {
+        $session = getDecodedString($_GET['ss']);
+        $e164 = getDecodedString($_GET['ee']);
+        (new AnveoModel(['session' => $session, 'start_at' => $now, 'e164' => $e164]))->save();
+    }
 }
 
-if (!empty($_GET['incoming_flow_end']) || !empty($_GET['end_out']))
+if (!empty($_GET['incoming_flow_end']) || !empty($_GET['outgoing_flow_end']))
 {
-    $session = getDecodedString($_GET['session']);
-    db_query("UPDATE anveo_calls SET `end_at` = '{$now}' WHERE `session` = '{$session}'");
+    $session = getDecodedString($_GET['ss']);
+    if ($model = AnveoModel::objects()->get(['session' => $session])) {
+        $model->end_at = $now;
+        $model->save();
+    }
 }
 
-if (!empty($_POST['incoming_call_saved']) || !empty($_POST['record_out']))
+if (!empty($_GET['lost_call']))
 {
-    $session = getDecodedString($_POST['session']);
+    sleep(3);
+    $session = getDecodedString($_GET['ss']);
+    if ($model = AnveoModel::objects()->get(['session' => $session])){
 
-    if (!empty($_POST['incoming_call_saved']))
-    {
-        $file = getDecodedString($_POST['incoming_call_saved']);
-    }
-    elseif (!empty($_POST['record_filename'])) {
-        $file = getDecodedString($_POST['record_filename']);
-    }
+        $model->is_lost = true;
 
-    db_query("UPDATE anveo_calls SET `file` = '{$file}' WHERE `session` = '{$session}'");
+        if (!empty($_GET['ee'])){
+            $ee = getDecodedString($_GET['ee']);
+            $model->e164 = $ee;
+
+        }
+        if (!empty($_GET['rdnis'])){
+            $rdnis = getDecodedString($_GET['rdnis']);
+            $model->rdnis = $rdnis;
+        }
+        if (!empty($_GET['cname'])){
+            $cname = getDecodedString($_GET['cname']);
+            $model->cname = $cname;
+        }
+
+        $model->save();
+
+    } else {
+
+        (new AnveoModel(['session' => $session,
+                         'is_lost' => true,
+                         'e164' => getDecodedString($_GET['ee']),
+                         'rdnis' => getDecodedString($_GET['rdnis']),
+                         'cname' => getDecodedString($_GET['cname'])
+                        ]))->save();
+    }
+}
+
+if (!empty($_POST['ss']))
+{
+    $session = getDecodedString($_POST['ss']);
+    if ($model = AnveoModel::objects()->get(['session' => $session])){
+        if (!empty($_POST['file'])){
+            $file = getDecodedString($_POST['file']);
+            $model->file = $file;
+            $file = explode("-", $file);
+        }
+        if (!empty($_POST['uacc'])) {
+            $uacc = getDecodedString($_POST['uacc']);
+            $model->anveo_account = $uacc;
+        }
+        if (!empty($_POST['cnam'])) {
+            $cname = getDecodedString($_POST['cnam']);
+            $model->cname = $cname;
+        }
+        if (!empty($_POST['ee'])) {
+            $e164 = getDecodedString($_POST['ee']);
+            $model->e164 = $e164;
+        }
+
+        $model->save();
+    }
 }
 
 saveToLog();
@@ -100,5 +160,17 @@ function saveToLog()
 
     if (!empty($getArray)) {
         func_backprocess_log('anveo_logging', implode("\n---\n", $getArray));
+//
+//        $now = date('Y-m-d-H-i-s');
+//        $file_name = "./Anveo/Anveo_log.txt";
+//        $handle = fopen($file_name, "a");
+//        $string = "Time: {$now}\n---\n";
+//        $string .= implode("\n---\n", $getArray);
+//        $string .= "\n____________________________________________________________\n";
+//        fwrite($handle, $string);
+//        fclose($handle);
+//
+//        file_put_contents("./Anveo/{$now}.txt", implode("\n---\n", $getArray));
     }
 }
+
