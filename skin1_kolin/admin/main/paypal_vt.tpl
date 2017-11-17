@@ -289,7 +289,7 @@
             });
             $(this).prev('.transaction_log_div').toggle('slow');
             return false;
-        }).on('click', '.transaction_info_table .dropdown .item, .transaction_info_table .lookup',
+        }).on('click', '.dropdown .item, .lookup',
         function () {
             var type = $(this).data('type');
             if (type === 'refund') {
