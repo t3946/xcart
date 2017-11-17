@@ -43,7 +43,34 @@ class OrderDetail extends Data
 
     public function getPrice()
     {
+//        return $this->getExtraPrice() ?: $this->getField('price');
         return $this->getField('price');
+    }
+
+    public function getOriginalPrice()
+    {
+        return $this->getExtraOriginalPrice() ?: $this->getPrice();
+    }
+
+    public function getExtraPrice()
+    {
+        $extra_data = $this->getExtraData();
+
+        if (!empty($extra_data['display']) && !empty($extra_data['display']['discounted_price'])) {
+            return floatval($extra_data['display']['discounted_price']) / $this->getAmount();
+        }
+
+        return 0;
+    }
+    public function getExtraOriginalPrice()
+    {
+        $extra_data = $this->getExtraData();
+
+        if (!empty($extra_data['original_price'])) {
+            return floatval($extra_data['original_price']);
+        }
+
+        return 0;
     }
 
     public function getOrderId()
@@ -84,6 +111,11 @@ class OrderDetail extends Data
     public function getTotalProductPrice()
     {
         return floatval($this->getPrice() * $this->getAmount());
+    }
+
+    public function getExtraData()
+    {
+        return unserialize($this->getField('extra_data'));
     }
 
     public function getProductHST()

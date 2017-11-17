@@ -20,6 +20,8 @@ use Xcart\App\Orm\Model;
  * For constructing custom discount
  *
  * @property (bool) active
+ * @property (bool) deleted
+ * @property (string) uid
  * @property (string) code
  * @property (string) name
  * @property (int) type [1 => percentage, 2 => summ]
@@ -48,6 +50,15 @@ class CouponKitModel extends Model
             'id' => AutoField::className(),
             'active' => [
                 'class' => BooleanField::className(),
+            ],
+            'deleted' => [
+                'class' => BooleanField::className(),
+                'default' => false,
+            ],
+            'uid' => [
+                'class' => CharField::className(),
+                'required' => true,
+                'default' => uniqid(),
             ],
             'code' => [
                 'class' => CharField::className(),
@@ -112,6 +123,13 @@ class CouponKitModel extends Model
     public function __toString()
     {
         return $this->name . " [{$this->code}]";
+    }
+
+    public function delete()
+    {
+        $this->deleted = true;
+
+        return parent::save();
     }
 
     public function afterDelete($owner)

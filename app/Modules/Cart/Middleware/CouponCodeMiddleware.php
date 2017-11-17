@@ -49,7 +49,7 @@ class CouponCodeMiddleware extends Middleware
                     $flash->error("Incorrect coupon code");
                 }
 
-                CouponOldCart::getInstance()->appendCoupon();
+                CouponOldCart::getInstance()->validateCoupon();
 
                 $request->getIsGet()?: $request->refresh();
             }

@@ -21,4 +21,13 @@ class CouponKitAdmin extends Admin
     {
         return new CouponKitModel();
     }
+
+    public function getQuerySet()
+    {
+        $qs = parent::getQuerySet();
+
+        $qs->filter(['deleted' => false]);
+
+        return $qs;
+    }
 }

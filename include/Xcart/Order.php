@@ -543,6 +543,7 @@ class Order extends Data
     public function getOrderTotalNetDiscounted()
     {
         $total = $this->getOrderTotalNet();
+        return $total;
         return $total - abs($this->coupon_discount);
     }
 
@@ -589,6 +590,7 @@ class Order extends Data
     {
         $total = $this->getOrderTotalGross(false);
 
+        return $total;
         return round($total - abs($this->coupon_discount), 2);
     }
 
@@ -642,6 +644,7 @@ class Order extends Data
     public function getOrderGrandTotalNetDiscount()
     {
         $total = $this->getOrderGrandTotalNet();
+        return $total;
         return $total - abs($this->coupon_discount);
     }
 

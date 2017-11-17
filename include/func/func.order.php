@@ -786,10 +786,10 @@ function func_order_data($orderid)
         $order["extra"]["tax_info"]["product_tax_name"] = array_pop($_product_taxes);
     }
 
-    if ($order["coupon_type"] == "free_ship") {
-        $order["shipping_cost"] = $order["coupon_discount"];
-        $order["discounted_subtotal"] += $order["coupon_discount"];
-    }
+//    if ($order["coupon_type"] == "free_ship") {
+//        $order["shipping_cost"] = $order["coupon_discount"];
+//        $order["discounted_subtotal"] += $order["coupon_discount"];
+//    }
 
     $order["discounted_subtotal"] = price_format($order["discounted_subtotal"]);
 
@@ -1355,11 +1355,18 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
             foreach ($products as $pk => $product) {
                 if (($single_mode) || ($product["provider"] == $current_order["provider"])) {
                     $product["price"]                                     = price_format($product["price"]);
+                    $product["extra_data"]["original_price"]              = $product["price"];
                     $product["extra_data"]["product_options"]             = $product["options"];
                     $product["extra_data"]["taxes"]                       = $product["taxes"];
                     $product["extra_data"]["display"]["price"]            = price_format($product["display_price"]);
                     $product["extra_data"]["display"]["discounted_price"] = price_format($product["display_discounted_price"]);
                     $product["extra_data"]["display"]["subtotal"]         = price_format($product["display_subtotal"]);
+                    $product["extra_data"]["display"]["coupon_discount"]  = price_format($product["coupon_discount"]);
+
+                    if (!empty($product['discounted_price_orig'])) {
+                        $product["price"] = $product['discounted_price_orig'];
+                    }
+
                     if (empty($product["product_orig"])) {
                         $product["product_orig"] = $product["product"];
                     }
@@ -1367,7 +1374,6 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
                     if (!empty($active_modules['Product_Options'])) {
                         $product["product_options"] = func_serialize_options($product["options"]);
                     }
-                    $original_provider = '';
 
                     $original_provider = func_query_first_cell("SELECT provider FROM $sql_tbl[products] WHERE productid='" . $product['productid'] . "'");
 

@@ -36,6 +36,7 @@ use Modules\Product\Models\ProductModel;
 use Modules\User\Helpers\SurfingHelper;
 use Modules\User\Models\SurfPathModel;
 use Xcart\CidevSurfPath;
+
 require "./auth.php";
 
 if (!empty($active_modules['Wishlist'])) {
@@ -1077,8 +1078,9 @@ if (!$func_is_cart_empty) {
     # Calculate all prices
     #
     $cart = func_array_merge($cart, func_calculate($cart, $products, $login, $current_area, (!empty($paymentid) ? intval($paymentid) : 0)));
-    if ($mode == "checkout" && !empty($paymentid)) {
-        $cart = CouponOldCart::getInstance()->appendCoupon($cart);
+    if ($mode == "checkout" && !empty($paymentid) && CouponOldCart::getInstance()->hasErrors()) {
+        $str = implode("<br/>", CouponOldCart::getInstance()->getErrors());
+        \Xcart\App\Main\Xcart::app()->flash->addWithCode('coupon_code', $str, 15000);
     }
 
     if (func_is_cart_empty($cart)) {

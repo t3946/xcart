@@ -137,7 +137,7 @@ function func_set_tracking_shipping(obj, m_id, invoice_number){ldelim}
   {foreach from=$tracking_links item=link_info key=linkid}
 
     carrier_id_in_arr = parseInt({$link_info.carrier_id});
-    
+
     if (carrier_id == carrier_id_in_arr){ldelim}
 
       $("#"+tracking_shipping_id).append($('<option value="{$linkid}">{$link_info.shipping|escape}</option>'));
@@ -221,7 +221,7 @@ var dc_status;
 /*
 function func_check_additional_shipping_status(m_id){
 
-  var additional_shipping_status = $("#additional_shipping_status_"+m_id).val(); 
+  var additional_shipping_status = $("#additional_shipping_status_"+m_id).val();
 
   if (additional_shipping_status == "P"){
     $("#additional_vt_info_"+m_id).show();
@@ -234,7 +234,7 @@ function func_check_additional_shipping_status(m_id){
 
 function func_check_cb_status(m_id){
 
-  var cb_status = $("#groups_cb_status_"+m_id).val(); 
+  var cb_status = $("#groups_cb_status_"+m_id).val();
 
   if (cb_status == "P" || cb_status == "3" || cb_status == "V" || cb_status == "H" || cb_status == "R"){
     $("#groups_shipping_cost_net_"+m_id).prop("readonly",true);
@@ -354,19 +354,19 @@ function func_check_cb_statuses(){
 
 /*
   if (
-      (cb_status_eq_P_found == true && all_cb_status_eq_P == true) || 
-      (cb_status_eq_3_found == true && all_cb_status_eq_3 == true) || 
-      (cb_status_eq_V_found == true && all_cb_status_eq_V == true) || 
-      (cb_status_eq_H_found == true && all_cb_status_eq_H == true) || 
+      (cb_status_eq_P_found == true && all_cb_status_eq_P == true) ||
+      (cb_status_eq_3_found == true && all_cb_status_eq_3 == true) ||
+      (cb_status_eq_V_found == true && all_cb_status_eq_V == true) ||
+      (cb_status_eq_H_found == true && all_cb_status_eq_H == true) ||
       (cb_status_eq_R_found == true && all_cb_status_eq_R == true)
   ) {
-    for (var i = 0; i < 20; i++) { 
+    for (var i = 0; i < 20; i++) {
       if (document.getElementById('sku_add_to_order_box_'+i)){
         $("#sku_add_to_order_box_"+i).prop("disabled",true);
       }
     }
   } else {
-    for (var i = 0; i < 20; i++) { 
+    for (var i = 0; i < 20; i++) {
       if (document.getElementById('sku_add_to_order_box_'+i)){
         $("#sku_add_to_order_box_"+i).prop("disabled",false);
       }
@@ -493,7 +493,7 @@ function check_r_fields(){
 </tr>
 
 
-<tr class="TableHead" style="BACKGROUND-COLOR: #FFD44C;">
+<tr class="TableHead bg__yellow">
   <td width="35%"></td>
   <td width="17%"></td>
   <td width="7%" nowrap="nowrap"><font style="font-size: .87rem;">Cost to us</font></td>
@@ -584,9 +584,9 @@ function check_r_fields(){
         <td></td>
         <td></td>
         <td></td>
-        <td><div style="BACKGROUND-COLOR: #FFD44C; color: #000000" align="right">{include file="currency2.tpl" value=$v.oOrderGroup->getTotalCostToUs()}</div></td>
+        <td><div class="bg__yellow color__black" align="right">{include file="currency2.tpl" value=$v.oOrderGroup->getTotalCostToUs()}</div></td>
         <td></td>
-        <td><div style="BACKGROUND-COLOR: #FFD44C; color: #000000" align="right">{include file="currency2.tpl" value=$v.oOrderGroup->getTotalCostToUs()}</div></td>
+        <td><div class="bg__yellow color__black" align="right">{include file="currency2.tpl" value=$v.oOrderGroup->getTotalCostToUs()}</div></td>
         <td></td>
     </tr>
 
@@ -657,12 +657,12 @@ function check_r_fields(){
     {/if}
 
   </td>
-  <td align="right">{if !$static}<input type="text" size="8" name="items[{$product.itemid}][price]" value="{$product.price|price_format}" {if $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}readonly="readonly"{/if} />{else}{include file="currency2.tpl" value=$product.price|price_format}{/if}
+  <td align="right">{if !$static}<input type="text" size="8" name="items[{$product.itemid}][price]" value="{$product.oOrderDetail->getOriginalPrice()|price_format}" {if $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}readonly="readonly"{/if} />{else}{include file="currency2.tpl" value=$product.oOrderDetail->getPrice()|price_format}{/if}
 
 {* --- *}
 {math equation="x+y" x=$GROUP_cost_to_us y=$product.cost_to_us assign="GROUP_cost_to_us"}
 
-<div style="BACKGROUND-COLOR: #FFD44C; color: #000000" align="right">
+<div class="bg__yellow color__black" align="right">
 {include file="currency2.tpl" value=$product.cost_to_us|price_format}
 </div>
 
@@ -731,7 +731,7 @@ Cost to us accurate
   <td align="right">{include file="currency2.tpl" value=$product.oOrderDetail->getTotalProductPrice()}
 
 {* --- *}
-<div style="BACKGROUND-COLOR: #FFD44C; color: #000000" align="right">
+<div class="bg__yellow color__black" align="right">
 {include file="currency2.tpl" value=$product.oOrderDetail->getCostToUs()}
 </div>
 {* --- *}
@@ -747,7 +747,7 @@ Cost to us accurate
 {include file="currency2.tpl" value=$product.oOrderDetail->getTotalProductPrice()}
 
 {* --- *}
-<div style="BACKGROUND-COLOR: #FFD44C; color: #000000" align="right">
+<div class="bg__yellow color__black" align="right">
 {include file="currency2.tpl" value=$product.oOrderDetail->getCostToUs()}
 </div>
 {* --- *}
@@ -851,7 +851,7 @@ Cost to us accurate
 </tr>
 
 {* ----------------------- *}
-<tr{cycle values=", class='TableSubHead'" name="cycle_`$m_id`"} style="BACKGROUND-COLOR: #FFD44C;">
+<tr class="bg__yellow {cycle values="TableSubHead" name="cycle_`$m_id`"} ">
   <td colspan="7">
 
 <div style="float: left;">
@@ -925,10 +925,10 @@ Drop-ship fee: {include file="currency.tpl" value=$order_manufacturers[$m_id].d_
 
 
 {if $order_manufacturers[$m_id].additional_shipping_charge gt 0}
-<tr {cycle values=", class='TableSubHead'" name="cycle_`$m_id`"} style="BACKGROUND-COLOR: #FFD44C;">
+<tr  class="bg__yellow {cycle values="TableSubHead" name="cycle_`$m_id`"}">
 
 <td colspan="2">
-<span style="color: #FF0000; font-weight: bold;">Additional shipping required: ${$order_manufacturers[$m_id].additional_shipping_charge}</span>
+<span class="color__red fw__bold" >Additional shipping required: ${$order_manufacturers[$m_id].additional_shipping_charge}</span>
 </td>
 
 <td colspan="4" align="right">
@@ -1356,7 +1356,7 @@ C-{$key_memos}: {$invoice_memo_statuses[$item_memos.status]}<br />
 <tr{cycle values=", class='TableSubHead'" name="cycle_totals"}>
   <td>Total Product Price
 
-<div style="BACKGROUND-COLOR: #FFD44C; color: #000000" align="left">
+<div class="bg__yellow color__black" align="left">
 Total Product Cost to us
 </div>
 
@@ -1365,7 +1365,7 @@ Total Product Cost to us
   <td align="right">{include file="currency2.tpl" value=$oOrder->getProductPriceNet()}
 
 {* --- *}
-<div style="BACKGROUND-COLOR: #FFD44C; color: #000000" align="right">
+<div class="bg__yellow color__black" align="right">
 {include file="currency2.tpl" value=$oOrder->getOrderCostToUs()|price_format}
 </div>
 {* --- *}
@@ -1376,7 +1376,7 @@ Total Product Cost to us
   <td align="right">{include file="currency2.tpl" value=$oOrder->getProductPriceGross()}
 
 {* --- *}
-<div style="BACKGROUND-COLOR: #FFD44C; color: #000000" align="right">
+<div class="bg__yellow color__black" align="right">
 {include file="currency2.tpl" value=$oOrder->getOrderCostToUs()|price_format}
 </div>
 {* --- *}

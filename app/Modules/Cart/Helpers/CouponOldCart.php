@@ -20,7 +20,11 @@ class CouponOldCart
 
     private $pids_appended = [];
     private $forProducts = false;
+    private $order_id = null;
     private $cart = [];
+    private $errors = [];
+    private $login;
+    private $code;
 
 
     /**
@@ -60,13 +64,45 @@ class CouponOldCart
         return $this->cart;
     }
 
+    public function setCart($cart = [])
+    {
+        $this->cart = $cart;
+        return $this;
+    }
+
+    public function setLogin($login)
+    {
+        $this->login = $login;
+        return $this;
+    }
+
+    public function setCouponCode($code)
+    {
+        $this->code = $code;
+        return $this;
+    }
+
+    public function getOrderId()
+    {
+        return $this->order_id;
+    }
+
+    public function setOrderId($order_id)
+    {
+        $this->order_id = $order_id;
+        return $this;
+    }
+
     /**
      * @return CouponKitModel
      */
     public function getCoupon()
     {
         if (!static::$coupon) {
-            if ( $code = Xcart::app()->request->session->get('coupon_code') ) {
+            if ($this->code && $this->order_id) {
+                static::$coupon = CouponKitModel::objects()->filter(['code' => $this->code])->get();
+            }
+            else if ( $code = Xcart::app()->request->session->get('coupon_code') ) {
                 static::$coupon = CouponKitModel::objects()->filter(['active' => true, 'code' => $code])->get();
             }
         }
@@ -95,7 +131,10 @@ class CouponOldCart
     public function getCustomer()
     {
         if (!static::$customer) {
-            if( $login = Xcart::app()->request->session->get('login') ) {
+            if ($this->login) {
+                static::setCustomer(UserModel::objects()->filter(['login' => $this->login])->get());
+            }
+            else if( $login = Xcart::app()->request->session->get('login') ) {
                 static::setCustomer(UserModel::objects()->filter(['login' => $login])->get());
             }
         }
@@ -151,6 +190,7 @@ class CouponOldCart
         foreach ($this->getRestricts() as $restrict) {
             $restrict->setCoupon($this->getCoupon());
             $restrict->setCart($this->getCart());
+            $restrict->setOrderId($this->getOrderId());
             $valid = false;
 
             switch ($restrict->getTypeValidation())
@@ -176,6 +216,7 @@ class CouponOldCart
                     $valid = $restrict->validate();
             }
 
+            $this->addError($restrict::className(), $restrict->getErrorMessage());
             $this->setRestrictTypeValidate($restrict::className(), $valid);
         }
 
@@ -185,6 +226,8 @@ class CouponOldCart
     public function setRestrictTypeValidate($class, $status) {
         if ($status && isset(static::$types_restrictions[$class])) {
             static::$types_restrictions[$class] = true;
+
+            $this->cleanError($class);
         }
     }
 
@@ -195,11 +238,13 @@ class CouponOldCart
 
     public function isAllTypesValid()
     {
-        foreach (static::$types_restrictions as $valid) {
+        foreach (static::$types_restrictions as $type =>$valid) {
             if (!$valid) {
                 return false;
             }
         }
+
+        $this->cleanErrors();
 
         return true;
     }
@@ -209,30 +254,71 @@ class CouponOldCart
         return $this->forProducts == true;
     }
 
-    public function getSummProducts()
+    private function getValidProductIds()
+    {
+        if (!$this->pids_appended) {
+            $cart = $this->getCart();
+
+            foreach ($cart['products'] as $item) {
+                $this->pids_appended[] = $item['productid'];
+            }
+        }
+
+        return $this->pids_appended;
+    }
+
+    public function getProductSubtotal($item)
+    {
+        return $item['price'] * $item['amount'];
+    }
+
+    public function getSumProducts()
     {
         $cost = 0;
         $cart = $this->getCart();
 
+        if (!empty($cart['subtotal'])) {
+            return $cart['subtotal'];
+        }
+
         foreach ($cart['products'] as $item) {
-            $cost += $item['subtotal'];
+            $cost += $this->getProductSubtotal($item);
         }
 
         return $cost;
-
     }
 
-    public function calcDiscount()
+    public function getSumValidProducts()
     {
-        $coupon = $this->getCoupon();
+        $cost = 0;
         $cart = $this->getCart();
-        $discount = floatval($coupon->discount);
-        $max_dict = floatval($coupon->max_discount);
-        $cost = $cart['subtotal'];
+        $pids = $this->getValidProductIds();
+
+        foreach ($cart['products'] as $item) {
+            if (in_array($item['productid'], $pids)) {
+                $cost += $this->getProductSubtotal($item);
+            }
+        }
+
+        return $cost;
+    }
+
+    public function calcSumDiscount()
+    {
+        $cost = $this->getSumProducts();
 
         if ($this->isForProduct()) {
-            $cost = $this->getSummProducts();
+            $cost = $this->getSumValidProducts();
         }
+
+        return $this->calcDiscount($cost);
+    }
+
+    public function calcDiscount($cost)
+    {
+        $coupon = $this->getCoupon();
+        $discount = floatval($coupon->discount);
+        $max_dict = floatval($coupon->max_discount);
 
         if ($coupon->isPercentageCalc()) {
             //  Dec to float 10% => 0.1
@@ -248,40 +334,110 @@ class CouponOldCart
         }
 
         return $calc;
-
     }
 
-    public function appendCoupon($cart = [])
+    public function addError($type, $message)
     {
-        $cart = $this->cart = $cart ?: $this->getCart();
+        $this->errors[$type] = $message;
+        return $this;
+    }
 
+    public function cleanError($type) {
+        unset($this->errors[$type]);
+        return $this;
+    }
+
+    public function cleanErrors()
+    {
+        $this->errors = [];
+        return $this;
+    }
+
+    public function getErrors()
+    {
+        return $this->errors ?: [];
+    }
+
+    public function hasErrors()
+    {
+        return !empty($this->errors);
+    }
+
+    /**
+     * @return bool|null
+     */
+    public function validateCoupon()
+    {
         if ($coupon = $this->getCoupon()) {
-            if ($this->getCustomer() && $cart) {
-                if ($this->checkRestrictions()) {
-                    $discount = $this->calcDiscount();
-
-                    $total = $cart['subtotal'];
-
-                    $cart['coupon'] = $coupon->code;
-                    $cart['coupon_discount'] = -1 * $discount;
-                    $cart['display_discounted_subtotal'] = $total - $discount;
-                    $cart['total_cost'] = $cart['total_cost'] - $discount;
-
-                    $cart['orders'][0]['coupon'] = $cart['coupon'];
-                    $cart['orders'][0]['coupon_discount'] =  $cart['coupon_discount'];
-                    $cart['orders'][0]['total_cost'] = $cart['total_cost'];
-                    $cart['orders'][0]['display_discounted_subtotal'] = $cart['display_discounted_subtotal'];
-
-
-                }
-                else {
-//                    Xcart::app()->request->session->remove('coupon_code');
-                    Xcart::app()->flash->addWithCode('coupon_code', 'Coupon not be used in current cart.', 'error', 15000);
-                }
+            if ($this->getCustomer() && $this->getCart()) {
+                return $this->checkRestrictions();
             }
         }
 
-        return $cart;
+        return null;
     }
 
+    private function reCalcProducts()
+    {
+        $cart = $this->getCart();
+        $pids = $this->getValidProductIds();
+
+        foreach ($cart['products'] as $key =>$item) {
+            if ( in_array($item['productid'], $pids) ) {
+                $price = $item['price'];
+                $total = $this->getProductSubtotal($item);
+                $discount = $this->calcDiscount($total);
+                $p_discount = $this->calcDiscount($price);
+
+                $item['coupon_discount'] = $discount;
+                $item['discounted_price'] = $total - $discount;
+                $item['discounted_price_orig'] = $p_discount;
+                $item['display_price'] = $p_discount;
+                $item['display_subtotal'] = $total - $discount;
+                $item['display_discounted_price'] = $total - $discount;
+
+                $cart['products'][$key] = $item;
+            }
+        }
+
+        $cart['orders'][0]['products'] = $cart['products'];
+
+        $this->setCart($cart);
+    }
+
+    private function reCalcCart()
+    {
+        $coupon = $this->getCoupon();
+        $discount = $this->calcSumDiscount();
+        $cart = $this->getCart();
+
+        $total = $this->getSumProducts();
+
+        $cart['coupon'] = $coupon->code;
+        $cart['discount_coupon'] = $coupon->code;
+        $cart['coupon_discount'] = $discount;
+        $cart['coupon_discount_orig'] = $discount;
+        $cart['display_discounted_subtotal'] = $total - $discount;
+        $cart['total_cost'] = $cart['total_cost'] - $discount;
+
+        $cart['orders'][0]['coupon'] = $cart['coupon'];
+        $cart['orders'][0]['coupon_discount'] =  $cart['coupon_discount'];
+        $cart['orders'][0]['total_cost'] = $cart['total_cost'];
+        $cart['orders'][0]['display_discounted_subtotal'] = $cart['display_discounted_subtotal'];
+
+        $this->setCart($cart);
+    }
+
+    /**
+     * @return array|null Old cart structure
+     */
+    public function appendCoupon()
+    {
+        if ($this->validateCoupon()) {
+            $this->reCalcProducts();
+            $this->reCalcCart();
+        }
+
+        return $this->getCart();
+    }
 }

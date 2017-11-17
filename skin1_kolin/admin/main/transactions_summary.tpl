@@ -25,7 +25,7 @@
             {elseif $order_store->getAmountDeficit() < 0}Order proficit
             {/if}
         </td>
-        <td width="1%" align="right" {if ($order_store->getAmountDeficit() != 0)}style="background-color: red;"{/if}>{include file="currency2.tpl" value=$order_store->getAmountDeficit()}</td>
+        <td width="1%" align="right" {if ($order_store->getAmountDeficit() != 0)}class="bg__red color__white" {/if}>{include file="currency2.tpl" value=$order_store->getAmountDeficit()}</td>
     </tr>
     {if $order_store->getAskFromCx() != 0}
         <tr{cycle values=", class='TableSubHead'" name="cycle_totals"}>
@@ -34,7 +34,7 @@
                 {elseif $order_store->getAskFromCx() < 0}Return to Cx
                 {/if}
             </td>
-            <td width="1%" align="right" {if ($order_store->getAskFromCx() != 0)}style="background-color: red;"{/if}>{include file="currency2.tpl" value=$order_store->getAskFromCx()}</td>
+            <td width="1%" align="right" {if ($order_store->getAskFromCx() != 0)}class="bg__red color__white"{/if}>{include file="currency2.tpl" value=$order_store->getAskFromCx()}</td>
         </tr>
     {/if}
 
