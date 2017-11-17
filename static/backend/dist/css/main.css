@@ -7525,6 +7525,25 @@ a.ui-button:active,
 .ui-widget-header {
   background: #d8d3cf; }
 
+.bg__yellow {
+  background-color: rgba(255, 212, 76, 0.72); }
+
+.bg__red {
+  background-color: rgba(255, 0, 0, 0.81); }
+
+.color__black {
+  color: black; }
+
+.color__white {
+  color: white;
+  font-weight: 500; }
+
+.color__black {
+  color: red; }
+
+.fw__bold {
+  font-weight: 500; }
+
 .admin-body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
