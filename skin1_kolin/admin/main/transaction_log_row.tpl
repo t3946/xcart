@@ -60,28 +60,28 @@
 <tr>
     <td class="transaction_action" colspan="7" data-transaction-id="{$model->id}">
         <form action="{$model->getProcessUrl('lookup')}" method="post">
-            <span style="float: left; line-height: 22px;"><b>Available actions:</b></span>&nbsp;
+            <span style="line-height: 22px;"><b>Available actions:</b></span>&nbsp;
             {if $model->getLinks()}
                 <input type="text" name="transaction_amount[{$model->id}]" id="transaction_amount_{$model->id}" size="6" value="{$model->getAvailAmount()|abs}" required pattern="^\d+(\.?\d+|)$"/>
             {/if}
             <div class="ui xcart buttons">
-                <div data-action="{$model->getProcessUrl('lookup')}" class="ui button lookup" style="border: 1px solid #808080;">Look up payment</div>
+                <div data-action="{$model->getProcessUrl('lookup')}" class="ui button lookup" style="border: 1px solid #808080; font-size: 1rem;">Look up payment</div>
                 {if $model->getLinks()}
-                    <div style="border-color: #808080; border-image: none; border-style: solid solid solid none; border-width: 1px 1px 1px 0;" class="ui combo top right dropdown icon button">
+                    <div style="overflow: visible; border-color: #808080; border-image: none; border-style: solid solid solid none; border-width: 1px 1px 1px 0;" class="ui combo top right dropdown icon button">
                         <i class="dropdown icon"></i>
                         <div class="menu" style="min-width: 200px;">
                                 {foreach from=$model->getLinks() item=link}
                                         {if $link.rel eq "self"}
                                         {elseif $link.rel eq "refund"}
-                                            {if in_array($user_login, array('sergey2', 'igor', 'roman_n', 'dmitry_s', 'alexandern'))}
-                                                <div data-type="refund" data-action="{$model->getProcessUrl('refund')}" class="item" style="padding: 10px !important;">Refund transaction</div>
+                                            {if in_array($user_login, array('sergey2', 'igor', 'roman_n', 'dmitry_s'))}
+                                                <div data-type="refund" data-action="{$model->getProcessUrl('refund')}" class="item" style="font-size: 1rem;">Refund transaction</div>
                                             {/if}
                                         {elseif $link.rel eq "void"}
-                                                <div data-type="void" data-action="{$model->getProcessUrl('void')}" class="item" style="padding: 10px !important;">Void authorized transaction</div>
+                                                <div data-type="void" data-action="{$model->getProcessUrl('void')}" class="item" style="font-size: 1rem;">Void authorized transaction</div>
                                         {elseif $link.rel eq "capture"}
-                                                <div data-type="capture" data-action="{$model->getProcessUrl('capture')}" class="item" style="padding: 10px !important;">Capture selected authorized transaction</div>
+                                                <div data-type="capture" data-action="{$model->getProcessUrl('capture')}" class="item" style="font-size: 1rem;">Capture selected authorized transaction</div>
                                         {elseif $link.rel eq "reauthorize"}
-                                                <div data-type="reauthorize" data-action="{$model->getProcessUrl('reauthorize')}" class="item" style="padding: 10px !important;">RE-authorize selected transaction</div>
+                                                <div data-type="reauthorize" data-action="{$model->getProcessUrl('reauthorize')}" class="item" style="font-size: 1rem;">RE-authorize selected transaction</div>
                                         {/if}
                                 {/foreach}
                         </div>
