@@ -25,6 +25,11 @@ class CountUsedRestriction extends AbstractRestriction
         return self::VALIDATION_CUSTOMER;
     }
 
+    public function getErrorMessage()
+    {
+        return "Coupon can no longer be used.";
+    }
+
     /**
      * @param \Modules\User\Models\UserModel $user
      *
@@ -32,7 +37,11 @@ class CountUsedRestriction extends AbstractRestriction
      */
     public function validate($user = null)
     {
-        return $this->data['max_use'] > CouponOrderModel::objects()->filter(['code' => $this->couponModel->code])->count();
+        $result = $this->data['max_use'] > CouponOrderModel::objects()->filter(['code' => $this->couponModel->code])->count();
+        if (!$result) {
+            $this->notValidAction();
+        }
+        return $result;
     }
 
     public function dataToString()

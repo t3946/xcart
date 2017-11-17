@@ -4,6 +4,8 @@ namespace Modules\Cart\Discounts\Restrictions;
 
 use Modules\Cart\CartModule;
 use Modules\Cart\Forms\CouponRestrictions\DatesRestrictionForm;
+use Xcart\App\Cli\Cli;
+use Xcart\App\Main\Xcart;
 
 class DateRestriction extends AbstractRestriction
 {
@@ -22,7 +24,10 @@ class DateRestriction extends AbstractRestriction
     {
         return self::VALIDATION_OTHER;
     }
-
+    public function getErrorMessage()
+    {
+        return "Coupon is currently non valid";
+    }
 
     public function validate($object = null)
     {
@@ -30,7 +35,11 @@ class DateRestriction extends AbstractRestriction
         $end = strtotime($this->data['end']);
         $time = time();
 
-        return ($start <= $time && $time <= $end);
+        $result = ($start <= $time && $time <= $end);
+        if (!$result) {
+            $this->notValidAction();
+        }
+        return $result;
     }
 
     public function dataToString()

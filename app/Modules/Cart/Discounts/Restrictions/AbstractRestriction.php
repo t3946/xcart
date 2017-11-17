@@ -1,15 +1,10 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: maksim
- * Date: 31.10.17
- * Time: 20:52
- */
-
 namespace Modules\Cart\Discounts\Restrictions;
 
 use Modules\Cart\Interfaces\IDiscountRestriction;
+use Xcart\App\Cli\Cli;
 use Xcart\App\Helpers\ClassNames;
+use Xcart\App\Main\Xcart;
 
 abstract class AbstractRestriction implements IDiscountRestriction
 {
@@ -25,6 +20,7 @@ abstract class AbstractRestriction implements IDiscountRestriction
      */
     public $couponModel = null;
     public $cart = null;
+    public $order_id = null;
 
     /**
      * AbstractRestriction constructor.
@@ -35,13 +31,22 @@ abstract class AbstractRestriction implements IDiscountRestriction
         $this->restrictModel = $restrictModel;
     }
 
+    public function setOrderId($order_id) {
+        $this->order_id = $order_id;
+        return $this;
+    }
+
     public function setCoupon($model) {
         $this->couponModel = $model;
+        return $this;
     }
 
     public function setCart($cart) {
         $this->cart = $cart;
+        return $this;
     }
+
+    abstract public function getErrorMessage();
 
     abstract public function getFormClass();
 
@@ -49,5 +54,12 @@ abstract class AbstractRestriction implements IDiscountRestriction
 
     public function setData($data) {
         $this->data = $data;
+    }
+
+    public function notValidAction()
+    {
+        if (!Cli::isCli()) {
+            Xcart::app()->request->session->remove('coupon_code');
+        }
     }
 }

@@ -24,6 +24,11 @@ class MinimalPriceRestriction extends AbstractRestriction
         return self::VALIDATION_CUSTOMER;
     }
 
+    public function getErrorMessage()
+    {
+        return "Coupon use for minimal price {$this->data['min_price']}";
+    }
+
     /**
      * @param \Modules\User\Models\UserModel $user
      *
@@ -33,6 +38,7 @@ class MinimalPriceRestriction extends AbstractRestriction
     {
 
         if ($this->cart) {
+            //@TODO: Cahnge for new cart
             return $this->cart['subtotal'] > $this->data['min_price'];
         }
 

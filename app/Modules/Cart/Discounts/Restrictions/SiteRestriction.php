@@ -5,6 +5,7 @@ namespace Modules\Cart\Discounts\Restrictions;
 use Modules\Cart\CartModule;
 use Modules\Cart\Forms\CouponRestrictions\SiteRestrictionForm;
 use Modules\Sites\Models\SiteModel;
+use Xcart\App\Cli\Cli;
 use Xcart\App\Main\Xcart;
 
 class SiteRestriction extends AbstractRestriction
@@ -26,6 +27,10 @@ class SiteRestriction extends AbstractRestriction
         return self::VALIDATION_OTHER;
     }
 
+    public function getErrorMessage()
+    {
+        return "Coupon is not valid in this store.";
+    }
 
     public function validate($object = null)
     {
@@ -35,11 +40,16 @@ class SiteRestriction extends AbstractRestriction
 
         if ($site && $model = $this->getModel()) {
             if ($this->data['not_in']) {
-                return $site->pk != $model->pk;
+                $result = $site->pk != $model->pk;
             }
             else {
-                return $site->pk == $model->pk;
+                $result = $site->pk == $model->pk;
             }
+
+            if (!$result) {
+                $this->notValidAction();
+            }
+            return $result;
         }
 
         return true;

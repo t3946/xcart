@@ -23,6 +23,11 @@ class CustomerRestriction extends AbstractRestriction
         return self::VALIDATION_CUSTOMER;
     }
 
+    public function getErrorMessage()
+    {
+        return "Your phone number or email is not suitable for this coupon";
+    }
+
     /**
      * @param \Modules\User\Models\UserModel $user
      *
@@ -44,6 +49,10 @@ class CustomerRestriction extends AbstractRestriction
             }
             if (!empty($this->data['email']) && $user->email) {
                 $result = !$result?: ($user->email == $this->data['email']);
+            }
+
+            if (!$result) {
+                $this->notValidAction();
             }
         }
 

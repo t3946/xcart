@@ -26,6 +26,11 @@ class CategoryRestriction extends AbstractRestriction
         return self::VALIDATION_PRODUCT;
     }
 
+    public function getErrorMessage()
+    {
+        return "No products in your cart eligible for a discount";
+    }
+
     /**
      * @param \Modules\Product\Models\ProductModel $product
      *
