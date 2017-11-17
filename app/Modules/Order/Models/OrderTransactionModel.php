@@ -113,7 +113,7 @@ class OrderTransactionModel extends Model
             'child' => [
                 'class' => HasManyField::className(),
                 'modelClass' => OrderTransactionModel::className(),
-                'link' => ['parent_id' => 'id'],
+                'link' => ['id' => 'parent_id'],
             ],
         ];
     }

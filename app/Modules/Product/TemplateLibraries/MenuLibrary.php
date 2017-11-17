@@ -13,7 +13,7 @@ use Xcart\App\Traits\RenderTrait;
 class MenuLibrary extends TemplateLibrary
 {
     const MAX_POINTS_IN_COLUMN = 26;
-    const MAX_POINTS = 26 * 3;
+    const MAX_POINTS = 78; //26 * 3
     const LVL2_POINT = 4;
     const LVL3_POINT = 1;
 
