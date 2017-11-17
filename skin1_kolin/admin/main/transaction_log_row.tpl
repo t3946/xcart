@@ -68,7 +68,7 @@
                 <div data-action="{$model->getProcessUrl('lookup')}" class="ui button lookup" style="border: 1px solid #808080; font-size: 1rem;">Look up payment</div>
                 {if $model->getLinks()}
                     <div style="overflow: visible; border-color: #808080; border-image: none; border-style: solid solid solid none; border-width: 1px 1px 1px 0;" class="ui combo top right dropdown icon button">
-                        <i class="dropdown icon"></i>
+                        <i class="dropdown icon" style="font-family: Dropdown !important;"></i>
                         <div class="menu" style="min-width: 200px;">
                                 {foreach from=$model->getLinks() item=link}
                                         {if $link.rel eq "self"}
