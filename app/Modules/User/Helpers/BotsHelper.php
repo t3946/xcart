@@ -6,6 +6,7 @@ use Xcart\App\Cli\Cli;
 use Xcart\Helpers\CrawlerDetect\CrawlerDetect;
 use Xcart\Helpers\CrawlerDetect\Crawlers;
 use Xcart\Helpers\CrawlerDetect\CrawlersIp;
+use Xcart\Helpers\CrawlerDetect\CrawlersUserAuth;
 
 class BotsHelper
 {
@@ -22,6 +23,7 @@ class BotsHelper
             if ($cr->isCrawler()
                 || $cr->setCrawlers(new Crawlers())->isCrawler()
                 || $cr->setCrawlers(new CrawlersIp())->isCrawler()
+                || $cr->setCrawlers(new CrawlersUserAuth())->isCrawler()
             ) {
                 self::$isRobot = true;
             }

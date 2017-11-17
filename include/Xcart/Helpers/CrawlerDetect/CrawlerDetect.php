@@ -5,6 +5,7 @@ class CrawlerDetect extends \Jaybizzle\CrawlerDetect\CrawlerDetect
 {
     const MODE_DEFAULT = 1;
     const MODE_BY_IP = 2;
+    const MODE_BY_AUTH = 4;
 
     private $mode;
 
@@ -52,6 +53,11 @@ class CrawlerDetect extends \Jaybizzle\CrawlerDetect\CrawlerDetect
         if ($this->mode == self::MODE_BY_IP)
         {
             $userAgent = "REMOTE_ADDR: {$_SERVER['REMOTE_ADDR']}";
+        }
+
+        if ($this->mode == self::MODE_BY_AUTH && isset($_SERVER['PHP_AUTH_USER']))
+        {
+            $userAgent = "AUTH_USER: {$_SERVER['PHP_AUTH_USER']}";
         }
 
         return parent::isCrawler($userAgent);
