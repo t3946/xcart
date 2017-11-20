@@ -7496,8 +7496,8 @@ div.ui.error.message ul.list {
 .hide {
   display: none; }
 
-.ui-widget, .ui-widget * {
-  font-family: inherit !important; }
+.ui-widget, .ui-widget input, .ui-widget select, .ui-widget textarea, .ui-widget button {
+  font-family: inherit; }
 
 .ui-tabs .ui-tabs-nav li {
   display: block; }
@@ -7531,6 +7531,9 @@ a.ui-button:active,
 .bg__red {
   background-color: rgba(255, 0, 0, 0.81); }
 
+.bg__gray {
+  background-color: #d2d2d2; }
+
 .color__black {
   color: black; }
 
@@ -7538,11 +7541,21 @@ a.ui-button:active,
   color: white;
   font-weight: 500; }
 
-.color__black {
+.color__red {
   color: red; }
+
+.text_align__right {
+  text-align: right; }
 
 .fw__bold {
   font-weight: 500; }
+
+.float__left {
+  float: left; }
+
+.margin__first_image {
+  margin-right: 5px;
+  margin-bottom: 5px; }
 
 .admin-body {
   -webkit-font-smoothing: antialiased;
@@ -8283,6 +8296,14 @@ h1 {
     border: 0;
     outline: 1px dashed red; }
 
+i.icon.m {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  background-size: contain; }
+  i.icon.m.discount {
+    background-image: url("../images/icons/discount.svg"); }
+
 .login-page {
   border: none !important;
   position: absolute;
@@ -8441,6 +8462,19 @@ h1 {
       .form-page fieldset .fields .form-field input[type=checkbox] + label.alone {
         padding: 0;
         width: 15px; }
+
+.form-page.info .object-info {
+  table-layout: auto;
+  width: 100%; }
+  .form-page.info .object-info .first {
+    vertical-align: top;
+    font-weight: 500; }
+  .form-page.info .object-info > tbody > tr:nth-last-child(1) {
+    border-bottom: none; }
+  .form-page.info .object-info > tbody > tr > td {
+    padding: 7px; }
+    .form-page.info .object-info > tbody > tr > td iframe {
+      width: 100%; }
 
 .admin .search-form .date_templates {
   margin-bottom: 3px; }

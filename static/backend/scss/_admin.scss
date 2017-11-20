@@ -2070,10 +2070,8 @@ div.ui.error.message ul.list {
   display: none;
 }
 
-.ui-widget {
-  &, * {
-    font-family: inherit !important;
-  }
+.ui-widget, .ui-widget input, .ui-widget select, .ui-widget textarea, .ui-widget button {
+  font-family: inherit;
 }
 
 .ui-tabs .ui-tabs-nav li {
@@ -2119,6 +2117,10 @@ a.ui-button:active,
   background-color: rgba(255, 0, 0, 0.81);
 }
 
+.bg__gray {
+  background-color: #d2d2d2;
+}
+
 .color__black {
   color: black;
 }
@@ -2127,10 +2129,23 @@ a.ui-button:active,
   font-weight: 500;
 }
 
-.color__black {
+.color__red {
   color: red;
+}
+
+.text_align__right {
+  text-align: right;
 }
 
 .fw__bold {
   font-weight: 500;
+}
+
+.float__left {
+  float: left;
+}
+
+.margin__first_image {
+  margin-right: 5px;
+  margin-bottom: 5px;
 }

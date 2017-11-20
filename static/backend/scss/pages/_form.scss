@@ -152,4 +152,34 @@
       }
     }
   }
+
+  &.info {
+    .object-info {
+      table-layout: auto;
+      width: 100%;
+
+      .first {
+        vertical-align: top;
+        font-weight: 500;
+      }
+
+      & > tbody {
+        & > tr {
+          //border-bottom: 1px solid lightgrey;
+
+          &:nth-last-child(1) {
+            border-bottom: none;
+          }
+
+          & > td {
+            padding: 7px;
+
+            iframe {
+              width: 100%;
+            }
+          }
+        }
+      }
+    }
+  }
 }
