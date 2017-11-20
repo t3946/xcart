@@ -1,6 +1,7 @@
 <?php
 namespace Xcart;
 
+use Modules\Cart\Models\CouponOrderModel;
 use Modules\User\Models\ReferrerModel;
 
 class Order extends Data
@@ -591,7 +592,7 @@ class Order extends Data
         $total = $this->getOrderTotalGross(false);
 
         return $total;
-        return round($total - abs($this->coupon_discount), 2);
+//        return round($total - abs($this->coupon_discount), 2);
     }
 
     public function getOrderCostToUs()
@@ -700,18 +701,22 @@ class Order extends Data
         $this->_refresh();
         $fTotalRetailTrust = 0;
         $aOrderGroups = $this->getOrderGroups();
+
         if (!empty($aOrderGroups)) {
             foreach ($aOrderGroups as $oOrderGroup) {
                 $fTotalRetailTrustGroup = 0;
                 $aOrderDetails = $oOrderGroup->getOrderDetailsWithRetailTrust();
+
                 if (!empty($aOrderDetails)) {
                     foreach ($aOrderDetails as $oOrderDetail) {
                         $fTotalRetailTrustGroup += $oOrderDetail->getRetailTrustPrice();
                     }
+
                     $oOrderGroup->addTotalNet($fTotalRetailTrustGroup)->addTotalGross($fTotalRetailTrustGroup)->_update();
                     $fTotalRetailTrust += $fTotalRetailTrustGroup;
                 }
             }
+
             if ($fTotalRetailTrust > 0) {
                 $this->addOrderTotaNet($fTotalRetailTrust)->addOrderTotalGross($fTotalRetailTrust)->addOrderTotal($fTotalRetailTrust)->_update();
                 $this->_refresh();
@@ -1034,5 +1039,15 @@ SQL;
             }
         }
         return $sRefererDomain;
+    }
+
+    public function getCouponModel()
+    {
+        /** @var CouponOrderModel $model */
+        if ($model = CouponOrderModel::objects()->get(['order_id' => $this->getOrderId()])) {
+            return $model->coupon;
+        }
+
+        return null;
     }
 }

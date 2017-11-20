@@ -22,6 +22,7 @@ use Xcart\App\Orm\Model;
  * @property (int) $order_id
  * @property \Modules\Cart\Models\CouponKitModel $coupon
  * @property UserModel $customer
+ * @property (string) $uid
  * @property (string) $code
  * @property (string) $login
  * @property \DateTime $created_at
@@ -48,7 +49,7 @@ class CouponOrderModel extends Model
             'coupon' => [
                 'class' => HasToOneField::className(),
                 'modelClass' => CouponKitModel::className(),
-                'link' => ['code' => 'code'],
+                'link' => ['code' => 'code', 'uid' => 'uid'],
                 'null' => false,
             ],
             'customer' => [
@@ -57,6 +58,10 @@ class CouponOrderModel extends Model
                 'link' => ['login' => 'login'],
             ],
 
+            'uid' => [
+                'class' => CharField::className(),
+                'null' => false,
+            ],
             'code' => [
                 'class' => CharField::className(),
                 'null' => false,

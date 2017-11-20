@@ -2,6 +2,7 @@
 
 namespace Modules\Cart\Models;
 
+use Modules\Cart\Admin\CouponKitAdmin;
 use Modules\Cart\Discounts\Restrictions\DefaultRestriction;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\Fields\AutoField;
@@ -95,12 +96,7 @@ class CouponKitModel extends Model
                 'class' => IntField::className(),
                 'null' => false,
                 'default' => 1,
-                'verboseName' => 'Max user per user'
-            ],
-
-            'description' => [
-                'class' => TextField::className(),
-                'null' => true,
+                'verboseName' => 'Max uses per user'
             ],
 
             'created_at' => [
@@ -116,7 +112,12 @@ class CouponKitModel extends Model
                 'class' => HasManyField::className(),
                 'modelClass' => CouponRestrictionModel::className(),
                 'link' => ['id' => 'coupon_id'],
-            ]
+            ],
+
+            'description' => [
+                'class' => TextField::className(),
+                'null' => true,
+            ],
         ];
     }
 
@@ -145,5 +146,10 @@ class CouponKitModel extends Model
     public function isPercentageCalc()
     {
         return $this->type == 1;
+    }
+
+    public function getAdmin()
+    {
+        return (new CouponKitAdmin())->setModel($this);
     }
 }

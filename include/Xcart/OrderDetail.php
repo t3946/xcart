@@ -47,31 +47,31 @@ class OrderDetail extends Data
         return $this->getField('price');
     }
 
-    public function getOriginalPrice()
-    {
-        return $this->getExtraOriginalPrice() ?: $this->getPrice();
-    }
+//    public function getOriginalPrice()
+//    {
+//        return $this->getExtraOriginalPrice() ?: $this->getPrice();
+//    }
 
-    public function getExtraPrice()
-    {
-        $extra_data = $this->getExtraData();
-
-        if (!empty($extra_data['display']) && !empty($extra_data['display']['discounted_price'])) {
-            return floatval($extra_data['display']['discounted_price']) / $this->getAmount();
-        }
-
-        return 0;
-    }
-    public function getExtraOriginalPrice()
-    {
-        $extra_data = $this->getExtraData();
-
-        if (!empty($extra_data['original_price'])) {
-            return floatval($extra_data['original_price']);
-        }
-
-        return 0;
-    }
+//    public function getExtraPrice()
+//    {
+//        $extra_data = $this->getExtraData();
+//
+//        if (!empty($extra_data['display']) && !empty($extra_data['display']['discounted_price'])) {
+//            return floatval($extra_data['display']['discounted_price']) / $this->getAmount();
+//        }
+//
+//        return 0;
+//    }
+//    public function getExtraOriginalPrice()
+//    {
+//        $extra_data = $this->getExtraData();
+//
+//        if (!empty($extra_data['original_price'])) {
+//            return floatval($extra_data['original_price']);
+//        }
+//
+//        return 0;
+//    }
 
     public function getOrderId()
     {

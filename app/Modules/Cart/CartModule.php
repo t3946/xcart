@@ -12,12 +12,11 @@ class CartModule extends Module
 {
     use AdminTrait;
 
-    /**
-     * @var
-     */
     public $listRoute;
 
     public $couponModel;
+
+    private $isCouponsActive;
 
     /**
      * @var array
@@ -78,5 +77,14 @@ class CartModule extends Module
         }
 
         return null;
+    }
+
+    public function isCouponActive()
+    {
+        if (is_null($this->isCouponsActive)) {
+            $this->isCouponsActive = (bool)CouponKitModel::objects()->filter(['active' => true, 'deleted' => false])->count();
+        }
+
+        return $this->isCouponsActive;
     }
 }

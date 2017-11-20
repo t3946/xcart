@@ -515,7 +515,7 @@ function func_calculate($cart, $products, $login, $login_type, $paymentid=NULL) 
 		}
 	}
 
-	$_payment_surcharge = 0;
+    $_payment_surcharge = 0;
 	if ($paymentid !== NULL) {
 		#
 		# Apply the payment method surcharge or discount
@@ -552,6 +552,7 @@ function func_calculate($cart, $products, $login, $login_type, $paymentid=NULL) 
 
 	$return["display_cart_products_tax_rates"] = "N";
 	$return["product_tax_name"] = "";
+
 	if ($config["Taxes"]["display_cart_products_tax_rates"] == "Y") {
 		$_taxes = array();
 		foreach ($return["orders"] as $k=>$v) {
@@ -583,9 +584,11 @@ function func_calculate($cart, $products, $login, $login_type, $paymentid=NULL) 
 	#
 	$giftcert_cost = 0;
 	$applied_giftcerts = array();
+
 	if (!empty($cart["applied_giftcerts"])) {
 		$gc_payed_sum = 0;
 		$applied_giftcerts = array();
+
 		foreach ($cart["applied_giftcerts"] as $k=>$v) {
 			if (($gc_payed_sum + $v["giftcert_cost"]) <= $return["total_cost"]) {
 				$gc_payed_sum += $v["giftcert_cost"];
@@ -642,6 +645,7 @@ function func_calculate($cart, $products, $login, $login_type, $paymentid=NULL) 
 		}
 	}
 	$return['whole_taxes'] = $result['whole_taxes'];
+
 	return $return;
 }
 
@@ -1149,6 +1153,7 @@ function func_calculate_single($cart, $products, $login, $login_type, $provider_
 		$product_keys[] = "free_price";
 		$product_keys[] = "discount";
 		$product_keys[] = "coupon_discount";
+		$product_keys[] = "coupon_discount_orig";
 		$product_keys[] = "discounted_price";
 		$product_keys[] = "taxes";
 		$product_keys[] = "subtotal";
@@ -1204,8 +1209,10 @@ function func_calculate_single($cart, $products, $login, $login_type, $provider_
 			$product_keys[] = "saved_original_price";
 		}
 	}
-	else
-		$products = array();
+	else {
+        $product_keys = [];
+        $products = [];
+    }
 
 	#
 	# Calculate totals for one provider only or for all ($single_mode=true)
@@ -1233,6 +1240,7 @@ function func_calculate_single($cart, $products, $login, $login_type, $provider_
 		#
 		$discounts_ret = func_calculate_discounts($customer_info["membershipid"], $products, $discount_coupon, $provider_for);
 
+//		d($discounts_ret);
 		#
 		# Extract returned variables to global variables set:
 		# $discount, $coupon_discount, $discount_coupon, $products
@@ -1641,7 +1649,7 @@ function func_calculate_single($cart, $products, $login, $login_type, $provider_
         }
     }
 
-		ksort($shipping_groups);
+    ksort($shipping_groups);
 
 	$return = array(
 		"total_cost" => price_format($total),

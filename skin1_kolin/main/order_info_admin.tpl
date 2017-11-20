@@ -550,12 +550,18 @@ function check_r_fields(){
             {/if}
         </td>
         <td align="right">
-            <a class="group_total_link" href="#">{include file="currency2.tpl" value=$v.total.net}</a>
+            <a class="group_total_link" href="#">
+                {if $v.coupon_discount > 0}<i class="m icon discount float__left margin__first_image"></i>{/if}
+                {include file="currency2.tpl" value=$v.total.net}
+            </a>
         </td>
         <td align="right">{include file="currency2.tpl" value=$v.total.gst hide_zero='Y'}</td>
         {*  <td align="right">{include file="currency2.tpl" value=$v.total.pst hide_zero='Y'}</td> *}
         <td align="right">
-            <a class="group_total_link" href="#">{include file="currency2.tpl" value=$v.total.gross}</a>
+            <a class="group_total_link" href="#">
+                {if $v.coupon_discount  > 0}<i class="m icon discount float__left margin__first_image"></i>{/if}
+                {include file="currency2.tpl" value=$v.total.gross}
+            </a>
         </td>
         <td>
             {if $v.empty_products_list eq "Y"}
@@ -571,9 +577,13 @@ function check_r_fields(){
         <td></td>
         <td></td>
         <td></td>
-        <td><div style="BACKGROUND-COLOR: #cccccc; color: #000000" align="right">{include file="currency2.tpl" value=$v.oOrderGroup->getTotalProductPrice()}</div></td>
+        <td class="bg__gray color__black text_align__right">
+                {include file="currency2.tpl" value=$v.oOrderGroup->getTotalProductPriceDiscounted()}
+            </td>
         <td></td>
-        <td><div style="BACKGROUND-COLOR: #cccccc; color: #000000" align="right">{include file="currency2.tpl" value=$v.oOrderGroup->getTotalProductPrice()}</td>
+        <td class="bg__gray color__black text_align__right">
+            {include file="currency2.tpl" value=$v.oOrderGroup->getTotalProductPriceDiscounted()}
+        </td>
         <td></td>
     </tr>
     <tr class="group_total_price_row">
@@ -584,9 +594,9 @@ function check_r_fields(){
         <td></td>
         <td></td>
         <td></td>
-        <td><div class="bg__yellow color__black" align="right">{include file="currency2.tpl" value=$v.oOrderGroup->getTotalCostToUs()}</div></td>
+        <td class="bg__yellow color__black text_align__right">{include file="currency2.tpl" value=$v.oOrderGroup->getTotalCostToUs()}</td>
         <td></td>
-        <td><div class="bg__yellow color__black" align="right">{include file="currency2.tpl" value=$v.oOrderGroup->getTotalCostToUs()}</div></td>
+        <td class="bg__yellow color__black text_align__right" >{include file="currency2.tpl" value=$v.oOrderGroup->getTotalCostToUs()}</td>
         <td></td>
     </tr>
 
@@ -595,6 +605,9 @@ function check_r_fields(){
 {foreach from=$v.products item=product key=prod_num}
 <tr{cycle values=", class='TableSubHead'" name="cycle_`$m_id`"}>
   <td>
+    {if $product.coupon_discount > 0}
+        <i class="m icon discount float__left margin__first_image"></i>
+    {/if}
     <a href="{$product.oProduct->getUrl()}{if $cats[$product.productid]}&cat={$cats[$product.productid]}{/if}" title="" target="_blank">{$product.product}</a>
     {assign var='oHTMLShot' value = $product.oProduct->getHTMLShot($order.orderid)}
     {if (!empty($oHTMLShot) && $oHTMLShot->getId())}
@@ -657,7 +670,7 @@ function check_r_fields(){
     {/if}
 
   </td>
-  <td align="right">{if !$static}<input type="text" size="8" name="items[{$product.itemid}][price]" value="{$product.oOrderDetail->getOriginalPrice()|price_format}" {if $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}readonly="readonly"{/if} />{else}{include file="currency2.tpl" value=$product.oOrderDetail->getPrice()|price_format}{/if}
+  <td align="right">{if !$static}<input type="text" size="8" name="items[{$product.itemid}][price]" value="{$product.oOrderDetail->getPrice()|price_format}" {if $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}readonly="readonly"{/if} />{else}{include file="currency2.tpl" value=$product.oOrderDetail->getPrice()|price_format}{/if}
 
 {* --- *}
 {math equation="x+y" x=$GROUP_cost_to_us y=$product.cost_to_us assign="GROUP_cost_to_us"}
@@ -1421,24 +1434,33 @@ Total Product Cost to us
 </tr>
 {/foreach}
 {/if}
-{if $order.coupon}
+
 <tr {cycle values=", class='TableSubHead'" name="cycle_totals"}>
-  <td>{$lng.lbl_coupon_saving}</td>
-  <td colspan="6">&nbsp;</td>
-  <td align="right"></td>
-  <td align="right"></td>
-        <td align="right" class="info">{include file="currency2.tpl" value=$oOrder->coupon_discount}</td>
-  <td>&nbsp;</td>
+    <td>{$lng.lbl_coupon_saving}</td>
+    <td colspan="6">
+        {assign var="couponModel" value=$oOrder->getCouponModel()}
+        {assign var="couponAdmin" value=$couponModel->getAdmin()}
+        {$couponModel->code}
+
+        ( <a href="{$couponAdmin->getInfoUrl()}" target="_blank">View info</a> )
+    </td>
+    <td align="right" class="color__red">
+        {include file="currency2.tpl" value=$oOrder->coupon_discount}
+    </td>
+    <td align="right"></td>
+    <td align="right" class="info color__red">
+        {include file="currency2.tpl" value=$oOrder->coupon_discount}
+    </td>
+    <td>&nbsp;</td>
 </tr>
-{/if}
 
 <tr{cycle values=", class='TableSubHead'" name="cycle_totals"} style="font-weight: bold;">
   <td style="font-size: 1.1rem;">{$lng.lbl_grand_total}</td>
   <td colspan="6">&nbsp;</td>
-  <td align="right" style="font-size: 1.1rem;">{include file="currency2.tpl" value=$oOrder->getOrderTotalNetDiscounted()}</td>
+  <td align="right" style="font-size: 1.1rem;">{include file="currency2.tpl" value=$oOrder->getOrderTotalNet()}</td>
   <td align="right" style="font-size: 1.1rem;">{include file="currency2.tpl" value=$oOrder->getOrderTotalHST() hide_zero='Y'}</td>
 {*  <td align="right" style="font-size: 1.1rem;">{include file="currency2.tpl" value=$order.extra.total.pst hide_zero='Y'}</td> *}
-  <td align="right" style="font-size: 1.1rem;">{include file="currency2.tpl" value=$oOrder->getOrderTotalGrossDiscounted()}</td>
+  <td align="right" style="font-size: 1.1rem;">{include file="currency2.tpl" value=$oOrder->getOrderTotalGross()}</td>
   <td>&nbsp;</td>
 </tr>
 <tr>

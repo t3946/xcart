@@ -30,4 +30,14 @@ class CouponKitAdmin extends Admin
 
         return $qs;
     }
+
+    public function getListItemActions()
+    {
+        return [
+            'update',
+            'view',
+            'info',
+            'remove'
+        ];
+    }
 }
