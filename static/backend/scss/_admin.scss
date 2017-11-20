@@ -2022,7 +2022,9 @@ div.ui.error.message ul.list {
     text-shadow: none;
     background-image: none;
     padding: 0.58571429rem 0.88rem;
+    height: auto;
   }
+
   &.dropdown .menu > .item {
     font-size: .80rem;
   }

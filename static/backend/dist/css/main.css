@@ -7460,7 +7460,8 @@ div.ui.error.message ul.list {
   color: inherit;
   text-shadow: none;
   background-image: none;
-  padding: 0.58571429rem 0.88rem; }
+  padding: 0.58571429rem 0.88rem;
+  height: auto; }
 
 .xcart.buttons .ui.dropdown .menu > .item {
   font-size: .80rem; }
