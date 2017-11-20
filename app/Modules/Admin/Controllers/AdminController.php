@@ -13,6 +13,12 @@ class AdminController extends BackendController
         $admin->all($id);
     }
 
+    public function info($module, $admin, $pk)
+    {
+        $admin = $this->getAdmin($module, $admin);
+        $admin->info($pk);
+    }
+
     public function create($module, $admin, $id = null)
     {
         $admin = $this->getAdmin($module, $admin);

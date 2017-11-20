@@ -32,6 +32,7 @@ abstract class Admin
     public $listItemActionsTemplate = 'admin/list/_item_actions.tpl';
     public $listPaginationTemplate = 'admin/list/_pagination.tpl';
 
+    public $infoTemplate = 'admin/info.tpl';
     public $createTemplate = 'admin/create.tpl';
     public $updateTemplate = 'admin/update.tpl';
     public $formTemplate = 'admin/form/_form.tpl';
@@ -39,9 +40,6 @@ abstract class Admin
 
     public $pageSize = 20;
     public $pageSizes = [20, 50, 100];
-
-//    /** @var \Modules\Admin\Controllers\AdminController $controller */
-//    public $controller = null;
 
     /**
      * Sorting column
@@ -53,6 +51,9 @@ abstract class Admin
     public $innerRender = false;
 
     public $autoFixSort = true;
+
+    /** @var Model */
+    public $model;
 
     /**
      * @return mixed
@@ -490,6 +491,21 @@ abstract class Admin
         return $qs;
     }
 
+    public function setModel(Model $model)
+    {
+        $this->model = $model;
+        return $this;
+    }
+
+    public function getModelPk()
+    {
+        if ($this->model) {
+            return $this->model->pk;
+        }
+
+        return null;
+    }
+
     /**
      * @return array
      */
@@ -534,7 +550,7 @@ abstract class Admin
         return Xcart::app()->router->url('admin:update', [
             'module' => static::getModuleName(),
             'admin' => static::classNameShort(),
-            'pk' => $pk
+            'pk' => $pk ?: $this->getModelPk(),
         ], $query);
     }
 
@@ -543,7 +559,7 @@ abstract class Admin
         return Xcart::app()->router->url('admin:info', [
             'module' => static::getModuleName(),
             'admin' => static::classNameShort(),
-            'pk' => $pk
+            'pk' => $pk ?: $this->getModelPk(),
         ]);
     }
 
@@ -552,7 +568,7 @@ abstract class Admin
         return Xcart::app()->router->url('admin:remove', [
             'module' => static::getModuleName(),
             'admin' => static::classNameShort(),
-            'pk' => $pk
+            'pk' => $pk ?: $this->getModelPk(),
         ]);
     }
 
@@ -625,6 +641,17 @@ abstract class Admin
             'search' => $this->getSearchColumns(),
             'columns' => $this->buildListColumns(),
             'canSort' => $this->getCanSort($qs),
+        ]);
+    }
+
+    public function info($pk)
+    {
+        $object = $this->getModelOr404($pk);
+
+        $this->setBreadcrumbs('Информация');
+        $this->renderInternal($this->infoTemplate, [
+            'object' => $object,
+            'fields' => $object::getFields(),
         ]);
     }
 
