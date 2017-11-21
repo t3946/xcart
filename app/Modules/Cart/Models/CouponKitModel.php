@@ -157,7 +157,7 @@ class CouponKitModel extends Model
 
     public function delete()
     {
-        if ($this->objects()->filter(['orders__through__coupon_id' => $this->id])->count())
+        if ($this->hasEdit())
         {
             $this->deleted = true;
             return parent::update(['deleted']);
@@ -168,7 +168,7 @@ class CouponKitModel extends Model
 
     public function save(array $fields = [])
     {
-        if ($this->objects()->filter(['orders__through__coupon_id' => $this->id])->count())
+        if ($this->hasEdit())
         {
             return $this->cloneCoupon();
         }
@@ -200,6 +200,11 @@ class CouponKitModel extends Model
         }
 
         return true;
+    }
+
+    public function hasEdit()
+    {
+        return !$this->objects()->filter(['orders__through__coupon_id' => $this->id])->count();
     }
 
     public function afterDelete($owner)
