@@ -46,7 +46,7 @@ trait ValidateField
                 if ($validator instanceof Closure) {
                     /* @var $validator Closure */
                     /* @var $this \Xcart\App\Validation\Interfaces\IValidateObject */
-                    $valid = $validator->__invoke($this->getValue());
+                    $valid = $validator->bindTo($this)->__invoke($this->getValue());
                     if ($valid !== true) {
                         if (!is_array($valid)) {
                             $valid = [$valid];

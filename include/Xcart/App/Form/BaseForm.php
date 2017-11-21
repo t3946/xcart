@@ -391,7 +391,7 @@ abstract class BaseForm implements IteratorAggregate, Countable, ArrayAccess, IV
      */
     public function getFieldsInit()
     {
-        if (!$this->_fields) {
+        if (is_null($this->_fields)) {
             $this->initFields();
         }
 

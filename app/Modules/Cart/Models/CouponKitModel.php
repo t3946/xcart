@@ -71,10 +71,23 @@ class CouponKitModel extends Model
                 'class' => CharField::className(),
                 'required' => true,
                 'validators' => [
-                        new Callback(function($value, ExecutionContextInterface $context) {
-                        d($context->getObject());
+                    function($value, ExecutionContextInterface $context = null) {
+                        /** @var $this $model */
+                        /** @var \Xcart\App\Orm\Fields\Field $this */
+                        $model = $this->getModel();
 
-                    }),
+                        $maxCount = $this->getModel()->getIsNewRecord() ? 0 : 1;
+
+                        if ( $model->objects()->filter([$this->getName() => $value, 'deleted' => false, ])->count() > $maxCount) {
+                            if ($context) {
+                                $context->buildViolation('The value must be unique')->addViolation();
+                            }
+
+                            return false;
+                        }
+
+                        return true;
+                    }
                 ],
             ],
 

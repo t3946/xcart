@@ -126,7 +126,16 @@ abstract class Field implements ModelFieldInterface
             ]);
         }
 
-        return array_merge($constraints, $this->validators);
+        foreach ($this->validators as $validator) {
+            if ($validator instanceof Closure) {
+                $constraints[] = new Assert\Callback($validator->bindTo($this));
+            }
+            else {
+                $constraints[] = $validator;
+            }
+        }
+
+        return $constraints;
     }
 
     /**
@@ -451,11 +460,11 @@ abstract class Field implements ModelFieldInterface
         }
 
         $validators = [];
-//        if ($form->hasField($this->name)) {
-//            $field = $form->getField($this->name);
-//            $validators = $field->validators;
-//        }
-//
+        if ($form->hasField($this->name)) {
+            $field = $form->getField($this->name);
+            $validators = $field->validators;
+        }
+
 //        if (($this->null === false || $this->required) && $this->autoFetch === false && ($this instanceof BooleanField) === false) {
 //            $validator = new RequiredValidator;
 //            $validator->setName($this->name);

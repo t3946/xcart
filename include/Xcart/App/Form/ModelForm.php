@@ -39,6 +39,7 @@ class ModelForm extends BaseForm
         // if prefix available - inline form
         $prefix = $this->getPrefix();
         $fields = $this->getFields();
+        $this->_fields = $this->_fields ?: [];
 
         foreach ($instance->getFieldsInit() as $name => $field) {
             /** @var \Xcart\App\Orm\Fields\Field $field */
@@ -57,6 +58,7 @@ class ModelForm extends BaseForm
             }
             else {
                 $modelField = $field->setModel($instance)->getFormField($this);
+
                 if ($modelField) {
                     $this->_fields[$name] = $modelField;
                 }
