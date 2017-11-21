@@ -20,10 +20,12 @@ class AnveoAssignCalls
     {
         if ($model && $model->start_at && $model->end_at)
         {
-            if (empty($model->anveo_account) && $model->file)
-            {
-                if ($account = static::parseAccount($model->file))
-                {
+
+            if ($model->file) {
+                $account = static::parseAccount($model->file);
+
+                if ($account && $model->anveo_account != $account) {
+
                     $model->anveo_account = $account;
                     $model->save(['anveo_account']);
                 }
