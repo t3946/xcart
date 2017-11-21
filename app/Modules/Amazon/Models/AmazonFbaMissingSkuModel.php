@@ -27,7 +27,8 @@ class AmazonFbaMissingSkuModel extends Model
                 'field' => 'productid',
                 'class' => ForeignField::className(),
                 'modelClass' => ProductModel::className(),
-                'null' => false,
+                'null' => true,
+                'default' => null,
             ],
         ];
     }

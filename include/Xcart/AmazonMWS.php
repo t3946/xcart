@@ -46,6 +46,7 @@ use MarketplaceWebServiceProducts_Model_SalesRankType;
 use MarketplaceWebServiceProducts_Model_SellerSKUIdentifier;
 use MarketplaceWebServiceProducts_Model_SellerSKUListType;
 use Modules\Amazon\Helpers\AmazonHelper;
+use Modules\Amazon\Models\AmazonFbaMissingSkuModel;
 use Modules\Amazon\Models\AmazonFbaProductModel;
 use Modules\Amazon\Models\AmazonFbaProductsQuickModel;
 use Modules\Amazon\Models\AmazonListInboundShipment;
@@ -1423,6 +1424,7 @@ SQL;
 
                                 $aManufacturerid_arr = [];
                                 $product_total = 0;
+                                $c_flag = true;
 
                                 foreach ($aOrderItems as $oOrderItem) {
                                     $sAmazonSKU = addslashes($oOrderItem->getElementsByTagName('SellerSKU')->item(0)->nodeValue);
@@ -1430,18 +1432,24 @@ SQL;
 
                                     if (!$oProduct->getProductId()) {
                                         /*search product in fba_missing_sku*/
-                                        $oFbaMissing = FbaMissingSku::model(['missing_productcode' => $sAmazonSKU]);
-                                        if ($oFbaMissing->getProductId()) {
-                                            $oProduct = Product::model(['productid' => $oFbaMissing->getProductId()]);
-                                        } else
-                                            if ($oFbaMissing->getField('missing_productcode') == '') {
-                                                $oFbaMissing->setField('missing_productcode', $sAmazonSKU)->setField('productid', 0)->_insert();
-                                                global $config;
-                                                $oProduct->setField('productcode', $sAmazonSKU);
-                                                $to = $config['Company']['product_management'];
-                                                $from = 'team@s3stores.com';
-                                                func_send_mail($to, 'mail/missing_sku_subj.tpl', 'mail/missing_sku.tpl', $from, true);
-                                            }
+                                        list($oFbaMissing, $missCreated) = AmazonFbaMissingSkuModel::objects()->getOrNew(['missing_productcode' => $sAmazonSKU]);
+
+                                        if (!$missCreated && $oFbaMissing->productid) {
+
+                                            $oProduct = Product::model(['productid' => $oFbaMissing->productid]);
+
+                                        } else {
+
+                                            global $config;
+                                            $to = $config['Company']['product_management'];
+                                            $from = 'team@s3stores.com';
+                                            func_send_mail($to, 'mail/missing_sku_subj.tpl', 'mail/missing_sku.tpl', $from, true);
+                                            $c_flag = false;
+
+                                            $oFbaMissing->missing_productcode = $sAmazonSKU;
+                                            $oFbaMissing->save();
+                                            break;
+                                        }
                                     }
 
                                     $iOrderQuantity = intval($oOrderItem->getElementsByTagName('QuantityOrdered')->item(0)->nodeValue);
@@ -1500,6 +1508,10 @@ SQL;
                                         }
                                         $product_total += $oOrderDetail->getTotalProductPrice();
                                     }
+                                }
+
+                                if (!$c_flag) {
+                                    continue;
                                 }
 
                                 $oOrder->updateVerificationStatus()->reCalculateTotals();
