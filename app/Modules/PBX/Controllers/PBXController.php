@@ -2,6 +2,7 @@
 
 namespace Modules\PBX\Controllers;
 
+use Modules\PBX\Helpers\AnveoAssignCalls;
 use Modules\PBX\Models\PbxAnveoCallModel;
 use Xcart\App\Controller\Controller;
 use Xcart\App\Main\Xcart;
@@ -13,21 +14,19 @@ class PBXController extends Controller
         /** @var PbxAnveoCallModel $model */
         $request = $this->getRequest();
         $session = $this->getCallSession();
-        $now = date('Y-m-d H:i:s');
+        $now = new \DateTime();
 
         if ($session) {
-            $model = PbxAnveoCallModel::objects()->getOrCreate(['session' => $session]);
+            list($model, $isNew) = PbxAnveoCallModel::objects()->getOrCreate(['session' => $session]);
 
             if ($request->get->has('incoming_flow_start') || $request->get->has('outgoing_flow_start')) {
+                $model->is_outgoing = $request->get->has('outgoing_flow_start');
                 $model->start_at = $now;
-                $model->e164 = $request->get['ee'];
-
-                if ($request->get->has('outgoing_flow_start')) {
-                    $model->is_outgoing = true;
-                }
+                $model->e164 = $model->e164 ?: $request->get['ee'];
             }
 
             if ($request->get->has('incoming_flow_end') || $request->get->has('outgoing_flow_end')) {
+                $model->is_outgoing = $model->is_outgoing ?: $request->get->has('outgoing_flow_end');
                 $model->end_at = $now;
             }
 
@@ -36,58 +35,48 @@ class PBXController extends Controller
                 $model->is_lost = true;
 
                 if ($request->get->has('ee')) {
-                    $ee = $request->get['ee'];
-                    $model->e164 = $ee;
+                    $model->e164 = $model->e164 ?: $request->get['ee'];
                 }
 
                 if ($request->get->has('rdnis')) {
-                    $rdnis = ($request->get['rdnis']);
-                    $model->rdnis = $rdnis;
+                    $model->rdnis = $request->get['rdnis'];
                 }
 
                 if ($request->get->has('cname')) {
-                    $cname = ($request->get['cname']);
-                    $model->cname = $cname;
+                    $model->cname = $request->get['cname'];
                 }
             }
 
             if ($request->getIsPost())
             {
-                $file = '';
+                $e164 = '';
 
                 if ($request->post->has('file')) {
-                    $file = $request->post['file'];
-                    $model->file = $file;
+                    $model->file = $request->post['file'];
                 }
 
                 if ($request->post->has('uacc')) {
-                    $uacc = $request->post['uacc'];
-                    $model->anveo_account = $uacc;
+                    $model->anveo_account = $request->post['uacc'];
                 }
 
                 if ($request->post->has('cnam')) {
-                    $cname = $request->post['cnam'];
-                    $model->cname = $cname;
+                    $model->cname = $request->post['cnam'];
                 }
 
                 if ($request->post->has('ee')) {
                     $e164 = $request->post['ee'];
+                }
 
-                    if ( empty($e164) && $file)
-                    {
-                        $file_parts = explode('-', $file);
+                if (!empty($model->file)) {
+                    $e164 = $e164 ?: AnveoAssignCalls::parseE164($model->file);
+                    $account = AnveoAssignCalls::parseAccount($model->file);
 
-                        if (!empty($file_parts[5])) {
-
-                            if (preg_match('/(.*)\..*/', $file_parts[5], $matches)) {
-                                $e164 = $matches[1];
-                            }
-                            else {
-                                $e164 = $file_parts[5];
-                            }
-                        }
+                    if ($account && $model->anveo_account != $account) {
+                        $model->anveo_account = $account;
                     }
+                }
 
+                if ($e164) {
                     $model->e164 = $e164;
                 }
             }
