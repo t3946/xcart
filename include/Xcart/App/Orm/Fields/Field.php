@@ -50,6 +50,8 @@ abstract class Field implements ModelFieldInterface
 
     public $helpText;
 
+    public $required = false;
+
     public $unique = false;
 
     public $primary = false;
@@ -70,7 +72,7 @@ abstract class Field implements ModelFieldInterface
     /**
      * @var array
      */
-    protected $validators = [];
+    public $validators = [];
     /**
      * @var mixed
      */
@@ -270,7 +272,7 @@ abstract class Field implements ModelFieldInterface
      */
     public function isRequired()
     {
-        return $this->null === false && is_null($this->default) === true;
+        return $this->null === false && is_null($this->default) === true || $this->required;
     }
 
     /**

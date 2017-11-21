@@ -4,6 +4,8 @@ namespace Modules\Cart\Models;
 
 use Modules\Cart\Admin\CouponKitAdmin;
 use Modules\Cart\Discounts\Restrictions\DefaultRestriction;
+use Symfony\Component\Validator\Constraints\Callback;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\BooleanField;
@@ -49,23 +51,33 @@ class CouponKitModel extends Model
     {
         return [
             'id' => AutoField::className(),
+
             'active' => [
                 'class' => BooleanField::className(),
             ],
+
             'deleted' => [
                 'class' => BooleanField::className(),
                 'default' => false,
             ],
+
             'uid' => [
                 'class' => CharField::className(),
                 'required' => true,
                 'default' => uniqid(),
             ],
+
             'code' => [
                 'class' => CharField::className(),
                 'required' => true,
-                'unique' => true,
+                'validators' => [
+                    new Callback(function($value, ExecutionContextInterface $context) {
+                        d($context->getObject());
+
+                    }),
+                ],
             ],
+
             'name' => [
                 'class' => CharField::className(),
                 'required' => true,
@@ -103,6 +115,7 @@ class CouponKitModel extends Model
                 'class' => DateTimeField::className(),
                 'autoNowAdd' => true,
             ],
+
             'updated_at' => [
                 'class' => DateTimeField::className(),
                 'autoNow' => true,
