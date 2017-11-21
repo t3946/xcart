@@ -22,7 +22,6 @@ use Xcart\App\Orm\Model;
  * @property \DateTime $end_at
  * @property (boolean) $is_lost
  * @property (boolean) $is_outgoing
- * @property (boolean) $processed
  * @property (string) $e164
  * @property (string) $rdnis
  * @property (string) $file
@@ -104,12 +103,6 @@ class PbxAnveoCallModel extends Model
             ],
 
             'is_outgoing' => [
-                'class' => BooleanField::className(),
-                'null' => false,
-                'default' => false
-            ],
-
-            'processed' => [
                 'class' => BooleanField::className(),
                 'null' => false,
                 'default' => false
