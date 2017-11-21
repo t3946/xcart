@@ -3,6 +3,7 @@ namespace Modules\PBX\Helpers;
 
 use Modules\Order\Models\OrdersCallsModel;
 use Modules\Order\Models\OrderUserActivityModel;
+use Modules\PBX\Models\PbxAnveoCallModel;
 use Modules\User\Models\PbxOptionsModel;
 use Modules\User\Models\UserModel;
 
@@ -11,6 +12,10 @@ class AnveoAssignCalls
     public static function eventBindCallToOrder($sender = null, $model)
     {
         self::bindCallToOrder($model);
+
+        if (rand(0, 6) >= 5) {
+            self::reValidate();
+        }
     }
 
     /**
@@ -20,9 +25,8 @@ class AnveoAssignCalls
     {
         if ($model && $model->start_at && $model->end_at)
         {
-
             if ($model->file) {
-                $account = static::parseAccount($model->file);
+                $account = self::parseAccount($model->file);
 
                 if ($account && $model->anveo_account != $account) {
 
@@ -49,6 +53,15 @@ class AnveoAssignCalls
                     }
                 }
             }
+        }
+    }
+
+    public static function reValidate()
+    {
+        $models = PbxAnveoCallModel::objects()->filter(['orders__through__order_id__isnull' => true])->order(['-id'])->limit(10)->all();
+
+        foreach ($models as $model) {
+            self::bindCallToOrder($model);
         }
     }
 
