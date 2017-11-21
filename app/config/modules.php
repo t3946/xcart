@@ -21,4 +21,5 @@ return [
     'Brand',
     'Pages',
     'Amp',
+    'PBX',
 ];

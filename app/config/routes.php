@@ -11,6 +11,11 @@ return array_merge($admin_routes, [
         'namespace' => 'amp',
     ],
     [
+        'route' => '/pbx',
+        'path' => 'Modules.PBX.routes',
+        'namespace' => 'pbx',
+    ],
+    [
         'route' => '/coupon',
         'path' => 'Modules.Cart.routes_coupon',
         'namespace' => 'coupon',
