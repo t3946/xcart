@@ -20,6 +20,7 @@ use Xcart\App\Orm\Model;
  * @property (int) $id PK
  * @property OrderModel $order
  * @property (int) $order_id
+ * @property (int) $coupon_id
  * @property \Modules\Cart\Models\CouponKitModel $coupon
  * @property UserModel $customer
  * @property (string) $uid
@@ -40,32 +41,27 @@ class CouponOrderModel extends Model
     {
         return [
             'id' => AutoField::className(),
+
             'order' => [
                 'class'=> ForeignField::className(),
                 'modelClass' => OrderModel::className(),
                 'link' => ['order_id' => 'orderid'],
                 'null' => true,
             ],
+
             'coupon' => [
-                'class' => HasToOneField::className(),
+                'class' => ForeignField::className(),
                 'modelClass' => CouponKitModel::className(),
-                'link' => ['code' => 'code', 'uid' => 'uid'],
+                'link' => ['coupon_id' => 'id'],
                 'null' => false,
             ],
+
             'customer' => [
                 'class' => HasToOneField::className(),
                 'modelClass' => UserModel::className(),
                 'link' => ['login' => 'login'],
             ],
 
-            'uid' => [
-                'class' => CharField::className(),
-                'null' => false,
-            ],
-            'code' => [
-                'class' => CharField::className(),
-                'null' => false,
-            ],
             'login' => [
                 'class' => CharField::className(),
                 'null' => false,

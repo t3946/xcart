@@ -4,6 +4,7 @@ namespace Modules\Cart\Models;
 
 use Modules\Cart\Admin\CouponKitAdmin;
 use Modules\Cart\Discounts\Restrictions\DefaultRestriction;
+use Modules\Order\Models\OrderModel;
 use Symfony\Component\Validator\Constraints\Callback;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 use Xcart\App\Main\Xcart;
@@ -14,6 +15,7 @@ use Xcart\App\Orm\Fields\DateTimeField;
 use Xcart\App\Orm\Fields\DecimalField;
 use Xcart\App\Orm\Fields\HasManyField;
 use Xcart\App\Orm\Fields\IntField;
+use Xcart\App\Orm\Fields\ManyToManyField;
 use Xcart\App\Orm\Fields\TextField;
 use Xcart\App\Orm\Model;
 
@@ -24,7 +26,6 @@ use Xcart\App\Orm\Model;
  *
  * @property (bool) active
  * @property (bool) deleted
- * @property (string) uid
  * @property (string) code
  * @property (string) name
  * @property (int) type [1 => percentage, 2 => summ]
@@ -34,7 +35,9 @@ use Xcart\App\Orm\Model;
  * @property (string) description
  * @property \DateTime created_at
  * @property \DateTime updated_at
+ *
  * @property CouponRestrictionModel[]|\Xcart\App\Orm\Manager|null restrictions
+ * @property OrderModel[] orders
  *
  * @package Modules\Cart\Models
  */
@@ -52,6 +55,12 @@ class CouponKitModel extends Model
         return [
             'id' => AutoField::className(),
 
+            'orders' => [
+                'class' => ManyToManyField::className(),
+                'modelClass' => OrderModel::className(),
+                'through' => CouponOrderModel::className(),
+            ],
+
             'active' => [
                 'class' => BooleanField::className(),
             ],
@@ -59,12 +68,6 @@ class CouponKitModel extends Model
             'deleted' => [
                 'class' => BooleanField::className(),
                 'default' => false,
-            ],
-
-            'uid' => [
-                'class' => CharField::className(),
-                'required' => true,
-                'default' => uniqid(),
             ],
 
             'code' => [
@@ -154,9 +157,49 @@ class CouponKitModel extends Model
 
     public function delete()
     {
-        $this->deleted = true;
+        if ($this->objects()->filter(['orders__through__coupon_id' => $this->id])->count())
+        {
+            $this->deleted = true;
+            return parent::update(['deleted']);
+        }
+
+        return parent::delete();
+    }
+
+    public function save(array $fields = [])
+    {
+        if ($this->objects()->filter(['orders__through__coupon_id' => $this->id])->count())
+        {
+            $this->deleted = true;
+            parent::save(['deleted']);
+
+            return $this->cloneCoupon();
+        }
 
         return parent::save();
+    }
+
+    private function cloneCoupon()
+    {
+        /** @var \Modules\Cart\Models\CouponRestrictionModel $restrictions */
+        /** @var \Modules\Cart\Models\CouponRestrictionModel $rt */
+        $restrictions = $this->restrictions->all();
+
+        $this->setIsNewRecord(true);
+        $this->pk = null;
+        $this->deleted = false;
+
+        parent::save();
+
+        foreach ($restrictions as $restriction) {
+            $rt = clone $restriction;
+            $rt->setIsNewRecord(true);
+            $rt->id = null;
+            $rt->coupon_id = $this->id;
+            $rt->save();
+        }
+
+        return true;
     }
 
     public function afterDelete($owner)

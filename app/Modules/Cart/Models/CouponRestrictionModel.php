@@ -12,6 +12,7 @@ use Xcart\App\Orm\Model;
  * Class CouponRestrictionModel
  *
  * @property \Modules\Cart\Models\CouponKitModel coupon
+ * @property (int) coupon_id
  * @property (string) class
  * @property (array) data
  *

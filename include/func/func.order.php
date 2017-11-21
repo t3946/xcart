@@ -1269,8 +1269,7 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
             /** @var  \Modules\Cart\Models\CouponKitModel $coupon */
             $coupon = \Modules\Cart\Models\CouponKitModel::objects()->get(['active' => true, 'code' => $insert_data['coupon']]);
             $model = new \Modules\Cart\Models\CouponOrderModel();
-            $model->code = $coupon->code;
-            $model->uid = $coupon->uid;
+            $model->coupon_id = $coupon->pk;
             $model->login = $insert_data['login'];
             $model->order_id = $orderid;
             $model->save();
