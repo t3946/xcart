@@ -47,13 +47,13 @@ class OrderUserActivityModel extends Model
             'created_at__gte' => (new \DateTime())->modify( '-2 minutes' )
         ];
 
-        if (static::objects()->filter($filter)->count()) {
-            static::objects()->filter($filter)->delete();
-
+        if (!static::objects()->filter($filter)->count()) {
             $this->setIsNewRecord(true);
+
+            return parent::save($fields);
         }
 
-        return parent::save($fields);
+        return false;
     }
 
     public function afterSave($owner, $isNew)
