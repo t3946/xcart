@@ -5902,7 +5902,7 @@ HTML, BODY {
   HEIGHT: 100%;
   MARGIN: 0px;
   PADDING: 0px;
-  background-color: #edeef0; }
+  background-color: #e8eaf0; }
 
 FORM {
   MARGIN: 0px; }
@@ -8359,6 +8359,23 @@ i.icon.m {
 .all-page {
   padding: 25px 30px; }
 
+.info-page {
+  padding: 25px 30px; }
+  .info-page .object-info {
+    table-layout: auto;
+    width: 100%; }
+    .info-page .object-info .first {
+      vertical-align: top;
+      font-weight: 500; }
+    .info-page .object-info > tbody > tr:nth-last-child(1) {
+      border-bottom: none; }
+    .info-page .object-info > tbody > tr:nth-child(2n) > td {
+      background-color: #f4f4f4; }
+    .info-page .object-info > tbody > tr > td {
+      padding: 7px; }
+      .info-page .object-info > tbody > tr > td iframe {
+        width: 100%; }
+
 .main-block .form-page {
   padding: 0 0 50px; }
   .main-block .form-page .actions-panel {
@@ -8463,19 +8480,6 @@ i.icon.m {
       .form-page fieldset .fields .form-field input[type=checkbox] + label.alone {
         padding: 0;
         width: 15px; }
-
-.form-page.info .object-info {
-  table-layout: auto;
-  width: 100%; }
-  .form-page.info .object-info .first {
-    vertical-align: top;
-    font-weight: 500; }
-  .form-page.info .object-info > tbody > tr:nth-last-child(1) {
-    border-bottom: none; }
-  .form-page.info .object-info > tbody > tr > td {
-    padding: 7px; }
-    .form-page.info .object-info > tbody > tr > td iframe {
-      width: 100%; }
 
 .admin .search-form .date_templates {
   margin-bottom: 3px; }
