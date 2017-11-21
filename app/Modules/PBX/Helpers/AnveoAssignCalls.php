@@ -40,10 +40,10 @@ class AnveoAssignCalls
                 }
             }
 
-            if ($model->anveo_account && $model->options && $user_id = $model->options->user->id)
+            if ($model->anveo_account && $model->options && $user_model = $model->options->user)
             {
                 $filter = [
-                    'user_id' => $user_id,
+                    'user_id' => $user_model->id,
                     'created_at__gte' => $model->start_at,
                     'created_at__lte' => $model->end_at,
                 ];
