@@ -36,6 +36,10 @@ trait ValidationTrait
      */
     public function isValid()
     {
+
+        if ($this->name == 'code')
+        d($this->getValidationConstraints());
+
         $this->beforeValidate();
         $errors = $this->getValidator()->validate($this->getValue(), $this->getValidationConstraints());
         $this->setErrors($errors);
