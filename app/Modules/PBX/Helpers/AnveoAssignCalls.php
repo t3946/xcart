@@ -22,20 +22,9 @@ class AnveoAssignCalls
         {
             if (empty($model->anveo_account) && $model->file)
             {
-                $file_parts = explode('-', $model->file);
-
-                if (empty($file_parts[4]) || $file_parts[4] == "na") {
-                    exit;
-                }
-                else {
-
-                    if (preg_match('/(.*)\..*/', $file_parts[4], $matches)) {
-                        $model->anveo_account = $matches[1];
-                    }
-                    else {
-                        $model->anveo_account = $file_parts[4];
-                    }
-
+                if ($account = static::parseAccount($model->file))
+                {
+                    $model->anveo_account = $account;
                     $model->save(['anveo_account']);
                 }
             }
@@ -59,5 +48,45 @@ class AnveoAssignCalls
                 }
             }
         }
+    }
+
+    public static function parseAccount($file)
+    {
+        $account = null;
+        $file_parts = explode('-', $file);
+
+        if (empty($file_parts[4]) || $file_parts[4] == "na") {
+            return null;
+        }
+        else {
+
+            if (preg_match('/(.*)\..*/', $file_parts[4], $matches)) {
+                $account = $matches[1];
+            }
+            else {
+                $account = $file_parts[4];
+            }
+
+        }
+
+        return $account;
+    }
+
+    public static function parseE164($file)
+    {
+        $e164 = null;
+        $file_parts = explode('-', $file);
+
+        if (!empty($file_parts[5])) {
+
+            if (preg_match('/(.*)\..*/', $file_parts[5], $matches)) {
+                $e164 = $matches[1];
+            }
+            else {
+                $e164 = $file_parts[5];
+            }
+        }
+
+        return $e164;
     }
 }

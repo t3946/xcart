@@ -2,6 +2,7 @@
 
 namespace Modules\PBX\Controllers;
 
+use Modules\PBX\Helpers\AnveoAssignCalls;
 use Modules\PBX\Models\PbxAnveoCallModel;
 use Xcart\App\Controller\Controller;
 use Xcart\App\Main\Xcart;
@@ -66,17 +67,12 @@ class PBXController extends Controller
                     $e164 = $request->post['ee'];
                 }
 
-                if (empty($e164) && !empty($model->file)) {
-                    $file_parts = explode('-', $model->file);
+                if (!empty($model->file)) {
+                    $e164 = $e164 ?: AnveoAssignCalls::parseE164($model->file);
+                    $account = AnveoAssignCalls::parseAccount($model->file);
 
-                    if (!empty($file_parts[5])) {
-
-                        if (preg_match('/(.*)\..*/', $file_parts[5], $matches)) {
-                            $e164 = $matches[1];
-                        }
-                        else {
-                            $e164 = $file_parts[5];
-                        }
+                    if ($account && $model->anveo_account != $account) {
+                        $model->anveo_account = $account;
                     }
                 }
 
