@@ -11,6 +11,8 @@ use Xcart\App\Form\ModelForm;
 
 class CouponKitForm extends ModelForm
 {
+    public $exclude = ['orders'];
+
     public function getModel()
     {
         return new CouponKitModel();

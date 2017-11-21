@@ -7,6 +7,11 @@ use Modules\Cart\Models\CouponKitModel;
 
 class CouponKitAdmin extends Admin
 {
+    public function getExcludedColumns()
+    {
+        return ['orders'];
+    }
+
     public static function getName()
     {
         return 'Coupon KIT';
