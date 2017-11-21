@@ -53,6 +53,8 @@ class PBXController extends Controller
 
             if ($request->getIsPost())
             {
+                $file = '';
+
                 if ($request->post->has('file')) {
                     $file = $request->post['file'];
                     $model->file = $file;
@@ -69,7 +71,7 @@ class PBXController extends Controller
                 }
 
                 if ($request->post->has('ee')) {
-                    if ( !$e164 = $request->post['ee'] )
+                    if ( !$e164 = $request->post['ee'] && $file)
                     {
                         $file_parts = explode('-', $file);
 
@@ -84,7 +86,9 @@ class PBXController extends Controller
                         }
                     }
 
-                    $model->e164 = $e164;
+                    if (!empty($e164)) {
+                        $model->e164 = $e164;
+                    }
                 }
             }
 
