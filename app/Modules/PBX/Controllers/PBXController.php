@@ -4,6 +4,7 @@ namespace Modules\PBX\Controllers;
 
 use Modules\PBX\Models\PbxAnveoCallModel;
 use Xcart\App\Controller\Controller;
+use Xcart\App\Main\Xcart;
 
 class PBXController extends Controller
 {
@@ -108,6 +109,7 @@ class PBXController extends Controller
                 }
 
                 $model->save();
+                Xcart::app()->event->trigger('anveo:call', ['model' => $model]);
             }
         }
     }
