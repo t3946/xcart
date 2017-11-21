@@ -10,6 +10,7 @@ use Xcart\App\Orm\Fields\BooleanField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\DateTimeField;
 use Xcart\App\Orm\Fields\ForeignField;
+use Xcart\App\Orm\Fields\HasToOneField;
 use Xcart\App\Orm\Fields\ManyToManyField;
 use Xcart\App\Orm\Model;
 
@@ -27,6 +28,9 @@ use Xcart\App\Orm\Model;
  * @property (string) $rdnis
  * @property (string) $file
  * @property (string) $cname
+ *
+ * @property OrderModel[]| $orders
+ * @property PbxOptionsModel|null $options
  *
  * @package Modules\Anveo\Models
  */
@@ -55,6 +59,12 @@ class PbxAnveoCallModel extends Model
                 'class' => ManyToManyField::className(),
                 'modelClass' => OrderModel::className(),
                 'through' => OrdersCallsModel::className(),
+            ],
+
+            'options' => [
+                'class' => HasToOneField::className(),
+                'modelClass' => PbxOptionsModel::className(),
+                'link' => ['anveo_account' => 'anveo_account'],
             ],
 
             'session' => [

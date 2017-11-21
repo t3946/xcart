@@ -7,6 +7,18 @@ use Xcart\App\Orm\Fields\DateTimeField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Model;
 
+/**
+ * Class OrderUserActivityModel
+ *
+ * @property (int) $user_id
+ * @property (int) $order_id
+ * @property \DateTime $created_at
+ *
+ * @property UserModel $user
+ * @property \Modules\Order\Models\OrderModel $order
+ *
+ * @package Modules\Order\Models
+ */
 class OrderUserActivityModel extends Model
 {
     public static function tableName()

@@ -14,54 +14,47 @@ class AnveoAssignCalls
     }
 
     /**
-     * @param $model
+     * @param \Modules\PBX\Models\PbxAnveoCallModel $model
      */
     public static function bindCallToOrder($model = null)
     {
-        if ($model) {
-            if (!empty($model->anveo_account)) {
-                $anveo_account = $model->anveo_account;
-            }
-            else {
+        if ($model)
+        {
+            if (empty($model->anveo_account)) {
                 $file_parts = explode('-', $model->file);
 
                 if (empty($file_parts[4]) || $file_parts[4] == "na") {
                     exit;
                 }
                 else {
-                    $regexp = '/(.*)\..*/';
-                    if (preg_match($regexp, $file_parts[4], $matches)) {
-                        $anveo_account = $matches[1];
+
+                    if (preg_match('/(.*)\..*/', $file_parts[4], $matches)) {
+                        $model->anveo_account = $matches[1];
                     }
                     else {
-                        $anveo_account = $file_parts[4];
+                        $model->anveo_account = $file_parts[4];
                     }
                 }
             }
 
-            /** @var PbxOptionsModel $pbx_options_model */
-            $pbx_options_model = PbxOptionsModel::objects()->get(['anveo_account' => $anveo_account]);
+            if ($model->options && $user_id = $model->options->user->id)
+            {
+                $filter = [
+                    'user_id' => $user_id,
+                    'created_at__gte' => $model->start_at,
+                    'created_at__lte' => $model->end_at,
+                ];
 
-            $pbx_extension = $pbx_options_model->extension;
+                /** @var OrderUserActivityModel[] $oua_models */
+                if ($oua_models = OrderUserActivityModel::objects()->filter($filter)->all()) {
+                    $manager = OrdersCallsModel::objects();
 
-            /** @var UserModel $user_model */
-            if ($user_model = UserModel::objects()
-                                       ->get(['pbx_extension' => $pbx_extension, 'usertype' => 'A', 'status' => 'Y'])) {
-                $user_id = $user_model->id;
-
-                if ($oua_models = OrderUserActivityModel::objects()
-                                                        ->filter(['user_id' => $user_id, 'created_at__gte' => $model->start_at, 'created_at__lte' => $model->end_at])
-                                                        ->all()) {
                     foreach ($oua_models as $oua_model) {
-                        OrdersCallsModel::objects()
-                                        ->updateOrCreate(['call_id' => $model->id, 'order_id' => $oua_model->order_id],
-                                                         ['relevance_type' => OrdersCallsModel::TYPE_VIEWING_SAME_OPERATOR, 'relevance_order' => 10]);
+                        $manager->updateOrCreate(['call_id' => $model->id, 'order_id' => $oua_model->order_id],
+                                                 ['relevance_type' => OrdersCallsModel::TYPE_VIEWING_SAME_OPERATOR, 'relevance_order' => 10]);
                     }
                 }
-
             }
-
         }
     }
-
 }
