@@ -18,9 +18,10 @@ class AnveoAssignCalls
      */
     public static function bindCallToOrder($model = null)
     {
-        if ($model)
+        if ($model && $model->start_at && $model->end_at)
         {
-            if (empty($model->anveo_account)) {
+            if (empty($model->anveo_account) && $model->file)
+            {
                 $file_parts = explode('-', $model->file);
 
                 if (empty($file_parts[4]) || $file_parts[4] == "na") {
@@ -34,10 +35,12 @@ class AnveoAssignCalls
                     else {
                         $model->anveo_account = $file_parts[4];
                     }
+
+                    $model->save(['anveo_account']);
                 }
             }
 
-            if ($model->options && $user_id = $model->options->user->id)
+            if ($model->anveo_account && $model->options && $user_id = $model->options->user->id)
             {
                 $filter = [
                     'user_id' => $user_id,

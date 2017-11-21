@@ -19,6 +19,7 @@ use Xcart\App\Orm\Model;
  *
  * @property (string) $login
  * @property (string) $session
+ * @property (string) $anveo_account
  * @property \DateTime $start_at
  * @property \DateTime $end_at
  * @property (boolean) $is_lost
