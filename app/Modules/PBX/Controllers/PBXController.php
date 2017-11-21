@@ -16,7 +16,7 @@ class PBXController extends Controller
         $now = new \DateTime();
 
         if ($session) {
-            $model = PbxAnveoCallModel::objects()->getOrCreate(['session' => $session]);
+            list($model, $isNew) = PbxAnveoCallModel::objects()->getOrCreate(['session' => $session]);
 
             if ($request->get->has('incoming_flow_start') || $request->get->has('outgoing_flow_start')) {
                 $model->start_at = $now;
