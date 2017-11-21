@@ -10,6 +10,11 @@ return [
         'namespace' => 'amp',
     ],
     [
+        'route' => '/pbx',
+        'path' => 'Modules.PBX.routes',
+        'namespace' => 'pbx',
+    ],
+    [
         'route' => '/brand',
         'path' => 'Modules.Brand.routes',
         'namespace' => 'brand',

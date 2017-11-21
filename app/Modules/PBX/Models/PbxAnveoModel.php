@@ -1,16 +1,37 @@
 <?php
 
-namespace Modules\Anveo\Models;
+namespace Modules\PBX\Models;
 
+use Modules\Order\Models\OrderModel;
+use Modules\Order\Models\OrdersCallsModel;
 use Modules\User\Models\PbxOptionsModel;
 use Xcart\App\Orm\Fields\AutoField;
+use Xcart\App\Orm\Fields\BigIntField;
 use Xcart\App\Orm\Fields\BooleanField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\DateTimeField;
 use Xcart\App\Orm\Fields\ForeignField;
+use Xcart\App\Orm\Fields\ManyToManyField;
 use Xcart\App\Orm\Model;
 
-class AnveoModel extends Model
+/**
+ * Class PbxAnveoModel
+ *
+ * @property (string) $login
+ * @property (string) $session
+ * @property \DateTime $start_at
+ * @property \DateTime $end_at
+ * @property (boolean) $is_lost
+ * @property (boolean) $is_outgoing
+ * @property (boolean) $processed
+ * @property (string) $e164
+ * @property (string) $rdnis
+ * @property (string) $file
+ * @property (string) $cname
+ *
+ * @package Modules\Anveo\Models
+ */
+class PbxAnveoModel extends Model
 {
 
     public static function tableName()
@@ -29,6 +50,12 @@ class AnveoModel extends Model
                 'class' => ForeignField::className(),
                 'modelClass' => PbxOptionsModel::className(),
                 'link' => [ 'anveo_account' => 'anveo_account'],
+            ],
+
+            'orders' => [
+                'class' => ManyToManyField::className(),
+                'modelClass' => OrderModel::className(),
+                'through' => OrdersCallsModel::className(),
             ],
 
             'session' => [
@@ -83,9 +110,26 @@ class AnveoModel extends Model
                 'default' => false
             ],
 
-
+            'processed' => [
+                'class' => BooleanField::className(),
+                'null' => false,
+                'default' => false
+            ],
 
         ];
     }
+
+    public function isIncoming(){
+        return !$this->isOutgoing();
+    }
+
+    public function isOutgoing(){
+        return $this->is_outgoing;
+    }
+
+    public function isLost(){
+        return $this->is_lost;
+    }
+
 
 }
