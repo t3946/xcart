@@ -71,7 +71,7 @@ class CouponKitModel extends Model
                 'class' => CharField::className(),
                 'required' => true,
                 'validators' => [
-                    new Callback(function($value, ExecutionContextInterface $context) {
+                        new Callback(function($value, ExecutionContextInterface $context) {
                         d($context->getObject());
 
                     }),
