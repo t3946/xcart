@@ -170,9 +170,6 @@ class CouponKitModel extends Model
     {
         if ($this->objects()->filter(['orders__through__coupon_id' => $this->id])->count())
         {
-            $this->deleted = true;
-            parent::save(['deleted']);
-
             return $this->cloneCoupon();
         }
 
@@ -184,6 +181,9 @@ class CouponKitModel extends Model
         /** @var \Modules\Cart\Models\CouponRestrictionModel $restrictions */
         /** @var \Modules\Cart\Models\CouponRestrictionModel $rt */
         $restrictions = $this->restrictions->all();
+
+        $this->deleted = true;
+        parent::save(['deleted']);
 
         $this->setIsNewRecord(true);
         $this->pk = null;
