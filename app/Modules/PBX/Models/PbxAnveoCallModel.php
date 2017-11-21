@@ -22,6 +22,7 @@ use Xcart\App\Orm\Model;
  * @property \DateTime $end_at
  * @property (boolean) $is_lost
  * @property (boolean) $is_outgoing
+ * @property (boolean) $is_voice_mail
  * @property (string) $e164
  * @property (string) $rdnis
  * @property (string) $file
@@ -108,6 +109,12 @@ class PbxAnveoCallModel extends Model
                 'default' => false
             ],
 
+            'is_voice_mail' => [
+                'class' => BooleanField::className(),
+                'null' => false,
+                'default' => false
+            ],
+
         ];
     }
 
@@ -121,6 +128,10 @@ class PbxAnveoCallModel extends Model
 
     public function isLost(){
         return $this->is_lost;
+    }
+
+    public function isVoiceMail(){
+        return $this->is_voice_mail;
     }
 
 

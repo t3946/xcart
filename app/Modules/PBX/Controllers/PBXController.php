@@ -26,6 +26,10 @@ class PBXController extends Controller
             $model->save();
         }
 
+        if ($request->get->has('vm')) {
+            PbxAnveoCallModel::objects()->filter(['session' => $session])->update(['is_voice_mail' => true]);
+        }
+
         if ($request->get->has('incoming_flow_end') || $request->get->has('outgoing_flow_end')) {
             PbxAnveoCallModel::objects()->filter(['session' => $session])->update(['end_at' => $now]);
         }
