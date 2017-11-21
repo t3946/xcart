@@ -19,15 +19,13 @@ class PBXController extends Controller
             list($model, $isNew) = PbxAnveoCallModel::objects()->getOrCreate(['session' => $session]);
 
             if ($request->get->has('incoming_flow_start') || $request->get->has('outgoing_flow_start')) {
+                $model->is_outgoing = $request->get->has('outgoing_flow_start');
                 $model->start_at = $now;
-                $model->e164 = $request->get['ee'];
-
-                if ($request->get->has('outgoing_flow_start')) {
-                    $model->is_outgoing = true;
-                }
+                $model->e164 = $model->e164 ?: $request->get['ee'];
             }
 
             if ($request->get->has('incoming_flow_end') || $request->get->has('outgoing_flow_end')) {
+                $model->is_outgoing = $model->is_outgoing ?: $request->get->has('outgoing_flow_end');
                 $model->end_at = $now;
             }
 
@@ -36,18 +34,15 @@ class PBXController extends Controller
                 $model->is_lost = true;
 
                 if ($request->get->has('ee')) {
-                    $ee = $request->get['ee'];
-                    $model->e164 = $ee;
+                    $model->e164 = $model->e164 ?: $request->get['ee'];
                 }
 
                 if ($request->get->has('rdnis')) {
-                    $rdnis = ($request->get['rdnis']);
-                    $model->rdnis = $rdnis;
+                    $model->rdnis = $request->get['rdnis'];
                 }
 
                 if ($request->get->has('cname')) {
-                    $cname = ($request->get['cname']);
-                    $model->cname = $cname;
+                    $model->cname = $request->get['cname'];
                 }
             }
 
@@ -62,13 +57,11 @@ class PBXController extends Controller
                 }
 
                 if ($request->post->has('uacc')) {
-                    $uacc = $request->post['uacc'];
-                    $model->anveo_account = $uacc;
+                    $model->anveo_account = $request->post['uacc'];
                 }
 
                 if ($request->post->has('cnam')) {
-                    $cname = $request->post['cnam'];
-                    $model->cname = $cname;
+                    $model->cname = $request->post['cnam'];
                 }
 
                 if ($request->post->has('ee')) {
