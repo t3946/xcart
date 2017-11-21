@@ -65,6 +65,8 @@ class OrderUserActivityModel extends Model
             return parent::save($fields);
         }
 
+        $this->afterSave($this, false);
+
         return false;
     }
 
