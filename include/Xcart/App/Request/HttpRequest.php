@@ -15,6 +15,8 @@ use Xcart\App\Main\Xcart;
  * @property \Xcart\App\Request\Session|\Modules\User\Components\XcartSession $session
  * @property \Xcart\App\Helpers\Collection $get
  * @property \Xcart\App\Helpers\Collection $post
+ * @property \Xcart\App\Helpers\Collection $request $_GET replaced by $_POST without $_COOKIE
+ * @property \Xcart\App\Helpers\Collection $cookie
  *
  * @package Xcart\App\Request
  *
@@ -59,6 +61,11 @@ class HttpRequest extends Request
      * @var Collection
      */
     public $post;
+
+    /**
+     * @var Collection
+     */
+    public $request;
 
     public $enableCsrfValidation = false;
 
@@ -126,6 +133,7 @@ class HttpRequest extends Request
     {
         $this->get = new Collection($_GET);
         $this->post = new Collection($_POST);
+        $this->request = new Collection(array_replace($_GET, $_POST));
         $this->cookie = new CookieCollection();
     }
 
