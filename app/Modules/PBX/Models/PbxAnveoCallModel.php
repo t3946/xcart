@@ -17,6 +17,7 @@ use Xcart\App\Orm\Model;
 /**
  * Class PbxAnveoCallModel
  *
+ * @property (int) $id
  * @property (string) $login
  * @property (string) $session
  * @property (string) $anveo_account
