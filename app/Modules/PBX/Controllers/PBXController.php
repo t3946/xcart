@@ -13,7 +13,7 @@ class PBXController extends Controller
         /** @var PbxAnveoCallModel $model */
         $request = $this->getRequest();
         $session = $this->getCallSession();
-        $now = date('Y-m-d H:i:s');
+        $now = new \DateTime();
 
         if ($session) {
             $model = PbxAnveoCallModel::objects()->getOrCreate(['session' => $session]);
