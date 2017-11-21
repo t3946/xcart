@@ -2,7 +2,7 @@
 
 namespace Modules\Order\Models;
 
-use Modules\PBX\Models\PbxAnveoModel;
+use Modules\PBX\Models\PbxAnveoCallModel;
 use Xcart\App\Orm\AutoMetaModel;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\ForeignField;
@@ -22,7 +22,7 @@ class OrdersCallsModel extends AutoMetaModel
             'call' => [
                 'field' => 'call_id',
                 'class' => ForeignField::className(),
-                'modelClass' => PbxAnveoModel::className(),
+                'modelClass' => PbxAnveoCallModel::className(),
                 'link' => ['call_id' => 'id'],
                 'null' => false,
                 'primary' => true

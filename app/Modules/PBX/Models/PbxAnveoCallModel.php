@@ -6,7 +6,6 @@ use Modules\Order\Models\OrderModel;
 use Modules\Order\Models\OrdersCallsModel;
 use Modules\User\Models\PbxOptionsModel;
 use Xcart\App\Orm\Fields\AutoField;
-use Xcart\App\Orm\Fields\BigIntField;
 use Xcart\App\Orm\Fields\BooleanField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\DateTimeField;
@@ -15,7 +14,7 @@ use Xcart\App\Orm\Fields\ManyToManyField;
 use Xcart\App\Orm\Model;
 
 /**
- * Class PbxAnveoModel
+ * Class PbxAnveoCallModel
  *
  * @property (string) $login
  * @property (string) $session
@@ -31,7 +30,7 @@ use Xcart\App\Orm\Model;
  *
  * @package Modules\Anveo\Models
  */
-class PbxAnveoModel extends Model
+class PbxAnveoCallModel extends Model
 {
 
     public static function tableName()
