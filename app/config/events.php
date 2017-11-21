@@ -1,5 +1,10 @@
 <?php
 return [
+    'anveo:call' => [
+        [
+            'callback' => ['\\Modules\\PBX\\Helpers\\AnveoAssignCalls', 'eventBindCallToOrder']
+        ]
+    ],
     'order:changed' => [
         [
             'callback' => ['\\Modules\\Order\\Models\\OrderEventsModel', 'newOrderEvent'],

@@ -4,7 +4,6 @@ namespace Modules\Order\Models;
 
 use Modules\PBX\Models\PbxAnveoCallModel;
 use Xcart\App\Orm\AutoMetaTrait;
-use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Model;
@@ -12,6 +11,10 @@ use Xcart\App\Orm\Model;
 class OrdersCallsModel extends Model
 {
     use AutoMetaTrait;
+
+    const TYPE_VIEWING_SAME_OPERATOR = 0;
+    const TYPE_VIEWING_OTHER_OPERATOR = 1;
+
 
     public static function tableName()
     {
@@ -40,9 +43,14 @@ class OrdersCallsModel extends Model
             ],
 
             'relevance_type' => [
-                'class' => CharField::className(),
+                'class' => IntField::className(),
+                'length' => 1,
                 'null' => false,
-                'default' => ''
+                'default' => 0,
+                'choices' => [
+                    0 => 'order viewed during call same operator',
+                    1 =>  'order viewed during call by other operator',
+                ],
             ],
 
             'relevance_order' => [
