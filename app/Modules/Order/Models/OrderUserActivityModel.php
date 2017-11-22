@@ -3,9 +3,6 @@ namespace Modules\Order\Models;
 
 use Modules\User\Models\UserModel;
 use Xcart\App\Main\Xcart;
-use Xcart\App\Orm\Fields\DateTimeField;
-use Xcart\App\Orm\Fields\ForeignField;
-use Xcart\App\Orm\Model;
 
 /**
  * Class OrderUserActivityModel
@@ -19,36 +16,11 @@ use Xcart\App\Orm\Model;
  *
  * @package Modules\Order\Models
  */
-class OrderUserActivityModel extends Model
+class OrderUserActivityModel extends AbstractOrderUserActivityModel
 {
     public static function tableName()
     {
         return 'xcart_order_user_actives';
-    }
-
-    public static function getFields()
-    {
-        return [
-            'user' => [
-                'field' => 'user_id',
-                'class' => ForeignField::className(),
-                'modelClass' => UserModel::className(),
-                'link' => ['id', 'user_id'],
-                'primary' => true,
-            ],
-            'order' => [
-                'field' => 'order_id',
-                'class' => ForeignField::className(),
-                'modelClass' => OrderModel::className(),
-                'link' => ['order_id' => 'orderid'],
-                'primary' => true,
-            ],
-            'created_at' => [
-                'class' => DateTimeField::className(),
-                'autoNowAdd' => true,
-                'autoNow' => true,
-            ]
-        ];
     }
 
     public function save(array $fields = [])
@@ -60,8 +32,6 @@ class OrderUserActivityModel extends Model
         ];
 
         if (!static::objects()->filter($filter)->count()) {
-            $this->setIsNewRecord(true);
-
             return parent::save($fields);
         }
 

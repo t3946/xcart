@@ -12,6 +12,8 @@
   display: inline-block;
   text-decoration: none;
   font-family: $font;
+  overflow: hidden;
+  cursor: pointer;
 
   &.pad {
     padding: 0 25px;
@@ -22,5 +24,14 @@
     color: #9594A5;
     background-color: $t;
     font-weight: 500;
+  }
+}
+
+a {
+  &.button {
+    //@extend .button;
+    &, &:visited, &:hover {
+      color: #fff;
+    }
   }
 }

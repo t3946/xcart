@@ -74,7 +74,7 @@ src="https://www.google.com/maps/embed/v1/directions?mode=flying&center=53.12540
         <table>
 
           <tr>
-            <td width="219">
+            <td width="300">
                 <B>{* Distributor *}{$v.manufacturer} time:</B> {$v.distributor_time|date_format:'%d-%b-%Y&nbsp; %H:%M'}
                 <br />
                 <B>{* Distributor *}{$v.manufacturer} phone:</B> {$v.distributor_phone}
@@ -82,7 +82,7 @@ src="https://www.google.com/maps/embed/v1/directions?mode=flying&center=53.12540
           </tr>
 
           <tr>
-            <td class="call_btn_distr_{if $v.good_time_to_send_email_to_distributor eq "Y"}a{else}d{/if}" width="219" height="44">
+            <td class="call_btn_distr_{if $v.good_time_to_send_email_to_distributor eq "Y"}a{else}d{/if}" width="300" height="44">
                 <a target="_blank" href="tel:{if $v.distributor_phone_phone_normalized ne ""}{$v.distributor_phone_phone_normalized}{else}{$v.distributor_phone}{/if}"><div style="width: 219px; height: 44px;"></div></a>
             </td>
           </tr>
@@ -108,7 +108,7 @@ src="https://www.google.com/maps/embed/v1/directions?mode=flying&center=53.12540
           </tr>
 
           <tr>
-            <td class="call_btn_customer_{if $customer.good_time_to_send_email_to_customer eq "Y"}a{else}d{/if}" width="219" height="44">
+            <td class="call_btn_customer_{if $customer.good_time_to_send_email_to_customer eq "Y"}a{else}d{/if}" width="300" height="44">
                 <a target="_blank" href="tel:{if $customer.phone_normalized ne ""}{$customer.phone_normalized}{else}{$customer.phone}{/if}"><div style="width: 219px; height: 44px;"></div></a>
             </td>
           </tr>

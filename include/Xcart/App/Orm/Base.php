@@ -232,9 +232,7 @@ abstract class Base implements ModelInterface, ArrayAccess, Serializable
                 }
 
                 $this->attributes->setAttribute($attributeName, $value);
-                $this->afterSetAttribute($attributeName, $value);
-            }
-            else {
+            } else {
                 $this->related[$name] = $value;
             }
         }
@@ -244,7 +242,16 @@ abstract class Base implements ModelInterface, ArrayAccess, Serializable
         }
     }
 
-    public function afterSetAttribute($attributeName, $value) {}
+    /**
+     * @param $name
+     *
+     * @return null
+     * @deprecated
+     */
+    public function getNotModelAttribute($name)
+    {
+        return $this->getFromQueryAttribute($name);
+    }
 
     public function getFromQueryAttribute($name)
     {
@@ -815,10 +822,14 @@ abstract class Base implements ModelInterface, ArrayAccess, Serializable
 
             /** @var \Xcart\App\Orm\Fields\RelatedField $field */
             $field = $this->getField($name);
-            if (empty($value)) {
-                $field->getManager()->clean();
-            } else {
-                $field->setValue($value);
+            if ($field->editable)
+            {
+                if (empty($value)) {
+                    $field->getManager()->clean();
+                }
+                else {
+                    $field->setValue($value);
+                }
             }
         }
         $this->related = [];

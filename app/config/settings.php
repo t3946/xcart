@@ -13,7 +13,7 @@ return array_replace_recursive([
    'globals' => [
 //       'blowfish_key' => '8d5db63ada15e11643a0b1c3477c2c5c',
 //       'blowfish' => new \ctBlowfish(),
-       'sql_tbl' => include "xcart_tables.php",
+       'sql_tbl' => include __DIR__ . DS . "xcart_tables.php",
    ],
    'modules' => include __DIR__ . DS . 'modules.php',
    'locale' => [
@@ -44,12 +44,12 @@ return array_replace_recursive([
                ]
            ]
        ],
-//       'errorHandler' => [
-//           'class' => '\\Xcart\\App\\Main\\ErrorHandler',
-//           'debug' => true,
-//           'errHandler' => true,
-//           'ignoreDeprecated' => true,
-//       ],
+       'errorHandler' => [
+           'class' => '\\Xcart\\App\\Main\\ErrorHandler',
+           'debug' => true,
+           'errHandler' => true,
+           'ignoreDeprecated' => true,
+       ],
        'event' => [
            'class' => '\\Xcart\\App\\Event\\EventManager',
            'events' => include __DIR__ . DS .  'events.php'
@@ -65,23 +65,7 @@ return array_replace_recursive([
 
        'middleware' => [
            'class' => '\\Xcart\\App\\Middleware\\MiddlewareManager',
-           'middleware' => [
-//               'RedirectMiddleware' => [
-//                   'class' => '\Modules\Redirect\Middleware\RedirectMiddleware'
-//               ],
-//               'AutoCacheMiddleware' => [
-//                   'class' => '\\Modules\\Core\\Middleware\\CacheMiddleware',
-//               ],
-               'CurrentSiteMiddleware' => [
-                   'class' => '\\Modules\\Sites\\Middleware\\CurrentSiteMiddleware',
-               ],
-               'BotsMiddleware' => [
-                   'class' => '\\Modules\\User\\Middleware\\BotsMiddleware',
-               ],
-               'ReferrerSearch' => [
-                   'class' => '\\Modules\\User\\Middleware\\ReferrerSearchMiddleware'
-               ],
-           ],
+           'middleware' => include __DIR__ . DS . 'middleware.php',
        ],
        'request' => [
            'class' => '\\Xcart\\App\\Request\\RequestManager',

@@ -4,11 +4,14 @@ namespace Modules\Order\Models;
 
 
 use Modules\Distributor\Models\DistributorModel;
-use Xcart\App\Orm\AutoMetaModel;
+use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\ForeignField;
+use Xcart\App\Orm\Model;
 
-class OrderGroupRefundModel extends AutoMetaModel
+class OrderGroupRefundModel extends Model
 {
+    use AutoMetaTrait;
+
     public static function tableName()
     {
         return 'xcart_refund_groups';

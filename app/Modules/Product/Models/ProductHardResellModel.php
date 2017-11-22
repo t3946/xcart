@@ -2,11 +2,14 @@
 
 namespace Modules\Product\Models;
 
-use Xcart\App\Orm\AutoMetaModel;
+use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
+use Xcart\App\Orm\Model;
 
-class ProductHardResellModel extends AutoMetaModel
+class ProductHardResellModel extends Model
 {
+    use AutoMetaTrait;
+
     const HARD_TO_RESELL_YES = 'Y';
     const HARD_TO_RESELL_NO = 'N';
     const HARD_TO_RESELL_UNKNOWN = 'U';

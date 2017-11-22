@@ -39,7 +39,9 @@ if (!defined('XCART_START')) { header("Location: ../../"); die("Access denied");
 # Generates codes(symbols) for each ACTIVE location 
 function func_generate_codes($pages, $codes = array()) {
 	global $config, $xcart_dir;
-	
+
+    is_array($codes) ?: $codes = [];
+
 	include_once $xcart_dir. "/modules/Image_Verification/" .$config['Image_Verification']['spambot_arrest_str_generator'].".php";
 	
 	$image_length = $config['Image_Verification']['spambot_arrest_image_length'];
@@ -60,5 +62,3 @@ function func_validate_image(&$image_str, $input_str) {
 
 	return ($image_str['code'] != $input_str);
 }
-
-?>

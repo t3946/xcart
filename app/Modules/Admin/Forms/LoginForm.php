@@ -40,20 +40,24 @@ class LoginForm extends Form
         ];
     }
 
-    public function clean($attributes)
+    public function afterValidate($owner, $isValid)
     {
-        $email = $attributes['email'];
-        $password = $attributes['password'];
+        if ($isValid) {
+            $attributes = $this->getAttributes();
 
-        $hasher = UserModule::getPasswordHasher();
-        
-        $user = $this->getUser($email);
-        if ($user) {
-            if (!$hasher::verify($password, $user->password)) {
-                $this->addError('password', 'Incorrect password');
+            $email = $attributes['login'];
+            $password = $attributes['password'];
+
+            $hasher = UserModule::getPasswordHasher();
+
+            $user = $this->getUser($email);
+            if ($user) {
+                if (!$hasher::verify($password, $user->password)) {
+                    $this->addError('password', 'Incorrect password');
+                }
+            } else {
+                $this->addError('email', 'User not found');
             }
-        } else {
-            $this->addError('email', 'User not found');
         }
     }
 

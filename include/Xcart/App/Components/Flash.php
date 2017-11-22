@@ -11,33 +11,53 @@ class Flash
     use SmartProperties, ClassNames;
 
     const SESSION_KEY = 'FLASH';
+    const DEFAULT_TIME = 5000;
 
-    public function success($message)
+    CONST TYPE_SUCCESS = 'success';
+    CONST TYPE_ERROR = 'error';
+    CONST TYPE_INFO = 'info';
+
+    public function success($message, $time = null)
     {
-        $this->add($message, 'success');
+        $this->add($message, self::TYPE_SUCCESS, $time);
     }
 
-    public function error($message)
+    public function error($message, $time = null)
     {
-        $this->add($message, 'error');
+        $this->add($message, self::TYPE_ERROR, $time);
     }
 
-    public function info($message)
+    public function info($message, $time = null)
     {
-        $this->add($message, 'info');
+        $this->add($message, self::TYPE_INFO, $time);
     }
     
     /**
      * @param $message
      * @param string $type "success"|"error"|"info"
+     * @param (int) $time time in miliseconds
      */
-    public function add($message, $type = 'success')
+    public function add($message, $type = self::TYPE_SUCCESS, $time = null)
     {
         $messages = $this->getMessages();
         $messages[] = [
             'message' => $message,
-            'type' => $type
+            'type' => $type,
+            'time' => $time ?: self::DEFAULT_TIME,
         ];
+
+        $this->setMessages($messages);
+    }
+
+    public function addWithCode($code, $message, $type = self::TYPE_SUCCESS, $time=null)
+    {
+        $messages = $this->getMessages();
+        $messages[$code] = [
+            'message' => $message,
+            'type' => $type,
+            'time' => $time ?: self::DEFAULT_TIME,
+        ];
+
         $this->setMessages($messages);
     }
 

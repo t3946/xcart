@@ -3,12 +3,15 @@
 namespace Modules\Order\Models;
 
 use Modules\PBX\Models\PbxAnveoCallModel;
-use Xcart\App\Orm\AutoMetaModel;
+use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\IntField;
+use Xcart\App\Orm\Model;
 
-class OrdersCallsModel extends AutoMetaModel
+class OrdersCallsModel extends Model
 {
+    use AutoMetaTrait;
+
     const TYPE_VIEWING_SAME_OPERATOR = 0;
     const TYPE_VIEWING_OTHER_OPERATOR = 1;
 

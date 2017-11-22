@@ -256,7 +256,6 @@ class XcartSession extends Session
         return $this->getId() ? true : false;
     }
 
-
     public function getStorage()
     {
         $this->open();

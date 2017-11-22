@@ -1,4 +1,4 @@
-{extends 'mail/base.tpl'}
+{extends 'mail/raw_template.tpl'}
 
 {block 'content'}
     {raw $msg|nl2br}

@@ -6,11 +6,35 @@ return [
         'target' => ['\Modules\Admin\Controllers\CommonController', 'index'],
         'name' => 'index'
     ],
-
     [
-        'route' => '/all/{:module}/{:admin}',
+        'route' => '/list/{:module}/{:admin}/owner/{:id}',
         'target' => ['\Modules\Admin\Controllers\AdminController', 'all'],
-        'name' => 'all'
+        'name' => 'list_owned'
+    ],
+    [
+        'route' => '/suggestion/{:module}/{:admin}/{:entity}',
+        'target' => ['\Modules\Admin\Controllers\AdminController', 'suggestion'],
+        'name' => 'suggestion'
+    ],
+    [
+        'route' => '/list/{:module}/{:admin}/{:id}',
+        'target' => ['\Modules\Admin\Controllers\AdminController', 'all'],
+        'name' => 'list_nested'
+    ],
+    [
+        'route' => '/list/{:module}/{:admin}',
+        'target' => ['\Modules\Admin\Controllers\AdminController', 'all'],
+        'name' => 'list'
+    ],
+    [
+        'route' => '/create/{:module}/{:admin}/owner/{:id}',
+        'target' => ['\Modules\Admin\Controllers\AdminController', 'create'],
+        'name' => 'create_owned'
+    ],
+    [
+        'route' => '/create/{:module}/{:admin}/{:id}',
+        'target' => ['\Modules\Admin\Controllers\AdminController', 'create'],
+        'name' => 'create_nested'
     ],
     [
         'route' => '/create/{:module}/{:admin}',
@@ -31,6 +55,12 @@ return [
         'route' => '/columns/{:module}/{:admin}',
         'target' => ['\Modules\Admin\Controllers\AdminController', 'columns'],
         'name' => 'columns'
+    ],
+
+    [
+        'route' => '/update/{:module}/{:admin}/{:pk}/owner/{:owner}',
+        'target' => ['\Modules\Admin\Controllers\AdminController', 'update'],
+        'name' => 'update_owned'
     ],
     [
         'route' => '/update/{:module}/{:admin}/{:pk}',

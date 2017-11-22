@@ -81,7 +81,7 @@ function func_calc_total_deposit_amount(){
 </script>
 
 
-<script type="text/javascript" language="JavaScript 1.2" src="{$SkinDir}/lib/jqueryui/jquery-ui.custom.min.js"></script>
+{*<script type="text/javascript" language="JavaScript 1.2" src="{$SkinDir}/lib/jqueryui/jquery-ui.custom.min.js"></script>*}
 {include file="main/multirow.tpl"}
 
 {include file="page_title.tpl" title="Deposit"}

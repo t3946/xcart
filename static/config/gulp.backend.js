@@ -1,7 +1,8 @@
 const fs = require('fs');
 const imagemin = require('gulp-imagemin');
 
-var modulesDir = 'node_modules';
+// var modulesDir = 'node_modules';
+var modulesDir = '../app/Modules';
 
 var modules = fs.readdirSync(modulesDir).map(function (module) {
     return modulesDir + '/' + module;
@@ -9,30 +10,15 @@ var modules = fs.readdirSync(modulesDir).map(function (module) {
 
 
 module.exports = {
+    config: require('./gulp.backend.configs'),
     dst: {
         js: 'backend/dist/js',
-        scss: 'backend/temp/css',
-        jsx: 'backend/temp/js',
+        scss: 'temp/backend/css',
+        jsx: 'temp/backend/js',
         css: 'backend/dist/css',
         images: 'backend/dist/images',
         fonts: 'backend/dist/fonts',
         raw: 'backend/dist/raw'
-    },
-    config: {
-        name: 'main',
-        compress: true,
-        babel: {
-            presets: ['es2015']
-        },
-        inline_image: {
-            baseDir: './backend/css'
-        },
-        imagemin: [
-            imagemin.gifsicle({interlaced: true}),
-            imagemin.jpegtran({progressive: true}),
-            imagemin.optipng({optimizationLevel: 5}),
-            imagemin.svgo({plugins: [{removeViewBox: true, removeComments: true, removeMetadata: true}]})
-        ],
     },
     src: {
         jsx: [
@@ -41,35 +27,50 @@ module.exports = {
         ],
         js: [
             'backend/js/**/*',
-            'backend/temp/js/**/*',
-        ],
+            'temp/backend/js/**/*',
+        ].concat(modules.map(function(dir) {
+            return dir + '/static/js/**/*.*'
+        })),
         scss: [
             'backend/scss/**/*.scss'
-        ],
-        scss_include: [
-            'bower_components/compass-mixins/lib/',
-        ],
+        ].concat(modules.map(function(dir) {
+            return dir + '/static/scss/**/*.*'
+        })),
+        scss_include: [],
         css: [
             'backend/css/*',
-            'backend/temp/css/**/*'
-        ],
+            'temp/backend/css/**/*',
+        ].concat(modules.map(function(dir) {
+            return dir + '/static/css/**/*.*'
+        })),
         images: [
             'backend/images/**/*.*'
         ],
-        fonts: [],
-        raw: []
+        fonts: [
+            'backend/fonts/GothamPro/fonts/**/*',
+            'backend/fonts/icons/fonts/*'
+        ],
+        raw: [].concat(modules.map(function(dir) {
+            return dir + '/static/raw/*/**'
+        }))
     },
     vendors: {
         jquery: {
             js: [
-                'bower_components/jquery/dist/jquery.min.js'
+                'bower_components/jquery/dist/jquery.js'
             ]
         },
 
         'jquery-ui': {
             js: [
                 'bower_components/jquery-ui/jquery-ui.js'
-            ]
+            ],
+            css: [
+                'bower_components/jquery-ui/themes/base/jquery-ui.css',
+                // 'bower_components/jquery-ui/themes/base/theme.css',
+                // 'bower_components/jquery-ui/themes/base/tabs.css',
+                // 'bower_components/jquery-ui/themes/base/datepicker.css',
+            ],
         },
 
         'jquery.shapeshift': {
@@ -88,14 +89,27 @@ module.exports = {
                 'bower_components/jquery-form/dist/jquery.form.min.js'
             ]
         },
+        font_icons: {
+            css: [
+                'backend/fonts/icons/css/style.css'
+            ],
+            fonts: [
+                'backend/fonts/icons/fonts/*'
+            ],
+        },
 
-        modal: {
+        mmodal: {
             js: [
                 'bower_components/mmodal/js/jquery.mindy.modal.js'
             ]
             // scss: [
             //     'bower_components/mmodal/scss/jquery.mmodal.scss'
             // ]
+        },
+        modal: {
+            js: [
+                'components/modal/modal.js'
+            ]
         },
         mouse_wheel: {
             js: [
@@ -105,9 +119,42 @@ module.exports = {
             //     'bower_components/mmodal/scss/jquery.mmodal.scss'
             // ]
         },
-
+        underscore: {
+            js: [
+                'bower_components/underscore/underscore.js'
+            ]
+        },
+        confirm: {
+            js: [
+                'components/confirm/jquery.confirm.js'
+            ]
+        },
+        ui_custom: {
+            js: [
+                'components/ui-custom/jquery-ui.min.js'
+            ],
+            css: [
+                'components/ui-custom/jquery-ui.min.css'
+            ]
+        },
+        deparam: {
+            js: [
+                'components/deparam/jquery.deparam.js'
+            ]
+        },
+        flow: {
+            js: [
+                'bower_components/flow-js/dist/flow.js'
+            ]
+        },
+        files_field: {
+            js: [
+                'components/fields/js/filesfield.js'
+            ]
+        },
         select2: {
             js: [
+                // 'bower_components/select2/dist/js/select2.full.js'
                 'bower_components/select2/dist/js/select2.js'
             ],
             css: [
@@ -117,11 +164,11 @@ module.exports = {
 
         'air-datepicker': {
             js: [
-                'bower_components/air-datepicker/dist/js/datepicker.js',
-                'bower_components/air-datepicker/dist/js/i18n/datepicker.en.js'
+                'components/air-datepicker/dist/js/datepicker.js',
+                'components/air-datepicker/dist/js/i18n/datepicker.en.js'
             ],
             css: [
-                'bower_components/air-datepicker/dist/css/datepicker.css'
+                'components/air-datepicker/dist/css/datepicker.css'
             ]
         },
 
@@ -137,12 +184,26 @@ module.exports = {
             ]
         },
 
+        'font-gotham_pro': {
+            fonts: [
+                'backend/fonts/GothamPro/fonts/**/*'
+            ],
+            css: [
+                'backend/fonts/GothamPro/css/*'
+            ]
+        },
+
         cds: {
             scss_include: [
                 'components/cds'
             ]
         },
 
+        'compass-mixins': {
+            scss_include: [
+                'bower_components/compass-mixins/lib/'
+            ]
+        },
         'mindy-sass': {
             scss_include: [
                 'bower_components/mindy-sass/'

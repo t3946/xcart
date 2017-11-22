@@ -199,7 +199,6 @@
             var me = this;
             $('#' + this.options.field).val(url);
             $('.modal-closer').trigger('click');
-            console.log(url);
         },
         openFolder: function (path) {
             var me = this;

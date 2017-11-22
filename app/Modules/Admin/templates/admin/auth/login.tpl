@@ -1,4 +1,4 @@
-{extends "admin/base.tpl"}
+{extends "admin/base_login.tpl"}
 
 {block 'menu_block'}
 {/block}
@@ -6,7 +6,7 @@
 {block 'main_block_class'}wide{/block}
 
 {block 'main_block'}
-    <div class="login-page">
+    <div class="admin-page login-page">
         <div class="login-block">
             <h1>{t 'Login'}</h1>
 

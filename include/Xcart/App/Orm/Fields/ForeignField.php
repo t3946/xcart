@@ -137,7 +137,9 @@ class ForeignField extends RelatedField
             }
         }
 
-        $result = $this->getManager()->cache($this->getModel()->getCache())->get(array_merge($filter, $this->extra));
+        $result = $this->getManager()
+                       ->cache($this->getModel()->getCache())
+                       ->get(array_merge($filter, $this->extra));
         $this->getModel()->noCache();
 
         return $result;

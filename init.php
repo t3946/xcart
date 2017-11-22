@@ -64,13 +64,23 @@ if ($cur_host == 'www.kolinskyartbrushes.com') {
 }
 
 
-$settings_path = $xcart_dir .'/app/config/settings_admin.php';
-if (!defined('AREA_TYPE') || AREA_TYPE == 'C') {
-    $settings_path = $xcart_dir .'/app/config/settings.php';
+if (!defined('XCART_APP_CONFIG')) {
+    $settings_path = $xcart_dir .'/app/config/settings_admin.php';
+    if (!defined('AREA_TYPE') || AREA_TYPE == 'C') {
+        $settings_path = $xcart_dir .'/app/config/settings.php';
+    }
+
+    $app_settings = include $settings_path;
+}
+else {
+    $app_settings = XCART_APP_CONFIG;
 }
 
-\Xcart\App\Main\Xcart::init(include $settings_path);
+
+\Xcart\App\Main\Xcart::init($app_settings);
 \Xcart\App\Main\Xcart::app()->beforeRun();
+
+global $sql_tbl;
 
 #
 # Initialize logging
@@ -137,7 +147,7 @@ $sql_max_allowed_packet = intval($tmp['Value']);
 unset($tmp);
 
 if (preg_match("/^(\d+\.\d+\.\d+)/", db_mysql_get_server_info(), $match)) {
-        define("X_MYSQL_VERSION", $match[1]);
+    define("X_MYSQL_VERSION", $match[1]);
 
     if (func_version_compare(X_MYSQL_VERSION, "5.0.0") >= 0) {
         db_query("SET sql_mode = 'MYSQL40'");
@@ -285,11 +295,10 @@ $smarty->assign("xcart_web_dir", $xcart_web_dir);
 $smarty->assign("current_location", $current_location);
 $smarty->assign("php_url", $php_url);
 
-# START: random:20341 [2010 Jul 29 14:46] 
 $smarty->assign("artss_manufacturerid", $artss_manufacturerid);
 $smarty->assign("artss_code", $artss_code);
+$smarty->assign("AREA_TYPE", AREA_TYPE);
 
-# END: random:20341 [2010 Jul 29 14:46] 
 foreach ($var_dirs_web as $k => $v) {
     $var_dirs_web[$k] = $current_location . $v;
 }

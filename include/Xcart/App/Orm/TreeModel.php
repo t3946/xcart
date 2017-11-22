@@ -3,6 +3,7 @@
 namespace Xcart\App\Orm;
 
 use Exception;
+use Xcart\App\Orm\Fields\TreeForeignField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\IntField;
 use Mindy\QueryBuilder\Expression;
@@ -25,7 +26,7 @@ abstract class TreeModel extends Model
     {
         return [
             'parent' => [
-                'class' => ForeignField::className(),
+                'class' => TreeForeignField::className(),
                 'modelClass' => get_called_class(),
                 'null' => true,
             ],

@@ -31,6 +31,7 @@ Thumbs.db
 ######################
 ## folders to exclude
 /images/**
+!/skin1_kolin/images/**
 /.pgp.def/**
 /upgrade/**
 /.pgp/**
@@ -77,4 +78,5 @@ node_modules
 bower_components
 /static/backend/temp/
 /static/frontend/temp/
+/static/temp/
 /skin1_kolin/pages/

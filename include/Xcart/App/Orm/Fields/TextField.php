@@ -10,6 +10,8 @@ use Doctrine\DBAL\Types\Type;
  */
 class TextField extends Field
 {
+    public $formField = '\Xcart\App\Form\Fields\TextField';
+
     /**
      * @return string
      */

@@ -1,0 +1,21 @@
+<?php
+return [
+//               'RedirectMiddleware' => [
+//                   'class' => '\Modules\Redirect\Middleware\RedirectMiddleware'
+//               ],
+//               'AutoCacheMiddleware' => [
+//                   'class' => '\\Modules\\Core\\Middleware\\CacheMiddleware',
+//               ],
+    'CurrentSiteMiddleware' => [
+        'class' => '\\Modules\\Sites\\Middleware\\CurrentSiteMiddleware',
+    ],
+    'CouponCodeMiddleware' => [
+        'class' => '\Modules\Cart\Middleware\CouponCodeMiddleware'
+    ],
+    'BotsMiddleware' => [
+        'class' => '\\Modules\\User\\Middleware\\BotsMiddleware',
+    ],
+    'ReferrerSearch' => [
+        'class' => '\\Modules\\User\\Middleware\\ReferrerSearchMiddleware'
+    ],
+];

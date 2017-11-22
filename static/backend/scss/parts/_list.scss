@@ -66,8 +66,8 @@
       width: 100%;
       $th-height: 40px;
 
-      $width-padding: 15px;
-      $height-padding: 10px;
+      $width-padding: 10px;
+      $height-padding: 5px;
 
       thead {
         tr.list-head {
@@ -108,6 +108,7 @@
                   visibility: hidden;
 
                   .columns-list {
+                    list-style: none;
                     margin-top: 11px;
                     position: relative;
                     background-color: #fff;
@@ -194,19 +195,16 @@
       }
 
       th, td {
-        &.checker {
-          width: 40px;
-          padding-left: 0 !important;
-          padding-right: 0 !important;
-          text-align: center;
-          font-size: 0;
-        }
-
+        &.checker,
+        &.nested,
         &.sort {
           width: 40px;
           padding-left: 0 !important;
           padding-right: 0 !important;
           text-align: center;
+        }
+
+        &.sort {
 
           a {
             text-decoration: none;
@@ -236,7 +234,7 @@
             border-left: 1px solid #DFDFDF;
             border-right: 1px solid #DFDFDF;
             padding: $height-padding $width-padding;
-            font-size: 15px;
+            font-size: 13px;
             color: #000000;
             background-color: #fff;
             vertical-align: middle;

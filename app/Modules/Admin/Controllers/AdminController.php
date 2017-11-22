@@ -7,24 +7,27 @@ use Xcart\App\Main\Xcart;
 
 class AdminController extends BackendController
 {
-    public function all($module, $admin)
+    public function all($module, $admin, $id = null)
     {
         $admin = $this->getAdmin($module, $admin);
-        $this->setBreadcrumbs($admin);
-        $admin->all();
+        $admin->all($id);
     }
 
-    public function create($module, $admin)
+    public function info($module, $admin, $pk)
     {
         $admin = $this->getAdmin($module, $admin);
-        $this->setBreadcrumbs($admin, 'Создание');
-        $admin->create();
+        $admin->info($pk);
+    }
+
+    public function create($module, $admin, $id = null)
+    {
+        $admin = $this->getAdmin($module, $admin);
+        $admin->create($id);
     }
 
     public function update($module, $admin, $pk)
     {
         $admin = $this->getAdmin($module, $admin);
-        $this->setBreadcrumbs($admin, 'Редактирование');
         $admin->update($pk);
     }
 
@@ -74,19 +77,10 @@ class AdminController extends BackendController
         }
     }
 
-    /**
-     * @param $admin Admin
-     */
-    public function setBreadcrumbs($admin, $last = null)
+    public function suggestion($module, $admin, $entity)
     {
-        Xcart::app()->breadcrumbs->add(
-            $admin->getName(),
-            $admin->getAllUrl()
-        );
-
-        if ($last) {
-            Xcart::app()->breadcrumbs->add($last);
-        }
+        $admin = $this->getAdmin($module, $admin);
+        $admin->suggestions($entity);
     }
 
     /**
@@ -98,7 +92,7 @@ class AdminController extends BackendController
     {
         $class = "Modules\\{$module}\\Admin\\{$admin}";
         if (class_exists($class)) {
-            return new $class;
+            return new $class();
         }
         $this->error(404);
     }

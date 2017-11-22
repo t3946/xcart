@@ -1102,6 +1102,10 @@ if ($REQUEST_METHOD == "POST")
             }
         }
 
+        if (!empty($order['coupon'])) {
+            \Modules\Cart\Helpers\CouponOldCart::getInstance()->setOrderId($orderid)->setLogin($order['login']);
+        }
+
         func_oe_update_order($cart_tmp, $order["shipping_groups"], $order_data["products"]);
 
         if (!empty($groups) && is_array($groups)) {

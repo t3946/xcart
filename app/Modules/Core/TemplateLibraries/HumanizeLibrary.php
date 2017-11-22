@@ -2,6 +2,7 @@
 namespace Modules\Core\TemplateLibraries;
 
 
+use Xcart\App\Helpers\Humanize;
 use Xcart\App\Template\TemplateLibrary;
 
 class HumanizeLibrary extends TemplateLibrary
@@ -30,5 +31,16 @@ class HumanizeLibrary extends TemplateLibrary
             $message = ' Tb';
         }
         return $converted . $message;
+    }
+
+
+    /**
+     * @kind modifier
+     * @name humanizeDateTime
+     * @return string
+     */
+    public static function humanizeDateTime($dateRaw, $dateFormat = 'd.m.Y', $timeFormat = 'H:i', $delimiter = ', ')
+    {
+        return Humanize::humanizeDateTime($dateRaw, $dateFormat, $timeFormat, $delimiter);
     }
 }

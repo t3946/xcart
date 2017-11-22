@@ -29,6 +29,8 @@ class HasManyField extends RelatedField
 
     public $modelClass;
 
+    public $editable = false;
+
     public $through;
     /**
      * @var array
@@ -51,7 +53,7 @@ class HasManyField extends RelatedField
         $where = [];
         if ($this->link) {
             foreach ($this->link as $from => $to) {
-                $where[$from] = $this->getModel()->getAttribute($to);
+                $where[$to] = $this->getModel()->getAttribute($from);
             }
         }
 

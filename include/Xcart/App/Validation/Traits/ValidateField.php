@@ -46,7 +46,7 @@ trait ValidateField
                 if ($validator instanceof Closure) {
                     /* @var $validator Closure */
                     /* @var $this \Xcart\App\Validation\Interfaces\IValidateObject */
-                    $valid = $validator->__invoke($this->getValue());
+                    $valid = $validator->bindTo($this)->__invoke($this->getValue());
                     if ($valid !== true) {
                         if (!is_array($valid)) {
                             $valid = [$valid];
@@ -83,7 +83,11 @@ trait ValidateField
 
             if ($instance->hasField($this->name) && $field = $instance->getField($this->name)) {
                 /** @var \Xcart\App\Orm\Fields\Field $field */
-                $field->setValue($value);
+                if ($field->editable) {
+                    $field->setValue($value);
+                }
+
+
 
                 if ($field->isValid() === false) {
                     $this->addErrors($field->getErrors());
