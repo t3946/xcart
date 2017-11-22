@@ -63,6 +63,12 @@ if ($cur_host == 'www.kolinskyartbrushes.com') {
     exit();
 }
 
+#
+# Initialize logging
+#
+@require_once $xcart_dir . "/include/logging.php";
+$dieError = "Sorry, the shop is inaccessible temporarily. Please try again later.";
+
 
 if (!defined('XCART_APP_CONFIG')) {
     $settings_path = $xcart_dir .'/app/config/settings_admin.php';
@@ -82,11 +88,6 @@ else {
 
 global $sql_tbl;
 
-#
-# Initialize logging
-#
-@require_once $xcart_dir . "/include/logging.php";
-$dieError = "Sorry, the shop is inaccessible temporarily. Please try again later.";
 try {
     Xcart\Connection::getInstanceFromApp()->connect();
 }
