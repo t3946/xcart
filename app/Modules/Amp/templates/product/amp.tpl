@@ -1,33 +1,19 @@
 {extends 'layout/product_amp.tpl'}
 
 {block 'head'}
-    {ignore}
-        <style amp-boilerplate>body
-
-            {-webkit-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-moz-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-ms-animation:-amp-start 8s steps(1,end) 0s 1 normal both;animation:-amp-start 8s steps(1,end) 0s 1 normal both} @-webkit-keyframes -amp-start
-
-            {from{visibility:hidden}to{visibility:visible}} @-moz-keyframes -amp-start
-
-            {from{visibility:hidden}to{visibility:visible}} @-ms-keyframes -amp-start
-
-            {from{visibility:hidden}to{visibility:visible}} @-o-keyframes -amp-start
-
-            {from{visibility:hidden}to{visibility:visible}} @keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}</style>
-        <noscript>
-            <style amp-boilerplate>body{-webkit-animation:none;-moz-animation:none;-ms-animation:none;animation:none}</style>
-        </noscript>
-    {/ignore}
     <script async src="https://cdn.ampproject.org/v0.js"></script>
     <script async custom-element="amp-bind" src="https://cdn.ampproject.org/v0/amp-bind-0.1.js"></script>
     <script async custom-element="amp-carousel" src="https://cdn.ampproject.org/v0/amp-carousel-0.1.js"></script>
-    <script async custom-element="amp-selector" src="https://cdn.ampproject.org/v0/amp-selector-0.1.js"></script>
-    <script async custom-template="amp-mustache" src="https://cdn.ampproject.org/v0/amp-mustache-0.1.js"></script>
-    <script async custom-element="amp-youtube" src="https://cdn.ampproject.org/v0/amp-youtube-0.1.js"></script>
     <script async custom-element="amp-analytics" src="https://cdn.ampproject.org/v0/amp-analytics-0.1.js"></script>
     <script async custom-element="amp-social-share" src="https://cdn.ampproject.org/v0/amp-social-share-0.1.js"></script>
+    <script async custom-element="amp-form" src="https://cdn.ampproject.org/v0/amp-form-0.1.js"></script>
+    <meta name="amp-google-client-id-api" content="googleanalytics">
     <style amp-custom>
         {include "product/amp_style.css"}
     </style>
+    {ignore}
+        <style amp-boilerplate>body{-webkit-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-moz-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-ms-animation:-amp-start 8s steps(1,end) 0s 1 normal both;animation:-amp-start 8s steps(1,end) 0s 1 normal both}@-webkit-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-moz-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-ms-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-o-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}</style><noscript><style amp-boilerplate>body{-webkit-animation:none;-moz-animation:none;-ms-animation:none;animation:none}</style></noscript>
+    {/ignore}
 {/block}
 
 {block 'content'}
@@ -99,7 +85,7 @@
 
             {else}
                 {if $model->r_avail > 0}
-                <form method="get" action="/cart.php?mode=add" >
+                <form method="get" action="/cart.php" target="_top">
                     <input type="hidden" name="amount" value="1">
                     <input type="hidden" name="mode" value="add">
                     <input type="hidden" name="productid" value="{$model->productid}">
@@ -128,7 +114,6 @@
                         <button id="place_order" class="mdl-button mdl-button--raised mdl-button--accent add_to_cart" >
                             Add to cart
                         </button>
-
 
                     </div>
 
@@ -166,6 +151,14 @@
             {$model->getFrontendDescription()}
         </div>
 
+        {if $model->isGroupChild()}
+            <br>
+                <a class="button_redirect_2" id="group_prod_2" href="{$model->parent->getAbsoluteUrl()}">
+                    <b>See other product variations</b>
+                </a>
+            <br>
+        {/if}
+
         {*<amp-youtube
                 data-videoid="AjvbqVlxYOs"
                 layout="responsive"
@@ -196,8 +189,9 @@
                         Web Orders
                     </h4>
                     <p class="about_text">
-                        24 hours a day, 7 days a week<br>
-                        Email Support
+                        24 hours a day, 7 days a week<br><br>
+                        <b>Email Support</b><br>
+                        <a class="telephon" href="/help.php?section=contactus&mode=update" >Contact us</a>
                     </p>
                 </div>
                 <div>

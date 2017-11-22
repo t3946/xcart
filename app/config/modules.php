@@ -15,4 +15,5 @@ return [
     'Amp',
     'Mail',
     'Meta',
+    'PBX',
 ];

@@ -65,13 +65,25 @@ class AmpProductModel extends ProductModel
         if($this->isGroupRoot()){
             $product_models = $this->getFrontendChilds();
             foreach ($product_models as $p_model){
+
                 $images_model = $p_model->getImages();
-                if($images_model) {
+
+                if ($images_model)
+                {
                     $image_model = reset($images_model);
+                }
+                else
+                {
+                    $image_model = $p_model->getThumbnail();
+                }
+
+                if($image_model)
+                {
                     $for_image = ltrim($image_model->image_path, ".");
                     $images[] = $domain . $for_image;
                 }
             }
+
             if(!$flag){
                 return $images;
             }
@@ -83,10 +95,21 @@ class AmpProductModel extends ProductModel
         else {
             $images_model = $this->getImages();
 
-            foreach ($images_model as $image_model) {
+            if ($images_model)
+            {
+                $image_model = reset($images_model);
+            }
+            else
+            {
+                $image_model = $this->getThumbnail();
+            }
+
+            if($image_model)
+            {
                 $for_image = ltrim($image_model->image_path, ".");
                 $images[] = $domain . $for_image;
             }
+
             if (!$flag) {
                 return $images;
             }

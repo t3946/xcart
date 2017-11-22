@@ -29,6 +29,13 @@ class UserModel extends AutoMetaModel
             'id' => [
                 'class' => AutoField::className(),
             ],
+
+            'pbx_extension' => [
+                'class' => CharField::className(),
+                'null' => false,
+                'default' => ''
+            ],
+
             'login' => [
                 'class' => CharField::className(),
                 'null' => false,

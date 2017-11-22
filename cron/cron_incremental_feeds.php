@@ -40,7 +40,7 @@ if ($config[LOG_CATEGORY] == "Y") {
     $oMail->subject = sprintf('Attention! Xcart cron %s Already launched', LOG_CATEGORY);
     $oMail->body = LOG_CATEGORY . ' already launched';
     $oMail->sendEmail();
-    if (isset($argv) && !in_array('--force-flag', $argv)) {
+    if (!isset($argv) || (isset($argv) && !in_array('--force-flag', $argv))) {
         die("Already launched"); // ################################
     }
 }

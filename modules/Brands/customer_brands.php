@@ -42,7 +42,7 @@ if (!empty($active_modules['Multiple_Storefronts'])) {
 	$brandidssql = "Select Distinct P.brandid from $sql_tbl[products_sf] PS inner join $sql_tbl[products] P ON P.productid = PS.productid and P.forsale = 'Y'  where PS.sfid = $current_storefront /*Group By B.brandid*/";
 /*	$brandidssql = "SELECT $sql_tbl[brands].brandid,(Select $sql_tbl[products].productid from $sql_tbl[products] inner join $sql_tbl[products_sf] ON $sql_tbl[products_sf].productid = $sql_tbl[products].productid and $sql_tbl[products_sf].sfid = $current_storefront where $sql_tbl[products].brandid = $sql_tbl[brands].brandid and $sql_tbl[products].forsale = 'Y' Limit 1) As PB FROM $sql_tbl[brands] USE INDEX (PRIMARY) Having  PB is NOT NULL";*/
 	$sf_join = "/* INNER JOIN $sql_tbl[brands_sf] ON $sql_tbl[brands_sf].brandid=$sql_tbl[brands].brandid*/";
-	$sf_join = " INNER JOIN $sql_tbl[products] USE INDEX FOR JOIN (brandid) ON $sql_tbl[products].brandid = $sql_tbl[brands].brandid ";
+	$sf_join = " INNER JOIN $sql_tbl[products] ON $sql_tbl[products].brandid = $sql_tbl[brands].brandid ";
 	$sf_join = $sf_join. "INNER JOIN $sql_tbl[products_sf] ON $sql_tbl[products_sf].productid = $sql_tbl[products].productid ";
 	$sf_condition = "/* AND $sql_tbl[brands_sf].sfid=$current_storefront*/";
 	$sf_condition = " AND $sql_tbl[products].forsale = 'Y' AND $sql_tbl[products_sf].sfid = $current_storefront /*AND $sql_tbl[products].productid IS NOT NULL*/ ";

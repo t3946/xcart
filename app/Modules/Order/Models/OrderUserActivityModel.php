@@ -7,6 +7,18 @@ use Xcart\App\Orm\Fields\DateTimeField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Model;
 
+/**
+ * Class OrderUserActivityModel
+ *
+ * @property (int) $user_id
+ * @property (int) $order_id
+ * @property \DateTime $created_at
+ *
+ * @property UserModel $user
+ * @property \Modules\Order\Models\OrderModel $order
+ *
+ * @package Modules\Order\Models
+ */
 class OrderUserActivityModel extends Model
 {
     public static function tableName()
@@ -47,13 +59,15 @@ class OrderUserActivityModel extends Model
             'created_at__gte' => (new \DateTime())->modify( '-2 minutes' )
         ];
 
-        if (static::objects()->filter($filter)->count()) {
-            static::objects()->filter($filter)->delete();
-
+        if (!static::objects()->filter($filter)->count()) {
             $this->setIsNewRecord(true);
+
+            return parent::save($fields);
         }
 
-        return parent::save($fields);
+        $this->afterSave($this, false);
+
+        return false;
     }
 
     public function afterSave($owner, $isNew)

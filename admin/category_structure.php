@@ -38,12 +38,14 @@ require $xcart_dir."/include/categories.php";
 
 if (!empty($all_categories) && is_array($all_categories)){
 
-//	$prev_cat = 0;
-//	$prev_google_product_category = "";
-
 	$parentid_google_product_category = array();
 
 	foreach ($all_categories as $k => $v){
+
+		if ($v['global_product_count'] == 0) {
+			unset ($all_categories[$k]);
+			continue;
+		}
 
 		$count_pc_products = func_query_first_cell("SELECT COUNT(*) FROM $sql_tbl[products] LEFT JOIN $sql_tbl[products_categories] ON $sql_tbl[products_categories].productid=$sql_tbl[products].productid WHERE $sql_tbl[products_categories].categoryid='$v[categoryid]' AND ($sql_tbl[products].pc_classify_status!='ACC' AND $sql_tbl[products].pc_classify_status!='MC') AND $sql_tbl[products].forsale='Y'");
 
@@ -53,12 +55,9 @@ if (!empty($all_categories) && is_array($all_categories)){
                	$all_categories[$k]["categoryid_path_arr_count"] = count($categoryid_path_arr);
 
 		if (!empty($v["google_product_category"])){
-//			$prev_cat = $v["categoryid"];
-//			$prev_google_product_category = $v["google_product_category"];
 
 			$parentid_google_product_category[$v["categoryid"]] = $v["google_product_category"];
 		}
-//		elseif (!empty($v["parentid"]) && !empty($prev_google_product_category) && $v["parentid"] == $prev_cat){
 		elseif (!empty($parentid_google_product_category[$v["parentid"]])){
 			$all_categories[$k]["prev_google_product_category"] = $parentid_google_product_category[$v["parentid"]];
 			$parentid_google_product_category[$v["categoryid"]] = $parentid_google_product_category[$v["parentid"]];

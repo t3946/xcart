@@ -460,23 +460,27 @@ function sendPayPalRequest($aParams = [])
     if (!empty($aParams['send_request_orderid'])) {
         $iOrderId = (int)$aParams['send_request_orderid'];
         Xcart\Logs::_log('orders', $iOrderId, 'X', "'Send request' at 'Paypal Payment request' pressed");
-        $oPaypal = (new Paypal());
-        $oInv = $oPaypal->sendPaypalRequest($aParams);
-        if (!empty($oInv)) {
-            \Xcart\Connection::getInstance()->insert('xcart_order_cx_invoices', [
-                'orderid' => $iOrderId,
-                'invoice_order_number' => $aParams['invoice_next_number'],
-                'invoice_number' => $oInv->getId(),
-                'status' => $oPaypal->getPayPalInvoice($oInv->getId())->getStatus(),
-                'payer_email' => $aParams['paypal_request_email'],
-                'payment_request_subject' => $aParams['paypal_request_subject'],
-                'short_payment_description' => $aParams['paypal_request_notes'],
-                'amount' => $aParams['paypal_request_amount'],
-                'currency' => $aParams['paypal_request_currency'],
-            ]);
-            Xcart\Logs::_log('orders', $iOrderId, 'X',
-                "Paypal Cx invoice # <a target='_blank' href='https://www.paypal.com/webscr?cmd=_history-details-from-hub&id={$oInv->getId()}'>{$oInv->getId()}</a> has been sent");
-            $aResult['result'] = true;
+        try {
+            $oPaypal = (new Paypal());
+            $oInv = $oPaypal->sendPaypalRequest($aParams);
+            if (!empty($oInv)) {
+                \Xcart\Connection::getInstance()->insert('xcart_order_cx_invoices', [
+                    'orderid' => $iOrderId,
+                    'invoice_order_number' => $aParams['invoice_next_number'],
+                    'invoice_number' => $oInv->getId(),
+                    'status' => $oPaypal->getPayPalInvoice($oInv->getId())->getStatus(),
+                    'payer_email' => $aParams['paypal_request_email'],
+                    'payment_request_subject' => $aParams['paypal_request_subject'],
+                    'short_payment_description' => $aParams['paypal_request_notes'],
+                    'amount' => $aParams['paypal_request_amount'],
+                    'currency' => $aParams['paypal_request_currency'],
+                ]);
+                Xcart\Logs::_log('orders', $iOrderId, 'X',
+                    "Paypal Cx invoice # <a target='_blank' href='https://www.paypal.com/webscr?cmd=_history-details-from-hub&id={$oInv->getId()}'>{$oInv->getId()}</a> has been sent");
+                $aResult['result'] = true;
+            }
+        } catch (\Exception $e) {
+            Xcart\Logs::_log('orders', $iOrderId, 'X', $e->getMessage());
         }
     }
     print(json_encode($aResult));

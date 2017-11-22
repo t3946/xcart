@@ -94,7 +94,7 @@ $(document).on('pageload ready', function(){
     $('div.ga_click > h3 > a').unbind('click');
     $('a.ga_click, div.ga_click > h3 > a')
         .click(function(){
-            var label = $(this).data('label');
+            var label = $(this).data('label') || $(this).parent().parent().data('label');
             if (label === undefined) {
                 label = $(this).text();
             }

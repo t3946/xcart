@@ -18,6 +18,10 @@ class AmpController extends FrontendController
         if ($model = AmpProductModel::objects()->get(['productid' => $id]) )
         {
 
+            if($model->forsale != "Y"){
+                $this->redirect('/');
+            }
+
             /** @var \Modules\Sites\Models\SiteModel $site */
             $site = Xcart::app()->getModule('Sites')->getSite();
 

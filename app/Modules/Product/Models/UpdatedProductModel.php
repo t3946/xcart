@@ -18,11 +18,6 @@ class UpdatedProductModel extends AutoMetaModel
     public static function getFields()
     {
         return [
-            'resourceid' => [
-                'class' => IntField::className(),
-                'primary' => true,
-                'null' => false,
-            ],
             'type' => [
                 'class' => IntField::className(),
                 'primary' => true,
@@ -37,6 +32,11 @@ class UpdatedProductModel extends AutoMetaModel
                 'class' => ForeignField::className(),
                 'modelClass' => ProductModel::className(),
                 'link' => ['resourceid' => 'productid'],
+            ],
+            'resourceid' => [
+                'class' => IntField::className(),
+                'primary' => true,
+                'null' => false,
             ],
             'mask' => [
                 'class' => IntField::className(),

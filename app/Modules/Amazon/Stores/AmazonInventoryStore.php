@@ -35,7 +35,7 @@ class AmazonInventoryStore extends BaseStore
     {
         $i = 1;
         $max_products = 25;
-        while ($missings = AmazonFbaMissingSkuModel::objects()->paginate($i++, $max_products)->all())
+        while ($missings = AmazonFbaMissingSkuModel::objects()->filter(['productid__isnull' => false])->paginate($i++, $max_products)->all())
         {
             $aProductsBatch = [];
             foreach ($missings as $mis) {

@@ -1582,7 +1582,7 @@ if ($mode == 'ref_notify')
             }
         }
 
-        if ($ref_notify_button_clicked == "Update_C2B_status_and_Send_refund_notification" && in_array($login, ['sergey2', 'igor', 'roman_n', 'dmitry_s', 'alexandern'])) {
+        if ($ref_notify_button_clicked == "Update_C2B_status_and_Send_refund_notification" && in_array($login, ['sergey2', 'igor', 'roman_n', 'dmitry_s'])) {
             if ($orderModel = OrderModel::objects()->get(['orderid' => $orderid])) {
                 $error_message = $ref_sum = null;
 
@@ -1644,7 +1644,7 @@ if ($mode == 'ref_notify')
                         $error_message = 'Refund error. ' . $e->getMessage();
                     }
                 } else {
-                        $error_message = 'Transactions to refund does not exists';
+                        $error_message = 'This transaction(s) has already been refunded.';
                     }
 
                 if ($error_message) {
@@ -2964,9 +2964,13 @@ $order_tabs[0]["title"]   = "Important messages";
 $order_tabs[0]["section"] = "important_messages";
 $order_tabs[0]["anchor"]  = "0";
 
-$order_tabs[1]["title"]   = "All logs and messages";
-$order_tabs[1]["section"] = "all_logs_and_messages";
+$order_tabs[1]["title"]   = "Calls";
+$order_tabs[1]["section"] = "order_calls";
 $order_tabs[1]["anchor"]  = "1";
+
+$order_tabs[2]["title"]   = "All logs and messages";
+$order_tabs[2]["section"] = "all_logs_and_messages";
+$order_tabs[2]["anchor"]  = "2";
 
 $smarty->assign('order_tabs', $order_tabs);
 

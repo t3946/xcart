@@ -312,12 +312,9 @@ function send_question_email_form(){
         {include file="sliders/slider.tpl" productid=$product.productid mode='similar_products'  title="Similar products"}
     {/if}
   {foreach from=$product_tabs item=tab key=ind}
-    <div data-role="collapsible" data-collapsed="true" class="ga_click">
-      <h3>{$tab.title}</h3>
-      <div>
-{*
-{include file=$tab.tpl nodialog='Y'}
-*}
+    <div data-role="collapsible" data-collapsed="true" class="ga_click" data-label="{$tab.title}">
+        <h3>{$tab.title}</h3>
+    <div>
 
         {if $tab.tpl eq "_product_description_"}
 
