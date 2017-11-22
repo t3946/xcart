@@ -4,6 +4,7 @@ namespace Modules\Cart\Admin;
 use Modules\Admin\Contrib\Admin;
 use Modules\Cart\Forms\CouponKitForm;
 use Modules\Cart\Models\CouponKitModel;
+use Xcart\App\Exceptions\HttpException;
 
 class CouponKitAdmin extends Admin
 {
@@ -34,6 +35,17 @@ class CouponKitAdmin extends Admin
         $qs->filter(['deleted' => false]);
 
         return $qs;
+    }
+
+    public function getModelOr404($pk)
+    {
+        $object = $this->getModel()->objectsAll()->filter(['pk' => $pk])->limit(1)->get();
+
+        if (!$object) {
+            throw new HttpException(404);
+        }
+
+        return $object;
     }
 
     public function getListItemActions()
