@@ -40,9 +40,7 @@ class CouponKitAdmin extends Admin
     {
         return [
             'update',
-            'view',
             'info',
-            'remove'
         ];
     }
 }

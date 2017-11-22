@@ -5865,7 +5865,11 @@ body {
   color: #111;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-rendering: optimizeLegibility; }
+  text-rendering: optimizeLegibility;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background-color: rgba(232, 234, 240, 0.4); }
 
 input, textarea, select, button {
   font-size: inherit; }
@@ -5897,12 +5901,6 @@ h1, h2, h3 {
 HR {
   COLOR: #DDDDDD;
   HEIGHT: 1px; }
-
-HTML, BODY {
-  HEIGHT: 100%;
-  MARGIN: 0px;
-  PADDING: 0px;
-  background-color: #e8eaf0; }
 
 FORM {
   MARGIN: 0px; }
