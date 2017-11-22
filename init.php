@@ -222,10 +222,13 @@ $_tmp            = parse_url($http_location);
 $xcart_http_host = $_tmp["host"];
 unset($_tmp);
 
+$PHP_SELF = empty($PHP_SELF) ? '' : $PHP_SELF;
+$QUERY_STRING = empty($QUERY_STRING) ? '' : $QUERY_STRING;
+
 #
 # Create URL
 #
-$php_url = ["url" => "http" . ($HTTPS == "on" ? "s://" . $xcart_https_host : "://" . $xcart_http_host) . $PHP_SELF, "query_string" => $QUERY_STRING];
+$php_url = ["url" => "http" . ($HTTPS == "on" ? "s://" . $xcart_https_host : "://" . $xcart_http_host) . $PHP_SELF ?: '', "query_string" => $QUERY_STRING];
 
 #
 # Check internal temporary directories
