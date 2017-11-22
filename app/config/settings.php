@@ -48,7 +48,14 @@ return array_replace_recursive([
            'class' => '\\Xcart\\App\\Main\\ErrorHandler',
            'debug' => true,
            'errHandler' => true,
-           'ignoreDeprecated' => true,
+           'ignoringTypes' => [
+               E_DEPRECATED,
+               E_USER_DEPRECATED,
+               E_NOTICE,
+               E_USER_NOTICE,
+               E_WARNING,
+               E_USER_WARNING,
+           ]
        ],
        'event' => [
            'class' => '\\Xcart\\App\\Event\\EventManager',
