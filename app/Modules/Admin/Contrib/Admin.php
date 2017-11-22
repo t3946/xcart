@@ -619,7 +619,7 @@ abstract class Admin
         return $value;
     }
 
-    public function all()
+    public function all($pk = null)
     {
         $this->setBreadcrumbs();
         $search = isset($_GET['search']) ? $_GET['search'] : null;
@@ -723,9 +723,9 @@ abstract class Admin
         return $this->getForm()->getFieldsets();
     }
 
-    public function create()
+    public function create($pk = null)
     {
-        $this->update();
+        $this->update(null, $pk);
     }
 
     public function update($pk = null, $parent_id = null)

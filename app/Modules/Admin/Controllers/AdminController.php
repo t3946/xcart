@@ -3,7 +3,6 @@
 namespace Modules\Admin\Controllers;
 
 use Modules\Admin\Contrib\Admin;
-use Xcart\App\Main\Xcart;
 
 class AdminController extends BackendController
 {
