@@ -217,6 +217,6 @@ class ForeignField extends RelatedField
      */
     public function getManager()
     {
-        return call_user_func([$this->modelClass, 'objects']);
+        return call_user_func([$this->modelClass, $this->managerFunction]);
     }
 }

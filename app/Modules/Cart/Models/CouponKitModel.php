@@ -5,8 +5,6 @@ namespace Modules\Cart\Models;
 use Modules\Cart\Admin\CouponKitAdmin;
 use Modules\Cart\Discounts\Restrictions\DefaultRestriction;
 use Modules\Order\Models\OrderModel;
-use Symfony\Component\Validator\Constraints\Callback;
-use Symfony\Component\Validator\Context\ExecutionContextInterface;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\BooleanField;
@@ -38,6 +36,8 @@ use Xcart\App\Orm\Model;
  *
  * @property CouponRestrictionModel[]|\Xcart\App\Orm\Manager|null restrictions
  * @property OrderModel[] orders
+ *
+ * @method static \Xcart\App\Orm\Manager objectsAll($instance = null)
  *
  * @package Modules\Cart\Models
  */
@@ -73,25 +73,7 @@ class CouponKitModel extends Model
             'code' => [
                 'class' => CharField::className(),
                 'required' => true,
-                'validators' => [
-                    function($value, ExecutionContextInterface $context = null) {
-                        /** @var $this $model */
-                        /** @var \Xcart\App\Orm\Fields\Field $this */
-                        $model = $this->getModel();
-
-                        $maxCount = $this->getModel()->getIsNewRecord() ? 0 : 1;
-
-                        if ( $model->objects()->filter([$this->getName() => $value, 'deleted' => false, ])->count() > $maxCount) {
-                            if ($context) {
-                                $context->buildViolation('The value must be unique')->addViolation();
-                            }
-
-                            return false;
-                        }
-
-                        return true;
-                    }
-                ],
+                'unique' => true,
             ],
 
             'name' => [
@@ -157,7 +139,7 @@ class CouponKitModel extends Model
 
     public function delete()
     {
-        if ($this->hasEdit())
+        if (!$this->hasEdit())
         {
             $this->deleted = true;
             return parent::update(['deleted']);
@@ -168,7 +150,7 @@ class CouponKitModel extends Model
 
     public function save(array $fields = [])
     {
-        if ($this->hasEdit())
+        if (!$this->hasEdit())
         {
             return $this->cloneCoupon();
         }
@@ -204,7 +186,11 @@ class CouponKitModel extends Model
 
     public function hasEdit()
     {
-        return !$this->objects()->filter(['orders__through__coupon_id' => $this->id])->count();
+        if (!$this->getIsNewRecord()) {
+            return (boolean)$this->objects()->filter(['orders__through__coupon_id' => $this->id])->count();
+        }
+
+        return true;
     }
 
     public function afterDelete($owner)
@@ -225,5 +211,15 @@ class CouponKitModel extends Model
     public function getAdmin()
     {
         return (new CouponKitAdmin())->setModel($this);
+    }
+
+    public static function objectsManager($instance = null)
+    {
+        return parent::objectsManager($instance)->filter(['deleted' => 0]);
+    }
+
+    public static function objectsAllManager($instance = null)
+    {
+        return parent::objectsManager($instance);
     }
 }

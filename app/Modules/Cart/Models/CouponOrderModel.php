@@ -53,6 +53,7 @@ class CouponOrderModel extends Model
                 'class' => ForeignField::className(),
                 'modelClass' => CouponKitModel::className(),
                 'link' => ['coupon_id' => 'id'],
+                'managerFunction' => 'objectsAll',
                 'null' => false,
             ],
 
