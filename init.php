@@ -434,6 +434,8 @@ if (!defined('QUICK_START')) {
     $blowfish = new ctBlowfish();
 }
 
+$search_all_website = isset($search_all_website) ? $search_all_website : false;
+
 $t                      = parse_url($config['Search_All']['search_all_website_url']);
 $search_all_website_url = $t['host'];
 $search_all_website_url = ltrim($search_all_website_url, 'www.');
