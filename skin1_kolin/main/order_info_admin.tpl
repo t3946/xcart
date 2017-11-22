@@ -1435,6 +1435,7 @@ Total Product Cost to us
 {/foreach}
 {/if}
 
+{if $order.coupon}
 <tr {cycle values=", class='TableSubHead'" name="cycle_totals"}>
     <td>{$lng.lbl_coupon_saving}</td>
     <td colspan="6">
@@ -1453,6 +1454,7 @@ Total Product Cost to us
     </td>
     <td>&nbsp;</td>
 </tr>
+{/if}
 
 <tr{cycle values=", class='TableSubHead'" name="cycle_totals"} style="font-weight: bold;">
   <td style="font-size: 1.1rem;">{$lng.lbl_grand_total}</td>
