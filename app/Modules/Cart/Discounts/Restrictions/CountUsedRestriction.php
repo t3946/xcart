@@ -37,7 +37,7 @@ class CountUsedRestriction extends AbstractRestriction
      */
     public function validate($user = null)
     {
-        $result = $this->data['max_use'] > CouponOrderModel::objects()->filter(['code' => $this->couponModel->code])->count();
+        $result = $this->data['max_use'] > CouponOrderModel::objects()->filter(['coupon_id' => $this->couponModel->id])->count();
         if (!$result) {
             $this->notValidAction();
         }

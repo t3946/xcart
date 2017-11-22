@@ -50,13 +50,12 @@ class DefaultRestriction extends AbstractRestriction
     private function validatePerUserUses($user)
     {
         if ($user && $this->couponModel) {
-            $logins = UserModel::objects()
-                               ->filter(['email' => $user->email])
-                               ->orFilter(['phone' => $user->phone])
-                               ->valuesList('login', true);
+            $uQs = UserModel::objects()
+                            ->filter(['email' => $user->email])
+                            ->orFilter(['phone' => $user->phone]);
 
-            if ( $logins ) {
-                $qs = CouponOrderModel::objects()->filter(['login__in' => $logins, 'code' => $this->couponModel->code]);
+            if ( $uQs->count() ) {
+                $qs = CouponOrderModel::objects()->filter(['login__in' => $uQs->select(['login']), 'coupon_id' => $this->couponModel->id]);
 
                 if ($this->order_id) {
                     $qs->filter([new QAndNot(['order_id' => $this->order_id])]);
