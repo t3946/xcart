@@ -1,1 +1,7 @@
-{extends $.request->get->has('popup') ? 'admin/layout.tpl': 'base/admin_layout.tpl'}
+{if $.request->get->has('popup')}
+    {set $layout = 'admin/layout.tpl'}
+{else}
+    {set $layout = 'base/admin_layout.tpl'}
+{/if}
+
+{extends $layout}
