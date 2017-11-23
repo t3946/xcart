@@ -158,5 +158,13 @@ class AmpProductModel extends ProductModel
         return $fulldescr;
     }
 
+    public function isNeedForm(){
+        if (!$this->isGroupRoot() && $this->r_avail > 0){
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 
 }
