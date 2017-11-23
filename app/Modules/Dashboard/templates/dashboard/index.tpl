@@ -82,7 +82,7 @@
 {block 'js'}
     {parent}
     <script>
-        $(function () {
+        (function () {
             var url_dashboard_update = '{url 'dashboard:index'}';
             var url_dashboard_my_sort = '{url 'dashboard:sort_my_filters'}';
 

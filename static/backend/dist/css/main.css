@@ -8574,7 +8574,7 @@ i.icon.m {
       padding: 1px 2px;
       border-radius: 3px; }
     .admin .dashboard-filters .dashboard-item .events {
-      font-size: 8px;
+      font-size: .8em;
       color: blue; }
     .admin .dashboard-filters .dashboard-item.empty {
       padding: 2px 5px;
