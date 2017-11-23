@@ -1,24 +1,22 @@
 <?php
 namespace Modules\Order\Models;
 
-use Mindy\QueryBuilder\Expression;
-use Mindy\QueryBuilder\QueryBuilder;
 use Modules\Core\Models\StateModel;
 use Modules\Order\Helpers\OrderHelper;
-use Xcart\App\Main\Xcart;
-use Xcart\App\Orm\AutoMetaModel;
+use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\HasManyField;
 use Xcart\App\Orm\Fields\ManyToManyField;
 use Xcart\App\Orm\Fields\TimestampField;
+use Xcart\App\Orm\Model;
 use Xcart\App\Traits\DataModelTrait;
 use Xcart\App\Traits\FieldManagerCacheTrait;
 use Xcart\Order;
 
-class OrderModel extends AutoMetaModel
+class OrderModel extends Model
 {
-    use DataModelTrait, FieldManagerCacheTrait;
+    use DataModelTrait, FieldManagerCacheTrait, AutoMetaTrait;
 
     public $last_activity;
     public $last_message;

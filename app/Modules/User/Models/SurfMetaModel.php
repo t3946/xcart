@@ -3,11 +3,14 @@
 namespace Modules\User\Models;
 
 use Xcart\App\Main\Xcart;
-use Xcart\App\Orm\AutoMetaModel;
+use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
+use Xcart\App\Orm\Model;
 
-class SurfMetaModel extends AutoMetaModel
+class SurfMetaModel extends Model
 {
+    use AutoMetaTrait;
+
     private static $_instance = null;
 
     public static function tableName()

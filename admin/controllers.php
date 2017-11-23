@@ -7,6 +7,9 @@
 // $_SESSION;
 // $_ENV;
 
+//display_errors(1);
+//error_reporting(E_ALL ^ E_DEPRECATED);
+
 defined('XCART_APP') ?: define('XCART_APP', 1);
 defined('XCART_EXT_ENV') ?: define('XCART_EXT_ENV', 1);
 
@@ -26,11 +29,4 @@ if (isset($_POST['cur_sf']) && $_POST['mode'] == 'change_storefront') {
 
 require $xcart_dir."/include/security.php";
 
-//$configPath = $xcart_dir .'/app/config/settings_admin.php';
-//$config = include $configPath;
-//
-//Xcart::init($config);
-
-$smarty->assign('xcartApp', Xcart::app());
-//Xcart::app()->run();
 Xcart::app()->handleRequest();

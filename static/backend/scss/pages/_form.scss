@@ -1,9 +1,11 @@
 .main-block .form-page {
-  padding: 0 $main-block-padding-width 110px;
+  //padding: 0 $main-block-padding-width 110px;
+  padding: 0 0 50px;
 
   .actions-panel {
     position: fixed;
-    left: $menu-width;
+    //left: $menu-width;
+    left: 0;
     right: 0;
     bottom: 0;
     background: #FFFFFF;
@@ -68,6 +70,10 @@
           width: 770px;
         }
 
+        input[type=radio] + label {
+          display: inline-block;
+        }
+
         textarea {
           min-height: 110px;
         }
@@ -81,7 +87,8 @@
 
   fieldset {
     background: #FFFFFF;
-    border: 1px solid #DFDFDF;
+    border: none;
+    //border: 1px solid #DFDFDF;
 
     .fieldset-title {
       font-weight: 500;
@@ -133,7 +140,7 @@
           &:before {
             content: '?';
             position: absolute;
-            font-weight: bold;
+            font-weight: 500;
             font-size: 15px;
             color: #8C8C8C;
             top: 10px;

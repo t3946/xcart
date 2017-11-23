@@ -153,6 +153,7 @@ class CartController extends BaseCartController
             'extended' => $extended,
             'quantity' => $item->getQuantity(),
             'discount' => $discount,
+            'avail' => $product->avail,
         ];
     }
 

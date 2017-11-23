@@ -7,7 +7,7 @@
     {*<script src="/static/frontend/dist/js/main.js?v={frontend_js_version}"></script>*}
 
     <script>
-        window.location = '/';
+        // window.location = '/';
     </script>
 </head>
 <body>

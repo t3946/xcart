@@ -3,10 +3,8 @@
 
 namespace Modules\User\Models;
 
-use Xcart\App\Orm\AutoMetaModel;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\CharField;
-use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\HasToOneField;
 use Xcart\App\Orm\Model;
 

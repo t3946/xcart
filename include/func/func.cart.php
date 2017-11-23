@@ -1,5 +1,6 @@
 <?php
 
+use Modules\Cart\Helpers\CouponOldCart;
 use Modules\Product\Models\ProductModel;
 
 x_load('files','user','taxes');
@@ -423,9 +424,7 @@ function func_real_shipping($delivery, $for_manufacturerid = 0, $approximation_i
 #
 function func_calculate($cart, $products, $login, $login_type, $paymentid=NULL) {
 	global $config, $single_mode, $sql_tbl;
-# START: random:17710_17631 [2009 Mar 26 09:25] 
 	global $xcart_dir, $active_modules;
-# END: random:17710_17631 [2009 Mar 26 09:25] 
 	$return = array ();
 	$return ["orders"] = array ();
 
@@ -452,22 +451,11 @@ function func_calculate($cart, $products, $login, $login_type, $paymentid=NULL) 
 
 			$result = func_calculate_single ($cart, $_products, $login, $login_type, $provider_for);
 
-#
-##
-###
 			$return ['additional_fee'] = $result['additional_fee'];
-###
-##
-#
-
-# START: random:1073746882_1073747063 [2008 Dec 24 16:25] 
 			$return ['shipping_groups'] = $result['shipping_groups'];
 			$return ['shipping_costs'] = $result['shipping_costs'];
 			$return ['display_shipping_costs'] = $result['display_shipping_costs'];
-# START: random:20341 [2010 Jul 29 14:46] 
 			$return ['shipping_taxes'] = $result['shipping_taxes'];
-# END: random:20341 [2010 Jul 29 14:46] 
-# END: random:1073746882_1073747063 [2008 Dec 24 16:25] 
 			$return ["total_cost"] += $result ["total_cost"];
 			$return ["shipping_cost"] += $result ["shipping_cost"];
 			$return ["display_shipping_cost"] += $result ["display_shipping_cost"];
@@ -527,7 +515,7 @@ function func_calculate($cart, $products, $login, $login_type, $paymentid=NULL) 
 		}
 	}
 
-	$_payment_surcharge = 0;
+    $_payment_surcharge = 0;
 	if ($paymentid !== NULL) {
 		#
 		# Apply the payment method surcharge or discount
@@ -564,6 +552,7 @@ function func_calculate($cart, $products, $login, $login_type, $paymentid=NULL) 
 
 	$return["display_cart_products_tax_rates"] = "N";
 	$return["product_tax_name"] = "";
+
 	if ($config["Taxes"]["display_cart_products_tax_rates"] == "Y") {
 		$_taxes = array();
 		foreach ($return["orders"] as $k=>$v) {
@@ -595,9 +584,11 @@ function func_calculate($cart, $products, $login, $login_type, $paymentid=NULL) 
 	#
 	$giftcert_cost = 0;
 	$applied_giftcerts = array();
+
 	if (!empty($cart["applied_giftcerts"])) {
 		$gc_payed_sum = 0;
 		$applied_giftcerts = array();
+
 		foreach ($cart["applied_giftcerts"] as $k=>$v) {
 			if (($gc_payed_sum + $v["giftcert_cost"]) <= $return["total_cost"]) {
 				$gc_payed_sum += $v["giftcert_cost"];
@@ -619,9 +610,6 @@ function func_calculate($cart, $products, $login, $login_type, $paymentid=NULL) 
 	$return["total_cost"] = price_format($return["total_cost"] - $return["giftcert_discount"]);
 	$return["applied_giftcerts"] = $applied_giftcerts;
 
-#
-## 14.02.2014
-###
 	if (!empty($return["additional_fee"]) && is_array($return["additional_fee"])){
 		foreach ($return["additional_fee"] as $k => $v){
 			if (!empty($v["additional_fee_value"])){
@@ -629,9 +617,6 @@ function func_calculate($cart, $products, $login, $login_type, $paymentid=NULL) 
 			}
 		}
 	}
-###
-##
-#
 	if ($single_mode) {
 		$return ["orders"][0]["total_cost"] = $return["total_cost"];
 	}
@@ -659,9 +644,8 @@ function func_calculate($cart, $products, $login, $login_type, $paymentid=NULL) 
 			$return["orders"][$k]["total_cost"] = price_format($return["orders"][$k]["total_cost"] - $return["orders"][$k]["giftcert_discount"]);
 		}
 	}
-# START: random:1073746882_1073747063 [2008 Dec 24 16:25] 
 	$return['whole_taxes'] = $result['whole_taxes'];
-# END: random:1073746882_1073747063 [2008 Dec 24 16:25] 
+
 	return $return;
 }
 
@@ -821,7 +805,6 @@ function func_calculate_discounts($membershipid, $products, $discount_coupon = "
 	$return = array(
 		"discount" => 0,
 		"coupon_discount" => 0,
-		"discount_coupon" => $discount_coupon,
 		"products" => $products);
 
 	if ($avail_discount_total > 0) {
@@ -885,246 +868,7 @@ function func_calculate_discounts($membershipid, $products, $discount_coupon = "
 		}
 	}
 
-	#
-	# Apply discount coupon
-	#
-	if ($active_modules["Discount_Coupons"] && !empty($discount_coupon)) {
-		#
-		# Calculate discount value of the discount coupon
-		#
-		$coupon_total = 0;
-		$coupon_amount = 0;
-
-		if (!empty($active_modules['Multiple_Storefronts'])) {
-			$sf_condition = "AND storefrontid=$current_storefront";
-		} else {
-			$sf_condition = '';
-		}
-
-		if (!empty($global_store['discount_coupons'])) {
-			$discount_coupon_data = array();
-			foreach ($global_store['discount_coupons'] as $v) {
-				if ($v['__override'] || ($v['coupon'] == $discount_coupon && ($single_mode || $v['provider'] == $provider))) {
-					$discount_coupon_data = $v;
-					break;
-				}
-			}
-		}
-		else {
-			$discount_coupon_data = func_query_first("select * from $sql_tbl[discount_coupons] where coupon='$discount_coupon' $provider_condition $sf_condition");
-		}
-
-		$return["discount_coupon_data"] = $discount_coupon_data;
-
-		if (!$single_mode && ($discount_coupon_data["provider"] != $provider || empty($products)))
-			$return["discount_coupon"] = $discount_coupon_data = "";
-
-		$return["coupon_type"] = $discount_coupon_data["coupon_type"];
-
-		if (!empty($discount_coupon_data) && (($discount_coupon_data["coupon_type"] == "absolute") || ($discount_coupon_data["coupon_type"] == "percent"))) {
-			$coupon_discount = 0;
-			if ($discount_coupon_data["productid"] > 0) {
-				#
-				# Apply coupon to product
-				#
-				foreach($products as $k=>$product) {
-					if (@$product["deleted"]) continue; # for Advanced_Order_Management module
-
-					if (!empty($active_modules["Special_Offers"]) && !empty($product['free_amount'])) {
-						# it's a "free product"
-						# necessary only for absolute discount
-						continue;
-					}
-
-					if ($product["productid"] != $discount_coupon_data["productid"])
-						continue;
-
-					$price = $product["discounted_price"];
-
-					if ($discount_coupon_data["coupon_type"] == "absolute" && $discount_coupon_data["discount"] > $price) {
-						$discount_coupon_data["discount"] = 100;
-						$discount_coupon_data["coupon_type"] = 'percent';
-					}
-
-					if ($discount_coupon_data["coupon_type"]=="absolute" && $discount_coupon_data["apply_product_once"] == "N")
-						$multiplier = $product["amount"];
-					else
-						$multiplier = 1;
-
-					$_coupon_discount = $_taxed_coupon_discount = $discount_coupon_data["discount"] * $multiplier;
-
-					if ($config["Taxes"]["apply_discount_on_taxed_amount"] == "Y" && !empty($product["taxes"]) && is_array($product["taxes"])) {
-
-						$_taxes = func_tax_price($_coupon_discount, 0, false, NULL, "", $product["taxes"], ($discount_coupon_data["coupon_type"] == "percent"));
-						$_taxed_coupon_discount = $_taxes["taxed_price"];
-						$_coupon_discount = $_taxes["net_price"];
-					}
-
-					if ($discount_coupon_data["coupon_type"]=="absolute") {
-						$taxed_coupon_discount = $_taxed_coupon_discount;
-						$taxed_coupon_discount = $coupon_discount = $_coupon_discount;
-					}
-					else {
-						$taxed_coupon_discount = price_format($price * $_taxed_coupon_discount / 100 );
-						$coupon_discount = price_format($price * $_coupon_discount / 100 );
-					}
-
-					$products[$k]["coupon_discount"] = $taxed_coupon_discount;
-					$products[$k]["discounted_price"] = max($price - $coupon_discount, 0.00);
-	
-					$return["coupon_discount"] += $taxed_coupon_discount;
-				}
-			}
-			elseif ($discount_coupon_data["categoryid"] > 0) {
-				#
-				# Apply coupon to category (and subcategories)
-				#
-				$category_ids[] = $discount_coupon_data["categoryid"];
-
-				if ($discount_coupon_data["recursive"] == "Y") {
-					$categoryid_path = func_query_first_cell("SELECT categoryid_path FROM $sql_tbl[categories] WHERE categoryid='$discount_coupon_data[categoryid]'");
-					if (!empty($categoryid_path))
-						$tmp = db_query("SELECT categoryid FROM $sql_tbl[categories] WHERE categoryid_path LIKE '$categoryid_path/%'");
-					while($row = db_fetch_array($tmp))
-						$category_ids[] = $row["categoryid"];
-				}
-
-				if ($discount_coupon_data['coupon_type'] == 'absolute') {
-					#
-					# Check if absolute discount does not exceeds total
-					#
-					foreach ($products as $k=>$product) {
-
-						if (@$product["deleted"]) continue; # for Advanced_Order_Management module
-
-						if (!empty($active_modules["Special_Offers"]) && !empty($product['free_amount'])) {
-							# it's a "free product"
-							# necessary only for absolute discount
-							continue;
-						}
-
-						$product_categories = func_query("SELECT categoryid FROM $sql_tbl[products_categories] WHERE productid='$product[productid]'");
-						$is_valid_product = false;
-						foreach ($product_categories as $pc) {
-							if (in_array($pc["categoryid"], $category_ids)) {
-								$is_valid_product = true;
-								break;
-							}
-						}
-
-						if ($is_valid_product) {
-							if ($discount_coupon_data["coupon_type"]=="absolute" && $discount_coupon_data["apply_product_once"] == "N")
-								$multiplier = $product["amount"];
-							else
-								$multiplier = 1;
-
-							$sum_discount += $discount_coupon_data['discount'] * $multiplier;
-						}
-				
-					}
-
-					if ($sum_discount > $total) {
-						# Transform coupon discount to 100%
-						$discount_coupon_data['discount'] = 100;
-						$discount_coupon_data['coupon_type'] = 'percent';
-					}
-				}
-
-				#
-				# Apply coupon to one category
-				#
-				foreach ($products as $k=>$product) {
-					if (@$product["deleted"]) continue; # for Advanced_Order_Management module
-
-					if (!empty($active_modules["Special_Offers"]) && !empty($product['free_amount'])) {
-						# it's a "free product"
-						# necessary only for absolute discount
-						continue;
-					}
-
-					$product_categories = func_query("SELECT categoryid FROM $sql_tbl[products_categories] WHERE productid='$product[productid]'");
-					$is_valid_product = false;
-					foreach ($product_categories as $pc) {
-						if (in_array($pc["categoryid"], $category_ids)) {
-							$is_valid_product = true;
-							break;
-						}
-					}
-
-					if ($is_valid_product) {
-
-						if ($discount_coupon_data["coupon_type"]=="absolute" && $discount_coupon_data["apply_product_once"] == "N")
-							$multiplier = $product["amount"];
-						else
-							$multiplier = 1;
-
-						$_coupon_discount = $_taxed_coupon_discount = $discount_coupon_data["discount"] * $multiplier;
-
-						if ($config["Taxes"]["apply_discount_on_taxed_amount"] == "Y" && !empty($product["taxes"]) && is_array($product["taxes"])) {
-
-							$_taxes = func_tax_price($_coupon_discount, 0, false, NULL, "", $product["taxes"], ($discount_coupon_data["coupon_type"] == "percent"));
-							$_taxed_coupon_discount = $_taxes["taxed_price"];
-							$_coupon_discount = $_taxes["net_price"];
-
-						}
-
-						$price = $product["discounted_price"];
-
-						if ($discount_coupon_data["coupon_type"]=="absolute") {
-							$taxed_coupon_discount = $_taxed_coupon_discount;
-							$coupon_discount = $_coupon_discount;
-						}
-						else {
-							$taxed_coupon_discount = price_format($price * $_taxed_coupon_discount / 100 );
-							$coupon_discount = price_format($price * $_coupon_discount / 100 );
-						}
-
-						$taxed_coupon_discount = price_format($taxed_coupon_discount);
-
-						$products[$k]["coupon_discount"] = $taxed_coupon_discount;
-						$products[$k]["discounted_price"] = max($price - $coupon_discount, 0.00);
-	
-						$return["coupon_discount"] += $taxed_coupon_discount;
-
-						if ($discount_coupon_data["coupon_type"] == "absolute" && $discount_coupon_data["apply_category_once"] == "Y")
-							break;
-					}
-				}
-			}
-			else {
-				#
-				# Apply coupon to subtotal
-				#
-				if ($discount_coupon_data["coupon_type"]=="absolute" && $discount_coupon_data['discount'] > $total) {
-					$discount_coupon_data['discount'] = 100;
-					$discount_coupon_data['coupon_type'] = 'percent';
-				}
-
-				if ($discount_coupon_data["coupon_type"]=="absolute") {
-					$return["coupon_discount"] = $discount_coupon_data["discount"];
-				}
-				elseif ($discount_coupon_data["coupon_type"]=="percent")
-					$return["coupon_discount"] = $total * $discount_coupon_data["discount"] / 100;
-				$updated = func_distribute_discount("coupon_discount", $products, $discount_coupon_data["discount"], $discount_coupon_data["coupon_type"], $total, $_taxes);
-
-				#
-				# $products and $discount are extracted from the array $updated
-				#
-				extract($updated);
-				unset($updated);
-
-				$return["coupon_discount"] = $coupon_discount;
-
-			}
-		}
-
-		if (isset($coupon_discount_orig))
-			$return["coupon_discount_orig"] = $coupon_discount_orig;
-		else
-			$return["coupon_discount_orig"] = $return["coupon_discount"];
-
-		$return["products"] = $products;
-	}
+    $return = CouponOldCart::getInstance()->setCart($return)->appendCoupon();
 
 	return $return;
 }
@@ -1163,53 +907,32 @@ function func_calculate_shippings($products, $shipping_id, $customer_info, $prov
 		foreach($products as $k=>$product) {
 			if (@$product["deleted"]) continue; # for Advanced_Order_Management module
 
-# START: random:20460 [2010 Mar 18 13:43] 
 			if ($active_modules["Egoods"] && $product["distribution"] != "") {
-# END: random:20460 [2010 Mar 18 13:43] 
 				continue;
 			}
 			else {
-# START: random:20460 [2010 Mar 18 13:43] 
 
 				$free_shipping_arr = func_is_customer_free_ship_zone($product["free_ship_zone"], $customer_info, $product["provider"]);
 				$free_shipping = $free_shipping_arr["is_customer_free_ship_zone"];
 
-//if ($product["productid"] == "39768"){
-//func_print_r($product["productid"], $free_shipping_arr);
-//}
-
-
-# END: random:20460 [2010 Mar 18 13:43] 
 				if (!($config["Shipping"]["replace_shipping_with_freight"] == "Y" && $product["shipping_freight"] > 0)) {
-# START: random:20460 [2010 Mar 18 13:43] 
 					if (!$free_shipping) {
-# END: random:20460 [2010 Mar 18 13:43] 
 					$total_shipping += $product["subtotal"];
 					$total_weight_shipping += $product["weight"] * $product["amount"];
-# START: random:20460 [2010 Mar 18 13:43] 
 					}
-# END: random:20460 [2010 Mar 18 13:43] 
 					if ($product["product_type"] != 'C')
 						$total_ship_items += $product["amount"];
 				}
 
-# START: random:20460 [2010 Mar 18 13:43] 
 				if (!$free_shipping) {
-# END: random:20460 [2010 Mar 18 13:43] 
 					$shipping_freight += $product["shipping_freight"] * $product["amount"];
 				}
-# START: random:20460 [2010 Mar 18 13:43] 
 			}
-# END: random:20460 [2010 Mar 18 13:43] 
-# START: random:17710_17631 [2009 Mar 26 09:25] 
 			if (!isset($for_manufacturerid)){
-# END: random:17710_17631 [2009 Mar 26 09:25] 
-# START: random:20341 [2010 Jul 29 14:46] 
 				$for_manufacturerid = func_manufacturerid_for_group($product['shipping_freight'], $product['manufacturerid']);
 
 
 			}
-# END: random:20341 [2010 Jul 29 14:46] 
 		}
 	}
 
@@ -1236,29 +959,18 @@ function func_calculate_shippings($products, $shipping_id, $customer_info, $prov
 	#
 	$result = func_query_first ("SELECT * FROM $sql_tbl[shipping] WHERE shippingid='$shipping_id' AND code!=''");
 	if ($config["Shipping"]["realtime_shipping"]=="Y" && $result && $total_ship_items>0) {
-# START: random:1073746882_1073747063 [2008 Dec 24 16:25] 
 		$tmp = func_real_shipping($shipping_id, $for_manufacturerid, $approximation_intershipper_rates);
 
-#
-##
-###		
 		if ($shipping_id == "1"){  // approximation used in shipping/shipping.php
 			$tmp["surcharge"] = 0;
 		}
-###
-##
-#
 
 		$shipping_cost = $tmp['rate'];
-# END: random:1073746882_1073747063 [2008 Dec 24 16:25] 
 		$customer_zone = func_get_customer_zone_ship($customer_info, $provider,"R", $for_manufacturerid, $shipping_id);
-# START: random:1073746882_1073747063 [2008 Dec 24 16:25]
 		if (!is_null($customer_zone))
 			$shipping_rt = func_query("SELECT * FROM $sql_tbl[shipping_rates] WHERE shippingid='$shipping_id' $provider_condition AND zoneid='$customer_zone' AND manufacturerid='$for_manufacturerid' AND mintotal<='$total_shipping' AND maxtotal>='$total_shipping' AND minweight<='$total_weight_shipping' AND maxweight>='$total_weight_shipping' AND type='R' ORDER BY maxtotal, maxweight");
-# END: random:1073746882_1073747063 [2008 Dec 24 16:25] 
 
 		if ($shipping_rt && $shipping_cost > 0){
-# START: random:1073746882_1073747063 [2008 Dec 24 16:25] 
 
 			if ($shipping_rt[0]['cost_marcup'] > 0){
 				$shipping_cost *= $shipping_rt[0]['cost_marcup'];
@@ -1272,15 +984,12 @@ function func_calculate_shippings($products, $shipping_id, $customer_info, $prov
 	                + $tmp['surcharge'];
 		}
 	
-# END: random:1073746882_1073747063 [2008 Dec 24 16:25] 
 	}
 
 	$shipping_cost += $shipping_freight;
 
-#
-##
-###
 	$shipping = func_query_first_cell("SELECT shipping FROM $sql_tbl[shipping] WHERE shippingid='$shipping_id'");
+
 	if ($shipping == "_USE_MY_UPS_FEDEX_ACCOUNT_"){
 		$shipping_cost = "5.00";
 	} elseif ($shipping == "_USE_MY_TRUCKING_ACCOUNT_"){
@@ -1288,11 +997,9 @@ function func_calculate_shippings($products, $shipping_id, $customer_info, $prov
 	} elseif ($shipping == "_SHIP_BY_FASTEST_METHOD_"){
 		$shipping_cost = "0.00";
 	}
-###
-##
-#
 
 	$return["shipping_cost"] = $shipping_cost;
+
 	return $return;
 }
 
@@ -1414,9 +1121,7 @@ function func_calculate_taxes(&$products, $customer_info, $shipping_cost, $provi
 #
 function func_calculate_single($cart, $products, $login, $login_type, $provider_for="") {
 	global $single_mode, $current_storefront;
-# START: random:17710_17631 [2009 Mar 26 09:25] 
 	global $active_modules, $config, $sql_tbl;
-# END: random:17710_17631 [2009 Mar 26 09:25] 
 	global $xcart_dir;
 
 	if ($config["Taxes"]["display_taxed_order_totals"] == "Y")
@@ -1438,10 +1143,8 @@ function func_calculate_single($cart, $products, $login, $login_type, $provider_
 		$product_keys[] = "cartid";
 		$product_keys[] = "product";
 		$product_keys[] = "productcode";
-# START: random:1073746882_1073747063 [2008 Dec 24 16:25] 
 		$product_keys[] = "manufacturerid";
 		$product_keys[] = "shipping_freight";
-# END: random:1073746882_1073747063 [2008 Dec 24 16:25] 
 		$product_keys[] = "product_options";
 		$product_keys[] = "price";
 		$product_keys[] = "display_price";
@@ -1450,6 +1153,7 @@ function func_calculate_single($cart, $products, $login, $login_type, $provider_
 		$product_keys[] = "free_price";
 		$product_keys[] = "discount";
 		$product_keys[] = "coupon_discount";
+		$product_keys[] = "coupon_discount_orig";
 		$product_keys[] = "discounted_price";
 		$product_keys[] = "taxes";
 		$product_keys[] = "subtotal";
@@ -1462,15 +1166,9 @@ function func_calculate_single($cart, $products, $login, $login_type, $provider_
 		$product_keys[] = "itemid";
 		$product_keys[] = "oProduct";
 		$product_keys[] = "oOrderDetail";
-# START: random:20460 [2010 Mar 18 13:43]
 		$product_keys[] = "free_ship_zone";
-# END: random:20460 [2010 Mar 18 13:43] 
-# START: random:1073746882_1073747063 [2008 Dec 24 16:25] 
 		$product_keys[] = "taxed_shipping_freight";
-# END: random:1073746882_1073747063 [2008 Dec 24 16:25] 
-# START: random:20341 [2010 Jul 29 14:46] 
 		$product_keys[] = "deleted";
-# END: random:20341 [2010 Jul 29 14:46] 
 
 		if ($active_modules["Google_Checkout"])
 			$product_keys[] = "valid_for_gcheckout";
@@ -1511,8 +1209,10 @@ function func_calculate_single($cart, $products, $login, $login_type, $provider_
 			$product_keys[] = "saved_original_price";
 		}
 	}
-	else
-		$products = array();
+	else {
+        $product_keys = [];
+        $products = [];
+    }
 
 	#
 	# Calculate totals for one provider only or for all ($single_mode=true)
@@ -1520,7 +1220,6 @@ function func_calculate_single($cart, $products, $login, $login_type, $provider_
 	$provider_condition = ($single_mode ? "" : "and provider='$provider_for'");
 
 	$giftcerts = @$cart["giftcerts"];
-	$discount_coupon = @$cart["discount_coupon"];
 
 	#
 	# Get the user information
@@ -1541,11 +1240,12 @@ function func_calculate_single($cart, $products, $login, $login_type, $provider_
 		#
 		$discounts_ret = func_calculate_discounts($customer_info["membershipid"], $products, $discount_coupon, $provider_for);
 
+//		d($discounts_ret);
 		#
 		# Extract returned variables to global variables set:
 		# $discount, $coupon_discount, $discount_coupon, $products
 		#
-		extract($discounts_ret);
+		extract($discounts_ret, EXTR_OVERWRITE);
 		unset($discounts_ret);
 	}
 
@@ -1628,7 +1328,6 @@ function func_calculate_single($cart, $products, $login, $login_type, $provider_
 		}
 	}
 
-# START: random:17710_17631 [2009 Mar 26 09:25] 
 	if (defined('IS_SHIPPING_QUOTE')) {
 		global $shipquote_userinfo;
 		if (empty($customer_info))
@@ -1637,46 +1336,29 @@ function func_calculate_single($cart, $products, $login, $login_type, $provider_
 		$calculate_enable_flag = true;
 	}
 
-# END: random:17710_17631 [2009 Mar 26 09:25] 
-# START: random:1073746882_1073747063 [2008 Dec 24 16:25] 
 	$whole_taxes = array();
-# END: random:1073746882_1073747063 [2008 Dec 24 16:25]
 	if (empty($config['Shipping']['new_shipping_calculation']) || (!empty($config['Shipping']['new_shipping_calculation'])) && $config['Shipping']['new_shipping_calculation'] !='Y') {
 		if ($config["Shipping"]["disable_shipping"] != "Y" && $calculate_enable_flag || $cart["use_shipping_cost_alt"] == "Y") {
 			#
 			# Calculate shipping cost
 			#
-# START: random:20341 [2010 Jul 29 14:46] 
 			if ($cart["use_shipping_costs_alt"] == "Y") {
 				$shipping_cost = $display_shipping_cost = $cart["shipping_cost_alt"];
 				$shipping_costs = $display_shipping_costs = $cart["shipping_costs_alt"];
 			} elseif ($cart["use_shipping_cost_alt"] == "Y") {
-# END: random:20341 [2010 Jul 29 14:46] 
-# END: random:17710_17631 [2009 Mar 26 09:25] 
 				$shipping_cost = $cart["shipping_cost_alt"];
-# START: random:17710_17631 [2009 Mar 26 09:25] 
 				$display_shipping_costs = array($shipping_cost);
-# END: random:17710_17631 [2009 Mar 26 09:25] 
 			} else {
-# START: random:1073746882_1073747063 [2008 Dec 24 16:25] 
 				$display_shipping_costs = array();
-# START: random:17710_17631 [2009 Mar 26 09:25] 
-# START: random:20341 [2010 Jul 29 14:46] 
 				$shipping_taxes = array();
-# END: random:20341 [2010 Jul 29 14:46] 
 				$shippingids = @$cart["shippingids"];
 				if (!empty($shippingids) && is_array($shippingids)) {
 					foreach ($shippingids as $ks => $shipping_id) {
 						if (!empty($shipping_id)) {
-# END: random:17710_17631 [2009 Mar 26 09:25] 
 							$_products_ = array();
-# START: random:17710_17631 [2009 Mar 26 09:25] 
 							foreach ($products as $kp => $vp) {
-# START: random:20341 [2010 Jul 29 14:46] 
 								if ($ks == func_manufacturerid_for_group($vp['shipping_freight'], $vp['manufacturerid']))
-# END: random:20341 [2010 Jul 29 14:46] 
 									$_products_[] = $vp;
-# END: random:17710_17631 [2009 Mar 26 09:25] 
 							}
 
 							$shippings_ret = func_calculate_shippings($_products_, $shipping_id, $customer_info, $provider_for);
@@ -1688,7 +1370,6 @@ function func_calculate_single($cart, $products, $login, $login_type, $provider_
 							unset($shippings_ret);
 							$shipping_costs[$ks] = $shipping_cost;
 							$manuf_taxes = func_calculate_taxes($_products_, $customer_info, $shipping_cost, $provider_for);
-# START: random:20341 [2010 Jul 29 14:46] 
 							$shipping_taxes[$ks] = array();
 							if ($manuf_taxes["taxes"]) {
 								foreach ($manuf_taxes["taxes"] as $__tk => $__tv) {
@@ -1699,7 +1380,6 @@ function func_calculate_single($cart, $products, $login, $login_type, $provider_
 									}
 								}
 							}
-# END: random:20341 [2010 Jul 29 14:46] 
 							$display_shipping_costs[$ks] = $shipping_cost + $manuf_taxes["shipping"];
 							if (empty($whole_taxes)) {
 								$whole_taxes = $manuf_taxes;
@@ -1708,9 +1388,7 @@ function func_calculate_single($cart, $products, $login, $login_type, $provider_
 								$whole_taxes["shipping"] += $manuf_taxes["shipping"];
 								if ($manuf_taxes["taxes"]) {
 									foreach ($manuf_taxes["taxes"] as $__tk => $__tv) {
-# START: random:20341 [2010 Jul 29 14:46] 
 										if (!empty($whole_taxes["taxes"]) && array_key_exists($__tk, $whole_taxes["taxes"])) {
-# END: random:20341 [2010 Jul 29 14:46] 
 											$whole_taxes["taxes"][$__tk]["tax_value_precise"] += $__tv["tax_value_precise"];
 											$whole_taxes["taxes"][$__tk]["tax_value"] += $__tv["tax_value"];
 											$whole_taxes["taxes"][$__tk]["taxed_price"] += $__tv["taxed_price"];
@@ -1735,10 +1413,8 @@ function func_calculate_single($cart, $products, $login, $login_type, $provider_
 					}
 
 				}
-# START: random:17710_17631 [2009 Mar 26 09:25] 
 				if (empty($shipping_cost) && !empty($cart['shippingid'])) {
 					$shipping_id = $cart['shippingid'];
-# END: random:17710_17631 [2009 Mar 26 09:25] 
 					$shippings_ret = func_calculate_shippings($products, $shipping_id, $customer_info, $provider_for);
 					extract($shippings_ret);
 					unset($shippings_ret);
@@ -1751,9 +1427,7 @@ function func_calculate_single($cart, $products, $login, $login_type, $provider_
 				if (($single_mode) || ($provider_for == $discount_coupon_data["provider"])) {
 					$coupon_discount = $shipping_cost;
 					$shipping_cost = 0;
-# START: random:1073746882_1073747063 [2008 Dec 24 16:25] 
 					$display_shipping_cost = $shipping_cost;
-# END: random:1073746882_1073747063 [2008 Dec 24 16:25] 
 				}
 			}
 		}
@@ -1775,7 +1449,6 @@ function func_calculate_single($cart, $products, $login, $login_type, $provider_
 		# Calculate taxes cost
 		#
 		$taxes = func_calculate_taxes($products, $customer_info, $shipping_cost, $provider_for);
-# START: random:1073746882_1073747063 [2008 Dec 24 16:25] 
 		$sum_freight = 0;
 		if(!empty($products))
 		foreach($products as $k=>$p){
@@ -1801,12 +1474,11 @@ function func_calculate_single($cart, $products, $login, $login_type, $provider_
 					if ($v["display_including_tax"] != "Y")
 						$_display_discounted_subtotal_tax += $v["tax_cost"];
 			}
-# START: random:1073746882_1073747063 [2008 Dec 24 16:25] 
 			if (empty($display_shipping_costs))
-# END: random:1073746882_1073747063 [2008 Dec 24 16:25] 
 			$display_shipping_cost = $shipping_cost + $taxes["shipping"];
 			$_display_subtotal = 0;
 			$_display_discounted_subtotal = 0;
+
 			if (is_array($products)) {
 				foreach ($products as $k=>$v) {
 					if (@$v["deleted"]) continue; # for Advanced_Order_Management module
@@ -1824,6 +1496,7 @@ function func_calculate_single($cart, $products, $login, $login_type, $provider_
 					if (!empty($v["discount"]) || !empty($v["coupon_discount"])) {
 						$subscription_flag = ( !empty($active_modules["Subscriptions"]) && $v["sub_plan"] ? false : true );
 						$_taxes = func_tax_price($v["price"], $v["productid"], false, $v["discounted_price"], $customer_info, "", $subscription_flag);
+
 						if ($v['discounted_price'] > 0)
 							$products[$k]["display_discounted_price"] = price_format($_taxes["taxed_price"]);
 					}
@@ -1833,11 +1506,13 @@ function func_calculate_single($cart, $products, $login, $login_type, $provider_
 
 					$products[$k]["display_subtotal"] = $products[$k]["display_discounted_price"];
 					$_display_discounted_subtotal += $products[$k]["display_subtotal"];
+
 					if ($v["product_type"] == "C") {
 						# Corrections for Product Configurator module
 						$products[$k]["display_price"] = $_pconf_display_price = max(doubleval($products[$k]["options_surcharge"]), 0);
 						$_display_subtotal += ($_pconf_display_price * $products[$k]["amount"]);
 						$_pconf_taxes = array();
+
 						foreach ($products as $k1=>$v1) {
 							if (@$v1["deleted"]) continue; # for Advanced_Order_Management module
 
@@ -1866,6 +1541,7 @@ function func_calculate_single($cart, $products, $login, $login_type, $provider_
 						$subscription_markup = $products[$k]["sub_days_remain"] * $products[$k]["sub_onedayprice"];
 						$_display_subtotal += $subscription_markup;
 						$products[$k]["display_price"] += $subscription_markup;
+
 						if ($display_subtotal == $display_discounted_subtotal)
 							$products[$k]["display_subtotal"] += $subscription_markup;
 					}
@@ -1925,110 +1601,72 @@ function func_calculate_single($cart, $products, $login, $login_type, $provider_
 		$total = $display_discounted_subtotal + $display_shipping_cost;
 	}
 	else
-# START: random:17710_17631 [2009 Mar 26 09:25] 
 		$total = $discounted_subtotal + $shipping_cost + $total_tax;
-# END: random:17710_17631 [2009 Mar 26 09:25] 
 
-# START: random:1073746882_1073747063 [2008 Dec 24 16:25] 
 	$freight_cost = 0;
-# END: random:1073746882_1073747063 [2008 Dec 24 16:25] 
 	$_products = array();
-# START: random:17710_17631 [2009 Mar 26 09:25] 
 	$shipping_groups = array();
-	foreach ($products as $index=>$product) {
-# END: random:17710_17631 [2009 Mar 26 09:25] 
-		foreach($product as $key=>$value)
-			if (in_array($key, $product_keys))
-				$_products[$index][$key] = $value;
-			$freight_cost += $product['taxed_shipping_freight']*$product['amount'];	
 
-# START: random:17710_17631 [2009 Mar 26 09:25] 
-# START: random:20341 [2010 Jul 29 14:46] 
-			$m_id = func_manufacturerid_for_group($product['shipping_freight'], $product['manufacturerid']);
+    foreach ($products as $index => $product) {
+        foreach ($product as $key => $value) {
+            if (in_array($key, $product_keys)) {
+                $_products[ $index ][ $key ] = $value;
+            }
+        }
+        $freight_cost += $product['taxed_shipping_freight'] * $product['amount'];
 
-			if (!isset($current_order_amount_in_us[$m_id])){
-				$current_order_amount_in_us[$m_id] = 0;
-			}
-			$current_order_amount_in_us[$m_id] += $product["display_subtotal"];
+        $m_id = func_manufacturerid_for_group($product['shipping_freight'], $product['manufacturerid']);
 
-//func_print_r($product);
+        if (!isset($current_order_amount_in_us[ $m_id ])) {
+            $current_order_amount_in_us[ $m_id ] = 0;
+        }
+        $current_order_amount_in_us[ $m_id ] += $product["display_subtotal"];
 
-# END: random:20341 [2010 Jul 29 14:46] 
-			if (!isset($shipping_groups[$m_id])) {
-# START: random:20341 [2010 Jul 29 14:46] 
-				$manufact_data = func_query_first("SELECT * FROM $sql_tbl[manufacturers] WHERE manufacturerid = '$m_id'");
-# END: random:20341 [2010 Jul 29 14:46]
+        if (!isset($shipping_groups[ $m_id ])) {
+            $manufact_data = func_query_first("SELECT * FROM $sql_tbl[manufacturers] WHERE manufacturerid = '$m_id'");
 
-//func_print_r($manufact_data); 
-				$shipping_groups[$m_id]['group_name'] = $manufact_data['manufacturer'];
-				$shipping_groups[$m_id]['manufact_text_displayed'] = $manufact_data['manufact_text_displayed'];
-				$shipping_groups[$m_id]['cart_manufact_text_displayed'] = $manufact_data['cart_manufact_text_displayed'];
-#
-##
-###
-				$shipping_groups[$m_id]['m_state_code'] = $manufact_data['m_state'];
-				$shipping_groups[$m_id]['m_country_code'] = $manufact_data['m_country'];
+            $shipping_groups[ $m_id ]['group_name'] = $manufact_data['manufacturer'];
+            $shipping_groups[ $m_id ]['manufact_text_displayed'] = $manufact_data['manufact_text_displayed'];
+            $shipping_groups[ $m_id ]['cart_manufact_text_displayed'] = $manufact_data['cart_manufact_text_displayed'];
+            $shipping_groups[ $m_id ]['m_state_code'] = $manufact_data['m_state'];
+            $shipping_groups[ $m_id ]['m_country_code'] = $manufact_data['m_country'];
 
-				$shipping_groups[$m_id]['d_minimum_order_amount'] = $manufact_data['d_minimum_order_amount'];
-				$shipping_groups[$m_id]['d_minimum_order_amount_in_us'] = $manufact_data['d_minimum_order_amount_in_us'];
-				$shipping_groups[$m_id]['d_for_orders_below_min_order_amount'] = $manufact_data['d_for_orders_below_min_order_amount'];
-###
-##
-#
-				$shipping_groups[$m_id]['m_city'] = $manufact_data['m_city'];
-				$shipping_groups[$m_id]['m_state'] = func_get_state($manufact_data['m_state'], $manufact_data['m_country']);            
-				$shipping_groups[$m_id]['m_country'] = func_get_country($manufact_data['m_country']);
-# END: random:17710_17631 [2009 Mar 26 09:25] 
-			}
+            $shipping_groups[ $m_id ]['d_minimum_order_amount'] = $manufact_data['d_minimum_order_amount'];
+            $shipping_groups[ $m_id ]['d_minimum_order_amount_in_us'] = $manufact_data['d_minimum_order_amount_in_us'];
+            $shipping_groups[ $m_id ]['d_for_orders_below_min_order_amount'] = $manufact_data['d_for_orders_below_min_order_amount'];
+            $shipping_groups[ $m_id ]['m_city'] = $manufact_data['m_city'];
+            $shipping_groups[ $m_id ]['m_state'] = func_get_state($manufact_data['m_state'], $manufact_data['m_country']);
+            $shipping_groups[ $m_id ]['m_country'] = func_get_country($manufact_data['m_country']);
+        }
+    }
 
+    if (!empty($shipping_groups) && is_array($shipping_groups)) {
+        foreach ($shipping_groups as $m_id => $s_g) {
+            if ($shipping_groups[ $m_id ]['d_minimum_order_amount_in_us'] > 0 && $shipping_groups[ $m_id ]['d_minimum_order_amount'] == "applies_to_all_orders" && $current_order_amount_in_us[ $m_id ] < $shipping_groups[ $m_id ]['d_minimum_order_amount_in_us'] && $shipping_groups[ $m_id ]['d_for_orders_below_min_order_amount'] == "are_rejected") {
+                $need_add_more = $shipping_groups[ $m_id ]['d_minimum_order_amount_in_us'] - $current_order_amount_in_us[ $m_id ];
+                $shipping_groups[ $m_id ]['need_add_more'] = $need_add_more;
+            }
+        }
+    }
 
-//func_print_r($current_order_amount_in_us[$m_id]);
-
-		}
-
-	
-		if (!empty($shipping_groups) && is_array($shipping_groups))
-		foreach ($shipping_groups as $m_id => $s_g){
-                        if ($shipping_groups[$m_id]['d_minimum_order_amount_in_us'] > 0 && $shipping_groups[$m_id]['d_minimum_order_amount'] == "applies_to_all_orders" && $current_order_amount_in_us[$m_id] < $shipping_groups[$m_id]['d_minimum_order_amount_in_us'] && $shipping_groups[$m_id]['d_for_orders_below_min_order_amount'] == "are_rejected"){
-                                $need_add_more = $shipping_groups[$m_id]['d_minimum_order_amount_in_us'] - $current_order_amount_in_us[$m_id];
-                                $shipping_groups[$m_id]['need_add_more'] = $need_add_more;
-                        }
-		}
-
-		ksort($shipping_groups);
+    ksort($shipping_groups);
 
 	$return = array(
 		"total_cost" => price_format($total),
-# START: random:1073746882_1073747063 [2008 Dec 24 16:25] 
 		"freight_cost" => price_format($freight_cost),
-# END: random:1073746882_1073747063 [2008 Dec 24 16:25] 
 		"shipping_cost" => price_format($shipping_cost),
 		"taxes" => $taxes["taxes"],
-# START: random:1073746882_1073747063 [2008 Dec 24 16:25] 
 		"whole_taxes" => $whole_taxes['taxes'],
-# END: random:1073746882_1073747063 [2008 Dec 24 16:25] 
 		"tax_cost" => price_format($taxes["total"]),
 		"discount" => price_format($discount),
 		"coupon" => $discount_coupon,
 		"coupon_discount" => price_format($coupon_discount),
 		"subtotal" => price_format($subtotal),
-
-#
-##
-###
 		"additional_fee" => $cart["additional_fee"],
-###
-##
-#
-
-# START: random:1073746882_1073747063 [2008 Dec 24 16:25] 
 		"shipping_groups" => $shipping_groups,
 		"shipping_costs" => $shipping_costs,
-# START: random:20341 [2010 Jul 29 14:46] 
 		"shipping_taxes" => $shipping_taxes,
-# END: random:20341 [2010 Jul 29 14:46] 
 		"display_shipping_costs" => $display_shipping_costs,
-# END: random:1073746882_1073747063 [2008 Dec 24 16:25] 
 		"display_subtotal" => price_format($display_subtotal),
 		"discounted_subtotal" => price_format($discounted_subtotal),
 		"display_shipping_cost" => price_format($display_shipping_cost),
@@ -2356,6 +1994,10 @@ function func_manufacturerid_sort($a, $b) {
 #
 function func_generate_cartid($cart_products) {
 	global $cart;
+
+    if (!is_array($cart)) {
+        $cart = [];
+    }
 
 	if (empty($cart["max_cartid"]))
 		$cart["max_cartid"] = 0;

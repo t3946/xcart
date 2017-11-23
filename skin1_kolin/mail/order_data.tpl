@@ -140,12 +140,16 @@
 {$lng.lbl_giftcert_discount|truncate:$max_truncate:"...":true|cat:":"|string_format:$max_space}{include file="currency.tpl" value=$order.giftcert_discount}
 {/if}
 
+{*{if $order.coupon gt 0}*}
+{*{$lng.lbl_coupon_saving|truncate:$max_truncate:"...":true|cat:":"|string_format:$max_space}{include file="currency.tpl" value=$order.coupon_discount}*}
+{*{/if}*}
+
 {if $oOrder && $oOrder->getOrderRetailTrustGross() > 0}
 {$lng.lbl_retailtrust_ordered_total|truncate:$max_truncate:"...":true|cat:":"|string_format:$max_space}{include file="currency.tpl" value=$oOrder->getOrderRetailTrustGross()}
 
 {/if}
 {if ($oOrder)}
-{$lng.lbl_total|truncate:$max_truncate:"...":true|cat:":"|string_format:$max_space}{include file="currency.tpl" value=$oOrder->getOrderTotalGross()}
+{$lng.lbl_total|truncate:$max_truncate:"...":true|cat:":"|string_format:$max_space}{include file="currency.tpl" value=$oOrder->getOrderTotalGrossDiscounted()}
 {/if}
 
 {if $_userinfo.tax_exempt ne "Y"}

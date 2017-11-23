@@ -1,4 +1,5 @@
 {var $id = $admin->getId()}
+{add $isNested = false}
 
 <div class="list-block" data-list data-id="{$id}-list">
     <div class="list-top clearfix">
@@ -34,6 +35,16 @@
                             <th class="sort full" data-sort-column>
                                 <span class="title">
                                      <i class="icon-double_triangle"></i>
+                                </span>
+
+                                {var $cols = $cols+1}
+                            </th>
+                        {/if}
+
+                        {if $isNested }
+                            <th class="nested full" data-nested-column>
+                                <span class="title">
+                                     <i class="fa fa-folder"></i>
                                 </span>
 
                                 {var $cols = $cols+1}
@@ -94,6 +105,16 @@
                                     <a href="#" class="sort-handler {if $canSort}active{else}not-active{/if}">
                                         <i class="icon-double_triangle"></i>
                                     </a>
+                                </td>
+                            {/if}
+
+                            {if $isNested}
+                                <td class="nested">
+                                    {if !$item->getIsLeaf()}
+                                        <a href="{url 'admin:list_nested' params=['id' => $item->pk, 'admin' => $adminClass, 'module' => $moduleClass]}"" class="">
+                                            <i class="fa fa-folder-open"></i>
+                                        </a>
+                                    {/if}
                                 </td>
                             {/if}
 

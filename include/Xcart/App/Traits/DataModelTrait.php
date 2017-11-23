@@ -2,7 +2,7 @@
 namespace Xcart\App\Traits;
 
 use Exception;
-use Xcart\App\Orm\Model;
+use Xcart\App\Orm\ModelInterface;
 use Xcart\Data;
 
 trait DataModelTrait
@@ -25,7 +25,7 @@ trait DataModelTrait
      */
     public function getDataModel()
     {
-        /** @var Model $this */
+        /** @var ModelInterface $this */
 
         if (!$this->dataModel) {
             $class = static::getDataModelClass();

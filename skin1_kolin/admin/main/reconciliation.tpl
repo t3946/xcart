@@ -1,4 +1,4 @@
-<script type="text/javascript" language="JavaScript 1.2" src="{$SkinDir}/lib/jqueryui/jquery-ui.custom.min.js"></script>
+{*<script type="text/javascript" language="JavaScript 1.2" src="{$SkinDir}/lib/jqueryui/jquery-ui.custom.min.js"></script>*}
 
 <script type="text/javascript">
 <!--
@@ -317,7 +317,7 @@ to
 <td style="background-color: #D9EAD3;" width="90">TR Date</td>
 <td nowrap="nowrap" style="background-color: #D9EAD3;" width="200">Transaction Description</td>
 <td style="background-color: #D9EAD3;" width="50">Amount</td>
-<td style="background-color: #FFD44C;" width="90">Action</td>
+<td class="bg__yelow" width="90">Action</td>
 <td style="background-color: #F4CCCC;" width="90">Amount</td>
 <td style="background-color: #F4CCCC;" width="90">Distr</td>
 <td style="background-color: #F4CCCC;" width="90">Order #</td>
@@ -641,7 +641,7 @@ to
 <td style="background-color: #D9EAD3;" width="100">Date</td>
 <td style="background-color: #D9EAD3;" width="*">Description</td>
 <td style="background-color: #D9EAD3;" width="100">Amount</td>
-<td style="background-color: #FFD44C;" width="100">Action</td>
+<td class="bg__yellow" width="100">Action</td>
 </tr>
 {foreach from=$reconciliations item=v key=k}
 <tr {cycle values=", class='TableSubHead'" name="cycle_totals"}>

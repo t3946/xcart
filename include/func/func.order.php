@@ -134,18 +134,28 @@ function func_get_group_totals($group_products, $group_shipping)
         $result[$dn] = 0;
     }
 
+    $result['coupon_discount'] = 0;
+
     foreach ($group_products as $product) {
-        $result['net'] += $product['price'] * $product['amount'];
+        $result['net'] += !empty($product['discounted_price']) ? $product['discounted_price'] : $product['price'] * $product['amount'];
+
         if (!empty($product['extra_data']['taxes']['GST']['tax_value'])) {
             $result['gst'] += price_format($product['extra_data']['taxes']['GST']['tax_value']);
         }
+
         if (!empty($product['extra_data']['taxes']['HST']['tax_value'])) {
             $result['gst'] += price_format($product['extra_data']['taxes']['HST']['tax_value']);
         } # GST/HST sum
+
         if (!empty($product['extra_data']['taxes']['PST']['tax_value'])) {
             $result['pst'] += price_format($product['extra_data']['taxes']['PST']['tax_value']);
         }
+
         $result['gross'] += $product['display_subtotal'];
+
+        if (!empty($product['discounted_price'])) {
+            $result['coupon_discount'] += (($product['price'] * $product['amount']) - $product['discounted_price']);
+        }
     }
 
     foreach ($price_details_names as $dn) {
@@ -786,10 +796,10 @@ function func_order_data($orderid)
         $order["extra"]["tax_info"]["product_tax_name"] = array_pop($_product_taxes);
     }
 
-    if ($order["coupon_type"] == "free_ship") {
-        $order["shipping_cost"] = $order["coupon_discount"];
-        $order["discounted_subtotal"] += $order["coupon_discount"];
-    }
+//    if ($order["coupon_type"] == "free_ship") {
+//        $order["shipping_cost"] = $order["coupon_discount"];
+//        $order["discounted_subtotal"] += $order["coupon_discount"];
+//    }
 
     $order["discounted_subtotal"] = price_format($order["discounted_subtotal"]);
 
@@ -1000,7 +1010,7 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
 
     $giftcert_id = @$cart["giftcert_id"];
 
-    $extra = "";
+    $extra = [];
     if (!empty($active_modules["Anti_Fraud"]) && defined("IS_AF_CHECK") && ($cart['total_cost'] > 0 || $config['Anti_Fraud']['check_zero_order'] == 'Y')) {
         include $xcart_dir . "/modules/Anti_Fraud/anti_fraud.php";
     }
@@ -1077,10 +1087,10 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
 
         $taxes_applied = addslashes(serialize($current_order["whole_taxes"]));
 
-        $discount_coupon = $current_order["coupon"];
-        if (!empty($current_order["coupon"])) {
-            $current_order["coupon"] = func_query_first_cell("SELECT coupon_type FROM $sql_tbl[discount_coupons] WHERE coupon='" . addslashes($current_order["coupon"]) . "'") . "``" . $current_order["coupon"];
-        }
+//        $discount_coupon = $current_order["coupon"];
+//        if (!empty($current_order["coupon"])) {
+//            $current_order["coupon"] = func_query_first_cell("SELECT coupon_type FROM $sql_tbl[discount_coupons] WHERE coupon='" . addslashes($current_order["coupon"]) . "'") . "``" . $current_order["coupon"];
+//        }
 
         $save_info = $userinfo;
         $userinfo["b_address"] .= "\n" . $userinfo["b_address_2"];
@@ -1255,6 +1265,16 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
 
         $orderid = func_array2insert('orders', $insert_data);
 
+        if (!empty($insert_data['coupon'])) {
+            /** @var  \Modules\Cart\Models\CouponKitModel $coupon */
+            $coupon = \Modules\Cart\Models\CouponKitModel::objects()->get(['active' => true, 'code' => $insert_data['coupon']]);
+            $model = new \Modules\Cart\Models\CouponOrderModel();
+            $model->coupon_id = $coupon->pk;
+            $model->login = $insert_data['login'];
+            $model->order_id = $orderid;
+            $model->save();
+        }
+
         global $purchase_order_selected;
         x_session_register('purchase_order_selected');
 
@@ -1348,11 +1368,21 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
             foreach ($products as $pk => $product) {
                 if (($single_mode) || ($product["provider"] == $current_order["provider"])) {
                     $product["price"]                                     = price_format($product["price"]);
+                    $product["coupon_discount"]                           = $product["coupon_discount"];
+                    $product["extra_data"]["original_price"]              = $product["price"];
+                    $product["extra_data"]["discounted_price"]            = $product["discounted_price_orig"];
                     $product["extra_data"]["product_options"]             = $product["options"];
                     $product["extra_data"]["taxes"]                       = $product["taxes"];
                     $product["extra_data"]["display"]["price"]            = price_format($product["display_price"]);
                     $product["extra_data"]["display"]["discounted_price"] = price_format($product["display_discounted_price"]);
+                    $product["extra_data"]["display"]["discounted_price"] = price_format($product["display_discounted_price"]);
                     $product["extra_data"]["display"]["subtotal"]         = price_format($product["display_subtotal"]);
+                    $product["extra_data"]["display"]["coupon_discount"]  = price_format($product["coupon_discount"]);
+
+                    if (!empty($product['discounted_price_orig'])) {
+                        $product["price"] = $product['discounted_price_orig'];
+                    }
+
                     if (empty($product["product_orig"])) {
                         $product["product_orig"] = $product["product"];
                     }
@@ -1360,7 +1390,6 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
                     if (!empty($active_modules['Product_Options'])) {
                         $product["product_options"] = func_serialize_options($product["options"]);
                     }
-                    $original_provider = '';
 
                     $original_provider = func_query_first_cell("SELECT provider FROM $sql_tbl[products] WHERE productid='" . $product['productid'] . "'");
 
@@ -1412,9 +1441,11 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
             # Reset order detailed totals
             $shippingLogMessage = null;
             $_extra['total'] = $_extra['product_total'] = $_extra['shipping_total'] = ['net' => 0, 'gst' => 0, 'pst' => 0, 'gross' => 0];
+
             if (!empty($config['Shipping']['new_shipping_calculation']) && $config['Shipping']['new_shipping_calculation'] == 'Y') {
                 $shippingLogMessage = "<br/><b>Shipping cost:</b> <br/>";
             }
+
             foreach ($current_order['shipping_groups'] as $mid => $v) {
                 $insert_data                   = [];
                 $insert_data['orderid']        = $orderid;
@@ -1440,11 +1471,15 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
                 $group_shipping['gst']   = @$current_order['shipping_taxes'][$mid]['gst'];
                 $group_shipping['pst']   = @$current_order['shipping_taxes'][$mid]['pst'];
                 $group_total             = func_get_group_totals($v['products'], $group_shipping);
+
+                $insert_data['coupon_discount'] = $group_total['coupon_discount'];
+
                 foreach ($group_total as $totk => $totv) {
                     $_extra['total'][$totk] += $totv;
                     $_extra['shipping_total'][$totk] += $group_shipping[$totk];
                     $_extra['product_total'][$totk] += $totv - $group_shipping[$totk];
                 }
+
                 foreach ($price_details_names as $dn) {
                     $insert_data["shipping_$dn"] = $group_shipping[$dn];
                     $insert_data["total_$dn"]    = $group_total[$dn];
@@ -1470,43 +1505,57 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
                 if (!empty($config['Shipping']['new_shipping_calculation']) && $config['Shipping']['new_shipping_calculation'] == 'Y') {
                     $total_shipping_cost = price_format($cart['all_shippings'][$mid][$cart['shippingids'][$mid]]['rate']);
                     $shippingLogMessage .= "<b>{$oManufacturer->getManufacturerCode()} ({$total_shipping_cost})</b><br/>";
-                    if (!empty($cart['all_shippings'][$mid][$cart['shippingids'][$mid]]['added_shipping']) && is_array($cart['all_shippings'][$mid][$cart['shippingids'][$mid]]['added_shipping'])) {
+
+                    if (!empty($cart['all_shippings'][$mid][$cart['shippingids'][$mid]]['added_shipping'])
+                        && is_array($cart['all_shippings'][$mid][$cart['shippingids'][$mid]]['added_shipping']))
+                    {
                         foreach ($cart['all_shippings'][$mid][$cart['shippingids'][$mid]]['added_shipping'] as $aAddedShippingRate) {
                             $subMapCharge = '';
                             $oShippingAdded = \Xcart\Shipping::model(['shippingid' => $aAddedShippingRate['shippingid']]);
                             $addedCharge = price_format($aAddedShippingRate['shipping_charge']);
                             $mapCharge = floatval($aAddedShippingRate['shipping_extra_margin_value']);
+
                             if ($mapCharge > 0) {
                                 $smapCharge = price_format($mapCharge);
                                 $subMapCharge = " (-{$smapCharge})";
                             }
+
                             $shippingLogMessage .= str_repeat("&nbsp;", 4) . "{$oShippingAdded->getShippingCarrier()->getName()} - {$oShippingAdded->getName()} ({$addedCharge}{$subMapCharge}) <br/>";
+
                             if (!empty($aAddedShippingRate['products'])) {
                                 foreach ($aAddedShippingRate['products'] as $sProductSKU) {
                                     $shippingLogMessage .= str_repeat("&nbsp;", 8) . "$sProductSKU <br/>";
                                 }
                             }
+
                             $total_shipping_cost -= $addedCharge;
                         }
                     }
                     $oShippingAdded = \Xcart\Shipping::model(['shippingid' => $cart['all_shippings'][$mid][$cart['shippingids'][$mid]]['shippingid']]);
                     $mapCharge = floatval($cart['all_shippings'][$mid][$cart['shippingids'][$mid]]['shipping_extra_margin_value']);
                     $subMapCharge = '';
+
                     if ($mapCharge > 0) {
                         $smapCharge = price_format($mapCharge);
                         $subMapCharge = " (-{$smapCharge})";
                     }
+
                     $shippingLogMessage .= str_repeat("&nbsp;", 4) . "{$oShippingAdded->getShippingCarrier()->getName()} - {$oShippingAdded->getName()} ({$total_shipping_cost}{$subMapCharge})<br/>";
-                    if (!empty($cart['all_shippings'][$mid][$cart['shippingids'][$mid]]['products']) && is_array($cart['all_shippings'][$mid][$cart['shippingids'][$mid]]['products'])) {
+
+                    if (!empty($cart['all_shippings'][$mid][$cart['shippingids'][$mid]]['products'])
+                        && is_array($cart['all_shippings'][$mid][$cart['shippingids'][$mid]]['products']))
+                    {
                         foreach ($cart['all_shippings'][$mid][$cart['shippingids'][$mid]]['products'] as $sProductSKU) {
                             $shippingLogMessage .= str_repeat("&nbsp;", 8) . "$sProductSKU <br/>";
                         }
                     }
                 }
             }
+
             if (!empty($shippingLogMessage)) {
                 $log .= $shippingLogMessage;
             }
+
             $log .= "<br /><B>REMOTE_ADDR:</B> " . $ip_info;
             \Xcart\Logs::_log('orders', $orderid, \Xcart\Logs::LOG_TYPE_CLIENT, $log, $userinfo['login']);
 
@@ -1533,6 +1582,7 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
                 'meta_id' =>  SurfMetaModel::getInstance()->id])
             ->order(['-id'])
             ->limit(1)->get();
+
         if ($oSurfPath) {
             $oOrder->updateField('referer_id', $oSurfPath->resource_id);
         }

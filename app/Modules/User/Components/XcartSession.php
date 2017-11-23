@@ -162,7 +162,7 @@ class XcartSession extends Session
                 $GLOBALS[$this->getSessionKey()] = $id;
                 $GLOBALS['XCART_SESSION_NAME'] = $this->getSessionKey();
                 $GLOBALS['XCART_SESSION_EXPIRY'] = $this->model->expiry;
-                define("XCART_SESSION_START", 1);
+                defined('XCART_SESSION_START') ?: define('XCART_SESSION_START', 1);
             }
         }
     }
@@ -255,7 +255,6 @@ class XcartSession extends Session
     {
         return $this->getId() ? true : false;
     }
-
 
     public function getStorage()
     {

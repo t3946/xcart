@@ -22,6 +22,10 @@ $modal-preloader-size: 30px;
   left: 0;
   overflow-y: scroll;
 
+  &, * {
+    box-sizing: border-box;
+  }
+
   .modal-container {
     display: none;
     position: relative;

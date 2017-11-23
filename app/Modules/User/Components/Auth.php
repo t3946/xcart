@@ -133,9 +133,9 @@ class Auth implements AuthInterface
         return null;
     }
 
-    public function updateSession( $user)
+    public function updateSession($user)
     {
-        $this->setSession($user->id);
+        $this->setSession($user);
     }
 
     public function updateCookie( $user)
@@ -144,9 +144,10 @@ class Auth implements AuthInterface
         $this->setCookie($value);
     }
 
-    public function setSession($session)
+    public function setSession($user)
     {
-        Xcart::app()->request->session->add($this->authSessionName, $session);
+        Xcart::app()->request->session->add($this->authSessionName, $user->id);
+        Xcart::app()->request->session->add('login', $user->login);
     }
 
     public function getSession()

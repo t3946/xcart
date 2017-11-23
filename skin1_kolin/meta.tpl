@@ -159,8 +159,9 @@ var page_charset = "{$default_charset|default:"iso-8859-1"}";
 {*
 {if $main eq "product"}
 *}
-{* igor_async *}
- <script src="{$SkinDir}/jquery.min.1.7.1.js" type="text/javascript"></script>
+{if $AREA_TYPE ne 'A'}
+    <script src="{$SkinDir}/jquery.min.1.7.1.js" type="text/javascript"></script>
+{/if}
 {*
 {/if}
 *}

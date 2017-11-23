@@ -52,7 +52,7 @@ class Meta extends Model
                 'modelClass' => Xcart::app()->getModule('Sites')->modelClass,
                 'verboseName' => SitesModule::t('Site'),
                 'link' => ['site_code' => 'code'],
-                'required' => true,
+                'required' => false,
                 'null' => true
             ];
         }

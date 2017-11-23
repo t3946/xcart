@@ -604,7 +604,7 @@ function func_check_ref_to_us_part_of_transaction(mid, index){
            onchange="func_recalculate_manufacturer_invoices_data('{$m_id}','{$invoice_number}')"
            {if $invoice.status eq "R"}readonly="readonly"{/if} />
     {if $invoice_detail->itemid}
-    <div style="BACKGROUND-COLOR: #FFD44C; color: #000000;" align="right" class="invoice_unit_cost_to_us" data-cost-to-us="{$product_model->cost_to_us}" >
+    <div align="right" class="invoice_unit_cost_to_us bg__yellow color__black" data-cost-to-us="{$product_model->cost_to_us}" >
         {include file="currency2.tpl" value=$product_model->cost_to_us|price_format}
     </div>
     <div style="BACKGROUND-COLOR: #F2A3A8; color: #000000;" align="right">
@@ -643,7 +643,7 @@ function func_check_ref_to_us_part_of_transaction(mid, index){
 <td align="right">
 <span id="unit_cost_total_{$m_id}_{$invoice_number}_{$invoice_detail->itemid}">{include file="currency2.tpl" value=$invoice_detail->unit_cost_total}</span>
 
-<div style="BACKGROUND-COLOR: #FFD44C; color: #000000;" align="right">
+<div align="right" class="bg__yellow color__black">
 {math equation="x*y" x=$product_model->cost_to_us y=$invoice_detail->qty_inv assign="unit_cost_to_us_total"}
 <span id="unit_cost_to_us_total_{$m_id}_{$invoice_number}_{$invoice_detail->itemid}">{include file="currency2.tpl" value=$unit_cost_to_us_total|price_format}</span>
 </div>
@@ -687,7 +687,7 @@ function func_check_ref_to_us_part_of_transaction(mid, index){
                             name="manufacturer_invoices_data[{$m_id}][{$invoice_number}][add_extra_value_cost][{$smarty.foreach.invoice_detail_addition.iteration}]"
                             type="text" value="{$invoice_detail->unit_cost}"/>
                     {if $add_product_model}
-                        <div style="BACKGROUND-COLOR: #FFD44C; color: #000000;" align="right" class="invoice_unit_cost_to_us" data-cost="{$add_product_model->cost_to_us}">
+                        <div class="bg__yellow color__black" align="right" class="invoice_unit_cost_to_us" data-cost="{$add_product_model->cost_to_us}">
                             {$add_product_model->cost_to_us|price_format}
                         </div>
                     {/if}
@@ -706,7 +706,7 @@ function func_check_ref_to_us_part_of_transaction(mid, index){
                     {if $add_product_model}
                         {math equation="x*y" x=$invoice_detail->qty_inv y=$add_product_model->cost_to_us assign="cost_to_us_for_add_products_in_xcart"}
                         {math equation="x+y" x=$add_product_cost_to_us y=$cost_to_us_for_add_products_in_xcart assign="add_product_cost_to_us"}
-                        <div style="BACKGROUND-COLOR: #FFD44C; color: #000000;" align="right" class="invoice_unit_cost_to_us" data-cost="{$add_product_model->cost_to_us}">
+                        <div class="bg__yellow color__black" align="right" class="invoice_unit_cost_to_us" data-cost="{$add_product_model->cost_to_us}">
                             {$cost_to_us_for_add_products_in_xcart|price_format}
                         </div>
                     {/if}
@@ -732,13 +732,13 @@ function func_check_ref_to_us_part_of_transaction(mid, index){
     </td>
     <td id="add_extra_track_{$m_id}_{$invoice_number}_box_2" align="center">
         <input class="add_extra_value_cost" onkeyup="func_recalculate_manufacturer_invoices_data('{$m_id}','{$invoice_number}')" onchange="func_recalculate_manufacturer_invoices_data('{$m_id}','{$invoice_number}')" size="8" name="manufacturer_invoices_data[{$m_id}][{$invoice_number}][add_extra_value_cost][]" type="text" value="" />
-        <div style="BACKGROUND-COLOR: #FFD44C; color: #000000;" align="right" class="invoice_unit_cost_to_us"></div>
+        <div  align="right" class="invoice_unit_cost_to_us bg__yellow color__black"></div>
     </td>
     <td id="add_extra_track_{$m_id}_{$invoice_number}_box_3"></td>
     <td id="add_extra_track_{$m_id}_{$invoice_number}_box_4" align="center"><input class="add_extra_value_qty" onkeyup="func_recalculate_manufacturer_invoices_data('{$m_id}','{$invoice_number}')" onchange="func_recalculate_manufacturer_invoices_data('{$m_id}','{$invoice_number}')" size="5"name="manufacturer_invoices_data[{$m_id}][{$invoice_number}][add_extra_value_qty][]" type="text" value="" /></td>
     <td id="add_extra_track_{$m_id}_{$invoice_number}_box_5" align="right" class="add_extra_value_total">
         <span class="invoice_unit_cost_to_us_total"></span>
-        <div style="BACKGROUND-COLOR: #FFD44C; color: #000000; display: none;" align="right" class="invoice_unit_cost_to_us" data-cost=""></div>
+        <div class="invoice_unit_cost_to_us bg__yellow color__black" data-cost=""></div>
     </td>
     <td>{include file="buttons/multirow_add.tpl" mark="add_extra_track_`$m_id`_`$invoice_number`"}
     </td>
@@ -746,7 +746,7 @@ function func_check_ref_to_us_part_of_transaction(mid, index){
 <tr>
 <td>
 Cost to us for the products charged
-<div style="BACKGROUND-COLOR: #FFD44C; color: #000000;">
+<div class="bg__yellow color__black">
 Cost to us for the products in X-cart
 </div>
 </td>
@@ -755,7 +755,7 @@ Cost to us for the products in X-cart
 <span id="cost_to_us_for_products_charged_{$m_id}_{$invoice_number}">
 {include file="currency2.tpl" value=$invoice.cost_to_us_for_products_charged}
 </span>
-<div style="BACKGROUND-COLOR: #FFD44C; color: #000000;" align="right">
+<div class="bg__yellow color__black" align="right">
 <span id="cost_to_us_for_products_in_xcart_{$m_id}_{$invoice_number}">
 {include file="currency2.tpl" value=$cost_to_us_for_products_in_xcart|price_format}
 </span>
@@ -845,7 +845,7 @@ Items are shipped to an address that is different from
 <tr>
 <td>
 Drop-ship fee charged
-<div style="BACKGROUND-COLOR: #FFD44C; color: #000000;">
+<div class="bg__yellow color__black">
 Drop-ship fee in X-cart
 </div>
 </td>
@@ -853,7 +853,7 @@ Drop-ship fee in X-cart
 <td align="center">
   <input id="manufacturer_invoices_data_drop_ship_fee_charged_{$m_id}_{$invoice_number}" name="manufacturer_invoices_data[{$m_id}][{$invoice_number}][drop_ship_fee_charged]" size="8" value="{$invoice.drop_ship_fee_charged}" onkeyup="func_recalculate_manufacturer_invoices_data('{$m_id}','{$invoice_number}')" onchange="func_recalculate_manufacturer_invoices_data('{$m_id}','{$invoice_number}')" {if $invoice.status eq "R"}readonly="readonly"{/if} />
 
-<div style="BACKGROUND-COLOR: #FFD44C; color: #000000;" align="right">
+<div class="bg__yellow color__black" align="right">
 
 {if $v.real_drop_ship_fee ne ""}
   {include file="currency2.tpl" value=$v.real_drop_ship_fee}

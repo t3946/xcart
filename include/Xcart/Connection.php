@@ -34,6 +34,10 @@ class Connection
      */
     static public function getInstance($params = [])
     {
+        if (!self::$_instance && !$params) {
+            static::getInstanceFromApp();
+        }
+        
         if (!self::$_instance) {
             if ($params) {
                 self::$_instance = DriverManager::getConnection($params);

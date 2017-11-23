@@ -39,6 +39,7 @@ class ModelForm extends BaseForm
         // if prefix available - inline form
         $prefix = $this->getPrefix();
         $fields = $this->getFields();
+        $this->_fields = $this->_fields ?: [];
 
         foreach ($instance->getFieldsInit() as $name => $field) {
             /** @var \Xcart\App\Orm\Fields\Field $field */
@@ -57,18 +58,15 @@ class ModelForm extends BaseForm
             }
             else {
                 $modelField = $field->setModel($instance)->getFormField($this);
+
                 if ($modelField) {
                     $this->_fields[$name] = $modelField;
                 }
             }
+        }
 
-            if ($instance) {
-                $value = $instance->{$name};
-                if ($value instanceof FileField) {
-                    $value = $value->getUrl();
-                }
-                $this->_fields[$name]->setValue($value);
-            }
+        if ($instance) {
+            $this->populateFromInstance($instance);
         }
 
 
@@ -88,11 +86,15 @@ class ModelForm extends BaseForm
             ], is_array($config) ? $config : ['class' => $config]));
 
             if ($instance && $instance->hasField($name)) {
-                $value = $instance->{$instance->getField($name)->getAttributeName()};
-                if ($value instanceof FileField) {
-                    $value = $value->path();
+                if ($instance->getField($name)->editable) {
+                    $value = $instance->{$instance->getField($name)->getAttributeName()};
+
+                    if ($value instanceof FileField) {
+                        $value = $value->path();
+                    }
+
+                    $this->_fields[$name]->setValue($value);
                 }
-                $this->_fields[$name]->setValue($value);
             }
         }
 
@@ -162,8 +164,9 @@ class ModelForm extends BaseForm
 
         if (!$model->getIsNewRecord()) {
             $this->setModel($model);
-            $this->populateFromInstance($model);
         }
+
+        $this->populateFromInstance($model);
     }
 
     /**
@@ -172,6 +175,7 @@ class ModelForm extends BaseForm
     public function clearInstance()
     {
         $this->_instance = null;
+        $this->init();
     }
 
     /**
@@ -324,7 +328,9 @@ class ModelForm extends BaseForm
 
     protected function populateFromInstance(\Xcart\App\Orm\Model $model)
     {
-        foreach ($this->getFieldsInit() as $name => $field) {
+        $fields = $this->getFieldsInit();
+
+        foreach ($fields as $name => $field) {
             if ($model->hasField($name)) {
                 $value = $model->getField($name)->getValue();
 
@@ -332,7 +338,7 @@ class ModelForm extends BaseForm
                     $value = $value->getValue();
                 }
 
-                $this->_fields[$name]->setValue($value);
+                $fields[$name]->setValue($value);
             }
         }
 

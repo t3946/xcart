@@ -1,5 +1,5 @@
 
-<fieldset class="{if $full_expanded}expanded-force{/if}" rel="1">
+<fieldset class="{if $full_expanded}expanded-force{/if} collapsible" rel="1">
     <legend>General</legend>
 
     <ul class="ul-main">
@@ -289,7 +289,7 @@
 </fieldset>
 
 
-<fieldset class="{if $full_expanded}expanded-force{/if}" rel="3">
+<fieldset class="{if $full_expanded}expanded-force{/if} collapsible" rel="3">
     <legend>
         Advanced - Product in order
     </legend>
@@ -369,7 +369,7 @@
     </ul>
 </fieldset>
 
-<fieldset class="{if $full_expanded}expanded-force{/if}"  rel="2">
+<fieldset class="{if $full_expanded}expanded-force{/if} collapsible"  rel="2">
     <legend>
         Advanced - Payment \ Shipping
     </legend>
@@ -580,7 +580,7 @@
     </ul>
 </fieldset>
 
-<fieldset class="{if $full_expanded}expanded-force{/if}"  rel="3">
+<fieldset class="{if $full_expanded}expanded-force{/if} collapsible"  rel="3">
     <legend>
         Advanced
     </legend>

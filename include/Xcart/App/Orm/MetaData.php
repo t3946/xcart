@@ -85,6 +85,7 @@ class MetaData
 
         foreach (call_user_func([$className, 'getFields']) as $name => $config) {
 
+            /** @var \Xcart\App\Orm\Fields\Field $field */
             $field = $this->createField($config);
             $field->setName((!empty($config['name'])) ? $config['name'] : $name);
             $field->setModelClass($className);

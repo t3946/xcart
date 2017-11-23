@@ -137,7 +137,9 @@ class ForeignField extends RelatedField
             }
         }
 
-        $result = $this->getManager()->cache($this->getModel()->getCache())->get(array_merge($filter, $this->extra));
+        $result = $this->getManager()
+                       ->cache($this->getModel()->getCache())
+                       ->get(array_merge($filter, $this->extra));
         $this->getModel()->noCache();
 
         return $result;
@@ -215,6 +217,6 @@ class ForeignField extends RelatedField
      */
     public function getManager()
     {
-        return call_user_func([$this->modelClass, 'objects']);
+        return call_user_func([$this->modelClass, $this->managerFunction]);
     }
 }

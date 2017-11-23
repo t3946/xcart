@@ -35,6 +35,7 @@ class ErrorHandler
     public $errHandler = true;
     public $excHandler = true;
     public $ignoreDeprecated = false;
+    public $ignoringTypes = [];
 
 
     public $handlers = [];
@@ -79,6 +80,11 @@ class ErrorHandler
     public function init()
     {
         $this->setHandlers();
+
+        if ($this->ignoreDeprecated) {
+            $this->ignoringTypes[] = E_USER_DEPRECATED;
+            $this->ignoringTypes[] = E_DEPRECATED;
+        }
     }
 
     public function setHandlers()
@@ -286,6 +292,10 @@ class ErrorHandler
     {
         $app = Xcart::app();
         if (defined('APP_DEBUG') && APP_DEBUG) {
+            if (in_array($code, $this->ignoringTypes)) {
+                return true;
+            }
+
             // Tryhard
             switch ($code) {
                 case E_ERROR:
@@ -329,25 +339,17 @@ class ErrorHandler
                     throw new RecoverableErrorException($message, 0, $code, $file, $line);
                 case E_DEPRECATED:
                     $app->logger->critical($message, ['code' => $code, 'file' => $file, 'line' => $line], 'error');
-                    if (!$this->ignoreDeprecated) {
-                        throw new DeprecatedException($message, 0, $code, $file, $line);
-                    }
+                    throw new DeprecatedException($message, 0, $code, $file, $line);
                     break;
                 case E_USER_DEPRECATED:
                     $app->logger->critical($message, ['code' => $code, 'file' => $file, 'line' => $line], 'error');
-                    if (!$this->ignoreDeprecated) {
-                        throw new UserDeprecatedException($message, 0, $code, $file, $line);
-                    }
+                    throw new UserDeprecatedException($message, 0, $code, $file, $line);
                     break;
             }
         }
         else {
-            if ($this->ignoreDeprecated) {
-                switch ($code) {
-                    case E_DEPRECATED:
-                    case E_USER_DEPRECATED:
-                        return false;
-                }
+            if (in_array($code, $this->ignoringTypes)) {
+                return true;
             }
 
             $msg = "Error: {$message}\nFile: {$file}\nLine: {$line}";
@@ -382,6 +384,10 @@ class ErrorHandler
 
             $app = Xcart::app();
             if ($app instanceof Application && Console::isCli() === false) {
+                if (in_array($code, $this->ignoringTypes)) {
+                    return true;
+                }
+
                 switch ($code) {
                     case E_WARNING:
                         $type = 'PHP warning';
@@ -473,11 +479,17 @@ class ErrorHandler
             ]),
             'this' => $this
         ];
+
+
         if ($this->useTemplate) {
-            echo $this->renderTemplate($view . '.tpl', $data);
-        } else {
-            echo $this->renderInternal(__DIR__ . '/templates/' . $view . '.php', $data);
+            $output = $this->renderTemplate($view . '.tpl', $data);
         }
+        else {
+            $output = $this->renderInternal(__DIR__ . '/templates/' . $view . '.php', $data);
+        }
+
+        echo $output;
+
         Xcart::app()->end();
     }
 
@@ -490,7 +502,8 @@ class ErrorHandler
         $exception = $this->getException();
         if ($this->getIsAjax() || Console::isCli() || $this->shortOutput) {
             $this->displayException($exception);
-        } else {
+        }
+        else {
             if (defined('APP_DEBUG') && APP_DEBUG) {
                 $this->render('exception', $this->getError());
             } else {
@@ -599,7 +612,7 @@ class ErrorHandler
     protected function renderSourceCode($file, $errorLine, $maxLines)
     {
         $errorLine--; // adjust line number to 0-based from 1-based
-        $lines = false;
+        $lines = [];
 
         if ($errorLine < 0
             || (file_exists($file) && ($lines = @file($file)) === false)
