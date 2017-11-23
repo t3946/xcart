@@ -1,7 +1,7 @@
 <?php
 return [
     [
-        'route' => '/{:code}',
+        'route' => '/{:code}/',
         'target' => ['\Modules\Cart\Controllers\CouponController', 'actionView'],
         'name' => 'view'
     ],
