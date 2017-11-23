@@ -8375,7 +8375,8 @@ i.icon.m {
     .info-page .object-info > tbody > tr > td {
       padding: 7px; }
       .info-page .object-info > tbody > tr > td iframe {
-        width: 100%; }
+        width: 100%;
+        min-height: 200px; }
 
 .main-block .form-page {
   padding: 0 0 50px; }
