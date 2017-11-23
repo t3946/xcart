@@ -87,7 +87,7 @@ class CouponKitModel extends Model
                 'default' => 1,
                 'choices' => [
                     1 => 'Discount percentage.',
-                    2 => 'Discount summ.'
+                    2 => 'Discount summ.',
                 ],
             ],
 
@@ -99,14 +99,14 @@ class CouponKitModel extends Model
             'max_discount' => [
                 'class' => DecimalField::className(),
                 'required' => true,
-                'verboseName' => 'Max summ discount'
+                'verboseName' => 'Max summ discount',
             ],
 
             'uses_per_user' => [
                 'class' => IntField::className(),
                 'null' => false,
                 'default' => 1,
-                'verboseName' => 'Max uses per user'
+                'verboseName' => 'Max uses per user',
             ],
 
             'created_at' => [
@@ -173,11 +173,14 @@ class CouponKitModel extends Model
 
         parent::save();
 
+        /** @var \Modules\Cart\Models\CouponRestrictionModel $restriction */
         foreach ($restrictions as $restriction) {
+            $data = $restriction->data;
             $rt = clone $restriction;
             $rt->setIsNewRecord(true);
             $rt->id = null;
             $rt->coupon_id = $this->id;
+            $rt->data = $data;
             $rt->save();
         }
 
@@ -187,7 +190,7 @@ class CouponKitModel extends Model
     public function hasEdit()
     {
         if (!$this->getIsNewRecord()) {
-            return (boolean)$this->objects()->filter(['orders__through__coupon_id' => $this->id])->count();
+            return !$this->objects()->filter(['orders__through__coupon_id' => $this->id])->count();
         }
 
         return true;
