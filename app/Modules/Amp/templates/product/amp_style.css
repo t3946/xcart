@@ -584,3 +584,15 @@ amp-carousel[controls] .amp-carousel-button{
 .button_redirect_2:active{
     background-color: #ff8a00;
 }
+
+.description tr:nth-child(2n -1) td {
+    background: #dadada;
+}
+
+.description table {
+    margin: 15px 0;
+}
+
+.description td {
+    padding: 5px;
+}

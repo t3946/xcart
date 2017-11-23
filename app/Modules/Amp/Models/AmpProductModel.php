@@ -118,4 +118,45 @@ class AmpProductModel extends ProductModel
             }
         }
     }
+
+    public function isDescrHasIframe(){
+        $fulldescr = $this->getFrontendDescription();
+        if (strpos( strtolower($fulldescr), "<iframe") !== false){
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function getAmpFrontendDescription()
+    {
+        $fulldescr = $this->getFrontendDescription();
+
+
+        $iframes = [];
+        $regexp = '/(<iframe[^>]*?><\/iframe>)/s';
+        if (preg_match_all($regexp, $fulldescr, $matches)) {
+            $fulldescr = preg_replace($regexp, '', $fulldescr);
+            foreach ($matches[1] as $value){
+                $reg = '/iframe/';
+                if (preg_match($reg, $value)){
+                    $iframes[] = preg_replace($reg, 'amp-iframe', $value);
+                }
+            }
+        }
+
+
+        $fulldescr = preg_replace("/<([a-z][a-z0-9]*)[^>]*?(\/?)>/i",'<$1$2>', $fulldescr);
+
+        if (count($iframes) > 0){
+            foreach ($iframes as $iframe){
+                $fulldescr .= "<br>{$iframe}<br>";
+            }
+        }
+
+
+        return $fulldescr;
+    }
+
+
 }
