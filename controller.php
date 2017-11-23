@@ -5,7 +5,7 @@ date_default_timezone_set('EST');
 defined('XCART_APP') ?: define('XCART_APP', 1);
 defined('XCART_EXT_ENV') ?: define('XCART_EXT_ENV', 1);
 
-define('XCART_APP_CONFIG', include './app/config/settings_controller.php');
+$XCART_APP_CONFIG = include './app/config/settings_controller.php';
 
 require "./auth.php";
 
