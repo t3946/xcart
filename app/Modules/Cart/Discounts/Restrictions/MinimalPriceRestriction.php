@@ -26,7 +26,9 @@ class MinimalPriceRestriction extends AbstractRestriction
 
     public function getErrorMessage()
     {
-        return "Coupon use for minimal price {$this->data['min_price']}";
+        $format = number_format($this->data['min_price']);
+
+        return "Coupon use for minimal price $ {$format}";
     }
 
     /**

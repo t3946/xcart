@@ -17,11 +17,12 @@
         <div class="discard">
             <span style="margin-right: 1em;">
                 Appended coupon:
-                {if $couponModel->description}
-                    <a href="{$couponModel->getAbsoluteUrl()}" target="_blank" title="Show coupon policy / description.">{$couponModel->code}</a>
-                {else}
-                    {$couponModel->code}
-                {/if}
+                {*{if $couponModel->description}*}
+                    {*<a href="{$couponModel->getAbsoluteUrl()}" target="_blank" title="Show coupon policy / description.">{$couponModel->code}</a>*}
+                {*{else}*}
+                    {*{$couponModel->code}*}
+                {*{/if}*}
+                {$couponModel->code}
             </span>
 
             <button name="discard-coupon" value="1" class="cidev_new_button cidev_new_white" style="font-size: 11px;">

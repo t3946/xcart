@@ -1125,6 +1125,10 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
             x_session_save('first_order_total_in_current_session');
         }
 
+        if ( \Modules\Cart\Helpers\CouponOldCart::getInstance()->isValid()) {
+            $current_order['coupon'] = null;
+        }
+
         #
         # Insert into orders
         #
