@@ -103,9 +103,19 @@ if ($mode == 'search'){
 
             if (!empty($posted_data["extra_sku"]) && count($posted_data["extra_sku"]) == 1) {
                 $sFindSKU = addslashes($posted_data["extra_sku"][0]);
-                $oProduct = \Xcart\Product::model()->find(\Xcart\SQLBuilder::getInstance()->addCondition("productcode='{$sFindSKU}'"));
-                if ($oProduct->getProductId()) {
-                    func_header_location('product_modify.php?productid=' . $oProduct->getProductId() . '&switch_sf=true');
+                $app = \Xcart\App\Main\Xcart::app();
+
+                $product = \Modules\Product\Models\ProductModel::objects()->filter(['productcode' => $sFindSKU])->get();
+                /** @var \Modules\Sites\Models\SiteModel $site */
+                $site = $product->sites->limit(1)->get();
+
+                if ($site->storefrontid != $app->request->session->get('current_storefront')) {
+                    $app->request->session->add('current_storefront', $site->storefrontid);
+                    $app->flash->info('Storefront changed to ' . $site->getName());
+                }
+
+                if ($product->productid) {
+                    func_header_location('product_modify.php?productid=' . $product->productid . '&switch_sf=true');
                 }
             }
 
