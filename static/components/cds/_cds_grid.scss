@@ -19,7 +19,7 @@ $grid: (
 */
 
 .row {
-  max-width: #{$max-row-width}px;
+  //max-width: #{$max-row-width}px;
   margin: 0 auto;
 
   &:before, &:after {

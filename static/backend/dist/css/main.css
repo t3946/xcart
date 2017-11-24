@@ -5201,7 +5201,6 @@ $grid: (
 
 */
 .row {
-  max-width: 1240px;
   margin: 0 auto; }
   .row:before, .row:after {
     content: " ";
