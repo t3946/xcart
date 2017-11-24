@@ -53,7 +53,7 @@ $grid: (
     padding-left: #{$half}px;
     padding-right: #{$half}px;
 
-    & .row {
+    & > .row {
       margin-left: -#{$half}px;
       margin-right: -#{$half}px;
     }

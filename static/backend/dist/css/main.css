@@ -5217,7 +5217,7 @@ $grid: (
   .column, .columns {
     padding-left: 15px;
     padding-right: 15px; }
-    .column .row, .columns .row {
+    .column > .row, .columns > .row {
       margin-left: -15px;
       margin-right: -15px; }
   .row > .row {
@@ -5910,9 +5910,6 @@ HR {
 
 FORM {
   MARGIN: 0px; }
-
-table {
-  width: 100%; }
 
 TABLE, IMG {
   BORDER: 0px; }
