@@ -42095,6 +42095,7 @@ S2.define('jquery.select2',[
         },
 
         __stop: false,
+        __first: true,
 
         init: function(element, options) {
             this.options = $.extend(this.options, options);
@@ -42163,7 +42164,7 @@ S2.define('jquery.select2',[
                 }
             });
 
-            if (notify)
+            if (notify && !self.__first)
             {
                 for (var i in data.filters)
                 {
@@ -42225,6 +42226,19 @@ S2.define('jquery.select2',[
                 this.__stop = false;
             }
         },
+        firstRefresh: function() {
+            if (!this.__stop) {
+                var self = this;
+
+                setTimeout(function () {
+                    $(document).trigger(self.options.triggers.refresh);
+                }, 400);
+
+            }
+            else {
+                this.__stop = false;
+            }
+        },
         bindEvents: function() {
             var self = this;
             $(document).on(self.options.triggers.refresh, function(){
@@ -42240,7 +42254,7 @@ S2.define('jquery.select2',[
         },
         start: function() {
             this.bindEvents();
-            this.cycleRefresh();
+            this.firstRefresh();
         }
     };
 
