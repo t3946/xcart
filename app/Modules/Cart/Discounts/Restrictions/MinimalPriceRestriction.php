@@ -47,6 +47,6 @@ class MinimalPriceRestriction extends AbstractRestriction
 
     public function dataToString()
     {
-        return "Minimal price: {$this->data['min_price']}";
+        return "{$this->data['min_price']}";
     }
 }
