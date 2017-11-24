@@ -6462,8 +6462,7 @@ TABLE.DialogInfo {
   BACKGROUND-IMAGE: url(/skin1_kolin/images/save_money.gif); }
 
 .MarketPrice {
-  font-size: 1.05rem;
-  FONT-FAMILY: Times New Roman; }
+  font-size: 1.05rem; }
 
 .PListImgBox {
   WIDTH: 90px;
@@ -6565,26 +6564,22 @@ A.Button:visited, A.Button:hover, A.Button:active {
 .SmallNote:visited {
   COLOR: #7C4C00;
   TEXT-DECORATION: none;
-  FONT-SIZE: 9px;
-  FONT-FAMILY: Arial, Verdana, Helvetica, Sans-serif; }
+  FONT-SIZE: 9px; }
 
 .SmallNote:hover {
   COLOR: #7C4C00;
   TEXT-DECORATION: underline;
-  FONT-SIZE: 9px;
-  FONT-FAMILY: Arial, Verdana, Helvetica, Sans-serif; }
+  FONT-SIZE: 9px; }
 
 .SmallNote:active {
   COLOR: #7C4C00;
   TEXT-DECORATION: none;
-  FONT-SIZE: 9px;
-  FONT-FAMILY: Arial, Verdana, Helvetica, Sans-serif; }
+  FONT-SIZE: 9px; }
 
 .SmallText {
   COLOR: #7C4C00;
   TEXT-DECORATION: none;
-  FONT-SIZE: 9px;
-  FONT-FAMILY: Arial, Verdana, Helvetica, Sans-serif; }
+  FONT-SIZE: 9px; }
 
 .SubcatTitle {
   TEXT-ALIGN: left;
@@ -7291,7 +7286,6 @@ div.confirmation-hedgehog {
   margin-top: 100px; }
   div.confirmation-hedgehog p {
     font-weight: 500;
-    font-family: Arial, Helvetica, sans-serif;
     font-size: 1.1rem; }
 
 .btn_send_info {

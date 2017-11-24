@@ -757,7 +757,6 @@ TABLE.DialogInfo {
 
 .MarketPrice {
   font-size: 1.05rem;
-  FONT-FAMILY: Times New Roman;
 }
 
 
@@ -892,19 +891,16 @@ A.Button {
     COLOR: #7C4C00;
     TEXT-DECORATION: none;
     FONT-SIZE: 9px;
-    FONT-FAMILY: Arial, Verdana, Helvetica, Sans-serif;
   }
   &:hover {
     COLOR: #7C4C00;
     TEXT-DECORATION: underline;
     FONT-SIZE: 9px;
-    FONT-FAMILY: Arial, Verdana, Helvetica, Sans-serif;
   }
   &:active {
     COLOR: #7C4C00;
     TEXT-DECORATION: none;
     FONT-SIZE: 9px;
-    FONT-FAMILY: Arial, Verdana, Helvetica, Sans-serif;
   }
 }
 
@@ -912,7 +908,6 @@ A.Button {
   COLOR: #7C4C00;
   TEXT-DECORATION: none;
   FONT-SIZE: 9px;
-  FONT-FAMILY: Arial, Verdana, Helvetica, Sans-serif;
 }
 
 .SubcatTitle {
@@ -1811,7 +1806,6 @@ div.confirmation-hedgehog {
   margin-top: 100px;
   p {
     font-weight: 500;
-    font-family: Arial, Helvetica, sans-serif;
     font-size: 1.1rem;
   }
 }
