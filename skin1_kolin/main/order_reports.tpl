@@ -2,7 +2,7 @@
 $Id: order_reports.tpl, v 1.0.0 2010/04/12 18:25:21 random Exp $
 vim: set ts=2 sw=2 sts=2 et:
 *}
-<script type="text/javascript" language="JavaScript 1.2" src="{$SkinDir}/lib/jqueryui/jquery-ui.custom.min.js"></script>
+{*<script type="text/javascript" language="JavaScript 1.2" src="{$SkinDir}/lib/jqueryui/jquery-ui.custom.min.js"></script>*}
 
 {include file="page_title.tpl" title=$lng.lbl_order_reports}
 
