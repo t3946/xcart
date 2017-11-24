@@ -2,6 +2,32 @@
 
 {include file="main/include_js.tpl" src="main/popup_image_selection.js"}
 
+{*
+<script src="//tinymce.cachefly.net/4.0/tinymce.min.js"></script>
+*}
+<script type="text/javascript">
+//<![CDATA[
+{literal}
+
+tinymce.init({
+    selector: "textarea",
+    resize: "both",
+    plugins: [
+        "advlist autolink lists link image charmap print preview anchor",
+        "searchreplace visualblocks code fullscreen",
+        "insertdatetime media table contextmenu paste"
+    ],
+    toolbar: "insertfile undo redo | styleselect | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image",
+    forced_root_block : false,
+    force_br_newlines : true,
+    force_p_newlines : false,
+    convert_urls: false,
+    relative_urls: false
+});
+
+{/literal}
+//]]>
+</script>
 
 {assign var="order_details_name" value="Compose message (Order # `$order.order_prefix``$order.orderid`)"}
 {include file="page_title.tpl" title=$order_details_name}
