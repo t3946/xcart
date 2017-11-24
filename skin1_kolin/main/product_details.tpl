@@ -2,8 +2,6 @@
 
 {capture name=dialog}
     {include file="check_clean_url.tpl"}
-    <script type="text/javascript" language="JavaScript 1.2"
-            src="{$SkinDir}/lib/jqueryui/jquery-ui.custom.min.js"></script>
     {if $taxes}
         <script type="text/javascript" language="JavaScript 1.2">
             <!--

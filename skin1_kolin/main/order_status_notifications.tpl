@@ -1,35 +1,3 @@
-{*
-$Id: order_status_notifications.tpl, v 1.0.0 2011/10/18 12:44:21 kate Exp $
-vim: set ts=2 sw=2 sts=2 et:
-*}
-{include file="page_title.tpl" title=$lng.lbl_order_status_notifications}
-<script src="{$SkinDir}/tinymce/js/tinymce/tinymce.min.js" type="text/javascript"></script>
-<script type="text/javascript">
-    //<![CDATA[
-    {literal}
-    function initMCEexact() {
-        tinymce.remove();
-        tinymce.init({
-            mode: "textareas",
-            resize: "both",
-            plugins: [
-                "advlist autolink lists link image charmap print preview anchor",
-                "searchreplace visualblocks code fullscreen",
-                "insertdatetime media table contextmenu paste fullpage"
-            ],
-            toolbar: "insertfile undo redo | styleselect | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image",
-            forced_root_block: false,
-            force_br_newlines: true,
-            force_p_newlines: false,
-            convert_urls: false,
-            relative_urls: false,
-            apply_source_formatting : true
-        });
-    }
-    initMCEexact();
-    {/literal}
-    //]]>
-</script>
 
 <script type="text/javascript">
 <!--
