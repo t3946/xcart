@@ -42113,53 +42113,59 @@ S2.define('jquery.select2',[
             $(this.options.selector).each(function(){
                 var $this = $(this),
                     id = $this.data('id'),
-                    count = parseInt($this.attr('data-count'));
+                    count = parseInt(this.dataset.count);
 
                 if (data.filters[id]) {
                     var data_filter = data.filters[id];
+                    var t_count = data_filter['count']['orders'];
+                    var t_events = data_filter['count']['events'];
+                    var t_priority = data_filter['count']['priority'];
+                    var count_events ='', count_priority = '', c_chng = 0;
 
-                    if (data.filters[id]['count']['orders'] == count) {
+
+                    if (t_count == count) {
                         $this.find('.count').html(data.filters[id]['count']['orders']);
                     }
                     else {
-                        var count_events ='',
-                            sign = '',
-                            c_chng = data_filter['count']['orders'] - count;
+                        c_chng = t_count - count;
 
                         if (c_chng > 0) {
-                            sign = '+';
+                            count += ' +' + c_chng;
                             notify = true;
                         }
 
-                        if (data.filters[id]['count']['events']) {
-                            count_events = '+' + data.filters[id]['count']['events'];
+                        if (t_events && t_events > 0) {
+                            count_events = '+' + t_events;
                         }
 
-                        if (data.filters[id]['count']['priority']) {
-                            $this.find('.priority').removeClass('empty');
-                            $this.find('.priority').html(data.filters[id]['count']['priority']);
+                        if (t_priority && t_priority > 0) {
+                            count_priority = t_priority;
                         }
-                        else {
-                            $this.find('.priority').addClass('empty');
-                            $this.find('.priority').html('');
-                        }
+                    }
 
-                        $this.attr('data-count', data_filter['count']['orders']);
-                        $this.find('.count').html(count + ' ' + sign + c_chng);
-                        $this.find('.events').html(count_events);
+                    this.dataset.count = t_count;
+                    $this.find('.events').toggleClass(self.options.classes.disabled, (t_events === 0)).html(count_events);
+                    $this.find('.priority').toggleClass(self.options.classes.disabled, (t_priority === 0)).html(count_priority);
 
-                        if (data.filters[id]['count']['orders'] > 0 && $this.hasClass(self.options.classes.disabled)) {
-                            $this.removeClass(self.options.classes.disabled);
-                            $this.addClass(self.options.classes.enabled);
-                        }
-                        else if (data.filters[id]['count']['orders'] == 0 && $this.hasClass(self.options.classes.enabled)) {
-                            $this.removeClass(self.options.classes.enabled);
-                            $this.addClass(self.options.classes.disabled);
-                        }
+                    if (self.__first) {
+                        $this.find('.count').html(t_count);
+                    }
+                    else {
+                        $this.find('.count').html(count);
+                    }
 
-                        if (c_chng > 0) {
-                            data.filters[id]['notify_text'] =  '<a target="_blank" href="'+ $this.attr('href') +'">'+ $this.find('.name_events').html() +'</a>';
-                        }
+                    if (t_count > 0 ) {
+                        $this.toggleClass(self.options.classes.disabled, false);
+                        $this.toggleClass(self.options.classes.enabled, true);
+
+                    }
+                    else {
+                        $this.toggleClass(self.options.classes.enabled, false);
+                        $this.toggleClass(self.options.classes.disabled, true);
+                    }
+
+                    if (c_chng > 0) {
+                        data.filters[id]['notify_text'] =  '<a target="_blank" href="'+ $this.attr('href') +'">'+ $this.find('.name_events').html() +'</a>';
                     }
                 }
             });
@@ -42217,6 +42223,7 @@ S2.define('jquery.select2',[
         cycleRefresh: function() {
             if (!this.__stop) {
                 var self = this;
+                self.__first = false;
 
                 setTimeout(function () {
                     $(document).trigger(self.options.triggers.refresh);
