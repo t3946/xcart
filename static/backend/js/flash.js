@@ -32,10 +32,12 @@ $(function () {
         }, outTime);
     };
 
-    if (window['flashStack'] && window['flashStack'].length) {
-        for (var i in window['flashStack']) {
-            var f = window['flashStack'][i];
-            addFlashMessage(f.message, f.type, f.time);
+    $(document).ready(function () {
+        if (window['flashStack'] && window['flashStack'].length) {
+            for (var i in window['flashStack']) {
+                var f = window['flashStack'][i];
+                addFlashMessage(f.message, f.type, f.time);
+            }
         }
-    }
+    });
 });
