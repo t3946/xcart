@@ -6408,7 +6408,7 @@ TABLE.DialogInfo {
 .NavDialogSeparator {
   WIDTH: 100%;
   HEIGHT: 14px;
-  BACKGROUND-IMAGE: url(images/separator.gif);
+  BACKGROUND-IMAGE: url(/skin1_kolin/images/separator.gif);
   PADDING-LEFT: 7px; }
   .NavDialogSeparator IMG {
     WIDTH: 100%;
@@ -6459,7 +6459,7 @@ TABLE.DialogInfo {
   VERTICAL-ALIGN: middle;
   COLOR: #FFFFFF;
   FONT-WEIGHT: 500;
-  BACKGROUND-IMAGE: url(images/save_money.gif); }
+  BACKGROUND-IMAGE: url(/skin1_kolin/images/save_money.gif); }
 
 .MarketPrice {
   font-size: 1.05rem;
@@ -6530,7 +6530,7 @@ TABLE.ButtonTable {
     PADDING: 0px; }
 
 TD.Button {
-  BACKGROUND: url(images/butbg.gif);
+  BACKGROUND: url(/skin1_kolin/images/butbg.gif);
   BACKGROUND-COLOR: #e27a2b;
   BACKGROUND-REPEAT: repeat-x;
   PADDING-LEFT: 5px;
@@ -6630,25 +6630,25 @@ A.Button:visited, A.Button:hover, A.Button:active {
 
 TD.TabLeftSide {
   WIDTH: 9px;
-  BACKGROUND-IMAGE: url(images/tab_l.gif); }
+  BACKGROUND-IMAGE: url(/skin1_kolin/images/tab_l.gif); }
 
 TD.TabRightSide {
   WIDTH: 9px;
-  BACKGROUND-IMAGE: url(images/tab_r.gif); }
+  BACKGROUND-IMAGE: url(/skin1_kolin/images/tab_r.gif); }
 
 TD.TabLeftCorner {
   WIDTH: 9px;
   HEIGHT: 9px;
-  BACKGROUND-IMAGE: url(images/tab_c1.gif); }
+  BACKGROUND-IMAGE: url(/skin1_kolin/images/tab_c1.gif); }
 
 TD.TabRightCorner {
   WIDTH: 9px;
   HEIGHT: 9px;
-  BACKGROUND-IMAGE: url(images/tab_c2.gif); }
+  BACKGROUND-IMAGE: url(/skin1_kolin/images/tab_c2.gif); }
 
 TD.TabCenter {
   HEIGHT: 9px;
-  BACKGROUND-IMAGE: url(images/tab_b.gif); }
+  BACKGROUND-IMAGE: url(/skin1_kolin/images/tab_b.gif); }
 
 IMG.TabCorner {
   WIDTH: 9px;
@@ -6670,7 +6670,7 @@ IMG.TabSide {
 .NavigationCell {
   TEXT-ALIGN: center;
   VERTICAL-ALIGN: bottom;
-  BACKGROUND-IMAGE: url(images/page.gif);
+  BACKGROUND-IMAGE: url(/skin1_kolin/images/page.gif);
   WIDTH: 17px; }
   .NavigationCell A:visited, .NavigationCell A:hover, .NavigationCell A:active {
     TEXT-DECORATION: none; }
@@ -6681,7 +6681,7 @@ IMG.TabSide {
 .NavigationCellWide {
   TEXT-ALIGN: center;
   VERTICAL-ALIGN: bottom;
-  BACKGROUND-IMAGE: url(images/page_wide.gif);
+  BACKGROUND-IMAGE: url(/skin1_kolin/images/page_wide.gif);
   WIDTH: 23px; }
   .NavigationCellWide A:link, .NavigationCellWide A:visited, .NavigationCellWide A:hover, .NavigationCellWide A:active {
     TEXT-DECORATION: none; }
@@ -6861,7 +6861,7 @@ TABLE.DataSheet TR TH {
   WIDTH: 19px;
   HEIGHT: 19px;
   VERTICAL-ALIGN: middle;
-  BACKGROUND-IMAGE: url(images/tree_v.gif); }
+  BACKGROUND-IMAGE: url(/skin1_kolin/images/tree_v.gif); }
 
 .AffiliateCell {
   WIDTH: 19px;
@@ -6967,13 +6967,13 @@ TD.SurveyTabLine {
     WIDTH: 100%; }
 
 .addrow {
-  background-image: url(images/plus.gif);
+  background-image: url(/skin1_kolin/images/plus.gif);
   background-repeat: no-repeat;
   background-position: center;
   cursor: pointer; }
 
 .droprow {
-  background-image: url(images/minus.gif);
+  background-image: url(/skin1_kolin/images/minus.gif);
   background-repeat: no-repeat;
   background-position: center;
   cursor: pointer; }
@@ -7095,10 +7095,10 @@ td.b_empty_value {
   height: 11px; }
 
 .bpm_plus {
-  background-image: url("images/plus.gif"); }
+  background-image: url("/skin1_kolin/images/plus.gif"); }
 
 .bpm_minus {
-  background-image: url("images/minus.gif"); }
+  background-image: url("/skin1_kolin/images/minus.gif"); }
 
 .bpm_one_row {
   height: 14px;
@@ -7273,14 +7273,14 @@ table.survey {
 
 /* buttons */
 button.all_in_stock {
-  background: url(images/button_all.png) no-repeat;
+  background: url(/skin1_kolin/images/button_all.png) no-repeat;
   border: 0;
   width: 100px;
   height: 22px;
   cursor: pointer; }
 
 button#submit {
-  background: url(images/button.png) no-repeat;
+  background: url(/skin1_kolin/images/button.png) no-repeat;
   border: 0;
   width: 100px;
   height: 22px;
@@ -7295,17 +7295,17 @@ div.confirmation-hedgehog {
     font-size: 1.1rem; }
 
 .btn_send_info {
-  background: transparent url(images/send-information-100.png) no-repeat 0px 0px;
+  background: transparent url(/skin1_kolin/images/send-information-100.png) no-repeat 0px 0px;
   display: inline-block;
   height: 42px;
   width: 285px; }
   .btn_send_info:hover {
-    background: transparent url(images/send-information-100.png) no-repeat 0px -43px;
+    background: transparent url(/skin1_kolin/images/send-information-100.png) no-repeat 0px -43px;
     display: inline-block;
     height: 42px;
     width: 285px; }
   .btn_send_info:active {
-    background: transparent url(images/send-information-100.png) no-repeat 0px -86px;
+    background: transparent url(/skin1_kolin/images/send-information-100.png) no-repeat 0px -86px;
     display: inline-block;
     height: 42px;
     width: 285px; }
@@ -7324,31 +7324,31 @@ div.confirmation-hedgehog {
 
 /* -- */
 .call_btn_customer_d {
-  background: transparent url(images/3_call_buttons.png) no-repeat 0 -44px;
+  background: transparent url(/skin1_kolin/images/3_call_buttons.png) no-repeat 0 -44px;
   height: 44px;
   width: 219px;
   CURSOR: pointer; }
 
 .call_btn_customer_a {
-  background: transparent url(images/3_call_buttons.png) no-repeat 0 0px;
+  background: transparent url(/skin1_kolin/images/3_call_buttons.png) no-repeat 0 0px;
   height: 43px;
   width: 219px;
   CURSOR: pointer; }
 
 .call_btn_distr_d {
-  background: transparent url(images/3_call_buttons.png) no-repeat -228px -44px;
+  background: transparent url(/skin1_kolin/images/3_call_buttons.png) no-repeat -228px -44px;
   height: 44px;
   width: 219px;
   CURSOR: pointer; }
 
 .call_btn_distr_a {
-  background: transparent url(images/3_call_buttons.png) no-repeat -228px 2px;
+  background: transparent url(/skin1_kolin/images/3_call_buttons.png) no-repeat -228px 2px;
   height: 44px;
   width: 219px;
   CURSOR: pointer; }
 
 .call_btn_shipper {
-  background: transparent url(images/3_call_buttons.png) no-repeat -456px 0px;
+  background: transparent url(/skin1_kolin/images/3_call_buttons.png) no-repeat -456px 0px;
   height: 44px;
   width: 219px;
   CURSOR: pointer; }
