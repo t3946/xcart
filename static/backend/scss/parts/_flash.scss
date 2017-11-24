@@ -1,56 +1,76 @@
-.flash-messages-block {
-  //position: fixed;
-  //right: 0;
-  //top: 0;
-  //left: $menu-width;
-  z-index: 1000;
+.flash-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: 1;
 
-  .flash-list {
-    display: block;
-    padding: 0;
+  .flash-message {
+    margin: 1em 0;
+    font-size: 18px;
+    padding: 10px 15px;
+    text-align: center;
+    @include transform(translate3d(0, -3000px, 0));
+    @include border-radius(4px);
+    @include css3-prefix('animation', bounceInDown 1s);
+    @include css3-prefix('animation-delay', 0.5s);
+    @include css3-prefix('animation-fill-mode', forwards);
+    @include css3-prefix('animation-iteration-count', 1);
 
-    li {
-      display: block;
-      padding-left: 80px;
-      padding-right: 20px;
-      font-size: 1.5em;
-      height: 60px;
-      line-height: 60px;
-      box-sizing: border-box;
+    &.success {
+      background-color: rgb(122, 175, 100);
+      color: #fff;
+    }
+    &.error {
+      background-color: rgb(175, 78, 63);
+      color: #fff;
+    }
+    &.info {
+      background-color: rgb(5, 90, 147);
+      color: #fff;
+    }
 
-      & > .row {
-        display: inline-block;
-        vertical-align: middle;
-        line-height: normal;
-      }
+    .close-flash {
+      color: inherit;
 
-      .line {
-        font-size: 1.5em;
-      }
-
-      a {
-        text-decoration: none;
-      }
-
-      &.error {
-        background: #FDEAEA url('../images/flash/error-flash.png') 20px 50% no-repeat;
-        background-size: 40px 40px;
-        border-bottom: 1px solid #E3B7B7;
-
-        * {
-          color: #955F5F;
-        }
-      }
-
-      &.success {
-        background: #D5F8AD url('../images/flash/success-flash.png') 20px 50% no-repeat;
-        background-size: 40px 40px;
-        border-bottom: 1px solid #A6D76E;
-
-        * {
-          color: #698D3F;
-        }
+      &.right {
+        float: right;
       }
     }
+  }
+}
+
+.flash-messages-block {
+  //margin-bottom: 30px;
+  position: relative;
+}
+
+@include keyframes(bounceInDown) {
+  0%, 60%, 75%, 90%, 100% {
+    @include css3-prefix('animation-timing-function', cubic-bezier(0.215, 0.610, 0.355, 1.000));
+  }
+
+  0% {
+    opacity: 0;
+    @include transform(translate3d(0, -3000px, 0));
+  }
+
+  60% {
+    opacity: 1;
+    @include transform(translate3d(0, 25px, 0));
+  }
+
+  75% {
+    @include transform(translate3d(0, -10px, 0));
+  }
+
+  90% {
+    @include transform(translate3d(0, 5px, 0));
+  }
+
+  100% {
+    @include transform(none);
   }
 }
