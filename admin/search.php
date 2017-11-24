@@ -115,7 +115,7 @@ if ($mode == 'search'){
                 }
 
                 if ($product->productid) {
-                    func_header_location('product_modify.php?productid=' . $product->productid . '&switch_sf=true');
+                    $app->request->redirect('product_modify.php?productid=' . $product->productid);
                 }
             }
 
