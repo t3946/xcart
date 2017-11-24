@@ -32,6 +32,7 @@ class CouponOldCart
 
     private $balance;
     private $productsDiscount = 0;
+    private $force_show_error = false;
 
 
     /**
@@ -98,6 +99,13 @@ class CouponOldCart
     {
         $this->order_id = $order_id;
         return $this;
+    }
+
+    public function setIsForceShow($force = false)
+    {
+        if (!$this->force_show_error) {
+            $this->force_show_error = $force;
+        }
     }
 
     /**
@@ -249,6 +257,7 @@ class CouponOldCart
                     $valid = $restrict->validate();
             }
 
+            $this->setIsForceShow($restrict->isForceShow());
             $this->addError($restrict::className(), $restrict->getErrorMessage());
             $this->setRestrictTypeValidate($restrict::className(), $valid);
         }
@@ -484,6 +493,11 @@ class CouponOldCart
     public function isValid()
     {
         return $this->validateCoupon();
+    }
+
+    public function isForceShow()
+    {
+        return $this->force_show_error;
     }
 
     /**

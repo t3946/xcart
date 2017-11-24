@@ -4,7 +4,7 @@
 
     <div class="coupon" style="text-align: right">
     {if !$couponModel}
-        <label for="coupon-code" style="margin-right: 1em;">
+        <label for="coupon-code" style="margin-right: 1em; color: #CC3333; font-size: 1.1em;">
             Got a coupon code ?
         </label>
 
@@ -25,7 +25,7 @@
                 {$couponModel->code}
             </span>
 
-            <button name="discard-coupon" value="1" class="cidev_new_button cidev_new_white" style="font-size: 11px;">
+            <button name="discard-coupon" value="1" class="cidev_new_button cidev_new_white" style="font-size: 1.15em">
                 Discard
             </button>
         </div>

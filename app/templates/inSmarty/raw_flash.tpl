@@ -4,7 +4,7 @@
     window['flashStack'] = [];
 
     {foreach $messages as $item}
-        window['flashStack'].push({ 'message': "{$item['message']|escape}", 'type': {$item['type']|json_encode}, 'time': {$item['time']|json_encode} });
+        window['flashStack'].push({ 'message': {$item['message']|json_encode}, 'type': {$item['type']|json_encode}, 'time': {$item['time']|json_encode} });
     {/foreach}
 
     {ignore}
@@ -27,7 +27,7 @@
 
             var $item = $('<div class="flash-message"></div>').addClass(type);
             var $closer = $('<a class="close-flash right"><i class="icon-delete_in_filter"></i></a>');
-            var $text = $('<span/>').addClass('message').text(message);
+            var $text = $('<span/>').addClass('message').innerHTML = message;
 
             $item.append($closer);
             $item.append($text);

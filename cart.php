@@ -1078,7 +1078,7 @@ if (!$func_is_cart_empty) {
     # Calculate all prices
     #
     $cart = func_array_merge($cart, func_calculate($cart, $products, $login, $current_area, (!empty($paymentid) ? intval($paymentid) : 0)));
-    if ($mode == "checkout" && !empty($paymentid) && CouponOldCart::getInstance()->hasErrors()) {
+    if (CouponOldCart::getInstance()->hasErrors() && (($mode == "checkout" && !empty($paymentid)) || CouponOldCart::getInstance()->isForceShow()) ) {
         $str = implode("<br/>", CouponOldCart::getInstance()->getErrors());
         \Xcart\App\Main\Xcart::app()->flash->addWithCode('coupon_code', $str, 'info', 15000);
     }
