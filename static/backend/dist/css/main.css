@@ -8138,6 +8138,15 @@ h1 {
         color: #9594A5;
         background-color: #fff; }
 
+.flash-messages-block {
+  width: 1280px;
+  position: fixed;
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
+  z-index: 1000; }
+
 .flash-list {
   list-style: none;
   padding: 0;
@@ -8198,9 +8207,6 @@ h1 {
       color: inherit; }
       .flash-list .flash-message .close-flash.right {
         float: right; }
-
-.flash-messages-block {
-  position: relative; }
 
 @-webkit-keyframes bounceInDown {
   0%, 60%, 75%, 90%, 100% {
