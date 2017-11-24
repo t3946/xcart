@@ -19,6 +19,7 @@ Thumbs.db
 !/static/**/*.png
 !/static/**/*.jpg
 !/static/**/*.jpeg
+!/static/**/*.svg
 ###################################
 ## scripts to exclude
 /robots.txt.php
