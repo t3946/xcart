@@ -59,32 +59,24 @@
                     var t_count = data_filter['count']['orders'];
                     var t_events = data_filter['count']['events'];
                     var t_priority = data_filter['count']['priority'];
-                    var count_events ='', count_priority = '', c_chng = 0;
+                    var count_events ='', count_priority = '', c_chng = t_count - count;
 
-
-                    if (t_count == count) {
-                        $this.find('.count').html(data.filters[id]['count']['orders']);
+                    if (c_chng > 0) {
+                        count += ' +' + c_chng;
+                        notify = true;
                     }
-                    else {
-                        c_chng = t_count - count;
 
-                        if (c_chng > 0) {
-                            count += ' +' + c_chng;
-                            notify = true;
-                        }
+                    if (t_events && t_events > 0) {
+                        count_events = '+' + t_events;
+                    }
 
-                        if (t_events && t_events > 0) {
-                            count_events = '+' + t_events;
-                        }
-
-                        if (t_priority && t_priority > 0) {
-                            count_priority = t_priority;
-                        }
+                    if (t_priority && t_priority > 0) {
+                        count_priority = t_priority;
                     }
 
                     this.dataset.count = t_count;
-                    $this.find('.events').toggleClass(self.options.classes.disabled, (t_events === 0)).html(count_events);
-                    $this.find('.priority').toggleClass(self.options.classes.disabled, (t_priority === 0)).html(count_priority);
+                    $this.find('.events').toggleClass(self.options.classes.disabled, (t_events == 0)).html(count_events);
+                    $this.find('.priority').toggleClass(self.options.classes.disabled, (t_priority == 0)).html(count_priority);
 
                     if (self.__first) {
                         $this.find('.count').html(t_count);

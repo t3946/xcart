@@ -3,7 +3,7 @@
    target="_blank"
    data-id="{$model->id}"
    data-tooltip-action="{url 'dashboard:filter_subscription' id=$model->id}"
-   data-count="{$model->getSearchStorage()->getCashedCount()}">
+   data-count="0">
     <div class="row">
         <div class="columns large-12">
             {if $model->tag}
