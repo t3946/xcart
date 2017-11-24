@@ -888,7 +888,7 @@ class OrderSearchStore extends BaseStore
         $qs->filter(['shipping.important' => 1, new QAndNot(['group.shippingid' => ''])]);
         $qs->addSelect(['shipping.important']);
 
-        return Connection::getInstance()->fetchColumn("select COUNT(`order`.`important`) from ({$qs->allSql()}) as `order`");
+        return (int)Connection::getInstance()->fetchColumn("select COUNT(`order`.`important`) from ({$qs->allSql()}) as `order`");
     }
 
     public function getCachedPriorityShippingCount()
