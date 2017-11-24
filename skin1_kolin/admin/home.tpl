@@ -2,87 +2,83 @@
 { config_load file="$skin_config" }
 <html>
 <head>
-	<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    <title>{if $login ne ""}{if $current_storefront_info.prefix eq "MAIN_SF_PREFIX"}AR-{else}{$current_storefront_info.prefix}{/if}Admin: {$cidev_firstname} ({$login}){else}{$lng.txt_site_title}{/if}</title>
+    { include file="meta.tpl" }
 
-<title>{if $login ne ""}{if $current_storefront_info.prefix eq "MAIN_SF_PREFIX"}AR-{else}{$current_storefront_info.prefix}{/if}Admin: {$cidev_firstname} ({$login}){else}{$lng.txt_site_title}{/if}</title>
-{ include file="meta.tpl" }
 
-<script src="/static/backend/dist/js/main.js"></script>
-<link rel="stylesheet" href="/static/backend/dist/css/main.css" />
+    {$xcartApp->template->render('inSmarty/headers_admin.tpl')}
 
-{*<link rel="stylesheet" href="{$SkinDir}/lib/jqueryui/jquery.ui.admin.css" />*}
-{*<link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,500,500i,700,700i,900,900i&subset=cyrillic,cyrillic-ext,latin-ext" rel="stylesheet">*}
-<link href="/static/backend/production/gotham-pro.css" rel="stylesheet">
+    {if $main eq "manufacturers"}
+    <script src="{$SkinDir}/tinymce/js/tinymce/qunit-git.js"></script>
+    <script>
+    {literal}
 
-{if $main eq "manufacturers"}
-<script src="{$SkinDir}/tinymce/js/tinymce/qunit-git.js"></script>
-<script>
-{literal}
+    QUnit.config.reorder = false;
+    QUnit.config.autostart = false;
+    // This test can only be run with a built version of tinyMCE since the dev
+    // version uses document.write to put tiny on the page :(
+    module("Loading TinyMCE asynchronously", {
+        autostart: false
+    });
+    // kicks off the test by installing an interval checking for domready.
+    // Not a robust or typical domready check, but suitable for the test.
+    var attempts = 0;
+    var readyStateTimer = setInterval(function() {
+        if (document.readyState !== 'complete' && attempts < 100) return;
+        clearInterval(readyStateTimer);
+        loadTinyMCE();
+    }, 20);
+    var loadTinyMCE = function() {
+        injectScript('{/literal}{$SkinDir}{literal}/tinymce/js/tinymce/tinymce.min.js', initEditor);
+    };
+    // simple script injection helper
+    var injectScript = (function() {
+        var relative = document.getElementsByTagName('script')[0];
+        var loadEvent = 'onload' in relative ? 'onload' : 'onreadystatechange';
+        return function(src, callback) {
+            var script = document.createElement('script');
+            script.async = 1;
+            script.src = src;
+            if (callback) script[loadEvent] = callback;
+            relative.parentNode.insertBefore(script, relative);
+            return script;
+        }
+    }());
+    var initEditor = function(script) {
+        tinyMCE.init({
+    //		mode : 'exact',
+    //		elements : 'elm1',
+        selector: "textarea.new_editor",
+        resize: "both",
+        plugins: [
+            "advlist autolink lists link image charmap print preview anchor",
+            "searchreplace visualblocks code fullscreen",
+            "insertdatetime media table contextmenu paste"
+        ],
+        toolbar: "insertfile undo redo | styleselect | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image",
+        forced_root_block : false,
+        force_br_newlines : true,
+        force_p_newlines : false,
+        convert_urls: false,
+        relative_urls: false,
+        button_tile_map : true,
 
-QUnit.config.reorder = false;
-QUnit.config.autostart = false;
-// This test can only be run with a built version of tinyMCE since the dev
-// version uses document.write to put tiny on the page :(
-module("Loading TinyMCE asynchronously", {
-	autostart: false
-});
-// kicks off the test by installing an interval checking for domready.
-// Not a robust or typical domready check, but suitable for the test.
-var attempts = 0;
-var readyStateTimer = setInterval(function() {
-	if (document.readyState !== 'complete' && attempts < 100) return;
-	clearInterval(readyStateTimer);
-	loadTinyMCE();
-}, 20);
-var loadTinyMCE = function() {
-	injectScript('{/literal}{$SkinDir}{literal}/tinymce/js/tinymce/tinymce.min.js', initEditor);
-};
-// simple script injection helper
-var injectScript = (function() {
-	var relative = document.getElementsByTagName('script')[0];
-	var loadEvent = 'onload' in relative ? 'onload' : 'onreadystatechange';
-	return function(src, callback) {
-		var script = document.createElement('script');
-		script.async = 1;
-		script.src = src;
-		if (callback) script[loadEvent] = callback;
-		relative.parentNode.insertBefore(script, relative);
-		return script;
-	}
-}());
-var initEditor = function(script) {
-	tinyMCE.init({
-//		mode : 'exact',
-//		elements : 'elm1',
-    selector: "textarea.new_editor",
-    resize: "both",
-    plugins: [
-        "advlist autolink lists link image charmap print preview anchor",
-        "searchreplace visualblocks code fullscreen",
-        "insertdatetime media table contextmenu paste"
-    ],
-    toolbar: "insertfile undo redo | styleselect | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image",
-    forced_root_block : false,
-    force_br_newlines : true,
-    force_p_newlines : false,
-    convert_urls: false,
-    relative_urls: false,
-    button_tile_map : true,
+            init_instance_callback : runTests
+        });
+    };
+    var runTests = function(editor) {
+    };
 
-		init_instance_callback : runTests
-	});
-};
-var runTests = function(editor) {
-};
-
-{/literal}
-</script>
+    {/literal}
+    </script>
 {/if}
-	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
-	<link rel="icon" href="/favicon.ico" type="image/x-icon">
+
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
 </head>
 <body{$reading_direction_tag}>
 
+{$xcartApp->template->render('inSmarty/raw_flash.tpl')}
 <div class="row">
     <div class="column large-12">
         { include file="rectangle_top.tpl" }
