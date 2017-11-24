@@ -212,6 +212,11 @@ class CouponOldCart
 
     public function checkRestrictions()
     {
+        if ($this->cart && empty($this->cart['tmp_coupon_total'])) {
+            $this->cart['tmp_coupon_total'] = $this->getSumProducts();
+        }
+
+
         /** @var \Modules\Cart\Discounts\Restrictions\AbstractRestriction $restrict */
         foreach ($this->getRestricts() as $restrict) {
             $restrict->setCoupon($this->getCoupon());

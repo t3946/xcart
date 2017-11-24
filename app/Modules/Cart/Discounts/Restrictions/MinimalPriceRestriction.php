@@ -21,7 +21,7 @@ class MinimalPriceRestriction extends AbstractRestriction
 
     public function getTypeValidation()
     {
-        return self::VALIDATION_CUSTOMER;
+        return self::VALIDATION_OTHER;
     }
 
     public function getErrorMessage()
@@ -39,7 +39,7 @@ class MinimalPriceRestriction extends AbstractRestriction
 
         if ($this->cart) {
             //@TODO: Cahnge for new cart
-            return $this->cart['subtotal'] > $this->data['min_price'];
+            return $this->cart['tmp_coupon_total'] > $this->data['min_price'];
         }
 
         return false;

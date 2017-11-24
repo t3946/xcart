@@ -1080,7 +1080,7 @@ if (!$func_is_cart_empty) {
     $cart = func_array_merge($cart, func_calculate($cart, $products, $login, $current_area, (!empty($paymentid) ? intval($paymentid) : 0)));
     if ($mode == "checkout" && !empty($paymentid) && CouponOldCart::getInstance()->hasErrors()) {
         $str = implode("<br/>", CouponOldCart::getInstance()->getErrors());
-        \Xcart\App\Main\Xcart::app()->flash->addWithCode('coupon_code', $str, 15000);
+        \Xcart\App\Main\Xcart::app()->flash->addWithCode('coupon_code', $str, 'info', 15000);
     }
 
     if (func_is_cart_empty($cart)) {
