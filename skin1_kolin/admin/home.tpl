@@ -11,7 +11,9 @@
 </head>
 <body{$reading_direction_tag}>
 
-{$xcartApp->template->render('inSmarty/raw_flash.tpl')}
+<div class="flash-messages-block">
+    <div class="flash-list"></div>
+</div>
 
 <div class="row">
     <div class="column large-12">

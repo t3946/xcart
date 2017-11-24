@@ -5,6 +5,15 @@
 <script src="/static/backend/dist/raw/editor/tinymce.min.js"></script>
 <script>
     $(function () {
+        {set $messages = $.app->flash->read()}
+
+        window['flashStack'] = [];
+
+        {foreach $messages as $item}
+        window['flashStack'].push({ 'message': {$item['message']|json_encode}, 'type': {$item['type']|json_encode}, 'time': {$item['time']|json_encode} });
+        {/foreach}
+
+
         $(document).ready(function(){
             tinymce.init({
                 selector: 'textarea.new_editor',
