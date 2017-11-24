@@ -53,7 +53,7 @@ class CouponKitAdmin extends Admin
     {
         $return = [];
 
-        if (!Xcart::app()->user->getIsStaff()) {
+        if (Xcart::app()->user->getIsSuperuser()) {
             $return[] = 'update';
         }
         $return[] = 'info';
