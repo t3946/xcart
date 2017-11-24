@@ -79,9 +79,11 @@ tinymce.init({
           </tr>
 
           <tr>
-            <td class="call_btn_distr_{if $manufacturer.good_time_to_send_email_to_distributor eq "Y"}a{else}d{/if}" width="219" height="44">
-                <a target="_blank" href="tel:{if $manufacturer.distributor_phone_phone_normalized ne ""}{$manufacturer.distributor_phone_phone_normalized}{else}{$manufacturer.distributor_phone}{/if}"><div style="width: 219px; height: 44px;"></div></a>
-            </td>
+              <td>
+                    <div class="call_btn_distr_{if $manufacturer.good_time_to_send_email_to_distributor eq "Y"}a{else}d{/if}">
+                        <a target="_blank" href="tel:{if $manufacturer.distributor_phone_phone_normalized ne ""}{$manufacturer.distributor_phone_phone_normalized}{else}{$manufacturer.distributor_phone}{/if}"><div style="width: 219px; height: 44px;"></div></a>
+                    </div>
+              </td>
           </tr>
 
         </table>

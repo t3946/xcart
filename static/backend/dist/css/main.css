@@ -7317,6 +7317,10 @@ div.confirmation-hedgehog {
   color: blue; }
 
 /* -- */
+.call_btn {
+  height: 44px;
+  width: 219px; }
+
 .call_btn_customer_d {
   background: transparent url(/skin1_kolin/images/3_call_buttons.png) no-repeat 0 -44px;
   height: 44px;

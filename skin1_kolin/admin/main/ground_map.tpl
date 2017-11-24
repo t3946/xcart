@@ -82,8 +82,10 @@ src="https://www.google.com/maps/embed/v1/directions?mode=flying&center=53.12540
           </tr>
 
           <tr>
-            <td class="call_btn_distr_{if $v.good_time_to_send_email_to_distributor eq "Y"}a{else}d{/if}" width="300" height="44">
-                <a target="_blank" href="tel:{if $v.distributor_phone_phone_normalized ne ""}{$v.distributor_phone_phone_normalized}{else}{$v.distributor_phone}{/if}"><div style="width: 219px; height: 44px;"></div></a>
+            <td>
+                <div class="call_btn_distr_{if $v.good_time_to_send_email_to_distributor eq "Y"}a{else}d{/if}">
+                    <a target="_blank" href="tel:{if $v.distributor_phone_phone_normalized ne ""}{$v.distributor_phone_phone_normalized}{else}{$v.distributor_phone}{/if}"><div style="width: 219px; height: 44px;"></div></a>
+                </div>
             </td>
           </tr>
 
@@ -92,9 +94,12 @@ src="https://www.google.com/maps/embed/v1/directions?mode=flying&center=53.12540
 <tr><td>&nbsp;</td></tr>
 <tr><td><B>Shipper phone:</B> {$tracking_links_carrier[$key_carrier].phone}</td></tr>
           <tr>
-            <td class="call_btn_shipper" width="219" height="44">
-                <a target="_blank" href="tel:{$tracking_links_carrier[$key_carrier].phone}"><div style="width: 219px; height: 44px;"></div></a>
-            </td>
+              <td>
+
+                <div class="call_btn call_btn_shipper" >
+                    <a target="_blank" href="tel:{$tracking_links_carrier[$key_carrier].phone}"><div style="width: 219px; height: 44px;"></div></a>
+                </div>
+              </td>
           </tr>
 {/if}
 <tr><td>&nbsp;</td></tr>
@@ -108,9 +113,12 @@ src="https://www.google.com/maps/embed/v1/directions?mode=flying&center=53.12540
           </tr>
 
           <tr>
-            <td class="call_btn_customer_{if $customer.good_time_to_send_email_to_customer eq "Y"}a{else}d{/if}" width="300" height="44">
-                <a target="_blank" href="tel:{if $customer.phone_normalized ne ""}{$customer.phone_normalized}{else}{$customer.phone}{/if}"><div style="width: 219px; height: 44px;"></div></a>
-            </td>
+              <td>
+
+                <div class="call_btn_customer_{if $customer.good_time_to_send_email_to_customer eq "Y"}a{else}d{/if}">
+                    <a target="_blank" href="tel:{if $customer.phone_normalized ne ""}{$customer.phone_normalized}{else}{$customer.phone}{/if}"><div style="width: 219px; height: 44px;"></div></a>
+                </div>
+              </td>
           </tr>
 
 
