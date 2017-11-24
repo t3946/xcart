@@ -111,7 +111,7 @@ class BrandModel extends Model
             'child_brands' => [
                 'class' => HasManyField::className(),
                 'modelClass' => BrandModel::className(),
-                'link' => ['parent_brand_id' => 'brandid']
+                'link' => ['brandid' => 'parent_brand_id']
             ],
             'products' => [
                 'class' => HasManyField::className(),
