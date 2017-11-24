@@ -28,7 +28,7 @@ class MinimalPriceRestriction extends AbstractRestriction
     {
         $format = number_format($this->data['min_price']);
 
-        return "Coupon use for minimal price $ {$format}";
+        return "Minimum order amount for this coupon is $ {$format}";
     }
 
     /**
