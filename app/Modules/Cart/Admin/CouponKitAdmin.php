@@ -5,6 +5,7 @@ use Modules\Admin\Contrib\Admin;
 use Modules\Cart\Forms\CouponKitForm;
 use Modules\Cart\Models\CouponKitModel;
 use Xcart\App\Exceptions\HttpException;
+use Xcart\App\Main\Xcart;
 
 class CouponKitAdmin extends Admin
 {
@@ -50,9 +51,13 @@ class CouponKitAdmin extends Admin
 
     public function getListItemActions()
     {
-        return [
-            'update',
-            'info',
-        ];
+        $return = [];
+
+        if (!Xcart::app()->user->getIsStaff()) {
+            $return[] = 'update';
+        }
+        $return[] = 'info';
+
+        return $return;
     }
 }
