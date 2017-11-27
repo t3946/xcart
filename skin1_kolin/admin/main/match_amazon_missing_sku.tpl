@@ -35,8 +35,8 @@
             <td align="center" class="missing_order_count">{$oMatchProduct->getOrdersCount()}</td>
             <td style="text-align: center">
                 <div class="action_reclass_buttons ui buttons" data-missing-sku="{$oMatchProduct->getMissingSKU()}">
-                    <div data-action="Edit" class="ui button item" style="border: 1px solid #808080;">Edit</div>
-                    <div style="border-color: #808080; border-image: none; border-style: solid solid solid none; border-width: 1px 1px 1px 0;"
+                    <div data-action="Edit" class="ui button item" style="border: 1px solid #808080; height: 100%;">Edit</div>
+                    <div style="border-color: #808080; border-image: none; border-style: solid solid solid none; border-width: 1px 1px 1px 0; height: 100%; overflow: visible;"
                          class="ui combo top right dropdown icon button">
                         <i class="dropdown icon"></i>
                         <div class="menu">
@@ -77,8 +77,8 @@
                     <td></td>
                     <td style="text-align: center">
                         <div class="action_reclass_buttons ui buttons" data-missing-sku="{$oMatchProduct->getMissingSKU()}">
-                            <div data-action="Edit" class="ui button item" style="border: 1px solid #808080;">Edit</div>
-                            <div style="border-color: #808080; border-image: none; border-style: solid solid solid none; border-width: 1px 1px 1px 0;"
+                            <div data-action="Edit" class="ui button item" style="border: 1px solid #808080;  height: 100%;">Edit</div>
+                            <div style="border-color: #808080; border-image: none; border-style: solid solid solid none; border-width: 1px 1px 1px 0;  height: 100%; overflow: visible;"
                                  class="ui combo top right dropdown icon button">
                                 <i class="dropdown icon"></i>
                                 <div class="menu">
