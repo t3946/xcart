@@ -2,8 +2,8 @@
 
 namespace Modules\Meta\Forms;
 
+use Modules\Core\Fields\AceField;
 use Modules\Meta\Models\MetaTemplate;
-use Xcart\App\Form\Fields\TextField;
 use Xcart\App\Form\ModelForm;
 
 class MetaTemplateForm extends ModelForm
@@ -26,8 +26,17 @@ class MetaTemplateForm extends ModelForm
     {
         return [
             'title' => [
-                'class' => TextField::className(),
-            ]
+                'class' => AceField::className(),
+                'language' => 'smarty',
+            ],
+            'description' => [
+                'class' => AceField::className(),
+                'language' => 'smarty',
+            ],
+            'keywords' => [
+                'class' => AceField::className(),
+                'language' => 'smarty',
+            ],
         ];
     }
 }
