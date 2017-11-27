@@ -399,7 +399,7 @@ class ProductModel extends Model implements ICartItem
     {
         $name = $this->seo_product_name ?: $this->product;
 
-        return ($this->isGroupChild()) ?  $this->parent->group_mask . " ". $name : $name;
+        return ($this->isGroupChild()) ?  $this->group_mask . " ". $name : $name;
     }
 
     public function getFrontendDescription()

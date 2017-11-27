@@ -592,6 +592,18 @@
                 </td>
             </tr>
 
+            {if $oProduct && $oProduct->isGroupChild()}
+                <tr>
+                    {if $geid ne ''}
+                        <td width="15" class="TableSubHead">&nbsp;</td>
+                    {/if}
+                    <td class="FormButton" nowrap="nowrap">Product group mask:</td>
+                    <td>
+                        <input type="text" name="group_mask" style="width: 80%;" value="{$oProduct->group_mask}"/>
+                    </td>
+                </tr>
+            {/if}
+
             {if $product.productid ne ""}
                 {include file="main/clean_url_field.tpl" clean_url=$product.clean_url clean_urls_history=$product.clean_urls_history clean_url_fill_error=$top_message.clean_url_fill_error tooltip_id='clean_url_tooltip_link'}
             {/if}
