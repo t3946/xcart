@@ -6,7 +6,9 @@
 
 {block 'content'}
     {if $filter_data}
-        {include 'amazon/reordering/_filter_enabled_message.tpl'}
+    {smarty_admin_block name=''}
+        Some filtering applied to list. Change filters to look at all products.
+    {/smarty_admin_block}
     {/if}
 
     {smarty_admin_block name='Products Filter'}
