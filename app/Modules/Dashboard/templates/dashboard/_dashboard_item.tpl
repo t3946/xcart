@@ -19,10 +19,7 @@
                             {$model->getSearchStorage()->getCachedPrioritySHippingCount()}
                         {/if}
                     </span>
-                    <span class="events {if !$model->getSearchStorage()->getCachedEventsCount()}empty{/if}">
-                        {if $model->getSearchStorage()->getCachedEventsCount()}
-                            +{$model->getSearchStorage()->getCachedEventsCount()}
-                        {/if}
+                    <span class="events empty">
                     </span>
                 </span>
 
