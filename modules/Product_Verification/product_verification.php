@@ -10,7 +10,8 @@ if ( !defined('XCART_START') ) { header("Location: ../"); die("Access denied"); 
 $aOrders = OrderModel::objects()
     ->filter(
         [
-            'vn_status__isnt' => Order::ORDER_VERIFICATION_STATUS_PRODUCT_VERIFIED
+            'vn_status__isnt' => Order::ORDER_VERIFICATION_STATUS_PRODUCT_VERIFIED,
+            'amazonorderid' => ''
         ]
     )->exclude(
         [
