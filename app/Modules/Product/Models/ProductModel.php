@@ -8,6 +8,7 @@ use Modules\Amp\Models\AmpProductModel;
 use Modules\Brand\Models\BrandModel;
 use Modules\Cart\Interfaces\ICartItem;
 use Modules\Distributor\Models\DistributorModel;
+use Modules\Order\Models\OrderDetailModel;
 use Modules\Sites\Models\SiteModel;
 use Modules\Menu\Models\CleanUrlModel;
 use Xcart\App\Components\Breadcrumbs;
@@ -110,6 +111,12 @@ class ProductModel extends Model implements ICartItem
                 'modelClass' => CleanUrlModel::className(),
                 'link' => ['productid' => 'resource_id'],
                 'extra' => ['resource_type' => 'P'],
+            ],
+
+            'order_details' => [
+                'class' => HasManyField::className(),
+                'modelClass' => OrderDetailModel::className(),
+                'link' => ['productid' => 'productid'],
             ],
 
 
