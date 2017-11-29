@@ -87,6 +87,9 @@
                             );
                         },
                         onSubmit: function (s) {
+
+                            tinyMCE.triggerSave();
+
                             var self = this;
                             var $form = $(s).closest('form');
                             var product = $('.thumbnails img', $form).not('.not').map(function(i,v){
