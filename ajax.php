@@ -48,6 +48,7 @@ switch ($ajax_action) {
                 $is_group = true;
                 $productid = $product_id;
                 $amount = $product_info['quantity'];
+                $product_options = isset($product_info['options']) ? $product_info['options'] : null;
                 include "ajax_add_to_cart.php";
                 $res[] = $return;
                 if (isset($return['error']) && $return['error'] == 'Y') {

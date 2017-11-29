@@ -237,7 +237,12 @@ class ProductModel extends Model implements ICartItem
             ],
             'retail_trust_enabled' => [
                 'class' => BooleanCharField::className(),
-            ]
+            ],
+            'options' => [
+                'class' => HasManyField::className(),
+                'modelClass' => OptionModel::className(),
+                'link' => ['productid' => 'productid']
+            ],
         ];
     }
 

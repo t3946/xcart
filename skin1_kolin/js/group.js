@@ -140,13 +140,24 @@ $(function() {
         rows.each(function () {
             var price_table = $(this).data('price');
             var q = parseInt($(this).find('input.quantity').val()) || 0;
+
             if (q > 0) {
+
+                var oparr = {};
+                var options = $('select.option', $(this));
+                if (options.length) {
+                    options.each(function() {
+                        oparr[$(this).data('option-id')] = $(this).find('option:selected').val();
+                    })
+                }
+
                 pr[$(this).data('product-id')] = {
                     quantity: q,
                     price: getPrice(price_table, q) * q,
                     brand: $(this).data('brand'),
                     title: $(this).data('name'),
-                    category: $(this).data('category')
+                    category: $(this).data('category'),
+                    options: oparr
                 };
             }
         });

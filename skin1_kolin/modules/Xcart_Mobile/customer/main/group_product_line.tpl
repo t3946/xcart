@@ -41,6 +41,22 @@
                         </div>
                     {/if}
                     {if !$child->isProductOutOfStock()}
+
+                        {assign var=options value=$child->options}
+                        {if options}
+                            {foreach from=$options item=option}
+                                <label for="product_options_{$option->classid}">{$option->getFrontendName()}</label>
+
+                                <select data-option-id="{$option->classid}" class="option" id="product_options_{$option->classid}" title="{$option->getFrontendName()}" name="product_options[{$option->classid}]">
+                                    {foreach from=$option->getActiveValues() item=option_value}
+                                        <option value="{$option_value->optionid}">
+                                            {$option_value->getFrontendName()}
+                                        </option>
+                                    {/foreach}
+                                </select>
+                            {/foreach}
+                        {/if}
+
                         {if $child->min_amount > 1  && $child->mult_order_quantity == 'Y'}
                             {assign var=step value=$child->min_amount}
                         {else}

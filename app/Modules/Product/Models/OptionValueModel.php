@@ -7,7 +7,7 @@ use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Model;
 
-class ProductOptionModel extends Model
+class OptionValueModel extends Model
 {
     use AutoMetaTrait;
 
@@ -33,5 +33,10 @@ class ProductOptionModel extends Model
                 'default' => ''
             ]
         ];
+    }
+
+    public function getFrontendName()
+    {
+        return $this->option_name;
     }
 }
