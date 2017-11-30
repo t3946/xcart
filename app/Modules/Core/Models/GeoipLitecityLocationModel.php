@@ -57,4 +57,9 @@ class GeoipLitecityLocationModel extends Model
             ],
         ];
     }
+
+    public function __toString()
+    {
+        return "{$this->country}, {$this->region}, {$this->city}, {$this->postalCode}";
+    }
 }

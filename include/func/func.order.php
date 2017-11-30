@@ -1,5 +1,6 @@
 <?php
 
+use Modules\GeoIp\Helpers\GeoIpHelper;
 use Modules\Order\Models\OrderDetailModel;
 use Modules\Order\Models\OrderGroupInvoiceProductModel;
 use Modules\Order\Models\OrderGroupModel;
@@ -961,9 +962,8 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
 
     $ip_info = $CLIENT_IP;
 
-    $geo_litecity_location = func_get_geoip_locations($CLIENT_IP);
-    if (!empty($geo_litecity_location)) {
-        $ip_info .= " (" . $geo_litecity_location["country"] . ", " . $geo_litecity_location["region"] . ", " . $geo_litecity_location["city"] . ", " . $geo_litecity_location["postalCode"] . ")";
+    if ($geo_litecity_location = GeoIpHelper::getGeoipLocation($CLIENT_IP)) {
+        $ip_info .= "({$geo_litecity_location})";
     }
 
     $extras['ip_info'] = $ip_info;
