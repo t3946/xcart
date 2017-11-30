@@ -128,6 +128,7 @@ class ComposerStaticInited1e2f7cb4425e4bdc0264910bb94e92
         'D' => 
         array (
             'Doctrine\\Common\\Cache\\' => 22,
+            'Dariuszp\\' => 9,
         ),
         'C' => 
         array (
@@ -268,6 +269,10 @@ class ComposerStaticInited1e2f7cb4425e4bdc0264910bb94e92
         'Doctrine\\Common\\Cache\\' => 
         array (
             0 => __DIR__ . '/..' . '/doctrine/cache/lib/Doctrine/Common/Cache',
+        ),
+        'Dariuszp\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/dariuszp/cli-progress-bar/src/Dariuszp',
         ),
         'Cocur\\Slugify\\' => 
         array (

@@ -39,5 +39,6 @@ return array(
     'Google\\Auth\\' => array($vendorDir . '/google/auth/src'),
     'Firebase\\JWT\\' => array($vendorDir . '/firebase/php-jwt/src'),
     'Doctrine\\Common\\Cache\\' => array($vendorDir . '/doctrine/cache/lib/Doctrine/Common/Cache'),
+    'Dariuszp\\' => array($vendorDir . '/dariuszp/cli-progress-bar/src/Dariuszp'),
     'Cocur\\Slugify\\' => array($vendorDir . '/cocur/slugify/src'),
 );
