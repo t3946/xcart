@@ -29,7 +29,8 @@
         "theiconic/php-ga-measurement-protocol": "^1.2",
         "imagine/imagine": "^0.7.1",
         "swiftmailer/swiftmailer": "^5.4",
-        "cocur/slugify": "^1.4"
+        "cocur/slugify": "^1.4",
+        "geoip2/geoip2": "^2.7"
     },
     "autoload": {
         "psr-4": {

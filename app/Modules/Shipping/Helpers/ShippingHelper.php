@@ -3,9 +3,9 @@
 namespace Modules\Shipping\Helpers;
 
 
-use Modules\Core\Helpers\GeoipHelper;
 use Modules\Core\Models\StateModel;
 use Modules\Distributor\Models\DistributorModel;
+use Modules\GeoIp\Helpers\GeoIpHelper;
 use Modules\Product\Models\ProductModel;
 use Modules\Shipping\Models\ShippingModel;
 use Modules\Shipping\Models\ShippingRateModel;
@@ -76,7 +76,7 @@ class ShippingHelper
         $ip = Xcart::app()->request->getUserIP();
         //$ip = '173.234.204.152';
         if (($geo_ip = GeoipHelper::getGeoipLocation($ip))
-            && ($state_model = $geo_ip->state_model)
+            && ($state_model = StateModel::objects()->get(['code' => $geo_ip->mostSpecificSubdivision->isoCode, 'country_code' => $geo_ip->country->isoCode]))
             && ($oManufacturer->calculate_shipping == 'Y'
                 || (
                     ($product->amazon_fba == 'Y' && $product->getAmazonFBAAvailExcludedProcessing() >= $qty)
