@@ -16,6 +16,7 @@ Thumbs.db
 ######################
 ## folders to exclude
 /images/
+/media/
 /m1/
 /files/
 /product_files/
