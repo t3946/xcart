@@ -213,14 +213,15 @@ class CategoryModel extends TreeModel
                 ]);
         }
 
-        if ($old_parent) {
-            $parent = static::objects()->get(['pk' => $old_parent]);
-            $parent->reCalcSelfAndParents();
-        }
-
-        if (!$isNew) {
-            $this->reCalcSelfAndParents();
-        }
+//        @TODO: SLOOOOOOOW
+//        if ($old_parent) {
+//            $parent = static::objects()->get(['pk' => $old_parent]);
+//            $parent->reCalcSelfAndParents();
+//        }
+//
+//        if (!$isNew) {
+//            $this->reCalcProductsCount();
+//        }
     }
 
     public function reCalcProductsCount()
@@ -257,7 +258,7 @@ class CategoryModel extends TreeModel
 
     public function reCalcSelfAndParents()
     {
-        if ($models = $this->objects()->parents()->all()) {
+        if ($models = $this->objects()->ancestors(true)->all()) {
             /** @var static $model */
             foreach ($models as $model)
             {
