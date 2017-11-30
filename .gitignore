@@ -15,6 +15,7 @@ www.*_*.xml
 thumbs.db
 Thumbs.db
 *.cur
+.DS_Store
 !/static/**/*.gif
 !/static/**/*.png
 !/static/**/*.jpg
