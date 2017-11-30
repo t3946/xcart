@@ -11,6 +11,7 @@ use Modules\Core\Models\GlobalConfigModel;
 use Modules\Core\Models\StateModel;
 use Modules\Core\Models\TelephoneAreaModel;
 use Modules\Sites\Models\SiteConfigModel;
+use Xcart\App\Exceptions\Exception;
 use Xcart\App\Helpers\Paths;
 
 class GeoIpHelper
@@ -30,6 +31,8 @@ class GeoIpHelper
             $model = $reader->city($ip);
 
         } catch (AddressNotFoundException $addressNotFoundException) {
+
+        } catch (\Exception $addressNotFoundException) {
 
         }
 
