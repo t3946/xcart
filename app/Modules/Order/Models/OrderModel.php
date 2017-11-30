@@ -3,6 +3,7 @@ namespace Modules\Order\Models;
 
 use Modules\Core\Models\StateModel;
 use Modules\Order\Helpers\OrderHelper;
+use Modules\Product\Models\ProductModel;
 use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\ForeignField;
@@ -43,6 +44,11 @@ class OrderModel extends Model
             'groups' => [
                 'class' => HasManyField::className(),
                 'modelClass' => OrderGroupModel::className(),
+                'link' => ['orderid' => 'orderid'],
+            ],
+            'details' => [
+                'class' => HasManyField::className(),
+                'modelClass' => OrderDetailModel::className(),
                 'link' => ['orderid' => 'orderid'],
             ],
             'tags' => [
@@ -119,5 +125,15 @@ class OrderModel extends Model
     public function isAmazon()
     {
         return !empty($this->amazonorderid);
+    }
+
+    /**
+     * @return ProductModel[]
+     */
+    public function getProducts()
+    {
+        return ProductModel::objects()
+            ->filter(['order_details__orderid' => $this->orderid])
+            ->all();
     }
 }

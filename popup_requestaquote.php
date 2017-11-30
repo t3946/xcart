@@ -35,6 +35,8 @@
 # popup_shipquote.php, random
 #
 
+use Modules\GeoIp\Helpers\GeoIpHelper;
+
 require "./auth.php";
 require $xcart_dir."/include/countries.php";
 require $xcart_dir."/include/states.php";
@@ -162,9 +164,8 @@ $smarty->assign("cart", $cart);
 $smarty->assign("mode", @$mode);
 $smarty->assign("userinfo", $shipquote_userinfo);
 
-$geo_litecity_location = func_get_geoip_locations($CLIENT_IP);
-if (!empty($geo_litecity_location)) {
-    $smarty->assign('geo_litecity_location', $geo_litecity_location);
+if ($geo_litecity_location = GeoIpHelper::getGeoipLocation($CLIENT_IP)) {
+    $smarty->assign('geo_litecity_location', $geo_litecity_location->getAttributes());
 }
 
 func_display("customer/main/popup_requestaquote.tpl",$smarty);

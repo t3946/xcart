@@ -41,7 +41,7 @@ use Modules\Order\Stores\OrderTransactionStore;
 use Modules\Payment\Gateways\Gateway;
 use Modules\Payment\Helpers\PaymentHelper;
 use Modules\Payment\Models\ProcessorModel;
-use Modules\Product\Models\ProductOptionModel;
+use Modules\Product\Models\OptionValueModel;
 use Xcart\Paypal;
 
 global $login;
@@ -860,7 +860,7 @@ if ($REQUEST_METHOD == "POST") {
 
                         if (!empty($v["classid_optionid"]) && is_array($v["classid_optionid"])){
                             foreach ($v["classid_optionid"] as $class_id => $option_id) {
-                                if ($optionModel = ProductOptionModel::objects()->get(['optionid' => $option_id])) {
+                                if ($optionModel = OptionValueModel::objects()->get(['optionid' => $option_id])) {
                                     $v["classid_optionid"][$class_id] = $optionModel->getAttributes();
                                 }
                             }

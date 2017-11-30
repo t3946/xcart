@@ -104,6 +104,9 @@ class ComposerStaticInited1e2f7cb4425e4bdc0264910bb94e92
             'Monolog\\' => 8,
             'Modules\\' => 8,
             'Mindy\\QueryBuilder\\' => 19,
+            'MaxMind\\WebService\\' => 19,
+            'MaxMind\\Exception\\' => 18,
+            'MaxMind\\Db\\' => 11,
         ),
         'L' => 
         array (
@@ -120,6 +123,7 @@ class ComposerStaticInited1e2f7cb4425e4bdc0264910bb94e92
             'GuzzleHttp\\Psr7\\' => 16,
             'GuzzleHttp\\' => 11,
             'Google\\Auth\\' => 12,
+            'GeoIp2\\' => 7,
         ),
         'F' => 
         array (
@@ -132,6 +136,7 @@ class ComposerStaticInited1e2f7cb4425e4bdc0264910bb94e92
         ),
         'C' => 
         array (
+            'Composer\\CaBundle\\' => 18,
             'Cocur\\Slugify\\' => 14,
         ),
     );
@@ -234,6 +239,18 @@ class ComposerStaticInited1e2f7cb4425e4bdc0264910bb94e92
         array (
             0 => __DIR__ . '/..' . '/mindy/query_builder/src',
         ),
+        'MaxMind\\WebService\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/maxmind/web-service-common/src/WebService',
+        ),
+        'MaxMind\\Exception\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/maxmind/web-service-common/src/Exception',
+        ),
+        'MaxMind\\Db\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/maxmind-db/reader/src/MaxMind/Db',
+        ),
         'League\\Flysystem\\' => 
         array (
             0 => __DIR__ . '/..' . '/league/flysystem/src',
@@ -262,6 +279,10 @@ class ComposerStaticInited1e2f7cb4425e4bdc0264910bb94e92
         array (
             0 => __DIR__ . '/..' . '/google/auth/src',
         ),
+        'GeoIp2\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/geoip2/geoip2/src',
+        ),
         'Firebase\\JWT\\' => 
         array (
             0 => __DIR__ . '/..' . '/firebase/php-jwt/src',
@@ -273,6 +294,10 @@ class ComposerStaticInited1e2f7cb4425e4bdc0264910bb94e92
         'Dariuszp\\' => 
         array (
             0 => __DIR__ . '/..' . '/dariuszp/cli-progress-bar/src/Dariuszp',
+        ),
+        'Composer\\CaBundle\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/composer/ca-bundle/src',
         ),
         'Cocur\\Slugify\\' => 
         array (

@@ -608,7 +608,7 @@ function check_r_fields(){
     {if $product.coupon_discount > 0}
         <i class="m icon discount float__left margin__first_image"></i>
     {/if}
-    <a href="{$product.oProduct->getUrl()}{if $cats[$product.productid]}&cat={$cats[$product.productid]}{/if}" title="" target="_blank">{$product.product}</a>
+    <a href="{$product.oProduct->getUrl()}{if $cats[$product.productid]}&cat={$cats[$product.productid]}{/if}" title="" target="_blank">{$product.oProduct->getFrontendName()}</a>
     {assign var='oHTMLShot' value = $product.oProduct->getHTMLShot($order.orderid)}
     {if (!empty($oHTMLShot) && $oHTMLShot->getId())}
       <a title="View HTML-Shot" target="_blanks" style="float:right; margin-top:3px;" href="/admin/view_html_shot.php?id={$oHTMLShot->getId()}" class="html-shot-view">
@@ -1440,10 +1440,12 @@ Total Product Cost to us
     <td>{$lng.lbl_coupon_saving}</td>
     <td colspan="6">
         {assign var="couponModel" value=$oOrder->getCouponModel()}
-        {assign var="couponAdmin" value=$couponModel->getAdmin()}
-        {$couponModel->code}
+        {if $couponModel}
+            {assign var="couponAdmin" value=$couponModel->getAdmin()}
+            {$couponModel->code}
 
-        ( <a href="{$couponAdmin->getInfoUrl()}" target="_blank">View info</a> )
+            ( <a href="{$couponAdmin->getInfoUrl()}" target="_blank">View info</a> )
+        {/if}
     </td>
     <td align="right" class="color__red">
         {include file="currency2.tpl" value=$oOrder->coupon_discount}

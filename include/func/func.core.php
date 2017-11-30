@@ -1,7 +1,7 @@
 <?php
 
 use Modules\Core\Helpers\CoreHelper;
-use Modules\Core\Helpers\GeoipHelper;
+use Modules\GeoIp\Helpers\GeoIpHelper;
 
 #
 # Use this function to load code of functions on demand (include/func/func.*.php)
@@ -3766,42 +3766,6 @@ function func_add_slashes($str)
     $str = addslashes($str);
 
     return $str;
-}
-
-function func_get_geoip_locations($CLIENT_IP, $geo_litecity_location_debug = "N")
-{
-    global $sql_tbl;
-    $geo_litecity_location = false;
-    if (!empty($CLIENT_IP)) {
-        $CLIENT_IP_arr = explode(".", $CLIENT_IP);
-        if (!empty($CLIENT_IP_arr) && is_array($CLIENT_IP_arr)) {
-            $CLIENT_IP_INTEGER = $CLIENT_IP_arr[0] * 16777216 + $CLIENT_IP_arr[1] * 65536 + $CLIENT_IP_arr[2] * 256 + $CLIENT_IP_arr[3];
-        }
-
-        if (!empty($CLIENT_IP_INTEGER))
-        {
-            $sql = <<<SQL
-SELECT l.*, xs.phone, endIpNum
-FROM  $sql_tbl[geo_litecity_location] l
-INNER JOIN $sql_tbl[geo_litecity_blocks] b ON (l.locId=b.locId)
-LEFT JOIN  $sql_tbl[states] xs ON xs.country_code = l.country AND xs.code = l.region
-WHERE $CLIENT_IP_INTEGER >= b.startIpNum
-ORDER BY b.startIpNum DESC LIMIT 1;
-SQL;
-            $geo_litecity_location = func_query_first($sql);
-
-            if (!empty($geo_litecity_location)) {
-                if ($geo_litecity_location['endIpNum'] < $CLIENT_IP_INTEGER) $geo_litecity_location = false;
-
-                if ($geo_litecity_location_debug == "Y") {
-                    x_load("debug");
-                    func_print_r($geo_litecity_location);
-                }
-            }
-        }
-    }
-
-    return $geo_litecity_location;
 }
 
 if (!function_exists("array_column")) {
