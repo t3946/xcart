@@ -7,6 +7,7 @@ use GeoIp2\Database\Reader;
 use GeoIp2\Exception\AddressNotFoundException;
 use MaxMind\Db\Reader\InvalidDatabaseException;
 use Modules\Core\Models\CountryModel;
+use Modules\Core\Models\GeoipLitecityLocationModel;
 use Modules\Core\Models\GlobalConfigModel;
 use Modules\Core\Models\StateModel;
 use Modules\Core\Models\TelephoneAreaModel;
@@ -19,9 +20,8 @@ class GeoIpHelper
     /**
      * @param string $ip
      * @return \GeoIp2\Model\City|null
-     * @throws InvalidDatabaseException
      */
-    public static function getGeoipLocation($ip)
+    public static function getGeoipLocation2($ip)
     {
         $model = null;
 
@@ -34,6 +34,22 @@ class GeoIpHelper
 
         } catch (\Exception $addressNotFoundException) {
 
+        }
+
+        return $model;
+    }
+
+    public static function getGeoipLocation($ip)
+    {
+        $model = null;
+
+        if ($iIp = sprintf("%u", ip2long($ip))) {
+            /** @var GeoipLitecityLocationModel $model */
+            $model = GeoipLitecityLocationModel::objects()
+                ->filter(['blocks__startIpNum__lt' => $iIp])
+                ->order(['-blocks__startIpNum'])
+                ->limit(1)
+                ->get();
         }
 
         return $model;

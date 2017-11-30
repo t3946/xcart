@@ -18,7 +18,7 @@ define('x_session_save_to_db__do_not_use', 'Y');
 require "./top.inc.php";
 require "./init.php"; #uses xid.X
 
-$current_area="C";
+$current_area = "C";
 $aResult = [];
 
 
@@ -26,14 +26,14 @@ if ($REQUEST_METHOD == 'POST') {
 
     list($products, $sGoogleAnaliticsParam) = Xcart\Helpers\SliderData::getSliderData($section_name, $productid);
 
-    if (!empty($products)){
+    if (!empty($products)) {
 
-        foreach ($products as $k => $oProduct){
+        foreach ($products as $k => $oProduct) {
             $oThumb = $oProduct->getThumbnail();
             $oBrand = \Xcart\Brand::objects()->get(['brandid' => $oProduct->brandid]);
             $smarty->assign('splash', $oProduct->getSplash());
             $smarty->assign('config', $config);
-            $smarty->assign('tmbn_url',null);
+            $smarty->assign('tmbn_url', null);
             if ($oThumb) {
                 $smarty->assign('tmbn_url', $oThumb->getURL());
             }
@@ -58,18 +58,16 @@ if ($REQUEST_METHOD == 'POST') {
                     'is_group' => $oProduct->isGroupRoot()
                 ];
 
-		}
-	}
+        }
+    }
     echo json_encode($aResult);
 }
 if ($REQUEST_METHOD == 'GET' && $section_name == 'shipping') {
     if ($_GET['product_id']) {
         $qty = intval($_GET['qty']);
 
-        /** @var StateModel $state_model */
-
         if (($geo_ip = GeoipHelper::getGeoipLocation(Xcart\App\Main\Xcart::app()->request->getUserIP()))
-            && ($state_model = StateModel::objects()->get(['code' => $geo_ip->mostSpecificSubdivision->isoCode, 'country_code' => $geo_ip->country->isoCode]))) {
+            && ($state_model = $geo_ip->state_model)) {
 
             $shipping_rate = ShippingHelper::getStateMinShipping($_GET['product_id'], $qty, $state_model);
 

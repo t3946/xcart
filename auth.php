@@ -449,18 +449,11 @@ if (!empty($config["Appearance"]["Google_Trusted_Store_ID"])){
 		$smarty->assign("GTS_badge_code", $GTS_badge_code);
 }
 
-if (($geo_ip = GeoipHelper::getGeoipLocation($CLIENT_IP))
-    && ($state = StateModel::objects()->get(['code' => $geo_ip->mostSpecificSubdivision->isoCode, 'country_code' => $geo_ip->country->isoCode]))) {
-
+if ($geoipModel = GeoipHelper::getGeoipLocation($CLIENT_IP)) {
     $smarty->assign('geo_litecity_location',
         array_merge(
-            [
-                'country' => $geo_ip->country->isoCode,
-                'region' => $geo_ip->mostSpecificSubdivision->isoCode,
-                'city' => $geo_ip->city->name,
-                'postalCode' => $geo_ip->postal->code
-            ],
-            ['phone' => $state->phone]
+            $geoipModel->getAttributes(),
+            ['phone' => $geoipModel->state_model->phone]
         )
     );
 }
