@@ -367,7 +367,7 @@ class ProductModel extends Model implements ICartItem
     {
         return CategoryModel::objects()->filter([
             'products__through__main' => 'Y',
-            'products_link__productid' => $this->productid
+            'products__through__productid' => $this->productid
         ])->limit(1)->get();
     }
 

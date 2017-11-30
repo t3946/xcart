@@ -2,6 +2,7 @@
 namespace Modules\Product\Models;
 
 use Mindy\QueryBuilder\Expression;
+use Mindy\QueryBuilder\Q\QOr;
 use Modules\Menu\Models\CleanUrlModel;
 use Modules\Sites\Models\SiteModel;
 use Xcart\App\Components\Breadcrumbs;
@@ -12,6 +13,7 @@ use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\HasManyField;
 use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Fields\ManyToManyField;
+use Xcart\App\Orm\Manager;
 use Xcart\App\Orm\TreeModel;
 use Xcart\App\Traits\DataModelTrait;
 use Xcart\Category;
@@ -26,6 +28,7 @@ use Xcart\Category;
  * @property string category Name of category
  * @property null|CleanUrlModel url
  * @property null|\Modules\Sites\Models\SiteModel site
+ * @property Manager|ProductModel[] products
  */
 class CategoryModel extends TreeModel
 {
@@ -50,12 +53,6 @@ class CategoryModel extends TreeModel
                      'class' => ManyToManyField::className(),
                      'modelClass' => ProductModel::className(),
                      'through' => ProductCategoriesModel::className(),
-                 ],
-
-                 'products_link' => [
-                     'class' => HasManyField::className(),
-                     'modelClass' => ProductCategoriesModel::className(),
-                     'link' => ['categoryid' => 'categoryid'],
                  ],
 
                  'url' => [
@@ -179,5 +176,93 @@ class CategoryModel extends TreeModel
         }
 
         return $qs->all();
+    }
+
+    public function afterDelete($owner)
+    {
+        parent::afterDelete($owner);
+
+        ProductCategoriesModel::objects()->delete(['categoryid' => $this->categoryid]);
+    }
+
+    public function beforeSave($owner, $isNew)
+    {
+        parent::beforeSave($owner, $isNew);
+
+        $this->categoryid_path = $this->pk;
+
+        if ($parent = $this->parent) {
+            $this->categoryid_path = $parent->categoryid_path . '/' . $this->pk;
+        }
+    }
+
+    public function afterSave($owner, $isNew)
+    {
+        parent::afterSave($owner, $isNew);
+
+        //@TODO: For old code, delete after global refactoring
+
+        /** @var static $owner */
+        $old_parent = $owner->attributes->getOldAttribute('parentid');
+
+        if ($old_parent != $owner->parentid) {
+            $this->objects()
+                ->descendants()
+                ->update([
+                    'categoryid_path' => new Expression("CONCAT('{$this->categoryid_path}', SUBSTRING_INDEX(categoryid_path, {$owner->pk}, -1))")
+                ]);
+        }
+
+        if ($old_parent) {
+            $parent = static::objects()->get(['pk' => $old_parent]);
+            $parent->reCalcSelfAndParents();
+        }
+
+        if (!$isNew) {
+            $this->reCalcSelfAndParents();
+        }
+    }
+
+    public function reCalcProductsCount()
+    {
+        $ta = ProductModel::objects()->getQuerySet()->getTableAlias();
+        $qor = new QOr(['group_root' => new Expression("`{$ta}`.`productid`"), 'group_root__isnull' => true]);
+
+        $this->global_product_count = ProductModel::objects()
+            ->with(['categories'])
+            ->filter([
+                'categories__lft__gte' => $this->lft,
+                'categories__rgt__lte' => $this->rgt,
+                'categories__root' => $this->root,
+            ])
+            ->count();
+
+        $this->active_product_count = ProductModel::objects()
+            ->with(['categories'])
+            ->filter([
+                'forsale' => 'Y',
+                'categories__lft__gte' => $this->lft,
+                'categories__rgt__lte' => $this->rgt,
+                'categories__root' => $this->root,
+                'categories__avail' => 'Y',
+                $qor
+            ])
+            ->count();
+
+        $this->product_count = $this->products->filter(['forsale' => 'Y', $qor])->count();
+        $this->subcategory_count = $this->objects()->descendants()->count();
+
+        $this->save(['global_product_count', 'active_product_count', 'product_count', 'subcategory_count']);
+    }
+
+    public function reCalcSelfAndParents()
+    {
+        if ($models = $this->objects()->parents()->all()) {
+            /** @var static $model */
+            foreach ($models as $model)
+            {
+                $model->reCalcProductsCount();
+            }
+        }
     }
 }
