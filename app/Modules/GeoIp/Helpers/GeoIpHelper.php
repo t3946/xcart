@@ -1,21 +1,44 @@
 <?php
 
-namespace Modules\Core\Helpers;
+namespace Modules\GeoIp\Helpers;
 
 
+use GeoIp2\Database\Reader;
+use GeoIp2\Exception\AddressNotFoundException;
+use MaxMind\Db\Reader\InvalidDatabaseException;
 use Modules\Core\Models\CountryModel;
 use Modules\Core\Models\GeoipLitecityLocationModel;
 use Modules\Core\Models\GlobalConfigModel;
 use Modules\Core\Models\StateModel;
 use Modules\Core\Models\TelephoneAreaModel;
 use Modules\Sites\Models\SiteConfigModel;
+use Xcart\App\Exceptions\Exception;
+use Xcart\App\Helpers\Paths;
 
-class GeoipHelper
+class GeoIpHelper
 {
     /**
-     * @param $ip
-     * @return GeoipLitecityLocationModel|null
+     * @param string $ip
+     * @return \GeoIp2\Model\City|null
      */
+    public static function getGeoipLocation2($ip)
+    {
+        $model = null;
+
+        try {
+
+            $reader = new Reader(__DIR__ . '/../GeoLite2/GeoLite2-City.mmdb');
+            $model = $reader->city($ip);
+
+        } catch (AddressNotFoundException $addressNotFoundException) {
+
+        } catch (\Exception $addressNotFoundException) {
+
+        }
+
+        return $model;
+    }
+
     public static function getGeoipLocation($ip)
     {
         $model = null;

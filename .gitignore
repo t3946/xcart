@@ -2,6 +2,7 @@
 ## files with extensions to exclude
 *.tiff
 *.log
+*.mmdb
 www.*_*.xml
 thumbs.db
 Thumbs.db

@@ -1,7 +1,7 @@
 <?php
 
 use Modules\Core\Helpers\CoreHelper;
-use Modules\Core\Helpers\GeoipHelper;
+use Modules\GeoIp\Helpers\GeoIpHelper;
 
 #
 # Use this function to load code of functions on demand (include/func/func.*.php)
