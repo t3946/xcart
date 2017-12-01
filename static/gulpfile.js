@@ -10,12 +10,21 @@ const hashsum = require('gulp-hashsum');
 const uglify = require('gulp-uglify');
 const autoprefixer = require('gulp-autoprefixer');
 const babel = require('gulp-babel');
-const browserify = require('gulp-browserify');
-// const inlineimage = require('gulp-inline-image');
-// const modernizr = require('modernizr');
+// const browserify = require('gulp-browserify');
+const spawn = require('child_process').spawn;
+const inlineimage = require('gulp-inline-image');
+const importCss = require('gulp-import-css');
+// const pump = require('pump');
+const gcmq = require('gulp-group-css-media-queries');
+
+let watch = false;
 
 let frontend = require('./config/gulp.frontend');
 let backend = require('./config/gulp.backend');
+
+function isProduction() {
+    return (process.env.NODE_ENV == 'production');
+}
 
 function buildVendorsData(vendors) {
     let vendorsData = {};
@@ -65,7 +74,14 @@ gulp.task('frontend:scss', function() {
         .pipe(sass({
             includePaths: frontend.src.scss_include ? frontend.src.scss_include : []
         }).on('error', sass.logError))
-        // .pipe(inlineimage())
+        .pipe(inlineimage())
+        .pipe(gulp.dest(frontend.dst.scss));
+});
+
+gulp.task('frontend:css:raw', function() {
+    let pipe = gulp.src(frontend.src.css_raw);
+
+    return pipe.pipe(concat(frontend.config.name + '.css'))
         .pipe(gulp.dest(frontend.dst.scss));
 });
 
@@ -78,110 +94,79 @@ gulp.task('backend:scss', function() {
         .pipe(gulp.dest(backend.dst.scss));
 });
 
-gulp.task('frontend:css', ['frontend:scss'], function () {
+gulp.task('frontend:css', ['frontend:scss', 'frontend:css:raw'], function () {
     let pipe = gulp.src(frontend.src.css)
+        // .pipe(importCss())
+        .pipe(gcmq())
         .pipe(autoprefixer({
-            browsers: ['last 2 versions'],
+            browsers: ["> 5%", "last 2 versions", "last 4 iOS versions"],
             cascade: false
         }));
 
-    if (frontend.config.compress) {
-        pipe = pipe.pipe(cssnano())
+    if (isProduction && frontend.config.compress) {
+        pipe = pipe.pipe(cssnano(frontend.config.cssnano))
     }
 
-    return pipe.pipe(concat(frontend.config.name + '.css'))
-        // .pipe(inlineimage(frontend.config.inline_image || {}))
-        // .on('error',  function(err) {
-        //     console.log('[Compilation Error]');
-        //     console.log(err.fileName + ( err.loc ? `( ${err.loc.line}, ${err.loc.column} ): ` : ': '));
-        //     console.log('error Babel: ' + err.message + '\n');
-        //     console.log(err.codeFrame);
-        //
-        //     this.emit('end');
-        // })
+    return pipe
         .pipe(gulp.dest(frontend.dst.css))
         .pipe(hashsum({filename: 'frontend/versions/css.yml', hash: 'md5'}))
         .pipe(livereload());
 });
 
 gulp.task('backend:css', ['backend:scss'], function () {
-    let pipe = gulp.src(backend.src.css)
-        .pipe(autoprefixer({
-            browsers: ['last 2 versions'],
-            cascade: false
-        }));
+    let pipe = gulp.src(backend.src.css);
 
-    if (backend.config.compress) {
-        pipe = pipe.pipe(cssnano())
-    }
+    // if (isProduction && backend.config.compress) {
+    //     pipe = pipe.pipe(cssnano(backend.config.cssnano))
+    // }
+
+    // pipe = pipe.pipe(cssnano(backend.config.cssnano))
 
     return pipe.pipe(concat(backend.config.name + '.css'))
-        // .pipe(inlineimage(backend.config.inline_image || {}))
-        // .on('error',  function(err) {
-        //     console.log('[Compilation Error]');
-        //     console.log(err.fileName + ( err.loc ? `( ${err.loc.line}, ${err.loc.column} ): ` : ': '));
-        //     console.log('error Babel: ' + err.message + '\n');
-        //     console.log(err.codeFrame);
-        //
-        //     this.emit('end');
-        // })
         .pipe(gulp.dest(backend.dst.css))
         .pipe(hashsum({filename: 'backend/versions/css.yml', hash: 'md5'}))
         .pipe(livereload());
 });
 
-gulp.task('frontend:jsx', function() {
-    let pipe = gulp.src(frontend.src.jsx);
+gulp.task('frontend:jsx', function(done){
 
-    if (frontend.config && frontend.config.babel) {
-        pipe = pipe.pipe(babel(frontend.config.babel))
-            .on('error',  function(err) {
-                // For gulp-util users u can use a more colorfull variation
-                // util.log(util.colors.red('[Compilation Error]'));
-                // util.log(err.fileName + ( err.loc ? `( ${err.loc.line}, ${err.loc.column} ): ` : ': '));
-                // util.log(util.colors.red('error Babel: ' + err.message + '\n'));
-                // util.log(err.codeFrame);
-
-                console.log('[Compilation Error]');
-                console.log(err.fileName + ( err.loc ? `( ${err.loc.line}, ${err.loc.column} ): ` : ': '));
-                console.log('error Babel: ' + err.message + '\n');
-                console.log(err.codeFrame);
-
-                this.emit('end');
-            });
-
+    let args = ['./node_modules/webpack/bin/webpack.js', '--config', './config/webpack.frontend.js'];
+    if (isProduction()) {
+        args.push('-p');
+    }
+    if (watch) {
+        args.push('--progress');
+        args.push('-w');
     }
 
-    return pipe.pipe(gulp.dest(frontend.dst.jsx));
+    let cmd = spawn('node', args, {stdio: 'inherit'});
+    cmd.on('close', function (code) {
+        console.log('frontend:jsx exited with code ' + code);
+        done(code);
+    });
 });
 
-gulp.task('frontend:modernizr', ['clear:frontend'], function (done) {
+gulp.task('frontend:js:includes', function(done){
+    if (!fjsinc_builded) {
+        let pipe = gulp.src(frontend.src.js_include);
 
-    if (frontend.config.modernizr)
-    {
-        modernizr.build(frontend.config.modernizr, function(code) {
-            if (!fs.existsSync(frontend.dst.jsx)){
-                fs.mkdirSync(frontend.dst.jsx);
-            }
+        if (isProduction && frontend.config.compress) {
+            pipe = pipe.pipe(uglify(frontend.config.uglify));
+        }
 
-            fs.writeFile(frontend.dst.jsx + '/modernizr.js', code, done);
-        });
+        return pipe
+            .pipe(concat('vendors.js'))
+            .pipe(hashsum({filename: 'frontend/versions/vendor_js.yml', hash: 'md5'}))
+            .pipe(gulp.dest(frontend.dst.js));
     }
-    else {
-        done();
-    }
+
+    done();
 });
 
-gulp.task('frontend:js', ['frontend:jsx'], function() {
+// gulp.task('frontend:js', ['frontend:js:includes'], function() {
+gulp.task('frontend:js', function() {
     let pipe = gulp.src(frontend.src.js);
-    //
-    // if (frontend.config && frontend.config.babel) {
-    //     pipe = pipe.pipe(babel(frontend.config.babel));
-    // }
 
-    if (frontend.config.compress) {
-        pipe = pipe.pipe(uglify())
-    }
     return pipe
         .pipe(concat(frontend.config.name + '.js'))
         .pipe(gulp.dest(frontend.dst.js))
@@ -218,7 +203,7 @@ gulp.task('backend:js', ['backend:jsx'], function() {
     let pipe = gulp.src(backend.src.js);
 
     if (backend.config.compress) {
-        pipe = pipe.pipe(uglify())
+        pipe = pipe.pipe(uglify(backend.config.uglify))
     }
 
     return pipe
@@ -231,7 +216,7 @@ gulp.task('backend:js', ['backend:jsx'], function() {
 gulp.task('frontend:images', function() {
     let pipe = gulp.src(frontend.src.images);
 
-    if (frontend.config.compress) {
+    if (isProduction() && frontend.config.compress) {
         pipe = pipe.pipe(imagemin(frontend.config.imagemin || {}));
     }
     return pipe
@@ -242,7 +227,7 @@ gulp.task('frontend:images', function() {
 gulp.task('backend:images', function() {
     let pipe = gulp.src(backend.src.images);
 
-    if (backend.config.compress) {
+    if (isProduction() && backend.config.compress) {
         pipe = pipe.pipe(imagemin(backend.config.imagemin || {}));
     }
     return pipe
@@ -271,15 +256,18 @@ gulp.task('backend:raw', function() {
 });
 
 gulp.task('watch:frontend', ['build:frontend'], function() {
+    watch = true;
     livereload({ start: true });
+    // const js_watch = frontend.src.js.concat(frontend.src.jsx);
 
     gulp.watch(frontend.src.raw, ['frontend:raw']);
     gulp.watch(frontend.src.scss, ['frontend:css']);
     gulp.watch(frontend.src.css, ['frontend:css']);
-    gulp.watch(frontend.src.jsx, ['frontend:js']);
     gulp.watch(frontend.src.js, ['frontend:js']);
     gulp.watch(frontend.src.images, ['frontend:images']);
     gulp.watch(frontend.src.fonts, ['frontend:fonts']);
+
+    gulp.start('frontend:jsx');
 });
 
 gulp.task('watch:backend', ['build:backend'], function() {
@@ -292,6 +280,19 @@ gulp.task('watch:backend', ['build:backend'], function() {
     gulp.watch(backend.src.css, ['backend:css']);
     gulp.watch(backend.src.images, ['backend:images']);
     gulp.watch(backend.src.fonts, ['backend:fonts']);
+});
+
+gulp.task('prepare:frontend', ['clear:frontend' , 'frontend:jsx'], function(done){
+
+    if (!fs.existsSync(frontend.dst.scss)){
+        fs.mkdirSync(frontend.dst.scss);
+    }
+
+    if (!fs.existsSync(frontend.dst.jsx)){
+        fs.mkdirSync(frontend.dst.jsx);
+    }
+
+    done();
 });
 
 gulp.task('watch', ['build'], function() {
@@ -315,7 +316,7 @@ gulp.task('clear', function() {
     );
 });
 
-gulp.task('build:frontend', ['clear:frontend', 'frontend:modernizr'], function(){
+gulp.task('build:frontend', ['clear:frontend', 'prepare:frontend'], function(){
     gulp.start(
         'frontend:raw', 'frontend:css', 'frontend:js', 'frontend:images', 'frontend:fonts'
     );

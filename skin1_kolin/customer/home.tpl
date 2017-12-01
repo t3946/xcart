@@ -1,4 +1,3 @@
-{* $Id: home.tpl,v 1.88.2.4 2006/10/13 10:41:21 svowl Exp $ *}
 <!DOCTYPE html>
 <html lang="en-US">
 <head>
@@ -99,7 +98,7 @@
 
 {if ($main eq "product")}
     {if $oProduct}
-        <link rel="amphtml" href="{$oProduct->getAbsoluteUrl(true, true)}">
+        <link rel="amphtml" href="{$oProduct->getAmpAbsoluteUrl(true)}">
     {/if}
 {* igor_async *}
 <script src="{$SkinDir}/jquery.tooltip.js" type="text/javascript"></script>
@@ -146,6 +145,9 @@ window.attachEvent("onload", anchor_fix);
 {include file="main/include_js.tpl" src="ajax_add_to_cart.js"}
 </head>
 <body{$reading_direction_tag}{if $body_onload ne ''} onload="javascript: {$body_onload}"{/if}>
+
+{$xcartApp->template->render('inSmarty/raw_flash.tpl')}
+
 {if !empty($config.Appearance.Facebook_pixel_code)}
     {$config.Appearance.Facebook_pixel_code}
 {/if}

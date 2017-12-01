@@ -63,27 +63,11 @@
                     .mmodal({
                         width: 1008,
                         onAfterOpen: function () {
-                            tinymce.init({
-                                selector: ".mmodal-content textarea.new_editor",
-                                height: 200,
-                                resize: "both",
-                                plugins: [
-                                    "advlist autolink lists link image charmap print preview anchor",
-                                    "searchreplace visualblocks code fullscreen",
-                                    "insertdatetime media table contextmenu paste"
-                                ],
-                                toolbar: "insertfile undo redo | styleselect | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image",
-                                forced_root_block: false,
-                                force_br_newlines: true,
-                                force_p_newlines: false,
-                                convert_urls: false,
-                                relative_urls: false,
-                                setup: function (editor) {
-                                    editor.on('change', function () {
-                                        tinymce.triggerSave();
-                                    });
-                                }
-                            });
+                            var id = 'text_' + Date.now();
+
+                            $(".mmodal-content textarea").attr('id', id);
+                            tinyMCE.execCommand("mceAddEditor", false, id);
+
                             $.get('{url 'product:group_categories'}',
                                 {
                                     products: arrP
@@ -103,6 +87,9 @@
                             );
                         },
                         onSubmit: function (s) {
+
+                            tinyMCE.triggerSave();
+
                             var self = this;
                             var $form = $(s).closest('form');
                             var product = $('.thumbnails img', $form).not('.not').map(function(i,v){

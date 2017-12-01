@@ -2,11 +2,14 @@
 
 namespace Modules\Core\Models;
 
-use Xcart\App\Orm\AutoMetaModel;
+use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\IntField;
+use Xcart\App\Orm\Model;
 
-class GeoLitecityBlocks extends AutoMetaModel
+class GeoLitecityBlocks extends Model
 {
+    use AutoMetaTrait;
+
     public static function tableName()
     {
         return 'xcart_geo_litecity_blocks';

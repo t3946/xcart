@@ -37,7 +37,7 @@
 # This script contains the common functions for cart operating
 #
 
-use Modules\Product\Models\ProductOptionModel;
+use Modules\Product\Models\OptionValueModel;
 use Modules\User\Helpers\SurfingHelper;
 
 if ( !defined('XCART_START') ) { header("Location: ../"); die("Access denied"); }
@@ -317,7 +317,7 @@ function func_add_to_cart(&$cart, $product_data) {
 				$add_to_cart_time = time();
 
             if (!empty($product_options)) {
-                if ($optionModel = ProductOptionModel::objects()->get(['optionid' => current($product_options)])){
+                if ($optionModel = OptionValueModel::objects()->get(['optionid' => current($product_options)])){
                     $product_options[$optionModel->classid] = $optionModel->getAttributes();
 				}
             }

@@ -3,7 +3,6 @@ namespace Xcart;
 
 use Xcart\App\Helpers\ClassNames;
 use Xcart\App\Helpers\SmartProperties;
-use Xcart\App\Orm\AutoMetaModel;
 use Xcart\App\Orm\Legacy\OrmLegacy;
 
 class Data extends OrmLegacy

@@ -30,12 +30,17 @@ class MetaHelper
             $meta = self::fetchMeta(substr($uri, 0, $pos));
         }
 
+        $site = null;
+        if (Xcart::app()->getModule('Meta')->onSite) {
+            $site = Xcart::app()->getModule('Sites')->getSite();
+        }
+
         $metaTemplateName = $controller->getMetaTemplate();
         /** @var \Modules\Meta\Models\MetaTemplate $metaTemplate */
         $metaTemplate = MetaTemplate::objects()->filter(['code' => $metaTemplateName])->limit(1)->get();
         if ($metaTemplate) {
             $metaTemplate->params = $controller->getMetaTemplateParams();
-        }
+            }
 
         $site = null;
         if (Xcart::app()->getModule('Meta')->onSite) {
@@ -53,10 +58,10 @@ class MetaHelper
         }
         elseif ($metaTemplate) {
             echo self::renderTemplate('meta/meta_helper.tpl', [
-                'title' => self::formatTitle($controller, $metaTemplate->renderTitle()),
+                'title' => self::cleanString( self::formatTitle($controller, $metaTemplate->renderTitle()) ),
                 'canonical' => $canonical,
-                'description' => $metaTemplate->renderDescription(),
-                'keywords' => $metaTemplate->renderKeywords(),
+                'description' => self::cleanString( $metaTemplate->renderDescription() ),
+                'keywords' => self::cleanString( $metaTemplate->renderKeywords() ),
                 'site' => $site
             ]);
         }
@@ -72,7 +77,7 @@ class MetaHelper
     }
 
     /**
-     * @param $controller
+     * @param \Xcart\App\Controller\FrontendController $controller
      * @param null $title
      * @param SiteModel|null $site
      * @return string
@@ -101,6 +106,13 @@ class MetaHelper
         }
 
         return implode(' - ', $data);
+    }
+
+    protected static function cleanString($str)
+    {
+        $t = preg_replace("/(\r?\n){2,}/", "", $str);
+        $t = preg_replace("/(\s+)/", " ", $t);
+        return trim( $t );
     }
 
     protected static function fetchMeta($uri)

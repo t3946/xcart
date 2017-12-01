@@ -26,8 +26,8 @@
 {if $active_modules.Anti_Fraud}
 	<td width="10%" nowrap="nowrap">{$lng.lbl_check}*</td>
 {/if}
-	<td width="40px" style="background-color: #FFD44C;">{$lng.lbl_acc_proc}</td>
-	<td width="40px" style="background-color: #FFD44C;">Trans fees</td>
+	<td width="40px" style="bg__yellow">{$lng.lbl_acc_proc}</td>
+	<td width="40px" class="bg__yellow">Trans fees</td>
 	<td width="40px" style="background-color: #F4CCCC;">VT</td>
 	<td width="40px" style="background-color: #F4CCCC;" nowrap="nowrap">Transaction id link</td>
 </tr>

@@ -27,7 +27,7 @@ trait AdminTrait
                     'adminClassNameShort' => $adminClass::classNameShort(),
                     'moduleName' => static::getName(),
                     'name' => $adminClass::getName(),
-                    'route' => Xcart::app()->router->url('admin:all', [
+                    'route' => Xcart::app()->router->url('admin:list', [
                         'module' => static::getName(),
                         'admin' => $adminClass::classNameShort()
                     ])

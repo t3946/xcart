@@ -455,6 +455,8 @@ x {if $active_modules.Egoods and $products[product].distribution}1<input type="h
 {else}
 {include file="customer/main/cart_totals.tpl"}
 {/if}
+
+    {$xcartApp->template->render('inSmarty/coupon_cart_desktop.tpl')}
 {$lng.lbl_your_mer_subtotal}<br /><br />
 {if $js_enabled}
 

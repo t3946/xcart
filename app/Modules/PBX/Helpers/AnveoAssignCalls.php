@@ -74,17 +74,8 @@ class AnveoAssignCalls
             return null;
         }
         else {
-
-            if (preg_match('/(.*)\..*/', $file_parts[4], $matches)) {
-                $account = $matches[1];
-            }
-            else {
-                $account = $file_parts[4];
-            }
-
+            return $file_parts[4];
         }
-
-        return $account;
     }
 
     public static function parseE164($file)

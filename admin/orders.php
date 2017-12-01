@@ -39,6 +39,8 @@ define("NUMBER_VARS", "posted_data[total_min],posted_data[total_max],posted_data
 require "./auth.php";
 require $xcart_dir."/include/security.php";
 
+\Xcart\App\Main\Xcart::app()->request->redirect('dashboard:index');
+
 x_session_register("search_data");
 x_session_register("order_page_title");
 x_session_register("order_search_condition");

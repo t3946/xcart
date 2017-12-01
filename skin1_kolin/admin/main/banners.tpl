@@ -21,7 +21,7 @@
             {/literal}
         </style>
 
-        <script type="text/javascript" src="{$SkinDir}/lib/jqueryui/jquery-ui.custom.min.js"></script>
+        {*<script type="text/javascript" src="{$SkinDir}/lib/jqueryui/jquery-ui.custom.min.js"></script>*}
 
         {if $errors}
             <div class="errors">

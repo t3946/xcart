@@ -68,7 +68,7 @@
                             <label for="o-group-description">Group description</label>
                         </div>
                         <div class="columns large-8">
-                            <textarea name="group[description]" class="new_editor description"></textarea>
+                            <textarea name="group[description]" class="description"></textarea>
                         </div>
                     </div>
                 </li>

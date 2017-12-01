@@ -7,7 +7,7 @@ vim: set ts=2 sw=2 sts=2 et:
   var isHTML_Editor = true;
 //]]>
 </script>
-<script type="text/javascript" src="{$SkinDir}/modules/HTML_Editor/editors/tinymce/tiny_mce.js"></script>
+{*<script type="text/javascript" src="{$SkinDir}/modules/HTML_Editor/editors/tinymce/tiny_mce.js"></script>*}
 <script type="text/javascript" src="{$SkinDir}/modules/HTML_Editor/editors/tinymce/start_textarea.js"></script>
 <script type="text/javascript">
 //<![CDATA[
@@ -15,7 +15,7 @@ tinyMCE.init({ldelim}
   mode : "none",
   theme : "advanced",
   skin : "o2k7",
-  skin_variant : "silver",
+  // skin_variant : "silver",
   relative_urls : false,
   plugins : "safari,spellchecker,pagebreak,style,layer,table,save,advhr,advimage,advlink,emotions,iespell,inlinepopups,insertdatetime,preview,media,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,xhtmlxtras,template",
   theme_advanced_buttons1 : "save,newdocument,|,bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,|,styleselect,formatselect,fontselect,fontsizeselect",

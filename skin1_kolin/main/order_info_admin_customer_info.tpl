@@ -84,7 +84,7 @@
 </tr>
 <tr>
   <td width="47%" valign="top">
-  <table cellspacing="0" cellpadding="0" class="customer-info-edit">
+  <table cellspacing="0" cellpadding="1px" class="customer-info-edit">
 {if $customer.default_fields.company}
 <tr>
   <td>{$lng.lbl_company}:</td>
@@ -119,21 +119,41 @@
 </tr>
 {/if}
 {if $customer.default_fields.phone}
-<tr>
-  <td><b>{$lng.lbl_phone}:</b></td>
-  <td width="100%">
-  {if !$static}<input type="text" name="customer_info[phone]" value="{$customer.phone}" style="width: 29%; {if $order.po_details && $customer.phone eq '(000) 000-0000'}background-color: #F4CCCC;{/if}" />{else}{$customer.phone}{/if}
-  <b>{$lng.lbl_phone_ext}</b> {if !$static}<input type="text" name="customer_info[phone_ext]" value="{$customer.phone_ext}" style="width: 10%;" maxlength="6" />{else}{$customer.phone_ext}{/if}&nbsp;<a target="_blank" href="https://www.google.com/#q={$google_phone}" style="color: #1F08F8;">Google #</a>
-&nbsp;<a target="_blank" href="http://www.spokeo.com/search?q={$google_phone}" style="color: #1F08F8;">Spokeo #</a>
-  </td>
-</tr>
+    <tr>
+      <td><b>{$lng.lbl_phone}:</b></td>
+      <td width="100%">
+      {if !$static}
+          <input type="text"
+                 name="customer_info[phone]"
+                 value="{$customer.phone}"
+                 style="width: 55%; {if $order.po_details && $customer.phone eq '(000) 000-0000'}background-color: #F4CCCC;{/if}"/>
+      {else}
+          {$customer.phone}
+      {/if}
 
-{if $Telephone_area_code_info ne ""}
-<tr>
-  <td nowrap="nowrap"><b>Phone area code:</b></td>
-  <td width="100%">{$Telephone_area_code_info}</td>
-</tr>
-{/if}
+          <b>{$lng.lbl_phone_ext}</b>
+          {if !$static}
+              <input type="text"
+                     name="customer_info[phone_ext]"
+                     value="{$customer.phone_ext}"
+                     style="width: 10%;"
+                     maxlength="6"/>
+          {else}
+              {$customer.phone_ext}
+          {/if}
+          <br>
+          <a target="_blank" href="https://www.google.com/#q={$google_phone}" style="color: #1F08F8;">Google #</a>
+          &shy;
+          <a target="_blank" href="http://www.spokeo.com/search?q={$google_phone}" style="color: #1F08F8;">Spokeo #</a>
+      </td>
+    </tr>
+
+    {if $Telephone_area_code_info ne ""}
+    <tr>
+      <td nowrap="nowrap"><b>Phone area code:</b></td>
+      <td width="100%">{$Telephone_area_code_info}</td>
+    </tr>
+    {/if}
 
 {/if}
 {if $customer.default_fields.fax}

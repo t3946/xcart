@@ -2,14 +2,17 @@
 
 namespace Modules\Core\Models;
 
-use Xcart\App\Orm\AutoMetaModel;
+use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\HasManyField;
+use Xcart\App\Orm\Model;
 
-class GeoipLitecityLocationModel extends AutoMetaModel
+class GeoipLitecityLocationModel extends Model
 {
+    use AutoMetaTrait;
+
     public static function tableName()
     {
         return 'xcart_geo_litecity_location';
@@ -53,5 +56,10 @@ class GeoipLitecityLocationModel extends AutoMetaModel
                 'link' => ['locId' => 'locId'],
             ],
         ];
+    }
+
+    public function __toString()
+    {
+        return "{$this->country}, {$this->region}, {$this->city}, {$this->postalCode}";
     }
 }

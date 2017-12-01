@@ -147,8 +147,8 @@ class Product extends Data
             }
         } else {
             $this->changeVerificationStatus(self::PRODUCT_STATUS_NOT_VERIFY, '', true, [$iOrderID]);
-            HTMLShot::model()->createHTMLShot($this, $iOrderID);
         }
+        HTMLShot::model()->createHTMLShot($this, $iOrderID);
     }
 
     public function getProductURLOnDistributorWebSite()
@@ -168,11 +168,6 @@ class Product extends Data
             return $oDatetime;
         }
         return false;
-    }
-
-    public static function getProductVerificationStatuses()
-    {
-        return func_query("SELECT * FROM " . self::$sql_tbl['product_verification_statuses'] . " ORDER BY orderby ASC");
     }
 
     public function getProductVerificationHistoryLastNote()

@@ -4418,6 +4418,10 @@ table.group_product .notify_form .email input {
 	border: solid 1px #dacf9c;
 }
 
+table.group_product select.option {
+	max-width: 170px;
+}
+
 #add_cart_group.disable {
 	pointer-events: none;
 	cursor: pointer;

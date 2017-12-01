@@ -11,7 +11,7 @@
         {/if}
     {/if}
 
-    <a href="{build_url data=['order' => $newOrder]}" class="title">
+    <a href="{extend_url url=$.request->getUrl() data=['order' => $newOrder]}" class="title">
         <span class="text">
             {$config['title']}
         </span>

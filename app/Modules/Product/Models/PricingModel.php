@@ -1,16 +1,18 @@
 <?php
 namespace Modules\Product\Models;
 
-use Xcart\App\Orm\AutoMetaModel;
+use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\HasManyField;
-use Xcart\App\Orm\Fields\IntField;
+use Xcart\App\Orm\Model;
 
 /**
  * @property float price
  */
-class PricingModel extends AutoMetaModel
+class PricingModel extends Model
 {
+    use AutoMetaTrait;
+
     public static function tableName()
     {
         return 'xcart_pricing';

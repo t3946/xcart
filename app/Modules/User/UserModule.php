@@ -2,6 +2,7 @@
 namespace Modules\User;
 
 use Modules\User\Helpers\BotsHelper;
+use Modules\User\Helpers\PasswordHelper;
 use Xcart\App\Cli\Cli;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Module\Module;
@@ -21,5 +22,9 @@ class UserModule extends Module
             $template->isBot = BotsHelper::IsBot();
             $template->sessionKey = Xcart::app()->request->session->getSessionKey();
         }
+    }
+    public static function getPasswordHasher()
+    {
+        return PasswordHelper::className();
     }
 }

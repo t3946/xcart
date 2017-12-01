@@ -64,4 +64,3 @@ $smarty->assign("variant_id_for_point2", $variant_id_for_point2);
 ###
 ##
 #
-?>

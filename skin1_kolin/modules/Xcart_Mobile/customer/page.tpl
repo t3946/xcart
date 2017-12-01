@@ -7,6 +7,7 @@ vim: set ts=2 sw=2 sts=2 et:
 {include file="cidev_tracking_code.tpl" }
 {* ------------------- *}
 
+{$xcartApp->template->render('inSmarty/raw_flash.tpl')}
 
 {if $mobile_mode eq 'get_detailed_images'}
   {if $product and $images ne ''}

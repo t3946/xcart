@@ -7,32 +7,6 @@
 {/if}
 {include file="main/multirow.tpl"}
 
-<script src="{$SkinDir}/tinymce/js/tinymce/tinymce.min.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-//<![CDATA[
-{literal}
-
-tinymce.init({
-    selector: "textarea.new_editor",
-    height: 350,
-    resize: "both",
-    plugins: [
-        "advlist autolink lists link image charmap print preview anchor",
-        "searchreplace visualblocks code fullscreen",
-        "insertdatetime media table contextmenu paste"
-    ],
-    toolbar: "insertfile undo redo | styleselect | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image",
-    forced_root_block : false,
-    force_br_newlines : true,
-    force_p_newlines : false,
-    convert_urls: false,
-    relative_urls: false
-});
-
-{/literal}
-//]]>
-</script>
 
 <script src="{$SkinDir}/cidev_ajax.js" type="text/javascript"></script>
 
@@ -1303,13 +1277,13 @@ $(function() {ldelim}
         {/if}
   var $tabs = $('#main_order_tabs-container').tabs(
           {ldelim}
-              select: function(event, ui) {ldelim}
-                  document.title = "{$order.order_prefix}{$order.orderid}: ("+ui.tab.text +") " + curTitle;
+              activate: function(event, ui) {ldelim}
+                  document.title = "{$order.order_prefix}{$order.orderid}: ("+ui.newTab.text() +") " + curTitle;
               {rdelim}
           {rdelim}
   );
     {if $smarty.get.tab ne "y"}
-        $tabs.tabs("select", indexTab);
+        $tabs.tabs("option","active", indexTab);
     {/if}
 {rdelim});
 //]]>
@@ -1349,18 +1323,18 @@ $(function() {ldelim}
 <div id="main_order_tabs-container">
   <ul>
   {foreach from=$main_order_tabs item=tab key=ind}
-    <li
+    <li class="hide"
 	{if $tab.anchor eq "reference" || $tab.anchor eq "ground_map" || $tab.anchor eq "RMA"}
 		style="float: right"
 	{/if}
     >
-	<a {if $tab.anchor eq "order_details"}style="color: #580505; font-weight: bold;"{elseif $tab.anchor eq "customer_info" && (($order.note_is_taken_care_of eq "N" && $order.customer_notes ne "") || $other_customer_orders ne "")}style="font-weight: bold;"{/if} href="#main_order_tabs-{$tab.anchor}">{$tab.title}</a>
+	<a {if $tab.anchor eq "order_details"}style=" font-weight: bold;"{elseif $tab.anchor eq "customer_info" && (($order.note_is_taken_care_of eq "N" && $order.customer_notes ne "") || $other_customer_orders ne "")}style="font-weight: bold;"{/if} href="#main_order_tabs-{$tab.anchor}">{$tab.title}</a>
     </li>
   {/foreach}
   </ul>
 
   {foreach from=$main_order_tabs item=tab key=ind}
-      <div id="main_order_tabs-{$tab.anchor}">
+      <div id="main_order_tabs-{$tab.anchor}" class="hide">
         {assign var=tab_section value=$tab.section}
        	{$smarty.capture.$tab_section}
       </div>

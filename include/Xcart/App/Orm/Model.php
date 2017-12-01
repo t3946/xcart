@@ -6,6 +6,7 @@ use ReflectionClass;
 
 /**
  * Class Model
+ * @property (int)|(string) pk
  * @package Xcart\App\Orm
  */
 class Model extends AbstractModel

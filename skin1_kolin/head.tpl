@@ -184,7 +184,7 @@ function scrollTop(){
         jQuery('#scrollTop').fadeOut('fast');
     }
 }
-jQuery('#scrollTop').live('click', function(){
+jQuery('#scrollTop').on('click', function(){
     jQuery('body,html').animate({
         scrollTop: 0
     }, 300);

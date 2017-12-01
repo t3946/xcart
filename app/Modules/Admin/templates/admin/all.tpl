@@ -5,7 +5,7 @@
 {/block}
 
 {block 'main_block'}
-    <div class="all-page">
+    <div class="admin-page all-page">
         {include 'admin/list/_list.tpl'}
     </div>
 {/block}

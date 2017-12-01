@@ -1,1 +1,1 @@
-{extends 'admin/layout.tpl'}
+{extends $.request->get['popup'] ? 'admin/layout.tpl' : 'base/admin_layout.tpl'}

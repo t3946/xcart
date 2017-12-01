@@ -3,7 +3,7 @@ $Id: order_info_admin.tpl, v 1.0.0 2010/03/23 15:16:14 random Exp $
 vim: set ts=2 sw=2 sts=2 et:
 Use $product.oProduct classProduct
 *}
-<script type="text/javascript" src="{$SkinDir}/lib/jqueryui/jquery-ui.custom.min.js"></script>
+{*<script type="text/javascript" src="{$SkinDir}/lib/jqueryui/jquery-ui.custom.min.js"></script>*}
 {include file="check_zipcode_js.tpl"}
 
 <a name="order_info"></a>
@@ -49,11 +49,11 @@ function func_check_for_paypal_vt(m_id){
                     {/literal}
                         {if $found_show_stock_availability_form eq "Y"}
                                 {literal}
-                                        {selected: 3}
+                                        {active: 3}
                                 {/literal}
                         {else}
                                 {literal}
-                                        {selected: 2}
+                                        {active: 2}
                                 {/literal}
                         {/if}
                     {literal}
@@ -137,7 +137,7 @@ function func_set_tracking_shipping(obj, m_id, invoice_number){ldelim}
   {foreach from=$tracking_links item=link_info key=linkid}
 
     carrier_id_in_arr = parseInt({$link_info.carrier_id});
-    
+
     if (carrier_id == carrier_id_in_arr){ldelim}
 
       $("#"+tracking_shipping_id).append($('<option value="{$linkid}">{$link_info.shipping|escape}</option>'));
@@ -221,7 +221,7 @@ var dc_status;
 /*
 function func_check_additional_shipping_status(m_id){
 
-  var additional_shipping_status = $("#additional_shipping_status_"+m_id).val(); 
+  var additional_shipping_status = $("#additional_shipping_status_"+m_id).val();
 
   if (additional_shipping_status == "P"){
     $("#additional_vt_info_"+m_id).show();
@@ -234,7 +234,7 @@ function func_check_additional_shipping_status(m_id){
 
 function func_check_cb_status(m_id){
 
-  var cb_status = $("#groups_cb_status_"+m_id).val(); 
+  var cb_status = $("#groups_cb_status_"+m_id).val();
 
   if (cb_status == "P" || cb_status == "3" || cb_status == "V" || cb_status == "H" || cb_status == "R"){
     $("#groups_shipping_cost_net_"+m_id).prop("readonly",true);
@@ -354,19 +354,19 @@ function func_check_cb_statuses(){
 
 /*
   if (
-      (cb_status_eq_P_found == true && all_cb_status_eq_P == true) || 
-      (cb_status_eq_3_found == true && all_cb_status_eq_3 == true) || 
-      (cb_status_eq_V_found == true && all_cb_status_eq_V == true) || 
-      (cb_status_eq_H_found == true && all_cb_status_eq_H == true) || 
+      (cb_status_eq_P_found == true && all_cb_status_eq_P == true) ||
+      (cb_status_eq_3_found == true && all_cb_status_eq_3 == true) ||
+      (cb_status_eq_V_found == true && all_cb_status_eq_V == true) ||
+      (cb_status_eq_H_found == true && all_cb_status_eq_H == true) ||
       (cb_status_eq_R_found == true && all_cb_status_eq_R == true)
   ) {
-    for (var i = 0; i < 20; i++) { 
+    for (var i = 0; i < 20; i++) {
       if (document.getElementById('sku_add_to_order_box_'+i)){
         $("#sku_add_to_order_box_"+i).prop("disabled",true);
       }
     }
   } else {
-    for (var i = 0; i < 20; i++) { 
+    for (var i = 0; i < 20; i++) {
       if (document.getElementById('sku_add_to_order_box_'+i)){
         $("#sku_add_to_order_box_"+i).prop("disabled",false);
       }
@@ -493,18 +493,18 @@ function check_r_fields(){
 </tr>
 
 
-<tr class="TableHead" style="BACKGROUND-COLOR: #FFD44C;">
+<tr class="TableHead bg__yellow">
   <td width="35%"></td>
   <td width="17%"></td>
-  <td width="7%" nowrap="nowrap"><font style="font-size: 9px;">Cost to us</font></td>
+  <td width="7%" nowrap="nowrap"><font style="font-size: .87rem;">Cost to us</font></td>
   <td width="5%"></td>
   <td width="*"></td>
   <td width="5%"></td>
   <td width="7%"></td>
-  <td width="7%" nowrap="nowrap"><font style="font-size: 9px;">Cost to us</font></td>
+  <td width="7%" nowrap="nowrap"><font style="font-size: .87rem;">Cost to us</font></td>
   <td width="7%"></td>
 {*  <td width="7%"></td> *}
-  <td width="7%" nowrap="nowrap"><font style="font-size: 9px;">Cost to us</font></td>
+  <td width="7%" nowrap="nowrap"><font style="font-size: .87rem;">Cost to us</font></td>
   {if !$static}<td width="5%">{else}<td>{/if}</td>
 </tr>
 
@@ -550,12 +550,18 @@ function check_r_fields(){
             {/if}
         </td>
         <td align="right">
-            <a class="group_total_link" href="#">{include file="currency2.tpl" value=$v.total.net}</a>
+            <a class="group_total_link" href="#">
+                {if $v.coupon_discount > 0}<i class="m icon discount float__left margin__first_image"></i>{/if}
+                {include file="currency2.tpl" value=$v.total.net}
+            </a>
         </td>
         <td align="right">{include file="currency2.tpl" value=$v.total.gst hide_zero='Y'}</td>
         {*  <td align="right">{include file="currency2.tpl" value=$v.total.pst hide_zero='Y'}</td> *}
         <td align="right">
-            <a class="group_total_link" href="#">{include file="currency2.tpl" value=$v.total.gross}</a>
+            <a class="group_total_link" href="#">
+                {if $v.coupon_discount  > 0}<i class="m icon discount float__left margin__first_image"></i>{/if}
+                {include file="currency2.tpl" value=$v.total.gross}
+            </a>
         </td>
         <td>
             {if $v.empty_products_list eq "Y"}
@@ -571,9 +577,13 @@ function check_r_fields(){
         <td></td>
         <td></td>
         <td></td>
-        <td><div style="BACKGROUND-COLOR: #cccccc; color: #000000" align="right">{include file="currency2.tpl" value=$v.oOrderGroup->getTotalProductPrice()}</div></td>
+        <td class="bg__gray color__black text_align__right">
+                {include file="currency2.tpl" value=$v.oOrderGroup->getTotalProductPriceDiscounted()}
+            </td>
         <td></td>
-        <td><div style="BACKGROUND-COLOR: #cccccc; color: #000000" align="right">{include file="currency2.tpl" value=$v.oOrderGroup->getTotalProductPrice()}</td>
+        <td class="bg__gray color__black text_align__right">
+            {include file="currency2.tpl" value=$v.oOrderGroup->getTotalProductPriceDiscounted()}
+        </td>
         <td></td>
     </tr>
     <tr class="group_total_price_row">
@@ -584,9 +594,9 @@ function check_r_fields(){
         <td></td>
         <td></td>
         <td></td>
-        <td><div style="BACKGROUND-COLOR: #FFD44C; color: #000000" align="right">{include file="currency2.tpl" value=$v.oOrderGroup->getTotalCostToUs()}</div></td>
+        <td class="bg__yellow color__black text_align__right">{include file="currency2.tpl" value=$v.oOrderGroup->getTotalCostToUs()}</td>
         <td></td>
-        <td><div style="BACKGROUND-COLOR: #FFD44C; color: #000000" align="right">{include file="currency2.tpl" value=$v.oOrderGroup->getTotalCostToUs()}</div></td>
+        <td class="bg__yellow color__black text_align__right" >{include file="currency2.tpl" value=$v.oOrderGroup->getTotalCostToUs()}</td>
         <td></td>
     </tr>
 
@@ -595,7 +605,10 @@ function check_r_fields(){
 {foreach from=$v.products item=product key=prod_num}
 <tr{cycle values=", class='TableSubHead'" name="cycle_`$m_id`"}>
   <td>
-    <a href="{$product.oProduct->getUrl()}{if $cats[$product.productid]}&cat={$cats[$product.productid]}{/if}" title="" target="_blank">{$product.product}</a>
+    {if $product.coupon_discount > 0}
+        <i class="m icon discount float__left margin__first_image"></i>
+    {/if}
+    <a href="{$product.oProduct->getUrl()}{if $cats[$product.productid]}&cat={$cats[$product.productid]}{/if}" title="" target="_blank">{$product.oProduct->getFrontendName()}</a>
     {assign var='oHTMLShot' value = $product.oProduct->getHTMLShot($order.orderid)}
     {if (!empty($oHTMLShot) && $oHTMLShot->getId())}
       <a title="View HTML-Shot" target="_blanks" style="float:right; margin-top:3px;" href="/admin/view_html_shot.php?id={$oHTMLShot->getId()}" class="html-shot-view">
@@ -657,12 +670,12 @@ function check_r_fields(){
     {/if}
 
   </td>
-  <td align="right">{if !$static}<input type="text" size="8" name="items[{$product.itemid}][price]" value="{$product.price|price_format}" {if $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}readonly="readonly"{/if} />{else}{include file="currency2.tpl" value=$product.price|price_format}{/if}
+  <td align="right">{if !$static}<input type="text" size="8" name="items[{$product.itemid}][price]" value="{$product.oOrderDetail->getPrice()|price_format}" {if $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}readonly="readonly"{/if} />{else}{include file="currency2.tpl" value=$product.oOrderDetail->getPrice()|price_format}{/if}
 
 {* --- *}
 {math equation="x+y" x=$GROUP_cost_to_us y=$product.cost_to_us assign="GROUP_cost_to_us"}
 
-<div style="BACKGROUND-COLOR: #FFD44C; color: #000000" align="right">
+<div class="bg__yellow color__black" align="right">
 {include file="currency2.tpl" value=$product.cost_to_us|price_format}
 </div>
 
@@ -731,7 +744,7 @@ Cost to us accurate
   <td align="right">{include file="currency2.tpl" value=$product.oOrderDetail->getTotalProductPrice()}
 
 {* --- *}
-<div style="BACKGROUND-COLOR: #FFD44C; color: #000000" align="right">
+<div class="bg__yellow color__black" align="right">
 {include file="currency2.tpl" value=$product.oOrderDetail->getCostToUs()}
 </div>
 {* --- *}
@@ -747,7 +760,7 @@ Cost to us accurate
 {include file="currency2.tpl" value=$product.oOrderDetail->getTotalProductPrice()}
 
 {* --- *}
-<div style="BACKGROUND-COLOR: #FFD44C; color: #000000" align="right">
+<div class="bg__yellow color__black" align="right">
 {include file="currency2.tpl" value=$product.oOrderDetail->getCostToUs()}
 </div>
 {* --- *}
@@ -762,7 +775,7 @@ Cost to us accurate
   <td nowrap="nowrap">
     <div>
         <p>Carrier: {if $v.shipping_code ne ""}{$v.shipping_code}{else}Flat rate{/if}</p>
-        <p>Customer's choice: <input style="width:92px" type="text" maxlength="255" name="groups[{$m_id}][shipping]" value="{$v.shipping|trademark:''}"/>
+        <p>Customer's choice: <input type="text" maxlength="255" name="groups[{$m_id}][shipping]" value="{$v.shipping|trademark:''}"/>
         </p>
         <p>Method:
             {if !$static}
@@ -795,7 +808,7 @@ Cost to us accurate
         && $oOrderGroup->amz_fullfilment_order_placed !='Y'
   )}
     <td colspan="2" align="center">
-      <input data-orderid="{$oOrderGroup->getOrderId()}" data-manufacturerid="{$oOrderGroup->getManufacturerId()}" id="submit_amazon_shipment" name="submit_amazon_shipment" type="button"  value="{if ($oOrderGroup->getField('cb_status') =='AP' && $order_transactions_totals.authorized_PLUS_captured_totals == $oOrder->getOrderTotalGross())}Capture & {/if}Ship now by Amazon" />
+      <input data-orderid="{$oOrderGroup->getOrderId()}" data-manufacturerid="{$oOrderGroup->getManufacturerId()}" id="submit_amazon_shipment" name="submit_amazon_shipment" type="button"  value="{if ($oOrderGroup->getField('cb_status') =='AP' && $order_transactions_totals.authorized_PLUS_captured_totals == $oOrder->getOrderTotalGrossDiscounted())}Capture & {/if}Ship now by Amazon" />
       <select {if $oOrderShipping->isAmazonShipping() && $oOrder->amazon_fulfillment_channel == 'AFN'} disabled="disabled" {/if}style="margin-top: 7px; width: 88%;" name="amazon_shipping_method_select" id="amazon_shipping_method_select">
         <option value=""></option>
         {html_options options=$aAmazonShippingMethods selected=$oOrderGroup->getShippingMethodName()}
@@ -851,7 +864,7 @@ Cost to us accurate
 </tr>
 
 {* ----------------------- *}
-<tr{cycle values=", class='TableSubHead'" name="cycle_`$m_id`"} style="BACKGROUND-COLOR: #FFD44C;">
+<tr class="bg__yellow {cycle values="TableSubHead" name="cycle_`$m_id`"} ">
   <td colspan="7">
 
 <div style="float: left;">
@@ -925,10 +938,10 @@ Drop-ship fee: {include file="currency.tpl" value=$order_manufacturers[$m_id].d_
 
 
 {if $order_manufacturers[$m_id].additional_shipping_charge gt 0}
-<tr {cycle values=", class='TableSubHead'" name="cycle_`$m_id`"} style="BACKGROUND-COLOR: #FFD44C;">
+<tr  class="bg__yellow {cycle values="TableSubHead" name="cycle_`$m_id`"}">
 
 <td colspan="2">
-<span style="color: #FF0000; font-weight: bold;">Additional shipping required: ${$order_manufacturers[$m_id].additional_shipping_charge}</span>
+<span class="color__red fw__bold" >Additional shipping required: ${$order_manufacturers[$m_id].additional_shipping_charge}</span>
 </td>
 
 <td colspan="4" align="right">
@@ -1356,7 +1369,7 @@ C-{$key_memos}: {$invoice_memo_statuses[$item_memos.status]}<br />
 <tr{cycle values=", class='TableSubHead'" name="cycle_totals"}>
   <td>Total Product Price
 
-<div style="BACKGROUND-COLOR: #FFD44C; color: #000000" align="left">
+<div class="bg__yellow color__black" align="left">
 Total Product Cost to us
 </div>
 
@@ -1365,7 +1378,7 @@ Total Product Cost to us
   <td align="right">{include file="currency2.tpl" value=$oOrder->getProductPriceNet()}
 
 {* --- *}
-<div style="BACKGROUND-COLOR: #FFD44C; color: #000000" align="right">
+<div class="bg__yellow color__black" align="right">
 {include file="currency2.tpl" value=$oOrder->getOrderCostToUs()|price_format}
 </div>
 {* --- *}
@@ -1376,7 +1389,7 @@ Total Product Cost to us
   <td align="right">{include file="currency2.tpl" value=$oOrder->getProductPriceGross()}
 
 {* --- *}
-<div style="BACKGROUND-COLOR: #FFD44C; color: #000000" align="right">
+<div class="bg__yellow color__black" align="right">
 {include file="currency2.tpl" value=$oOrder->getOrderCostToUs()|price_format}
 </div>
 {* --- *}
@@ -1422,13 +1435,36 @@ Total Product Cost to us
 {/foreach}
 {/if}
 
+{if $order.coupon}
+<tr {cycle values=", class='TableSubHead'" name="cycle_totals"}>
+    <td>{$lng.lbl_coupon_saving}</td>
+    <td colspan="6">
+        {assign var="couponModel" value=$oOrder->getCouponModel()}
+        {if $couponModel}
+            {assign var="couponAdmin" value=$couponModel->getAdmin()}
+            {$couponModel->code}
+
+            ( <a href="{$couponAdmin->getInfoUrl()}" target="_blank">View info</a> )
+        {/if}
+    </td>
+    <td align="right" class="color__red">
+        {include file="currency2.tpl" value=$oOrder->coupon_discount}
+    </td>
+    <td align="right"></td>
+    <td align="right" class="info color__red">
+        {include file="currency2.tpl" value=$oOrder->coupon_discount}
+    </td>
+    <td>&nbsp;</td>
+</tr>
+{/if}
+
 <tr{cycle values=", class='TableSubHead'" name="cycle_totals"} style="font-weight: bold;">
-  <td style="font-size: 12px;">{$lng.lbl_grand_total}</td>
+  <td style="font-size: 1.1rem;">{$lng.lbl_grand_total}</td>
   <td colspan="6">&nbsp;</td>
-  <td align="right" style="font-size: 12px;">{include file="currency2.tpl" value=$oOrder->getOrderTotalNet()}</td>
-  <td align="right" style="font-size: 12px;">{include file="currency2.tpl" value=$oOrder->getOrderTotalHST() hide_zero='Y'}</td>
-{*  <td align="right" style="font-size: 12px;">{include file="currency2.tpl" value=$order.extra.total.pst hide_zero='Y'}</td> *}
-  <td align="right" style="font-size: 12px;">{include file="currency2.tpl" value=$oOrder->getOrderTotalGross()}</td>
+  <td align="right" style="font-size: 1.1rem;">{include file="currency2.tpl" value=$oOrder->getOrderTotalNet()}</td>
+  <td align="right" style="font-size: 1.1rem;">{include file="currency2.tpl" value=$oOrder->getOrderTotalHST() hide_zero='Y'}</td>
+{*  <td align="right" style="font-size: 1.1rem;">{include file="currency2.tpl" value=$order.extra.total.pst hide_zero='Y'}</td> *}
+  <td align="right" style="font-size: 1.1rem;">{include file="currency2.tpl" value=$oOrder->getOrderTotalGross()}</td>
   <td>&nbsp;</td>
 </tr>
 <tr>

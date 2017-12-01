@@ -7,9 +7,10 @@
         {block 'seo'}
             <title>Admin</title>
         {/block}
+        <link rel="stylesheet" href="/static/backend/dist/css/main.css?v={backend_css_version}">
+        <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
 
-        <link rel="stylesheet" href="/static_admin/dist/css/main.css?v={backend_css_version}">
-        <script src="/static_admin/dist/js/main.js?v={backend_js_version}"></script>
+        <script src="/static/backend/dist/js/main.js?v={backend_js_version}"></script>
 
         {* Another head information *}
         {block 'head'}{/block}
@@ -21,7 +22,7 @@
     {/if}
 
 </head>
-<body>
+<body class="admin-body">
     <div class="wrapper">
         {if !$.request->getIsAjax()}
             {render_flash:raw template='admin/_flash.tpl'}

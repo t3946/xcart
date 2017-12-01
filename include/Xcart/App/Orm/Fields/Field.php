@@ -50,11 +50,15 @@ abstract class Field implements ModelFieldInterface
 
     public $helpText;
 
+    public $required = false;
+
     public $unique = false;
 
     public $primary = false;
 
     public $autoFetch = false;
+
+    public $formField = '\Xcart\App\Form\Fields\CharField';
 
     protected $name;
 
@@ -68,7 +72,7 @@ abstract class Field implements ModelFieldInterface
     /**
      * @var array
      */
-    protected $validators = [];
+    public $validators = [];
     /**
      * @var mixed
      */
@@ -122,7 +126,16 @@ abstract class Field implements ModelFieldInterface
             ]);
         }
 
-        return array_merge($constraints, $this->validators);
+        foreach ($this->validators as $validator) {
+            if ($validator instanceof Closure) {
+                $constraints[] = new Assert\Callback($validator->bindTo($this));
+            }
+            else {
+                $constraints[] = $validator;
+            }
+        }
+
+        return $constraints;
     }
 
     /**
@@ -268,7 +281,7 @@ abstract class Field implements ModelFieldInterface
      */
     public function isRequired()
     {
-        return $this->null === false && is_null($this->default) === true;
+        return $this->null === false && is_null($this->default) === true || $this->required;
     }
 
     /**
@@ -440,8 +453,9 @@ abstract class Field implements ModelFieldInterface
         }
 
         if ($fieldClass === null) {
-            $fieldClass = $this->choices ? \Xcart\App\Form\Fields\DropDownField::className() : \Xcart\App\Form\Fields\CharField::className();
-        } elseif ($fieldClass === false) {
+            $fieldClass = $this->choices ? \Xcart\App\Form\Fields\DropDownField::className() : $this->formField;
+        }
+        elseif ($fieldClass === false) {
             return null;
         }
 
@@ -450,7 +464,7 @@ abstract class Field implements ModelFieldInterface
             $field = $form->getField($this->name);
             $validators = $field->validators;
         }
-//
+
 //        if (($this->null === false || $this->required) && $this->autoFetch === false && ($this instanceof BooleanField) === false) {
 //            $validator = new RequiredValidator;
 //            $validator->setName($this->name);

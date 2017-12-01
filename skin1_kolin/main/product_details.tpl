@@ -2,8 +2,6 @@
 
 {capture name=dialog}
     {include file="check_clean_url.tpl"}
-    <script type="text/javascript" language="JavaScript 1.2"
-            src="{$SkinDir}/lib/jqueryui/jquery-ui.custom.min.js"></script>
     {if $taxes}
         <script type="text/javascript" language="JavaScript 1.2">
             <!--
@@ -593,6 +591,18 @@
                     &nbsp;{include file="capitalize_js.tpl" id="product_name"}
                 </td>
             </tr>
+
+            {if $oProduct && $oProduct->isGroupChild()}
+                <tr>
+                    {if $geid ne ''}
+                        <td width="15" class="TableSubHead">&nbsp;</td>
+                    {/if}
+                    <td class="FormButton" nowrap="nowrap">Product group mask:</td>
+                    <td>
+                        <input type="text" name="group_mask" style="width: 80%;" value="{$oProduct->group_mask}"/>
+                    </td>
+                </tr>
+            {/if}
 
             {if $product.productid ne ""}
                 {include file="main/clean_url_field.tpl" clean_url=$product.clean_url clean_urls_history=$product.clean_urls_history clean_url_fill_error=$top_message.clean_url_fill_error tooltip_id='clean_url_tooltip_link'}

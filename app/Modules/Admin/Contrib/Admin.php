@@ -18,10 +18,13 @@ use Xcart\App\Orm\QuerySet;
 use Xcart\App\Pagination\DataSource\QuerySetDataSource;
 use Xcart\App\Pagination\Pagination;
 use Xcart\App\Template\Renderer;
+use Xcart\App\Traits\SmartyRenderTrait;
 
 abstract class Admin
 {
-    use SmartProperties, ClassNames, Renderer;
+    use SmartProperties, ClassNames, Renderer, SmartyRenderTrait;
+
+    protected $parent_pk = null;
 
     public static $public = true;
 
@@ -29,9 +32,11 @@ abstract class Admin
     public $listItemActionsTemplate = 'admin/list/_item_actions.tpl';
     public $listPaginationTemplate = 'admin/list/_pagination.tpl';
 
+    public $infoTemplate = 'admin/info.tpl';
     public $createTemplate = 'admin/create.tpl';
     public $updateTemplate = 'admin/update.tpl';
     public $formTemplate = 'admin/form/_form.tpl';
+    public $columnDefaultTemplate = 'admin/list/columns/default.tpl';
 
     public $pageSize = 20;
     public $pageSizes = [20, 50, 100];
@@ -43,7 +48,12 @@ abstract class Admin
      */
     public $sort = null;
 
+    public $innerRender = false;
+
     public $autoFixSort = true;
+
+    /** @var Model */
+    public $model;
 
     /**
      * @return mixed
@@ -53,12 +63,12 @@ abstract class Admin
         return [
             'id' => [
                 'title' => 'ID',
-                'template' => 'admin/list/columns/default.tpl',
+                'template' => $this->columnDefaultTemplate,
                 'order' => 'id'
             ],
             '(string)' => [
                 'title' => $this->getItemName(),
-                'template' => 'admin/list/columns/default.tpl',
+                'template' => $this->columnDefaultTemplate,
                 'order' => 'id'
             ],
         ];
@@ -67,6 +77,11 @@ abstract class Admin
     public function getListColumns()
     {
         return ['id', '(string)'];
+    }
+
+    public function getExcludedColumns()
+    {
+        return [];
     }
 
     /**
@@ -225,6 +240,7 @@ abstract class Admin
 
         $availableColumns = $this->getAvailableListColumns();
         $fields = $this->getModel()->getFields();
+        $excluded = $this->getExcludedColumns();
 
         $config = [];
         $enabled = [];
@@ -245,6 +261,10 @@ abstract class Admin
             }
         }
         foreach ($fields as $name => $field) {
+            if (in_array($name, $excluded)) {
+                continue;
+            }
+
             if (is_array($field)) {
                 $columnConfig = isset($config[$name]) ? $config[$name] : [];
                 if (!isset($columnConfig['title']) && isset($field['label'])) {
@@ -258,7 +278,7 @@ abstract class Admin
                         $columnConfig['order'] = $attribute;
                     }
                 }
-                $columnConfig['template'] = 'admin/list/columns/default.tpl';
+                $columnConfig['template'] = $this->columnDefaultTemplate;
                 $config[$name] = $columnConfig;
             }
         }
@@ -286,6 +306,22 @@ abstract class Admin
     }
 
     public function getSearchColumns()
+    {
+        return [];
+    }
+
+    /**
+     * @return array
+     *  Example: [
+     *      'brand' => [
+     *          'class' => 'Modules\Brand\Models\BrandModel',
+     *          'columns' => [
+     *              'name', 'code', 'pk'
+     *          ]
+     *      ]
+     *  ]
+     */
+    public function getSuggestionColumns()
     {
         return [];
     }
@@ -371,6 +407,46 @@ abstract class Admin
     }
 
     /**
+     * @return QuerySet
+     */
+    public function handleSuggestion($entity, $search)
+    {
+        $entity = strtolower($entity);
+        $entitys = $this->getSuggestionColumns();
+
+        if (array_key_exists($entity, $entitys)) {
+            $class = $entitys[$entity]['class'];
+            $columns = $entitys[$entity]['columns'];
+
+            /** @var Model $model */
+            $model = new $class();
+            $qs = $model->objects()->getQuerySet();
+
+            if ($search && $columns) {
+                $orData = [];
+                foreach ($columns as $column) {
+                    $orData[] = [$column . '__contains' => $search];
+                }
+                $filter = [new QOr($orData)];
+                $qs = $qs->filter($filter);
+            }
+        }
+        else {
+            throw new \UnexpectedValueException("Entity: {$entity} not set in suggestion columns");
+        }
+
+        return $qs;
+    }
+
+    public function checkSuggestionEntity($entity)
+    {
+        $entity = strtolower($entity);
+        $entitys = $this->getSuggestionColumns();
+
+        return array_key_exists($entity, $entitys);
+    }
+
+    /**
      * @param $qs QuerySet
      * @return QuerySet
      */
@@ -415,6 +491,21 @@ abstract class Admin
         return $qs;
     }
 
+    public function setModel(Model $model)
+    {
+        $this->model = $model;
+        return $this;
+    }
+
+    public function getModelPk()
+    {
+        if ($this->model) {
+            return $this->model->pk;
+        }
+
+        return null;
+    }
+
     /**
      * @return array
      */
@@ -434,7 +525,7 @@ abstract class Admin
 
     public function getAllUrl()
     {
-        return Xcart::app()->router->url('admin:all', [
+        return Xcart::app()->router->url('admin:list', [
             'module' => static::getModuleName(),
             'admin' => static::classNameShort()
         ]);
@@ -450,11 +541,17 @@ abstract class Admin
 
     public function getUpdateUrl($pk = null)
     {
+        $query = [];
+
+        if (Xcart::app()->request->get->has('popup')) {
+            $query['popup'] = true;
+        }
+
         return Xcart::app()->router->url('admin:update', [
             'module' => static::getModuleName(),
             'admin' => static::classNameShort(),
-            'pk' => $pk
-        ]);
+            'pk' => $pk ?: $this->getModelPk(),
+        ], $query);
     }
 
     public function getInfoUrl($pk = null)
@@ -462,7 +559,7 @@ abstract class Admin
         return Xcart::app()->router->url('admin:info', [
             'module' => static::getModuleName(),
             'admin' => static::classNameShort(),
-            'pk' => $pk
+            'pk' => $pk ?: $this->getModelPk(),
         ]);
     }
 
@@ -471,7 +568,7 @@ abstract class Admin
         return Xcart::app()->router->url('admin:remove', [
             'module' => static::getModuleName(),
             'admin' => static::classNameShort(),
-            'pk' => $pk
+            'pk' => $pk ?: $this->getModelPk(),
         ]);
     }
 
@@ -499,6 +596,19 @@ abstract class Admin
         ]);
     }
 
+    public function getSuggestionUrl($entity)
+    {
+        if ($this->checkSuggestionEntity($entity)) {
+            return Xcart::app()->router->url('admin:suggestion', [
+                'module' => static::getModuleName(),
+                'admin' => static::classNameShort(),
+                'entity' => $entity,
+            ]);
+        }
+
+        return null;
+    }
+
     public function getItemProperty(Model $item, $property)
     {
         $value = $item;
@@ -509,8 +619,9 @@ abstract class Admin
         return $value;
     }
 
-    public function all()
+    public function all($pk = null)
     {
+        $this->setBreadcrumbs();
         $search = isset($_GET['search']) ? $_GET['search'] : null;
 
         $qs = $this->getQuerySet();
@@ -523,14 +634,40 @@ abstract class Admin
             'pageSizes' => $this->pageSizes
         ], new QuerySetDataSource());
 
-        $this->render($this->allTemplate, [
+        $this->renderInternal($this->allTemplate, [
             'objects' => $pagination->paginate(),
             'pagination' => $pagination,
             'order' => $this->getOrder(),
             'search' => $this->getSearchColumns(),
             'columns' => $this->buildListColumns(),
-            'canSort' => $this->getCanSort($qs)
+            'canSort' => $this->getCanSort($qs),
         ]);
+    }
+
+    public function info($pk)
+    {
+        $object = $this->getModelOr404($pk);
+
+        $this->setBreadcrumbs('Информация');
+        $this->renderInternal($this->infoTemplate, [
+            'object' => $object,
+            'fields' => $object::getFields(),
+        ]);
+    }
+
+    public function suggestions($entity)
+    {
+        $search = isset($_GET['term']) ? $_GET['term'] : null;
+
+        if ($qs = $this->handleSuggestion($entity, $search)) {
+            $data = [];
+            foreach ($qs->all() as $v)
+            {
+                $data[] = ['id' => $v->pk, 'text' => (string)$v];
+            }
+
+            $this->jsonResponse(['items' => $data]);
+        }
     }
 
     public function remove($pk)
@@ -558,7 +695,7 @@ abstract class Admin
 
     public function render($template, $data = [])
     {
-        echo $this->renderTemplate($template, array_merge($data, $this->getCommonData()));
+        return $this->renderTemplate($template, array_merge($data, $this->getCommonData()));
     }
 
     public function jsonResponse($data = [])
@@ -586,21 +723,30 @@ abstract class Admin
         return $this->getForm()->getFieldsets();
     }
 
-    public function create()
+    public function create($pk = null)
     {
-        $this->update(null);
+        $this->update(null, $pk);
     }
 
-    public function update($pk = null)
+    public function update($pk = null, $parent_id = null)
     {
+        /** @var \Xcart\App\Orm\TreeModel $model */
         $new = false;
         if (is_null($pk)) {
             $new = true;
             $model = $this->newModel();
             $form = $this->getForm();
+
+            if ($parent_id) {
+                $model->parent_id = $parent_id;
+            }
         } else {
             $model = $this->getModelOr404($pk);
             $form = $this->getUpdateForm();
+        }
+
+        if (isset($model->parent_id)) {
+            $this->parent_pk = $model->parent_id;
         }
 
         $form->setInstance($model);
@@ -609,16 +755,19 @@ abstract class Admin
         if ($request->getIsPost() && $form->populate($_POST, $_FILES)) {
             if ($form->isValid() && $form->save()) {
                 if ($request->getIsAjax()) {
-
-                } else {
+                    $this->jsonResponse(['state' => 'success']);
+                }
+                else {
                     Xcart::app()->flash->success('Изменения сохранены');
 
                     $next = isset($_POST['save']) ? $_POST['save']: 'save';
                     if ($next == 'save') {
-                        $request->redirect($this->getAllUrl());
-                    } elseif ($next == 'save-stay') {
+                        $request->redirect(($this->parent_pk) ? $this->getParentAllUrl():$this->getAllUrl());
+                    }
+                    elseif ($next == 'save-stay') {
                         $request->redirect($this->getUpdateUrl($model->pk));
-                    } else {
+                    }
+                    else {
                         $request->redirect($this->getCreateUrl());
                     }
                 }
@@ -628,9 +777,10 @@ abstract class Admin
                 }
             }
         }
-        
+
+        $this->setBreadcrumbs(($pk)? 'Редактировать' : 'Создать');
         $template = $new ? $this->createTemplate : $this->updateTemplate;
-        $this->render($template, [
+        $this->renderInternal($template, [
             'form' => $form,
             'model' => $model,
             'new' => $new
@@ -690,5 +840,47 @@ abstract class Admin
     public static function getItemName()
     {
         return static::classNameShort();
+    }
+
+    //@TODO: Remove after delete smarty
+    public function renderInternal($view, $params)
+    {
+        $params = array_replace($this->getCommonData(), $params);
+
+        if (
+            Xcart::app()->request->getIsAjax()
+            || Xcart::app()->request->get->has('popup')
+            || $this->innerRender
+        ) {
+            echo $this->render($view, $params);
+        }
+        else {
+            echo $this->renderSmarty("admin/home.tpl", [
+                'single_mode' => true,
+                'main'        => 'raw_html',
+                'content'     =>  $this->render($view, $params),
+            ]);
+        }
+    }
+
+
+    public function getBreadcrumbs()
+    {
+        return [[$this->getName(), $this->getAllUrl()]];
+    }
+
+    /**
+     * @param $admin Admin
+     */
+    public function setBreadcrumbs($last = null)
+    {
+        foreach ($this->getBreadcrumbs() as $bread) {
+            list ($name, $url) = $bread;
+            Xcart::app()->breadcrumbs->add($name, $url);
+        }
+
+        if ($last) {
+            Xcart::app()->breadcrumbs->add($last);
+        }
     }
 }

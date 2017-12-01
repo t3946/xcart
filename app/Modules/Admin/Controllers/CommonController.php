@@ -6,8 +6,7 @@ class CommonController extends BackendController
 {
     public function index()
     {
-        echo $this->render('admin/index.tpl', [
-
-        ]);
+        $this->redirect('/admin/', 302);
+        echo $this->render('admin/index.tpl', []);
     }
 }

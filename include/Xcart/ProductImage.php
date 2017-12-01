@@ -28,7 +28,7 @@ class ProductImage extends Data
         $sPath = null;
         $aPath = pathinfo($this->getField("image_path"));
         if ($this->bUseCDN)
-            $sPath = '//' . $this->sCDNURL . ltrim($aPath['dirname'], '.') . '/';
+            $sPath = 'https://' . $this->sCDNURL . ltrim($aPath['dirname'], '.') . '/';
         else
             $sPath = $xcart_dir . ltrim($aPath['dirname'], '.') . '/';
         return $sPath;

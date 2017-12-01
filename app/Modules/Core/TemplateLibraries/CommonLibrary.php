@@ -48,11 +48,34 @@ class CommonLibrary extends TemplateLibrary
     public static function buildUrl($params)
     {
         $data = isset($params['data']) ? $params['data'] : [];
-        $query = Xcart::app()->request->getQueryArray();
+        $query = Xcart::app()->request->getQueryArray(null, false);
         $query = array_replace_recursive($query, $data);
         foreach ($data as $key => $value) {
             $query[$key] = $value;
         }
         return Xcart::app()->request->getPath() . '?' . http_build_query($query);
+    }
+
+    /**
+     * @name extend_url
+     * @kind function
+     * @return string
+     * @throws \Xcart\App\Exceptions\InvalidConfigException
+     */
+    public static function extendUrl($params)
+    {
+        $query = '';
+        $path = '';
+
+        $url = isset($params['url']) ? $params['url'] : Xcart::app()->request->getUrl();
+        extract(parse_url($url), EXTR_OVERWRITE);
+        $query = Xcart::app()->request->getQueryArray($query, false);
+
+        $data = isset($params['data']) ? $params['data'] : [];
+        $query = array_replace_recursive($query, $data);
+        foreach ($data as $key => $value) {
+            $query[$key] = $value;
+        }
+        return $path . '?' . http_build_query($query);
     }
 }

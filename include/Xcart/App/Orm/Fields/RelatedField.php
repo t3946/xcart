@@ -19,6 +19,8 @@ abstract class RelatedField extends IntField
      */
     public $modelClass;
 
+    public $managerFunction = 'objects';
+
     /**
      * @var string sql type of field get type name from const Doctrine\DBAL\Types\Type class
      *             default = 'integer'
