@@ -34,7 +34,7 @@
 # $Id: popup_poptions.php,v 1.12.2.3 2006/11/17 11:37:59 max Exp $
 #
 
-use Modules\Product\Models\ProductOptionModel;
+use Modules\Product\Models\OptionValueModel;
 
 require "./auth.php";
 
@@ -102,7 +102,7 @@ if ($REQUEST_METHOD == 'POST' && $mode == 'update' && !empty($_POST['product_opt
 	$poptions = $_POST['product_options'];
 
     if (!empty($poptions)) {
-        if ($optionModel = ProductOptionModel::objects()->get(['optionid' => current($poptions)])){
+        if ($optionModel = OptionValueModel::objects()->get(['optionid' => current($poptions)])){
             $product_options[$optionModel->classid] = $optionModel->getAttributes();
         }
     }

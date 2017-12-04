@@ -27,7 +27,6 @@
 {/block}
 
 {block 'js'}
-    <script src="/skin1_kolin/tinymce/js/tinymce/tinymce.min.js" type="text/javascript"></script>
     <script type="text/javascript">
 
         $(document).on('click', '.thumbnails > img:not(.not)', function() {

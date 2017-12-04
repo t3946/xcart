@@ -261,7 +261,7 @@ function cidev_update_product_amount_next(cartid, amount, manufacturerid){
 {/if}
 </td>
 <td valign="top">
-<a href="product.php?productid={$products[product].productid}"><font class="ProductTitle">{if $products[product].oProduct}{$products[product].oProduct->getTitle()}{/if}</font></a>
+<a href="product.php?productid={$products[product].productid}"><font class="ProductTitle">{if $products[product].oProduct}{$products[product].oProduct->getFrontendName()}{/if}</font></a>
 <br>
 <font color="#006600" class="DialogTitleT">SKU: {$products[product].productcode}</font>
 <br>
@@ -455,6 +455,8 @@ x {if $active_modules.Egoods and $products[product].distribution}1<input type="h
 {else}
 {include file="customer/main/cart_totals.tpl"}
 {/if}
+
+    {$xcartApp->template->render('inSmarty/coupon_cart_desktop.tpl')}
 {$lng.lbl_your_mer_subtotal}<br /><br />
 {if $js_enabled}
 

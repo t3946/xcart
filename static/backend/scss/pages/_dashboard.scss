@@ -98,7 +98,15 @@
         }
 
         .dashboard-item {
+            font-size: .95em;
+            font-weight: normal;
             position: relative;
+            text-transform: none;
+            //color: black;
+
+            &:hover, &:visited {
+              color: inherit;
+            }
 
             &.check-owner {
                 &.other {}
@@ -140,7 +148,7 @@
 
             .events,
             .priority {
-                font-weight: bold;
+                font-weight: 500;
                 line-height: 1.2;
 
                 &.empty {
@@ -149,18 +157,18 @@
             }
 
             .priority {
-                font-weight: bold;
+                font-weight: 500;
                 line-height: 1.2;
                 display: inline-block;
                 background-color: rgb(255, 233, 165);
 
-                font-size: 8px;
+                font-size: 10px;
                 padding: 1px 2px;
                 border-radius: 3px;
             }
 
             .events {
-                font-size: 8px;
+                font-size: .8em;
                 color: rgb(0, 0, 255);
             }
 
@@ -204,12 +212,22 @@
         //margin-left: map-get(map-get($grid, 'large'), 'gutter') / 2 * -1px;
         //margin-right: map-get(map-get($grid, 'large'), 'gutter') / 2 * -1px;
 
+        .order_link {
+          font-weight: 500;
+          &, &:link {
+            color: blue;
+          }
+        }
+
         .TableHead {
-            font-weight: bold;
+            //font-weight: bold;
+          font-weight: 500;
         }
 
         .TableSubHead_new {
-            background-color: #e5e5e5;
+            //background-color: #e5e5e5;
+            background-color: rgba(183, 206, 226, .17);
+            //background-color: rgb(43,43,43);
         }
 
         tr {
@@ -242,7 +260,7 @@
                 //border-top: 1px solid black;
                 //border-bottom: 1px solid black;
                 //padding: 3px 0 0;
-                padding: 4px 0 0;
+                padding: .6rem 0 0;
                 box-shadow: inset 0px 10px 4px -9px rgba(0, 0, 0, 0.55);
             }
         }
@@ -250,7 +268,7 @@
         .events-container {
             .events {
                 color: rgb(0, 0, 255);
-                font-weight: bold;
+                font-weight: 500;
                 line-height: 1.2;
             }
         }
@@ -282,7 +300,8 @@
                 padding: 5px 6px;
                 background: none;
                 background: {
-                    color: rgb(235, 235, 235);
+                    //color: rgb(235, 235, 235);
+                    color: #e9e9e9;
                 };
                 font: {
                     weight: 500;
@@ -292,9 +311,9 @@
                 &:before {
                     content: '+';
                     display: inline-block;
-                    font: {
-                        size: 8px;
-                    }
+                    //font: {
+                    //    size: 8px;
+                    //}
                     width: 17px;
                     height: 17px;
                     background: {

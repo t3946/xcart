@@ -260,7 +260,7 @@
 {if $email_is_sent_to_operator eq "Y"}
 <a href="{$product.links.customer}" style="color: blue;">
 {/if}
-{$product.product}
+{$product.oProduct->getFrontendName()}
 {if $email_is_sent_to_operator eq "Y"}
 </a>
 {/if}

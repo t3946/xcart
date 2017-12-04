@@ -462,43 +462,49 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
                             }
 
                             $aSupplierCategory = $aProduct['supplier_categories'];
+
                             if (!empty($aSupplierCategory)) {
+
                                 $aSupplierCategory = reset($aSupplierCategory);
                                 $cats_arr = explode("/", $aSupplierCategory);
+
                                 if (!empty($cats_arr) && is_array($cats_arr)) {
-                                    $parentid = $supplierFeedModel->base_category_id;
+
+                                    $parent_id = $supplierFeedModel->base_category_id;
                                     $lastCategory = null;
+
                                     foreach ($cats_arr as $v_cat) {
-                                        $modelCats = CategoryModel::objects()
-                                            ->filter([
-                                                'parentid' => $parentid,
+
+                                        /** @var CategoryModel $modelCat */
+                                        list($modelCat, $is_created) = CategoryModel::objects()->getOrNew(
+                                            [
+                                                'parentid' => $parent_id,
                                                 'category' => $v_cat
-                                            ])->all();
-                                        if (!count($modelCats)) {
-                                            $modelCat = new CategoryModel([
-                                                'parentid' => $parentid,
-                                                'category' => $v_cat,
+                                            ]);
+
+                                        if ($is_created) {
+                                            $modelCat->setAttributes([
                                                 'storefrontid' => $supplierFeedModel->storefront_id,
                                                 'prevent_index_products' => $modelProduct->prevent_search_indexing_this_product_page == 'Y' ? 'Y' : 'N',
                                                 'prevent_index_category_page' => $modelProduct->prevent_search_indexing_this_product_page == 'Y' ? 'Y' : 'N',
                                                 'is_bold' => 'Y',
                                                 'order_by' => 10
                                             ]);
+
                                             $modelCat->save();
-                                            /** @var CategoryModel $parentModel */
-                                            if ($parentModel = CategoryModel::objects()->get(['categoryid' => $parentid])) {
-                                                $modelCat->categoryid_path = $parentModel->categoryid_path . "/" . $modelCat->categoryid;
-                                            }
+
+                                            $modelCat->categoryid_path = $modelCat->parent->categoryid_path . "/" . $modelCat->categoryid;
+
                                             $modelCat->save();
+
                                             $clean_url = func_clean_url_autogenerate('C', $modelCat->categoryid, array('category' => $modelCat->category));
                                             func_clean_url_add($clean_url, 'C', $modelCat->categoryid);
-
-                                        } else {
-                                            $modelCat = reset($modelCats);
                                         }
+
                                         $lastCategory = $modelCat;
-                                        $parentid = $modelCat->categoryid;
+                                        $parent_id = $modelCat->categoryid;
                                     }
+
                                     if ($lastCategory) {
                                         if ($modelProduct->pc_classify_status && !in_array($modelProduct->pc_classify_status, ['AC', 'ACC', 'MC'])) {
                                             db_query_param(/** @lang MySQL */

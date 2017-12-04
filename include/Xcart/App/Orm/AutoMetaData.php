@@ -36,6 +36,7 @@ class AutoMetaData extends MetaData
         foreach ($this->getTableConfig($className) as $name => $config)
         {
             if (!isset($this->fields[$name])) {
+                /** @var \Xcart\App\Orm\Fields\Field $field */
                 $field = $this->createField($config);
                 $field->setName($name);
                 $field->setModelClass($className);

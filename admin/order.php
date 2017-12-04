@@ -41,7 +41,7 @@ use Modules\Order\Stores\OrderTransactionStore;
 use Modules\Payment\Gateways\Gateway;
 use Modules\Payment\Helpers\PaymentHelper;
 use Modules\Payment\Models\ProcessorModel;
-use Modules\Product\Models\ProductOptionModel;
+use Modules\Product\Models\OptionValueModel;
 use Xcart\Paypal;
 
 global $login;
@@ -860,7 +860,7 @@ if ($REQUEST_METHOD == "POST") {
 
                         if (!empty($v["classid_optionid"]) && is_array($v["classid_optionid"])){
                             foreach ($v["classid_optionid"] as $class_id => $option_id) {
-                                if ($optionModel = ProductOptionModel::objects()->get(['optionid' => $option_id])) {
+                                if ($optionModel = OptionValueModel::objects()->get(['optionid' => $option_id])) {
                                     $v["classid_optionid"][$class_id] = $optionModel->getAttributes();
                                 }
                             }
@@ -2964,9 +2964,13 @@ $order_tabs[0]["title"]   = "Important messages";
 $order_tabs[0]["section"] = "important_messages";
 $order_tabs[0]["anchor"]  = "0";
 
-$order_tabs[1]["title"]   = "All logs and messages";
-$order_tabs[1]["section"] = "all_logs_and_messages";
+$order_tabs[1]["title"]   = "Calls";
+$order_tabs[1]["section"] = "order_calls";
 $order_tabs[1]["anchor"]  = "1";
+
+$order_tabs[2]["title"]   = "All logs and messages";
+$order_tabs[2]["section"] = "all_logs_and_messages";
+$order_tabs[2]["anchor"]  = "2";
 
 $smarty->assign('order_tabs', $order_tabs);
 

@@ -9,20 +9,23 @@ use Modules\Sites\Models\SiteModel;
 use Modules\User\Models\UserModel;
 use Xcart\App\Components\Breadcrumbs;
 use Xcart\App\Main\Xcart;
-use Xcart\App\Orm\AutoMetaModel;
+use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\BooleanCharField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\HasManyField;
+use Xcart\App\Orm\Fields\HasToOneField;
 use Xcart\App\Orm\Fields\ManyToManyField;
-use Xcart\App\Orm\Fields\OneToOneField;
+use Xcart\App\Orm\Model;
 
 /**
  * @property mixed brandid
  */
-class BrandModel extends AutoMetaModel
+class BrandModel extends Model
 {
+    use AutoMetaTrait;
+
     public static function tableName()
     {
         return 'xcart_brands';
@@ -108,7 +111,7 @@ class BrandModel extends AutoMetaModel
             'child_brands' => [
                 'class' => HasManyField::className(),
                 'modelClass' => BrandModel::className(),
-                'link' => ['parent_brand_id' => 'brandid']
+                'link' => ['brandid' => 'parent_brand_id']
             ],
             'products' => [
                 'class' => HasManyField::className(),
@@ -128,7 +131,7 @@ class BrandModel extends AutoMetaModel
                 'link' => ['provider' => 'login']
             ],
             'clean_url' => [
-                'class' => HasManyField::className(),
+                'class' => HasToOneField::className(),
                 'modelClass' => CleanUrlModel::className(),
                 'link' => ['brandid' => 'resource_id'],
                 'extra' => ['resource_type' => 'M'],
@@ -153,10 +156,17 @@ class BrandModel extends AutoMetaModel
 
     public function getAbsoluteUrl($full = false)
     {
-        if ($this->brandid)
-        {
-            return $this->clean_url->limit(1)->get()->urlFromCode('brand:view', $full, $this->storefront->limit(1)->get());
-//            return Xcart::app()->router->url('brand:view', ['id' => $this->brandid, 'slug' => 'TEMP']);
+        if ($this->brandid) {
+
+            $url = Xcart::app()->router->url('catalog:product:view', ['id' => $this->pk, 'slug' => $this->clean_url->getSlugPart()]);
+
+            if ($full) {
+                $site = $this->storefront->limit(1)->get();
+
+                $url = '//' . $site->domain . $url;
+            }
+
+            return $url;
         }
 
         return false;
@@ -177,4 +187,15 @@ class BrandModel extends AutoMetaModel
         return "/brand/{$this->brandid}";
     }
 
+    public function __toString()
+    {
+        $code = '';
+        if ($st = $this->storefront->limit(1)->get()) {
+            $code .=  $st->code .":";
+        }
+
+        $code .= $this->pk;
+
+        return "[{$code}] {$this->brand}";
+    }
 }

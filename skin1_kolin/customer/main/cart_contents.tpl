@@ -49,7 +49,7 @@
 <td style="width: 110px">{$products[prod_num].productcode}</td>
 <td>
     {if $products[prod_num].oProduct}
-        {$products[prod_num].oProduct->getTitle()|escape}
+        {$products[prod_num].oProduct->getFrontendName()|escape}
     {else}
         {$products[prod_num].product|escape}
     {/if}

@@ -1,5 +1,6 @@
 <?php
 
+use Modules\GeoIp\Helpers\GeoIpHelper;
 use Modules\Order\Models\OrderDetailModel;
 use Modules\Order\Models\OrderGroupInvoiceProductModel;
 use Modules\Order\Models\OrderGroupModel;
@@ -134,18 +135,28 @@ function func_get_group_totals($group_products, $group_shipping)
         $result[$dn] = 0;
     }
 
+    $result['coupon_discount'] = 0;
+
     foreach ($group_products as $product) {
-        $result['net'] += $product['price'] * $product['amount'];
+        $result['net'] += !empty($product['discounted_price']) ? $product['discounted_price'] : $product['price'] * $product['amount'];
+
         if (!empty($product['extra_data']['taxes']['GST']['tax_value'])) {
             $result['gst'] += price_format($product['extra_data']['taxes']['GST']['tax_value']);
         }
+
         if (!empty($product['extra_data']['taxes']['HST']['tax_value'])) {
             $result['gst'] += price_format($product['extra_data']['taxes']['HST']['tax_value']);
         } # GST/HST sum
+
         if (!empty($product['extra_data']['taxes']['PST']['tax_value'])) {
             $result['pst'] += price_format($product['extra_data']['taxes']['PST']['tax_value']);
         }
+
         $result['gross'] += $product['display_subtotal'];
+
+        if (!empty($product['discounted_price'])) {
+            $result['coupon_discount'] += (($product['price'] * $product['amount']) - $product['discounted_price']);
+        }
     }
 
     foreach ($price_details_names as $dn) {
@@ -786,10 +797,10 @@ function func_order_data($orderid)
         $order["extra"]["tax_info"]["product_tax_name"] = array_pop($_product_taxes);
     }
 
-    if ($order["coupon_type"] == "free_ship") {
-        $order["shipping_cost"] = $order["coupon_discount"];
-        $order["discounted_subtotal"] += $order["coupon_discount"];
-    }
+//    if ($order["coupon_type"] == "free_ship") {
+//        $order["shipping_cost"] = $order["coupon_discount"];
+//        $order["discounted_subtotal"] += $order["coupon_discount"];
+//    }
 
     $order["discounted_subtotal"] = price_format($order["discounted_subtotal"]);
 
@@ -951,9 +962,8 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
 
     $ip_info = $CLIENT_IP;
 
-    $geo_litecity_location = func_get_geoip_locations($CLIENT_IP);
-    if (!empty($geo_litecity_location)) {
-        $ip_info .= " (" . $geo_litecity_location["country"] . ", " . $geo_litecity_location["region"] . ", " . $geo_litecity_location["city"] . ", " . $geo_litecity_location["postalCode"] . ")";
+    if ($geo_litecity_location = GeoIpHelper::getGeoipLocation($CLIENT_IP)) {
+        $ip_info .= "({$geo_litecity_location})";
     }
 
     $extras['ip_info'] = $ip_info;
@@ -1000,7 +1010,7 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
 
     $giftcert_id = @$cart["giftcert_id"];
 
-    $extra = "";
+    $extra = [];
     if (!empty($active_modules["Anti_Fraud"]) && defined("IS_AF_CHECK") && ($cart['total_cost'] > 0 || $config['Anti_Fraud']['check_zero_order'] == 'Y')) {
         include $xcart_dir . "/modules/Anti_Fraud/anti_fraud.php";
     }
@@ -1077,10 +1087,10 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
 
         $taxes_applied = addslashes(serialize($current_order["whole_taxes"]));
 
-        $discount_coupon = $current_order["coupon"];
-        if (!empty($current_order["coupon"])) {
-            $current_order["coupon"] = func_query_first_cell("SELECT coupon_type FROM $sql_tbl[discount_coupons] WHERE coupon='" . addslashes($current_order["coupon"]) . "'") . "``" . $current_order["coupon"];
-        }
+//        $discount_coupon = $current_order["coupon"];
+//        if (!empty($current_order["coupon"])) {
+//            $current_order["coupon"] = func_query_first_cell("SELECT coupon_type FROM $sql_tbl[discount_coupons] WHERE coupon='" . addslashes($current_order["coupon"]) . "'") . "``" . $current_order["coupon"];
+//        }
 
         $save_info = $userinfo;
         $userinfo["b_address"] .= "\n" . $userinfo["b_address_2"];
@@ -1113,6 +1123,10 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
         if (empty($first_order_total_in_current_session)) {
             $first_order_total_in_current_session = $current_order['total_cost'];
             x_session_save('first_order_total_in_current_session');
+        }
+
+        if ( !\Modules\Cart\Helpers\CouponOldCart::getInstance()->isValid()) {
+            $current_order['coupon'] = null;
         }
 
         #
@@ -1255,6 +1269,16 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
 
         $orderid = func_array2insert('orders', $insert_data);
 
+        if (!empty($insert_data['coupon'])) {
+            /** @var  \Modules\Cart\Models\CouponKitModel $coupon */
+            $coupon = \Modules\Cart\Models\CouponKitModel::objects()->get(['active' => true, 'code' => $insert_data['coupon']]);
+            $model = new \Modules\Cart\Models\CouponOrderModel();
+            $model->coupon_id = $coupon->pk;
+            $model->login = $insert_data['login'];
+            $model->order_id = $orderid;
+            $model->save();
+        }
+
         global $purchase_order_selected;
         x_session_register('purchase_order_selected');
 
@@ -1346,40 +1370,49 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
             }
 
             foreach ($products as $pk => $product) {
+
+                /** @var ProductModel $oProduct */
+
+                $oProduct = ProductModel::objects()->get(['productid' => (int)$product['productid']]);
+
                 if (($single_mode) || ($product["provider"] == $current_order["provider"])) {
                     $product["price"]                                     = price_format($product["price"]);
+                    $product["extra_data"]["original_price"]              = $product["price"];
+                    $product["extra_data"]["discounted_price"]            = $product["discounted_price_orig"];
                     $product["extra_data"]["product_options"]             = $product["options"];
                     $product["extra_data"]["taxes"]                       = $product["taxes"];
                     $product["extra_data"]["display"]["price"]            = price_format($product["display_price"]);
                     $product["extra_data"]["display"]["discounted_price"] = price_format($product["display_discounted_price"]);
+                    $product["extra_data"]["display"]["discounted_price"] = price_format($product["display_discounted_price"]);
                     $product["extra_data"]["display"]["subtotal"]         = price_format($product["display_subtotal"]);
-                    if (empty($product["product_orig"])) {
-                        $product["product_orig"] = $product["product"];
+                    $product["extra_data"]["display"]["coupon_discount"]  = price_format($product["coupon_discount"]);
+
+                    if (!empty($product['discounted_price_orig'])) {
+                        $product["price"] = $product['discounted_price_orig'];
                     }
 
                     if (!empty($active_modules['Product_Options'])) {
                         $product["product_options"] = func_serialize_options($product["options"]);
                     }
-                    $original_provider = '';
 
-                    $original_provider = func_query_first_cell("SELECT provider FROM $sql_tbl[products] WHERE productid='" . $product['productid'] . "'");
+                    $order_detail_model = new OrderDetailModel(
+                        [
+                            'orderid' => $orderid,
+                            'productid' => $product['productid'],
+                            'item_cost_to_us' => $product["cost_to_us"],
+                            'product' => $oProduct->getFrontendName(),
+                            'product_options' => $product['product_options'],
+                            'amount' => $product['amount'],
+                            'price' => $product['price'],
+                            'provider' => $product["provider"],
+                            'extra_data' => $product["extra_data"],
+                            'original_provider' => $oProduct->provider,
+                            'productcode' => $product['productcode'],
+                        ]
+                    );
 
-                    $insert_data = [
-                        'orderid'           => $orderid,
-                        'productid'         => $product['productid'],
-                        'item_cost_to_us'   => $product["cost_to_us"],
-                        'product'           => addslashes($product['product_orig']),
-                        'product_options'   => addslashes($product['product_options']),
-                        'amount'            => $product['amount'],
-                        'price'             => $product['price'],
-                        'provider'          => addslashes($product["provider"]),
-                        'extra_data'        => addslashes(serialize($product["extra_data"])),
-                        'original_provider' => addslashes($original_provider),
-                        'productcode'       => addslashes($product['productcode']),
-                    ];
-
-                    $products[$pk]['itemid'] = func_array2insert('order_details', $insert_data);
-                    unset($insert_data);
+                    $order_detail_model->save();
+                    $products[$pk]['itemid'] = $order_detail_model->itemid;
 
                     #
                     # Insert into subscription_customers table (for subscription products)
@@ -1394,14 +1427,9 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
                     if (!empty($active_modules["Wishlist"])) {
                         include $xcart_dir . "/modules/Wishlist/place_order.php";
                     }
-
-                    if (!empty($active_modules["Recommended_Products"])) {
-                        $rec_counter = func_query_first_cell("SELECT COUNT(*) FROM $sql_tbl[stats_customers_products] WHERE productid='$product[productid]' AND login='" . addslashes($userinfo["login"]) . "'");
-                    }
                 }
-                $current_order['shipping_groups'][func_manufacturerid_for_group($product['shipping_freight'], $product['manufacturerid'])]['products'][] = $product;
+                $current_order['shipping_groups'][$oProduct->manufacturerid]['products'][] = $product;
 
-                $oProduct = \Xcart\Product::model(['productid' => (int)$product['productid']]);
                 $oProduct->createHTMLShot($orderid);
             }
 
@@ -1412,9 +1440,11 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
             # Reset order detailed totals
             $shippingLogMessage = null;
             $_extra['total'] = $_extra['product_total'] = $_extra['shipping_total'] = ['net' => 0, 'gst' => 0, 'pst' => 0, 'gross' => 0];
+
             if (!empty($config['Shipping']['new_shipping_calculation']) && $config['Shipping']['new_shipping_calculation'] == 'Y') {
                 $shippingLogMessage = "<br/><b>Shipping cost:</b> <br/>";
             }
+
             foreach ($current_order['shipping_groups'] as $mid => $v) {
                 $insert_data                   = [];
                 $insert_data['orderid']        = $orderid;
@@ -1440,11 +1470,15 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
                 $group_shipping['gst']   = @$current_order['shipping_taxes'][$mid]['gst'];
                 $group_shipping['pst']   = @$current_order['shipping_taxes'][$mid]['pst'];
                 $group_total             = func_get_group_totals($v['products'], $group_shipping);
+
+                $insert_data['coupon_discount'] = $group_total['coupon_discount'];
+
                 foreach ($group_total as $totk => $totv) {
                     $_extra['total'][$totk] += $totv;
                     $_extra['shipping_total'][$totk] += $group_shipping[$totk];
                     $_extra['product_total'][$totk] += $totv - $group_shipping[$totk];
                 }
+
                 foreach ($price_details_names as $dn) {
                     $insert_data["shipping_$dn"] = $group_shipping[$dn];
                     $insert_data["total_$dn"]    = $group_total[$dn];
@@ -1470,43 +1504,57 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
                 if (!empty($config['Shipping']['new_shipping_calculation']) && $config['Shipping']['new_shipping_calculation'] == 'Y') {
                     $total_shipping_cost = price_format($cart['all_shippings'][$mid][$cart['shippingids'][$mid]]['rate']);
                     $shippingLogMessage .= "<b>{$oManufacturer->getManufacturerCode()} ({$total_shipping_cost})</b><br/>";
-                    if (!empty($cart['all_shippings'][$mid][$cart['shippingids'][$mid]]['added_shipping']) && is_array($cart['all_shippings'][$mid][$cart['shippingids'][$mid]]['added_shipping'])) {
+
+                    if (!empty($cart['all_shippings'][$mid][$cart['shippingids'][$mid]]['added_shipping'])
+                        && is_array($cart['all_shippings'][$mid][$cart['shippingids'][$mid]]['added_shipping']))
+                    {
                         foreach ($cart['all_shippings'][$mid][$cart['shippingids'][$mid]]['added_shipping'] as $aAddedShippingRate) {
                             $subMapCharge = '';
                             $oShippingAdded = \Xcart\Shipping::model(['shippingid' => $aAddedShippingRate['shippingid']]);
                             $addedCharge = price_format($aAddedShippingRate['shipping_charge']);
                             $mapCharge = floatval($aAddedShippingRate['shipping_extra_margin_value']);
+
                             if ($mapCharge > 0) {
                                 $smapCharge = price_format($mapCharge);
                                 $subMapCharge = " (-{$smapCharge})";
                             }
+
                             $shippingLogMessage .= str_repeat("&nbsp;", 4) . "{$oShippingAdded->getShippingCarrier()->getName()} - {$oShippingAdded->getName()} ({$addedCharge}{$subMapCharge}) <br/>";
+
                             if (!empty($aAddedShippingRate['products'])) {
                                 foreach ($aAddedShippingRate['products'] as $sProductSKU) {
                                     $shippingLogMessage .= str_repeat("&nbsp;", 8) . "$sProductSKU <br/>";
                                 }
                             }
+
                             $total_shipping_cost -= $addedCharge;
                         }
                     }
                     $oShippingAdded = \Xcart\Shipping::model(['shippingid' => $cart['all_shippings'][$mid][$cart['shippingids'][$mid]]['shippingid']]);
                     $mapCharge = floatval($cart['all_shippings'][$mid][$cart['shippingids'][$mid]]['shipping_extra_margin_value']);
                     $subMapCharge = '';
+
                     if ($mapCharge > 0) {
                         $smapCharge = price_format($mapCharge);
                         $subMapCharge = " (-{$smapCharge})";
                     }
+
                     $shippingLogMessage .= str_repeat("&nbsp;", 4) . "{$oShippingAdded->getShippingCarrier()->getName()} - {$oShippingAdded->getName()} ({$total_shipping_cost}{$subMapCharge})<br/>";
-                    if (!empty($cart['all_shippings'][$mid][$cart['shippingids'][$mid]]['products']) && is_array($cart['all_shippings'][$mid][$cart['shippingids'][$mid]]['products'])) {
+
+                    if (!empty($cart['all_shippings'][$mid][$cart['shippingids'][$mid]]['products'])
+                        && is_array($cart['all_shippings'][$mid][$cart['shippingids'][$mid]]['products']))
+                    {
                         foreach ($cart['all_shippings'][$mid][$cart['shippingids'][$mid]]['products'] as $sProductSKU) {
                             $shippingLogMessage .= str_repeat("&nbsp;", 8) . "$sProductSKU <br/>";
                         }
                     }
                 }
             }
+
             if (!empty($shippingLogMessage)) {
                 $log .= $shippingLogMessage;
             }
+
             $log .= "<br /><B>REMOTE_ADDR:</B> " . $ip_info;
             \Xcart\Logs::_log('orders', $orderid, \Xcart\Logs::LOG_TYPE_CLIENT, $log, $userinfo['login']);
 
@@ -1533,6 +1581,7 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
                 'meta_id' =>  SurfMetaModel::getInstance()->id])
             ->order(['-id'])
             ->limit(1)->get();
+
         if ($oSurfPath) {
             $oOrder->updateField('referer_id', $oSurfPath->resource_id);
         }
@@ -2012,59 +2061,62 @@ function func_get_order_manufacturers($orderid)
 
                     $order_products_counter = 0;
 
-                    /** @var OrderDetailModel $detail_model */
-                    foreach ($order_group->detail_models as $detail_model) {
+                    if ($order_group->detail_models->count()) {
 
-                        /** @var ProductModel $product_model */
-                        $product_model = $detail_model->product_model;
-                        $v = $product_model->getAttributes();
-                        $selected_product_options = "";
+                        /** @var OrderDetailModel $detail_model */
+                        foreach ($order_group->detail_models as $detail_model) {
 
-                        if (!empty($detail_model->product_options)) {
+                            /** @var ProductModel $product_model */
+                            $product_model = $detail_model->product_model;
+                            $v = $product_model->getAttributes();
+                            $selected_product_options = "";
 
-                            $options = $detail_model->product_options;
+                            if (!empty($detail_model->product_options)) {
 
-                        } else {
+                                $options = $detail_model->product_options;
 
-                            $extra_data = unserialize($detail_model->extra_data);
-                            if (!empty($extra_data['product_options'])) {
-                                list($variant, $options) = func_get_product_options_data($product_model->productid, $extra_data['product_options']);
-                            }
-                        }
+                            } else {
 
-                        if (!empty($options)) {
-                            if (is_array($options)) {
-                                foreach ($options as $kk => $vv) {
-                                    $selected_product_options .= "<br />" . $vv["classtext"] . " " . $vv["option_name"];
+                                $extra_data = $detail_model->extra_data;
+                                if (!empty($extra_data['product_options'])) {
+                                    list($variant, $options) = func_get_product_options_data($product_model->productid, $extra_data['product_options']);
                                 }
-                            } else {
-                                $selected_product_options .= "<br />" . $options;
                             }
-                        }
 
-                        $tmp_sku = $product_model->getMPN();
+                            if (!empty($options)) {
+                                if (is_array($options)) {
+                                    foreach ($options as $kk => $vv) {
+                                        $selected_product_options .= "<br />" . $vv["classtext"] . " " . $vv["option_name"];
+                                    }
+                                } else {
+                                    $selected_product_options .= "<br />" . $options;
+                                }
+                            }
 
-                        $cidev_items_table .= '<tr><td width="150px" style="text-align: left;">' . $tmp_sku . '</td><td width="250px" style="text-align: left;"><a href="' . $product_model->getUrl() . '">' . $detail_model->product . '</a>' . $selected_product_options . '</td><td style="text-align: right;">' . $detail_model->amount . '</td></tr>';
+                            $tmp_sku = $product_model->getMPN();
 
-                        $instock_items = $detail_model->amount - $detail_model->back;
-                        $cidev_instock_items_table .= '<tr><td width="150px" style="text-align: left;">' . $tmp_sku . '</td><td width="250px" style="text-align: left;"><a href="' . $product_model->getUrl() . '">' . $detail_model->product . '</a>' . $selected_product_options . '</td><td style="text-align: right;">' . $instock_items . '</td></tr>';
+                            $cidev_items_table .= '<tr><td width="150px" style="text-align: left;">' . $tmp_sku . '</td><td width="250px" style="text-align: left;"><a href="' . $product_model->getUrl() . '">' . $detail_model->product . '</a>' . $selected_product_options . '</td><td style="text-align: right;">' . $detail_model->amount . '</td></tr>';
 
-                        $cidev_outofstock_items_table .= '<tr><td width="150px" style="text-align: left;">' . $tmp_sku . '</td><td width="250px" style="text-align: left;"><a href="' . $product_model->getUrl() . '">' . $detail_model->product . '</a>' . $selected_product_options . '</td><td style="text-align: right;">' . $detail_model->back . '</td></tr>';
+                            $instock_items = $detail_model->amount - $detail_model->back;
+                            $cidev_instock_items_table .= '<tr><td width="150px" style="text-align: left;">' . $tmp_sku . '</td><td width="250px" style="text-align: left;"><a href="' . $product_model->getUrl() . '">' . $detail_model->product . '</a>' . $selected_product_options . '</td><td style="text-align: right;">' . $instock_items . '</td></tr>';
 
-                        $order_products_amount = $detail_model->amount;
+                            $cidev_outofstock_items_table .= '<tr><td width="150px" style="text-align: left;">' . $tmp_sku . '</td><td width="250px" style="text-align: left;"><a href="' . $product_model->getUrl() . '">' . $detail_model->product . '</a>' . $selected_product_options . '</td><td style="text-align: right;">' . $detail_model->back . '</td></tr>';
 
-                        if (!empty($order["refund_groups"][$m_id]["products"][$detail_model->itemid]["ref_qty"])) {
-                            $tmp_ref_qty = $order["refund_groups"][$m_id]["products"][$detail_model->itemid]["ref_qty"];
-                            $order_products_amount -= $tmp_ref_qty;
-                        }
+                            $order_products_amount = $detail_model->amount;
 
-                        if ($order_products_amount > 0) {
-                            $order_products_counter++;
+                            if (!empty($order["refund_groups"][$m_id]["products"][$detail_model->itemid]["ref_qty"])) {
+                                $tmp_ref_qty = $order["refund_groups"][$m_id]["products"][$detail_model->itemid]["ref_qty"];
+                                $order_products_amount -= $tmp_ref_qty;
+                            }
 
-                            if ($mv["add_cost_to_us_column_to_dispatch_message"] == "Y") {
-                                $order_products .= '<tr><td align="center">' . $tmp_sku . '</td><td><font style="FONT-SIZE: 11px"><a href="' . $product_model->getUrl() . '">' . $detail_model->product . '</a>' . $selected_product_options . '</font></td><td align="center">US$' . number_format($detail_model->item_cost_to_us, 2) . '</td><td align="center">' . $order_products_amount . '</td></tr>';
-                            } else {
-                                $order_products .= '<tr><td align="center">' . $tmp_sku . '</td><td><font style="FONT-SIZE: 11px"><a href="' . $product_model->getUrl() . '">' . $detail_model->product . '</a>' . $selected_product_options . '</font></td><td align="center">' . $order_products_amount . '</td></tr>';
+                            if ($order_products_amount > 0) {
+                                $order_products_counter++;
+
+                                if ($mv["add_cost_to_us_column_to_dispatch_message"] == "Y") {
+                                    $order_products .= '<tr><td align="center">' . $tmp_sku . '</td><td><font style="FONT-SIZE: 11px"><a href="' . $product_model->getUrl() . '">' . $detail_model->product . '</a>' . $selected_product_options . '</font></td><td align="center">US$' . number_format($detail_model->item_cost_to_us, 2) . '</td><td align="center">' . $order_products_amount . '</td></tr>';
+                                } else {
+                                    $order_products .= '<tr><td align="center">' . $tmp_sku . '</td><td><font style="FONT-SIZE: 11px"><a href="' . $product_model->getUrl() . '">' . $detail_model->product . '</a>' . $selected_product_options . '</font></td><td align="center">' . $order_products_amount . '</td></tr>';
+                                }
                             }
                         }
                     }

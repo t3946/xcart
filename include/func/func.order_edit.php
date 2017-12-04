@@ -566,6 +566,7 @@ function func_oe_update_order($cart, $shipping_groups, $old_products = "")
             if (!empty($product['itemid'])) {
                 $query_data = func_query_first("SELECT * FROM $sql_tbl[order_details] WHERE itemid='$product[itemid]'");
             }
+
             $query_data_tmp = [
                 "itemid"          => $product['itemid'],
                 "orderid"         => $cart['orderid'],
@@ -579,6 +580,7 @@ function func_oe_update_order($cart, $shipping_groups, $old_products = "")
                 "productcode"     => $product['productcode'],
                 "product"         => $product['product'],
                 "item_cost_to_us" => $product['cost_to_us'],
+                "coupon_discount" => $product['coupon_discount'],
             ];
             if (floatval($query_data['item_cost_to_us']) != 0) {
                 unset($query_data_tmp['item_cost_to_us']);
@@ -702,6 +704,8 @@ function func_oe_update_order($cart, $shipping_groups, $old_products = "")
             if ($apply_per_trans = !in_array($v['acc_paymentid'], $applied_per_trans_payments)) {
                 $applied_per_trans_payments[] = $v['acc_paymentid'];
             }
+
+            $query_data['coupon_discount'] = $v['total']['coupon_discount'];
 
             $v['apply_per_trans']                     = $apply_per_trans;
             $shipping_groups[$mid]['apply_per_trans'] = $apply_per_trans;

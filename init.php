@@ -63,20 +63,31 @@ if ($cur_host == 'www.kolinskyartbrushes.com') {
     exit();
 }
 
-
-$settings_path = $xcart_dir .'/app/config/settings_admin.php';
-if (!defined('AREA_TYPE') || AREA_TYPE == 'C') {
-    $settings_path = $xcart_dir .'/app/config/settings.php';
-}
-
-\Xcart\App\Main\Xcart::init(include $settings_path);
-\Xcart\App\Main\Xcart::app()->beforeRun();
-
 #
 # Initialize logging
 #
 @require_once $xcart_dir . "/include/logging.php";
 $dieError = "Sorry, the shop is inaccessible temporarily. Please try again later.";
+
+
+if (empty($XCART_APP_CONFIG)) {
+    $settings_path = $xcart_dir .'/app/config/settings_admin.php';
+    if (!defined('AREA_TYPE') || AREA_TYPE == 'C') {
+        $settings_path = $xcart_dir .'/app/config/settings.php';
+    }
+
+    $app_settings = include $settings_path;
+}
+else {
+    $app_settings = $XCART_APP_CONFIG;
+}
+
+
+\Xcart\App\Main\Xcart::init($app_settings);
+\Xcart\App\Main\Xcart::app()->beforeRun();
+
+global $sql_tbl;
+
 try {
     Xcart\Connection::getInstanceFromApp()->connect();
 }
@@ -137,7 +148,7 @@ $sql_max_allowed_packet = intval($tmp['Value']);
 unset($tmp);
 
 if (preg_match("/^(\d+\.\d+\.\d+)/", db_mysql_get_server_info(), $match)) {
-        define("X_MYSQL_VERSION", $match[1]);
+    define("X_MYSQL_VERSION", $match[1]);
 
     if (func_version_compare(X_MYSQL_VERSION, "5.0.0") >= 0) {
         db_query("SET sql_mode = 'MYSQL40'");
@@ -211,10 +222,13 @@ $_tmp            = parse_url($http_location);
 $xcart_http_host = $_tmp["host"];
 unset($_tmp);
 
+$PHP_SELF = empty($PHP_SELF) ? '' : $PHP_SELF;
+$QUERY_STRING = empty($QUERY_STRING) ? '' : $QUERY_STRING;
+
 #
 # Create URL
 #
-$php_url = ["url" => "http" . ($HTTPS == "on" ? "s://" . $xcart_https_host : "://" . $xcart_http_host) . $PHP_SELF, "query_string" => $QUERY_STRING];
+$php_url = ["url" => "http" . ($HTTPS == "on" ? "s://" . $xcart_https_host : "://" . $xcart_http_host) . $PHP_SELF ?: '', "query_string" => $QUERY_STRING];
 
 #
 # Check internal temporary directories
@@ -285,11 +299,10 @@ $smarty->assign("xcart_web_dir", $xcart_web_dir);
 $smarty->assign("current_location", $current_location);
 $smarty->assign("php_url", $php_url);
 
-# START: random:20341 [2010 Jul 29 14:46] 
 $smarty->assign("artss_manufacturerid", $artss_manufacturerid);
 $smarty->assign("artss_code", $artss_code);
+$smarty->assign("AREA_TYPE", AREA_TYPE);
 
-# END: random:20341 [2010 Jul 29 14:46] 
 foreach ($var_dirs_web as $k => $v) {
     $var_dirs_web[$k] = $current_location . $v;
 }
@@ -420,6 +433,8 @@ if (!defined('QUICK_START')) {
     #
     $blowfish = new ctBlowfish();
 }
+
+$search_all_website = isset($search_all_website) ? $search_all_website : false;
 
 $t                      = parse_url($config['Search_All']['search_all_website_url']);
 $search_all_website_url = $t['host'];

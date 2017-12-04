@@ -3,8 +3,8 @@
             {if $field->empty}
                 <option value="{$field->empty}">{$field->empty}</option>
             {/if}
-            {foreach $field->getChoises() as $key => $name}
-                <option value="{$key}" {if $key == $value}selected="selected"{/if} {if $value in list $field->disabled}disabled{/if}>{$name}</option>
+            {foreach $field->getChoices() as $key => $name}
+                <option value="{$key}" {if $key in list $field->getSelected()}selected="selected"{/if} {if $key in list $field->disabled}disabled{/if}>{$name}</option>
             {/foreach}
         </select>
 </span>

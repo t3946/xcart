@@ -1349,7 +1349,7 @@ if ($mode == "search") {
     print($search_query_count."<br><br>");
     print($search_query_brandids."<br><br>");*/
 
-    db_query("SET OPTION SQL_BIG_SELECTS=1");
+//    db_query("SET OPTION SQL_BIG_SELECTS=1");
     $_res = db_query($search_query_count_NEW);
 
     $total_items = db_num_rows($_res);

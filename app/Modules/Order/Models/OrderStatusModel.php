@@ -2,11 +2,14 @@
 
 namespace Modules\Order\Models;
 
-use Xcart\App\Orm\AutoMetaModel;
+use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\CharField;
+use Xcart\App\Orm\Model;
 
-class OrderStatusModel extends AutoMetaModel
+class OrderStatusModel extends Model
 {
+    use AutoMetaTrait;
+
     const ORDER_STATUS_AUTHORIZED = 'AP';
     const ORDER_STATUS_COMPLETED = 'P';
 

@@ -6,7 +6,12 @@
     <script async custom-element="amp-carousel" src="https://cdn.ampproject.org/v0/amp-carousel-0.1.js"></script>
     <script async custom-element="amp-analytics" src="https://cdn.ampproject.org/v0/amp-analytics-0.1.js"></script>
     <script async custom-element="amp-social-share" src="https://cdn.ampproject.org/v0/amp-social-share-0.1.js"></script>
+    {if $model->isNeedForm()}
     <script async custom-element="amp-form" src="https://cdn.ampproject.org/v0/amp-form-0.1.js"></script>
+    {/if}
+    {if $model->isDescrHasIframe()}
+    <script async custom-element="amp-iframe" src="https://cdn.ampproject.org/v0/amp-iframe-0.1.js"></script>
+    {/if}
     <meta name="amp-google-client-id-api" content="googleanalytics">
     <style amp-custom>
         {include "product/amp_style.css"}
@@ -148,7 +153,7 @@
 
 
         <div class="description">
-            {$model->getFrontendDescription()}
+            {$model->getAmpFrontendDescription()|trim|nl2br}
         </div>
 
         {if $model->isGroupChild()}

@@ -3,7 +3,7 @@
 
 {capture name=dialog}
 
-<span style="font-size: 12px; font-weight: bold;">List of deposits</span>
+<span style="font-size: .95px; font-weight: bold;">List of deposits</span>
 
 <form action="checks_deposited.php" method="post" name="checks_depositedform">
 <input type="hidden" name="mode" value="" />
@@ -40,7 +40,7 @@
 
 <br />
 <hr />
-<span style="font-size: 12px; font-weight: bold;">Unfreeze operation</span>
+<span style="font-size: .95rem; font-weight: bold;">Unfreeze operation</span>
 <br />
 Unfreeze C2B payment status for order # <input type="text" name="unfreeze_orderid" value="" size="9" />
 <br />

@@ -2,18 +2,19 @@
 namespace Modules\Product\Models;
 
 use Mindy\QueryBuilder\Expression;
+use Mindy\QueryBuilder\Q\QOr;
 use Modules\Menu\Models\CleanUrlModel;
 use Modules\Sites\Models\SiteModel;
 use Xcart\App\Components\Breadcrumbs;
-use Xcart\App\Main\Xcart;
-use Xcart\App\Orm\AutoMetaModel;
-use Xcart\App\Orm\AutoMetaTreeModel;
+use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\HasManyField;
 use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Fields\ManyToManyField;
+use Xcart\App\Orm\Manager;
+use Xcart\App\Orm\TreeModel;
 use Xcart\App\Traits\DataModelTrait;
 use Xcart\Category;
 
@@ -27,11 +28,11 @@ use Xcart\Category;
  * @property string category Name of category
  * @property null|CleanUrlModel url
  * @property null|\Modules\Sites\Models\SiteModel site
+ * @property Manager|ProductModel[] products
  */
-//class CategoryModel extends AutoMetaTreeModel
-class CategoryModel extends AutoMetaModel
+class CategoryModel extends TreeModel
 {
-    use DataModelTrait;
+    use DataModelTrait, AutoMetaTrait;
 
     public static function getDataModelClass()
     {
@@ -52,12 +53,6 @@ class CategoryModel extends AutoMetaModel
                      'class' => ManyToManyField::className(),
                      'modelClass' => ProductModel::className(),
                      'through' => ProductCategoriesModel::className(),
-                 ],
-
-                 'products_link' => [
-                     'class' => HasManyField::className(),
-                     'modelClass' => ProductCategoriesModel::className(),
-                     'link' => ['categoryid' => 'categoryid'],
                  ],
 
                  'url' => [
@@ -81,9 +76,10 @@ class CategoryModel extends AutoMetaModel
                     'primary' => true,
                     'null' => false,
                 ],
-//                'parent' => [
-//                    'field' => 'parentid',
-//                ],
+                'parent' => [
+                    'field' => 'parentid'
+                ],
+
 
                 'description' => [
                     'class' => CharField::className(),
@@ -97,6 +93,18 @@ class CategoryModel extends AutoMetaModel
                 ],
             ]
         );
+    }
+
+    public function __toString()
+    {
+        $code = '';
+        if ($st = $this->site) {
+            $code .=  $st->code .":";
+        }
+
+        $code .= $this->pk;
+
+        return "[{$code}] {$this->category}";
     }
 
     public function getBreadcrumbs()
@@ -168,5 +176,94 @@ class CategoryModel extends AutoMetaModel
         }
 
         return $qs->all();
+    }
+
+    public function afterDelete($owner)
+    {
+        parent::afterDelete($owner);
+
+        ProductCategoriesModel::objects()->delete(['categoryid' => $this->categoryid]);
+    }
+
+    public function beforeSave($owner, $isNew)
+    {
+        parent::beforeSave($owner, $isNew);
+
+        $this->categoryid_path = $this->pk;
+
+        if ($parent = $this->parent) {
+            $this->categoryid_path = $parent->categoryid_path . '/' . $this->pk;
+        }
+    }
+
+    public function afterSave($owner, $isNew)
+    {
+        parent::afterSave($owner, $isNew);
+
+        //@TODO: For old code, delete after global refactoring
+
+        /** @var static $owner */
+        $old_parent = $owner->attributes->getOldAttribute('parentid');
+
+        if ($old_parent != $owner->parentid) {
+            $this->objects()
+                ->descendants()
+                ->update([
+                    'categoryid_path' => new Expression("CONCAT('{$this->categoryid_path}', SUBSTRING_INDEX(categoryid_path, {$owner->pk}, -1))")
+                ]);
+        }
+
+//        @TODO: SLOOOOOOOW
+//        if ($old_parent) {
+//            $parent = static::objects()->get(['pk' => $old_parent]);
+//            $parent->reCalcSelfAndParents();
+//        }
+//
+//        if (!$isNew) {
+//            $this->reCalcProductsCount();
+//        }
+    }
+
+    public function reCalcProductsCount()
+    {
+        $ta = ProductModel::objects()->getQuerySet()->getTableAlias();
+        $qor = new QOr(['group_root__raw' => " = `{$ta}`.`productid`", 'group_root__isnull' => true]);
+
+        $this->global_product_count = ProductModel::objects()
+            ->with(['categories'])
+            ->filter([
+                'categories__lft__gte' => $this->lft,
+                'categories__rgt__lte' => $this->rgt,
+                'categories__root' => $this->root,
+            ])
+            ->count();
+
+        $this->active_product_count = ProductModel::objects()
+            ->with(['categories'])
+            ->filter([
+                'forsale' => 'Y',
+                'categories__lft__gte' => $this->lft,
+                'categories__rgt__lte' => $this->rgt,
+                'categories__root' => $this->root,
+                'categories__avail' => 'Y',
+                $qor
+            ])
+            ->count();
+
+        $this->product_count = $this->products->filter(['forsale' => 'Y', $qor])->count();
+        $this->subcategory_count = $this->objects()->descendants()->count();
+
+        $this->save(['global_product_count', 'active_product_count', 'product_count', 'subcategory_count']);
+    }
+
+    public function reCalcSelfAndParents()
+    {
+        if ($models = $this->objects()->ancestors(true)->all()) {
+            /** @var static $model */
+            foreach ($models as $model)
+            {
+                $model->reCalcProductsCount();
+            }
+        }
     }
 }

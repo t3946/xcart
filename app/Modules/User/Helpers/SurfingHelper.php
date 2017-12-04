@@ -53,13 +53,16 @@ class SurfingHelper
                 $oSurfMeta->points_visited++;
                 $oSurfMeta->referal_url = $referer;
                 if ($oSurfMeta->id) {
+
+                    $auth = Xcart::app()->request->getAuthUser() ? ' User auth: ' . Xcart::app()->request->getAuthUser() : '';
+
                     (new SurfPathModel([
                             'meta_id'         => $oSurfMeta->id,
                             'resource_id'     => $oReferer->referer_id,
                             'resource_type'   => SurfPathModel::GOAL_TYPE_REFERER,
                             'timestamp'       => time(),
                             'position'        => $oSurfMeta->points_visited,
-                            'additional_data' => Xcart::app()->request->getUserAgent(),
+                            'additional_data' => Xcart::app()->request->getUserAgent() . $auth,
                         ]
                     ))->save();
                 }
@@ -110,12 +113,15 @@ class SurfingHelper
 
     public static function getReferUrl()
     {
-        $sReferUrl = null;
+        $sReferUrl = $sPath = null;
         $aReferalUrl = parse_url(Xcart::app()->request->getReferrer());
-        $aUri = Xcart::app()->request->getQueryArray();
 
         if ($aReferalUrl['host'] != Xcart::app()->request->getHost()) {
-            $sPath = ltrim($aReferalUrl['path'], '/');
+
+            if (!empty($aReferalUrl['path'])) {
+                $sPath = ltrim($aReferalUrl['path'], '/');
+            }
+
             $sReferUrl = $aReferalUrl['host'] . (empty($sPath) ? '' : '/' . $sPath) . (empty($aReferalUrl['query']) ? '' : "?{$aReferalUrl['query']}");
             $aUri = Xcart::app()->request->getQueryArray();
 

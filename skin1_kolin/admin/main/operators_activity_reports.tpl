@@ -6,7 +6,7 @@ vim: set ts=2 sw=2 sts=2 et:
 <br /><br />
 {if ($mode ne "report") }
 
-<script type="text/javascript" language="JavaScript 1.2" src="{$SkinDir}/lib/jqueryui/jquery-ui.custom.min.js"></script>
+{*<script type="text/javascript" language="JavaScript 1.2" src="{$SkinDir}/lib/jqueryui/jquery-ui.custom.min.js"></script>*}
 
 {include file="main/include_js.tpl" src="reset.js"}
 <script type="text/javascript">

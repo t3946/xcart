@@ -1,40 +1,56 @@
 <?php
-use Xcart\Orders;
+
+use Modules\Order\Models\OrderModel;
+use Modules\Product\Models\VerificationStatusModel;
+use Xcart\Order;
 
 if ( !defined('XCART_START') ) { header("Location: ../"); die("Access denied"); }
 
-$oOrders = new Orders();
-$aOrders = $oOrders->getOrdersWithProductsForVerification();
+/** @var OrderModel[] $aOrders */
+$aOrders = OrderModel::objects()
+    ->filter(
+        [
+            'vn_status__isnt' => Order::ORDER_VERIFICATION_STATUS_PRODUCT_VERIFIED,
+            'amazonorderid' => ''
+        ]
+    )->exclude(
+        [
+            'cb_status__in' => ['A', 'D']
+        ]
+    )->all();
 
-if (!empty($aOrders)) {
+if ($aOrders) {
 
+    /** @var OrderModel[] $aManufacturers */
     $aManufacturers = [];
     foreach ($aOrders as $oOrder) {
-        $aOrderProducts = $oOrder->getOrderProducts();
+        $aOrderProducts = $oOrder->getProducts();
         if (!empty($aOrderProducts))
         foreach ($aOrderProducts as $oProduct) {
-            $aManufacturers[(int) $oProduct->getField('manufacturerid')][(int) $oOrder->getField('orderid')] = $oOrder;
+            if ($oProduct->forsale == 'Y') {
+                $aManufacturers[$oProduct->manufacturerid][$oOrder->orderid] = $oOrder;
+            }
         }
     }
 
     foreach ($aManufacturers as $iManufacturerId => $aManufacturer) {
         $aProducts = [];
         foreach ($aManufacturer as $oOrderManufacturer) {
-            $aOrderManufacturerProducts = $oOrderManufacturer->getOrderProducts();
+            $aOrderManufacturerProducts = $oOrderManufacturer->getProducts();
             if (!empty($aOrderManufacturerProducts))
             foreach ($aOrderManufacturerProducts as $oProduct) {
-                if ($oProduct->getField('manufacturerid') == $iManufacturerId) {
-                    if (!in_array($oProduct->getField('productid'), $aProducts)) {
-                        $aProducts[] = $oProduct->getField('productid');
-                    } else {
-                        //$oOrderManufacturer->unsetOrderProduct($oProduct->getField('productid'));
+                if ($oProduct->forsale == 'Y') {
+                    if ($oProduct->manufacturerid == $iManufacturerId) {
+                        if (!in_array($oProduct->productid, $aProducts)) {
+                            $aProducts[] = $oProduct->productid;
+                        }
                     }
                 }
             }
         }
     }
 
-    $aVerifyStatuses = Xcart\Product::getProductVerificationStatuses();
+    $aVerifyStatuses = VerificationStatusModel::objects()->all();
 
     $smarty->assign('aVerifyStatuses',$aVerifyStatuses);
     $smarty->assign('aManufacturers',$aManufacturers);

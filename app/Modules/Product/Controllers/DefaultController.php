@@ -46,15 +46,21 @@ class DefaultController extends FrontendController
 //            $this->redirect($model->getAbsoluteUrl(true));
 //        }
 
+        $this->setMetaTemplate('product:base', [
+            'model' => $model,
+            'category' => $model->getMainCategory(),
+            'site' => $site,
+        ]);
+
         echo $this->render('product/product.tpl', [
             'model' => $model,
             'breadcrumbs' => $model->getBreadcrumbs(),
             'tabs' => TabDataHelper::getTabsFromManufacturer($model->manufacturerid),
         ]);
 
-        if (!Xcart::app()->cart->has($model)) {
-            Xcart::app()->cart->add($model);
-        }
+//        if (!Xcart::app()->cart->has($model)) {
+//            Xcart::app()->cart->add($model);
+//        }
 
 //        foreach (Xcart::app()->cart->getItems() as $cartItem) {
 //            func_dump((string)"{{$cartItem->getQuantity()}}" . $cartItem->getObject() );

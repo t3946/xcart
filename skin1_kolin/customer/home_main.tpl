@@ -114,6 +114,9 @@
 {elseif $main eq "rma_request"}
 {include file="customer/main/rma_request.tpl"}
 
+{elseif $main eq "raw_html"}
+    {$content}
+
 {else}
 {include file="common_templates.tpl"}
 {/if}

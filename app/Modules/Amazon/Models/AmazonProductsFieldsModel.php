@@ -2,11 +2,14 @@
 namespace Modules\Amazon\Models;
 
 
-use Xcart\App\Orm\AutoMetaModel;
+use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
+use Xcart\App\Orm\Model;
 
-class AmazonProductsFieldsModel extends AutoMetaModel
+class AmazonProductsFieldsModel extends Model
 {
+    use AutoMetaTrait;
+
     public static function tableName()
     {
         return 'xcart_products_amz_fields';

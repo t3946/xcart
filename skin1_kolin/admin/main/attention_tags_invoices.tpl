@@ -1,7 +1,7 @@
-<script type="text/javascript" language="JavaScript 1.2" src="{$SkinDir}/lib/jqueryui/jquery-ui.custom.min.js"></script>
-<script type="text/javascript" language="JavaScript 1.2" src="{$SkinDir}/lib/jqueryui/jquery-ui-timepicker-addon.min.js"></script>
-<link rel="stylesheet" href="{$SkinDir}/lib/jqueryui/jquery.ui.theme.css" />
-<link rel="stylesheet" href="{$SkinDir}/lib/jqueryui/jquery-ui-timepicker-addon.min.css" />
+{*<script type="text/javascript" language="JavaScript 1.2" src="{$SkinDir}/lib/jqueryui/jquery-ui.custom.min.js"></script>*}
+{*<script type="text/javascript" language="JavaScript 1.2" src="{$SkinDir}/lib/jqueryui/jquery-ui-timepicker-addon.min.js"></script>*}
+{*<link rel="stylesheet" href="{$SkinDir}/lib/jqueryui/jquery.ui.theme.css" />*}
+{*<link rel="stylesheet" href="{$SkinDir}/lib/jqueryui/jquery-ui-timepicker-addon.min.css" />*}
 <form name="fraudform" action="configuration.php" method="POST">
 <input type="hidden" name="option" value="Attention_tags_invoices">
 <input type="hidden" name="mode" value="Update_Attention_tags_invoices">

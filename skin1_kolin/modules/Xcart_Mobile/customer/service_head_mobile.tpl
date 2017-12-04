@@ -17,7 +17,7 @@ vim: set ts=2 sw=2 sts=2 et:
 <link rel="apple-touch-icon" sizes="114x114" href="{if $config.Appearance.CDN_domain ne "" && $config.Appearance.Enable_CDN eq "Y"}{if $add_http_if_cdn eq "Y"}http://{/if}{$config.Appearance.CDN_domain}{else}{$current_location}{/if}/touch-icon-iphone-retina.png" />
 <link rel="apple-touch-icon" sizes="144x144" href="{if $config.Appearance.CDN_domain ne "" && $config.Appearance.Enable_CDN eq "Y"}{if $add_http_if_cdn eq "Y"}http://{/if}{$config.Appearance.CDN_domain}{else}{$current_location}{/if}/touch-icon-ipad-retina.png" />
 {if $canonical_url}
-  {if $oProduct && $oProduct->isGroupChild()}
+  {if $oProduct && $oProduct->isGroupChild() && $oProduct->parent}
     <link rel="canonical" href="{$oProduct->parent->getUrl()}" />
   {else}
     <link rel="canonical" href="{$current_location}/{$canonical_url}" />

@@ -32,14 +32,18 @@ class EditorController extends Controller
         $path = '';
         if (isset($_GET['path'])) {
             $path = $_GET['path'];
-        } elseif (isset($_POST['path'])) {
+        }
+        elseif (isset($_POST['path'])) {
             $path = $_POST['path'];
         }
+
         $path = ltrim($path, DIRECTORY_SEPARATOR);
         if (!$path || !Text::startsWith($path, $this->getBasePath())) {
             $path = $this->getBasePath();
         }
+
         $result = [];
+
         if ($path) {
             $result[] = $path;
         }

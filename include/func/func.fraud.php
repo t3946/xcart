@@ -1,4 +1,7 @@
 <?php
+
+use Modules\GeoIp\Helpers\GeoIpHelper;
+
 x_load('cart','mail','order','product','taxes');
 
 /*
@@ -149,10 +152,9 @@ function func_CHECK_STATES($order_data){
 	$geoip_state = "";
 	$phone_area_code_state = "";
 
-	$geo_litecity_location = func_get_geoip_locations($customer_ip);
-	if (!empty($geo_litecity_location)) {
-		$geoip_state = func_correct_field($geo_litecity_location["region"]);
-	}
+    if ($geo_litecity_location = GeoIpHelper::getGeoipLocation($customer_ip)) {
+        $geoip_state = func_correct_field($geo_litecity_location->region);
+    }
 
         $userinfo_phone = $order_data["userinfo"]["phone"];
         $userinfo_phone = str_replace(" ", "", $userinfo_phone);
@@ -204,10 +206,9 @@ function func_GEOIP_CITY_VS_B_S($order_data){
 
         $geoip_city = "";
 
-		$geo_litecity_location = func_get_geoip_locations($customer_ip);
-		if (!empty($geo_litecity_location)) {
-			$geoip_city = func_correct_field($geo_litecity_location["city"]);
-		}
+        if ($geo_litecity_location = GeoIpHelper::getGeoipLocation($customer_ip)) {
+            $geoip_city = func_correct_field($geo_litecity_location->city);
+        }
 
 	$names = array();
 

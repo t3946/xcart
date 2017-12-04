@@ -1172,9 +1172,11 @@ class OrderGroup extends Data
         $aOrderDetails = $this->getOrderDetails();
         if (!empty($aOrderDetails)) {
             $this->setTotalGross(0)->setTotalNet(0);
+
             foreach ($aOrderDetails as $oOrderDetail) {
                 $this->setTotalGross($this->getTotalGross() + ($oOrderDetail->getTotalProductPrice()));
             }
+
             $this->setTotalGross($this->getTotalGross() + $this->getShippingGross());
             $this->calculateTotalNet();
             $this->_save();
@@ -1266,6 +1268,11 @@ class OrderGroup extends Data
 
         }
         return $result;
+    }
+
+    public function getTotalProductPriceDiscounted()
+    {
+        return round($this->getTotalProductPrice() - $this->coupon_discount, 2);
     }
 
     public function getTotalProductAmount()

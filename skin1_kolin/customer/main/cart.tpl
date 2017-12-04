@@ -252,7 +252,7 @@ function cidev_update_product_amount_next(cartid, amount, manufacturerid){
 {/if}
 </td>
 <td valign="top">
-<a href="{if $from_admin_area eq "Y"}../{/if}product.php?productid={$products[product].productid}"><span class="ProductTitle">{if $products[product].oProduct}{$products[product].oProduct->getTitle()}{/if}</span></a>
+<a href="{if $from_admin_area eq "Y"}../{/if}product.php?productid={$products[product].productid}"><span class="ProductTitle">{if $products[product].oProduct}{$products[product].oProduct->getFrontendName()}{/if}</span></a>
 <br>
 <span color="#006600" class="DialogTitleT">SKU: {$products[product].productcode}</span>
 <br>
@@ -422,10 +422,9 @@ x {if $active_modules.Egoods and $products[product].distribution}1<input type="h
 <tr><td colspan="2"><hr size="1" noshade="noshade" /></td></tr>
 *}
 <hr size="1" noshade="noshade" />
-
-{if $active_modules.Gift_Certificates ne ""}
-{include file="modules/Gift_Certificates/gc_cart.tpl" giftcerts_data=$cart.giftcerts}
-{/if}
+{*{if $active_modules.Gift_Certificates ne ""}*}
+{*{include file="modules/Gift_Certificates/gc_cart.tpl" giftcerts_data=$cart.giftcerts}*}
+{*{/if}*}
 {if $main eq "fast_lane_checkout" || $from_admin_area eq "Y"}
 <div id="cidev_cart_subtotal">
 {include file="modules/Fast_Lane_Checkout/cart_subtotal.tpl"}
@@ -433,6 +432,10 @@ x {if $active_modules.Egoods and $products[product].distribution}1<input type="h
 {else}
 {include file="customer/main/cart_totals.tpl"}
 {/if}
+
+
+{$xcartApp->template->render('inSmarty/coupon_cart_desktop.tpl')}
+
 {$lng.lbl_your_mer_subtotal}<br /><br />
 
 			{if $from_admin_area ne "Y"}

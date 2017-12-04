@@ -4,15 +4,16 @@ namespace Modules\Distributor\Models;
 
 use Modules\Product\Models\ProductModel;
 use Modules\Shipping\Models\ShippingRateModel;
-use Xcart\App\Orm\AutoMetaModel;
+use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\HasManyField;
+use Xcart\App\Orm\Model;
 use Xcart\App\Traits\DataModelTrait;
 use Xcart\Manufacturer;
 
-class DistributorModel extends AutoMetaModel
+class DistributorModel extends Model
 {
-    use DataModelTrait;
+    use DataModelTrait, AutoMetaTrait;
 
     public static function getDataModelClass()
     {

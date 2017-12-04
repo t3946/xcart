@@ -1,0 +1,544 @@
+$base_color: #646464;
+$bgcolor: #f5f5f5;
+$bgrcolor: #3e3e3e;
+$white: #ffffff;
+$black: #000000;
+$green: #54ac19;
+$btn_hover: #4a9c14;
+$btn_click: #3b810c;
+$blue: #055a93;
+$a_hover: #154159;
+$thead_color: #4a4949;
+$thead_bg: #ebebeb;
+$td_border: #e1e1e1;
+$hr_color: #e3e7e8;
+$darkgrey: #4d4c4c;
+$light_black: #303030;
+$light_grey: #f0f0f0;
+$check_color: #15303f;
+@mixin flex() {
+  display: -webkit-box;
+  display: -moz-box;
+  //display: -ms-flexbox;
+  //display: -webkit-flex;
+  //display: flex;
+}
+@mixin flex_grow($grow) {
+  -moz-box-flex: $grow;
+  -webkit-box-flex: $grow;
+  box-flex: $grow;
+  //flex-grow: $grow;
+}
+@mixin box_orient($orient) {
+  -webkit-box-orient: $orient;
+  -moz-box-orient: $orient;
+  box-orient: $orient;
+}
+@mixin h_shadow() {
+  text-shadow: 0 1px 2px #000;
+}
+* {
+  margin: 0;
+  padding: 0;
+}
+/* font-family: "LatoRegular"; */
+@font-face {
+  font-family: "LatoRegular";
+  src: url("../fonts/LatoRegular/LatoRegular.eot");
+  src: url("../fonts/LatoRegular/LatoRegular.eot?#iefix")format("embedded-opentype"),
+  url("../fonts/LatoRegular/LatoRegular.woff") format("woff"),
+  url("../fonts/LatoRegular/LatoRegular.ttf") format("truetype");
+  font-style: normal;
+  font-weight: normal;
+}
+/* font-family: "LatoBold"; */
+@font-face {
+  font-family: "LatoBold";
+  src: url("../fonts/LatoBold/LatoBold.eot");
+  src: url("../fonts/LatoBold/LatoBold.eot?#iefix")format("embedded-opentype"),
+  url("../fonts/LatoBold/LatoBold.woff") format("woff"),
+  url("../fonts/LatoBold/LatoBold.ttf") format("truetype");
+  font-style: normal;
+  font-weight: normal;
+}
+/* font-family: "LatoItalic"; */
+@font-face {
+  font-family: "LatoItalic";
+  src: url("../fonts/LatoItalic/LatoItalic.eot");
+  src: url("../fonts/LatoItalic/LatoItalic.eot?#iefix")format("embedded-opentype"),
+  url("../fonts/LatoItalic/LatoItalic.woff") format("woff"),
+  url("../fonts/LatoItalic/LatoItalic.ttf") format("truetype");
+  font-style: normal;
+  font-weight: normal;
+}
+/* font-family: "LatoLight"; */
+@font-face {
+  font-family: "LatoLight";
+  src: url("../fonts/LatoLight/LatoLight.eot");
+  src: url("../fonts/LatoLight/LatoLight.eot?#iefix")format("embedded-opentype"),
+  url("../fonts/LatoLight/LatoLight.woff") format("woff"),
+  url("../fonts/LatoLight/LatoLight.ttf") format("truetype");
+  font-style: normal;
+  font-weight: normal;
+}
+/* font-family: "LatoBoldItalic"; */
+@font-face {
+  font-family: "LatoBoldItalic";
+  src: url("../fonts/LatoBoldItalic/LatoBoldItalic.eot");
+  src: url("../fonts/LatoBoldItalic/LatoBoldItalic.eot?#iefix")format("embedded-opentype"),
+  url("../fonts/LatoBoldItalic/LatoBoldItalic.woff") format("woff"),
+  url("../fonts/LatoBoldItalic/LatoBoldItalic.ttf") format("truetype");
+  font-style: normal;
+  font-weight: normal;
+}
+/* font-family: "LatoLightItalic"; */
+@font-face {
+  font-family: "LatoLightItalic";
+  src: url("../fonts/LatoLightItalic/LatoLightItalic.eot");
+  src: url("../fonts/LatoLightItalic/LatoLightItalic.eot?#iefix")format("embedded-opentype"),
+  url("../fonts/LatoLightItalic/LatoLightItalic.woff") format("woff"),
+  url("../fonts/LatoLightItalic/LatoLightItalic.ttf") format("truetype");
+  font-style: normal;
+  font-weight: normal;
+}
+header, section, footer, aside, nav, article, figure, figcaption {
+  display: block;
+}
+img{
+  max-width: 100%;
+}
+body {
+  display: flex;
+  display: -webkit-box;
+  width: 100%;
+  height: 100%;
+  min-width: 280px;
+  color: $base_color;
+  font: 100% LatoRegular, sans-serif;
+  background: $bgrcolor url(../img/bgr.png);
+}
+a{
+  text-decoration: none;
+}
+ul{
+  margin: 0;
+  padding: 0;
+}
+ul li{
+  list-style-type: none;
+  display: inline-block;
+}
+#outer_wrapper{
+  margin: 0 auto;
+  background-color: $white;
+  max-width: 700px;
+}
+#wrapper{
+  @include flex();
+  @include flex_grow(1);
+  @include box_orient(vertical);
+  margin: 9px 0 35px 0;
+}
+#close{
+  position: relative;
+  background: url(../img/close.svg);
+  width: 22px;
+  height: 22px;
+  float: right;
+  right: 9px;
+}
+#close:hover{
+  cursor: pointer;
+  background: url(../img/close_hover.svg);
+}
+#close:active{
+  cursor: pointer;
+  background: url(../img/close_clicking.svg);
+}
+#retail_logo{
+  text-align: center;
+  margin: 27px 0 10px 0;
+}
+#retail_logo a{
+  display: inline-block;
+  width: 170px;
+  height: 34px;
+  background: url(../img/logo.svg);
+}
+#main_header h1{
+  color: $green;
+  font-size: 1.0625em;
+  text-align: center;
+  padding: 0 4.2%;
+  line-height: 1.18;
+}
+#main_header{
+  border-bottom: 3px solid $hr_color;
+  padding-bottom: 12px;
+}
+#retail_block #fig_block{
+  @include box_orient(vertical);
+  margin-top: 19px;
+}
+
+#retail_block #fig_block figure{
+  width: 100%;
+  max-width: 100%;
+}
+.retail_img{
+  display: block;
+  text-align: center;
+  margin: 0 auto;
+}
+.round {
+  -moz-border-radius: 100px; /* Firefox */
+  -webkit-border-radius: 100px; /* Safari, Chrome */
+  -khtml-border-radius: 100px; /* KHTML */
+  border-radius: 100px; /* CSS3 */
+  border: 2px solid $light_grey;
+  width: 100px;
+  height: 100px;
+}
+#retail_block #fig_block, #retail_block p, #retail_block h2{
+  padding: 0 5.5%;
+}
+#retail_block .descr_container{
+  text-align: center;
+  padding: 14px 16% 23.5px 16%;
+}
+#retail_block figcaption{
+  font-size: 1.0625em;
+  color: $green;
+  margin: 0 0 7px 0;
+}
+#rt1{
+  width: 62.33333%;
+  padding: 17.5% 4% 0 8%;
+}
+#rt2{
+  width: 50.33333%;
+  padding: 20% 4% 0 9%;
+}
+#rt3{
+  width: 54.33333%;
+  padding: 21% 0 0 5%;
+}
+
+#fig_block{
+  border-bottom: 1px solid $hr_color;
+}
+
+#retail_block p {
+  margin: 34px 1.1% 1px 1.1%;
+  font-size: 0.9375em;
+  text-align: center;
+  line-height: 1.35;
+}
+#retail_block h2{
+  font-size: 0.9375em;
+  color: $green;
+  text-align: center;
+  line-height: 1.4;
+}
+#items_table{
+  background: $bgcolor;
+  color: $black;
+  margin: 25px 0 0 0;
+}
+#items_table caption{
+  font-size: 1.125em;
+  text-align: left;
+  padding: 16px 3.5% 8px;
+  font-weight: bold;
+}
+
+#items_table th, #items_table td{
+  padding: 8px 8px 3.5px 8px;
+  border-top: 1px solid $td_border;
+}
+input[type="checkbox"]{
+  display: none;
+}
+input[type="checkbox"] + .item_descr::before{
+  content: "";
+  display: inline-block;
+  height: 21px;
+  width: 21px;
+  margin: 0 1% 0 0;
+  background: url(../img/check_box.svg);
+  background-repeat: no-repeat;
+}
+input[type="checkbox"]:checked + .item_descr::before{
+  background: url(../img/check_mark.svg);
+}
+.item_descr{
+  font-size: 13px;
+}
+.item_descr:hover{
+  cursor: pointer;
+}
+.item_descr .item_cont{
+  margin-top: -27px;
+  margin-left: 13%;
+}
+.item_descr .sum{
+  margin-top: 4.5px;
+}
+th, td:nth-child(2), td:nth-child(3){
+  display: none;
+}
+tfoot td{
+  text-align: right;
+  padding: 14px 4.5% 10px !important;
+}
+#main_footer .full_terms{
+  margin: 25px 5.5% 20px;
+  text-align: center;
+}
+#main_footer .thanks, #main_footer .full_terms a{
+  color: $blue;
+  text-decoration: underline;
+  font-size: 0.9375em;
+}
+#main_footer .thanks:hover, #main_footer .full_terms a:hover{
+  color: $a_hover;
+}
+#main_footer .thanks:active, #main_footer .full_terms a:active{
+  color: $a_hover;
+}
+.green_btn{
+  line-height: 1;
+  font-size: 1.125em;
+  font-weight: bold;
+  display: inline-block;
+  color: white;
+  text-transform: uppercase;
+  padding: 0.64em 1.35em 0.64em 1.35em;
+  float: right;
+  outline: none;
+  border: 1px solid $white;
+  border-radius: 6px;
+  background: $green;
+  transition: 0.2s;
+}
+
+.green_btn:hover{
+  cursor: pointer;
+  background: $btn_hover;
+}
+.green_btn:active{
+  background: $btn_click;
+}
+#order{
+  padding: 0 5.5%;
+}
+#main_footer .thanks{
+  display: inline-block;
+  margin-top: 15px;
+}
+@media only screen and (min-width: 400px){
+  #outer_wrapper{
+    margin: 415px auto 1115px;
+  }
+  #wrapper{
+    @include flex();
+    @include flex_grow(1);
+    @include box_orient(vertical);
+    margin: 9px 0 30px 0;
+  }
+  #main_header{
+    margin: 0 7.7%;
+  }
+  #close{
+    position: relative;
+    background: url(../img/close.svg);
+    width: 36px;
+    height: 36px;
+    float: right;
+    right: -45px;
+  }
+  #close:hover{
+    background: url(../img/close_hover.svg);
+  }
+  #close:active{
+    background: url(../img/close_clicking.svg);
+  }
+  #retail_logo{
+    margin: 32px 0 10px 33px;
+  }
+  #retail_logo a{
+    width: 200px;
+    height: 40px;
+    background: url(../img/logo.svg);
+  }
+  #main_header h1{
+    font-size: 1.125em;
+    padding: 0 4.2%;
+    line-height: 1.6;
+  }
+  #main_header{
+    border-bottom: 3px solid $hr_color;
+    padding-bottom: 12px;
+  }
+  #retail_block #fig_block{
+    @include box_orient(horizontal);
+    margin-top: 19px;
+  }
+
+  #retail_block #fig_block figure{
+    width: 32.7%;
+    display: inline-block;
+    vertical-align: top;
+  }
+  .retail_img{
+    display: block;
+    text-align: center;
+    margin: 0 auto;
+  }
+  .round {
+    -moz-border-radius: 100px; /* Firefox */
+    -webkit-border-radius: 100px; /* Safari, Chrome */
+    -khtml-border-radius: 100px; /* KHTML */
+    border-radius: 100px; /* CSS3 */
+    border: 2px solid $light_grey;
+    width: 81px;
+    height: 81px;
+  }
+  #retail_block #fig_block, #retail_block p, #retail_block h2{
+    padding: 0 7.7%;
+  }
+  #retail_block .descr_container{
+    text-align: center;
+    padding: 14px 16% 23.5px 16%;
+  }
+  #retail_block figcaption{
+    font-size: 0.875em;
+    color: $green;
+    margin: 0 0 7px 0;
+  }
+  #rt1{
+    width: 62.33333%;
+    padding: 17.5% 4% 0 8%;
+  }
+  #rt2{
+    width: 50.33333%;
+    padding: 20% 4% 0 9%;
+  }
+  #rt3{
+    width: 54.33333%;
+    padding: 21% 0 0 5%;
+  }
+
+  #fig_block{
+    border-bottom: 1px solid $hr_color;
+  }
+
+  #retail_block p {
+    margin: 34px 1.1% 1px 1.1%;
+    font-size: 0.9375em;
+    text-align: center;
+    line-height: 1.35;
+  }
+  #retail_block h2{
+    font-size: 0.9375em;
+    color: $green;
+    text-align: center;
+    line-height: 1.4;
+  }
+  #items_table{
+    background: $bgcolor;
+    color: $black;
+    margin: 25px 0 0 0;
+  }
+  #items_table caption{
+    font-size: 1.125em;
+    text-align: left;
+    padding: 16px 3.5% 8px;
+    font-weight: bold;
+  }
+
+  #items_table th, #items_table td{
+    padding: 8px 8px 3.5px 8px;
+    border-top: 1px solid $td_border;
+  }
+  input[type="checkbox"]{
+    display: none;
+  }
+  input[type="checkbox"] + .item_descr::before{
+    content: "";
+    display: inline-block;
+    height: 21px;
+    width: 21px;
+    margin: 0 1% 0 0;
+    background: url(../img/check_box.svg);
+    background-repeat: no-repeat;
+  }
+  input[type="checkbox"]:checked + .item_descr::before{
+    background: url(../img/check_mark.svg);
+  }
+  .item_descr{
+    font-size: 13px;
+  }
+  .item_descr:hover{
+    cursor: pointer;
+  }
+  .item_descr .item_cont{
+    margin-top: -27px;
+    margin-left: 13%;
+  }
+  .item_descr .sum{
+    margin-top: 4.5px;
+  }
+  th, td:nth-child(2), td:nth-child(3){
+    display: none;
+  }
+  tfoot td{
+    text-align: right;
+    padding: 14px 4.5% 10px !important;
+  }
+  #main_footer .full_terms{
+    margin: 25px 5.5% 20px;
+    text-align: center;
+  }
+  #main_footer .thanks, #main_footer .full_terms a{
+    color: $blue;
+    text-decoration: underline;
+    font-size: 0.9375em;
+  }
+  #main_footer .thanks:hover, #main_footer .full_terms a:hover{
+    color: $a_hover;
+  }
+  #main_footer .thanks:active, #main_footer .full_terms a:active{
+    color: $a_hover;
+  }
+  .green_btn{
+    line-height: 1;
+    font-size: 1.125em;
+    font-weight: bold;
+    display: inline-block;
+    color: white;
+    text-transform: uppercase;
+    padding: 0.64em 1.35em 0.64em 1.35em;
+    float: right;
+    outline: none;
+    border: 1px solid $white;
+    border-radius: 6px;
+    background: $green;
+    transition: 0.2s;
+  }
+
+  .green_btn:hover{
+    cursor: pointer;
+    background: $btn_hover;
+  }
+  .green_btn:active{
+    background: $btn_click;
+  }
+  #order{
+    padding: 0 5.5%;
+  }
+  #main_footer .thanks{
+    display: inline-block;
+    margin-top: 15px;
+  }
+}

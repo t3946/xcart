@@ -1,12 +1,15 @@
 <?php
 namespace Modules\Distributor\Models;
 
-use Xcart\App\Orm\AutoMetaModel;
+use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\IntField;
+use Xcart\App\Orm\Model;
 
-class DistributorFeedFieldModel extends AutoMetaModel
+class DistributorFeedFieldModel extends Model
 {
+    use AutoMetaTrait;
+
     public static function tableName()
     {
         return 'xcart_manufacturer_feed_fields';

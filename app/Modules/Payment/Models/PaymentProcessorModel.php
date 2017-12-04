@@ -1,14 +1,15 @@
 <?php
 namespace Modules\Payment\Models;
 
-use Xcart\App\Orm\AutoMetaModel;
+use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\CharField;
-use Xcart\App\Orm\Fields\OneToOneField;
 use Xcart\App\Orm\Model;
 
-class PaymentProcessorModel extends AutoMetaModel
+class PaymentProcessorModel extends Model
 {
+    use AutoMetaTrait;
+
     public static function tableName()
     {
         return 'xcart_ccprocessors';

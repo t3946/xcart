@@ -14,6 +14,7 @@
 namespace Modules\Meta\Models;
 
 use Modules\Meta\MetaModule;
+use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\TextField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Model;
@@ -28,6 +29,7 @@ class MetaTemplate extends Model
     public static function getFields() 
     {
         return [
+            'id' => AutoField::className(),
             'title' => [
                 'class' => CharField::className(),
                 'verboseName' => MetaModule::t("Title")

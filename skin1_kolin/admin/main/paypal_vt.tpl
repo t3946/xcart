@@ -59,8 +59,8 @@
                 </td>
             </tr>
             <tr>
-                <td align="right" style="font-size: 12px;"><b>Grand total:</b></td>
-                <td><input style="font-size: 12px;" type="text" name="paypal_vt[grand_total]" value="{$order.total}"
+                <td align="right" style="font-size: .93rem;"><b>Grand total:</b></td>
+                <td><input style="font-size: .93rem;" type="text" name="paypal_vt[grand_total]" value="{$order.total}"
                            size="8" required pattern="^\d+(\.?\d+|)$"
                            id="paypal_vt_grand_total"/></td>
             </tr>
@@ -289,7 +289,7 @@
             });
             $(this).prev('.transaction_log_div').toggle('slow');
             return false;
-        }).on('click', '.transaction_info_table .dropdown .item, .transaction_info_table .lookup',
+        }).on('click', '.dropdown .item, .lookup',
         function () {
             var type = $(this).data('type');
             if (type === 'refund') {

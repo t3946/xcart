@@ -58,6 +58,8 @@ requiredFields = new Array();
 {include file="customer/main/cart_contents.tpl" link_qty="Y"}
 {/if}
 
+{*{$xcartApp->template->render('inSmarty/coupon_cart_desktop.tpl')}*}
+
 {include file="customer/main/cart_totals.tpl" link_shipping="Y" no_form_fields=true}
 <br /><br />
 <input type="hidden" name="paymentid" value="{$payment_data.paymentid}" />

@@ -17,12 +17,6 @@ class Orders extends Order
         return new self($iId);
     }
 
-    /**
-     * @return Order[]
-     */
-    public function getOrdersWithProductsForVerification() {
-        return Order::model()->findAll(SQLBuilder::getInstance()->addCondition("vn_status != '".Order::ORDER_VERIFICATION_STATUS_PRODUCT_VERIFIED."'"));
-    }
 
     /**
      * @return Order[]
