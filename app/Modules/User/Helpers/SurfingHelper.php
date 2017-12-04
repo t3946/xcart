@@ -113,12 +113,15 @@ class SurfingHelper
 
     public static function getReferUrl()
     {
-        $sReferUrl = null;
+        $sReferUrl = $sPath = null;
         $aReferalUrl = parse_url(Xcart::app()->request->getReferrer());
-        $aUri = Xcart::app()->request->getQueryArray();
 
         if ($aReferalUrl['host'] != Xcart::app()->request->getHost()) {
-            $sPath = ltrim($aReferalUrl['path'], '/');
+
+            if (!empty($aReferalUrl['path'])) {
+                $sPath = ltrim($aReferalUrl['path'], '/');
+            }
+
             $sReferUrl = $aReferalUrl['host'] . (empty($sPath) ? '' : '/' . $sPath) . (empty($aReferalUrl['query']) ? '' : "?{$aReferalUrl['query']}");
             $aUri = Xcart::app()->request->getQueryArray();
 
