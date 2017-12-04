@@ -142,12 +142,7 @@ class CouponOldCart
         if (static::$coupon) {
             $coupon = static::$coupon;
             $this->balance = $coupon->max_discount;
-
-            if ($coupon->type == 2) {
-                $this->balance = $coupon->discount;
-            }
         }
-
 
         return static::$coupon;
     }
