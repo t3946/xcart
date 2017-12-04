@@ -130,7 +130,7 @@ class AmpProductModel extends ProductModel
 
     public function isDescrHasIframe(){
         $fulldescr = $this->getFrontendDescription();
-        if (strpos( strtolower($fulldescr), "<iframe") !== false){
+        if ( (strpos( strtolower($fulldescr), "<iframe") !== false)  || (strpos( strtolower($fulldescr), "<video") !== false) ){
             return true;
         } else {
             return false;
@@ -141,6 +141,19 @@ class AmpProductModel extends ProductModel
     {
         $fulldescr = $this->getFrontendDescription();
 
+        if (stripos($fulldescr, "<img/>") !== false){
+            $fulldescr = str_replace("<img/>", "", $fulldescr);
+        }
+
+
+        $videos = [];
+        $regexp = '/<video[^>]*?>.*?<source[^>]*?src="(.*?)"[^>]*?><\/video>/';
+        if (preg_match_all($regexp, $fulldescr, $matches)){
+            $fulldescr = preg_replace($regexp, '', $fulldescr);
+            foreach ($matches[1] as $match){
+                $videos[] = "<amp-iframe width='320' height='240' src=\"{$match}\"></amp-iframe>";
+            }
+        }
 
         $iframes = [];
         $regexp = '/(<iframe[^>]*?><\/iframe>)/s';
@@ -155,7 +168,15 @@ class AmpProductModel extends ProductModel
         }
 
 
+
+
         $fulldescr = preg_replace("/<([a-z][a-z0-9]*)[^>]*?(\/?)>/i",'<$1$2>', $fulldescr);
+
+        if (count($videos) > 0){
+            foreach ($videos as $video){
+                $fulldescr .= "<br>{$video}<br>";
+            }
+        }
 
         if (count($iframes) > 0){
             foreach ($iframes as $iframe){
@@ -178,6 +199,5 @@ class AmpProductModel extends ProductModel
             return false;
         }
     }
-
 
 }
