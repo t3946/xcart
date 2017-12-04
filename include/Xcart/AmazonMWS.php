@@ -1577,36 +1577,37 @@ SQL;
                         if (in_array($sOrderStatus, ['Shipped', 'Canceled'])) {
 
                             /** @var OrderGroup $oOrderGroup */
-                            $aOrderGroups = $oOrder->getOrderGroups();
-                            switch ($sOrderStatus) {
-                                case 'Shipped':
-                                    foreach ($aOrderGroups as $oOrderGroup) {
-                                        if ($oOrderGroup->getOrderGroupStatusCB() != "P") {
-                                            if (!empty($sLog)) $sLog .= '<br />';
-                                            $sLog .= "<b>" . $oOrderGroup->getManufacturerEntity()->getField('code') . ":</b> cb_status: " . OrderStatus::model(['code' => $oOrderGroup->getOrderGroupStatusCB()])->getName() . " -> " . OrderStatus::model(['code' => 'P'])->getName();
-                                            $oOrderGroup->updateField('cb_status', 'P');
-                                            $oOrder->updateField('cb_status', 'P');
+                            if ($aOrderGroups = $oOrder->getOrderGroups()) {
+                                switch ($sOrderStatus) {
+                                    case 'Shipped':
+                                        foreach ($aOrderGroups as $oOrderGroup) {
+                                            if ($oOrderGroup->getOrderGroupStatusCB() != "P") {
+                                                if (!empty($sLog)) $sLog .= '<br />';
+                                                $sLog .= "<b>" . $oOrderGroup->getManufacturerEntity()->getField('code') . ":</b> cb_status: " . OrderStatus::model(['code' => $oOrderGroup->getOrderGroupStatusCB()])->getName() . " -> " . OrderStatus::model(['code' => 'P'])->getName();
+                                                $oOrderGroup->updateField('cb_status', 'P');
+                                                $oOrder->updateField('cb_status', 'P');
+                                            }
+                                            if ($oOrderGroup->getOrderGroupStatusDC() != "S") {
+                                                if (!empty($sLog)) $sLog .= '<br />';
+                                                $sLog .= "<b>" . $oOrderGroup->getManufacturerEntity()->getField('code') . ":</b> dc_status: " . OrderStatus::model(['code' => $oOrderGroup->getOrderGroupStatusDC()])->getName() . " -> " . OrderStatus::model(['code' => 'S'])->getName();
+                                                $oOrderGroup->updateField('dc_status', 'S');
+                                                $oOrder->updateField('dc_status', 'S');
+                                            }
                                         }
-                                        if ($oOrderGroup->getOrderGroupStatusDC() != "S") {
-                                            if (!empty($sLog)) $sLog .= '<br />';
-                                            $sLog .= "<b>" . $oOrderGroup->getManufacturerEntity()->getField('code') . ":</b> dc_status: " . OrderStatus::model(['code' => $oOrderGroup->getOrderGroupStatusDC()])->getName() . " -> " . OrderStatus::model(['code' => 'S'])->getName();
-                                            $oOrderGroup->updateField('dc_status', 'S');
-                                            $oOrder->updateField('dc_status', 'S');
-                                        }
-                                    }
 
-                                    break;
-                                case 'Canceled':
-                                    foreach ($aOrderGroups as $oOrderGroup) {
-                                        if ($oOrderGroup->getOrderGroupStatusCB() != "A") {
-                                            if (!empty($sLog)) $sLog .= '<br />';
-                                            $sLog .= "<b>" . $oOrderGroup->getManufacturerEntity()->getField('code') . ":</b> cb_status: " . OrderStatus::model(['code' => $oOrderGroup->getOrderGroupStatusCB()])->getName() . " -> " . OrderStatus::model(['code' => 'A'])->getName();
-                                            $oOrderGroup->updateField('cb_status', 'A');
-                                            $oOrder->updateField('cb_status', 'A');
+                                        break;
+                                    case 'Canceled':
+                                        foreach ($aOrderGroups as $oOrderGroup) {
+                                            if ($oOrderGroup->getOrderGroupStatusCB() != "A") {
+                                                if (!empty($sLog)) $sLog .= '<br />';
+                                                $sLog .= "<b>" . $oOrderGroup->getManufacturerEntity()->getField('code') . ":</b> cb_status: " . OrderStatus::model(['code' => $oOrderGroup->getOrderGroupStatusCB()])->getName() . " -> " . OrderStatus::model(['code' => 'A'])->getName();
+                                                $oOrderGroup->updateField('cb_status', 'A');
+                                                $oOrder->updateField('cb_status', 'A');
+                                            }
                                         }
-                                    }
 
-                                    break;
+                                        break;
+                                }
                             }
                             if (!empty($sLog))
                                 Logs::model()->_log('orders', $oOrder->getOrderId(), 'S', $sLog, 'Amazon');
