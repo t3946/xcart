@@ -227,7 +227,7 @@ class CategoryModel extends TreeModel
     public function reCalcProductsCount()
     {
         $ta = ProductModel::objects()->getQuerySet()->getTableAlias();
-        $qor = new QOr(['group_root__raw' => "`{$ta}`.`productid`", 'group_root__isnull' => true]);
+        $qor = new QOr(['group_root__raw' => " = `{$ta}`.`productid`", 'group_root__isnull' => true]);
 
         $this->global_product_count = ProductModel::objects()
             ->with(['categories'])

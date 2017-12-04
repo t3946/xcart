@@ -4,7 +4,10 @@ namespace Modules\Order\Models;
 use Modules\Product\Models\ProductModel;
 use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
+use Xcart\App\Orm\Fields\DecimalField;
 use Xcart\App\Orm\Fields\ForeignField;
+use Xcart\App\Orm\Fields\IntField;
+use Xcart\App\Orm\Fields\SerializeField;
 use Xcart\App\Orm\Model;
 use Xcart\App\Traits\DataModelTrait;
 use Xcart\OrderDetail;
@@ -35,6 +38,21 @@ class OrderDetailModel  extends Model
                 'modelClass' => ProductModel::className(),
                 'link' => ['productid' => 'productid'],
                 'null' => false,
+            ],
+            'back' => [
+                'class' => IntField::className(),
+                'null' => false,
+                'default' => 0
+            ],
+            'retail_trust_price' => [
+                'class' => DecimalField::className(),
+                'null' => false,
+                'default' => 0
+            ],
+            'extra_data' => [
+                'class' => SerializeField::className(),
+                'null' => false,
+                'default' => '',
             ],
         ];
     }

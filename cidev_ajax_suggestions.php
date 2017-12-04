@@ -51,7 +51,7 @@ if ($REQUEST_METHOD == 'POST') {
                     'price_2' => $oProduct->getFrontendPrice(2),
                     'category' => $oProduct->getMainCategory()->category,
                     'brand' => $oBrand->brand,
-                    'product' => $oProduct->getTitle(),
+                    'product' => $oProduct->getFrontendName(),
                     'thumb' => $oProduct->isGroupRoot() ? $smarty->fetch('group_thumbnail.tpl') : $smarty->fetch('product_thumbnail.tpl'),
                     'N_key' => $k + 1,
                     'ga_param' => $sGoogleAnaliticsParam,

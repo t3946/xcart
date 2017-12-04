@@ -42,7 +42,7 @@
 {foreach from=$v.products item=product}
 <tr>
 <td align="center">{if $type eq 'A' || $type eq 'P'}<a href="{if $provider_notification eq 'Y'}{$product.links.provider}{else}{$product.links.admin}{/if}">{$product.productcode}</a>{else}{$product.productcode}{/if}</td>
-<td><font style="FONT-SIZE: 11px"><a href="{$product.links.customer}">{$product.oProduct->getTitle()}</a></font>
+<td><font style="FONT-SIZE: 11px"><a href="{$product.links.customer}">{$product.oProduct->getFrontendName()}</a></font>
 {if $product.product_options ne '' && $active_modules.Product_Options}
 <table>
 
