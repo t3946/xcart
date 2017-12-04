@@ -10,7 +10,7 @@
                 Group product has been successfully created!
             </p>
             <p class="title">
-                <a target="_blank" href="{$model->getUrl()}">{$model->getTitle()|escape}</a>
+                <a target="_blank" href="{$model->getUrl()}">{$model->getFrontendName()|escape}</a>
             </p>
             <p class="code">
                 <a target="_blank" href="{$model->getAdminUrl()}">{$model->productcode}</a>

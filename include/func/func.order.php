@@ -1370,9 +1370,13 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
             }
 
             foreach ($products as $pk => $product) {
+
+                /** @var ProductModel $oProduct */
+
+                $oProduct = ProductModel::objects()->get(['productid' => (int)$product['productid']]);
+
                 if (($single_mode) || ($product["provider"] == $current_order["provider"])) {
                     $product["price"]                                     = price_format($product["price"]);
-                    $product["coupon_discount"]                           = $product["coupon_discount"];
                     $product["extra_data"]["original_price"]              = $product["price"];
                     $product["extra_data"]["discounted_price"]            = $product["discounted_price_orig"];
                     $product["extra_data"]["product_options"]             = $product["options"];
@@ -1387,32 +1391,28 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
                         $product["price"] = $product['discounted_price_orig'];
                     }
 
-                    if (empty($product["product_orig"])) {
-                        $product["product_orig"] = $product["product"];
-                    }
-
                     if (!empty($active_modules['Product_Options'])) {
                         $product["product_options"] = func_serialize_options($product["options"]);
                     }
 
-                    $original_provider = func_query_first_cell("SELECT provider FROM $sql_tbl[products] WHERE productid='" . $product['productid'] . "'");
+                    $order_detail_model = new OrderDetailModel(
+                        [
+                            'orderid' => $orderid,
+                            'productid' => $product['productid'],
+                            'item_cost_to_us' => $product["cost_to_us"],
+                            'product' => $oProduct->getFrontendName(),
+                            'product_options' => $product['product_options'],
+                            'amount' => $product['amount'],
+                            'price' => $product['price'],
+                            'provider' => $product["provider"],
+                            'extra_data' => $product["extra_data"],
+                            'original_provider' => $oProduct->provider,
+                            'productcode' => $product['productcode'],
+                        ]
+                    );
 
-                    $insert_data = [
-                        'orderid'           => $orderid,
-                        'productid'         => $product['productid'],
-                        'item_cost_to_us'   => $product["cost_to_us"],
-                        'product'           => addslashes($product['product_orig']),
-                        'product_options'   => addslashes($product['product_options']),
-                        'amount'            => $product['amount'],
-                        'price'             => $product['price'],
-                        'provider'          => addslashes($product["provider"]),
-                        'extra_data'        => addslashes(serialize($product["extra_data"])),
-                        'original_provider' => addslashes($original_provider),
-                        'productcode'       => addslashes($product['productcode']),
-                    ];
-
-                    $products[$pk]['itemid'] = func_array2insert('order_details', $insert_data);
-                    unset($insert_data);
+                    $order_detail_model->save();
+                    $products[$pk]['itemid'] = $order_detail_model->itemid;
 
                     #
                     # Insert into subscription_customers table (for subscription products)
@@ -1427,14 +1427,9 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
                     if (!empty($active_modules["Wishlist"])) {
                         include $xcart_dir . "/modules/Wishlist/place_order.php";
                     }
-
-                    if (!empty($active_modules["Recommended_Products"])) {
-                        $rec_counter = func_query_first_cell("SELECT COUNT(*) FROM $sql_tbl[stats_customers_products] WHERE productid='$product[productid]' AND login='" . addslashes($userinfo["login"]) . "'");
-                    }
                 }
-                $current_order['shipping_groups'][func_manufacturerid_for_group($product['shipping_freight'], $product['manufacturerid'])]['products'][] = $product;
+                $current_order['shipping_groups'][$oProduct->manufacturerid]['products'][] = $product;
 
-                $oProduct = \Xcart\Product::model(['productid' => (int)$product['productid']]);
                 $oProduct->createHTMLShot($orderid);
             }
 
@@ -2080,7 +2075,7 @@ function func_get_order_manufacturers($orderid)
 
                         } else {
 
-                            $extra_data = unserialize($detail_model->extra_data);
+                            $extra_data = $detail_model->extra_data;
                             if (!empty($extra_data['product_options'])) {
                                 list($variant, $options) = func_get_product_options_data($product_model->productid, $extra_data['product_options']);
                             }

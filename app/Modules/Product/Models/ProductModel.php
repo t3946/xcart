@@ -449,15 +449,6 @@ class ProductModel extends Model implements ICartItem
         return $tq;
     }
 
-    /**
-     * @TODO: Remove this method
-     * @deprecated
-     * @return string
-     */
-    public function getTitle() {
-        return $this->getFrontendName();
-    }
-
     public function getFrontendChilds()
     {
         return $this->childs->filter(['forsale' => 'Y'])->order(['group_order']);
