@@ -15,10 +15,10 @@ Thumbs.db
 /modules/XPDF/dompdf/lib/fonts/log.htm
 ######################
 ## folders to exclude
-/images/
-/media/
+/images/**/*
+/media/**/*
 /m1/
-/files/
+/files/**/*
 /product_files/
 /.idea/
 /verificator/cookies
@@ -28,8 +28,9 @@ node_modules
 bower_components
 /static/**/temp/
 /skin1_kolin/pages/
-/app/runtime/
+/app/runtime/**/*
 
 !.gitkeep
 !/config.php
 !/skin1_kolin/
+!/app/runtime/log/
