@@ -151,8 +151,15 @@ class AmpProductModel extends ProductModel
         if (preg_match_all($regexp, $fulldescr, $matches)){
             $fulldescr = preg_replace($regexp, '', $fulldescr);
             foreach ($matches[1] as $match){
+                if (stripos($match, "http:") !== false){
+                    $match = str_replace("http:", "https:", $match);
+                }
                 $videos[] = "<amp-iframe width='320' height='240' src=\"{$match}\"></amp-iframe>";
             }
+        }
+
+        if (preg_match('/<style[^>]*?>/', $fulldescr) ){
+            $fulldescr = preg_replace('/<style[^>]*?>/', "", $fulldescr);
         }
 
         $iframes = [];
@@ -166,9 +173,6 @@ class AmpProductModel extends ProductModel
                 }
             }
         }
-
-
-
 
         $fulldescr = preg_replace("/<([a-z][a-z0-9]*)[^>]*?(\/?)>/i",'<$1$2>', $fulldescr);
 
