@@ -71,7 +71,7 @@
                                 {if $products[product].oProduct && $products[product].oProduct->isGroupRoot()}
                                     {include file="group_thumbnail.tpl" product=$products[product].oProduct}
                                 {else}
-                                    {include file="product_thumbnail.tpl" productid=$products[product].productid image_x=$config.Appearance.thumbnail_width product=$products[product].oProduct->getTitle() tmbn_url=$products[product].tmbn_url splash=$products[product].oSplash}
+                                    {include file="product_thumbnail.tpl" productid=$products[product].productid image_x=$config.Appearance.thumbnail_width product=$products[product].oProduct->getFrontendName() tmbn_url=$products[product].tmbn_url splash=$products[product].oSplash}
                                 {/if}
                             </a>
                             {if $active_modules.Special_Offers ne "" and $products[product].have_offers}

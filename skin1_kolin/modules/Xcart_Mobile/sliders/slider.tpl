@@ -30,7 +30,7 @@
                                         {assign var='tmbn_url' value=$ImageTModel->getURL()}
                                     {/if}
                                     {assign var='productid' value=$item->productid}
-                                    {assign var='product' value=$item->getTitle()}
+                                    {assign var='product' value=$item->getFrontendName()}
                                     {assign var='splash' value=$item->getSplash()}
                                     {if $config.Appearance.show_thumbnails eq "Y"}
                                         {include file="product_splash.tpl"}
@@ -43,7 +43,7 @@
                                 </span>
 
                                 <span class="label row">
-                                    {$item->getTitle()}
+                                    {$item->getFrontendName()}
                                     <span class="grad">&nbsp;</span>
                                 </span>
 
