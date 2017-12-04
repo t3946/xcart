@@ -261,7 +261,7 @@ abstract class Admin
             }
         }
         foreach ($fields as $name => $field) {
-            if (in_array($name, $excluded)) {
+            if (in_array($name, $excluded) || array_key_exists($name, $config)) {
                 continue;
             }
 
