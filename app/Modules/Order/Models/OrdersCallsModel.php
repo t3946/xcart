@@ -50,6 +50,7 @@ class OrdersCallsModel extends Model
                 'choices' => [
                     0 => 'order viewed during call same operator',
                     1 =>  'order viewed during call by other operator',
+                    2 => 'ORDER_PHONE_EQUALS_CALLED_PHONE'
                 ],
             ],
 
