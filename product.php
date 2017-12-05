@@ -267,7 +267,7 @@ if (!empty($current_category) and is_array($current_category["category_location"
 }
 
 if (!empty($product_info)) {
-	$location[] = [$oProduct->getTitle()];
+	$location[] = [$oProduct->getFrontendName()];
 	if (is_array($location) && !empty($location)) {
 		if (is_array($location)) {
 			foreach (array_reverse($location) as $l) {

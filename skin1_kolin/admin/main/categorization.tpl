@@ -255,7 +255,7 @@ Category {$v} is not ready to classification!<br />
             {assign var=product value=$v.oProduct->parent}
 		{/if}
 		<a href="http://{$current_storefront_info.domain}/product.php?productid={$product->productid}" target="_blank" style="color: blue;">
-        	{$product->getTitle()|escape}
+        	{$product->getFrontendName()|escape}
 		</a>
 	{else}
 		<a href="http://{$current_storefront_info.domain}/product.php?productid={$v.productid}" target="_blank" style="color: blue;">

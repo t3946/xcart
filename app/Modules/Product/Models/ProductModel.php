@@ -8,6 +8,7 @@ use Modules\Amp\Models\AmpProductModel;
 use Modules\Brand\Models\BrandModel;
 use Modules\Cart\Interfaces\ICartItem;
 use Modules\Distributor\Models\DistributorModel;
+use Modules\Order\Models\OrderDetailModel;
 use Modules\Sites\Models\SiteModel;
 use Modules\Menu\Models\CleanUrlModel;
 use Xcart\App\Components\Breadcrumbs;
@@ -110,6 +111,12 @@ class ProductModel extends Model implements ICartItem
                 'modelClass' => CleanUrlModel::className(),
                 'link' => ['productid' => 'resource_id'],
                 'extra' => ['resource_type' => 'P'],
+            ],
+
+            'order_details' => [
+                'class' => HasManyField::className(),
+                'modelClass' => OrderDetailModel::className(),
+                'link' => ['productid' => 'productid'],
             ],
 
 
@@ -237,7 +244,12 @@ class ProductModel extends Model implements ICartItem
             ],
             'retail_trust_enabled' => [
                 'class' => BooleanCharField::className(),
-            ]
+            ],
+            'options' => [
+                'class' => HasManyField::className(),
+                'modelClass' => OptionModel::className(),
+                'link' => ['productid' => 'productid']
+            ],
         ];
     }
 
@@ -355,7 +367,7 @@ class ProductModel extends Model implements ICartItem
     {
         return CategoryModel::objects()->filter([
             'products__through__main' => 'Y',
-            'products_link__productid' => $this->productid
+            'products__through__productid' => $this->productid
         ])->limit(1)->get();
     }
 
@@ -397,7 +409,9 @@ class ProductModel extends Model implements ICartItem
 
     public function getFrontendName()
     {
-        return $this->seo_product_name ?: $this->product;
+        $name = $this->seo_product_name ?: $this->product;
+
+        return ($this->isGroupChild()) ?  $this->group_mask . " ". $name : $name;
     }
 
     public function getFrontendDescription()
@@ -433,15 +447,6 @@ class ProductModel extends Model implements ICartItem
         }
 
         return $tq;
-    }
-
-    /**
-     * @TODO: Remove this method
-     * @deprecated
-     * @return string
-     */
-    public function getTitle() {
-        return $this->getFrontendName();
     }
 
     public function getFrontendChilds()

@@ -1,30 +1,5 @@
 {* $Id: configuration.tpl,v 1.91.2.7 2007/01/16 09:06:32 twice Exp $ *}
 
-<script src="{$SkinDir}/tinymce/js/tinymce/tinymce.min.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-//<![CDATA[
-{literal}
-
-tinymce.init({
-    selector: "textarea.new_editor",
-    resize: "both",
-    plugins: [
-        "advlist autolink lists link image charmap print preview anchor",
-        "searchreplace visualblocks code fullscreen",
-        "insertdatetime media table contextmenu paste fullpage"
-    ],
-    toolbar: "insertfile undo redo | styleselect | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image",
-    forced_root_block : false,
-    force_br_newlines : true,
-    force_p_newlines : false,
-    convert_urls: false,
-    relative_urls: false
-});
-
-{/literal}
-//]]>
-</script>
 
 {if $option ne 'Multiple_Storefronts'}
     {include file="page_title.tpl" title=$lng.lbl_general_settings}

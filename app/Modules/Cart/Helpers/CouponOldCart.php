@@ -32,6 +32,7 @@ class CouponOldCart
 
     private $balance;
     private $productsDiscount = 0;
+    private $force_show_error = false;
 
 
     /**
@@ -100,6 +101,13 @@ class CouponOldCart
         return $this;
     }
 
+    public function setIsForceShow($force = false)
+    {
+        if (!$this->force_show_error) {
+            $this->force_show_error = $force;
+        }
+    }
+
     /**
      * @param CouponKitModel $coupon
      *
@@ -131,7 +139,10 @@ class CouponOldCart
             }
         }
 
-        $this->balance = static::$coupon->max_discount;
+        if (static::$coupon) {
+            $coupon = static::$coupon;
+            $this->balance = $coupon->max_discount;
+        }
 
         return static::$coupon;
     }
@@ -212,6 +223,11 @@ class CouponOldCart
 
     public function checkRestrictions()
     {
+        if ($this->cart && empty($this->cart['tmp_coupon_total'])) {
+            $this->cart['tmp_coupon_total'] = $this->getSumProducts();
+        }
+
+
         /** @var \Modules\Cart\Discounts\Restrictions\AbstractRestriction $restrict */
         foreach ($this->getRestricts() as $restrict) {
             $restrict->setCoupon($this->getCoupon());
@@ -244,6 +260,7 @@ class CouponOldCart
                     $valid = $restrict->validate();
             }
 
+            $this->setIsForceShow($restrict->isForceShow());
             $this->addError($restrict::className(), $restrict->getErrorMessage());
             $this->setRestrictTypeValidate($restrict::className(), $valid);
         }
@@ -479,6 +496,11 @@ class CouponOldCart
     public function isValid()
     {
         return $this->validateCoupon();
+    }
+
+    public function isForceShow()
+    {
+        return $this->force_show_error;
     }
 
     /**

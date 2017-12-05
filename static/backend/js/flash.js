@@ -3,7 +3,7 @@ $(function () {
 
     var $flashList = $('.flash-messages-block .flash-list');
 
-    $(document).on('click', '.close-flash', function (e) {
+    $(document).on('click', '.close-flash, .flash-message', function (e) {
         e.preventDefault();
         $(this).closest('.flash-message').fadeOut(400, function () {
             $(this).remove();
@@ -17,9 +17,10 @@ $(function () {
 
         var $item = $('<div class="flash-message"></div>').addClass(type);
         var $closer = $('<a class="close-flash right"><i class="icon-delete_in_filter"></i></a>');
-        var $text = $('<span/>').addClass('message').text(message);
+        var $text = $('<span/>').addClass('message').innerHTML = message;
 
-        $item.append([$closer, $text]);
+        $item.append($closer);
+        $item.append($text);
         $flashList.append($item);
 
         setTimeout(function () {
@@ -31,10 +32,12 @@ $(function () {
         }, outTime);
     };
 
-    if (window['flashStack'] && window['flashStack'].length) {
-        for (var i in window['flashStack']) {
-            var f = window['flashStack'][i];
-            addFlashMessage(f.message, f.type);
+    $(document).ready(function () {
+        if (window['flashStack'] && window['flashStack'].length) {
+            for (var i in window['flashStack']) {
+                var f = window['flashStack'][i];
+                addFlashMessage(f.message, f.type, f.time);
+            }
         }
-    }
+    });
 });

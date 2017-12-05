@@ -34,7 +34,8 @@
 # $Id: auth.php,v 1.30.2.4 2006/11/01 12:37:40 twice Exp $
 #
 
-use Modules\Core\Helpers\GeoipHelper;
+use Modules\Core\Models\StateModel;
+use Modules\GeoIp\Helpers\GeoIpHelper;
 
 define('AREA_TYPE', 'C');
 

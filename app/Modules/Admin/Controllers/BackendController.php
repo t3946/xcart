@@ -12,12 +12,13 @@ class BackendController extends Controller
 
     public function beforeAction($action, $params)
     {
+        /** @var \Modules\User\Models\UserModel $user */
         $user = Xcart::app()->auth->getUser();
 
         if (!$user || $user->getIsGuest()) {
             $this->getRequest()->redirect('admin:login');
         }
-        elseif (!$user->getIsSuperuser()) {
+        elseif (!($user->getIsSuperuser() || $user->getIsStaff())) {
             $this->error(403);
         }
     }

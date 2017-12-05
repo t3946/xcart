@@ -58,10 +58,10 @@ class MetaHelper
         }
         elseif ($metaTemplate) {
             echo self::renderTemplate('meta/meta_helper.tpl', [
-                'title' => self::formatTitle($controller, $metaTemplate->renderTitle()),
+                'title' => self::cleanString( self::formatTitle($controller, $metaTemplate->renderTitle()) ),
                 'canonical' => $canonical,
-                'description' => $metaTemplate->renderDescription(),
-                'keywords' => $metaTemplate->renderKeywords(),
+                'description' => self::cleanString( $metaTemplate->renderDescription() ),
+                'keywords' => self::cleanString( $metaTemplate->renderKeywords() ),
                 'site' => $site
             ]);
         }
@@ -106,6 +106,13 @@ class MetaHelper
         }
 
         return implode(' - ', $data);
+    }
+
+    protected static function cleanString($str)
+    {
+        $t = preg_replace("/(\r?\n){2,}/", "", $str);
+        $t = preg_replace("/(\s+)/", " ", $t);
+        return trim( $t );
     }
 
     protected static function fetchMeta($uri)

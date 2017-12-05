@@ -261,14 +261,19 @@ abstract class Admin
             }
         }
         foreach ($fields as $name => $field) {
-            if (in_array($name, $excluded)) {
+            if (in_array($name, $excluded) || array_key_exists($name, $config)) {
                 continue;
             }
 
             if (is_array($field)) {
                 $columnConfig = isset($config[$name]) ? $config[$name] : [];
-                if (!isset($columnConfig['title']) && isset($field['label'])) {
-                    $columnConfig['title'] = $field['label'];
+                if (!isset($columnConfig['title']) && ( isset($field['label']) || isset($field['verboseName']) )) {
+                    if (!empty($field['label'])) {
+                        $columnConfig['title'] = $field['label'];
+                    }
+                    elseif (!empty($field['verboseName'])) {
+                        $columnConfig['title'] = $field['verboseName'];
+                    }
                 }
                 if (!isset($columnConfig['order'])) {
                     /** @var Field $modelField */

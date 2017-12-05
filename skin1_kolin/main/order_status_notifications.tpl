@@ -1,9 +1,5 @@
-{*
-$Id: order_status_notifications.tpl, v 1.0.0 2011/10/18 12:44:21 kate Exp $
-vim: set ts=2 sw=2 sts=2 et:
-*}
+
 {include file="page_title.tpl" title=$lng.lbl_order_status_notifications}
-<script src="{$SkinDir}/tinymce/js/tinymce/tinymce.min.js" type="text/javascript"></script>
 <script type="text/javascript">
     //<![CDATA[
     {literal}

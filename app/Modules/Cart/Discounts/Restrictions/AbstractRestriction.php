@@ -21,6 +21,7 @@ abstract class AbstractRestriction implements IDiscountRestriction
     public $couponModel = null;
     public $cart = null;
     public $order_id = null;
+    private $force_show = false;
 
     /**
      * AbstractRestriction constructor.
@@ -56,9 +57,15 @@ abstract class AbstractRestriction implements IDiscountRestriction
         $this->data = $data;
     }
 
+    public function isForceShow()
+    {
+        return $this->force_show;
+    }
+
     public function notValidAction()
     {
         if (!Cli::isCli()) {
+            $this->force_show = true;
             Xcart::app()->request->session->remove('coupon_code');
         }
     }

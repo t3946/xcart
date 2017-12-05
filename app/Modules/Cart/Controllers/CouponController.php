@@ -18,9 +18,13 @@ class CouponController extends FrontendController
 
             if (strtoupper($code) == strtoupper($scode) && $model = CouponKitModel::objects()->filter(['code' => $code, 'active' => true])->get())
             {
-                echo $this->renderInSmarty('coupon/view.tpl', [
+                echo $this->render('coupon/view.tpl', [
                     'model' => $model
                 ]);
+
+//                echo $this->renderInSmarty('coupon/view.tpl', [
+//                    'model' => $model
+//                ]);
             }
         }
 

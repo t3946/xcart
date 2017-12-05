@@ -5,8 +5,6 @@
 {*
 <script src="//tinymce.cachefly.net/4.0/tinymce.min.js"></script>
 *}
-<script src="{$SkinDir}/tinymce/js/tinymce/tinymce.min.js" type="text/javascript"></script>
-
 <script type="text/javascript">
 //<![CDATA[
 {literal}

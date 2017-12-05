@@ -68,13 +68,13 @@
 
                 {elseif $field.class == 'Xcart\\App\\Orm\\Fields\\HasManyField'}
                     <table>
-                        <tr>
                         {foreach $value->all() as $model}
+                        <tr>
                             <td>
                                 {$model}
                             </td>
-                        {/foreach}
                         </tr>
+                        {/foreach}
                     </table>
 
 

@@ -47,12 +47,9 @@ class CustomerRestriction extends AbstractRestriction
 
                 $result = !$result?: ($phone == $cp);
             }
+
             if (!empty($this->data['email']) && $user->email) {
                 $result = !$result?: ($user->email == $this->data['email']);
-            }
-
-            if (!$result) {
-                $this->notValidAction();
             }
         }
 

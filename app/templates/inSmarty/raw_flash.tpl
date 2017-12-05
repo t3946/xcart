@@ -27,7 +27,7 @@
 
             var $item = $('<div class="flash-message"></div>').addClass(type);
             var $closer = $('<a class="close-flash right"><i class="icon-delete_in_filter"></i></a>');
-            var $text = $('<span/>').addClass('message').text(message);
+            var $text = $('<span/>').addClass('message').innerHTML = message;
 
             $item.append($closer);
             $item.append($text);

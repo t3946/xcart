@@ -5,6 +5,7 @@ use Modules\Admin\Contrib\Admin;
 use Modules\Cart\Forms\CouponKitForm;
 use Modules\Cart\Models\CouponKitModel;
 use Xcart\App\Exceptions\HttpException;
+use Xcart\App\Main\Xcart;
 
 class CouponKitAdmin extends Admin
 {
@@ -28,6 +29,18 @@ class CouponKitAdmin extends Admin
         return new CouponKitModel();
     }
 
+    public function getAvailableListColumns()
+    {
+        return array_replace_recursive(parent::getAvailableListColumns(), [
+            'active' => [
+                'title' => 'Active',
+                'template' => 'admin/list/columns/boolean.tpl',
+                'order' => 'active'
+            ],
+        ]);
+    }
+
+
     public function getQuerySet()
     {
         $qs = parent::getQuerySet();
@@ -50,9 +63,13 @@ class CouponKitAdmin extends Admin
 
     public function getListItemActions()
     {
-        return [
-            'update',
-            'info',
-        ];
+        $return = [];
+
+        if (Xcart::app()->user->getIsSuperuser()) {
+            $return[] = 'update';
+        }
+        $return[] = 'info';
+
+        return $return;
     }
 }

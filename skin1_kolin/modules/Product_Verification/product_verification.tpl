@@ -53,23 +53,23 @@
 {foreach from=$aManufacturers name=manufacturerFirst item=aManufacturer key=iManufacturerId}
 	{assign var='showManufacturer' value=true}
 	{foreach from=$aManufacturer name=manufacturerSecond item=oOrderManufacturer}
-		{foreach from=$oOrderManufacturer->getOrderProducts() item=oProduct name=manufacturerThird}
-			{if ($oProduct->getField('manufacturerid') == $iManufacturerId && $oProduct->getField('verification_statusid') < 3)}
-				{assign var='oManufacturer' value = $oProduct->getManfacturerClass()}
+		{foreach from=$oOrderManufacturer->getProducts() item=oProduct name=manufacturerThird}
+			{if ($oProduct->manufacturerid == $iManufacturerId && $oProduct->verification_statusid < 3)}
+				{assign var='oManufacturer' value = $oProduct->distributor}
 				{assign var='oVerifyDate' value = $oProduct->getProductLastVerifyDate()}
-				{assign var='oHTMLShot' value = $oProduct->getHTMLShot($oOrderManufacturer->getField('orderid'))}
-				<tr{cycle values=', class="TableSubHead"'} {if $showManufacturer}data-manufacturer-id="{$oManufacturer->getField('manufacturerid')}"{/if}>
+				{assign var='oHTMLShot' value = $oProduct->getHTMLShot($oOrderManufacturer->orderid)}
+				<tr{cycle values=', class="TableSubHead"'} {if $showManufacturer}data-manufacturer-id="{$oManufacturer->manufacturerid}"{/if}>
 					<td width="1%">
 						{if $showManufacturer}
-							<a style="font-weight: bold;" href="{$oManufacturer->getAdminUrl()}" target="_blank"> {$oManufacturer->getField('manufacturer')}</a>
+							<a style="font-weight: bold;" href="{$oManufacturer->getAdminUrl()}&distributor_section=8" target="_blank"> {$oManufacturer->manufacturer}</a>
 							{assign var='showManufacturer' value=false}
                         {else}
-                            <a style="font-weight: bold; display:none;" href="{$oManufacturer->getAdminUrl()}" target="_blank"> {$oManufacturer->getField('manufacturer')}</a>
+                            <a style="font-weight: bold; display:none;" href="{$oManufacturer->getAdminUrl()}&distributor_section=8" target="_blank"> {$oManufacturer->manufacturer}</a>
 						{/if}
 					</td>
-					<td nowrap="nowrap"><a target="_blank" href="{$oOrderManufacturer->getAdminUrl()}">{$oOrderManufacturer->getDisplayOrderNumber()}</a></td>
-					<td nowrap="nowrap"><a target="_blank" href="{$oProduct->getAdminUrl()}">{$oProduct->getField('productcode')}</a></td>
-					<td><a target="_blank" href="{$oProduct->getURL()}">{$oProduct->getField('product')}</a>
+					<td nowrap="nowrap"><a target="_blank" href="{$oOrderManufacturer->getAdminUrl()}">{$oOrderManufacturer->getOrderNumber()}</a></td>
+					<td nowrap="nowrap"><a target="_blank" href="{$oProduct->getAdminUrl()}">{$oProduct->productcode}</a></td>
+					<td><a target="_blank" href="{$oProduct->getAbsoluteUrl(true)}">{$oProduct->getFrontendName()}</a>
                         {if (!empty($oHTMLShot) && $oHTMLShot->getId())}
                             <a title="View HTML-Shot" target="_blank" style="float:right; margin-top:3px;" href="/admin/view_html_shot.php?id={$oHTMLShot->getId()}" class="html-shot-view">
                                 <img src="{$ImagesDir}/html-shot.png" />
@@ -79,11 +79,11 @@
 					<td nowrap="nowrap"><a target="_blank" href="{$oProduct->getProductURLOnDistributorWebSite()}">{$oProduct->getMPN()}</a></td>
 					<td nowrap="nowrap">{if ($oVerifyDate)}{$oVerifyDate->format('d-M-Y')}{/if}</td>
 					<td align="center">
-					<select title="{$oProduct->getProductVerificationHistoryLastNote()}" data-order-id="{$oOrderManufacturer->getField('orderid')}" data-product-verification-id="{$oProduct->getField('productid')}"
-                            class="change_product_verify_status" name="product_verify_status" data-prev-val="{$oProduct->getField('verification_statusid')}">
+					<select title="{$oProduct->getProductVerificationHistoryLastNote()}" data-order-id="{$oOrderManufacturer->orderid}" data-product-verification-id="{$oProduct->productid}"
+                            class="change_product_verify_status" name="product_verify_status" data-prev-val="{$oProduct->verification_statusid}">
 						{foreach from=$aVerifyStatuses item=aVerifyStatus}
-							<option value="{$aVerifyStatus.statusid}"  {if $oProduct->getField('verification_statusid') == $aVerifyStatus.statusid} selected="selected"{/if}>
-								{$aVerifyStatus.name}
+							<option value="{$aVerifyStatus->statusid}"  {if $oProduct->verification_statusid == $aVerifyStatus->statusid} selected="selected"{/if}>
+								{$aVerifyStatus->name}
 							</option>
 						{/foreach}
 					</select>

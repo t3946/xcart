@@ -1,4 +1,6 @@
 <?php
+
+use Modules\GeoIp\Helpers\GeoIpHelper;
 use Modules\Order\Models\FraudCheckModel;
 use Modules\Order\Models\OrderDetailModel;
 use Modules\Order\Models\OrderFraudCheckModel;
@@ -410,13 +412,10 @@ $customer_ip = $order["extra"]["ip"];
 $geoip_state = "";
 
 
-$geo_litecity_location = func_get_geoip_locations($customer_ip);
-if (!empty($geo_litecity_location)) {
-    $geoip_state = $geo_litecity_location["region"];
-
-    $geoip_address = $geo_litecity_location["country"] . ", " . $geo_litecity_location["region"] . ", " . $geo_litecity_location["city"] . ", " . $geo_litecity_location["postalCode"];
+if ($geo_litecity_location = GeoIpHelper::getGeoipLocation($customer_ip)) {
+    $geoip_state = $geo_litecity_location->region;
+    $geoip_address = $geo_litecity_location;
 }
-
 
 $billing_address_comma = $userinfo["b_address"] . (!empty($userinfo["b_address_2"]) ? ", $userinfo[b_address_2]" : "") . ", " . $userinfo["b_city"] . ", " . $userinfo["b_state"] . ", " . $userinfo["b_zipcode"];
 

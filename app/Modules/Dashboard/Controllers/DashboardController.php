@@ -35,9 +35,11 @@ class DashboardController extends PrototypeAdminController
     public function index()
     {
         $models = DashboardFilter::objects()->filter(['enabled' => true])->all();
+        $myModels = DashboardFilter::objects()->filter(['enabled' => true, 'users__id' => Xcart::app()->user->id])->order(['-position_row', '-position_column'])->all();
         $questionModels = ProductQuestionModel::objects()->select(['status', 'id' => new Expression('count(*)')])->exclude(['status' => ''])->group(['status'])->order(['-status'])->all();
 
         if ($this->getRequest()->getIsAjax()) {
+            $mIds = array_map(function($model){ return $model->pk; }, $myModels);
             $data = ['filters' => [], 'groups' => []];
 
             /** @var DashboardFilter $model */
@@ -45,8 +47,8 @@ class DashboardController extends PrototypeAdminController
                 $data['filters'][$model->id] = [
                     'count' => [
                         'orders' => $model->getSearchStorage()->getCashedCount(),
-                        'events' => $model->getSearchStorage()->getCachedEventsCount(),
                         'priority' => $model->getSearchStorage()->getCachedPriorityShippingCount(),
+                        'events' => (in_array($model->pk, $mIds)) ? $model->getSearchStorage()->getCachedEventsCount() : null,
                     ]
                 ];
             }
@@ -59,7 +61,7 @@ class DashboardController extends PrototypeAdminController
                 [
                     'models'  => $models,
                     'row_col' => DashboardFilter::getMaxRowCol(),
-                    'myModels' => DashboardFilter::objects()->filter(['enabled' => true, 'users__id' => Xcart::app()->user->id])->order(['-position_row', '-position_column'])->all(),
+                    'myModels' => $myModels,
                     'groups'  => GroupModel::objects()->filter(['filters__name__isnull' => false])->group(['id'])->all(),
                     'questions' => $questionModels,
                 ]

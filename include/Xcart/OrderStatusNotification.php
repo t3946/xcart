@@ -1,9 +1,9 @@
 <?php
 namespace Xcart;
 
-use Modules\Core\Helpers\GeoipHelper;
 use Modules\Core\Models\GlobalConfigModel;
 use Modules\Core\Models\StateModel;
+use Modules\GeoIp\Helpers\GeoIpHelper;
 use Modules\Sites\Models\SiteConfigModel;
 
 class OrderStatusNotification extends Mail

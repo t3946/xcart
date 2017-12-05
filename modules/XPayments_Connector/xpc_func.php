@@ -595,7 +595,7 @@ function xpc_prepare_cart($cart, $refId, $force_auth)
     $result['shippingCost'] = round($cart['shipping_cost'], 2);
     $result['taxCost']      = round($cart['tax_cost'], 2);
     $result['totalCost']    = round($cart['total_cost'], 2);
-    $result['discount']     = round($cart['discount'], 2);
+    $result['discount']     = round($cart['discount'] + $cart['coupon_discount'], 2);
 
     // Get admin email if Orders department email is empty
     if (empty($result['merchantEmail'])) {

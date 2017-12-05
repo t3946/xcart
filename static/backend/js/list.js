@@ -140,31 +140,34 @@ $(function () {
             var me = this;
             var $table = me.getTable();
 
-            $table.find("tbody").sortable({
-                axis: 'y',
-                placeholder: "highlight",
-                start: function(e, ui){
-                    ui.placeholder.height(ui.item.height());
-                },
-                helper: function (e, ui) {
-                    ui.children().each(function () {
-                        var $this = $(this);
-                        $this.width($this.width());
-                    });
-                    return ui;
-                },
-                update: function (event, ui) {
-                    var $to = $(ui.item),
-                        $prev = $to.prev(),
-                        $next = $to.next();
+            if (typeof $table.attr('data-sorting') != typeof undefined)
+            {
+                $table.find("tbody").sortable({
+                    axis: 'y',
+                    placeholder: "highlight",
+                    start: function(e, ui){
+                        ui.placeholder.height(ui.item.height());
+                    },
+                    helper: function (e, ui) {
+                        ui.children().each(function () {
+                            var $this = $(this);
+                            $this.width($this.width());
+                        });
+                        return ui;
+                    },
+                    update: function (event, ui) {
+                        var $to = $(ui.item),
+                            $prev = $to.prev(),
+                            $next = $to.next();
 
-                    var pk_list = $(this).sortable('toArray', {
-                        attribute: 'data-pk'
-                    });
+                        var pk_list = $(this).sortable('toArray', {
+                            attribute: 'data-pk'
+                        });
 
-                    me.setSort(pk_list, $to.data('id'), $prev.data('id'), $next.data('id'))
-                }
-            });
+                        me.setSort(pk_list, $to.data('id'), $prev.data('id'), $next.data('id'))
+                    }
+                });
+            }
         },
         setSort: function (pk_list, to, prev, next) {
             var me = this;

@@ -21,12 +21,14 @@ class MinimalPriceRestriction extends AbstractRestriction
 
     public function getTypeValidation()
     {
-        return self::VALIDATION_CUSTOMER;
+        return self::VALIDATION_OTHER;
     }
 
     public function getErrorMessage()
     {
-        return "Coupon use for minimal price {$this->data['min_price']}";
+        $format = number_format($this->data['min_price']);
+
+        return "Minimum order amount for this coupon is $ {$format}";
     }
 
     /**
@@ -39,7 +41,7 @@ class MinimalPriceRestriction extends AbstractRestriction
 
         if ($this->cart) {
             //@TODO: Cahnge for new cart
-            return $this->cart['subtotal'] > $this->data['min_price'];
+            return $this->cart['tmp_coupon_total'] > $this->data['min_price'];
         }
 
         return false;
@@ -47,6 +49,6 @@ class MinimalPriceRestriction extends AbstractRestriction
 
     public function dataToString()
     {
-        return "Minimal price: {$this->data['min_price']}";
+        return "{$this->data['min_price']}";
     }
 }

@@ -1,6 +1,4 @@
 {include file="change_states_js.tpl"}
-{*<script type="text/javascript" src="{$SkinDir}/lib/jqueryui/jquery-ui.custom.min.js"></script>*}
-{*<script src="{$SkinDir}/tinymce/js/tinymce/tinymce.min.js" type="text/javascript"></script>*}
 
 <script type="text/javascript">
 //<![CDATA[
@@ -512,7 +510,8 @@ $(function() {ldelim}
           </tr>
 
           <tr>
-            <td class="call_btn_distr_{if $distributor_info.good_time_to_send_email_to_distributor eq "Y"}a{else}d{/if}" width="219" height="44">
+            <td>
+                <div class="call_btn call_btn_distr_{if $distributor_info.good_time_to_send_email_to_distributor eq "Y"}a{else}d{/if}" style=""></div>
                 <a target="_blank" href="tel:{if $distributor_info.distributor_phone_phone_normalized ne ""}{$distributor_info.distributor_phone_phone_normalized}{else}{$distributor_info.distributor_phone}{/if}"><div style="width: 219px; height: 44px;"></div></a>
             </td>
           </tr>
@@ -528,8 +527,10 @@ $(function() {ldelim}
           </tr>
 
           <tr>
-            <td class="call_btn_customer_{if $product_question.good_time_to_send_email_to_customer eq "Y"}a{else}d{/if}" width="219" height="44">
-                <a target="_blank" href="tel:{if $product_question.phone_normalized ne ""}{$product_question.phone_normalized}{else}{$product_question.phone}{/if}"><div style="width: 219px; height: 44px;"></div></a>
+            <td>
+                <div class="call_btn call_btn_customer_{if $product_question.good_time_to_send_email_to_customer eq "Y"}a{else}d{/if}" >
+                    <a target="_blank" href="tel:{if $product_question.phone_normalized ne ""}{$product_question.phone_normalized}{else}{$product_question.phone}{/if}"><div style="width: 219px; height: 44px;"></div></a>
+                </div>
             </td>
           </tr>
 

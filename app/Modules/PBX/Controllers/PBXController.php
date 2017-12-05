@@ -19,6 +19,8 @@ class PBXController extends Controller
         if ($session) {
             list($model, $isNew) = PbxAnveoCallModel::objects()->getOrCreate(['session' => $session]);
 
+            $model->is_voice_mail = $model->is_voice_mail ?: $request->get->has('vm');
+
             if ($request->get->has('incoming_flow_start') || $request->get->has('outgoing_flow_start')) {
                 $model->is_outgoing = $request->get->has('outgoing_flow_start');
                 $model->start_at = $now;

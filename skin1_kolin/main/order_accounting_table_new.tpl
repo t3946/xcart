@@ -54,8 +54,8 @@ function func_recalculate_manufacturer_invoices_data(m_id, invoice_number){
 
                     unit_cost_total = qty_inv * unit_cost;
                     unit_cost_to_us_total = parseFloat($(this).find('.invoice_unit_cost_to_us').data('cost-to-us')) * qty_inv;
-                    $(this).find('[id^=unit_cost_total').text(price_format(isNaN(unit_cost_total) ? '' : unit_cost_total));
-                    $(this).find('[id^=unit_cost_to_us_total').text(price_format(isNaN(unit_cost_to_us_total) ? '' : unit_cost_to_us_total));
+                    $(this).find('[id^=unit_cost_total]').text(price_format(isNaN(unit_cost_total) ? '' : unit_cost_total));
+                    $(this).find('[id^=unit_cost_to_us_total]').text(price_format(isNaN(unit_cost_to_us_total) ? '' : unit_cost_to_us_total));
                     unit_cost_total_sum += unit_cost_total;
                     unit_cost_to_us_total_sum += unit_cost_to_us_total;
             }

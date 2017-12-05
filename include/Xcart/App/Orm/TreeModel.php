@@ -123,7 +123,8 @@ abstract class TreeModel extends Model
         if ($this->getIsNewRecord()) {
             if ($this->parent) {
                 $this->appendTo($this->parent);
-            } else {
+            }
+            else {
                 $this->makeRoot();
             }
 
@@ -133,14 +134,19 @@ abstract class TreeModel extends Model
         $pid_name = $this->getField('parent')->getAttributeName();
 
         if (in_array($pid_name, $this->getDirtyAttributes())) {
-            if ($saved = parent::save($fields)) {
+
+            if ($saved = parent::save($fields))
+            {
                 if ($this->parent) {
                     $this->moveAsLast($this->parent);
-                } elseif ($this->isRoot() == false) {
+                }
+                elseif ($this->isRoot() == false) {
                     $this->moveAsRoot();
                 }
-                    /** @var array $parent */
-                    $parent = $this->objects()->asArray()->get(['pk' => $this->pk]);
+
+                /** @var array $parent */
+                $parent = $this->objects()->asArray()->get(['pk' => $this->pk]);
+
                 if ($parent !== null) {
                     $this->setAttributes($parent);
                     $this->setIsNewRecord(false);
@@ -160,10 +166,7 @@ abstract class TreeModel extends Model
         $fields = ['lft', 'rgt', 'level', 'root'];
 
         if (!$this->parent) {
-            $this->lft = 1;
-            $this->rgt = 2;
-            $this->level = '0';
-            $this->root = $this->pk;
+            $this->makeRoot();
 
             return parent::save($fields);
         }
