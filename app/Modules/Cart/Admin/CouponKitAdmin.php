@@ -29,6 +29,18 @@ class CouponKitAdmin extends Admin
         return new CouponKitModel();
     }
 
+    public function getAvailableListColumns()
+    {
+        return array_replace_recursive(parent::getAvailableListColumns(), [
+            'active' => [
+                'title' => 'Active',
+                'template' => 'admin/list/columns/boolean.tpl',
+                'order' => 'active'
+            ],
+        ]);
+    }
+
+
     public function getQuerySet()
     {
         $qs = parent::getQuerySet();

@@ -20,7 +20,7 @@
     </div>
     <div class="list-wrapper">
         <div class="list-update-block">
-            <table data-list-table>
+            <table data-list-table {if $admin->sort}data-sorting{/if}>
                 <thead>
                     {var $cols = 0}
 
