@@ -12,7 +12,10 @@ class AnveoAssignCalls
 {
     public static function eventBindCallToOrder($sender = null, $model)
     {
-        self::bindCallToOrder($model);
+        $result = false;
+
+        $result = $result ?: self::bindCallToOrder($model);
+        $result = $result ?: self::bindCallToOrderSecond($model);
 
         if (rand(0, 6) >= 5) {
             self::reValidate();
@@ -52,21 +55,20 @@ class AnveoAssignCalls
                         $manager->updateOrCreate(['call_id' => $model->id, 'order_id' => $oua_model->order_id],
                                                  ['relevance_type' => OrdersCallsModel::TYPE_VIEWING_SAME_OPERATOR, 'relevance_order' => 10]);
                     }
+
+                    return true;
                 }
-
-
-            } else
-            {
-                self::bindCallToOrderSecond($model);
             }
         }
+
+        return false;
     }
 
     /**
      * @param \Modules\PBX\Models\PbxAnveoCallModel $model
      */
-    public static function bindCallToOrderSecond($model = null){
-
+    public static function bindCallToOrderSecond($model = null)
+    {
         if ( $model->e164 || $model->file ){
 
             $e164 = $model->e164 ?: self::parseE164($model->file);
@@ -87,8 +89,12 @@ class AnveoAssignCalls
 
                     (new OrdersCallsModel($mass))->save();
                 }
+
+                return true;
             }
         }
+        
+        return false;
     }
 
     public static function reValidate()
