@@ -93,7 +93,7 @@ class AnveoAssignCalls
                 return true;
             }
         }
-        
+
         return false;
     }
 
