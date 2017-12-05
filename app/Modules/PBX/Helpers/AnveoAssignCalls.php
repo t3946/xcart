@@ -1,6 +1,7 @@
 <?php
 namespace Modules\PBX\Helpers;
 
+use Modules\Order\Models\OrderModel;
 use Modules\Order\Models\OrdersCallsModel;
 use Modules\Order\Models\OrderUserActivityModel;
 use Modules\PBX\Models\PbxAnveoCallModel;
@@ -51,6 +52,40 @@ class AnveoAssignCalls
                         $manager->updateOrCreate(['call_id' => $model->id, 'order_id' => $oua_model->order_id],
                                                  ['relevance_type' => OrdersCallsModel::TYPE_VIEWING_SAME_OPERATOR, 'relevance_order' => 10]);
                     }
+                }
+
+
+            } else
+            {
+                self::bindCallToOrderSecond($model);
+            }
+        }
+    }
+
+    /**
+     * @param \Modules\PBX\Models\PbxAnveoCallModel $model
+     */
+    public static function bindCallToOrderSecond($model = null){
+
+        if ( $model->e164 || $model->file ){
+
+            $e164 = $model->e164 ?: self::parseE164($model->file);
+
+            if ( $order_models = OrderModel::objects()->filter(['phone' => $e164])->order(['date'])->limit(5)->all() )
+            {
+                $relevance_order = 0;
+                for ($i = 0; $i < count ($order_models); $i++){
+
+                    $relevance_order += 10;
+
+                    $mass = [
+                        'call_id' => $model->id,
+                        'order_id' => $order_models[$i]->orderid,
+                        'relevance_type' => OrdersCallsModel::ORDER_PHONE_EQUALS_CALLED_PHONE,
+                        'relevance_order' => $relevance_order
+                    ];
+
+                    (new OrdersCallsModel($mass))->save();
                 }
             }
         }
