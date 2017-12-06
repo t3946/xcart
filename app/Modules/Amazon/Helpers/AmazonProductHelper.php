@@ -79,14 +79,16 @@ class AmazonProductHelper
                                             if ($price = $cp->getPrice()) {
                                                 if ($cp->getbelongsToRequester() == 'true') {
                                                     /** @var MarketplaceWebServiceProducts_Model_MoneyType $lPrice */
-                                                    $lPrice = $price->getLandedPrice();
-                                                    $oAmazonProductModel->cpr_belongs_LandedPrice = $lPrice->getAmount();
-                                                    $oAmazonProductModel->buybox_in++;
+                                                    if ($lPrice = $price->getLandedPrice()) {
+                                                        $oAmazonProductModel->cpr_belongs_LandedPrice = $lPrice->getAmount();
+                                                        $oAmazonProductModel->buybox_in++;
+                                                    }
                                                 } else {
-                                                    $lPrice = $price->getLandedPrice();
-                                                    $oAmazonProductModel->cpr_LandedPrice = $lPrice->getAmount();
-                                                    $oAmazonProductModel->cpr_belongs_LandedPrice = 0;
-                                                    $oAmazonProductModel->buybox_out++;
+                                                    if ($lPrice = $price->getLandedPrice()) {
+                                                        $oAmazonProductModel->cpr_LandedPrice = $lPrice->getAmount();
+                                                        $oAmazonProductModel->cpr_belongs_LandedPrice = 0;
+                                                        $oAmazonProductModel->buybox_out++;
+                                                    }
                                                 }
                                             }
                                         }
