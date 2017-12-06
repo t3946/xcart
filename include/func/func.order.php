@@ -1209,6 +1209,10 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
                 continue;
             }
 
+            if ($k == 'phone') {
+                $userinfo[$k] = preg_replace('/\D/', '', $userinfo[$k]);
+            }
+
             $insert_data[$k] = addslashes($userinfo[$k]);
         }
 
