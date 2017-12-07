@@ -1,6 +1,7 @@
 <?php
 namespace Modules\PBX\Helpers;
 
+use Mindy\QueryBuilder\Expression;
 use Modules\Order\Models\OrderModel;
 use Modules\Order\Models\OrdersCallsModel;
 use Modules\Order\Models\OrderUserActivityModel;
@@ -12,10 +13,9 @@ class AnveoAssignCalls
 {
     public static function eventBindCallToOrder($sender = null, $model)
     {
-        $result = false;
 
-        $result = $result ?: self::bindCallToOrder($model);
-        $result = $result ?: self::bindCallToOrderSecond($model);
+        self::bindCallToOrder($model);
+        self::bindCallToOrderSecond($model);
 
         if (rand(0, 6) >= 5) {
             self::reValidate();
@@ -31,6 +31,7 @@ class AnveoAssignCalls
         {
             if ($model->file) {
                 $account = self::parseAccount($model->file);
+                $e164 = self::parseE164($model->file);
 
                 if ($account && $model->anveo_account != $account) {
 
@@ -54,14 +55,20 @@ class AnveoAssignCalls
                     foreach ($oua_models as $oua_model) {
                         $manager->updateOrCreate(['call_id' => $model->id, 'order_id' => $oua_model->order_id],
                                                  ['relevance_type' => OrdersCallsModel::TYPE_VIEWING_SAME_OPERATOR, 'relevance_order' => 10]);
+
+                        $log_category = "anveo_calls";
+                        $log_text = "{$e164} - Привязан к заказу - {$oua_model->order_id} по первой связке";
+                        func_backprocess_log($log_category, $log_text);
                     }
 
-                    return true;
+
                 }
+
+                $log_category = "anveo_calls";
+                $log_text = "{$e164} - Не привязан к заказу по первой привязке";
+                func_backprocess_log($log_category, $log_text);
             }
         }
-
-        return false;
     }
 
     /**
@@ -73,7 +80,14 @@ class AnveoAssignCalls
 
             $e164 = $model->e164 ?: self::parseE164($model->file);
 
-            if ( $order_models = OrderModel::objects()->filter(['phone' => $e164])->order(['date'])->limit(5)->all() )
+            $e164 = substr($e164, -10);
+
+            $qs = OrderModel::objects()->getQuerySet();
+            if ( $order_models = OrderModel::objects()
+                                           ->filter([(new Expression("SUBSTRING({$qs->getTableAlias()}.phone, -10)"))->toSQL() => $e164])
+                                           ->order(['-date'])
+                                           ->limit(5)
+                                           ->all() )
             {
                 $relevance_order = 0;
                 for ($i = 0; $i < count ($order_models); $i++){
@@ -88,13 +102,17 @@ class AnveoAssignCalls
                     ];
 
                     (new OrdersCallsModel($mass))->save();
+
+                    $log_category = "anveo_calls";
+                    $log_text = "{$e164} - Привязан к заказу - {$order_models[$i]} по второй привязке";
+                    func_backprocess_log($log_category, $log_text);
                 }
-
-                return true;
             }
-        }
 
-        return false;
+            $log_category = "anveo_calls";
+            $log_text = "{$e164} - Не привязан к заказу по второй привязке";
+            func_backprocess_log($log_category, $log_text);
+        }
     }
 
     public static function reValidate()

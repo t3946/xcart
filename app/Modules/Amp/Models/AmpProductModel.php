@@ -189,7 +189,7 @@ class AmpProductModel extends ProductModel
         }
 
         if ( (stripos($fulldescr, "<font>") !== false) || (stripos($fulldescr, "</font>") !== false) ) {
-            $fulldescr = str_replace(["<font>", "</font>"], "", $fulldescr);
+            $fulldescr = str_ireplace(["<font>", "</font>"], "", $fulldescr);
         }
 
 
