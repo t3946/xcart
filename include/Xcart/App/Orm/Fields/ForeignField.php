@@ -52,7 +52,7 @@ class ForeignField extends RelatedField
             return $this->to;
         }
 
-        if (count($this->link) == 1) {
+        if ($this->link && count($this->link) == 1) {
             return reset($this->link);
         }
 

@@ -247,14 +247,6 @@ class Google_Service_Sheets extends Google_Service
                   'type' => 'string',
                   'required' => true,
                 ),
-                'dateTimeRenderOption' => array(
-                  'location' => 'query',
-                  'type' => 'string',
-                ),
-                'valueRenderOption' => array(
-                  'location' => 'query',
-                  'type' => 'string',
-                ),
                 'majorDimension' => array(
                   'location' => 'query',
                   'type' => 'string',
@@ -263,6 +255,14 @@ class Google_Service_Sheets extends Google_Service
                   'location' => 'query',
                   'type' => 'string',
                   'repeated' => true,
+                ),
+                'dateTimeRenderOption' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                ),
+                'valueRenderOption' => array(
+                  'location' => 'query',
+                  'type' => 'string',
                 ),
               ),
             ),'batchGetByDataFilter' => array(
@@ -351,6 +351,10 @@ class Google_Service_Sheets extends Google_Service
                   'type' => 'string',
                   'required' => true,
                 ),
+                'responseValueRenderOption' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                ),
                 'valueInputOption' => array(
                   'location' => 'query',
                   'type' => 'string',
@@ -362,10 +366,6 @@ class Google_Service_Sheets extends Google_Service
                 'includeValuesInResponse' => array(
                   'location' => 'query',
                   'type' => 'boolean',
-                ),
-                'responseValueRenderOption' => array(
-                  'location' => 'query',
-                  'type' => 'string',
                 ),
               ),
             ),
