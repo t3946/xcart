@@ -31,6 +31,7 @@ class AnveoAssignCalls
         {
             if ($model->file) {
                 $account = self::parseAccount($model->file);
+                $e164 = self::parseE164($model->file);
 
                 if ($account && $model->anveo_account != $account) {
 
@@ -54,8 +55,18 @@ class AnveoAssignCalls
                     foreach ($oua_models as $oua_model) {
                         $manager->updateOrCreate(['call_id' => $model->id, 'order_id' => $oua_model->order_id],
                                                  ['relevance_type' => OrdersCallsModel::TYPE_VIEWING_SAME_OPERATOR, 'relevance_order' => 10]);
+
+                        $log_category = "anveo_calls";
+                        $log_text = "{$e164} - Привязан к заказу - {$oua_model->order_id} по первой связке";
+                        func_backprocess_log($log_category, $log_text);
                     }
+
+
                 }
+
+                $log_category = "anveo_calls";
+                $log_text = "{$e164} - Не привязан к заказу по первой привязке";
+                func_backprocess_log($log_category, $log_text);
             }
         }
     }
@@ -91,8 +102,16 @@ class AnveoAssignCalls
                     ];
 
                     (new OrdersCallsModel($mass))->save();
+
+                    $log_category = "anveo_calls";
+                    $log_text = "{$e164} - Привязан к заказу - {$order_models[$i]} по второй привязке";
+                    func_backprocess_log($log_category, $log_text);
                 }
             }
+
+            $log_category = "anveo_calls";
+            $log_text = "{$e164} - Не привязан к заказу по второй привязке";
+            func_backprocess_log($log_category, $log_text);
         }
     }
 
