@@ -1297,12 +1297,12 @@ if ($mode == "search") {
 
                 if ($categoryModel)
                 {
-                    $categoryids = $categoryModel->getObjects()->ancestors(true)->select('categoryid')->valuesList([],true);
-                    $ai = array_intersect($categoryids, $product['categoryid']);
-
-                    if (!empty($ai)) {
-                        $push = true;
-                    }
+//                    $categoryids = $categoryModel->getObjects()->ancestors(true)->select('categoryid')->valuesList([],true);
+//                    $ai = array_intersect($categoryids, $product['categoryid']);
+//
+//                    if (!empty($ai)) {
+//                        $push = true;
+//                    }
                 }
                 else {
                     $push = true;
