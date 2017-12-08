@@ -637,11 +637,13 @@ if ($mode == "search") {
 
         if (!empty($data["search_in_subcategories"])) {
             # Search also in all subcategories
-            $categoryid_path = addslashes(func_query_first_cell("SELECT categoryid_path FROM $sql_tbl[categories] WHERE avail='Y' and categoryid='" . $data["categoryid"] . "' and $sql_tbl[categories].storefrontid = " . $current_storefront));
-            $categoryids = func_query_column("SELECT categoryid FROM $sql_tbl[categories] WHERE  avail='Y' and (categoryid='" . $data["categoryid"] . "' OR categoryid_path LIKE '$categoryid_path/%') and $sql_tbl[categories].storefrontid = " . $current_storefront);
+            /** @var \Modules\Product\Models\CategoryModel $categoryModel */
+            $categoryModel = \Modules\Product\Models\CategoryModel::objects()->get(['avail' => 'Y', 'categoryid' => $data["categoryid"], 'storefrontid' => $current_storefront]);
 
-            if (is_array($categoryids) && !empty($categoryids)) {
-                $where[] = "$sql_tbl[products_categories].categoryid $category_sign IN (" . implode(",", $categoryids) . ")";
+            if ($categoryModel) {
+                $where[] = "$sql_tbl[products_categories].root = {$categoryModel->root}";
+                $where[] = "$sql_tbl[products_categories].lft > {$categoryModel->lft}";
+                $where[] = "$sql_tbl[products_categories].rgt < {$categoryModel->rgt}";
             }
         } else {
             $where[] = "$category_sign $sql_tbl[products_categories].categoryid='$data[categoryid]'";
@@ -1293,8 +1295,9 @@ if ($mode == "search") {
                 if (in_array($push_el, $t_ids_product_arr)) { continue; }
                 if (count($t_ids_product_arr) == 50) { break; }
 
-                if (!empty($categoryids) && !empty($product['categoryid']))
+                if ($categoryModel)
                 {
+                    $categoryids = $categoryModel->getObjects()->ancestors(true)->select('categoryid')->valuesList([],true);
                     $ai = array_intersect($categoryids, $product['categoryid']);
 
                     if (!empty($ai)) {
