@@ -6,6 +6,7 @@ use Modules\Distributor\Models\DistributorFeedFieldModel;
 use Modules\Distributor\Models\SupplierFeedModel;
 use Modules\Product\Helpers\ImageHelper;
 use Modules\Product\Helpers\ProductHelper;
+use Modules\Product\Helpers\SupplierFeedHelper;
 use Modules\Product\Models\CategoryModel;
 use Modules\Product\Models\FilterModel;
 use Modules\Product\Models\FilterProductModel;
@@ -188,9 +189,10 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
                 $lastFeedFields = array_unique(array_merge($lastFeedFields, array_keys($aProduct)));
                 $last_feed_fields_arr_vals = $aProduct;
 
-                $modelProduct = ProductModel::objects()->filter(['productcode' => $aProduct['productcode']])->get();
+                /** @var ProductModel $modelProduct */
+                list($modelProduct, $is_created) = ProductModel::objects()->getOrNew(['productcode' => $aProduct['productcode']]);
 
-                if (!$modelProduct) {
+                if ($is_created) {
                     $attributes = [
                         'source_sfid' => $supplierFeedModel->storefront_id,
                         'manufacturerid' => $supplierFeedModel->manufacturerid,
@@ -202,12 +204,13 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
                         $attributes = array_merge($attributes, $supplierFeed->defaults);
                     }
 
-                    $modelProduct= new ProductModel($attributes);
+                    $modelProduct->setAttributes($attributes);
                 }
 
                 $modelProduct->setAttributes($aProduct);
 
                 $all_feed_productcodes[] = $modelProduct->productcode;
+
                 $discontinuedDate = $aProduct['discontinued_date'];
                 if (!empty($discontinuedDate)) {
                     $discontinuedDateTimeDiff = strtotime($discontinuedDate) - time();
@@ -218,19 +221,12 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
                         }
                     }
                 }
-                $todayDate = strtotime(date("Y-m-d"));
-                if (($modelProduct->eta_date_lock == "Y")
-                    && ($modelProduct->getOldAttribute('eta_date_mm_dd_yyyy') > $todayDate)
-                    && (($modelProduct->getOldAttribute('eta_date_mm_dd_yyyy') > $modelProduct->eta_date_mm_dd_yyyy) || empty($modelProduct->eta_date_mm_dd_yyyy))
-                ) {
-                    $modelProduct->eta_date_mm_dd_yyyy = $modelProduct->getOldAttribute('eta_date_mm_dd_yyyy');
-                } else {
-                    $modelProduct->eta_date_lock = "N";
-                }
+
+                $modelProduct = SupplierFeedHelper::getEtaDate($modelProduct);
 
                 switch ($supplierFeedModel->feed_type) {
                     case 'I' :
-                        if ($modelProduct->getIsNewRecord()) {
+                        if ($is_created) {
                             $new_products_count++;
                             continue;
                         }
@@ -252,13 +248,27 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
                             $modelProduct->fulldescr = ProductHelper::cleanProductFullDescription($modelProduct->fulldescr);
                         }
 
-                        if (!$modelProduct->getIsNewRecord())
+                        list($modelProduct, $upc_different) = SupplierFeedHelper::getUPC($modelProduct);
+
+                        if ($upc_different) {
+                            list($upcModel, $is_upc_changed_created) = ProductUpcChangesModel::objects()->getOrNew(['productid' => $modelProduct->productid]);
+                            $upcModel->setAttributes(
+                                [
+                                    'productid' => $modelProduct->productid,
+                                    'original_upc' => $modelProduct->getOldAttribute('upc'),
+                                    'corrected_upc' => $modelProduct->upc
+                                ]
+                            );
+                            $upcModel->save();
+                        }
+
+                        if (!$is_created)
                         {
                             if ($supplierFeedModel->add_new_only == "Y") {
                                 $skippedProductsCount++;
                                 continue;
                             }
-                            if (!empty($supplierFeed->dont_update_fields) && is_array($supplierFeed->dont_update_fields)) {
+                            if ($supplierFeed->dont_update_fields && is_array($supplierFeed->dont_update_fields)) {
                                 foreach ($supplierFeed->dont_update_fields as $fieldUnset) {
                                     $trimDesc = trim($modelProduct->fulldescr);
                                     if ($fieldUnset != 'fulldescr' || $fieldUnset == 'fulldescr' && !empty($trimDesc)) {
@@ -266,73 +276,26 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
                                     }
                                 }
                             }
-                            if ($modelProduct->weight_lock == 'Y' || (!$modelProduct->weight && $modelProduct->getOldAttribute('weight'))) {
-                                $modelProduct->weight = $modelProduct->getOldAttribute('weight');
-                            }
-                            if ($modelProduct->shipping_weight_lock == 'Y' || (!$modelProduct->shipping_weight && $modelProduct->getOldAttribute('shipping_weight'))) {
-                                $modelProduct->shipping_weight = $modelProduct->getOldAttribute('shipping_weight');
-                            }
-                            if ($modelProduct->dim_lock == 'Y') {
-                                $modelProduct->dim_x = $modelProduct->getOldAttribute('dim_x');
-                                $modelProduct->dim_y = $modelProduct->getOldAttribute('dim_y');
-                                $modelProduct->dim_z = $modelProduct->getOldAttribute('dim_z');
-                            } else {
-                                $aDimFeed = [$modelProduct->dim_x, $modelProduct->dim_y, $modelProduct->dim_z];
-                                $aDimOld = [$modelProduct->getOldAttribute('dim_x'), $modelProduct->getOldAttribute('dim_y'), $modelProduct->getOldAttribute('dim_z')];
-                                rsort($aDimFeed);
-                                rsort($aDimOld);
-                                $modelProduct->dim_x = empty($aDimFeed[0]) ? $aDimOld[0] : $aDimFeed[0];
-                                $modelProduct->dim_y = empty($aDimFeed[1]) ? $aDimOld[1] : $aDimFeed[1];
-                                $modelProduct->dim_z = empty($aDimFeed[2]) ? $aDimOld[2] : $aDimFeed[2];
-                            }
-                            if ($modelProduct->shipping_dim_lock == 'Y') {
-                                $modelProduct->shipping_dim_x = $modelProduct->getOldAttribute('shipping_dim_x');
-                                $modelProduct->shipping_dim_y = $modelProduct->getOldAttribute('shipping_dim_y');
-                                $modelProduct->shipping_dim_z = $modelProduct->getOldAttribute('shipping_dim_z');
-                            } else {
-                                $aShipDimFeed = [$modelProduct->shipping_dim_x, $modelProduct->shipping_dim_y, $modelProduct->shipping_dim_z];
-                                $aShipDimOld = [$modelProduct->getOldAttribute('shipping_dim_x'), $modelProduct->getOldAttribute('shipping_dim_y'), $modelProduct->getOldAttribute('shipping_dim_z')];
-                                rsort($aShipDimFeed);
-                                rsort($aShipDimOld);
-                                $modelProduct->shipping_dim_x = empty($aShipDimFeed[0]) ? $aShipDimOld[0] : $aShipDimFeed[0];
-                                $modelProduct->shipping_dim_y = empty($aShipDimFeed[1]) ? $aShipDimOld[1] : $aShipDimFeed[1];
-                                $modelProduct->shipping_dim_z = empty($aShipDimFeed[2]) ? $aShipDimOld[2] : $aShipDimFeed[2];
-                            }
-                        }
 
-                        if (!$modelProduct->getIsNewRecord() && $modelProduct->isGroupChild()) {
-                            $modelProduct->product = $modelProduct->getOldAttribute('product');
-                        }
+                            $modelProduct = SupplierFeedHelper::getWeightOptions($modelProduct);
 
-                        $newUPC = Xcart\Product::calculateUPC($modelProduct->upc);
-                        $oldUPC = $modelProduct->getOldAttribute('upc');
-                        if ($oldUPC != $newUPC) {
-                            $modelProduct->upc = $newUPC;
-                        } else {
-                            $modelProduct->upc = $oldUPC;
+                            if ($modelProduct->isGroupChild()) {
+                                $modelProduct->product = $modelProduct->getOldAttribute('product');
+                            }
                         }
 
                         if ($modelProduct->getChangedAttributes()) {
                             print_r($modelProduct->getChangedAttributes());
                             $bUpdatedProduct = true;
                         }
-                        if ($modelProduct->getIsNewRecord()){
+
+                        if ($is_created){
                             $modelProduct->save();
                         }
 
-                        if($modelProduct->productid){
-                            if ($oldUPC != $newUPC) {
-                                $upcModel = ProductUpcChangesModel::objects()->get(['productid' => $modelProduct->productid]);
-                                if (!$upcModel) {
-                                    (new ProductUpcChangesModel([
-                                        'productid' => $modelProduct->productid,
-                                        'original_upc' => $modelProduct->upc,
-                                        'corrected_upc' => $newUPC])
-                                    )->save();
-                                }
-                            }
+                        if ($modelProduct->productid) {
 
-                            if ($modelProduct->getIsCreated()) {
+                            if ($is_created) {
                                 (new ProductCategoriesModel([
                                     'categoryid' => $supplierFeedModel->base_category_id,
                                     'productid' => $modelProduct->productid,
@@ -417,7 +380,7 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
                             }
 
                             //Brand section
-                            if ($modelProduct->getIsCreated()) {
+                            if ($is_created) {
                                 $brandName = $aProduct['brand_name'];
                                 if (!empty($brandName)) {
                                     $brandModel = BrandModel::objects()->get(['brand' => $brandName]);
@@ -476,13 +439,13 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
                                     foreach ($cats_arr as $v_cat) {
 
                                         /** @var CategoryModel $modelCat */
-                                        list($modelCat, $is_created) = CategoryModel::objects()->getOrNew(
+                                        list($modelCat, $is_cat_created) = CategoryModel::objects()->getOrNew(
                                             [
                                                 'parentid' => $parent_id,
                                                 'category' => $v_cat
                                             ]);
 
-                                        if ($is_created) {
+                                        if ($is_cat_created) {
                                             $modelCat->setAttributes([
                                                 'storefrontid' => $supplierFeedModel->storefront_id,
                                                 'prevent_index_products' => $modelProduct->prevent_search_indexing_this_product_page == 'Y' ? 'Y' : 'N',
@@ -519,7 +482,7 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
                             }
 
 
-                            if ($modelProduct->getChangedAttributes() && !($modelProduct->getIsCreated())) {
+                            if (!$is_created && $modelProduct->getChangedAttributes()) {
                                 print_r($modelProduct->getChangedAttributes());
                                 $bUpdatedProduct = true;
                             }
