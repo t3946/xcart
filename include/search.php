@@ -642,8 +642,8 @@ if ($mode == "search") {
 
             if ($categoryModel) {
                 $where[] = "$sql_tbl[categories].root = {$categoryModel->root}";
-                $where[] = "$sql_tbl[categories].lft > {$categoryModel->lft}";
-                $where[] = "$sql_tbl[categories].rgt < {$categoryModel->rgt}";
+                $where[] = "$sql_tbl[categories].lft >= {$categoryModel->lft}";
+                $where[] = "$sql_tbl[categories].rgt <= {$categoryModel->rgt}";
             }
         } else {
             $where[] = "$category_sign $sql_tbl[products_categories].categoryid='$data[categoryid]'";
