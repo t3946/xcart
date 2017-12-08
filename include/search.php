@@ -644,7 +644,7 @@ if ($mode == "search") {
                 $where[] = "$sql_tbl[categories].root = {$categoryModel->root}";
                 $where[] = "$sql_tbl[categories].lft >= {$categoryModel->lft}";
                 $where[] = "$sql_tbl[categories].rgt <= {$categoryModel->rgt}";
-                $where[] = "$sql_tbl[categories].storefront = {$current_storefront}";
+                $where[] = "$sql_tbl[categories].storefrontid = {$current_storefront}";
                 $where[] = "$sql_tbl[categories].avail = 'Y'";
             }
         } else {
