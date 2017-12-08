@@ -638,12 +638,12 @@ if ($mode == "search") {
         if (!empty($data["search_in_subcategories"])) {
             # Search also in all subcategories
             /** @var \Modules\Product\Models\CategoryModel $categoryModel */
-            $categoryModel = \Modules\Product\Models\CategoryModel::objects()->get(['avail' => 'Y', 'categoryid' => $data["categoryid"], 'storefrontid' => $current_storefront]);
+            $categoryids = \Modules\Product\Models\CategoryModel::objects()
+                ->filter(['avail' => 'Y', 'categoryid' => $data["categoryid"], 'storefrontid' => $current_storefront])
+                ->valuesList(['categoryid', true]);
 
-            if ($categoryModel) {
-                $where[] = "$sql_tbl[products_categories].root = {$categoryModel->root}";
-                $where[] = "$sql_tbl[products_categories].lft > {$categoryModel->lft}";
-                $where[] = "$sql_tbl[products_categories].rgt < {$categoryModel->rgt}";
+            if (is_array($categoryids) && !empty($categoryids)) {
+                $where[] = "$sql_tbl[products_categories].categoryid $category_sign IN (" . implode(",", $categoryids) . ")";
             }
         } else {
             $where[] = "$category_sign $sql_tbl[products_categories].categoryid='$data[categoryid]'";
@@ -1295,14 +1295,13 @@ if ($mode == "search") {
                 if (in_array($push_el, $t_ids_product_arr)) { continue; }
                 if (count($t_ids_product_arr) == 50) { break; }
 
-                if ($categoryModel)
+                if (!empty($categoryids) && !empty($product['categoryid']))
                 {
-//                    $categoryids = $categoryModel->getObjects()->ancestors(true)->select('categoryid')->valuesList([],true);
-//                    $ai = array_intersect($categoryids, $product['categoryid']);
-//
-//                    if (!empty($ai)) {
-//                        $push = true;
-//                    }
+                    $ai = array_intersect($categoryids, $product['categoryid']);
+
+                    if (!empty($ai)) {
+                        $push = true;
+                    }
                 }
                 else {
                     $push = true;
