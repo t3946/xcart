@@ -638,13 +638,12 @@ if ($mode == "search") {
         if (!empty($data["search_in_subcategories"])) {
             # Search also in all subcategories
             /** @var \Modules\Product\Models\CategoryModel $categoryModel */
-            $categoryModel = \Modules\Product\Models\CategoryModel::objects()
-                ->get(['avail' => 'Y', 'categoryid' => $data["categoryid"], 'storefrontid' => $current_storefront]);
+            $categoryModel = \Modules\Product\Models\CategoryModel::objects()->get(['avail' => 'Y', 'categoryid' => $data["categoryid"], 'storefrontid' => $current_storefront]);
 
-            $categoryids = $categoryModel->getObjects()->ancestors()->valuesList(['categoryid', true]);
-
-            if (is_array($categoryids) && !empty($categoryids)) {
-                $where[] = "$sql_tbl[products_categories].categoryid $category_sign IN (" . implode(",", $categoryids) . ")";
+            if ($categoryModel) {
+                $where[] = "$sql_tbl[categories].root = {$categoryModel->root}";
+                $where[] = "$sql_tbl[categories].lft > {$categoryModel->lft}";
+                $where[] = "$sql_tbl[categories].rgt < {$categoryModel->rgt}";
             }
         } else {
             $where[] = "$category_sign $sql_tbl[products_categories].categoryid='$data[categoryid]'";
