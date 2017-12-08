@@ -27,7 +27,7 @@ class File extends CacheDriver
 
     public $directoryLevel = 1;
 
-    public $mode = 0755;
+    public $mode = 0775;
 
     public function set($key, $value, $timeout = null)
     {
