@@ -29,13 +29,14 @@ class SupplierFeedStore extends BaseStore
 
     public function populate(array $feed)
     {
-        $product_cols_replace = array(
-            "sku" => "productcode",
-            "quantity" => "r_avail",
-            "eta_date" => "eta_date_mm_dd_yyyy",
-            "title" => "product",
-            "listprice" => "list_price"
-        );
+        $product_cols_replace =
+            [
+                "sku" => "productcode",
+                "quantity" => "r_avail",
+                "eta_date" => "eta_date_mm_dd_yyyy",
+                "title" => "product",
+                "listprice" => "list_price"
+            ];
 
         $this->supplier_id = $feed['supplier_id'];
         $this->supplier_name = $feed['supplier_name'];
@@ -46,8 +47,8 @@ class SupplierFeedStore extends BaseStore
         $this->defaults = $feed['defaults'];
 
         if (!empty($feed['dont_update_fields'])) {
-            foreach ($feed['dont_update_fields'] as $doNotUpdateFiled){
-                if ($doNotUpdateFiled == "images"){
+            foreach ($feed['dont_update_fields'] as $doNotUpdateFiled) {
+                if ($doNotUpdateFiled == "images") {
                     $doNotUpdateFiled = "supplier_images";
                 }
                 $idx = array_search($doNotUpdateFiled, array_keys($product_cols_replace));
@@ -61,21 +62,26 @@ class SupplierFeedStore extends BaseStore
 
         if (!empty($feed['products'])) {
             foreach ($feed['products'] as $product) {
-                $product['productcode'] = strtoupper(!isset($product['sku']) ? $product['productcode'] : $product['sku']);
+
+                $product['productcode'] = strtoupper(trim(!isset($product['sku']) ? $product['productcode'] : $product['sku']));
                 $product['r_avail'] = !isset($product['quantity']) ? $product['r_avail'] : $product['quantity'];
                 $product['eta_date_mm_dd_yyyy'] = !isset($product['eta_date']) ? $product['eta_date_mm_dd_yyyy'] : $product['eta_date'];
                 $product['product'] = !isset($product['title']) ? $product['product'] : $product['title'];
-                $product['list_price'] = !isset($product['listprice']) ? $product['listprice'] : $product['listprice'];
+                $product['list_price'] = !isset($product['listprice']) ? $product['list_price'] : $product['listprice'];
+
                 $product = array_filter($product, function ($v) {
                     return !is_null($v);
                 });
+
                 if (isset($product['eta_date_mm_dd_yyyy'])) {
                     $product['eta_date_mm_dd_yyyy'] = strtotime($product['eta_date_mm_dd_yyyy']);
                 }
+
                 if (isset($product['images'])) {
                     $product['supplier_images'] = $product['images'];
                     unset($product['images']);
                 }
+
                 $this->products[] = $product;
             }
         }

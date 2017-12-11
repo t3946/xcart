@@ -203,7 +203,7 @@ class AbstractModel extends Base
             $this->setIsCreated(true);
             $this->setIsNewRecord(false);
             $this->updateRelated();
-            $this->attributes->resetOldAttributes();
+            $this->attributes->reflectOldAttributes();
         }
 
         return $inserted;
@@ -236,7 +236,7 @@ class AbstractModel extends Base
 
         if ($updated) {
             $this->updateRelated();
-            $this->attributes->resetOldAttributes();
+            $this->attributes->reflectOldAttributes();
         }
         return $updated;
     }

@@ -3,7 +3,20 @@
 namespace Modules\Product\Helpers;
 
 
+use Mindy\QueryBuilder\Q\QOr;
+use Modules\Brand\Models\BrandModel;
+use Modules\Brand\Models\BrandStorefrontModel;
+use Modules\Distributor\Models\SupplierFeedModel;
+use Modules\Product\Models\CategoryModel;
+use Modules\Product\Models\FilterModel;
+use Modules\Product\Models\FilterProductModel;
+use Modules\Product\Models\FilterValueModel;
+use Modules\Product\Models\PricingModel;
+use Modules\Product\Models\ProductCategoriesModel;
+use Modules\Product\Models\ProductLinksModel;
 use Modules\Product\Models\ProductModel;
+use Modules\Product\Models\ProductStorefrontModel;
+use Modules\Product\Models\ProductUpcChangesModel;
 
 class SupplierFeedHelper
 {
@@ -84,5 +97,289 @@ class SupplierFeedHelper
         }
 
         return [$model, $oldUPC != $newUPC];
+    }
+
+    /**
+     * @param ProductModel $model
+     * @param bool $is_created
+     * @param SupplierFeedModel $feed
+     * @param array $data
+     * @param array $dont_update_fields
+     * @param array $defaults
+     * @return mixed|ProductModel
+     * @throws \Doctrine\DBAL\DBALException
+     * @throws \Exception
+     */
+    public static function addProduct($model, $is_created, $feed, $data, $dont_update_fields, $defaults)
+    {
+        $model->controlled_by_feed = $feed->feed_file_name;
+
+        $model->source_sfid = $feed->storefront_id;
+        $model->manufacturerid = $feed->manufacturerid;
+
+        $discontinuedDate = $data['discontinued_date'];
+        if (!empty($discontinuedDate)) {
+            $discontinuedDateTimeDiff = strtotime($discontinuedDate) - time();
+            if ($discontinuedDateTimeDiff < (60 * 60 * 24 * 20)) {
+                if ($model->forsale != "N") {
+                    $model->forsale = "N";
+                    $model->update_search_index = "Y";
+                    return $model;
+                }
+            }
+        }
+
+        if (!empty($model->fulldescr) && $feed->native_full_description != "Y") {
+            $model->fulldescr = ProductHelper::cleanProductFullDescription($model->fulldescr);
+        }
+
+        $model = SupplierFeedHelper::getEtaDate($model);
+
+        $model = SupplierFeedHelper::getWeightOptions($model);
+
+        list($model, $upc_different) = SupplierFeedHelper::getUPC($model);
+
+        if ($upc_different) {
+            list($upcModel, $is_upc_changed_created) = ProductUpcChangesModel::objects()->getOrNew(['productid' => $model->productid]);
+            $upcModel->setAttributes(
+                [
+                    'productid' => $model->productid,
+                    'original_upc' => $model->getOldAttribute('upc'),
+                    'corrected_upc' => $model->upc
+                ]
+            );
+            $upcModel->save();
+        }
+
+        if (!$is_created)
+        {
+            if ($model->isGroupChild()) {
+                $model->product = $model->getOldAttribute('product');
+            }
+
+            if ($dont_update_fields) {
+                foreach ($dont_update_fields as $fieldUnset) {
+                    $trimDesc = trim($model->fulldescr);
+                    if ($fieldUnset != 'fulldescr' || $fieldUnset == 'fulldescr' && !empty($trimDesc)) {
+                        $model->setAttribute($fieldUnset, $model->getOldAttribute($fieldUnset));
+                    }
+                }
+            }
+        }
+
+        if ($is_created) {
+
+            if ($defaults) {
+                $model->setAttributes(array_merge($data, $defaults));
+            }
+
+            (new ProductCategoriesModel([
+                'categoryid' => $feed->base_category_id,
+                'productid' => $model->productid,
+                'main' => 'Y']))
+                ->save();
+
+            (new ProductStorefrontModel([
+                'productid' => $model->productid,
+                'sfid' => $feed->storefront_id]))
+                ->save();
+
+            (new PricingModel([
+                'productid' => $model->productid,
+                'quantity' => 1,
+                'price' => $model->distributor->calculatePrice($model)]))
+                ->save();
+
+            $clean_url = func_clean_url_autogenerate('P', $model->productid, array('product' => $model->product, 'productcode' => $model->productcode));
+            func_clean_url_add($clean_url, 'P', $model->productid);
+            func_build_quick_flags($model->productid);
+            func_build_quick_prices($model->productid);
+
+        }
+
+        //Images section
+        $aImages = $data['supplier_images'];
+        $aAltImageNames = $data['alt_names'];
+        if (!empty($aImages) && is_array($aImages)) {
+            foreach ($aImages as $kImg => $IMAGE_URL) {
+                $modelDImage = ImageHelper::uploadMainImage(
+                    $IMAGE_URL,
+                    empty($aAltImageNames[$kImg]) ? $model->product : $aAltImageNames[$kImg],
+                    $feed->manufacturerid,
+                    $model->productid);
+                if ($modelDImage && $modelDImage->getIsNewRecord()) {
+                    $modelDImage->id = $model->productid;
+                    $modelDImage->orderby = ($kImg + 1) * 10;
+                    $modelDImage->save();
+                    if (class_exists('Imagick')) {
+                        $imageParam = $modelDImage->getAttributes();
+                        $imageParam['image_path'] = '../' . $imageParam['image_path'];
+                        $image_info = func_set_correct_det_img($imageParam, true);
+                    }
+                }
+            }
+        }
+
+        //Files section
+        $aFiles = $data['product_files'];
+        if (!empty($aFiles) && is_array($aFiles)) {
+            $orderBy = 0;
+            foreach ($aFiles as $aFile) {
+                $fileModel = ProductHelper::uploadProductFile($aFile['name'], $aFile['link'], $model->productid);
+                if ($fileModel && $fileModel->getIsNewRecord()) {
+                    $fileModel->avail = 'Y';
+                    $fileModel->date = time();
+                    $fileModel->orderby = ++$orderBy * 10;
+                    $fileModel->save();
+                }
+            }
+        }
+
+        //Related section
+        $params = [];
+        $aRelatedInternalId = $data['related_internal_id'];
+        $aRelatedInternalSKU = $data['related_sku'];
+        if (!empty($aRelatedInternalId)) {
+            $params['supplier_internal_product_id__in'] = $aRelatedInternalId;
+        }
+        if (!empty($aRelatedInternalSKU)) {
+            $params['productcode__in'] = $aRelatedInternalSKU;
+        }
+        if (!empty($params)) {
+            if ($aRelatedProducts = ProductModel::objects()->filter(new QOr($params))->all()) {
+                foreach ($aRelatedProducts as $relatedProductModel) {
+                    ProductLinksModel::objects()->getOrCreate(['productid1' => $model->productid, 'productid2' => $relatedProductModel->productid]);
+                    ProductLinksModel::objects()->getOrCreate(['productid1' => $relatedProductModel->productid, 'productid2' => $model->productid]);
+                }
+            }
+        }
+
+        //Brand section
+        if ($is_created) {
+            $brandName = $data['brand_name'];
+            if (!empty($brandName)) {
+                $brandModel = BrandModel::objects()->get(['brand' => $brandName]);
+                if (!$brandModel) {
+                    $brandModel = (new BrandModel([
+                        'brand' => $brandName,
+                        'orderby' => 10,
+                        'prevent_search_indexing_of_all_brand_products' => $model->prevent_search_indexing_this_product_page == 'Y' ? 'Y' : 'N',
+                        'prevent_search_indexing_brand_page' => $model->prevent_search_indexing_this_product_page == 'Y' ? 'Y' : 'N'
+                    ]));
+                    $brandModel->save();
+                    (new BrandStorefrontModel([
+                        'brandid' => $brandModel->brandid,
+                        'sfid' => $feed->storefront_id,
+                    ]))->save();
+                    $clean_url = func_clean_url_autogenerate('M', $brandModel->brandid, array('brand' => $brandName));
+                    func_clean_url_add($clean_url, 'M', $brandModel->brandid);
+                }
+                if ($brandModel->parent_brand_id) {
+                    $brandModel = $brandModel->parent;
+                }
+                $model->brandid = $brandModel->brandid;
+            }
+        }
+
+        //Attributes section
+        FilterProductModel::objects()->delete(['productid' => $model->productid, 'is_feed' => 1]);
+        $aAttributes = $data['attributes'];
+        if (!empty($aAttributes)) {
+            foreach ($aAttributes as $f_name => $fv_name_arr) {
+                if (!empty($fv_name_arr) && is_array($fv_name_arr)) {
+                    list($filterModel) = FilterModel::objects()->getOrCreate(['f_name' => $f_name, 'storefrontid' => $feed->storefront_id]);
+                    foreach ($fv_name_arr as $fv_name) {
+                        $fv_name = trim($fv_name);
+                        if (!empty($fv_name)) {
+                            list($filterValueModel) = FilterValueModel::objects()->getOrCreate(['f_id' => $filterModel->f_id, 'fv_name' => $fv_name]);
+                            FilterProductModel::objects()->getOrCreate(['fv_id' => $filterValueModel->fv_id, 'productid' => $model->productid, 'is_feed' => 1]);
+                        }
+                    }
+                }
+            }
+        }
+
+        $aSupplierCategory = $data['supplier_categories'];
+
+        if (!empty($aSupplierCategory)) {
+
+            $aSupplierCategory = reset($aSupplierCategory);
+            $cats_arr = explode("/", $aSupplierCategory);
+
+            if (!empty($cats_arr) && is_array($cats_arr)) {
+
+                $parent_id = $feed->base_category_id;
+                $lastCategory = null;
+
+                foreach ($cats_arr as $v_cat) {
+
+                    /** @var CategoryModel $modelCat */
+                    list($modelCat, $is_cat_created) = CategoryModel::objects()->getOrNew(
+                        [
+                            'parentid' => $parent_id,
+                            'category' => $v_cat
+                        ]);
+
+                    if ($is_cat_created) {
+                        $modelCat->setAttributes([
+                            'storefrontid' => $feed->storefront_id,
+                            'prevent_index_products' => $model->prevent_search_indexing_this_product_page == 'Y' ? 'Y' : 'N',
+                            'prevent_index_category_page' => $model->prevent_search_indexing_this_product_page == 'Y' ? 'Y' : 'N',
+                            'is_bold' => 'Y',
+                            'order_by' => 10
+                        ]);
+
+                        $modelCat->save();
+
+                        $modelCat->categoryid_path = $modelCat->parent->categoryid_path . "/" . $modelCat->categoryid;
+
+                        $modelCat->save();
+
+                        $clean_url = func_clean_url_autogenerate('C', $modelCat->categoryid, array('category' => $modelCat->category));
+                        func_clean_url_add($clean_url, 'C', $modelCat->categoryid);
+                    }
+
+                    $lastCategory = $modelCat;
+                    $parent_id = $modelCat->categoryid;
+                }
+
+                if ($lastCategory) {
+                    if ($model->pc_classify_status && !in_array($model->pc_classify_status, ['AC', 'ACC', 'MC'])) {
+                        db_query_param(/** @lang MySQL */
+                            "UPDATE xcart_products_categories SET categoryid=:categoryid WHERE productid=:productid AND main=:main", [
+                            'categoryid' => $lastCategory->categoryid,
+                            'productid' => $model->productid,
+                            'main' => 'Y'
+                        ]);
+                    }
+                }
+            }
+        }
+
+        return  $model;
+    }
+
+    public static function getFileFtp($file_name, $config)
+    {
+        $home_ftp = $config["Supplier_feeds"]["Feeds_storage_path"];
+        $login = $config["Supplier_feeds"]["Feeds_storage_login"];
+        $pass = $config["Supplier_feeds"]["Feeds_storage_password"];
+
+        $ftp_connect = ftp_connect($home_ftp);
+
+        if(!ftp_login($ftp_connect, $login, $pass)) {
+            return false;
+        }
+
+        ftp_pasv($ftp_connect, true);
+
+        $temp_file = tmpfile();
+        ftp_fget($ftp_connect, $temp_file, $file_name , FTP_ASCII);
+        $content = stream_get_contents($temp_file, -1, 0);
+        fclose($temp_file);
+
+        ftp_close($ftp_connect);
+
+        return $content;
     }
 }
