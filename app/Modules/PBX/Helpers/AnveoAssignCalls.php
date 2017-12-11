@@ -154,4 +154,46 @@ class AnveoAssignCalls
 
         return $e164;
     }
+
+    public static function getResource($order_id)
+    {
+        $result = [];
+
+        if ( $order_calls_models = OrdersCallsModel::objects()->filter(['order_id' => $order_id])->all() ) {
+            foreach ($order_calls_models as $order_calls_model) {
+
+                /** @var OrdersCallsModel $order_calls_model */
+                /** @var PbxAnveoCallModel $anveo_call_model */
+                $anveo_call_model = $order_calls_model->call;
+
+                $mass = [
+                   'account' =>  self::parseAccount($anveo_call_model->file),
+                   'e164' => self::parseE164($anveo_call_model->file),
+                   'url' => $anveo_call_model->getUrl(),
+                   'start_at' => $anveo_call_model->start_at,
+                   'end_at' => $anveo_call_model->end_at,
+                   'cname' => $anveo_call_model->cname
+                ];
+
+                if ($anveo_call_model->isOutgoing()){
+                    $mass['direction'] = "Out";
+                } else {
+                    $mass['direction'] = "In";
+                }
+
+                $datetime1 = new \DateTime($anveo_call_model->end_at);
+                $datetime2 = new \DateTime($anveo_call_model->start_at);
+                $interval = $datetime1->diff($datetime2);
+
+                $mass['diff'] = $interval->format('%H:%I:%S');
+                $mass['type'] = $order_calls_model->getField('relevance_type')->toText();
+                $mass['relevance_order'] = $order_calls_model->relevance_type;
+
+                $result[] = $mass;
+            }
+        }
+        if (!empty($result)){
+            return $result;
+        }
+    }
 }
