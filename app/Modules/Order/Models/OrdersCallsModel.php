@@ -14,7 +14,7 @@ class OrdersCallsModel extends Model
 
     const TYPE_VIEWING_SAME_OPERATOR = 0;
     const TYPE_VIEWING_OTHER_OPERATOR = 1;
-
+    const ORDER_PHONE_EQUALS_CALLED_PHONE = 2;
 
     public static function tableName()
     {
@@ -48,8 +48,9 @@ class OrdersCallsModel extends Model
                 'null' => false,
                 'default' => 0,
                 'choices' => [
-                    0 => 'order viewed during call same operator',
-                    1 =>  'order viewed during call by other operator',
+                    0 => 'Order on call',
+                    1 => 'order viewed during call by other operator',
+                    2 => 'Order phone'
                 ],
             ],
 

@@ -45,7 +45,7 @@ function func_upload_product_file($productid, $upload_data, $insert_id = false, 
     
     $path = $product_files_dir . '/' . $productid;
     if (!is_dir($path)) {
-        func_mkdir($path, 0755);
+        func_mkdir($path, 0775);
     }
     $path = $path . '/' . $upload_data['filename'];
 

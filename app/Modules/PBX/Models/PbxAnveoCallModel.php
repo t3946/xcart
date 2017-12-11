@@ -4,6 +4,7 @@ namespace Modules\PBX\Models;
 
 use Modules\Order\Models\OrderModel;
 use Modules\Order\Models\OrdersCallsModel;
+use Modules\PBX\Helpers\AnveoAssignCalls;
 use Modules\User\Models\PbxOptionsModel;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\BooleanField;
@@ -146,5 +147,15 @@ class PbxAnveoCallModel extends Model
         return $this->is_voice_mail;
     }
 
+    public function getUrl()
+    {
+        if ($this->isOutgoing()){
+            $account = AnveoAssignCalls::parseAccount($this->file);
+            return $url = "https://s3.amazonaws.com/anveo-{$account}/{$this->file}";
+        }
+        else {
+            return $url = "https://s3.amazonaws.com/incoming_business_hours/{$this->file}";
+        }
+    }
 
 }

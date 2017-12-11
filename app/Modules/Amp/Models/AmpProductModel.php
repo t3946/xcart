@@ -169,6 +169,10 @@ class AmpProductModel extends ProductModel
             foreach ($matches[1] as $value){
                 $reg = '/iframe/';
                 if (preg_match($reg, $value)){
+                    $regexp = '/(src=.)http:(.*)/s';
+                    if (preg_match($regexp, $value)) {
+                        $value = preg_replace($regexp, "$1https:$2", $value);
+                    }
                     $iframes[] = preg_replace($reg, 'amp-iframe', $value);
                 }
             }
@@ -189,7 +193,22 @@ class AmpProductModel extends ProductModel
         }
 
         if ( (stripos($fulldescr, "<font>") !== false) || (stripos($fulldescr, "</font>") !== false) ) {
-            $fulldescr = str_replace(["<font>", "</font>"], "", $fulldescr);
+            $fulldescr = str_ireplace(["<font>", "</font>"], "", $fulldescr);
+        }
+
+        $regexp = '/<([^>]*?)mozallowfullscreen|webkitallowfullscreen([^>]*?)>/s';
+
+        while (preg_match($regexp, $fulldescr)){
+            $fulldescr = preg_replace($regexp, "$1$2", $fulldescr);
+        }
+
+        if (preg_match('/<nbsp>/i', $fulldescr )) {
+            $fulldescr = preg_replace('/<nbsp>/i', '', $fulldescr);
+        }
+
+        $regexp = '/<!\[.*?\]>/';
+        if (preg_match($regexp, $fulldescr)) {
+            $fulldescr = preg_replace($regexp, '', $fulldescr);
         }
 
 
