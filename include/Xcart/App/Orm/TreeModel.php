@@ -12,6 +12,7 @@ use Mindy\QueryBuilder\Expression;
  * Class TreeModel.
  *
  * @method static \Xcart\App\Orm\TreeManager objects($instance = null)
+ * @method \Xcart\App\Orm\TreeManager getObjects
  *
  * @property TreeModel|null $parent
  * @property int|null $parent_id
