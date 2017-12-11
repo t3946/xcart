@@ -187,7 +187,7 @@ class AnveoAssignCalls
 
                 $mass['diff'] = $interval->format('%H:%I:%S');
                 $mass['type'] = $order_calls_model->getField('relevance_type')->toText();
-                $mass['relevance_order'] = $order_calls_model->relevance_type;
+                $mass['relevance_order'] = $order_calls_model->relevance_order;
 
                 $result[] = $mass;
             }
