@@ -229,7 +229,75 @@
 
             {elseif $tab.section eq "order_calls"}
 
-                Phone injection
+                <table width="100%" cellpadding="5" cellspacing="0" style="table-layout: auto;">
+                    <thead>
+                        <tr>
+                            <th>
+                                Account
+                            </th>
+                            <th>
+                                E164
+                            </th>
+                            <th>
+                                Cname
+                            </th>
+                            <th>
+                                Start at
+                            </th>
+                            <th>
+                                Duration
+                            </th>
+                            <th>
+                                Direction
+                            </th>
+                            <th>
+                                Type
+                            </th>
+                            <th>
+                                Relevance Order
+                            </th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {foreach from=$calls_log_data key=k item=value}
+                        <tr>
+                            <td align="center">
+                                {$value.account}
+                            </td>
+                            <td align="center">
+                                {$value.e164}
+                            </td>
+                            <td align="center">
+                                {$value.cname}
+                            </td>
+                            <td align="center">
+                                {$value.start_at}
+                            </td>
+                            <td align="center">
+                                {$value.diff}
+                            </td>
+                            <td align="center">
+                                {$value.direction}
+                            </td>
+                            <td>
+                                {$value.type}
+                            </td>
+                            <td>
+                                {$value.relevance_order}
+                            </td>
+
+                        </tr>
+                        <tr>
+                            <td colspan="8" style="padding-top: 5px;">
+                                <audio controls preload="none" style="width: 100%">
+                                    <source src="{$value.url}" type="audio/mp3">
+                                </audio>
+                            </td>
+                        </tr>
+                    {/foreach}
+                    </tbody>
+                 </table>
 
             {elseif $tab.section eq "all_logs_and_messages"}
 
