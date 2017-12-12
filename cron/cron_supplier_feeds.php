@@ -144,7 +144,7 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
             $products = [];
 
             if (isset($prod['is_group']) && $prod['is_group'] === true) {
-                if ($prod['child_products']) {
+                    if ($prod['child_products']) {
                     foreach ($prod['child_products'] as $child_data) {
                         if ($child = ProductModel::objects()->get(['productcode' => $child_data['productcode']])) {
                             if ($parent = $child->parent) {
@@ -159,7 +159,8 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
                     /** @var ProductModel $group */
                     list($group, $is_created) = ProductModel::objects()->getOrCreate(['productcode' => $prod['productcode']]);
 
-                    $group->setAttributes(array_merge($prod, ['group_root' => $group->productid]));
+                    $group->setAttributes(array_merge($prod, ['parent' => $group]));
+                    $group = SupplierFeedHelper::addProduct($group, $is_created, $supplierFeedModel, $prod, $supplierFeed->dont_update_fields, $supplierFeed->defaults);
                     $group->save();
 
                     $childs = [];
@@ -176,7 +177,7 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
                         $group->childs->exclude(['productcode__in' => $childs])->update(['groop_root' => null]);
                     }
 
-                    $products = array_merge([$prod], $prod['child_products']);
+                    $products = $prod['child_products'];
                 }
             }
 

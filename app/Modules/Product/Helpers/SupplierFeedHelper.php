@@ -151,8 +151,7 @@ class SupplierFeedHelper
             $upcModel->save();
         }
 
-        if (!$is_created)
-        {
+        if (!$is_created) {
             if ($model->isGroupChild()) {
                 $model->product = $model->getOldAttribute('product');
             }
@@ -255,30 +254,39 @@ class SupplierFeedHelper
         }
 
         //Brand section
-        if ($is_created) {
-            $brandName = $data['brand_name'];
-            if (!empty($brandName)) {
-                $brandModel = BrandModel::objects()->get(['brand' => $brandName]);
-                if (!$brandModel) {
-                    $brandModel = (new BrandModel([
+        $brandName = $data['brand_name'];
+
+        if (!empty($brandName)) {
+
+            /** @var BrandModel $brandModel */
+            list($brandModel, $brand_created) = BrandModel::objects()->getOrCreate(['brand' => $brandName]);
+
+            if ($brand_created) {
+                $brandModel->setAttributes(
+                    [
                         'brand' => $brandName,
                         'orderby' => 10,
                         'prevent_search_indexing_of_all_brand_products' => $model->prevent_search_indexing_this_product_page == 'Y' ? 'Y' : 'N',
                         'prevent_search_indexing_brand_page' => $model->prevent_search_indexing_this_product_page == 'Y' ? 'Y' : 'N'
-                    ]));
-                    $brandModel->save();
-                    (new BrandStorefrontModel([
-                        'brandid' => $brandModel->brandid,
-                        'sfid' => $feed->storefront_id,
-                    ]))->save();
-                    $clean_url = func_clean_url_autogenerate('M', $brandModel->brandid, array('brand' => $brandName));
-                    func_clean_url_add($clean_url, 'M', $brandModel->brandid);
-                }
-                if ($brandModel->parent_brand_id) {
-                    $brandModel = $brandModel->parent;
-                }
-                $model->brandid = $brandModel->brandid;
+                    ]);
+
+                $brandModel->save();
+
+                (new BrandStorefrontModel([
+                    'brandid' => $brandModel->brandid,
+                    'sfid' => $feed->storefront_id,
+                ]))
+                    ->save();
+
+                $clean_url = func_clean_url_autogenerate('M', $brandModel->brandid, array('brand' => $brandName));
+
+                func_clean_url_add($clean_url, 'M', $brandModel->brandid);
+
             }
+            if ($brandModel->parent_brand_id) {
+                $brandModel = $brandModel->parent;
+            }
+            $model->brandid = $brandModel->brandid;
         }
 
         //Attributes section
@@ -359,7 +367,7 @@ class SupplierFeedHelper
             }
         }
 
-        return  $model;
+        return $model;
     }
 
     public static function getFileFtp($file_name, $config)
@@ -370,14 +378,14 @@ class SupplierFeedHelper
 
         $ftp_connect = ftp_connect($home_ftp);
 
-        if(!ftp_login($ftp_connect, $login, $pass)) {
+        if (!ftp_login($ftp_connect, $login, $pass)) {
             return false;
         }
 
         ftp_pasv($ftp_connect, true);
 
         $temp_file = tmpfile();
-        ftp_fget($ftp_connect, $temp_file, $file_name , FTP_ASCII);
+        ftp_fget($ftp_connect, $temp_file, $file_name, FTP_ASCII);
         $content = stream_get_contents($temp_file, -1, 0);
         fclose($temp_file);
 
