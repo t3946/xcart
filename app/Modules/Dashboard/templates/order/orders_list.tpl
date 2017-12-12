@@ -76,7 +76,13 @@
                 {$order->date|interval_string}
             </td>
             <td colspan="7" class="text-left">
-                {raw $order->last_message.log|br2nl|strip_tags|truncate:160:'[...]'|nl2space}
+                {set $last_message = $order->last_message.log|br2nl|strip_tags}
+
+                <div {if mb_strlen($last_message) > 160}title="{$last_message|escape}"{/if}>
+                    {raw $last_message|truncate:160:' [...]'|nl2space}
+                </div>
+
+
             </td>
         </tr>
 
