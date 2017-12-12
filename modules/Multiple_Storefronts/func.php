@@ -148,7 +148,7 @@ function func_get_storefront_info($sf_id, $type = 'ID', $full = false)
             $sf_info = [
                 'storefrontid' => 0,
                 'status'       => ($config['General']['shop_closed'] == 'Y') ? 'D' : 'E',
-                'prefix'       => MAIN_SF_PREFIX,
+                'prefix'       => defined('MAIN_SF_PREFIX') ? MAIN_SF_PREFIX: "",
                 'top_banner'   => 'default',
                 'domain'       => MAIN_SF_DOMAIN,
             ];
