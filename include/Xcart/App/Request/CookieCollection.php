@@ -31,7 +31,20 @@ class CookieCollection implements ArrayAccess, Countable
 
     public function get($key, $default = null)
     {
-        return $this->has($key) ? $_COOKIE[$key] : $default;
+//        return $this->has($key) ? $_COOKIE[$key] : $default; //For history
+        $return = $default;
+
+        if ($this->has($key))
+        {
+            $return = $_COOKIE[$key];
+
+            if (defined('X_REJECT_OVERRIDE_COOKIE')) {
+                $return = stripcslashes($return);
+                $return = html_entity_decode($return);
+            }
+        }
+
+        return $return;
     }
 
     public function all()
@@ -52,9 +65,7 @@ class CookieCollection implements ArrayAccess, Countable
     public function clear()
     {
         foreach (array_keys($_COOKIE) as $key) {
-            if ($this->setCookie($key, "", time()-3600, '/')) {
-                unset($_COOKIE[$key]);
-            }
+            $this->remove($key);
         }
     }
 

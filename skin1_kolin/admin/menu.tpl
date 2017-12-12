@@ -1,4 +1,6 @@
-{* $Id: menu.tpl,v 1.68.2.3 2006/07/19 10:19:35 max Exp $ *}
+
+{$xcartApp->template->render('base/old_admin_menu.tpl')}
+
 {capture name=menu}
 
 {if $allowed_elements.LeftLink_Users eq "Y"}
@@ -172,5 +174,3 @@
 
 {/capture}
 { include file="menu_admin.tpl" dingbats="dingbats_categorie.gif" menu_title=$lng.lbl_management menu_content=$smarty.capture.menu }
-
-{$xcartApp->template->render('base/old_admin_menu.tpl')}

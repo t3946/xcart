@@ -3,6 +3,7 @@ namespace Modules\Core;
 
 use Detection\MobileDetect;
 use Fenom;
+use Modules\Admin\Traits\AdminTrait;
 use Modules\Core\Components\GlobalConfig;
 use Modules\Core\TemplateLibraries\CacheCompiler;
 use Xcart\App\Main\Xcart;
@@ -10,6 +11,8 @@ use Xcart\App\Module\Module;
 
 class CoreModule extends Module
 {
+    use AdminTrait;
+
     public static function getGlobalConfig()
     {
         return GlobalConfig::getInstance()->setOldMode();
