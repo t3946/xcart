@@ -31,7 +31,8 @@
         "swiftmailer/swiftmailer": "^5.4",
         "cocur/slugify": "^1.4",
         "dariuszp/cli-progress-bar": "^1.0",
-        "geoip2/geoip2": "^2.7"
+        "geoip2/geoip2": "^2.7",
+        "symfony/polyfill-mbstring": "^1.6"
     },
     "autoload": {
         "psr-4": {
@@ -76,7 +77,6 @@
             "include/func/func.order_edit.php",
             "include/func/func.payment.php",
             "include/func/func.product.php",
-            "include/func/func.product_feeds.php",
             "include/func/func.snapshots.php",
             "include/func/func.taxes.php",
             "include/func/func.templater.php",

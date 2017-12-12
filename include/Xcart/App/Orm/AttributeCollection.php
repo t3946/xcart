@@ -73,6 +73,11 @@ class AttributeCollection
         $this->attributes[$name] = $value;
     }
 
+    public function setOldAttribute($name, $value)
+    {
+        $this->oldAttributes[$name] = $value;
+    }
+
     /**
      * @return array
      */
@@ -108,6 +113,7 @@ class AttributeCollection
 
     public function reflectOldAttributes()
     {
+        $this->resetOldAttributes();
         foreach ($this->getAttributes() as $name => $value) {
             $this->oldAttributes[$name] = $value;
         }

@@ -226,6 +226,7 @@ class ProductModel extends Model implements ICartItem
                 'class' => ForeignField::className(),
                 'modelClass' => ProductModel::className(),
                 'link' => ['group_root' => 'productid'],
+                'null' => true,
             ],
             'thumbnail' => [
                 'class' => HasManyField::className(),

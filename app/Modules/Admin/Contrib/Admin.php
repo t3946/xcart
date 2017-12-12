@@ -334,7 +334,14 @@ abstract class Admin
     /**
      * @return Model
      */
-    abstract public function getModel();
+    public function getModel()
+    {
+        if (!$this->model) {
+            $this->model = $this->getForm()->getModel();
+        }
+
+        return $this->model;
+    }
 
     /**
      * @return Model
@@ -348,10 +355,7 @@ abstract class Admin
     /**
      * @return ModelForm
      */
-    public function getForm()
-    {
-        return new ModelForm();
-    }
+    abstract public function getForm();
 
     /**
      * @return ModelForm

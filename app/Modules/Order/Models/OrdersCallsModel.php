@@ -48,8 +48,9 @@ class OrdersCallsModel extends Model
                 'null' => false,
                 'default' => 0,
                 'choices' => [
-                    0 => 'order viewed during call same operator',
-                    1 =>  'order viewed during call by other operator',
+                    0 => 'Order on call',
+                    1 => 'Order on transferred call',
+                    2 => 'Order phone'
                 ],
             ],
 

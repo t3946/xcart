@@ -4,6 +4,7 @@ namespace Xcart\App\Orm;
 use Doctrine\DBAL\DriverManager;
 use ReflectionClass;
 use Xcart\App\Helpers\SmartProperties;
+use Xcart\App\Main\Xcart;
 
 class ConnectionManager
 {
@@ -111,9 +112,14 @@ class ConnectionManager
      */
     public function getConnection($name = null)
     {
-        if (empty($name)) {
+        if (empty($name) || empty($this->connections[$name])) {
             $name = $this->defaultConnection;
         }
+
+        if (empty($this->connections[$name])) {
+            Xcart::app()->logger->warning('Unknown connection ' . $name);
+        }
+
         return $this->connections[$name];
     }
 }
