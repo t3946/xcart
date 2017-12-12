@@ -63,26 +63,13 @@ class SupplierFeedStore extends BaseStore
         if (!empty($feed['products'])) {
             foreach ($feed['products'] as $product) {
 
-                $product['productcode'] = strtoupper(trim(!isset($product['sku']) ? $product['productcode'] : $product['sku']));
-                $product['r_avail'] = !isset($product['quantity']) ? $product['r_avail'] : $product['quantity'];
-                $product['eta_date_mm_dd_yyyy'] = !isset($product['eta_date']) ? $product['eta_date_mm_dd_yyyy'] : $product['eta_date'];
-                $product['product'] = !isset($product['title']) ? $product['product'] : $product['title'];
-                $product['list_price'] = !isset($product['listprice']) ? $product['list_price'] : $product['listprice'];
-
-                $product = array_filter($product, function ($v) {
-                    return !is_null($v);
-                });
-
-                if (isset($product['eta_date_mm_dd_yyyy'])) {
-                    $product['eta_date_mm_dd_yyyy'] = strtotime($product['eta_date_mm_dd_yyyy']);
+                if (isset($product['child_products'])) {
+                    foreach ($product['child_products'] as $key => $child) {
+                        $product['child_products'][$key] = self::replaceFeedFields($child);
+                    }
                 }
 
-                if (isset($product['images'])) {
-                    $product['supplier_images'] = $product['images'];
-                    unset($product['images']);
-                }
-
-                $this->products[] = $product;
+                $this->products[] = self::replaceFeedFields($product);
             }
         }
     }
@@ -97,5 +84,29 @@ class SupplierFeedStore extends BaseStore
         $create_date_arr = explode("-", $this->create_date);
         return mktime(0, 0, 0, $create_date_arr[0], $create_date_arr[1], $create_date_arr[2]);
 
+    }
+
+    public static function replaceFeedFields($data)
+    {
+        $data['productcode'] = strtoupper(trim(!isset($data['sku']) ? $data['productcode'] : $data['sku']));
+        $data['r_avail'] = !isset($data['quantity']) ? $data['r_avail'] : $data['quantity'];
+        $data['eta_date_mm_dd_yyyy'] = !isset($data['eta_date']) ? $data['eta_date_mm_dd_yyyy'] : $data['eta_date'];
+        $data['product'] = !isset($data['title']) ? $data['product'] : $data['title'];
+        $data['list_price'] = !isset($data['listprice']) ? $data['list_price'] : $data['listprice'];
+
+        $data = array_filter($data, function ($v) {
+            return !is_null($v);
+        });
+
+        if (isset($data['eta_date_mm_dd_yyyy'])) {
+            $data['eta_date_mm_dd_yyyy'] = strtotime($data['eta_date_mm_dd_yyyy']);
+        }
+
+        if (isset($data['images'])) {
+            $data['supplier_images'] = $data['images'];
+            unset($data['images']);
+        }
+
+        return $data;
     }
 }

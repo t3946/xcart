@@ -142,7 +142,6 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
         foreach ($supplierFeed->products as $kp => $prod) {
 
             $products = [];
-            $products[] = $prod;
 
             if (isset($prod['is_group']) && $prod['is_group'] === true) {
                 if ($prod['child_products']) {
@@ -157,16 +156,27 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
                     if (!$prod['productcode']) {
                         $prod['productcode'] = ProductHelper::getNewGroupSKU($supplierFeedModel->manufacturerid);
                     }
-                    list($group, $is_created) = ProductModel::objects()->getOrNew(['productcode' => $prod['productcode']]);
+                    /** @var ProductModel $group */
+                    list($group, $is_created) = ProductModel::objects()->getOrCreate(['productcode' => $prod['productcode']]);
 
-                    $group->setAttribures($prod);
+                    $group->setAttributes(array_merge($prod, ['group_root' => $group->productid]));
                     $group->save();
 
-                    if ($products = $prod['child_products']) {
-                        foreach ($products as $key => $child_data) {
-                            $products[$key]['group_root'] = $group->productid;
-                        }
+                    $childs = [];
+                    foreach ($prod['child_products'] as $key => $child_data) {
+
+                        $prod['child_products'][$key]['group_root'] = $group->productid;
+                        $prod['child_products'][$key]['brand_name'] = $prod['brand_name'];
+                        $prod['child_products'][$key]['supplier_categories'] = $prod['supplier_categories'];
+
+                        $childs[] = $child_data['productcode'];
                     }
+
+                    if ($childs) {
+                        $group->childs->exclude(['productcode__in' => $childs])->update(['groop_root' => null]);
+                    }
+
+                    $products = array_merge([$prod], $prod['child_products']);
                 }
             }
 
@@ -174,8 +184,7 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
 
                 print($kp . ' --> ' . $aProduct['productcode'] . "\n");
 
-                if (!isset($aProduct['is_group'])
-                    && (empty($aProduct['productcode']) || (isset($aProduct['cost_to_us']) && floatval($aProduct['cost_to_us']) <= 0))) {
+                if (empty($aProduct['productcode']) || (isset($aProduct['cost_to_us']) && floatval($aProduct['cost_to_us']) <= 0)) {
                     $skippedProductsCount++;
                     continue;
                 }
@@ -193,13 +202,15 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
 
                         break;
                     case 'P' :
-                        if (!isset($aProduct['cost_to_us'])) {
-                            $skippedProductsCount++;
-                            continue;
-                        }
-                        if (!$is_created && $supplierFeedModel->add_new_only == "Y") {
-                            $skippedProductsCount++;
-                            continue;
+                        if (!isset($aProduct['is_group'])) {
+                            if (!isset($aProduct['cost_to_us'])) {
+                                $skippedProductsCount++;
+                                continue;
+                            }
+                            if (!$is_created && $supplierFeedModel->add_new_only == "Y") {
+                                $skippedProductsCount++;
+                                continue;
+                            }
                         }
                         break;
                 }

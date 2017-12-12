@@ -301,15 +301,18 @@ class SupplierFeedHelper
 
         $aSupplierCategory = $data['supplier_categories'];
 
-        if (!empty($aSupplierCategory)) {
+        if (!empty($aSupplierCategory) && is_array($aSupplierCategory)) {
 
-            $aSupplierCategory = reset($aSupplierCategory);
-            $cats_arr = explode("/", $aSupplierCategory);
+            $parent_id = $feed->base_category_id;
+            $lastCategory = null;
 
-            if (!empty($cats_arr) && is_array($cats_arr)) {
+            $cats_arr = $aSupplierCategory;
 
-                $parent_id = $feed->base_category_id;
-                $lastCategory = null;
+            if (count($aSupplierCategory) == 1) {
+                $cats_arr = explode("/", reset($aSupplierCategory));
+            }
+
+            if ($cats_arr) {
 
                 foreach ($cats_arr as $v_cat) {
 
