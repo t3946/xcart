@@ -107,7 +107,7 @@ class AnveoAssignCalls
                     (new OrdersCallsModel($mass))->save();
 
                     $log_category = "anveo_calls";
-                    $log_text = "{$e164} - Привязан к заказу - {$order_models[$i]->order_id} по второй привязке";
+                    $log_text = "{$e164} - Привязан к заказу - {$order_models[$i]->orderid} по второй привязке";
                     func_backprocess_log($log_category, $log_text);
                 }
             }
@@ -146,7 +146,7 @@ class AnveoAssignCalls
 
                 if ($oua_models = OrderUserActivityModel::objects()->filter($filter)->order(['-created_at'])->limit(5)->all()) {
 
-                    if (count($oua_models) > 0 && count($oua_models) < 2){
+                    if (count($oua_models) > 0 && count($oua_models) < 3){
                         $manager = OrdersCallsModel::objects();
 
                         foreach ($oua_models as $oua_model) {
