@@ -35,7 +35,7 @@
 # $Id: product_clone.php,v 1.39.2.4 2006/08/23 13:06:24 max Exp $
 #
 
-use Modules\Product\Models\ProductModel;
+use Modules\Goods\Models\ProductModel;
 
 if ( !defined('XCART_SESSION_START') ) { header("Location: ../"); die("Access denied"); }
 

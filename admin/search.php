@@ -105,7 +105,7 @@ if ($mode == 'search'){
                 $sFindSKU = addslashes($posted_data["extra_sku"][0]);
                 $app = \Xcart\App\Main\Xcart::app();
 
-                if ( $product = \Modules\Product\Models\ProductModel::objects()->filter(['productcode' => $sFindSKU])->get())
+                if ( $product = \Modules\Goods\Models\ProductModel::objects()->filter(['productcode' => $sFindSKU])->get())
                 {
                     /** @var \Modules\Sites\Models\SiteModel $site */
                     $site = $product->sites->limit(1)->get();

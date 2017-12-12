@@ -37,7 +37,7 @@
 # This script contains the common functions for cart operating
 #
 
-use Modules\Product\Models\OptionValueModel;
+use Modules\Goods\Models\OptionValueModel;
 use Modules\User\Helpers\SurfingHelper;
 
 if ( !defined('XCART_START') ) { header("Location: ../"); die("Access denied"); }

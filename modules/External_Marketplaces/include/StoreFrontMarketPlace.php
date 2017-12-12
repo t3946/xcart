@@ -1,7 +1,7 @@
 <?php
 namespace Xcart\External_Marketplaces;
-use Modules\Product\Models\ProductModel;
-use Modules\Product\Models\UpdatedProductModel;
+use Modules\Goods\Models\ProductModel;
+use Modules\Goods\Models\UpdatedProductModel;
 use Xcart\Connection;
 use Xcart\Data;
 

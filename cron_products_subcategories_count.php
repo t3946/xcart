@@ -38,8 +38,8 @@ while ($record = db_fetch_array($records)) {
     }
     ###
 
-    /** @var \Modules\Product\Models\CategoryModel $model */
-    if ($model = \Modules\Product\Models\CategoryModel::objects()->get(['pk' => $record['resourceid']])) {
+    /** @var \Modules\Goods\Models\CategoryModel $model */
+    if ($model = \Modules\Goods\Models\CategoryModel::objects()->get(['pk' => $record['resourceid']])) {
         $model->reCalcSelfAndParents();
     }
 

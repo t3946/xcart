@@ -32,7 +32,7 @@
 
 use Modules\Cart\Helpers\CouponOldCart;
 use Modules\Distributor\Helpers\DistributorHelper;
-use Modules\Product\Models\ProductModel;
+use Modules\Goods\Models\ProductModel;
 use Modules\User\Helpers\SurfingHelper;
 use Modules\User\Models\SurfPathModel;
 use Xcart\CidevSurfPath;

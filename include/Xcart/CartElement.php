@@ -3,7 +3,7 @@
 namespace Xcart;
 
 
-use Modules\Product\Models\ProductModel;
+use Modules\Goods\Models\ProductModel;
 use Modules\Shipping\Models\ShippingProductModel;
 
 class CartElement

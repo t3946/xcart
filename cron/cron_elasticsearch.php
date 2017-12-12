@@ -68,7 +68,7 @@ while ($record = db_fetch_array($cidev_updated_products)) {
 
         foreach ($products as $product)
         {
-            $product_model = \Modules\Product\Models\ProductModel::objects()->get(['productid' => $product['productid']]);
+            $product_model = \Modules\Goods\Models\ProductModel::objects()->get(['productid' => $product['productid']]);
             if ($product["forsale"] == "Y") {
                 if ($record["type"] == "6")
                 {

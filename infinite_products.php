@@ -3,7 +3,7 @@
 //print_r($_POST);
 //print_r($_GET);
 
-use Modules\Product\Models\ProductModel;
+use Modules\Goods\Models\ProductModel;
 
 if (!empty($_POST["cidev_filter_mode"]) && $_POST["cidev_filter_mode"] == "load_more_products_SKU") {
 

@@ -4,8 +4,8 @@ namespace Modules\Menu\TemplateLibraries;
 
 use Mindy\QueryBuilder\Expression;
 use Mindy\QueryBuilder\Q\QOr;
-use Modules\Product\Models\CategoryModel;
-use Modules\Product\Models\ProductModel;
+use Modules\Goods\Models\CategoryModel;
+use Modules\Goods\Models\ProductModel;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Template\TemplateLibrary;
 use Xcart\App\Traits\RenderTrait;

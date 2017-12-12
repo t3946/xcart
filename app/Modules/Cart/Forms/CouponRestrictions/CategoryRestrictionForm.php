@@ -5,7 +5,7 @@ namespace Modules\Cart\Forms\CouponRestrictions;
 use Modules\Cart\Admin\DiscountRestrictionAdmin;
 use Modules\Cart\Discounts\Restrictions\CategoryRestriction;
 use Modules\Cart\Forms\DiscountRestrictionForm;
-use Modules\Product\Models\CategoryModel;
+use Modules\Goods\Models\CategoryModel;
 use Xcart\App\Form\Fields\Select2Field;
 
 class CategoryRestrictionForm extends DiscountRestrictionForm

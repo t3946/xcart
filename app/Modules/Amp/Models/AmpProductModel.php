@@ -4,8 +4,8 @@ namespace Modules\Amp\Models;
 
 use Modules\Amp\Helpers\AmpHelper;
 use Modules\Core\Models\GlobalConfigModel;
-use Modules\Product\Models\CategoryModel;
-use Modules\Product\Models\ProductModel;
+use Modules\Goods\Models\CategoryModel;
+use Modules\Goods\Models\ProductModel;
 use Modules\Sites\Models\SiteConfigModel;
 use Xcart\App\Main\Xcart;
 
