@@ -43,6 +43,7 @@
     </tr>
 
     {set $route =  $.request->getMatchRouting()}
+    {set $messages = $.app->cache->get('ticket_resolver_messages')}
 
     {foreach $orders as $order index=$index}
         <tr class="separator">
@@ -88,6 +89,10 @@
                     <a style="color: blue;" href="{$order->otrs_ticket}" target="_blank">
                         OTRS ticket
                     </a>
+
+                    {if $messages[$order->pk]!}
+                        ({$messages[$order->pk]})
+                    {/if}
                 {/if}
             </td>
             <td colspan="1">

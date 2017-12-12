@@ -3,6 +3,7 @@ namespace Xcart;
 
 use Modules\Cart\Models\CouponOrderModel;
 use Modules\User\Models\ReferrerModel;
+use Xcart\App\Main\Xcart;
 
 class Order extends Data
 {
@@ -979,6 +980,10 @@ class Order extends Data
 
                     if (!empty($ticket_resolver[0]["messages"])) {
                         $ticket_resolver_messages = $ticket_resolver[0]["messages"];
+
+                        $t_arr = Xcart::app()->cache->get('ticket_resolver_messages', []);
+                        $t_arr [$this->getOrderId()] = $ticket_resolver_messages;
+                        Xcart::app()->cache->set('ticket_resolver_messages', $t_arr);
                     }
                     $this->updateField('otrs_ticket', addslashes($ticket_resolver_link));
                 }
