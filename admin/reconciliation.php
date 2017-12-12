@@ -10,7 +10,7 @@ x_load('backoffice','files', 'order');
 set_time_limit(0);
 ini_set('memory_limit', '512M');
 
-x_session_register("search_data");
+x_session_register("search_data", []);
 
 $all_tabs = array("unreconciled", "reconciled", "dropped", "expense_report", "import", "calculation", "accounts_payable", "receivables", "rules", "inventory");
 

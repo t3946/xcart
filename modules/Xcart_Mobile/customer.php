@@ -213,8 +213,8 @@ if (isset($more_info)) {
  */
 if (!empty($mobile_mode)) {
 
-x_session_register("search_data");
-x_session_register("e_search_data");
+x_session_register("search_data", []);
+x_session_register("e_search_data", []);
 
 #
 ##

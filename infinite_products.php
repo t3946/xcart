@@ -121,7 +121,7 @@ if ($REQUEST_METHOD == 'POST' || $REQUEST_METHOD == 'GET') {
 
         x_session_save("sfids_of_products");
 
-        x_session_register("search_data");
+        x_session_register("search_data", []);
 
         $ajax_navigation_page = $ajax_navigation_page_next;
         $search_data["products"]["page"] = $ajax_navigation_page;
@@ -188,7 +188,7 @@ if ($REQUEST_METHOD == 'POST' || $REQUEST_METHOD == 'GET') {
         func_display('customer/main/infinite_products.tpl', $smarty);
     } elseif ($cidev_filter_mode == "load_more_products_SKU") {
 
-        x_session_register("search_data");
+        x_session_register("search_data", []);
 
         $search_data = array();
         $search_data['products'] = array('by_sku' => 1,
@@ -258,8 +258,8 @@ if ($REQUEST_METHOD == 'POST' || $REQUEST_METHOD == 'GET') {
         func_display('customer/main/infinite_products.tpl', $smarty);
     } elseif ($cidev_filter_mode == "load_more_e_products") {
 
-        x_session_register("e_search_data");
-        x_session_register("search_data");
+        x_session_register("e_search_data", []);
+        x_session_register("search_data", []);
 
         $e_search_data["substring"] = $e_search_data_substring;
 

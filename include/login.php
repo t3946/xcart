@@ -118,7 +118,7 @@ if ($REQUEST_METHOD == "POST") {
 #
 ##
 ###
-			x_session_register("search_data");
+			x_session_register("search_data", []);
 			$search_data = "";
 			x_session_save("search_data");
 

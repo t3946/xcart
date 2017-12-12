@@ -37,7 +37,7 @@
 require "./auth.php";
 require $xcart_dir."/include/security.php";
 
-x_session_register("search_data");
+x_session_register("search_data", []);
 
 if (!$single_mode) {
 	$search_data["orders"]["provider_login"] = addslashes($login);

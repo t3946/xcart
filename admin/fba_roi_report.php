@@ -5,7 +5,7 @@ global $xcart_dir, $mode, $REQUEST_METHOD;
 require "./auth.php";
 require $xcart_dir . "/include/security.php";
 
-x_session_register("search_data");
+x_session_register("search_data", []);
 
 $location[] = array("FBA ROI report (year based)", "");
 

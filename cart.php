@@ -292,7 +292,7 @@ if (!empty($cart["products"]) && empty($cart["cart_number"])) {
     }
 }
 
-x_session_register("e_search_data");
+x_session_register("e_search_data", []);
 if ($top_btn == "Y") {
     $e_search_data["substring"] = "";
     x_session_save("e_search_data");
