@@ -7,6 +7,8 @@ www.*_*.xml
 thumbs.db
 Thumbs.db
 .DS_Store
+package-lock.json
+composer.lock
 ###################################
 ## scripts to exclude
 /config.local.php
