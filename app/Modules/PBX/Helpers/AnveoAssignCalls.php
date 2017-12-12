@@ -14,7 +14,7 @@ class AnveoAssignCalls
     public static function eventBindCallToOrder($sender = null, $model)
     {
 
-        self::bindCallToOrder($model);
+        self::bindCallToOrder($model) ?: self::bindCallToOrderThird($model);
         self::bindCallToOrderSecond($model);
 
         if (rand(0, 6) >= 5) {
@@ -24,6 +24,8 @@ class AnveoAssignCalls
 
     /**
      * @param \Modules\PBX\Models\PbxAnveoCallModel $model
+     *
+     * @return bool
      */
     public static function bindCallToOrder($model = null)
     {
@@ -60,15 +62,16 @@ class AnveoAssignCalls
                         $log_text = "{$e164} - Привязан к заказу - {$oua_model->order_id} по первой связке";
                         func_backprocess_log($log_category, $log_text);
                     }
-
-
+                    return true;
                 }
 
                 $log_category = "anveo_calls";
                 $log_text = "{$e164} - Не привязан к заказу по первой привязке";
                 func_backprocess_log($log_category, $log_text);
+
             }
         }
+        return false;
     }
 
     /**
@@ -104,7 +107,7 @@ class AnveoAssignCalls
                     (new OrdersCallsModel($mass))->save();
 
                     $log_category = "anveo_calls";
-                    $log_text = "{$e164} - Привязан к заказу - {$order_models[$i]->order_id} по второй привязке";
+                    $log_text = "{$e164} - Привязан к заказу - {$order_models[$i]->orderid} по второй привязке";
                     func_backprocess_log($log_category, $log_text);
                 }
             }
@@ -112,6 +115,55 @@ class AnveoAssignCalls
             $log_category = "anveo_calls";
             $log_text = "{$e164} - Не привязан к заказу по второй привязке";
             func_backprocess_log($log_category, $log_text);
+        }
+    }
+
+    /**
+     * @param \Modules\PBX\Models\PbxAnveoCallModel $model
+     */
+    public static function bindCallToOrderThird($model = null)
+    {
+        if ($model && $model->start_at && $model->end_at){
+
+            if ($model->file) {
+                $account = self::parseAccount($model->file);
+                $e164 = self::parseE164($model->file);
+
+                if ($account && $model->anveo_account != $account) {
+
+                    $model->anveo_account = $account;
+                    $model->save(['anveo_account']);
+                }
+            }
+
+            if ($model->anveo_account && $model->options && $user_model = $model->options->user) {
+
+                $filter = [
+                    'user_id__isnt' => $user_model->id,
+                    'created_at__gte' => $model->start_at,
+                    'created_at__lte' => $model->end_at,
+                ];
+
+                if ($oua_models = OrderUserActivityModel::objects()->filter($filter)->order(['-created_at'])->limit(5)->all()) {
+
+                    if (count($oua_models) > 0 && count($oua_models) < 3){
+                        $manager = OrdersCallsModel::objects();
+
+                        foreach ($oua_models as $oua_model) {
+                            $manager->updateOrCreate(['call_id' => $model->id, 'order_id' => $oua_model->order_id],
+                                                     ['relevance_type' => OrdersCallsModel::TYPE_VIEWING_OTHER_OPERATOR, 'relevance_order' => 20]);
+
+                            $log_category = "anveo_calls";
+                            $log_text = "{$e164} - Привязан к заказу - {$oua_model->order_id} по третьей связке";
+                            func_backprocess_log($log_category, $log_text);
+                        }
+                    }
+                }
+
+                $log_category = "anveo_calls";
+                $log_text = "{$e164} - Не привязан к заказу по третьей привязке";
+                func_backprocess_log($log_category, $log_text);
+            }
         }
     }
 
