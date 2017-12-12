@@ -15,12 +15,27 @@ class AmpController extends FrontendController
     public function amp($id, $slug)
     {
         /** @var AmpProductModel $model */
-        if ($model = AmpProductModel::objects()->get(['productid' => $id]) )
-        {
+        $model = AmpProductModel::objects()->get(['productid' => $id]);
 
-            if($model->forsale != "Y"){
-                $this->redirect('/');
+        if (!$model) {
+            $this->redirect('/', [], 301);
+        }
+        elseif ($model->forsale != "Y") {
+            /** @var CategoryModel $category */
+            $category = $model->getMainCategory();
+
+            if ($category && $category->avail != 'Y') {
+                $category = $category->getObjects()->ancestors()->filter(['avail' => 'Y'])->limit(1)->get();
             }
+
+            if ($category) {
+                $this->redirect($category->getAbsoluteUrl(), [], 301);
+            }
+            $this->redirect('/', [], 301);
+        }
+
+        if ( $model )
+        {
 
             /** @var \Modules\Sites\Models\SiteModel $site */
             $site = Xcart::app()->getModule('Sites')->getSite();
@@ -57,8 +72,6 @@ class AmpController extends FrontendController
                 'helper' => new AmpHelper($model),
             ]);
 
-        } else {
-            $this->redirect('/');
         }
     }
 }

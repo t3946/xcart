@@ -60,6 +60,7 @@ class ElasticSearch
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $this->data_json);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 1);
         $result_json = curl_exec($ch);
         $this->curl_info = curl_getinfo($ch);
         curl_close($ch);

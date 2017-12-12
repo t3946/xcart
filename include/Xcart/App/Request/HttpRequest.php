@@ -4,9 +4,7 @@ namespace Xcart\App\Request;
 use Xcart\App\Exceptions\HttpException;
 use Xcart\App\Exceptions\InvalidConfigException;
 use Xcart\App\Helpers\Collection;
-use Xcart\App\Helpers\Configurator;
 use Xcart\App\Helpers\Creator;
-use Xcart\App\Helpers\SmartProperties;
 use Xcart\App\Main\Xcart;
 
 /**
@@ -16,7 +14,7 @@ use Xcart\App\Main\Xcart;
  * @property \Xcart\App\Helpers\Collection $get
  * @property \Xcart\App\Helpers\Collection $post
  * @property \Xcart\App\Helpers\Collection $request $_GET replaced by $_POST without $_COOKIE
- * @property \Xcart\App\Helpers\Collection $cookie
+ * @property CookieCollection $cookie
  *
  * @package Xcart\App\Request
  *

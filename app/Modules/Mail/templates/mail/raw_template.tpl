@@ -12,7 +12,7 @@
             <table cellpadding="0" cellspacing="0" border="0" width="960" style="margin-top: 70px;box-shadow: 0 13px 27px rgba(0,0,0,.05);">
                 <tr>
                     <td style="background-color: #fff;" valign="top" align="center">
-                        <table cellpadding="0" cellspacing="0" border="0" width="530" style="margin-top: 35px;">
+                        <table cellpadding="0" cellspacing="0" border="0" width="920" style="margin-top: 35px;">
                             <tr>
                                 <td style="text-align: left; vertical-align: middle;">
                                     {block 'logo'}

@@ -15,6 +15,7 @@ vim: set ts=2 sw=2 sts=2 et:
     <script src="{$SkinDir}/js/google_analytics_impressions.js" type="text/javascript"></script>
     <script type="text/javascript" src="{$SkinDir}/js/spinner.js"></script>
     <script type="text/javascript" src="{$SkinDir}/js/group.js"></script>
+    <link rel="stylesheet" href="/static/backend/fonts/icons/css/style.css">
 
   </head>
   <body>
@@ -26,6 +27,7 @@ vim: set ts=2 sw=2 sts=2 et:
     {load_defer_code type="js"}
     {load_defer_code type="css"}
 
+{$xcartApp->template->render('inSmarty/raw_static_notifications.tpl')}
   </body>
 </html>
 {/if}

@@ -77,12 +77,10 @@ class DashboardModule extends Module
                 'route' => $router->url('dashboard:index'),
                 'items' => ($user && $user->getIsSuperuser()) ? [
                     [
-                        'icon' => 'fa fa-pencil-square-o',
                         'name' => 'Filters settings',
                         'route' => $router->url('dashboard:admin_filters'),
                     ],
                     [
-                        'icon' => 'fa fa-pencil-square-o',
                         'name' => 'Filters group settings',
                         'route' => $router->url('dashboard:admin_groups'),
                     ],

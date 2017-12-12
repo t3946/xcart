@@ -49,10 +49,6 @@ abstract class Base implements ModelInterface, ArrayAccess, Serializable
      * @var array
      */
     protected $related = [];
-    /**
-     * @var Connection
-     */
-    protected $connection;
 
     /**
      * @param array $attributes
@@ -779,9 +775,9 @@ abstract class Base implements ModelInterface, ArrayAccess, Serializable
      * @param string|null $connection Connection name from config
      * @return $this
      */
-    public function using($connection = null)
+    public function using($name = null)
     {
-        $this->using = $connection;
+        $this->using = $name;
         return $this;
     }
 
@@ -791,23 +787,7 @@ abstract class Base implements ModelInterface, ArrayAccess, Serializable
      */
     public function getConnection()
     {
-        if ($this->connection === null) {
-            $connection = Xcart::app()->db->getConnection($this->using);
-            if (($connection instanceof Connection) === false) {
-                throw new Exception('Unknown connection ' . $this->using);
-            }
-
-            $this->connection = $connection;
-        }
-        return $this->connection;
-    }
-
-    /**
-     * @param Connection $connection
-     */
-    public function setConnection(Connection $connection)
-    {
-        $this->connection = $connection;
+        return Xcart::app()->db->getConnection($this->using);
     }
 
     /**

@@ -92,7 +92,7 @@ vim: set ts=2 sw=2 sts=2 et:
     <div class="top-info ui-body ui-body-b ui-overlay-shadow">
         <div class="ui-grid-{if $active_modules.Special_Offers && $product.bonus_points gt 0}a{else}solo{/if}">
             <div class="ui-block-a">
-                <h1 {if $main eq "product"}{if $use_schema_org eq "Y"} id="so_name" itemprop="name"{/if}{/if}>{$oProduct->getTitle()|escape}</h1>
+                <h1 {if $main eq "product"}{if $use_schema_org eq "Y"} id="so_name" itemprop="name"{/if}{/if}>{$oProduct->getFrontendName()|escape}</h1>
             </div>
             {if $active_modules.Special_Offers && $product.bonus_points gt 0}
                 <div class="ui-block-b">

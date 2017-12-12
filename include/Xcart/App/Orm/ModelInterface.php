@@ -105,8 +105,8 @@ interface ModelInterface
      */
     public function getConnection();
 
-    /**
-     * @param Connection $connection
-     */
-    public function setConnection(Connection $connection);
+//    /**
+//     * @param Connection $connection
+//     */
+//    public function setConnection(Connection $connection);
 }

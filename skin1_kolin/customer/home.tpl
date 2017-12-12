@@ -759,6 +759,8 @@ function openPopUp()
     </script>
 {/if}
 
+{$xcartApp->template->render('inSmarty/raw_static_notifications.tpl')}
+
 </body>
 </html>
 {/if}

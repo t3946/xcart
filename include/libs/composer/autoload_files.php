@@ -43,7 +43,6 @@ return array(
     '49c17c188cf012fc294a8bf1c3848a8d' => $baseDir . '/include/func/func.order_edit.php',
     '197f91b90ff50d598ea003293247f7d2' => $baseDir . '/include/func/func.payment.php',
     '6429a7127e4af112a87ff616b7363a2d' => $baseDir . '/include/func/func.product.php',
-    '75a899c82c09f4c6815a5ab473c6691e' => $baseDir . '/include/func/func.product_feeds.php',
     'd9eb0d5fec929766b1eaa87d846a00b6' => $baseDir . '/include/func/func.snapshots.php',
     '958783f5a2a344d8c8bc789f72d27479' => $baseDir . '/include/func/func.taxes.php',
     '69094f3c2fec7461e41a47629a2de28d' => $baseDir . '/include/func/func.templater.php',

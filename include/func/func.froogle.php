@@ -145,7 +145,7 @@ if ($sExtraLog=='Y')
 	if (empty($product))
 		return;
 
-    $product['product'] = $productModel->getTitle();
+    $product['product'] = $productModel->getFrontendName();
 
 	if ($scrip_name != "main_google"){
 	        if ($product["min_amount"] > 1){

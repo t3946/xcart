@@ -2971,7 +2971,9 @@ $order_tabs[1]["anchor"]  = "1";
 $order_tabs[2]["title"]   = "All logs and messages";
 $order_tabs[2]["section"] = "all_logs_and_messages";
 $order_tabs[2]["anchor"]  = "2";
+$calls_log_data = \Modules\PBX\Helpers\AnveoAssignCalls::getResource($orderid);
 
+$smarty->assign('calls_log_data', $calls_log_data);
 $smarty->assign('order_tabs', $order_tabs);
 
 $type_names = [

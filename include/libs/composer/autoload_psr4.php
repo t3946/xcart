@@ -43,6 +43,7 @@ return array(
     'GeoIp2\\' => array($vendorDir . '/geoip2/geoip2/src'),
     'Firebase\\JWT\\' => array($vendorDir . '/firebase/php-jwt/src'),
     'Doctrine\\Common\\Cache\\' => array($vendorDir . '/doctrine/cache/lib/Doctrine/Common/Cache'),
+    'Dariuszp\\' => array($vendorDir . '/dariuszp/cli-progress-bar/src/Dariuszp'),
     'Composer\\CaBundle\\' => array($vendorDir . '/composer/ca-bundle/src'),
     'Cocur\\Slugify\\' => array($vendorDir . '/cocur/slugify/src'),
 );

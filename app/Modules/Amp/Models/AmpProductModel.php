@@ -130,7 +130,7 @@ class AmpProductModel extends ProductModel
 
     public function isDescrHasIframe(){
         $fulldescr = $this->getFrontendDescription();
-        if (strpos( strtolower($fulldescr), "<iframe") !== false){
+        if ( (strpos( strtolower($fulldescr), "<iframe") !== false)  || (strpos( strtolower($fulldescr), "<video") !== false) ){
             return true;
         } else {
             return false;
@@ -141,6 +141,26 @@ class AmpProductModel extends ProductModel
     {
         $fulldescr = $this->getFrontendDescription();
 
+        if (stripos($fulldescr, "<img/>") !== false){
+            $fulldescr = str_replace("<img/>", "", $fulldescr);
+        }
+
+
+        $videos = [];
+        $regexp = '/<video[^>]*?>.*?<source[^>]*?src="(.*?)"[^>]*?><\/video>/';
+        if (preg_match_all($regexp, $fulldescr, $matches)){
+            $fulldescr = preg_replace($regexp, '', $fulldescr);
+            foreach ($matches[1] as $match){
+                if (stripos($match, "http:") !== false){
+                    $match = str_replace("http:", "https:", $match);
+                }
+                $videos[] = "<amp-iframe width='320' height='240' src=\"{$match}\"></amp-iframe>";
+            }
+        }
+
+        if (preg_match('/<style[^>]*?>/', $fulldescr) ){
+            $fulldescr = preg_replace('/<style[^>]*?>/', "", $fulldescr);
+        }
 
         $iframes = [];
         $regexp = '/(<iframe[^>]*?><\/iframe>)/s';
@@ -149,18 +169,46 @@ class AmpProductModel extends ProductModel
             foreach ($matches[1] as $value){
                 $reg = '/iframe/';
                 if (preg_match($reg, $value)){
+                    $regexp = '/(src=.)http:(.*)/s';
+                    if (preg_match($regexp, $value)) {
+                        $value = preg_replace($regexp, "$1https:$2", $value);
+                    }
                     $iframes[] = preg_replace($reg, 'amp-iframe', $value);
                 }
             }
         }
 
-
         $fulldescr = preg_replace("/<([a-z][a-z0-9]*)[^>]*?(\/?)>/i",'<$1$2>', $fulldescr);
+
+        if (count($videos) > 0){
+            foreach ($videos as $video){
+                $fulldescr .= "<br>{$video}<br>";
+            }
+        }
 
         if (count($iframes) > 0){
             foreach ($iframes as $iframe){
                 $fulldescr .= "<br>{$iframe}<br>";
             }
+        }
+
+        if ( (stripos($fulldescr, "<font>") !== false) || (stripos($fulldescr, "</font>") !== false) ) {
+            $fulldescr = str_ireplace(["<font>", "</font>"], "", $fulldescr);
+        }
+
+        $regexp = '/<([^>]*?)mozallowfullscreen|webkitallowfullscreen([^>]*?)>/s';
+
+        while (preg_match($regexp, $fulldescr)){
+            $fulldescr = preg_replace($regexp, "$1$2", $fulldescr);
+        }
+
+        if (preg_match('/<nbsp>/i', $fulldescr )) {
+            $fulldescr = preg_replace('/<nbsp>/i', '', $fulldescr);
+        }
+
+        $regexp = '/<!\[.*?\]>/';
+        if (preg_match($regexp, $fulldescr)) {
+            $fulldescr = preg_replace($regexp, '', $fulldescr);
         }
 
 
@@ -174,6 +222,5 @@ class AmpProductModel extends ProductModel
             return false;
         }
     }
-
 
 }

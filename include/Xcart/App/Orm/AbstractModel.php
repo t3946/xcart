@@ -203,7 +203,7 @@ class AbstractModel extends Base
             $this->setIsCreated(true);
             $this->setIsNewRecord(false);
             $this->updateRelated();
-            $this->attributes->reflectOldAttributes();
+            $this->reflectOldAttributes();
         }
 
         return $inserted;
@@ -236,7 +236,7 @@ class AbstractModel extends Base
 
         if ($updated) {
             $this->updateRelated();
-            $this->attributes->reflectOldAttributes();
+            $this->reflectOldAttributes();
         }
         return $updated;
     }
@@ -262,7 +262,7 @@ class AbstractModel extends Base
 
         $platform = $this->getConnection()->getDatabasePlatform();
 
-        $meta = self::getMeta();
+        $meta = static::getMeta();
         foreach ($this->getAttributes() as $name => $attribute) {
             if (in_array($name, $fields) && in_array($name, $dirty) && $meta->hasField($name)) {
                 $field = $this->getField($name);
@@ -279,6 +279,23 @@ class AbstractModel extends Base
         }
 
         return $changed;
+    }
+
+    protected function reflectOldAttributes()
+    {
+        $this->attributes->reflectOldAttributes();
+        $meta = static::getMeta();
+
+        $dirty = $this->attributes->getDirtyAttributes();
+        $meta_attr = $meta->getAttributes();
+
+        $diff = array_diff($meta_attr, $dirty);
+
+        if ($diff) {
+            foreach ($diff as $name) {
+                $this->attributes->setOldAttribute($name, $meta->getField($name)->getValue());
+            }
+        }
     }
 
     /**

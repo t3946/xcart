@@ -175,15 +175,10 @@ if ($REQUEST_METHOD == "POST") {
 			}
 
 			if (!$sf_error) {
-			$cat = func_array2insert('categories', $query);
+				$model = new \Modules\Product\Models\CategoryModel($query);
+                $model->save();
+                $cat = $model->categoryid;
 
-			if ($parent == 0) {
-				$parent_categoryid_path = $cat;
-			} else {
-				$parent_categoryid_path = func_query_first_cell("SELECT categoryid_path FROM $sql_tbl[categories] WHERE categoryid='$parent'")."/".$cat;
-			}
-
-			func_array2update("categories", array("categoryid_path" => $parent_categoryid_path), "categoryid = '$cat'");
 			$top_message = array(
 				"content" => func_get_langvar_by_name("msg_adm_category_add"),
 				"type" => "I"
@@ -214,14 +209,23 @@ if ($REQUEST_METHOD == "POST") {
 		if (empty($supplemental_category)){
 			$supplemental_category = "N";
 		}
+        \Modules\Product\Models\CategoryModel::objects()
+            ->filter(['pk' => $cat])
+            ->update([
+                'category'=> $category_name,
+                'description' => $description,
+                'meta_descr' => $meta_descr,
+                'meta_keywords' => $meta_keywords,
+                'avail' => $avail,
+                'order_by' => $order_by,
+                'is_bold' => $is_bold,
+            ]);
 
-		db_query("UPDATE $sql_tbl[categories] SET category='$category_name', description='$description', meta_descr='$meta_descr', meta_keywords='$meta_keywords', avail='$avail', order_by='$order_by', is_bold='$is_bold', pc_ready_to_classify='$pc_ready_to_classify', title_tag='$title_tag', SEO_category_name='$SEO_category_name', SEO_h2='".trim($SEO_h2)."', google_product_category='$google_product_category', prevent_index_products='$prevent_index_products', prevent_index_category_page='$prevent_index_category_page', supplemental_category='$supplemental_category' WHERE categoryid='$cat'");
-
-        	    // Autogenerate clean URL.
-	        $clean_url = func_clean_url_autogenerate('C', $cat, array('category' => $category_name));
-        	$clean_url_save_in_history = false;
-		db_query("DELETE FROM $sql_tbl[clean_urls] WHERE resource_type='C' AND resource_id='$cat'");
-	        func_clean_url_add($clean_url, 'C', $cat);
+        // Autogenerate clean URL.
+        $clean_url = func_clean_url_autogenerate('C', $cat, array('category' => $category_name));
+        $clean_url_save_in_history = false;
+        db_query("DELETE FROM $sql_tbl[clean_urls] WHERE resource_type='C' AND resource_id='$cat'");
+        func_clean_url_add($clean_url, 'C', $cat);
 
 
 
@@ -273,13 +277,13 @@ if ($REQUEST_METHOD == "POST") {
 		}
 
 		# Get old category path
-		$old_path = explode("/", func_query_first_cell("SELECT categoryid_path FROM $sql_tbl[categories] WHERE categoryid = '$cat'"));
-
-		$new_parent_categoryid_path = func_query_first_cell("SELECT categoryid_path FROM $sql_tbl[categories] WHERE categoryid='$cat_location'");
-		$current_categoryid_path = func_query_first_cell("SELECT categoryid_path FROM $sql_tbl[categories] WHERE categoryid='$cat'");
-		if (!empty($new_parent_categoryid_path)) {
-			$new_parent_categoryid_path .= "/";
-		}
+//		$old_path = explode("/", func_query_first_cell("SELECT categoryid_path FROM $sql_tbl[categories] WHERE categoryid = '$cat'"));
+//
+//		$new_parent_categoryid_path = func_query_first_cell("SELECT categoryid_path FROM $sql_tbl[categories] WHERE categoryid='$cat_location'");
+//		$current_categoryid_path = func_query_first_cell("SELECT categoryid_path FROM $sql_tbl[categories] WHERE categoryid='$cat'");
+//		if (!empty($new_parent_categoryid_path)) {
+//			$new_parent_categoryid_path .= "/";
+//		}
 
 		$sf_error = false;
 			
@@ -290,12 +294,14 @@ if ($REQUEST_METHOD == "POST") {
 			}
 		}
 
-		if (!$sf_error) {
-		if (!empty($current_categoryid_path)) {
-			db_query("UPDATE $sql_tbl[categories] SET parentid='$cat_location', categoryid_path='$new_parent_categoryid_path$cat' WHERE categoryid='$cat'");
-			db_query("UPDATE $sql_tbl[categories] SET categoryid_path=CONCAT('$new_parent_categoryid_path$cat/', SUBSTRING(categoryid_path, ".(strlen($current_categoryid_path."/")+1).")) WHERE categoryid_path LIKE '$current_categoryid_path/%'");
-		}
-		}
+        if (!$sf_error) {
+            /** @var \Modules\Product\Models\CategoryModel $category_model */
+            if ($category_model = \Modules\Product\Models\CategoryModel::objects()->get(['pk' => $cat]))
+            {
+                $category_model->parent = $cat_location;
+                $category_model->save();
+            }
+        }
 
 # START: random:20766 [2010 May 11 13:18] 
 		if (!empty($additional_cat_location)) {

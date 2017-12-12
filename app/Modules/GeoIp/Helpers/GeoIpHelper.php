@@ -19,7 +19,7 @@ class GeoIpHelper
 {
     /**
      * @param string $ip
-     * @return \GeoIp2\Model\City|null
+     * @return GeoipLitecityLocationModel|null
      */
     public static function getGeoipLocation2($ip)
     {
@@ -28,7 +28,15 @@ class GeoIpHelper
         try {
 
             $reader = new Reader(__DIR__ . '/../GeoLite2/GeoLite2-City.mmdb');
-            $model = $reader->city($ip);
+            $result = $reader->city($ip);
+            $model = new GeoipLitecityLocationModel(
+                [
+                    'country' => $result->country->isoCode,
+                    'region' => $result->mostSpecificSubdivision->isoCode,
+                    'city' => $result->city->name,
+                    'postalCode' => $result->postal->code,
+                ]
+            );
 
         } catch (AddressNotFoundException $addressNotFoundException) {
 
@@ -41,18 +49,7 @@ class GeoIpHelper
 
     public static function getGeoipLocation($ip)
     {
-        $model = null;
-
-        if ($iIp = sprintf("%u", ip2long($ip))) {
-            /** @var GeoipLitecityLocationModel $model */
-            $model = GeoipLitecityLocationModel::objects()
-                ->filter(['blocks__startIpNum__lt' => $iIp])
-                ->order(['-blocks__startIpNum'])
-                ->limit(1)
-                ->get();
-        }
-
-        return $model;
+        return self::getGeoipLocation2($ip);
     }
 
     public static function getAreaCodeFromPhone($phone)

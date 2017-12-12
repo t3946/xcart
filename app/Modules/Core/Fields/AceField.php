@@ -10,7 +10,7 @@ class AceField extends TextAreaField
 //    public $theme = 'twilight';
     public $theme = 'gruvbox';
 
-    public $inputTemplate = 'fields/ace_field.tpl';
+    public $inputTemplate = 'forms/field/ace/input.tpl';
 
     public function init()
     {

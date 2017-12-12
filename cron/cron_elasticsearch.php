@@ -79,7 +79,7 @@ while ($record = db_fetch_array($cidev_updated_products)) {
                     $product["fulldescr"] = str_replace("/r/n", " ", $product["fulldescr"]);
                     $product["fulldescr"] = str_replace("\r\n", " ", $product["fulldescr"]);
 
-                    $data_arr["productname"] = $product_model->getTitle();
+                    $data_arr["productname"] = $product_model->getFrontendName();
                     $data_arr["sku"]         = $product["productcode"];
                     $data_arr["upc"]         = $product["upc"];
                     $data_arr["brand"]       = $product["brand"];
@@ -135,7 +135,7 @@ while ($record = db_fetch_array($cidev_updated_products)) {
                     $product["fulldescr"] = str_replace("/r/n", " ", $product["fulldescr"]);
                     $product["fulldescr"] = str_replace("\r\n", " ", $product["fulldescr"]);
 
-                    $data_arr["productname"] = $product_model->getTitle();
+                    $data_arr["productname"] = $product_model->getFrontendName();
                     $data_arr["sku"]         = $product["productcode"];
                     $data_arr["upc"]         = $product["upc"];
                     $data_arr["brand"]       = $product["brand"];

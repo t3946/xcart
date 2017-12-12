@@ -6,6 +6,7 @@
 www.*_*.xml
 thumbs.db
 Thumbs.db
+.DS_Store
 ###################################
 ## scripts to exclude
 /config.local.php
@@ -15,10 +16,10 @@ Thumbs.db
 ######################
 ## folders to exclude
 /images/
+/media/
 /m1/
 /files/
 /product_files/
-/files/
 /.idea/
 /verificator/cookies
 /var/
@@ -29,11 +30,6 @@ bower_components
 /skin1_kolin/pages/
 /app/runtime/
 
-
-!/static/**/*.gif
-!/static/**/*.png
-!/static/**/*.jpg
-!/static/**/*.jpeg
-!/static/**/*.svg
+!.gitkeep
 !/config.php
 !/skin1_kolin/

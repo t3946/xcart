@@ -386,19 +386,24 @@ function reg_quote(s) {
 
 function setCookie(name, value) {
 	var date = new Date();
-	date.setFullYear(date.getYear()+1);
-	document.cookie = name+"="+escape(value)+"; expires="+date.toGMTString();
+	date.setFullYear(date.getFullYear()+1);
+	document.cookie = name+"="+encodeURI(value)+"; expires="+date.toUTCString();
 }
 
 function getCookie(name) {
   if (document.cookie.length > 0) {
+  	var start, end;
     start = document.cookie.indexOf(name + "=");
+
     if (start != - 1) {
       start = start + name.length + 1;
       end = document.cookie.indexOf(";", start);
-      if (end == - 1) end = document.cookie.length;
 
-      return unescape(document.cookie.substring(start, end));
+      if (end == - 1) {
+          end = document.cookie.length;
+	  }
+
+      return decodeURI(document.cookie.substring(start, end));
     }
   }
 
