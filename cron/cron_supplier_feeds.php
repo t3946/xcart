@@ -136,7 +136,7 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
         }
 
         $create_date_time_diff = time() - $supplierFeed->getFeedDate();
-        $log_text = "manufacturerid: {c}. Started. ({$feed_types[$supplierFeedModel->feed_type]})";
+        $log_text = "manufacturerid: {$supplierFeedModel->manufacturerid}. Started. ({$feed_types[$supplierFeedModel->feed_type]})";
         func_backprocess_log($log_category, $log_text);
 
         foreach ($supplierFeed->products as $kp => $prod) {
@@ -174,7 +174,7 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
                     }
 
                     if ($childs) {
-                        $group->childs->exclude(['productcode__in' => $childs])->update(['groop_root' => null]);
+                        $group->childs->exclude(['productcode__in' => $childs])->update(['group_root' => null]);
                     }
 
                     $products = $prod['child_products'];
