@@ -809,7 +809,7 @@ if (!$func_is_cart_empty) {
 
             $cart["products"] = $cart_prods;
         } else {
-            $cart = "";
+            $cart = [];
         }
 
         func_header_location("cart.php?$QUERY_STRING");
@@ -1087,7 +1087,7 @@ if (!$func_is_cart_empty) {
         if (!empty($active_modules["SnS_connector"]))
             func_sns_exec_actions($is_sns_action);
 
-        $cart = "";
+        $cart = [];
         func_header_location($xcart_web_dir . DIR_CUSTOMER . "/error_message.php?product_in_cart_expired");
     } else {
         $products = func_products_in_cart($cart, (!empty($userinfo["membershipid"]) ? $userinfo["membershipid"] : 0));

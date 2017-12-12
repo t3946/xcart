@@ -76,7 +76,7 @@ function func_paypal_detect_state($country, $state, &$err) {
 	return func_query_first_cell("SELECT code FROM $sql_tbl[states] WHERE country_code = '$country' LIMIT 1");
 }
 
-x_session_register('cart');
+x_session_register('cart', []);
 
 $pp_locale_codes = array("AU","DE","FR","GB","IT","JP","US");
 $pp_supported_charsets = array (
@@ -300,7 +300,7 @@ EOT;
 		$login = $pp_anon_user['login'];
 		$logged = '';
 		
-		x_session_register("identifiers",array());
+		x_session_register("identifiers", Ñ…ÑŠ);
 		$identifiers['C'] = array (
 			'login' => $login,
 			'login_type' => $login_type
@@ -311,7 +311,7 @@ EOT;
 	}
 
 	x_session_register("paypal_payment_id");
-	x_session_register("paypal_express_details");
+	x_session_register("paypal_express_details", []);
 	$paypal_express_details = $result;
 
 	switch ($state_err) {
@@ -436,7 +436,7 @@ if ($REQUEST_METHOD == 'POST' && $_POST['action'] == 'place_order' && $pp_dp_all
           <PaymentAction>$pp_final_action</PaymentAction>
           <PaymentDetails>
             <OrderTotal currencyID="$pp_currency">$pp_total</OrderTotal>
-            <ButtonSource>X-óart-DP</ButtonSource>
+            <ButtonSource>X-ï¿½art-DP</ButtonSource>
             <NotifyURL>$notify_url</NotifyURL>
 			<ShipToAddress>
               <Name>$s_name</Name>
@@ -531,7 +531,7 @@ if ($REQUEST_METHOD == 'POST' && $_POST['action'] == 'place_order') {
 	$pp_ordr = $pp_prefix.join("-",$secure_oid);
 
 	# finish ExpressCheckout
-	x_session_register("paypal_express_details");
+	x_session_register("paypal_express_details", []);
 	$request =<<<EOT
 <?xml version="1.0" encoding="$pp_charset"?>
 <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
@@ -554,7 +554,7 @@ if ($REQUEST_METHOD == 'POST' && $_POST['action'] == 'place_order') {
           <PayerID>$paypal_express_details[PayerID]</PayerID>
           <PaymentDetails>
             <OrderTotal currencyID="$pp_currency">$pp_total</OrderTotal>
-            <ButtonSource>X-óart-EC</ButtonSource>
+            <ButtonSource>X-ï¿½art-EC</ButtonSource>
             <NotifyURL>$notify_url</NotifyURL>
             <InvoiceID>$pp_ordr</InvoiceID>
             <Custom>$order_secureid</Custom>

@@ -875,8 +875,8 @@ if ($REQUEST_METHOD == 'POST' && isset($_POST['usertype'])) {
 			}
 		}
 
-		$profile_modified_data = "";
-		$profile_modified_add_field = "";
+		$profile_modified_data = [];
+		$profile_modified_add_field = [];
 	}
 
 	$script = $PHP_SELF."?".$QUERY_STRING;
@@ -1357,7 +1357,7 @@ if (!empty($active_modules['XAffiliate']) && (($mode == 'update' && $login_type 
 }
 
 if ($REQUEST_METHOD == "GET")
-	$profile_modified_data = "";
+	$profile_modified_data = [];
 
 if ($_GET['parent']) {
 	$smarty->assign("parent", $parent);

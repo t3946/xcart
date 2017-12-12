@@ -110,7 +110,7 @@ $_orderids = func_get_urlencoded_orderids ($orderids);
 #
 # Remove all from cart
 #
-$cart="";
+$cart=[];
 if (!empty($active_modules['SnS_connector'])) {
 	func_generate_sns_action("CartChanged");
 }
