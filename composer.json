@@ -46,7 +46,7 @@
         "classmap": [
             "include/libs/caponica/amazon-mws-complete/src/AmazonPhpClientLibrary/FBAOutboundServiceMWS",
             "include/libs/caponica/amazon-mws-complete/src/AmazonPhpClientLibrary/MarketplaceWebService",
-            "src/FBAInventoryServiceMWS"
+            "include/libs/caponica/amazon-mws-complete/src/AmazonPhpClientLibrary/FBAInventoryServiceMWS"
         ],
         "files": [
             "include/func/func.core.php",
