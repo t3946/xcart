@@ -9,6 +9,8 @@ use Xcart\App\Middleware\Middleware;
 
 class ReferrerSearchMiddleware extends Middleware
 {
+    public $isProcessRequest = true;
+
     public function processRequest($request)
     {
 

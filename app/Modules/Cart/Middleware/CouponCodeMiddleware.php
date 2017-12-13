@@ -18,6 +18,8 @@ class CouponCodeMiddleware extends Middleware
 {
     const CODE_PARAM = 'coupon_code';
 
+    public $isProcessRequest = true;
+
     public function processRequest($request)
     {
         if (!Cli::isCli()) {
