@@ -88,6 +88,12 @@ class ProductModel extends Model implements ICartItem
                 'through' => ProductCategoriesModel::className(),
             ],
 
+            'product_categories' => [
+                'class' => HasManyField::className(),
+                'modelClass' => ProductCategoriesModel::className(),
+                'link' => ['productid' => 'productid'],
+            ],
+
             'prices' => [
                 'class' => HasManyField::className(),
                 'modelClass' => PricingModel::className(),
@@ -368,8 +374,35 @@ class ProductModel extends Model implements ICartItem
     {
         return CategoryModel::objects()->filter([
             'products__through__main' => 'Y',
-            'products__through__productid' => $this->productid
+            'products__through__productid' => $this->productid,
+            'storefrontid' => $this->sites->limit(1)->get()->storefrontid
         ])->limit(1)->get();
+    }
+
+    /**
+     * @param CategoryModel $model
+     */
+    public function setMainCategory(CategoryModel $model)
+    {
+        if ($adc = ProductCategoriesModel::objects()
+            ->filter([
+                'category__storefrontid' => $this->sites->limit(1)->get()->storefrontid,
+                'productid' => $this->productid,
+                'main' => 'Y',
+                'categoryid__isnt' => $model->categoryid
+            ])->all()) {
+            foreach ($adc as $dc) {
+                $dc->delete();
+            }
+        }
+
+        ProductCategoriesModel::objects()->getOrCreate(
+            [
+                'categoryid' => $model->categoryid,
+                'productid' => $this->productid,
+                'main' => 'Y',
+            ]
+        );
     }
 
     public function getBreadcrumbs()

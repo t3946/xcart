@@ -172,12 +172,6 @@ class SupplierFeedHelper
                 $model->setAttributes(array_merge($data, $defaults));
             }
 
-            (new ProductCategoriesModel([
-                'categoryid' => $feed->base_category_id,
-                'productid' => $model->productid,
-                'main' => 'Y']))
-                ->save();
-
             (new ProductStorefrontModel([
                 'productid' => $model->productid,
                 'sfid' => $feed->storefront_id]))
@@ -312,6 +306,11 @@ class SupplierFeedHelper
         if (!empty($aSupplierCategory) && is_array($aSupplierCategory)) {
 
             $parent_id = $feed->base_category_id;
+
+            if ($is_created && $model->isGroupRoot()) {
+                $parent_id = 0;
+            }
+
             $lastCategory = null;
 
             $cats_arr = $aSupplierCategory;
@@ -325,22 +324,20 @@ class SupplierFeedHelper
                 foreach ($cats_arr as $v_cat) {
 
                     /** @var CategoryModel $modelCat */
-                    list($modelCat, $is_cat_created) = CategoryModel::objects()->getOrNew(
+                    list($modelCat, $is_cat_created) = CategoryModel::objects()->getOrCreate(
                         [
                             'parentid' => $parent_id,
-                            'category' => $v_cat
+                            'category' => $v_cat,
+                            'storefrontid' => $feed->storefront_id
                         ]);
 
                     if ($is_cat_created) {
                         $modelCat->setAttributes([
-                            'storefrontid' => $feed->storefront_id,
                             'prevent_index_products' => $model->prevent_search_indexing_this_product_page == 'Y' ? 'Y' : 'N',
                             'prevent_index_category_page' => $model->prevent_search_indexing_this_product_page == 'Y' ? 'Y' : 'N',
                             'is_bold' => 'Y',
                             'order_by' => 10
                         ]);
-
-                        $modelCat->save();
 
                         $modelCat->categoryid_path = $modelCat->parent->categoryid_path . "/" . $modelCat->categoryid;
 
@@ -355,16 +352,13 @@ class SupplierFeedHelper
                 }
 
                 if ($lastCategory) {
-                    if ($model->pc_classify_status && !in_array($model->pc_classify_status, ['AC', 'ACC', 'MC'])) {
-                        db_query_param(/** @lang MySQL */
-                            "UPDATE xcart_products_categories SET categoryid=:categoryid WHERE productid=:productid AND main=:main", [
-                            'categoryid' => $lastCategory->categoryid,
-                            'productid' => $model->productid,
-                            'main' => 'Y'
-                        ]);
+                    if (!$model->isCategorized() || ($model->isGroupRoot() && $is_created)) {
+                        $model->setMainCategory($lastCategory);
                     }
                 }
             }
+        } else {
+            $model->setMainCategory(CategoryModel::objects()->get(['categoryid' => $feed->base_category_id]));
         }
 
         return $model;
