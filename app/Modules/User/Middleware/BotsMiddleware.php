@@ -9,7 +9,7 @@ class BotsMiddleware extends Middleware
 {
     public $isProcessRequest = true;
 
-    public function processRequest($request)
+    public function processHttpRequest($request)
     {
         if (BotsHelper::IsBot()) {
             define("IS_ROBOT", 1);

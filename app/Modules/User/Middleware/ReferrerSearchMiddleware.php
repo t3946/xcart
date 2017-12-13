@@ -11,10 +11,10 @@ class ReferrerSearchMiddleware extends Middleware
 {
     public $isProcessRequest = true;
 
-    public function processRequest($request)
+    public function processHttpRequest($request)
     {
 
-        if (!Cli::isCli() && $request->getReferrer()) {
+        if ($request->getReferrer()) {
             $url = SurfingHelper::getReferUrl();
 
             $url = parse_url($url);

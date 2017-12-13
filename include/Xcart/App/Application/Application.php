@@ -203,7 +203,7 @@ class Application
     public function beforeRun()
     {
         if (!$this->isRun()) {
-            if ($this->getIsWebMode() && $this->hasComponent('middleware')) {
+            if ($this->hasComponent('middleware')) {
                 $this->middleware->processRequest($this->request);
             }
 

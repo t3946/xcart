@@ -2,7 +2,9 @@
 
 namespace Xcart\App\Middleware;
 use Exception;
+use Xcart\App\Cli\Cli;
 use Xcart\App\Request\Request;
+use Xcart\App\Request\HttpRequest;
 
 abstract class Middleware implements IMiddleware
 {
@@ -16,8 +18,23 @@ abstract class Middleware implements IMiddleware
      */
     public function processRequest($request)
     {
-
+        if (!Cli::isCli() || $request instanceof HttpRequest) {
+            $this->processHttpRequest($request);
+        }
+        else {
+            $this->processCliRequest($request);
+        }
     }
+
+    /**
+     * @param \Xcart\App\Request\Request $request
+     */
+    public function processCliRequest($request) {}
+
+    /**
+     * @param \Xcart\App\Request\HttpRequest $request
+     */
+    public function processHttpRequest($request) {}
 
     /**
      * Event owner RenderTrait
