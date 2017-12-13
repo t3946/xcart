@@ -887,27 +887,21 @@ A.Button {
 
 
 .SmallNote {
-  &:visited {
-    COLOR: #7C4C00;
+  FONT-SIZE: .9em;
+  COLOR: #7C4C00;
+
+  &:visited, &:active {
     TEXT-DECORATION: none;
-    FONT-SIZE: 9px;
   }
   &:hover {
-    COLOR: #7C4C00;
     TEXT-DECORATION: underline;
-    FONT-SIZE: 9px;
-  }
-  &:active {
-    COLOR: #7C4C00;
-    TEXT-DECORATION: none;
-    FONT-SIZE: 9px;
   }
 }
 
 .SmallText {
   COLOR: #7C4C00;
   TEXT-DECORATION: none;
-  FONT-SIZE: 9px;
+  FONT-SIZE: .9em;
 }
 
 .SubcatTitle {

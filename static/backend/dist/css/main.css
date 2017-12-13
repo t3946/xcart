@@ -6561,25 +6561,18 @@ A.Button:visited, A.Button:hover, A.Button:active {
   VERTICAL-ALIGN: middle;
   BORDER: 0px; }
 
-.SmallNote:visited {
-  COLOR: #7C4C00;
-  TEXT-DECORATION: none;
-  FONT-SIZE: 9px; }
-
-.SmallNote:hover {
-  COLOR: #7C4C00;
-  TEXT-DECORATION: underline;
-  FONT-SIZE: 9px; }
-
-.SmallNote:active {
-  COLOR: #7C4C00;
-  TEXT-DECORATION: none;
-  FONT-SIZE: 9px; }
+.SmallNote {
+  FONT-SIZE: .9em;
+  COLOR: #7C4C00; }
+  .SmallNote:visited, .SmallNote:active {
+    TEXT-DECORATION: none; }
+  .SmallNote:hover {
+    TEXT-DECORATION: underline; }
 
 .SmallText {
   COLOR: #7C4C00;
   TEXT-DECORATION: none;
-  FONT-SIZE: 9px; }
+  FONT-SIZE: .9em; }
 
 .SubcatTitle {
   TEXT-ALIGN: left;
