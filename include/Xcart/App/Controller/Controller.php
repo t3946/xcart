@@ -104,7 +104,7 @@ class Controller
      */
     public function render($template, $params = [])
     {
-        $data = ['this' => $this];
+        $data = ['controller' => $this];
         return Xcart::app()->template->render($template, array_replace($data, $params));
     }
 

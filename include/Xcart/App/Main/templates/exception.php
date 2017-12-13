@@ -29,7 +29,7 @@
 
     <div class="source">
         <p class="file"><?php echo $data['type']; ?>(<?php echo $data['line']; ?>)</p>
-        <?php echo $this->renderSource($data['file'], $data['line'], $this->maxSourceLines); ?>
+        <?php echo $self->renderSource($data['file'], $data['line'], $self->maxSourceLines); ?>
     </div>
 
     <div class="traces">
@@ -37,7 +37,7 @@
         <table style="width:100%;">
             <?php
             foreach ($data['traces'] as $i => $trace) {
-                if ($this->isCore($trace)) {
+                if ($self->isCore($trace)) {
                     $cssClass = 'core';
                 } elseif ($i > 3) {
                     $cssClass = 'app';
@@ -58,12 +58,12 @@
 
                             <?php if (isset($trace['args'])) { ?>
                                 <strong><?php echo $trace['function'] ?></strong>
-                                <?php echo $this->argsToString($trace['args']); ?>
+                                <?php echo $self->argsToString($trace['args']); ?>
                             <?php } ?>
                         </div>
 
                         <?php if ($hasCode) { ?>
-                            <?php echo $this->renderSource($trace['file'], $trace['line'], $this->maxSourceLines); ?>
+                            <?php echo $self->renderSource($trace['file'], $trace['line'], $self->maxSourceLines); ?>
                         <?php } ?>
                     </td>
                 </tr>
