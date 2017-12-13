@@ -467,4 +467,9 @@ class ProductModel extends Model implements ICartItem
     {
         return sprintf(self::ADMIN_PRODUCT_MODIFY_URL, $this->productid, $this->sites->limit(1)->get()->storefrontid);
     }
+
+    public function isCategorized()
+    {
+        return ($this->pc_classify_status === 'ACC' || $this->pc_classify_status === 'MC');
+    }
 }

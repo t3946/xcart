@@ -110,7 +110,7 @@ class SupplierFeedHelper
      * @throws \Doctrine\DBAL\DBALException
      * @throws \Exception
      */
-    public static function addProduct($model, $is_created, $feed, $data, $dont_update_fields, $defaults)
+    public static function feedProduct($model, $is_created, $feed, $data, $dont_update_fields, $defaults)
     {
         $model->controlled_by_feed = $feed->feed_file_name;
 

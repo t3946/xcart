@@ -6,6 +6,7 @@ use Modules\Distributor\Models\DistributorFeedFieldModel;
 use Modules\Distributor\Models\SupplierFeedModel;
 use Modules\Product\Helpers\ProductHelper;
 use Modules\Product\Helpers\SupplierFeedHelper;
+use Modules\Product\Models\CategoryModel;
 use Modules\Product\Models\ProductModel;
 use Modules\Product\Stores\SupplierFeedStore;
 
@@ -76,12 +77,12 @@ if (!$supplier_feeds) {
 /** @var SupplierFeedModel[] $supplier_feeds */
 foreach ($supplier_feeds as $k => $supplierFeedModel) {
 
+    $discontinued_products_count = $updated_products_count = $inserted_products_count = $new_products_count = $skippedProductsCount = 0;
+    $all_feed_productcodes = $lastFeedFields = $last_feed_fields_arr_vals = [];
+
     clearstatcache();
 
     $start_supplier_time = new DateTime();
-
-    $discontinued_products_count = $updated_products_count = $inserted_products_count = $new_products_count = $skippedProductsCount = 0;
-    $all_feed_productcodes = $lastFeedFields = $last_feed_fields_arr_vals = [];
 
     $md5_arr = explode(".", $supplierFeedModel->feed_file_name);
     array_pop($md5_arr);
@@ -103,179 +104,172 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
         continue;
     }
 
-    if ($contents = SupplierFeedHelper::getFileFtp($supplierFeedModel->feed_file_name, $config)) {
+    $contents = SupplierFeedHelper::getFileFtp($supplierFeedModel->feed_file_name, $config);
 
-        $supplierFeed = new SupplierFeedStore($contents);
-
-        if (empty($supplierFeed->products) || !is_array($supplierFeed->products)) {
-            $log_text = "manufacturerid: " . $supplierFeedModel->manufacturerid . ". No products found. (" . $feed_types[$supplierFeedModel->feed_type] . ")";
-            func_backprocess_log($log_category, $log_text);
-            func_backprocess_log("supplier feeds errors", $log_text);
-            continue;
-        }
-        if ($supplierFeed->count() != $supplierFeed->products_in_feed) {
-            $log_text = "manufacturerid: {$supplierFeedModel->manufacturerid}. Corrupted feed file (by products in feed count). ({$feed_types[$supplierFeedModel->feed_type]}){$supplierFeed->count()} vs {$supplierFeed->products_in_feed}";
-            func_backprocess_log($log_category, $log_text);
-            func_backprocess_log("supplier feeds errors", $log_text);
-            db_query_param(/** @lang MySQL */
-                'UPDATE xcart_config SET value=:value WHERE name=:name', ['value' => 'N', 'name' => $log_category]);
-            continue;
-        }
-        if ($supplierFeed->supplier_id != $supplierFeedModel->manufacturerid) {
-            $log_text = "manufacturerid: {$supplierFeedModel->manufacturerid}. Wrong supplier_id. ({$feed_types[$supplierFeedModel->feed_type]}) . Feed skipped.";
-            func_backprocess_log($log_category, $log_text);
-            func_backprocess_log("supplier feeds errors", $log_text);
-            continue;
-        }
-        if ($supplierFeedModel->last_update_items_count > 0) {
-            if (($supplierFeed->products_in_feed / $supplierFeedModel->last_update_items_count) < $supplierFeedModel->threshold) {
-                $log_text = "manufacturerid: {$supplierFeedModel->manufacturerid}. Too few products in feed in comparison with last update {$supplierFeed->products_in_feed} against {$supplierFeedModel->last_update_items_count}. ({$feed_types[$supplierFeedModel->feed_type]})";
-                func_backprocess_log($log_category, $log_text);
-                continue;
-            }
-        }
-
-        $create_date_time_diff = time() - $supplierFeed->getFeedDate();
-        $log_text = "manufacturerid: {$supplierFeedModel->manufacturerid}. Started. ({$feed_types[$supplierFeedModel->feed_type]})";
-        func_backprocess_log($log_category, $log_text);
-
-        foreach ($supplierFeed->products as $kp => $prod) {
-
-            $products = [];
-
-            if (isset($prod['is_group']) && $prod['is_group'] === true) {
-                    if ($prod['child_products']) {
-                    foreach ($prod['child_products'] as $child_data) {
-                        if ($child = ProductModel::objects()->get(['productcode' => $child_data['productcode']])) {
-                            if ($parent = $child->parent) {
-                                $prod['productcode'] = $parent->productcode;
-                                break;
-                            }
-                        }
-                    }
-                    if (!$prod['productcode']) {
-                        $prod['productcode'] = ProductHelper::getNewGroupSKU($supplierFeedModel->manufacturerid);
-                    }
-                    /** @var ProductModel $group */
-                    list($group, $is_created) = ProductModel::objects()->getOrCreate(['productcode' => $prod['productcode']]);
-
-                    $group->setAttributes(array_merge($prod, ['parent' => $group]));
-                    $group = SupplierFeedHelper::addProduct($group, $is_created, $supplierFeedModel, $prod, $supplierFeed->dont_update_fields, $supplierFeed->defaults);
-                    $group->save();
-
-                    $childs = [];
-                    foreach ($prod['child_products'] as $key => $child_data) {
-
-                        $prod['child_products'][$key]['group_root'] = $group->productid;
-                        $prod['child_products'][$key]['brand_name'] = $prod['brand_name'];
-                        $prod['child_products'][$key]['supplier_categories'] = $prod['supplier_categories'];
-
-                        $childs[] = $child_data['productcode'];
-                    }
-
-                    if ($childs) {
-                        $group->childs->exclude(['productcode__in' => $childs])->update(['group_root' => null]);
-                    }
-
-                    $products = $prod['child_products'];
-                }
-            }
-
-            foreach ($products as $aProduct) {
-
-                print($kp . ' --> ' . $aProduct['productcode'] . "\n");
-
-                if (empty($aProduct['productcode']) || (isset($aProduct['cost_to_us']) && floatval($aProduct['cost_to_us']) <= 0)) {
-                    $skippedProductsCount++;
-                    continue;
-                }
-
-                /** @var ProductModel $modelProduct */
-
-                list($modelProduct, $is_created) = ProductModel::objects()->getOrNew(['productcode' => $aProduct['productcode']]);
-
-                switch ($supplierFeedModel->feed_type) {
-                    case 'I' :
-                        if ($is_created) {
-                            $new_products_count++;
-                            continue;
-                        }
-
-                        break;
-                    case 'P' :
-                        if (!isset($aProduct['is_group'])) {
-                            if (!isset($aProduct['cost_to_us'])) {
-                                $skippedProductsCount++;
-                                continue;
-                            }
-                            if (!$is_created && $supplierFeedModel->add_new_only == "Y") {
-                                $skippedProductsCount++;
-                                continue;
-                            }
-                        }
-                        break;
-                }
-
-                if ($modelProduct && $modelProduct->save()) {
-
-                    $modelProduct->setAttributes($aProduct);
-
-                    $modelProduct = SupplierFeedHelper::addProduct($modelProduct, $is_created, $supplierFeedModel, $aProduct, $supplierFeed->dont_update_fields, $supplierFeed->defaults);
-
-                    if ($is_created) {
-                        $new_products_count++;
-                        $inserted_products_count++;
-                    } else if ($modelProduct->getChangedAttributes()) {
-                        print_r($modelProduct->getChangedAttributes());
-                        $updated_products_count++;
-                    }
-
-                    $modelProduct->save();
-
-                    $all_feed_productcodes[] = $modelProduct->productcode;
-                    $last_feed_fields_arr_vals = $aProduct;
-                    $lastFeedFields = array_unique(array_merge($lastFeedFields, array_keys($aProduct)));
-                }
-            }
-        }
-
-        if (!empty($all_feed_productcodes) && is_array($all_feed_productcodes) && $supplierFeedModel->disable_search_of_discontinued_items != 'Y') {
-            print("Search of discontinued section\n");
-
-            /** @var ProductModel[] $discountinued_models */
-            if ($discountinued_models = ProductModel::objects()->filter(
-                [
-                    'sites__through__sfid' => $supplierFeedModel->storefront_id,
-                    'manufacturerid' => $supplierFeedModel->manufacturerid,
-                    'forsale' => 'Y',
-                    new QOr(['productid__isnt' => new Expression('group_root'), 'group_root_isnull' => true])
-                ])->all()) {
-
-                print "<br />Second iteration:<br />";
-
-                foreach ($discountinued_models as $d_model) {
-                    if (!in_array(strtoupper(trim($d_model->productcode)), $all_feed_productcodes)) {
-                        $discontinued_products_count++;
-
-                        if ($d_model->update_search_index == "N") {
-                            $d_model->update_search_index = "D";
-                        }
-
-                        $d_model->setAttributes(['r_avail' => 0, 'forsale' => 'N',]);
-
-                        $d_model->save();
-                    }
-                }
-            }
-        }
-
-
-    } else {
+    if (!$contents) {
         $log_text = "manufacturerid: " . $supplierFeedModel->manufacturerid . ". File read error. Skipped.";
         func_backprocess_log($log_category, $log_text);
         func_backprocess_log("supplier feeds errors", $log_text);
         continue;
     }
+
+    $supplierFeed = new SupplierFeedStore($supplierFeedModel, $contents);
+
+    if ((!$supplierFeed->isValid()) && $supplierFeed->errors) {
+
+        $log_text = implode($supplierFeed->errors, PHP_EOL);
+
+        func_backprocess_log($log_category, $log_text);
+        func_backprocess_log("supplier feeds errors", $log_text);
+        continue;
+    }
+
+    $create_date_time_diff = time() - $supplierFeed->getFeedDate();
+    $log_text = "manufacturerid: {$supplierFeedModel->manufacturerid}. Started. ({$supplierFeedModel->getField('feed_type')->toText()})";
+    func_backprocess_log($log_category, $log_text);
+
+    foreach ($supplierFeed->products as $kp => $prod) {
+
+        $products = [];
+
+        if (isset($prod['is_group']) && $prod['is_group'] === true) {
+            if ($prod['child_products']) {
+                /** @var ProductModel $child */
+
+                foreach ($prod['child_products'] as $child_data) {
+                    if ($child = ProductModel::objects()->get(['productcode' => $child_data['productcode']])) {
+                        if (!isset($prod['productcode']) && ($parent = $child->parent)) {
+                            $prod['productcode'] = $parent->productcode;
+                        }
+                        if (!isset($prod['pc_classify_status']) && $child->isCategorized()) {
+                            $prod['supplier_categories'] = array_reverse(CategoryModel::objects($group->getMainCategory())->parents(true)->valuesList('category', true));
+                            $prod['pc_classify_status'] = 'ACC';
+                        }
+                    }
+                }
+                if (empty($prod['productcode'])) {
+                    $prod['productcode'] = ProductHelper::getNewGroupSKU($supplierFeedModel->manufacturerid);
+                }
+                /** @var ProductModel $group */
+                list($group, $is_created) = ProductModel::objects()->getOrCreate(['productcode' => $prod['productcode']]);
+
+                $group->setAttributes(array_merge($prod, ['parent' => $group]));
+                $group = SupplierFeedHelper::feedProduct($group, $is_created, $supplierFeedModel, $prod, $supplierFeed->dont_update_fields, $supplierFeed->defaults);
+                $group->save();
+
+                $childs = [];
+                foreach ($prod['child_products'] as $key => $child_data) {
+
+                    $prod['child_products'][$key]['group_root'] = $group->productid;
+                    $prod['child_products'][$key]['brand_name'] = $prod['brand_name'];
+
+                    $prod['child_products'][$key]['supplier_categories'] = $prod['supplier_categories'];
+
+                    if (isset($prod['pc_classify_status'])) {
+                        $prod['child_products'][$key]['pc_classify_status'] = $prod['pc_classify_status'];
+                    }
+
+                    $childs[] = $child_data['productcode'];
+                }
+
+                if ($childs) {
+                    $group->childs->exclude(['productcode__in' => $childs])->update(['group_root' => null]);
+                }
+
+                $products = $prod['child_products'];
+            }
+        } else {
+            $products[] = $prod;
+        }
+
+        foreach ($products as $aProduct) {
+
+            print($kp . ' --> ' . $aProduct['productcode'] . "\n");
+
+            if (empty($aProduct['productcode']) || (isset($aProduct['cost_to_us']) && floatval($aProduct['cost_to_us']) <= 0)) {
+                $skippedProductsCount++;
+                continue;
+            }
+
+            /** @var ProductModel $modelProduct */
+
+            list($modelProduct, $is_created) = ProductModel::objects()->getOrNew(['productcode' => $aProduct['productcode']]);
+
+            switch ($supplierFeedModel->feed_type) {
+                case 'I' :
+                    if ($is_created) {
+                        $new_products_count++;
+                        continue;
+                    }
+
+                    break;
+                case 'P' :
+                    if (!isset($aProduct['is_group'])) {
+                        if (!isset($aProduct['cost_to_us'])) {
+                            $skippedProductsCount++;
+                            continue;
+                        }
+                        if (!$is_created && $supplierFeedModel->add_new_only == "Y") {
+                            $skippedProductsCount++;
+                            continue;
+                        }
+                    }
+                    break;
+            }
+
+            if ($modelProduct && $modelProduct->save()) {
+
+                $modelProduct->setAttributes($aProduct);
+
+                $modelProduct = SupplierFeedHelper::feedProduct($modelProduct, $is_created, $supplierFeedModel, $aProduct, $supplierFeed->dont_update_fields, $supplierFeed->defaults);
+
+                if ($is_created) {
+                    $new_products_count++;
+                    $inserted_products_count++;
+                } else if ($modelProduct->getChangedAttributes()) {
+                    print_r($modelProduct->getChangedAttributes());
+                    $updated_products_count++;
+                }
+
+                $modelProduct->save();
+
+                $all_feed_productcodes[] = $modelProduct->productcode;
+                $last_feed_fields_arr_vals = $aProduct;
+                $lastFeedFields = array_unique(array_merge($lastFeedFields, array_keys($aProduct)));
+            }
+        }
+    }
+
+    if (!empty($all_feed_productcodes) && is_array($all_feed_productcodes) && $supplierFeedModel->disable_search_of_discontinued_items != 'Y') {
+        print("Search of discontinued section\n");
+
+        /** @var ProductModel[] $discountinued_models */
+        if ($discountinued_models = ProductModel::objects()->filter(
+            [
+                'sites__through__sfid' => $supplierFeedModel->storefront_id,
+                'manufacturerid' => $supplierFeedModel->manufacturerid,
+                'forsale' => 'Y',
+                new QOr(['productid__isnt' => new Expression('group_root'), 'group_root_isnull' => true])
+            ])->all()) {
+
+            print "<br />Second iteration:<br />";
+
+            foreach ($discountinued_models as $d_model) {
+                if (!in_array(strtoupper(trim($d_model->productcode)), $all_feed_productcodes)) {
+                    $discontinued_products_count++;
+
+                    if ($d_model->update_search_index == "N") {
+                        $d_model->update_search_index = "D";
+                    }
+
+                    $d_model->setAttributes(['r_avail' => 0, 'forsale' => 'N',]);
+
+                    $d_model->save();
+                }
+            }
+        }
+    }
+
 
     $feedProductCount = 0;
     if ($supplierFeed) {
