@@ -14,31 +14,27 @@ class CurrentSiteMiddleware extends Middleware
 
     public function processRequest($request)
     {
-        if (!Cli::isCli()) {
-            /** @var SitesModule $sitesModule */
-            $sitesModule = Xcart::app()->getModule('Sites');
+        /** @var SitesModule $sitesModule */
+        $sitesModule = Xcart::app()->getModule('Sites');
 
-            if ($model = CurrentSiteHelper::check($request)) {
-                $sitesModule->setSite($model);
-            }
-            elseif (defined('APP_DEBUG') || defined('APP_LOCAL')) {
-                defined('LOCAL_SF_ID') ?: define('LOCAL_SF_ID', $sitesModule->getSite()->storefrontid);
-                defined('LOCAL_SF_DOMAIN') ?: define('LOCAL_SF_DOMAIN', $_SERVER['SERVER_NAME']);
-
-                $GLOBALS['xcart_http_host'] = $GLOBALS['xcart_https_host'] = $_SERVER['HTTP_HOST'];
-            }
-
-            $domain = SiteModel::objects()->cache(50000)->filter(['code' => 'AR'])->valuesList(['domain'], true);
-            $domain = $domain[0];
-
-            defined('DEFAULT_SF_DOMAIN') ?: define('DEFAULT_SF_DOMAIN', $domain);
-
-            defined('MAIN_SF_DOMAIN') ?:
-                defined('LOCAL_SF_DOMAIN') ?
-                    define('MAIN_SF_DOMAIN', LOCAL_SF_DOMAIN) :
-                    define('MAIN_SF_DOMAIN', $domain);
-
-
+        if (!Cli::isCli() && $model = CurrentSiteHelper::check($request)) {
+            $sitesModule->setSite($model);
         }
+        elseif (defined('APP_DEBUG') || defined('APP_LOCAL')) {
+            defined('LOCAL_SF_ID') ?: define('LOCAL_SF_ID', $sitesModule->getSite()->storefrontid);
+            defined('LOCAL_SF_DOMAIN') ?: define('LOCAL_SF_DOMAIN', $_SERVER['SERVER_NAME']);
+
+            $GLOBALS['xcart_http_host'] = $GLOBALS['xcart_https_host'] = $_SERVER['HTTP_HOST'];
+        }
+
+        $domain = SiteModel::objects()->cache(50000)->filter(['code' => 'AR'])->valuesList(['domain'], true);
+        $domain = $domain[0];
+
+        defined('DEFAULT_SF_DOMAIN') ?: define('DEFAULT_SF_DOMAIN', $domain);
+
+        defined('MAIN_SF_DOMAIN') ?:
+            defined('LOCAL_SF_DOMAIN') ?
+                define('MAIN_SF_DOMAIN', LOCAL_SF_DOMAIN) :
+                define('MAIN_SF_DOMAIN', $domain);
     }
 }
