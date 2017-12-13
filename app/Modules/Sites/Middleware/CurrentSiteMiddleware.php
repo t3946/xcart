@@ -14,17 +14,19 @@ class CurrentSiteMiddleware extends Middleware
 
     public function processRequest($request)
     {
-        /** @var SitesModule $sitesModule */
-        $sitesModule = Xcart::app()->getModule('Sites');
+        if (!Cli::isCli()) {
+            /** @var SitesModule $sitesModule */
+            $sitesModule = Xcart::app()->getModule('Sites');
 
-        if (defined('APP_LOCAL')) {
-            defined('LOCAL_SF_ID') ?: define('LOCAL_SF_ID', $sitesModule->getSite()->storefrontid);
-            defined('LOCAL_SF_DOMAIN') ?: define('LOCAL_SF_DOMAIN', $_SERVER['SERVER_NAME']);
+            if (defined('APP_LOCAL')) {
+                defined('LOCAL_SF_ID') ?: define('LOCAL_SF_ID', $sitesModule->getSite()->storefrontid);
+                defined('LOCAL_SF_DOMAIN') ?: define('LOCAL_SF_DOMAIN', $_SERVER['SERVER_NAME']);
 
-            $GLOBALS['xcart_http_host'] = $GLOBALS['xcart_https_host'] = $_SERVER['HTTP_HOST'];
-        }
-        elseif (!Cli::isCli() && $model = CurrentSiteHelper::check($request)) {
-            $sitesModule->setSite($model);
+                $GLOBALS['xcart_http_host'] = $GLOBALS['xcart_https_host'] = $_SERVER['HTTP_HOST'];
+            }
+            elseif (!Cli::isCli() && $model = CurrentSiteHelper::check($request)) {
+                $sitesModule->setSite($model);
+            }
         }
 
         $domain = SiteModel::objects()->cache(50000)->filter(['code' => 'AR'])->valuesList(['domain'], true);
