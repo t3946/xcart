@@ -257,7 +257,7 @@ gulp.task('backend:raw', function() {
 
 gulp.task('watch:frontend', ['build:frontend'], function() {
     watch = true;
-    livereload({ start: true });
+    livereload({ start: true, quiet: true});
     // const js_watch = frontend.src.js.concat(frontend.src.jsx);
 
     gulp.watch(frontend.src.raw, ['frontend:raw']);
@@ -271,7 +271,7 @@ gulp.task('watch:frontend', ['build:frontend'], function() {
 });
 
 gulp.task('watch:backend', ['build:backend'], function() {
-    livereload({ start: true });
+    livereload({ start: true, quiet: true });
 
     gulp.watch(backend.src.raw, ['backend:raw']);
     gulp.watch(backend.src.jsx, ['backend:js']);

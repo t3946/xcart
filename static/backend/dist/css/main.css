@@ -6041,7 +6041,7 @@ HR.GreyLine {
 .TopLabel {
   COLOR: #000000;
   FONT-WEIGHT: 500;
-  font-size: .9rem; }
+  font-size: 1em; }
 
 .Message {
   COLOR: #FF3300; }
