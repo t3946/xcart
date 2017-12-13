@@ -1014,8 +1014,6 @@ IMG {
 .NavigationCell {
   TEXT-ALIGN: center;
   VERTICAL-ALIGN: bottom;
-  BACKGROUND-IMAGE: url(/skin1_kolin/images/page.gif);
-  WIDTH: 17px;
   A {
     &:visited, &:hover, &:active {
       TEXT-DECORATION: none;
@@ -1030,8 +1028,6 @@ IMG {
 .NavigationCellWide {
   TEXT-ALIGN: center;
   VERTICAL-ALIGN: bottom;
-  BACKGROUND-IMAGE: url(/skin1_kolin/images/page_wide.gif);
-  WIDTH: 23px;
   A {
     &:link, &:visited, &:hover, &:active {
       TEXT-DECORATION: none;
