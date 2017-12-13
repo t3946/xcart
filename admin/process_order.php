@@ -37,7 +37,7 @@
 require "./auth.php";
 require $xcart_dir."/include/security.php";
 
-x_session_register("search_data");
+x_session_register("search_data", []);
 
 #
 # Orders processing subroutine

@@ -910,7 +910,7 @@ SQL;
     {
         $oThumbImage = null;
         if (is_null($this->aThumbNails)){
-            $this->aThumbNails = \Modules\Product\Models\ImageTModel::objects()->filter(['id' => $this->getProductId()])->all();
+            $this->aThumbNails = \Modules\Goods\Models\ImageTModel::objects()->filter(['id' => $this->getProductId()])->all();
         }
         if (!empty($this->aThumbNails)) {
             $oThumbImage = reset($this->aThumbNails);

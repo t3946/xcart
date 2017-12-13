@@ -56,6 +56,10 @@ if (!empty($orderid)){
 			$ticket_resolver_messages = $ticket_resolver[0]["messages"];
 //			$ticket_resolver_link .= "&messages=".$ticket_resolver_messages;
 
+            $t_arr = \Xcart\App\Main\Xcart::app()->cache->get('ticket_resolver_messages', []);
+            $t_arr [$orderid] = $ticket_resolver_messages;
+            \Xcart\App\Main\Xcart::app()->cache->set('ticket_resolver_messages', $t_arr);
+
 			$smarty->assign('ticket_resolver_messages', $ticket_resolver_messages);
 		}
 

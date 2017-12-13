@@ -104,7 +104,7 @@ if (defined('GCHECKOUT_DEBUG')) {
 if (AREA_TYPE != 'C')
 	return;
 
-x_session_register('cart');
+x_session_register('cart', []);
 
 if (!defined("IS_ERROR_MESSAGE"))
 	include $xcart_dir."/modules/Google_Checkout/gcheckout_button.php";

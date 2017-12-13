@@ -60,6 +60,9 @@ class OrderEventsModel extends Model
             $model = new static();
             $model->setAttributes(['order_id' => $order_id, 'message' => $message]);
 
+            //Cache UP
+            $model->order->getOTRSTicketMessages();
+
             if ($model->isValid() && $model->save())
             {
                 return $model;

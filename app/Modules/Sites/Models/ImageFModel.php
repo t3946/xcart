@@ -2,7 +2,7 @@
 namespace Modules\Sites\Models;
 
 
-use Modules\Product\Models\ImageModel;
+use Modules\Goods\Models\ImageModel;
 
 class ImageFModel extends ImageModel
 {

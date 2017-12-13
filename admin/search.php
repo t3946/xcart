@@ -38,7 +38,7 @@ define("NUMBER_VARS", "posted_data[price_min],posted_data[price_max],posted_data
 require "./auth.php";
 require $xcart_dir."/include/security.php";
 
-x_session_register("search_data");
+x_session_register("search_data", []);
 
 #
 # Define data for the navigation within section
@@ -105,7 +105,7 @@ if ($mode == 'search'){
                 $sFindSKU = addslashes($posted_data["extra_sku"][0]);
                 $app = \Xcart\App\Main\Xcart::app();
 
-                if ( $product = \Modules\Product\Models\ProductModel::objects()->filter(['productcode' => $sFindSKU])->get())
+                if ( $product = \Modules\Goods\Models\ProductModel::objects()->filter(['productcode' => $sFindSKU])->get())
                 {
                     /** @var \Modules\Sites\Models\SiteModel $site */
                     $site = $product->sites->limit(1)->get();

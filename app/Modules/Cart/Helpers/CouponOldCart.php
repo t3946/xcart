@@ -3,7 +3,7 @@ namespace Modules\Cart\Helpers;
 
 use Modules\Cart\Models\CouponKitModel;
 use Modules\Cart\Models\CouponOrderModel;
-use Modules\Product\Models\ProductModel;
+use Modules\Goods\Models\ProductModel;
 use Modules\User\Models\UserModel;
 use Xcart\App\Main\Xcart;
 

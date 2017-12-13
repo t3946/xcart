@@ -41,7 +41,7 @@ use Modules\Order\Stores\OrderTransactionStore;
 use Modules\Payment\Gateways\Gateway;
 use Modules\Payment\Helpers\PaymentHelper;
 use Modules\Payment\Models\ProcessorModel;
-use Modules\Product\Models\OptionValueModel;
+use Modules\Goods\Models\OptionValueModel;
 use Xcart\Paypal;
 
 global $login;

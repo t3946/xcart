@@ -4,7 +4,7 @@ use Modules\GeoIp\Helpers\GeoIpHelper;
 use Modules\Order\Models\OrderDetailModel;
 use Modules\Order\Models\OrderGroupInvoiceProductModel;
 use Modules\Order\Models\OrderGroupModel;
-use Modules\Product\Models\ProductModel;
+use Modules\Goods\Models\ProductModel;
 use Modules\User\Helpers\SurfingHelper;
 use Modules\User\Models\SurfMetaModel;
 use Modules\User\Models\SurfPathModel;

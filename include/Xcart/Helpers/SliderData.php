@@ -3,8 +3,8 @@ namespace Xcart\Helpers;
 
 use Mindy\QueryBuilder\Expression;
 use Mindy\QueryBuilder\Q\QAndNot;
-use Modules\Product\Helpers\ProductHelper;
-use Modules\Product\Models\ProductModel;
+use Modules\Goods\Helpers\ProductHelper;
+use Modules\Goods\Models\ProductModel;
 use Xcart\Brands;
 use Xcart\ElasticSearch;
 use Xcart\Product;

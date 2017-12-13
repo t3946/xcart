@@ -7,7 +7,7 @@
 #       supplier_feeds_enabled  ('Y'|'N')
 #       cost_to_us      DECIMAL
 #       price   DECIMAL    price corrected with min_amount quantity
-use Modules\Product\Models\ProductModel;
+use Modules\Goods\Models\ProductModel;
 
 /**
  * @deprecated

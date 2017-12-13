@@ -4,7 +4,7 @@ namespace Modules\Cart\Discounts\Restrictions;
 
 use Modules\Cart\CartModule;
 use Modules\Cart\Forms\CouponRestrictions\CategoryRestrictionForm;
-use Modules\Product\Models\CategoryModel;
+use Modules\Goods\Models\CategoryModel;
 
 class CategoryRestriction extends AbstractRestriction
 {
@@ -32,7 +32,7 @@ class CategoryRestriction extends AbstractRestriction
     }
 
     /**
-     * @param \Modules\Product\Models\ProductModel $product
+     * @param \Modules\Goods\Models\ProductModel $product
      *
      * @return bool
      */

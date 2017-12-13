@@ -1,6 +1,6 @@
 <?php
 
-use Modules\Product\Models\ProductModel;
+use Modules\Goods\Models\ProductModel;
 
 if (!empty($page)) {
     $page = abs(intval($page));

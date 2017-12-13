@@ -152,13 +152,13 @@ if ($configured)
 # Use HTTPS connection
 #
 elseif (test_active_bouncer()) {
-	$http_post = "";
+	$http_post = [];
 	foreach($post as $key=>$value)
 		$http_post[] = $key."=".$value;
 
 	list($a,$content) = func_https_request("POST","https://vault.trustcommerce.com:443/trans/", $http_post,'&');
 
-	$result="";
+	$result=[];
 	foreach (explode("\n",$content) as $line) {
 		list($key,$value) = explode('=',$line);
 		$result[$key] = $value;

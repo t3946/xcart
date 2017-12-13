@@ -47,7 +47,7 @@ if (!empty($paypal_enable_id) && func_query_first_cell("SELECT value FROM $sql_t
 	# activate paypal processing...
 	func_disable_paypal_methods($config['paypal_solution'], true);
 
-	x_session_register("top_message");
+	x_session_register("top_message", []);
 	$top_message["content"] = func_get_langvar_by_name("msg_paypal_processing_enabled");
 	$top_message["type"] = "I";
 	db_query("DELETE FROM $sql_tbl[config] WHERE name='paypal_enable_id' AND value='$paypal_enable_id'");

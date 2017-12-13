@@ -182,7 +182,7 @@ XML;
 
 	x_load("http");
 
-	x_session_register("cart");
+	x_session_register("cart", []);
 	x_session_register("secure_oid");
 
 	$module_params = func_query_first("SELECT * FROM $sql_tbl[ccprocessors] WHERE processor = 'cc_ideala.php'");

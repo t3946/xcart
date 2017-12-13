@@ -1,6 +1,6 @@
 <?php
 use Mindy\QueryBuilder\QueryBuilder;
-use Modules\Product\Models\ProductCategoryTermsModel;
+use Modules\Goods\Models\ProductCategoryTermsModel;
 use Xcart\Connection;
 
 define("CIDEV_CRON_START", "CRON");

@@ -5,7 +5,7 @@ namespace Modules\Amp\Helpers;
 
 
 use Mindy\QueryBuilder\Expression;
-use Modules\Product\Models\CategoryModel;
+use Modules\Goods\Models\CategoryModel;
 use Modules\Amp\Models\AmpProductModel;
 use Modules\User\Helpers\SurfingHelper;
 use Modules\User\Models\SurfPathModel;

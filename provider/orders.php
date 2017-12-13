@@ -39,7 +39,7 @@ require $xcart_dir."/include/security.php";
 
 func_header_location('error_message.php?page_not_found');
 
-x_session_register("search_data");
+x_session_register("search_data", []);
 
 if (!$single_mode) {
 	$search_data["orders"]["provider_login"] = addslashes($login);

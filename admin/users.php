@@ -39,7 +39,7 @@ require $xcart_dir."/include/security.php";
 
 x_load('export');
 
-x_session_register("search_data");
+x_session_register("search_data", []);
 
 $location[] = array(func_get_langvar_by_name("lbl_users_management"), "");
 

@@ -70,7 +70,7 @@ else {
 
 	$sessurl = str_replace("&", "", $sessurl);
 	$request = $xcart_catalogs['customer']."/cart.php?mode=order_message&orderids=".$_orderids."&".$sessurl;
-	$cart="";
+	$cart=[];
 	x_session_save();
 
 	if (!empty($active_modules['SnS_connector'])) {

@@ -79,7 +79,7 @@ if (empty($product_info)) {
 	func_header_location("search.php?substring=".urlencode($sku)."&by_sku=1&mode=search&from=fast_search");
 }
 
-$oProduct = Modules\Product\Models\ProductModel::objects()->get(['productid'=>$product_info['productid']]);
+$oProduct = Modules\Goods\Models\ProductModel::objects()->get(['productid'=>$product_info['productid']]);
 
 $reverse_sku = func_query_first_cell("SELECT reverse_sku FROM $sql_tbl[manufacturers] WHERE manufacturerid='$product_info[manufacturerid]'");
 $remove_dashes = func_query_first_cell("SELECT remove_dashes FROM $sql_tbl[manufacturers] WHERE manufacturerid='$product_info[manufacturerid]'");

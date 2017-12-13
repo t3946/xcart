@@ -39,8 +39,8 @@ if ( !defined('XCART_SESSION_START') ) { header("Location: ../"); die("Access de
 
 x_load('backoffice','files','product');
 
-x_session_register("file_upload_data");
-x_session_register('fields', array());
+x_session_register("file_upload_data", []);
+x_session_register('fields', []);
 if (isset($product_field)) {
 	$fields['product_image'] = $product_field;
 }

@@ -31,7 +31,7 @@ class BrandRestriction extends AbstractRestriction
     }
 
     /**
-     * @param \Modules\Product\Models\ProductModel $item
+     * @param \Modules\Goods\Models\ProductModel $item
      *
      * @return bool
      */

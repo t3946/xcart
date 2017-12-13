@@ -6,8 +6,8 @@ use Modules\Order\Models\OrderDetailModel;
 use Modules\Order\Models\OrderFraudCheckModel;
 use Modules\Order\Models\OrderModel;
 use Modules\Payment\Models\PaymentMethodModel;
-use Modules\Product\Helpers\ProductHelper;
-use Modules\Product\Models\ProductHardResellModel;
+use Modules\Goods\Helpers\ProductHelper;
+use Modules\Goods\Models\ProductHardResellModel;
 
 global $orderid, $smarty, $mode, $order_data, $REQUEST_METHOD, $xcart_dir;
 

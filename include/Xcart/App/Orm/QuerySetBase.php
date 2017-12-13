@@ -3,6 +3,7 @@
 namespace Xcart\App\Orm;
 
 use ArrayAccess;
+use Countable;
 use Doctrine\DBAL\Connection;
 use Exception;
 use IteratorAggregate;
@@ -16,7 +17,7 @@ use Serializable;
  * Class QuerySetBase
  * @package Xcart\App\Orm
  */
-abstract class QuerySetBase implements IteratorAggregate, ArrayAccess, Serializable
+abstract class QuerySetBase implements Countable, IteratorAggregate, ArrayAccess, Serializable
 {
     /**
      * @var string the name of the ActiveRecord class.

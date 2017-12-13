@@ -2,8 +2,8 @@
 
 namespace Xcart\External_Marketplaces\Marketplaces;
 
-use Modules\Product\Models\ProductModel;
-use Modules\Product\Models\UpdatedProductModel;
+use Modules\Goods\Models\ProductModel;
+use Modules\Goods\Models\UpdatedProductModel;
 use Xcart\External_Marketplaces\StoreFrontMarketPlace;
 
 class Bing extends StoreFrontMarketPlace
