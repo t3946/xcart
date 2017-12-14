@@ -134,49 +134,7 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
 
         if (isset($prod['is_group']) && $prod['is_group'] === true) {
             if ($prod['child_products']) {
-                /** @var ProductModel $child */
-
-                foreach ($prod['child_products'] as $child_data) {
-                    if ($child = ProductModel::objects()->get(['productcode' => $child_data['productcode']])) {
-                        if (empty($prod['productcode']) && ($parent = $child->parent)) {
-                            $prod['productcode'] = $parent->productcode;
-                        }
-                        if (!isset($prod['pc_classify_status']) && $child->isCategorized()) {
-                            $prod['supplier_categories'] = array_reverse(CategoryModel::objects($child->getMainCategory())->parents(true)->valuesList('category', true));
-                            $prod['pc_classify_status'] = 'ACC';
-                        }
-                    }
-                }
-                if (empty($prod['productcode'])) {
-                    $prod['productcode'] = ProductHelper::getNewGroupSKU($supplierFeedModel->manufacturerid);
-                }
-                /** @var ProductModel $group */
-                list($group, $is_created) = ProductModel::objects()->getOrCreate(['productcode' => $prod['productcode']]);
-
-                $group->setAttributes(array_merge($prod, ['parent' => $group]));
-                $group = SupplierFeedHelper::feedProduct($group, $is_created, $supplierFeedModel, $prod, $supplierFeed->dont_update_fields, $supplierFeed->defaults);
-                $group->save();
-
-                $childs = [];
-                foreach ($prod['child_products'] as $key => $child_data) {
-
-                    $prod['child_products'][$key]['group_root'] = $group->productid;
-                    $prod['child_products'][$key]['brand_name'] = $prod['brand_name'];
-
-                    $prod['child_products'][$key]['supplier_categories'] = $prod['supplier_categories'];
-
-                    if (isset($prod['pc_classify_status'])) {
-                        $prod['child_products'][$key]['pc_classify_status'] = $prod['pc_classify_status'];
-                    }
-
-                    $childs[] = $child_data['productcode'];
-                }
-
-                if ($childs) {
-                    $group->childs->exclude(['productcode__in' => $childs])->update(['group_root' => null]);
-                }
-
-                $products = $prod['child_products'];
+                $products = SupplierFeedHelper::feedChilds($prod, $supplierFeed);
             }
         } else {
             $products[] = $prod;

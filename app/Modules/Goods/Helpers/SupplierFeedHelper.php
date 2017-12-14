@@ -16,6 +16,7 @@ use Modules\Goods\Models\ProductLinksModel;
 use Modules\Goods\Models\ProductModel;
 use Modules\Goods\Models\ProductStorefrontModel;
 use Modules\Goods\Models\ProductUpcChangesModel;
+use Modules\Goods\Stores\SupplierFeedStore;
 
 class SupplierFeedHelper
 {
@@ -105,7 +106,7 @@ class SupplierFeedHelper
      * @param array $data
      * @param array $dont_update_fields
      * @param array $defaults
-     * @return mixed|ProductModel
+     * @return ProductModel
      * @throws \Doctrine\DBAL\DBALException
      * @throws \Exception
      */
@@ -139,7 +140,8 @@ class SupplierFeedHelper
         list($model, $upc_different) = SupplierFeedHelper::getUPC($model);
 
         if ($upc_different) {
-            list($upcModel, $is_upc_changed_created) = ProductUpcChangesModel::objects()->getOrNew(['productid' => $model->productid]);
+            list($upcModel) = ProductUpcChangesModel::objects()->getOrNew(['productid' => $model->productid]);
+            /** @var ProductUpcChangesModel $upcModel */
             $upcModel->setAttributes(
                 [
                     'productid' => $model->productid,
@@ -206,7 +208,7 @@ class SupplierFeedHelper
                     if (class_exists('Imagick')) {
                         $imageParam = $modelDImage->getAttributes();
                         $imageParam['image_path'] = '../' . $imageParam['image_path'];
-                        $image_info = func_set_correct_det_img($imageParam, true);
+                        func_set_correct_det_img($imageParam, true);
                     }
                 }
             }
@@ -238,6 +240,7 @@ class SupplierFeedHelper
             $params['productcode__in'] = $aRelatedInternalSKU;
         }
         if (!empty($params)) {
+            /** @var ProductModel[] $aRelatedProducts */
             if ($aRelatedProducts = ProductModel::objects()->filter(new QOr($params))->all()) {
                 foreach ($aRelatedProducts as $relatedProductModel) {
                     ProductLinksModel::objects()->getOrCreate(['productid1' => $model->productid, 'productid2' => $relatedProductModel->productid]);
@@ -300,9 +303,21 @@ class SupplierFeedHelper
             }
         }
 
-        $aSupplierCategory = $data['supplier_categories'];
+        $model = self::feedCategories($model, $feed, $data['supplier_categories']);
 
-        if (!empty($aSupplierCategory) && is_array($aSupplierCategory)) {
+        return $model;
+    }
+
+    /**
+     * @param ProductModel $model
+     * @param SupplierFeedModel $feed
+     * @param array $categories
+     * @return ProductModel
+     * @throws \Exception
+     */
+    public static function feedCategories($model, $feed, $categories)
+    {
+        if (!empty($categories) && is_array($categories)) {
 
             $parent_id = $feed->base_category_id;
 
@@ -312,10 +327,10 @@ class SupplierFeedHelper
 
             $lastCategory = null;
 
-            $cats_arr = $aSupplierCategory;
+            $cats_arr = $categories;
 
-            if (count($aSupplierCategory) == 1) {
-                $cats_arr = explode("/", reset($aSupplierCategory));
+            if (count($categories) == 1) {
+                $cats_arr = explode("/", reset($categories));
             }
 
             if ($cats_arr) {
@@ -351,17 +366,75 @@ class SupplierFeedHelper
                 }
 
                 if ($lastCategory) {
-                    if (!$model->isCategorized() || ($model->isGroupRoot() && $is_created && $model->isCategorized())) {
+                    if (!$model->isCategorized() || ($model->isGroupRoot() && $model->isCategorized())) {
                         $model->setMainCategory($lastCategory);
                     }
                 }
             }
         } else {
-            $model->setMainCategory(CategoryModel::objects()->get(['categoryid' => $feed->base_category_id]));
+            /** @var CategoryModel $cat */
+            $cat = CategoryModel::objects()->get(['categoryid' => $feed->base_category_id]);
+            $model->setMainCategory($cat);
         }
 
         return $model;
     }
+
+    /**
+     * @param array $data
+     * @param SupplierFeedStore $feed
+     * @return array
+     * @throws \Doctrine\DBAL\DBALException
+     * @throws \Exception
+     * @return ProductModel
+     */
+    public static function feedChilds($data, $feed)
+    {
+        /** @var ProductModel $child */
+
+        foreach ($data['child_products'] as $child_data) {
+            if ($child = ProductModel::objects()->get(['productcode' => $child_data['productcode']])) {
+                if (empty($data['productcode']) && ($parent = $child->parent)) {
+                    $data['productcode'] = $parent->productcode;
+                }
+                if (!isset($data['pc_classify_status']) && $child->isCategorized()) {
+                    $data['supplier_categories'] = array_reverse(CategoryModel::objects($child->getMainCategory())->parents(true)->valuesList('category', true));
+                    $data['pc_classify_status'] = 'ACC';
+                }
+            }
+        }
+        if (empty($data['productcode'])) {
+            $data['productcode'] = ProductHelper::getNewGroupSKU($feed->feed_model->manufacturerid);
+        }
+        /** @var ProductModel $group */
+        list($group, $is_created) = ProductModel::objects()->getOrCreate(['productcode' => $data['productcode']]);
+
+        $group->setAttributes(array_merge($data, ['parent' => $group]));
+        $group = SupplierFeedHelper::feedProduct($group, $is_created, $feed->feed_model, $data, $feed->dont_update_fields, $feed->defaults);
+        $group->save();
+
+        $childs = [];
+        foreach ($data['child_products'] as $key => $child_data) {
+
+            $data['child_products'][$key]['group_root'] = $group->productid;
+            $data['child_products'][$key]['brand_name'] = $data['brand_name'];
+
+            $data['child_products'][$key]['supplier_categories'] = $data['supplier_categories'];
+
+            if (isset($data['pc_classify_status'])) {
+                $data['child_products'][$key]['pc_classify_status'] = $data['pc_classify_status'];
+            }
+
+            $childs[] = $child_data['productcode'];
+        }
+
+        if ($childs) {
+            $group->childs->exclude(['productcode__in' => $childs])->update(['group_root' => null]);
+        }
+
+        return $data['child_products'];
+    }
+
 
     public static function getFileFtp($file_name, $config)
     {
