@@ -51,8 +51,8 @@ if ($REQUEST_METHOD == "POST") {
             $start_date -= $config["Appearance"]["timezone_offset"];
         }
 
-        $search_condition .= " AND o.date>='".($start_date)."'";
-        $search_condition .= " AND o.date<='".($end_date)."'";
+        $search_condition .= " AND OL.date>='".($start_date)."'";
+        $search_condition .= " AND OL.date<='".($end_date)."'";
     }
 
 
@@ -60,7 +60,7 @@ if ($REQUEST_METHOD == "POST") {
         $login_condition .= " AND OL.login IN ('".implode("','", $posted_data["operators"])."')";
     }
 
-    $all_actions = func_query("Select CONCAT (o.order_prefix, o.orderid) as order_number, otrs_ticket, FROM_UNIXTIME(o.date) as orderdate, group_concat(xo1.name) as orderstatus, xc.firstname, OL.*, FROM_UNIXTIME(OL.date) actiondate
+    $all_actions = func_query($sql = "Select CONCAT (o.order_prefix, o.orderid) as order_number, otrs_ticket, FROM_UNIXTIME(o.date) as orderdate, group_concat(xo1.name) as orderstatus, xc.firstname, OL.*, FROM_UNIXTIME(OL.date) actiondate
         FROM $sql_tbl[orders] o
         LEFT JOIN $sql_tbl[order_logs] OL ON OL.orderid = o.orderid $login_condition
        INNER JOIN $sql_tbl[order_groups] xo ON xo.orderid = o.orderid
