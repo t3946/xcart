@@ -201,7 +201,7 @@ class SupplierFeedHelper
 
         $model = self::feedAttributes($model, $feed, $data['attributes']);
 
-        $model = self::feedCategories($model, $feed, $data['supplier_categories']);
+        $model = self::feedCategories($model, $is_created, $feed, $data['supplier_categories']);
 
         return $model;
     }
@@ -367,18 +367,23 @@ class SupplierFeedHelper
 
     /**
      * @param ProductModel $model
+     * @param boolean $is_created
      * @param SupplierFeedModel $feed
      * @param array $categories
      * @return ProductModel
      * @throws \Exception
      */
-    public static function feedCategories($model, $feed, $categories)
+    public static function feedCategories($model, $is_created, $feed, $categories)
     {
         if (!empty($categories) && is_array($categories)) {
 
             $parent_id = $feed->base_category_id;
 
-            if ($model->isCategorized()) {
+            if (!$is_created && !$model->isGroupRoot()) {
+                return $model;
+            }
+
+            if ($model->isGroupRoot()) {
                 $parent_id = 0;
             }
 
@@ -423,7 +428,7 @@ class SupplierFeedHelper
                 }
 
                 if ($lastCategory) {
-                    if (!$model->isCategorized() || ($model->isGroupRoot() && $model->isCategorized())) {
+                    if ($is_created || $model->isGroupRoot()) {
                         $model->setMainCategory($lastCategory);
                     }
                 }
