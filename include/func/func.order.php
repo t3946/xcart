@@ -5,6 +5,7 @@ use Modules\Order\Models\OrderDetailModel;
 use Modules\Order\Models\OrderGroupInvoiceProductModel;
 use Modules\Order\Models\OrderGroupModel;
 use Modules\Goods\Models\ProductModel;
+use Modules\Order\Models\OrderModel;
 use Modules\User\Helpers\SurfingHelper;
 use Modules\User\Models\SurfMetaModel;
 use Modules\User\Models\SurfPathModel;
@@ -4319,33 +4320,32 @@ function func_other_customer_orders($email, $orderid = 0)
 {
     global $sql_tbl, $smarty;
 
-    $other_customer_orders = func_query("SELECT orderid, order_prefix, fraud_status FROM $sql_tbl[orders] WHERE email='$email' AND orderid!='$orderid' ORDER BY orderid DESC");
+    if ($orders = OrderModel::objects()->filter([
+        'email' => $email,
+        'orderid__isnt' => $orderid])
+    ->order(['orderid'])->all()) {
 
-    if (!empty($other_customer_orders))
-    {
         $count_Completed = 0;
         $count_Fraud     = 0;
         $count_Open      = 0;
 
-        foreach ($other_customer_orders as $k => $v) {
+        foreach ($orders as $k => $order) {
 
             $Completed = "";
             $Fraud     = "";
             $Open      = "";
 
-            $order_groups_info = func_query("SELECT cb_status, dc_status FROM $sql_tbl[order_groups] WHERE orderid='$v[orderid]'");
-            if (!empty($order_groups_info)) {
-                foreach ($order_groups_info as $kk => $vv) {
-
-                    if (in_array($v["fraud_status"], ["C", "E"]) && $vv["cb_status"] == "P" && $vv["dc_status"] == "S") {
+            if ($groups = $order->groups) {
+                foreach ($groups as $group) {
+                    if (in_array($group->fraud_status, ["C", "E"]) && $group->cb_status == "P" && $group->dc_status == "S") {
                         $Completed = "Y";
                         $count_Completed++;
                     }
-                    elseif (!in_array($v["fraud_status"], ["C", "E", "U", "T", "N"])) {
+                    elseif (!in_array($group->fraud_status, ["C", "E", "U", "T", "N"])) {
                         $Fraud = "Y";
                         $count_Fraud++;
                     }
-                    elseif (in_array($v["fraud_status"], ["C", "E"]) && in_array($vv["cb_status"], ['N', 'O', 'P', 'Q', 'IO', 'F', 'I', 'AP']) && in_array($vv["dc_status"], ['M', 'T', 'K', 'B', 'DP', 'L', 'C', 'E'])) {
+                    elseif (in_array($order->fraud_status, ["C", "E"]) && in_array($group->cb_status, ['N', 'O', 'P', 'Q', 'IO', 'F', 'I', 'AP']) && in_array($group->dc_status, ['M', 'T', 'K', 'B', 'DP', 'L', 'C', 'E'])) {
                         $Open = "Y";
                         $count_Open++;
                     }
@@ -4355,6 +4355,7 @@ function func_other_customer_orders($email, $orderid = 0)
             $other_customer_orders[$k]["statuses"]["Completed"] = $Completed;
             $other_customer_orders[$k]["statuses"]["Fraud"]     = $Fraud;
             $other_customer_orders[$k]["statuses"]["Open"]      = $Open;
+            $other_customer_orders[$k]['oOrder']                = $order;
         }
 
         $smarty->assign("count_Completed", $count_Completed);

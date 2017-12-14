@@ -50,14 +50,14 @@ class OrderGroupModel extends Model
                 'modelClass' => ShippingModel::className(),
                 'null' => false,
             ],
-            'status_cb' => [
+            'cb_status' => [
                 'field' => 'cb_status',
                 'class' => ForeignField::className(),
                 'modelClass' => OrderStatusModel::className(),
                 'null' => false,
             ],
-            'status_dc' => [
-                'field' => 'cb_status',
+            'dc_status' => [
+                'field' => 'dc_status',
                 'class' => ForeignField::className(),
                 'modelClass' => OrderStatusModel::className(),
                 'null' => false,
