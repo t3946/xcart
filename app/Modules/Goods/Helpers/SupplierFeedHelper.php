@@ -1,22 +1,21 @@
 <?php
 
-namespace Modules\Product\Helpers;
+namespace Modules\Goods\Helpers;
 
 
 use Mindy\QueryBuilder\Q\QOr;
 use Modules\Brand\Models\BrandModel;
 use Modules\Brand\Models\BrandStorefrontModel;
 use Modules\Distributor\Models\SupplierFeedModel;
-use Modules\Product\Models\CategoryModel;
-use Modules\Product\Models\FilterModel;
-use Modules\Product\Models\FilterProductModel;
-use Modules\Product\Models\FilterValueModel;
-use Modules\Product\Models\PricingModel;
-use Modules\Product\Models\ProductCategoriesModel;
-use Modules\Product\Models\ProductLinksModel;
-use Modules\Product\Models\ProductModel;
-use Modules\Product\Models\ProductStorefrontModel;
-use Modules\Product\Models\ProductUpcChangesModel;
+use Modules\Goods\Models\CategoryModel;
+use Modules\Goods\Models\FilterModel;
+use Modules\Goods\Models\FilterProductModel;
+use Modules\Goods\Models\FilterValueModel;
+use Modules\Goods\Models\PricingModel;
+use Modules\Goods\Models\ProductLinksModel;
+use Modules\Goods\Models\ProductModel;
+use Modules\Goods\Models\ProductStorefrontModel;
+use Modules\Goods\Models\ProductUpcChangesModel;
 
 class SupplierFeedHelper
 {

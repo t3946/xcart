@@ -4,11 +4,11 @@ use Mindy\QueryBuilder\Expression;
 use Mindy\QueryBuilder\Q\QOr;
 use Modules\Distributor\Models\DistributorFeedFieldModel;
 use Modules\Distributor\Models\SupplierFeedModel;
-use Modules\Product\Helpers\ProductHelper;
-use Modules\Product\Helpers\SupplierFeedHelper;
-use Modules\Product\Models\CategoryModel;
-use Modules\Product\Models\ProductModel;
-use Modules\Product\Stores\SupplierFeedStore;
+use Modules\Goods\Helpers\SupplierFeedHelper;
+use Modules\Goods\Helpers\ProductHelper;
+use Modules\Goods\Models\CategoryModel;
+use Modules\Goods\Models\ProductModel;
+use Modules\Goods\Stores\SupplierFeedStore;
 
 define("CIDEV_CRON_START", "CRON");
 session_start();
