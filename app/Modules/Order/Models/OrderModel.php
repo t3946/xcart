@@ -75,6 +75,24 @@ class OrderModel extends Model
                     's_country' => 'country_code'
                 ]
             ],
+            'cb_status' => [
+                'field' => 'cb_status',
+                'class' => ForeignField::className(),
+                'modelClass' => OrderStatusModel::className(),
+                'null' => false,
+            ],
+            'dc_status' => [
+                'field' => 'dc_status',
+                'class' => ForeignField::className(),
+                'modelClass' => OrderStatusModel::className(),
+                'null' => false,
+            ],
+            'fraud_status' => [
+                'field' => 'fraud_status',
+                'class' => ForeignField::className(),
+                'modelClass' => FraudStatusModel::className(),
+                'null' => false,
+            ],
         ];
     }
 
