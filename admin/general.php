@@ -120,7 +120,7 @@ function test_dirs_rights() {
 	);
 
 	sort($directories);
-	$rc = "";
+	$rc = [];
 	$root_dir = func_normalize_path($xcart_dir);
 	foreach ($directories as $dir) {
 		$testdir = func_normalize_path($dir);
@@ -183,12 +183,12 @@ function test_environment() {
 	);
 	$env[] = array(
 		"item" => func_get_langvar_by_name("lbl_env_mysql_server"),
-		"default" => mysql_get_server_info(),
+//		"default" => mysql_get_server_info(),
 	);
 
 	$env[] = array(
 		"item" => func_get_langvar_by_name("lbl_env_mysql_client"),
-		"data" => mysql_get_client_info()
+//		"data" => mysql_get_client_info()
 	);
 	$env[] = array(
 		"item" => func_get_langvar_by_name("lbl_env_web_server"),
