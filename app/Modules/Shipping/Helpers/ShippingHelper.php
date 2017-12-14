@@ -6,7 +6,7 @@ namespace Modules\Shipping\Helpers;
 use Modules\Core\Models\StateModel;
 use Modules\Distributor\Models\DistributorModel;
 use Modules\GeoIp\Helpers\GeoIpHelper;
-use Modules\Product\Models\ProductModel;
+use Modules\Goods\Models\ProductModel;
 use Modules\Shipping\Models\ShippingModel;
 use Modules\Shipping\Models\ShippingRateModel;
 use Modules\Shipping\Models\ZoneElementModel;

@@ -9,6 +9,13 @@ use Xcart\App\Main\Xcart;
 use Xcart\App\Request\HttpRequest;
 use Xcart\App\Request\RequestManager;
 
+/**
+ * Class Controller
+ * @package Xcart\App\Controller
+ *
+ * @method beforeAction($action, $params)
+ * @method afterAction($action, $params, $out)
+ */
 class Controller
 {
     use ClassNames;
@@ -47,22 +54,40 @@ class Controller
         if (!$action) {
             $action = $this->defaultAction;
         }
-        $this->beforeAction($action, $params);
-        ob_start();
-        if (method_exists($this, $action)) {
-            $this->runAction($action, $params);
-        } else {
-            ob_end_clean();
-            $class = get_class();
-            throw new InvalidConfigException("There is no action {$action} in controller {$class}");
+
+        if (method_exists($this, 'beforeAction')) {
+            $this->beforeAction($action, $params);
         }
 
-        $this->afterAction($action, $params, ob_get_clean());
+        if (($eaa = method_exists($this, 'afterAction')) || $this->checkMiddleware())
+        {
+            ob_start();
+            if (method_exists($this, $action)) {
+                $this->runAction($action, $params);
+            } else {
+                ob_end_clean();
+                $class = get_class();
+                throw new InvalidConfigException("There is no action {$action} in controller {$class}");
+            }
+
+            $echo = ob_get_clean();
+
+            if ($eaa && $aresult = $this->afterAction($action, $params, $echo)) {
+                echo $aresult;
+            }
+
+            echo $echo;
+        }
+        else {
+            $this->runAction($action, $params);
+        }
     }
+
     public function runAction($action, $params = [])
     {
         $method = new ReflectionMethod($this, $action);
         $ps = [];
+
         if ($method->getNumberOfParameters() > 0)
         {
             foreach ($method->getParameters() as $param) {
@@ -87,14 +112,11 @@ class Controller
                     throw new InvalidConfigException("Param {$name} for action {$action} in controller {$class} must be defined. Please, check your routes.");
                 }
             }
-            $method->invokeArgs($this, $ps);
-        }
-        else {
-            $method->invokeArgs($this, $params);//temp
-//            $this->{$action}();
         }
 
-        return true;
+        $ps = ($ps ?: $params);
+
+        $method->invokeArgs($this, $ps);
     }
 
     /**
@@ -104,7 +126,7 @@ class Controller
      */
     public function render($template, $params = [])
     {
-        $data = ['this' => $this];
+        $data = ['controller' => $this];
         return Xcart::app()->template->render($template, array_replace($data, $params));
     }
 
@@ -118,21 +140,6 @@ class Controller
         $this->_request->refresh();
     }
 
-    public function beforeAction($action, $params)
-    {
-    }
-
-    public function afterAction($action, $params, $out)
-    {
-        if (Xcart::app()->hasComponent('middleware')) {
-
-            Xcart::app()->middleware->processView($this->getRequest(), $out);
-            Xcart::app()->middleware->processResponse($this->getRequest());
-        }
-
-        echo $out;
-    }
-
     public function error($code = 404, $message = null)
     {
         throw new HttpException($code, $message);
@@ -142,5 +149,12 @@ class Controller
     {
         header('Content-Type: application/json');
         echo json_encode($data);
+    }
+
+    private function checkMiddleware()
+    {
+        $app = Xcart::app();
+
+        return $app->hasComponent('middleware') && ($app->middleware->isProcessView() || $app->middleware->isProcessResponse());
     }
 }

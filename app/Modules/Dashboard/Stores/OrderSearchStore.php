@@ -13,7 +13,7 @@ use Modules\Dashboard\Helpers\SearchHelper;
 use Modules\Dashboard\Models\DashboardFilter;
 use Modules\Order\Helpers\OrderHelper;
 use Modules\Order\Models\OrderModel;
-use Modules\Product\Models\ProductQuestionModel;
+use Modules\Goods\Models\ProductQuestionModel;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\Model;
 use Xcart\App\Orm\QuerySet;

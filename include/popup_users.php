@@ -41,7 +41,7 @@ if (empty($form)) {
 }
 
 x_session_register("popup_search_users_formats");
-x_session_register("search_data");
+x_session_register("search_data", []);
 
 if (isset($_GET['format'])) {
 	$popup_search_users_formats[$form] = $_GET['format'];

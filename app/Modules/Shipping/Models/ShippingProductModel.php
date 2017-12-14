@@ -2,7 +2,7 @@
 
 namespace Modules\Shipping\Models;
 
-use Modules\Product\Models\ProductModel;
+use Modules\Goods\Models\ProductModel;
 use Xcart\App\Orm\Fields\FloatField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Model;

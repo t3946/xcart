@@ -4,7 +4,7 @@ require $xcart_dir."/include/security.php";
 
 $location[] = array("Classification log", "");
 
-x_session_register("search_data");
+x_session_register("search_data", []);
 
 if ($mode == "search") {
 

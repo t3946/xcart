@@ -540,13 +540,13 @@ if ($REQUEST_METHOD=="POST" && $mode=="catalog_gen" || $REQUEST_METHOD=="GET" &&
 	func_flush();
 
 	# variables initiation
-	x_session_register("hc_state");
+	x_session_register("hc_state", []);
 	if($config["General"]["shop_closed"] == "Y" && !empty($config["General"]["shop_closed_key"])) {
 		$shop_closed_var = "&shopkey=".$config["General"]["shop_closed_key"];
 	}
 
 	if (empty($hc_state) || $REQUEST_METHOD=="POST") {
-		$hc_state="";
+		$hc_state=[];
 		$hc_state["category_processed"] = false;
 		$hc_state["catproducts_processed"] = false;
 		$hc_state["last_cid"] = 0;

@@ -62,7 +62,7 @@ if (!empty($active_modules['SnS_connector']) && $REQUEST_METHOD == 'POST') {
 	}
 }
 
-x_session_register("search_data");
+x_session_register("search_data", []);
 
 # The list of the fields allowed for searching
 $allowable_search_fields = array (

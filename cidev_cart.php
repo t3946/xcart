@@ -105,7 +105,7 @@ if ($action == "update" && !$func_is_cart_empty && !empty($amount)) {
 
                 $cart["products"] = $cart_prods;
             } else {
-                $cart = "";
+                $cart = [];
             }
         }
 
@@ -116,7 +116,7 @@ if ($action == "update" && !$func_is_cart_empty && !empty($amount)) {
         $cart = func_array_merge($cart, func_calculate($cart, $products, $login, $current_area, (!empty($paymentid) ? intval($paymentid) : 0)));
 
         if (func_is_cart_empty($cart)) {
-            $cart = "";
+            $cart = [];
         } else {
             $products = func_products_in_cart($cart, (!empty($userinfo["membershipid"]) ? $userinfo["membershipid"] : 0));
         }

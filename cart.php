@@ -32,7 +32,7 @@
 
 use Modules\Cart\Helpers\CouponOldCart;
 use Modules\Distributor\Helpers\DistributorHelper;
-use Modules\Product\Models\ProductModel;
+use Modules\Goods\Models\ProductModel;
 use Modules\User\Helpers\SurfingHelper;
 use Modules\User\Models\SurfPathModel;
 use Xcart\CidevSurfPath;
@@ -292,7 +292,7 @@ if (!empty($cart["products"]) && empty($cart["cart_number"])) {
     }
 }
 
-x_session_register("e_search_data");
+x_session_register("e_search_data", []);
 if ($top_btn == "Y") {
     $e_search_data["substring"] = "";
     x_session_save("e_search_data");
@@ -809,7 +809,7 @@ if (!$func_is_cart_empty) {
 
             $cart["products"] = $cart_prods;
         } else {
-            $cart = "";
+            $cart = [];
         }
 
         func_header_location("cart.php?$QUERY_STRING");
@@ -1087,7 +1087,7 @@ if (!$func_is_cart_empty) {
         if (!empty($active_modules["SnS_connector"]))
             func_sns_exec_actions($is_sns_action);
 
-        $cart = "";
+        $cart = [];
         func_header_location($xcart_web_dir . DIR_CUSTOMER . "/error_message.php?product_in_cart_expired");
     } else {
         $products = func_products_in_cart($cart, (!empty($userinfo["membershipid"]) ? $userinfo["membershipid"] : 0));

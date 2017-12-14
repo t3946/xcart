@@ -1,7 +1,7 @@
 <?php
 
 use Modules\Order\Models\OrderModel;
-use Modules\Product\Models\VerificationStatusModel;
+use Modules\Goods\Models\VerificationStatusModel;
 use Xcart\Order;
 
 if ( !defined('XCART_START') ) { header("Location: ../"); die("Access denied"); }

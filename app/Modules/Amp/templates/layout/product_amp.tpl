@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
         {set $site = $.getSite}
         <link rel="icon" href="{$site->favicons->limit(1)->get()->getCdnURL()}" type="image/x-icon">
-        {block 'seo'}{meta controller=$this!:null}{/block}
+        {block 'seo'}{meta controller=$controller!:null}{/block}
 
 <link rel="canonical" href="{$model->getAbsoluteUrl(true)}">
 {block 'head'}

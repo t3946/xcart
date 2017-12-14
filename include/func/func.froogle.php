@@ -1,6 +1,6 @@
 <?php
 use Modules\Core\Helpers\CoreHelper;
-use Modules\Product\Models\ProductModel;
+use Modules\Goods\Models\ProductModel;
 use Modules\User\Models\UserModel;
 use Xcart\StoreFront;
 

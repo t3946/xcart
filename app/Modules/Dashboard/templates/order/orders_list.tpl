@@ -43,6 +43,7 @@
     </tr>
 
     {set $route =  $.request->getMatchRouting()}
+    {set $messages = $.app->cache->get('ticket_resolver_messages')}
 
     {foreach $orders as $order index=$index}
         <tr class="separator">
@@ -75,7 +76,13 @@
                 {$order->date|interval_string}
             </td>
             <td colspan="7" class="text-left">
-                {raw $order->last_message.log|br2nl|strip_tags|truncate:160:'[...]'|nl2space}
+                {set $last_message = $order->last_message.log|br2nl|strip_tags}
+
+                <div {if mb_strlen($last_message) > 160}title="{$last_message|escape}"{/if}>
+                    {raw $last_message|truncate:160:' [...]'|nl2space}
+                </div>
+
+
             </td>
         </tr>
 
@@ -88,6 +95,10 @@
                     <a style="color: blue;" href="{$order->otrs_ticket}" target="_blank">
                         OTRS ticket
                     </a>
+
+                    {if $messages[$order->pk]!}
+                        ({$messages[$order->pk]})
+                    {/if}
                 {/if}
             </td>
             <td colspan="1">

@@ -5,7 +5,7 @@ namespace Modules\Amp\Controllers;
 
 use Mindy\QueryBuilder\Expression;
 use Modules\Amp\Models\AmpProductModel;
-use Modules\Product\Models\CategoryModel;
+use Modules\Goods\Models\CategoryModel;
 use Xcart\App\Controller\FrontendController;
 use Xcart\App\Main\Xcart;
 use Modules\Amp\Helpers\AmpHelper;

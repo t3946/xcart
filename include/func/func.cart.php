@@ -1,7 +1,7 @@
 <?php
 
 use Modules\Cart\Helpers\CouponOldCart;
-use Modules\Product\Models\ProductModel;
+use Modules\Goods\Models\ProductModel;
 
 x_load('files','user','taxes');
 

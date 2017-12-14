@@ -27,8 +27,8 @@ return [
         'namespace' => 'order'
     ],
     [
-        'route' => '/admin/product',
-        'path' => 'Modules.Product.routes_admin',
+        'route' => '/admin/goods',
+        'path' => 'Modules.Goods.routes_admin',
         'namespace' => 'product'
     ],
     [

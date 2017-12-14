@@ -145,7 +145,7 @@ if ($REQUEST_METHOD == "POST") {
 			}
 			
             if (!$sf_error) {
-			    $model = new \Modules\Product\Models\CategoryModel($query);
+			    $model = new \Modules\Goods\Models\CategoryModel($query);
                 $model->save();
 				$cat = $model->categoryid;
 
@@ -176,7 +176,7 @@ if ($REQUEST_METHOD == "POST") {
 		# Update general data of category
 		#
 //		db_query("UPDATE $sql_tbl[categories] SET category='$category_name', description='$description', meta_descr='$meta_descr', meta_keywords='$meta_keywords', avail='$avail', order_by='$order_by', is_bold='$is_bold' WHERE categoryid='$cat'");
-		\Modules\Product\Models\CategoryModel::objects()
+		\Modules\Goods\Models\CategoryModel::objects()
 			->filter(['pk' => $cat])
 			->update([
 				'category'=> $category_name,
@@ -250,8 +250,8 @@ if ($REQUEST_METHOD == "POST") {
 		}
 
         if (!$sf_error) {
-            /** @var \Modules\Product\Models\CategoryModel $category_model */
-            if ($category_model = \Modules\Product\Models\CategoryModel::objects()->get(['pk' => $cat]))
+            /** @var \Modules\Goods\Models\CategoryModel $category_model */
+            if ($category_model = \Modules\Goods\Models\CategoryModel::objects()->get(['pk' => $cat]))
             {
                 $category_model->parentid = $cat_location;
                 $category_model->save();

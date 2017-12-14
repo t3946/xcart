@@ -4,7 +4,7 @@ namespace Modules\Brand\Models;
 
 use Modules\Brand\BrandModule;
 use Modules\Menu\Models\CleanUrlModel;
-use Modules\Product\Models\ProductModel;
+use Modules\Goods\Models\ProductModel;
 use Modules\Sites\Models\SiteModel;
 use Modules\User\Models\UserModel;
 use Xcart\App\Components\Breadcrumbs;

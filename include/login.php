@@ -118,7 +118,7 @@ if ($REQUEST_METHOD == "POST") {
 #
 ##
 ###
-			x_session_register("search_data");
+			x_session_register("search_data", []);
 			$search_data = "";
 			x_session_save("search_data");
 
@@ -231,7 +231,7 @@ JS;
 			if ($login_type == "C") {
 
 				# Redirect to saved URL
-				x_session_register("remember_data");
+				x_session_register("remember_data", []);
 				if ($is_remember == 'Y' && !empty($remember_data)) {
 					func_header_location($remember_data['URL'], false);
 				}
@@ -356,7 +356,7 @@ mysql> SELECT * FROM xcart_memberships WHERE membershipid='1' OR membershipid='1
 if ($mode == "logout") {
 	$login_antibot_on = false;
 	$login_attempt = "";
-	x_session_register("identifiers",array());
+	x_session_register("identifiers", []);
 	x_session_register("payment_cc_fields");
 	$payment_cc_fields = array();
 	func_unset($identifiers,$current_type);

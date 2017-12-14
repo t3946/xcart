@@ -22,10 +22,41 @@ class MiddlewareManager implements IMiddleware
      */
     private $_middleware = [];
 
+    private $isProcessView = false;
+    private $isProcessRequest = false;
+    private $isProcessException = false;
+    private $isProcessResponse = false;
+
+    public function isProcessView()
+    {
+        return $this->isProcessView;
+    }
+    public function isProcessRequest()
+    {
+        return $this->isProcessRequest;
+    }
+    public function isProcessException()
+    {
+        return $this->isProcessException;
+    }
+    public function isProcessResponse()
+    {
+        return $this->isProcessResponse;
+    }
+
     public function init()
     {
-        foreach ($this->middleware as $middleware) {
-            $this->_middleware[] = Creator::createObject($middleware);
+        foreach ($this->middleware as $middleware)
+        {
+            /** @var Middleware $mw */
+            $mw = Creator::createObject($middleware);
+
+            $this->isProcessView ?: $this->isProcessView = $mw->isProcessView;
+            $this->isProcessRequest ?: $this->isProcessRequest = $mw->isProcessRequest;
+            $this->isProcessException ?: $this->isProcessException = $mw->isProcessException;
+            $this->isProcessResponse ?: $this->isProcessResponse = $mw->isProcessResponse;
+
+            $this->_middleware[] = $mw;
         }
     }
 

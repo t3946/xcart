@@ -54,7 +54,7 @@ require $xcart_dir."/include/security.php";
 x_load('snapshots');
 
 x_session_register("file_log_name");
-x_session_register("search_data");
+x_session_register("search_data", []);
 
 #
 # This function sort out the file log by file path/name

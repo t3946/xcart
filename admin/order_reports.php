@@ -43,7 +43,7 @@ require $xcart_dir."/include/security.php";
 set_time_limit(86400);
 ini_set("memory_limit", "500M");
 
-x_session_register("search_data");
+x_session_register("search_data", []);
 
 $smarty->assign("show_order_details", "Y");
 

@@ -7,7 +7,7 @@ use Modules\Amazon\ClientPack\MwsFbaInventoryClient;
 use Modules\Amazon\Helpers\AmazonProductHelper;
 use Modules\Amazon\Models\AmazonFbaMissingSkuModel;
 use Modules\Amazon\Models\AmazonFbaProductModel;
-use Modules\Product\Models\ProductModel;
+use Modules\Goods\Models\ProductModel;
 use Xcart\App\Store\BaseStore;
 
 class AmazonInventoryStore extends BaseStore

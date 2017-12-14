@@ -4,11 +4,11 @@ use Mindy\QueryBuilder\Expression;
 use Mindy\QueryBuilder\Q\QOr;
 use Modules\Distributor\Models\DistributorFeedFieldModel;
 use Modules\Distributor\Models\SupplierFeedModel;
-use Modules\Product\Helpers\ProductHelper;
-use Modules\Product\Helpers\SupplierFeedHelper;
-use Modules\Product\Models\CategoryModel;
-use Modules\Product\Models\ProductModel;
-use Modules\Product\Stores\SupplierFeedStore;
+use Modules\Goods\Helpers\SupplierFeedHelper;
+use Modules\Goods\Helpers\ProductHelper;
+use Modules\Goods\Models\CategoryModel;
+use Modules\Goods\Models\ProductModel;
+use Modules\Goods\Stores\SupplierFeedStore;
 
 define("CIDEV_CRON_START", "CRON");
 session_start();
@@ -115,7 +115,7 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
 
     $supplierFeed = new SupplierFeedStore($supplierFeedModel, $contents);
 
-    if ((!$supplierFeed->isValid()) && $supplierFeed->errors) {
+    if (!$supplierFeed->isValid()) {
 
         $log_text = implode($supplierFeed->errors, PHP_EOL);
 
@@ -138,11 +138,11 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
 
                 foreach ($prod['child_products'] as $child_data) {
                     if ($child = ProductModel::objects()->get(['productcode' => $child_data['productcode']])) {
-                        if (!isset($prod['productcode']) && ($parent = $child->parent)) {
+                        if (empty($prod['productcode']) && ($parent = $child->parent)) {
                             $prod['productcode'] = $parent->productcode;
                         }
                         if (!isset($prod['pc_classify_status']) && $child->isCategorized()) {
-                            $prod['supplier_categories'] = array_reverse(CategoryModel::objects($group->getMainCategory())->parents(true)->valuesList('category', true));
+                            $prod['supplier_categories'] = array_reverse(CategoryModel::objects($child->getMainCategory())->parents(true)->valuesList('category', true));
                             $prod['pc_classify_status'] = 'ACC';
                         }
                     }
@@ -193,7 +193,7 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
 
             /** @var ProductModel $modelProduct */
 
-            list($modelProduct, $is_created) = ProductModel::objects()->getOrNew(['productcode' => $aProduct['productcode']]);
+            list($modelProduct, $is_created) = ProductModel::objects()->getOrCreate(['productcode' => $aProduct['productcode']]);
 
             switch ($supplierFeedModel->feed_type) {
                 case 'I' :
@@ -217,7 +217,7 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
                     break;
             }
 
-            if ($modelProduct && $modelProduct->save()) {
+            if ($modelProduct) {
 
                 $modelProduct->setAttributes($aProduct);
 

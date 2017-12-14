@@ -12,7 +12,7 @@ if ( !defined('XCART_START') ) { header("Location: ../../"); die("Access denied"
 define("GET_ALL_CATEGORIES", true);
 require $xcart_dir."/include/categories.php";
 
-x_session_register("search_data");
+x_session_register("search_data", []);
 
 if ($REQUEST_METHOD == 'POST'){
 

@@ -52,7 +52,7 @@ $a = func_query_first("SELECT sessionid,param1,param2 FROM $sql_tbl[cc_pp3_data]
 x_session_id($a["sessid"]);
 x_session_register("login");
 x_session_register("login_type");
-x_session_register("cart");
+x_session_register("cart", []);
 
 $userinfo = func_userinfo($login, $login_type);
 

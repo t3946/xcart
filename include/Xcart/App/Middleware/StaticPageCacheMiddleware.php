@@ -8,12 +8,15 @@ use Xcart\App\Request\Request;
 
 class StaticPageCacheMiddleware extends Middleware
 {
+    public $isProcessRequest = true;
+    public $isProcessView = true;
+
     /**
      * @var int default cache timeout 5 min
      */
     public $timeout = 300000;
 
-    public function processRequest(Request $request)
+    public function processRequest($request)
     {
         $fileName = ($request->path == '/' ? 'index' : basename($request->path)) . '.html';
         $dir = str_replace('/', '.', ltrim(dirname($request->path), '/'));
@@ -25,7 +28,7 @@ class StaticPageCacheMiddleware extends Middleware
         }
     }
 
-    public function processView(Request $request, &$output)
+    public function processView($request, &$output)
     {
         $fileName = ($request->path == '/' ? 'index' : basename($request->path)) . '.html';
         $dir = str_replace('/', '.', ltrim(dirname($request->path), '/'));

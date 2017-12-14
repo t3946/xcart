@@ -142,7 +142,7 @@ window.close();
 		exit;
 	}
 
-	x_session_register("cart");
+	x_session_register("cart", []);
 
 	include $xcart_dir."/shipping/shipping.php";
 
