@@ -4337,11 +4337,11 @@ function func_other_customer_orders($email, $orderid = 0)
 
             if ($groups = $order->groups) {
                 foreach ($groups as $group) {
-                    if (in_array($group->fraud_status, ["C", "E"]) && $group->cb_status == "P" && $group->dc_status == "S") {
+                    if (in_array($order->fraud_status, ["C", "E"]) && $group->cb_status == "P" && $group->dc_status == "S") {
                         $Completed = "Y";
                         $count_Completed++;
                     }
-                    elseif (!in_array($group->fraud_status, ["C", "E", "U", "T", "N"])) {
+                    elseif (!in_array($order->fraud_status, ["C", "E", "U", "T", "N"])) {
                         $Fraud = "Y";
                         $count_Fraud++;
                     }
