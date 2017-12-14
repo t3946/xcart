@@ -155,7 +155,13 @@ class XcartSession extends Session
                 $this->unpacked = [];
             }
 
-            $this->request->cookie->add($this->getSessionKey(), $id, $this->model->expiry);
+            $sessionTime = Xcart::app()->getModule('User')->sessionTime;
+
+            if ($this->model->getIsNewRecord() || $this->model->expiry < ($sessionTime / 3))
+            {
+                $this->model->expiry = time() + $sessionTime;
+                $this->request->cookie->add($this->getSessionKey(), $id, $this->model->expiry);
+            }
 
             if ($this->registerGlobals) {
                 $GLOBALS['XCARTSESSID'] = $id;
