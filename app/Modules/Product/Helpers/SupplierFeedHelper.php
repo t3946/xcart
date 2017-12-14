@@ -307,7 +307,7 @@ class SupplierFeedHelper
 
             $parent_id = $feed->base_category_id;
 
-            if ($is_created && $model->isGroupRoot()) {
+            if ($model->isCategorized()) {
                 $parent_id = 0;
             }
 
@@ -352,7 +352,7 @@ class SupplierFeedHelper
                 }
 
                 if ($lastCategory) {
-                    if (!$model->isCategorized() || ($model->isGroupRoot() && $is_created)) {
+                    if (!$model->isCategorized() || ($model->isGroupRoot() && $is_created && $model->isCategorized())) {
                         $model->setMainCategory($lastCategory);
                     }
                 }
