@@ -191,9 +191,32 @@ class SupplierFeedHelper
 
         }
 
-        //Images section
+        self::feedImages($model, $feed, $data);
+
+        self::feedFiles($model, $data);
+
+        self::feedRelated($model, $data);
+
+        $model = self::feedBrand($model, $feed, $data['brand_name']);
+
+        $model = self::feedAttributes($model, $feed, $data['attributes']);
+
+        $model = self::feedCategories($model, $feed, $data['supplier_categories']);
+
+        return $model;
+    }
+
+    /**
+     * @param ProductModel $model
+     * @param SupplierFeedModel $feed
+     * @param array $data
+     * @throws \Exception
+     */
+    public static function feedImages($model, $feed, $data)
+    {
         $aImages = $data['supplier_images'];
         $aAltImageNames = $data['alt_names'];
+
         if (!empty($aImages) && is_array($aImages)) {
             foreach ($aImages as $kImg => $IMAGE_URL) {
                 $modelDImage = ImageHelper::uploadMainImage(
@@ -213,8 +236,14 @@ class SupplierFeedHelper
                 }
             }
         }
+    }
 
-        //Files section
+    /**
+     * @param ProductModel $model
+     * @param array $data
+     */
+    public static function feedFiles($model, $data)
+    {
         $aFiles = $data['product_files'];
         if (!empty($aFiles) && is_array($aFiles)) {
             $orderBy = 0;
@@ -228,17 +257,26 @@ class SupplierFeedHelper
                 }
             }
         }
+    }
 
-        //Related section
+    /**
+     * @param ProductModel $model
+     * @param array $data
+     */
+    public static function feedRelated($model, $data)
+    {
         $params = [];
         $aRelatedInternalId = $data['related_internal_id'];
         $aRelatedInternalSKU = $data['related_sku'];
+
         if (!empty($aRelatedInternalId)) {
             $params['supplier_internal_product_id__in'] = $aRelatedInternalId;
         }
+
         if (!empty($aRelatedInternalSKU)) {
             $params['productcode__in'] = $aRelatedInternalSKU;
         }
+
         if (!empty($params)) {
             /** @var ProductModel[] $aRelatedProducts */
             if ($aRelatedProducts = ProductModel::objects()->filter(new QOr($params))->all()) {
@@ -248,19 +286,26 @@ class SupplierFeedHelper
                 }
             }
         }
+    }
 
-        //Brand section
-        $brandName = $data['brand_name'];
-
-        if (!empty($brandName)) {
+    /**
+     * @param ProductModel $model
+     * @param SupplierFeedModel $feed
+     * @param string $data
+     * @return ProductModel
+     * @throws \Exception
+     */
+    public static function feedBrand($model, $feed, $data)
+    {
+        if (!empty($data)) {
 
             /** @var BrandModel $brandModel */
-            list($brandModel, $brand_created) = BrandModel::objects()->getOrCreate(['brand' => $brandName]);
+            list($brandModel, $brand_created) = BrandModel::objects()->getOrCreate(['brand' => $data]);
 
             if ($brand_created) {
                 $brandModel->setAttributes(
                     [
-                        'brand' => $brandName,
+                        'brand' => $data,
                         'orderby' => 10,
                         'prevent_search_indexing_of_all_brand_products' => $model->prevent_search_indexing_this_product_page == 'Y' ? 'Y' : 'N',
                         'prevent_search_indexing_brand_page' => $model->prevent_search_indexing_this_product_page == 'Y' ? 'Y' : 'N'
@@ -274,22 +319,36 @@ class SupplierFeedHelper
                 ]))
                     ->save();
 
-                $clean_url = func_clean_url_autogenerate('M', $brandModel->brandid, array('brand' => $brandName));
+                $clean_url = func_clean_url_autogenerate('M', $brandModel->brandid, array('brand' => $data));
 
                 func_clean_url_add($clean_url, 'M', $brandModel->brandid);
 
             }
+
             if ($brandModel->parent_brand_id) {
                 $brandModel = $brandModel->parent;
             }
+
             $model->brandid = $brandModel->brandid;
         }
 
+        return $model;
+    }
+
+
+    /**
+     * @param ProductModel $model
+     * @param SupplierFeedModel $feed
+     * @param array $data
+     * @return ProductModel
+     */
+    public static function feedAttributes($model, $feed, $data)
+    {
         //Attributes section
         FilterProductModel::objects()->delete(['productid' => $model->productid, 'is_feed' => 1]);
-        $aAttributes = $data['attributes'];
-        if (!empty($aAttributes)) {
-            foreach ($aAttributes as $f_name => $fv_name_arr) {
+
+        if (!empty($data)) {
+            foreach ($data as $f_name => $fv_name_arr) {
                 if (!empty($fv_name_arr) && is_array($fv_name_arr)) {
                     list($filterModel) = FilterModel::objects()->getOrCreate(['f_name' => $f_name, 'storefrontid' => $feed->storefront_id]);
                     foreach ($fv_name_arr as $fv_name) {
@@ -302,8 +361,6 @@ class SupplierFeedHelper
                 }
             }
         }
-
-        $model = self::feedCategories($model, $feed, $data['supplier_categories']);
 
         return $model;
     }
