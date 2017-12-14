@@ -111,7 +111,7 @@
     }
 
     .static-messages-block .message > * {
-        font-size: 1.3em;
+        font-size: 1.17em;
     }
 
     .ui-mobile-viewport .static-messages-block .message > * {
