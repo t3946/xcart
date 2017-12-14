@@ -218,4 +218,67 @@ class ProductHelper
 
         return $new_sku;
     }
+
+    public static function calculateUPC($upc_code)
+    {
+        $upc_code = preg_replace("/[^0-9]/", "", $upc_code);
+        switch (strlen($upc_code)) {
+            case 8:
+            case 14:
+                $cd = self::UPC_calculate_check_digit($upc_code);
+                if ($cd != $upc_code[strlen($upc_code) - 1]) {
+                    return substr($upc_code, 0, -1) . $cd;
+                } else {
+                    return $upc_code;
+                }
+                break;
+            case 11:
+            case 12:
+            case 13:
+                $cd = self::UPC_calculate_check_digit($upc_code);
+                if ($cd != $upc_code[strlen($upc_code) - 1]) {
+                    if (!self::isISBN($upc_code) || (self::isISBN($upc_code) && strlen($upc_code) == 12)) {
+                        $cd = self::UPC_calculate_check_digit($upc_code . "1");
+                        return $upc_code . $cd;
+                    } else {
+                        return "";
+                    }
+                } else {
+                    return $upc_code;
+                }
+                break;
+        }
+        return "";
+    }
+
+    private static function UPC_calculate_check_digit($upc_code)
+    {
+        $sum = 0;
+        $mult = 3;
+        for ($i = (strlen($upc_code) - 2); $i >= 0; $i--) {
+            $sum += $mult * $upc_code[$i];
+            if ($mult == 3) {
+                $mult = 1;
+            } else {
+                $mult = 3;
+            }
+        }
+        if ($sum % 10 == 0) {
+            $sum = ($sum % 10);
+        } else {
+            $sum = 10 - ($sum % 10);
+        }
+        return $sum;
+    }
+
+    private static function isISBN($sCode)
+    {
+        $bResult = false;
+        if (in_array(strlen($sCode), [10, 13])) {
+            if (in_array(substr($sCode, 0, 3), [978, 979])) {
+                $bResult = true;
+            }
+        }
+        return $bResult;
+    }
 }

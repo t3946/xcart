@@ -592,7 +592,7 @@ abstract class Base implements ModelInterface, ArrayAccess, Serializable
     public function delete()
     {
         $this->beforeDeleteInternal();
-        $result = $this->objects()->delete(['pk' => $this->pk]);
+        $result = $this->objects()->delete($this->getPrimaryKeyValues());
         if ($result) {
             $this->afterDeleteInternal();
         }

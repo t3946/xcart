@@ -88,6 +88,12 @@ class ProductModel extends Model implements ICartItem
                 'through' => ProductCategoriesModel::className(),
             ],
 
+            'product_categories' => [
+                'class' => HasManyField::className(),
+                'modelClass' => ProductCategoriesModel::className(),
+                'link' => ['productid' => 'productid'],
+            ],
+
             'prices' => [
                 'class' => HasManyField::className(),
                 'modelClass' => PricingModel::className(),
@@ -226,6 +232,7 @@ class ProductModel extends Model implements ICartItem
                 'class' => ForeignField::className(),
                 'modelClass' => ProductModel::className(),
                 'link' => ['group_root' => 'productid'],
+                'null' => true,
             ],
             'thumbnail' => [
                 'class' => HasManyField::className(),
@@ -367,8 +374,35 @@ class ProductModel extends Model implements ICartItem
     {
         return CategoryModel::objects()->filter([
             'products__through__main' => 'Y',
-            'products__through__productid' => $this->productid
+            'products__through__productid' => $this->productid,
+            'storefrontid' => $this->sites->limit(1)->get()->storefrontid
         ])->limit(1)->get();
+    }
+
+    /**
+     * @param CategoryModel $model
+     */
+    public function setMainCategory(CategoryModel $model)
+    {
+        if ($adc = ProductCategoriesModel::objects()
+            ->filter([
+                'category__storefrontid' => $this->sites->limit(1)->get()->storefrontid,
+                'productid' => $this->productid,
+                'main' => 'Y',
+                'categoryid__isnt' => $model->categoryid
+            ])->all()) {
+            foreach ($adc as $dc) {
+                $dc->delete();
+            }
+        }
+
+        ProductCategoriesModel::objects()->getOrCreate(
+            [
+                'categoryid' => $model->categoryid,
+                'productid' => $this->productid,
+                'main' => 'Y',
+            ]
+        );
     }
 
     public function getBreadcrumbs()
@@ -465,5 +499,10 @@ class ProductModel extends Model implements ICartItem
     public function getAdminUrl()
     {
         return sprintf(self::ADMIN_PRODUCT_MODIFY_URL, $this->productid, $this->sites->limit(1)->get()->storefrontid);
+    }
+
+    public function isCategorized()
+    {
+        return ($this->pc_classify_status === 'ACC' || $this->pc_classify_status === 'MC');
     }
 }
