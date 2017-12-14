@@ -817,27 +817,3 @@ $smarty->register_function('getPricingArray', ['Modules\Goods\Helpers\ProductHel
 
 $smarty->assign('recaptcha_enable', $recaptcha_enable);
 $smarty->assign('key_recaptcha_public', $key_recaptcha_public);
-
-
-if (defined("SET_EXPIRE")) {
-    header("Expires: " . gmdate("D, d M Y H:i:s", SET_EXPIRE) . " GMT");
-}
-else {
-    header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
-#       header("Expires: ".gmdate("D, d M Y H:i:s", time() + 600)." GMT");
-}
-
-header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
-
-if (defined("SET_EXPIRE")) {
-    header("Cache-Control: public");
-}
-elseif ($HTTPS) {
-    header("Cache-Control: private, must-revalidate");
-}
-else {
-    header("Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0");
-    header("Pragma: no-cache");
-}
-
-header("Vary: User-Agent");
