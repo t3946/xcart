@@ -175,7 +175,7 @@ if ($REQUEST_METHOD == "POST") {
 			}
 
 			if (!$sf_error) {
-				$model = new \Modules\Product\Models\CategoryModel($query);
+				$model = new \Modules\Goods\Models\CategoryModel($query);
                 $model->save();
                 $cat = $model->categoryid;
 
@@ -209,7 +209,7 @@ if ($REQUEST_METHOD == "POST") {
 		if (empty($supplemental_category)){
 			$supplemental_category = "N";
 		}
-        \Modules\Product\Models\CategoryModel::objects()
+        \Modules\Goods\Models\CategoryModel::objects()
             ->filter(['pk' => $cat])
             ->update([
                 'category'=> $category_name,
@@ -295,8 +295,8 @@ if ($REQUEST_METHOD == "POST") {
 		}
 
         if (!$sf_error) {
-            /** @var \Modules\Product\Models\CategoryModel $category_model */
-            if ($category_model = \Modules\Product\Models\CategoryModel::objects()->get(['pk' => $cat]))
+            /** @var \Modules\Goods\Models\CategoryModel $category_model */
+            if ($category_model = \Modules\Goods\Models\CategoryModel::objects()->get(['pk' => $cat]))
             {
                 $category_model->parent = $cat_location;
                 $category_model->save();

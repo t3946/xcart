@@ -8,9 +8,6 @@ $config = array_replace_recursive([
     'exit_on_end' => true,
     'components' => [
       'errorHandler' => [
-          'class' => '\\Xcart\\App\\Main\\ErrorHandler',
-          'debug' => true,
-          'errHandler' => false
       ],
       'router' => [
 //          'pathRoutes' => 'base.config.routes_admin',

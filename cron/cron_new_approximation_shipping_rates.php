@@ -1,6 +1,6 @@
 <?php
 
-use Modules\Product\Models\ProductModel;
+use Modules\Goods\Models\ProductModel;
 use Modules\Shipping\Helpers\ShippingHelper;
 use Modules\Shipping\Models\ShippingProductModel;
 

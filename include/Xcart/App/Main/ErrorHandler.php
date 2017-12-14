@@ -477,7 +477,7 @@ class ErrorHandler
                 'admin' => $this->adminInfo,
                 'version' => $this->getVersionInfo()
             ]),
-            'this' => $this
+            'self' => $this
         ];
 
 

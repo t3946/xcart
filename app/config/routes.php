@@ -3,7 +3,7 @@ $admin_routes = include('routes_admin.php');
 return array_merge($admin_routes, [
     [
         'route' => '',
-        'path' => 'Modules.Product.routes',
+        'path' => 'Modules.Goods.routes',
     ],
     [
         'route' => '/amp',

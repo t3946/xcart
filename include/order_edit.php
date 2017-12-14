@@ -1839,7 +1839,7 @@ if ($REQUEST_METHOD == "POST")
                                     if (!empty($invoice_data["add_extra_value_string"][$key])) {
                                         $params['product_id'] = null;
                                         if ($invoice_data["add_extra_value_type"][$key] == 1) {
-                                            $pModel = \Modules\Product\Models\ProductModel::objects()->get(['productcode' => $invoice_data["add_extra_value_string"][$key]]);
+                                            $pModel = \Modules\Goods\Models\ProductModel::objects()->get(['productcode' => $invoice_data["add_extra_value_string"][$key]]);
                                             if ($pModel) {
                                                 $params['product_id'] = $pModel->productid;
                                             }

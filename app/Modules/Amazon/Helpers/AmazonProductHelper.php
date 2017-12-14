@@ -25,7 +25,7 @@ use MarketplaceWebServiceProducts_Model_SalesRankList;
 use MarketplaceWebServiceProducts_Model_SalesRankType;
 use MarketplaceWebServiceProducts_Model_SellerSKUIdentifier;
 use Modules\Amazon\Models\AmazonFbaProductModel;
-use Modules\Product\Models\ProductModel;
+use Modules\Goods\Models\ProductModel;
 
 class AmazonProductHelper
 {

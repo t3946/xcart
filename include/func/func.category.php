@@ -33,7 +33,7 @@ function func_delete_category($cat) {
 	if (is_array($subcats) && !empty($subcats)) {
 		 x_load('backoffice');
 
-		 $model = \Modules\Product\Models\CategoryModel::objects()->filter(['categoryid__in' => $subcats])->get();
+		 $model = \Modules\Goods\Models\CategoryModel::objects()->filter(['categoryid__in' => $subcats])->get();
 		 $model->delete();
 		db_exec("DELETE FROM $sql_tbl[categories_parents] WHERE categoryid IN (?)", array($subcats));
 //		db_exec("DELETE FROM $sql_tbl[products_categories] WHERE categoryid IN (?)", array($subcats));

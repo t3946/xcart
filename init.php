@@ -31,44 +31,6 @@ if (!@is_readable($xcart_dir . "/config.php")) {
     exit;
 }
 @require_once $xcart_dir . "/config.php";
-@include_once $xcart_dir . "/config.local.php";
-
-# Main storefront: domain
-define('DEFAULT_SF_DOMAIN', 'www.artistsupplysource.com');
-
-if (defined('LOCAL_SF_DOMAIN')) {
-    define('MAIN_SF_DOMAIN', LOCAL_SF_DOMAIN);
-}
-else {
-    define('MAIN_SF_DOMAIN', DEFAULT_SF_DOMAIN);
-}
-
-if (defined('CIDEV_CRON_START') && CIDEV_CRON_START == "CRON") {
-
-    if (empty($_SERVER['HTTP_HOST'])) {
-        $_SERVER['SERVER_NAME'] = $_SERVER['HTTP_HOST'] = MAIN_SF_DOMAIN;
-    }
-
-    if (empty($_SERVER['REQUEST_URI'])) {
-        $_SERVER['REQUEST_URI'] = $_SERVER['SCRIPT_FILENAME'];
-    }
-}
-
-$cur_host = $_SERVER['HTTP_HOST'];
-$cur_url  = $_SERVER['REQUEST_URI'];
-if ($cur_host == 'www.kolinskyartbrushes.com') {
-    $new_url = ((!empty($HTTPS)) ? 'https://' : 'http://') . 'www.artistsupplysource.com' . $cur_url;
-    header('HTTP/1.1 301 Moved Permanently');
-    header('Location: ' . $new_url);
-    exit();
-}
-
-#
-# Initialize logging
-#
-@require_once $xcart_dir . "/include/logging.php";
-$dieError = "Sorry, the shop is inaccessible temporarily. Please try again later.";
-
 
 if (empty($XCART_APP_CONFIG)) {
     $settings_path = $xcart_dir .'/app/config/settings_admin.php';
@@ -82,9 +44,25 @@ else {
     $app_settings = $XCART_APP_CONFIG;
 }
 
-
 \Xcart\App\Main\Xcart::init($app_settings);
 \Xcart\App\Main\Xcart::app()->beforeRun();
+
+if (defined('CIDEV_CRON_START') && CIDEV_CRON_START == "CRON") {
+
+    if (empty($_SERVER['HTTP_HOST'])) {
+        $_SERVER['SERVER_NAME'] = $_SERVER['HTTP_HOST'] = MAIN_SF_DOMAIN;
+    }
+
+    if (empty($_SERVER['REQUEST_URI'])) {
+        $_SERVER['REQUEST_URI'] = $_SERVER['SCRIPT_FILENAME'];
+    }
+}
+
+#
+# Initialize logging
+#
+@require_once $xcart_dir . "/include/logging.php";
+$dieError = "Sorry, the shop is inaccessible temporarily. Please try again later.";
 
 global $sql_tbl;
 
@@ -190,10 +168,7 @@ $https_location = "https://$xcart_https_host" . $xcart_web_dir;
 #
 $current_location = $HTTPS ? $https_location : $http_location;
 if (isset($last_current_location) && $last_current_location) {
-    if (preg_match("/kolinskyartbrushes.com/i", $HTTP_REFERER) || preg_match("/kolinskyartbrushes.com/i", $last_current_location)) {
-        $current_location = str_replace($HTTPS ? $xcart_https_host : $xcart_http_host, "kolinskyartbrushes.com", $current_location);
-    }
-    elseif (preg_match("/artistssupplysource.com/i", $HTTP_REFERER) || preg_match("/artistssupplysource.com/i", $last_current_location)) {
+    if (preg_match("/artistssupplysource.com/i", $HTTP_REFERER) || preg_match("/artistssupplysource.com/i", $last_current_location)) {
         $current_location = str_replace($HTTPS ? $xcart_https_host : $xcart_http_host, "artistssupplysource.com", $current_location);
     }
 }
@@ -838,7 +813,7 @@ if (false && !function_exists('fn_shutdown')) {
 
 $smarty->register_function('getBanners', ['Xcart\Helpers\Banners', 'getBannerSmarty']);
 $smarty->register_function('getSliderData', ['Xcart\Helpers\SliderData', 'getSliderDataSmarty']);
-$smarty->register_function('getPricingArray', ['Modules\Product\Helpers\ProductHelper', 'getPricingArray']);
+$smarty->register_function('getPricingArray', ['Modules\Goods\Helpers\ProductHelper', 'getPricingArray']);
 
 $smarty->assign('recaptcha_enable', $recaptcha_enable);
 $smarty->assign('key_recaptcha_public', $key_recaptcha_public);

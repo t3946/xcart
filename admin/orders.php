@@ -41,7 +41,7 @@ require $xcart_dir."/include/security.php";
 
 \Xcart\App\Main\Xcart::app()->request->redirect('dashboard:index');
 
-x_session_register("search_data");
+x_session_register("search_data", []);
 x_session_register("order_page_title");
 x_session_register("order_search_condition");
 x_session_register("no_orders_test_checkout_hide_time");

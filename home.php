@@ -49,7 +49,7 @@ x_load("category");
 #
 ##
 ###
-x_session_register("e_search_data");
+x_session_register("e_search_data", []);
 x_session_register("e_search_data_orig_substring");
 
 if (!empty($purchase_order_selected)) {
@@ -129,24 +129,24 @@ if ($cidev_dispatched_request_arr[0] == "keyword" && !empty($cidev_dispatched_re
 
 if ($REQUEST_METHOD == 'POST' && $e_mode == "e_search"){
 
-        $e_search_data_orig_substring = $e_posted_data["substring"];
-        x_session_save("e_search_data_orig_substring");
+    $e_search_data_orig_substring = $e_posted_data["substring"];
+    x_session_save("e_search_data_orig_substring");
 
-//	$e_search_data["orig_substring"] = $e_posted_data["substring"];
-	$e_search_data["substring"] = htmlspecialchars_decode($e_posted_data["substring"]);
-	$e_search_data["substring"] = stripslashes($e_search_data["substring"]);
-	$e_search_data["substring"] = trim($e_search_data["substring"]);
-	$e_search_data["substring"] = str_replace("&#039;", "'", $e_search_data["substring"]);
-	$e_search_data["substring"] = str_replace("&", " ", $e_search_data["substring"]);
-	$e_search_data["orig_substring"] = $e_search_data["substring"];
+    $e_search_data["orig_substring"] = $e_posted_data["substring"];
+    $e_search_data["substring"] = $e_posted_data["substring"];
+    $e_search_data["substring"] = htmlspecialchars_decode($e_posted_data["substring"]);
+    $e_search_data["substring"] = stripslashes($e_search_data["substring"]);
+    $e_search_data["substring"] = trim($e_search_data["substring"]);
+    $e_search_data["substring"] = str_replace("&#039;", "'", $e_search_data["substring"]);
+    $e_search_data["substring"] = str_replace("&", " ", $e_search_data["substring"]);
+    $e_search_data["orig_substring"] = $e_search_data["substring"];
 
-	x_session_save("e_search_data");
+    x_session_save("e_search_data");
 
-        $redirect_substring = str_replace(array(' ','#',':', '&'), '-', $e_search_data["substring"]);
+    $redirect_substring = str_replace(array(' ','#',':', '&'), '-', $e_search_data["substring"]);
 
 
-        func_header_location("/keyword/".$redirect_substring."/?mode_search=Y");
-
+    func_header_location("/keyword/".$redirect_substring."/?mode_search=Y");
 }
 
 

@@ -3,11 +3,12 @@
 namespace Xcart\App\Middleware;
 
 use Xcart\App\Request\HttpRequest;
-use Xcart\App\Request\Request;
 
 class AjaxRedirectMiddleware extends Middleware
 {
-    public function processResponse(Request $request)
+    public $isProcessResponse = true;
+
+    public function processResponse($request)
     {
         /** @var HttpRequest $request */
         if ($request->getIsPost() && $request->getIsAjax()) {

@@ -10,7 +10,7 @@ require $xcart_dir."/include/security.php";
 require $xcart_dir."/include/countries.php";
 require $xcart_dir."/include/states.php";
 
-x_session_register("search_data");
+x_session_register("search_data", []);
 
 $id = isset($id) ? abs(intval($id)) : 0;
 

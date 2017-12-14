@@ -5,8 +5,8 @@ namespace Xcart\External_Marketplaces\Marketplaces;
 use CaponicaAmazonMwsComplete\ClientPack\MwsFeedAndReportClientPack;
 use Modules\Amazon\Helpers\AmazonFbaFeedHelper;
 use Modules\Amazon\Stores\AmazonPoolStore;
-use Modules\Product\Models\ProductModel;
-use Modules\Product\Models\UpdatedProductModel;
+use Modules\Goods\Models\ProductModel;
+use Modules\Goods\Models\UpdatedProductModel;
 use Xcart\External_Marketplaces\StoreFrontMarketPlace;
 
 class Amazon extends StoreFrontMarketPlace

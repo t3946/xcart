@@ -1,7 +1,7 @@
 <?php
 namespace Modules\Brand\Models;
 
-use Modules\Product\Models\ImageModel;
+use Modules\Goods\Models\ImageModel;
 
 class ImageBModel extends ImageModel
 {

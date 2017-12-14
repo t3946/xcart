@@ -121,8 +121,8 @@ if ($type == 'MERCHANT-CALCULATION-CALLBACK') {
 
 	x_session_id($sessid);
 	x_session_register('login');
-	x_session_register('cart');
-	x_session_register('user_tmp', array());
+	x_session_register('cart', []);
+	x_session_register('user_tmp', []);
 
 	$products = $cart['products'];
 
@@ -468,9 +468,9 @@ OUT;
 		# Restore the session
 		$sessid = $_pp3_data['sessionid'];
 		x_session_id($sessid);
-		x_session_register('cart');
+		x_session_register('cart', []);
 		x_session_register('login');
-		x_session_register('user_tmp');
+		x_session_register('user_tmp', []);
 
 		x_load('cart','crypt','user','order');
 
@@ -532,7 +532,7 @@ OUT;
 			$login = $profile_values['login'];
 			$login_type = 'C';
 			$logged = "";
-			x_session_register("identifiers",array());
+			x_session_register("identifiers", []);
 			$identifiers[$login_type] = array (
 				'login' => $login,
 				'login_type' => 'C'

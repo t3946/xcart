@@ -3,8 +3,8 @@
 use Mindy\QueryBuilder\Aggregation\Count;
 use Mindy\QueryBuilder\Aggregation\Min;
 use Mindy\QueryBuilder\Expression;
-use Modules\Product\Models\ProductModel;
-use Modules\Product\Models\UpdatedProductModel;
+use Modules\Goods\Models\ProductModel;
+use Modules\Goods\Models\UpdatedProductModel;
 use Xcart\Connection;
 use Xcart\External_Marketplaces\StoreFrontMarketPlace;
 

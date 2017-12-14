@@ -35,7 +35,7 @@
 # customer_brands_list.php, random
 #
 
-use Modules\Product\Models\ProductModel;
+use Modules\Goods\Models\ProductModel;
 
 if (!defined('XCART_START')) {
     header("Location: ../");

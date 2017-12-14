@@ -8,7 +8,7 @@ use Modules\Dashboard\Models\DashboardFilter;
 use Modules\Dashboard\Models\GroupModel;
 use Modules\Dashboard\Models\UserFiltersLinkModel;
 use Modules\Dashboard\Stores\OrderSearchStore;
-use Modules\Product\Models\ProductQuestionModel;
+use Modules\Goods\Models\ProductQuestionModel;
 use Modules\User\Models\UserModel;
 use Xcart\App\Controller\PrototypeAdminController;
 use Xcart\App\Main\Xcart;

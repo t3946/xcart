@@ -6,9 +6,11 @@ use Xcart\App\Request\Request;
 
 class HtmlMinMiddleware extends Middleware
 {
+    public $isProcessView = true;
+
     public $spaceless = true;
 
-    public function processView(Request $request, &$output)
+    public function processView($request, &$output)
     {
         if ($this->spaceless) {
             $output = trim(preg_replace('/>\\s+</', '><', $output));

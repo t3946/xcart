@@ -38,7 +38,7 @@ define("NUMBER_VARS", "posted_data[price_min],posted_data[price_max],posted_data
 require "./auth.php";
 require $xcart_dir."/include/security.php";
 
-x_session_register("search_data");
+x_session_register("search_data", []);
 
 #
 # Define data for the navigation within section

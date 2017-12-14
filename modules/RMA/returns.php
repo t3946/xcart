@@ -46,7 +46,7 @@ if ($start_date_Month) {
 	$search['end_date'] = mktime(23,59,59,$end_date_Month, $end_date_Day, $end_date_Year);
 }
 
-x_session_register("search_data");
+x_session_register("search_data". []);
 
 if (($current_area == 'C') && ($returnid || $to_delete)) {
 	$returnids = func_array_merge(array($returnid), array_keys((array)$to_delete));

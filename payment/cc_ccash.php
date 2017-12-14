@@ -61,7 +61,7 @@ if(!$userinfo["card_type"])$userinfo["card_type"]="ot";
 
 # Execute perl script
 
-$post = "";
+$post = [];
 $post[] = "order-id=".$prefix.join("-",$secure_oid);
 $post[] = "card-number=".$userinfo["card_number"];
 $post[] = "card-exp=".substr($userinfo["card_expire"],0,2)."/".substr($userinfo["card_expire"],2,2);

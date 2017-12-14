@@ -1,6 +1,6 @@
 <?php
 
-use Modules\Product\Models\ProductModel;
+use Modules\Goods\Models\ProductModel;
 use Xcart\App\Main\Xcart;
 
 require "./auth.php";

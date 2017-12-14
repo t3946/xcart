@@ -34,7 +34,7 @@
 # $Id: popup_poptions.php,v 1.12.2.3 2006/11/17 11:37:59 max Exp $
 #
 
-use Modules\Product\Models\OptionValueModel;
+use Modules\Goods\Models\OptionValueModel;
 
 require "./auth.php";
 

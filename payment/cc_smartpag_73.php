@@ -61,7 +61,7 @@ if (!$sessid) {
 }
 
 x_session_id($sessid);
-x_session_register("cart");
+x_session_register("cart", []);
 x_session_register("login");
 x_session_register("login_type");
 $login_type = "C"; // Set CUSTOMER Flag

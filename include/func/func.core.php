@@ -6,25 +6,19 @@ use Modules\GeoIp\Helpers\GeoIpHelper;
 #
 # Use this function to load code of functions on demand (include/func/func.*.php)
 #
+/**
+ * @return bool
+ * @deprecated
+ */
 function x_load()
 {
     return true;
-    global $xcart_dir;
-
-    $names = func_get_args();
-    foreach ($names as $n) {
-        $n = str_replace("..", "", $n);
-        $f = $xcart_dir . "/include/func/func.$n.php";
-
-        if (file_exists($f)) {
-            require_once $f;
-        }
-    }
 }
 
 
 /**
  * This function replaced standard PHP function header('Location...')
+ * @deprecated Use Xcart::app()->request->redirect($url, $data = [], $status = 302);
  */
 function func_header_location($location, $keep_https = true, $http_error_code = 302, $allow_error_redirect = false, $show_note = true)
 {

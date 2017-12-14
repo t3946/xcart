@@ -2,12 +2,9 @@
 
 use Mindy\QueryBuilder\Q\QOr;
 use Modules\Amazon\Helpers\AmazonProductHelper;
-use Modules\Amazon\Models\AmazonFbaMissingSkuModel;
-use Modules\Amazon\Models\AmazonFbaProductModel;
 use Modules\Amazon\Stores\AmazonInventoryStore;
 use Modules\Amazon\Stores\AmazonPoolStore;
-use Modules\Amazon\Stores\AmazonStore;
-use Modules\Product\Models\ProductModel;
+use Modules\Goods\Models\ProductModel;
 use Xcart\Product;
 
 define("CIDEV_CRON_START", "CRON");

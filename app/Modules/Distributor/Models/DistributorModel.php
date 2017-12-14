@@ -2,7 +2,7 @@
 
 namespace Modules\Distributor\Models;
 
-use Modules\Product\Models\ProductModel;
+use Modules\Goods\Models\ProductModel;
 use Modules\Shipping\Models\ShippingRateModel;
 use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;

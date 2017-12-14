@@ -234,7 +234,7 @@ HR {
 .TopLabel {
   COLOR: #000000;
   FONT-WEIGHT: 500;
-  font-size: .9rem;
+  font-size: 1em;
 }
 
 .Message {
@@ -887,27 +887,21 @@ A.Button {
 
 
 .SmallNote {
-  &:visited {
-    COLOR: #7C4C00;
+  FONT-SIZE: .9em;
+  COLOR: #7C4C00;
+
+  &:visited, &:active {
     TEXT-DECORATION: none;
-    FONT-SIZE: 9px;
   }
   &:hover {
-    COLOR: #7C4C00;
     TEXT-DECORATION: underline;
-    FONT-SIZE: 9px;
-  }
-  &:active {
-    COLOR: #7C4C00;
-    TEXT-DECORATION: none;
-    FONT-SIZE: 9px;
   }
 }
 
 .SmallText {
   COLOR: #7C4C00;
   TEXT-DECORATION: none;
-  FONT-SIZE: 9px;
+  FONT-SIZE: .9em;
 }
 
 .SubcatTitle {
@@ -1014,8 +1008,6 @@ IMG {
 .NavigationCell {
   TEXT-ALIGN: center;
   VERTICAL-ALIGN: bottom;
-  BACKGROUND-IMAGE: url(/skin1_kolin/images/page.gif);
-  WIDTH: 17px;
   A {
     &:visited, &:hover, &:active {
       TEXT-DECORATION: none;
@@ -1030,8 +1022,6 @@ IMG {
 .NavigationCellWide {
   TEXT-ALIGN: center;
   VERTICAL-ALIGN: bottom;
-  BACKGROUND-IMAGE: url(/skin1_kolin/images/page_wide.gif);
-  WIDTH: 23px;
   A {
     &:link, &:visited, &:hover, &:active {
       TEXT-DECORATION: none;
