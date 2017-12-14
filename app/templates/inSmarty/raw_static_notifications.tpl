@@ -79,8 +79,8 @@
         position: relative;
     }
 
-    .static-messages-block .messages-list ul,
-    .static-messages-block .messages-list ul li {
+    .static-messages-block .messages-list > ul,
+    .static-messages-block .messages-list > ul > li {
         margin: 0;
         padding: 0;
         list-style: none;
