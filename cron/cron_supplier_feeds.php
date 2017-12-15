@@ -204,15 +204,20 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
         print("Search of discontinued section\n");
 
         /** @var ProductModel[] $discountinued_models */
-        if ($discountinued_models = ProductModel::objects()->filter(
+
+        $i = 1;
+        while ($discountinued_models = ProductModel::objects()->filter(
             [
                 'sites__through__sfid' => $supplierFeedModel->storefront_id,
                 'manufacturerid' => $supplierFeedModel->manufacturerid,
                 'forsale' => 'Y',
                 new QOr(['productid__isnt' => new Expression('group_root'), 'group_root__isnull' => true])
-            ])->all()) {
+            ])
+            ->paginate($i++, 10000)
+            ->all())
+         {
 
-            print PHP_EOL . " Second iteration: Found " . count($discountinued_models) . " products "  . PHP_EOL;
+            print PHP_EOL . "{$i} iteration: Found " . count($discountinued_models) . " products "  . PHP_EOL;
 
             foreach ($discountinued_models as $d_model) {
                 if (!in_array(strtoupper(trim($d_model->productcode)), $all_feed_productcodes)) {
