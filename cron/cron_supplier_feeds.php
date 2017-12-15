@@ -209,7 +209,7 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
                 'sites__through__sfid' => $supplierFeedModel->storefront_id,
                 'manufacturerid' => $supplierFeedModel->manufacturerid,
                 'forsale' => 'Y',
-                new QOr(['productid__isnt' => new Expression('group_root'), 'group_root_isnull' => true])
+                new QOr(['productid__isnt' => new Expression('group_root'), 'group_root__isnull' => true])
             ])->all()) {
 
             print PHP_EOL . " Second iteration: Found " . count($discountinued_models) . " products "  . PHP_EOL;
