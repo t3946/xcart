@@ -160,7 +160,6 @@ class XcartSession extends Session
             if ($this->model->getIsNewRecord() || $this->model->expiry < ($sessionTime / 3))
             {
                 $this->model->expiry = time() + $sessionTime;
-                $this->model->save();
                 $this->request->cookie->add($this->getSessionKey(), $id, $this->model->expiry);
             }
 
