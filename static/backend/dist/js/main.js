@@ -42189,11 +42189,15 @@ S2.define('jquery.select2',[
         },
         refresh: function() {
             var self = this;
+            var url = this.options.ajax.url;
+
+            url += ((url.indexOf('?') !== -1) ? "&" : "?") + "_=" +(new Date()).getTime();
+
 
             $.ajax({
                 dataType: this.options.ajax.dataType,
                 type: this.options.ajax.type,
-                url: this.options.ajax.url,
+                url: url,
                 cache: this.options.ajax.cache,
 
                 success: function (data, textStatus, jqXHR) {
