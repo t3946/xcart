@@ -227,6 +227,7 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
                     $d_model->save();
                 }
             }
+            print "Discontinued {$discontinued_products_count} products "  . PHP_EOL;
         }
     }
 
