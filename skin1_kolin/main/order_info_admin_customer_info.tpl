@@ -484,8 +484,8 @@
 {if $customer.default_fields.s_zipcode}
   <tr>
     <td><b>{$lng.lbl_zip_code}:</b> </td>
-    <td width="100%">{if !$static}<input type="text" name="customer_info[s_zipcode]" value="{$oOrder->getShippingZipCode()}" style="width: 50%;" />{else}{$oOrder->getShippingZipCode()}{/if}
-&nbsp;<a style="color: blue;" href="javascript: void(0);" onclick="javascript: window.open('orders.php?fast_search=Y&posted_data[s_zipcode]={$oOrder->getShippingZipCode()}&mode=');">{$oOrder->getShippingZipCode()}</a>
+    <td width="100%">{if !$static}<input type="text" name="customer_info[s_zipcode]" value="{$oOrder->s_zipcode}" style="width: 50%;" />{else}{$oOrder->s_zipcode}{/if}
+&nbsp;<a style="color: blue;" href="{$xcartApp->router->url('dashboard:search')}?search[customer][zip_code]={$oOrder->s_zipcode}" target="_blank" >{$oOrder->s_zipcode}</a>
     </td>
   </tr>
 {/if}

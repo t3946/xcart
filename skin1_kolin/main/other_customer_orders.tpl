@@ -22,12 +22,19 @@
 
 Completed: {$count_Completed}, In progress: {$count_Open}, Fraud: {$count_Fraud}
     <table>
+        <tr class="TableHead">
+            <td>Order #</td>
+            <td>CB</td>
+            <td>DC</td>
+            <td>FC</td>
+            <td>Order date</td>
+        </tr>
         {foreach from=$other_customer_orders item=v_o key=k_o}
             {if $k_o lt $show_count_before_see_more}
                 <tr>
                     <td>
                         {assign var="v_o_status_found" value=""}
-                        <a href="order.php?orderid={$v_o.orderid}" target="_blank" style="color: blue;">{$v_o.order_prefix}{$v_o.orderid}</a>
+                        <a href="{$v_o.oOrder->getAdminUrl()}" target="_blank" style="color: blue;">{$v_o.oOrder->getOrderNumber()}</a>
                         {foreach from=$v_o.statuses item=v_o_status key=k_o_status}
                             {if $v_o_status eq "Y"}
                                 {if $v_o_status_found eq "Y"}, {else}: {/if}
@@ -36,10 +43,10 @@ Completed: {$count_Completed}, In progress: {$count_Open}, Fraud: {$count_Fraud}
                         {/foreach}
 
                     </td>
-                    <td>{$v_o->cb_status->name}</td>
-                    <td>{$v_o->dc_status->name}</td>
-                    <td>{$v_o->fraud_status->name}</td>
-                    <td>{$v_o->date|date_format:'%d-%b-%Y %H:%M:%S'}</td>
+                    <td>{$v_o.oOrder->cb_status_model->name}</td>
+                    <td>{$v_o.oOrder->dc_status_model->name}</td>
+                    <td>{$v_o.oOrder->fraud_status_model->name}</td>
+                    <td>{$v_o.oOrder->date|date_format:'%d-%b-%Y %H:%M:%S'}</td>
                 </tr>
             {/if}
         {/foreach}

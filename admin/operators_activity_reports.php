@@ -60,7 +60,14 @@ if ($REQUEST_METHOD == "POST") {
         $login_condition .= " AND OL.login IN ('".implode("','", $posted_data["operators"])."')";
     }
 
-    $all_actions = func_query($sql = "Select CONCAT (o.order_prefix, o.orderid) as order_number, otrs_ticket, FROM_UNIXTIME(o.date) as orderdate, group_concat(xo1.name) as orderstatus, xc.firstname, OL.*, FROM_UNIXTIME(OL.date) actiondate
+    $all_actions = func_query($sql = "
+Select CONCAT (o.order_prefix, o.orderid) as order_number, 
+otrs_ticket, 
+FROM_UNIXTIME(o.date) as orderdate, 
+group_concat(xo1.name) as orderstatus, 
+xc.firstname, 
+OL.*, 
+FROM_UNIXTIME(OL.date) actiondate
         FROM $sql_tbl[orders] o
         LEFT JOIN $sql_tbl[order_logs] OL ON OL.orderid = o.orderid $login_condition
        INNER JOIN $sql_tbl[order_groups] xo ON xo.orderid = o.orderid
@@ -68,7 +75,7 @@ if ($REQUEST_METHOD == "POST") {
        INNER JOIN $sql_tbl[customers] xc ON OL.login = xc.login
       where OL.id is not NULL  $search_condition AND usertype='A'
       group by o.orderid, OL.id
-      order by o.date, OL.date ASC
+      order by MAX(OL.date) DESC
       ");
 
     $firstlevelGroup = array();

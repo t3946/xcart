@@ -162,7 +162,7 @@ class OrderHelper
             foreach ($model->groups as $group) {
                 if (in_array($group->cb_status, ['Q', 'N', 'I'])) {
                     if ($group->cb_status != $status) {
-                        $log = "<br/><b>" . $group->manufacturer->code . ":</b> cb_status: " . $group->cb_status->name
+                        $log = "<br/><b>" . $group->manufacturer->code . ":</b> cb_status: " . $group->cb_status_model->name
                             . " -> " . OrderStatusModel::objects()->get(['code' => $status])->name;
                     }
                     $send = true;
