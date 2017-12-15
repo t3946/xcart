@@ -19,17 +19,22 @@ class ExpireHeadersMiddleware extends Middleware
             header("Vary: User-Agent");
 //            header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
 
-            if ($request->getIsAjax()) {
+            if (defined('AREA_TYPE') && AREA_TYPE == 'A') {
                 $this->noCache();
             }
             else {
+                if ($request->getIsAjax()) {
+                    $this->noCache();
+                }
+                else {
 
-                $request->getIsSecureConnection() ?
-                    header("Cache-Control: private, max-age=3600, must-revalidate") :
-                    header("Cache-Control: public, max-age=3600");
+                    $request->getIsSecureConnection() ?
+                        header("Cache-Control: private, max-age=3600, must-revalidate") :
+                        header("Cache-Control: public, max-age=3600");
 
-                !defined("SET_EXPIRE") ?:
-                    header("Expires: " . gmdate("D, d M Y H:i:s", SET_EXPIRE) . " GMT"); // is defined
+                    !defined("SET_EXPIRE") ?:
+                        header("Expires: " . gmdate("D, d M Y H:i:s", SET_EXPIRE) . " GMT"); // is defined
+                }
             }
         }
     }
