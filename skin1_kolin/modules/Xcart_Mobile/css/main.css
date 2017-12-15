@@ -1210,7 +1210,8 @@ div[data-role="page"] .ui-header div[data-role="navbar"] span.ui-btn-text span {
   max-height: none;
   position: relative;
   margin: 0 auto;
-  padding: 0.01em;
+  left: 0;
+  /*padding: 0.01em;*/
   float: none;
 }
 .product-details .image .ui-li-has-thumb .ui-btn-inner a.ui-link-inherit,
