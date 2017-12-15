@@ -205,7 +205,7 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
 
         /** @var ProductModel[] $discountinued_models */
 
-        $i = 1;
+        $i = 0;
         while ($discountinued_models = ProductModel::objects()->filter(
             [
                 'sites__through__sfid' => $supplierFeedModel->storefront_id,
@@ -213,7 +213,7 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
                 'forsale' => 'Y',
                 new QOr(['productid__isnt' => new Expression('group_root'), 'group_root__isnull' => true])
             ])
-            ->paginate($i++, 10000)
+            ->paginate(++$i, 10000)
             ->all())
          {
 
