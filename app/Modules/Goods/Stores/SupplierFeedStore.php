@@ -52,7 +52,7 @@ class SupplierFeedStore extends BaseStore
         }
         if ($this->feed_model->last_update_items_count > 0) {
             if (($this->products_in_feed / $this->feed_model->last_update_items_count) < $this->feed_model->threshold) {
-                $this->errors[] = GoodsModule::t("manufacturerid: {mid}. Too few products in feed in comparison with last update {c1} against. ({feed_type})",
+                $this->errors[] = GoodsModule::t("manufacturerid: {mid}. Too few products in feed in comparison with last update {c1} against {c2}. ({feed_type})",
                     ['{mid}' => $this->feed_model->manufacturerid, '{feed_type}' => $this->feed_model->getField('feed_type')->toText(), '{c1}' => $this->products_in_feed, '{c2}' => $this->feed_model->last_update_items_count]);
                 return false;
             }
