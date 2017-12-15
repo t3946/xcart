@@ -67,7 +67,8 @@ FROM_UNIXTIME(o.date) as orderdate,
 group_concat(xo1.name) as orderstatus, 
 xc.firstname, 
 OL.*, 
-FROM_UNIXTIME(OL.date) actiondate
+FROM_UNIXTIME(OL.date) actiondate,
+FROM_UNIXTIME(OL.date) last_action_date
         FROM $sql_tbl[orders] o
         LEFT JOIN $sql_tbl[order_logs] OL ON OL.orderid = o.orderid $login_condition
        INNER JOIN $sql_tbl[order_groups] xo ON xo.orderid = o.orderid
@@ -75,7 +76,7 @@ FROM_UNIXTIME(OL.date) actiondate
        INNER JOIN $sql_tbl[customers] xc ON OL.login = xc.login
       where OL.id is not NULL  $search_condition AND usertype='A'
       group by o.orderid, OL.id
-      order by MAX(OL.date) DESC
+      order by OL.date DESC
       ");
 
     $firstlevelGroup = array();
@@ -90,6 +91,7 @@ FROM_UNIXTIME(OL.date) actiondate
 
             $secondLevelGroup[$actionrow["firstname"]]["orders"][$actionrow["orderid"]]["actioncount"]++;
             $secondLevelGroup[$actionrow["firstname"]]["orders"][$actionrow["orderid"]]["orderdate"] = $actionrow["orderdate"];
+            $secondLevelGroup[$actionrow["firstname"]]["orders"][$actionrow["orderid"]]["last_action_date"] = isset($secondLevelGroup[$actionrow["firstname"]]["orders"][$actionrow["orderid"]]["last_action_date"])? $secondLevelGroup[$actionrow["firstname"]]["orders"][$actionrow["orderid"]]["last_action_date"] : $actionrow["last_action_date"];
             $secondLevelGroup[$actionrow["firstname"]]["orders"][$actionrow["orderid"]]["orderstatus"] = $actionrow["orderstatus"];
             $secondLevelGroup[$actionrow["firstname"]]["orders"][$actionrow["orderid"]]["ordernumberwithprefix"] = $actionrow["order_number"];
             $secondLevelGroup[$actionrow["firstname"]]["orders"][$actionrow["orderid"]]["otrsticket"] = $actionrow["otrs_ticket"];
@@ -105,7 +107,7 @@ FROM_UNIXTIME(OL.date) actiondate
         $secondlevelGroupData = array();
         foreach ($secondLevelGroup as $login => $dataS) {
             foreach ($dataS["orders"] as $orderid => $dataSecond)
-                $secondlevelGroupData[$login][] = array("ordernumber" => $orderid, "orderdate" => $dataSecond["orderdate"], "orderstatus" => $dataSecond["orderstatus"], "actioncount" => $dataSecond["actioncount"], "ordernumberwithprefix" => $dataSecond["ordernumberwithprefix"], "otrsticket" => $dataSecond["otrsticket"]);
+                $secondlevelGroupData[$login][] = array("ordernumber" => $orderid, "last_action_date" => $dataSecond["last_action_date"], "orderstatus" => $dataSecond["orderstatus"], "actioncount" => $dataSecond["actioncount"], "ordernumberwithprefix" => $dataSecond["ordernumberwithprefix"], "otrsticket" => $dataSecond["otrsticket"]);
         }
     }
 
