@@ -151,7 +151,7 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
 
             /** @var ProductModel $modelProduct */
 
-            list($modelProduct, $is_created) = ProductModel::objects()->getOrCreate(['productcode' => $aProduct['productcode']]);
+            list($modelProduct, $is_created) = ProductModel::objects()->getOrNew(['productcode' => $aProduct['productcode']]);
 
             switch ($supplierFeedModel->feed_type) {
                 case 'I' :
@@ -162,6 +162,7 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
 
                     break;
                 case 'P' :
+                    $modelProduct->save();
                     if (!isset($aProduct['is_group'])) {
                         if (!isset($aProduct['cost_to_us'])) {
                             $skippedProductsCount++;
