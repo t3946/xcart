@@ -161,8 +161,9 @@ var page_charset = "{$default_charset|default:"iso-8859-1"}";
 *}
 {if $AREA_TYPE ne 'A'}
     <script src="{$SkinDir}/jquery.min.1.7.1.js" type="text/javascript"></script>
-    <link rel="stylesheet" href="/static/backend/fonts/icons/css/style.css">
 {/if}
+
+<link rel="stylesheet" href="/static/backend/fonts/icons/css/style.css">
 {*
 {/if}
 *}

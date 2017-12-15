@@ -18,4 +18,7 @@ return [
     'ReferrerSearch' => [
         'class' => '\\Modules\\User\\Middleware\\ReferrerSearchMiddleware'
     ],
+    'ExpireHeaders' => [
+        'class' => '\\Modules\\User\\Middleware\\ExpireHeadersMiddleware'
+    ],
 ];

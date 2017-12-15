@@ -37,6 +37,8 @@ use Modules\User\Helpers\SurfingHelper;
 use Modules\User\Models\SurfPathModel;
 use Xcart\CidevSurfPath;
 
+define('SET_EXPIRE', 1);
+
 require "./auth.php";
 
 if (!empty($active_modules['Wishlist'])) {

@@ -190,7 +190,8 @@ abstract class Admin
         if (is_array($result) && count($result) == 2 && is_bool($result[0]) && is_string($result[1])) {
             $success = $result[0];
             $message = $result[1];
-        } elseif ($result !== true) {
+        }
+        elseif ($result !== true) {
             $success = false;
             if (is_string($result)) {
                 $message = $result;
@@ -205,7 +206,8 @@ abstract class Admin
                 'message' => $message
             ]);
             Xcart::app()->end();
-        } else {
+        }
+        else {
             $flash->add($message, $success ? 'success' : 'error');
             $request->redirect($this->getAllUrl());
         }
@@ -220,6 +222,7 @@ abstract class Admin
         if (array_key_exists('update', $actions)) {
             unset($actions['update']);
         }
+
         return $actions;
     }
 
@@ -749,7 +752,8 @@ abstract class Admin
             if ($parent_id) {
                 $model->parent_id = $parent_id;
             }
-        } else {
+        }
+        else {
             $model = $this->getModelOr404($pk);
             $form = $this->getUpdateForm();
         }
@@ -780,7 +784,8 @@ abstract class Admin
                         $request->redirect($this->getCreateUrl());
                     }
                 }
-            } else {
+            }
+            else {
                 if (!$request->getIsAjax()) {
                     Xcart::app()->flash->error('Пожалуйста, исправьте ошибки');
                 }
