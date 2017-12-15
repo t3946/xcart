@@ -129,7 +129,7 @@ class SupplierFeedHelper
             }
         }
 
-        if (!empty($model->fulldescr) && $feed->native_full_description != "Y") {
+        if ($is_created && !empty($model->fulldescr) && $feed->native_full_description != "Y") {
             $model->fulldescr = ProductHelper::cleanProductFullDescription($model->fulldescr);
         }
 
@@ -375,13 +375,13 @@ class SupplierFeedHelper
      */
     public static function feedCategories($model, $is_created, $feed, $categories)
     {
+        if (!$is_created && !$model->isGroupRoot()) {
+            return $model;
+        }
+
         if (!empty($categories) && is_array($categories)) {
 
             $parent_id = $feed->base_category_id;
-
-            if (!$is_created && !$model->isGroupRoot()) {
-                return $model;
-            }
 
             if ($model->isGroupRoot()) {
                 $parent_id = 0;

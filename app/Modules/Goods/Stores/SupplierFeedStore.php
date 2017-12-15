@@ -3,6 +3,7 @@
 namespace Modules\Goods\Stores;
 
 use Modules\Distributor\Models\SupplierFeedModel;
+use Modules\Goods\GoodsModule;
 use Xcart\App\Store\BaseStore;
 
 class SupplierFeedStore extends BaseStore
@@ -35,23 +36,23 @@ class SupplierFeedStore extends BaseStore
     public function isValid()
     {
         if (empty($this->products) || !is_array($this->products)) {
-            $this->errors[] = ProductModule::t("manufacturerid: {mid}. No products found. ({feed_type})",
+            $this->errors[] = GoodsModule::t("manufacturerid: {mid}. No products found. ({feed_type})",
                 ['{mid}' => $this->feed_model->manufacturerid, '{feed_type}' => $this->feed_model->getField('feed_type')->toText()]);
             return false;
         }
         if ($this->count() != $this->products_in_feed) {
-            $this->errors[] = ProductModule::t("manufacturerid: {mid}. Corrupted feed file (by products in feed count). ({feed_type}) {c1} vs {c2}",
+            $this->errors[] = GoodsModule::t("manufacturerid: {mid}. Corrupted feed file (by products in feed count). ({feed_type}) {c1} vs {c2}",
                 ['{mid}' => $this->feed_model->manufacturerid, '{feed_type}' => $this->feed_model->getField('feed_type')->toText(), '{c1}' => $this->count(), '{c2}' => $this->products_in_feed]);
             return false;
         }
         if ($this->supplier_id != $this->feed_model->manufacturerid) {
-            $this->errors[] = ProductModule::t("manufacturerid: {mid}. Wrong supplier_id. ({feed_type}) . Feed skipped.",
+            $this->errors[] = GoodsModule::t("manufacturerid: {mid}. Wrong supplier_id. ({feed_type}) . Feed skipped.",
                 ['{mid}' => $this->feed_model->manufacturerid, '{feed_type}' => $this->feed_model->getField('feed_type')->toText()]);
             return false;
         }
         if ($this->feed_model->last_update_items_count > 0) {
             if (($this->products_in_feed / $this->feed_model->last_update_items_count) < $this->feed_model->threshold) {
-                $this->errors[] = ProductModule::t("manufacturerid: {mid}. Too few products in feed in comparison with last update {c1} against. ({feed_type})",
+                $this->errors[] = GoodsModule::t("manufacturerid: {mid}. Too few products in feed in comparison with last update {c1} against. ({feed_type})",
                     ['{mid}' => $this->feed_model->manufacturerid, '{feed_type}' => $this->feed_model->getField('feed_type')->toText(), '{c1}' => $this->products_in_feed, '{c2}' => $this->feed_model->last_update_items_count]);
                 return false;
             }
@@ -122,17 +123,17 @@ class SupplierFeedStore extends BaseStore
     public static function replaceFeedFields($data)
     {
         $data['productcode'] = strtoupper(trim(!isset($data['sku']) ? $data['productcode'] : $data['sku']));
-        $data['r_avail'] = !isset($data['quantity']) ? $data['r_avail'] : $data['quantity'];
+        $data['r_avail'] = (string) !isset($data['quantity']) ? $data['r_avail'] : $data['quantity'];
         $data['eta_date_mm_dd_yyyy'] = !isset($data['eta_date']) ? $data['eta_date_mm_dd_yyyy'] : $data['eta_date'];
         $data['product'] = !isset($data['title']) ? $data['product'] : $data['title'];
-        $data['list_price'] = !isset($data['listprice']) ? $data['list_price'] : $data['listprice'];
+        $data['list_price'] = (string) !isset($data['listprice']) ? $data['list_price'] : $data['listprice'];
 
         $data = array_filter($data, function ($v) {
             return !is_null($v);
         });
 
         if (isset($data['eta_date_mm_dd_yyyy'])) {
-            $data['eta_date_mm_dd_yyyy'] = strtotime($data['eta_date_mm_dd_yyyy']);
+            $data['eta_date_mm_dd_yyyy'] = (string) strtotime($data['eta_date_mm_dd_yyyy']);
         }
 
         if (isset($data['images'])) {
