@@ -150,7 +150,7 @@ class XcartSession extends Session
 
             if (!$this->model) {
                 $id = $this->genSessId();
-                list($this->model) = SessionDataModel::objects()->getOrCreate(['sessid' => $id]);
+                list($this->model) = SessionDataModel::objects()->getOrNew(['sessid' => $id]);
                 $this->data = [];
                 $this->unpacked = [];
             }
@@ -160,6 +160,7 @@ class XcartSession extends Session
             if ($this->model->getIsNewRecord() || $this->model->expiry < ($sessionTime / 3))
             {
                 $this->model->expiry = time() + $sessionTime;
+                $this->model->save();
                 $this->request->cookie->add($this->getSessionKey(), $id, $this->model->expiry);
             }
 
