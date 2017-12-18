@@ -268,6 +268,7 @@ JSON;
     }
     //curl -X GET http://localhost:9200/{INDEX}/{TYPE}/_search?q= ...
     function query($q = array()){
+        return [];
         return $this->call($this->type . '/_search?' . http_build_query($q), array('method' => 'POST', 'content' => $this->queryParams));
     }
 }
