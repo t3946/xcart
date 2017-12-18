@@ -168,13 +168,16 @@ if (!empty($cidev_storefronts) && is_array($cidev_storefronts)) {
             ->order(['-utype', '-product__forsale'])
             ->limit(3000)
             ->all()) {
+
             $timeout = 60 * 20;
             $storefront_time_start = time();
+
             $log_text = "Storefront: " . $sf_info["domain"] . " Storefrontid: " . $sf_info["storefrontid"];
             func_backprocess_log("incremental feeds", $log_text);
 
             foreach ($queues as $queue_o) {
 
+                /** @var UpdatedProductModel $queue */
                 if ($queue = UpdatedProductModel::objects()
                     ->get(
                         [
@@ -197,9 +200,10 @@ if (!empty($cidev_storefronts) && is_array($cidev_storefronts)) {
                         break;
                     }
 
+                    /** @var $oProduct ProductModel */
+
                     if ($oProduct = $queue->product) {
 
-                        /** @var $oProduct ProductModel */
                         $oProduct->last_incremental_update = time();
 
                         $oProduct->save();
