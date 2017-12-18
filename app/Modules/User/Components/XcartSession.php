@@ -179,11 +179,9 @@ class XcartSession extends Session
     {
         $key = $this->getSessionKey();
 
-        if ($id = $this->request->post->get($key)) {}
-        elseif ($id = $this->request->get->get($key)) {}
-        elseif ($id = $this->request->cookie->get($key)) {}
-
-        return $id;
+        return $this->request->post->get($key) ?:
+                $this->request->get->get($key) ?:
+                    $this->request->cookie->get($key);
     }
 
     public function getSessionKey()
