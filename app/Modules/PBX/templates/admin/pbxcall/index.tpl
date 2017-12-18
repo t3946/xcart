@@ -1,1 +1,104 @@
 {extends "base/admin.tpl"}
+{block "heading"}
+    <h1>{$page_title}</h1>
+{/block}
+{block "content"}
+    {smarty_admin_block name='Calls'}
+
+
+        Filter
+        <form name="filter" method="get" action="/admin/pbx/pbxcalls" target="_top">
+            <input type="hidden" name="filter" value="1">
+            <select name="direction">
+                <option selected disabled>Direction</option>
+                <option value="in">Inbound</option>
+                <option value="out">Outbound</option>
+                <option value="lost">Miss call</option>
+                <option value="vm">Voice mail</option>
+            </select>
+            Order # <input name="order_id" type="text" placeholder="Order #">
+            Date From <input name="date_from" type="date" placeholder="mm/dd/YY">
+            Date To <input name="date_to" type="date" placeholder="mm/dd/YY">
+            <hr>
+            Party Tel # <input name="e164" type="text">
+            Operator <select name="firstname">
+                <option selected disabled>Operator</option>
+                {foreach $operators as $oper}
+                    <option value="{$oper}">{$oper}</option>
+                {/foreach}
+            </select>
+            <hr>
+            <input type="submit" value="Find">
+        </form>
+
+        <hr>
+
+        <table width="100%" border="1" cellpadding="14" cellspacing="0" style="table-layout: auto;">
+            <thead>
+            <tr>
+                <th>
+                    Order #
+                </th>
+                <th>
+                    Party Tel #
+                </th>
+                <th>
+                    Party Details
+                </th>
+                <th>
+                    Operator Name
+                </th>
+                <th>
+                    Starting Time
+                </th>
+                <th>
+                    Direction
+                </th>
+                <th>
+                    Duration
+                </th>
+                <th>
+                    Audio
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            {foreach $mass as $value}
+                <tr>
+                    <td align="center">
+                        {$value.order_id}
+                    </td>
+                    <td align="center">
+                        {$value.e164}
+                    </td>
+                    <td align="center">
+                        {$value.cx_name}
+                    </td>
+                    <td align="center">
+                        {$value.name}
+                    </td>
+                    <td align="center">
+                        {$value.start_at}
+                    </td>
+                    <td align="center">
+                        {$value.direction}
+                    </td>
+                    <td align="center">
+                        {$value.diff}
+                    </td>
+                    <td align="center" id="{$value.call_id}">
+                        {if $value.url?}
+                            <a href="{$value.url}" target="_blank" ">Listen</a>
+                        {else}
+                        Not defined
+                        {/if}
+                    </td>
+                </tr>
+            {/foreach}
+            </tbody>
+
+        </table>
+    {/smarty_admin_block}
+
+    {$pager}
+{/block}
