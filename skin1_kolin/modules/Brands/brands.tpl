@@ -322,7 +322,7 @@ checkboxes = new Array({foreach from=$brands item=v key=k}{if $k > 0},{/if}'{if 
 <tr>
         <td class="FormButton">Product brand name:</td>
         <td>&nbsp;</td>
-        <td><input type="text" name="title" style="width: 80%;" value="{$brand.product_brand_name}" /></td>
+        <td><input type="text" name="product_brand_name" style="width: 80%;" value="{$brand.product_brand_name}" /></td>
 <tr>
 
 <tr>
