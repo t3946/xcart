@@ -299,37 +299,35 @@ class SupplierFeedHelper
     {
         if (!empty($data)) {
 
-            /** @var BrandModel $brandModel */
-            list($brandModel, $brand_created) = BrandModel::objects()->getOrCreate(['brand' => $data]);
+            if (!$brand = BrandModel::objects()->filter([
+                'brand' => $data,
+                'storefront__through__sfid' => $feed->storefront_id
+            ])->limit(1)->get()) {
 
-            if ($brand_created) {
-                $brandModel->setAttributes(
-                    [
-                        'brand' => $data,
-                        'orderby' => 10,
-                        'prevent_search_indexing_of_all_brand_products' => $model->prevent_search_indexing_this_product_page == 'Y' ? 'Y' : 'N',
-                        'prevent_search_indexing_brand_page' => $model->prevent_search_indexing_this_product_page == 'Y' ? 'Y' : 'N'
-                    ]);
+                $brand = new BrandModel([
+                    'brand' => $data,
+                    'orderby' => 10,
+                    'prevent_search_indexing_of_all_brand_products' => $model->prevent_search_indexing_this_product_page == 'Y' ? 'Y' : 'N',
+                    'prevent_search_indexing_brand_page' => $model->prevent_search_indexing_this_product_page == 'Y' ? 'Y' : 'N'
+                ]);
 
-                $brandModel->save();
+                $brand->save();
 
                 (new BrandStorefrontModel([
-                    'brandid' => $brandModel->brandid,
+                    'brandid' => $brand->brandid,
                     'sfid' => $feed->storefront_id,
-                ]))
-                    ->save();
+                ]))->save();
 
-                $clean_url = func_clean_url_autogenerate('M', $brandModel->brandid, array('brand' => $data));
+                $clean_url = func_clean_url_autogenerate('M', $brand->brandid, array('brand' => $data));
 
-                func_clean_url_add($clean_url, 'M', $brandModel->brandid);
-
+                func_clean_url_add($clean_url, 'M', $brand->brandid);
             }
 
-            if ($brandModel->parent_brand_id) {
-                $brandModel = $brandModel->parent;
+            if ($brand->parent_brand_id) {
+                $brand = $brand->parent;
             }
 
-            $model->brandid = $brandModel->brandid;
+            $model->brandid = $brand->brandid;
         }
 
         return $model;
