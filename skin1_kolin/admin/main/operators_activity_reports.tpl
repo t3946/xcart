@@ -239,7 +239,7 @@ function managedate(status) {
 					<tr class="secondlevel">
 						<th class="firstcell"></th>
 						<th style="width:50px;">Order number</th>
-						<th style="width:100px;">Order date</th>
+						<th style="width:100px;">Last action date</th>
 						<th>Order statuses</th>
 						<th>Actions</th>
 					</tr>
@@ -247,7 +247,7 @@ function managedate(status) {
 					<tr>
 						<td class="crosscell"><img src="/skin1_kolin/images/plus.gif" /></td>
 						<td><a target="_blank" href="/admin/order.php?orderid={$row2.ordernumber}&tab=main_order_tabs-logs&tab2=order_tabs-1">{$row2.ordernumberwithprefix}</a></td>
-						<td>{$row2.orderdate|date_format:'%d-%b-%Y<br />%H:%M:%S'}</td>
+						<td>{$row2.last_action_date|date_format:'%d-%b-%Y<br />%H:%M:%S'}</td>
 						<td><a target="_blank" href="{$row2.otrsticket}">{$row2.orderstatus}</a></td>
 						<td>{$row2.actioncount}</td>
 					</tr>

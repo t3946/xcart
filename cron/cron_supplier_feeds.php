@@ -151,25 +151,27 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
 
             /** @var ProductModel $modelProduct */
 
-            list($modelProduct, $is_created) = ProductModel::objects()->getOrCreate(['productcode' => $aProduct['productcode']]);
+            list($modelProduct, $is_created) = ProductModel::objects()->getOrNew(['productcode' => $aProduct['productcode']]);
 
             switch ($supplierFeedModel->feed_type) {
                 case 'I' :
+
                     if ($is_created) {
                         $new_products_count++;
-                        continue;
+                        continue 2;
                     }
 
                     break;
                 case 'P' :
+                    $modelProduct->save();
                     if (!isset($aProduct['is_group'])) {
                         if (!isset($aProduct['cost_to_us'])) {
                             $skippedProductsCount++;
-                            continue;
+                            continue 2;
                         }
                         if (!$is_created && $supplierFeedModel->add_new_only == "Y") {
                             $skippedProductsCount++;
-                            continue;
+                            continue 2;
                         }
                     }
                     break;
@@ -202,15 +204,20 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
         print("Search of discontinued section\n");
 
         /** @var ProductModel[] $discountinued_models */
-        if ($discountinued_models = ProductModel::objects()->filter(
+
+        $i = 0;
+        while ($discountinued_models = ProductModel::objects()->filter(
             [
                 'sites__through__sfid' => $supplierFeedModel->storefront_id,
                 'manufacturerid' => $supplierFeedModel->manufacturerid,
                 'forsale' => 'Y',
-                new QOr(['productid__isnt' => new Expression('group_root'), 'group_root_isnull' => true])
-            ])->all()) {
+                new QOr(['productid__isnt' => new Expression('group_root'), 'group_root__isnull' => true])
+            ])
+            ->paginate(++$i, 10000)
+            ->all())
+         {
 
-            print "<br />Second iteration:<br />";
+            print PHP_EOL . "{$i} iteration: Found " . count($discountinued_models) . " products "  . PHP_EOL;
 
             foreach ($discountinued_models as $d_model) {
                 if (!in_array(strtoupper(trim($d_model->productcode)), $all_feed_productcodes)) {
@@ -225,6 +232,7 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
                     $d_model->save();
                 }
             }
+            print "Discontinued {$discontinued_products_count} products "  . PHP_EOL;
         }
     }
 

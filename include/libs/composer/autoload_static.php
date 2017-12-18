@@ -390,6 +390,13 @@ class ComposerStaticInited1e2f7cb4425e4bdc0264910bb94e92
                 0 => __DIR__ . '/..' . '/caponica/amazon-mws-complete/src',
             ),
         ),
+        'A' => 
+        array (
+            'Aws' => 
+            array (
+                0 => __DIR__ . '/..' . '/aws/aws-sdk-php/src',
+            ),
+        ),
     );
 
     public static $classMap = array (

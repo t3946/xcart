@@ -97,6 +97,7 @@ if ($REQUEST_METHOD == "POST" || ($mode == "delete_image" && $brandid)) {
                                 "prevent_search_indexing_of_all_brand_products" => $prevent_search_indexing_of_all_brand_products,
 				"prevent_search_indexing_brand_page" => $prevent_search_indexing_brand_page,
 				"title" => trim($title),
+				"product_brand_name" => trim($product_brand_name),
 				"SEO_brand_name_h1" => trim($SEO_brand_name_h1),
 				"SEO_h2" => trim($SEO_h2),
 				"meta_descr" => trim($meta_descr),
