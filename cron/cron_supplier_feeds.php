@@ -145,6 +145,7 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
             print($kp . ' --> ' . $aProduct['productcode'] . "\n");
 
             if (empty($aProduct['productcode']) || (isset($aProduct['cost_to_us']) && floatval($aProduct['cost_to_us']) <= 0)) {
+                print("Skip product -->' \n");
                 $skippedProductsCount++;
                 continue;
             }
@@ -166,10 +167,12 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
                     $modelProduct->save();
                     if (!isset($aProduct['is_group'])) {
                         if (!isset($aProduct['cost_to_us'])) {
+                            print("Skip product --> 'No cost_to_us' \n");
                             $skippedProductsCount++;
                             continue 2;
                         }
                         if (!$is_created && $supplierFeedModel->add_new_only == "Y") {
+                            print("Skip product --> 'Add new only' \n");
                             $skippedProductsCount++;
                             continue 2;
                         }
