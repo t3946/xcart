@@ -45,6 +45,7 @@ class SessionDataModel extends Model
                 'class' => IntField::className(),
                 'unsigned' => true,
                 'null' => false,
+                'default' => 0,
             ],
             'cart_number' => [
                 'class' => IntField::className(),
