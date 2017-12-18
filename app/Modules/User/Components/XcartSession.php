@@ -159,7 +159,7 @@ class XcartSession extends Session
 
             $sessionTime = Xcart::app()->getModule('User')->sessionTime;
 
-            if ($isNew || $this->model->expiry < ($sessionTime / 3))
+            if ($isNew || ($this->model->expiry < ($sessionTime / 3)))
             {
                 $this->model->expiry = time() + $sessionTime;
                 $this->request->cookie->add($this->getSessionKey(), $id, $this->model->expiry);
