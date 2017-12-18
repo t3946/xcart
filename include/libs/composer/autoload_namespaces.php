@@ -22,4 +22,5 @@ return array(
     'Doctrine\\Common\\' => array($vendorDir . '/doctrine/common/lib'),
     'Detection' => array($vendorDir . '/mobiledetect/mobiledetectlib/namespaced'),
     'CaponicaAmazonMwsComplete\\' => array($vendorDir . '/caponica/amazon-mws-complete/src'),
+    'Aws' => array($vendorDir . '/aws/aws-sdk-php/src'),
 );

@@ -198,4 +198,9 @@ class BrandModel extends Model
 
         return "[{$code}] {$this->brand}";
     }
+
+    public function getProductFrontendName()
+    {
+        return $this->product_brand_name ?: $this->brand;
+    }
 }
