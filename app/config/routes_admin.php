@@ -1,6 +1,10 @@
 <?php
 return [
-
+    [
+        'route' => '/admin/pbx',
+        'path' => 'Modules.PBX.routes_admin',
+        'namespace' => 'admin_pbx'
+    ],
     [
         'route' => '/admin/dashboard',
         'path' => 'Modules.Dashboard.routes_admin',

@@ -64,6 +64,12 @@ class PbxAnveoCallModel extends Model
                 'through' => OrdersCallsModel::className(),
             ],
 
+            'bind_calls' => [
+                'class' => HasToOneField::className(),
+                'modelClass' => OrdersCallsModel::className(),
+                'link' => ['id' => 'call_id'],
+            ],
+
             'options' => [
                 'class' => HasToOneField::className(),
                 'modelClass' => PbxOptionsModel::className(),
@@ -156,6 +162,23 @@ class PbxAnveoCallModel extends Model
         else {
             return $url = "https://s3.amazonaws.com/incoming_business_hours/{$this->file}";
         }
+    }
+
+    public function getFrontendE164()
+    {
+        $e164 = "Not defined";
+        if ($this->e164){
+            $e164 = "+" . $this->e164;
+            if (strlen($e164) > 10){
+                $first_section = substr($e164,1,1);
+                $second_section = substr($e164, 2, 3);
+                $third_section = substr($e164, 5, 3);
+                $forth_section = substr($e164, 8);
+                $e164 = "+{$first_section} ({$second_section}) {$third_section}-{$forth_section}";
+            }
+
+        }
+        return $e164;
     }
 
 }
