@@ -475,11 +475,15 @@ class ProductModel extends Model implements ICartItem
 
     public function getFrontendName()
     {
+        $brand_name = '';
+
         $name = $this->seo_product_name ?: $this->product;
 
-        $brand = ($this->brand_normalized && !$this->isGroupRoot()) ? $this->brand->getProductFrontendName() . ' ' : '';
+        if ($brand = $this->brand) {
+            $brand_name = ($this->brand_normalized && !$this->isGroupRoot()) ? $brand->getProductFrontendName() . ' ' : '';
+        }
 
-        return ($this->isGroupChild()) ?  $this->group_mask . " ". $name : $brand . $name;
+        return ($this->isGroupChild()) ?  $this->group_mask . " ". $name : $brand_name . $name;
     }
 
     public function getFrontendDescription()
