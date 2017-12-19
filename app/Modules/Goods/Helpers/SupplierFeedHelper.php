@@ -3,6 +3,7 @@
 namespace Modules\Goods\Helpers;
 
 
+use Mindy\QueryBuilder\Expression;
 use Mindy\QueryBuilder\Q\QOr;
 use Modules\Brand\Models\BrandModel;
 use Modules\Brand\Models\BrandStorefrontModel;
@@ -490,7 +491,13 @@ class SupplierFeedHelper
         }
 
         if ($childs) {
-            $group->childs->exclude(['productcode__in' => $childs])->update(['group_root' => null]);
+            $params = [
+                'group_root' => null,
+                'product' => new Expression('TRIM(CONCAT(COALESCE(group_mask, ""), " ", product))'),
+                'group_mask' => null
+            ];
+
+            $group->childs->exclude(['productcode__in' => $childs])->update($params);
         }
 
         return $data['child_products'];
