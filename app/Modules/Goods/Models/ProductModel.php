@@ -16,7 +16,10 @@ use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\BooleanCharField;
+use Xcart\App\Orm\Fields\BooleanField;
 use Xcart\App\Orm\Fields\CharField;
+use Xcart\App\Orm\Fields\DecimalField;
+use Xcart\App\Orm\Fields\FloatField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\HasManyField;
 use Xcart\App\Orm\Fields\HasToOneField;
@@ -257,6 +260,41 @@ class ProductModel extends Model implements ICartItem
                 'modelClass' => OptionModel::className(),
                 'link' => ['productid' => 'productid']
             ],
+            'cost_to_us' => [
+                'class' => DecimalField::className(),
+                'null' => false,
+                'default' => 0,
+            ],
+            'weight' => [
+                'class' => DecimalField::className(),
+                'null' => false,
+                'default' => 0,
+            ],
+            'list_price' => [
+                'class' => DecimalField::className(),
+                'null' => false,
+                'default' => 0,
+            ],
+            'map_price' => [
+                'class' => DecimalField::className(),
+                'null' => false,
+                'default' => 0,
+            ],
+            'new_map_price' => [
+                'class' => DecimalField::className(),
+                'null' => false,
+                'default' => 0,
+            ],
+            'shipping_weight' => [
+                'class' => DecimalField::className(),
+                'null' => false,
+                'default' => 0,
+            ],
+            'brand_normalized' => [
+                'class' => BooleanField::className(),
+                'null' => false,
+                'default' => false,
+            ],
         ];
     }
 
@@ -443,11 +481,15 @@ class ProductModel extends Model implements ICartItem
 
     public function getFrontendName()
     {
+        $brand_name = '';
+
         $name = $this->seo_product_name ?: $this->product;
 
-        $brand = ($this->brand_normalized && !$this->isGroupRoot()) ? $this->brand->getProductFrontendName() . ' ' : '';
+        if ($brand = $this->brand) {
+            $brand_name = ($this->brand_normalized && !$this->isGroupRoot()) ? $brand->getProductFrontendName() . ' ' : '';
+        }
 
-        return ($this->isGroupChild()) ?  $this->group_mask . " ". $name : $brand . $name;
+        return ($this->isGroupChild()) ?  $this->group_mask . " ". $name : $brand_name . $name;
     }
 
     public function getFrontendDescription()

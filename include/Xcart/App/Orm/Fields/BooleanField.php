@@ -2,6 +2,7 @@
 
 namespace Xcart\App\Orm\Fields;
 
+use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\Type;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -61,5 +62,11 @@ class BooleanField extends Field
     public function getFormField($form, $fieldClass = '\Xcart\App\Form\Fields\CheckboxField', array $extra = [])
     {
         return parent::getFormField($form, $fieldClass, $extra);
+    }
+
+    public function convertToDatabaseValueSQL($value, AbstractPlatform $platform)
+    {
+
+        return parent::convertToPHPValue((bool) $value, $platform);
     }
 }
