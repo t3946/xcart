@@ -206,10 +206,8 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
     if (!empty($all_feed_productcodes) && is_array($all_feed_productcodes) && $supplierFeedModel->disable_search_of_discontinued_items != 'Y') {
         print("Search of discontinued section\n");
 
-        /** @var ProductModel[] $discountinued_models */
-
         $i = 0;
-        while ($discountinued_models = ProductModel::objects()->filter(
+        while ($discountinued_products = ProductModel::objects()->filter(
             [
                 'sites__through__sfid' => $supplierFeedModel->storefront_id,
                 'manufacturerid' => $supplierFeedModel->manufacturerid,
@@ -217,22 +215,17 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
                 new QOr(['productid__isnt' => new Expression('group_root'), 'group_root__isnull' => true])
             ])
             ->paginate(++$i, 10000)
-            ->all())
+            ->valuesList('productcode', true))
          {
 
-            print PHP_EOL . "{$i} iteration: Found " . count($discountinued_models) . " products "  . PHP_EOL;
+            print PHP_EOL . "{$i} iteration: Found " . count($discountinued_products) . " products "  . PHP_EOL;
 
-            foreach ($discountinued_models as $d_model) {
-                if (!in_array(strtoupper(trim($d_model->productcode)), $all_feed_productcodes)) {
+            foreach ($discountinued_products as $productcode) {
+                if (!in_array(strtoupper(trim($productcode)), $all_feed_productcodes)) {
                     $discontinued_products_count++;
 
-                    if ($d_model->update_search_index == "N") {
-                        $d_model->update_search_index = "D";
-                    }
+                    ProductModel::objects()->filter(['productcode' => $productcode])->update(['r_avail' => 0, 'forsale' => 'N', 'update_search_index' => 'D']);
 
-                    $d_model->setAttributes(['r_avail' => 0, 'forsale' => 'N',]);
-
-                    $d_model->save();
                 }
             }
             print "Discontinued {$discontinued_products_count} products "  . PHP_EOL;
