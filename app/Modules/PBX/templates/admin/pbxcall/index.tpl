@@ -6,29 +6,14 @@
     {smarty_admin_block name='Calls'}
 
 
-        Filter
-        <form name="filter" method="get" action="/admin/pbx/pbxcalls" target="_top">
-            <input type="hidden" name="filter" value="1">
-            <select name="direction">
-                <option selected disabled>Direction</option>
-                <option value="in">Inbound</option>
-                <option value="out">Outbound</option>
-                <option value="lost">Miss call</option>
-                <option value="vm">Voice mail</option>
-            </select>
-            Order # <input name="order_id" type="text" placeholder="Order #">
-            Date From <input name="date_from" type="text" placeholder="mm/dd/YY" class="datepicker-here date" data-language="en" data-timepicker="1">
-            Date To <input name="date_to" type="text" placeholder="mm/dd/YY" class="datepicker-here date" data-language="en" data-timepicker="1">
-            <hr>
-            Party Tel # <input name="e164" type="text" placeholder="example 18609534423" pattern="\d+">
-            Operator <select name="firstname">
-                <option selected disabled>Operator</option>
-                {foreach $operators as $oper}
-                    <option value="{$oper}">{$oper}</option>
-                {/foreach}
-            </select>
-            <hr>
-            <input type="submit" value="Find">
+
+        <form method="get" action="/admin/pbx/pbxcalls" class="search-form">
+
+            <fieldset class="collapsible expanded " rel="0">
+                <legend>Filter</legend>
+               {$form->render($form->getTemplateFromType('ul'))}
+                <input type="submit" value="Find">
+            </fieldset>
         </form>
 
         <hr>

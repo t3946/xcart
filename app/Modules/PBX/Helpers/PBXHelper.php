@@ -9,6 +9,7 @@
 namespace Modules\PBX\Helpers;
 
 use DateTime;
+use Mindy\QueryBuilder\Expression;
 use Modules\PBX\Models\PbxAnveoCallModel;
 use Modules\User\Models\PbxOptionsModel;
 use Modules\User\Models\UserModel;
@@ -37,5 +38,31 @@ class PBXHelper
 
         return $clear_date;
 
+    }
+
+    public static function getListOfNameOperators($for_form = false)
+    {
+        $op = [];
+
+        if ($for_form){
+            $op[] = "Operators";
+        }
+
+        $filter = [
+            'usertype' => 'A',
+            'status' => 'Y',
+            //            'login__isnt' => 'sergey2',
+            new Expression("trim(pbx_extension) != '' ")
+        ];
+
+        $operators = UserModel::objects()
+                              ->filter($filter)
+                              ->all();
+
+        foreach ($operators as $operator){
+            $op[$operator->id] = $operator->firstname;
+        }
+
+        return $op;
     }
 }

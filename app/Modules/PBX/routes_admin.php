@@ -3,6 +3,7 @@
 return [
     [
         'route' => '/pbxcalls',
-        'target' => ['\Modules\PBX\Controllers\Admin\PBXController', 'index']
+        'target' => ['\Modules\PBX\Controllers\Admin\PBXController', 'index'],
+        'name' => 'view'
     ]
 ];
