@@ -209,7 +209,7 @@ if ($productid != "") {
 	}
 	# Get the product info or display 'Access denied' message if not exists
 	
-	$product_info = func_select_product($productid, $user_account['membershipid']);
+	$product_info = func_select_product($productid, $user_account['membershipid'], false, false, false, true);
 
 	$product_info['image'] = array(
 		"T" => func_image_properties("T", $productid),
@@ -1311,7 +1311,7 @@ include $xcart_dir."/include/reviews.php";
 
 if (($productid != "") && !$fillerror) {
 
-    $product_info = func_select_product($productid, $user_account['membershipid']);
+    $product_info = func_select_product($productid, $user_account['membershipid'], false, false, false, true);
 
     $product_info['image'] = array(
         "T" => func_image_properties("T", $productid),
