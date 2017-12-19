@@ -10,6 +10,7 @@ namespace Modules\PBX\Controllers\Admin;
 
 use Mindy\QueryBuilder\Expression;
 use Modules\Admin\Controllers\BackendController;
+use Modules\PBX\Helpers\PBXHelper;
 use Modules\PBX\Models\PbxAnveoCallModel;
 use Modules\User\Models\UserModel;
 use Xcart\App\Main\Xcart;
@@ -20,12 +21,53 @@ class PBXController extends BackendController
 {
     public function index()
     {
+        $qs =  PbxAnveoCallModel::objects();
         $request = $this->getRequest();
-        $keys = ["direction", "order_id", "date_from", "date_to"];
         if ($request->get->has('filter')) {
-            if ($request->get('filter') == 1){
+
+            /** @var \Xcart\App\Orm\QuerySet $qs */
+
+            foreach ($request->get as $key => $value){
+                if ($value) {
+
+                    if ($key == 'order_id') {
+                        $qs->filter(['orders__orderid' => $value]);
+                    }
+                    elseif ($key == 'date_from') {
+                        $date = PBXHelper::getClearDate($value);
+                        $qs->filter(['start_at__gte' => $date->format('Y-m-d H:i:s')]);
+                    }
+                    elseif ($key == 'date_to') {
+                        $date = PBXHelper::getClearDate($value);
+                        $qs->filter(['end_at__lte' => $date->format('Y-m-d H:i:s')]);
+                    }
+                    elseif ($key == 'firstname'){
+                        $qs->filter(['anveo_account' => PBXHelper::getOperatorsAccount($value)]);
+                    }
+                    elseif ($key == 'e164'){
+                        $qs->filter([$key => $value]);
+                    }
+                    elseif ($key == 'direction') {
+
+                        if($value == 'in'){
+                            $qs->filter(['is_lost' => 0, 'is_voice_mail' => 0, 'is_outgoing' => 0]);
+                        }
+                        elseif ($value == 'out'){
+                            $qs->filter(['is_lost' => 0, 'is_voice_mail' => 0, 'is_outgoing' => 1]);
+                        }
+                        elseif ($value == 'vm'){
+                            $qs->filter(['is_lost' => 0, 'is_voice_mail' => 1, 'is_outgoing' => 0]);
+                        }
+                        elseif ($value == 'lost'){
+                            $qs->filter(['is_lost' => 1, 'is_voice_mail' => 0, 'is_outgoing' => 0]);
+                        }
+
+                    }
+                }
 
             }
+//dd($qs->getSql());
+
         }
 
         $op = [];
@@ -33,7 +75,7 @@ class PBXController extends BackendController
         $filter = [
             'usertype' => 'A',
             'status' => 'Y',
-            'login__isnt' => 'sergey2',
+//            'login__isnt' => 'sergey2',
             new Expression("trim(pbx_extension) != '' ")
         ];
 
@@ -45,7 +87,7 @@ class PBXController extends BackendController
             $op[] = $operator->firstname;
         }
 
-        $pager = new Pagination(PbxAnveoCallModel::objects(),[], new QuerySetDataSource());
+        $pager = new Pagination($qs,[], new QuerySetDataSource());
 
         $mass = [];
         $i = 0;
@@ -63,7 +105,6 @@ class PBXController extends BackendController
                     }
                 }
 
-
                 $mass[ $i ] = [
                     'call_id' => $model->id,
                     'name' => $name,
@@ -79,6 +120,7 @@ class PBXController extends BackendController
                 if ($order = $model->bind_calls) {
                     $order_id = $order->order_id;
                     $mass[$i]['order_id'] = $model->orders->get(['orderid' => $order_id])->getOrderNumber();
+                    $mass[$i]['order_url'] = $model->orders->get(['orderid' => $order_id])->getAdminUrl();
                 }
 
                 if ($model->isOutgoing()) {

@@ -17,10 +17,10 @@
                 <option value="vm">Voice mail</option>
             </select>
             Order # <input name="order_id" type="text" placeholder="Order #">
-            Date From <input name="date_from" type="date" placeholder="mm/dd/YY">
-            Date To <input name="date_to" type="date" placeholder="mm/dd/YY">
+            Date From <input name="date_from" type="text" placeholder="mm/dd/YY" class="datepicker-here date" data-language="en" data-timepicker="1">
+            Date To <input name="date_to" type="text" placeholder="mm/dd/YY" class="datepicker-here date" data-language="en" data-timepicker="1">
             <hr>
-            Party Tel # <input name="e164" type="text">
+            Party Tel # <input name="e164" type="text" placeholder="example 18609534423" pattern="\d+">
             Operator <select name="firstname">
                 <option selected disabled>Operator</option>
                 {foreach $operators as $oper}
@@ -46,13 +46,13 @@
                     Party Details
                 </th>
                 <th>
+                    Direction
+                </th>
+                <th>
                     Operator Name
                 </th>
                 <th>
                     Starting Time
-                </th>
-                <th>
-                    Direction
                 </th>
                 <th>
                     Duration
@@ -66,7 +66,7 @@
             {foreach $mass as $value}
                 <tr>
                     <td align="center">
-                        {$value.order_id}
+                        <a href="{$value.order_url}" target="_blank">{$value.order_id}</a>
                     </td>
                     <td align="center">
                         {$value.e164}
@@ -75,13 +75,13 @@
                         {$value.cx_name}
                     </td>
                     <td align="center">
+                        {$value.direction}
+                    </td>
+                    <td align="center">
                         {$value.name}
                     </td>
                     <td align="center">
                         {$value.start_at}
-                    </td>
-                    <td align="center">
-                        {$value.direction}
                     </td>
                     <td align="center">
                         {$value.diff}
