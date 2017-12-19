@@ -1,6 +1,7 @@
 <?php
 
 namespace Xcart\App\Orm\Fields;
+use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\Type;
 
 /**
@@ -44,9 +45,10 @@ class DecimalField extends Field
     public function setValue($value)
     {
         if (is_null($value)) {
-            return $this->value = $value;
+            return $this->value = (float) $value;
         } else {
             return $this->value = round($value, $this->scale);
         }
     }
+
 }

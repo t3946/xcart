@@ -133,7 +133,7 @@ class SupplierFeedStore extends BaseStore
         });
 
         if (isset($data['eta_date_mm_dd_yyyy'])) {
-            $data['eta_date_mm_dd_yyyy'] = (string) strtotime($data['eta_date_mm_dd_yyyy']);
+            $data['eta_date_mm_dd_yyyy'] = strtotime($data['eta_date_mm_dd_yyyy']);
         }
 
         if (isset($data['images'])) {

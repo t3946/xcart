@@ -3,6 +3,7 @@
 namespace Modules\Goods\Helpers;
 
 
+use Mindy\QueryBuilder\Expression;
 use Mindy\QueryBuilder\Q\QOr;
 use Modules\Brand\Models\BrandModel;
 use Modules\Brand\Models\BrandStorefrontModel;
@@ -153,7 +154,7 @@ class SupplierFeedHelper
         }
 
         if (!$is_created) {
-            if ($model->isGroupChild()) {
+            if ($model->isGroupChild() && empty($data['feed_child'])) {
                 $model->product = $model->getOldAttribute('product');
             }
 
@@ -476,6 +477,7 @@ class SupplierFeedHelper
         $childs = [];
         foreach ($data['child_products'] as $key => $child_data) {
 
+            $data['child_products'][$key]['feed_child'] = true;
             $data['child_products'][$key]['group_root'] = $group->productid;
             $data['child_products'][$key]['brand_name'] = $data['brand_name'];
 
@@ -489,7 +491,13 @@ class SupplierFeedHelper
         }
 
         if ($childs) {
-            $group->childs->exclude(['productcode__in' => $childs])->update(['group_root' => null]);
+            $params = [
+                'group_root' => null,
+                'product' => new Expression('TRIM(CONCAT(COALESCE(group_mask, ""), " ", product))'),
+                'group_mask' => null
+            ];
+
+            $group->childs->exclude(['productcode__in' => $childs])->update($params);
         }
 
         return $data['child_products'];
@@ -518,5 +526,17 @@ class SupplierFeedHelper
         ftp_close($ftp_connect);
 
         return $content;
+    }
+
+    public static function getChanged(ProductModel $model)
+    {
+        if ($data = $model->getChangedAttributes()) {
+            foreach ($data as $k => $v) {
+                if ($model->getOldAttribute($k) == $v) {
+                    unset($data[$k]);
+                }
+            }
+        }
+        return $data;
     }
 }

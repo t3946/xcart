@@ -2,6 +2,7 @@
 
 namespace Xcart\App\Form\Fields;
 
+use Xcart\App\Form\ModelForm;
 use Xcart\App\Helpers\JavaScript;
 use Xcart\App\Helpers\JavaScriptExpression;
 use Xcart\App\Orm\Fields\ForeignField;
@@ -66,9 +67,19 @@ class Select2Field extends DropDownField
     public function getJSOptions()
     {
 
-        $model = $this->getForm()->getModel();
-        $modelField = $model->getField($this->name);
-        $multiple = $modelField instanceof ManyToManyField || $modelField instanceof HasManyField || $this->multiple;
+        $form = $this->getForm();
+
+        if ($form instanceof ModelForm) {
+
+            $model = $this->getForm()->getModel();
+            $modelField = $model->getField($this->name);
+            $multiple = $modelField instanceof ManyToManyField || $modelField instanceof HasManyField || $this->multiple;
+        }
+        else {
+            $multiple = $this->multiple;
+        }
+
+
         $options = [
             'width' => 'resolve',
             'allowClear' => true,

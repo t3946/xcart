@@ -52,6 +52,28 @@ class DropDownField extends Field
         return $this->_selected;
     }
 
+    public function getAttributesInput()
+    {
+        $params = [];
+        if ($this->multiple) {
+            $params['multiple'] = 'multiple';
+        }
+
+        return array_replace_recursive(parent::getAttributesInput(), $params);
+    }
+
+    public function getHtmlName()
+    {
+        $name = $this->getPrefix() . '[' . $this->name . ']';
+
+        if ($this->multiple) {
+            $name .= '[]';
+        }
+
+        return $name;
+    }
+
+
     public function getChoices()
     {
         $data = [];
@@ -80,6 +102,9 @@ class DropDownField extends Field
                 }
                 else if ($value instanceof Model) {
                     $selected[] = $value->pk;
+                }
+                else if (is_array($value)) {
+                    $selected = $value;
                 }
                 else {
                     $selected[] = $value;
@@ -125,10 +150,6 @@ class DropDownField extends Field
                 else {
                     $selected = $this->value;
                 };
-            }
-
-            if ($this->multiple) {
-                $this->_attributes['multiple'] = 'multiple';
             }
         }
         elseif  ($this->form instanceof ModelForm && $this->form->getModel()->hasField($this->name)) {
@@ -198,6 +219,10 @@ class DropDownField extends Field
         }
         else {
             $data = parent::getValue();
+        }
+
+        if ($this->multiple) {
+            $this->_attributes['multiple'] = 'multiple';
         }
 
         $this->_selected = $selected;
