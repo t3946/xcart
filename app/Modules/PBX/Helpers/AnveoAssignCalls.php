@@ -217,7 +217,11 @@ class AnveoAssignCalls
                 /** @var OrdersCallsModel $order_calls_model */
                 /** @var PbxAnveoCallModel $anveo_call_model */
                 $anveo_call_model = $order_calls_model->call;
-                $user = $anveo_call_model->options->user->firstname;
+
+                $user = '';
+                if ($anveo_call_model->anveo_account) {
+                    $user = $anveo_call_model->options->user->firstname;
+                }
 
                 $mass = [
                    'account' =>  $user,
