@@ -193,8 +193,8 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
                     $new_products_count++;
                     $inserted_products_count++;
                     $modelProduct->save();
-                } else if ($modelProduct->getChangedAttributes()) {
-                    print_r($modelProduct->getChangedAttributes());
+                } else if ($changed = SupplierFeedHelper::getChanged($modelProduct)) {
+                    print_r($changed);
                     $updated_products_count++;
                     $modelProduct->save();
                 }

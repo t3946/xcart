@@ -527,4 +527,16 @@ class SupplierFeedHelper
 
         return $content;
     }
+
+    public static function getChanged(ProductModel $model)
+    {
+        if ($data = $model->getChangedAttributes()) {
+            foreach ($data as $k => $v) {
+                if ($model->getOldAttribute($k) == $v) {
+                    unset($data[$k]);
+                }
+            }
+        }
+        return $data;
+    }
 }
