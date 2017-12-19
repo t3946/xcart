@@ -24,7 +24,6 @@ return array(
     '7a0f7bab0b4c07a48efbd41ed882e12c' => $baseDir . '/include/func/func.clean_urls.php',
     '2e533e5cb2c07d8428158b9e0b1a8f59' => $baseDir . '/include/func/func.crypt.php',
     '77051ec6f375af33ee9a9812c74448bf' => $baseDir . '/include/func/func.db.php',
-    '1f6b825d735402a45f92496cd075653e' => $baseDir . '/include/func/func.debug.php',
     '697d63fd5a525232af8e966a1be1059c' => $baseDir . '/include/func/func.export.php',
     '4adcbdf83ad97c61a32666548447b10e' => $baseDir . '/include/func/func.files.php',
     'ac35a74c3508918853d2004669f1c05a' => $baseDir . '/include/func/func.fraud.php',

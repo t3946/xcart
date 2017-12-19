@@ -139,7 +139,7 @@
         $return_echo["XML"] = $ex->getXML();
         $return_echo["ResponseHeaderMetadata"] = $ex->getResponseHeaderMetadata();
         $return_echo["message"] = "Delay 2 minutes and trying the same Request";
-        func_print_r($return_echo);
+//        func_print_r($return_echo);
         return $return_echo;
 
      }
@@ -274,7 +274,7 @@
         $return_echo["XML"] = $ex->getXML();
         $return_echo["ResponseHeaderMetadata"] = $ex->getResponseHeaderMetadata();
         $return_echo["message"] = "Delay 2 minutes and trying the same Request";
-        func_print_r($return_echo);
+//        func_print_r($return_echo);
         return $return_echo;
 
      }

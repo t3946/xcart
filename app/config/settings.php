@@ -44,26 +44,11 @@ return array_replace_recursive([
                ]
            ]
        ],
-       'errorHandler' => [
-           'class' => '\\Xcart\\App\\Main\\ErrorHandler',
-           'debug' => true,
-           'ignoringTypes' => [
-               E_DEPRECATED,
-               E_USER_DEPRECATED,
-               E_NOTICE,
-               E_USER_NOTICE,
-               E_WARNING,
-               E_USER_WARNING,
-           ]
-       ],
+
        'event' => [
            'class' => '\\Xcart\\App\\Event\\EventManager',
            'events' => include __DIR__ . DS .  'events.php'
        ],
-
-       'oldMail' => '\Modules\Mail\Components\MailComponent',
-
-       'logger' => include __DIR__. DS . 'logger.php',
 
        'breadcrumbs' => ['class' => 'Xcart\App\Components\Breadcrumbs'],
        'flash' => ['class' => '\Xcart\App\Components\Flash'],
@@ -126,21 +111,34 @@ return array_replace_recursive([
                ]
            ]
        ],
+
+       'oldMail' => '\Modules\Mail\Components\MailComponent',
        'mail' => [
            'class' => '\Modules\Mail\Components\Mailer',
            'defaultFrom' => 'robot@{domain}',
-//           'defaultFrom' => 'robot@s3stores.com',
        ],
+
        'auth' => [
            'class' => '\\Modules\\User\\Components\\Auth'
        ],
-//       'global_config' => [
-//           'class' => '\\Modules\\Core\\Components\\GlobalConfig'
-//       ],
+
+       'logger' => include __DIR__. DS . 'logger.php',
+       'errorHandler' => [
+           'class' => '\\Xcart\\App\\Main\\ErrorHandler',
+           'debug' => true,
+           'ignoringTypes' => [
+               E_DEPRECATED,
+               E_USER_DEPRECATED,
+               E_NOTICE,
+               E_USER_NOTICE,
+               E_WARNING,
+               E_USER_WARNING,
+           ]
+       ],
    ],
    'autoloadComponents' => [
-//       'errorHandler',
+       'errorHandler',
+       'logger',
        'db',
-       'logger'
    ]
 ],  (is_file($local_config)) ? include $local_config : []);

@@ -1,24 +1,25 @@
 <?php
 return [
     'class' => '\\Xcart\\App\\Logger\\LoggerManager',
+    'defaultPatch' => 'base.log',
     'handlers' => [
         'default' => [
             'class' => '\\Xcart\\App\\Logger\\Handler\\RotatingFileHandler' ,
-            'level' => defined('APP_DEBUG') ? "DEBUG" : "ERROR",
-            'alias' => 'base.runtime.log.err',
+            'level' => 'DEBUG',
+            'alias' => 'base.log.log',
+            'formatter' => 'log'
+        ],
+        'error' => [
+            'class' => '\\Xcart\\App\\Logger\\Handler\\RotatingFileHandler' ,
+            'level' => 'DEBUG',
+            'alias' => 'base.log.error',
             'formatter' => 'log'
         ],
         'sql' => [
             'class' => '\\Xcart\\App\\Logger\\Handler\\RotatingFileHandler',
-            'level' =>  "ERROR",
-            'alias' => 'base.runtime.log.sql'
+            'level' =>  'DEBUG',
+            'alias' => 'base.log.sql'
         ],
-//        'error' => [
-//            'class' => '\\Xcart\\App\\Logger\\Handler\\RotatingFileHandler',
-//            'level' =>  "ERROR",
-//            'alias' => 'base.log.err',
-//            'formatter' => 'log'
-//        ],
         'null' => [
             'class' => '\\Xcart\\App\\Logger\\Handler\\NullHandler',
             'level' => 'ERROR'
@@ -26,12 +27,6 @@ return [
         'console' => [
             'class' => '\\Xcart\\App\\Logger\\Handler\\StreamHandler',
             'formatter' => 'console'
-        ],
-        'users' => [
-            'class' => '\\Xcart\\App\\Logger\\Handler\\RotatingFileHandler',
-            'alias' => 'base.runtime.log.users',
-            'level' => 'INFO',
-            'formatter' => 'users'
         ],
 //        'mail_admins' => [
 //            'class' => '\\Xcart\\App\\Logger\\Handler\\SwiftMailerHandler',
@@ -44,7 +39,7 @@ return [
         ],
         'log' => [
             'class' => '\\Xcart\\App\\Logger\\Formatters\\LineFormatter',
-//            'allowInlineLineBreaks' => true,
+            'allowInlineLineBreaks' => true,
             'includeStacktrace' => true
         ],
         'console' => [
@@ -52,13 +47,13 @@ return [
         ]
     ],
     'loggers' => [
-        'users' => [
-            'class' => '\\Monolog\\Logger',
-            'handlers' => ['users'],
-        ],
         'sql' => [
             'class' => '\\Xcart\\App\\Logger\\Logger',
             'handlers' => ['sql']
+        ],
+        'info' => [
+            'class' => '\\Xcart\\App\\Logger\\Logger',
+            'handlers' => ['default']
         ],
 //        'error' => [
 //            'class' => '\\Xcart\\App\\Logger\\Logger',

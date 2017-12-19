@@ -46,3 +46,29 @@ function dd()
     }
     die();
 }
+
+function pd()
+{
+    $debug = debug_backtrace();
+    $args = func_get_args();
+    $data = array(
+        'data' => $args,
+        'debug' => array(
+            'file' => isset($debug[0]['file']) ? $debug[0]['file'] : null,
+            'line' => isset($debug[0]['line']) ? $debug[0]['line'] : null,
+        )
+    );
+    if (Xcart\App\Cli\Cli::isCli()) {
+        print_r($data);
+    }
+    else {
+        echo "<pre>";
+        echo VarDumper::dump($data, 10, false);
+        echo "</pre>";
+    }
+}
+
+function func_dump()
+{
+    pd();
+}

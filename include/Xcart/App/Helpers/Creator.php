@@ -158,7 +158,8 @@ class Creator
             $config = $class;
             $class = $config['class'];
             unset($config['class']);
-        } elseif (!is_string($class)) {
+        }
+        elseif (!is_string($class)) {
             throw new InvalidConfigException("Class name must be defined");
         }
         

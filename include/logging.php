@@ -41,76 +41,95 @@ if ( !defined('XCART_START') ) { header("Location: ../"); die("Access denied"); 
 define ('X_LOG_SIGNATURE', '<'.'?php die(); ?'.">\n");
 
 function x_log_add($label, $message, $add_backtrace=false, $stack_skip=0, $email_addresses=false, $email_only=false) {
-	global $var_dirs;
-	global $PHP_SELF;
-	global $_SERVER;
-	global $config;
+    global $config;
 
-	$filename = sprintf("%s/x-errors_%s-%s.php", $var_dirs["log"], strtolower($label), date('ymd'));
-
-	if ($label == 'SQL')
-		$type = 'error';
-	elseif ($label == 'INI' || $label == 'SHIPPING')
-		$type = 'warning';
-	else
-		$type = 'message';
-
-	$uri = $PHP_SELF;
-    if (!empty($_SERVER['QUERY_STRING'])) {
-        $uri .= '?' . $_SERVER['QUERY_STRING'];
+    if (is_array($message) || is_object($message)) {
+        ob_start();
+        print_r($message);
+        $message = ob_get_contents();
+        ob_end_clean();
+    }
+    else {
+        $message = trim($message);
     }
 
-	if ($add_backtrace) {
-		$stack = func_get_backtrace(1+$stack_skip);
-		$backtrace = "Backtrace:\n".implode("\n", $stack)."\n";
-	}
-	else
-		$backtrace = '';
+    $app = Xcart\App\Main\Xcart::app();
+    $logger = $app->logger;
 
-	if (is_array($message) || is_object($message)) {
-		ob_start();
-		print_r($message);
-		$message = ob_get_contents();
-		ob_end_clean();
-	} else {
-		$message = trim($message);
-	}
+    if ($add_backtrace) {
+        $trace = debug_backtrace();
+        $message .= "\n\nBacktrace: \n";
 
-	$local_time = "";
-	if (!empty($config)) {
-		$local_time = "(shop: ".date('d-M-Y H:i:s', time() + $config['Appearance']['timezone_offset']).") ";
-	}
+        if (is_array($trace) && !empty($trace)) {
+            $result = [];
 
-	$message = str_replace("\n", "\n    ", "\n".$message);
-	$message = str_replace("\t", "    ", $message);
+            if ($stack_skip) {
+                $trace = array_slice($trace, $stack_skip);
+            }
 
-	$data = sprintf("[%s] %s%s %s:%s\nRequest URI: %s\n%s-------------------------------------------------\n",
-		date('d-M-Y H:i:s'),
-		$local_time,
-		$label, $type,
-		$message,
-		$uri,
-		$backtrace
-	);
+            foreach ($trace as $item) {
+                if (!empty($item['file']))
+                    $line = $item['file'] . "($item[line]):";
 
-	if (!$email_only && x_log_check_file($filename) !== false) {
-		$fp = @fopen($filename, "a+");
-		if ($fp !== false) {
-			fwrite($fp, $data);
-			fclose($fp);
-		}
-	}
+                    if ($item['function']) {
+                        $line .= " $item[function]";
 
-	if (!empty($email_addresses) && is_array($email_addresses)) {
-		x_load('mail');
+                        $line .= ' (';
+                        if ($item['args']) {
+                            $args = array_map(function( $item ){
 
-		foreach ($email_addresses as $k=>$email) {
-			func_send_simple_mail(
-				$email,
-				$config["Company"]["operating_company_name"].": $label $type notification",
-				$data, $config["Company"]["site_administrator"]);
-		}
-	}
+                                if (is_string($item)) {
+                                    return "'$item'";
+                                }
+
+                                return $item;
+
+                            }, $item['args']);
+                            $line .=  implode(", ", $args);
+                        }
+                        $line .= ' )';
+                    }
+
+                    $result[] = $line;
+            }
+
+            $message .= implode("\n", $result);
+        }
+
+        if (empty($result)) {
+            $message .='[empty backtrace]';
+        }
+    }
+
+    if ($label == 'SQL')
+        $type = 'error';
+    elseif ($label == 'INI' || $label == 'SHIPPING')
+        $type = 'warning';
+    else
+        $type = 'message';
+
+    if (!$email_only) {
+        if ($label == 'SQL')
+            $logger->critical($message, [], strtolower($label));
+        elseif ($label == 'INI' || $label == 'SHIPPING')
+            $logger->warning($message, [], strtolower($label));
+        else
+            $logger->info($message, [], strtolower($label));
+    }
+
+
+    if ($email_only && (!empty($email_addresses) && is_array($email_addresses)))
+    {
+
+        foreach ($email_addresses as $k=>$email) {
+            $app->mail->template(
+                $email,
+                $config["Company"]["operating_company_name"].": $label $type notification",
+                'mail/log_template.tpl',
+                ['message' => $message]
+            );
+        }
+    }
 }
 
 function x_log_flag($flag_key, $label, $message, $add_backtrace=false, $stack_skip=0) {
@@ -136,26 +155,6 @@ function x_log_flag($flag_key, $label, $message, $add_backtrace=false, $stack_sk
 
 	if ($do_log || $do_email)
 		x_log_add($label, $message, $add_backtrace, $stack_skip+1, $addresses, ($do_email && !$do_log));
-}
-
-#
-# For testing purpose: set parameters of debugging functions
-#
-# Operations:
-# 'P' - display/not display debug messages
-#
-function x_debug_ctl($operation, $arg=null) {
-	static $print_status = true;
-
-	switch ($operation) {
-		case 'P':
-			if (is_null($arg))
-				return $print_status;
-			$print_status = $arg;
-			return true;
-	}
-
-	return false;
 }
 
 function x_log_list_files($labels = false, $start=false, $end=false) {
@@ -287,41 +286,6 @@ function x_log_get_contents($labels = false, $start=false, $end=false, $html_saf
 	return $logs_data;
 }
 
-
-function x_log_count_messages($labels=false, $start=false, $end=false) {
-	global $var_dirs;
-	static $regexp = '!^\[\d{2}-.{3}-\d{4} \d{2}:\d{2}:\d{2}\] !S';
-
-	$logs = x_log_list_files($labels, $start, $end);
-
-	if (!is_array($logs) || empty($logs))
-		return false;
-
-	$return = array();
-
-	foreach ($logs as $label=>$list) {
-		if (!is_array($list) || empty($list)) continue;
-
-		foreach ($list as $timestamp=>$file) {
-			# count records in single log file
-			$fp = @fopen($var_dirs["log"].'/'.$file, 'r');
-			if ($fp === false)
-				continue;
-
-			$count = 0;
-			while (($line = fgets($fp, 8192)) !== false) {
-				if (preg_match($regexp, $line)) $count++;
-			}
-
-			fclose($fp);
-
-			$return[$label][$timestamp] = $count;
-		}
-	}
-
-	return $return;
-}
-
 function x_log_get_names($labels=false, $force_output=false) {
 	static $all_labels = false;
 
@@ -362,90 +326,6 @@ function x_log_get_names($labels=false, $force_output=false) {
 	return $result;
 }
 
-function x_log_check_file($filename) {
-	$fp = @fopen($filename, "a+");
-	if ($fp === false) return false;
-
-	if (filesize($filename) ==0) {
-		@fwrite($fp, X_LOG_SIGNATURE);
-		@fclose($fp);
-		return $filename;
-	}
-
-	if (@fseek($fp, 0, SEEK_SET) < 0) {
-		@fclose($fp);
-		return false;
-	}
-
-	$tmp = @fread($fp, strlen(X_LOG_SIGNATURE));
-	if (strcmp($tmp, X_LOG_SIGNATURE)) {
-		@fseek($fp, 0, SEEK_SET);
-		@ftruncate($fp, 0);
-		@fwrite($fp, X_LOG_SIGNATURE);
-	}
-	@fclose($fp);
-
-	return $filename;
-}
-
-function func_array_compare($orig, $new) {
-	$result = array (
-		'removed' => false,
-		'added' => false,
-		'delta' => false,
-		'changed' => false
-	);
-
-	$keys = array();
-	if (is_array($orig)) $keys = array_keys($orig);
-	if (is_array($new)) $keys = array_merge($keys, array_keys($new));
-	$keys = array_unique($keys);
-
-	foreach ($keys as $key) {
-		$in_orig = isset($orig[$key]);
-		$in_new = isset($new[$key]);
-
-		if ($in_orig && !$in_new) {
-			$result['removed'][$key] = $orig[$key];
-		}
-		elseif (!$in_orig && $in_new) {
-			$result['added'][$key] = $new[$key];
-		}
-		else {
-			# check for changed values
-			if (!is_array($new[$key])) {
-				if (!strcmp((string)$orig[$key], (string)$new[$key])) {
-					continue;
-				}
-
-				$is_numeric = preg_match('!^((\d+)|(\d+\.\d+))$!S', $new[$key]);
-
-				if ($is_numeric) {
-					$result['delta'][$key] = $new[$key] - $orig[$key];
-				}
-
-				$result['changed'][$key] = $new[$key];
-			}
-			else {
-				$tmp = func_array_compare($orig[$key],$new[$key]);
-
-				foreach ($tmp as $tmp_key=>$tmp_value) {
-					if ($tmp_value === false) continue;
-
-					$result[$tmp_key][$key] = $tmp_value;
-				}
-			}
-		}
-	}
-
-	# remove not used arrays
-	foreach ($result as $k=>$v) {
-		if ($v === false)
-			unset($result[$k]);
-	}
-
-	return $result;
-}
 
 #
 # Function to get backtrace for debugging
@@ -479,194 +359,16 @@ function func_get_backtrace($skip=0) {
 	return $result;
 }
 
-#
-# Error handler
-#
-function func_error_handler($errno, $errstr, $errfile, $errline) {
-	static $hash_errors = array();
-
-	if (!(ini_get("error_reporting") & $errno))
-		return;
-
-	if (ini_get("display_errors") == 0 && ini_get("log_errors") == 0)
-		return;
-
-	if (ini_get("ignore_repeated_errors") == 1 && isset($hash_errors[$errno]) && isset($hash_errors[$errno][$errfile.":".$errline]))
-		return;
-
-	$date = date("d-M-Y H:i:s");
-
-	$errortypes = array(
-		E_ERROR				=> "Error",
-		E_WARNING			=> "Warning",
-		E_PARSE				=> "Parsing Error",
-		E_NOTICE			=> "Notice",
-		E_CORE_ERROR		=> "Error",
-		E_CORE_WARNING		=> "Warning",
-		E_COMPILE_ERROR		=> "Error",
-		E_COMPILE_WARNING	=> "Warning",
-		E_USER_ERROR		=> "Error",
-		E_USER_WARNING		=> "Warning",
-		E_USER_NOTICE		=> "Notice",
-		E_STRICT			=> "Runtime Notice"
-	);
-
-	$errortype = isset($errortypes[$errno]) ? $errortypes[$errno] : "Unknown Error";
-
-	if (ini_get("display_errors") != 0) {
-
-		# Display error
-		global $REQUEST_METHOD;
-		if (empty($REQUEST_METHOD))
-			echo "$errortype: $errstr in $errfile on line $errline\n";
-		else
-			echo "<b>$errortype</b>: $errstr in <b>$errfile</b> on line <b>$errline</b><br />\n";
-	}
-
-	if (ini_get("log_errors") == 1 && ini_get("error_log") != '') {
-
-		# Write error to file
-		$bt = '';
-		if (defined("LOG_WITH_BACKTRACE") && constant("LOG_WITH_BACKTRACE") && preg_match("/^Smarty error: /", $errstr)) {
-			global $_SERVER;
-			$bt = "\nREQUEST_URI: " . $_SERVER['REQUEST_URI'];
-			$bt .= "\nBacktrace:\n\t".implode("\n\t", func_get_backtrace(1));
-		}
-
-		error_log(
-			"[$date] $errortype: $errstr in $errfile on line $errline $bt\n",
-			3,
-			ini_get("error_log")
-		);
-	}
-
-	if (ini_get("ignore_repeated_errors") == 1) {
-		if (!isset($hash_errors[$errno]))
-			$hash_errors[$errno] = array();
-		$hash_errors[$errno][$errfile.":".$errline] = true;
-	}
-}
-
-set_error_handler("func_error_handler");
 
 #
 # Set internal php values
 #
-if ($debug_mode==2 || $debug_mode==0) {
-	ini_set("display_errors",0);
-	ini_set("display_startup_errors",0);
-}
-if ($debug_mode==2 || $debug_mode==3) {
-	ini_set("log_errors", 1);
-	ini_set("error_log", x_log_check_file($var_dirs["log"]."/x-errors_php-".date('ymd').".php"));
-	ini_set("ignore_repeated_errors", 1);
-}
+//if ($debug_mode==2 || $debug_mode==0) {
+//	ini_set("display_errors",0);
+//	ini_set("display_startup_errors",0);
+//}
+//if ($debug_mode==2 || $debug_mode==3) {
+//	ini_set("log_errors", 1);
+//	ini_set("ignore_repeated_errors", 1);
+//}
 
-# Remove empty log for previous day. Purging/checking all empty logs from
-# previuos days can reduce performance
-if (rand(0,1)) {
-    $_prev_logfile = $var_dirs["log"]."/x-errors_php-".date('ymd', time()-SECONDS_PER_DAY).".php";
-
-    if (file_exists($_prev_logfile) && @filesize($_prev_logfile) <= strlen(X_LOG_SIGNATURE))
-        @unlink($_prev_logfile);
-}
-
-#
-# Log changes of PHP.ini settings
-#
-
-$old_settings = false;
-if (file_exists($var_dirs["log"]."/data.phpini.php")) {
-	ob_start();
-	readfile($var_dirs["log"]."/data.phpini.php");
-	$_tmp = ob_get_contents();
-	ob_end_clean();
-	$_tmp = substr($_tmp, strlen(X_LOG_SIGNATURE));
-	$old_settings = unserialize($_tmp);
-}
-
-//$current_settings = ini_settings_storage();
-/*speed optimization do not log php.ini settings*/
-
-# these optionas are set in config.php
-func_unset($current_settings, 'error_log');
-func_unset($current_settings, 'ignore_repeated_errors');
-func_unset($current_settings, 'log_errors');
-func_unset($current_settings, 'log_errors_max_len');
-func_unset($current_settings, 'magic_quotes_runtime');
-func_unset($current_settings, 'session.bug_compat_warn');
-func_unset($current_settings, 'max_execution_time');
-# do not log these changes
-func_unset($current_settings, 'magic_quotes_sybase');
-func_unset($current_settings, 'session.bug_compat_42');
-
-$_tmp_changed = false;
-if (is_array($old_settings) && !empty($old_settings) && is_array($current_settings)) {
-	$changed_settings = func_array_compare($old_settings, $current_settings);
-	$_msg = array();
-
-	if (!empty($changed_settings['removed'])) {
-		$_lines = array();
-		foreach ($changed_settings['removed'] as $_k=>$_v) {
-			$_lines[] = "\t$_k = ``$_v''";
-		}
-		$_msg[] = "Removed options:\n".implode("\n", $_lines);
-		unset($_lines);
-	}
-
-	if (!empty($changed_settings['added'])) {
-		$_lines = array();
-		foreach ($changed_settings['added'] as $_k=>$_v) {
-			$_lines[] = "\t$_k = ``$_v''";
-		}
-		$_msg[] = "Added options:\n".implode("\n", $_lines);
-		unset($_lines);
-	}
-
-	if (!empty($changed_settings['changed'])) {
-		$_lines = array();
-		foreach ($changed_settings['changed'] as $_k=>$_v) {
-			$_lines[] = "\t$_k = ``$_v'' (was: ``".$old_settings[$_k]."'')";
-		}
-		$_msg[] = "Changed options:\n".implode("\n", $_lines);
-		unset($_lines);
-	}
-
-	if (!empty($_msg)) {
-		x_log_add('ENV', implode("\n",$_msg));
-		$_tmp_changed = true;
-	}
-
-	unset($changed_settings);
-	unset($_msg);
-}
-
-if (empty($old_settings) || $_tmp_changed) {
-	$_tmp_fp = @fopen($var_dirs["log"]."/data.phpini.php", "wb");
-	if ($_tmp_fp !== false) {
-		@fwrite($_tmp_fp, X_LOG_SIGNATURE.serialize($current_settings));
-		@fclose($_tmp_fp);
-	}
-}
-
-unset($_tmp_changed);
-unset($_tmp_fp);
-unset($current_settings);
-unset($old_settings);
-
-#
-# Log uploaded files
-#
-
-if (!empty($_FILES)) {
-	$_lines = array();
-	foreach ($_FILES as $_k => $_v) {
-		if (empty($_v['name'])) continue;
-
-		$_lines[] = $_v['name'].' (size: '.$_v['size'].' byte(s), type: '.$_v['type'].')';
-	}
-
-	if (!empty($_lines)) {
-		x_log_add('FILES', "Uploaded files:\n".implode($_lines));
-	}
-}
