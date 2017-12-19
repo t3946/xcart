@@ -51,10 +51,6 @@ class DecimalField extends Field
         }
     }
 
-    public function getValue()
-    {
-        return (float) parent::getValue();
-    }
 
     public function convertToDatabaseValueSQL($value, AbstractPlatform $platform)
     {
