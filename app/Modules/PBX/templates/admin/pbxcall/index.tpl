@@ -13,6 +13,7 @@
                 <legend>Filter</legend>
                {$form->render($form->getTemplateFromType('ul'))}
                 <input type="submit" value="Find">
+                <input type="submit" name="reset" value="Clean filter">
             </fieldset>
         </form>
 

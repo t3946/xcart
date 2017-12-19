@@ -22,13 +22,20 @@ class PBXController extends BackendController
 {
     public function index()
     {
+//        dd($_GET);
         $form = new CallsFilterForm();
         $form->populate($_GET);
+
+
 
         $qs =  PbxAnveoCallModel::objects();
         if (!empty($_GET)) {
             /** @var \Xcart\App\Orm\QuerySet $qs */
-
+            if (array_key_exists('reset', $_GET)){
+                foreach ($form->getAttributes() as $key => $value){
+                    $form->setAttributes([$key => '']);
+                }
+            }
             foreach ($form->getAttributes() as $key => $value){
                 if ($value) {
 
