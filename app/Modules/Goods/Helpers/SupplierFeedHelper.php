@@ -153,7 +153,7 @@ class SupplierFeedHelper
         }
 
         if (!$is_created) {
-            if ($model->isGroupChild()) {
+            if ($model->isGroupChild() && empty($data['feed_child'])) {
                 $model->product = $model->getOldAttribute('product');
             }
 
@@ -476,6 +476,7 @@ class SupplierFeedHelper
         $childs = [];
         foreach ($data['child_products'] as $key => $child_data) {
 
+            $data['child_products'][$key]['feed_child'] = true;
             $data['child_products'][$key]['group_root'] = $group->productid;
             $data['child_products'][$key]['brand_name'] = $data['brand_name'];
 
