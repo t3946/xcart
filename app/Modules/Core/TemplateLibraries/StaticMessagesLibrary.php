@@ -29,10 +29,9 @@ class StaticMessagesLibrary extends TemplateLibrary
         if ($idx = Xcart::app()->request->cookie->get('notification_hide_idx')) {
 
             $idx = json_decode($idx);
-            $idx = array_unique($idx);
 
             if ($idx && is_array($idx)) {
-                $qs->exclude(['pk__in' => $idx]);
+                $qs->exclude(['pk__in' => array_unique($idx)]);
             }
         }
 

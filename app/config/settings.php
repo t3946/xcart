@@ -47,7 +47,6 @@ return array_replace_recursive([
        'errorHandler' => [
            'class' => '\\Xcart\\App\\Main\\ErrorHandler',
            'debug' => true,
-           'errHandler' => true,
            'ignoringTypes' => [
                E_DEPRECATED,
                E_USER_DEPRECATED,

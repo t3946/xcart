@@ -137,7 +137,13 @@ class Humanize
 
     public static function humanizeDateTime($dateRaw, $dateFormat = 'd.m.Y', $timeFormat = 'H:i', $delimiter = ', ')
     {
-        $date = new DateTime($dateRaw);
+        if ($dateRaw instanceof DateTime) {
+            $date = $dateRaw;
+        }
+        else {
+            $date = new DateTime($dateRaw);
+        }
+
         $now = new DateTime();
         $diff = $date->diff($now);
 

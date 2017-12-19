@@ -7,7 +7,9 @@ use Xcart\App\Middleware\Middleware;
 
 class BotsMiddleware extends Middleware
 {
-    public function processRequest($request)
+    public $isProcessRequest = true;
+
+    public function processHttpRequest($request)
     {
         if (BotsHelper::IsBot()) {
             define("IS_ROBOT", 1);

@@ -146,4 +146,3 @@ define('X_USE_PAYPAL_FLOW', true);
 
 }
 require_once "include/libs/autoload.php";
-?>

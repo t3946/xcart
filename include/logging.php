@@ -564,9 +564,12 @@ if ($debug_mode==2 || $debug_mode==3) {
 
 # Remove empty log for previous day. Purging/checking all empty logs from
 # previuos days can reduce performance
-$_prev_logfile = $var_dirs["log"]."/x-errors_php-".date('ymd', time()-SECONDS_PER_DAY).".php";
-if (file_exists($_prev_logfile) && @filesize($_prev_logfile) <= strlen(X_LOG_SIGNATURE))
-	@unlink($_prev_logfile);
+if (rand(0,1)) {
+    $_prev_logfile = $var_dirs["log"]."/x-errors_php-".date('ymd', time()-SECONDS_PER_DAY).".php";
+
+    if (file_exists($_prev_logfile) && @filesize($_prev_logfile) <= strlen(X_LOG_SIGNATURE))
+        @unlink($_prev_logfile);
+}
 
 #
 # Log changes of PHP.ini settings
@@ -667,5 +670,3 @@ if (!empty($_FILES)) {
 		x_log_add('FILES', "Uploaded files:\n".implode($_lines));
 	}
 }
-
-?>

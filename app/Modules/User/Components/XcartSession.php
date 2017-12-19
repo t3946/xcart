@@ -137,6 +137,8 @@ class XcartSession extends Session
 
     public function start($id = null)
     {
+        $isNew = false;
+
         if (!BotsHelper::IsBot() || $id) {
             if ($id || $id = $this->getSessionId()) {
                 if ($this->model = SessionDataModel::objects()->get(['pk' => $id])) {
@@ -150,12 +152,18 @@ class XcartSession extends Session
 
             if (!$this->model) {
                 $id = $this->genSessId();
-                list($this->model) = SessionDataModel::objects()->getOrCreate(['sessid' => $id]);
+                list($this->model, $isNew) = SessionDataModel::objects()->getOrCreate(['sessid' => $id]);
                 $this->data = [];
                 $this->unpacked = [];
             }
 
-            $this->request->cookie->add($this->getSessionKey(), $id, $this->model->expiry);
+            $sessionTime = Xcart::app()->getModule('User')->sessionTime;
+
+            if ($isNew || ($this->model->expiry < ($sessionTime / 3)))
+            {
+                $this->model->expiry = time() + $sessionTime;
+                $this->request->cookie->add($this->getSessionKey(), $id, $this->model->expiry);
+            }
 
             if ($this->registerGlobals) {
                 $GLOBALS['XCARTSESSID'] = $id;
@@ -171,11 +179,9 @@ class XcartSession extends Session
     {
         $key = $this->getSessionKey();
 
-        if ($id = $this->request->post->get($key)) {}
-        elseif ($id = $this->request->get->get($key)) {}
-        elseif ($id = $this->request->cookie->get($key)) {}
-
-        return $id;
+        return $this->request->post->get($key) ?:
+                $this->request->get->get($key) ?:
+                    $this->request->cookie->get($key);
     }
 
     public function getSessionKey()

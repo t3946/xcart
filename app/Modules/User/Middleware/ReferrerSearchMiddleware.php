@@ -9,10 +9,12 @@ use Xcart\App\Middleware\Middleware;
 
 class ReferrerSearchMiddleware extends Middleware
 {
-    public function processRequest($request)
+    public $isProcessRequest = true;
+
+    public function processHttpRequest($request)
     {
 
-        if (!Cli::isCli() && $request->getReferrer()) {
+        if ($request->getReferrer()) {
             $url = SurfingHelper::getReferUrl();
 
             $url = parse_url($url);

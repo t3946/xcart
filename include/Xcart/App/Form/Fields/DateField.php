@@ -61,6 +61,7 @@ class DateField extends CharField
             $date = new \DateTime();
             $date->setTimestamp($time);
         }
+
         return $date;
     }
 }

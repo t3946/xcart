@@ -9,9 +9,7 @@
                 var date = new Date();
 
                 date.setFullYear(date.getFullYear()+1);
-                document.cookie = name+"="+JSON.stringify(value)+"; expires="+date.toUTCString();
-
-                console.log(document.cookie);
+                document.cookie = name+"="+JSON.stringify(value)+"; expires="+date.toUTCString() + "; path=/";
             };
 
             var getCookie = function(name, defaults) {
@@ -33,7 +31,7 @@
                         }
 
                         var str = document.cookie.substring(start, end);
-                        console.log(decodeURI(str));
+
                         if (str) {
                             return JSON.parse(decodeURI(str));
                         }
@@ -75,17 +73,15 @@
         margin-left: auto;
         margin-right: auto;
         padding: 1em;
-        padding-right: 25px;
+        padding-right: 3em;
+        position: relative;
+        box-sizing: border-box;
+    }
+
+    .static-messages-block .messages-list .message-block {
         position: relative;
     }
 
-    .static-messages-block .messages-list ul,
-    .static-messages-block .messages-list ul li {
-        margin: 0;
-        padding: 0;
-        list-style: none;
-        position: relative;
-    }
     .static-messages-block .message,
     .static-messages-block .message *,
     .static-messages-block .message .description *{
@@ -103,7 +99,7 @@
         display: block;
         width: 1em;
         height: 1em;
-        right: 1em;
+        right: .5em;
         top: 50%;
         margin-top: -.5em;
         text-decoration: none;
@@ -111,7 +107,7 @@
     }
 
     .static-messages-block .message > * {
-        font-size: 1.3em;
+        font-size: 1.17em;
     }
 
     .ui-mobile-viewport .static-messages-block .message > * {

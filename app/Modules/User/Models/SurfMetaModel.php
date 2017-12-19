@@ -2,6 +2,7 @@
 
 namespace Modules\User\Models;
 
+use Mobile_Detect;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
@@ -29,26 +30,25 @@ class SurfMetaModel extends Model
 
     static public function getInstance()
     {
-        global $detect_isMobile_was_created, $current_storefront;
-
         if (is_null(self::$_instance)) {
 
             if ($sessId = Xcart::app()->request->session->getId()) {
                 self::$_instance = self::objects()->filter(["sessid" =>$sessId])->get();
 
                 if (is_null(self::$_instance)) {
+                    $md = new Mobile_Detect();
                     self::$_instance =  new self(
                         [
                             "sessid"         => $sessId,
                             "date"           => time(),
-                            "is_mobile"      => ($detect_isMobile_was_created ? "Y" : "N"),
+                            "is_mobile"      => ($md->isMobile() ? "Y" : "N"),
                             "goal_order"     => 'N',
                             "goal_checkout"  => 'N',
                             "goal_addtocart" => 'N',
                             "goal_search"    => 'N',
                             "points_visited" => '0',
                             "last_update"    => time(),
-                            "storefrontid"   => $current_storefront,
+                            "storefrontid"   => Xcart::app()->getModule('Sites')->getSite()->storefrontid,
                         ]
                     );
                     self::$_instance->save();

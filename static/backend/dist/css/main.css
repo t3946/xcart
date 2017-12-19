@@ -6041,7 +6041,7 @@ HR.GreyLine {
 .TopLabel {
   COLOR: #000000;
   FONT-WEIGHT: 500;
-  font-size: .9rem; }
+  font-size: 1em; }
 
 .Message {
   COLOR: #FF3300; }
@@ -6561,25 +6561,18 @@ A.Button:visited, A.Button:hover, A.Button:active {
   VERTICAL-ALIGN: middle;
   BORDER: 0px; }
 
-.SmallNote:visited {
-  COLOR: #7C4C00;
-  TEXT-DECORATION: none;
-  FONT-SIZE: 9px; }
-
-.SmallNote:hover {
-  COLOR: #7C4C00;
-  TEXT-DECORATION: underline;
-  FONT-SIZE: 9px; }
-
-.SmallNote:active {
-  COLOR: #7C4C00;
-  TEXT-DECORATION: none;
-  FONT-SIZE: 9px; }
+.SmallNote {
+  FONT-SIZE: .9em;
+  COLOR: #7C4C00; }
+  .SmallNote:visited, .SmallNote:active {
+    TEXT-DECORATION: none; }
+  .SmallNote:hover {
+    TEXT-DECORATION: underline; }
 
 .SmallText {
   COLOR: #7C4C00;
   TEXT-DECORATION: none;
-  FONT-SIZE: 9px; }
+  FONT-SIZE: .9em; }
 
 .SubcatTitle {
   TEXT-ALIGN: left;
@@ -6664,9 +6657,7 @@ IMG.TabSide {
 
 .NavigationCell {
   TEXT-ALIGN: center;
-  VERTICAL-ALIGN: bottom;
-  BACKGROUND-IMAGE: url(/skin1_kolin/images/page.gif);
-  WIDTH: 17px; }
+  VERTICAL-ALIGN: bottom; }
   .NavigationCell A:visited, .NavigationCell A:hover, .NavigationCell A:active {
     TEXT-DECORATION: none; }
   .NavigationCell IMG {
@@ -6675,9 +6666,7 @@ IMG.TabSide {
 
 .NavigationCellWide {
   TEXT-ALIGN: center;
-  VERTICAL-ALIGN: bottom;
-  BACKGROUND-IMAGE: url(/skin1_kolin/images/page_wide.gif);
-  WIDTH: 23px; }
+  VERTICAL-ALIGN: bottom; }
   .NavigationCellWide A:link, .NavigationCellWide A:visited, .NavigationCellWide A:hover, .NavigationCellWide A:active {
     TEXT-DECORATION: none; }
   .NavigationCellWide IMG {

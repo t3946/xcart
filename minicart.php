@@ -34,6 +34,8 @@
 # $Id: minicart.php,v 1.4 2006/03/14 14:41:30 svowl Exp $
 #
 
+define('SET_EXPIRE', 1);
+
 if ( !defined('XCART_START') ) { header("Location: home.php"); die("Access denied"); }
 
 x_session_register ("cart");
