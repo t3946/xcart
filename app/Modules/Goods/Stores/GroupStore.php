@@ -65,7 +65,7 @@ class GroupStore extends BaseStore
 
             $filter = [
                 'forsale' => 'Y',
-                'sites__storefrontid' => $this->data['sfid'],
+                'sites__through__sfid' => $this->data['sfid'],
                 'group_root__isnull' => true
             ];
 
@@ -91,7 +91,7 @@ class GroupStore extends BaseStore
             [
                 (new Expression("SUBSTRING_INDEX({$qs->getTableAlias()}.product, ' ', {$this->level})"))->toSQL() => (new Expression($this->model->group_option))->toSQL(),
                 'group_root__isnull' => true,
-                'sites__storefrontid' => $this->data['sfid'],
+                'sites__through__sfid' => $this->data['sfid'],
                 'brandid' => $this->model->brandid
             ]
         );
@@ -114,7 +114,7 @@ class GroupStore extends BaseStore
             [
                 'productid' => new Expression($qs->getTableAlias().".group_root"),
                 'group_root__isnull' => false,
-                'sites__storefrontid' => $this->data['sfid'],
+                'sites__through__sfid' => $this->data['sfid'],
                 'p2.group_root__isnull' => true,
                 'p2.product__raw' => "LIKE CONCAT({$qs->getTableAlias()}.group_option, '%')"
             ]

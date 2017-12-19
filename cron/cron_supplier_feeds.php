@@ -153,6 +153,7 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
             /** @var ProductModel $modelProduct */
 
             list($modelProduct, $is_created) = ProductModel::objects()->getOrNew(['productcode' => $aProduct['productcode']]);
+            $all_feed_productcodes[] = $modelProduct->productcode;
 
             switch ($supplierFeedModel->feed_type) {
                 case 'I' :
@@ -164,7 +165,9 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
 
                     break;
                 case 'P' :
-                    $modelProduct->save();
+                    if ($is_created) {
+                        $modelProduct->save();
+                    }
                     if (!isset($aProduct['is_group'])) {
                         if (!isset($aProduct['cost_to_us'])) {
                             print("Skip product --> 'No cost_to_us' \n");
@@ -189,14 +192,13 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
                 if ($is_created) {
                     $new_products_count++;
                     $inserted_products_count++;
-                } else if ($modelProduct->getChangedAttributes()) {
-                    print_r($modelProduct->getChangedAttributes());
+                    $modelProduct->save();
+                } else if ($changed = SupplierFeedHelper::getChanged($modelProduct)) {
+                    print_r($changed);
                     $updated_products_count++;
+                    $modelProduct->save();
                 }
 
-                $modelProduct->save();
-
-                $all_feed_productcodes[] = $modelProduct->productcode;
                 $last_feed_fields_arr_vals = $aProduct;
                 $lastFeedFields = array_unique(array_merge($lastFeedFields, array_keys($aProduct)));
             }
