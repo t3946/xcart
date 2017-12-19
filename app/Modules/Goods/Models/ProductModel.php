@@ -295,6 +295,11 @@ class ProductModel extends Model implements ICartItem
                 'null' => false,
                 'default' => false,
             ],
+            'r_avail' => [
+                'class' => IntField::className(),
+                'null' => false,
+                'default' => 0,
+            ],
         ];
     }
 
