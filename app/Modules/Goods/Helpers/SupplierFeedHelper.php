@@ -250,7 +250,7 @@ class SupplierFeedHelper
                         $name = empty($aAltImageNames[$key]) ? $model->product : $aAltImageNames[$key];
 
                         /** @var ImageDModel $image */
-                        $image = ImageHelper::uploadMainImage($aImages[$key], ltrim($url, '.'), $name, $feed->manufacturerid, $model->productid);
+                        $image = ImageHelper::uploadMainImage($aImages[$key], ltrim($url, '.'), $name);
 
                         print "Upload image --> {$aImages[$key]}" . PHP_EOL;
 
