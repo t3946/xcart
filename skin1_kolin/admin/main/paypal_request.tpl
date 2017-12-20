@@ -93,8 +93,8 @@
 {/if}
 {literal}
     <script type="text/javascript">
-        $('#main_order_tabs-container').bind('tabsshow', function(event, ui) {
-            if ($(ui.tab).attr('href') == '#main_order_tabs-paypal_request'){
+        $('#main_order_tabs-container').on('tabsactivate', function(event, ui) {
+            if (ui.newTab.find('a').attr('href') === '#main_order_tabs-paypal_request'){
                 $('.invoice_list_row[data-status=new]').each(function(){
                     var row = $(this);
                     var inv_number = $(this).find('.pp_invoice_number').data('inv-number');
