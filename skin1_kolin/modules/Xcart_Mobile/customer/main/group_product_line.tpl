@@ -23,7 +23,7 @@
                 data-name="{$child->product|escape}"
                 data-category="{$main_cat->category->category|escape}"
                 data-sfid="{$current_storefront}"
-                data-price='{getPricingArray pricing=$child->pricing json=true}'
+                data-price='{getPricingArray pricing=$child->pricing  map_price=$child->new_map_price json=true}'
                 data-list='group_product_item'>
                 {assign var=thumbnail_m value=$child->thumbnail}
                 {assign var=thumbnail value=$thumbnail_m->get()}

@@ -12,6 +12,7 @@ use Modules\Goods\Models\CategoryModel;
 use Modules\Goods\Models\FilterModel;
 use Modules\Goods\Models\FilterProductModel;
 use Modules\Goods\Models\FilterValueModel;
+use Modules\Goods\Models\ImageDModel;
 use Modules\Goods\Models\PricingModel;
 use Modules\Goods\Models\ProductLinksModel;
 use Modules\Goods\Models\ProductModel;
@@ -218,21 +219,41 @@ class SupplierFeedHelper
         $aImages = $data['supplier_images'];
         $aAltImageNames = $data['alt_names'];
 
-        if (!empty($aImages) && is_array($aImages)) {
-            foreach ($aImages as $kImg => $IMAGE_URL) {
-                $modelDImage = ImageHelper::uploadMainImage(
-                    $IMAGE_URL,
-                    empty($aAltImageNames[$kImg]) ? $model->product : $aAltImageNames[$kImg],
-                    $feed->manufacturerid,
-                    $model->productid);
-                if ($modelDImage && $modelDImage->getIsNewRecord()) {
-                    $modelDImage->id = $model->productid;
-                    $modelDImage->orderby = ($kImg + 1) * 10;
-                    $modelDImage->save();
-                    if (class_exists('Imagick')) {
-                        $imageParam = $modelDImage->getAttributes();
-                        $imageParam['image_path'] = '../' . $imageParam['image_path'];
-                        func_set_correct_det_img($imageParam, true);
+        if ($aImages && is_array($aImages)) {
+
+            $uploads = array_map(function($v) use ($feed){
+                return '.' . ImageHelper::getImageFileName($v, $feed->manufacturerid);
+            }, $aImages);
+
+            $p_images = ImageDModel::objects()->filter(['image_path__in' => $uploads, 'id' => $model->productid])->valuesList('image_path', true);
+
+            if ($uploads) {
+
+                foreach ($uploads as $key => $url) {
+
+                    $url_q = preg_quote($url, '/');
+
+                    if (!preg_grep("/{$url_q}/i", $p_images)) {
+
+                        $name = empty($aAltImageNames[$key]) ? $model->product : $aAltImageNames[$key];
+
+                        /** @var ImageDModel $image */
+                        $image = ImageHelper::uploadMainImage($aImages[$key], ltrim($url, '.'), $name, $feed->manufacturerid, $model->productid);
+
+                        print "Upload image --> {$aImages[$key]}" . PHP_EOL;
+
+                        if ($image && $image->getIsNewRecord()) {
+
+                            $image->id = $model->productid;
+                            $image->orderby = ($key + 1) * 10;
+                            $image->save();
+
+                            if (class_exists('Imagick')) {
+                                $imageParam = $image->getAttributes();
+                                $imageParam['image_path'] = '../' . $imageParam['image_path'];
+                                func_set_correct_det_img($imageParam, true);
+                            }
+                        }
                     }
                 }
             }
