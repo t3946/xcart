@@ -161,9 +161,10 @@ class Mailer
     
     public function getHostInfo()
     {
-        if (!$this->hostInfo) {
+        if (!$this->hostInfo && !Cli::isCli()) {
             $this->hostInfo = Xcart::app()->request->getHostInfo();
         }
+
         return $this->hostInfo;
     }
 }

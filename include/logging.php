@@ -118,7 +118,7 @@ function x_log_add($label, $message, $add_backtrace=false, $stack_skip=0, $email
     }
 
 
-    if ($email_only && (!empty($email_addresses) && is_array($email_addresses)))
+    if (!empty($email_addresses) && is_array($email_addresses))
     {
 
         foreach ($email_addresses as $k=>$email) {
