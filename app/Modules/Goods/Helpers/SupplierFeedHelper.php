@@ -221,15 +221,27 @@ class SupplierFeedHelper
 
         if ($aImages && is_array($aImages)) {
 
-            $uploads = array_map(function($v) use ($feed){
-                return '.' . ImageHelper::getImageFileName($v, $feed->manufacturerid);
-            }, $aImages);
+            foreach ($aImages as $k => $v) {
+                if (empty($v)) {
+                    unset($aImages[$k]);
+                    unset($aAltImageNames[$k]);
+                }
+            }
 
-            $p_images = ImageDModel::objects()->filter(['image_path__in' => $uploads, 'id' => $model->productid])->valuesList('image_path', true);
+            $uploads = array_filter(array_map(function ($v) use ($feed) {
+                if (empty($v)) return null;
+                return '.' . ImageHelper::getImageFileName($v, $feed->manufacturerid);
+            }, $aImages), function ($v) {
+                return !empty($v);
+            });
 
             if ($uploads) {
 
+                $p_images = ImageDModel::objects()->filter(['image_path__in' => $uploads, 'id' => $model->productid])->valuesList('image_path', true);
+
                 foreach ($uploads as $key => $url) {
+
+                    if (!$url) {continue;}
 
                     $url_q = preg_quote($url, '/');
 

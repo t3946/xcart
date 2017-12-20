@@ -167,6 +167,7 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
                 case 'P' :
                     if ($is_created) {
                         $modelProduct->save();
+                        print "Add product --> OK" . PHP_EOL;
                     }
                     if (!isset($aProduct['is_group'])) {
                         if (!isset($aProduct['cost_to_us'])) {
