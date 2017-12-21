@@ -1340,7 +1340,7 @@ SQL;
 
 
                             print("ORDER INFO: \r\n");
-                            func_print_r($aOrderInfo->nodeValue);
+                            print_r($aOrderInfo->nodeValue);
                             $log_text = "Processing order: " . $oOrder->getField('amazonorderid') . "  status: " . $sOrderStatus;
                             print($log_text . "\r\n");
 
