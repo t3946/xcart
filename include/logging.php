@@ -94,6 +94,7 @@ function x_log_add($label, $message, $add_backtrace=false, $stack_skip=0, $email
             }
 
             $message .= implode("\n", $result);
+            $message .= "\n\n";
         }
 
         if (empty($result)) {
