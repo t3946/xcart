@@ -104,7 +104,7 @@ class AnveoAssignCalls
                         'relevance_order' => $relevance_order
                     ];
 
-                    (new OrdersCallsModel($mass))->save();
+                    OrdersCallsModel::objects()->getOrCreate($mass);
 
                     $log_category = "anveo_calls";
                     $log_text = "{$e164} - Привязан к заказу - {$order_models[$i]->orderid} по второй привязке";
