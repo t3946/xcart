@@ -114,7 +114,6 @@ class SupplierFeedHelper
      */
     public static function feedProduct($model, $is_created, $feed, $data, $dont_update_fields, $defaults)
     {
-        $model->controlled_by_feed = $feed->feed_file_name;
 
         $model->source_sfid = $feed->storefront_id;
         $model->manufacturerid = $feed->manufacturerid;
@@ -250,7 +249,7 @@ class SupplierFeedHelper
                         $name = empty($aAltImageNames[$key]) ? $model->product : $aAltImageNames[$key];
 
                         /** @var ImageDModel $image */
-                        $image = ImageHelper::uploadMainImage($aImages[$key], ltrim($url, '.'), $name, $feed->manufacturerid, $model->productid);
+                        $image = ImageHelper::uploadMainImage($aImages[$key], ltrim($url, '.'), $name);
 
                         print "Upload image --> {$aImages[$key]}" . PHP_EOL;
 
@@ -334,8 +333,7 @@ class SupplierFeedHelper
         if (!empty($data)) {
 
             if (!$brand = BrandModel::objects()->filter([
-                'brand' => $data,
-                'storefront__through__sfid' => $feed->storefront_id
+                'brand' => $data
             ])->limit(1)->get()) {
 
                 $brand = new BrandModel([
@@ -347,15 +345,15 @@ class SupplierFeedHelper
 
                 $brand->save();
 
-                (new BrandStorefrontModel([
-                    'brandid' => $brand->brandid,
-                    'sfid' => $feed->storefront_id,
-                ]))->save();
-
                 $clean_url = func_clean_url_autogenerate('M', $brand->brandid, array('brand' => $data));
 
                 func_clean_url_add($clean_url, 'M', $brand->brandid);
             }
+
+            BrandStorefrontModel::objects()->getOrCreate([
+                'brandid' => $brand->brandid,
+                'sfid' => $feed->storefront_id,
+            ]);
 
             if ($brand->parent_brand_id) {
                 $brand = $brand->parent;

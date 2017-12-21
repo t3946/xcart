@@ -12,6 +12,7 @@ use Modules\Goods\Models\ProductCategoriesModel;
 use Modules\Goods\Models\ProductModel;
 use Modules\Goods\Models\ProductStorefrontModel;
 use Xcart\App\Main\Xcart;
+use Xcart\App\Orm\QuerySet;
 use Xcart\App\Pagination\DataSource\QuerySetDataSource;
 use Xcart\App\Pagination\Pagination;
 use Xcart\App\Store\BaseStore;
@@ -63,22 +64,20 @@ class GroupStore extends BaseStore
                     'g_max' => new Expression($qs->getSql())
                 ]);
 
-            $filter = [
+            $this->qs->filter([
                 'forsale' => 'Y',
                 'sites__through__sfid' => $this->data['sfid'],
                 'group_root__isnull' => true
-            ];
+            ]);
 
             if ($this->model) {
-                $filter['brandid'] = $this->model->brandid;
+                $this->qs->filter(['brand__brandid' => $this->model->brandid]);
             }
 
             if ($this->level > 1) {
-                $lmo = $this->level - 1;
-                $filter[(new Expression("SUBSTRING_INDEX({$this->qs->getTableAlias()}.product, ' ', {$lmo})"))->toSQL()] = $this->data['group_phrase'];
+                $this->qs->filter([$this->getProductNameExpression($this->qs,$this->level - 1)]);
             }
 
-            $this->qs->filter($filter);
         }
         return $this->qs;
     }
@@ -130,30 +129,27 @@ class GroupStore extends BaseStore
     public function getBrandQuerySet()
     {
         $qs = BrandModel::objects()->getQuerySet();
+        $ps = ProductModel::objects()->getQuerySet();
 
-        $phrase = new Expression("SUBSTRING_INDEX (p.product,' ', {$this->level})");
+        $phrase = new Expression("SUBSTRING_INDEX ({$ps->getTableAlias()}.product,' ', {$this->level})");
 
-        $qs->select(['*', 'count' => new Expression('count(p.productid)'), 'group_phrase' => $phrase]);
+        $qs->select(['*', 'count' => new Expression("count({$ps->getTableAlias()}.productid)"), 'group_phrase' => $phrase]);
 
-        $filter = [
-            'p.forsale' => 'Y',
-            'sf.sfid' => $this->data['sfid'],
-            'p.group_root__isnull' => true
-        ];
+        $qs->filter([
+            'products__forsale' => 'Y',
+            'storefront__through__sfid' => $this->data['sfid'],
+            'products__group_root__isnull' => true
+        ]);
 
         if ($this->model) {
-            $filter['brandid'] = $this->model->brandid;
+            $qs->filter(['brandid' => $this->model->brandid]);
         }
 
         if ($this->level > 1) {
-            $lmo = $this->level - 1;
-            $filter[(new Expression("SUBSTRING_INDEX(p.product, ' ', {$lmo})"))->toSQL()] = $this->data['group_phrase'];
+            $qs->filter(
+                [$this->getProductNameExpression($ps,$this->level - 1)]
+            );
         }
-
-        $qs->filter($filter);
-
-        $qs->join('inner join', 'xcart_products', ['brandid' => 'p.brandid'], 'p');
-        $qs->join('inner join', 'xcart_products_sf', ['p.productid' => 'sf.productid'], 'sf');
 
         $qs->group(['brandid', $phrase->toSql()]);
         $qs->having(['count__gt' => 1]);
@@ -363,5 +359,17 @@ class GroupStore extends BaseStore
     public function updateGroupProduct()
     {
         $this->createGroupProduct();
+    }
+
+    /**
+     * @param QuerySet $qs
+     * @param int $level
+     * @return Expression
+     */
+    private function getProductNameExpression($qs, $level)
+    {
+        return new Expression("IF ({$qs->getTableAlias()}.brand_normalized,
+                                            SUBSTRING_INDEX(CONCAT(COALESCE(product_brand_name, brand),' ',{$qs->getTableAlias()}.product), ' ', {$level}) = '{$this->data['group_phrase']}',
+                                            SUBSTRING_INDEX({$qs->getTableAlias()}.product, ' ', {$level}) = '{$this->data['group_phrase']}')");
     }
 }

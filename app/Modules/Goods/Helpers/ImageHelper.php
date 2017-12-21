@@ -49,11 +49,11 @@ class ImageHelper
 
     /**
      * @param string $image
+     * @param string $upload_image
      * @param string $name
-     * @param string $prefix
      * @return ImageDModel|null
      */
-    public static function uploadMainImage($image, $upload_image, $name, $prefix, $product_id)
+    public static function uploadMainImage($image, $upload_image, $name)
     {
         global $xcart_dir;
         /** @var ImageDModel $imageModel */
