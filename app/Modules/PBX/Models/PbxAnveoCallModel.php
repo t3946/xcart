@@ -11,6 +11,7 @@ use Xcart\App\Orm\Fields\BooleanField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\DateTimeField;
 use Xcart\App\Orm\Fields\ForeignField;
+use Xcart\App\Orm\Fields\HasManyField;
 use Xcart\App\Orm\Fields\HasToOneField;
 use Xcart\App\Orm\Fields\ManyToManyField;
 use Xcart\App\Orm\Model;
@@ -65,7 +66,7 @@ class PbxAnveoCallModel extends Model
             ],
 
             'bind_calls' => [
-                'class' => HasToOneField::className(),
+                'class' => HasManyField::className(),
                 'modelClass' => OrdersCallsModel::className(),
                 'link' => ['id' => 'call_id'],
             ],

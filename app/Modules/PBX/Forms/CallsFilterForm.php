@@ -16,17 +16,55 @@ use Xcart\App\Form\Fields\CharField;
 use Xcart\App\Form\Fields\DateTimeField;
 use Xcart\App\Form\Fields\DropDownField;
 use Xcart\App\Form\Fields\NumberField;
+use Xcart\App\Form\Fields\RadioField;
 
 class CallsFilterForm extends BaseForm
 {
     public function getFields()
     {
         return [
+            'is_voice_mail' => [
+                'class' => RadioField::className(),
+                'choices' => [
+                    0 => 'off',
+                    1 => 'no',
+                    2 => 'yes',
+                ],
+            ],
+
+            'is_outgoing' => [
+                'class' => RadioField::className(),
+                'choices' => [
+                    0 => 'off',
+                    1 => 'no',
+                    2 => 'yes',
+                ],
+            ],
+
+            'is_lost' => [
+                'class' => RadioField::className(),
+                'choices' => [
+                    0 => 'off',
+                    1 => 'no',
+                    2 => 'yes',
+                ],
+            ],
+
+            'is_incoming' => [
+                'class' => RadioField::className(),
+                'choices' => [
+                    0 => 'off',
+                    1 => 'no',
+                    2 => 'yes',
+                ],
+            ],
+
             'direction' => [
                 'class' => DropDownField::className(),
                 'label' => 'Direction',
                 'multiple' => true,
                 'choices' => [
+                    'extension' => 'Choose type',
                     'in' => 'Inbound',
                     'out' => 'Outbound',
                     'lost' => 'Miss call',
