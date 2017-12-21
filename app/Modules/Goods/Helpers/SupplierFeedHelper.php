@@ -333,8 +333,7 @@ class SupplierFeedHelper
         if (!empty($data)) {
 
             if (!$brand = BrandModel::objects()->filter([
-                'brand' => $data,
-                'storefront__through__sfid' => $feed->storefront_id
+                'brand' => $data
             ])->limit(1)->get()) {
 
                 $brand = new BrandModel([
