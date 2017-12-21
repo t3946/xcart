@@ -9,6 +9,7 @@ use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\HasManyField;
 use Xcart\App\Orm\Fields\ManyToManyField;
+use Xcart\App\Orm\Fields\SerializeField;
 use Xcart\App\Orm\Fields\TimestampField;
 use Xcart\App\Orm\Model;
 use Xcart\App\Traits\DataModelTrait;
@@ -95,6 +96,11 @@ class OrderModel extends Model
                 'modelClass' => FraudStatusModel::className(),
                 'link' => ['fraud_status' => 'code'],
                 'null' => false,
+            ],
+            'extra' => [
+                'class' => SerializeField::className(),
+                'null' => false,
+                'default' => ''
             ],
         ];
     }
