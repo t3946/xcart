@@ -345,15 +345,15 @@ class SupplierFeedHelper
 
                 $brand->save();
 
-                (new BrandStorefrontModel([
-                    'brandid' => $brand->brandid,
-                    'sfid' => $feed->storefront_id,
-                ]))->save();
-
                 $clean_url = func_clean_url_autogenerate('M', $brand->brandid, array('brand' => $data));
 
                 func_clean_url_add($clean_url, 'M', $brand->brandid);
             }
+
+            BrandStorefrontModel::objects()->getOrCreate([
+                'brandid' => $brand->brandid,
+                'sfid' => $feed->storefront_id,
+            ]);
 
             if ($brand->parent_brand_id) {
                 $brand = $brand->parent;
