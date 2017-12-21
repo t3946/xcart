@@ -78,7 +78,7 @@ if (!$supplier_feeds) {
 foreach ($supplier_feeds as $k => $supplierFeedModel) {
 
     $discontinued_products_count = $updated_products_count = $inserted_products_count = $new_products_count = $skippedProductsCount = 0;
-    $all_feed_productcodes = $lastFeedFields = $last_feed_fields_arr_vals = [];
+    $all_feed_productcodes = $lastFeedFields = $last_feed_fields_arr_vals = $duplicate_sku = [];
 
     clearstatcache();
 
@@ -153,7 +153,11 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
             /** @var ProductModel $modelProduct */
 
             list($modelProduct, $is_created) = ProductModel::objects()->getOrNew(['productcode' => $aProduct['productcode']]);
-            $all_feed_productcodes[] = $modelProduct->productcode;
+            if (in_array($modelProduct->productcode, $all_feed_productcodes)) {
+                $duplicate_sku[] = $modelProduct->productcode;
+            } else {
+                $all_feed_productcodes[] = $modelProduct->productcode;
+            }
 
             switch ($supplierFeedModel->feed_type) {
                 case 'I' :
@@ -292,6 +296,12 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
     }
     $log_text .= "discontinued: {$discontinued_products_count}\n";
     $log_text .= "skipped: {$skippedProductsCount}\n";
+
+    if ($duplicate_sku) {
+        $sku_d = implode(', ', $duplicate_sku);
+        $log_text .= "Duplicated SKU's:{$sku_d}\n";
+    }
+    
     $log_text .= "Duration: " . (new DateTime('now'))->diff($start_supplier_time)->format('%H:%I:%S') . "\n";
     func_backprocess_log($log_category, $log_text);
 }
