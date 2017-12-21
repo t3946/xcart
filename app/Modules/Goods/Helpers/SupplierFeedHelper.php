@@ -114,7 +114,6 @@ class SupplierFeedHelper
      */
     public static function feedProduct($model, $is_created, $feed, $data, $dont_update_fields, $defaults)
     {
-        $model->controlled_by_feed = $feed->feed_file_name;
 
         $model->source_sfid = $feed->storefront_id;
         $model->manufacturerid = $feed->manufacturerid;

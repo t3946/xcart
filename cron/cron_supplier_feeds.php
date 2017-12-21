@@ -162,6 +162,7 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
                         $new_products_count++;
                         continue 2;
                     }
+                    $modelProduct->controlled_by_feed = $supplierFeedModel->feed_file_name;
 
                     break;
                 case 'P' :
