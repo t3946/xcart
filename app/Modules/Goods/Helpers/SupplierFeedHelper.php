@@ -334,7 +334,7 @@ class SupplierFeedHelper
 
             if (!$brand = BrandModel::objects()->filter([
                 'brand' => $data
-            ])->limit(1)->get()) {
+            ])->limit(1)->order(['brandid'])->get()) {
 
                 $brand = new BrandModel([
                     'brand' => $data,
