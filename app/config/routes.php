@@ -6,6 +6,11 @@ return array_merge($admin_routes, [
         'path' => 'Modules.Goods.routes',
     ],
     [
+        'route' => '/identity_check',
+        'path' => 'Modules.User.routes',
+        'namespace' => 'id_check',
+    ],
+    [
         'route' => '/amp',
         'path' => 'Modules.Amp.routes',
         'namespace' => 'amp',
