@@ -6,6 +6,7 @@ use Modules\Dashboard\Sqls\SearchSql;
 use Modules\Dashboard\Stores\OrderSearchStore;
 use Modules\Order\Models\OrderTransactionModel;
 use Xcart\App\Main\Xcart;
+use Xcart\App\Orm\DefaultConnection;
 use Xcart\Connection;
 use Xcart\POPipeline;
 
@@ -209,8 +210,11 @@ class SearchHelper
         $stmt = null;
         $data = [];
         $like = "%{$query}%";
+        $connection = Connection::getInstance();
 
-        $connection = Connection::getInstance()->setIgnoreErrors(true);
+        if ($connection instanceof DefaultConnection) {
+            $connection = $connection->setIgnoreErrors(true);
+        }
 
         switch ($from) {
             case 'distributor' :
@@ -261,7 +265,9 @@ class SearchHelper
             $data = $stmt->fetchAll();
         }
 
-        $connection->setIgnoreErrors(false);
+        if ($connection instanceof DefaultConnection) {
+            $connection->setIgnoreErrors(false);
+        }
 
         return $data;
     }
