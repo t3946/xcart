@@ -8,7 +8,7 @@
 
         {if $order?}
 
-        <form action="{url 'id_check:start_check'}" >
+        <form action="{url 'id_check:start_check'}" target="_blank">
 
             <p>Primary Name <input type="text" name="primary.name" value="{$order->s_firstname}"></p>
             <p>Primary Phone <input type="text" name="primary.phone" value="{$phone}"></p>
