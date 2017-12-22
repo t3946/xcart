@@ -13,6 +13,7 @@ return array(
     'edc6464955a37aa4d5fbf39d40fb6ee7' => $vendorDir . '/symfony/polyfill-php55/bootstrap.php',
     '3e2471375464aac821502deb0ac64275' => $vendorDir . '/symfony/polyfill-php54/bootstrap.php',
     'a0edc8309cc5e1d60e3047b5df6b7052' => $vendorDir . '/guzzlehttp/psr7/src/functions_include.php',
+    'bd9634f2d41831496de0d3dfe4c94881' => $vendorDir . '/symfony/polyfill-php56/bootstrap.php',
     'decc78cc4436b1292c6c0d151b19445c' => $vendorDir . '/phpseclib/phpseclib/phpseclib/bootstrap.php',
     '68f9084e889ebf718663435970ab45e3' => $vendorDir . '/mindy/query_builder/src/Conditions.php',
     'b77dd737e4bb7d84d61e01c37cdbd0aa' => $baseDir . '/www/include/func/func.core.php',
