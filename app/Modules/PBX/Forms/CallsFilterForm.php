@@ -16,17 +16,19 @@ use Xcart\App\Form\Fields\CharField;
 use Xcart\App\Form\Fields\DateTimeField;
 use Xcart\App\Form\Fields\DropDownField;
 use Xcart\App\Form\Fields\NumberField;
+use Xcart\App\Form\Fields\RadioField;
 
 class CallsFilterForm extends BaseForm
 {
     public function getFields()
     {
         return [
+
             'direction' => [
                 'class' => DropDownField::className(),
                 'label' => 'Direction',
-                'multiple' => true,
                 'choices' => [
+                    'extension' => 'Choose type',
                     'in' => 'Inbound',
                     'out' => 'Outbound',
                     'lost' => 'Miss call',

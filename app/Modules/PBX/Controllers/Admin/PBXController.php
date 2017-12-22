@@ -9,6 +9,7 @@
 namespace Modules\PBX\Controllers\Admin;
 
 use Mindy\QueryBuilder\Expression;
+use Mindy\QueryBuilder\Q\QOr;
 use Modules\Admin\Controllers\BackendController;
 use Modules\PBX\Forms\CallsFilterForm;
 use Modules\PBX\Helpers\PBXHelper;
@@ -22,24 +23,17 @@ class PBXController extends BackendController
 {
     public function index()
     {
-//        dd($_GET);
         $form = new CallsFilterForm();
         $form->populate($_GET);
 
-
-
         $qs =  PbxAnveoCallModel::objects();
         if (!empty($_GET)) {
+
             /** @var \Xcart\App\Orm\QuerySet $qs */
-            if (array_key_exists('reset', $_GET)){
-                foreach ($form->getAttributes() as $key => $value){
-                    $form->setAttributes([$key => '']);
-                }
-            }
             foreach ($form->getAttributes() as $key => $value){
                 if ($value) {
 
-                    if ($key == 'order_id') {
+                    if ($key == 'order') {
                         $qs->filter(['orders__orderid' => $value]);
                     }
                     elseif ($key == 'date_from') {
@@ -59,21 +53,28 @@ class PBXController extends BackendController
                     elseif ($key == 'e164'){
                         $qs->filter([$key => $value]);
                     }
-                    elseif ($key == 'direction') {
-
-                        $filter = [
-                            'is_outgoing' => in_array('out', $value),
-                            'is_lost' => in_array('lost', $value),
-                            'is_voice_mail' => in_array('vm', $value)
-                        ];
-
-                        $qs->filter($filter);
-
+                    elseif ($key == 'direction'){
+                        if ($value == 'in'){
+                            $qs->filter([
+                                'is_outgoing' => 0,
+                                'is_lost' => 0,
+                                'is_voice_mail' => 0
+                                        ]);
+                        }
+                        elseif ($value == 'out'){
+                            $qs->filter(['is_outgoing' => 1]);
+                        }
+                        elseif ($value == 'lost'){
+                            $qs->filter(['is_lost' => 1]);
+                        }
+                        elseif ($value == 'vm'){
+                            $qs->filter(['is_voice_mail' => 1]);
+                        }
                     }
+
                 }
 
             }
-//dd($qs->getSql());
 
         }
 
@@ -84,7 +85,6 @@ class PBXController extends BackendController
         /** @var PbxAnveoCallModel $model */
         foreach ($pager->paginate() as $model) {
             if ($model) {
-
                 $name = "Not defined";
 
                 if ($model->anveo_account) {
@@ -107,10 +107,17 @@ class PBXController extends BackendController
                     $mass[$i]['url'] = $model->getUrl();
                 }
 
-                if ($order = $model->bind_calls) {
-                    $order_id = $order->order_id;
-                    $mass[$i]['order_id'] = $model->orders->get(['orderid' => $order_id])->getOrderNumber();
-                    $mass[$i]['order_url'] = $model->orders->get(['orderid' => $order_id])->getAdminUrl();
+                if ($orders = $model->bind_calls) {
+                    $count = count($orders);
+                    for($j = 0; $j < $count; $j++){
+                        $order_id = $orders[$j]->order_id;
+                            if(!empty($order_id)) {
+                                $mass[ $i ]['order'][ $j ]['order_id'] = $model->orders->get(['orderid' => $order_id])
+                                                                                       ->getOrderNumber();
+                                $mass[ $i ]['order'][ $j ]['order_url'] = $model->orders->get(['orderid' => $order_id])
+                                                                                        ->getAdminUrl();
+                            }
+                    }
                 }
 
                 if ($model->isOutgoing()) {
