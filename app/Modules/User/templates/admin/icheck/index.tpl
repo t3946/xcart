@@ -4,7 +4,7 @@
 {/block}
 {block "content"}
 
-    {smarty_admin_block name='Calls'}
+    {smarty_admin_block name='ICheck'}
 
         {if $order?}
 
