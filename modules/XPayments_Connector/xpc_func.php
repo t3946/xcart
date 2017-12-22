@@ -1506,7 +1506,7 @@ function xpc_api_request($target, $action, $data = array(), $schema = array())
     curl_setopt($ch, CURLOPT_FOLLOWLOCATION, false);
     curl_setopt($ch, CURLOPT_HEADERFUNCTION, 'xpc_curl_headers_collector');
 
-    curl_setopt($ch, CURLOPT_SSLVERSION, 3);
+    //curl_setopt($ch, CURLOPT_SSLVERSION, 3);
 
     if (!empty($config['General']['https_proxy'])) {
         // uncomment this line if you need proxy tunnel
