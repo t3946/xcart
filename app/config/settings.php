@@ -40,7 +40,7 @@ return array_replace_recursive([
                    ],
                    'cache' => [
                        'class' => '\\Xcart\\App\\Orm\\Cache\\FilesystemCache',
-                       'directory' => 'app.runtime.query_cache'
+                       'directory' => 'base.runtime.query_cache'
                    ],
                    /*'driverOptions' => [
                        PDO::ATTR_EMULATE_PREPARES => false,
