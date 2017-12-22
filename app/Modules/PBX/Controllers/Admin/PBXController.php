@@ -53,32 +53,25 @@ class PBXController extends BackendController
                     elseif ($key == 'e164'){
                         $qs->filter([$key => $value]);
                     }
-                    elseif ($key == 'is_lost'){
-                        if ($value){
-                            $qs->filter(['is_lost' => 1]);
-                        }
-                    }
-                    elseif ($key =='is_voice_mail'){
-                        if ($value){
-                            $qs->filter(['is_voice_mail' => 1]);
-
-                        }
-                    }
-                    elseif ($key == 'is_outgoing'){
-                        if ($value){
-                            $qs->filter(['is_outgoing' => 1]);
-                        }
-                    }
-                    elseif ($key == 'is_incoming') {
-                        if ($value) {
+                    elseif ($key == 'direction'){
+                        if ($value == 'in'){
                             $qs->filter([
+                                'is_outgoing' => 0,
                                 'is_lost' => 0,
-                                'is_voice_mail' => 0,
-                                'is_outgoing' => 0
+                                'is_voice_mail' => 0
                                         ]);
                         }
-
+                        elseif ($value == 'out'){
+                            $qs->filter(['is_outgoing' => 1]);
+                        }
+                        elseif ($value == 'lost'){
+                            $qs->filter(['is_lost' => 1]);
+                        }
+                        elseif ($value == 'vm'){
+                            $qs->filter(['is_voice_mail' => 1]);
+                        }
                     }
+
                 }
 
             }
