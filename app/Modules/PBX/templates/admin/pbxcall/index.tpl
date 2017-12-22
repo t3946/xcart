@@ -1,19 +1,24 @@
 {extends "base/admin.tpl"}
 {block "heading"}
     <h1>{$page_title}</h1>
+    <style type="text/css">
+        .radio-container{
+            display: inline-block;
+        }
+    </style>
 {/block}
 {block "content"}
     {smarty_admin_block name='Calls'}
 
 
 
-        <form method="get" action="/admin/pbx/pbxcalls" class="search-form">
+        <form method="get" action="{url 'admin_pbx:view'}" class="search-form">
 
             <fieldset class="collapsible expanded " rel="0">
                 <legend>Filter</legend>
                {$form->render($form->getTemplateFromType('ul'))}
                 <input type="submit" value="Find">
-                <input type="submit" name="reset" value="Clean filter">
+                <a href="{url 'admin_pbx:view'}">Clean filter</a>
             </fieldset>
         </form>
 
@@ -52,7 +57,9 @@
             {foreach $mass as $value}
                 <tr>
                     <td align="center">
-                        <a href="{$value.order_url}" target="_blank">{$value.order_id}</a>
+                        {foreach $value.order as $order}
+                            <a href="{$order.order_url}" target="_blank">{$order.order_id}</a>
+                        {/foreach}
                     </td>
                     <td align="center">
                         {$value.e164}

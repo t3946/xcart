@@ -34,7 +34,7 @@
 
         </form>
             <br>
-        <a href="https://pro.whitepages.com/developer/documentation/identity-check-api/#doc-section-1"> Documentation is here </a>
+        <a href="https://pro.whitepages.com/developer/documentation/identity-check-api/#doc-section-1" target="_blank"> Documentation is here </a>
 
         {/if}
         {if $response?}
