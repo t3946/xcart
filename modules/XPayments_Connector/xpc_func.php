@@ -1530,6 +1530,10 @@ function xpc_api_request($target, $action, $data = array(), $schema = array())
         }
     }
 
+    /* TODO remove this after change servers */
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+
     $body = curl_exec($ch);
     $errno = curl_errno($ch);
     $error = curl_error($ch);
