@@ -102,6 +102,11 @@ class OrderModel extends Model
                 'null' => false,
                 'default' => ''
             ],
+            'extra_info' => [
+                'class' => HasManyField::className(),
+                'modelClass' => OrderExtrasModel::className(),
+                'link' => ['orderid' => 'orderid'],
+            ]
         ];
     }
 
