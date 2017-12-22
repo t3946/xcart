@@ -8,6 +8,7 @@ use Modules\Amazon\Models\AmazonFbaMissingSkuModel;
 use Modules\Distributor\Models\DistributorModel;
 use Modules\Goods\Models\ProductFileModel;
 use Modules\Goods\Models\ProductModel;
+use Xcart\App\Orm\Manager;
 
 class ProductHelper
 {
@@ -120,14 +121,18 @@ class ProductHelper
     public static function getPricingArray($params)
     {
         $res = [];
+
+        $map_price = isset($params['map_price']) ? $params['map_price'] : 0;
+
         if ($params['pricing']) {
+
             foreach ($params['pricing'] as $price) {
                 $res[$price->quantity] = [
-                    'price' => $price->price
+                    'price' => max($price->price, $map_price)
                 ];
             }
         }
-        if (isset($params['json']) && $params['json']) {
+        if (!empty($params['json'])) {
             return json_encode($res);
         }
         return $res;

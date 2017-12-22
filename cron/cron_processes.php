@@ -8,8 +8,8 @@
 
 define("CIDEV_CRON_START", "CRON");
 
-require "../top.inc.php";
-require "../init.php";
+require __DIR__ . DIRECTORY_SEPARATOR ."../top.inc.php";
+require __DIR__ . DIRECTORY_SEPARATOR . "../init.php";
 
 set_time_limit(0);
 

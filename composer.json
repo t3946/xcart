@@ -59,7 +59,6 @@
             "include/func/func.clean_urls.php",
             "include/func/func.crypt.php",
             "include/func/func.db.php",
-            "include/func/func.debug.php",
             "include/func/func.export.php",
             "include/func/func.files.php",
             "include/func/func.fraud.php",

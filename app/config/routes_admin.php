@@ -6,6 +6,11 @@ return [
         'namespace' => 'admin_pbx'
     ],
     [
+        'route' => '/admin/identity_check',
+        'path' => 'Modules.User.routes_admin',
+        'namespace' => 'id_check',
+    ],
+    [
         'route' => '/admin/dashboard',
         'path' => 'Modules.Dashboard.routes_admin',
         'namespace' => 'dashboard'

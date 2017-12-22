@@ -14,7 +14,9 @@ use Xcart\App\Traits\Configurator;
  */
 class LoggerManager
 {
-    use Accessors, Configurator;
+    use Accessors;
+
+    public $defaultPatch;
     /**
      * @var array
      */
@@ -54,7 +56,18 @@ class LoggerManager
     private $defaultHandler = [
         'default' => [
             'class' => '\\Xcart\\App\\Logger\\Handler\\RotatingFileHandler',
-            'level' => 'DEBUG'
+            'level' => 'DEBUG',
+            'formatter' => 'default',
+        ]
+    ];
+    /**
+     * @var array
+     */
+    private $defaultFormatter = [
+        'default' => [
+            'class' => '\\Xcart\\App\\Logger\\Formatters\\LineFormatter',
+            'allowInlineLineBreaks' => true,
+            'includeStacktrace' => true
         ]
     ];
 
@@ -63,47 +76,69 @@ class LoggerManager
      */
     public function init()
     {
+        $this->formatters = array_replace_recursive($this->defaultFormatter, $this->formatters);
         foreach ($this->formatters as $name => $data) {
             $this->_formatters[$name] = Creator::createObject($data);
         }
 
-        $this->handlers = array_merge($this->defaultHandler, $this->handlers);
+        $this->handlers = array_replace_recursive($this->defaultHandler, $this->handlers);
         foreach ($this->handlers as $name => $data) {
-            $formatter = null;
-            if (isset($data['formatter'])) {
-                $formatter = $data['formatter'];
-                unset($data['formatter']);
-            }
-            $this->_handlers[$name] = Creator::createObject($data);
-            if ($formatter) {
-                if (!isset($this->_formatters[$formatter])) {
-                    throw new Exception("Formatter $formatter not initialized");
-                }
-                $fmt = $this->_formatters[$formatter];
-                $this->_handlers[$name]->setFormatter($fmt instanceof FormatterInterface ? $fmt : $fmt->formatter);
-            }
+            $this->constructHandler($name, $data);
         }
 
         $this->loggers = array_merge($this->defaultLogger, $this->loggers);
         foreach ($this->loggers as $name => $data) {
-            $handlers = null;
-            if (isset($data['handlers'])) {
-                $handlers = $data['handlers'];
-                unset($data['handlers']);
-            }
-            $this->_loggers[$name] = Creator::createObject($data, $name);
-            foreach ($handlers as $hname) {
-                if (!isset($this->_handlers[$name])) {
-                    throw new Exception("Handler $hname not initialized");
-                }
-                $this->_loggers[$name]->pushHandler($this->_handlers[$hname]->handler);
-            }
+            $this->constructLogger($name, $data);
         }
+    }
+
+    protected function constructHandler($name, $config)
+    {
+        $formatter = null;
+
+        if (isset($config['formatter'])) {
+            $formatter = $config['formatter'];
+            unset($config['formatter']);
+        }
+
+        $this->_handlers[$name] = Creator::createObject($config);
+
+        if ($formatter) {
+            if (!isset($this->_formatters[$formatter])) {
+                throw new Exception("Formatter $formatter not initialized");
+            }
+
+            $fmt = $this->_formatters[$formatter];
+            $this->_handlers[$name]->setFormatter($fmt instanceof FormatterInterface ? $fmt : $fmt->formatter);
+        }
+
+        return $this->_handlers[$name];
+    }
+
+    protected function constructLogger($name, $config)
+    {
+        $handlers = null;
+
+        if (isset($config['handlers'])) {
+            $handlers = $config['handlers'];
+            unset($config['handlers']);
+        }
+        $this->_loggers[$name] = Creator::createObject($config, $name);
+
+        foreach ($handlers as $hname) {
+            if (!isset($this->_handlers[$hname])) {
+                throw new Exception("Handler $hname not initialized");
+            }
+
+            $this->_loggers[$name]->pushHandler($this->_handlers[$hname]->handler);
+        }
+
+        return $this->_loggers[$name];
     }
 
     /**
      * @param $loggerName
-     * @return \Xcart\App\Logger\Logger|null
+     * @return \Xcart\App\Logger\Logger\null
      */
     protected function getLogger($loggerName)
     {
@@ -119,9 +154,11 @@ class LoggerManager
                 break;
             }
         }
+
         if ($log === null) {
-            $log = $this->getDefaultLogger();
+            $log = $this->getGeneratedLogger($loggerName);
         }
+
         return $log;
     }
 
@@ -131,6 +168,33 @@ class LoggerManager
     protected function getDefaultLogger()
     {
         return $this->_loggers['default'];
+    }
+
+    /**
+     * For fallback to old logging system
+     *
+     * @param $name
+     * @return \Monolog\Logger
+     * @throws Exception
+     */
+    protected function getGeneratedLogger($name)
+    {
+        if ($this->defaultPatch) {
+
+            $config_handler = $this->defaultHandler['default'];
+            $config_handler['alias'] = $this->defaultPatch . '.' . $name;
+
+            $handler = $this->constructHandler('gen' . $name, $config_handler);
+
+            $config_logger = $this->defaultLogger['default'];
+            $config_logger['handlers'] = ['gen' . $name];
+
+            $logger = $this->constructLogger($name, $config_logger);
+
+            return $logger;
+        }
+
+        return $this->getDefaultLogger();
     }
 
     /**

@@ -104,7 +104,7 @@ class AnveoAssignCalls
                         'relevance_order' => $relevance_order
                     ];
 
-                    (new OrdersCallsModel($mass))->save();
+                    OrdersCallsModel::objects()->getOrCreate($mass);
 
                     $log_category = "anveo_calls";
                     $log_text = "{$e164} - Привязан к заказу - {$order_models[$i]->orderid} по второй привязке";
@@ -217,7 +217,11 @@ class AnveoAssignCalls
                 /** @var OrdersCallsModel $order_calls_model */
                 /** @var PbxAnveoCallModel $anveo_call_model */
                 $anveo_call_model = $order_calls_model->call;
-                $user = $anveo_call_model->options->user->firstname;
+
+                $user = '';
+                if ($anveo_call_model->anveo_account) {
+                    $user = $anveo_call_model->options->user->firstname;
+                }
 
                 $mass = [
                    'account' =>  $user,

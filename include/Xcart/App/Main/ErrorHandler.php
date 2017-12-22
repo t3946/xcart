@@ -31,8 +31,10 @@ class ErrorHandler
     public $errorTemplate = 'error.tpl';
     public $exceptionTemplate = 'exception.tpl';
 
+    public $errBitMask;
     public $debug = false;
     public $errHandler = true;
+    public $errShutdownHandler = true;
     public $excHandler = true;
     public $ignoreDeprecated = false;
     public $ignoringTypes = [];
@@ -85,15 +87,34 @@ class ErrorHandler
             $this->ignoringTypes[] = E_USER_DEPRECATED;
             $this->ignoringTypes[] = E_DEPRECATED;
         }
+
+        if (is_null($this->errBitMask)) {
+            $this->errBitMask = E_STRICT | E_ALL;
+        }
+
+        $errBitMask = $this->errBitMask;
+
+        foreach ($this->ignoringTypes as $type) {
+            $errBitMask = $errBitMask & ~$type;
+        }
+
+        $this->errBitMask = $errBitMask;
     }
 
     public function setHandlers()
     {
-//        ini_set('display_errors', false);
+        ini_set('display_errors', true);
+        ini_set('display_startup_errors', true);
+        error_reporting($this->errBitMask);
 
         if ($this->errHandler) {
             set_error_handler([$this, 'handleError']);
         }
+
+        if ($this->errShutdownHandler) {
+            register_shutdown_function([$this, 'shutdownHandler']);
+        }
+
         if ($this->excHandler) {
             set_exception_handler([$this, 'handleException']);
         }
@@ -131,6 +152,13 @@ class ErrorHandler
     public function getException()
     {
         return $this->_exception;
+    }
+
+    public function shutdownHandler()
+    {
+        if ($lasterror = error_get_last()) {
+            $this->handleError($lasterror['type'], $lasterror['message'], $lasterror['file'], $lasterror['line']);
+        }
     }
 
     /**
@@ -179,22 +207,18 @@ class ErrorHandler
                 'message' => $exception->getMessage(),
                 'file' => $fileName,
                 'line' => $errorLine,
-                'trace' => $exception->getTraceAsString(),
-                'traces' => $trace,
+                'trace' => "\n" .$exception->getTraceAsString(),
             ];
 
-
-            $err = $this->_error;
-            unset($err['trace']);
-
-            $app->logger->critical($exception->getMessage(), $err, 'error');
+            $app->logger->critical($exception->getMessage(), $this->_error, 'error');
 
             if (!headers_sent()) {
                 header("HTTP/1.0 {$code} " . $this->getHttpHeader($code, get_class($exception)));
             }
 
             $this->renderException();
-        } else {
+        }
+        else {
             $this->displayException($exception);
         }
     }
@@ -225,6 +249,7 @@ class ErrorHandler
             // skip the first 3 stacks as they do not tell the error position
             if (count($trace) > 3)
                 $trace = array_slice($trace, 3);
+
             foreach ($trace as $i => $t) {
                 if (!isset($t['file']))
                     $t['file'] = 'unknown';
@@ -260,11 +285,16 @@ class ErrorHandler
      */
     public function displayException($exception)
     {
+        if (http_response_code() == 200) {
+            http_response_code(500);
+        }
+
         if ($this->shortOutput) {
             echo get_class($exception) . PHP_EOL;
             echo $exception->getMessage() . ' (' . $exception->getFile() . ':' . $exception->getLine() . ')' . PHP_EOL;
             echo $exception->getTraceAsString() . PHP_EOL;
-        } else if (Cli::isCli()) {
+        }
+        else if (Cli::isCli()) {
             if (defined('APP_DEBUG') && APP_DEBUG) {
                 echo Console::color(get_class($exception), Console::FOREGROUND_RED) . PHP_EOL;
                 echo $exception->getMessage() . ' (' . $exception->getFile() . ':' . $exception->getLine() . ')' . PHP_EOL;
@@ -273,14 +303,23 @@ class ErrorHandler
                 echo Console::color(get_class($exception), Console::FOREGROUND_RED) . PHP_EOL;
                 echo $exception->getMessage() . PHP_EOL;
             }
-        } else {
+        }
+        else {
             if (defined('APP_DEBUG') && APP_DEBUG) {
                 echo '<h1>' . get_class($exception) . "</h1>\n";
                 echo '<p>' . $exception->getMessage() . ' (' . $exception->getFile() . ':' . $exception->getLine() . ')</p>';
                 echo '<pre>' . $exception->getTraceAsString() . '</pre>';
-            } else {
+            }
+            else {
                 echo '<h1>' . get_class($exception) . "</h1>\n";
-                echo '<p>' . $exception->getMessage() . '</p>';
+
+                if ($this->debug) {
+                    $file = $exception->getFile();
+                    $file = explode(DIRECTORY_SEPARATOR, $file);
+                    $file = end($file);
+
+                    echo '<p>' . $exception->getMessage() . ' (' . $file . ':' . $exception->getLine() .  ')</p>';
+                }
             }
         }
     }
@@ -290,68 +329,50 @@ class ErrorHandler
      */
     public function handleError($code, $message, $file, $line, array $errcontext = [])
     {
+        if (in_array($code, $this->ignoringTypes)) {
+            return true;
+        }
+
+        d(func_get_args());
         $app = Xcart::app();
         if (defined('APP_DEBUG') && APP_DEBUG) {
-            if (in_array($code, $this->ignoringTypes)) {
-                return true;
-            }
 
-            // Tryhard
+            $app->logger->critical($message, ['code' => $code, 'file' => $file, 'line' => $line], 'error');
+
             switch ($code) {
                 case E_ERROR:
-                    $app->logger->critical($message, ['code' => $code, 'file' => $file, 'line' => $line], 'error');
                     throw new ErrorException($message, 0, $code, $file, $line);
                 case E_WARNING:
-                    $app->logger->critical($message, ['code' => $code, 'file' => $file, 'line' => $line], 'error');
                     throw new WarningException($message, 0, $code, $file, $line);
                 case E_PARSE:
-                    $app->logger->critical($message, ['code' => $code, 'file' => $file, 'line' => $line], 'error');
                     throw new ParseException($message, 0, $code, $file, $line);
                 case E_NOTICE:
-                    $app->logger->critical($message, ['code' => $code, 'file' => $file, 'line' => $line], 'error');
                     throw new NoticeException($message, 0, $code, $file, $line);
                 case E_CORE_ERROR:
-                    $app->logger->critical($message, ['code' => $code, 'file' => $file, 'line' => $line], 'error');
                     throw new CoreErrorException($message, 0, $code, $file, $line);
                 case E_CORE_WARNING:
-                    $app->logger->critical($message, ['code' => $code, 'file' => $file, 'line' => $line], 'error');
                     throw new CoreWarningException($message, 0, $code, $file, $line);
                 case E_COMPILE_ERROR:
-                    $app->logger->critical($message, ['code' => $code, 'file' => $file, 'line' => $line], 'error');
                     throw new CompileErrorException($message, 0, $code, $file, $line);
                 case E_COMPILE_WARNING:
-                    $app->logger->critical($message, ['code' => $code, 'file' => $file, 'line' => $line], 'error');
                     throw new CoreWarningException($message, 0, $code, $file, $line);
                 case E_USER_ERROR:
-                    $app->logger->critical($message, ['code' => $code, 'file' => $file, 'line' => $line], 'error');
                     throw new UserErrorException($message, 0, $code, $file, $line);
                 case E_USER_WARNING:
-                    $app->logger->critical($message, ['code' => $code, 'file' => $file, 'line' => $line], 'error');
                     throw new UserWarningException($message, 0, $code, $file, $line);
                 case E_USER_NOTICE:
-                    $app->logger->critical($message, ['code' => $code, 'file' => $file, 'line' => $line], 'error');
                     throw new UserNoticeException($message, 0, $code, $file, $line);
                 case E_STRICT:
-                    $app->logger->critical($message, ['code' => $code, 'file' => $file, 'line' => $line], 'error');
                     throw new StrictException($message, 0, $code, $file, $line);
                 case E_RECOVERABLE_ERROR:
-                    $app->logger->critical($message, ['code' => $code, 'file' => $file, 'line' => $line], 'error');
                     throw new RecoverableErrorException($message, 0, $code, $file, $line);
                 case E_DEPRECATED:
-                    $app->logger->critical($message, ['code' => $code, 'file' => $file, 'line' => $line], 'error');
                     throw new DeprecatedException($message, 0, $code, $file, $line);
-                    break;
                 case E_USER_DEPRECATED:
-                    $app->logger->critical($message, ['code' => $code, 'file' => $file, 'line' => $line], 'error');
                     throw new UserDeprecatedException($message, 0, $code, $file, $line);
-                    break;
             }
         }
         else {
-            if (in_array($code, $this->ignoringTypes)) {
-                return true;
-            }
-
             $msg = "Error: {$message}\nFile: {$file}\nLine: {$line}";
 
             $trace = debug_backtrace();
@@ -384,9 +405,6 @@ class ErrorHandler
 
             $app = Xcart::app();
             if ($app instanceof Application && Console::isCli() === false) {
-                if (in_array($code, $this->ignoringTypes)) {
-                    return true;
-                }
 
                 switch ($code) {
                     case E_WARNING:
@@ -418,11 +436,9 @@ class ErrorHandler
                     'file' => $file,
                     'line' => $line,
                     'trace' => $traceString,
-                    'traces' => $trace,
                 ];
 
                 $err = $this->_error;
-                unset($err['trace']);
 
                 $app->logger->error($type, $err, 'error');
 
@@ -430,7 +446,8 @@ class ErrorHandler
                     header("HTTP/1.0 500 Internal Server Error");
                 }
                 $this->renderError();
-            } else {
+            }
+            else {
                 $this->displayError($code, $message, $file, $line);
             }
         }

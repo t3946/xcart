@@ -5,8 +5,6 @@ $trusted_post_variables = array('subject', 'body');
 require "./auth.php";
 require $xcart_dir."/include/security.php";
 
-x_load('mail','order','crypt');
-
 $department_arr = array(
                         "customer" => "Customer",
                         "distributor" => "Distributor",
@@ -16,10 +14,10 @@ $department_arr = array(
 $department_arr_keys = array_keys($department_arr);
 
 if (
-	!is_numeric($orderid) || 
-	!in_array($department, $department_arr_keys) || 
-	(empty($template_id) && ($department == "customer" || $department == "our_customer_service" || $department == "third_party")) || 
-	(empty($mid_templateid) && $department == "distributor") 
+	!is_numeric($orderid) ||
+	!in_array($department, $department_arr_keys) ||
+	(empty($template_id) && ($department == "customer" || $department == "our_customer_service" || $department == "third_party")) ||
+	(empty($mid_templateid) && $department == "distributor")
 ){
 	func_header_location("error_message.php?access_denied&id=8");
 }
@@ -146,7 +144,7 @@ if (!empty($department_info) && is_array($department_info) && !empty($mnfs) && i
 				$all__shipto_full_table__arr[$mid] = $v["__shipto_full_table__"];
 			}
 		}
-	
+
 		if (is_array($all__items_table__arr) && !empty($all__items_table__arr)){
 			$all__items_table__ = implode("<br />", $all__items_table__arr);
 		}
@@ -233,7 +231,7 @@ if (!empty($department_info) && is_array($department_info) && !empty($mnfs) && i
 	$cidev_instock_items_table = $instock_and_outofstock_items_table["instock"];
 	$cidev_outofstock_items_table = $instock_and_outofstock_items_table["outofstock"];
 	$cidev_outofstock_items_eta_table = $instock_and_outofstock_items_table["outofstock_eta"];
-	
+
         $body = str_replace("{{instock}}", $cidev_instock_items_table, $body);
         $body = str_replace("{{outofstock}}", $cidev_outofstock_items_table, $body);
         $body = str_replace("{{outofstock_eta}}", $cidev_outofstock_items_eta_table, $body);
@@ -380,7 +378,7 @@ $body = str_replace("{{shipping_difference}}", $shipping_difference, $body);
 
 
 if ($debug == "Y"){
-func_print_r($body);
+print_r($body);
 }
 
 

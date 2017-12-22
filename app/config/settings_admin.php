@@ -8,6 +8,7 @@ $config = array_replace_recursive([
     'exit_on_end' => true,
     'components' => [
       'errorHandler' => [
+          'debug' => true,
       ],
       'router' => [
 //          'pathRoutes' => 'base.config.routes_admin',

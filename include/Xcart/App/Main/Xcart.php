@@ -21,7 +21,12 @@ class Xcart
 
     public static function init($configuration, $application = 'Xcart\App\Application\Application')
     {
-        static::$_app = Creator::create($application, $configuration);
+        static::$_app = new $application;
+        static::$_app = Creator::configure(static::$_app, $configuration);
+
+        if (method_exists(static::$_app, 'init')) {
+            static::$_app->init();
+        }
     }
 
     /**

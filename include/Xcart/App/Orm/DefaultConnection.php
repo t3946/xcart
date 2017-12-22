@@ -192,8 +192,8 @@ class DefaultConnection extends DBALConnection
         $oMail->template(
             'team@s3stores.com',
             'S3 Stores, Inc.: SQL error notification',
-            'mail/sql_exception.tpl',
-            [ 'msg' => $msg, ]
+            'mail/log_template.tpl',
+            [ 'message' => $msg, ]
         );
 
         if (function_exists('x_log_add')) {

@@ -1,8 +1,8 @@
 <?php
 define("CIDEV_CRON_START", "CRON");
 
-require "../top.inc.php";
-require "../init.php";
+require __DIR__ . DIRECTORY_SEPARATOR ."../top.inc.php";
+require __DIR__ . DIRECTORY_SEPARATOR ."../init.php";
 
 ini_set('memory_limit', '512M');
 set_time_limit(0);

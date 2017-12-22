@@ -994,38 +994,35 @@ $( document ).ready(function() {
 
 
  {if $show_request_availability eq "Y"}
-  <a name="request_availability_{$mnf_id}"></a>
-  <form action="order.php" method="post" name="mnf_notifyform_{$mnf_id}">
-  <input type="hidden" name="orderid" value="{$order.orderid}" />
-  <input type="hidden" name="mnf_id" value="{$mnf_id}" />
-  <input type="hidden" name="mode" value="mnf_notify" />
-  <input type="hidden" name="set_status_K" value="Y" />
-  <div class="ProductTitle" align="center">{$v.manufacturer}: Request availability</div>
-  <B>{$lng.lbl_from}:</B><br />
-  <input type="text" name="mnf_from" value="{$config.Company.orders_department}" readonly="readonly" style="width: 80%;" /><br /><br />
-  <B>{$lng.lbl_to}:</B><br />
-  <input type="text" name="mnf_to" value="{$v.d_send_to_email_14}" style="width: 80%;" /><br /><br />
-  <B>Subject line:</B><br />
-  <input type="text" name="d_email_subject_14" value="{$v.d_email_subject_14}" style="width: 80%;" /><br /><br />
-  <B>{$lng.lbl_message_body}:</B><br />
-{*  <textarea rows="20" cols="60" name="mnf_body" style="width: 80%;">{$v.d_message_body_14}</textarea> *}
-{*  <input type="submit" value="Send (Request availability)" {if $v.good_time_to_send_email_to_distributor ne "Y"}disabled="disabled"{/if} /><br /><br /> *}
+     <a name="request_availability_{$mnf_id}"></a>
+     <form action="order.php" method="post" name="mnf_notifyform_{$mnf_id}">
+         <input type="hidden" name="orderid" value="{$order.orderid}"/>
+         <input type="hidden" name="mnf_id" value="{$mnf_id}"/>
+         <input type="hidden" name="mode" value="mnf_notify"/>
+         <input type="hidden" name="set_status_K" value="Y"/>
+         <div class="ProductTitle" align="center">{$v.manufacturer}: Request availability</div>
+         <B>{$lng.lbl_from}:</B><br/>
+         <input type="text" name="mnf_from" value="{$config.Company.orders_department}" readonly="readonly"
+                style="width: 80%;"/><br/><br/>
+         <B>{$lng.lbl_to}:</B><br/>
+         <input type="text" name="mnf_to" value="{$v.d_send_to_email_14}" style="width: 80%;"/><br/><br/>
+         <B>Subject line:</B><br/>
+         <input type="text" name="d_email_subject_14" value="{$v.d_email_subject_14}" style="width: 80%;"/><br/><br/>
+         <B>{$lng.lbl_message_body}:</B><br/>
 
-  {* --- *}
-{*
-  {include file="main/textarea_def.tpl" name="request_availability_mnf_body_`$mnf_id`" cols="60" rows="30" class="InputWidth" data=$v.d_message_body_14|replace:"\n":"<br />" width="99%" btn_rows="30"}
-*}
-
-<textarea rows="30" cols="60" name="request_availability_mnf_body_{$mnf_id}" style="width: 80%;" class="new_editor">{$v.d_message_body_14|replace:"\n":"<br />"}</textarea>
+         <textarea rows="30" cols="60" name="request_availability_mnf_body_{$mnf_id}" style="width: 80%;"
+                   class="new_editor">{$v.d_message_body_14|replace:"\n":"<br />"}</textarea>
 
 
-  <input type="hidden" name="mnf_body" value="" />
-  <br /><br />
-  <input name="send_email_button" type="button" value="Send (Request availability)" onclick="javascript: tinyMCE.triggerSave(); func_set_value_to_field(document.mnf_notifyform_{$mnf_id}, 'request_availability_', 'mnf_body', {$mnf_id});" {if $v.good_time_to_send_email_to_distributor ne "Y" && $v.d_availability_must_be_checked eq "Y"}disabled="disabled"{/if} /><br /><br />
-  {* --- *}
+         <input type="hidden" name="mnf_body" value=""/>
+         <br/><br/>
+         <input name="send_email_button" type="button" value="Send (Request availability)"
+                onclick="javascript: tinyMCE.triggerSave(); func_set_value_to_field(document.mnf_notifyform_{$mnf_id}, 'request_availability_', 'mnf_body', {$mnf_id});"
+                {if $v.good_time_to_send_email_to_distributor ne "Y" && $v.d_availability_must_be_checked eq "Y"}disabled="disabled"{/if} /><br/><br/>
 
-  <hr /><br />
-  </form>
+         <hr/>
+         <br/>
+     </form>
  {/if}
 
 
