@@ -49,12 +49,14 @@
                                     {if $v === 0}{set $v = "0"}{/if}
                                     {if $v === true}{set $v = "true"}{/if}
                                     {if $v === false}{set $v = "false"}{/if}
+                                    {if is_null($v)}{set $v = "null"}{/if}
                                     <p>{$k} => {$v}</p>
                                 {/foreach}
                             {else}
                                 {if $value === 0}{set $value = "0"}{/if}
                                 {if $value === true}{set $value = "true"}{/if}
                                 {if $value === false}{set $value = "false"}{/if}
+                                {if is_null($value)}{set $value = "null"}{/if}
                             <p>{$key} => {$value}</p>
                             {/if}
                     {/foreach}
@@ -62,6 +64,7 @@
                         {if $mass === 0}{set $mass = "0"}{/if}
                         {if $mass === true}{set $mass = "true"}{/if}
                         {if $mass === false}{set $mass = "false"}{/if}
+                        {if is_null($mass)}{set $mass = "null"}{/if}
                     <p>{$name} => {$mass}</p>
                     {/if}
                 </div>
