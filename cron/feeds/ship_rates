@@ -1,0 +1,6 @@
+#!/bin/bash
+echo "Start processing" >> /home/feeds/ship_rates_progress.txt
+cd /var/www/stores/cron
+php ./cron_new_approximation_shipping_rates.php >> /home/feeds/ship_rates_progress.txt
+rm /home/feeds/ship_rates_progress.txt
+echo " " >> /home/feeds/ship_rates_progress.txt

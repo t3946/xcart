@@ -11,25 +11,24 @@ package-lock.json
 composer.lock
 ###################################
 ## scripts to exclude
-/config.local.php
 /app/config/*_local.php
 /robots.txt
 /modules/XPDF/dompdf/lib/fonts/log.htm
 ######################
 ## folders to exclude
-/images/
-/media/
-/m1/
-/files/
-/product_files/
+/www/images/
+/www/media/
+/www/m1/
+/www/files/
+/www/product_files/
 /.idea/
-/verificator/cookies
-/var/
-/include/system/
+/www/verificator/cookies
+/www/var/
+/www/include/system/
 node_modules
 bower_components
-/static/**/temp/
-/skin1_kolin/pages/
+/www/static/**/temp/
+/www/skin1_kolin/pages/
 /app/runtime/
 
 !.gitkeep

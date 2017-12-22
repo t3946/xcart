@@ -1,0 +1,6 @@
+#!/bin/bash
+echo "Start processing" >> /home/feeds/ck_progress.txt
+cd /var/www/stores/
+php5 ./cron_cleaner_script_es.php >> /home/feeds/ck_progress.txt
+rm /home/feeds/ck_progress.txt
+echo " " >> /home/feeds/ck_progress.txt

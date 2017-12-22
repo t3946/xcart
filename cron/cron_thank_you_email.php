@@ -8,8 +8,8 @@ use Modules\Sites\Models\SiteModel;
 define("CIDEV_CRON_START", "CRON");
 global $config, $mail_smarty;
 
-require "../top.inc.php";
-require "../init.php";
+require __DIR__ . DIRECTORY_SEPARATOR . "../www/top.inc.php";
+require __DIR__ . DIRECTORY_SEPARATOR . "../www/init.php";
 
 $log_category = 'cron_thank_you_email';
 $start_time = new DateTime('now');

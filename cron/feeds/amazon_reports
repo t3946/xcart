@@ -1,0 +1,19 @@
+#!/bin/bash
+flag="/home/feeds/amazon_reports.flg"
+if [ -e /home/feeds/amazon_reports.flg ]
+then
+    echo "Already running..."
+    
+else
+    echo " " >> /home/feeds/amazon_reports.flg
+    rm /home/feeds/amazon_reports_progress.txt
+    echo " " >> /home/feeds/amazon_reports_progress.txt
+    echo "Start processing" >> /home/feeds/amazon_reports_progress.txt
+    cd /var/www/stores/cron
+    php5 ./cron_amazon_settlement_report.php >> /home/feeds/amazon_reports_progress.txt
+
+    echo " " >> /home/feeds/amazon_reports_progress.txt
+    echo "Finish processing" >> /home/feeds/amazon_reports_progress.txt
+    rm /home/feeds/amazon_reports.flg
+fi
+

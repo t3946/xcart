@@ -1,0 +1,19 @@
+#!/bin/bash
+flag="/home/feeds/thankyou_feeds.flg"
+if [ -e /home/feeds/thankyou_feeds.flg ]
+then
+    echo "Already running..."
+    
+else
+    echo " " >> /home/feeds/thankyou_feeds.flg
+    rm /home/feeds/thankyou_progress.txt
+    echo " " >> /home/feeds/thankyou_progress.txt
+    echo "Start processing" >> /home/feeds/thankyou_progress.txt
+    cd /var/www/stores/cron
+    php5 ./cron_thank_you_email.php >> /home/feeds/thankyou_progress.txt
+
+    echo " " >> /home/feeds/thankyou_progress.txt
+    echo "Finish processing" >> /home/feeds/thankyou_progress.txt
+    rm /home/feeds/thankyou_feeds.flg
+fi
+

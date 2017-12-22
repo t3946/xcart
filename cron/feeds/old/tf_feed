@@ -1,0 +1,6 @@
+#!/bin/bash
+echo "Start processing " >> /home/feeds/thefind_progress.txt
+cd /var/www/stores/
+php5 ./cidev_thefind_generate_new.php >> /home/feeds/thefind_progress.txt
+rm /home/feeds/thefind_progress.txt
+echo " " >> /home/feeds/thefind_progress.txt

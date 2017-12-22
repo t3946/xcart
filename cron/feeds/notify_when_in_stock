@@ -1,0 +1,19 @@
+#!/bin/bash
+flag="/home/feeds/notify_when_in_stock.flg"
+if [ -e /home/feeds/notify_when_in_stock.flg ]
+then
+    echo "Already running..."
+    
+else
+    echo " " >> /home/feeds/notify_when_in_stock.flg
+    rm /home/feeds/notify_when_in_stock_progress.txt
+    echo " " >> /home/feeds/notify_when_in_stock_progress.txt
+    echo "Start processing" >> /home/feeds/notify_when_in_stock_progress.txt
+    cd /var/www/stores/cron
+    php5 ./cron_notify_when_in_stock.php >> /home/feeds/notify_when_in_stock_progress.txt
+
+    echo " " >> /home/feeds/notify_when_in_stock_progress.txt
+    echo "Finish processing" >> /home/feeds/notify_when_in_stock_progress.txt
+    rm /home/feeds/notify_when_in_stock.flg
+fi
+

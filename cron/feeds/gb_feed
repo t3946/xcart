@@ -1,0 +1,6 @@
+#!/bin/bash
+echo "Start processing" >> /home/feeds/google_progress.txt
+cd /var/www/stores/
+php5 ./cidev_googlebase_generate_new.php daily >> /home/feeds/google_progress.txt
+rm /home/feeds/google_progress.txt
+echo " " >> /home/feeds/google_progress.txt

@@ -13,8 +13,8 @@ use Modules\Goods\Stores\SupplierFeedStore;
 define("CIDEV_CRON_START", "CRON");
 session_start();
 
-require "../top.inc.php";
-require "../init.php";
+require __DIR__ . DIRECTORY_SEPARATOR . "../www/top.inc.php";
+require __DIR__ . DIRECTORY_SEPARATOR . "../www/init.php";
 
 global $config, $xcart_dir;
 

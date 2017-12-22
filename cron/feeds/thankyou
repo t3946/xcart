@@ -1,0 +1,6 @@
+#!/bin/bash
+echo "Start processing" >> /home/feeds/ty_progress.txt
+cd /var/www/stores/
+php5 ./trackingnumber_and_email.php >> /home/feeds/ty_progress.txt
+rm /home/feeds/ty_progress.txt
+echo " " >> /home/feeds/ty_progress.txt

@@ -1,0 +1,19 @@
+#!/bin/bash
+flag="/home/feeds/feat_feeds.flg"
+if [ -e /home/feeds/feat_feeds.flg ]
+then
+    echo "Already running..."
+    
+else
+    echo " " >> /home/feeds/feat_feeds.flg
+    rm /home/feeds/feat_feeds_progress.txt
+    echo " " >> /home/feeds/feat_feeds_progress.txt
+    echo "Start processing" >> /home/feeds/feat_feeds_progress.txt
+    cd /var/www/stores/cron/
+    php5 ./cidev_featured_fba_gen.php >> /home/feeds/feat_feeds_progress.txt
+
+    echo " " >> /home/feeds/feat_feeds_progress.txt
+    echo "Finish processing" >> /home/feeds/feat_feeds_progress.txt
+    rm /home/feeds/feat_feeds.flg
+fi
+

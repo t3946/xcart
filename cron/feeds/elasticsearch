@@ -1,0 +1,21 @@
+#!/bin/bash
+process_name="elasticsearch";
+
+flag="/home/feeds/$process_name.flg"
+if [ -e /home/feeds/"$process_name".flg ]
+then
+    echo "Already running..."
+    
+else
+    echo " " >> /home/feeds/"$process_name".flg
+    rm /home/feeds/"$process_name"_progress.txt
+    echo " " >> /home/feeds/"$process_name"_progress.txt
+    echo "Start processing" >> /home/feeds/"$process_name"_progress.txt
+    cd /var/www/stores/cron/
+    php5 ./cron_elasticsearch.php >> /home/feeds/"$process_name"_progress.txt
+
+    echo " " >> /home/feeds/"$process_name"_progress.txt
+    echo "Finish processing" >> /home/feeds/"$process_name"_progress.txt
+    rm /home/feeds/"$process_name".flg
+fi
+

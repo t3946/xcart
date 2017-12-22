@@ -3,8 +3,8 @@ use Modules\Core\Helpers\CoreHelper;
 
 define("CIDEV_CRON_START", "CRON");
 
-require "../top.inc.php";
-require "../init.php";
+require __DIR__ . DIRECTORY_SEPARATOR . "../www/top.inc.php";
+require __DIR__ . DIRECTORY_SEPARATOR . "../www/init.php";
 
 ini_set('memory_limit', '512M');
 set_time_limit(0);

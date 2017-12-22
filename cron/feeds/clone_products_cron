@@ -1,0 +1,19 @@
+#!/bin/bash
+flag="/home/feeds/clone_products_cron.flg"
+if [ -e /home/feeds/clone_products_cron.flg ]
+then
+    echo "Already running..."
+    
+else
+    echo " " >> /home/feeds/clone_products_cron.flg
+    rm /home/feeds/clone_products_cron_progress.txt
+    echo " " >> /home/feeds/clone_products_cron_progress.txt
+    echo "Start processing" >> /home/feeds/clone_products_cron_progress.txt
+    cd /var/www/stores/
+    php5 ./cron_clone_products.php >> /home/feeds/clone_products_cron_progress.txt
+
+    echo " " >> /home/feeds/clone_products_cron_progress.txt
+    echo "Finish processing" >> /home/feeds/clone_products_cron_progress.txt
+    rm /home/feeds/clone_products_cron.flg
+fi
+

@@ -2,8 +2,8 @@
 define("CIDEV_CRON_START", "CRON");
 session_start();
 
-require "../top.inc.php";
-require "../init.php";
+require __DIR__ . DIRECTORY_SEPARATOR . "../www/top.inc.php";
+require __DIR__ . DIRECTORY_SEPARATOR . "../www/init.php";
 
 set_time_limit(0);
 const LOG_CATEGORY = Xcart\AmazonMWS::BACK_PROCESS_LOG_NAME_FBA_INVENTORY;

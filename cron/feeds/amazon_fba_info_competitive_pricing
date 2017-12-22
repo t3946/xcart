@@ -1,0 +1,19 @@
+#!/bin/bash
+flag="/home/feeds/amazon_fba_info_competitive_pricing.flg"
+if [ -e /home/feeds/amazon_fba_info_competitive_pricing.flg ]
+then
+    echo "Already running..."
+    
+else
+    echo " " >> /home/feeds/amazon_fba_info_competitive_pricing.flg
+    rm /home/feeds/amazon_fba_info_competitive_pricing_progress.txt
+    echo " " >> /home/feeds/amazon_fba_info_competitive_pricing_progress.txt
+    echo "Start processing" >> /home/feeds/amazon_fba_info_competitive_pricing_progress.txt
+    cd /var/www/stores/cron
+    php5 ./cron_amazon_info.php competitive_pricing 1>> /home/feeds/amazon_fba_info_competitive_pricing_progress.txt
+
+    echo " " >> /home/feeds/amazon_fba_info_competitive_pricing_progress.txt
+    echo "Finish processing" >> /home/feeds/amazon_fba_info_competitive_pricing_progress.txt
+    rm /home/feeds/amazon_fba_info_competitive_pricing.flg
+fi
+
