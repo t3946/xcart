@@ -333,7 +333,6 @@ class ErrorHandler
             return true;
         }
 
-        d(func_get_args());
         $app = Xcart::app();
         if (defined('APP_DEBUG') && APP_DEBUG) {
 
