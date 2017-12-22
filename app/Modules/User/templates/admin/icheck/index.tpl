@@ -46,13 +46,22 @@
                             {if is_array($value)}
                                 <h5>{$key}</h5>
                                 {foreach $value as $k => $v}
+                                    {if $v === 0}{set $v = "0"}{/if}
+                                    {if $v === true}{set $v = "true"}{/if}
+                                    {if $v === false}{set $v = "false"}{/if}
                                     <p>{$k} => {$v}</p>
                                 {/foreach}
                             {else}
+                                {if $value === 0}{set $value = "0"}{/if}
+                                {if $value === true}{set $value = "true"}{/if}
+                                {if $value === false}{set $value = "false"}{/if}
                             <p>{$key} => {$value}</p>
                             {/if}
                     {/foreach}
                     {else}
+                        {if $mass === 0}{set $mass = "0"}{/if}
+                        {if $mass === true}{set $mass = "true"}{/if}
+                        {if $mass === false}{set $mass = "false"}{/if}
                     <p>{$name} => {$mass}</p>
                     {/if}
                 </div>
