@@ -6,6 +6,8 @@ use Xcart\App\Form\ModelForm;
 
 class CronForm extends ModelForm
 {
+    public $exclude = ['run_start', 'run_end'];
+
     public function getModel()
     {
         return new CronModel();
