@@ -7,8 +7,8 @@ return array_replace_recursive([
    'name' => 'Xcart',
    'exit_on_end' => false,
    'paths' => [
-       'app'    => realpath(implode(DS, [__DIR__, '..'])),
-       'base'   => realpath(implode(DS, [__DIR__, '..', '..'])),
+       'base'   => realpath(implode(DS, [__DIR__, '..'])),
+       'root'   => realpath(implode(DS, [__DIR__, '..', '..'])),
        'www'    => realpath(implode(DS, [__DIR__, '..', '..', 'www'])),
    ],
    'globals' => [

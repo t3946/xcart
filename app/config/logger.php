@@ -1,24 +1,24 @@
 <?php
 return [
     'class' => '\\Xcart\\App\\Logger\\LoggerManager',
-    'defaultPatch' => 'base.log',
+    'defaultPatch' => 'root.log',
     'handlers' => [
         'default' => [
             'class' => '\\Xcart\\App\\Logger\\Handler\\RotatingFileHandler' ,
             'level' => 'DEBUG',
-            'alias' => 'base.log.log',
+            'alias' => 'root.log.log',
             'formatter' => 'log'
         ],
         'error' => [
             'class' => '\\Xcart\\App\\Logger\\Handler\\RotatingFileHandler' ,
             'level' => 'DEBUG',
-            'alias' => 'base.log.error',
+            'alias' => 'root.log.error',
             'formatter' => 'log'
         ],
         'sql' => [
             'class' => '\\Xcart\\App\\Logger\\Handler\\RotatingFileHandler',
             'level' =>  'DEBUG',
-            'alias' => 'base.log.sql'
+            'alias' => 'root.log.sql'
         ],
         'null' => [
             'class' => '\\Xcart\\App\\Logger\\Handler\\NullHandler',
