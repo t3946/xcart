@@ -109,7 +109,6 @@ return array_replace_recursive([
            'drivers' => [
                'default' =>  [
                    'class' => '\\Xcart\\App\\Cache\\Drivers\\File',
-                   'path' => 'app.runtime.cache'
                ],
                'memory' =>  [
                    'class' => '\\Xcart\\App\\Cache\\Drivers\\Memory',
