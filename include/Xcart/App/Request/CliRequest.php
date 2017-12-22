@@ -78,4 +78,13 @@ class CliRequest extends Request
         }
         return $data;
     }
+
+    /**
+     * For stupid code
+     * @return null
+     */
+    public function getSession()
+    {
+        return null;
+    }
 }

@@ -1272,8 +1272,10 @@ if ($mode == "search") {
         $related_ids = [];
         $related_like_text = null;
 
-        $related_products = new Xcart\Helpers\ViewedRelatedProducts();
-        $search_related_products_ids = $related_products->getRelated();
+        if (!Xcart\App\Cli\Cli::isCli()) {
+            $related_products = new Xcart\Helpers\ViewedRelatedProducts();
+            $search_related_products_ids = $related_products->getRelated();
+        }
 
         if (!empty($search_related_products_ids))
         {
