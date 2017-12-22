@@ -11,19 +11,19 @@ class IdentityCheckController extends BackendController
 {
     public function actionCallback()
     {
-        if (!empty($_GET)){
+        if (!empty($_GET)) {
             $order_id = $_GET['order_id'];
 
             /** @var OrderModel $order_model */
-            if ($order_model = OrderModel::objects()->get(['orderid' => $order_id])){
+            if ($order_model = OrderModel::objects()->get(['orderid' => $order_id])) {
 
                 $pageTitle = "Identity Checker";
                 $phone = $ip_info = '';
 
-                if ($phone = $order_model->phone){
+                if ($phone = $order_model->phone) {
                     $phone = trim($phone);
-                    if (strpos($phone, '+') !== 0){
-                        if (strlen($phone) > 10){
+                    if (strpos($phone, '+') !== 0) {
+                        if (strlen($phone) > 10) {
                             $phone = '+' . $phone;
                         }
                         else {
@@ -32,10 +32,14 @@ class IdentityCheckController extends BackendController
                     }
                 }
 
-                if (!empty($order_model->extra['ip_info'])){
+                if ($order_extras = $order_model->extra_info->filter(['khash' => 'ip'])->get()) {
+                    $ip_info = !empty($order_extras->value) ? $order_extras->value : '';
+                }
+                
+                if ((empty($ip_info)) && !empty($order_model->extra['ip_info'])) {
                     $ip_info = $order_model->extra['ip_info'];
                     $regexp = '/.*?(\d+\.\d+\.\d+\.\d+).*/';
-                    if (preg_match($regexp, $ip_info, $matches)){
+                    if (preg_match($regexp, $ip_info, $matches)) {
                         $ip_info = $matches[1];
                     }
                 }
