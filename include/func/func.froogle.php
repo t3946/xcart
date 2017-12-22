@@ -1136,7 +1136,7 @@ if ($debug_mode != 'Y') {
 		$json = json_encode($postBody);
 
 		if ($json == "null") {
-			func_print_r("json = json_encode(postBody); print_r(postBody):", $postBody);
+			print_r("json = json_encode(postBody); print_r(postBody):", $postBody);
 		}
 
 		$baseuri = $sEndpoint;//"https://content.api.bingads.microsoft.com/shopping/v9.1";
@@ -1380,7 +1380,7 @@ if ($debug_mode != 'Y') {
 		print("GB: call custombatch end");
 
 		if ($debug_requests == "Y") {
-			func_print_r($results);
+			print_r($results);
 		}
 
 

@@ -75,7 +75,7 @@ if (!empty($manufacturers) && is_array($manufacturers) && !empty($states)) {
 
 
         if ($show_shippings == "Y") {
-            func_print_r($manufacturer_info);
+            print_r($manufacturer_info);
         }
 
         foreach ($states as $state_info) {
@@ -100,7 +100,7 @@ if (!empty($manufacturers) && is_array($manufacturers) && !empty($states)) {
                 $intershipper_rates = func_shipper($weight, $userinfo);
 
                 if ($show_shippings == "Y") {
-                    func_print_r($intershipper_rates);
+                    print_r($intershipper_rates);
                 }
 
                 if (!empty($intershipper_rates) && is_array($intershipper_rates)) {

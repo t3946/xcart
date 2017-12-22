@@ -5,7 +5,9 @@ use Modules\Brand\Models\BrandModel;
 use Modules\Dashboard\Sqls\SearchSql;
 use Modules\Dashboard\Stores\OrderSearchStore;
 use Modules\Order\Models\OrderTransactionModel;
+use Modules\Sites\Models\SiteModel;
 use Xcart\App\Main\Xcart;
+use Xcart\App\Orm\DefaultConnection;
 use Xcart\Connection;
 use Xcart\POPipeline;
 
@@ -25,8 +27,8 @@ class SearchHelper
             $raw_statuses     = Connection::getInstance()->fetchAll("SELECT * FROM xcart_order_statuses ORDER BY type ASC, orderby ASC");
             $shipping_methods = Connection::getInstance()->fetchAll("SELECT * FROM xcart_shipping");
             $payment_methods  = Connection::getInstance()->fetchAll("SELECT * FROM xcart_payment_methods");
-            $domains          = Connection::getInstance()->fetchAll("SELECT * FROM xcart_storefronts WHERE status = 'Y' ORDER BY orderby ASC");
             $countries        = Connection::getInstance()->fetchAll(SearchSql::getAllCountryOrderSql());
+            $domains          = SiteModel::objects()->all();
 
             $order_statuses = [];
             foreach ($raw_statuses as $status) {
@@ -37,9 +39,9 @@ class SearchHelper
                 $order_statuses[$status['type']][] = $status;
             }
 
-            $storefronts = [0 => 'www.artistsupplysource.com'];
+            /** @var SiteModel $domain */
             foreach ($domains as $domain) {
-                $storefronts[$domain['storefrontid']] = $domain['domain'];
+                $storefronts[$domain->storefrontid] = $domain->__toString();
             }
 
             $properties = [
@@ -209,8 +211,11 @@ class SearchHelper
         $stmt = null;
         $data = [];
         $like = "%{$query}%";
+        $connection = Connection::getInstance();
 
-        $connection = Connection::getInstance()->setIgnoreErrors(true);
+        if ($connection instanceof DefaultConnection) {
+            $connection = $connection->setIgnoreErrors(true);
+        }
 
         switch ($from) {
             case 'distributor' :
@@ -261,7 +266,9 @@ class SearchHelper
             $data = $stmt->fetchAll();
         }
 
-        $connection->setIgnoreErrors(false);
+        if ($connection instanceof DefaultConnection) {
+            $connection->setIgnoreErrors(false);
+        }
 
         return $data;
     }
