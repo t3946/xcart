@@ -1,0 +1,6 @@
+#!/bin/bash
+cd /var/www/stores/var/log/
+find . -name "*.php" -mtime +5 | xargs rm -Rf >> /home/feeds/cleanup_var_logs.log
+
+
+

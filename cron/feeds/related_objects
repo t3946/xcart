@@ -1,0 +1,19 @@
+#!/bin/bash
+flag="/home/feeds/related_objects.flg"
+if [ -e /home/feeds/related_objects.flg ]
+then
+    echo "Already running..."
+    
+else
+    echo " " >> /home/feeds/related_objects.flg
+    rm /home/feeds/related_objects_progress.txt
+    echo " " >> /home/feeds/related_objects_progress.txt
+    echo "Start processing" >> /home/feeds/related_objects_progress.txt
+    cd /var/www/stores/
+    php5 ./cron_related_objects.php >> /home/feeds/related_objects_progress.txt
+
+    echo " " >> /home/feeds/related_objects_progress.txt
+    echo "Finish processing" >> /home/feeds/related_objects_progress.txt
+    rm /home/feeds/related_objects.flg
+fi
+

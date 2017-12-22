@@ -1,0 +1,19 @@
+#!/bin/bash
+flag="/home/feeds/req_avail.flg"
+if [ -e /home/feeds/req_avail.flg ]
+then
+    echo "Already running..."
+    
+else
+    echo " " >> /home/feeds/req_avail.flg
+    rm /home/feeds/req_avail_progress.txt
+    echo " " >> /home/feeds/req_avail_progress.txt
+    echo "Start processing" >> /home/feeds/req_avail_progress.txt
+    cd /var/www/stores/cron
+    php5 ./cron_request_availability.php >> /home/feeds/req_avail_progress.txt
+
+    echo " " >> /home/feeds/req_avail_progress.txt
+    echo "Finish processing" >> /home/feeds/req_avail_progress.txt
+    rm /home/feeds/req_avail.flg
+fi
+

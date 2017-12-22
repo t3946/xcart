@@ -1,0 +1,16 @@
+#!/bin/bash
+flag="/home/feeds/cleanup_images.flg"
+if [ -e /home/feeds/cleanup_images.flg ]
+then
+    echo "Already running..."
+else
+    echo " " >> /home/feeds/cleanup_images.flg
+    rm /home/feeds/cleanup_images_progress.txt
+    echo " " >> /home/feeds/cleanup_images_progress.txt
+    echo "Start processing" >> /home/feeds/cleanup_images_progress.txt
+    cd /var/www/stores/
+    php5 ./del_imgs_from_folder_and_db.php >> /home/feeds/cleanup_images_progress.txt
+    echo " " >> /home/feeds/cleanup_images_progress.txt
+    echo "Finish processing" >> /home/feeds/cleanup_images_progress.txt
+    rm /home/feeds/cleanup_images.flg
+fi

@@ -1,0 +1,16 @@
+#!/bin/bash
+flag="/home/feeds/sfeed_feedsi.flg"
+if [ -e /home/feeds/sfeed_feedsi.flg ]
+then
+    echo "Already running..."
+else
+    echo " " >> /home/feeds/sfeed_feedsi.flg
+    rm /home/feeds/sfeed_feedsi_progress.txt
+    echo " " >> /home/feeds/sfeed_feedsi_progress.txt
+    echo "Start processing" >> /home/feeds/sfeed_feedsi_progress.txt
+    cd /var/www/stores/cron
+    php ./cron_supplier_feeds.php I 1>> /home/feeds/sfeed_feedsi_progress.txt
+    echo " " >> /home/feeds/sfeed_feedsi_progress.txt
+    echo "Finish processing" >> /home/feeds/sfeed_feedsi_progress.txt
+    rm /home/feeds/sfeed_feedsi.flg
+fi

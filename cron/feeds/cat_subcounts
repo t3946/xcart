@@ -1,0 +1,19 @@
+#!/bin/bash
+flag="/home/feeds/cat_subcounts.flg"
+if [ -e /home/feeds/cat_subcounts.flg ]
+then
+    echo "Already running..."
+    
+else
+    echo " " >> /home/feeds/cat_subcounts.flg
+    rm /home/feeds/cat_subcounts_progress.txt
+    echo " " >> /home/feeds/cat_subcounts_progress.txt
+    echo "Start processing" >> /home/feeds/cat_subcounts_progress.txt
+    cd /var/www/stores/
+    php5 ./cron_products_subcategories_count.php >> /home/feeds/cat_subcounts_progress.txt
+
+    echo " " >> /home/feeds/cat_subcounts_progress.txt
+    echo "Finish processing" >> /home/feeds/cat_subcounts_progress.txt
+    rm /home/feeds/cat_subcounts.flg
+fi
+
