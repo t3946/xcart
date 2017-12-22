@@ -7,8 +7,9 @@ return array_replace_recursive([
    'name' => 'Xcart',
    'exit_on_end' => false,
    'paths' => [
-       'base' => realpath(implode(DS, [__DIR__, '..'])),
-       'www' => realpath(implode(DS, [__DIR__, '..', '..'])),
+       'app'    => realpath(implode(DS, [__DIR__, '..'])),
+       'base'   => realpath(implode(DS, [__DIR__, '..', '..'])),
+       'www'    => realpath(implode(DS, [__DIR__, '..', '..', 'www'])),
    ],
    'globals' => [
 //       'blowfish_key' => '8d5db63ada15e11643a0b1c3477c2c5c',
@@ -39,7 +40,7 @@ return array_replace_recursive([
                    ],
                    'cache' => [
                        'class' => '\\Xcart\\App\\Orm\\Cache\\FilesystemCache',
-                       'directory' => 'base.runtime.query_cache'
+                       'directory' => 'app.runtime.query_cache'
                    ],
                    /*'driverOptions' => [
                        PDO::ATTR_EMULATE_PREPARES => false,
@@ -76,7 +77,7 @@ return array_replace_recursive([
        ],
        'router' => [
            'class' => '\\Xcart\\App\\Router\\Router',
-           'pathRoutes' => 'base.config.routes'
+           'pathRoutes' => 'app.config.routes'
        ],
        'template' => [
            'class' => '\\Xcart\\App\\Template\\TemplateManager',
@@ -107,7 +108,8 @@ return array_replace_recursive([
            'memoryDriver' => 'memory',
            'drivers' => [
                'default' =>  [
-                   'class' => '\\Xcart\\App\\Cache\\Drivers\\File'
+                   'class' => '\\Xcart\\App\\Cache\\Drivers\\File',
+                   'path' => 'app.runtime.cache'
                ],
                'memory' =>  [
                    'class' => '\\Xcart\\App\\Cache\\Drivers\\Memory',
@@ -119,7 +121,8 @@ return array_replace_recursive([
        'oldMail' => '\Modules\Mail\Components\MailComponent',
        'mail' => [
            'class' => '\Modules\Mail\Components\Mailer',
-           'defaultFrom' => 'robot@{domain}',
+           'defaultFrom' => 'robot@s3stores.com',
+//           'defaultFrom' => 'robot@{domain}',
        ],
 
        'auth' => [
