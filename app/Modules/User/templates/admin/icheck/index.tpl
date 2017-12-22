@@ -41,9 +41,20 @@
             {foreach $response as $name => $mass}
                 <div>
                     <h4>{$name}</h4>
-                {foreach $mass as $key => $value}
-                    <p>{$key} => {$value}</p>
-                {/foreach}
+                    {if is_array($mass)}
+                        {foreach $mass as $key => $value}
+                            {if is_array($value)}
+                                <h5>{$key}</h5>
+                                {foreach $value as $k => $v}
+                                    <p>{$k} => {$v}</p>
+                                {/foreach}
+                            {else}
+                            <p>{$key} => {$value}</p>
+                            {/if}
+                    {/foreach}
+                    {else}
+                    <p>{$name} => {$mass}</p>
+                    {/if}
                 </div>
             {/foreach}
         {/if}
