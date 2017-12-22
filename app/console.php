@@ -2,9 +2,9 @@
 define('XCART_START' , true);
 date_default_timezone_set('US/Pacific'); //Magic;
 
-$xcart_dir = __DIR__ . '/../';
+$xcart_dir = __DIR__ . '/../www/';
 
-require_once '../include/libs/autoload.php';
+require_once '../www/include/libs/autoload.php';
 use Xcart\App\Main\Xcart;
 $config = include './config/settings.php';
 
