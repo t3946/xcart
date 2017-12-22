@@ -296,30 +296,43 @@ class Application
         /** @var CliRequest $request */
         $request = $this->request;
         list($module, $command, $action, $arguments) = $request->parse();
-        if ($module && $command) {
+
+        if ($module && $command)
+        {
             $module = ucfirst($module);
             $command = ucfirst($command);
             $class = '\\Modules\\' . $module . '\\Commands\\' . $command . 'Command';
-            if (class_exists($class)) {
+
+            if (class_exists($class))
+            {
                 $command = new $class();
+
                 if (method_exists($command, $action)) {
                     $command->{$action}($arguments);
-                } else {
+                }
+                else {
                     throw new Exception("Method '{$action}' of class '{$class}' does not exist");
                 }
-            } else {
+            }
+            else {
                 throw new Exception("Class '{$class}' does not exist");
             }
-        } else {
+        }
+        else {
             $data = $request->getCommandsList();
             echo 'List of available commands' . PHP_EOL . PHP_EOL;
-            foreach ($data as $name => $commands) {
+
+            foreach ($data as $name => $commands)
+            {
                 echo 'Module: ' . $name . PHP_EOL;
+
                 foreach ($commands as $command => $description) {
                     echo $command . ($description ? ' - '. $description : '') . PHP_EOL;
                 }
+
                 echo PHP_EOL;
             }
+
             echo  'Usage example:' . PHP_EOL . 'php index.php Base Db';
         }
     }
