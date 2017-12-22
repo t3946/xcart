@@ -123,17 +123,17 @@ class SupplierFeedStore extends BaseStore
     public static function replaceFeedFields($data)
     {
         $data['productcode'] = strtoupper(trim(!isset($data['sku']) ? $data['productcode'] : $data['sku']));
-        $data['r_avail'] = (string) !isset($data['quantity']) ? $data['r_avail'] : $data['quantity'];
+        $data['r_avail'] = !isset($data['quantity']) ? $data['r_avail'] : $data['quantity'];
         $data['eta_date_mm_dd_yyyy'] = !isset($data['eta_date']) ? $data['eta_date_mm_dd_yyyy'] : $data['eta_date'];
         $data['product'] = !isset($data['title']) ? $data['product'] : $data['title'];
-        $data['list_price'] = (string) !isset($data['listprice']) ? $data['list_price'] : $data['listprice'];
+        $data['list_price'] = !isset($data['listprice']) ? $data['list_price'] : $data['listprice'];
 
         $data = array_filter($data, function ($v) {
             return !is_null($v);
         });
 
         if (isset($data['eta_date_mm_dd_yyyy'])) {
-            $data['eta_date_mm_dd_yyyy'] = (string) strtotime($data['eta_date_mm_dd_yyyy']);
+            $data['eta_date_mm_dd_yyyy'] = strtotime($data['eta_date_mm_dd_yyyy']);
         }
 
         if (isset($data['images'])) {

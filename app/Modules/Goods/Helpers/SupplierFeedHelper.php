@@ -3,6 +3,7 @@
 namespace Modules\Goods\Helpers;
 
 
+use Mindy\QueryBuilder\Expression;
 use Mindy\QueryBuilder\Q\QOr;
 use Modules\Brand\Models\BrandModel;
 use Modules\Brand\Models\BrandStorefrontModel;
@@ -11,6 +12,7 @@ use Modules\Goods\Models\CategoryModel;
 use Modules\Goods\Models\FilterModel;
 use Modules\Goods\Models\FilterProductModel;
 use Modules\Goods\Models\FilterValueModel;
+use Modules\Goods\Models\ImageDModel;
 use Modules\Goods\Models\PricingModel;
 use Modules\Goods\Models\ProductLinksModel;
 use Modules\Goods\Models\ProductModel;
@@ -112,7 +114,6 @@ class SupplierFeedHelper
      */
     public static function feedProduct($model, $is_created, $feed, $data, $dont_update_fields, $defaults)
     {
-        $model->controlled_by_feed = $feed->feed_file_name;
 
         $model->source_sfid = $feed->storefront_id;
         $model->manufacturerid = $feed->manufacturerid;
@@ -153,7 +154,7 @@ class SupplierFeedHelper
         }
 
         if (!$is_created) {
-            if ($model->isGroupChild()) {
+            if ($model->isGroupChild() && empty($data['feed_child'])) {
                 $model->product = $model->getOldAttribute('product');
             }
 
@@ -217,21 +218,53 @@ class SupplierFeedHelper
         $aImages = $data['supplier_images'];
         $aAltImageNames = $data['alt_names'];
 
-        if (!empty($aImages) && is_array($aImages)) {
-            foreach ($aImages as $kImg => $IMAGE_URL) {
-                $modelDImage = ImageHelper::uploadMainImage(
-                    $IMAGE_URL,
-                    empty($aAltImageNames[$kImg]) ? $model->product : $aAltImageNames[$kImg],
-                    $feed->manufacturerid,
-                    $model->productid);
-                if ($modelDImage && $modelDImage->getIsNewRecord()) {
-                    $modelDImage->id = $model->productid;
-                    $modelDImage->orderby = ($kImg + 1) * 10;
-                    $modelDImage->save();
-                    if (class_exists('Imagick')) {
-                        $imageParam = $modelDImage->getAttributes();
-                        $imageParam['image_path'] = '../' . $imageParam['image_path'];
-                        func_set_correct_det_img($imageParam, true);
+        if ($aImages && is_array($aImages)) {
+
+            foreach ($aImages as $k => $v) {
+                if (empty($v)) {
+                    unset($aImages[$k]);
+                    unset($aAltImageNames[$k]);
+                }
+            }
+
+            $uploads = array_filter(array_map(function ($v) use ($feed) {
+                if (empty($v)) return null;
+                return '.' . ImageHelper::getImageFileName($v, $feed->manufacturerid);
+            }, $aImages), function ($v) {
+                return !empty($v);
+            });
+
+            if ($uploads) {
+
+                $p_images = ImageDModel::objects()->filter(['image_path__in' => $uploads, 'id' => $model->productid])->valuesList('image_path', true);
+
+                foreach ($uploads as $key => $url) {
+
+                    if (!$url) {continue;}
+
+                    $url_q = preg_quote($url, '/');
+
+                    if (!preg_grep("/{$url_q}/i", $p_images)) {
+
+                        $name = empty($aAltImageNames[$key]) ? $model->product : $aAltImageNames[$key];
+
+                        /** @var ImageDModel $image */
+                        $image = ImageHelper::uploadMainImage($aImages[$key], ltrim($url, '.'), $name);
+
+                        print "Upload image --> {$aImages[$key]}" . PHP_EOL;
+
+                        if ($image && $image->getIsNewRecord()) {
+
+                            $image->id = $model->productid;
+                            $image->orderby = ($key + 1) * 10;
+                            $image->save();
+
+                            if (class_exists('Imagick')) {
+                                $imageParam = $image->getAttributes();
+                                $imageParam['image_path'] = '../' . $imageParam['image_path'];
+                                func_set_correct_det_img($imageParam, true);
+                            }
+                        }
                     }
                 }
             }
@@ -299,37 +332,34 @@ class SupplierFeedHelper
     {
         if (!empty($data)) {
 
-            /** @var BrandModel $brandModel */
-            list($brandModel, $brand_created) = BrandModel::objects()->getOrCreate(['brand' => $data]);
+            if (!$brand = BrandModel::objects()->filter([
+                'brand' => $data
+            ])->limit(1)->order(['brandid'])->get()) {
 
-            if ($brand_created) {
-                $brandModel->setAttributes(
-                    [
-                        'brand' => $data,
-                        'orderby' => 10,
-                        'prevent_search_indexing_of_all_brand_products' => $model->prevent_search_indexing_this_product_page == 'Y' ? 'Y' : 'N',
-                        'prevent_search_indexing_brand_page' => $model->prevent_search_indexing_this_product_page == 'Y' ? 'Y' : 'N'
-                    ]);
+                $brand = new BrandModel([
+                    'brand' => $data,
+                    'orderby' => 10,
+                    'prevent_search_indexing_of_all_brand_products' => $model->prevent_search_indexing_this_product_page == 'Y' ? 'Y' : 'N',
+                    'prevent_search_indexing_brand_page' => $model->prevent_search_indexing_this_product_page == 'Y' ? 'Y' : 'N'
+                ]);
 
-                $brandModel->save();
+                $brand->save();
 
-                (new BrandStorefrontModel([
-                    'brandid' => $brandModel->brandid,
-                    'sfid' => $feed->storefront_id,
-                ]))
-                    ->save();
+                $clean_url = func_clean_url_autogenerate('M', $brand->brandid, array('brand' => $data));
 
-                $clean_url = func_clean_url_autogenerate('M', $brandModel->brandid, array('brand' => $data));
-
-                func_clean_url_add($clean_url, 'M', $brandModel->brandid);
-
+                func_clean_url_add($clean_url, 'M', $brand->brandid);
             }
 
-            if ($brandModel->parent_brand_id) {
-                $brandModel = $brandModel->parent;
+            BrandStorefrontModel::objects()->getOrCreate([
+                'brandid' => $brand->brandid,
+                'sfid' => $feed->storefront_id,
+            ]);
+
+            if ($brand->parent_brand_id) {
+                $brand = $brand->parent;
             }
 
-            $model->brandid = $brandModel->brandid;
+            $model->brandid = $brand->brandid;
         }
 
         return $model;
@@ -478,6 +508,7 @@ class SupplierFeedHelper
         $childs = [];
         foreach ($data['child_products'] as $key => $child_data) {
 
+            $data['child_products'][$key]['feed_child'] = true;
             $data['child_products'][$key]['group_root'] = $group->productid;
             $data['child_products'][$key]['brand_name'] = $data['brand_name'];
 
@@ -491,7 +522,13 @@ class SupplierFeedHelper
         }
 
         if ($childs) {
-            $group->childs->exclude(['productcode__in' => $childs])->update(['group_root' => null]);
+            $params = [
+                'group_root' => null,
+                'product' => new Expression('TRIM(CONCAT(COALESCE(group_mask, ""), " ", product))'),
+                'group_mask' => null
+            ];
+
+            $group->childs->exclude(['productcode__in' => $childs])->update($params);
         }
 
         return $data['child_products'];
@@ -520,5 +557,17 @@ class SupplierFeedHelper
         ftp_close($ftp_connect);
 
         return $content;
+    }
+
+    public static function getChanged(ProductModel $model)
+    {
+        if ($data = $model->getChangedAttributes()) {
+            foreach ($data as $k => $v) {
+                if ($model->getOldAttribute($k) == $v) {
+                    unset($data[$k]);
+                }
+            }
+        }
+        return $data;
     }
 }

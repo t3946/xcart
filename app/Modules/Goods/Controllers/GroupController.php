@@ -136,17 +136,14 @@ class GroupController extends PrototypeAdminController
 
             if ($this->getRequest()->getIsAjax()) {
 
-                $res = '';
+                $res = null;
 
                 $store->level = $store->data['level'];
 
+                /** @var BrandModel[] $brands */
                 $brands = $store->getLevels();
 
-                if ($store->level > 3) {
-                    $store->defaultPagerPageSize = 20000;
-                } else {
-                    $store->defaultPagerPageSize = 500;
-                }
+                $store->defaultPagerPageSize = 1000;
 
                 if ($products = $store->getModels()) {
 

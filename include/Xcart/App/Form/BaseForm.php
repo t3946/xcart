@@ -32,7 +32,7 @@ abstract class BaseForm implements IteratorAggregate, Countable, ArrayAccess, IV
         'default' => 'forms/default.tpl',
         'block' => 'core/form/block.tpl',
         'table' => 'core/form/table.tpl',
-        'ul' => 'core/form/ul.tpl',
+        'ul' => 'forms/ul.tpl',
     ];
 
     public $max = PHP_INT_MAX;

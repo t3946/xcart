@@ -28,7 +28,7 @@
             <tr class="row google_impression_object" data-product-id="{$child->productid}" data-brand="{$child->brand->brand|escape}"
                 data-category="{$main_cat->category->category|escape}" data-sfid="{$current_storefront}"
                 data-name="{$child->product|escape}"
-                data-price='{getPricingArray pricing=$child->pricing json=true}'
+                data-price='{getPricingArray pricing=$child->pricing map_price=$child->new_map_price json=true}'
                 data-list='group_product_item'>
                 <td class="sku"><a href="{$child->getUrl()}" target="_blank">{$child->productcode}</a></td>
                 {assign var=thumbnail_m value=$child->thumbnail}

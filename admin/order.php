@@ -2896,6 +2896,9 @@ $main_order_tabs[$tabs_key]["section"] = "customer_info";
 $main_order_tabs[$tabs_key]["anchor"]  = $main_order_tabs[$tabs_key]["section"];
 $tabs_key++;
 
+$identity_check_url = '/admin/identity_check/check_user';
+$smarty->assign('identity_check_url', $identity_check_url);
+
 $main_order_tabs[$tabs_key]["title"]   = "VT";
 $main_order_tabs[$tabs_key]["section"] = "VT";
 $main_order_tabs[$tabs_key]["anchor"]  = $main_order_tabs[$tabs_key]["section"];
@@ -2964,13 +2967,14 @@ $order_tabs[0]["title"]   = "Important messages";
 $order_tabs[0]["section"] = "important_messages";
 $order_tabs[0]["anchor"]  = "0";
 
-$order_tabs[1]["title"]   = "Calls";
+$order_tabs[1]["title"]   = "Calls" .  \Modules\PBX\Helpers\AnveoAssignCalls::addToTitleName($orderid);
 $order_tabs[1]["section"] = "order_calls";
 $order_tabs[1]["anchor"]  = "1";
 
 $order_tabs[2]["title"]   = "All logs and messages";
 $order_tabs[2]["section"] = "all_logs_and_messages";
 $order_tabs[2]["anchor"]  = "2";
+
 $calls_log_data = \Modules\PBX\Helpers\AnveoAssignCalls::getResource($orderid);
 
 $smarty->assign('calls_log_data', $calls_log_data);

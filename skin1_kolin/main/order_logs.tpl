@@ -233,16 +233,16 @@
                     <thead>
                         <tr>
                             <th>
-                                Account
+                                Party Tel #
                             </th>
                             <th>
-                                E164
+                                Party Details
                             </th>
                             <th>
-                                Cname
+                                Operator Name
                             </th>
                             <th>
-                                Start at
+                                Starting Time
                             </th>
                             <th>
                                 Duration
@@ -251,10 +251,10 @@
                                 Direction
                             </th>
                             <th>
-                                Type
+                                Call Type
                             </th>
                             <th>
-                                Relevance Order
+                                Reliability Score
                             </th>
 
                         </tr>
@@ -263,13 +263,13 @@
                     {foreach from=$calls_log_data key=k item=value}
                         <tr>
                             <td align="center">
-                                {$value.account}
-                            </td>
-                            <td align="center">
                                 {$value.e164}
                             </td>
                             <td align="center">
                                 {$value.cname}
+                            </td>
+                            <td align="center">
+                                {$value.account}
                             </td>
                             <td align="center">
                                 {$value.start_at}

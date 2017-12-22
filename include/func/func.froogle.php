@@ -32,7 +32,7 @@ function GetGooglePrice($fproduct){
 		global $sql_tbl, $xcart_dir, $active_modules, $config, $https_location, $http_location;
 
 		$price_min_amount = func_product_price($fproduct);
-		
+
         if ($fproduct["min_amount"] > 1 && $fproduct["mult_order_quantity"] == "Y"){
 			/* price for bundle */
 			if ($fproduct["product_availability"] == "out of stock")
@@ -48,7 +48,7 @@ function GetGooglePrice($fproduct){
 			/* price for dozen item*/
 				$product_price = $price_min_amount;
 			}
-	
+
 
 	return $product_price;
 }
@@ -191,7 +191,7 @@ if ($sExtraLog=='Y')
 		//$product['bing_link'] = $product['froogle_location'] . constant('DIR_CUSTOMER') . '/' . $clean_url_link . '?utm_source=' . $sf_info['prefix'] . 'Bing-Shopping&utm_medium='.$utm_medium.'&utm_campaign='.$utm_campaign;
 //		$product['bing_adwords_redirect'] = $product['froogle_location'] . constant('DIR_CUSTOMER') . '/' . $clean_url_link . '?utm_source=' . $sf_info['prefix'] . 'Bing_Product-Ads&utm_medium='.$utm_medium.'&utm_campaign='.$utm_campaign;
 		$product['bing_adwords_redirect'] = $product['froogle_location'] . constant('DIR_CUSTOMER') . '/' . $clean_url_link . '?origin=bing_product_ads';
-		
+
 		$product["adwords_grouping"] = $product['manufacturerid'];
 		$product['page_url'] = $product['froogle_location'] . constant('DIR_CUSTOMER') . '/'. $clean_url_link . '?utm_source=' . $sf_info['prefix'] . 'thefind&utm_medium=feed&utm_campaign='.$utm_campaign;
 	}
@@ -242,7 +242,7 @@ if ($sExtraLog=='Y')
 	# Define full description
 	if (!empty($product['fulldescr']))
 		$product['descr'] = $product['fulldescr'];
-	
+
 	if (strlen(trim($product['descr']))<20)
 	{
 		$product['descr'] = $product['descr'].' '.$product['product'];
@@ -487,7 +487,7 @@ if ($sExtraLog=='Y')
         $price_group_label = '100000';
     }
     $product["custom_label_1"] = $price_group_label;
-    
+
 	#
 	# Define Detailed product image
 	#
@@ -588,7 +588,7 @@ if ($sExtraLog=='Y')
 			$multipack = $product["min_amount"];
 			$product['multipack'] = $multipack;
 		}
-		
+
 		$product['price'] = price_format(GetGooglePrice($product));
 		$product['taxed_price'] = $product['price'];
 
@@ -649,71 +649,31 @@ if ($sExtraLog=='Y')
 	return $row_arr;
 }
 
-function AddProductToAmazonBatch($productid, $update_type, $amazon_inventory_batch_count, $ainventory){
-
-	if ($update_type == "2" || $update_type == "1,2" || $update_type == "1"){
-                $count_ainventory = count($ainventory);
-                $ainventory[$count_ainventory]["productid"] = $productid;
-                $amazon_inventory_batch_count++;
-	}
-
-        $AddProductToAmazonBatch_arr["amazon_inventory_batch_count"] = $amazon_inventory_batch_count;
-        $AddProductToAmazonBatch_arr["ainventory"] = $ainventory;
-
-        return $AddProductToAmazonBatch_arr;
-}
-
-function AddProductToGoogleBaseBatch($productid, $update_type, $forsale, $google_products_batch_count, $gproducts, $google_inventory_batch_count, $ginventory, $sExtraLog = "N"){
-
-	if ($update_type == "1" || $update_type == "1,2" || (($update_type == "2" && $forsale == "N"))){
-			$Batchid = $google_products_batch_count;
-			$count_gproducts = count($gproducts);
-			$gproducts[$count_gproducts]["productid"] = $productid;
-			$gproducts[$count_gproducts]["Batchid"] = $Batchid;
-			$gproducts[$count_gproducts]["product_info"] = GetGoogleBaseOneRow($productid, "main_google", $sExtraLog);
-			$google_products_batch_count++;
-	}
-	elseif ($update_type == "2" && $forsale == "Y"){
-		$Batchid = $google_inventory_batch_count;
-		$count_ginventory = count($ginventory);
-		$ginventory[$count_ginventory]["productid"] = $productid;
-		$ginventory[$count_ginventory]["Batchid"] = $Batchid;
-		$google_inventory_batch_count++;
-	}
-
-	$AddProductToGoogleBaseBatch_arr["google_products_batch_count"] = $google_products_batch_count;
-	$AddProductToGoogleBaseBatch_arr["gproducts"] = $gproducts;
-	$AddProductToGoogleBaseBatch_arr["google_inventory_batch_count"] = $google_inventory_batch_count;
-	$AddProductToGoogleBaseBatch_arr["ginventory"] = $ginventory;
-
-	return $AddProductToGoogleBaseBatch_arr;
-}
-
 function SubmitGoogleInventoryBatch($ginventory, $service, $MerchantID, $debug_mode = 'N', $sExtraLog = 'N'){
 			global $started_at, $sql_tbl, $froogle_tracing_token, $debug_requests;
 
 	foreach ($ginventory as $k => $v){
-				/*func_build_quick_prices($v["productid"]);*/
-				if ($sExtraLog == 'Y')
-					func_backprocess_log("incremental feeds", sprintf("Inventory updated for pid=%d",$v["productid"]));
+				if ($sExtraLog == 'Y') {
+                    func_backprocess_log("incremental feeds", sprintf("Inventory updated for pid=%d", $v["productid"]));
+                }
+
                 $fields = ", IFNULL($sql_tbl[variants].avail, $sql_tbl[products].r_avail) as r_avail, $sql_tbl[products].cost_to_us, $sql_tbl[products].map_price, $sql_tbl[products].manufacturerid, $sql_tbl[products].eta_date_mm_dd_yyyy";
                 $joins = " INNER JOIN $sql_tbl[products_sf] ON  $sql_tbl[products].productid= $sql_tbl[products_sf].productid";
                 $joins .= " INNER JOIN $sql_tbl[quick_prices] ON $sql_tbl[quick_prices].productid = $sql_tbl[products].productid AND $sql_tbl[quick_prices].membershipid = '0'";
                 $joins .= " LEFT JOIN $sql_tbl[variants] ON $sql_tbl[variants].productid = $sql_tbl[products].productid AND $sql_tbl[quick_prices].variantid = $sql_tbl[variants].variantid";
                 $where = " AND $sql_tbl[products_sf].productid = '$v[productid]' AND IFNULL($sql_tbl[variants].avail, $sql_tbl[products].avail) >= '0'";
 
-                $product = func_query_first("SELECT SQL_NO_CACHE $sql_tbl[products].productid, $sql_tbl[products].provider, $sql_tbl[products].new_map_price, $sql_tbl[products].r_avail, $sql_tbl[products].avail, $sql_tbl[products].cost_to_us, $sql_tbl[products].product_type, $sql_tbl[pricing].price $fields, $sql_tbl[products].min_amount, $sql_tbl[products].mult_order_quantity FROM ($sql_tbl[categories], $sql_tbl[products_categories], $sql_tbl[pricing], $sql_tbl[products]) $joins WHERE $sql_tbl[products].productid = $sql_tbl[products_categories].productid AND $sql_tbl[products_categories].categoryid = $sql_tbl[categories].categoryid AND $sql_tbl[pricing].priceid = $sql_tbl[quick_prices].priceid $where GROUP BY $sql_tbl[products].productid HAVING (price > '0' OR $sql_tbl[products].product_type = 'C')");
+                $product = func_query_first("SELECT $sql_tbl[products].productid, $sql_tbl[products].provider, $sql_tbl[products].new_map_price, $sql_tbl[products].r_avail, $sql_tbl[products].avail, $sql_tbl[products].cost_to_us, $sql_tbl[products].product_type, $sql_tbl[pricing].price $fields, $sql_tbl[products].min_amount, $sql_tbl[products].mult_order_quantity FROM ($sql_tbl[categories], $sql_tbl[products_categories], $sql_tbl[pricing], $sql_tbl[products]) $joins WHERE $sql_tbl[products].productid = $sql_tbl[products_categories].productid AND $sql_tbl[products_categories].categoryid = $sql_tbl[categories].categoryid AND $sql_tbl[pricing].priceid = $sql_tbl[quick_prices].priceid $where GROUP BY $sql_tbl[products].productid HAVING (price > '0' OR $sql_tbl[products].product_type = 'C')");
 
-				
+
 				$product_availability = $product["product_availability"] = func_product_availability(false,$product);
 				If ($product["min_amount"]>1 and $product["mult_order_quantity"] == "Y")
 					{
 						$product['multipack'] = $product["min_amount"];
 					}
-//                $product["supplier_feeds_enabled"] = func_query_first_cell("SELECT enabled FROM $sql_tbl[supplier_feeds] WHERE manufacturerid='$product[manufacturerid]' AND feed_file_name='$product[provider]' AND feed_type = 'I'");
 		$product["supplier_feeds_enabled"] = func_query_first_cell("SELECT enabled FROM $sql_tbl[supplier_feeds] WHERE manufacturerid='$product[manufacturerid]' AND feed_type = 'I' AND enabled='Y' AND (multiple_feed_destinations!='Y' OR (multiple_feed_destinations='Y' AND feed_file_name='".$product["controlled_by_feed"]."'))");
-		
-				
+
+
 				$product['price'] = price_format(GetGooglePrice($product));
 				$postBody["entries"][$k]["inventory"]["price"]["value"] = $product["price"];
 				$postBody["entries"][$k]["inventory"]["price"]["currency"] = "USD";
@@ -824,7 +784,7 @@ function SubmitBingInventoryBatch($binventory, $sEndpoint, $MerchantID, $Catalog
 
                 $product = func_query_first("SELECT SQL_NO_CACHE $sql_tbl[products].productid, $sql_tbl[products].provider, $sql_tbl[products].new_map_price, $sql_tbl[products].avail, $sql_tbl[products].r_avail, $sql_tbl[products].cost_to_us, $sql_tbl[products].product_type, $sql_tbl[pricing].price $fields, $sql_tbl[products].min_amount, $sql_tbl[products].mult_order_quantity FROM ($sql_tbl[categories], $sql_tbl[products_categories], $sql_tbl[pricing], $sql_tbl[products]) $joins WHERE $sql_tbl[products].productid = $sql_tbl[products_categories].productid AND $sql_tbl[products_categories].categoryid = $sql_tbl[categories].categoryid AND $sql_tbl[pricing].priceid = $sql_tbl[quick_prices].priceid $where GROUP BY $sql_tbl[products].productid HAVING (price > '0' OR $sql_tbl[products].product_type = 'C')");
 
-				
+
 				//$product_availability = $product["product_availability"] = func_product_availability(false,$product);
         		$product_availability = $product["product_availability"] = 'in stock';
 
@@ -832,17 +792,17 @@ function SubmitBingInventoryBatch($binventory, $sEndpoint, $MerchantID, $Catalog
 					{
 						$product['multipack'] = $product["min_amount"];
 					}
-                    
+
                 $product["supplier_feeds_enabled"] = func_query_first_cell("SELECT enabled FROM $sql_tbl[supplier_feeds] WHERE manufacturerid='$product[manufacturerid]' AND feed_type = 'I' AND enabled='Y' AND (multiple_feed_destinations!='Y' OR (multiple_feed_destinations='Y' AND feed_file_name='".$product["controlled_by_feed"]."'))");
 
 				$product['price'] = price_format(GetGooglePrice($product));
-                
+
    				$postBody["entries"][$k]["batchId"] = $v["productid"];
 				$postBody["entries"][$k]["merchantId"] = $MerchantID;
 				$postBody["entries"][$k]["storeCode"] = "online";
 				$postBody["entries"][$k]["productId"] = "online:en:US:".$v["productid"];
                 $postBody["entries"][$k]["method"] = "insert";
-                
+
 				$postBody["entries"][$k]["product"]["price"]["value"] = $product["price"];
 				$postBody["entries"][$k]["product"]["price"]["currency"] = "USD";
 				$postBody["entries"][$k]["product"]["availability"]= $product_availability;
@@ -868,9 +828,9 @@ function SubmitBingInventoryBatch($binventory, $sEndpoint, $MerchantID, $Catalog
                 $clean_url_link .="/";
 
                 $product['link'] = $product['froogle_location'] . constant('DIR_CUSTOMER') . '/'. $clean_url_link;
-                
+
                 $postBody["entries"][$k]["product"]["link"] = $product["link"];
-                
+
                 /* get detailed image link */
                 $tmp_all = func_query("SELECT id, imageid, image_path FROM $sql_tbl[images_D] WHERE $sql_tbl[images_D].id = '$v[productid]' AND $sql_tbl[images_D].avail='Y' ORDER BY orderby");
 
@@ -1176,7 +1136,7 @@ if ($debug_mode != 'Y') {
 		$json = json_encode($postBody);
 
 		if ($json == "null") {
-			func_print_r("json = json_encode(postBody); print_r(postBody):", $postBody);
+			print_r("json = json_encode(postBody); print_r(postBody):", $postBody);
 		}
 
 		$baseuri = $sEndpoint;//"https://content.api.bingads.microsoft.com/shopping/v9.1";
@@ -1255,33 +1215,6 @@ return $code;
 
 
 
-function AddProductToBingBaseBatch($productid,$update_type,$forsale,$bing_products_batch_count,$bproducts,$bing_inventory_batch_count,$binventory)
-{
-
-	if ($update_type == "1" || $update_type == "1,2" || (($update_type == "2" && $forsale == "N"))){
-		$batchid = $bing_products_batch_count;
-		$count_bproducts = count($bproducts);
-		$bproducts[$count_bproducts]["productid"] = $productid;
-		$bproducts[$count_bproducts]["Batchid"] = $batchid;
-		$bing_products_batch_count++;
-	}
-	elseif ($update_type == "2" && $forsale == "Y"){
-		$batchid = $bing_inventory_batch_count;
-		$count_binventory = count($binventory);
-		$binventory[$count_binventory]["productid"] = $productid;
-		$binventory[$count_binventory]["Batchid"] = $batchid;
-		$bing_inventory_batch_count++;
-	}
-
-	$AddProductToBingBaseBatch_arr["bing_products_batch_count"] = $bing_products_batch_count;
-	$AddProductToBingBaseBatch_arr["bproducts"] = $bproducts;
-	$AddProductToBingBaseBatch_arr["bing_inventory_batch_count"] = $bing_inventory_batch_count;
-	$AddProductToBingBaseBatch_arr["binventory"] = $binventory;
-
-	return $AddProductToBingBaseBatch_arr;
-
-}
-
 function SubmitGoogleProductsBatch($gproducts, $service, $MerchantID, $debug_mode = 'N'){
 	global $sql_tbl, $froogle_tracing_token, $debug_requests;
 
@@ -1304,15 +1237,15 @@ function SubmitGoogleProductsBatch($gproducts, $service, $MerchantID, $debug_mod
 			continue;
 		}
 
-		
+
 		if ($pforsale == 'N' || (empty($product_info["product"]) || !is_array($product_info["product"])) || ($product_info["product"]["min_amount"]>1))  {
                 $postBody["entries"][$k_counter]["batchId"] = $v["productid"];
 	            $postBody["entries"][$k_counter]["merchantId"] = $MerchantID;
     	        $postBody["entries"][$k_counter]["method"] = "delete";
         	    $postBody["entries"][$k_counter]["productId"] = "online:en:US:".$v["productid"];
 		    $k_counter++;
-		    
-		
+
+
 		} else
 		{
                 $postBody["entries"][$k_counter]["batchId"] = $v["productid"];
@@ -1335,7 +1268,7 @@ function SubmitGoogleProductsBatch($gproducts, $service, $MerchantID, $debug_mod
 
 				$product_availability = func_product_availability(false,$product_info["product"]);
 
-			
+
                 $postBody["entries"][$k_counter]["product"]["availability"] = $product_availability;
                 $postBody["entries"][$k_counter]["product"]["brand"] = $product_info["product"]["google_brand"];
                 $postBody["entries"][$k_counter]["product"]["condition"] = "new";
@@ -1447,7 +1380,7 @@ if ($debug_mode != 'Y') {
 		print("GB: call custombatch end");
 
 		if ($debug_requests == "Y") {
-			func_print_r($results);
+			print_r($results);
 		}
 
 
@@ -1494,325 +1427,4 @@ if ($debug_mode != 'Y') {
 
 return $code;
 
-}
-
-function SubmitAmazonInventoryBatch($ainventory, $a_config, $marketplaceIdArray, \Xcart\External_Marketplaces\StoreFrontMarketPlace $oMarketPlace){
-        global $sql_tbl, $xcart_dir;
-
-	if (empty($ainventory) || !is_array($ainventory)){
-	        print('Amazon inventory empty\r');
-		return false;
-	}
-	$sMerchantId = $ainventory[''];
-######################### Avail start #########################
-$feed = <<<EOD
-<?xml version="1.0" encoding="utf-8" ?>
-<AmazonEnvelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="amzn-envelope.xsd">
-<Header>
-   <DocumentVersion>1.01</DocumentVersion>
-   <MerchantIdentifier>$sMerchantId</MerchantIdentifier>
-   </Header>
-   <MessageType>Inventory</MessageType>
-EOD;
-
-	$MessageID = 1;
-	foreach ($ainventory as $k => $v) {
-
-		$oProduct = \Xcart\Product::model(['productid' => $v["productid"]]);
-		$oProductAmazonFields = \Xcart\ProductsAmazonFields::model(['productid' => $v["productid"]]);
-		$productcode = $oProduct->getSKU();
-
-		$aFBAProductCodes = null;
-
-			if ($oProduct->isAmazonFBAEnabled() &&
-				($oProduct->getAmazonFBAAvailReal() > 0 || $oProduct->getAmazonFBAStockReservedTransfers() > 0) &&
-				!in_array($oProductAmazonFields->getPreventSellingOnAmazon(), ['FBA', 'MFN'])
-			) {
-				$aFBAProductCodes[] =  $productcode;
-				$aMissingSKU = \Xcart\FbaMissingSku::model()->findAll(\Xcart\SQLBuilder::getInstance()->addCondition('productid = '.$oProduct->getProductId()));
-				if (!empty($aMissingSKU)) {
-					foreach ($aMissingSKU as $oMissingSKU) {
-						$aFBAProductCodes[] = $oMissingSKU->getMissingSKU();
-					}
-				}
-
-				foreach ($aFBAProductCodes as $sProductCode) {
-
-					$feed .= <<<EOD
-<Message>
-<MessageID>$MessageID</MessageID>
-<OperationType>Update</OperationType>
-<Inventory>
-<SKU>$sProductCode</SKU>
-<FulfillmentCenterID>AMAZON_NA</FulfillmentCenterID>
-<Lookup>FulfillmentNetwork</Lookup>
-<SwitchFulfillmentTo>AFN</SwitchFulfillmentTo>
-</Inventory>
-</Message>
-EOD;
-					$MessageID++;
-				}
-			} else {
-
-				$avail = $oProduct->getAmazonQuantity();
-				if ($oProductAmazonFields->getPreventSellingOnAmazon() == 'MFN' ||
-					!($oMarketPlace->checkProductExcludedMarketPlace($oProduct->getProductId()))) {
-					$avail = 0;
-				}
-				$aleadtime = $oProduct->getManfacturerClass()->getAmazonLeadtimetoship();
-
-				$feed .= <<<EOD
-<Message>
-<MessageID>$MessageID</MessageID>
-<OperationType>Update</OperationType>
-<Inventory>
-<SKU>$productcode</SKU>
-<FulfillmentCenterID>DEFAULT</FulfillmentCenterID>
-<Quantity>$avail</Quantity>
-<FulfillmentLatency>$aleadtime</FulfillmentLatency>
-<SwitchFulfillmentTo>MFN</SwitchFulfillmentTo>
-</Inventory>
-</Message>
-EOD;
-				$MessageID++;
-			}
-	}
-
-	$feed .= <<<EOD
-</AmazonEnvelope>
-EOD;
-
-	print($feed."\n\n");
-
-	print("INVENTORY pull\n\n");
-	
-	$a_service = new MarketplaceWebService_Client(
-	     AWS_ACCESS_KEY_ID,
-	     AWS_SECRET_ACCESS_KEY,
-	     $a_config,
-	     APPLICATION_NAME,
-	     APPLICATION_VERSION);
-
-
-	$feedHandle = @fopen('php://temp', 'rw+');
-	fwrite($feedHandle, $feed);
-	if(!$feedHandle) die("Can't open device");
-	rewind($feedHandle);
-
-
-	$parameters = array (
-	  'Merchant' => MERCHANT_ID,
-	  'MarketplaceIdList' => $marketplaceIdArray,
-	  'FeedType' => '_POST_INVENTORY_AVAILABILITY_DATA_',
-	  'FeedContent' => $feedHandle,
-	  'PurgeAndReplace' => false,
-	  'ContentMd5' => base64_encode(md5(stream_get_contents($feedHandle), true)),
-	//  'MWSAuthToken' => '<MWS Auth Token>', // Optional
-	);
-
-	$request = new MarketplaceWebService_Model_SubmitFeedRequest($parameters);
-
-	invokeSubmitFeed($a_service, $request);
-
-	@fclose($feedHandle);
-
-######################### Avail End #########################
-
-######################### Price start #########################
-        $feed = <<<EOD
-<?xml version="1.0" encoding="utf-8" ?>
-<AmazonEnvelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="amzn-envelope.xsd">
-<Header>
-   <DocumentVersion>1.01</DocumentVersion>
-   <MerchantIdentifier>$sMerchantId</MerchantIdentifier>
-   </Header>
-   <MessageType>Price</MessageType>
-EOD;
-
-        $MessageID = 1;
-        foreach ($ainventory as $k => $product){
-
-			$aFBAProductCodes = null;
-			$oProduct = \Xcart\Product::model(['productid' => $product["productid"]]);
-			$price = $oProduct->getAmazonPrice();
-
-
-			$aFBAProductCodes[] = $oProduct->getSKU();
-
-			if ($oProduct->isAmazonFBAEnabled() && ($oProduct->getAmazonFBAAvailReal() > 0 || $oProduct->getAmazonFBAStockReservedTransfers() > 0)) {
-				$aMissingSKU = \Xcart\FbaMissingSku::model()->findAll(\Xcart\SQLBuilder::getInstance()->addCondition('productid = '.$oProduct->getProductId()));
-				if (!empty($aMissingSKU)) {
-					foreach ($aMissingSKU as $oMissingSKU) {
-						$aFBAProductCodes[] = $oMissingSKU->getMissingSKU();
-					}
-				}
-			}
-
-			foreach ($aFBAProductCodes as $sProductCode) {
-                    $feed .= <<<EOD
-<Message>
-<MessageID>$MessageID</MessageID>
-<Price>
-<SKU>$sProductCode</SKU>
-<StandardPrice currency="USD">$price</StandardPrice>
-</Price>
-</Message>
-EOD;
-				$MessageID++;
-			}
-        }
-
-        $feed .= <<<EOD
-</AmazonEnvelope>
-EOD;
-
-	print($feed."\n\n");
-
-	print("INVENTORY pull\n\n");
-
- 
-        $a_service = new MarketplaceWebService_Client(
-             AWS_ACCESS_KEY_ID,
-             AWS_SECRET_ACCESS_KEY,
-             $a_config,
-             APPLICATION_NAME,
-             APPLICATION_VERSION);
-
-
-        $feedHandle = @fopen('php://temp', 'rw+');
-        fwrite($feedHandle, $feed);
-        if(!$feedHandle) die("Can't open device");
-        rewind($feedHandle);
-
-
-        $parameters = array (
-          'Merchant' => MERCHANT_ID,
-          'MarketplaceIdList' => $marketplaceIdArray,
-          'FeedType' => '_POST_PRODUCT_PRICING_DATA_',
-          'FeedContent' => $feedHandle,
-          'PurgeAndReplace' => false,
-          'ContentMd5' => base64_encode(md5(stream_get_contents($feedHandle), true)),
-        //  'MWSAuthToken' => '<MWS Auth Token>', // Optional
-        );
-
-        $request = new MarketplaceWebService_Model_SubmitFeedRequest($parameters);
-
-        invokeSubmitFeed($a_service, $request);
-
-        @fclose($feedHandle);
-######################### Price end #########################
-		if ($MessageID-- > 0) {
-			print("\nAMZ: tried to submit $MessageID items as inventory feed \n");
-			$log_text = "AMZ: tried to submit $MessageID items as inventory feed";
-			func_backprocess_log("incremental feeds", $log_text);
-		}
-
-}
-
-function SubmitAmazonProductsBatch(){
-        global $sql_tbl;
-
-}
-
-function invokeSubmitFeed(MarketplaceWebService_Interface $a_service, $request)
-  {
-      try {
-              $response = $a_service->submitFeed($request);
-
-                echo ("Service Response\n");
-                echo ("=============================================================================\n");
-
-                echo("        SubmitFeedResponse\n");
-                if ($response->isSetSubmitFeedResult()) {
-                    echo("            SubmitFeedResult\n");
-                    $submitFeedResult = $response->getSubmitFeedResult();
-                    if ($submitFeedResult->isSetFeedSubmissionInfo()) {
-                        echo("                FeedSubmissionInfo\n");
-                        $feedSubmissionInfo = $submitFeedResult->getFeedSubmissionInfo();
-                        if ($feedSubmissionInfo->isSetFeedSubmissionId())
-                        {
-                            echo("                    FeedSubmissionId\n");
-                            echo("                        " . $feedSubmissionInfo->getFeedSubmissionId() . "\n");
-                        }
-                        if ($feedSubmissionInfo->isSetFeedType())
-                        {
-                            echo("                    FeedType\n");
-                            echo("                        " . $feedSubmissionInfo->getFeedType() . "\n");
-                        }
-                        if ($feedSubmissionInfo->isSetSubmittedDate())
-                        {
-                            echo("                    SubmittedDate\n");
-                            echo("                        " . $feedSubmissionInfo->getSubmittedDate()->format(DATE_FORMAT) . "\n");
-                        }
-                        if ($feedSubmissionInfo->isSetFeedProcessingStatus())
-                        {
-                            echo("                    FeedProcessingStatus\n");
-                            echo("                        " . $feedSubmissionInfo->getFeedProcessingStatus() . "\n");
-                        }
-                        if ($feedSubmissionInfo->isSetStartedProcessingDate())
-                        {
-                            echo("                    StartedProcessingDate\n");
-                            echo("                        " . $feedSubmissionInfo->getStartedProcessingDate()->format(DATE_FORMAT) . "\n");
-                        }
-                        if ($feedSubmissionInfo->isSetCompletedProcessingDate())
-                        {
-                            echo("                    CompletedProcessingDate\n");
-                            echo("                        " . $feedSubmissionInfo->getCompletedProcessingDate()->format(DATE_FORMAT) . "\n");
-                        }
-                    }
-                }
-                if ($response->isSetResponseMetadata()) {
-                    echo("            ResponseMetadata\n");
-                    $responseMetadata = $response->getResponseMetadata();
-                    if ($responseMetadata->isSetRequestId())
-                    {
-                        echo("                RequestId\n");
-                        echo("                    " . $responseMetadata->getRequestId() . "\n");
-                    }
-                }
-
-                echo("            ResponseHeaderMetadata: " . $response->getResponseHeaderMetadata() . "\n");
-     } catch (MarketplaceWebService_Exception $ex) {
-         echo("Caught Exception: " . $ex->getMessage() . "\n");
-         echo("Response Status Code: " . $ex->getStatusCode() . "\n");
-         echo("Error Code: " . $ex->getErrorCode() . "\n");
-         echo("Error Type: " . $ex->getErrorType() . "\n");
-         echo("Request ID: " . $ex->getRequestId() . "\n");
-         echo("XML: " . $ex->getXML() . "\n");
-         echo("ResponseHeaderMetadata: " . $ex->getResponseHeaderMetadata() . "\n");
-     }
-
-//     return $feedSubmissionInfo->getFeedProcessingStatus();
-
-}
-
-function Submit_expirationDate_ToGBFeed($productid, $MerchantID, $client_id, $key_file_location, $service){
-	global $sql_tbl;
-
-	try {
-		$results = $service->products->get($MerchantID, "online:en:US:".$productid);
-
-		$postBody = $results->toSimpleObject();
-		$postBody = (array)$postBody;
-
-		$expirationDate = time()+60*60*24*30;
-		$expirationDate = date("Y-m-d", $expirationDate);
-		$postBody["expirationDate"] = $expirationDate;
-
-		$optParams = array();
-		$params = array('merchantId' => $MerchantID, 'postBody' => $postBody);
-		$params = array_merge($params, $optParams);
-		$results2 = $service->products->call('insert', array($params), "Google_Service_ShoppingContent_Product");
-	}
-	catch (Google_ServiceException $e) {
-		print "Error code :" . $e->getCode() . "\n";
-		// Error message is formatted as "Error calling <REQUEST METHOD> <REQUEST URL>: (<CODE>) <MESSAGE OR REASON>".
-		print "Error message: " . $e->getMessage() . "\n";
-	}
-	catch (Google_Exception $e) {
-		// Other error.
-		print "An error occurred: (" . $e->getCode() . ") " . $e->getMessage() . "\n";
-		if ($e->getCode() == '404') {
-		}
-	}
 }

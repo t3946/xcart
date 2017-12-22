@@ -104,7 +104,7 @@ class AnveoAssignCalls
                         'relevance_order' => $relevance_order
                     ];
 
-                    (new OrdersCallsModel($mass))->save();
+                    OrdersCallsModel::objects()->getOrCreate($mass);
 
                     $log_category = "anveo_calls";
                     $log_text = "{$e164} - Привязан к заказу - {$order_models[$i]->orderid} по второй привязке";
@@ -218,9 +218,14 @@ class AnveoAssignCalls
                 /** @var PbxAnveoCallModel $anveo_call_model */
                 $anveo_call_model = $order_calls_model->call;
 
+                $user = '';
+                if ($anveo_call_model->anveo_account) {
+                    $user = $anveo_call_model->options->user->firstname;
+                }
+
                 $mass = [
-                   'account' =>  self::parseAccount($anveo_call_model->file),
-                   'e164' => self::parseE164($anveo_call_model->file),
+                   'account' =>  $user,
+                   'e164' => $anveo_call_model->getFrontendE164(),
                    'url' => $anveo_call_model->getUrl(),
                    'start_at' => $anveo_call_model->start_at,
                    'end_at' => $anveo_call_model->end_at,
@@ -228,9 +233,9 @@ class AnveoAssignCalls
                 ];
 
                 if ($anveo_call_model->isOutgoing()){
-                    $mass['direction'] = "Out";
+                    $mass['direction'] = "Outbound";
                 } else {
-                    $mass['direction'] = "In";
+                    $mass['direction'] = "Inbound";
                 }
 
                 $datetime1 = new \DateTime($anveo_call_model->end_at);
@@ -246,6 +251,39 @@ class AnveoAssignCalls
         }
         if (!empty($result)){
             return $result;
+        }
+    }
+
+    public static function addToTitleName($order_id)
+    {
+        $count = 0;
+        $new = 0;
+
+        if ($order_calls = OrdersCallsModel::objects()->filter(['order_id' => $order_id])->all()){
+
+            $count = count($order_calls);
+            $now = new \DateTime(date("Y-m-d H:i:s"));
+            // DateTime::setTime ( int $hour , int $minute [, int $second = 0 [, int $microseconds = 0 ]] )
+
+            $now->modify("-1 day");
+
+            $now->setTime(0,0,0);
+
+//            if ($count > 1){
+                foreach ($order_calls as $order_call){
+                    $time = new \DateTime($order_call->call->start_at);
+                    $interval = $now->diff($time);
+                    if ( $interval->format('%a') < 1) {
+                        $new++;
+                    }
+                }
+//            }
+        }
+
+        if ($new > 0) {
+            return " ({$count} + {$new})";
+        } else {
+            return " ({$count})";
         }
     }
 }

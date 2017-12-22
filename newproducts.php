@@ -132,7 +132,6 @@ if (!empty($new_prod_ids_random) && is_array($new_prod_ids_random) && $count_new
 
 //if ($qqq == "qqq"){
 //x_load("debug");
-//func_print_r($new_prod_ids_arr, $tmp_rand_keys, $new_products);
 //}
 //print(count($new_products));
 $smarty->assign("new_products",$new_products);

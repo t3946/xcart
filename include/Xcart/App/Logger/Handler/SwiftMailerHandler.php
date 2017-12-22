@@ -11,11 +11,17 @@ use Xcart\App\Main\Xcart;
  */
 class SwiftMailerHandler extends ProxyHandler
 {
+    public $subject;
+    public $to;
+
     public function getHandler()
     {
         $mail = Xcart::app()->mail;
-        $mailer = $mail->getSwiftMailer();
-        $message = $mail->compose()->getSwiftMessage();
+
+        $mailer = $mail->getMailer();
+        $message = $mail->createMessage()->getSwiftMessage();
+
+
         return new MonoSwiftMailerHandler($mailer, $message, $this->getLevel(), $this->bubble);
     }
 }

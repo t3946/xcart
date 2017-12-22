@@ -78,7 +78,7 @@ if (!$supplier_feeds) {
 foreach ($supplier_feeds as $k => $supplierFeedModel) {
 
     $discontinued_products_count = $updated_products_count = $inserted_products_count = $new_products_count = $skippedProductsCount = 0;
-    $all_feed_productcodes = $lastFeedFields = $last_feed_fields_arr_vals = [];
+    $all_feed_productcodes = $lastFeedFields = $last_feed_fields_arr_vals = $duplicate_sku = [];
 
     clearstatcache();
 
@@ -145,6 +145,7 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
             print($kp . ' --> ' . $aProduct['productcode'] . "\n");
 
             if (empty($aProduct['productcode']) || (isset($aProduct['cost_to_us']) && floatval($aProduct['cost_to_us']) <= 0)) {
+                print("Skip product -->' \n");
                 $skippedProductsCount++;
                 continue;
             }
@@ -152,6 +153,11 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
             /** @var ProductModel $modelProduct */
 
             list($modelProduct, $is_created) = ProductModel::objects()->getOrNew(['productcode' => $aProduct['productcode']]);
+            if (in_array($modelProduct->productcode, $all_feed_productcodes)) {
+                $duplicate_sku[] = $modelProduct->productcode;
+            } else {
+                $all_feed_productcodes[] = $modelProduct->productcode;
+            }
 
             switch ($supplierFeedModel->feed_type) {
                 case 'I' :
@@ -160,16 +166,22 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
                         $new_products_count++;
                         continue 2;
                     }
+                    $modelProduct->controlled_by_feed = $supplierFeedModel->feed_file_name;
 
                     break;
                 case 'P' :
-                    $modelProduct->save();
+                    if ($is_created) {
+                        $modelProduct->save();
+                        print "Add product --> OK" . PHP_EOL;
+                    }
                     if (!isset($aProduct['is_group'])) {
                         if (!isset($aProduct['cost_to_us'])) {
+                            print("Skip product --> 'No cost_to_us' \n");
                             $skippedProductsCount++;
                             continue 2;
                         }
                         if (!$is_created && $supplierFeedModel->add_new_only == "Y") {
+                            print("Skip product --> 'Add new only' \n");
                             $skippedProductsCount++;
                             continue 2;
                         }
@@ -186,14 +198,13 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
                 if ($is_created) {
                     $new_products_count++;
                     $inserted_products_count++;
-                } else if ($modelProduct->getChangedAttributes()) {
-                    print_r($modelProduct->getChangedAttributes());
+                    $modelProduct->save();
+                } else if ($changed = SupplierFeedHelper::getChanged($modelProduct)) {
+                    print_r($changed);
                     $updated_products_count++;
+                    $modelProduct->save();
                 }
 
-                $modelProduct->save();
-
-                $all_feed_productcodes[] = $modelProduct->productcode;
                 $last_feed_fields_arr_vals = $aProduct;
                 $lastFeedFields = array_unique(array_merge($lastFeedFields, array_keys($aProduct)));
             }
@@ -203,10 +214,8 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
     if (!empty($all_feed_productcodes) && is_array($all_feed_productcodes) && $supplierFeedModel->disable_search_of_discontinued_items != 'Y') {
         print("Search of discontinued section\n");
 
-        /** @var ProductModel[] $discountinued_models */
-
         $i = 0;
-        while ($discountinued_models = ProductModel::objects()->filter(
+        while ($discountinued_products = ProductModel::objects()->filter(
             [
                 'sites__through__sfid' => $supplierFeedModel->storefront_id,
                 'manufacturerid' => $supplierFeedModel->manufacturerid,
@@ -214,22 +223,17 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
                 new QOr(['productid__isnt' => new Expression('group_root'), 'group_root__isnull' => true])
             ])
             ->paginate(++$i, 10000)
-            ->all())
+            ->valuesList('productcode', true))
          {
 
-            print PHP_EOL . "{$i} iteration: Found " . count($discountinued_models) . " products "  . PHP_EOL;
+            print PHP_EOL . "{$i} iteration: Found " . count($discountinued_products) . " products "  . PHP_EOL;
 
-            foreach ($discountinued_models as $d_model) {
-                if (!in_array(strtoupper(trim($d_model->productcode)), $all_feed_productcodes)) {
+            foreach ($discountinued_products as $productcode) {
+                if (!in_array(strtoupper(trim($productcode)), $all_feed_productcodes)) {
                     $discontinued_products_count++;
 
-                    if ($d_model->update_search_index == "N") {
-                        $d_model->update_search_index = "D";
-                    }
+                    ProductModel::objects()->filter(['productcode' => $productcode])->update(['r_avail' => 0, 'forsale' => 'N', 'update_search_index' => 'D']);
 
-                    $d_model->setAttributes(['r_avail' => 0, 'forsale' => 'N',]);
-
-                    $d_model->save();
                 }
             }
             print "Discontinued {$discontinued_products_count} products "  . PHP_EOL;
@@ -292,6 +296,12 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
     }
     $log_text .= "discontinued: {$discontinued_products_count}\n";
     $log_text .= "skipped: {$skippedProductsCount}\n";
+
+    if ($duplicate_sku) {
+        $sku_d = implode(', ', $duplicate_sku);
+        $log_text .= "Duplicated SKU's:{$sku_d}\n";
+    }
+    
     $log_text .= "Duration: " . (new DateTime('now'))->diff($start_supplier_time)->format('%H:%I:%S') . "\n";
     func_backprocess_log($log_category, $log_text);
 }

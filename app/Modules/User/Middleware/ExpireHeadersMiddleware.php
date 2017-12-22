@@ -18,6 +18,8 @@ class ExpireHeadersMiddleware extends Middleware
 
             header("Vary: User-Agent");
 //            header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
+            $this->noCache();
+            return;
 
             if (defined('AREA_TYPE') && AREA_TYPE == 'A') {
                 $this->noCache();
