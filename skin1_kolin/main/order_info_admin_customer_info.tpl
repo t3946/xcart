@@ -639,7 +639,7 @@
 
 <img src="/skin1_kolin/images/spacer_black.gif" height="2" width="100%" >
 
-<form action="{$identity_check_url}">
+<form action="{$identity_check_url}" target="_blank">
     <input type="hidden" name="order_id" value="{$oOrder->orderid}">
     <input type="submit" value="Click here for identity check">
 </form>
