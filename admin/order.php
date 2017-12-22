@@ -2896,6 +2896,9 @@ $main_order_tabs[$tabs_key]["section"] = "customer_info";
 $main_order_tabs[$tabs_key]["anchor"]  = $main_order_tabs[$tabs_key]["section"];
 $tabs_key++;
 
+$identity_check_url = '/admin/identity_check/check_user';
+$smarty->assign('identity_check_url', $identity_check_url);
+
 $main_order_tabs[$tabs_key]["title"]   = "VT";
 $main_order_tabs[$tabs_key]["section"] = "VT";
 $main_order_tabs[$tabs_key]["anchor"]  = $main_order_tabs[$tabs_key]["section"];
