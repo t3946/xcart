@@ -77,7 +77,7 @@ return array_replace_recursive([
        ],
        'router' => [
            'class' => '\\Xcart\\App\\Router\\Router',
-           'pathRoutes' => 'app.config.routes'
+           'pathRoutes' => 'base.config.routes'
        ],
        'template' => [
            'class' => '\\Xcart\\App\\Template\\TemplateManager',
