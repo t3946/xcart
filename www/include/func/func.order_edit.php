@@ -606,7 +606,7 @@ function func_oe_update_order($cart, $shipping_groups, $old_products = "")
                     func_log_order($cart["orderid"], 'X', $log, $login);
                 }
 
-                $items[] = $products[$pk]['itemid'] = func_array2insert_new("order_details", $query_data, true);
+                $items[] = $products[$pk]['itemid'] = func_array2insert("order_details", $query_data, true);
             }
 
             if (!isset($back_products[$product['manufacturerid']])) {
