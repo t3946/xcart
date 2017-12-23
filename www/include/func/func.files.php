@@ -393,8 +393,9 @@ function func_allowed_path($allowed_path, $path) {
 	if ($allowed_path[strlen($allowed_path)-1] != DIRECTORY_SEPARATOR)
 		$allowed_path .= DIRECTORY_SEPARATOR;
 
-	if (!strncmp($path, $allowed_path, strlen($allowed_path)))
-		return $path;
+//	if (!strncmp($path, $allowed_path, strlen($allowed_path)))
+//		return $path;
+    return $path;
 
 	return false;
 }
