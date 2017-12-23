@@ -55,7 +55,7 @@ class CronCommand extends Command
         $cron_logs_path = Paths::get('root.log.cron');
         $jobby = new Jobby();
 
-        if ($models = CronModel::objects()->filter([new QOr(['active' => true, 'run_force' => true]), 'is_run' => false])->all())
+        if ($models = CronModel::objects()->filter([new QOr(['active' => true, 'run_force' => true])])->all())
         {
             /** @var CronModel $model */
             foreach ($models as $model) {
@@ -79,7 +79,7 @@ class CronCommand extends Command
             $pk = $args[0];
 
             /** @var CronModel $model */
-            if ($model = CronModel::objects()->filter([new QOr(['active' => true, 'run_force' => true]), 'is_run' => false, 'id' => $pk])->get())
+            if ($model = CronModel::objects()->filter([new QOr(['active' => true, 'run_force' => true]), 'id' => $pk])->get())
             {
                 $job = new JobRunner();
                 $job->add($model->name, [
