@@ -41,7 +41,7 @@ class JobRunner extends Jobby
         $binary = $this->getPhpBinary();
 
         $output = $config['debug'] ? 'debug.log' : '/dev/null';
-        exec("$binary $command 1> $output 2>&1 &", $pid);
+        exec("$binary $command 1> $output 2>&1", $pid);
 
     }
 }
