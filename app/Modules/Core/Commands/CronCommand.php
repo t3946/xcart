@@ -59,7 +59,7 @@ class CronCommand extends Command
         {
             /** @var CronModel $model */
             foreach ($models as $model) {
-                $jobby->add($model->name, [
+                $jobby->add($model->name. "__runner", [
                     'schedule' => $model->run_force ? '* * * * *' : $model->schedule,
                     'command'  => 'php ./app/console.php Core Cron run '. $model->pk,
                     'output'   => $cron_logs_path . '/' . $model->log_file,
