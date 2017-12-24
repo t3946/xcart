@@ -9,8 +9,6 @@ global $config, $sql_tbl;
 
 set_time_limit(0);
 
-register_shutdown_function('process_errors');
-
 const LOG_CATEGORY = 'cidev_amazon_orders_v2';
 
 if ($config[LOG_CATEGORY] == "Y") {
@@ -21,7 +19,9 @@ if ($config[LOG_CATEGORY] == "Y") {
     $oMail->subject = sprintf('Attention! Xcart cron %s Already launched', LOG_CATEGORY);
     $oMail->body = Xcart\AmazonMWS::BACK_PROCESS_LOG_NAME_ORDERS . ' already launched';
     $oMail->sendEmail();
-    die("Already launched"); // ################################
+    if (!isset($argv) || (isset($argv) && !in_array('--force-flag', $argv))) {
+        die("Already launched"); // ################################
+    }
 }
 db_query("REPLACE $sql_tbl[config] SET value='Y', name='" . LOG_CATEGORY . "'");
 
@@ -40,16 +40,3 @@ $log_text = "Cron completed. Processing time: {$str_time}";
 func_backprocess_log(Xcart\AmazonMWS::BACK_PROCESS_LOG_NAME_ORDERS, $log_text);
 
 die("DONE!");
-
-function process_errors()
-{
-    $error = error_get_last();
-    if ($error && ($error['type'] & 1)) {
-        $oMail = \Xcart\App\Main\Xcart::app()->oldMail;
-        $oMail->to = 'team@s3stores.com';
-        $oMail->from = ('team@s3stores.com');
-        $oMail->subject = sprintf('Attention! Xcart cron %s failed', LOG_CATEGORY);
-        $oMail->body = $error['message'];
-        $oMail->sendEmail();
-    }
-}
