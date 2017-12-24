@@ -317,11 +317,11 @@ $templates_repository = $xcart_dir . $templates_repository_dir;
 #
 # Set MySQL variable 'max_join_size'
 #
-$mjsize = func_query_first("SHOW VARIABLES LIKE 'max_join_size'");
-if (intval($mjsize['Value']) < 1073741824) {
-    db_query("SET OPTION SQL_MAX_JOIN_SIZE=1073741824");
-}
-unset($mjsize);
+//$mjsize = func_query_first("SHOW VARIABLES LIKE 'max_join_size'");
+//if (intval($mjsize['Value']) < 1073741824) {
+//    db_query("SET OPTION SQL_MAX_JOIN_SIZE=1073741824");
+//}
+//unset($mjsize);
 
 #
 # Read config variables from Database
