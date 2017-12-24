@@ -5,7 +5,7 @@ x_load('cart', 'user', 'order');
 require $xcart_dir . "/include/cart_process.php";
 include $xcart_dir . "/shipping/shipping.php";
 
-x_session_register("cart");
+x_session_register("cart", []);
 x_session_register("intershipper_rates");
 x_session_register("intershipper_rates_all");
 x_session_register("intershipper_recalc");

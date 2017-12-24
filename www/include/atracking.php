@@ -54,7 +54,7 @@ x_session_register("stats_pages_string");
 # Session variables for cart funnel statistics
 x_session_register("stats_transactionid");
 x_session_register("stats_transaction_step");
-x_session_register("cart");
+x_session_register("cart", []);
 
 function update_statistics() {
 	global $stats_pageid, $stats_page_time, $stats_pages_string, $REQUEST_URI, $PHP_SELF, $QUERY_STRING, $sql_tbl;

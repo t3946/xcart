@@ -1691,7 +1691,7 @@ if ($mode == "search") {
             }
 
             if (!empty($products) && $current_area == "C") {
-                x_session_register("cart");
+                x_session_register("cart", []);
 
                 # Get tax rates cache
                 $ids = [];

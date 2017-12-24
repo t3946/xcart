@@ -78,7 +78,7 @@ if (isset($result) && isset($pszPurchorderNum)) {
 #[tipotrans]=SSL
 #[store]=PI00001537
 #[coderror]=180
-#[deserror]=Operación Denegada
+#[deserror]=Operaciï¿½n Denegada
 #[fpago]=000
 
 	$bill_output["sessid"] = func_query_first_cell("SELECT sessionid FROM $sql_tbl[cc_pp3_data] WHERE ref = '".$pszPurchorderNum."'");
@@ -113,7 +113,7 @@ if (isset($result) && isset($pszPurchorderNum)) {
 	$status = array_shift($oids);
 
 	x_session_id($sessid);
-	x_session_register("cart");
+	x_session_register("cart", []);
 
 	$pp_total = 0;
 	$pp_count = 0;

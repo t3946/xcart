@@ -53,7 +53,7 @@ if (!empty($_POST["is_mobile_checkout"])){
 ##
 #
 
-x_session_register("cart");
+x_session_register("cart", []);
 x_session_register("order_secureid");
 x_session_register("intershipper_rates");
 x_session_register("dhl_ext_country_store");

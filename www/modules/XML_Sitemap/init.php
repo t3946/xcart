@@ -46,7 +46,7 @@ if (defined('AREA_TYPE') && in_array(constant('AREA_TYPE'), array('A', 'P'))) {
 			}
 			
 			// Store error or success message in session
-			x_session_register("top_message");
+			x_session_register("top_message", []);
 			if (!empty($xmlmap_error)) {
 				$top_message['content'] = $xmlmap_error;
 				$top_message['type'] = 'E';

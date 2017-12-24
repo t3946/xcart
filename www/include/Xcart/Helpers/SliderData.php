@@ -31,7 +31,7 @@ class SliderData
         global $config, $sql_tbl, $site_domain;
         global $current_storefront;
 
-        x_session_register("cart");
+        x_session_register("cart", []);
 
         $section_name = $mode;
         $saveOrder = false;

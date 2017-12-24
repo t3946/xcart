@@ -47,8 +47,8 @@ $current_area="C";
 x_load('files',"payment");
 
 x_session_register("session_failed_transaction");
-x_session_register("cart");
-x_session_register("top_message");
+x_session_register("cart", []);
+x_session_register("top_message", []);
 x_session_register('pointid_ab_testing_arr');
 
 if (!empty($active_modules['XAffiliate'])) {

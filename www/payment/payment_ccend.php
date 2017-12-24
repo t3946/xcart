@@ -40,7 +40,7 @@ x_load('crypt');
 
 require($xcart_dir."/payment/payment_ccmid.php");
 
-x_session_register("cart");
+x_session_register("cart", []);
 
 if ($bill_error) {
 	if (!empty($bill_output) && $bill_output['code'] == 2 && $bill_output['billmes'] == 'Cancelled') {

@@ -54,7 +54,7 @@ x_session_register("export_ranges");
 
 $smarty->assign("js_enabled", "Y");
 
-x_session_register("top_message");
+x_session_register("top_message", []);
 if (!empty($top_message)) {
 	$smarty->assign("top_message", $top_message);
 	if($config['Adaptives']['is_first_start'] != 'Y')

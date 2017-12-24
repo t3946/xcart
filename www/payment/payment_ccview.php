@@ -58,8 +58,8 @@ $sessid = $a['sessionid'];
 if ($a['is_callback'] != 'N') {
 	if ($XCARTSESSID != $sessid) {
 		x_session_start($sessid);
-		x_session_register("cart");
-		x_session_register("top_message");
+		x_session_register("cart", []);
+		x_session_register("top_message", []);
 	}
 
     func_array2update('cc_pp3_data', array('is_callback' => 'R'), "ref = '".$skey."'");
