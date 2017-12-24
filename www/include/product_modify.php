@@ -261,7 +261,7 @@ if (empty($product_info)) {
 			$top_message["content"] = func_get_langvar_by_name("msg_adm_warn_no_providers");
 			$top_message["type"] = "W";
 			$smarty->assign("top_message", $top_message);
-			$top_message = "";
+			$top_message = [];
 			$section = "error";
 		}
 	}

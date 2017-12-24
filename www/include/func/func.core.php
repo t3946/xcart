@@ -368,8 +368,10 @@ function func_get_langvar_by_name($lang_name, $replace_to = null, $force_code = 
     }
 
     $result = func_query_first_cell("SELECT value FROM $sql_tbl[languages] WHERE code='$language_code' AND name='$lang_name'");
+
     if (empty($result)) {
         $_language_code = ($current_area == "C" ? $config["default_customer_language"] : $config["default_admin_language"]);
+
         if ($_language_code != $language_code) {
             $result = func_query_first_cell("SELECT value FROM $sql_tbl[languages] WHERE code='$_language_code' AND name='$lang_name'");
         }
@@ -382,10 +384,6 @@ function func_get_langvar_by_name($lang_name, $replace_to = null, $force_code = 
         foreach ($replace_to as $k => $v) {
             $result = str_replace("{{" . $k . "}}", $v, $result);
         }
-    }
-
-    if ($smarty->webmaster_mode && !$cancel_wm) {
-        $result = func_webmaster_label($user_agent, $lang_name, $result);
     }
 
     return $result;

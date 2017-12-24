@@ -59,7 +59,7 @@ x_session_register("top_message", []);
 if (!empty($top_message)) {
 	$smarty->assign("top_message", $top_message);
 	if($config['Adaptives']['is_first_start'] != 'Y')
-		$top_message = "";
+		$top_message = [];
 	x_session_save("top_message");
 }
 

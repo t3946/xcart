@@ -1,6 +1,6 @@
 <?php
 define('XCART_START' , true);
-date_default_timezone_set('US/Pacific'); //Magic;
+date_default_timezone_set('EST');
 
 $xcart_dir = __DIR__ . '/../www/';
 
