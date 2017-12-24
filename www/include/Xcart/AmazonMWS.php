@@ -899,10 +899,10 @@ SQL;
         $this->$methodName();
 
         while ((!empty($this->dom_xml_arr["Caught_Exception"]) && $this->dom_xml_arr["Caught_Exception"] == "Request is throttled" && $this->dom_xml_arr["Response_Status_Code"] == "503") || !$this->checkLoopExitConditionStatus()) {
-            func_flush("sleeping...");
+            func_flush("sleeping...\n");
             func_flush();
             sleep($this->sleepTimeOut);
-            func_flush("Unsleeped");
+            func_flush("Unsleeped\n");
             func_flush();
             $this->$methodName();
             if (!empty($this->error)) return $this;
