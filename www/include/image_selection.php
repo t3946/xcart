@@ -60,7 +60,7 @@ if (strpos($type, 'D') === false) {
 }
 
 if ($not_image == 'avail') {
-	x_session_register("file_upload_data_not_image");
+	x_session_register("file_upload_data_not_image", []);
 	$image_extensions = array('jpeg', 'jpg', 'gif', 'png', 'bmp');
 }
 
