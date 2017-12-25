@@ -24,7 +24,9 @@ if ($config[$log_category] == "Y") {
     $oMail->subject = sprintf('Attention! Xcart cron %s Already launched', $log_category);
     $oMail->body = $log_category . ' already launched';
     $oMail->sendEmail();
-    die("Already launched"); // ################################
+    if (!isset($argv) || (isset($argv) && !in_array('--force-flag', $argv))) {
+        die("Already launched"); // ################################
+    }
 }
 
 db_query_param("REPLACE xcart_config SET value='Y', name=:log_category", ['log_category' => $log_category]);
