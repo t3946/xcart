@@ -295,6 +295,10 @@ function func_select_order($orderid)
 
     $order["extra"] = @unserialize($order["extra"]);
 
+    if (empty($order["extra"]) || !is_array($order["extra"])) {
+        $order["extra"] = [];
+    }
+
     if (!empty($order["b_company"]) || !empty($order["s_company"])) {
         $order["extra"]                        = ["additional_fields" => []];
         $order["extra"]["additional_fields"][] = ['fieldid' => 1, 'section' => 'B', 'value' => $order['b_company'], 'title' => 'Company'];
