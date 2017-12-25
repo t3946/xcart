@@ -33,9 +33,14 @@ $start_time = new DateTime('now');
 $log_text = " * * *  Cron started  * * * ";
 func_backprocess_log($log_category, $log_text);
 
+print $log_text . PHP_EOL;
+
 $ogModels = OrderGroupModel::objects()->filter(['amz_fullfilment_order_placed' => 'Y'])->all();
 if ($ogModels) {
-    func_backprocess_log($log_category, sprintf("Processing %d Send by Amazon orders", count($ogModels)));
+    func_backprocess_log($log_category, $log = sprintf("Processing %d Send by Amazon orders", count($ogModels)));
+
+    print $log . PHP_EOL;
+
     $amzPool = new AmazonPoolStore();
     $oClientPack = $amzPool->getFbaOutboundClientPack();
     /** @var OrderGroupModel $ogm */
@@ -61,7 +66,9 @@ if ($ogModels) {
                         $ogm->tracking = $old;
                         $ogm->dc_status = 'S';
 
-                        func_backprocess_log($log_category, "Add tracking number {$amTrack['track_number']} in order {$ogm->orderid}");
+                        func_backprocess_log($log_category, $log = "Add tracking number {$amTrack['track_number']} in order {$ogm->orderid}");
+
+                        print $log . PHP_EOL;
 
                         $ogm->save();
 
@@ -70,7 +77,7 @@ if ($ogModels) {
                 }
             }
         } catch(FBAOutboundServiceMWS_Exception $e){
-            print($e->getMessage());
+            print($e->getMessage() . PHP_EOL) ;
             func_backprocess_log($log_category, "callGetFulfillmentOrder error. OrderId: {$ogm->orderid}. " . $e->getMessage());
         }
     }
@@ -83,7 +90,10 @@ $ogModels = OrderModel::objects()
     ->filter(['amazon_fulfillment_channel' => 'MFN'])
     ->all();
 if ($ogModels) {
-    func_backprocess_log($log_category, sprintf("Processing %d MFN orders", count($ogModels)));
+    func_backprocess_log($log_category, $log = sprintf("Processing %d MFN orders", count($ogModels)));
+
+    print $log . PHP_EOL;
+
     foreach($ogModels as $order) {
         if ($groups = $order->groups){
             /** @var OrderGroupModel $group */
@@ -117,4 +127,5 @@ $str_time = (new DateTime('now'))->diff($start_time)->format('%H:%I:%S');
 $log_text = "Cron completed. Processing time: {$str_time}";
 func_backprocess_log($log_category, $log_text);
 
-print "Done.";
+print $log_text . PHP_EOL;
+print "Done." . PHP_EOL;
