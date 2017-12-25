@@ -306,7 +306,7 @@ function func_select_order($orderid)
         $order["extra"]["additional_fields"][] = ['fieldid' => 1, 'section' => 'B', 'value' => $order['b_company'], 'title' => 'Company'];
         $order["extra"]["additional_fields"][] = ['fieldid' => 2, 'section' => 'S', 'value' => $order['s_company'], 'title' => 'Company'];
     }
-    if (!empty($order['tax_info_display_taxed_order_totals'])) {
+    /*if (!empty($order['tax_info_display_taxed_order_totals'])) {
         $order["extra"]['tax_info']['display_taxed_order_totals'] = [];
         $order["extra"]['tax_info']['display_taxed_order_totals'] = $order['tax_info_display_taxed_order_totals'];
     }
@@ -323,7 +323,7 @@ function func_select_order($orderid)
     }
     if (floatval($order['tax_info_taxed_shipping']) > 0) {
         $order["extra"]['tax_info']['taxed_shipping'] = $order['tax_info_taxed_shipping'];
-    }
+    }*/
 
     foreach ($price_details_names as $pn) {
         if (floatval($order['shipping_total_' . $pn]) > 0) {
