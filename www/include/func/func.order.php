@@ -293,7 +293,13 @@ function func_select_order($orderid)
 
     $order["notes"] = stripslashes($order["notes"]);
 
-    $order["extra"] = @unserialize($order["extra"]);
+    if (!$order["extra"] = @unserialize($order["extra"])) {
+        $order["extra"] = [];
+    }
+
+    if (empty($order["extra"]['tax_info'])) {
+        $order["extra"]['tax_info'] = [];
+    }
 
     if (!empty($order["b_company"]) || !empty($order["s_company"])) {
         $order["extra"]                        = ["additional_fields" => []];
