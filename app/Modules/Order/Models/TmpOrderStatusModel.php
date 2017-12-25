@@ -4,6 +4,7 @@ namespace Modules\Order\Models;
 
 use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\CharField;
+use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Model;
 
 class TmpOrderStatusModel extends Model
@@ -21,7 +22,7 @@ class TmpOrderStatusModel extends Model
     {
         return [
             'code' => [
-                'class' => CharField::className(),
+                'class' => IntField::className(),
                 'primary' => true
             ],
         ];

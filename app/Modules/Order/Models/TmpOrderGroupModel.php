@@ -48,7 +48,7 @@ class TmpOrderGroupModel extends Model
             'cb_status_model' => [
                 'field' => 'cb_status',
                 'class' => ForeignField::className(),
-                'modelClass' => OrderStatusModel::className(),
+                'modelClass' => TmpOrderStatusModel::className(),
                 'link' => ['cb_status' => 'code'],
                 'null' => false,
             ],
