@@ -24,7 +24,7 @@ class TmpOrderGroupModel extends Model
 
     public static function tableName()
     {
-        return 'xcart_order_groups';
+        return 'tmp_og';
     }
 
     public static function getFields()
