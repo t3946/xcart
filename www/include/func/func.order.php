@@ -325,7 +325,7 @@ function func_select_order($orderid)
         $order["extra"]['tax_info']['taxed_shipping'] = $order['tax_info_taxed_shipping'];
     }*/
 
-    foreach ($price_details_names as $pn) {
+    /*foreach ($price_details_names as $pn) {
         if (floatval($order['shipping_total_' . $pn]) > 0) {
             $order["extra"]['shipping_total'][$pn] = $order['shipping_total_' . $pn];
         }
@@ -335,7 +335,7 @@ function func_select_order($orderid)
         if (floatval($order['total_' . $pn]) > 0) {
             $order["extra"]['total'][$pn] = $order['total_' . $pn];
         }
-    }
+    }*/
 
     $extras = func_query("SELECT khash, value FROM $sql_tbl[order_extras] WHERE orderid = '$orderid'");
     if (!empty($extras)) {
