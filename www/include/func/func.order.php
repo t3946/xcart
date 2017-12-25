@@ -293,25 +293,17 @@ function func_select_order($orderid)
 
     $order["notes"] = stripslashes($order["notes"]);
 
-    if (!$order["extra"] = @unserialize($order["extra"])) {
-        $order["extra"] = [];
-    }
-
-    if (empty($order["extra"]['tax_info'])) {
-        $order["extra"]['tax_info'] = [];
-    }
+    $order["extra"] = @unserialize($order["extra"]);
 
     if (!empty($order["b_company"]) || !empty($order["s_company"])) {
         $order["extra"]                        = ["additional_fields" => []];
         $order["extra"]["additional_fields"][] = ['fieldid' => 1, 'section' => 'B', 'value' => $order['b_company'], 'title' => 'Company'];
         $order["extra"]["additional_fields"][] = ['fieldid' => 2, 'section' => 'S', 'value' => $order['s_company'], 'title' => 'Company'];
     }
-    /*if (!empty($order['tax_info_display_taxed_order_totals'])) {
-        $order["extra"]['tax_info']['display_taxed_order_totals'] = [];
+    if (!empty($order['tax_info_display_taxed_order_totals'])) {
         $order["extra"]['tax_info']['display_taxed_order_totals'] = $order['tax_info_display_taxed_order_totals'];
     }
     if (!empty($order['tax_info_display_cart_products_tax_rates'])) {
-        $order["extra"]['tax_info']['display_cart_products_tax_rates'] = [];
         $order["extra"]['tax_info']['display_cart_products_tax_rates'] = $order['tax_info_display_cart_products_tax_rates'];
     }
 
@@ -323,9 +315,9 @@ function func_select_order($orderid)
     }
     if (floatval($order['tax_info_taxed_shipping']) > 0) {
         $order["extra"]['tax_info']['taxed_shipping'] = $order['tax_info_taxed_shipping'];
-    }*/
+    }
 
-    /*foreach ($price_details_names as $pn) {
+    foreach ($price_details_names as $pn) {
         if (floatval($order['shipping_total_' . $pn]) > 0) {
             $order["extra"]['shipping_total'][$pn] = $order['shipping_total_' . $pn];
         }
@@ -335,7 +327,7 @@ function func_select_order($orderid)
         if (floatval($order['total_' . $pn]) > 0) {
             $order["extra"]['total'][$pn] = $order['total_' . $pn];
         }
-    }*/
+    }
 
     $extras = func_query("SELECT khash, value FROM $sql_tbl[order_extras] WHERE orderid = '$orderid'");
     if (!empty($extras)) {
