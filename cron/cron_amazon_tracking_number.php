@@ -49,7 +49,7 @@ if ($ogModels) {
     foreach ($ogModels as $ogm){
         $tracks = [];
         try {
-            $res = AmazonFbaOutboundHelper::getFulfillmentOrderTrackingNumbers($oClientPack->callGetFulfillmentOrder($ogm->getDataModel()->getAmazonShippingOrderId()));
+            $res = AmazonFbaOutboundHelper::getFulfillmentOrderTrackingNumbers($oClientPack->callGetFulfillmentOrder($ogm->getAmazonShippingOrderId()));
             if (!empty($res)) {
                 if (!empty($ogm->tracking)) {
                     $tracks = array_map(function ($a) {return $a['tracknum'];}, $ogm->tracking);
