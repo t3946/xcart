@@ -22,7 +22,7 @@ class TmpOrderStatusModel extends Model
     {
         return [
             'code' => [
-                'class' => IntField::className(),
+                'class' => CharField::className(),
                 'primary' => true
             ],
         ];
