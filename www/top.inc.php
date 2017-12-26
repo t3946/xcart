@@ -107,7 +107,9 @@ $__smarty_size = $bench_max_session = $bench_max_memory = 0;
 #
 $xcart_dir = realpath(dirname(__FILE__));
 if (substr($xcart_dir, -1) == DIRECTORY_SEPARATOR)
-	$xcart_dir = substr($xcart_dir, 0, -1);
+    $xcart_dir = substr($xcart_dir, 0, -1);
+
+$runtime_dir = $xcart_dir . "/../app/runtime/";
 
 # Directories location definition
 # Examples:
