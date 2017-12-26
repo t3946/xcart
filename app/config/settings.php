@@ -131,7 +131,7 @@ return array_replace_recursive([
        'logger' => include __DIR__. DS . 'logger.php',
        'errorHandler' => [
            'class' => '\\Xcart\\App\\Main\\ErrorHandler',
-           'debug' => false,
+           'debug' => true,
            'ignoringTypes' => [
                E_DEPRECATED,
                E_USER_DEPRECATED,
