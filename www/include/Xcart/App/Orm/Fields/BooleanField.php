@@ -30,7 +30,7 @@ class BooleanField extends Field
      */
     public function getSqlType()
     {
-        return Type::getType(Type::SMALLINT);
+        return Type::getType(Type::INTEGER);
     }
 
     /**
