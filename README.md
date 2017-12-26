@@ -20,10 +20,18 @@ return [
 ];
 ```
 
-Create folders:
-- /app/runtime
-- /www/files/product_feeds_v2/
-- /www/files/reconciliation_feeds/
+- Create folders:
+    - /app/runtime
+    - /www/media/
+    - /www/files/
+    - /www/product_files/
+    - /www/images/
+
+- Static files build:
+    - install `bower`
+    - install `node.js` and `npm`
+    - run `bower install && npm instal` in `/www/static/`
+    - run `npm run gupl watch:frontend` or `npm run gulp watch:backend` for building distribution static files.
 
 ---
 #Соглашение о разработке
