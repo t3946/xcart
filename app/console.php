@@ -4,7 +4,7 @@ date_default_timezone_set('EST');
 
 $xcart_dir = __DIR__ . '/../www/';
 
-require_once __DIR__ .'/../www/include/libs/autoload.php';
+require_once __DIR__ .'/../app/vendors/autoload.php';
 use Xcart\App\Main\Xcart;
 $config = include __DIR__ . '/config/settings.php';
 

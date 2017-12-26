@@ -7,6 +7,7 @@ $baseDir = dirname(dirname(dirname($vendorDir)));
 
 return array(
     'CallbackFilterIterator' => $vendorDir . '/symfony/polyfill-php54/Resources/stubs/CallbackFilterIterator.php',
+    'Config_File' => $baseDir . '/app/include/smarty/Config_File.class.php',
     'FBAInventoryServiceMWS_Client' => $vendorDir . '/caponica/amazon-mws-complete/src/AmazonPhpClientLibrary/FBAInventoryServiceMWS/Client.php',
     'FBAInventoryServiceMWS_Exception' => $vendorDir . '/caponica/amazon-mws-complete/src/AmazonPhpClientLibrary/FBAInventoryServiceMWS/Exception.php',
     'FBAInventoryServiceMWS_Interface' => $vendorDir . '/caponica/amazon-mws-complete/src/AmazonPhpClientLibrary/FBAInventoryServiceMWS/Interface.php',
@@ -202,4 +203,8 @@ return array(
     'RecursiveCallbackFilterIterator' => $vendorDir . '/symfony/polyfill-php54/Resources/stubs/RecursiveCallbackFilterIterator.php',
     'RequestType' => $vendorDir . '/caponica/amazon-mws-complete/src/AmazonPhpClientLibrary/MarketplaceWebService/RequestType.php',
     'SessionHandlerInterface' => $vendorDir . '/symfony/polyfill-php54/Resources/stubs/SessionHandlerInterface.php',
+    'Smarty' => $baseDir . '/app/include/smarty/Smarty.class.php',
+    'Smarty_Compiler' => $baseDir . '/app/include/smarty/Smarty_Compiler.class.php',
+    'TemplateCompiler' => $baseDir . '/app/include/templater/templater.php',
+    'Templater' => $baseDir . '/app/include/templater/templater.php',
 );

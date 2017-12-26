@@ -9,7 +9,7 @@ return array(
     'phpseclib\\' => array($vendorDir . '/phpseclib/phpseclib/phpseclib'),
     'Xcart\\External_Product_Verification\\' => array($baseDir . '/www/modules/External_Product_Verification/include'),
     'Xcart\\External_Marketplaces\\' => array($baseDir . '/www/modules/External_Marketplaces/include'),
-    'Xcart\\' => array($baseDir . '/www/include/Xcart'),
+    'Xcart\\' => array($baseDir . '/app/include/Xcart'),
     'Ups\\' => array($vendorDir . '/gabrielbull/ups-api/src/Ups'),
     'TrueBV\\' => array($vendorDir . '/true/punycode/src'),
     'TheIconic\\Tracking\\GoogleAnalytics\\' => array($vendorDir . '/theiconic/php-ga-measurement-protocol/src'),

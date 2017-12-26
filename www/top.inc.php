@@ -76,19 +76,19 @@ define('BENCH_MEM_LIMIT', 0.1);
 # Remove results of automatic variables registration then register_globals=on
 #
 
-    foreach (get_defined_vars() as $__key => $__val) {
-        if (defined('USE_TRUSTED_POST_VARIABLES') && $__key == "trusted_post_variables") {
-            continue;
-        }
-
-        if (defined('XCART_INSTALL') && $__key == "module_definition") {
-            continue;
-        }
-
-	    if (!in_array($__key, array('GLOBALS', '_GET', '_POST', '_SERVER', '_ENV', '_COOKIE', '_FILES', '__key', '__val', 'HTTP_RAW_POST_DATA','_xhprof'))) {
-		unset($$__key);
-	}
+foreach (get_defined_vars() as $__key => $__val) {
+    if (defined('USE_TRUSTED_POST_VARIABLES') && $__key == "trusted_post_variables") {
+        continue;
     }
+
+    if (defined('XCART_INSTALL') && $__key == "module_definition") {
+        continue;
+    }
+
+    if (!in_array($__key, array('GLOBALS', '_GET', '_POST', '_SERVER', '_ENV', '_COOKIE', '_FILES', '__key', '__val', 'HTTP_RAW_POST_DATA','_xhprof'))) {
+        unset($$__key);
+    }
+}
 
 unset($__key, $__val);
 
@@ -145,4 +145,4 @@ define('PAYMENT_CHARGED_STATUS', 4);
 define('X_USE_PAYPAL_FLOW', true);
 
 }
-require_once "include/libs/autoload.php";
+require_once $xcart_dir . "/../app/include/vendors/autoload.php";

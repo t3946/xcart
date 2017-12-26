@@ -470,7 +470,7 @@ function x_register_js($file)
 {
     global $smarty, $xcart_dir, $x_defer_resources;
 
-    include_once $xcart_dir . '/include/templater/plugins/function.load_defer.php';
+    include_once $xcart_dir . '/../app/include/templater/plugins/function.load_defer.php';
 
     $result = smarty_function_load_defer(
         array(
@@ -490,7 +490,7 @@ function x_register_css($file)
 {
     global $smarty, $xcart_dir, $x_defer_resources;
 
-    include_once $xcart_dir . '/include/templater/plugins/function.load_defer.php';
+    include_once $xcart_dir . '/../app/include/templater/plugins/function.load_defer.php';
 
     $result = smarty_function_load_defer(
         array(

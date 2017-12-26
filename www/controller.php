@@ -5,9 +5,9 @@ date_default_timezone_set('EST');
 defined('XCART_APP') ?: define('XCART_APP', 1);
 defined('XCART_EXT_ENV') ?: define('XCART_EXT_ENV', 1);
 
-$XCART_APP_CONFIG = include './../app/config/settings_controller.php';
+$XCART_APP_CONFIG = include __DIR__ . '/../app/config/settings_controller.php';
 
-require_once './include/libs/autoload.php';
+require_once __DIR__ . '/../app/include/vendors/autoload.php';
 //require_once "./auth.php";
 
 use Xcart\App\Main\Xcart;
