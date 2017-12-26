@@ -142,11 +142,11 @@ else {
 $smarty->assign("js_update_link", $js_update_link);
 $smarty->assign("js_enabled", $js_enabled);
 
-x_session_register("top_message");
+x_session_register("top_message", []);
 if (!empty($top_message)) {
 	$smarty->assign("top_message", $top_message);
 	if ($config['Adaptives']['is_first_start'] != 'Y')
-		$top_message = "";
+		$top_message = [];
 
 	x_session_save("top_message");
 }

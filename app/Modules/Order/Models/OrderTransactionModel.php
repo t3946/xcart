@@ -2,6 +2,7 @@
 
 namespace Modules\Order\Models;
 
+use Doctrine\DBAL\Types\Type;
 use Modules\Order\Stores\OrderTransactionStore;
 use Modules\Payment\Models\PaymentMethodModel;
 use Modules\User\Models\UserModel;
@@ -92,6 +93,7 @@ class OrderTransactionModel extends Model
                 'class' => ForeignField::className(),
                 'modelClass' => UserModel::className(),
                 'link' => ['login' => 'login'],
+                'sqlType' => Type::STRING,
             ],
             'order' => [
                 'field' => 'orderid',

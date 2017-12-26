@@ -3,7 +3,7 @@
 *.tiff
 *.log
 *.mmdb
-www.*_*.xml
+www.*.xml
 thumbs.db
 Thumbs.db
 .DS_Store

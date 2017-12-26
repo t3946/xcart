@@ -60,7 +60,7 @@ if (strpos($type, 'D') === false) {
 }
 
 if ($not_image == 'avail') {
-	x_session_register("file_upload_data_not_image");
+	x_session_register("file_upload_data_not_image", []);
 	$image_extensions = array('jpeg', 'jpg', 'gif', 'png', 'bmp');
 }
 
@@ -263,6 +263,10 @@ if ($REQUEST_METHOD == "POST") {
 	$data["id"] = $id;
 	$data["type"] = $type;
 	$data["date"] = time();
+
+	if (empty($file_upload_data) || !is_array($file_upload_data)) {
+        $file_upload_data = [];
+	}
 
 	if (!empty($multi_id)) {
 		if ($not_image != 'avail' || $not_image == 'avail' && $is_image) {

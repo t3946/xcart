@@ -2,7 +2,7 @@ const fs = require('fs');
 const imagemin = require('gulp-imagemin');
 
 // var modulesDir = 'node_modules';
-var modulesDir = '../app/Modules';
+var modulesDir = '../../app/Modules';
 
 var modules = fs.readdirSync(modulesDir).map(function (module) {
     return modulesDir + '/' + module;

@@ -135,7 +135,7 @@ if ($msg_type != "") {
 	$top_message["type"] = $msg_type;
 	$top_message["no_close"] = true;
 	$smarty->assign("top_message", $top_message);
-	$top_message = "";
+	$top_message = [];
 }
 
 if ($result != "" && ($msg_type=="" || $msg_type=="I" && @$result["data"]["check_error"] != "IP_NOT_FOUND")) {

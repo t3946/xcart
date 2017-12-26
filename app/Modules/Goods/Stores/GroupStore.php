@@ -137,7 +137,7 @@ class GroupStore extends BaseStore
 
         $qs->filter([
             'products__forsale' => 'Y',
-            'storefront__through__sfid' => $this->data['sfid'],
+            'products__sites__through__sfid' => $this->data['sfid'],
             'products__group_root__isnull' => true
         ]);
 

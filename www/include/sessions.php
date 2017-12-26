@@ -126,7 +126,7 @@ function check_session_var($varname)
 #
 # Register variable XCART_SESSION_VARS array from the database
 #
-function x_session_register($varname, $default = null)
+function x_session_register($varname, $default = "")
 {
     if (empty($varname)) {
         return;

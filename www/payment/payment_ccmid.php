@@ -81,7 +81,7 @@ if (!empty($bill_output["sessid"])) {
 	$sessurl = $XCART_SESSION_NAME."=".$bill_output["sessid"]."&";
 
 	x_session_id($bill_output["sessid"]);
-	x_session_register("cart");
+	x_session_register("cart", []);
 	x_session_register("secure_oid");
 	$orderids = $secure_oid;
 }

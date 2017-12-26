@@ -21,6 +21,10 @@ $(function () {
             this.initSort();
         },
         setUrl: function (url) {
+            if (window.history) {
+                window.history.pushState({}, document.title, url);
+            }
+
             this.currentUrl = url;
             this.update();
         },
@@ -72,8 +76,6 @@ $(function () {
         update: function () {
             var me = this;
             me.setLoading();
-
-            console.log(this.currentUrl);
 
             $.ajax({
                 url: this.currentUrl,

@@ -2,6 +2,7 @@
 
 namespace Modules\Core\Models;
 
+use Doctrine\DBAL\Types\Type;
 use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\CharField;
@@ -37,12 +38,14 @@ class GeoipLitecityLocationModel extends Model
             'country_model' => [
                 'field' => 'country',
                 'class' => ForeignField::className(),
+                'sqlType' => Type::STRING,
                 'modelClass' => CountryModel::className(),
                 'link' => ['country' => 'code'],
             ],
             'state_model' => [
                 'field' => 'region',
                 'class' => ForeignField::className(),
+                'sqlType' => Type::STRING,
                 'modelClass' => StateModel::className(),
                 'link' => [
                     'region' => 'code',

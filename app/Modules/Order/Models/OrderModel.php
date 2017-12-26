@@ -1,6 +1,7 @@
 <?php
 namespace Modules\Order\Models;
 
+use Doctrine\DBAL\Types\Type;
 use Modules\Core\Models\StateModel;
 use Modules\Order\Helpers\OrderHelper;
 use Modules\Goods\Models\ProductModel;
@@ -71,6 +72,7 @@ class OrderModel extends Model
                 'field' => 's_state',
                 'class' => ForeignField::className(),
                 'modelClass' => StateModel::className(),
+                'sqlType' => Type::STRING,
                 'link' => [
                     's_state' => 'code',
                     's_country' => 'country_code'
@@ -81,6 +83,7 @@ class OrderModel extends Model
                 'class' => ForeignField::className(),
                 'modelClass' => OrderStatusModel::className(),
                 'link' => ['cb_status' => 'code'],
+                'sqlType' => Type::STRING,
                 'null' => false,
             ],
             'dc_status_model' => [
@@ -88,6 +91,7 @@ class OrderModel extends Model
                 'class' => ForeignField::className(),
                 'modelClass' => OrderStatusModel::className(),
                 'link' => ['dc_status' => 'code'],
+                'sqlType' => Type::STRING,
                 'null' => false,
             ],
             'fraud_status_model' => [
@@ -95,6 +99,7 @@ class OrderModel extends Model
                 'class' => ForeignField::className(),
                 'modelClass' => FraudStatusModel::className(),
                 'link' => ['fraud_status' => 'code'],
+                'sqlType' => Type::STRING,
                 'null' => false,
             ],
             'extra' => [

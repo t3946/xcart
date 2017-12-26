@@ -216,9 +216,9 @@ $fedex_default_rates_dir = $xcart_dir.DIRECTORY_SEPARATOR."shipping".DIRECTORY_S
 # Temporary directories
 #
 $var_dirs = array (
-	"tmp" => $xcart_dir."/var/tmp",
-	"templates_c" => $xcart_dir."/var/templates_c",
-	"upgrade" => $xcart_dir."/var/upgrade"
+	"tmp" => $runtime_dir . "/tmp",
+	"templates_c" => $runtime_dir."/templates_c",
+	"upgrade" => $runtime_dir."/upgrade"
 );
 
 $var_dirs_web = array (
@@ -230,7 +230,7 @@ $var_dirs_web = array (
 # The variable $var_dirs["log"] defines the location of the directory where X-Cart log
 # files are stored.
 #
-$var_dirs["log"] = $xcart_dir."/var/log";
+$var_dirs["log"] = $runtime_dir."/log";
 
 #
 # Cache directory
@@ -238,8 +238,8 @@ $var_dirs["log"] = $xcart_dir."/var/log";
 # The variable $var_dirs["cache"] defines the location of the directory where
 # X-Cart cache files are stored.
 #
-$var_dirs["cache"] = $xcart_dir."/var/cache";
-$var_dirs_web["cache"] = "/var/cache";
+$var_dirs["cache"] = $runtime_dir."/xcache";
+$var_dirs_web["cache"] = $runtime_dir. "/xcache";
 
 #
 # Export directory

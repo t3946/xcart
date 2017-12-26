@@ -62,7 +62,7 @@ if (!empty($purchase_order_selected)) {
 ## Mobile
 ###
 if ($top_btn == "Y"){
-        $e_search_data["substring"] = "";
+        $e_search_data["substring"] = [];
         x_session_save("e_search_data");
 
 
@@ -170,7 +170,7 @@ if (is_array($e_search_data) && !empty($e_search_data["substring"])){
         if ($cat != $e_search_data["current_categoryid"] && !empty($e_search_data["substring"])){
 
 		if (empty($mode_search)) {
-			$e_search_data = "";
+			$e_search_data = [];
 		}
         }
 
@@ -250,7 +250,7 @@ if (is_array($e_search_data) && !empty($e_search_data["substring"])){
 
 }
 else {
-        $e_search_data = "";
+        $e_search_data = [];
 
 	if (empty($products) && empty($keyphrase)) {
         	if (!empty($cat)){

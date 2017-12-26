@@ -177,6 +177,8 @@ if ($brandid) {
 ##
 ###
     if (!empty($active_modules['CIDEV_Best_Search_Filter'])) {
+        if (!is_array($filter_selected_and_found_brands)) { $filter_selected_and_found_brands = []; }
+
         $filter_selected_and_found_brands[0]["brandid"] = $brandid;
         $filter_selected_and_found_brands[0]["selected"] = "Y";
         $filter_selected_and_found_brands[0]["selected_and_found"] = "Y";

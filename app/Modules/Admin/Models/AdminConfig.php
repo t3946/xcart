@@ -35,22 +35,22 @@ class AdminConfig extends Model
         return [
             'module' => [
                 'class' => CharField::className(),
-                'label' => 'Module'
+                'verboseName' => 'Module'
             ],
             'admin' => [
                 'class' => CharField::className(),
-                'label' => 'Admin'
+                'verboseName' => 'Admin'
             ],
             'user' => [
                 'class' => ForeignField::className(),
-                'label' => 'User',
+                'verboseName' => 'User',
                 'modelClass' => UserModel::className(),
                 'link' => ['user_id' => 'id']
             ],
             // Comma-separated columns
             'columns' => [
                 'class' => TextField::className(),
-                'label' => 'Columns',
+                'verboseName' => 'Columns',
                 'null' => true
             ]
         ];

@@ -118,4 +118,3 @@ function func_dc_payments_https() {
 
 	return func_query("SELECT $sql_tbl[payment_methods].paymentid, $sql_tbl[ccprocessors].processor FROM $sql_tbl[payment_methods] USE INDEX (protocol) LEFT JOIN $sql_tbl[ccprocessors] ON $sql_tbl[payment_methods].paymentid = $sql_tbl[ccprocessors].paymentid WHERE $sql_tbl[payment_methods].protocol = 'https'");
 }
-?>

@@ -2,6 +2,7 @@
 
 namespace Modules\PBX\Models;
 
+use Doctrine\DBAL\Types\Type;
 use Modules\Order\Models\OrderModel;
 use Modules\Order\Models\OrdersCallsModel;
 use Modules\PBX\Helpers\AnveoAssignCalls;
@@ -53,8 +54,9 @@ class PbxAnveoCallModel extends Model
             'id' => AutoField::className(),
 
             'account' => [
-                'field' => 'anveo_account',
                 'class' => ForeignField::className(),
+                'field' => 'anveo_account',
+                'sqlType' => Type::STRING,
                 'modelClass' => PbxOptionsModel::className(),
                 'link' => [ 'anveo_account' => 'anveo_account'],
             ],

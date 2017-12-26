@@ -10,12 +10,12 @@ vim: set ts=2 sw=2 sts=2 et:
 {*<meta name="viewport" content="width=width, initial-scale=1, minimum-scale=0.25, maximum-scale=5, user-scalable=yes" />*}
 <meta name="viewport" content="width=width, initial-scale={if $is_tablet}0.9{else}0.6{/if}, minimum-scale=0.6, maximum-scale=1, user-scalable=yes" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
-<link rel="shortcut icon" type="image/png" href="{if $config.Appearance.CDN_domain ne "" && $config.Appearance.Enable_CDN eq "Y"}{if $add_http_if_cdn eq "Y"}http://{/if}{$config.Appearance.CDN_domain}{else}{$current_location}{/if}/favicon.ico" />
-<link rel="apple-touch-icon-precomposed" href="{if $config.Appearance.CDN_domain ne "" && $config.Appearance.Enable_CDN eq "Y"}{if $add_http_if_cdn eq "Y"}http://{/if}{$config.Appearance.CDN_domain}{else}{$current_location}{/if}/touch-icon-iphone-retina.png" />
-<link rel="apple-touch-icon" href="{if $config.Appearance.CDN_domain ne "" && $config.Appearance.Enable_CDN eq "Y"}{if $add_http_if_cdn eq "Y"}http://{/if}{$config.Appearance.CDN_domain}{else}{$current_location}{/if}/touch-icon-iphone.png" />
-<link rel="apple-touch-icon" sizes="72x72" href="{if $config.Appearance.CDN_domain ne "" && $config.Appearance.Enable_CDN eq "Y"}{if $add_http_if_cdn eq "Y"}http://{/if}{$config.Appearance.CDN_domain}{else}{$current_location}{/if}/touch-icon-ipad.png" />
-<link rel="apple-touch-icon" sizes="114x114" href="{if $config.Appearance.CDN_domain ne "" && $config.Appearance.Enable_CDN eq "Y"}{if $add_http_if_cdn eq "Y"}http://{/if}{$config.Appearance.CDN_domain}{else}{$current_location}{/if}/touch-icon-iphone-retina.png" />
-<link rel="apple-touch-icon" sizes="144x144" href="{if $config.Appearance.CDN_domain ne "" && $config.Appearance.Enable_CDN eq "Y"}{if $add_http_if_cdn eq "Y"}http://{/if}{$config.Appearance.CDN_domain}{else}{$current_location}{/if}/touch-icon-ipad-retina.png" />
+<link rel="shortcut icon" type="image/png" href="{if $config.Appearance.CDN_domain ne "" && $config.Appearance.Enable_CDN eq "Y"}//{$config.Appearance.CDN_domain}{else}{$current_location}{/if}/favicon.ico" />
+<link rel="apple-touch-icon-precomposed" href="{if $config.Appearance.CDN_domain ne "" && $config.Appearance.Enable_CDN eq "Y"}//{$config.Appearance.CDN_domain}{else}{$current_location}{/if}/touch-icon-iphone-retina.png" />
+<link rel="apple-touch-icon" href="{if $config.Appearance.CDN_domain ne "" && $config.Appearance.Enable_CDN eq "Y"}//{$config.Appearance.CDN_domain}{else}{$current_location}{/if}/touch-icon-iphone.png" />
+<link rel="apple-touch-icon" sizes="72x72" href="{if $config.Appearance.CDN_domain ne "" && $config.Appearance.Enable_CDN eq "Y"}//{$config.Appearance.CDN_domain}{else}{$current_location}{/if}/touch-icon-ipad.png" />
+<link rel="apple-touch-icon" sizes="114x114" href="{if $config.Appearance.CDN_domain ne "" && $config.Appearance.Enable_CDN eq "Y"}//{$config.Appearance.CDN_domain}{else}{$current_location}{/if}/touch-icon-iphone-retina.png" />
+<link rel="apple-touch-icon" sizes="144x144" href="{if $config.Appearance.CDN_domain ne "" && $config.Appearance.Enable_CDN eq "Y"}//{$config.Appearance.CDN_domain}{else}{$current_location}{/if}/touch-icon-ipad-retina.png" />
 {if $canonical_url}
   {if $oProduct && $oProduct->isGroupChild() && $oProduct->parent}
     <link rel="canonical" href="{$oProduct->parent->getUrl()}" />

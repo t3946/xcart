@@ -41,7 +41,7 @@ if ($REQUEST_METHOD == 'POST' && ($_POST['transId'] == 'getOrder' || $_GET['tran
 	$sessid = func_query_first_cell("SELECT sessionid FROM $sql_tbl[cc_pp3_data] WHERE ref='".$numOrder."'");
 
 	x_session_id($sessid);
-	x_session_register("cart");
+	x_session_register("cart", []);
 
 	print "<BEGIN_ORDER_DESCRIPTION><orderid>=(".$numOrder.")\n";
 	foreach($products as $product)

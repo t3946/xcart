@@ -3,6 +3,7 @@ namespace Modules\Order\Models;
 
 use Modules\Distributor\Models\DistributorModel;
 use Xcart\App\Orm\AutoMetaTrait;
+use Xcart\App\Orm\Fields\DateTimeField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Model;
@@ -47,6 +48,11 @@ class OrderGroupInvoiceModel extends Model
                 'null' => false,
                 'primary' => true,
                 'default' => 0
+            ],
+            'invoice_date' => [
+                'class' => DateTimeField::className(),
+                'autoNowAdd' => true,
+                'null' => false
             ],
         ];
     }

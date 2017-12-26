@@ -2,6 +2,7 @@
 
 namespace Modules\Meta\Models;
 
+use Doctrine\DBAL\Types\Type;
 use Modules\Meta\MetaModule;
 use Modules\Sites\SitesModule;
 use Xcart\App\Orm\Fields\CharField;
@@ -49,6 +50,7 @@ class Meta extends Model
             $fields['site'] = [
                 'field' => 'site_code',
                 'class' => ForeignField::className(),
+                'sqlType' => Type::STRING,
                 'modelClass' => Xcart::app()->getModule('Sites')->modelClass,
                 'verboseName' => SitesModule::t('Site'),
                 'link' => ['site_code' => 'code'],

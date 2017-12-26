@@ -52,7 +52,7 @@ x_session_register("logged");
 x_session_register("previous_login_date");
 
 x_session_register("login_attempt");
-x_session_register("cart");
+x_session_register("cart", []);
 x_session_register("intershipper_recalc");
 
 x_session_register("merchant_password");
