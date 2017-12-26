@@ -183,6 +183,7 @@ class DefaultConnection extends DBALConnection
             $msg .= "SQL query   : {$query}\n";
         }
 
+        $msg .= "Date Time   : ".(new \DateTime())->format('Y-m-d H:i:s')."\n";
         $msg .= "Error code  : ".$exception->getCode()."\n";
         $msg .= "Description : ".$exception->getMessage() ."\n\n";
         $msg .= "Backtrace: \n";
