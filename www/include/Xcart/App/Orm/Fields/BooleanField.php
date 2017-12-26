@@ -30,7 +30,7 @@ class BooleanField extends Field
      */
     public function getSqlType()
     {
-        return Type::getType(Type::BOOLEAN);
+        return Type::getType(Type::SMALLINT);
     }
 
     /**
@@ -67,6 +67,6 @@ class BooleanField extends Field
     public function convertToDatabaseValueSQL($value, AbstractPlatform $platform)
     {
 
-        return parent::convertToPHPValue((bool) $value, $platform);
+        return (bool) parent::convertToPHPValue((bool) $value, $platform);
     }
 }
