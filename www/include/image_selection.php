@@ -264,6 +264,10 @@ if ($REQUEST_METHOD == "POST") {
 	$data["type"] = $type;
 	$data["date"] = time();
 
+	if (empty($file_upload_data) || !is_array($file_upload_data)) {
+        $file_upload_data = [];
+	}
+
 	if (!empty($multi_id)) {
 		if ($not_image != 'avail' || $not_image == 'avail' && $is_image) {
 		if (!empty($type) && (!isset($file_upload_data[$type]) || empty($file_upload_data[$type]) || !is_array($file_upload_data[$type]))) {
