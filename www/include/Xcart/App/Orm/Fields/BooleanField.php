@@ -67,6 +67,6 @@ class BooleanField extends Field
     public function convertToDatabaseValueSQL($value, AbstractPlatform $platform)
     {
 
-        return (bool) parent::convertToPHPValue((bool) $value, $platform);
+        return parent::convertToPHPValue((bool) $value, $platform);
     }
 }
