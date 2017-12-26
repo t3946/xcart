@@ -10,6 +10,8 @@ class DateField extends CharField
 {
 //    public $type = 'hidden';
 
+    public $format = 'Y-m-d H:i:s';
+
     public function render()
     {
         $id = $this->getHtmlId();
@@ -24,6 +26,14 @@ class DateField extends CharField
 })()</script>";
         return parent::render() . $js;
     }
+
+    public function getRenderValue()
+    {
+        $date = $this->getDateFromValue();
+
+        return ($date) ? $date->format('Y-m-d H:i:s'):'';
+    }
+
 
     public function getJSDate()
     {
@@ -43,7 +53,7 @@ class DateField extends CharField
         ];
     }
 
-    public function getDateFromValue()
+    public function getDateFromValue():?\DateTime
     {
         $value = $this->getValue();
 
