@@ -39,7 +39,6 @@ return [
         ],
         'log' => [
             'class' => '\\Xcart\\App\\Logger\\Formatters\\LineFormatter',
-            'allowInlineLineBreaks' => true,
             'includeStacktrace' => true
         ],
         'console' => [
