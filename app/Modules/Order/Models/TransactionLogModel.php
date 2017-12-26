@@ -2,6 +2,7 @@
 
 namespace Modules\Order\Models;
 
+use Doctrine\DBAL\Types\Type;
 use Modules\Payment\Models\PaymentMethodModel;
 use Modules\User\Models\UserModel;
 use Xcart\App\Orm\AutoMetaTrait;
@@ -66,6 +67,7 @@ class TransactionLogModel extends Model
                 'class' => ForeignField::className(),
                 'modelClass' => UserModel::className(),
                 'link' => ['login' => 'login'],
+                'sqlType' => Type::STRING,
             ],
             'transaction' => [
                 'field' => 'order_transaction_id',

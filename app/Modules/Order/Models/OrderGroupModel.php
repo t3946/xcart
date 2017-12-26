@@ -1,6 +1,7 @@
 <?php
 namespace Modules\Order\Models;
 
+use Doctrine\DBAL\Types\Type;
 use Modules\Distributor\Models\DistributorModel;
 use Modules\Goods\Models\ProductModel;
 use Modules\Shipping\Models\ShippingModel;
@@ -51,15 +52,17 @@ class OrderGroupModel extends Model
                 'null' => false,
             ],
             'cb_status_model' => [
-                'field' => 'cb_status',
                 'class' => ForeignField::className(),
+                'field' => 'cb_status',
+                'sqlType' => Type::STRING,
                 'modelClass' => OrderStatusModel::className(),
                 'link' => ['cb_status' => 'code'],
                 'null' => false,
             ],
             'dc_status_model' => [
-                'field' => 'dc_status',
                 'class' => ForeignField::className(),
+                'field' => 'dc_status',
+                'sqlType' => Type::STRING,
                 'modelClass' => OrderStatusModel::className(),
                 'link' => ['dc_status' => 'code'],
                 'null' => false,

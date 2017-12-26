@@ -52,7 +52,18 @@ class AbstractModel extends Base
         $adapter = $this->getQueryBuilder()->getAdapter();
 
         $tableName = $adapter->quoteTableName($adapter->getRawTableName($this->tableName()));
-        $rows = $connection->update($tableName, $values, $this->getPrimaryKeyValues(), array_replace($this->extractTypes(array_keys($values)), $this->extractTypes($this->getPrimaryKeyName(true))));
+
+        $fields = array_keys($values);
+
+        foreach ($this->getPrimaryKeyName(true) as $field) {
+            if (!in_array($fields, $field)) {
+                $fields[]= $field;
+            }
+        }
+
+        $e_types = array_merge(array_keys($values), $this->getPrimaryKeyName(true));
+
+        $rows = $connection->update($tableName, $values, $this->getPrimaryKeyValues(), $this->extractTypes($e_types));
 
         foreach ($values as $name => $value) {
             $this->setAttribute($name, $value);

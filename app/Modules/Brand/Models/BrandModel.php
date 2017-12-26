@@ -2,6 +2,7 @@
 
 namespace Modules\Brand\Models;
 
+use Doctrine\DBAL\Types\Type;
 use Modules\Brand\BrandModule;
 use Modules\Menu\Models\CleanUrlModel;
 use Modules\Goods\Models\ProductModel;
@@ -127,6 +128,7 @@ class BrandModel extends Model
             'user' => [
                 'field' => 'provider',
                 'class' => ForeignField::className(),
+                'sqlType' => Type::STRING,
                 'modelClass' => UserModel::className(),
                 'link' => ['provider' => 'login']
             ],
