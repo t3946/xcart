@@ -292,15 +292,15 @@ function func_realpath($path) {
 
 		$path = func_normalize_path($path);
 
-		$cache = array ();
-		do {
-			$cache[$path] = true; # prevent the loop
-			$path = func_resolve_fs_symlinks($path);
-			if ($path === false) {
-				# cannot resolve, broken path
-				return false;
-			}
-		} while (empty($cache[$path]));
+        /*$cache = array ();
+        do {
+            $cache[$path] = true; # prevent the loop
+            $path = func_resolve_fs_symlinks($path);
+            if ($path === false) {
+                # cannot resolve, broken path
+                return false;
+            }
+        } while (empty($cache[$path]));*/
 	}
 
 	return $path;
