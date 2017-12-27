@@ -261,7 +261,7 @@ class SupplierFeedHelper
 
                             if (class_exists('Imagick')) {
                                 $imageParam = $image->getAttributes();
-                                $imageParam['image_path'] = '../' . $imageParam['image_path'];
+                                $imageParam['image_path'] = '../www/' . $imageParam['image_path'];
                                 func_set_correct_det_img($imageParam, true);
                             }
                         }
