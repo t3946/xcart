@@ -5,15 +5,12 @@ namespace Modules\GeoIp\Helpers;
 
 use GeoIp2\Database\Reader;
 use GeoIp2\Exception\AddressNotFoundException;
-use MaxMind\Db\Reader\InvalidDatabaseException;
 use Modules\Core\Models\CountryModel;
-use Modules\Core\Models\GeoipLitecityLocationModel;
 use Modules\Core\Models\GlobalConfigModel;
 use Modules\Core\Models\StateModel;
 use Modules\Core\Models\TelephoneAreaModel;
+use Modules\GeoIp\Models\GeoipLitecityLocationModel;
 use Modules\Sites\Models\SiteConfigModel;
-use Xcart\App\Exceptions\Exception;
-use Xcart\App\Helpers\Paths;
 
 class GeoIpHelper
 {

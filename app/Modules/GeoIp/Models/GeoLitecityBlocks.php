@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Core\Models;
+namespace Modules\GeoIp\Models;
 
 use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\IntField;

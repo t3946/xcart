@@ -170,10 +170,7 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
 
                     break;
                 case 'P' :
-                    if ($is_created) {
-                        $modelProduct->save();
-                        print "Add product --> OK" . PHP_EOL;
-                    }
+
                     if (!isset($aProduct['is_group'])) {
                         if (!isset($aProduct['cost_to_us'])) {
                             print("Skip product --> 'No cost_to_us' \n");
@@ -185,6 +182,11 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
                             $skippedProductsCount++;
                             continue 2;
                         }
+                    }
+
+                    if ($is_created) {
+                        $modelProduct->save();
+                        print "Add product --> OK" . PHP_EOL;
                     }
                     break;
             }
