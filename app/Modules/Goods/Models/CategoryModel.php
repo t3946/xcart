@@ -205,7 +205,7 @@ class CategoryModel extends TreeModel
         /** @var static $owner */
         $old_parent = $owner->attributes->getOldAttribute('parentid');
 
-        if ($old_parent != $owner->parentid) {
+        if ($old_parent && $old_parent != $owner->parentid) {
             $this->objects()
                 ->descendants()
                 ->update([
