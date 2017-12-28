@@ -4,7 +4,7 @@
         <td>Fraud Check</td>
         <td>Customer</td>
         <td colspan="2">Order age</td>
-        <td colspan="7" rowspan="2" width="35%">
+        <td colspan="7" rowspan="2" width="40%">
             Last customer service message <br>
             Attention tag
         </td>
