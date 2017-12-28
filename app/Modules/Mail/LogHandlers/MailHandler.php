@@ -53,8 +53,7 @@ class MailHandler extends MonologMailHandler
 
 
         Xcart::app()->mail->template(
-//            $this->to,
-            'maksim@s3stores.com',
+            $this->to,
             $this->subject,
             'mail/log_template.tpl',
             ['message' => $this->toHtmlString($msg)]
