@@ -51,7 +51,7 @@ class DefaultConnection extends DBALConnection
     /**
      * {@inheritdoc}
      */
-    public function delete($tableExpression, array $identifier, array $types = array())
+    public function delete($tableExpression, array $identifier, array $types = [])
     {
         return $this->__internalCall(__FUNCTION__, func_get_args());
     }
@@ -59,7 +59,7 @@ class DefaultConnection extends DBALConnection
     /**
      * {@inheritdoc}
      */
-    public function update($tableExpression, array $data, array $identifier, array $types = array())
+    public function update($tableExpression, array $data, array $identifier, array $types = [])
     {
         return $this->__internalCall(__FUNCTION__, func_get_args());
     }
@@ -67,7 +67,7 @@ class DefaultConnection extends DBALConnection
     /**
      * {@inheritdoc}
      */
-    public function insert($tableExpression, array $data, array $types = array())
+    public function insert($tableExpression, array $data, array $types = [])
     {
         return $this->__internalCall(__FUNCTION__, func_get_args());
     }
@@ -83,7 +83,7 @@ class DefaultConnection extends DBALConnection
     /**
      * {@inheritdoc}
      */
-    public function executeQuery($query, array $params = array(), $types = array(), QueryCacheProfile $qcp = null)
+    public function executeQuery($query, array $params = [], $types = [], QueryCacheProfile $qcp = null)
     {
         $this->__countQueries++;
         return $this->__internalCall(__FUNCTION__, func_get_args());
@@ -109,7 +109,7 @@ class DefaultConnection extends DBALConnection
     /**
      * {@inheritdoc}
      */
-    public function executeUpdate($query, array $params = array(), array $types = array())
+    public function executeUpdate($query, array $params = [], array $types = [])
     {
         $this->__countQueries++;
         return $this->__internalCall(__FUNCTION__, func_get_args());
@@ -162,46 +162,11 @@ class DefaultConnection extends DBALConnection
             return;
         }
 
+        $data = $query ? ['SQL query' => $query] : [];
 
-        $msg = '';
-        $msg .= "Date Time   : ".(new \DateTime())->format('Y-m-d H:i:s')."\n";
+        $data['Error code']     = $exception->getCode();
+        $data['Backtrace']      = "\n" .$exception->getTraceAsString();
 
-        if (Xcart::app()->getIsWebMode()) {
-
-            $login = '';
-            $session = Xcart::app()->request->session;
-
-            if ($session) {
-                $login = $session->get('admin_login') ?: $session->get('admin_login');
-            }
-
-            $msg .= "Site        : " . $_SERVER["HTTP_HOST"]. $_SERVER['REQUEST_URI']."\n";
-            $msg .= "Remote IP   : {$_SERVER['REMOTE_ADDR']}\n";
-            $msg .= "Logged as   : {$login}\n";
-        }
-
-        if (!empty($query)) {
-            $msg .= "SQL query   : {$query}\n";
-        }
-
-        $msg .= "Error code  : ".$exception->getCode()."\n";
-        $msg .= "Description : ".$exception->getMessage() ."\n\n";
-        $msg .= "Backtrace: \n";
-        $msg .= $exception->getTraceAsString();
-
-        $oMail = Xcart::app()->mail;
-        $oMail->template(
-            'team@s3stores.com',
-            'S3 Stores, Inc.: SQL error notification',
-            'mail/log_template.tpl',
-            [ 'message' => $msg, ]
-        );
-
-        if (function_exists('x_log_add')) {
-            x_log_add('SQL', $msg);
-        }
-        else {
-            print_r($msg);
-        }
+        Xcart::app()->logger->critical($exception->getMessage(), $data, 'sql');
     }
 }

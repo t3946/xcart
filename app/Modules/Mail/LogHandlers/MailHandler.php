@@ -33,13 +33,15 @@ class MailHandler extends MonologMailHandler
 
         foreach ($records as $record)
         {
-
             $msg .= $this->format('Date Time', $record['datetime']->format('Y-m-d H:i:s'));
             $msg .= $this->format('Chanel', $record['channel']);
-            $msg .= $this->format('Level name', $record['level'] . " | " . $record['level_name']);
-            $msg .= $this->format('Message', $record['message']);
+            $msg .= $this->format('Level name', $record['level_name'] . " | " . $record['level']);
 
-            if ($record['context']) {
+            if (!empty($record['message'])) {
+                $msg .= $this->format('Message', $record['message']);
+            }
+
+            if (!empty($record['context'])) {
                 $msg .= "\n";
                 $msg .= sprintf("  %1$20s\n","-- Context --");
 
@@ -51,23 +53,27 @@ class MailHandler extends MonologMailHandler
             $msg .= (count($records)>1) ? sprintf("\n\n%1$20s\n\n","--- next ---"): null;
         }
 
+        $message = $this->toHtmlString($msg);
 
         Xcart::app()->mail->template(
             $this->to,
             $this->subject,
             'mail/log_template.tpl',
-            ['message' => $this->toHtmlString($msg)]
+            ['message' => $message]
         );
     }
 
     protected function format($title, $value)
     {
-        return sprintf("  %1$10s: %2\$s\n", ucfirst($title), $value);
+        $post_val = !strstr($value, "\n")?'':"\n-";
+        return sprintf("**%1$15s**: %2\$s \n", strtoupper($title), $value . $post_val);
     }
 
     protected function toHtmlString($string)
     {
-        return str_replace(' ', '&nbsp;', $string);
+        $string = preg_replace("/\*\*(.*)\*\*(.+)/","<b>$1</b>$2", $string);
+        $string = str_replace(' ', '&nbsp;', $string);
+        return $string;
     }
 
 }

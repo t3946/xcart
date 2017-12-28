@@ -52,7 +52,7 @@ return [
     'loggers' => [
         'sql' => [
             'class' => '\\Xcart\\App\\Logger\\Logger',
-            'handlers' => ['sql']
+            'handlers' => ['sql', 'error_mail_admins']
         ],
         'info' => [
             'class' => '\\Xcart\\App\\Logger\\Logger',
