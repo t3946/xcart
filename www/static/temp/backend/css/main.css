@@ -3703,12 +3703,15 @@ i.icon.m {
     text-align: center; }
     .admin .OrderSheet tr td .text-left {
       text-align: left; }
-    .admin .OrderSheet tr td:nth-child(1) {
-      border-left-width: 2px;
-      border-left-color: #8596a8; }
-    .admin .OrderSheet tr td:nth-last-child(1) {
-      border-right-width: 2px;
-      border-right-color: #8596a8; }
+  .admin .OrderSheet .order-tags {
+    text-align: left;
+    padding: 10px; }
+    .admin .OrderSheet .order-tags .order-tag {
+      padding: 3px 7px;
+      line-height: 1.5;
+      display: inline-block; }
+  .admin .OrderSheet .message {
+    margin-bottom: 1em; }
   .admin .OrderSheet .separator td {
     border: none;
     padding: .6rem 0 0;

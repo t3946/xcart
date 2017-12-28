@@ -4,7 +4,10 @@
         <td>Fraud Check</td>
         <td>Customer</td>
         <td colspan="2">Order age</td>
-        <td colspan="7">Last customer service message</td>
+        <td colspan="7" rowspan="2" width="35%">
+            Last customer service message <br>
+            Attention tag
+        </td>
     </tr>
 
     <tr class="TableHead TableHeadAccounting TableHeadLight">
@@ -12,11 +15,6 @@
         <td>OTRS ticket</td>
         <td colspan="1">ZIP code</td>
         <td colspan="2">Last activity</td>
-        <td colspan="3">Attention tag</td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
     </tr>
 
     <tr class="TableHead TableHeadAccounting TableHeadLight">
@@ -26,7 +24,7 @@
         <td colspan="2">LATEST ETA DATE</td>
         <td colspan="2">Payment</td>
         <td>Grand total</td>
-        <td colspan="4">+</td>
+        <td>+</td>
     </tr>
     <tr>
         <td colspan="12" style="padding: 0;"></td>
@@ -38,7 +36,7 @@
         <td colspan="2">B2D INVOICE</td>
         <td colspan="2">Processor</td>
         <td>TOTAL</td>
-        <td colspan="4">+</td>
+        <td>+</td>
 
     </tr>
 
@@ -47,7 +45,7 @@
 
     {foreach $orders as $order index=$index}
         <tr class="separator">
-            <td colspan="12"></td>
+            <td colspan="9"></td>
         </tr>
         {if $index % 2}
             {set $cycle_class = 'TableSubHead_new'}
@@ -75,13 +73,20 @@
             <td colspan="2">
                 {$order->date|interval_string}
             </td>
-            <td colspan="7" class="text-left">
+            <td rowspan="2" colspan="7" class="text-left order-tags" valign="top">
                 {set $last_message = $order->last_message.log|br2nl|strip_tags}
 
-                <div {if mb_strlen($last_message) > 160}title="{$last_message|escape}"{/if}>
+                <div {if mb_strlen($last_message) > 160}title="{$last_message|escape}"{/if} class="message">
                     {raw $last_message|truncate:160:' [...]'|nl2space}
                 </div>
 
+                {foreach $order->tags as $tag}
+                    <div style="background-color: {if $tag->color}{$tag->color}{else}#F4CCCC{/if};" class="order-tag">
+                        <span title="{$tag->description}">
+                            {$tag->status}
+                        </span>
+                    </div>
+                {/foreach}
 
             </td>
         </tr>
@@ -109,18 +114,6 @@
             </td>
             <td colspan="2">
                 {$order->last_activity|interval_string}
-            </td>
-            <td colspan="3">
-                {foreach $order->tags as $tag}
-                    <div style="background-color: {if $tag->color}{$tag->color}{else}#F4CCCC{/if}; color: #000000; padding: 3px;">
-                        <span title="{$tag->description}">
-                            {$tag->status}
-                        </span>
-                    </div>
-                {/foreach}
-            </td>
-            <td colspan="4">
-
             </td>
         </tr>
 
@@ -233,7 +226,7 @@
             </tr>
             {if !$last_group}
             <tr>
-                <td colspan="12" style="padding: 0;"></td>
+                <td colspan="9" style="padding: 0;"></td>
             </tr>
             {/if}
         {/foreach}
