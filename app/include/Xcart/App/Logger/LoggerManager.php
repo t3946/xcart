@@ -4,8 +4,10 @@ namespace Xcart\App\Logger;
 
 use Exception;
 use Monolog\Formatter\FormatterInterface;
+use Monolog\Handler\AbstractHandler;
 use Xcart\App\Helpers\Accessors;
 use Xcart\App\Helpers\Creator;
+use Xcart\App\Logger\Handler\ProxyHandler;
 use Xcart\App\Traits\Configurator;
 
 /**
@@ -46,7 +48,7 @@ class LoggerManager
      */
     private $defaultLogger = [
         'default' => [
-            'class' => '\\Xcart\\App\\Logger\\Logger',
+            'class' => '\Xcart\App\Logger\Logger',
             'handlers' => ['default']
         ],
     ];
@@ -55,7 +57,7 @@ class LoggerManager
      */
     private $defaultHandler = [
         'default' => [
-            'class' => '\\Xcart\\App\\Logger\\Handler\\RotatingFileHandler',
+            'class' => '\Xcart\App\Logger\Handler\RotatingFileHandler',
             'level' => 'DEBUG',
             'formatter' => 'default',
         ]
@@ -65,7 +67,7 @@ class LoggerManager
      */
     private $defaultFormatter = [
         'default' => [
-            'class' => '\\Xcart\\App\\Logger\\Formatters\\LineFormatter',
+            'class' => '\Xcart\App\Logger\Formatters\LineFormatter',
             'allowInlineLineBreaks' => true,
             'includeStacktrace' => true
         ]
@@ -130,7 +132,13 @@ class LoggerManager
                 throw new Exception("Handler $hname not initialized");
             }
 
-            $this->_loggers[$name]->pushHandler($this->_handlers[$hname]->handler);
+            if ($this->_handlers[$hname] instanceof ProxyHandler) {
+                $this->_loggers[$name]->pushHandler($this->_handlers[$hname]->handler);
+            }
+            else if ($this->_handlers[$hname] instanceof AbstractHandler) {
+                d($this->_handlers[$hname]);
+                $this->_loggers[$name]->pushHandler($this->_handlers[$hname]);
+            }
         }
 
         return $this->_loggers[$name];
@@ -138,9 +146,9 @@ class LoggerManager
 
     /**
      * @param $loggerName
-     * @return \Xcart\App\Logger\Logger\null
+     * @return null|Logger
      */
-    protected function getLogger($loggerName)
+    protected function getLogger($loggerName):?Logger
     {
         $log = null;
         foreach ($this->_loggers as $name => $logger) {
@@ -163,7 +171,7 @@ class LoggerManager
     }
 
     /**
-     * @return \Monolog\Logger
+     * @return Logger
      */
     protected function getDefaultLogger()
     {
@@ -174,10 +182,10 @@ class LoggerManager
      * For fallback to old logging system
      *
      * @param $name
-     * @return \Monolog\Logger
+     * @return Logger
      * @throws Exception
      */
-    protected function getGeneratedLogger($name)
+    protected function getGeneratedLogger($name):Logger
     {
         if ($this->defaultPatch) {
 

@@ -32,5 +32,4 @@ bower_components
 /app/runtime/
 
 !.gitkeep
-!/config.php
 !/skin1_kolin/

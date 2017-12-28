@@ -110,9 +110,9 @@ function x_log_add($label, $message, $add_backtrace=false, $stack_skip=0, $email
         $type = 'message';
 
     if (!$email_only) {
-        if ($label == 'SQL')
+        if ($type == 'error')
             $logger->critical($message, [], strtolower($label));
-        elseif ($label == 'INI' || $label == 'SHIPPING')
+        elseif ($type == 'warning')
             $logger->warning($message, [], strtolower($label));
         else
             $logger->info($message, [], strtolower($label));

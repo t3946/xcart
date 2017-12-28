@@ -28,9 +28,13 @@ return [
             'class' => '\\Xcart\\App\\Logger\\Handler\\StreamHandler',
             'formatter' => 'console'
         ],
-//        'mail_admins' => [
-//            'class' => '\\Xcart\\App\\Logger\\Handler\\SwiftMailerHandler',
-//        ],
+        'error_mail_admins' => [
+            'class' => '\\Modules\\Mail\\LogHandlers\\MailProxyHandler',
+            'level' => 'DEBUG',
+            'formatter' => 'log',
+            'to' => 'team@s3stores.com',
+            'subject' => 'Critical error',
+        ],
     ],
     'formatters' => [
         'users' => [
@@ -54,9 +58,9 @@ return [
             'class' => '\\Xcart\\App\\Logger\\Logger',
             'handlers' => ['default']
         ],
-//        'error' => [
-//            'class' => '\\Xcart\\App\\Logger\\Logger',
-//            'handlers' => ['error', 'mail_admins']
-//        ],
+        'error' => [
+            'class' => '\\Xcart\\App\\Logger\\Logger',
+            'handlers' => ['error', 'error_mail_admins']
+        ],
     ]
 ];
