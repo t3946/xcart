@@ -44,7 +44,7 @@ return array_replace_recursive([
                    ],
                    'driverOptions' => [
 //                       PDO::ATTR_EMULATE_PREPARES => false,
-//                       PDO::ATTR_STRINGIFY_FETCHES => false
+                       PDO::ATTR_STRINGIFY_FETCHES => false
                    ]
                ]
            ]
