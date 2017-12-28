@@ -133,8 +133,9 @@ abstract class TreeModel extends Model
         }
 
         $pid_name = $this->getField('parent')->getAttributeName();
+        $changed_values = $this->getChangedAttributes($fields);
 
-        if (in_array($pid_name, $this->getChangedAttributes($fields))) {
+        if (in_array($pid_name, array_keys($changed_values))) {
 
             if ($saved = parent::save($fields))
             {
