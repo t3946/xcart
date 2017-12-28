@@ -7,11 +7,6 @@ require __DIR__ . DIRECTORY_SEPARATOR . "../www/init.php";
 ini_set('memory_limit', '512M');
 set_time_limit(0);
 
-if ($config["cron_products_subcategories_count"] == "Y"){
-        die("Already launched"); // ################################
-}
-db_query("UPDATE $sql_tbl[config] SET value='Y' WHERE name='cron_products_subcategories_count'");
-
 $start_time = time();
 
 
@@ -47,8 +42,3 @@ while ($record = db_fetch_array($records)) {
     db_query("DELETE FROM xcart_cidev_updated_products WHERE resourceid='$record[resourceid]' AND (type='4' OR type='5')");
 }
 db_free_result($records);
-
-
-db_query("UPDATE $sql_tbl[config] SET value='N' WHERE name='cron_products_subcategories_count'");
-
-print"<br />DONE!";
