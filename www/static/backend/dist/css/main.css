@@ -8849,6 +8849,7 @@ i.icon.m {
     text-align: left;
     padding: 10px; }
     .admin .OrderSheet .order-tags .order-tag {
+      margin: 3px;
       padding: 3px 7px;
       line-height: 1.5;
       display: inline-block; }
