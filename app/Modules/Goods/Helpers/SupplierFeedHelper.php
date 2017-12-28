@@ -19,6 +19,7 @@ use Modules\Goods\Models\ProductModel;
 use Modules\Goods\Models\ProductStorefrontModel;
 use Modules\Goods\Models\ProductUpcChangesModel;
 use Modules\Goods\Stores\SupplierFeedStore;
+use Xcart\App\Helpers\Paths;
 
 class SupplierFeedHelper
 {
@@ -261,7 +262,7 @@ class SupplierFeedHelper
 
                             if (class_exists('Imagick')) {
                                 $imageParam = $image->getAttributes();
-                                $imageParam['image_path'] = '../www/' . $imageParam['image_path'];
+                                $imageParam['image_path'] = Paths::get('www') . DIRECTORY_SEPARATOR . $imageParam['image_path'];
                                 func_set_correct_det_img($imageParam, true);
                             }
                         }
