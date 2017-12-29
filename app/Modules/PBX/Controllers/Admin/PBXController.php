@@ -26,7 +26,7 @@ class PBXController extends BackendController
         $form = new CallsFilterForm();
         $form->populate($_GET);
 
-        $qs =  PbxAnveoCallModel::objects();
+        $qs =  PbxAnveoCallModel::objects()->order(['-start_at']);
         if (!empty($_GET)) {
 
             /** @var \Xcart\App\Orm\QuerySet $qs */
@@ -107,7 +107,7 @@ class PBXController extends BackendController
                     $mass[$i]['url'] = $model->getUrl();
                 }
 
-                if ($orders = $model->bind_calls) {
+                if ($orders = $model->bind_calls->all()) {
                     $count = count($orders);
                     for($j = 0; $j < $count; $j++){
                         $order_id = $orders[$j]->order_id;
@@ -145,6 +145,7 @@ class PBXController extends BackendController
                 else {
                     $mass[ $i ]['diff'] = "Not defined";
                 }
+
             }
         }
 

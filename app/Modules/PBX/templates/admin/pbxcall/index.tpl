@@ -58,7 +58,7 @@
                 <tr>
                     <td align="center">
                         {foreach $value.order as $order}
-                            <a href="{$order.order_url}" target="_blank">{$order.order_id}</a>
+                            <a href="{$order.order_url}" target="_blank">{$order.order_id}</a><hr>
                         {/foreach}
                     </td>
                     <td align="center">
