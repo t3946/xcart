@@ -40,7 +40,7 @@ class AmpController extends FrontendController
             /** @var \Modules\Sites\Models\SiteModel $site */
             $site = Xcart::app()->getModule('Sites')->getSite();
 
-            if ( (!$model->sites->filter(['storefrontid__in' => [$site->storefrontid]])->count()) && ( !$model->sites->limit(1)->get()->isWork() ) ){
+            if ( (!$model->sites->filter(['storefrontid__in' => [$site->storefrontid]])->count()) || ( !$model->sites->limit(1)->get()->isWork() ) ){
                 $this->redirect('/');
             }
 
