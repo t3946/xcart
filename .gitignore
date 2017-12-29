@@ -18,12 +18,10 @@ composer.lock
 ## folders to exclude
 /www/images/
 /www/media/
-/www/m1/
 /www/files/
 /www/product_files/
 /.idea/
 /www/verificator/cookies
-/www/var/
 /www/include/system/
 node_modules
 bower_components
