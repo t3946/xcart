@@ -59,7 +59,7 @@ while ($product = db_fetch_array($products)){
 	if (empty($image_id))
 		continue;
 
-	$image_data['image_path'] = $image_data["image_path"] ?:  \Xcart\App\Helpers\Paths::get('www') . DIRECTORY_SEPARATOR . $image_data['image_path'];
+	$image_data['image_path'] = empty($image_data["image_path"]) ?: \Xcart\App\Helpers\Paths::get('www') . DIRECTORY_SEPARATOR . $image_data['image_path'];
 
 	$image_data = func_set_correct_det_img($image_data, true);
 
