@@ -91,8 +91,15 @@
                     </td>
                     <td valign="top">
                         <a {include file="on_product_click.tpl"}
-                                href="{if $search_all_website eq 'Y'}{if $products[product].clean_url ne ""}{$products[product].clean_url}{else}//{$products[product].domain}/product.php?productid={$products[product].productid}{/if}{else}/product.php?productid={$products[product].productid}{/if}" {if $search_all_website eq 'Y'}target="_blank"{/if}><font
-                                    class="ProductTitle">{$products[product].product}</font></a>
+                                href="{if $search_all_website eq 'Y'}{if $products[product].clean_url ne ""}{$products[product].clean_url}{else}//{$products[product].domain}/product.php?productid={$products[product].productid}{/if}{else}/product.php?productid={$products[product].productid}{/if}" {if $search_all_website eq 'Y'}target="_blank"{/if}>
+                            <span class="ProductTitle">
+                                {if $products[product].oProduct}
+                                    {$products[product].oProduct->getFrontendName()}
+                                {else}
+                                    {$products[product].product}
+                                {/if}
+                            </span>
+                        </a>
                         {if $config.Appearance.display_productcode_in_list eq "Y" and $products[product].productcode ne ""}
                             <br/>
                             <span style="color:#006600;">{$lng.lbl_sku}: {$products[product].productcode}</span>
