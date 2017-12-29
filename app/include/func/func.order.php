@@ -2070,7 +2070,7 @@ function func_get_order_manufacturers($orderid)
 
                     $order_products_counter = 0;
 
-                    if ($order_group->detail_models->count()) {
+                    if ($order_group && $order_group->detail_models->count()) {
 
                         /** @var OrderDetailModel $detail_model */
                         foreach ($order_group->detail_models as $detail_model) {
