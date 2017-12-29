@@ -1,6 +1,6 @@
 <table class="OrderSheet orders" cellspacing="1" cellpadding="3">
     <tr class="TableHead TableHeadAccounting TableHeadLight">
-        <td width="5">#</td>
+        <td width="10%">#</td>
         <td>Fraud Check</td>
         <td>Customer</td>
         <td colspan="2">Order age</td>
