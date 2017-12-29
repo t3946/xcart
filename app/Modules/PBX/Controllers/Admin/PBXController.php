@@ -11,6 +11,7 @@ namespace Modules\PBX\Controllers\Admin;
 use Mindy\QueryBuilder\Expression;
 use Mindy\QueryBuilder\Q\QOr;
 use Modules\Admin\Controllers\BackendController;
+use Modules\Order\Models\OrderModel;
 use Modules\PBX\Forms\CallsFilterForm;
 use Modules\PBX\Helpers\PBXHelper;
 use Modules\PBX\Models\PbxAnveoCallModel;
@@ -107,16 +108,13 @@ class PBXController extends BackendController
                     $mass[$i]['url'] = $model->getUrl();
                 }
 
-                if ($orders = $model->bind_calls->all()) {
-                    $count = count($orders);
-                    for($j = 0; $j < $count; $j++){
-                        $order_id = $orders[$j]->order_id;
-                            if(!empty($order_id)) {
-                                $mass[ $i ]['order'][ $j ]['order_id'] = $model->orders->get(['orderid' => $order_id])
-                                                                                       ->getOrderNumber();
-                                $mass[ $i ]['order'][ $j ]['order_url'] = $model->orders->get(['orderid' => $order_id])
-                                                                                        ->getAdminUrl();
-                            }
+                if ($binds = $model->bind_calls->all()) {
+                    
+                    foreach ($binds as $k => $bind) {
+                        $order_model = OrderModel::objects()->get(['orderid' => $bind->order_id]);
+
+                        $mass[ $i ]['order'][ $k ]['order_id'] = $order_model->getOrderNumber();
+                        $mass[ $i ]['order'][ $k ]['order_url'] = $order_model->getAdminUrl();
                     }
                 }
 
