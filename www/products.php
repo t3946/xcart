@@ -151,8 +151,7 @@ if (!empty($active_modules["Subscriptions"])) {
 
 if ($products && is_array($products)) {
     $products = array_map(function ($a) {
-        $a['oProduct'] = new ProductModel($a);
-        $a['oProduct']->setIsNewRecord(false);
+        $a['oProduct'] = ProductModel::objects()->get(['productid' => $a['productid']]);
         return $a;
     }, $products);
 }
