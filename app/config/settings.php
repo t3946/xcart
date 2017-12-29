@@ -5,7 +5,7 @@ $local_config = __DIR__ . DS .'settings_local.php';
 
 return array_replace_recursive([
    'name' => 'Xcart',
-   'exit_on_end' => false,
+   'exit_on_end' => true,
    'paths' => [
        'base'   => realpath(implode(DS, [__DIR__, '..'])),
        'root'   => realpath(implode(DS, [__DIR__, '..', '..'])),
