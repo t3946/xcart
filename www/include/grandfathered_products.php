@@ -160,7 +160,7 @@ $query_base = ' FROM ' . $sql_tbl['products'] . ' AS p'
     . ((!empty($where)) ? implode(' AND ', $where) : '')
     . ' GROUP BY pr.productid';
 	
-db_query('SET OPTION SQL_BIG_SELECTS=1');
+//db_query('SET OPTION SQL_BIG_SELECTS=1');
 $_res = db_query('SELECT p.productid ' . $query_base);
 
 $total_items = db_num_rows($_res);
