@@ -331,11 +331,14 @@ class ErrorHandler
      */
     public function handleError($code, $message, $file, $line, array $errcontext = [])
     {
+        $app = Xcart::app();
+
         if (in_array($code, $this->ignoringTypes)) {
+            $app->logger->debug($message, ['code' => $code, 'file' => $file, 'line' => $line], 'error');
+
             return true;
         }
 
-        $app = Xcart::app();
         if (defined('APP_DEBUG') && APP_DEBUG) {
 
             $app->logger->critical($message, ['code' => $code, 'file' => $file, 'line' => $line], 'error');
