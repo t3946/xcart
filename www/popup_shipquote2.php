@@ -142,7 +142,7 @@ if ($REQUEST_METHOD == "POST" || $shipping_error == "Y") {
 
     x_session_register("cart");
 
-    include $xcart_dir . "/shipping/shipping.php";
+
 
     if (func_is_cart_empty($cart) || empty($cart["shipping_groups"]))
         func_close_window();

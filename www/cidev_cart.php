@@ -3,7 +3,7 @@ require "./auth.php";
 x_load('cart', 'user', 'order');
 
 require $xcart_dir . "/include/cart_process.php";
-include $xcart_dir . "/shipping/shipping.php";
+
 
 x_session_register("cart", []);
 x_session_register("intershipper_rates");
@@ -188,73 +188,6 @@ if ($cidev_filter_mode == "save_t_use_my_account_number") {
 if ($cidev_filter_mode == "save_t_ship_by_shipping_method" && !empty($t_ship_by_shipping_method) && !empty($t_ship_by_shipping_method)) {
     $cart["t_ship_by_shipping_method"][$manufacturerid] = $t_ship_by_shipping_method;
 }
-###
-##
-#
-
-if ((empty($config['Shipping']['new_shipping_calculation']) || $config['Shipping']['new_shipping_calculation'] != 'Y') && $cidev_filter_mode == "save_shippingid" && !empty($shippingids) && is_array($shippingids)) {
-
-    if (!$func_is_cart_empty) {
-
-        $cart["shippingids"] = $shippingids;
-
-        $products = func_products_in_cart($cart, (!empty($userinfo["membershipid"]) ? $userinfo["membershipid"] : ""));
-
-        $need_shipping = false;
-        if ($config["Shipping"]["disable_shipping"] != "Y" && is_array($products)) {
-            foreach ($products as $product) {
-                if (!empty($active_modules["Egoods"]) && !empty($product["distribution"]))
-                    continue;
-
-                $need_shipping = true;
-                break;
-            }
-        }
-
-        $no_shipping_in_group = false;
-
-        if ($need_shipping) {
-            $shippings = array();
-            if (is_array($cart["shipping_groups"])) {
-
-                foreach ($cart["shipping_groups"] as $k => $v) {
-                    $_products = array();
-
-                    foreach ($products as $v2) {
-                        if ($k == $v2['manufacturerid']) {
-                            $_products[] = $v2;
-                        }
-                    }
-                    $current_carrier = 'UPS';
-                    $intershipper_recalc = 'Y';
-
-                    $shipping = func_get_shipping_methods_list($cart, $_products, $userinfo, false, $k);
-                    $shippings[$k] = $shipping;
-                    if (!$shipping) {
-                        $no_shipping_in_group = true;
-                    } elseif (is_array($shipping)) {
-                        $shipping_matched = false;
-                        foreach ($shipping as $shipping_method) {
-                            if (@$cart["shippingids"][$k] == $shipping_method["shippingid"])
-                                $shipping_matched = true;
-                        }
-
-                    }
-                    if (!$shipping_matched)
-                        $cart["shippingids"][$k] = $shipping[0]["shippingid"];
-
-                }
-            }
-
-            $cart['groups_delivery'] = array();
-            if (!empty($cart['shippingids']))
-                foreach ($cart['shippingids'] as $m_id => $sh_id) {
-                    $cart['groups_delivery'][$m_id] = func_query_first_cell("SELECT shipping FROM $sql_tbl[shipping] WHERE shippingid = '$sh_id'");
-                }
-        }
-    }
-}
-
 
 func_save_customer_cart($login, $cart);
 $smarty->assign("cart", $cart);

@@ -1047,7 +1047,7 @@ if ($cidev_redirect){
 		}
 	}
 	elseif ($current_area == "C" && !empty($cart)) {
-		include_once $xcart_dir."/shipping/shipping.php";
+		//include_once $xcart_dir."/shipping/shipping.php";
 
 		$shippings = func_get_shipping_methods_list($cart, $cart["products"], $userinfo);
 		if (is_array($shippings)) {

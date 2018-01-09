@@ -36,7 +36,7 @@
 
 require "./auth.php";
 require $xcart_dir."/include/security.php";
-include $xcart_dir."/shipping/shipping.php";
+//include $xcart_dir."/shipping/shipping.php";
 
 x_load('http');
 
