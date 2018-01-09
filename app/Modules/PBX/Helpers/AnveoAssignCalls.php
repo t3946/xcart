@@ -101,10 +101,15 @@ class AnveoAssignCalls
                         'call_id' => $model->id,
                         'order_id' => $order_models[$i]->orderid,
                         'relevance_type' => OrdersCallsModel::ORDER_PHONE_EQUALS_CALLED_PHONE,
-                        'relevance_order' => $relevance_order
                     ];
 
-                    OrdersCallsModel::objects()->getOrCreate($mass);
+                    /** @var OrdersCallsModel $oc_model */
+                    [$oc_model, $is_created] = OrdersCallsModel::objects()->getOrNew($mass);
+
+                    if ($is_created) {
+                        $oc_model->relevance_order = $relevance_order;
+                        $oc_model->save();
+                    }
 
                     $log_category = "anveo_calls";
                     $log_text = "{$e164} - Привязан к заказу - {$order_models[$i]->orderid} по второй привязке";
