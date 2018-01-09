@@ -334,7 +334,7 @@ class ErrorHandler
         $app = Xcart::app();
 
         if (in_array($code, $this->ignoringTypes)) {
-            $app->logger->debug($message, ['code' => $code, 'file' => $file, 'line' => $line], 'error');
+//            $app->logger->debug($message, ['code' => $code, 'file' => $file, 'line' => $line], 'error');
 
             return true;
         }
