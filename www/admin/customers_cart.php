@@ -40,6 +40,13 @@ if (empty($cart)){
 //	func_header_location("cart.php?cart_number=$cart_number");
 }
 
+if (!empty($cart)) {
+    foreach ($cart["products"] as $k => $product) {
+        $cart["products"][$k]['oProduct'] = \Modules\Goods\Models\ProductModel::objects()->get(['pk' => $product['productid']]);
+    }
+}
+
+
 if (!empty($cart["paymentid"])){
         $cart["payment_method"] = func_query_first_cell("SELECT payment_method FROM $sql_tbl[payment_methods] WHERE paymentid='$cart[paymentid]'");
 }
@@ -59,4 +66,3 @@ $smarty->assign("location", $location);
 
 @include $xcart_dir."/modules/gold_display.php";
 func_display("admin/home.tpl",$smarty);
-?>
