@@ -13,8 +13,7 @@ class Amazon extends ShippingProcessor
 {
     public function isProcessorApplicable()
     {
-        $bResult = true;
-        return $bResult;
+        return true;
     }
 
     public function getServerQuotes($aShippingRates)
