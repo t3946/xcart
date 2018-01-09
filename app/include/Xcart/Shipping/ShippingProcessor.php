@@ -292,10 +292,11 @@ abstract class ShippingProcessor
                 ]
             );
 
-            [$location] = ShippingCacheModel::objects()->getOrCreate([
+            $location = new ShippingCacheModel([
                 'shipping_location_id' => $model->shipping_location_id,
                 'shipping_carrier' => (new \ReflectionClass($this))->getShortName(),
             ]);
+            $location->save();
 
             foreach ($this->aShippingRates as $oShippingRate) {
 
