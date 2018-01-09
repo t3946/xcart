@@ -36,12 +36,6 @@
 
 require "./auth.php";
 require $xcart_dir."/include/security.php";
-//include $xcart_dir."/shipping/shipping.php";
-
-x_load('http');
-
-$show_arb_account_field = func_use_arb_account();
-$smarty->assign("show_arb_account_field", $show_arb_account_field);
 
 if (!isset($weight)) {
 	$weight=1;
@@ -59,10 +53,6 @@ if (!empty($active_modules["UPS_OnLine_Tools"]) and $config["Shipping"]["realtim
 	$smarty->assign("current_carrier", $current_carrier);
 }
 
-if ($config["Shipping"]["use_intershipper"] == "Y")
-	include $xcart_dir."/shipping/intershipper.php";
-else
-	include $xcart_dir."/shipping/myshipper.php";
 
 require $xcart_dir."/include/countries.php";
 require $xcart_dir."/include/states.php";
@@ -105,7 +95,7 @@ $smarty->assign("airborne_account", $airborne_account);
 func_https_ctl('IGNORE');
 
 ob_start();
-$intershipper_rates = func_shipper($weight,$userinfo,"Y");
+//$intershipper_rates = func_shipper($weight,$userinfo,"Y");
 $content = ob_get_contents();
 ob_end_clean();
 
