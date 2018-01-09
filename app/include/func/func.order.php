@@ -4314,10 +4314,11 @@ function func_other_customer_orders($email, $orderid = 0)
 {
     global $sql_tbl, $smarty;
 
-    if ($orders = OrderModel::objects()->filter([
-        'email' => $email,
-        'orderid__isnt' => $orderid])
-    ->order(['orderid'])->all()) {
+    if ($orders = OrderModel::objects()
+        ->filter(['email' => $email])
+        ->exclude(['orderid' => $orderid])
+        ->order(['orderid'])->all())
+    {
 
         $count_Completed = 0;
         $count_Fraud     = 0;
