@@ -56,7 +56,7 @@ class AbstractModel extends Base
         $fields = array_keys($values);
 
         foreach ($this->getPrimaryKeyName(true) as $field) {
-            if (!in_array($fields, $field)) {
+            if (!in_array($field, $fields)) {
                 $fields[]= $field;
             }
         }
