@@ -200,16 +200,19 @@ class ErrorHandler
 
             $this->_exception = $exception;
 
-            $this->_error = [
+            $this->_error = $err =[
                 'code' => $code,
                 'type' => get_class($exception),
                 'errorCode' => $exception->getCode(),
                 'file' => $fileName,
                 'line' => $errorLine,
                 'trace' => "\n" .$exception->getTraceAsString(),
+                'traces' => $trace,
             ];
 
-            $app->logger->critical($exception->getMessage(), $this->_error, 'error');
+            unset($err['traces']);
+
+            $app->logger->critical($exception->getMessage(), $err, 'error');
 
             if (!headers_sent()) {
                 header("HTTP/1.0 {$code} " . $this->getHttpHeader($code, get_class($exception)));
@@ -328,11 +331,14 @@ class ErrorHandler
      */
     public function handleError($code, $message, $file, $line, array $errcontext = [])
     {
+        $app = Xcart::app();
+
         if (in_array($code, $this->ignoringTypes)) {
+//            $app->logger->debug($message, ['code' => $code, 'file' => $file, 'line' => $line], 'error');
+
             return true;
         }
 
-        $app = Xcart::app();
         if (defined('APP_DEBUG') && APP_DEBUG) {
 
             $app->logger->critical($message, ['code' => $code, 'file' => $file, 'line' => $line], 'error');
@@ -427,16 +433,17 @@ class ErrorHandler
                         $type = 'PHP error';
                 }
                 $this->_exception = null;
-                $this->_error = [
+                $this->_error = $err = [
                     'code' => 500,
                     'type' => $type,
                     'message' => $message,
                     'file' => $file,
                     'line' => $line,
                     'trace' => $traceString,
+                    'traces' => $trace,
                 ];
 
-                $err = $this->_error;
+                unset($err['traces']);
 
                 $app->logger->error($type, $err, 'error');
 
@@ -494,7 +501,6 @@ class ErrorHandler
             ]),
             'self' => $this
         ];
-
 
         if ($this->useTemplate) {
             $output = $this->renderTemplate($view . '.tpl', $data);

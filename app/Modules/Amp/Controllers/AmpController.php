@@ -12,6 +12,11 @@ use Modules\Amp\Helpers\AmpHelper;
 
 class AmpController extends FrontendController
 {
+    public function index($id, $slug)
+    {
+        $this->redirect('amp:product', ['id' => $id, 'slug' => $slug]);
+    }
+
     public function amp($id, $slug)
     {
         /** @var AmpProductModel $model */

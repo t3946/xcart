@@ -109,12 +109,14 @@ class PBXController extends BackendController
                 }
 
                 if ($binds = $model->bind_calls->all()) {
-                    
+
                     foreach ($binds as $k => $bind) {
+                        /** @var OrderModel $order_model */
                         $order_model = OrderModel::objects()->get(['orderid' => $bind->order_id]);
 
-                        $mass[ $i ]['order'][ $k ]['order_id'] = $order_model->getOrderNumber();
-                        $mass[ $i ]['order'][ $k ]['order_url'] = $order_model->getAdminUrl();
+                            $mass[ $i ]['order'][ $k ]['order_id'] = $order_model->getOrderNumber();
+                            $mass[ $i ]['order'][ $k ]['order_url'] = $order_model->getAdminUrl();
+
                     }
                 }
 

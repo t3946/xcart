@@ -95,7 +95,7 @@ elseif (!empty($inq_tag_id)){
 
 	$total_items_query = "SELECT $sql_tbl[inquiries].*, $sql_tbl[inquiry_types].inquiry_type FROM $sql_tbl[inquiries] LEFT JOIN $sql_tbl[inquiry_types] ON $sql_tbl[inquiry_types].inq_type_id=$sql_tbl[inquiries].inq_type_id LEFT JOIN $sql_tbl[inquirires_tags] ON $sql_tbl[inquirires_tags].inq_id=$sql_tbl[inquiries].inq_id WHERE $sql_tbl[inquirires_tags].inq_tag_id='$inq_tag_id' GROUP BY $sql_tbl[inquiries].inq_id";
 
-        db_query("SET OPTION SQL_BIG_SELECTS=1");
+//        db_query("SET OPTION SQL_BIG_SELECTS=1");
         $_res = db_query($total_items_query);
         $total_items = db_num_rows($_res);
         db_free_result($_res);

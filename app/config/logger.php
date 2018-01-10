@@ -33,7 +33,7 @@ return [
             'level' => 'DEBUG',
             'formatter' => 'log',
             'to' => 'team@s3stores.com',
-            'subject' => 'Critical error',
+            'subject' => 'ERR LOG: {chanel}.{level_name}',
         ],
     ],
     'formatters' => [

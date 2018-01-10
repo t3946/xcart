@@ -13,6 +13,7 @@ class MailHandler extends MonologMailHandler
     protected function send($content, array $records)
     {
         $msg = '';
+        $subject = $this->subject;
 
         if (Xcart::app()->getIsWebMode()) {
 
@@ -37,6 +38,12 @@ class MailHandler extends MonologMailHandler
             $msg .= $this->format('Chanel', $record['channel']);
             $msg .= $this->format('Level name', $record['level_name'] . " | " . $record['level']);
 
+            $subject = str_replace(
+                ['{chanel}', '{level}', '{level_name}', '{date}', '{time}'],
+                [$record['channel'], $record['level'], $record['level_name'], $record['datetime']->format('Y-m-d'), $record['datetime']->format('H:i:s')],
+                $subject
+            );
+
             if (!empty($record['message'])) {
                 $msg .= $this->format('Message', $record['message']);
             }
@@ -57,7 +64,7 @@ class MailHandler extends MonologMailHandler
 
         Xcart::app()->mail->template(
             $this->to,
-            $this->subject,
+            $subject,
             'mail/log_template.tpl',
             ['message' => $message]
         );

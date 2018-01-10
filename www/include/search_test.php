@@ -781,7 +781,7 @@ if ($mode == "search") {
 	#
 	# Calculate the number of rows in the search results
 	#
-	db_query("SET OPTION SQL_BIG_SELECTS=1");
+//	db_query("SET OPTION SQL_BIG_SELECTS=1");
 	if (empty($disable_product_count)) {
 	$_res = db_query($search_query_count);
 	$total_items = db_num_rows($_res);
