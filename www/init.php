@@ -4,6 +4,8 @@
 # X-Cart initialization
 #
 
+!defined('AREA_TYPE') ?: define('AREA_TYPE', null);
+
 if (!defined('XCART_START')) {
     header("Location: index.php");
     die("Access denied");
