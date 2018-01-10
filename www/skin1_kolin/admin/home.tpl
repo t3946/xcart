@@ -557,10 +557,6 @@
         {elseif $main eq "grandfathered_products"}
             {include file="main/grandfathered_products.tpl"}
 
-        {elseif $main eq "search_all_website"}
-            {include file="admin/main/search_all_website.tpl"}
-
-
             {* start_modification_CIDEV -> CIDEV_Best_Search_Filter *}
         {elseif $main eq "cidev_admin_filters"}
             {include file="modules/CIDEV_Best_Search_Filter/admin/cidev_admin_filters.tpl"}

@@ -18,7 +18,6 @@ return array(
     '68f9084e889ebf718663435970ab45e3' => $vendorDir . '/mindy/query_builder/src/Conditions.php',
     'f29a2007f2178ee4ae11496b92ada6d1' => $baseDir . '/app/include/func/func.core.php',
     '3d0a72febcb8a483969ed811c9d351f7' => $baseDir . '/app/include/func/func.amazon.php',
-    '41b92a43e9244e79ae96a5087c0a28a2' => $baseDir . '/app/include/func/func.amazon_shipping.php',
     '8a5fbc4004d1d6ab9474ee26d4d26a67' => $baseDir . '/app/include/func/func.backoffice.php',
     '41152f076ea83bb54a480e7000e49960' => $baseDir . '/app/include/func/func.cart.php',
     '085bd63b35db17112eb31e921f7ccf43' => $baseDir . '/app/include/func/func.category.php',

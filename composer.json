@@ -54,7 +54,6 @@
         "files": [
             "app/include/func/func.core.php",
             "app/include/func/func.amazon.php",
-            "app/include/func/func.amazon_shipping.php",
             "app/include/func/func.backoffice.php",
             "app/include/func/func.cart.php",
             "app/include/func/func.category.php",

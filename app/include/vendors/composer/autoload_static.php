@@ -19,7 +19,6 @@ class ComposerStaticInited1e2f7cb4425e4bdc0264910bb94e92
         '68f9084e889ebf718663435970ab45e3' => __DIR__ . '/..' . '/mindy/query_builder/src/Conditions.php',
         'f29a2007f2178ee4ae11496b92ada6d1' => __DIR__ . '/../../../..' . '/app/include/func/func.core.php',
         '3d0a72febcb8a483969ed811c9d351f7' => __DIR__ . '/../../../..' . '/app/include/func/func.amazon.php',
-        '41b92a43e9244e79ae96a5087c0a28a2' => __DIR__ . '/../../../..' . '/app/include/func/func.amazon_shipping.php',
         '8a5fbc4004d1d6ab9474ee26d4d26a67' => __DIR__ . '/../../../..' . '/app/include/func/func.backoffice.php',
         '41152f076ea83bb54a480e7000e49960' => __DIR__ . '/../../../..' . '/app/include/func/func.cart.php',
         '085bd63b35db17112eb31e921f7ccf43' => __DIR__ . '/../../../..' . '/app/include/func/func.category.php',
