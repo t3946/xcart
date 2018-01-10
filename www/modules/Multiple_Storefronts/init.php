@@ -55,6 +55,15 @@ if ($storefronts) {
         }
     }
     $smarty->assign('storefronts', $storefronts);
+
+    $sd_selects = [];
+//    $domains = Modules\Sites\Models\SiteModel::objects()->filter(['config__name__isnt' => null])->allSql();
+    $domains = Modules\Sites\Models\SiteModel::objects()->all();
+    /** @var Modules\Sites\Models\SiteModel $domain */
+    foreach ($domains as $domain) {
+        $sd_selects[$domain->storefrontid] = $domain->__toString();
+    }
+    $smarty->assign('sd_selects', $sd_selects);
 }
 
 if ($search_all_website) {

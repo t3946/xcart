@@ -606,15 +606,18 @@ class QueryBuilder
     {
         if (!is_array($condition)) {
             return (string)$condition;
-        } else if (empty($condition)) {
+        }
+        else if (empty($condition)) {
             return '';
         }
 
         if (isset($condition[0]) && is_string($condition[0])) {
             $operatorRaw = array_shift($condition);
             $operator = strtoupper($operatorRaw);
+
             return $this->buildAndCondition($operator, $condition, $params);
-        } else {
+        }
+        else {
             return $this->parseCondition($condition);
         }
     }

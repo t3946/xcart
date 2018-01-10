@@ -254,15 +254,18 @@ class QuerySet extends QuerySetBase
 
     protected function execute($sql, array $params = [], $types = [])
     {
+        $rows = [];
         $qcp = null;
+
         if ($this->cache && $this->getConnection()->getConfiguration()->getResultCacheImpl()) {
             $qcp = new QueryCacheProfile($this->cache);
         }
 
 
-        $stmt = $this->getConnection()->executeQuery($sql, $params, $types, $qcp);
-        $rows = $stmt->fetchAll()?:[];
-        $stmt->closeCursor();
+        if ( $stmt = $this->getConnection()->executeQuery($sql, $params, $types, $qcp)) {
+            $rows = $stmt->fetchAll()?:[];
+            $stmt->closeCursor();
+        }
 
         return $rows;
     }
