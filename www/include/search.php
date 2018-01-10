@@ -55,7 +55,7 @@ if ($REQUEST_METHOD == 'POST' && $mode == "search_gen_discounts" && $current_are
 ##
 ###
 if ($REQUEST_METHOD == 'POST' && $mode == "search_reset" && $current_area != "C") {
-    $search_data = "";
+    $search_data = [];
     x_session_save("search_data");
     func_header_location("search.php");
 }
@@ -98,7 +98,7 @@ if ($current_area == 'A' || $current_area == 'P') {
 }
 
 if (empty($search_data)) {
-    $search_data = array();
+    $search_data = [];
 }
 
 if ($REQUEST_METHOD == "POST" && $mode == 'search' && empty($e_mode) && $cidev_filter_mode != "load_more_products" && $cidev_filter_mode != "load_more_e_products" && $cidev_filter_mode != "load_more_products_SKU") {
