@@ -463,13 +463,20 @@ class ErrorHandler
     public function debugLog($code, $type, $err)
     {
         switch ($code) {
+            case E_DEPRECATED:
+            case E_USER_DEPRECATED:
+                return Xcart::app()->logger->info($type, $err, 'debug');
             case E_WARNING:
+            case E_CORE_WARNING:
+            case E_COMPILE_WARNING:
             case E_USER_WARNING:
                 return Xcart::app()->logger->warning($type, $err, 'debug');
             case E_NOTICE:
             case E_USER_NOTICE:
                 return Xcart::app()->logger->notice($type, $err, 'debug');
             case E_RECOVERABLE_ERROR:
+            case E_CORE_ERROR:
+            case E_COMPILE_ERROR:
             case E_USER_ERROR:
             default:
                 return Xcart::app()->logger->error($type, $err, 'debug');
