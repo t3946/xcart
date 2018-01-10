@@ -2095,7 +2095,7 @@ if ($source != 'XML_Sitemap') {
 
 
     if (!$_inner_search) {
-        $smarty->assign("search_prefilled", $search_data["products"]);
+        $smarty->assign("search_prefilled", !empty($search_data["products"])? $search_data["products"]:[]);
     }
 
     # START: random:18298_18304_18324 [2009 Jun 08 09:50] 
