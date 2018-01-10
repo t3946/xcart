@@ -670,9 +670,11 @@ class QueryBuilder
 
                     list($lookup, $column, $lookupValue) = $this->lookupBuilder->parseLookup($this, $key, $value);
                     $column = $this->getLookupBuilder()->fetchColumnName($column);
+
                     if (empty($tableAlias) === false && strpos($column, '.') === false) {
                         $column = $tableAlias . '.' . $column;
                     }
+
                     $parts[] = $this->lookupBuilder->runLookup($this->getAdapter(), $lookup, $column, $lookupValue);
                 }
             }
