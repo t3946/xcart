@@ -39,6 +39,8 @@ class ErrorHandler
     public $ignoreDeprecated = false;
     public $ignoringTypes = [];
 
+    public $loggingIgnoredTypes = [];
+
 
     public $handlers = [];
 
@@ -333,8 +335,73 @@ class ErrorHandler
     {
         $app = Xcart::app();
 
+        $trace = debug_backtrace();
+        // skip the first 3 stacks as they do not tell the error position
+        if (count($trace) > 1) {
+            $trace = array_slice($trace, 1);
+        }
+        $traceString = '';
+        foreach ($trace as $i => $t) {
+            if (!isset($t['file'])) {
+                $trace[$i]['file'] = 'unknown';
+            }
+
+            if (!isset($t['line'])) {
+                $trace[$i]['line'] = 0;
+            }
+
+            if (!isset($t['function'])) {
+                $trace[$i]['function'] = 'unknown';
+            }
+
+            $traceString .= "#$i {$trace[$i]['file']}({$trace[$i]['line']}): ";
+            if (isset($t['object']) && is_object($t['object'])) {
+                $traceString .= get_class($t['object']) . '->';
+            }
+            $traceString .= "{$trace[$i]['function']}()\n";
+
+            unset($trace[$i]['object']);
+        }
+
+        switch ($code) {
+            case E_WARNING:
+                $type = 'PHP warning';
+                break;
+            case E_NOTICE:
+                $type = 'PHP notice';
+                break;
+            case E_USER_ERROR:
+                $type = 'User error';
+                break;
+            case E_USER_WARNING:
+                $type = 'User warning';
+                break;
+            case E_USER_NOTICE:
+                $type = 'User notice';
+                break;
+            case E_RECOVERABLE_ERROR:
+                $type = 'Recoverable error';
+                break;
+            default:
+                $type = 'PHP error';
+        }
+        $this->_exception = null;
+        $this->_error = $err = [
+            'code' => 500,
+            'type' => $type,
+            'message' => $message,
+            'file' => $file,
+            'line' => $line,
+            'trace' => $traceString,
+            'traces' => $trace,
+        ];
+
+        unset($err['traces']);
+
         if (in_array($code, $this->ignoringTypes)) {
-//            $app->logger->debug($message, ['code' => $code, 'file' => $file, 'line' => $line], 'error');
+            if (in_array($code, $this->loggingIgnoredTypes)) {
+                $app->logger->debug($type, $err, 'info');
+            }
 
             return true;
         }
@@ -377,71 +444,7 @@ class ErrorHandler
             }
         }
         else {
-            $trace = debug_backtrace();
-            // skip the first 3 stacks as they do not tell the error position
-            if (count($trace) > 3) {
-                $trace = array_slice($trace, 3);
-            }
-            $traceString = '';
-            foreach ($trace as $i => $t) {
-                if (!isset($t['file'])) {
-                    $trace[$i]['file'] = 'unknown';
-                }
-
-                if (!isset($t['line'])) {
-                    $trace[$i]['line'] = 0;
-                }
-
-                if (!isset($t['function'])) {
-                    $trace[$i]['function'] = 'unknown';
-                }
-
-                $traceString .= "#$i {$trace[$i]['file']}({$trace[$i]['line']}): ";
-                if (isset($t['object']) && is_object($t['object'])) {
-                    $traceString .= get_class($t['object']) . '->';
-                }
-                $traceString .= "{$trace[$i]['function']}()\n";
-
-                unset($trace[$i]['object']);
-            }
-
-            $app = Xcart::app();
             if ($app instanceof Application && Console::isCli() === false) {
-
-                switch ($code) {
-                    case E_WARNING:
-                        $type = 'PHP warning';
-                        break;
-                    case E_NOTICE:
-                        $type = 'PHP notice';
-                        break;
-                    case E_USER_ERROR:
-                        $type = 'User error';
-                        break;
-                    case E_USER_WARNING:
-                        $type = 'User warning';
-                        break;
-                    case E_USER_NOTICE:
-                        $type = 'User notice';
-                        break;
-                    case E_RECOVERABLE_ERROR:
-                        $type = 'Recoverable error';
-                        break;
-                    default:
-                        $type = 'PHP error';
-                }
-                $this->_exception = null;
-                $this->_error = $err = [
-                    'code' => 500,
-                    'type' => $type,
-                    'message' => $message,
-                    'file' => $file,
-                    'line' => $line,
-                    'trace' => $traceString,
-                    'traces' => $trace,
-                ];
-
-                unset($err['traces']);
 
                 $app->logger->error($type, $err, 'error');
 

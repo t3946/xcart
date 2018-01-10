@@ -15,6 +15,12 @@ return [
             'alias' => 'root.log.error',
             'formatter' => 'log'
         ],
+        'info' => [
+            'class' => '\\Xcart\\App\\Logger\\Handler\\RotatingFileHandler' ,
+            'level' => 'DEBUG',
+            'alias' => 'root.log.info',
+            'formatter' => 'log'
+        ],
         'sql' => [
             'class' => '\\Xcart\\App\\Logger\\Handler\\RotatingFileHandler',
             'level' =>  'DEBUG',
@@ -56,7 +62,7 @@ return [
         ],
         'info' => [
             'class' => '\\Xcart\\App\\Logger\\Logger',
-            'handlers' => ['default']
+            'handlers' => ['info', 'error_mail_admins']
         ],
         'error' => [
             'class' => '\\Xcart\\App\\Logger\\Logger',

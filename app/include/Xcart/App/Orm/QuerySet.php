@@ -261,8 +261,7 @@ class QuerySet extends QuerySetBase
             $qcp = new QueryCacheProfile($this->cache);
         }
 
-
-        if ( $stmt = $this->getConnection()->executeQuery($sql, $params, $types, $qcp)) {
+        if ( $stmt = $this->getConnection()->executeQuery($sql, $params, $types, $qcp) ) {
             $rows = $stmt->fetchAll()?:[];
             $stmt->closeCursor();
         }
@@ -286,7 +285,8 @@ class QuerySet extends QuerySetBase
 
         if (count($rows) > 1) {
             throw new MultipleObjectsReturned();
-        } elseif (count($rows) === 0) {
+        }
+        elseif (count($rows) === 0) {
             return null;
         }
 
@@ -296,7 +296,8 @@ class QuerySet extends QuerySetBase
         $row = array_shift($rows);
         if ($this->asArray) {
             return $row;
-        } else {
+        }
+        else {
             $model = $this->createModel($row);
             $model->setIsNewRecord(false);
             return $model;
