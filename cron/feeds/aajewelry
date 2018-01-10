@@ -1,6 +1,0 @@
-#!/bin/bash
-echo "Start processing" >> /home/feeds/aajewelry_progress.txt
-cd /var/www/stores/
-php5 ./cron_aa_supplier_internal_id.php >> /home/feeds/aajewelry_progress.txt
-rm /home/feeds/aajewelry_progress.txt
-echo " " >> /home/feeds/aajewelry_progress.txt

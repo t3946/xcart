@@ -1,6 +1,0 @@
-#!/bin/bash
-echo "Start processing" >> /home/feeds/similar_progress.txt
-cd /var/www/stores/
-php5 ./launch_similar_products.php >> /home/feeds/similar_progress.txt
-rm /home/feeds/similar_progress.txt
-echo " " >> /home/feeds/similar_progress.txt
