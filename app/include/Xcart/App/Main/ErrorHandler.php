@@ -400,7 +400,7 @@ class ErrorHandler
 
         if (in_array($code, $this->ignoringTypes)) {
             if (in_array($code, $this->loggingIgnoredTypes)) {
-                $app->logger->debug($type, $err, 'info');
+                $this->debugLog($code, $type, $err);
             }
 
             return true;
@@ -457,6 +457,22 @@ class ErrorHandler
             else {
                 $this->displayError($code, $message, $file, $line);
             }
+        }
+    }
+
+    public function debugLog($code, $type, $err)
+    {
+        switch ($code) {
+            case E_WARNING:
+            case E_USER_WARNING:
+                return Xcart::app()->logger->warning($type, $err, 'debug');
+            case E_NOTICE:
+            case E_USER_NOTICE:
+                return Xcart::app()->logger->notice($type, $err, 'debug');
+            case E_RECOVERABLE_ERROR:
+            case E_USER_ERROR:
+            default:
+                return Xcart::app()->logger->error($type, $err, 'debug');
         }
     }
 
