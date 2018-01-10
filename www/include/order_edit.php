@@ -51,7 +51,6 @@ if (!defined("XCART_SESSION_START")) {
 
 x_load('order_edit', 'taxes');
 
-include $xcart_dir . "/shipping/shipping.php";
 include $xcart_dir . "/include/countries.php";
 include $xcart_dir . "/include/states.php";
 

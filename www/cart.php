@@ -254,7 +254,7 @@ if (!empty($orderids) && $_GET["mode"] == "order_message") {
 }
 
 require $xcart_dir . "/include/cart_process.php";
-include $xcart_dir . "/shipping/shipping.php";
+
 
 x_session_register("cart", []);
 x_session_register("intershipper_rates");
@@ -863,103 +863,87 @@ if (!$func_is_cart_empty) {
                         $_products[] = $v2;
                     }
                 }
-                if (!empty($config['Shipping']['new_shipping_calculation']) && $config['Shipping']['new_shipping_calculation'] == 'Y') {
-                    if (!empty($_products)) {
-                        /** @var \Modules\Distributor\Models\DistributorModel $oManufacturer */
-                        $oManufacturer = \Modules\Distributor\Models\DistributorModel::objects()->get(['manufacturerid' => $k]);
-                        $oCart = new Xcart\Cart();
-                        foreach ($_products as $_product) {
-                            $oProduct = ProductModel::objects()->get(['productid' => $_product['productid']]);
-                            $oProduct->setPrice($_product['price']); //calculate regarding cart product price
-                            if ($oProduct->getManufacturerId() == $k) {
-                                $oCart->addObjectToCart(new \Xcart\CartElement($oProduct, $_product['amount']));
-                            }
+
+                if (!empty($_products)) {
+                    /** @var \Modules\Distributor\Models\DistributorModel $oManufacturer */
+                    $oManufacturer = \Modules\Distributor\Models\DistributorModel::objects()->get(['manufacturerid' => $k]);
+                    $oCart = new Xcart\Cart();
+                    foreach ($_products as $_product) {
+                        $oProduct = ProductModel::objects()->get(['productid' => $_product['productid']]);
+                        $oProduct->setPrice($_product['price']); //calculate regarding cart product price
+                        if ($oProduct->getManufacturerId() == $k) {
+                            $oCart->addObjectToCart(new \Xcart\CartElement($oProduct, $_product['amount']));
                         }
-                        if (!empty($userinfo)) {
-                            $oCustomer = new \Modules\User\Models\UserModel($userinfo);
-                        }
-                        try {
-                            $aShippingZones = Xcart\Shipping::model()->getShippingRates($oCustomer, $oManufacturer, $oCart);
-                        }
-                        catch(\Exception $e){
-                            $aShippingZones = [];
-                        }
-                        $shipping = [];
-                        if (!empty($aShippingZones)) {
-                            /** @var \Xcart\ShippingRate[] $aShippingRates */
-                            foreach ($aShippingZones as $aShippingRates) {
-                                if (!empty($aShippingRates)) {
-                                    foreach ($aShippingRates as $oShippingRate) {
-                                        $shipping[$oShippingRate->getShippingId()] = $oShippingRate->getShippingEntity()->getFields();
-                                        $shipping[$oShippingRate->getShippingId()]['rate'] = $oShippingRate->getShippingCharge();
-                                        $shipping[$oShippingRate->getShippingId()]['allowed'] = true;
-                                        if ($oShippingRate->getCart()->getExtraMarginValue() > 0) {
-                                            $shipping[$oShippingRate->getShippingId()]['shipping_extra_margin_value'] = $oShippingRate->getShippingChargeBeforeMap() - $oShippingRate->getShippingCharge();
+                    }
+                    if (!empty($userinfo)) {
+                        $oCustomer = new \Modules\User\Models\UserModel($userinfo);
+                    }
+                    try {
+                        $aShippingZones = Xcart\Shipping::model()->getShippingRates($oCustomer, $oManufacturer, $oCart);
+                    } catch (\Exception $e) {
+                        $aShippingZones = [];
+                    }
+                    $shipping = [];
+                    if (!empty($aShippingZones)) {
+                        /** @var \Xcart\ShippingRate[] $aShippingRates */
+                        foreach ($aShippingZones as $aShippingRates) {
+                            if (!empty($aShippingRates)) {
+                                foreach ($aShippingRates as $oShippingRate) {
+                                    $shipping[$oShippingRate->getShippingId()] = $oShippingRate->getShippingEntity()->getFields();
+                                    $shipping[$oShippingRate->getShippingId()]['rate'] = $oShippingRate->getShippingCharge();
+                                    $shipping[$oShippingRate->getShippingId()]['allowed'] = true;
+                                    if ($oShippingRate->getCart()->getExtraMarginValue() > 0) {
+                                        $shipping[$oShippingRate->getShippingId()]['shipping_extra_margin_value'] = $oShippingRate->getShippingChargeBeforeMap() - $oShippingRate->getShippingCharge();
+                                    }
+                                    $aCartElements = $oShippingRate->getCart()->getElements();
+                                    if (!empty($aCartElements)) {
+                                        /** @var \Xcart\CartElement $oCartElement */
+                                        foreach ($aCartElements as $oCartElement) {
+                                            $shipping[$oShippingRate->getShippingId()]['products'][] = $oCartElement->getProduct()->getSKU();
                                         }
-                                        $aCartElements = $oShippingRate->getCart()->getElements();
-                                        if (!empty($aCartElements)) {
-                                            /** @var \Xcart\CartElement $oCartElement */
-                                            foreach ($aCartElements as $oCartElement) {
-                                                $shipping[$oShippingRate->getShippingId()]['products'][] = $oCartElement->getProduct()->getSKU();
-                                            }
-                                        }
-                                        $aAddedShippingRates = $oShippingRate->getAddedShippingRates();
-                                        if (!empty($aAddedShippingRates)) {
-                                            foreach ($aAddedShippingRates as $oAddedShippingRate) {
-                                                $aShipping = $oAddedShippingRate->getFields();
-                                                $aShipping['shipping_charge'] = $oAddedShippingRate->getShippingCharge();
-                                                $aShipping['shipping_extra_margin_value'] = $oAddedShippingRate->getCart()->getExtraMarginValue();
-                                                $aProducts = $oAddedShippingRate->getCart()->getElements();
-                                                if (!empty($aProducts)) {
-                                                    /** @var \Xcart\CartElement $oCartElement */
-                                                    foreach ($aProducts as $oCartElement) {
-                                                        $aShipping['products'][] = $oCartElement->getProduct()->getSKU();
-                                                    }
+                                    }
+                                    $aAddedShippingRates = $oShippingRate->getAddedShippingRates();
+                                    if (!empty($aAddedShippingRates)) {
+                                        foreach ($aAddedShippingRates as $oAddedShippingRate) {
+                                            $aShipping = $oAddedShippingRate->getFields();
+                                            $aShipping['shipping_charge'] = $oAddedShippingRate->getShippingCharge();
+                                            $aShipping['shipping_extra_margin_value'] = $oAddedShippingRate->getCart()->getExtraMarginValue();
+                                            $aProducts = $oAddedShippingRate->getCart()->getElements();
+                                            if (!empty($aProducts)) {
+                                                /** @var \Xcart\CartElement $oCartElement */
+                                                foreach ($aProducts as $oCartElement) {
+                                                    $aShipping['products'][] = $oCartElement->getProduct()->getSKU();
                                                 }
-                                                $shipping[$oShippingRate->getShippingId()]['added_shipping'][] = $aShipping;
                                             }
+                                            $shipping[$oShippingRate->getShippingId()]['added_shipping'][] = $aShipping;
                                         }
                                     }
                                 }
                             }
                         }
-
-                        $shippings[$k] = $shipping;
-                        if ((!empty($cart["shippingids"][$k]) && !in_array($cart["shippingids"][$k], array_keys($shipping))) || empty($cart["shippingids"][$k])) {
-                                $aShippingFirst = reset($shipping);
-                                $cart["shippingids"][$k] = $aShippingFirst["shippingid"];
-                        }
-
-                        if (!empty($cart["shippingids"]) && is_array($cart["shippingids"])) {
-                            $cart['shipping_cost'] = 0;
-                            foreach ($cart["shippingids"] as $m_id => $sh_id) {
-                                $cart['shipping_costs'][$m_id] = $shippings[$m_id][$sh_id]['rate'];
-                                $cart['display_shipping_costs'][$m_id] = $cart['shipping_costs'][$m_id];
-                                $cart['shipping_cost'] += $shippings[$m_id][$sh_id]['rate'];
-                                $cart['display_shipping_cost'] = $cart['shipping_cost'];
-                            }
-                        }
                     }
-                } else {
-                    $current_carrier = 'UPS';
-                    $intershipper_recalc = 'Y';
-                    $shipping = func_get_shipping_methods_list($cart, $_products, $userinfo, false, $k);
+
                     $shippings[$k] = $shipping;
-                    if (!$shipping) {
-                        $no_shipping_in_group = true;
-                    } elseif (is_array($shipping)) {
-                        $shipping_matched = false;
-                        foreach ($shipping as $shipping_method) {
-                            if (@$cart["shippingids"][$k] == $shipping_method["shippingid"])
-                                $shipping_matched = true;
-                        }
-
+                    if ((!empty($cart["shippingids"][$k]) && !in_array($cart["shippingids"][$k], array_keys($shipping))) || empty($cart["shippingids"][$k])) {
+                        $aShippingFirst = reset($shipping);
+                        $cart["shippingids"][$k] = $aShippingFirst["shippingid"];
                     }
-                    if (!$shipping_matched)
-                        $cart["shippingids"][$k] = $shipping[0]["shippingid"];
+
+                    if (!empty($cart["shippingids"]) && is_array($cart["shippingids"])) {
+                        $cart['shipping_cost'] = 0;
+                        foreach ($cart["shippingids"] as $m_id => $sh_id) {
+                            $cart['shipping_costs'][$m_id] = $shippings[$m_id][$sh_id]['rate'];
+                            $cart['display_shipping_costs'][$m_id] = $cart['shipping_costs'][$m_id];
+                            $cart['shipping_cost'] += $shippings[$m_id][$sh_id]['rate'];
+                            $cart['display_shipping_cost'] = $cart['shipping_cost'];
+                        }
+                    }
                 }
+
                 if ($ca = DistributorHelper::getShippingCountries($k)) {
-                    $cart["shipping_groups"][$k]['shipping_countries'] = implode(array_map(function($a){return func_get_langvar_by_name('country_'.$a->code);}, $ca), ' or ');
+                    $cart["shipping_groups"][$k]['shipping_countries'] = implode(array_map(function ($a) {
+                        return func_get_langvar_by_name('country_' . $a->code);
+                    }, $ca), ' or ');
                 }
             }
         }
@@ -1448,10 +1432,7 @@ if ($mode == "checkout" || $mode == "auth") {
 
 func_save_customer_cart($login, $cart);
 
-if (func_use_arb_account()) {
-    $smarty->assign("use_airborne_account", true);
-    $smarty->assign("airborne_account", $airborne_account);
-}
+
 
 $allow_cod = func_query_first_cell("SELECT COUNT(*) FROM $sql_tbl[payment_methods] WHERE active = 'Y' AND is_cod = 'Y'") > 0;
 $smarty->assign("allow_cod", $allow_cod);

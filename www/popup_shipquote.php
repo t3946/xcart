@@ -144,7 +144,7 @@ window.close();
 
 	x_session_register("cart", []);
 
-	include $xcart_dir."/shipping/shipping.php";
+	//include $xcart_dir."/shipping/shipping.php";
 
 	if (func_is_cart_empty($cart) || empty($cart["shipping_groups"]))	
 		func_close_window();
@@ -217,7 +217,7 @@ $smarty->assign("variant_id", $variant_id);
 				 $intershipper_recalc = 'Y';
 //			 }
 			 
-			$shipping = func_get_shipping_methods_list($cart, $_products, $shipquote_userinfo, false, $k);
+			//$shipping = func_get_shipping_methods_list($cart, $_products, $shipquote_userinfo, false, $k);
 			
 			$shippings[$k] = $shipping;
 

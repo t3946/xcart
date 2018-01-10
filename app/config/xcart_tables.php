@@ -235,7 +235,7 @@ return [
     "storefronts_config"                      => "xcart_storefronts_config",
     "shipping_carrier"                        => "xcart_shipping_carrier",
     "shipping_cache_products"                 => "xcart_shipping_cache_products",
-    "shipping_cache_simple"                   => "xcart_shipping_cache_simple",
+    "shipping_cache_location"                 => "xcart_shipping_cache_location",
     "fba_inventory_receipts"                  => "xcart_fba_inventory_receipts",
     "fba_roi_accounting"                      => "xcart_fba_roi_accounting",
     "order_cx_invoices"                       => "xcart_order_cx_invoices",
