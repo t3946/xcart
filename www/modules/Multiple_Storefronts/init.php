@@ -57,7 +57,7 @@ if ($storefronts) {
     $smarty->assign('storefronts', $storefronts);
 
     $sd_selects = [];
-//    $domains = Modules\Sites\Models\SiteModel::objects()->filter(['config__name__isnt' => null])->allSql();
+//    $t_domains = Modules\Sites\Models\SiteModel::objects()->filter(['config__name__isnt' => null])->group(['storefrontid'])->all();
     $t_domains = Modules\Sites\Models\SiteModel::objects()->all();
     /** @var Modules\Sites\Models\SiteModel $t_domains */
     foreach ($t_domains as $t_domain) {
