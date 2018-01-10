@@ -387,7 +387,7 @@ class ErrorHandler
         }
         $this->_exception = null;
         $this->_error = $err = [
-            'code' => 500,
+            'code' => $code,
             'type' => $type,
             'message' => $message,
             'file' => $file,
@@ -451,6 +451,7 @@ class ErrorHandler
                 if (!headers_sent()) {
                     header("HTTP/1.0 500 Internal Server Error");
                 }
+                $this->_error['code'] = 500;
                 $this->renderError();
             }
             else {

@@ -231,7 +231,7 @@ function func_tax_price($price, $productid=0, $disable_abs=false, $discounted_pr
 
 	if (empty($customer_info)) {
 		global $login;
-		$customer_info["login"] = $login;
+        $customer_info = ["login" => $login];
 	}
 
 	$return_taxes = array();

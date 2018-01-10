@@ -663,7 +663,7 @@ if ($mode == "search") {
     # /if (!empty($data["categoryid"]))
 
 
-    if (count($data["extra_sku"]) == 1) {
+    if (!empty($data["extra_sku"]) && count($data["extra_sku"]) == 1) {
         $data["productcode"] = $data["extra_sku"][0];
         unset($data["extra_sku"]);
     }
