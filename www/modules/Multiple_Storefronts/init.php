@@ -64,7 +64,7 @@ if ($storefronts) {
 //        $sd_selects[$t_domains->storefrontid] = $t_domains->__toString();
 //    }
 //    $smarty->assign('sd_selects', $sd_selects);
-//}
+}
 
 if ($search_all_website) {
     return;
