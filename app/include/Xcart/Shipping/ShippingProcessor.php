@@ -281,7 +281,7 @@ abstract class ShippingProcessor
             $oCart = $this->getCart();
 
             /** @var ShippingCacheLocationModel $model */
-            [$model, $is_created] = ShippingCacheLocationModel::objects()->getOrCreate(
+            [$model] = ShippingCacheLocationModel::objects()->getOrCreate(
                 [
                     'zip_to' => $oCustomer->s_zipcode,
                     'zip_from' => $oManufacturer->m_zipcode,
@@ -301,7 +301,7 @@ abstract class ShippingProcessor
             foreach ($this->aShippingRates as $oShippingRate) {
 
                 /** @var ShippingCacheQuoteModel $q */
-                [$q] = ShippingCacheQuoteModel::objects()->getOrCreate([
+                [$q] = ShippingCacheQuoteModel::objects()->getOrNew([
                     'shipping_cache_id' => $location->shipping_cache_id,
                     'rate_id' => $oShippingRate->rateid,
                 ]);
