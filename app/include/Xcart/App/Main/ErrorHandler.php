@@ -377,8 +377,6 @@ class ErrorHandler
             }
         }
         else {
-            $msg = "Error: {$message}\nFile: {$file}\nLine: {$line}";
-
             $trace = debug_backtrace();
             // skip the first 3 stacks as they do not tell the error position
             if (count($trace) > 3) {
