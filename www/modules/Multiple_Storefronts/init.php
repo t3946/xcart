@@ -61,7 +61,7 @@ if ($storefronts) {
     $t_domains = Modules\Sites\Models\SiteModel::objects()->all();
     /** @var Modules\Sites\Models\SiteModel $t_domains */
     foreach ($t_domains as $t_domain) {
-        $sd_selects[$t_domains->storefrontid] = $t_domain->__toString();
+        $sd_selects[$t_domain->storefrontid] = $t_domain->__toString();
     }
     $smarty->assign('sd_selects', $sd_selects);
 }
