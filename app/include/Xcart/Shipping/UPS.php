@@ -9,6 +9,7 @@ use Ups\Entity\PackagingType;
 use Ups\Entity\ShipFrom;
 use Ups\Entity\Shipment;
 use Ups\Rate;
+use Xcart\App\Main\Xcart;
 use Xcart\Logs;
 use Xcart\Product;
 use Xcart\ApproximationShippingRates;
@@ -50,8 +51,7 @@ class UPS extends ShippingProcessor
 
     public function isProcessorApplicable()
     {
-        $bResult = true;
-        return $bResult;
+        return true;
     }
 
     /**
@@ -66,17 +66,12 @@ class UPS extends ShippingProcessor
         if (!empty($aShippingRates)) {
             $oShippingRate = reset($aShippingRates);
 
-
-
             $UPS_username = text_decrypt(trim($config["UPS_OnLine_Tools"]["UPS_username"]));
             $UPS_password = text_decrypt(trim($config["UPS_OnLine_Tools"]["UPS_password"]));
             $UPS_accesskey = text_decrypt(trim($config["UPS_OnLine_Tools"]["UPS_accesskey"]));
 
-            $rate = new Rate(
-                $UPS_accesskey,
-                $UPS_username,
-                $UPS_password
-            );
+            $rate = new Rate($UPS_accesskey, $UPS_username, $UPS_password);
+
             try {
                 $oCustomer = $this->getCustomer();
 
@@ -114,6 +109,7 @@ class UPS extends ShippingProcessor
 
                 $shipment->addPackage($package);
                 $aResponses = $rate->shopRates($shipment);
+
 
             } catch (\Exception $e) {
                 //log
