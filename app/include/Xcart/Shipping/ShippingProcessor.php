@@ -283,12 +283,12 @@ abstract class ShippingProcessor
             /** @var ShippingCacheLocationModel $model */
             [$model] = ShippingCacheLocationModel::objects()->getOrCreate(
                 [
-                    'zip_to' => $oCustomer->s_zipcode,
-                    'zip_from' => $oManufacturer->m_zipcode,
-                    'state_to' => $oCustomer->s_state,
-                    'state_from' => $oManufacturer->m_state,
-                    'country_to' => $oCustomer->s_country,
-                    'country_from' => $oManufacturer->m_country,
+                    'zip_to' => $oCustomer->s_zipcode ?: '',
+                    'zip_from' => $oManufacturer->m_zipcode ?: '',
+                    'state_to' => $oCustomer->s_state ?: '',
+                    'state_from' => $oManufacturer->m_state ?: '',
+                    'country_to' => $oCustomer->s_country ?: '',
+                    'country_from' => $oManufacturer->m_country ?: '',
                 ]
             );
 
