@@ -267,9 +267,9 @@ class Manager extends ManyToManyManager
         return $this;
     }
     
-    public function cache($life_time = null)
+    public function cache($ttl = null)
     {
-        $this->getQuerySet()->cache($life_time);
+        $this->getQuerySet()->cache($ttl);
         return $this;
     }
 }

@@ -34,7 +34,7 @@ class DashboardController extends PrototypeAdminController
 
     public function index()
     {
-        $models = DashboardFilter::objects()->filter(['enabled' => true])->all();
+        $models = DashboardFilter::objects()->filter(['enabled' => true])->cache(60)->all();
         $myModels = DashboardFilter::objects()->filter(['enabled' => true, 'users__id' => Xcart::app()->user->id])->order(['-position_row', '-position_column'])->all();
         $questionModels = ProductQuestionModel::objects()->select(['status', 'id' => new Expression('count(*)')])->exclude(['status' => ''])->group(['status'])->order(['-status'])->all();
 

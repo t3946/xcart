@@ -803,10 +803,10 @@ class QuerySet extends QuerySetBase
         return $field;
     }
 
-    public function cache($life_time = null)
+    public function cache($ttl = null)
     {
 //        $this->cache = ($life_time)?$life_time:$this->getConnection()->getConfiguration()->;
-        $this->cache = $life_time;
+        $this->cache = $ttl;
         return $this;
     }
 }
