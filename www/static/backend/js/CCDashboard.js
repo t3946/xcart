@@ -28,7 +28,7 @@
                     err_refresh: 'Dashboard refresh error'
                 }
             },
-            interval: 25000,
+            interval: 10000,
             selector: '.dashboard-filters a[data-id]',
             questionSelector: '.admin .question_products'
         },
