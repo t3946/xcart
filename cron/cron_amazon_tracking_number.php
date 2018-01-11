@@ -16,20 +16,20 @@ global $config;
 
 $log_category = 'cron_amazon_tracking_number';
 
-if ($config[$log_category] == "Y") {
-    func_backprocess_log($log_category, 'Already launched');
-    $oMail = \Xcart\App\Main\Xcart::app()->oldMail;
-    $oMail->to = 'team@s3stores.com';
-    $oMail->from = ('team@s3stores.com');
-    $oMail->subject = sprintf('Attention! Xcart cron %s Already launched', $log_category);
-    $oMail->body = $log_category . ' already launched';
-    $oMail->sendEmail();
-    if (!isset($argv) || (isset($argv) && !in_array('--force-flag', $argv))) {
-        die("Already launched"); // ################################
-    }
-}
-
-db_query_param("REPLACE xcart_config SET value='Y', name=:log_category", ['log_category' => $log_category]);
+//if ($config[$log_category] == "Y") {
+//    func_backprocess_log($log_category, 'Already launched');
+//    $oMail = \Xcart\App\Main\Xcart::app()->oldMail;
+//    $oMail->to = 'team@s3stores.com';
+//    $oMail->from = ('team@s3stores.com');
+//    $oMail->subject = sprintf('Attention! Xcart cron %s Already launched', $log_category);
+//    $oMail->body = $log_category . ' already launched';
+//    $oMail->sendEmail();
+//    if (!isset($argv) || (isset($argv) && !in_array('--force-flag', $argv))) {
+//        die("Already launched"); // ################################
+//    }
+//}
+//
+//db_query_param("REPLACE xcart_config SET value='Y', name=:log_category", ['log_category' => $log_category]);
 
 $start_time = new DateTime('now');
 $log_text = " * * *  Cron started  * * * ";
@@ -124,7 +124,7 @@ if ($ogModels) {
 
 
 
-Xcart\Config::model(['name' => $log_category])->setValue('N')->_update();
+//Xcart\Config::model(['name' => $log_category])->setValue('N')->_update();
 
 $str_time = (new DateTime('now'))->diff($start_time)->format('%H:%I:%S');
 $log_text = "Cron completed. Processing time: {$str_time}";

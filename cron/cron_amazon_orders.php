@@ -11,19 +11,19 @@ set_time_limit(0);
 
 const LOG_CATEGORY = 'cidev_amazon_orders_v2';
 
-if ($config[LOG_CATEGORY] == "Y") {
-    func_backprocess_log(Xcart\AmazonMWS::BACK_PROCESS_LOG_NAME_ORDERS, 'Already launched');
-    $oMail = \Xcart\App\Main\Xcart::app()->oldMail;
-    $oMail->to = 'team@s3stores.com';
-    $oMail->from = ('team@s3stores.com');
-    $oMail->subject = sprintf('Attention! Xcart cron %s Already launched', LOG_CATEGORY);
-    $oMail->body = Xcart\AmazonMWS::BACK_PROCESS_LOG_NAME_ORDERS . ' already launched';
-    $oMail->sendEmail();
-    if (!isset($argv) || (isset($argv) && !in_array('--force-flag', $argv))) {
-        die("Already launched"); // ################################
-    }
-}
-db_query("REPLACE $sql_tbl[config] SET value='Y', name='" . LOG_CATEGORY . "'");
+//if ($config[LOG_CATEGORY] == "Y") {
+//    func_backprocess_log(Xcart\AmazonMWS::BACK_PROCESS_LOG_NAME_ORDERS, 'Already launched');
+//    $oMail = \Xcart\App\Main\Xcart::app()->oldMail;
+//    $oMail->to = 'team@s3stores.com';
+//    $oMail->from = ('team@s3stores.com');
+//    $oMail->subject = sprintf('Attention! Xcart cron %s Already launched', LOG_CATEGORY);
+//    $oMail->body = Xcart\AmazonMWS::BACK_PROCESS_LOG_NAME_ORDERS . ' already launched';
+//    $oMail->sendEmail();
+//    if (!isset($argv) || (isset($argv) && !in_array('--force-flag', $argv))) {
+//        die("Already launched"); // ################################
+//    }
+//}
+//db_query("REPLACE $sql_tbl[config] SET value='Y', name='" . LOG_CATEGORY . "'");
 
 $start_time = new DateTime('now');
 
@@ -34,7 +34,7 @@ $classAmazonMWS = new Xcart\AmazonMWS('MarketplaceWebServiceOrders_Client', '/Or
 
 $classAmazonMWS->_Request('OrderListRequest');
 
-Xcart\Config::model(['name' => LOG_CATEGORY])->setValue('N')->_update();
+//Xcart\Config::model(['name' => LOG_CATEGORY])->setValue('N')->_update();
 $str_time = (new DateTime('now'))->diff($start_time)->format('%H:%I:%S');
 $log_text = "Cron completed. Processing time: {$str_time}";
 func_backprocess_log(Xcart\AmazonMWS::BACK_PROCESS_LOG_NAME_ORDERS, $log_text);

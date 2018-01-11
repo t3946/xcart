@@ -11,13 +11,13 @@ require __DIR__ . DIRECTORY_SEPARATOR . "../www/init.php";
 ini_set('memory_limit', '512M');
 set_time_limit(0);
 
-if ($config["cron_pc_launched"] == "Y") {
-
-//	echo '<pre>'.print_r(opcache_get_status(), true).'</pre>';
-    die("Already launched"); // ################################
-}
-
-db_query_param(/** @lang MySQL */"UPDATE xcart_config SET value='Y' WHERE name='cron_pc_launched'", []);
+//if ($config["cron_pc_launched"] == "Y") {
+//
+////	echo '<pre>'.print_r(opcache_get_status(), true).'</pre>';
+//    die("Already launched"); // ################################
+//}
+//
+//db_query_param(/** @lang MySQL */"UPDATE xcart_config SET value='Y' WHERE name='cron_pc_launched'", []);
 
 $pc_options = func_query_hash("SELECT * FROM $sql_tbl[pc_options]", 'storefrontid', false);
 
@@ -206,7 +206,7 @@ WHERE C.pc_ready_to_classify='Y' AND C.storefrontid = :storefrontid AND C.avail 
     }
 }
 
-db_query_param(/** @lang MySQL */"UPDATE xcart_config SET value='N' WHERE name='cron_pc_launched'", []);
+//db_query_param(/** @lang MySQL */"UPDATE xcart_config SET value='N' WHERE name='cron_pc_launched'", []);
 db_query_param(/** @lang MySQL */"UPDATE xcart_config SET value='' WHERE name='cron_pc_launched_storefrontid'", []);
 
 print"<br />DONE!";

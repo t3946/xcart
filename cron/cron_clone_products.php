@@ -9,15 +9,15 @@ set_time_limit(0);
 
 $log_category = 'clone_products_cron';
 
-if ($config[$log_category] == "Y"){
-    die("Already launched"); // ################################
-}
+//if ($config[$log_category] == "Y"){
+//    die("Already launched"); // ################################
+//}
 
 global $xcart_dir;
 
 $classProducts = new Xcart\Products();
 
-db_query("REPLACE $sql_tbl[config] SET value='Y', name='$log_category'");
+//db_query("REPLACE $sql_tbl[config] SET value='Y', name='$log_category'");
 
 $start_time = time();
 
@@ -54,6 +54,6 @@ if ($iProductsCount) {
 
 }
 
-db_query("UPDATE $sql_tbl[config] SET value='N' WHERE name='$log_category'");
+//db_query("UPDATE $sql_tbl[config] SET value='N' WHERE name='$log_category'");
 
 die("DONE!");
