@@ -88,7 +88,7 @@ if ($ogModels && 1==2) {
 $ogModels = OrderModel::objects()
     ->getQuerySet()
     ->join('inner join', 'xcart_order_groups', ['og.orderid' => 'orderid'], 'og')
-    ->exclude(['og.tracking__contains' => 'send_to_amazon'])
+    //->exclude(['og.tracking__contains' => 'send_to_amazon'])
     ->filter(['amazon_fulfillment_channel' => 'MFN', 'orderid' => 111449])
     ->all();
 if ($ogModels) {
