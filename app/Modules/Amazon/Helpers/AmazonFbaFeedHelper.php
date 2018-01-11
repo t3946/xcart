@@ -47,7 +47,7 @@ class AmazonFbaFeedHelper
                 foreach ($details as $detail) {
                     $items[] = ['Item' => [
                         'AmazonOrderItemCode' => $detail->AmazonOrderItemCode,
-                        'MerchantFulfillmentItemID' => $detail->productcode,
+//                        'MerchantFulfillmentItemID' => $detail->productcode,
                         'Quantity' => $detail->amount
                     ]];
                 }
