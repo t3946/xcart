@@ -145,7 +145,7 @@ return array_replace_recursive([
            'class' => '\\Xcart\\App\\Main\\ErrorHandler',
            'debug' => false,
            'ignoringTypes' => [
-               E_RECOVERABLE_ERROR,
+//               E_RECOVERABLE_ERROR,
                E_DEPRECATED,
                E_USER_DEPRECATED,
                E_NOTICE,
