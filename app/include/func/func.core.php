@@ -1330,84 +1330,22 @@ function func_data_cache_get($name, $params = [], $force_rebuild = false)
         return false;
     }
 
-    $path = $var_dirs["cache"] . "/" . $name;
-    if (!empty($params)) {
-        $path .= "." . implode(".", $params);
-    }
-
-    $path .= ".php";
     $no_save = defined("BLOCK_DATA_CACHE_" . strtoupper($name));
 
-    if (file_exists($path) && !$force_rebuild && defined("USE_DATA_CACHE") && constant("USE_DATA_CACHE") && !$no_save) {
-        if (!@include($path)) {
-            return false;
-        }
-
-        return $$name;
+    if ( !$force_rebuild
+        && defined("USE_DATA_CACHE")
+        && constant("USE_DATA_CACHE")
+        && !$no_save
+        && $data = \Xcart\App\Main\Xcart::app()->cache->get($name) )
+    {
+        return $data;
     }
     else {
         $data = call_user_func_array($data_caches[$name]['func'], $params);
-        if (defined("USE_DATA_CACHE") && constant("USE_DATA_CACHE") && is_writable($var_dirs["cache"]) && is_dir($var_dirs["cache"]) && !$no_save) {
-            if (file_exists($path)) {
-                @unlink($path);
-            }
-            $fp        = @fopen($path, "w");
-            $is_unlink = false;
-            if ($fp) {
-                if (@fwrite($fp, "<?php\nif (!defined('XCART_START')) { header('Location: ../../'); die('Access denied'); }\n") === false) {
-                    $is_unlink = true;
-                }
-                if (!$is_unlink && !func_data_cache_write($fp, '$' . $name, $data)) {
-                    $is_unlink = true;
-                }
-                if (!$is_unlink && @fwrite($fp, "?>") === false) {
-                    $is_unlink = true;
-                }
-
-                fclose($fp);
-            }
-
-            if ($is_unlink && file_exists($path)) {
-                @unlink($path);
-            }
-        }
+        \Xcart\App\Main\Xcart::app()->cache->set($name, $data);
 
         return $data;
     }
-}
-
-#
-# Write array to data cache file
-#
-function func_data_cache_write($fp, $prefix, $data)
-{
-    if (!is_array($data)) {
-        fwrite($fp, $prefix . '=');
-        if (is_bool($data)) {
-            if (@fwrite($fp, ($data ? "true" : "false") . ";\n") === false) {
-                return false;
-            }
-        }
-        elseif (is_int($data) || is_float($data)) {
-            if (@fwrite($fp, $data . ";\n") === false) {
-                return false;
-            }
-        }
-        else {
-            if (@fwrite($fp, '"' . str_replace('"', '\"', $data) . "\";\n") === false) {
-                return false;
-            }
-        }
-    }
-    else {
-        foreach ($data as $key => $value) {
-            if (!func_data_cache_write($fp, $prefix . "['" . str_replace("'", "\'", $key) . "']", $value)) {
-                return false;
-            }
-        }
-    }
-
-    return true;
 }
 
 #
@@ -1415,26 +1353,7 @@ function func_data_cache_write($fp, $prefix, $data)
 #
 function func_data_cache_clear($name = false)
 {
-    global $data_caches, $var_dirs, $xcart_dir;
-
-    if ($name !== false && (!isset($data_caches[$name]) || empty($data_caches[$name]['func']) || !function_exists($data_caches[$name]['func']))) {
-        return false;
-    }
-
-    $path = $var_dirs["cache"];
-
-    $dir = opendir($path);
-    if (!$dir) {
-        return false;
-    }
-
-    while ($file = readdir($dir)) {
-        if ($file != '.' && $file != '..' && (($name === false && preg_match("/\.php$/S", $file)) || ($name !== false && strpos($file, $name . ".") === 0))) {
-            @unlink($path . DIRECTORY_SEPARATOR . $file);
-        }
-    }
-
-    closedir($dir);
+    \Xcart\App\Main\Xcart::app()->cache->set($name, null);
 
     return true;
 }
