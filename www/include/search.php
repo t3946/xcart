@@ -1265,9 +1265,6 @@ if ($mode == "search") {
      */
     if (empty($data["sort_field"]) || $data["sort_field"] == 'orderby')
     {
-        $t1_arr = array();
-        $t3_arr = array();
-
         $search_related_products_ids = [];
         $related_ids = [];
         $related_like_text = null;
@@ -1309,7 +1306,6 @@ if ($mode == "search") {
 
                 if ($push) {
                     $t_ids_product_arr[] = $push_el;
-                    $t3_arr[] = ['score' =>$product['score'], 'productid' => $product['productid']];
                 }
             }
 
@@ -1322,20 +1318,6 @@ if ($mode == "search") {
                 array_unshift($orderbys, $order_by_lastsearch_1, $order_by_lastsearch_2);
             }
         }
-
-        if (!empty($search_related_products_ids)) {
-            foreach ($search_related_products_ids as $founded) {
-                $t1_arr[(string)$founded['score']] = $founded['productid'];
-            }
-        }
-
-        $t1_arr_count = count($t1_arr);
-        $t1_arr = json_encode($t1_arr);
-        $t3_arr = json_encode($t3_arr);
-
-        $smarty->assign("t1_arr", $t1_arr);
-        $smarty->assign("t1_arr_count", $t1_arr_count);
-        $smarty->assign("t3_arr", $t3_arr);
     }
 
     if (!empty($orderbys)) {
