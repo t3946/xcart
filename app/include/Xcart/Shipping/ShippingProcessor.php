@@ -347,12 +347,12 @@ abstract class ShippingProcessor
             'cnt_total' => (new Expression('COUNT(DISTINCT xs2.product_id)'))->toSQL()
         ]);
         $qs->filter([
-            'shipping_location__zip_to' => $oCustomer->s_zipcode,
-            'shipping_location__zip_from' => $oManufacturer->m_zipcode,
-            'shipping_location__state_to' => $oCustomer->s_state,
-            'shipping_location__state_from' => $oManufacturer->m_state,
-            'shipping_location__country_to' => $oCustomer->s_country,
-            'shipping_location__country_from' => $oManufacturer->m_country,
+            'shipping_location__zip_to' => $oCustomer->s_zipcode ?: '',
+            'shipping_location__zip_from' => $oManufacturer->m_zipcode ?: '',
+            'shipping_location__state_to' => $oCustomer->s_state ?: '',
+            'shipping_location__state_from' => $oManufacturer->m_state ?: '',
+            'shipping_location__country_to' => $oCustomer->s_country ?: '',
+            'shipping_location__country_from' => $oManufacturer->m_country ?: '',
             'shipping_carrier' => $sCarrierName,
         ]);
 
