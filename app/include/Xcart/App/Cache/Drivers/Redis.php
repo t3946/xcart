@@ -10,6 +10,7 @@ class Redis extends CacheDriver
     public $port = 6379;
     public $timeout = 0;
 
+    /** @var RedisCache */
     protected $dbal_redis;
 
 
@@ -30,12 +31,22 @@ class Redis extends CacheDriver
 
     protected function getValue($key)
     {
-
+        $this->dbal_redis->fetch($key);
     }
 
     protected function setValue($key, $data, $timeout)
     {
+        $this->dbal_redis->save($key, $data, $timeout);
+    }
 
+    public function serialize($value)
+    {
+        return $value;
+    }
+
+    public function unserialize($value)
+    {
+        return $value;
     }
 
 
