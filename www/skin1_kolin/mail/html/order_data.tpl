@@ -100,35 +100,37 @@
 </tr>
 {/if}
 {if $show_shipping_groups neq 'N'}
-    {if $v.tracking}
-        {foreach from=$v.tracking item=tr}
+    {if $v.oOrderGroup->tracking}
+        {foreach from=$v.oOrderGroup->tracking item=tr}
             <tr>
                 <td colspan="{$colspan}" style="padding: 10px;">
-		    {assign var="current_carrier_id" value=$tr.carrier_id}
+                    {assign var="current_carrier_id" value=$tr.carrier_id}
                     {assign var="full_shipper" value="by `$tracking_links_carrier[$current_carrier_id].carrier`"}
-		    {if $tracking_links[$tr.linkid].shipping ne ""}
-                    	{assign var="full_shipper" value="`$full_shipper` `$tracking_links[$tr.linkid].shipping`"}
-		    {/if}
-		    {if $tr.ship_date ne ""}
-			{assign var="full_shipper" value="on `$tr.ship_date` `$full_shipper`"}
-		    {/if}
+                    {if $tracking_links[$tr.linkid].shipping ne ""}
+                        {assign var="full_shipper" value="`$full_shipper` `$tracking_links[$tr.linkid].shipping`"}
+                    {/if}
+                    {if $tr.shipping_date}
+                        {assign var="shp" value=$tr.shipping_date->format('F j, Y')}
+                        {assign var="full_shipper" value="on `$shp` `$full_shipper`"}
+                    {else}
+                        {if $tr.ship_date}
+                            {assign var="full_shipper" value="on `$tr.ship_date` `$full_shipper`"}
+                        {/if}
+                    {/if}
 
                     {if $tr.tracknum ne ""}
 
-                        {$lng.eml_order_shipped|substitute:"shipper":$full_shipper|substitute:"distributor":$v.group_name}<br />
-                        {$lng.lbl_tracking_number_is} 
-{if $tracking_links_carrier[$current_carrier_id].link ne ""}<a href="{$tracking_links_carrier[$current_carrier_id].link|substitute:"tracknum":$tr.tracknum}">{/if}{$tr.tracknum}{if $tracking_links_carrier[$current_carrier_id].link ne ""}</a>{/if}
-<br />
-{*
-                        <a href="{$tracking_links[$tr.linkid].link|substitute:"tracknum":$tr.tracknum}">{$tracking_links[$tr.linkid].link|substitute:"tracknum":$tr.tracknum}</a>
-*}
+                        {$lng.eml_order_shipped|substitute:"shipper":$full_shipper|substitute:"distributor":$v.group_name}
+                        <br/>
+                        {$lng.lbl_tracking_number_is}
+                        {if $tracking_links_carrier[$current_carrier_id].link ne ""}<a href="{$tracking_links_carrier[$current_carrier_id].link|substitute:"tracknum":$tr.tracknum}">{/if}{$tr.tracknum}{if $tracking_links_carrier[$current_carrier_id].link ne ""}</a>{/if}
+                        <br/>
                     {else}
-                        {$lng.eml_order_shipped_nolink|substitute:"shipper":$full_shipper|substitute:"distributor":$v.group_name}<br />
- 
-			{if $tracking_links_carrier[$current_carrier_id].link ne ""}
-{*	                       <a href="{$tracking_links[$tr.linkid].link}">link</a> *}
-				{$tracking_links_carrier[$current_carrier_id].link}
-			{/if}
+                        {$lng.eml_order_shipped_nolink|substitute:"shipper":$full_shipper|substitute:"distributor":$v.group_name}
+                        <br/>
+                        {if $tracking_links_carrier[$current_carrier_id].link ne ""}
+                            {$tracking_links_carrier[$current_carrier_id].link}
+                        {/if}
                     {/if}
                 </td>
             </tr>

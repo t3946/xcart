@@ -60,6 +60,7 @@ if ($ogModels) {
                         $newTrack = [
                             'tracknum' => $amTrack['track_number'],
                             'ship_date' => $amTrack['shipping_date']->format('m/d/Y'),
+                            'shipping_date' => $amTrack['shipping_date'],
                         ];
                         if ($carrierModel = TrackingLinksCarrierModel::objects()->get(['carrier' => $amTrack['carrier_code']])) {
                             $newTrack['carrier_id'] = $carrierModel->carrier_id;

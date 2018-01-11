@@ -781,6 +781,10 @@ if ($REQUEST_METHOD == "POST") {
                             $tracknums_to_db[$tracknums_to_db_index]["tracknum"]       = $vv["tracknum"];
                             $tracknums_to_db[$tracknums_to_db_index]["invoice_number"] = $vv["invoice_number"];
                             $tracknums_to_db[$tracknums_to_db_index]["ship_date"]      = $vv["ship_date"];
+                            if (empty($vv["shipping_date"])) {
+                                $vv["shipping_date"] = empty($vv["ship_date"]) ? null : \DateTime::createFromFormat('m/d/Y H:i:s', $vv["ship_date"].' 00:00:00');
+                            }
+                            $tracknums_to_db[$tracknums_to_db_index]["shipping_date"]  = $vv["shipping_date"];
                             $tracknums_to_db[$tracknums_to_db_index]["carrier_id"]     = $vv["carrier_id"];
 
                             $tracknums_to_db_index++;

@@ -16,9 +16,14 @@ class AmazonFbaFeedHelper
     public static function sendTrackingCodeToAmazon(OrderGroupModel $orderGroup, array $trackNumberData)
     {
         $result = null;
-        $trackNumberData['shipping_date'] = DateTime::createFromFormat('m/d/Y H:i:s', $trackNumberData['ship_date'] . ' 00:00:01');
+        if (empty($trackNumberData['shipping_date'])) {
+            $trackNumberData['shipping_date'] = DateTime::createFromFormat('m/d/Y H:i:s', $trackNumberData['ship_date'] . ' 00:00:00');
+        }
+
         $cm = TrackingLinksCarrierModel::objects()->get(['carrier_id' => $trackNumberData['carrier_id']]);
+
         $trackNumberData['carrier'] = $cm ? $cm->carrier : '';
+
         if (isset($trackNumberData['linkid']) && $trackNumberData['linkid']) {
             $lm = TrackingLinksModel::objects()->get(['linkid' => $trackNumberData['linkid']]);
             $trackNumberData['shipping_method'] = $lm ? $lm->shipping : '';

@@ -1001,9 +1001,10 @@ multirowInputSets['acc_track_{$m_id}_{$invoice_number}'].noCloneContent = 1;
 
         <div id="acc_tracknum_{$m_id}_{$invoice_number}_{$row_conter}">
           {if $t.tracknum ne ""}
-            <a href="{$tracking_links_carrier[$current_carrier_id].link|substitute:"tracknum":$t.tracknum}" target="_blank">Shipped{if $t.ship_date ne ""} on {$t.ship_date}{/if} by {$tracking_links_carrier[$current_carrier_id].carrier}{if $tracking_links[$t.linkid].shipping ne ""} {$tracking_links[$t.linkid].shipping}{/if}: {$t.tracknum}</a>
+            <a href="{$tracking_links_carrier[$current_carrier_id].link|substitute:"tracknum":$t.tracknum}" target="_blank">
+                Shipped{if $t.shipping_date || $t.ship_date} on {if $t.shipping_date}{$t.shipping_date->format('F j, Y')}{else}{$t.ship_date}{/if}{/if} by {$tracking_links_carrier[$current_carrier_id].carrier}{if $tracking_links[$t.linkid].shipping ne ""} {$tracking_links[$t.linkid].shipping}{/if}: {$t.tracknum}</a>
           {else}
-            Shipped{if $t.ship_date ne ""} on {$t.ship_date}{/if} by {$tracking_links_carrier[$current_carrier_id].carrier}{if $tracking_links[$t.linkid].shipping ne ""} {$tracking_links[$t.linkid].shipping}{/if}: {$tracking_links_carrier[$current_carrier_id].link}
+            Shipped{if $t.shipping_date || $t.ship_date} on {if $t.shipping_date}{$t.shipping_date->format('F j, Y')}{else}{$t.ship_date}{/if}{/if} by {$tracking_links_carrier[$current_carrier_id].carrier}{if $tracking_links[$t.linkid].shipping ne ""} {$tracking_links[$t.linkid].shipping}{/if}: {$tracking_links_carrier[$current_carrier_id].link}
           {/if}
 
           <a href="javascript: void(0);" onclick="javascript: $('#acc_tracknum_val_{$m_id}_{$invoice_number}_{$row_conter}').val(''); $('#acc_tracknum_link_{$m_id}_{$invoice_number}_{$row_conter}').val('');  $('#acc_tracknum_carrier_id_{$m_id}_{$invoice_number}_{$row_conter}').val(''); $('#acc_tracknum_{$m_id}_{$invoice_number}_{$row_conter}').hide();"><img src="{$ImagesDir}/minus.gif" /></a>
