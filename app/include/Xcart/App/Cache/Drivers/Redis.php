@@ -8,7 +8,7 @@ class Redis extends CacheDriver
 {
     public $address = '127.0.0.1';
     public $port = 6379;
-    public $timeout = 0;
+    public $wait = 0;
 
     /** @var RedisCache */
     protected $dbal_redis;
@@ -18,20 +18,17 @@ class Redis extends CacheDriver
     {
         $r = new \Redis();
 
-        if (strpos($this->address, '/') !== -1) {
-            $r->connect($this->address,null, $this->timeout);
-        }
-        else {
-            $r->connect($this->address, $this->port, $this->timeout);
-        }
 
-        $this->dbal_redis = new RedisCache();
-        $this->dbal_redis->setRedis($r);
+        if ( $r->connect($this->address,null, $this->wait) )
+        {
+            $this->dbal_redis = new RedisCache();
+            $this->dbal_redis->setRedis($r);
+        }
     }
 
     protected function getValue($key)
     {
-        $this->dbal_redis->fetch($key);
+        return $this->dbal_redis->fetch($key) ?: null;
     }
 
     protected function setValue($key, $data, $timeout)
@@ -39,24 +36,28 @@ class Redis extends CacheDriver
         $this->dbal_redis->save($key, $data, $timeout);
     }
 
-    public function serialize($value)
-    {
-        return $value;
-    }
+//    public function serialize($value)
+//    {
+//        return $value;
+//    }
+//
+//    public function unserialize($value)
+//    {
+//        return $value;
+//    }
 
-    public function unserialize($value)
+    public function buildKey($key)
     {
-        return $value;
+        return $key;
     }
-
 
     public function gc($force = false, $expiredOnly = true)
     {
-
+        //@NOTE: Automate gc in redis;
     }
 
     public function cleanUp($force = false)
     {
-        $this->gc(true, !$force);
+        $this->dbal_redis->flushAll();
     }
 }

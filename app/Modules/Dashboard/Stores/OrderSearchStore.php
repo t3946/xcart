@@ -916,7 +916,7 @@ class OrderSearchStore extends BaseStore
     public function getCacheCountKey($prefix = 'order_search_store_count_', array $params = [])
     {
         if ($this->model) {
-            $id = get_class($this->model) . $this->model->pk;
+            $id = $this->model::classNameShort() . $this->model->pk;
         }
         else {
             $md5 = json_encode($this->where);

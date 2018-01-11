@@ -42,6 +42,9 @@ return array_replace_recursive([
                        'class' => '\\Xcart\\App\\Orm\\Cache\\FilesystemCache',
                        'directory' => 'base.runtime.query_cache'
                    ],
+//                   'cache' => [
+//                       'class' => '\Xcart\App\Orm\Cache\RedisCache',
+//                   ],
                    'driverOptions' => [
 //                       PDO::ATTR_EMULATE_PREPARES => false,
                        PDO::ATTR_STRINGIFY_FETCHES => false
