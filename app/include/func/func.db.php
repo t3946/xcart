@@ -102,30 +102,6 @@ function db_prepare_params($query, array $params = [])
     return [$query, $params];
 }
 
-function db_error_generic($query, $query_error, $msg)
-{
-    global $debug_mode, $config, $xcart_dir;
-
-    $email = false;
-
-    if (@$config["Email_Note"]["admin_sqlerror_notify"] == "Y") {
-        $email = [$config["Company"]["site_administrator"]];
-    }
-
-    if ($debug_mode == 1 || $debug_mode == 3) {
-        echo "<b><font COLOR=DARKRED>INVALID SQL: </font></b>" . htmlspecialchars($query_error) . "<br />";
-        echo "<b><font COLOR=DARKRED>SQL QUERY FAILURE:</font></b>" . htmlspecialchars($query) . "<br />";
-        flush();
-    }
-
-    $do_log = ($debug_mode == 2 || $debug_mode == 3);
-
-    if ($email !== false || $do_log) {
-        @require_once $xcart_dir . "/include/logging.php";
-        x_log_add('SQL', $msg, true, 1, $email, !$do_log);
-    }
-}
-
 function db_prepare_query($query, $params)
 {
     static $prepared = [];
