@@ -45,7 +45,12 @@ class Redis extends CacheDriver
 
     protected function setValue($key, $data, $timeout)
     {
-        $this->dbal_redis->save($key, $data, $timeout);
+        if (is_null($data)) {
+            $this->dbal_redis->delete($key);
+        }
+        else {
+            $this->dbal_redis->save($key, $data, $timeout);
+        }
     }
 
     public function serialize($value)
