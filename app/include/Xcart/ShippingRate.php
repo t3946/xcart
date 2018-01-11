@@ -134,7 +134,7 @@ class ShippingRate extends Data
     }
 
 
-    public function addShippingCharge(ShippingRate $oShippingRate)
+    public function addShippingCharge($oShippingRate)
     {
         $this->getShippingCharge();
         $this->fShippingCharge += $oShippingRate->getShippingCharge();
