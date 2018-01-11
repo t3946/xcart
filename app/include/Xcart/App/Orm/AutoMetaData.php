@@ -197,8 +197,8 @@ class AutoMetaData extends MetaData
 
     public static function saveCache($owner)
     {
-        if (self::$_configs) {
-            Xcart::app()->cache->set('auto_meta_data_configs', self::$_configs, 360);
+        if (!defined('APP_DEBUG') && self::$_configs) {
+            Xcart::app()->cache->set('auto_meta_data_configs', self::$_configs, defined('APP_DEBUG')?360:7200);
         }
     }
 }
