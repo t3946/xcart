@@ -921,7 +921,7 @@ $( document ).ready(function() {
 {/literal}
     </script>
 
-{assign var="oOrderGroups" value=$oOrder->getOrderGroups()}
+{assign var="oOrderGroups" value=$oOrder->groups}
 {foreach from=$oOrderGroups item=oOrderGroup}
     {assign var="key" value=$oOrderGroup->getManufacturerId()}
     {assign var="mnf_id" value=$oOrderGroup->getManufacturerId()}

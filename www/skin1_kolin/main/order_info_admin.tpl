@@ -799,7 +799,7 @@ Cost to us accurate
     </div>
   </td>
 
-  {assign var="oOrder" value=$oOrderGroup->getOrderInstance()}
+  {assign var="oOrder" value=$oOrderGroup->order}
   {if ((($oOrder->isOrderAmazon() == false) || ($oOrder->isOrderAmazon() && $oOrder->amazon_fulfillment_channel == 'MFN'))
         && $oOrder->fraud_status == 'C'
         && ($oOrderGroup->cb_status == 'P' || $oOrderGroup->cb_status =='O' || ($oOrderGroup->cb_status =='AP' && ($order_store->getAmountToCapture() >= $oOrderGroup->total_gross || $oOrder->getAmazonChanell() == 'MFN')))
@@ -821,18 +821,18 @@ Cost to us accurate
     </td>
   {else}
   <td colspan="6">
-    {if $v.tracking}
-      {assign var="row_conter" value="0"}
-      {foreach from=$v.tracking item=t}
+    {if $oOrderGroup->tracking}
+      {foreach from=$oOrderGroup->tracking item=t key=row_conter}
 
         {assign var="current_carrier_id" value=$t.carrier_id}
-        {math equation="x+1" x=$row_conter assign="row_conter"}
 
         <div id="tracknum_{$m_id}_{$row_conter}">
-          {if $t.tracknum ne ""}
-            <a href="{$tracking_links_carrier[$current_carrier_id].link|substitute:"tracknum":$t.tracknum}" target="_blank">Shipped{if $t.ship_date ne ""} on {$t.ship_date}{/if} by {$tracking_links_carrier[$current_carrier_id].carrier}{if $tracking_links[$t.linkid].shipping ne ""} {$tracking_links[$t.linkid].shipping}{/if}: {$t.tracknum}</a>
+          {if $t.tracknum}
+            <a href="{$tracking_links_carrier[$current_carrier_id].link|substitute:"tracknum":$t.tracknum}" target="_blank">
+                Shipped{if $t.shipping_date || $t.ship_date} on {if $t.shipping_date}{$t.shipping_date->format('F j, Y')}{else}{$t.ship_date}{/if}{/if} by {$tracking_links_carrier[$current_carrier_id].carrier}{if $tracking_links[$t.linkid].shipping ne ""} {$tracking_links[$t.linkid].shipping}{/if}: {$t.tracknum}
+            </a>
           {else}
-            Shipped{if $t.ship_date ne ""} on {$t.ship_date}{/if} by {$tracking_links_carrier[$current_carrier_id].carrier}{if $tracking_links[$t.linkid].shipping ne ""} {$tracking_links[$t.linkid].shipping}{/if}: {$tracking_links_carrier[$current_carrier_id].link}
+            Shipped{if $t.shipping_date || $t.ship_date} on {if $t.shipping_date}{$t.shipping_date->format('F j, Y')}{else}{$t.ship_date}{/if}{/if} by {$tracking_links_carrier[$current_carrier_id].carrier}{if $tracking_links[$t.linkid].shipping ne ""} {$tracking_links[$t.linkid].shipping}{/if}: {$tracking_links_carrier[$current_carrier_id].link}
           {/if}
 
           <a href="javascript: void(0);" onclick="javascript: $('#tracknum_val_{$m_id}_{$row_conter}').val(''); $('#tracknum_link_{$m_id}_{$row_conter}').val(''); $('#tracknum_invoice_number_{$m_id}_{$row_conter}').val(''); $('#tracknum_carrier_id_{$m_id}_{$row_conter}').val(''); $('#tracknum_{$m_id}_{$row_conter}').hide();"><img src="{$ImagesDir}/minus.gif" /></a>

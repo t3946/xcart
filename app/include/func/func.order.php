@@ -58,17 +58,7 @@ function func_get_shipping_groups($orderid)
             $return[$m_id]["tracking"] = unserialize($group["tracking"]);
 
             global $xcart_dir;
-            $return[$m_id]['oOrderGroup'] = new \Xcart\OrderGroup(['manufacturerid' => $m_id, 'orderid' => $orderid]);
-
-            if (!empty($return[$m_id]["tracking"]) && is_array($return[$m_id]["tracking"])) {
-                foreach ($return[$m_id]["tracking"] as $kt => $vt) {
-                    if (!empty($vt["ship_date"]) && strpos($vt["ship_date"], "/") !== false) {
-                        $current_ship_date_arr                       = explode("/", $vt["ship_date"]);
-                        $current_ship_date_time                      = mktime(0, 0, 0, $current_ship_date_arr[0], $current_ship_date_arr[1], $current_ship_date_arr[2]);
-                        $return[$m_id]["tracking"][$kt]["ship_date"] = date("F j, Y", $current_ship_date_time);
-                    }
-                }
-            }
+            $return[$m_id]['oOrderGroup'] = OrderGroupModel::objects()->get(['manufacturerid' => $m_id, 'orderid' => $orderid]);
 
             $return[$m_id]["total"]              = $return[$m_id]["shipping_cost"] = $return[$m_id]["actual_shipping_cost"] = [];
             $return[$m_id]["extra"]              = unserialize($group["extra"]);
@@ -741,7 +731,7 @@ function func_order_data($orderid)
 
         $m_id = func_manufacturerid_for_group($v['shipping_freight'], $v['manufacturerid']);
         $order['shipping_groups'][$m_id]['products'][$v["itemid"]] = $v;
-        $order['shipping_groups'][$m_id]['oOrderGroup']            = \Xcart\OrderGroup::model(['orderid' => $orderid, 'manufacturerid' => $m_id]);
+        $order['shipping_groups'][$m_id]['oOrderGroup']            = OrderGroupModel::objects()->get(['orderid' => $orderid, 'manufacturerid' => $m_id]);
 
         if (!empty($v['extra_data']['taxes']))
         {
@@ -871,7 +861,7 @@ function func_order_data($orderid)
         $order["alt_products"] = $alt_products;
     }
 
-    $order['oOrder'] = \Xcart\Order::model(['orderid' => $orderid]);
+    $order['oOrder'] = OrderModel::objects()->get(['orderid' => $orderid]);
 
     return [
         "order"     => $order,

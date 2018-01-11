@@ -60,6 +60,7 @@ if ($ogModels) {
                         $newTrack = [
                             'tracknum' => $amTrack['track_number'],
                             'ship_date' => $amTrack['shipping_date']->format('m/d/Y'),
+                            'shipping_date' => $amTrack['shipping_date'],
                         ];
                         if ($carrierModel = TrackingLinksCarrierModel::objects()->get(['carrier' => $amTrack['carrier_code']])) {
                             $newTrack['carrier_id'] = $carrierModel->carrier_id;
@@ -104,7 +105,7 @@ if ($ogModels) {
                     if (!empty($group->tracking) && is_array($group->tracking)) {
                         $aTrackings = $group->tracking;
                         foreach ($aTrackings as $key => $track) {
-                            if (!isset($track['send_to_amazon'])) {
+                            if (!isset($track['send_to_amazon']) || 1==1) {
                                 $feedResult = AmazonFbaFeedHelper::sendTrackingCodeToAmazon($group, $track);
                                 $aTrackings[$key]['send_to_amazon'] = 'Y';
                             }
