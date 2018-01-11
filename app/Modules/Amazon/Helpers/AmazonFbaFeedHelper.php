@@ -42,9 +42,8 @@ class AmazonFbaFeedHelper
         $items = [];
         if (!empty($trackNumberData)) {
             $orderModel = $orderGroup->order;
-            $shipDate = ($trackNumberData['shipping_date']) ? $trackNumberData['shipping_date']->format(DATE_ISO8601) : '';
+            $shipDate = ($trackNumberData['shipping_date']) ? $trackNumberData['shipping_date']->format(DATE_W3C) : '';
 
-            $shipDate = '2018-01-11T15:36:33-05:00';
             /*if ($details = $orderGroup->detail_models->all()) {
                 foreach ($details as $detail) {
                     $items[] = ['Item' => [
