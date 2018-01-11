@@ -43,12 +43,11 @@ class AmazonFbaFeedHelper
         if (!empty($trackNumberData)) {
             $orderModel = $orderGroup->order;
             $shipDate = ($trackNumberData['shipping_date']) ? $trackNumberData['shipping_date']->format(DATE_ISO8601) : '';
-            if ($details = $orderGroup->getOrderDetailModels()) {
+            if ($details = $orderGroup->detail_models->all()) {
                 foreach ($details as $detail) {
-                    $product = $detail->product_model;
                     $items[] = ['Item' => [
-                        'AmazonOrderItemCode' => $product->productcode,
-                        'MerchantFulfillmentItemID' => $product->productcode,
+                        'AmazonOrderItemCode' => $detail->AmazonOrderItemCode,
+                        'MerchantFulfillmentItemID' => $detail->productcode,
                         'Quantity' => $detail->amount
                     ]];
                 }
