@@ -18,12 +18,24 @@ class Redis extends CacheDriver
     {
         $r = new \Redis();
 
-
         if ( $r->connect($this->address,null, $this->wait) )
         {
             $this->dbal_redis = new RedisCache();
             $this->dbal_redis->setRedis($r);
         }
+    }
+
+    public function mget($keys, $default = null)
+    {
+        $values = $this->dbal_redis->fetchMultiple($keys);
+
+        if ($t_keys = array_diff($keys, array_keys($values))) {
+            foreach ($t_keys as $t_key) {
+                $values[$t_key] = $default;
+            }
+        }
+
+        return $values;
     }
 
     protected function getValue($key)
@@ -36,15 +48,24 @@ class Redis extends CacheDriver
         $this->dbal_redis->save($key, $data, $timeout);
     }
 
-//    public function serialize($value)
-//    {
-//        return $value;
-//    }
-//
-//    public function unserialize($value)
-//    {
-//        return $value;
-//    }
+    public function serialize($value)
+    {
+        if ($this->serializer) {
+            return call_user_func($this->serializer[0], $value);
+        } else {
+            return $value;
+        }
+    }
+
+    public function unserialize($value)
+    {
+        if ($this->serializer) {
+            return call_user_func($this->serializer[1], $value);
+        } else {
+            return $value;
+        }
+    }
+
 
     public function buildKey($key)
     {

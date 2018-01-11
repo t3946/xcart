@@ -66,6 +66,11 @@ class Cache
         return $value;
     }
 
+    public function mget(array $keys, $default = null)
+    {
+        return $this->getDriver($this->defaultDriver)->mget($keys, $default);
+    }
+
     public function cleanUp($force = false)
     {
         if ($this->saveInMemory) {

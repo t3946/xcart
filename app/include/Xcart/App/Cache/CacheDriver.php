@@ -18,6 +18,20 @@ abstract class CacheDriver
         return is_null($value) ? $default : $this->unserialize($value);
     }
 
+    public function mget($keys, $default = null)
+    {
+        $values = [];
+        $t_keys = [];
+
+        foreach ($keys as $key) {
+            $t_keys[] = $this->buildKey($key);
+            $value = $this->getValue($this->buildKey($key));
+            $values[] = is_null($value) ? $default : $this->unserialize($value);
+        }
+
+        return array_combine($keys, $values);
+    }
+
     public function set($key, $value, $timeout = null)
     {
         $timeout = $timeout ?: $this->timeout;

@@ -121,10 +121,10 @@ return array_replace_recursive([
 //       ],
 
        'cache' => [
-           'class' => '\\Xcart\\App\\Cache\\Cache',
+           'class' => '\Xcart\App\Cache\Cache',
            'drivers' => [
                'default' =>  [
-                   'class' => '\\Xcart\\App\\Cache\\Drivers\\Redis',
+                   'class' => '\Xcart\App\Cache\Drivers\Redis',
                ],
            ]
        ],

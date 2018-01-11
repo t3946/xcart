@@ -913,7 +913,7 @@ class OrderSearchStore extends BaseStore
         return $this->qs->count();
     }
 
-    public function getCacheCountKey($prefix = 'order_search_store_count_', array $params = [])
+    private function getCacheCountKey($prefix = 'order_search_store_count_', array $params = [])
     {
         if ($this->model) {
             $id = $this->model::classNameShort() . $this->model->pk;
@@ -931,11 +931,26 @@ class OrderSearchStore extends BaseStore
         return $prefix.$id;
     }
 
+    public function getCacheKeyCount()
+    {
+        return $this->getCacheCountKey();
+    }
+
+    public function getCacheKeyPriority()
+    {
+        return $this->getCacheCountKey(self::CONST_CACHE_KEY_PRIORITY);
+    }
+
+    public function getCacheKeyEvent()
+    {
+        return $this->getCacheCountKey(self::CONST_CACHE_KEY_EVENT, ['user_id' => Xcart::app()->user->login]);
+    }
+
     public function clearCache()
     {
-        Xcart::app()->cache->set($this->getCacheCountKey(), null);
-        Xcart::app()->cache->set($this->getCacheCountKey(self::CONST_CACHE_KEY_PRIORITY), null);
-        Xcart::app()->cache->set($this->getCacheCountKey(self::CONST_CACHE_KEY_EVENT, ['user_id' => Xcart::app()->user->login]), null);
+        Xcart::app()->cache->set($this->getCacheKeyCount(), null);
+        Xcart::app()->cache->set($this->getCacheKeyPriority(), null);
+        Xcart::app()->cache->set($this->getCacheKeyEvent(), null);
     }
 
     public function getCashedCount()
@@ -991,7 +1006,7 @@ class OrderSearchStore extends BaseStore
 
         $count = null;
 
-        $key = $this->getCacheCountKey(self::CONST_CACHE_KEY_EVENT, ['user_id' => $user->login]);
+        $key = $this->getCacheKeyEvent();
         $count = Xcart::app()->cache->get($key);
 
         if (is_null($count))
