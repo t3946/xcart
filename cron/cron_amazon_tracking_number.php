@@ -38,7 +38,7 @@ func_backprocess_log($log_category, $log_text);
 print $log_text . PHP_EOL;
 
 $ogModels = OrderGroupModel::objects()->filter(['amz_fullfilment_order_placed' => 'Y'])->all();
-if ($ogModels && 1==2) {
+if ($ogModels) {
     func_backprocess_log($log_category, $log = sprintf("Processing %d Send by Amazon orders", count($ogModels)));
 
     print $log . PHP_EOL;
@@ -88,8 +88,8 @@ if ($ogModels && 1==2) {
 $ogModels = OrderModel::objects()
     ->getQuerySet()
     ->join('inner join', 'xcart_order_groups', ['og.orderid' => 'orderid'], 'og')
-    //->exclude(['og.tracking__contains' => 'send_to_amazon'])
-    ->filter(['amazon_fulfillment_channel' => 'MFN', 'orderid' => 111449])
+    ->exclude(['og.tracking__contains' => 'send_to_amazon'])
+    ->filter(['amazon_fulfillment_channel' => 'MFN'])
     ->all();
 if ($ogModels) {
     func_backprocess_log($log_category, $log = sprintf("Processing %d MFN orders", count($ogModels)));
