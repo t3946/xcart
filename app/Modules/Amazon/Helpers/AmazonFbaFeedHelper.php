@@ -43,7 +43,7 @@ class AmazonFbaFeedHelper
         if (!empty($trackNumberData)) {
             $orderModel = $orderGroup->order;
             $shipDate = ($trackNumberData['shipping_date']) ? $trackNumberData['shipping_date']->format(DATE_ISO8601) : '';
-            /*if ($details = $orderGroup->getOrderDetailModels()) {
+            if ($details = $orderGroup->getOrderDetailModels()) {
                 foreach ($details as $detail) {
                     $product = $detail->product_model;
                     $items[] = ['Item' => [
@@ -52,7 +52,7 @@ class AmazonFbaFeedHelper
                         'Quantity' => $detail->amount
                     ]];
                 }
-            }*/
+            }
             $data_0 = [
                 'Header' => [
                     'DocumentVersion' => '1.01',
