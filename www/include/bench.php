@@ -467,7 +467,7 @@ function _get_smarty_size($tpl_output, &$smarty) {
 	return $tpl_output;
 }
 
-register_shutdown_function("__debug");
+//register_shutdown_function("__debug");
 if (isset($smarty) && defined("BENCH") && constant("BENCH")) {
 	$smarty->register_outputfilter("_get_smarty_size");
 }
