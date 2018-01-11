@@ -14,20 +14,20 @@ $config = array_replace_recursive([
             'connections' => [
                 'default' => [
                     'wrapperClass' => false,
-                    'cache' => [
-                        'class' => '\Xcart\App\Orm\Cache\RedisCache',
-                    ],
+//                    'cache' => [
+//                        'class' => '\Xcart\App\Orm\Cache\RedisCache',
+//                    ],
                 ]
             ],
-            'cache' => [
-                'class' => '\\Xcart\\App\\Cache\\Cache',
-                'saveInMemory' => false,
-                'drivers' => [
-                    'default' =>  [
-                        'class' => '\\Xcart\\App\\Cache\\Drivers\\Redis',
-                    ],
-                ]
-            ],
+//            'cache' => [
+//                'class' => '\\Xcart\\App\\Cache\\Cache',
+//                'saveInMemory' => false,
+//                'drivers' => [
+//                    'default' =>  [
+//                        'class' => '\\Xcart\\App\\Cache\\Drivers\\Redis',
+//                    ],
+//                ]
+//            ],
         ],
     ],
     'autoloadComponents' => [
