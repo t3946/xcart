@@ -23,4 +23,9 @@ class TestCommand extends Command
 
         dd($res);
     }
+
+    public function exception($arguments = [])
+    {
+        throw new \Exception();
+    }
 }
