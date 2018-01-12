@@ -10,6 +10,7 @@ use Modules\Shipping\Models\ShippingCacheLocationModel;
 use Modules\Shipping\Models\ShippingCacheModel;
 use Modules\Shipping\Models\ShippingCacheProductModel;
 use Modules\Shipping\Models\ShippingCacheQuoteModel;
+use Modules\Shipping\Models\ShippingRateModel;
 use Modules\User\Models\UserModel;
 use Xcart\CartElement;
 use Xcart\Manufacturer;
@@ -46,7 +47,7 @@ abstract class ShippingProcessor
     private $aShippingMethods = null;
 
     /**
-     * @var ShippingRate[]
+     * @var ShippingRateModel[]
      */
     private $aShippingRatesEntities = null;
     /**
@@ -152,14 +153,6 @@ abstract class ShippingProcessor
         $this->sShippingType = $sShippingType;
     }
 
-    public function getShippingRateFilterValues(Shipping $oShipping)
-    {
-        $weight = $this->getCartShippingWeight($oShipping);
-        $total = $this->getCart()->getCost();
-        $count = $this->getCart()->getProductCount();
-        $sResult = " {$weight} BETWEEN minweight AND maxweight AND {$total} BETWEEN mintotal AND maxtotal AND maxamount <= {$count} ";
-        return $sResult;
-    }
 
     public function getCartShippingWeight(Shipping $oShipping)
     {
@@ -177,27 +170,28 @@ abstract class ShippingProcessor
         return $fCartShippingWeight;
     }
 
+
     /**
      * @return ShippingRate[]
      */
     public function getShippingRatesEntities()
     {
-        if (is_null($this->aShippingRatesEntities)) {
-            if (!empty($this->aShippingMethods)) {
-                foreach ($this->aShippingMethods as $oShipping) {
-                    $aResults = ShippingRate::model()->findAll(
-                        SQLBuilder::getInstance()->addSelect('*')->
-                        addFromTable('shipping_rates')->
-                        addCondition('zoneid = ' . $this->getShippingZone()->zoneid)->
-                        addCondition('shippingid = ' . $oShipping->getShippingId())->
-                        addCondition('manufacturerid = ' . $this->getManufacturer()->getManufacturerId())->
-                        addCondition($this->getShippingRateFilterValues($oShipping)));
-                    if (!empty($aResults)) {
-                        foreach ($aResults as $oShippingRate) {
-                            $oShippingRate->setShippingEntity($oShipping);
-                            $oShippingRate->setCart($this->getCart());
-                            $this->aShippingRatesEntities[] = $oShippingRate;
-                        }
+        if (is_null($this->aShippingRatesEntities) && $this->aShippingMethods) {
+            foreach ($this->aShippingMethods as $oShipping) {
+                $aResults = ShippingRateModel::objects()->filter([
+                    'zoneid' => $this->getShippingZone()->zoneid,
+                    'shippingid' => $oShipping->shippingid,
+                    'manufacturerid' => $this->getManufacturer()->manufacturerid,
+                    new Expression("{$this->getCartShippingWeight($oShipping)} BETWEEN minweight AND maxweight"),
+                    new Expression("{$this->getCart()->getCost()} BETWEEN minweight AND maxweight"),
+                    'maxamount__lte' => $this->getCart()->getProductCount()
+                ])->all();
+
+                if ($aResults) {
+                    foreach ($aResults as $oShippingRate) {
+                        $oShippingRate->setShippingEntity($oShipping);
+                        $oShippingRate->setCart($this->getCart());
+                        $this->aShippingRatesEntities[] = $oShippingRate;
                     }
                 }
             }
