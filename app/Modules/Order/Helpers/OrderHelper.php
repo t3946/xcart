@@ -215,4 +215,19 @@ class OrderHelper
 
         return $log;
     }
+
+    public static function getSubmitOperator(): ?UserModel
+    {
+        /** @var UserModel $user */
+
+        $user = null;
+
+        if (($user_ids = Xcart::app()->request->session->get('identifiers')) && ($login = $user_ids['A'] ?: null) && !empty($login['login'])) {
+
+             $user = UserModel::objects()->filter(['login' => $login['login']])->limit(1)->get();
+         }
+
+
+        return $user;
+    }
 }

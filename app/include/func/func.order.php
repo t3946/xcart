@@ -1,6 +1,7 @@
 <?php
 
 use Modules\GeoIp\Helpers\GeoIpHelper;
+use Modules\Order\Helpers\OrderHelper;
 use Modules\Order\Models\OrderDetailModel;
 use Modules\Order\Models\OrderGroupInvoiceProductModel;
 use Modules\Order\Models\OrderGroupModel;
@@ -1276,6 +1277,11 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
             $model->login = $insert_data['login'];
             $model->order_id = $orderid;
             $model->save();
+        }
+
+        if ($order_model = OrderModel::objects()->get(['pk' => $orderid])) {
+            $order_model->submit_operator = OrderHelper::getSubmitOperator();
+            $order_model->save(['submit_operator_id']);
         }
 
         global $purchase_order_selected;

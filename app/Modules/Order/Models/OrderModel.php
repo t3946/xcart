@@ -5,6 +5,7 @@ use Doctrine\DBAL\Types\Type;
 use Modules\Core\Models\StateModel;
 use Modules\Order\Helpers\OrderHelper;
 use Modules\Goods\Models\ProductModel;
+use Modules\User\Models\UserModel;
 use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\ForeignField;
@@ -42,6 +43,13 @@ class OrderModel extends Model
             ],
             'date' => [
                 'class' => TimestampField::className(),
+            ],
+            'submit_operator' => [
+                'field' => 'submit_operator_id',
+                'class' => ForeignField::className(),
+                'modelClass' => UserModel::className(),
+                'link' => ['submit_operator' => 'id'],
+                'null' => true,
             ],
             'groups' => [
                 'class' => HasManyField::className(),
