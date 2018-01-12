@@ -1,11 +1,14 @@
 <?php
 namespace Modules\Dashboard\Helpers;
 
+use Mindy\QueryBuilder\Expression;
+use Mindy\QueryBuilder\Q\QOr;
 use Modules\Brand\Models\BrandModel;
 use Modules\Dashboard\Sqls\SearchSql;
 use Modules\Dashboard\Stores\OrderSearchStore;
 use Modules\Order\Models\OrderTransactionModel;
 use Modules\Sites\Models\SiteModel;
+use Modules\User\Models\UserModel;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\DefaultConnection;
 use Xcart\Connection;
@@ -229,7 +232,12 @@ class SearchHelper
                     ->all();
                 break;
             case 'operator' :
-                $stmt = $connection->executeQuery(SearchSql::getOperatorSql(), ['like' => $like]);
+                $data = UserModel::objects()
+                    ->select(['id' => 'login', 'text' => new Expression("concat('[',login,'] ', firstname)")])
+                    ->filter(new QOr(['login__contains' => $query, 'firstname__contains' => $query]))
+                    ->exclude(['usertype' => 'C'])
+                    ->asArray()
+                    ->all();
                 break;
             case 'company' :
                 $stmt = $connection->executeQuery(SearchSql::getCompanySql(), ['like' => $like]);

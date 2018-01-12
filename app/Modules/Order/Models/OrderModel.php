@@ -11,6 +11,7 @@ use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\HasManyField;
 use Xcart\App\Orm\Fields\ManyToManyField;
+use Xcart\App\Orm\Fields\OneToOneField;
 use Xcart\App\Orm\Fields\SerializeField;
 use Xcart\App\Orm\Fields\TimestampField;
 use Xcart\App\Orm\Model;
@@ -44,11 +45,10 @@ class OrderModel extends Model
             'date' => [
                 'class' => TimestampField::className(),
             ],
-            'submit_operator' => [
-                'field' => 'submit_operator_id',
-                'class' => ForeignField::className(),
-                'modelClass' => UserModel::className(),
-                'link' => ['submit_operator' => 'id'],
+            'extra_model' => [
+                'class' => ForeignField::class,
+                'modelClass' => OrderExtraModel::class,
+                'link' => ['orderid' => 'order_id'],
                 'null' => true,
             ],
             'groups' => [
