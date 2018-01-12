@@ -172,7 +172,7 @@ abstract class ShippingProcessor
 
 
     /**
-     * @return ShippingRate[]
+     * @return ShippingRateModel[]
      */
     public function getShippingRatesEntities()
     {
@@ -181,7 +181,7 @@ abstract class ShippingProcessor
                 $aResults = ShippingRateModel::objects()->filter([
                     'zoneid' => $this->getShippingZone()->zoneid,
                     'shippingid' => $oShipping->shippingid,
-                    'manufacturerid' => $this->getManufacturer()->manufacturerid,
+                    'manufacturerid' => $this->getManufacturer()->getManufacturerId(),
                     new Expression("{$this->getCartShippingWeight($oShipping)} BETWEEN minweight AND maxweight"),
                     new Expression("{$this->getCart()->getCost()} BETWEEN minweight AND maxweight"),
                     'maxamount__lte' => $this->getCart()->getProductCount()
