@@ -3,6 +3,7 @@
 use Modules\GeoIp\Helpers\GeoIpHelper;
 use Modules\Order\Helpers\OrderHelper;
 use Modules\Order\Models\OrderDetailModel;
+use Modules\Order\Models\OrderExtraModel;
 use Modules\Order\Models\OrderGroupInvoiceProductModel;
 use Modules\Order\Models\OrderGroupModel;
 use Modules\Goods\Models\ProductModel;
@@ -1279,10 +1280,12 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
             $model->save();
         }
 
-        if ($order_model = OrderModel::objects()->get(['pk' => $orderid])) {
-            $order_model->submit_operator = OrderHelper::getSubmitOperator();
-            $order_model->save(['submit_operator_id']);
-        }
+        /** @var OrderExtraModel $order_extra_model */
+
+        [$order_extra_model] = OrderExtraModel::objects()->getOrNew(['order_id' => $orderid]);
+
+        $order_extra_model->submit_operator = OrderHelper::getSubmitOperator();
+        $order_extra_model->save();
 
         global $purchase_order_selected;
         x_session_register('purchase_order_selected');
