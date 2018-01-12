@@ -47,7 +47,7 @@ abstract class ShippingProcessor
     private $aShippingMethods = null;
 
     /**
-     * @var ShippingRate[]
+     * @var ShippingRateModel[]
      */
     private $aShippingRatesEntities = null;
     /**
@@ -145,15 +145,6 @@ abstract class ShippingProcessor
         return $this->sShippingType;
     }
 
-    public function getShippingRateFilterValues(Shipping $oShipping)
-    {
-        $weight = $this->getCartShippingWeight($oShipping);
-        $total = $this->getCart()->getCost();
-        $count = $this->getCart()->getProductCount();
-        $sResult = " {$weight} BETWEEN minweight AND maxweight AND {$total} BETWEEN mintotal AND maxtotal AND maxamount <= {$count} ";
-        return $sResult;
-    }
-
     /**
      * @param string $sShippingType
      */
@@ -181,27 +172,20 @@ abstract class ShippingProcessor
 
 
     /**
-     * @return ShippingRate[]
+     * @return ShippingRateModel[]
      */
     public function getShippingRatesEntities()
     {
         if (is_null($this->aShippingRatesEntities) && $this->aShippingMethods) {
             foreach ($this->aShippingMethods as $oShipping) {
-                /*$aResults = ShippingRateModel::objects()->filter([
+                $aResults = ShippingRateModel::objects()->filter([
                     'zoneid' => $this->getShippingZone()->zoneid,
                     'shippingid' => $oShipping->shippingid,
                     'manufacturerid' => $this->getManufacturer()->getManufacturerId(),
                     new Expression("{$this->getCartShippingWeight($oShipping)} BETWEEN minweight AND maxweight"),
-                    new Expression("{$this->getCart()->getCost()} BETWEEN minweight AND maxweight"),
+                    new Expression("{$this->getCart()->getCost()} BETWEEN mintotal AND maxtotal"),
                     'maxamount__lte' => $this->getCart()->getProductCount()
-                ])->all();*/
-                $aResults = ShippingRate::model()->findAll(
-                    SQLBuilder::getInstance()->addSelect('*')->
-                    addFromTable('shipping_rates')->
-                    addCondition('zoneid = ' . $this->getShippingZone()->zoneid)->
-                    addCondition('shippingid = ' . $oShipping->getShippingId())->
-                    addCondition('manufacturerid = ' . $this->getManufacturer()->getManufacturerId())->
-                    addCondition($this->getShippingRateFilterValues($oShipping)));
+                ])->all();
 
                 if ($aResults) {
                     foreach ($aResults as $oShippingRate) {
