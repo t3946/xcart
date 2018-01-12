@@ -58,7 +58,7 @@ x_session_register("intershipper_rates");
 x_session_register("intershipper_recalc");
 x_session_register("current_carrier", "UPS");
 
-$oOrder = new Order(['orderid' => $orderid]);
+$oOrder = $orderid ? OrderModel::objects()->get(['orderid' => $orderid]) : null;
 $smarty->assign('oOrder', $oOrder);
 $mail_smarty->assign('oOrder', $oOrder);
 
@@ -2204,7 +2204,7 @@ if (!empty($order["shipping_groups"]) && is_array($order["shipping_groups"])) {
 $smarty->assign("convert_to_regular_order_show_button", $convert_to_regular_order_show_button);
 $smarty->assign("order", $order);
 
-$oOrder = Order::model(['orderid' => $orderid]);
+$oOrder = OrderModel::objects()->get(['orderid' => $orderid]);
 $smarty->assign("oOrder", $oOrder);
 $mail_smarty->assign('oOrder', $oOrder);
 
