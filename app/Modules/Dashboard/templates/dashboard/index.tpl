@@ -87,56 +87,58 @@
             var url_dashboard_my_sort = '{url 'dashboard:sort_my_filters'}';
 
             {ignore}
-            $(document).dashboard({
-                ajax: {
-                    url: url_dashboard_update
-                }
-            });
+            $(document).ready(function(){
+                $(document).dashboard({
+                    ajax: {
+                        url: url_dashboard_update
+                    }
+                });
 
-            $('.dashboard-filters.index a[data-id]').majaxtooltip({
-                onAfterSubmit: function() {
-                    this.setContent("<div class='load'></div>")
-                },
-                onAfterSuccess: function() {
-                    $.mnotify({
-                        title: '"My dashboard" changed',
-                        message: 'Refresh the page to display\\hide the elements'
-                    });
-                }
-            });
+                $('.dashboard-filters.index a[data-id]').majaxtooltip({
+                    onAfterSubmit: function() {
+                        this.setContent("<div class='load'></div>")
+                    },
+                    onAfterSuccess: function() {
+                        $.mnotify({
+                            title: '"My dashboard" changed',
+                            message: 'Refresh the page to display\\hide the elements'
+                        });
+                    }
+                });
 
-            $('.my_dashboard .dashboard-filters ').tablePositions({
-                draggableSelector: '.button, .empty',
-                dropSelector: '.container',
+                $('.my_dashboard .dashboard-filters ').tablePositions({
+                    draggableSelector: '.button, .empty',
+                    dropSelector: '.container',
 
-                onMove: function (el, to) {
-                    var def = $.Deferred();
-                    $.ajax({
-                        type: 'POST',
-                        url: url_dashboard_my_sort,
-                        data: {
-                            position_row: $(to).data('row'),
-                            position_column: $(to).data('col'),
-                            id: $(el).data('id')
-                        },
-                        success: function (data) {
-                            if (data) {
-                                $.mnotify({
-                                    title: 'Position saved',
-                                    message: data.message
-                                });
+                    onMove: function (el, to) {
+                        var def = $.Deferred();
+                        $.ajax({
+                            type: 'POST',
+                            url: url_dashboard_my_sort,
+                            data: {
+                                position_row: $(to).data('row'),
+                                position_column: $(to).data('col'),
+                                id: $(el).data('id')
+                            },
+                            success: function (data) {
+                                if (data) {
+                                    $.mnotify({
+                                        title: 'Position saved',
+                                        message: data.message
+                                    });
 
-                                def.resolve(true, data);
+                                    def.resolve(true, data);
+                                }
+                                def.reject(false);
+                            },
+                            error: function () {
+                                def.reject(false);
                             }
-                            def.reject(false);
-                        },
-                        error: function () {
-                            def.reject(false);
-                        }
-                    });
+                        });
 
-                    return def.promise();
-                }
+                        return def.promise();
+                    }
+                });
             });
             {/ignore}
         })();
