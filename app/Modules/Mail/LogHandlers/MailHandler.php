@@ -62,12 +62,17 @@ class MailHandler extends MonologMailHandler
 
         $message = $this->toHtmlString($msg);
 
-        Xcart::app()->mail->template(
-            $this->to,
-            $subject,
-            'mail/log_template.tpl',
-            ['message' => $message]
-        );
+        try {
+            Xcart::app()->mail->template(
+                $this->to,
+                $subject,
+                'mail/log_template.tpl',
+                ['message' => $message]
+            );
+        }
+        catch (\Exception $e) {
+            d(123);
+        }
     }
 
     protected function format($title, $value)

@@ -79,7 +79,7 @@ class Mailer
     public function getMailer()
     {
         if (!$this->_mailer) {
-            $this->_mailer = Swift_Mailer::newInstance($this->getTransport());
+            $this->_mailer = new Swift_Mailer($this->getTransport());
         }
         return $this->_mailer;
     }

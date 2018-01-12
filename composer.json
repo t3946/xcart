@@ -25,7 +25,7 @@
         "monolog/monolog": "^1.22",
         "theiconic/php-ga-measurement-protocol": "^1.2",
         "imagine/imagine": "^0.7.1",
-        "swiftmailer/swiftmailer": "^5.4",
+        "swiftmailer/swiftmailer": "^6",
         "cocur/slugify": "^1.4",
         "dariuszp/cli-progress-bar": "^1.0",
         "geoip2/geoip2": "^2.7",

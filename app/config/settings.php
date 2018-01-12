@@ -147,7 +147,7 @@ return array_replace_recursive([
            'ignoringTypes' => [
 //               E_RECOVERABLE_ERROR,
                E_DEPRECATED,
-               E_USER_DEPRECATED,
+//               E_USER_DEPRECATED,
                E_NOTICE,
                E_USER_NOTICE,
                E_WARNING,

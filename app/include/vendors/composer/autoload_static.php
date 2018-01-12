@@ -133,6 +133,10 @@ class ComposerStaticInited1e2f7cb4425e4bdc0264910bb94e92
         array (
             'Firebase\\JWT\\' => 13,
         ),
+        'E' => 
+        array (
+            'Egulias\\EmailValidator\\' => 23,
+        ),
         'D' => 
         array (
             'Doctrine\\Common\\Cache\\' => 22,
@@ -315,6 +319,10 @@ class ComposerStaticInited1e2f7cb4425e4bdc0264910bb94e92
         'Firebase\\JWT\\' => 
         array (
             0 => __DIR__ . '/..' . '/firebase/php-jwt/src',
+        ),
+        'Egulias\\EmailValidator\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/egulias/email-validator/EmailValidator',
         ),
         'Doctrine\\Common\\Cache\\' => 
         array (
