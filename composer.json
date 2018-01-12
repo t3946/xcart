@@ -12,7 +12,7 @@
     "require": {
         "aws/aws-sdk-php": "^2.8",
         "caponica/amazon-mws-complete": "dev-master",
-        "cocur/slugify": "^1.4",
+        "cocur/slugify": "^3.0",
         "dariuszp/cli-progress-bar": "^1.0",
         "fenom/fenom": "^2.11",
         "gabrielbull/ups-api": "^0.4.0",
