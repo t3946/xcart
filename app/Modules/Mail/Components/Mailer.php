@@ -25,7 +25,7 @@ class Mailer
     // Swift_SmtpTransport
     const MODE_SMTP = 'smtp';
 
-    public $mode = 'mail';
+    public $mode = 'sendmail';
 
     public $config = [];
 
