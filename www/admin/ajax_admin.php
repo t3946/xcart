@@ -2,6 +2,7 @@
 use Modules\Order\Models\OrderTransactionModel;
 use Modules\Order\Models\TransactionLogModel;
 use Modules\Goods\Models\ProductModel;
+use Modules\Shipping\Models\ShippingRateModel;
 use Xcart\External_Product_Verification\ExternalVerificationBatch;
 use Xcart\External_Product_Verification\ExternalVerificationFeeds;
 use Xcart\External_Product_Verification\ExternalVerificationProducts;
@@ -603,12 +604,12 @@ function getOrderGroupShippingCharge($aParams = [])
         if ($oOrderGroup) {
             $aShippingRates = $oOrderGroup->getShippingRates();
             if (!empty($aShippingRates)) {
-                /** @var ShippingRate $oShippingRate*/
+                /** @var ShippingRateModel $oShippingRate*/
                 $sResult = '';
                 $aShippingRates = reset($aShippingRates);
                 foreach ($aShippingRates as $oShippingRate) {
                     $shippingCharge = "$". price_format($oShippingRate->getShippingCharge());
-                    $sResult .= "{$oShippingRate->getShippingEntity()->getName()} {$oShippingRate->shipping_time}: {$shippingCharge} \n";
+                    $sResult .= "{$oShippingRate->shipping->getName()} {$oShippingRate->shipping->shipping_time}: {$shippingCharge} \n";
                 }
             }
         }
