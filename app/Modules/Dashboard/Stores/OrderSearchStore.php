@@ -14,6 +14,7 @@ use Modules\Dashboard\Models\DashboardFilter;
 use Modules\Order\Helpers\OrderHelper;
 use Modules\Order\Models\OrderModel;
 use Modules\Goods\Models\ProductQuestionModel;
+use Modules\User\Models\UserModel;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\Model;
 use Xcart\App\Orm\QuerySet;
@@ -249,6 +250,20 @@ class OrderSearchStore extends BaseStore
                 ];
 
                 $this->getQ($tmp, 'order.operator');
+            }
+
+            if (!empty($data['order']['submit_operator']) || $this->checkNot('order.submit_operator')) {
+                $qs->join('inner join', 'order_extra', ['orderid' => 'ext.order_id'], 'ext');
+
+                $val = ($data['order']['submit_operator']) ? $data['order']['submit_operator'] : [''];
+
+                $qs->join('inner join', 'xcart_customers', ['xcart_customers.id' => 'ext.submit_operator_id'], 'xcart_customers');
+
+                $tmp = [
+                    'xcart_customers.login__in' => $val,
+                ];
+
+                $this->getQ($tmp, 'order.submit_operator');
             }
 
             if (!empty($data['order']['payment_method']) || $this->checkNot('order.payment_method')) {

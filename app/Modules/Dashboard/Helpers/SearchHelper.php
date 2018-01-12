@@ -163,6 +163,10 @@ class SearchHelper
             $data['order']['operator'] = self::getDecoratedAutoCompleteData($data['order']['operator'], 'order.operator');
             $data['order']['operator'] = self::clearAutoCompleteData($data['order']['operator']);
         }
+        if (!empty($data['order']['submit_operator'])) {
+            $data['order']['submit_operator'] = self::getDecoratedAutoCompleteData($data['order']['submit_operator'], 'order.submit_operator');
+            $data['order']['submit_operator'] = self::clearAutoCompleteData($data['order']['submit_operator']);
+        }
         if (!empty($data['order']['distributor'])) {
             $data['order']['distributor'] = self::getDecoratedAutoCompleteData($data['order']['distributor'], 'order.distributor');
             $data['order']['distributor'] = self::clearAutoCompleteData($data['order']['distributor']);
