@@ -49,85 +49,95 @@ var usertype = "{$usertype}";
 <meta name="robots" content="noindex">
 {/if}
 
-{if $usertype eq "P" or $usertype eq "A"}
-<meta name="ROBOTS" content="NOINDEX,NOFOLLOW" />
+{if $metahelper}
+    {$metahelper->render()}
 {else}
-{assign var="_meta_descr" value=""}
-{assign var="_meta_keywords" value=""}
-{if $product.meta_descr ne "" and $config.SEO.include_meta_products eq "Y"}
-{assign var="_meta_descr" value="`$product.meta_descr`"}
-{assign var="_meta_keywords" value="`$product.meta_keywords`"}
-{/if}
-{if $current_category.meta_descr ne "" and $config.SEO.include_meta_categories eq "Y" and !$product.productid}
-{assign var="_meta_descr" value="`$_meta_descr``$current_category.meta_descr`"}
-{assign var="_meta_keywords" value="`$_meta_keywords``$current_category.meta_keywords`"}
-{/if}
-{if $brand.meta_descr ne "" && $config.Brands.include_meta_brands eq "Y"}
-{assign var="_meta_descr" value="`$_meta_descr``$brand.meta_descr`"}
-{assign var="_meta_keywords" value="`$_meta_keywords``$brand.meta_keywords`"}
-{/if}
-{if $_meta_descr eq ''}
-{assign var="_meta_descr" value=" "}
-{/if}
-{if $_meta_keywords eq ''}
-{assign var="_meta_keywords" value="`$_meta_keywords``$brand.meta_keywords` "}
-{/if}
-{assign var="_meta_descr" value="`$_meta_descr``$config.SEO.meta_descr`"}
-{assign var="_meta_keywords" value="`$_meta_keywords``$config.SEO.meta_keywords`"}
-
-{if $config.Company.cidev_keywords ne "" && (($main eq "catalog" && $current_category.category eq "") || ($_meta_keywords eq "")) }
-{assign var="_meta_keywords" value=$config.Company.cidev_keywords}
-{/if}
-
-{if $config.Company.cidev_description ne "" && (($main eq "catalog" && $current_category.category eq "") || ($_meta_descr eq "")) }
-{assign var="_meta_descr" value=$config.Company.cidev_description}
-{/if}
-
-{if $main eq "product"}
-
-	{if $product.map_price gt $product.taxed_price}
-		{assign var="meta_current_price" value=$product.map_price}
-	{else}
-		{assign var="meta_current_price" value=$product.taxed_price}
-	{/if}
-
-    {if $product.seo_meta_descr ne ""}
-        <meta name="description" content="{$product.seo_meta_descr|truncate:"500":"...":false|escape|strip}" />
+    {if $usertype eq "P" or $usertype eq "A"}
+        <meta name="ROBOTS" content="NOINDEX,NOFOLLOW" />
     {else}
-    {if $current_storefront == 41}
-        {assign var="seo_meta_descr" value="Buy `$product.product` online at `$config.Company.company_name`. `$current_category.category` at cheap prices. Sale up to 50%"}
-        <meta name="description" content="{$seo_meta_descr|truncate:"160":"...":false|escape|strip}" />
-    {else}
-        <meta name="description" content="Buy online or call {$config.Company.company_phone}. {$_meta_descr|truncate:"500":"...":false|escape|strip}" />
-    {/if}
-{/if}
+        {assign var="_meta_descr" value=""}
+        {assign var="_meta_keywords" value=""}
 
-{elseif $main eq "catalog" && $current_category.category ne ""}
-
-	{if $current_category.meta_descr_orig ne ""}
-		<meta name="description" content="{$current_category.meta_descr_orig|escape|strip}" />
-	{elseif $current_category.description ne ""}
-                <meta name="description" content="{$current_category.description|escape|strip}" />
-        {else}
-                <meta name="description" content="{$_meta_descr|truncate:"500":"...":false|escape|strip}" />
+        {if $product.meta_descr ne "" and $config.SEO.include_meta_products eq "Y"}
+            {assign var="_meta_descr" value="`$product.meta_descr`"}
+            {assign var="_meta_keywords" value="`$product.meta_keywords`"}
         {/if}
 
-	{if $current_category.meta_keywords_orig ne ""}
-		<meta name="keywords" content="{$current_category.meta_keywords_orig|truncate:"500":"":false|escape|strip}" />
-	{/if}
-{else}
-		<meta name="description" content="{$_meta_descr|truncate:"500":"...":false|escape|strip}" />
-{/if}
+        {if $current_category.meta_descr ne "" and $config.SEO.include_meta_categories eq "Y" and !$product.productid}
+            {assign var="_meta_descr" value="`$_meta_descr``$current_category.meta_descr`"}
+            {assign var="_meta_keywords" value="`$_meta_keywords``$current_category.meta_keywords`"}
+        {/if}
 
- {if $config.Company.config_keywords_meta_tag ne "" && (($main eq "catalog" && $current_category.category eq ""))}
-  {assign var="_meta_keywords" value=$config.Company.config_keywords_meta_tag}
-  <meta name="keywords" content="{$_meta_keywords|truncate:"500":"":false|escape|strip}" />
- {else}
+        {if $brand.meta_descr ne "" && $config.Brands.include_meta_brands eq "Y"}
+            {assign var="_meta_descr" value="`$_meta_descr``$brand.meta_descr`"}
+            {assign var="_meta_keywords" value="`$_meta_keywords``$brand.meta_keywords`"}
+        {/if}
 
- {*
- <meta name="keywords" content="{$_meta_keywords|truncate:"500":"":false|escape|strip}" />
- *}
- {/if}
+        {if $_meta_descr eq ''}
+            {assign var="_meta_descr" value=" "}
+        {/if}
+
+        {if $_meta_keywords eq ''}
+            {assign var="_meta_keywords" value="`$_meta_keywords``$brand.meta_keywords` "}
+        {/if}
+
+        {assign var="_meta_descr" value="`$_meta_descr``$config.SEO.meta_descr`"}
+        {assign var="_meta_keywords" value="`$_meta_keywords``$config.SEO.meta_keywords`"}
+
+        {if $config.Company.cidev_keywords ne "" && (($main eq "catalog" && $current_category.category eq "") || ($_meta_keywords eq "")) }
+            {assign var="_meta_keywords" value=$config.Company.cidev_keywords}
+        {/if}
+
+        {if $config.Company.cidev_description ne "" && (($main eq "catalog" && $current_category.category eq "") || ($_meta_descr eq "")) }
+            {assign var="_meta_descr" value=$config.Company.cidev_description}
+        {/if}
+
+        {if $main eq "product"}
+
+            {if $product.map_price gt $product.taxed_price}
+                {assign var="meta_current_price" value=$product.map_price}
+            {else}
+                {assign var="meta_current_price" value=$product.taxed_price}
+            {/if}
+
+            {if $product.seo_meta_descr ne ""}
+                <meta name="description" content="{$product.seo_meta_descr|truncate:"500":"...":false|escape|strip}" />
+            {else}
+                {if $current_storefront == 41}
+                    {assign var="seo_meta_descr" value="Buy `$product.product` online at `$config.Company.company_name`. `$current_category.category` at cheap prices. Sale up to 50%"}
+                    <meta name="description" content="{$seo_meta_descr|truncate:"160":"...":false|escape|strip}" />
+                {else}
+                    <meta name="description" content="Buy online or call {$config.Company.company_phone}. {$_meta_descr|truncate:"500":"...":false|escape|strip}" />
+                {/if}
+            {/if}
+
+        {elseif $main eq "catalog" && $current_category.category ne ""}
+
+            {if $current_category.meta_descr_orig ne ""}
+                <meta name="description" content="{$current_category.meta_descr_orig|escape|strip}" />
+            {elseif $current_category.description ne ""}
+                <meta name="description" content="{$current_category.description|escape|strip}" />
+            {else}
+                <meta name="description" content="{$_meta_descr|truncate:"500":"...":false|escape|strip}" />
+            {/if}
+
+            {if $current_category.meta_keywords_orig ne ""}
+                <meta name="keywords" content="{$current_category.meta_keywords_orig|truncate:"500":"":false|escape|strip}" />
+            {/if}
+        {else}
+            <meta name="description" content="{$_meta_descr|truncate:"500":"...":false|escape|strip}" />
+        {/if}
+
+        {if $config.Company.config_keywords_meta_tag ne "" && (($main eq "catalog" && $current_category.category eq ""))}
+            {assign var="_meta_keywords" value=$config.Company.config_keywords_meta_tag}
+            <meta name="keywords" content="{$_meta_keywords|truncate:"500":"":false|escape|strip}" />
+        {else}
+
+         {*
+         <meta name="keywords" content="{$_meta_keywords|truncate:"500":"":false|escape|strip}" />
+         *}
+        {/if}
+    {/if}
 {/if}
 
 {if $webmaster_mode eq "editor"}
