@@ -609,7 +609,9 @@ function getOrderGroupShippingCharge($aParams = [])
                 $aShippingRates = reset($aShippingRates);
                 foreach ($aShippingRates as $oShippingRate) {
                     $shippingCharge = "$". price_format($oShippingRate->getShippingCharge());
-                    $sResult .= "{$oShippingRate->shipping->getName()} {$oShippingRate->shipping->shipping_time}: {$shippingCharge} \n";
+                    if ($ship_m = $oShippingRate->shipping) {
+                        $sResult .= "{$ship_m->getName()} {$ship_m->shipping_time}: {$shippingCharge} \n";
+                    }
                 }
             }
         }
