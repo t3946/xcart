@@ -20,7 +20,7 @@ class Mailer
     const MODE_SENDMAIL = 'sendmail';
 
     // Swift_MailTransport
-    const MODE_MAIL = 'mail';
+//    const MODE_MAIL = 'mail';
 
     // Swift_SmtpTransport
     const MODE_SMTP = 'smtp';
@@ -68,10 +68,10 @@ class Mailer
             $transport->setPassword($config['password']);
             return $transport;
         }
-        elseif ($this->mode == self::MODE_MAIL) {
-            $extraParams = isset($config['extraParams']) ? $config['extraParams'] : '-f%s';
-            return new Swift_MailTransport($extraParams);
-        }
+//        elseif ($this->mode == self::MODE_MAIL) {
+//            $extraParams = isset($config['extraParams']) ? $config['extraParams'] : '-f%s';
+//            return new Swift_MailTransport($extraParams);
+//        }
         return null;
     }
 
