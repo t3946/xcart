@@ -17,7 +17,7 @@ class UserAdminMiddleware extends Middleware
         if ($request->get->has('identify_admin')) {
             if ($model = UserModel::objects()->get(['login' => $request->get->get('identify_admin')])) {
 
-                $identifiers = array_merge(Xcart::app()->request->session->get('identifiers') ?: [], ['login' => $model->login, 'login_type' => 'A']);
+                $identifiers = func_array_merge_assoc(Xcart::app()->request->session->get('identifiers') ?: [], ['A' => ['login' => $model->login, 'login_type' => 'A']]);
 
                 Xcart::app()->request->session->add('identifiers', $identifiers);
             }
