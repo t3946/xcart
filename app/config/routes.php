@@ -36,11 +36,6 @@ return array_merge($admin_routes, [
         'namespace' => 'payment'
     ],
     [
-        'route' => '/user',
-        'path' => 'Modules.User.routes',
-        'namespace' => 'user',
-    ],
-    [
         'route' => '/',
         'path' => 'Modules.Pages.routes',
         'namespace' => 'page'
