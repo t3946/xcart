@@ -86,10 +86,10 @@ class PBXController extends Controller
             if ($request->get['outgoing_flow_start'] || $request->get['outgoing_flow_end']){
                 $log_category = "Calls_Record_Anveo";
 
-                if ($request->get->has['outgoing_flow_start']) {
+                if ($request->get->has('outgoing_flow_start')) {
                     $log_text = "Исходящий звонок начался со след.сессией: {$request->get['ss']}";
                 }
-                elseif ($request->get->has['outgoing_flow_end']){
+                elseif ($request->get->has('outgoing_flow_end')){
                     $log_text = "Исходящий звонок закончился со след.сессией: {$request->get['ss']}";
                 }
                 func_backprocess_log($log_category, $log_text);
