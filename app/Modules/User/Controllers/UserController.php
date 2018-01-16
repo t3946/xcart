@@ -9,13 +9,13 @@ use Xcart\App\Main\Xcart;
 
 class UserController extends FrontendController
 {
-    public function remember_admin_user($slug, $site)
+    public function remember_admin_user($slug)
     {
-        if ($slug && $site_model = SiteModel::objects()->get(['code' => $site])) {
+        if ($slug) {
 
             Xcart::app()->request->cookie->add(Xcart::app()->request->session->getSessionKey() . "A_remember", $slug);
 
-            Xcart::app()->request->redirect('//'.$site_model->domain);
+            Xcart::app()->request->redirect('/');
         }
     }
 }
