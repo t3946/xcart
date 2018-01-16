@@ -1,7 +1,9 @@
 {extends 'base/admin.tpl'}
 {block 'heading'}
     <h1 class="column large-10" align="center">Customer Care dashboard.</h1>
-    <a class="column large-2 button create-order" href="{url 'user:remember_admin_user' slug=$user->login site=$site->code}" target="_blank">Create New Cx order</a>
+    {if $site && $user}
+        <a class="column large-2 button create-order" href="{url 'user:remember_admin_user' slug=$user->login site=$site->code}" target="_blank">Create New Cx order</a>
+    {/if}
 {/block}
 
 {block 'before-content'}

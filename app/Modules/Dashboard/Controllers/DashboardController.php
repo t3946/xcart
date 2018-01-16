@@ -9,6 +9,7 @@ use Modules\Dashboard\Models\GroupModel;
 use Modules\Dashboard\Models\UserFiltersLinkModel;
 use Modules\Dashboard\Stores\OrderSearchStore;
 use Modules\Goods\Models\ProductQuestionModel;
+use Modules\Sites\Models\SiteModel;
 use Modules\User\Models\UserModel;
 use Xcart\App\Controller\PrototypeAdminController;
 use Xcart\App\Main\Xcart;
@@ -65,7 +66,7 @@ class DashboardController extends PrototypeAdminController
                     'groups'  => GroupModel::objects()->filter(['filters__name__isnull' => false])->group(['id'])->all(),
                     'questions' => $questionModels,
                     'user' => Xcart::app()->user,
-                    'site' => Xcart::app()->getModule('Sites')->getSite()
+                    'site' => SiteModel::objects()->get(['storefrontid' => Xcart::app()->request->session->get('current_storefront')])
                 ]
             );
         }
