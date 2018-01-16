@@ -64,7 +64,8 @@ class DashboardController extends PrototypeAdminController
                     'myModels' => $myModels,
                     'groups'  => GroupModel::objects()->filter(['filters__name__isnull' => false])->group(['id'])->all(),
                     'questions' => $questionModels,
-                    'user' => Xcart::app()->user
+                    'user' => Xcart::app()->user,
+                    'site' => Xcart::app()->getModule('Sites')->getSite()
                 ]
             );
         }
