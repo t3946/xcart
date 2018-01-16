@@ -354,4 +354,15 @@
             }
         }
     }
+
+    .create-order {
+        &.button {
+            margin-top: 1em;
+            color: inherit;
+
+            &:hover {
+                color: inherit;
+            }
+        }
+    }
 }
