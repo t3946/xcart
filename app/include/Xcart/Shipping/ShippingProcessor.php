@@ -368,10 +368,11 @@ abstract class ShippingProcessor
         if ($cache_model = $qs->limit(1)->get()) {
             if ($quotes = $cache_model->quotes->all()) {
                 foreach ($quotes as $quote) {
-                    $rate = $quote->shipping_rate;
-                    $rate->setShippingChargeQuote($quote->shipping_quote);
-                    $rate->setCart($this->getCart());
-                    $this->aShippingRates[] = $rate;
+                    if ($rate = $quote->shipping_rate) {
+                        $rate->setShippingChargeQuote($quote->shipping_quote);
+                        $rate->setCart($this->getCart());
+                        $this->aShippingRates[] = $rate;
+                    }
                 }
             }
 
