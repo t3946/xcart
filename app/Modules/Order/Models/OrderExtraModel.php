@@ -33,7 +33,15 @@ class OrderExtraModel extends Model
                 'modelClass' => UserModel::class,
                 'link' => ['submit_operator_id' => 'id'],
                 'null' => true,
-            ]
+            ],
+
+            'payment_operator' => [
+                'field' => 'payment_operator_id',
+                'class' => ForeignField::class,
+                'modelClass' => UserModel::class,
+                'link' => ['payment_operator_id' => 'id'],
+                'null' => true,
+            ],
         ];
     }
 }
