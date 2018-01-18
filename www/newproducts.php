@@ -130,10 +130,10 @@ if (!empty($new_prod_ids_random) && is_array($new_prod_ids_random) && $count_new
 
 }
 
-$products = array_map(function ($a) {
+$new_products = array_map(function ($a) {
     $a['oProduct'] = ProductModel::objects()->get(['productid' => $a['productid']]);
     return $a;
-}, $products);
+}, $new_products);
 
 
 $smarty->assign("new_products",$new_products);

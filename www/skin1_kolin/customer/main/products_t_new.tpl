@@ -53,7 +53,7 @@
 <table cellpadding="0" cellspacing="0" width="100%">
 <tr>
 	<td height="100" nowrap="nowrap">
-<a {include file="on_product_click.tpl"} href="/product.php?productid={$products[product].productid}">{include file="product_thumbnail.tpl" productid=$products[product].productid image_x=$products[product].tmbn_x|default:$config.Appearance.thumbnail_width image_y=$products[product].tmbn_y product=$products[product].product tmbn_url=$products[product].tmbn_url splash=$products[product].oSplash}</a>
+<a {include file="on_product_click.tpl"} href="/product.php?productid={$products[product].productid}">{include file="product_thumbnail.tpl" productid=$products[product].productid image_x=$products[product].tmbn_x|default:$config.Appearance.thumbnail_width image_y=$products[product].tmbn_y product=$products[product].oProduct->getFrontendName() tmbn_url=$products[product].tmbn_url splash=$products[product].oSplash}</a>
 {if $active_modules.Special_Offers ne "" and $products[product].have_offers}
 {include file="modules/Special_Offers/customer/product_offer_thumb.tpl" product=$products[product]}
 {/if}
@@ -62,7 +62,7 @@
 </table>
 
 <div style="height: 47px; overflow: hidden;">
-<a {include file="on_product_click.tpl"} href="/product.php?productid={$products[product].productid}" class="ProductTitle{if $flag eq "related"}Related{/if}" style="font-weight: normal;">{* <font color=#0033CC> *}{$products[product].product}{*</font>*}</a><br />
+<a {include file="on_product_click.tpl"} href="/product.php?productid={$products[product].productid}" class="ProductTitle{if $flag eq "related"}Related{/if}" style="font-weight: normal;">{* <font color=#0033CC> *}{$products[product].oProduct->getFrontendName()}{*</font>*}</a><br />
 </div>
 
 {if $products[product].product_type ne "C"}
