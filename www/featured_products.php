@@ -37,6 +37,8 @@
 # Get new products data and store it into $new_products array
 #
 
+use Modules\Goods\Models\ProductModel;
+
 if ( !defined('XCART_START') ) { header("Location: home.php"); die("Access denied"); }
 
 #
@@ -84,6 +86,10 @@ $smarty->assign("navigation_script", $cidev_navigation_script);
 ##
 #
 
+$products = array_map(function ($a) {
+    $a['oProduct'] = ProductModel::objects()->get(['productid' => $a['productid']]);
+    return $a;
+}, $products);
 
 $smarty->assign("f_products",$products);
 $search_data = '';
