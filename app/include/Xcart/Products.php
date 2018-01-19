@@ -811,7 +811,7 @@ class Products extends CloneData
                 $sClonedSKU = $this->getClonedSKU($aChildManufacturer["code"], $this->getProductMPN($aProduct["productcode"], $aManufacturer["code"]));
 
                 $aProductSKU = $this->getProductBySKU($sClonedSKU);
-                if (isset($aProductSKU) && is_array($aProductSKU) && !empty($aProductSKU)) {
+                if (isset($aProductSKU) && is_array($aProductSKU) && !empty($aProductSKU) && $aProductSKU['clone_parent_product_id']) {
                     //если clonedSKU существует в БД, то
 
                     //вызвать блок обновления продукта для очередного подчиненного дистрибьютора;
@@ -824,7 +824,7 @@ class Products extends CloneData
                         $this->IncSuccessUpdate();
                     }
                 } else {
-                    $this->message[] = "SKU $sClonedSKU not found, continue";
+                    $this->message[] = "SKU $sClonedSKU not found or unlinked, continue";
 
                 }
             }
