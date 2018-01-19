@@ -423,7 +423,7 @@ class Products extends CloneData
         /*ЕСЛИ [PRODUCT] не существует ИЛИ [PRODUCT].forsale !="Y" ИЛИ trim([PRODUCT].clone_parent_productid) >0 или дистрибьютор от [xcart_clone_products_queue].manufacturerid не имеет родителя, ТО
 			залоггировать в BackprocessLogs текст 'trying clone cloned, disabled or non-existing product, or target manufacturer is not a clone. skip...'*/
 
-        if (empty($aProduct) || $aProduct["forsale"] != "Y" || $aProduct["clone_parent_product_id"] > 0 || $aQueuedManufacturer["parent_manufacturer_id"] == -1) {
+        if (empty($aProduct) || $aProduct["forsale"] != "Y" || $aProduct["clone_parent_productid"] > 0 || $aQueuedManufacturer["parent_manufacturer_id"] == -1) {
             $this->BackprocessLogs("trying clone cloned, disabled or non-existing product, or target manufacturer is not a clone. skip...");
             $this->IncFailAdd();
             return false;
@@ -776,7 +776,7 @@ class Products extends CloneData
 
     protected function  updateProduct($aProduct) {
         //ЕСЛИ [PRODUCT] не существует ИЛИ trim([PRODUCT].clone_parent_product_sku) != '', ТО
-        if (empty($aProduct) || $aProduct["clone_parent_product_id"] > 0) {
+        if (empty($aProduct) || $aProduct["clone_parent_productid"] > 0) {
             $this->BackprocessLogs('trying update cloned or non-existing product . skip...');
             $this->IncFailUpdate();
             return false;
@@ -811,7 +811,7 @@ class Products extends CloneData
                 $sClonedSKU = $this->getClonedSKU($aChildManufacturer["code"], $this->getProductMPN($aProduct["productcode"], $aManufacturer["code"]));
 
                 $aProductSKU = $this->getProductBySKU($sClonedSKU);
-                if (isset($aProductSKU) && is_array($aProductSKU) && !empty($aProductSKU) && $aProductSKU['clone_parent_product_id']) {
+                if (is_array($aProductSKU) && !empty($aProductSKU) && $aProductSKU['clone_parent_productid']) {
                     //если clonedSKU существует в БД, то
 
                     //вызвать блок обновления продукта для очередного подчиненного дистрибьютора;
