@@ -1263,7 +1263,8 @@ if ($mode == "search") {
      * поднимаем 50 продуктов в выводе категории согластно последнегому поисковому результату,
      * так-же поднимает товары похожие на уже просмотренные в данном разделе.
      */
-    if (empty($data["sort_field"]) || $data["sort_field"] == 'orderby')
+    $elastic_sort = (empty($data["sort_field"]) || $data["sort_field"] == 'orderby');
+    if ($elastic_sort)
     {
         $search_related_products_ids = [];
         $related_ids = [];
@@ -1554,7 +1555,7 @@ if ($mode == "search") {
                 #
                 # Get the products and go to modify them
                 #
-                $res = db_query($search_query);
+                $res = db_query($search_query, !$elastic_sort);
                 if ($res) {
                     $geid = false;
                     $productid = false;
@@ -1623,7 +1624,7 @@ if ($mode == "search") {
 
                 $search_query .= " LIMIT $first_page, $objects_per_page";
 
-                $products = func_query($search_query, true);
+                $products = func_query($search_query, !$elastic_sort);
 
                 $max_fba = 5;
                 $sql_fba = "{$search_query_fba} order by s.in_list_showed ASC, RAND() ASC limit {$max_fba}";
