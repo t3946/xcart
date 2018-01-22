@@ -1270,6 +1270,8 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
 
         $orderid = func_array2insert('orders', $insert_data);
 
+        \Xcart\App\Main\Xcart::app()->event->trigger('order:created', ['model' => OrderModel::objects()->get(['orderid' => $orderid])]);
+
         if (!empty($insert_data['coupon'])) {
             /** @var  \Modules\Cart\Models\CouponKitModel $coupon */
             $coupon = \Modules\Cart\Models\CouponKitModel::objects()->get(['active' => true, 'code' => $insert_data['coupon']]);
@@ -1279,13 +1281,6 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
             $model->order_id = $orderid;
             $model->save();
         }
-
-        /** @var OrderExtraModel $order_extra_model */
-
-        [$order_extra_model] = OrderExtraModel::objects()->getOrNew(['order_id' => $orderid]);
-
-        $order_extra_model->submit_operator = OrderHelper::getSubmitOperator();
-        $order_extra_model->save();
 
         global $purchase_order_selected;
         x_session_register('purchase_order_selected');

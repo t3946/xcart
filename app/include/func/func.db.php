@@ -2,14 +2,25 @@
 
 /**
  * @param $query
+ * @param int|bool|null $cache
  *
- * @return \Doctrine\DBAL\Driver\Statement|mixed|null
+ * @return \Doctrine\DBAL\Driver\ResultStatement|mixed|null
  * @throws \Doctrine\DBAL\DBALException
  * @deprecated
  */
-function db_query($query)
+function db_query($query, $cache = null)
 {
-    return \Xcart\Connection::getInstance()->executeQuery($query);
+    $qcp = null;
+
+    if ($cache && \Xcart\Connection::getInstance()->getConfiguration()->getResultCacheImpl()) {
+        if (is_bool($cache)) {
+            $cache = 3600;
+        }
+
+        $qcp = new Doctrine\DBAL\Cache\QueryCacheProfile($cache);
+    }
+
+    return \Xcart\Connection::getInstance()->executeQuery($query, [] ,[], $qcp);
 }
 
 /**
@@ -17,7 +28,7 @@ function db_query($query)
  * @param array $params ['val1' => $val1, 'val2' => $val2, 'id' => $id]
  * @param array $types  \PDO Param type [\PDO::PARAM_NULL, \PDO::PARAM_SRT, \PDO::PARAM_INT]
  *
- * @return \Doctrine\DBAL\Driver\Statement|mixed|null
+ * @return \Doctrine\DBAL\Driver\ResultStatement|mixed|null
  * @throws \Doctrine\DBAL\DBALException
  */
 function db_query_param($query, array $params, array $types = [])
@@ -27,39 +38,39 @@ function db_query_param($query, array $params, array $types = [])
     return \Xcart\Connection::getInstance()->executeQuery($query, $params, $types);
 }
 
-function db_result(\Doctrine\DBAL\Driver\Statement $result, $offset)
+function db_result(\Doctrine\DBAL\Driver\ResultStatement $result, $offset)
 {
     return db_fetch_field($result, $offset);
 }
 
-function db_fetch_row(\Doctrine\DBAL\Driver\Statement $result)
+function db_fetch_row(\Doctrine\DBAL\Driver\ResultStatement $result)
 {
     return $result->fetch(PDO::FETCH_NUM);
 }
 
-function db_fetch_array(\Doctrine\DBAL\Driver\Statement $result, $flag = null)
+function db_fetch_array(\Doctrine\DBAL\Driver\ResultStatement $result, $flag = null)
 {
     return $result->fetch(PDO::FETCH_ASSOC);
 }
 
-function db_fetch_field(\Doctrine\DBAL\Driver\Statement $result, $num = 0)
+function db_fetch_field(\Doctrine\DBAL\Driver\ResultStatement $result, $num = 0)
 {
     return $result->fetchColumn($num);
 }
 
-function db_free_result(\Doctrine\DBAL\Driver\Statement $result)
+function db_free_result(\Doctrine\DBAL\Driver\ResultStatement $result)
 {
-    if ($result && $result instanceof \Doctrine\DBAL\Driver\Statement) {
+    if ($result && $result instanceof \Doctrine\DBAL\Driver\ResultStatement) {
         $result->closeCursor();
     }
 }
 
-function db_num_rows(\Doctrine\DBAL\Driver\Statement $result)
+function db_num_rows(\Doctrine\DBAL\Driver\ResultStatement $result)
 {
     return $result->rowCount();
 }
 
-function db_num_fields(\Doctrine\DBAL\Driver\Statement $result)
+function db_num_fields(\Doctrine\DBAL\Driver\ResultStatement $result)
 {
     return $result->columnCount();
 }
@@ -69,7 +80,7 @@ function db_insert_id()
     return \Xcart\Connection::getInstance()->lastInsertId();
 }
 
-function db_affected_rows(\Doctrine\DBAL\Driver\Statement $result)
+function db_affected_rows(\Doctrine\DBAL\Driver\ResultStatement $result)
 {
     return $result->rowCount();
 }
@@ -183,7 +194,7 @@ function db_prepare_query($query, $params)
  * @param $query
  * @param array $params
  *
- * @return \Doctrine\DBAL\Driver\Statement|mixed|null
+ * @return \Doctrine\DBAL\Driver\ResultStatement|mixed|null
  * @throws \Doctrine\DBAL\DBALException
  * @deprecated
  */
@@ -201,7 +212,7 @@ function db_exec($query, $params = [])
  * @param array $params
  * @param array $types
  *
- * @return \Doctrine\DBAL\Driver\Statement|mixed|null
+ * @return \Doctrine\DBAL\Driver\ResultStatement|mixed|null
  * @throws \Doctrine\DBAL\DBALException
  */
 function db_exec_param($query, array $params, array $types = [])
@@ -219,11 +230,11 @@ function db_exec_param($query, array $params, array $types = [])
  * @throws \Doctrine\DBAL\DBALException
  * @deprecated
  */
-function func_query($query)
+function func_query($query, $cache = null)
 {
     $result = false;
 
-    if ($p_result = db_query($query)) {
+    if ($p_result = db_query($query, $cache)) {
         while ($arr = db_fetch_array($p_result)) {
             $result[] = $arr;
         }
@@ -266,11 +277,11 @@ function func_query_param($query, array $params, array $types = [])
  * @throws \Doctrine\DBAL\DBALException
  * @deprecated
  */
-function func_query_first($query)
+function func_query_first($query, $cache = null)
 {
     $result = null;
 
-    if ($p_result = db_query($query)) {
+    if ($p_result = db_query($query, $cache)) {
         $result = db_fetch_array($p_result);
         db_free_result($p_result);
     }
@@ -306,9 +317,9 @@ function func_query_first_param($query, array $param, array $types = [])
  * @throws \Doctrine\DBAL\DBALException
  * @deprecated use func_query_first_cell_param
  */
-function func_query_first_cell($query)
+function func_query_first_cell($query, $cache = null)
 {
-    if ($p_result = db_query($query)) {
+    if ($p_result = db_query($query, $cache)) {
         $result = db_fetch_row($p_result);
         db_free_result($p_result);
     }
@@ -518,7 +529,7 @@ function func_array2insert_new($tbl, array $data, $is_replace = false, $is_ignor
  * @param $arr
  * @param string $where
  *
- * @return bool|\Doctrine\DBAL\Driver\Statement|mixed|null
+ * @return bool|\Doctrine\DBAL\Driver\ResultStatement|mixed|null
  * @throws \Doctrine\DBAL\DBALException
  * @deprecated
  */

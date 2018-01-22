@@ -37,6 +37,8 @@
 # Get new products data and store it into $f_new_products array
 #
 
+use Modules\Goods\Models\ProductModel;
+
 if (!defined('XCART_START')) {
     header("Location: home.php");
     die("Access denied");
@@ -178,6 +180,12 @@ if ($page > 1) {
 
             }
         }
+
+        $f_new_products = array_map(function ($a) {
+            $a['oProduct'] = ProductModel::objects()->get(['productid' => $a['productid']]);
+            return $a;
+        }, $f_new_products);
+
         $smarty->assign("f_products", $f_new_products);
     }
 }

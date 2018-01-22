@@ -603,11 +603,14 @@ if ($REQUEST_METHOD == "POST")
                             $linkid = $v["tracking_shipper"][$_k];
                         }
 
+                        $t_shipdate = trim($v["tracking_ship_date"][$_k]);
+                        $t_shipdate = empty($t_shipdate) ? (new \DateTime())->format('m/d/Y') : $t_shipdate;
+
                         $tracking[]                                   = [
                             'linkid' => $linkid,
                             'tracknum' => trim($v["tracking_number"][$_k]),
-                            'ship_date' => trim($v["tracking_ship_date"][$_k]),
-                            'shipping_date' => empty(trim($v["tracking_ship_date"][$_k])) ? null : \DateTime::createFromFormat('m/d/Y H:i:s', trim($v["tracking_ship_date"][$_k]).' 00:00:00'),
+                            'ship_date' => $t_shipdate,
+                            'shipping_date' => empty($t_shipdate) ? null : \DateTime::createFromFormat('m/d/Y H:i:s', $t_shipdate.' 00:00:00'),
                             'carrier_id' => $sh
                         ];
 
@@ -1431,12 +1434,15 @@ if ($REQUEST_METHOD == "POST")
                                             $linkid = $v["tracking_shipper"][$invoice_number][$_k];
                                         }
 
+                                        $t_shipdate = trim($v["tracking_ship_date"][$invoice_number][$_k]);
+                                        $t_shipdate = empty($t_shipdate) ? (new \DateTime())->format('m/d/Y') : $t_shipdate;
+
                                         $tracknums[$m_id][$tmp_tracknums_counter] = [
                                             'linkid' => $linkid,
                                             'tracknum' => trim($v["tracking_number"][$invoice_number][$_k]),
                                             'invoice_number' => $invoice_number,
-                                            'ship_date' => trim($v["tracking_ship_date"][$invoice_number][$_k]),
-                                            'shipping_date' => empty(trim($v["tracking_ship_date"][$invoice_number][$_k])) ? null : \DateTime::createFromFormat('m/d/Y H:i:s', $v["tracking_ship_date"][$invoice_number][$_k].' 00:00:00'),
+                                            'ship_date' => $t_shipdate,
+                                            'shipping_date' => empty($t_shipdate) ? null : \DateTime::createFromFormat('m/d/Y H:i:s', $t_shipdate.' 00:00:00'),
                                             'carrier_id' => $sh
                                         ];
                                         $tmp_tracknums_counter++;

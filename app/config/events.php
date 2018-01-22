@@ -11,6 +11,18 @@ return [
         ],
     ],
 
+    'order:created' => [
+        [
+            'callback' => ['\\Modules\\Order\\Helpers\\OrderEventHelper', 'triggerOrderCreateEvent'],
+        ],
+    ],
+
+    'payment:authorize' => [
+        [
+            'callback' => ['\\Modules\\Payment\\Helpers\\PaymentEventHelper', 'triggerPaymentAuthorizeEvent'],
+        ],
+    ],
+
     'order:tag' => [
         [
             'callback' => ['\\Modules\\Order\\Helpers\\OrderTagEventHelper', 'triggerOrderTagEvent'],

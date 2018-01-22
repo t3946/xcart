@@ -71,7 +71,7 @@ class MailHandler extends MonologMailHandler
             );
         }
         catch (\Exception $e) {
-            d(123);
+            
         }
     }
 

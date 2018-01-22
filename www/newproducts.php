@@ -34,6 +34,8 @@
 # $Id: featured_products.php,v 1.22.2.1 2006/08/17 08:05:57 max Exp $
 #
 
+use Modules\Goods\Models\ProductModel;
+
 if ( !defined('XCART_START') ) { header("Location: home.php"); die("Access denied"); }
 
 $user_account['membershipid'] = !empty($user_account['membershipid'])?$user_account['membershipid']:0;
@@ -128,12 +130,12 @@ if (!empty($new_prod_ids_random) && is_array($new_prod_ids_random) && $count_new
 
 }
 
+$new_products = array_map(function ($a) {
+    $a['oProduct'] = ProductModel::objects()->get(['productid' => $a['productid']]);
+    return $a;
+}, $new_products);
 
 
-//if ($qqq == "qqq"){
-//x_load("debug");
-//}
-//print(count($new_products));
 $smarty->assign("new_products",$new_products);
 
 ?>
