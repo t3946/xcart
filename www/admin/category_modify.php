@@ -219,6 +219,7 @@ if ($REQUEST_METHOD == "POST") {
                 'avail' => $avail,
                 'order_by' => $order_by,
                 'is_bold' => $is_bold,
+				'pc_ready_to_classify' => $pc_ready_to_classify
             ]);
 
         // Autogenerate clean URL.

@@ -190,10 +190,6 @@ class CategoryModel extends TreeModel
         parent::beforeSave($owner, $isNew);
 
         $this->categoryid_path = $this->pk;
-
-        if ($parent = $this->parent) {
-            $this->categoryid_path = $parent->categoryid_path . '/' . $this->pk;
-        }
     }
 
     public function afterSave($owner, $isNew)
@@ -211,6 +207,10 @@ class CategoryModel extends TreeModel
                 ->update([
                     'categoryid_path' => new Expression("CONCAT('{$this->categoryid_path}', SUBSTRING_INDEX(categoryid_path, {$owner->pk}, -1))")
                 ]);
+        }
+
+        if ($parent = $this->parent) {
+            $this->categoryid_path = $parent->categoryid_path . '/' . $this->pk;
         }
 
 //        @TODO: SLOOOOOOOW
