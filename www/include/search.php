@@ -1322,7 +1322,7 @@ if ($mode == "search") {
 
     if (!empty($orderbys)) {
         $search_query .= " ORDER BY " . implode(", ", $orderbys);
-        $search_query_count .= " ORDER BY " . implode(", ", $orderbys);
+//        $search_query_count .= " ORDER BY " . implode(", ", $orderbys);
     }
 
     #
@@ -1334,7 +1334,7 @@ if ($mode == "search") {
     print($search_query_brandids."<br><br>");*/
 
 //    db_query("SET OPTION SQL_BIG_SELECTS=1");
-    $_res = db_query($search_query_count_NEW);
+    $_res = db_query($search_query_count_NEW, true);
 
     $total_items = db_num_rows($_res);
     db_free_result($_res);
@@ -1371,7 +1371,7 @@ if ($mode == "search") {
             }
 
             $imploded_brandids = implode(",", $all_brandids_in_products);
-            $filter_found_brands = func_query("SELECT brandid, brand FROM $sql_tbl[brands] WHERE brandid IN ($imploded_brandids) ORDER BY brand");
+            $filter_found_brands = func_query("SELECT brandid, brand FROM $sql_tbl[brands] WHERE brandid IN ($imploded_brandids) ORDER BY brand", true);
 
             $smarty->assign("filter_found_brands", $filter_found_brands);
 
@@ -1489,7 +1489,7 @@ if ($mode == "search") {
 
 //print($igor_query_filter_count_search);
 //die();
-        $igor_query_filter_count_search_result = func_query($igor_query_filter_count_search);
+        $igor_query_filter_count_search_result = func_query($igor_query_filter_count_search, true);
         if (!empty($igor_query_filter_count_search_result)) {
             unset($filter_found_fv_ids_count);
             foreach ($igor_query_filter_count_search_result as $k => $v) {
@@ -1623,12 +1623,12 @@ if ($mode == "search") {
 
                 $search_query .= " LIMIT $first_page, $objects_per_page";
 
-                $products = func_query($search_query);
+                $products = func_query($search_query, true);
 
                 $max_fba = 5;
                 $sql_fba = "{$search_query_fba} order by s.in_list_showed ASC, RAND() ASC limit {$max_fba}";
 
-                if (!defined('IS_ROBOT') && $products_fba = func_query($sql_fba))
+                if (!defined('IS_ROBOT') && $products_fba = func_query($sql_fba, true))
                 {
                     foreach ($products as $product) {
                         for ($i = 0; $i < count($products_fba); $i++) {
@@ -1997,7 +1997,7 @@ if ($mode == "search") {
 
                 if (is_array($products) && !empty($products)) {
                     foreach ($products as $k => $v) {
-                        $products[$k]["cidev_filter_products"] = func_query("SELECT $sql_tbl[cidev_filter_products].fv_id, $sql_tbl[cidev_filter_values].fv_name, $sql_tbl[cidev_filter_values].f_id FROM $sql_tbl[cidev_filter_products] LEFT JOIN $sql_tbl[cidev_filter_values] ON $sql_tbl[cidev_filter_values].fv_id=$sql_tbl[cidev_filter_products].fv_id WHERE productid='$v[productid]' ORDER BY $sql_tbl[cidev_filter_values].fv_order_by, $sql_tbl[cidev_filter_values].fv_name");
+                        $products[$k]["cidev_filter_products"] = func_query("SELECT $sql_tbl[cidev_filter_products].fv_id, $sql_tbl[cidev_filter_values].fv_name, $sql_tbl[cidev_filter_values].f_id FROM $sql_tbl[cidev_filter_products] LEFT JOIN $sql_tbl[cidev_filter_values] ON $sql_tbl[cidev_filter_values].fv_id=$sql_tbl[cidev_filter_products].fv_id WHERE productid='$v[productid]' ORDER BY $sql_tbl[cidev_filter_values].fv_order_by, $sql_tbl[cidev_filter_values].fv_name", true);
 
                         $products[$k]["prevent_search_indexing"] = func_prevent_search_indexing($v);
                     }
