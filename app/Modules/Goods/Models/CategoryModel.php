@@ -185,22 +185,20 @@ class CategoryModel extends TreeModel
         ProductCategoriesModel::objects()->delete(['categoryid' => $this->categoryid]);
     }
 
-    public function beforeSave($owner, $isNew)
-    {
-        parent::beforeSave($owner, $isNew);
-
-        $this->categoryid_path = $this->pk;
-
-        if ($parent = $this->parent) {
-            $this->categoryid_path = $parent->categoryid_path . '/' . $this->pk;
-        }
-    }
-
     public function afterSave($owner, $isNew)
     {
         parent::afterSave($owner, $isNew);
 
         //@TODO: For old code, delete after global refactoring
+
+        if (empty($this->categoryid_path)) {
+            $this->categoryid_path = $this->pk;
+
+            /** @var self $parent */
+            if ($parent = $this->parent) {
+                $this->categoryid_path = $parent->categoryid_path . '/' . $this->pk;
+            }
+        }
 
         /** @var static $owner */
         $old_parent = $owner->attributes->getOldAttribute('parentid');
