@@ -210,7 +210,7 @@ class MailComponent
 
             list($message_header, $mail_message) = func_parse_mail($msgs);
         }
-        $headers = "From: " . $this->from . $lend . "X-Mailer: PHP/" . phpversion() . $lend . "MIME-Version: 1.0" . $lend . $message_header;
+        $headers = "From: " . $this->from . $lend . "MIME-Version: 1.0" . $lend . $message_header;
         if (trim($this->from) != "") {
             $mail_from = $this->from;
             if (!empty($this->reply_to)) {
