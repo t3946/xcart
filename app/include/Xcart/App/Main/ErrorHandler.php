@@ -216,8 +216,9 @@ class ErrorHandler
                 || is_subclass_of($app->request->getRequest(), 'Xcart\App\Request\HttpRequest'))
             {
                 $err['uri'] = $app->request->getRequestUri();
-                $err['suri'] = $app->request->getScriptUrl();
+                $err['script uri'] = $app->request->getScriptUrl();
                 $err['host'] = $app->request->getHostInfo();
+                $err['method'] = $app->request->getMethod();
                 $err['user'] = $app->request->getUserIP();
 
                 if ($app->request->getUserHost()) {
