@@ -92,7 +92,7 @@ if ($REQUEST_METHOD == "POST") {
 		#
 		# Add/Update category data
 		#
-		$category_name = trim($category_name);
+		$category_name = trim(\Xcart\App\Main\Xcart::app()->request->post['category_name']);
 		if (empty($category_name)) {
 			#
 			# Display the error message
