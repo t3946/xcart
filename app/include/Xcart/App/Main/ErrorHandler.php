@@ -212,7 +212,9 @@ class ErrorHandler
                 'traces' => $trace,
             ];
 
-            if (is_subclass_of($app->request, 'Xcart\App\Request\HttpRequest')) {
+            if (is_a($app->request->getRequest(), 'Xcart\App\Request\HttpRequest')
+                || is_subclass_of($app->request->getRequest(), 'Xcart\App\Request\HttpRequest'))
+            {
                 $err['uri'] = $app->request->getRequestUri();
                 $err['suri'] = $app->request->getScriptUrl();
                 $err['host'] = $app->request->getHostInfo();
