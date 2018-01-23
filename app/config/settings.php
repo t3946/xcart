@@ -134,9 +134,9 @@ return array_replace_recursive([
            'class' => '\Modules\Mail\Components\Mailer',
            'defaultFrom' => 'robot@s3stores.com',
 //           'defaultFrom' => 'robot@{domain}',
-            'config' => [
-                'command' => '/usr/sbin/exim -bs'
-            ]
+//            'config' => [
+//                'command' => '/usr/sbin/exim -bs'
+//            ]
        ],
 
        'auth' => [
