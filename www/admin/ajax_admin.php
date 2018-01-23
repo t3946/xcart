@@ -515,9 +515,9 @@ function getPayPalInvoiceStatus($aParams = [])
                                 'type' => OrderTransactionModel::TYPE_CAPTURE,
                                 'transaction_status' => OrderTransactionModel::STATUS_COMPLETED,
                                 'transaction_currency' => 'USD',
-                                'transaction_amount' => $payment->getAmount(),
+                                'transaction_amount' => $payment->getAmount()->getValue(),
                                 'transaction_fee' => 0,
-                                'login' => '',
+                                'login' => $model->order->login,
                                 'transaction_response' => null,
                                 'manual_transaction' => 'N'
                             ]);
@@ -526,6 +526,7 @@ function getPayPalInvoiceStatus($aParams = [])
 
                             (new TransactionLogModel([
                                 'order_transaction_id' => $txn->id,
+                                'transaction_id' => $txn->transaction_id,
                                 'orderid' => $txn->orderid,
                                 'paymentid' => $txn->paymentid,
                                 'transaction_status' => $txn->transaction_status,
