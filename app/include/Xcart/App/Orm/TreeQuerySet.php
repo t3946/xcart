@@ -273,7 +273,7 @@ class TreeQuerySet extends QuerySet
 
         $query = clone $this->getQueryBuilder();
         $query->clear()->setTypeSelect()->select(['id' => $id_attr, 'lft', 'rgt', 'root'])->from($table)->where([
-            new QAndNot(['parent_id__in' => $subQuery]),
+            new QAndNot(["{$pid_attr}__in" => $subQuery]),
         ]);
 
         $rows = $this->getConnection()->query($query->toSQL())->fetchAll();
