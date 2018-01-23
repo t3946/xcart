@@ -13,6 +13,13 @@ class CategoryTreeBuildCommand extends Command
         $prev_fixed = 0;
         $qs = CategoryModel::objects()->getQuerySet();
 
+        #fix parent_id
+        $model = new CategoryModel();
+        $id_attr = $model->getField('pk')->getAttributeName();
+        $pid_attr = $model->getField('parent')->getAttributeName();
+
+        CategoryModel::objects()->filter(["{$pid_attr}__raw" => " = {$id_attr}"])->update([$pid_attr => 0]);
+
         while (($count = $qs->filter(['lft__isnull' => true])->count()) != 0) {
             ++$i;
             $fixed = 0;
