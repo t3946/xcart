@@ -1,4 +1,6 @@
 <?php
+
+use Modules\Order\Models\OrderCxInvoiceModel;
 use Modules\Order\Models\OrderTransactionModel;
 use Modules\Order\Models\TransactionLogModel;
 use Modules\Goods\Models\ProductModel;
@@ -489,14 +491,60 @@ function sendPayPalRequest($aParams = [])
 
 function getPayPalInvoiceStatus($aParams = [])
 {
+    $aResult = [];
+
     $aResult['result'] = false;
+
     if (!empty($aParams['paypal_invoice_id'])) {
-        $oInv = (new Paypal())->getPayPalInvoice($aParams['paypal_invoice_id']);
-        if ($oInv) {
-            $oOrderCxInv = OrderCxInvoice::model()->find(SQLBuilder::getInstance()->addCondition("invoice_number = '{$aParams['paypal_invoice_id']}'"));
-            $oOrderCxInv->updateField('status', $oInv->getStatus());
-            $aResult['result'] = true;
-            $aResult['status'] = $oInv->getStatus();
+
+        if ($oInv = (new Paypal())->getPayPalInvoice($aParams['paypal_invoice_id'])) {
+
+            if ($model = OrderCxInvoiceModel::objects()->get(['invoice_number' => $aParams['paypal_invoice_id']])) {
+
+                if ($model->status != $oInv->getStatus() && $oInv->getStatus() == OrderCxInvoiceModel::STATUS_PAID && $payments = $oInv->getPayments()) {
+                    foreach ($payments as $payment) {
+
+                        /** @var OrderTransactionModel $txn */
+                        [$txn, $txn_new] = OrderTransactionModel::objects()->getOrNew(['transaction_id' => $payment->getTransactionId()]);
+
+                        if ($txn_new) {
+
+                            $txn->setAttributes([
+                                'orderid' => $model->orderid,
+                                'paymentid' => 100,
+                                'type' => OrderTransactionModel::TYPE_CAPTURE,
+                                'transaction_status' => OrderTransactionModel::STATUS_COMPLETED,
+                                'transaction_currency' => 'USD',
+                                'transaction_amount' => $payment->getAmount(),
+                                'transaction_fee' => 0,
+                                'login' => '',
+                                'transaction_response' => null,
+                                'manual_transaction' => 'N'
+                            ]);
+
+                            $txn->save();
+
+                            (new TransactionLogModel([
+                                'order_transaction_id' => $txn->id,
+                                'orderid' => $txn->orderid,
+                                'paymentid' => $txn->paymentid,
+                                'transaction_status' => $txn->transaction_status,
+                                'transaction_currency' => $txn->transaction_currency,
+                                'transaction_total' => $txn->transaction_amount,
+                                'login' => $txn->login,
+                            ]))->save();
+                        }
+                    }
+                }
+
+                $model->status = $oInv->getStatus();
+
+                $model->save();
+
+                $aResult['result'] = true;
+                $aResult['status'] = $oInv->getStatus();
+            }
+
         }
     }
     print(json_encode($aResult));
@@ -526,9 +574,9 @@ function getAmazonListingProducts($aParams = [])
     global $smarty;
     $aVerificationResult = [];
     $html = null;
-    if (!empty($aParams['feed_id']) && is_numeric($aParams['feed_id'])){
+    if (!empty($aParams['feed_id']) && is_numeric($aParams['feed_id'])) {
         $oFeed = ExternalVerificationFeeds::model(['feed_id' => intval($aParams['feed_id'])]);
-        switch ($aParams['type']){
+        switch ($aParams['type']) {
             case 'success' :
                 $sStatus = 'submit_to_feed_success';
                 break;
@@ -561,7 +609,7 @@ function getAmazonListingProducts($aParams = [])
             /** @var Logs[] $aLogs */
             $aLogs = (new Xcart\Logs('amazon_listings'))->_getLogs(1, 1, intval($aParams['feed_id']));
             $html = "<tr class='listing_products'><td colspan='7'><b>";
-            if (!empty($aLogs)){
+            if (!empty($aLogs)) {
 
                 foreach ($aLogs as $oLog) {
                     $html .= nl2br($oLog->getLogText());
@@ -580,7 +628,7 @@ function changeAmazonFBARestricted($aParams = [])
 {
     $aResult['result'] = false;
     if (!empty($aParams['product_id']) && is_numeric($aParams['product_id'])) {
-        $iProductId = (int) $aParams['product_id'];
+        $iProductId = (int)$aParams['product_id'];
         $oProductAmazonFields = ProductsAmazonFields::model(['productid' => $iProductId]);
         $sFbaStatus = isset($aParams['status']) ? 'Y' : 'N';
         $oProductAmazonFields->setField('amazon_fba_restricted', $sFbaStatus);
@@ -604,11 +652,11 @@ function getOrderGroupShippingCharge($aParams = [])
         if ($oOrderGroup) {
             $aShippingRates = $oOrderGroup->getShippingRates();
             if (!empty($aShippingRates)) {
-                /** @var ShippingRateModel $oShippingRate*/
+                /** @var ShippingRateModel $oShippingRate */
                 $sResult = '';
                 $aShippingRates = reset($aShippingRates);
                 foreach ($aShippingRates as $oShippingRate) {
-                    $shippingCharge = "$". price_format($oShippingRate->getShippingCharge());
+                    $shippingCharge = "$" . price_format($oShippingRate->getShippingCharge());
                     if ($ship_m = $oShippingRate->shipping) {
                         $sResult .= "{$ship_m->getName()} {$ship_m->shipping_time}: {$shippingCharge} \n";
                     }
@@ -637,7 +685,7 @@ function changeProductSplash($aParams = [])
     $aResult['result'] = false;
     if (!empty($aParams['product_id'])) {
         $oProduct = Product::objects()->filter(['productid' => $aParams['product_id']])->get();
-        $oProduct->setAttribute('splash_id', (int) $aParams['splash_id']);
+        $oProduct->setAttribute('splash_id', (int)$aParams['splash_id']);
         $oProduct->_update();
         $aResult['result'] = true;
     }
@@ -655,6 +703,7 @@ function getTransactionLog($aParams = [])
     }
     print $result;
 }
+
 function getProductCostToUs($aParams = [])
 {
     $aResult = ['result' => false];
@@ -670,8 +719,7 @@ function getProductCostToUs($aParams = [])
                         'cost_to_us' => $model->cost_to_us
                     ],
                 ];
-            }
-            else {
+            } else {
                 $aResult['error'] = "SKU {$aParams['sku']} not found in this distributor";
             }
         } else {
