@@ -212,6 +212,20 @@ class ErrorHandler
                 'traces' => $trace,
             ];
 
+            if (is_subclass_of($app->request, 'Xcart\App\Request\HttpRequest')) {
+                $err['uri'] = $app->request->getRequestUri();
+                $err['suri'] = $app->request->getScriptUrl();
+                $err['host'] = $app->request->getHostInfo();
+                $err['user'] = $app->request->getUserIP();
+
+                if ($app->request->getUserHost()) {
+                    $err['user'] .= " ({$app->request->getUserHost()})";
+                }
+                if ($app->request->getUserAgent()) {
+                    $err['user'] .= " [{$app->request->getUserAgent()}]";
+                }
+            }
+
             unset($err['traces']);
 
             $app->logger->critical($exception->getMessage(), $err, 'error');
