@@ -10,6 +10,8 @@
  */
 function db_query($query, $cache = null)
 {
+    $cache = false; 
+
     $qcp = null;
 
     if ($cache && \Xcart\Connection::getInstance()->getConfiguration()->getResultCacheImpl()) {
