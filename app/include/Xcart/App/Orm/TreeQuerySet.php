@@ -225,7 +225,7 @@ class TreeQuerySet extends QuerySet
         $subQuery->clear()->setTypeSelect()->from($table)->select('root')->where(new QOr(['parent_id__isnull' => true, 'parent_id' => 0]));
 
         $query = clone $this->getQueryBuilder();
-        $query->clear()->setTypeSelect()->select([$id_attr => 'id'])->from($table)->where([
+        $query->clear()->setTypeSelect()->select(['id' => $id_attr])->from($table)->where([
             new QOr(['parent_id__isnull' => true, 'parent_id' => 0]),
             new QAndNot(['root__in' => $subQuery]),
         ]);
@@ -269,10 +269,10 @@ class TreeQuerySet extends QuerySet
         ]);
          */
         $subQuery = clone $this->getQueryBuilder();
-        $subQuery->clear()->setTypeSelect()->select([$id_attr => 'id'])->from($table);
+        $subQuery->clear()->setTypeSelect()->select(['id' => $id_attr])->from($table);
 
         $query = clone $this->getQueryBuilder();
-        $query->clear()->setTypeSelect()->select([$id_attr => 'id', 'lft', 'rgt', 'root'])->from($table)->where([
+        $query->clear()->setTypeSelect()->select(['id' => $id_attr, 'lft', 'rgt', 'root'])->from($table)->where([
             new QAndNot(['parent_id__in' => $subQuery]),
         ]);
 
