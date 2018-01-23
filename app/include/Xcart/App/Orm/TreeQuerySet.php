@@ -217,16 +217,16 @@ class TreeQuerySet extends QuerySet
      */
     protected function deleteBranchWithoutRoot($table)
     {
-
+        return false;
         $id_attr = $this->getModel()->getField('pk')->getAttributeName();
         $pid_attr = $this->getModel()->getField('parent')->getAttributeName();
 
         $subQuery = clone $this->getQueryBuilder();
-        $subQuery->clear()->setTypeSelect()->from($table)->select('root')->where(new QOr(['parent_id__isnull' => true, 'parent_id' => 0]));
+        $subQuery->clear()->setTypeSelect()->from($table)->select('root')->where(new QOr(["{$pid_attr}__isnull" => true, $pid_attr => 0]));
 
         $query = clone $this->getQueryBuilder();
         $query->clear()->setTypeSelect()->select(['id' => $id_attr])->from($table)->where([
-            new QOr(['parent_id__isnull' => true, 'parent_id' => 0]),
+            new QOr(["{$pid_attr}__isnull" => true, $pid_attr => 0]),
             new QAndNot(['root__in' => $subQuery]),
         ]);
 
@@ -258,6 +258,7 @@ class TreeQuerySet extends QuerySet
      */
     protected function deleteBranchWithoutParent($table)
     {
+        return false;
         $id_attr = $this->getModel()->getField('pk')->getAttributeName();
         $pid_attr = $this->getModel()->getField('parent')->getAttributeName();
 
@@ -273,7 +274,7 @@ class TreeQuerySet extends QuerySet
 
         $query = clone $this->getQueryBuilder();
         $query->clear()->setTypeSelect()->select(['id' => $id_attr, 'lft', 'rgt', 'root'])->from($table)->where([
-            new QAndNot(['parent_id__in' => $subQuery]),
+            new QAndNot(["{$pid_attr}__in" => $subQuery]),
         ]);
 
         $rows = $this->getConnection()->query($query->toSQL())->fetchAll();
