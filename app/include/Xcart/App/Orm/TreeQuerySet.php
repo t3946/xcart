@@ -217,7 +217,7 @@ class TreeQuerySet extends QuerySet
      */
     protected function deleteBranchWithoutRoot($table)
     {
-
+        return false;
         $id_attr = $this->getModel()->getField('pk')->getAttributeName();
         $pid_attr = $this->getModel()->getField('parent')->getAttributeName();
 
@@ -258,6 +258,7 @@ class TreeQuerySet extends QuerySet
      */
     protected function deleteBranchWithoutParent($table)
     {
+        return false;
         $id_attr = $this->getModel()->getField('pk')->getAttributeName();
         $pid_attr = $this->getModel()->getField('parent')->getAttributeName();
 
