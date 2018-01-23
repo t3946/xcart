@@ -92,7 +92,10 @@ if ($REQUEST_METHOD == "POST") {
 		#
 		# Add/Update category data
 		#
-		$category_name = trim(\Xcart\App\Main\Xcart::app()->request->post['category_name']);
+
+		/*TODO rewrite controller*/
+		$category_name = stripslashes(trim(\Xcart\App\Main\Xcart::app()->request->post['category_name']));
+
 		if (empty($category_name)) {
 			#
 			# Display the error message
