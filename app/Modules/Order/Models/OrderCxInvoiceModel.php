@@ -21,7 +21,7 @@ class OrderCxInvoiceModel extends Model
 
     public static function tableName()
     {
-        return 'xcart_order_details';
+        return 'xcart_order_cx_invoices';
     }
 
     public static function getFields()
