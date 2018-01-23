@@ -71,7 +71,7 @@ class MailHandler extends MonologMailHandler
             );
         }
         catch (\Exception $e) {
-            
+            Xcart::app()->logger->alert($e->getMessage(), ['trace' => $e->getTraceAsString()], 'email');
         }
     }
 
