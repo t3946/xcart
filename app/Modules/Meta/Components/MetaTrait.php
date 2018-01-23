@@ -91,16 +91,19 @@ trait MetaTrait
     }
 
     /**
-     * @param $value array|string
+     * @param $values array|string
      * @return $this
      */
-    public function setBreadcrumbs($value)
+    public function setBreadcrumbs($values)
     {
-        if (!is_array($value)) {
-            $value = [$value];
+        if (!is_array($values)) {
+            $values = [$values];
         }
 
-        $this->breadcrumbs = $value;
+        foreach ($values as $value => $url) {
+            $this->addBreadcrumb($value, $url);
+        }
+
         return $this;
     }
 
@@ -188,6 +191,11 @@ trait MetaTrait
     {
         $this->metaTemplate = $template;
         $this->metaTemplateParams = $params;
+    }
+
+    public function addMetaTemplateParam($param, $data)
+    {
+        $this->metaTemplateParams[$param] = $data;
     }
 
     /**
