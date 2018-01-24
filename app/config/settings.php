@@ -38,10 +38,6 @@ return array_replace_recursive([
                    'mapping' => [
                        'enum' => 'string'
                    ],
-//                   'cache' => [
-//                       'class' => '\\Xcart\\App\\Orm\\Cache\\FilesystemCache',
-//                       'directory' => 'base.runtime.query_cache'
-//                   ],
                    'cache' => [
                        'class' => '\Xcart\App\Orm\Cache\RedisCache',
                    ],
@@ -105,21 +101,6 @@ return array_replace_recursive([
            ],
        ],
 
-//       'cache' => [
-//           'class' => '\\Xcart\\App\\Cache\\Cache',
-//           'saveInMemory' => true,
-//           'memoryDriver' => 'memory',
-//           'drivers' => [
-//               'default' =>  [
-//                   'class' => '\\Xcart\\App\\Cache\\Drivers\\File',
-//               ],
-//               'memory' =>  [
-//                   'class' => '\\Xcart\\App\\Cache\\Drivers\\Memory',
-//                   'numCacheQuery' => 30,
-//               ]
-//           ]
-//       ],
-
        'cache' => [
            'class' => '\Xcart\App\Cache\Cache',
            'drivers' => [
@@ -133,10 +114,6 @@ return array_replace_recursive([
        'mail' => [
            'class' => '\Modules\Mail\Components\Mailer',
            'defaultFrom' => 'robot@s3stores.com',
-//           'defaultFrom' => 'robot@{domain}',
-//            'config' => [
-//                'command' => '/usr/sbin/exim -bs'
-//            ]
        ],
 
        'auth' => [
