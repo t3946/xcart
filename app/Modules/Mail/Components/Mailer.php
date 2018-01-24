@@ -59,7 +59,8 @@ class Mailer
         $config = $this->config;
         if ($this->mode == self::MODE_SENDMAIL) {
             $command = isset($config['command']) ? $config['command'] : '/usr/sbin/sendmail -bs';
-            return new Swift_SendmailTransport($command);
+            $transport = new Swift_SendmailTransport($command);
+            return $transport;
         }
         elseif ($this->mode == self::MODE_SMTP) {
             $security = isset($config['security']) ? $config['security'] : null;

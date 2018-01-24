@@ -46,9 +46,13 @@ class CategoryModel extends TreeModel
 
     public static function getFields()
     {
-        return array_merge_recursive(
+        return array_replace_recursive(
             parent::getFields(),
              [
+                 'parent' => [
+                     'field' => 'parentid'
+                 ],
+
                  'products' => [
                      'class' => ManyToManyField::className(),
                      'modelClass' => ProductModel::className(),
@@ -76,10 +80,6 @@ class CategoryModel extends TreeModel
                     'primary' => true,
                     'null' => false,
                 ],
-                'parent' => [
-                    'field' => 'parentid'
-                ],
-
 
                 'description' => [
                     'class' => CharField::className(),
@@ -198,6 +198,7 @@ class CategoryModel extends TreeModel
             if ($parent = $this->parent) {
                 $this->categoryid_path = $parent->categoryid_path . '/' . $this->pk;
             }
+            $this->update(['categoryid_path']);
         }
 
         /** @var static $owner */

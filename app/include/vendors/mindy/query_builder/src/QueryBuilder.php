@@ -562,6 +562,7 @@ class QueryBuilder
         $this->_from = '';
         $this->_union = [];
         $this->_having = [];
+        $this->_alias = null;
         return $this;
     }
 
