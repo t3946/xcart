@@ -17,7 +17,7 @@ class Router
     /**
      * @var array Default HTTP-methods
      */
-    public $defaultMethods = ['GET', 'POST'];
+    public $defaultMethods = ['GET', 'POST', 'HEAD'];
 
     public $pathGet = false;
 
@@ -466,7 +466,7 @@ class Router
      */
     public function appendRoute($item, $namespace = '', $route = '/', $config = [])
     {
-        $methods = isset($item['methods']) ? $item['methods'] : ["GET", "POST"];
+        $methods = isset($item['methods']) ? $item['methods'] : $this->defaultMethods;
         $method = implode('|', $methods);
         $name = isset($item['name']) ? $item['name'] : '';
 
