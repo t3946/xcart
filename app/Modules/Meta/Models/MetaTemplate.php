@@ -36,7 +36,8 @@ class MetaTemplate extends Model
             ],
             'code' => [
                 'class' => CharField::className(),
-                'verboseName' => MetaModule::t("Code")
+                'verboseName' => MetaModule::t("Code"),
+                'unique' => true,
             ],
             'description' => [
                 'class' => TextField::className(),
