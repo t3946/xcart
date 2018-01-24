@@ -38,13 +38,17 @@ class PBXController extends BackendController
                         $qs->filter(['orders__orderid' => $value]);
                     }
                     elseif ($key == 'date_from') {
-                        if ( $date = PBXHelper::getClearDate($value) ) {
-                            $qs->filter(['start_at__gte' => $date->format('Y-m-d H:i:s')]);
+                        if (!is_null($value) && !empty($value)) {
+                            if ($date = PBXHelper::getClearDate($value)) {
+                                $qs->filter(['start_at__gte' => $date->format('Y-m-d H:i:s')]);
+                            }
                         }
                     }
                     elseif ($key == 'date_to') {
-                        if ( $date = PBXHelper::getClearDate($value) ) {
-                            $qs->filter(['end_at__lte' => $date->format('Y-m-d H:i:s')]);
+                        if (!is_null($value) && !empty($value)) {
+                            if ($date = PBXHelper::getClearDate($value)) {
+                                $qs->filter(['end_at__lte' => $date->format('Y-m-d H:i:s')]);
+                            }
                         }
                     }
                     elseif ($key == 'operator'){
