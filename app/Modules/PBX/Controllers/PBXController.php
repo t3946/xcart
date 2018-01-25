@@ -16,6 +16,18 @@ class PBXController extends Controller
         $session = $this->getCallSession();
         $now = new \DateTime();
 
+        if ($_GET){
+            $string = "";
+            foreach ($_GET as $k => $v){
+                $string .= "  {$k} => $v  ";
+            }
+            $log_category = "Calls_Record_Anveo";
+            $log_text = "Исходящий звонок закончился со след.сессией: {$string}";
+            func_backprocess_log($log_category, $log_text);
+        }
+
+
+
         if ($session) {
             list($model, $isNew) = PbxAnveoCallModel::objects()->getOrCreate(['session' => $session]);
 
