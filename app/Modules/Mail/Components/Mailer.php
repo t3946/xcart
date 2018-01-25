@@ -20,12 +20,12 @@ class Mailer
     const MODE_SENDMAIL = 'sendmail';
 
     // Swift_MailTransport
-    const MODE_MAIL = 'mail';
+//    const MODE_MAIL = 'mail';
 
     // Swift_SmtpTransport
     const MODE_SMTP = 'smtp';
 
-    public $mode = 'mail';
+    public $mode = 'sendmail';
 
     public $config = [];
 
@@ -59,7 +59,8 @@ class Mailer
         $config = $this->config;
         if ($this->mode == self::MODE_SENDMAIL) {
             $command = isset($config['command']) ? $config['command'] : '/usr/sbin/sendmail -bs';
-            return new Swift_SendmailTransport($command);
+            $transport = new Swift_SendmailTransport($command);
+            return $transport;
         }
         elseif ($this->mode == self::MODE_SMTP) {
             $security = isset($config['security']) ? $config['security'] : null;
@@ -68,10 +69,10 @@ class Mailer
             $transport->setPassword($config['password']);
             return $transport;
         }
-        elseif ($this->mode == self::MODE_MAIL) {
-            $extraParams = isset($config['extraParams']) ? $config['extraParams'] : '-f%s';
-            return new Swift_MailTransport($extraParams);
-        }
+//        elseif ($this->mode == self::MODE_MAIL) {
+//            $extraParams = isset($config['extraParams']) ? $config['extraParams'] : '-f%s';
+//            return new Swift_MailTransport($extraParams);
+//        }
         return null;
     }
 
@@ -79,7 +80,7 @@ class Mailer
     public function getMailer()
     {
         if (!$this->_mailer) {
-            $this->_mailer = Swift_Mailer::newInstance($this->getTransport());
+            $this->_mailer = new Swift_Mailer($this->getTransport());
         }
         return $this->_mailer;
     }

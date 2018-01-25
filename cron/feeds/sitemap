@@ -1,6 +1,0 @@
-#!/bin/bash
-echo "Start processing" >> /home/feeds/sitemap_progress.txt
-cd /var/www/stores/cron/
-php5 ./cidev_xml_sitemap.php >> /home/feeds/sitemap_progress.txt
-rm /home/feeds/sitemap_progress.txt
-echo " " >> /home/feeds/sitemap_progress.txt

@@ -92,7 +92,10 @@ if ($REQUEST_METHOD == "POST") {
 		#
 		# Add/Update category data
 		#
-		$category_name = trim($category_name);
+
+		/*TODO rewrite controller*/
+		$category_name = stripslashes(trim(\Xcart\App\Main\Xcart::app()->request->post['category_name']));
+
 		if (empty($category_name)) {
 			#
 			# Display the error message
@@ -219,6 +222,7 @@ if ($REQUEST_METHOD == "POST") {
                 'avail' => $avail,
                 'order_by' => $order_by,
                 'is_bold' => $is_bold,
+				'pc_ready_to_classify' => $pc_ready_to_classify
             ]);
 
         // Autogenerate clean URL.

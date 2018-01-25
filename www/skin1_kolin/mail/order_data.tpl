@@ -39,28 +39,32 @@
 {$lng.lbl_shipping_status|cat:":"|string_format:$max_space}{include file="main/order_status.tpl" status=$v.dc_status mode="static" status_type="DC"}
 {/if}
 
-{if $show_shipping_groups neq 'N' && $v.tracking}
-{foreach from=$v.tracking item=tr}
-{assign var="current_carrier_id" value=$tr.carrier_id}
-{assign var="full_shipper" value="by `$tracking_links_carrier[$current_carrier_id].carrier`"}
-{if $tracking_links[$tr.linkid].shipping ne ""}
-{assign var="full_shipper" value="`$full_shipper` `$tracking_links[$tr.linkid].shipping`"}
+{if $show_shipping_groups neq 'N' && $v.oOrderGroup->tracking}
+    {foreach from=$v.oOrderGroup->tracking item=tr}
+        {assign var="current_carrier_id" value=$tr.carrier_id}
+        {assign var="full_shipper" value="by `$tracking_links_carrier[$current_carrier_id].carrier`"}
+        {if $tracking_links[$tr.linkid].shipping ne ""}
+            {assign var="full_shipper" value="`$full_shipper` `$tracking_links[$tr.linkid].shipping`"}
+        {/if}
+        {if $tr.shipping_date}
+            {assign var="full_shipper" value="on `$tr.shipping_date->format('F j, Y')` `$full_shipper`"}
+        {else}
+            {if $tr.ship_date}
+                {assign var="full_shipper" value="on `$tr.ship_date` `$full_shipper`"}
+            {/if}
+        {/if}
+        {if $tr.tracknum ne ""}
+            {$lng.eml_order_shipped|substitute:"shipper":$full_shipper|substitute:"distributor":$v.group_name}
+            {$lng.lbl_tracking_number_is} {$tr.tracknum}
+            {* {$tracking_links[$tr.linkid].link|substitute:"tracknum":$tr.tracknum} *}
+            {$tracking_links_carrier[$current_carrier_id].link|substitute:"tracknum":$tr.tracknum}
+        {else}
+            {$lng.eml_order_shipped_nolink|substitute:"shipper":$full_shipper}
+            {$tracking_links_carrier[$current_carrier_id].link}
+        {/if}
+    {/foreach}
 {/if}
-{if $tr.ship_date ne ""}
-{assign var="full_shipper" value="on `$tr.ship_date` `$full_shipper`"}
-{/if}
-{if $tr.tracknum ne ""}
-{$lng.eml_order_shipped|substitute:"shipper":$full_shipper|substitute:"distributor":$v.group_name}
-{$lng.lbl_tracking_number_is} {$tr.tracknum}
-{* {$tracking_links[$tr.linkid].link|substitute:"tracknum":$tr.tracknum} *}
-{$tracking_links_carrier[$current_carrier_id].link|substitute:"tracknum":$tr.tracknum}
-{else}
-{$lng.eml_order_shipped_nolink|substitute:"shipper":$full_shipper}
-{$tracking_links_carrier[$current_carrier_id].link}
-{/if}
-{/foreach}
 
-{/if}
 {/foreach}
 {section name=giftcert loop=$giftcerts}
 {$lng.lbl_items} ({$lng.lbl_delivery_by} {if $giftcerts[giftcert].send_via eq "E"}{$lng.lbl_email}{else}{$lng.lbl_gc_postal_mail}{/if}, {include file="currency.tpl" value=$v.shipping_cost.gross|default:"0"}):

@@ -55,7 +55,7 @@ if ($REQUEST_METHOD == 'POST' && $mode == "search_gen_discounts" && $current_are
 ##
 ###
 if ($REQUEST_METHOD == 'POST' && $mode == "search_reset" && $current_area != "C") {
-    $search_data = "";
+    $search_data = [];
     x_session_save("search_data");
     func_header_location("search.php");
 }
@@ -98,7 +98,7 @@ if ($current_area == 'A' || $current_area == 'P') {
 }
 
 if (empty($search_data)) {
-    $search_data = array();
+    $search_data = [];
 }
 
 if ($REQUEST_METHOD == "POST" && $mode == 'search' && empty($e_mode) && $cidev_filter_mode != "load_more_products" && $cidev_filter_mode != "load_more_e_products" && $cidev_filter_mode != "load_more_products_SKU") {
@@ -663,7 +663,7 @@ if ($mode == "search") {
     # /if (!empty($data["categoryid"]))
 
 
-    if (count($data["extra_sku"]) == 1) {
+    if (!empty($data["extra_sku"]) && count($data["extra_sku"]) == 1) {
         $data["productcode"] = $data["extra_sku"][0];
         unset($data["extra_sku"]);
     }
@@ -1263,11 +1263,9 @@ if ($mode == "search") {
      * поднимаем 50 продуктов в выводе категории согластно последнегому поисковому результату,
      * так-же поднимает товары похожие на уже просмотренные в данном разделе.
      */
-    if (empty($data["sort_field"]) || $data["sort_field"] == 'orderby')
+    $elastic_sort = (empty($data["sort_field"]) || $data["sort_field"] == 'orderby');
+    if ($elastic_sort)
     {
-        $t1_arr = array();
-        $t3_arr = array();
-
         $search_related_products_ids = [];
         $related_ids = [];
         $related_like_text = null;
@@ -1309,7 +1307,6 @@ if ($mode == "search") {
 
                 if ($push) {
                     $t_ids_product_arr[] = $push_el;
-                    $t3_arr[] = ['score' =>$product['score'], 'productid' => $product['productid']];
                 }
             }
 
@@ -1322,25 +1319,11 @@ if ($mode == "search") {
                 array_unshift($orderbys, $order_by_lastsearch_1, $order_by_lastsearch_2);
             }
         }
-
-        if (!empty($search_related_products_ids)) {
-            foreach ($search_related_products_ids as $founded) {
-                $t1_arr[(string)$founded['score']] = $founded['productid'];
-            }
-        }
-
-        $t1_arr_count = count($t1_arr);
-        $t1_arr = json_encode($t1_arr);
-        $t3_arr = json_encode($t3_arr);
-
-        $smarty->assign("t1_arr", $t1_arr);
-        $smarty->assign("t1_arr_count", $t1_arr_count);
-        $smarty->assign("t3_arr", $t3_arr);
     }
 
     if (!empty($orderbys)) {
         $search_query .= " ORDER BY " . implode(", ", $orderbys);
-        $search_query_count .= " ORDER BY " . implode(", ", $orderbys);
+//        $search_query_count .= " ORDER BY " . implode(", ", $orderbys);
     }
 
     #
@@ -1352,7 +1335,7 @@ if ($mode == "search") {
     print($search_query_brandids."<br><br>");*/
 
 //    db_query("SET OPTION SQL_BIG_SELECTS=1");
-    $_res = db_query($search_query_count_NEW);
+    $_res = db_query($search_query_count_NEW, true);
 
     $total_items = db_num_rows($_res);
     db_free_result($_res);
@@ -1389,7 +1372,7 @@ if ($mode == "search") {
             }
 
             $imploded_brandids = implode(",", $all_brandids_in_products);
-            $filter_found_brands = func_query("SELECT brandid, brand FROM $sql_tbl[brands] WHERE brandid IN ($imploded_brandids) ORDER BY brand");
+            $filter_found_brands = func_query("SELECT brandid, brand FROM $sql_tbl[brands] WHERE brandid IN ($imploded_brandids) ORDER BY brand", true);
 
             $smarty->assign("filter_found_brands", $filter_found_brands);
 
@@ -1507,7 +1490,7 @@ if ($mode == "search") {
 
 //print($igor_query_filter_count_search);
 //die();
-        $igor_query_filter_count_search_result = func_query($igor_query_filter_count_search);
+        $igor_query_filter_count_search_result = func_query($igor_query_filter_count_search, true);
         if (!empty($igor_query_filter_count_search_result)) {
             unset($filter_found_fv_ids_count);
             foreach ($igor_query_filter_count_search_result as $k => $v) {
@@ -1572,7 +1555,7 @@ if ($mode == "search") {
                 #
                 # Get the products and go to modify them
                 #
-                $res = db_query($search_query);
+                $res = db_query($search_query, !$elastic_sort);
                 if ($res) {
                     $geid = false;
                     $productid = false;
@@ -1641,12 +1624,12 @@ if ($mode == "search") {
 
                 $search_query .= " LIMIT $first_page, $objects_per_page";
 
-                $products = func_query($search_query);
+                $products = func_query($search_query, !$elastic_sort);
 
                 $max_fba = 5;
                 $sql_fba = "{$search_query_fba} order by s.in_list_showed ASC, RAND() ASC limit {$max_fba}";
 
-                if (!defined('IS_ROBOT') && $products_fba = func_query($sql_fba))
+                if (!defined('IS_ROBOT') && $products_fba = func_query($sql_fba, true))
                 {
                     foreach ($products as $product) {
                         for ($i = 0; $i < count($products_fba); $i++) {
@@ -2015,7 +1998,7 @@ if ($mode == "search") {
 
                 if (is_array($products) && !empty($products)) {
                     foreach ($products as $k => $v) {
-                        $products[$k]["cidev_filter_products"] = func_query("SELECT $sql_tbl[cidev_filter_products].fv_id, $sql_tbl[cidev_filter_values].fv_name, $sql_tbl[cidev_filter_values].f_id FROM $sql_tbl[cidev_filter_products] LEFT JOIN $sql_tbl[cidev_filter_values] ON $sql_tbl[cidev_filter_values].fv_id=$sql_tbl[cidev_filter_products].fv_id WHERE productid='$v[productid]' ORDER BY $sql_tbl[cidev_filter_values].fv_order_by, $sql_tbl[cidev_filter_values].fv_name");
+                        $products[$k]["cidev_filter_products"] = func_query("SELECT $sql_tbl[cidev_filter_products].fv_id, $sql_tbl[cidev_filter_values].fv_name, $sql_tbl[cidev_filter_values].f_id FROM $sql_tbl[cidev_filter_products] LEFT JOIN $sql_tbl[cidev_filter_values] ON $sql_tbl[cidev_filter_values].fv_id=$sql_tbl[cidev_filter_products].fv_id WHERE productid='$v[productid]' ORDER BY $sql_tbl[cidev_filter_values].fv_order_by, $sql_tbl[cidev_filter_values].fv_name", true);
 
                         $products[$k]["prevent_search_indexing"] = func_prevent_search_indexing($v);
                     }
@@ -2095,7 +2078,7 @@ if ($source != 'XML_Sitemap') {
 
 
     if (!$_inner_search) {
-        $smarty->assign("search_prefilled", $search_data["products"]);
+        $smarty->assign("search_prefilled", !empty($search_data["products"])? $search_data["products"]:[]);
     }
 
     # START: random:18298_18304_18324 [2009 Jun 08 09:50] 

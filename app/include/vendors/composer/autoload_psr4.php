@@ -48,6 +48,7 @@ return array(
     'Google\\Auth\\' => array($vendorDir . '/google/auth/src'),
     'GeoIp2\\' => array($vendorDir . '/geoip2/geoip2/src'),
     'Firebase\\JWT\\' => array($vendorDir . '/firebase/php-jwt/src'),
+    'Egulias\\EmailValidator\\' => array($vendorDir . '/egulias/email-validator/EmailValidator'),
     'Doctrine\\Common\\Cache\\' => array($vendorDir . '/doctrine/cache/lib/Doctrine/Common/Cache'),
     'Dariuszp\\' => array($vendorDir . '/dariuszp/cli-progress-bar/src/Dariuszp'),
     'Cron\\' => array($vendorDir . '/mtdowling/cron-expression/src/Cron'),

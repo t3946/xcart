@@ -1,5 +1,6 @@
 {
     "config": {
+        "sort-packages": true,
         "vendor-dir": "app/include/vendors"
     },
     "repositories": [
@@ -9,29 +10,29 @@
         }
     ],
     "require": {
-        "google/apiclient": "^2.0",
-        "mindy/query_builder": "dev-master_5.4",
-        "gabrielbull/ups-api": "^0.4.0",
-        "jaybizzle/crawler-detect": "^1.2",
-        "fenom/fenom": "^2.11",
-        "paypal/rest-api-sdk-php": "*",
-        "symfony/validator": "^2.8",
-        "true/punycode": "^2.1",
-        "caponica/amazon-mws-complete": "dev-master",
-        "mobiledetect/mobiledetectlib": "^2.8",
-        "omnipay/paypal": "v2.6.3",
-        "league/flysystem": "^1.0",
-        "symfony/http-foundation": "^2.8",
-        "monolog/monolog": "^1.22",
-        "theiconic/php-ga-measurement-protocol": "^1.2",
-        "imagine/imagine": "^0.7.1",
-        "swiftmailer/swiftmailer": "^5.4",
-        "cocur/slugify": "^1.4",
-        "dariuszp/cli-progress-bar": "^1.0",
-        "geoip2/geoip2": "^2.7",
-        "symfony/polyfill-mbstring": "^1.6",
         "aws/aws-sdk-php": "^2.8",
-        "hellogerard/jobby": "^3.3"
+        "caponica/amazon-mws-complete": "dev-master",
+        "cocur/slugify": "^3.0",
+        "dariuszp/cli-progress-bar": "^1.0",
+        "fenom/fenom": "^2.11",
+        "gabrielbull/ups-api": "^0.4.0",
+        "geoip2/geoip2": "^2.7",
+        "google/apiclient": "^2.0",
+        "hellogerard/jobby": "^3.3",
+        "imagine/imagine": "^0.7.1",
+        "jaybizzle/crawler-detect": "^1.2",
+        "league/flysystem": "^1.0",
+        "mindy/query_builder": "dev-master_5.4",
+        "mobiledetect/mobiledetectlib": "^2.8",
+        "monolog/monolog": "^1.22",
+        "omnipay/paypal": "v2.6.3",
+        "paypal/rest-api-sdk-php": "*",
+        "swiftmailer/swiftmailer": "^6",
+        "symfony/http-foundation": "^2.8",
+        "symfony/polyfill-mbstring": "^1.6",
+        "symfony/validator": "^2.8",
+        "theiconic/php-ga-measurement-protocol": "^1.2",
+        "true/punycode": "^2.1"
     },
     "autoload": {
         "psr-4": {
@@ -54,7 +55,6 @@
         "files": [
             "app/include/func/func.core.php",
             "app/include/func/func.amazon.php",
-            "app/include/func/func.amazon_shipping.php",
             "app/include/func/func.backoffice.php",
             "app/include/func/func.cart.php",
             "app/include/func/func.category.php",

@@ -564,7 +564,7 @@ function func_search_products($query, $membershipid, $orderby="", $limit="") {
 	if (!empty($limit))
 		$search_query .= " LIMIT ".$limit;
 
-	db_query("SET OPTION SQL_BIG_SELECTS=1");
+//	db_query("SET OPTION SQL_BIG_SELECTS=1");
 
 	$result = func_query($search_query);
 

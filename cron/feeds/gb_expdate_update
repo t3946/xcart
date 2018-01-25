@@ -1,8 +1,0 @@
-#!/bin/bash  
-rm /home/feeds/gb_expdate_update_progress.txt
-echo " " >> /home/feeds/gb_expdate_update_progress.txt
-echo "Start processing" >> /home/feeds/gb_expdate_update_progress.txt
-cd /var/www/stores/
-php5 ./cidev_googlebase_expiredate.php >> /home/feeds/gb_expdate_update_progress.txt
-echo "\nFinish processing" >> /home/feeds/gb_expdate_update_progress.txt
-

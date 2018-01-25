@@ -4,6 +4,8 @@
 # X-Cart initialization
 #
 
+//!defined('AREA_TYPE') ?: define('AREA_TYPE', null);
+
 if (!defined('XCART_START')) {
     header("Location: index.php");
     die("Access denied");
@@ -34,8 +36,13 @@ if (!@is_readable($xcart_dir . "/config.php")) {
 
 if (empty($XCART_APP_CONFIG)) {
     $settings_path = $xcart_dir .'/../app/config/settings_admin.php';
+
     if (!defined('AREA_TYPE') || AREA_TYPE == 'C') {
         $settings_path = $xcart_dir .'/../app/config/settings.php';
+    }
+
+    if (\Xcart\App\Cli\Cli::isCli()) {
+        $settings_path = $xcart_dir .'/../app/config/settings_console.php';
     }
 
     $app_settings = include $settings_path;
@@ -99,7 +106,7 @@ $artss_code           = 'ART';
 #
 # Redefine error_reporting option
 #
-error_reporting($x_error_reporting);
+//error_reporting($x_error_reporting);
 
 #
 # Multi Storefront

@@ -185,8 +185,9 @@ if ($mode == "product_images") {
  
 
 #cidev
-	if (!empty($file_upload_data_not_image[$productid]))
-		unset($file_upload_data_not_image[$productid]);
+	if (!empty($file_upload_data_not_image[$productid]) && is_array($file_upload_data_not_image)) {
+        unset($file_upload_data_not_image[$productid]);
+    }
 
 	x_session_register('file_upload_data_not_image');
 #cidev

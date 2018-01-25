@@ -134,7 +134,7 @@ class ShippingRate extends Data
     }
 
 
-    public function addShippingCharge(ShippingRate $oShippingRate)
+    public function addShippingCharge($oShippingRate)
     {
         $this->getShippingCharge();
         $this->fShippingCharge += $oShippingRate->getShippingCharge();
@@ -238,17 +238,7 @@ class ShippingRate extends Data
     {
         return $this->aAddedShippingRates;
     }
-
-    public function getDataToSave(){
-        return
-            [
-                'rate_id' => $this->getField('rateid'),
-                'shipping_quote' => $this->getShippingQuote(),
-                'shipping_charge' => $this->getShippingCharge(),
-                'shipping_charge_before_map' => $this->getShippingChargeBeforeMap()
-            ];
-    }
-
+    
     public function setUseMapPRice($value)
     {
         $this->useMapPrice = $value;

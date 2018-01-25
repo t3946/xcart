@@ -1154,7 +1154,7 @@ class OrderGroup extends Data
      */
     public function getOrderDetails()
     {
-        if (is_null($this->aOrderDetails)) {
+        if (is_null($this->aOrderDetails) && $this->getOrderId()) {
             $this->aOrderDetails = OrderDetail::model()->findAll(SQLBuilder::getInstance()->
             addInnerJoin('products', 'p', "p.productid = main.productid AND p.manufacturerid = " . $this->getManufacturerId())->
             addCondition('orderid = ' . $this->getOrderId()));

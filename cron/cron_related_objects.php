@@ -8,10 +8,10 @@ ini_set('memory_limit', '512M');
 set_time_limit(0);
 
 
-if ($config["cron_objects_collector_launched"] == "Y"){
-#	die("Already launched"); 
-}
-db_query("UPDATE $sql_tbl[config] SET value='Y' WHERE name='cron_objects_collector_launched'"); 
+//if ($config["cron_objects_collector_launched"] == "Y"){
+//#	die("Already launched");
+//}
+//db_query("UPDATE $sql_tbl[config] SET value='Y' WHERE name='cron_objects_collector_launched'");
 
 
 $related_objects_collector = func_query_hash("SELECT * FROM $sql_tbl[related_objects_collector]", 'storefrontid', false);
@@ -650,7 +650,7 @@ Group By P.productid";
 
 } // foreach ($storefronts as $storefrontid => $store_info)
 
-db_query("UPDATE $sql_tbl[config] SET value='N' WHERE name='cron_objects_collector_launched'");
+//db_query("UPDATE $sql_tbl[config] SET value='N' WHERE name='cron_objects_collector_launched'");
 
 print"<br />DONE!";
 

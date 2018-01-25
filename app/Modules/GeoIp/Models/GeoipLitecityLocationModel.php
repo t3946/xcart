@@ -1,0 +1,70 @@
+<?php
+
+namespace Modules\GeoIp\Models;
+
+use Doctrine\DBAL\Types\Type;
+use Modules\Core\Models\CountryModel;
+use Modules\Core\Models\StateModel;
+use Xcart\App\Orm\AutoMetaTrait;
+use Xcart\App\Orm\Fields\AutoField;
+use Xcart\App\Orm\Fields\CharField;
+use Xcart\App\Orm\Fields\ForeignField;
+use Xcart\App\Orm\Fields\HasManyField;
+use Xcart\App\Orm\Model;
+
+class GeoipLitecityLocationModel extends Model
+{
+    use AutoMetaTrait;
+
+    public static function tableName()
+    {
+        return 'xcart_geo_litecity_location';
+    }
+
+    public static function getFields()
+    {
+        return [
+            'locId' => [
+                'class' => AutoField::className(),
+            ],
+            'region' => [
+                'class' => CharField::className(),
+                'default' => '',
+                'null' => false
+            ],
+            'country' => [
+                'class' => CharField::className(),
+                'default' => '',
+                'null' => false
+            ],
+            'country_model' => [
+                'field' => 'country',
+                'class' => ForeignField::className(),
+                'sqlType' => Type::STRING,
+                'modelClass' => CountryModel::className(),
+                'link' => ['country' => 'code'],
+            ],
+            'state_model' => [
+                'field' => 'region',
+                'class' => ForeignField::className(),
+                'sqlType' => Type::STRING,
+                'modelClass' => StateModel::className(),
+                'link' => [
+                    'region' => 'code',
+                    'country' => 'country_code'
+                ],
+            ],
+            'blocks' => [
+                'field' => 'locId',
+                'class' => HasManyField::className(),
+                'modelClass' => GeoLitecityBlocks::className(),
+                'link' => ['locId' => 'locId'],
+            ],
+        ];
+    }
+
+    public function __toString()
+    {
+        return "{$this->country}, {$this->region}, {$this->city}, {$this->postalCode}";
+    }
+}

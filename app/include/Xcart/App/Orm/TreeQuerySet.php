@@ -5,6 +5,7 @@ namespace Xcart\App\Orm;
 use Mindy\QueryBuilder\Expression;
 use Mindy\QueryBuilder\Q\QAndNot;
 use Mindy\QueryBuilder\Q\QOr;
+use Xcart\App\Main\Xcart;
 
 /**
  * Class TreeQuerySet.
@@ -217,16 +218,15 @@ class TreeQuerySet extends QuerySet
      */
     protected function deleteBranchWithoutRoot($table)
     {
-
         $id_attr = $this->getModel()->getField('pk')->getAttributeName();
         $pid_attr = $this->getModel()->getField('parent')->getAttributeName();
 
         $subQuery = clone $this->getQueryBuilder();
-        $subQuery->clear()->setTypeSelect()->from($table)->select('root')->where(new QOr(['parent_id__isnull' => true, 'parent_id' => 0]));
+        $subQuery->clear()->setTypeSelect()->from($table)->select('root')->where(new QOr(["{$pid_attr}__isnull" => true, $pid_attr => 0]));
 
         $query = clone $this->getQueryBuilder();
-        $query->clear()->setTypeSelect()->select([$id_attr => 'id'])->from($table)->where([
-            new QOr(['parent_id__isnull' => true, 'parent_id' => 0]),
+        $query->clear()->setTypeSelect()->select(['id' => $id_attr])->from($table)->where([
+            new QAndNot([new QOr(["{$pid_attr}__isnull" => true, $pid_attr => 0])]),
             new QAndNot(['root__in' => $subQuery]),
         ]);
 
@@ -269,11 +269,12 @@ class TreeQuerySet extends QuerySet
         ]);
          */
         $subQuery = clone $this->getQueryBuilder();
-        $subQuery->clear()->setTypeSelect()->select([$id_attr => 'id'])->from($table);
+        $subQuery->clear()->setTypeSelect()->select(['id' => $id_attr])->from($table);
 
         $query = clone $this->getQueryBuilder();
-        $query->clear()->setTypeSelect()->select([$id_attr => 'id', 'lft', 'rgt', 'root'])->from($table)->where([
-            new QAndNot(['parent_id__in' => $subQuery]),
+        $query->clear()->setTypeSelect()->select(['id' => $id_attr, 'lft', 'rgt', 'root'])->from($table)->where([
+            new QAndNot([new QOr(["{$pid_attr}__isnull" => true, $pid_attr => 0])]),
+            new QAndNot(["{$pid_attr}__in" => $subQuery]),
         ]);
 
         $rows = $this->getConnection()->query($query->toSQL())->fetchAll();
@@ -323,6 +324,11 @@ SQL;
 
         $rows = $this->getConnection()->query($adapter->quoteSql($sql))->fetchAll();
         foreach ($rows as $row) {
+            if ($row['move'] < 0) {
+                Xcart::app()->logger->warning("Tree in table '{$table}', maybe broken and can't fix automaticly.", ['fixdata' => $row]);
+                continue;
+            }
+
             $sql = 'UPDATE '.$table.' SET `lft`=`lft`-'.$row['move'].', `rgt`=`rgt`-'.$row['move'].' WHERE `root`='.$row['root'].' AND `lft` > '.$row['rgt'];
             $this->getConnection()->query($sql)->execute();
             $sql = 'UPDATE '.$table.' SET `rgt`=`rgt`-'.$row['move'].' WHERE `root`='.$row['root'].' AND `lft`<`rgt` AND `rgt` >= '.$row['rgt'];
@@ -336,10 +342,9 @@ SQL;
      *
      * @throws \Exception
      */
-    protected function findAndFixCorruptedTree()
+    public function findAndFixCorruptedTree()
     {
         $model = $this->getModel();
-        $db = $model->getConnection();
         $table = $model->tableName();
         $this->deleteBranchWithoutRoot($table);
         $this->deleteBranchWithoutParent($table);

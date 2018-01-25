@@ -19,17 +19,17 @@ set_time_limit(0);
 const LOG_CATEGORY = 'cron_google_product_statuses';
 const BACK_PROCESS_LOG_NAME = 'google_product_statuses';
 
-if ($config[LOG_CATEGORY] == "Y") {
-    func_backprocess_log(BACK_PROCESS_LOG_NAME, 'Already launched');
-    $oMail = Xcart::app()->oldMail;
-    $oMail->to = 'team@s3stores.com';
-    $oMail->from = ('team@s3stores.com');
-    $oMail->subject = sprintf('Attention! Xcart cron %s Already launched', LOG_CATEGORY);
-    $oMail->body = BACK_PROCESS_LOG_NAME . ' already launched';
-    $oMail->sendEmail();
-    die("Already launched"); // ################################
-}
-db_query("REPLACE $sql_tbl[config] SET value='Y', name='" . LOG_CATEGORY . "'");
+//if ($config[LOG_CATEGORY] == "Y") {
+//    func_backprocess_log(BACK_PROCESS_LOG_NAME, 'Already launched');
+//    $oMail = Xcart::app()->oldMail;
+//    $oMail->to = 'team@s3stores.com';
+//    $oMail->from = ('team@s3stores.com');
+//    $oMail->subject = sprintf('Attention! Xcart cron %s Already launched', LOG_CATEGORY);
+//    $oMail->body = BACK_PROCESS_LOG_NAME . ' already launched';
+//    $oMail->sendEmail();
+//    die("Already launched"); // ################################
+//}
+//db_query("REPLACE $sql_tbl[config] SET value='Y', name='" . LOG_CATEGORY . "'");
 $start_time = time();
 
 $log_text = " * * *  Cron started  * * * ";
@@ -52,7 +52,7 @@ if (!empty($aStoreFronts)) {
     }
 }
 
-db_query("UPDATE $sql_tbl[config] SET value='N' WHERE name='" . LOG_CATEGORY . "'");
+//db_query("UPDATE $sql_tbl[config] SET value='N' WHERE name='" . LOG_CATEGORY . "'");
 
 $current_time = time();
 

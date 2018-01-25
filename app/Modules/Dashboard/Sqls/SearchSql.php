@@ -26,18 +26,6 @@ SQL;
                            ->where(['t.manufacturerid__in' => $in])->toSQL();
     }
 
-    public static function getOperatorSql()
-    {
-        return /** @lang MySQL */ <<<SQL
-select login as id, concat('[',login,'] ', firstname) as text 
-from xcart_customers 
-
-where not usertype in ('C') and (login like :like or firstname like :like) 
-ORDER BY login asc
-limit 50
-SQL;
-    }
-
     public static function getInOperatorSql($in)
     {
         return QueryBuilder::getInstance(Connection::getInstance())

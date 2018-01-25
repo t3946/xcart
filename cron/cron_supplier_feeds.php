@@ -37,18 +37,18 @@ if (isset($argv) && is_array($argv)) {
     }
 }
 
-if ($config[$log_category] == "Y") {
-    $oMail = \Xcart\App\Main\Xcart::app()->oldMail;
-    $oMail->to = 'team@s3stores.com';
-    $oMail->from = ('team@s3stores.com');
-    $oMail->subject = sprintf('Attention! Xcart cron %s Already launched', $log_category);
-    $oMail->body = $log_category . ' already launched';
-    $oMail->sendEmail();
-    if (!isset($argv) || (isset($argv) && !in_array('--force-flag', $argv))) {
-        die("Already launched"); // ################################
-    }
-}
-db_query_param('REPLACE xcart_config SET value=:value, name=:name', ['value' => 'Y', 'name' => $log_category]);
+//if ($config[$log_category] == "Y") {
+//    $oMail = \Xcart\App\Main\Xcart::app()->oldMail;
+//    $oMail->to = 'team@s3stores.com';
+//    $oMail->from = ('team@s3stores.com');
+//    $oMail->subject = sprintf('Attention! Xcart cron %s Already launched', $log_category);
+//    $oMail->body = $log_category . ' already launched';
+//    $oMail->sendEmail();
+//    if (!isset($argv) || (isset($argv) && !in_array('--force-flag', $argv))) {
+//        die("Already launched"); // ################################
+//    }
+//}
+//db_query_param('REPLACE xcart_config SET value=:value, name=:name', ['value' => 'Y', 'name' => $log_category]);
 
 $start_time = new DateTime('now');
 $log_text = " * * *  Cron started  * * * ";
@@ -63,7 +63,7 @@ if (empty($config["Supplier_feeds"]["Feeds_storage_path"]) || empty($config["Sup
     die($log_text);
 }
 
-$supplier_feeds = SupplierFeedModel::objects()->filter(['enabled' => 'Y', 'new_cron' => 'Y', 'feed_type__in' => array_keys($feed_types)])->all();
+$supplier_feeds = SupplierFeedModel::objects()->filter(['enabled' => 'Y', 'feed_type__in' => array_keys($feed_types)])->all();
 
 if (!$supplier_feeds) {
     $log_text = "--- xcart_supplier_feeds does not have 'enabled' rows. Script stopped.";
@@ -170,10 +170,7 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
 
                     break;
                 case 'P' :
-                    if ($is_created) {
-                        $modelProduct->save();
-                        print "Add product --> OK" . PHP_EOL;
-                    }
+
                     if (!isset($aProduct['is_group'])) {
                         if (!isset($aProduct['cost_to_us'])) {
                             print("Skip product --> 'No cost_to_us' \n");
@@ -185,6 +182,11 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
                             $skippedProductsCount++;
                             continue 2;
                         }
+                    }
+
+                    if ($is_created) {
+                        $modelProduct->save();
+                        print "Add product --> OK" . PHP_EOL;
                     }
                     break;
             }
@@ -308,8 +310,8 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
 ######################################################################################
 
 
-db_query_param(/** @lang MySQL */
-    'UPDATE xcart_config SET value=:value WHERE name=:name', ['value' => 'N', 'name' => $log_category]);
+//db_query_param(/** @lang MySQL */
+//    'UPDATE xcart_config SET value=:value WHERE name=:name', ['value' => 'N', 'name' => $log_category]);
 $log_text = "Cron completed. Duration: " . (new DateTime('now'))->diff($start_time)->format('%H:%I:%S');
 func_backprocess_log($log_category, $log_text);
 

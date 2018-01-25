@@ -39,6 +39,8 @@ class ErrorHandler
     public $ignoreDeprecated = false;
     public $ignoringTypes = [];
 
+    public $loggingIgnoredTypes = [];
+
 
     public $handlers = [];
 
@@ -200,17 +202,34 @@ class ErrorHandler
 
             $this->_exception = $exception;
 
-            $this->_error = [
+            $this->_error = $err =[
                 'code' => $code,
                 'type' => get_class($exception),
                 'errorCode' => $exception->getCode(),
-                'message' => $exception->getMessage(),
                 'file' => $fileName,
                 'line' => $errorLine,
                 'trace' => "\n" .$exception->getTraceAsString(),
+                'traces' => $trace,
             ];
 
-            $app->logger->critical($exception->getMessage(), $this->_error, 'error');
+            if (is_a($app->request->getRequest(), 'Xcart\App\Request\HttpRequest')
+                || is_subclass_of($app->request->getRequest(), 'Xcart\App\Request\HttpRequest'))
+            {
+                $err['script uri'] = $app->request->getScriptUrl();
+                $err['uri'] = $app->request->getMethod() . " " .$app->request->getHostInfo() . $app->request->getRequestUri();
+                $err['user'] = $app->request->getUserIP();
+
+                if ($app->request->getUserHost()) {
+                    $err['user'] .= " ({$app->request->getUserHost()})";
+                }
+                if ($app->request->getUserAgent()) {
+                    $err['user'] .= " [{$app->request->getUserAgent()}]";
+                }
+            }
+
+            unset($err['traces']);
+
+            $app->logger->critical($exception->getMessage(), $err, 'error');
 
             if (!headers_sent()) {
                 header("HTTP/1.0 {$code} " . $this->getHttpHeader($code, get_class($exception)));
@@ -329,11 +348,79 @@ class ErrorHandler
      */
     public function handleError($code, $message, $file, $line, array $errcontext = [])
     {
+        $app = Xcart::app();
+
+        $trace = debug_backtrace();
+        // skip the first 3 stacks as they do not tell the error position
+        if (count($trace) > 1) {
+            $trace = array_slice($trace, 1);
+        }
+        $traceString = '';
+        foreach ($trace as $i => $t) {
+            if (!isset($t['file'])) {
+                $trace[$i]['file'] = 'unknown';
+            }
+
+            if (!isset($t['line'])) {
+                $trace[$i]['line'] = 0;
+            }
+
+            if (!isset($t['function'])) {
+                $trace[$i]['function'] = 'unknown';
+            }
+
+            $traceString .= "#$i {$trace[$i]['file']}({$trace[$i]['line']}): ";
+            if (isset($t['object']) && is_object($t['object'])) {
+                $traceString .= get_class($t['object']) . '->';
+            }
+            $traceString .= "{$trace[$i]['function']}()\n";
+
+            unset($trace[$i]['object']);
+        }
+
+        switch ($code) {
+            case E_WARNING:
+                $type = 'PHP warning';
+                break;
+            case E_NOTICE:
+                $type = 'PHP notice';
+                break;
+            case E_USER_ERROR:
+                $type = 'User error';
+                break;
+            case E_USER_WARNING:
+                $type = 'User warning';
+                break;
+            case E_USER_NOTICE:
+                $type = 'User notice';
+                break;
+            case E_RECOVERABLE_ERROR:
+                $type = 'Recoverable error';
+                break;
+            default:
+                $type = 'PHP error';
+        }
+        $this->_exception = null;
+        $this->_error = $err = [
+            'code' => $code,
+            'type' => $type,
+            'message' => $message,
+            'file' => $file,
+            'line' => $line,
+            'trace' => $traceString,
+            'traces' => $trace,
+        ];
+
+        unset($err['traces']);
+
         if (in_array($code, $this->ignoringTypes)) {
+            if (in_array($code, $this->loggingIgnoredTypes)) {
+                $this->debugLog($code, $type, $err);
+            }
+
             return true;
         }
 
-        $app = Xcart::app();
         if (defined('APP_DEBUG') && APP_DEBUG) {
 
             $app->logger->critical($message, ['code' => $code, 'file' => $file, 'line' => $line], 'error');
@@ -372,83 +459,42 @@ class ErrorHandler
             }
         }
         else {
-            $msg = "Error: {$message}\nFile: {$file}\nLine: {$line}";
-
-            $trace = debug_backtrace();
-            // skip the first 3 stacks as they do not tell the error position
-            if (count($trace) > 3) {
-                $trace = array_slice($trace, 3);
-            }
-            $traceString = '';
-            foreach ($trace as $i => $t) {
-                if (!isset($t['file'])) {
-                    $trace[$i]['file'] = 'unknown';
-                }
-
-                if (!isset($t['line'])) {
-                    $trace[$i]['line'] = 0;
-                }
-
-                if (!isset($t['function'])) {
-                    $trace[$i]['function'] = 'unknown';
-                }
-
-                $traceString .= "#$i {$trace[$i]['file']}({$trace[$i]['line']}): ";
-                if (isset($t['object']) && is_object($t['object'])) {
-                    $traceString .= get_class($t['object']) . '->';
-                }
-                $traceString .= "{$trace[$i]['function']}()\n";
-
-                unset($trace[$i]['object']);
-            }
-
-            $app = Xcart::app();
             if ($app instanceof Application && Console::isCli() === false) {
-
-                switch ($code) {
-                    case E_WARNING:
-                        $type = 'PHP warning';
-                        break;
-                    case E_NOTICE:
-                        $type = 'PHP notice';
-                        break;
-                    case E_USER_ERROR:
-                        $type = 'User error';
-                        break;
-                    case E_USER_WARNING:
-                        $type = 'User warning';
-                        break;
-                    case E_USER_NOTICE:
-                        $type = 'User notice';
-                        break;
-                    case E_RECOVERABLE_ERROR:
-                        $type = 'Recoverable error';
-                        break;
-                    default:
-                        $type = 'PHP error';
-                }
-                $this->_exception = null;
-                $this->_error = [
-                    'code' => 500,
-                    'type' => $type,
-                    'message' => $message,
-                    'file' => $file,
-                    'line' => $line,
-                    'trace' => $traceString,
-                ];
-
-                $err = $this->_error;
 
                 $app->logger->error($type, $err, 'error');
 
                 if (!headers_sent()) {
                     header("HTTP/1.0 500 Internal Server Error");
                 }
+                $this->_error['code'] = 500;
                 $this->renderError();
             }
             else {
                 $this->displayError($code, $message, $file, $line);
             }
+        }
+    }
+
+    public function debugLog($code, $type, $err)
+    {
+        switch ($code) {
+            case E_DEPRECATED:
+            case E_USER_DEPRECATED:
+                return Xcart::app()->logger->info($type, $err, 'debug');
+            case E_WARNING:
+            case E_CORE_WARNING:
+            case E_COMPILE_WARNING:
+            case E_USER_WARNING:
+                return Xcart::app()->logger->warning($type, $err, 'debug');
+            case E_NOTICE:
+            case E_USER_NOTICE:
+                return Xcart::app()->logger->notice($type, $err, 'debug');
+            case E_RECOVERABLE_ERROR:
+            case E_CORE_ERROR:
+            case E_COMPILE_ERROR:
+            case E_USER_ERROR:
+            default:
+                return Xcart::app()->logger->error($type, $err, 'debug');
         }
     }
 
@@ -495,7 +541,6 @@ class ErrorHandler
             ]),
             'self' => $this
         ];
-
 
         if ($this->useTemplate) {
             $output = $this->renderTemplate($view . '.tpl', $data);

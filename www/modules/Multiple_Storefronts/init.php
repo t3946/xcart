@@ -55,6 +55,15 @@ if ($storefronts) {
         }
     }
     $smarty->assign('storefronts', $storefronts);
+
+    $sd_selects = [];
+//    $t_domains = Modules\Sites\Models\SiteModel::objects()->filter(['config__name__isnt' => null])->group(['storefrontid'])->all();
+    $t_domains = Modules\Sites\Models\SiteModel::objects()->all();
+    /** @var Modules\Sites\Models\SiteModel $t_domains */
+    foreach ($t_domains as $t_domain) {
+        $sd_selects[$t_domain->storefrontid] = $t_domain->__toString();
+    }
+    $smarty->assign('sd_selects', $sd_selects);
 }
 
 if ($search_all_website) {
@@ -151,7 +160,7 @@ else {
     $current_storefront = 0;
 }
 
-if (AREA_TYPE == 'C') {
+if (defined('AREA_TYPE') && AREA_TYPE == 'C') {
 
     $sf_links = func_query_hash("SELECT l.storefront2, s.orderby, s.domain, c.name, c.value"
         . " FROM $sql_tbl[storefront_links] l"
@@ -181,7 +190,7 @@ if (AREA_TYPE == 'C') {
         );
     }
 
-    usort($sf_links, func_msf_sort_front_array);
+    usort($sf_links, 'func_msf_sort_front_array');
 
     if (!empty($sf_links)) {
         $storefronts_per_column = ceil((count($sf_links) + 1) / $config['Appearance']['storefront_columns']);

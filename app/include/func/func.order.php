@@ -1,7 +1,9 @@
 <?php
 
 use Modules\GeoIp\Helpers\GeoIpHelper;
+use Modules\Order\Helpers\OrderHelper;
 use Modules\Order\Models\OrderDetailModel;
+use Modules\Order\Models\OrderExtraModel;
 use Modules\Order\Models\OrderGroupInvoiceProductModel;
 use Modules\Order\Models\OrderGroupModel;
 use Modules\Goods\Models\ProductModel;
@@ -58,17 +60,7 @@ function func_get_shipping_groups($orderid)
             $return[$m_id]["tracking"] = unserialize($group["tracking"]);
 
             global $xcart_dir;
-            $return[$m_id]['oOrderGroup'] = new \Xcart\OrderGroup(['manufacturerid' => $m_id, 'orderid' => $orderid]);
-
-            if (!empty($return[$m_id]["tracking"]) && is_array($return[$m_id]["tracking"])) {
-                foreach ($return[$m_id]["tracking"] as $kt => $vt) {
-                    if (!empty($vt["ship_date"]) && strpos($vt["ship_date"], "/") !== false) {
-                        $current_ship_date_arr                       = explode("/", $vt["ship_date"]);
-                        $current_ship_date_time                      = mktime(0, 0, 0, $current_ship_date_arr[0], $current_ship_date_arr[1], $current_ship_date_arr[2]);
-                        $return[$m_id]["tracking"][$kt]["ship_date"] = date("F j, Y", $current_ship_date_time);
-                    }
-                }
-            }
+            $return[$m_id]['oOrderGroup'] = OrderGroupModel::objects()->get(['manufacturerid' => $m_id, 'orderid' => $orderid]);
 
             $return[$m_id]["total"]              = $return[$m_id]["shipping_cost"] = $return[$m_id]["actual_shipping_cost"] = [];
             $return[$m_id]["extra"]              = unserialize($group["extra"]);
@@ -741,7 +733,7 @@ function func_order_data($orderid)
 
         $m_id = func_manufacturerid_for_group($v['shipping_freight'], $v['manufacturerid']);
         $order['shipping_groups'][$m_id]['products'][$v["itemid"]] = $v;
-        $order['shipping_groups'][$m_id]['oOrderGroup']            = \Xcart\OrderGroup::model(['orderid' => $orderid, 'manufacturerid' => $m_id]);
+        $order['shipping_groups'][$m_id]['oOrderGroup']            = OrderGroupModel::objects()->get(['orderid' => $orderid, 'manufacturerid' => $m_id]);
 
         if (!empty($v['extra_data']['taxes']))
         {
@@ -871,7 +863,7 @@ function func_order_data($orderid)
         $order["alt_products"] = $alt_products;
     }
 
-    $order['oOrder'] = \Xcart\Order::model(['orderid' => $orderid]);
+    $order['oOrder'] = OrderModel::objects()->get(['orderid' => $orderid]);
 
     return [
         "order"     => $order,
@@ -1277,6 +1269,8 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
         }
 
         $orderid = func_array2insert('orders', $insert_data);
+
+        \Xcart\App\Main\Xcart::app()->event->trigger('order:created', ['model' => OrderModel::objects()->get(['orderid' => $orderid])]);
 
         if (!empty($insert_data['coupon'])) {
             /** @var  \Modules\Cart\Models\CouponKitModel $coupon */
@@ -2025,402 +2019,393 @@ function func_get_order_manufacturers($orderid)
             }
             $cidev_ship_to_full = $order["s_address"] . ", " . $cidev_ship_to;
 
-            foreach ($mnfs as $m_id => $mv)
-            {
-                $order_group = OrderGroupModel::objects()->get(
+            foreach ($mnfs as $m_id => $mv) {
+                if ($order_group = OrderGroupModel::objects()->get(
                     [
                         'orderid' => $orderid,
                         'manufacturerid' => $m_id
                     ]
-                );
+                )) {
 
-                $signature = func_get_signature($mnfs[$m_id]["d_main_sf"], false, $order);
+                    $signature = func_get_signature($mnfs[$m_id]["d_main_sf"], false, $order);
 
-                $mnfs[$m_id]['notify_sent'] = $order['shipping_groups'][$m_id]['notify_sent'];
+                    $mnfs[$m_id]['notify_sent'] = $order['shipping_groups'][$m_id]['notify_sent'];
 
-                $mnfs[$m_id]['cb_status'] = $order['shipping_groups'][$m_id]['cb_status'];
-                $mnfs[$m_id]['dc_status'] = $order['shipping_groups'][$m_id]['dc_status'];
-                $mnfs[$m_id]['bd_status'] = $order['shipping_groups'][$m_id]['bd_status'];
+                    $mnfs[$m_id]['cb_status'] = $order['shipping_groups'][$m_id]['cb_status'];
+                    $mnfs[$m_id]['dc_status'] = $order['shipping_groups'][$m_id]['dc_status'];
+                    $mnfs[$m_id]['bd_status'] = $order['shipping_groups'][$m_id]['bd_status'];
 
-                if (!empty($products) && is_array($products)) {
+                    if (!empty($products) && is_array($products)) {
 
-                    $total_product_cost_to_us = 0;
+                        $total_product_cost_to_us = 0;
 
-                    $cidev_items_table = "";
-                    $cidev_items_table .= '<table width="500px" border="1" cellpadding="5" cellspacing="0" bordercolor="#414236" style="font-family: Arial, Helvetica, sans-serif; font-size: 14px; color: #000000; line-height: 18px;">';
-                    $cidev_items_table .= '<tr><td width="150px" style="text-align: left; font-weight: bold;">Item number</td><td width="250px" style="text-align: left; font-weight: bold;">Item name</td><td style="text-align: right; font-weight: bold;">Quantity</td></tr>';
+                        $cidev_items_table = "";
+                        $cidev_items_table .= '<table width="500px" border="1" cellpadding="5" cellspacing="0" bordercolor="#414236" style="font-family: Arial, Helvetica, sans-serif; font-size: 14px; color: #000000; line-height: 18px;">';
+                        $cidev_items_table .= '<tr><td width="150px" style="text-align: left; font-weight: bold;">Item number</td><td width="250px" style="text-align: left; font-weight: bold;">Item name</td><td style="text-align: right; font-weight: bold;">Quantity</td></tr>';
 
-                    $cidev_instock_items_table = '<table width="500px" border="1" cellpadding="5" cellspacing="0" bordercolor="#414236" style="font-family: Arial, Helvetica, sans-serif; font-size: 14px; color: #000000; line-height: 18px;">';
-                    $cidev_instock_items_table .= '<tr><td width="150px" style="text-align: left; font-weight: bold;">Item number</td><td width="250px" style="text-align: left; font-weight: bold;">Item name</td><td style="text-align: right; font-weight: bold;">Quantity in stock</td></tr>';
+                        $cidev_instock_items_table = '<table width="500px" border="1" cellpadding="5" cellspacing="0" bordercolor="#414236" style="font-family: Arial, Helvetica, sans-serif; font-size: 14px; color: #000000; line-height: 18px;">';
+                        $cidev_instock_items_table .= '<tr><td width="150px" style="text-align: left; font-weight: bold;">Item number</td><td width="250px" style="text-align: left; font-weight: bold;">Item name</td><td style="text-align: right; font-weight: bold;">Quantity in stock</td></tr>';
 
-                    $cidev_outofstock_items_table = '<table width="500px" border="1" cellpadding="5" cellspacing="0" bordercolor="#414236" style="font-family: Arial, Helvetica, sans-serif; font-size: 14px; color: #000000; line-height: 18px;">';
-                    $cidev_outofstock_items_table .= '<tr><td width="150px" style="text-align: left; font-weight: bold;">Item number</td><td width="250px" style="text-align: left; font-weight: bold;">Item name</td><td style="text-align: right; font-weight: bold;">"Out of stock" quantity</td></tr>';
+                        $cidev_outofstock_items_table = '<table width="500px" border="1" cellpadding="5" cellspacing="0" bordercolor="#414236" style="font-family: Arial, Helvetica, sans-serif; font-size: 14px; color: #000000; line-height: 18px;">';
+                        $cidev_outofstock_items_table .= '<tr><td width="150px" style="text-align: left; font-weight: bold;">Item number</td><td width="250px" style="text-align: left; font-weight: bold;">Item name</td><td style="text-align: right; font-weight: bold;">"Out of stock" quantity</td></tr>';
 
-                    $order_products = '<br /><table width="100%" cellspacing="0" cellpadding="0" border="0"><tr><td valign="top"><img alt="" src="https://www.artistsupplysource.com/skin1_kolin/images/S3-Stores-Logo-M.png"></td><td width="100%" valign="top"><table width="100%" cellspacing="0" cellpadding="2"><tr><td width="30">&nbsp;</td><td valign="top"><h1 style="margin-bottom: 0px; margin-top: 0px; text-transform: uppercase;">PURCHASE ORDER</h1><b>Order date:</b> ' . date("j-M-Y", $order["date"]) . '<br /><b>Order #:</b> ' . $order["order_prefix"] . $order["orderid"] . '<br /></td><td valign="bottom" align="right"><b>S3 Stores, Inc.</b><br />27 Joseph St.,<br>Chatham, Ontario<br />N7L 3G4, Canada<br />Toll Free: ' . $config["Company"]["company_phone"] . '<br />Tel: ' . $config["Company"]["company_phone_2"] . '<br />Fax: ' . $config["Company"]["company_fax"] . '<br>Email: orders@s3stores.com</td></tr></table></td></tr></table><hr style="width:100%;margin: 0px 0 5px 0; border: 0 none; border-bottom: 1px solid #999999;">';
+                        $order_products = '<br /><table width="100%" cellspacing="0" cellpadding="0" border="0"><tr><td valign="top"><img alt="" src="https://www.artistsupplysource.com/skin1_kolin/images/S3-Stores-Logo-M.png"></td><td width="100%" valign="top"><table width="100%" cellspacing="0" cellpadding="2"><tr><td width="30">&nbsp;</td><td valign="top"><h1 style="margin-bottom: 0px; margin-top: 0px; text-transform: uppercase;">PURCHASE ORDER</h1><b>Order date:</b> ' . date("j-M-Y", $order["date"]) . '<br /><b>Order #:</b> ' . $order["order_prefix"] . $order["orderid"] . '<br /></td><td valign="bottom" align="right"><b>S3 Stores, Inc.</b><br />27 Joseph St.,<br>Chatham, Ontario<br />N7L 3G4, Canada<br />Toll Free: ' . $config["Company"]["company_phone"] . '<br />Tel: ' . $config["Company"]["company_phone_2"] . '<br />Fax: ' . $config["Company"]["company_fax"] . '<br>Email: orders@s3stores.com</td></tr></table></td></tr></table><hr style="width:100%;margin: 0px 0 5px 0; border: 0 none; border-bottom: 1px solid #999999;">';
 
-                    $order_products .= '<table width="45%" cellspacing="0" cellpadding="0" border="0"><tr><td nowrap="nowrap"> <b>Full Name:</b> </td> <td>' . $userinfo["firstname"] . '</td></tr><tr><td><b>Phone:</b></td><td>' . $userinfo["phone"] . (!empty($userinfo["phone_ext"]) ? " <B>ext</B> $userinfo[phone_ext] " : "") . '</td></tr><tr><td colspan="2"><br /><b>Shipping Address</b><hr style="width:100%;margin: 0px; border: 0 none; border-bottom: 1px solid #999999;"></td></tr><tr><td><b>Full Name:</b></td><td>' . $userinfo["s_firstname"] . (!empty($order["po_number"]) ? ' / PO# ' . $order["po_number"] : '') . '</td></tr><tr><td><b>Company:</b></td><td>' . $userinfo["additional_fields"]["1"]["value"] . '</td></tr><tr><td><b>Address:</b></td><td>' . $userinfo["s_address"] .
-                                       '</td></tr>' . (!empty($userinfo["s_address_2"]) ? '<tr><td><b>Address (line 2):</b></td><td>' . $userinfo["s_address_2"] . '</td></tr>' : '') . '<tr><td><b>City:</b> </td><td>' . $userinfo["s_city"] . '</td></tr><tr><td><b>State/Province:</b> </td><td>' . $userinfo["s_statename"] . '</td></tr><tr><td><b>Country:</b></td><td>' . $userinfo["s_countryname"] . '</td></tr><tr><td><b>Zip/Postal code:</b></td><td>' . $userinfo["s_zipcode"] . '</td></tr></table>';
+                        $order_products .= '<table width="45%" cellspacing="0" cellpadding="0" border="0"><tr><td nowrap="nowrap"> <b>Full Name:</b> </td> <td>' . $userinfo["firstname"] . '</td></tr><tr><td><b>Phone:</b></td><td>' . $userinfo["phone"] . (!empty($userinfo["phone_ext"]) ? " <B>ext</B> $userinfo[phone_ext] " : "") . '</td></tr><tr><td colspan="2"><br /><b>Shipping Address</b><hr style="width:100%;margin: 0px; border: 0 none; border-bottom: 1px solid #999999;"></td></tr><tr><td><b>Full Name:</b></td><td>' . $userinfo["s_firstname"] . (!empty($order["po_number"]) ? ' / PO# ' . $order["po_number"] : '') . '</td></tr><tr><td><b>Company:</b></td><td>' . $userinfo["additional_fields"]["1"]["value"] . '</td></tr><tr><td><b>Address:</b></td><td>' . $userinfo["s_address"] .
+                            '</td></tr>' . (!empty($userinfo["s_address_2"]) ? '<tr><td><b>Address (line 2):</b></td><td>' . $userinfo["s_address_2"] . '</td></tr>' : '') . '<tr><td><b>City:</b> </td><td>' . $userinfo["s_city"] . '</td></tr><tr><td><b>State/Province:</b> </td><td>' . $userinfo["s_statename"] . '</td></tr><tr><td><b>Country:</b></td><td>' . $userinfo["s_countryname"] . '</td></tr><tr><td><b>Zip/Postal code:</b></td><td>' . $userinfo["s_zipcode"] . '</td></tr></table>';
 
-                    if ($mv["add_cost_to_us_column_to_dispatch_message"] == "Y") {
-                        $order_products .= '<table style="margin-top: 5px;" width="100%" cellspacing="0" cellpadding="3" border="1"><tr><th width="60" bgcolor="#cccccc" align="center">SKU</th><th width="*" bgcolor="#cccccc" align="center">Product</th><th width="90" nowrap="nowrap" bgcolor="#cccccc" align="center">\'Cost to us\' per item</th><th width="50" nowrap="nowrap" bgcolor="#cccccc" align="center">Qty</th></tr>';
-                    }
-                    else {
-                        $order_products .= '<table style="margin-top: 5px;" width="100%" cellspacing="0" cellpadding="3" border="1"><tr><th width="60" bgcolor="#cccccc" align="center">SKU</th><th width="*" bgcolor="#cccccc" align="center">Product</th><th width="50" nowrap="nowrap" bgcolor="#cccccc" align="center">Qty</th></tr>';
-                    }
+                        if ($mv["add_cost_to_us_column_to_dispatch_message"] == "Y") {
+                            $order_products .= '<table style="margin-top: 5px;" width="100%" cellspacing="0" cellpadding="3" border="1"><tr><th width="60" bgcolor="#cccccc" align="center">SKU</th><th width="*" bgcolor="#cccccc" align="center">Product</th><th width="90" nowrap="nowrap" bgcolor="#cccccc" align="center">\'Cost to us\' per item</th><th width="50" nowrap="nowrap" bgcolor="#cccccc" align="center">Qty</th></tr>';
+                        } else {
+                            $order_products .= '<table style="margin-top: 5px;" width="100%" cellspacing="0" cellpadding="3" border="1"><tr><th width="60" bgcolor="#cccccc" align="center">SKU</th><th width="*" bgcolor="#cccccc" align="center">Product</th><th width="50" nowrap="nowrap" bgcolor="#cccccc" align="center">Qty</th></tr>';
+                        }
 
-                    $order_products_counter = 0;
+                        $order_products_counter = 0;
 
-                    if ($order_group->detail_models->count()) {
+                        if ($order_group->detail_models->count()) {
 
-                        /** @var OrderDetailModel $detail_model */
-                        foreach ($order_group->detail_models as $detail_model) {
+                            /** @var OrderDetailModel $detail_model */
+                            foreach ($order_group->detail_models as $detail_model) {
 
-                            /** @var ProductModel $product_model */
-                            $product_model = $detail_model->product_model;
-                            $v = $product_model->getAttributes();
-                            $selected_product_options = "";
+                                /** @var ProductModel $product_model */
+                                $product_model = $detail_model->product_model;
+                                $v = $product_model->getAttributes();
+                                $selected_product_options = $options = null;
 
-                            if (!empty($detail_model->product_options)) {
+                                if (!empty($detail_model->product_options)) {
 
-                                $options = $detail_model->product_options;
+                                    $options = $detail_model->product_options;
 
-                            } else {
+                                } else {
 
-                                $extra_data = $detail_model->extra_data;
-                                if (!empty($extra_data['product_options'])) {
-                                    list($variant, $options) = func_get_product_options_data($product_model->productid, $extra_data['product_options']);
-                                }
-                            }
+                                    $extra_data = $detail_model->extra_data;
 
-                            if (!empty($options)) {
-                                if (is_array($options)) {
-                                    foreach ($options as $kk => $vv) {
-                                        $selected_product_options .= "<br />" . $vv["classtext"] . " " . $vv["option_name"];
+                                    if (!empty($extra_data['product_options'])) {
+                                        list($variant, $options) = func_get_product_options_data($product_model->productid, $extra_data['product_options']);
                                     }
-                                } else {
-                                    $selected_product_options .= "<br />" . $options;
                                 }
-                            }
 
-                            $tmp_sku = $product_model->getMPN();
+                                if (!empty($options)) {
+                                    if (is_array($options)) {
+                                        foreach ($options as $kk => $vv) {
+                                            $selected_product_options .= "<br />" . $vv["classtext"] . " " . $vv["option_name"];
+                                        }
+                                    } else {
+                                        $selected_product_options .= "<br />" . $options;
+                                    }
+                                }
 
-                            $cidev_items_table .= '<tr><td width="150px" style="text-align: left;">' . $tmp_sku . '</td><td width="250px" style="text-align: left;"><a href="' . $product_model->getUrl() . '">' . $detail_model->product . '</a>' . $selected_product_options . '</td><td style="text-align: right;">' . $detail_model->amount . '</td></tr>';
+                                $tmp_sku = $product_model->getMPN();
 
-                            $instock_items = $detail_model->amount - $detail_model->back;
-                            $cidev_instock_items_table .= '<tr><td width="150px" style="text-align: left;">' . $tmp_sku . '</td><td width="250px" style="text-align: left;"><a href="' . $product_model->getUrl() . '">' . $detail_model->product . '</a>' . $selected_product_options . '</td><td style="text-align: right;">' . $instock_items . '</td></tr>';
+                                $cidev_items_table .= '<tr><td width="150px" style="text-align: left;">' . $tmp_sku . '</td><td width="250px" style="text-align: left;"><a href="' . $product_model->getUrl() . '">' . $detail_model->product . '</a>' . $selected_product_options . '</td><td style="text-align: right;">' . $detail_model->amount . '</td></tr>';
 
-                            $cidev_outofstock_items_table .= '<tr><td width="150px" style="text-align: left;">' . $tmp_sku . '</td><td width="250px" style="text-align: left;"><a href="' . $product_model->getUrl() . '">' . $detail_model->product . '</a>' . $selected_product_options . '</td><td style="text-align: right;">' . $detail_model->back . '</td></tr>';
+                                $instock_items = $detail_model->amount - $detail_model->back;
+                                $cidev_instock_items_table .= '<tr><td width="150px" style="text-align: left;">' . $tmp_sku . '</td><td width="250px" style="text-align: left;"><a href="' . $product_model->getUrl() . '">' . $detail_model->product . '</a>' . $selected_product_options . '</td><td style="text-align: right;">' . $instock_items . '</td></tr>';
 
-                            $order_products_amount = $detail_model->amount;
+                                $cidev_outofstock_items_table .= '<tr><td width="150px" style="text-align: left;">' . $tmp_sku . '</td><td width="250px" style="text-align: left;"><a href="' . $product_model->getUrl() . '">' . $detail_model->product . '</a>' . $selected_product_options . '</td><td style="text-align: right;">' . $detail_model->back . '</td></tr>';
 
-                            if (!empty($order["refund_groups"][$m_id]["products"][$detail_model->itemid]["ref_qty"])) {
-                                $tmp_ref_qty = $order["refund_groups"][$m_id]["products"][$detail_model->itemid]["ref_qty"];
-                                $order_products_amount -= $tmp_ref_qty;
-                            }
+                                $order_products_amount = $detail_model->amount;
 
-                            if ($order_products_amount > 0) {
-                                $order_products_counter++;
+                                if (!empty($order["refund_groups"][$m_id]["products"][$detail_model->itemid]["ref_qty"])) {
+                                    $tmp_ref_qty = $order["refund_groups"][$m_id]["products"][$detail_model->itemid]["ref_qty"];
+                                    $order_products_amount -= $tmp_ref_qty;
+                                }
 
-                                if ($mv["add_cost_to_us_column_to_dispatch_message"] == "Y") {
-                                    $order_products .= '<tr><td align="center">' . $tmp_sku . '</td><td><font style="FONT-SIZE: 11px"><a href="' . $product_model->getUrl() . '">' . $detail_model->product . '</a>' . $selected_product_options . '</font></td><td align="center">US$' . number_format($detail_model->item_cost_to_us, 2) . '</td><td align="center">' . $order_products_amount . '</td></tr>';
-                                } else {
-                                    $order_products .= '<tr><td align="center">' . $tmp_sku . '</td><td><font style="FONT-SIZE: 11px"><a href="' . $product_model->getUrl() . '">' . $detail_model->product . '</a>' . $selected_product_options . '</font></td><td align="center">' . $order_products_amount . '</td></tr>';
+                                if ($order_products_amount > 0) {
+                                    $order_products_counter++;
+
+                                    if ($mv["add_cost_to_us_column_to_dispatch_message"] == "Y") {
+                                        $order_products .= '<tr><td align="center">' . $tmp_sku . '</td><td><font style="FONT-SIZE: 11px"><a href="' . $product_model->getUrl() . '">' . $detail_model->product . '</a>' . $selected_product_options . '</font></td><td align="center">US$' . number_format($detail_model->item_cost_to_us, 2) . '</td><td align="center">' . $order_products_amount . '</td></tr>';
+                                    } else {
+                                        $order_products .= '<tr><td align="center">' . $tmp_sku . '</td><td><font style="FONT-SIZE: 11px"><a href="' . $product_model->getUrl() . '">' . $detail_model->product . '</a>' . $selected_product_options . '</font></td><td align="center">' . $order_products_amount . '</td></tr>';
+                                    }
                                 }
                             }
                         }
+                        $cidev_items_table .= "</table>";
+                        $cidev_instock_items_table .= "</table>";
+                        $cidev_outofstock_items_table .= "</table>";
+
+                        if ($order_products_counter > 0) {
+                            $order_products .= "</table>";
+                        } else {
+                            $order_products = "";
+                        }
                     }
-                    $cidev_items_table .= "</table>";
-                    $cidev_instock_items_table .= "</table>";
-                    $cidev_outofstock_items_table .= "</table>";
 
-                    if ($order_products_counter > 0) {
-                        $order_products .= "</table>";
+                    /** @var \Xcart\OrderGroup $oOrderGroup */
+                    $oOrderGroup = Xcart\OrderGroup::objects()->filter(['orderid' => $orderid, 'manufacturerid' => $m_id])->get();
+                    if ($oOrderGroup) {
+                        $total_product_cost_to_us = $oOrderGroup->getTotalCostToUs();
                     }
-                    else {
-                        $order_products = "";
-                    }
-                }
+                    $mnfs[$m_id]['total_product_cost_to_us'] = $total_product_cost_to_us;
 
-                /** @var \Xcart\OrderGroup $oOrderGroup */
-                $oOrderGroup = Xcart\OrderGroup::objects()->filter(['orderid' => $orderid, 'manufacturerid' => $m_id])->get();
-                if ($oOrderGroup) {
-                    $total_product_cost_to_us = $oOrderGroup->getTotalCostToUs();
-                }
-                $mnfs[$m_id]['total_product_cost_to_us'] = $total_product_cost_to_us;
+                    $secure_check = $orderid . $m_id;
+                    $secure_check = text_crypt($secure_check);
+                    $cidev_url_variables = "s=$secure_check&o=$orderid&m=$m_id";
 
-                $secure_check        = $orderid . $m_id;
-                $secure_check        = text_crypt($secure_check);
-                $cidev_url_variables = "s=$secure_check&o=$orderid&m=$m_id";
+                    $mnfs[$m_id]['__items_table__'] = $cidev_items_table;
+                    $mnfs[$m_id]['__shipto_table__'] = $cidev_ship_to;
+                    $mnfs[$m_id]['__shipto_full_table__'] = $cidev_ship_to_full;
 
-                $mnfs[$m_id]['__items_table__']  = $cidev_items_table;
-                $mnfs[$m_id]['__shipto_table__'] = $cidev_ship_to;
-                $mnfs[$m_id]['__shipto_full_table__'] = $cidev_ship_to_full;
+                    $d_message_body_14 = $mv['d_message_body_14'];
+                    $d_message_body_14 = str_replace("\r\n", "<br />", $d_message_body_14);
+                    $d_message_body_14 = str_replace("{{items}}", $cidev_items_table, $d_message_body_14);
+                    $d_message_body_14 = str_replace("{{shipto}}", $cidev_ship_to, $d_message_body_14);
+                    $d_message_body_14 = str_replace("{{shipto_full_address}}", $cidev_ship_to_full, $d_message_body_14);
+                    $d_message_body_14 = str_replace("{{shipping_method}}", $order["shipping_groups"][$m_id]["shipping"], $d_message_body_14);
+                    $d_message_body_14 = str_replace("{{orderid}}", $order["order_prefix"] . $orderid, $d_message_body_14);
+                    $d_message_body_14 = str_replace("{{signature}}", $signature, $d_message_body_14);
+                    $d_message_body_14 = str_replace("{{userfirstname}}", $userfirstname, $d_message_body_14);
+                    $d_message_body_14 = str_replace("{{userfullname}}", $userfullname, $d_message_body_14);
+                    $cidev_page_url1 = "http://www.s3stores.com/stock_availability.php";
 
-                $d_message_body_14 = $mv['d_message_body_14'];
-                $d_message_body_14 = str_replace("\r\n", "<br />", $d_message_body_14);
-                $d_message_body_14 = str_replace("{{items}}", $cidev_items_table, $d_message_body_14);
-                $d_message_body_14 = str_replace("{{shipto}}", $cidev_ship_to, $d_message_body_14);
-                $d_message_body_14 = str_replace("{{shipto_full_address}}", $cidev_ship_to_full, $d_message_body_14);
-                $d_message_body_14 = str_replace("{{shipping_method}}", $order["shipping_groups"][$m_id]["shipping"], $d_message_body_14);
-                $d_message_body_14 = str_replace("{{orderid}}", $order["order_prefix"] . $orderid, $d_message_body_14);
-                $d_message_body_14 = str_replace("{{signature}}", $signature, $d_message_body_14);
-                $d_message_body_14 = str_replace("{{userfirstname}}", $userfirstname, $d_message_body_14);
-                $d_message_body_14 = str_replace("{{userfullname}}", $userfullname, $d_message_body_14);
-                $cidev_page_url1 = "http://www.s3stores.com/stock_availability.php";
+                    $webpagebutton = "<a href='$cidev_page_url1?$cidev_url_variables'><img src='http://www.artistsupplysource.com/skin1_kolin/images/webpage_button.png' alt='Please click here to send us product availability information' /></a>";
+                    $d_message_body_14 = str_replace("{{webpagebutton}}", $webpagebutton, $d_message_body_14);
+                    $mnfs[$m_id]['d_message_body_14'] = $d_message_body_14;
 
-                $webpagebutton                    = "<a href='$cidev_page_url1?$cidev_url_variables'><img src='http://www.artistsupplysource.com/skin1_kolin/images/webpage_button.png' alt='Please click here to send us product availability information' /></a>";
-                $d_message_body_14                = str_replace("{{webpagebutton}}", $webpagebutton, $d_message_body_14);
-                $mnfs[$m_id]['d_message_body_14'] = $d_message_body_14;
+                    $d_email_subject_14 = $mv['d_email_subject_14'];
+                    $d_email_subject_14 = str_replace("{{items}}", $cidev_items_table, $d_email_subject_14);
+                    $d_email_subject_14 = str_replace("{{shipto}}", $cidev_ship_to, $d_email_subject_14);
+                    $d_email_subject_14 = str_replace("{{shipto_full_address}}", $cidev_ship_to_full, $d_email_subject_14);
+                    $d_email_subject_14 = str_replace("{{orderid}}", $order["order_prefix"] . $orderid, $d_email_subject_14);
+                    $d_email_subject_14 = str_replace("{{signature}}", $signature, $d_email_subject_14);
+                    $d_email_subject_14 = str_replace("{{userfirstname}}", $userfirstname, $d_email_subject_14);
+                    $d_email_subject_14 = str_replace("{{userfullname}}", $userfullname, $d_email_subject_14);
 
-                $d_email_subject_14 = $mv['d_email_subject_14'];
-                $d_email_subject_14 = str_replace("{{items}}", $cidev_items_table, $d_email_subject_14);
-                $d_email_subject_14 = str_replace("{{shipto}}", $cidev_ship_to, $d_email_subject_14);
-                $d_email_subject_14 = str_replace("{{shipto_full_address}}", $cidev_ship_to_full, $d_email_subject_14);
-                $d_email_subject_14 = str_replace("{{orderid}}", $order["order_prefix"] . $orderid, $d_email_subject_14);
-                $d_email_subject_14 = str_replace("{{signature}}", $signature, $d_email_subject_14);
-                $d_email_subject_14 = str_replace("{{userfirstname}}", $userfirstname, $d_email_subject_14);
-                $d_email_subject_14 = str_replace("{{userfullname}}", $userfullname, $d_email_subject_14);
+                    $mnfs[$m_id]['d_email_subject_14'] = $d_email_subject_14;
 
-                $mnfs[$m_id]['d_email_subject_14'] = $d_email_subject_14;
+                    $cidev_page_url2 = "http://www.s3stores.com/index.php?pageid=42";
+                    $cidev_mess_body = "<a href='$cidev_page_url2&$cidev_url_variables'><img src='http://www.artistsupplysource.com/skin1_kolin/images/received_img.png' alt='Please click to confirm that you received this order'/></a>";
+                    $mess_body = $mv['mess_body'];
+                    $mess_body = str_replace("{{received}}", $cidev_mess_body, $mess_body);
+                    $mess_body = str_replace("{{orderid}}", $order["order_prefix"] . $orderid, $mess_body);
 
-                $cidev_page_url2 = "http://www.s3stores.com/index.php?pageid=42";
-                $cidev_mess_body = "<a href='$cidev_page_url2&$cidev_url_variables'><img src='http://www.artistsupplysource.com/skin1_kolin/images/received_img.png' alt='Please click to confirm that you received this order'/></a>";
-                $mess_body       = $mv['mess_body'];
-                $mess_body       = str_replace("{{received}}", $cidev_mess_body, $mess_body);
-                $mess_body       = str_replace("{{orderid}}", $order["order_prefix"] . $orderid, $mess_body);
+                    $oShipping = \Xcart\Shipping::model(['shippingid' => $order["shipping_groups"][$m_id]["shippingid"]]);
+                    $orig_shipping_name = $oShipping->getName();
 
-                $oShipping          = \Xcart\Shipping::model(['shippingid' => $order["shipping_groups"][$m_id]["shippingid"]]);
-                $orig_shipping_name = $oShipping->getName();
+                    $d_shipping_options_arr = [];
 
-                $d_shipping_options_arr = [];
-
-                if ($orig_shipping_name == "_USE_MY_UPS_FEDEX_ACCOUNT_") {
-                    $d_shipping_options_arr[] = $order["shipping_groups"][$m_id]["shipping"];
-                    $d_shipping_options_arr[] = "the least expensive shipping method";
-                }
-                elseif ($orig_shipping_name == "_USE_MY_TRUCKING_ACCOUNT_") {
-                    $d_shipping_options_arr[] = $order["shipping_groups"][$m_id]["shipping"];
-                    $d_shipping_options_arr[] = "the least expensive shipping method";
-                }
-                elseif (!empty($order["shipping_groups"][$m_id]["real_shipping_method"])
+                    if ($orig_shipping_name == "_USE_MY_UPS_FEDEX_ACCOUNT_") {
+                        $d_shipping_options_arr[] = $order["shipping_groups"][$m_id]["shipping"];
+                        $d_shipping_options_arr[] = "the least expensive shipping method";
+                    } elseif ($orig_shipping_name == "_USE_MY_TRUCKING_ACCOUNT_") {
+                        $d_shipping_options_arr[] = $order["shipping_groups"][$m_id]["shipping"];
+                        $d_shipping_options_arr[] = "the least expensive shipping method";
+                    } elseif (!empty($order["shipping_groups"][$m_id]["real_shipping_method"])
                         && $oShipping->getName() != $order["shipping_groups"][$m_id]["real_shipping_method"]
-                ) {
-                    $d_shipping_options_arr[] = "the least expensive shipping method";
-                    $d_shipping_options_arr[] = $order["shipping_groups"][$m_id]["real_shipping_method"];
-                    $d_shipping_options_arr[] = $oShipping->getName();
-                }
-                else {
-                    $d_shipping_options_arr[] = "the least expensive shipping method";
-                    $d_shipping_options_arr[] = $oShipping->getName();
-                }
-
-                if (!empty($mv["d_shipping_options"])) {
-                    $d_shipping_options_arr_add = explode(",", $mv["d_shipping_options"]);
-                    if (!empty($d_shipping_options_arr_add) && is_array($d_shipping_options_arr_add)) {
-                        foreach ($d_shipping_options_arr_add as $k_s => $v_s) {
-                            $additional_shipping_method = trim($v_s);
-                            if (!empty($additional_shipping_method)) {
-                                $d_shipping_options_arr[] = $additional_shipping_method;
-                            }
-                        }
-                    }
-                }
-
-                $mnfs[$m_id]["d_shipping_options_arr"] = $d_shipping_options_arr;
-                unset($d_shipping_options_arr);
-
-                $order_products .= '<hr style="width:100%; margin: 5px 0 -5px 0; border: 0 none; border-bottom: 1px solid #999999;">S3 Stores, Inc.<br />Phone: ' . $config["Company"]["company_phone"] . '<br />Fax: ' . $config["Company"]["company_fax"] . '<br />URL: <a href="http://www.s3stores.com">www.s3stores.com</a>';
-                $mess_body .= '<br />' . $order_products;
-
-                $mess_body = str_replace("{{signature}}", $signature, $mess_body);
-                $mess_body = str_replace("{{userfirstname}}", $userfirstname, $mess_body);
-                $mess_body = str_replace("{{userfullname}}", $userfullname, $mess_body);
-
-                $mnfs[$m_id]['mess_body'] = $mess_body;
-
-                $mnfs[$m_id]['d_subject_line_8'] = str_replace("{{orderid}}", $order["order_prefix"] . $orderid, $mv["d_subject_line_8"]);
-                $mnfs[$m_id]['d_subject_line_8'] = str_replace("{{signature}}", $signature, $mnfs[$m_id]['d_subject_line_8']);
-                $mnfs[$m_id]['d_subject_line_8'] = str_replace("{{userfirstname}}", $userfirstname, $mnfs[$m_id]['d_subject_line_8']);
-                $mnfs[$m_id]['d_subject_line_8'] = str_replace("{{userfullname}}", $userfullname, $mnfs[$m_id]['d_subject_line_8']);
-
-                $mnfs[$m_id]['d_order_entry_operator_subject_line_8'] = str_replace("{{orderid}}", $order["order_prefix"] . $orderid, $mv["d_order_entry_operator_subject_line_8"]);
-                $mnfs[$m_id]['d_order_entry_operator_subject_line_8'] = str_replace("{{signature}}", $signature, $mnfs[$m_id]['d_order_entry_operator_subject_line_8']);
-                $mnfs[$m_id]['d_order_entry_operator_subject_line_8'] = str_replace("{{userfirstname}}", $userfirstname, $mnfs[$m_id]['d_order_entry_operator_subject_line_8']);
-                $mnfs[$m_id]['d_order_entry_operator_subject_line_8'] = str_replace("{{userfullname}}", $userfullname, $mnfs[$m_id]['d_order_entry_operator_subject_line_8']);
-
-                $mnfs[$m_id]['d_instructions_to_order_entry_operator'] = str_replace("{{orderid}}", $order["order_prefix"] . $orderid, $mv["d_instructions_to_order_entry_operator"]);
-
-                $mnfs[$m_id]['d_instructions_to_order_entry_operator'] = str_replace("{{signature}}", $signature, $mnfs[$m_id]['d_instructions_to_order_entry_operator']);
-                $mnfs[$m_id]['d_instructions_to_order_entry_operator'] = str_replace("{{userfirstname}}", $userfirstname, $mnfs[$m_id]['d_instructions_to_order_entry_operator']);
-                $mnfs[$m_id]['d_instructions_to_order_entry_operator'] = str_replace("{{userfullname}}", $userfullname, $mnfs[$m_id]['d_instructions_to_order_entry_operator']);
-
-                $grand_total                = $order['shipping_groups'][$m_id]["total"]["gross"];
-                $mnfs[$m_id]["grand_total"] = $grand_total;
-
-                $actual_shipping_cost                = $order['shipping_groups'][$m_id]["actual_shipping_cost"]["gross"];
-                $mnfs[$m_id]["actual_shipping_cost"] = $actual_shipping_cost;
-
-                $estimated_profit = (1 - $config["Additional_shipping_charge"]["credit_card_processing_fees"] / 100) * $grand_total - $config["Additional_shipping_charge"]["per_transaction"] - $total_product_cost_to_us - $actual_shipping_cost;
-                $estimated_profit = price_format($estimated_profit);
-
-                $mnfs[$m_id]["estimated_profit"] = $estimated_profit;
-                if ($estimated_profit < 0) {
-                    $mnfs[$m_id]["estimated_profit_abs"] = abs($estimated_profit);
-                }
-
-                if ($grand_total > 0) {
-                    $estimated_profit_margin = $estimated_profit / ((1 - $config["Additional_shipping_charge"]["credit_card_processing_fees"] / 100) * $grand_total);
-                }
-                $estimated_profit_margin                = price_format($estimated_profit_margin);
-                $mnfs[$m_id]["estimated_profit_margin"] = $estimated_profit_margin;
-
-                $estimated_profit_margin_percent = $estimated_profit_margin * 100;
-                $estimated_profit_margin_percent = intval($estimated_profit_margin_percent);
-
-                $mnfs[$m_id]["estimated_profit_margin_percent"] = $estimated_profit_margin_percent;
-                if ($estimated_profit_margin_percent < 0) {
-                    $mnfs[$m_id]["estimated_profit_margin_percent_abs"] = abs($estimated_profit_margin_percent);
-                }
-
-                if ($order["shipping_groups"][$m_id]["shipping_value_selectbox"] == "required_shipping_charge") {
-                    $required_shipping_charge = $order["shipping_groups"][$m_id]["actual_shipping_net"];
-                }
-                else {
-                    $required_shipping_charge = $actual_shipping_cost * $config["Additional_shipping_charge"]["required_shipping_charge_k"];
-                }
-
-                $required_shipping_charge                = price_format($required_shipping_charge);
-                $mnfs[$m_id]["required_shipping_charge"] = $required_shipping_charge;
-
-                $additional_shipping_charge                = $required_shipping_charge - $order['shipping_groups'][$m_id]["shipping_cost"]["gross"];
-                $additional_shipping_charge                = price_format($additional_shipping_charge);
-                $mnfs[$m_id]["additional_shipping_charge"] = $additional_shipping_charge;
-
-                $estimated_profit_after_additional_payment                = $estimated_profit + (1 - $config["Additional_shipping_charge"]["credit_card_processing_fees"] / 100) * $additional_shipping_charge - $config["Additional_shipping_charge"]["per_transaction"];
-                $estimated_profit_after_additional_payment                = price_format($estimated_profit_after_additional_payment);
-                $mnfs[$m_id]["estimated_profit_after_additional_payment"] = $estimated_profit_after_additional_payment;
-
-                if ($estimated_profit_after_additional_payment < 0) {
-                    $mnfs[$m_id]["estimated_profit_after_additional_payment_abs"] = abs($estimated_profit_after_additional_payment);
-                }
-
-                if (
-                    ($grand_total + $additional_shipping_charge) > 0
-                    && (1 - $config["Additional_shipping_charge"]["credit_card_processing_fees"] / 100) > 0
-                ) {
-                    $estimated_profit_margin_after_additional_payment = $estimated_profit_after_additional_payment / ((1 - $config["Additional_shipping_charge"]["credit_card_processing_fees"] / 100) * ($grand_total + $additional_shipping_charge));
-                }
-
-                $estimated_profit_margin_after_additional_payment                = price_format($estimated_profit_margin_after_additional_payment);
-                $mnfs[$m_id]["estimated_profit_margin_after_additional_payment"] = $estimated_profit_margin_after_additional_payment;
-
-                if ($estimated_profit_margin_after_additional_payment < 0) {
-                    $mnfs[$m_id]["estimated_profit_margin_after_additional_payment_abs"] = abs($estimated_profit_margin_after_additional_payment);
-                }
-
-                $estimated_profit_margin_after_additional_payment_percent = $estimated_profit_margin_after_additional_payment * 100;
-                $estimated_profit_margin_after_additional_payment_percent                = intval($estimated_profit_margin_after_additional_payment_percent);
-                $mnfs[$m_id]["estimated_profit_margin_after_additional_payment_percent"] = $estimated_profit_margin_after_additional_payment_percent;
-                if ($estimated_profit_margin_after_additional_payment < 0) {
-                    $mnfs[$m_id]["estimated_profit_margin_after_additional_payment_percent_abs"] = abs($estimated_profit_margin_after_additional_payment_percent);
-                }
-
-                if (
-                    empty($order_data["order"]["shipping_groups"][$m_id]["additional_shipping_status"])
-                    && (
-                        ($additional_shipping_charge < $config["Additional_shipping_charge"]["waive_additional_shipping_charge"])
-                        || ($estimated_profit > $config["Additional_shipping_charge"]["estimated_profit"] && $estimated_profit_margin_percent > $config["Additional_shipping_charge"]["estimated_profit_margin"])
-                    )
-                ) {
-
-                    db_query("UPDATE $sql_tbl[order_groups] SET additional_shipping_status='W' WHERE orderid='$orderid' AND manufacturerid='$m_id'");
-                    $mnfs["reload_page"] = "Y";
-                }
-
-                if ($additional_shipping_charge > 0) {
-
-                    if (!empty($order["po_details"]) && is_array($order["po_details"])) {
-                        $additional_shipping_charge_message = $config["Additional_shipping_charge"]["po_message_body"];
-                    }
-                    else {
-                        $additional_shipping_charge_message = $config["Additional_shipping_charge"]["message_body"];
+                    ) {
+                        $d_shipping_options_arr[] = "the least expensive shipping method";
+                        $d_shipping_options_arr[] = $order["shipping_groups"][$m_id]["real_shipping_method"];
+                        $d_shipping_options_arr[] = $oShipping->getName();
+                    } else {
+                        $d_shipping_options_arr[] = "the least expensive shipping method";
+                        $d_shipping_options_arr[] = $oShipping->getName();
                     }
 
-                    $additional_shipping_charge_message = str_replace("{{orderid}}", $order["order_prefix"] . $orderid, $additional_shipping_charge_message);
-                    $additional_shipping_charge_message = str_replace("{{required}}", "$" . price_format($required_shipping_charge), $additional_shipping_charge_message);
-                    $additional_shipping_charge_message = str_replace("{{additional}}", "$" . price_format($additional_shipping_charge), $additional_shipping_charge_message);
-                    $additional_shipping_charge_message = str_replace("{{fullname}}", $userinfo["firstname"], $additional_shipping_charge_message);
-                    $additional_shipping_charge_message = str_replace("{{po_number}}", $order["po_number"], $additional_shipping_charge_message);
-                    $additional_shipping_charge_message = str_replace("{{signature}}", $signature, $additional_shipping_charge_message);
-                    $additional_shipping_charge_message = str_replace("{{userfirstname}}", $userfirstname, $additional_shipping_charge_message);
-                    $additional_shipping_charge_message = str_replace("{{userfullname}}", $userfullname, $additional_shipping_charge_message);
-
-                    $mnfs[$m_id]["additional_shipping_charge_message"] = $additional_shipping_charge_message;
-
-                    if (!empty($order["po_details"]) && is_array($order["po_details"])) {
-                        $additional_shipping_charge_subject_line = $config["Additional_shipping_charge"]["po_subject_line"];
-                    }
-                    else {
-                        $additional_shipping_charge_subject_line = $config["Additional_shipping_charge"]["subject_line"];
-                    }
-
-                    $additional_shipping_charge_subject_line                = str_replace("{{orderid}}", $order["order_prefix"] . $orderid, $additional_shipping_charge_subject_line);
-                    $additional_shipping_charge_subject_line                = str_replace("{{required}}", "$" . price_format($required_shipping_charge), $additional_shipping_charge_subject_line);
-                    $additional_shipping_charge_subject_line                = str_replace("{{additional}}", "$" . price_format($additional_shipping_charge), $additional_shipping_charge_subject_line);
-                    $additional_shipping_charge_subject_line                = str_replace("{{fullname}}", $userinfo["firstname"], $additional_shipping_charge_subject_line);
-                    $additional_shipping_charge_subject_line                = str_replace("{{po_number}}", $order["po_number"], $additional_shipping_charge_subject_line);
-                    $mnfs[$m_id]["additional_shipping_charge_subject_line"] = $additional_shipping_charge_subject_line;
-                }
-
-                $mnfs[$m_id]["d_website_search_for_sku_url"]         = str_replace("{{mpn}}", "---mpn---", $mnfs[$m_id]["d_website_search_for_sku_url"]);
-                $mnfs[$m_id]["d_link_to_order_distributors_website"] = str_replace("{{orderid}}", $order["order_prefix"] . $orderid, $mnfs[$m_id]["d_link_to_order_distributors_website"]);
-
-                $compose_email_to_distributor = "";
-                if (!empty($mv["d_send_to_email_for_templates"])) {
-                    $compose_email_to_distributor = $mv["d_send_to_email_for_templates"];
-                }
-                else {
-                    if ($mv["submit_to_operator"] == "by_email_or_and_fax" && !empty($mv["email"])) {
-                        $compose_email_to_distributor = $mv["email"];
-                    }
-                }
-                $mnfs[$m_id]["compose_email_to_distributor"] = $compose_email_to_distributor;
-
-
-                $tmp_cur_time_sec                  = time();
-                $d_server_min_distributor_time_sec = $mv["d_server_min_distributor_time"] * 60 * 60;
-                $tmp_cur_time_sec -= $d_server_min_distributor_time_sec;
-                $mnfs[$m_id]["distributor_time"] = $tmp_cur_time_sec;
-                $tmp_cur_time_date_format        = date("G.i", $tmp_cur_time_sec);
-                $tmp_date_mm_dd_yyyy             = date("m/d/Y", $tmp_cur_time_sec);
-                $tmp_number_of_day_of_week = date("w", $tmp_cur_time_sec); // 0 (for Sunday) through 6 (for Saturday)
-
-                if ($tmp_cur_time_date_format >= "8.30" && $tmp_cur_time_date_format <= "16.30" && ($tmp_number_of_day_of_week != "0" && $tmp_number_of_day_of_week != "6")) {
-
-                    if (!empty($request_availability_options) && is_array($request_availability_options)) {
-                        foreach ($request_availability_options as $k_r => $v_r) {
-                            if ($v_r["date_mm_dd_yyyy"] == $tmp_date_mm_dd_yyyy && $v_r["active"] == "Y") {
-                                $good_time_to_send_email_to_distributor = "N";
+                    if (!empty($mv["d_shipping_options"])) {
+                        $d_shipping_options_arr_add = explode(",", $mv["d_shipping_options"]);
+                        if (!empty($d_shipping_options_arr_add) && is_array($d_shipping_options_arr_add)) {
+                            foreach ($d_shipping_options_arr_add as $k_s => $v_s) {
+                                $additional_shipping_method = trim($v_s);
+                                if (!empty($additional_shipping_method)) {
+                                    $d_shipping_options_arr[] = $additional_shipping_method;
+                                }
                             }
                         }
                     }
 
-                    if ($good_time_to_send_email_to_distributor != "N") {
-                        $good_time_to_send_email_to_distributor = "Y";
+                    $mnfs[$m_id]["d_shipping_options_arr"] = $d_shipping_options_arr;
+                    unset($d_shipping_options_arr);
+
+                    $order_products .= '<hr style="width:100%; margin: 5px 0 -5px 0; border: 0 none; border-bottom: 1px solid #999999;">S3 Stores, Inc.<br />Phone: ' . $config["Company"]["company_phone"] . '<br />Fax: ' . $config["Company"]["company_fax"] . '<br />URL: <a href="http://www.s3stores.com">www.s3stores.com</a>';
+                    $mess_body .= '<br />' . $order_products;
+
+                    $mess_body = str_replace("{{signature}}", $signature, $mess_body);
+                    $mess_body = str_replace("{{userfirstname}}", $userfirstname, $mess_body);
+                    $mess_body = str_replace("{{userfullname}}", $userfullname, $mess_body);
+
+                    $mnfs[$m_id]['mess_body'] = $mess_body;
+
+                    $mnfs[$m_id]['d_subject_line_8'] = str_replace("{{orderid}}", $order["order_prefix"] . $orderid, $mv["d_subject_line_8"]);
+                    $mnfs[$m_id]['d_subject_line_8'] = str_replace("{{signature}}", $signature, $mnfs[$m_id]['d_subject_line_8']);
+                    $mnfs[$m_id]['d_subject_line_8'] = str_replace("{{userfirstname}}", $userfirstname, $mnfs[$m_id]['d_subject_line_8']);
+                    $mnfs[$m_id]['d_subject_line_8'] = str_replace("{{userfullname}}", $userfullname, $mnfs[$m_id]['d_subject_line_8']);
+
+                    $mnfs[$m_id]['d_order_entry_operator_subject_line_8'] = str_replace("{{orderid}}", $order["order_prefix"] . $orderid, $mv["d_order_entry_operator_subject_line_8"]);
+                    $mnfs[$m_id]['d_order_entry_operator_subject_line_8'] = str_replace("{{signature}}", $signature, $mnfs[$m_id]['d_order_entry_operator_subject_line_8']);
+                    $mnfs[$m_id]['d_order_entry_operator_subject_line_8'] = str_replace("{{userfirstname}}", $userfirstname, $mnfs[$m_id]['d_order_entry_operator_subject_line_8']);
+                    $mnfs[$m_id]['d_order_entry_operator_subject_line_8'] = str_replace("{{userfullname}}", $userfullname, $mnfs[$m_id]['d_order_entry_operator_subject_line_8']);
+
+                    $mnfs[$m_id]['d_instructions_to_order_entry_operator'] = str_replace("{{orderid}}", $order["order_prefix"] . $orderid, $mv["d_instructions_to_order_entry_operator"]);
+
+                    $mnfs[$m_id]['d_instructions_to_order_entry_operator'] = str_replace("{{signature}}", $signature, $mnfs[$m_id]['d_instructions_to_order_entry_operator']);
+                    $mnfs[$m_id]['d_instructions_to_order_entry_operator'] = str_replace("{{userfirstname}}", $userfirstname, $mnfs[$m_id]['d_instructions_to_order_entry_operator']);
+                    $mnfs[$m_id]['d_instructions_to_order_entry_operator'] = str_replace("{{userfullname}}", $userfullname, $mnfs[$m_id]['d_instructions_to_order_entry_operator']);
+
+                    $grand_total = $order['shipping_groups'][$m_id]["total"]["gross"];
+                    $mnfs[$m_id]["grand_total"] = $grand_total;
+
+                    $actual_shipping_cost = $order['shipping_groups'][$m_id]["actual_shipping_cost"]["gross"];
+                    $mnfs[$m_id]["actual_shipping_cost"] = $actual_shipping_cost;
+
+                    $estimated_profit = (1 - $config["Additional_shipping_charge"]["credit_card_processing_fees"] / 100) * $grand_total - $config["Additional_shipping_charge"]["per_transaction"] - $total_product_cost_to_us - $actual_shipping_cost;
+                    $estimated_profit = price_format($estimated_profit);
+
+                    $mnfs[$m_id]["estimated_profit"] = $estimated_profit;
+                    if ($estimated_profit < 0) {
+                        $mnfs[$m_id]["estimated_profit_abs"] = abs($estimated_profit);
                     }
 
-                    $mnfs[$m_id]["good_time_to_send_email_to_distributor"] = $good_time_to_send_email_to_distributor;
-                }
-                else {
-                    $mnfs[$m_id]["good_time_to_send_email_to_distributor"] = "N";
-                }
+                    if ($grand_total > 0) {
+                        $estimated_profit_margin = $estimated_profit / ((1 - $config["Additional_shipping_charge"]["credit_card_processing_fees"] / 100) * $grand_total);
+                    }
+                    $estimated_profit_margin = price_format($estimated_profit_margin);
+                    $mnfs[$m_id]["estimated_profit_margin"] = $estimated_profit_margin;
 
-                $mnfs[$m_id]["distributor_phone"] = func_query_first_cell("SELECT phone FROM $sql_tbl[distributor_contacts] WHERE manufacturerid='$m_id' AND phone!='' ORDER BY distributor_field_code asc LIMIT 1");
+                    $estimated_profit_margin_percent = $estimated_profit_margin * 100;
+                    $estimated_profit_margin_percent = intval($estimated_profit_margin_percent);
 
-                $phone_normalized = preg_replace("/[^0-9]/S", "", $mnfs[$m_id]["distributor_phone"]);
+                    $mnfs[$m_id]["estimated_profit_margin_percent"] = $estimated_profit_margin_percent;
+                    if ($estimated_profit_margin_percent < 0) {
+                        $mnfs[$m_id]["estimated_profit_margin_percent_abs"] = abs($estimated_profit_margin_percent);
+                    }
 
-                if (strlen($phone_normalized) == "10") {
-                    $mnfs[$m_id]["distributor_phone_phone_normalized"] = "+1" . $phone_normalized;
+                    if ($order["shipping_groups"][$m_id]["shipping_value_selectbox"] == "required_shipping_charge") {
+                        $required_shipping_charge = $order["shipping_groups"][$m_id]["actual_shipping_net"];
+                    } else {
+                        $required_shipping_charge = $actual_shipping_cost * $config["Additional_shipping_charge"]["required_shipping_charge_k"];
+                    }
+
+                    $required_shipping_charge = price_format($required_shipping_charge);
+                    $mnfs[$m_id]["required_shipping_charge"] = $required_shipping_charge;
+
+                    $additional_shipping_charge = $required_shipping_charge - $order['shipping_groups'][$m_id]["shipping_cost"]["gross"];
+                    $additional_shipping_charge = price_format($additional_shipping_charge);
+                    $mnfs[$m_id]["additional_shipping_charge"] = $additional_shipping_charge;
+
+                    $estimated_profit_after_additional_payment = $estimated_profit + (1 - $config["Additional_shipping_charge"]["credit_card_processing_fees"] / 100) * $additional_shipping_charge - $config["Additional_shipping_charge"]["per_transaction"];
+                    $estimated_profit_after_additional_payment = price_format($estimated_profit_after_additional_payment);
+                    $mnfs[$m_id]["estimated_profit_after_additional_payment"] = $estimated_profit_after_additional_payment;
+
+                    if ($estimated_profit_after_additional_payment < 0) {
+                        $mnfs[$m_id]["estimated_profit_after_additional_payment_abs"] = abs($estimated_profit_after_additional_payment);
+                    }
+
+                    if (
+                        ($grand_total + $additional_shipping_charge) > 0
+                        && (1 - $config["Additional_shipping_charge"]["credit_card_processing_fees"] / 100) > 0
+                    ) {
+                        $estimated_profit_margin_after_additional_payment = $estimated_profit_after_additional_payment / ((1 - $config["Additional_shipping_charge"]["credit_card_processing_fees"] / 100) * ($grand_total + $additional_shipping_charge));
+                    }
+
+                    $estimated_profit_margin_after_additional_payment = price_format($estimated_profit_margin_after_additional_payment);
+                    $mnfs[$m_id]["estimated_profit_margin_after_additional_payment"] = $estimated_profit_margin_after_additional_payment;
+
+                    if ($estimated_profit_margin_after_additional_payment < 0) {
+                        $mnfs[$m_id]["estimated_profit_margin_after_additional_payment_abs"] = abs($estimated_profit_margin_after_additional_payment);
+                    }
+
+                    $estimated_profit_margin_after_additional_payment_percent = $estimated_profit_margin_after_additional_payment * 100;
+                    $estimated_profit_margin_after_additional_payment_percent = intval($estimated_profit_margin_after_additional_payment_percent);
+                    $mnfs[$m_id]["estimated_profit_margin_after_additional_payment_percent"] = $estimated_profit_margin_after_additional_payment_percent;
+                    if ($estimated_profit_margin_after_additional_payment < 0) {
+                        $mnfs[$m_id]["estimated_profit_margin_after_additional_payment_percent_abs"] = abs($estimated_profit_margin_after_additional_payment_percent);
+                    }
+
+                    if (
+                        empty($order_data["order"]["shipping_groups"][$m_id]["additional_shipping_status"])
+                        && (
+                            ($additional_shipping_charge < $config["Additional_shipping_charge"]["waive_additional_shipping_charge"])
+                            || ($estimated_profit > $config["Additional_shipping_charge"]["estimated_profit"] && $estimated_profit_margin_percent > $config["Additional_shipping_charge"]["estimated_profit_margin"])
+                        )
+                    ) {
+
+                        db_query("UPDATE $sql_tbl[order_groups] SET additional_shipping_status='W' WHERE orderid='$orderid' AND manufacturerid='$m_id'");
+                        $mnfs["reload_page"] = "Y";
+                    }
+
+                    if ($additional_shipping_charge > 0) {
+
+                        if (!empty($order["po_details"]) && is_array($order["po_details"])) {
+                            $additional_shipping_charge_message = $config["Additional_shipping_charge"]["po_message_body"];
+                        } else {
+                            $additional_shipping_charge_message = $config["Additional_shipping_charge"]["message_body"];
+                        }
+
+                        $additional_shipping_charge_message = str_replace("{{orderid}}", $order["order_prefix"] . $orderid, $additional_shipping_charge_message);
+                        $additional_shipping_charge_message = str_replace("{{required}}", "$" . price_format($required_shipping_charge), $additional_shipping_charge_message);
+                        $additional_shipping_charge_message = str_replace("{{additional}}", "$" . price_format($additional_shipping_charge), $additional_shipping_charge_message);
+                        $additional_shipping_charge_message = str_replace("{{fullname}}", $userinfo["firstname"], $additional_shipping_charge_message);
+                        $additional_shipping_charge_message = str_replace("{{po_number}}", $order["po_number"], $additional_shipping_charge_message);
+                        $additional_shipping_charge_message = str_replace("{{signature}}", $signature, $additional_shipping_charge_message);
+                        $additional_shipping_charge_message = str_replace("{{userfirstname}}", $userfirstname, $additional_shipping_charge_message);
+                        $additional_shipping_charge_message = str_replace("{{userfullname}}", $userfullname, $additional_shipping_charge_message);
+
+                        $mnfs[$m_id]["additional_shipping_charge_message"] = $additional_shipping_charge_message;
+
+                        if (!empty($order["po_details"]) && is_array($order["po_details"])) {
+                            $additional_shipping_charge_subject_line = $config["Additional_shipping_charge"]["po_subject_line"];
+                        } else {
+                            $additional_shipping_charge_subject_line = $config["Additional_shipping_charge"]["subject_line"];
+                        }
+
+                        $additional_shipping_charge_subject_line = str_replace("{{orderid}}", $order["order_prefix"] . $orderid, $additional_shipping_charge_subject_line);
+                        $additional_shipping_charge_subject_line = str_replace("{{required}}", "$" . price_format($required_shipping_charge), $additional_shipping_charge_subject_line);
+                        $additional_shipping_charge_subject_line = str_replace("{{additional}}", "$" . price_format($additional_shipping_charge), $additional_shipping_charge_subject_line);
+                        $additional_shipping_charge_subject_line = str_replace("{{fullname}}", $userinfo["firstname"], $additional_shipping_charge_subject_line);
+                        $additional_shipping_charge_subject_line = str_replace("{{po_number}}", $order["po_number"], $additional_shipping_charge_subject_line);
+                        $mnfs[$m_id]["additional_shipping_charge_subject_line"] = $additional_shipping_charge_subject_line;
+                    }
+
+                    $mnfs[$m_id]["d_website_search_for_sku_url"] = str_replace("{{mpn}}", "---mpn---", $mnfs[$m_id]["d_website_search_for_sku_url"]);
+                    $mnfs[$m_id]["d_link_to_order_distributors_website"] = str_replace("{{orderid}}", $order["order_prefix"] . $orderid, $mnfs[$m_id]["d_link_to_order_distributors_website"]);
+
+                    $compose_email_to_distributor = "";
+                    if (!empty($mv["d_send_to_email_for_templates"])) {
+                        $compose_email_to_distributor = $mv["d_send_to_email_for_templates"];
+                    } else {
+                        if ($mv["submit_to_operator"] == "by_email_or_and_fax" && !empty($mv["email"])) {
+                            $compose_email_to_distributor = $mv["email"];
+                        }
+                    }
+                    $mnfs[$m_id]["compose_email_to_distributor"] = $compose_email_to_distributor;
+
+
+                    $tmp_cur_time_sec = time();
+                    $d_server_min_distributor_time_sec = $mv["d_server_min_distributor_time"] * 60 * 60;
+                    $tmp_cur_time_sec -= $d_server_min_distributor_time_sec;
+                    $mnfs[$m_id]["distributor_time"] = $tmp_cur_time_sec;
+                    $tmp_cur_time_date_format = date("G.i", $tmp_cur_time_sec);
+                    $tmp_date_mm_dd_yyyy = date("m/d/Y", $tmp_cur_time_sec);
+                    $tmp_number_of_day_of_week = date("w", $tmp_cur_time_sec); // 0 (for Sunday) through 6 (for Saturday)
+
+                    if ($tmp_cur_time_date_format >= "8.30" && $tmp_cur_time_date_format <= "16.30" && ($tmp_number_of_day_of_week != "0" && $tmp_number_of_day_of_week != "6")) {
+
+                        if (!empty($request_availability_options) && is_array($request_availability_options)) {
+                            foreach ($request_availability_options as $k_r => $v_r) {
+                                if ($v_r["date_mm_dd_yyyy"] == $tmp_date_mm_dd_yyyy && $v_r["active"] == "Y") {
+                                    $good_time_to_send_email_to_distributor = "N";
+                                }
+                            }
+                        }
+
+                        if ($good_time_to_send_email_to_distributor != "N") {
+                            $good_time_to_send_email_to_distributor = "Y";
+                        }
+
+                        $mnfs[$m_id]["good_time_to_send_email_to_distributor"] = $good_time_to_send_email_to_distributor;
+                    } else {
+                        $mnfs[$m_id]["good_time_to_send_email_to_distributor"] = "N";
+                    }
+
+                    $mnfs[$m_id]["distributor_phone"] = func_query_first_cell("SELECT phone FROM $sql_tbl[distributor_contacts] WHERE manufacturerid='$m_id' AND phone!='' ORDER BY distributor_field_code asc LIMIT 1");
+
+                    $phone_normalized = preg_replace("/[^0-9]/S", "", $mnfs[$m_id]["distributor_phone"]);
+
+                    if (strlen($phone_normalized) == "10") {
+                        $mnfs[$m_id]["distributor_phone_phone_normalized"] = "+1" . $phone_normalized;
+                    }
                 }
             }
         }
@@ -4324,10 +4309,11 @@ function func_other_customer_orders($email, $orderid = 0)
 {
     global $sql_tbl, $smarty;
 
-    if ($orders = OrderModel::objects()->filter([
-        'email' => $email,
-        'orderid__isnt' => $orderid])
-    ->order(['orderid'])->all()) {
+    if ($orders = OrderModel::objects()
+        ->filter(['email' => $email])
+        ->exclude(['orderid' => $orderid])
+        ->order(['orderid'])->all())
+    {
 
         $count_Completed = 0;
         $count_Fraud     = 0;

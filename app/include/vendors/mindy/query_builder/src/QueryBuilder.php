@@ -562,6 +562,7 @@ class QueryBuilder
         $this->_from = '';
         $this->_union = [];
         $this->_having = [];
+        $this->_alias = null;
         return $this;
     }
 
@@ -606,15 +607,18 @@ class QueryBuilder
     {
         if (!is_array($condition)) {
             return (string)$condition;
-        } else if (empty($condition)) {
+        }
+        else if (empty($condition)) {
             return '';
         }
 
         if (isset($condition[0]) && is_string($condition[0])) {
             $operatorRaw = array_shift($condition);
             $operator = strtoupper($operatorRaw);
+
             return $this->buildAndCondition($operator, $condition, $params);
-        } else {
+        }
+        else {
             return $this->parseCondition($condition);
         }
     }
@@ -667,9 +671,11 @@ class QueryBuilder
 
                     list($lookup, $column, $lookupValue) = $this->lookupBuilder->parseLookup($this, $key, $value);
                     $column = $this->getLookupBuilder()->fetchColumnName($column);
+
                     if (empty($tableAlias) === false && strpos($column, '.') === false) {
                         $column = $tableAlias . '.' . $column;
                     }
+
                     $parts[] = $this->lookupBuilder->runLookup($this->getAdapter(), $lookup, $column, $lookupValue);
                 }
             }

@@ -8,16 +8,16 @@ require __DIR__ . DIRECTORY_SEPARATOR . "../www/init.php";
 set_time_limit(0);
 const LOG_CATEGORY = Xcart\AmazonMWS::BACK_PROCESS_LOG_NAME_FBA_INVENTORY;
 
-if ($config[LOG_CATEGORY] == "Y") {
-    func_backprocess_log(LOG_CATEGORY, 'Already launched');
-    Xcart\Mail::model()->
-    setTo('team@s3stores.com')->
-    setFrom('team@s3stores.com')->
-    setBody(LOG_CATEGORY . ' already launched')->
-    setSubject(sprintf('Attention! Xcart cron %s Already launched', LOG_CATEGORY))->sendEmail();
-    die("Already launched"); // ################################
-}
-db_query("REPLACE $sql_tbl[config] SET value='Y', name='" . LOG_CATEGORY . "'");
+//if ($config[LOG_CATEGORY] == "Y") {
+//    func_backprocess_log(LOG_CATEGORY, 'Already launched');
+//    Xcart\Mail::model()->
+//    setTo('team@s3stores.com')->
+//    setFrom('team@s3stores.com')->
+//    setBody(LOG_CATEGORY . ' already launched')->
+//    setSubject(sprintf('Attention! Xcart cron %s Already launched', LOG_CATEGORY))->sendEmail();
+//    die("Already launched"); // ################################
+//}
+//db_query("REPLACE $sql_tbl[config] SET value='Y', name='" . LOG_CATEGORY . "'");
 $start_time = time();
 
 $log_text = " * * *  Cron started  * * * ";
@@ -36,7 +36,7 @@ $classAmazonMWS->setReportType('_GET_FBA_FULFILLMENT_INVENTORY_RECEIPTS_DATA_')
     ->_Request('UpdateReportAcknowledgements')
     ->processReportFulfillmentInventoryData();
 
-db_query("UPDATE $sql_tbl[config] SET value='N' WHERE name='" . LOG_CATEGORY . "'");
+//db_query("UPDATE $sql_tbl[config] SET value='N' WHERE name='" . LOG_CATEGORY . "'");
 
 $current_time = time();
 

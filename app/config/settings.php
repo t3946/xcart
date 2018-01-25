@@ -5,7 +5,7 @@ $local_config = __DIR__ . DS .'settings_local.php';
 
 return array_replace_recursive([
    'name' => 'Xcart',
-   'exit_on_end' => false,
+   'exit_on_end' => true,
    'paths' => [
        'base'   => realpath(implode(DS, [__DIR__, '..'])),
        'root'   => realpath(implode(DS, [__DIR__, '..', '..'])),
@@ -39,8 +39,7 @@ return array_replace_recursive([
                        'enum' => 'string'
                    ],
                    'cache' => [
-                       'class' => '\\Xcart\\App\\Orm\\Cache\\FilesystemCache',
-                       'directory' => 'base.runtime.query_cache'
+                       'class' => '\Xcart\App\Orm\Cache\RedisCache',
                    ],
                    'driverOptions' => [
 //                       PDO::ATTR_EMULATE_PREPARES => false,
@@ -103,17 +102,11 @@ return array_replace_recursive([
        ],
 
        'cache' => [
-           'class' => '\\Xcart\\App\\Cache\\Cache',
-           'saveInMemory' => true,
-           'memoryDriver' => 'memory',
+           'class' => '\Xcart\App\Cache\Cache',
            'drivers' => [
                'default' =>  [
-                   'class' => '\\Xcart\\App\\Cache\\Drivers\\File',
+                   'class' => '\Xcart\App\Cache\Drivers\Redis',
                ],
-               'memory' =>  [
-                   'class' => '\\Xcart\\App\\Cache\\Drivers\\Memory',
-                   'numCacheQuery' => 30,
-               ]
            ]
        ],
 
@@ -121,7 +114,6 @@ return array_replace_recursive([
        'mail' => [
            'class' => '\Modules\Mail\Components\Mailer',
            'defaultFrom' => 'robot@s3stores.com',
-//           'defaultFrom' => 'robot@{domain}',
        ],
 
        'auth' => [
@@ -131,14 +123,23 @@ return array_replace_recursive([
        'logger' => include __DIR__. DS . 'logger.php',
        'errorHandler' => [
            'class' => '\\Xcart\\App\\Main\\ErrorHandler',
-           'debug' => true,
+           'debug' => false,
            'ignoringTypes' => [
+//               E_RECOVERABLE_ERROR,
                E_DEPRECATED,
                E_USER_DEPRECATED,
                E_NOTICE,
                E_USER_NOTICE,
                E_WARNING,
                E_USER_WARNING,
+           ],
+           'loggingIgnoredTypes' => [
+               E_RECOVERABLE_ERROR,
+//               E_DEPRECATED,
+               E_USER_DEPRECATED,
+//               E_WARNING,
+               E_USER_WARNING,
+               E_USER_NOTICE,
            ]
        ],
    ],

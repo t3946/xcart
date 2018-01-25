@@ -85,6 +85,7 @@ $userfiles_dir = func_get_files_location().DIRECTORY_SEPARATOR;
 if ($REQUEST_METHOD == "POST") {
 
 	$data = array();
+    $file_upload_data_not_image = [];
 	$data["is_copied"] = false; # file is not a copy and should not deleted
 
 	switch($source) {

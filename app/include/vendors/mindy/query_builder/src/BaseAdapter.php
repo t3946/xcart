@@ -123,10 +123,13 @@ abstract class BaseAdapter implements ISQLGenerator
      */
     public function quoteValue($str)
     {
-        if ($str instanceof Expression)
-        {
+        if ($str instanceof Expression) {
             return $str->toSQL();
         }
+//        else if (is_null($str)) {
+//            $str = '';
+//            trigger_error('Warning: The value is null, is given to the string, possibly incorrect behavior.', E_USER_WARNING);
+//        }
         else if (!is_string($str)) {
             return $str;
         }
@@ -172,7 +175,7 @@ abstract class BaseAdapter implements ISQLGenerator
 
     public function quoteSql($sql)
     {
-        $tablePrefix = $this->tablePrefix;
+//        $tablePrefix = $this->tablePrefix;
 
 //        if (preg_match('/\\{\\{(%?[\w\-\. ]+%?)\\}\\}|\\[\\[([\w\-\. ]+)\\]\\]|\\[\\[([\w\-\. ]+)\\]\\][\s]*=[\s]*\\@([\w\-\. \/\%\:]+)\\@/', $sql))
 //        {
@@ -195,7 +198,8 @@ abstract class BaseAdapter implements ISQLGenerator
     {
         if ($rawValue === true || $rawValue === false || $rawValue === 'true' || $rawValue === 'false') {
             return $this->getBoolean($rawValue);
-        } else if ($rawValue === 'null' || $rawValue === null) {
+        }
+        else if ($rawValue === 'null' || $rawValue === null) {
             return 'NULL';
         }
         return $rawValue;

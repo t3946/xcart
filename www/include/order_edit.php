@@ -51,7 +51,6 @@ if (!defined("XCART_SESSION_START")) {
 
 x_load('order_edit', 'taxes');
 
-include $xcart_dir . "/shipping/shipping.php";
 include $xcart_dir . "/include/countries.php";
 include $xcart_dir . "/include/states.php";
 
@@ -59,7 +58,7 @@ x_session_register("intershipper_rates");
 x_session_register("intershipper_recalc");
 x_session_register("current_carrier", "UPS");
 
-$oOrder = new Order(['orderid' => $orderid]);
+$oOrder = $orderid ? OrderModel::objects()->get(['orderid' => $orderid]) : null;
 $smarty->assign('oOrder', $oOrder);
 $mail_smarty->assign('oOrder', $oOrder);
 
@@ -604,7 +603,17 @@ if ($REQUEST_METHOD == "POST")
                             $linkid = $v["tracking_shipper"][$_k];
                         }
 
-                        $tracking[]                                   = ['linkid' => $linkid, 'tracknum' => trim($v["tracking_number"][$_k]), 'ship_date' => trim($v["tracking_ship_date"][$_k]), 'carrier_id' => $sh];
+                        $t_shipdate = trim($v["tracking_ship_date"][$_k]);
+                        $t_shipdate = empty($t_shipdate) ? (new \DateTime())->format('m/d/Y') : $t_shipdate;
+
+                        $tracking[]                                   = [
+                            'linkid' => $linkid,
+                            'tracknum' => trim($v["tracking_number"][$_k]),
+                            'ship_date' => $t_shipdate,
+                            'shipping_date' => empty($t_shipdate) ? null : \DateTime::createFromFormat('m/d/Y H:i:s', $t_shipdate.' 00:00:00'),
+                            'carrier_id' => $sh
+                        ];
+
                         $order['shipping_groups'][$m_id]['dc_status'] = 'S';
                         define('TRACKING_ADDED', 1);
 
@@ -1425,7 +1434,17 @@ if ($REQUEST_METHOD == "POST")
                                             $linkid = $v["tracking_shipper"][$invoice_number][$_k];
                                         }
 
-                                        $tracknums[$m_id][$tmp_tracknums_counter] = ['linkid' => $linkid, 'tracknum' => trim($v["tracking_number"][$invoice_number][$_k]), 'invoice_number' => $invoice_number, 'ship_date' => trim($v["tracking_ship_date"][$invoice_number][$_k]), 'carrier_id' => $sh];
+                                        $t_shipdate = trim($v["tracking_ship_date"][$invoice_number][$_k]);
+                                        $t_shipdate = empty($t_shipdate) ? (new \DateTime())->format('m/d/Y') : $t_shipdate;
+
+                                        $tracknums[$m_id][$tmp_tracknums_counter] = [
+                                            'linkid' => $linkid,
+                                            'tracknum' => trim($v["tracking_number"][$invoice_number][$_k]),
+                                            'invoice_number' => $invoice_number,
+                                            'ship_date' => $t_shipdate,
+                                            'shipping_date' => empty($t_shipdate) ? null : \DateTime::createFromFormat('m/d/Y H:i:s', $t_shipdate.' 00:00:00'),
+                                            'carrier_id' => $sh
+                                        ];
                                         $tmp_tracknums_counter++;
 
                                         if (!empty($linkid)) {
@@ -1500,6 +1519,10 @@ if ($REQUEST_METHOD == "POST")
                                 $tracknums_to_db[$tracknums_to_db_index]["tracknum"]       = $vv["tracknum"];
                                 $tracknums_to_db[$tracknums_to_db_index]["invoice_number"] = $vv["invoice_number"];
                                 $tracknums_to_db[$tracknums_to_db_index]["ship_date"]      = $vv["ship_date"];
+                                if (empty($vv["shipping_date"])) {
+                                    $vv["shipping_date"] = empty($vv["ship_date"]) ? null : \DateTime::createFromFormat('m/d/Y H:i:s', $vv["ship_date"].' 00:00:00');
+                                }
+                                $tracknums_to_db[$tracknums_to_db_index]["shipping_date"]  = $vv["shipping_date"];
                                 $tracknums_to_db[$tracknums_to_db_index]["carrier_id"]     = $vv["carrier_id"];
                                 $tracknums_to_db_index++;
 
@@ -2187,7 +2210,7 @@ if (!empty($order["shipping_groups"]) && is_array($order["shipping_groups"])) {
 $smarty->assign("convert_to_regular_order_show_button", $convert_to_regular_order_show_button);
 $smarty->assign("order", $order);
 
-$oOrder = Order::model(['orderid' => $orderid]);
+$oOrder = OrderModel::objects()->get(['orderid' => $orderid]);
 $smarty->assign("oOrder", $oOrder);
 $mail_smarty->assign('oOrder', $oOrder);
 

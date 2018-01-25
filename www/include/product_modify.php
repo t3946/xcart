@@ -586,7 +586,7 @@ if (($REQUEST_METHOD == "POST") && ($mode == "product_modify")) {
 		$sku_is_exist);
 
 
-	if (!$fillerror || $oProduct->isGroupRoot()) {
+	if (!$fillerror || ($oProduct && $oProduct->isGroupRoot())) {
 	#
 	# If no errors
 	#
@@ -928,8 +928,10 @@ if (($REQUEST_METHOD == "POST") && ($mode == "product_modify")) {
 
 		func_array2update("products", $query_data, "productid = '$productid'");
 
-        $oProduct->group_mask = $group_mask;
-		$oProduct->update(['group_mask']);
+        if ($oProduct) {
+            $oProduct->group_mask = $group_mask;
+            $oProduct->update(['group_mask']);
+        }
 
 #
 ##

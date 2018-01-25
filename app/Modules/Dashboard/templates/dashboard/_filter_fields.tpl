@@ -654,6 +654,29 @@
         <li>
             <div class="row">
                 <div class="columns large-4">
+                    <label for="o_submit_operator">Submit operator:</label>
+                </div>
+
+                <div class="columns large-6">
+                    <select type="text" name="search[order][submit_operator][]" id="o_submit_operator" class="big" data-ajax-from="operator" multiple>
+                        {foreach $form_data.order.submit_operator as $value}
+                            <option value="{raw $value.id}" selected>
+                                {raw $value.text}
+                            </option>
+                        {/foreach}
+                    </select>
+                </div>
+
+                <div class="columns large-2 not">
+                    <input type="checkbox" value="1" name="search[not][order][submit_operator]" id="noo" {if $form_data.not.order.submit_operator}checked{/if}>
+                    <label for="noo">Not</label>
+                </div>
+            </div>
+        </li>
+
+        <li>
+            <div class="row">
+                <div class="columns large-4">
                     <label for="o_features">Order features:</label>
                 </div>
 

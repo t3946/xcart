@@ -777,10 +777,16 @@ if ($REQUEST_METHOD == "POST") {
 
                     foreach ($tracknums[$k] as $kk => $vv) {
                         if (!empty($vv["carrier_id"])) {
+                            $t_shipdate = $vv["ship_date"];
+
                             $tracknums_to_db[$tracknums_to_db_index]["linkid"]         = $vv["linkid"];
                             $tracknums_to_db[$tracknums_to_db_index]["tracknum"]       = $vv["tracknum"];
                             $tracknums_to_db[$tracknums_to_db_index]["invoice_number"] = $vv["invoice_number"];
-                            $tracknums_to_db[$tracknums_to_db_index]["ship_date"]      = $vv["ship_date"];
+                            $tracknums_to_db[$tracknums_to_db_index]["ship_date"]      = empty($t_shipdate) ? (new \DateTime())->format('m/d/Y') : $t_shipdate;
+                            if (empty($vv["shipping_date"])) {
+                                $vv["shipping_date"] = empty($tracknums_to_db[$tracknums_to_db_index]["ship_date"]) ? null : \DateTime::createFromFormat('m/d/Y H:i:s', $tracknums_to_db[$tracknums_to_db_index]["ship_date"].' 00:00:00');
+                            }
+                            $tracknums_to_db[$tracknums_to_db_index]["shipping_date"]  = $vv["shipping_date"];
                             $tracknums_to_db[$tracknums_to_db_index]["carrier_id"]     = $vv["carrier_id"];
 
                             $tracknums_to_db_index++;
@@ -1287,76 +1293,7 @@ $smarty->assign("orderid", $orderid);
 
 if ($REQUEST_METHOD == "POST") {
 
-    if ($mode == "calc_shipping" && !empty($mid)) {
-
-        $section_name = "main_order_tabs-ground_map";
-        x_session_save("section_name");
-        x_load('http');
-
-        $_products = [];
-
-        if (!empty($products))
-        {
-            foreach ($products as $k_p => $v_p)
-            {
-                if ($mid == $v_p['manufacturerid']) {
-
-                    $allow_to_add = true;
-
-                    if (!empty($order["refund_groups"][$mid]["products"]) && is_array($order["refund_groups"][$mid]["products"])) {
-
-                        foreach ($order["refund_groups"][$mid]["products"] as $kr => $vr) {
-                            if ($vr["productid"] == $v["productid"]) {
-
-                                $v_p["amount"] -= $vr["ref_qty"];
-
-                                if (empty($v_p["amount"])) {
-                                    $allow_to_add = false;
-                                }
-
-                                break;
-                            }
-                        }
-                    }
-
-                    if ($allow_to_add) {
-                        $v_p["cartid"] = $k_p + 1;
-                        $_products[]   = $v_p;
-                    }
-                }
-            }
-        }
-
-        if (!empty($_products)) {
-            $cart["products"]        = $_products;
-            $cart["max_cartid"]      = $k_p + 1;
-            $cart["source_sf"]       = $v_p["storefrontid"];
-            $cart["shipping_groups"] = $order["shipping_groups"];
-        }
-
-        $current_carrier     = 'UPS';
-        $intershipper_recalc = 'Y';
-
-        include $xcart_dir . "/shipping/shipping.php";
-        if ($config["Shipping"]["use_intershipper"] == "Y") {
-            include $xcart_dir . "/shipping/intershipper.php";
-        }
-        else {
-            include $xcart_dir . "/shipping/myshipper.php";
-        }
-
-        func_https_ctl('IGNORE');
-
-        $shipping = func_get_shipping_methods_list($cart, $_products, $userinfo, false, $mid);
-
-        func_https_ctl('STORE');
-
-        $show_intershipper_rates[$mid] = $shipping;
-        x_session_save("show_intershipper_rates");
-
-        func_header_location("order.php?orderid=" . $orderid . "&tab=y#main_order_tabs-");
-    }
-    elseif ($mode == 'map_incorrect' && !empty($zipcode)) {
+    if ($mode == 'map_incorrect' && !empty($zipcode)) {
         Xcart\GroundMap::model(['zipcode' => $zipcode])->_delete();
         func_header_location("order.php?orderid=" . $orderid);
     }

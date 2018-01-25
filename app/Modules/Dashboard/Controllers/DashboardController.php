@@ -9,6 +9,7 @@ use Modules\Dashboard\Models\GroupModel;
 use Modules\Dashboard\Models\UserFiltersLinkModel;
 use Modules\Dashboard\Stores\OrderSearchStore;
 use Modules\Goods\Models\ProductQuestionModel;
+use Modules\Sites\Models\SiteModel;
 use Modules\User\Models\UserModel;
 use Xcart\App\Controller\PrototypeAdminController;
 use Xcart\App\Main\Xcart;
@@ -34,7 +35,7 @@ class DashboardController extends PrototypeAdminController
 
     public function index()
     {
-        $models = DashboardFilter::objects()->filter(['enabled' => true])->all();
+        $models = DashboardFilter::objects()->filter(['enabled' => true])->cache(60)->all();
         $myModels = DashboardFilter::objects()->filter(['enabled' => true, 'users__id' => Xcart::app()->user->id])->order(['-position_row', '-position_column'])->all();
         $questionModels = ProductQuestionModel::objects()->select(['status', 'id' => new Expression('count(*)')])->exclude(['status' => ''])->group(['status'])->order(['-status'])->all();
 
@@ -64,6 +65,8 @@ class DashboardController extends PrototypeAdminController
                     'myModels' => $myModels,
                     'groups'  => GroupModel::objects()->filter(['filters__name__isnull' => false])->group(['id'])->all(),
                     'questions' => $questionModels,
+                    'user' => Xcart::app()->user,
+                    'site' => SiteModel::objects()->get(['storefrontid' => Xcart::app()->request->session->get('current_storefront')])
                 ]
             );
         }

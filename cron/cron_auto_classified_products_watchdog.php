@@ -16,18 +16,18 @@ set_time_limit(0);
 const LOG_CATEGORY = 'cron_auto_classified_products_watchdog';
 $aSendLines = [];
 
-if ($config[LOG_CATEGORY] == "Y") {
-    func_backprocess_log(LOG_CATEGORY, 'Already launched');
-    $oMail = \Xcart\App\Main\Xcart::app()->oldMail;
-    $oMail->to = 'team@s3stores.com';
-    $oMail->from = ('team@s3stores.com');
-    $oMail->subject = LOG_CATEGORY . ' already launched';
-    $oMail->body = sprintf('Attention! Xcart cron %s Already launched', LOG_CATEGORY);
-    $oMail->sendEmail();
-    die("Already launched"); // ################################
-}
-
-db_query("REPLACE $sql_tbl[config] SET value='Y', name='" . LOG_CATEGORY . "'");
+//if ($config[LOG_CATEGORY] == "Y") {
+//    func_backprocess_log(LOG_CATEGORY, 'Already launched');
+//    $oMail = \Xcart\App\Main\Xcart::app()->oldMail;
+//    $oMail->to = 'team@s3stores.com';
+//    $oMail->from = ('team@s3stores.com');
+//    $oMail->subject = LOG_CATEGORY . ' already launched';
+//    $oMail->body = sprintf('Attention! Xcart cron %s Already launched', LOG_CATEGORY);
+//    $oMail->sendEmail();
+//    die("Already launched"); // ################################
+//}
+//
+//db_query("REPLACE $sql_tbl[config] SET value='Y', name='" . LOG_CATEGORY . "'");
 $start_time = new DateTime('now');
 
 $log_text = " * * *  Cron started  * * * ";
@@ -60,7 +60,7 @@ if (!empty($aSendLines) && is_array($aSendLines)) {
     $oMail->sendEmail();
 }
 
-Config::model(['name' => LOG_CATEGORY])->setValue('N')->_update();
+//Config::model(['name' => LOG_CATEGORY])->setValue('N')->_update();
 $str_time = (new DateTime('now'))->diff($start_time)->format('%H:%I:%S');
 $log_text = "Cron completed. Processing time: {$str_time}";
 func_backprocess_log(LOG_CATEGORY, $log_text);

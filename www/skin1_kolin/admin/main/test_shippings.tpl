@@ -187,5 +187,6 @@ function check_zip_code_local(flag) {
 
 {/if}
 <!-- main area -->
+Temporary not work need refactoring!!!!
 </body>
 </html>

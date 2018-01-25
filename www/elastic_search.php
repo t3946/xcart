@@ -74,8 +74,8 @@ if (!empty($result["hits"]["hits"]) && is_array($result["hits"]["hits"]))
 
             if (!empty($e_product_info)) {
 
-                $product_model = new ProductModel($e_product_info);
-                $product_model->setIsNewRecord(false);
+                /** @var ProductModel $product_model */
+                $product_model = ProductModel::objects()->get(['productid' => $e_product_info['productid']]);
 
                 if ($product_model->isGroupRoot() && $product_model->getFrontendChilds()->count() === 0) {
                     continue;

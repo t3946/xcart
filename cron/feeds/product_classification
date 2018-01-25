@@ -1,6 +1,0 @@
-#!/bin/bash
-rm /home/feeds/product_classification_progress.txt
-echo "Start processing" >> /home/feeds/product_classification_progress.txt
-cd /var/www/stores/cron
-php5 ./cron_pc.php >> /home/feeds/product_classification_progress.txt
-echo " " >> /home/feeds/product_classification_progress.txt

@@ -11,6 +11,7 @@ namespace Modules\PBX\Controllers\Admin;
 use Mindy\QueryBuilder\Expression;
 use Mindy\QueryBuilder\Q\QOr;
 use Modules\Admin\Controllers\BackendController;
+use Modules\Order\Models\OrderModel;
 use Modules\PBX\Forms\CallsFilterForm;
 use Modules\PBX\Helpers\PBXHelper;
 use Modules\PBX\Models\PbxAnveoCallModel;
@@ -26,7 +27,7 @@ class PBXController extends BackendController
         $form = new CallsFilterForm();
         $form->populate($_GET);
 
-        $qs =  PbxAnveoCallModel::objects();
+        $qs =  PbxAnveoCallModel::objects()->order(['-start_at']);
         if (!empty($_GET)) {
 
             /** @var \Xcart\App\Orm\QuerySet $qs */
@@ -37,12 +38,18 @@ class PBXController extends BackendController
                         $qs->filter(['orders__orderid' => $value]);
                     }
                     elseif ($key == 'date_from') {
-                        $date = PBXHelper::getClearDate($value);
-                        $qs->filter(['start_at__gte' => $date->format('Y-m-d H:i:s')]);
+                        if (!is_null($value) && !empty($value)) {
+                            if ($date = PBXHelper::getClearDate($value)) {
+                                $qs->filter(['start_at__gte' => $date->format('Y-m-d H:i:s')]);
+                            }
+                        }
                     }
                     elseif ($key == 'date_to') {
-                        $date = PBXHelper::getClearDate($value);
-                        $qs->filter(['end_at__lte' => $date->format('Y-m-d H:i:s')]);
+                        if (!is_null($value) && !empty($value)) {
+                            if ($date = PBXHelper::getClearDate($value)) {
+                                $qs->filter(['end_at__lte' => $date->format('Y-m-d H:i:s')]);
+                            }
+                        }
                     }
                     elseif ($key == 'operator'){
 
@@ -107,16 +114,15 @@ class PBXController extends BackendController
                     $mass[$i]['url'] = $model->getUrl();
                 }
 
-                if ($orders = $model->bind_calls) {
-                    $count = count($orders);
-                    for($j = 0; $j < $count; $j++){
-                        $order_id = $orders[$j]->order_id;
-                            if(!empty($order_id)) {
-                                $mass[ $i ]['order'][ $j ]['order_id'] = $model->orders->get(['orderid' => $order_id])
-                                                                                       ->getOrderNumber();
-                                $mass[ $i ]['order'][ $j ]['order_url'] = $model->orders->get(['orderid' => $order_id])
-                                                                                        ->getAdminUrl();
-                            }
+                if ($binds = $model->bind_calls->all()) {
+
+                    foreach ($binds as $k => $bind) {
+                        /** @var OrderModel $order_model */
+                        $order_model = OrderModel::objects()->get(['orderid' => $bind->order_id]);
+
+                            $mass[ $i ]['order'][ $k ]['order_id'] = $order_model->getOrderNumber();
+                            $mass[ $i ]['order'][ $k ]['order_url'] = $order_model->getAdminUrl();
+
                     }
                 }
 
@@ -145,6 +151,7 @@ class PBXController extends BackendController
                 else {
                     $mass[ $i ]['diff'] = "Not defined";
                 }
+
             }
         }
 

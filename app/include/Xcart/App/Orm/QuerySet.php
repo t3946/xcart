@@ -254,15 +254,17 @@ class QuerySet extends QuerySetBase
 
     protected function execute($sql, array $params = [], $types = [])
     {
+        $rows = [];
         $qcp = null;
+
         if ($this->cache && $this->getConnection()->getConfiguration()->getResultCacheImpl()) {
             $qcp = new QueryCacheProfile($this->cache);
         }
 
-
-        $stmt = $this->getConnection()->executeQuery($sql, $params, $types, $qcp);
-        $rows = $stmt->fetchAll()?:[];
-        $stmt->closeCursor();
+        if ( $stmt = $this->getConnection()->executeQuery($sql, $params, $types, $qcp) ) {
+            $rows = $stmt->fetchAll()?:[];
+            $stmt->closeCursor();
+        }
 
         return $rows;
     }
@@ -283,7 +285,8 @@ class QuerySet extends QuerySetBase
 
         if (count($rows) > 1) {
             throw new MultipleObjectsReturned();
-        } elseif (count($rows) === 0) {
+        }
+        elseif (count($rows) === 0) {
             return null;
         }
 
@@ -293,7 +296,8 @@ class QuerySet extends QuerySetBase
         $row = array_shift($rows);
         if ($this->asArray) {
             return $row;
-        } else {
+        }
+        else {
             $model = $this->createModel($row);
             $model->setIsNewRecord(false);
             return $model;
@@ -799,10 +803,10 @@ class QuerySet extends QuerySetBase
         return $field;
     }
 
-    public function cache($life_time = null)
+    public function cache($ttl = null)
     {
 //        $this->cache = ($life_time)?$life_time:$this->getConnection()->getConfiguration()->;
-        $this->cache = $life_time;
+        $this->cache = $ttl;
         return $this;
     }
 }

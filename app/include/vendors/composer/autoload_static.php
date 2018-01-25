@@ -7,19 +7,18 @@ namespace Composer\Autoload;
 class ComposerStaticInited1e2f7cb4425e4bdc0264910bb94e92
 {
     public static $files = array (
+        '2c102faa651ef8ea5874edb585946bce' => __DIR__ . '/..' . '/swiftmailer/swiftmailer/lib/swift_required.php',
         '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
         'ad155f8f1cf0d418fe49e248db8c661b' => __DIR__ . '/..' . '/react/promise/src/functions_include.php',
         'e40631d46120a9c38ea139981f8dab26' => __DIR__ . '/..' . '/ircmaxell/password-compat/lib/password.php',
-        '2c102faa651ef8ea5874edb585946bce' => __DIR__ . '/..' . '/swiftmailer/swiftmailer/lib/swift_required.php',
-        'edc6464955a37aa4d5fbf39d40fb6ee7' => __DIR__ . '/..' . '/symfony/polyfill-php55/bootstrap.php',
         '3e2471375464aac821502deb0ac64275' => __DIR__ . '/..' . '/symfony/polyfill-php54/bootstrap.php',
+        'edc6464955a37aa4d5fbf39d40fb6ee7' => __DIR__ . '/..' . '/symfony/polyfill-php55/bootstrap.php',
         'a0edc8309cc5e1d60e3047b5df6b7052' => __DIR__ . '/..' . '/guzzlehttp/psr7/src/functions_include.php',
         'bd9634f2d41831496de0d3dfe4c94881' => __DIR__ . '/..' . '/symfony/polyfill-php56/bootstrap.php',
         'decc78cc4436b1292c6c0d151b19445c' => __DIR__ . '/..' . '/phpseclib/phpseclib/phpseclib/bootstrap.php',
         '68f9084e889ebf718663435970ab45e3' => __DIR__ . '/..' . '/mindy/query_builder/src/Conditions.php',
         'f29a2007f2178ee4ae11496b92ada6d1' => __DIR__ . '/../../../..' . '/app/include/func/func.core.php',
         '3d0a72febcb8a483969ed811c9d351f7' => __DIR__ . '/../../../..' . '/app/include/func/func.amazon.php',
-        '41b92a43e9244e79ae96a5087c0a28a2' => __DIR__ . '/../../../..' . '/app/include/func/func.amazon_shipping.php',
         '8a5fbc4004d1d6ab9474ee26d4d26a67' => __DIR__ . '/../../../..' . '/app/include/func/func.backoffice.php',
         '41152f076ea83bb54a480e7000e49960' => __DIR__ . '/../../../..' . '/app/include/func/func.cart.php',
         '085bd63b35db17112eb31e921f7ccf43' => __DIR__ . '/../../../..' . '/app/include/func/func.category.php',
@@ -133,6 +132,10 @@ class ComposerStaticInited1e2f7cb4425e4bdc0264910bb94e92
         'F' => 
         array (
             'Firebase\\JWT\\' => 13,
+        ),
+        'E' => 
+        array (
+            'Egulias\\EmailValidator\\' => 23,
         ),
         'D' => 
         array (
@@ -316,6 +319,10 @@ class ComposerStaticInited1e2f7cb4425e4bdc0264910bb94e92
         'Firebase\\JWT\\' => 
         array (
             0 => __DIR__ . '/..' . '/firebase/php-jwt/src',
+        ),
+        'Egulias\\EmailValidator\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/egulias/email-validator/EmailValidator',
         ),
         'Doctrine\\Common\\Cache\\' => 
         array (

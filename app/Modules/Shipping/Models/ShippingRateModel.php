@@ -8,6 +8,7 @@ use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\HasManyField;
+use Xcart\App\Orm\Fields\ManyToManyField;
 use Xcart\App\Orm\Model;
 use Xcart\App\Traits\DataModelTrait;
 use Xcart\ShippingRate;
@@ -49,6 +50,11 @@ class ShippingRateModel extends Model
                 'modelClass' => ZoneElementModel::className(),
                 'link' => ['zoneid' => 'zoneid'],
                 'extra' => ['field_type' => 'C']
+            ],
+            'cache_quotes' => [
+                'class' => ManyToManyField::class,
+                'modelClass' => ShippingCacheQuoteModel::class,
+                'link' => ['rateid' => 'rate_id'],
             ],
 
         ];

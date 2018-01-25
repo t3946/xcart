@@ -122,14 +122,8 @@
 	<form action="{$smarty.server.REQUEST_URI|amp}" method="post" name="storefrontsform">
 	<input type="hidden" name="mode" value="change_storefront"/>
 		<select name="cur_sf" onchange="javascript: document.storefrontsform.submit();">
-			<option value="0"{if $current_storefront eq '0'} selected="selected" disabled="disabled"{/if}>{$main_storefront}</option>
-            {foreach from=$storefronts item=sf}
-                {*
-                                <option value="{$sf.storefrontid}"{if $current_storefront eq $sf.storefrontid} selected="selected"{/if}>{$sf.domain}</option>
-                *}
-                {if $sf.storefrontid ne "0"}
-                    <option value="{$sf.storefrontid}"{if $current_storefront eq $sf.storefrontid} selected="selected" disabled="disabled" {/if}>{if $sf.storefront_name ne ""}{$sf.storefront_name}{else}{$sf.domain}{/if}</option>
-                {/if}
+            {foreach from=$sd_selects key=key item=sf}
+                <option value="{$key}"{if $current_storefront eq $key} selected="selected" disabled="disabled" {/if}>{$sf}</option>
             {/foreach}
 		</select>
 	</form>
@@ -143,21 +137,4 @@
 
 
 </tr>
-{******** Remove this line to display how much products there are online ****
-<tr>
-{insert name="productsonline" assign="_productsonline"}
-    <td colspan="4" class="NumberOfArticles" align="right">
-{if $config.Appearance.show_in_stock eq "Y"}
-{insert name="itemsonline" assign="_itemsonline"}
-{$lng.lbl_products_and_items_online|substitute:"X":$_productsonline:"Y":$_itemsonline}
-{else}
-{$lng.lbl_products_online|substitute:"X":$_productsonline}
-{/if}
-&nbsp;
-    </td>
-</tr>
-**** Remove this line to display how much products there are online ********}
-{*<tr>*}
-{*<td colspan="4">&nbsp;</td>*}
-{*</tr>*}
 </table>

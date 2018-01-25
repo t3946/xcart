@@ -15,6 +15,18 @@ return [
             'alias' => 'root.log.error',
             'formatter' => 'log'
         ],
+        'info' => [
+            'class' => '\\Xcart\\App\\Logger\\Handler\\RotatingFileHandler' ,
+            'level' => 'DEBUG',
+            'alias' => 'root.log.info',
+            'formatter' => 'log'
+        ],
+        'debug' => [
+            'class' => '\\Xcart\\App\\Logger\\Handler\\RotatingFileHandler' ,
+            'level' => 'DEBUG',
+            'alias' => 'root.log.debug',
+            'formatter' => 'log'
+        ],
         'sql' => [
             'class' => '\\Xcart\\App\\Logger\\Handler\\RotatingFileHandler',
             'level' =>  'DEBUG',
@@ -28,9 +40,13 @@ return [
             'class' => '\\Xcart\\App\\Logger\\Handler\\StreamHandler',
             'formatter' => 'console'
         ],
-//        'mail_admins' => [
-//            'class' => '\\Xcart\\App\\Logger\\Handler\\SwiftMailerHandler',
-//        ],
+        'error_mail_admins' => [
+            'class' => '\\Modules\\Mail\\LogHandlers\\MailProxyHandler',
+            'level' => 'DEBUG',
+            'formatter' => 'log',
+            'to' => 'team@s3stores.com',
+            'subject' => 'ERR LOG: {chanel}.{level_name}',
+        ],
     ],
     'formatters' => [
         'users' => [
@@ -48,15 +64,15 @@ return [
     'loggers' => [
         'sql' => [
             'class' => '\\Xcart\\App\\Logger\\Logger',
-            'handlers' => ['sql']
+            'handlers' => ['sql', 'error_mail_admins']
         ],
-        'info' => [
+        'debug' => [
+            'class' => '\\Xcart\\App\\Logger\\DebugLogger',
+            'handlers' => ['debug', 'error_mail_admins']
+        ],
+        'error' => [
             'class' => '\\Xcart\\App\\Logger\\Logger',
-            'handlers' => ['default']
+            'handlers' => ['error', 'error_mail_admins']
         ],
-//        'error' => [
-//            'class' => '\\Xcart\\App\\Logger\\Logger',
-//            'handlers' => ['error', 'mail_admins']
-//        ],
     ]
 ];

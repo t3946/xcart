@@ -5,11 +5,13 @@ use Doctrine\DBAL\Types\Type;
 use Modules\Core\Models\StateModel;
 use Modules\Order\Helpers\OrderHelper;
 use Modules\Goods\Models\ProductModel;
+use Modules\User\Models\UserModel;
 use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\HasManyField;
 use Xcart\App\Orm\Fields\ManyToManyField;
+use Xcart\App\Orm\Fields\OneToOneField;
 use Xcart\App\Orm\Fields\SerializeField;
 use Xcart\App\Orm\Fields\TimestampField;
 use Xcart\App\Orm\Model;
@@ -42,6 +44,12 @@ class OrderModel extends Model
             ],
             'date' => [
                 'class' => TimestampField::className(),
+            ],
+            'extra_model' => [
+                'class' => ForeignField::class,
+                'modelClass' => OrderExtraModel::class,
+                'link' => ['orderid' => 'order_id'],
+                'null' => true,
             ],
             'groups' => [
                 'class' => HasManyField::className(),

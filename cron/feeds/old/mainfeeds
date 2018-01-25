@@ -1,6 +1,0 @@
-#!/bin/bash
-rm /home/feeds/mainfeeds_progress.txt
-echo " " >> /home/feeds/mainfeeds_progress.txt
-echo "Start processing" >> /home/feeds/mainfeeds_progress.txt
-cd /var/www/stores/
-php5 ./launch_main_product_feeds.php >> /home/feeds/mainfeeds_progress.txt

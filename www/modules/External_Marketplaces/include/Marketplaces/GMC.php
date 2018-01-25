@@ -116,9 +116,6 @@ class GMC extends StoreFrontMarketPlace
     {
         $iUpdateProductCount = $iNewIssues = $totalCounter = 0;
         $pageToken = null;
-        $log = new Logger('gmc_info');
-        $logFile = sprintf("../var/log/gmc_products-{$iStoreFrontId}-%s.php", date('ymd'));
-        $log->pushHandler(new StreamHandler($logFile, Logger::INFO));
         do {
             $oResponse = null;
             if (!empty($pageToken)) {
@@ -189,7 +186,6 @@ class GMC extends StoreFrontMarketPlace
                             $aQueue[] = ['productid' => $iProductId];
                             $iUpdateProductCount++;
                         }
-                        $log->addInfo($oProduct->link);
                     }
                 }
             } catch (\Exception $e) {

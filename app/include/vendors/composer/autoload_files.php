@@ -6,19 +6,18 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname(dirname(dirname($vendorDir)));
 
 return array(
+    '2c102faa651ef8ea5874edb585946bce' => $vendorDir . '/swiftmailer/swiftmailer/lib/swift_required.php',
     '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => $vendorDir . '/symfony/polyfill-mbstring/bootstrap.php',
     'ad155f8f1cf0d418fe49e248db8c661b' => $vendorDir . '/react/promise/src/functions_include.php',
     'e40631d46120a9c38ea139981f8dab26' => $vendorDir . '/ircmaxell/password-compat/lib/password.php',
-    '2c102faa651ef8ea5874edb585946bce' => $vendorDir . '/swiftmailer/swiftmailer/lib/swift_required.php',
-    'edc6464955a37aa4d5fbf39d40fb6ee7' => $vendorDir . '/symfony/polyfill-php55/bootstrap.php',
     '3e2471375464aac821502deb0ac64275' => $vendorDir . '/symfony/polyfill-php54/bootstrap.php',
+    'edc6464955a37aa4d5fbf39d40fb6ee7' => $vendorDir . '/symfony/polyfill-php55/bootstrap.php',
     'a0edc8309cc5e1d60e3047b5df6b7052' => $vendorDir . '/guzzlehttp/psr7/src/functions_include.php',
     'bd9634f2d41831496de0d3dfe4c94881' => $vendorDir . '/symfony/polyfill-php56/bootstrap.php',
     'decc78cc4436b1292c6c0d151b19445c' => $vendorDir . '/phpseclib/phpseclib/phpseclib/bootstrap.php',
     '68f9084e889ebf718663435970ab45e3' => $vendorDir . '/mindy/query_builder/src/Conditions.php',
     'f29a2007f2178ee4ae11496b92ada6d1' => $baseDir . '/app/include/func/func.core.php',
     '3d0a72febcb8a483969ed811c9d351f7' => $baseDir . '/app/include/func/func.amazon.php',
-    '41b92a43e9244e79ae96a5087c0a28a2' => $baseDir . '/app/include/func/func.amazon_shipping.php',
     '8a5fbc4004d1d6ab9474ee26d4d26a67' => $baseDir . '/app/include/func/func.backoffice.php',
     '41152f076ea83bb54a480e7000e49960' => $baseDir . '/app/include/func/func.cart.php',
     '085bd63b35db17112eb31e921f7ccf43' => $baseDir . '/app/include/func/func.category.php',
