@@ -22,7 +22,7 @@ class PBXController extends Controller
                 $string .= "  {$k} => {$v}  ";
             }
             $log_category = "Calls_Record_Anveo";
-            $log_text = "Исходящий звонок закончился со след.сессией: {$string}";
+            $log_text = "Звонок: {$string}";
             func_backprocess_log($log_category, $log_text);
         }
 
@@ -32,7 +32,7 @@ class PBXController extends Controller
                 $string .= "  {$k} => {$v}  ";
             }
             $log_category = "Calls_Record_Anveo";
-            $log_text = "Исходящий звонок закончился со след.сессией: {$string}";
+            $log_text = "Звонок: {$string}";
             func_backprocess_log($log_category, $log_text);
         }
 
