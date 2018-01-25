@@ -19,7 +19,17 @@ class PBXController extends Controller
         if ($_GET){
             $string = "";
             foreach ($_GET as $k => $v){
-                $string .= "  {$k} => $v  ";
+                $string .= "  {$k} => {$v}  ";
+            }
+            $log_category = "Calls_Record_Anveo";
+            $log_text = "Исходящий звонок закончился со след.сессией: {$string}";
+            func_backprocess_log($log_category, $log_text);
+        }
+
+        if ($_POST){
+            $string = "";
+            foreach ($_POST as $k => $v){
+                $string .= "  {$k} => {$v}  ";
             }
             $log_category = "Calls_Record_Anveo";
             $log_text = "Исходящий звонок закончился со след.сессией: {$string}";
