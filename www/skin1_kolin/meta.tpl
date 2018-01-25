@@ -49,8 +49,8 @@ var usertype = "{$usertype}";
 <meta name="robots" content="noindex">
 {/if}
 
-{if $metahelper}
-    {$metahelper->render()}
+{if $_meta_helper->compose()}
+    {$_meta_helper->render()}
 {else}
     {if $usertype eq "P" or $usertype eq "A"}
         <meta name="ROBOTS" content="NOINDEX,NOFOLLOW" />

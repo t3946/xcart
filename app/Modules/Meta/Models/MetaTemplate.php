@@ -15,6 +15,7 @@ namespace Modules\Meta\Models;
 
 use Modules\Meta\MetaModule;
 use Xcart\App\Orm\Fields\AutoField;
+use Xcart\App\Orm\Fields\JsonField;
 use Xcart\App\Orm\Fields\TextField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Model;
@@ -44,11 +45,11 @@ class MetaTemplate extends Model
                 'verboseName' => MetaModule::t('Description'),
                 'null' => true
             ],
-            'keywords' => [
-                'class' => TextField::className(),
-                'verboseName' => MetaModule::t('Keywords'),
+            'advanced' => [
+                'class' => JsonField::className(),
+                'verboseName' => MetaModule::t('Advanced fields'),
                 'null' => true
-            ]
+            ],
         ];
     }
     
@@ -62,14 +63,22 @@ class MetaTemplate extends Model
         return $this->render('title');
     }
 
-    public function renderKeywords()
-    {
-        return $this->render('keywords');
-    }
-
     public function renderDescription()
     {
         return $this->render('description');
+    }
+
+    public function renderAdvanced():array
+    {
+        $result = [];
+
+        if ($this->advanced) {
+            foreach ($this->advanced as $value) {
+                $result[$value['type']][$value['name']] = self::renderString($value['template'], $this->params);
+            }
+        }
+
+        return $result;
     }
 
     public function render($name)
