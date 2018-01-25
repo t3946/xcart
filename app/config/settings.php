@@ -2,6 +2,7 @@
 (defined('DS')?:define('DS', DIRECTORY_SEPARATOR));
 
 $local_config = __DIR__ . DS .'settings_local.php';
+$local_config = (is_file($local_config)) ? include $local_config : [];
 
 return array_replace_recursive([
    'name' => 'Xcart',
@@ -38,7 +39,10 @@ return array_replace_recursive([
                    'mapping' => [
                        'enum' => 'string'
                    ],
-                   'cache' => [
+                   'cache' => (defined('APP_DEV') && APP_DEV) ? [
+                       'class' => '\\Xcart\\App\\Orm\\Cache\\FilesystemCache',
+                       'directory' => 'base.runtime.query_cache'
+                   ] : [ //PRODUCTION CACHE
                        'class' => '\Xcart\App\Orm\Cache\RedisCache',
                    ],
                    'driverOptions' => [
@@ -101,7 +105,20 @@ return array_replace_recursive([
            ],
        ],
 
-       'cache' => [
+       'cache' => (defined('APP_DEV') && APP_DEV) ? [
+           'class' => '\\Xcart\\App\\Cache\\Cache',
+           'saveInMemory' => true,
+           'memoryDriver' => 'memory',
+           'drivers' => [
+               'default' =>  [
+                   'class' => '\\Xcart\\App\\Cache\\Drivers\\File',
+               ],
+               'memory' =>  [
+                   'class' => '\\Xcart\\App\\Cache\\Drivers\\Memory',
+                   'numCacheQuery' => 30,
+               ]
+           ]
+       ] : [ //PRODUCTION CACHE
            'class' => '\Xcart\App\Cache\Cache',
            'drivers' => [
                'default' =>  [
@@ -148,4 +165,4 @@ return array_replace_recursive([
        'logger',
        'db',
    ]
-],  (is_file($local_config)) ? include $local_config : []);
+],  $local_config);

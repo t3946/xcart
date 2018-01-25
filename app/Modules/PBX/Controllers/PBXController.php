@@ -16,6 +16,28 @@ class PBXController extends Controller
         $session = $this->getCallSession();
         $now = new \DateTime();
 
+        if ($_GET){
+            $string = "";
+            foreach ($_GET as $k => $v){
+                $string .= "  {$k} => {$v}  ";
+            }
+            $log_category = "Calls_Record_Anveo";
+            $log_text = "Звонок: {$string}";
+            func_backprocess_log($log_category, $log_text);
+        }
+
+        if ($_POST){
+            $string = "";
+            foreach ($_POST as $k => $v){
+                $string .= "  {$k} => {$v}  ";
+            }
+            $log_category = "Calls_Record_Anveo";
+            $log_text = "Звонок: {$string}";
+            func_backprocess_log($log_category, $log_text);
+        }
+
+
+
         if ($session) {
             list($model, $isNew) = PbxAnveoCallModel::objects()->getOrCreate(['session' => $session]);
 
@@ -81,18 +103,6 @@ class PBXController extends Controller
                 if ($e164) {
                     $model->e164 = $e164;
                 }
-            }
-
-            if ($request->get['outgoing_flow_start'] || $request->get['outgoing_flow_end']){
-                $log_category = "Calls_Record_Anveo";
-
-                if ($request->get->has('outgoing_flow_start')) {
-                    $log_text = "Исходящий звонок начался со след.сессией: {$request->get['ss']}";
-                }
-                elseif ($request->get->has('outgoing_flow_end')){
-                    $log_text = "Исходящий звонок закончился со след.сессией: {$request->get['ss']}";
-                }
-                func_backprocess_log($log_category, $log_text);
             }
 
             $model->save();

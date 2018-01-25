@@ -85,36 +85,33 @@ class AnveoAssignCalls
 
             $e164 = substr($e164, -10);
 
+            /** @var OrderModel $order_model */
             $qs = OrderModel::objects()->getQuerySet();
-            if ( $order_models = OrderModel::objects()
+            if ( $order_model = OrderModel::objects()
                                            ->filter([(new Expression("SUBSTRING({$qs->getTableAlias()}.phone, -10)"))->toSQL() => $e164])
                                            ->order(['-date'])
-                                           ->limit(5)
-                                           ->all() )
+                                           ->limit(1)
+                                           ->get() )
             {
-                $relevance_order = 0;
-                for ($i = 0; $i < count ($order_models); $i++){
+                $relevance_order = 10;
 
-                    $relevance_order += 10;
+                $mass = [
+                    'call_id' => $model->id,
+                    'order_id' => $order_model->orderid,
+                    'relevance_type' => OrdersCallsModel::ORDER_PHONE_EQUALS_CALLED_PHONE,
+                ];
 
-                    $mass = [
-                        'call_id' => $model->id,
-                        'order_id' => $order_models[$i]->orderid,
-                        'relevance_type' => OrdersCallsModel::ORDER_PHONE_EQUALS_CALLED_PHONE,
-                    ];
+                /** @var OrdersCallsModel $oc_model */
+                [$oc_model, $is_created] = OrdersCallsModel::objects()->getOrNew($mass);
 
-                    /** @var OrdersCallsModel $oc_model */
-                    [$oc_model, $is_created] = OrdersCallsModel::objects()->getOrNew($mass);
-
-                    if ($is_created) {
-                        $oc_model->relevance_order = $relevance_order;
-                        $oc_model->save();
-                    }
-
-                    $log_category = "anveo_calls";
-                    $log_text = "{$e164} - Привязан к заказу - {$order_models[$i]->orderid} по второй привязке";
-                    func_backprocess_log($log_category, $log_text);
+                if ($is_created) {
+                    $oc_model->relevance_order = $relevance_order;
+                    $oc_model->save();
                 }
+
+                $log_category = "anveo_calls";
+                $log_text = "{$e164} - Привязан к заказу - {$order_model->orderid} по второй привязке";
+                func_backprocess_log($log_category, $log_text);
             }
 
             $log_category = "anveo_calls";

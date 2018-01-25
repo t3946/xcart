@@ -2070,7 +2070,7 @@ function func_get_order_manufacturers($orderid)
                                 /** @var ProductModel $product_model */
                                 $product_model = $detail_model->product_model;
                                 $v = $product_model->getAttributes();
-                                $selected_product_options = "";
+                                $selected_product_options = $options = null;
 
                                 if (!empty($detail_model->product_options)) {
 
@@ -2079,6 +2079,7 @@ function func_get_order_manufacturers($orderid)
                                 } else {
 
                                     $extra_data = $detail_model->extra_data;
+
                                     if (!empty($extra_data['product_options'])) {
                                         list($variant, $options) = func_get_product_options_data($product_model->productid, $extra_data['product_options']);
                                     }
