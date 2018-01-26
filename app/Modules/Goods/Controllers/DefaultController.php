@@ -46,7 +46,7 @@ class DefaultController extends FrontendController
 //            $this->redirect($model->getAbsoluteUrl(true));
 //        }
 
-        $this->setMetaTemplate('product:base', [
+        $this->setMetaTemplate('products:base', [
             'model' => $model,
             'category' => $model->getMainCategory(),
             'site' => $site,

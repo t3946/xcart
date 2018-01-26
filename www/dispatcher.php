@@ -292,13 +292,21 @@ case 'C':
     $_GET['cat'] = $cat = intval($clean_url_data['resource_id']);
     $QUERY_STRING = 'cat=' . $cat . (!empty($QUERY_STRING) ? '&' . $QUERY_STRING : '');
     $PHP_SELF = dirname($PHP_SELF).'/home.php';
- 
+
+    \Modules\Meta\Helpers\MetaExtHelper::getInstance()
+        ->setBaseCode(\Modules\Meta\Types\MetaType::CATEGORY)
+        ->addParam('model', \Modules\Goods\Models\CategoryModel::objects()->get(['pk'=>$cat]));
+
+
     require $xcart_dir.DIR_CUSTOMER.'/home.php';
     break;
 
 case 'K':
     // Keyword page case
     $PHP_SELF = dirname($PHP_SELF).'/home.php';
+
+    \Modules\Meta\Helpers\MetaExtHelper::getInstance()
+        ->setBaseCode(\Modules\Meta\Types\MetaType::SEARCH);
 
     require $xcart_dir.DIR_CUSTOMER.'/home.php';
     break;
@@ -310,7 +318,9 @@ case 'P':
     $QUERY_STRING = 'productid=' . $productid . (!empty($QUERY_STRING) ? '&' . $QUERY_STRING : '');
     $PHP_SELF = dirname($PHP_SELF) . '/product.php';
 
-    
+    \Modules\Meta\Helpers\MetaExtHelper::getInstance()
+        ->setBaseCode(\Modules\Meta\Types\MetaType::PRODUCT)
+        ->addParam('model', \Modules\Goods\Models\ProductModel::objects()->get(['pk'=>$productid]));
 
     require $xcart_dir.DIR_CUSTOMER.'/product.php';
 
@@ -321,6 +331,10 @@ case 'M':
     $_GET['brandid'] = $brandid = intval($clean_url_data['resource_id']);
     $QUERY_STRING = 'brandid=' . $brandid . (!empty($QUERY_STRING) ? '&' . $QUERY_STRING : '');
     $PHP_SELF = dirname($PHP_SELF) . '/brands.php';
+
+    \Modules\Meta\Helpers\MetaExtHelper::getInstance()
+        ->setBaseCode(\Modules\Meta\Types\MetaType::BRAND)
+        ->addParam('model', \Modules\Brand\Models\BrandModel::objects()->get(['pk'=>$brandid]));
 
     include $xcart_dir.DIR_CUSTOMER.'/brands.php';
     break;
@@ -338,5 +352,3 @@ default:
 
     func_page_not_found();
 }
-
-?>

@@ -6,6 +6,7 @@ namespace Modules\Amp\Controllers;
 use Mindy\QueryBuilder\Expression;
 use Modules\Amp\Models\AmpProductModel;
 use Modules\Goods\Models\CategoryModel;
+use Modules\Meta\Types\MetaType;
 use Xcart\App\Controller\FrontendController;
 use Xcart\App\Main\Xcart;
 use Modules\Amp\Helpers\AmpHelper;
@@ -55,10 +56,10 @@ class AmpController extends FrontendController
             }
 
             $category = $model->getMainCategory();
-            $this->setMetaTemplate('product:base', [
+
+            $this->setMetaBase(MetaType::PRODUCT, [
                 'model' => $model,
-                'category' => $category,
-                'site' => $site,
+                'category' => $category
             ]);
 
 

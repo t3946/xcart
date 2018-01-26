@@ -413,7 +413,7 @@ class ProductModel extends Model implements ICartItem
         return $model->getAbsoluteUrl($full, true);
     }
 
-    public function getMainCategory()
+    public function getMainCategory():?CategoryModel
     {
         return CategoryModel::objects()->filter([
             'products__through__main' => 'Y',

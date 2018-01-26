@@ -274,7 +274,7 @@ class QuerySet extends QuerySetBase
      *
      * @param array $filter
      *
-     * @return array|null|\Xcart\App\Orm\ModelInterface
+     * @return null|\Xcart\App\Orm\ModelInterface
      * @throws \Doctrine\DBAL\DBALException
      * @throws \Exception
      * @throws \Xcart\App\Orm\Exception\MultipleObjectsReturned

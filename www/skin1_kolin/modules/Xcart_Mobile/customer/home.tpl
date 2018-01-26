@@ -19,6 +19,10 @@ vim: set ts=2 sw=2 sts=2 et:
 
   </head>
   <body>
+{else}
+  <div data-role="header">
+      {include file="meta_titles.tpl" }
+  </div>
 {/if}
 
     {include file="customer/page.tpl"}

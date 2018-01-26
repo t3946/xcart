@@ -33,6 +33,7 @@ trait MetaTrait
      * @var string|null
      */
     protected $metaTemplate = 'default';
+    protected $metaBase;
 
     /**
      * @var array
@@ -193,6 +194,12 @@ trait MetaTrait
         $this->metaTemplateParams = $params;
     }
 
+    public function setMetaBase($type, $params = [])
+    {
+        $this->metaBase = $type;
+        $this->metaTemplateParams = $params;
+    }
+
     public function addMetaTemplateParam($param, $data)
     {
         $this->metaTemplateParams[$param] = $data;
@@ -204,6 +211,11 @@ trait MetaTrait
     public function getMetaTemplate()
     {
         return $this->metaTemplate;
+    }
+
+    public function getMetaBase():?int
+    {
+        return $this->metaBase;
     }
 
     /**
