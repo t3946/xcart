@@ -5,8 +5,8 @@ require $xcart_dir."/include/security.php";
 
 x_session_register("search_data", []);
 
-if (empty($search_data["backprocess_logs"]) || !is_array($search_data["backprocess_logs"])) {
-    $search_data["backprocess_logs"] = [];
+if (empty($search_data) || !is_array($search_data)) {
+    $search_data = [];
 }
 
 $location[] = array("Backprocess logs", "");
