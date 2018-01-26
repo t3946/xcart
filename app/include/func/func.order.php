@@ -3959,7 +3959,7 @@ function func_instock_and_outofstock_items_table($products, $type_of_message = '
     $cidev_instock_items_table .= '<tr><td width="150px" style="text-align: left; font-weight: bold;">Item number</td><td width="250px" style="text-align: left; font-weight: bold;">Item name</td><td style="text-align: right; font-weight: bold;" nowrap="nowrap">Quantity in stock</td></tr>';
 
     $cidev_outofstock_items_table = '<table width="500px" border="1" cellpadding="5" cellspacing="0" bordercolor="#414236" style="font-family: Arial, Helvetica, sans-serif; font-size: 14px; color: #000000; line-height: 18px;">';
-    $cidev_outofstock_items_table .= '<tr><td width="150px" style="text-align: left; font-weight: bold;">Item number</td><td width="250px" style="text-align: left; font-weight: bold;">Item name</td><td style="text-align: right; font-weight: bold;" nowrap="nowrap">Quantity required</td><td style="text-align: right; font-weight: bold;" nowrap="nowrap" width="150px">ETA date</td></tr>';
+    $cidev_outofstock_items_table .= '<tr><td width="150px" style="text-align: left; font-weight: bold;">Item number</td><td width="250px" style="text-align: left; font-weight: bold;">Item name</td><td style="text-align: right; font-weight: bold;" nowrap="nowrap">Quantity required</td></tr>';
 
     $cidev_outofstock_items_eta_table = '<table width="500px" border="1" cellpadding="5" cellspacing="0" bordercolor="#414236" style="font-family: Arial, Helvetica, sans-serif; font-size: 14px; color: #000000; line-height: 18px;">';
     $cidev_outofstock_items_eta_table .= '<tr><td width="150px" style="text-align: left; font-weight: bold;">Item number</td><td width="250px" style="text-align: left; font-weight: bold;">Item name</td><td style="text-align: right; font-weight: bold;" nowrap="nowrap">Quantity required</td><td style="text-align: right; font-weight: bold;" nowrap="nowrap" width="150px">ETA date to ship all items</td></tr>';
@@ -4063,7 +4063,7 @@ function func_instock_and_outofstock_items_table($products, $type_of_message = '
                 }
 
                 if ($v["offer_backorder"] == "Y" || $type_of_message == "compose_message_page") {
-                    $cidev_outofstock_items_table .= '<tr><td width="150px" style="text-align: left;">' . $tmp_sku . '</td><td width="250px" style="text-align: left;"><a data-mce-href="' . $v["links"]["customer"] . '" href="' . $v["links"]["customer"] . '">' . $v["product"] . '</a>' . $selected_product_options . '</td><td style="text-align: right;">' . $v["amount"] . '</td><td style="text-align: right;" nowrap="nowrap">' . $tmp_eta_date_mm_dd_yyyy . '</td></tr>';
+                    $cidev_outofstock_items_table .= '<tr><td width="150px" style="text-align: left;">' . $tmp_sku . '</td><td width="250px" style="text-align: left;"><a data-mce-href="' . $v["links"]["customer"] . '" href="' . $v["links"]["customer"] . '">' . $v["product"] . '</a>' . $selected_product_options . '</td><td style="text-align: right;">' . $v["amount"] . '</td></tr>';
 
                     $count_outofstock_products_with_offer_backorder_Y++;
 
