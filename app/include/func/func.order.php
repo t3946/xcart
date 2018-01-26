@@ -4010,7 +4010,7 @@ function func_instock_and_outofstock_items_table($products, $type_of_message = '
                 $cidev_instock_items_table .= '<tr><td width="150px" style="text-align: left;">' . $tmp_sku . '</td><td width="250px" style="text-align: left;"><a data-mce-href="' . $v["links"]["customer"] . '" href="' . $v["links"]["customer"] . '">' . $v["product"] . '</a>' . $selected_product_options . '</td><td style="text-align: right;">' . $instock_items . '</td></tr>';
             }
 
-            if ($v["back"] > 0) {
+            if ($v["back"] > 0 || $type_of_message == "compose_message_page") {
                 $is_back = "Y";
 
                 $count_out_of_stock_items++;
