@@ -29,9 +29,7 @@ class ExpireHeadersMiddleware extends Middleware
                 }
                 else {
                     if (!defined('SET_EXPIRE')) {
-                        $request->getIsSecureConnection() ?
-                            header("Cache-Control: private, max-age=3600, must-revalidate") :
-                            header("Cache-Control: public, max-age=3600, must-revalidate");
+                        header("Cache-Control: public, max-age=3600, must-revalidate");
                     }
 
                     $last_modded = false;
