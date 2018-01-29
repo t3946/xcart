@@ -32,6 +32,14 @@ class ExpireHeadersMiddleware extends Middleware
                             header("Cache-Control: public, max-age=3600");
                     }
 
+                    $last_modded = false;
+                    foreach ( headers_list() as $header) {
+                        $last_modded = $last_modded ?: strpos(strtolower($header), 'last-modified:') !== false;
+                    }
+
+                     (!$last_modded) ?:
+                        header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
+
                     !defined("SET_EXPIRE") ?:
                         header("Expires: " . gmdate("D, d M Y H:i:s", SET_EXPIRE) . " GMT"); // is defined
                 }
