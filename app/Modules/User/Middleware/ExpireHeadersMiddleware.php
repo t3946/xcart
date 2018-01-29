@@ -15,35 +15,27 @@ class ExpireHeadersMiddleware extends Middleware
     {
         header('Vary: Accept-Encoding');
 
-        if (!headers_sent()) {
-//            header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
-//            $this->noCache();
-//            return;
+        if (!headers_sent())
+        {
+            $this->autoLastModified();
 
-            if (defined('AREA_TYPE') && AREA_TYPE == 'A') {
-                $this->noCache();
+            if (!defined('SET_EXPIRE')) {
+                header("Cache-Control: public, max-age=3600, must-revalidate");
             }
-            else {
-                if ($request->getIsAjax()) {
-                    $this->noCache();
-                }
-                else {
-                    if (!defined('SET_EXPIRE')) {
-                        header("Cache-Control: public, max-age=3600, must-revalidate");
-                    }
 
-                    $last_modded = false;
-                    foreach ( headers_list() as $header) {
-                        $last_modded = $last_modded ?: strpos(strtolower($header), 'last-modified:') !== false;
-                    }
+            !defined("SET_EXPIRE") ?:
+                header("Expires: " . gmdate("D, d M Y H:i:s", SET_EXPIRE) . " GMT"); // is defined
 
-                     ($last_modded) ?:
-                        header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
-
-                    !defined("SET_EXPIRE") ?:
-                        header("Expires: " . gmdate("D, d M Y H:i:s", SET_EXPIRE) . " GMT"); // is defined
-                }
+            if ( $request->getIsAjax() || (defined('AREA_TYPE') && AREA_TYPE == 'A'))
+            {
+                header("Cache-Control: no-cache, must-revalidate");
             }
+
+//            if (defined('AREA_TYPE') && AREA_TYPE == 'A') {
+//                defined("SET_EXPIRE") ?
+//                    header("Expires: " . gmdate("D, d M Y H:i:s", SET_EXPIRE) . " GMT"):
+//                    header("Expires: " . gmdate("D, d M Y H:i:s", 10) . " GMT"); // is defined
+//            }
         }
     }
 
@@ -55,5 +47,16 @@ class ExpireHeadersMiddleware extends Middleware
 
 //        header("Vary: User-Agent");
 //        header("Pragma: no-cache");
+    }
+
+    public function autoLastModified()
+    {
+        $last_modded = false;
+        foreach ( headers_list() as $header) {
+            $last_modded = $last_modded ?: strpos(strtolower($header), 'last-modified:') !== false;
+        }
+
+        ($last_modded) ?:
+            header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
     }
 }
