@@ -31,12 +31,11 @@ class ExpireHeadersMiddleware extends Middleware
 //                header("Cache-Control: no-cache, must-revalidate");
 //            }
 
-            if (defined('AREA_TYPE') && AREA_TYPE == 'A') {
-
+            if (defined('AREA_TYPE') && AREA_TYPE == 'A')
+            {
                 header("Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0");
-                defined("SET_EXPIRE") ?
-                    header("Expires: " . gmdate("D, d M Y H:i:s", SET_EXPIRE) . " GMT"):
-                    header("Expires: " . gmdate("D, d M Y H:i:s", 10) . " GMT");
+                defined("SET_EXPIRE") ?:
+                    header("Expires: " . gmdate("D, d M Y H:i:s", time() + 10) . " GMT");
             }
         }
     }
