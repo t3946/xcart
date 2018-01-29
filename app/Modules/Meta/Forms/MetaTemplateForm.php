@@ -12,7 +12,7 @@ class MetaTemplateForm extends ModelForm
     {
         return [
             'Main' => [
-                'code', 'title', 'description', 'keywords'
+                'code', 'title', 'description'
             ]
         ];
     }

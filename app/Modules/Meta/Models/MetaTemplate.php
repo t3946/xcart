@@ -45,11 +45,11 @@ class MetaTemplate extends Model
                 'verboseName' => MetaModule::t('Description'),
                 'null' => true
             ],
-            'advanced' => [
-                'class' => JsonField::className(),
-                'verboseName' => MetaModule::t('Advanced fields'),
-                'null' => true
-            ],
+//            'advanced' => [
+//                'class' => JsonField::className(),
+//                'verboseName' => MetaModule::t('Advanced fields'),
+//                'null' => true
+//            ],
         ];
     }
     
