@@ -12,6 +12,7 @@ use Xcart\App\Helpers\Creator;
 use Xcart\App\Helpers\Paths;
 use Xcart\App\Interfaces\AuthInterface;
 use Xcart\App\Main\ComponentsLibrary;
+use Xcart\App\Module\Module;
 use Xcart\App\Request\CliRequest;
 use Xcart\App\Request\HttpRequest;
 
@@ -121,7 +122,7 @@ class Application
         return $configs;
     }
 
-    public function getModule($name)
+    public function getModule($name):?Module
     {
         if (!isset($this->_modules[$name])) {
             $config = $this->getModuleConfig($name);

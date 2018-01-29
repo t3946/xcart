@@ -22,44 +22,41 @@ class CouponCodeMiddleware extends Middleware
 
     public function processHttpRequest($request)
     {
-        if (!Cli::isCli()) {
+        $flash = Xcart::app()->flash;
 
-            $flash = Xcart::app()->flash;
+        if ( $code = $this->getCouponCode($request) ) {
 
-            if ( $code = $this->getCouponCode($request) ) {
+            if ( $model = CouponKitModel::objects()->filter(['code' => $code, 'active' => true])->get()) {
+                $code = strtoupper($model->code);
 
-                if ( $model = CouponKitModel::objects()->filter(['code' => $code, 'active' => true])->get()) {
-                    $code = strtoupper($model->code);
+                if ($request->session->has(self::CODE_PARAM)) {
+                    $cc_appended = $request->session->get(self::CODE_PARAM);
+                    $cc_appended = strtoupper($cc_appended);
 
-                    if ($request->session->has(self::CODE_PARAM)) {
-                        $cc_appended = $request->session->get(self::CODE_PARAM);
-                        $cc_appended = strtoupper($cc_appended);
-
-                        if ($cc_appended != $code) {
-                            $flash->addWithCode(self::CODE_PARAM, "Coupon code \"{$cc_appended}\" changed to \"{$code}\"", $flash::TYPE_INFO);
-                        }
-
-                    }
-                    else {
-                        $flash->addWithCode(self::CODE_PARAM, "Appended coupon code: \"{$code}\"", $flash::TYPE_SUCCESS);
+                    if ($cc_appended != $code) {
+                        $flash->addWithCode(self::CODE_PARAM, "Coupon code \"{$cc_appended}\" changed to \"{$code}\"", $flash::TYPE_INFO);
                     }
 
-                    $request->session->add(self::CODE_PARAM, $code);
                 }
                 else {
-
-                    $flash->error("Incorrect coupon code");
+                    $flash->addWithCode(self::CODE_PARAM, "Appended coupon code: \"{$code}\"", $flash::TYPE_SUCCESS);
                 }
 
-                CouponOldCart::getInstance()->validateCoupon();
+                $request->session->add(self::CODE_PARAM, $code);
+            }
+            else {
 
-                $request->getIsGet()?: $request->refresh();
+                $flash->error("Incorrect coupon code");
             }
-            elseif ($request->post->has('discard-coupon')) {
-                $request->session->remove(self::CODE_PARAM);
-                $flash->success("Coupon has been discarded");
-                $request->refresh();
-            }
+
+            CouponOldCart::getInstance()->validateCoupon();
+
+            $request->getIsGet()?: $request->refresh();
+        }
+        elseif ($request->post->has('discard-coupon')) {
+            $request->session->remove(self::CODE_PARAM);
+            $flash->success("Coupon has been discarded");
+            $request->refresh();
         }
     }
 

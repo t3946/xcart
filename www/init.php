@@ -822,5 +822,6 @@ $smarty->register_function('getBanners', ['Xcart\Helpers\Banners', 'getBannerSma
 $smarty->register_function('getSliderData', ['Xcart\Helpers\SliderData', 'getSliderDataSmarty']);
 $smarty->register_function('getPricingArray', ['Modules\Goods\Helpers\ProductHelper', 'getPricingArray']);
 
+$smarty->assign('_meta_helper', Modules\Meta\Helpers\MetaExtHelper::getInstance());
 $smarty->assign('recaptcha_enable', $recaptcha_enable);
 $smarty->assign('key_recaptcha_public', $key_recaptcha_public);

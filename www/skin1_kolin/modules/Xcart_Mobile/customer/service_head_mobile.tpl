@@ -5,7 +5,10 @@ vim: set ts=2 sw=2 sts=2 et:
 {if $config.SEO.clean_urls_enabled eq "Y"}
   <base href="{$catalogs.customer}/" />
 {/if}
-{get_title page_type=$meta_page_type page_id=$meta_page_id}
+
+{include file="meta_titles.tpl" }
+{*{get_title page_type=$meta_page_type page_id=$meta_page_id}*}
+
 <meta charset="{$default_charset|default:"utf-8"}" />
 {*<meta name="viewport" content="width=width, initial-scale=1, minimum-scale=0.25, maximum-scale=5, user-scalable=yes" />*}
 <meta name="viewport" content="width=width, initial-scale={if $is_tablet}0.9{else}0.6{/if}, minimum-scale=0.6, maximum-scale=1, user-scalable=yes" />
@@ -16,6 +19,7 @@ vim: set ts=2 sw=2 sts=2 et:
 <link rel="apple-touch-icon" sizes="72x72" href="{if $config.Appearance.CDN_domain ne "" && $config.Appearance.Enable_CDN eq "Y"}//{$config.Appearance.CDN_domain}{else}{$current_location}{/if}/touch-icon-ipad.png" />
 <link rel="apple-touch-icon" sizes="114x114" href="{if $config.Appearance.CDN_domain ne "" && $config.Appearance.Enable_CDN eq "Y"}//{$config.Appearance.CDN_domain}{else}{$current_location}{/if}/touch-icon-iphone-retina.png" />
 <link rel="apple-touch-icon" sizes="144x144" href="{if $config.Appearance.CDN_domain ne "" && $config.Appearance.Enable_CDN eq "Y"}//{$config.Appearance.CDN_domain}{else}{$current_location}{/if}/touch-icon-ipad-retina.png" />
+
 {if $canonical_url}
   {if $oProduct && $oProduct->isGroupChild() && $oProduct->parent}
     <link rel="canonical" href="{$oProduct->parent->getUrl()}" />

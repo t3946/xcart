@@ -33,10 +33,10 @@ class MetaTemplateForm extends ModelForm
                 'class' => AceField::className(),
                 'language' => 'smarty',
             ],
-            'keywords' => [
-                'class' => AceField::className(),
+            'advanced' => [
+                'class' => JsonAceField::class,
                 'language' => 'smarty',
-            ],
+            ]
         ];
     }
 }
