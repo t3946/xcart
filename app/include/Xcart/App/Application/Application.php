@@ -251,7 +251,7 @@ class Application
         return !self::getIsCliMode();
     }
 
-    public function getUser()
+    public function getUser():?UserModel
     {
         /** @var AuthInterface $auth */
         if ($auth = $this->getComponent('auth')) {

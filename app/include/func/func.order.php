@@ -3734,8 +3734,10 @@ function func_change_order_group_status($orderid, $mid, $status)
             func_log_order($orderid, 'X', $log, $login);
         }
 
-        db_query('UPDATE ' . $sql_tbl['order_groups'] . ' SET ' . $status_column . '="' . $status . '"'
-                 . ' WHERE orderid="' . $orderid . '" AND manufacturerid="' . $mid . '"');
+        /** @var OrderGroupModel $order_group_m */
+        $order_group_m = OrderGroupModel::objects()->get(['orderid' => $orderid, 'manufacturerid' => $mid]);
+        $order_group_m->{$status_column} = $status;
+        $order_group_m->save([$status_column]);
 
         if (
             (($status == 'D' && $order_group[$status_column] != 'F')

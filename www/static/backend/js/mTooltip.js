@@ -9,7 +9,7 @@
         _tooltip: undefined,
         init: function (selector, options) {
             this.options = options || {};
-            this._tooltip = $('<div class="tooltip"></div>');
+            this._tooltip = $('<div class="mtooltip"></div>');
 
             var self = this;
             $(document).on('mouseenter', selector, function () {

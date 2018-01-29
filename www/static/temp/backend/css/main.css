@@ -669,7 +669,7 @@ html > body .mnotify {
     #notifier-box .message-box a .message-close {
       opacity: .4; }
 
-.tooltip {
+.mtooltip {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
@@ -686,19 +686,19 @@ html > body .mnotify {
   border-top: 1px solid rgba(255, 255, 255, 0.5);
   position: absolute;
   padding: 5px 10px; }
-  .tooltip.top:after {
+  .mtooltip.top:after {
     border-top-color: transparent;
     border-bottom: 10px solid rgba(255, 255, 255, 0.8);
     top: -20px;
     bottom: auto; }
-  .tooltip.left:after {
+  .mtooltip.left:after {
     left: 10px;
     margin: 0; }
-  .tooltip.right :after {
+  .mtooltip.right :after {
     right: 10px;
     left: auto;
     margin: 0; }
-  .tooltip:after {
+  .mtooltip:after {
     width: 0;
     height: 0;
     border-top: 10px solid rgba(255, 255, 255, 0.9);
@@ -2396,6 +2396,9 @@ a.ui-button:active,
 .text_align__right {
   text-align: right; }
 
+.text_align__left {
+  text-align: left; }
+
 .fw__bold {
   font-weight: 500; }
 
@@ -2405,6 +2408,70 @@ a.ui-button:active,
 .margin__first_image {
   margin-right: 5px;
   margin-bottom: 5px; }
+
+.itooltip {
+  position: relative;
+  display: inline-block;
+  border-bottom: 1px dotted black;
+  /* If you want dots under the hoverable text */
+  /* Tooltip text */ }
+  .itooltip:hover .info,
+  .itooltip:focus .info {
+    visibility: visible;
+    opacity: 1;
+    transform: translate3d(0, 0, 0); }
+  .itooltip .info {
+    padding: .3em;
+    box-sizing: border-box;
+    position: absolute;
+    bottom: 2em;
+    left: calc(50% - 500px);
+    display: block;
+    background: rgba(0, 0, 0, 0.8);
+    width: 500px;
+    font-size: 1em;
+    line-height: 1.2;
+    cursor: text;
+    visibility: hidden;
+    opacity: 0;
+    transform: translate3d(0, -20px, 0);
+    transition: all .5s ease-out;
+    color: whitesmoke; }
+    .itooltip .info:before {
+      position: absolute;
+      content: '';
+      width: 100%;
+      height: 14px;
+      bottom: -14px;
+      left: 0; }
+    .itooltip .info:after {
+      position: absolute;
+      content: '';
+      width: 10px;
+      height: 10px;
+      transform: rotate(45deg);
+      bottom: -5px;
+      left: 100%;
+      margin-left: -5px;
+      background: rgba(0, 0, 0, 0.8); }
+    .itooltip .info .pronounce {
+      display: block;
+      background: #fff;
+      background: rgba(0, 0, 0, 0.8);
+      padding: 8px 17px 10px 17px;
+      line-height: 16px; }
+      .itooltip .info .pronounce .fa {
+        position: relative;
+        margin-left: 10px;
+        top: 1px;
+        cursor: pointer;
+        transition: all .2s ease-out; }
+        .itooltip .info .pronounce .fa:hover {
+          transform: scale(1.15) translate3d(0, 0, 0);
+          backface-visibility: none; }
+  .itooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1; }
 
 .admin-body {
   -webkit-font-smoothing: antialiased;

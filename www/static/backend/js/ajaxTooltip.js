@@ -30,7 +30,7 @@
             onAfterSuccess: $.noop
         },
         classes: {
-            container: 'tooltip'
+            container: 'mtooltip'
         },
         _tooltip: null,
         _element: null,

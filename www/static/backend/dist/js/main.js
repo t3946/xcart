@@ -42297,7 +42297,7 @@ S2.define('jquery.select2',[
             onAfterSuccess: $.noop
         },
         classes: {
-            container: 'tooltip'
+            container: 'mtooltip'
         },
         _tooltip: null,
         _element: null,
@@ -43152,7 +43152,7 @@ $(function () {
         _tooltip: undefined,
         init: function (selector, options) {
             this.options = options || {};
-            this._tooltip = $('<div class="tooltip"></div>');
+            this._tooltip = $('<div class="mtooltip"></div>');
 
             var self = this;
             $(document).on('mouseenter', selector, function () {

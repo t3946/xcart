@@ -488,7 +488,10 @@ function func_oe_update_order($cart, $shipping_groups, $old_products = "")
             $oCustomer->updateFields($arrNewValue);
         }
 
-        func_array2update("orders", $query_data, "orderid='$cart[orderid]'");
+        $order_model = \Modules\Order\Models\OrderModel::objects()->get(['pk' => $cart['orderid']]);
+        $order_model->setAttributes( func_array_map('stripcslashes', $query_data) );
+        $order_model->save();
+//        func_array2update("orders", $query_data, "orderid='$cart[orderid]'");
     }
 
     if (!empty($shipping_groups)) {
@@ -746,7 +749,9 @@ function func_oe_update_order($cart, $shipping_groups, $old_products = "")
 
                 func_log_order_groups($query_data, $cart["orderid"], $mid, 'X', $login);
 
-                func_array2insert('order_groups', $query_data);
+//                func_array2insert('order_groups', $query_data);
+                $order_group = new \Modules\Order\Models\OrderGroupModel(func_array_map('stripcslashes', $query_data));
+                $order_group->save();
 
                 $last_status_change = $status;
             }
@@ -789,7 +794,11 @@ function func_oe_update_order($cart, $shipping_groups, $old_products = "")
 
                 func_log_order_groups($query_data, $cart["orderid"], $mid, 'X', $login);
 
-                func_array2update('order_groups', $query_data, "orderid='$cart[orderid]' AND manufacturerid='$mid'");
+                $order_group = \Modules\Order\Models\OrderGroupModel::objects()->get(['orderid' => $cart['orderid'], 'manufacturerid' => $mid]);
+                $order_group->setAttributes( func_array_map('stripcslashes', $query_data) );
+                $order_group->save();
+
+//                func_array2update('order_groups', $query_data, "orderid='$cart[orderid]' AND manufacturerid='$mid'");
             }
 
             if ( (isset($do_refund[$mid]) && $do_refund[$mid] == true) || (isset($v['refund']) && !empty($v['refund'])) )

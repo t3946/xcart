@@ -6,6 +6,7 @@ use Modules\Core\Models\StateModel;
 use Modules\Order\Helpers\OrderHelper;
 use Modules\Goods\Models\ProductModel;
 use Modules\User\Models\UserModel;
+use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\ForeignField;
@@ -162,6 +163,17 @@ class OrderModel extends Model
 
         return null;
     }
+
+    public function getEventsMessage()
+    {
+        return OrderHelper::getCountEventsActiveUserQS()
+            ->filter(['order_id' => $this->pk])
+            ->select([])
+            ->group([])
+            ->order(['-created_at'])
+            ->all();
+    }
+
     public function getOrderNumber()
     {
         return $this->order_prefix . $this->orderid;
@@ -180,5 +192,32 @@ class OrderModel extends Model
         return ProductModel::objects()
             ->filter(['order_details__orderid' => $this->orderid])
             ->all();
+    }
+
+    public function afterSave($owner, $isNew)
+    {
+        parent::afterSave($owner, $isNew);
+
+
+        $statuses = [];
+        $t_statuses = OrderStatusModel::objects()->cache(3600)->valuesList(['code', 'name']);
+        foreach ($t_statuses as $status) {
+            $statuses[$status['code']] = $status['name'];
+        }
+
+        foreach ($this->getOldAttributes() as $attribute => $oldValue) {
+            if (strpos($attribute, '_status') !== false) {
+                if ($this->{$attribute} != $oldValue)
+                {
+                    $old_status = $statuses[$oldValue] ?? $oldValue;
+                    $new_status = $statuses[$this->{$attribute}] ?? $this->{$attribute};
+
+                    Xcart::app()->event->trigger('order:status.changed', [
+                        'order_id' => $this->pk,
+                        'message' => "Order [{$attribute}]: {$old_status} -> {$new_status}"
+                    ]);
+                }
+            }
+        }
     }
 }
