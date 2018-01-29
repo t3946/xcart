@@ -13,6 +13,8 @@ class ExpireHeadersMiddleware extends Middleware
 
     public function processHttpRequest($request)
     {
+        header('Vary: Accept-Encoding');
+
         if (!headers_sent()) {
 //            header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
 //            $this->noCache();
