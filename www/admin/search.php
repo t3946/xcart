@@ -40,6 +40,10 @@ require $xcart_dir."/include/security.php";
 
 x_session_register("search_data", []);
 
+if (empty($search_data) || !is_array($search_data)) {
+    $search_data = [];
+}
+
 #
 # Define data for the navigation within section
 #
