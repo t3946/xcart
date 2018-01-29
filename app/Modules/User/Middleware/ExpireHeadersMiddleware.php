@@ -26,10 +26,10 @@ class ExpireHeadersMiddleware extends Middleware
             !defined("SET_EXPIRE") ?:
                 header("Expires: " . gmdate("D, d M Y H:i:s", SET_EXPIRE) . " GMT"); // is defined
 
-            if ( $request->getIsAjax() || (defined('AREA_TYPE') && AREA_TYPE == 'A'))
-            {
-                header("Cache-Control: no-cache, must-revalidate");
-            }
+//            if ( $request->getIsAjax() || (defined('AREA_TYPE') && AREA_TYPE == 'A'))
+//            {
+//                header("Cache-Control: no-cache, must-revalidate");
+//            }
 
 //            if (defined('AREA_TYPE') && AREA_TYPE == 'A') {
 //                defined("SET_EXPIRE") ?
