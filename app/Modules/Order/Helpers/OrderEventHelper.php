@@ -36,7 +36,7 @@ class OrderEventHelper
 
     private static function initStatuses()
     {
-        if (!self::$_f_statuses || !self::$_all_statuses)
+        if (empty(self::$_f_statuses) || empty(self::$_all_statuses))
         {
             self::$_all_statuses = [];
             self::$_f_statuses = [];
