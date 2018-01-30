@@ -20,7 +20,7 @@ class ExpireHeadersMiddleware extends Middleware
             $this->autoLastModified();
 
             if (!defined('SET_EXPIRE')) {
-                header("Cache-Control: private, max-age=3600, must-revalidate");
+                header("Cache-Control: public, max-age=3600, must-revalidate");
             }
 
             !defined("SET_EXPIRE") ?:
