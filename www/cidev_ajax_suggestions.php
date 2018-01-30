@@ -30,15 +30,23 @@ if ($REQUEST_METHOD == 'POST') {
     if (!empty($products)) {
 
         foreach ($products as $k => $oProduct) {
+            $oBrand = null;
             $oThumb = $oProduct->getThumbnail();
-            $oBrand = BrandModel::objects()->get(['brandid' => $oProduct->brandid]);
+
+            if ($oProduct->brandid) {
+                $oBrand = BrandModel::objects()->get(['brandid' => $oProduct->brandid]);
+            }
+
             $smarty->assign('splash', $oProduct->getSplash());
             $smarty->assign('config', $config);
             $smarty->assign('tmbn_url', null);
+
             if ($oThumb) {
                 $smarty->assign('tmbn_url', $oThumb->getURL());
             }
+
             $smarty->assign('product', $oProduct->product);
+
             if ($oProduct->isGroupRoot()) {
                 $smarty->assign('product', $oProduct);
             }
