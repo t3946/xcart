@@ -73,10 +73,13 @@ class OrderEventHelper
                 }
             }
 
-            Xcart::app()->event->trigger('order:status.changed', [
-                'order_id' => $order_id,
-                'message' => "Order [{$attribute}]: {$old_status} -> {$new_status}"
-            ]);
+            if (isset($new_status) || isset($old_status))
+            {
+                Xcart::app()->event->trigger('order:status.changed', [
+                    'order_id' => $order_id,
+                    'message' => "Order [{$attribute}]: {$old_status} -> {$new_status}"
+                ]);
+            }
         }
     }
 }
