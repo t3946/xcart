@@ -369,10 +369,10 @@ if ($REQUEST_METHOD == "POST" && !($mode == "unlock_order" || $mode == "unlock_o
 
             if ($log != "") $log .= "<br />";
             $current_fraud_status_name = $fraud_statuses[$current_fraud_status];
-            $fraud_status_name = $fraud_statuses[$fraud_status];
+            $fraud_status_name = $fraud_statuses[$new_fraud_status];
             $log .= "fraud_status: " . $current_fraud_status_name . " -> " . $fraud_status_name;
             if ($orderModel) {
-                $orderModel->fraud_status = $fraud_status;
+                $orderModel->fraud_status = $new_fraud_status;
                 $orderModel->save();
             }
         }
