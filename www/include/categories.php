@@ -441,10 +441,11 @@ function func_get_category_data($cat) {
 		if ($correct_path) {
 			$_cat_sequense = $previous_catid;
 			$use_add_parent_categories = 'Y';
-		} else {
-            $model = new \Modules\Goods\Models\CategoryModel($category);
-            $_cat_sequense = $model->getObjects()->ancestors(true)->order(['level'])->valuesList(['pk'], true);
-			$previous_catid = $_cat_sequense;
+		}
+		else {
+//            $model = new \Modules\Goods\Models\CategoryModel($category);
+//            $_cat_sequense = $model->getObjects()->ancestors(true)->order(['level'])->valuesList(['pk'], true);
+//			$previous_catid = $_cat_sequense;
 		}
 
 		if (empty($_cat_sequense)) {
