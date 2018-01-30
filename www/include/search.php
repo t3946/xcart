@@ -1732,9 +1732,9 @@ if ($mode == "search") {
                 # Get thumbnails dimensions
                 $thumb_dims = func_query_hash("SELECT id, image_x, image_y FROM $sql_tbl[images_T] WHERE id IN ('" . implode("','", $ids) . "')", "id", false);
 
-                $brands_in_found_products = func_query_hash("SELECT $sql_tbl[brands].brand, $sql_tbl[brands].brandid FROM $sql_tbl[brands] WHERE $sql_tbl[brands].brandid IN (" . implode(",", $brandids_in_found_products) . ")", "brandid", false);
+                $brands_in_found_products = func_query_hash("SELECT $sql_tbl[brands].brand, $sql_tbl[brands].brandid FROM $sql_tbl[brands] WHERE $sql_tbl[brands].brandid IN (" . implode(",", array_filter($brandids_in_found_products)) . ")", "brandid", false);
 
-                $manufacturers_in_found_products = func_query_hash("SELECT manufacturerid, allow_pre_orders, reverse_sku, remove_dashes, lead_time_message FROM $sql_tbl[manufacturers] WHERE manufacturerid IN ('" . implode("','", $manufacturerids_in_found_products) . "')", 'manufacturerid', false);
+                $manufacturers_in_found_products = func_query_hash("SELECT manufacturerid, allow_pre_orders, reverse_sku, remove_dashes, lead_time_message FROM $sql_tbl[manufacturers] WHERE manufacturerid IN ('" . implode("','", array_filter($manufacturerids_in_found_products)) . "')", 'manufacturerid', false);
 
                 # Get Extra fields cache
                 if (!empty($active_modules['Extra_Fields'])) {
