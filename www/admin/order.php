@@ -2026,7 +2026,7 @@ if ($mode == 'mnf_notify' || $mode == "cidev_send_email_to_operator")
 //        db_query("UPDATE $sql_tbl[order_groups] SET dc_status='E' WHERE orderid = '$orderid' AND manufacturerid='$mnf_id'");
         OrderGroupModel::objects()
             ->get(['orderid' => $orderid, 'manufacturerid' => $mnf_id])
-            ->setAttribute('dc_status', 'K')
+            ->setAttribute('dc_status', 'E')
             ->save();
     }
 
