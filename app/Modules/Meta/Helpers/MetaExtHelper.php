@@ -112,6 +112,7 @@ class MetaExtHelper
 
         $url = Xcart::app()->request->getUrl();
         $path = Xcart::app()->request->getPath();
+        $connections = Xcart::app()->db->getConnection();
 
         /** @var SiteModel $site */
         $site = Xcart::app()->getModule('Sites')->getSite();
@@ -122,7 +123,7 @@ class MetaExtHelper
         /** @var Meta $meta */
         $meta = Meta::objects()->filter([
             new QOr([
-                new QAnd(['url' => $url,  'site_id' => $site->pk]),
+                new QAnd(['url' => $connections->quote($url),  'site_id' => $site->pk]),
                 new QAnd(['url' => $path, 'site_id' => $site->pk]),
                 new QAnd(['url' => $path, 'site_id__isnull' => true]),
             ])
