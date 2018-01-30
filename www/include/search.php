@@ -1251,11 +1251,16 @@ if ($mode == "search") {
     #
     # Calculate the number of rows in the search results
     #
+    if (empty($category)) {
+        $_res = db_query($search_query_count_NEW, !$elastic_sort);
 
-    $_res = db_query($search_query_count_NEW, !$elastic_sort);
-
-    $total_items = db_num_rows($_res);
-    db_free_result($_res);
+        $total_items = db_num_rows($_res);
+        db_free_result($_res);
+    }
+    else {
+        //@TODO: TEST RUN
+        $total_items = $category['active_product_count'];
+    }
 
 #
 ## Search_Filter
