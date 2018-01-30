@@ -3,6 +3,7 @@ namespace Modules\Order\Models;
 
 use Doctrine\DBAL\Types\Type;
 use Modules\Core\Models\StateModel;
+use Modules\Order\Helpers\OrderEventHelper;
 use Modules\Order\Helpers\OrderHelper;
 use Modules\Goods\Models\ProductModel;
 use Modules\User\Models\UserModel;
@@ -198,26 +199,8 @@ class OrderModel extends Model
     {
         parent::afterSave($owner, $isNew);
 
-
-        $statuses = [];
-        $t_statuses = OrderStatusModel::objects()->cache(3600)->valuesList(['code', 'name']);
-        foreach ($t_statuses as $status) {
-            $statuses[$status['code']] = $status['name'];
-        }
-
-        foreach ($this->getOldAttributes() as $attribute => $oldValue) {
-            if (strpos($attribute, '_status') !== false) {
-                if ($this->{$attribute} != $oldValue)
-                {
-                    $old_status = $statuses[$oldValue] ?? $oldValue;
-                    $new_status = $statuses[$this->{$attribute}] ?? $this->{$attribute};
-
-                    Xcart::app()->event->trigger('order:status.changed', [
-                        'order_id' => $this->pk,
-                        'message' => "Order [{$attribute}]: {$old_status} -> {$new_status}"
-                    ]);
-                }
-            }
+        foreach ($this->getAttributes() as $attribute => $value) {
+            OrderEventHelper::registerAfterSaveEvent($this->pk, $attribute, $value, $this->getOldAttribute($attribute));
         }
     }
 }

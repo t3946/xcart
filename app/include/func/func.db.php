@@ -643,13 +643,13 @@ function func_get_sql_type($value)
  * @throws \Doctrine\DBAL\DBALException
  * @deprecated
  */
-function func_query_hash($query, $column = false, $is_multirow = true, $only_first = false)
+function func_query_hash($query, $column = false, $is_multirow = true, $only_first = false, $cache = null)
 {
     $result = [];
     $is_multicolumn = false;
     $is = null;
 
-    if ($p_result = db_query($query)) {
+    if ($p_result = db_query($query, $cache)) {
         if ($column === false) {
 
             # Get first field name

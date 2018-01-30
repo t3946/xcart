@@ -198,7 +198,10 @@ abstract class Base implements ModelInterface, ArrayAccess, Serializable
     /**
      * @param string $name
      * @param $value
+     * @return static
+     *
      * @throws Exception
+     *
      */
     public function setAttribute($name, $value)
     {
@@ -236,6 +239,8 @@ abstract class Base implements ModelInterface, ArrayAccess, Serializable
             $this->attributesNotField[$name] = $value;
 //            throw new Exception(get_class($this) . ' has no attribute named "' . $name . '".');
         }
+
+        return $this;
     }
 
     /**
