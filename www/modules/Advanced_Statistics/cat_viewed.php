@@ -42,7 +42,6 @@ if (empty($active_modules["Advanced_Statistics"]) || $config["Advanced_Statistic
 	return;
 
 if (!empty($cat)) {
-	db_query("UPDATE $sql_tbl[categories] SET views_stats = (views_stats + 1) WHERE categoryid = '$cat'");
+	db_query("UPDATE low_priority $sql_tbl[categories] SET views_stats = (views_stats + 1) WHERE categoryid = '$cat'");
 	db_query("INSERT INTO $sql_tbl[stats_shop](id,action,date) VALUES('$cat','C','".time()."')");
 }
-?>

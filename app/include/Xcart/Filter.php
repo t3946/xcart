@@ -179,7 +179,7 @@ SQL;
         return $this->aValueFound;
     }
 
-    public function getMoreBrands()
+    public function getMoreBrands(int $limit = null)
     {
         if (is_null($this->aValueFound)) {
 
@@ -189,7 +189,12 @@ SELECT xb.brandid, xb.brand, count(1) as cnt FROM ({$this->getFilteredProductsQu
      GROUP BY xb.brandid 
      ORDER BY xb.brand
 SQL;
+            if ($limit) {
+                $sSQL .= " limit {$limit}";
+            }
+
             $aResults = SQLBuilder::getInstance()->setQuery($sSQL)->query()->getQueryResult();
+
             if (!empty($aResults)) {
                 foreach ($aResults as $aResult) {
                     $iCount = $aResult['cnt'];
@@ -198,6 +203,7 @@ SQL;
                 }
             }
         }
+
         return $this->aValueFound;
     }
 

@@ -95,69 +95,77 @@
 	{assign var="show_category_filter" value="Y"}
   {/if}
 
-  {if $show_category_filter eq "Y"}
-    {if $cidev_subcategories_products_count ne ""}
-	<table width="100%" cellpadding="2" cellspacing="2" style="background-color: #FFFFFF;">
-	{foreach from=$subcategories item=subcat}
-	 {foreach from=$cidev_subcategories_products_count item=v}
-{*
-	  {if ($subcat.product_count_global || $subcat.subcategory_count) && $v.categoryid eq $subcat.categoryid && $v.count_products gt 0}
-*}
-	  {if $v.categoryid eq $subcat.categoryid && $v.count_products gt 0} 
-		{if $v.supplemental_category ne "Y"}
-	<tr>
-	<td style="background-color: #FEF6F3; padding-left: 10px; padding-right: 10px;">
-        <a class="VertMenuItems CategoriesList" href="/home.php?cat={ $subcat.categoryid }"><h2 style="margin: 0; font-weight: inherit; display: inherit;">{ $subcat.category|escape }</h2></a> ({$v.count_products})
-    </td>
-	</tr>
-		{else}
-			{assign var="supplemental_category_found" value="Y"}
-		{/if}
-	  {/if}
-	 {/foreach}
-	{/foreach}
-	</table>
-    {/if}
+    {if $show_category_filter eq "Y"}
+        {if $cidev_subcategories_products_count ne ""}
+            <table width="100%" cellpadding="2" cellspacing="2" style="background-color: #FFFFFF;">
+                {foreach from=$subcategories item=subcat}
+                    {foreach from=$cidev_subcategories_products_count item=v}
+                        {*
+                              {if ($subcat.product_count_global || $subcat.subcategory_count) && $v.categoryid eq $subcat.categoryid && $v.count_products gt 0}
+                        *}
+                        {if $v.categoryid eq $subcat.categoryid && $v.count_products gt 0}
+                            {if $v.supplemental_category ne "Y"}
+                                <tr>
+                                    <td style="background-color: #FEF6F3; padding-left: 10px; padding-right: 10px;">
+                                        <a class="VertMenuItems CategoriesList"
+                                           href="/home.php?cat={ $subcat.categoryid }"><h2 style="margin: 0; font-weight: inherit; display: inherit;">{$subcat.category|escape }</h2></a>
+                                        ({$v.count_products})
+                                    </td>
+                                </tr>
+                            {else}
+                                {assign var="supplemental_category_found" value="Y"}
+                            {/if}
+                        {/if}
+                    {/foreach}
+                {/foreach}
+            </table>
+        {/if}
 
-  {elseif $keyword_subcategories ne ""}
-
+    {elseif $keyword_subcategories ne ""}
         <table width="100%" cellpadding="2" cellspacing="2" style="background-color: #FFFFFF;">
-        {foreach from=$keyword_subcategories item=subcat}
-	{if $subcat.supplemental_category ne "Y"}
-        <tr>
-        <td style="background-color: #FEF6F3; padding-left: 10px; padding-right: 10px;"><a class="VertMenuItems CategoriesList" href="/home.php?cat={ $subcat.categoryid }">{ $subcat.category|escape }</a> ({$subcat.count})</td>
-        </tr>
-	{else}
-		{assign var="supplemental_category_found" value="Y"}
-	{/if}
-        {/foreach}
+            {foreach from=$keyword_subcategories item=subcat}
+                {if $subcat.supplemental_category ne "Y"}
+                    <tr>
+                        <td style="background-color: #FEF6F3; padding-left: 10px; padding-right: 10px;">
+                            <a class="VertMenuItems CategoriesList CategoriesKeyword"
+                               href="/home.php?cat={ $subcat.categoryid }">{$subcat.category|escape }</a>
+                            ({$subcat.count})
+                        </td>
+                    </tr>
+                {else}
+                    {assign var="supplemental_category_found" value="Y"}
+                {/if}
+            {/foreach}
         </table>
-
-  {else}
-
-	<table width="100%" cellpadding="2" cellspacing="2" style="background-color: #FFFFFF;">
-	{foreach from=$categories item=c}
-	{if $c.order_by ge 0 && $c.order_by le 500 && ($c.product_count gt 0 || $c.global_product_count gt 0)}
-	<tr>
-	<td style="background-color: #FEF6F3; padding-left: 10px; padding-right: 10px;">
-	    {if $c.categoryid eq ''}
-        	<font class="CategoriesList">
-	            <a href="/home.php?scatid={$c.scatid}&amp;keyphrase={$c.keyphrase}" class="VertMenuItems">{if $c.is_bold eq "Y"}<b>{$c.category}</b>{else}{$c.category}{/if}</a>
-	        </font>
-        	<br />
-	    {else}
-		{if $c.supplemental_category ne "Y"}
-        	{if $c.categoryid ne $smarty.get.cat}<a href="/home.php?cat={$c.categoryid}" class="VertMenuItems">{/if}<h2 class="CategoriesList" style="margin:0; font-weight: normal">{if $c.is_bold eq "Y"}<b>{$c.category}</b>{else}{$c.category}{/if}{if $c.categoryid ne $smarty.get.cat}</h2></a>{/if}
-		{else}
-			{assign var="supplemental_category_found" value="Y"}
-		{/if}
-	    {/if}
-	</td>
-	</tr>
-	{/if}
-	{/foreach}
-	</table>
-  {/if}
+    {else}
+        <table width="100%" cellpadding="2" cellspacing="2" style="background-color: #FFFFFF;">
+            {foreach from=$categories item=c}
+                {if $c.order_by ge 0 && $c.order_by le 500 && ($c.product_count gt 0 || $c.global_product_count gt 0)}
+                    <tr>
+                        <td style="background-color: #FEF6F3; padding-left: 10px; padding-right: 10px;">
+                            {if $c.categoryid eq ''}
+                                <font class="CategoriesList">
+                                    <a href="/home.php?scatid={$c.scatid}&amp;keyphrase={$c.keyphrase}"
+                                       class="VertMenuItems">{if $c.is_bold eq "Y"}
+                                            <b>{$c.category}</b>{else}{$c.category}{/if}</a>
+                                </font>
+                                <br/>
+                            {else}
+                                {if $c.supplemental_category ne "Y"}
+                                    {if $c.categoryid ne $smarty.get.cat}<a href="/home.php?cat={$c.categoryid}" class="VertMenuItems">{/if}
+                                    <h2 class="CategoriesList"
+                                        style="margin:0; font-weight: normal">{if $c.is_bold eq "Y"}<b>{$c.category}</b>{else}{$c.category}{/if}</h2>
+                                    {if $c.categoryid ne $smarty.get.cat}</a>{/if}
+                                {else}
+                                    {assign var="supplemental_category_found" value="Y"}
+                                {/if}
+                            {/if}
+                        </td>
+                    </tr>
+                {/if}
+            {/foreach}
+        </table>
+    {/if}
 
 {else} {foreach from=$subcategories item=c key=catid}
 {if $c.order_by ge 0 && $c.order_by le 500}
@@ -285,6 +293,7 @@
                          </tr>
                      {/if}
                  {/foreach}
+
                  {if count($aBrandFilters) gt 5}
                  <tr>
                      <td colspan="2" align="right">

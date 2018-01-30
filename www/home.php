@@ -40,6 +40,7 @@ use Modules\User\Models\SurfPathModel;
 define('OFFERS_DONT_SHOW_NEW',1);
 require "./auth.php";
 $bench1 = func_microtime();
+$start_time = microtime(true);
 
 $cat = isset($cat) ? abs(intval($cat)) : 0;
 
@@ -91,14 +92,15 @@ if (
 
 require $xcart_dir."/include/categories.php";
 
-# START: random:18298_18304_18324 [2009 Jun 08 09:50] 
+
+//d($cat, microtime(true) - $start_time);
+
 if ($active_modules["Brands"])
     include $xcart_dir."/modules/Brands/customer_brands.php";
-else
-# END: random:18298_18304_18324 [2009 Jun 08 09:50] 
-if ($active_modules["Manufacturers"])
+elseif ($active_modules["Manufacturers"])
     include $xcart_dir."/modules/Manufacturers/customer_manufacturers.php";
 
+//d($cat, microtime(true) - $start_time);
 
 if (!empty($cat)){
 	include "./products.php";
@@ -118,6 +120,7 @@ else {
 ##
 #
 }
+//d($cat, microtime(true) - $start_time);
 
 #
 ##
@@ -175,6 +178,7 @@ if (is_array($e_search_data) && !empty($e_search_data["substring"])){
         }
 
 }
+
 
 if (is_array($e_search_data) && !empty($e_search_data["substring"])){
 
