@@ -145,7 +145,7 @@ class ProductModel extends Model implements ICartItem
                 'class' => ForeignField::className(),
                 'modelClass' => BrandModel::className(),
                 'link' => ['brandid' => 'brandid'],
-                'null' => false,
+                'null' => true,
             ],
             'filter_values' => [
                 'class' => ManyToManyField::className(),
