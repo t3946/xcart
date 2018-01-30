@@ -442,8 +442,14 @@ function func_get_category_data($cat) {
 			$_cat_sequense = $previous_catid;
 			$use_add_parent_categories = 'Y';
 		} else {
-			$_cat_sequense = explode("/", $category["categoryid_path"]);
+            $model = new \Modules\Goods\Models\CategoryModel($category);
+            $_cat_sequense = $model->getObjects()->ancestors(true)->valuesList(['pk'], true);
 			$previous_catid = $_cat_sequense;
+		}
+
+		if (empty($_cat_sequense)) {
+            $_cat_sequense = explode("/", $category["categoryid_path"]);
+            $previous_catid = $_cat_sequense;
 		}
 
 		#
@@ -490,17 +496,14 @@ function func_get_category_data($cat) {
 		
 		$cpath = $category["categoryid_path"][0];
 		$category["main_order_by"] = func_query_first_cell("SELECT order_by FROM $sql_tbl[categories] WHERE categoryid='$cpath' and storefrontid = '$current_storefront'");
-# START: random:20766 [2010 May 11 13:18] 
-//i		$category["additional_parentids"] = func_query_column("SELECT parentid FROM $sql_tbl[categories_parents] WHERE categoryid='$cat'");
-# END: random:20766 [2010 May 11 13:18] 
         $category['customer_url'] = ($HTTPS) ? 'https://' : 'http://';
         if (!empty($active_modules['Multiple_Storefronts'])) {
             $category['customer_url'] .= func_get_http_location_sf($current_storefront) . '/home.php?cat=' . $cat;
         } else {
             $category['customer_url'] .= $xcart_catalogs['customer'] . '/home.php?cat=' . $cat;
         }
-		
-     		return $category;
+
+		return $category;
 	}
 
 	return false;
@@ -586,7 +589,8 @@ if ($cat > 0 && $mode != "delete") {
 #
 
 		$smarty->assign("current_category", $current_category);
-	} else {
+	}
+	else {
 		if ($current_area == "A") {
 			$top_message["content"] = func_get_langvar_by_name("msg_category_not_exist");
 			$top_message["type"] = "E";
@@ -606,7 +610,8 @@ if ($cat > 0 && $mode != "delete") {
 					}
 				}
 			}
-			func_header_location($redirect_url, true, 301);
+
+			func_header_location($redirect_url, true, 302);
 		}
 	}
 }
