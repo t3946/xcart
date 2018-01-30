@@ -443,7 +443,7 @@ function func_get_category_data($cat) {
 			$use_add_parent_categories = 'Y';
 		} else {
             $model = new \Modules\Goods\Models\CategoryModel($category);
-            $_cat_sequense = $model->getObjects()->ancestors(true)->order(['-level'])->valuesList(['pk'], true);
+            $_cat_sequense = $model->getObjects()->ancestors(true)->order(['level'])->valuesList(['pk'], true);
 			$previous_catid = $_cat_sequense;
 		}
 
