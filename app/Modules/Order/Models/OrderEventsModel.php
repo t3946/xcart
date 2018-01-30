@@ -74,7 +74,7 @@ class OrderEventsModel extends Model
             $model->setAttributes(['order_id' => $order_id, 'message' => $message, 'user_id' => $user_id]);
 
             //Cache UP
-//            $model->order->getOTRSTicketMessages();
+            $model->order->getOTRSTicketMessages();
 
             if ($model->isValid() && $model->save())
             {

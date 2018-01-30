@@ -51,30 +51,32 @@ class OrderEventHelper
 
     public static function registerAfterSaveEvent($order_id, $attribute, $newValue, $oldValue)
     {
-        static::initStatuses();
+        if ($newValue != $oldValue) {
+            static::initStatuses();
 
-        switch ($attribute) {
-            case 'fraud_status' : {
-                $old_status = self::$_f_statuses[$oldValue] ?? $oldValue;
-                $new_status = self::$_f_statuses[$newValue] ?? $newValue;
+            switch ($attribute) {
+                case 'fraud_status' : {
+                    $old_status = self::$_f_statuses[$oldValue] ?? $oldValue;
+                    $new_status = self::$_f_statuses[$newValue] ?? $newValue;
 
-                break;
-            }
+                    break;
+                }
 
-            default: {
-                if (strpos($attribute, '_status') !== false) {
-                    if ($attribute != $oldValue)
-                    {
-                        $old_status = self::$_all_statuses[$oldValue] ?? $oldValue;
-                        $new_status = self::$_all_statuses[$newValue] ?? $newValue;
+                default: {
+                    if (strpos($attribute, '_status') !== false) {
+                        if ($attribute != $oldValue)
+                        {
+                            $old_status = self::$_all_statuses[$oldValue] ?? $oldValue;
+                            $new_status = self::$_all_statuses[$newValue] ?? $newValue;
+                        }
                     }
                 }
             }
-        }
 
-        Xcart::app()->event->trigger('order:status.changed', [
-            'order_id' => $order_id,
-            'message' => "Order [{$attribute}]: {$old_status} -> {$new_status}"
-        ]);
+            Xcart::app()->event->trigger('order:status.changed', [
+                'order_id' => $order_id,
+                'message' => "Order [{$attribute}]: {$old_status} -> {$new_status}"
+            ]);
+        }
     }
 }
