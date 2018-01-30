@@ -637,8 +637,13 @@ if ($mode == "search") {
 
         if (!empty($data["search_in_subcategories"])) {
             # Search also in all subcategories
-            $categoryid_path = addslashes(func_query_first_cell("SELECT categoryid_path FROM $sql_tbl[categories] WHERE avail='Y' and categoryid='" . $data["categoryid"] . "' and $sql_tbl[categories].storefrontid = " . $current_storefront));
-            $categoryids = func_query_column("SELECT categoryid FROM $sql_tbl[categories] WHERE  avail='Y' and (categoryid='" . $data["categoryid"] . "' OR categoryid_path LIKE '$categoryid_path/%') and $sql_tbl[categories].storefrontid = " . $current_storefront);
+//            $categoryid_path = addslashes(func_query_first_cell("SELECT categoryid_path FROM $sql_tbl[categories] WHERE avail='Y' and categoryid='" . $data["categoryid"] . "' and $sql_tbl[categories].storefrontid = " . $current_storefront));
+//            $categoryids = func_query_column("SELECT categoryid FROM $sql_tbl[categories] WHERE  avail='Y' and (categoryid='" . $data["categoryid"] . "' OR categoryid_path LIKE '$categoryid_path/%') and $sql_tbl[categories].storefrontid = " . $current_storefront);
+
+            if ($category =  \Modules\Goods\Models\CategoryModel::objects()->get(['pk' => $data["categoryid"]])) {
+                /** @var \Modules\Goods\Models\CategoryModel $category */
+                $categoryids = $category->getObjects()->descendants()->valuesList(['categoryid'], true);
+            }
 
             if (is_array($categoryids) && !empty($categoryids)) {
                 $where[] = "$sql_tbl[products_categories].categoryid $category_sign IN (" . implode(",", $categoryids) . ")";
