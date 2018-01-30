@@ -4,6 +4,7 @@
  */
 global $REQUEST_METHOD, $smarty, $config, $productid, $section_name;
 
+use Modules\Brand\Models\BrandModel;
 use Modules\Core\Models\StateModel;
 use Modules\GeoIp\Helpers\GeoIpHelper;
 use Modules\Shipping\Helpers\ShippingHelper;
@@ -30,7 +31,7 @@ if ($REQUEST_METHOD == 'POST') {
 
         foreach ($products as $k => $oProduct) {
             $oThumb = $oProduct->getThumbnail();
-            $oBrand = \Xcart\Brand::objects()->get(['brandid' => $oProduct->brandid]);
+            $oBrand = BrandModel::objects()->get(['brandid' => $oProduct->brandid]);
             $smarty->assign('splash', $oProduct->getSplash());
             $smarty->assign('config', $config);
             $smarty->assign('tmbn_url', null);
@@ -50,7 +51,7 @@ if ($REQUEST_METHOD == 'POST') {
                     'price' => $oProduct->getFrontendPrice(),
                     'price_2' => $oProduct->getFrontendPrice(2),
                     'category' => $oProduct->getMainCategory()->category,
-                    'brand' => $oBrand->brand,
+                    'brand' => $oBrand ? $oBrand->brand : '',
                     'product' => $oProduct->getFrontendName(),
                     'thumb' => $oProduct->isGroupRoot() ? $smarty->fetch('group_thumbnail.tpl') : $smarty->fetch('product_thumbnail.tpl'),
                     'N_key' => $k + 1,
