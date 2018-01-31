@@ -79,16 +79,18 @@ if (isset($argv) && is_array($argv) && !empty($argv[1])) {
                 $log_text = 'ERROR in getCompetitivePricingForSKU competitive_pricing cron for SKU\'s: ' . implode(', ', $aSKUs) . "\n";
 
                 try {
-                    $counter_dropped = $aSKUs;
-                    $pricing = $client->callGetCompetitivePricingForSKU($aSKUs);
-                    if ($filtered_products_cp && $products = AmazonProductHelper::getCompetitivePricingForSKU($pricing, $filtered_products_cp)) {
-                        foreach ($products as $aAmazonFbaProduct) {
-                            $aAmazonFbaProduct->save();
-                            $counter_received['CompetitivePricing']++;
+                    if ($aSKUs) {
+                        $counter_dropped = $aSKUs;
+                        $pricing = $client->callGetCompetitivePricingForSKU($aSKUs);
+                        if ($filtered_products_cp && $products = AmazonProductHelper::getCompetitivePricingForSKU($pricing, $filtered_products_cp)) {
+                            foreach ($products as $aAmazonFbaProduct) {
+                                $aAmazonFbaProduct->save();
+                                $counter_received['CompetitivePricing']++;
 
-                            $key = array_search($aAmazonFbaProduct->productcode, $counter_dropped);
-                            if ($key !== false) {
-                                unset($counter_dropped[$key]);
+                                $key = array_search($aAmazonFbaProduct->productcode, $counter_dropped);
+                                if ($key !== false) {
+                                    unset($counter_dropped[$key]);
+                                }
                             }
                         }
                     }
@@ -123,18 +125,20 @@ if (isset($argv) && is_array($argv) && !empty($argv[1])) {
 
                     $aSKUs = array_map(function($a) {return $a->productcode;}, $filtered_products_mp);
 
-                    $counter_dropped = $aSKUs;
-                    $myPricing = $client->callGetMyPriceForSKU($aSKUs);
-                    if ($filtered_products_mp && $products = AmazonProductHelper::getMyPriceForSKU($myPricing, $filtered_products_mp)) {
-                        foreach ($products as $aAmazonFbaProduct) {
-                            $aAmazonFbaProduct->save();
-                            $counter_received['MyPrice']++;
+                    if ($aSKUs) {
+                        $counter_dropped = $aSKUs;
+                        $myPricing = $client->callGetMyPriceForSKU($aSKUs);
+                        if ($filtered_products_mp && $products = AmazonProductHelper::getMyPriceForSKU($myPricing, $filtered_products_mp)) {
+                            foreach ($products as $aAmazonFbaProduct) {
+                                $aAmazonFbaProduct->save();
+                                $counter_received['MyPrice']++;
 
-                            $counter_dropped3[] = $aAmazonFbaProduct->productcode;
+                                $counter_dropped3[] = $aAmazonFbaProduct->productcode;
 
-                            $key = array_search($aAmazonFbaProduct->productcode, $counter_dropped);
-                            if ( $key !== false) {
-                                unset($counter_dropped[$key]);
+                                $key = array_search($aAmazonFbaProduct->productcode, $counter_dropped);
+                                if ($key !== false) {
+                                    unset($counter_dropped[$key]);
+                                }
                             }
                         }
                     }
