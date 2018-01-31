@@ -193,13 +193,14 @@ class CategoryModel extends TreeModel
 
         if (empty($this->categoryid_path)) {
             $this->categoryid_path = $this->pk;
-
-            /** @var self $parent */
-            if ($parent = $this->parent) {
-                $this->categoryid_path = $parent->categoryid_path . '/' . $this->pk;
-            }
-            $this->update(['categoryid_path']);
         }
+
+        /** @var self $parent */
+        if ($parent = $this->parent) {
+            $this->categoryid_path = $parent->categoryid_path . '/' . $this->pk;
+        }
+
+        $this->update(['categoryid_path']);
 
         /** @var static $owner */
         $old_parent = $owner->attributes->getOldAttribute('parentid');
