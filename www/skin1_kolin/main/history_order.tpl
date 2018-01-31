@@ -241,7 +241,7 @@ function func_set_value_to_field(form, fefix_field, field, mnf_id){
                                   $select.select2({
                                       width: '260px',
                                       matcher: function(params, data) {
-                                          if (params.term === '') {
+                                          if (!params.term) {
                                               return data;
                                           }
 
