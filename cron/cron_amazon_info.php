@@ -2,6 +2,7 @@
 
 use Mindy\QueryBuilder\Q\QOr;
 use Modules\Amazon\Helpers\AmazonProductHelper;
+use Modules\Amazon\Models\AmazonProductsFieldsModel;
 use Modules\Amazon\Stores\AmazonInventoryStore;
 use Modules\Amazon\Stores\AmazonPoolStore;
 use Modules\Goods\Models\ProductModel;
@@ -58,20 +59,29 @@ if (isset($argv) && is_array($argv) && !empty($argv[1])) {
                 'MyPrice' => 0,
             ];
 
-            while ($aProductsBatch = Product::objects()
+            while ($aProductsBatch = ProductModel::objects()
                 ->filter(['forsale' => 'Y', 'amazon_enabled' => 'Y'])
                 ->paginate($i++, $max_products)
                 ->all())
             {
-                $counter_send += count($aProductsBatch);
+                $filtered_products_cp = array_filter($aProductsBatch, function($a) {
+                    if($a->amazon_fields && ($amz = $a->amazon_fields->limit(1)->get())) {
+                        if ($amz->sleep_cp) {
+                            $amz->sleep_cp--;
+                            $amz->save(['sleep_cp']);
+                        }
+                        return !$amz->sleep_cp;
+                    }
+                    return true;
+                });
 
-                $aSKUs = array_map(function($a) {return $a->productcode;}, $aProductsBatch);
+                $aSKUs = array_map(function($a) {return $a->productcode;}, $filtered_products_cp);
                 $log_text = 'ERROR in getCompetitivePricingForSKU competitive_pricing cron for SKU\'s: ' . implode(', ', $aSKUs) . "\n";
 
                 try {
                     $counter_dropped = $aSKUs;
                     $pricing = $client->callGetCompetitivePricingForSKU($aSKUs);
-                    if ($products = AmazonProductHelper::getCompetitivePricingForSKU($pricing, $aProductsBatch)) {
+                    if ($products = AmazonProductHelper::getCompetitivePricingForSKU($pricing, $filtered_products_cp)) {
                         foreach ($products as $aAmazonFbaProduct) {
                             $aAmazonFbaProduct->save();
                             $counter_received['CompetitivePricing']++;
@@ -88,14 +98,34 @@ if (isset($argv) && is_array($argv) && !empty($argv[1])) {
                 }
 
                 if (!empty($counter_dropped)) {
+                    foreach ($counter_dropped as $drop) {
+                        if ($drop_model = ProductModel::objects()->get(['productcode' => $drop])) {
+                            [$amz] = AmazonProductsFieldsModel::objects()->getOrNew(['productid' => $drop_model->productid]);
+                            $amz->sleep_cp = 48;
+                            $amz->save();
+                        }
+                    }
                     func_backprocess_log(Xcart\AmazonMWS::BACK_PROCESS_LOG_NAME_ORDER_INFO, "Skipped SKU's in CompetitivePricing: ".implode(', ', $counter_dropped));
                 }
 
                 $log_text = 'ERROR in getMyPriceForSKU competitive_pricing cron for SKU\'s: ' . implode(', ', $aSKUs) . "\n";
                 try {
+                    $filtered_products_mp = array_filter($aProductsBatch, function($a) {
+                        if($a->amazon_fields && ($amz = $a->amazon_fields->limit(1)->get())) {
+                            if ($amz->sleep_mp) {
+                                $amz->sleep_mp--;
+                                $amz->save(['sleep_mp']);
+                            }
+                            return !$amz->sleep_mp;
+                        }
+                        return true;
+                    });
+
+                    $aSKUs = array_map(function($a) {return $a->productcode;}, $filtered_products_mp);
+
                     $counter_dropped = $aSKUs;
                     $myPricing = $client->callGetMyPriceForSKU($aSKUs);
-                    if ($products = AmazonProductHelper::getMyPriceForSKU($myPricing, $aProductsBatch)) {
+                    if ($products = AmazonProductHelper::getMyPriceForSKU($myPricing, $filtered_products_mp)) {
                         foreach ($products as $aAmazonFbaProduct) {
                             $aAmazonFbaProduct->save();
                             $counter_received['MyPrice']++;
@@ -114,8 +144,17 @@ if (isset($argv) && is_array($argv) && !empty($argv[1])) {
                 }
 
                 if (!empty($counter_dropped)) {
+                    foreach ($counter_dropped as $drop) {
+                        if ($drop_model = ProductModel::objects()->get(['productcode' => $drop])) {
+                            [$amz] = AmazonProductsFieldsModel::objects()->getOrNew(['productid' => $drop_model->productid]);
+                            $amz->sleep_mp = 48;
+                            $amz->save(['sleep_mp']);
+                        }
+                    }
                     func_backprocess_log(Xcart\AmazonMWS::BACK_PROCESS_LOG_NAME_ORDER_INFO, "Skipped SKU's in MyPrice: ".implode(', ', $counter_dropped));
                 }
+
+                $counter_send += max(count($filtered_products_cp), count($filtered_products_mp));
             }
             break;
         case 'lowest_offer':
