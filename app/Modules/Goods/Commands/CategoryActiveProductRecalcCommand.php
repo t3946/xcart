@@ -2,6 +2,7 @@
 namespace Modules\Goods\Commands;
 
 use Dariuszp\CliProgressBar;
+use Modules\Goods\Helpers\CategoryCalculateHelper;
 use Modules\Goods\Models\CategoryModel;
 use Xcart\App\Commands\Command;
 
@@ -13,7 +14,7 @@ class CategoryActiveProductRecalcCommand extends Command
 
     private function recalc(CategoryModel $model)
     {
-        $model->reCalcProductsCount();
+        CategoryCalculateHelper::reCalcProductsCount($model);
 
         $this->bar->progress();
 
@@ -30,6 +31,7 @@ class CategoryActiveProductRecalcCommand extends Command
 
         $this->bar = new CliProgressBar(CategoryModel::objects()->count());
 
+        /** @var CategoryModel $model */
         foreach (CategoryModel::objects()->filter(['parentid' => 0])->all() as $model) {
             $this->recalc($model);
         }

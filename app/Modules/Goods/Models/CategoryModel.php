@@ -3,6 +3,7 @@ namespace Modules\Goods\Models;
 
 use Mindy\QueryBuilder\Expression;
 use Mindy\QueryBuilder\Q\QOr;
+use Modules\Goods\Helpers\CategoryCalculateHelper;
 use Modules\Menu\Models\CleanUrlModel;
 use Modules\Sites\Models\SiteModel;
 use Xcart\App\Components\Breadcrumbs;
@@ -214,57 +215,13 @@ class CategoryModel extends TreeModel
                 ]);
         }
 
-//        @TODO: SLOOOOOOOW
         if (!$isNew && ($old_parent != $this->parentid)) {
             if ($old_parent) {
-                (static::objects()->get(['pk' => $old_parent]))->reCalcSelfAndParents();
+                CategoryCalculateHelper::recalcParents($old_parent, true);
             }
 
             if ($this->parentid) {
-                (static::objects()->get(['pk' => $this->parentid]))->reCalcSelfAndParents();
-            }
-        }
-    }
-
-    public function reCalcProductsCount()
-    {
-        $ta = ProductModel::objects()->getQuerySet()->getTableAlias();
-        $qor = new QOr(['group_root__raw' => " = `{$ta}`.`productid`", 'group_root__isnull' => true]);
-
-        $this->global_product_count = ProductModel::objects()
-            ->with(['categories'])
-            ->filter([
-                'categories__lft__gte' => $this->lft,
-                'categories__rgt__lte' => $this->rgt,
-                'categories__root' => $this->root,
-            ])
-            ->count();
-
-        $this->active_product_count = ProductModel::objects()
-            ->with(['categories'])
-            ->filter([
-                'forsale' => 'Y',
-                'categories__lft__gte' => $this->lft,
-                'categories__rgt__lte' => $this->rgt,
-                'categories__root' => $this->root,
-                'categories__avail' => 'Y',
-                $qor
-            ])
-            ->count();
-
-        $this->product_count = $this->products->filter(['forsale' => 'Y', $qor])->count();
-        $this->subcategory_count = $this->objects()->descendants()->count();
-
-        $this->save(['global_product_count', 'active_product_count', 'product_count', 'subcategory_count']);
-    }
-
-    public function reCalcSelfAndParents()
-    {
-        if ($models = $this->objects()->ancestors(true)->all()) {
-            /** @var static $model */
-            foreach ($models as $model)
-            {
-                $model->reCalcProductsCount();
+                CategoryCalculateHelper::recalcParents($this->parentid, true);
             }
         }
     }
