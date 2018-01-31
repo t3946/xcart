@@ -46,7 +46,7 @@ require $xcart_dir . "/include/categories.php";
 
 if (!empty($active_modules['Multiple_Storefronts'])) {
     $sf_join = " LEFT JOIN $sql_tbl[brands_sf] ON $sql_tbl[brands_sf].brandid=$sql_tbl[brands].brandid";
-    $sf_condition = " AND $sql_tbl[brands].parent_brand_id IS NULL AND $sql_tbl[brands_sf].sfid=$current_storefront";
+    $sf_condition = " AND $sql_tbl[brands_sf].sfid=$current_storefront";
 } else {
     $sf_join = '';
     $sf_condition = '';
