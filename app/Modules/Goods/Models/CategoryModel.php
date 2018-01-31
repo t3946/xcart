@@ -191,7 +191,7 @@ class CategoryModel extends TreeModel
 
         //@TODO: For old code, delete after global refactoring
 
-        if (empty($this->categoryid_path)) {
+        if (empty($this->categoryid_path) || empty($this->parentid)) {
             $this->categoryid_path = $this->pk;
         }
 
@@ -200,14 +200,15 @@ class CategoryModel extends TreeModel
             $this->categoryid_path = $parent->categoryid_path . '/' . $this->pk;
         }
 
-        $this->update(['categoryid_path']);
-
         /** @var static $owner */
         $old_parent = $owner->attributes->getOldAttribute('parentid');
 
-        if ($old_parent && $old_parent != $owner->parentid) {
+        if ($old_parent != $this->parentid) {
+            static::objects()->filter(['pk' => $this->pk])->update(['categoryid_path' => $this->categoryid_path]);
+
             $this->objects()
                 ->descendants()
+                ->getQuerySet()
                 ->update([
                     'categoryid_path' => new Expression("CONCAT('{$this->categoryid_path}', SUBSTRING_INDEX(categoryid_path, {$owner->pk}, -1))")
                 ]);
