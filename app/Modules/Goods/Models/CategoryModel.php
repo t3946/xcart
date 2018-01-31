@@ -2,7 +2,6 @@
 namespace Modules\Goods\Models;
 
 use Mindy\QueryBuilder\Expression;
-use Mindy\QueryBuilder\Q\QOr;
 use Modules\Goods\Helpers\CategoryCalculateHelper;
 use Modules\Menu\Models\CleanUrlModel;
 use Modules\Sites\Models\SiteModel;
@@ -11,8 +10,6 @@ use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\ForeignField;
-use Xcart\App\Orm\Fields\HasManyField;
-use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Fields\ManyToManyField;
 use Xcart\App\Orm\Manager;
 use Xcart\App\Orm\TreeModel;
@@ -130,8 +127,6 @@ class CategoryModel extends TreeModel
         if ($this->categoryid && $this->url)
         {
             return $this->url->urlFromCode('catalog:view', $full, $this->site);
-
-//            return Xcart::app()->router->url('catalog:view:old', ['id' => $this->categoryid, 'slug' => 'TEMP']);
         }
 
         return false;
