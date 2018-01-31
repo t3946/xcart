@@ -148,23 +148,130 @@ function func_set_value_to_field(form, fefix_field, field, mnf_id){
 
 <td align="right" width="25%" style="position:relative;">
 <div>
-                 <table cellspacing="0" cellpadding="0" border="0">
+                 <table cellspacing="0" cellpadding="0" border="0" width="100%">
                  <tr>
-                 <td nowrap="nowrap" valign="top">Add <a href="javascript: void(0);" style="font-weight:bold; color: blue; border-bottom:1px dotted; text-decoration: none;" onclick="javascript: $('#block_tag_notes_desctiption_all').toggle();">attention tag</a>:&nbsp;</td>
                  <td valign="top">
+                     <div>
+                         Add <a href="javascript: void(0);" style="font-weight:bold; color: blue; border-bottom:1px dotted; text-decoration: none;" onclick="javascript: $('#block_tag_notes_desctiption_all').toggle();">attention tag</a>:&nbsp;
+                     </div>
+
+
                   <div style="margin-top: -3px;">
-                  <form action="order.php" method="post" name="order_add_additional_tag">
-                  <input type="hidden" name="mode" id="mode_additional_tag" value="add_additional_tag" />
+                  <div class="order_additional_tags">
                   <input type="hidden" name="orderid" value="{$order.orderid}" />
                   <input type="hidden" name="del_status_id" id="del_status_id" value="" />
-                  <select name="additional_tag_status" onchange="javascript: document.order_add_additional_tag.submit();">
-                  <option value="">
+
+                  <select id="additional_tag_status" name="additional_tag_status" multiple style="width: 100%">
                         {foreach from=$attention_tags_values item=item key=key}
                           {if $item.active eq "Y"}
-                            <option value="{$item.status_id}">{$item.status}</option>
+                            <option
+                                    value="{$item.status_id}"
+                                    data-color="{$item.color}"
+                                    data-order="{$order.orderid}"
+                                    {foreach from=$order.attention_tags item=item2}
+                                        {if $item.status_id == $item2.status_id}
+                                            selected
+                                        {/if}
+                                    {/foreach}
+                            >{$item.status}</option>
                           {/if}
                         {/foreach}
-                  </select>
+                    </select>
+
+                      <script>
+                          {literal}
+                          (function(){
+
+                              $(document).ready(function(){
+                                  let $select = $('select[name=additional_tag_status]');
+
+                                  $select.on('select2:selecting', function(e){
+                                      e.stopPropagation();
+                                      $select.select2('close');
+
+                                      let order_id = e.params.args.data.element.dataset.order;
+                                      let status_id = e.params.args.data.element.value;
+                                      let values = $select.val();
+
+                                      console.log(order_id, status_id);
+
+                                      $.ajax({
+                                          url: '/admin/order/api/tag/add/' + order_id + '/' + status_id,
+                                          success: function(data) {
+
+                                              window.addFlashMessage(data.content, data.type);
+
+                                              if (data.type == 'success') {
+                                                  values.push(status_id);
+                                                  $select.val(values);
+                                                  $select.trigger('change');
+                                              }
+                                          },
+                                      });
+
+                                      return false;
+                                  });
+                                  $select.on('select2:unselecting', function(e){
+                                      e.stopPropagation();
+
+                                      $select.select2('close');
+
+                                      let order_id = e.params.args.data.element.dataset.order;
+                                      let status_id = e.params.args.data.element.value;
+                                      let values = $select.val();
+
+                                      console.log(order_id, status_id);
+
+                                      $.ajax({
+                                          url: '/admin/order/api/tag/del/' + order_id + '/' + status_id,
+                                          success: function(data) {
+
+                                              window.addFlashMessage(data.content, data.type);
+
+                                              if (data.type == 'success') {
+                                                  let index = values.indexOf(status_id);
+                                                  if (index > -1) {
+                                                      values.splice(index, 1);
+                                                      $select.val(values);
+                                                      $select.trigger('change');
+                                                  }
+                                              }
+                                          },
+                                      });
+
+                                      return false;
+                                  });
+
+                                  $select.select2({
+                                      tags: true,
+                                      width: '260px',
+                                      templateResult: function(state) {
+                                          if (!state.id) {
+                                              return state.text;
+                                          }
+
+                                          return $("<div class='option-result' style='background-color: "+state.element.dataset.color+";'>"+state.text+"</div>");
+                                      },
+                                      templateSelection: function(state) {
+                                          if (!state.id) {
+                                              return state.text;
+                                          }
+
+                                          if (state.element.dataset.color) {
+                                              return $("<span class='option-selected' style='background-color: "+state.element.dataset.color+";'>"+state.text+"</span>");
+                                          }
+
+                                          return $("<span class='option-selected'>"+state.text+"</span>");
+                                      }
+
+                                  }).addClass('order_additional_tags');
+
+
+                              })
+                          })($);
+                          {/literal}
+                      </script>
+
                       <div id="block_tag_notes_desctiption" style="margin-left: 0px; color: rgb(85, 0, 0); text-align: left; border: 1px solid rgb(255, 102, 0); display: none;  left: -192px; right: 190px; z-index:106;" class="cidev_NoteBox">
                       </div>
                       <div id="block_tag_notes_desctiption_all" style="margin-left: 0px;margin-top: 2px; color: rgb(85, 0, 0); text-align: left; border: 1px solid rgb(255, 102, 0); display: none;  left: -50%; z-index:107;" class="cidev_NoteBox">
@@ -176,22 +283,7 @@ function func_set_value_to_field(form, fefix_field, field, mnf_id){
                               {/if}
                           {/foreach}
                       </div>
-
-                  {if $order.attention_tags ne ""}
-                        <br />
-                        <table align="right" id="attention_tags_selected">
-                        {foreach from=$order.attention_tags item=item key=key}
-                            {if $item.status_id gt 0}
-                                <tr>
-                                <td class="attention_tag_selected_item" data-description="{$item.description}" nowrap="nowrap" style="cursor:pointer; background-color: #F4CCCC; color: #000000;">{$item.status}</td>
-                                <td><a href="javascript: void();" onclick="javascript: $('#mode_additional_tag').val('del_additional_tag'); $('#del_status_id').val('{$item.status_id}'); document.order_add_additional_tag.submit();" style="color: red; font-weight: bold; text-decoration: none;">X</a></td>
-                                </tr>
-                            {/if}
-                        {/foreach}
-                        </table>
-                  {/if}
-
-                  </form>
+                  </div>
                   </div>
 
                  </td>

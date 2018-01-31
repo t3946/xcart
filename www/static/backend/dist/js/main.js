@@ -43474,7 +43474,8 @@ jQuery.fn.tablePositions = function (options) {
         $('fieldset.collapsible').mfieldset();
 
         var _loop = function _loop(form) {
-            if ($(form).attr('method').toString().toLowerCase() != 'post') {
+            var $form = $(form);
+            if ($form.attr('method') && $form.attr('method').toString().toLowerCase() != 'post') {
                 var action = $(form).attr('action');
 
                 if (action.indexOf('?') > -1) {

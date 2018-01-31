@@ -293,3 +293,37 @@
         }
     }
 }
+
+
+.order_additional_tags {
+
+    .select2-selection {
+        &__choice {
+            overflow: hidden;
+            padding-right: 0 !important;
+
+            &__remove {
+                color: black !important;
+            }
+
+            .option-selected {
+                padding:.2em;
+                display: inline-block;
+            }
+        }
+    }
+}
+
+#select2-additional_tag_status-results {
+    .select2-results__option {
+        .option-result {
+            padding:.2em;
+        }
+
+        &--highlighted {
+            .option-result {
+                color: black;
+            }
+        }
+    }
+}

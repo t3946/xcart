@@ -191,3 +191,18 @@
     .errors-block .errors .fields > li {
       text-transform: capitalize;
       font-weight: 500; }
+
+.order_additional_tags .select2-selection__choice {
+  overflow: hidden;
+  padding-right: 0 !important; }
+  .order_additional_tags .select2-selection__choice__remove {
+    color: black !important; }
+  .order_additional_tags .select2-selection__choice .option-selected {
+    padding: .2em;
+    display: inline-block; }
+
+#select2-additional_tag_status-results .select2-results__option .option-result {
+  padding: .2em; }
+
+#select2-additional_tag_status-results .select2-results__option--highlighted .option-result {
+  color: black; }
