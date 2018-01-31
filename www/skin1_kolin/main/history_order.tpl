@@ -193,8 +193,6 @@ function func_set_value_to_field(form, fefix_field, field, mnf_id){
                                       let status_id = e.params.args.data.element.value;
                                       let values = $select.val();
 
-                                      console.log(order_id, status_id);
-
                                       $.ajax({
                                           url: '/admin/order/api/tag/add/' + order_id + '/' + status_id,
                                           success: function(data) {
@@ -220,8 +218,6 @@ function func_set_value_to_field(form, fefix_field, field, mnf_id){
                                       let status_id = e.params.args.data.element.value;
                                       let values = $select.val();
 
-                                      console.log(order_id, status_id);
-
                                       $.ajax({
                                           url: '/admin/order/api/tag/del/' + order_id + '/' + status_id,
                                           success: function(data) {
@@ -243,14 +239,32 @@ function func_set_value_to_field(form, fefix_field, field, mnf_id){
                                   });
 
                                   $select.select2({
-                                      tags: true,
                                       width: '260px',
-                                      templateResult: function(state) {
-                                          if (!state.id) {
-                                              return state.text;
+                                      matcher: function(params, data) {
+                                          if (params.term === '') {
+                                              return data;
                                           }
 
-                                          return $("<div class='option-result' style='background-color: "+state.element.dataset.color+";'>"+state.text+"</div>");
+                                          let re = new RegExp('^.*' + params.term + '.*$', 'i');
+
+                                          if (re.test(data.text)) {
+                                              return data;
+                                          }
+
+                                          return null;
+                                      },
+                                      templateResult: function(state) {
+                                          if (state) {
+                                              if (!state.id) {
+                                                  return state.text;
+                                              }
+
+                                              if (state.element) {
+                                                  return $("<div class='option-result' style='background-color: "+state.element.dataset.color+";'>"+state.text+"</div>");
+                                              }
+
+                                              return $("<span class='option-result'>"+state.text+"</span>");
+                                          }
                                       },
                                       templateSelection: function(state) {
                                           if (!state.id) {
