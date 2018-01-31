@@ -367,7 +367,7 @@ if ($sExtraLog=='Y')
                 [
                     's_country' => $v["country_code"],
                     's_state' => $v["code"],
-                    's_city' => $v["city"],
+                    's_city' => $v["city"] ?: 'New City' ,
                     's_zipcode' => $v["base_state_zipcode"]
                 ]
             );
