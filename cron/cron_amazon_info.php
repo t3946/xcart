@@ -81,7 +81,7 @@ if (isset($argv) && is_array($argv) && !empty($argv[1])) {
                 try {
                     $counter_dropped = $aSKUs;
                     $pricing = $client->callGetCompetitivePricingForSKU($aSKUs);
-                    if ($products = AmazonProductHelper::getCompetitivePricingForSKU($pricing, $filtered_products_cp)) {
+                    if ($filtered_products_cp && $products = AmazonProductHelper::getCompetitivePricingForSKU($pricing, $filtered_products_cp)) {
                         foreach ($products as $aAmazonFbaProduct) {
                             $aAmazonFbaProduct->save();
                             $counter_received['CompetitivePricing']++;
@@ -125,7 +125,7 @@ if (isset($argv) && is_array($argv) && !empty($argv[1])) {
 
                     $counter_dropped = $aSKUs;
                     $myPricing = $client->callGetMyPriceForSKU($aSKUs);
-                    if ($products = AmazonProductHelper::getMyPriceForSKU($myPricing, $filtered_products_mp)) {
+                    if ($filtered_products_mp && $products = AmazonProductHelper::getMyPriceForSKU($myPricing, $filtered_products_mp)) {
                         foreach ($products as $aAmazonFbaProduct) {
                             $aAmazonFbaProduct->save();
                             $counter_received['MyPrice']++;
