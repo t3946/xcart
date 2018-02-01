@@ -188,7 +188,7 @@ function xmlmap_generate($cron = "", $cron_storefrontid = "")
 
 		func_flush(func_get_langvar_by_name('xmlmap_log_generatexml', null, false, true));
 		global $smarty;
-		$chunks = array_chunk($prepared_items, 25000);
+		$chunks = array_chunk($prepared_items, 10000);
 		$n = count($chunks);
 		$xml_files = array();
 		$smarty->assign('current_storefront_info', $current_storefront_info);
