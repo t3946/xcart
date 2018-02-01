@@ -7392,8 +7392,7 @@ input[name=dimensionx], input[name=dimensiony], input[name=dimensionz], input[na
   background: #D9EAD3 none repeat scroll 0% 0%;
   border: 1px solid;
   position: absolute;
-  right: 0;
-  width: 430px;
+  width: auto;
   text-align: left;
   display: none; }
 

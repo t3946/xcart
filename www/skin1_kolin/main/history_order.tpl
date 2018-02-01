@@ -133,6 +133,51 @@ function func_set_value_to_field(form, fefix_field, field, mnf_id){
  <td>
 	/ <a target="_blank" style="color: #140BFC" href="https://mail.google.com/mail/u/0/#search/{$order.order_prefix}{$order.orderid}+OR+%22SFP-{$order.orderid}%22">Gmail</a>
  </td>
+     <td style="position: relative;">
+         / <div style="position: relative; display: inline-block; vertical-align: middle;">
+             <a href="#" onclick="{if $you_have_right_to_change_order}$('#send_note_form_js').toggle();{/if} return false;">
+                 {if $you_have_right_to_change_order}
+                     <img src="{$ImagesDir}/noteicon.png"/>
+                 {else}
+                     <img src="{$ImagesDir}/noteicon_disable.png"/>
+                 {/if}
+             </a>
+         </div>
+
+         <div id="send_note_form_js">
+             <form action="order.php" method="post" name="ordernotesformnewjs">
+                 <input type="hidden" name="mode" value="submit_message"/>
+                 <input type="hidden" name="send_email" value="N"/>
+                 <input type="hidden" name="orderid" value="{$order.orderid}"/>
+                 {$cidev_firstname} ({$login}) note:<br/>
+                 Write a note below or
+                 <button style="font-size: 1em; display: inline; border: none; padding: 0; background: none; color: inherit; text-decoration: underline; cursor: pointer; word-wrap: break-word;"
+                         value="empty"
+                         name="type">
+                     click this link to empty 'Last CS message' in the order list
+                 </button>. <br/>
+
+                 <div>
+                     <p><b>Subject line:</b></p>
+                     <input style="width: 100%;" type="text" name="subject_line"/>
+                 </div>
+                 <p><b>Message body:</b></p>
+                 <textarea id="notes" name="notes" cols="70" style="width: 100%;" rows="6"></textarea><br/>
+
+                 {* <input type="submit" value="Post message" id="post_message" /> *}
+
+                 <div style="margin-top:10px">
+
+                     <button value="message" name="type" onclick="javascript:
+                     {literal}if (!$('#notes').val().length) { alert('You try to send message with only subject! \nPlease explain your message in the message body field...'); return false;}{/literal}
+                             document.ordernotesformnewjs.submit();">
+                         Post message
+                     </button>
+
+                 </div>
+             </form>
+         </div>
+     </td>
  </tr>
  </table>
 
@@ -146,7 +191,7 @@ function func_set_value_to_field(form, fefix_field, field, mnf_id){
 </td>
 *}
 
-<td align="right" width="35%" style="position:relative;">
+<td align="right" width="40%" style="position:relative;">
 <div>
                  <table cellspacing="0" cellpadding="0" border="0" width="100%">
                  <tr>
@@ -240,7 +285,7 @@ function func_set_value_to_field(form, fefix_field, field, mnf_id){
                                   });
 
                                   $select.select2({
-                                      width: '260px',
+                                      width: '100%',
                                       matcher: function(params, data) {
                                           if (!params.term) {
                                               return data;
@@ -305,48 +350,8 @@ function func_set_value_to_field(form, fefix_field, field, mnf_id){
                  </tr>
                  </table>
 </div>
-    <div style="position: relative; margin-top: 10px;">
-        <a href="#" onclick="{if $you_have_right_to_change_order}$(this).parent().siblings('#send_note_form_js').toggle();{/if} return false;">
-            {if $you_have_right_to_change_order}
-                <img src="{$ImagesDir}/noteicon.png"/>
-            {else}
-                <img src="{$ImagesDir}/noteicon_disable.png"/>
-            {/if}
-        </a>
-    </div>
-    <div id="send_note_form_js">
-        <form action="order.php" method="post" name="ordernotesformnewjs">
-            <input type="hidden" name="mode" value="submit_message"/>
-            <input type="hidden" name="send_email" value="N"/>
-            <input type="hidden" name="orderid" value="{$order.orderid}"/>
-            {$cidev_firstname} ({$login}) note:<br/>
-            Write a note below or
-            <button style="font-size: 1em; display: inline; border: none; padding: 0; background: none; color: inherit; text-decoration: underline; cursor: pointer; word-wrap: break-word;"
-                    value="empty"
-                    name="type">
-                click this link to empty 'Last CS message' in the order list
-            </button>. <br/>
 
-            <div>
-                <p><b>Subject line:</b></p>
-                <input style="width: 100%;" type="text" name="subject_line"/>
-            </div>
-            <p><b>Message body:</b></p>
-            <textarea id="notes" name="notes" cols="70" style="width: 100%;" rows="6"></textarea><br/>
 
-            {* <input type="submit" value="Post message" id="post_message" /> *}
-
-            <div style="margin-top:10px">
-
-                <button value="message" name="type" onclick="javascript:
-                {literal}if (!$('#notes').val().length) { alert('You try to send message with only subject! \nPlease explain your message in the message body field...'); return false;}{/literal}
-                        document.ordernotesformnewjs.submit();">
-                    Post message
-                </button>
-
-            </div>
-        </form>
-    </div>
 </td>
 
 </tr>

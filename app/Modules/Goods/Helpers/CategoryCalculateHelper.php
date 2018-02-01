@@ -49,28 +49,32 @@ class CategoryCalculateHelper
 
     public static function recalcParents(int $pk, bool $include_self = false)
     {
-        /** @var CategoryModel $thisModel */
-        $thisModel = CategoryModel::objects()->get(['pk' => $pk]);
+        if ($pk) {
+            /** @var CategoryModel $thisModel */
+            $thisModel = CategoryModel::objects()->get(['pk' => $pk]);
 
-        if ($models = $thisModel->getObjects()->ancestors($include_self)->all()) {
-            /** @var CategoryModel $model */
-            foreach ($models as $model)
-            {
-                self::reCalcProductsCount($model);
+            if ($models = $thisModel->getObjects()->ancestors($include_self)->all()) {
+                /** @var CategoryModel $model */
+                foreach ($models as $model)
+                {
+                    self::reCalcProductsCount($model);
+                }
             }
         }
     }
 
     public static function recalcChildrens(int $pk, bool $include_self = false)
     {
-        /** @var CategoryModel $thisModel */
-        $thisModel = CategoryModel::objects()->get(['pk' => $pk]);
+        if ($pk) {
+            /** @var CategoryModel $thisModel */
+            $thisModel = CategoryModel::objects()->get(['pk' => $pk]);
 
-        if ($models = $thisModel->getObjects()->descendants($include_self)->all()) {
-            /** @var CategoryModel $model */
-            foreach ($models as $model)
-            {
-                self::reCalcProductsCount($model);
+            if ($models = $thisModel->getObjects()->descendants($include_self)->all()) {
+                /** @var CategoryModel $model */
+                foreach ($models as $model)
+                {
+                    self::reCalcProductsCount($model);
+                }
             }
         }
     }
