@@ -146,7 +146,7 @@ function func_set_value_to_field(form, fefix_field, field, mnf_id){
 </td>
 *}
 
-<td align="right" width="25%" style="position:relative;">
+<td align="right" width="35%" style="position:relative;">
 <div>
                  <table cellspacing="0" cellpadding="0" border="0" width="100%">
                  <tr>
