@@ -140,7 +140,11 @@ SELECT p.*
            INNER JOIN xcart_products_categories pc ON p.productid = pc.productid
            INNER JOIN xcart_pc_options po ON po.storefrontid = {$this->oStorefront->getStoreFrontId()} AND 
                                           ((po.disable_AC_products = 'N') OR (po.disable_AC_products = 'Y' AND p.pc_classify_status != 'AC'))
-           INNER JOIN xcart_categories c ON pc.categoryid = c.categoryid AND c.categoryid_path LIKE '{$this->oCategory->getPath()}%' AND c.storefrontid = {$this->oStorefront->getStoreFrontId()}
+           INNER JOIN xcart_categories c ON pc.categoryid = c.categoryid 
+           AND c.lft >= '{$this->oCategory->lft}' 
+           AND c.rgt <= '{$this->oCategory->rgt}' 
+           AND c.root = '{$this->oCategory->root}' 
+           AND c.storefrontid = {$this->oStorefront->getStoreFrontId()}
            
            {$sSQLfv}
       WHERE forsale = 'Y' {$this->getPriceQueryCondition()} {$this->getBrandQueryCondition()}
