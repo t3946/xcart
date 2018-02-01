@@ -33,7 +33,7 @@ if (!empty($b_ids)) {
     );
 }
 
-if (!$aFilterValues = \Xcart\App\Main\Xcart::app()->cache->get('$oFilter->getMoreBrands')) {
+if (!$aFilterValues = \Xcart\App\Main\Xcart::app()->cache->get('$oFilter->getMoreBrands__st:'.\Xcart\App\Main\Xcart::app()->getModule('Sites')->getSite()->pk)) {
     $aFilterValues = $oFilter->getMoreBrands();
     \Xcart\App\Main\Xcart::app()->cache->set('$oFilter->getMoreBrands', $aFilterValues);
 }
