@@ -100,7 +100,6 @@ if ($active_modules["Brands"])
 elseif ($active_modules["Manufacturers"])
     include $xcart_dir."/modules/Manufacturers/customer_manufacturers.php";
 
-//d($cat, microtime(true) - $start_time);
 
 if (!empty($cat)){
 	include "./products.php";
@@ -120,7 +119,6 @@ else {
 ##
 #
 }
-//d($cat, microtime(true) - $start_time);
 
 #
 ##
