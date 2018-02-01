@@ -203,25 +203,41 @@ function func_set_value_to_field(form, fefix_field, field, mnf_id){
 
                   <div style="margin-top: -3px;">
                   <div class="order_additional_tags">
-                  <input type="hidden" name="orderid" value="{$order.orderid}" />
-                  <input type="hidden" name="del_status_id" id="del_status_id" value="" />
+                        {assign var='string_tags_idx' value=''}
+                      {foreach from=$attention_tags_values item=item key=key}
+                          {if $item.active eq "Y"}
 
-                  <select id="additional_tag_status" name="additional_tag_status" multiple style="width: 100%">
-                        {foreach from=$attention_tags_values item=item key=key}
-                            {foreach from=$order.attention_tags item=item2}
-                              {if $item.active eq "Y" || $item.status_id == $item2.status_id}
-                                <option
-                                        value="{$item.status_id}"
-                                        data-color="{$item.color}"
-                                        data-order="{$order.orderid}"
-                                        {if $item.status_id == $item2.status_id}
-                                            selected
-                                        {/if}
-                                >{$item.status}</option>
+                              {assign var='string_tags_idx' value="`$string_tags_idx`,`$item.status_id`"}
+                          {/if}
+                      {/foreach}
+
+                      {foreach from=$attention_tags_values item=item key=key}
+                          {foreach from=$order.attention_tags item=item2 key=key2}
+
+                              {if ($item.status_id == $item2.status_id && $item.active ne "Y")}
+
+                                  {assign var='string_tags_idx' value="`$string_tags_idx`,`$item.status_id`"}
                               {/if}
 
-                            {/foreach}
-                        {/foreach}
+                          {/foreach}
+                      {/foreach}
+
+                  <select id="additional_tag_status" name="additional_tag_status" multiple style="width: 100%">
+
+                      {foreach from=$attention_tags_values item=item key=key}
+                      {if strpos($string_tags_idx, ",`$item.status_id`") !== false}
+                          <option
+                                  value="{$item.status_id}"
+                                  data-color="{$item.color}"
+                                  data-order="{$order.orderid}"
+                                  {foreach from=$order.attention_tags item=item2 key=key2}
+                                  {if $item.status_id == $item2.status_id}
+                                      selected
+                                  {/if}
+                                  {/foreach}
+                          >{$item.status}</option>
+                      {/if}
+                      {/foreach}
                     </select>
 
                       <script>

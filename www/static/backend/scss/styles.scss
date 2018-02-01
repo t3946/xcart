@@ -316,11 +316,15 @@
 
 #select2-additional_tag_status-results {
     .select2-results__option {
+        padding: 1px;
+
         .option-result {
-            padding:.2em;
+            padding:.5em;
         }
 
         &--highlighted {
+            background-color: black;
+
             .option-result {
                 color: black;
             }
