@@ -163,18 +163,19 @@ function func_set_value_to_field(form, fefix_field, field, mnf_id){
 
                   <select id="additional_tag_status" name="additional_tag_status" multiple style="width: 100%">
                         {foreach from=$attention_tags_values item=item key=key}
-                          {if $item.active eq "Y"}
-                            <option
-                                    value="{$item.status_id}"
-                                    data-color="{$item.color}"
-                                    data-order="{$order.orderid}"
-                                    {foreach from=$order.attention_tags item=item2}
+                            {foreach from=$order.attention_tags item=item2}
+                              {if $item.active eq "Y" || $item.status_id == $item2.status_id}
+                                <option
+                                        value="{$item.status_id}"
+                                        data-color="{$item.color}"
+                                        data-order="{$order.orderid}"
                                         {if $item.status_id == $item2.status_id}
                                             selected
                                         {/if}
-                                    {/foreach}
-                            >{$item.status}</option>
-                          {/if}
+                                >{$item.status}</option>
+                              {/if}
+
+                            {/foreach}
                         {/foreach}
                     </select>
 
