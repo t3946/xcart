@@ -32,7 +32,7 @@ if ($brands_menu > 0) {
         . " FROM $sql_tbl[brands] "
         . " /*LEFT JOIN $sql_tbl[brands_lng] ON $sql_tbl[brands].brandid = $sql_tbl[brands_lng].brandid AND $sql_tbl[brands_lng].code = '$shop_language'*/"
         . " WHERE $sql_tbl[brands].avail = 'Y' AND $sql_tbl[brands].brandid IN ('" . implode("', '", array_keys($brands_products)) . "')"
-        . " ORDER BY orderby, brand" . (($config["Brands"]["brands_limit"] > 0) ? " LIMIT " . $config["Brands"]["brands_limit"] : ""));
+        . " ORDER BY orderby, brand" . (($config["Brands"]["brands_limit"] > 0) ? " LIMIT " . $config["Brands"]["brands_limit"] : ""), true);
 
     $smarty->assign("brands_menu", $brands_menu);
 
