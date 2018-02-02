@@ -4,13 +4,12 @@ namespace Modules\Goods\Controllers;
 
 use Modules\Goods\Models\ProductModel;
 use Xcart\App\Controller\Controller;
+use Mindy\QueryBuilder\Expression;
 
 class ProductController extends Controller
 {
     public function getDistributorProductList()
     {
-
-        dd($_GET);
         $qs = ProductModel::objects()->getQuerySet();
         $filter = [];
 
@@ -26,6 +25,7 @@ class ProductController extends Controller
             $mass_of_all_mpn[] = $product_model->getMPN();
         }
 
-//        var_dump( $mass_of_all_mpn );
+        $json = json_encode($mass_of_all_mpn);
+
     }
 }
