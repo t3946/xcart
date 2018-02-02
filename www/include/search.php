@@ -1382,7 +1382,7 @@ if ($mode == "search") {
 		$inner_join_productids
 		GROUP BY FP.fv_id";
 
-        $igor_query_filter_count_search_result = func_query($igor_query_filter_count_search);
+        $igor_query_filter_count_search_result = func_query($igor_query_filter_count_search, true);
         if (!empty($igor_query_filter_count_search_result)) {
             unset($filter_found_fv_ids_count);
             foreach ($igor_query_filter_count_search_result as $k => $v) {
