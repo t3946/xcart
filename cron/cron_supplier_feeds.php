@@ -216,8 +216,6 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
     if (!empty($all_feed_productcodes) && is_array($all_feed_productcodes) && $supplierFeedModel->disable_search_of_discontinued_items != 'Y') {
         print("Search of discontinued section\n");
 
-        print_r($all_feed_productcodes);
-
         $i = 0;
         while ($discountinued_products = ProductModel::objects()->filter(
             [
