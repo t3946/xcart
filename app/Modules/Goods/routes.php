@@ -1,5 +1,12 @@
 <?php
 return [
+
+    [
+        'route' => '/getallmpn/',
+        'target' => ['\Modules\Goods\Controllers\ProductController', 'getDistributorProductList'],
+        'name' => 'getmpn'
+    ],
+
     [
         'route' => '',
         'path' => 'Modules.Goods.routes_catalog',
@@ -14,4 +21,5 @@ return [
             'cache' => false,
         ]
     ],
+
 ];
