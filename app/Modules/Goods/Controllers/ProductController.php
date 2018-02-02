@@ -27,5 +27,6 @@ class ProductController extends Controller
 
         $json = json_encode($mass_of_all_mpn);
 
+        print_r($json);
     }
 }
