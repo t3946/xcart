@@ -138,6 +138,7 @@ class SupplierFeedStore extends BaseStore
 
         if (isset($data['images'])) {
             $data['supplier_images'] = $data['images'];
+            $data['supplier_images'] = array_map(function($a){return html_entity_decode($a);}, $data['supplier_images']);
             unset($data['images']);
         }
 
