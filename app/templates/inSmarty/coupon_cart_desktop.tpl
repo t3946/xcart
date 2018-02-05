@@ -37,7 +37,7 @@
 
             {if !$validator->isValid() && $validator->precalcProducts()}
                 <p>
-                    Your supposed discount is <span class="ProductPriceSmall">US$ {$.app->getModule('Cart')->getValidateComponent()->getProductDiscount()|number_format:2}</span>.
+                    Your supposed discount is <span class="ProductPriceSmall">US$ {$validator->getProductDiscount()|number_format:2}</span>.
                     <br>
 
                     The exact amount of discount will be calculated on Order Review page.
