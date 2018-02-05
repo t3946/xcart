@@ -49,7 +49,9 @@ class CouponCodeMiddleware extends Middleware
                 $flash->error("Incorrect coupon code");
             }
 
-            CouponOldCart::getInstance()->validateCoupon();
+            ($component = CouponOldCart::getInstance())->validateCoupon();
+
+            Xcart::app()->getModule('Cart')->setValidateComponent($component);
 
             $request->getIsGet()?: $request->refresh();
         }

@@ -471,6 +471,27 @@ class CouponOldCart
         $this->setCart($cart);
     }
 
+    public function precalcProducts():bool
+    {
+        if ($this->getCart()) {
+            $cart = $this->getCart();
+            $pids = $this->getValidProductIds();
+
+            foreach ($cart['products'] as $key =>$item) {
+                if ( in_array($item['productid'], $pids) ) {
+                    $total = $this->getProductSubtotal($item);
+                    $discount = $this->getBalancedDiscount($total);
+
+                    $this->productsDiscount += $discount;
+                }
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+
     private function reCalcCart()
     {
         $coupon = $this->getCoupon();
@@ -491,6 +512,11 @@ class CouponOldCart
         $cart['orders'][0]['display_discounted_subtotal'] = $cart['display_discounted_subtotal'];
 
         $this->setCart($cart);
+    }
+
+    public function getProductDiscount():?float
+    {
+        return $this->productsDiscount;
     }
 
     public function isValid()
