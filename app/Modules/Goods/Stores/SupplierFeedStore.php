@@ -25,9 +25,10 @@ class SupplierFeedStore extends BaseStore
 
     public function __construct($feed_model, $feed)
     {
+        $this->feed_model = $feed_model;
+
         if ($content = json_decode($feed, true)) {
             if (is_array($content)) {
-                $this->feed_model = $feed_model;
                 $this->populate($content);
             }
         }

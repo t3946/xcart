@@ -2,8 +2,8 @@
 return [
 
     [
-        'route' => '/getallmpn/',
-        'target' => ['\Modules\Goods\Controllers\ProductController', 'getDistributorProductList'],
+        'route' => '/api/products/getallmpn/',
+        'target' => ['\Modules\Goods\Controllers\Api\ApiProductController', 'getDistributorProductList'],
         'name' => 'getmpn'
     ],
 

@@ -64,6 +64,7 @@ if (isset($argv) && is_array($argv) && !empty($argv[1])) {
                 ->paginate($i++, $max_products)
                 ->all())
             {
+
                 $filtered_products_cp = array_filter($aProductsBatch, function($a) {
                     if($a->amazon_fields && ($amz = $a->amazon_fields->limit(1)->get())) {
                         if ($amz->sleep_cp) {
@@ -75,12 +76,14 @@ if (isset($argv) && is_array($argv) && !empty($argv[1])) {
                     return true;
                 });
 
-                $aSKUs = array_map(function($a) {return $a->productcode;}, $filtered_products_cp);
+                $aSKUs = array_filter(array_map(function($a) {return $a->productcode;}, $filtered_products_cp));
+                $counter_dropped = $aSKUs;
+
                 $log_text = 'ERROR in getCompetitivePricingForSKU competitive_pricing cron for SKU\'s: ' . implode(', ', $aSKUs) . "\n";
 
                 try {
                     if ($aSKUs) {
-                        $counter_dropped = $aSKUs;
+
                         $pricing = $client->callGetCompetitivePricingForSKU($aSKUs);
                         if ($filtered_products_cp && $products = AmazonProductHelper::getCompetitivePricingForSKU($pricing, $filtered_products_cp)) {
                             foreach ($products as $aAmazonFbaProduct) {
@@ -123,10 +126,11 @@ if (isset($argv) && is_array($argv) && !empty($argv[1])) {
                         return true;
                     });
 
-                    $aSKUs = array_map(function($a) {return $a->productcode;}, $filtered_products_mp);
+                    $aSKUs = array_filter(array_map(function($a) {return $a->productcode;}, $filtered_products_mp));
+
+                    $counter_dropped = $aSKUs;
 
                     if ($aSKUs) {
-                        $counter_dropped = $aSKUs;
                         $myPricing = $client->callGetMyPriceForSKU($aSKUs);
                         if ($filtered_products_mp && $products = AmazonProductHelper::getMyPriceForSKU($myPricing, $filtered_products_mp)) {
                             foreach ($products as $aAmazonFbaProduct) {
