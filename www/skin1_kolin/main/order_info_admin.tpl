@@ -12,6 +12,7 @@ Use $product.oProduct classProduct
 
 {$lng.txt_order_details_top_text}
 
+{assign var=bCanAcceptCoupon value=''}
 {include file="change_states_js.tpl"}
 
 <script type="text/javascript">
@@ -1166,8 +1167,11 @@ multirowInputSets['track_{$m_id}'].noCloneContent = 1;
           {include file="main/order_status.tpl" status=$v.cb_status mode="select" name="groups[`$m_id`][cb_status]" status_type="CB" extra=" id='groups_cb_status_`$m_id`'"}
         {/if}
 
+          {if $v.cb_status == 'N' || empty($v.cb_status)}
+              {assign var=bCanAcceptCoupon value='Y'}
+          {/if}
 
-<br />
+          <br />
 <B>Payment date:</B>&nbsp;{if $v.paid_date eq "0"}<span style="color: red;">Not yet paid</span>{else}{$v.paid_date|date_format:'%d-%b-%Y&nbsp; %H:%M'}{/if}
 
       </td>
@@ -1548,6 +1552,20 @@ multirowInputSets['add_additional_fee_to_order'].noCloneContent = 1;
     <td>{include file="buttons/multirow_add.tpl" mark="add_retailtrust"}</td>
   </tr>
 {/if}
+
+
+
+    {if empty($order.coupon) && $bCanAcceptCoupon == 'Y'}
+
+    <tr>
+        <td colspan="11">
+            {include file="main/subheader.tpl" title="Append coupon"}
+
+            <input type="text" name="coupon">
+        </td>
+    </tr>
+
+    {/if}
 
 </table>
 <br />

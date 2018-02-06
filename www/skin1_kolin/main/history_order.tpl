@@ -247,46 +247,45 @@ function func_set_value_to_field(form, fefix_field, field, mnf_id){
                               $(document).ready(function(){
                                   let $select = $('select[name=additional_tag_status]');
 
-                                  $select.on('select2:selecting', function(e){
+
+                                  let fncS2selections = function(e, action, callback){
+
                                       e.stopPropagation();
                                       $select.select2('close');
 
                                       let order_id = e.params.args.data.element.dataset.order;
                                       let status_id = e.params.args.data.element.value;
-                                      let values = $select.val();
 
                                       $.ajax({
-                                          url: '/admin/order/api/tag/add/' + order_id + '/' + status_id,
-                                          success: function(data) {
+                                          url: '/admin/order/api/tag/'+action+'/' + order_id + '/' + status_id,
+                                          success: (data) => {
 
                                               window.addFlashMessage(data.content, data.type);
 
+                                              if (callback) {
+                                                  callback(data, status_id);
+                                              }
+                                          },
+                                      });
+                                  };
+
+                                  $select
+                                      .on('select2:selecting', function(e){
+                                          fncS2selections(e, 'add', function(data, status_id) {
                                               if (data.type == 'success') {
+                                                  let values = $select.val();
                                                   values.push(status_id);
                                                   $select.val(values);
                                                   $select.trigger('change');
                                               }
-                                          },
-                                      });
+                                          });
 
-                                      return false;
-                                  });
-                                  $select.on('select2:unselecting', function(e){
-                                      e.stopPropagation();
-
-                                      $select.select2('close');
-
-                                      let order_id = e.params.args.data.element.dataset.order;
-                                      let status_id = e.params.args.data.element.value;
-                                      let values = $select.val();
-
-                                      $.ajax({
-                                          url: '/admin/order/api/tag/del/' + order_id + '/' + status_id,
-                                          success: function(data) {
-
-                                              window.addFlashMessage(data.content, data.type);
-
+                                          return false;
+                                      })
+                                      .on('select2:unselecting', function(e){
+                                          fncS2selections(e, 'del', function(data, status_id) {
                                               if (data.type == 'success') {
+                                                  let values = $select.val();
                                                   let index = values.indexOf(status_id);
                                                   if (index > -1) {
                                                       values.splice(index, 1);
@@ -294,11 +293,10 @@ function func_set_value_to_field(form, fefix_field, field, mnf_id){
                                                       $select.trigger('change');
                                                   }
                                               }
-                                          },
-                                      });
+                                          });
 
-                                      return false;
-                                  });
+                                          return false;
+                                      });
 
                                   $select.select2({
                                       width: '100%',
