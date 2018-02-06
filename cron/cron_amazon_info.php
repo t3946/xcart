@@ -64,6 +64,8 @@ if (isset($argv) && is_array($argv) && !empty($argv[1])) {
                 ->paginate($i++, $max_products)
                 ->all())
             {
+                $counter_dropped = [];
+
                 $filtered_products_cp = array_filter($aProductsBatch, function($a) {
                     if($a->amazon_fields && ($amz = $a->amazon_fields->limit(1)->get())) {
                         if ($amz->sleep_cp) {
@@ -122,6 +124,8 @@ if (isset($argv) && is_array($argv) && !empty($argv[1])) {
                         }
                         return true;
                     });
+
+                    $counter_dropped = [];
 
                     $aSKUs = array_map(function($a) {return $a->productcode;}, $filtered_products_mp);
 
