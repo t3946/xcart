@@ -77,7 +77,7 @@ if (isset($argv) && is_array($argv) && !empty($argv[1])) {
                     return true;
                 });
 
-                $aSKUs = array_map(function($a) {return $a->productcode;}, $filtered_products_cp);
+                $aSKUs = array_filter(array_map(function($a) {return $a->productcode;}, $filtered_products_cp));
                 $log_text = 'ERROR in getCompetitivePricingForSKU competitive_pricing cron for SKU\'s: ' . implode(', ', $aSKUs) . "\n";
 
                 try {
@@ -127,7 +127,7 @@ if (isset($argv) && is_array($argv) && !empty($argv[1])) {
 
                     $counter_dropped = [];
 
-                    $aSKUs = array_map(function($a) {return $a->productcode;}, $filtered_products_mp);
+                    $aSKUs = array_filter(array_map(function($a) {return $a->productcode;}, $filtered_products_mp));
 
                     if ($aSKUs) {
                         $counter_dropped = $aSKUs;
