@@ -52,7 +52,7 @@ class DefaultController extends FrontendController
             'site' => $site,
         ]);
 
-        echo $this->render('product/product.tpl', [
+        $this->display('product/product.tpl', [
             'model' => $model,
             'breadcrumbs' => $model->getBreadcrumbs(),
             'tabs' => TabDataHelper::getTabsFromManufacturer($model->manufacturerid),

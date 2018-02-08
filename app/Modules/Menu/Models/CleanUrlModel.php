@@ -2,11 +2,11 @@
 
 namespace Modules\Menu\Models;
 
+use Modules\Sites\Models\SiteModel;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Model;
-use Xcart\App\Traits\SlugifyTrait;
 
 /**
  * Class CleanUrlModel
@@ -20,8 +20,6 @@ use Xcart\App\Traits\SlugifyTrait;
  */
 class CleanUrlModel extends Model
 {
-    use SlugifyTrait;
-
     public static function tableName()
     {
         return 'xcart_clean_urls';
@@ -68,50 +66,32 @@ class CleanUrlModel extends Model
         parent::beforeSave($owner, $isNew);
     }
 
-    public function getSlugPart()
+    public function getSlugPart():string
     {
-        $ta = explode('/', $this->clean_url);
-        $last = end($ta);
-        return $this->createSlug($last);
+        return end(explode('/', $this->clean_url));
     }
 
-    public function urlFromCode($code = null, $absolute = false, $site = null)
+    public function urlFromCode($code = null, $absolute = false, SiteModel $site = null):string
     {
         $path = '';
+        $site = $site ?: Xcart::app()->getModule('Sites')->getSite();
 
-        if (!$site) {
-            /** @var \Modules\Sites\SitesModule $module */
-            $module = Xcart::app()->getModule('Sites');
-
-            $site = $module->getSite(true);
-        }
-
-        if ($absolute) {
-            if ($site) {
-                $path .= $site->domain;
-            }
+        if ($absolute && $site) {
+            $path .= '//' . $site->domain;
         }
 
         if ($code) {
-            $ta = explode('/', $this->clean_url);
-            $last = end($ta);
-
-            $path .= Xcart::app()->router->url(
-                $code,
-                [
+            $path .= Xcart::app()
+                ->router
+                ->url( $code, [
                     'id' => $this->resource_id,
-                    'slug' => $this->createSlug($last)
-                ]
-            );
+                    'slug' => $this->getSlugPart(),
+                ]);
         }
         else {
             $path .= '/' . $this->clean_url;
         }
 
-
-        if ($absolute) {
-            $path = '//' . $path;
-        }
 
         return $path;
     }

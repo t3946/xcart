@@ -31,17 +31,13 @@ class MetaHelper
             $meta = self::fetchMeta(substr($uri, 0, $pos));
         }
 
-        $site = null;
-        if (Xcart::app()->getModule('Meta')->onSite) {
-            $site = Xcart::app()->getModule('Sites')->getSite();
-        }
+        $site = Xcart::app()->getModule('Sites')->getSite();
 
         if ($meta) {
             echo self::renderTemplate('meta/meta_helper.tpl', [
                 'title' => self::formatTitle($controller, $meta->title, $site, $meta),
                 'canonical' => $canonical,
                 'description' => $meta->description,
-                'keywords' => $meta->keywords,
                 'site' => $site
             ]);
         }
@@ -52,7 +48,6 @@ class MetaHelper
                 'title' => self::cleanString( self::formatTitle($controller, $metaTemplate->renderTitle()) ),
                 'canonical' => $canonical,
                 'description' => self::cleanString( $metaTemplate->renderDescription() ),
-                'keywords' => self::cleanString( $metaTemplate->renderKeywords() ),
                 'site' => $site
             ]);
         }
@@ -60,7 +55,6 @@ class MetaHelper
             echo self::renderTemplate('meta/meta_helper.tpl', [
                 'title' => self::formatTitle($controller, null, $site),
                 'canonical' => $canonical,
-                'keywords' => $controller->getKeywords(),
                 'description' => $controller->getDescription(),
                 'site' => $site
             ]);

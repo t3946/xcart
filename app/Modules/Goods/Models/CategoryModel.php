@@ -109,15 +109,13 @@ class CategoryModel extends TreeModel
     {
         $bread = new Breadcrumbs();
 
-        if ($parents = self::objects($this)->ancestors()->order(['lft'])->all())
+        if ($parents = $this->getObjects()->ancestors(true)->order(['lft'])->all())
         {
             /** @var self $model */
             foreach ($parents as $model) {
                 $bread->add($model->category, $model->getAbsoluteUrl());
             }
         }
-
-        $bread->add($this->category, $this->getAbsoluteUrl());
 
         return $bread;
     }
@@ -134,11 +132,9 @@ class CategoryModel extends TreeModel
 
     public function getSubcategories($withProductCount = true, $level = 1, $tree = false, $cache = true)
     {
-        $qs = static::objects()
+        $qs = $this->objects()
                     ->descendants(false, $level)
-                    ->filter([
-                        'avail' => 'Y',
-                    ]);
+                    ->filter([ 'avail' => 'Y' ]);
 
         if ($withProductCount) {
             $qs->filter(['active_product_count__gt' => 0,]);

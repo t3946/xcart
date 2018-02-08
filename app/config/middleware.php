@@ -7,7 +7,7 @@ return [
 //                   'class' => '\\Modules\\Core\\Middleware\\CacheMiddleware',
 //               ],
     'CurrentSiteMiddleware' => [
-        'class' => '\\Modules\\Sites\\Middleware\\CurrentSiteMiddleware',
+        'class' => '\Modules\Sites\Middleware\CurrentSiteMiddleware',
     ],
     'CouponCodeMiddleware' => [
         'class' => '\Modules\Cart\Middleware\CouponCodeMiddleware'
@@ -16,12 +16,12 @@ return [
         'class' => '\Modules\User\Middleware\UserAdminMiddleware'
     ],
     'BotsMiddleware' => [
-        'class' => '\\Modules\\User\\Middleware\\BotsMiddleware',
+        'class' => '\Modules\User\Middleware\BotsMiddleware',
     ],
     'ReferrerSearch' => [
-        'class' => '\\Modules\\User\\Middleware\\ReferrerSearchMiddleware'
+        'class' => '\Modules\User\Middleware\ReferrerSearchMiddleware'
     ],
     'ExpireHeaders' => [
-        'class' => '\\Modules\\User\\Middleware\\ExpireHeadersMiddleware'
+        'class' => '\Modules\User\Middleware\ExpireHeadersMiddleware'
     ],
 ];

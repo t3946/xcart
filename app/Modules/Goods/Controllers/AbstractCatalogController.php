@@ -2,6 +2,7 @@
 
 namespace Modules\Goods\Controllers;
 
+use Mindy\QueryBuilder\Q\QOr;
 use Modules\Goods\Helpers\ProductFilterHelper;
 use Modules\Goods\Helpers\ProductSortHelper;
 use Modules\Goods\Models\CategoryModel;
@@ -44,7 +45,18 @@ abstract class AbstractCatalogController extends FrontendController
      */
     public function getQS($data)
     {
-        return ProductModel::objects()->filter([ 'forsale' => 'Y' ]);
+        $qs = ProductModel::objects();
+        $ta = $qs->getTableAlias();
+
+         $qs->filter([
+            'forsale' => 'Y',
+            new QOr([
+                ['group_root__isnull' => true],
+                ['group_root__raw' => " = `{$ta}`.`productid`"]
+            ])
+         ]);
+
+         return $qs;
     }
 
     /**
@@ -123,10 +135,10 @@ abstract class AbstractCatalogController extends FrontendController
             ]);
         }
         else {
-            $pager->setPage(0);
-            echo $this->render($this->view, array_replace([
+            $this->display($this->view,
+                array_replace([
                 'model' => $model,
-                'pager' => $pager,
+                'pager' => $pager->setPage(0),
                 'sort'  => $orderBy,
                 'sort_arr'  => ProductSortHelper::$orderBy,
                 'breadcrumbs' => $this->getBreadcrumbsFromData($model),

@@ -55,32 +55,26 @@ class Controller
             $action = $this->defaultAction;
         }
 
+        if (!method_exists($this, $action)) {
+            $class = get_class();
+            throw new InvalidConfigException("There is no action {$action} in controller {$class}");
+        }
+
         if (method_exists($this, 'beforeAction')) {
             $this->beforeAction($action, $params);
         }
 
-        if (($eaa = method_exists($this, 'afterAction')) || $this->checkMiddleware())
-        {
-            ob_start();
-            if (method_exists($this, $action)) {
-                $this->runAction($action, $params);
-            } else {
-                ob_end_clean();
-                $class = get_class();
-                throw new InvalidConfigException("There is no action {$action} in controller {$class}");
-            }
+        $echo = $this->runAction($action, $params);
 
-            $echo = ob_get_clean();
-
-            if ($eaa && $aresult = $this->afterAction($action, $params, $echo)) {
-                echo $aresult;
-            }
-
-            echo $echo;
+        if (method_exists($this, 'afterAction')) {
+            $echo = $this->afterAction($action, $params, $echo);
         }
-        else {
-            $this->runAction($action, $params);
+
+        if ($this->checkMiddleware()) {
+            $echo = $this->middlewareAction($action, $params, $echo);
         }
+
+        echo $echo;
     }
 
     public function runAction($action, $params = [])
@@ -126,8 +120,19 @@ class Controller
      */
     public function render($template, $params = [])
     {
-        $data = ['controller' => $this];
+        $data = ['this' => $this];
         return Xcart::app()->template->render($template, array_replace($data, $params));
+    }
+
+    /**
+     * @param string $template Path to template
+     * @param array $params
+     * @return void
+     */
+    public function display($template, $params = [])
+    {
+        $data = ['this' => $this];
+        Xcart::app()->template->display($template, array_replace($data, $params));
     }
 
     public function redirect($url, $data = [], $status = 302, $query = [])
@@ -156,5 +161,16 @@ class Controller
         $app = Xcart::app();
 
         return $app->hasComponent('middleware') && ($app->middleware->isProcessView() || $app->middleware->isProcessResponse());
+    }
+
+    private function middlewareAction($action, $params, $out)
+    {
+        if (Xcart::app()->hasComponent('middleware')) {
+
+            Xcart::app()->middleware->processView($this->getRequest(), $out);
+            Xcart::app()->middleware->processResponse($this->getRequest());
+        }
+
+        echo $out;
     }
 }

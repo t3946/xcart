@@ -49,7 +49,7 @@ class DefaultController extends FrontendController
             $models[] = new ProductModel($t_models[$number]);
         }
 
-        echo $this->render('demo/catalog/index.tpl', [
+        $this->display('demo/catalog/index.tpl', [
             'breadcrumbs' => $breadcrumbs->get(),
             'models' => $models,
         ]);

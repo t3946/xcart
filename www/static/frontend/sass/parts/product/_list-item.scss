@@ -64,6 +64,7 @@
         left: 0;
         right: 0;
         bottom: 0;
+        line-height: 1.5;
       }
 
       .splash {
@@ -358,6 +359,12 @@
 
       .image_container {
         flex: 0 0 40%;
+        line-height: rem-calc(190);
+
+        @include breakpoint(sm down) {
+          //height: rem-calc(130);
+          line-height: rem-calc(130);
+        }
 
         @include breakpoint(medium up) {
           flex: 0 0 20%;
@@ -463,9 +470,11 @@
         display: block;
         padding-bottom: 2%;
         height: rem-calc(190);
+        line-height: rem-calc(190);
 
         @include breakpoint(sm down) {
           height: rem-calc(130);
+          line-height: rem-calc(130);
 
           img {
             max-height: rem-calc(125);

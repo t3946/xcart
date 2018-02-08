@@ -46,7 +46,7 @@ class Application
     public $exit_on_end = true;
     public $globals = [];
     public $locale = [
-        'language' => 'ru',
+        'language' => 'en',
         'sourceLanguage' => 'en',
         'charset' => 'utf-8',
     ];
@@ -92,7 +92,7 @@ class Application
         $this->_modulesConfig = $this->prepareModulesConfigs($config);
     }
 
-    public function prepareModulesConfigs($rawConfig)
+    public function prepareModulesConfigs($rawConfig):array
     {
         $configs = [];
         foreach ($rawConfig as $key => $module) {
@@ -119,16 +119,19 @@ class Application
                 ]);
             }
         }
+
         return $configs;
     }
 
-    public function getModule($name):?Module
+    public function getModule($name):Module
     {
         if (!isset($this->_modules[$name])) {
             $config = $this->getModuleConfig($name);
+
             if (!is_null($config)) {
                 $this->_modules[$name] = Creator::createObject($config);
-            } else {
+            }
+            else {
                 throw new UnknownPropertyException("Module with name" . $name . " not found");
             }
         }
@@ -136,20 +139,21 @@ class Application
         return $this->_modules[$name];
     }
 
-    public function getModuleConfig($name)
+    public function getModuleConfig($name):array
     {
         if (array_key_exists($name, $this->_modulesConfig)) {
             return $this->_modulesConfig[$name];
         }
+
         return null;
     }
 
-    public function getModulesList()
+    public function getModulesList():array
     {
         return array_keys($this->_modulesConfig);
     }
 
-    public function getModulesConfig()
+    public function getModulesConfig():array
     {
         return $this->_modulesConfig;
     }
@@ -257,6 +261,7 @@ class Application
         if ($auth = $this->getComponent('auth')) {
             return $auth->getUser();
         }
+
         return null;
     }
     public function handleWebRequest()

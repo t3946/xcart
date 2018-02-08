@@ -3,6 +3,7 @@
 namespace Xcart\App\Middleware;
 
 use Exception;
+use Xcart\App\Request\Request;
 
 interface IMiddleware
 {
@@ -11,14 +12,15 @@ interface IMiddleware
      *
      * @void
      */
-    public function processRequest($request);
+    public function processRequest(Request $request);
 
     /**
      * Event owner RenderTrait
      * @param \Xcart\App\Request\Request|\Xcart\App\Request\RequestManager $request
      * @param $output string
+     * @return string
      */
-    public function processView($request, &$output);
+    public function processView(Request $request, string $output):string;
 
     /**
      * @param Exception $exception
@@ -30,5 +32,5 @@ interface IMiddleware
      * @param \Xcart\App\Request\Request|\Xcart\App\Request\RequestManager $request
      * @return mixed
      */
-    public function processResponse($request);
+    public function processResponse(Request $request);
 }

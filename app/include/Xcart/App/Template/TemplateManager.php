@@ -90,6 +90,11 @@ class TemplateManager
         return $paths;
     }
 
+    public function display($template, $params = [])
+    {
+        return $this->_renderer->display($template, $params);
+    }
+
     public function render($template, $params = [])
     {
         return $this->_renderer->fetch($template, $params);
