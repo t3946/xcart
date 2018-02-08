@@ -1122,8 +1122,9 @@ if ($REQUEST_METHOD == "POST")
                     'coupon_id' => $ckmodel->pk,
                 ]);
             }
-            \Modules\Cart\Helpers\CouponOldCart::getInstance()->setOrderId($orderid)->setLogin($order['login']);
         }
+
+        \Modules\Cart\Helpers\CouponOldCart::getInstance()->setOrderId($orderid)->setLogin($order['login']);
 
         func_oe_update_order($cart_tmp, $order["shipping_groups"], $order_data["products"]);
 

@@ -1449,6 +1449,8 @@ Total Product Cost to us
             {$couponModel->code}
 
             ( <a href="{$couponAdmin->getInfoUrl()}" target="_blank">View info</a> )
+        {else}
+            {$order.coupon}
         {/if}
     </td>
     <td align="right" class="color__red">
