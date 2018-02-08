@@ -18,14 +18,14 @@
 
     <div class="source">
         <p class="file">{$data.file}({$data.line})</p>
-        {raw $this->renderSource($data.file, $data.line, $this->maxSourceLines)}
+        {raw $self->renderSource($data.file, $data.line, $self->maxSourceLines)}
     </div>
 
     <div class="traces">
         <h2>Stack Trace</h2>
         <table style="width:100%;">
             {foreach $data.traces as $trace index=$index}
-                {if $this->isCore($trace)}
+                {if $self->isCore($trace)}
                     {set $cssClass = 'core'}
                 {elseif $index > 3}
                     {set $cssClass = 'app'}
@@ -48,13 +48,13 @@
                             {if $trace.args}
                                 <strong>{$trace.function}</strong>
                                 {if $trace.args|length > 0 }
-                                    {$this->argsToString($trace.args)}
+                                    {$self->argsToString($trace.args)}
                                 {/if}
                             {/if}
                         </div>
 
                         {if $hasCode}
-                          {raw $this->renderSource($trace.file, $trace.line, $this->maxSourceLines)}
+                            {raw $self->renderSource($trace.file, $trace.line, $self->maxSourceLines)}
                         {/if}
                     </td>
                 </tr>

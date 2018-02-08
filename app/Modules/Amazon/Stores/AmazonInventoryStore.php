@@ -7,7 +7,7 @@ use Modules\Amazon\ClientPack\MwsFbaInventoryClient;
 use Modules\Amazon\Helpers\AmazonProductHelper;
 use Modules\Amazon\Models\AmazonFbaMissingSkuModel;
 use Modules\Amazon\Models\AmazonFbaProductModel;
-use Modules\Product\Models\ProductModel;
+use Modules\Goods\Models\ProductModel;
 use Xcart\App\Store\BaseStore;
 
 class AmazonInventoryStore extends BaseStore
@@ -35,7 +35,7 @@ class AmazonInventoryStore extends BaseStore
     {
         $i = 1;
         $max_products = 25;
-        while ($missings = AmazonFbaMissingSkuModel::objects()->paginate($i++, $max_products)->all())
+        while ($missings = AmazonFbaMissingSkuModel::objects()->filter(['productid__isnull' => false])->paginate($i++, $max_products)->all())
         {
             $aProductsBatch = [];
             foreach ($missings as $mis) {

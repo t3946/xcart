@@ -5,24 +5,24 @@ define("CIDEV_CRON_START", "CRON");
 session_start();
 set_time_limit(0);
 
-require "../top.inc.php";
-require "../init.php";
+require __DIR__ . DIRECTORY_SEPARATOR . "../www/top.inc.php";
+require __DIR__ . DIRECTORY_SEPARATOR . "../www/init.php";
 
 global $config;
 
 const LOG_CATEGORY = 'cron_amazon_list_inbound_shipment_items';
 
-if ($config[LOG_CATEGORY] == "Y") {
-    $oMail = \Xcart\App\Main\Xcart::app()->oldMail;
-    $oMail->to = 'team@s3stores.com';
-    $oMail->from = 'team@s3stores.com';
-    $oMail->subject = sprintf('Attention! Xcart cron %s Already launched', LOG_CATEGORY);
-    $oMail->body = LOG_CATEGORY . ' already launched';
-    $oMail->sendEmail();
-    die("Already launched");
-}
-db_query_param(/** @lang MySQL */
-    "REPLACE xcart_config SET value='Y', name=:name",['name' => LOG_CATEGORY]);
+//if ($config[LOG_CATEGORY] == "Y") {
+//    $oMail = \Xcart\App\Main\Xcart::app()->oldMail;
+//    $oMail->to = 'team@s3stores.com';
+//    $oMail->from = 'team@s3stores.com';
+//    $oMail->subject = sprintf('Attention! Xcart cron %s Already launched', LOG_CATEGORY);
+//    $oMail->body = LOG_CATEGORY . ' already launched';
+//    $oMail->sendEmail();
+//    die("Already launched");
+//}
+//db_query_param(/** @lang MySQL */
+//    "REPLACE xcart_config SET value='Y', name=:name",['name' => LOG_CATEGORY]);
 
 $start_time = new DateTime('now');
 $log_text = " * * *  Cron started  * * * ";
@@ -36,7 +36,7 @@ $oAmazon
     ->_Request('GetListInboundShipments');
 
 
-Xcart\Config::model(['name' => LOG_CATEGORY])->setValue('N')->_update();
+//Xcart\Config::model(['name' => LOG_CATEGORY])->setValue('N')->_update();
 $str_time = (new DateTime('now'))->diff($start_time)->format('%H:%I:%S');
 $log_text = "Cron completed. Processing time: {$str_time}";
 func_backprocess_log(LOG_CATEGORY, $log_text);

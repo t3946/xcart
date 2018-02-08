@@ -13,7 +13,8 @@ use Modules\Dashboard\Helpers\SearchHelper;
 use Modules\Dashboard\Models\DashboardFilter;
 use Modules\Order\Helpers\OrderHelper;
 use Modules\Order\Models\OrderModel;
-use Modules\Product\Models\ProductQuestionModel;
+use Modules\Goods\Models\ProductQuestionModel;
+use Modules\User\Models\UserModel;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\Model;
 use Xcart\App\Orm\QuerySet;
@@ -249,6 +250,20 @@ class OrderSearchStore extends BaseStore
                 ];
 
                 $this->getQ($tmp, 'order.operator');
+            }
+
+            if (!empty($data['order']['submit_operator']) || $this->checkNot('order.submit_operator')) {
+                $qs->join('inner join', 'order_extra', ['orderid' => 'ext.order_id'], 'ext');
+
+                $val = ($data['order']['submit_operator']) ? $data['order']['submit_operator'] : [''];
+
+                $qs->join('inner join', 'xcart_customers', ['xcart_customers.id' => 'ext.submit_operator_id'], 'xcart_customers');
+
+                $tmp = [
+                    'xcart_customers.login__in' => $val,
+                ];
+
+                $this->getQ($tmp, 'order.submit_operator');
             }
 
             if (!empty($data['order']['payment_method']) || $this->checkNot('order.payment_method')) {
@@ -847,7 +862,7 @@ class OrderSearchStore extends BaseStore
                 default: {
                     if ($user->show_events) {
                         /** @var QuerySet $qs */
-                        $e_qs = OrderHelper::getEventCountQS($user->id, ($user->show_events_min_date) ? (new DateTime($user->show_events_min_date)) : null);
+                        $e_qs = OrderHelper::getCountEventsQS($user->id, ($user->show_events_min_date) ? (new DateTime($user->show_events_min_date)) : null);
                         $qs->join('left join', $e_qs->select(['order_id', 'count' => new Expression('count(*)')])->group(['order_id'])->allSql(), ['events.order_id' => 'orderid'], 'events');
                         $qs->order(['-shipping.important', '-events.count', '-date', '-orderid']);
                     }
@@ -888,7 +903,7 @@ class OrderSearchStore extends BaseStore
         $qs->filter(['shipping.important' => 1, new QAndNot(['group.shippingid' => ''])]);
         $qs->addSelect(['shipping.important']);
 
-        return Connection::getInstance()->fetchColumn("select COUNT(`order`.`important`) from ({$qs->allSql()}) as `order`");
+        return (int)Connection::getInstance()->fetchColumn("select COUNT(`order`.`important`) from ({$qs->allSql()}) as `order`");
     }
 
     public function getCachedPriorityShippingCount()
@@ -913,10 +928,10 @@ class OrderSearchStore extends BaseStore
         return $this->qs->count();
     }
 
-    public function getCacheCountKey($prefix = 'order_search_store_count_', array $params = [])
+    private function getCacheCountKey($prefix = 'order_search_store_count_', array $params = [])
     {
         if ($this->model) {
-            $id = get_class($this->model) . $this->model->pk;
+            $id = $this->model::classNameShort() . $this->model->pk;
         }
         else {
             $md5 = json_encode($this->where);
@@ -931,11 +946,26 @@ class OrderSearchStore extends BaseStore
         return $prefix.$id;
     }
 
+    public function getCacheKeyCount()
+    {
+        return $this->getCacheCountKey();
+    }
+
+    public function getCacheKeyPriority()
+    {
+        return $this->getCacheCountKey(self::CONST_CACHE_KEY_PRIORITY);
+    }
+
+    public function getCacheKeyEvent()
+    {
+        return $this->getCacheCountKey(self::CONST_CACHE_KEY_EVENT, ['user_id' => Xcart::app()->user->login]);
+    }
+
     public function clearCache()
     {
-        Xcart::app()->cache->set($this->getCacheCountKey(), null);
-        Xcart::app()->cache->set($this->getCacheCountKey(self::CONST_CACHE_KEY_PRIORITY), null);
-        Xcart::app()->cache->set($this->getCacheCountKey(self::CONST_CACHE_KEY_EVENT, ['user_id' => Xcart::app()->user->login]), null);
+        Xcart::app()->cache->set($this->getCacheKeyCount(), null);
+        Xcart::app()->cache->set($this->getCacheKeyPriority(), null);
+        Xcart::app()->cache->set($this->getCacheKeyEvent(), null);
     }
 
     public function getCashedCount()
@@ -966,7 +996,7 @@ class OrderSearchStore extends BaseStore
             $o_qs = clone $this->qs;
 
             /** @var QuerySet $qs */
-            $qs = OrderHelper::getEventCountQS($user->id, ($user->show_events_min_date) ? (new DateTime($user->show_events_min_date)) : null);
+            $qs = OrderHelper::getCountEventsQS($user->id, ($user->show_events_min_date) ? (new DateTime($user->show_events_min_date)) : null);
 
             if ($ids) {
                 $qs->filter(['order_id__in' => $ids]);
@@ -991,7 +1021,7 @@ class OrderSearchStore extends BaseStore
 
         $count = null;
 
-        $key = $this->getCacheCountKey(self::CONST_CACHE_KEY_EVENT, ['user_id' => $user->login]);
+        $key = $this->getCacheKeyEvent();
         $count = Xcart::app()->cache->get($key);
 
         if (is_null($count))

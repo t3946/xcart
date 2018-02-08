@@ -1,0 +1,229 @@
+@mixin getPricesTable()
+{
+  .prices__container {
+    .cart_add {
+      @include breakpoint(large only) {
+        .text {
+          display: none;
+
+          .extended {
+          }
+        }
+      }
+    }
+
+    .price__quantity {
+
+      .price-row-width {
+
+        max-width: rem-calc(148) + rem-calc(174) + rem-calc(2) + rem-calc(40);
+
+        @include breakpoint(large only) {
+          max-width: rem-calc(128) + rem-calc(154) + rem-calc(2) + rem-calc(40);
+        }
+
+      }
+
+      .table {
+        display: flex;
+        flex-direction: row;
+
+        .column {
+          display: flex;
+          flex-direction: column;
+
+          &.auto {
+            flex: auto;
+          }
+
+          .title {
+            display: flex;
+            text-align: center;
+            height: rem-calc(36);
+            line-height: rem-calc(36);
+            align-content: center;
+            justify-content: center;
+          }
+
+          .value {
+            display: flex;
+            align-content: center;
+            align-items: center;
+          }
+        }
+      }
+
+      .table__prices {
+        border: 2px solid #666;
+
+        .column {
+          flex: auto;
+          padding: 0;
+          border-right: 2px solid #b4b4b4;
+
+          .title { text-align: center; border-bottom: 2px solid #666 }
+          .value {
+            text-align: center;
+            justify-content: center;
+            padding: 10px;
+
+          }
+
+          &.price {
+            flex: 0 0 rem-calc(174);
+            width: rem-calc(174);
+
+            @include breakpoint(large only) {
+              flex: 0 0 rem-calc(154);
+              width: rem-calc(154);
+            }
+          }
+
+          &.quantity {
+            flex: 0 0 rem-calc(148);
+            width: rem-calc(148);
+
+            @include breakpoint(large only) {
+              flex: 0 0 rem-calc(128);
+              width: rem-calc(128);
+            }
+          }
+
+          &.extended {
+            flex: auto;
+
+            @include breakpoint(medium up) {
+              flex: 0 0 rem-calc(175);
+            }
+
+            @include breakpoint(large only) {
+              flex: 0 0 rem-calc(155);
+              width: rem-calc(155);
+            }
+          }
+        }
+
+        @include bem_modifier(down) {
+          display: flex;
+          flex-direction: column;
+          border: none;
+          position: relative;
+        }
+
+        @include bem_modifier(row) {
+          display: flex;
+          flex-direction: row;
+          flex: auto;
+        }
+
+
+        @include bem_modifier(top) {
+          box-shadow: 0 5px 7px rgba(0, 0, 0, 0.1);
+
+          .column {
+
+            &.auto {
+              border-right: none;
+            }
+
+            .value {
+              height: rem-calc(63);
+              line-height: rem-calc(63);
+
+              .cart_add {
+                width: 100%;
+              }
+            }
+          }
+        }
+
+        .price-row {
+          transition: all .4s ease-in-out;
+          height: rem-calc(30);
+          overflow: hidden;
+
+          border: 2px solid #bababa;
+          border-top: none;
+          border-right: none;
+          border-bottom: 1px solid #dbdbdb;
+          background-color: #f2f2f2;
+
+
+          max-width: rem-calc(148) + rem-calc(174) + rem-calc(2);
+
+          @include breakpoint(large only) {
+            max-width: rem-calc(128) + rem-calc(154) + rem-calc(2);
+          }
+
+
+          &:nth-last-child(1) {
+            border-bottom: 2px solid #bababa;
+          }
+
+          &.hidden {
+            height: 0;
+
+            &.af-anim {
+              border-bottom: 0;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .subtotal_container {
+    padding-top: rem-calc(10);
+    text-align: right;
+
+    .safe-prices {
+      font-size: rem-calc(16);
+
+      .title, .value {
+        display: inline-block;
+      }
+
+      .title {
+        text-align: right;
+      }
+
+      .value {
+        min-width: 110px;
+        text-align: left;
+      }
+
+      &.list-price {
+        color: #5c5c5c;
+        line-height: 2;
+
+        .value {
+          text-decoration: line-through;
+        }
+      }
+
+      &.safe {
+        line-height: rem-calc(22);
+
+        .value {
+          font-weight: 700;
+        }
+      }
+
+      &.safe-per-item {
+
+        .title {
+          font-size: rem-calc(14);
+        }
+
+        .value {
+
+        }
+      }
+
+      &.total-safe {
+        text-transform: uppercase;
+
+      }
+    }
+  }
+}

@@ -35,17 +35,19 @@ class OrderTagEventHelper
     {
         if ($status_id && $order_id) {
 
+            /** @var AttentionTagModel $model */
             $model = AttentionTagModel::objects()->filter(['status_id' => $status_id])->get();
 
             if ($model) {
                 list($link, $created) = OrderAdditionalTagLinkModel::objects()->getOrCreate(['status_id' => $status_id, 'orderid' => $order_id]);
 
+                $message = "Attention tag added: " . $model->status;
                 if ($save_log && $created) {
-                    Logs::_log('orders', $order_id, 'X', "Attention tag added: " . $model->status . "\n", Xcart::app()->user->login);
+                    Logs::_log('orders', $order_id, 'X', $message, Xcart::app()->user->login);
                 }
 
                 if ($model->events) {
-                    Xcart::app()->event->trigger('order:changed', ['order_id' => $order_id]);
+                    Xcart::app()->event->trigger('order:status.changed', ['order_id' => $order_id, 'message' => $message]);
                 }
             }
         }

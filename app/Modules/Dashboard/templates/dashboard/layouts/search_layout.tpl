@@ -17,7 +17,7 @@
                 {include 'dashboard/layouts/_search_form_block.tpl'}
         {/smarty_admin_block}
     {else}
-        <fieldset class="{if $form_collapse}collapsed-force collapsed{else}expanded{/if}">
+        <fieldset class="{if $form_collapse}collapsed-force collapsed{else}expanded{/if} collapsible">
         <legend>Order search form</legend>
             {include 'dashboard/layouts/_search_form_block.tpl'}
         </fieldset>
@@ -30,7 +30,9 @@
             </div>
         </div>
         <div class="row">
-            {include 'order/orders_list.tpl' orders=$models}
+            <div class="columns large-12">
+                {include 'order/orders_list.tpl' orders=$models}
+            </div>
         </div>
         <div class="row">
             <div class="columns large-12">

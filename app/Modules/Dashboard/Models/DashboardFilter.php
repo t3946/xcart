@@ -164,9 +164,16 @@ class DashboardFilter extends Model
             $this->uf_link_model = UserFiltersLinkModel::objects()->filter(['filter_id' => $this->id, 'user__login' => (string)Xcart::app()->user->login])->get();
         }
 
+        if ($this->uf_link_model) {
+            return [
+                'position_row' => $this->uf_link_model->position_row ?: $this->position_row,
+                'position_column' => $this->uf_link_model->position_column ?: $this->position_column,
+            ];
+        }
+
         return [
-            'position_row' => ($this->uf_link_model && $this->uf_link_model->position_row) ? $this->uf_link_model->position_row : $this->position_row,
-            'position_column' => ($this->uf_link_model && $this->uf_link_model->position_column) ? $this->uf_link_model->position_column : $this->position_column,
+            'position_row' => $this->position_row,
+            'position_column' => $this->position_column,
         ];
     }
 

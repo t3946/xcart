@@ -8,6 +8,16 @@ use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\JsonField;
 use Xcart\App\Orm\Model;
 
+/**
+ * Class CouponRestrictionModel
+ *
+ * @property \Modules\Cart\Models\CouponKitModel coupon
+ * @property (int) coupon_id
+ * @property (string) class
+ * @property (array) data
+ *
+ * @package Modules\Cart\Models
+ */
 class CouponRestrictionModel extends Model
 {
     /** @var \Modules\Cart\Discounts\Restrictions\AbstractRestriction */
@@ -39,7 +49,7 @@ class CouponRestrictionModel extends Model
     {
         if (!$this->restrict) {
             if (!$this->getIsNewRecord()) {
-                $this->restrict = new $this->class();
+                $this->restrict = new $this->class($this);
             }
         }
 

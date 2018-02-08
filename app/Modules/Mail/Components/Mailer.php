@@ -2,6 +2,7 @@
 
 namespace Modules\Mail\Components;
 
+use Modules\Sites\SitesModule;
 use Swift_Mailer;
 use Swift_MailTransport;
 use Swift_Message;
@@ -19,15 +20,18 @@ class Mailer
     const MODE_SENDMAIL = 'sendmail';
 
     // Swift_MailTransport
-    const MODE_MAIL = 'mail';
+//    const MODE_MAIL = 'mail';
 
     // Swift_SmtpTransport
     const MODE_SMTP = 'smtp';
 
-    public $mode = 'mail';
+    public $mode = 'sendmail';
 
     public $config = [];
 
+    /**
+     * @var string in string replacement {domain} to current domain
+     */
     public $defaultFrom;
 
     /**
@@ -39,6 +43,8 @@ class Mailer
     protected $_transport;
 
     protected $_mailer;
+
+    protected $_message;
 
     public function getTransport()
     {
@@ -53,7 +59,8 @@ class Mailer
         $config = $this->config;
         if ($this->mode == self::MODE_SENDMAIL) {
             $command = isset($config['command']) ? $config['command'] : '/usr/sbin/sendmail -bs';
-            return new Swift_SendmailTransport($command);
+            $transport = new Swift_SendmailTransport($command);
+            return $transport;
         }
         elseif ($this->mode == self::MODE_SMTP) {
             $security = isset($config['security']) ? $config['security'] : null;
@@ -62,25 +69,27 @@ class Mailer
             $transport->setPassword($config['password']);
             return $transport;
         }
-        elseif ($this->mode == self::MODE_MAIL) {
-            $extraParams = isset($config['extraParams']) ? $config['extraParams'] : '-f%s';
-            return new Swift_MailTransport($extraParams);
-        }
+//        elseif ($this->mode == self::MODE_MAIL) {
+//            $extraParams = isset($config['extraParams']) ? $config['extraParams'] : '-f%s';
+//            return new Swift_MailTransport($extraParams);
+//        }
         return null;
     }
 
 
-    protected function getMailer()
+    public function getMailer()
     {
         if (!$this->_mailer) {
-            $this->_mailer = Swift_Mailer::newInstance($this->getTransport());
+            $this->_mailer = new Swift_Mailer($this->getTransport());
         }
         return $this->_mailer;
     }
 
     public function raw($to, $subject, $body, $additional = [], $attachments = [])
     {
-        $message = new Swift_Message();
+        $this->compose();
+        $message = $this->getSwiftMessage();
+
         $message->setTo($to);
         $message->setSubject($subject);
         $message->setBody($body, 'text/html');
@@ -90,12 +99,7 @@ class Mailer
             $message->setSender($additional['from']);
         }
         elseif ($this->defaultFrom) {
-            $default = $this->defaultFrom;
-
-            if (!Cli::isCli()) {
-                $default = strtr($this->defaultFrom, ['{domain}' => $this->getDomain()]);
-            }
-
+            $default = strtr($this->defaultFrom, ['{domain}' => $this->getDomain()]);
             $message->setFrom($default);
             $message->setSender($default);
         }
@@ -103,29 +107,65 @@ class Mailer
         return $this->getMailer()->send($message);
     }
 
+    public function compose()
+    {
+        $this->createMessage();
+
+        return $this;
+    }
+
+    public function createMessage()
+    {
+        $this->_message = new Swift_Message();
+
+        return $this;
+    }
+
+    /**
+     * @return Swift_Message
+     */
+    public function getSwiftMessage()
+    {
+        return $this->_message;
+    }
+
     public function template($to, $subject, $template, $data = [], $additional = [], $attachments = [])
     {
-        $data = array_merge($data, [
-            'hostInfo' => $this->hostInfo
-        ]);
+        $data = array_merge([
+            'hostInfo' => $this->getHostInfo(),
+            'domain' => $this->getDomain(),
+        ], $data);
+
         $body = self::renderTemplate($template, $data);
+
         return $this->raw($to, $subject, $body, $additional, $attachments);
     }
 
-    public function getDomain()
+    protected function getDomain()
     {
-        $domain = Xcart::app()->request->getHost();
-        if ( strpos($domain, ':') !== false ){
-            $domain = substr($domain, 0, strpos($domain, ':'));
+        $domain = false;
+
+        /** @var SitesModule $module */
+        if ($module = Xcart::app()->getModule('Sites')) {
+            $domain = $module->getSite()->getBaseDomain();
         }
+
+        if (!$domain) {
+            $domain = Xcart::app()->request->getHost();
+            if ( strpos($domain, ':') !== false ){
+                $domain = substr($domain, 0, strpos($domain, ':'));
+            }
+        }
+
         return $domain;
     }
     
     public function getHostInfo()
     {
-        if (!$this->hostInfo) {
+        if (!$this->hostInfo && !Cli::isCli()) {
             $this->hostInfo = Xcart::app()->request->getHostInfo();
         }
+
         return $this->hostInfo;
     }
 }

@@ -1,7 +1,7 @@
 {extends 'base.tpl'}
 
     <script>
-        window.location = '/';
+        // window.location = '/';
     </script>
 
 {block 'content'}

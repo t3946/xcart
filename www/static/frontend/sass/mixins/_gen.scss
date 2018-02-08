@@ -1,0 +1,326 @@
+
+//@mixin flex() {
+//  display: -webkit-box;
+//  display: -moz-box;
+//}
+
+//@mixin flex_grow($grow) {
+//  -moz-box-flex: $grow;
+//  -webkit-box-flex: $grow;
+//  box-flex: $grow;
+//}
+//
+//@mixin box_orient($orient) {
+//  -webkit-box-orient: $orient;
+//  -moz-box-orient: $orient;
+//  box-orient: $orient;
+//}
+
+@mixin css3-prefix($property, $value) {
+  -webkit-#{$property}: #{$value};
+  -khtml-#{$property}: #{$value};
+  -moz-#{$property}: #{$value};
+  -ms-#{$property}: #{$value};
+  -o-#{$property}: #{$value};
+  #{$property}: #{$value};
+}
+
+@mixin button_action($height, $fsz){
+  font-size: $fsz;
+  text-transform: uppercase;
+  height: $height;
+  line-height: $height;
+  background-color: $bb_grey;
+  color: $black;
+  text-align: center;
+  width: 100%;
+
+  &:after{
+    content: "";
+    display: inline-block;
+    width: 8px;
+    height: 5px;
+    position: relative;
+    left: 9px;
+    vertical-align: middle;
+    top: -2px;
+    background: url("../images/category/768/drop-down_list2.svg") no-repeat;
+  }
+
+  &:hover, &:focus{
+    text-decoration: none;
+  }
+
+}
+
+@mixin button_action_active(){
+  background-color: $deep_blue;
+  color: $light_90a;
+
+  &:after{
+    background: url("../images/category/768/drop-down_list2_up.svg") no-repeat;
+  }
+}
+
+@mixin item_list ($height, $fsz){
+  background-color: $white;
+  border: 1px solid $dark_blue;
+  @include border-radius(0);
+  margin: 0;
+  padding: 0;
+  border-top: none;
+
+  li{
+    font-size: $fsz;
+    width: 100%;
+    border-bottom: 1px solid $grey_e2;
+    padding: 0 10px 0 20px;
+    line-height: $height;
+
+    &:hover{
+      background-color: $light_edf;
+
+      a{
+
+      }
+    }
+
+    a{
+      color: $black;
+
+      padding: 0;
+      line-height: $height;
+
+    }
+  }
+}
+
+@mixin modal-accordion () {
+
+  .modal-dialog{
+    margin: 0;
+    width: 100%;
+
+    .modal-content{
+      border-radius: 0;
+
+      .modal-header{
+        color: $light_90a;
+        background-color: $deep_blue;
+        padding: 0 10px 0 20px;
+
+        .close{
+          width: 22px;
+          height: 22px;
+          margin-top: 8px;
+          background-image: url("../images/category/1280/close_white.svg");
+
+          &:hover, &:active, &:focus{
+            background-image: url("../images/category/1280/close_white.svg");
+          }
+        }
+
+        .modal-title{
+          padding: 8px 0;
+          font-size: 1em;
+          text-transform: uppercase;
+        }
+      }
+
+      .modal-body{
+        padding: 0;
+
+        .panel-group {
+          margin-bottom: 0;
+
+          .panel {
+            margin-top: 0;
+            border: none;
+            border-radius: 0;
+            border-bottom: 1px solid $grey_cb;
+
+            .panel-heading {
+              background-color: $white;
+              padding: 11px 14px 10px 20px;
+              @include border-radius(0);
+
+              &[aria-expanded="true"] {
+                background-color: $light_grey;
+
+                .panel-title{
+                  &:after {
+                    background: url("../images/home/iphone6/minus.svg") no-repeat;
+                    position: absolute;
+                    top: 50%;
+                    margin-top: -1px;
+                    right: 0;
+                    height: 12px;
+                  }
+                }
+
+              }
+
+              &.active-panel-heading{
+                background-color: $grey_dfe;
+              }
+
+              .panel-title {
+                font-size: 1.0625em;
+                font-weight: 700;
+                color: $black;
+                padding-right: 6%;
+
+
+                line-height: 20px;
+                position: relative;
+                display: block;
+
+
+                &:after {
+                  content: '';
+                  display: inline-block;
+                  width: 12px;
+                  height: 12px;
+                  position: absolute;
+                  top: 50%;
+                  margin-top: -6px;
+                  right: 0;
+                  background: url("../images/home/iphone6/plus.svg") no-repeat;
+                }
+
+
+              }
+
+              &:hover{
+                cursor: pointer;
+              }
+            }
+
+            .panel-collapse {
+              font-size: 0.875em;
+              background-color: $white;
+              .panel-body {
+                padding: 15px 15px 15px 20px;
+                line-height: 2;
+                border: none;
+
+                a.link-arrow-right {
+
+                  display: inline;
+                  color: $black;
+                  .departments__count {
+                    color: $grey_83;
+                  }
+                  &:after {
+                    content: '';
+                    display: inline-block;
+                    width: 11px;
+                    height: 11px;
+                    float: right;
+                    font-style: normal;
+                    background: url("../images/home/iphone6/link_arrow_right_dark.svg") no-repeat;
+                    margin: 15px 0;
+                  }
+                }
+                ul {
+                  li {
+                    display: block;
+                    line-height: 41px;
+                  }
+                }
+              }
+            }
+          }
+        }
+
+
+
+      }
+    }
+  }
+
+
+}
+
+@mixin up-btn($bg, $color, $fsz) {
+  color: $color;
+  font-weight: 800;
+  background: $bg;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.45);
+  text-transform: uppercase;
+
+  @if $color == $white {
+    background-image: url("../images/home/iphone6/up_arrow.svg");
+  } @else {
+    background-image: url("../images/home/iphone6/up_arrow_dark.svg");
+  }
+
+  background-repeat: no-repeat;
+  background-position: center 5px;
+  background-size: 20px 11px;
+  font-size: $fsz;
+  height: 44px;
+  padding-top: 24px;
+  width: 100%;
+  text-align: center;
+  @include border-radius(4px);
+
+  &:hover{
+    text-decoration: none;
+  }
+
+  &:focus{
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.9);
+
+    @if $color == $white {
+      background: $blue_4b6;
+      background-image: url("../images/home/iphone6/up_arrow.svg");
+    } @else {
+      background: $light_f7;
+      background-image: url("../images/home/iphone6/up_arrow_dark.svg");
+    }
+
+    background-repeat: no-repeat;
+    background-position: center 5px;
+    background-size: 20px 11px;
+    text-decoration: none;
+  }
+}
+
+
+//.container {
+//  @include container-fixed;
+//
+//  @media (min-width: $screen-sm-min) {
+//    width: 100%;//$container-sm;
+//  }
+//  @media (min-width: $screen-md-min) {
+//    width: 100%;//$container-md;
+//  }
+//  @media (min-width: $screen-lg-min) {
+//    width: 100%;//$container-lg;
+//  }
+//}
+
+// Creates a wrapper for a series of columns
+//@mixin make-row($gutter: $grid-gutter-width) {
+//  margin-left:  0;//ceil(($gutter / -2));
+//  margin-right: 0;//floor(($gutter / -2));
+//  @include clearfix;
+//}
+
+//@mixin make-grid-columns($i: 1, $list: ".col-xs-#{$i}, .col-sm-#{$i}, .col-md-#{$i}, .col-lg-#{$i}") {
+//  @for $i from (1 + 1) through $grid-columns {
+//    $list: "#{$list}, .col-xs-#{$i}, .col-sm-#{$i}, .col-md-#{$i}, .col-lg-#{$i}";
+//  }
+//  #{$list} {
+//    position: relative;
+//    // Prevent columns from collapsing when empty
+//    min-height: 1px;
+//    // Inner gutter via padding
+//    padding-left: 0; //ceil(($grid-gutter-width / 2));
+//    padding-right: 0; //floor(($grid-gutter-width / 2));
+//  }
+//}
+
+

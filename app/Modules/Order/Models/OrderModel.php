@@ -1,13 +1,20 @@
 <?php
 namespace Modules\Order\Models;
 
+use Doctrine\DBAL\Types\Type;
 use Modules\Core\Models\StateModel;
+use Modules\Order\Helpers\OrderEventHelper;
 use Modules\Order\Helpers\OrderHelper;
+use Modules\Goods\Models\ProductModel;
+use Modules\User\Models\UserModel;
+use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\HasManyField;
 use Xcart\App\Orm\Fields\ManyToManyField;
+use Xcart\App\Orm\Fields\OneToOneField;
+use Xcart\App\Orm\Fields\SerializeField;
 use Xcart\App\Orm\Fields\TimestampField;
 use Xcart\App\Orm\Model;
 use Xcart\App\Traits\DataModelTrait;
@@ -40,9 +47,20 @@ class OrderModel extends Model
             'date' => [
                 'class' => TimestampField::className(),
             ],
+            'extra_model' => [
+                'class' => ForeignField::class,
+                'modelClass' => OrderExtraModel::class,
+                'link' => ['orderid' => 'order_id'],
+                'null' => true,
+            ],
             'groups' => [
                 'class' => HasManyField::className(),
                 'modelClass' => OrderGroupModel::className(),
+                'link' => ['orderid' => 'orderid'],
+            ],
+            'details' => [
+                'class' => HasManyField::className(),
+                'modelClass' => OrderDetailModel::className(),
                 'link' => ['orderid' => 'orderid'],
             ],
             'tags' => [
@@ -64,11 +82,46 @@ class OrderModel extends Model
                 'field' => 's_state',
                 'class' => ForeignField::className(),
                 'modelClass' => StateModel::className(),
+                'sqlType' => Type::STRING,
                 'link' => [
                     's_state' => 'code',
                     's_country' => 'country_code'
                 ]
             ],
+            'cb_status_model' => [
+                'field' => 'cb_status',
+                'class' => ForeignField::className(),
+                'modelClass' => OrderStatusModel::className(),
+                'link' => ['cb_status' => 'code'],
+                'sqlType' => Type::STRING,
+                'null' => false,
+            ],
+            'dc_status_model' => [
+                'field' => 'dc_status',
+                'class' => ForeignField::className(),
+                'modelClass' => OrderStatusModel::className(),
+                'link' => ['dc_status' => 'code'],
+                'sqlType' => Type::STRING,
+                'null' => false,
+            ],
+            'fraud_status_model' => [
+                'field' => 'fraud_status',
+                'class' => ForeignField::className(),
+                'modelClass' => FraudStatusModel::className(),
+                'link' => ['fraud_status' => 'code'],
+                'sqlType' => Type::STRING,
+                'null' => false,
+            ],
+            'extra' => [
+                'class' => SerializeField::className(),
+                'null' => false,
+                'default' => ''
+            ],
+            'extra_info' => [
+                'class' => HasManyField::className(),
+                'modelClass' => OrderExtrasModel::className(),
+                'link' => ['orderid' => 'orderid'],
+            ]
         ];
     }
 
@@ -111,6 +164,17 @@ class OrderModel extends Model
 
         return null;
     }
+
+    public function getEventsMessage()
+    {
+        return OrderHelper::getCountEventsActiveUserQS()
+            ->filter(['order_id' => $this->pk])
+            ->select([])
+            ->group([])
+            ->order(['-created_at'])
+            ->all();
+    }
+
     public function getOrderNumber()
     {
         return $this->order_prefix . $this->orderid;
@@ -119,5 +183,24 @@ class OrderModel extends Model
     public function isAmazon()
     {
         return !empty($this->amazonorderid);
+    }
+
+    /**
+     * @return ProductModel[]
+     */
+    public function getProducts()
+    {
+        return ProductModel::objects()
+            ->filter(['order_details__orderid' => $this->orderid])
+            ->all();
+    }
+
+    public function afterSave($owner, $isNew)
+    {
+        parent::afterSave($owner, $isNew);
+
+        foreach ($this->getAttributes() as $attribute => $value) {
+            OrderEventHelper::registerAfterSaveEvent($this->pk, $attribute, $value, $this->getOldAttribute($attribute));
+        }
     }
 }

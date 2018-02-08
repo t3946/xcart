@@ -6,12 +6,8 @@ $config = array_replace_recursive((is_file($local_config)) ? include $local_conf
     'exit_on_end' => true,
     'components' => [
       'errorHandler' => [
-          'class' => '\\Xcart\\App\\Main\\ErrorHandler',
           'debug' => false,
-//          'errHandler' => true,
-//          'excHandler' => false,
           'useTemplate' => true,
-          'ignoreDeprecated' => true,
       ],
     ],
     'autoloadComponents' => [

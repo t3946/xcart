@@ -17,17 +17,15 @@ class SiteRestrictionForm extends DiscountRestrictionForm
 
     public function getFields()
     {
-        $bid = $this->getDataValue('site');
-        $nin = $this->getDataValue('not_in', false);
-
         return array_merge(parent::getFields(), [
             'not_in' => [
                 'class' => CheckboxField::className(),
-                'value' => $nin,
+                'value' => $this->getDataValue('not_in', false),
+                'label' => 'Not for selected'
             ],
             'site' => [
                 'class' => DropDownField::className(),
-                'value' => $bid,
+                'value' => $this->getDataValue('site'),
                 'choices' => function(){
                     $result = [];
 

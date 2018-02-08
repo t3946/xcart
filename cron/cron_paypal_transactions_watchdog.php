@@ -20,23 +20,23 @@ global $config, $sql_tbl;
 define("CIDEV_CRON_START", "CRON");
 session_start();
 
-require "../top.inc.php";
-require "../init.php";
+require __DIR__ . DIRECTORY_SEPARATOR . "../www/top.inc.php";
+require __DIR__ . DIRECTORY_SEPARATOR . "../www/init.php";
 
 set_time_limit(0);
 const LOG_CATEGORY = 'cron_paypal_transactions_watchdog';
 
-if ($config[LOG_CATEGORY] == "Y") {
-    func_backprocess_log(LOG_CATEGORY, 'Already launched');
-    $oMail = \Xcart\App\Main\Xcart::app()->oldMail;
-    $oMail->to = 'team@s3stores.com';
-    $oMail->from = ('team@s3stores.com');
-    $oMail->body = LOG_CATEGORY . ' already launched';
-    $oMail->subject = sprintf('Attention! Xcart cron %s Already launched', LOG_CATEGORY);
-    $oMail->sendEmail();
-    die("Already launched"); // ################################
-}
-db_query("REPLACE $sql_tbl[config] SET value='Y', name='" . LOG_CATEGORY . "'");
+//if ($config[LOG_CATEGORY] == "Y") {
+//    func_backprocess_log(LOG_CATEGORY, 'Already launched');
+//    $oMail = \Xcart\App\Main\Xcart::app()->oldMail;
+//    $oMail->to = 'team@s3stores.com';
+//    $oMail->from = ('team@s3stores.com');
+//    $oMail->body = LOG_CATEGORY . ' already launched';
+//    $oMail->subject = sprintf('Attention! Xcart cron %s Already launched', LOG_CATEGORY);
+//    $oMail->sendEmail();
+//    die("Already launched"); // ################################
+//}
+//db_query("REPLACE $sql_tbl[config] SET value='Y', name='" . LOG_CATEGORY . "'");
 $start_time = new DateTime('now');
 
 $log_text = " * * *  Cron started  * * * ";
@@ -104,7 +104,7 @@ if (!empty($aOrderGroups)) {
     }
 }
 
-Config::model(['name' => LOG_CATEGORY])->setValue('N')->_update();
+//Config::model(['name' => LOG_CATEGORY])->setValue('N')->_update();
 $str_time = (new DateTime('now'))->diff($start_time)->format('%H:%I:%S');
 $log_text = "Cron completed. Processing time: {$str_time}";
 func_backprocess_log(LOG_CATEGORY, $log_text);

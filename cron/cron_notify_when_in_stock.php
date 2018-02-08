@@ -1,9 +1,9 @@
 <?php
-use Modules\Product\Models\ProductModel;
+use Modules\Goods\Models\ProductModel;
 
 define("CIDEV_CRON_START", "CRON");
-require "../top.inc.php";
-require "../init.php";
+require __DIR__ . DIRECTORY_SEPARATOR . "../www/top.inc.php";
+require __DIR__ . DIRECTORY_SEPARATOR . "../www/init.php";
 
 global $mail_smarty;
 

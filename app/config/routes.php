@@ -7,22 +7,18 @@ return array_merge($admin_routes, [
         'namespace' => 'main'
     ],
     [
+        'route' => '',
+        'path' => 'Modules.Goods.routes',
+    ],
+    [
         'route' => '/amp',
         'path' => 'Modules.Amp.routes',
         'namespace' => 'amp',
     ],
     [
-        'route' => '',
-        'path' => 'Modules.Product.routes',
-        //        'namespace' => 'catalog',
-        //        'config' => [
-        //            'cache' => [
-        //                'time' => 360,
-        //            ]
-        //        ]
-    ],
-
-    [
+        'route' => '/pbx',
+        'path' => 'Modules.PBX.routes',
+        'namespace' => 'pbx',
         'route' => '/brand',
         'path' => 'Modules.Brand.routes',
         'namespace' => 'brand',
@@ -47,6 +43,11 @@ return array_merge($admin_routes, [
         'route' => '/demo',
         'path' => 'Modules.Demo.routes',
         'namespace' => 'demo'
+    ],
+    [
+        'route' => '/coupon',
+        'path' => 'Modules.Cart.routes_coupon',
+        'namespace' => 'coupon',
     ],
     [
         'route' => '/images',

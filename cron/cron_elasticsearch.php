@@ -3,8 +3,8 @@ use Modules\Core\Helpers\CoreHelper;
 
 define("CIDEV_CRON_START", "CRON");
 
-require "../top.inc.php";
-require "../init.php";
+require __DIR__ . DIRECTORY_SEPARATOR . "../www/top.inc.php";
+require __DIR__ . DIRECTORY_SEPARATOR . "../www/init.php";
 
 ini_set('memory_limit', '512M');
 set_time_limit(0);
@@ -68,7 +68,7 @@ while ($record = db_fetch_array($cidev_updated_products)) {
 
         foreach ($products as $product)
         {
-            $product_model = \Modules\Product\Models\ProductModel::objects()->get(['productid' => $product['productid']]);
+            $product_model = \Modules\Goods\Models\ProductModel::objects()->get(['productid' => $product['productid']]);
             if ($product["forsale"] == "Y") {
                 if ($record["type"] == "6")
                 {
@@ -79,7 +79,7 @@ while ($record = db_fetch_array($cidev_updated_products)) {
                     $product["fulldescr"] = str_replace("/r/n", " ", $product["fulldescr"]);
                     $product["fulldescr"] = str_replace("\r\n", " ", $product["fulldescr"]);
 
-                    $data_arr["productname"] = $product_model->getTitle();
+                    $data_arr["productname"] = $product_model->getFrontendName();
                     $data_arr["sku"]         = $product["productcode"];
                     $data_arr["upc"]         = $product["upc"];
                     $data_arr["brand"]       = $product["brand"];
@@ -135,7 +135,7 @@ while ($record = db_fetch_array($cidev_updated_products)) {
                     $product["fulldescr"] = str_replace("/r/n", " ", $product["fulldescr"]);
                     $product["fulldescr"] = str_replace("\r\n", " ", $product["fulldescr"]);
 
-                    $data_arr["productname"] = $product_model->getTitle();
+                    $data_arr["productname"] = $product_model->getFrontendName();
                     $data_arr["sku"]         = $product["productcode"];
                     $data_arr["upc"]         = $product["upc"];
                     $data_arr["brand"]       = $product["brand"];

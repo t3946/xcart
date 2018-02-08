@@ -3,6 +3,7 @@ namespace Modules\Distributor\Models;
 
 use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
+use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\SerializeField;
 use Xcart\App\Orm\Model;
@@ -36,6 +37,13 @@ class SupplierFeedModel extends Model
                 'link' => ['manufacturerid' => 'manufacturerid'],
                 'null' => false,
             ],
+            'feed_type' => [
+                'class' => CharField::className(),
+                'choices' => [
+                    'P' => 'product',
+                    'I' => 'inventory',
+                ],
+            ]
         ];
     }
 }

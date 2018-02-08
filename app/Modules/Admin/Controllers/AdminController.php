@@ -3,7 +3,6 @@
 namespace Modules\Admin\Controllers;
 
 use Modules\Admin\Contrib\Admin;
-use Xcart\App\Main\Xcart;
 
 class AdminController extends BackendController
 {
@@ -11,6 +10,12 @@ class AdminController extends BackendController
     {
         $admin = $this->getAdmin($module, $admin);
         $admin->all($id);
+    }
+
+    public function info($module, $admin, $pk)
+    {
+        $admin = $this->getAdmin($module, $admin);
+        $admin->info($pk);
     }
 
     public function create($module, $admin, $id = null)

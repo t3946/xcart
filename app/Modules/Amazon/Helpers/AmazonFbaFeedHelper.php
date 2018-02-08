@@ -16,9 +16,14 @@ class AmazonFbaFeedHelper
     public static function sendTrackingCodeToAmazon(OrderGroupModel $orderGroup, array $trackNumberData)
     {
         $result = null;
-        $trackNumberData['shipping_date'] = DateTime::createFromFormat('m/d/Y', $trackNumberData['ship_date']);
+        if (empty($trackNumberData['shipping_date'])) {
+            $trackNumberData['shipping_date'] = DateTime::createFromFormat('m/d/Y H:i:s', $trackNumberData['ship_date'] . ' 00:00:00');
+        }
+
         $cm = TrackingLinksCarrierModel::objects()->get(['carrier_id' => $trackNumberData['carrier_id']]);
+
         $trackNumberData['carrier'] = $cm ? $cm->carrier : '';
+
         if (isset($trackNumberData['linkid']) && $trackNumberData['linkid']) {
             $lm = TrackingLinksModel::objects()->get(['linkid' => $trackNumberData['linkid']]);
             $trackNumberData['shipping_method'] = $lm ? $lm->shipping : '';
@@ -42,13 +47,13 @@ class AmazonFbaFeedHelper
         $items = [];
         if (!empty($trackNumberData)) {
             $orderModel = $orderGroup->order;
-            $shipDate = ($trackNumberData['shipping_date']) ? $trackNumberData['shipping_date']->format(DATE_ISO8601) : '';
-            /*if ($details = $orderGroup->getOrderDetailModels()) {
+            $shipDate = ($trackNumberData['shipping_date']) ? $trackNumberData['shipping_date']->format(DATE_W3C) : '';
+
+            /*if ($details = $orderGroup->detail_models->all()) {
                 foreach ($details as $detail) {
-                    $product = $detail->product_model;
                     $items[] = ['Item' => [
-                        'AmazonOrderItemCode' => $product->productcode,
-                        'MerchantFulfillmentItemID' => $product->productcode,
+                        'AmazonOrderItemCode' => $detail->AmazonOrderItemCode,
+                        'MerchantFulfillmentItemID' => $detail->productcode,
                         'Quantity' => $detail->amount
                     ]];
                 }
@@ -56,7 +61,7 @@ class AmazonFbaFeedHelper
             $data_0 = [
                 'Header' => [
                     'DocumentVersion' => '1.01',
-                    'MerchantIdentifier' => 'S3 Stores'
+                    'MerchantIdentifier' => AmazonPoolStore::MERCHANT_ID
                 ],
                 'MessageType' => 'OrderFulfillment',
                 'Message' => [

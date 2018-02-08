@@ -564,3 +564,35 @@ amp-carousel[controls] .amp-carousel-button{
 .button_redirect:active{
     background-color: #ff8a00;
 }
+
+.button_redirect_2{
+    color: #1a1107;
+    display: inline-block;
+    text-decoration: none;
+    padding: 8px 25px;
+    font-size: 14px;
+    font-weight: bold;
+    border-radius: 2px;
+    /*background-color: #ffb400;*/
+    border: 2px solid #ffb400;
+}
+
+.button_redirect_2:hover{
+    background-color: #ff9c00;
+}
+
+.button_redirect_2:active{
+    background-color: #ff8a00;
+}
+
+.description tr:nth-child(2n -1) td {
+    background: #dadada;
+}
+
+.description table {
+    margin: 15px 0;
+}
+
+.description td {
+    padding: 5px;
+}

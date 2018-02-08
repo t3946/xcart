@@ -1,23 +1,23 @@
 <?php
 use Mindy\QueryBuilder\QueryBuilder;
-use Modules\Product\Models\ProductCategoryTermsModel;
+use Modules\Goods\Models\ProductCategoryTermsModel;
 use Xcart\Connection;
 
 define("CIDEV_CRON_START", "CRON");
 
-require "../top.inc.php";
-require "../init.php";
+require __DIR__ . DIRECTORY_SEPARATOR . "../www/top.inc.php";
+require __DIR__ . DIRECTORY_SEPARATOR . "../www/init.php";
 
 ini_set('memory_limit', '512M');
 set_time_limit(0);
 
-if ($config["cron_pc_launched"] == "Y") {
-
-//	echo '<pre>'.print_r(opcache_get_status(), true).'</pre>';
-    die("Already launched"); // ################################
-}
-
-db_query_param(/** @lang MySQL */"UPDATE xcart_config SET value='Y' WHERE name='cron_pc_launched'", []);
+//if ($config["cron_pc_launched"] == "Y") {
+//
+////	echo '<pre>'.print_r(opcache_get_status(), true).'</pre>';
+//    die("Already launched"); // ################################
+//}
+//
+//db_query_param(/** @lang MySQL */"UPDATE xcart_config SET value='Y' WHERE name='cron_pc_launched'", []);
 
 $pc_options = func_query_hash("SELECT * FROM $sql_tbl[pc_options]", 'storefrontid', false);
 
@@ -27,7 +27,7 @@ $storefronts[0]["domain"] = "www.artistsupplysource.com";
 $start_time = time();
 echo "--";
 foreach ($storefronts as $storefrontid => $store_info) {
-    func_print_r($store_info);
+    print_r($store_info);
 
     if (empty($pc_options[$storefrontid])) {
         db_query("INSERT INTO $sql_tbl[pc_options] (storefrontid, maximum_number_of_autoclassify_product_per_turn, minimum_number_of_autoclassify_product_per_turn, stop_words, excluded_char_sequences) VALUES ('$storefrontid', '50', '3', '- with for not as by this when x you your the a on and feature will would can to in must do or nor if of me is', '+#13+ +#10+')");
@@ -42,7 +42,7 @@ SQL;
     $count_AC_products = func_query_first_cell_param($sql, ['storefrontid' => $storefrontid, 'forsale' => 'Y', 'pc_classify_status' => 'AC']);
     $count_NC_products = func_query_first_cell_param($sql, ['storefrontid' => $storefrontid, 'forsale' => 'Y', 'pc_classify_status' => 'NC']);
 
-    func_print_r($pc_options[$storefrontid]);
+    print_r($pc_options[$storefrontid]);
 
     $mcAccCountSQL = QueryBuilder::getInstance(Connection::getInstance())
         ->setTypeSelect()
@@ -206,7 +206,7 @@ WHERE C.pc_ready_to_classify='Y' AND C.storefrontid = :storefrontid AND C.avail 
     }
 }
 
-db_query_param(/** @lang MySQL */"UPDATE xcart_config SET value='N' WHERE name='cron_pc_launched'", []);
+//db_query_param(/** @lang MySQL */"UPDATE xcart_config SET value='N' WHERE name='cron_pc_launched'", []);
 db_query_param(/** @lang MySQL */"UPDATE xcart_config SET value='' WHERE name='cron_pc_launched_storefrontid'", []);
 
 print"<br />DONE!";

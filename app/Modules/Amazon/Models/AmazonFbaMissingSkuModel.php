@@ -2,7 +2,7 @@
 
 namespace Modules\Amazon\Models;
 
-use Modules\Product\Models\ProductModel;
+use Modules\Goods\Models\ProductModel;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\HasManyField;
@@ -27,7 +27,8 @@ class AmazonFbaMissingSkuModel extends Model
                 'field' => 'productid',
                 'class' => ForeignField::className(),
                 'modelClass' => ProductModel::className(),
-                'null' => false,
+                'null' => true,
+                'default' => null,
             ],
         ];
     }

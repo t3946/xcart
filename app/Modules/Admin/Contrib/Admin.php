@@ -32,6 +32,7 @@ abstract class Admin
     public $listItemActionsTemplate = 'admin/list/_item_actions.tpl';
     public $listPaginationTemplate = 'admin/list/_pagination.tpl';
 
+    public $infoTemplate = 'admin/info.tpl';
     public $createTemplate = 'admin/create.tpl';
     public $updateTemplate = 'admin/update.tpl';
     public $formTemplate = 'admin/form/_form.tpl';
@@ -39,9 +40,6 @@ abstract class Admin
 
     public $pageSize = 20;
     public $pageSizes = [20, 50, 100];
-
-//    /** @var \Modules\Admin\Controllers\AdminController $controller */
-//    public $controller = null;
 
     /**
      * Sorting column
@@ -53,6 +51,9 @@ abstract class Admin
     public $innerRender = false;
 
     public $autoFixSort = true;
+
+    /** @var Model */
+    public $model;
 
     /**
      * @return mixed
@@ -189,7 +190,8 @@ abstract class Admin
         if (is_array($result) && count($result) == 2 && is_bool($result[0]) && is_string($result[1])) {
             $success = $result[0];
             $message = $result[1];
-        } elseif ($result !== true) {
+        }
+        elseif ($result !== true) {
             $success = false;
             if (is_string($result)) {
                 $message = $result;
@@ -204,7 +206,8 @@ abstract class Admin
                 'message' => $message
             ]);
             Xcart::app()->end();
-        } else {
+        }
+        else {
             $flash->add($message, $success ? 'success' : 'error');
             $request->redirect($this->getAllUrl());
         }
@@ -219,6 +222,7 @@ abstract class Admin
         if (array_key_exists('update', $actions)) {
             unset($actions['update']);
         }
+
         return $actions;
     }
 
@@ -260,14 +264,19 @@ abstract class Admin
             }
         }
         foreach ($fields as $name => $field) {
-            if (in_array($name, $excluded)) {
+            if (in_array($name, $excluded) || array_key_exists($name, $config)) {
                 continue;
             }
 
             if (is_array($field)) {
                 $columnConfig = isset($config[$name]) ? $config[$name] : [];
-                if (!isset($columnConfig['title']) && isset($field['label'])) {
-                    $columnConfig['title'] = $field['label'];
+                if (!isset($columnConfig['title']) && ( isset($field['label']) || isset($field['verboseName']) )) {
+                    if (!empty($field['label'])) {
+                        $columnConfig['title'] = $field['label'];
+                    }
+                    elseif (!empty($field['verboseName'])) {
+                        $columnConfig['title'] = $field['verboseName'];
+                    }
                 }
                 if (!isset($columnConfig['order'])) {
                     /** @var Field $modelField */
@@ -328,7 +337,14 @@ abstract class Admin
     /**
      * @return Model
      */
-    abstract public function getModel();
+    public function getModel()
+    {
+        if (!$this->model) {
+            $this->model = $this->getForm()->getModel();
+        }
+
+        return $this->model;
+    }
 
     /**
      * @return Model
@@ -342,10 +358,7 @@ abstract class Admin
     /**
      * @return ModelForm
      */
-    public function getForm()
-    {
-        return new ModelForm();
-    }
+    abstract public function getForm();
 
     /**
      * @return ModelForm
@@ -490,6 +503,21 @@ abstract class Admin
         return $qs;
     }
 
+    public function setModel(Model $model)
+    {
+        $this->model = $model;
+        return $this;
+    }
+
+    public function getModelPk()
+    {
+        if ($this->model) {
+            return $this->model->pk;
+        }
+
+        return null;
+    }
+
     /**
      * @return array
      */
@@ -534,7 +562,7 @@ abstract class Admin
         return Xcart::app()->router->url('admin:update', [
             'module' => static::getModuleName(),
             'admin' => static::classNameShort(),
-            'pk' => $pk
+            'pk' => $pk ?: $this->getModelPk(),
         ], $query);
     }
 
@@ -543,7 +571,7 @@ abstract class Admin
         return Xcart::app()->router->url('admin:info', [
             'module' => static::getModuleName(),
             'admin' => static::classNameShort(),
-            'pk' => $pk
+            'pk' => $pk ?: $this->getModelPk(),
         ]);
     }
 
@@ -552,7 +580,7 @@ abstract class Admin
         return Xcart::app()->router->url('admin:remove', [
             'module' => static::getModuleName(),
             'admin' => static::classNameShort(),
-            'pk' => $pk
+            'pk' => $pk ?: $this->getModelPk(),
         ]);
     }
 
@@ -603,7 +631,7 @@ abstract class Admin
         return $value;
     }
 
-    public function all()
+    public function all($pk = null)
     {
         $this->setBreadcrumbs();
         $search = isset($_GET['search']) ? $_GET['search'] : null;
@@ -625,6 +653,17 @@ abstract class Admin
             'search' => $this->getSearchColumns(),
             'columns' => $this->buildListColumns(),
             'canSort' => $this->getCanSort($qs),
+        ]);
+    }
+
+    public function info($pk)
+    {
+        $object = $this->getModelOr404($pk);
+
+        $this->setBreadcrumbs('Информация');
+        $this->renderInternal($this->infoTemplate, [
+            'object' => $object,
+            'fields' => $object::getFields(),
         ]);
     }
 
@@ -696,9 +735,9 @@ abstract class Admin
         return $this->getForm()->getFieldsets();
     }
 
-    public function create()
+    public function create($pk = null)
     {
-        $this->update();
+        $this->update(null, $pk);
     }
 
     public function update($pk = null, $parent_id = null)
@@ -713,7 +752,8 @@ abstract class Admin
             if ($parent_id) {
                 $model->parent_id = $parent_id;
             }
-        } else {
+        }
+        else {
             $model = $this->getModelOr404($pk);
             $form = $this->getUpdateForm();
         }
@@ -744,7 +784,8 @@ abstract class Admin
                         $request->redirect($this->getCreateUrl());
                     }
                 }
-            } else {
+            }
+            else {
                 if (!$request->getIsAjax()) {
                     Xcart::app()->flash->error('Пожалуйста, исправьте ошибки');
                 }

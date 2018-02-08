@@ -45,6 +45,7 @@ class SessionDataModel extends Model
                 'class' => IntField::className(),
                 'unsigned' => true,
                 'null' => false,
+                'default' => 0,
             ],
             'cart_number' => [
                 'class' => IntField::className(),
@@ -61,9 +62,11 @@ class SessionDataModel extends Model
 
     public function beforeSave($owner, $isNew)
     {
-        /** @var \Modules\User\UserModule $module */
-        if ($module = Xcart::app()->getModule('User')) {
-            $owner->expiry = time() + $module->sessionTime;
+        if ($isNew) {
+            /** @var \Modules\User\UserModule $module */
+            if ($module = Xcart::app()->getModule('User')) {
+                $owner->expiry = time() + $module->sessionTime;
+            }
         }
     }
 }

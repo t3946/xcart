@@ -2,13 +2,15 @@
 (defined('DS')?:define('DS', DIRECTORY_SEPARATOR));
 
 $local_config = __DIR__ . DS .'settings_local.php';
+$local_config = (is_file($local_config)) ? include $local_config : [];
 
 return array_replace_recursive([
    'name' => 'Xcart',
    'exit_on_end' => true,
    'paths' => [
-       'base' => realpath(implode(DS, [__DIR__, '..'])),
-       'www' => realpath(implode(DS, [__DIR__, '..', '..'])),
+       'base'   => realpath(implode(DS, [__DIR__, '..'])),
+       'root'   => realpath(implode(DS, [__DIR__, '..', '..'])),
+       'www'    => realpath(implode(DS, [__DIR__, '..', '..', 'www'])),
    ],
    'globals' => [
 //       'blowfish_key' => '8d5db63ada15e11643a0b1c3477c2c5c',
@@ -37,27 +39,24 @@ return array_replace_recursive([
                    'mapping' => [
                        'enum' => 'string'
                    ],
-                   'cache' => [
+                   'cache' => (defined('APP_DEV') && APP_DEV) ? [
                        'class' => '\\Xcart\\App\\Orm\\Cache\\FilesystemCache',
                        'directory' => 'base.runtime.query_cache'
+                   ] : [ //PRODUCTION CACHE
+                       'class' => '\Xcart\App\Orm\Cache\RedisCache',
+                   ],
+                   'driverOptions' => [
+//                       PDO::ATTR_EMULATE_PREPARES => false,
+                       PDO::ATTR_STRINGIFY_FETCHES => false
                    ]
                ]
            ]
        ],
-       'errorHandler' => [
-           'class' => '\\Xcart\\App\\Main\\ErrorHandler',
-           'debug' => true,
-           'errHandler' => true,
-           'ignoreDeprecated' => true,
-       ],
+
        'event' => [
            'class' => '\\Xcart\\App\\Event\\EventManager',
            'events' => include __DIR__ . DS .  'events.php'
        ],
-
-       'oldMail' => '\Modules\Mail\Components\MailComponent',
-
-       'logger' => include __DIR__. DS . 'logger.php',
 
        'breadcrumbs' => ['class' => 'Xcart\App\Components\Breadcrumbs'],
        'flash' => ['class' => '\Xcart\App\Components\Flash'],
@@ -65,23 +64,7 @@ return array_replace_recursive([
 
        'middleware' => [
            'class' => '\\Xcart\\App\\Middleware\\MiddlewareManager',
-           'middleware' => [
-//               'RedirectMiddleware' => [
-//                   'class' => '\Modules\Redirect\Middleware\RedirectMiddleware'
-//               ],
-//               'AutoCacheMiddleware' => [
-//                   'class' => '\\Modules\\Core\\Middleware\\CacheMiddleware',
-//               ],
-               'CurrentSiteMiddleware' => [
-                   'class' => '\\Modules\\Sites\\Middleware\\CurrentSiteMiddleware',
-               ],
-               'BotsMiddleware' => [
-                   'class' => '\\Modules\\User\\Middleware\\BotsMiddleware',
-               ],
-               'ReferrerSearch' => [
-                   'class' => '\\Modules\\User\\Middleware\\ReferrerSearchMiddleware'
-               ],
-           ],
+           'middleware' => include __DIR__ . DS . 'middleware.php',
        ],
        'request' => [
            'class' => '\\Xcart\\App\\Request\\RequestManager',
@@ -122,35 +105,64 @@ return array_replace_recursive([
            ],
        ],
 
-       'cache' => [
+       'cache' => (defined('APP_DEV') && APP_DEV) ? [
            'class' => '\\Xcart\\App\\Cache\\Cache',
            'saveInMemory' => true,
            'memoryDriver' => 'memory',
            'drivers' => [
                'default' =>  [
-                   'class' => '\\Xcart\\App\\Cache\\Drivers\\File'
+                   'class' => '\\Xcart\\App\\Cache\\Drivers\\File',
                ],
                'memory' =>  [
                    'class' => '\\Xcart\\App\\Cache\\Drivers\\Memory',
                    'numCacheQuery' => 30,
                ]
            ]
+       ] : [ //PRODUCTION CACHE
+           'class' => '\Xcart\App\Cache\Cache',
+           'drivers' => [
+               'default' =>  [
+                   'class' => '\Xcart\App\Cache\Drivers\Redis',
+               ],
+           ]
        ],
+
+       'oldMail' => '\Modules\Mail\Components\MailComponent',
        'mail' => [
            'class' => '\Modules\Mail\Components\Mailer',
-           'defaultFrom' => 'robot@{domain}',
-//           'defaultFrom' => 'robot@s3stores.com',
+           'defaultFrom' => 'robot@s3stores.com',
        ],
+
        'auth' => [
            'class' => '\\Modules\\User\\Components\\Auth'
        ],
-//       'global_config' => [
-//           'class' => '\\Modules\\Core\\Components\\GlobalConfig'
-//       ],
+
+       'logger' => include __DIR__. DS . 'logger.php',
+       'errorHandler' => [
+           'class' => '\\Xcart\\App\\Main\\ErrorHandler',
+           'debug' => false,
+           'ignoringTypes' => [
+//               E_RECOVERABLE_ERROR,
+               E_DEPRECATED,
+               E_USER_DEPRECATED,
+               E_NOTICE,
+               E_USER_NOTICE,
+               E_WARNING,
+               E_USER_WARNING,
+           ],
+           'loggingIgnoredTypes' => [
+               E_RECOVERABLE_ERROR,
+//               E_DEPRECATED,
+               E_USER_DEPRECATED,
+//               E_WARNING,
+               E_USER_WARNING,
+               E_USER_NOTICE,
+           ]
+       ],
    ],
    'autoloadComponents' => [
        'errorHandler',
+       'logger',
        'db',
-       'logger'
    ]
-],  (is_file($local_config)) ? include $local_config : []);
+],  $local_config);

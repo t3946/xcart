@@ -12,6 +12,9 @@ class OrderStatusModel extends Model
 
     const ORDER_STATUS_AUTHORIZED = 'AP';
     const ORDER_STATUS_COMPLETED = 'P';
+    const ORDER_STATUS_QUEUED = 'Q';
+    const ORDER_STATUS_UNPAID = 'N';
+    const ORDER_STATUS_NOT_FINISHED = 'I';
 
     public static function tableName()
     {

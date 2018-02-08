@@ -2,6 +2,7 @@
 
 namespace Modules\Meta\Helpers;
 
+use Modules\Meta\Components\MetaTrait;
 use Modules\Meta\Models\Meta;
 use Modules\Meta\Models\MetaTemplate;
 use Modules\Sites\Models\SiteModel;
@@ -35,18 +36,6 @@ class MetaHelper
             $site = Xcart::app()->getModule('Sites')->getSite();
         }
 
-        $metaTemplateName = $controller->getMetaTemplate();
-        /** @var \Modules\Meta\Models\MetaTemplate $metaTemplate */
-        $metaTemplate = MetaTemplate::objects()->filter(['code' => $metaTemplateName])->limit(1)->get();
-        if ($metaTemplate) {
-            $metaTemplate->params = $controller->getMetaTemplateParams();
-            }
-
-        $site = null;
-        if (Xcart::app()->getModule('Meta')->onSite) {
-            $site = Xcart::app()->getModule('Sites')->getSite();
-        }
-
         if ($meta) {
             echo self::renderTemplate('meta/meta_helper.tpl', [
                 'title' => self::formatTitle($controller, $meta->title, $site, $meta),
@@ -56,16 +45,18 @@ class MetaHelper
                 'site' => $site
             ]);
         }
-        elseif ($metaTemplate) {
+        elseif ($controller && $metaTemplate = MetaTemplate::objects()->filter(['code' => $controller->getMetaTemplate()])->limit(1)->get()) {
+            $metaTemplate->params = $controller->getMetaTemplateParams();
+
             echo self::renderTemplate('meta/meta_helper.tpl', [
-                'title' => self::formatTitle($controller, $metaTemplate->renderTitle()),
+                'title' => self::cleanString( self::formatTitle($controller, $metaTemplate->renderTitle()) ),
                 'canonical' => $canonical,
-                'description' => $metaTemplate->renderDescription(),
-                'keywords' => $metaTemplate->renderKeywords(),
+                'description' => self::cleanString( $metaTemplate->renderDescription() ),
+                'keywords' => self::cleanString( $metaTemplate->renderKeywords() ),
                 'site' => $site
             ]);
         }
-        else {
+        else if ($controller) {
             echo self::renderTemplate('meta/meta_helper.tpl', [
                 'title' => self::formatTitle($controller, null, $site),
                 'canonical' => $canonical,
@@ -77,9 +68,10 @@ class MetaHelper
     }
 
     /**
-     * @param \Xcart\App\Controller\FrontendController $controller
+     * @param MetaTrait $controller
      * @param null $title
      * @param SiteModel|null $site
+     * @param Meta $metaModel
      * @return string
      */
     protected static function formatTitle($controller, $title = null, $site = null, $metaModel = null)
@@ -106,6 +98,13 @@ class MetaHelper
         }
 
         return implode(' - ', $data);
+    }
+
+    protected static function cleanString($str)
+    {
+        $t = preg_replace("/(\r?\n){2,}/", "", $str);
+        $t = preg_replace("/(\s+)/", " ", $t);
+        return trim( $t );
     }
 
     protected static function fetchMeta($uri)

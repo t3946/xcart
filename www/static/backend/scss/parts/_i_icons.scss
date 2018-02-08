@@ -1,0 +1,10 @@
+i.icon.m {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  background-size: contain;
+
+  &.discount {
+    background-image: url("../images/icons/discount.svg");
+  }
+}

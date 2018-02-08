@@ -2,6 +2,7 @@
 
 namespace Modules\Payment\Models;
 
+use Doctrine\DBAL\Types\Type;
 use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\CharField;
@@ -38,6 +39,7 @@ class ProcessorModel extends Model
                 'class' => ForeignField::className(),
                 'modelClass' => PaymentProcessorModel::className(),
                 'link' => ['processor_name' => 'module_name'],
+                'sqlType' => Type::STRING,
             ]
 
         ];

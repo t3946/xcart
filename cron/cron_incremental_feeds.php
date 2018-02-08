@@ -3,16 +3,16 @@
 use Mindy\QueryBuilder\Aggregation\Count;
 use Mindy\QueryBuilder\Aggregation\Min;
 use Mindy\QueryBuilder\Expression;
-use Modules\Product\Models\ProductModel;
-use Modules\Product\Models\UpdatedProductModel;
+use Modules\Goods\Models\ProductModel;
+use Modules\Goods\Models\UpdatedProductModel;
 use Xcart\Connection;
 use Xcart\External_Marketplaces\StoreFrontMarketPlace;
 
 define("CIDEV_CRON_START", "CRON");
 session_start();
 
-require "../top.inc.php";
-require "../init.php";
+require __DIR__ . DIRECTORY_SEPARATOR . "../www/top.inc.php";
+require __DIR__ . DIRECTORY_SEPARATOR . "../www/init.php";
 
 global $xcart_dir, $config, $storefronts, $aManufacturerZones;
 
@@ -32,18 +32,18 @@ define('EXTRA_LOG', 'N');
 
 set_time_limit(0);
 
-if ($config[LOG_CATEGORY] == "Y") {
-    func_backprocess_log('incremental feeds', 'Already launched');
-    $oMail = \Xcart\App\Main\Xcart::app()->oldMail;
-    $oMail->to = 'team@s3stores.com';
-    $oMail->from = 'team@s3stores.com';
-    $oMail->subject = sprintf('Attention! Xcart cron %s Already launched', LOG_CATEGORY);
-    $oMail->body = LOG_CATEGORY . ' already launched';
-    $oMail->sendEmail();
-    if (isset($argv) && !in_array('--force-flag', $argv)) {
-        die("Already launched"); // ################################
-    }
-}
+//if ($config[LOG_CATEGORY] == "Y") {
+//    func_backprocess_log('incremental feeds', 'Already launched');
+//    $oMail = \Xcart\App\Main\Xcart::app()->oldMail;
+//    $oMail->to = 'team@s3stores.com';
+//    $oMail->from = 'team@s3stores.com';
+//    $oMail->subject = sprintf('Attention! Xcart cron %s Already launched', LOG_CATEGORY);
+//    $oMail->body = LOG_CATEGORY . ' already launched';
+//    $oMail->sendEmail();
+//    if (!isset($argv) || (isset($argv) && !in_array('--force-flag', $argv))) {
+//        die("Already launched"); // ################################
+//    }
+//}
 
 $xcart_states_US = func_query_param(/** @lang MySQL */
     <<<SQL
@@ -53,8 +53,8 @@ LEFT JOIN xcart_geo_litecity_location ON country = country_code AND postalCode =
 SQL
     , ['co' => 'US']);
 
-db_query_param(/** @lang MySQL */
-    "REPLACE xcart_config SET value='Y', name=:name", ['name' => LOG_CATEGORY]);
+//db_query_param(/** @lang MySQL */
+//    "REPLACE xcart_config SET value='Y', name=:name", ['name' => LOG_CATEGORY]);
 
 $started_at = time();
 
@@ -168,13 +168,16 @@ if (!empty($cidev_storefronts) && is_array($cidev_storefronts)) {
             ->order(['-utype', '-product__forsale'])
             ->limit(3000)
             ->all()) {
+
             $timeout = 60 * 20;
             $storefront_time_start = time();
+
             $log_text = "Storefront: " . $sf_info["domain"] . " Storefrontid: " . $sf_info["storefrontid"];
             func_backprocess_log("incremental feeds", $log_text);
 
             foreach ($queues as $queue_o) {
 
+                /** @var UpdatedProductModel $queue */
                 if ($queue = UpdatedProductModel::objects()
                     ->get(
                         [
@@ -197,9 +200,10 @@ if (!empty($cidev_storefronts) && is_array($cidev_storefronts)) {
                         break;
                     }
 
+                    /** @var $oProduct ProductModel */
+
                     if ($oProduct = $queue->product) {
 
-                        /** @var $oProduct ProductModel */
                         $oProduct->last_incremental_update = time();
 
                         $oProduct->save();
@@ -278,8 +282,8 @@ if (!empty($cidev_storefronts) && is_array($cidev_storefronts)) {
 
 }
 
-db_query_param(/** @lang MySQL */
-    "UPDATE xcart_config SET value='N' WHERE name=:name", ['name' => LOG_CATEGORY]);
+//db_query_param(/** @lang MySQL */
+//    "UPDATE xcart_config SET value='N' WHERE name=:name", ['name' => LOG_CATEGORY]);
 
 $str_time = (new DateTime('now'))->diff($start_time)->format('%H:%I:%S');
 $log_text = "Cron completed. Processing time: {$str_time}";

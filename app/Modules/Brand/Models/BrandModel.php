@@ -2,9 +2,10 @@
 
 namespace Modules\Brand\Models;
 
+use Doctrine\DBAL\Types\Type;
 use Modules\Brand\BrandModule;
 use Modules\Menu\Models\CleanUrlModel;
-use Modules\Product\Models\ProductModel;
+use Modules\Goods\Models\ProductModel;
 use Modules\Sites\Models\SiteModel;
 use Modules\User\Models\UserModel;
 use Xcart\App\Components\Breadcrumbs;
@@ -111,7 +112,7 @@ class BrandModel extends Model
             'child_brands' => [
                 'class' => HasManyField::className(),
                 'modelClass' => BrandModel::className(),
-                'link' => ['parent_brand_id' => 'brandid']
+                'link' => ['brandid' => 'parent_brand_id']
             ],
             'products' => [
                 'class' => HasManyField::className(),
@@ -127,6 +128,7 @@ class BrandModel extends Model
             'user' => [
                 'field' => 'provider',
                 'class' => ForeignField::className(),
+                'sqlType' => Type::STRING,
                 'modelClass' => UserModel::className(),
                 'link' => ['provider' => 'login']
             ],
@@ -197,5 +199,10 @@ class BrandModel extends Model
         $code .= $this->pk;
 
         return "[{$code}] {$this->brand}";
+    }
+
+    public function getProductFrontendName()
+    {
+        return $this->product_brand_name ?: $this->brand;
     }
 }

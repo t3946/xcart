@@ -1,23 +1,25 @@
 <?php
+
+defined('APP_DEBUG')?:define('APP_DEBUG', true);
 $base_config = __DIR__ . DIRECTORY_SEPARATOR .'settings.php';
 $local_config = __DIR__ . DIRECTORY_SEPARATOR .'settings_admin_local.php';
-
-
 
 $config = array_replace_recursive([
     'exit_on_end' => true,
     'components' => [
-      'errorHandler' => [
-          'class' => '\\Xcart\\App\\Main\\ErrorHandler',
+        'errorHandler' => [
           'debug' => true,
-          'errHandler' => false
-      ],
-      'router' => [
-//          'pathRoutes' => 'base.config.routes_admin',
-      ],
+        ],
+        'db' => [
+            'connections' => [
+                'default' => [
+                    'wrapperClass' => false,
+                ]
+            ]
+        ],
     ],
     'autoloadComponents' => [
-      'errorHandler'
+        'errorHandler'
     ]
 ], (is_file($local_config)) ? include $local_config : []);
 

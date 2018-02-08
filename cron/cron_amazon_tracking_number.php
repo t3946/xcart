@@ -9,40 +9,47 @@ use Modules\Shipping\Models\TrackingLinksCarrierModel;
 
 define("CIDEV_CRON_START", "CRON");
 
-require "../top.inc.php";
-require "../init.php";
+require __DIR__ . DIRECTORY_SEPARATOR . "../www/top.inc.php";
+require __DIR__ . DIRECTORY_SEPARATOR . "../www/init.php";
 
 global $config;
 
 $log_category = 'cron_amazon_tracking_number';
 
-if ($config[$log_category] == "Y") {
-    func_backprocess_log($log_category, 'Already launched');
-    $oMail = \Xcart\App\Main\Xcart::app()->oldMail;
-    $oMail->to = 'team@s3stores.com';
-    $oMail->from = ('team@s3stores.com');
-    $oMail->subject = sprintf('Attention! Xcart cron %s Already launched', $log_category);
-    $oMail->body = $log_category . ' already launched';
-    $oMail->sendEmail();
-    die("Already launched"); // ################################
-}
-
-db_query_param("REPLACE xcart_config SET value='Y', name=:log_category", ['log_category' => $log_category]);
+//if ($config[$log_category] == "Y") {
+//    func_backprocess_log($log_category, 'Already launched');
+//    $oMail = \Xcart\App\Main\Xcart::app()->oldMail;
+//    $oMail->to = 'team@s3stores.com';
+//    $oMail->from = ('team@s3stores.com');
+//    $oMail->subject = sprintf('Attention! Xcart cron %s Already launched', $log_category);
+//    $oMail->body = $log_category . ' already launched';
+//    $oMail->sendEmail();
+//    if (!isset($argv) || (isset($argv) && !in_array('--force-flag', $argv))) {
+//        die("Already launched"); // ################################
+//    }
+//}
+//
+//db_query_param("REPLACE xcart_config SET value='Y', name=:log_category", ['log_category' => $log_category]);
 
 $start_time = new DateTime('now');
 $log_text = " * * *  Cron started  * * * ";
 func_backprocess_log($log_category, $log_text);
 
+print $log_text . PHP_EOL;
+
 $ogModels = OrderGroupModel::objects()->filter(['amz_fullfilment_order_placed' => 'Y'])->all();
 if ($ogModels) {
-    func_backprocess_log($log_category, sprintf("Processing %d Send by Amazon orders", count($ogModels)));
+    func_backprocess_log($log_category, $log = sprintf("Processing %d Send by Amazon orders", count($ogModels)));
+
+    print $log . PHP_EOL;
+
     $amzPool = new AmazonPoolStore();
     $oClientPack = $amzPool->getFbaOutboundClientPack();
     /** @var OrderGroupModel $ogm */
     foreach ($ogModels as $ogm){
         $tracks = [];
         try {
-            $res = AmazonFbaOutboundHelper::getFulfillmentOrderTrackingNumbers($oClientPack->callGetFulfillmentOrder($ogm->getDataModel()->getAmazonShippingOrderId()));
+            $res = AmazonFbaOutboundHelper::getFulfillmentOrderTrackingNumbers($oClientPack->callGetFulfillmentOrder($ogm->getAmazonShippingOrderId()));
             if (!empty($res)) {
                 if (!empty($ogm->tracking)) {
                     $tracks = array_map(function ($a) {return $a['tracknum'];}, $ogm->tracking);
@@ -53,6 +60,7 @@ if ($ogModels) {
                         $newTrack = [
                             'tracknum' => $amTrack['track_number'],
                             'ship_date' => $amTrack['shipping_date']->format('m/d/Y'),
+                            'shipping_date' => $amTrack['shipping_date'],
                         ];
                         if ($carrierModel = TrackingLinksCarrierModel::objects()->get(['carrier' => $amTrack['carrier_code']])) {
                             $newTrack['carrier_id'] = $carrierModel->carrier_id;
@@ -61,7 +69,9 @@ if ($ogModels) {
                         $ogm->tracking = $old;
                         $ogm->dc_status = 'S';
 
-                        func_backprocess_log($log_category, "Add tracking number {$amTrack['track_number']} in order {$ogm->orderid}");
+                        func_backprocess_log($log_category, $log = "Add tracking number {$amTrack['track_number']} in order {$ogm->orderid}");
+
+                        print $log . PHP_EOL;
 
                         $ogm->save();
 
@@ -70,7 +80,7 @@ if ($ogModels) {
                 }
             }
         } catch(FBAOutboundServiceMWS_Exception $e){
-            print($e->getMessage());
+            print($e->getMessage() . PHP_EOL) ;
             func_backprocess_log($log_category, "callGetFulfillmentOrder error. OrderId: {$ogm->orderid}. " . $e->getMessage());
         }
     }
@@ -83,7 +93,10 @@ $ogModels = OrderModel::objects()
     ->filter(['amazon_fulfillment_channel' => 'MFN'])
     ->all();
 if ($ogModels) {
-    func_backprocess_log($log_category, sprintf("Processing %d MFN orders", count($ogModels)));
+    func_backprocess_log($log_category, $log = sprintf("Processing %d MFN orders", count($ogModels)));
+
+    print $log . PHP_EOL;
+
     foreach($ogModels as $order) {
         if ($groups = $order->groups){
             /** @var OrderGroupModel $group */
@@ -92,7 +105,7 @@ if ($ogModels) {
                     if (!empty($group->tracking) && is_array($group->tracking)) {
                         $aTrackings = $group->tracking;
                         foreach ($aTrackings as $key => $track) {
-                            if (!isset($track['send_to_amazon'])) {
+                            if (!isset($track['send_to_amazon']) || 1==1) {
                                 $feedResult = AmazonFbaFeedHelper::sendTrackingCodeToAmazon($group, $track);
                                 $aTrackings[$key]['send_to_amazon'] = 'Y';
                             }
@@ -111,10 +124,11 @@ if ($ogModels) {
 
 
 
-Xcart\Config::model(['name' => $log_category])->setValue('N')->_update();
+//Xcart\Config::model(['name' => $log_category])->setValue('N')->_update();
 
 $str_time = (new DateTime('now'))->diff($start_time)->format('%H:%I:%S');
 $log_text = "Cron completed. Processing time: {$str_time}";
 func_backprocess_log($log_category, $log_text);
 
-print "Done.";
+print $log_text . PHP_EOL;
+print "Done." . PHP_EOL;

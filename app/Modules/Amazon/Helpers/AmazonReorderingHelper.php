@@ -5,7 +5,7 @@ namespace Modules\Amazon\Helpers;
 
 use DateTime;
 use Modules\Amazon\Sqls\AmazonSql;
-use Modules\Product\Models\ProductModel;
+use Modules\Goods\Models\ProductModel;
 use Xcart\Connection;
 
 class AmazonReorderingHelper

@@ -1,0 +1,32 @@
+.text-hide {
+  text-indent: -9999px;
+}
+
+.icon {
+
+  &:after {
+    content: '';
+    display: inline-block;
+    background: no-repeat center center;
+    background-size: contain;
+
+  }
+
+  &.cart_remove {
+    &:after {
+      width: rem-calc(18);
+      height: rem-calc(22);
+
+      background-image: url('../images/icons/cart/remove.svg');
+    }
+  }
+
+  &.retailTrust {
+    &:after {
+
+      width: rem-calc(43);
+      height: rem-calc(40);
+      background-image: url("../images/icons/rt/logo_icon.svg");
+    }
+  }
+}

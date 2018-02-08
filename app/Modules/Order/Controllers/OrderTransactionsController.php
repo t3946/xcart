@@ -68,6 +68,8 @@ class OrderTransactionsController extends PrototypeAdminController
         /** @var OrderModel $orderModel */
         if (isset($_POST['paypal_vt']) && $order_id && ($orderModel = OrderModel::objects()->get(['orderid' => $order_id]))) {
 
+            $order_before = new OrderModel($orderModel->getOldAttributes());
+
             $count = $orderModel->transactions->count();
 
             if (!($isAllowed = PaymentHelper::isAuthorizeAllowed($orderModel, $count))) {
@@ -108,11 +110,14 @@ class OrderTransactionsController extends PrototypeAdminController
                 if ($o_log) {
                     $order_log .= "<br />" . $o_log;
                 }
+                Xcart::app()->event->trigger('payment:authorize', ['model' => $orderModel, 'order_before' => $order_before, 'transaction' => $transaction_model]);
             }
 
             if (!$count && $send_notification) {
                 func_send_order_status_notification($orderModel->orderid, OrderStatusModel::ORDER_STATUS_AUTHORIZED, true);
             }
+
+
         }
 
         func_log_order($order_id, 'PP', $order_log, Xcart::app()->user->login);

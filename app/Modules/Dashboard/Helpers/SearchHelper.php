@@ -1,10 +1,14 @@
 <?php
 namespace Modules\Dashboard\Helpers;
 
+use Mindy\QueryBuilder\Expression;
+use Mindy\QueryBuilder\Q\QOr;
 use Modules\Brand\Models\BrandModel;
 use Modules\Dashboard\Sqls\SearchSql;
 use Modules\Dashboard\Stores\OrderSearchStore;
 use Modules\Order\Models\OrderTransactionModel;
+use Modules\Sites\Models\SiteModel;
+use Modules\User\Models\UserModel;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\DefaultConnection;
 use Xcart\Connection;
@@ -26,8 +30,8 @@ class SearchHelper
             $raw_statuses     = Connection::getInstance()->fetchAll("SELECT * FROM xcart_order_statuses ORDER BY type ASC, orderby ASC");
             $shipping_methods = Connection::getInstance()->fetchAll("SELECT * FROM xcart_shipping");
             $payment_methods  = Connection::getInstance()->fetchAll("SELECT * FROM xcart_payment_methods");
-            $domains          = Connection::getInstance()->fetchAll("SELECT * FROM xcart_storefronts WHERE status = 'Y' ORDER BY orderby ASC");
             $countries        = Connection::getInstance()->fetchAll(SearchSql::getAllCountryOrderSql());
+            $domains          = SiteModel::objects()->all();
 
             $order_statuses = [];
             foreach ($raw_statuses as $status) {
@@ -38,9 +42,9 @@ class SearchHelper
                 $order_statuses[$status['type']][] = $status;
             }
 
-            $storefronts = [0 => 'www.artistsupplysource.com'];
+            /** @var SiteModel $domain */
             foreach ($domains as $domain) {
-                $storefronts[$domain['storefrontid']] = $domain['domain'];
+                $storefronts[$domain->storefrontid] = $domain->__toString();
             }
 
             $properties = [
@@ -159,6 +163,10 @@ class SearchHelper
             $data['order']['operator'] = self::getDecoratedAutoCompleteData($data['order']['operator'], 'order.operator');
             $data['order']['operator'] = self::clearAutoCompleteData($data['order']['operator']);
         }
+        if (!empty($data['order']['submit_operator'])) {
+            $data['order']['submit_operator'] = self::getDecoratedAutoCompleteData($data['order']['submit_operator'], 'order.submit_operator');
+            $data['order']['submit_operator'] = self::clearAutoCompleteData($data['order']['submit_operator']);
+        }
         if (!empty($data['order']['distributor'])) {
             $data['order']['distributor'] = self::getDecoratedAutoCompleteData($data['order']['distributor'], 'order.distributor');
             $data['order']['distributor'] = self::clearAutoCompleteData($data['order']['distributor']);
@@ -210,13 +218,11 @@ class SearchHelper
         $stmt = null;
         $data = [];
         $like = "%{$query}%";
-
         $connection = Connection::getInstance();
 
         if ($connection instanceof DefaultConnection) {
-            $connection->setIgnoreErrors(true);
+            $connection = $connection->setIgnoreErrors(true);
         }
-
 
         switch ($from) {
             case 'distributor' :
@@ -230,7 +236,12 @@ class SearchHelper
                     ->all();
                 break;
             case 'operator' :
-                $stmt = $connection->executeQuery(SearchSql::getOperatorSql(), ['like' => $like]);
+                $data = UserModel::objects()
+                    ->select(['id' => 'login', 'text' => new Expression("concat('[',login,'] ', firstname)")])
+                    ->filter(new QOr(['login__contains' => $query, 'firstname__contains' => $query]))
+                    ->exclude(['usertype' => 'C'])
+                    ->asArray()
+                    ->all();
                 break;
             case 'company' :
                 $stmt = $connection->executeQuery(SearchSql::getCompanySql(), ['like' => $like]);
@@ -266,6 +277,7 @@ class SearchHelper
         if ($stmt) {
             $data = $stmt->fetchAll();
         }
+
         if ($connection instanceof DefaultConnection) {
             $connection->setIgnoreErrors(false);
         }

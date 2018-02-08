@@ -1,24 +1,37 @@
 <?php
 return [
     'class' => '\\Xcart\\App\\Logger\\LoggerManager',
+    'defaultPatch' => 'root.log',
     'handlers' => [
         'default' => [
             'class' => '\\Xcart\\App\\Logger\\Handler\\RotatingFileHandler' ,
-            'level' => defined('APP_DEBUG') ? "DEBUG" : "ERROR",
-            'alias' => 'base.runtime.log.err',
+            'level' => 'DEBUG',
+            'alias' => 'root.log.log',
+            'formatter' => 'log'
+        ],
+        'error' => [
+            'class' => '\\Xcart\\App\\Logger\\Handler\\RotatingFileHandler' ,
+            'level' => 'DEBUG',
+            'alias' => 'root.log.error',
+            'formatter' => 'log'
+        ],
+        'info' => [
+            'class' => '\\Xcart\\App\\Logger\\Handler\\RotatingFileHandler' ,
+            'level' => 'DEBUG',
+            'alias' => 'root.log.info',
+            'formatter' => 'log'
+        ],
+        'debug' => [
+            'class' => '\\Xcart\\App\\Logger\\Handler\\RotatingFileHandler' ,
+            'level' => 'DEBUG',
+            'alias' => 'root.log.debug',
             'formatter' => 'log'
         ],
         'sql' => [
             'class' => '\\Xcart\\App\\Logger\\Handler\\RotatingFileHandler',
-            'level' =>  "ERROR",
-            'alias' => 'base.runtime.log.sql'
+            'level' =>  'DEBUG',
+            'alias' => 'root.log.sql'
         ],
-//        'error' => [
-//            'class' => '\\Xcart\\App\\Logger\\Handler\\RotatingFileHandler',
-//            'level' =>  "ERROR",
-//            'alias' => 'base.log.err',
-//            'formatter' => 'log'
-//        ],
         'null' => [
             'class' => '\\Xcart\\App\\Logger\\Handler\\NullHandler',
             'level' => 'ERROR'
@@ -27,15 +40,13 @@ return [
             'class' => '\\Xcart\\App\\Logger\\Handler\\StreamHandler',
             'formatter' => 'console'
         ],
-        'users' => [
-            'class' => '\\Xcart\\App\\Logger\\Handler\\RotatingFileHandler',
-            'alias' => 'base.runtime.log.users',
-            'level' => 'INFO',
-            'formatter' => 'users'
+        'error_mail_admins' => [
+            'class' => '\\Modules\\Mail\\LogHandlers\\MailProxyHandler',
+            'level' => 'DEBUG',
+            'formatter' => 'log',
+            'to' => 'team@s3stores.com',
+            'subject' => 'ERR LOG: {chanel}.{level_name}',
         ],
-//        'mail_admins' => [
-//            'class' => '\\Xcart\\App\\Logger\\Handler\\SwiftMailerHandler',
-//        ],
     ],
     'formatters' => [
         'users' => [
@@ -44,7 +55,6 @@ return [
         ],
         'log' => [
             'class' => '\\Xcart\\App\\Logger\\Formatters\\LineFormatter',
-//            'allowInlineLineBreaks' => true,
             'includeStacktrace' => true
         ],
         'console' => [
@@ -52,17 +62,17 @@ return [
         ]
     ],
     'loggers' => [
-        'users' => [
-            'class' => '\\Monolog\\Logger',
-            'handlers' => ['users'],
-        ],
         'sql' => [
             'class' => '\\Xcart\\App\\Logger\\Logger',
-            'handlers' => ['sql']
+            'handlers' => ['sql', 'error_mail_admins']
         ],
-//        'error' => [
-//            'class' => '\\Xcart\\App\\Logger\\Logger',
-//            'handlers' => ['error', 'mail_admins']
-//        ],
+        'debug' => [
+            'class' => '\\Xcart\\App\\Logger\\DebugLogger',
+            'handlers' => ['debug', 'error_mail_admins']
+        ],
+        'error' => [
+            'class' => '\\Xcart\\App\\Logger\\Logger',
+            'handlers' => ['error', 'error_mail_admins']
+        ],
     ]
 ];

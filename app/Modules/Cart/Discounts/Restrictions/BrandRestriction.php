@@ -20,9 +20,28 @@ class BrandRestriction extends AbstractRestriction
         return CartModule::t('Brand restriction');
     }
 
-    public function validate()
+    public function getTypeValidation()
     {
+        return self::VALIDATION_PRODUCT;
+    }
 
+    public function getErrorMessage()
+    {
+        return "No products in your cart eligible for a discount";
+    }
+
+    /**
+     * @param \Modules\Goods\Models\ProductModel $item
+     *
+     * @return bool
+     */
+    public function validate($item = null)
+    {
+        if ($item && $brand = $this->getBrand()) {
+            return $item->brandid == $brand->pk;
+        }
+
+        return false;
     }
 
     public function dataToString()

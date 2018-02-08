@@ -99,10 +99,9 @@ class OrderGroupHelper
 
                 $new_status = OrderStatusModel::objects()->get(['code' => 'P']);
 
-                $log .= "<br /><B>" . $group_model->manufacturer->code . ":</B> cb_status: " . $group_model->status_cb->name . " -> " . $new_status->name;
+                $log .= "<br /><B>" . $group_model->manufacturer->code . ":</B> cb_status: " . $group_model->cb_status_model->name . " -> " . $new_status->name;
 
-                $group_model->cb_status = $new_status->code;
-
+                $group_model->cb_status_model = $new_status;
                 $group_model->save();
 
             } else {

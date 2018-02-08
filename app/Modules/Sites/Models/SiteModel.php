@@ -50,6 +50,17 @@ class SiteModel extends Model
     public static function getFields()
     {
         return [
+            'images' => [
+                'class' => HasManyField::className(),
+                'modelClass' => ImageSModel::className(),
+                'link' => ['storefrontid' => 'id'],
+            ],
+
+            'favicons' => [
+                'class' => HasManyField::className(),
+                'modelClass' => ImageFModel::className(),
+                'link' => ['storefrontid' => 'id'],
+            ],
             'config' => [
                 'class' => HasManyField::className(),
                 'modelClass' => SiteConfigModel::className(),

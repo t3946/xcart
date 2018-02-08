@@ -12,7 +12,7 @@ return [
     'Demo',
     'Dashboard',
     'Distributor',
-    'Product',
+    'Goods',
     'Order',
     'Shipping',
     'User'   => ['sessionTime' => 15552000],
@@ -23,4 +23,5 @@ return [
     'Brand',
     'Pages',
     'Amp',
+    'PBX',
 ];

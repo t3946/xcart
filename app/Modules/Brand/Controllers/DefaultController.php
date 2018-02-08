@@ -3,9 +3,9 @@ namespace Modules\Brand\Controllers;
 
 use Mindy\QueryBuilder\Expression;
 use Modules\Brand\Models\BrandModel;
-use Modules\Product\Controllers\AbstractCatalogController;
-use Modules\Product\Models\CategoryModel;
-use Modules\Product\Models\ProductModel;
+use Modules\Goods\Controllers\AbstractCatalogController;
+use Modules\Goods\Models\CategoryModel;
+use Modules\Goods\Models\ProductModel;
 use Xcart\App\Components\Breadcrumbs;
 use Xcart\App\Main\Xcart;
 

@@ -1,5 +1,5 @@
-<section class="pager-container">
-    <section class="row">
+
+    <section class="row pager-container">
         <section class="total columns large-2">Total: {$view->getTotal()}</section>
 
         <ul class="pager columns large-8 no-bullet">
@@ -59,4 +59,3 @@
             {insert "core/pager/sizes.tpl"}
         </section>
     </section>
-</section>

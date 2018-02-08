@@ -1,0 +1,423 @@
+@media only screen and (min-width: $break-medium-xs){
+  #main_footer{
+    .mobile{
+      display: none;
+    }
+
+    .bottom-nav{
+      display:  block;
+      background: $btn_yellow;
+      padding: 17px 10px 3px;
+
+      .bottom-nav__column{
+        padding-right: 14px;
+        margin-right: 3px;
+
+        &:last-child{
+          width: 16.7%;
+        }
+
+        a{
+          color: $black;
+        }
+
+        .bottom-nav__column_title{
+          font-size: 1em;
+          font-weight: 700;
+          margin: 0 0 7px;
+        }
+
+        .bottom-nav__item{
+          display: block;
+          margin: 0 0 15px;
+          line-height: 1.2;
+          font-size: 0.6875em;
+        }
+      }
+    }
+
+    .bottom-info{
+      padding: 17px 10px 0;
+
+      .logo-s3stores{
+        width: 82px;
+        height: 48px;
+      }
+
+      .web-orders{
+        margin-left: 3px;
+
+        .web-orders__container{
+          position: relative;
+          top: -6px;
+          padding-left: 6px;
+          color: $btn_yellow;
+          display: inline-block;
+          line-height: 1.5;
+
+          .web-orders__caption{
+            font-size: 1em;
+            font-weight: 900;
+          }
+
+          .web-orders__description{
+            font-size: 0.75em;
+          }
+        }
+
+        &:before{
+          content: '';
+          display: inline-block;
+          background: url("../images/home/1280/web_order.svg");
+          width: 33px;
+          height: 37px;
+        }
+      }
+
+      .find-local-btn{
+        height: 42px;
+        line-height: 15px;
+        padding: 6px 20px 6px 55px;
+        font-size: 0.75em;
+
+        &:before{
+          width: 40px;
+          height: 40px;
+          background-size: 30px 30px;
+          background-position: 5px 5px;
+
+        }
+      }
+
+      .contact-row{
+        padding: 18px 0 32px;
+        border-bottom: 2px solid $blue_2a4;
+
+        .bottom-info__title{
+          font-size: 1rem;
+          margin-bottom: 10px;
+        }
+
+        .telephone{
+          margin: 0;
+
+          span{
+            font-size: 0.8125em;
+            line-height: 2.08;
+            text-decoration: none;
+
+            &.telephone__free{
+              font-size: 1.0625em;
+            }
+
+            a{
+              line-height: 1;
+            }
+          }
+        }
+
+        .contact-us{
+          margin-left: 6px;
+          font-size: 0.6875em;
+
+          li{
+            display: block;
+            line-height: 2.6;
+            margin: 0;
+
+            a{
+              color: $light_blue;
+              line-height: 1;
+            }
+          }
+        }
+
+        .social-subscribe{
+
+          .follow-us{
+
+            .col-sm-offset-5{
+              margin-left: 7.5%;
+            }
+
+            .follow-us__link{
+              width: 36px;
+            }
+
+            .popover{
+              @include border-radius(3px);
+              @include box-shadow(0 1px 2px rgba(0, 0, 0, 0.15));
+
+              .popover-content{
+                padding: 12px 14px;
+                font-weight: 700;
+                font-size: 0.875em;
+              }
+
+              .arrow{
+                margin-left: -12px;
+                bottom: -14px;
+                border-top-color: transparent;
+
+                &:after{
+                  border-width: 5px;
+                  margin-left: -4px;
+                  bottom: 4px;
+                }
+              }
+            }
+          }
+
+          .subscribe{
+            margin-top: 32px;
+
+            .subscribe__caption{
+              margin-bottom: 0;
+              line-height: 1.7;
+            }
+
+            input{
+              height: 40px;
+
+              &.subscribe__email{
+                font-size: 0.9375em;
+                padding: 0 7px;
+                width: 73.5%;
+              }
+
+              &.subscribe__submit{
+                font-size: 1em;
+                padding: 0 1%;
+                width: 26.5%;
+              }
+            }
+          }
+        }
+      }
+
+      .payment-confidence-row{
+        padding: 19px 0 16px;
+        border-bottom: 2px solid $blue_2a4;
+
+        h3{
+          font-size: 1rem;
+          margin-bottom: 13px;
+        }
+
+        .payment-block{
+          @media screen and (max-width: $break-medium - 1px){
+            width: 80%;
+          }
+        }
+
+        .icons-container{
+          margin-bottom: 16px;
+        }
+
+        .payment-icons{
+          .payment-icons__main{
+            display: inline-block;
+            width: auto;
+          }
+
+          .payment-icons__po{
+            display: inline-block;
+            width: 15%;
+          }
+
+          .payment__link{
+            width: 39px;
+            height: auto;
+          }
+
+          .payment__span{
+            display: block;
+            font-size: 0.6875em;
+
+            a{
+              color: $light_blue;
+            }
+
+            &.payment__span_po{
+              width: 150%;
+            }
+          }
+        }
+
+        .confidence-block{
+          display: none;
+        }
+
+      }
+
+      .switch-settings-bottom {
+        margin-top: 0;
+
+        .dropup{
+          width: 128px;
+          margin-top: 0;
+
+          &.open{
+
+            .switch-settings_selected{
+
+              &:after{
+
+              }
+
+            }
+          }
+
+          &.dropup-language{
+
+          }
+
+          &.dropdown-currency{
+          }
+
+          .dropdown-toggle{
+
+            padding: 14px 10px 14px 9px;
+
+            .switch-settings_selected{
+              font-size: 0.875em;
+
+              &:before{
+                width: 16px;
+                height: 11px;
+                background-size: 16px 11px;
+                margin-bottom: 0;
+              }
+
+              &:after{
+                margin-left: 15px;
+                width: 10px;
+              }
+            }
+
+          }
+
+          .dropdown-menu{
+            li{
+              a{
+                font-size: 0.875em;
+
+                &:before{
+                  width: 16px;
+                  height: 11px;
+                  background-size: 16px 11px;
+                  margin-bottom: 0;
+                }
+
+                &:hover{
+
+                }
+              }
+            }
+          }
+        }
+      }
+
+      .switch-settings-bottom-container {
+        height: 52px;
+
+        .switch-settings-bottom {
+          margin-top: 0;
+
+          .dropup {
+            width: 128px;
+            margin-top: 0;
+
+            &.open {
+
+              .switch-settings_selected {
+
+                &:after {
+
+                }
+
+              }
+            }
+
+            &.dropup-language {
+
+            }
+
+            &.dropdown-currency {
+
+            }
+
+            .dropdown-toggle {
+
+              padding: 14px 10px 14px 9px;
+
+              .switch-settings_selected {
+                font-size: 0.875em;
+
+                &:before {
+                  width: 16px;
+                  height: 11px;
+                  background-size: 16px 11px;
+                  margin-bottom: 0;
+                }
+
+                &:after {
+                  margin-left: 15px;
+                  width: 10px;
+
+                }
+              }
+
+            }
+
+            .dropdown-menu {
+              li {
+                a {
+                  font-size: 0.875em;
+
+                  &:before {
+                    width: 16px;
+                    height: 11px;
+                    background-size: 16px 11px;
+                    margin-bottom: 0;
+                  }
+
+                  &:hover {
+
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .copyright{
+      padding: 8px 1.45%;
+
+      .policy-nav{
+
+        li{
+          margin: 0 !important;
+
+          &.policy-nav__terms-of-use{
+            padding-right: 7.3%;
+            padding-left: 30.5%;
+          }
+
+          a{
+            font-size: 0.6875em;
+          }
+        }
+      }
+
+      .copyright__text{
+        margin: 0;
+
+        small{
+        }
+      }
+    }
+  }
+}

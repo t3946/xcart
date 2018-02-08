@@ -10,7 +10,7 @@
 
                 <div class="columns large-6">
                     <select type="text" name="report_select" id="report_select" class="big" autocomplete="off">
-                        <option>Select report</option>
+                        <option></option>
                         {foreach $reports as $report}
                             <option value="{$report->id}" {if ($model && $report->id == $model->id)}selected="selected"{/if}>
                                 {$report->name}

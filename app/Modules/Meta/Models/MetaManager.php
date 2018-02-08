@@ -14,7 +14,7 @@ class MetaManager extends Manager
     {
         /** @var \Modules\Sites\SitesModule $module */
         if ($module = Xcart::app()->getModule('Sites')) {
-            $this->filter(['site_code' => $module->getSite()->code]);
+            $this->filter(['site_id' => $module->getSite()->pk]);
         }
 
         return $this;
