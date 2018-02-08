@@ -71,7 +71,7 @@ class AmpController extends FrontendController
                                       ->all();
             }
 
-            echo $this->render('product/amp.tpl', [
+            $this->display('product/amp.tpl', [
                 'model' => $model,
                 'category' => $category,
                 'categories' =>$categories,

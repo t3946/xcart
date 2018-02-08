@@ -34,7 +34,7 @@ class DefaultController extends AbstractCatalogController
         $breadcrumbs = new Breadcrumbs();
         $breadcrumbs->add('Brands', 'brand:list');
 
-        echo $this->render('brand/list.tpl', [
+        $this->display('brand/list.tpl', [
             'breadcrumbs' => $breadcrumbs
         ]);
     }
