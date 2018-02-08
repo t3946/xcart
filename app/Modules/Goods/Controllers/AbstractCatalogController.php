@@ -34,8 +34,6 @@ abstract class AbstractCatalogController extends FrontendController
         }
 
         $this->sort = Xcart::app()->request->session->get('category_sort', ProductSortHelper::$default);
-
-        parent::beforeAction($action, $params);
     }
 
 

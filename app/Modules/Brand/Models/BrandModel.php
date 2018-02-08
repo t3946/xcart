@@ -160,14 +160,14 @@ class BrandModel extends Model
     {
         if ($this->brandid) {
 
-            $url = Xcart::app()->router->url('catalog:product:view', ['id' => $this->pk, 'slug' => $this->clean_url->getSlugPart()]);
+            $url = Xcart::app()->router->url('brand:view', ['id' => $this->pk, 'slug' => $this->clean_url->getSlugPart()]);
 
             if ($full) {
                 $site = $this->storefront->limit(1)->get();
 
                 $url = '//' . $site->domain . $url;
             }
-
+            http://via.placeholder.com/200x200/efefef/a6a6a6/?text=No+image
             return $url;
         }
 

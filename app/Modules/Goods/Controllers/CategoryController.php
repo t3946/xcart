@@ -30,6 +30,11 @@ class CategoryController extends AbstractCatalogController
 
     public function getQS($data)
     {
-        return parent::getQS($data)->filter(['categories__categoryid__in' => CategoryModel::objects($data)->descendants(true)->select('pk')->order([])]);
+        return parent::getQS($data)
+            ->filter([
+                'categories__lft__gte' => $data->lft,
+                'categories__rgt__lte' => $data->rgt,
+                'categories__root' => $data->root,
+            ]);
     }
 }

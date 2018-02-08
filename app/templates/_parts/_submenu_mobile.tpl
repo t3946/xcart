@@ -1,12 +1,12 @@
 {if $items|count}
 <ul class="no-bullet">
     {foreach $items as $item}
-        {if $item->getFromQueryAttribute('pcount')}
+        {if $item->active_product_count}
         <li>
             <a href="{$item->getAbsoluteUrl()}">
                 {$item->category}
                 <span class="count">
-                    ({$item->getFromQueryAttribute('pcount')})
+                    ({$item->active_product_count})
                 </span>
             </a>
         </li>

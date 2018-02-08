@@ -136,39 +136,16 @@ class CategoryModel extends TreeModel
     {
         $qs = static::objects()
                     ->descendants(false, $level)
-                    ->filter(['avail' => 'Y']);
+                    ->filter([
+                        'avail' => 'Y',
+                    ]);
 
         if ($withProductCount) {
-            $ta = $qs->getTableAlias();
-
-            $pcountSql = ProductModel::objects()
-                        ->with(['categories'])
-                        ->filter([
-                            'forsale' => 'Y',
-                            'categories__lft__gte' => new Expression("{{category}}.lft"),
-                            'categories__rgt__lte' => new Expression("{{category}}.rgt"),
-                            'categories__root' => new Expression("{{category}}.root"),
-                        ])
-                        ->countSql();
-
-            $pcountSql = str_replace($ta, 'cp', $pcountSql);
-            $pcountSql = str_replace("{{category}}", $ta, $pcountSql);
-
-            $qs->group(['categoryid']);
-            $qs->select([
-                'pcount' => $pcountSql,
-                '*',
-            ]);
-
-            $qs->having(['pcount__gt' => 0]);
+            $qs->filter(['active_product_count__gt' => 0,]);
         }
 
         if ($tree) {
             $qs->asTree();
-        }
-
-        if ($cache) {
-            $qs->cache(300);
         }
 
         return $qs->all();

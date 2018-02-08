@@ -83,7 +83,7 @@ class ProductFilterHelper
             $brands = $tqs->select(['name' => 'brand__brand', 'value' => 'brandid', new Count('*', 'count')])
                           ->group(['brandid'])
                           ->order(['brand__brand'])
-                          ->asArray()->cache(300)->all();
+                          ->asArray()->all();
 
             $changed = false;
             foreach ($brands as $key => $brand) {
@@ -105,21 +105,21 @@ class ProductFilterHelper
             $ftqs = clone $this->getFiltrateQS();
             $tqs = clone $this->qs;
             $tqs = $tqs->filter(['filter_values__fv_active' => 'Y'])->order([]);
-            $f_ids = $tqs->cache(300)->group(['filter_values__f_id'])->valuesList(['filter_values__f_id'], true);
+            $f_ids = $tqs->group(['filter_values__f_id'])->valuesList(['filter_values__f_id'], true);
 
             if ($f_ids) {
                 $filters = FilterModel::objects()
                                       ->filter(['f_active' => 'Y',
                                                 'f_id__in' => $f_ids])
                                       ->order(['f_order_by'])
-                                      ->cache(300)->valuesList([]);
+                                      ->valuesList([]);
 
                 if ($filters) {
                     $fv_count = [];
                     $fvalues = $ftqs->filter(['filter_values__fv_active' => 'Y'])
                                   ->select(['filter_values__fv_id', new Count('*', 'count')])
                                   ->group(['filter_values__fv_id'])
-                                  ->asArray()->cache(300)->all();
+                                  ->asArray()->all();
 
                     foreach ($fvalues as $value) {
                         $fv_count[$value['fv_id']] = $value['count'];
@@ -129,7 +129,7 @@ class ProductFilterHelper
                                   ->select(['filter_values__fv_name', 'filter_values__fv_id', 'filter_values__f_id', new Count('*', 'count')])
                                   ->order(['filter_values__f_id','filter_values__fv_order_by','filter_values__fv_name'])
                                   ->group(['filter_values__fv_id'])
-                                  ->asArray()->cache(600)->all();
+                                  ->asArray()->all();
 
 
                     foreach ($filters as $filter)

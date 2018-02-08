@@ -3,7 +3,7 @@
 </div>
 <ul class="accordion" data-accordion data-allow-all-closed="true" data-multi-expand="true">
     {foreach $.getCategoryMenu() as $category}
-        {if $category->getFromQueryAttribute('pcount') > 0}
+        {if $category->active_product_count > 0}
             {set $subcats = $category->getSubcategories()}
             {set $has_childs = ($subcats|count > 0)}
 

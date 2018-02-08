@@ -45,26 +45,11 @@ class DefaultController extends AbstractCatalogController
         $siteModule = Xcart::app()->getModule('Sites');
         $qs = CategoryModel::objects()->filter([
             'categoryid__in' => $this->getQS($data)->select(['categories__categoryid']),
-            'storefrontid' => $siteModule->getSite()->storefrontid
+            'storefrontid' => $siteModule->getSite()->storefrontid,
+            'active_product_count__gt' => 0,
         ]);
 
-        $ta = $qs->getTableAlias();
-
-        $pcountSql = $this->getQS($data)
-            ->with(['categories'])
-            ->filter([
-                'categories__lft__gte' => new Expression("{{category}}.lft"),
-                'categories__rgt__lte' => new Expression("{{category}}.rgt"),
-                'categories__root' => new Expression("{{category}}.root"),
-            ])
-            ->countSql();
-
-        $pcountSql = str_replace($ta, 'cp', $pcountSql);
-        $pcountSql = str_replace("{{category}}", $ta, $pcountSql);
-
-        $qs->group(['categoryid'])
-           ->select(['pcount' => $pcountSql, '*', ]);
-        $categories = $qs->cache(300)->order(['-pcount', 'category'])->all();
+        $categories = $qs->order(['category'])->all();
 
         return [
             'categories' => $categories ? : [],

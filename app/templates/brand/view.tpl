@@ -1,5 +1,5 @@
 {extends  "catalog/base.tpl"}
-{set $brand_page = $model}
+{set $brand = $model}
 
 {if !$.request->getIsAjax()}
     {block "catalog-filter"}
@@ -49,9 +49,9 @@
                                     <div class="column {if $index > 11}more_items{/if}">
                                         <a href="{$item->getAbsoluteUrl()}" class="subcategory_item">
                                             {$item->category}
-                                            {if $item->getFromQueryAttribute('pcount')}
+                                            {if $item->active_product_count}
                                                 <span class="count">
-                                                    ({$item->getFromQueryAttribute('pcount')})
+                                                    ({$item->active_product_count})
                                                 </span>
                                             {/if}
                                         </a>

@@ -9,11 +9,6 @@ use Xcart\App\Orm\Model;
 
 class CartModel extends Model
 {
-    public static function tableName()
-    {
-        return 'xcart_cart';
-    }
-
     public static function getFields()
     {
         return [

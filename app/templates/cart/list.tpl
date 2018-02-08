@@ -53,7 +53,9 @@
                                 <div class="table-column name">
 
                                     <div class="title">
-                                        {$position->object}
+                                        <a href="{$position->object->getAbsoluteUrl()}">
+                                            {$position->object}
+                                        </a>
                                     </div>
 
                                     <div class="code sku show-for-medium">

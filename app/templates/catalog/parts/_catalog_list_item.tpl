@@ -51,18 +51,18 @@
                 {*<a data-tooltip class="has-tip right " title="What is SKU">?</a>*}
             </div>
 
+            {add $brand = $item->cache()->brand}
+
+            {if $brand}
             <div class="brand show-for-small">
-                {if $brand_page!}
-                    {set $brand = $brand_page}
-                {else}
-                    {set $brand = $item->cache()->brand}
-                {/if}
 
                 Brand:
                 <a class="value" itemprop="brand"  href="{$brand->getAbsoluteUrl()}">
                     {$brand->brand}
                 </a>
             </div>
+            {/if}
+
             {if $item->getFrontendDescription()}
                 {set $description = $item->getFrontendDescription()}
 

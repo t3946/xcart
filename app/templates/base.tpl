@@ -1,12 +1,7 @@
 {extends "wrapper.tpl"}
 {block "wrapper"}
 <section id="main_wrapper" class="off-canvas-wrapper">
-    <div class="off-canvas position-left" id="offCanvasLeft" data-off-canvas data-transition="push">
 
-    {cache key = "_parts/_menu_mobile.tpl"}
-        {insert "_parts/_menu_mobile.tpl"}
-    {/cache}
-    </div>
     <div class="off-canvas-content" data-off-canvas-content>
         <header itemscope itemtype="http://schema.org/WPHeader">
             <section class="top-header hide-for-small-only">
@@ -81,7 +76,7 @@
                      data-margin-top="0"
                      data-check-every="0"
                      data-top-anchor="content-wrapper"
-                     {*data-btm-anchor="content"*}
+                        {*data-btm-anchor="content"*}
                 >
                     <section id="search_container" class="desktop_menu_search_cart show-for-large" data-toggler="show-for-large" >
                         <div class="row" >
@@ -94,7 +89,7 @@
                                     </div>
                                 </section>
                                 {*{cache key = '_parts/_menu_desktop.tpl'}*}
-                                    {insert "_parts/_menu_desktop.tpl"}
+                                {insert "_parts/_menu_desktop.tpl"}
                                 {*{/cache}*}
                             </div>
                             <div class="columns small-12 large-7">
@@ -131,6 +126,12 @@
             </section>
         </section>
 
+    </div>
+    <div class="off-canvas position-left" id="offCanvasLeft" data-off-canvas data-transition="push">
+
+    {*{cache key = "_parts/_menu_mobile.tpl"}*}
+        {insert "_parts/_menu_mobile.tpl"}
+    {*{/cache}*}
     </div>
 </section>
 

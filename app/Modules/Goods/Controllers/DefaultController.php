@@ -42,9 +42,9 @@ class DefaultController extends FrontendController
         }
 
 
-//        if (!$model->checkSite($site->storefrontid)) {
-//            $this->redirect($model->getAbsoluteUrl(true));
-//        }
+        if (!$model->checkSite($site->pk)) {
+            $this->redirect($model->getAbsoluteUrl(true), 301);
+        }
 
         $this->setMetaTemplate('products:base', [
             'model' => $model,
@@ -58,20 +58,6 @@ class DefaultController extends FrontendController
             'tabs' => TabDataHelper::getTabsFromManufacturer($model->manufacturerid),
         ]);
 
-//        if (!Xcart::app()->cart->has($model)) {
-//            Xcart::app()->cart->add($model);
-//        }
-
-//        foreach (Xcart::app()->cart->getItems() as $cartItem) {
-//            func_dump((string)"{{$cartItem->getQuantity()}}" . $cartItem->getObject() );
-//        }
-//
-//
-//        func_dump(Xcart::app()->cart->getQuantity());
-//        func_dump(Xcart::app()->cart->getTotal());
-
-
-//        func_dump($model);
 
 //        SurfingHelper::logSurfPath(['resource_type' => SurfPathModel::GOAL_TYPE_PRODUCT, 'resource_id' => $model->pk]);
     }
