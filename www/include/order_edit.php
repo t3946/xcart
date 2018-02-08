@@ -1111,9 +1111,7 @@ if ($REQUEST_METHOD == "POST")
             }
         }
 
-//        d($order['coupon'], $cart_tmp, $coupon);
-
-        if (!empty($order['coupon']) || $coupon) {
+        if (!empty($order['coupon']) && $coupon) {
             if (empty($order['coupon']) && $ckmodel = \Modules\Cart\Models\CouponKitModel::objects()->get(['code' => $coupon])) {
                 $cart_tmp['coupon'] = $coupon;
 
