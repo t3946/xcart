@@ -1561,7 +1561,7 @@ multirowInputSets['add_additional_fee_to_order'].noCloneContent = 1;
         <td colspan="11">
             {include file="main/subheader.tpl" title="Append coupon"}
 
-            <input type="text" name="coupon">
+            <input type="text" name="coupon_admin">
         </td>
     </tr>
 
