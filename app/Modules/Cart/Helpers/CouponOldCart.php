@@ -131,11 +131,13 @@ class CouponOldCart
 
                 static::$coupon = $model->coupon;
             }
-            elseif ($this->code) {
-                static::$coupon = CouponKitModel::objects()->filter(['active' => true, 'code' => $this->code])->get();
-            }
-            else if ( $code = Xcart::app()->request->session->get('coupon_code') ) {
-                static::$coupon = CouponKitModel::objects()->filter(['active' => true, 'code' => $code])->get();
+            else {
+                if ($this->code) {
+                    static::$coupon = CouponKitModel::objects()->filter(['active' => true, 'code' => $this->code])->get();
+                }
+                else if ( $code = Xcart::app()->request->session->get('coupon_code') ) {
+                    static::$coupon = CouponKitModel::objects()->filter(['active' => true, 'code' => $code])->get();
+                }
             }
         }
 
