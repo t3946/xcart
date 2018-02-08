@@ -3,6 +3,8 @@
 namespace Xcart;
 
 
+use Modules\Core\Helpers\Cache;
+
 class Filter extends Data
 {
     /**
@@ -197,7 +199,7 @@ SQL;
                 $sSQL .= " limit {$limit}";
             }
 
-            $aResults = SQLBuilder::getInstance()->setQuery($sSQL)->query()->getQueryResult();
+            $aResults = SQLBuilder::getInstance()->setQuery($sSQL)->cache(Cache::CACHE_HALF_DAY)->query()->getQueryResult();
 
             if (!empty($aResults)) {
                 foreach ($aResults as $aResult) {

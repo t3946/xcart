@@ -14,6 +14,7 @@ class SQLBuilder
     private $sLimit = null;
     private $sqlQuery = null;
     private $aSqlQueryResult = [];
+    private $cacheTime = null;
 
     public function __construct()
     {
@@ -33,6 +34,7 @@ class SQLBuilder
         $this->sLimit = null;
         $this->sqlQuery = null;
         $this->aSqlQueryResult = [];
+        $this->cacheTime = null;
         return $this;
     }
 
@@ -140,9 +142,9 @@ class SQLBuilder
     {
         $this->generateSQL();
         if (!empty($hashColumn)) {
-            $this->aSqlQueryResult = func_query_hash($this->sqlQuery, $hashColumn);
+            $this->aSqlQueryResult = func_query_hash($this->sqlQuery, $hashColumn, true, false, $this->cacheTime);
         } else
-            $this->aSqlQueryResult = func_query($this->sqlQuery);
+            $this->aSqlQueryResult = func_query($this->sqlQuery, $this->cacheTime);
         return $this;
     }
 
@@ -155,7 +157,7 @@ class SQLBuilder
     {
         $this->setLimit('1');
         $this->generateSQL();
-        $this->aSqlQueryResult = func_query_first($this->sqlQuery);
+        $this->aSqlQueryResult = func_query_first($this->sqlQuery, $this->cacheTime);
         return $this;
     }
 
@@ -197,6 +199,13 @@ class SQLBuilder
     public function getQueryResultFirst()
     {
         return reset($this->aSqlQueryResult);
+    }
+
+    public function cache(int $time = 0):self
+    {
+        $this->cacheTime = $time;
+
+        return $this;
     }
 
 }

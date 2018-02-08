@@ -14,7 +14,7 @@ function db_query($query, $cache = null)
 
     if ($cache && \Xcart\Connection::getInstance()->getConfiguration()->getResultCacheImpl()) {
         if (is_bool($cache)) {
-            $cache = 3600;
+            $cache = \Modules\Core\Helpers\Cache::CACHE_HOUR;
         }
 
         $qcp = new Doctrine\DBAL\Cache\QueryCacheProfile($cache);
