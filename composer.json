@@ -1,0 +1,90 @@
+{
+    "config": {
+        "sort-packages": true,
+        "vendor-dir": "app/include/vendors"
+    },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/tsukasa-mixer/QueryBuilder"
+        }
+    ],
+    "require": {
+        "aws/aws-sdk-php": "^2.8",
+        "caponica/amazon-mws-complete": "dev-master",
+        "cocur/slugify": "^3.0",
+        "dariuszp/cli-progress-bar": "^1.0",
+        "fenom/fenom": "^2.11",
+        "gabrielbull/ups-api": "^0.4.0",
+        "geoip2/geoip2": "^2.7",
+        "google/apiclient": "^2.0",
+        "hellogerard/jobby": "^3.3",
+        "imagine/imagine": "^0.7.1",
+        "jaybizzle/crawler-detect": "^1.2",
+        "league/flysystem": "^1.0",
+        "mindy/query_builder": "dev-master_5.4",
+        "mobiledetect/mobiledetectlib": "^2.8",
+        "monolog/monolog": "^1.22",
+        "omnipay/paypal": "v2.6.3",
+        "paypal/rest-api-sdk-php": "*",
+        "swiftmailer/swiftmailer": "^6",
+        "symfony/http-foundation": "^2.8",
+        "symfony/polyfill-mbstring": "^1.6",
+        "symfony/validator": "^2.8",
+        "theiconic/php-ga-measurement-protocol": "^1.2",
+        "true/punycode": "^2.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "Xcart\\": "app/include/Xcart",
+            "Modules\\": "app/Modules",
+            "Xcart\\External_Product_Verification\\": "www/modules/External_Product_Verification/include",
+            "Xcart\\External_Marketplaces\\": "www/modules/External_Marketplaces/include",
+            "Omnipay\\BluePay\\" : "app/Modules/Payment/Gateways/Omnipay/BluePay",
+            "Omnipay\\PayPal\\" : "app/Modules/Payment/Gateways/Omnipay/PayPal"
+        },
+        "classmap": [
+            "app/include/vendors/caponica/amazon-mws-complete/src/AmazonPhpClientLibrary/FBAOutboundServiceMWS",
+            "app/include/vendors/caponica/amazon-mws-complete/src/AmazonPhpClientLibrary/MarketplaceWebService",
+            "app/include/vendors/caponica/amazon-mws-complete/src/AmazonPhpClientLibrary/FBAInventoryServiceMWS",
+            "app/include/templater/templater.php",
+            "app/include/smarty/Smarty.class.php",
+            "app/include/smarty/Smarty_Compiler.class.php",
+            "app/include/smarty/Config_File.class.php"
+        ],
+        "files": [
+            "app/include/func/func.core.php",
+            "app/include/func/func.amazon.php",
+            "app/include/func/func.backoffice.php",
+            "app/include/func/func.cart.php",
+            "app/include/func/func.category.php",
+            "app/include/func/func.clean_urls.php",
+            "app/include/func/func.crypt.php",
+            "app/include/func/func.db.php",
+            "app/include/func/func.export.php",
+            "app/include/func/func.files.php",
+            "app/include/func/func.fraud.php",
+            "app/include/func/func.froogle.php",
+            "app/include/func/func.gd.php",
+            "app/include/func/func.http.php",
+            "app/include/func/func.https_curl.php",
+            "app/include/func/func.https_httpscli.php",
+            "app/include/func/func.https_libcurl.php",
+            "app/include/func/func.https_openssl.php",
+            "app/include/func/func.https_ssleay.php",
+            "app/include/func/func.image.php",
+            "app/include/func/func.import.php",
+            "app/include/func/func.mail.php",
+            "app/include/func/func.order.php",
+            "app/include/func/func.order_edit.php",
+            "app/include/func/func.payment.php",
+            "app/include/func/func.product.php",
+            "app/include/func/func.snapshots.php",
+            "app/include/func/func.taxes.php",
+            "app/include/func/func.templater.php",
+            "app/include/func/func.tests.php",
+            "app/include/func/func.user.php",
+            "app/include/func/func.xml.php"
+        ]
+    }
+}
