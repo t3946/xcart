@@ -1167,7 +1167,7 @@ multirowInputSets['track_{$m_id}'].noCloneContent = 1;
           {include file="main/order_status.tpl" status=$v.cb_status mode="select" name="groups[`$m_id`][cb_status]" status_type="CB" extra=" id='groups_cb_status_`$m_id`'"}
         {/if}
 
-          {if $v.cb_status == 'N' || empty($v.cb_status)}
+          {if $v.cb_status == 'I' ||$v.cb_status == 'Q' ||$v.cb_status == 'AP' ||$v.cb_status == 'N' || empty($v.cb_status)}
               {assign var=bCanAcceptCoupon value='Y'}
           {/if}
 
