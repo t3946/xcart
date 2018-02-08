@@ -122,7 +122,7 @@ elseif ($f_mode == "f_search") {
 
     if ($count_filter_selected_brandids == "1" && $cidev_clean_url_type == "C") {
         $b_id = $filter_selected_brandids[0];
-        $brand_clean_url = func_query_first_cell("SELECT clean_url FROM  $sql_tbl[clean_urls] WHERE resource_type='M' AND resource_id='$b_id'", true);
+        $brand_clean_url = func_query_first_cell("SELECT clean_url FROM  $sql_tbl[clean_urls] WHERE resource_type='M' AND resource_id='$b_id'", \Modules\Core\Helpers\Cache::CACHE_DAY);
         $cidev_redirect_url .= $brand_clean_url . "/";
     }
 }
@@ -132,7 +132,7 @@ if ($cat_with_one_brand_filter != 'Y') {
         $count_filter_selected_brandids = count($filter_selected_brandids);
         if ($count_filter_selected_brandids == "1" && $cidev_clean_url_type == "C") {
             $b_id = $filter_selected_brandids[0];
-            $brand_clean_url = func_query_first_cell("SELECT clean_url FROM  $sql_tbl[clean_urls] WHERE resource_type='M' AND resource_id='$b_id'", true);
+            $brand_clean_url = func_query_first_cell("SELECT clean_url FROM  $sql_tbl[clean_urls] WHERE resource_type='M' AND resource_id='$b_id'", \Modules\Core\Helpers\Cache::CACHE_DAY);
             $cidev_redirect_url = $xcart_web_dir . "/" . $dispatched_request . "/" . $brand_clean_url . "/";
             if (!empty($_GET)) {
                 $aParams = $_GET;
@@ -168,7 +168,7 @@ else {
 if (!empty($filter_selected_brandids) && is_array($filter_selected_brandids)) {
 
     $imploded_brandids = implode(",", $filter_selected_brandids);
-    $filter_selected_brands = func_query("SELECT brandid, brand FROM $sql_tbl[brands] WHERE brandid IN ($imploded_brandids) ORDER BY brand", true);
+    $filter_selected_brands = func_query("SELECT brandid, brand FROM $sql_tbl[brands] WHERE brandid IN ($imploded_brandids) ORDER BY brand", \Modules\Core\Helpers\Cache::CACHE_DAY);
 
     if (!empty($filter_selected_brands) && is_array($filter_selected_brands)) {
         foreach ($filter_selected_brands as $k => $v) {

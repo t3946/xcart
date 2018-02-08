@@ -42,6 +42,8 @@ if (!defined('XCART_SESSION_START')) {
 x_session_register('bulk_search_query');
 x_session_register('bulk_search_query_ids');
 
+$bAllowCache = !in_array($current_area, array('A', 'P'));
+
 if ($current_area == 'C' && $search_all_website && $mode_load_next_productids != "Y") {
     x_session_register('sfids_of_products');
 }
@@ -1186,7 +1188,7 @@ if ($mode == "search") {
      * так-же поднимает товары похожие на уже просмотренные в данном разделе.
      */
     $elastic_sort = (empty($data["sort_field"]) || $data["sort_field"] == 'orderby');
-    if ($elastic_sort)
+    if (!in_array($current_area, array('A', 'P')) && $elastic_sort)
     {
         $search_related_products_ids = [];
         $related_ids = [];
@@ -1252,7 +1254,7 @@ if ($mode == "search") {
     # Calculate the number of rows in the search results
     #
     if (empty($category)) {
-        $_res = db_query($search_query_count_NEW);
+        $_res = db_query($search_query_count_NEW, $bAllowCache);
 
         $total_items = db_num_rows($_res);
         db_free_result($_res);
@@ -1281,7 +1283,8 @@ if ($mode == "search") {
         $having_count_distinct_f_id = "";
         $left_join_price = "";
 
-        $all_brandids_in_products_arr = func_query($search_query_brandids);
+        $bBrandCache = ($current_area == "C")?\Modules\Core\Helpers\Cache::CACHE_DAY:false;
+        $all_brandids_in_products_arr = func_query($search_query_brandids,$bBrandCache);
 
         if (!empty($all_brandids_in_products_arr)) {
 
@@ -1291,7 +1294,7 @@ if ($mode == "search") {
             }
 
             $imploded_brandids = implode(",", $all_brandids_in_products);
-            $filter_found_brands = func_query("SELECT brandid, brand FROM $sql_tbl[brands] WHERE brandid IN ($imploded_brandids) ORDER BY brand");
+            $filter_found_brands = func_query("SELECT brandid, brand FROM $sql_tbl[brands] WHERE brandid IN ($imploded_brandids) ORDER BY brand",$bBrandCache);
 
             $smarty->assign("filter_found_brands", $filter_found_brands);
 
@@ -1507,12 +1510,12 @@ if ($mode == "search") {
 
                 $search_query .= " LIMIT $first_page, $objects_per_page";
 
-                $products = func_query($search_query);
+                $products = func_query($search_query, $bAllowCache);
 
                 $max_fba = 5;
                 $sql_fba = "{$search_query_fba} order by s.in_list_showed ASC, RAND() ASC limit {$max_fba}";
 
-                if (!defined('IS_ROBOT') && $products_fba = func_query($sql_fba))
+                if (!defined('IS_ROBOT') && $products_fba = func_query($sql_fba, $bAllowCache))
                 {
                     foreach ($products as $product) {
                         for ($i = 0; $i < count($products_fba); $i++) {
@@ -1549,9 +1552,11 @@ if ($mode == "search") {
             if (!empty($products) && $current_area != 'C') {
                 foreach ($products as $k => $v) {
                     $add_cats = func_query_column('SELECT categoryid FROM ' . $sql_tbl['products_categories'] . ' WHERE productid="' . $v['productid'] . '" AND main<>"Y"');
+
                     if (is_array($add_cats) && !empty($add_cats)) {
                         $products[$k]['add_cats'] = implode(',', $add_cats);
                     }
+
                     $products[$k]['main_cat'] = func_query_first_cell('SELECT categoryid FROM ' . $sql_tbl['products_categories'] . ' WHERE productid="' . $v['productid'] . '" AND main="Y"');
                 }
             }
