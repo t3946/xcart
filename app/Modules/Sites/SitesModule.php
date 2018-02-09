@@ -70,7 +70,7 @@ class SitesModule extends Module
                 $this->setSelectedSite(SiteModel::objects()->get(['pk' => $sf_id]));
             }
             else {
-               $this->setSelectedSite($this->getSite());
+                $this->setSelectedSite($this->getSite());
             }
         }
 
