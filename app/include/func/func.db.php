@@ -14,7 +14,7 @@ function db_query($query, $cache = null)
 
     if ($cache && \Xcart\Connection::getInstance()->getConfiguration()->getResultCacheImpl()) {
         if (is_bool($cache)) {
-            $cache = 3600;
+            $cache = \Modules\Core\Helpers\Cache::CACHE_HOUR;
         }
 
         $qcp = new Doctrine\DBAL\Cache\QueryCacheProfile($cache);
@@ -353,13 +353,13 @@ function func_query_first_cell_param($query, array $params, array $types = [])
  * @throws \Doctrine\DBAL\DBALException
  * @deprecated use func_query_column_param
  */
-function func_query_column($query, $column = 0)
+function func_query_column($query, $column = 0, $cache = false)
 {
     $result = [];
 
     $fetch_func = is_int($column) ? 'db_fetch_row' : 'db_fetch_array';
 
-    if ($p_result = db_query($query)) {
+    if ($p_result = db_query($query, $cache)) {
         while ($row = $fetch_func($p_result)) {
             $result[] = $row[$column];
         }

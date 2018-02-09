@@ -11,6 +11,7 @@ use Xcart\App\Orm\Fields\DateTimeField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\HasToOneField;
 use Xcart\App\Orm\Model;
+use Xcart\Logs;
 
 /**
  * Class CouponOrderModel
@@ -80,6 +81,8 @@ class CouponOrderModel extends Model
 
         if (!Cli::isCli()) {
             Xcart::app()->request->session->remove('coupon_code');
+
+            Logs::_log('orders', $this->order_id, Logs::LOG_TYPE_XCART, "Add coupon: {$this->coupon->code}", Xcart::app()->user->login);
         }
     }
 }

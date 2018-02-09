@@ -21,7 +21,7 @@ else {
     $sf_condition = '';
 }
 
-$brands_products = func_query_hash($brandidssql, 'brandid', false, true, true);
+$brands_products = func_query_hash($brandidssql, 'brandid', false, true, \Modules\Core\Helpers\Cache::CACHE_DAY);
 $brands_menu = count($brands_products);
 
 if ($brands_menu > 0) {
@@ -32,7 +32,7 @@ if ($brands_menu > 0) {
         . " FROM $sql_tbl[brands] "
         . " /*LEFT JOIN $sql_tbl[brands_lng] ON $sql_tbl[brands].brandid = $sql_tbl[brands_lng].brandid AND $sql_tbl[brands_lng].code = '$shop_language'*/"
         . " WHERE $sql_tbl[brands].avail = 'Y' AND $sql_tbl[brands].brandid IN ('" . implode("', '", array_keys($brands_products)) . "')"
-        . " ORDER BY orderby, brand" . (($config["Brands"]["brands_limit"] > 0) ? " LIMIT " . $config["Brands"]["brands_limit"] : ""), true);
+        . " ORDER BY orderby, brand" . (($config["Brands"]["brands_limit"] > 0) ? " LIMIT " . $config["Brands"]["brands_limit"] : ""), \Modules\Core\Helpers\Cache::CACHE_HALF_DAY);
 
     $smarty->assign("brands_menu", $brands_menu);
 
