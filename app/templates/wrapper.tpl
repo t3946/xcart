@@ -25,9 +25,6 @@
     {*<meta name="name" itemprop='name' content="S3 Stores">*}
     <link rel="shortcut icon" href="/favicon.png" type="image/png" />
 
-    {block 'seo'}{meta controller=$this!:null}{/block}
-
-
     <script type="text/javascript">
         window['app'] = {
             afterReady:[],
@@ -63,6 +60,7 @@
 
     {*<script src="/static/frontend/dist/js/vendors.js?v={frontend_version resource='vendors.js'}" defer></script>*}
 
+    {block 'seo'}{meta controller=$this!:null}{/block}
     {block 'head'}{/block}
 
     {get_assets:raw type='css' position='head'}

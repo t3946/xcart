@@ -167,8 +167,10 @@ class Controller
     {
         if (Xcart::app()->hasComponent('middleware')) {
 
-            Xcart::app()->middleware->processView($this->getRequest(), $out);
-            Xcart::app()->middleware->processResponse($this->getRequest());
+            d($this->getRequest());
+
+            Xcart::app()->middleware->processView($this->getRequest()->getRequest(), $out);
+            Xcart::app()->middleware->processResponse($this->getRequest()->getRequest());
         }
 
         echo $out;
