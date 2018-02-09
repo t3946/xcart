@@ -275,6 +275,15 @@ class HttpRequest extends Request
         }
     }
 
+    public function getDomain()
+    {
+        if ($host = $this->getHost()) {
+            return current(explode(':', $host));
+        }
+
+        return null;
+    }
+
     /**
      * Returns the schema and host part of the current request URL.
      * The returned URL does not have an ending slash.

@@ -3,9 +3,9 @@
 
 namespace Modules\Sites\Helpers;
 
-use HttpRequest;
 use Modules\Sites\Models\SiteModel;
 use Xcart\App\Main\Xcart;
+use Xcart\App\Request\HttpRequest;
 
 class CurrentSiteHelper
 {
@@ -14,7 +14,7 @@ class CurrentSiteHelper
         /** @var HttpRequest $request */
         /** @var SiteModel $modelClass */
         $modelClass = Xcart::app()->getModule('Sites')->modelClass;
-        $model = $modelClass::objects()->filter([ 'domain' => static::decode($request->getHost()) ])->get();
+        $model = $modelClass::objects()->filter([ 'domain' => static::decode( $request->getDomain() ) ])->get();
 
         return $model;
     }
@@ -27,9 +27,8 @@ class CurrentSiteHelper
         else if (class_exists('\True\Punycode')) {
             return (new \TrueBV\Punycode(Xcart::app()->locale['charset']))->decode($value);
         }
-        else {
-//            Xcart::app()->logger->error("CurrentSiteMiddleware required php intl or \\True\\Punycode packages");
-            return $value;
-        }
+
+        Xcart::app()->logger->error("CurrentSiteMiddleware required php intl or \\True\\Punycode packages");
+        return $value;
     }
 }

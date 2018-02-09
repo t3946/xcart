@@ -381,7 +381,8 @@ class ProductModel extends Model implements ICartItem
         return ($this->list_price > ($fp + $fp * .3));
     }
 
-    public function checkSite($id) {
+    public function checkSite($id):bool
+    {
         return (bool)($this->sites->filter(['storefrontid' => $id])->count());
     }
 
@@ -413,31 +414,35 @@ class ProductModel extends Model implements ICartItem
         return $model->getAbsoluteUrl($full, true);
     }
 
-    public function getMainCategory():?CategoryModel
+    public function getMainCategory(int $site_id = null):?CategoryModel
     {
-        return CategoryModel::objects()->filter([
+        $params  = [
             'products__through__main' => 'Y',
             'products__through__productid' => $this->productid,
-            'storefrontid' => $this->sites->limit(1)->get()->storefrontid
-        ])->limit(1)->get();
+            'storefrontid' => $site_id
+        ];
+
+        if ($site_id) {
+            $params['storefrontid']  = $site_id;
+        }
+
+        return CategoryModel::objects()
+            ->limit(1)->get($params);
     }
 
-    /**
-     * @param CategoryModel $model
-     */
-    public function setMainCategory(CategoryModel $model)
+    public function setMainCategory(CategoryModel $model, int $site_id = null):void
     {
-        if ($adc = ProductCategoriesModel::objects()
-            ->filter([
-                'category__storefrontid' => $this->sites->limit(1)->get()->storefrontid,
-                'productid' => $this->productid,
-                'main' => 'Y',
-                'categoryid__isnt' => $model->categoryid
-            ])->all()) {
-            foreach ($adc as $dc) {
-                $dc->delete();
-            }
+        $params = [
+            'productid' => $this->productid,
+            'main' => 'Y',
+            'categoryid__isnt' => $model->categoryid
+        ];
+
+        if ($site_id) {
+            $params['category__storefrontid'] = $site_id;
         }
+
+        ProductCategoriesModel::objects()->delete($params);
 
         ProductCategoriesModel::objects()->getOrCreate(
             [
@@ -448,7 +453,7 @@ class ProductModel extends Model implements ICartItem
         );
     }
 
-    public function getBreadcrumbs()
+    public function getBreadcrumbs():Breadcrumbs
     {
         /** @var CategoryModel $category */
         if ($category = $this->getMainCategory()) {

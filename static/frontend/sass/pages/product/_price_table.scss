@@ -65,8 +65,7 @@
           .value {
             text-align: center;
             justify-content: center;
-            padding: 10px;
-
+            //padding: 10px;
           }
 
           &.price {
@@ -140,6 +139,7 @@
         .price-row {
           transition: all .4s ease-in-out;
           height: rem-calc(30);
+          line-height: rem-calc(30);
           overflow: hidden;
 
           border: 2px solid #bababa;
