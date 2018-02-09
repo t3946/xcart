@@ -419,7 +419,6 @@ class ProductModel extends Model implements ICartItem
         $params  = [
             'products__through__main' => 'Y',
             'products__through__productid' => $this->productid,
-            'storefrontid' => $site_id
         ];
 
         if ($site_id) {
