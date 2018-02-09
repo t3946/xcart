@@ -78,7 +78,11 @@ abstract class AbstractCatalogController extends FrontendController
      */
     public function getPager($qs)
     {
-        return new Pagination($qs, ['pageSize' => $this->pageSize, 'view' => 'core/pager/front_endless.tpl', 'pageKey' => 'page'], new QuerySetDataSource());
+        return new Pagination($qs, [
+            'pageSize' => $this->pageSize,
+            'view' => 'core/pager/front_endless.tpl',
+            'pageKey' => 'page'
+        ], new QuerySetDataSource());
     }
 
     /**
