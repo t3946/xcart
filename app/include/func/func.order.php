@@ -4065,7 +4065,7 @@ function func_instock_and_outofstock_items_table($products, $type_of_message = '
                 }
 
                 if ($v["offer_backorder"] == "Y" || $type_of_message == "compose_message_page") {
-                    $cidev_outofstock_items_table .= '<tr><td width="150px" style="text-align: left;">' . $tmp_sku . '</td><td width="250px" style="text-align: left;"><a data-mce-href="' . $v["links"]["customer"] . '" href="' . $v["links"]["customer"] . '">' . $v["product"] . '</a>' . $selected_product_options . '</td><td style="text-align: right;">' . $v["amount"] . '</td></tr>';
+                    $cidev_outofstock_items_table .= '<tr><td width="150px" style="text-align: left;">' . $tmp_sku . '</td><td width="250px" style="text-align: left;"><a data-mce-href="' . $v["links"]["customer"] . '" href="' . $v["links"]["customer"] . '">' . $v["product"] . '</a>' . $selected_product_options . '</td><td style="text-align: right;">' . $v["amount"] . '</td><td style="text-align: right;" nowrap="nowrap">' . $tmp_eta_date_mm_dd_yyyy . '</td></tr>';
 
                     $count_outofstock_products_with_offer_backorder_Y++;
 
