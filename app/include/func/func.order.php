@@ -4048,6 +4048,8 @@ function func_instock_and_outofstock_items_table($products, $type_of_message = '
                         }
                     }
                     else {
+                        $tmp_eta_date_mm_dd_yyyy = '';
+
                         if ($type_of_message == 'backorder_decision_request') {
                             $tmp_eta_date_mm_dd_yyyy = "unknown";
                             $count_eta_unknown++;
