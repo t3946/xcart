@@ -4029,7 +4029,7 @@ function func_instock_and_outofstock_items_table($products, $type_of_message = '
                 else {
                     $tmp_eta_date_mm_dd_yyyy = $v["eta_date_mm_dd_yyyy"];
 
-                    if (!empty($tmp_eta_date_mm_dd_yyyy))
+                    if (!empty($tmp_eta_date_mm_dd_yyyy) && $tmp_eta_date_mm_dd_yyyy >= time())
                     {
                         $tmp_eta_date_mm_dd_yyyy = date("j-M-Y", $tmp_eta_date_mm_dd_yyyy);
 
