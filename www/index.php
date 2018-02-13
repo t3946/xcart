@@ -33,7 +33,7 @@
 #
 # $Id: index.php,v 1.8 2006/03/30 12:23:04 max Exp $
 #
-define('SET_EXPIRE', 1);
+
 require "./top.inc.php";
 
 $search_all_website = true;

@@ -37,6 +37,8 @@
 use Modules\User\Helpers\SurfingHelper;
 use Modules\User\Models\SurfPathModel;
 
+define('SET_EXPIRE', 1);
+
 define('OFFERS_DONT_SHOW_NEW',1);
 require "./auth.php";
 $bench1 = func_microtime();
