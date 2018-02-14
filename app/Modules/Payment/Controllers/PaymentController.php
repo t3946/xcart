@@ -76,6 +76,6 @@ class PaymentController extends Controller
 
     public function endpoint($gateway)
     {
-        Xcart::app()->logger->error(serialize($_REQUEST));
+        Xcart::app()->logger->info("{$gateway} IPN response",$_REQUEST ?: [], 'ipn');
     }
 }
