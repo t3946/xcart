@@ -203,6 +203,56 @@ If <b>PROFIT</b> &lt; <b>0.00</b>, then set the following attention tag:
                         </select>
                 </td>
         </tr>
+        <tr>
+                <td width="3%">&nbsp;</td>
+                <td class="TableSeparator" width="57%">
+                        Order transaction dispute tags:
+                </td>
+                <td width="40%">
+                </td>
+        </tr>
+        <tr>
+                <td width="3%">&nbsp;</td>
+                <td width="57%">
+                        &nbsp;&nbsp;&nbsp;&nbsp;<b> - dispute created</b>:
+                </td>
+                <td width="40%">
+                        <select name="tag_for_events_dispute_created">
+                                <option value="">None</option>
+                            {foreach from=$attention_tags_values item=v key=k}
+                                    <option value="{$v.status_id}" {if $v.status_id eq $config.Attention_tags_invoices.tag_for_events_dispute_created}selected="selected"{/if}>{$v.status}</option>
+                            {/foreach}
+                        </select>
+                </td>
+        </tr>
+        <tr>
+                <td width="3%">&nbsp;</td>
+                <td width="57%">
+                        &nbsp;&nbsp;&nbsp;&nbsp;<b>- dispute updated</b>:
+                </td>
+                <td width="40%">
+                        <select name="tag_for_events_dispute_updated">
+                                <option value="">None</option>
+                            {foreach from=$attention_tags_values item=v key=k}
+                                    <option value="{$v.status_id}" {if $v.status_id eq $config.Attention_tags_invoices.tag_for_events_dispute_updated}selected="selected"{/if}>{$v.status}</option>
+                            {/foreach}
+                        </select>
+                </td>
+        </tr>
+        <tr>
+                <td width="3%">&nbsp;</td>
+                <td width="57%">
+                        &nbsp;&nbsp;&nbsp;&nbsp;<b>- dispute resolved</b>:
+                </td>
+                <td width="40%">
+                        <select name="tag_for_events_dispute_resolved">
+                                <option value="">None</option>
+                            {foreach from=$attention_tags_values item=v key=k}
+                                    <option value="{$v.status_id}" {if $v.status_id eq $config.Attention_tags_invoices.tag_for_events_dispute_resolved}selected="selected"{/if}>{$v.status}</option>
+                            {/foreach}
+                        </select>
+                </td>
+        </tr>
 
         <tr>
                 <td class="TableSeparator" colspan="3">
