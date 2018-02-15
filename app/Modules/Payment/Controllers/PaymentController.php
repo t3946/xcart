@@ -102,6 +102,6 @@ class PaymentController extends Controller
             }
         }
 
-        Xcart::app()->logger->info("{$gateway} IPN response {$bodyReceived}", $params ?: $_REQUEST ?: [], 'ipn');
+        Xcart::app()->logger->info("{$gateway} IPN response", $params ?: $_REQUEST ?: [], 'ipn');
     }
 }
