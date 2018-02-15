@@ -62,7 +62,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST['action'] == 'return' && !emp
     $key = 'XPC' . $_POST['refId'];
     $bill_output['sessid'] = func_query_first_cell("SELECT sessionid FROM $sql_tbl[cc_pp3_data] WHERE ref = '" . $key . "'");
 
+    x_log_flag('log_payment_processing_errors', 'XPAYLOG', serialize($_POST ?: []), true);
+
     list($status, $response) = xpc_request_get_payment_info($_POST['txnId']);
+
+    x_log_flag('log_payment_processing_errors', 'XPAYLOG', serialize($response ?: []), true);
+
 
     $extra_order_data = array(
         'xpc_txnid' => $_POST['txnId']
