@@ -216,7 +216,7 @@ class AmpProductModel extends ProductModel
     }
 
     public function isNeedForm(){
-        if (!$this->isGroupRoot() && $this->r_avail > 0){
+        if (!$this->isGroupRoot() && !$this->isOutOfStock()){
             return true;
         } else {
             return false;

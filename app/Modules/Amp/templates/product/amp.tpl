@@ -90,7 +90,7 @@
             <br><br>
 
             {else}
-                {if $model->r_avail > 0}
+                {if !$model->isOutOfStock()}
                 <form method="get" action="/cart.php" target="_top">
                     <input type="hidden" name="amount" value="1">
                     <input type="hidden" name="mode" value="add">
@@ -125,7 +125,7 @@
 
 
                 </form>
-                {elseif $model->r_avail == 0 || $model->r_avail < 0 }
+                {elseif $model->isOutOfStock() }
                     <div class="similar">
                         <div class="options price">
                             <h6 id="sku">SKU:
