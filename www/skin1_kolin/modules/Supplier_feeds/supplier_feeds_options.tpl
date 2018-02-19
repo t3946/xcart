@@ -41,6 +41,7 @@
 <table width="100%" cellpadding="3">
 <tr style="background-color: #EEEEEE;">
         <td valign="top" nowrap="nowrap"><b>feed_id</b></td>
+        <td valign="top" nowrap="nowrap"><b>amended</b></td>
         <td valign="top" nowrap="nowrap"><b>feed_name</b></td>
         <td valign="top" nowrap="nowrap"><b>feed_type</b></td>
         <td valign="top" nowrap="nowrap"><b>manufacturerid</b></td>
@@ -68,6 +69,10 @@
 <td valign="top" align="center">
 {$item.feed_id}
 <input type="hidden"  name="Supplier_feeds[{$key}][feed_id]" value="{$item.feed_id}" />
+</td>
+
+<td valign="top" align="center">
+<input type="checkbox" name="Supplier_feeds[{$key}][amended]" value="Y"/>
 </td>
 
 <td valign="top" align="center">
