@@ -125,7 +125,7 @@
 
 
                 </form>
-                {elseif $model->isOutOfStock() }
+                {else}
                     <div class="similar">
                         <div class="options price">
                             <h6 id="sku">SKU:
