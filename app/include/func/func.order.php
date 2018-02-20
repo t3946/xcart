@@ -1973,6 +1973,7 @@ function func_check_and_send_request_availability_email($orderid, $sent_by = '')
                 }
 
                 func_log_order($orderid, 'S', $order_notes);
+                func_backprocess_log('cron_request_availability', $order_notes);
 
                 $oMail = \Xcart\App\Main\Xcart::app()->oldMail;
                 $oMail->to = $to;
@@ -1983,6 +1984,30 @@ function func_check_and_send_request_availability_email($orderid, $sent_by = '')
                 $oMail->addHeader(['X-Xcart-Label' => 'order-communication']);
                 $oMail->sendEmail();
                 //func_send_mail($to, "mail/order_notification_subj.tpl", "mail/order_notification_mnf.tpl", $from, false);
+            } else {
+                $log = "Order #{$orderid} did not pass following conditions:";
+
+                $cnd = [];
+
+                if (empty($mv["cb_status"])) {
+                    $cnd[] = 'Empty CB status';
+                }
+                if (!in_array($mv["cb_status"], $allowed_cb_statuses)){
+                    $cnd[] = "CB status {$mv["cb_status"]} not allowed";
+                }
+                if (!in_array($mv["dc_status"], $allowed_dc_statuses)){
+                    $cnd[] = "DC status {$mv["dc_status"]} not allowed";
+                }
+                if ($mv["d_availability_must_be_checked"] != "Y"){
+                    $cnd[] = "d_availability_must_be_checked != Y";
+                }
+                if ($mv["good_time_to_send_email_to_distributor"] != "Y"){
+                    $cnd[] = "good_time_to_send_email_to_distributor != Y";
+                }
+                if ($cnd) {
+                    $log .= implode(', ', $cnd);
+                    func_backprocess_log('cron_request_availability', $log);
+                }
             }
         }
     }
