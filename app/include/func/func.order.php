@@ -1973,7 +1973,7 @@ function func_check_and_send_request_availability_email($orderid, $sent_by = '')
                 }
 
                 func_log_order($orderid, 'S', $order_notes);
-                func_backprocess_log('cron_request_availability', $order_notes);
+                func_backprocess_log('cron_request_availability', "Order #{$orderid}: " . $order_notes);
 
                 $oMail = \Xcart\App\Main\Xcart::app()->oldMail;
                 $oMail->to = $to;
