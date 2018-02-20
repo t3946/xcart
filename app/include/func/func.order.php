@@ -2396,33 +2396,7 @@ function func_get_order_manufacturers($orderid)
                     }
                     $mnfs[$m_id]["compose_email_to_distributor"] = $compose_email_to_distributor;
 
-
-                    $tmp_cur_time_sec = time();
-                    $d_server_min_distributor_time_sec = $mv["d_server_min_distributor_time"] * 60 * 60;
-                    $tmp_cur_time_sec -= $d_server_min_distributor_time_sec;
-                    $mnfs[$m_id]["distributor_time"] = $tmp_cur_time_sec;
-                    $tmp_cur_time_date_format = date("G.i", $tmp_cur_time_sec);
-                    $tmp_date_mm_dd_yyyy = date("m/d/Y", $tmp_cur_time_sec);
-                    $tmp_number_of_day_of_week = date("w", $tmp_cur_time_sec); // 0 (for Sunday) through 6 (for Saturday)
-
-                    if ($tmp_cur_time_date_format >= "8.30" && $tmp_cur_time_date_format <= "16.30" && ($tmp_number_of_day_of_week != "0" && $tmp_number_of_day_of_week != "6")) {
-
-                        if (!empty($request_availability_options) && is_array($request_availability_options)) {
-                            foreach ($request_availability_options as $k_r => $v_r) {
-                                if ($v_r["date_mm_dd_yyyy"] == $tmp_date_mm_dd_yyyy && $v_r["active"] == "Y") {
-                                    $good_time_to_send_email_to_distributor = "N";
-                                }
-                            }
-                        }
-
-                        if ($good_time_to_send_email_to_distributor != "N") {
-                            $good_time_to_send_email_to_distributor = "Y";
-                        }
-
-                        $mnfs[$m_id]["good_time_to_send_email_to_distributor"] = $good_time_to_send_email_to_distributor;
-                    } else {
-                        $mnfs[$m_id]["good_time_to_send_email_to_distributor"] = "N";
-                    }
+                    $mnfs[$m_id]["good_time_to_send_email_to_distributor"] = $order_group->manufacturer->isGoodTimeToSendEmail() ? 'Y' : 'N';
 
                     $mnfs[$m_id]["distributor_phone"] = func_query_first_cell("SELECT phone FROM $sql_tbl[distributor_contacts] WHERE manufacturerid='$m_id' AND phone!='' ORDER BY distributor_field_code asc LIMIT 1");
 
