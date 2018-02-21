@@ -95,6 +95,7 @@ if ($REQUEST_METHOD == "POST") {
 
 		/*TODO rewrite controller*/
 		$category_name = stripslashes(trim(\Xcart\App\Main\Xcart::app()->request->post['category_name']));
+        $description = stripslashes(trim(\Xcart\App\Main\Xcart::app()->request->post['description']));
 
 		if (empty($category_name)) {
 			#
@@ -222,7 +223,10 @@ if ($REQUEST_METHOD == "POST") {
                 'avail' => $avail,
                 'order_by' => $order_by,
                 'is_bold' => $is_bold,
-				'pc_ready_to_classify' => $pc_ready_to_classify
+				'pc_ready_to_classify' => $pc_ready_to_classify,
+				'title_tag' => $title_tag,
+				'SEO_category_name' => $SEO_category_name,
+				'SEO_h2' => $SEO_h2,
             ]);
 
         // Autogenerate clean URL.
