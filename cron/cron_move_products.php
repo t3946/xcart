@@ -18,6 +18,7 @@ foreach ($models as $model){
     $product_id = $model->resourceid;
     $storefront_id = $model->extra_data_int;
 
+    /** @var ProductsSfMovesModel [] $p_moves_models */
     if ($p_moves_models = ProductsSfMovesModel::objects()->filter(['productid' => $model->resourceid, 'resource_type' => "SF"])->all()){
         $p_moves_model = array_pop($p_moves_models);
         $batch_id = $p_moves_model->batch_id + 1;
@@ -31,6 +32,7 @@ foreach ($models as $model){
     $product_model = ProductModel::objects()->get(['productid' => $model->resourceid]);
     $product_model->update(['source_sfid' => $model->extra_data_int]);
 
+    /** @var ProductStorefrontModel [] $products_sf_models */
     $products_sf_models = ProductStorefrontModel::objects()->filter(['productid' => $model->resourceid])->all();
 
     if (count($products_sf_models) > 1){
