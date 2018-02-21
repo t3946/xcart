@@ -4,13 +4,16 @@
 namespace Modules\Goods\Helpers;
 
 use Modules\Goods\Models\CategoryModel;
+use Modules\Goods\Models\FilterModel;
+use Modules\Goods\Models\FilterProductModel;
+use Modules\Goods\Models\FilterValueModel;
 use Modules\Goods\Models\ProductCategoriesModel;
 use Modules\Goods\Models\ProductsSfMovesModel;
 
 class ProductsToMoveHelper
 {
 
-    public static function processingCategoriesInNewSf($category_models, $sfid, $batch_id)
+    public static function processingCategoriesToNewSf($category_models, $sfid, $batch_id)
     {
         /** @var ProductCategoriesModel $category_model */
         foreach ($category_models as $category_model) {
@@ -33,7 +36,7 @@ class ProductsToMoveHelper
                 else {
                     $category = CategoryModel::objects()
                                              ->get(['parentid' => $parent_id, 'category' => $ancestors_categories[ $i ]->category, 'storefrontid' => $sfid])
-                        ? : (new CategoryModel(['parentid' => $parent_id, 'category' => $ancestors_categories[ $i ]->category, 'storefrontid' => $sfid]));
+                                             ? : (new CategoryModel(['parentid' => $parent_id, 'category' => $ancestors_categories[ $i ]->category, 'storefrontid' => $sfid]));
                     $category->save();
                     $parent_id = $category->categoryid;
                 }
@@ -43,10 +46,56 @@ class ProductsToMoveHelper
                                        'productid' => $category_model->productid,
                                        'resource_id' => $category_model->categoryid,
                                        'resource_type' => 'CS',
-                                       'resource_extra_value' => $category_model->main]))->save();
+                                       'resource_extra_value' => $category_model->main
+                                      ]))->save();
 
             $category_model->update(['categoryid' => $parent_id]);
 
+        }
+    }
+
+    public static function processingFilterAndValuesToNewSf($productid, $sfid, $batch_id)
+    {
+        $filter_product_models = FilterProductModel::objects()->filter(['productid' => $productid])->all();
+
+        foreach ($filter_product_models as $filter_product_model){
+
+            (new ProductsSfMovesModel(['batch_id' => $batch_id,
+                                       'productid' => $productid,
+                                       'resource_id' => $filter_product_model->fv_id,
+                                       'resource_type' => 'FL']))->save();
+
+            $filter_value_model = $filter_product_model->filter_val;
+
+            $filter_model = $filter_value_model->filter;
+
+            $new_filter_model = FilterModel::objects()->get([
+                                                             'f_name' => $filter_model->f_name,
+                                                             'storefrontid' => $sfid
+                                                            ]) ?:
+                                           (new FilterModel([
+                                                             'f_name' => $filter_model->f_name,
+                                                             'f_order_by' => $filter_model->f_order_by,
+                                                             'f_active' => $filter_model->f_active,
+                                                             'storefrontid' => $sfid
+                                                            ]) );
+
+            $new_filter_model->save();
+
+            $new_filter_value_model = FilterValueModel::objects()->get([
+                                                                        'f_id' => $new_filter_model->f_id,
+                                                                        'fv_name' => $filter_value_model->fv_name,
+
+                                                                       ]) ?:
+                                                 (new FilterValueModel([
+                                                                        'f_id' => $new_filter_model->f_id,
+                                                                        'fv_name' => $filter_value_model->fv_name,
+                                                                        'fv_order_by' => $filter_value_model->fv_order_by,
+                                                                        'fv_active' => $filter_value_model->fv_active
+                                                                       ]));
+            $new_filter_value_model->save();
+
+            $filter_product_model->update(['fv_id' => $new_filter_value_model->fv_id]);
         }
     }
 
