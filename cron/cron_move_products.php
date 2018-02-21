@@ -47,7 +47,9 @@ foreach ($models as $model){
     /** @var ProductCategoriesModel $categories_models */
     $categories_models = $product_model->product_categories->all();
 
-    ProductsToMoveHelper::processingCategoriesInNewSf($categories_models, $model->extra_data_int, $batch_id);
+    ProductsToMoveHelper::processingCategoriesToNewSf($categories_models, $model->extra_data_int, $batch_id);
+
+    ProductsToMoveHelper::processingFilterAndValuesToNewSf($model->resourceid, $model->extra_data_int, $batch_id);
 
 }
 
