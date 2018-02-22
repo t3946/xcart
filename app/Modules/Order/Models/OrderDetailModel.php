@@ -58,7 +58,7 @@ class OrderDetailModel  extends Model
             'order_groups' => [
                 'field' => 'orderid',
                 'class' => ForeignField::className(),
-                'model' => OrderGroupModel::className(),
+                'modelClass' => OrderGroupModel::className(),
                 'link' => ['orderid' => 'orderid'],
                 'null' => false,
             ]

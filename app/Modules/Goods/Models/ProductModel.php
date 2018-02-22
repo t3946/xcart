@@ -11,6 +11,7 @@ use Modules\Distributor\Models\DistributorModel;
 use Modules\Order\Models\OrderDetailModel;
 use Modules\Sites\Models\SiteModel;
 use Modules\Menu\Models\CleanUrlModel;
+use Modules\User\Models\SurfPathModel;
 use Xcart\App\Components\Breadcrumbs;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\AutoMetaTrait;
@@ -126,6 +127,13 @@ class ProductModel extends Model implements ICartItem
                 'class' => HasManyField::className(),
                 'modelClass' => OrderDetailModel::className(),
                 'link' => ['productid' => 'productid'],
+            ],
+
+            'surf_path' => [
+                'class' => HasManyField::className(),
+                'modelClass' => SurfPathModel::className(),
+                'link' => ['productid' => 'resource_id'],
+                'extra' => ['resource_type' => 'P'],
             ],
 
 
