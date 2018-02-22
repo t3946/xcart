@@ -183,15 +183,15 @@ class OrderGroupModel extends Model
     {
         if ($order_payment_method = $this->payment_method ?: $this->order->payment_method) {
 
-            $estimated_profit = (1 - $order_payment_method->acc_percent / 100) * $this->grand_total - $order_payment_method->acc_per_trans - $this->getTotalCostToUs() - $this->actual_shipping_gross;
+            $estimated_profit = (1 - $order_payment_method->acc_percent / 100) * $this->total_gross - $order_payment_method->acc_per_trans - $this->getTotalCostToUs() - $this->actual_shipping_gross;
 
-            $estimated_profit_margin = $estimated_profit / ((1 - $order_payment_method->acc_percent / 100) * $this->grand_total);
+            $estimated_profit_margin = $estimated_profit / ((1 - $order_payment_method->acc_percent / 100) * $this->total_gross);
 
             if ($additional_shipping_charge) {
 
                 $estimated_profit_after_additional_payment = $estimated_profit + (1 - $order_payment_method->acc_percent / 100) * $additional_shipping_charge - $order_payment_method->acc_per_trans;
 
-                $estimated_profit_margin_after_additional_payment = $estimated_profit_after_additional_payment / ((1 - $order_payment_method->acc_percent / 100) * ($this->grand_total + $additional_shipping_charge));
+                $estimated_profit_margin_after_additional_payment = $estimated_profit_after_additional_payment / ((1 - $order_payment_method->acc_percent / 100) * ($this->total_gross + $additional_shipping_charge));
 
             }
 
