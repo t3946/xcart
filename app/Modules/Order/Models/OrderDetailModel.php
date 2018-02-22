@@ -54,6 +54,14 @@ class OrderDetailModel  extends Model
                 'null' => false,
                 'default' => '',
             ],
+
+            'order_groups' => [
+                'field' => 'orderid',
+                'class' => ForeignField::className(),
+                'model' => OrderGroupModel::className(),
+                'link' => ['orderid' => 'orderid'],
+                'null' => false,
+            ]
         ];
     }
 }
