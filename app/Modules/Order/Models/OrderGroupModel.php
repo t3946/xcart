@@ -5,6 +5,7 @@ use Doctrine\DBAL\Types\Type;
 use Modules\Distributor\Models\DistributorModel;
 use Modules\Goods\Models\ProductModel;
 use Modules\Order\Helpers\OrderEventHelper;
+use Modules\Payment\Models\PaymentMethodModel;
 use Modules\Shipping\Models\ShippingModel;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\AutoMetaTrait;
@@ -67,6 +68,13 @@ class OrderGroupModel extends Model
                 'sqlType' => Type::STRING,
                 'modelClass' => OrderStatusModel::className(),
                 'link' => ['dc_status' => 'code'],
+                'null' => false,
+            ],
+            'payment_method' => [
+                'field' => 'acc_paymentid',
+                'class' => ForeignField::class,
+                'modelClass' => PaymentMethodModel::class,
+                'link' => ['acc_paymentid' => 'paymentid'],
                 'null' => false,
             ],
             'detail_models' => [
@@ -169,5 +177,28 @@ class OrderGroupModel extends Model
         foreach ($this->getAttributes() as $attribute => $value) {
             OrderEventHelper::registerAfterSaveEvent($this->orderid, $attribute, $value, $this->getOldAttribute($attribute));
         }
+    }
+
+    public function getEstimateProfit($additional_shipping_charge = null) :? array
+    {
+        if ($order_payment_method = $this->payment_method ?: $this->order->payment_method) {
+
+            $estimated_profit = (1 - $order_payment_method->acc_percent / 100) * $this->grand_total - $order_payment_method->acc_per_trans - $this->getTotalCostToUs() - $this->actual_shipping_gross;
+
+            $estimated_profit_margin = $estimated_profit / ((1 - $order_payment_method->acc_percent / 100) * $this->grand_total);
+
+            if ($additional_shipping_charge) {
+
+                $estimated_profit_after_additional_payment = $estimated_profit + (1 - $order_payment_method->acc_percent / 100) * $additional_shipping_charge - $order_payment_method->acc_per_trans;
+
+                $estimated_profit_margin_after_additional_payment = $estimated_profit_after_additional_payment / ((1 - $order_payment_method->acc_percent / 100) * ($this->grand_total + $additional_shipping_charge));
+
+            }
+
+            return [$estimated_profit, $estimated_profit_margin, $estimated_profit_after_additional_payment ?: null, $estimated_profit_margin_after_additional_payment ?: null];
+
+        }
+        
+        return null;
     }
 }

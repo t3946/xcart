@@ -6,6 +6,7 @@ use Modules\Core\Models\StateModel;
 use Modules\Order\Helpers\OrderEventHelper;
 use Modules\Order\Helpers\OrderHelper;
 use Modules\Goods\Models\ProductModel;
+use Modules\Payment\Models\PaymentMethodModel;
 use Modules\User\Models\UserModel;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\AutoMetaTrait;
@@ -121,7 +122,14 @@ class OrderModel extends Model
                 'class' => HasManyField::className(),
                 'modelClass' => OrderExtrasModel::className(),
                 'link' => ['orderid' => 'orderid'],
-            ]
+            ],
+            'payment_method' => [
+                'field' => 'paymentid',
+                'class' => ForeignField::class,
+                'modelClass' => PaymentMethodModel::class,
+                'link' => ['acc_paymentid' => 'paymentid'],
+                'null' => false,
+            ],
         ];
     }
 

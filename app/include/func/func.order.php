@@ -2045,6 +2045,9 @@ function func_get_order_manufacturers($orderid)
             $cidev_ship_to_full = $order["s_address"] . ", " . $cidev_ship_to;
 
             foreach ($mnfs as $m_id => $mv) {
+
+                /** @var OrderGroupModel $order_group */
+
                 if ($order_group = OrderGroupModel::objects()->get(
                     [
                         'orderid' => $orderid,
@@ -2274,28 +2277,6 @@ function func_get_order_manufacturers($orderid)
                     $actual_shipping_cost = $order['shipping_groups'][$m_id]["actual_shipping_cost"]["gross"];
                     $mnfs[$m_id]["actual_shipping_cost"] = $actual_shipping_cost;
 
-                    $estimated_profit = (1 - $config["Additional_shipping_charge"]["credit_card_processing_fees"] / 100) * $grand_total - $config["Additional_shipping_charge"]["per_transaction"] - $total_product_cost_to_us - $actual_shipping_cost;
-                    $estimated_profit = price_format($estimated_profit);
-
-                    $mnfs[$m_id]["estimated_profit"] = $estimated_profit;
-                    if ($estimated_profit < 0) {
-                        $mnfs[$m_id]["estimated_profit_abs"] = abs($estimated_profit);
-                    }
-
-                    if ($grand_total > 0) {
-                        $estimated_profit_margin = $estimated_profit / ((1 - $config["Additional_shipping_charge"]["credit_card_processing_fees"] / 100) * $grand_total);
-                    }
-                    $estimated_profit_margin = price_format($estimated_profit_margin);
-                    $mnfs[$m_id]["estimated_profit_margin"] = $estimated_profit_margin;
-
-                    $estimated_profit_margin_percent = $estimated_profit_margin * 100;
-                    $estimated_profit_margin_percent = intval($estimated_profit_margin_percent);
-
-                    $mnfs[$m_id]["estimated_profit_margin_percent"] = $estimated_profit_margin_percent;
-                    if ($estimated_profit_margin_percent < 0) {
-                        $mnfs[$m_id]["estimated_profit_margin_percent_abs"] = abs($estimated_profit_margin_percent);
-                    }
-
                     if ($order["shipping_groups"][$m_id]["shipping_value_selectbox"] == "required_shipping_charge") {
                         $required_shipping_charge = $order["shipping_groups"][$m_id]["actual_shipping_net"];
                     } else {
@@ -2309,19 +2290,32 @@ function func_get_order_manufacturers($orderid)
                     $additional_shipping_charge = price_format($additional_shipping_charge);
                     $mnfs[$m_id]["additional_shipping_charge"] = $additional_shipping_charge;
 
-                    $estimated_profit_after_additional_payment = $estimated_profit + (1 - $config["Additional_shipping_charge"]["credit_card_processing_fees"] / 100) * $additional_shipping_charge - $config["Additional_shipping_charge"]["per_transaction"];
+                    [$estimated_profit, $estimated_profit_margin, $estimated_profit_after_additional_payment, $estimated_profit_margin_after_additional_payment] = $order_group->getEstimateProfit($additional_shipping_charge);
+
+                    $estimated_profit = price_format($estimated_profit);
+
+                    $mnfs[$m_id]["estimated_profit"] = $estimated_profit;
+
+                    if ($estimated_profit < 0) {
+                        $mnfs[$m_id]["estimated_profit_abs"] = abs($estimated_profit);
+                    }
+
+                    $estimated_profit_margin = price_format($estimated_profit_margin);
+                    $mnfs[$m_id]["estimated_profit_margin"] = $estimated_profit_margin;
+
+                    $estimated_profit_margin_percent = $estimated_profit_margin * 100;
+                    $estimated_profit_margin_percent = intval($estimated_profit_margin_percent);
+
+                    $mnfs[$m_id]["estimated_profit_margin_percent"] = $estimated_profit_margin_percent;
+                    if ($estimated_profit_margin_percent < 0) {
+                        $mnfs[$m_id]["estimated_profit_margin_percent_abs"] = abs($estimated_profit_margin_percent);
+                    }
+
                     $estimated_profit_after_additional_payment = price_format($estimated_profit_after_additional_payment);
                     $mnfs[$m_id]["estimated_profit_after_additional_payment"] = $estimated_profit_after_additional_payment;
 
                     if ($estimated_profit_after_additional_payment < 0) {
                         $mnfs[$m_id]["estimated_profit_after_additional_payment_abs"] = abs($estimated_profit_after_additional_payment);
-                    }
-
-                    if (
-                        ($grand_total + $additional_shipping_charge) > 0
-                        && (1 - $config["Additional_shipping_charge"]["credit_card_processing_fees"] / 100) > 0
-                    ) {
-                        $estimated_profit_margin_after_additional_payment = $estimated_profit_after_additional_payment / ((1 - $config["Additional_shipping_charge"]["credit_card_processing_fees"] / 100) * ($grand_total + $additional_shipping_charge));
                     }
 
                     $estimated_profit_margin_after_additional_payment = price_format($estimated_profit_margin_after_additional_payment);
