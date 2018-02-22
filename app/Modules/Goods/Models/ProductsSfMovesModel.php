@@ -10,6 +10,11 @@ use Xcart\App\Orm\Model;
 
 class ProductsSfMovesModel extends Model
 {
+    public static function tableName()
+    {
+        return 'products_sf_moves';
+    }
+
     public static function getFields()
     {
         return [
