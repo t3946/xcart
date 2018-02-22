@@ -127,7 +127,7 @@ class OrderModel extends Model
                 'field' => 'paymentid',
                 'class' => ForeignField::class,
                 'modelClass' => PaymentMethodModel::class,
-                'link' => ['acc_paymentid' => 'paymentid'],
+                'link' => ['paymentid' => 'paymentid'],
                 'null' => false,
             ],
         ];
