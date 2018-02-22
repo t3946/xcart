@@ -38,7 +38,7 @@ class FilterModel extends Model
                 'null' => false,
                 'default' => 'Y'
             ],
-            'storefrontid' => [
+            'storefront' => [
                 'field' => 'storefrontid',
                 'class' => ForeignField::className(),
                 'modelClass' => SiteModel::className(),
