@@ -8,14 +8,31 @@ use Modules\Goods\Models\FilterModel;
 use Modules\Goods\Models\FilterProductModel;
 use Modules\Goods\Models\FilterValueModel;
 use Modules\Goods\Models\ProductCategoriesModel;
+use Modules\Goods\Models\ProductModel;
 use Modules\Goods\Models\ProductsSfMovesModel;
 
 class ProductsToMoveHelper
 {
 
-    public static function isValidProduct($productid)
+    public static function isValidProduct($product_model)
     {
         return false;
+    }
+
+    public static function isValidGroupProduct($group_productid)
+    {
+        $flag = false;
+
+        /** @var ProductModel $product_model */
+        $product_model = ProductModel::objects()->get(['productid' => $group_productid]);
+
+        $child_products = $product_model->childs;
+
+        foreach ($child_products as $child_product){
+            $flag = self::isValidProduct($child_product);
+        }
+
+        return $flag;
     }
 
     public static function processingCategoriesToNewSf($category_models, $sfid, $batch_id)
