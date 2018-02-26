@@ -24,7 +24,7 @@ class ProductsToMoveHelper
 
         if ($pm = $qs->select([(new Expression("distinct({$qs->getTableAlias()}.productid)"))->toSQL()])->filter(
             [
-                'order_details__order_groups__cb_status__in' => ['P'],
+                'order_details__order_groups__cb_status__in' => ['P', 'AP', 'R', 'H', 'O'],
                 'forsale' => 'Y',
                 'surf_path__id__isnull' => false,
                 'productid' => $productid
@@ -50,7 +50,7 @@ class ProductsToMoveHelper
 
     public static function isValidProduct($product_model)
     {
-        return true;
+        return self::isNeedToTransferProduct($product_model->productid);
     }
 
     public static function isValidGroupProduct($group_productid)
