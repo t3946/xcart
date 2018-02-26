@@ -28,7 +28,15 @@ foreach ($models as $model){
     /** @var ProductModel $product_model */
     $product_model = ProductModel::objects()->get(['productid' => $model->resourceid]);
 
+    if (!$product_model){
+        continue;
+    }
+
     if (!ProductsToMoveHelper::isNeedToTransferProduct($model->resourceid)){
+        continue;
+    }
+
+    if ($product_model->amazon_fba_avail > 0){
         continue;
     }
 
