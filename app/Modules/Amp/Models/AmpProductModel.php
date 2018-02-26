@@ -196,6 +196,10 @@ class AmpProductModel extends ProductModel
             $fulldescr = str_ireplace(["<font>", "</font>"], "", $fulldescr);
         }
 
+        if (preg_match('/<img\/>/i', $fulldescr)){
+            $fulldescr = preg_replace('/<img\/>/i', '', $fulldescr);
+        }
+
         $regexp = '/<([^>]*?)mozallowfullscreen|webkitallowfullscreen([^>]*?)>/s';
 
         while (preg_match($regexp, $fulldescr)){
