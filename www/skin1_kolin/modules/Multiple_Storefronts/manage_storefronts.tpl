@@ -81,7 +81,11 @@
 <table cellpadding="7" cellspacing="7" width="100%">
 <tr>
     <td>{$lng.lbl_mf_new_main_domain|cat:":"}</td>
-    <td><input type="text" name="new_main_domain" value="" size="30" /></td>
+    <td><input type="text" name="new_main_domain" value="" size="30" required /></td>
+</tr>
+<tr>
+    <td>Storefront symbolic code (AR, TS, CA ...):</td>
+    <td><input type="text" name="domain_code" value="" size="30" required /></td>
 </tr>
 <tr>
     <td colspan="2" class="mf_explanation">{$lng.lbl_mf_new_main_domain_txt}</td>
