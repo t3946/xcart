@@ -187,6 +187,7 @@ SQL;
                         func_array2update_new('storefronts_config', ['value' => 'Y'],['storefrontid' => $model->pk, 'name' => 'shop_closed']);
                         func_array2update_new('storefronts_config', ['value' => 'N'],['storefrontid' => $model->pk, 'name' => 'https_enabled']);
                         func_array2update_new('storefronts_config', ['value' => 'N'],['storefrontid' => $model->pk, 'name' => 'Enable_CDN']);
+                        func_array2update_new('storefronts_config', ['value' => 'N'],['storefrontid' => $model->pk, 'name' => 'search_all_website_show']);
                         func_array2update_new('storefronts_config', ['value' => $domain_code.'-'],['storefrontid' => $model->pk, 'name' => 'opt_order_prefix']);
                         func_array2update_new('storefronts_config', ['value' => 'http://' . $model->domain],['storefrontid' => $model->pk, 'name' => 'company_website']);
                         func_array2update_new('storefronts_config', ['value' => $model->getBaseDomain()],['storefrontid' => $model->pk, 'name' => 'company_name']);
