@@ -35,7 +35,6 @@ class ProductsToMoveHelper
             return true;
         }
 
-
     }
 
     public static function isAlwaysProductMoved($productid, $sfid)

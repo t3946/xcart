@@ -28,15 +28,18 @@ foreach ($models as $model){
     /** @var ProductModel $product_model */
     $product_model = ProductModel::objects()->get(['productid' => $model->resourceid]);
 
+    /** TODO Переписать получение batch_id по нижеидущему коду */
+    /*    $model = ProductsSfMovesModel::objects()->filter(['productid' => $product_id])->order('batch_id')->desc->limit(1);*/
+
     if (!$product_model){
         continue;
     }
 
-    if (!ProductsToMoveHelper::isNeedToTransferProduct($model->resourceid)){
+    if ($product_model->amazon_fba_avail > 0){
         continue;
     }
 
-    if ($product_model->amazon_fba_avail > 0){
+    if (!ProductsToMoveHelper::isNeedToTransferProduct($model->resourceid)){
         continue;
     }
 
@@ -69,7 +72,7 @@ foreach ($models as $model){
 
     $model->delete();
 
-/*    $model = ProductsSfMovesModel::objects()->filter(['productid' => $product_id])->order('batch_id')->desc->limit(1);*/
+
 
 }
 
