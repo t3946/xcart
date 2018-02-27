@@ -34,7 +34,7 @@
 # $Id: auth.php,v 1.30.2.4 2006/11/01 12:37:40 twice Exp $
 #
 
-use Modules\Core\Models\StateModel;
+use Modules\Core\Components\Profiler;
 use Modules\GeoIp\Helpers\GeoIpHelper;
 
 define('AREA_TYPE', 'C');
@@ -44,8 +44,14 @@ if (file_exists("../top.inc.php")) {@include_once "../top.inc.php";}
 if (file_exists("../../top.inc.php")) {@include_once "../../top.inc.php";}
 if (!defined('DIR_CUSTOMER')) die("ERROR: Can not initiate application! Please check configuration.");
 
+Profiler::getInstance()->start('trace');
+
+Profiler::getInstance()->addPoint();
+
+
 include_once $xcart_dir."/init.php";
 
+Profiler::getInstance()->addPoint();
 
 $current_area="C";
 

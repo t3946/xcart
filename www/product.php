@@ -1,11 +1,13 @@
 <?php
 
 
+use Modules\Core\Components\Profiler;
 use Modules\Distributor\Helpers\DistributorHelper;
 
 define('OFFERS_DONT_SHOW_NEW',1);
 require "./auth.php";
 
+Profiler::getInstance()->addPoint();
 
 if (
     isset($productid)
@@ -102,7 +104,7 @@ if ($reverse_sku == "Y"){
 ###
 ##
 #
-
+Profiler::getInstance()->addPoint();
 #
 ##
 ###
@@ -178,6 +180,8 @@ if ($active_modules["Manufacturers"])
 	include $xcart_dir."/modules/Manufacturers/customer_manufacturers.php";
 
 $product_info["customer_service_email"] = func_query_first_cell("SELECT customer_service_email FROM $sql_tbl[brands] WHERE brandid='$product_info[brandid]'");
+
+Profiler::getInstance()->addPoint();
 
 if ($product_info["product_type"] != "C") {
 	#
@@ -255,9 +259,9 @@ if (!empty($active_modules["Recommended_Products"]))
 if (!empty($active_modules["SnS_connector"]))
 	include $xcart_dir."/modules/SnS_connector/product.php";
 
-include "./vote.php";
+//include "./vote.php";
 
-require $xcart_dir."/include/categories.php";
+//require $xcart_dir."/include/categories.php";
 
 if (!empty($current_category) and is_array($current_category["category_location"])) {
 	foreach ($current_category["category_location"] as $k=>$v) {
@@ -308,6 +312,7 @@ if ($show_dimensions){
 		$smarty->assign('show_dimensions_orderby_str', $show_dimensions_orderby_str);
 	}
 }
+Profiler::getInstance()->addPoint();
 
 $smarty->assign('show_dimensions', $show_dimensions);
 
@@ -410,6 +415,8 @@ if (!empty($brandid_brands_info[$product_info["brandid"]]["descr"])){
 ##
 #
 
+Profiler::getInstance()->addPoint();
+
 if (!empty($cart_manufact_text_displayed_tabs) && is_array($cart_manufact_text_displayed_tabs)){
 	$count_product_tabs = count($product_tabs);
         foreach ($cart_manufact_text_displayed_tabs as $k => $v){
@@ -457,173 +464,8 @@ if ($config['product_question_email']['product_question_enable'] == 'Y') {
 	$product_tabs[$count_product_tabs]["tpl"] = "_product_question_tpl_";
 	$product_tabs[$count_product_tabs]["anchor"] = $count_product_tabs;
 }
-/*echo "maintenanced 5<br>";
-exit;*/
 
-
-$chech_domain = "http://www.productqueries.com/";
-
-if ($config['product_queries']['product_queries_enable'] == 'Y' && url_exists($chech_domain)) {
-        $count_product_tabs = count($product_tabs);
-        $product_tabs[$count_product_tabs]["title"] = "Product queries";
-        $product_tabs[$count_product_tabs]["tpl"] = "_product_queries_tpl_";
-        $product_tabs[$count_product_tabs]["anchor"] = $count_product_tabs;
-
-	$server_url = $config['product_queries']['product_queries_get_content_url'];
-	$additional_query = "";
-	if (!empty($server_url)){
-
-		if (!empty($product_info["upc"])){
-		        $gtin = trim($product_info["upc"]);
-		        $gtin = urlencode($gtin);
-		        $additional_query = "&gtin=".$gtin;
-		} elseif (!empty($product_info["mpn"]) && !empty($product_info["brandid"])){
-		        $brand_name = func_query_first_cell("SELECT brand FROM $sql_tbl[brands] WHERE brandid='$product_info[brandid]'");
-		        $brand_name = trim($brand_name);
-		        $brand_name = urlencode($brand_name);
-		        $mpn_urlencode = trim($product_info["mpn"]);
-		        $mpn_urlencode = urlencode($mpn_urlencode);
-		        $additional_query = "&mpn=".$mpn_urlencode."&brand=".$brand_name;
-		}
-	}
-
-	if (!empty($additional_query)){
-
-          $full_server_url = $server_url.$additional_query;
-
-	  $curl_err = false;
-	  $ch = curl_init();
-	  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-	  curl_setopt($ch, CURLOPT_URL, $full_server_url);
-	  curl_setopt($ch, CURLOPT_TIMEOUT_MS, 1000);
-	  $output = curl_exec($ch);
-
-	  if (curl_errno($ch) != 0 || curl_getinfo($ch, CURLINFO_HTTP_CODE) !== 200) {
-	          $curl_err = true;
-	  }
-	  curl_close($ch);
-
-	  if (!$curl_err){
-
-
-	        $productqueries_page = file_get_contents($full_server_url);
-        	$productqueries_page = utf8_encode($productqueries_page);
-	        if (!empty($productqueries_page)){
-
-			if (!empty($product_info["clean_url"])){
-				$clean_url_arr = explode("/", $product_info["clean_url"]);
-				$clean_url_last_part = array_pop($clean_url_arr);
-				$clean_url_last_part = ucwords($clean_url_last_part);
-			}
-
-        	        $productqueries_page_arr = json_decode($productqueries_page, true);
-
-                	if (!empty($productqueries_page_arr) && is_array($productqueries_page_arr)){
-
-				foreach ($productqueries_page_arr as $k => $v){
-
-					if (!empty($v["name"]))
-						$productqueries_page_arr[$k]["name"] = html_entity_decode($v["name"]);
-
-                                        if (!empty($v["content"]))
-                                                $productqueries_page_arr[$k]["content"] = html_entity_decode($v["content"]);
-
-
-					if (!empty($v["answers"]) && is_array($v["answers"])){
-						foreach ($v["answers"] as $kk => $vv){
-
-		                                        if (!empty($vv["content"]))
-                		                                $productqueries_page_arr[$k]["answers"][$kk]["content"] = html_entity_decode($vv["content"]);
-
-							if (empty($vv["comments"])){
-								unset($productqueries_page_arr[$k]["answers"][$kk]["comments"]);
-							}
-						}
-					}
-
-					if (!empty($v["url"]) && !empty($clean_url_last_part)){
-						$productqueries_page_arr[$k]["url"] = "http://www.productqueries.com/".$v["tid"]."/".$clean_url_last_part."/";
-					}
-				}
-
-                        	$smarty->assign("productqueries_page_arr", $productqueries_page_arr);
-	                }
-        	}
-	  }
-	}
-
-
-	$get_question_forms_url = $config['product_queries']['product_queries_get_question_forms_url'];
-	if (!empty($get_question_forms_url) && !empty($additional_query)){
-
-		$product_name_urlencode = trim($product_info["product"]);
-		$product_name_urlencode = urlencode($product_name_urlencode);
-		$additional_query .= "&product_name=".$product_name_urlencode;
-
-		$product_sfid = func_query_first_cell("SELECT sfid FROM $sql_tbl[products_sf] WHERE productid='$productid'");
-
-		if ($product_sfid > 0){
-			$site_url = func_query_first_cell("SELECT domain FROM $sql_tbl[storefronts] WHERE storefrontid='$product_sfid'");
-			$site_url = "http://".$site_url."/";
-		} else {
-			$site_url = "http://www.artistsupplysource.com/";
-		}
-		
-		$product_url = $site_url.$product_info["clean_url"]."/";
-		$product_url_urlencode = urlencode($product_url);
-		
-		$additional_query .= "&product_url=".$product_url_urlencode;
-
-#
-##
-###
-		$product_image = "";
-		$product_image_hidden = "";
-		if (!empty($product_info["image_path_P"])){
-		        $product_image = str_replace("./", "", $product_info["image_path_P"]);
-		} elseif (!empty($product_info["image_path_T"])){
-		        $product_image = str_replace("./", "", $product_info["image_path_T"]);
-		}
-		if (!empty($product_image)){
-		        $product_image = $site_url.$product_image;
-			$product_image_hidden = '<input type="hidden" name="product_image" value="'.$product_image.'">';
-		}
-###
-##
-#
-		$full_get_question_forms_url = $get_question_forms_url.$additional_query;
-
-
-		$curl_err = false;
-		$ch = curl_init();
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-		curl_setopt($ch, CURLOPT_URL, $full_get_question_forms_url);
-		curl_setopt($ch, CURLOPT_TIMEOUT_MS, 1000);
-		$output = curl_exec($ch);
-
-		if (curl_errno($ch) != 0 || curl_getinfo($ch, CURLINFO_HTTP_CODE) !== 200) {
-		        $curl_err = true;
-		}
-		curl_close($ch);
-
-		if (!$curl_err){
-
-
-			$get_question_forms_url_info = @file_get_contents($full_get_question_forms_url);
-			$get_question_forms_url_info = utf8_encode($get_question_forms_url_info);
-
-			$get_question_forms_url_info_arr = explode("</style>", $get_question_forms_url_info);
-			$product_form_info = array_pop($get_question_forms_url_info_arr);
-
-			$product_form_info = str_replace('<input type="submit" value="Submit question">', $product_image_hidden.'<span onclick="javascript: document.form_query.submit();" class="cidev_new_button cidev_new_white">Submit question</span>', $product_form_info);
-			$product_form_info = str_replace('<form', '<form name="form_query"', $product_form_info);
-
-			$smarty->assign('product_form_info', $product_form_info);
-
-		}
-	}
-}
-
+Profiler::getInstance()->addPoint();
 
 if (!empty($product_tabs) && is_array($product_tabs)) {
 
@@ -690,7 +532,7 @@ if (empty($product_info["lead_time_message"])){
 
 # END: random:1073746882_1073747063 [2008 Dec 24 16:25] 
 
-
+Profiler::getInstance()->addPoint();
 ###
 if (!empty($cart["shipping_groups"][$product_info["manufacturerid"]])){
 	if (!empty($cart["shipping_groups"][$product_info["manufacturerid"]]["need_add_more"]) && !empty($cart["shipping_groups"][$product_info["manufacturerid"]]["d_minimum_order_amount_in_us"]) && $cart["shipping_groups"][$product_info["manufacturerid"]]["d_minimum_order_amount_in_us"] > $product_info["taxed_price"]){
@@ -773,6 +615,8 @@ if (!empty($location) && is_array($location)){
 if (!empty($product_info["supplier_internal_id_last_parsed_update"])){
 	$count_days = (time() - $product_info["supplier_internal_id_last_parsed_update"])/(60*60*24);
 }
+
+Profiler::getInstance()->addPoint();
 
 if ($product_info["manufacturerid"] == "32" && !empty($product_info["supplier_internal_id"]) && !empty($product_info["supplier_internal_option"]) && $count_days > 10){
 
@@ -871,6 +715,7 @@ if (\Modules\Shipping\Helpers\ShippingHelper::isCalcShippingEnabled($oProduct)) 
         $smarty->assign('shipping_rate_show', true);
 }
 
+Profiler::getInstance()->addPoint();
 
 x_session_register("notify_email");
 $smarty->assign("notify_email", $notify_email);
@@ -880,4 +725,11 @@ $smarty->assign("ga_page_name", "detail_page");
 # Assign the current location line
 $smarty->assign("location", $location);
 
-func_display("customer/home.tpl",$smarty);
+Profiler::getInstance()->addPoint();
+
+
+//func_display("customer/home.tpl",$smarty);
+
+Profiler::getInstance()->addPoint();
+Profiler::getInstance()->stop('trace');
+Profiler::getInstance()->display();

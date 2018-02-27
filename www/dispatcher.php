@@ -31,6 +31,8 @@
 +-----------------------------------------------------------------------------+
 \*****************************************************************************/
 
+use Modules\Core\Components\Profiler;
+
 /**
  * Clean URLs dispatcher
  *
@@ -47,9 +49,10 @@
 
 define('DISPATCHED_REQUEST', 1);
 
-//die("123-dispatcher.php");
 
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . 'auth.php';
+
+Profiler::getInstance()->addPoint();
 
 $request_uri_info = @parse_url(stripslashes(func_get_request_uri()));
 
@@ -284,6 +287,7 @@ $smarty->assign('clean_url_data', $clean_url_data);
 ###
 ##
 #
+Profiler::getInstance()->addPoint();
 
 switch ($clean_url_data['resource_type']) {
 
@@ -321,6 +325,8 @@ case 'P':
     \Modules\Meta\Helpers\MetaExtHelper::getInstance()
         ->setBaseCode(\Modules\Meta\Types\MetaType::PRODUCT)
         ->addParam('model', \Modules\Goods\Models\ProductModel::objects()->get(['pk'=>$productid]));
+
+    Profiler::getInstance()->addPoint();
 
     require $xcart_dir.DIR_CUSTOMER.'/product.php';
 

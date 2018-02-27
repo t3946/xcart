@@ -6,6 +6,8 @@
 
 //!defined('AREA_TYPE') ?: define('AREA_TYPE', null);
 
+use Modules\Core\Components\Profiler;
+
 if (!defined('XCART_START')) {
     header("Location: index.php");
     die("Access denied");
@@ -15,6 +17,8 @@ if (empty($_SERVER['SERVER_NAME']) && !empty($_SERVER['HTTP_HOST'])) {
     $s_name_a               = explode(':', $_SERVER['HTTP_HOST']);
     $_SERVER['SERVER_NAME'] = $s_name_a[0];
 }
+
+Profiler::getInstance()->addPoint();
 
 @require_once $xcart_dir . "/prepare.php";
 
@@ -32,6 +36,9 @@ if (!@is_readable($xcart_dir . "/config.php")) {
     echo "Can't read config!";
     exit;
 }
+
+Profiler::getInstance()->addPoint();
+
 @require_once $xcart_dir . "/config.php";
 
 if (empty($XCART_APP_CONFIG)) {
@@ -51,8 +58,12 @@ else {
     $app_settings = $XCART_APP_CONFIG;
 }
 
+Profiler::getInstance()->addPoint();
+
 \Xcart\App\Main\Xcart::init($app_settings);
 \Xcart\App\Main\Xcart::app()->beforeRun();
+
+Profiler::getInstance()->addPoint();
 
 if (defined('CIDEV_CRON_START') && CIDEV_CRON_START == "CRON") {
 
@@ -64,6 +75,8 @@ if (defined('CIDEV_CRON_START') && CIDEV_CRON_START == "CRON") {
         $_SERVER['REQUEST_URI'] = $_SERVER['SCRIPT_FILENAME'];
     }
 }
+
+Profiler::getInstance()->addPoint();
 
 #
 # Initialize logging
@@ -84,6 +97,8 @@ catch (\Exception $e) {
     x_log_add('php', $e->getMessage(), true);
     die($dieError);
 }
+
+Profiler::getInstance()->addPoint();
 
 $file_temp_dir = $var_dirs["tmp"];
 
@@ -108,12 +123,16 @@ $artss_code           = 'ART';
 #
 //error_reporting($x_error_reporting);
 
+Profiler::getInstance()->addPoint();
+
 #
 # Multi Storefront
 #
 if (!empty($current_storefront)) {
     @include_once $xcart_dir . 'modules/Multiple_Storefronts/sf_config.php';
 }
+
+Profiler::getInstance()->addPoint();
 
 #
 # Include functions
@@ -128,9 +147,6 @@ include_once($xcart_dir . "/include/bench.php");
 while ($db_connect_limit-- > 0 && !@db_connect($sql_host, $sql_user, $sql_password)) { }
 db_select_db($sql_db) || die("Sorry, the shop is inaccessible temporarily. Please try again later.");*/
 
-$tmp = func_query_first("SHOW VARIABLES LIKE 'max_allowed_packet'");
-$sql_max_allowed_packet = intval($tmp['Value']);
-unset($tmp);
 
 if (preg_match("/^(\d+\.\d+\.\d+)/", db_mysql_get_server_info(), $match)) {
     define("X_MYSQL_VERSION", $match[1]);
@@ -147,6 +163,8 @@ if (preg_match("/^(\d+\.\d+\.\d+)/", db_mysql_get_server_info(), $match)) {
         define("X_MYSQL5018_COMP_MODE", true);
     }
 }
+
+Profiler::getInstance()->addPoint();
 
 #
 ## Set the session name here
@@ -232,6 +250,7 @@ $var_dirs_rules = [
         ".htaccess" => "Deny from all",
     ],
 ];
+Profiler::getInstance()->addPoint();
 
 foreach ($var_dirs as $k => $v) {
     if (!file_exists($v) || !is_dir($v)) {
@@ -265,6 +284,8 @@ if (!@include $xcart_dir . "/smarty.php") {
     echo "Can't launch template engine!";
     exit;
 }
+
+Profiler::getInstance()->addPoint();
 
 $smarty->assign('xcartApp',\Xcart\App\Main\Xcart::app());
 #
@@ -329,13 +350,17 @@ $templates_repository = $xcart_dir . $templates_repository_dir;
 //    db_query("SET OPTION SQL_MAX_JOIN_SIZE=1073741824");
 //}
 //unset($mjsize);
-
+Profiler::getInstance()->addPoint();
 #
 # Read config variables from Database
 # This variables are used inside php scripts, not in smarty templates
 #
-$c_result = db_query("SELECT name, value, category FROM $sql_tbl[config] WHERE type != 'separator'");
+
+Profiler::getInstance()->addPoint();
+
+$c_result = db_query("SELECT name, value, category FROM $sql_tbl[config] WHERE type != 'separator'", true);
 $config   = [];
+Profiler::getInstance()->addPoint();
 if ($c_result) {
     while ($row = db_fetch_row($c_result)) {
         if (!empty($row[2])) {
@@ -346,16 +371,15 @@ if ($c_result) {
         }
     }
 }
-
 db_free_result($c_result);
-
+Profiler::getInstance()->addPoint();
 $config["Sessions"]["session_length"] = $use_session_length;
 
 #
 # Include data cache functionality
 #
 @include_once($xcart_dir . "/include/data_cache.php");
-
+Profiler::getInstance()->addPoint();
 #
 # Timezone offset (sec) = N hours x 60 minutes x 60 seconds
 #
@@ -404,8 +428,11 @@ if (!defined("QUICK_START")) {
 #
 # Prepare session
 #
+Profiler::getInstance()->addPoint();
 @include_once $xcart_dir . "/include/sessions.php";
+Profiler::getInstance()->addPoint();
 @include_once $xcart_dir . "/include/unallowed_request.php";
+Profiler::getInstance()->addPoint();
 
 if (!defined('QUICK_START')) {
     @include_once($xcart_dir . "/include/blowfish.php");
@@ -417,6 +444,8 @@ if (!defined('QUICK_START')) {
 }
 
 $search_all_website = isset($search_all_website) ? $search_all_website : false;
+
+Profiler::getInstance()->addPoint();
 
 $t                      = parse_url($config['Search_All']['search_all_website_url']);
 $search_all_website_url = $t['host'];
@@ -583,7 +612,7 @@ if (!defined("QUICK_START")) {
     #
     @include_once($xcart_dir . "/include/adaptives.php");
 }
-
+Profiler::getInstance()->addPoint();
 #
 # Read Modules and put in into $active_modules
 #
@@ -693,17 +722,20 @@ if (!defined("QUICK_START")) {
     // Assign email regular expression
     $smarty->assign('clean_url_validation_regexp', func_clean_url_validation_regexp());
 }
-
+Profiler::getInstance()->addPoint();
 #
 # Init modules
 #
 if (is_array($active_modules)) {
     foreach ($active_modules as $__k => $__v) {
         if (file_exists($xcart_dir . "/modules/" . $__k . "/init.php")) {
+            Profiler::getInstance()->addPoint();
             include $xcart_dir . "/modules/" . $__k . "/init.php";
+            Profiler::getInstance()->addPoint($__k);
         }
     }
 }
+Profiler::getInstance()->addPoint();
 
 if (defined('CIDEV_CRON_START') && CIDEV_CRON_START == "CRON") {
 
@@ -794,6 +826,7 @@ if ((rand() % 100) == 0) {
     db_query("DELETE FROM $sql_tbl[temporary_data] WHERE expire<UNIX_TIMESTAMP(NOW())");
 }
 
+Profiler::getInstance()->addPoint();
 #
 # Remember visitor for a long time period
 #
@@ -817,6 +850,8 @@ if (false && !function_exists('fn_shutdown')) {
 
     register_shutdown_function('fn_shutdown');
 }
+
+Profiler::getInstance()->addPoint();
 
 $smarty->register_function('getBanners', ['Xcart\Helpers\Banners', 'getBannerSmarty']);
 $smarty->register_function('getSliderData', ['Xcart\Helpers\SliderData', 'getSliderDataSmarty']);
