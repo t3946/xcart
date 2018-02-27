@@ -187,7 +187,8 @@
 
 
 {/capture}
-{ include file="menu.tpl" menu_title="Departments" menu_content=$smarty.capture.menu cellpadding=$fc_cellpadding}
+
+{include file="menu.tpl" menu_title="Departments" menu_content=$smarty.capture.menu cellpadding=$fc_cellpadding}
 
 {/if}
 
