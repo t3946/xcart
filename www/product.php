@@ -81,8 +81,7 @@ Profiler::getInstance()->addPoint();
 	if($country['country_code']==$config['Company']['location_country'])
 	$smarty->assign("company_country", $country['country']);*/
 
-//$product_info = func_select_product($productid, @$user_account['membershipid'], !isset($sku));
-$product_info = $oProduct->getAttributes();
+$product_info = func_select_product($productid, @$user_account['membershipid'], !isset($sku));
 
 if (!$oProduct) {
     func_header_location("search.php?substring=".urlencode($sku)."&by_sku=1&mode=search&from=fast_search");
