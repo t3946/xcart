@@ -80,7 +80,9 @@ Profiler::getInstance()->addPoint();
 
 if (!empty($active_modules['CIDEV_Best_Search_Filter'])) {
     include $xcart_dir . "/modules/CIDEV_Best_Search_Filter/filter_init.php";
+
     Profiler::getInstance()->addPoint();
+
     if (!empty($subcategories) && is_array($subcategories)) {
 
 //        $search_query_count_NEW_SUB_CAT = $search_query_count_NEW;

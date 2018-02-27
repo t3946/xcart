@@ -294,7 +294,8 @@ Order By 3 desc;";
 							ORDER BY xb.products_count DESC
 							LIMIT ".($config["Brands"]["brands_listed_count"]+1);
 
-	$menu_brands = func_query($menu_brands_query);
+
+	$menu_brands = func_query($menu_brands_query, true);
 
 	$count_menu_brands = count($menu_brands);
 
@@ -310,31 +311,30 @@ Order By 3 desc;";
 	$smarty->assign("count_menu_brands", $count_menu_brands);
 
 }
-
-if ($config["Appearance"]["Enable_surf_stats"] == "Y"){
-
-	if (!empty($clean_url_data["resource_type"])){
-		$resource_type = $clean_url_data["resource_type"];
-		if ($resource_type == SurfPathModel::GOAL_TYPE_CHECKOUT){
-			$resource_type = SurfPathModel::GOAL_TYPE_SEARCH;
-		}
-	} else {
-		$resource_type = SurfPathModel::GOAL_TYPE_HOME_PAGE;
-	}
-
-	if ($detect_isMobile_was_created == 'Y' && $resource_type == SurfPathModel::GOAL_TYPE_HOME_PAGE) {
-
-	} else {
-        SurfingHelper::logSurfPath([
-        	'resource_type' => $resource_type,
-            'resource_id' => $clean_url_data["resource_id"],
-			'additional_data' => SurfingHelper::getSurfPathAdditionalData([
-				'resource_type' => $resource_type,
-				'cidev_filters_tree_sorted' => $cidev_filters_tree_sorted
-			]),
-		]);
-	}
-}
+//if ($config["Appearance"]["Enable_surf_stats"] == "Y"){
+//
+//	if (!empty($clean_url_data["resource_type"])){
+//		$resource_type = $clean_url_data["resource_type"];
+//		if ($resource_type == SurfPathModel::GOAL_TYPE_CHECKOUT){
+//			$resource_type = SurfPathModel::GOAL_TYPE_SEARCH;
+//		}
+//	} else {
+//		$resource_type = SurfPathModel::GOAL_TYPE_HOME_PAGE;
+//	}
+//
+//	if ($detect_isMobile_was_created == 'Y' && $resource_type == SurfPathModel::GOAL_TYPE_HOME_PAGE) {
+//
+//	} else {
+//        SurfingHelper::logSurfPath([
+//        	'resource_type' => $resource_type,
+//            'resource_id' => $clean_url_data["resource_id"],
+//			'additional_data' => SurfingHelper::getSurfPathAdditionalData([
+//				'resource_type' => $resource_type,
+//				'cidev_filters_tree_sorted' => $cidev_filters_tree_sorted
+//			]),
+//		]);
+//	}
+//}
 
 	if ( !(empty($cat) && empty($keyphrase)) && $cat_with_one_brand_filter != "Y"){
 		$ga_page_name = "category_list";
@@ -360,9 +360,7 @@ $smarty->assign("main","catalog");
 
 # Assign the current location line
 $smarty->assign("location", $location);
-$bench2 = func_microtime();
 $smarty->assign("bench_name", "home.php");
-$smarty->assign("bench_time", $bench2-$bench1);
 
 func_display("customer/home.tpl",$smarty);
 
