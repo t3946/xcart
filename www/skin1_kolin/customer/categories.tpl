@@ -213,159 +213,159 @@
 <input type="hidden" name="f_mode" value="f_search" id="f_mode" >
 
 <br />
-{capture name=menu_filter}
- {assign var="filter_name" value=""}
- <table border="0" cellpadding="0" cellspacing="0" width="100%">
+{*{capture name=menu_filter}*}
+ {*{assign var="filter_name" value=""}*}
+ {*<table border="0" cellpadding="0" cellspacing="0" width="100%">*}
 
- {if $cidev_filters_tree_sorted ne ""}
-  {foreach from=$cidev_filters_tree_sorted item=v}
-    {if $v.filter_values ne ""}
+ {*{if $cidev_filters_tree_sorted ne ""}*}
+  {*{foreach from=$cidev_filters_tree_sorted item=v}*}
+    {*{if $v.filter_values ne ""}*}
 
-     {assign var="row_conter" value="0"}
+     {*{assign var="row_conter" value="0"}*}
 
-     {foreach from=$v.filter_values item=tree_filter_values name=filterloop}
+     {*{foreach from=$v.filter_values item=tree_filter_values name=filterloop}*}
 
-      {if $tree_filter_values.found eq 'Y' || $tree_filter_values.selected eq "Y"}
+      {*{if $tree_filter_values.found eq 'Y' || $tree_filter_values.selected eq "Y"}*}
 
-	    {if $filter_name ne $v.f_name}
-		    {if $filter_name ne ""}
-		        <tr><td colspan="2">&nbsp;</td><tr>
-		    {/if}
-        	<tr><td colspan="2"><B>{$v.f_name}:</B></td><tr>
-	        {assign var="filter_name" value=$v.f_name}
-	    {/if}
+	    {*{if $filter_name ne $v.f_name}*}
+		    {*{if $filter_name ne ""}*}
+		        {*<tr><td colspan="2">&nbsp;</td><tr>*}
+		    {*{/if}*}
+        	{*<tr><td colspan="2"><B>{$v.f_name}:</B></td><tr>*}
+	        {*{assign var="filter_name" value=$v.f_name}*}
+	    {*{/if}*}
 
-        {if $row_conter lt $v.show_N_fvalues}
-	<tr>
-	<td width="5">
-		<input name="fv_ids[{$tree_filter_values.fv_id}]" id="fv_id_{$tree_filter_values.fv_id}" value="Y" type="checkbox"
-		{if $tree_filter_values.selected eq 'Y'}
-			checked="checked"
-			{assign var="show_clear_all_button" value="Y"}
-		{/if}
-		>
-	</td>
-	<td {if $tree_filter_values.selected eq 'Y' && $tree_filter_values.selected_and_found ne "Y"}style="color: #cccccc;"{/if}>{$tree_filter_values.fv_name} {if $filter_found_fv_ids_count[$tree_filter_values.fv_id] ne ""}({$filter_found_fv_ids_count[$tree_filter_values.fv_id]}){/if}</td>
-	</tr>
-	{/if}
+        {*{if $row_conter lt $v.show_N_fvalues}*}
+	{*<tr>*}
+	{*<td width="5">*}
+		{*<input name="fv_ids[{$tree_filter_values.fv_id}]" id="fv_id_{$tree_filter_values.fv_id}" value="Y" type="checkbox"*}
+		{*{if $tree_filter_values.selected eq 'Y'}*}
+			{*checked="checked"*}
+			{*{assign var="show_clear_all_button" value="Y"}*}
+		{*{/if}*}
+		{*>*}
+	{*</td>*}
+	{*<td {if $tree_filter_values.selected eq 'Y' && $tree_filter_values.selected_and_found ne "Y"}style="color: #cccccc;"{/if}>{$tree_filter_values.fv_name} {if $filter_found_fv_ids_count[$tree_filter_values.fv_id] ne ""}({$filter_found_fv_ids_count[$tree_filter_values.fv_id]}){/if}</td>*}
+	{*</tr>*}
+	{*{/if}*}
 
-	{math equation="x+1" x=$row_conter assign="row_conter"}
+	{*{math equation="x+1" x=$row_conter assign="row_conter"}*}
 
-      {/if}
-     {/foreach}
+      {*{/if}*}
+     {*{/foreach}*}
 
-     {if $row_conter gt $v.show_N_fvalues}
-        <tr>
-        <td colspan="2" align="right">
+     {*{if $row_conter gt $v.show_N_fvalues}*}
+        {*<tr>*}
+        {*<td colspan="2" align="right">*}
 
-            <a class="simple-button" target="_blank" title="Show more"
-               onclick="javascript: popupOpen('cidev_show_more_filters.php?target=show_more&return={$canonical_url}&filter=fvalues&p_ids[{$filter_min_price_selected}_{$filter_max_price_selected}]=Y{if $filter_selected_brandids}&b_ids={','|implode:$filter_selected_brandids}{/if}&categoryid={$current_category.categoryid}&f_id={$v.f_id}{if $fv_ids_arr}&fv_sel={','|implode:$fv_ids_arr}{/if}', '{$v.f_name}'); return false;"
-               href="/cidev_show_more_filters.php?target=show_more&filter=fvalues&f_id={$v.f_id}"><span>Show more</span></a>
+            {*<a class="simple-button" target="_blank" title="Show more"*}
+               {*onclick="javascript: popupOpen('cidev_show_more_filters.php?target=show_more&return={$canonical_url}&filter=fvalues&p_ids[{$filter_min_price_selected}_{$filter_max_price_selected}]=Y{if $filter_selected_brandids}&b_ids={','|implode:$filter_selected_brandids}{/if}&categoryid={$current_category.categoryid}&f_id={$v.f_id}{if $fv_ids_arr}&fv_sel={','|implode:$fv_ids_arr}{/if}', '{$v.f_name}'); return false;"*}
+               {*href="/cidev_show_more_filters.php?target=show_more&filter=fvalues&f_id={$v.f_id}"><span>Show more</span></a>*}
 
-        </td>
-        <tr>
-     {/if}
+        {*</td>*}
+        {*<tr>*}
+     {*{/if}*}
 
-    {/if}
-  {/foreach}
- {/if}
-
-
-         {if count($aBrandFilters) > 0}
-             {if $filter_name ne ""}
-                 <tr>
-                     <td colspan="2">&nbsp;</td>
-                 <tr>
-                 {/if}
-                 <tr>
-                     <td colspan="2"><B>Brand:</B></td>
-                 </tr>
-                 {assign var="row_conter" value="0"}
-                 {foreach from=$aBrandFilters item=oBrand key=k name=brandloop}
-                     {if $smarty.foreach.brandloop.index < 5}
-                         <tr>
-                             <td width="5"><input name="b_ids[{$oBrand->getBrandId()}]" id="b_id_{$oBrand->getBrandId()}" value="Y"
-                                                  type="checkbox" {if $filter_selected_brandids && in_array($oBrand->getBrandId(), $filter_selected_brandids)} checked="checked" {assign var="show_clear_all_button" value="Y"} {/if}>
-                             </td>
-                             <td {if $v.selected eq 'Y' && $v.selected_and_found ne "Y"}style="color: #cccccc;"{/if}>{$oBrand->getBrandName()}
-                                 ({$oBrand->getCount()})
-                             </td>
-                         </tr>
-                     {/if}
-                 {/foreach}
-
-                 {if count($aBrandFilters) gt 5}
-                 <tr>
-                     <td colspan="2" align="right">
-                         <a class="simple-button" target="_blank" title="Show more"
-                            onclick="javascript: popupOpen('cidev_show_more_filters.php?target=show_more&return={$canonical_url}&filter=brand&p_ids[{$filter_min_price_selected}_{$filter_max_price_selected}]=Y&categoryid={$current_category.categoryid}{if $fv_ids_arr}&fv_sel={','|implode:$fv_ids_arr}{/if}', 'Brand'); return false;"
-                            href="/cidev_show_more_filters.php?target=show_more&filter=brand"><span>Show more</span></a>
-                     </td>
-                 <tr>
-             {/if}
-         {/if}
-
-{if $filter_prices ne ""}
-  <tr><td colspan="2">&nbsp;</td><tr>
-  <tr><td colspan="2"><B>Price:</B></td><tr>
-  {if $filter_max_price_selected gt "0"}
-	<tr>
-	<td>
-		<input name="p_ids[{$filter_min_price_selected}_{$filter_max_price_selected}]" id="price_ids_range" value="Y" type="checkbox" checked="checked">
-	</td>
-	<td>
-		{$config.General.currency_symbol}{$filter_min_price_selected} - {$config.General.currency_symbol}{$filter_max_price_selected}
-		{assign var="show_clear_all_button" value="Y"}
-	</td>
-	</tr>
-	<tr><td colspan="2">&nbsp;</td><tr>
-  {/if}
-
-  {foreach from=$filter_prices item=v key=k}
-   <tr>
-    <td width="5">
-        <input name="p_ids[{$k}]" id="p_id_{$k}" value="Y" type="checkbox"
-                {if $v.selected eq 'Y'}
-                        checked="checked"
-                        {assign var="show_clear_all_button" value="Y"}
-                {/if}
-
-		{if $v.count_products eq '0'}disabled="disabled"
-		{else}
-			{if $filter_max_price_selected gt "0"}
-				onclick="javascript: document.getElementById('price_ids_range').checked=false;"
-			{/if}
-		{/if}
-        >
-    </td>
-    <td {if $v.count_products eq '0'}style="color: #cccccc;"{/if *}>{$config.General.currency_symbol}{$v.min_price} - {$config.General.currency_symbol}{$v.max_price} ({$v.count_products})</td>
-   </tr>
-  {/foreach}
- {/if}
+    {*{/if}*}
+  {*{/foreach}*}
+ {*{/if}*}
 
 
-<tr>
-<td colspan="2"><br />
-<table width="100%" cellpadding="0" cellspacing="0">
-<tr>
-	<td align="left">
-{if ($filter_found_fv_ids ne "" || $filter_selected_and_found_brands ne "") || $brandid gt 0}
-	<input type="submit" value="Show" >
-	</td>
-{/if}
-	<td align="right">
-	{if $show_clear_all_button eq "Y"}
-	<input type="submit" value="Clear All" onclick="javascript: $('#f_mode').val('clear');" >
-	{/if}
-	</td>
-<tr>
-</table>
-</td>
-</tr>
+         {*{if count($aBrandFilters) > 0}*}
+             {*{if $filter_name ne ""}*}
+                 {*<tr>*}
+                     {*<td colspan="2">&nbsp;</td>*}
+                 {*<tr>*}
+                 {*{/if}*}
+                 {*<tr>*}
+                     {*<td colspan="2"><B>Brand:</B></td>*}
+                 {*</tr>*}
+                 {*{assign var="row_conter" value="0"}*}
+                 {*{foreach from=$aBrandFilters item=oBrand key=k name=brandloop}*}
+                     {*{if $smarty.foreach.brandloop.index < 5}*}
+                         {*<tr>*}
+                             {*<td width="5"><input name="b_ids[{$oBrand->getBrandId()}]" id="b_id_{$oBrand->getBrandId()}" value="Y"*}
+                                                  {*type="checkbox" {if $filter_selected_brandids && in_array($oBrand->getBrandId(), $filter_selected_brandids)} checked="checked" {assign var="show_clear_all_button" value="Y"} {/if}>*}
+                             {*</td>*}
+                             {*<td {if $v.selected eq 'Y' && $v.selected_and_found ne "Y"}style="color: #cccccc;"{/if}>{$oBrand->getBrandName()}*}
+                                 {*({$oBrand->getCount()})*}
+                             {*</td>*}
+                         {*</tr>*}
+                     {*{/if}*}
+                 {*{/foreach}*}
 
- </table>
-{/capture}
-{ include file="menu.tpl" menu_title="Shop By" menu_content=$smarty.capture.menu_filter}
+                 {*{if count($aBrandFilters) gt 5}*}
+                 {*<tr>*}
+                     {*<td colspan="2" align="right">*}
+                         {*<a class="simple-button" target="_blank" title="Show more"*}
+                            {*onclick="javascript: popupOpen('cidev_show_more_filters.php?target=show_more&return={$canonical_url}&filter=brand&p_ids[{$filter_min_price_selected}_{$filter_max_price_selected}]=Y&categoryid={$current_category.categoryid}{if $fv_ids_arr}&fv_sel={','|implode:$fv_ids_arr}{/if}', 'Brand'); return false;"*}
+                            {*href="/cidev_show_more_filters.php?target=show_more&filter=brand"><span>Show more</span></a>*}
+                     {*</td>*}
+                 {*<tr>*}
+             {*{/if}*}
+         {*{/if}*}
+
+{*{if $filter_prices ne ""}*}
+  {*<tr><td colspan="2">&nbsp;</td><tr>*}
+  {*<tr><td colspan="2"><B>Price:</B></td><tr>*}
+  {*{if $filter_max_price_selected gt "0"}*}
+	{*<tr>*}
+	{*<td>*}
+		{*<input name="p_ids[{$filter_min_price_selected}_{$filter_max_price_selected}]" id="price_ids_range" value="Y" type="checkbox" checked="checked">*}
+	{*</td>*}
+	{*<td>*}
+		{*{$config.General.currency_symbol}{$filter_min_price_selected} - {$config.General.currency_symbol}{$filter_max_price_selected}*}
+		{*{assign var="show_clear_all_button" value="Y"}*}
+	{*</td>*}
+	{*</tr>*}
+	{*<tr><td colspan="2">&nbsp;</td><tr>*}
+  {*{/if}*}
+
+  {*{foreach from=$filter_prices item=v key=k}*}
+   {*<tr>*}
+    {*<td width="5">*}
+        {*<input name="p_ids[{$k}]" id="p_id_{$k}" value="Y" type="checkbox"*}
+                {*{if $v.selected eq 'Y'}*}
+                        {*checked="checked"*}
+                        {*{assign var="show_clear_all_button" value="Y"}*}
+                {*{/if}*}
+
+		{*{if $v.count_products eq '0'}disabled="disabled"*}
+		{*{else}*}
+			{*{if $filter_max_price_selected gt "0"}*}
+				{*onclick="javascript: document.getElementById('price_ids_range').checked=false;"*}
+			{*{/if}*}
+		{*{/if}*}
+        {*>*}
+    {*</td>*}
+    {*<td {if $v.count_products eq '0'}style="color: #cccccc;"{/if *}{*>{$config.General.currency_symbol}{$v.min_price} - {$config.General.currency_symbol}{$v.max_price} ({$v.count_products})</td>*}
+   {*</tr>*}
+  {*{/foreach}*}
+ {*{/if}*}
+
+
+{*<tr>*}
+{*<td colspan="2"><br />*}
+{*<table width="100%" cellpadding="0" cellspacing="0">*}
+{*<tr>*}
+	{*<td align="left">*}
+{*{if ($filter_found_fv_ids ne "" || $filter_selected_and_found_brands ne "") || $brandid gt 0}*}
+	{*<input type="submit" value="Show" >*}
+	{*</td>*}
+{*{/if}*}
+	{*<td align="right">*}
+	{*{if $show_clear_all_button eq "Y"}*}
+	{*<input type="submit" value="Clear All" onclick="javascript: $('#f_mode').val('clear');" >*}
+	{*{/if}*}
+	{*</td>*}
+{*<tr>*}
+{*</table>*}
+{*</td>*}
+{*</tr>*}
+
+ {*</table>*}
+{*{/capture}*}
+{*{ include file="menu.tpl" menu_title="Shop By" menu_content=$smarty.capture.menu_filter}*}
 
 </form>
 {/if}

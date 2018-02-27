@@ -6,7 +6,7 @@ Profiler::getInstance()->addPoint();
 //if ($gPage_status['match'] && $gPage_status['type'] == 'brand') {
 //    $b_ids = [$gPage_status['page_id'] => "Y"];
 //}
-//
+
 //$aFilterSelected = null;
 //if (!empty($fv_ids))
 //    $aFilterSelected = array_keys($fv_ids);
@@ -52,7 +52,7 @@ Profiler::getInstance()->addPoint();
 //    $smarty->assign('filter_selected_brandids', $selected_brandids);
 //}
 
-//$search_data["products"]["search_in_subcategories"] = "Y";
+$search_data["products"]["search_in_subcategories"] = "Y";
 //$filter_selected_and_found_brands = "";
 //$cidev_filters_tree_sorted = "";
 //$filter_found_fv_ids_count = "";
@@ -153,7 +153,7 @@ Profiler::getInstance()->addPoint();
 //$search_data['products']['sorted_filter_values_id'] = $sorted_filter_values_id;
 //$search_data['products']['filter_selected_brandids'] = $filter_selected_brandids;
 //$search_data['products']['filter_prices'] = $filter_prices;
-//
+
 //
 //if ($filter_max_price_selected > 0) {
 //    $search_data['products']['price_min'] = $filter_min_price_selected;
@@ -175,16 +175,17 @@ Profiler::getInstance()->addPoint();
 //        }
 //    }
 //}
-//if (!isset($sort))
-//    $sort = $config["Appearance"]["products_order"];
-//if (!isset($sort_direction))
-//    $sort_direction = 0;
-//
-//if (isset($_GET['p']) && is_numeric($_GET['p'])) {
-//    $first_page = 0;
-//    $objects_per_page = intval($_GET['p'])*intval($config["Appearance"]["products_per_page"]);
-//    $smarty->assign('ajax_navigation_page', intval($_GET['p']));
-//}
+
+if (!isset($sort))
+    $sort = $config["Appearance"]["products_order"];
+if (!isset($sort_direction))
+    $sort_direction = 0;
+
+if (isset($_GET['p']) && is_numeric($_GET['p'])) {
+    $first_page = 0;
+    $objects_per_page = intval($_GET['p'])*intval($config["Appearance"]["products_per_page"]);
+    $smarty->assign('ajax_navigation_page', intval($_GET['p']));
+}
 
 Profiler::getInstance()->addPoint();
 $mode = "search";
@@ -200,6 +201,7 @@ Profiler::getInstance()->addPoint();
 //        }
 //    }
 //}
+//
 //$search_query_count_NEW = str_replace("  ", " ", $search_query_count_NEW);
 //if (!empty($cidev_filters_tree) && is_array($cidev_filters_tree))
 //{
@@ -281,6 +283,7 @@ Profiler::getInstance()->addPoint();
 //    $cidev_filters_tree_sorted = $cidev_filters_tree;
 //    $smarty->assign("cidev_filters_tree_sorted", $cidev_filters_tree_sorted);
 //}
+//Profiler::getInstance()->addPoint();
 //if (!empty($filter_found_brands) && is_array($filter_found_brands)) {
 //
 //    $filter_selected_and_found_brands = $filter_found_brands;
@@ -311,8 +314,9 @@ Profiler::getInstance()->addPoint();
 //        $filter_selected_and_found_brands = $filter_selected_brands;
 //    }
 //}
-//$filter_prices_old = $filter_prices;
-//$filter_prices = [];
+Profiler::getInstance()->addPoint();
+$filter_prices_old = $filter_prices;
+$filter_prices = [];
 
 //if ($filter_max_price_selected > 0) {
 //    $filter_min_price = $filter_min_price_selected;
@@ -325,7 +329,7 @@ Profiler::getInstance()->addPoint();
 //    $filter_max_price = func_query_first_cell($search_query_max_price, true);
 //    $filter_min_price = 0;
 //}
-
+//
 //if ($filter_max_price > 0) {
 //    $filter_range_price = ($filter_max_price - $filter_min_price) / 5;
 //
@@ -356,14 +360,15 @@ Profiler::getInstance()->addPoint();
 //    }
 //}
 
-//if (!empty($filter_prices)) {
-//
-//    if (strpos($search_query_count_NEW, '((xcart_pricing.price >=') !== false) {
-//        $filter_price_is_checked = true;
-//    } else {
-//        $search_query_prices_range_arr = explode("GROUP BY", $search_query_count_NEW);
-//        $filter_price_is_checked = false;
-//    }
+Profiler::getInstance()->addPoint();
+if (!empty($filter_prices)) {
+
+    if (strpos($search_query_count_NEW, '((xcart_pricing.price >=') !== false) {
+        $filter_price_is_checked = true;
+    } else {
+        $search_query_prices_range_arr = explode("GROUP BY", $search_query_count_NEW);
+        $filter_price_is_checked = false;
+    }
 
 //    foreach ($filter_prices as $k => $v)
 //    {
@@ -382,11 +387,11 @@ Profiler::getInstance()->addPoint();
 //        db_free_result($search_query_prices_range_products);
 //        $filter_prices[$k]["count_products"] = $count_search_query_prices_range_products;
 //    }
-//    $smarty->assign("filter_prices", $filter_prices);
-//
-//    $smarty->assign("filter_min_price_selected", $filter_min_price_selected);
-//    $smarty->assign("filter_max_price_selected", $filter_max_price_selected);
-//}
-//
-//$smarty->assign("fv_ids_arr", $fv_ids_arr);
+    $smarty->assign("filter_prices", $filter_prices);
+
+    $smarty->assign("filter_min_price_selected", $filter_min_price_selected);
+    $smarty->assign("filter_max_price_selected", $filter_max_price_selected);
+}
+
+$smarty->assign("fv_ids_arr", $fv_ids_arr);
 Profiler::getInstance()->addPoint();
