@@ -347,42 +347,29 @@ x_session_save("current_html_banner");
 Profiler::getInstance()->addPoint();
 $statuses = func_query_hash('SELECT code, name, type FROM ' . $sql_tbl['order_statuses']
     . ' ORDER BY orderby', array('type', 'code'), false, true);
+
 $smarty->assign('statuses', $statuses);
+$smarty->assign('use_schema_org', 'Y');
 
 
-#
-##
-###
-//if ($current_storefront == "12"){
-	$smarty->assign('use_schema_org', 'Y');
+Profiler::getInstance()->addPoint();
+
+//if (!empty($active_modules['CIDEV_Best_Search_Filter']) && isset($clean_url_data) && in_array($clean_url_data['resource_type'], array('C','M'))) {
+//	$cidev_filters_tree = func_cidev_filters_tree(true);
+//	$smarty->assign("cidev_filters_tree", $cidev_filters_tree);
+//
+//	$filter_price_ranges = array(0, 10, 20, 50, 100, 200, 500, 1000, 2000, 5000, 10000, 20000, 50000, 100000, 200000, 500000, 1000000);
 //}
-###
-##
-#
 
-if (!empty($active_modules['CIDEV_Best_Search_Filter']) && isset($clean_url_data) && in_array($clean_url_data['resource_type'], array('C','M'))) {
-	$cidev_filters_tree = func_cidev_filters_tree(true);
-	$smarty->assign("cidev_filters_tree", $cidev_filters_tree);
-
-	$filter_price_ranges = array(0, 10, 20, 50, 100, 200, 500, 1000, 2000, 5000, 10000, 20000, 50000, 100000, 200000, 500000, 1000000);
-}
-
-#
-##
-###
+Profiler::getInstance()->addPoint();
 x_session_register('notify_when_in_stock', array());
 $smarty->assign("notify_when_in_stock", $notify_when_in_stock);
-###
-##
-#
-
-#
-##
-###
 x_session_register('first_order_total_in_current_session');
 x_session_register('pointid_ab_testing_arr', array());
 
 
+
+Profiler::getInstance()->addPoint();
 x_session_register('variant_id_for_point2');
 $variant_id_for_point2 = Get_AB_Variant(2);
 x_session_save("variant_id_for_point2");
@@ -425,6 +412,7 @@ $smarty->assign("variant_id_for_point11", $variant_id_for_point11);
 ##
 #
 
+Profiler::getInstance()->addPoint();
 ###
 if ($HTTPS){
 	$smarty->assign("HTTPS_url", "Y");
