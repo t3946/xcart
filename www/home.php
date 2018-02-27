@@ -98,7 +98,7 @@ if ($cidev_dispatched_request_arr[0] == "keyword" && !empty($cidev_dispatched_re
 	$e_search_data["substring"] = $cidev_dispatched_request_arr[1];
 	$e_search_data["substring"] = str_replace("-", " ", $e_search_data["substring"]);
 }
-
+Profiler::getInstance()->addPoint();
 if ($REQUEST_METHOD == 'POST' && $e_mode == "e_search"){
 
     $e_search_data_orig_substring = $e_posted_data["substring"];
@@ -120,7 +120,7 @@ if ($REQUEST_METHOD == 'POST' && $e_mode == "e_search"){
     func_header_location("/keyword/".$redirect_substring."/?mode_search=Y");
 }
 
-
+Profiler::getInstance()->addPoint();
 #
 ##
 ###
@@ -147,7 +147,7 @@ if (is_array($e_search_data) && !empty($e_search_data["substring"])){
 
 }
 
-
+Profiler::getInstance()->addPoint();
 if (is_array($e_search_data) && !empty($e_search_data["substring"])){
 
 	if (empty($clean_url_data['resource_type'])){
@@ -235,13 +235,13 @@ else {
 	x_session_save("e_search_data");
 }
 
-
+Profiler::getInstance()->addPoint();
 
 if (!empty($keyphrase)) {
     include $xcart_dir . '/include/search_categories.php';
 }
 
-
+Profiler::getInstance()->addPoint();
 
 if (!empty($current_category) and is_array($current_category["category_location"])) {
 	foreach ($current_category["category_location"] as $k => $v) {
@@ -257,7 +257,7 @@ if (!empty($current_category) && is_array($location)) {
 	$current_category['meta_keywords'] = trim(strip_tags(substr($current_category['meta_keywords'], 0, strlen($current_category['meta_keywords']) - 2)));
 	$smarty->assign('current_category', $current_category);
 }
-
+Profiler::getInstance()->addPoint();
 $tmp_count_location = count($location);
 if (!empty($current_category) && is_array($location) && (empty($page) || $page == "1") ) {
         $counter_location = 0;
@@ -272,7 +272,7 @@ if (!empty($current_category) && is_array($location) && (empty($page) || $page =
 if ((empty($cat) || $cat=="0") && (empty($page) || $page == "1")){
         include './newproducts.php';
 }
-
+Profiler::getInstance()->addPoint();
 #
 ## Brands
 ###
