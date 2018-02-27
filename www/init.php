@@ -63,7 +63,7 @@ Profiler::getInstance()->addPoint();
 \Xcart\App\Main\Xcart::init($app_settings);
 \Xcart\App\Main\Xcart::app()->beforeRun();
 
-Profiler::getInstance()->addPoint();
+Profiler::getInstance()->addPoint('xcart initialized');
 
 if (defined('CIDEV_CRON_START') && CIDEV_CRON_START == "CRON") {
 

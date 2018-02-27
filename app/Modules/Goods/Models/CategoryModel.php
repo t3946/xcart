@@ -132,6 +132,11 @@ class CategoryModel extends TreeModel
         return false;
     }
 
+    public function getFrontendName()
+    {
+        return $this->SEO_category_name ?: $this->category;
+    }
+
     public function getSubcategories($withProductCount = true, $level = 1, $tree = false, $cache = true)
     {
         $qs = static::objects()

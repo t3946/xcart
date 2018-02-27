@@ -3,6 +3,7 @@
 
 use Modules\Core\Components\Profiler;
 use Modules\Distributor\Helpers\DistributorHelper;
+use Modules\Goods\Models\ProductModel;
 
 define('OFFERS_DONT_SHOW_NEW',1);
 require "./auth.php";
@@ -171,11 +172,9 @@ if (!empty($active_modules["Upselling_Products"]))
 if (!empty($active_modules["Advanced_Statistics"]) && !defined("IS_ROBOT"))
     include $xcart_dir."/modules/Advanced_Statistics/prod_viewed.php";
 
-# START: random:18298_18304_18324 [2009 Jun 08 09:50] 
 if ($active_modules["Brands"])
     include $xcart_dir."/modules/Brands/customer_brands.php";
 else
-# END: random:18298_18304_18324 [2009 Jun 08 09:50] 
 if ($active_modules["Manufacturers"])
 	include $xcart_dir."/modules/Manufacturers/customer_manufacturers.php";
 
@@ -262,6 +261,13 @@ if (!empty($active_modules["SnS_connector"]))
 //include "./vote.php";
 
 //require $xcart_dir."/include/categories.php";
+
+/** @var ProductModel $oProduct */
+if ($oProduct && $categoryModel = $oProduct->getMainCategory()) {
+    foreach ($categoryModel->getObjects()->parents(true) as $model) {
+        $location[] = [$model->getFrontendName(), '/'];
+    }
+}
 
 if (!empty($current_category) and is_array($current_category["category_location"])) {
 	foreach ($current_category["category_location"] as $k=>$v) {
@@ -728,7 +734,7 @@ $smarty->assign("location", $location);
 Profiler::getInstance()->addPoint();
 
 
-//func_display("customer/home.tpl",$smarty);
+func_display("customer/home.tpl",$smarty);
 
 Profiler::getInstance()->addPoint();
 Profiler::getInstance()->stop('trace');
