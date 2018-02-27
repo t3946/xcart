@@ -1,5 +1,8 @@
 <?php
 
+use Modules\Core\Components\Profiler;
+
+Profiler::getInstance()->addPoint();
 if ($gPage_status['match'] && $gPage_status['type'] == 'brand') {
     $b_ids = [$gPage_status['page_id'] => "Y"];
 }
@@ -12,11 +15,11 @@ if (!empty($f_id)) {
     $oFilter = \Xcart\Filter::model(['f_id' => $f_id]);
 }
 else $oFilter = \Xcart\Filter::model();
-
+Profiler::getInstance()->addPoint();
 $oFilter
     ->setStoreFront(\Xcart\StoreFront::model(['storefrontid' => $current_storefront]))
     ->setCategory(\Xcart\Category::model(['categoryid' => $cat]));
-
+Profiler::getInstance()->addPoint();
 if (!empty($aFilterSelected)) {
     $oFilter->setFilterValuesSelected(
         \Xcart\FilterValue::model()->findAll(\Xcart\SQLBuilder::getInstance()->addCondition('fv_id IN (' . implode(',', $aFilterSelected) . ')'))
@@ -32,11 +35,11 @@ if (!empty($b_ids)) {
         \Xcart\Brand::model()->findAll(\Xcart\SQLBuilder::getInstance()->addCondition('brandid IN (' . implode(',', array_keys($b_ids)) . ')'))
     );
 }
-
+Profiler::getInstance()->addPoint();
 $aFilterValues = $oFilter->getMoreBrands();
 
 $smarty->assign("aBrandFilters", $aFilterValues);
-
+Profiler::getInstance()->addPoint();
 if ($gPage_status['match'] && $gPage_status['type'] == 'brand')
 {
     $selected_brandids = [];
@@ -49,7 +52,7 @@ if ($gPage_status['match'] && $gPage_status['type'] == 'brand')
     $smarty->assign('filter_selected_brandids', $selected_brandids);
 }
 
-
+Profiler::getInstance()->addPoint();
 $search_data["products"]["search_in_subcategories"] = "Y";
 $filter_selected_and_found_brands = "";
 $cidev_filters_tree_sorted = "";
@@ -127,6 +130,8 @@ elseif ($f_mode == "f_search") {
     }
 }
 
+Profiler::getInstance()->addPoint();
+
 if ($cat_with_one_brand_filter != 'Y') {
     if (!empty($filter_selected_brandids)) {
         $count_filter_selected_brandids = count($filter_selected_brandids);
@@ -148,7 +153,7 @@ else {
         $filter_selected_brandids[0] = $brandid_in_url;
     }
 }
-
+Profiler::getInstance()->addPoint();
 
 $search_data['products']['sorted_filter_values_id'] = $sorted_filter_values_id;
 $search_data['products']['filter_selected_brandids'] = $filter_selected_brandids;
@@ -163,7 +168,7 @@ else {
     $search_data['products']['price_min'] = "";
     $search_data['products']['price_max'] = "";
 }
-
+Profiler::getInstance()->addPoint();
 
 if (!empty($filter_selected_brandids) && is_array($filter_selected_brandids)) {
 
@@ -176,7 +181,7 @@ if (!empty($filter_selected_brandids) && is_array($filter_selected_brandids)) {
         }
     }
 }
-
+Profiler::getInstance()->addPoint();
 if (!isset($sort))
     $sort = $config["Appearance"]["products_order"];
 if (!isset($sort_direction))
@@ -187,12 +192,12 @@ if (isset($_GET['p']) && is_numeric($_GET['p'])) {
     $objects_per_page = intval($_GET['p'])*intval($config["Appearance"]["products_per_page"]);
     $smarty->assign('ajax_navigation_page', intval($_GET['p']));
 }
+
+Profiler::getInstance()->addPoint();
 $mode = "search";
 include $xcart_dir . "/include/search.php";
+Profiler::getInstance()->addPoint();
 
-/*
- *https://s3stores.teamwork.com/tasks/6258406
- */
 $bOptimisedSelectBrands = true;
 if ($bOptimisedSelectBrands) {
     if (isset($current_category) && is_array($current_category) && !empty($current_category) && isset($current_category['parentid'])
@@ -202,7 +207,7 @@ if ($bOptimisedSelectBrands) {
         }
     }
 }
-
+Profiler::getInstance()->addPoint();
 $search_query_count_NEW = str_replace("  ", " ", $search_query_count_NEW);
 if (!empty($cidev_filters_tree) && is_array($cidev_filters_tree))
 {
@@ -284,7 +289,7 @@ if (!empty($cidev_filters_tree) && is_array($cidev_filters_tree))
     $cidev_filters_tree_sorted = $cidev_filters_tree;
     $smarty->assign("cidev_filters_tree_sorted", $cidev_filters_tree_sorted);
 }
-
+Profiler::getInstance()->addPoint();
 if (!empty($filter_found_brands) && is_array($filter_found_brands)) {
 
     $filter_selected_and_found_brands = $filter_found_brands;
@@ -315,7 +320,7 @@ else {
         $filter_selected_and_found_brands = $filter_selected_brands;
     }
 }
-
+Profiler::getInstance()->addPoint();
 $filter_prices_old = $filter_prices;
 $filter_prices = [];
 
@@ -361,7 +366,7 @@ if ($filter_max_price > 0) {
     }
 }
 
-
+Profiler::getInstance()->addPoint();
 if (!empty($filter_prices)) {
 
     if (strpos($search_query_count_NEW, '((xcart_pricing.price >=') !== false) {
@@ -371,23 +376,23 @@ if (!empty($filter_prices)) {
         $filter_price_is_checked = false;
     }
 
-    foreach ($filter_prices as $k => $v)
-    {
-        $filter_price_sub_query = "((xcart_pricing.price >='" . $v["min_price"] . "' AND xcart_pricing.price <='" . $v["max_price"] . "'))";
-
-        if ($filter_price_is_checked) {
-            $search_query_prices_range = $search_query_count_NEW;
-            $search_query_prices_range = preg_replace('/\(\(xcart_pricing.price >=(.*?)\)\)/is', $filter_price_sub_query, $search_query_prices_range);
-        }
-        else {
-            $search_query_prices_range = $search_query_prices_range_arr[0] . " AND " . $filter_price_sub_query . " GROUP BY " . $search_query_prices_range_arr[1];
-        }
-
-        $search_query_prices_range_products = db_query($search_query_prices_range, true);
-        $count_search_query_prices_range_products = db_num_rows($search_query_prices_range_products);
-        db_free_result($search_query_prices_range_products);
-        $filter_prices[$k]["count_products"] = $count_search_query_prices_range_products;
-    }
+//    foreach ($filter_prices as $k => $v)
+//    {
+//        $filter_price_sub_query = "((xcart_pricing.price >='" . $v["min_price"] . "' AND xcart_pricing.price <='" . $v["max_price"] . "'))";
+//
+//        if ($filter_price_is_checked) {
+//            $search_query_prices_range = $search_query_count_NEW;
+//            $search_query_prices_range = preg_replace('/\(\(xcart_pricing.price >=(.*?)\)\)/is', $filter_price_sub_query, $search_query_prices_range);
+//        }
+//        else {
+//            $search_query_prices_range = $search_query_prices_range_arr[0] . " AND " . $filter_price_sub_query . " GROUP BY " . $search_query_prices_range_arr[1];
+//        }
+//
+//        $search_query_prices_range_products = db_query($search_query_prices_range, true);
+//        $count_search_query_prices_range_products = db_num_rows($search_query_prices_range_products);
+//        db_free_result($search_query_prices_range_products);
+//        $filter_prices[$k]["count_products"] = $count_search_query_prices_range_products;
+//    }
     $smarty->assign("filter_prices", $filter_prices);
 
     $smarty->assign("filter_min_price_selected", $filter_min_price_selected);
@@ -395,4 +400,4 @@ if (!empty($filter_prices)) {
 }
 
 $smarty->assign("fv_ids_arr", $fv_ids_arr);
-
+Profiler::getInstance()->addPoint();

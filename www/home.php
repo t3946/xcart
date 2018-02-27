@@ -1,39 +1,5 @@
-<?php /* MODIFIED: random:18298_18304_18324 [2009 Jun 08 09:50][Custom development (����� ��� �������� ����������� "��������������" (X-Cart's Manufacturers) + Add new "Brands" module + Search URLs feature)] */ ?>
 <?php
-/*****************************************************************************\
-+-----------------------------------------------------------------------------+
-| X-Cart                                                                      |
-| Copyright (c) 2001-2006 Ruslan R. Fazliev <rrf@rrf.ru>                      |
-| All rights reserved.                                                        |
-+-----------------------------------------------------------------------------+
-| PLEASE READ  THE FULL TEXT OF SOFTWARE LICENSE AGREEMENT IN THE "COPYRIGHT" |
-| FILE PROVIDED WITH THIS DISTRIBUTION. THE AGREEMENT TEXT IS ALSO AVAILABLE  |
-| AT THE FOLLOWING URL: http://www.x-cart.com/license.php                     |
-|                                                                             |
-| THIS  AGREEMENT  EXPRESSES  THE  TERMS  AND CONDITIONS ON WHICH YOU MAY USE |
-| THIS SOFTWARE   PROGRAM   AND  ASSOCIATED  DOCUMENTATION   THAT  RUSLAN  R. |
-| FAZLIEV (hereinafter  referred to as "THE AUTHOR") IS FURNISHING  OR MAKING |
-| AVAILABLE TO YOU WITH  THIS  AGREEMENT  (COLLECTIVELY,  THE  "SOFTWARE").   |
-| PLEASE   REVIEW   THE  TERMS  AND   CONDITIONS  OF  THIS  LICENSE AGREEMENT |
-| CAREFULLY   BEFORE   INSTALLING   OR  USING  THE  SOFTWARE.  BY INSTALLING, |
-| COPYING   OR   OTHERWISE   USING   THE   SOFTWARE,  YOU  AND  YOUR  COMPANY |
-| (COLLECTIVELY,  "YOU")  ARE  ACCEPTING  AND AGREEING  TO  THE TERMS OF THIS |
-| LICENSE   AGREEMENT.   IF  YOU    ARE  NOT  WILLING   TO  BE  BOUND BY THIS |
-| AGREEMENT, DO  NOT INSTALL OR USE THE SOFTWARE.  VARIOUS   COPYRIGHTS   AND |
-| OTHER   INTELLECTUAL   PROPERTY   RIGHTS    PROTECT   THE   SOFTWARE.  THIS |
-| AGREEMENT IS A LICENSE AGREEMENT THAT GIVES  YOU  LIMITED  RIGHTS   TO  USE |
-| THE  SOFTWARE   AND  NOT  AN  AGREEMENT  FOR SALE OR FOR  TRANSFER OF TITLE.|
-| THE AUTHOR RETAINS ALL RIGHTS NOT EXPRESSLY GRANTED BY THIS AGREEMENT.      |
-|                                                                             |
-| The Initial Developer of the Original Code is Ruslan R. Fazliev             |
-| Portions created by Ruslan R. Fazliev are Copyright (C) 2001-2006           |
-| Ruslan R. Fazliev. All Rights Reserved.                                     |
-+-----------------------------------------------------------------------------+
-\*****************************************************************************/
-
-#
-# $Id: home.php,v 1.10 2006/03/31 06:18:48 max Exp $
-#
+use Modules\Core\Components\Profiler;
 use Modules\User\Helpers\SurfingHelper;
 use Modules\User\Models\SurfPathModel;
 
@@ -41,13 +7,12 @@ define('SET_EXPIRE', 1);
 
 define('OFFERS_DONT_SHOW_NEW',1);
 require "./auth.php";
-$bench1 = func_microtime();
-$start_time = microtime(true);
 
 $cat = isset($cat) ? abs(intval($cat)) : 0;
 
 
-x_load("category");
+Profiler::getInstance()->addPoint();
+//x_load("category");
 
 #
 ##
@@ -91,21 +56,23 @@ if (
 ) {
     func_clean_url_permanent_redirect('C', intval($cat));
 }
-
+Profiler::getInstance()->addPoint();
 require $xcart_dir."/include/categories.php";
 
 
-//d($cat, microtime(true) - $start_time);
-
+Profiler::getInstance()->addPoint('include/categories.php');
 if ($active_modules["Brands"])
     include $xcart_dir."/modules/Brands/customer_brands.php";
 elseif ($active_modules["Manufacturers"])
     include $xcart_dir."/modules/Manufacturers/customer_manufacturers.php";
 
+Profiler::getInstance()->addPoint();
 
 if (!empty($cat)){
 	include "./products.php";
+    Profiler::getInstance()->addPoint('include "./products.php"');
 }
+
 else {
 #
 ##
@@ -121,6 +88,8 @@ else {
 ##
 #
 }
+
+Profiler::getInstance()->addPoint();
 
 #
 ##
@@ -397,4 +366,6 @@ $smarty->assign("bench_time", $bench2-$bench1);
 
 func_display("customer/home.tpl",$smarty);
 
-?>
+Profiler::getInstance()->addPoint();
+Profiler::getInstance()->stop('trace');
+Profiler::getInstance()->display();

@@ -276,6 +276,7 @@ if (!empty($top_pages_menu) && is_array($top_pages_menu)){
 }
 
 
+Profiler::getInstance()->addPoint();
 
 $speed_bar = unserialize($config["speed_bar"]);
 if (!empty($speed_bar)) {
@@ -332,6 +333,7 @@ $html_banners = array(
 "html_banners/banner_3.tpl"
 );
 
+Profiler::getInstance()->addPoint();
 x_session_register("current_html_banner");
 $current_html_banner = intval($current_html_banner);
 if ($current_html_banner > (count($html_banners)-1)) $current_html_banner = 0;
@@ -342,6 +344,7 @@ x_session_save("current_html_banner");
 
 #require_once("DSEFU.php");
 
+Profiler::getInstance()->addPoint();
 $statuses = func_query_hash('SELECT code, name, type FROM ' . $sql_tbl['order_statuses']
     . ' ORDER BY orderby', array('type', 'code'), false, true);
 $smarty->assign('statuses', $statuses);
@@ -431,6 +434,7 @@ else {
 }
 ###
 
+Profiler::getInstance()->addPoint();
 
 #
 ##
@@ -455,6 +459,7 @@ if (!empty($config["Appearance"]["Google_Trusted_Store_ID"])){
 		$smarty->assign("GTS_badge_code", $GTS_badge_code);
 }
 
+Profiler::getInstance()->addPoint();
 if ($geoipModel = GeoipHelper::getGeoipLocation($CLIENT_IP)) {
     $smarty->assign('geo_litecity_location',
         array_merge(
@@ -466,6 +471,7 @@ if ($geoipModel = GeoipHelper::getGeoipLocation($CLIENT_IP)) {
 
 func_detect_working_hours();
 
+Profiler::getInstance()->addPoint();
 # https://basecamp.com/2070980/projects/1577907/messages/53989896
 ##  Auto pop up in 30 seconds
 ###
@@ -487,3 +493,5 @@ if (!empty($matches[1]))
     $gPage_status['match'] = true;
     list($gPage_status['type'], $gPage_status['page_id'], $gPage_status['slut']) = $matches[1];
 }
+
+Profiler::getInstance()->addPoint();

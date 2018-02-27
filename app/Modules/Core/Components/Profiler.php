@@ -40,9 +40,9 @@ class Profiler
         );
     }
 
-    private function formatTime($time)
+    private function formatTime($time, $onlyMS = false)
     {
-        if ($time > 0.1) {
+        if ($time > 0.1 && !$onlyMS) {
             return round($time, 2) . ' s';
         } else {
             return round($time * 1000) . ' ms';
@@ -51,7 +51,7 @@ class Profiler
 
     public function display($min = 0)
     {
-        echo '<table class="minitimer_table">' . $this->displayTimers($min) . $this->displayPoints($min) . '</table>';
+        echo '<table class="minitimer_table" cellpadding="5">' . $this->displayTimers($min) . $this->displayPoints($min) . '</table>';
     }
 
     private function displayTimers($min = 0)
@@ -77,15 +77,19 @@ class Profiler
             return false;
         }
 
+        $first_point_time = 0;
         $isFirst = true;
         $tableRow = '';
         $last_point = array();
 
         foreach ($this->points as $point) {
             if ($isFirst) {
+                $first_point_time = $point['time'];
                 $isFirst = false;
-            } else {
+            }
+            else {
                 $time = $point['time'] - $last_point['time'];
+                $time_fallback = $point['time'] - $first_point_time;
                 if ($time >= $min) {
                     $tableRow .= '<tr>
                         <td>
@@ -93,6 +97,7 @@ class Profiler
                             and <small>' . $point['backtrace'][0]['file'] . '</small> line ' . $point['backtrace'][0]['line'] .' '.$point['label']. '
                         </td>
                         <td class="time">' . self::formatTime($time) . '</td>
+                        <td class="point_time">' . self::formatTime($time_fallback, true) . '</td>
                     </tr>';
                 }
             }
