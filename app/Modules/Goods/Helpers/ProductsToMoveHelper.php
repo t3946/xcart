@@ -29,6 +29,8 @@ class ProductsToMoveHelper
                 'surf_path__id__isnull' => false,
                 'productid' => $productid
             ])->all() ) {
+            $queue_model = UpdatedProductModel::objects()->get(['resourceid' => $productid, 'type' => 9]);
+            $queue_model->delete();
             return false;
         }
         else {
@@ -81,13 +83,20 @@ class ProductsToMoveHelper
             return false;
         }
 
-        if ($p_moves_models = ProductsSfMovesModel::objects()->filter(['productid' => $queue_model->resourceid, 'resource_type' => "SF"])->all()){
+/*        if ($p_moves_models = ProductsSfMovesModel::objects()->filter(['productid' => $queue_model->resourceid, 'resource_type' => "SF"])->all()){
             $p_moves_model = array_pop($p_moves_models);
             $batch_id = $p_moves_model->batch_id + 1;
         }
         else {
             $batch_id = 0;
             $p_moves_model = new ProductsSfMovesModel(['batch_id' => $batch_id, 'productid' => $queue_model->resourceid]);
+        }*/
+
+        if ($move_model = ProductsSfMovesModel::objects()->filter(['productid' => $queue_model->resourceid])->order(['-batch_id'])->all() ) {
+            $batch_id = $move_model[0]->batch_id + 1;
+        }
+        else {
+            $batch_id = 0;
         }
 
         /** @var ProductModel $product_model */
@@ -156,14 +165,27 @@ class ProductsToMoveHelper
                 }
             }
 
-            (new ProductsSfMovesModel(['batch_id' => $batch_id,
-                                       'productid' => $category_model->productid,
-                                       'resource_id' => $category_model->categoryid,
-                                       'resource_type' => 'CS',
-                                       'resource_extra_value' => $category_model->main,
-                                      ]))->save();
+//            if (!$products_sf_moves_models = ProductsSfMovesModel::objects()->get([]) )
+
+//            (new ProductsSfMovesModel(['batch_id' => $batch_id,
+//                                       'productid' => $category_model->productid,
+//                                       'resource_id' => $category_model->categoryid,
+//                                       'resource_type' => 'CS',
+//                                       'resource_extra_value' => $category_model->main,
+//                                      ]))->save();
+
+            /** @var ProductsSfMovesModel $products_sf_moves_model */
+            $products_sf_moves_model = ProductsSfMovesModel::objects()->getOrNew(['batch_id' => $batch_id,
+                                                                                   'productid' => $category_model->productid,
+                                                                                   'resource_id' => $category_model->categoryid,
+                                                                                   'resource_type' => 'CS',
+                                                                                   'resource_extra_value' => $category_model->main,]);
+            if ($products_sf_moves_model[1]) {
+                $products_sf_moves_model[0]->save();
+            }
+
             $category_model->categoryid = $parent_id;
-            $category_model->save();
+            $category_model->update(['categoryid']);
 
         }
     }

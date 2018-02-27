@@ -24,12 +24,16 @@ foreach ($models as $model){
     /** @var UpdatedProductModel $model */
     $product_id = $model->resourceid;
     $storefront_id = $model->extra_data_int;
+//
+//    if ($move_model = ProductsSfMovesModel::objects()->filter(['productid' => $model->resourceid])->order(['-batch_id'])->all() ) {
+//        $batch_id = $move_model[0]->batch_id + 1;
+//    }
+//    else {
+//        $batch_id = 0;
+//    }
 
     /** @var ProductModel $product_model */
     $product_model = ProductModel::objects()->get(['productid' => $model->resourceid]);
-
-    /** TODO Переписать получение batch_id по нижеидущему коду */
-    /*    $model = ProductsSfMovesModel::objects()->filter(['productid' => $product_id])->order('batch_id')->desc->limit(1);*/
 
     if (!$product_model){
         continue;
