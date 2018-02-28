@@ -155,4 +155,3 @@ if ($cat) {
 
 Profiler::getInstance()->addPoint();
 Profiler::getInstance()->stop('trace');
-Profiler::getInstance()->display();
