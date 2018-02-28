@@ -22,7 +22,6 @@ $counter = 0;
 
 while ($record = db_fetch_array($records)) {
 
-    ###
     $counter++;
     if ($counter % 100 == 0) {
         func_flush(".");
@@ -31,13 +30,8 @@ while ($record = db_fetch_array($records)) {
         }
         func_flush();
     }
-    ###
 
-    /** @var \Modules\Goods\Models\CategoryModel $model */
-    if ($model = \Modules\Goods\Models\CategoryModel::objects()->get(['pk' => $record['resourceid']])) {
-        $model->reCalcSelfAndParents();
-    }
-
+    \Modules\Goods\Helpers\CategoryCalculateHelper::recalcParents($record['resourceid'], true);
 
     db_query("DELETE FROM xcart_cidev_updated_products WHERE resourceid='$record[resourceid]' AND (type='4' OR type='5')");
 }

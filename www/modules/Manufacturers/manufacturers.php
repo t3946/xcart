@@ -38,6 +38,7 @@
 
 if ( !defined('XCART_START') ) { header("Location: ../"); die("Access denied"); }
 
+use Modules\Distributor\Models\DistributorModel;
 use Xcart\External_Marketplaces\ExternalMarketPlace;
 use Xcart\External_Marketplaces\DisabledMarketPlace;
 
@@ -128,7 +129,7 @@ if ($REQUEST_METHOD == "POST" && $mode == "delete_line" && !empty($manufactureri
         func_header_location("manufacturers.php?manufacturerid=".$manufacturerid .($distributor_section ? "&distributor_section=".$distributor_section : ""));
 }
 
-if ($REQUEST_METHOD == "POST" && $mode == "delete_distributor_return_address" && !empty($manufacturerid) && !empty($delete_distributor_return_address_number)){      
+if ($REQUEST_METHOD == "POST" && $mode == "delete_distributor_return_address" && !empty($manufacturerid) && !empty($delete_distributor_return_address_number)){
         db_query("DELETE FROM $sql_tbl[distributor_return_address] WHERE manufacturerid='$manufacturerid' AND id='$delete_distributor_return_address_number'");
         $top_message["content"] = 'Deleted';
         $top_message['type'] = 'I';
@@ -456,7 +457,7 @@ if ($REQUEST_METHOD == "POST" || ($mode == "delete_image" && $manufacturerid)) {
 				$query_data['m_state'] = $b_state;
 				$query_data['m_zipcode'] = $b_zipcode;
 //			}	
-			
+
 			if ($login_type == 'P') {
 				$selected_manufacturers = func_query_first_cell("SELECT manufacturerids FROM $sql_tbl[customers] WHERE login='$login' AND usertype='$login_type'");
 				if (!empty($selected_manufacturers)) {
@@ -488,7 +489,7 @@ if ($REQUEST_METHOD == "POST" || ($mode == "delete_image" && $manufacturerid)) {
 
 
 				foreach ($distributor_contacts as $field_code => $v){
-			
+
 					if ($field_code == $pq){
 						$v["pq"] = "Y";
 
@@ -519,7 +520,7 @@ if ($REQUEST_METHOD == "POST" || ($mode == "delete_image" && $manufacturerid)) {
 					$tmp_zipcode = "zipcode_".$v_a["id"];
 					$tmp_phone = "phone_".$v_a["id"];
 					$tmp_ext = "ext_".$v_a["id"];
-	
+
 					db_query("UPDATE $sql_tbl[distributor_return_address] SET warehouse_name='".$$tmp_warehouse_name."', full_name='".$$tmp_full_name."', company='".$$tmp_company."', address='".$$tmp_address."', address_2='".$$tmp_address_2."', city='".$$tmp_city."', country='".$$tmp_country."', state='".$$tmp_state."', zipcode='".$$tmp_zipcode."', phone='".$$tmp_phone."', ext='".$$tmp_ext."' WHERE id='$v_a[id]'");
 				}
 			}
@@ -610,15 +611,15 @@ if ($REQUEST_METHOD == "POST" || ($mode == "delete_image" && $manufacturerid)) {
 
 				if (!empty($operators)) {
 					$customers = func_query_hash("SELECT login, manufacturerids FROM $sql_tbl[customers] WHERE login IN ('" . implode("','", $operators) . "')", 'login', false, true);
-                    
+
 					foreach ($operators as $op) {
 						if (empty($customers[$op])) {
 							continue;
 						}
-                        
+
 						$customers[$op] = unserialize($customers[$op]);
 						$customers[$op][] = $manufacturerid;
-                        
+
 						db_query("UPDATE $sql_tbl[customers] SET manufacturerids='" . serialize($customers[$op]) . "' WHERE login='$op'");
 					}
 				}
@@ -720,9 +721,9 @@ if ($REQUEST_METHOD == "POST" || ($mode == "delete_image" && $manufacturerid)) {
 			}
 		}
 
-		$fh=fopen($xcart_dir."/files/distributor_contacts.txt","w"); 
-		fwrite($fh,$distributors_list); 
-		fclose($fh); 
+		$fh=fopen($xcart_dir."/files/distributor_contacts.txt","w");
+		fwrite($fh,$distributors_list);
+		fclose($fh);
 
 		func_header_location("manufacturers.php?word=num");
 	}
@@ -750,13 +751,17 @@ if ($mode == "add" or !empty($manufacturerid)) {
 #
 	if ($mode == 'add') {
 		$active_operators = func_query("SELECT login, b_firstname, b_lastname FROM $sql_tbl[customers] WHERE usertype='P' AND status='Y' AND activity='Y' ORDER BY login");
-        
+
 		$smarty->assign('operators', $active_operators);
 	}
 
 	$location[count($location)-1][1] = "manufacturers.php?word=num";
 
 	if (!empty($manufacturerid)) {
+
+        /** @var DistributorModel $distributor_model */
+        $distributor_model = DistributorModel::objects()->get(['manufacturerid' => $manufacturerid]);
+
 		$manufacturer_data = func_query_first("SELECT $sql_tbl[manufacturers].*, IF($sql_tbl[images_M].id IS NULL, '', 'Y') as is_image, IFNULL($sql_tbl[manufacturers_lng].manufacturer, $sql_tbl[manufacturers].manufacturer) as manufacturer, IFNULL($sql_tbl[manufacturers_lng].descr, $sql_tbl[manufacturers].descr) as descr FROM $sql_tbl[manufacturers] LEFT JOIN $sql_tbl[manufacturers_lng] ON $sql_tbl[manufacturers_lng].manufacturerid = $sql_tbl[manufacturers].manufacturerid AND $sql_tbl[manufacturers_lng].code = '$shop_language' LEFT JOIN $sql_tbl[images_M] ON $sql_tbl[images_M].id = $sql_tbl[manufacturers].manufacturerid WHERE $sql_tbl[manufacturers].manufacturerid = '$manufacturerid'");
 
 		if (empty($manufacturer_data)) {
@@ -786,38 +791,7 @@ if ($mode == "add" or !empty($manufacturerid)) {
 			$manufacturer_data["distributor_return_addresses"] = $distributor_return_addresses;
 
 
-#
-##
-                        $tmp_cur_time_sec = time();
-                        $d_server_min_distributor_time_sec = $manufacturer_data["d_server_min_distributor_time"] * 60 *60;
-                        $tmp_cur_time_sec -= $d_server_min_distributor_time_sec;
-                        $manufacturer_data["distributor_time"] = $tmp_cur_time_sec;
-                        $tmp_cur_time_date_format = date("G.i", $tmp_cur_time_sec);
-                        $tmp_date_mm_dd_yyyy = date("m/d/Y", $tmp_cur_time_sec);
-                        // $tmp_cur_time_sec += 2*24*60*60; // for checking
-                        $tmp_number_of_day_of_week = date("w", $tmp_cur_time_sec); // 0 (for Sunday) through 6 (for Saturday)
-                        // func_print_r($tmp_number_of_day_of_week, $tmp_cur_time_date_format); // for checking
-
-                        if ($tmp_cur_time_date_format >= "8.30" && $tmp_cur_time_date_format <= "16.30" && ($tmp_number_of_day_of_week != "0" && $tmp_number_of_day_of_week != "6")){
-
-				$request_availability_options = func_query("SELECT * FROM $sql_tbl[request_availability_options]");
-
-                                if (!empty($request_availability_options) && is_array($request_availability_options)){
-                                	foreach ($request_availability_options as $k_r => $v_r){
-		                                if ($v_r["date_mm_dd_yyyy"] == $tmp_date_mm_dd_yyyy && $v_r["active"] == "Y"){
-                	                                $good_time_to_send_email_to_distributor = "N";
-                                                }
-                                        }
-                                }
-
-                                if ($good_time_to_send_email_to_distributor != "N"){
-                        	        $good_time_to_send_email_to_distributor = "Y";
-                                }
-
-                                $manufacturer_data["good_time_to_send_email_to_distributor"] = $good_time_to_send_email_to_distributor;
-                         } else {
-                                $manufacturer_data["good_time_to_send_email_to_distributor"] = "N";
-                         }
+			$manufacturer_data["good_time_to_send_email_to_distributor"] = $distributor_model->isGoodTimeToSendEmail() ? 'Y' : 'N';
 
                          $manufacturer_data["distributor_phone"] = func_query_first_cell("SELECT phone FROM $sql_tbl[distributor_contacts] WHERE manufacturerid='$manufacturerid' AND phone!='' ORDER BY distributor_field_code asc LIMIT 1");
 
@@ -825,12 +799,7 @@ if ($mode == "add" or !empty($manufacturerid)) {
                          if (strlen($phone_normalized) == "10"){
 	                         $manufacturer_data["distributor_phone_phone_normalized"] = "+1".$phone_normalized;
                          }
-##
-#
 
-###
-##
-#
 			$smarty->assign("manufacturer", $manufacturer_data);
 			$smarty->assign("image", func_image_properties("M", $manufacturerid));
 		}
@@ -859,9 +828,9 @@ else {
 		} elseif ($word == 'num') {
 			$where = " WHERE m.manufacturer REGEXP '^[0-9]+.*'";
 		}
-        
+
         $smarty->assign('word', $word);
-        
+
 		$word = 'word=' . $word;
 	}
 
@@ -1226,7 +1195,7 @@ if ($distributor_section == "18"){
 		'order_by' => '180',
 		'distributor_section' => '40'
 	);
-	
+
 	$distributor_sections[] = array(
 		'title'  => 'Product verification settings',
 		'order_by' => '180',

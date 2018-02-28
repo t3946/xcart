@@ -1,4 +1,4 @@
-$(function() {
+$(document).ready(function() {
 
     function submit_group_product_notify_form(row, callback) {
 
@@ -205,4 +205,4 @@ $(function() {
         }
     })
 
-})();
+});

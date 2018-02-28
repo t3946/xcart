@@ -25,4 +25,14 @@ return [
         'target' => ['\Modules\Order\Controllers\OrderTransactionsController', 'child_transactions_list'],
         'name' => 'child_transactions_list'
     ],
+    [
+        'route' => '/api/tag/add/{i:order_id}/{i:status_id}',
+        'target' => ['\Modules\Order\Controllers\Admin\ApiTagsController', 'actionAdd'],
+        'name' => 'api:tag:add'
+    ],
+    [
+        'route' => '/api/tag/del/{i:order_id}/{i:status_id}',
+        'target' => ['\Modules\Order\Controllers\Admin\ApiTagsController', 'actionDel'],
+        'name' => 'api:tag:del'
+    ],
 ];

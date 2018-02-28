@@ -39,5 +39,3 @@ if (!defined('XCART_START')) { header("Location: ../../"); die("Access denied");
 if (!empty($config['Maintenance_Agent']['periodic_type']) != '' && $config['Maintenance_Agent']['periodic_mode'] == 'A') {
 	func_send_periodical_email();
 }
-
-?>

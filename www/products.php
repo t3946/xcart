@@ -35,26 +35,29 @@
 #
 # Navigation code
 #
+use Modules\Core\Components\Profiler;
 use Modules\Goods\Models\ProductModel;
 
 if (!defined('XCART_START')) {
     header("Location: home.php");
     die("Access denied");
 }
-
+Profiler::getInstance()->addPoint();
 define('META_DATA_PARAM', 5);
 
 if ($config["General"]["disable_outofstock_products"] == "Y") {
     $avail = ($config["General"]["unlimited_products"] == "N") ? " AND $sql_tbl[products].avail>0 " : "";
     $current_category["product_count"] = func_query_first_cell("SELECT COUNT(productid) FROM $sql_tbl[products], $sql_tbl[products_categories] WHERE $sql_tbl[products].productid=$sql_tbl[products_categories].productid AND $sql_tbl[products].forsale='Y' $avail AND $sql_tbl[products_categories].categoryid='$cat'");
+
     if (is_array($subcategories)) {
         foreach ($subcategories as $k => $v) {
             $subcategories[$k]["product_count"] = func_query_first_cell("SELECT COUNT(productid) FROM $sql_tbl[products], $sql_tbl[products_categories] WHERE $sql_tbl[products].productid=$sql_tbl[products_categories].productid AND $sql_tbl[products].forsale='Y' $avail AND $sql_tbl[products_categories].categoryid='$v[categoryid]'");
         }
+
         $smarty->assign("subcategories", $subcategories);
     }
 }
-
+Profiler::getInstance()->addPoint();
 if ($active_modules["Advanced_Statistics"] && !defined("IS_ROBOT"))
     include $xcart_dir . "/modules/Advanced_Statistics/cat_viewed.php";
 
@@ -72,46 +75,50 @@ $search_data["products"]["search_in_subcategories"] = "";
 $search_data["products"]["category_extra"] = "Y";
 $search_data["products"]["forsale"] = "Y";
 $search_data["products"]['group_root'] = true;
+Profiler::getInstance()->addPoint();
 
-#
-##
-###
+
 if (!empty($active_modules['CIDEV_Best_Search_Filter'])) {
     include $xcart_dir . "/modules/CIDEV_Best_Search_Filter/filter_init.php";
 
+    Profiler::getInstance()->addPoint();
+
     if (!empty($subcategories) && is_array($subcategories)) {
 
-        $search_query_count_NEW_SUB_CAT = $search_query_count_NEW;
-        $search_query_count_NEW_SUB_CAT = preg_replace('/SELECT(.*?)FROM/is', "SELECT COUNT(xcart_products.productid) FROM", $search_query_count_NEW_SUB_CAT);
-        $search_query_count_NEW_SUB_CAT = preg_replace('/xcart_products_categories.categoryid IN(.*?)\)/is', "xcart_products_categories.categoryid IN (____XXXX____)", $search_query_count_NEW_SUB_CAT);
-
-        $cidev_subcategories_products_count = array();
+//        $search_query_count_NEW_SUB_CAT = $search_query_count_NEW;
+//        $search_query_count_NEW_SUB_CAT = preg_replace('/SELECT(.*?)FROM/is', "SELECT COUNT(xcart_products.productid) FROM", $search_query_count_NEW_SUB_CAT);
+//        $search_query_count_NEW_SUB_CAT = preg_replace('/xcart_products_categories.categoryid IN(.*?)\)/is', "xcart_products_categories.categoryid IN (____XXXX____)", $search_query_count_NEW_SUB_CAT);
+//
+        $cidev_subcategories_products_count = [];
         foreach ($subcategories as $k => $v) {
+//
+//            $tmp_categoryid_path = addslashes(func_query_first_cell("SELECT categoryid_path FROM $sql_tbl[categories] WHERE categoryid='" . $v["categoryid"] . "'"));
+//            $tmp_categoryids = func_query_column("SELECT categoryid FROM $sql_tbl[categories] WHERE categoryid='" . $v["categoryid"] . "' OR categoryid_path LIKE '$tmp_categoryid_path/%'");
+//            $tmp_categoryids_imploded = implode(",", $tmp_categoryids);
+//            $search_query_count_NEW_SUB_CAT_query = str_replace("____XXXX____", $tmp_categoryids_imploded, $search_query_count_NEW_SUB_CAT);
+//
+//            $subcategories_count_products = db_query($search_query_count_NEW_SUB_CAT_query);
+//            $COUNT_products_in_subcat = db_num_rows($subcategories_count_products);
+//            db_free_result($subcategories_count_products);
 
-            $tmp_categoryid_path = addslashes(func_query_first_cell("SELECT categoryid_path FROM $sql_tbl[categories] WHERE categoryid='" . $v["categoryid"] . "'"));
-            $tmp_categoryids = func_query_column("SELECT categoryid FROM $sql_tbl[categories] WHERE categoryid='" . $v["categoryid"] . "' OR categoryid_path LIKE '$tmp_categoryid_path/%'");
-            $tmp_categoryids_imploded = implode(",", $tmp_categoryids);
-            $search_query_count_NEW_SUB_CAT_query = str_replace("____XXXX____", $tmp_categoryids_imploded, $search_query_count_NEW_SUB_CAT);
-
-            $subcategories_count_products = db_query($search_query_count_NEW_SUB_CAT_query);
-            $COUNT_products_in_subcat = db_num_rows($subcategories_count_products);
-            db_free_result($subcategories_count_products);
-
+//            $cidev_subcategories_products_count[$k]["count_products"] = $COUNT_products_in_subcat;
             $cidev_subcategories_products_count[$k]["categoryid"] = $v["categoryid"];
             $cidev_subcategories_products_count[$k]["supplemental_category"] = $v["supplemental_category"];
-            $cidev_subcategories_products_count[$k]["count_products"] = $COUNT_products_in_subcat;
+            $cidev_subcategories_products_count[$k]["count_products"] = $v["active_product_count"];
         }
 
         $smarty->assign("cidev_subcategories_products_count", $cidev_subcategories_products_count);
     }
 }
+Profiler::getInstance()->addPoint();
 
 if (is_array($current_category)) {
     if (is_array($products)) {
         $fp_num = (count($products) >= META_DATA_PARAM) ? META_DATA_PARAM : count($products);
         $first_products = array_slice($products, 0, $fp_num);
         $q_first_products = count($first_products);
-    } else {
+    }
+    else {
         $first_products = array();
         $q_first_products = 0;
     }
@@ -141,7 +148,7 @@ if (is_array($current_category)) {
 
     $current_category['meta_descr'] = trim(strip_tags($current_category['category'] . ': ' . $meta_descr));
 }
-
+Profiler::getInstance()->addPoint();
 $search_data["products"] = $old_search_data;
 $mode = $old_mode;
 
@@ -155,33 +162,25 @@ if ($products && is_array($products)) {
         return $a;
     }, $products);
 }
-
+Profiler::getInstance()->addPoint();
 $smarty->assign("products", $products);
-//$smarty->assign("navigation_script","home.php?cat=$cat&sort=$sort&sort_direction=$sort_direction");
 
-#
-##
-###
 if (!empty($cidev_orig_dispatched_request)) {
     $cidev_script = $cidev_orig_dispatched_request . "/?";
-} else {
+}
+else {
     $cidev_script = "/home.php?";
+
     if (!empty($cat)) {
         $cidev_script .= "cat=" . $cat;
     }
 }
 
-//func_print_r($cidev_script);
-
 $cidev_navigation_script = $cidev_script . ($_GET["sort"] ? "&sort=" . $sort : "") . ($sort_direction ? "&sort_direction=" . $sort_direction : "");
-//if (substr($cidev_navigation_script, -1) == "?") $cidev_navigation_script = substr($cidev_navigation_script, 0, -1);
-if (strpos($cidev_navigation_script, "?&") !== false) $cidev_navigation_script = str_replace("?&", "?", $cidev_navigation_script);
 
-//func_print_r($cidev_navigation_script);
+if (strpos($cidev_navigation_script, "?&") !== false)
+    $cidev_navigation_script = str_replace("?&", "?", $cidev_navigation_script);
 
+Profiler::getInstance()->addPoint();
 $smarty->assign("cidev_filter_mode", 'load_more_products');
 $smarty->assign("navigation_script", $cidev_navigation_script);
-###
-##
-#
-?>

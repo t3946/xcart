@@ -5,6 +5,10 @@ require $xcart_dir."/include/security.php";
 
 x_session_register("search_data", []);
 
+if (empty($search_data) || !is_array($search_data)) {
+    $search_data = [];
+}
+
 $location[] = array("Backprocess logs", "");
 
 $where_90 = time() - 60*60*24*30;
@@ -33,7 +37,7 @@ if ($REQUEST_METHOD == "POST") {
 	    }
 
 	    if (!empty($posted_data["process_id"]) && is_array($posted_data["process_id"])){
-		$search_data["backprocess_logs"]["process_id"] = $posted_data["process_id"];
+			$search_data["backprocess_logs"]["process_id"] = $posted_data["process_id"];
 	    }
 
  	    x_session_save("search_data");

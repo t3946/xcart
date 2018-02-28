@@ -8,6 +8,7 @@ use Modules\Order\Models\OrderModel;
 use Modules\Payment\Models\PaymentMethodModel;
 use Modules\Goods\Helpers\ProductHelper;
 use Modules\Goods\Models\ProductHardResellModel;
+use Xcart\App\Main\Xcart;
 
 global $orderid, $smarty, $mode, $order_data, $REQUEST_METHOD, $xcart_dir;
 
@@ -357,31 +358,22 @@ if ($REQUEST_METHOD == "POST" && !($mode == "unlock_order" || $mode == "unlock_o
             } else {
                 $new_fraud_status = $config["Fraud_check"]["below_threshold_status"];
             }
-
-            if ($current_fraud_status != $new_fraud_status) {
-                if ($log != "") $log .= "<br />";
-                $current_fraud_status_name = $fraud_statuses[$current_fraud_status];
-                $new_fraud_status_name = $fraud_statuses[$new_fraud_status];
-                $log .= "fraud_status: " . $current_fraud_status_name . " -> " . $new_fraud_status_name;
-                if ($orderModel) {
-                    $orderModel->fraud_status = $new_fraud_status;
-                    $orderModel->save();
-                }
-            }
         }
 
         if ($mode == "apply_changes_and_update_fraud_scores_and_change_fraud_check_status") {
 
-            if ($current_fraud_status != $fraud_status) {
+            $new_fraud_status = $fraud_status;
+        }
 
-                if ($log != "") $log .= "<br />";
-                $current_fraud_status_name = $fraud_statuses[$current_fraud_status];
-                $fraud_status_name = $fraud_statuses[$fraud_status];
-                $log .= "fraud_status: " . $current_fraud_status_name . " -> " . $fraud_status_name;
-                if ($orderModel) {
-                    $orderModel->fraud_status = $fraud_status;
-                    $orderModel->save();
-                }
+        if (!empty($new_fraud_status) && $current_fraud_status != $new_fraud_status) {
+
+            if ($log != "") $log .= "<br />";
+            $current_fraud_status_name = $fraud_statuses[$current_fraud_status];
+            $fraud_status_name = $fraud_statuses[$new_fraud_status];
+            $log .= "fraud_status: " . $current_fraud_status_name . " -> " . $fraud_status_name;
+            if ($orderModel) {
+                $orderModel->fraud_status = $new_fraud_status;
+                $orderModel->save();
             }
         }
 

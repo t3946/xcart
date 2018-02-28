@@ -25,9 +25,10 @@ class SupplierFeedStore extends BaseStore
 
     public function __construct($feed_model, $feed)
     {
+        $this->feed_model = $feed_model;
+
         if ($content = json_decode($feed, true)) {
             if (is_array($content)) {
-                $this->feed_model = $feed_model;
                 $this->populate($content);
             }
         }
@@ -138,6 +139,7 @@ class SupplierFeedStore extends BaseStore
 
         if (isset($data['images'])) {
             $data['supplier_images'] = $data['images'];
+            $data['supplier_images'] = array_map(function($a){return html_entity_decode($a);}, $data['supplier_images']);
             unset($data['images']);
         }
 

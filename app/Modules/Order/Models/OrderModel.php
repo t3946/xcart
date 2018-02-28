@@ -3,9 +3,12 @@ namespace Modules\Order\Models;
 
 use Doctrine\DBAL\Types\Type;
 use Modules\Core\Models\StateModel;
+use Modules\Order\Helpers\OrderEventHelper;
 use Modules\Order\Helpers\OrderHelper;
 use Modules\Goods\Models\ProductModel;
+use Modules\Payment\Models\PaymentMethodModel;
 use Modules\User\Models\UserModel;
+use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\ForeignField;
@@ -119,7 +122,14 @@ class OrderModel extends Model
                 'class' => HasManyField::className(),
                 'modelClass' => OrderExtrasModel::className(),
                 'link' => ['orderid' => 'orderid'],
-            ]
+            ],
+            'payment_method' => [
+                'field' => 'paymentid',
+                'class' => ForeignField::class,
+                'modelClass' => PaymentMethodModel::class,
+                'link' => ['paymentid' => 'paymentid'],
+                'null' => false,
+            ],
         ];
     }
 
@@ -162,6 +172,17 @@ class OrderModel extends Model
 
         return null;
     }
+
+    public function getEventsMessage()
+    {
+        return OrderHelper::getCountEventsActiveUserQS()
+            ->filter(['order_id' => $this->pk])
+            ->select([])
+            ->group([])
+            ->order(['-created_at'])
+            ->all();
+    }
+
     public function getOrderNumber()
     {
         return $this->order_prefix . $this->orderid;
@@ -180,5 +201,14 @@ class OrderModel extends Model
         return ProductModel::objects()
             ->filter(['order_details__orderid' => $this->orderid])
             ->all();
+    }
+
+    public function afterSave($owner, $isNew)
+    {
+        parent::afterSave($owner, $isNew);
+
+        foreach ($this->getAttributes() as $attribute => $value) {
+            OrderEventHelper::registerAfterSaveEvent($this->pk, $attribute, $value, $this->getOldAttribute($attribute));
+        }
     }
 }

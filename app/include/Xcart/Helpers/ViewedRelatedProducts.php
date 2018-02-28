@@ -198,11 +198,15 @@ JSON;
 
     public function getFromElastic($query = array(), $minScope = 0.3, $size = 500, $from = 0, $pull_categories = true)
     {
-        $classElastic = clone $this->elastic;
-        $classElastic->setMinScore($minScope);
-        $classElastic->setType('product');
-        $classElastic->setSearchQuery($query);
-        $result =  $classElastic->query(array("size"=>$size, "from"=>$from));
+        if (!$result = Xcart::app()->cache->get($query)) {
+            $classElastic = clone $this->elastic;
+            $classElastic->setMinScore($minScope);
+            $classElastic->setType('product');
+            $classElastic->setSearchQuery($query);
+            $result =  $classElastic->query(array("size"=>$size, "from"=>$from));
+
+            Xcart::app()->cache->set($query, $result, 60);
+        }
 
         if ($result['hits']['total'])
         {
@@ -222,11 +226,11 @@ JSON;
     {
         $t_arr = [];
         foreach ($products as $product) {
-            $t_arr[] = array(
+            $t_arr[] = [
                 'productid' => $product['_id'],
                 'score' => $product['_score'],
-                'categoryid' => array(),
-            );
+                'categoryid' => [],
+            ];
         }
 
         return $t_arr;
@@ -243,10 +247,9 @@ JSON;
         $p_ids = implode(',', $p_ids);
 
         $sql = /** @lang MySQL */ <<<SQL
-SELECT productid, group_concat(categoryid) as categories 
+SELECT productid, categoryid
 FROM xcart_products_categories
 WHERE productid in ({$p_ids}) 
-group by productid
 ORDER BY FIELD(main, 'Y', 'N')
 SQL;
         $categories = Xcart::app()->db->getConnection()->fetchAll($sql);
@@ -258,8 +261,7 @@ SQL;
                 {
                     if ($product['productid'] == $cat_product['productid'])
                     {
-                        $products[$k]['categoryid'] = explode(',', $cat_product['categories']);
-                        break;
+                        $products[$k]['categoryid'][] = $cat_product['categoryid'];
                     }
                 }
             }

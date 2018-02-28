@@ -114,7 +114,10 @@ SQL;
 				func_flush();
 			}
 		}
-		db_free_result($products);
+		if ($products) {
+            db_free_result($products);
+        }
+
 
 		db_query("UPDATE $sql_tbl[products_categories] SET orderby='1000000' WHERE categoryid='$categoryid'");
 
@@ -168,7 +171,9 @@ Order By Sales desc, COUNT(SP.id) desc";
                                 func_flush();
                         }
                 }
-		db_free_result($brands);
+        if ($brands) {
+            db_free_result($brands);
+        }
 
                 db_query("delete from xcart_cidev_related_objects where resource_id = '$categoryid' and resource_type = 'C' and related_type = 0 and related_resource_type = 'B'");
 
@@ -240,7 +245,9 @@ Order By S desc, V desc";
                                 func_flush();
                         }
                 }
-		db_free_result($subcat);
+        if ($subcat) {
+            db_free_result($subcat);
+        }
 
                 if (!empty($P_NUM)){
 	                db_query("update xcart_categories C set C.order_by = 499 where C.parentid = '$categoryid'");
@@ -312,7 +319,9 @@ Order By Sales desc, COUNT(SPS.id) desc";
                                 func_flush();
                         }
                 }
-		db_free_result($cat_prod_outer);
+                if ($cat_prod_outer) {
+                    db_free_result($cat_prod_outer);
+                }
 
                 if (!empty($P_NUM)){
                         db_query("delete from xcart_cidev_related_objects where resource_id = '$categoryid' and resource_type = 'C' and related_type = 1 and related_resource_type = 'P'");
@@ -382,7 +391,9 @@ Order By Sales desc, COUNT(SPS.id) desc";
                                 func_flush();
                         }
                 }
-		db_free_result($cat_cat_outer);
+        if ($cat_cat_outer) {
+            db_free_result($cat_cat_outer);
+        }
 
                 if (!empty($P_NUM)){
                         db_query("delete from xcart_cidev_related_objects where resource_id = '$categoryid' and resource_type = 'C' and related_type = 1 and related_resource_type = 'C'");
@@ -426,7 +437,9 @@ Group By SP.resource_id";
                                 func_flush();
                         }
                 }
-		db_free_result($cat_attr);
+        if ($cat_attr) {
+            db_free_result($cat_attr);
+        }
 
 		if (!empty($P_NUM)){
 
@@ -543,7 +556,9 @@ Group By SP.resource_id";
 #
 
 	} // while ($category = db_fetch_array($categories))
-	db_free_result($categories);
+	if ($categories) {
+        db_free_result($categories);
+    }
 
 
 #
@@ -617,7 +632,9 @@ Group By P.productid";
                 	        }
 
 			}
-			db_free_result($r_products);
+			if ($r_products) {
+                db_free_result($r_products);
+            }
 
 
 	                if (!empty($Related_productids_arr_all)){
@@ -642,7 +659,9 @@ Group By P.productid";
         	        }
 
 		}
-		db_free_result($products);
+		if ($products) {
+            db_free_result($products);
+        }
 
 #
 # STEP 7 END

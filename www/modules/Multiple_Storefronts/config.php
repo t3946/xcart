@@ -40,7 +40,7 @@ if (!defined('XCART_START')) {
 }
 
 # The maximum quantity of storefronts
-define('MAX_STOREFRONTS', 26);
+define('MAX_STOREFRONTS', 900);
 $smarty->assign('MAX_STOREFRONTS', MAX_STOREFRONTS);
 
 $config['available_images']['S'] = 'U';

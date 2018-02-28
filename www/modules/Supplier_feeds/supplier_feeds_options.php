@@ -1,33 +1,58 @@
 <?php
 
+use Modules\Distributor\Models\SupplierFeedModel;
+use Modules\Goods\Models\CategoryModel;
+use Xcart\App\Main\Xcart;
+
 if ($REQUEST_METHOD == 'POST'){
 
     if ($mode == 'Update_Supplier_feeds'){
+//dd($Supplier_feeds);
+        if (!empty($Supplier_feeds) && is_array($Supplier_feeds)) {
+            foreach ($Supplier_feeds as $k => $v){
 
-	db_query("UPDATE $sql_tbl[config] SET value='$Feeds_storage_path' WHERE name='Feeds_storage_path'");
-	db_query("UPDATE $sql_tbl[config] SET value='$Feeds_storage_login' WHERE name='Feeds_storage_login'");
-	db_query("UPDATE $sql_tbl[config] SET value='$Feeds_storage_password' WHERE name='Feeds_storage_password'");
+                /** @var SupplierFeedModel $model */
+                if($v['amended'] == 'Y'){
+                    if ($v['delete'] == 'Y'){
+                        $model = SupplierFeedModel::objects()->get(['feed_id' => $v['feed_id']]);
+                        if ($model){
+                            $model->delete();
+                        }
+                    }
+                    else {
+                        $v['base_category_id'] = $v['base_category_id'] ?: null;
 
+                        if (!empty($v['base_category_id'])){
+                            /** @var CategoryModel $category_model */
 
+                            if (!$category_model = CategoryModel::objects()->get(['categoryid' => $v['base_category_id'], 'parentid' => 0, 'storefrontid' => $v['storefront_id']])){
 
-        if (!empty($Supplier_feeds) && is_array($Supplier_feeds)){
-                foreach ($Supplier_feeds as $k => $v){
-			if ($v["delete"] == "Y"){
-				db_query("DELETE FROM $sql_tbl[supplier_feeds] WHERE feed_id='$v[feed_id]'");
-			} else {
-				db_query("UPDATE $sql_tbl[supplier_feeds] SET feed_name='$v[feed_name]', feed_type='$v[feed_type]', manufacturerid='$v[manufacturerid]', storefront_id='$v[storefront_id]', base_category_id='$v[base_category_id]', feed_file_name='$v[feed_file_name]', average_update_period='$v[average_update_period]', last_update_items_count='$v[last_update_items_count]', threshold='$v[threshold]', add_new_only='$v[add_new_only]', last_md5='$v[last_md5]', enabled='$v[enabled]', multiple_feed_destinations='$v[multiple_feed_destinations]', disable_search_of_discontinued_items='$v[disable_search_of_discontinued_items]', native_full_description='$v[native_full_description]' WHERE feed_id='$v[feed_id]'");
-			}
+                                if ($category_model = CategoryModel::objects()->get(['parentid' => 0, 'category' => 'New Products', 'storefrontid' => $v['storefront_id']])){
+                                    Xcart::app()->request->session->add('top_message', ['content' => "Bad Category for this Storefront. Use {$category_model->categoryid} category id for this storefront", 'type' => 'E']);
+                                }
+                                else {
+                                    Xcart::app()->request->session->add('top_message', ['content' => "This storefront haven't base category", 'type' => 'E']);
+                                }
+
+                                Xcart::app()->request->redirect("configuration.php?option=Supplier_feeds");
+                            }
+                        }
+
+                        $model = SupplierFeedModel::objects()->get(['feed_id' => $v['feed_id']]);
+                        $model->setAttributes($v);
+                        $model->save();
+                    }
                 }
+            }
         }
     }
     elseif ($mode == 'Add_Supplier_feed') {
-	db_query("INSERT INTO $sql_tbl[supplier_feeds] (feed_name) VALUES ('new feed name')");
+        (new SupplierFeedModel(['feed_name' => 'new feed name']))->save();
     }
 
-    $top_message["content"] = 'Done.';
-    $top_message["type"] = "I";
+    Xcart::app()->request->session->add('top_message', ['content' => 'Done.', 'type' => 'I']);
+    Xcart::app()->request->redirect("configuration.php?option=Supplier_feeds");
 
-    func_header_location("configuration.php?option=Supplier_feeds");
 }
 
 $Supplier_feeds = func_query("SELECT * FROM $sql_tbl[supplier_feeds] ORDER BY feed_id ASC");

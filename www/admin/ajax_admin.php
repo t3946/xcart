@@ -1,6 +1,7 @@
 <?php
 
 use Modules\Order\Models\OrderCxInvoiceModel;
+use Modules\Order\Models\OrderModel;
 use Modules\Order\Models\OrderTransactionModel;
 use Modules\Order\Models\TransactionLogModel;
 use Modules\Goods\Models\ProductModel;

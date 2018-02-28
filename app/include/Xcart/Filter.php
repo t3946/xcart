@@ -3,6 +3,8 @@
 namespace Xcart;
 
 
+use Modules\Core\Helpers\Cache;
+
 class Filter extends Data
 {
     /**
@@ -140,7 +142,11 @@ SELECT p.*
            INNER JOIN xcart_products_categories pc ON p.productid = pc.productid
            INNER JOIN xcart_pc_options po ON po.storefrontid = {$this->oStorefront->getStoreFrontId()} AND 
                                           ((po.disable_AC_products = 'N') OR (po.disable_AC_products = 'Y' AND p.pc_classify_status != 'AC'))
-           INNER JOIN xcart_categories c ON pc.categoryid = c.categoryid AND c.categoryid_path LIKE '{$this->oCategory->getPath()}%' AND c.storefrontid = {$this->oStorefront->getStoreFrontId()}
+           INNER JOIN xcart_categories c ON pc.categoryid = c.categoryid 
+           AND c.lft >= '{$this->oCategory->lft}' 
+           AND c.rgt <= '{$this->oCategory->rgt}' 
+           AND c.root = '{$this->oCategory->root}' 
+           AND c.storefrontid = {$this->oStorefront->getStoreFrontId()}
            
            {$sSQLfv}
       WHERE forsale = 'Y' {$this->getPriceQueryCondition()} {$this->getBrandQueryCondition()}
@@ -179,7 +185,7 @@ SQL;
         return $this->aValueFound;
     }
 
-    public function getMoreBrands()
+    public function getMoreBrands(int $limit = null)
     {
         if (is_null($this->aValueFound)) {
 
@@ -189,7 +195,12 @@ SELECT xb.brandid, xb.brand, count(1) as cnt FROM ({$this->getFilteredProductsQu
      GROUP BY xb.brandid 
      ORDER BY xb.brand
 SQL;
-            $aResults = SQLBuilder::getInstance()->setQuery($sSQL)->query()->getQueryResult();
+            if ($limit) {
+                $sSQL .= " limit {$limit}";
+            }
+
+            $aResults = SQLBuilder::getInstance()->setQuery($sSQL)->cache(Cache::CACHE_HALF_DAY)->query()->getQueryResult();
+
             if (!empty($aResults)) {
                 foreach ($aResults as $aResult) {
                     $iCount = $aResult['cnt'];
@@ -198,6 +209,7 @@ SQL;
                 }
             }
         }
+
         return $this->aValueFound;
     }
 

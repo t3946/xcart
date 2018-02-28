@@ -6,7 +6,8 @@
 
         for (let form of $('form'))
         {
-            if ($(form).attr('method').toString().toLowerCase() != 'post') {
+            let $form = $(form);
+            if ($form.attr('method') && $form.attr('method').toString().toLowerCase() != 'post') {
                 let action = $(form).attr('action');
 
                 if (action.indexOf('?') > -1) {

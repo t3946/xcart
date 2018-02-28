@@ -1973,6 +1973,7 @@ function func_check_and_send_request_availability_email($orderid, $sent_by = '')
                 }
 
                 func_log_order($orderid, 'S', $order_notes);
+                func_backprocess_log('cron_request_availability', "Order #{$orderid}: " . $order_notes);
 
                 $oMail = \Xcart\App\Main\Xcart::app()->oldMail;
                 $oMail->to = $to;
@@ -1983,6 +1984,30 @@ function func_check_and_send_request_availability_email($orderid, $sent_by = '')
                 $oMail->addHeader(['X-Xcart-Label' => 'order-communication']);
                 $oMail->sendEmail();
                 //func_send_mail($to, "mail/order_notification_subj.tpl", "mail/order_notification_mnf.tpl", $from, false);
+            } else {
+                $log = "Order #{$orderid} did not pass following conditions:";
+
+                $cnd = [];
+
+                if (empty($mv["cb_status"])) {
+                    $cnd[] = 'Empty CB status';
+                }
+                if (!in_array($mv["cb_status"], $allowed_cb_statuses)){
+                    $cnd[] = "CB status {$mv["cb_status"]} not allowed";
+                }
+                if (!in_array($mv["dc_status"], $allowed_dc_statuses)){
+                    $cnd[] = "DC status {$mv["dc_status"]} not allowed";
+                }
+                if ($mv["d_availability_must_be_checked"] != "Y"){
+                    $cnd[] = "d_availability_must_be_checked != Y";
+                }
+                if ($mv["good_time_to_send_email_to_distributor"] != "Y"){
+                    $cnd[] = "good_time_to_send_email_to_distributor != Y";
+                }
+                if ($cnd) {
+                    $log .= implode(', ', $cnd);
+                    func_backprocess_log('cron_request_availability', $log);
+                }
             }
         }
     }
@@ -2020,6 +2045,9 @@ function func_get_order_manufacturers($orderid)
             $cidev_ship_to_full = $order["s_address"] . ", " . $cidev_ship_to;
 
             foreach ($mnfs as $m_id => $mv) {
+
+                /** @var OrderGroupModel $order_group */
+
                 if ($order_group = OrderGroupModel::objects()->get(
                     [
                         'orderid' => $orderid,
@@ -2249,28 +2277,6 @@ function func_get_order_manufacturers($orderid)
                     $actual_shipping_cost = $order['shipping_groups'][$m_id]["actual_shipping_cost"]["gross"];
                     $mnfs[$m_id]["actual_shipping_cost"] = $actual_shipping_cost;
 
-                    $estimated_profit = (1 - $config["Additional_shipping_charge"]["credit_card_processing_fees"] / 100) * $grand_total - $config["Additional_shipping_charge"]["per_transaction"] - $total_product_cost_to_us - $actual_shipping_cost;
-                    $estimated_profit = price_format($estimated_profit);
-
-                    $mnfs[$m_id]["estimated_profit"] = $estimated_profit;
-                    if ($estimated_profit < 0) {
-                        $mnfs[$m_id]["estimated_profit_abs"] = abs($estimated_profit);
-                    }
-
-                    if ($grand_total > 0) {
-                        $estimated_profit_margin = $estimated_profit / ((1 - $config["Additional_shipping_charge"]["credit_card_processing_fees"] / 100) * $grand_total);
-                    }
-                    $estimated_profit_margin = price_format($estimated_profit_margin);
-                    $mnfs[$m_id]["estimated_profit_margin"] = $estimated_profit_margin;
-
-                    $estimated_profit_margin_percent = $estimated_profit_margin * 100;
-                    $estimated_profit_margin_percent = intval($estimated_profit_margin_percent);
-
-                    $mnfs[$m_id]["estimated_profit_margin_percent"] = $estimated_profit_margin_percent;
-                    if ($estimated_profit_margin_percent < 0) {
-                        $mnfs[$m_id]["estimated_profit_margin_percent_abs"] = abs($estimated_profit_margin_percent);
-                    }
-
                     if ($order["shipping_groups"][$m_id]["shipping_value_selectbox"] == "required_shipping_charge") {
                         $required_shipping_charge = $order["shipping_groups"][$m_id]["actual_shipping_net"];
                     } else {
@@ -2284,19 +2290,32 @@ function func_get_order_manufacturers($orderid)
                     $additional_shipping_charge = price_format($additional_shipping_charge);
                     $mnfs[$m_id]["additional_shipping_charge"] = $additional_shipping_charge;
 
-                    $estimated_profit_after_additional_payment = $estimated_profit + (1 - $config["Additional_shipping_charge"]["credit_card_processing_fees"] / 100) * $additional_shipping_charge - $config["Additional_shipping_charge"]["per_transaction"];
+                    [$estimated_profit, $estimated_profit_margin, $estimated_profit_after_additional_payment, $estimated_profit_margin_after_additional_payment] = $order_group->getEstimateProfit($additional_shipping_charge);
+
+                    $estimated_profit = price_format($estimated_profit);
+
+                    $mnfs[$m_id]["estimated_profit"] = $estimated_profit;
+
+                    if ($estimated_profit < 0) {
+                        $mnfs[$m_id]["estimated_profit_abs"] = abs($estimated_profit);
+                    }
+
+                    $estimated_profit_margin = price_format($estimated_profit_margin);
+                    $mnfs[$m_id]["estimated_profit_margin"] = $estimated_profit_margin;
+
+                    $estimated_profit_margin_percent = $estimated_profit_margin * 100;
+                    $estimated_profit_margin_percent = intval($estimated_profit_margin_percent);
+
+                    $mnfs[$m_id]["estimated_profit_margin_percent"] = $estimated_profit_margin_percent;
+                    if ($estimated_profit_margin_percent < 0) {
+                        $mnfs[$m_id]["estimated_profit_margin_percent_abs"] = abs($estimated_profit_margin_percent);
+                    }
+
                     $estimated_profit_after_additional_payment = price_format($estimated_profit_after_additional_payment);
                     $mnfs[$m_id]["estimated_profit_after_additional_payment"] = $estimated_profit_after_additional_payment;
 
                     if ($estimated_profit_after_additional_payment < 0) {
                         $mnfs[$m_id]["estimated_profit_after_additional_payment_abs"] = abs($estimated_profit_after_additional_payment);
-                    }
-
-                    if (
-                        ($grand_total + $additional_shipping_charge) > 0
-                        && (1 - $config["Additional_shipping_charge"]["credit_card_processing_fees"] / 100) > 0
-                    ) {
-                        $estimated_profit_margin_after_additional_payment = $estimated_profit_after_additional_payment / ((1 - $config["Additional_shipping_charge"]["credit_card_processing_fees"] / 100) * ($grand_total + $additional_shipping_charge));
                     }
 
                     $estimated_profit_margin_after_additional_payment = price_format($estimated_profit_margin_after_additional_payment);
@@ -2371,33 +2390,7 @@ function func_get_order_manufacturers($orderid)
                     }
                     $mnfs[$m_id]["compose_email_to_distributor"] = $compose_email_to_distributor;
 
-
-                    $tmp_cur_time_sec = time();
-                    $d_server_min_distributor_time_sec = $mv["d_server_min_distributor_time"] * 60 * 60;
-                    $tmp_cur_time_sec -= $d_server_min_distributor_time_sec;
-                    $mnfs[$m_id]["distributor_time"] = $tmp_cur_time_sec;
-                    $tmp_cur_time_date_format = date("G.i", $tmp_cur_time_sec);
-                    $tmp_date_mm_dd_yyyy = date("m/d/Y", $tmp_cur_time_sec);
-                    $tmp_number_of_day_of_week = date("w", $tmp_cur_time_sec); // 0 (for Sunday) through 6 (for Saturday)
-
-                    if ($tmp_cur_time_date_format >= "8.30" && $tmp_cur_time_date_format <= "16.30" && ($tmp_number_of_day_of_week != "0" && $tmp_number_of_day_of_week != "6")) {
-
-                        if (!empty($request_availability_options) && is_array($request_availability_options)) {
-                            foreach ($request_availability_options as $k_r => $v_r) {
-                                if ($v_r["date_mm_dd_yyyy"] == $tmp_date_mm_dd_yyyy && $v_r["active"] == "Y") {
-                                    $good_time_to_send_email_to_distributor = "N";
-                                }
-                            }
-                        }
-
-                        if ($good_time_to_send_email_to_distributor != "N") {
-                            $good_time_to_send_email_to_distributor = "Y";
-                        }
-
-                        $mnfs[$m_id]["good_time_to_send_email_to_distributor"] = $good_time_to_send_email_to_distributor;
-                    } else {
-                        $mnfs[$m_id]["good_time_to_send_email_to_distributor"] = "N";
-                    }
+                    $mnfs[$m_id]["good_time_to_send_email_to_distributor"] = $order_group->manufacturer->isGoodTimeToSendEmail() ? 'Y' : 'N';
 
                     $mnfs[$m_id]["distributor_phone"] = func_query_first_cell("SELECT phone FROM $sql_tbl[distributor_contacts] WHERE manufacturerid='$m_id' AND phone!='' ORDER BY distributor_field_code asc LIMIT 1");
 
@@ -3734,8 +3727,10 @@ function func_change_order_group_status($orderid, $mid, $status)
             func_log_order($orderid, 'X', $log, $login);
         }
 
-        db_query('UPDATE ' . $sql_tbl['order_groups'] . ' SET ' . $status_column . '="' . $status . '"'
-                 . ' WHERE orderid="' . $orderid . '" AND manufacturerid="' . $mid . '"');
+        /** @var OrderGroupModel $order_group_m */
+        $order_group_m = OrderGroupModel::objects()->get(['orderid' => $orderid, 'manufacturerid' => $mid]);
+        $order_group_m->{$status_column} = $status;
+        $order_group_m->save([$status_column]);
 
         if (
             (($status == 'D' && $order_group[$status_column] != 'F')
@@ -3959,7 +3954,7 @@ function func_instock_and_outofstock_items_table($products, $type_of_message = '
     $cidev_instock_items_table .= '<tr><td width="150px" style="text-align: left; font-weight: bold;">Item number</td><td width="250px" style="text-align: left; font-weight: bold;">Item name</td><td style="text-align: right; font-weight: bold;" nowrap="nowrap">Quantity in stock</td></tr>';
 
     $cidev_outofstock_items_table = '<table width="500px" border="1" cellpadding="5" cellspacing="0" bordercolor="#414236" style="font-family: Arial, Helvetica, sans-serif; font-size: 14px; color: #000000; line-height: 18px;">';
-    $cidev_outofstock_items_table .= '<tr><td width="150px" style="text-align: left; font-weight: bold;">Item number</td><td width="250px" style="text-align: left; font-weight: bold;">Item name</td><td style="text-align: right; font-weight: bold;" nowrap="nowrap">Quantity out of stock</td><td style="text-align: right; font-weight: bold;" nowrap="nowrap" width="150px">ETA date</td></tr>';
+    $cidev_outofstock_items_table .= '<tr><td width="150px" style="text-align: left; font-weight: bold;">Item number</td><td width="250px" style="text-align: left; font-weight: bold;">Item name</td><td style="text-align: right; font-weight: bold;" nowrap="nowrap">Quantity required</td><td style="text-align: right; font-weight: bold;" nowrap="nowrap" width="150px">ETA date</td></tr>';
 
     $cidev_outofstock_items_eta_table = '<table width="500px" border="1" cellpadding="5" cellspacing="0" bordercolor="#414236" style="font-family: Arial, Helvetica, sans-serif; font-size: 14px; color: #000000; line-height: 18px;">';
     $cidev_outofstock_items_eta_table .= '<tr><td width="150px" style="text-align: left; font-weight: bold;">Item number</td><td width="250px" style="text-align: left; font-weight: bold;">Item name</td><td style="text-align: right; font-weight: bold;" nowrap="nowrap">Quantity required</td><td style="text-align: right; font-weight: bold;" nowrap="nowrap" width="150px">ETA date to ship all items</td></tr>';
@@ -4010,7 +4005,7 @@ function func_instock_and_outofstock_items_table($products, $type_of_message = '
                 $cidev_instock_items_table .= '<tr><td width="150px" style="text-align: left;">' . $tmp_sku . '</td><td width="250px" style="text-align: left;"><a data-mce-href="' . $v["links"]["customer"] . '" href="' . $v["links"]["customer"] . '">' . $v["product"] . '</a>' . $selected_product_options . '</td><td style="text-align: right;">' . $instock_items . '</td></tr>';
             }
 
-            if ($v["back"] > 0) {
+            if ($v["back"] > 0 || $type_of_message == "compose_message_page") {
                 $is_back = "Y";
 
                 $count_out_of_stock_items++;
@@ -4027,7 +4022,7 @@ function func_instock_and_outofstock_items_table($products, $type_of_message = '
                 else {
                     $tmp_eta_date_mm_dd_yyyy = $v["eta_date_mm_dd_yyyy"];
 
-                    if (!empty($tmp_eta_date_mm_dd_yyyy))
+                    if (!empty($tmp_eta_date_mm_dd_yyyy) && $tmp_eta_date_mm_dd_yyyy >= time())
                     {
                         $tmp_eta_date_mm_dd_yyyy = date("j-M-Y", $tmp_eta_date_mm_dd_yyyy);
 
@@ -4046,6 +4041,8 @@ function func_instock_and_outofstock_items_table($products, $type_of_message = '
                         }
                     }
                     else {
+                        $tmp_eta_date_mm_dd_yyyy = '';
+
                         if ($type_of_message == 'backorder_decision_request') {
                             $tmp_eta_date_mm_dd_yyyy = "unknown";
                             $count_eta_unknown++;
@@ -4063,7 +4060,7 @@ function func_instock_and_outofstock_items_table($products, $type_of_message = '
                 }
 
                 if ($v["offer_backorder"] == "Y" || $type_of_message == "compose_message_page") {
-                    $cidev_outofstock_items_table .= '<tr><td width="150px" style="text-align: left;">' . $tmp_sku . '</td><td width="250px" style="text-align: left;"><a data-mce-href="' . $v["links"]["customer"] . '" href="' . $v["links"]["customer"] . '">' . $v["product"] . '</a>' . $selected_product_options . '</td><td style="text-align: right;">' . $v["back"] . '</td><td style="text-align: right;" nowrap="nowrap">' . $tmp_eta_date_mm_dd_yyyy . '</td></tr>';
+                    $cidev_outofstock_items_table .= '<tr><td width="150px" style="text-align: left;">' . $tmp_sku . '</td><td width="250px" style="text-align: left;"><a data-mce-href="' . $v["links"]["customer"] . '" href="' . $v["links"]["customer"] . '">' . $v["product"] . '</a>' . $selected_product_options . '</td><td style="text-align: right;">' . $v["amount"] . '</td><td style="text-align: right;" nowrap="nowrap">' . $tmp_eta_date_mm_dd_yyyy . '</td></tr>';
 
                     $count_outofstock_products_with_offer_backorder_Y++;
 

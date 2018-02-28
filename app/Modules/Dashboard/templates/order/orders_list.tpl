@@ -151,9 +151,27 @@
             </td>
             <td class="events-container" colspan="4">
                 {if $order->getCountEvents()}
-                    <span class="events">
+                    {set $evnt_messages}
+                        {foreach $order->getEventsMessage() as $event last=$last}
+                            {if $event->message}
+                                [{$event->created_at}] {$event->message}
+                                {if !$last}
+                                    <br>
+                                {/if}
+                            {/if}
+                        {/foreach}
+                    {/set}
+
+                    <span class="events {if $evnt_messages|trim}itooltip{/if}">
                         +{$order->getCountEvents()}
+                        {if $evnt_messages|trim}
+                            <span class="info text_align__left">
+                                {$evnt_messages}
+                            </span>
+                        {/if}
+
                     </span>
+
                 {/if}
             </td>
         </tr>

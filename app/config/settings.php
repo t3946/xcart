@@ -47,7 +47,8 @@ return array_replace_recursive([
                    ],
                    'driverOptions' => [
 //                       PDO::ATTR_EMULATE_PREPARES => false,
-                       PDO::ATTR_STRINGIFY_FETCHES => false
+                       PDO::ATTR_STRINGIFY_FETCHES => false,
+//                       PDO::ATTR_PERSISTENT => true, //broken -> https://stackoverflow.com/questions/16217426/is-it-possible-to-use-doctrine-with-persistent-pdo-connections
                    ]
                ]
            ]
@@ -162,7 +163,7 @@ return array_replace_recursive([
    ],
    'autoloadComponents' => [
        'errorHandler',
-       'logger',
+//       'logger',
        'db',
    ]
 ],  $local_config);

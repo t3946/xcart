@@ -62,4 +62,3 @@ $smarty->assign("filter", $filter);
 
 $smarty->assign("template_name", "customer/show_more_filters.tpl");
 func_display("customer/help/popup_info.tpl", $smarty);
-?>

@@ -6,6 +6,7 @@
     <script async custom-element="amp-carousel" src="https://cdn.ampproject.org/v0/amp-carousel-0.1.js"></script>
     <script async custom-element="amp-analytics" src="https://cdn.ampproject.org/v0/amp-analytics-0.1.js"></script>
     <script async custom-element="amp-social-share" src="https://cdn.ampproject.org/v0/amp-social-share-0.1.js"></script>
+    <link rel="canonical" href="{$model->getAbsoluteUrl(true)}">
     {if $model->isNeedForm()}
     <script async custom-element="amp-form" src="https://cdn.ampproject.org/v0/amp-form-0.1.js"></script>
     {/if}
@@ -89,7 +90,7 @@
             <br><br>
 
             {else}
-                {if $model->r_avail > 0}
+                {if !$model->isOutOfStock()}
                 <form method="get" action="/cart.php" target="_top">
                     <input type="hidden" name="amount" value="1">
                     <input type="hidden" name="mode" value="add">
@@ -124,7 +125,7 @@
 
 
                 </form>
-                {elseif $model->r_avail == 0 || $model->r_avail < 0 }
+                {else}
                     <div class="similar">
                         <div class="options price">
                             <h6 id="sku">SKU:

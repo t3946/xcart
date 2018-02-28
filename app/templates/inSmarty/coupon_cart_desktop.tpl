@@ -14,6 +14,7 @@
         </button>
 
     {else}
+
         <div class="discard">
             <span style="margin-right: 1em;">
                 Appended coupon:
@@ -28,6 +29,30 @@
             <button name="discard-coupon" value="1" class="cidev_new_button cidev_new_white" style="font-size: 1.15em">
                 Discard
             </button>
+        </div>
+
+        <div class="discount">
+
+            {add $validator = $.app->getModule('Cart')->getValidateComponent()}
+
+            {if !$validator->isValid() && $validator->precalcProducts()}
+                <p>
+                    Your supposed discount is <span class="ProductPriceSmall">US$ {$validator->getProductDiscount()|number_format:2}</span>.
+                    <br>
+
+                    The exact amount of discount will be calculated on Order Review page.
+                </p>
+            {/if}
+        </div>
+
+
+        {if $couponModel->description}
+        <div class="description">
+            {$couponModel->description}
+        </div>
+        {/if}
+
+        <div>
         </div>
     {/if}
     </div>

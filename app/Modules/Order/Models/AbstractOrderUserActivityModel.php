@@ -40,6 +40,7 @@ abstract class AbstractOrderUserActivityModel extends Model
             ],
             'created_at' => [
                 'class' => DateTimeField::className(),
+                'default' => (new \DateTime())->modify('+5 seconds'),
                 'autoNowAdd' => true,
                 'autoNow' => true,
             ]

@@ -4,6 +4,7 @@ namespace Modules\Cart;
 
 use Modules\Admin\Traits\AdminTrait;
 use Modules\Cart\Admin\CouponKitAdmin;
+use Modules\Cart\Helpers\CouponOldCart;
 use Modules\Cart\Models\CouponKitModel;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Module\Module;
@@ -17,6 +18,8 @@ class CartModule extends Module
     public $couponModel;
 
     private $isCouponsActive;
+
+    private $validate_component;
 
     /**
      * @var array
@@ -62,6 +65,20 @@ class CartModule extends Module
                 ]),
             ],
         ];
+    }
+
+    public function setValidateComponent($component):void
+    {
+        $this->validate_component = $component;
+    }
+
+    public function getValidateComponent()
+    {
+        if (!$this->validate_component) {
+            $this->validate_component = CouponOldCart::getInstance();
+        }
+
+        return $this->validate_component;
     }
 
     public function getCouponModel()

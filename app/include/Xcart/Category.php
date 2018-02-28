@@ -1,6 +1,8 @@
 <?php
 namespace Xcart;
 
+use Modules\Goods\Models\CategoryModel;
+
 class Category extends Data
 {
     /**
@@ -59,13 +61,20 @@ class Category extends Data
     public function getParentsCategories()
     {
         if (is_null($this->aParentCategories)) {
-            $aPaths = explode('/', $this->getField('categoryid_path'));
+//            $aPaths = explode('/', $this->getField('categoryid_path'));
+
+            /** @var CategoryModel $model */
+//            $model = CategoryModel::objects()->get(['pk' => $this->getCategoryId()]);
+            $model = new CategoryModel($this->aPrimaryTableValue);
+            $aPaths = $model->getObjects()->ancestors()->valuesList(['categoryid'], true);
+
             if (!empty($aPaths)) {
-                array_pop($aPaths);
+//                array_pop($aPaths);
+
                 if (!empty($aPaths)) {
                     $aCats = SQLBuilder::getInstance()
                         ->addSelect('c.*')
-                        ->addSelect('ROUND ((LENGTH(categoryid_path) - LENGTH(REPLACE (categoryid_path, "/", ""))) / LENGTH("/")) level')
+//                        ->addSelect('ROUND ((LENGTH(categoryid_path) - LENGTH(REPLACE (categoryid_path, "/", ""))) / LENGTH("/")) level')
                         ->addFromTable('categories', 'c')
                         ->addCondition("categoryid IN (".implode($aPaths).")")
                         ->addOrderBy('level DESC')->query()->getQueryResult();

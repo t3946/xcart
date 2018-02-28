@@ -55,8 +55,12 @@ class AnveoAssignCalls
                     $manager = OrdersCallsModel::objects();
 
                     foreach ($oua_models as $oua_model) {
-                        $manager->updateOrCreate(['call_id' => $model->id, 'order_id' => $oua_model->order_id],
-                                                 ['relevance_type' => OrdersCallsModel::TYPE_VIEWING_SAME_OPERATOR, 'relevance_order' => 10]);
+
+                        /** @var OrdersCallsModel $oc_model */
+                        [$oc_model] = $manager->getOrNew(['call_id' => $model->id, 'order_id' => $oua_model->order_id, 'relevance_type' => OrdersCallsModel::TYPE_VIEWING_SAME_OPERATOR]);
+                        $oc_model->relevance_order = 10;
+
+                        $oc_model->save();
 
                         $log_category = "anveo_calls";
                         $log_text = "{$e164} - Привязан к заказу - {$oua_model->order_id} по первой связке";
@@ -152,8 +156,8 @@ class AnveoAssignCalls
                         $manager = OrdersCallsModel::objects();
 
                         foreach ($oua_models as $oua_model) {
-                            $manager->updateOrCreate(['call_id' => $model->id, 'order_id' => $oua_model->order_id],
-                                                     ['relevance_type' => OrdersCallsModel::TYPE_VIEWING_OTHER_OPERATOR, 'relevance_order' => 20]);
+                            $manager->updateOrCreate(['call_id' => $model->id, 'order_id' => $oua_model->order_id, 'relevance_type' => OrdersCallsModel::TYPE_VIEWING_OTHER_OPERATOR],
+                                                     ['relevance_order' => 20]);
 
                             $log_category = "anveo_calls";
                             $log_text = "{$e164} - Привязан к заказу - {$oua_model->order_id} по третьей связке";

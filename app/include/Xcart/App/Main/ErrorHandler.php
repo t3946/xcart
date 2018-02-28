@@ -206,6 +206,7 @@ class ErrorHandler
                 'code' => $code,
                 'type' => get_class($exception),
                 'errorCode' => $exception->getCode(),
+                'message' => $exception->getMessage(),
                 'file' => $fileName,
                 'line' => $errorLine,
                 'trace' => "\n" .$exception->getTraceAsString(),
@@ -227,7 +228,7 @@ class ErrorHandler
                 }
             }
 
-            unset($err['traces']);
+            unset($err['traces'], $err['traces']);
 
             $app->logger->critical($exception->getMessage(), $err, 'error');
 

@@ -1398,6 +1398,7 @@ SQL;
                                 setField('dc_status', ($sOrderStatus == 'Unshipped' ? 'T' : 'S'))->
                                 setField('bd_status', 'W')->
                                 setField('payment_method', 'Amazon Seller')->
+                                setField('paymentid', 1)->
                                 setField('firstname', $sBuyerName)->
                                 setField('s_firstname', (empty($sShippingAddressName) ? $sBuyerName : $sShippingAddressName))->
                                 setField('s_address', $sAddress)->

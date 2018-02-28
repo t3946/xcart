@@ -293,3 +293,41 @@
         }
     }
 }
+
+
+.order_additional_tags {
+
+    .select2-selection {
+        &__choice {
+            overflow: hidden;
+            padding-right: 0 !important;
+
+            &__remove {
+                color: black !important;
+            }
+
+            .option-selected {
+                padding:.2em;
+                display: inline-block;
+            }
+        }
+    }
+}
+
+#select2-additional_tag_status-results {
+    .select2-results__option {
+        padding: 1px;
+
+        .option-result {
+            padding:.5em;
+        }
+
+        &--highlighted {
+            background-color: black;
+
+            .option-result {
+                color: black;
+            }
+        }
+    }
+}

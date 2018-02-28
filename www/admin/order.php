@@ -415,6 +415,7 @@ if ($REQUEST_METHOD == "POST")
                         $new_shipping_cost = 0;
                     }
 
+
                     db_query("UPDATE  $sql_tbl[orders] SET shipping_cost='$new_shipping_cost' WHERE orderid='$orderid'");
                     db_query("DELETE FROM $sql_tbl[order_groups] WHERE orderid='$orderid' AND manufacturerid='$k'");
 
@@ -1472,7 +1473,12 @@ if ($mode == 'pending_order_message2_done_clicked' && !empty($notify_mid))
 {
     $log = "'Done' clicked. <br /><B>" . $order["shipping_groups"][$notify_mid]["all_distributor_info"]["code"] . "</B>: order_entry_flag: " . $order["shipping_groups"][$notify_mid]["order_entry_flag"] . " -> D";
 
-    db_query("UPDATE $sql_tbl[order_groups] SET order_entry_flag='D' WHERE orderid='$orderid' AND manufacturerid='$notify_mid'");
+    OrderGroupModel::objects()
+        ->get(['orderid' => $orderid, 'manufacturerid' => $mnf_id])
+        ->setAttribute('order_entry_flag', 'D')
+        ->save();
+
+//    db_query("UPDATE $sql_tbl[order_groups] SET order_entry_flag='D' WHERE orderid='$orderid' AND manufacturerid='$notify_mid'");
 
     $section_name = "main_order_tabs-order_details";
     x_session_save("section_name");
@@ -1757,7 +1763,12 @@ if ($mode == 'mnf_notify' || $mode == "cidev_send_email_to_operator")
                 $new_value = func_query_first_cell("SELECT name FROM $sql_tbl[order_statuses] WHERE code='DP'");
                 $log .= "<B>" . $code . ":</B> dc_status: " . $current_dc_status_value . " -> " . $new_value;
 
-                db_query("UPDATE $sql_tbl[order_groups] SET dc_status='DP' WHERE orderid = '$orderid' AND manufacturerid='$mnf_id'");
+                OrderGroupModel::objects()
+                    ->get(['orderid' => $orderid, 'manufacturerid' => $mnf_id])
+                    ->setAttribute('dc_status', 'DP')
+                    ->save();
+
+//                db_query("UPDATE $sql_tbl[order_groups] SET dc_status='DP' WHERE orderid = '$orderid' AND manufacturerid='$mnf_id'");
             }
 
             $message_in_db_id = func_query_first_cell("SELECT id FROM $sql_tbl[off_hours_messages] WHERE orderid = '$orderid' AND manufacturerid='$mnf_id'");
@@ -1915,10 +1926,17 @@ if ($mode == 'mnf_notify' || $mode == "cidev_send_email_to_operator")
                 func_log_order($orderid, 'X', $log, $login);
             }
 
-            db_query("UPDATE $sql_tbl[order_groups] SET notify_sent = 'Y', dc_status='K'"
-                     . " WHERE orderid = '$orderid' AND manufacturerid='$mnf_id'");
+            OrderGroupModel::objects()
+                ->get(['orderid' => $orderid, 'manufacturerid' => $mnf_id])
+                ->setAttribute('notify_sent', 'Y')
+                ->setAttribute('dc_status', 'K')
+                ->save();
+
+//            db_query("UPDATE $sql_tbl[order_groups] SET notify_sent = 'Y', dc_status='K'"
+//                     . " WHERE orderid = '$orderid' AND manufacturerid='$mnf_id'");
         }
         else {
+            $order_group = OrderGroupModel::objects()->get(['orderid' => $orderid, 'manufacturerid' => $mnf_id]);
 
             if ($current_dc_status != "C") {
                 $new_value = func_query_first_cell("SELECT name FROM $sql_tbl[order_statuses] WHERE code='C'");
@@ -1928,12 +1946,16 @@ if ($mode == 'mnf_notify' || $mode == "cidev_send_email_to_operator")
                 $current_dc_dispatched_time = func_query_first_cell("SELECT dc_dispatched_time FROM $sql_tbl[order_groups] WHERE manufacturerid='$mnf_id' AND orderid='$orderid'");
 
                 if (empty($current_dc_dispatched_time)) {
-                    db_query("UPDATE $sql_tbl[order_groups] SET dc_dispatched_time='" . time() . "' WHERE orderid = '$orderid' AND manufacturerid='$mnf_id'");
+                    $order_group->dc_dispatched_time = time();
+//                    db_query("UPDATE $sql_tbl[order_groups] SET dc_dispatched_time='" . time() . "' WHERE orderid = '$orderid' AND manufacturerid='$mnf_id'");
                 }
             }
 
-            db_query("UPDATE $sql_tbl[order_groups] SET notify_sent = 'Y', dc_status='C'"
-                     . " WHERE orderid = '$orderid' AND manufacturerid='$mnf_id'");
+            $order_group->notify_sent = 'Y';
+            $order_group->dc_status = 'C';
+            $order_group->save();
+//            db_query("UPDATE $sql_tbl[order_groups] SET notify_sent = 'Y', dc_status='C'"
+//                     . " WHERE orderid = '$orderid' AND manufacturerid='$mnf_id'");
         }
 
         if ($all_sent) {
@@ -2001,7 +2023,11 @@ if ($mode == 'mnf_notify' || $mode == "cidev_send_email_to_operator")
             func_log_order($orderid, 'X', $log, $login);
         }
 
-        db_query("UPDATE $sql_tbl[order_groups] SET dc_status='E' WHERE orderid = '$orderid' AND manufacturerid='$mnf_id'");
+//        db_query("UPDATE $sql_tbl[order_groups] SET dc_status='E' WHERE orderid = '$orderid' AND manufacturerid='$mnf_id'");
+        OrderGroupModel::objects()
+            ->get(['orderid' => $orderid, 'manufacturerid' => $mnf_id])
+            ->setAttribute('dc_status', 'E')
+            ->save();
     }
 
     func_header_location("order.php?orderid=" . $orderid);
@@ -2120,7 +2146,12 @@ elseif ($mode == 'waive') {
     if ($current_additional_shipping_status != "W") {
         $log = "<B>" . $code . ":</B> additional_shipping_status: " . $additional_shipping_statuses[$current_additional_shipping_status] . " -> Waive";
         func_log_order($orderid, 'X', $log, $login);
-        db_query("UPDATE $sql_tbl[order_groups] SET additional_shipping_status='W' WHERE orderid='$orderid' AND manufacturerid='$mnf_id'");
+
+        OrderGroupModel::objects()
+            ->get(['orderid' => $orderid, 'manufacturerid' => $mnf_id])
+            ->setAttribute('additional_shipping_status', 'W')
+            ->save();
+//        db_query("UPDATE $sql_tbl[order_groups] SET additional_shipping_status='W' WHERE orderid='$orderid' AND manufacturerid='$mnf_id'");
     }
 
     func_header_location("order.php?orderid=" . $orderid);
@@ -2147,7 +2178,11 @@ elseif ($mode == 'mode_info_request_survey') {
             unset($actual_shipping_net);
         }
         else {
-            db_query("UPDATE $sql_tbl[order_groups] SET stock_request_shipping_cost='$actual_shipping_net' WHERE orderid='$orderid' AND manufacturerid='$mnf_id'");
+            OrderGroupModel::objects()
+                ->get(['orderid' => $orderid, 'manufacturerid' => $mnf_id])
+                ->setAttribute('stock_request_shipping_cost', $actual_shipping_net)
+                ->save();
+//            db_query("UPDATE $sql_tbl[order_groups] SET stock_request_shipping_cost='$actual_shipping_net' WHERE orderid='$orderid' AND manufacturerid='$mnf_id'");
         }
     }
 
@@ -2182,7 +2217,13 @@ elseif ($mode == 'mode_info_request_survey') {
                     }
                 }
             }
-            db_query("UPDATE $sql_tbl[order_groups] SET actual_shipping_net='" . addslashes($actual_shipping_net) . "', actual_shipping_gross='" . addslashes($actual_shipping_gross) . "' WHERE orderid='$orderid' AND manufacturerid='$mnf_id'");
+
+            OrderGroupModel::objects()
+                ->get(['orderid' => $orderid, 'manufacturerid' => $mnf_id])
+                ->setAttribute('actual_shipping_net', $actual_shipping_net)
+                ->setAttribute('actual_shipping_gross', $actual_shipping_gross)
+                ->save();
+//            db_query("UPDATE $sql_tbl[order_groups] SET actual_shipping_net='" . addslashes($actual_shipping_net) . "', actual_shipping_gross='" . addslashes($actual_shipping_gross) . "' WHERE orderid='$orderid' AND manufacturerid='$mnf_id'");
         }
     }
 
@@ -2391,7 +2432,11 @@ elseif ($mode == 'mode_info_request_survey') {
         $log .= "<B>" . $code . ":</B> dc_status: " . $current_dc_status_value . " -> " . $new_value . "<br />";
     }
 
-    db_query("UPDATE $sql_tbl[order_groups] SET dc_status='M' WHERE orderid = '$orderid' AND manufacturerid='$mnf_id'");
+    OrderGroupModel::objects()
+        ->get(['orderid' => $orderid, 'manufacturerid' => $mnf_id])
+        ->setAttribute('dc_status', 'M')
+        ->save();
+//    db_query("UPDATE $sql_tbl[order_groups] SET dc_status='M' WHERE orderid = '$orderid' AND manufacturerid='$mnf_id'");
 
     if (!empty($log)) {
         func_log_order($orderid, 'X', $log, $login);

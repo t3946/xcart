@@ -1,6 +1,8 @@
 <?php
 namespace Modules\Order\Models;
 
+use Modules\User\Models\UserModel;
+use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\DateTimeField;
 use Xcart\App\Orm\Fields\ForeignField;
@@ -41,7 +43,12 @@ class OrderEventsModel extends Model
             'message' => [
                 'class' => CharField::className(),
                 'null' => true
-            ]
+            ],
+            'user' => [
+                'class' => ForeignField::class,
+                'modelClass' => UserModel::class,
+                'link' => ['user_id' => 'id'],
+            ],
         ];
     }
 
@@ -53,15 +60,23 @@ class OrderEventsModel extends Model
      * @return null|static
      * @throws \Exception
      */
-    public static function newOrderEvent($owner = null, $order_id, $message = null)
+    public static function newOrderEvent($owner = null, $order_id, string $message = null, int $user_id = null)
     {
         if (static::objects()->filter(['order_id' => $order_id, 'created_at' => new \DateTime()])->count() == 0)
         {
+            if (!$user_id) {
+                if ($user = Xcart::app()->getUser()) {
+                    $user_id = Xcart::app()->getUser()->pk;
+                }
+            }
+
             $model = new static();
-            $model->setAttributes(['order_id' => $order_id, 'message' => $message]);
+            $model->setAttributes(['order_id' => $order_id, 'message' => $message, 'user_id' => $user_id]);
 
             //Cache UP
-            $model->order->getOTRSTicketMessages();
+            if (rand(0,10) > 6) {
+                $model->order->getOTRSTicketMessages();
+            }
 
             if ($model->isValid() && $model->save())
             {

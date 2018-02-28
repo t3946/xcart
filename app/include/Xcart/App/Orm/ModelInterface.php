@@ -97,6 +97,8 @@ interface ModelInterface
     /**
      * @param string $name
      * @param $value
+     *
+     * @return static
      */
     public function setAttribute($name, $value);
 

@@ -12,7 +12,7 @@ class MetaTemplateForm extends ModelForm
     {
         return [
             'Main' => [
-                'code', 'title', 'description', 'keywords'
+                'code', 'title', 'description'
             ]
         ];
     }
@@ -33,10 +33,10 @@ class MetaTemplateForm extends ModelForm
                 'class' => AceField::className(),
                 'language' => 'smarty',
             ],
-            'keywords' => [
-                'class' => AceField::className(),
-                'language' => 'smarty',
-            ],
+//            'advanced' => [
+//                'class' => JsonAceField::class,
+//                'language' => 'smarty',
+//            ]
         ];
     }
 }

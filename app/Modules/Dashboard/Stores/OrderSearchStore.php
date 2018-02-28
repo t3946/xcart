@@ -862,7 +862,7 @@ class OrderSearchStore extends BaseStore
                 default: {
                     if ($user->show_events) {
                         /** @var QuerySet $qs */
-                        $e_qs = OrderHelper::getEventCountQS($user->id, ($user->show_events_min_date) ? (new DateTime($user->show_events_min_date)) : null);
+                        $e_qs = OrderHelper::getCountEventsQS($user->id, ($user->show_events_min_date) ? (new DateTime($user->show_events_min_date)) : null);
                         $qs->join('left join', $e_qs->select(['order_id', 'count' => new Expression('count(*)')])->group(['order_id'])->allSql(), ['events.order_id' => 'orderid'], 'events');
                         $qs->order(['-shipping.important', '-events.count', '-date', '-orderid']);
                     }
@@ -996,7 +996,7 @@ class OrderSearchStore extends BaseStore
             $o_qs = clone $this->qs;
 
             /** @var QuerySet $qs */
-            $qs = OrderHelper::getEventCountQS($user->id, ($user->show_events_min_date) ? (new DateTime($user->show_events_min_date)) : null);
+            $qs = OrderHelper::getCountEventsQS($user->id, ($user->show_events_min_date) ? (new DateTime($user->show_events_min_date)) : null);
 
             if ($ids) {
                 $qs->filter(['order_id__in' => $ids]);

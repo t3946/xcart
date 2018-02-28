@@ -4,6 +4,7 @@ namespace Modules\Order\Helpers;
 use DateTime;
 use Mindy\QueryBuilder\Expression;
 use Mindy\QueryBuilder\Q\QAnd;
+use Mindy\QueryBuilder\Q\QAndNot;
 use Mindy\QueryBuilder\Q\QOr;
 use Mindy\QueryBuilder\QueryBuilder;
 use Modules\Order\Models\OrderEventsModel;
@@ -62,7 +63,7 @@ class OrderHelper
 
         if (empty($user_id) && Xcart::app()->getIsWebMode())
         {
-            $userModel = Xcart::app()->user;
+            $userModel = Xcart::app()->getUser();
             $user_id = $userModel->id;
         }
 
@@ -84,10 +85,11 @@ class OrderHelper
 
             $min_date = ($userModel->show_events_min_date) ? (new DateTime($userModel->show_events_min_date)) : null;
 
-            $qs = static::getEventCountQS($user_id, $min_date);
-            $topAlias = $qs->getTableAlias();
+            $qs = static::getCountEventsQS($user_id, $min_date);
 
-            $sql = $qs->filter(['order_id__in' => $ids,])->group(["{$topAlias}.order_id"])->allSql();
+            $sql = $qs->filter(['order_id__in' => $ids,])
+                ->group(["order_id"])
+                ->allSql();
 
             $counts = $connection->fetchAll($sql);
             if ($counts) {
@@ -121,7 +123,7 @@ class OrderHelper
      *
      * @return \Xcart\App\Orm\Manager
      */
-    public static function getEventCountQS($user_id, $min_show_date = null)
+    public static function getCountEventsQS($user_id, $min_show_date = null)
     {
         $qs = OrderEventsModel::objects();
         $topAlias = $qs->getTableAlias();
@@ -137,12 +139,21 @@ class OrderHelper
                     new QAnd(['a.user_id' => $user_id, new QAnd(new Expression("`{$topAlias}`.`created_at` >= `a`.`created_at`"))]),
                     'a.user_id__isnull' => true
                 ]),
+                new QAndNot(['user_id' => $user_id,]),
             ])
             ->getQuerySet()
             ->join('left join', OrderUserLastActivityModel::tableName(), ['a.order_id' => 'order_id', 'a.user_id' => new Expression($user_id)], 'a')
             ->select(['order_id', 'count' => new Expression('count(*)')]);
 
         return $qs;
+    }
+
+    public static function getCountEventsActiveUserQS()
+    {
+        $userModel = Xcart::app()->getUser();
+        $min_date = ($userModel->show_events_min_date) ? (new DateTime($userModel->show_events_min_date)) : null;
+
+        return static::getCountEventsQS($userModel->pk, $min_date);
     }
 
     /**

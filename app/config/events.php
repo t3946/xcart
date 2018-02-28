@@ -5,7 +5,7 @@ return [
             'callback' => ['\\Modules\\PBX\\Helpers\\AnveoAssignCalls', 'eventBindCallToOrder']
         ]
     ],
-    'order:changed' => [
+    'order:status.changed' => [
         [
             'callback' => ['\\Modules\\Order\\Models\\OrderEventsModel', 'newOrderEvent'],
         ],

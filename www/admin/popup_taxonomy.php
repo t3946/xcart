@@ -3,10 +3,10 @@
 require "./auth.php";
 require $xcart_dir."/include/security.php";
 
-x_session_register('google_product_taxonomy');
+/*x_session_register('google_product_taxonomy');
 x_session_register('google_product_taxonomy_id');
 x_session_register('google_categories_short');
-x_session_register('google_categories_full');
+x_session_register('google_categories_full');*/
 
 /*
 
@@ -152,10 +152,10 @@ if (empty($google_product_taxonomy) || !is_array($google_product_taxonomy) || em
 		unset($value_arr);
 	}
 
-	x_session_save("google_product_taxonomy");
+/*	x_session_save("google_product_taxonomy");
 	x_session_save("google_product_taxonomy_id");
 	x_session_save("google_categories_short");
-	x_session_save("google_categories_full");
+	x_session_save("google_categories_full");*/
 }
 
 //func_print_r($google_categories_full);

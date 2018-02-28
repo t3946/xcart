@@ -45,7 +45,7 @@
                         <div class="info clock">
                             <i class="icon"></i>
                             <span class="title">Out of stock</span>
-                            {if $child->eta_date_mm_dd_yyyy}
+                            {if $child->eta_date_mm_dd_yyyy && $child->eta_date_mm_dd_yyyy > $smarty.now}
                                 <span class="subline">ETA date: {$child->eta_date_mm_dd_yyyy|date_format:'%d %b %Y'}</span>
                             {/if}
                         </div>

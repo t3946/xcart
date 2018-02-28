@@ -13,30 +13,29 @@ class ExpireHeadersMiddleware extends Middleware
 
     public function processHttpRequest($request)
     {
+        header('Vary: Accept-Encoding, User-Agent');
 
-        if (!headers_sent()) {
+        if (!headers_sent())
+        {
+            $this->autoLastModified();
 
-            header("Vary: User-Agent");
-//            header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
-            $this->noCache();
-            return;
-
-            if (defined('AREA_TYPE') && AREA_TYPE == 'A') {
-                $this->noCache();
+            if (!defined('SET_EXPIRE')) {
+                header("Cache-Control: public, max-age=3600, must-revalidate");
             }
-            else {
-                if ($request->getIsAjax()) {
-                    $this->noCache();
-                }
-                else {
 
-                    $request->getIsSecureConnection() ?
-                        header("Cache-Control: private, max-age=3600, must-revalidate") :
-                        header("Cache-Control: public, max-age=3600");
+            !defined("SET_EXPIRE") ?:
+                header("Expires: " . gmdate("D, d M Y H:i:s", SET_EXPIRE) . " GMT"); // is defined
 
-                    !defined("SET_EXPIRE") ?:
-                        header("Expires: " . gmdate("D, d M Y H:i:s", SET_EXPIRE) . " GMT"); // is defined
-                }
+//            if ( $request->getIsAjax() || (defined('AREA_TYPE') && AREA_TYPE == 'A'))
+//            {
+//                header("Cache-Control: no-cache, must-revalidate");
+//            }
+
+            if (defined('AREA_TYPE') && AREA_TYPE == 'A')
+            {
+                header("Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0");
+                defined("SET_EXPIRE") ?:
+                    header("Expires: " . gmdate("D, d M Y H:i:s", time() + 10) . " GMT");
             }
         }
     }
@@ -46,6 +45,19 @@ class ExpireHeadersMiddleware extends Middleware
         header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
         header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
         header("Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0");
-        header("Pragma: no-cache");
+
+//        header("Vary: User-Agent");
+//        header("Pragma: no-cache");
+    }
+
+    public function autoLastModified()
+    {
+        $last_modded = false;
+        foreach ( headers_list() as $header) {
+            $last_modded = $last_modded ?: strpos(strtolower($header), 'last-modified:') !== false;
+        }
+
+        ($last_modded) ?:
+            header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
     }
 }

@@ -306,15 +306,17 @@ class Manufacturers extends CloneData
     }
 
     public function getChildrenManufacturers ($iManufacturerId){
-        $aManufacturer = func_query("SELECT ".$this->sPrimaryKeyFiled." FROM ".self::$sql_tbl[$this->sPrimaryTable]." WHERE parent_manufacturer_id = ".$iManufacturerId);
+        if ($iManufacturerId) {
+            $aManufacturer = func_query("SELECT " . $this->sPrimaryKeyFiled . " FROM " . self::$sql_tbl[$this->sPrimaryTable] . " WHERE parent_manufacturer_id = " . $iManufacturerId);
 
-        if (isset($aManufacturer) && is_array($aManufacturer) && !empty($aManufacturer)) {
-            $aParents = array();
+            if (isset($aManufacturer) && is_array($aManufacturer) && !empty($aManufacturer)) {
+                $aParents = array();
 
-            foreach ($aManufacturer as $oManufacturer) {
-                $aParents[] = $oManufacturer[$this->sPrimaryKeyFiled];
+                foreach ($aManufacturer as $oManufacturer) {
+                    $aParents[] = $oManufacturer[$this->sPrimaryKeyFiled];
+                }
+                return $this->getMainufacturersInfo($aParents);
             }
-            return $this->getMainufacturersInfo($aParents);
         }
         return false;
     }

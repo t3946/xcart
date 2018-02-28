@@ -131,11 +131,13 @@ class CouponOldCart
 
                 static::$coupon = $model->coupon;
             }
-            elseif ($this->code) {
-                static::$coupon = CouponKitModel::objects()->filter(['active' => true, 'code' => $this->code])->get();
-            }
-            else if ( $code = Xcart::app()->request->session->get('coupon_code') ) {
-                static::$coupon = CouponKitModel::objects()->filter(['active' => true, 'code' => $code])->get();
+            else {
+                if ($this->code) {
+                    static::$coupon = CouponKitModel::objects()->filter(['active' => true, 'code' => $this->code])->get();
+                }
+                else if ( $code = Xcart::app()->request->session->get('coupon_code') ) {
+                    static::$coupon = CouponKitModel::objects()->filter(['active' => true, 'code' => $code])->get();
+                }
             }
         }
 
@@ -361,20 +363,24 @@ class CouponOldCart
 
     public function calcDiscount($cost)
     {
-        $coupon = $this->getCoupon();
-        $discount = floatval($coupon->discount);
-        $max_dict = floatval($coupon->max_discount);
+        $calc = 0;
 
-        if ($coupon->isPercentageCalc()) {
-            //  Dec to float 10% => 0.1
-            $calc = $cost * ($discount / 100);
-        }
-        else {
-            $calc = $discount;
-        }
+        if ( $coupon = $this->getCoupon() )
+        {
+            $discount = floatval($coupon->discount);
+            $max_dict = floatval($coupon->max_discount);
 
-        if ($calc > $max_dict) {
-            $calc = $max_dict;
+            if ($coupon->isPercentageCalc()) {
+                //  Dec to float 10% => 0.1
+                $calc = $cost * ($discount / 100);
+            }
+            else {
+                $calc = $discount;
+            }
+
+            if ($calc > $max_dict) {
+                $calc = $max_dict;
+            }
         }
 
         return $calc;
@@ -471,26 +477,53 @@ class CouponOldCart
         $this->setCart($cart);
     }
 
+    public function precalcProducts():bool
+    {
+        if ($this->getCart()) {
+            $cart = $this->getCart();
+            $pids = $this->getValidProductIds();
+
+            foreach ($cart['products'] as $key =>$item) {
+                if ( in_array($item['productid'], $pids) ) {
+                    $total = $this->getProductSubtotal($item);
+                    $discount = $this->getBalancedDiscount($total);
+
+                    $this->productsDiscount += $discount;
+                }
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+
     private function reCalcCart()
     {
-        $coupon = $this->getCoupon();
-        $cart = $this->getCart();
+        if ($coupon = $this->getCoupon()) {
+            $cart = $this->getCart();
 
-        $total = $this->getSumProducts();
+            $total = $this->getSumProducts();
 
-        $cart['coupon'] = $coupon->code;
-        $cart['discount_coupon'] = $coupon->code;
-        $cart['coupon_discount'] = $this->productsDiscount;
-        $cart['coupon_discount_orig'] = $this->productsDiscount;
-        $cart['display_discounted_subtotal'] = $total - $this->productsDiscount;
-        $cart['total_cost'] = $cart['total_cost'] - $this->productsDiscount;
+            $cart['coupon'] = $coupon->code;
+            $cart['discount_coupon'] = $coupon->code;
+            $cart['coupon_discount'] = $this->productsDiscount;
+            $cart['coupon_discount_orig'] = $this->productsDiscount;
+            $cart['display_discounted_subtotal'] = $total - $this->productsDiscount;
+            $cart['total_cost'] = $cart['total_cost'] - $this->productsDiscount;
 
-        $cart['orders'][0]['coupon'] = $cart['coupon'];
-        $cart['orders'][0]['coupon_discount'] =  $cart['coupon_discount'];
-        $cart['orders'][0]['total_cost'] = $cart['total_cost'];
-        $cart['orders'][0]['display_discounted_subtotal'] = $cart['display_discounted_subtotal'];
+            $cart['orders'][0]['coupon'] = $cart['coupon'];
+            $cart['orders'][0]['coupon_discount'] =  $cart['coupon_discount'];
+            $cart['orders'][0]['total_cost'] = $cart['total_cost'];
+            $cart['orders'][0]['display_discounted_subtotal'] = $cart['display_discounted_subtotal'];
 
-        $this->setCart($cart);
+            $this->setCart($cart);
+        }
+    }
+
+    public function getProductDiscount():?float
+    {
+        return $this->productsDiscount;
     }
 
     public function isValid()

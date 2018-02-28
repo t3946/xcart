@@ -415,7 +415,7 @@ class SupplierFeedHelper
             $parent_id = $feed->base_category_id;
 
             if ($model->isGroupRoot()) {
-                $parent_id = 0;
+                $parent_id = null;
             }
 
             $lastCategory = null;
@@ -433,7 +433,7 @@ class SupplierFeedHelper
                     /** @var CategoryModel $modelCat */
                     list($modelCat, $is_cat_created) = CategoryModel::objects()->getOrCreate(
                         [
-                            'parentid' => $parent_id,
+                            'parentid' => $parent_id ?: 0,
                             'category' => $v_cat,
                             'storefrontid' => $feed->storefront_id
                         ]);

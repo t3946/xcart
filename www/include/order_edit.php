@@ -1111,9 +1111,20 @@ if ($REQUEST_METHOD == "POST")
             }
         }
 
-        if (!empty($order['coupon'])) {
-            \Modules\Cart\Helpers\CouponOldCart::getInstance()->setOrderId($orderid)->setLogin($order['login']);
+        if (!empty($order['coupon']) || empty($order['coupon']) && $coupon_admin) {
+            if (empty($order['coupon']) && $ckmodel = \Modules\Cart\Models\CouponKitModel::objects()->get(['code' => $coupon_admin])) {
+                $cart_tmp['coupon'] = $coupon_admin;
+
+                \Modules\Cart\Models\CouponOrderModel::objects()->getOrCreate([
+                    'order_id' => $orderid,
+                    'login' => $order['login'],
+                    'created_at' => new \DateTime(),
+                    'coupon_id' => $ckmodel->pk,
+                ]);
+            }
         }
+
+        \Modules\Cart\Helpers\CouponOldCart::getInstance()->setOrderId($orderid)->setLogin($order['login']);
 
         func_oe_update_order($cart_tmp, $order["shipping_groups"], $order_data["products"]);
 
