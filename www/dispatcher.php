@@ -322,13 +322,13 @@ case 'P':
     $QUERY_STRING = 'productid=' . $productid . (!empty($QUERY_STRING) ? '&' . $QUERY_STRING : '');
     $PHP_SELF = dirname($PHP_SELF) . '/product.php';
 
-    Templater::getInstance()->caching = 2;
-    Templater::getInstance()->cache_lifetime = \Modules\Core\Helpers\Cache::CACHE_DAY;
-
-    if ( Templater::getInstance()->is_cached("customer/home.tpl", "product_" . $productid)) {
-        func_display_cached("customer/home.tpl", "product_" . $productid);
-        die();
-    }
+//    Templater::getInstance()->caching = 2;
+//    Templater::getInstance()->cache_lifetime = \Modules\Core\Helpers\Cache::CACHE_DAY;
+//
+//    if ( Templater::getInstance()->is_cached("customer/home.tpl", "product_" . $productid)) {
+//        func_display_cached("customer/home.tpl", "product_" . $productid);
+//        die();
+//    }
 
     \Modules\Meta\Helpers\MetaExtHelper::getInstance()
         ->setBaseCode(\Modules\Meta\Types\MetaType::PRODUCT)

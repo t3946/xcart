@@ -657,7 +657,7 @@ function func_display_cached($tpl, $cache_id = null, $cache_lifetime = true)
 
     if ($cache_id) {
         $templater->caching = 2;
-        $templater->cache_lifetime = is_numeric($cache_lifetime) ? $cache_lifetime : \Modules\Core\Helpers\Cache::CACHE_DAY;
+        $templater->cache_lifetime = is_numeric($cache_lifetime) ? $cache_lifetime : \Modules\Core\Helpers\Cache::CACHE_HOUR;
     }
 
     return func_display($tpl, $templater, true, $cache_id);
