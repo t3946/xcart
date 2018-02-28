@@ -318,14 +318,14 @@ case 'K':
 case 'P':
     // Product page case
 
+    $_GET['productid'] = $productid = intval($clean_url_data['resource_id']);
+    $QUERY_STRING = 'productid=' . $productid . (!empty($QUERY_STRING) ? '&' . $QUERY_STRING : '');
+    $PHP_SELF = dirname($PHP_SELF) . '/product.php';
+
     if ( Templater::getInstance()->is_cached("customer/home.tpl", "product_" . $productid)) {
         func_display_cached("customer/home.tpl", "product_" . $productid);
         die();
     }
-
-    $_GET['productid'] = $productid = intval($clean_url_data['resource_id']);
-    $QUERY_STRING = 'productid=' . $productid . (!empty($QUERY_STRING) ? '&' . $QUERY_STRING : '');
-    $PHP_SELF = dirname($PHP_SELF) . '/product.php';
 
     \Modules\Meta\Helpers\MetaExtHelper::getInstance()
         ->setBaseCode(\Modules\Meta\Types\MetaType::PRODUCT)
