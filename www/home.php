@@ -366,4 +366,3 @@ func_display("customer/home.tpl",$smarty);
 
 Profiler::getInstance()->addPoint();
 Profiler::getInstance()->stop('trace');
-Profiler::getInstance()->display();
