@@ -320,6 +320,7 @@ case 'P':
 
     if ( Templater::getInstance()->is_cached("customer/home.tpl", "product_" . $productid)) {
         func_display_cached("customer/home.tpl", "product_" . $productid);
+        die();
     }
 
     $_GET['productid'] = $productid = intval($clean_url_data['resource_id']);
