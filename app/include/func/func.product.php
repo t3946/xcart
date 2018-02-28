@@ -749,14 +749,18 @@ function func_select_product($id, $membershipid, $redirect_if_error=true, $clear
     $product = func_query_first("SELECT $sql_tbl[products].*, $sql_tbl[products].avail-$in_cart AS avail, $sql_tbl[pricing].price as price $add_fields FROM $sql_tbl[pricing], $sql_tbl[products] $join WHERE  " .$product_condition. $login_condition . $p_membershipid_condition . $price_condition . $sf_condition . " GROUP BY $sql_tbl[products].productid");
 
     Profiler::getInstance()->addPoint();
+
+    $categoryid = null;
+
     /** @var ProductModel $oProduct */
     /** @var \Xcart\Product $classProduct */
-    $oProduct = ProductModel::objects()->get(['pk' => $id]);
-    $classProduct = $oProduct;
-    Profiler::getInstance()->addPoint();
+    if ($oProduct = ProductModel::objects()->get(['pk' => $id])) {
+        $classProduct = $oProduct;
+        Profiler::getInstance()->addPoint();
 
-    $oCategory = $oProduct->getMainCategory();
-    $categoryid = $oCategory->pk;
+        $oCategory = $oProduct->getMainCategory();
+        $categoryid = $oCategory->pk;
+    }
 
     Profiler::getInstance()->addPoint();
     #
