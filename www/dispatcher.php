@@ -318,6 +318,10 @@ case 'K':
 case 'P':
     // Product page case
 
+    if ( Templater::getInstance()->is_cached("customer/home.tpl", "product_" . $productid)) {
+        func_display_cached("customer/home.tpl", "product_" . $productid);
+    }
+
     $_GET['productid'] = $productid = intval($clean_url_data['resource_id']);
     $QUERY_STRING = 'productid=' . $productid . (!empty($QUERY_STRING) ? '&' . $QUERY_STRING : '');
     $PHP_SELF = dirname($PHP_SELF) . '/product.php';
