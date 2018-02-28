@@ -358,7 +358,7 @@ Profiler::getInstance()->addPoint();
 
 Profiler::getInstance()->addPoint();
 
-$c_result = db_query("SELECT name, value, category FROM $sql_tbl[config] WHERE type != 'separator'", true);
+$c_result = db_query("SELECT name, value, category FROM $sql_tbl[config] WHERE type != 'separator'", false);
 $config   = [];
 Profiler::getInstance()->addPoint();
 if ($c_result) {
