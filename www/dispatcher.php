@@ -295,13 +295,13 @@ case 'C':
     // Category page case
     $_GET['cat'] = $cat = intval($clean_url_data['resource_id']);
     $QUERY_STRING = 'cat=' . $cat . (!empty($QUERY_STRING) ? '&' . $QUERY_STRING : '');
+//    $PHP_SELF = dirname($PHP_SELF).'/category.php';
     $PHP_SELF = dirname($PHP_SELF).'/home.php';
-
     \Modules\Meta\Helpers\MetaExtHelper::getInstance()
         ->setBaseCode(\Modules\Meta\Types\MetaType::CATEGORY)
         ->addParam('model', \Modules\Goods\Models\CategoryModel::objects()->get(['pk'=>$cat]));
 
-
+//    require $xcart_dir.DIR_CUSTOMER.'/category.php';
     require $xcart_dir.DIR_CUSTOMER.'/home.php';
     break;
 

@@ -44,11 +44,8 @@ if (!defined('XCART_START')) {
 if (in_array(AREA_TYPE, array('A', 'P'))) {
     x_session_register('current_storefront');
 }
-Profiler::getInstance()->addPoint();
 
 $storefronts = func_query_hash('SELECT s.storefrontid, s.storefrontid AS id, s.domain, s.prefix, s.status, s.orderby, i.filename, i.image_x, f.filename AS favicon_filename, c.value AS storefront_name FROM ' . $sql_tbl['storefronts'] . ' AS s LEFT JOIN ' . $sql_tbl['images_S'] . ' AS i ON s.storefrontid=i.id LEFT JOIN ' . $sql_tbl['images_F'] . ' AS f ON s.storefrontid=f.id LEFT JOIN ' . $sql_tbl['storefronts_config'] . ' AS c ON s.storefrontid=c.storefrontid WHERE c.name="company_name" ORDER BY s.orderby, s.domain', 'id', false, false);
-
-Profiler::getInstance()->addPoint();
 if ($storefronts) {
     $domains = func_get_column_from_array('domain', $storefronts);
     if (!empty($domains) && is_array($domains)) {
@@ -58,7 +55,6 @@ if ($storefronts) {
     }
     $smarty->assign('storefronts', $storefronts);
 
-    Profiler::getInstance()->addPoint();
     if (AREA_TYPE == 'A') {
         $sd_selects = [];
         $t_domains = Modules\Sites\Models\SiteModel::objects()->all();
@@ -70,11 +66,9 @@ if ($storefronts) {
         $smarty->assign('sd_selects', $sd_selects);
     }
 }
-Profiler::getInstance()->addPoint();
 if ($search_all_website) {
     return;
 }
-Profiler::getInstance()->addPoint();
 
 if (
     (empty($domains) || !in_array($_SERVER['SERVER_NAME'], $domains))
@@ -108,7 +102,6 @@ if (in_array(AREA_TYPE, array('A', 'P'))) {
         func_header_location($url['path'] . '?' . implode('&', $qs));
     }
 }
-Profiler::getInstance()->addPoint();
 if (empty($current_storefront) || AREA_TYPE == 'C') {
 
     /** @var \Modules\Sites\SitesModule $module */
@@ -121,7 +114,8 @@ $current_storefront_info = func_get_storefront_info($current_storefront, 'ID');
 if (!empty($current_storefront) && $current_storefront > 0) {
     if (!empty($current_storefront_info["domain"])) {
         $site_domain = $current_storefront_info["domain"];
-    } else {
+    }
+    else {
         $site_domain = func_query_first_cell("SELECT domain FROM $sql_tbl[storefronts] WHERE storefrontid='$current_storefront'");
     }
 } else {
@@ -134,7 +128,6 @@ if (!empty($current_storefront) && $current_storefront > 0) {
 }
 
 $smarty->assign('site_domain', $site_domain);
-Profiler::getInstance()->addPoint();
 ###################################
 //if (AREA_TYPE == 'C' && defined('LOCAL_SF_ID'))
 //{
@@ -164,7 +157,6 @@ if (!empty($current_storefront_info)) {
 else {
     $current_storefront = 0;
 }
-Profiler::getInstance()->addPoint();
 if (defined('AREA_TYPE') && AREA_TYPE == 'C') {
 
     $sf_links = func_query_hash("SELECT l.storefront2, s.orderby, s.domain, c.name, c.value"
@@ -204,6 +196,5 @@ if (defined('AREA_TYPE') && AREA_TYPE == 'C') {
         $smarty->assign('sf_column_percent', 100 / $config['Appearance']['storefront_columns']);
     }
 }
-Profiler::getInstance()->addPoint();
 $smarty->assign('current_storefront', $current_storefront);
 $smarty->assign('current_storefront_info', $current_storefront_info);

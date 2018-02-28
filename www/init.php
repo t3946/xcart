@@ -622,6 +622,7 @@ $active_modules       = func_data_cache_get("modules");
 $addons        = [];
 $body_onload   = "";
 $tbl_demo_data = $tbl_keys = [];
+Profiler::getInstance()->addPoint();
 if ($active_modules) {
     if (!empty($active_modules['Multiple_Storefronts'])) {
         if (file_exists($xcart_dir . '/modules/Multiple_Storefronts/config.php')) {
@@ -632,6 +633,7 @@ if ($active_modules) {
             include $xcart_dir . '/modules/Multiple_Storefronts/func.php';
         }
     }
+    Profiler::getInstance()->addPoint();
     foreach ($active_modules as $active_module => $tmp) {
         if ($active_module != 'Multiple_Storefronts') {
 
@@ -657,6 +659,8 @@ if ($active_modules) {
                 include $xcart_dir . "/modules/" . $active_module . "/func.php";
             }
         }
+
+        Profiler::getInstance()->addPoint("config: {$active_module}");
     }
 }
 
@@ -668,6 +672,7 @@ if (empty($active_modules["CIDEV_Best_Search_Filter"]) && $current_area != 'C') 
 $smarty->assign_by_ref("active_modules", $active_modules);
 $mail_smarty->assign_by_ref("active_modules", $active_modules);
 
+Profiler::getInstance()->addPoint();
 /* speed optimizations */
 $config['setup_images'] = func_data_cache_get("setup_images");
 foreach ($config['available_images'] as $k => $v) {
@@ -729,9 +734,8 @@ Profiler::getInstance()->addPoint();
 if (is_array($active_modules)) {
     foreach ($active_modules as $__k => $__v) {
         if (file_exists($xcart_dir . "/modules/" . $__k . "/init.php")) {
-            Profiler::getInstance()->addPoint();
             include $xcart_dir . "/modules/" . $__k . "/init.php";
-            Profiler::getInstance()->addPoint($__k);
+            Profiler::getInstance()->addPoint("init: {$__k}");
         }
     }
 }

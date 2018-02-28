@@ -465,8 +465,6 @@ if (!empty($ch_cat)) {
     $cat = $ch_cat[0];
 }
 
-$cat = intval($cat);
-
 if ($cat > 0 && $mode != "delete") {
 #
 # Get the current category data

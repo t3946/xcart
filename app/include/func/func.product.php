@@ -7,6 +7,7 @@
 #       supplier_feeds_enabled  ('Y'|'N')
 #       cost_to_us      DECIMAL
 #       price   DECIMAL    price corrected with min_amount quantity
+use Modules\Core\Components\Profiler;
 use Modules\Goods\Models\ProductModel;
 
 /**
@@ -644,202 +645,203 @@ function func_search_products($query, $membershipid, $orderby="", $limit="") {
 # Put all product info into $product array
 #
 function func_select_product($id, $membershipid, $redirect_if_error=true, $clear_price=false, $always_select=false, $skip_cat_checking=false, $use_current_storefront = '') {
-	global $login, $login_type, $current_area, $single_mode, $cart, $current_location;
-	global $store_language, $sql_tbl, $config, $active_modules, $xcart_catalogs;
-	global $ajax_error, $ajax_redirect, $ajax_mode, $current_storefront;
-	global $add_from_order_edit;
+    global $login, $login_type, $current_area, $single_mode, $cart, $current_location;
+    global $store_language, $sql_tbl, $config, $active_modules, $xcart_catalogs;
+    global $ajax_error, $ajax_redirect, $ajax_mode, $current_storefront;
+    global $add_from_order_edit;
 
-#
-##
-###
-	if ($use_current_storefront != ""){
-		$current_storefront = $use_current_storefront;
-	}
-###
-##
-#
-	x_load('files','taxes');
+    if ($use_current_storefront != ""){
+        $current_storefront = $use_current_storefront;
+    }
+    Profiler::getInstance()->start('func_select_product');
+    Profiler::getInstance()->addPoint('start: func_select_product');
 
-	$in_cart = 0;
+    $in_cart = 0;
 
-	$id = intval($id);
+    if ($current_area == "C" && !empty($cart) && !empty($cart["products"])) {
+        foreach ($cart["products"] as $cart_item) {
+            if ($cart_item["productid"] == $id) {
+                $in_cart += $cart_item["amount"];
+            }
+        }
+    }
 
-	$membershipid = intval($membershipid);
-	$p_membershipid_condition = $membershipid_condition = "";
-	if ($current_area == "C" || empty($current_area)) {  /*speed optimization*/
-		$membershipid_condition = ""; // " AND ($sql_tbl[category_memberships].membershipid = '$membershipid' OR $sql_tbl[category_memberships].membershipid IS NULL) ";
-		$p_membershipid_condition = ""; // " AND ($sql_tbl[product_memberships].membershipid = '$membershipid' OR $sql_tbl[product_memberships].membershipid IS NULL) ";
-//		$price_condition = " /*AND $sql_tbl[quick_prices].membershipid ".((empty($membershipid) || empty($active_modules['Wholesale_Trading'])) ? "= 0" : "IN ('$membershipid', 0)")."*/ AND $sql_tbl[quick_prices].priceid = $sql_tbl[pricing].priceid and $sql_tbl[pricing].quantity = 1";
-		$price_condition = " AND $sql_tbl[quick_prices].priceid = $sql_tbl[pricing].priceid";
+    $membershipid = intval($membershipid);
+    $p_membershipid_condition = $membershipid_condition = "";
+    if ($current_area == "C" || empty($current_area)) {  /*speed optimization*/
+        $membershipid_condition = ""; // " AND ($sql_tbl[category_memberships].membershipid = '$membershipid' OR $sql_tbl[category_memberships].membershipid IS NULL) ";
+        $p_membershipid_condition = ""; // " AND ($sql_tbl[product_memberships].membershipid = '$membershipid' OR $sql_tbl[product_memberships].membershipid IS NULL) ";
+    //		$price_condition = " /*AND $sql_tbl[quick_prices].membershipid ".((empty($membershipid) || empty($active_modules['Wholesale_Trading'])) ? "= 0" : "IN ('$membershipid', 0)")."*/ AND $sql_tbl[quick_prices].priceid = $sql_tbl[pricing].priceid and $sql_tbl[pricing].quantity = 1";
+        $price_condition = " AND $sql_tbl[quick_prices].priceid = $sql_tbl[pricing].priceid";
 
-	} else {
-		$price_condition = " /*AND $sql_tbl[pricing].membershipid = 0*/ AND $sql_tbl[products].productid = $sql_tbl[pricing].productid AND $sql_tbl[pricing].quantity = 1 AND $sql_tbl[pricing].variantid = 0";
-	}
+    }
+    else {
+        $price_condition = " AND $sql_tbl[products].productid = $sql_tbl[pricing].productid AND $sql_tbl[pricing].quantity = 1 AND $sql_tbl[pricing].variantid = 0";
+    }
 
-	if ($current_area == "C" && !empty($cart) && !empty($cart["products"])) {
-		foreach ($cart["products"] as $cart_item) {
-			if ($cart_item["productid"] == $id) {
-				$in_cart += $cart_item["amount"];
-			}
-		}
-	}
+    $login_condition = "";
+    if (!$single_mode) {
+        if ($login != "" && $login_type == "P")
+        {
+            $selected_manufacturers = func_query_first_cell("SELECT manufacturerids FROM $sql_tbl[customers] WHERE login='$login' AND usertype='$login_type'");
 
-	$login_condition = "";
-	if (!$single_mode) {
-# START: random:1073746882_1073747063 [2008 Dec 24 16:25] 
-		if ($login != "" && $login_type == "P") {
-			$selected_manufacturers = func_query_first_cell("SELECT manufacturerids FROM $sql_tbl[customers] WHERE login='$login' AND usertype='$login_type'");
-			if (!empty($selected_manufacturers)) {
-				$selected_manufacturers = unserialize($selected_manufacturers);
-			}
+            if (!empty($selected_manufacturers)) {
+                $selected_manufacturers = unserialize($selected_manufacturers);
+            }
 
-			if (is_array($selected_manufacturers)) {
-				$login_condition = "AND $sql_tbl[products].manufacturerid IN ('".implode("','", $selected_manufacturers)."')";
-			} else {
-# END: random:1073746882_1073747063 [2008 Dec 24 16:25] 
-		$login_condition = (($login != "" && $login_type == "P") ? "AND $sql_tbl[products].provider='$login'" : "");
-	}
-# START: random:1073746882_1073747063 [2008 Dec 24 16:25] 
-		} 
-	}
-# END: random:1073746882_1073747063 [2008 Dec 24 16:25] 
+            if (is_array($selected_manufacturers)) {
+                $login_condition = "AND $sql_tbl[products].manufacturerid IN ('" . implode("','", $selected_manufacturers) . "')";
+            }
+            else {
+                $login_condition = (($login != "" && $login_type == "P") ? "AND $sql_tbl[products].provider='$login'" : "");
+            }
+        }
+    }
 
-	$add_fields = "";
-	$join = "";
+    $add_fields = "";
+    $join = "";
 
-	if (!empty($active_modules['Product_Options']) && ($current_area == "P" || $current_area == "A")) {
-		$join .= " LEFT JOIN $sql_tbl[variants] ON $sql_tbl[products].productid = $sql_tbl[variants].productid";
-		$add_fields .= ", IF($sql_tbl[variants].productid IS NULL, '', 'Y') as is_variants";
-	}
+    if (!empty($active_modules['Product_Options']) && ($current_area == "P" || $current_area == "A")) {
+        $join .= " LEFT JOIN $sql_tbl[variants] ON $sql_tbl[products].productid = $sql_tbl[variants].productid";
+        $add_fields .= ", IF($sql_tbl[variants].productid IS NULL, '', 'Y') as is_variants";
+    }
 
-	if (
-		!empty($active_modules['Multiple_Storefronts']) &&
-		!$add_from_order_edit &&
-		!( ($current_area == 'A' || $current_area == 'P') && $config['Search_products']['search_by_sku_from_all_sf'] == 'Y')
-	   ) 
-	{
-		$join .= " LEFT JOIN $sql_tbl[products_sf] ON $sql_tbl[products_sf].productid=$sql_tbl[products].productid";
-		$sf_condition = " AND $sql_tbl[products_sf].sfid=$current_storefront";
-	} else {
-		$sf_condition = '';
-	}
-
-	if (!empty($active_modules['Feature_Comparison'])) {
-		$join .= " LEFT JOIN $sql_tbl[product_features] ON $sql_tbl[product_features].productid = $sql_tbl[products].productid";
-		$add_fields .= ", $sql_tbl[product_features].fclassid";
-	}
-
-	if (!empty($active_modules["Manufacturers"])) {
-		$join .= " LEFT JOIN $sql_tbl[manufacturers] ON $sql_tbl[manufacturers].manufacturerid = $sql_tbl[products].manufacturerid";
-		$add_fields .= ", $sql_tbl[manufacturers].manufacturer, $sql_tbl[manufacturers].cost_to_us_coef_x, $sql_tbl[manufacturers].price_coef_x, $sql_tbl[manufacturers].price_coef_y, $sql_tbl[manufacturers].price_coef_z, $sql_tbl[manufacturers].map_price_coef_x, $sql_tbl[manufacturers].new_map_price_coef_x, $sql_tbl[manufacturers].allow_pre_orders ";
-	}
-
-	$join .= " LEFT JOIN xcart_supplier_feeds SF ON SF.manufacturerid = xcart_products.manufacturerid and SF.feed_type = 'I' AND SF.enabled='Y' AND (SF.multiple_feed_destinations!='Y' OR (SF.multiple_feed_destinations='Y' AND xcart_products.controlled_by_feed=SF.feed_file_name))";
-	$add_fields .= ", SF.enabled as supplier_feeds_enabled ";
-
-	if ($current_area == "C" || empty($current_area)) {  /*speed optimization*/
-		$add_fields .= ", /*IF($sql_tbl[products_lng].productid != '', $sql_tbl[products_lng].product,*/( $sql_tbl[products].product) as product, /*IF($sql_tbl[products_lng].productid != '', $sql_tbl[products_lng].descr,*/( $sql_tbl[products].descr) as descr, /*IF($sql_tbl[products_lng].productid != '', $sql_tbl[products_lng].fulldescr,*/( $sql_tbl[products].fulldescr) as fulldescr, $sql_tbl[quick_flags].*, $sql_tbl[quick_prices].variantid, $sql_tbl[quick_prices].priceid";
-		$join .= " /*LEFT JOIN $sql_tbl[products_lng] ON $sql_tbl[products_lng].code='$store_language' AND $sql_tbl[products_lng].productid = $sql_tbl[products].productid*/ LEFT JOIN $sql_tbl[quick_prices] ON $sql_tbl[products].productid = $sql_tbl[quick_prices].productid /*AND $sql_tbl[quick_prices].membershipid*/ ";
-/*		if (empty($membershipid) || empty($active_modules['Wholesale_Trading'])) {
-			$join .= " = '0'";
-		} else {
-			$join .= " IN ('$membershipid', 0)";
-		}*/
-		$join .= " LEFT JOIN $sql_tbl[quick_flags] ON $sql_tbl[products].productid = $sql_tbl[quick_flags].productid";
-	}
-	else {
-                $add_fields .= ", $sql_tbl[manufacturers].d_website_search_for_sku_url ";
-	}
-
-//	$join .= " LEFT JOIN $sql_tbl[product_memberships] ON $sql_tbl[product_memberships].productid = $sql_tbl[products].productid";
+    if (
+        !empty($active_modules['Multiple_Storefronts']) &&
+        !$add_from_order_edit &&
+        !(($current_area == 'A' || $current_area == 'P') && $config['Search_products']['search_by_sku_from_all_sf'] == 'Y')
+    ) {
+        $join .= " LEFT JOIN $sql_tbl[products_sf] ON $sql_tbl[products_sf].productid=$sql_tbl[products].productid";
+        $sf_condition = " AND $sql_tbl[products_sf].sfid=$current_storefront";
+    } else {
+        $sf_condition = '';
+    }
 
 
-#
-##
-###
-	    $join .= " LEFT JOIN $sql_tbl[clean_urls] ON $sql_tbl[clean_urls].resource_type = 'P' AND $sql_tbl[clean_urls].resource_id = $sql_tbl[products].productid";
+    if (!empty($active_modules["Manufacturers"])) {
+        $join .= " LEFT JOIN $sql_tbl[manufacturers] ON $sql_tbl[manufacturers].manufacturerid = $sql_tbl[products].manufacturerid";
+        $add_fields .= ", $sql_tbl[manufacturers].manufacturer, $sql_tbl[manufacturers].code as mnf_code, $sql_tbl[manufacturers].cost_to_us_coef_x, $sql_tbl[manufacturers].price_coef_x, $sql_tbl[manufacturers].price_coef_y, $sql_tbl[manufacturers].price_coef_z, $sql_tbl[manufacturers].map_price_coef_x, $sql_tbl[manufacturers].new_map_price_coef_x, $sql_tbl[manufacturers].allow_pre_orders ";
+    }
 
-	    $add_fields .= ", $sql_tbl[clean_urls].clean_url, $sql_tbl[clean_urls].mtime";
-###
-##
-#
+    $join .= " LEFT JOIN xcart_supplier_feeds SF ON SF.manufacturerid = xcart_products.manufacturerid and SF.feed_type = 'I' AND SF.enabled='Y' AND (SF.multiple_feed_destinations!='Y' OR (SF.multiple_feed_destinations='Y' AND xcart_products.controlled_by_feed=SF.feed_file_name))";
+    $add_fields .= ", SF.enabled as supplier_feeds_enabled ";
 
-    $product = func_query_first("SELECT $sql_tbl[products].*, $sql_tbl[products].avail-$in_cart AS avail, $sql_tbl[pricing].price as price $add_fields FROM $sql_tbl[pricing], $sql_tbl[products] $join WHERE $sql_tbl[products].productid='$id' ".$login_condition.$p_membershipid_condition.$price_condition.$sf_condition." GROUP BY $sql_tbl[products].productid");
-
-/*speed optimization*/
-//	print("l:".$membershipid_condition);
-//	$categoryid = func_query_first_cell("SELECT $sql_tbl[products_categories].categoryid FROM $sql_tbl[products_categories]  /*, $sql_tbl[categories]*/ /*LEFT JOIN $sql_tbl[category_memberships] ON $sql_tbl[category_memberships].categoryid = $sql_tbl[categories].categoryid*/ WHERE /*$sql_tbl[products_categories].categoryid=$sql_tbl[categories].categoryid $membershipid_condition AND*/ $sql_tbl[products_categories].productid = '$id' and $sql_tbl[products_categories].main = 'Y' LIMIT 1");
-	$category_info = func_query_first("SELECT $sql_tbl[products_categories].categoryid, $sql_tbl[categories].category FROM $sql_tbl[products_categories]  LEFT JOIN $sql_tbl[categories] ON $sql_tbl[products_categories].categoryid=$sql_tbl[categories].categoryid WHERE $sql_tbl[products_categories].productid = '$id' and $sql_tbl[products_categories].main = 'Y' LIMIT 1");
-
-	$categoryid = $category_info["categoryid"];
+    if ($current_area == "C" || empty($current_area)) {  /*speed optimization*/
+        $add_fields .= ", $sql_tbl[products].product as product, $sql_tbl[products].descr as descr, $sql_tbl[products].fulldescr as fulldescr, $sql_tbl[quick_flags].*, $sql_tbl[quick_prices].variantid, $sql_tbl[quick_prices].priceid";
+        $join .= " LEFT JOIN $sql_tbl[quick_prices] ON $sql_tbl[products].productid = $sql_tbl[quick_prices].productid /*AND $sql_tbl[quick_prices].membershipid*/ ";
+        $join .= " LEFT JOIN $sql_tbl[quick_flags] ON $sql_tbl[products].productid = $sql_tbl[quick_flags].productid";
+    }
+    else {
+        $add_fields .= ", $sql_tbl[manufacturers].d_website_search_for_sku_url ";
+    }
 
 
-/*
-	# Check product's provider activity // Custom development (Activity of providers should not affect products)
-	if (!$single_mode && $current_area == "C" && !empty($product)) {
-		if (!func_query_first_cell("SELECT COUNT(*) FROM $sql_tbl[customers] WHERE login = '$product[provider]'")) {
-			$product = array();
-	}
-	}
-*/
-	#
-	# Error handling
-	#
-	if (!$product || (!$categoryid && $skip_cat_checking == false)) {
-		if ($redirect_if_error) {
-			if ($ajax_mode == 'Y') {
-				$ajax_error = 'Y';
-				$ajax_redirect = 'error_message.php?access_denied&id=33';
-				return false;
-			} else {
-			func_header_location("error_message.php?access_denied&id=33");
-			}
-		} else {
-			return false;
-	}
-	}
+    if (!is_numeric($id)) {
+        $id = \Xcart\App\Main\Xcart::app()->db->getConnection()->quote($id);
+        $product_condition = "$sql_tbl[products].productcode='$id' ";
+    }
+    else {
+        $id = intval($id);
+        $product_condition = " $sql_tbl[products].productid='$id' ";
+    }
 
-	$product["productid"] = $id;
-	$product["categoryid"] = $categoryid;
-	$product["category"] = $category_info["category"];
-	if ($current_area != 'C' && !empty($current_area)) { /*speed optimization*/
-	$tmp = func_query_column("SELECT membershipid FROM $sql_tbl[product_memberships] WHERE productid = '$product[productid]'");
-	if (!empty($tmp) && is_array($tmp)) {
-		$product['membershipids'] = array();
-		foreach ($tmp as $v) {
-			$product['membershipids'][$v] = 'Y';
-		}
-		}
-	}
-	
-	if (!empty($product['variantid']) && !empty($active_modules['Product_Options'])) {
-		$tmp = func_query_first("SELECT * FROM $sql_tbl[variants] WHERE variantid = '$product[variantid]'");
-		if (!empty($tmp)) {
-			func_unset($tmp, "def");
-			$product = func_array_merge($product, $tmp);
-		} else {
-			func_unset($product, "variantid");
-		}
-	}
+    Profiler::getInstance()->addPoint();
+    $product = func_query_first("SELECT $sql_tbl[products].*, $sql_tbl[products].avail-$in_cart AS avail, $sql_tbl[pricing].price as price $add_fields FROM $sql_tbl[pricing], $sql_tbl[products] $join WHERE  " .$product_condition. $login_condition . $p_membershipid_condition . $price_condition . $sf_condition . " GROUP BY $sql_tbl[products].productid");
 
-	# Detect product thumbnail and image
-	$tmp = func_query_first("SELECT image_path as image_path_T, image_x as image_x_T, image_y as image_y_T FROM $sql_tbl[images_T] WHERE id = '$product[productid]'");
-	if (!empty($tmp)) {
-		$product = func_array_merge($product, $tmp);
-		$product['is_thumbnail'] = true;
-	}
+    Profiler::getInstance()->addPoint();
+    /** @var ProductModel $oProduct */
+    /** @var \Xcart\Product $classProduct */
+    $oProduct = ProductModel::objects()->get(['pk' => $id]);
+    $classProduct = $oProduct;
+    Profiler::getInstance()->addPoint();
 
-	$tmp = false;
-	if (!empty($product['variantid']) && !empty($active_modules['Product_Options']) && ($current_area == "C" || $current_area == "B" || empty($current_area)))
-		$tmp = func_query_first("SELECT image_path as image_path_P, image_x as image_x_P, image_y as image_y_P FROM $sql_tbl[images_W] WHERE id = '$product[variantid]'");
-	if (empty($tmp))
-		$tmp = func_query_first("SELECT image_path as image_path_P, image_x as image_x_P, image_y as image_y_P FROM $sql_tbl[images_P] WHERE id = '$product[productid]'");
-	if (!empty($tmp)) {
-		$product = func_array_merge($product, $tmp);
-		$product['is_image'] = true;
-	}
+    $oCategory = $oProduct->getMainCategory();
+    $categoryid = $oCategory->pk;
 
-	unset($tmp);
+    Profiler::getInstance()->addPoint();
+    #
+    # Error handling
+    #
+    if (!$product || (!$categoryid && $skip_cat_checking == false)) {
+        if ($redirect_if_error) {
+            if ($ajax_mode == 'Y') {
+                $ajax_error = 'Y';
+                $ajax_redirect = 'error_message.php?access_denied&id=33';
+
+                return false;
+            }
+            else {
+                func_header_location("error_message.php?access_denied&id=33");
+            }
+        }
+        else {
+            return false;
+        }
+    }
+
+    $product["clean_url"] = $oProduct->getAbsoluteUrl();
+
+    $product["productid"] = $id;
+    $product["categoryid"] = $oCategory->pk;
+    $product["category"] = $oCategory->category;
+    $product['oCategory'] = $oCategory;
+    $product['oProduct'] = $oProduct;
+
+    Profiler::getInstance()->addPoint();
+
+    if ($current_area != 'C' && !empty($current_area))
+    {
+        $tmp = func_query_column("SELECT membershipid FROM $sql_tbl[product_memberships] WHERE productid = '$product[productid]'");
+
+        if (!empty($tmp) && is_array($tmp)) {
+            $product['membershipids'] = array();
+
+            foreach ($tmp as $v) {
+                $product['membershipids'][$v] = 'Y';
+            }
+        }
+    }
+
+    Profiler::getInstance()->addPoint();
+
+    if (!empty($product['variantid']) && !empty($active_modules['Product_Options'])) {
+        $tmp = func_query_first("SELECT * FROM $sql_tbl[variants] WHERE variantid = '$product[variantid]'");
+
+        if (!empty($tmp)) {
+            func_unset($tmp, "def");
+            $product = func_array_merge($product, $tmp);
+        }
+        else {
+            func_unset($product, "variantid");
+        }
+    }
+
+
+    Profiler::getInstance()->addPoint();
+
+    # Detect product thumbnail and image
+    $tmp = func_query_first("SELECT image_path as image_path_T, image_x as image_x_T, image_y as image_y_T FROM $sql_tbl[images_T] WHERE id = '$product[productid]'");
+    if (!empty($tmp)) {
+        $product = func_array_merge($product, $tmp);
+        $product['is_thumbnail'] = true;
+    }
+
+    $tmp = false;
+    if (!empty($product['variantid']) && !empty($active_modules['Product_Options']) && ($current_area == "C" || $current_area == "B" || empty($current_area)))
+        $tmp = func_query_first("SELECT image_path as image_path_P, image_x as image_x_P, image_y as image_y_P FROM $sql_tbl[images_W] WHERE id = '$product[variantid]'");
+
+    if (empty($tmp))
+        $tmp = func_query_first("SELECT image_path as image_path_P, image_x as image_x_P, image_y as image_y_P FROM $sql_tbl[images_P] WHERE id = '$product[productid]'");
+
+    if (!empty($tmp)) {
+        $product = func_array_merge($product, $tmp);
+        $product['is_image'] = true;
+    }
+
+
+    Profiler::getInstance()->addPoint();
+
+    unset($tmp);
 
     if ($current_area == 'A' || $current_area == 'P') {
         if (!empty($active_modules['Multiple_Storefronts'])) {
@@ -850,144 +852,155 @@ function func_select_product($id, $membershipid, $redirect_if_error=true, $clear
         }
     }
 
-	if ($current_area == "C" || $current_area == "B" || empty($current_area)) {
-		#
-		# Check if product is not available for sale
-		#
-		if (empty($active_modules["Egoods"]))
-			$product["distribution"] = "";
 
-		global $pconf;
+    Profiler::getInstance()->addPoint();
 
-		if ($product["forsale"] == "B" && empty($pconf)) {
-			if (is_array(@$cart["products"])) {
-				foreach ($cart["products"] as $k=>$v) {
-					if ($v["productid"] == $product["productid"]) {
-						$pconf = $product["productid"];
-						break;
-					}
-				}
-			}
-			if (empty($pconf)) {
-				x_session_register("configurations");
-				global $configurations;
+    if ($current_area == "C" || $current_area == "B" || empty($current_area)) {
+        #
+        # Check if product is not available for sale
+        #
+        if (empty($active_modules["Egoods"]))
+            $product["distribution"] = "";
 
-				if (!empty($configurations)) {
-					foreach ($configurations as $c) {
-						if (empty($c['steps']) || !is_array($c['steps']))
-							continue;
+        global $pconf;
 
-						foreach ($c['steps'] as $s) {
-							if (empty($s['slots']) || !is_array($s['slots']))
-								continue;
+        if ($product["forsale"] == "B" && empty($pconf)) {
+            if (is_array(@$cart["products"])) {
+                foreach ($cart["products"] as $k=>$v) {
+                    if ($v["productid"] == $product["productid"]) {
+                        $pconf = $product["productid"];
+                        break;
+                    }
+                }
+            }
+            if (empty($pconf)) {
+                x_session_register("configurations");
+                global $configurations;
 
-							foreach($s['slots'] as $sl) {
-								if ($sl['productid'] == $product["productid"]) {
-									$pconf = $product["productid"];
-									break;
-								}
-							}
-						}
-					}
-				}
-			}
-		}
+                if (!empty($configurations)) {
+                    foreach ($configurations as $c) {
+                        if (empty($c['steps']) || !is_array($c['steps']))
+                            continue;
 
-		$product['taxed_price'] = $product['price'];
+                        foreach ($c['steps'] as $s) {
+                            if (empty($s['slots']) || !is_array($s['slots']))
+                                continue;
 
-		if (!$always_select && ($product["forsale"] == "N" || ($product["forsale"] == "B" && empty($pconf)))) {
-			if ($redirect_if_error) {
-				if ($ajax_mode == 'Y') {
-					$ajax_error = 'Y';
-					$ajax_redirect = 'error_message.php?product_disabled';
-					return false;
-				} else {
-				func_header_location("error_message.php?product_disabled");
-				}
-			} else {
-				return false;
-		}
-		}
+                            foreach($s['slots'] as $sl) {
+                                if ($sl['productid'] == $product["productid"]) {
+                                    $pconf = $product["productid"];
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
 
-		if (($current_area == "C" || empty($current_area)) && !$clear_price) {
-			#
-			# Calculate taxes and price including taxes
-			#
-			global $login;
+        $product['taxed_price'] = $product['price'];
 
-			$product["taxes"] = func_get_product_taxes($product, $login);
-		}
-	}
+        if (!$always_select && ($product["forsale"] == "N" || ($product["forsale"] == "B" && empty($pconf)))) {
+            if ($redirect_if_error) {
+                if ($ajax_mode == 'Y') {
+                    $ajax_error = 'Y';
+                    $ajax_redirect = 'error_message.php?product_disabled';
 
-	if (!empty($active_modules['Google_Checkout'])) {
-		global $xcart_dir;
-		include $xcart_dir."/modules/Google_Checkout/product_modify.php";
-	}
+                    return false;
+                }
+                else {
+                    func_header_location("error_message.php?product_disabled");
+                }
+            }
+            else {
+                return false;
+            }
+        }
 
-	# Add product features
-	if (!empty($active_modules['Feature_Comparison']) && $product['fclassid'] > 0) {
-		$product['features'] = func_get_product_features($product['productid']);
-		$product['is_clist'] = func_check_comparison($product['productid'], $product['fclassid']);
-	}
+        if (($current_area == "C" || empty($current_area)) && !$clear_price) {
+            #
+            # Calculate taxes and price including taxes
+            #
+            global $login;
 
-	$product["producttitle"] = $product['product'];
+            $product["taxes"] = func_get_product_taxes($product, $login);
+        }
+    }
 
-	if ($current_area == "C" || $current_area == "B" || empty($current_area)) {
-		$product["descr"] = func_eol2br($product["descr"]);
-		$product["fulldescr"] = func_eol2br($product["fulldescr"]);
-	}
+
+    Profiler::getInstance()->addPoint();
+
+    if (!empty($active_modules['Google_Checkout'])) {
+        global $xcart_dir;
+        include $xcart_dir."/modules/Google_Checkout/product_modify.php";
+    }
+
+
+    Profiler::getInstance()->addPoint();
+
+    # Add product features
+    if (!empty($active_modules['Feature_Comparison']) && $product['fclassid'] > 0) {
+        $product['features'] = func_get_product_features($product['productid']);
+        $product['is_clist'] = func_check_comparison($product['productid'], $product['fclassid']);
+    }
+
+
+    Profiler::getInstance()->addPoint();
+
+    $product["producttitle"] = $product['product'];
+
+    if ($current_area == "C" || $current_area == "B" || empty($current_area)) {
+        $product["descr"] = func_eol2br($product["descr"]);
+        $product["fulldescr"] = func_eol2br($product["fulldescr"]);
+    }
 
     if ($product['google_search_term']) {
         $product['google_search_link'] = urlencode($product['google_search_term']);
     }
 
-	#
-	# Get thumbnail's URL (uses only if images stored in FS)
-	#
-	if ($product['is_image'])
-		$product["tmbn_url_P"] = func_get_image_url($product["productid"], "P", $product['image_path_P']);
 
-	if ($product['is_thumbnail'])
-		$product["tmbn_url_T"] = func_get_image_url($product["productid"], "T", $product['image_path_T']);
+    Profiler::getInstance()->addPoint();
 
-	if (!$product['is_image'] && !$product['is_thumbnail']) {
-		$product["tmbn_url"] = func_get_default_image("P");
+    #
+    # Get thumbnail's URL (uses only if images stored in FS)
+    #
+    if ($product['is_image'])
+        $product["tmbn_url_P"] = func_get_image_url($product["productid"], "P", $product['image_path_P']);
 
-	} elseif ($product['is_image']) {
-		$product["tmbn_url"] = $product["tmbn_url_P"];
-		$product["image_x"] = $product["image_x_P"];
-		$product["image_y"] = $product["image_y_P"];
+    if ($product['is_thumbnail'])
+        $product["tmbn_url_T"] = func_get_image_url($product["productid"], "T", $product['image_path_T']);
 
-	} else {
-		# Use thumbnail instead of product image for product details page
-		# when product image is not available.
-		# Necessary only for the image dimensions because of
-		# usage in <img> tag
-		$product["tmbn_url"] = $product["tmbn_url_T"];
-		$product["image_x"] = $product["image_x_T"];
-		$product["image_y"] = $product["image_y_T"];
-	}
+    if (!$product['is_image'] && !$product['is_thumbnail']) {
+        $product["tmbn_url"] = func_get_default_image("P");
+
+    } elseif ($product['is_image']) {
+        $product["tmbn_url"] = $product["tmbn_url_P"];
+        $product["image_x"] = $product["image_x_P"];
+        $product["image_y"] = $product["image_y_P"];
+
+    } else {
+        # Use thumbnail instead of product image for product details page
+        # when product image is not available.
+        # Necessary only for the image dimensions because of
+        # usage in <img> tag
+        $product["tmbn_url"] = $product["tmbn_url_T"];
+        $product["image_x"] = $product["image_x_T"];
+        $product["image_y"] = $product["image_y_T"];
+    }
 
 
-#
-##
-###
-/*speed optimization*/
-//	    $product['clean_urls_history'] = func_query_hash("SELECT id, clean_url FROM $sql_tbl[clean_urls_history] WHERE resource_type = 'P' AND resource_id = '".$product['productid']."' ORDER BY mtime DESC", "id", false, true);
-###
-##
-#
+    Profiler::getInstance()->addPoint();
 
     if (($current_area == 'C' || empty($current_area)) && !empty($product['upc'])) {
         $upc_len = strlen($product['upc']);
-        
+
         $product['upc_ean_isbn'] = array();
         $product['upc_ean_isbn']['value'] = $product['upc'];
-        
+
         switch ($upc_len) {
-	
+
             case "8": $product['upc_ean_isbn']['type'] = func_get_langvar_by_name('lbl_ean');
-		break;
+        break;
 
             case "14": $product['upc_ean_isbn']['type'] = func_get_langvar_by_name('lbl_ean');
                 break;
@@ -998,7 +1011,7 @@ function func_select_product($id, $membershipid, $redirect_if_error=true, $clear
             case UPC_LENGTH: $product['upc_ean_isbn']['type'] = func_get_langvar_by_name('lbl_upc');
                 break;
 
-            case EAN_ISBN_LENGTH: 
+            case EAN_ISBN_LENGTH:
                 if (substr(trim($product['upc']), 0, 3) == '978') {
                     $product['upc_ean_isbn']['type'] = func_get_langvar_by_name('lbl_isbn');
                 } else {
@@ -1010,81 +1023,87 @@ function func_select_product($id, $membershipid, $redirect_if_error=true, $clear
         }
     }
 
-#
-##
-###
-        if (($current_area == 'C' || empty($current_area)) && $product["new_map_price"]>0){
 
-                if ($product["new_map_price"] > $product["price"]){
-                        $product["price"] = $product["new_map_price"];
-                        $product['taxed_price'] = $product['price'];
-                }
+    Profiler::getInstance()->addPoint();
 
-                $product["discount_avail"] = "N";
-                $product["discount_slope"] = "";
-                $product["discount_table"] = "";
+    if (($current_area == 'C' || empty($current_area)) && $product["new_map_price"]>0){
+
+            if ($product["new_map_price"] > $product["price"]){
+                    $product["price"] = $product["new_map_price"];
+                    $product['taxed_price'] = $product['price'];
+            }
+
+            $product["discount_avail"] = "N";
+            $product["discount_slope"] = "";
+            $product["discount_table"] = "";
+    }
+
+    if (!empty($product["eta_date_mm_dd_yyyy"])){
+        if ($product["eta_date_mm_dd_yyyy"] > time()){
+            $product["eta_date_in_future"] = "Y";
+
+            if (($current_area == 'C' || empty($current_area)) && $product["allow_pre_orders"] != "Y"){
+                $product["avail"] = "0";
+            }
         }
-###
-##
-#
-
-#
-##
-###
-	if (!empty($product["eta_date_mm_dd_yyyy"])){
-		if ($product["eta_date_mm_dd_yyyy"] > time()){
-			$product["eta_date_in_future"] = "Y";
-
-			if (($current_area == 'C' || empty($current_area)) && $product["allow_pre_orders"] != "Y"){
-				$product["avail"] = "0";
-			}
-		}
-	}
-
-		$classProduct = new Xcart\Product(['productid'=>$product['productid']]);
-		$mpn = $classProduct->getMPN();
+    }
 
 
-        /*$pos = strpos($product['productcode'], '-');
-        $mpn = '';
-        if ($pos && is_numeric($pos) && $pos + 1 != strlen($product['productcode'])) {
-  	      $mpn = substr($product['productcode'], $pos + 1);
-        }*/
-
-	    $product['mpn'] = $mpn;
-
-	if (!empty($product["d_website_search_for_sku_url"]) && !empty($mpn) && ($current_area != 'C' && !empty($current_area))){
-		$product["d_website_search_for_sku_url"] = $classProduct->getProductURLOnDistributorWebSite();
-	}
-
-	$product["prevent_search_indexing"] = func_prevent_search_indexing($product);
-	if (strpos($product['prevent_search_indexing'], 'Y') !== false){
-		$product["robots_noindex"] = "Y";
-	}
+    Profiler::getInstance()->addPoint();
 
 
-#
-## Calculate correct price for customer area
-###
-	$product["product_availability"] = func_product_availability(false,$product);
+    $mpn = null;
 
-	if ($current_area == 'C' || empty($current_area)){
-		$product["price"] = $product["taxed_price"] = func_product_price($product);
+    if (strpos($oProduct->productcode, $product['mnf_code']) == 0) {
+        $mpn = substr($oProduct->productcode, strlen($product['mnf_code'])+1 );
+    }
 
-		if ($product["supplier_feeds_enabled"] == "Y" && empty($product["is_variants"]) && $product["product_availability"] == "out of stock"){
-		        $product["new_notify_in_stock_price"] = $product["price"];
-		}
-	}
-###
-##
-#
+    $product['mpn'] = $mpn;
 
-	$product["brand"] = func_query_first_cell("SELECT brand FROM $sql_tbl[brands] WHERE brandid='$product[brandid]'");
+    Profiler::getInstance()->addPoint();
 
-	if ($classProduct->splash_id) {
-		$product['oSplash'] = \Xcart\Images\Splash::objects()->filter(['id' => $classProduct->splash_id , 'active' => 'Y'])->get();
-	}
-	return $product;
+    if (!empty($product["d_website_search_for_sku_url"]) && !empty($mpn) && ($current_area != 'C' && !empty($current_area))){
+        $product["d_website_search_for_sku_url"] = $classProduct->getProductURLOnDistributorWebSite();
+    }
+
+    $product["prevent_search_indexing"] = func_prevent_search_indexing($product);
+    if (strpos($product['prevent_search_indexing'], 'Y') !== false){
+        $product["robots_noindex"] = "Y";
+    }
+
+
+
+    Profiler::getInstance()->addPoint();
+
+    #
+    ## Calculate correct price for customer area
+    ###
+    $product["product_availability"] = func_product_availability(false, $oProduct);
+
+    if ($current_area == 'C' || empty($current_area)){
+        $product["price"] = $product["taxed_price"] = func_product_price($product);
+
+        if ($product["supplier_feeds_enabled"] == "Y" && empty($product["is_variants"]) && $product["product_availability"] == "out of stock"){
+                $product["new_notify_in_stock_price"] = $product["price"];
+        }
+    }
+    ###
+    ##
+    #
+
+
+    Profiler::getInstance()->addPoint();
+    $product["brand"] = func_query_first_cell("SELECT brand FROM $sql_tbl[brands] WHERE brandid='$product[brandid]'");
+
+    if ($classProduct->splash_id) {
+        $product['oSplash'] = \Xcart\Images\Splash::objects()->filter(['id' => $classProduct->splash_id , 'active' => 'Y'])->get();
+    }
+
+
+    Profiler::getInstance()->addPoint('end: func_select_product');
+    Profiler::getInstance()->stop('func_select_product');
+
+    return $product;
 }
 
 #

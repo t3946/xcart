@@ -69,7 +69,6 @@ WHERE
 	$sql_tbl[countries].active='Y'
 ORDER BY country";
 
-$countries = func_query($query);
+$countries = func_query($query, true);
 
 $smarty->assign("countries",$countries);
-?>

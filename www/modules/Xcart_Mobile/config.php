@@ -25,6 +25,9 @@
 | GRANTED BY THIS AGREEMENT.                                                  |
 +-----------------------------------------------------------------------------+
 \*****************************************************************************/
+
+use Modules\Core\Components\Profiler;
+
 /**
  * Module configuration
  *
@@ -66,6 +69,7 @@ if (
 ) {
     $_POST['current'] = 4;
 }
+
 /**
  * ADMIN SIDE:
  * Configuration page drawings
@@ -91,18 +95,18 @@ if (
 
     if ($detect->isMobile() && func_mobile_constant('AREA_TYPE') != 'A') {
 
-	$detect_isMobile_was_created = true;
+        $detect_isMobile_was_created = true;
 
-	x_load(
-	'backoffice',
-	'perms',
-	'security' // For func_check_admin_security_redirect
-	);
-	x_session_register('login', '');
-	x_session_register('login_type', '');
-	x_session_register('logged_userid', 0);
-	x_session_register('identifiers', array());
-	
+        x_load(
+            'backoffice',
+            'perms',
+            'security' // For func_check_admin_security_redirect
+        );
+        x_session_register('login', '');
+        x_session_register('login_type', '');
+        x_session_register('logged_userid', 0);
+        x_session_register('identifiers', array());
+
 
         /**
          * Switch mobile view trigger
@@ -118,16 +122,17 @@ if (
             x_session_save(); // save status
             die;
         }
-	if (!empty($active_modules['XAuth'])) {
-		$soc_login = list($passwd1, $passwd2) = func_xauth_register_php_hook($login);
 
-		$xHash = $_SERVER['HTTP_REFERER'];
-		if (preg_match('/([a-zA-Z0-9-]*)?\.rpxnow\.com/s', $xHash)) {
-			if (!empty($login) && !preg_match('/cart\.php\?mode=checkout/Ss', $url)) {
-				func_header_location('cart.php?mode=checkout');
-			}
-		}
-	}
+        if (!empty($active_modules['XAuth'])) {
+            $soc_login = list($passwd1, $passwd2) = func_xauth_register_php_hook($login);
+
+            $xHash = $_SERVER['HTTP_REFERER'];
+            if (preg_match('/([a-zA-Z0-9-]*)?\.rpxnow\.com/s', $xHash)) {
+                if (!empty($login) && !preg_match('/cart\.php\?mode=checkout/Ss', $url)) {
+                    func_header_location('cart.php?mode=checkout');
+                }
+            }
+        }
 /*
 	if (strpos($php_url['url'], 'cart.php') && empty($login) && $mode == 'checkout' && $config['General']['enable_anonymous_checkout'] !== 'Y' && empty($soc_login)) {
             if (
@@ -153,6 +158,7 @@ if (
             }
         }
 */
+
         if ($mobile_view_trigger == 'common' && $mobile_view_dialog != 'closed') {
             $top_message = array(
                 'type'    => 'I',
@@ -171,6 +177,7 @@ if (
             );
             $smarty->assign('top_message', $top_message);
         }
+
         if (isset($_GET['switch_view']) && !empty($_GET['switch_view'])) {
             parse_str($php_url['query_string'], $_qry_vals);
             unset($_qry_vals['switch_view']);
@@ -181,10 +188,10 @@ if (
             }
             func_header_location($php_url['url'] . $_qry_vals);
         }
+
         if (empty($mobile_view_trigger) || $mobile_view_trigger == 'mobile') {
             include $_module_dir . XC_DS . 'customer.php';
         }
+
     }
 }
-
-?>
