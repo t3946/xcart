@@ -651,10 +651,22 @@ function func_qs_combine($arr, $qappend = true)
     return ($qappend ? '?' : '') . join("&amp;", $qs);
 }
 
+function func_display_cached($tpl, $cache_id = null, $cache_lifetime = true)
+{
+    $templater = Templater::getInstance();
+
+    if ($cache_id) {
+        $templater->caching = 2;
+        $templater->cache_lifetime = is_numeric($cache_lifetime) ? $cache_lifetime : \Modules\Core\Helpers\Cache::CACHE_DAY;
+    }
+
+    return func_display($tpl, $templater, true, $cache_id);
+}
+
 #
 # Smarty->display wrapper
 #
-function func_display($tpl, &$templater, $to_display = true)
+function func_display($tpl, &$templater, $to_display = true, $cache_id = null)
 {
     global $config;
     global $predefined_lng_variables, $override_lng_code, $shop_language, $user_agent, $__smarty_time, $__smarty_size;
@@ -721,11 +733,11 @@ function func_display($tpl, &$templater, $to_display = true)
     }
 
     if ($to_display == true) {
-        $templater->display($tpl);
+        $templater->display($tpl, $cache_id);
         $ret = "";
     }
     else {
-        $ret = $templater->fetch($tpl);
+        $ret = $templater->fetch($tpl, $cache_id);
     }
 
     __add_mark_smarty($tpl);
