@@ -51,7 +51,7 @@ class Profiler
 
     public function display($min = 0)
     {
-        echo '<table class="minitimer_table" cellpadding="5">' . $this->displayTimers($min) . $this->displayPoints($min) . '</table>';
+        echo '<!--<table class="minitimer_table" cellpadding="5">' . $this->displayTimers($min) . $this->displayPoints($min) . '</table>-->';
     }
 
     private function displayTimers($min = 0)
@@ -73,6 +73,8 @@ class Profiler
 
     private function displayPoints($min = 0)
     {
+        return false;
+
         if (empty($this->points)) {
             return false;
         }
