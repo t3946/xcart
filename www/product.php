@@ -714,7 +714,7 @@ $smarty->assign("location", $location);
 Profiler::getInstance()->addPoint();
 
 
-func_display("customer/home.tpl", $smarty);
+func_display_cached("customer/home.tpl", 'product_' . $productid);
 
 Profiler::getInstance()->addPoint();
 Profiler::getInstance()->stop('trace');
