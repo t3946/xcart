@@ -6,6 +6,7 @@ use Modules\Goods\Helpers\CategoryCalculateHelper;
 use Modules\Menu\Models\CleanUrlModel;
 use Modules\Sites\Models\SiteModel;
 use Xcart\App\Components\Breadcrumbs;
+use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\CharField;
@@ -14,6 +15,7 @@ use Xcart\App\Orm\Fields\ManyToManyField;
 use Xcart\App\Orm\Manager;
 use Xcart\App\Orm\TreeModel;
 use Xcart\App\Traits\DataModelTrait;
+use Xcart\App\Traits\SlugifyTrait;
 use Xcart\Category;
 
 /**
@@ -30,7 +32,7 @@ use Xcart\Category;
  */
 class CategoryModel extends TreeModel
 {
-    use DataModelTrait, AutoMetaTrait;
+    use DataModelTrait, AutoMetaTrait, SlugifyTrait;
 
     public static function getDataModelClass()
     {
@@ -124,12 +126,23 @@ class CategoryModel extends TreeModel
 
     public function getAbsoluteUrl($full = false)
     {
-        if ($this->categoryid && $this->url)
-        {
-            return $this->url->urlFromCode('catalog:view', $full, $this->site);
+        if ($full) {
+            if ($this->categoryid && $this->url)
+            {
+                return $this->url->urlFromCode('catalog:view', $full, $this->site);
+            }
+        }
+        else {
+            return Xcart::app()->router->url('catalog:view', ['id' => $this->pk, 'slug' => $this->createSlug($this->category)]);
         }
 
+
         return false;
+    }
+
+    public function getFrontendName()
+    {
+        return $this->SEO_category_name ?: $this->category;
     }
 
     public function getSubcategories($withProductCount = true, $level = 1, $tree = false, $cache = true)

@@ -34,7 +34,7 @@
 # $Id: auth.php,v 1.30.2.4 2006/11/01 12:37:40 twice Exp $
 #
 
-use Modules\Core\Models\StateModel;
+use Modules\Core\Components\Profiler;
 use Modules\GeoIp\Helpers\GeoIpHelper;
 
 define('AREA_TYPE', 'C');
@@ -44,8 +44,14 @@ if (file_exists("../top.inc.php")) {@include_once "../top.inc.php";}
 if (file_exists("../../top.inc.php")) {@include_once "../../top.inc.php";}
 if (!defined('DIR_CUSTOMER')) die("ERROR: Can not initiate application! Please check configuration.");
 
+Profiler::getInstance()->start('trace');
+
+Profiler::getInstance()->addPoint();
+
+
 include_once $xcart_dir."/init.php";
 
+Profiler::getInstance()->addPoint();
 
 $current_area="C";
 
@@ -270,6 +276,7 @@ if (!empty($top_pages_menu) && is_array($top_pages_menu)){
 }
 
 
+Profiler::getInstance()->addPoint();
 
 $speed_bar = unserialize($config["speed_bar"]);
 if (!empty($speed_bar)) {
@@ -326,6 +333,7 @@ $html_banners = array(
 "html_banners/banner_3.tpl"
 );
 
+Profiler::getInstance()->addPoint();
 x_session_register("current_html_banner");
 $current_html_banner = intval($current_html_banner);
 if ($current_html_banner > (count($html_banners)-1)) $current_html_banner = 0;
@@ -336,44 +344,32 @@ x_session_save("current_html_banner");
 
 #require_once("DSEFU.php");
 
+Profiler::getInstance()->addPoint();
 $statuses = func_query_hash('SELECT code, name, type FROM ' . $sql_tbl['order_statuses']
     . ' ORDER BY orderby', array('type', 'code'), false, true);
+
 $smarty->assign('statuses', $statuses);
+$smarty->assign('use_schema_org', 'Y');
 
 
-#
-##
-###
-//if ($current_storefront == "12"){
-	$smarty->assign('use_schema_org', 'Y');
+Profiler::getInstance()->addPoint();
+
+//if (!empty($active_modules['CIDEV_Best_Search_Filter']) && isset($clean_url_data) && in_array($clean_url_data['resource_type'], array('C','M'))) {
+//	$cidev_filters_tree = func_cidev_filters_tree(true);
+//	$smarty->assign("cidev_filters_tree", $cidev_filters_tree);
+//
+//	$filter_price_ranges = array(0, 10, 20, 50, 100, 200, 500, 1000, 2000, 5000, 10000, 20000, 50000, 100000, 200000, 500000, 1000000);
 //}
-###
-##
-#
 
-if (!empty($active_modules['CIDEV_Best_Search_Filter']) && isset($clean_url_data) && in_array($clean_url_data['resource_type'], array('C','M'))) {
-	$cidev_filters_tree = func_cidev_filters_tree(true);
-	$smarty->assign("cidev_filters_tree", $cidev_filters_tree);
-
-	$filter_price_ranges = array(0, 10, 20, 50, 100, 200, 500, 1000, 2000, 5000, 10000, 20000, 50000, 100000, 200000, 500000, 1000000);
-}
-
-#
-##
-###
+Profiler::getInstance()->addPoint();
 x_session_register('notify_when_in_stock', array());
 $smarty->assign("notify_when_in_stock", $notify_when_in_stock);
-###
-##
-#
-
-#
-##
-###
 x_session_register('first_order_total_in_current_session');
 x_session_register('pointid_ab_testing_arr', array());
 
 
+
+Profiler::getInstance()->addPoint();
 x_session_register('variant_id_for_point2');
 $variant_id_for_point2 = Get_AB_Variant(2);
 x_session_save("variant_id_for_point2");
@@ -416,6 +412,7 @@ $smarty->assign("variant_id_for_point11", $variant_id_for_point11);
 ##
 #
 
+Profiler::getInstance()->addPoint();
 ###
 if ($HTTPS){
 	$smarty->assign("HTTPS_url", "Y");
@@ -425,6 +422,7 @@ else {
 }
 ###
 
+Profiler::getInstance()->addPoint();
 
 #
 ##
@@ -449,6 +447,7 @@ if (!empty($config["Appearance"]["Google_Trusted_Store_ID"])){
 		$smarty->assign("GTS_badge_code", $GTS_badge_code);
 }
 
+Profiler::getInstance()->addPoint();
 if ($geoipModel = GeoipHelper::getGeoipLocation($CLIENT_IP)) {
     $smarty->assign('geo_litecity_location',
         array_merge(
@@ -460,6 +459,7 @@ if ($geoipModel = GeoipHelper::getGeoipLocation($CLIENT_IP)) {
 
 func_detect_working_hours();
 
+Profiler::getInstance()->addPoint();
 # https://basecamp.com/2070980/projects/1577907/messages/53989896
 ##  Auto pop up in 30 seconds
 ###
@@ -481,3 +481,5 @@ if (!empty($matches[1]))
     $gPage_status['match'] = true;
     list($gPage_status['type'], $gPage_status['page_id'], $gPage_status['slut']) = $matches[1];
 }
+
+Profiler::getInstance()->addPoint();

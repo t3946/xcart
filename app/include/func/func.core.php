@@ -2,6 +2,7 @@
 
 use Modules\Core\Helpers\CoreHelper;
 use Modules\GeoIp\Helpers\GeoIpHelper;
+use Modules\Goods\Models\ProductModel;
 
 #
 # Use this function to load code of functions on demand (include/func/func.*.php)
@@ -3317,23 +3318,26 @@ function func_backprocess_log($process_id = "", $log_text = "")
 
 function func_product_availability($productid = false, $product = false)
 {
+    /** @var \Xcart\Product $model */
+    $model = null;
 
     $availability = "out of stock";
-    if ($productid == false && $product == false) {
-        return $availability;
+
+    if ($product && is_object($product)) {
+        $model = $product;
     }
 
-    if (!empty($productid) || (!empty($product) && is_array($product))) {
+    if (!$model) {
+        if ($product && is_array($product)) {
+            $productid = $product['productid'];
+        }
 
-        if (empty($productid)) {
-            if (!empty($product)) {
-                $productid = $product['productid'];
-            }
-        }
-        $oProduct = \Xcart\Product::model(['productid' => $productid]);
-        if ($oProduct->getProductId() && !$oProduct->isProductOutOfStock()) {
-            $availability = "in stock";
-        }
+        $model = ProductModel::objects()->get(['pk' => $productid]);
+    }
+
+
+    if ($model && !$model->isProductOutOfStock()) {
+        $availability = "in stock";
     }
 
     return $availability;

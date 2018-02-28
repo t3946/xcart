@@ -31,6 +31,8 @@
 +-----------------------------------------------------------------------------+
 \*****************************************************************************/
 
+use Modules\Core\Components\Profiler;
+
 /**
  * Clean URLs dispatcher
  *
@@ -47,9 +49,10 @@
 
 define('DISPATCHED_REQUEST', 1);
 
-//die("123-dispatcher.php");
 
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . 'auth.php';
+
+Profiler::getInstance()->addPoint();
 
 $request_uri_info = @parse_url(stripslashes(func_get_request_uri()));
 
@@ -284,6 +287,7 @@ $smarty->assign('clean_url_data', $clean_url_data);
 ###
 ##
 #
+Profiler::getInstance()->addPoint();
 
 switch ($clean_url_data['resource_type']) {
 
@@ -291,13 +295,13 @@ case 'C':
     // Category page case
     $_GET['cat'] = $cat = intval($clean_url_data['resource_id']);
     $QUERY_STRING = 'cat=' . $cat . (!empty($QUERY_STRING) ? '&' . $QUERY_STRING : '');
+//    $PHP_SELF = dirname($PHP_SELF).'/category.php';
     $PHP_SELF = dirname($PHP_SELF).'/home.php';
-
     \Modules\Meta\Helpers\MetaExtHelper::getInstance()
         ->setBaseCode(\Modules\Meta\Types\MetaType::CATEGORY)
         ->addParam('model', \Modules\Goods\Models\CategoryModel::objects()->get(['pk'=>$cat]));
 
-
+//    require $xcart_dir.DIR_CUSTOMER.'/category.php';
     require $xcart_dir.DIR_CUSTOMER.'/home.php';
     break;
 
@@ -321,6 +325,8 @@ case 'P':
     \Modules\Meta\Helpers\MetaExtHelper::getInstance()
         ->setBaseCode(\Modules\Meta\Types\MetaType::PRODUCT)
         ->addParam('model', \Modules\Goods\Models\ProductModel::objects()->get(['pk'=>$productid]));
+
+    Profiler::getInstance()->addPoint();
 
     require $xcart_dir.DIR_CUSTOMER.'/product.php';
 

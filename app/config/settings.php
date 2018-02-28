@@ -163,7 +163,7 @@ return array_replace_recursive([
    ],
    'autoloadComponents' => [
        'errorHandler',
-       'logger',
+//       'logger',
        'db',
    ]
 ],  $local_config);

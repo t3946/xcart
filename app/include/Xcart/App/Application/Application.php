@@ -162,10 +162,11 @@ class Application
         }
     }
 
-    public function setUpPaths()
+    public function setUpPaths($fast = true)
     {
         $basePath = Paths::get('base');
-        if (!is_dir($basePath)) {
+
+        if (!$fast && !is_dir($basePath)) {
             throw new InvalidConfigException('Base path must be a valid directory. Please, set up correct base path in "paths" section of configuration.');
         }
 
@@ -174,7 +175,8 @@ class Application
             $runtimePath = Paths::get('base.runtime');
             Paths::add('runtime', $runtimePath);
         }
-        if (!is_dir($runtimePath) || !is_writable($runtimePath)) {
+
+        if (!$fast && !is_dir($runtimePath) || !is_writable($runtimePath)) {
             throw new InvalidConfigException('Runtime path must be a valid and writable directory. Please, set up correct runtime path in "paths" section of configuration.');
         }
 
@@ -183,7 +185,7 @@ class Application
             $modulesPath = Paths::get('base.Modules');
             Paths::add('Modules', $modulesPath);
         }
-        if (!is_dir($modulesPath)) {
+        if (!$fast && !is_dir($modulesPath)) {
             throw new InvalidConfigException('Modules path must be a valid. Please, set up correct modules path in "paths" section of configuration.');
         }
     }
