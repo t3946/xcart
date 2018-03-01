@@ -6,12 +6,16 @@ require __DIR__ . DIRECTORY_SEPARATOR . "../www/top.inc.php";
 require __DIR__ . DIRECTORY_SEPARATOR . "../www/init.php";
 
 use Mindy\QueryBuilder\Expression;
+use Mindy\QueryBuilder\Q\QAnd;
+use Mindy\QueryBuilder\Q\QOr;
 use Modules\Goods\Helpers\ProductsToMoveHelper;
 use Modules\Goods\Models\ProductCategoriesModel;
 use Modules\Goods\Models\ProductModel;
 use Modules\Goods\Models\ProductsSfMovesModel;
 use Modules\Goods\Models\ProductStorefrontModel;
 use Modules\Goods\Models\UpdatedProductModel;
+use Modules\User\Models\SessionDataModel;
+use Modules\User\Models\SurfPathModel;
 
 $models = UpdatedProductModel::objects()->filter(['type' => 9])->all();
 
@@ -24,31 +28,20 @@ foreach ($models as $model){
     /** @var UpdatedProductModel $model */
     $product_id = $model->resourceid;
     $storefront_id = $model->extra_data_int;
-//
-//    if ($move_model = ProductsSfMovesModel::objects()->filter(['productid' => $model->resourceid])->order(['-batch_id'])->all() ) {
-//        $batch_id = $move_model[0]->batch_id + 1;
-//    }
-//    else {
-//        $batch_id = 0;
-//    }
+
+    $qs = SurfPathModel::objects()->getQuerySet();
 
     /** @var ProductModel $product_model */
     $product_model = ProductModel::objects()->get(['productid' => $model->resourceid]);
 
-    if (!$product_model){
-        continue;
-    }
-
-    if ($product_model->amazon_fba_avail > 0){
-        continue;
-    }
-
     if (!ProductsToMoveHelper::isNeedToTransferProduct($model->resourceid)){
+        $model->delete();
         continue;
     }
 
     if ($product_model->isGroupRoot() || $product_model->isGroupChild()){
-        if (!ProductsToMoveHelper::isValidGroupProduct($product_model->group_root)) {
+        if (!ProductsToMoveHelper::isValidGroupProduct($product_model->group_root, $model)) {
+            $model->delete();
             echo "It's not valid group product for move to new sf {$product_model->group_root}";
             continue;
         } else {
@@ -58,24 +51,23 @@ foreach ($models as $model){
 
             foreach ($childs as $child){
 
-                if (ProductsToMoveHelper::processingMoveProductToNewSf($child, $model)){
+                if (ProductsToMoveHelper::processingMoveProductToNewSf($child, $child->productid, $model->extra_data_int)){
                     $count_processed++;
                 }
             }
 
-            ProductsToMoveHelper::processingMoveProductToNewSf($group_product, $model);
+            ProductsToMoveHelper::processingMoveProductToNewSf($group_product, $group_product->productid, $model->extra_data_int);
         }
     }
-    elseif (!ProductsToMoveHelper::isValidProduct($product_model)){
+    elseif (!ProductsToMoveHelper::isValidProduct($product_model, $model)){
         continue;
     } else {
-        if (ProductsToMoveHelper::processingMoveProductToNewSf($product_model, $model)){
+        if (ProductsToMoveHelper::processingMoveProductToNewSf($product_model, $model->resourceid, $model->extra_data_int)){
             $count_processed++;
         }
     }
 
     $model->delete();
-
 
 
 }
