@@ -75,4 +75,9 @@ abstract class Middleware implements IMiddleware
         return $this->requestIsWeb;
     }
 
+    /**
+     * @param \Xcart\App\Request\Request $request
+     */
+    public function processEnd($request) {}
+
 }
