@@ -5,6 +5,7 @@ namespace Modules\User\Models;
 use Xcart\App\Cli\Cli;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\Fields\CharField;
+use Xcart\App\Orm\Fields\HasManyField;
 use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Fields\SerializeField;
 use Xcart\App\Orm\Model;
@@ -56,6 +57,13 @@ class SessionDataModel extends Model
                 'class' => SerializeField::className(),
                 'null' => false,
                 'default' => '',
+            ],
+
+            'surf_meta' => [
+                'field' => 'sessid',
+                'class' => HasManyField::class,
+                'modelClass' => SurfMetaModel::class,
+                'link' => ['sessid' => 'sessid']
             ],
         ];
     }
