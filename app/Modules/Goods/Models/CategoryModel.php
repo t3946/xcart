@@ -11,6 +11,7 @@ use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\ForeignField;
+use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Fields\ManyToManyField;
 use Xcart\App\Orm\Manager;
 use Xcart\App\Orm\TreeModel;
@@ -79,6 +80,11 @@ class CategoryModel extends TreeModel
                     'class' => AutoField::className(),
                     'primary' => true,
                     'null' => false,
+                ],
+
+                'parentid' => [
+                    'class' => IntField::className(),
+                    'default' => 0,
                 ],
 
                 'description' => [
