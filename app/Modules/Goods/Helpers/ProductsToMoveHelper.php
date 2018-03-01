@@ -58,24 +58,10 @@ class ProductsToMoveHelper
         /** @var ProductModel $product_model */
         $qs = SurfPathModel::objects()->getQuerySet();
 
-/*        if ($s_model = SessionDataModel::objects()->filter([
-                                                                   'surf_meta__surf_path__product__productid' => $productid,
-                                                                   "{$qs->getTableAlias()}.resource_type" => 'P'])
-                                           ->exclude([
-                                                         new QOr(['data__contains' => '"login_type";s:1:"A";',]),
-                                                         new QOr(['data__contains' => '"login_type";s:1:"P";',]),
-                                                         new QOr(['data__contains' => '"username";s:0:"";']),
-                                                         new QOr(['data' => ""])
-                                                     ])
-                                           ->all()
-           ) {*/
+
         if ($s_model = SessionDataModel::objects()->filter([
                                                            'surf_meta__surf_path__product__productid' => $productid,
                                                            "{$qs->getTableAlias()}.resource_type" => 'P',
-                                                           /*                                                       new Expression("{$qs2->getTableAlias()}.data NOT LIKE '%\"login_type\";s:1:\"A\";%'"),
-                                                                                                                  new Expression("{$qs2->getTableAlias()}.data NOT LIKE '%\"login_type\";s:1:\"P\";%'"),
-                                                                                                                  new Expression("{$qs2->getTableAlias()}.data NOT LIKE '%\"username\";s:0:\"\";%'"),
-                                                                                                                  new Expression("{$qs2->getTableAlias()}.data != ''")*/
                                                        ])->exclude([
                                                                        new QOr([
                                                                                    new QOr(['data__contains' => '"login_type";s:1:"A";',]),
