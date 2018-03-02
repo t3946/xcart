@@ -14,6 +14,7 @@ class CacheMiddleware extends Middleware
 {
     public $globalCacheTime = 360;
     public $cacheDriver = 'html';
+    public $cacheEnabled = true;
 
     protected $show_from_cache = false;
     protected $params = false;
@@ -22,7 +23,7 @@ class CacheMiddleware extends Middleware
     {
         /** @var \Xcart\App\Request\HttpRequest $request */
 
-        if (!headers_sent()) {
+        if (!headers_sent() && $this->cacheEnabled) {
 
             $params = [];
             $params = $params ?: $this->getAdvancedDetector($request);
@@ -104,7 +105,7 @@ class CacheMiddleware extends Middleware
 
     public function processSave($output)
     {
-        if ($this->params) {
+        if ($this->params && $this->cacheEnabled) {
             [$modTime, $etag] = $this->saveCache($output);
 
             $this->setCacheHeaders($modTime, Cache::CACHE_HALF_HOUR, $etag);
