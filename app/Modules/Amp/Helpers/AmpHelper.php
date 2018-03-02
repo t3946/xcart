@@ -187,12 +187,4 @@ class AmpHelper
         return $image;
     }
 
-    public function addToCart(){
-        $action = "cart.php";
-        $productid = $this->model->productid;
-        $amount = 1;
-        if (include "ajax_add_to_cart.php")
-        Xcart::app()->request->redirect('//dev07.artist/cart.php');
-    }
-
 }

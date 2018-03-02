@@ -119,8 +119,9 @@ class ProductsToMoveHelper
         $child_products = $product_model->childs->all();
 
         foreach ($child_products as $child_product){
+
             $flag = self::isValidProduct($child_product, $queue_model);
-            if ($flag){
+            if (!$flag){
                 return $flag;
             }
         }
