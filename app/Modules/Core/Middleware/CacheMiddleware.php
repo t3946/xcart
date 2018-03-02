@@ -134,12 +134,12 @@ class CacheMiddleware extends Middleware
 
                 $content = Xcart::app()->cache->getDriver($this->cacheDriver)->get($key);
 
-                if (Xcart::app()->request->getIsAjax()) {
-                    $key .= '-ajax';
-                }
-
                 if ((new MobileDetect())->isMobile()) {
                     $key .= '-mobile';
+                }
+
+                if (Xcart::app()->request->getIsAjax()) {
+                    $key .= '-ajax';
                 }
 
                 return [Cache::CACHE_YEAR, $key, $content];
