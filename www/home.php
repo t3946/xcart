@@ -360,7 +360,14 @@ $smarty->assign("main","catalog");
 $smarty->assign("location", $location);
 $smarty->assign("bench_name", "home.php");
 
-func_display("customer/home.tpl",$smarty);
+$output = func_display("customer/home.tpl",$smarty, false);
+
+if ($cache_middle = \Xcart\App\Main\Xcart::app()->middleware->getMiddleware('static_cache')) {
+    /** @var \Modules\Core\Middleware\CacheMiddleware $cache_middle */
+    $cache_middle->processSave($output);
+}
+
+echo $output;
 
 Profiler::getInstance()->addPoint();
 Profiler::getInstance()->stop('trace');

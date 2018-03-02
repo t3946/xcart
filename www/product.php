@@ -716,7 +716,10 @@ Profiler::getInstance()->addPoint();
 //func_display_cached("customer/home.tpl", 'product_' . $productid);
 $output = func_display("customer/home.tpl", $smarty, false);
 
-\Xcart\App\Main\Xcart::app()->middleware->getMiddleware('static_cache')->processSave($output);
+if ($cache_middle = \Xcart\App\Main\Xcart::app()->middleware->getMiddleware('static_cache')) {
+    /** @var \Modules\Core\Middleware\CacheMiddleware $cache_middle */
+    $cache_middle->processSave($output);
+}
 
 echo $output;
 

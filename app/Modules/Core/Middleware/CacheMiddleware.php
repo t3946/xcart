@@ -104,9 +104,11 @@ class CacheMiddleware extends Middleware
 
     public function processSave($output)
     {
-        [$modTime, $etag] = $this->saveCache($output);
+        if ($this->params) {
+            [$modTime, $etag] = $this->saveCache($output);
 
-        $this->setCacheHeaders($modTime, Cache::CACHE_HALF_HOUR, $etag);
+            $this->setCacheHeaders($modTime, Cache::CACHE_HALF_HOUR, $etag);
+        }
     }
 
     private function getDetector($request)
