@@ -2,8 +2,12 @@
 
 namespace Modules\User\Models;
 
+use Modules\Goods\Models\ProductModel;
 use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
+use Xcart\App\Orm\Fields\ForeignField;
+use Xcart\App\Orm\Fields\HasManyField;
+use Xcart\App\Orm\Fields\ManyToManyField;
 use Xcart\App\Orm\Fields\TextField;
 use Xcart\App\Orm\Model;
 
@@ -48,6 +52,21 @@ class SurfPathModel extends Model
                 'default' => '',
                 'null' => false
             ],
+
+            'surf_meta' => [
+                'field' => 'id',
+                'class' => ForeignField::class,
+                'modelClass' => SurfMetaModel::class,
+                'link' => ['id' => 'id'],
+                'null' => false,
+            ],
+
+            'product' => [
+                'class' => HasManyField::class,
+                'modelClass' => ProductModel::class,
+                'link' => ['resource_id' => 'productid'],
+                'extra' => ['resource_type' => 'P']
+            ]
         ];
     }
 
