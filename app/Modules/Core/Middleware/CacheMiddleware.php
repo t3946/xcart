@@ -134,7 +134,9 @@ class CacheMiddleware extends Middleware
 
                 $content = Xcart::app()->cache->getDriver($this->cacheDriver)->get($key);
 
-                if ((new MobileDetect())->isMobile()) {
+                $detector = new MobileDetect();
+
+                if ($detector->isMobile() || $detector->isTablet()) {
                     $key .= '-mobile';
                 }
 
