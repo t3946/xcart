@@ -249,8 +249,10 @@ class ProductsToMoveHelper
                         $products_sf_moves_model[0]->save();
                     }
 
+                    $product_categories_model->delete();
+
                     $product_categories_model->categoryid = $parent_id;
-                    $product_categories_model->save();
+                    $product_categories_model->insert();
                 }
             }
 
