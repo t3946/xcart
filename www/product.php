@@ -79,7 +79,7 @@ if ($current_forsale == "N"){
         $redirect_url = $xcart_web_dir . "/";
     }
 
-    func_header_location($redirect_url, true, 301);
+    func_header_location($redirect_url, true);
 }
 
 Profiler::getInstance()->addPoint();
