@@ -28,6 +28,8 @@ class CacheMiddleware extends Middleware
             $params = $params ?: $this->getAdvancedDetector($request);
 //            $params = $params ?: $this->getDetector($request);
 
+//            d($params);
+
             if ($params) {
                 $this->params = $params;
                 [$cacheTime, $key, $a_output] = $params;
