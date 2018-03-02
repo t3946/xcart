@@ -34,15 +34,9 @@ foreach ($models as $model){
     /** @var ProductModel $product_model */
     $product_model = ProductModel::objects()->get(['productid' => $model->resourceid]);
 
-    if (!ProductsToMoveHelper::isNeedToTransferProduct($model->resourceid)){
-        $model->delete();
-        continue;
-    }
-
     if ($product_model->isGroupRoot() || $product_model->isGroupChild()){
         if (!ProductsToMoveHelper::isValidGroupProduct($product_model->group_root, $model)) {
             $model->delete();
-            echo "It's not valid group product for move to new sf {$product_model->group_root}";
             continue;
         } else {
             /** @var ProductModel $group_product */

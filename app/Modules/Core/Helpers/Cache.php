@@ -5,6 +5,7 @@ namespace Modules\Core\Helpers;
 
 class Cache
 {
+    const CACHE_YEAR = 31536000;
     const CACHE_WEEK = 604800;
     const CACHE_DAY = 86400;
     const CACHE_HOUR = 3600;

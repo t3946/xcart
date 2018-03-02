@@ -79,7 +79,7 @@ if ($current_forsale == "N"){
         $redirect_url = $xcart_web_dir . "/";
     }
 
-    func_header_location($redirect_url, true, 301);
+    func_header_location($redirect_url, true);
 }
 
 Profiler::getInstance()->addPoint();
@@ -714,7 +714,11 @@ Profiler::getInstance()->addPoint();
 
 
 //func_display_cached("customer/home.tpl", 'product_' . $productid);
-func_display("customer/home.tpl", $smarty);
+$output = func_display("customer/home.tpl", $smarty, false);
+
+\Xcart\App\Main\Xcart::app()->middleware->getMiddleware('static_cache')->processSave($output);
+
+echo $output;
 
 Profiler::getInstance()->addPoint();
 Profiler::getInstance()->stop('trace');

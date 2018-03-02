@@ -111,7 +111,7 @@ class ProductsToMoveHelper
 
     public static function isValidGroupProduct($group_productid, $queue_model)
     {
-        $flag = false;
+        $flag = true;
 
         /** @var ProductModel $product_model */
         $product_model = ProductModel::objects()->get(['productid' => $group_productid]);
@@ -119,8 +119,9 @@ class ProductsToMoveHelper
         $child_products = $product_model->childs->all();
 
         foreach ($child_products as $child_product){
+
             $flag = self::isValidProduct($child_product, $queue_model);
-            if ($flag){
+            if (!$flag){
                 return $flag;
             }
         }
@@ -189,64 +190,47 @@ class ProductsToMoveHelper
 
 
         /** @var ProductCategoriesModel $product_categories_model */
-        foreach ($product_categories_models as $product_categories_model) {
-
+        foreach ($product_categories_models as $product_categories_model)
+        {
             /** @var CategoryModel $category_model */
             if ($category_model = $product_categories_model->category)
             {
                 if ( $ancestors_categories = $category_model->getObjects()->ancestors(true)->order(['lft'])->all())
                 {
-                    $count = count($ancestors_categories);
                     $parent_category = null;
                     $parent_id = null;
-                    for($i = 0; $i < $count; $i++){
-                        $category = null;
 
-                        /** @var CategoryModel $model */
-//                        $model = $ancestors_categories[$i];
-//
-//                        $clone = clone $model;
-//                        $clone->categoryid = null;
-//                        $clone->root = null;
-//                        $clone->lft = null;
-//                        $clone->rgt = null;
-//                        $clone->level = null;
-//                        $clone->parent_id = $parent_id;
-////
-//                        $clone->save();
-//
-//                        $parent_id = $clone->pk;
-
-
-                        if ($i == 0){
-                            $parent_category = CategoryModel::objects()
-                                                            ->get(['category' => $ancestors_categories[0]->category, 'parentid' => 0, 'storefrontid' => $sfid])
-                                ?: (new CategoryModel(['category' => $ancestors_categories[0]->category, 'storefrontid' => $sfid]));
-
-                            $parent_category->save();
-                            $parent_id = $parent_category->categoryid;
+                    /** @var CategoryModel $model */
+                    foreach ($ancestors_categories as $model)
+                    {
+                        if ($model->isRoot()) {
+                            [$parent_category, $isNew] = CategoryModel::objects()->getOrCreate([
+                               'category' => $model->category,
+                               'parentid' => 0,
+                               'storefrontid' => $sfid
+                           ]);
                         }
                         else {
-
-
-                            $category = CategoryModel::objects()->getOrCreate([
-                                'parentid' => $parent_id,
-                                'category' => $ancestors_categories[ $i ]->category,
-                                'storefrontid' => $sfid
-                            ]);
-                            $parent_id = $category->categoryid;
+                            [$parent_category, $isNew] = CategoryModel::objects()->getOrCreate([
+                               'category' => $model->category,
+                               'parentid' => $parent_id,
+                               'storefrontid' => $sfid
+                           ]);
                         }
+
+                        $parent_id = $parent_category->pk;
                     }
 
 
                     /** @var ProductsSfMovesModel $products_sf_moves_model */
-                    $products_sf_moves_model = ProductsSfMovesModel::objects()->getOrNew(['batch_id' => $batch_id,
+                    [$products_sf_moves_model, $isNew] = ProductsSfMovesModel::objects()->getOrNew(['batch_id' => $batch_id,
                                                                                           'productid' => $product_categories_model->productid,
                                                                                           'resource_id' => $product_categories_model->categoryid,
                                                                                           'resource_type' => 'CS',
-                                                                                          'resource_extra_value' => $product_categories_model->main,]);
-                    if ($products_sf_moves_model[1]) {
-                        $products_sf_moves_model[0]->save();
+                                                                                          'resource_extra_value' => $product_categories_model->main,
+                                                                                               ]);
+                    if ($isNew) {
+                        $products_sf_moves_model->save();
                     }
 
                     $product_categories_model->delete();
@@ -255,7 +239,6 @@ class ProductsToMoveHelper
                     $product_categories_model->insert();
                 }
             }
-
         }
     }
 

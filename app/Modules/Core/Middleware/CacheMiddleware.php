@@ -2,42 +2,52 @@
 
 namespace Modules\Core\Middleware;
 
+use Detection\MobileDetect;
+use Modules\Core\Helpers\Cache;
 use Xcart\App\Cli\Cli;
 use Xcart\App\Controller\FrontendController;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Middleware\Middleware;
+use Xcart\App\Request\HttpRequest;
 
 class CacheMiddleware extends Middleware
 {
     public $globalCacheTime = 360;
+    public $cacheDriver = 'html';
 
-    public function processRequest($request)
+    protected $show_from_cache = false;
+    protected $params = false;
+
+    public function processHttpRequest($request)
     {
         /** @var \Xcart\App\Request\HttpRequest $request */
 
-        if (Cli::isCli() == false) {
-            if (!headers_sent()) {
+        if (!headers_sent()) {
 
-                $match = Xcart::app()->router->match($request->getUrl(), $request->getMethod());
+            $params = [];
+            $params = $params ?: $this->getAdvancedDetector($request);
+//            $params = $params ?: $this->getDetector($request);
 
-                if ($cacheTime = $this->getCacheTime($match)) {
-                    if ($a_output = Xcart::app()->cache->get($this->getCacheKey($request, $match))) {
-                        list($output, $headers, $etag, $modTime) = $a_output;
+            if ($params) {
+                $this->params = $params;
+                [$cacheTime, $key, $a_output] = $params;
 
-                        if ($request->getHeaderValue('IF_NONE_MATCH') == "\"{$etag}\"") {
-                            header("HTTP/1.1 304 Not Modified");
-                            Xcart::app()->end();
-                        }
+                if ($a_output) {
+                    list($output, $headers, $etag, $modTime) = $a_output;
 
-                        foreach ($headers as $header) {
-                            header($header);
-                        }
-
-                        $this->setCacheHeaders($modTime, $cacheTime, $etag);
-
-                        echo $output;
+                    if ($request->getHeaderValue('IF_NONE_MATCH') == "\"{$etag}\"") {
+                        header("HTTP/1.1 304 Not Modified");
                         Xcart::app()->end();
                     }
+
+                    foreach ($headers as $header) {
+                        header($header);
+                    }
+
+                    $this->setCacheHeaders($modTime, $cacheTime, $etag);
+
+                    echo $output;
+                    Xcart::app()->end();
                 }
             }
         }
@@ -45,32 +55,100 @@ class CacheMiddleware extends Middleware
 
     public function processView($request, &$output)
     {
-        if (Cli::isCli() == false) {
+        if (!Cli::isCli()) {
 
             /** @var \Xcart\App\Request\HttpRequest $request */
             $match = Xcart::app()->router->match($request->getUrl(), $request->getMethod());
 
             if ($cacheTime = $this->getCacheTime($match)) {
+                [$modTime, $etag] = $this->saveCache($output);
 
-                $headers = array_filter(headers_list(), function($header) {
 
-                    if (!preg_match('/(X-Powered-By|Set-Cookie)/', $header)) {
-
-                        return $header;
-                    }
-                });
-
-                $data = [$output, $headers];
-                $etag = md5(serialize($data));
-                $modTime = gmdate("D, d M Y H:i:s", time());
-                $data[] = $etag;
-                $data[] = $modTime;
-
-                $this->setCacheHeaders($modTime, $cacheTime, $etag);
-
-                Xcart::app()->cache->set($this->getCacheKey($request, $match), $data, $cacheTime?:null);
+                $this->setCacheHeaders($modTime, Cache::CACHE_HALF_HOUR, $etag);
             }
         }
+    }
+
+//    public function processEnd($request)
+//    {
+//        if (!Cli::isCli() && ! $this->show_from_cache) {
+//
+//           $this->saveCache(ob_get_clean());
+//        }
+//    }
+
+    private function saveCache($output)
+    {
+        [$cacheTime, $key] = $this->params;
+
+
+        $headers = array_filter(headers_list(), function($header) {
+            if (!preg_match('/(X-Powered-By|Set-Cookie)/', $header)) {
+
+                return $header;
+            }
+
+            return false;
+        });
+
+        $data = [$output, $headers];
+        $etag = md5(serialize($data));
+        $modTime = gmdate("D, d M Y H:i:s", time());
+        $data[] = $etag;
+        $data[] = $modTime;
+
+        Xcart::app()->cache->getDriver($this->cacheDriver)->set($key, $data, $cacheTime?:null);
+
+        return [$modTime, $etag];
+    }
+
+    public function processSave($output)
+    {
+        [$modTime, $etag] = $this->saveCache($output);
+
+        $this->setCacheHeaders($modTime, Cache::CACHE_HALF_HOUR, $etag);
+    }
+
+    private function getDetector($request)
+    {
+        /** @var HttpRequest $request */
+        $match = Xcart::app()->router->match($request->getUrl(), $request->getMethod());
+
+        if ($cacheTime = $this->getCacheTime($match)) {
+            $key = $this->getCacheKey($request, $match);
+
+            $a_output = Xcart::app()->cache->getDriver($this->cacheDriver)->get($key);
+            return [$cacheTime, $key, $a_output];
+        }
+
+        return false;
+    }
+
+    private function getAdvancedDetector($request)
+    {
+        /** @var HttpRequest $request */
+
+        if (!$request->getIsAjax()) {
+            if (strpos($request->getPath(), 'product') !== false &&  preg_match("/\/product\/(\d+)\/.*/", $request->getPath(), $match)) {
+                $key = 'product-' . $match[1];
+
+                $content = Xcart::app()->cache->getDriver($this->cacheDriver)->get($key);
+
+                $detector = new MobileDetect();
+
+                if ($detector->isMobile() || $detector->isTablet()) {
+                    $key .= '-mobile';
+                }
+
+                if (Xcart::app()->request->getIsAjax()) {
+                    $key .= '-ajax';
+                }
+
+                return [Cache::CACHE_YEAR, $key, $content];
+            }
+        }
+
+        return false;
     }
 
 
@@ -111,8 +189,8 @@ class CacheMiddleware extends Middleware
     private function setCacheHeaders($modTime, $lifeTime, $etag)
     {
         if (!headers_sent()) {
-            header("Last-Modified: {$modTime} GMT");
-            header("Cache-Control: max-age={$lifeTime}");
+//            header("Last-Modified: {$modTime} GMT");
+//            header("Cache-Control: max-age={$lifeTime}");
             header("ETag: \"{$etag}\"");
         }
     }
