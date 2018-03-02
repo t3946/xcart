@@ -3,6 +3,7 @@ namespace Modules\Order\Helpers;
 
 use Modules\Order\Models\AttentionTagModel;
 use Modules\Order\Models\OrderAdditionalTagLinkModel;
+use Modules\Order\Models\OrderLogModel;
 use Xcart\App\Main\Xcart;
 use Xcart\Logs;
 
@@ -43,7 +44,12 @@ class OrderTagEventHelper
 
                 $message = "Attention tag added: " . $model->status;
                 if ($save_log && $created) {
-                    Logs::_log('orders', $order_id, 'X', $message, Xcart::app()->user->login);
+                    (new OrderLogModel([
+                        'orderid' => $order_id,
+                        'type' => 'X',
+                        'log' => $message,
+                        'login' => Xcart::app()->user->login
+                    ]))->save();
                 }
 
                 if ($model->events) {
