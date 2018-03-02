@@ -37,6 +37,6 @@ while ($record = db_fetch_array($records)) {
         }
     }
 
-    db_query("DELETE FROM xcart_cidev_updated_products WHERE resourceid='{$record['resourceid']}' AND type='10' and timeshtamp='{$record['time_stamp']}'");
+    db_query("DELETE FROM xcart_cidev_updated_products WHERE resourceid='{$record['resourceid']}' and time_stamp='{$record['time_stamp']}' and type='10' ");
 }
 db_free_result($records);
