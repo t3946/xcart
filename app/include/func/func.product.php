@@ -672,11 +672,11 @@ function func_select_product($id, $membershipid, $redirect_if_error=true, $clear
         $membershipid_condition = ""; // " AND ($sql_tbl[category_memberships].membershipid = '$membershipid' OR $sql_tbl[category_memberships].membershipid IS NULL) ";
         $p_membershipid_condition = ""; // " AND ($sql_tbl[product_memberships].membershipid = '$membershipid' OR $sql_tbl[product_memberships].membershipid IS NULL) ";
     //		$price_condition = " /*AND $sql_tbl[quick_prices].membershipid ".((empty($membershipid) || empty($active_modules['Wholesale_Trading'])) ? "= 0" : "IN ('$membershipid', 0)")."*/ AND $sql_tbl[quick_prices].priceid = $sql_tbl[pricing].priceid and $sql_tbl[pricing].quantity = 1";
-        $price_condition = " AND $sql_tbl[quick_prices].priceid = $sql_tbl[pricing].priceid";
+        $price_condition = " AND $sql_tbl[quick_prices].priceid = pr.priceid";
 
     }
     else {
-        $price_condition = " AND $sql_tbl[products].productid = $sql_tbl[pricing].productid AND $sql_tbl[pricing].quantity = 1 AND $sql_tbl[pricing].variantid = 0";
+        $price_condition = " AND p.productid = pr.productid AND pr.quantity = 1 AND pr.variantid = 0";
     }
 
     $login_condition = "";
@@ -690,10 +690,10 @@ function func_select_product($id, $membershipid, $redirect_if_error=true, $clear
             }
 
             if (is_array($selected_manufacturers)) {
-                $login_condition = "AND $sql_tbl[products].manufacturerid IN ('" . implode("','", $selected_manufacturers) . "')";
+                $login_condition = "AND p.manufacturerid IN ('" . implode("','", $selected_manufacturers) . "')";
             }
             else {
-                $login_condition = (($login != "" && $login_type == "P") ? "AND $sql_tbl[products].provider='$login'" : "");
+                $login_condition = (($login != "" && $login_type == "P") ? "AND p.provider='$login'" : "");
             }
         }
     }
@@ -702,7 +702,7 @@ function func_select_product($id, $membershipid, $redirect_if_error=true, $clear
     $join = "";
 
     if (!empty($active_modules['Product_Options']) && ($current_area == "P" || $current_area == "A")) {
-        $join .= " LEFT JOIN $sql_tbl[variants] ON $sql_tbl[products].productid = $sql_tbl[variants].productid";
+        $join .= " LEFT JOIN $sql_tbl[variants] ON p.productid = $sql_tbl[variants].productid";
         $add_fields .= ", IF($sql_tbl[variants].productid IS NULL, '', 'Y') as is_variants";
     }
 
@@ -711,7 +711,7 @@ function func_select_product($id, $membershipid, $redirect_if_error=true, $clear
         !$add_from_order_edit &&
         !(($current_area == 'A' || $current_area == 'P') && $config['Search_products']['search_by_sku_from_all_sf'] == 'Y')
     ) {
-        $join .= " LEFT JOIN $sql_tbl[products_sf] ON $sql_tbl[products_sf].productid=$sql_tbl[products].productid";
+        $join .= " LEFT JOIN $sql_tbl[products_sf] ON $sql_tbl[products_sf].productid=p.productid";
         $sf_condition = " AND $sql_tbl[products_sf].sfid=$current_storefront";
     } else {
         $sf_condition = '';
@@ -719,17 +719,17 @@ function func_select_product($id, $membershipid, $redirect_if_error=true, $clear
 
 
     if (!empty($active_modules["Manufacturers"])) {
-        $join .= " LEFT JOIN $sql_tbl[manufacturers] ON $sql_tbl[manufacturers].manufacturerid = $sql_tbl[products].manufacturerid";
+        $join .= " LEFT JOIN $sql_tbl[manufacturers] ON $sql_tbl[manufacturers].manufacturerid = p.manufacturerid";
         $add_fields .= ", $sql_tbl[manufacturers].manufacturer, $sql_tbl[manufacturers].code as mnf_code, $sql_tbl[manufacturers].cost_to_us_coef_x, $sql_tbl[manufacturers].price_coef_x, $sql_tbl[manufacturers].price_coef_y, $sql_tbl[manufacturers].price_coef_z, $sql_tbl[manufacturers].map_price_coef_x, $sql_tbl[manufacturers].new_map_price_coef_x, $sql_tbl[manufacturers].allow_pre_orders ";
     }
 
-    $join .= " LEFT JOIN xcart_supplier_feeds SF ON SF.manufacturerid = xcart_products.manufacturerid and SF.feed_type = 'I' AND SF.enabled='Y' AND (SF.multiple_feed_destinations!='Y' OR (SF.multiple_feed_destinations='Y' AND xcart_products.controlled_by_feed=SF.feed_file_name))";
+    $join .= " LEFT JOIN xcart_supplier_feeds SF ON SF.manufacturerid = p.manufacturerid and SF.feed_type = 'I' AND SF.enabled='Y' AND (SF.multiple_feed_destinations!='Y' OR (SF.multiple_feed_destinations='Y' AND p.controlled_by_feed=SF.feed_file_name))";
     $add_fields .= ", SF.enabled as supplier_feeds_enabled ";
 
     if ($current_area == "C" || empty($current_area)) {  /*speed optimization*/
-        $add_fields .= ", $sql_tbl[products].product as product, $sql_tbl[products].descr as descr, $sql_tbl[products].fulldescr as fulldescr, $sql_tbl[quick_flags].*, $sql_tbl[quick_prices].variantid, $sql_tbl[quick_prices].priceid";
-        $join .= " LEFT JOIN $sql_tbl[quick_prices] ON $sql_tbl[products].productid = $sql_tbl[quick_prices].productid /*AND $sql_tbl[quick_prices].membershipid*/ ";
-        $join .= " LEFT JOIN $sql_tbl[quick_flags] ON $sql_tbl[products].productid = $sql_tbl[quick_flags].productid";
+        $add_fields .= ", $sql_tbl[quick_flags].*, $sql_tbl[quick_prices].variantid, $sql_tbl[quick_prices].priceid";
+        $join .= " LEFT JOIN $sql_tbl[quick_prices] ON p.productid = $sql_tbl[quick_prices].productid";
+        $join .= " LEFT JOIN $sql_tbl[quick_flags] ON p.productid = $sql_tbl[quick_flags].productid";
     }
     else {
         $add_fields .= ", $sql_tbl[manufacturers].d_website_search_for_sku_url ";
@@ -738,15 +738,21 @@ function func_select_product($id, $membershipid, $redirect_if_error=true, $clear
 
     if (!is_numeric($id)) {
         $id = \Xcart\App\Main\Xcart::app()->db->getConnection()->quote($id);
-        $product_condition = "$sql_tbl[products].productcode='$id' ";
+        $product_condition = "p.productcode='$id' ";
     }
     else {
         $id = intval($id);
-        $product_condition = " $sql_tbl[products].productid='$id' ";
+        $product_condition = " p.productid='$id' ";
     }
 
     Profiler::getInstance()->addPoint();
-    $product = func_query_first("SELECT $sql_tbl[products].*, $sql_tbl[products].avail-$in_cart AS avail, $sql_tbl[pricing].price as price $add_fields FROM $sql_tbl[pricing], $sql_tbl[products] $join WHERE  " .$product_condition. $login_condition . $p_membershipid_condition . $price_condition . $sf_condition . " GROUP BY $sql_tbl[products].productid");
+    $product = func_query_first($sql_q = <<<SQL
+SELECT p.*, p.avail - {$in_cart} AS avail, pr.price as price {$add_fields} 
+FROM xcart_pricing pr, xcart_products p {$join} 
+WHERE  {$product_condition} {$login_condition} {$p_membershipid_condition} {$price_condition} {$sf_condition} 
+GROUP BY p.productid
+SQL
+);
 
     Profiler::getInstance()->addPoint();
 

@@ -352,8 +352,8 @@ $smarty->assign('show_shipping_dimensions', $show_shipping_dimensions);
 
 
 if (!empty($product_info['manufacturerid'])) {
-    $product_info['manufact_text_displayed'] = func_query_first_cell("SELECT manufact_text_displayed FROM $sql_tbl[manufacturers] WHERE manufacturerid ='" . $product_info['manufacturerid'] . "'");
-    $product_info['cart_manufact_text_displayed'] = func_query_first_cell("SELECT cart_manufact_text_displayed FROM $sql_tbl[manufacturers] WHERE manufacturerid ='" . $product_info['manufacturerid'] . "'");
+    $product_info['manufact_text_displayed'] = $oManufacturer->manufact_text_displayed;
+    $product_info['cart_manufact_text_displayed'] = $oManufacturer->cart_manufact_text_displayed;
 }
 
 
@@ -512,7 +512,7 @@ if ($cidev_warning_code > 0) {
 #
 
 if (empty($product_info["lead_time_message"])) {
-    $lead_time_message = func_query_first_cell("SELECT lead_time_message FROM $sql_tbl[manufacturers] WHERE manufacturerid='$product_info[manufacturerid]'");
+    $lead_time_message = $oManufacturer->lead_time_message;
 
     $lead_time_message = str_replace("'", "\'", $lead_time_message);
     $lead_time_message = str_replace('"', "\'", $lead_time_message);
@@ -530,10 +530,9 @@ if (!empty($cart["shipping_groups"][$product_info["manufacturerid"]])) {
     }
 } else {
 
-    $manuf_info_arr = func_query_first("SELECT d_minimum_order_amount_in_us, d_minimum_order_amount, d_for_orders_below_min_order_amount FROM $sql_tbl[manufacturers] WHERE manufacturerid='" . $product_info["manufacturerid"] . "'");
-    $d_minimum_order_amount_in_us = $manuf_info_arr["d_minimum_order_amount_in_us"];
-    $d_minimum_order_amount = $manuf_info_arr["d_minimum_order_amount"];
-    $d_for_orders_below_min_order_amount = $manuf_info_arr["d_for_orders_below_min_order_amount"];
+    $d_minimum_order_amount_in_us = $oManufacturer->d_minimum_order_amount_in_us;
+    $d_minimum_order_amount = $oManufacturer->d_minimum_order_amount;
+    $d_for_orders_below_min_order_amount = $oManufacturer->d_for_orders_below_min_order_amount;
 
     if ($d_minimum_order_amount_in_us != "0.00" && $d_minimum_order_amount == "applies_to_all_orders" && $d_for_orders_below_min_order_amount == "are_rejected") {
 
