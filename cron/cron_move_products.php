@@ -37,7 +37,6 @@ foreach ($models as $model){
     if ($product_model->isGroupRoot() || $product_model->isGroupChild()){
         if (!ProductsToMoveHelper::isValidGroupProduct($product_model->group_root, $model)) {
             $model->delete();
-            echo "It's not valid group product for move to new sf {$product_model->group_root}";
             continue;
         } else {
             /** @var ProductModel $group_product */
