@@ -187,8 +187,8 @@ class CacheMiddleware extends Middleware
     private function setCacheHeaders($modTime, $lifeTime, $etag)
     {
         if (!headers_sent()) {
-            header("Last-Modified: {$modTime} GMT");
-            header("Cache-Control: max-age={$lifeTime}");
+//            header("Last-Modified: {$modTime} GMT");
+//            header("Cache-Control: max-age={$lifeTime}");
             header("ETag: \"{$etag}\"");
         }
     }
