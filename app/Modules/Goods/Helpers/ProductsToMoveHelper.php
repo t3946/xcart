@@ -178,49 +178,81 @@ class ProductsToMoveHelper
 
     public static function processingCategoriesToNewSf($product_categories_models, $sfid, $batch_id)
     {
+        $count = count($product_categories_models);
+
+        if ($count > 1 ){
+            $number_of_last_category = $count - 1;
+        }
+        else {
+            $number_of_last_category = 0;
+        }
+
+
         /** @var ProductCategoriesModel $product_categories_model */
         foreach ($product_categories_models as $product_categories_model) {
 
-            $ancestors_categories = CategoryModel::objects($product_categories_model->category)->ancestors(true)->all();
-            $ancestors_categories = array_reverse($ancestors_categories);
+            /** @var CategoryModel $category_model */
+            if ($category_model = $product_categories_model->category)
+            {
+                if ( $ancestors_categories = $category_model->getObjects()->ancestors(true)->order(['lft'])->all())
+                {
+                    $count = count($ancestors_categories);
+                    $parent_category = null;
+                    $parent_id = null;
+                    for($i = 0; $i < $count; $i++){
+                        $category = null;
 
-            $count = count($ancestors_categories);
-            $parent_category = null;
-            $parent_id = null;
-            for($i = 0; $i < $count; $i++){
+                        /** @var CategoryModel $model */
+//                        $model = $ancestors_categories[$i];
+//
+//                        $clone = clone $model;
+//                        $clone->categoryid = null;
+//                        $clone->root = null;
+//                        $clone->lft = null;
+//                        $clone->rgt = null;
+//                        $clone->level = null;
+//                        $clone->parent_id = $parent_id;
+////
+//                        $clone->save();
+//
+//                        $parent_id = $clone->pk;
 
-                $category = null;
 
-                if ($i == 0){
-                    $parent_category = CategoryModel::objects()
-                                                    ->get(['category' => $ancestors_categories[0]->category, 'parentid' => 0, 'storefrontid' => $sfid])
-                                                    ?: (new CategoryModel(['category' => $ancestors_categories[0]->category, 'storefrontid' => $sfid]));
+                        if ($i == 0){
+                            $parent_category = CategoryModel::objects()
+                                                            ->get(['category' => $ancestors_categories[0]->category, 'parentid' => 0, 'storefrontid' => $sfid])
+                                ?: (new CategoryModel(['category' => $ancestors_categories[0]->category, 'storefrontid' => $sfid]));
 
-                    $parent_category->save();
-                    $parent_id = $parent_category->categoryid;
-                }
-                else {
-                    $category = CategoryModel::objects()
-                                             ->get(['parentid' => $parent_id, 'category' => $ancestors_categories[ $i ]->category, 'storefrontid' => $sfid])
-                                             ? : (new CategoryModel(['parentid' => $parent_id, 'category' => $ancestors_categories[ $i ]->category, 'storefrontid' => $sfid]));
-                    $category->save();
-                    $parent_id = $category->categoryid;
+                            $parent_category->save();
+                            $parent_id = $parent_category->categoryid;
+                        }
+                        else {
+
+
+                            $category = CategoryModel::objects()->getOrCreate([
+                                'parentid' => $parent_id,
+                                'category' => $ancestors_categories[ $i ]->category,
+                                'storefrontid' => $sfid
+                            ]);
+                            $parent_id = $category->categoryid;
+                        }
+                    }
+
+
+                    /** @var ProductsSfMovesModel $products_sf_moves_model */
+                    $products_sf_moves_model = ProductsSfMovesModel::objects()->getOrNew(['batch_id' => $batch_id,
+                                                                                          'productid' => $product_categories_model->productid,
+                                                                                          'resource_id' => $product_categories_model->categoryid,
+                                                                                          'resource_type' => 'CS',
+                                                                                          'resource_extra_value' => $product_categories_model->main,]);
+                    if ($products_sf_moves_model[1]) {
+                        $products_sf_moves_model[0]->save();
+                    }
+
+                    $product_categories_model->categoryid = $parent_id;
+                    $product_categories_model->save();
                 }
             }
-
-
-            /** @var ProductsSfMovesModel $products_sf_moves_model */
-            $products_sf_moves_model = ProductsSfMovesModel::objects()->getOrNew(['batch_id' => $batch_id,
-                                                                                   'productid' => $product_categories_model->productid,
-                                                                                   'resource_id' => $product_categories_model->categoryid,
-                                                                                   'resource_type' => 'CS',
-                                                                                   'resource_extra_value' => $product_categories_model->main,]);
-            if ($products_sf_moves_model[1]) {
-                $products_sf_moves_model[0]->save();
-            }
-
-            $product_categories_model->categoryid = $parent_id;
-            $product_categories_model->update(['categoryid']);
 
         }
     }
