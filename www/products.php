@@ -35,13 +35,14 @@
 #
 # Navigation code
 #
+use Modules\Core\Components\Profiler;
 use Modules\Goods\Models\ProductModel;
 
 if (!defined('XCART_START')) {
     header("Location: home.php");
     die("Access denied");
 }
-
+Profiler::getInstance()->addPoint();
 define('META_DATA_PARAM', 5);
 
 if ($config["General"]["disable_outofstock_products"] == "Y") {
@@ -56,7 +57,7 @@ if ($config["General"]["disable_outofstock_products"] == "Y") {
         $smarty->assign("subcategories", $subcategories);
     }
 }
-
+Profiler::getInstance()->addPoint();
 if ($active_modules["Advanced_Statistics"] && !defined("IS_ROBOT"))
     include $xcart_dir . "/modules/Advanced_Statistics/cat_viewed.php";
 
@@ -74,11 +75,13 @@ $search_data["products"]["search_in_subcategories"] = "";
 $search_data["products"]["category_extra"] = "Y";
 $search_data["products"]["forsale"] = "Y";
 $search_data["products"]['group_root'] = true;
-
+Profiler::getInstance()->addPoint();
 
 
 if (!empty($active_modules['CIDEV_Best_Search_Filter'])) {
     include $xcart_dir . "/modules/CIDEV_Best_Search_Filter/filter_init.php";
+
+    Profiler::getInstance()->addPoint();
 
     if (!empty($subcategories) && is_array($subcategories)) {
 
@@ -107,6 +110,7 @@ if (!empty($active_modules['CIDEV_Best_Search_Filter'])) {
         $smarty->assign("cidev_subcategories_products_count", $cidev_subcategories_products_count);
     }
 }
+Profiler::getInstance()->addPoint();
 
 if (is_array($current_category)) {
     if (is_array($products)) {
@@ -144,7 +148,7 @@ if (is_array($current_category)) {
 
     $current_category['meta_descr'] = trim(strip_tags($current_category['category'] . ': ' . $meta_descr));
 }
-
+Profiler::getInstance()->addPoint();
 $search_data["products"] = $old_search_data;
 $mode = $old_mode;
 
@@ -158,7 +162,7 @@ if ($products && is_array($products)) {
         return $a;
     }, $products);
 }
-
+Profiler::getInstance()->addPoint();
 $smarty->assign("products", $products);
 
 if (!empty($cidev_orig_dispatched_request)) {
@@ -177,6 +181,6 @@ $cidev_navigation_script = $cidev_script . ($_GET["sort"] ? "&sort=" . $sort : "
 if (strpos($cidev_navigation_script, "?&") !== false)
     $cidev_navigation_script = str_replace("?&", "?", $cidev_navigation_script);
 
-
+Profiler::getInstance()->addPoint();
 $smarty->assign("cidev_filter_mode", 'load_more_products');
 $smarty->assign("navigation_script", $cidev_navigation_script);

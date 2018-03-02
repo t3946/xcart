@@ -2,6 +2,7 @@
 
 use Modules\Core\Helpers\CoreHelper;
 use Modules\GeoIp\Helpers\GeoIpHelper;
+use Modules\Goods\Models\ProductModel;
 
 #
 # Use this function to load code of functions on demand (include/func/func.*.php)
@@ -650,10 +651,22 @@ function func_qs_combine($arr, $qappend = true)
     return ($qappend ? '?' : '') . join("&amp;", $qs);
 }
 
+function func_display_cached($tpl, $cache_id = null, $cache_lifetime = true)
+{
+    $templater = Templater::getInstance();
+
+    if ($cache_id) {
+        $templater->caching = 2;
+        $templater->cache_lifetime = is_numeric($cache_lifetime) ? $cache_lifetime : \Modules\Core\Helpers\Cache::CACHE_HOUR;
+    }
+
+    return func_display($tpl, $templater, true, $cache_id);
+}
+
 #
 # Smarty->display wrapper
 #
-function func_display($tpl, &$templater, $to_display = true)
+function func_display($tpl, &$templater, $to_display = true, $cache_id = null)
 {
     global $config;
     global $predefined_lng_variables, $override_lng_code, $shop_language, $user_agent, $__smarty_time, $__smarty_size;
@@ -720,11 +733,11 @@ function func_display($tpl, &$templater, $to_display = true)
     }
 
     if ($to_display == true) {
-        $templater->display($tpl);
+        $templater->display($tpl, $cache_id);
         $ret = "";
     }
     else {
-        $ret = $templater->fetch($tpl);
+        $ret = $templater->fetch($tpl, $cache_id);
     }
 
     __add_mark_smarty($tpl);
@@ -3317,23 +3330,26 @@ function func_backprocess_log($process_id = "", $log_text = "")
 
 function func_product_availability($productid = false, $product = false)
 {
+    /** @var \Xcart\Product $model */
+    $model = null;
 
     $availability = "out of stock";
-    if ($productid == false && $product == false) {
-        return $availability;
+
+    if ($product && is_object($product)) {
+        $model = $product;
     }
 
-    if (!empty($productid) || (!empty($product) && is_array($product))) {
+    if (!$model) {
+        if ($product && is_array($product)) {
+            $productid = $product['productid'];
+        }
 
-        if (empty($productid)) {
-            if (!empty($product)) {
-                $productid = $product['productid'];
-            }
-        }
-        $oProduct = \Xcart\Product::model(['productid' => $productid]);
-        if ($oProduct->getProductId() && !$oProduct->isProductOutOfStock()) {
-            $availability = "in stock";
-        }
+        $model = ProductModel::objects()->get(['pk' => $productid]);
+    }
+
+
+    if ($model && !$model->isProductOutOfStock()) {
+        $availability = "in stock";
     }
 
     return $availability;

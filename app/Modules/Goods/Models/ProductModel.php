@@ -29,6 +29,7 @@ use Xcart\App\Orm\Fields\ManyToManyField;
 use Xcart\App\Orm\Fields\UnixTimestampField;
 use Xcart\App\Orm\Model;
 use Xcart\App\Traits\DataModelTrait;
+use Xcart\App\Traits\SlugifyTrait;
 use Xcart\Product;
 
 /**
@@ -71,7 +72,7 @@ class ProductModel extends Model implements ICartItem
 {
     const ADMIN_PRODUCT_MODIFY_URL = '/admin/product_modify.php?productid=%d&sf=%d';
 
-    use DataModelTrait, AutoMetaTrait;
+    use DataModelTrait, AutoMetaTrait, SlugifyTrait;
 
     public static function getDataModelClass()
     {
@@ -313,12 +314,13 @@ class ProductModel extends Model implements ICartItem
 
     public function getMPN()
     {
-        $sMPN = null;
         $model = $this->distributor;
+
         if (strpos($this->productcode, $model->code) == 0) {
-            $sMPN = preg_replace("/^(" . $model->code . "-)/i", "", $this->productcode);
+            return substr($this->productcode, strlen($model->code)+1 );
         }
-        return $sMPN;
+
+        return null;
     }
 
     public function isGroupRoot()
@@ -401,7 +403,8 @@ class ProductModel extends Model implements ICartItem
     public function getAbsoluteUrl($full = false)
     {
         if ($this->productid) {
-            $url = Xcart::app()->router->url('catalog:product:view', ['id' => $this->pk, 'slug' => $this->clean_url ? $this->clean_url->getSlugPart(): '']);
+//            $url = Xcart::app()->router->url('catalog:product:view', ['id' => $this->pk, 'slug' => $this->clean_url ? $this->clean_url->getSlugPart(): '']);
+            $url = Xcart::app()->router->url('catalog:product:view', ['id' => $this->pk, 'slug' => $this->createSlug($this->product)]);
 
             if ($full) {
                 $site = $this->sites->limit(1)->get();

@@ -30,6 +30,7 @@
  * +-----------------------------------------------------------------------------+
  * \*****************************************************************************/
 
+use Modules\Core\Components\Profiler;
 use Xcart\Product;
 
 x_load('product');
@@ -38,6 +39,8 @@ if (!defined('XCART_SESSION_START')) {
     header("Location: ../");
     die("Access denied");
 }
+
+Profiler::getInstance()->start('search.php');
 
 x_session_register('bulk_search_query');
 x_session_register('bulk_search_query_ids');
@@ -2158,3 +2161,5 @@ if ($source != 'XML_Sitemap') {
         func_header_location('product_modify.php?productid=' . $products[0]['productid'] . '&switch_sf=true');
     }
 }
+
+Profiler::getInstance()->stop('search.php');
