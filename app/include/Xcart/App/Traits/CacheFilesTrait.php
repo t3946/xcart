@@ -9,6 +9,8 @@ trait CacheFilesTrait
 
     public $extension = '.cache';
 
+    public $keySerialization = true;
+
     public $gcProbability = 10;
 
     public $directoryLevel = 1;
@@ -31,13 +33,14 @@ trait CacheFilesTrait
 
     public function get($key, $default = null)
     {
-        $value = $this->getValue($key);
+        $value = $this->getValue($this->buildKey($key));
         return is_null($value) ? $default : $this->unserialize($value);
     }
 
     protected function getValue($key)
     {
         $filePath = $this->getFileName($key);
+
         if (is_file($filePath) && @filemtime($filePath) > time()) {
             $fp = @fopen($filePath, 'r');
             if ($fp !== false) {
@@ -55,6 +58,7 @@ trait CacheFilesTrait
     {
         $this->gc();
         $cacheFile = $this->getFileName($key);
+
         if ($this->directoryLevel > 0) {
             $dir = dirname($cacheFile);
             if (!is_dir($dir)) {
@@ -77,7 +81,7 @@ trait CacheFilesTrait
             $base = '';
             for ($i = 0; $i < $this->directoryLevel; ++$i) {
                 if (($prefix = substr($key, $i + $i, 2)) !== false) {
-                    $base .= DIRECTORY_SEPARATOR . $prefix;
+                    $base .= DIRECTORY_SEPARATOR . $prefix . DIRECTORY_SEPARATOR;
                 }
             }
             $filePath = $base . $filePath;
@@ -118,7 +122,8 @@ trait CacheFilesTrait
         if (!is_string($key)) {
             $key = serialize($key);
         }
-        return $this->prefix . md5($key);
+
+        return $this->prefix . $this->keySerialization ? md5($key) : $key;
     }
 
     protected function setExpirationTime($fullPath, $timeout)

@@ -117,6 +117,13 @@ return array_replace_recursive([
                'memory' =>  [
                    'class' => '\\Xcart\\App\\Cache\\Drivers\\Memory',
                    'numCacheQuery' => 30,
+               ],
+               'html' =>  [
+                   'class' => '\\Xcart\\App\\Cache\\Drivers\\File',
+                   'extension' => '.html',
+                   'path' => 'root.html_cache',
+//                   'keySerialization' => false,
+                   'directoryLevel' => 2
                ]
            ]
        ] : [ //PRODUCTION CACHE
@@ -124,6 +131,11 @@ return array_replace_recursive([
            'drivers' => [
                'default' =>  [
                    'class' => '\Xcart\App\Cache\Drivers\Redis',
+               ],
+               'html' =>  [
+                   'class' => '\\Xcart\\App\\Cache\\Drivers\\File',
+                   'extension' => '.html',
+                   'path' => 'root.html_cache'
                ],
            ]
        ],

@@ -6,6 +6,9 @@ return [
 //               'AutoCacheMiddleware' => [
 //                   'class' => '\\Modules\\Core\\Middleware\\CacheMiddleware',
 //               ],
+    'static_cache' => [
+        'class' => '\\Modules\\Core\\Middleware\\CacheMiddleware'
+    ],
     'CurrentSiteMiddleware' => [
         'class' => '\\Modules\\Sites\\Middleware\\CurrentSiteMiddleware',
     ],

@@ -34,11 +34,6 @@ foreach ($models as $model){
     /** @var ProductModel $product_model */
     $product_model = ProductModel::objects()->get(['productid' => $model->resourceid]);
 
-    if (!ProductsToMoveHelper::isNeedToTransferProduct($model->resourceid)){
-        $model->delete();
-        continue;
-    }
-
     if ($product_model->isGroupRoot() || $product_model->isGroupChild()){
         if (!ProductsToMoveHelper::isValidGroupProduct($product_model->group_root, $model)) {
             $model->delete();
