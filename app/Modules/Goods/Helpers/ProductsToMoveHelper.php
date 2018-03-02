@@ -111,7 +111,7 @@ class ProductsToMoveHelper
 
     public static function isValidGroupProduct($group_productid, $queue_model)
     {
-        $flag = false;
+        $flag = true;
 
         /** @var ProductModel $product_model */
         $product_model = ProductModel::objects()->get(['productid' => $group_productid]);
