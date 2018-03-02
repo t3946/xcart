@@ -132,8 +132,6 @@ class CacheMiddleware extends Middleware
             if (strpos($request->getPath(), 'product') !== false &&  preg_match("/\/product\/(\d+)\/.*/", $request->getPath(), $match)) {
                 $key = 'product-' . $match[1];
 
-                $content = Xcart::app()->cache->getDriver($this->cacheDriver)->get($key);
-
                 $detector = new MobileDetect();
 
                 if ($detector->isMobile() || $detector->isTablet()) {
@@ -143,6 +141,8 @@ class CacheMiddleware extends Middleware
                 if (Xcart::app()->request->getIsAjax()) {
                     $key .= '-ajax';
                 }
+
+                $content = Xcart::app()->cache->getDriver($this->cacheDriver)->get($key);
 
                 return [Cache::CACHE_YEAR, $key, $content];
             }
