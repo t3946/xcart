@@ -18,14 +18,14 @@ $records = db_query("select t.* from xcart_cidev_updated_products t where t.`typ
 $guzzle = new \GuzzleHttp\Client();
 
 while ($record = db_fetch_array($records)) {
+    $key = 'product-' . $record['resourceid'];
+
+    Xcart::app()->cache->getDriver('html')->set($key, null, 1);
+    Xcart::app()->cache->getDriver('html')->set($key . '-mobile', null, 1);
+    Xcart::app()->cache->getDriver('html')->set($key . '-mobile-ajax', null, 1)
+
     /** @var ProductModel $model */
     if ($model = ProductModel::objects()->get(['pk' => $record['resourceid']])) {
-        $key = 'product-' . $model->pk;
-
-        Xcart::app()->cache->getDriver('html')->set($key, null, 1);
-        Xcart::app()->cache->getDriver('html')->set($key . '-mobile', null, 1);
-        Xcart::app()->cache->getDriver('html')->set($key . '-mobile-ajax', null, 1);
-
         foreach ($model->sites as $site) {
             /** @var SiteModel $site */
 
