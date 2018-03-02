@@ -39,4 +39,15 @@ while ($record = db_fetch_array($records)) {
 
     db_query("DELETE FROM xcart_cidev_updated_products WHERE resourceid='{$record['resourceid']}' and time_stamp='{$record['time_stamp']}' and type='10' ");
 }
-db_free_result($records);
+
+if (rand(1, 7) > 5) {
+    foreach (SiteModel::objects()->all() as $model) {
+        /** @var SiteModel $model */
+
+        $ssl = ($site->getConfig()['https_enabled'] == 'Y');
+        $url = ($ssl ? 'http' : 'https') . '://' . $site->domain;
+
+        $guzzle->get($url, ['headers' => ['User-Agent' => $desktop_user_agent]]);
+        $guzzle->get($url, ['headers' => ['User-Agent' => $mobile_user_agent]]);
+    }
+}
