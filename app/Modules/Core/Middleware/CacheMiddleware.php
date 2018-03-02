@@ -149,7 +149,7 @@ class CacheMiddleware extends Middleware
 
                 $content = Xcart::app()->cache->getDriver($this->cacheDriver)->get($key);
 
-                return [Cache::CACHE_HALF_DAY, $key, $content];
+                return [Cache::CACHE_HOUR * 3, $key, $content];
             }
 
             if (strpos($request->getPath(), 'product') !== false &&  preg_match("/\/product\/(\d+)\/.*/", $request->getPath(), $match)) {
