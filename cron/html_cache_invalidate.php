@@ -13,7 +13,7 @@ $desktop_user_agent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_3) AppleWebK
 $mobile_user_agent  = 'Mozilla/5.0 (Linux; Android 6.0.1; SM-G920V Build/MMB29K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.98 Mobile Safari/537.36';
 
 
-$records = db_query("select t.* from xcart_cidev_updated_products t where t.`type` = 10 limit 200");
+$records = db_query("select t.* from xcart_cidev_updated_products t where t.`type` = 10 ORDER BY t.time_stamp DESC limit 200");
 
 $guzzle = new \GuzzleHttp\Client();
 
