@@ -80,6 +80,10 @@ class PaymentController extends Controller
     {
         $params = null;
 
+        /** @var \Modules\Core\CoreModule $coreModule */
+        $coreModule = Xcart::app()->getModule('Core');
+        $config = $coreModule::getGlobalConfig();
+
         if ($bodyReceived = file_get_contents('php://input')) {
 
             if ($params = json_decode($bodyReceived, true)) {
@@ -90,14 +94,27 @@ class PaymentController extends Controller
 
                         if ($txn = OrderTransactionModel::objects()->get(['transaction_id' => $params['buyer_transaction_id']])) {
 
-                            /** @var \Modules\Core\CoreModule $coreModule */
-                            $coreModule = Xcart::app()->getModule('Core');
-                            $config = $coreModule::getGlobalConfig();
-
                             OrderTagEventHelper::orderTagEvent($config['Attention_tags_invoices']['tag_for_events_dispute_created'], $txn->order->orderid);
                         }
 
                         break;
+                }
+            }
+        }
+
+        if (!$params) {
+
+            if (Xcart::app()->request->request->has('txn_type') && Xcart::app()->request->request->has('txn_id')) {
+
+                if ($txn = OrderTransactionModel::objects()->get(['transaction_id' => Xcart::app()->request->request->get('txn_id')])) {
+
+                    switch (Xcart::app()->request->request->get('txn_type')) {
+                        case 'new_case':
+
+                            OrderTagEventHelper::orderTagEvent($config['Attention_tags_invoices']['tag_for_events_dispute_created'], $txn->order->orderid);
+
+                            break;
+                    }
                 }
             }
         }

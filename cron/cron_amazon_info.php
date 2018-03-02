@@ -29,19 +29,19 @@ $param_reports = [
 if (isset($argv) && is_array($argv) && !empty($argv[1])) {
     $p_arg = $argv[1];
     $log = LOG_CATEGORY.'_'.$p_arg;
-    if ($config[$log] == "Y") {
-        $oMail = \Xcart\App\Main\Xcart::app()->oldMail;
-        $oMail->to = 'team@s3stores.com';
-        $oMail->from = 'team@s3stores.com';
-        $oMail->subject = sprintf('Attention! Xcart cron %s Already launched', $log);
-        $oMail->body = $log . ' already launched';
-        $oMail->sendEmail();
-        if (!isset($argv) || (isset($argv) && !in_array('--force-flag', $argv))) {
-            die("Already launched"); // ################################
-        }
-    }
-    db_query_param(/** @lang MySQL */
-        "REPLACE xcart_config SET value='Y', name=:name", ['name' => $log]);
+//    if ($config[$log] == "Y") {
+//        $oMail = \Xcart\App\Main\Xcart::app()->oldMail;
+//        $oMail->to = 'team@s3stores.com';
+//        $oMail->from = 'team@s3stores.com';
+//        $oMail->subject = sprintf('Attention! Xcart cron %s Already launched', $log);
+//        $oMail->body = $log . ' already launched';
+//        $oMail->sendEmail();
+//        if (!isset($argv) || (isset($argv) && !in_array('--force-flag', $argv))) {
+//            die("Already launched"); // ################################
+//        }
+//    }
+//    db_query_param(/** @lang MySQL */
+//        "REPLACE xcart_config SET value='Y', name=:name", ['name' => $log]);
 
     $counter_received = [];
     $counter_send = 0;
@@ -256,7 +256,7 @@ if (isset($argv) && is_array($argv) && !empty($argv[1])) {
             break;
     }
 
-    Xcart\Config::model(['name' => $log])->setValue('N')->_update();
+//    Xcart\Config::model(['name' => $log])->setValue('N')->_update();
     $str_time = (new DateTime('now'))->diff($start_time)->format('%H:%I:%S');
     $log_text = "Cron {$log} completed. Processing time: {$str_time}";
 
