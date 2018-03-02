@@ -28,13 +28,11 @@ class CacheMiddleware extends Middleware
             $params = $params ?: $this->getAdvancedDetector($request);
 //            $params = $params ?: $this->getDetector($request);
 
-//            d($params);
-
             if ($params) {
                 $this->params = $params;
                 [$cacheTime, $key, $a_output] = $params;
 
-                if ($a_output) {
+                if ($a_output && !$request->get->has('no_cache')) {
                     list($output, $headers, $etag, $modTime) = $a_output;
 
                     if ($request->getHeaderValue('IF_NONE_MATCH') == "\"{$etag}\"") {
@@ -131,12 +129,30 @@ class CacheMiddleware extends Middleware
         /** @var HttpRequest $request */
 
         if (!$request->getIsAjax()) {
+            $detector = new MobileDetect();
+
+            $isMobile = false;
+
+            if ($detector->isMobile() || $detector->isTablet()) {
+                $isMobile = true;
+            }
+
+            if ( in_array($request->getPath(),['', '/', '/home.php'])) {
+                $key = 'home-'. $request->getHostInfo() . '-' . rand(1, 10);
+
+                if ($isMobile) {
+                    $key .= '-mobile';
+                }
+
+                $content = Xcart::app()->cache->getDriver($this->cacheDriver)->get($key);
+
+                return [Cache::CACHE_HALF_DAY, $key, $content];
+            }
+
             if (strpos($request->getPath(), 'product') !== false &&  preg_match("/\/product\/(\d+)\/.*/", $request->getPath(), $match)) {
                 $key = 'product-' . $match[1];
 
-                $detector = new MobileDetect();
-
-                if ($detector->isMobile() || $detector->isTablet()) {
+                if ($isMobile) {
                     $key .= '-mobile';
                 }
 
