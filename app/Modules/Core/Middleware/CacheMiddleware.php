@@ -2,6 +2,7 @@
 
 namespace Modules\Core\Middleware;
 
+use Detection\MobileDetect;
 use Modules\Core\Helpers\Cache;
 use Xcart\App\Cli\Cli;
 use Xcart\App\Controller\FrontendController;
@@ -133,7 +134,15 @@ class CacheMiddleware extends Middleware
 
                 $content = Xcart::app()->cache->getDriver($this->cacheDriver)->get($key);
 
-                return [Cache::CACHE_YEAR, 'product-' . $match[1], $content];
+                if (Xcart::app()->request->getIsAjax()) {
+                    $key .= '-ajax';
+                }
+
+                if ((new MobileDetect())->isMobile()) {
+                    $key .= '-mobile';
+                }
+
+                return [Cache::CACHE_YEAR, $key, $content];
             }
         }
 

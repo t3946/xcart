@@ -29,7 +29,7 @@ bower_components
 /www/skin1_kolin/pages/
 /app/runtime/
 /log/
-/html/
+/html_cache/
 
 !.gitkeep
 !/skin1_kolin/
