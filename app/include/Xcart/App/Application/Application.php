@@ -219,6 +219,10 @@ class Application
 
     public function end($status = 0, $response = null, $force = false)
     {
+        if ($this->hasComponent('middleware')) {
+            $this->middleware->processEnd($this->request);
+        }
+
         $this->_provideModuleEvent('onApplicationEnd', [$status, $response]);
 
         $this->event->trigger('app:end');

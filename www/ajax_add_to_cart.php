@@ -1,4 +1,5 @@
 <?php
+define('SET_EXPIRE', 1);
 
 require "./auth.php";
 
@@ -43,13 +44,11 @@ if (!empty($action)) {
 		$add_product['price'] = abs(doubleval($price));
 		$add_product['catalog_price'] = ($catalog_price) ? price_format($catalog_price) : null;
 
-###
 		if ($mult_order_quantity == "Y" && $min_amount > 1){
 			$ceil_amount = $add_product['amount'] / $min_amount;
 			$ceil_amount = ceil($ceil_amount);
 			$add_product['amount'] = $ceil_amount*$min_amount;
 		}
-###
 
 		#
 		# Add to cart
@@ -106,38 +105,39 @@ if (!empty($action)) {
         if($_POST['relocate_to_cart'] == "Yes"){
             \Xcart\App\Main\Xcart::app()->request->redirect("/cart.php");
         }
-
-		#
-		# Update minicart
-		#
-		include $xcart_dir . '/minicart.php';
-		
-		$smarty->assign('cart', $cart);
-		$display = 'customer/menu_cart.tpl';
-		$return['display'] = func_display($display, $smarty, false);
-		if ($ajax_error == 'Y') {
-			$return['error'] = 'Y';
-		}
-		if ($ajax_redirect) {
-			$return['redirect'] = $ajax_redirect;
-		}
-		x_session_unregister('ajax_error');
-		x_session_unregister('ajax_redirect');
-		x_session_unregister('ajax_mode');
-
-		if (!isset($return['error'])) {
-			$return['error'] = 'N';
-		}
-		if (!isset($return['redirect'])) {
-			$return['redirect'] = '';
-		}
-
-		if (!isset($is_group)) {
-            $ajax_result = func_json_encode($return);
-            header('Content-Type: application/json; charset=utf-8');
-
-            echo $ajax_result;
-            exit;
-        }
 	}
+}
+
+
+#
+# Update minicart
+#
+include $xcart_dir . '/minicart.php';
+
+$smarty->assign('cart', $cart);
+$display = 'customer/menu_cart.tpl';
+$return['display'] = func_display($display, $smarty, false);
+if ($ajax_error == 'Y') {
+    $return['error'] = 'Y';
+}
+if ($ajax_redirect) {
+    $return['redirect'] = $ajax_redirect;
+}
+x_session_unregister('ajax_error');
+x_session_unregister('ajax_redirect');
+x_session_unregister('ajax_mode');
+
+if (!isset($return['error'])) {
+    $return['error'] = 'N';
+}
+if (!isset($return['redirect'])) {
+    $return['redirect'] = '';
+}
+
+if (!isset($is_group)) {
+    $ajax_result = func_json_encode($return);
+    header('Content-Type: application/json; charset=utf-8');
+
+    echo $ajax_result;
+    exit;
 }
