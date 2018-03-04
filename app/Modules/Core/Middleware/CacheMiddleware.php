@@ -136,7 +136,7 @@ class CacheMiddleware extends Middleware
 
             $isMobile = false;
 
-            if ( ($detector->isMobile() || $detector->isTablet()) && Xcart::app()->request->session->get('mobile_view_trigger') == 'common' ) {
+            if ( ($detector->isMobile() || $detector->isTablet()) && Xcart::app()->request->session->get('mobile_view_trigger') != 'common' ) {
                 $isMobile = true;
             }
 
