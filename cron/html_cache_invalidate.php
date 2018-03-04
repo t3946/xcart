@@ -44,10 +44,12 @@ if (rand(1, 7) > 5) {
     foreach (SiteModel::objects()->all() as $site) {
         /** @var SiteModel $model */
 
-        $ssl = ($site->getConfig()['https_enabled'] == 'Y');
-        $url = ($ssl ? 'http' : 'https') . '://' . $site->domain;
+        if ($site->isWork()) {
+            $ssl = ($site->getConfig()['https_enabled'] == 'Y');
+            $url = ($ssl ? 'http' : 'https') . '://' . $site->domain;
 
-        $guzzle->get($url, ['headers' => ['User-Agent' => $desktop_user_agent]]);
-        $guzzle->get($url, ['headers' => ['User-Agent' => $mobile_user_agent]]);
+            $guzzle->get($url, ['headers' => ['User-Agent' => $desktop_user_agent]]);
+            $guzzle->get($url, ['headers' => ['User-Agent' => $mobile_user_agent]]);
+        }
     }
 }
