@@ -140,7 +140,7 @@ class CacheMiddleware extends Middleware
                 $isMobile = true;
             }
 
-            if ( empty($request->getQueryArray()) && in_array($request->getPath(),['', '/', '/home.php'])) {
+            if ( !$request->getIsPost() && empty($request->getQueryArray()) && in_array($request->getPath(),['', '/', '/home.php'])) {
                 $key = 'home-'. $request->getHost() . '-' . rand(1, 10);
 
                 if ($isMobile) {
