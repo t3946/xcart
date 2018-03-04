@@ -30,7 +30,7 @@ while ($record = db_fetch_array($records)) {
             /** @var SiteModel $site */
 
             $ssl = ($site->getConfig()['https_enabled'] == 'Y');
-            $url = ($ssl ? 'http' : 'https') . '://' . $site->domain  . $model->getAbsoluteUrl();
+            $url = ($ssl ? 'https' : 'http') . '://' . $site->domain  . $model->getAbsoluteUrl();
 
             $guzzle->get($url, ['headers' => ['User-Agent' => $desktop_user_agent]]);
             $guzzle->get($url, ['headers' => ['User-Agent' => $mobile_user_agent]]);
@@ -46,7 +46,7 @@ if (rand(1, 7) > 5) {
 
         if ($site->isWork()) {
             $ssl = ($site->getConfig()['https_enabled'] == 'Y');
-            $url = ($ssl ? 'http' : 'https') . '://' . $site->domain;
+            $url = ($ssl ? 'https' : 'http') . '://' . $site->domain;
 
             $guzzle->get($url, ['headers' => ['User-Agent' => $desktop_user_agent]]);
             $guzzle->get($url, ['headers' => ['User-Agent' => $mobile_user_agent]]);
