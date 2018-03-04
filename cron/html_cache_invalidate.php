@@ -41,7 +41,7 @@ while ($record = db_fetch_array($records)) {
 }
 
 if (rand(1, 7) > 5) {
-    foreach (SiteModel::objects()->all() as $model) {
+    foreach (SiteModel::objects()->all() as $site) {
         /** @var SiteModel $model */
 
         $ssl = ($site->getConfig()['https_enabled'] == 'Y');
