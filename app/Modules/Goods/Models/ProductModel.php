@@ -136,6 +136,11 @@ class ProductModel extends Model implements ICartItem
                 'link' => ['productid' => 'resource_id'],
                 'extra' => ['resource_type' => 'P'],
             ],
+            'sf_moves' => [
+                'class' => HasManyField::class,
+                'modelClass' => ProductsSfMovesModel::class,
+                'link' => ['productid' => 'productid'],
+            ],
 
 
 

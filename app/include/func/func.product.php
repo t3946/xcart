@@ -8,7 +8,9 @@
 #       cost_to_us      DECIMAL
 #       price   DECIMAL    price corrected with min_amount quantity
 use Modules\Core\Components\Profiler;
+use Modules\Goods\Models\CategoryModel;
 use Modules\Goods\Models\ProductModel;
+use Modules\Goods\Models\ProductsSfMovesModel;
 
 /**
  * @deprecated
@@ -781,6 +783,16 @@ SQL
                 return false;
             }
             else {
+
+                if ($oProduct && $mv_resource = $oProduct->sf_moves->filter(['resource_type' => ProductsSfMovesModel::RESOURCE_TYPE_CATEGORY])->order(['-batch_id'])->limit(1)->get()) {
+                        /** @var CategoryModel $mv_category */
+                        if ($mv_category = CategoryModel::objects()->get(['pk' => $mv_resource->resource_id])) {
+                            if ($mv_category = $mv_category->getObjects()->ancestors(true)->filter(['avail' => 'Y'])->limit(1)->get()) {
+                                \Xcart\App\Main\Xcart::app()->request->redirect($mv_category->getAbsoluteUrl());
+                            }
+                        }
+                    }
+
                 func_header_location("error_message.php?access_denied&id=33");
             }
         }
