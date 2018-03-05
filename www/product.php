@@ -171,8 +171,9 @@ if (!empty($active_modules["Product_Options"]))
 if (!empty($active_modules["Advanced_Statistics"]) && !defined("IS_ROBOT"))
     include $xcart_dir . "/modules/Advanced_Statistics/prod_viewed.php";
 
-if ($active_modules["Brands"])
-    include $xcart_dir . "/modules/Brands/customer_brands.php";
+if ($active_modules["Brands"]) {
+    //include $xcart_dir . "/modules/Brands/customer_brands.php";
+}
 else
     if ($active_modules["Manufacturers"])
         include $xcart_dir . "/modules/Manufacturers/customer_manufacturers.php";
@@ -398,7 +399,7 @@ $product_tabs[0]["title"] = "Product description";
 $product_tabs[0]["tpl"] = "_product_description_";
 $product_tabs[0]["anchor"] = 0;
 
-if (!empty($brandid_brands_info[$product_info["brandid"]]["descr"])) {
+if (!empty($oProduct->brand->descr)) {
 
     $brand_image = func_image_properties("B", $product_info["brandid"]);
     if (!empty($brand_image["filename"])) {
