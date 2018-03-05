@@ -242,16 +242,27 @@ class MetaExtHelper
         return null;
     }
 
+    private function cleanup(array $strs)
+    {
+        foreach ($strs as $k => $str) {
+            $strs[$k] = str_replace("\n", '', $str);
+        }
+
+        return $strs;
+    }
+
     private function prepare(MetaTemplate $template): bool
     {
         try {
             $template->params = $this->_params;
 
+            ob_start();
             $this->_composed = [
-                'title' => $template->renderTitle(),
-                'description' => $template->renderDescription(),
-                'advanced' => $template->renderAdvanced(),
+                'title' => $this->cleanup([$template->renderTitle()])[0],
+                'description' => $this->cleanup([$template->renderDescription()])[0],
+                'advanced' => $this->cleanup($template->renderAdvanced()),
             ];
+            ob_end_clean();
         }
         catch (\Throwable $e) {
             Xcart::app()->logger->critical('Error in compose meta tags from template', [
