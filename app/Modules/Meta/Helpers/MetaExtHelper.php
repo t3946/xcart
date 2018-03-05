@@ -118,6 +118,15 @@ class MetaExtHelper
         $site = Xcart::app()->getModule('Sites')->getSite();
         $site_code = strtolower($site->code);
 
+        if ($list_config = $site->list_config) {
+            $site_name = $list_config->getName();
+        }
+        else {
+            $site_name = $site->getName();
+        }
+
+        $this->addParam('site_name', $site_name);
+
         $this->_params['site'] = $site;
 
         /** @var Meta $meta */
