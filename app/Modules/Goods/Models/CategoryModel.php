@@ -215,19 +215,18 @@ class CategoryModel extends TreeModel
             $this->categoryid_path = $parent->categoryid_path . '/' . $this->pk;
         }
 
-        if (!$isNew)
-        {
+        static::objects()->filter(['pk' => $this->pk])->update(['categoryid_path' => $this->categoryid_path]);
+
+        if (!$isNew) {
             /** @var static $owner */
             $old_parent = $owner->attributes->getOldAttribute('parentid');
 
             if ($old_parent != $this->parentid) {
-                static::objects()->filter(['pk' => $this->pk])->update(['categoryid_path' => $this->categoryid_path]);
-
                 $this->objects()
                     ->descendants()
                     ->getQuerySet()
                     ->update([
-                        'categoryid_path' => new Expression("CONCAT('{$this->categoryid_path}', SUBSTRING_INDEX(categoryid_path, {$owner->pk}, -1))")
+                        'categoryid_path' => new Expression("CONCAT('{$this->categoryid_path}', SUBSTRING_INDEX(categoryid_path, {$this->pk}, -1))")
                     ]);
             }
 
