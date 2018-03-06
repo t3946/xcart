@@ -62,11 +62,25 @@ foreach (getResource() as $record) {
             }
         }
     }
+}
 
+$sites = SiteModel::objects()->all();
+
+if (mt_rand(0, 10000) < 10) {
+    foreach ($sites as $site) {
+        /** @var SiteModel $model */
+
+        if ($site->isWork()) {
+            for($i = 1; $i < 11; $i++) {
+                Xcart::app()->cache->getDriver('html')->set('home-' . $site->domain. '-' . $i, null, 1);
+                Xcart::app()->cache->getDriver('html')->set('home-' . $site->domain. '-' . $i . '-mobile', null, 1);
+            }
+        }
+    }
 }
 
 if (rand(1, 7) > 5) {
-    foreach (SiteModel::objects()->all() as $site) {
+    foreach ($sites as $site) {
         /** @var SiteModel $model */
 
         if ($site->isWork()) {
