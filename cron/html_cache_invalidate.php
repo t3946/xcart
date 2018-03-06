@@ -68,7 +68,7 @@ $sites = SiteModel::objects()->all();
 
 if (mt_rand(0, 10000) < 10) {
     foreach ($sites as $site) {
-        /** @var SiteModel $model */
+        /** @var SiteModel $site */
 
         if ($site->isWork()) {
             for($i = 1; $i < 11; $i++) {
@@ -81,7 +81,7 @@ if (mt_rand(0, 10000) < 10) {
 
 if (rand(1, 7) > 5) {
     foreach ($sites as $site) {
-        /** @var SiteModel $model */
+        /** @var SiteModel $site */
 
         if ($site->isWork()) {
             $ssl = ($site->getConfig()['https_enabled'] == 'Y');
