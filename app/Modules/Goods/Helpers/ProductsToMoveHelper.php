@@ -209,6 +209,7 @@ class ProductsToMoveHelper
                                'parentid' => 0,
                                'storefrontid' => $sfid
                            ]);
+
                         }
                         else {
                             [$parent_category, $isNew] = CategoryModel::objects()->getOrCreate([
@@ -216,6 +217,12 @@ class ProductsToMoveHelper
                                'parentid' => $parent_id,
                                'storefrontid' => $sfid
                            ]);
+
+                        }
+
+                        if ($isNew){
+                            $clean_url = func_clean_url_autogenerate('C', $parent_category->categoryid, array('category' => $parent_category->category));
+                            func_clean_url_add($clean_url, 'C', $parent_category->categoryid);
                         }
 
                         $parent_id = $parent_category->pk;
@@ -231,12 +238,14 @@ class ProductsToMoveHelper
                                                                                                ]);
                     if ($isNew) {
                         $products_sf_moves_model->save();
+
                     }
 
                     $product_categories_model->delete();
 
                     $product_categories_model->categoryid = $parent_id;
                     $product_categories_model->insert();
+
                 }
             }
         }
