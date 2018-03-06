@@ -39,7 +39,7 @@ return array_replace_recursive([
                    'mapping' => [
                        'enum' => 'string'
                    ],
-                   'cache' => (defined('APP_DEV') && APP_DEV) ? [
+                   'cache' => (defined('APP_DEBUG') && APP_DEBUG) ? [
                        'class' => '\\Xcart\\App\\Orm\\Cache\\FilesystemCache',
                        'directory' => 'base.runtime.query_cache'
                    ] : [ //PRODUCTION CACHE
@@ -106,7 +106,7 @@ return array_replace_recursive([
            ],
        ],
 
-       'cache' => (defined('APP_DEV') && APP_DEV) ? [
+       'cache' => (defined('APP_DEBUG') && APP_DEBUG) ? [
            'class' => '\\Xcart\\App\\Cache\\Cache',
            'saveInMemory' => true,
            'memoryDriver' => 'memory',

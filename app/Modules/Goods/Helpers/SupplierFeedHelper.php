@@ -116,7 +116,6 @@ class SupplierFeedHelper
     public static function feedProduct($model, $is_created, $feed, $data, $dont_update_fields, $defaults)
     {
 
-        $model->source_sfid = $feed->storefront_id;
         $model->manufacturerid = $feed->manufacturerid;
 
         $discontinuedDate = $data['discontinued_date'];
@@ -170,6 +169,8 @@ class SupplierFeedHelper
         }
 
         if ($is_created) {
+
+            $model->source_sfid = $feed->storefront_id;
 
             if ($defaults) {
                 $model->setAttributes(array_merge($data, $defaults));

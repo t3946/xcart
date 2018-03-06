@@ -12,12 +12,34 @@ require __DIR__ . DIRECTORY_SEPARATOR . "../www/init.php";
 $desktop_user_agent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.119 Safari/537.36';
 $mobile_user_agent  = 'Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.119 Mobile Safari/537.36';
 
+const LIMIT = 200;
 
-$records = db_query("select t.* from xcart_cidev_updated_products t where t.`type` = 10 ORDER BY t.time_stamp DESC limit 200");
+$updated = 0;
+
+function getResource()
+{
+    global $updated;
+
+    while ($updated < LIMIT) {
+        $ids = [];
+        $records = db_query("select t.* from xcart_cidev_updated_products t where t.`type` = 10 ORDER BY t.time_stamp DESC limit 20");
+
+        while ($record = db_fetch_array($records)) {
+            yield $record;
+            $ids[] = $record['resourceid'];
+        }
+
+        if ($ids) {
+            $ids = implode(',', $ids);
+            db_query("DELETE FROM xcart_cidev_updated_products WHERE resourceid in ({$ids}) and type='10' ");
+        }
+    }
+}
+
 
 $guzzle = new \GuzzleHttp\Client();
 
-while ($record = db_fetch_array($records)) {
+foreach (getResource() as $record) {
     $key = 'product-' . $record['resourceid'];
 
     Xcart::app()->cache->getDriver('html')->set($key, null, 1);
@@ -30,6 +52,7 @@ while ($record = db_fetch_array($records)) {
             /** @var SiteModel $site */
 
             if ($site->isWork()) {
+                $updated++;
 
                 $ssl = ($site->getConfig()['https_enabled'] == 'Y');
                 $url = ($ssl ? 'https' : 'http') . '://' . $site->domain  . $model->getAbsoluteUrl();
@@ -40,7 +63,6 @@ while ($record = db_fetch_array($records)) {
         }
     }
 
-    db_query("DELETE FROM xcart_cidev_updated_products WHERE resourceid='{$record['resourceid']}' and time_stamp='{$record['time_stamp']}' and type='10' ");
 }
 
 if (rand(1, 7) > 5) {
