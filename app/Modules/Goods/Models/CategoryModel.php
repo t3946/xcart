@@ -215,7 +215,9 @@ class CategoryModel extends TreeModel
             $this->categoryid_path = $parent->categoryid_path . '/' . $this->pk;
         }
 
-        static::objects()->filter(['pk' => $this->pk])->update(['categoryid_path' => $this->categoryid_path]);
+        if ($this->categoryid_path != $owner->attributes->getOldAttribute('categoryid_path')) {
+            static::objects()->filter(['pk' => $this->pk])->update(['categoryid_path' => $this->categoryid_path]);
+        }
 
         if (!$isNew) {
             /** @var static $owner */
