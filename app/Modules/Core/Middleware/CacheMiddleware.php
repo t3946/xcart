@@ -141,10 +141,8 @@ class CacheMiddleware extends Middleware
             }
 
             if ( !$request->getIsPost()
-                && (
-                        !$request->get->has('mobile_mode')
-                    ||  !$request->get->has('mode_search')
-                )
+                && !$request->get->has('mobile_mode')
+                && !$request->get->has('mode_search')
                 && empty($request->getQueryArray())
                 && in_array($request->getPath(),['', '/', '/home.php'])
             ) {
