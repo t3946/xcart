@@ -219,7 +219,7 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
         $i = 0;
         while ($discountinued_products = ProductModel::objects()->filter(
             [
-//                'sites__through__sfid' => $supplierFeedModel->storefront_id,
+                'sites__through__sfid' => $supplierFeedModel->storefront_id,
                 'manufacturerid' => $supplierFeedModel->manufacturerid,
                 'forsale' => 'Y',
                 new QOr(['productid__isnt' => new Expression('group_root'), 'group_root__isnull' => true])
