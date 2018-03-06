@@ -106,7 +106,7 @@ return array_replace_recursive([
            ],
        ],
 
-       'cache' => (defined('APP_DEV') && APP_DEV) ? [
+       'cache' => (defined('APP_DEBUG') && APP_DEBUG) ? [
            'class' => '\\Xcart\\App\\Cache\\Cache',
            'saveInMemory' => true,
            'memoryDriver' => 'memory',
