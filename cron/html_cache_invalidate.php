@@ -32,7 +32,7 @@ function getResource()
 
 $guzzle = new \GuzzleHttp\Client();
 
-while ($record = getResource()) {
+foreach (getResource() as $record) {
     $key = 'product-' . $record['resourceid'];
 
     Xcart::app()->cache->getDriver('html')->set($key, null, 1);
