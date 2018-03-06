@@ -21,10 +21,17 @@ function getResource()
     global $updated;
 
     while ($updated < LIMIT) {
-        $records = db_query("select t.* from xcart_cidev_updated_products t where t.`type` = 10 ORDER BY t.time_stamp DESC limit 200");
+        $ids = [];
+        $records = db_query("select t.* from xcart_cidev_updated_products t where t.`type` = 10 ORDER BY t.time_stamp DESC limit 20");
 
         while ($record = db_fetch_array($records)) {
             yield $record;
+            $ids[] = $record['resourceid'];
+        }
+
+        if ($ids) {
+            $ids = implode(',', $ids);
+            db_query("DELETE FROM xcart_cidev_updated_products WHERE resourceid in ({$ids}) and type='10' ");
         }
     }
 }
@@ -56,7 +63,6 @@ foreach (getResource() as $record) {
         }
     }
 
-    db_query("DELETE FROM xcart_cidev_updated_products WHERE resourceid='{$record['resourceid']}' and time_stamp='{$record['time_stamp']}' and type='10' ");
 }
 
 if (rand(1, 7) > 5) {
