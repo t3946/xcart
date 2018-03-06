@@ -54,6 +54,7 @@ foreach ($models as $model){
         }
     }
     elseif (!ProductsToMoveHelper::isValidProduct($product_model, $model)){
+        $model->delete();
         continue;
     } else {
         if (ProductsToMoveHelper::processingMoveProductToNewSf($product_model, $model->resourceid, $model->extra_data_int)){
