@@ -29,11 +29,14 @@ while ($record = db_fetch_array($records)) {
         foreach ($model->sites as $site) {
             /** @var SiteModel $site */
 
-            $ssl = ($site->getConfig()['https_enabled'] == 'Y');
-            $url = ($ssl ? 'https' : 'http') . '://' . $site->domain  . $model->getAbsoluteUrl();
+            if ($site->isWork()) {
 
-            $guzzle->get($url, ['headers' => ['User-Agent' => $desktop_user_agent]]);
-            $guzzle->get($url, ['headers' => ['User-Agent' => $mobile_user_agent]]);
+                $ssl = ($site->getConfig()['https_enabled'] == 'Y');
+                $url = ($ssl ? 'https' : 'http') . '://' . $site->domain  . $model->getAbsoluteUrl();
+
+                $guzzle->get($url, ['headers' => ['User-Agent' => $desktop_user_agent]]);
+                $guzzle->get($url, ['headers' => ['User-Agent' => $mobile_user_agent]]);
+            }
         }
     }
 
@@ -53,3 +56,5 @@ if (rand(1, 7) > 5) {
         }
     }
 }
+
+Xcart::app()->cache->gc(true);

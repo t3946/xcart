@@ -81,4 +81,11 @@ class Cache
         }
     }
 
+    public function gc($force = false)
+    {
+        foreach ($this->_drivers as $name => $driver) {
+            $driver->gc($force);
+        }
+    }
+
 }
