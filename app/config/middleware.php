@@ -7,7 +7,8 @@ return [
 //                   'class' => '\\Modules\\Core\\Middleware\\CacheMiddleware',
 //               ],
     'static_cache' => [
-        'class' => '\\Modules\\Core\\Middleware\\CacheMiddleware'
+        'class' => '\\Modules\\Core\\Middleware\\CacheMiddleware',
+        'cacheEnabled' => (defined('APP_DEBUG') && APP_DEBUG)? false : true,
     ],
     'CurrentSiteMiddleware' => [
         'class' => '\\Modules\\Sites\\Middleware\\CurrentSiteMiddleware',

@@ -8,6 +8,7 @@ use Xcart\App\Orm\Fields\DateTimeField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\TextField;
 use Xcart\App\Orm\Fields\TimestampField;
+use Xcart\App\Orm\Fields\UnixTimestampField;
 use Xcart\App\Orm\Model;
 
 class OrderLogModel extends Model
@@ -35,7 +36,7 @@ class OrderLogModel extends Model
                 'null' => false,
             ],
             'date' => [
-                'class' => DateTimeField::className(),
+                'class' => UnixTimestampField::className(),
                 'autoNowAdd' => true,
                 'autoNow' => true,
             ],

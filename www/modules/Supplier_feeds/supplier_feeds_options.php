@@ -20,6 +20,9 @@ if ($REQUEST_METHOD == 'POST'){
                         }
                     }
                     else {
+                        if (!array_key_exists("enabled", $v)){
+                            $v['enabled'] = 'N';
+                        }
                         $v['base_category_id'] = $v['base_category_id'] ?: null;
 
                         if (!empty($v['base_category_id'])){
@@ -40,6 +43,7 @@ if ($REQUEST_METHOD == 'POST'){
 
                         $model = SupplierFeedModel::objects()->get(['feed_id' => $v['feed_id']]);
                         $model->setAttributes($v);
+
                         $model->save();
                     }
                 }

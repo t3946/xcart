@@ -164,7 +164,7 @@ class ProductsToMoveHelper
         $products_sf_model->delete();
 
 
-        (new ProductsSfMovesModel(['batch_id' => $batch_id, 'productid' => $productid, 'resource_id' => $old_sfid, 'resource_type' => "SF"]))->save();
+        (new ProductsSfMovesModel(['batch_id' => $batch_id, 'productid' => $productid, 'resource_id' => $old_sfid, 'resource_type' => ProductsSfMovesModel::RESOURCE_TYPE_SITE]))->save();
 
 
         /** @var ProductCategoriesModel $categories_models */

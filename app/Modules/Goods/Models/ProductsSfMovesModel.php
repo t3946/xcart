@@ -10,6 +10,10 @@ use Xcart\App\Orm\Model;
 
 class ProductsSfMovesModel extends Model
 {
+    const RESOURCE_TYPE_CATEGORY = 'CS';
+    const RESOURCE_TYPE_SITE = 'SF';
+    const RESOURCE_TYPE_FILTER = 'FL';
+
     public static function tableName()
     {
         return 'products_sf_moves';
@@ -38,9 +42,9 @@ class ProductsSfMovesModel extends Model
                 'class' => CharField::className(),
                 'default' => false,
                 'choices' => [
-                    0 => 'CS',
-                    1 => 'SF',
-                    2 => 'FL'
+                    self::RESOURCE_TYPE_CATEGORY => 'Category',
+                    self::RESOURCE_TYPE_SITE => 'Storefront',
+                    self::RESOURCE_TYPE_FILTER => 'Filter'
                 ]
             ],
 
