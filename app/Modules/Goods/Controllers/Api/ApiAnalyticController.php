@@ -31,6 +31,7 @@ class ApiAnalyticController extends Controller
 
                 if (in_array($path, ['', '/'])) {
                     $type = SurfPathModel::GOAL_TYPE_HOME_PAGE;
+                    $id = 1;
                 }
                 elseif (strpos($path, '/product/')) {
                     $type = SurfPathModel::GOAL_TYPE_PRODUCT;
@@ -48,6 +49,13 @@ class ApiAnalyticController extends Controller
 
                 if ($type && $id) {
                     SurfingHelper::logSurfPath([
+                        'resource_type' => $type,
+                        'resource_id' => $id,
+                        'referer' => $referer,
+                        'additional_data' => $advanced
+                    ]);
+
+                    dd([
                         'resource_type' => $type,
                         'resource_id' => $id,
                         'referer' => $referer,
