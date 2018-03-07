@@ -20,7 +20,7 @@ trait CacheFilesTrait
     public function set($key, $value, $timeout = null)
     {
         if (is_null($value)) {
-            @unlink($this->getFileName($this->buildKey($key)));
+            while(!@unlink($this->getFileName($this->buildKey($key)))){}
             return true;
         }
         else {
