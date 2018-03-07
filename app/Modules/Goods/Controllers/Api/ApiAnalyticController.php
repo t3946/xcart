@@ -48,7 +48,7 @@ class ApiAnalyticController extends Controller
                 }
 
                 if ($type && $id) {
-                    SurfingHelper::logSurfPath([
+                    $saved = SurfingHelper::logSurfPath([
                         'resource_type' => $type,
                         'resource_id' => $id,
                         'referer' => $referer,
@@ -59,6 +59,7 @@ class ApiAnalyticController extends Controller
                         'resource_type' => $type,
                         'resource_id' => $id,
                         'referer' => $referer,
+                        'saved' => $saved,
                     ]);
                 }
             }

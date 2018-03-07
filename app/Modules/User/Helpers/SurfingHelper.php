@@ -35,11 +35,7 @@ class SurfingHelper
             $model->timestamp = time();
             $model->position = $oSurfMeta->points_visited;
 
-            if ($model->meta_id) {
-                if ($model->isValid()) {
-                    $model->save();
-                }
-            }
+
 
             if ($sReferalUrl || !is_null($sReferalUrl = SurfingHelper::getReferUrl())) {
                 $referer = (string) urldecode($sReferalUrl);
@@ -70,7 +66,7 @@ class SurfingHelper
                 }
             }
 
-            return $oSurfMeta->save();
+            return ($model->isValid() && $model->save()) && $oSurfMeta->save();
         }
 
         return false;
