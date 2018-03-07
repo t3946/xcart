@@ -10,9 +10,11 @@ class SurfingHelper
 {
     public static function logSurfPath(array $params = [])
     {
-        $model = new SurfPathModel($params);
-        $sReferalUrl = !empty($params['referer']) ? $params['referer'] : null;
         $aGoalArray = [];
+        $sReferalUrl = !empty($params['referer']) ? $params['referer'] : null;
+        unset($params['referer']);
+
+        $model = new SurfPathModel($params);
 
         if (defined("IS_ROBOT") || !Xcart::app()->request->session->getId()) {
             return false;
@@ -49,8 +51,9 @@ class SurfingHelper
                 $oReferer->visits++;
                 $oReferer->save();
 
-                $oSurfMeta->points_visited++;
                 $oSurfMeta->referal_url = $referer;
+                $oSurfMeta->points_visited++;
+
                 if ($oSurfMeta->id) {
 
                     $auth = Xcart::app()->request->getAuthUser() ? ' User auth: ' . Xcart::app()->request->getAuthUser() : '';
