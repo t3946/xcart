@@ -26,7 +26,14 @@ class ProductsToMoveHelper
     {
         /** @var ProductModel $product_model */
         /** @var UpdatedProductModel $queue_model */
-        if ( (!$product_model = ProductModel::objects()->get(['productid' => $productid]) ) || self::isHaveAnyPaidOrder($productid) || self::isHaveVisits($productid) || self::isMoreThanOneSf($productid) || $product_model->amazon_fba_avail > 0 || self::isInThisBrandsAndCategories($productid) || $product_model->forsale == 'N'){
+        if ( (!$product_model = ProductModel::objects()->get(['productid' => $productid]) )
+             || self::isHaveAnyPaidOrder($productid)
+             || self::isHaveVisits($productid)
+             || self::isMoreThanOneSf($productid)
+             || $product_model->amazon_fba_avail > 0
+             || self::isInThisBrandsAndCategories($productid)
+             || $product_model->forsale == 'N' )
+        {
             return false;
         }
         else {
