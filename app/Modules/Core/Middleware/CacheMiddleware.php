@@ -157,20 +157,19 @@ class CacheMiddleware extends Middleware
                 return [Cache::CACHE_HOUR * 3, $key, $content];
             }
 
-            if (strpos($request->getPath(), 'amp') === false && strpos($request->getPath(), 'product') !== false && preg_match("/\/product\/(\d+)\/.*/", $request->getPath(), $match)) {
-                $key = 'product-' . $match[1];
+            if (strpos($request->getPath(), 'amp/') === false )
+            {
+                if (strpos($request->getPath(), 'product') !== false && preg_match("/\/product\/(\d+)\/.*/", $request->getPath(), $match)) {
+                    $key = 'product-' . $match[1];
 
-                if ($isMobile) {
-                    $key .= '-mobile';
+                    if ($isMobile) {
+                        $key .= '-mobile';
+                    }
+
+                    $content = Xcart::app()->cache->getDriver($this->cacheDriver)->get($key);
+
+                    return [Cache::CACHE_YEAR, $key, $content];
                 }
-
-                if (Xcart::app()->request->getIsAjax()) {
-                    $key .= '-ajax';
-                }
-
-                $content = Xcart::app()->cache->getDriver($this->cacheDriver)->get($key);
-
-                return [Cache::CACHE_YEAR, $key, $content];
             }
         }
 
