@@ -25,6 +25,8 @@ class CacheMiddleware extends Middleware
 
         if (!headers_sent() && $this->cacheEnabled) {
 
+            $ignoreCache = ($request->get->has('no_cache') || $request->cookie->has('no_cache'));
+
             $params = [];
             $params = $params ?: $this->getAdvancedDetector($request);
 //            $params = $params ?: $this->getDetector($request);
@@ -33,7 +35,7 @@ class CacheMiddleware extends Middleware
                 $this->params = $params;
                 [$cacheTime, $key, $a_output] = $params;
 
-                if ($a_output && !$request->get->has('no_cache')) {
+                if ($a_output && !$ignoreCache) {
                     list($output, $headers, $etag, $modTime) = $a_output;
 
                     if ($request->getHeaderValue('IF_NONE_MATCH') == "\"{$etag}\"") {
