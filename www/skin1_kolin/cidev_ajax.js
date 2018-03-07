@@ -39,11 +39,10 @@ function cidev_id$(id) {
 
 
 function surfMetaRegister() {
-    var url = window.location.href;
-
-    url += (url.indexOf('?') > 0 ? '&' : '?') + '_=' + (new Date()).getTime();
-
-    $.post('/api/analytics', { 'url': url, 'referer': document.referer ? document.referer : '' });
+    $.post('/api/analytics?_=' + (new Date()).getTime(), {
+        'url': window.location.href,
+        'referer': document.referer ? document.referer : ''
+    });
 }
 
 
