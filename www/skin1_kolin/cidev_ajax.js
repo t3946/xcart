@@ -37,3 +37,14 @@ function cidev_id$(id) {
     return document.getElementById(id)
 }
 
+
+function surfMetaRegister() {
+    var url = window.location.href;
+
+    url += (url.indexOf('?') > 0 ? '&' : '?') + '_=' + (new Date()).getTime();
+
+    $.post('/api/analytics', { 'url': url });
+}
+
+
+surfMetaRegister();
