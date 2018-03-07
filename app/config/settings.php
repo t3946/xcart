@@ -124,7 +124,6 @@ return array_replace_recursive([
                    'path' => 'root.html_cache',
                    'autoGC' => false,
 //                   'keySerialization' => false,
-                   'directoryLevel' => 2
                ]
            ]
        ] : [ //PRODUCTION CACHE
