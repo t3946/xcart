@@ -48,6 +48,10 @@ class SurfMetaModel extends Model
     {
         if (is_null(self::$_instance)) {
 
+            if (!Xcart::app()->request->session->getIsActive()) {
+                Xcart::app()->request->session->start();
+            }
+
             if ($sessId = Xcart::app()->request->session->getId()) {
                 self::$_instance = self::objects()->filter(["sessid" =>$sessId])->get();
 
