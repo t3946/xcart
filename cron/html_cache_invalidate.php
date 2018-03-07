@@ -12,7 +12,7 @@ require __DIR__ . DIRECTORY_SEPARATOR . "../www/init.php";
 $desktop_user_agent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.119 Safari/537.36';
 $mobile_user_agent  = 'Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.119 Mobile Safari/537.36';
 
-const LIMIT = 200;
+const LIMIT = 300;
 
 $updated = 0;
 
