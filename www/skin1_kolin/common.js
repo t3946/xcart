@@ -491,6 +491,5 @@ function surfMetaRegister() {
     $.post('/api/analytics', { 'url': url }, function(data){console.log(data);});
 }
 
-$(document).on('ready', function(){
-    surfMetaRegister();
-});
+
+surfMetaRegister();

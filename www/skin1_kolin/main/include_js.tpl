@@ -6,5 +6,5 @@
 -->
 </script>
 {else}
-<script src="{$SkinDir}/{$src}" type="text/javascript"></script>
+<script src="{$SkinDir}/{$src}" type="text/javascript" onload="console.log(this);"></script>
 {/if}
