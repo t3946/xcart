@@ -67,9 +67,7 @@ class SurfingHelper
                 }
             }
 
-            $oSurfMeta->save();
-
-            return true;
+            return $oSurfMeta->save();
         }
 
         return false;

@@ -55,12 +55,11 @@ class ApiAnalyticController extends Controller
                         'additional_data' => $advanced
                     ]);
 
-//                    dd([
-//                        'resource_type' => $type,
-//                        'resource_id' => $id,
-//                        'referer' => $referer,
-//                        'additional_data' => $advanced
-//                    ]);
+                    print_r([
+                        'resource_type' => $type,
+                        'resource_id' => $id,
+                        'referer' => $referer,
+                    ]);
                 }
             }
         }
