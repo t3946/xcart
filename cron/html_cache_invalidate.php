@@ -19,8 +19,9 @@ $updated = 0;
 function getResource()
 {
     global $updated;
+    $loop = true;
 
-    while ($updated < LIMIT) {
+    while ($updated < LIMIT && $loop) {
         $ids = [];
         $records = db_query("select t.* from xcart_cidev_updated_products t where t.`type` = 10 ORDER BY t.time_stamp DESC limit 20");
 
@@ -30,8 +31,12 @@ function getResource()
         }
 
         if ($ids) {
+            $loop = true;
             $ids = implode(',', $ids);
             db_query("DELETE FROM xcart_cidev_updated_products WHERE resourceid in ({$ids}) and type='10' ");
+        }
+        else {
+            $loop = false;
         }
     }
 }
