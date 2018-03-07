@@ -33,16 +33,16 @@ class ApiAnalyticController extends Controller
                     $type = SurfPathModel::GOAL_TYPE_HOME_PAGE;
                     $id = 1;
                 }
-                elseif (strpos($path, '/product/')) {
+                elseif (strpos($path, '/product/') !== false) {
                     $type = SurfPathModel::GOAL_TYPE_PRODUCT;
                 }
-                elseif (strpos($path, '/category/')) {
+                elseif (strpos($path, '/category/') !== false) {
                     $type = SurfPathModel::GOAL_TYPE_CATEGORY;
                 }
-                elseif (strpos($path, '/brand/')) {
+                elseif (strpos($path, '/brand/') !== false) {
                     $type = SurfPathModel::GOAL_TYPE_BRAND;
                 }
-                elseif (strpos($path, '/keyword/')) {
+                elseif (strpos($path, '/keyword/') !== false) {
                     $type = SurfPathModel::GOAL_TYPE_SEARCH;
                     $id = Xcart::app()->request->session->get('e_search_data_orig_substring');
                 }
@@ -55,12 +55,12 @@ class ApiAnalyticController extends Controller
                         'additional_data' => $advanced
                     ]);
 
-                    dd([
-                        'resource_type' => $type,
-                        'resource_id' => $id,
-                        'referer' => $referer,
-                        'additional_data' => $advanced
-                    ]);
+//                    dd([
+//                        'resource_type' => $type,
+//                        'resource_id' => $id,
+//                        'referer' => $referer,
+//                        'additional_data' => $advanced
+//                    ]);
                 }
             }
         }
