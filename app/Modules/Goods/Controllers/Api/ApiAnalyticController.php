@@ -23,7 +23,7 @@ class ApiAnalyticController extends Controller
                 $type = null;
                 $referer = $this->getRequest()->post->get('referer');
                 $id = null;
-                $advanced = [];
+                $advanced = '';
 
                 if (preg_match("/\/(\d+)\//", $path, $match)) {
                     $id = $match[1];
