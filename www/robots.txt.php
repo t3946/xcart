@@ -1,10 +1,30 @@
 <?php
 
+use Modules\Sites\Models\SiteConfigModel;
+use Modules\Sites\Models\SiteModel;
+
+define("CIDEV_CRON_START", "CRON");
+
+include 'top.inc.php';
+include 'init.php';
+
+
+
 $default_host = 'www.artistsupplysource.com';
 if (isset($_SERVER['HTTP_HOST'])) {
     $host = $_SERVER['HTTP_HOST'];
 } else {
     $host = $default_host;
+}
+if (!(SiteConfigModel::objects()->get(['site__domain' => $host , 'name' => 'shop_closed', 'value__isnt' => 'Y']))) {
+    $text = <<<ROBOTS
+User-agent: *
+Disallow: /
+ROBOTS;
+
+    header("Content-type: text/plain");
+    printf($text);
+    die();
 }
 
 if  ($host == 'www.artistsupplysource.com')
