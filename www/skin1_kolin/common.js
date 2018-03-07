@@ -488,7 +488,7 @@ function surfMetaRegister() {
 
     url += (url.indexOf('?') ? '&' : '?') + '_=' + (new Date()).getTime();
 
-    $.post('/api/analytics', { 'url': url }, function(data){console.log(data);});
+    // $.post('/api/analytics', { 'url': url }, function(data){console.log(data);});
 }
 
 
