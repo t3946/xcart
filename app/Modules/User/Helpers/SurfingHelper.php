@@ -66,6 +66,10 @@ class SurfingHelper
                 }
             }
 
+            if (!$model->isValid()) {
+                Xcart::app()->logger->warning('model surf path not valid: ' . implode(', ', $model->getErrors()), [] ,'error');
+            }
+
             return ($model->isValid() && $model->save()) && $oSurfMeta->save();
         }
 
