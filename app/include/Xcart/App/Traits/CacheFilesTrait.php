@@ -19,15 +19,12 @@ trait CacheFilesTrait
 
     public function set($key, $value, $timeout = null)
     {
-        $timeout = $timeout ?: $this->timeout;
-
         if (is_null($value)) {
             @unlink($this->getFileName($this->buildKey($key)));
             return true;
         }
         else {
-
-            return $this->setValue($this->buildKey($key), $this->serialize($value), $timeout);
+            return $this->setValue($this->buildKey($key), $this->serialize($value), $timeout ?: $this->timeout);
         }
     }
 
