@@ -11,6 +11,7 @@ $config = array_replace_recursive([
             'drivers' => [
                 'html' =>  [
                     'autoGC' => true,
+                    'strongRemove' => true,
                 ]
             ]
         ],

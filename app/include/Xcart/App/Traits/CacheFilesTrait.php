@@ -13,6 +13,8 @@ trait CacheFilesTrait
 
     public $autoGC = true;
 
+    public $strongRemove = false;
+
     public $gcProbability = 10;
 
     public $directoryLevel = 1;
@@ -22,7 +24,13 @@ trait CacheFilesTrait
     public function set($key, $value, $timeout = null)
     {
         if (is_null($value)) {
-            while(is_file($this->getFileName($this->buildKey($key))) && !@unlink($this->getFileName($this->buildKey($key)))){}
+            if ($this->strongRemove) {
+                while(is_file($this->getFileName($this->buildKey($key))) && !@unlink($this->getFileName($this->buildKey($key)))){}
+            }
+            else {
+                @unlink($this->getFileName($this->buildKey($key)));
+            }
+
             return true;
         }
         else {
