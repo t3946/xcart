@@ -550,7 +550,7 @@ class ProductModel extends Model implements ICartItem
 
     public function getFrontendChilds()
     {
-        return $this->childs->filter(['forsale' => 'Y'])->order(['group_order']);
+        return $this->childs->filter(['forsale' => 'Y'])->order(['group_order', 'product']);
     }
 
     /**
