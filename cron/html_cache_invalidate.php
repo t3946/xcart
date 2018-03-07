@@ -44,7 +44,6 @@ foreach (getResource() as $record) {
 
     Xcart::app()->cache->getDriver('html')->set($key, null, 1);
     Xcart::app()->cache->getDriver('html')->set($key . '-mobile', null, 1);
-    Xcart::app()->cache->getDriver('html')->set($key . '-mobile-ajax', null, 1);
 
     /** @var ProductModel $model */
     if ($model = ProductModel::objects()->get(['pk' => $record['resourceid']])) {
