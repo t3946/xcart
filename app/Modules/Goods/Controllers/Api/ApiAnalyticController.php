@@ -59,7 +59,6 @@ class ApiAnalyticController extends Controller
                         'resource_type' => $type,
                         'resource_id' => $id,
                         'referer' => $referer,
-                        'saved' => $saved,
                     ]);
                 }
             }
