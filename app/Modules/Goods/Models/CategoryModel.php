@@ -206,7 +206,7 @@ class CategoryModel extends TreeModel
 
         //@TODO: For old code, delete after global refactoring
 
-        if (empty($this->categoryid_path) || empty($this->parentid)) {
+        if (empty($this->categoryid_path) || !$this->parentid) {
             $this->categoryid_path = $this->pk;
         }
 
@@ -215,21 +215,23 @@ class CategoryModel extends TreeModel
             $this->categoryid_path = $parent->categoryid_path . '/' . $this->pk;
         }
 
-        /** @var static $owner */
-        $old_parent = $owner->attributes->getOldAttribute('parentid');
-
-        if ($old_parent != $this->parentid) {
+        if ($this->categoryid_path != $owner->attributes->getOldAttribute('categoryid_path')) {
             static::objects()->filter(['pk' => $this->pk])->update(['categoryid_path' => $this->categoryid_path]);
-
-            $this->objects()
-                ->descendants()
-                ->getQuerySet()
-                ->update([
-                    'categoryid_path' => new Expression("CONCAT('{$this->categoryid_path}', SUBSTRING_INDEX(categoryid_path, {$owner->pk}, -1))")
-                ]);
         }
 
-        if (!$isNew && ($old_parent != $this->parentid)) {
+        if (!$isNew) {
+            /** @var static $owner */
+            $old_parent = $owner->attributes->getOldAttribute('parentid');
+
+            if ($old_parent != $this->parentid) {
+                $this->objects()
+                    ->descendants()
+                    ->getQuerySet()
+                    ->update([
+                        'categoryid_path' => new Expression("CONCAT('{$this->categoryid_path}', SUBSTRING_INDEX(categoryid_path, {$this->pk}, -1))")
+                    ]);
+            }
+
             if ($old_parent) {
                 CategoryCalculateHelper::recalcParents($old_parent, true);
             }

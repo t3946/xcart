@@ -15,6 +15,7 @@ use Modules\Goods\Models\ProductModel;
 use Modules\Goods\Models\ProductsSfMovesModel;
 use Modules\Goods\Models\ProductStorefrontModel;
 use Modules\Goods\Models\UpdatedProductModel;
+use Modules\Sites\Models\SiteModel;
 use Modules\User\Models\SessionDataModel;
 use Modules\User\Models\SurfPathModel;
 
@@ -25,7 +26,14 @@ class ProductsToMoveHelper
     {
         /** @var ProductModel $product_model */
         /** @var UpdatedProductModel $queue_model */
-        if ( (!$product_model = ProductModel::objects()->get(['productid' => $productid]) ) || self::isHaveAnyPaidOrder($productid) || self::isHaveVisits($productid) || self::isMoreThanOneSf($productid) || $product_model->amazon_fba_avail > 0){
+        if ( (!$product_model = ProductModel::objects()->get(['productid' => $productid]) )
+             || self::isHaveAnyPaidOrder($productid)
+             || self::isHaveVisits($productid)
+             || self::isMoreThanOneSf($productid)
+             || $product_model->amazon_fba_avail > 0
+             || self::isInThisBrandsAndCategories($productid)
+             || $product_model->forsale == 'N' )
+        {
             return false;
         }
         else {
@@ -79,6 +87,47 @@ class ProductsToMoveHelper
         else {
             return false;
         }
+    }
+
+    public static function isInThisBrandsAndCategories($productid)
+    {
+        $exclude_brands_ar = [230,7364,280,3235,285,282,7355,198,61,5346,4372,5325,69,3635,276,225,10,4302,226,4303,366,3799,3,1642,8,5336,7295];
+
+        $exclude_brands_ts = [286,7950,3101,356,3496,3559,7086,340,309,3467,3461,3527,466,3503,308,307,477,583,353,329];
+
+        $exclude_categories = [50859];
+
+        /** @var ProductModel $product_model */
+        $product_model = ProductModel::objects()->get(['productid' => $productid]);
+
+        $sf_models = $product_model->sites->all();
+
+        if (count($sf_models) > 1 || count($sf_models) === 0){
+            return true;
+        }
+
+        /** @var SiteModel $sf_model */
+        $sf_model = $sf_models[0];
+
+        if ( ($sf_model->code == 'AR' && in_array($product_model->brandid, $exclude_brands_ar))
+             || ($sf_model->code == 'TS' && in_array($product_model->brandid, $exclude_brands_ts))
+        ){
+            return true;
+        }
+
+        if ($category_models = $product_model->categories->all()){
+            foreach ($category_models as $category_model){
+                /** @var CategoryModel $category_model */
+                $rootModel = $category_model->isRoot() ? $category_model : CategoryModel::objects()->get([ 'root' => $category_model->root, 'lft' => 1 ]);
+
+                if (in_array($rootModel->categoryid, $exclude_categories)){
+                    return true;
+                }
+            }
+        }
+
+        return false;
+
     }
 
     public static function isMoreThanOneSf($productid)
@@ -209,6 +258,7 @@ class ProductsToMoveHelper
                                'parentid' => 0,
                                'storefrontid' => $sfid
                            ]);
+
                         }
                         else {
                             [$parent_category, $isNew] = CategoryModel::objects()->getOrCreate([
@@ -216,6 +266,12 @@ class ProductsToMoveHelper
                                'parentid' => $parent_id,
                                'storefrontid' => $sfid
                            ]);
+
+                        }
+
+                        if ($isNew){
+                            $clean_url = func_clean_url_autogenerate('C', $parent_category->categoryid, array('category' => $parent_category->category));
+                            func_clean_url_add($clean_url, 'C', $parent_category->categoryid);
                         }
 
                         $parent_id = $parent_category->pk;
@@ -231,12 +287,14 @@ class ProductsToMoveHelper
                                                                                                ]);
                     if ($isNew) {
                         $products_sf_moves_model->save();
+
                     }
 
                     $product_categories_model->delete();
 
                     $product_categories_model->categoryid = $parent_id;
                     $product_categories_model->insert();
+
                 }
             }
         }
