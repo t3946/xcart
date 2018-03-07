@@ -3,6 +3,7 @@ namespace Modules\Sites\Models;
 
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\CharField;
+use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Fields\TextField;
 use Xcart\App\Orm\Model;
@@ -17,16 +18,20 @@ class SiteConfigModel extends Model
     public static function getFields()
     {
         return [
+            'site' => [
+                'field' => 'storefrontid',
+                'class' => ForeignField::class,
+                'modelClass' => SiteModel::class,
+                'link' => ['storefrontid' => 'storefrontid'],
+                'null' => false,
+                'default' => 0,
+                'primary' => true
+            ],
+
             'name' => [
                 'class' => CharField::className(),
                 'null' => false,
                 'default' => '',
-                'primary' => true
-            ],
-            'storefrontid' => [
-                'class' => IntField::className(),
-                'null' => false,
-                'default' => 0,
                 'primary' => true
             ],
             'comment' => [
