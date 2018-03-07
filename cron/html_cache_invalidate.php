@@ -42,8 +42,8 @@ $guzzle = new \GuzzleHttp\Client();
 foreach (getResource() as $record) {
     $key = 'product-' . $record['resourceid'];
 
-    Xcart::app()->cache->getDriver('html')->set($key, null, 1);
-    Xcart::app()->cache->getDriver('html')->set($key . '-mobile', null, 1);
+    Xcart::app()->cache->getDriver('html')->set($key, null);
+    Xcart::app()->cache->getDriver('html')->set($key . '-mobile', null);
 
     /** @var ProductModel $model */
     if ($model = ProductModel::objects()->get(['pk' => $record['resourceid']])) {
@@ -71,8 +71,8 @@ if (mt_rand(0, 10000) < 10) {
 
         if ($site->isWork()) {
             for($i = 1; $i < 11; $i++) {
-                Xcart::app()->cache->getDriver('html')->set('home-' . $site->domain. '-' . $i, null, 1);
-                Xcart::app()->cache->getDriver('html')->set('home-' . $site->domain. '-' . $i . '-mobile', null, 1);
+                Xcart::app()->cache->getDriver('html')->set('home-' . $site->domain. '-' . $i, null);
+                Xcart::app()->cache->getDriver('html')->set('home-' . $site->domain. '-' . $i . '-mobile', null);
             }
         }
     }
