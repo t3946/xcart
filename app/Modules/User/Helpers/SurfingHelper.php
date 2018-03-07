@@ -11,8 +11,7 @@ class SurfingHelper
     public static function logSurfPath(array $params = [])
     {
         $model = new SurfPathModel($params);
-
-        $sReferalUrl = null;
+        $sReferalUrl = !empty($params['referer']) ? $params['referer'] : null;
         $aGoalArray = [];
 
         if (defined("IS_ROBOT") || !Xcart::app()->request->session->getId()) {
@@ -40,7 +39,7 @@ class SurfingHelper
                 }
             }
 
-            if (!is_null($sReferalUrl = SurfingHelper::getReferUrl())) {
+            if ($sReferalUrl || !is_null($sReferalUrl = SurfingHelper::getReferUrl())) {
                 $referer = (string) urldecode($sReferalUrl);
 
                 $oReferer = ReferrerModel::objects()->filter(['referer' => $referer])->limit(1)->get();

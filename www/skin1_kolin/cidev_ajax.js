@@ -43,7 +43,7 @@ function surfMetaRegister() {
 
     url += (url.indexOf('?') > 0 ? '&' : '?') + '_=' + (new Date()).getTime();
 
-    $.post('/api/analytics', { 'url': url });
+    $.post('/api/analytics', { 'url': url, 'referer': document.referer ? document.referer : '' });
 }
 
 

@@ -54,7 +54,7 @@ Profiler::getInstance()->addPoint();
 
 $search_data["products"]["search_in_subcategories"] = "Y";
 //$filter_selected_and_found_brands = "";
-//$cidev_filters_tree_sorted = "";
+$cidev_filters_tree_sorted = "";
 //$filter_found_fv_ids_count = "";
 
 

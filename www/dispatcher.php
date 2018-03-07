@@ -280,13 +280,7 @@ if ($config['SEO']['clean_urls_enabled'] != 'Y' || $redirect_to_canonical_url) {
 }
 
 
-#
-##
-###
 $smarty->assign('clean_url_data', $clean_url_data);
-###
-##
-#
 Profiler::getInstance()->addPoint();
 
 switch ($clean_url_data['resource_type']) {
@@ -295,13 +289,11 @@ case 'C':
     // Category page case
     $_GET['cat'] = $cat = intval($clean_url_data['resource_id']);
     $QUERY_STRING = 'cat=' . $cat . (!empty($QUERY_STRING) ? '&' . $QUERY_STRING : '');
-//    $PHP_SELF = dirname($PHP_SELF).'/category.php';
     $PHP_SELF = dirname($PHP_SELF).'/home.php';
     \Modules\Meta\Helpers\MetaExtHelper::getInstance()
         ->setBaseCode(\Modules\Meta\Types\MetaType::CATEGORY)
         ->addParam('model', \Modules\Goods\Models\CategoryModel::objects()->get(['pk'=>$cat]));
 
-//    require $xcart_dir.DIR_CUSTOMER.'/category.php';
     require $xcart_dir.DIR_CUSTOMER.'/home.php';
     break;
 
@@ -321,14 +313,6 @@ case 'P':
     $_GET['productid'] = $productid = intval($clean_url_data['resource_id']);
     $QUERY_STRING = 'productid=' . $productid . (!empty($QUERY_STRING) ? '&' . $QUERY_STRING : '');
     $PHP_SELF = dirname($PHP_SELF) . '/product.php';
-
-//    Templater::getInstance()->caching = 2;
-//    Templater::getInstance()->cache_lifetime = \Modules\Core\Helpers\Cache::CACHE_DAY;
-//
-//    if ( Templater::getInstance()->is_cached("customer/home.tpl", "product_" . $productid)) {
-//        func_display_cached("customer/home.tpl", "product_" . $productid);
-//        die();
-//    }
 
     \Modules\Meta\Helpers\MetaExtHelper::getInstance()
         ->setBaseCode(\Modules\Meta\Types\MetaType::PRODUCT)
