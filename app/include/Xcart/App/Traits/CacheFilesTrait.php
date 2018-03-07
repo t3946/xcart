@@ -11,6 +11,8 @@ trait CacheFilesTrait
 
     public $keySerialization = true;
 
+    public $autoGC = true;
+
     public $gcProbability = 10;
 
     public $directoryLevel = 1;
@@ -53,7 +55,10 @@ trait CacheFilesTrait
 
     protected function setValue($key, $data, $timeout)
     {
-        $this->gc();
+        if ($this->autoGC) {
+            $this->gc();
+        }
+
         $cacheFile = $this->getFileName($key);
 
         if ($this->directoryLevel > 0) {
