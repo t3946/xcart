@@ -689,12 +689,12 @@ if ($product_info["manufacturerid"] == "32" && !empty($product_info["supplier_in
 }
 
 Profiler::getInstance()->addPoint();
-if ($config["Appearance"]["Enable_surf_stats"] == "Y") {
-    Modules\User\Helpers\SurfingHelper::logSurfPath([
-        'resource_type' => Modules\User\Models\SurfPathModel::GOAL_TYPE_PRODUCT,
-        'resource_id' => $productid,
-    ]);
-}
+//if ($config["Appearance"]["Enable_surf_stats"] == "Y") {
+//    Modules\User\Helpers\SurfingHelper::logSurfPath([
+//        'resource_type' => Modules\User\Models\SurfPathModel::GOAL_TYPE_PRODUCT,
+//        'resource_id' => $productid,
+//    ]);
+//}
 
 Profiler::getInstance()->addPoint();
 if (\Modules\Shipping\Helpers\ShippingHelper::isCalcShippingEnabled($oProduct)) {

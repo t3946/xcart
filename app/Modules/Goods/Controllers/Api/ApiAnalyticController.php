@@ -4,17 +4,25 @@ namespace Modules\Goods\Controllers\Api;
 
 
 use Modules\User\Helpers\SurfingHelper;
-use Modules\User\Models\SurfPathModel;
 use Xcart\App\Controller\Controller;
 
 class ApiAnalyticController extends Controller
 {
+    public $defaultAction = 'index';
 
-    public function actionPath()
+    public function index()
     {
-        SurfingHelper::logSurfPath([
-            'resource_type' => SurfPathModel::GOAL_TYPE_PRODUCT,
-            'resource_id' => $productid,
-        ]);
+
+        if ( $url = $this->getRequest()->post->get('url') )
+        {
+            $url = parse_url($url);
+
+            d($url);
+
+            SurfingHelper::logSurfPath([
+                'resource_type' => $this->getRequest()->get->get('type'),
+                'resource_id' => $this->getRequest()->get->get('id'),
+            ]);
+        }
     }
 }

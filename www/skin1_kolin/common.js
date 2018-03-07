@@ -482,3 +482,15 @@ function getPopupControl(elm) {
   return (e && e._popupControl) ? e._popupControl : false;
 }
 
+
+function surfMetaRegister() {
+    var url = window.location.href;
+
+    url += (url.indexOf('?') ? '&' : '?') + '_=' + (new Date()).getTime();
+
+    $.post('/api/analytics', { 'url': url });
+}
+
+$(document).on('ready', function(){
+    surfMetaRegister();
+});
