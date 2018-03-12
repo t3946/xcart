@@ -213,20 +213,7 @@ class ErrorHandler
                 'traces' => $trace,
             ];
 
-            if (is_a($app->request->getRequest(), 'Xcart\App\Request\HttpRequest')
-                || is_subclass_of($app->request->getRequest(), 'Xcart\App\Request\HttpRequest'))
-            {
-                $err['script uri'] = $app->request->getScriptUrl();
-                $err['uri'] = $app->request->getMethod() . " " .$app->request->getHostInfo() . $app->request->getRequestUri();
-                $err['user'] = $app->request->getUserIP();
-
-                if ($app->request->getUserHost()) {
-                    $err['user'] .= " ({$app->request->getUserHost()})";
-                }
-                if ($app->request->getUserAgent()) {
-                    $err['user'] .= " [{$app->request->getUserAgent()}]";
-                }
-            }
+            $err = array_merge($err, static::getRequestErrData());
 
             unset($err['traces'], $err['traces']);
 
@@ -241,6 +228,30 @@ class ErrorHandler
         else {
             $this->displayException($exception);
         }
+    }
+
+    public static function getRequestErrData()
+    {
+        $err = [];
+        $app = Xcart::app();
+
+
+        if (is_a($app->request->getRequest(), 'Xcart\App\Request\HttpRequest')
+            || is_subclass_of($app->request->getRequest(), 'Xcart\App\Request\HttpRequest'))
+        {
+            $err['script uri'] = $app->request->getScriptUrl();
+            $err['uri'] = $app->request->getMethod() . " " .$app->request->getHostInfo() . $app->request->getRequestUri();
+            $err['user'] = $app->request->getUserIP();
+
+            if ($app->request->getUserHost()) {
+                $err['user'] .= " ({$app->request->getUserHost()})";
+            }
+            if ($app->request->getUserAgent()) {
+                $err['user'] .= " [{$app->request->getUserAgent()}]";
+            }
+        }
+
+        return $err;
     }
 
 
