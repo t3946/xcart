@@ -11,9 +11,13 @@ require "./auth.php";
 
 Profiler::getInstance()->addPoint();
 
-if (
-    isset($productid)
-    && !empty($productid)
+
+if (!is_numeric($productid) && empty($sku)) {
+    func_header_location("error_message.php?access_denied&id=33");
+}
+
+
+if (!empty($productid)
     && $config['SEO']['clean_urls_enabled'] == 'Y'
     && !defined('DISPATCHED_REQUEST')
 ) {
