@@ -218,8 +218,8 @@ class ErrorHandler
             {
                 $err['script uri'] = $app->request->getScriptUrl();
                 $err['uri'] = $app->request->getMethod() . " " .$app->request->getHostInfo() . $app->request->getRequestUri();
+                $err['request method'] = $app->request->getRequestMethod();
                 $err['user'] = $app->request->getUserIP();
-                $err['user'] = $app->request->getRequestMethod();
 
                 if ($app->request->getUserHost()) {
                     $err['user'] .= " ({$app->request->getUserHost()})";
