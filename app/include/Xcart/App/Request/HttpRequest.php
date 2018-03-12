@@ -555,6 +555,11 @@ class HttpRequest extends Request
         return isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : null;
     }
 
+    public function getRequestMethod()
+    {
+        return isset($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : 'GET';
+    }
+
     /**
      * Returns the user agent.
      *
