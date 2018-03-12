@@ -43,4 +43,3 @@ if (empty($active_modules["Advanced_Statistics"]) || $config["Advanced_Statistic
 
 db_query("UPDATE $sql_tbl[products] SET views_stats = (views_stats + 1) WHERE productid='$productid'");
 db_query("INSERT INTO $sql_tbl[stats_shop](id, action, date) VALUES('$productid', 'V', '".time()."')");
-?>

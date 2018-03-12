@@ -23,11 +23,13 @@ class CurrentSiteMiddleware extends Middleware
 
             $GLOBALS['xcart_http_host'] = $GLOBALS['xcart_https_host'] = $_SERVER['HTTP_HOST'];
         }
-        elseif ($model = CurrentSiteHelper::check($request)) {
+            elseif ($model = CurrentSiteHelper::check($request)) {
             $sitesModule->setSite($model);
         }
 
-        $domain = SiteModel::objects()->filter(['code' => 'AR'])->valuesList(['domain'], true)[0];
+//        $domain = SiteModel::objects()->filter(['code' => 'AR'])->valuesList(['domain'], true);
+//        $domain = $domain[0];
+        $domain = 'www.artistsupplysource.com';
 
         defined('DEFAULT_SF_DOMAIN') ?: define('DEFAULT_SF_DOMAIN', $domain);
 

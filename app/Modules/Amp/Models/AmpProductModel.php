@@ -196,6 +196,10 @@ class AmpProductModel extends ProductModel
             $fulldescr = str_ireplace(["<font>", "</font>"], "", $fulldescr);
         }
 
+        if (preg_match('/<img\/>/i', $fulldescr)){
+            $fulldescr = preg_replace('/<img\/>/i', '', $fulldescr);
+        }
+
         $regexp = '/<([^>]*?)mozallowfullscreen|webkitallowfullscreen([^>]*?)>/s';
 
         while (preg_match($regexp, $fulldescr)){
@@ -216,7 +220,7 @@ class AmpProductModel extends ProductModel
     }
 
     public function isNeedForm(){
-        if (!$this->isGroupRoot() && $this->r_avail > 0){
+        if (!$this->isGroupRoot() && !$this->isOutOfStock()){
             return true;
         } else {
             return false;

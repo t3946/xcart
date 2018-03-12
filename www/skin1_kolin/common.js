@@ -481,4 +481,3 @@ function getPopupControl(elm) {
 
   return (e && e._popupControl) ? e._popupControl : false;
 }
-

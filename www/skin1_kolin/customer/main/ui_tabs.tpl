@@ -175,7 +175,6 @@ function send_question_email_form(){
 		{assign var=product_description_title value=$lng.lbl_product_description}
 	{/if}
 {/if}
-
 {include file="dialog.tpl" title=$product_description_title content=$smarty.capture.dialog extra='width="100%"' use_h2="Y" }
 
         {elseif $tab.tpl eq "_Brand_"}
@@ -201,13 +200,13 @@ function send_question_email_form(){
   {/if}
 
 <p align="justify">
-{$brandid_brands_info[$product.brandid].descr}
+{$oProduct->brand->descr}
               <br />
 <a href="{$oStorefront->getStoreFrontURL()}/brand/{$product.brandid}/" class="NavigationPath">All {$brandid_brands_info[$product.brandid].brand} products</a>
 </p>
 
 {/capture}
-{include file="dialog.tpl" title=$brandid_brands_info[$product.brandid].brand content=$smarty.capture.dialog schema='brand' title_itemprop='brand' extra='width="100%"' use_h2="Y" }
+{include file="dialog.tpl" title=$oProduct->brand->brand content=$smarty.capture.dialog schema='brand' title_itemprop='brand' extra='width="100%"' use_h2="Y" }
 
 	{elseif $tab.tpl eq "_product_queries_tpl_"}
 

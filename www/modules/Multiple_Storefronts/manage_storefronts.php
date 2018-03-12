@@ -63,7 +63,8 @@ if ($REQUEST_METHOD == 'GET' && $mode == 'delete_icon' && !empty($storefrontid))
 
 if ($REQUEST_METHOD == 'POST') {
 	if ($mode == 'add') {
-		if (!empty($new_main_domain)/* && !empty($new_db_prefix)*/) {
+
+		if (!empty($new_main_domain) && !empty($domain_code)) {
 			$new_main_domain = trim($new_main_domain);
 			//$new_db_prefix = trim($new_db_prefix);
 			if (strlen($new_main_domain < 64) && preg_match('/^([0-9a-z]([0-9a-z\-])*[0-9a-z]\.)+[a-z]{2,6}$/i', $new_main_domain)) {
@@ -73,123 +74,174 @@ if ($REQUEST_METHOD == 'POST') {
 				/*if (in_array($new_db_prefix, $prefixes) || $new_db_prefix == MAIN_SF_PREFIX) {
 					$info_error = 'P';
 				}*/
-			
+
 				if (in_array($new_main_domain, $domains)) {
 					$info_error = 'D';
 				}
+
 				if ($info_error == 'N') {
-	
-					if (!empty($file_upload_data['S']) && is_array($file_upload_data['S'])) {
+
+
+					if (!empty($file_upload_data['S']) && is_array($file_upload_data['S']))
+					{
 						$image_perms = func_check_image_storage_perms($file_upload_data, 'S');
+
+
 						if ($image_perms !== true) {
 							$top_message['content'] = $image_perms['content']; 
 							$top_message['type'] = 'E';
-						} else {
+						}
+						else {
 
 							$image_posted = func_check_image_posted($file_upload_data, 'S');
 
 							if ($image_posted) {
 
-								$orderby = func_query_first_cell('SELECT MAX(orderby) FROM ' . $sql_tbl['storefronts']);
-								if (is_numeric($orderby)) {
-									$orderby += 10;
-								} else {
-									$orderby = 10;
-								}
-
-								$query = array(
-									'domain'	=> $new_main_domain,
-									'prefix'	=> $new_db_prefix ? $new_db_prefix : '',
-									'orderby'	=> $orderby,
-									'status'    => 'Y', // enable storefront by default 
-								);
-								$new_storefront_id = func_array2insert('storefronts', $query);
-
-								if (is_numeric($new_storefront_id) && !empty($new_storefront_id)) {
-									$image_id = func_save_image($file_upload_data, 'S', $new_storefront_id);
-								}
-
-								// Category in the files directory
-								$domain_dir = $xcart_dir . $files_dir . DIRECTORY_SEPARATOR . $new_main_domain;
-								if (!is_dir($domain_dir)) {
-									@mkdir($domain_dir, 0711);
-								}
-
-								// SF configs
-								if (is_array($domain_specific_config)) {
-									$data = array();
-									$configs_copy = '';
-									foreach ($domain_specific_config as $dsc) {
-										foreach ($dsc as $n => $v) {
-											if (!empty($n)) {
-												$configs_copy .= '"' . $n . '"' . ', ';
-											}
-										}
-									}
-									$configs_copy = substr($configs_copy, 0, count($configs_copy) - 3);
-									$fields = array(
-										'name',
-										'comment',
-										'value',
-										'category',
-										'orderby',
-										'type',
-										'defvalue',
-										'variants',
-										'validation',
-									);
-									$data = func_query('SELECT ' . implode(', ', $fields) . ' FROM ' . $sql_tbl['config'] . ' WHERE name IN(' . $configs_copy . ')');
-									if (!empty($data)) {
-										foreach ($data as $d) {
-
-
-#
-##
-###
-											$d['value'] = '';
-###
-##
-#
-
-											if ($d['name'] == 'shop_closed') {
-												$d['value'] = 'Y';
-											}
-											if ($d['name'] == 'opt_order_prefix') {
-												$d['value'] = ''; // default order prefix is empty
-											}
-											$d['storefrontid'] = $new_storefront_id;
-                                            $d['orderby'] = $domain_specific_config[$d['category']][$d['name']];
-											func_array2insert('storefronts_config', $d);
-										}
-									}
-
-								}
-
-
-								$top_message['content'] = func_get_langvar_by_name('msg_adm_storefront_created_success');
-								$top_message['type'] = 'I';
-							} else {
+							}
+							else {
 								$top_message['content'] = func_get_langvar_by_name('err_adm_banner_not_posted');
 								$top_message['type'] = 'E';
 							}
 						}
 					}
+
+
+//                    $orderby = func_query_first_cell('SELECT MAX(orderby) FROM ' . $sql_tbl['storefronts']);
+//
+//                    if (is_numeric($orderby)) {
+//                        $orderby += 10;
+//                    } else {
+//                        $orderby = 10;
+//                    }
+
+                    $domain_code = strtoupper($domain_code);
+
+                    $query = array(
+                        'domain'	=> $new_main_domain,
+                        'code'		=> $domain_code,
+                        'prefix'	=> $new_db_prefix ? $new_db_prefix : '',
+                        'orderby'	=> 10,
+                        'status'    => 'Y', // enable storefront by default
+                    );
+
+
+                    [$model] = \Modules\Sites\Models\SiteModel::objects()->getOrCreate($query);
+
+                    $new_storefront_id = $model->pk;
+
+//                    $new_storefront_id = func_array2insert('storefronts', $query);
+
+                    if (is_numeric($new_storefront_id) && !empty($new_storefront_id)) {
+                        $image_id = func_save_image($file_upload_data, 'S', $new_storefront_id);
+                    }
+
+                    // Category in the files directory
+                    $domain_dir = $xcart_dir . $files_dir . DIRECTORY_SEPARATOR . $new_main_domain;
+                    if (!is_dir($domain_dir)) {
+                        @mkdir($domain_dir, 0711);
+                    }
+
+                    // SF configs
+                    if (is_array($domain_specific_config)) {
+                        $data = array();
+                        $configs_copy = '';
+                        foreach ($domain_specific_config as $dsc) {
+                            foreach ($dsc as $n => $v) {
+                                if (!empty($n)) {
+                                    $configs_copy .= '"' . $n . '"' . ', ';
+                                }
+                            }
+                        }
+                        $configs_copy = substr($configs_copy, 0, count($configs_copy) - 3);
+                        $fields = array(
+                            'name',
+                            'comment',
+                            'value',
+                            'category',
+                            'orderby',
+                            'type',
+                            'defvalue',
+                            'variants',
+                            'validation',
+                        );
+//									$data = func_query('SELECT ' . implode(', ', $fields) . ' FROM ' . $sql_tbl['config'] . ' WHERE name IN(' . $configs_copy . ')');
+
+                        $sql = <<<SQL
+insert ignore into xcart_storefronts_config (storefrontid, name, comment, value, category, orderby , type, `defvalue`, `variants`, `validation`) 
+  select {$new_storefront_id}, 
+  			c.`name`, 
+  			c.`comment`, 
+  			c.`value`, 
+  			c.`category`, 
+  			c.`orderby`, 
+  			c.`type`, 
+  			c.`defvalue`, 
+  			c.`variants`, 
+  			c.`validation`
+  from `xcart_config` as c
+  join (select * from xcart_storefronts_config group by name) as nn on nn.name = c.name and nn.category = c.`category`
+SQL;
+
+                        db_query($sql);
+
+                        func_array2update_new('storefronts_config', ['value' => 'Y'],['storefrontid' => $model->pk, 'name' => 'shop_closed']);
+                        func_array2update_new('storefronts_config', ['value' => 'N'],['storefrontid' => $model->pk, 'name' => 'https_enabled']);
+                        func_array2update_new('storefronts_config', ['value' => 'N'],['storefrontid' => $model->pk, 'name' => 'Enable_CDN']);
+                        func_array2update_new('storefronts_config', ['value' => 'N'],['storefrontid' => $model->pk, 'name' => 'search_all_website_show']);
+                        func_array2update_new('storefronts_config', ['value' => $domain_code.'-'],['storefrontid' => $model->pk, 'name' => 'opt_order_prefix']);
+                        func_array2update_new('storefronts_config', ['value' => 'http://' . $model->domain],['storefrontid' => $model->pk, 'name' => 'company_website']);
+                        func_array2update_new('storefronts_config', ['value' => $model->getBaseDomain()],['storefrontid' => $model->pk, 'name' => 'company_name']);
+                        func_array2update_new('storefronts_config', ['value' => 'cdn.' . $model->getBaseDomain()],['storefrontid' => $model->pk, 'name' => 'CDN_domain']);
+                        func_array2update_new('storefronts_config', ['value' => ''],['storefrontid' => $model->pk, 'name' => 'cidev_main_page_code']);
+                        func_array2update_new('storefronts_config', ['value' => ''],['storefrontid' => $model->pk, 'name' => 'html_into_head']);
+                        func_array2update_new('storefronts_config', ['value' => ''],['storefrontid' => $model->pk, 'name' => 'cidev_ga_code_number']);
+                        func_array2update_new('storefronts_config', ['value' => ''],['storefrontid' => $model->pk, 'name' => 'cidev_yandex_code_number']);
+                        func_array2update_new('storefronts_config', ['value' => ''],['storefrontid' => $model->pk, 'name' => 'search_products_unique_id']);
+                        func_array2update_new('storefronts_config', ['value' => ''],['storefrontid' => $model->pk, 'name' => 'sf_top_image_alt']);
+                        func_array2update_new('storefronts_config', ['value' => "<div id='m_container'><img src='//cdn.{$model->getBaseDomain()}/skin1_kolin/malina/malina2_v.png'></div>"],['storefrontid' => $model->pk, 'name' => 'product_advantages_code']);
+
+//									if (!empty($data)) {
+//										foreach ($data as $d) {
+//
+//											$d['value'] = '';
+//
+//											if ($d['name'] == 'shop_closed') {
+//												$d['value'] = 'Y';
+//											}
+//											if ($d['name'] == 'opt_order_prefix') {
+//												$d['value'] = ''; // default order prefix is empty
+//											}
+//											$d['storefrontid'] = $new_storefront_id;
+//                                            $d['orderby'] = $domain_specific_config[$d['category']][$d['name']];
+//											func_array2insert('storefronts_config', $d);
+//										}
+//									}
+
+                    }
+
+
+                    $top_message['content'] = func_get_langvar_by_name('msg_adm_storefront_created_success');
+                    $top_message['type'] = 'I';
 					
-				} else {
+				}
+				else {
 					if ($info_error == 'P') {
 						$top_message['content'] = func_get_langvar_by_name('err_mf_prefix_exists', null, false, true);
 						$top_message['type'] = 'E';
 					}
+
 					if ($info_error == 'D') {
 						$top_message['content'] = func_get_langvar_by_name('err_mf_domain_exists', null, false, true);
 						$top_message['type'] = 'E';
 					}
 				}
-			} else {
+			}
+			else {
 				$top_message['content'] = func_get_langvar_by_name('err_mf_wrong_domain_name', null, false, true);
 				$top_message['type'] = 'E';
 			}
-		} else {
+		}
+		else {
 			$top_message['content'] = func_get_langvar_by_name('err_mf_empty_fields', null, false, true);
 			$top_message['type'] = 'E';
 

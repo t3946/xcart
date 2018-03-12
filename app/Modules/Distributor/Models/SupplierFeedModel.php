@@ -25,11 +25,13 @@ class SupplierFeedModel extends Model
                 'primary' => true,
                 'null' => false,
             ],
+
             'last_feed_fields' => [
                 'class' => SerializeField::className(),
                 'null' => false,
                 'default' => ''
             ],
+
             'distributor' => [
                 'field' => 'manufacturerid',
                 'class' => ForeignField::className(),
@@ -37,12 +39,14 @@ class SupplierFeedModel extends Model
                 'link' => ['manufacturerid' => 'manufacturerid'],
                 'null' => false,
             ],
+
             'feed_type' => [
                 'class' => CharField::className(),
                 'choices' => [
                     'P' => 'product',
                     'I' => 'inventory',
                 ],
+                'default' => 'I'
             ]
         ];
     }

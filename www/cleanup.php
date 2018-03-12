@@ -3,13 +3,16 @@ define("CIDEV_CRON_START", "CRON");
 require __DIR__ . DIRECTORY_SEPARATOR . "./top.inc.php";
 require __DIR__ . DIRECTORY_SEPARATOR . "./init.php";
 
-$smarty->clear_all_cache();
-$smarty->clear_compiled_tpl();
+if (empty($_GET['only_cdn'])) {
 
-\Xcart\App\Main\Xcart::app()->cache->cleanUp(true);
-\Xcart\App\Main\Xcart::app()->template->getRenderer()->clearAllCompiles();
+    $smarty->clear_all_cache();
+    $smarty->clear_compiled_tpl();
 
-if (!empty($_GET['cdn'])) {
+    \Xcart\App\Main\Xcart::app()->cache->cleanUp(true, ['html']);
+    \Xcart\App\Main\Xcart::app()->template->getRenderer()->clearAllCompiles();
+}
+
+if (!empty($_GET['cdn']) || !empty($_GET['only_cdn'])) {
     \Modules\Amazon\Helpers\AmazonAWSHelper::invalidateCDN();
 }
 ?>

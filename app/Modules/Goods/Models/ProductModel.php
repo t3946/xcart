@@ -11,6 +11,7 @@ use Modules\Distributor\Models\DistributorModel;
 use Modules\Order\Models\OrderDetailModel;
 use Modules\Sites\Models\SiteModel;
 use Modules\Menu\Models\CleanUrlModel;
+use Modules\User\Models\SurfPathModel;
 use Xcart\App\Components\Breadcrumbs;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\AutoMetaTrait;
@@ -28,6 +29,7 @@ use Xcart\App\Orm\Fields\ManyToManyField;
 use Xcart\App\Orm\Fields\UnixTimestampField;
 use Xcart\App\Orm\Model;
 use Xcart\App\Traits\DataModelTrait;
+use Xcart\App\Traits\SlugifyTrait;
 use Xcart\Product;
 
 /**
@@ -70,7 +72,7 @@ class ProductModel extends Model implements ICartItem
 {
     const ADMIN_PRODUCT_MODIFY_URL = '/admin/product_modify.php?productid=%d&sf=%d';
 
-    use DataModelTrait, AutoMetaTrait;
+    use DataModelTrait, AutoMetaTrait, SlugifyTrait;
 
     public static function getDataModelClass()
     {
@@ -125,6 +127,18 @@ class ProductModel extends Model implements ICartItem
             'order_details' => [
                 'class' => HasManyField::className(),
                 'modelClass' => OrderDetailModel::className(),
+                'link' => ['productid' => 'productid'],
+            ],
+
+            'surf_path' => [
+                'class' => HasManyField::className(),
+                'modelClass' => SurfPathModel::className(),
+                'link' => ['productid' => 'resource_id'],
+                'extra' => ['resource_type' => 'P'],
+            ],
+            'sf_moves' => [
+                'class' => HasManyField::class,
+                'modelClass' => ProductsSfMovesModel::class,
                 'link' => ['productid' => 'productid'],
             ],
 
@@ -305,12 +319,13 @@ class ProductModel extends Model implements ICartItem
 
     public function getMPN()
     {
-        $sMPN = null;
         $model = $this->distributor;
+
         if (strpos($this->productcode, $model->code) == 0) {
-            $sMPN = preg_replace("/^(" . $model->code . "-)/i", "", $this->productcode);
+            return substr($this->productcode, strlen($model->code)+1 );
         }
-        return $sMPN;
+
+        return null;
     }
 
     public function isGroupRoot()
@@ -394,7 +409,8 @@ class ProductModel extends Model implements ICartItem
     public function getAbsoluteUrl($full = false)
     {
         if ($this->productid) {
-            $url = Xcart::app()->router->url('catalog:product:view', ['id' => $this->pk, 'slug' => $this->clean_url ? $this->clean_url->getSlugPart(): '']);
+//            $url = Xcart::app()->router->url('catalog:product:view', ['id' => $this->pk, 'slug' => $this->clean_url ? $this->clean_url->getSlugPart(): '']);
+            $url = Xcart::app()->router->url('catalog:product:view', ['id' => $this->pk, 'slug' => $this->createSlug($this->product)]);
 
             if ($full) {
                 $site = $this->sites->limit(1)->get();
@@ -538,7 +554,7 @@ class ProductModel extends Model implements ICartItem
 
     public function getFrontendChilds()
     {
-        return $this->childs->filter(['forsale' => 'Y'])->order(['group_order']);
+        return $this->childs->filter(['forsale' => 'Y'])->order(['group_order', 'product']);
     }
 
     /**

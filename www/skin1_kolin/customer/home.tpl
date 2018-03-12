@@ -524,9 +524,10 @@ document.body.appendChild(element5);
 {/if}
 {literal}
 
-var element6 = document.createElement("script");
+/*var element6 = document.createElement("script");
 element6.src = "{/literal}{$SkinDir}{literal}/browser_identificator.js";
 document.body.appendChild(element6);
+*/
 
 /*
 {/literal}

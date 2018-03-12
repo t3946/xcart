@@ -4,6 +4,8 @@ namespace Modules\Payment\Controllers;
 
 
 use Exception;
+use Modules\Order\Helpers\OrderTagEventHelper;
+use Modules\Order\Models\OrderTransactionModel;
 use Modules\Payment\Gateways\Gateway;
 use Modules\Payment\Models\ProcessorModel;
 use Xcart\App\Controller\Controller;
@@ -76,6 +78,47 @@ class PaymentController extends Controller
 
     public function endpoint($gateway)
     {
-        Xcart::app()->logger->error(serialize($_REQUEST));
+        $params = null;
+
+        /** @var \Modules\Core\CoreModule $coreModule */
+        $coreModule = Xcart::app()->getModule('Core');
+        $config = $coreModule::getGlobalConfig();
+
+        if ($bodyReceived = file_get_contents('php://input')) {
+
+            if ($params = json_decode($bodyReceived, true)) {
+
+                switch ($params['event_type']) {
+
+                    case 'CUSTOMER.DISPUTE.CREATED':
+
+                        if ($txn = OrderTransactionModel::objects()->get(['transaction_id' => $params['buyer_transaction_id']])) {
+
+                            OrderTagEventHelper::orderTagEvent($config['Attention_tags_invoices']['tag_for_events_dispute_created'], $txn->order->orderid);
+                        }
+
+                        break;
+                }
+            }
+        }
+
+        if (!$params) {
+
+            if (Xcart::app()->request->request->has('txn_type') && Xcart::app()->request->request->has('txn_id')) {
+
+                if ($txn = OrderTransactionModel::objects()->get(['transaction_id' => Xcart::app()->request->request->get('txn_id')])) {
+
+                    switch (Xcart::app()->request->request->get('txn_type')) {
+                        case 'new_case':
+
+                            OrderTagEventHelper::orderTagEvent($config['Attention_tags_invoices']['tag_for_events_dispute_created'], $txn->order->orderid);
+
+                            break;
+                    }
+                }
+            }
+        }
+
+        Xcart::app()->logger->info("{$gateway} IPN response", $params ?: $_REQUEST ?: [], 'ipn');
     }
 }

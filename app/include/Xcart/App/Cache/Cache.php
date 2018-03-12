@@ -71,12 +71,21 @@ class Cache
         return $this->getDriver($this->defaultDriver)->mget($keys, $default);
     }
 
-    public function cleanUp($force = false)
+    public function cleanUp($force = false, array $ignoring = [])
     {
-        if ($this->saveInMemory) {
-            $this->getDriver($this->memoryDriver)->cleanUp($force);
+        foreach ($this->_drivers as $name => $driver) {
+            if (empty($ignoring) || !in_array($name, $ignoring))
+            {
+                $driver->cleanUp($force);
+            }
         }
-        $this->getDriver($this->defaultDriver)->cleanUp($force);
+    }
+
+    public function gc($force = false)
+    {
+        foreach ($this->_drivers as $name => $driver) {
+            $driver->gc($force);
+        }
     }
 
 }

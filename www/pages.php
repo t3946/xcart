@@ -64,15 +64,12 @@ if ($active_modules["Manufacturers"])
     include $xcart_dir."/modules/Manufacturers/customer_manufacturers.php";
 
 if (!empty($active_modules["Xcart_Mobile"]) && $config["Appearance"]["Enable_Mobile_skin"] == "Y"){
-	if ($detect->isMobile()){
-        if (is_array($smarty->template_dir)) {
-            $pages_dir = $smarty->template_dir[1] . "/pages/$store_language/";
-        } else {
-            $pages_dir = $smarty->template_dir."/pages/$store_language/";
-        }
-	} else {
-		$pages_dir = $smarty->template_dir."/pages/$store_language/";
-	}
+
+    if (is_array($smarty->template_dir)) {
+        $pages_dir = $smarty->template_dir[1] . "/pages/$store_language/";
+    } else {
+        $pages_dir = $smarty->template_dir . "/pages/$store_language/";
+    }
 }
 else {
 	$pages_dir = $smarty->template_dir."/pages/$store_language/";

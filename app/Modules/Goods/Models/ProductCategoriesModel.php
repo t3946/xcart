@@ -36,7 +36,7 @@ class ProductCategoriesModel extends Model
             ],
             'main' => [
                 'class' => CharField::className(),
-                'primary' => true,
+                'primary' => false,
                 'null' => false,
                 'default' => 'N'
             ],

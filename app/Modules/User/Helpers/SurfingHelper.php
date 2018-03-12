@@ -10,12 +10,13 @@ class SurfingHelper
 {
     public static function logSurfPath(array $params = [])
     {
+        $aGoalArray = [];
+        $sReferalUrl = !empty($params['referer']) ? $params['referer'] : null;
+        unset($params['referer']);
+
         $model = new SurfPathModel($params);
 
-        $sReferalUrl = null;
-        $aGoalArray = [];
-
-        if (defined("IS_ROBOT") || !Xcart::app()->request->session->getId()) {
+        if (defined("IS_ROBOT")) {
             return false;
         }
 
@@ -34,13 +35,9 @@ class SurfingHelper
             $model->timestamp = time();
             $model->position = $oSurfMeta->points_visited;
 
-            if ($model->meta_id) {
-                if ($model->isValid()) {
-                    $model->save();
-                }
-            }
 
-            if (!is_null($sReferalUrl = SurfingHelper::getReferUrl())) {
+
+            if ($sReferalUrl || !is_null($sReferalUrl = SurfingHelper::getReferUrl())) {
                 $referer = (string) urldecode($sReferalUrl);
 
                 $oReferer = ReferrerModel::objects()->filter(['referer' => $referer])->limit(1)->get();
@@ -50,8 +47,9 @@ class SurfingHelper
                 $oReferer->visits++;
                 $oReferer->save();
 
-                $oSurfMeta->points_visited++;
                 $oSurfMeta->referal_url = $referer;
+                $oSurfMeta->points_visited++;
+
                 if ($oSurfMeta->id) {
 
                     $auth = Xcart::app()->request->getAuthUser() ? ' User auth: ' . Xcart::app()->request->getAuthUser() : '';
@@ -68,9 +66,7 @@ class SurfingHelper
                 }
             }
 
-            $oSurfMeta->save();
-
-            return true;
+            return $model->save() && $oSurfMeta->save();
         }
 
         return false;

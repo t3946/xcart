@@ -39,7 +39,7 @@ return array_replace_recursive([
                    'mapping' => [
                        'enum' => 'string'
                    ],
-                   'cache' => (defined('APP_DEV') && APP_DEV) ? [
+                   'cache' => (defined('APP_DEBUG') && APP_DEBUG) ? [
                        'class' => '\\Xcart\\App\\Orm\\Cache\\FilesystemCache',
                        'directory' => 'base.runtime.query_cache'
                    ] : [ //PRODUCTION CACHE
@@ -106,7 +106,7 @@ return array_replace_recursive([
            ],
        ],
 
-       'cache' => (defined('APP_DEV') && APP_DEV) ? [
+       'cache' => (defined('APP_DEBUG') && APP_DEBUG) ? [
            'class' => '\\Xcart\\App\\Cache\\Cache',
            'saveInMemory' => true,
            'memoryDriver' => 'memory',
@@ -117,6 +117,13 @@ return array_replace_recursive([
                'memory' =>  [
                    'class' => '\\Xcart\\App\\Cache\\Drivers\\Memory',
                    'numCacheQuery' => 30,
+               ],
+               'html' =>  [
+                   'class' => '\\Xcart\\App\\Cache\\Drivers\\File',
+                   'extension' => '.html',
+                   'path' => 'root.html_cache',
+                   'autoGC' => false,
+//                   'keySerialization' => false,
                ]
            ]
        ] : [ //PRODUCTION CACHE
@@ -124,6 +131,12 @@ return array_replace_recursive([
            'drivers' => [
                'default' =>  [
                    'class' => '\Xcart\App\Cache\Drivers\Redis',
+               ],
+               'html' =>  [
+                   'class' => '\\Xcart\\App\\Cache\\Drivers\\File',
+                   'extension' => '.html',
+                   'autoGC' => false,
+                   'path' => 'root.html_cache',
                ],
            ]
        ],
@@ -163,7 +176,7 @@ return array_replace_recursive([
    ],
    'autoloadComponents' => [
        'errorHandler',
-       'logger',
+//       'logger',
        'db',
    ]
 ],  $local_config);

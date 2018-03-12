@@ -49,9 +49,8 @@ class CategoryCalculateHelper
 
     public static function recalcParents(int $pk, bool $include_self = false)
     {
-        if ($pk) {
-            /** @var CategoryModel $thisModel */
-            $thisModel = CategoryModel::objects()->get(['pk' => $pk]);
+        /** @var CategoryModel $thisModel */
+        if ($pk && $thisModel = CategoryModel::objects()->get(['pk' => $pk])) {
 
             if ($models = $thisModel->getObjects()->ancestors($include_self)->all()) {
                 /** @var CategoryModel $model */
@@ -65,9 +64,8 @@ class CategoryCalculateHelper
 
     public static function recalcChildrens(int $pk, bool $include_self = false)
     {
-        if ($pk) {
-            /** @var CategoryModel $thisModel */
-            $thisModel = CategoryModel::objects()->get(['pk' => $pk]);
+        /** @var CategoryModel $thisModel */
+        if ($pk && $thisModel = CategoryModel::objects()->get(['pk' => $pk])) {
 
             if ($models = $thisModel->getObjects()->descendants($include_self)->all()) {
                 /** @var CategoryModel $model */

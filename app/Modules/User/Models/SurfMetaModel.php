@@ -6,6 +6,8 @@ use Mobile_Detect;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
+use Xcart\App\Orm\Fields\ForeignField;
+use Xcart\App\Orm\Fields\HasManyField;
 use Xcart\App\Orm\Model;
 
 class SurfMetaModel extends Model
@@ -24,6 +26,20 @@ class SurfMetaModel extends Model
         return [
             'id' => [
                 'class' => AutoField::className()
+            ],
+
+            'session_data' => [
+                'field' => 'sessid',
+                'class' => ForeignField::class,
+                'modelClass' => SessionDataModel::class,
+                'link' => ['sessid' => 'sessid'],
+            ],
+
+            'surf_path' => [
+                'field' => 'id',
+                'class' => HasManyField::class,
+                'modelClass' => SurfPathModel::class,
+                'link' => ['id' => 'id']
             ]
         ];
     }
@@ -31,6 +47,10 @@ class SurfMetaModel extends Model
     static public function getInstance()
     {
         if (is_null(self::$_instance)) {
+
+            if (!Xcart::app()->request->session->getIsActive()) {
+                Xcart::app()->request->session->start();
+            }
 
             if ($sessId = Xcart::app()->request->session->getId()) {
                 self::$_instance = self::objects()->filter(["sessid" =>$sessId])->get();

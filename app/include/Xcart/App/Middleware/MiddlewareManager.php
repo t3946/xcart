@@ -46,7 +46,7 @@ class MiddlewareManager implements IMiddleware
 
     public function init()
     {
-        foreach ($this->middleware as $middleware)
+        foreach ($this->middleware as $name => $middleware)
         {
             /** @var Middleware $mw */
             $mw = Creator::createObject($middleware);
@@ -56,7 +56,7 @@ class MiddlewareManager implements IMiddleware
             $this->isProcessException ?: $this->isProcessException = $mw->isProcessException;
             $this->isProcessResponse ?: $this->isProcessResponse = $mw->isProcessResponse;
 
-            $this->_middleware[] = $mw;
+            $this->_middleware[$name] = $mw;
         }
     }
 
@@ -92,5 +92,17 @@ class MiddlewareManager implements IMiddleware
         foreach ($this->_middleware as $middleware) {
             $middleware->processResponse($request);
         }
+    }
+
+    public function processEnd($request)
+    {
+        foreach ($this->_middleware as $middleware) {
+            $middleware->processEnd($request);
+        }
+    }
+
+    public function getMiddleware($name)
+    {
+        return $this->_middleware[$name] ?? null;
     }
 }

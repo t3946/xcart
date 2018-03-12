@@ -33,4 +33,10 @@ interface IMiddleware
      * @return mixed
      */
     public function processResponse(Request $request);
+
+    /**
+     * @param \Xcart\App\Request\Request|\Xcart\App\Request\RequestManager $request
+     * @return mixed
+     */
+    public function processEnd($request);
 }

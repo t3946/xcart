@@ -2,6 +2,7 @@
 
 namespace Modules\Distributor\Models;
 
+use DateTime;
 use Modules\Goods\Models\ProductModel;
 use Modules\Shipping\Models\ShippingRateModel;
 use Xcart\App\Orm\AutoMetaTrait;
@@ -67,5 +68,28 @@ class DistributorModel extends Model
                         'zoneid' => 0
                     ]
                 )->count() > 0;
+    }
+
+    public function getDistributorTime(): DateTime
+    {
+        return (new DateTime())->setTimestamp(time() - $this->d_server_min_distributor_time * 60 * 60);
+    }
+
+    public function isGoodTimeToSendEmail(): bool
+    {
+        $result = false;
+
+        $d_time = $this->getDistributorTime();
+
+        $startTime = new DateTime('08:30');
+        $endTime = new DateTime('16:30');
+
+        if ($d_time >= $startTime && $d_time <= $endTime && !in_array(intval($d_time->format( 'N' )), [6, 7])) {
+            if (!RequestAvailabilityOptionModel::objects()->get(['date_mm_dd_yyyy' => $d_time->format('m/d/Y'), 'active' => 'Y'])) {
+                $result = true;
+            }
+        }
+
+        return $result;
     }
 }

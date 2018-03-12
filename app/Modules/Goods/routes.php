@@ -1,10 +1,9 @@
 <?php
 return [
-
     [
-        'route' => '/api/products/getallmpn/',
-        'target' => ['\Modules\Goods\Controllers\Api\ApiProductController', 'getDistributorProductList'],
-        'name' => 'getmpn'
+        'route' => '/api/',
+        'path' => 'Modules.Goods.routes_api',
+        'namespace' => 'api'
     ],
 
     [

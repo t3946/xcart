@@ -429,7 +429,7 @@
   <tr>
     <td>Company:</td>
         <td width="100%" nowrap="nowrap">{if !$static}<input style="width: 55%;" type="text" name="additional_fields[2]" value="{$oOrder->getShippingCompany()}" />{else}{$oOrder->getShippingCompany()}{/if}
-&nbsp;<a target="_blank" href="https://www.google.com/#q={$oOrder->getShippingCompany()|replace:' ':'+'}" style="color: #1F08F8;">Google company</a>
+&nbsp;<a target="_blank" href="https://www.google.com/#q={$oOrder->getShippingCompany()|escape:"url"}" style="color: #1F08F8;">Google company</a>{*{$oOrder->getShippingCompany()|escape|var_dump}*}
         </td>
   </tr>
 {if $customer.default_fields.s_address}
@@ -511,7 +511,7 @@
   <tr>
     <td>Company:</td>
     <td width="100%" nowrap="nowrap">{if !$static}<input style="width: 55%;" type="text" name="additional_fields[1]" value="{$oOrder->getBillingCompany()}" />{else}{$oOrder->getBillingCompany()}{/if}
-    &nbsp;<a target="_blank" href="https://www.google.com/#q={$oOrder->getBillingCompany()|replace:' ':'+'}" style="color: #1F08F8;">Google company</a>
+    &nbsp;<a target="_blank" href="https://www.google.com/#q={$oOrder->getBillingCompany()|escape:"url"}" style="color: #1F08F8;">Google company</a>
     </td>
   </tr>
 {if $customer.default_fields.b_address}
@@ -637,9 +637,9 @@
 
 </form>
 
-<img src="/skin1_kolin/images/spacer_black.gif" height="2" width="100%" >
+{*<img src="/skin1_kolin/images/spacer_black.gif" height="2" width="100%" >*}
 
-<form action="{$identity_check_url}" target="_blank">
-    <input type="hidden" name="order_id" value="{$oOrder->orderid}">
-    <input type="submit" value="Click here for identity check">
-</form>
+{*<form action="{$identity_check_url}" target="_blank">*}
+    {*<input type="hidden" name="order_id" value="{$oOrder->orderid}">*}
+    {*<input type="submit" value="Click here for identity check">*}
+{*</form>*}
