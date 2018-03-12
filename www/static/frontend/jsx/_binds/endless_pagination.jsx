@@ -5,42 +5,49 @@ $(document).on('click', '.front-endless-pager a.show-more', function(e){
 
 window.endless_paginate = ()=>{
     let $this = $('.front-endless-pager a.show-more');
-    let $parent = $this.parent();
+    // let $parent = $this.parent();
     let $container = $('.product-items');
     let text_loading = $this.data('text-loading');
     let text_default = $this.data('text-default');
 
+    if ($this.length) {
 
-    window.loader.load(
-        $.ajax($this.attr('href'), {
-            'dataType': 'json',
-            'success' : (data)=>{
-                let old_uri = $this.attr('href');
-                $container.append(data.content);
+        window.loader.load(
+            $.ajax($this.attr('href'), {
+                'dataType': 'json',
+                'success' : (data)=>{
+                    let old_uri = $this.attr('href');
+                    $container.append(data.content);
 
-                if (data.href) {
+                    if (data.href) {
+                        console.log(data.href, $this.attr('href'));
+
+                        $this.find('.text').html(text_default);
+                        $this.attr('href', data.href);
+                        $this.removeAttr('disabled');
+
+                        console.log(data.href, $this.attr('href'));
+                    }
+                    else {
+                        $this.remove();
+                    }
+
+                    $('.page_count_wrap').html(data.page_count);
+
+                    // history.replaceState({pageUrl: old_uri}, document.title, old_uri);
+                },
+                'error': ()=>{
+                    window.loader.detach();
                     $this.find('.text').html(text_default);
-                    $this.attr('href', data.href);
-                    $this.removeAttr('disabled')
+                    $this.removeAttr('disabled');
+
+                    window.addFlashMessage('An error has occurred. Please try again later.', 'error');
                 }
-                else {
-                    $this.remove();
-                }
-
-                $('.page_count_wrap').html(data.page_count);
-                // history.replaceState({pageUrl: old_uri}, document.title, old_uri);
-            },
-            'error': ()=>{
-                window.loader.detach();
-                $this.find('.text').html(text_default);
-                $this.removeAttr('disabled');
-
-                window.addFlashMessage('An error has occurred. Please try again later.', 'error');
-            }
-        })
-    );
+            })
+        );
 
 
-    $this.attr('disabled', 'disabled');
-    $this.find('.text').html(text_loading);
+        $this.attr('disabled', 'disabled');
+        $this.find('.text').html(text_loading);
+    }
 };

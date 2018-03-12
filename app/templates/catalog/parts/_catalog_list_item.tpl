@@ -14,7 +14,20 @@
         <div class="image_container container">
             <a href="{$item->getAbsoluteUrl()}" title="{$item.product}" class="link">
 
-                {include "catalog/parts/_item_image.tpl" model=$item}
+
+                {if $item->isGroupRoot()}
+                    {set $childrens = $item->getFrontendChilds()->limit(4)->all()}
+                    <div class="images images-many images-{$childrens|count}">
+                        {foreach $childrens as $child}
+                            {include "catalog/parts/_item_image.tpl" model=$child}
+                        {/foreach}
+                    </div>
+                {else}
+                    <div class="images images-1">
+                        {include "catalog/parts/_item_image.tpl" model=$item}
+                    </div>
+                {/if}
+
 
                 {if $item->isNewProduct()}
                     <span class="splash splash-new show-for-large">New</span>
@@ -29,7 +42,7 @@
                 {*{/if}*}
 
             </a>
-            <a href="#" class="button yellow-white button-quick-view hide waves">quick view</a>
+            {*<a href="#" class="button yellow-white button-quick-view hide waves">quick view</a>*}
         </div>
         <div class="info_container container">
             <h4 class="title " itemprop="name">
@@ -126,53 +139,75 @@
                 <span class="current">
                     <span class="title">Price:</span>
                     <span class="price">
-                        <span itemprop="priceCurrency" content="USD">US$</span>
-                        <span itemprop="price" var-price>{$item->getFrontendPrice()|number_format:2}</span>
-                        {if $item->isOutOfStock()}
-                            <link itemprop="availability" href="http://schema.org/OutOfStock" />
-                        {else}
-                            <link itemprop="availability" href="http://schema.org/InStock" />
-                        {/if}
 
+                        {if $item->isGroupRoot()}
+                            <span itemprop="priceCurrency" content="USD">US$</span>
+                            <span itemprop="price">{$item->getPrice(1)|number_format:2}</span>
+                            -
+                            <span itemprop="priceCurrency" content="USD">US$</span>
+                            <span itemprop="price">{$item->getPrice(2)|number_format:2}</span>
+                        {else}
+
+                            <span itemprop="priceCurrency" content="USD">US$</span>
+                            <span itemprop="price" var-price>{$item->getFrontendPrice()|number_format:2}</span>
+
+                            {if $item->isOutOfStock()}
+                                <link itemprop="availability" href="http://schema.org/OutOfStock" />
+                            {else}
+                                <link itemprop="availability" href="http://schema.org/InStock" />
+                            {/if}
+                        {/if}
                     </span>
                 </span>
             </div>
 
             <div class="overflow_container">
-                {if !$item->isOutOfStock()}
-                    <div class="cart_quantity">
-                        <label for="quantity-{$item.productid}" class="show-for-large">
-                            <span class="show-for-xlarge">Quantity:</span>
-                            <span class="show-for-large-only">Qty:</span>
-                        </label>
-
-                        {include "product/parts/_quantity_group.tpl" model=$item}
-                    </div>
-
-                    <div class="info_container">
-                        {include "product/messages/_messages.tpl" model=$item}
-                    </div>
-
-                    <div class="cart_add">
-                        <a class="add button waves waves-orange yellow">
-                            <span class="text">
-                                Add to cart
-                            </span>
-                        </a>
-                    </div>
-
-                    <div class="subtotal_container hide" cont-subtotal>
-                        <div class="subtotal">
-                            Subtotal: US$ <span class="price" var-price-extended>400.01</span>
-                        </div>
-                        <div class="safe">
-                            Save <span class="percentage" var-percent-safe>41</span>% (US$ <span class="price" var-price-perunit-safe>5.27</span> per unit)
-                        </div>
-                    </div>
+                {if $item->isGroupRoot()}
+                <div class="cart_add">
+                    <a class="button waves waves-orange white">
+                        <span class="text">
+                            See {$item->getFrontendChilds()->count()} product variation
+                        </span>
+                    </a>
+                </div>
                 {else}
-                    <div class="out-of-stock">
-                        {include "product/messages/_messages.tpl" model=$item}
-                    </div>
+
+                    {if !$item->isOutOfStock()}
+                        <div class="cart_quantity">
+                            <label for="quantity-{$item.productid}" class="show-for-large">
+                                <span class="show-for-xlarge">Quantity:</span>
+                                <span class="show-for-large-only">Qty:</span>
+                            </label>
+
+                            {include "product/parts/_quantity_group.tpl" model=$item}
+                        </div>
+
+                        <div class="info_container">
+                            {include "product/messages/_messages.tpl" model=$item}
+                        </div>
+
+                        <div class="cart_add">
+                            <a class="add button waves waves-orange yellow">
+                                <span class="text">
+                                    Add to cart
+                                </span>
+                            </a>
+                        </div>
+
+                        <div class="subtotal_container hide" cont-subtotal>
+                            <div class="subtotal">
+                                Subtotal: US$ <span class="price" var-price-extended>400.01</span>
+                            </div>
+                            <div class="safe">
+                                Save <span class="percentage" var-percent-safe>41</span>% (US$ <span class="price" var-price-perunit-safe>5.27</span> per unit)
+                            </div>
+                        </div>
+                    {else}
+                        <div class="out-of-stock">
+                            {include "product/messages/_messages.tpl" model=$item}
+                        </div>
+                    {/if}
+
                 {/if}
             </div>
 

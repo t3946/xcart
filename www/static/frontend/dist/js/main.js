@@ -44306,38 +44306,45 @@ $(document).on('click', '.front-endless-pager a.show-more', function (e) {
 
 window.endless_paginate = function () {
     var $this = $('.front-endless-pager a.show-more');
-    var $parent = $this.parent();
+
     var $container = $('.product-items');
     var text_loading = $this.data('text-loading');
     var text_default = $this.data('text-default');
 
-    window.loader.load($.ajax($this.attr('href'), {
-        'dataType': 'json',
-        'success': function success(data) {
-            var old_uri = $this.attr('href');
-            $container.append(data.content);
+    if ($this.length) {
 
-            if (data.href) {
+        window.loader.load($.ajax($this.attr('href'), {
+            'dataType': 'json',
+            'success': function success(data) {
+                var old_uri = $this.attr('href');
+                $container.append(data.content);
+
+                if (data.href) {
+                    console.log(data.href, $this.attr('href'));
+
+                    $this.find('.text').html(text_default);
+                    $this.attr('href', data.href);
+                    $this.removeAttr('disabled');
+
+                    console.log(data.href, $this.attr('href'));
+                } else {
+                    $this.remove();
+                }
+
+                $('.page_count_wrap').html(data.page_count);
+            },
+            'error': function error() {
+                window.loader.detach();
                 $this.find('.text').html(text_default);
-                $this.attr('href', data.href);
                 $this.removeAttr('disabled');
-            } else {
-                $this.remove();
+
+                window.addFlashMessage('An error has occurred. Please try again later.', 'error');
             }
+        }));
 
-            $('.page_count_wrap').html(data.page_count);
-        },
-        'error': function error() {
-            window.loader.detach();
-            $this.find('.text').html(text_default);
-            $this.removeAttr('disabled');
-
-            window.addFlashMessage('An error has occurred. Please try again later.', 'error');
-        }
-    }));
-
-    $this.attr('disabled', 'disabled');
-    $this.find('.text').html(text_loading);
+        $this.attr('disabled', 'disabled');
+        $this.find('.text').html(text_loading);
+    }
 };
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
@@ -56470,7 +56477,7 @@ var Loader = function () {
         this.loaders = 0;
         this.elements = {};
         this.options = (0, _extend2.default)({
-            'timeout': 1000
+            'timeout': 1500
         }, options);
 
         this.timer = null;

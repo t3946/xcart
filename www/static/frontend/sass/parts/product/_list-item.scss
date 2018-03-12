@@ -40,18 +40,56 @@
       position: relative;
       text-align: center;
 
-
-      a {
-        //display: block;
-        display: inline-block;
-      }
-
       img {
         display: inline-block;
         width: auto;
         max-height: rem-calc(190);
         min-height: rem-calc(100);
       }
+
+      a {
+        //display: block;
+        display: inline-block;
+
+        .images {
+          height: 100%;
+          display: flex;
+          flex-direction: row;
+          flex-wrap: wrap;
+          align-items: center;
+          //align-content: center;
+          justify-content: center;
+
+          &.images-many {
+            img {
+              padding: rem-calc(2.5);
+              max-height: rem-calc(90);
+              //display: flex;
+            }
+          }
+
+          &.images-1 {
+            img {
+              //width: auto;
+              //max-height: rem-calc(190);
+              //min-height: rem-calc(100);
+            }
+          }
+
+
+          &.images-2 {
+            flex-direction: column;
+          }
+
+          &.images-3,
+          &.images-4 {
+            img {
+              max-width: 50%;
+            }
+          }
+        }
+      }
+
 
       @include breakpoint(small) {
         .not-avail {
