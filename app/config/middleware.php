@@ -6,6 +6,9 @@ return [
 //               'AutoCacheMiddleware' => [
 //                   'class' => '\\Modules\\Core\\Middleware\\CacheMiddleware',
 //               ],
+    'CORS' => [
+        'class' => '\\Modules\\Core\\Middleware\\CorsMiddleware',
+    ],
     'static_cache' => [
         'class' => '\\Modules\\Core\\Middleware\\CacheMiddleware',
         'cacheEnabled' => (defined('APP_DEBUG') && APP_DEBUG)? false : true,
