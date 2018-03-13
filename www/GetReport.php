@@ -44,7 +44,7 @@ if ($mode == "GetReportList" && !empty($setAcknowledged1)) {
     $request->setReportTypeList($reqt);
     $request->setMaxCount("100");
 
-    pd("setAcknowledged1_value:", $setAcknowledged1);
+    print_r("setAcknowledged1_value:", $setAcknowledged1);
 
     if ($setAcknowledged1 != "all") {
 
@@ -57,11 +57,11 @@ if ($mode == "GetReportList" && !empty($setAcknowledged1)) {
     // $request->setMWSAuthToken('<MWS Auth Token>'); // Optional
 
     //$dom_xml3_a =  invokeGetReportList($service, $request);
-    pd($request);
+    print_r($request);
 
     $dom_xml_arr = invokeGetReportList((new \Xcart\AmazonMWS())->getService(), $request);
 
-    pd($dom_xml_arr);
+    print_r($dom_xml_arr);
 
 } // if ($mode == "GetReportList")
 
@@ -88,12 +88,12 @@ if ($mode == "GetReport" && !empty($reportId)) {
     $request->setReportId($reportId);
 //$request->setMWSAuthToken('<MWS Auth Token>'); // Optional
 
-    pd($request);
+    print_r($request);
 
 
     $dom_xml_3 = invokeGetReport((new \Xcart\AmazonMWS())->getService(), $request);
 
-    pd($dom_xml_3);
+    print_r($dom_xml_3);
 
 }// if ($mode == "GetReport" && !empty($reportId))
 
@@ -107,7 +107,7 @@ if ($mode == "Acknowledgement" && !empty($reportId) && !empty($setAcknowledged))
     $request->setReportIdList($idList->withId($reportId));
     $request->setAcknowledged($setAcknowledged);
 
-    pd($request);
+    print_r($request);
     invokeUpdateReportAcknowledgements((new \Xcart\AmazonMWS())->getService(), $request);
 }
 
