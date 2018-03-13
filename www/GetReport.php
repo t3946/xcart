@@ -93,7 +93,11 @@ if ($mode == "GetReport" && !empty($reportId)) {
 
     $dom_xml_3 = invokeGetReport((new \Xcart\AmazonMWS())->getService(), $request);
 
-    print_r($dom_xml_3);
+    if (!empty($dom_xml_3['Report_Contents'])) {
+        echo $dom_xml_3['Report_Contents'];
+    } else {
+        pd($dom_xml_3);
+    }
 
 }// if ($mode == "GetReport" && !empty($reportId))
 
