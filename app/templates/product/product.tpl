@@ -126,7 +126,11 @@
 
     {include 'product/_tabs.tpl' model=$model}
 
-    <section class="groupped-products" id="products">groupped products</section>
+    {if $model->isGroupRoot()}
+        <section class="groupped-products" id="products">
+            {include "product/_groupped_products.tpl"}
+        </section>
+    {/if}
 </section>
 {/block}
 

@@ -43192,7 +43192,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
         }
     };
 
-    $(document).on('click', '.cart_add .button', function (e) {
+    $(document).on('click', '.cart_add .add', function (e) {
         e.preventDefault();
 
         var $product = $(e.target).closest('[data-product]');

@@ -1,4 +1,4 @@
-<section class="state_line pcont">
+<section class="products_state_line pcont">
     <div class="row">
         <div class="columns large-3 show-for-large">
             <div class="page_count_wrap">
@@ -8,6 +8,8 @@
         <div class="columns small-12 large-9">
             <div class="actions">
                 <div class="action_group">
+
+                    {if !$hide_filter_button}
                     <div class="action_block  filter">
                         <a class="action_button filter" href="#filter_form" data-modal-class="filter default">
                             <span class="action">
@@ -15,6 +17,8 @@
                             </span>
                         </a>
                     </div>
+                    {/if}
+
                     <div class="action_block sort">
                         <div class="action_button sort">
                             <span class="action">
@@ -35,6 +39,7 @@
                             {/foreach}
                         </ul>
                     </div>
+
                 </div>
                 <div class="action_block view">
                     <span class="show-for-large">

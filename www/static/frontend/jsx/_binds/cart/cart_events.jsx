@@ -60,7 +60,7 @@ import { cartAdd } from "../../redusers/appCartRediser";
     };
 
     $(document)
-        .on('click','.cart_add .button', (e) =>{
+        .on('click','.cart_add .add', (e) =>{
             e.preventDefault();
 
             let $product = $(e.target).closest('[data-product]');

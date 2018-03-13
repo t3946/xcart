@@ -38,6 +38,15 @@ class Breadcrumbs
         return $this->_lists[$this->_active] = [];
     }
 
+    public function set(Breadcrumbs $breadcrumbs)
+    {
+        foreach ($breadcrumbs->get() as $breadcrumb) {
+            $this->add($breadcrumb['name'], $breadcrumb['url']??null);
+        }
+
+        return $this;
+    }
+
     public function add($name, $url = null, $params = [], $meta = [])
     {
         if (!isset($this->_lists[$this->_active])) {

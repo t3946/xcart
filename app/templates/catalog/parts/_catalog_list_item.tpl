@@ -136,40 +136,46 @@
                         <span class="price">US$ {$item->list_price}</span>
                     </span>
                 {/if}
+
+                {if !$item->isGroupRoot()}
                 <span class="current">
                     <span class="title">Price:</span>
                     <span class="price">
+                        <span itemprop="priceCurrency" content="USD">US$</span>
+                        <span itemprop="price" var-price>{$item->getFrontendPrice()|number_format:2}</span>
 
-                        {if $item->isGroupRoot()}
-                            <span itemprop="priceCurrency" content="USD">US$</span>
-                            <span itemprop="price">{$item->getPrice(1)|number_format:2}</span>
-                            -
-                            <span itemprop="priceCurrency" content="USD">US$</span>
-                            <span itemprop="price">{$item->getPrice(2)|number_format:2}</span>
+                        {if $item->isOutOfStock()}
+                            <link itemprop="availability" href="http://schema.org/OutOfStock" />
                         {else}
-
-                            <span itemprop="priceCurrency" content="USD">US$</span>
-                            <span itemprop="price" var-price>{$item->getFrontendPrice()|number_format:2}</span>
-
-                            {if $item->isOutOfStock()}
-                                <link itemprop="availability" href="http://schema.org/OutOfStock" />
-                            {else}
-                                <link itemprop="availability" href="http://schema.org/InStock" />
-                            {/if}
+                            <link itemprop="availability" href="http://schema.org/InStock" />
                         {/if}
                     </span>
                 </span>
+                {else}
+                    <div>
+                        <span class="price-title">Price from:</span>
+                        <span itemprop="priceCurrency" content="USD">US$</span>
+                        <span itemprop="price">{$item->getPrice(1)|number_format:2}</span>
+                    </div>
+
+                    <div>
+                        <span class="price-title">Price to:</span>
+                        <span itemprop="priceCurrency" content="USD">US$</span>
+                        <span itemprop="price">{$item->getPrice(2)|number_format:2}</span>
+                    </div>
+
+                {/if}
             </div>
 
             <div class="overflow_container">
                 {if $item->isGroupRoot()}
-                <div class="cart_add">
-                    <a class="button waves waves-orange white">
-                        <span class="text">
-                            See {$item->getFrontendChilds()->count()} product variation
-                        </span>
-                    </a>
-                </div>
+                    <div class="cart_buttons">
+                        <a class="button waves waves-orange yellow-white see-other" href="{$item->getAbsoluteUrl()}">
+                            <span class="text">
+                                See {$item->getFrontendChilds()->count()} product variation
+                            </span>
+                        </a>
+                    </div>
                 {else}
 
                     {if !$item->isOutOfStock()}
@@ -186,7 +192,7 @@
                             {include "product/messages/_messages.tpl" model=$item}
                         </div>
 
-                        <div class="cart_add">
+                        <div class="cart_add cart_buttons">
                             <a class="add button waves waves-orange yellow">
                                 <span class="text">
                                     Add to cart

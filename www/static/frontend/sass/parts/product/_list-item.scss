@@ -269,7 +269,26 @@
           font: {
             weight: bold;
           }
+
+          .price-title {
+            font: {
+              weight: normal;
+            };
+          }
         }
+      }
+    }
+
+    .see-other {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      flex: 1 1 100%;
+
+      .text {
+        //font: {
+        //  size: rem-calc(14);
+        //}
       }
     }
 
@@ -425,6 +444,10 @@
         @include breakpoint(large up) {
           flex: 0 0 60%;
         }
+      }
+
+      .cart_buttons {
+        padding-top: rem-calc(5);
       }
 
       .cart_price_container {
