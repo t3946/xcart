@@ -14,6 +14,7 @@ class SurfMetaModel extends Model
 {
     use AutoMetaTrait;
 
+    /** @var null|SurfMetaModel  */
     private static $_instance = null;
 
     public static function tableName()
@@ -48,29 +49,19 @@ class SurfMetaModel extends Model
     {
         if (is_null(self::$_instance)) {
 
-            if (!Xcart::app()->request->session->getIsActive()) {
-                Xcart::app()->request->session->start();
-            }
+            Xcart::app()->request->session->open();
 
             if ($sessId = Xcart::app()->request->session->getId()) {
-                self::$_instance = self::objects()->filter(["sessid" =>$sessId])->get();
+                [self::$_instance, $is_new] = self::objects()->getOrCreate(["sessid" =>$sessId]);
 
-                if (is_null(self::$_instance)) {
-                    $md = new Mobile_Detect();
-                    self::$_instance =  new self(
-                        [
-                            "sessid"         => $sessId,
-                            "date"           => time(),
-                            "is_mobile"      => ($md->isMobile() ? "Y" : "N"),
-                            "goal_order"     => 'N',
-                            "goal_checkout"  => 'N',
-                            "goal_addtocart" => 'N',
-                            "goal_search"    => 'N',
-                            "points_visited" => '0',
-                            "last_update"    => time(),
-                            "storefrontid"   => Xcart::app()->getModule('Sites')->getSite()->storefrontid,
-                        ]
-                    );
+                if ($is_new)
+                {
+                    self::$_instance->setAttributes([
+                        "date"           => time(),
+                        "is_mobile"      => ((new Mobile_Detect())->isMobile() ? "Y" : "N"),
+                        "last_update"    => time(),
+                        "storefrontid"   => Xcart::app()->getModule('Sites')->getSite()->storefrontid,
+                    ]);
                     self::$_instance->save();
                 }
             }
