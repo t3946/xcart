@@ -409,8 +409,8 @@ class ProductModel extends Model implements ICartItem
     public function getAbsoluteUrl($full = false)
     {
         if ($this->productid) {
-//            $url = Xcart::app()->router->url('catalog:product:view', ['id' => $this->pk, 'slug' => $this->clean_url ? $this->clean_url->getSlugPart(): '']);
-            $url = Xcart::app()->router->url('catalog:product:view', ['id' => $this->pk, 'slug' => $this->createSlug($this->product)]);
+            $url = Xcart::app()->router->url('catalog:product:view', ['id' => $this->pk, 'slug' => $this->clean_url ? $this->clean_url->getSlugPart(): '']);
+//            $url = Xcart::app()->router->url('catalog:product:view', ['id' => $this->pk, 'slug' => $this->createSlug($this->product)]);
 
             if ($full) {
                 $site = $this->sites->limit(1)->get();
