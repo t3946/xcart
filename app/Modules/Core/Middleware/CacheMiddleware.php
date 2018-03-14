@@ -36,21 +36,28 @@ class CacheMiddleware extends Middleware
                 [$cacheTime, $key, $a_output] = $params;
 
                 if ($a_output && !$ignoreCache) {
-                    list($output, $headers, $etag, $modTime) = $a_output;
+                    list($output, $headers, $etag, $modTime, $wheres) = $a_output;
 
-                    if ($request->getHeaderValue('IF_NONE_MATCH') == "\"{$etag}\"") {
-                        header("HTTP/1.1 304 Not Modified");
+                    if (empty($wheres) ||
+                        (
+                            $wheres['domain'] == $request->getDomain()
+                        )
+                    )
+                    {
+                        if ($request->getHeaderValue('IF_NONE_MATCH') == "\"{$etag}\"") {
+                            header("HTTP/1.1 304 Not Modified");
+                            Xcart::app()->end();
+                        }
+
+                        foreach ($headers as $header) {
+                            header($header);
+                        }
+
+                        $this->setCacheHeaders($modTime, $cacheTime, $etag);
+
+                        echo $output;
                         Xcart::app()->end();
                     }
-
-                    foreach ($headers as $header) {
-                        header($header);
-                    }
-
-                    $this->setCacheHeaders($modTime, $cacheTime, $etag);
-
-                    echo $output;
-                    Xcart::app()->end();
                 }
             }
         }
@@ -99,6 +106,9 @@ class CacheMiddleware extends Middleware
         $modTime = gmdate("D, d M Y H:i:s", time());
         $data[] = $etag;
         $data[] = $modTime;
+        $data[] = [
+            'domain' => Xcart::app()->request->getDomain(),
+        ];
 
         Xcart::app()->cache->getDriver($this->cacheDriver)->set($key, $data, $cacheTime?:null);
 
