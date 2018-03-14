@@ -164,6 +164,16 @@ class SiteModel extends Model
         return $models;
     }
 
+    public function getAbsoluteUrl()
+    {
+        return $this->getHttpOrHttps()  . $this->domain;
+    }
+
+    public function getHttpOrHttps()
+    {
+        return (($this->getConfig()['https_enabled'] == "Y")? 'https' : 'http') . '://';
+    }
+
     public function getName()
     {
         $name = $this->getBaseDomain();

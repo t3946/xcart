@@ -2,12 +2,16 @@
 <html lang="en" class="no-js {if $.detector->isMobile()} mobile {/if}{if $.detector->isTablet()} tablet {/if}" itemscope itemtype="http://schema.org/WebSite">
 <head>
     <meta charset="utf-8">
+
+    {block 'seo'}{meta controller=$this!:null}{/block}
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
     <meta name="format-detection" content="telephone=no">
     <meta name="format-detection" content="date=no">
     <meta name="format-detection" content="address=no">
     <meta name="format-detection" content="email=no">
 
+    <link rel="dns-prefetch" href="{$.getSite->getHttpOrHttps() ~ $.getSite->getConfig().CDN_domain}">
     <link rel="dns-prefetch" href="https://www.google-analytics.com">
     <link rel="dns-prefetch" href="https://fonts.googleapis.com">
 
@@ -19,10 +23,11 @@
     {*<meta name="apple-mobile-web-app-title" content="S3 Stores">*}
 
     <meta name="mobile-web-app-capable" content="yes">
-    <meta name="application-name" content="S3 Stores">
+    <meta name="application-name" content="{$.getSite->getName()}">
 
-    {*<meta name="url" itemprop="url" content="https://s3stores.com/" >*}
-    {*<meta name="name" itemprop='name' content="S3 Stores">*}
+    {*<meta name="url" itemprop="url" content="{$.getSite->getAbsoluteUrl()}" >*}
+    <meta name="name" itemprop='name' content="{$.getSite->getName()}">
+
     <link rel="shortcut icon" href="/favicon.png" type="image/png" />
 
     <script type="text/javascript">
@@ -59,7 +64,6 @@
 
     {*<script src="/static/frontend/dist/js/vendors.js?v={frontend_version resource='vendors.js'}" defer></script>*}
 
-    {block 'seo'}{meta controller=$this!:null}{/block}
     {block 'head'}{/block}
 
     {get_assets:raw type='css' position='head'}
@@ -84,9 +88,9 @@
 {/autoescape}
 {/filter}
 
-    <noscript class="styles_no_load" id="deferred-styles">
-        <link rel="stylesheet" href="/static/frontend/dist/css/styles.css?v={frontend_version resource='css/styles.css'}" media="all">
-    </noscript>
+    {*<noscript class="styles_no_load" id="deferred-styles">*}
+        {*<link rel="stylesheet" href="/static/frontend/dist/css/styles.css?v={frontend_version resource='css/styles.css'}" media="all">*}
+    {*</noscript>*}
 
     <script src="/static/frontend/dist/js/main.js?v={frontend_version resource="js/main.js"}" defer></script>
 

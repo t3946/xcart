@@ -33,6 +33,8 @@ class DefaultController extends FrontendController
      */
     private function view_internal($model = null)
     {
+//        $this->display('wrapper.tpl');
+
         /** @var \Modules\Sites\Models\SiteModel $site */
         $site = Xcart::app()->getModule('Sites')->getSite();
 
