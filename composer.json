@@ -8,6 +8,10 @@
         {
             "type": "vcs",
             "url": "https://github.com/tsukasa-mixer/QueryBuilder"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/tsukasa-mixer/fenom"
         }
     ],
     "require": {
