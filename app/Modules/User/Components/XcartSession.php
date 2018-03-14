@@ -10,7 +10,7 @@ use Xcart\App\Request\Session;
 class XcartSession extends Session
 {
     public $autoStart = false; //@NOTE: Do not turn on. Initialization on first access
-    public $autoGc = true;
+    public $autoGc = false;
     public $registerGlobals = true;
     public $fullUnpackGlobals = false;
     private $session_key;
@@ -268,8 +268,8 @@ class XcartSession extends Session
         return $this->model;
     }
 
-    public function gc()
+    public function gc($limit = 1)
     {
-        SessionDataModel::objects()->filter(['expiry__lt' => time()])->limit(1)->delete();
+        SessionDataModel::objects()->filter(['expiry__lt' => time()])->limit($limit)->delete();
     }
 }
