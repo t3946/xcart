@@ -33,14 +33,15 @@ class CacheMiddleware extends Middleware
 
             if ($params) {
                 $this->params = $params;
-                [$cacheTime, $key, $a_output] = $params;
+                [$cacheTime, $key, $a_output, $slug] = $params;
 
                 if ($a_output && !$ignoreCache) {
                     list($output, $headers, $etag, $modTime, $wheres) = $a_output;
 
                     if (empty($wheres) ||
                         (
-                            $wheres['domain'] == $request->getDomain()
+                            ((empty($wheres['domain'])) || (!empty($wheres['domain']) && $wheres['domain'] == $request->getDomain()))
+                        &&  ((empty($wheres['slug']))   || (!empty($slug) && !empty($wheres['slug']) && $wheres['slug'] == $slug))
                         )
                     )
                     {
@@ -89,7 +90,7 @@ class CacheMiddleware extends Middleware
 
     private function saveCache($output)
     {
-        [$cacheTime, $key] = $this->params;
+        [$cacheTime, $key, $c_output, $slug] = $this->params;
 
 
         $headers = array_filter(headers_list(), function($header) {
@@ -108,6 +109,7 @@ class CacheMiddleware extends Middleware
         $data[] = $modTime;
         $data[] = [
             'domain' => Xcart::app()->request->getDomain(),
+            'slug' => $slug
         ];
 
         Xcart::app()->cache->getDriver($this->cacheDriver)->set($key, $data, $cacheTime?:null);
@@ -133,7 +135,7 @@ class CacheMiddleware extends Middleware
             $key = $this->getCacheKey($request, $match);
 
             $a_output = Xcart::app()->cache->getDriver($this->cacheDriver)->get($key);
-            return [$cacheTime, $key, $a_output];
+            return [$cacheTime, $key, $a_output, ''];
         }
 
         return false;
@@ -171,7 +173,9 @@ class CacheMiddleware extends Middleware
 
             if (strpos($request->getPath(), 'amp/') === false )
             {
-                if (strpos($request->getPath(), 'product') !== false && preg_match("/\/product\/(\d+)\/.*/", $request->getPath(), $match)) {
+                if (strpos($request->getPath(), 'product') !== false
+                    && preg_match("/\/product\/(\d+)\/([\d\w-]+)\//", $request->getPath(), $match)
+                ) {
                     $key = 'product-' . $match[1];
 
                     if ($isMobile) {
@@ -180,7 +184,7 @@ class CacheMiddleware extends Middleware
 
                     $content = Xcart::app()->cache->getDriver($this->cacheDriver)->get($key);
 
-                    return [Cache::CACHE_YEAR, $key, $content];
+                    return [Cache::CACHE_YEAR, $key, $content, $match[2]];
                 }
             }
         }
