@@ -644,9 +644,11 @@ SQL;
                                     $order_date_old->setTimestamp($orderModel->date);
                                     $orderModel->date = $posted_date->getTimestamp();
                                     $orderModel->save(['date']);
-                                    func_backprocess_log(self::BACK_PROCESS_LOG_NAME_SETTLEMENT,
-                                        "order#{$orderModel->orderid};{$order_date_old->format(\DateTime::ISO8601)};{$posted_date->format(\DateTime::ISO8601)}"
-                                    );
+                                    if ($order_date_old != $posted_date) {
+                                        func_backprocess_log(self::BACK_PROCESS_LOG_NAME_SETTLEMENT,
+                                            "order#{$orderModel->orderid};{$order_date_old->format(\DateTime::ISO8601)};{$posted_date->format(\DateTime::ISO8601)}"
+                                        );
+                                    }
                                 }
 
                                 foreach ($v["Fulfillment"] as $kk => $vv) {
