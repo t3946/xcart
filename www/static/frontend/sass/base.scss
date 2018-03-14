@@ -4,16 +4,22 @@
 @import 'settings/colors';
 @import 'settings/settings';
 
+@import 'mixins/mixins';
+@import 'mixins/array_maps';
+@import 'mixins/menu';
+@import 'mixins/bem';
+
 @import 'settings/foundation_settings';
-@import 'settings/foundation_includes_base';
+//@import 'settings/foundation_includes_base';
 //@import "mindy/global";
-@import 'base/base';
-@import 'base/typography';
+//@import 'base/base';
+//@import 'base/header';
+//@import 'base/typography';
 
 //@import 'mixins/gen';
 //@import 'mixins/menu';
 
 @import 'parts/loader_base';
 //@import 'parts/header';
-@import 'parts/off-canvas_base';
+//@import 'parts/off-canvas_base';
 //@import 'parts/off-canvas';

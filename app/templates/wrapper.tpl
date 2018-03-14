@@ -56,7 +56,6 @@
     </script>
 
     <style type="text/css">{inline file="static/frontend/dist/css/base.css"}</style>
-    <link rel="stylesheet" href="/static/frontend/dist/css/styles.css?v={frontend_version resource='css/styles.css'}" media="all">
 
     {*<script src="/static/frontend/dist/js/vendors.js?v={frontend_version resource='vendors.js'}" defer></script>*}
 
@@ -85,12 +84,29 @@
 {/autoescape}
 {/filter}
 
+    <noscript class="styles_no_load" id="deferred-styles">
+        <link rel="stylesheet" href="/static/frontend/dist/css/styles.css?v={frontend_version resource='css/styles.css'}" media="all">
+    </noscript>
+
     <script src="/static/frontend/dist/js/main.js?v={frontend_version resource="js/main.js"}" defer></script>
 
 {block 'js'}{/block}
 
 {get_assets:raw type='css'}
 {get_assets:raw type='js'}
+
+
+<script>
+    var cb = function() {
+        var l = document.createElement('link'); l.rel = 'stylesheet';
+        l.href = "/static/frontend/dist/css/styles.css?v={frontend_version resource='css/styles.css'}";
+        var h = document.getElementsByTagName('head')[0]; h.parentNode.insertBefore(l, h);
+    };
+    var raf = requestAnimationFrame || mozRequestAnimationFrame ||
+        webkitRequestAnimationFrame || msRequestAnimationFrame;
+    if (raf) raf(cb);
+    else window.addEventListener('load', cb);
+</script>
 
 </body>
 </html>
