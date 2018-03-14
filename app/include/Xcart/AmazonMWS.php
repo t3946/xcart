@@ -639,7 +639,7 @@ SQL;
                                 $log_text = "order processed: " . $v["AmazonOrderID"];
                                 func_backprocess_log(self::BACK_PROCESS_LOG_NAME_SETTLEMENT, $log_text);
 
-                                if ($orderModel && !empty($v['Fulfillment']['PostedDate']) && $posted_date = \DateTime::createFromFormat(\DateTime::ISO8601, $v['Fulfillment']['PostedDate'])) {
+                                if ($k_name == 'Item' && $orderModel && !empty($v['Fulfillment']['PostedDate']) && $posted_date = \DateTime::createFromFormat(\DateTime::ISO8601, $v['Fulfillment']['PostedDate'])) {
                                     $order_date_old = new \DateTime();
                                     $order_date_old->setTimestamp($orderModel->date);
                                     $orderModel->date = $posted_date->getTimestamp();
