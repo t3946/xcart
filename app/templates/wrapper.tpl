@@ -15,6 +15,13 @@
     <link rel="dns-prefetch" href="https://www.google-analytics.com">
     <link rel="dns-prefetch" href="https://fonts.googleapis.com">
 
+    <link rel="preconnect" href="{$.getSite->getHttpOrHttps() ~ $.getSite->getConfig().CDN_domain}">
+    <link rel="preconnect" href="https://www.google-analytics.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+
+    <link rel="prefetch" href="/static/frontend/dist/css/styles.css" as="style">
+    <link rel="prefetch" href="/static/frontend/dist/js/main.js" as="script">
+
     {*<link rel="manifest" href="/manifest.json">*}
 
     <meta name="apple-touch-fullscreen" content="yes" />
