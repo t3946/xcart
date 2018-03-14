@@ -7,14 +7,14 @@ session_start();
 require __DIR__ . DIRECTORY_SEPARATOR . "../www/top.inc.php";
 require __DIR__ . DIRECTORY_SEPARATOR . "../www/init.php";
 
-if ($config["cidev_image_generator"] == "Y"){
+/*if ($config["cidev_image_generator"] == "Y"){
 	$log_text = "--- already launched";
 	func_backprocess_log("image generator", $log_text);
 
         die("Already launched"); // ################################
 }
 db_query("UPDATE $sql_tbl[config] SET value='Y' WHERE name='cidev_image_generator'");
-//db_query("UPDATE $sql_tbl[config] SET value='N' WHERE name='cidev_image_generator'");
+//db_query("UPDATE $sql_tbl[config] SET value='N' WHERE name='cidev_image_generator'");*/
 
 $started_at = time();
 $log_text = " * * *  Cron started  * * * ";
@@ -154,7 +154,7 @@ $finished_at = time();
 $duration = $started_at - $finished_at;
 $duration = $duration/(60*60);
 $duration = round($duration,1);
-db_query("UPDATE $sql_tbl[config] SET value='N' WHERE name='cidev_image_generator'");
+//db_query("UPDATE $sql_tbl[config] SET value='N' WHERE name='cidev_image_generator'");
 $log_text = "Cron completed. Duration: ".$duration." hours, processed ".$cnt." records";
 func_backprocess_log("image generator", $log_text);
 die("DONE!");

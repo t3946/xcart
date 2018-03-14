@@ -785,13 +785,16 @@ SQL
             else {
 
                 if ($oProduct && $mv_resource = $oProduct->sf_moves->filter(['resource_type' => ProductsSfMovesModel::RESOURCE_TYPE_CATEGORY])->order(['-batch_id'])->limit(1)->get()) {
-                        /** @var CategoryModel $mv_category */
-                        if ($mv_category = CategoryModel::objects()->get(['pk' => $mv_resource->resource_id])) {
-                            if ($mv_category = $mv_category->getObjects()->ancestors(true)->filter(['avail' => 'Y'])->limit(1)->get()) {
-                                \Xcart\App\Main\Xcart::app()->request->redirect($mv_category->getAbsoluteUrl());
-                            }
+                    /** @var CategoryModel $mv_category */
+                    if ($mv_category = CategoryModel::objects()->get(['pk' => $mv_resource->resource_id])) {
+                        if ($mv_category = $mv_category->getObjects()->ancestors(true)->filter(['avail' => 'Y'])->limit(1)->get()) {
+                            \Xcart\App\Main\Xcart::app()->request->redirect($mv_category->getAbsoluteUrl());
                         }
                     }
+
+                    \Xcart\App\Main\Xcart::app()->request->redirect('/');
+
+                }
 
                 func_header_location("error_message.php?access_denied&id=33");
             }
@@ -931,7 +934,14 @@ SQL
                     return false;
                 }
                 else {
-                    func_header_location("error_message.php?product_disabled");
+
+                    if ($oProduct && $mv_category = $oProduct->getMainCategory()) {
+                        if ($mv_category = $mv_category->getObjects()->ancestors(true)->filter(['avail' => 'Y'])->limit(1)->get()) {
+                            \Xcart\App\Main\Xcart::app()->request->redirect($mv_category->getAbsoluteUrl());
+                        }
+                    }
+
+                    \Xcart\App\Main\Xcart::app()->request->redirect('/');
                 }
             }
             else {
