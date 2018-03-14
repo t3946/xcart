@@ -262,15 +262,6 @@ class HttpRequest extends Request
         return $this->getIsAjax() && !empty($_SERVER['HTTP_X_PJAX']);
     }
 
-    public function getDomain()
-    {
-        if ($host = $this->getHost()) {
-            return explode(':', $host)[0];
-        }
-
-        return null;
-    }
-
     public function getHost()
     {
         if (isset($_SERVER['HTTP_HOST'])) {
