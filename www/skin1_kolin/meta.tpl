@@ -1,3 +1,7 @@
+<link rel="stylesheet" href="/static/backend/fonts/icons/css/style.css">
+
+<link rel="dns-prefetch" href="https://www.google-analytics.com">
+<link rel="preconnect" href="https://www.google-analytics.com">
 
 {include file="meta_titles.tpl" }
 
@@ -60,7 +64,7 @@ var page_charset = "{$default_charset|default:"iso-8859-1"}";
     <script src="{$SkinDir}/jquery.min.1.7.1.js" type="text/javascript"></script>
 {/if}
 
-<link rel="stylesheet" href="/static/backend/fonts/icons/css/style.css">
+
 {*
 {/if}
 *}
