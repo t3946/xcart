@@ -63,6 +63,17 @@
                 {insert "catalog/parts/_state_line.tpl"}
 
                 {raw $pager->render()}
+
+                {add_asset_block type="js"}
+                    <script type="text/javascript">
+                        (function(){
+                            document.addEventListener('DOMContentLoaded', function(){
+                                setTimeout(endless_paginate, 500);
+                                // endless_paginate();
+                            })
+                        })();
+                    </script>
+                {/add_asset_block}
             </div>
         </div>
     </section>
@@ -73,16 +84,4 @@
 
 {block 'after-content'}
     {*{include "demo/blocks/sliders/_recently_viewed.tpl"}*}
-{/block}
-
-{block 'js'}
-    {if !$.request->getIsAjax() }
-    <script type="text/javascript">
-        (function(){
-            document.addEventListener('DOMContentLoaded', function(){
-                endless_paginate();
-            })
-        })();
-    </script>
-    {/if}
 {/block}

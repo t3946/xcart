@@ -478,7 +478,13 @@ class ProductModel extends Model implements ICartItem
             $bread = new Breadcrumbs();
         }
 
-        $bread->add($this->product, $this->getAbsoluteUrl());
+        if ($this->isGroupChild()) {
+            /** @var static $parent */
+            $parent = $this->parent;
+            $bread->add($parent->getFrontendName(), $parent->getAbsoluteUrl());
+        }
+
+        $bread->add($this->getFrontendName(), $this->getAbsoluteUrl());
 
         return $bread;
     }

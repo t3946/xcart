@@ -111,10 +111,21 @@
                 <div class="prices">
                     {include "product/price/_table_prices.tpl" model=$model}
 
+                    {if $model->isGroupChild()}
+                        {set $parent = $model->parent}
+                        <div class="link__group_root">
+                            <a href="{$parent->getAbsoluteUrl()}">
+                                Full {$parent->getFrontendName()} product line
+                            </a>
+                        </div>
+                    {/if}
+
                     {*{if $model->isOutOfStock()}*}
                     {*{else}*}
                     {*{/if}*}
                 </div>
+                {else}
+
                 {/if}
                 {*<div class="godaddy hide-for-medium hide-for-large text-align--center">*}
                     {*<img src="/static/frontend/dist/images/icons/item_product/gd_label.png" alt="GODADDY Verified & secured" class="gd">*}
