@@ -46,4 +46,6 @@ function surfMetaRegister() {
 }
 
 
-surfMetaRegister();
+document.addEventListener('DOMContentLoaded', function(){
+    setTimeout(surfMetaRegister, 500);
+});
