@@ -121,7 +121,7 @@ export default class LazyImageLoad
 
         this.intervalSearch = setInterval(()=>{
             $(document).trigger('lil.observe');
-        }, 3000);
+        }, 1500);
     }
 
     runTimer(load_all = false, time_out = 50) {
