@@ -665,7 +665,11 @@
 {/if}
 {if $active_modules.Product_Options ne ''}
     <script type="text/javascript">
-        check_options();
+        {literal}
+            document.addEventListener('DOMContentLoaded', function(){
+                setTimeout(check_options, 500);
+            });
+        {/literal}
     </script>
 {/if}
 {literal}
