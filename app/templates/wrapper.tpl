@@ -99,7 +99,7 @@
         {*<link rel="stylesheet" href="/static/frontend/dist/css/styles.css?v={frontend_version resource='css/styles.css'}" media="all">*}
     {*</noscript>*}
 
-    <script src="/static/frontend/dist/js/main.js?v={frontend_version resource="js/main.js"}" defer></script>
+    <script src="/static/frontend/dist/js/main.js?v={frontend_version resource="js/main.js"}" async></script>
 
 {block 'js'}{/block}
 
@@ -116,7 +116,7 @@
     var raf = requestAnimationFrame || mozRequestAnimationFrame ||
         webkitRequestAnimationFrame || msRequestAnimationFrame;
     if (raf) raf(cb);
-    else window.addEventListener('load', cb);
+    else window.addEventListener('DOMContentLoaded', cb);
 </script>
 
 </body>

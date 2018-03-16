@@ -18,59 +18,61 @@ import documentReady from "./utils/documentReady";
 // require('preact/devtools');
 
 (function(){
+    documentReady(()=>{
+        new SearchSuggestion();
+        new LazyImageLoad();
+        new CategoryViewType();
+        new DepartmentMenu();
+        new DottedText('.must-show-less');
+        new CatalogFilter();
 
-    new SearchSuggestion();
-    new LazyImageLoad();
-    new CategoryViewType();
-    new DepartmentMenu();
-    new DottedText('.must-show-less');
-    new CatalogFilter();
+        window['FilterPriceSlider'] = FilterPriceSlider;
+        window['loader'] = new Loader;
 
-    isMedia('medium', '(max-width: 1023px)');
+        isMedia('medium', '(max-width: 1023px)');
 
-    window['FilterPriceSlider'] = FilterPriceSlider;
-    window['loader'] = new Loader;
+        Waves.attach('.waves');
+        Waves.init();
 
-    Waves.attach('.waves');
-    Waves.init();
+        let $offCanvas = $('#offCanvasLeft');
 
-    let $offCanvas = $('#offCanvasLeft');
-
-    $(document).on('swipe', function(e, Dx, Dy, angle) {
-
-        if (e.target.closest('#main_wrapper')) {
-            if (isMedia('medium') && isTouch()) {
-                if (angle < 10) {
-                    if (Dx === 1 && Dy === 0) { //right
-                        $offCanvas.foundation('open', e);
-                    }
-                    else if (Dx === -1 && Dy === 0) {
-                        $offCanvas.foundation('close');
+        $(document).on('swipe', function(e, Dx, Dy, angle) {
+            if (e.target.closest('#main_wrapper')) {
+                if (isMedia('medium') && isTouch()) {
+                    if (angle < 10) {
+                        if (Dx === 1 && Dy === 0) { //right
+                            $offCanvas.foundation('open', e);
+                        }
+                        else if (Dx === -1 && Dy === 0) {
+                            $offCanvas.foundation('close');
+                        }
                     }
                 }
             }
-        }
-    });
+        });
+
+        $(document).on('click', '.show_more', function(e){
+            let $this = $(this);
+            let $target = $($this.data('target'));
+
+            if (!$target.hasClass('full')) {
+                $target.addClass('full');
+
+                $this.html($this.data('text-less'));
+            }
+            else {
+                $target.removeClass('full');
+
+                $this.html($this.data('text-more'));
+            }
+        });
 
 
-    $(document).on('click', '.show_more', function(e){
-        let $this = $(this);
-        let $target = $($this.data('target'));
-
-        if (!$target.hasClass('full')) {
-            $target.addClass('full');
-
-            $this.html($this.data('text-less'));
-        }
-        else {
-            $target.removeClass('full');
-
-            $this.html($this.data('text-more'));
-        }
-    });
-
-    documentReady(()=>{
         $(document).foundation();
+
+        while(window.app.afterReady.length) {
+            (window.app.afterReady.pop())();
+        }
 
         setTimeout(()=>{
             WebFont.load({
@@ -80,15 +82,10 @@ import documentReady from "./utils/documentReady";
             });
 
             foundationRegisterCustomEvents();
-            loader.detach();
             $(document).trigger('component.cart.check');
 
-            if (window.app.afterReady && window.app.afterReady.length) {
-                let ar = window.app.afterReady;
-                for (let i = 0, len =ar.length; i < len; i++) {
-                    ar[i]();
-                }
-            }
         }, 100);
+
+        loader.detach();
     })
 })();

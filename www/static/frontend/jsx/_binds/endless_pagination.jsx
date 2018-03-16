@@ -12,7 +12,7 @@ window.endless_paginate = ()=>{
 
     if ($this.length) {
 
-        window.loader.load(
+        // window.loader.load(
             $.ajax($this.attr('href'), {
                 'dataType': 'json',
                 'success' : (data)=>{
@@ -20,13 +20,9 @@ window.endless_paginate = ()=>{
                     $container.append(data.content);
 
                     if (data.href) {
-                        console.log(data.href, $this.attr('href'));
-
                         $this.find('.text').html(text_default);
                         $this.attr('href', data.href);
                         $this.removeAttr('disabled');
-
-                        console.log(data.href, $this.attr('href'));
                     }
                     else {
                         $this.remove();
@@ -44,7 +40,7 @@ window.endless_paginate = ()=>{
                     window.addFlashMessage('An error has occurred. Please try again later.', 'error');
                 }
             })
-        );
+        // );
 
 
         $this.attr('disabled', 'disabled');

@@ -35,8 +35,8 @@
 
 
 {add_asset_block type="js"}
-<script type="text/javascript" defer>
-    document.addEventListener('DOMContentLoaded', function() {
+<script type="text/javascript">
+    window.app.afterReady.push(function(){
         var price_min = {$values.prices.min};
         var price_max = {$values.prices.max};
         var start_min = {$values.selected.min};

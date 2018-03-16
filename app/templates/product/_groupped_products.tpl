@@ -17,12 +17,9 @@
 
         {add_asset_block type="js"}
             <script type="text/javascript">
-                (function(){
-                    document.addEventListener('DOMContentLoaded', function(){
-                        setTimeout(endless_paginate, 500);
-                        // endless_paginate();
-                    })
-                })();
+                window.app.afterReady.push(function(){
+                    endless_paginate();
+                });
             </script>
         {/add_asset_block}
     </div>
