@@ -49,7 +49,7 @@
 {block 'js'}
     {parent}
     <script type="text/javascript">
-        $(document).ready(function(){
+        (function(){
             {if $batch_model}
                 var url_restocking_batch_processing = '{url 'amazon:batch_processing'}';
                 var url_restocking_batch_processing_check = '{url 'amazon:batch_processing_check'}';
@@ -139,10 +139,10 @@
                     var cost_to_us = $(this).find('td.cost-to-us').text().replace('$', ''),
                     qty = $(this).find('input.restocking-qty').val();
                     if (qty > 0) {
-                        total += round(parseFloat(cost_to_us) * parseInt(qty),2);
+                        total += Math.round(round(parseFloat(cost_to_us) * parseInt(qty) *100) / 100;
                     }
                 });
-                total = round(total,2);
+                total = Math.round(total *100) /100;
                 obj.siblings('legend').find('span.distributor-total').text('$'+total.toFixed(2));
                 return total;
             }
