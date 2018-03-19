@@ -1,1 +1,1 @@
-<script defer src="{$SkinDir}/{$src}" type="text/javascript"></script>
+{defer file="`$SkinDir`/`$src`"}

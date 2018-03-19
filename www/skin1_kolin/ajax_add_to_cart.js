@@ -1,7 +1,7 @@
 // $Id: ajax_add_to_cart.js,v 1.0 2010/11/01 16:30:02 kate Exp $
 
 
-$().ready(function () {
+$(document).ready(function () {
     $.ajaxSetup({
         cache: false,
         error: function (x, e) {
@@ -140,4 +140,4 @@ function ajax_add_to_cart(id, add_date, source) {
 }
 
 
-$(document).on('ready', ajax_refresh_cart);
+$(document).ready(ajax_refresh_cart);

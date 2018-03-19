@@ -1,7 +1,4 @@
-<link rel="stylesheet" href="/static/backend/fonts/icons/css/style.css">
 
-<link rel="dns-prefetch" href="https://www.google-analytics.com">
-<link rel="preconnect" href="https://www.google-analytics.com">
 
 {include file="meta_titles.tpl" }
 
@@ -10,11 +7,6 @@
 
 {include file="presets_js.tpl"}
 
-{if (($main eq "product" || $main eq "fast_lane_checkout") || $usertype ne "C")}
-    {* igor_async *}
-    {include file="main/include_js.tpl" src="common.js"}
-{/if}
-
 {if $config.Adaptives.isJS eq '' && $config.Adaptives.is_first_start eq 'Y'}
     <script type="text/javascript">
         <!--
@@ -22,8 +14,6 @@
         -->
     </script>
     <script id="adaptives_script" type="text/javascript" language="JavaScript 1.2"></script>
-
-    {* igor_async {include file="main/include_js.tpl" src="browser_identificator.js"} *}
 
 {/if}
 
@@ -60,9 +50,7 @@ var page_charset = "{$default_charset|default:"iso-8859-1"}";
 {*
 {if $main eq "product"}
 *}
-{if $AREA_TYPE ne 'A'}
-    <script src="{$SkinDir}/jquery.min.1.7.1.js" type="text/javascript"></script>
-{/if}
+
 
 
 {*

@@ -8,7 +8,7 @@
     {/foreach}
 
     {ignore}
-    $(function () {
+    $(document).ready(function () {
         var flashOutTime = 5000;
 
         var $flashList = $('.flash-messages-block .flash-list');

@@ -14,16 +14,32 @@
                 <link rel="shortcut icon" href="{$xcart_web_dir}/image.php?id=0&amp;type=F" type="image/vnd.microsoft.icon"/>
             {/if}
 
-            {config_load file="$skin_config"}
+            <link rel="dns-prefetch" href="https://www.google-analytics.com">
+            <link rel="preconnect" href="https://www.google-analytics.com">
+            <link rel="prefetch" href="{$SkinDir}/skin1.min.css" as="style">
+            <link rel="prefetch" href="{$SkinDir}/jquery.min.1.7.1.js" as="script">
 
-            <link rel="stylesheet" href="{$SkinDir}/lib/jqueryui/jquery.ui.theme.css" />
-            <link rel="stylesheet" href="{$SkinDir}/{#CSSFile#}" />
-            <link rel="stylesheet" href="{$SkinDir}/jquery.tooltip.css" />
-            <link rel="stylesheet" href="{$SkinDir}/US_City_List/jquery.autocomplete.css" />
-            <link rel="stylesheet" href="{$SkinDir}/lib/colorbox/colorbox.css" />
-            <!--[if IE]>
-            <link rel="stylesheet" href="{$SkinDir}/skin1.IE.css" type="text/css" media="all" />
-            <![endif]-->
+            {config_load file="$skin_config"}
+            {if ($main != 'product') }
+
+                <link rel="stylesheet" href="/static/backend/fonts/icons/css/style.css">
+                <link rel="stylesheet" href="{$SkinDir}/lib/jqueryui/jquery.ui.theme.min.css" />
+                <link rel="stylesheet" href="{$SkinDir}/skin1.min.css" />
+                <link rel="stylesheet" href="{$SkinDir}/jquery.tooltip.css" />
+                <link rel="stylesheet" href="{$SkinDir}/US_City_List/jquery.autocomplete.min.css" />
+                <!--[if IE]>
+                <link rel="stylesheet" href="{$SkinDir}/skin1.IE.css" type="text/css" media="all" />
+                <![endif]-->
+            {else}
+                <style>{include file="critical_path_product.tpl"}</style>
+
+                {defer file="`$SkinDir`/skin1.min.css" type="css"}
+                {defer file="`$SkinDir`/lib/jqueryui/jquery.ui.theme.min.css" type="css"}
+                {defer file="`$SkinDir`/jquery.tooltip.css" type="css"}
+                {defer file="`$SkinDir`/US_City_List/jquery.autocomplete.min.css" type="css"}
+                {defer file="/static/backend/fonts/icons/css/style.css" type="css"}
+
+            {/if}
 
             {if $config.Product_Page.map_bridge_text_background ne ''}
                 {literal}
@@ -61,9 +77,25 @@
                 <link rel="amphtml" href="{$oProduct->getAmpAbsoluteUrl(true)}">
             {/if}
 
+
+
         </head>
 
         <body{$reading_direction_tag}{if $body_onload ne ''} onload="javascript: {$body_onload}"{/if}>
+
+            <script>
+                {literal}
+                if (!window.$) {
+                    function jQuery(func) {
+                        if (func) drh_callbacks.push(func);
+                        return {
+                            ready: function(func) { drh_callbacks.push(func); }
+                        };
+                    }
+                    window.$ = window.jQuery = jQuery; drh_callbacks = [];
+                }
+                {/literal}
+            </script>
 
                 {$xcartApp->template->render('inSmarty/raw_flash.tpl')}
 
@@ -86,116 +118,113 @@
 
                         }
 
-                    function func_load_ajax_carousel_products(section_name)
-                    {
-                        var tmp_rand = Math.random();
-                        var options = {'section_name': section_name};
-                        {/literal}
-                        {if $product.productid ne ""}
+                        function func_load_ajax_carousel_products(section_name) {
+                            var tmp_rand = Math.random();
+                            var options = {'section_name': section_name};
+                            {/literal}
+                            {if $product.productid ne ""}
                             {literal}options['productid'] = {/literal}{$product.productid}{literal};{/literal}
-                        {/if}
-                        {literal}
+                            {/if}
+                            {literal}
 
-                        $.post('cidev_ajax_suggestions.php?rand=' + tmp_rand,options, function(data)
-                        {
-                            if (data)
-                            {
-                                var obj = $.parseJSON(data);
-                                var html = '<ul>';
-                                var a_href = '';
+                            $.post('cidev_ajax_suggestions.php?rand=' + tmp_rand, options, function (data) {
+                                if (data) {
+                                    var obj = $.parseJSON(data);
+                                    var html = '<ul>';
+                                    var a_href = '';
 
-                                var ga_page_name = '{/literal}{$ga_page_name}{literal}';
+                                    var ga_page_name = '{/literal}{$ga_page_name}{literal}';
 
-                                if (obj !== undefined) {
-                                    $.each(obj.items, function () {
-                                        if (this.clean_url != '') {
-                                            a_href = this.clean_url;
-                                        } else {
-                                            a_href = 'product.php?productid=' + this.productid;
-                                        }
-                                        ga_page_name = this.ga_param;
-                                        html += '<li class="google_impression_object" data-product-id="'+this.productid+'" data-name="'+this.product+'" data-category="'+this.category+'" data-brand="'+this.brand+'" data-list="'+ga_page_name+'" data-price="'+this.price.toFixed(2)+'" data-position="'+this.N_key+'" class="active">' +
-                                            '<div style="text-align: center;"><div style="width:150px;height:150px; margin:0 auto;">' +
-                                            '<a href="' + a_href + '" onclick="onProductClick(\'' + this.productid + '\',\'' + this.product + '\',\'' + this.category + '\',\'' + this.brand + '\',\'' + this.N_key + '\',\'' + ga_page_name + '\',\'' + this.price + '\'); return !ga.loaded;">';
-                                        if (this.thumb && this.thumb.length) {
-                                            html += this.thumb;
-                                        }
-                                        html += '</a></div>' +
-                                            '<br />' + '<a href="' + a_href + '" onclick="onProductClick(\'' + this.productid + '\',\'' + this.product + '\',\'' + this.category + '\',\'' + this.brand + '\',\'' + this.N_key + '\',\'' + ga_page_name + '\',\'' + this.price.toFixed(2) + '\'); return !ga.loaded;">' + this.product + '</a>';
-                                        if (this.is_group === true) {
-                                            if (this.price > 0) {
-                                                var range = '';
-                                                if (this.price !== this.price_2) {
-                                                    range = ' - US$ ' + this.price_2.toFixed(2);
-                                                }
-                                                html += '<br /> <span class="ProductPrice">US$ ' + this.price.toFixed(2) + range + '</span>';
+                                    if (obj !== undefined && obj.items) {
+                                        $.each(obj.items, function () {
+                                            if (this.clean_url != '') {
+                                                a_href = this.clean_url;
+                                            } else {
+                                                a_href = 'product.php?productid=' + this.productid;
                                             }
-                                        } else
-                                        {
-                                            html += '<br /> <span class="ProductPrice">US$ ' + this.price.toFixed(2) + '</span>';
+                                            ga_page_name = this.ga_param;
+                                            html += '<li class="google_impression_object" data-product-id="' + this.productid + '" data-name="' + this.product + '" data-category="' + this.category + '" data-brand="' + this.brand + '" data-list="' + ga_page_name + '" data-price="' + this.price.toFixed(2) + '" data-position="' + this.N_key + '" class="active">' +
+                                                '<div style="text-align: center;"><div style="width:150px;height:150px; margin:0 auto;">' +
+                                                '<a href="' + a_href + '" onclick="onProductClick(\'' + this.productid + '\',\'' + this.product + '\',\'' + this.category + '\',\'' + this.brand + '\',\'' + this.N_key + '\',\'' + ga_page_name + '\',\'' + this.price + '\'); return !ga.loaded;">';
+                                            if (this.thumb && this.thumb.length) {
+                                                html += this.thumb;
+                                            }
+                                            html += '</a></div>' +
+                                                '<br />' + '<a href="' + a_href + '" onclick="onProductClick(\'' + this.productid + '\',\'' + this.product + '\',\'' + this.category + '\',\'' + this.brand + '\',\'' + this.N_key + '\',\'' + ga_page_name + '\',\'' + this.price.toFixed(2) + '\'); return !ga.loaded;">' + this.product + '</a>';
+                                            if (this.is_group === true) {
+                                                if (this.price > 0) {
+                                                    var range = '';
+                                                    if (this.price !== this.price_2) {
+                                                        range = ' - US$ ' + this.price_2.toFixed(2);
+                                                    }
+                                                    html += '<br /> <span class="ProductPrice">US$ ' + this.price.toFixed(2) + range + '</span>';
+                                                }
+                                            } else {
+                                                html += '<br /> <span class="ProductPrice">US$ ' + this.price.toFixed(2) + '</span>';
+                                            }
+                                            html += '</div>' +
+                                                '</li>';
+                                        });
+
+
+                                        html += '</ul>';
+
+                                        if (data != "") {
+                                            $("#" + section_name).show();
                                         }
-                                        html += '</div>' +
-                                            '</li>';
-                                    });
+
+                                        $('#jcarousel_' + section_name).html(html).parent().after('<ul class="pages"></ul>');
+                                        jQuery(function ($) {
+                                            'use strict';
+
+                                            // -------------------------------------------------------------
+                                            //   Basic Navigation
+                                            // -------------------------------------------------------------
+                                            (function () {
+                                                var $frame = $('#jcarousel_' + section_name);
+                                                var $wrap = $frame.parent().parent();
+
+                                                var options = {
+                                                    horizontal: 1,
+                                                    itemNav: 'basic',
+                                                    smart: 1,
+                                                    activateOn: 'click',
+                                                    mouseDragging: 1,
+                                                    touchDragging: 1,
+                                                    releaseSwing: 1,
+                                                    startAt: 0,
+                                                    scrollBar: $wrap.find('.scrollbar'),
+                                                    scrollBy: 0,
+                                                    pagesBar: $wrap.find('.pages'),
+                                                    activatePageOn: 'click',
+                                                    speed: 300,
+                                                    elasticBounds: 1,
+                                                    easing: 'easeOutExpo',
+                                                    dragHandle: 1,
+                                                    dynamicHandle: 1,
+                                                    clickBar: 1,
+
+                                                    // Buttons
+                                                    prevPage: $wrap.find('.jcarousel-control-prev'),
+                                                    nextPage: $wrap.find('.jcarousel-control-next')
+                                                };
+                                                try {
+                                                    var frame = new Sly('#jcarousel_' + section_name, options, {
+                                                        load: checkCarouselsVisibility,
+                                                        moveEnd: checkCarouselsVisibility
+                                                    }).init();
+                                                }
+                                                catch (err) {
+                                                }
+
+
+                                            }());
+
+                                        });
+                                    }
                                 }
-
-                                html += '</ul>';
-
-                                if (data != "") {
-                                    $("#" + section_name).show();
-                                }
-
-                                $('#jcarousel_' + section_name).html(html).parent().after('<ul class="pages"></ul>');
-                                jQuery(function ($) {
-                                    'use strict';
-
-                                    // -------------------------------------------------------------
-                                    //   Basic Navigation
-                                    // -------------------------------------------------------------
-                                    (function () {
-                                        var $frame = $('#jcarousel_' + section_name);
-                                        var $wrap = $frame.parent().parent();
-
-                                        var options = {
-                                            horizontal: 1,
-                                            itemNav: 'basic',
-                                            smart: 1,
-                                            activateOn: 'click',
-                                            mouseDragging: 1,
-                                            touchDragging: 1,
-                                            releaseSwing: 1,
-                                            startAt: 0,
-                                            scrollBar: $wrap.find('.scrollbar'),
-                                            scrollBy: 0,
-                                            pagesBar: $wrap.find('.pages'),
-                                            activatePageOn: 'click',
-                                            speed: 300,
-                                            elasticBounds: 1,
-                                            easing: 'easeOutExpo',
-                                            dragHandle: 1,
-                                            dynamicHandle: 1,
-                                            clickBar: 1,
-
-                                            // Buttons
-                                            prevPage: $wrap.find('.jcarousel-control-prev'),
-                                            nextPage: $wrap.find('.jcarousel-control-next')
-                                        };
-                                        try {
-                                            var frame = new Sly('#jcarousel_' + section_name, options, {
-                                                load: checkCarouselsVisibility,
-                                                moveEnd: checkCarouselsVisibility
-                                            }).init();
-                                        }
-                                        catch(err) {
-                                        }
-
-
-                                    }());
-
-                                });
-                            }
-                        });
-                    }
+                            });
+                        }
                     {/literal}
                     </script>
                 {/if}
@@ -308,7 +337,11 @@
                 <div id="recently_viewed_products" style="display: none;">{include file="customer/main/ajax_carousel_products.tpl" section_name="recently_viewed_products" section_title=$lng.lbl_recently_viewed_products}</div>
 
                 <script type="text/javascript">
-                    func_load_ALL_ajax_carousels("recently_viewed_products", 0);
+                    {literal}
+                        $(document).ready(function() {
+                            func_load_ALL_ajax_carousels("recently_viewed_products", 0);
+                        });
+                    {/literal}
                 </script>
             {/if}
 
@@ -333,19 +366,20 @@
 
             {if $main eq "product"}
                 <script type="text/javascript">
-                    var txt_tooltip_helper = '{$map_bridge_mouseover_text|escape:javascript}';
                     {literal}
-                    $(document).ready(function() {
+                    var txt_tooltip_helper = '{$map_bridge_mouseover_text|escape:javascript}';
+                    $(document).ready(function () {
                         $('.map_price_help').tooltip({
                             delay: 0,
                             showURL: false,
                             track: false,
-                            bodyHandler: function() {
+                            bodyHandler: function () {
                                 return txt_tooltip_helper;
-                        }});
+                            }
+                        });
                         $(document).scroll(function () {
                             clearTimeout($.data(this, 'scrollTimer'));
-                            $.data(this, 'scrollTimer', setTimeout(function() {
+                            $.data(this, 'scrollTimer', setTimeout(function () {
                                 checkCarouselsVisibility();
                             }, 700));
                         });
@@ -387,65 +421,56 @@
                 {$GTS_badge_code}
             {/if}
 
-            {if !($main eq "fast_lane_checkout")}
-                <script async src="{$SkinDir}/check_email_script.js" type="text/javascript"></script>
-            {/if}
-
-            {if !($main eq "product" || $main eq "fast_lane_checkout")}
-                <script async src="{$SkinDir}/common.js" type="text/javascript"></script>
-            {/if}
-
-            {if !($main eq "product")}
-
-                <script async src="{$SkinDir}/jquery.tooltip.js" type="text/javascript"></script>
-                <script async src="{$SkinDir}/lib/jqueryui/jquery-ui.custom.min.js" type="text/javascript"></script>
-            {/if}
-
-            {if $main eq "product"}
-                <script async src="{$SkinDir}/main/popup_image.js" type="text/javascript"></script>
-            {/if}
-
-            <script async src="{$SkinDir}/ajax_notify_by_email.js" type="text/javascript"></script>
-            <script async src="{$SkinDir}/ajax_home_page.js" type="text/javascript"></script>
 
             {if (($main eq "product") && $config.Appearance.Enable_desktop_notifications_on_product_page eq "Y")}
-                <script type="text/javascript">
-                    {literal}
-                    var counter = 0;
-                    var notifyTimeOut = {/literal}{$config.Appearance.Desktop_notification_timeout}{literal} * 1000;
-                    var sOriginalTitle = document.title;
-                    var fireTitleChange = function(param){
-                        switch (counter) {
-                            case 0: document.title = "{/literal}{$lng.lb_suggest_notification_for_product_page}{literal}";
-                                break;
-                            case 1: document.title = sOriginalTitle;
-                                break;
-                        }
-                        counter++;
-                        if (counter > 1) counter = 0;
-                    };
-                    var interval_id;
-                    var timer_id;
-                    var notifytimer;
-                    var notificationEnable = true;
-                    var fireDeskTopNotify = function () {
-                        Notification.requestPermission( newMessage );
+            <script type="text/javascript">
+                {literal}
+                var counter = 0;
+                var notifyTimeOut = {/literal}{$config.Appearance.Desktop_notification_timeout}{literal} * 1000;
+                var sOriginalTitle = document.title;
+                var fireTitleChange = function (param) {
+                    switch (counter) {
+                        case 0:
+                            document.title = "{/literal}{$lng.lb_suggest_notification_for_product_page}{literal}";
+                            break;
+                        case 1:
+                            document.title = sOriginalTitle;
+                            break;
+                    }
+                    counter++;
+                    if (counter > 1) counter = 0;
+                };
+                var interval_id;
+                var timer_id;
+                var notifytimer;
+                var notificationEnable = true;
+                var fireDeskTopNotify = function () {
+                    Notification.requestPermission(newMessage);
 
-                        function DisableNotification () {notificationEnable = false; }
-                        function newMessage(permission) {
+                    function DisableNotification() {
+                        notificationEnable = false;
+                    }
 
-                            if( permission != "granted" || notificationEnable == false) return false;
-                            var notify = new Notification("{/literal}{$lng.lb_suggest_notification_for_product_page}{literal}", {
-                                tag: "attention-notify",
-                                body: "Look at the suggested similar products",
-                                icon: "{/literal}{$product.tmbn_url}{literal}"
-                            });
-                            notify.onclick = function(event) { DisableNotification(); window.focus(); this.close(); };
-                            notify.onclose = function(event) { DisableNotification(); };
-                        }
-                    };
+                    function newMessage(permission) {
 
-                    $(window).on("blur focus", function(e) {
+                        if (permission != "granted" || notificationEnable == false) return false;
+                        var notify = new Notification("{/literal}{$lng.lb_suggest_notification_for_product_page}{literal}", {
+                            tag: "attention-notify",
+                            body: "Look at the suggested similar products",
+                            icon: "{/literal}{$product.tmbn_url}{literal}"
+                        });
+                        notify.onclick = function (event) {
+                            DisableNotification();
+                            window.focus();
+                            this.close();
+                        };
+                        notify.onclose = function (event) {
+                            DisableNotification();
+                        };
+                    }
+                };
+                $(document).ready(function () {
+                    $(window).on("blur focus", function (e) {
                         var prevType = $(this).data("prevType");
 
                         if (prevType != e.type) {   //  reduce double fire issues
@@ -467,13 +492,14 @@
                                             }
 
                                             $('html,body').animate({
-                                                        scrollTop: offset},
-                                                    'fast');
+                                                    scrollTop: offset
+                                                },
+                                                'fast');
 
                                             notifytimer = setTimeout(fireDeskTopNotify, 1000);
 
 
-                                        },notifyTimeOut);
+                                        }, notifyTimeOut);
                                     }
                                     break;
                                 case "focus":
@@ -489,33 +515,98 @@
 
                         $(this).data("prevType", e.type);
                     });
-                    {/literal}
+                });
 
-                </script>
+                {/literal}
+
+            </script>
             {/if}
 
             {$xcartApp->template->render('inSmarty/raw_static_notifications.tpl')}
 
-            {if ($main eq "product")}
-
-                <script defer src="{$SkinDir}/jquery.tooltip.js" type="text/javascript"></script>
-                <script defer type="text/javascript" src="{$SkinDir}/lib/jqueryui/jquery-ui.custom.min.js"></script>
-                <script async type="text/javascript" src="{$SkinDir}/js/spinner.js"></script>
-                <script async type="text/javascript" src="{$SkinDir}/js/group.js"></script>
+            {if $AREA_TYPE ne 'A'}
+                <script id="jquery_script" async src="{$SkinDir}/jquery.min.1.7.1.js" type="text/javascript" onload='afterQueryLoaded()'></script>
             {/if}
 
-            <script async type="text/javascript" src="{$SkinDir}/js/jquery.visible.min.js"></script>
-            <script async src="{$SkinDir}/js/google_analytics_impressions.js" type="text/javascript"></script>
+            {defer file="`$SkinDir`/js/jquery.autocomplete.min.js" type="js"}
+            {defer file="`$SkinDir`/js/jquery.visible.min.js" type="js"}
+            {defer file="`$SkinDir`/js/jquery.tooltip.min.js" type="js"}
 
+            {if ($main eq "product")}
+                {defer file="`$SkinDir`/lib/jqueryui/jquery-ui.custom.min.js" type="js"}
+                {defer file="`$SkinDir`/js/spinner.min.js" type="js"}
+                {defer file="`$SkinDir`/js/group.min.js" type="js"}
+            {/if}
 
-            <script async src="{$SkinDir}/js/infinite_scroll.js" type="text/javascript"></script>
-            <script async src="{$SkinDir}/js/sly.min.js" type="text/javascript"></script>
+            {defer file="`$SkinDir`/js/google_analytics_impressions.min.js" type="js"}
+            {defer file="`$SkinDir`/js/infinite_scroll.min.js" type="js"}
+            {defer file="`$SkinDir`/js/sly.min.js" type="js"}
 
-            {include file="main/include_js.tpl" src="ajax_add_to_cart.js"}
+            {defer file="`$SkinDir`/js/ajax_add_to_cart.min.js"}
 
             {if $main eq "product" || $main eq "catalog" || $main eq "brand_products" || $main eq "search" || $main eq "advanced_search"}
-                <script async src="{$SkinDir}/cidev_ajax.js" type="text/javascript"></script>
+                {defer file="`$SkinDir`/js/cidev_ajax.min.js" type="js"}
             {/if}
+
+            {if !($main eq "fast_lane_checkout")}
+                {defer file="`$SkinDir`/js/check_email_script.min.js" type="js"}
+            {/if}
+
+            {defer file="`$SkinDir`/js/common.min.js" type="js"}
+
+            {if !($main eq "product")}
+
+                {defer file="`$SkinDir`/lib/jqueryui/jquery-ui.custom.min.js" type="js"}
+            {/if}
+
+            {if $main eq "product"}
+                {defer file="`$SkinDir`/js/popup_image.min.js" type="js"}
+            {/if}
+
+            {defer file="`$SkinDir`/js/ajax_notify_by_email.min.js" type="js"}
+            {defer file="`$SkinDir`/js/ajax_home_page.min.js" type="js"}
+
+            <script type="text/javascript">
+                {literal}
+                    function afterQueryLoaded() {
+                        {/literal}
+                            {defer_echo type="css"}
+                        {literal}
+
+                        var loadDeferredStyles = function() {
+                            if (typeof css !== 'undefined' && css.length) {
+                                while (css.length) {
+                                    var l = document.createElement("link");
+                                    l.rel = 'stylesheet';
+                                    l.href = css.shift();
+                                    var h = document.getElementsByTagName('head')[0];
+                                    h.parentNode.insertBefore(l, h);
+                                }
+                            }
+                        };
+                        var raf = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
+                            window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
+                        if (raf) raf(function() { window.setTimeout(loadDeferredStyles, 40); });
+                        else window.addEventListener('load', loadDeferredStyles);
+
+                        while (drh_callbacks.length) {
+                            $(drh_callbacks.shift());
+                        }
+
+                        {/literal}
+                        {defer_echo type="js"}
+                        {literal}
+
+                        if (typeof js !== 'undefined' && js.length) {
+                            while(js.length) {
+                                var j = document.createElement("script");
+                                j.src = js.shift();
+                                document.body.appendChild(j);
+                            }
+                        }
+                    };
+                {/literal}
+            </script>
 
         </body>
     </html>

@@ -151,4 +151,4 @@ var lbl_including_tax = "{$lng.lbl_including_tax|escape:javascript}";
 -->
 </script>
 
-{include file="main/include_js.tpl" src="modules/Product_Options/func.js"}
+{defer file="`$SkinDir`/js/func.min.js"}

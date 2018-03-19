@@ -717,6 +717,7 @@ $smarty->assign("location", $location);
 
 Profiler::getInstance()->addPoint();
 
+$smarty->load_filter('output', 'trimwhitespace');
 
 //func_display_cached("customer/home.tpl", 'product_' . $productid);
 $output = func_display("customer/home.tpl", $smarty, false);

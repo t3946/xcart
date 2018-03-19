@@ -1,185 +1,175 @@
 {include file="check_email_script.tpl"}
 
-{*
-{include file="check_zipcode_js.tpl"}
-<script src="{$SkinDir}/cidev_ajax.js" type="text/javascript"></script>
-*}
+<script type="text/javascript">
+    {literal}
+        $(document).ready(function () {
+            $('#{/literal}{$prefix}{literal}container').tabs();
+        });
+    {/literal}
+
+    {literal}
+    function check_question_email_form() {
+
+        if ($("#email").val()!="" && $("#phone").val()!="" && $("#question").val()!="" && $("#firstname").val()!=""){
+
+            $("#button_submit_question_id").hide();
+
+            send_question_email_form();
+
+        } else {
+            alert("Please fill in all fields");
+            return false;
+        }
+    }
+
+    function send_question_email_form(){
+
+        cidev_xmlHttp=cidev_createHttpRequestObject();
+        if (cidev_xmlHttp.readyState==4 || cidev_xmlHttp.readyState==0){
+
+            var cidev_parameters = 'cidev_mode=send&email=' + $("#email").val() + '&phone=' + $("#phone").val() + '&question=' + $("#question").val() + '&productid=' + $('#question_productid').val() + '&firstname=' + $('#firstname').val();
+
+            cidev_xmlHttp.onreadystatechange=function(){
+                if(cidev_xmlHttp.readyState==4){
+                    if(cidev_xmlHttp.status==200){
+                                    cidev_id$("product_question_after").innerHTML=cidev_xmlHttp.responseText;
+                        $("#product_question_pre").hide();
+                                }else{
+                                    cidev_Error('no_server', 'Y');
+                                }
+                }
+            };
+
+                    cidev_xmlHttp.open('POST','product_question.php',true);
+                    cidev_xmlHttp.setRequestHeader('Content-type','application/x-www-form-urlencoded');
+                    cidev_xmlHttp.setRequestHeader('Content-length',cidev_parameters.length);
+                    cidev_xmlHttp.setRequestHeader('Connection','close');
+                    cidev_xmlHttp.send(cidev_parameters);
+        }
+        else {
+            setTimeout('send_question_email_form()', 1000);
+        }
+    }
+
+
+    {/literal}
+</script>
 
 <script type="text/javascript">
-//<![CDATA[
-$(function() {ldelim}
-  $('#{$prefix}container').tabs();
-{rdelim});
+    {literal}
+      $(document).ready(function() {
+            $('#email').focusout(function() {
 
-{literal}
-function check_question_email_form() {
-
-	if ($("#email").val()!="" && $("#phone").val()!="" && $("#question").val()!="" && $("#firstname").val()!=""){
-
-		$("#button_submit_question_id").hide();
-
-		send_question_email_form();
-
-	} else {
-		alert("Please fill in all fields");
-		return false;
-	}
-}
-
-function send_question_email_form(){
-
-	cidev_xmlHttp=cidev_createHttpRequestObject();
-	if (cidev_xmlHttp.readyState==4 || cidev_xmlHttp.readyState==0){
-
-		var cidev_parameters = 'cidev_mode=send&email=' + $("#email").val() + '&phone=' + $("#phone").val() + '&question=' + $("#question").val() + '&productid=' + $('#question_productid').val() + '&firstname=' + $('#firstname').val();
-
-		cidev_xmlHttp.onreadystatechange=function(){
-			if(cidev_xmlHttp.readyState==4){
-				if(cidev_xmlHttp.status==200){
-                	        	cidev_id$("product_question_after").innerHTML=cidev_xmlHttp.responseText;
-					$("#product_question_pre").hide();
-                        	}else{
-                        		cidev_Error('no_server', 'Y');
-	                        }
-			}
-		};
-
-                cidev_xmlHttp.open('POST','product_question.php',true);
-                cidev_xmlHttp.setRequestHeader('Content-type','application/x-www-form-urlencoded');
-                cidev_xmlHttp.setRequestHeader('Content-length',cidev_parameters.length);
-                cidev_xmlHttp.setRequestHeader('Connection','close');
-                cidev_xmlHttp.send(cidev_parameters);
-	}
-	else {
-		setTimeout('send_question_email_form()', 1000);
-	}
-}
-
-
-{/literal}
-
-//]]>
-</script>
-
-<script type="text/javascript" language="JavaScript 1.2">
-//<![CDATA[
-{literal}
-  $(document).ready(function() {
-        $('#email').focusout(function() {
-
-                if ($('#email').val() != ""){
-                        checkEmailAddress(document.product_question_email_form.email, 'Y');
-                }
-        });
-  });
-{/literal}
-//]]>
+                    if ($('#email').val() != ""){
+                            checkEmailAddress(document.product_question_email_form.email, 'Y');
+                    }
+            });
+      });
+    {/literal}
 </script>
 
 
-<div id="{$prefix}container">
+<div id="{$prefix}container" class="ui-tabs ui-widget ui-widget-content ui-corner-all">
 
-  <ul>
-  {foreach from=$tabs item=tab key=ind}
-    <li><a class="ga_click" data-label="{$tab.title}" {if $count_product_tabs gte "7"}style="padding: 0.5em 10px;"{/if} href="{if $tab.url}{$tab.url|amp}{else}#{$prefix}{$tab.anchor|default:$ti}{/if}">{$tab.title}</a></li>
-  {/foreach}
+  <ul class="ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all">
+      {foreach from=$tabs item=tab key=ind}
+          <li class="ui-state-default ui-corner-top {if $ind===0}ui-tabs-selected ui-state-active{/if}"><a class="ga_click" data-label="{$tab.title}" {if $count_product_tabs gte "7"}style="padding: 0.5em 10px;"{/if} href="{if $tab.url}{$tab.url|amp}{else}#{$prefix}{$tab.anchor|default:$ti}{/if}">{$tab.title}</a></li>
+      {/foreach}
   </ul>
 
   {foreach from=$tabs item=tab key=ind}
     {if $tab.tpl}
-      <div id="{$prefix}{$tab.anchor|default:$ti}">
+        <div id="{$prefix}{$tab.anchor|default:$ti}" class="ui-tabs-panel ui-widget-content ui-corner-bottom {if $ind !==0 }ui-tabs-hide{/if}">
+        {if $tab.tpl eq "_product_description_"}
+        <br />
 
-	{if $tab.tpl eq "_product_description_"}
-<br />
-{capture name=dialog}
-<div style="padding-left: 8px;">
-<span style="font-size: 13px; color: #000000;" class="SPItems-description">
-    {if $use_schema_org eq "Y"}
-        <span id="so_description" itemprop="description">
-    {/if}
-        {if $product.seo_fulldescr ne ""}
-            {$product.seo_fulldescr|stripslashes}
-        {elseif $product.fulldescr ne ""}
-            {$product.fulldescr|stripslashes}
+        {capture name=dialog}
+            <div style="padding-left: 8px;">
+            <span style="font-size: 13px; color: #000000;" class="SPItems-description">
+                {if $use_schema_org eq "Y"}
+                    <span id="so_description" itemprop="description">
+                {/if}
+                {if $product.seo_fulldescr ne ""}
+                    {$product.seo_fulldescr|stripslashes}
+                {elseif $product.fulldescr ne ""}
+                    {$product.fulldescr|stripslashes}
+                {else}
+                    {$product.descr|stripslashes}
+                {/if}
+                {if $use_schema_org eq "Y"}
+                    </span>
+                {/if}
+            </span>
+
+            {if $product.weight ne "0.00" || $variants ne '' || $show_dimensions || $product.upc_ean_isbn}
+                <br />
+            {/if}
+
+                <br />
+                {if $active_modules.Extra_Fields ne ""}
+                    <table width="100%" cellpadding="0" cellspacing="0">
+                        {include file="modules/Extra_Fields/product.tpl"}
+                    </table>
+                {/if}
+
+                {assign var="oStorefront" value=$oProduct->getStoreFront()}
+
+                <span id="so_manuf" itemprop="manufacturer" itemscope="" itemtype="http://schema.org/Organization">
+                    <span itemprop="name" content="{$product.manufacturer}">
+                    </span>
+                </span>
+
+            {if $cidev_mpn ne ""}
+                <meta id="so_mpn" itemprop="mpn" content="{$cidev_mpn}"/>
+                <meta id="so_model" itemprop="model" content="{$cidev_mpn}"/>
+            {/if}
+
+                <meta id="so_offer" itemprop="offers" itemscope="" itemtype="http://schema.org/Offer" itemref="{if !$no_group_root && $oProduct->isGroupRoot()}so_o_price_spec{else}so_o_price so_o_stock{/if} so_o_condition so_o_currency so_o_function so_o_delivery so_o_seller pm_1 pm_2 pm_3 pm_4"/>
+            {if !$no_group_root && !$oProduct->isGroupRoot()}
+                <div id="so_weight" itemprop="weight" itemscope="" itemtype="http://schema.org/QuantitativeValue" itemref="so_weight_value">
+                    <meta itemprop="unitCode" content="lbs">
+                </div>
+            {/if}
+
+            {if $cat_name_for_itemprop ne ""}
+                <meta id="so_category" itemprop="category" content="{$cat_name_for_itemprop}"/>
+            {/if}
+
+                <meta id="so_o_condition" itemprop="itemCondition" content="NewCondition"/>
+                <meta id="so_o_currency" itemprop="priceCurrency" content="USD">
+
+                <meta id="so_o_function" itemprop="businessFunction" href="http://purl.org/goodrelations/v1#Sell"/>
+                <div id="so_o_delivery" itemprop="deliveryLeadTime"  itemscope="" itemtype="http://schema.org/QuantitativeValue">
+                    <meta itemprop="value" content="6">
+                    <meta itemprop="unitText" content="days">
+                </div>
+
+                {if $product_wholesale.0.price ne "" && $product.new_notify_in_stock_price eq "" && $product.map_price lte $product.taxed_price}
+                    {assign var="current_price" value=$product_wholesale.0.price}
+                {/if}
+
+                <div id="so_o_seller" itemprop="seller" itemscope="" itemtype="http://schema.org/Organization">
+                    <meta itemprop="logo" content="{$current_location}/skin1_kolin/images/S3-Stores-Logo-S2.png"/>
+                    <meta itemprop="url" content="http://www.s3stores.com/"/>
+                    <meta itemprop="name" content="S3 Stores Inc."/>
+                </div>
+            </div>
+        {/capture}
+
+        {if $product.seo_h2 ne ""}
+            {assign var=product_description_title value=$product.seo_h2}
         {else}
-            {$product.descr|stripslashes}
+            {if $current_storefront_info.storefrontid eq "50"}
+                {assign var=product_description_title value="`$product.mpn` `$lng.lbl_product_description`"}
+            {else}
+                {assign var=product_description_title value=$lng.lbl_product_description}
+            {/if}
         {/if}
-
-    {if $use_schema_org eq "Y"}
-        </span>
-    {/if}
-</span>
-
-{if $product.weight ne "0.00" || $variants ne '' || $show_dimensions || $product.upc_ean_isbn}
-<br />
-{/if}
-
-<br />
-{if $active_modules.Extra_Fields ne ""}
-<table width="100%" cellpadding="0" cellspacing="0">
-{include file="modules/Extra_Fields/product.tpl"}
-</table>
-{/if}
-
-{assign var="oStorefront" value=$oProduct->getStoreFront()}
-
-<span id="so_manuf" itemprop="manufacturer" itemscope="" itemtype="http://schema.org/Organization">
-	<span itemprop="name" content="{$product.manufacturer}">
-	</span>
-</span>
-
-{if $cidev_mpn ne ""}
-<meta id="so_mpn" itemprop="mpn" content="{$cidev_mpn}"/>
-<meta id="so_model" itemprop="model" content="{$cidev_mpn}"/>
-{/if}
-
-<meta id="so_offer" itemprop="offers" itemscope="" itemtype="http://schema.org/Offer" itemref="{if !$no_group_root && $oProduct->isGroupRoot()}so_o_price_spec{else}so_o_price so_o_stock{/if} so_o_condition so_o_currency so_o_function so_o_delivery so_o_seller pm_1 pm_2 pm_3 pm_4"/>
-{if !$no_group_root && !$oProduct->isGroupRoot()}
-<div id="so_weight" itemprop="weight" itemscope="" itemtype="http://schema.org/QuantitativeValue" itemref="so_weight_value">
-	<meta itemprop="unitCode" content="lbs">
-</div>
-{/if}
-{if $cat_name_for_itemprop ne ""}
-<meta id="so_category" itemprop="category" content="{$cat_name_for_itemprop}"/>
-{/if}
-
-<meta id="so_o_condition" itemprop="itemCondition" content="NewCondition"/>
-<meta id="so_o_currency" itemprop="priceCurrency" content="USD">
-
-<meta id="so_o_function" itemprop="businessFunction" href="http://purl.org/goodrelations/v1#Sell"/>
-<div id="so_o_delivery" itemprop="deliveryLeadTime"  itemscope="" itemtype="http://schema.org/QuantitativeValue">
-	<meta itemprop="value" content="6">
-	<meta itemprop="unitText" content="days">
-</div>
-
-{if $product_wholesale.0.price ne "" && $product.new_notify_in_stock_price eq "" && $product.map_price lte $product.taxed_price}
-	{assign var="current_price" value=$product_wholesale.0.price}
-{/if}
-
-<div id="so_o_seller" itemprop="seller" itemscope="" itemtype="http://schema.org/Organization">
-	<meta itemprop="logo" content="{$current_location}/skin1_kolin/images/S3-Stores-Logo-S2.png"/>
-	<meta itemprop="url" content="http://www.s3stores.com/"/>
-	<meta itemprop="name" content="S3 Stores Inc."/>
-</div>
-
-
-</div>
-{/capture}
-
-{if $product.seo_h2 ne ""}
-	{assign var=product_description_title value=$product.seo_h2}
-{else}
-	{if $current_storefront_info.storefrontid eq "50"}
-		{assign var=product_description_title value="`$product.mpn` `$lng.lbl_product_description`"}
-	{else}
-		{assign var=product_description_title value=$lng.lbl_product_description}
-	{/if}
-{/if}
-{include file="dialog.tpl" title=$product_description_title content=$smarty.capture.dialog extra='width="100%"' use_h2="Y" }
+        {include file="dialog.tpl" title=$product_description_title content=$smarty.capture.dialog extra='width="100%"' use_h2="Y" }
 
         {elseif $tab.tpl eq "_Brand_"}
 
-<br />
+        <br />
 {php}
   $this->assign("arr_schemas", [
           'brand' => [
@@ -189,30 +179,32 @@ function send_question_email_form(){
           ]
   ]);
 {/php}
-{capture name=dialog}
 
-  {if $brand_image.filename ne ""}
-      {assign var="imagePath" value=$xcart_web_dir}
-      {if $config.Appearance.CDN_domain ne "" && $config.Appearance.Enable_CDN eq "Y"}
-          {assign var="imagePath" value="//`$config.Appearance.CDN_domain`"}
-      {/if}
-      <img src="{$imagePath}/images/B/{$brand_image.filename}" style="float: left; margin: 10px 10px 10px 0;" />
-  {/if}
+        {capture name=dialog}
+            {if $brand_image.filename ne ""}
+              {assign var="imagePath" value=$xcart_web_dir}
+              {if $config.Appearance.CDN_domain ne "" && $config.Appearance.Enable_CDN eq "Y"}
+                  {assign var="imagePath" value="//`$config.Appearance.CDN_domain`"}
+              {/if}
+              <img src="{$imagePath}/images/B/{$brand_image.filename}" style="float: left; margin: 10px 10px 10px 0;" />
+            {/if}
 
-<p align="justify">
-{$oProduct->brand->descr}
-              <br />
-<a href="{$oStorefront->getStoreFrontURL()}/brand/{$product.brandid}/" class="NavigationPath">All {$brandid_brands_info[$product.brandid].brand} products</a>
-</p>
+            <p align="justify">
+                {$oProduct->brand->descr}
+                              <br />
+                <a href="{$oStorefront->getStoreFrontURL()}/brand/{$product.brandid}/" class="NavigationPath">All {$brandid_brands_info[$product.brandid].brand} products</a>
+            </p>
 
-{/capture}
-{include file="dialog.tpl" title=$oProduct->brand->brand content=$smarty.capture.dialog schema='brand' title_itemprop='brand' extra='width="100%"' use_h2="Y" }
+        {/capture}
 
-	{elseif $tab.tpl eq "_product_queries_tpl_"}
+        {include file="dialog.tpl" title=$oProduct->brand->brand content=$smarty.capture.dialog schema='brand' title_itemprop='brand' extra='width="100%"' use_h2="Y" }
 
-{$lng.lbl_product_queries_pre_instructions}
-<br >
-<br >
+	    {elseif $tab.tpl eq "_product_queries_tpl_"}
+
+        {$lng.lbl_product_queries_pre_instructions}
+        <br >
+        <br >
+
 {if $productqueries_page_arr ne ""}
 
 {foreach from=$productqueries_page_arr item=v key=k}
