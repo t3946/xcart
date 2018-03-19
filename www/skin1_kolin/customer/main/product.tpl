@@ -674,7 +674,11 @@
     <script type="text/javascript">
         {literal}
         $(document).ready(function () {
-            check_options();
+            {/literal}
+            {if !is_group}
+                check_options();
+            {/if}
+            {literal}
             $('#calculate_shipping_button').on('click', function (e) {
 
                 $('#calculate_shipping_text').find('.shipping_info').html('Please wait...').attr('align', 'center').end().fadeIn();
