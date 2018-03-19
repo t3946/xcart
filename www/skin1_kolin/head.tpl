@@ -170,30 +170,3 @@ $(function(){
 {if $variant_id_for_point3 eq "1" && ($main ne "product" && $main ne "fast_lane_checkout")}
 {$config.Storefront_common_details.common_header_code}
 {/if}
-
-<a id="scrollTop" class="button_new grey" href="#" title="Up">Up</a>
-
-<script type="text/javascript">
-{literal}
-$(document).ready(function () {
-    function scrollTop() {
-        if (jQuery(window).scrollTop() > jQuery('#header').height()) {
-            jQuery('#scrollTop').fadeIn('slow');
-        } else {
-            jQuery('#scrollTop').fadeOut('fast');
-        }
-    }
-
-    jQuery('#scrollTop').on('click', function () {
-        jQuery('body,html').animate({
-            scrollTop: 0
-        }, 300);
-        return false;
-    });
-    jQuery(window).scroll(function () {
-        scrollTop();
-    });
-});
-
-{/literal}
-</script>
