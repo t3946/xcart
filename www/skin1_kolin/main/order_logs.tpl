@@ -288,6 +288,7 @@
                             </td>
 
                         </tr>
+                        {if !empty($value.url)}
                         <tr>
                             <td colspan="8" style="padding-top: 5px;">
                                 <audio controls preload="none" style="width: 100%">
@@ -295,6 +296,7 @@
                                 </audio>
                             </td>
                         </tr>
+                        {/if}
                     {/foreach}
                     </tbody>
                  </table>
