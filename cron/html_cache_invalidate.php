@@ -1,6 +1,7 @@
 <?php
 
 use GuzzleHttp\Event\CompleteEvent;
+use GuzzleHttp\Event\ErrorEvent;
 use GuzzleHttp\Pool;
 use Modules\Goods\Models\ProductModel;
 use Modules\Sites\Models\SiteModel;
@@ -26,11 +27,8 @@ $updated = 0;
 function poolSend($client, $requests)
 {
     Pool::send($client, $requests, [
-        'complete' => function (CompleteEvent $event) {
-            global $sended_requests, $updated;
-            $sended_requests++;
-            $updated = floor($sended_requests / 2);
-        }
+        'complete' => function (CompleteEvent $event) {},
+        'error' => function (ErrorEvent $event) {},
     ]);
 }
 
@@ -85,6 +83,7 @@ foreach (getResource() as $record) {
             /** @var SiteModel $site */
 
             if ($site->isWork()) {
+                $updated++;
 
 
                 $ssl = ($site->getConfig()['https_enabled'] == 'Y');
