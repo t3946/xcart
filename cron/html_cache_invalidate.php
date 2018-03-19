@@ -23,12 +23,14 @@ const LIMIT = 1000;
 $date = new DateTime();
 $updated = 0;
 
-function poolSend($client, $requests)
+function poolSend($client, &$requests)
 {
     Pool::send($client, $requests, [
         'complete' => function (CompleteEvent $event) {},
         'error' => function (ErrorEvent $event) {},
     ]);
+
+    $requests = [];
 }
 
 function writeLog($str)
