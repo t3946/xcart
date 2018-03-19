@@ -29,6 +29,7 @@
                 <!--[if IE]>
                 <link rel="stylesheet" href="{$SkinDir}/skin1.IE.css" type="text/css" media="all" />
                 <![endif]-->
+
             {else}
                 <style>{include file="critical_path_product.tpl"}</style>
 
@@ -74,8 +75,6 @@
             {if $main eq 'product' && $oProduct}
                 <link rel="amphtml" href="{$oProduct->getAmpAbsoluteUrl(true)}">
             {/if}
-
-
 
         </head>
 

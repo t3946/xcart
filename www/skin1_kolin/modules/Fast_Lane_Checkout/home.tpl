@@ -25,7 +25,9 @@
 <link rel="stylesheet" href="{$SkinDir}/{#CSSFile#}" />
 <link rel="stylesheet" href="{$SkinDir}/modules/Fast_Lane_Checkout/{#CSSFile#}" />
 <link rel="stylesheet" href="{$SkinDir}/US_City_List/jquery.autocomplete.css" />
-
+{if $AREA_TYPE ne 'A'}
+    <script src="{$SkinDir}/jquery.min.1.7.1.js" type="text/javascript" ></script>
+{/if}
 
 </head>
 <body>
