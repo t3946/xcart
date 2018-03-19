@@ -51,9 +51,9 @@ trait CacheFilesTrait
         if (is_file($filePath) && @filemtime($filePath) > time()) {
             $fp = @fopen($filePath, 'r');
             if ($fp !== false) {
-                @flock($fp, LOCK_SH);
+//                @flock($fp, LOCK_SH);
                 $cacheValue = @stream_get_contents($fp);
-                @flock($fp, LOCK_UN);
+//                @flock($fp, LOCK_UN);
                 @fclose($fp);
                 return $cacheValue;
             }
