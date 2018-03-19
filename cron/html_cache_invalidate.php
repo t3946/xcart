@@ -1,5 +1,8 @@
 <?php
 
+use GuzzleHttp\Event\CompleteEvent;
+use GuzzleHttp\Event\ErrorEvent;
+use GuzzleHttp\Pool;
 use Modules\Goods\Models\ProductModel;
 use Modules\Sites\Models\SiteModel;
 use Xcart\App\Main\Xcart;
@@ -18,7 +21,19 @@ const LIMIT = 1000;
 
 
 $date = new DateTime();
+$sended_requests = 0;
 $updated = 0;
+
+function poolSend($client, $requests)
+{
+    Pool::send($client, $requests, [
+        'complete' => function (CompleteEvent $event) {
+            global $sended_requests, $updated;
+            $sended_requests++;
+            $updated = ceil($sended_requests / 2);
+        }
+    ]);
+}
 
 function writeLog($str)
 {
@@ -57,6 +72,7 @@ writeLog("Started");
 
 
 $guzzle = new \GuzzleHttp\Client();
+$requests = [];
 
 foreach (getResource() as $record) {
     $key = 'product-' . $record['resourceid'];
@@ -70,16 +86,24 @@ foreach (getResource() as $record) {
             /** @var SiteModel $site */
 
             if ($site->isWork()) {
-                $updated++;
+
 
                 $ssl = ($site->getConfig()['https_enabled'] == 'Y');
                 $url = ($ssl ? 'https' : 'http') . '://' . $site->domain  . $model->getAbsoluteUrl();
 
-                $guzzle->get($url, ['headers' => ['User-Agent' => $desktop_user_agent]]);
-                $guzzle->get($url, ['headers' => ['User-Agent' => $mobile_user_agent]]);
+                $requests[] = $guzzle->createRequest('GET', $url, ['headers' => ['User-Agent' => $desktop_user_agent]]);
+                $requests[] = $guzzle->createRequest('GET', $url, ['headers' => ['User-Agent' => $mobile_user_agent]]);
             }
         }
     }
+
+    if (count($requests) > 20) {
+        poolSend($guzzle, $requests);
+    }
+}
+
+if (count($requests)) {
+    poolSend($guzzle, $requests);
 }
 
 
