@@ -675,7 +675,7 @@
         {literal}
         $(document).ready(function () {
             {/literal}
-            {if !is_group}
+            {if !$is_group}
                 check_options();
             {/if}
             {literal}
