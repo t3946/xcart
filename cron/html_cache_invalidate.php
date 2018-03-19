@@ -21,7 +21,6 @@ const LIMIT = 1000;
 
 
 $date = new DateTime();
-$sended_requests = 0;
 $updated = 0;
 
 function poolSend($client, $requests)
@@ -84,7 +83,6 @@ foreach (getResource() as $record) {
 
             if ($site->isWork()) {
                 $updated++;
-
 
                 $ssl = ($site->getConfig()['https_enabled'] == 'Y');
                 $url = ($ssl ? 'https' : 'http') . '://' . $site->domain  . $model->getAbsoluteUrl();
