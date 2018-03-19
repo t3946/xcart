@@ -26,7 +26,6 @@
                 <link rel="stylesheet" href="{$SkinDir}/lib/jqueryui/jquery.ui.theme.min.css" />
                 <link rel="stylesheet" href="{$SkinDir}/skin1.min.css" />
                 <link rel="stylesheet" href="{$SkinDir}/jquery.tooltip.css" />
-                <link rel="stylesheet" href="{$SkinDir}/US_City_List/jquery.autocomplete.min.css" />
                 <!--[if IE]>
                 <link rel="stylesheet" href="{$SkinDir}/skin1.IE.css" type="text/css" media="all" />
                 <![endif]-->
@@ -36,7 +35,6 @@
                 {defer file="`$SkinDir`/skin1.min.css" type="css"}
                 {defer file="`$SkinDir`/lib/jqueryui/jquery.ui.theme.min.css" type="css"}
                 {defer file="`$SkinDir`/jquery.tooltip.css" type="css"}
-                {defer file="`$SkinDir`/US_City_List/jquery.autocomplete.min.css" type="css"}
                 {defer file="/static/backend/fonts/icons/css/style.css" type="css"}
 
             {/if}
@@ -529,7 +527,6 @@
             {/if}
 
             {defer file="`$SkinDir`/js/jquery.autocomplete.min.js" type="js"}
-            {defer file="`$SkinDir`/js/jquery.visible.min.js" type="js"}
             {defer file="`$SkinDir`/js/jquery.tooltip.min.js" type="js"}
 
             {if ($main eq "product")}
@@ -544,9 +541,6 @@
 
             {defer file="`$SkinDir`/js/ajax_add_to_cart.min.js"}
 
-            {if $main eq "product" || $main eq "catalog" || $main eq "brand_products" || $main eq "search" || $main eq "advanced_search"}
-                {defer file="`$SkinDir`/js/cidev_ajax.min.js" type="js"}
-            {/if}
 
             {if !($main eq "fast_lane_checkout")}
                 {defer file="`$SkinDir`/js/check_email_script.min.js" type="js"}
@@ -559,12 +553,8 @@
                 {defer file="`$SkinDir`/lib/jqueryui/jquery-ui.custom.min.js" type="js"}
             {/if}
 
-            {if $main eq "product"}
-                {defer file="`$SkinDir`/js/popup_image.min.js" type="js"}
-            {/if}
-
-            {defer file="`$SkinDir`/js/ajax_notify_by_email.min.js" type="js"}
             {defer file="`$SkinDir`/js/ajax_home_page.min.js" type="js"}
+            {defer file="`$SkinDir`/js/home.min.js" type="js"}
 
             <script type="text/javascript">
                 {literal}
