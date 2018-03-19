@@ -96,7 +96,7 @@ foreach (getResource() as $record) {
         }
     }
 
-    if (count($requests) > 20) {
+    if (count($requests) > 50) {
         poolSend($guzzle, $requests);
     }
 }
