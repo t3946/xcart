@@ -1107,6 +1107,10 @@ function func_set_correct_det_img($image_info, $update = false){
                         $im->readImage($file_name_path);
                         $im->thumbnailImage(abs($R*$width), 0, false);
 
+                        $im->setImageCompression(Imagick::COMPRESSION_JPEG);
+                        $im->setSamplingFactors(['2x2', '1x1', '1x1']);
+                        $im->setImageCompressionQuality(94);
+
                         $im->setImageFileName($file_name_path);
                         $im->writeImage();
 
