@@ -57,7 +57,7 @@
                             {include file="modules/Detailed_Product_Images/popup_image.tpl"}
                         {else}
                             {if $active_modules.Detailed_Product_Images ne "" && $images ne ''}
-                                <a style="font-size: 0px;" href="#dp_images" class="ga_click" data-label="More Images">
+                                <a style="font-size: 0px;" name="javascript:void(self.location.hash = 'dp_images');" class="ga_click" data-label="More Images">
                             {/if}
                             {if $oProduct && $oProduct->isGroupRoot()}
                                 {include file="group_thumbnail.tpl" product=$oProduct}
