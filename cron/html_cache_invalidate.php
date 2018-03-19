@@ -72,6 +72,9 @@ foreach (getResource() as $record) {
     }
 }
 
+
+func_backprocess_log(PROCESS, "End products cache invalidate. Updated: {$updated}. DT Diff: {$date->diff(new DateTime())->format(DATEFORMAT)}");
+
 $sites = SiteModel::objects()->all();
 
 if (mt_rand(0, 10000) < 10) {
