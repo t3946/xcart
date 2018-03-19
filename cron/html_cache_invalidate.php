@@ -44,6 +44,8 @@ function getResource()
         if ($ids) {
             $loop = true;
             $ids = implode(',', $ids);
+
+            writeLog("Processed products: {$ids}.");
             db_query("DELETE FROM xcart_cidev_updated_products WHERE resourceid in ({$ids}) and type='10' ");
         }
         else {
