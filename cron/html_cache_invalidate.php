@@ -12,6 +12,8 @@ require __DIR__ . DIRECTORY_SEPARATOR . "../www/init.php";
 $desktop_user_agent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.119 Safari/537.36';
 $mobile_user_agent  = 'Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.119 Mobile Safari/537.36';
 
+const PROCESS = 'HTML_CACHE_INVALIDATE';
+const DATEFORMAT = '';
 const LIMIT = 100;
 
 $updated = 0;
@@ -41,13 +43,19 @@ function getResource()
     }
 }
 
+func_backprocess_log(PROCESS, 'Started');
+
 
 $guzzle = new \GuzzleHttp\Client();
 
 foreach (getResource() as $record) {
     $key = 'product-' . $record['resourceid'];
 
+
+    func_backprocess_log(PROCESS, 'Remove product by key:' . $key);
     Xcart::app()->cache->getDriver('html')->set($key, null);
+
+    func_backprocess_log(PROCESS, 'Remove product by key:' . $key . '-mobile');
     Xcart::app()->cache->getDriver('html')->set($key . '-mobile', null);
 
     /** @var ProductModel $model */
@@ -61,7 +69,12 @@ foreach (getResource() as $record) {
                 $ssl = ($site->getConfig()['https_enabled'] == 'Y');
                 $url = ($ssl ? 'https' : 'http') . '://' . $site->domain  . $model->getAbsoluteUrl();
 
+                func_backprocess_log(PROCESS, "Request: {$url}, [User-Agent: {$desktop_user_agent}]" );
+
                 $guzzle->get($url, ['headers' => ['User-Agent' => $desktop_user_agent]]);
+
+
+                func_backprocess_log(PROCESS, "Request: {$url}, [User-Agent: {$mobile_user_agent}]" );
                 $guzzle->get($url, ['headers' => ['User-Agent' => $mobile_user_agent]]);
             }
         }
@@ -71,12 +84,19 @@ foreach (getResource() as $record) {
 $sites = SiteModel::objects()->all();
 
 if (mt_rand(0, 10000) < 10) {
+
+    func_backprocess_log(PROCESS, "Remove home cache started");
     foreach ($sites as $site) {
         /** @var SiteModel $site */
 
         if ($site->isWork()) {
             for($i = 1; $i < 11; $i++) {
+
+                func_backprocess_log(PROCESS, "Remove home cache by key: " . 'home-' . $site->domain. '-' . $i);
                 Xcart::app()->cache->getDriver('html')->set('home-' . $site->domain. '-' . $i, null);
+
+
+                func_backprocess_log(PROCESS, "Remove home cache by key: " . 'home-' . $site->domain. '-' . $i . '-mobile');
                 Xcart::app()->cache->getDriver('html')->set('home-' . $site->domain. '-' . $i . '-mobile', null);
             }
         }
@@ -84,6 +104,8 @@ if (mt_rand(0, 10000) < 10) {
 }
 
 if (rand(1, 7) > 5) {
+
+    func_backprocess_log(PROCESS, "Get home pages started");
     foreach ($sites as $site) {
         /** @var SiteModel $site */
 
@@ -91,11 +113,24 @@ if (rand(1, 7) > 5) {
             $ssl = ($site->getConfig()['https_enabled'] == 'Y');
             $url = ($ssl ? 'https' : 'http') . '://' . $site->domain;
 
+
+            func_backprocess_log(PROCESS, "Request: {$url}, [User-Agent: {$desktop_user_agent}]" );
             $guzzle->get($url, ['headers' => ['User-Agent' => $desktop_user_agent]]);
+
+
+            func_backprocess_log(PROCESS, "Request: {$url}, [User-Agent: {$mobile_user_agent}]" );
             $guzzle->get($url, ['headers' => ['User-Agent' => $mobile_user_agent]]);
         }
     }
 }
 
+
+func_backprocess_log(PROCESS, "Start cache GC");
 Xcart::app()->cache->gc(true);
+func_backprocess_log(PROCESS, "END cache GC");
+
+func_backprocess_log(PROCESS, "Start sessions GC");
 (new \Modules\User\Components\XcartSession())->gc(null);
+
+
+func_backprocess_log(PROCESS, "End");
