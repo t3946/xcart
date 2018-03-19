@@ -57,7 +57,9 @@ var google_remarketing_only = false;
 {else}
 {if $GTS_order_confirmation_module_code ne ""}
   <script>
-    $("body").append(gts_code);
+      $(document).ready(function() {
+          $("body").append(gts_code);
+      });
   </script>
 {/if}
 {/if}
