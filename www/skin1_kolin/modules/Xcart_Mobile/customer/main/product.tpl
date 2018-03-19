@@ -509,8 +509,8 @@ function send_question_email_form(){
 {if $active_modules.Product_Options and ($product_options ne '' or $product_wholesale ne '') and ($product.product_type ne "C" or not $active_modules.Product_Configurator)}
   <script type="text/javascript">
       {literal}
-      document.addEventListener('DOMContentLoaded', function(){
-          setTimeout(check_options, 500);
+      $(document).ready(function(){
+          check_options();
       });
       {/literal}
   </script>

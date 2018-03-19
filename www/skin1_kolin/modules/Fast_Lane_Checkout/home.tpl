@@ -26,8 +26,6 @@
 <link rel="stylesheet" href="{$SkinDir}/modules/Fast_Lane_Checkout/{#CSSFile#}" />
 <link rel="stylesheet" href="{$SkinDir}/US_City_List/jquery.autocomplete.css" />
 
-<link rel="stylesheet" href="{$SkinDir}/lib/colorbox/colorbox.css" />
-<script src="{$SkinDir}/lib/colorbox/jquery.colorbox-min.js" type="text/javascript"></script>
 
 </head>
 <body>
@@ -40,7 +38,10 @@
 {* ------------------- *}
 {if !($usertype eq "A" || $usertype eq "P")}
     <script type="text/javascript">
-        ga('send', 'pageview');
+        $(document).ready(function(){
+            ga('send', 'pageview');
+        });
+
     </script>
 {/if}
 
