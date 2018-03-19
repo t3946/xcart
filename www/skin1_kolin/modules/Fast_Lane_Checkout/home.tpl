@@ -30,6 +30,7 @@
 {/if}
     <script src="{$SkinDir}/check_zipcode.js" type="text/javascript"></script>
     <script src="{$SkinDir}/check_email_script.js" type="text/javascript"></script>
+    <script src="{$SkinDir}/js/common.min.js" type="text/javascript"></script>
 
 </head>
 <body>
