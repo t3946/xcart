@@ -16,7 +16,16 @@ const PROCESS = 'HTML_CACHE_INVALIDATE';
 const DATEFORMAT = '%H:%I:%S';
 const LIMIT = 1000;
 
+
+$date = new DateTime();
 $updated = 0;
+
+function writeLog($str)
+{
+    global $date;
+    $diff = "[{$date->diff(new DateTime())->format(DATEFORMAT)}] ";
+    func_backprocess_log(PROCESS, $diff.$str);
+}
 
 function getResource()
 {
@@ -42,8 +51,7 @@ function getResource()
         }
     }
 }
-$date = new DateTime();
-func_backprocess_log(PROCESS, 'Started');
+writeLog("Started");
 
 
 $guzzle = new \GuzzleHttp\Client();
@@ -73,13 +81,13 @@ foreach (getResource() as $record) {
 }
 
 
-func_backprocess_log(PROCESS, "End products cache invalidate. Updated: {$updated}. DT Diff: {$date->diff(new DateTime())->format(DATEFORMAT)}");
+writeLog("End products cache invalidate. Updated: {$updated}.");
 
 $sites = SiteModel::objects()->all();
 
 if (mt_rand(0, 10000) < 10) {
 
-    func_backprocess_log(PROCESS, "Remove home cache started. DT Diff: {$date->diff(new DateTime())->format(DATEFORMAT)}");
+    writeLog( "Remove home cache started.");
     foreach ($sites as $site) {
         /** @var SiteModel $site */
 
@@ -94,7 +102,7 @@ if (mt_rand(0, 10000) < 10) {
 
 if (rand(1, 7) > 5) {
 
-    func_backprocess_log(PROCESS, "Get home pages started. DT Diff: {$date->diff(new DateTime())->format(DATEFORMAT)}");
+    writeLog("Get home pages started.");
     foreach ($sites as $site) {
         /** @var SiteModel $site */
 
@@ -110,12 +118,12 @@ if (rand(1, 7) > 5) {
 }
 
 
-func_backprocess_log(PROCESS, "Start cache GC. DT Diff: {$date->diff(new DateTime())->format(DATEFORMAT)}");
+writeLog("Start cache GC.");
 Xcart::app()->cache->gc(true);
-func_backprocess_log(PROCESS, "END cache GC. DT Diff: {$date->diff(new DateTime())->format(DATEFORMAT)}");
+writeLog("END cache GC.");
 
-func_backprocess_log(PROCESS, "Start sessions GC. DT Diff: {$date->diff(new DateTime())->format(DATEFORMAT)}");
+writeLog("Start sessions GC.");
 (new \Modules\User\Components\XcartSession())->gc(null);
 
 
-func_backprocess_log(PROCESS, "End. DT Diff: {$date->diff(new DateTime())->format(DATEFORMAT)}");
+writeLog("End.");
