@@ -641,7 +641,7 @@ a.jcarousel-control-next:hover{color:#cccccc;text-decoration:none;}
 .header_line1{height:41px;width:984px;background-color:#FFF;border-bottom-left-radius:4px;border-bottom-right-radius:4px;border-top:0;box-shadow:0 0 2px 1px #CBCBCB;margin-bottom:5px;}
 .top_text_1{font-family:Verdana;COLOR:#000000;font-size:12px;font-weight:bold;}
 .top_text_2{font-family:Verdana;COLOR:#000000;font-size:16px;font-weight:bold;}
-.header_line2_table{BACKGROUND:url(images/new/home/banner.png) no-repeat center right;}
+.header_line2_table{BACKGROUND:url(images/new/home/banner.png) no-repeat bottom right;}
 .header_line2{height:89px;width:960px;}
 .header_line_flc2{height:89px;width:960px;}
 .header_line3{position:relative;top:-4px;height:40px;width:100%;BACKGROUND:url(images/new/home/rectangle.png);}
