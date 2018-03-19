@@ -16,27 +16,27 @@
 
             <link rel="dns-prefetch" href="https://www.google-analytics.com">
             <link rel="preconnect" href="https://www.google-analytics.com">
-            <link rel="prefetch" href="{$SkinDir}/css/skin1.min.css" as="style">
+            <link rel="prefetch" href="{$SkinDir}/skin1.min.css" as="style">
             <link rel="prefetch" href="{$SkinDir}/jquery.min.1.7.1.js" as="script">
 
             {config_load file="$skin_config"}
             {if ($main != 'product') }
 
                 <link rel="stylesheet" href="/static/backend/fonts/icons/css/style.css">
-                <link rel="stylesheet" href="{$SkinDir}/css/jqueryui/jquery.ui.theme.min.css" />
-                <link rel="stylesheet" href="{$SkinDir}/css/skin1.min.css" />
+                <link rel="stylesheet" href="{$SkinDir}/lib/jqueryui/jquery.ui.theme.min.css" />
+                <link rel="stylesheet" href="{$SkinDir}/skin1.min.css" />
                 <link rel="stylesheet" href="{$SkinDir}/jquery.tooltip.css" />
-                <link rel="stylesheet" href="{$SkinDir}/css/jquery.autocomplete.min.css" />
+                <link rel="stylesheet" href="{$SkinDir}/US_City_List/jquery.autocomplete.min.css" />
                 <!--[if IE]>
                 <link rel="stylesheet" href="{$SkinDir}/skin1.IE.css" type="text/css" media="all" />
                 <![endif]-->
             {else}
                 <style>{include file="critical_path_product.tpl"}</style>
 
-                {defer file="`$SkinDir`/css/skin1.min.css" type="css"}
-                {defer file="`$SkinDir`/css/jquery.ui.theme.min.css" type="css"}
+                {defer file="`$SkinDir`/skin1.min.css" type="css"}
+                {defer file="`$SkinDir`/lib/jqueryui/jquery.ui.theme.min.css" type="css"}
                 {defer file="`$SkinDir`/jquery.tooltip.css" type="css"}
-                {defer file="`$SkinDir`/css/jquery.autocomplete.min.css" type="css"}
+                {defer file="`$SkinDir`/US_City_List/jquery.autocomplete.min.css" type="css"}
                 {defer file="/static/backend/fonts/icons/css/style.css" type="css"}
 
             {/if}
@@ -600,7 +600,7 @@
                         if (typeof js !== 'undefined' && js.length) {
                             while(js.length) {
                                 var j = document.createElement("script");
-                                j.src = js.pop();
+                                j.src = js.shift();
                                 document.body.appendChild(j);
                             }
                         }
