@@ -28,6 +28,8 @@
 {if $AREA_TYPE ne 'A'}
     <script src="{$SkinDir}/jquery.min.1.7.1.js" type="text/javascript" ></script>
 {/if}
+    <script src="{$SkinDir}/check_zipcode.js" type="text/javascript"></script>
+    <script src="{$SkinDir}/check_email_script.js" type="text/javascript"></script>
 
 </head>
 <body>
