@@ -1,7 +1,6 @@
 <?php
 
 use GuzzleHttp\Event\CompleteEvent;
-use GuzzleHttp\Event\ErrorEvent;
 use GuzzleHttp\Pool;
 use Modules\Goods\Models\ProductModel;
 use Modules\Sites\Models\SiteModel;
@@ -12,8 +11,8 @@ define("CIDEV_CRON_START", "CRON");
 require __DIR__ . DIRECTORY_SEPARATOR . "../www/top.inc.php";
 require __DIR__ . DIRECTORY_SEPARATOR . "../www/init.php";
 
-$desktop_user_agent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.119 Safari/537.36';
-$mobile_user_agent  = 'Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.119 Mobile Safari/537.36';
+const desktop_user_agent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.119 Safari/537.36';
+const mobile_user_agent  = 'Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.119 Mobile Safari/537.36';
 
 const PROCESS = 'HTML_CACHE_INVALIDATE';
 const DATEFORMAT = '%H:%I:%S';
@@ -30,7 +29,7 @@ function poolSend($client, $requests)
         'complete' => function (CompleteEvent $event) {
             global $sended_requests, $updated;
             $sended_requests++;
-            $updated = ceil($sended_requests / 2);
+            $updated = floor($sended_requests / 2);
         }
     ]);
 }
@@ -91,8 +90,8 @@ foreach (getResource() as $record) {
                 $ssl = ($site->getConfig()['https_enabled'] == 'Y');
                 $url = ($ssl ? 'https' : 'http') . '://' . $site->domain  . $model->getAbsoluteUrl();
 
-                $requests[] = $guzzle->createRequest('GET', $url, ['headers' => ['User-Agent' => $desktop_user_agent]]);
-                $requests[] = $guzzle->createRequest('GET', $url, ['headers' => ['User-Agent' => $mobile_user_agent]]);
+                $requests[] = $guzzle->createRequest('GET', $url, ['headers' => ['User-Agent' => desktop_user_agent]]);
+                $requests[] = $guzzle->createRequest('GET', $url, ['headers' => ['User-Agent' => mobile_user_agent]]);
             }
         }
     }
@@ -137,8 +136,8 @@ if (rand(1, 7) > 5) {
             $url = ($ssl ? 'https' : 'http') . '://' . $site->domain;
 
 
-            $guzzle->get($url, ['headers' => ['User-Agent' => $desktop_user_agent]]);
-            $guzzle->get($url, ['headers' => ['User-Agent' => $mobile_user_agent]]);
+            $guzzle->get($url, ['headers' => ['User-Agent' => desktop_user_agent]]);
+            $guzzle->get($url, ['headers' => ['User-Agent' => mobile_user_agent]]);
         }
     }
 }
