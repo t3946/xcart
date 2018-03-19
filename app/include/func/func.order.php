@@ -2123,7 +2123,7 @@ function func_get_order_manufacturers($orderid)
                                     }
                                 }
 
-                                if ($department == 'distributor'){
+                                if ($department == 'distributor' || empty($department)){
                                     $tmp_sku = $product_model->getMPN();
                                 }
                                 else {
