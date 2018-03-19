@@ -38,10 +38,11 @@
 {* ------------------- *}
 {if !($usertype eq "A" || $usertype eq "P")}
     <script type="text/javascript">
+        {literal}
         $(document).ready(function(){
             ga('send', 'pageview');
         });
-
+        {/literal}
     </script>
 {/if}
 
