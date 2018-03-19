@@ -49,7 +49,7 @@
 {block 'js'}
     {parent}
     <script type="text/javascript">
-        (function(){
+        $(document).ready(function(){
             {if $batch_model}
                 var url_restocking_batch_processing = '{url 'amazon:batch_processing'}';
                 var url_restocking_batch_processing_check = '{url 'amazon:batch_processing_check'}';
