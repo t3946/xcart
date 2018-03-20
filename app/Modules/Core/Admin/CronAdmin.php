@@ -28,7 +28,10 @@ class CronAdmin extends Admin
             'active',
             'is_run',
             'run_force',
-            'run_start',
+            'run_start' => [
+                'title' => 'Run start',
+                'template' => 'admin/cron/column_run_start.tpl',
+            ],
             'run_end' => [
                 'title' => 'Run end',
                 'template' => 'admin/cron/column_run_end.tpl',
