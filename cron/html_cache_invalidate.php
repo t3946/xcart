@@ -4,6 +4,8 @@ use GuzzleHttp\Event\CompleteEvent;
 use GuzzleHttp\Event\ErrorEvent;
 use GuzzleHttp\Pool;
 use Modules\Goods\Models\ProductModel;
+use Modules\Goods\Models\ProductStorefrontModel;
+use Modules\Goods\Models\UpdatedProductModel;
 use Modules\Sites\Models\SiteModel;
 use Xcart\App\Main\Xcart;
 
@@ -40,50 +42,60 @@ function writeLog($str)
     func_backprocess_log(PROCESS, $diff.$str);
 }
 
+function getResourcesCount()
+{
+    return UpdatedProductModel::objects()->filter(['type' => 10])->count();
+}
+
 function getResource()
 {
     global $updated;
     $loop = true;
 
     while ($updated < LIMIT && $loop) {
+        $loop = false;
+
         $ids = [];
-        $records = db_query("select t.* from xcart_cidev_updated_products t where t.`type` = 10 ORDER BY t.time_stamp DESC limit 20");
+        $models = UpdatedProductModel::objects()->filter(['type' => 10])->order(['-time_stamp'])->limit(20)->all();
 
-        while ($record = db_fetch_array($records)) {
-            yield $record;
-            $ids[] = $record['resourceid'];
-        }
-
-        if ($ids) {
+        if ($models) {
             $loop = true;
-            $ids = implode(',', $ids);
 
-            writeLog("Updated: {$updated}. Processed products: {$ids}.");
-            db_query("DELETE FROM xcart_cidev_updated_products WHERE resourceid in ({$ids}) and type='10' ");
-        }
-        else {
-            $loop = false;
+            foreach ($models as $model) {
+                yield $model;
+                $ids[] = $model->resourceid;
+            }
+
+            UpdatedProductModel::objects()->filter(['resourceid__in' => $ids, 'type' => 10])->delete();
         }
     }
 }
-writeLog("Started");
+
+writeLog("Started. Resource count in queue: ". getResourcesCount());
+
+$sites = [];
+foreach (SiteModel::objects()->all() as $site) {
+    $sites[$site->pk] = $site;
+}
 
 
 $guzzle = new \GuzzleHttp\Client();
 $requests = [];
 
-foreach (getResource() as $record) {
-    $key = 'product-' . $record['resourceid'];
+foreach (getResource() as $model) {
+    $key = 'product-' . $model->resourceid;
 
     Xcart::app()->cache->getDriver('html')->set($key, null);
     Xcart::app()->cache->getDriver('html')->set($key . '-mobile', null);
 
     /** @var ProductModel $model */
-    if ($model = ProductModel::objects()->get(['pk' => $record['resourceid']])) {
-        foreach ($model->sites as $site) {
+    if ($model = ProductModel::objects()->get(['pk' => $model->resourceid])) {
+        foreach (ProductStorefrontModel::objects()->filter(['productid' => $model->pk])->valuesList(['sfid'], true) as $sf_id)
+        {
             /** @var SiteModel $site */
+            $site = $sites[$sf_id];
 
-            if ($site->isWork()) {
+            if ($site && $site->isWork()) {
                 $updated++;
 
                 $ssl = ($site->getConfig()['https_enabled'] == 'Y');
@@ -105,9 +117,7 @@ if (count($requests)) {
 }
 
 
-writeLog("End products cache invalidate. Updated: {$updated}.");
-
-$sites = SiteModel::objects()->all();
+writeLog("End products cache invalidate. Updated: {$updated}. Resource count in queue: ". getResourcesCount());
 
 if (mt_rand(0, 10000) < 10) {
 
