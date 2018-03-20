@@ -48,7 +48,7 @@ function checkTimeLimit()
 {
     global $time;
 
-    return (time() - $time) < 50;
+    return (time() - $time) < TIME_PRODUCTS_LIMIT;
 }
 
 function getResourcesCount()
