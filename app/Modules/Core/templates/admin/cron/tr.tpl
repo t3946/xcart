@@ -2,10 +2,10 @@
 
 {if $item->is_run}
     {if $item->run_start}
-        {if date_create($item->run_start)->getTimestamp() > 43200}
+        {if (time() - date_create($item->run_start)->getTimestamp()) > 43200}
             {set $color = "#f3b51a"}
         {/if}
-        {if date_create($item->run_start)->getTimestamp() > 86400}
+        {if (time() - date_create($item->run_start)->getTimestamp()) > 86400}
             {set $color = "#f65275"}
         {/if}
     {/if}
