@@ -19,7 +19,7 @@ const mobile_user_agent  = 'Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58
 
 const PROCESS = 'HTML_CACHE_INVALIDATE';
 const DATEFORMAT = '%H:%I:%S';
-const LIMIT = 2000;
+const LIMIT = 5000;
 const TIME_PRODUCTS_LIMIT = 113;
 
 
