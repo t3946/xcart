@@ -13,7 +13,7 @@ H1{FONT-SIZE:16px;margin-bottom:4px;margin-top:0px;}
 H2{FONT-SIZE:13px;}
 H3{COLOR:#000000;FONT-SIZE:12px;}
 HR{COLOR:#DDDDDD;HEIGHT:1px;}
-HTML,BODY{HEIGHT:100%;MARGIN:0px;PADDING:0px;}
+HTML,BODY{HEIGHT:100%;MARGIN:0px;PADDING:0px;min-width:960px;}
 FORM{MARGIN:0px;}
 TABLE,IMG{BORDER:0px;}
 IMG{white-space:normal;word-break:break-all;}

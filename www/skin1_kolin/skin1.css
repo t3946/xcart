@@ -72,6 +72,7 @@ HTML,BODY {
 	HEIGHT: 100%;
 	MARGIN: 0px;
 	PADDING: 0px;
+	min-width:960px;
 /* modify color*/
 /*	BACKGROUND-COLOR: #F2EFE6;*/
 /*	BACKGROUND-IMAGE: url(images/background_artss.jpg); */
