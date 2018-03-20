@@ -19,7 +19,7 @@ const mobile_user_agent  = 'Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58
 
 const PROCESS = 'HTML_CACHE_INVALIDATE';
 const DATEFORMAT = '%H:%I:%S';
-const LIMIT = 1000;
+const LIMIT = 900;
 
 
 $date = new DateTime();
