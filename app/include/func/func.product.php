@@ -740,11 +740,11 @@ function func_select_product($id, $membershipid, $redirect_if_error=true, $clear
 
     if (!is_numeric($id)) {
         $id = \Xcart\App\Main\Xcart::app()->db->getConnection()->quote($id);
-        $product_condition = "p.productcode='$id' ";
+        $product_condition = "p.productcode={$id} ";
     }
     else {
         $id = intval($id);
-        $product_condition = " p.productid='$id' ";
+        $product_condition = " p.productid={$id} ";
     }
 
     Profiler::getInstance()->addPoint();
