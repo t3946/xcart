@@ -12,7 +12,7 @@
 {/if}
 
 
-<tr data-pk="{$pk}" style="{if $color} background-color: {$color};{/if} {if !$item->active} color: gray;{/if}">
+<tr data-pk="{$pk}" style="{if $color} background-color: {$color};{/if} {if !$item->active} color: gray;{/if} {if $item->run_force} border-bottom: 2px solid orange; {/if}">
 
     <td class="checker">
         <input type="checkbox" id="{$id}-{$pk}-check" name="pk_list[]" value="{$pk}">
