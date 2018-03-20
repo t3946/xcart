@@ -6,7 +6,7 @@
             {set $color = "#f3b51a"}
         {/if}
         {if (time() - date_create($item->run_start)->getTimestamp()) > 86400}
-            {set $color = "darkred"}
+            {set $color = "#d83054"}
         {/if}
     {/if}
 {/if}
