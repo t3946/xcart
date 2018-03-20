@@ -51,7 +51,7 @@ if ($REQUEST_METHOD == 'POST') {
                 $smarty->assign('product', $oProduct);
             }
 
-            $smarty->assign('is_lazy', true);
+            $smarty->assign('lazy', true);
 
             $aResult['items'][] =
                 [
