@@ -580,7 +580,6 @@
             {/if}
 
             {defer file="`$SkinDir`/js/ajax_home_page.min.js" type="js"}
-            {defer file="`$SkinDir`/js/jquery.unveil.js" type="js"}
             {defer file="`$SkinDir`/js/home.min.js" type="js"}
 
             <script type="text/javascript">
