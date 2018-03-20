@@ -144,13 +144,15 @@ if (rand(1, 7) > 5) {
             $ssl = ($site->getConfig()['https_enabled'] == 'Y');
             $url = ($ssl ? 'https' : 'http') . '://' . $site->domain;
 
-
-            $guzzle->get($url, ['headers' => ['User-Agent' => desktop_user_agent]]);
-            $guzzle->get($url, ['headers' => ['User-Agent' => mobile_user_agent]]);
+            $requests[] = $guzzle->createRequest('GET', $url, ['headers' => ['User-Agent' => desktop_user_agent]]);
+            $requests[] = $guzzle->createRequest('GET', $url, ['headers' => ['User-Agent' => mobile_user_agent]]);
         }
     }
 }
 
+if (count($requests)) {
+    poolSend($guzzle, $requests);
+}
 
 writeLog("Start cache GC.");
 Xcart::app()->cache->gc(true);
