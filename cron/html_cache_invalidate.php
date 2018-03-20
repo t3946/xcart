@@ -157,9 +157,7 @@ if (rand(1, 7) > 5) {
             $requests[] = $guzzle->createRequest('GET', $url, ['headers' => ['User-Agent' => mobile_user_agent]]);
         }
     }
-}
 
-if (count($requests)) {
     poolSend($guzzle, $requests);
 }
 
