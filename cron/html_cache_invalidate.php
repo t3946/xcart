@@ -23,9 +23,12 @@ const LIMIT = 5000;
 const TIME_PRODUCTS_LIMIT = 113;
 
 
+$guzzle = new \GuzzleHttp\Client();
 $date = new DateTime();
 $time = time();
 $updated = 0;
+$requests = [];
+
 
 function poolSend($client, &$requests)
 {
@@ -80,53 +83,52 @@ function getResource()
     }
 }
 
-writeLog("Started. Resource count in queue: ". getResourcesCount());
 
 $sites = [];
 foreach (SiteModel::objects()->all() as $site) {
     $sites[$site->pk] = $site;
 }
 
+if ($resources_count = getResourcesCount()) {
+    writeLog("Started. Resource count in queue: {$resources_count}");
 
-$guzzle = new \GuzzleHttp\Client();
-$requests = [];
+    foreach (getResource() as $model) {
+        $key = 'product-' . $model->resourceid;
 
-foreach (getResource() as $model) {
-    $key = 'product-' . $model->resourceid;
+        Xcart::app()->cache->getDriver('html')->set($key, null);
+        Xcart::app()->cache->getDriver('html')->set($key . '-mobile', null);
 
-    Xcart::app()->cache->getDriver('html')->set($key, null);
-    Xcart::app()->cache->getDriver('html')->set($key . '-mobile', null);
+        /** @var ProductModel $model */
+        if ($model = ProductModel::objects()->get(['pk' => $model->resourceid])) {
+            foreach (ProductStorefrontModel::objects()->filter(['productid' => $model->pk])->valuesList(['sfid'], true) as $sf_id)
+            {
+                /** @var SiteModel $site */
+                $site = $sites[$sf_id];
 
-    /** @var ProductModel $model */
-    if ($model = ProductModel::objects()->get(['pk' => $model->resourceid])) {
-        foreach (ProductStorefrontModel::objects()->filter(['productid' => $model->pk])->valuesList(['sfid'], true) as $sf_id)
-        {
-            /** @var SiteModel $site */
-            $site = $sites[$sf_id];
+                if ($site && $site->isWork()) {
+                    $updated++;
 
-            if ($site && $site->isWork()) {
-                $updated++;
+                    $ssl = ($site->getConfig()['https_enabled'] == 'Y');
+                    $url = ($ssl ? 'https' : 'http') . '://' . $site->domain  . $model->getAbsoluteUrl();
 
-                $ssl = ($site->getConfig()['https_enabled'] == 'Y');
-                $url = ($ssl ? 'https' : 'http') . '://' . $site->domain  . $model->getAbsoluteUrl();
-
-                $requests[] = $guzzle->createRequest('GET', $url, ['headers' => ['User-Agent' => desktop_user_agent]]);
-                $requests[] = $guzzle->createRequest('GET', $url, ['headers' => ['User-Agent' => mobile_user_agent]]);
+                    $requests[] = $guzzle->createRequest('GET', $url, ['headers' => ['User-Agent' => desktop_user_agent]]);
+                    $requests[] = $guzzle->createRequest('GET', $url, ['headers' => ['User-Agent' => mobile_user_agent]]);
+                }
             }
+        }
+
+        if (count($requests) > 50) {
+            poolSend($guzzle, $requests);
         }
     }
 
-    if (count($requests) > 50) {
+    if (count($requests)) {
         poolSend($guzzle, $requests);
     }
+
+    writeLog("End products cache invalidate. Updated: {$updated}");
 }
 
-if (count($requests)) {
-    poolSend($guzzle, $requests);
-}
-
-
-writeLog("End products cache invalidate. Updated: {$updated}");
 
 if (mt_rand(0, 10000) < 10) {
 
@@ -161,12 +163,10 @@ if (rand(1, 7) > 5) {
     poolSend($guzzle, $requests);
 }
 
-writeLog("Start cache GC.");
+writeLog("Cache GC.");
 Xcart::app()->cache->gc(true);
-writeLog("END cache GC.");
 
-writeLog("Start sessions GC.");
+writeLog("Sessions GC.");
 (new \Modules\User\Components\XcartSession())->gc(null);
-
 
 writeLog("End.");
