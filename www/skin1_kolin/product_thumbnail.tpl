@@ -1,2 +1,2 @@
 {include file="product_splash.tpl"}
-{if $config.Appearance.show_thumbnails eq "Y"}<img{if $id ne ''} id="{$id}"{/if} src="{include file="product_image_src.tpl"}" {if $image_x ne 0} width="{$image_x}"{/if}{if $image_y ne 0} height="{$image_y}"{/if} alt="{$product|escape}" />{/if}
+{if $config.Appearance.show_thumbnails eq "Y"}<img{if $id ne ''} id="{$id}"{/if} {if $is_lazy}class="lazy" data-src{else}src{/if}="{include file="product_image_src.tpl"}" {if $image_x ne 0} width="{$image_x}"{/if}{if $image_y ne 0} height="{$image_y}"{/if} alt="{$product|escape}" />{/if}

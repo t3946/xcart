@@ -170,7 +170,7 @@
                                             $("#" + section_name).show();
                                         }
 
-                                        $('#jcarousel_' + section_name).html(html).parent().after('<ul class="pages"></ul>');
+                                        $('#jcarousel_' + section_name).html(html).find('img.lazy').unveil().end().parent().after('<ul class="pages"></ul>');
                                         jQuery(function ($) {
                                             'use strict';
 
@@ -580,6 +580,7 @@
             {/if}
 
             {defer file="`$SkinDir`/js/ajax_home_page.min.js" type="js"}
+            {defer file="`$SkinDir`/js/jquery.unveil.js" type="js"}
             {defer file="`$SkinDir`/js/home.min.js" type="js"}
 
             <script type="text/javascript">
