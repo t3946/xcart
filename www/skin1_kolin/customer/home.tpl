@@ -170,7 +170,7 @@
                                             $("#" + section_name).show();
                                         }
 
-                                        $('#jcarousel_' + section_name).html(html).parent().after('<ul class="pages"></ul>');
+                                        $('#jcarousel_' + section_name).html(html).find('img.lazy').unveil().end().parent().after('<ul class="pages"></ul>');
                                         jQuery(function ($) {
                                             'use strict';
 

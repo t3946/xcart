@@ -3,7 +3,7 @@
 {include file="meta_titles.tpl" }
 
 <!-- vewport test -->
-<meta name="viewport" content="width=device-width, initial-scale=2"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
 
 {include file="presets_js.tpl"}
 
