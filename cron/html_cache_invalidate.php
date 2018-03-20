@@ -117,7 +117,7 @@ if (count($requests)) {
 }
 
 
-writeLog("End products cache invalidate. Updated: {$updated}. Resource count in queue: ". getResourcesCount());
+writeLog("End products cache invalidate. Updated: {$updated}");
 
 if (mt_rand(0, 10000) < 10) {
 
