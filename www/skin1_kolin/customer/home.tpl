@@ -166,7 +166,7 @@
                                                 $("#" + section_name).show();
                                             }
 
-                                            $('#jcarousel_' + section_name).html(html).find('img.lazy').unveil(500).end().parent().after('<ul class="pages"></ul>');
+                                            $('#jcarousel_' + section_name).html(html).parent().after('<ul class="pages"></ul>');
                                             jQuery(function ($) {
                                                 'use strict';
 
@@ -203,14 +203,12 @@
                                                     };
                                                     try {
                                                         var frame = new Sly('#jcarousel_' + section_name, options, {
-                                                            load: checkCarouselsVisibility,
+                                                            load: function(){new LazyLoad({elements_selector:'img.lazy'}); checkCarouselsVisibility()},
                                                             moveEnd: checkCarouselsVisibility
                                                         }).init();
                                                     }
                                                     catch (err) {
                                                     }
-
-
                                                 }());
 
                                             });
@@ -279,8 +277,6 @@
                             {if $gcheckout_enabled and $main ne "cart" and $main ne "checkout" and $main ne "anonymous_checkout" and $main ne "order_message"}
                                 <div align="right">{include file="modules/Google_Checkout/gcheckout_button.tpl"}</div>
                             {/if}
-
-                            {include file="dialog_message.tpl"}
 
                             {if $active_modules.Special_Offers ne ""}
                             {include file="modules/Special_Offers/customer/new_offers_message.tpl"}
