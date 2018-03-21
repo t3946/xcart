@@ -158,12 +158,18 @@ class PbxAnveoCallModel extends Model
 
     public function getUrl()
     {
-        if ($this->isOutgoing()){
-            $account = AnveoAssignCalls::parseAccount($this->file);
-            return $url = "https://s3.amazonaws.com/anveo-{$account}/{$this->file}";
+        if (!empty($this->file)) {
+            if ($this->isOutgoing()) {
+                $account = AnveoAssignCalls::parseAccount($this->file);
+
+                return $url = "https://s3.amazonaws.com/anveo-{$account}/{$this->file}";
+            }
+            else {
+                return $url = "https://s3.amazonaws.com/incoming_business_hours/{$this->file}";
+            }
         }
         else {
-            return $url = "https://s3.amazonaws.com/incoming_business_hours/{$this->file}";
+            return '';
         }
     }
 

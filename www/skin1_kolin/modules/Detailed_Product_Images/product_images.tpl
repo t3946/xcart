@@ -9,9 +9,9 @@
 		{assign var="imagePath" value="//`$config.Appearance.CDN_domain`"}
 	{/if}
 {if $images[image].tmbn_url}
-<img class="google_impression_object" data-list='detailed_images' {if $use_schema_org eq "Y"} id="so_image" itemprop="image"{/if} src="{$imagePath}{$images[image].tmbn_url}" alt="{$images[image].alt|escape}" style="padding-bottom: 10px;  max-width: {$config.Appearance.max_width_det_img}px; max-height: {$config.Appearance.max_height_det_img}px;" />
+<img class="google_impression_object lazy" data-list='detailed_images' {if $use_schema_org eq "Y"} id="so_image" itemprop="image"{/if} data-lazy="{$imagePath}{$images[image].tmbn_url}" alt="{$images[image].alt|escape}" style="padding-bottom: 10px;  max-width: {$config.Appearance.max_width_det_img}px; max-height: {$config.Appearance.max_height_det_img}px;" />
 {else}
-<img class="google_impression_object" data-list='detailed_images' {if $use_schema_org eq "Y"} id="so_image" itemprop="image"{/if} src="{$imagePath}/image.php?id={$images[image].imageid}&amp;type=D" alt="{$images[image].alt|escape}" style="padding-bottom: 10px;" />
+<img class="google_impression_object lazy" data-list='detailed_images' {if $use_schema_org eq "Y"} id="so_image" itemprop="image"{/if} data-lazy="{$imagePath}/image.php?id={$images[image].imageid}&amp;type=D" alt="{$images[image].alt|escape}" style="padding-bottom: 10px;" />
 {/if}
 <br />
 {/if}

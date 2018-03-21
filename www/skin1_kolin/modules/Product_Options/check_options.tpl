@@ -1,6 +1,4 @@
-{* $Id: check_options.tpl,v 1.61.2.3 2006/09/19 07:31:06 max Exp $ *}
-<script type="text/javascript" language="JavaScript 1.2">
-<!--
+<script type="text/javascript">
 
 /*
 variants array:
@@ -148,7 +146,6 @@ var lbl_price = "{$lng.lbl_price_per_item|escape:javascript}";
 var txt_note = "{$lng.txt_note|escape:javascript}";
 var lbl_including_tax = "{$lng.lbl_including_tax|escape:javascript}";
 
--->
 </script>
 
-{include file="main/include_js.tpl" src="modules/Product_Options/func.js"}
+{defer file="`$SkinDir`/js/func.min.js"}

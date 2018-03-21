@@ -1,7 +1,5 @@
 {* $Id: search.tpl,v 1.9.2.1 2006/11/27 14:28:38 max Exp $ *}
 
-<script defer src="{$SkinDir}/US_City_List/jquery.autocomplete.js" type="text/javascript"></script>
-
 <script type="text/javascript">
 //<![CDATA[
 {literal}

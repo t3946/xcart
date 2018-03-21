@@ -215,6 +215,18 @@ class AmpProductModel extends ProductModel
             $fulldescr = preg_replace($regexp, '', $fulldescr);
         }
 
+        $mass = ['<embed>', '</embed>', '<param>' , '</param>', '<object>', '</object>', '<eol>', '</eol>'];
+
+        foreach ($mass as $element){
+            if (stripos($fulldescr, $element) !== false){
+                $fulldescr = str_ireplace($element, '', $fulldescr);
+            }
+        }
+
+        $regexp = '/(<amp-iframe[^>]*)type=".*?"([^>]*><\/amp-iframe>)/';
+        if (preg_match($regexp, $fulldescr)) {
+            $fulldescr = preg_replace($regexp, "$1$2", $fulldescr);
+        }
 
         return $fulldescr;
     }

@@ -55,7 +55,7 @@ class CronCommand extends Command
         $cron_logs_path = Paths::get('root.log.cron');
         $jobby = new Jobby();
 
-        if ($models = CronModel::objects()->filter([new QOr(['active' => true, 'run_force' => true])])->all())
+        if ($models = CronModel::objects()->filter([new QOr(['active' => true])])->all())
         {
             /** @var CronModel $model */
             foreach ($models as $model) {

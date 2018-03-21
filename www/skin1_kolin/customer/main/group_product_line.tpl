@@ -30,17 +30,17 @@
                 data-name="{$child->product|escape}"
                 data-price='{getPricingArray pricing=$child->pricing map_price=$child->new_map_price json=true}'
                 data-list='group_product_item'>
-                <td class="sku"><a href="{$child->getUrl()}" target="_blank">{$child->productcode}</a></td>
+                <td class="sku"><a href="{$child->getUrl()}">{$child->productcode}</a></td>
                 {assign var=thumbnail_m value=$child->thumbnail}
                 {assign var=thumbnail value=$thumbnail_m->get()}
                 <td>{if $thumbnail}
-                        <a href="{$child->getUrl()}" target="_blank">
+                        <a href="{$child->getUrl()}">
                             <img src="{include file="product_image_src.tpl" tmbn_url=$thumbnail->getUrl()}"/>
                         </a>
                     {/if}
                 </td>
                 <td class="title">
-                    <div><a href="{$child->getUrl()}" target="_blank">{$child->product}</a></div>
+                    <div><a href="{$child->getUrl()}">{$child->product}</a></div>
                     {if $child->isProductOutOfStock()}
                         <div class="info clock">
                             <i class="icon"></i>

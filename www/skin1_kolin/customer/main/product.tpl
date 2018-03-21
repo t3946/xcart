@@ -16,7 +16,7 @@
 {/if}
 <br>
 
-    {assign var="producttitle" value=$oProduct->getFrontendName()}
+{assign var="producttitle" value=$oProduct->getFrontendName()}
 
 {if $product.new_notify_in_stock_price ne ""}
     {assign var="current_price" value=$product.new_notify_in_stock_price}
@@ -57,7 +57,7 @@
                             {include file="modules/Detailed_Product_Images/popup_image.tpl"}
                         {else}
                             {if $active_modules.Detailed_Product_Images ne "" && $images ne ''}
-                                <a style="font-size: 0px;" href="#dp_images" class="ga_click" data-label="More Images">
+                                <a style="font-size: 0px;" name="javascript:void(self.location.hash = 'dp_images');" class="ga_click" data-label="More Images">
                             {/if}
                             {if $oProduct && $oProduct->isGroupRoot()}
                                 {include file="group_thumbnail.tpl" product=$oProduct}
@@ -174,7 +174,8 @@
                                 </tr>
 
                                 {if $config.Appearance.show_in_stock eq "Y" and $config.General.unlimited_products ne "Y" and $product.distribution eq "" && $product.avail <= $config.Appearance.quantity_threshold && $product.avail gt 0}
-                                    <tr id="so_o_stock" itemprop="availability" content="{if $product.product_availability eq "in stock"}InStock{else}OutOfStock{/if}">
+                                    <tr id="so_o_stock" itemprop="availability"
+                                        content="{if $product.product_availability eq "in stock"}InStock{else}OutOfStock{/if}">
                                         <td width="10%" class="BlackT">{$lng.lbl_in_stock}:</td>
                                         <td nowrap="nowrap" id="product_avail_txt" class="BlackT">
                                             {if $product.avail gt 0}{$lng.txt_items_available|substitute:"items":$product.avail}{else}{$lng.lbl_no_items_available}{/if}
@@ -218,7 +219,6 @@
                                             {if $config.General.unlimited_products eq "Y"}
                                                 {math equation="x+y" assign="mq" x=$mq y=$start_quantity}
                                             {/if}
-
                                             <script type="text/javascript">
                                                 var min_avail = {$start_quantity|default:1};
                                                 var avail = {$mq|default:1}-1;
@@ -296,7 +296,6 @@
                                                 }
                                                 {/literal}
                                             </script>
-
                                             <div class="product_attr quantity clearfix">
                                                 <a rel="nofollow"
                                                    class="oper reduce{if $start_quantity|default:1 eq "1"} disabled{/if}"
@@ -406,15 +405,17 @@
                         </td>
                         <td rowspan="3" class="save_td">&nbsp;</td>
                     {else}
-                        <td valign="top" width="*" style="padding-left: 20px; vertical-align: middle" class="full_product_cell">
+                        <td valign="top" width="*" style="padding-left: 20px; vertical-align: middle"
+                            class="full_product_cell">
                             <div class="btn_full_product_line"></div>
                             <div class="full_line_info">Click here to see full product line</div>
                             {if $config.Security.ssl_seal ne ""}
-                            <div class="seal">
-                               {$config.Security.ssl_seal}
-                            </div>
+                                <div class="seal">
+                                    {$config.Security.ssl_seal}
+                                </div>
                             {/if}
-                            <span id="so_o_price_spec" itemprop="priceSpecification" itemscope itemtype="http://schema.org/PriceSpecification">
+                            <span id="so_o_price_spec" itemprop="priceSpecification" itemscope
+                                  itemtype="http://schema.org/PriceSpecification">
                                 <meta itemprop="price minPrice" content="{$oProduct->getFrontendPrice()}"/>
                                 <meta itemprop="maxPrice" content="{$oProduct->getFrontendPrice(2)}"/>
                                 <meta itemprop="priceCurrency" content="USD"/>
@@ -554,7 +555,9 @@
                         <tr class="full_product_line_button">
                             <td colspan="2"></td>
                             <td colspan="2" style="padding-left: 16px;">
-                                <span style="font-size: 19px" class="cidev_new_button cidev_new_white" onclick="self.location = '{$oProduct->parent->getUrl()}'">See other product variations</span></td>
+                                <span style="font-size: 19px" class="cidev_new_button cidev_new_white"
+                                      onclick="self.location = '{$oProduct->parent->getUrl()}'">See other product variations</span>
+                            </td>
                         </tr>
                     {/if}
                 {/if}
@@ -579,13 +582,14 @@
 {/if}
 
 {if $product.product_availability ne "in stock"}
-    <br />
-    <br />
-
-    <div id="similar_products" style="display: none;">{include file="customer/main/ajax_carousel_products.tpl" section_name="similar_products" section_title=$lng.lbl_similar_products}</div>
-
+    <br/>
+    <br/>
+    <div id="similar_products"
+         style="display: none;">{include file="customer/main/ajax_carousel_products.tpl" section_name="similar_products" section_title=$lng.lbl_similar_products}</div>
     <script type="text/javascript">
-        func_load_ALL_ajax_carousels("similar_products", 0);
+        {literal}
+            $(document).ready(function() {func_load_ALL_ajax_carousels("similar_products", 0)})
+        {/literal}
     </script>
 {/if}
 
@@ -616,7 +620,8 @@
 <br/>
 {if $oProduct && $oProduct->isGroupChild() && $oProduct->parent}
     <div style="text-align: center;" class="full_product_line_button">
-            <span style="font-size: 19px" class="cidev_new_button cidev_new_white" onclick="self.location = '{$oProduct->parent->getUrl()}'">See other product variations</span>
+        <span style="font-size: 19px" class="cidev_new_button cidev_new_white"
+              onclick="self.location = '{$oProduct->parent->getUrl()}'">See other product variations</span>
     </div>
     <br/>
     <br/>
@@ -647,9 +652,11 @@
 <script type="text/javascript">
     {assign var=carousels value='products_also_bought_with_this_product,related_products,similar_products,recently_viewed_products'}
     {if $product.product_availability ne "in stock"}
-        {assign var=carousels value='products_also_bought_with_this_product,related_products,recently_viewed_products'}
+    {assign var=carousels value='products_also_bought_with_this_product,related_products,recently_viewed_products'}
     {/if}
-    func_load_ALL_ajax_carousels("{$carousels}", 0);
+    {literal}
+        $(document).ready(function() {func_load_ALL_ajax_carousels("{/literal}{$carousels}{literal}", 0)});
+    {/literal}
 </script>
 
 {if $active_modules.Recommended_Products ne ""}
@@ -666,45 +673,46 @@
 {if $active_modules.Product_Options ne ''}
     <script type="text/javascript">
         {literal}
-            document.addEventListener('DOMContentLoaded', function(){
-                setTimeout(check_options, 500);
+        $(document).ready(function () {
+            {/literal}
+            {if !$is_group}
+                check_options();
+            {/if}
+            {literal}
+            $('#calculate_shipping_button').on('click', function (e) {
+
+                $('#calculate_shipping_text').find('.shipping_info').html('Please wait...').attr('align', 'center').end().fadeIn();
+
+                var qty = parseInt($('#product_avail').val());
+
+                if (!e.ctrlKey) {
+                    ga('send', 'event', 'click', 'Shipping calculation', 'Quantity', qty);
+                }
+                $.get(
+                    '/cidev_ajax_suggestions.php',
+                    {
+                        product_id: $(this).data('product-id'),
+                        qty: qty,
+                        section_name: 'shipping'
+                    },
+                    function (data) {
+                        $('#calculate_shipping_text')
+                            .find('.shipping_info')
+                            .html(data)
+                            .attr('align', 'left')
+                            .end();
+                    });
+
             });
+            $('#qty-inc, #qty-dec').on('click', function () {
+                $('#calculate_shipping_text').fadeOut();
+            });
+
+            $('#product_avail').on('keyup', function () {
+                $('#calculate_shipping_text').fadeOut();
+            })
+
+        });
         {/literal}
     </script>
 {/if}
-{literal}
-    <script type="text/javascript">
-        $('#calculate_shipping_button').on('click', function (e) {
-
-            $('#calculate_shipping_text').find('.shipping_info').html('Please wait...').attr('align', 'center').end().fadeIn();
-
-            var qty = parseInt($('#product_avail').val());
-
-            if (!e.ctrlKey) {
-                ga('send', 'event', 'click', 'Shipping calculation', 'Quantity', qty);
-            }
-            $.get(
-                '/cidev_ajax_suggestions.php',
-                {
-                    product_id: $(this).data('product-id'),
-                    qty: qty,
-                    section_name: 'shipping'
-                },
-                function (data) {
-                    $('#calculate_shipping_text')
-                        .find('.shipping_info')
-                        .html(data)
-                        .attr('align', 'left')
-                        .end();
-                });
-
-        });
-        $('#qty-inc, #qty-dec').on('click', function () {
-            $('#calculate_shipping_text').fadeOut();
-        });
-
-        $('#product_avail').on('keyup', function () {
-            $('#calculate_shipping_text').fadeOut();
-        })
-    </script>
-{/literal}
