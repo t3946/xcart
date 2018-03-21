@@ -188,11 +188,12 @@
                                     <td height="25" class="BlackT">{$lng.lbl_quantity}:</td>
                                     <td style="text-align:left;font-size: 16px;" width="*">
                                         {if $config.General.unlimited_products eq "N" and ($product.avail le 0 or $product.avail lt $product.min_amount || $product.product_availability == 'out of stock') and $variants eq '' }
-                                            <script type="text/javascript">
+                                            {capture name="defer_script_50"}
                                                 var min_avail = 1;
                                                 var avail = 0;
                                                 var product_avail = 0;
-                                            </script>
+                                            {/capture}
+                                            {defer file=$smarty.capture.defer_script_50 type="js_inline"}
                                             <b>{$lng.txt_out_of_stock}</b>
                                         {else}
                                             {if $config.General.unlimited_products eq "Y"}
@@ -219,7 +220,7 @@
                                             {if $config.General.unlimited_products eq "Y"}
                                                 {math equation="x+y" assign="mq" x=$mq y=$start_quantity}
                                             {/if}
-                                            <script type="text/javascript">
+                                            {capture name="defer_script_51"}
                                                 var min_avail = {$start_quantity|default:1};
                                                 var avail = {$mq|default:1}-1;
                                                 var product_avail = {$product.avail|default:"0"};
@@ -295,7 +296,10 @@
                                                     }
                                                 }
                                                 {/literal}
-                                            </script>
+                                            {/capture}
+
+                                            {defer file=$smarty.capture.defer_script_51 type="js_inline"}
+
                                             <div class="product_attr quantity clearfix">
                                                 <a rel="nofollow"
                                                    class="oper reduce{if $start_quantity|default:1 eq "1"} disabled{/if}"
@@ -309,11 +313,12 @@
                                                    onclick="func_dec_inc_qty('inc', '{$step}');"></a>
                                             </div>
                                         {else}
-                                            <script type="text/javascript">
+                                            {capture name="defer_script_52"}
                                                 var min_avail = 1;
                                                 var avail = 1;
                                                 var product_avail = 1;
-                                            </script>
+                                            {/capture}
+                                            {defer file=$smarty.capture.defer_script_52 type="js_inline"}
                                             <font class="ProductDetailsTitle">1</font>
                                         <input type="hidden" name="amount"
                                                value="1"/> {if $product.distribution ne ""}{$lng.txt_product_downloadable}{/if}
@@ -531,11 +536,12 @@
 
                         <td width="196">
                             {if $shipping_rate_show}
-                                <script type="text/javascript">
+                                {capture name="defer_script_53"}
                                     {literal}
                                     ga('send', 'event', 'calculate shipping', 'showed', {nonInteraction: true});
                                     {/literal}
-                                </script>
+                                {/capture}
+                                {defer file=$smarty.capture.defer_script_53 type="js_inline"}
                                 <span id="calculate_shipping_button" data-product-id="{$product.productid}"
                                       style="margin-top: -5px;"
                                       class="cidev_new_button cidev_new_white">Show shipping</span>

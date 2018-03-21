@@ -18,17 +18,17 @@ function smarty_function_defer_echo($params, &$smarty)
             $arr = "['" . implode("','",$a[$params['type']]) . "'];";
 
             echo <<<INLINE
-                var {$params['type']} = {$arr} 
+var {$params['type']} = {$arr} 
 INLINE;
         }
 
         switch ($params['type']) {
             case 'css' :
-                echo <<<INLINE
+                echo \Fenom\Modifier::strip(<<<INLINE
                     var loadDeferredStyles = function() {
                         if (typeof css !== 'undefined' && css.length) {
                             while (css.length) {
-                                var l = document.createElement("link");
+                                var l = document.createElement('link');
                                 l.rel = 'stylesheet';
                                 l.href = css.shift();
                                 var h = document.getElementsByTagName('head')[0];
@@ -44,10 +44,11 @@ INLINE;
                     while (drh_callbacks.length) {
                         $(drh_callbacks.shift());
                     }
-INLINE;
+INLINE
+,false);
                 break;
             case 'js' :
-                echo <<<INLINE
+                echo \Fenom\Modifier::strip(<<<INLINE
                      if (typeof js !== 'undefined' && js.length) {
                         while(js.length) {
                             var j = document.createElement("script");
@@ -55,14 +56,16 @@ INLINE;
                             document.body.appendChild(j);
                         }
                     }
-INLINE;
+INLINE
+,false);
                 break;
             case 'js_inline' :
                 if ($a[$params['type']]) {
+                    $res = null;
                     foreach ($a[$params['type']] as $src) {
-                        echo $src;
+                        $res .= $src;
                     }
-
+                    echo \Fenom\Modifier::strip($res, false);
                 }
 
                 break;

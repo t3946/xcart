@@ -604,25 +604,22 @@
             {include file="cidev_tracking_code.tpl" }
 
             {if !($usertype eq "A" || $usertype eq "P")}
-            <script type="text/javascript">
-                ga('send', 'pageview');
-            </script>
+                <script type="text/javascript">
+                    ga('send', 'pageview');
+                </script>
             {/if}
 
             <script type="text/javascript">
                 {defer_echo type="js_inline"}
-
                 {literal}
                     function afterQueryLoaded() {
                         {/literal}
                             {defer_echo type="css"}
                             {defer_echo type="js"}
                         {literal}
-                    };
+                    }
                 {/literal}
-
             </script>
-
             {if !empty($config.Appearance.Facebook_pixel_code)}
                 {$config.Appearance.Facebook_pixel_code}
             {/if}
