@@ -586,11 +586,12 @@
     <br/>
     <div id="similar_products"
          style="display: none;">{include file="customer/main/ajax_carousel_products.tpl" section_name="similar_products" section_title=$lng.lbl_similar_products}</div>
-    <script type="text/javascript">
+    {capture name="defer_script_3"}
         {literal}
             $(document).ready(function() {func_load_ALL_ajax_carousels("similar_products", 0)})
         {/literal}
-    </script>
+    {/capture}
+    {defer file=$smarty.capture.defer_script_3 type="js_inline"}
 {/if}
 
 {if $product.cart_manufact_text_displayed ne ""}
@@ -649,7 +650,7 @@
 <div id="recently_viewed_products"
      style="display: none;">{include file="customer/main/ajax_carousel_products.tpl" section_name="recently_viewed_products" section_title=$lng.lbl_recently_viewed_products}</div>
 
-<script type="text/javascript">
+{capture name="defer_script_4"}
     {assign var=carousels value='products_also_bought_with_this_product,related_products,similar_products,recently_viewed_products'}
     {if $product.product_availability ne "in stock"}
     {assign var=carousels value='products_also_bought_with_this_product,related_products,recently_viewed_products'}
@@ -657,7 +658,9 @@
     {literal}
         $(document).ready(function() {func_load_ALL_ajax_carousels("{/literal}{$carousels}{literal}", 0)});
     {/literal}
-</script>
+{/capture}
+
+{defer file=$smarty.capture.defer_script_4 type="js_inline"}
 
 {if $active_modules.Recommended_Products ne ""}
     {if $recommends}
@@ -671,7 +674,7 @@
     {include file="modules/Customer_Reviews/vote_reviews.tpl" }
 {/if}
 {if $active_modules.Product_Options ne ''}
-    <script type="text/javascript">
+{capture name="defer_script_43"}
         {literal}
         $(document).ready(function () {
             check_options();
@@ -710,5 +713,6 @@
 
         });
         {/literal}
-    </script>
+    {/capture}
+    {defer file=$smarty.capture.defer_script_43 type="js_inline"}
 {/if}

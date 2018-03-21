@@ -67,7 +67,7 @@
                     data-list="{$ga_page_name}" data-price="{$products[product].price}" data-position="{$N_key}">
                     <td class="PListImgBox">
                         <div class="PListImgBox" {if $products[product].oProduct && $products[product].oProduct->isGroupRoot()}style="width:150px; height:150px;"{/if}">
-                            <a {include file="on_product_click.tpl"} href="{$products[product].oProduct->getUrl()}" {if $search_all_website eq 'Y'}target="_blank"{/if}>
+                            <a href="{$products[product].oProduct->getUrl()}" {if $search_all_website eq 'Y'}target="_blank"{/if}>
                                 {if $products[product].oProduct && $products[product].oProduct->isGroupRoot()}
                                     {include file="group_thumbnail.tpl" product=$products[product].oProduct}
                                 {else}
