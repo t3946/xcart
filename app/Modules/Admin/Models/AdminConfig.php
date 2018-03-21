@@ -20,6 +20,7 @@ use Modules\User\Models\UserModel;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\ForeignField;
+use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Fields\TextField;
 use Xcart\App\Orm\Model;
 
@@ -52,7 +53,12 @@ class AdminConfig extends Model
                 'class' => TextField::className(),
                 'verboseName' => 'Columns',
                 'null' => true
-            ]
+            ],
+            'page_size' => [
+                'class' => IntField::class,
+                'verboseName' => 'Items in list',
+                'null' => true,
+            ],
         ];
     }
 
@@ -70,17 +76,12 @@ class AdminConfig extends Model
 
     public static function fetch($module, $admin)
     {
-        $model = self::objects()->filter([
+        [$model, $isNew] = self::objects()->getOrCreate([
             'module' => $module,
             'admin' => $admin,
             'user_id' => Xcart::app()->user->id
-        ])->get();
-        if (!$model) {
-            $model = new self();
-            $model->module = $module;
-            $model->admin = $admin;
-            $model->user_id = Xcart::app()->user->id;
-        }
+        ]);
+
         return $model;
     }
 }

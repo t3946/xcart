@@ -25,7 +25,12 @@
 <link rel="stylesheet" href="{$SkinDir}/{#CSSFile#}" />
 <link rel="stylesheet" href="{$SkinDir}/modules/Fast_Lane_Checkout/{#CSSFile#}" />
 <link rel="stylesheet" href="{$SkinDir}/US_City_List/jquery.autocomplete.css" />
-
+{if $AREA_TYPE ne 'A'}
+    <script src="{$SkinDir}/jquery.min.1.7.1.js" type="text/javascript" ></script>
+{/if}
+    <script src="{$SkinDir}/check_zipcode.js" type="text/javascript"></script>
+    <script src="{$SkinDir}/check_email_script.js" type="text/javascript"></script>
+    <script src="{$SkinDir}/js/common.min.js" type="text/javascript"></script>
 
 </head>
 <body>
@@ -38,10 +43,11 @@
 {* ------------------- *}
 {if !($usertype eq "A" || $usertype eq "P")}
     <script type="text/javascript">
+        {literal}
         $(document).ready(function(){
             ga('send', 'pageview');
         });
-
+        {/literal}
     </script>
 {/if}
 

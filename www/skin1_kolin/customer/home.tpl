@@ -542,6 +542,33 @@
                 {defer file=$smarty.capture.defer_script_8 type="js_inline"}
             {/capture}
 
+            <a id="scrollTop" class="button_new grey" href="#" title="Up">Up</a>
+
+            <script type="text/javascript">
+                {literal}
+                $(document).ready(function () {
+                    function scrollTop() {
+                        if (jQuery(window).scrollTop() > jQuery('#header').height()) {
+                            jQuery('#scrollTop').fadeIn('slow');
+                        } else {
+                            jQuery('#scrollTop').fadeOut('fast');
+                        }
+                    }
+
+                    jQuery('#scrollTop').on('click', function () {
+                        jQuery('body,html').animate({
+                            scrollTop: 0
+                        }, 300);
+                        return false;
+                    });
+                    jQuery(window).scroll(function () {
+                        scrollTop();
+                    });
+                });
+
+                {/literal}
+            </script>
+
             {$xcartApp->template->render('inSmarty/raw_static_notifications.tpl')}
 
             {if $AREA_TYPE ne 'A'}

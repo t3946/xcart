@@ -2,6 +2,7 @@
 namespace Modules\Core\Models;
 
 
+use Cron\CronExpression;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\BooleanField;
 use Xcart\App\Orm\Fields\CharField;
@@ -89,6 +90,15 @@ class CronModel extends Model
     public function __toString()
     {
         return $this->name;
+    }
+
+    public function getNextRunning()
+    {
+        if ($this->active) {
+            return CronExpression::factory($this->run_force ? "* * * * *" : $this->schedule)->getNextRunDate('now');
+        }
+
+        return null;
     }
 
 }

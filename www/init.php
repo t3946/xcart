@@ -107,7 +107,7 @@ $file_temp_dir = $var_dirs["tmp"];
 #
 
 define('THUMB_BGCOLOR', 0xFFFFFF);
-define('THUMB_QUALITY', 97);
+define('THUMB_QUALITY', 94);
 
 $price_details_names = ["net", "gst", "pst", "gross"];
 
