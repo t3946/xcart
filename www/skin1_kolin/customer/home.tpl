@@ -203,7 +203,7 @@
                                                     };
                                                     try {
                                                         var frame = new Sly('#jcarousel_' + section_name, options, {
-                                                            load: function(){new LazyLoad({elements_selector:'img.lazy'}); checkCarouselsVisibility()},
+                                                            load: function(){new LazyLoad({elements_selector:'img.lazy', 'data_src': 'lazy'}); checkCarouselsVisibility()},
                                                             moveEnd: checkCarouselsVisibility
                                                         }).init();
                                                     }
