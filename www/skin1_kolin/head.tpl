@@ -86,8 +86,8 @@ $(function(){
 
         <td width="250" valign="middle">
         {if !($main eq "catalog" && $current_category.category eq "") || $smarty.get.page ne "" || $search_keyword eq true}<a href="/">{/if}
-                <img src="{include file="product_image_path.tpl"}/image.php?id={$current_storefront_info.storefrontid}&amp;type=S" {if $current_storefront_info.image.image_x gt "250"} width="250" {/if}  alt="{if $config.Company.sf_top_image_alt ne "" }{$config.Company.sf_top_image_alt}{else}{$config.Company.company_name}{/if}" />
-        {if !($main eq "catalog" && $current_category.category eq "") || $smarty.get.page ne "" || $search_keyword eq true}</a>{/if}
+                <img src="{$siteModel->images->get()}" {if $current_storefront_info.image.image_x gt "250"} width="250" {/if}  alt="{$siteModel->getFrontendName()}" />
+                {if !($main eq "catalog" && $current_category.category eq "") || $smarty.get.page ne "" || $search_keyword eq true}</a>{/if}
         </td>
 
 {if $main eq "fast_lane_checkout" || $main eq "order_message"}
