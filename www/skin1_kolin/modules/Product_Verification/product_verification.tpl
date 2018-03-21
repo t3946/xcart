@@ -209,7 +209,7 @@
             $('#verified_order_id').val($(this).attr('data-order-id'));
             $('#verified_product_status_id').val(statusid);
             if (statusid > 0 && statusid < 3) {
-                var position = $(this).position(),
+                var position = $(this).offset(),
                 note_form = $('#send_note_for_product'),
                 textarea = note_form.find('textarea');
                 note_form.css('left', position.left - 342).css('top', position.top);
