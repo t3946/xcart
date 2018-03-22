@@ -14,19 +14,37 @@
                 <link rel="shortcut icon" href="{$xcart_web_dir}/image.php?id=0&amp;type=F" type="image/vnd.microsoft.icon"/>
             {/if}
 
+            {if $urlPath}
+                <link rel="dns-prefetch" href="{$urlPath}">
+                <link rel="preconnect" href="{$urlPath}">
+            {/if}
             <link rel="dns-prefetch" href="https://www.google-analytics.com">
             <link rel="dns-prefetch" href="https://bat.bing.com">
             <link rel="dns-prefetch" href="https://seal.godaddy.com">
+            <link rel="dns-prefetch" href="https://assets.pinterest.com">
+            <link rel="dns-prefetch" href="https://livechat.s3stores.com">
+            <link rel="dns-prefetch" href="https://stats.g.doubleclick.net">
+            <link rel="dns-prefetch" href="https://log.pinterest.com">
+            <link rel="dns-prefetch" href="http://ocsp.godaddy.com">
+            <link rel="dns-prefetch" href="https://ampcid.google.com">
+
             <link rel="preconnect" href="https://www.google-analytics.com">
+            <link rel="preconnect" href="https://stats.g.doubleclick.net">
             <link rel="preconnect" href="https://bat.bing.com">
             <link rel="preconnect" href="https://seal.godaddy.com">
+            <link rel="preconnect" href="https://assets.pinterest.com">
+            <link rel="preconnect" href="https://livechat.s3stores.com">
+            <link rel="preconnect" href="https://log.pinterest.com">
+            <link rel="preconnect" href="http://ocsp.godaddy.com">
+            <link rel="preconnect" href="https://ampcid.google.com">
+
             <link rel="preload" href="{$SkinDir}/skin1.min.css" as="style">
             <link rel="preload" href="{$SkinDir}/verdana.ttf" as="style">
 
             {config_load file="$skin_config"}
             {if ($main != 'product') }
 
-                <link rel="stylesheet" href="{$SkinDir}/static/backend/fonts/icons/css/style.css">
+                <link rel="stylesheet" href="{$urlPath}/static/backend/fonts/icons/css/style.css">
                 <link rel="stylesheet" href="{$SkinDir}/lib/jqueryui/jquery.ui.theme.min.css" />
                 <link rel="stylesheet" href="{$SkinDir}/skin1.min.css" />
                 <link rel="stylesheet" href="{$SkinDir}/jquery.tooltip.css" />
@@ -40,7 +58,7 @@
                 {defer file="`$SkinDir`/skin1.min.css" type="css"}
                 {defer file="`$SkinDir`/lib/jqueryui/jquery.ui.theme.min.css" type="css"}
                 {defer file="`$SkinDir`/jquery.tooltip.css" type="css"}
-                {defer file="`$SkinDir`/static/backend/fonts/icons/css/style.css" type="css"}
+                {defer file="`$urlPath`/static/backend/fonts/icons/css/style.css" type="css"}
 
             {/if}
 
