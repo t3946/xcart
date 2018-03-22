@@ -24,6 +24,7 @@
             <link rel="dns-prefetch" href="https://assets.pinterest.com">
             <link rel="dns-prefetch" href="https://livechat.s3stores.com">
             <link rel="dns-prefetch" href="https://stats.g.doubleclick.net">
+            <link rel="dns-prefetch" href="https://www.google.com">
             <link rel="dns-prefetch" href="https://log.pinterest.com">
             <link rel="dns-prefetch" href="http://ocsp.godaddy.com">
             <link rel="dns-prefetch" href="https://ampcid.google.com">
@@ -37,6 +38,7 @@
             <link rel="preconnect" href="https://log.pinterest.com">
             <link rel="preconnect" href="http://ocsp.godaddy.com">
             <link rel="preconnect" href="https://ampcid.google.com">
+            <link rel="preconnect" href="https://www.google.com">
 
             <link rel="preload" href="{$SkinDir}/skin1.min.css" as="style">
             <link rel="preload" href="{$SkinDir}/verdana.ttf" as="style">
