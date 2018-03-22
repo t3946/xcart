@@ -108,10 +108,19 @@
 
 
 <script>
+    var createStyleElement = function (href) {
+        var h = document.getElementsByTagName('head')[0];
+        var l = document.createElement('link');
+
+        l.rel = 'stylesheet';
+        l.href = href;
+        h.parentNode.insertBefore(l, h);
+    };
+
     var cb = function() {
-        var l = document.createElement('link'); l.rel = 'stylesheet';
-        l.href = "/static/frontend/dist/css/styles.css?v={frontend_version resource='css/styles.css'}";
-        var h = document.getElementsByTagName('head')[0]; h.parentNode.insertBefore(l, h);
+        setTimeout(function(){
+            createStyleElement( "/static/frontend/dist/css/styles.css?v={frontend_version resource='css/styles.css'}");
+        }, 40);
     };
     var raf = requestAnimationFrame || mozRequestAnimationFrame ||
         webkitRequestAnimationFrame || msRequestAnimationFrame;
