@@ -15,13 +15,18 @@
             {/if}
 
             <link rel="dns-prefetch" href="https://www.google-analytics.com">
+            <link rel="dns-prefetch" href="https://bat.bing.com">
+            <link rel="dns-prefetch" href="https://seal.godaddy.com">
             <link rel="preconnect" href="https://www.google-analytics.com">
-            <link rel="prefetch" href="{$SkinDir}/skin1.min.css" as="style">
+            <link rel="preconnect" href="https://bat.bing.com">
+            <link rel="preconnect" href="https://seal.godaddy.com">
+            <link rel="preload" href="{$SkinDir}/skin1.min.css" as="style">
+            <link rel="preload" href="{$SkinDir}/verdana.ttf" as="style">
 
             {config_load file="$skin_config"}
             {if ($main != 'product') }
 
-                <link rel="stylesheet" href="/static/backend/fonts/icons/css/style.css">
+                <link rel="stylesheet" href="{$SkinDir}/static/backend/fonts/icons/css/style.css">
                 <link rel="stylesheet" href="{$SkinDir}/lib/jqueryui/jquery.ui.theme.min.css" />
                 <link rel="stylesheet" href="{$SkinDir}/skin1.min.css" />
                 <link rel="stylesheet" href="{$SkinDir}/jquery.tooltip.css" />
@@ -35,7 +40,7 @@
                 {defer file="`$SkinDir`/skin1.min.css" type="css"}
                 {defer file="`$SkinDir`/lib/jqueryui/jquery.ui.theme.min.css" type="css"}
                 {defer file="`$SkinDir`/jquery.tooltip.css" type="css"}
-                {defer file="/static/backend/fonts/icons/css/style.css" type="css"}
+                {defer file="`$SkinDir`/static/backend/fonts/icons/css/style.css" type="css"}
 
             {/if}
 
