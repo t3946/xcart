@@ -41,7 +41,7 @@
             <link rel="preconnect" href="https://www.google.com">
 
             <link rel="preload" href="{$SkinDir}/skin1.min.css" as="style">
-            <link rel="preload" href="{$SkinDir}/verdana.ttf" as="style">
+            <link rel="preload" href="{$SkinDir}/verdana.ttf" as="font">
 
             {config_load file="$skin_config"}
             {if ($main != 'product') }
