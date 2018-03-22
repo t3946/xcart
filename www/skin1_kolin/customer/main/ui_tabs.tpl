@@ -180,7 +180,7 @@
               {if $config.Appearance.CDN_domain ne "" && $config.Appearance.Enable_CDN eq "Y"}
                   {assign var="imagePath" value="//`$config.Appearance.CDN_domain`"}
               {/if}
-              <img src="{$imagePath}/images/B/{$brand_image.filename}" style="float: left; margin: 10px 10px 10px 0;" />
+              <img class="lazy" data-lazy="{$imagePath}/images/B/{$brand_image.filename}" style="float: left; margin: 10px 10px 10px 0;" />
             {/if}
 
             <p align="justify">
