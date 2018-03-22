@@ -600,10 +600,10 @@
             {include file="cidev_tracking_code.tpl" }
 
             <script type="text/javascript">
+                {defer_echo type="js_inline"}
                 {if !($usertype eq "A" || $usertype eq "P")}
                     ga('send', 'pageview');
                 {/if}
-                {defer_echo type="js_inline"}
                 {literal}
                     function afterQueryLoaded() {
                         {/literal}
