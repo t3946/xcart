@@ -4089,7 +4089,7 @@ a.jcarousel-control-next:hover {
         height: 40px;
 /*        width: 1241px; */
 	width: 100%;
-        BACKGROUND: url(images/new/home/rectangle.png);
+	background-color: #0072BB;
 }
 .header_line31 {
 	margin-left: 63px;
