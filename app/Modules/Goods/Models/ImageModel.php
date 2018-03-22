@@ -105,4 +105,9 @@ class ImageModel extends Model
         $domain = $site->getBaseDomain();
         return "//" .$pref . $domain . $this->getURL();
     }
+
+    public function __toString()
+    {
+        return $this->getCdnURL();
+    }
 }

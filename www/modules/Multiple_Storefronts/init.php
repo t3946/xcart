@@ -157,6 +157,9 @@ if (!empty($current_storefront_info)) {
 else {
     $current_storefront = 0;
 }
+
+$smarty->assign('siteModel', \Modules\Sites\Models\SiteModel::objects()->get(['pk' => $current_storefront]));
+
 if (defined('AREA_TYPE') && AREA_TYPE == 'C') {
 
     $sf_links = func_query_hash("SELECT l.storefront2, s.orderby, s.domain, c.name, c.value"
