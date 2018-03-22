@@ -1,4 +1,4 @@
-<script type="text/javascript">
+{capture name="defer_script_31"}
 
 /*
 variants array:
@@ -146,6 +146,9 @@ var lbl_price = "{$lng.lbl_price_per_item|escape:javascript}";
 var txt_note = "{$lng.txt_note|escape:javascript}";
 var lbl_including_tax = "{$lng.lbl_including_tax|escape:javascript}";
 
-</script>
+{/capture}
+
+{defer file=$smarty.capture.defer_script_31 type="js_inline"}
+
 
 {defer file="`$SkinDir`/js/func.min.js"}

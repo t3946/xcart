@@ -2,11 +2,13 @@
 {* {if $product_options ne ''} *}
 {if $nojs ne 'Y'}
 <tr style="display: none;"><td>
-<script type="text/javascript" language="JavaScript 1.2">
-<!--
-var alert_msg = '{$alert_msg}';
--->
-</script>
+
+{capture name="defer_script_30"}
+	var alert_msg = '{$alert_msg}';
+{/capture}
+
+{defer file=$smarty.capture.defer_script_30 type="js_inline"}
+
 {include file="modules/Product_Options/check_options.tpl"}
 </td></tr>
 {/if}

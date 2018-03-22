@@ -108,7 +108,8 @@ $(function(){
                         </td>
                         <td width="10">&nbsp;</td>
                         <td width=" 204" valign="middle" align="right">
-                        {include file="customer/menu_cart.tpl"}
+                            <div id="ajax_minicart"></div>
+
 
 {if $variant_id_for_point5 ne "" && $variant_id_for_point5 eq "0" && $main ne "product" && !($main eq "catalog" && $current_category.category eq "")}
 {assign var="social_buttons_data_services" value=$config.Appearance.social_buttons_data_services}

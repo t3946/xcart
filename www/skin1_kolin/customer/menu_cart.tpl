@@ -1,6 +1,4 @@
 {* $Id: menu_cart.tpl,v 1.35.2.1 2006/10/13 10:41:21 svowl Exp $ *}
-<div id="ajax_minicart">
-
 <table cellpadding="0" cellspacing="0" border="0">
 <tr {if $minicart_total_items gt 0} id="id_tr_minicart" onclick="javascript: self.location='/cart.php';" style="cursor: pointer;"{/if}>
         <td class="cidev_minicart_l"></td>
@@ -113,4 +111,4 @@
 	<a href="{$js_update_link|amp}" class="SmallNote">{$lng.txt_javascript_enabled}</a>
 {/if}
 *}
-</div>
+
