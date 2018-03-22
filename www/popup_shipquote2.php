@@ -41,8 +41,7 @@ require "./auth.php";
 require $xcart_dir . "/include/countries.php";
 require $xcart_dir . "/include/states.php";
 
-x_load('user');
-
+x_session_register ("cart");
 x_session_register("shipquote_userinfo");
 x_session_register('short_phrase');
 
