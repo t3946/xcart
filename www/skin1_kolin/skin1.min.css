@@ -644,7 +644,7 @@ a.jcarousel-control-next:hover{color:#cccccc;text-decoration:none;}
 .header_line2_table{BACKGROUND:url(images/new/home/banner.png) no-repeat bottom right;}
 .header_line2{height:89px;width:960px;}
 .header_line_flc2{height:89px;width:960px;}
-.header_line3{position:relative;top:-4px;height:40px;width:100%;BACKGROUND:url(images/new/home/rectangle.png);}
+.header_line3{position:relative;top:-4px;height:40px;width:100%;background-color: #0072BB;}
 .header_line31{margin-left:63px;}
 .product_search{font-family:Verdana;font-weight:bold;font-size:20px;color:#ffffff;padding-right:10px;}
 .save_td{width:18px;BACKGROUND:url(images/new/product/shadow.png) no-repeat;}
