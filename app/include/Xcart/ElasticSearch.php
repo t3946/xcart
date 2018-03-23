@@ -69,9 +69,11 @@ class ElasticSearch
         if (!empty($result["hits"])) {
             $this->hitsCount = count($result["hits"]["hits"]);
             $this->hitsTotal = $result["hits"]["total"];
+
+            return $result;
         }
 
-        return $result;
+        return [];
     }
 
     public function setDisMaxBoost($boost)
