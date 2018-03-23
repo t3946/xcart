@@ -718,10 +718,6 @@ Profiler::getInstance()->addPoint();
 
 $smarty->load_filter('output', 'trimwhitespace');
 
-if (!\Xcart\App\Main\Xcart::app()->template->getRenderer()->detector->isMobile()) {
-    $smarty->assign('lazy', true);
-}
-
 $output = func_display("customer/home.tpl", $smarty, false);
 
 if ($cache_middle = \Xcart\App\Main\Xcart::app()->middleware->getMiddleware('static_cache')) {
