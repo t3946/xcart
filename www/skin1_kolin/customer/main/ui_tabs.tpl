@@ -1,6 +1,6 @@
 {include file="check_email_script.tpl"}
 
-<script type="text/javascript">
+{capture name="defer_script_12"}
     {literal}
         $(document).ready(function () {
             $('#{/literal}{$prefix}{literal}container').tabs();
@@ -51,23 +51,17 @@
         }
     }
 
-
-    {/literal}
-</script>
-
-<script type="text/javascript">
-    {literal}
-      $(document).ready(function() {
+    $(document).ready(function() {
             $('#email').focusout(function() {
 
                     if ($('#email').val() != ""){
                             checkEmailAddress(document.product_question_email_form.email, 'Y');
                     }
             });
-      });
+    });
     {/literal}
-</script>
-
+{/capture}
+{defer file=$smarty.capture.defer_script_12 type="js_inline"}
 
 <div id="{$prefix}container" class="ui-tabs ui-widget ui-widget-content ui-corner-all">
 
@@ -186,7 +180,7 @@
               {if $config.Appearance.CDN_domain ne "" && $config.Appearance.Enable_CDN eq "Y"}
                   {assign var="imagePath" value="//`$config.Appearance.CDN_domain`"}
               {/if}
-              <img src="{$imagePath}/images/B/{$brand_image.filename}" style="float: left; margin: 10px 10px 10px 0;" />
+              <img class="lazy" data-lazy="{$imagePath}/images/B/{$brand_image.filename}" style="float: left; margin: 10px 10px 10px 0;" />
             {/if}
 
             <p align="justify">

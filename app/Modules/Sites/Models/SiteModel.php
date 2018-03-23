@@ -195,4 +195,14 @@ class SiteModel extends Model
         return $name;
     }
 
+    public function getFrontendName()
+    {
+        /** @var ListConfigModel $config */
+        if ($config = $this->list_config) {
+            return $config->getName();
+        }
+
+        return $this->getName();
+    }
+
 }

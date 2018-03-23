@@ -14,15 +14,39 @@
                 <link rel="shortcut icon" href="{$xcart_web_dir}/image.php?id=0&amp;type=F" type="image/vnd.microsoft.icon"/>
             {/if}
 
+            {if $urlPath}
+                <link rel="dns-prefetch" href="{$urlPath}">
+                <link rel="preconnect" href="{$urlPath}">
+            {/if}
             <link rel="dns-prefetch" href="https://www.google-analytics.com">
+            <link rel="dns-prefetch" href="https://bat.bing.com">
+            <link rel="dns-prefetch" href="https://seal.godaddy.com">
+            <link rel="dns-prefetch" href="https://assets.pinterest.com">
+            <link rel="dns-prefetch" href="https://livechat.s3stores.com">
+            <link rel="dns-prefetch" href="https://stats.g.doubleclick.net">
+            <link rel="dns-prefetch" href="https://www.google.com">
+            <link rel="dns-prefetch" href="https://log.pinterest.com">
+            <link rel="dns-prefetch" href="http://ocsp.godaddy.com">
+            <link rel="dns-prefetch" href="https://ampcid.google.com">
+
             <link rel="preconnect" href="https://www.google-analytics.com">
-            <link rel="prefetch" href="{$SkinDir}/skin1.min.css" as="style">
-            <link rel="prefetch" href="{$SkinDir}/jquery.min.1.7.1.js" as="script">
+            <link rel="preconnect" href="https://stats.g.doubleclick.net">
+            <link rel="preconnect" href="https://bat.bing.com">
+            <link rel="preconnect" href="https://seal.godaddy.com">
+            <link rel="preconnect" href="https://assets.pinterest.com">
+            <link rel="preconnect" href="https://livechat.s3stores.com">
+            <link rel="preconnect" href="https://log.pinterest.com">
+            <link rel="preconnect" href="http://ocsp.godaddy.com">
+            <link rel="preconnect" href="https://ampcid.google.com">
+            <link rel="preconnect" href="https://www.google.com">
+
+            <link rel="preload" href="{$SkinDir}/skin1.min.css" as="style">
+            <link rel="preload" href="{$SkinDir}/verdana.ttf" as="font">
 
             {config_load file="$skin_config"}
             {if ($main != 'product') }
 
-                <link rel="stylesheet" href="/static/backend/fonts/icons/css/style.css">
+                <link rel="stylesheet" href="{$urlPath}/static/backend/fonts/icons/css/style.css">
                 <link rel="stylesheet" href="{$SkinDir}/lib/jqueryui/jquery.ui.theme.min.css" />
                 <link rel="stylesheet" href="{$SkinDir}/skin1.min.css" />
                 <link rel="stylesheet" href="{$SkinDir}/jquery.tooltip.css" />
@@ -36,7 +60,7 @@
                 {defer file="`$SkinDir`/skin1.min.css" type="css"}
                 {defer file="`$SkinDir`/lib/jqueryui/jquery.ui.theme.min.css" type="css"}
                 {defer file="`$SkinDir`/jquery.tooltip.css" type="css"}
-                {defer file="/static/backend/fonts/icons/css/style.css" type="css"}
+                {defer file="`$urlPath`/static/backend/fonts/icons/css/style.css" type="css"}
 
             {/if}
 
@@ -94,136 +118,132 @@
                 {/literal}
             </script>
 
-                {$xcartApp->template->render('inSmarty/raw_flash.tpl')}
-
-                {if !empty($config.Appearance.Facebook_pixel_code)}
-                    {$config.Appearance.Facebook_pixel_code}
-                {/if}
-
                 {if $main eq "product" || $main eq "catalog"}
 
-                    <script type="text/javascript">
-                    {literal}
+                    {capture name="defer_script_1"}
+                        {literal}
 
-                        function func_load_ALL_ajax_carousels(load_ajax_sections, ajax_counter)
-                        {
-                            var load_ajax_sections_arr = load_ajax_sections.split(',');
+                            function func_load_ALL_ajax_carousels(load_ajax_sections, ajax_counter)
+                            {
+                                var load_ajax_sections_arr = load_ajax_sections.split(',');
 
-                            load_ajax_sections_arr.forEach(function (section_name, i, load_ajax_sections_arr) {
-                                setTimeout(function(){section_name.trim(); func_load_ajax_carousel_products(section_name)}.bind(section_name), 1400);
-                            });
+                                load_ajax_sections_arr.forEach(function (section_name, i, load_ajax_sections_arr) {
+                                    setTimeout(function(){section_name.trim(); func_load_ajax_carousel_products(section_name)}.bind(section_name), 1400);
+                                });
 
-                        }
+                            }
 
-                        function func_load_ajax_carousel_products(section_name) {
-                            var tmp_rand = Math.random();
-                            var options = {'section_name': section_name};
-                            {/literal}
-                            {if $product.productid ne ""}
-                            {literal}options['productid'] = {/literal}{$product.productid}{literal};{/literal}
-                            {/if}
-                            {literal}
+                            function func_load_ajax_carousel_products(section_name) {
+                                var tmp_rand = Math.random();
+                                var options = {'section_name': section_name};
+                                {/literal}
+                                {if $product.productid ne ""}
+                                {literal}options['productid'] = {/literal}{$product.productid}{literal};{/literal}
+                                {/if}
+                                {literal}
 
-                            $.post('cidev_ajax_suggestions.php?rand=' + tmp_rand, options, function (data) {
-                                if (data) {
-                                    var obj = $.parseJSON(data);
-                                    var html = '<ul>';
-                                    var a_href = '';
+                                $.post('cidev_ajax_suggestions.php?rand=' + tmp_rand, options, function (data) {
+                                    if (data) {
+                                        var obj = $.parseJSON(data);
+                                        var html = '<ul>';
+                                        var a_href = '';
 
-                                    var ga_page_name = '{/literal}{$ga_page_name}{literal}';
+                                        var ga_page_name = '{/literal}{$ga_page_name}{literal}';
 
-                                    if (obj !== undefined && obj.items) {
-                                        $.each(obj.items, function () {
-                                            if (this.clean_url != '') {
-                                                a_href = this.clean_url;
-                                            } else {
-                                                a_href = 'product.php?productid=' + this.productid;
-                                            }
-                                            ga_page_name = this.ga_param;
-                                            html += '<li class="google_impression_object" data-product-id="' + this.productid + '" data-name="' + this.product + '" data-category="' + this.category + '" data-brand="' + this.brand + '" data-list="' + ga_page_name + '" data-price="' + this.price.toFixed(2) + '" data-position="' + this.N_key + '" class="active">' +
-                                                '<div style="text-align: center;"><div style="width:150px;height:150px; margin:0 auto;">' +
-                                                '<a href="' + a_href + '" onclick="onProductClick(\'' + this.productid + '\',\'' + this.product + '\',\'' + this.category + '\',\'' + this.brand + '\',\'' + this.N_key + '\',\'' + ga_page_name + '\',\'' + this.price + '\'); return !ga.loaded;">';
-                                            if (this.thumb && this.thumb.length) {
-                                                html += this.thumb;
-                                            }
-                                            html += '</a></div>' +
-                                                '<br />' + '<a href="' + a_href + '" onclick="onProductClick(\'' + this.productid + '\',\'' + this.product + '\',\'' + this.category + '\',\'' + this.brand + '\',\'' + this.N_key + '\',\'' + ga_page_name + '\',\'' + this.price.toFixed(2) + '\'); return !ga.loaded;">' + this.product + '</a>';
-                                            if (this.is_group === true) {
-                                                if (this.price > 0) {
-                                                    var range = '';
-                                                    if (this.price !== this.price_2) {
-                                                        range = ' - US$ ' + this.price_2.toFixed(2);
+                                        if (obj !== undefined && obj.items) {
+                                            $.each(obj.items, function () {
+                                                if (this.clean_url != '') {
+                                                    a_href = this.clean_url;
+                                                } else {
+                                                    a_href = 'product.php?productid=' + this.productid;
+                                                }
+                                                ga_page_name = this.ga_param;
+                                                html += '<li class="google_impression_object" data-product-id="' + this.productid + '" data-name="' + this.product + '" data-category="' + this.category + '" data-brand="' + this.brand + '" data-list="' + ga_page_name + '" data-price="' + this.price.toFixed(2) + '" data-position="' + this.N_key + '" class="active">' +
+                                                    '<div style="text-align: center;"><div style="width:150px;height:150px; margin:0 auto;">' +
+                                                    '<a href="' + a_href + '" >';
+                                                if (this.thumb && this.thumb.length) {
+                                                    html += this.thumb;
+                                                }
+                                                html += '</a></div>' +
+                                                    '<br />' + '<a href="' + a_href + '" >' + this.product + '</a>';
+                                                if (this.is_group === true) {
+                                                    if (this.price > 0) {
+                                                        var range = '';
+                                                        if (this.price !== this.price_2) {
+                                                            range = ' - US$ ' + this.price_2.toFixed(2);
+                                                        }
+                                                        html += '<br /> <span class="ProductPrice">US$ ' + this.price.toFixed(2) + range + '</span>';
                                                     }
-                                                    html += '<br /> <span class="ProductPrice">US$ ' + this.price.toFixed(2) + range + '</span>';
+                                                } else {
+                                                    html += '<br /> <span class="ProductPrice">US$ ' + this.price.toFixed(2) + '</span>';
                                                 }
-                                            } else {
-                                                html += '<br /> <span class="ProductPrice">US$ ' + this.price.toFixed(2) + '</span>';
+                                                html += '</div>' +
+                                                    '</li>';
+                                            });
+
+
+                                            html += '</ul>';
+
+                                            if (data != "") {
+                                                $("#" + section_name).show();
                                             }
-                                            html += '</div>' +
-                                                '</li>';
-                                        });
 
+                                            $('#jcarousel_' + section_name).html(html).parent().after('<ul class="pages"></ul>');
+                                            jQuery(function ($) {
+                                                'use strict';
 
-                                        html += '</ul>';
+                                                // -------------------------------------------------------------
+                                                //   Basic Navigation
+                                                // -------------------------------------------------------------
+                                                (function () {
+                                                    var $frame = $('#jcarousel_' + section_name);
+                                                    var $wrap = $frame.parent().parent();
 
-                                        if (data != "") {
-                                            $("#" + section_name).show();
+                                                    var options = {
+                                                        horizontal: 1,
+                                                        itemNav: 'basic',
+                                                        smart: 1,
+                                                        activateOn: 'click',
+                                                        mouseDragging: 1,
+                                                        touchDragging: 1,
+                                                        releaseSwing: 1,
+                                                        startAt: 0,
+                                                        scrollBar: $wrap.find('.scrollbar'),
+                                                        scrollBy: 0,
+                                                        pagesBar: $wrap.find('.pages'),
+                                                        activatePageOn: 'click',
+                                                        speed: 300,
+                                                        elasticBounds: 1,
+                                                        easing: 'easeOutExpo',
+                                                        dragHandle: 1,
+                                                        dynamicHandle: 1,
+                                                        clickBar: 1,
+
+                                                        // Buttons
+                                                        prevPage: $wrap.find('.jcarousel-control-prev'),
+                                                        nextPage: $wrap.find('.jcarousel-control-next')
+                                                    };
+                                                    try {
+                                                        var frame = new Sly('#jcarousel_' + section_name, options, {
+                                                            load: function(){new LazyLoad({elements_selector:'img.lazy', 'data_src': 'lazy'}); checkCarouselsVisibility()},
+                                                            moveEnd: checkCarouselsVisibility
+                                                        }).init();
+                                                    }
+                                                    catch (err) {
+                                                    }
+                                                }());
+
+                                            });
                                         }
-
-                                        $('#jcarousel_' + section_name).html(html).find('img.lazy').unveil().end().parent().after('<ul class="pages"></ul>');
-                                        jQuery(function ($) {
-                                            'use strict';
-
-                                            // -------------------------------------------------------------
-                                            //   Basic Navigation
-                                            // -------------------------------------------------------------
-                                            (function () {
-                                                var $frame = $('#jcarousel_' + section_name);
-                                                var $wrap = $frame.parent().parent();
-
-                                                var options = {
-                                                    horizontal: 1,
-                                                    itemNav: 'basic',
-                                                    smart: 1,
-                                                    activateOn: 'click',
-                                                    mouseDragging: 1,
-                                                    touchDragging: 1,
-                                                    releaseSwing: 1,
-                                                    startAt: 0,
-                                                    scrollBar: $wrap.find('.scrollbar'),
-                                                    scrollBy: 0,
-                                                    pagesBar: $wrap.find('.pages'),
-                                                    activatePageOn: 'click',
-                                                    speed: 300,
-                                                    elasticBounds: 1,
-                                                    easing: 'easeOutExpo',
-                                                    dragHandle: 1,
-                                                    dynamicHandle: 1,
-                                                    clickBar: 1,
-
-                                                    // Buttons
-                                                    prevPage: $wrap.find('.jcarousel-control-prev'),
-                                                    nextPage: $wrap.find('.jcarousel-control-next')
-                                                };
-                                                try {
-                                                    var frame = new Sly('#jcarousel_' + section_name, options, {
-                                                        load: checkCarouselsVisibility,
-                                                        moveEnd: checkCarouselsVisibility
-                                                    }).init();
-                                                }
-                                                catch (err) {
-                                                }
-
-
-                                            }());
-
-                                        });
                                     }
-                                }
-                            });
-                        }
-                    {/literal}
-                    </script>
+                                });
+                            }
+                        {/literal}
+                    {/capture}
+
+
+                    {defer file=$smarty.capture.defer_script_1 type="js_inline"}
+
                 {/if}
 
 
@@ -231,15 +251,6 @@
                     <div style="display: none;" id="load_next_productids" data-value="{include file="customer/main/infinite_products_load_next_productids.tpl"}"></div>
                     <div style="display: none;" id="LN_total_items" data-value="{$total_items}"></div>
                 {/if}
-
-                {include file="cidev_tracking_code.tpl" }
-
-                {if !($usertype eq "A" || $usertype eq "P")}
-                    <script type="text/javascript">
-                        ga('send', 'pageview');
-                    </script>
-                {/if}
-
 
                 {include file="head.tpl" }
 
@@ -289,8 +300,6 @@
                                 <div align="right">{include file="modules/Google_Checkout/gcheckout_button.tpl"}</div>
                             {/if}
 
-                            {include file="dialog_message.tpl"}
-
                             {if $active_modules.Special_Offers ne ""}
                             {include file="modules/Special_Offers/customer/new_offers_message.tpl"}
                             {/if}
@@ -333,13 +342,14 @@
 
                 <div id="recently_viewed_products" style="display: none;">{include file="customer/main/ajax_carousel_products.tpl" section_name="recently_viewed_products" section_title=$lng.lbl_recently_viewed_products}</div>
 
-                <script type="text/javascript">
+                {capture name="defer_script_2"}
                     {literal}
                         $(document).ready(function() {
                             func_load_ALL_ajax_carousels("recently_viewed_products", 0);
                         });
                     {/literal}
-                </script>
+                {/capture}
+                {defer file=$smarty.capture.defer_script_2 type="js_inline"}
             {/if}
 
             {if $active_modules.Brands ne "" and $config.Brands.brands_menu eq "Y" and $main ne "sitemap_customer"  }
@@ -362,7 +372,7 @@
             {include file="rectangle_bottom.tpl" }
 
             {if $main eq "product"}
-                <script type="text/javascript">
+                {capture name="defer_script_5"}
                     {literal}
                     var txt_tooltip_helper = '{$map_bridge_mouseover_text|escape:javascript}';
                     $(document).ready(function () {
@@ -382,7 +392,8 @@
                         });
                     });
                     {/literal}
-                </script>
+                {/capture}
+                {defer file=$smarty.capture.defer_script_5 type="js_inline"}
             {/if}
 
             {if $config.Company.cidev_google_adwords ne "" }
@@ -420,108 +431,110 @@
 
 
             {if (($main eq "product") && $config.Appearance.Enable_desktop_notifications_on_product_page eq "Y")}
-            <script type="text/javascript">
-                {literal}
-                var counter = 0;
-                var notifyTimeOut = {/literal}{$config.Appearance.Desktop_notification_timeout}{literal} * 1000;
-                var sOriginalTitle = document.title;
-                var fireTitleChange = function (param) {
-                    switch (counter) {
-                        case 0:
-                            document.title = "{/literal}{$lng.lb_suggest_notification_for_product_page}{literal}";
-                            break;
-                        case 1:
-                            document.title = sOriginalTitle;
-                            break;
-                    }
-                    counter++;
-                    if (counter > 1) counter = 0;
-                };
-                var interval_id;
-                var timer_id;
-                var notifytimer;
-                var notificationEnable = true;
-                var fireDeskTopNotify = function () {
-                    Notification.requestPermission(newMessage);
+                {capture name="defer_script_7"}
+                    {literal}
+                    var counter = 0;
+                    var notifyTimeOut = {/literal}{$config.Appearance.Desktop_notification_timeout}{literal} * 1000;
+                    var sOriginalTitle = document.title;
+                    var fireTitleChange = function (param) {
+                        switch (counter) {
+                            case 0:
+                                document.title = "{/literal}{$lng.lb_suggest_notification_for_product_page}{literal}";
+                                break;
+                            case 1:
+                                document.title = sOriginalTitle;
+                                break;
+                        }
+                        counter++;
+                        if (counter > 1) counter = 0;
+                    };
+                    var interval_id;
+                    var timer_id;
+                    var notifytimer;
+                    var notificationEnable = true;
+                    var fireDeskTopNotify = function () {
+                        Notification.requestPermission(newMessage);
 
-                    function DisableNotification() {
-                        notificationEnable = false;
-                    }
-
-                    function newMessage(permission) {
-
-                        if (permission != "granted" || notificationEnable == false) return false;
-                        var notify = new Notification("{/literal}{$lng.lb_suggest_notification_for_product_page}{literal}", {
-                            tag: "attention-notify",
-                            body: "Look at the suggested similar products",
-                            icon: "{/literal}{$product.tmbn_url}{literal}"
-                        });
-                        notify.onclick = function (event) {
-                            DisableNotification();
-                            window.focus();
-                            this.close();
-                        };
-                        notify.onclose = function (event) {
-                            DisableNotification();
-                        };
-                    }
-                };
-                $(document).ready(function () {
-                    $(window).on("blur focus", function (e) {
-                        var prevType = $(this).data("prevType");
-
-                        if (prevType != e.type) {   //  reduce double fire issues
-                            switch (e.type) {
-                                case "blur":
-                                    if (!interval_id) {
-                                        timer_id = setTimeout(function () {
-                                            interval_id = setInterval(fireTitleChange, 3000);
-                                            var el = $("#products_also_bought_with_this_product, #related_products, #similar_products, #recently_viewed_products").filter(':visible:first');
-                                            var elOffset = el.offset().top;
-                                            var elHeight = el.height();
-                                            var windowHeight = $(window).height();
-                                            var offset;
-                                            if (elHeight < windowHeight) {
-                                                offset = elOffset - ((windowHeight / 2) - (elHeight / 2));
-                                            }
-                                            else {
-                                                offset = elOffset;
-                                            }
-
-                                            $('html,body').animate({
-                                                    scrollTop: offset
-                                                },
-                                                'fast');
-
-                                            notifytimer = setTimeout(fireDeskTopNotify, 1000);
-
-
-                                        }, notifyTimeOut);
-                                    }
-                                    break;
-                                case "focus":
-                                    clearInterval(interval_id);
-                                    clearTimeout(timer_id);
-                                    clearTimeout(notifytimer);
-                                    interval_id = 0;
-                                    timer_id = 0;
-                                    document.title = sOriginalTitle;
-                                    break;
-                            }
+                        function DisableNotification() {
+                            notificationEnable = false;
                         }
 
-                        $(this).data("prevType", e.type);
+                        function newMessage(permission) {
+
+                            if (permission != "granted" || notificationEnable == false) return false;
+                            var notify = new Notification("{/literal}{$lng.lb_suggest_notification_for_product_page}{literal}", {
+                                tag: "attention-notify",
+                                body: "Look at the suggested similar products",
+                                icon: "{/literal}{$product.tmbn_url}{literal}"
+                            });
+                            notify.onclick = function (event) {
+                                DisableNotification();
+                                window.focus();
+                                this.close();
+                            };
+                            notify.onclose = function (event) {
+                                DisableNotification();
+                            };
+                        }
+                    };
+                    $(document).ready(function () {
+                        $(window).on("blur focus", function (e) {
+                            var prevType = $(this).data("prevType");
+
+                            if (prevType != e.type) {   //  reduce double fire issues
+                                switch (e.type) {
+                                    case "blur":
+                                        if (!interval_id) {
+                                            timer_id = setTimeout(function () {
+                                                interval_id = setInterval(fireTitleChange, 3000);
+                                                var el = $("#products_also_bought_with_this_product, #related_products, #similar_products, #recently_viewed_products").filter(':visible:first');
+                                                var elOffset = el.offset().top;
+                                                var elHeight = el.height();
+                                                var windowHeight = $(window).height();
+                                                var offset;
+                                                if (elHeight < windowHeight) {
+                                                    offset = elOffset - ((windowHeight / 2) - (elHeight / 2));
+                                                }
+                                                else {
+                                                    offset = elOffset;
+                                                }
+
+                                                $('html,body').animate({
+                                                        scrollTop: offset
+                                                    },
+                                                    'fast');
+
+                                                notifytimer = setTimeout(fireDeskTopNotify, 1000);
+
+
+                                            }, notifyTimeOut);
+                                        }
+                                        break;
+                                    case "focus":
+                                        clearInterval(interval_id);
+                                        clearTimeout(timer_id);
+                                        clearTimeout(notifytimer);
+                                        interval_id = 0;
+                                        timer_id = 0;
+                                        document.title = sOriginalTitle;
+                                        break;
+                                }
+                            }
+
+                            $(this).data("prevType", e.type);
+                        });
                     });
-                });
 
-                {/literal}
+                    {/literal}
 
-            </script>
+                {/capture}
+
+                {defer file=$smarty.capture.defer_script_7 type="js_inline"}
             {/if}
 
             <a id="scrollTop" class="button_new grey" href="#" title="Up">Up</a>
 
-            <script type="text/javascript">
+            {capture name="defer_script_8"}
                 {literal}
                 $(document).ready(function () {
                     function scrollTop() {
@@ -544,8 +557,10 @@
                 });
 
                 {/literal}
-            </script>
+                {defer file=$smarty.capture.defer_script_8 type="js_inline"}
+            {/capture}
 
+            {$xcartApp->template->render('inSmarty/raw_flash.tpl')}
             {$xcartApp->template->render('inSmarty/raw_static_notifications.tpl')}
 
             {if $AREA_TYPE ne 'A'}
@@ -582,47 +597,25 @@
             {defer file="`$SkinDir`/js/ajax_home_page.min.js" type="js"}
             {defer file="`$SkinDir`/js/home.min.js" type="js"}
 
+            {include file="cidev_tracking_code.tpl" }
+
             <script type="text/javascript">
+                {defer_echo type="js_inline"}
+                {if !($usertype eq "A" || $usertype eq "P")}
+                    ga('send', 'pageview');
+                {/if}
                 {literal}
                     function afterQueryLoaded() {
                         {/literal}
                             {defer_echo type="css"}
+                            {defer_echo type="js"}
                         {literal}
-
-                        var loadDeferredStyles = function() {
-                            if (typeof css !== 'undefined' && css.length) {
-                                while (css.length) {
-                                    var l = document.createElement("link");
-                                    l.rel = 'stylesheet';
-                                    l.href = css.shift();
-                                    var h = document.getElementsByTagName('head')[0];
-                                    h.parentNode.insertBefore(l, h);
-                                }
-                            }
-                        };
-                        var raf = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
-                            window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
-                        if (raf) raf(function() { window.setTimeout(loadDeferredStyles, 40); });
-                        else window.addEventListener('load', loadDeferredStyles);
-
-                        while (drh_callbacks.length) {
-                            $(drh_callbacks.shift());
-                        }
-
-                        {/literal}
-                        {defer_echo type="js"}
-                        {literal}
-
-                        if (typeof js !== 'undefined' && js.length) {
-                            while(js.length) {
-                                var j = document.createElement("script");
-                                j.src = js.shift();
-                                document.body.appendChild(j);
-                            }
-                        }
-                    };
+                    }
                 {/literal}
             </script>
+            {if !empty($config.Appearance.Facebook_pixel_code)}
+                {$config.Appearance.Facebook_pixel_code}
+            {/if}
 
         </body>
     </html>

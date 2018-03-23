@@ -204,8 +204,6 @@ $location = array();
 //$location[] = array((!empty($lbl_site_name) ? $lbl_site_name : $config["Company"]["company_name"]), "home.php");
 $location[] = array((!empty($lbl_site_name) ? $lbl_site_name : $config["Company"]["company_name"]), "/");
 
-include $xcart_dir.DIR_CUSTOMER."/minicart.php";
-
 if (!empty($active_modules["Interneka"])) {
 	include $xcart_dir."/modules/Interneka/interneka.php";
 }
