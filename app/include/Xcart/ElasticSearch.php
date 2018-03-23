@@ -56,16 +56,17 @@ class ElasticSearch
         $method = $data_json['method'];
         $content = $data_json['content'];
         $this->data_json = json_encode($content);
-//        $ch = curl_init($url);
-//        curl_setopt($ch, CURLOPT_HTTPHEADER, array ("Accept: application/json"));
-//        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
-//        curl_setopt($ch, CURLOPT_POSTFIELDS, $this->data_json);
-//        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-//        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 1);
-//        $result_json = curl_exec($ch);
-//        $this->curl_info = curl_getinfo($ch);
-//        curl_close($ch);
-//        $result = json_decode($result_json, true);
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array ("Accept: application/json"));
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $this->data_json);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 1);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 3);
+        $result_json = curl_exec($ch);
+        $this->curl_info = curl_getinfo($ch);
+        curl_close($ch);
+        $result = json_decode($result_json, true);
 
         if (!empty($result["hits"])) {
             $this->hitsCount = count($result["hits"]["hits"]);
