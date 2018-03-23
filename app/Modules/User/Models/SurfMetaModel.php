@@ -36,6 +36,13 @@ class SurfMetaModel extends Model
                 'link' => ['sessid' => 'sessid'],
             ],
 
+            'user' => [
+                'field' => 'user_id',
+                'class' => ForeignField::class,
+                'modelClass' => UserModel::class,
+                'link' => ['user_id' => 'id'],
+            ],
+
             'surf_path' => [
                 'field' => 'id',
                 'class' => HasManyField::class,
