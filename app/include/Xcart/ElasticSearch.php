@@ -49,7 +49,7 @@ class ElasticSearch
     }
 
     function call($path, $data_json = array()){
-        return [];
+        //return [];
 
         //if (!$this->index) throw new Exception('$this->index needs a value');
         $url = $this->server . '/' . $this->index . '/' . $path;

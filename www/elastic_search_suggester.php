@@ -68,7 +68,7 @@
 
 	$data_json = $query;
 
-/*        $ch = curl_init($url);
+        $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array ("Accept: application/json"));
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data_json);
@@ -77,8 +77,8 @@
         curl_setopt($ch, CURLOPT_TIMEOUT, 3);
         $result_json = curl_exec($ch);
         curl_close($ch);
-        $result = json_decode($result_json, true);*/
-$result = [];
+        $result = json_decode($result_json, true);
+//$result = [];
 
 //func_print_r($result);
 
