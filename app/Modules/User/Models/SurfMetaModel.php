@@ -64,6 +64,13 @@ class SurfMetaModel extends Model
                     ]);
                     self::$_instance->save();
                 }
+
+                if (!self::$_instance->user_id) {
+                    if ($user = Xcart::app()->getUser()) {
+                        self::$_instance->user_id = $user->pk;
+                        self::$_instance->save(['user_id']);
+                    }
+                }
             }
         }
 
