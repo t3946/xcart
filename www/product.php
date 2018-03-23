@@ -4,7 +4,6 @@
 use Modules\Core\Components\Profiler;
 use Modules\Distributor\Helpers\DistributorHelper;
 use Modules\Goods\Models\ProductModel;
-use Modules\Distributor\Models\DistributorModel;
 
 define('OFFERS_DONT_SHOW_NEW', 1);
 require "./auth.php";
@@ -719,7 +718,10 @@ Profiler::getInstance()->addPoint();
 
 $smarty->load_filter('output', 'trimwhitespace');
 
-//func_display_cached("customer/home.tpl", 'product_' . $productid);
+if (!\Xcart\App\Main\Xcart::app()->template->getRenderer()->detector->isMobile()) {
+    $smarty->assign('lazy', true);
+}
+
 $output = func_display("customer/home.tpl", $smarty, false);
 
 if ($cache_middle = \Xcart\App\Main\Xcart::app()->middleware->getMiddleware('static_cache')) {

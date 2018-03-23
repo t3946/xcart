@@ -473,10 +473,11 @@
 
                                         {if $config.General.unlimited_products eq "Y" or ($product.avail gt 0 and $product.avail ge $product.min_amount)}
                                             {if $js_enabled}
-                                                <script type="text/javascript">
+                                                {capture name="defer_script_59"}
                                                     var lbl_added = "{$lng.lbl_added}";
                                                     var lbl_error = "{$lng.lbl_error}";
-                                                </script>
+                                                {/capture}
+                                                {defer file=$smarty.capture.defer_script_59 type="js_inline"}
                                                 <br/>
                                             {if $product.forsale ne "B"}
                                                 <table cellspacing="0" cellpadding="0" border="0">
