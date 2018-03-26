@@ -141,7 +141,7 @@ class XcartSession extends Session
 
         if (!BotsHelper::IsBot() || $id) {
             if ($id || $id = $this->getSessionId()) {
-                if ($this->model = SessionDataModel::objects()->get(['pk' => $id])) {
+                if ($this->model = SessionDataModel::objects()->get(['sessid' => $id])) {
                     $this->data = $this->model->data;
 
                     if ($this->registerGlobals && $this->fullUnpackGlobals) {
@@ -151,8 +151,14 @@ class XcartSession extends Session
             }
 
             if (!$this->model) {
-                $id = $this->genSessId();
-                list($this->model, $isNew) = SessionDataModel::objects()->getOrCreate(['sessid' => $id]);
+//                $id = $this->genSessId();
+//                list($this->model, $isNew) = SessionDataModel::objects()->getOrCreate(['sessid' => $id]);
+
+                $this->model = new SessionDataModel();
+                $this->model->save();
+                $isNew = true;
+                $id = $this->getId();
+
                 $this->data = [];
                 $this->unpacked = [];
             }
