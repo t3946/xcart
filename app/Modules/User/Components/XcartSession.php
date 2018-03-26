@@ -157,7 +157,6 @@ class XcartSession extends Session
                 $this->model = new SessionDataModel();
                 $this->model->save();
                 $isNew = true;
-                $id = $this->getId();
 
                 $this->data = [];
                 $this->unpacked = [];
@@ -168,7 +167,7 @@ class XcartSession extends Session
             if ($isNew || ($this->model->expiry < (($sessionTime + time()) / 3)))
             {
                 $this->model->expiry = time() + $sessionTime;
-                $this->request->cookie->add($this->getSessionKey(), $id, $this->model->expiry);
+                $this->request->cookie->add($this->getSessionKey(), $this->getId(), $this->model->expiry);
             }
 
             if ($this->registerGlobals) {
