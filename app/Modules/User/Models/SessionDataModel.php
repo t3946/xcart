@@ -39,6 +39,7 @@ class SessionDataModel extends Model
             'sessid' => [
                 'class' => CharField::className(),
                 'length' => 32,
+//                'null' => true,
 //                'primary' => true,
             ],
             'start' => [
