@@ -557,8 +557,9 @@
                 });
 
                 {/literal}
-                {defer file=$smarty.capture.defer_script_8 type="js_inline"}
             {/capture}
+
+            {defer file=$smarty.capture.defer_script_8 type="js_inline"}
 
             {$xcartApp->template->render('inSmarty/raw_flash.tpl')}
             {$xcartApp->template->render('inSmarty/raw_static_notifications.tpl')}
