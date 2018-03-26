@@ -936,7 +936,7 @@ SQL
                 else {
 
                     if ($oProduct && $mv_category = $oProduct->getMainCategory()) {
-                        if ($mv_category = $mv_category->getObjects()->ancestors(true)->filter(['avail' => 'Y'])->limit(1)->get()) {
+                        if ($mv_category = $mv_category->getObjects()->ancestors(true)->filter(['avail' => 'Y', 'product_count__gt' => 0])->limit(1)->get()) {
                             \Xcart\App\Main\Xcart::app()->request->redirect($mv_category->getAbsoluteUrl());
                         }
                     }
