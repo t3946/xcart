@@ -73,9 +73,12 @@
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data_json);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 1);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 3);
         $result_json = curl_exec($ch);
         curl_close($ch);
         $result = json_decode($result_json, true);
+//$result = [];
 
 //func_print_r($result);
 

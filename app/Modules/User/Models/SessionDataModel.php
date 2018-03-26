@@ -4,6 +4,7 @@ namespace Modules\User\Models;
 
 use Xcart\App\Cli\Cli;
 use Xcart\App\Main\Xcart;
+use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\HasManyField;
 use Xcart\App\Orm\Fields\IntField;
@@ -31,10 +32,15 @@ class SessionDataModel extends Model
     public static function getFields()
     {
         return [
+            'id' => [
+                'class' => AutoField::class,
+                'primary' => true,
+            ],
             'sessid' => [
                 'class' => CharField::className(),
                 'length' => 32,
-                'primary' => true,
+//                'null' => true,
+//                'primary' => true,
             ],
             'start' => [
                 'class' => IntField::className(),
@@ -76,5 +82,14 @@ class SessionDataModel extends Model
                 $owner->expiry = time() + $module->sessionTime;
             }
         }
+    }
+
+    public function afterInsertInternal()
+    {
+        if ($arr = $this->getObjects()->filter(['id' => $this->id])->valuesList(['sessid'], true)) {
+            $this->sessid = $arr[0];
+        }
+
+        parent::afterInsertInternal();
     }
 }
