@@ -4,6 +4,13 @@
 
 <footer itemscope itemtype="http://schema.org/WPFooter">
 
+    <section class="footer-content">
+        <div class="row">
+            <div class="column small-12">
+
+            </div>
+        </div>
+    </section>
 
     <section class="footer-menu">
         <div class="row">
