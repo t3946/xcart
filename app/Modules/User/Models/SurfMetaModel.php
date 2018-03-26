@@ -54,11 +54,10 @@ class SurfMetaModel extends Model
 
     static public function getInstance()
     {
-        if (is_null(self::$_instance)) {
-
-            Xcart::app()->request->session->open();
-
-            if ($sessId = Xcart::app()->request->session->getId()) {
+        if (is_null(self::$_instance))
+        {
+            if ($sessId = Xcart::app()->request->session->open()->getId())
+            {
                 [self::$_instance, $is_new] = self::objects()->getOrCreate(["sessid" =>$sessId]);
 
                 if ($is_new)
