@@ -86,7 +86,8 @@
             &.actions {
               background: $t solid #DFDFDF;
               border: none;
-              padding-left: 15px;
+              //padding-left: 15px;
+              padding-right: 0;
 
               .columns-list-appender {
                 position: relative;
@@ -224,6 +225,9 @@
 
       tbody {
         tr {
+          background-color: #fff;
+          color: #000000;
+
           &:first-child:not(.ui-sortable-helper), &:first-child.ui-sortable-helper + tr {
             td {
               border-top: 1px solid #DFDFDF;
@@ -235,12 +239,10 @@
             border-right: 1px solid #DFDFDF;
             padding: $height-padding $width-padding;
             font-size: 13px;
-            color: #000000;
-            background-color: #fff;
             vertical-align: middle;
 
             &.actions {
-              width: 130px;
+              //width: 130px;
               text-align: center;
               padding-left: 0 !important;
               padding-right: 0 !important;

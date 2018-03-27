@@ -301,7 +301,7 @@ function cidev_update_product_amount_next(cartid, amount, manufacturerid){
 x {if $active_modules.Egoods and $products[product].distribution}1<input type="hidden"{else}
 </td>
 <td>
-<input type="number" {if $main eq "fast_lane_checkout"} autocomplete="off" style="background: #ffffff; width: 100px; height: 50px;" id="productindex_{$products[product].cartid}" onkeyup="cidev_update_product_amount('{$products[product].cartid}', '{$products[product].manufacturerid}')"{/if}  size="3"{/if} name="productindexes[{$products[product].cartid}]" value="{$products[product].amount}" />
+<input type="number" {if $main eq "fast_lane_checkout"} autocomplete="off" style="background: #ffffff; width: 100px; height: 50px;" id="productindex_{$products[product].cartid}" onchange="cidev_update_product_amount('{$products[product].cartid}', '{$products[product].manufacturerid}')"{/if}  size="3"{/if} name="productindexes[{$products[product].cartid}]" value="{$products[product].amount}" />
 </td>
 <td>
  = 

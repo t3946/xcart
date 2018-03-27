@@ -72,6 +72,7 @@ HTML,BODY {
 	HEIGHT: 100%;
 	MARGIN: 0px;
 	PADDING: 0px;
+	min-width:960px;
 /* modify color*/
 /*	BACKGROUND-COLOR: #F2EFE6;*/
 /*	BACKGROUND-IMAGE: url(images/background_artss.jpg); */
@@ -4058,7 +4059,7 @@ a.jcarousel-control-next:hover {
         font-weight: bold;
 }
 .header_line2_table {
-	BACKGROUND: url(images/new/home/banner.png) no-repeat center right;
+	BACKGROUND: url(images/new/home/banner.png) no-repeat bottom right;
 }
 .header_line2 {
 /*
@@ -4088,7 +4089,7 @@ a.jcarousel-control-next:hover {
         height: 40px;
 /*        width: 1241px; */
 	width: 100%;
-        BACKGROUND: url(images/new/home/rectangle.png);
+	background-color: #0072BB;
 }
 .header_line31 {
 	margin-left: 63px;

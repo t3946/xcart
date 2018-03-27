@@ -5,6 +5,9 @@ vim: set ts=2 sw=2 sts=2 et:
 
 {* ------------------- *}
 {include file="cidev_tracking_code.tpl" }
+<script type="text/javascript">
+{defer_echo type="js_inline"}
+</script>
 {* ------------------- *}
 
 {$xcartApp->template->render('inSmarty/raw_flash.tpl')}

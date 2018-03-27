@@ -26,11 +26,14 @@ abstract class Admin
 
     protected $parent_pk = null;
 
+    private $admin_config = null;
+
     public static $public = true;
 
     public $allTemplate = 'admin/all.tpl';
     public $listItemActionsTemplate = 'admin/list/_item_actions.tpl';
     public $listPaginationTemplate = 'admin/list/_pagination.tpl';
+    public $listRowTemplate =  'admin/list/_tr.tpl';
 
     public $infoTemplate = 'admin/info.tpl';
     public $createTemplate = 'admin/create.tpl';
@@ -232,8 +235,18 @@ abstract class Admin
      */
     public function getUserColumns()
     {
-        $config = AdminConfig::fetch(static::getModuleName(), static::classNameShort());
+        $config = $this->getConfig();
         return $config->getColumnsList();
+    }
+
+
+    public function getConfig():AdminConfig
+    {
+        if (!$this->admin_config) {
+            $this->admin_config = AdminConfig::fetch(static::getModuleName(), static::classNameShort());
+        }
+
+        return $this->admin_config;
     }
 
     public function buildListColumns()
@@ -261,6 +274,14 @@ abstract class Admin
                 $config[$key] = $value;
             } elseif (is_string($value) && !array_key_exists($value, $config)) {
                 $config[$value] = [];
+
+                if ($field = $this->getModel()->getField($value))
+                {
+                    $config[$value] = [
+                        'title' => $field->getVerboseName(),
+                        'template' => $this->columnDefaultTemplate,
+                    ];
+                }
             }
         }
         foreach ($fields as $name => $field) {
@@ -642,9 +663,14 @@ abstract class Admin
         $qs = $this->fixSort($qs);
 
         $pagination = new Pagination($qs, [
-            'defaultPageSize' => $this->pageSize,
+            'pageSize' => $this->getConfig()->page_size ?: $this->pageSize,
             'pageSizes' => $this->pageSizes
         ], new QuerySetDataSource());
+
+        if (Xcart::app()->request->get->has($pagination->getPageSizeKey())) {
+            $this->getConfig()->page_size = Xcart::app()->request->get->get($pagination->getPageSizeKey());
+            $this->getConfig()->save();
+        }
 
         $this->renderInternal($this->allTemplate, [
             'objects' => $pagination->paginate(),

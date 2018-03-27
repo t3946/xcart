@@ -40,16 +40,6 @@
 
 {* ------------------- *}
 {include file="cidev_tracking_code.tpl" }
-{* ------------------- *}
-{if !($usertype eq "A" || $usertype eq "P")}
-    <script type="text/javascript">
-        {literal}
-        $(document).ready(function(){
-            ga('send', 'pageview');
-        });
-        {/literal}
-    </script>
-{/if}
 
 
 { include file="head.tpl" }
@@ -164,6 +154,13 @@
  {if $GTS_badge_code ne ""}
        {$GTS_badge_code}
  {/if}
+    <script type="text/javascript">
+        {defer_echo type="js_inline"}
+
+        {if !($usertype eq "A" || $usertype eq "P")}
+            ga('send', 'pageview');
+        {/if}
+    </script>
 
 </body>
 </html>
