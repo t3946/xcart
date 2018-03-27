@@ -99,6 +99,8 @@ function getEmptySurfMeta()
             ->all();
 
         if ($models) {
+            $loop = true;
+
             foreach ($models as $model) {
                 yield $model;
                 $selected++;
