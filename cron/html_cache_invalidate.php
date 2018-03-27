@@ -83,6 +83,30 @@ function getResource()
     }
 }
 
+function getEmptySurfMeta()
+{
+    $selected = 0;
+    $limit = 500;
+    $loop = true;
+
+    while ($limit < $selected && $loop ) {
+        $loop = false;
+
+        $models = \Modules\User\Models\SurfMetaModel::objects()
+            ->filter(['is_mobile' => '', 'points_visited' => 0, 'date__lt' => time() - \Modules\Core\Helpers\Cache::CACHE_HALF_DAY])
+            ->order(['-date'])
+            ->limit(20)
+            ->all();
+
+        if ($models) {
+            foreach ($models as $model) {
+                yield $model;
+                $selected++;
+            }
+        }
+    }
+}
+
 
 $sites = [];
 foreach (SiteModel::objects()->all() as $site) {
@@ -169,16 +193,9 @@ Xcart::app()->cache->gc(true);
 writeLog("Sessions GC.");
 (new \Modules\User\Components\XcartSession())->gc(null);
 
-if ($models = \Modules\User\Models\SurfMetaModel::objects()
-    ->filter(['is_mobile' => '', 'points_visited' => 0, 'date__lt' => time() - \Modules\Core\Helpers\Cache::CACHE_HALF_DAY])
-    ->order(['-date'])
-    ->limit(100)
-    ->all())
-{
-    /** @var \Modules\User\Models\SurfMetaModel $model */
-    foreach ($models as $model) {
-        \Modules\User\Models\SessionDataModel::objects()->delete(['sessid' => $model->sessid]);
-    }
+/** @var \Modules\User\Models\SurfMetaModel $model */
+foreach (getEmptySurfMeta() as $model) {
+    \Modules\User\Models\SessionDataModel::objects()->delete(['sessid' => $model->sessid]);
 }
 
 writeLog("End.");
