@@ -89,7 +89,7 @@ function getEmptySurfMeta()
     $limit = 500;
     $loop = true;
 
-    while ($limit < $selected && $loop ) {
+    while ($limit > $selected && $loop ) {
         $loop = false;
 
         $models = \Modules\User\Models\SurfMetaModel::objects()
