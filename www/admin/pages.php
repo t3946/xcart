@@ -202,8 +202,8 @@ if ($REQUEST_METHOD == "POST") {
                     $sfids = "";
                 }
 
-
-                db_query("UPDATE $sql_tbl[pages] SET title='$pagetitle', orderby='$orderby', active='$active', header_pos='$header_pos', sfids={$sfids} WHERE pageid='$pageid'");
+                $no_index = $no_index ?:0;
+                db_query("UPDATE $sql_tbl[pages] SET title='$pagetitle', orderby='$orderby', active='$active', header_pos='$header_pos', sfids={$sfids}, no_index={intval($no_index)} WHERE pageid='$pageid'");
                 $top_message["content"] = func_get_langvar_by_name("msg_adm_page_upd");
             }
 
