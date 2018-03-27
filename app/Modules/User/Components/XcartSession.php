@@ -10,7 +10,7 @@ use Xcart\App\Request\Session;
 class XcartSession extends Session
 {
     public $autoStart = false; //@NOTE: Do not turn on. Initialization on first access
-    public $autoGc = true;
+    public $autoGc = false;
     public $registerGlobals = true;
     public $fullUnpackGlobals = false;
     private $session_key;
@@ -141,7 +141,7 @@ class XcartSession extends Session
 
         if (!BotsHelper::IsBot() || $id) {
             if ($id || $id = $this->getSessionId()) {
-                if ($this->model = SessionDataModel::objects()->get(['pk' => $id])) {
+                if ($this->model = SessionDataModel::objects()->get(['sessid' => $id])) {
                     $this->data = $this->model->data;
 
                     if ($this->registerGlobals && $this->fullUnpackGlobals) {
@@ -151,8 +151,13 @@ class XcartSession extends Session
             }
 
             if (!$this->model) {
-                $id = $this->genSessId();
-                list($this->model, $isNew) = SessionDataModel::objects()->getOrCreate(['sessid' => $id]);
+//                $id = $this->genSessId();
+//                list($this->model, $isNew) = SessionDataModel::objects()->getOrCreate(['sessid' => $id]);
+
+                $this->model = new SessionDataModel();
+                $this->model->save();
+                $isNew = true;
+
                 $this->data = [];
                 $this->unpacked = [];
             }
@@ -162,7 +167,7 @@ class XcartSession extends Session
             if ($isNew || ($this->model->expiry < (($sessionTime + time()) / 3)))
             {
                 $this->model->expiry = time() + $sessionTime;
-                $this->request->cookie->add($this->getSessionKey(), $id, $this->model->expiry);
+                $this->request->cookie->add($this->getSessionKey(), $this->getId(), $this->model->expiry);
             }
 
             if ($this->registerGlobals) {
@@ -268,8 +273,8 @@ class XcartSession extends Session
         return $this->model;
     }
 
-    public function gc()
+    public function gc($limit = 1)
     {
-        SessionDataModel::objects()->filter(['expiry__lt' => time()])->limit(1)->delete();
+        SessionDataModel::objects()->filter(['expiry__lt' => time()])->limit($limit)->delete();
     }
 }

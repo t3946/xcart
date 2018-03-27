@@ -11,6 +11,10 @@ trait CacheFilesTrait
 
     public $keySerialization = true;
 
+    public $autoGC = true;
+
+    public $strongRemove = false;
+
     public $gcProbability = 10;
 
     public $directoryLevel = 1;
@@ -19,15 +23,18 @@ trait CacheFilesTrait
 
     public function set($key, $value, $timeout = null)
     {
-        $timeout = $timeout ?: $this->timeout;
-
         if (is_null($value)) {
-            @unlink($this->getFileName($this->buildKey($key)));
+            if ($this->strongRemove) {
+                while(is_file($this->getFileName($this->buildKey($key))) && !@unlink($this->getFileName($this->buildKey($key)))){}
+            }
+            else {
+                @unlink($this->getFileName($this->buildKey($key)));
+            }
+
             return true;
         }
         else {
-
-            return $this->setValue($this->buildKey($key), $this->serialize($value), $timeout);
+            return $this->setValue($this->buildKey($key), $this->serialize($value), $timeout ?: $this->timeout);
         }
     }
 
@@ -44,9 +51,9 @@ trait CacheFilesTrait
         if (is_file($filePath) && @filemtime($filePath) > time()) {
             $fp = @fopen($filePath, 'r');
             if ($fp !== false) {
-                @flock($fp, LOCK_SH);
+//                @flock($fp, LOCK_SH);
                 $cacheValue = @stream_get_contents($fp);
-                @flock($fp, LOCK_UN);
+//                @flock($fp, LOCK_UN);
                 @fclose($fp);
                 return $cacheValue;
             }
@@ -56,7 +63,10 @@ trait CacheFilesTrait
 
     protected function setValue($key, $data, $timeout)
     {
-        $this->gc();
+        if ($this->autoGC) {
+            $this->gc();
+        }
+
         $cacheFile = $this->getFileName($key);
 
         if ($this->directoryLevel > 0) {

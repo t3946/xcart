@@ -25,30 +25,40 @@ class CacheMiddleware extends Middleware
 
         if (!headers_sent() && $this->cacheEnabled) {
 
+            $ignoreCache = ($request->get->has('no_cache') || $request->cookie->has('no_cache'));
+
             $params = [];
             $params = $params ?: $this->getAdvancedDetector($request);
 //            $params = $params ?: $this->getDetector($request);
 
             if ($params) {
                 $this->params = $params;
-                [$cacheTime, $key, $a_output] = $params;
+                [$cacheTime, $key, $a_output, $slug] = $params;
 
-                if ($a_output && !$request->get->has('no_cache')) {
-                    list($output, $headers, $etag, $modTime) = $a_output;
+                if ($a_output && !$ignoreCache) {
+                    list($output, $headers, $etag, $modTime, $wheres) = $a_output;
 
-                    if ($request->getHeaderValue('IF_NONE_MATCH') == "\"{$etag}\"") {
-                        header("HTTP/1.1 304 Not Modified");
+                    if (empty($wheres) ||
+                        (
+                            ((empty($wheres['domain'])) || (!empty($wheres['domain']) && $wheres['domain'] == $request->getDomain()))
+                        &&  ((empty($wheres['slug']))   || (!empty($slug) && !empty($wheres['slug']) && $wheres['slug'] == $slug))
+                        )
+                    )
+                    {
+                        if ($request->getHeaderValue('IF_NONE_MATCH') == "\"{$etag}\"") {
+                            header("HTTP/1.1 304 Not Modified");
+                            Xcart::app()->end();
+                        }
+
+                        foreach ($headers as $header) {
+                            header($header);
+                        }
+
+                        $this->setCacheHeaders($modTime, $cacheTime, $etag);
+
+                        echo $output;
                         Xcart::app()->end();
                     }
-
-                    foreach ($headers as $header) {
-                        header($header);
-                    }
-
-                    $this->setCacheHeaders($modTime, $cacheTime, $etag);
-
-                    echo $output;
-                    Xcart::app()->end();
                 }
             }
         }
@@ -80,7 +90,7 @@ class CacheMiddleware extends Middleware
 
     private function saveCache($output)
     {
-        [$cacheTime, $key] = $this->params;
+        [$cacheTime, $key, $c_output, $slug] = $this->params;
 
 
         $headers = array_filter(headers_list(), function($header) {
@@ -97,6 +107,10 @@ class CacheMiddleware extends Middleware
         $modTime = gmdate("D, d M Y H:i:s", time());
         $data[] = $etag;
         $data[] = $modTime;
+        $data[] = [
+            'domain' => Xcart::app()->request->getDomain(),
+            'slug' => $slug
+        ];
 
         Xcart::app()->cache->getDriver($this->cacheDriver)->set($key, $data, $cacheTime?:null);
 
@@ -121,7 +135,7 @@ class CacheMiddleware extends Middleware
             $key = $this->getCacheKey($request, $match);
 
             $a_output = Xcart::app()->cache->getDriver($this->cacheDriver)->get($key);
-            return [$cacheTime, $key, $a_output];
+            return [$cacheTime, $key, $a_output, ''];
         }
 
         return false;
@@ -157,20 +171,21 @@ class CacheMiddleware extends Middleware
                 return [Cache::CACHE_HOUR * 3, $key, $content];
             }
 
-            if (strpos($request->getPath(), 'amp') === false && strpos($request->getPath(), 'product') !== false && preg_match("/\/product\/(\d+)\/.*/", $request->getPath(), $match)) {
-                $key = 'product-' . $match[1];
+            if (strpos($request->getPath(), 'amp/') === false )
+            {
+                if (strpos($request->getPath(), 'product') !== false
+                    && preg_match("/\/product\/(\d+)\/([\d\w-]+)\//", $request->getPath(), $match)
+                ) {
+                    $key = 'product-' . $match[1];
 
-                if ($isMobile) {
-                    $key .= '-mobile';
+                    if ($isMobile) {
+                        $key .= '-mobile';
+                    }
+
+                    $content = Xcart::app()->cache->getDriver($this->cacheDriver)->get($key);
+
+                    return [Cache::CACHE_YEAR, $key, $content, $match[2]];
                 }
-
-                if (Xcart::app()->request->getIsAjax()) {
-                    $key .= '-ajax';
-                }
-
-                $content = Xcart::app()->cache->getDriver($this->cacheDriver)->get($key);
-
-                return [Cache::CACHE_YEAR, $key, $content];
             }
         }
 

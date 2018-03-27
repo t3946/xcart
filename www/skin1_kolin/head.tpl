@@ -86,8 +86,8 @@ $(function(){
 
         <td width="250" valign="middle">
         {if !($main eq "catalog" && $current_category.category eq "") || $smarty.get.page ne "" || $search_keyword eq true}<a href="/">{/if}
-                <img src="{include file="product_image_path.tpl"}/image.php?id={$current_storefront_info.storefrontid}&amp;type=S" {if $current_storefront_info.image.image_x gt "250"} width="250" {/if}  alt="{if $config.Company.sf_top_image_alt ne "" }{$config.Company.sf_top_image_alt}{else}{$config.Company.company_name}{/if}" />
-        {if !($main eq "catalog" && $current_category.category eq "") || $smarty.get.page ne "" || $search_keyword eq true}</a>{/if}
+                <img src="{$siteModel->images->get()}" {if $current_storefront_info.image.image_x gt "250"} width="250" {/if}  alt="{$siteModel->getFrontendName()}" />
+                {if !($main eq "catalog" && $current_category.category eq "") || $smarty.get.page ne "" || $search_keyword eq true}</a>{/if}
         </td>
 
 {if $main eq "fast_lane_checkout" || $main eq "order_message"}
@@ -108,7 +108,8 @@ $(function(){
                         </td>
                         <td width="10">&nbsp;</td>
                         <td width=" 204" valign="middle" align="right">
-                        {include file="customer/menu_cart.tpl"}
+                            <div id="ajax_minicart"></div>
+
 
 {if $variant_id_for_point5 ne "" && $variant_id_for_point5 eq "0" && $main ne "product" && !($main eq "catalog" && $current_category.category eq "")}
 {assign var="social_buttons_data_services" value=$config.Appearance.social_buttons_data_services}
@@ -170,30 +171,3 @@ $(function(){
 {if $variant_id_for_point3 eq "1" && ($main ne "product" && $main ne "fast_lane_checkout")}
 {$config.Storefront_common_details.common_header_code}
 {/if}
-
-<a id="scrollTop" class="button_new grey" href="#" title="Up">Up</a>
-
-<script type="text/javascript">
-//<![CDATA[
-{literal}
-
-function scrollTop(){
-    if(jQuery(window).scrollTop() > jQuery('#header').height()){
-        jQuery('#scrollTop').fadeIn('slow');
-    } else {
-        jQuery('#scrollTop').fadeOut('fast');
-    }
-}
-jQuery('#scrollTop').on('click', function(){
-    jQuery('body,html').animate({
-        scrollTop: 0
-    }, 300);
-  return false;
-});
-jQuery(window).scroll(function(){
-    scrollTop();
-});
-
-{/literal}
-//]]>
-</script>

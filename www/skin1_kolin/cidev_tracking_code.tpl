@@ -1,27 +1,30 @@
 {if !($usertype eq "A" || $usertype eq "P")}
-    <script>
-        {literal}
-        (function (w, d, t, r, u) {
-            var f, n, i;
-            w[u] = w[u] || [], f = function () {
-                var o = {ti: "5024901"};
-                o.q = w[u], w[u] = new UET(o), w[u].push("pageLoad")
-            }, n = d.createElement(t), n.src = r, n.async = 1, n.onload = n.onreadystatechange = function () {
-                var s = this.readyState;
-                s && s !== "loaded" && s !== "complete" || (f(), n.onload = n.onreadystatechange = null)
-            }, i = d.getElementsByTagName(t)[0], i.parentNode.insertBefore(n, i)
-        })(window, document, "script", "//bat.bing.com/bat.js", "uetq");
-        {/literal}
-    </script>
     <noscript><img src="//bat.bing.com/action/0?ti=5024901&Ver=2" height="0" width="0" style="display:none; visibility: hidden;"/></noscript>
-    <script type="text/javascript">
+
+    {capture name="defer_script_21"}
+        {literal}
+        $(document).ready(function() {
+            (function (w, d, t, r, u) {
+                var f, n, i;
+                w[u] = w[u] || [], f = function () {
+                    var o = {ti: "5024901"};
+                    o.q = w[u], w[u] = new UET(o), w[u].push("pageLoad")
+                }, n = d.createElement(t), n.src = r, n.async = 1, n.onload = n.onreadystatechange = function () {
+                    var s = this.readyState;
+                    s && s !== "loaded" && s !== "complete" || (f(), n.onload = n.onreadystatechange = null)
+                }, i = d.getElementsByTagName(t)[0], i.parentNode.insertBefore(n, i)
+            })(window, document, "script", "//bat.bing.com/bat.js", "uetq");
+        });
+        {/literal}
         var revenue = '{$order_subtotal}';
         {literal}
         window.uetq = window.uetq || [];
         if (revenue != '')
             window.uetq.push({'gv': revenue});
         {/literal}
-    </script>
+    {/capture}
+
+    {defer file=$smarty.capture.defer_script_21 type="js_inline"}
 {/if}
 
 
@@ -38,56 +41,7 @@
 
     {$config.Storefront_common_details.google_analitics_tracking_script|substitute:"ga_account_nr":$config.Company.cidev_ga_code_number|substitute:"ga_ec_data":$ga_ec_data|substitute:"ga_send":$ga_send}
 
-<script type="text/javascript">
-    {if ($usertype eq "A" || $usertype eq "P") && $order ne ""}
-    {literal}
-    function ga_onRefundClick(mid) {
-
-        var cb_status_current = $('#groups_cb_status_' + mid).val();
-
-        if (cb_status_current == "3" || cb_status_current == "H") {
-            ga('require', 'ec');
-            {/literal}
-            {if $order.refund_groups ne ""}
-            {foreach from=$order.refund_groups item=v key=k}
-            {literal}
-
-            if (mid == {/literal}{$k}{literal}) {
-
-                {/literal}
-                {if $v.products ne ""}
-                {foreach from=$v.products item=vv key=kk}
-                {literal}
-
-                ga('ec:addProduct', {
-                    'id': '{/literal}{$vv.productid}{literal}',       // Product ID is required for partial refund.
-                    'quantity': {/literal}{$vv.ref_qty}{literal}         // Quantity is required for partial refund.
-                });
-
-                {/literal}
-                {/foreach}
-                {/if}
-                {literal}
-
-            }
-
-            {/literal}
-            {/foreach}
-            {/if}
-            {literal}
-
-        }
-
-        ga('ec:setAction', 'refund', {
-            'id': '{/literal}{$order.order_prefix}{$order.orderid}{literal}',    // Transaction ID is only required field for full/partial refund.
-            'affiliation': '{/literal}{$site_domain}{literal}'
-        });
-        ga('send', 'event', 'Ecommerce', 'Refund', {'nonInteraction': 1});
-
-    }
-    {/literal}
-
-    {/if} {* ($usertype eq "A" || $usertype eq "P") && $order ne "" *}
+{capture name="defer_script_22"}
 
     {if $main eq "fast_lane_checkout" || $main eq "order_message"}
 
@@ -221,7 +175,9 @@
 
 
     {/if}
-</script>
+{/capture}
+
+{defer file=$smarty.capture.defer_script_22 type="js_inline"}
 {/if}
 
 {if $config.Company.cidev_yandex_code_number ne "" && !($usertype eq "A" || $usertype eq "P")}

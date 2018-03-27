@@ -7,6 +7,15 @@ $local_config = __DIR__ . DIRECTORY_SEPARATOR .'settings_console_local.php';
 $config = array_replace_recursive([
     'exit_on_end' => true,
     'components' => [
+        'cache' =>  [
+            'drivers' => [
+                'html' =>  [
+                    'autoGC' => true,
+                    'strongRemove' => true,
+                ]
+            ]
+        ],
+
         'errorHandler' => [
             'debug' => true,
         ],

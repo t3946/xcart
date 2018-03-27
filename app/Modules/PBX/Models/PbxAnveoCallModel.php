@@ -161,6 +161,7 @@ class PbxAnveoCallModel extends Model
         if (!empty($this->file)) {
             if ($this->isOutgoing()) {
                 $account = AnveoAssignCalls::parseAccount($this->file);
+
                 return $url = "https://s3.amazonaws.com/anveo-{$account}/{$this->file}";
             }
             else {

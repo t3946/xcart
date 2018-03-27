@@ -49,6 +49,8 @@ class ElasticSearch
     }
 
     function call($path, $data_json = array()){
+        //return [];
+
         //if (!$this->index) throw new Exception('$this->index needs a value');
         $url = $this->server . '/' . $this->index . '/' . $path;
 
@@ -61,6 +63,7 @@ class ElasticSearch
         curl_setopt($ch, CURLOPT_POSTFIELDS, $this->data_json);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 1);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 3);
         $result_json = curl_exec($ch);
         $this->curl_info = curl_getinfo($ch);
         curl_close($ch);
@@ -69,9 +72,11 @@ class ElasticSearch
         if (!empty($result["hits"])) {
             $this->hitsCount = count($result["hits"]["hits"]);
             $this->hitsTotal = $result["hits"]["total"];
+
+            return $result;
         }
 
-        return $result;
+        return [];
     }
 
     public function setDisMaxBoost($boost)

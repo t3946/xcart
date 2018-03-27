@@ -37,3 +37,15 @@ function cidev_id$(id) {
     return document.getElementById(id)
 }
 
+
+function surfMetaRegister() {
+    $.post('/api/analytics?_=' + (new Date()).getTime(), {
+        'url': window.location.href,
+        'referrer': document.referrer ? document.referrer : ''
+    });
+}
+
+
+$(document).ready(function(){
+    surfMetaRegister();
+});

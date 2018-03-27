@@ -16,7 +16,7 @@
 {/if}
 <br>
 
-    {assign var="producttitle" value=$oProduct->getFrontendName()}
+{assign var="producttitle" value=$oProduct->getFrontendName()}
 
 {if $product.new_notify_in_stock_price ne ""}
     {assign var="current_price" value=$product.new_notify_in_stock_price}
@@ -57,7 +57,7 @@
                             {include file="modules/Detailed_Product_Images/popup_image.tpl"}
                         {else}
                             {if $active_modules.Detailed_Product_Images ne "" && $images ne ''}
-                                <a style="font-size: 0px;" href="#dp_images" class="ga_click" data-label="More Images">
+                                <a style="font-size: 0px;" name="javascript:void(self.location.hash = 'dp_images');" class="ga_click" data-label="More Images">
                             {/if}
                             {if $oProduct && $oProduct->isGroupRoot()}
                                 {include file="group_thumbnail.tpl" product=$oProduct}
@@ -174,7 +174,8 @@
                                 </tr>
 
                                 {if $config.Appearance.show_in_stock eq "Y" and $config.General.unlimited_products ne "Y" and $product.distribution eq "" && $product.avail <= $config.Appearance.quantity_threshold && $product.avail gt 0}
-                                    <tr id="so_o_stock" itemprop="availability" content="{if $product.product_availability eq "in stock"}InStock{else}OutOfStock{/if}">
+                                    <tr id="so_o_stock" itemprop="availability"
+                                        content="{if $product.product_availability eq "in stock"}InStock{else}OutOfStock{/if}">
                                         <td width="10%" class="BlackT">{$lng.lbl_in_stock}:</td>
                                         <td nowrap="nowrap" id="product_avail_txt" class="BlackT">
                                             {if $product.avail gt 0}{$lng.txt_items_available|substitute:"items":$product.avail}{else}{$lng.lbl_no_items_available}{/if}
@@ -187,11 +188,12 @@
                                     <td height="25" class="BlackT">{$lng.lbl_quantity}:</td>
                                     <td style="text-align:left;font-size: 16px;" width="*">
                                         {if $config.General.unlimited_products eq "N" and ($product.avail le 0 or $product.avail lt $product.min_amount || $product.product_availability == 'out of stock') and $variants eq '' }
-                                            <script type="text/javascript">
+                                            {capture name="defer_script_50"}
                                                 var min_avail = 1;
                                                 var avail = 0;
                                                 var product_avail = 0;
-                                            </script>
+                                            {/capture}
+                                            {defer file=$smarty.capture.defer_script_50 type="js_inline"}
                                             <b>{$lng.txt_out_of_stock}</b>
                                         {else}
                                             {if $config.General.unlimited_products eq "Y"}
@@ -218,8 +220,7 @@
                                             {if $config.General.unlimited_products eq "Y"}
                                                 {math equation="x+y" assign="mq" x=$mq y=$start_quantity}
                                             {/if}
-
-                                            <script type="text/javascript">
+                                            {capture name="defer_script_51"}
                                                 var min_avail = {$start_quantity|default:1};
                                                 var avail = {$mq|default:1}-1;
                                                 var product_avail = {$product.avail|default:"0"};
@@ -295,7 +296,9 @@
                                                     }
                                                 }
                                                 {/literal}
-                                            </script>
+                                            {/capture}
+
+                                            {defer file=$smarty.capture.defer_script_51 type="js_inline"}
 
                                             <div class="product_attr quantity clearfix">
                                                 <a rel="nofollow"
@@ -310,11 +313,12 @@
                                                    onclick="func_dec_inc_qty('inc', '{$step}');"></a>
                                             </div>
                                         {else}
-                                            <script type="text/javascript">
+                                            {capture name="defer_script_52"}
                                                 var min_avail = 1;
                                                 var avail = 1;
                                                 var product_avail = 1;
-                                            </script>
+                                            {/capture}
+                                            {defer file=$smarty.capture.defer_script_52 type="js_inline"}
                                             <font class="ProductDetailsTitle">1</font>
                                         <input type="hidden" name="amount"
                                                value="1"/> {if $product.distribution ne ""}{$lng.txt_product_downloadable}{/if}
@@ -406,15 +410,17 @@
                         </td>
                         <td rowspan="3" class="save_td">&nbsp;</td>
                     {else}
-                        <td valign="top" width="*" style="padding-left: 20px; vertical-align: middle" class="full_product_cell">
+                        <td valign="top" width="*" style="padding-left: 20px; vertical-align: middle"
+                            class="full_product_cell">
                             <div class="btn_full_product_line"></div>
                             <div class="full_line_info">Click here to see full product line</div>
                             {if $config.Security.ssl_seal ne ""}
-                            <div class="seal">
-                               {$config.Security.ssl_seal}
-                            </div>
+                                <div class="seal">
+                                    {$config.Security.ssl_seal}
+                                </div>
                             {/if}
-                            <span id="so_o_price_spec" itemprop="priceSpecification" itemscope itemtype="http://schema.org/PriceSpecification">
+                            <span id="so_o_price_spec" itemprop="priceSpecification" itemscope
+                                  itemtype="http://schema.org/PriceSpecification">
                                 <meta itemprop="price minPrice" content="{$oProduct->getFrontendPrice()}"/>
                                 <meta itemprop="maxPrice" content="{$oProduct->getFrontendPrice(2)}"/>
                                 <meta itemprop="priceCurrency" content="USD"/>
@@ -467,10 +473,11 @@
 
                                         {if $config.General.unlimited_products eq "Y" or ($product.avail gt 0 and $product.avail ge $product.min_amount)}
                                             {if $js_enabled}
-                                                <script type="text/javascript">
+                                                {capture name="defer_script_59"}
                                                     var lbl_added = "{$lng.lbl_added}";
                                                     var lbl_error = "{$lng.lbl_error}";
-                                                </script>
+                                                {/capture}
+                                                {defer file=$smarty.capture.defer_script_59 type="js_inline"}
                                                 <br/>
                                             {if $product.forsale ne "B"}
                                                 <table cellspacing="0" cellpadding="0" border="0">
@@ -530,11 +537,12 @@
 
                         <td width="196">
                             {if $shipping_rate_show}
-                                <script type="text/javascript">
+                                {capture name="defer_script_53"}
                                     {literal}
                                     ga('send', 'event', 'calculate shipping', 'showed', {nonInteraction: true});
                                     {/literal}
-                                </script>
+                                {/capture}
+                                {defer file=$smarty.capture.defer_script_53 type="js_inline"}
                                 <span id="calculate_shipping_button" data-product-id="{$product.productid}"
                                       style="margin-top: -5px;"
                                       class="cidev_new_button cidev_new_white">Show shipping</span>
@@ -554,7 +562,9 @@
                         <tr class="full_product_line_button">
                             <td colspan="2"></td>
                             <td colspan="2" style="padding-left: 16px;">
-                                <span style="font-size: 19px" class="cidev_new_button cidev_new_white" onclick="self.location = '{$oProduct->parent->getUrl()}'">See other product variations</span></td>
+                                <span style="font-size: 19px" class="cidev_new_button cidev_new_white"
+                                      onclick="self.location = '{$oProduct->parent->getUrl()}'">See other product variations</span>
+                            </td>
                         </tr>
                     {/if}
                 {/if}
@@ -579,14 +589,16 @@
 {/if}
 
 {if $product.product_availability ne "in stock"}
-    <br />
-    <br />
-
-    <div id="similar_products" style="display: none;">{include file="customer/main/ajax_carousel_products.tpl" section_name="similar_products" section_title=$lng.lbl_similar_products}</div>
-
-    <script type="text/javascript">
-        func_load_ALL_ajax_carousels("similar_products", 0);
-    </script>
+    <br/>
+    <br/>
+    <div id="similar_products"
+         style="display: none;">{include file="customer/main/ajax_carousel_products.tpl" section_name="similar_products" section_title=$lng.lbl_similar_products}</div>
+    {capture name="defer_script_3"}
+        {literal}
+            $(document).ready(function() {func_load_ALL_ajax_carousels("similar_products", 0)})
+        {/literal}
+    {/capture}
+    {defer file=$smarty.capture.defer_script_3 type="js_inline"}
 {/if}
 
 {if $product.cart_manufact_text_displayed ne ""}
@@ -616,7 +628,8 @@
 <br/>
 {if $oProduct && $oProduct->isGroupChild() && $oProduct->parent}
     <div style="text-align: center;" class="full_product_line_button">
-            <span style="font-size: 19px" class="cidev_new_button cidev_new_white" onclick="self.location = '{$oProduct->parent->getUrl()}'">See other product variations</span>
+        <span style="font-size: 19px" class="cidev_new_button cidev_new_white"
+              onclick="self.location = '{$oProduct->parent->getUrl()}'">See other product variations</span>
     </div>
     <br/>
     <br/>
@@ -644,13 +657,17 @@
 <div id="recently_viewed_products"
      style="display: none;">{include file="customer/main/ajax_carousel_products.tpl" section_name="recently_viewed_products" section_title=$lng.lbl_recently_viewed_products}</div>
 
-<script type="text/javascript">
+{capture name="defer_script_4"}
     {assign var=carousels value='products_also_bought_with_this_product,related_products,similar_products,recently_viewed_products'}
     {if $product.product_availability ne "in stock"}
-        {assign var=carousels value='products_also_bought_with_this_product,related_products,recently_viewed_products'}
+    {assign var=carousels value='products_also_bought_with_this_product,related_products,recently_viewed_products'}
     {/if}
-    func_load_ALL_ajax_carousels("{$carousels}", 0);
-</script>
+    {literal}
+        $(document).ready(function() {func_load_ALL_ajax_carousels("{/literal}{$carousels}{literal}", 0)});
+    {/literal}
+{/capture}
+
+{defer file=$smarty.capture.defer_script_4 type="js_inline"}
 
 {if $active_modules.Recommended_Products ne ""}
     {if $recommends}
@@ -664,43 +681,49 @@
     {include file="modules/Customer_Reviews/vote_reviews.tpl" }
 {/if}
 {if $active_modules.Product_Options ne ''}
-    <script type="text/javascript">
-        check_options();
-    </script>
+{capture name="defer_script_43"}
+        {literal}
+        $(document).ready(function () {
+            {/literal}
+            {if !$is_group}
+                check_options();
+            {/if}
+            {literal}
+            $('#calculate_shipping_button').on('click', function (e) {
+
+                $('#calculate_shipping_text').find('.shipping_info').html('Please wait...').attr('align', 'center').end().fadeIn();
+
+                var qty = parseInt($('#product_avail').val());
+
+                if (!e.ctrlKey) {
+                    ga('send', 'event', 'click', 'Shipping calculation', 'Quantity', qty);
+                }
+                $.get(
+                    '/cidev_ajax_suggestions.php',
+                    {
+                        product_id: $(this).data('product-id'),
+                        qty: qty,
+                        section_name: 'shipping'
+                    },
+                    function (data) {
+                        $('#calculate_shipping_text')
+                            .find('.shipping_info')
+                            .html(data)
+                            .attr('align', 'left')
+                            .end();
+                    });
+
+            });
+            $('#qty-inc, #qty-dec').on('click', function () {
+                $('#calculate_shipping_text').fadeOut();
+            });
+
+            $('#product_avail').on('keyup', function () {
+                $('#calculate_shipping_text').fadeOut();
+            })
+
+        });
+        {/literal}
+    {/capture}
+    {defer file=$smarty.capture.defer_script_43 type="js_inline"}
 {/if}
-{literal}
-    <script type="text/javascript">
-        $('#calculate_shipping_button').on('click', function (e) {
-
-            $('#calculate_shipping_text').find('.shipping_info').html('Please wait...').attr('align', 'center').end().fadeIn();
-
-            var qty = parseInt($('#product_avail').val());
-
-            if (!e.ctrlKey) {
-                ga('send', 'event', 'click', 'Shipping calculation', 'Quantity', qty);
-            }
-            $.get(
-                '/cidev_ajax_suggestions.php',
-                {
-                    product_id: $(this).data('product-id'),
-                    qty: qty,
-                    section_name: 'shipping'
-                },
-                function (data) {
-                    $('#calculate_shipping_text')
-                        .find('.shipping_info')
-                        .html(data)
-                        .attr('align', 'left')
-                        .end();
-                });
-
-        });
-        $('#qty-inc, #qty-dec').on('click', function () {
-            $('#calculate_shipping_text').fadeOut();
-        });
-
-        $('#product_avail').on('keyup', function () {
-            $('#calculate_shipping_text').fadeOut();
-        })
-    </script>
-{/literal}

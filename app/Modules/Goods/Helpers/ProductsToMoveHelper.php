@@ -198,13 +198,12 @@ class ProductsToMoveHelper
 
         /** @var ProductModel $product_model */
         /** @var ProductStorefrontModel [] $products_sf_models */
-        $products_sf_models = ProductStorefrontModel::objects()->filter(['productid' => $productid])->all();
+        $products_sf_model = ProductStorefrontModel::objects()->filter(['productid' => $productid])->limit(1)->get();
 
         $product_model->source_sfid = $sfid;
         $product_model->save();
 
         /** @var ProductStorefrontModel $products_sf_models */
-        $products_sf_model = $products_sf_models[0];
         $old_sfid = $products_sf_model->sfid;
         $products_sf_model->sfid = $sfid;
         $products_sf_model->save();

@@ -59,6 +59,7 @@ $urlPath = (!empty($CDN_domain) && $Enable_CDN == "Y") ? $CDN_domain : $xcart_we
 
 $smarty->assign("ImagesDir", $urlPath . "{$smarty_skin_dir}/images");
 $smarty->assign("SkinDir", $urlPath . $smarty_skin_dir);
+$smarty->assign("urlPath", $urlPath);
 
 $smarty->assign("template_dir", $smarty->template_dir);
 

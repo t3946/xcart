@@ -17,7 +17,7 @@ class Router
     /**
      * @var array Default HTTP-methods
      */
-    public $defaultMethods = ['GET', 'POST', 'HEAD'];
+    public $defaultMethods = ['GET', 'POST', 'HEAD', 'OPTIONS'];
 
     public $pathGet = false;
 

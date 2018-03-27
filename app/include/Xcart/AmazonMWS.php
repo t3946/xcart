@@ -638,6 +638,19 @@ SQL;
                             if (!empty($order_info) && $order_info['orderid']) {
                                 $log_text = "order processed: " . $v["AmazonOrderID"];
                                 func_backprocess_log(self::BACK_PROCESS_LOG_NAME_SETTLEMENT, $log_text);
+
+                                if ($k_name == 'Item' && $orderModel && !empty($v['Fulfillment']['PostedDate']) && $posted_date = \DateTime::createFromFormat(\DateTime::ISO8601, $v['Fulfillment']['PostedDate'])) {
+                                    $order_date_old = new \DateTime();
+                                    $order_date_old->setTimestamp($orderModel->date);
+                                    $orderModel->date = $posted_date->getTimestamp();
+                                    $orderModel->save(['date']);
+                                    if ($order_date_old != $posted_date) {
+                                        func_backprocess_log(self::BACK_PROCESS_LOG_NAME_SETTLEMENT,
+                                            "order#{$orderModel->orderid};{$order_date_old->format(\DateTime::ISO8601)};{$posted_date->format(\DateTime::ISO8601)}"
+                                        );
+                                    }
+                                }
+
                                 foreach ($v["Fulfillment"] as $kk => $vv) {
                                     if ($k_name == "Item") {
                                         if (!empty($vv["ItemFees"])) {

@@ -1,9 +1,8 @@
 {* $Id: register.tpl,v 1.51.2.6 2006/12/07 08:28:04 svowl Exp $ *}
 
 
-<script src="{$SkinDir}/US_City_List/jquery-1.4.js" type="text/javascript"></script>
-<script src="{$SkinDir}/US_City_List/jquery.autocomplete.js" type="text/javascript"></script>
-<script src="{$SkinDir}/cidev_ajax.js" type="text/javascript"></script>
+<script defer src="{$SkinDir}/US_City_List/jquery.autocomplete.js" type="text/javascript"></script>
+<script defer src="{$SkinDir}/cidev_ajax.js" type="text/javascript"></script>
 
 
 {if $av_error eq 1}

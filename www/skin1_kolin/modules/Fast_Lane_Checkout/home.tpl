@@ -25,9 +25,12 @@
 <link rel="stylesheet" href="{$SkinDir}/{#CSSFile#}" />
 <link rel="stylesheet" href="{$SkinDir}/modules/Fast_Lane_Checkout/{#CSSFile#}" />
 <link rel="stylesheet" href="{$SkinDir}/US_City_List/jquery.autocomplete.css" />
-
-<link rel="stylesheet" href="{$SkinDir}/lib/colorbox/colorbox.css" />
-<script src="{$SkinDir}/lib/colorbox/jquery.colorbox-min.js" type="text/javascript"></script>
+{if $AREA_TYPE ne 'A'}
+    <script src="{$SkinDir}/jquery.min.1.7.1.js" type="text/javascript" ></script>
+{/if}
+    <script src="{$SkinDir}/check_zipcode.js" type="text/javascript"></script>
+    <script src="{$SkinDir}/check_email_script.js" type="text/javascript"></script>
+    <script src="{$SkinDir}/js/common.min.js" type="text/javascript"></script>
 
 </head>
 <body>
@@ -37,12 +40,6 @@
 
 {* ------------------- *}
 {include file="cidev_tracking_code.tpl" }
-{* ------------------- *}
-{if !($usertype eq "A" || $usertype eq "P")}
-    <script type="text/javascript">
-        ga('send', 'pageview');
-    </script>
-{/if}
 
 
 { include file="head.tpl" }
@@ -157,6 +154,13 @@
  {if $GTS_badge_code ne ""}
        {$GTS_badge_code}
  {/if}
+    <script type="text/javascript">
+        {defer_echo type="js_inline"}
+
+        {if !($usertype eq "A" || $usertype eq "P")}
+            ga('send', 'pageview');
+        {/if}
+    </script>
 
 </body>
 </html>

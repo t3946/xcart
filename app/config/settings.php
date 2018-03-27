@@ -122,8 +122,8 @@ return array_replace_recursive([
                    'class' => '\\Xcart\\App\\Cache\\Drivers\\File',
                    'extension' => '.html',
                    'path' => 'root.html_cache',
+                   'autoGC' => false,
 //                   'keySerialization' => false,
-                   'directoryLevel' => 2
                ]
            ]
        ] : [ //PRODUCTION CACHE
@@ -135,7 +135,8 @@ return array_replace_recursive([
                'html' =>  [
                    'class' => '\\Xcart\\App\\Cache\\Drivers\\File',
                    'extension' => '.html',
-                   'path' => 'root.html_cache'
+                   'autoGC' => false,
+                   'path' => 'root.html_cache',
                ],
            ]
        ],

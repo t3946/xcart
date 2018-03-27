@@ -4,16 +4,19 @@
 use Modules\Core\Components\Profiler;
 use Modules\Distributor\Helpers\DistributorHelper;
 use Modules\Goods\Models\ProductModel;
-use Modules\Distributor\Models\DistributorModel;
 
 define('OFFERS_DONT_SHOW_NEW', 1);
 require "./auth.php";
 
 Profiler::getInstance()->addPoint();
 
-if (
-    isset($productid)
-    && !empty($productid)
+
+if (!is_numeric($productid) && empty($sku)) {
+    func_header_location("error_message.php?access_denied&id=33");
+}
+
+
+if (!empty($productid)
     && $config['SEO']['clean_urls_enabled'] == 'Y'
     && !defined('DISPATCHED_REQUEST')
 ) {
@@ -689,12 +692,12 @@ if ($product_info["manufacturerid"] == "32" && !empty($product_info["supplier_in
 }
 
 Profiler::getInstance()->addPoint();
-if ($config["Appearance"]["Enable_surf_stats"] == "Y") {
-    Modules\User\Helpers\SurfingHelper::logSurfPath([
-        'resource_type' => Modules\User\Models\SurfPathModel::GOAL_TYPE_PRODUCT,
-        'resource_id' => $productid,
-    ]);
-}
+//if ($config["Appearance"]["Enable_surf_stats"] == "Y") {
+//    Modules\User\Helpers\SurfingHelper::logSurfPath([
+//        'resource_type' => Modules\User\Models\SurfPathModel::GOAL_TYPE_PRODUCT,
+//        'resource_id' => $productid,
+//    ]);
+//}
 
 Profiler::getInstance()->addPoint();
 if (\Modules\Shipping\Helpers\ShippingHelper::isCalcShippingEnabled($oProduct)) {
@@ -713,8 +716,8 @@ $smarty->assign("location", $location);
 
 Profiler::getInstance()->addPoint();
 
+$smarty->load_filter('output', 'trimwhitespace');
 
-//func_display_cached("customer/home.tpl", 'product_' . $productid);
 $output = func_display("customer/home.tpl", $smarty, false);
 
 if ($cache_middle = \Xcart\App\Main\Xcart::app()->middleware->getMiddleware('static_cache')) {

@@ -6,6 +6,7 @@ use Mobile_Detect;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
+use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\HasManyField;
 use Xcart\App\Orm\Model;
@@ -14,6 +15,7 @@ class SurfMetaModel extends Model
 {
     use AutoMetaTrait;
 
+    /** @var null|SurfMetaModel  */
     private static $_instance = null;
 
     public static function tableName()
@@ -35,6 +37,20 @@ class SurfMetaModel extends Model
                 'link' => ['sessid' => 'sessid'],
             ],
 
+            'user' => [
+                'field' => 'user_id',
+                'class' => ForeignField::class,
+                'modelClass' => UserModel::class,
+                'link' => ['user_id' => 'id'],
+            ],
+
+            'is_mobile' => [
+                'class' => CharField::class,
+                'length' => 1,
+                'default' => 'N',
+                'null' => true,
+            ],
+
             'surf_path' => [
                 'field' => 'id',
                 'class' => HasManyField::class,
@@ -46,28 +62,28 @@ class SurfMetaModel extends Model
 
     static public function getInstance()
     {
-        if (is_null(self::$_instance)) {
+        if (is_null(self::$_instance))
+        {
+            if ($sessId = Xcart::app()->request->session->open()->getId())
+            {
+                [self::$_instance, $is_new] = self::objects()->getOrCreate(["sessid" =>$sessId]);
 
-            if ($sessId = Xcart::app()->request->session->getId()) {
-                self::$_instance = self::objects()->filter(["sessid" =>$sessId])->get();
-
-                if (is_null(self::$_instance)) {
-                    $md = new Mobile_Detect();
-                    self::$_instance =  new self(
-                        [
-                            "sessid"         => $sessId,
-                            "date"           => time(),
-                            "is_mobile"      => ($md->isMobile() ? "Y" : "N"),
-                            "goal_order"     => 'N',
-                            "goal_checkout"  => 'N',
-                            "goal_addtocart" => 'N',
-                            "goal_search"    => 'N',
-                            "points_visited" => '0',
-                            "last_update"    => time(),
-                            "storefrontid"   => Xcart::app()->getModule('Sites')->getSite()->storefrontid,
-                        ]
-                    );
+                if ($is_new || !self::$_instance->is_mobile)
+                {
+                    self::$_instance->setAttributes([
+                        "date"           => time(),
+                        "is_mobile"      => ((new Mobile_Detect())->isMobile() ? "Y" : "N"),
+                        "last_update"    => time(),
+                        "storefrontid"   => Xcart::app()->getModule('Sites')->getSite()->storefrontid,
+                    ]);
                     self::$_instance->save();
+                }
+
+                if (!self::$_instance->user_id) {
+                    if ($user = Xcart::app()->getUser()) {
+                        self::$_instance->user_id = $user->pk;
+                        self::$_instance->save();
+                    }
                 }
             }
         }

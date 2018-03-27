@@ -1,9 +1,5 @@
-{* $Id: search.tpl,v 1.9.2.1 2006/11/27 14:28:38 max Exp $ *}
 
-<script src="{$SkinDir}/US_City_List/jquery.autocomplete.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-//<![CDATA[
+{capture name="defer_script_40"}
 {literal}
 
 $(document).ready(function() {
@@ -54,14 +50,8 @@ $(document).ready(function() {
 });
 
 {/literal}
-//]]>
-</script>
-
-{* --------------------------- *}
 
 
-<script type="text/javascript">
-<!--
 {literal}
 
 function google_custom_search(control) {
@@ -71,7 +61,7 @@ function google_custom_search(control) {
         $('#main').hide();
         $('#google_search_result_block').show();
     });
-    
+
     $('.gsst_a .gscb_a').live('click', function() {
         $('#google_search_result_block').hide();
         $('#main').show();
@@ -98,7 +88,7 @@ function google_custom_search(control) {
 $(document).ready(function() {
     $('.g_td').hover(function() {
         $(this).addClass('g_td_hover');
-    }, 
+    },
     function() {
         $(this).removeClass('g_td_hover');
     });
@@ -111,8 +101,9 @@ $(document).ready(function() {
 });
 
 {/literal}
--->
-</script>
+{/capture}
+
+{defer file=$smarty.capture.defer_script_40 type="js_inline"}
 
 <div class="SearchContainer">
 <table class="SearchTable">
@@ -144,20 +135,11 @@ $(document).ready(function() {
               <input type="submit" title="Go" class="nav-submit-input" value="">
             </div>
 
-{*
-	    {if $e_search_data.substring ne ""}
-            <div class="nav-submit-button-x" id="nav-submit-button-x">
-			<span id="nav-submit-button-x-span" class="nav-submit-button-x-span">
-			<a href="javascript: void(0);" class="nav-submit-button-x-link" onclick="javascript: $('#twotabsearchtextbox').val(''); document.productsearchform.submit();" class="VertMenuItems">X</a>
-			</span>
-	    </div>
-	    {/if}
-*}
 		<input type="hidden" name="cat" value="0" />
 
             <div class="nav-searchfield-width">
               <div id="nav-iss-attach">
-                <input type="text" autocomplete="off" name="e_posted_data[substring]" 
+                <input type="text" autocomplete="off" name="e_posted_data[substring]"
 value="{if $e_search_data.orig_substring ne ""}{$e_search_data.orig_substring|stripslashes|escape}{elseif $e_search_data.substring ne ""}{$e_search_data.substring|stripslashes|escape}{else}{* {$e_search_data_previous_substring} *}{/if}"
 		title="Search For" id="twotabsearchtextbox" placeholder="{$config.Company.cidev_header_code}" />
               </div>
@@ -166,11 +148,10 @@ value="{if $e_search_data.orig_substring ne ""}{$e_search_data.orig_substring|st
           </form>
         </div>
 
-<script type="text/javascript">
-//<![CDATA[
+{capture name="defer_script_41"}
 {literal}
 
-$(document).ready(function() {  
+$(document).ready(function() {
 
   $("#nav-search-in").click(function(event){
         $("#nav-search-in").attr("class", "nav-sprite nav-facade-active nav-focus");
@@ -196,9 +177,10 @@ $(document).ready(function() {
 });
 
 {/literal}
-//]]>
-</script>
-{* ------------------------------ *}
+{/capture}
+
+{defer file=$smarty.capture.defer_script_41 type="js_inline"}
+
 
 {/if}
 			</td>

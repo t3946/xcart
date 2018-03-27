@@ -508,9 +508,11 @@ function send_question_email_form(){
 
 {if $active_modules.Product_Options and ($product_options ne '' or $product_wholesale ne '') and ($product.product_type ne "C" or not $active_modules.Product_Configurator)}
   <script type="text/javascript">
-    //<![CDATA[
-    check_options();
-    //]]>
+      {literal}
+      $(document).ready(function(){
+          check_options();
+      });
+      {/literal}
   </script>
 {/if}
 

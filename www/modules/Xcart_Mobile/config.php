@@ -97,11 +97,8 @@ if (
 
         $detect_isMobile_was_created = true;
 
-        x_load(
-            'backoffice',
-            'perms',
-            'security' // For func_check_admin_security_redirect
-        );
+        include "minicart.php";
+
         x_session_register('login', '');
         x_session_register('login_type', '');
         x_session_register('logged_userid', 0);

@@ -35,16 +35,16 @@ if($active_modules["Brands"]) {
 else
 	func_header_location("home.php");
 
-if ($config["Appearance"]["Enable_surf_stats"] == "Y"){
-    SurfingHelper::logSurfPath([
-        'resource_type' => SurfPathModel::GOAL_TYPE_BRAND,
-        'resource_id' => $brandid,
-        'additional_data' => SurfingHelper::getSurfPathAdditionalData([
-            'resource_type' => SurfPathModel::GOAL_TYPE_BRAND,
-            'cidev_filters_tree_sorted' => $cidev_filters_tree_sorted
-        ])
-    ]);
-}
+//if ($config["Appearance"]["Enable_surf_stats"] == "Y"){
+//    SurfingHelper::logSurfPath([
+//        'resource_type' => SurfPathModel::GOAL_TYPE_BRAND,
+//        'resource_id' => $brandid,
+//        'additional_data' => SurfingHelper::getSurfPathAdditionalData([
+//            'resource_type' => SurfPathModel::GOAL_TYPE_BRAND,
+//            'cidev_filters_tree_sorted' => $cidev_filters_tree_sorted
+//        ])
+//    ]);
+//}
 
 # Assign the current location line
 $smarty->assign("location", $location);
