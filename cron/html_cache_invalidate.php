@@ -105,6 +105,10 @@ function getEmptySurfMeta()
             }
         }
     }
+
+    if ($selected) {
+        writeLog("Looped surf meta from robot: {$selected}");
+    }
 }
 
 
