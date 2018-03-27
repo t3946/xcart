@@ -86,7 +86,7 @@ function getResource()
 function getEmptySurfMeta()
 {
     $selected = 0;
-    $limit = 500;
+    $limit = 1000;
     $loop = true;
 
     while ($limit > $selected && $loop ) {
