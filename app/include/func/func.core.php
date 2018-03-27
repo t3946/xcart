@@ -2351,7 +2351,7 @@ function func_XML_Sitemap_items_arr($sf_condition = null, $sfid = null)
             'changefreq'    => 'weekly',
             'priority'      => '0.2',
             'url_pattern'   => 'pages.php?pageid=',
-            'items_query'   => "SELECT SQL_NO_CACHE CONCAT('%s', $sql_tbl[pages].pageid) as url, $sql_tbl[pages].pageid as id, IFNULL($sql_tbl[xmlmap_lastmod].date, '%s') as date FROM $sql_tbl[pages] LEFT JOIN $sql_tbl[xmlmap_lastmod] ON $sql_tbl[xmlmap_lastmod].id = $sql_tbl[pages].pageid AND $sql_tbl[xmlmap_lastmod].type = 'S' WHERE $sql_tbl[pages].active='Y' AND $sql_tbl[pages].level='E' AND (sfids = '' or sfids like '%%{$sfid}%%')",
+            'items_query'   => "SELECT SQL_NO_CACHE CONCAT('%s', $sql_tbl[pages].pageid) as url, $sql_tbl[pages].pageid as id, IFNULL($sql_tbl[xmlmap_lastmod].date, '%s') as date FROM $sql_tbl[pages] LEFT JOIN $sql_tbl[xmlmap_lastmod] ON $sql_tbl[xmlmap_lastmod].id = $sql_tbl[pages].pageid AND $sql_tbl[xmlmap_lastmod].type = 'S' WHERE $sql_tbl[pages].active='Y' AND $sql_tbl[pages].level='E' AND $sql_tbl[pages].no_index = 0 AND (sfids = '' or sfids like '%%{$sfid}%%')",
             'multilanguage' => false,
         ],
         4 => [
