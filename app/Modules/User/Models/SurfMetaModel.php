@@ -47,6 +47,7 @@ class SurfMetaModel extends Model
             'is_mobile' => [
                 'class' => CharField::class,
                 'length' => 1,
+                'default' => 'N',
                 'null' => true,
             ],
 

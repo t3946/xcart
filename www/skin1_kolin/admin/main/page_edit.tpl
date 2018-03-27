@@ -160,6 +160,11 @@ function formSubmit() {
         <td><font class="Star"></font></td>
         <td><input type="text" name="header_pos" value='{$page_data.header_pos|default:""}' size="5" /></td>
 </tr>
+    <tr>
+        <td>No index tag:</td>
+        <td></td>
+        <td><input type="checkbox" {if $page_data.no_index}checked{/if} name="no_index" value='1'/></td>
+    </tr>
 
 <tr>
         <td>Icon Image:</td>

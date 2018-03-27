@@ -8,6 +8,14 @@ define("CIDEV_CRON_START", "CRON");
 include 'top.inc.php';
 include 'init.php';
 
+if (defined('APP_LOCAL') && APP_LOCAL) {
+    header("Content-type: text/plain");
+    echo <<<ECHO
+User-agent: *
+Disallow: /
+ECHO;
+}
+
 
 
 $default_host = 'www.artistsupplysource.com';

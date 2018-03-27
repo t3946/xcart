@@ -43,16 +43,19 @@ if (!empty($cidev_storefronts) && is_array($cidev_storefronts)){
 
             $config['XML_Sitemap']['items'] = func_XML_Sitemap_items_arr(null, $storefrontid);
 
-            $config['XML_Sitemap']['items'][1]['items_query'] = "SELECT SQL_NO_CACHE CONCAT('%s', $sql_tbl[products].productid) as url, $sql_tbl[products].productid as id, IFNULL($sql_tbl[xmlmap_lastmod].date, '%s') as date"
-                . " FROM $sql_tbl[products] LEFT JOIN $sql_tbl[xmlmap_lastmod] ON $sql_tbl[xmlmap_lastmod].id = $sql_tbl[products].productid AND $sql_tbl[xmlmap_lastmod].type = 'P'"
-                . " LEFT JOIN $sql_tbl[products_sf] ON $sql_tbl[products_sf].productid = $sql_tbl[products].productid"
-                . " WHERE $sql_tbl[products].forsale='Y' AND $sql_tbl[products_sf].sfid = $storefrontid";
+            $config['XML_Sitemap']['items'][1]['items_query'] = <<<SQL
+SELECT CONCAT('%s', {$sql_tbl['products']}.productid) as url, {$sql_tbl['products']}.productid as id, IFNULL({$sql_tbl['xmlmap_lastmod']}.date, '%s') as date
+                 FROM {$sql_tbl['products']} LEFT JOIN {$sql_tbl['xmlmap_lastmod']} ON {$sql_tbl['xmlmap_lastmod']}.id = {$sql_tbl['products']}.productid AND {$sql_tbl['xmlmap_lastmod']}.type = 'P'
+                 LEFT JOIN {$sql_tbl['products_sf']} ON {$sql_tbl['products_sf']}.productid = {$sql_tbl['products']}.productid
+                 WHERE {$sql_tbl['products']}.forsale='Y' AND {$sql_tbl['products']}.prevent_search_indexing_this_product_page !='Y' AND {$sql_tbl['products_sf']}.sfid = {$storefrontid}
+SQL;
 
-            $config['XML_Sitemap']['items'][2]['items_query'] = "SELECT SQL_NO_CACHE CONCAT('%s', $sql_tbl[brands].brandid) as url, $sql_tbl[brands].brandid as id, IFNULL($sql_tbl[xmlmap_lastmod].date, '%s') as date"
-                . " FROM $sql_tbl[brands] LEFT JOIN $sql_tbl[xmlmap_lastmod] ON $sql_tbl[xmlmap_lastmod].id = $sql_tbl[brands].brandid AND $sql_tbl[xmlmap_lastmod].type = 'B'"
-                . " LEFT JOIN $sql_tbl[brands_sf] ON $sql_tbl[brands_sf].brandid = $sql_tbl[brands].brandid"
-                . " WHERE $sql_tbl[brands].avail='Y' AND $sql_tbl[brands].parent_brand_id IS NULL  AND $sql_tbl[brands_sf].sfid = $storefrontid";
-
+            $config['XML_Sitemap']['items'][2]['items_query'] = <<<SQL
+SELECT CONCAT('%s', {$sql_tbl['brands']}.brandid) as url, {$sql_tbl['brands']}.brandid as id, IFNULL({$sql_tbl['xmlmap_lastmod']}.date, '%s') as date
+                 FROM {$sql_tbl['brands']} LEFT JOIN {$sql_tbl['xmlmap_lastmod']} ON {$sql_tbl['xmlmap_lastmod']}.id = {$sql_tbl['brands']}.brandid AND {$sql_tbl['xmlmap_lastmod']}.type = 'B'
+                 LEFT JOIN {$sql_tbl['brands_sf']} ON {$sql_tbl['brands_sf']}.brandid = {$sql_tbl['brands']}.brandid
+                 WHERE {$sql_tbl['brands']}.avail='Y' AND {$sql_tbl['brands']}.prevent_search_indexing_brand_page != 'Y' AND {$sql_tbl['brands']}.parent_brand_id IS NULL  AND {$sql_tbl['brands_sf']}.sfid = {$storefrontid}
+SQL;
             xmlmap_generate("Y", $storefrontid);
         }
     }

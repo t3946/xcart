@@ -21,7 +21,7 @@ class ApiAnalyticController extends Controller
             if (!empty($url['path'])) {
                 $path = $url['path'];
                 $type = null;
-                $referer = $this->getRequest()->post->get('referer');
+                $referrer = $this->getRequest()->post->get('referrer');
                 $id = null;
                 $advanced = '';
 
@@ -51,7 +51,7 @@ class ApiAnalyticController extends Controller
                     SurfingHelper::logSurfPath([
                         'resource_type' => $type,
                         'resource_id' => $id,
-                        'referer' => $referer,
+                        'referrer' => $referrer,
                         'additional_data' => $advanced
                     ]);
                 }

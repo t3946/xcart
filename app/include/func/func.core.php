@@ -2326,7 +2326,7 @@ function func_XML_Sitemap_items_arr($sf_condition = null, $sfid = null)
             'changefreq'    => 'weekly',
             'priority'      => '0.6',
             'url_pattern'   => 'home.php?cat=',
-            'items_query'   => "SELECT SQL_NO_CACHE CONCAT('%s', $sql_tbl[categories].categoryid) as url, $sql_tbl[categories].categoryid as id,  IFNULL($sql_tbl[xmlmap_lastmod].date, '%s') as date FROM $sql_tbl[categories] LEFT JOIN $sql_tbl[xmlmap_lastmod] ON $sql_tbl[xmlmap_lastmod].id = $sql_tbl[categories].categoryid AND $sql_tbl[xmlmap_lastmod].type = 'C' WHERE $sql_tbl[categories].avail='Y'" . ((empty($sf_condition)) ? '' : " AND $sql_tbl[categories].$sf_condition"),
+            'items_query'   => "SELECT CONCAT('%s', $sql_tbl[categories].categoryid) as url, $sql_tbl[categories].categoryid as id,  IFNULL($sql_tbl[xmlmap_lastmod].date, '%s') as date FROM $sql_tbl[categories] LEFT JOIN $sql_tbl[xmlmap_lastmod] ON $sql_tbl[xmlmap_lastmod].id = $sql_tbl[categories].categoryid AND $sql_tbl[xmlmap_lastmod].type = 'C' WHERE $sql_tbl[categories].avail='Y' AND $sql_tbl[categories].prevent_index_category_page !='Y' " . ((empty($sf_condition)) ? '' : " AND $sql_tbl[categories].$sf_condition"),
             'multilanguage' => false,
         ],
         1 => [
@@ -2351,7 +2351,7 @@ function func_XML_Sitemap_items_arr($sf_condition = null, $sfid = null)
             'changefreq'    => 'weekly',
             'priority'      => '0.2',
             'url_pattern'   => 'pages.php?pageid=',
-            'items_query'   => "SELECT SQL_NO_CACHE CONCAT('%s', $sql_tbl[pages].pageid) as url, $sql_tbl[pages].pageid as id, IFNULL($sql_tbl[xmlmap_lastmod].date, '%s') as date FROM $sql_tbl[pages] LEFT JOIN $sql_tbl[xmlmap_lastmod] ON $sql_tbl[xmlmap_lastmod].id = $sql_tbl[pages].pageid AND $sql_tbl[xmlmap_lastmod].type = 'S' WHERE $sql_tbl[pages].active='Y' AND $sql_tbl[pages].level='E' AND (sfids = '' or sfids like '%%{$sfid}%%')",
+            'items_query'   => "SELECT CONCAT('%s', $sql_tbl[pages].pageid) as url, $sql_tbl[pages].pageid as id, IFNULL($sql_tbl[xmlmap_lastmod].date, '%s') as date FROM $sql_tbl[pages] LEFT JOIN $sql_tbl[xmlmap_lastmod] ON $sql_tbl[xmlmap_lastmod].id = $sql_tbl[pages].pageid AND $sql_tbl[xmlmap_lastmod].type = 'S' WHERE $sql_tbl[pages].active='Y' AND $sql_tbl[pages].level='E' AND $sql_tbl[pages].no_index = 0 AND (sfids = '' or sfids like '%%{$sfid}%%')",
             'multilanguage' => false,
         ],
         4 => [
@@ -2360,7 +2360,7 @@ function func_XML_Sitemap_items_arr($sf_condition = null, $sfid = null)
             'changefreq'    => 'monthly',
             'priority'      => '0.4',
             'url_pattern'   => '',
-            'items_query'   => "%s SELECT SQL_NO_CACHE url, '%s' as date FROM $sql_tbl[xmlmap_extra]" . ((empty($sf_condition)) ? '' : " WHERE $sf_condition"),
+            'items_query'   => "%s SELECT url, '%s' as date FROM $sql_tbl[xmlmap_extra]" . ((empty($sf_condition)) ? '' : " WHERE $sf_condition"),
             'multilanguage' => false,
         ],
         5 => [
@@ -2369,7 +2369,7 @@ function func_XML_Sitemap_items_arr($sf_condition = null, $sfid = null)
             'changefreq'    => 'daily',
             'priority'      => '1.0',
             'url_pattern'   => '',
-            'items_query'   => "%s SELECT SQL_NO_CACHE IF((SELECT value FROM $sql_tbl[config] WHERE name = 'xseo_xmlmap_use_root') = 'Y','$GLOBALS[http_location]','home.php') as url, '%s' as date",
+            'items_query'   => "%s SELECT IF((SELECT value FROM $sql_tbl[config] WHERE name = 'xseo_xmlmap_use_root') = 'Y','$GLOBALS[http_location]','home.php') as url, '%s' as date",
             'multilanguage' => false,
         ],
         6 => [

@@ -41,7 +41,7 @@ function cidev_id$(id) {
 function surfMetaRegister() {
     $.post('/api/analytics?_=' + (new Date()).getTime(), {
         'url': window.location.href,
-        'referer': document.referer ? document.referer : ''
+        'referrer': document.referrer ? document.referrer : ''
     });
 }
 
