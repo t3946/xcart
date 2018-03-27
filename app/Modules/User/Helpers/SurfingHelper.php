@@ -11,8 +11,8 @@ class SurfingHelper
     public static function logSurfPath(array $params = [])
     {
         $aGoalArray = [];
-        $sReferalUrl = !empty($params['referer']) ? $params['referer'] : null;
-        unset($params['referer']);
+        $sReferalUrl = !empty($params['referrer']) ? $params['referrer'] : null;
+        unset($params['referrer']);
 
         $model = new SurfPathModel($params);
 

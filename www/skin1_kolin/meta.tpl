@@ -17,7 +17,7 @@
 
 {/if}
 
-{if $usertype eq "C" && ($product.robots_noindex eq "Y" || $current_category.prevent_index_category_page eq "Y" || $brand.prevent_search_indexing_brand_page eq "Y")}
+{if $usertype eq "C" && ($product.robots_noindex eq "Y" || $current_category.prevent_index_category_page eq "Y" || $brand.prevent_search_indexing_brand_page eq "Y" || $page_data.no_index eq 1)}
     <meta name="robots" content="noindex">
 {/if}
 

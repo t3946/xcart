@@ -436,10 +436,10 @@ function func_get_category_data($cat)
         $category["main_order_by"] = func_query_first_cell("SELECT order_by FROM $sql_tbl[categories] WHERE categoryid='$cpath' and storefrontid = '$current_storefront'");
 
         if (!empty($active_modules['Multiple_Storefronts'])) {
-            $category['customer_url'] .= func_get_http_location_sf($current_storefront) . '/home.php?cat=' . $cat;
+            $category['customer_url'] .= func_get_http_location_sf($current_storefront) . '/category/' . $cat."/";
         }
         else {
-            $category['customer_url'] .= $xcart_catalogs['customer'] . '/home.php?cat=' . $cat;
+            $category['customer_url'] .= $xcart_catalogs['customer'] . '/category/' . $cat."/";
         }
 
         return $category;

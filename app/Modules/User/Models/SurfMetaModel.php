@@ -6,6 +6,7 @@ use Mobile_Detect;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
+use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\HasManyField;
 use Xcart\App\Orm\Model;
@@ -43,6 +44,13 @@ class SurfMetaModel extends Model
                 'link' => ['user_id' => 'id'],
             ],
 
+            'is_mobile' => [
+                'class' => CharField::class,
+                'length' => 1,
+                'default' => 'N',
+                'null' => true,
+            ],
+
             'surf_path' => [
                 'field' => 'id',
                 'class' => HasManyField::class,
@@ -60,7 +68,7 @@ class SurfMetaModel extends Model
             {
                 [self::$_instance, $is_new] = self::objects()->getOrCreate(["sessid" =>$sessId]);
 
-                if ($is_new)
+                if ($is_new || !self::$_instance->is_mobile)
                 {
                     self::$_instance->setAttributes([
                         "date"           => time(),
