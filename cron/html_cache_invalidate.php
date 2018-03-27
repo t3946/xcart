@@ -22,7 +22,7 @@ const DATEFORMAT = '%H:%I:%S';
 const LIMIT = 5000;
 const TIME_PRODUCTS_LIMIT = 113;
 
-$cookie = new \GuzzleHttp\Cookie\CookieJar(false, ['418' => "I'm a teapot"]);
+$cookie = ['418' => "I'm a teapot"];
 $guzzle = new \GuzzleHttp\Client();
 $date = new DateTime();
 $time = time();
