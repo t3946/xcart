@@ -442,7 +442,7 @@ class SupplierFeedHelper
                         [
                             'parentid' => $parent_id ?: 0,
                             'category' => $v_cat,
-                            'storefrontid' => $child_sfid ?: $feed->storefront_id
+                            'storefrontid' => $child_sfid ?? $feed->storefront_id
                         ]);
 
                     if ($is_cat_created) {
@@ -473,8 +473,9 @@ class SupplierFeedHelper
             }
         } else {
             /** @var CategoryModel $cat */
-            $cat = CategoryModel::objects()->get(['categoryid' => $feed->base_category_id]);
-            $model->setMainCategory($cat);
+            if ($cat = CategoryModel::objects()->get(['categoryid' => $feed->base_category_id])) {
+                $model->setMainCategory($cat);
+            }
         }
 
         return $model;
