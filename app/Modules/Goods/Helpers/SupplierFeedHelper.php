@@ -407,6 +407,8 @@ class SupplierFeedHelper
      */
     public static function feedCategories($model, $is_created, $feed, $categories)
     {
+        $child_sfid = null;
+
         if (!$is_created && !$model->isGroupRoot()) {
             return $model;
         }
@@ -417,6 +419,10 @@ class SupplierFeedHelper
 
             if ($model->isGroupRoot()) {
                 $parent_id = null;
+                /** @var ProductModel $child_model */
+                if ($child_model = $model->childs->limit(1)->get()) {
+                    $child_sfid = $child_model->getMainCategory()->storefrontid;
+                }
             }
 
             $lastCategory = null;
@@ -436,7 +442,7 @@ class SupplierFeedHelper
                         [
                             'parentid' => $parent_id ?: 0,
                             'category' => $v_cat,
-                            'storefrontid' => $feed->storefront_id
+                            'storefrontid' => $child_sfid ?: $feed->storefront_id
                         ]);
 
                     if ($is_cat_created) {
