@@ -612,12 +612,16 @@
                             {defer_echo type="js"}
                         {literal}
                     }
+                    function afterJSLoaded(){
+                        while (drh_callbacks.length) {
+                            $(drh_callbacks.shift());
+                        }
+                    }
                 {/literal}
             </script>
             {if !empty($config.Appearance.Facebook_pixel_code)}
                 {$config.Appearance.Facebook_pixel_code}
             {/if}
-
         </body>
     </html>
 {/if}

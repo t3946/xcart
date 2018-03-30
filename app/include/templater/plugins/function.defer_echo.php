@@ -39,11 +39,7 @@ INLINE;
                     var raf = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
                         window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
                     if (raf) raf(function() { window.setTimeout(loadDeferredStyles, 40); });
-                    else window.addEventListener('load', loadDeferredStyles);
-
-                    while (drh_callbacks.length) {
-                        $(drh_callbacks.shift());
-                    }
+                    else window.addEventListener('load', loadDeferredStyles);                    
 INLINE
 ,false);
                 break;
@@ -52,6 +48,12 @@ INLINE
                      if (typeof js !== 'undefined' && js.length) {
                         while(js.length) {
                             var j = document.createElement("script");
+                            j.type = "text/javascript";
+                            if (js.length === 1) {
+                                j.onload=function(){
+                                    afterJSLoaded();
+                                };
+                            }
                             j.src = js.shift();
                             document.body.appendChild(j);
                         }
