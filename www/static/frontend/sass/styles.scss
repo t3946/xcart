@@ -27,12 +27,14 @@
 @import 'vendor/swiper/swiper';
 @import 'vendor/photoswipe/photoswipe';
 
+
+@import 'parts/header';
+@import 'parts/footer';
+
 @import 'parts/icons';
 @import 'parts/fe_pager';
 @import 'parts/img_notavail';
 @import 'parts/off-canvas';
-@import 'parts/header';
-@import 'parts/footer';
 @import 'parts/breadcrumbs';
 @import 'parts/catalog_filter_block';
 @import 'parts/show_lessmore';

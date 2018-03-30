@@ -105,6 +105,11 @@ class MenuLibrary extends TemplateLibrary
                     'name' => 'Privacy policy',
                     'items' => [],
                 ],
+                [
+                    'url' => '/retail-trust',
+                    'name' => 'Retail Trust Terms & Conditions',
+                    'items' => [],
+                ],
             ];
         }
         return [];
