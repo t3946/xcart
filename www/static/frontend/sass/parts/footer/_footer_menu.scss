@@ -2,7 +2,87 @@ footer {
   .footer-content {
     min-height: 60px;
     background-color: #15303f;
+    padding: rem-calc(10) 0;
 
+
+    .contacts-presentations {
+      @include breakpoint(large) {
+        margin-bottom: 10px;
+      }
+    }
+
+    .left-side {
+      @include breakpoint(large) {
+        border-right: 2px solid #2a4a5c;
+      }
+    }
+
+    .contacts {
+      .column {
+        display: flex;
+        justify-content: space-between;
+
+      }
+    }
+
+    .confirmations {
+      @include breakpoint(large) {
+        border-top: 2px solid #2a4a5c;;
+      }
+    }
+
+    .menu-list {
+      margin: 0;
+      color: #6796b0;
+      line-height: 31px;
+      font-size: 16px;
+
+      .title-menu {
+        color: white;
+        font-size: 21px;
+        font-weight: 700;
+        line-height: 21px;
+      }
+
+      .toll-free {
+        font-size: 20px;
+
+        .number {
+          font-weight: 700;
+          text-decoration: underline;
+        }
+      }
+
+      a {
+        color: #d0eeff;
+      }
+
+      @include breakpoint(medium) {
+        line-height: 30px;
+        font-size: 14px;
+
+        .title-menu {
+          font-size: 16px;
+        }
+
+        .toll-free {
+          font-size: 18px;
+        }
+      }
+
+      @include breakpoint(large) {
+        line-height: 20px;
+        font-size: 14px;
+
+        .title-menu {
+          font-size: 16px;
+        }
+
+        .toll-free {
+          font-size: 20px;
+        }
+      }
+    }
   }
 
   .footer-menu {

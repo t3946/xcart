@@ -116,6 +116,14 @@
   }
 }
 
+.no-padding {
+  padding: 0;
+}
+
+.no-margin {
+  margin: 0;
+}
+
 .text-align {
   @include bem_modifier(left) {
     text-align: left;
