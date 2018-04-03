@@ -16,7 +16,7 @@ class CsTipsController extends FrontendController
     public function index()
     {
 
-        echo $this->render('layout/thank_for_order.tpl',[
+        echo $this->render('cs_tips.tpl',[
             'meta' => self::PUBLIC_KEY
         ]);
 

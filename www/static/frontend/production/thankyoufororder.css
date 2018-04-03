@@ -1,0 +1,68 @@
+body {
+    margin: 0;
+    padding: 0;
+}
+
+.s3_logo {
+    margin: 0 auto;
+    width: 232px;
+    height: 70px;
+}
+
+.header_line {
+    background: #ffd200 url("/static/frontend/production/line1-1.png") no-repeat;
+    background-position: right center;
+    margin-bottom: 40px;
+    width: 50%;
+    height: 5px;
+    float: left;
+}
+
+.header_line_2 {
+    background: #0566a2 url("/static/frontend/production/line1-2.png") no-repeat;
+    background-position: left  center;
+    margin-bottom: 40px;
+    width: 50%;
+    height: 5px;
+    float: left;
+}
+
+.footer_line {
+    background: #0566a2 url("/static/frontend/production/line2-1.png") no-repeat;
+    background-position: right center;
+    margin-top: 30px;
+    width: 50%;
+    height: 5px;
+    float: left;
+}
+
+.footer_line_2 {
+    background: #ffbe00 url("/static/frontend/production/line2-2.png") no-repeat;
+    background-position: left center;
+    margin-top: 30px;
+    width: 50%;
+    height: 5px;
+    float: left;
+}
+
+.store_logo {
+    text-align: center;
+    width: 20%;
+    height: auto;
+}
+
+hr.between {
+    margin-top: 40px;
+    border-top: none;
+    background-color: #cecece;
+    width: 70%;
+    padding-bottom: 0px;
+}
+
+.header {
+    text-align: center;
+}
+
+img.footer_line {
+    height: 1px;
+}
