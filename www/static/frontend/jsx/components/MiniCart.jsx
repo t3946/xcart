@@ -1,6 +1,6 @@
-import { h, Component } from 'preact';
+import { h, Component, render } from 'preact';
 import _ from 'lodash';
-import 'SimpleBar';
+import SimpleBar from 'simplebar';
 // import { Provider, connect } from 'preact-redux';
 
 export default class MiniCart extends Component
@@ -11,6 +11,7 @@ export default class MiniCart extends Component
         this.changes = {};
         this.timers = {};
         this.simplebar = null;
+        this.product_list = null;
 
         this.state = props.store.getState();
         this.unsubscribe = props.store.subscribe(()=>{
@@ -23,8 +24,15 @@ export default class MiniCart extends Component
     }
 
     componentDidMount() {
-        this.simplebar = new SimpleBar(document.querySelector('.minicart-items .product-list'))
+        // this.product_list.appendChild(render(<div key={"product-list-inner"}>{this.renderProducts()}</div>));
+
+        // console.log(this.product_list);
+        // this.simplebar = new SimpleBar(this.product_list);
     }
+
+    // componentDidUpdate(props, state) {
+    //     console.log(props, state);
+    // }
 
     handleRemove(e, key, item)
     {
@@ -113,7 +121,7 @@ export default class MiniCart extends Component
     render() {
         return (
         <div className="minicart-items">
-            <div className="product-list">
+            <div className="product-list" ref={(product_list) => { this.product_list = product_list; }}>
                 {this.renderProducts()}
             </div>
             <div className="buttons">
