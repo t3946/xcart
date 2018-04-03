@@ -231,7 +231,7 @@ var requiredFields = [
 <input type="text" name="SEO_h2" size="45" style="width: 98%;" value="{$current_category.SEO_h2}" />
 <textarea rows="5" cols="65" name="SEO_h2" style="width: 80%;" class="new_editor">{$current_category.SEO_h2}</textarea>
 *}
-<textarea cols="65" rows="5" name="SEO_h2" style="width: 80%;">{$current_category.SEO_h2}</textarea>
+<textarea cols="65" rows="5" name="SEO_h2" style="width: 80%;" class="new_editor">{$current_category.SEO_h2}</textarea>
 
 </td>
 </tr>
