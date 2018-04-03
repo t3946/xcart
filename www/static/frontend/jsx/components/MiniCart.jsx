@@ -1,5 +1,6 @@
 import { h, Component } from 'preact';
 import _ from 'lodash';
+import 'SimpleBar';
 // import { Provider, connect } from 'preact-redux';
 
 export default class MiniCart extends Component
@@ -9,6 +10,7 @@ export default class MiniCart extends Component
 
         this.changes = {};
         this.timers = {};
+        this.simplebar = null;
 
         this.state = props.store.getState();
         this.unsubscribe = props.store.subscribe(()=>{
@@ -18,6 +20,10 @@ export default class MiniCart extends Component
 
     componentWillUnmount() {
         this.unsubscribe();
+    }
+
+    componentDidMount() {
+        this.simplebar = new SimpleBar(document.querySelector('.minicart-items .product-list'))
     }
 
     handleRemove(e, key, item)
