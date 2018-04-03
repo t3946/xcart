@@ -42,43 +42,40 @@ export default class LazyImageLoad
 
     /**
      *
-     * @param target Element
+     * @param {Element|Image} target
      */
     load(target)
     {
-        let $target = $(target);
+        target.classList.remove('lazy-img');
 
-        $target.removeClass('lazy-img');
-
-        if ($target.attr('data-background')) {
+        if (target.dataset.background) {
             this.stack.push(()=>{
-                let background = $target.attr('data-background');
-
-                $target.attr('data-background', null);
-                $target.addClass('lazy-bg');
+                let background = target.dataset.background;
+                target.dataset.background = '';
+                target.classList.add('lazy-bg');
 
                 this.onLoad(background,
-                    ()=>{ $target.css({'background-image': 'url('+background+')'}); },
-                    ()=>{ $target.addClass('lazy-bg-loaded'); }
+                    ()=>{ target.style.backgroundImage = 'url('+background+')' },
+                    ()=>{ target.classList.add('lazy-bg-loaded'); }
                 );
             });
 
         }
 
-        if ($target.attr('data-src')) {
+        if (target.dataset.src) {
             this.stack.push(()=>{
-                let original = $target.attr('data-src');
-                let hasUpdate = ($target.src !== original);
+                let original = target.dataset.src;
+                let hasUpdate = (target.src !== original);
 
                 if (hasUpdate) {
-                    $target.attr('src', '');
-                    $target.attr('data-src', null);
+                    target.src = '';
+                    target.dataset.src = '';
 
                     this.onLoad(original,
-                        ()=>{ $target.attr('src', original); },
-                        ()=>{ $target.addClass('lazy-loaded');
-                            if (typeof($target.attr('usemap')) !== 'undefined' && $.fn.rwdImageMaps) {
-                                $target.rwdImageMaps();
+                        ()=>{ target.src = original; },
+                        ()=>{ target.classList.add('lazy-loaded');
+                            if (typeof(target.usemap) !== 'undefined' && $.fn.rwdImageMaps) {
+                                $(target).rwdImageMaps();
                             }
                         }
                     );
@@ -87,16 +84,16 @@ export default class LazyImageLoad
         }
 
         this.observer.unobserve(target);
-        $(document).trigger('lil.tick');
+        this.trigger('lil.tick');
     }
 
     onLoad(image, call1, call2)
     {
-        let element = document.createElement('img');
+        let element = new Image();
 
         element.onload = () => {
             setTimeout(()=>{call1()}, 20);
-            setTimeout(()=>{call2()}, 200);
+            setTimeout(()=>{call2()}, 100);
 
             this.inLoad--;
             element.remove();
@@ -111,17 +108,17 @@ export default class LazyImageLoad
     }
 
     _bind() {
-        $([document,window]).on('resize', ()=>{ this.observe() });
-        $(document).on('lil.observe', ()=>{ this.observe(); });
-        $(document).on('lil.partial', ()=>{ this.fullLoad(); });
-        $(document).on('lil.full', ()=>{ this.fullLoad(true); });
-        $(document).on('lil.tick', ()=>{
-            this.runTimer();
-        });
+        this.on('resize', ()=>{ this.observe() })
+            .on('lil.observe', ()=>{ this.observe(); })
+            .on('lil.partial', ()=>{ this.fullLoad(); })
+            .on('lil.full', ()=>{ this.fullLoad(true); })
+            .on('lil.tick', ()=>{
+                this.runTimer();
+            });
 
         this.intervalSearch = setInterval(()=>{
-            $(document).trigger('lil.observe');
-        }, 1500);
+            this.trigger('lil.observe');
+        }, 3000);
     }
 
     runTimer(load_all = false, time_out = 50) {
@@ -160,7 +157,7 @@ export default class LazyImageLoad
 
         if (items.length) {
             this.timeoutToFullLoad = setTimeout(()=>{
-                $(document).trigger('lil.partial');
+                this.trigger('lil.partial');
             }, 1000);
         }
     }
@@ -174,7 +171,7 @@ export default class LazyImageLoad
 
             setTimeout(()=>{
                 if (this.inLoad === 0) {
-                    $(document).trigger('lil.partial');
+                    this.trigger('lil.partial');
                 }
             }, 3000)
         }
@@ -197,13 +194,27 @@ export default class LazyImageLoad
 
     each(load_all = false)
     {
-        while (this.stack.length) {
-            if (this.maxLoad >= this.inLoad || load_all) {
-                ((this.inLoad % 2) ? this.stack.pop():this.stack.shift())();
-            }
-            else {
-                break;
-            }
+        while (this.stack.length && (this.maxLoad >= this.inLoad || load_all)) {
+            ((this.inLoad % 2) ? this.stack.pop():this.stack.shift())();
         }
+    }
+
+    /**
+     *
+     * @param {string} eventName
+     * @param {function} callback
+     */
+    on(eventName, callback) {
+        document.addEventListener(eventName, callback);
+        return this;
+    }
+
+    /**
+     *
+     * @param {string} eventName
+     * @param {object} data
+     */
+    trigger(eventName, data = {}) {
+        document.dispatchEvent(new CustomEvent(eventName, data));
     }
 }

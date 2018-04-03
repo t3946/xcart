@@ -17,6 +17,44 @@ footer {
       }
     }
 
+    .present-icons {
+      .column {
+        display: flex;
+        justify-content: space-between;
+
+        & > * {
+          flex: 33%;
+        }
+      }
+    }
+
+    .s3logo {
+      width: 100px;
+      height: 60px;
+    }
+
+    .all-times {
+      width: 200px;
+      color: #ffae21;
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 20px;
+      clear: both;
+      display: inline-block;
+
+      img {
+        float: left;
+        width: 41px;
+        height: 45px;
+      }
+
+      .title {
+        font-size: 20px;
+        font-weight: 900;
+        line-height: 20px;
+      }
+    }
+
     .contacts {
       .column {
         display: flex;

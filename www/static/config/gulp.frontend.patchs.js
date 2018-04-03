@@ -191,6 +191,11 @@ module.exports = {
                 // 'bower_components/PACE/themes/red/pace-theme-minimal.css'
             ]
         },
+        simplebar: {
+            css: [
+                'node_modules/simplebar/dist/simplebar.css'
+            ]
+        },
         foundation: {
             js_include: [
                 // 'bower_components/foundation-sites/dist/js/foundation.js', //all

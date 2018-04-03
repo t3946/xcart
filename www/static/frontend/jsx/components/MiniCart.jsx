@@ -23,13 +23,13 @@ export default class MiniCart extends Component
         this.unsubscribe();
     }
 
-    componentDidMount() {
-        // this.product_list.appendChild(render(<div key={"product-list-inner"}>{this.renderProducts()}</div>));
-
-        // console.log(this.product_list);
-        // this.simplebar = new SimpleBar(this.product_list);
-    }
-
+    // componentDidMount() {
+    //     this.product_list.appendChild(render(this.renderProducts()));
+    //
+    //     console.log(this.product_list);
+    //     this.simplebar = new SimpleBar(this.product_list, { autoHide: false });
+    // }
+    //
     // componentDidUpdate(props, state) {
     //     console.log(props, state);
     // }

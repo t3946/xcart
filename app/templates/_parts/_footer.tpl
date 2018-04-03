@@ -13,6 +13,28 @@
                     <div class="row">
                         <div class="columns small-12">
 
+                            <img alt="S3 Stores, Inc." class="s3logo lazy lazy-img" data-src="/static/frontend/dist/images/logos/s3stores.svg">
+
+                            <div class="all-times">
+                                <img  alt="" class="lazy lazy-img" data-src="/static/frontend/dist/images/icons/footer/27-7.svg">
+                                <div class="content">
+                                    <div class="title">
+                                        Web Orders
+                                    </div>
+                                    <div>
+                                        24 hours a day, 7 days a week
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <ul class="no-bullet menu-list show-for-large">
+                                <li class="title-menu">
+                                    Email Support
+                                </li>
+                                <li><a href="/contact-us">Contact Us</a></li>
+                            </ul>
+
                         </div>
                     </div>
                 </div>
