@@ -761,5 +761,3 @@ $smarty->assign("dialog_tools_data", $dialog_tools_data);
 
 @include $xcart_dir."/modules/gold_display.php";
 func_display("admin/home.tpl",$smarty);
-
-?>
