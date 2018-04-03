@@ -24,13 +24,14 @@
         </div>
     {/block}
 </div>
-<footer>
+<div class="footer">
     <img class="footer_line" src="/static/frontend/production/line.png">
     <a href="www.s3stores.com">
         <img class="s3_logo" src="/static/frontend/production/logo_S3Stores.svg">
     </a>
-</footer>
-<div class="footer_line"></div><div class="footer_line_2"></div>
+</div>
+
+<div class="footer_line"> <div class="footer_line_1"></div><div class="footer_line_2"></div> </divclas>
 
 </body>
 </html>
