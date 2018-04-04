@@ -25,13 +25,56 @@
     {/block}
 </div>
 <div class="footer">
+    <div class="stores_icon">
+        <a href="#"><img src="/static/frontend/production/mini_store_icon/Teacher.png"></a>
+        <a href="#"><img src="/static/frontend/production/mini_store_icon/Artist.png"></a>
+        <a href="#"><img src="/static/frontend/production/mini_store_icon/Sport.png"></a>
+        <a href="#"><img src="/static/frontend/production/mini_store_icon/Pet.png"></a>
+        <a href="#"><img src="/static/frontend/production/mini_store_icon/Music.png"></a>
+        <a href="#"><img src="/static/frontend/production/mini_store_icon/Organic.png"></a>
+        <a href="#"><img src="/static/frontend/production/mini_store_icon/Wedding.png"></a>
+        <a href="#"><img src="/static/frontend/production/mini_store_icon/Furnishing.png"></a>
+    </div>
+
     <img class="footer_line" src="/static/frontend/production/line.png">
-    <a href="www.s3stores.com">
-        <img class="s3_logo" src="/static/frontend/production/logo_S3Stores.svg">
-    </a>
+
+    <div class="info">
+        <div>
+            <a href="www.s3stores.com">
+                <img class="s3_logo" src="/static/frontend/production/logo_S3Stores.svg">
+            </a>
+        </div>
+        <div>
+            <p>
+                <b>S3 Stores, Inc.</b><br>
+                27 Joseph St.<br>
+                Chatham, Ontario N7L 3G4<br>
+                Canada
+            </p>
+        </div>
+        <div>
+            <p>
+                <b>Order Online or Call Us</b><br>
+                (616) 259-5711<br>
+                1-800-929-2431
+            </p>
+        </div>
+        <div class="social">
+            <p>
+                <b>Find Us on social media</b>
+            </p>
+            <br>
+            <a href="#"><img src="/static/frontend/production/social_icon/facebook.png"></a>
+            <a href="#"><img src="/static/frontend/production/social_icon/twitter.png"></a>
+            <a href="#"><img src="/static/frontend/production/social_icon/youtube.png"></a>
+            <a href="#"><img src="/static/frontend/production/social_icon/pinterest.png"></a>
+            <a href="#"><img src="/static/frontend/production/social_icon/instagram.png"></a>
+            <a href="#"><img src="/static/frontend/production/social_icon/google.png"></a>
+        </div>
+    </div>
 </div>
 
-<div class="footer_line"> <div class="footer_line_1"></div><div class="footer_line_2"></div> </divclas>
+<div class="footer_line"> <div class="footer_line_1"></div><div class="footer_line_2"></div> </div>
 
 </body>
 </html>
