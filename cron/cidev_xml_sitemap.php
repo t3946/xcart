@@ -47,7 +47,13 @@ if (!empty($cidev_storefronts) && is_array($cidev_storefronts)){
 SELECT CONCAT('%s', {$sql_tbl['products']}.productid) as url, {$sql_tbl['products']}.productid as id, IFNULL({$sql_tbl['xmlmap_lastmod']}.date, '%s') as date
                  FROM {$sql_tbl['products']} LEFT JOIN {$sql_tbl['xmlmap_lastmod']} ON {$sql_tbl['xmlmap_lastmod']}.id = {$sql_tbl['products']}.productid AND {$sql_tbl['xmlmap_lastmod']}.type = 'P'
                  LEFT JOIN {$sql_tbl['products_sf']} ON {$sql_tbl['products_sf']}.productid = {$sql_tbl['products']}.productid
+                 LEFT JOIN {$sql_tbl['products_categories']} ON {$sql_tbl['products_categories']}.productid = {$sql_tbl['products']}.productid
+                 LEFT JOIN {$sql_tbl['categories']} ON {$sql_tbl['categories']}.categoryid = {$sql_tbl['products_categories']}.categoryid
                  WHERE {$sql_tbl['products']}.forsale='Y' AND {$sql_tbl['products']}.prevent_search_indexing_this_product_page !='Y' AND {$sql_tbl['products_sf']}.sfid = {$storefrontid}
+                 AND {$sql_tbl['categories']}.prevent_index_products != 'Y'
+                 AND ( {$sql_tbl['products']}.group_root IS NULL 
+                      OR {$sql_tbl['products']}.group_root = {$sql_tbl['products']}.productid )
+                 GROUP BY {$sql_tbl['products']}.productid
 SQL;
 
             $config['XML_Sitemap']['items'][2]['items_query'] = <<<SQL
