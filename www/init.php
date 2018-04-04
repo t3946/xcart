@@ -696,13 +696,14 @@ if (empty($active_modules['Image_Verification'])) {
     x_session_unregister("antibot_validation_val");
 }
 
-if (
-    $is_robot == "Y"
-    || defined("IS_ROBOT")
-    || (empty($$XCART_SESSION_NAME) && empty($XCARTSESSID))
-) {
-    $config["Appearance"]["products_per_page"] = 100;
-}
+/** Временно отключили для ускорения отдачи категории ботам */
+//if (
+//    $is_robot == "Y"
+//    || defined("IS_ROBOT")
+//    || (empty($$XCART_SESSION_NAME) && empty($XCARTSESSID))
+//) {
+//    $config["Appearance"]["products_per_page"] = 100;
+//}
 
 if (!defined("QUICK_START")) {
 
