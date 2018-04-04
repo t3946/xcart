@@ -9,14 +9,16 @@
         <div class="row contacts-presentations">
             <div class="column small-12 medium-6 large-7 left-side">
 
-                <div class="present-icons">
+                <div class="present-icons show-for-medium">
                     <div class="row">
                         <div class="columns small-12">
 
-                            <img alt="S3 Stores, Inc." class="s3logo lazy lazy-img" data-src="/static/frontend/dist/images/logos/s3stores.svg">
+                            <div class="s3stores-logo">
+                                <img alt="S3 Stores, Inc." class="s3logo " src="/static/frontend/dist/images/logos/s3stores.svg">
+                            </div>
 
                             <div class="all-times">
-                                <img  alt="" class="lazy lazy-img" data-src="/static/frontend/dist/images/icons/footer/27-7.svg">
+                                <img  alt="" class="" src="/static/frontend/dist/images/icons/footer/web_order.svg">
                                 <div class="content">
                                     <div class="title">
                                         Web Orders
@@ -28,7 +30,7 @@
                             </div>
 
 
-                            <ul class="no-bullet menu-list show-for-large">
+                            <ul class="no-bullet menu-list show-for-large email-support">
                                 <li class="title-menu">
                                     Email Support
                                 </li>
@@ -93,7 +95,13 @@
             <div class="column small-12 medium-6 large-5 right-side">
 
                 <div class="socials show-for-medium">
-
+                    <a href="https://www.facebook.com/s3stores/" class="facebook"></a>
+                    <a href="https://www.twitter.com/s3stores/" class="twitter"></a>
+                    <a href="https://www.youtube.com/channel/UCjE6xR1TriWo-hCDsbpvMKg" class="youtube"></a>
+                    <a href="https://www.pinterest.com/s3storesinc/" class="pinterest"></a>
+                    {*<a href="https://www.instagram.com/s3stores/" class="instagram"></a>*}
+                    <a href="https://plus.google.com/118379608603424325840" class="googleplus"></a>
+                    {*<a href="https://www.bbb.org/western-ontario/business-reviews/online-retailer/s3-stores-in-chatham-on-1054268" class="bbb"></a>*}
                 </div>
 
                 <ul class="no-bullet menu-list">
@@ -102,9 +110,9 @@
                     </li>
 
                     <li>
-                        <form action="">
+                        <form action="" class="email-subscription">
                             <input type="email" required value="">
-                            <button>
+                            <button class="waves waves-dark">
                                 Send
                             </button>
                         </form>
