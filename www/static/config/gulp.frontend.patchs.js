@@ -192,7 +192,7 @@ module.exports = {
             ]
         },
         simplebar: {
-            css: [
+            css_raw: [
                 'node_modules/simplebar/dist/simplebar.css'
             ]
         },
