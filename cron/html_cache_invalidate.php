@@ -22,7 +22,7 @@ const DATEFORMAT = '%H:%I:%S';
 const LIMIT = 5000;
 const TIME_PRODUCTS_LIMIT = 113;
 
-
+$cookie = ['418' => "I'm a teapot"];
 $guzzle = new \GuzzleHttp\Client();
 $date = new DateTime();
 $time = time();
@@ -83,6 +83,36 @@ function getResource()
     }
 }
 
+function getEmptySurfMeta()
+{
+    $selected = 0;
+    $limit = 1000;
+    $loop = true;
+
+    while ($limit > $selected && $loop ) {
+        $loop = false;
+
+        $models = \Modules\User\Models\SurfMetaModel::objects()
+            ->filter(['is_mobile' => '', 'points_visited' => 0, 'date__lt' => time() - \Modules\Core\Helpers\Cache::CACHE_HALF_DAY])
+            ->order(['-date'])
+            ->limit(20)
+            ->all();
+
+        if ($models) {
+            $loop = true;
+
+            foreach ($models as $model) {
+                yield $model;
+                $selected++;
+            }
+        }
+    }
+
+    if ($selected) {
+        writeLog("Looped surf meta from robot: {$selected}");
+    }
+}
+
 
 $sites = [];
 foreach (SiteModel::objects()->all() as $site) {
@@ -111,8 +141,8 @@ if ($resources_count = getResourcesCount()) {
                     $ssl = ($site->getConfig()['https_enabled'] == 'Y');
                     $url = ($ssl ? 'https' : 'http') . '://' . $site->domain  . $model->getAbsoluteUrl();
 
-                    $requests[] = $guzzle->createRequest('GET', $url, ['headers' => ['User-Agent' => desktop_user_agent]]);
-                    $requests[] = $guzzle->createRequest('GET', $url, ['headers' => ['User-Agent' => mobile_user_agent]]);
+                    $requests[] = $guzzle->createRequest('GET', $url, ['headers' => ['User-Agent' => desktop_user_agent], 'cookies' => $cookie]);
+                    $requests[] = $guzzle->createRequest('GET', $url, ['headers' => ['User-Agent' => mobile_user_agent ], 'cookies' => $cookie]);
                 }
             }
         }
@@ -155,8 +185,8 @@ if (rand(1, 7) > 5) {
             $ssl = ($site->getConfig()['https_enabled'] == 'Y');
             $url = ($ssl ? 'https' : 'http') . '://' . $site->domain;
 
-            $requests[] = $guzzle->createRequest('GET', $url, ['headers' => ['User-Agent' => desktop_user_agent]]);
-            $requests[] = $guzzle->createRequest('GET', $url, ['headers' => ['User-Agent' => mobile_user_agent]]);
+            $requests[] = $guzzle->createRequest('GET', $url, ['headers' => ['User-Agent' => desktop_user_agent], 'cookies' => $cookie]);
+            $requests[] = $guzzle->createRequest('GET', $url, ['headers' => ['User-Agent' => mobile_user_agent ], 'cookies' => $cookie]);
         }
     }
 
@@ -168,5 +198,10 @@ Xcart::app()->cache->gc(true);
 
 writeLog("Sessions GC.");
 (new \Modules\User\Components\XcartSession())->gc(null);
+
+/** @var \Modules\User\Models\SurfMetaModel $model */
+foreach (getEmptySurfMeta() as $model) {
+    \Modules\User\Models\SessionDataModel::objects()->delete(['sessid' => $model->sessid]);
+}
 
 writeLog("End.");

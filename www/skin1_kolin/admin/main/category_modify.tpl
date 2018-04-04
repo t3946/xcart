@@ -231,7 +231,7 @@ var requiredFields = [
 <input type="text" name="SEO_h2" size="45" style="width: 98%;" value="{$current_category.SEO_h2}" />
 <textarea rows="5" cols="65" name="SEO_h2" style="width: 80%;" class="new_editor">{$current_category.SEO_h2}</textarea>
 *}
-<textarea cols="65" rows="5" name="SEO_h2" style="width: 80%;">{$current_category.SEO_h2}</textarea>
+<textarea cols="65" rows="5" name="SEO_h2" style="width: 80%;" class="new_editor">{$current_category.SEO_h2}</textarea>
 
 </td>
 </tr>
@@ -248,7 +248,7 @@ var requiredFields = [
 	<td height="10" class="FormButton" nowrap="nowrap">{$lng.lbl_meta_description}:</td>
 	<td width="10" height="10"><font class="FormButtonOrange"></font></td>
 	<td height="10">
-<textarea cols="65" rows="4" name="meta_descr">{if $category_error ne ""}{$smarty.post.meta_descr|escape:"html"}{elseif $mode ne "add"}{$current_category.meta_descr|escape:"html"}{/if}</textarea>
+<textarea cols="65" rows="4" name="meta_descr" class="" >{if $category_error ne ""}{$smarty.post.meta_descr|escape:"html"}{elseif $mode ne "add"}{$current_category.meta_descr|escape:"html"}{/if}</textarea>
 	</td>
 </tr>
 

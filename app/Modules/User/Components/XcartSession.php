@@ -139,7 +139,7 @@ class XcartSession extends Session
     {
         $isNew = false;
 
-        if (!BotsHelper::IsBot() || $id) {
+        if ($this->startValidate() || $id) {
             if ($id || $id = $this->getSessionId()) {
                 if ($this->model = SessionDataModel::objects()->get(['sessid' => $id])) {
                     $this->data = $this->model->data;
@@ -276,5 +276,13 @@ class XcartSession extends Session
     public function gc($limit = 1)
     {
         SessionDataModel::objects()->filter(['expiry__lt' => time()])->limit($limit)->delete();
+    }
+
+    public function startValidate()
+    {
+        $start = !isset($_COOKIE['418']); // inner use for html invalidator
+        $start = $start ?:!BotsHelper::IsBot();
+
+        return $start;
     }
 }

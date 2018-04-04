@@ -36,9 +36,9 @@ class SurfingHelper
             $model->position = $oSurfMeta->points_visited;
 
 
+            $sReferalUrl = $sReferalUrl ?: SurfingHelper::getReferUrl();
 
-            if ($sReferalUrl || !is_null($sReferalUrl = SurfingHelper::getReferUrl())) {
-                $referer = (string) urldecode($sReferalUrl);
+            if ($sReferalUrl && self::checkReferUrl($sReferalUrl) && ($referer = self::prepareReferUrl($sReferalUrl))) {
 
                 $oReferer = ReferrerModel::objects()->filter(['referer' => $referer])->limit(1)->get();
                 if (!$oReferer) {
@@ -107,24 +107,48 @@ class SurfingHelper
         return $additional_data;
     }
 
+    public static function prepareReferUrl($url)
+    {
+        if ($origin = self::getQueryOrigin()) {
+            $urlParts = parse_url($url);
+
+            $url .= (empty($urlParts['query']) ? '?' : '&') . $origin;
+        }
+
+        return (string) urldecode($url);
+    }
+
     public static function getReferUrl()
     {
         $sReferUrl = $sPath = null;
-        $aReferalUrl = parse_url(Xcart::app()->request->getReferrer());
 
-        if ($aReferalUrl['host'] != Xcart::app()->request->getHost()) {
-
+        if ($aReferalUrl = parse_url(Xcart::app()->request->getReferrer()))
+        {
             if (!empty($aReferalUrl['path'])) {
                 $sPath = ltrim($aReferalUrl['path'], '/');
             }
 
             $sReferUrl = $aReferalUrl['host'] . (empty($sPath) ? '' : '/' . $sPath) . (empty($aReferalUrl['query']) ? '' : "?{$aReferalUrl['query']}");
-            $aUri = Xcart::app()->request->getQueryArray();
-
-            if (!empty($aUri['origin']) && !empty($aReferalUrl['host'])) {
-                $sReferUrl .= (empty($aReferalUrl['query']) ? '?' : '&') . http_build_query(['origin' => $aUri['origin']]);
-            }
         }
+
         return $sReferUrl;
+    }
+
+    public static function checkReferUrl(string $url) : bool
+    {
+        $parts = parse_url($url);
+
+        return $parts['host'] != Xcart::app()->request->getHost();
+    }
+
+    public static function getQueryOrigin() :? string
+    {
+        $aUri = Xcart::app()->request->getQueryArray();
+
+        if ( !empty($aUri['origin']) ) {
+            return http_build_query(['origin' => $aUri['origin']]);
+        }
+
+        return null;
     }
 }
