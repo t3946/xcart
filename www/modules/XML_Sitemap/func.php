@@ -132,7 +132,8 @@ function xmlmap_generate($cron = "", $cron_storefrontid = "")
 			}
 		}
 
-		if ($spec["type"] == "K") {
+		/** Временно для ускорения работы */
+		/*if ($spec["type"] == "K") {
 			$items = array();
 			$tmp_item_counter = 0;
 
@@ -162,7 +163,7 @@ function xmlmap_generate($cron = "", $cron_storefrontid = "")
 				}
 
 			}
-		}
+		}*/
 
 		if (!empty($items)) {
 			func_flush(func_get_langvar_by_name('xmlmap_log_itemsfound', array('count' => count((array)$items)), false, true));
