@@ -2326,7 +2326,7 @@ function func_XML_Sitemap_items_arr($sf_condition = null, $sfid = null)
             'changefreq'    => 'monthly',
             'priority'      => '0.1',
             'url_pattern'   => 'home.php?cat=',
-            'items_query'   => "SELECT CONCAT('%s', $sql_tbl[categories].categoryid) as url, $sql_tbl[categories].categoryid as id,  IFNULL($sql_tbl[xmlmap_lastmod].date, '%s') as date FROM $sql_tbl[categories] LEFT JOIN $sql_tbl[xmlmap_lastmod] ON $sql_tbl[xmlmap_lastmod].id = $sql_tbl[categories].categoryid AND $sql_tbl[xmlmap_lastmod].type = 'C' WHERE $sql_tbl[categories].avail='Y' AND $sql_tbl[categories].prevent_index_category_page !='Y' " . ((empty($sf_condition)) ? '' : " AND $sql_tbl[categories].$sf_condition"),
+            'items_query'   => "SELECT CONCAT('%s', $sql_tbl[categories].categoryid) as url, $sql_tbl[categories].categoryid as id,  IFNULL($sql_tbl[xmlmap_lastmod].date, '%s') as date FROM $sql_tbl[categories] LEFT JOIN $sql_tbl[xmlmap_lastmod] ON $sql_tbl[xmlmap_lastmod].id = $sql_tbl[categories].categoryid AND $sql_tbl[xmlmap_lastmod].type = 'C' WHERE $sql_tbl[categories].avail='Y' AND $sql_tbl[categories].prevent_index_category_page !='Y' " . ((empty($sf_condition)) ? '' : " AND $sql_tbl[categories].$sf_condition") . " AND ( $sql_tbl[categories].product_count > 10 OR TRIM($sql_tbl[categories].title_tag != '') OR TRIM($sql_tbl[categories].SEO_h2 !='') OR TRIM($sql_tbl[categories].description != '') OR TRIM($sql_tbl[categories].SEO_category_name != ''))",
             'multilanguage' => false,
         ],
         1 => [
