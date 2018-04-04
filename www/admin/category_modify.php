@@ -96,6 +96,7 @@ if ($REQUEST_METHOD == "POST") {
 		/*TODO rewrite controller*/
 		$category_name = stripslashes(trim(\Xcart\App\Main\Xcart::app()->request->post['category_name']));
         $description = stripslashes(trim(\Xcart\App\Main\Xcart::app()->request->post['description']));
+        $SEO_h2 = stripslashes(trim(\Xcart\App\Main\Xcart::app()->request->post['SEO_h2']));
 
 		if (empty($category_name)) {
 			#
@@ -761,5 +762,3 @@ $smarty->assign("dialog_tools_data", $dialog_tools_data);
 
 @include $xcart_dir."/modules/gold_display.php";
 func_display("admin/home.tpl",$smarty);
-
-?>
