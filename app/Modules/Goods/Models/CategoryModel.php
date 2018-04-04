@@ -97,6 +97,11 @@ class CategoryModel extends TreeModel
                     'null' => false,
                     'default' => '',
                 ],
+                 'SEO_h2' => [
+                     'class' => CharField::className(),
+                     'null' => false,
+                     'default' => '',
+                 ],
             ]
         );
     }
