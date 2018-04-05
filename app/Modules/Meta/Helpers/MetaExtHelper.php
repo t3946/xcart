@@ -25,7 +25,7 @@ class MetaExtHelper
     /** @var string */
     private $template_code;
     /** @var int */
-    private $base_code;
+    private $base_code = MetaType::DEFAULT;
 
     private $_params = [];
     private $_composed = [];
@@ -91,7 +91,7 @@ class MetaExtHelper
      */
     public static function getMeta($controller, $canonical = null):void
     {
-        if ($base_code = $controller->getMetaBase()) {
+        if ($controller && $base_code = $controller->getMetaBase()) {
             $instance = self::newInstance();
             $instance->setBaseCode($base_code);
             $instance->setParams($controller->getMetaTemplateParams());
@@ -128,6 +128,7 @@ class MetaExtHelper
         $this->addParam('site_name', $site_name);
 
         $this->_params['site'] = $site;
+        $this->_params['siteConfig'] = $site->getConfig();
 
         /** @var Meta $meta */
         $meta = Meta::objects()->filter([
@@ -137,10 +138,10 @@ class MetaExtHelper
                 new QAnd(['url' => $path, 'site_id__isnull' => true]),
             ])
         ])
-        ->order(['-site_id', '-url'])
-        ->limit(1)
-        ->cache(3600)
-        ->get();
+            ->order(['-site_id', '-url'])
+            ->limit(1)
+            ->cache(3600)
+            ->get();
 
         if ($meta) {
             $this->_composed = [
@@ -157,11 +158,16 @@ class MetaExtHelper
 
             return $this->prepare($template);
         }
-        elseif ($this->base_code && !empty($this->_params['model']) && is_subclass_of($this->_params['model'], Model::class)) {
-            $model = $this->_params['model'];
+        elseif ($this->base_code && (
+                ($this->base_code == MetaType::DEFAULT)
+                || (!empty($this->_params['model']) && is_subclass_of($this->_params['model'], Model::class))
+            ))
+        {
+            $model = $this->_params['model'] ?? null;
             $codes = null;
 
-            switch ($this->base_code) {
+            switch ($this->base_code)
+            {
                 case MetaType::BRAND: {
                     /** @var BrandModel $model */
 
@@ -219,6 +225,15 @@ class MetaExtHelper
                     $codes = [
                         "searches:store.{$site_code}",
                         "searches:base"
+                    ];
+
+                    break;
+                }
+
+                case MetaType::DEFAULT: {
+                    $codes = [
+                        "default:store.{$site_code}",
+                        "default:base",
                     ];
 
                     break;
