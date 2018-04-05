@@ -12,8 +12,7 @@
                     operator on your behalf</p></span>
             <form id="send" action="{url 'user:tips_log'}">
                 <input type="hidden" name="e" value="{$order_id}">
-                <input type="hidden" name="v" value="{$tips}">
-                <input type="number" name="v" value="{$tips}">
+                Please, enter the amount of tips and confirm the action:<input class="amount" step="any" type="number" name="v" value="{$tips}">$<br>
                 <button class="send_button" form="send"><img src="/static/frontend/production/send_button.png"></button>
             </form>
             <span class="p_s">*From your account will not be written off any money</span>

@@ -39,7 +39,7 @@ class CsTipsController extends FrontendController
 
         $order_log_model->save();
 
-        echo $this->render('cs_tips.tpl', [
+        echo $this->render('cs_tips_done.tpl', [
             'order_id' => $order_log_model->login,
             'tips' => $order_log_model->log
         ]);

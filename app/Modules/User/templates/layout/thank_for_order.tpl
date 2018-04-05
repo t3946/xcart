@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-
+    <link href="/static/frontend/production/thank_for_order.css" rel="stylesheet">
     {block 'head'}
 
     {/block}

@@ -64,6 +64,7 @@ img.freddie {
     border-radius: 0;
     padding: 0;
     background-color: transparent;
+    margin-top: 20px;
     margin-bottom: 40px;
     cursor: pointer;
 }
@@ -132,4 +133,14 @@ p.bold_string {
 
 p.second_child {
     margin-top: 0;
+}
+
+input.amount {
+    border-color: #77df07;
+    border-top: none;
+    border-right: none;
+    border-left: none;
+    text-align: right;
+    width: 40px;
+    margin-left: 40px;
 }
