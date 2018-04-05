@@ -7,7 +7,7 @@
     <section class="footer-content">
 
         <div class="row contacts-presentations">
-            <div class="column small-12 medium-6 large-7 left-side">
+            <div class="column small-12 medium-7 large-7 left-side">
 
                 <div class="present-icons show-for-medium">
                     <div class="row">
@@ -92,7 +92,7 @@
 
             </div>
 
-            <div class="column small-12 medium-6 large-5 right-side">
+            <div class="column small-12 medium-5 large-5 right-side">
 
                 <div class="socials show-for-medium">
                     <a href="https://www.facebook.com/s3stores/" class="facebook"></a>
@@ -110,8 +110,8 @@
                     </li>
 
                     <li>
-                        <form action="" class="email-subscription">
-                            <input type="email" required value="">
+                        <form class="email-subscription">
+                            <input type="email" name="subscribe[email]" required placeholder="Your Email Address" value="">
                             <button class="waves waves-dark">
                                 Send
                             </button>
@@ -127,11 +127,30 @@
                 <div class="confirmations">
                     <div class="row">
 
-                        <div class="column medium-6 large-6">
-
+                        <div class="column small-12 medium-7 large-7">
+                            <ul class="no-bullet menu-list">
+                                <li class="title-menu">
+                                    Payments Methods
+                                </li>
+                                <li class="payment-methods">
+                                    <img src="/static/frontend/dist/images/icons/p_methods/visa.png" alt="Visa icon">
+                                    <img src="/static/frontend/dist/images/icons/p_methods/mastercard.png" alt="MasterCard icon">
+                                    <img src="/static/frontend/dist/images/icons/p_methods/amex.png" alt="AmericanExpress icon">
+                                    <img src="/static/frontend/dist/images/icons/p_methods/discover_network.png" alt="Discover Network icon">
+                                    <img src="/static/frontend/dist/images/icons/p_methods/visadebit.png" alt="Visa Debit icon">
+                                    <img src="/static/frontend/dist/images/icons/p_methods/paypal.png" alt="PayPal icon">
+                                    <img src="/static/frontend/dist/images/icons/p_methods/echeck.png" alt="eCheck icon">
+                                    <img src="/static/frontend/dist/images/icons/p_methods/check.png" alt="Check icon">
+                                    <img src="/static/frontend/dist/images/icons/p_methods/po.png" alt="Purchase Order request icon">
+                                </li>
+                                <li class="fraud-orders">
+                                    <a href="/ecomerce-fraud">Combating eCommerce Fraud</a>
+                                    <a href="/purchase-orders">Purchase Orders</a>
+                                </li>
+                            </ul>
                         </div>
 
-                        <div class="column medium-6 large-6">
+                        <div class="column small-12 medium-5 large-5 ">
 
                         </div>
 

@@ -6,6 +6,8 @@ footer {
 
 
     .contacts-presentations {
+      margin-bottom: 40px;
+
       @include breakpoint(large) {
         margin-bottom: 10px;
       }
@@ -87,6 +89,18 @@ footer {
       }
     }
 
+    .payment-methods {
+      img {
+        width: 46px;
+        height: 28px;
+
+        @include breakpoint(large) {
+          width: 62px;
+          height: 38px;
+        }
+      }
+    }
+
     .all-times {
       width: 200px;
       color: #ffae21;
@@ -122,7 +136,6 @@ footer {
       position: relative;
       display: inline-block;
       width: 100%;
-      margin-top: rem-calc(5);
 
       input[type=email] {
         width: 90%;
@@ -180,10 +193,19 @@ footer {
       }
     }
 
-    .confirmations {
+    .fraud-orders {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 15px;
+
       @include breakpoint(large) {
-        border-top: 2px solid #2a4a5c;;
+        margin-top: 12px;
       }
+    }
+
+    .confirmations {
+      border-top: 2px solid #2a4a5c;
+      padding-top: 20px;
     }
 
     .menu-list {
@@ -197,6 +219,7 @@ footer {
         font-size: 21px;
         font-weight: 700;
         line-height: 21px;
+        margin-bottom: rem-calc(5);
       }
 
       .toll-free {
