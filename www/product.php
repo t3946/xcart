@@ -467,7 +467,7 @@ Profiler::getInstance()->addPoint();
 
 if (!empty($product_tabs) && is_array($product_tabs)) {
 
-    if (!$oProduct->distributor->hasDefaultShippingZone()) {
+    if ($oManufacturer && !$oManufacturer->hasDefaultShippingZone()) {
         if ($ca = DistributorHelper::getShippingCountries($oProduct->manufacturerid)) {
 
             $c_str = implode(array_map(function ($a) {
