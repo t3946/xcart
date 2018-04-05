@@ -4,6 +4,7 @@ use Modules\Core\Models\GlobalConfigModel;
 use Modules\Order\Models\OrderModel;
 use Modules\Sites\Models\SiteConfigModel;
 use Modules\Sites\Models\SiteModel;
+use Modules\User\Models\CsTipsModel;
 
 define("CIDEV_CRON_START", "CRON");
 global $config, $mail_smarty;
@@ -51,6 +52,20 @@ if ($storefrontsModels = SiteModel::objects()->all()){
                         }
                     }
                 }
+
+                $csTipsModel = new CsTipsModel();
+
+                $csTipsModel->order_id = $orderModel->orderid;
+
+                $csTipsModel->EncryptOrderId();
+                $csTipsModel->calculateOrderTips();
+
+                $encrypted_orderid = $csTipsModel->encrypt;
+                $order_tips = $csTipsModel->order_tips;
+
+                $link = $storefrontModel->domain . "/user/thankyoufororder/?e={$encrypted_orderid}&v={$order_tips}";
+
+
                 if ($send) {
                     $defaultFrom = GlobalConfigModel::objects()->get(['name' => 'thank_you_from']);
                     $configFrom = SiteConfigModel::objects()->get(['name' => 'thank_you_from', 'storefrontid' => $orderModel->storefrontid]);
@@ -71,6 +86,7 @@ if ($storefrontsModels = SiteModel::objects()->all()){
                         $oMail->init();
                         $oMail->addReplaceRule('{{orderid}}', $orderModel->getOrderNumber());
                         $oMail->addReplaceRule('{{c-fullname}}', $orderModel->firstname);
+                        $oMail->addReplaceRule('{{link}}', $link);
                         $oMail->to = $orderModel->email;
                         $oMail->from = (empty($configFrom)) ? $defaultFrom->value : $configFrom->value;
                         $oMail->subject = (empty($configSubject)) ? $defaultSubject->value : $configSubject->value;

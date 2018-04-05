@@ -1,5 +1,8 @@
 {extends 'layout/thank_for_order.tpl'}
-
+{block 'head'}
+    <link href="/static/frontend/production/thankyoufororder.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700" rel="stylesheet">
+{/block}
 {block 'content'}
     <div class="content">
 
