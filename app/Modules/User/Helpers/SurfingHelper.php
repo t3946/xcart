@@ -38,12 +38,12 @@ class SurfingHelper
 
             $sReferalUrl = $sReferalUrl ?: SurfingHelper::getReferUrl();
 
-            if ($sReferalUrl && self::checkReferUrl($sReferalUrl) && ($referer = self::prepareReferUrl($sReferalUrl))) {
+            if ($sReferalUrl && self::checkReferUrl($sReferalUrl))
+            {
+                $referer = self::prepareReferUrl($sReferalUrl);
 
-                $oReferer = ReferrerModel::objects()->filter(['referer' => $referer])->limit(1)->get();
-                if (!$oReferer) {
-                    $oReferer = new ReferrerModel(['referer' => $referer]);
-                }
+                /** @var ReferrerModel $oReferer */
+                $oReferer = ReferrerModel::objects()->getOrCreate(['referer' => $referer]);
                 $oReferer->visits++;
                 $oReferer->save();
 
@@ -137,6 +137,9 @@ class SurfingHelper
     public static function checkReferUrl(string $url) : bool
     {
         $parts = parse_url($url);
+        
+        print_r($parts['host']);
+        print_r(Xcart::app()->request->getHost());
 
         return $parts['host'] != Xcart::app()->request->getHost();
     }
