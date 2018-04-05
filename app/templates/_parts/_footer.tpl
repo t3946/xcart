@@ -95,13 +95,13 @@
             <div class="column small-12 medium-5 large-5 right-side">
 
                 <div class="socials show-for-medium">
-                    <a href="https://www.facebook.com/s3stores/" class="facebook"></a>
-                    <a href="https://www.twitter.com/s3stores/" class="twitter"></a>
-                    <a href="https://www.youtube.com/channel/UCjE6xR1TriWo-hCDsbpvMKg" class="youtube"></a>
-                    <a href="https://www.pinterest.com/s3storesinc/" class="pinterest"></a>
-                    {*<a href="https://www.instagram.com/s3stores/" class="instagram"></a>*}
-                    <a href="https://plus.google.com/118379608603424325840" class="googleplus"></a>
-                    {*<a href="https://www.bbb.org/western-ontario/business-reviews/online-retailer/s3-stores-in-chatham-on-1054268" class="bbb"></a>*}
+                    <a href="https://www.facebook.com/s3stores/" target="_blanck" class="facebook"></a>
+                    <a href="https://www.twitter.com/s3stores/" target="_blanck" class="twitter"></a>
+                    <a href="https://www.youtube.com/channel/UCjE6xR1TriWo-hCDsbpvMKg" target="_blanck" class="youtube"></a>
+                    <a href="https://www.pinterest.com/s3storesinc/" target="_blanck" class="pinterest"></a>
+                    {*<a href="https://www.instagram.com/s3stores/" target="_blanck" ""class="instagram"></a>*}
+                    <a href="https://plus.google.com/118379608603424325840" ctarget="_blanck" lass="googleplus"></a>
+                    {*<a href="https://www.bbb.org/western-ontario/business-reviews/online-retailer/s3-stores-in-chatham-on-1054268" target="_blanck" class="bbb"></a>*}
                 </div>
 
                 <ul class="no-bullet menu-list">
