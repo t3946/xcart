@@ -132,6 +132,15 @@ footer {
       }
     }
 
+    .confidence {
+      display: flex;
+      align-content: center;
+
+      img {
+        margin-right: rem-calc(20);
+      }
+    }
+
     .email-subscription {
       position: relative;
       display: inline-block;

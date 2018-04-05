@@ -130,12 +130,10 @@
 
     </div>
     <div class="off-canvas position-left" id="offCanvasLeft" data-off-canvas data-transition="push">
-
-    {*{cache key = "_parts/_menu_mobile.tpl"}*}
         {insert "_parts/_menu_mobile.tpl"}
-    {*{/cache}*}
     </div>
 </section>
 
+{insert "_parts/_bottom_menu.tpl"}
 {insert "_parts/_footer.tpl"}
 {/block}
