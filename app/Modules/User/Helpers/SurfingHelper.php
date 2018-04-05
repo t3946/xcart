@@ -113,7 +113,7 @@ class SurfingHelper
     public static function prepareReferUrl($url)
     {
         if ($origin = self::getQueryOrigin()) {
-            $urlParts = parse_url($url);
+            $urlParts = self::parse_url($url);
 
             $url .= (empty($urlParts['query']) ? '?' : '&') . $origin;
         }
