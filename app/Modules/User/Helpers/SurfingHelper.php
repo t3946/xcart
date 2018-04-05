@@ -158,12 +158,16 @@ class SurfingHelper
     /**
      * @return array|string
      */
-    private static function parse_url(string $url, $component = -1 )
+    private static function parse_url($url, $component = -1 )
     {
-        if (strpos($url, 'http') !== 0) {
-            $url = '//' . $url;
+        if ($url) {
+            if (strpos($url, 'http') !== 0) {
+                $url = '//' . $url;
+            }
+
+            return parse_url($url, $component);
         }
 
-        return parse_url($url, $component);
+        return [];
     }
 }
