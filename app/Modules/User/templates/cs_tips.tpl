@@ -10,9 +10,9 @@
             <span class="thanks">Thanks for the tip!</span>
             <span class="tips_text"><p>We will send payment to the <br>
                     operator on your behalf</p></span>
-            <form id="send" action="">
-                <input type="hidden" name="e" value="">
-                <input type="hidden" name="v" value="">
+            <form id="send" action="{url 'user:tips_log'}">
+                <input type="hidden" name="e" value="{$order_id}">
+                <input type="hidden" name="v" value="{$tips}">
                 <button class="send_button" form="send"><img src="/static/frontend/production/send_button.png"></button>
             </form>
             <span class="p_s">*From your account will not be written off any money</span>
