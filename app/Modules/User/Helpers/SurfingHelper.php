@@ -141,9 +141,6 @@ class SurfingHelper
     {
         $parts = parse_url($url);
 
-        print_r($parts['host']);
-        print_r(Xcart::app()->request->getHost());
-
         return $parts['host'] != Xcart::app()->request->getHost();
     }
 
