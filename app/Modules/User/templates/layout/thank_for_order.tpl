@@ -53,7 +53,7 @@
             </p>
         </div>
         <div>
-            <p>
+            <p class="second_child">
                 <b>Order Online or Call Us</b><br>
                 (616) 259-5711<br>
                 1-800-929-2431

@@ -127,5 +127,9 @@ p.bold_string {
     display: inline-block;
     padding-top: 0px;
     vertical-align:middle;
-    margin-left: 8%;
+    margin-left: 11%;
+}
+
+p.second_child {
+    margin-top: 0;
 }
