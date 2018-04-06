@@ -16,9 +16,17 @@ class CsTipsController extends FrontendController
 
     public function index()
     {
+        $csTipsModel = new CsTipsModel();
+        $csTipsModel->encrypt = $_GET['e'];
+        $csTipsModel->decryptOrderId();
+        $csTipsModel->calculateOrderTips();
+
+
+
         echo $this->render('cs_tips.tpl',[
             'order_id' => $_GET['e'],
-            'tips' => $_GET['v']
+            'tips' => $_GET['v'],
+            'capture_amount' => $csTipsModel->capture_amount
         ]);
 
     }
@@ -34,6 +42,7 @@ class CsTipsController extends FrontendController
         $order_log_model->orderid = $csTipsModel->order_id;
         $order_log_model->type = 'C';
         $order_log_model->date = time();
+        /** @var TODO Доработать. Логин указывать у клиента (Взять из сессии) login */
         $order_log_model->login = 'order_tips';
         $order_log_model->log = "Customer can get {$_GET['v']} dollars";
 

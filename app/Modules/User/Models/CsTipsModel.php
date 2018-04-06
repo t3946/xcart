@@ -12,6 +12,7 @@ class CsTipsModel extends Model
     public $order_id;
     public $encrypt;
     public $order_tips;
+    public $capture_amount;
 
     public function EncryptOrderId()
     {
@@ -22,8 +23,8 @@ class CsTipsModel extends Model
     {
         if ($order_model = OrderModel::objects()->get(['orderid' => $this->order_id]) ){
 
-            $capture_amount = (new OrderStore($order_model))->getAdditionalCaptureAmount();
-            $this->order_tips = min($capture_amount * 0.02, 50);
+            $this->capture_amount = (new OrderStore($order_model))->getAdditionalCaptureAmount();
+            $this->order_tips = min($this->capture_amount * 0.02, 50);
         }
 
     }

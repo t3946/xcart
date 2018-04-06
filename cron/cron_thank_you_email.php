@@ -60,10 +60,14 @@ if ($storefrontsModels = SiteModel::objects()->all()){
                 $csTipsModel->EncryptOrderId();
                 $csTipsModel->calculateOrderTips();
 
-                $encrypted_orderid = $csTipsModel->encrypt;
-                $order_tips = $csTipsModel->order_tips;
+                $link = $storefrontModel->domain . "/user/thankyoufororder/?e={$csTipsModel->encrypt}&v={$csTipsModel->order_tips}";
 
-                $link = $storefrontModel->domain . "/user/thankyoufororder/?e={$encrypted_orderid}&v={$order_tips}";
+                if ($csTipsModel->capture_amount && $csTipsModel->capture_amount > 0){
+                    $message = "Not Bad. You can paid a tip!";
+                }
+                else {
+                    $message = "You can't do this";
+                }
 
 
                 if ($send) {
@@ -87,6 +91,7 @@ if ($storefrontsModels = SiteModel::objects()->all()){
                         $oMail->addReplaceRule('{{orderid}}', $orderModel->getOrderNumber());
                         $oMail->addReplaceRule('{{c-fullname}}', $orderModel->firstname);
                         $oMail->addReplaceRule('{{link}}', $link);
+                        $oMail->addReplaceRule('{{message}}', $message);
                         $oMail->to = $orderModel->email;
                         $oMail->from = (empty($configFrom)) ? $defaultFrom->value : $configFrom->value;
                         $oMail->subject = (empty($configSubject)) ? $defaultSubject->value : $configSubject->value;

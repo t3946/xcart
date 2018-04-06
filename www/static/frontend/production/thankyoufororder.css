@@ -64,10 +64,44 @@ img.freddie {
     border-radius: 0;
     padding: 0;
     background-color: transparent;
-    margin-top: 20px;
-    margin-bottom: 40px;
     cursor: pointer;
+    margin-left: 40px;
+    margin-bottom: 40px;
 }
+
+
+div.amount {
+    position: relative;
+    width: 70px;
+    float: left;
+}
+
+div.symbol {
+    position: absolute;
+    top: 12px;
+    right: 0;
+}
+
+input.amount {
+    /*border-color: #77df07;*/
+    padding-right: 36px;
+    border-radius: 3px;
+    text-align: right;
+    width: 40px;
+    height: 40px;
+}
+
+input.amount::-webkit-outer-spin-button,
+input.amount::-webkit-inner-spin-button {
+    /* display: none; <- Crashes Chrome on hover */
+    -webkit-appearance: none;
+    margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+}
+
+input[type='number'] {
+    -moz-appearance: textfield;
+}
+
 
 span.p_s {
     color: #aeaeae;
@@ -118,6 +152,7 @@ hr.between {
 
 img.footer_line {
     height: 1px;
+    width: 100%;
 }
 
 p.bold_string {
@@ -133,14 +168,4 @@ p.bold_string {
 
 p.second_child {
     margin-top: 0;
-}
-
-input.amount {
-    border-color: #77df07;
-    border-top: none;
-    border-right: none;
-    border-left: none;
-    text-align: right;
-    width: 40px;
-    margin-left: 40px;
 }
