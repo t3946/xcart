@@ -132,6 +132,9 @@
     <div class="off-canvas position-left" id="offCanvasLeft" data-off-canvas data-transition="push">
         {insert "_parts/_menu_mobile.tpl"}
     </div>
+    <div class="off-canvas position-right" id="offCanvasRight" data-off-canvas data-transition="push">
+        {insert "_parts/_menu_mobile_pages.tpl"}
+    </div>
 </section>
 
 {insert "_parts/_bottom_menu.tpl"}

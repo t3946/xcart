@@ -37430,16 +37430,25 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
         Waves.attach('.waves');
         Waves.init();
 
-        var $offCanvas = $('#offCanvasLeft');
+        var $offCanvasLeft = $('#offCanvasLeft');
+        var $offCanvasRight = $('#offCanvasRight');
 
         $(document).on('swipe', function (e, Dx, Dy, angle) {
             if (e.target.closest('#main_wrapper')) {
                 if ((0, _isMedia2.default)('medium') && (0, _isTouch2.default)()) {
                     if (angle < 10) {
                         if (Dx === 1 && Dy === 0) {
-                            $offCanvas.foundation('open', e);
+                            if ($offCanvasRight.hasClass('is-open')) {
+                                $offCanvasRight.foundation('close');
+                            } else {
+                                $offCanvasLeft.foundation('open', e);
+                            }
                         } else if (Dx === -1 && Dy === 0) {
-                            $offCanvas.foundation('close');
+                            if ($offCanvasLeft.hasClass('is-open')) {
+                                $offCanvasLeft.foundation('close');
+                            } else {
+                                $offCanvasRight.foundation('open', e);
+                            }
                         }
                     }
                 }

@@ -34,17 +34,28 @@ import documentReady from "./utils/documentReady";
         Waves.attach('.waves');
         Waves.init();
 
-        let $offCanvas = $('#offCanvasLeft');
+        let $offCanvasLeft  = $('#offCanvasLeft');
+        let $offCanvasRight = $('#offCanvasRight');
 
         $(document).on('swipe', function(e, Dx, Dy, angle) {
             if (e.target.closest('#main_wrapper')) {
                 if (isMedia('medium') && isTouch()) {
                     if (angle < 10) {
                         if (Dx === 1 && Dy === 0) { //right
-                            $offCanvas.foundation('open', e);
+                            if ($offCanvasRight.hasClass('is-open')) {
+                                $offCanvasRight.foundation('close');
+                            }
+                            else {
+                                $offCanvasLeft.foundation('open', e);
+                            }
                         }
                         else if (Dx === -1 && Dy === 0) {
-                            $offCanvas.foundation('close');
+                            if ($offCanvasLeft.hasClass('is-open')) {
+                                $offCanvasLeft.foundation('close');
+                            }
+                            else {
+                                $offCanvasRight.foundation('open', e);
+                            }
                         }
                     }
                 }

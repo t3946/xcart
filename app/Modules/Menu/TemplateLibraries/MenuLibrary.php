@@ -93,6 +93,39 @@ class MenuLibrary extends TemplateLibrary
                 ],
             ];
         }
+        else if ('pages-menu') {
+            return [
+                [
+                    'name' => 'Shopping',
+                    'items' => [
+                        [
+                            'name' => 'Shipping & Delivery',
+                            'url' => 'shipping-delivery',
+                            'items' => [],
+                        ],
+                        [
+                            'name' => 'Our Price Guarantee',
+                            'url' => 'our-price-guarantee',
+                            'items' => [],
+                        ],
+                        [
+                            'name' => 'Sales Taxes',
+                            'url' => 'Sales-taxes',
+                            'items' => [],
+                        ],
+                    ],
+                ],
+                [
+                    'name' => 'Payments',
+                    'items' => [
+                        [
+
+                        ],
+                    ],
+                ]
+            ];
+        }
+
         else if ('footer-menu') {
             return [
                 [

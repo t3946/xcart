@@ -5,6 +5,11 @@
     text-transform: uppercase;
     padding:  0 rem-calc(20);
 
+    &.orange {
+      background-color: #ffae21;
+      color: black;
+    }
+
     h3 {
       font-size: rem-calc(19);
       line-height: rem-calc(46);
