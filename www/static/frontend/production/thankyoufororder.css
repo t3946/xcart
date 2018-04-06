@@ -83,7 +83,7 @@ div.symbol {
 }
 
 input.amount {
-    /*border-color: #77df07;*/
+    border: 1px solid #cbcbcb;
     padding-right: 36px;
     border-radius: 3px;
     text-align: right;
