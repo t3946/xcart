@@ -56,14 +56,17 @@ if ($storefrontsModels = SiteModel::objects()->all()){
                 $csTipsModel = new CsTipsModel();
 
                 $csTipsModel->order_id = $orderModel->orderid;
+                $csTipsModel->getHash();
 
-                $csTipsModel->EncryptOrderId();
-                $csTipsModel->calculateOrderTips();
+                $mass = [
+                    'order' => $orderModel->orderid,
+                    'hash' => $csTipsModel->hash
+                ];
 
-                $link = $storefrontModel->domain . "/user/thankyoufororder/?e={$csTipsModel->encrypt}&v={$csTipsModel->order_tips}";
+                $link = $storefrontModel->domain . \Xcart\App\Main\Xcart::app()->router->url('user:cs_tips', [], $mass);
 
                 if ($csTipsModel->capture_amount && $csTipsModel->capture_amount > 0){
-                    $message = "Not Bad. You can paid a tip!";
+                    $message = "Not Bad. You can paid a tip! Click here: {$link}";
                 }
                 else {
                     $message = "You can't do this";
@@ -89,7 +92,6 @@ if ($storefrontsModels = SiteModel::objects()->all()){
                         $oMail->init();
                         $oMail->addReplaceRule('{{orderid}}', $orderModel->getOrderNumber());
                         $oMail->addReplaceRule('{{c-fullname}}', $orderModel->firstname);
-                        $oMail->addReplaceRule('{{tips_link}}', $link);
                         $oMail->addReplaceRule('{{message}}', $message);
                         $oMail->to = $orderModel->email;
                         $oMail->from = (empty($configFrom)) ? $defaultFrom->value : $configFrom->value;

@@ -13,10 +13,16 @@ class CsTipsModel extends Model
     public $encrypt;
     public $order_tips;
     public $capture_amount;
+    public $hash;
 
-    public function EncryptOrderId()
+    public function getHash()
     {
-        $this->encrypt =  base64_encode($this->order_id);
+        /** @var OrderModel $order_model */
+        if ($order_model = OrderModel::objects()->get(['orderid' => $this->order_id]) ){
+            $login = $order_model->login;
+            $date = $order_model->date;
+            $this->hash = md5($login.$date);
+        }
     }
 
     public function calculateOrderTips()
@@ -27,9 +33,5 @@ class CsTipsModel extends Model
             $this->order_tips = min($this->capture_amount * 0.02, 50);
         }
 
-    }
-
-    public function decryptOrderId(){
-        $this->order_id = base64_decode($this->encrypt);
     }
 }

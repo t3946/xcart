@@ -8,11 +8,15 @@
 
         <div class="thanks">
             <span class="thanks">You can contribute any amount for a tip.</span>
-            <span class="tips_text"><p>We will send payment to the <br>
-                    operator on your behalf</p></span>
-            <form id="send" action="{url 'user:tips_log'}">
+            <span class="tips_text">
+                <p>We will send payment to the <br>
+                    operator on your behalf
+                </p>
+            </span>
+            <form id="send" method="post" action="{url 'user:tips_log'}" enctype="multipart/form-data">
                 <input type="hidden" name="e" value="{$order_id}">
-                <div class="amount"><input class="amount" step="any" max="{$capture_amount}" min="0" type="number" name="v" value="{$tips}"><div class="symbol">$</div></div>
+                <input type="hidden" name="v" value="{$hash}">
+                <div class="amount"><input class="amount" step="any" max="{$capture_amount}" min="0" type="number" name="cash" value="{$tips}"><div class="symbol">$</div></div>
                 <button class="send_button" form="send"><img src="/static/frontend/production/send_button.png"></button>
             </form>
             <span class="p_s">*From your account will not be written off any money</span>

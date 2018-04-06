@@ -11,41 +11,43 @@ use Xcart\App\Main\Xcart;
 
 class CsTipsController extends FrontendController
 {
-    const PRIVATE_KEY = "y5gzWWCcqyVVQByEzG/mRApTaW6l1tvq2ngOb5b3qeA=";
-    const PUBLIC_KEY = "2r7bQsPMLds=";
-
-
     public function index()
     {
+        $request = $this->getRequest();
+
         $csTipsModel = new CsTipsModel();
-        $csTipsModel->encrypt = $_GET['e'];
-        $csTipsModel->decryptOrderId();
+
+        $csTipsModel->order_id = $request->get->get('order');
         $csTipsModel->calculateOrderTips();
 
-
-
         echo $this->render('cs_tips.tpl',[
-            'order_id' => $_GET['e'],
-            'tips' => $_GET['v'],
-            'capture_amount' => $csTipsModel->capture_amount
+            'order_id' => $request->get->get('order'),
+            'hash' => $request->get->get('hash'),
+            'capture_amount' => $csTipsModel->capture_amount,
+            'tips' => $csTipsModel->order_tips
         ]);
 
     }
 
     public function tipsLog()
     {
+        $request = $this->getRequest();
+
         $csTipsModel = new CsTipsModel();
-        $csTipsModel->encrypt = $_GET['e'];
-        $csTipsModel->decryptOrderId();
+        $csTipsModel->order_id = $request->post->get('order');
+        $csTipsModel->getHash();
+
+        if ($request->post->get('hash') != $csTipsModel->hash){
+            $this->getRequest()->redirect("/");
+        }
 
         $order_log_model = new OrderLogModel();
 
         $order_log_model->orderid = $csTipsModel->order_id;
         $order_log_model->type = 'C';
         $order_log_model->date = time();
-        /** @var TODO Доработать. Логин указывать у клиента (Взять из сессии) login */
         $order_log_model->login = Xcart::app()->user->login;
-        $order_log_model->log = "Customer can get {$_GET['v']} dollars";
+        $order_log_model->log = "Customer can get {$request->post->get('cash')} dollars";
 
         $order_log_model->save();
 
