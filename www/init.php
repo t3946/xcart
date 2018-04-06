@@ -823,13 +823,6 @@ $smarty->assign('FROOGLE_TITLE_LENGTH', FROOGLE_TITLE_LENGTH);
 #
 $smarty->assign('map_bridge_mouseover_text', str_replace("\r", '<br />', $config['Product_Page']['map_bridge_mouseover_text']));
 
-#
-# Clean temporary data
-#
-if ((rand() % 100) == 0) {
-    db_query("DELETE FROM $sql_tbl[temporary_data] WHERE expire<UNIX_TIMESTAMP(NOW())");
-}
-
 Profiler::getInstance()->addPoint();
 #
 # Remember visitor for a long time period
