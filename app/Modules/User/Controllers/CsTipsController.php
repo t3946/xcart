@@ -7,6 +7,7 @@ use Modules\Order\Models\OrderLogModel;
 use Modules\Order\Models\OrderModel;
 use Modules\User\Models\CsTipsModel;
 use Xcart\App\Controller\FrontendController;
+use Xcart\App\Main\Xcart;
 
 class CsTipsController extends FrontendController
 {
@@ -43,7 +44,7 @@ class CsTipsController extends FrontendController
         $order_log_model->type = 'C';
         $order_log_model->date = time();
         /** @var TODO Доработать. Логин указывать у клиента (Взять из сессии) login */
-        $order_log_model->login = 'order_tips';
+        $order_log_model->login = Xcart::app()->user->login;
         $order_log_model->log = "Customer can get {$_GET['v']} dollars";
 
         $order_log_model->save();

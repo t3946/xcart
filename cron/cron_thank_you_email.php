@@ -69,7 +69,6 @@ if ($storefrontsModels = SiteModel::objects()->all()){
                     $message = "You can't do this";
                 }
 
-
                 if ($send) {
                     $defaultFrom = GlobalConfigModel::objects()->get(['name' => 'thank_you_from']);
                     $configFrom = SiteConfigModel::objects()->get(['name' => 'thank_you_from', 'storefrontid' => $orderModel->storefrontid]);
@@ -90,7 +89,7 @@ if ($storefrontsModels = SiteModel::objects()->all()){
                         $oMail->init();
                         $oMail->addReplaceRule('{{orderid}}', $orderModel->getOrderNumber());
                         $oMail->addReplaceRule('{{c-fullname}}', $orderModel->firstname);
-                        $oMail->addReplaceRule('{{link}}', $link);
+                        $oMail->addReplaceRule('{{tips_link}}', $link);
                         $oMail->addReplaceRule('{{message}}', $message);
                         $oMail->to = $orderModel->email;
                         $oMail->from = (empty($configFrom)) ? $defaultFrom->value : $configFrom->value;
