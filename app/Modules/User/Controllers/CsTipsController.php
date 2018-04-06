@@ -36,6 +36,7 @@ class CsTipsController extends FrontendController
         $csTipsModel = new CsTipsModel();
         $csTipsModel->order_id = $request->post->get('order');
         $csTipsModel->getHash();
+//        dd($csTipsModel->order_id);
 
         if ($request->post->get('hash') != $csTipsModel->hash){
             $this->getRequest()->redirect("/");

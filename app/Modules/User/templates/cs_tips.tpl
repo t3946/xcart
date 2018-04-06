@@ -14,8 +14,8 @@
                 </p>
             </span>
             <form id="send" method="post" action="{url 'user:tips_log'}" enctype="multipart/form-data">
-                <input type="hidden" name="e" value="{$order_id}">
-                <input type="hidden" name="v" value="{$hash}">
+                <input type="hidden" name="order" value="{$order_id}">
+                <input type="hidden" name="hash" value="{$hash}">
                 <div class="amount"><input class="amount" step="any" max="{$capture_amount}" min="0" type="number" name="cash" value="{$tips}"><div class="symbol">$</div></div>
                 <button class="send_button" form="send"><img src="/static/frontend/production/send_button.png"></button>
             </form>
