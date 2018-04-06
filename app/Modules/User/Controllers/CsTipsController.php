@@ -3,6 +3,8 @@
 
 namespace Modules\User\Controllers;
 
+use Modules\Core\Models\GlobalConfigModel;
+use Modules\Order\Helpers\OrderTagEventHelper;
 use Modules\Order\Models\OrderLogModel;
 use Modules\Order\Models\OrderModel;
 use Modules\User\Models\CsTipsModel;
@@ -36,11 +38,14 @@ class CsTipsController extends FrontendController
         $csTipsModel = new CsTipsModel();
         $csTipsModel->order_id = $request->post->get('order');
         $csTipsModel->getHash();
-//        dd($csTipsModel->order_id);
 
         if ($request->post->get('hash') != $csTipsModel->hash){
             $this->getRequest()->redirect("/");
         }
+
+        $globalConfigModel = GlobalConfigModel::objects()->get(['name' => 'tag_customer_tips']);
+        $ststus_id = $globalConfigModel->value;
+        OrderTagEventHelper::orderTagEvent($ststus_id, $request->post->get('order'));
 
         $order_log_model = new OrderLogModel();
 
