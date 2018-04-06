@@ -786,7 +786,7 @@ SQL
 
                 if ($oProduct && $mv_resource = $oProduct->sf_moves->filter(['resource_type' => ProductsSfMovesModel::RESOURCE_TYPE_CATEGORY])->order(['-batch_id'])->limit(1)->get()) {
 
-                    \Xcart\App\Main\Xcart::app()->request->redirect($oProduct->getAbsoluteUrl(), [], 301);
+                    \Xcart\App\Main\Xcart::app()->request->redirect($oProduct->getAbsoluteUrl(true), [], 301);
 
                 }
 
