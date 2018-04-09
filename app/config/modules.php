@@ -8,6 +8,7 @@ return [
     'Main',
     'Meta',
     'Menu',
+    'Slider',
     'Mail',
     'Demo',
     'Dashboard',

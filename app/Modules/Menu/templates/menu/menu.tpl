@@ -18,7 +18,7 @@
             <span>{$item.name}</span>
         {/if}
 
-        {if $item.items!}
+        {if $item.items}
             <ul class="childrens {"level-"~$level}">
                 {include "menu/menu.tpl" items=$item.items level=$level+1}
             </ul>

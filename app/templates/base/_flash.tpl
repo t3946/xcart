@@ -6,10 +6,12 @@
     </div>
 </div>
 
-<script>
-    window['flashStack'] = [];
+{add_asset_block type="js"}
+    <script>
+        window['flashStack'] = [];
 
-    {foreach $messages as $item}
-    window['flashStack'].push({ 'message': "{$item['message']|escape}", 'type': "{$item['type']|escape}" });
-    {/foreach}
-</script>
+        {foreach $messages as $item}
+        window['flashStack'].push({ 'message': "{$item['message']|escape}", 'type': "{$item['type']|escape}" });
+        {/foreach}
+    </script>
+{/add_asset_block}

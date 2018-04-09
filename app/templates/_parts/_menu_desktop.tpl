@@ -12,7 +12,8 @@
                     <ul class="no-bullet">
 
                         {foreach $.getCategoryMenu() as $category index=$index}
-                            {set $has_banner = rand(0,1)}
+                            {*{set $has_banner = rand(0,1)}*}
+                            {set $has_banner = false}
                             {set $submenu = $.getDepartmentSubmenu($category, $has_banner)}
 
                             <li class="category-menu-item {if $submenu|count > 0}has-child{/if}" data-hover-toggle="top-csm-{$index}">

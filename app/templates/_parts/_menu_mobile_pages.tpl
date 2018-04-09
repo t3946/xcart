@@ -1,29 +1,36 @@
-<div class="menu-title orange">
+<div class="menu-title">
     <h3>Pages</h3>
 </div>
 <ul class="accordion" data-accordion data-allow-all-closed="true" data-multi-expand="true">
-    {foreach $.getCategoryMenu() as $category}
-        {if $category->active_product_count > 0}
-            {set $subcats = $category->getSubcategories()}
-            {set $has_childs = ($subcats|count > 0)}
+    {set $menu_items = $.get_menu_items('pages-menu') }
+    {foreach $menu_items as $item}
+
+            {set $childs = $item.items}
+            {set $has_childs = ($childs|count > 0)}
 
             <li class="accordion-item" {if $has_childs }data-accordion-item{/if}>
-                <a class="accordion-title" {if !$has_childs}href="{$category->getAbsoluteUrl()}" {/if}>
+                <a class="accordion-title" {if !$has_childs}href="{$item.link}" {/if}>
                     <div class="row">
-                        <div class="columns small-2 medium-1">
-                            {*<img src="{$category->image}" alt="{$category->category}">*}
-                        </div>
-                        <div class="columns small-10 medium-11">
-                            <span>{$category->category}</span>
+                        <div class="columns small-12 ">
+                            <span>{$item.name}</span>
                         </div>
                     </div>
                 </a>
+
                 {if $has_childs}
                     <div class="accordion-content" data-tab-content>
-                        {include "_parts/_submenu_mobile.tpl" items=$subcats}
+                        <ul class="no-bullet">
+                            {foreach $childs as $item}
+                                    <li>
+                                        <a href="{$item.link}">
+                                            {$item.name}
+                                        </a>
+                                    </li>
+                            {/foreach}
+                        </ul>
                     </div>
                 {/if}
             </li>
-        {/if}
+
     {/foreach}
 </ul>

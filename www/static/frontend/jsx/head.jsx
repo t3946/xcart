@@ -46,4 +46,6 @@ import '../../vendors/wNumb.js'
     // window['PhotoSwipe'] = PhotoSwipe;
     // window['PhotoSwipeUI_Default'] = PhotoSwipeUI_Default;
     // window['Fotorama'] = Fotorama;
+
+    console.log( $('footer').height() );
 })();

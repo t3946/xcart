@@ -14,6 +14,7 @@ import Loader from "./components/Loader";
 import isTouch from "./utils/isTouch";
 import isMedia from "./utils/isMedia";
 import documentReady from "./utils/documentReady";
+import funcRecalcFooter from "./components/footer"; "./components/footer";
 
 // require('preact/devtools');
 
@@ -30,6 +31,9 @@ import documentReady from "./utils/documentReady";
         window['loader'] = new Loader;
 
         isMedia('medium', '(max-width: 1023px)');
+
+
+        funcRecalcFooter();
 
         Waves.attach('.waves');
         Waves.init();
@@ -62,41 +66,62 @@ import documentReady from "./utils/documentReady";
             }
         });
 
-        $(document).on('click', '.show_more', function(e){
-            let $this = $(this);
-            let $target = $($this.data('target'));
+        $(document)
+            .on('click', '.show_more', function(e){
+                let $this = $(this);
+                let $target = $($this.data('target'));
 
-            if (!$target.hasClass('full')) {
-                $target.addClass('full');
+                if (!$target.hasClass('full')) {
+                    $target.addClass('full');
 
-                $this.html($this.data('text-less'));
+                    $this.html($this.data('text-less'));
+                }
+                else {
+                    $target.removeClass('full');
+
+                    $this.html($this.data('text-more'));
+                }
+            });
+
+        $(window)
+            .on('resize', function(){
+                funcRecalcFooter();
+            });
+
+
+        loader.detach(()=>{
+            $('.off-canvas').removeClass('hide');
+
+            $(document).foundation();
+
+            while(window.app.afterReady.length) {
+                (window.app.afterReady.pop())();
             }
-            else {
-                $target.removeClass('full');
 
-                $this.html($this.data('text-more'));
-            }
+            foundationRegisterCustomEvents();
+
+            funcRecalcFooter();
         });
-
-
-        $(document).foundation();
-
-        while(window.app.afterReady.length) {
-            (window.app.afterReady.pop())();
-        }
 
         setTimeout(()=>{
             WebFont.load({
                 google: {
-                    families: ['Lato:300,300i,400,400i,700,700i,900']
+                    families: ['Lato:300i,400,700']
                 }
             });
 
-            foundationRegisterCustomEvents();
             $(document).trigger('component.cart.check');
 
+            setTimeout(()=>{
+                WebFont.load({
+                    google: {
+                        families: ['Lato:300,300i,400,400i,700,700i,900']
+                    }
+                });
+            }, 2000);
         }, 100);
 
-        loader.detach();
+
+
     })
 })();

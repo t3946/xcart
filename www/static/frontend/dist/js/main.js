@@ -37411,7 +37411,13 @@ var _documentReady = __webpack_require__(162);
 
 var _documentReady2 = _interopRequireDefault(_documentReady);
 
+var _footer = __webpack_require__(163);
+
+var _footer2 = _interopRequireDefault(_footer);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+"./components/footer";
 
 (function () {
     (0, _documentReady2.default)(function () {
@@ -37426,6 +37432,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
         window['loader'] = new _Loader2.default();
 
         (0, _isMedia2.default)('medium', '(max-width: 1023px)');
+
+        (0, _footer2.default)();
 
         Waves.attach('.waves');
         Waves.init();
@@ -37470,24 +37478,41 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
             }
         });
 
-        $(document).foundation();
+        $(window).on('resize', function () {
+            (0, _footer2.default)();
+        });
 
-        while (window.app.afterReady.length) {
-            window.app.afterReady.pop()();
-        }
+        loader.detach(function () {
+            $('.off-canvas').removeClass('hide');
+
+            $(document).foundation();
+
+            while (window.app.afterReady.length) {
+                window.app.afterReady.pop()();
+            }
+
+            (0, _foundation_events2.default)();
+
+            (0, _footer2.default)();
+        });
 
         setTimeout(function () {
             WebFont.load({
                 google: {
-                    families: ['Lato:300,300i,400,400i,700,700i,900']
+                    families: ['Lato:300i,400,700']
                 }
             });
 
-            (0, _foundation_events2.default)();
             $(document).trigger('component.cart.check');
-        }, 100);
 
-        loader.detach();
+            setTimeout(function () {
+                WebFont.load({
+                    google: {
+                        families: ['Lato:300,300i,400,400i,700,700i,900']
+                    }
+                });
+            }, 2000);
+        }, 100);
     });
 })();
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
@@ -37567,6 +37592,9 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
     window['Waves'] = _Waves2.default;
     window['WebFont'] = _webfontloader2.default;
     window['noUiSlider'] = _noUiSlider2.default;
+
+
+    console.log((0, _jquery2.default)('footer').height());
 })();
 
 /***/ }),
@@ -57798,6 +57826,27 @@ function documentReady(callback) {
         callback();
     }
 }
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
+
+/***/ }),
+/* 163 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function($) {
+
+exports.__esModule = true;
+
+var funcRecalcFooter = function funcRecalcFooter() {
+    var footerHeight = $('footer').height();
+
+    console.log(footerHeight);
+
+    $('#content-wrapper').css('margin-bottom', -footerHeight);
+    $('.off-canvas-content .push').css('height', footerHeight);
+};
+
+exports.default = funcRecalcFooter;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ })

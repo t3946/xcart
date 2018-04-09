@@ -78,6 +78,7 @@
         <section class="featured-products slider-horizontal" id="featured-products-block">
             <h3 class="featured-products__title section__title slider-horizontal__title">Featured products</h3>
             <a href="#" class="featured-products__view-all slider-horizontal__view-all section__view-all">View all</a>
+
             <div class="featured-products__active-wrapper slider-horizontal__active-wrapper">
                 <div class="featured-products__frame slider-horizontal__frame" id="featured-prod_frame">
 
