@@ -7,11 +7,20 @@
     <div class="content">
 
         <div class="thanks">
-            <span class="thanks">Thanks for the tip!</span>
-            <span class="tips_text"><p>Come to us again</p></span>
+            <div class="text_block">
+                <span class="thanks">
+                    Thank you for your tip!
+                </span>
+                {*<span class="tips_text">*}
+                    <p class="thanks">
+                        We appreciate your support. <br>
+                        We are looking forward to seeing you again.
+                    </p>
+                {*</span>*}
+            </div>
         </div>
         <div class="freddie">
-            <img class="freddie" src="/static/frontend/production/freddy.png">
+            <img class="freddie_good" src="/static/frontend/production/freddie_good.png">
         </div>
         <div style="clear: both;"></div>
     </div>
