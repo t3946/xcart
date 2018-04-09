@@ -6,17 +6,15 @@
 {block 'content'}
     <div class="content">
 
-        <div class="thanks">
+        <div class="thanks tips_done">
             <div class="text_block">
-                <span class="thanks">
+                <span class="thanks tips_done">
                     Thank you for your tip!
                 </span>
-                {*<span class="tips_text">*}
                     <p class="thanks">
                         We appreciate your support. <br>
                         We are looking forward to seeing you again.
                     </p>
-                {*</span>*}
             </div>
         </div>
         <div class="freddie">

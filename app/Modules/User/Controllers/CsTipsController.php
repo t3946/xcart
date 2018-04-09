@@ -26,7 +26,7 @@ class CsTipsController extends FrontendController
             'order_id' => $request->get->get('order'),
             'hash' => $request->get->get('hash'),
             'capture_amount' => $csTipsModel->capture_amount,
-            'tips' => $csTipsModel->order_tips
+            'tips' => $csTipsModel->tips
         ]);
 
     }

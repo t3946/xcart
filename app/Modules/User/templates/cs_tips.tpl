@@ -6,20 +6,22 @@
 {block 'content'}
     <div class="content">
 
-        <div class="thanks">
-            <span class="thanks">You can contribute any amount for a tip.</span>
+        <div class="thanks main_tips">
+            <span class="thanks main_tips">Thank you for your purchase.</span>
             <span class="tips_text">
-                <p>We will send payment to the <br>
-                    operator on your behalf
+                <p>If you are satisfied woith our customer service team,<br>
+                    feel free to leave a tip. The payment will go straight<br>
+                    to customer service from your behalf.
                 </p>
             </span>
             <form id="send" method="post" action="{url 'user:tips_log'}" enctype="multipart/form-data">
                 <input type="hidden" name="order" value="{$order_id}">
                 <input type="hidden" name="hash" value="{$hash}">
-                <div class="amount"><input class="amount" step="any" max="{$capture_amount}" min="0" type="number" name="cash" value="{$tips}"><div class="symbol">$</div></div>
-                <button class="send_button" form="send"><img src="/static/frontend/production/send_button.png"></button>
+                {foreach $tips as $key => $value}
+                    <input type="submit" class="send" name="cash" value="$ {$value}">
+                {/foreach}
             </form>
-            <span class="p_s">*From your account will not be written off any money</span>
+            <a href="{url 'user:tips_log'}"><span class="p_s">No, Thanks</span></a>
         </div>
         <div class="freddie">
             <img class="freddie" src="/static/frontend/production/freddy.png">

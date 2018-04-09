@@ -38,11 +38,31 @@ div.thanks {
     height: 415px;
     float: left;
     font-family: 'Lato', sans-serif;
+}
+
+div.main_tips {
+    text-align: center;
+}
+
+div.tips_done {
     background-image: url("/static/frontend/production/strelk.svg");
     background-size: 785px 415px;
 }
 
 span.thanks {
+    color: #ffb400;
+    text-transform: uppercase;
+    font-size: 52px;
+    /*margin-top: 50px;*/
+    /*margin-left: 25px;*/
+}
+
+span.main_tips {
+    font-size: 46px;
+}
+
+
+span.tips_done {
     color: #ffb400;
     text-transform: uppercase;
     font-size: 52px;
@@ -65,7 +85,7 @@ span.second {
 }
 
 span.tips_text {
-    font-size: 36px;
+    font-size: 30px;
 }
 
 div.freddie {
@@ -84,11 +104,14 @@ img.freddie_good {
     height: 500px;
 }
 
-.send_button {
-    border: 0;
+.send {
+    border: 1px solid #77df07;
     border-radius: 0;
-    padding: 0;
-    background-color: transparent;
+    padding: 15px 50px;
+    font-size: 18px;
+    /*padding: 0;*/
+    background-color: #77df07;
+    color: #ffffff;
     cursor: pointer;
     margin-left: 40px;
     margin-bottom: 40px;
@@ -129,6 +152,7 @@ input[type='number'] {
 
 
 span.p_s {
+    text-decoration: underline;
     color: #aeaeae;
 }
 

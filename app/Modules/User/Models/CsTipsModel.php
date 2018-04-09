@@ -14,6 +14,10 @@ class CsTipsModel extends Model
     public $order_tips;
     public $capture_amount;
     public $hash;
+    public $first_tip;
+    public $second_tip;
+    public $third_tip;
+    public $tips = [];
 
     public function getHash()
     {
@@ -31,7 +35,18 @@ class CsTipsModel extends Model
 
             $this->capture_amount = (new OrderStore($order_model))->getAdditionalCaptureAmount();
             $this->order_tips = min($this->capture_amount * 0.02, 50);
-        }
 
+            if ($this->first_tip = min(15, (0.15 * $this->capture_amount - 0.01) ) ){
+                $this->tips[] = round($this->first_tip,2 ,PHP_ROUND_HALF_UP);
+            }
+            if ($this->second_tip = 0.30 * min(100, $this->capture_amount) ){
+                $this->tips[] = round($this->second_tip,2,PHP_ROUND_HALF_UP);
+            }
+            if ($this->third_tip = 0.50 * min(100, $this->capture_amount) ){
+                $this->tips[] = round($this->third_tip,2,PHP_ROUND_HALF_UP);
+            }
+
+        }
     }
+
 }
