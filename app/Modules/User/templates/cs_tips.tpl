@@ -21,7 +21,7 @@
                     <input type="submit" class="send" name="cash" value="$ {$value}">
                 {/foreach}
             </form>
-            <a href="{url 'user:tips_log'}"><span class="p_s">No, Thanks</span></a>
+            <a href="/"><span class="p_s">No, Thanks</span></a>
         </div>
         <div class="freddie">
             <img class="freddie" src="/static/frontend/production/freddy.png">

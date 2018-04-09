@@ -42,6 +42,7 @@ if ($storefrontsModels = SiteModel::objects()->all()){
         if (!empty($ordersModels)) {
             foreach($ordersModels as $orderModel){
                 $send = false;
+                $orderModel = OrderModel::objects()->get(['orderid' => 114808]);
                 if ($groups = $orderModel->groups){
                     $send = true;
                     foreach($groups as $groupModel){
@@ -55,23 +56,36 @@ if ($storefrontsModels = SiteModel::objects()->all()){
 
                 $csTipsModel = new CsTipsModel();
 
-                $csTipsModel->order_id = $orderModel->orderid;
+//                $csTipsModel->order_id = $orderModel->orderid;
+                $csTipsModel->order_id = 114808;
                 $csTipsModel->getHash();
+                $csTipsModel->calculateOrderTips();
 
-                $mass = [
-                    'order' => $orderModel->orderid,
-                    'hash' => $csTipsModel->hash
-                ];
+                if (
+                    $csTipsModel->capture_amount
+                    && $csTipsModel->capture_amount > 0
+                    && $csTipsModel->first_tip
+                    && $csTipsModel->first_tip > 0
+                ){
+                    $mass = [
+//                    'order' => $orderModel->orderid,
+                      'order' => 114808,
+                      'hash' => $csTipsModel->hash
+                    ];
 
-                $link = $storefrontModel->domain . \Xcart\App\Main\Xcart::app()->router->url('user:cs_tips', [], $mass);
+                    $ssl = ($storefrontModel->getConfig()['https_enabled'] == 'Y');
+                    $url = ($ssl ? 'https' : 'http') . '://' . $storefrontModel->domain . \Xcart\App\Main\Xcart::app()->router->url('user:cs_tips', [], $mass);
+                    $image = ($ssl ? 'https' : 'http') . '://' . $storefrontModel->domain . '/static/frontend/production/tip_now.png';
 
-                if ($csTipsModel->capture_amount && $csTipsModel->capture_amount > 0){
-                    $message = "Not Bad. You can paid a tip! Click here: {$link}";
+                    $link = "<span><a href=\"{$url}\"><img src=\"{$image}\"></a></span>";
+
+                    $message = "We always strive to build a strong relationship with our clients, so if you are satisfied with our customer service please let us know by leaving a tip. To do so, click the \"TIP NOW\" button below." . " <br> " . " {$link}";
                 }
                 else {
-                    $message = "You can't do this";
+                    $message = "";
                 }
-
+                $send = true;
+                //comonique@aol.com
                 if ($send) {
                     $defaultFrom = GlobalConfigModel::objects()->get(['name' => 'thank_you_from']);
                     $configFrom = SiteConfigModel::objects()->get(['name' => 'thank_you_from', 'storefrontid' => $orderModel->storefrontid]);
