@@ -56,8 +56,7 @@ if ($storefrontsModels = SiteModel::objects()->all()){
 
                 $csTipsModel = new CsTipsModel();
 
-//                $csTipsModel->order_id = $orderModel->orderid;
-                $csTipsModel->order_id = 114808;
+                $csTipsModel->order_id = $orderModel->orderid;
                 $csTipsModel->getHash();
                 $csTipsModel->calculateOrderTips();
 
@@ -66,10 +65,10 @@ if ($storefrontsModels = SiteModel::objects()->all()){
                     && $csTipsModel->capture_amount > 0
                     && $csTipsModel->first_tip
                     && $csTipsModel->first_tip > 0
-                ){
+                )
+                {
                     $mass = [
-//                    'order' => $orderModel->orderid,
-                      'order' => 114808,
+                    'order' => $orderModel->orderid,
                       'hash' => $csTipsModel->hash
                     ];
 
@@ -84,8 +83,8 @@ if ($storefrontsModels = SiteModel::objects()->all()){
                 else {
                     $message = "";
                 }
-                $send = true;
-                //comonique@aol.com
+
+
                 if ($send) {
                     $defaultFrom = GlobalConfigModel::objects()->get(['name' => 'thank_you_from']);
                     $configFrom = SiteConfigModel::objects()->get(['name' => 'thank_you_from', 'storefrontid' => $orderModel->storefrontid]);
