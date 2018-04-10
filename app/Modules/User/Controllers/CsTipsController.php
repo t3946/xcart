@@ -51,7 +51,7 @@ class CsTipsController extends FrontendController
             $order_log_model->type = 'C';
             $order_log_model->date = time();
             $order_log_model->login = Xcart::app()->user->login;
-            $order_log_model->log = "Customer don't get tips, but see the page";
+            $order_log_model->log = "Customer left no tips";
 
             $order_log_model->save();
 
@@ -69,7 +69,7 @@ class CsTipsController extends FrontendController
         $order_log_model->type = 'C';
         $order_log_model->date = time();
         $order_log_model->login = Xcart::app()->user->login;
-        $order_log_model->log = "Customer can get {$request->post->get('cash')} dollars";
+        $order_log_model->log = "Customer gives {$request->post->get('cash')} dollars";
 
         $order_log_model->save();
 
