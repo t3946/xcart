@@ -42,7 +42,6 @@ if ($storefrontsModels = SiteModel::objects()->all()){
         if (!empty($ordersModels)) {
             foreach($ordersModels as $orderModel){
                 $send = false;
-                $orderModel = OrderModel::objects()->get(['orderid' => 114808]);
                 if ($groups = $orderModel->groups){
                     $send = true;
                     foreach($groups as $groupModel){
@@ -69,7 +68,7 @@ if ($storefrontsModels = SiteModel::objects()->all()){
                 {
                     $mass = [
                     'order' => $orderModel->orderid,
-                      'hash' => $csTipsModel->hash
+                    'hash' => $csTipsModel->hash
                     ];
 
                     $ssl = ($storefrontModel->getConfig()['https_enabled'] == 'Y');
