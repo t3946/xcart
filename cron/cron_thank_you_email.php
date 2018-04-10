@@ -78,6 +78,10 @@ if ($storefrontsModels = SiteModel::objects()->all()){
                     $link = "<span><a href=\"{$url}\"><img src=\"{$image}\"></a></span>";
 
                     $message = "We always strive to build a strong relationship with our clients, so if you are satisfied with our customer service please let us know by leaving a tip. To do so, click the \"TIP NOW\" button below." . " <br> " . " {$link}";
+
+                    $str_time = (new DateTime('now'))->diff($start_time)->format('%H:%I:%S');
+                    $log_text = "This order {$orderModel->orderid} 'thank you' email message with tips";
+                    func_backprocess_log($log_category, $log_text);
                 }
                 else {
                     $message = "";
