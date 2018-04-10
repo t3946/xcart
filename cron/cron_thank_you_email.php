@@ -4,6 +4,7 @@ use Modules\Core\Models\GlobalConfigModel;
 use Modules\Order\Models\OrderModel;
 use Modules\Sites\Models\SiteConfigModel;
 use Modules\Sites\Models\SiteModel;
+use Modules\User\Models\CsTipsModel;
 
 define("CIDEV_CRON_START", "CRON");
 global $config, $mail_smarty;
@@ -51,6 +52,38 @@ if ($storefrontsModels = SiteModel::objects()->all()){
                         }
                     }
                 }
+
+                $csTipsModel = new CsTipsModel();
+
+                $csTipsModel->order_id = $orderModel->orderid;
+                $csTipsModel->getHash();
+                $csTipsModel->calculateOrderTips();
+
+                if (
+                    $csTipsModel->capture_amount
+                    && $csTipsModel->capture_amount > 0
+                    && $csTipsModel->first_tip
+                    && $csTipsModel->first_tip > 0
+                )
+                {
+                    $mass = [
+                    'order' => $orderModel->orderid,
+                    'hash' => $csTipsModel->hash
+                    ];
+
+                    $ssl = ($storefrontModel->getConfig()['https_enabled'] == 'Y');
+                    $url = ($ssl ? 'https' : 'http') . '://' . $storefrontModel->domain . \Xcart\App\Main\Xcart::app()->router->url('user:cs_tips', [], $mass);
+                    $image = ($ssl ? 'https' : 'http') . '://' . $storefrontModel->domain . '/static/frontend/production/tip_now.png';
+
+                    $link = "<span><a href=\"{$url}\"><img src=\"{$image}\"></a></span>";
+
+                    $message = "We always strive to build a strong relationship with our clients, so if you are satisfied with our customer service please let us know by leaving a tip. To do so, click the \"TIP NOW\" button below." . " <br> " . " {$link}";
+                }
+                else {
+                    $message = "";
+                }
+
+
                 if ($send) {
                     $defaultFrom = GlobalConfigModel::objects()->get(['name' => 'thank_you_from']);
                     $configFrom = SiteConfigModel::objects()->get(['name' => 'thank_you_from', 'storefrontid' => $orderModel->storefrontid]);
@@ -71,6 +104,7 @@ if ($storefrontsModels = SiteModel::objects()->all()){
                         $oMail->init();
                         $oMail->addReplaceRule('{{orderid}}', $orderModel->getOrderNumber());
                         $oMail->addReplaceRule('{{c-fullname}}', $orderModel->firstname);
+                        $oMail->addReplaceRule('{{message}}', $message);
                         $oMail->to = $orderModel->email;
                         $oMail->from = (empty($configFrom)) ? $defaultFrom->value : $configFrom->value;
                         $oMail->subject = (empty($configSubject)) ? $defaultSubject->value : $configSubject->value;

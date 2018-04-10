@@ -204,4 +204,11 @@ foreach (getEmptySurfMeta() as $model) {
     \Modules\User\Models\SessionDataModel::objects()->delete(['sessid' => $model->sessid]);
 }
 
+#
+# Clean temporary data
+#
+if ((rand() % 100) == 0) {
+    db_query("DELETE FROM $sql_tbl[temporary_data] WHERE expire<UNIX_TIMESTAMP(NOW())");
+}
+
 writeLog("End.");

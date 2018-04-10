@@ -6,7 +6,6 @@
 <input type="hidden" name="option" value="Attention_tags_invoices">
 <input type="hidden" name="mode" value="Update_Attention_tags_invoices">
 
-
 <table width="100%" cellspacing="1" cellpadding="3">
 <tr>
    <td class="TableSeparator" colspan="3">
@@ -285,6 +284,39 @@ If <b>PROFIT</b> &lt; <b>0.00</b>, then set the following attention tag:
                                 </script>
 
                         {/literal}
+                </td>
+        </tr>
+
+        <tr>
+                <td class="TableSeparator" colspan="3">
+                        <br>
+                        <br>
+                        Order related tags
+                        <br>
+                        <br>
+                </td>
+        </tr>
+        <tr>
+                <td width="3%">&nbsp;</td>
+                <td width="57%">
+                        <b>Customer service tips tag</b>:
+                </td>
+                <td width="40%">
+                        <select  style="max-width: 194px;" name="tag_customer_tips">
+                                <option value="">None</option>
+                            {foreach from=$attention_tags_values item=v key=k}
+                                    <option value="{$v.status_id}" {if $v.status_id eq $config.Order_related_tags.tag_customer_tips}selected="selected"{/if}>{$v.status}</option>
+                            {/foreach}
+                        </select>
+                    {literal}
+
+                            <script type="text/javascript" language="JavaScript 1.2">
+                                    <!--
+                                    $('#one_day_unset_time_box').timepicker()();
+                                    -->
+                            </script>
+
+                    {/literal}
                 </td>
         </tr>
 
