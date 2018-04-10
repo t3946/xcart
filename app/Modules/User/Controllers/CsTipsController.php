@@ -43,6 +43,21 @@ class CsTipsController extends FrontendController
             $this->getRequest()->redirect("/");
         }
 
+        if (empty($request->post->get('cash')) || $request->post->get('cash') == 0 || $request->post->get('cash') < 0) {
+
+            $order_log_model = new OrderLogModel();
+            $order_log_model->orderid = $csTipsModel->order_id;
+            $order_log_model->type = 'C';
+            $order_log_model->date = time();
+            $order_log_model->login = Xcart::app()->user->login;
+            $order_log_model->log = "Customer don't get tips, but see the page";
+
+            $order_log_model->save();
+
+            $this->getRequest()->redirect("/");
+        }
+
+
         $globalConfigModel = GlobalConfigModel::objects()->get(['name' => 'tag_customer_tips']);
         $ststus_id = $globalConfigModel->value;
         OrderTagEventHelper::orderTagEvent($ststus_id, $request->post->get('order'));
