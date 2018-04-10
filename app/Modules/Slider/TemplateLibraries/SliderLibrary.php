@@ -3,6 +3,8 @@
 namespace Modules\Slider\TemplateLibraries;
 
 
+use Modules\Sites\Models\SiteModel;
+use Xcart\App\Main\Xcart;
 use Xcart\App\Template\TemplateLibrary;
 use Xcart\App\Traits\RenderTrait;
 
@@ -18,10 +20,12 @@ class SliderLibrary extends TemplateLibrary
     public static function renderSlider($params)
     {
         if ($params) {
+
             $slider = self::getSliderData(is_array($params) ? current($params) : $params);
 
-            static::renderTemplate($slider['template'], [
+            return static::renderTemplate($slider['template'], [
                 'slides' => $slider['data'],
+                'slider_name' => $slider['name'],
             ]);
         }
     }
@@ -55,6 +59,16 @@ class SliderLibrary extends TemplateLibrary
 
     private static function getSliderDataByStore($code)
     {
-        return [];
+        /** @var SiteModel $site */
+        $site = Xcart::app()->getModule('Sites')->getSite();
+        $code = strtolower($site->code);
+
+        return [
+            [
+                'title' => 'Promotional product',
+                'description' => 'Try it for 90 days. Enjoy it for 25 years >',
+                'image' => "/static/frontend/dist/images/slider/{$code}/promo.jpg",
+            ],
+        ];
     }
 }

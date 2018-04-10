@@ -64,8 +64,8 @@ module.exports = {
         },
 
         jquery: {
-            js_include: [
-                'bower_components/jquery/dist/jquery.min.js'
+            js: [
+                // 'bower_components/jquery/dist/jquery.min.js'
             ]
         },
         // jquery_cookie: {
@@ -180,6 +180,11 @@ module.exports = {
         wNumb: {
             js_include: [
                 'vendors/wNumb.js'
+            ]
+        },
+        Sly: {
+            js: [
+                // 'node_modules/sly/dist/sly.js'
             ]
         },
         pace: {

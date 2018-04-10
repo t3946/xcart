@@ -1,4 +1,4 @@
-<div class="promo_slider sly_slider">
+<div id='{$slider_name}' class="promo_slider sly_slider">
     <div class="frame">
         <ul>
             {foreach $slides as $slide}
@@ -21,17 +21,17 @@
 {add_asset_block type="js"}
     <script type="text/javascript">
         window.app.afterReady.push(function(){
-
-
+            var slider_name = '{$slider_name}';
             {ignore}
-            new window.FilterPriceSlider(keypressSlider, inputs, {
-                start: [start_min, start_max],
-                step: 1,
-                range: {
-                    min:price_min,
-                    max:price_max
-                }
+            $().sly({
+                horizontal: 1,
+                itemNav: 'basic',
+                speed: 300,
+                mouseDragging: 1,
+                touchDragging: 1
             });
+
+            console.log($('#promo_slider').toElement);
             {/ignore}
         });
     </script>

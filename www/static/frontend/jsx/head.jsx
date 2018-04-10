@@ -10,6 +10,7 @@ import WebFont from 'webfontloader';
 import Waves from 'Waves';
 import whatInput from 'what-input';
 import noUiSlider from 'noUiSlider';
+import 'sly/dist/sly';
 
 import 'pace';
 // import 'bower_components/PACE/pace.js';
@@ -39,6 +40,7 @@ import '../../vendors/wNumb.js'
 
 (function(){
     window['$'] = $;
+    window['jQuery'] = $;
     window['whatInput'] = whatInput;
     window['Waves'] = Waves;
     window['WebFont'] = WebFont;
@@ -46,6 +48,4 @@ import '../../vendors/wNumb.js'
     // window['PhotoSwipe'] = PhotoSwipe;
     // window['PhotoSwipeUI_Default'] = PhotoSwipeUI_Default;
     // window['Fotorama'] = Fotorama;
-
-    console.log( $('footer').height() );
 })();

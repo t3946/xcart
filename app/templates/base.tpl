@@ -126,8 +126,6 @@
                     {block "after-content"}{/block}
                 </section>
             </section>
-
-            <div class="push"></div>
         </section>
 
         {insert "_parts/_footer.tpl"}

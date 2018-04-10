@@ -6,7 +6,7 @@
     {/if}
 
         <div data-background="{$slide.image}">
-            <h3 class="caption">{$slider.title}</h3>
+            <h3 class="caption">{$slide.title}</h3>
             <p class="description">{$slide.description}</p>
         </div>
 

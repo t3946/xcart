@@ -14,7 +14,7 @@ import Loader from "./components/Loader";
 import isTouch from "./utils/isTouch";
 import isMedia from "./utils/isMedia";
 import documentReady from "./utils/documentReady";
-import funcRecalcFooter from "./components/footer"; "./components/footer";
+// import funcRecalcFooter from "./components/footer";
 
 // require('preact/devtools');
 
@@ -31,9 +31,6 @@ import funcRecalcFooter from "./components/footer"; "./components/footer";
         window['loader'] = new Loader;
 
         isMedia('medium', '(max-width: 1023px)');
-
-
-        funcRecalcFooter();
 
         Waves.attach('.waves');
         Waves.init();
@@ -83,12 +80,6 @@ import funcRecalcFooter from "./components/footer"; "./components/footer";
                 }
             });
 
-        $(window)
-            .on('resize', function(){
-                funcRecalcFooter();
-            });
-
-
         loader.detach(()=>{
             $('.off-canvas').removeClass('hide');
 
@@ -99,8 +90,6 @@ import funcRecalcFooter from "./components/footer"; "./components/footer";
             }
 
             foundationRegisterCustomEvents();
-
-            funcRecalcFooter();
         });
 
         setTimeout(()=>{
@@ -118,8 +107,6 @@ import funcRecalcFooter from "./components/footer"; "./components/footer";
                         families: ['Lato:300,300i,400,400i,700,700i,900']
                     }
                 });
-
-                funcRecalcFooter();
             }, 2000);
         }, 100);
 

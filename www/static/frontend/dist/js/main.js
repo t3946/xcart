@@ -8650,7 +8650,7 @@ exports.__esModule = true;
 
 var _redux = __webpack_require__(15);
 
-var _reduxLogger = __webpack_require__(73);
+var _reduxLogger = __webpack_require__(74);
 
 var _reduxThunk = __webpack_require__(25);
 
@@ -8792,8 +8792,8 @@ exports.default = store;
 /***/ (function(module, exports, __webpack_require__) {
 
 var Symbol = __webpack_require__(21),
-    getRawTag = __webpack_require__(64),
-    objectToString = __webpack_require__(65);
+    getRawTag = __webpack_require__(65),
+    objectToString = __webpack_require__(66);
 
 /** `Object#toString` result references. */
 var nullTag = '[object Null]',
@@ -26363,15 +26363,15 @@ var _createStore = __webpack_require__(19);
 
 var _createStore2 = _interopRequireDefault(_createStore);
 
-var _combineReducers = __webpack_require__(70);
+var _combineReducers = __webpack_require__(71);
 
 var _combineReducers2 = _interopRequireDefault(_combineReducers);
 
-var _bindActionCreators = __webpack_require__(71);
+var _bindActionCreators = __webpack_require__(72);
 
 var _bindActionCreators2 = _interopRequireDefault(_bindActionCreators);
 
-var _applyMiddleware = __webpack_require__(72);
+var _applyMiddleware = __webpack_require__(73);
 
 var _applyMiddleware2 = _interopRequireDefault(_applyMiddleware);
 
@@ -34760,7 +34760,7 @@ var _isPlainObject = __webpack_require__(20);
 
 var _isPlainObject2 = _interopRequireDefault(_isPlainObject);
 
-var _symbolObservable = __webpack_require__(68);
+var _symbolObservable = __webpack_require__(69);
 
 var _symbolObservable2 = _interopRequireDefault(_symbolObservable);
 
@@ -35017,7 +35017,7 @@ var ActionTypes = exports.ActionTypes = {
 /***/ (function(module, exports, __webpack_require__) {
 
 var baseGetTag = __webpack_require__(10),
-    getPrototype = __webpack_require__(66),
+    getPrototype = __webpack_require__(67),
     isObjectLike = __webpack_require__(11);
 
 /** `Object#toString` result references. */
@@ -35268,15 +35268,15 @@ exports.default = function (type, data) {
 
 exports.__esModule = true;
 
-var _cookie = __webpack_require__(74);
+var _cookie = __webpack_require__(75);
 
 var _cookie2 = _interopRequireDefault(_cookie);
 
-var _local = __webpack_require__(76);
+var _local = __webpack_require__(77);
 
 var _local2 = _interopRequireDefault(_local);
 
-var _tracking = __webpack_require__(77);
+var _tracking = __webpack_require__(78);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -35977,7 +35977,7 @@ return index;
 })));
 //# sourceMappingURL=preact-compat.js.map
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(100)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(101)))
 
 /***/ }),
 /* 31 */
@@ -36005,7 +36005,7 @@ if (true) {
   // By explicitly using `prop-types` you are opting into new development behavior.
   // http://fb.me/prop-types-in-prod
   var throwOnDirectAccess = true;
-  module.exports = __webpack_require__(101)(isValidElement, throwOnDirectAccess);
+  module.exports = __webpack_require__(102)(isValidElement, throwOnDirectAccess);
 } else {
   // By explicitly using `prop-types` you are opting into new production behavior.
   // http://fb.me/prop-types-in-prod
@@ -37120,7 +37120,7 @@ module.exports = baseAssignValue;
 /* 43 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var getNative = __webpack_require__(131);
+var getNative = __webpack_require__(132);
 
 var defineProperty = (function() {
   try {
@@ -37363,61 +37363,55 @@ module.exports = isIndex;
 
 __webpack_require__(51);
 
-var _foundation_events = __webpack_require__(114);
+var _foundation_events = __webpack_require__(115);
 
 var _foundation_events2 = _interopRequireDefault(_foundation_events);
 
-var _DepartmentMenu = __webpack_require__(115);
+var _DepartmentMenu = __webpack_require__(116);
 
 var _DepartmentMenu2 = _interopRequireDefault(_DepartmentMenu);
 
-var _DottedText = __webpack_require__(116);
+var _DottedText = __webpack_require__(117);
 
 var _DottedText2 = _interopRequireDefault(_DottedText);
 
-var _CategoryViewType = __webpack_require__(117);
+var _CategoryViewType = __webpack_require__(118);
 
 var _CategoryViewType2 = _interopRequireDefault(_CategoryViewType);
 
-var _LazyImageLoad = __webpack_require__(118);
+var _LazyImageLoad = __webpack_require__(119);
 
 var _LazyImageLoad2 = _interopRequireDefault(_LazyImageLoad);
 
-var _CatalogFilter = __webpack_require__(120);
+var _CatalogFilter = __webpack_require__(121);
 
 var _CatalogFilter2 = _interopRequireDefault(_CatalogFilter);
 
-var _FilterPriceSlider = __webpack_require__(124);
+var _FilterPriceSlider = __webpack_require__(125);
 
 var _FilterPriceSlider2 = _interopRequireDefault(_FilterPriceSlider);
 
-var _SearchSuggestion = __webpack_require__(125);
+var _SearchSuggestion = __webpack_require__(126);
 
 var _SearchSuggestion2 = _interopRequireDefault(_SearchSuggestion);
 
-var _Loader = __webpack_require__(126);
+var _Loader = __webpack_require__(127);
 
 var _Loader2 = _interopRequireDefault(_Loader);
 
-var _isTouch = __webpack_require__(160);
+var _isTouch = __webpack_require__(161);
 
 var _isTouch2 = _interopRequireDefault(_isTouch);
 
-var _isMedia = __webpack_require__(161);
+var _isMedia = __webpack_require__(162);
 
 var _isMedia2 = _interopRequireDefault(_isMedia);
 
-var _documentReady = __webpack_require__(162);
+var _documentReady = __webpack_require__(163);
 
 var _documentReady2 = _interopRequireDefault(_documentReady);
 
-var _footer = __webpack_require__(163);
-
-var _footer2 = _interopRequireDefault(_footer);
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-"./components/footer";
 
 (function () {
     (0, _documentReady2.default)(function () {
@@ -37432,8 +37426,6 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
         window['loader'] = new _Loader2.default();
 
         (0, _isMedia2.default)('medium', '(max-width: 1023px)');
-
-        (0, _footer2.default)();
 
         Waves.attach('.waves');
         Waves.init();
@@ -37478,10 +37470,6 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
             }
         });
 
-        $(window).on('resize', function () {
-            (0, _footer2.default)();
-        });
-
         loader.detach(function () {
             $('.off-canvas').removeClass('hide');
 
@@ -37492,8 +37480,6 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
             }
 
             (0, _foundation_events2.default)();
-
-            (0, _footer2.default)();
         });
 
         setTimeout(function () {
@@ -37511,8 +37497,6 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
                         families: ['Lato:300,300i,400,400i,700,700i,900']
                     }
                 });
-
-                (0, _footer2.default)();
             }, 2000);
         }, 100);
     });
@@ -37524,7 +37508,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-
+/* WEBPACK VAR INJECTION */(function(__webpack_provided_window_dot_jQuery) {
 
 __webpack_require__(52);
 
@@ -37554,13 +37538,13 @@ var _noUiSlider = __webpack_require__(58);
 
 var _noUiSlider2 = _interopRequireDefault(_noUiSlider);
 
-__webpack_require__(18);
-
 __webpack_require__(59);
+
+__webpack_require__(18);
 
 __webpack_require__(60);
 
-__webpack_require__(81);
+__webpack_require__(61);
 
 __webpack_require__(82);
 
@@ -37570,13 +37554,13 @@ __webpack_require__(84);
 
 __webpack_require__(85);
 
-__webpack_require__(89);
+__webpack_require__(86);
 
 __webpack_require__(90);
 
 __webpack_require__(91);
 
-__webpack_require__(103);
+__webpack_require__(92);
 
 __webpack_require__(104);
 
@@ -37584,20 +37568,21 @@ __webpack_require__(105);
 
 __webpack_require__(106);
 
-__webpack_require__(113);
+__webpack_require__(107);
+
+__webpack_require__(114);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 (function () {
     window['$'] = _jquery2.default;
+    __webpack_provided_window_dot_jQuery = _jquery2.default;
     window['whatInput'] = _whatInput2.default;
     window['Waves'] = _Waves2.default;
     window['WebFont'] = _webfontloader2.default;
     window['noUiSlider'] = _noUiSlider2.default;
-
-
-    console.log((0, _jquery2.default)('footer').height());
 })();
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
 /* 52 */
@@ -42542,6 +42527,2223 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 /* 59 */
 /***/ (function(module, exports, __webpack_require__) {
 
+/* WEBPACK VAR INJECTION */(function(jQuery) {/*!
+ * sly 1.6.1 - 8th Aug 2015
+ * https://github.com/darsain/sly
+ *
+ * Licensed under the MIT license.
+ * http://opensource.org/licenses/MIT
+ */
+
+;(function ($, w, undefined) {
+	'use strict';
+
+	var pluginName = 'sly';
+	var className  = 'Sly';
+	var namespace  = pluginName;
+
+	// Local WindowAnimationTiming interface
+	var cAF = w.cancelAnimationFrame || w.cancelRequestAnimationFrame;
+	var rAF = w.requestAnimationFrame;
+
+	// Support indicators
+	var transform, gpuAcceleration;
+
+	// Other global values
+	var $doc = $(document);
+	var dragInitEvents = 'touchstart.' + namespace + ' mousedown.' + namespace;
+	var dragMouseEvents = 'mousemove.' + namespace + ' mouseup.' + namespace;
+	var dragTouchEvents = 'touchmove.' + namespace + ' touchend.' + namespace;
+	var wheelEvent = (document.implementation.hasFeature('Event.wheel', '3.0') ? 'wheel.' : 'mousewheel.') + namespace;
+	var clickEvent = 'click.' + namespace;
+	var mouseDownEvent = 'mousedown.' + namespace;
+	var interactiveElements = ['INPUT', 'SELECT', 'BUTTON', 'TEXTAREA'];
+	var tmpArray = [];
+	var time;
+
+	// Math shorthands
+	var abs = Math.abs;
+	var sqrt = Math.sqrt;
+	var pow = Math.pow;
+	var round = Math.round;
+	var max = Math.max;
+	var min = Math.min;
+
+	// Keep track of last fired global wheel event
+	var lastGlobalWheel = 0;
+	$doc.on(wheelEvent, function (event) {
+		var sly = event.originalEvent[namespace];
+		var time = +new Date();
+		// Update last global wheel time, but only when event didn't originate
+		// in Sly frame, or the origin was less than scrollHijack time ago
+		if (!sly || sly.options.scrollHijack < time - lastGlobalWheel) lastGlobalWheel = time;
+	});
+
+	/**
+	 * Sly.
+	 *
+	 * @class
+	 *
+	 * @param {Element} frame       DOM element of sly container.
+	 * @param {Object}  options     Object with options.
+	 * @param {Object}  callbackMap Callbacks map.
+	 */
+	function Sly(frame, options, callbackMap) {
+		if (!(this instanceof Sly)) return new Sly(frame, options, callbackMap);
+
+		// Extend options
+		var o = $.extend({}, Sly.defaults, options);
+
+		// Private variables
+		var self = this;
+		var parallax = isNumber(frame);
+
+		// Frame
+		var $frame = $(frame);
+		var $slidee = o.slidee ? $(o.slidee).eq(0) : $frame.children().eq(0);
+		var frameSize = 0;
+		var slideeSize = 0;
+		var pos = {
+			start: 0,
+			center: 0,
+			end: 0,
+			cur: 0,
+			dest: 0
+		};
+
+		// Scrollbar
+		var $sb = $(o.scrollBar).eq(0);
+		var $handle = $sb.children().eq(0);
+		var sbSize = 0;
+		var handleSize = 0;
+		var hPos = {
+			start: 0,
+			end: 0,
+			cur: 0
+		};
+
+		// Pagesbar
+		var $pb = $(o.pagesBar);
+		var $pages = 0;
+		var pages = [];
+
+		// Items
+		var $items = 0;
+		var items = [];
+		var rel = {
+			firstItem: 0,
+			lastItem: 0,
+			centerItem: 0,
+			activeItem: null,
+			activePage: 0
+		};
+
+		// Styles
+		var frameStyles = new StyleRestorer($frame[0]);
+		var slideeStyles = new StyleRestorer($slidee[0]);
+		var sbStyles = new StyleRestorer($sb[0]);
+		var handleStyles = new StyleRestorer($handle[0]);
+
+		// Navigation type booleans
+		var basicNav = o.itemNav === 'basic';
+		var forceCenteredNav = o.itemNav === 'forceCentered';
+		var centeredNav = o.itemNav === 'centered' || forceCenteredNav;
+		var itemNav = !parallax && (basicNav || centeredNav || forceCenteredNav);
+
+		// Miscellaneous
+		var $scrollSource = o.scrollSource ? $(o.scrollSource) : $frame;
+		var $dragSource = o.dragSource ? $(o.dragSource) : $frame;
+		var $forwardButton = $(o.forward);
+		var $backwardButton = $(o.backward);
+		var $prevButton = $(o.prev);
+		var $nextButton = $(o.next);
+		var $prevPageButton = $(o.prevPage);
+		var $nextPageButton = $(o.nextPage);
+		var callbacks = {};
+		var last = {};
+		var animation = {};
+		var move = {};
+		var dragging = {
+			released: 1
+		};
+		var scrolling = {
+			last: 0,
+			delta: 0,
+			resetTime: 200
+		};
+		var renderID = 0;
+		var historyID = 0;
+		var cycleID = 0;
+		var continuousID = 0;
+		var i, l;
+
+		// Normalizing frame
+		if (!parallax) {
+			frame = $frame[0];
+		}
+
+		// Expose properties
+		self.initialized = 0;
+		self.frame = frame;
+		self.slidee = $slidee[0];
+		self.pos = pos;
+		self.rel = rel;
+		self.items = items;
+		self.pages = pages;
+		self.isPaused = 0;
+		self.options = o;
+		self.dragging = dragging;
+
+		/**
+		 * Loading function.
+		 *
+		 * Populate arrays, set sizes, bind events, ...
+		 *
+		 * @param {Boolean} [isInit] Whether load is called from within self.init().
+		 * @return {Void}
+		 */
+		function load(isInit) {
+			// Local variables
+			var lastItemsCount = 0;
+			var lastPagesCount = pages.length;
+
+			// Save old position
+			pos.old = $.extend({}, pos);
+
+			// Reset global variables
+			frameSize = parallax ? 0 : $frame[o.horizontal ? 'width' : 'height']();
+			sbSize = $sb[o.horizontal ? 'width' : 'height']();
+			slideeSize = parallax ? frame : $slidee[o.horizontal ? 'outerWidth' : 'outerHeight']();
+			pages.length = 0;
+
+			// Set position limits & relatives
+			pos.start = 0;
+			pos.end = max(slideeSize - frameSize, 0);
+
+			// Sizes & offsets for item based navigations
+			if (itemNav) {
+				// Save the number of current items
+				lastItemsCount = items.length;
+
+				// Reset itemNav related variables
+				$items = $slidee.children(o.itemSelector);
+				items.length = 0;
+
+				// Needed variables
+				var paddingStart = getPx($slidee, o.horizontal ? 'paddingLeft' : 'paddingTop');
+				var paddingEnd = getPx($slidee, o.horizontal ? 'paddingRight' : 'paddingBottom');
+				var borderBox = $($items).css('boxSizing') === 'border-box';
+				var areFloated = $items.css('float') !== 'none';
+				var ignoredMargin = 0;
+				var lastItemIndex = $items.length - 1;
+				var lastItem;
+
+				// Reset slideeSize
+				slideeSize = 0;
+
+				// Iterate through items
+				$items.each(function (i, element) {
+					// Item
+					var $item = $(element);
+					var rect = element.getBoundingClientRect();
+					var itemSize = round(o.horizontal ? rect.width || rect.right - rect.left : rect.height || rect.bottom - rect.top);
+					var itemMarginStart = getPx($item, o.horizontal ? 'marginLeft' : 'marginTop');
+					var itemMarginEnd = getPx($item, o.horizontal ? 'marginRight' : 'marginBottom');
+					var itemSizeFull = itemSize + itemMarginStart + itemMarginEnd;
+					var singleSpaced = !itemMarginStart || !itemMarginEnd;
+					var item = {};
+					item.el = element;
+					item.size = singleSpaced ? itemSize : itemSizeFull;
+					item.half = item.size / 2;
+					item.start = slideeSize + (singleSpaced ? itemMarginStart : 0);
+					item.center = item.start - round(frameSize / 2 - item.size / 2);
+					item.end = item.start - frameSize + item.size;
+
+					// Account for slidee padding
+					if (!i) {
+						slideeSize += paddingStart;
+					}
+
+					// Increment slidee size for size of the active element
+					slideeSize += itemSizeFull;
+
+					// Try to account for vertical margin collapsing in vertical mode
+					// It's not bulletproof, but should work in 99% of cases
+					if (!o.horizontal && !areFloated) {
+						// Subtract smaller margin, but only when top margin is not 0, and this is not the first element
+						if (itemMarginEnd && itemMarginStart && i > 0) {
+							slideeSize -= min(itemMarginStart, itemMarginEnd);
+						}
+					}
+
+					// Things to be done on last item
+					if (i === lastItemIndex) {
+						item.end += paddingEnd;
+						slideeSize += paddingEnd;
+						ignoredMargin = singleSpaced ? itemMarginEnd : 0;
+					}
+
+					// Add item object to items array
+					items.push(item);
+					lastItem = item;
+				});
+
+				// Resize SLIDEE to fit all items
+				$slidee[0].style[o.horizontal ? 'width' : 'height'] = (borderBox ? slideeSize: slideeSize - paddingStart - paddingEnd) + 'px';
+
+				// Adjust internal SLIDEE size for last margin
+				slideeSize -= ignoredMargin;
+
+				// Set limits
+				if (items.length) {
+					pos.start =  items[0][forceCenteredNav ? 'center' : 'start'];
+					pos.end = forceCenteredNav ? lastItem.center : frameSize < slideeSize ? lastItem.end : pos.start;
+				} else {
+					pos.start = pos.end = 0;
+				}
+			}
+
+			// Calculate SLIDEE center position
+			pos.center = round(pos.end / 2 + pos.start / 2);
+
+			// Update relative positions
+			updateRelatives();
+
+			// Scrollbar
+			if ($handle.length && sbSize > 0) {
+				// Stretch scrollbar handle to represent the visible area
+				if (o.dynamicHandle) {
+					handleSize = pos.start === pos.end ? sbSize : round(sbSize * frameSize / slideeSize);
+					handleSize = within(handleSize, o.minHandleSize, sbSize);
+					$handle[0].style[o.horizontal ? 'width' : 'height'] = handleSize + 'px';
+				} else {
+					handleSize = $handle[o.horizontal ? 'outerWidth' : 'outerHeight']();
+				}
+
+				hPos.end = sbSize - handleSize;
+
+				if (!renderID) {
+					syncScrollbar();
+				}
+			}
+
+			// Pages
+			if (!parallax && frameSize > 0) {
+				var tempPagePos = pos.start;
+				var pagesHtml = '';
+
+				// Populate pages array
+				if (itemNav) {
+					$.each(items, function (i, item) {
+						if (forceCenteredNav) {
+							pages.push(item.center);
+						} else if (item.start + item.size > tempPagePos && tempPagePos <= pos.end) {
+							tempPagePos = item.start;
+							pages.push(tempPagePos);
+							tempPagePos += frameSize;
+							if (tempPagePos > pos.end && tempPagePos < pos.end + frameSize) {
+								pages.push(pos.end);
+							}
+						}
+					});
+				} else {
+					while (tempPagePos - frameSize < pos.end) {
+						pages.push(tempPagePos);
+						tempPagePos += frameSize;
+					}
+				}
+
+				// Pages bar
+				if ($pb[0] && lastPagesCount !== pages.length) {
+					for (var i = 0; i < pages.length; i++) {
+						pagesHtml += o.pageBuilder.call(self, i);
+					}
+					$pages = $pb.html(pagesHtml).children();
+					$pages.eq(rel.activePage).addClass(o.activeClass);
+				}
+			}
+
+			// Extend relative variables object with some useful info
+			rel.slideeSize = slideeSize;
+			rel.frameSize = frameSize;
+			rel.sbSize = sbSize;
+			rel.handleSize = handleSize;
+
+			// Activate requested position
+			if (itemNav) {
+				if (isInit && o.startAt != null) {
+					activate(o.startAt);
+					self[centeredNav ? 'toCenter' : 'toStart'](o.startAt);
+				}
+				// Fix possible overflowing
+				var activeItem = items[rel.activeItem];
+				slideTo(centeredNav && activeItem ? activeItem.center : within(pos.dest, pos.start, pos.end));
+			} else {
+				if (isInit) {
+					if (o.startAt != null) slideTo(o.startAt, 1);
+				} else {
+					// Fix possible overflowing
+					slideTo(within(pos.dest, pos.start, pos.end));
+				}
+			}
+
+			// Trigger load event
+			trigger('load');
+		}
+		self.reload = function () { load(); };
+
+		/**
+		 * Animate to a position.
+		 *
+		 * @param {Int}  newPos    New position.
+		 * @param {Bool} immediate Reposition immediately without an animation.
+		 * @param {Bool} dontAlign Do not align items, use the raw position passed in first argument.
+		 *
+		 * @return {Void}
+		 */
+		function slideTo(newPos, immediate, dontAlign) {
+			// Align items
+			if (itemNav && dragging.released && !dontAlign) {
+				var tempRel = getRelatives(newPos);
+				var isNotBordering = newPos > pos.start && newPos < pos.end;
+
+				if (centeredNav) {
+					if (isNotBordering) {
+						newPos = items[tempRel.centerItem].center;
+					}
+					if (forceCenteredNav && o.activateMiddle) {
+						activate(tempRel.centerItem);
+					}
+				} else if (isNotBordering) {
+					newPos = items[tempRel.firstItem].start;
+				}
+			}
+
+			// Handle overflowing position limits
+			if (dragging.init && dragging.slidee && o.elasticBounds) {
+				if (newPos > pos.end) {
+					newPos = pos.end + (newPos - pos.end) / 6;
+				} else if (newPos < pos.start) {
+					newPos = pos.start + (newPos - pos.start) / 6;
+				}
+			} else {
+				newPos = within(newPos, pos.start, pos.end);
+			}
+
+			// Update the animation object
+			animation.start = +new Date();
+			animation.time = 0;
+			animation.from = pos.cur;
+			animation.to = newPos;
+			animation.delta = newPos - pos.cur;
+			animation.tweesing = dragging.tweese || dragging.init && !dragging.slidee;
+			animation.immediate = !animation.tweesing && (immediate || dragging.init && dragging.slidee || !o.speed);
+
+			// Reset dragging tweesing request
+			dragging.tweese = 0;
+
+			// Start animation rendering
+			if (newPos !== pos.dest) {
+				pos.dest = newPos;
+				trigger('change');
+				if (!renderID) {
+					render();
+				}
+			}
+
+			// Reset next cycle timeout
+			resetCycle();
+
+			// Synchronize states
+			updateRelatives();
+			updateButtonsState();
+			syncPagesbar();
+		}
+
+		/**
+		 * Render animation frame.
+		 *
+		 * @return {Void}
+		 */
+		function render() {
+			if (!self.initialized) {
+				return;
+			}
+
+			// If first render call, wait for next animationFrame
+			if (!renderID) {
+				renderID = rAF(render);
+				if (dragging.released) {
+					trigger('moveStart');
+				}
+				return;
+			}
+
+			// If immediate repositioning is requested, don't animate.
+			if (animation.immediate) {
+				pos.cur = animation.to;
+			}
+			// Use tweesing for animations without known end point
+			else if (animation.tweesing) {
+				animation.tweeseDelta = animation.to - pos.cur;
+				// Fuck Zeno's paradox
+				if (abs(animation.tweeseDelta) < 0.1) {
+					pos.cur = animation.to;
+				} else {
+					pos.cur += animation.tweeseDelta * (dragging.released ? o.swingSpeed : o.syncSpeed);
+				}
+			}
+			// Use tweening for basic animations with known end point
+			else {
+				animation.time = min(+new Date() - animation.start, o.speed);
+				pos.cur = animation.from + animation.delta * $.easing[o.easing](animation.time/o.speed, animation.time, 0, 1, o.speed);
+			}
+
+			// If there is nothing more to render break the rendering loop, otherwise request new animation frame.
+			if (animation.to === pos.cur) {
+				pos.cur = animation.to;
+				dragging.tweese = renderID = 0;
+			} else {
+				renderID = rAF(render);
+			}
+
+			trigger('move');
+
+			// Update SLIDEE position
+			if (!parallax) {
+				if (transform) {
+					$slidee[0].style[transform] = gpuAcceleration + (o.horizontal ? 'translateX' : 'translateY') + '(' + (-pos.cur) + 'px)';
+				} else {
+					$slidee[0].style[o.horizontal ? 'left' : 'top'] = -round(pos.cur) + 'px';
+				}
+			}
+
+			// When animation reached the end, and dragging is not active, trigger moveEnd
+			if (!renderID && dragging.released) {
+				trigger('moveEnd');
+			}
+
+			syncScrollbar();
+		}
+
+		/**
+		 * Synchronizes scrollbar with the SLIDEE.
+		 *
+		 * @return {Void}
+		 */
+		function syncScrollbar() {
+			if ($handle.length) {
+				hPos.cur = pos.start === pos.end ? 0 : (((dragging.init && !dragging.slidee) ? pos.dest : pos.cur) - pos.start) / (pos.end - pos.start) * hPos.end;
+				hPos.cur = within(round(hPos.cur), hPos.start, hPos.end);
+				if (last.hPos !== hPos.cur) {
+					last.hPos = hPos.cur;
+					if (transform) {
+						$handle[0].style[transform] = gpuAcceleration + (o.horizontal ? 'translateX' : 'translateY') + '(' + hPos.cur + 'px)';
+					} else {
+						$handle[0].style[o.horizontal ? 'left' : 'top'] = hPos.cur + 'px';
+					}
+				}
+			}
+		}
+
+		/**
+		 * Synchronizes pagesbar with SLIDEE.
+		 *
+		 * @return {Void}
+		 */
+		function syncPagesbar() {
+			if ($pages[0] && last.page !== rel.activePage) {
+				last.page = rel.activePage;
+				$pages.removeClass(o.activeClass).eq(rel.activePage).addClass(o.activeClass);
+				trigger('activePage', last.page);
+			}
+		}
+
+		/**
+		 * Returns the position object.
+		 *
+		 * @param {Mixed} item
+		 *
+		 * @return {Object}
+		 */
+		self.getPos = function (item) {
+			if (itemNav) {
+				var index = getIndex(item);
+				return index !== -1 ? items[index] : false;
+			} else {
+				var $item = $slidee.find(item).eq(0);
+
+				if ($item[0]) {
+					var offset = o.horizontal ? $item.offset().left - $slidee.offset().left : $item.offset().top - $slidee.offset().top;
+					var size = $item[o.horizontal ? 'outerWidth' : 'outerHeight']();
+
+					return {
+						start: offset,
+						center: offset - frameSize / 2 + size / 2,
+						end: offset - frameSize + size,
+						size: size
+					};
+				} else {
+					return false;
+				}
+			}
+		};
+
+		/**
+		 * Continuous move in a specified direction.
+		 *
+		 * @param  {Bool} forward True for forward movement, otherwise it'll go backwards.
+		 * @param  {Int}  speed   Movement speed in pixels per frame. Overrides options.moveBy value.
+		 *
+		 * @return {Void}
+		 */
+		self.moveBy = function (speed) {
+			move.speed = speed;
+			// If already initiated, or there is nowhere to move, abort
+			if (dragging.init || !move.speed || pos.cur === (move.speed > 0 ? pos.end : pos.start)) {
+				return;
+			}
+			// Initiate move object
+			move.lastTime = +new Date();
+			move.startPos = pos.cur;
+			// Set dragging as initiated
+			continuousInit('button');
+			dragging.init = 1;
+			// Start movement
+			trigger('moveStart');
+			cAF(continuousID);
+			moveLoop();
+		};
+
+		/**
+		 * Continuous movement loop.
+		 *
+		 * @return {Void}
+		 */
+		function moveLoop() {
+			// If there is nowhere to move anymore, stop
+			if (!move.speed || pos.cur === (move.speed > 0 ? pos.end : pos.start)) {
+				self.stop();
+			}
+			// Request new move loop if it hasn't been stopped
+			continuousID = dragging.init ? rAF(moveLoop) : 0;
+			// Update move object
+			move.now = +new Date();
+			move.pos = pos.cur + (move.now - move.lastTime) / 1000 * move.speed;
+			// Slide
+			slideTo(dragging.init ? move.pos : round(move.pos));
+			// Normally, this is triggered in render(), but if there
+			// is nothing to render, we have to do it manually here.
+			if (!dragging.init && pos.cur === pos.dest) {
+				trigger('moveEnd');
+			}
+			// Update times for future iteration
+			move.lastTime = move.now;
+		}
+
+		/**
+		 * Stops continuous movement.
+		 *
+		 * @return {Void}
+		 */
+		self.stop = function () {
+			if (dragging.source === 'button') {
+				dragging.init = 0;
+				dragging.released = 1;
+			}
+		};
+
+		/**
+		 * Activate previous item.
+		 *
+		 * @return {Void}
+		 */
+		self.prev = function () {
+			self.activate(rel.activeItem == null ? 0 : rel.activeItem - 1);
+		};
+
+		/**
+		 * Activate next item.
+		 *
+		 * @return {Void}
+		 */
+		self.next = function () {
+			self.activate(rel.activeItem == null ? 0 : rel.activeItem + 1);
+		};
+
+		/**
+		 * Activate previous page.
+		 *
+		 * @return {Void}
+		 */
+		self.prevPage = function () {
+			self.activatePage(rel.activePage - 1);
+		};
+
+		/**
+		 * Activate next page.
+		 *
+		 * @return {Void}
+		 */
+		self.nextPage = function () {
+			self.activatePage(rel.activePage + 1);
+		};
+
+		/**
+		 * Slide SLIDEE by amount of pixels.
+		 *
+		 * @param {Int}  delta     Pixels/Items. Positive means forward, negative means backward.
+		 * @param {Bool} immediate Reposition immediately without an animation.
+		 *
+		 * @return {Void}
+		 */
+		self.slideBy = function (delta, immediate) {
+			if (!delta) {
+				return;
+			}
+			if (itemNav) {
+				self[centeredNav ? 'toCenter' : 'toStart'](
+					within((centeredNav ? rel.centerItem : rel.firstItem) + o.scrollBy * delta, 0, items.length)
+				);
+			} else {
+				slideTo(pos.dest + delta, immediate);
+			}
+		};
+
+		/**
+		 * Animate SLIDEE to a specific position.
+		 *
+		 * @param {Int}  pos       New position.
+		 * @param {Bool} immediate Reposition immediately without an animation.
+		 *
+		 * @return {Void}
+		 */
+		self.slideTo = function (pos, immediate) {
+			slideTo(pos, immediate);
+		};
+
+		/**
+		 * Core method for handling `toLocation` methods.
+		 *
+		 * @param  {String} location
+		 * @param  {Mixed}  item
+		 * @param  {Bool}   immediate
+		 *
+		 * @return {Void}
+		 */
+		function to(location, item, immediate) {
+			// Optional arguments logic
+			if (type(item) === 'boolean') {
+				immediate = item;
+				item = undefined;
+			}
+
+			if (item === undefined) {
+				slideTo(pos[location], immediate);
+			} else {
+				// You can't align items to sides of the frame
+				// when centered navigation type is enabled
+				if (centeredNav && location !== 'center') {
+					return;
+				}
+
+				var itemPos = self.getPos(item);
+				if (itemPos) {
+					slideTo(itemPos[location], immediate, !centeredNav);
+				}
+			}
+		}
+
+		/**
+		 * Animate element or the whole SLIDEE to the start of the frame.
+		 *
+		 * @param {Mixed} item      Item DOM element, or index starting at 0. Omitting will animate SLIDEE.
+		 * @param {Bool}  immediate Reposition immediately without an animation.
+		 *
+		 * @return {Void}
+		 */
+		self.toStart = function (item, immediate) {
+			to('start', item, immediate);
+		};
+
+		/**
+		 * Animate element or the whole SLIDEE to the end of the frame.
+		 *
+		 * @param {Mixed} item      Item DOM element, or index starting at 0. Omitting will animate SLIDEE.
+		 * @param {Bool}  immediate Reposition immediately without an animation.
+		 *
+		 * @return {Void}
+		 */
+		self.toEnd = function (item, immediate) {
+			to('end', item, immediate);
+		};
+
+		/**
+		 * Animate element or the whole SLIDEE to the center of the frame.
+		 *
+		 * @param {Mixed} item      Item DOM element, or index starting at 0. Omitting will animate SLIDEE.
+		 * @param {Bool}  immediate Reposition immediately without an animation.
+		 *
+		 * @return {Void}
+		 */
+		self.toCenter = function (item, immediate) {
+			to('center', item, immediate);
+		};
+
+		/**
+		 * Get the index of an item in SLIDEE.
+		 *
+		 * @param {Mixed} item     Item DOM element.
+		 *
+		 * @return {Int}  Item index, or -1 if not found.
+		 */
+		function getIndex(item) {
+			return item != null ?
+					isNumber(item) ?
+						item >= 0 && item < items.length ? item : -1 :
+						$items.index(item) :
+					-1;
+		}
+		// Expose getIndex without lowering the compressibility of it,
+		// as it is used quite often throughout Sly.
+		self.getIndex = getIndex;
+
+		/**
+		 * Get index of an item in SLIDEE based on a variety of input types.
+		 *
+		 * @param  {Mixed} item DOM element, positive or negative integer.
+		 *
+		 * @return {Int}   Item index, or -1 if not found.
+		 */
+		function getRelativeIndex(item) {
+			return getIndex(isNumber(item) && item < 0 ? item + items.length : item);
+		}
+
+		/**
+		 * Activates an item.
+		 *
+		 * @param  {Mixed} item Item DOM element, or index starting at 0.
+		 *
+		 * @return {Mixed} Activated item index or false on fail.
+		 */
+		function activate(item, force) {
+			var index = getIndex(item);
+
+			if (!itemNav || index < 0) {
+				return false;
+			}
+
+			// Update classes, last active index, and trigger active event only when there
+			// has been a change. Otherwise just return the current active index.
+			if (last.active !== index || force) {
+				// Update classes
+				$items.eq(rel.activeItem).removeClass(o.activeClass);
+				$items.eq(index).addClass(o.activeClass);
+
+				last.active = rel.activeItem = index;
+
+				updateButtonsState();
+				trigger('active', index);
+			}
+
+			return index;
+		}
+
+		/**
+		 * Activates an item and helps with further navigation when o.smart is enabled.
+		 *
+		 * @param {Mixed} item      Item DOM element, or index starting at 0.
+		 * @param {Bool}  immediate Whether to reposition immediately in smart navigation.
+		 *
+		 * @return {Void}
+		 */
+		self.activate = function (item, immediate) {
+			var index = activate(item);
+
+			// Smart navigation
+			if (o.smart && index !== false) {
+				// When centeredNav is enabled, center the element.
+				// Otherwise, determine where to position the element based on its current position.
+				// If the element is currently on the far end side of the frame, assume that user is
+				// moving forward and animate it to the start of the visible frame, and vice versa.
+				if (centeredNav) {
+					self.toCenter(index, immediate);
+				} else if (index >= rel.lastItem) {
+					self.toStart(index, immediate);
+				} else if (index <= rel.firstItem) {
+					self.toEnd(index, immediate);
+				} else {
+					resetCycle();
+				}
+			}
+		};
+
+		/**
+		 * Activates a page.
+		 *
+		 * @param {Int}  index     Page index, starting from 0.
+		 * @param {Bool} immediate Whether to reposition immediately without animation.
+		 *
+		 * @return {Void}
+		 */
+		self.activatePage = function (index, immediate) {
+			if (isNumber(index)) {
+				slideTo(pages[within(index, 0, pages.length - 1)], immediate);
+			}
+		};
+
+		/**
+		 * Return relative positions of items based on their visibility within FRAME.
+		 *
+		 * @param {Int} slideePos Position of SLIDEE.
+		 *
+		 * @return {Void}
+		 */
+		function getRelatives(slideePos) {
+			slideePos = within(isNumber(slideePos) ? slideePos : pos.dest, pos.start, pos.end);
+
+			var relatives = {};
+			var centerOffset = forceCenteredNav ? 0 : frameSize / 2;
+
+			// Determine active page
+			if (!parallax) {
+				for (var p = 0, pl = pages.length; p < pl; p++) {
+					if (slideePos >= pos.end || p === pages.length - 1) {
+						relatives.activePage = pages.length - 1;
+						break;
+					}
+
+					if (slideePos <= pages[p] + centerOffset) {
+						relatives.activePage = p;
+						break;
+					}
+				}
+			}
+
+			// Relative item indexes
+			if (itemNav) {
+				var first = false;
+				var last = false;
+				var center = false;
+
+				// From start
+				for (var i = 0, il = items.length; i < il; i++) {
+					// First item
+					if (first === false && slideePos <= items[i].start + items[i].half) {
+						first = i;
+					}
+
+					// Center item
+					if (center === false && slideePos <= items[i].center + items[i].half) {
+						center = i;
+					}
+
+					// Last item
+					if (i === il - 1 || slideePos <= items[i].end + items[i].half) {
+						last = i;
+						break;
+					}
+				}
+
+				// Safe assignment, just to be sure the false won't be returned
+				relatives.firstItem = isNumber(first) ? first : 0;
+				relatives.centerItem = isNumber(center) ? center : relatives.firstItem;
+				relatives.lastItem = isNumber(last) ? last : relatives.centerItem;
+			}
+
+			return relatives;
+		}
+
+		/**
+		 * Update object with relative positions.
+		 *
+		 * @param {Int} newPos
+		 *
+		 * @return {Void}
+		 */
+		function updateRelatives(newPos) {
+			$.extend(rel, getRelatives(newPos));
+		}
+
+		/**
+		 * Disable navigation buttons when needed.
+		 *
+		 * Adds disabledClass, and when the button is <button> or <input>, activates :disabled state.
+		 *
+		 * @return {Void}
+		 */
+		function updateButtonsState() {
+			var isStart = pos.dest <= pos.start;
+			var isEnd = pos.dest >= pos.end;
+			var slideePosState = (isStart ? 1 : 0) | (isEnd ? 2 : 0);
+
+			// Update paging buttons only if there has been a change in SLIDEE position
+			if (last.slideePosState !== slideePosState) {
+				last.slideePosState = slideePosState;
+
+				if ($prevPageButton.is('button,input')) {
+					$prevPageButton.prop('disabled', isStart);
+				}
+
+				if ($nextPageButton.is('button,input')) {
+					$nextPageButton.prop('disabled', isEnd);
+				}
+
+				$prevPageButton.add($backwardButton)[isStart ? 'addClass' : 'removeClass'](o.disabledClass);
+				$nextPageButton.add($forwardButton)[isEnd ? 'addClass' : 'removeClass'](o.disabledClass);
+			}
+
+			// Forward & Backward buttons need a separate state caching because we cannot "property disable"
+			// them while they are being used, as disabled buttons stop emitting mouse events.
+			if (last.fwdbwdState !== slideePosState && dragging.released) {
+				last.fwdbwdState = slideePosState;
+
+				if ($backwardButton.is('button,input')) {
+					$backwardButton.prop('disabled', isStart);
+				}
+
+				if ($forwardButton.is('button,input')) {
+					$forwardButton.prop('disabled', isEnd);
+				}
+			}
+
+			// Item navigation
+			if (itemNav && rel.activeItem != null) {
+				var isFirst = rel.activeItem === 0;
+				var isLast = rel.activeItem >= items.length - 1;
+				var itemsButtonState = (isFirst ? 1 : 0) | (isLast ? 2 : 0);
+
+				if (last.itemsButtonState !== itemsButtonState) {
+					last.itemsButtonState = itemsButtonState;
+
+					if ($prevButton.is('button,input')) {
+						$prevButton.prop('disabled', isFirst);
+					}
+
+					if ($nextButton.is('button,input')) {
+						$nextButton.prop('disabled', isLast);
+					}
+
+					$prevButton[isFirst ? 'addClass' : 'removeClass'](o.disabledClass);
+					$nextButton[isLast ? 'addClass' : 'removeClass'](o.disabledClass);
+				}
+			}
+		}
+
+		/**
+		 * Resume cycling.
+		 *
+		 * @param {Int} priority Resume pause with priority lower or equal than this. Used internally for pauseOnHover.
+		 *
+		 * @return {Void}
+		 */
+		self.resume = function (priority) {
+			if (!o.cycleBy || !o.cycleInterval || o.cycleBy === 'items' && (!items[0] || rel.activeItem == null) || priority < self.isPaused) {
+				return;
+			}
+
+			self.isPaused = 0;
+
+			if (cycleID) {
+				cycleID = clearTimeout(cycleID);
+			} else {
+				trigger('resume');
+			}
+
+			cycleID = setTimeout(function () {
+				trigger('cycle');
+				switch (o.cycleBy) {
+					case 'items':
+						self.activate(rel.activeItem >= items.length - 1 ? 0 : rel.activeItem + 1);
+						break;
+
+					case 'pages':
+						self.activatePage(rel.activePage >= pages.length - 1 ? 0 : rel.activePage + 1);
+						break;
+				}
+			}, o.cycleInterval);
+		};
+
+		/**
+		 * Pause cycling.
+		 *
+		 * @param {Int} priority Pause priority. 100 is default. Used internally for pauseOnHover.
+		 *
+		 * @return {Void}
+		 */
+		self.pause = function (priority) {
+			if (priority < self.isPaused) {
+				return;
+			}
+
+			self.isPaused = priority || 100;
+
+			if (cycleID) {
+				cycleID = clearTimeout(cycleID);
+				trigger('pause');
+			}
+		};
+
+		/**
+		 * Toggle cycling.
+		 *
+		 * @return {Void}
+		 */
+		self.toggle = function () {
+			self[cycleID ? 'pause' : 'resume']();
+		};
+
+		/**
+		 * Updates a signle or multiple option values.
+		 *
+		 * @param {Mixed} name  Name of the option that should be updated, or object that will extend the options.
+		 * @param {Mixed} value New option value.
+		 *
+		 * @return {Void}
+		 */
+		self.set = function (name, value) {
+			if ($.isPlainObject(name)) {
+				$.extend(o, name);
+			} else if (o.hasOwnProperty(name)) {
+				o[name] = value;
+			}
+		};
+
+		/**
+		 * Add one or multiple items to the SLIDEE end, or a specified position index.
+		 *
+		 * @param {Mixed} element Node element, or HTML string.
+		 * @param {Int}   index   Index of a new item position. By default item is appended at the end.
+		 *
+		 * @return {Void}
+		 */
+		self.add = function (element, index) {
+			var $element = $(element);
+
+			if (itemNav) {
+				// Insert the element(s)
+				if (index == null || !items[0] || index >= items.length) {
+					$element.appendTo($slidee);
+				} else if (items.length) {
+					$element.insertBefore(items[index].el);
+				}
+
+				// Adjust the activeItem index
+				if (rel.activeItem != null && index <= rel.activeItem) {
+					last.active = rel.activeItem += $element.length;
+				}
+			} else {
+				$slidee.append($element);
+			}
+
+			// Reload
+			load();
+		};
+
+		/**
+		 * Remove an item from SLIDEE.
+		 *
+		 * @param {Mixed} element Item index, or DOM element.
+		 * @param {Int}   index   Index of a new item position. By default item is appended at the end.
+		 *
+		 * @return {Void}
+		 */
+		self.remove = function (element) {
+			if (itemNav) {
+				var index = getRelativeIndex(element);
+
+				if (index > -1) {
+					// Remove the element
+					$items.eq(index).remove();
+
+					// If the current item is being removed, activate new one after reload
+					var reactivate = index === rel.activeItem;
+
+					// Adjust the activeItem index
+					if (rel.activeItem != null && index < rel.activeItem) {
+						last.active = --rel.activeItem;
+					}
+
+					// Reload
+					load();
+
+					// Activate new item at the removed position
+					if (reactivate) {
+						last.active = null;
+						self.activate(rel.activeItem);
+					}
+				}
+			} else {
+				$(element).remove();
+				load();
+			}
+		};
+
+		/**
+		 * Helps re-arranging items.
+		 *
+		 * @param  {Mixed} item     Item DOM element, or index starting at 0. Use negative numbers to select items from the end.
+		 * @param  {Mixed} position Item insertion anchor. Accepts same input types as item argument.
+		 * @param  {Bool}  after    Insert after instead of before the anchor.
+		 *
+		 * @return {Void}
+		 */
+		function moveItem(item, position, after) {
+			item = getRelativeIndex(item);
+			position = getRelativeIndex(position);
+
+			// Move only if there is an actual change requested
+			if (item > -1 && position > -1 && item !== position && (!after || position !== item - 1) && (after || position !== item + 1)) {
+				$items.eq(item)[after ? 'insertAfter' : 'insertBefore'](items[position].el);
+
+				var shiftStart = item < position ? item : (after ? position : position - 1);
+				var shiftEnd = item > position ? item : (after ? position + 1 : position);
+				var shiftsUp = item > position;
+
+				// Update activeItem index
+				if (rel.activeItem != null) {
+					if (item === rel.activeItem) {
+						last.active = rel.activeItem = after ? (shiftsUp ? position + 1 : position) : (shiftsUp ? position : position - 1);
+					} else if (rel.activeItem > shiftStart && rel.activeItem < shiftEnd) {
+						last.active = rel.activeItem += shiftsUp ? 1 : -1;
+					}
+				}
+
+				// Reload
+				load();
+			}
+		}
+
+		/**
+		 * Move item after the target anchor.
+		 *
+		 * @param  {Mixed} item     Item to be moved. Can be DOM element or item index.
+		 * @param  {Mixed} position Target position anchor. Can be DOM element or item index.
+		 *
+		 * @return {Void}
+		 */
+		self.moveAfter = function (item, position) {
+			moveItem(item, position, 1);
+		};
+
+		/**
+		 * Move item before the target anchor.
+		 *
+		 * @param  {Mixed} item     Item to be moved. Can be DOM element or item index.
+		 * @param  {Mixed} position Target position anchor. Can be DOM element or item index.
+		 *
+		 * @return {Void}
+		 */
+		self.moveBefore = function (item, position) {
+			moveItem(item, position);
+		};
+
+		/**
+		 * Registers callbacks.
+		 *
+		 * @param  {Mixed} name  Event name, or callbacks map.
+		 * @param  {Mixed} fn    Callback, or an array of callback functions.
+		 *
+		 * @return {Void}
+		 */
+		self.on = function (name, fn) {
+			// Callbacks map
+			if (type(name) === 'object') {
+				for (var key in name) {
+					if (name.hasOwnProperty(key)) {
+						self.on(key, name[key]);
+					}
+				}
+			// Callback
+			} else if (type(fn) === 'function') {
+				var names = name.split(' ');
+				for (var n = 0, nl = names.length; n < nl; n++) {
+					callbacks[names[n]] = callbacks[names[n]] || [];
+					if (callbackIndex(names[n], fn) === -1) {
+						callbacks[names[n]].push(fn);
+					}
+				}
+			// Callbacks array
+			} else if (type(fn) === 'array') {
+				for (var f = 0, fl = fn.length; f < fl; f++) {
+					self.on(name, fn[f]);
+				}
+			}
+		};
+
+		/**
+		 * Registers callbacks to be executed only once.
+		 *
+		 * @param  {Mixed} name  Event name, or callbacks map.
+		 * @param  {Mixed} fn    Callback, or an array of callback functions.
+		 *
+		 * @return {Void}
+		 */
+		self.one = function (name, fn) {
+			function proxy() {
+				fn.apply(self, arguments);
+				self.off(name, proxy);
+			}
+			self.on(name, proxy);
+		};
+
+		/**
+		 * Remove one or all callbacks.
+		 *
+		 * @param  {String} name Event name.
+		 * @param  {Mixed}  fn   Callback, or an array of callback functions. Omit to remove all callbacks.
+		 *
+		 * @return {Void}
+		 */
+		self.off = function (name, fn) {
+			if (fn instanceof Array) {
+				for (var f = 0, fl = fn.length; f < fl; f++) {
+					self.off(name, fn[f]);
+				}
+			} else {
+				var names = name.split(' ');
+				for (var n = 0, nl = names.length; n < nl; n++) {
+					callbacks[names[n]] = callbacks[names[n]] || [];
+					if (fn == null) {
+						callbacks[names[n]].length = 0;
+					} else {
+						var index = callbackIndex(names[n], fn);
+						if (index !== -1) {
+							callbacks[names[n]].splice(index, 1);
+						}
+					}
+				}
+			}
+		};
+
+		/**
+		 * Returns callback array index.
+		 *
+		 * @param  {String}   name Event name.
+		 * @param  {Function} fn   Function
+		 *
+		 * @return {Int} Callback array index, or -1 if isn't registered.
+		 */
+		function callbackIndex(name, fn) {
+			for (var i = 0, l = callbacks[name].length; i < l; i++) {
+				if (callbacks[name][i] === fn) {
+					return i;
+				}
+			}
+			return -1;
+		}
+
+		/**
+		 * Reset next cycle timeout.
+		 *
+		 * @return {Void}
+		 */
+		function resetCycle() {
+			if (dragging.released && !self.isPaused) {
+				self.resume();
+			}
+		}
+
+		/**
+		 * Calculate SLIDEE representation of handle position.
+		 *
+		 * @param  {Int} handlePos
+		 *
+		 * @return {Int}
+		 */
+		function handleToSlidee(handlePos) {
+			return round(within(handlePos, hPos.start, hPos.end) / hPos.end * (pos.end - pos.start)) + pos.start;
+		}
+
+		/**
+		 * Keeps track of a dragging delta history.
+		 *
+		 * @return {Void}
+		 */
+		function draggingHistoryTick() {
+			// Looking at this, I know what you're thinking :) But as we need only 4 history states, doing it this way
+			// as opposed to a proper loop is ~25 bytes smaller (when minified with GCC), a lot faster, and doesn't
+			// generate garbage. The loop version would create 2 new variables on every tick. Unexaptable!
+			dragging.history[0] = dragging.history[1];
+			dragging.history[1] = dragging.history[2];
+			dragging.history[2] = dragging.history[3];
+			dragging.history[3] = dragging.delta;
+		}
+
+		/**
+		 * Initialize continuous movement.
+		 *
+		 * @return {Void}
+		 */
+		function continuousInit(source) {
+			dragging.released = 0;
+			dragging.source = source;
+			dragging.slidee = source === 'slidee';
+		}
+
+		/**
+		 * Dragging initiator.
+		 *
+		 * @param  {Event} event
+		 *
+		 * @return {Void}
+		 */
+		function dragInit(event) {
+			var isTouch = event.type === 'touchstart';
+			var source = event.data.source;
+			var isSlidee = source === 'slidee';
+
+			// Ignore when already in progress, or interactive element in non-touch navivagion
+			if (dragging.init || !isTouch && isInteractive(event.target)) {
+				return;
+			}
+
+			// Handle dragging conditions
+			if (source === 'handle' && (!o.dragHandle || hPos.start === hPos.end)) {
+				return;
+			}
+
+			// SLIDEE dragging conditions
+			if (isSlidee && !(isTouch ? o.touchDragging : o.mouseDragging && event.which < 2)) {
+				return;
+			}
+
+			if (!isTouch) {
+				// prevents native image dragging in Firefox
+				stopDefault(event);
+			}
+
+			// Reset dragging object
+			continuousInit(source);
+
+			// Properties used in dragHandler
+			dragging.init = 0;
+			dragging.$source = $(event.target);
+			dragging.touch = isTouch;
+			dragging.pointer = isTouch ? event.originalEvent.touches[0] : event;
+			dragging.initX = dragging.pointer.pageX;
+			dragging.initY = dragging.pointer.pageY;
+			dragging.initPos = isSlidee ? pos.cur : hPos.cur;
+			dragging.start = +new Date();
+			dragging.time = 0;
+			dragging.path = 0;
+			dragging.delta = 0;
+			dragging.locked = 0;
+			dragging.history = [0, 0, 0, 0];
+			dragging.pathToLock = isSlidee ? isTouch ? 30 : 10 : 0;
+
+			// Bind dragging events
+			$doc.on(isTouch ? dragTouchEvents : dragMouseEvents, dragHandler);
+
+			// Pause ongoing cycle
+			self.pause(1);
+
+			// Add dragging class
+			(isSlidee ? $slidee : $handle).addClass(o.draggedClass);
+
+			// Trigger moveStart event
+			trigger('moveStart');
+
+			// Keep track of a dragging path history. This is later used in the
+			// dragging release swing calculation when dragging SLIDEE.
+			if (isSlidee) {
+				historyID = setInterval(draggingHistoryTick, 10);
+			}
+		}
+
+		/**
+		 * Handler for dragging scrollbar handle or SLIDEE.
+		 *
+		 * @param  {Event} event
+		 *
+		 * @return {Void}
+		 */
+		function dragHandler(event) {
+			dragging.released = event.type === 'mouseup' || event.type === 'touchend';
+			dragging.pointer = dragging.touch ? event.originalEvent[dragging.released ? 'changedTouches' : 'touches'][0] : event;
+			dragging.pathX = dragging.pointer.pageX - dragging.initX;
+			dragging.pathY = dragging.pointer.pageY - dragging.initY;
+			dragging.path = sqrt(pow(dragging.pathX, 2) + pow(dragging.pathY, 2));
+			dragging.delta = o.horizontal ? dragging.pathX : dragging.pathY;
+
+			if (!dragging.released && dragging.path < 1) return;
+
+			// We haven't decided whether this is a drag or not...
+			if (!dragging.init) {
+				// If the drag path was very short, maybe it's not a drag?
+				if (dragging.path < o.dragThreshold) {
+					// If the pointer was released, the path will not become longer and it's
+					// definitely not a drag. If not released yet, decide on next iteration
+					return dragging.released ? dragEnd() : undefined;
+				}
+				else {
+					// If dragging path is sufficiently long we can confidently start a drag
+					// if drag is in different direction than scroll, ignore it
+					if (o.horizontal ? abs(dragging.pathX) > abs(dragging.pathY) : abs(dragging.pathX) < abs(dragging.pathY)) {
+						dragging.init = 1;
+					} else {
+						return dragEnd();
+					}
+				}
+			}
+
+			stopDefault(event);
+
+			// Disable click on a source element, as it is unwelcome when dragging
+			if (!dragging.locked && dragging.path > dragging.pathToLock && dragging.slidee) {
+				dragging.locked = 1;
+				dragging.$source.on(clickEvent, disableOneEvent);
+			}
+
+			// Cancel dragging on release
+			if (dragging.released) {
+				dragEnd();
+
+				// Adjust path with a swing on mouse release
+				if (o.releaseSwing && dragging.slidee) {
+					dragging.swing = (dragging.delta - dragging.history[0]) / 40 * 300;
+					dragging.delta += dragging.swing;
+					dragging.tweese = abs(dragging.swing) > 10;
+				}
+			}
+
+			slideTo(dragging.slidee ? round(dragging.initPos - dragging.delta) : handleToSlidee(dragging.initPos + dragging.delta));
+		}
+
+		/**
+		 * Stops dragging and cleans up after it.
+		 *
+		 * @return {Void}
+		 */
+		function dragEnd() {
+			clearInterval(historyID);
+			dragging.released = true;
+			$doc.off(dragging.touch ? dragTouchEvents : dragMouseEvents, dragHandler);
+			(dragging.slidee ? $slidee : $handle).removeClass(o.draggedClass);
+
+			// Make sure that disableOneEvent is not active in next tick.
+			setTimeout(function () {
+				dragging.$source.off(clickEvent, disableOneEvent);
+			});
+
+			// Normally, this is triggered in render(), but if there
+			// is nothing to render, we have to do it manually here.
+			if (pos.cur === pos.dest && dragging.init) {
+				trigger('moveEnd');
+			}
+
+			// Resume ongoing cycle
+			self.resume(1);
+
+			dragging.init = 0;
+		}
+
+		/**
+		 * Check whether element is interactive.
+		 *
+		 * @return {Boolean}
+		 */
+		function isInteractive(element) {
+			return ~$.inArray(element.nodeName, interactiveElements) || $(element).is(o.interactive);
+		}
+
+		/**
+		 * Continuous movement cleanup on mouseup.
+		 *
+		 * @return {Void}
+		 */
+		function movementReleaseHandler() {
+			self.stop();
+			$doc.off('mouseup', movementReleaseHandler);
+		}
+
+		/**
+		 * Buttons navigation handler.
+		 *
+		 * @param  {Event} event
+		 *
+		 * @return {Void}
+		 */
+		function buttonsHandler(event) {
+			/*jshint validthis:true */
+			stopDefault(event);
+			switch (this) {
+				case $forwardButton[0]:
+				case $backwardButton[0]:
+					self.moveBy($forwardButton.is(this) ? o.moveBy : -o.moveBy);
+					$doc.on('mouseup', movementReleaseHandler);
+					break;
+
+				case $prevButton[0]:
+					self.prev();
+					break;
+
+				case $nextButton[0]:
+					self.next();
+					break;
+
+				case $prevPageButton[0]:
+					self.prevPage();
+					break;
+
+				case $nextPageButton[0]:
+					self.nextPage();
+					break;
+			}
+		}
+
+		/**
+		 * Mouse wheel delta normalization.
+		 *
+		 * @param  {Event} event
+		 *
+		 * @return {Int}
+		 */
+		function normalizeWheelDelta(event) {
+			// wheelDelta needed only for IE8-
+			scrolling.curDelta = ((o.horizontal ? event.deltaY || event.deltaX : event.deltaY) || -event.wheelDelta);
+			scrolling.curDelta /= event.deltaMode === 1 ? 3 : 100;
+			if (!itemNav) {
+				return scrolling.curDelta;
+			}
+			time = +new Date();
+			if (scrolling.last < time - scrolling.resetTime) {
+				scrolling.delta = 0;
+			}
+			scrolling.last = time;
+			scrolling.delta += scrolling.curDelta;
+			if (abs(scrolling.delta) < 1) {
+				scrolling.finalDelta = 0;
+			} else {
+				scrolling.finalDelta = round(scrolling.delta / 1);
+				scrolling.delta %= 1;
+			}
+			return scrolling.finalDelta;
+		}
+
+		/**
+		 * Mouse scrolling handler.
+		 *
+		 * @param  {Event} event
+		 *
+		 * @return {Void}
+		 */
+		function scrollHandler(event) {
+			// Mark event as originating in a Sly instance
+			event.originalEvent[namespace] = self;
+			// Don't hijack global scrolling
+			var time = +new Date();
+			if (lastGlobalWheel + o.scrollHijack > time && $scrollSource[0] !== document && $scrollSource[0] !== window) {
+				lastGlobalWheel = time;
+				return;
+			}
+			// Ignore if there is no scrolling to be done
+			if (!o.scrollBy || pos.start === pos.end) {
+				return;
+			}
+			var delta = normalizeWheelDelta(event.originalEvent);
+			// Trap scrolling only when necessary and/or requested
+			if (o.scrollTrap || delta > 0 && pos.dest < pos.end || delta < 0 && pos.dest > pos.start) {
+				stopDefault(event, 1);
+			}
+			self.slideBy(o.scrollBy * delta);
+		}
+
+		/**
+		 * Scrollbar click handler.
+		 *
+		 * @param  {Event} event
+		 *
+		 * @return {Void}
+		 */
+		function scrollbarHandler(event) {
+			// Only clicks on scroll bar. Ignore the handle.
+			if (o.clickBar && event.target === $sb[0]) {
+				stopDefault(event);
+				// Calculate new handle position and sync SLIDEE to it
+				slideTo(handleToSlidee((o.horizontal ? event.pageX - $sb.offset().left : event.pageY - $sb.offset().top) - handleSize / 2));
+			}
+		}
+
+		/**
+		 * Keyboard input handler.
+		 *
+		 * @param  {Event} event
+		 *
+		 * @return {Void}
+		 */
+		function keyboardHandler(event) {
+			if (!o.keyboardNavBy) {
+				return;
+			}
+
+			switch (event.which) {
+				// Left or Up
+				case o.horizontal ? 37 : 38:
+					stopDefault(event);
+					self[o.keyboardNavBy === 'pages' ? 'prevPage' : 'prev']();
+					break;
+
+				// Right or Down
+				case o.horizontal ? 39 : 40:
+					stopDefault(event);
+					self[o.keyboardNavBy === 'pages' ? 'nextPage' : 'next']();
+					break;
+			}
+		}
+
+		/**
+		 * Click on item activation handler.
+		 *
+		 * @param  {Event} event
+		 *
+		 * @return {Void}
+		 */
+		function activateHandler(event) {
+			/*jshint validthis:true */
+
+			// Ignore clicks on interactive elements.
+			if (isInteractive(this)) {
+				event.originalEvent[namespace + 'ignore'] = true;
+				return;
+			}
+
+			// Ignore events that:
+			// - are not originating from direct SLIDEE children
+			// - originated from interactive elements
+			if (this.parentNode !== $slidee[0] || event.originalEvent[namespace + 'ignore']) return;
+
+			self.activate(this);
+		}
+
+		/**
+		 * Click on page button handler.
+		 *
+		 * @param {Event} event
+		 *
+		 * @return {Void}
+		 */
+		function activatePageHandler() {
+			/*jshint validthis:true */
+			// Accept only events from direct pages bar children.
+			if (this.parentNode === $pb[0]) {
+				self.activatePage($pages.index(this));
+			}
+		}
+
+		/**
+		 * Pause on hover handler.
+		 *
+		 * @param  {Event} event
+		 *
+		 * @return {Void}
+		 */
+		function pauseOnHoverHandler(event) {
+			if (o.pauseOnHover) {
+				self[event.type === 'mouseenter' ? 'pause' : 'resume'](2);
+			}
+		}
+
+		/**
+		 * Trigger callbacks for event.
+		 *
+		 * @param  {String} name Event name.
+		 * @param  {Mixed}  argX Arguments passed to callbacks.
+		 *
+		 * @return {Void}
+		 */
+		function trigger(name, arg1) {
+			if (callbacks[name]) {
+				l = callbacks[name].length;
+				// Callbacks will be stored and executed from a temporary array to not
+				// break the execution queue when one of the callbacks unbinds itself.
+				tmpArray.length = 0;
+				for (i = 0; i < l; i++) {
+					tmpArray.push(callbacks[name][i]);
+				}
+				// Execute the callbacks
+				for (i = 0; i < l; i++) {
+					tmpArray[i].call(self, name, arg1);
+				}
+			}
+		}
+
+		/**
+		 * Destroys instance and everything it created.
+		 *
+		 * @return {Void}
+		 */
+		self.destroy = function () {
+			// Remove the reference to itself
+			Sly.removeInstance(frame);
+
+			// Unbind all events
+			$scrollSource
+				.add($handle)
+				.add($sb)
+				.add($pb)
+				.add($forwardButton)
+				.add($backwardButton)
+				.add($prevButton)
+				.add($nextButton)
+				.add($prevPageButton)
+				.add($nextPageButton)
+				.off('.' + namespace);
+
+			// Unbinding specifically as to not nuke out other instances
+			$doc.off('keydown', keyboardHandler);
+
+			// Remove classes
+			$prevButton
+				.add($nextButton)
+				.add($prevPageButton)
+				.add($nextPageButton)
+				.removeClass(o.disabledClass);
+
+			if ($items && rel.activeItem != null) {
+				$items.eq(rel.activeItem).removeClass(o.activeClass);
+			}
+
+			// Remove page items
+			$pb.empty();
+
+			if (!parallax) {
+				// Unbind events from frame
+				$frame.off('.' + namespace);
+				// Restore original styles
+				frameStyles.restore();
+				slideeStyles.restore();
+				sbStyles.restore();
+				handleStyles.restore();
+				// Remove the instance from element data storage
+				$.removeData(frame, namespace);
+			}
+
+			// Clean up collections
+			items.length = pages.length = 0;
+			last = {};
+
+			// Reset initialized status and return the instance
+			self.initialized = 0;
+			return self;
+		};
+
+		/**
+		 * Initialize.
+		 *
+		 * @return {Object}
+		 */
+		self.init = function () {
+			if (self.initialized) {
+				return;
+			}
+
+			// Disallow multiple instances on the same element
+			if (Sly.getInstance(frame)) throw new Error('There is already a Sly instance on this element');
+
+			// Store the reference to itself
+			Sly.storeInstance(frame, self);
+
+			// Register callbacks map
+			self.on(callbackMap);
+
+			// Save styles
+			var holderProps = ['overflow', 'position'];
+			var movableProps = ['position', 'webkitTransform', 'msTransform', 'transform', 'left', 'top', 'width', 'height'];
+			frameStyles.save.apply(frameStyles, holderProps);
+			sbStyles.save.apply(sbStyles, holderProps);
+			slideeStyles.save.apply(slideeStyles, movableProps);
+			handleStyles.save.apply(handleStyles, movableProps);
+
+			// Set required styles
+			var $movables = $handle;
+			if (!parallax) {
+				$movables = $movables.add($slidee);
+				$frame.css('overflow', 'hidden');
+				if (!transform && $frame.css('position') === 'static') {
+					$frame.css('position', 'relative');
+				}
+			}
+			if (transform) {
+				if (gpuAcceleration) {
+					$movables.css(transform, gpuAcceleration);
+				}
+			} else {
+				if ($sb.css('position') === 'static') {
+					$sb.css('position', 'relative');
+				}
+				$movables.css({ position: 'absolute' });
+			}
+
+			// Navigation buttons
+			if (o.forward) {
+				$forwardButton.on(mouseDownEvent, buttonsHandler);
+			}
+			if (o.backward) {
+				$backwardButton.on(mouseDownEvent, buttonsHandler);
+			}
+			if (o.prev) {
+				$prevButton.on(clickEvent, buttonsHandler);
+			}
+			if (o.next) {
+				$nextButton.on(clickEvent, buttonsHandler);
+			}
+			if (o.prevPage) {
+				$prevPageButton.on(clickEvent, buttonsHandler);
+			}
+			if (o.nextPage) {
+				$nextPageButton.on(clickEvent, buttonsHandler);
+			}
+
+			// Scrolling navigation
+			$scrollSource.on(wheelEvent, scrollHandler);
+
+			// Clicking on scrollbar navigation
+			if ($sb[0]) {
+				$sb.on(clickEvent, scrollbarHandler);
+			}
+
+			// Click on items navigation
+			if (itemNav && o.activateOn) {
+				$frame.on(o.activateOn + '.' + namespace, '*', activateHandler);
+			}
+
+			// Pages navigation
+			if ($pb[0] && o.activatePageOn) {
+				$pb.on(o.activatePageOn + '.' + namespace, '*', activatePageHandler);
+			}
+
+			// Dragging navigation
+			$dragSource.on(dragInitEvents, { source: 'slidee' }, dragInit);
+
+			// Scrollbar dragging navigation
+			if ($handle) {
+				$handle.on(dragInitEvents, { source: 'handle' }, dragInit);
+			}
+
+			// Keyboard navigation
+			$doc.on('keydown', keyboardHandler);
+
+			if (!parallax) {
+				// Pause on hover
+				$frame.on('mouseenter.' + namespace + ' mouseleave.' + namespace, pauseOnHoverHandler);
+				// Reset native FRAME element scroll
+				$frame.on('scroll.' + namespace, resetScroll);
+			}
+
+			// Mark instance as initialized
+			self.initialized = 1;
+
+			// Load
+			load(true);
+
+			// Initiate automatic cycling
+			if (o.cycleBy && !parallax) {
+				self[o.startPaused ? 'pause' : 'resume']();
+			}
+
+			// Return instance
+			return self;
+		};
+	}
+
+	Sly.getInstance = function (element) {
+		return $.data(element, namespace);
+	};
+
+	Sly.storeInstance = function (element, sly) {
+		return $.data(element, namespace, sly);
+	};
+
+	Sly.removeInstance = function (element) {
+		return $.removeData(element, namespace);
+	};
+
+	/**
+	 * Return type of the value.
+	 *
+	 * @param  {Mixed} value
+	 *
+	 * @return {String}
+	 */
+	function type(value) {
+		if (value == null) {
+			return String(value);
+		}
+
+		if (typeof value === 'object' || typeof value === 'function') {
+			return Object.prototype.toString.call(value).match(/\s([a-z]+)/i)[1].toLowerCase() || 'object';
+		}
+
+		return typeof value;
+	}
+
+	/**
+	 * Event preventDefault & stopPropagation helper.
+	 *
+	 * @param {Event} event     Event object.
+	 * @param {Bool}  noBubbles Cancel event bubbling.
+	 *
+	 * @return {Void}
+	 */
+	function stopDefault(event, noBubbles) {
+		event.preventDefault();
+		if (noBubbles) {
+			event.stopPropagation();
+		}
+	}
+
+	/**
+	 * Disables an event it was triggered on and unbinds itself.
+	 *
+	 * @param  {Event} event
+	 *
+	 * @return {Void}
+	 */
+	function disableOneEvent(event) {
+		/*jshint validthis:true */
+		stopDefault(event, 1);
+		$(this).off(event.type, disableOneEvent);
+	}
+
+	/**
+	 * Resets native element scroll values to 0.
+	 *
+	 * @return {Void}
+	 */
+	function resetScroll() {
+		/*jshint validthis:true */
+		this.scrollLeft = 0;
+		this.scrollTop = 0;
+	}
+
+	/**
+	 * Check if variable is a number.
+	 *
+	 * @param {Mixed} value
+	 *
+	 * @return {Boolean}
+	 */
+	function isNumber(value) {
+		return !isNaN(parseFloat(value)) && isFinite(value);
+	}
+
+	/**
+	 * Parse style to pixels.
+	 *
+	 * @param {Object}   $item    jQuery object with element.
+	 * @param {Property} property CSS property to get the pixels from.
+	 *
+	 * @return {Int}
+	 */
+	function getPx($item, property) {
+		return 0 | round(String($item.css(property)).replace(/[^\-0-9.]/g, ''));
+	}
+
+	/**
+	 * Make sure that number is within the limits.
+	 *
+	 * @param {Number} number
+	 * @param {Number} min
+	 * @param {Number} max
+	 *
+	 * @return {Number}
+	 */
+	function within(number, min, max) {
+		return number < min ? min : number > max ? max : number;
+	}
+
+	/**
+	 * Saves element styles for later restoration.
+	 *
+	 * Example:
+	 *   var styles = new StyleRestorer(frame);
+	 *   styles.save('position');
+	 *   element.style.position = 'absolute';
+	 *   styles.restore(); // restores to state before the assignment above
+	 *
+	 * @param {Element} element
+	 */
+	function StyleRestorer(element) {
+		var self = {};
+		self.style = {};
+		self.save = function () {
+			if (!element || !element.nodeType) return;
+			for (var i = 0; i < arguments.length; i++) {
+				self.style[arguments[i]] = element.style[arguments[i]];
+			}
+			return self;
+		};
+		self.restore = function () {
+			if (!element || !element.nodeType) return;
+			for (var prop in self.style) {
+				if (self.style.hasOwnProperty(prop)) element.style[prop] = self.style[prop];
+			}
+			return self;
+		};
+		return self;
+	}
+
+	// Local WindowAnimationTiming interface polyfill
+	(function (w) {
+		rAF = w.requestAnimationFrame
+			|| w.webkitRequestAnimationFrame
+			|| fallback;
+
+		/**
+		* Fallback implementation.
+		*/
+		var prev = new Date().getTime();
+		function fallback(fn) {
+			var curr = new Date().getTime();
+			var ms = Math.max(0, 16 - (curr - prev));
+			var req = setTimeout(fn, ms);
+			prev = curr;
+			return req;
+		}
+
+		/**
+		* Cancel.
+		*/
+		var cancel = w.cancelAnimationFrame
+			|| w.webkitCancelAnimationFrame
+			|| w.clearTimeout;
+
+		cAF = function(id){
+			cancel.call(w, id);
+		};
+	}(window));
+
+	// Feature detects
+	(function () {
+		var prefixes = ['', 'Webkit', 'Moz', 'ms', 'O'];
+		var el = document.createElement('div');
+
+		function testProp(prop) {
+			for (var p = 0, pl = prefixes.length; p < pl; p++) {
+				var prefixedProp = prefixes[p] ? prefixes[p] + prop.charAt(0).toUpperCase() + prop.slice(1) : prop;
+				if (el.style[prefixedProp] != null) {
+					return prefixedProp;
+				}
+			}
+		}
+
+		// Global support indicators
+		transform = testProp('transform');
+		gpuAcceleration = testProp('perspective') ? 'translateZ(0) ' : '';
+	}());
+
+	// Expose class globally
+	w[className] = Sly;
+
+	// jQuery proxy
+	$.fn[pluginName] = function (options, callbackMap) {
+		var method, methodArgs;
+
+		// Attributes logic
+		if (!$.isPlainObject(options)) {
+			if (type(options) === 'string' || options === false) {
+				method = options === false ? 'destroy' : options;
+				methodArgs = Array.prototype.slice.call(arguments, 1);
+			}
+			options = {};
+		}
+
+		// Apply to all elements
+		return this.each(function (i, element) {
+			// Call with prevention against multiple instantiations
+			var plugin = Sly.getInstance(element);
+
+			if (!plugin && !method) {
+				// Create a new object if it doesn't exist yet
+				plugin = new Sly(element, options, callbackMap).init();
+			} else if (plugin && method) {
+				// Call method
+				if (plugin[method]) {
+					plugin[method].apply(plugin, methodArgs);
+				}
+			}
+		});
+	};
+
+	// Default options
+	Sly.defaults = {
+		slidee:     null,  // Selector, DOM element, or jQuery object with DOM element representing SLIDEE.
+		horizontal: false, // Switch to horizontal mode.
+
+		// Item based navigation
+		itemNav:        null,  // Item navigation type. Can be: 'basic', 'centered', 'forceCentered'.
+		itemSelector:   null,  // Select only items that match this selector.
+		smart:          false, // Repositions the activated item to help with further navigation.
+		activateOn:     null,  // Activate an item on this event. Can be: 'click', 'mouseenter', ...
+		activateMiddle: false, // Always activate the item in the middle of the FRAME. forceCentered only.
+
+		// Scrolling
+		scrollSource: null,  // Element for catching the mouse wheel scrolling. Default is FRAME.
+		scrollBy:     0,     // Pixels or items to move per one mouse scroll. 0 to disable scrolling.
+		scrollHijack: 300,   // Milliseconds since last wheel event after which it is acceptable to hijack global scroll.
+		scrollTrap:   false, // Don't bubble scrolling when hitting scrolling limits.
+
+		// Dragging
+		dragSource:    null,  // Selector or DOM element for catching dragging events. Default is FRAME.
+		mouseDragging: false, // Enable navigation by dragging the SLIDEE with mouse cursor.
+		touchDragging: false, // Enable navigation by dragging the SLIDEE with touch events.
+		releaseSwing:  false, // Ease out on dragging swing release.
+		swingSpeed:    0.2,   // Swing synchronization speed, where: 1 = instant, 0 = infinite.
+		elasticBounds: false, // Stretch SLIDEE position limits when dragging past FRAME boundaries.
+		dragThreshold: 3,     // Distance in pixels before Sly recognizes dragging.
+		interactive:   null,  // Selector for special interactive elements.
+
+		// Scrollbar
+		scrollBar:     null,  // Selector or DOM element for scrollbar container.
+		dragHandle:    false, // Whether the scrollbar handle should be draggable.
+		dynamicHandle: false, // Scrollbar handle represents the ratio between hidden and visible content.
+		minHandleSize: 50,    // Minimal height or width (depends on sly direction) of a handle in pixels.
+		clickBar:      false, // Enable navigation by clicking on scrollbar.
+		syncSpeed:     0.5,   // Handle => SLIDEE synchronization speed, where: 1 = instant, 0 = infinite.
+
+		// Pagesbar
+		pagesBar:       null, // Selector or DOM element for pages bar container.
+		activatePageOn: null, // Event used to activate page. Can be: click, mouseenter, ...
+		pageBuilder:          // Page item generator.
+			function (index) {
+				return '<li>' + (index + 1) + '</li>';
+			},
+
+		// Navigation buttons
+		forward:  null, // Selector or DOM element for "forward movement" button.
+		backward: null, // Selector or DOM element for "backward movement" button.
+		prev:     null, // Selector or DOM element for "previous item" button.
+		next:     null, // Selector or DOM element for "next item" button.
+		prevPage: null, // Selector or DOM element for "previous page" button.
+		nextPage: null, // Selector or DOM element for "next page" button.
+
+		// Automated cycling
+		cycleBy:       null,  // Enable automatic cycling by 'items' or 'pages'.
+		cycleInterval: 5000,  // Delay between cycles in milliseconds.
+		pauseOnHover:  false, // Pause cycling when mouse hovers over the FRAME.
+		startPaused:   false, // Whether to start in paused sate.
+
+		// Mixed options
+		moveBy:        300,     // Speed in pixels per second used by forward and backward buttons.
+		speed:         0,       // Animations speed in milliseconds. 0 to disable animations.
+		easing:        'swing', // Easing for duration based (tweening) animations.
+		startAt:       null,    // Starting offset in pixels or items.
+		keyboardNavBy: null,    // Enable keyboard navigation by 'items' or 'pages'.
+
+		// Classes
+		draggedClass:  'dragged', // Class for dragged elements (like SLIDEE or scrollbar handle).
+		activeClass:   'active',  // Class for active items and pages.
+		disabledClass: 'disabled' // Class for disabled navigation elements.
+	};
+}(jQuery, window));
+
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
+
+/***/ }),
+/* 60 */
+/***/ (function(module, exports, __webpack_require__) {
+
 "use strict";
 /* WEBPACK VAR INJECTION */(function(jQuery) {
 
@@ -43051,22 +45253,22 @@ jQuery(window).on('load', function () {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 60 */
+/* 61 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-__webpack_require__(61);
-
 __webpack_require__(62);
 
-__webpack_require__(79);
+__webpack_require__(63);
 
 __webpack_require__(80);
 
+__webpack_require__(81);
+
 /***/ }),
-/* 61 */
+/* 62 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -43156,13 +45358,13 @@ __webpack_require__(80);
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 62 */
+/* 63 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 /* WEBPACK VAR INJECTION */(function($) {
 
-var _countUp = __webpack_require__(63);
+var _countUp = __webpack_require__(64);
 
 var _countUp2 = _interopRequireDefault(_countUp);
 
@@ -43176,7 +45378,7 @@ var _StoreApp2 = _interopRequireDefault(_StoreApp);
 
 var _appHeadReduser = __webpack_require__(29);
 
-var _appCartRediser = __webpack_require__(78);
+var _appCartRediser = __webpack_require__(79);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -43286,7 +45488,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 63 */
+/* 64 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -43357,7 +45559,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 });
 
 /***/ }),
-/* 64 */
+/* 65 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Symbol = __webpack_require__(21);
@@ -43409,7 +45611,7 @@ module.exports = getRawTag;
 
 
 /***/ }),
-/* 65 */
+/* 66 */
 /***/ (function(module, exports) {
 
 /** Used for built-in method references. */
@@ -43437,10 +45639,10 @@ module.exports = objectToString;
 
 
 /***/ }),
-/* 66 */
+/* 67 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var overArg = __webpack_require__(67);
+var overArg = __webpack_require__(68);
 
 /** Built-in value references. */
 var getPrototype = overArg(Object.getPrototypeOf, Object);
@@ -43449,7 +45651,7 @@ module.exports = getPrototype;
 
 
 /***/ }),
-/* 67 */
+/* 68 */
 /***/ (function(module, exports) {
 
 /**
@@ -43470,7 +45672,7 @@ module.exports = overArg;
 
 
 /***/ }),
-/* 68 */
+/* 69 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -43480,7 +45682,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _ponyfill = __webpack_require__(69);
+var _ponyfill = __webpack_require__(70);
 
 var _ponyfill2 = _interopRequireDefault(_ponyfill);
 
@@ -43506,7 +45708,7 @@ exports['default'] = result;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2), __webpack_require__(4)(module)))
 
 /***/ }),
-/* 69 */
+/* 70 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -43535,7 +45737,7 @@ function symbolObservablePonyfill(root) {
 };
 
 /***/ }),
-/* 70 */
+/* 71 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -43684,7 +45886,7 @@ function combineReducers(reducers) {
 }
 
 /***/ }),
-/* 71 */
+/* 72 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -43741,7 +45943,7 @@ function bindActionCreators(actionCreators, dispatch) {
 }
 
 /***/ }),
-/* 72 */
+/* 73 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -43805,7 +46007,7 @@ function applyMiddleware() {
 }
 
 /***/ }),
-/* 73 */
+/* 74 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global) {!function(e,t){ true?t(exports):"function"==typeof define&&define.amd?define(["exports"],t):t(e.reduxLogger=e.reduxLogger||{})}(this,function(e){"use strict";function t(e,t){e.super_=t,e.prototype=Object.create(t.prototype,{constructor:{value:e,enumerable:!1,writable:!0,configurable:!0}})}function r(e,t){Object.defineProperty(this,"kind",{value:e,enumerable:!0}),t&&t.length&&Object.defineProperty(this,"path",{value:t,enumerable:!0})}function n(e,t,r){n.super_.call(this,"E",e),Object.defineProperty(this,"lhs",{value:t,enumerable:!0}),Object.defineProperty(this,"rhs",{value:r,enumerable:!0})}function o(e,t){o.super_.call(this,"N",e),Object.defineProperty(this,"rhs",{value:t,enumerable:!0})}function i(e,t){i.super_.call(this,"D",e),Object.defineProperty(this,"lhs",{value:t,enumerable:!0})}function a(e,t,r){a.super_.call(this,"A",e),Object.defineProperty(this,"index",{value:t,enumerable:!0}),Object.defineProperty(this,"item",{value:r,enumerable:!0})}function f(e,t,r){var n=e.slice((r||t)+1||e.length);return e.length=t<0?e.length+t:t,e.push.apply(e,n),e}function u(e){var t="undefined"==typeof e?"undefined":N(e);return"object"!==t?t:e===Math?"math":null===e?"null":Array.isArray(e)?"array":"[object Date]"===Object.prototype.toString.call(e)?"date":"function"==typeof e.toString&&/^\/.*\//.test(e.toString())?"regexp":"object"}function l(e,t,r,c,s,d,p){s=s||[],p=p||[];var g=s.slice(0);if("undefined"!=typeof d){if(c){if("function"==typeof c&&c(g,d))return;if("object"===("undefined"==typeof c?"undefined":N(c))){if(c.prefilter&&c.prefilter(g,d))return;if(c.normalize){var h=c.normalize(g,d,e,t);h&&(e=h[0],t=h[1])}}}g.push(d)}"regexp"===u(e)&&"regexp"===u(t)&&(e=e.toString(),t=t.toString());var y="undefined"==typeof e?"undefined":N(e),v="undefined"==typeof t?"undefined":N(t),b="undefined"!==y||p&&p[p.length-1].lhs&&p[p.length-1].lhs.hasOwnProperty(d),m="undefined"!==v||p&&p[p.length-1].rhs&&p[p.length-1].rhs.hasOwnProperty(d);if(!b&&m)r(new o(g,t));else if(!m&&b)r(new i(g,e));else if(u(e)!==u(t))r(new n(g,e,t));else if("date"===u(e)&&e-t!==0)r(new n(g,e,t));else if("object"===y&&null!==e&&null!==t)if(p.filter(function(t){return t.lhs===e}).length)e!==t&&r(new n(g,e,t));else{if(p.push({lhs:e,rhs:t}),Array.isArray(e)){var w;e.length;for(w=0;w<e.length;w++)w>=t.length?r(new a(g,w,new i(void 0,e[w]))):l(e[w],t[w],r,c,g,w,p);for(;w<t.length;)r(new a(g,w,new o(void 0,t[w++])))}else{var x=Object.keys(e),S=Object.keys(t);x.forEach(function(n,o){var i=S.indexOf(n);i>=0?(l(e[n],t[n],r,c,g,n,p),S=f(S,i)):l(e[n],void 0,r,c,g,n,p)}),S.forEach(function(e){l(void 0,t[e],r,c,g,e,p)})}p.length=p.length-1}else e!==t&&("number"===y&&isNaN(e)&&isNaN(t)||r(new n(g,e,t)))}function c(e,t,r,n){return n=n||[],l(e,t,function(e){e&&n.push(e)},r),n.length?n:void 0}function s(e,t,r){if(r.path&&r.path.length){var n,o=e[t],i=r.path.length-1;for(n=0;n<i;n++)o=o[r.path[n]];switch(r.kind){case"A":s(o[r.path[n]],r.index,r.item);break;case"D":delete o[r.path[n]];break;case"E":case"N":o[r.path[n]]=r.rhs}}else switch(r.kind){case"A":s(e[t],r.index,r.item);break;case"D":e=f(e,t);break;case"E":case"N":e[t]=r.rhs}return e}function d(e,t,r){if(e&&t&&r&&r.kind){for(var n=e,o=-1,i=r.path?r.path.length-1:0;++o<i;)"undefined"==typeof n[r.path[o]]&&(n[r.path[o]]="number"==typeof r.path[o]?[]:{}),n=n[r.path[o]];switch(r.kind){case"A":s(r.path?n[r.path[o]]:n,r.index,r.item);break;case"D":delete n[r.path[o]];break;case"E":case"N":n[r.path[o]]=r.rhs}}}function p(e,t,r){if(r.path&&r.path.length){var n,o=e[t],i=r.path.length-1;for(n=0;n<i;n++)o=o[r.path[n]];switch(r.kind){case"A":p(o[r.path[n]],r.index,r.item);break;case"D":o[r.path[n]]=r.lhs;break;case"E":o[r.path[n]]=r.lhs;break;case"N":delete o[r.path[n]]}}else switch(r.kind){case"A":p(e[t],r.index,r.item);break;case"D":e[t]=r.lhs;break;case"E":e[t]=r.lhs;break;case"N":e=f(e,t)}return e}function g(e,t,r){if(e&&t&&r&&r.kind){var n,o,i=e;for(o=r.path.length-1,n=0;n<o;n++)"undefined"==typeof i[r.path[n]]&&(i[r.path[n]]={}),i=i[r.path[n]];switch(r.kind){case"A":p(i[r.path[n]],r.index,r.item);break;case"D":i[r.path[n]]=r.lhs;break;case"E":i[r.path[n]]=r.lhs;break;case"N":delete i[r.path[n]]}}}function h(e,t,r){if(e&&t){var n=function(n){r&&!r(e,t,n)||d(e,t,n)};l(e,t,n)}}function y(e){return"color: "+F[e].color+"; font-weight: bold"}function v(e){var t=e.kind,r=e.path,n=e.lhs,o=e.rhs,i=e.index,a=e.item;switch(t){case"E":return[r.join("."),n,"→",o];case"N":return[r.join("."),o];case"D":return[r.join(".")];case"A":return[r.join(".")+"["+i+"]",a];default:return[]}}function b(e,t,r,n){var o=c(e,t);try{n?r.groupCollapsed("diff"):r.group("diff")}catch(e){r.log("diff")}o?o.forEach(function(e){var t=e.kind,n=v(e);r.log.apply(r,["%c "+F[t].text,y(t)].concat(P(n)))}):r.log("—— no diff ——");try{r.groupEnd()}catch(e){r.log("—— diff end —— ")}}function m(e,t,r,n){switch("undefined"==typeof e?"undefined":N(e)){case"object":return"function"==typeof e[n]?e[n].apply(e,P(r)):e[n];case"function":return e(t);default:return e}}function w(e){var t=e.timestamp,r=e.duration;return function(e,n,o){var i=["action"];return i.push("%c"+String(e.type)),t&&i.push("%c@ "+n),r&&i.push("%c(in "+o.toFixed(2)+" ms)"),i.join(" ")}}function x(e,t){var r=t.logger,n=t.actionTransformer,o=t.titleFormatter,i=void 0===o?w(t):o,a=t.collapsed,f=t.colors,u=t.level,l=t.diff,c="undefined"==typeof t.titleFormatter;e.forEach(function(o,s){var d=o.started,p=o.startedTime,g=o.action,h=o.prevState,y=o.error,v=o.took,w=o.nextState,x=e[s+1];x&&(w=x.prevState,v=x.started-d);var S=n(g),k="function"==typeof a?a(function(){return w},g,o):a,j=D(p),E=f.title?"color: "+f.title(S)+";":"",A=["color: gray; font-weight: lighter;"];A.push(E),t.timestamp&&A.push("color: gray; font-weight: lighter;"),t.duration&&A.push("color: gray; font-weight: lighter;");var O=i(S,j,v);try{k?f.title&&c?r.groupCollapsed.apply(r,["%c "+O].concat(A)):r.groupCollapsed(O):f.title&&c?r.group.apply(r,["%c "+O].concat(A)):r.group(O)}catch(e){r.log(O)}var N=m(u,S,[h],"prevState"),P=m(u,S,[S],"action"),C=m(u,S,[y,h],"error"),F=m(u,S,[w],"nextState");if(N)if(f.prevState){var L="color: "+f.prevState(h)+"; font-weight: bold";r[N]("%c prev state",L,h)}else r[N]("prev state",h);if(P)if(f.action){var T="color: "+f.action(S)+"; font-weight: bold";r[P]("%c action    ",T,S)}else r[P]("action    ",S);if(y&&C)if(f.error){var M="color: "+f.error(y,h)+"; font-weight: bold;";r[C]("%c error     ",M,y)}else r[C]("error     ",y);if(F)if(f.nextState){var _="color: "+f.nextState(w)+"; font-weight: bold";r[F]("%c next state",_,w)}else r[F]("next state",w);l&&b(h,w,r,k);try{r.groupEnd()}catch(e){r.log("—— log end ——")}})}function S(){var e=arguments.length>0&&void 0!==arguments[0]?arguments[0]:{},t=Object.assign({},L,e),r=t.logger,n=t.stateTransformer,o=t.errorTransformer,i=t.predicate,a=t.logErrors,f=t.diffPredicate;if("undefined"==typeof r)return function(){return function(e){return function(t){return e(t)}}};if(e.getState&&e.dispatch)return console.error("[redux-logger] redux-logger not installed. Make sure to pass logger instance as middleware:\n// Logger with default options\nimport { logger } from 'redux-logger'\nconst store = createStore(\n  reducer,\n  applyMiddleware(logger)\n)\n// Or you can create your own logger with custom options http://bit.ly/redux-logger-options\nimport createLogger from 'redux-logger'\nconst logger = createLogger({\n  // ...options\n});\nconst store = createStore(\n  reducer,\n  applyMiddleware(logger)\n)\n"),function(){return function(e){return function(t){return e(t)}}};var u=[];return function(e){var r=e.getState;return function(e){return function(l){if("function"==typeof i&&!i(r,l))return e(l);var c={};u.push(c),c.started=O.now(),c.startedTime=new Date,c.prevState=n(r()),c.action=l;var s=void 0;if(a)try{s=e(l)}catch(e){c.error=o(e)}else s=e(l);c.took=O.now()-c.started,c.nextState=n(r());var d=t.diff&&"function"==typeof f?f(r,l):t.diff;if(x(u,Object.assign({},t,{diff:d})),u.length=0,c.error)throw c.error;return s}}}}var k,j,E=function(e,t){return new Array(t+1).join(e)},A=function(e,t){return E("0",t-e.toString().length)+e},D=function(e){return A(e.getHours(),2)+":"+A(e.getMinutes(),2)+":"+A(e.getSeconds(),2)+"."+A(e.getMilliseconds(),3)},O="undefined"!=typeof performance&&null!==performance&&"function"==typeof performance.now?performance:Date,N="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(e){return typeof e}:function(e){return e&&"function"==typeof Symbol&&e.constructor===Symbol&&e!==Symbol.prototype?"symbol":typeof e},P=function(e){if(Array.isArray(e)){for(var t=0,r=Array(e.length);t<e.length;t++)r[t]=e[t];return r}return Array.from(e)},C=[];k="object"===("undefined"==typeof global?"undefined":N(global))&&global?global:"undefined"!=typeof window?window:{},j=k.DeepDiff,j&&C.push(function(){"undefined"!=typeof j&&k.DeepDiff===c&&(k.DeepDiff=j,j=void 0)}),t(n,r),t(o,r),t(i,r),t(a,r),Object.defineProperties(c,{diff:{value:c,enumerable:!0},observableDiff:{value:l,enumerable:!0},applyDiff:{value:h,enumerable:!0},applyChange:{value:d,enumerable:!0},revertChange:{value:g,enumerable:!0},isConflict:{value:function(){return"undefined"!=typeof j},enumerable:!0},noConflict:{value:function(){return C&&(C.forEach(function(e){e()}),C=null),c},enumerable:!0}});var F={E:{color:"#2196F3",text:"CHANGED:"},N:{color:"#4CAF50",text:"ADDED:"},D:{color:"#F44336",text:"DELETED:"},A:{color:"#2196F3",text:"ARRAY:"}},L={level:"log",logger:console,logErrors:!0,collapsed:void 0,predicate:void 0,duration:!1,timestamp:!0,stateTransformer:function(e){return e},actionTransformer:function(e){return e},errorTransformer:function(e){return e},colors:{title:function(){return"inherit"},prevState:function(){return"#9E9E9E"},action:function(){return"#03A9F4"},nextState:function(){return"#4CAF50"},error:function(){return"#F20404"}},diff:!1,diffPredicate:void 0,transformer:void 0},T=function(){var e=arguments.length>0&&void 0!==arguments[0]?arguments[0]:{},t=e.dispatch,r=e.getState;return"function"==typeof t||"function"==typeof r?S()({dispatch:t,getState:r}):void console.error("\n[redux-logger v3] BREAKING CHANGE\n[redux-logger v3] Since 3.0.0 redux-logger exports by default logger with default settings.\n[redux-logger v3] Change\n[redux-logger v3] import createLogger from 'redux-logger'\n[redux-logger v3] to\n[redux-logger v3] import { createLogger } from 'redux-logger'\n")};e.defaults=L,e.createLogger=S,e.logger=T,e.default=T,Object.defineProperty(e,"__esModule",{value:!0})});
@@ -43813,7 +46015,7 @@ function applyMiddleware() {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
 
 /***/ }),
-/* 74 */
+/* 75 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -43821,7 +46023,7 @@ function applyMiddleware() {
 
 exports.__esModule = true;
 
-var _jsCookie = __webpack_require__(75);
+var _jsCookie = __webpack_require__(76);
 
 var _jsCookie2 = _interopRequireDefault(_jsCookie);
 
@@ -43869,7 +46071,7 @@ var CookieStorage = function () {
 exports.default = CookieStorage;
 
 /***/ }),
-/* 75 */
+/* 76 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -44044,7 +46246,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
 
 
 /***/ }),
-/* 76 */
+/* 77 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -44096,7 +46298,7 @@ exports.default = LocalStorage;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
 
 /***/ }),
-/* 77 */
+/* 78 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -44159,7 +46361,7 @@ exports.default = {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
 
 /***/ }),
-/* 78 */
+/* 79 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -44189,7 +46391,7 @@ function cartAdd() {
 }
 
 /***/ }),
-/* 79 */
+/* 80 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -44288,7 +46490,7 @@ function cartAdd() {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 80 */
+/* 81 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -44309,7 +46511,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 81 */
+/* 82 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -44326,7 +46528,7 @@ $(document).ajaxComplete(function (e, xhr, settings) {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 82 */
+/* 83 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -44378,7 +46580,7 @@ window.endless_paginate = function () {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 83 */
+/* 84 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -44392,7 +46594,7 @@ $(document).on('click', 'a.mmodal', function (e) {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 84 */
+/* 85 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -44417,7 +46619,7 @@ $('.search-form-container .button-clear').on('click', function () {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 85 */
+/* 86 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -44425,9 +46627,9 @@ $('.search-form-container .button-clear').on('click', function () {
 
 var _preact = __webpack_require__(3);
 
-var _preactRedux = __webpack_require__(86);
+var _preactRedux = __webpack_require__(87);
 
-var _MiniCart = __webpack_require__(87);
+var _MiniCart = __webpack_require__(88);
 
 var _MiniCart2 = _interopRequireDefault(_MiniCart);
 
@@ -44448,7 +46650,7 @@ if (minicart) {
 }
 
 /***/ }),
-/* 86 */
+/* 87 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global) {(function (global, factory) {
@@ -45683,7 +47885,7 @@ return index;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
 
 /***/ }),
-/* 87 */
+/* 88 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -45697,7 +47899,7 @@ var _lodash = __webpack_require__(12);
 
 var _lodash2 = _interopRequireDefault(_lodash);
 
-var _simplebar = __webpack_require__(88);
+var _simplebar = __webpack_require__(89);
 
 var _simplebar2 = _interopRequireDefault(_simplebar);
 
@@ -45869,7 +48071,7 @@ var MiniCart = function (_Component) {
 exports.default = MiniCart;
 
 /***/ }),
-/* 88 */
+/* 89 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*!
@@ -45891,7 +48093,7 @@ object-assign
 var i=Object.getOwnPropertySymbols,o=Object.prototype.hasOwnProperty,s=Object.prototype.propertyIsEnumerable;t.exports=function(){try{if(!Object.assign)return!1;var t=new String("abc");if(t[5]="de","5"===Object.getOwnPropertyNames(t)[0])return!1;for(var e={},n=0;n<10;n++)e["_"+String.fromCharCode(n)]=n;if("0123456789"!==Object.getOwnPropertyNames(e).map(function(t){return e[t]}).join(""))return!1;var r={};return"abcdefghijklmnopqrst".split("").forEach(function(t){r[t]=t}),"abcdefghijklmnopqrst"===Object.keys(Object.assign({},r)).join("")}catch(t){return!1}}()?Object.assign:function(t,e){for(var n,c,a=r(t),u=1;u<arguments.length;u++){n=Object(arguments[u]);for(var l in n)o.call(n,l)&&(a[l]=n[l]);if(i){c=i(n);for(var f=0;f<c.length;f++)s.call(n,c[f])&&(a[c[f]]=n[c[f]])}}return a}}]).default});
 
 /***/ }),
-/* 89 */
+/* 90 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -45923,7 +48125,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 90 */
+/* 91 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -45970,7 +48172,7 @@ $(document).on('click', '.action_block.sort .options li', function (e) {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 91 */
+/* 92 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -45978,7 +48180,7 @@ $(document).on('click', '.action_block.sort .options li', function (e) {
 
 var _preact = __webpack_require__(3);
 
-var _ProductImageSlider = __webpack_require__(92);
+var _ProductImageSlider = __webpack_require__(93);
 
 var _ProductImageSlider2 = _interopRequireDefault(_ProductImageSlider);
 
@@ -46040,7 +48242,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 92 */
+/* 93 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -46050,13 +48252,13 @@ exports.__esModule = true;
 
 var _preact = __webpack_require__(3);
 
-var _preactRenderToString = __webpack_require__(93);
+var _preactRenderToString = __webpack_require__(94);
 
 var _preactRenderToString2 = _interopRequireDefault(_preactRenderToString);
 
-var _video = __webpack_require__(94);
+var _video = __webpack_require__(95);
 
-var _PhotoSwipeContainer = __webpack_require__(95);
+var _PhotoSwipeContainer = __webpack_require__(96);
 
 var _PhotoSwipeContainer2 = _interopRequireDefault(_PhotoSwipeContainer);
 
@@ -46064,7 +48266,7 @@ var _lodash = __webpack_require__(12);
 
 var _lodash2 = _interopRequireDefault(_lodash);
 
-var _reactIdSwiper = __webpack_require__(98);
+var _reactIdSwiper = __webpack_require__(99);
 
 var _reactIdSwiper2 = _interopRequireDefault(_reactIdSwiper);
 
@@ -46412,7 +48614,7 @@ exports.default = ProductImageSlider;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 93 */
+/* 94 */
 /***/ (function(module, exports, __webpack_require__) {
 
 (function (global, factory) {
@@ -46708,7 +48910,7 @@ return renderToString;
 
 
 /***/ }),
-/* 94 */
+/* 95 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -46810,7 +49012,7 @@ function videoLinkToObject(href, callback) {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 95 */
+/* 96 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -46820,11 +49022,11 @@ exports.__esModule = true;
 
 var _preact = __webpack_require__(3);
 
-var _photoswipe = __webpack_require__(96);
+var _photoswipe = __webpack_require__(97);
 
 var _photoswipe2 = _interopRequireDefault(_photoswipe);
 
-var _photoswipeUiDefault = __webpack_require__(97);
+var _photoswipeUiDefault = __webpack_require__(98);
 
 var _photoswipeUiDefault2 = _interopRequireDefault(_photoswipeUiDefault);
 
@@ -46999,7 +49201,7 @@ var cont = new (function () {
 exports.default = cont;
 
 /***/ }),
-/* 96 */
+/* 97 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -50147,7 +52349,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 });
 
 /***/ }),
-/* 97 */
+/* 98 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -50894,16 +53096,16 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 });
 
 /***/ }),
-/* 98 */
+/* 99 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-module.exports = __webpack_require__(99).default;
+module.exports = __webpack_require__(100).default;
 
 /***/ }),
-/* 99 */
+/* 100 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -51506,7 +53708,7 @@ ReactIdSwiper.propTypes = {
 exports.default = ReactIdSwiper;
 
 /***/ }),
-/* 100 */
+/* 101 */
 /***/ (function(module, exports) {
 
 // shim for using process in browser
@@ -51696,7 +53898,7 @@ process.umask = function() { return 0; };
 
 
 /***/ }),
-/* 101 */
+/* 102 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -51715,7 +53917,7 @@ var warning = __webpack_require__(34);
 var assign = __webpack_require__(35);
 
 var ReactPropTypesSecret = __webpack_require__(36);
-var checkPropTypes = __webpack_require__(102);
+var checkPropTypes = __webpack_require__(103);
 
 module.exports = function(isValidElement, throwOnDirectAccess) {
   /* global Symbol */
@@ -52245,7 +54447,7 @@ module.exports = function(isValidElement, throwOnDirectAccess) {
 
 
 /***/ }),
-/* 102 */
+/* 103 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -52311,7 +54513,7 @@ module.exports = checkPropTypes;
 
 
 /***/ }),
-/* 103 */
+/* 104 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -52355,7 +54557,7 @@ module.exports = checkPropTypes;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 104 */
+/* 105 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -52444,7 +54646,7 @@ module.exports = checkPropTypes;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 105 */
+/* 106 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -52493,17 +54695,17 @@ module.exports = checkPropTypes;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 106 */
+/* 107 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 /* WEBPACK VAR INJECTION */(function($) {
 
-var _foundation = __webpack_require__(107);
+var _foundation = __webpack_require__(108);
 
 var _foundationUtil = __webpack_require__(1);
 
-var _foundationUtil2 = __webpack_require__(108);
+var _foundationUtil2 = __webpack_require__(109);
 
 var _foundationUtil3 = __webpack_require__(37);
 
@@ -52515,15 +54717,15 @@ var _foundationUtil6 = __webpack_require__(14);
 
 var _foundation2 = __webpack_require__(39);
 
-var _foundation3 = __webpack_require__(109);
+var _foundation3 = __webpack_require__(110);
 
-var _foundation4 = __webpack_require__(110);
+var _foundation4 = __webpack_require__(111);
 
 var _foundation5 = __webpack_require__(40);
 
-var _foundation6 = __webpack_require__(111);
+var _foundation6 = __webpack_require__(112);
 
-var _foundation7 = __webpack_require__(112);
+var _foundation7 = __webpack_require__(113);
 
 (function () {
     _foundation.Foundation.addToJquery($);
@@ -52554,7 +54756,7 @@ var _foundation7 = __webpack_require__(112);
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 107 */
+/* 108 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -52832,7 +55034,7 @@ function hyphenate(str) {
 exports.Foundation = Foundation;
 
 /***/ }),
-/* 108 */
+/* 109 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -53031,7 +55233,7 @@ function GetExplicitOffsets(element, anchor, position, alignment, vOffset, hOffs
 exports.Box = Box;
 
 /***/ }),
-/* 109 */
+/* 110 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -53428,7 +55630,7 @@ OffCanvas.defaults = {
 exports.OffCanvas = OffCanvas;
 
 /***/ }),
-/* 110 */
+/* 111 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -53810,7 +56012,7 @@ function emCalc(em) {
 exports.Sticky = Sticky;
 
 /***/ }),
-/* 111 */
+/* 112 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -53935,7 +56137,7 @@ Toggler.defaults = {
 exports.Toggler = Toggler;
 
 /***/ }),
-/* 112 */
+/* 113 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -54163,7 +56365,7 @@ ResponsiveAccordionTabs.defaults = {};
 exports.ResponsiveAccordionTabs = ResponsiveAccordionTabs;
 
 /***/ }),
-/* 113 */
+/* 114 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -54430,7 +56632,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 })();
 
 /***/ }),
-/* 114 */
+/* 115 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -54441,7 +56643,7 @@ exports.default = foundationRegisterCustomEvents;
 function foundationRegisterCustomEvents() {}
 
 /***/ }),
-/* 115 */
+/* 116 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -54633,7 +56835,7 @@ exports.default = DepartmentMenu;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 116 */
+/* 117 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -54719,7 +56921,7 @@ exports.default = DottedText;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 117 */
+/* 118 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -54826,7 +57028,7 @@ exports.default = CategoryViewType;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 118 */
+/* 119 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -54834,7 +57036,7 @@ exports.default = CategoryViewType;
 
 exports.__esModule = true;
 
-__webpack_require__(119);
+__webpack_require__(120);
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -55075,7 +57277,7 @@ exports.default = LazyImageLoad;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 119 */
+/* 120 */
 /***/ (function(module, exports) {
 
 /**
@@ -55798,7 +58000,7 @@ window.IntersectionObserverEntry = IntersectionObserverEntry;
 
 
 /***/ }),
-/* 120 */
+/* 121 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -55806,15 +58008,15 @@ window.IntersectionObserverEntry = IntersectionObserverEntry;
 
 exports.__esModule = true;
 
-var _formSerialize = __webpack_require__(121);
+var _formSerialize = __webpack_require__(122);
 
 var _formSerialize2 = _interopRequireDefault(_formSerialize);
 
-var _deduplicate = __webpack_require__(122);
+var _deduplicate = __webpack_require__(123);
 
 var _deduplicate2 = _interopRequireDefault(_deduplicate);
 
-var _objToUri = __webpack_require__(123);
+var _objToUri = __webpack_require__(124);
 
 var _objToUri2 = _interopRequireDefault(_objToUri);
 
@@ -55953,7 +58155,7 @@ exports.default = CatalogFilter;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 121 */
+/* 122 */
 /***/ (function(module, exports) {
 
 // get successful control from form and assemble into object
@@ -56219,7 +58421,7 @@ module.exports = serialize;
 
 
 /***/ }),
-/* 122 */
+/* 123 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -56272,7 +58474,7 @@ function dedup(val) {
 }
 
 /***/ }),
-/* 123 */
+/* 124 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -56297,7 +58499,7 @@ function objToUri(obj, prefix) {
 }
 
 /***/ }),
-/* 124 */
+/* 125 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -56410,7 +58612,7 @@ var FilterPriceSlider = function () {
 exports.default = FilterPriceSlider;
 
 /***/ }),
-/* 125 */
+/* 126 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -56513,7 +58715,7 @@ exports.default = SearchSuggestion;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 126 */
+/* 127 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -56523,7 +58725,7 @@ exports.__esModule = true;
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
-var _extend = __webpack_require__(127);
+var _extend = __webpack_require__(128);
 
 var _extend2 = _interopRequireDefault(_extend);
 
@@ -56692,19 +58894,19 @@ exports.default = Loader;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 127 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__(128);
-
-
-/***/ }),
 /* 128 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var copyObject = __webpack_require__(129),
-    createAssigner = __webpack_require__(137),
-    keysIn = __webpack_require__(146);
+module.exports = __webpack_require__(129);
+
+
+/***/ }),
+/* 129 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var copyObject = __webpack_require__(130),
+    createAssigner = __webpack_require__(138),
+    keysIn = __webpack_require__(147);
 
 /**
  * This method is like `_.assign` except that it iterates over own and
@@ -56745,10 +58947,10 @@ module.exports = assignIn;
 
 
 /***/ }),
-/* 129 */
+/* 130 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var assignValue = __webpack_require__(130),
+var assignValue = __webpack_require__(131),
     baseAssignValue = __webpack_require__(42);
 
 /**
@@ -56791,7 +58993,7 @@ module.exports = copyObject;
 
 
 /***/ }),
-/* 130 */
+/* 131 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var baseAssignValue = __webpack_require__(42),
@@ -56825,11 +59027,11 @@ module.exports = assignValue;
 
 
 /***/ }),
-/* 131 */
+/* 132 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var baseIsNative = __webpack_require__(132),
-    getValue = __webpack_require__(136);
+var baseIsNative = __webpack_require__(133),
+    getValue = __webpack_require__(137);
 
 /**
  * Gets the native function at `key` of `object`.
@@ -56848,13 +59050,13 @@ module.exports = getNative;
 
 
 /***/ }),
-/* 132 */
+/* 133 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var isFunction = __webpack_require__(44),
-    isMasked = __webpack_require__(133),
+    isMasked = __webpack_require__(134),
     isObject = __webpack_require__(8),
-    toSource = __webpack_require__(135);
+    toSource = __webpack_require__(136);
 
 /**
  * Used to match `RegExp`
@@ -56901,10 +59103,10 @@ module.exports = baseIsNative;
 
 
 /***/ }),
-/* 133 */
+/* 134 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var coreJsData = __webpack_require__(134);
+var coreJsData = __webpack_require__(135);
 
 /** Used to detect methods masquerading as native. */
 var maskSrcKey = (function() {
@@ -56927,7 +59129,7 @@ module.exports = isMasked;
 
 
 /***/ }),
-/* 134 */
+/* 135 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var root = __webpack_require__(16);
@@ -56939,7 +59141,7 @@ module.exports = coreJsData;
 
 
 /***/ }),
-/* 135 */
+/* 136 */
 /***/ (function(module, exports) {
 
 /** Used for built-in method references. */
@@ -56971,7 +59173,7 @@ module.exports = toSource;
 
 
 /***/ }),
-/* 136 */
+/* 137 */
 /***/ (function(module, exports) {
 
 /**
@@ -56990,11 +59192,11 @@ module.exports = getValue;
 
 
 /***/ }),
-/* 137 */
+/* 138 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var baseRest = __webpack_require__(138),
-    isIterateeCall = __webpack_require__(145);
+var baseRest = __webpack_require__(139),
+    isIterateeCall = __webpack_require__(146);
 
 /**
  * Creates a function like `_.assign`.
@@ -57033,12 +59235,12 @@ module.exports = createAssigner;
 
 
 /***/ }),
-/* 138 */
+/* 139 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var identity = __webpack_require__(46),
-    overRest = __webpack_require__(139),
-    setToString = __webpack_require__(141);
+    overRest = __webpack_require__(140),
+    setToString = __webpack_require__(142);
 
 /**
  * The base implementation of `_.rest` which doesn't validate or coerce arguments.
@@ -57056,10 +59258,10 @@ module.exports = baseRest;
 
 
 /***/ }),
-/* 139 */
+/* 140 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var apply = __webpack_require__(140);
+var apply = __webpack_require__(141);
 
 /* Built-in method references for those with the same name as other `lodash` methods. */
 var nativeMax = Math.max;
@@ -57098,7 +59300,7 @@ module.exports = overRest;
 
 
 /***/ }),
-/* 140 */
+/* 141 */
 /***/ (function(module, exports) {
 
 /**
@@ -57125,11 +59327,11 @@ module.exports = apply;
 
 
 /***/ }),
-/* 141 */
+/* 142 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var baseSetToString = __webpack_require__(142),
-    shortOut = __webpack_require__(144);
+var baseSetToString = __webpack_require__(143),
+    shortOut = __webpack_require__(145);
 
 /**
  * Sets the `toString` method of `func` to return `string`.
@@ -57145,10 +59347,10 @@ module.exports = setToString;
 
 
 /***/ }),
-/* 142 */
+/* 143 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var constant = __webpack_require__(143),
+var constant = __webpack_require__(144),
     defineProperty = __webpack_require__(43),
     identity = __webpack_require__(46);
 
@@ -57173,7 +59375,7 @@ module.exports = baseSetToString;
 
 
 /***/ }),
-/* 143 */
+/* 144 */
 /***/ (function(module, exports) {
 
 /**
@@ -57205,7 +59407,7 @@ module.exports = constant;
 
 
 /***/ }),
-/* 144 */
+/* 145 */
 /***/ (function(module, exports) {
 
 /** Used to detect hot functions by number of calls within a span of milliseconds. */
@@ -57248,7 +59450,7 @@ module.exports = shortOut;
 
 
 /***/ }),
-/* 145 */
+/* 146 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var eq = __webpack_require__(45),
@@ -57284,11 +59486,11 @@ module.exports = isIterateeCall;
 
 
 /***/ }),
-/* 146 */
+/* 147 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var arrayLikeKeys = __webpack_require__(147),
-    baseKeysIn = __webpack_require__(157),
+var arrayLikeKeys = __webpack_require__(148),
+    baseKeysIn = __webpack_require__(158),
     isArrayLike = __webpack_require__(47);
 
 /**
@@ -57322,15 +59524,15 @@ module.exports = keysIn;
 
 
 /***/ }),
-/* 147 */
+/* 148 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var baseTimes = __webpack_require__(148),
-    isArguments = __webpack_require__(149),
+var baseTimes = __webpack_require__(149),
+    isArguments = __webpack_require__(150),
     isArray = __webpack_require__(41),
-    isBuffer = __webpack_require__(151),
+    isBuffer = __webpack_require__(152),
     isIndex = __webpack_require__(49),
-    isTypedArray = __webpack_require__(153);
+    isTypedArray = __webpack_require__(154);
 
 /** Used for built-in method references. */
 var objectProto = Object.prototype;
@@ -57377,7 +59579,7 @@ module.exports = arrayLikeKeys;
 
 
 /***/ }),
-/* 148 */
+/* 149 */
 /***/ (function(module, exports) {
 
 /**
@@ -57403,10 +59605,10 @@ module.exports = baseTimes;
 
 
 /***/ }),
-/* 149 */
+/* 150 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var baseIsArguments = __webpack_require__(150),
+var baseIsArguments = __webpack_require__(151),
     isObjectLike = __webpack_require__(11);
 
 /** Used for built-in method references. */
@@ -57445,7 +59647,7 @@ module.exports = isArguments;
 
 
 /***/ }),
-/* 150 */
+/* 151 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var baseGetTag = __webpack_require__(10),
@@ -57469,11 +59671,11 @@ module.exports = baseIsArguments;
 
 
 /***/ }),
-/* 151 */
+/* 152 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(module) {var root = __webpack_require__(16),
-    stubFalse = __webpack_require__(152);
+    stubFalse = __webpack_require__(153);
 
 /** Detect free variable `exports`. */
 var freeExports = typeof exports == 'object' && exports && !exports.nodeType && exports;
@@ -57514,7 +59716,7 @@ module.exports = isBuffer;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)(module)))
 
 /***/ }),
-/* 152 */
+/* 153 */
 /***/ (function(module, exports) {
 
 /**
@@ -57538,12 +59740,12 @@ module.exports = stubFalse;
 
 
 /***/ }),
-/* 153 */
+/* 154 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var baseIsTypedArray = __webpack_require__(154),
-    baseUnary = __webpack_require__(155),
-    nodeUtil = __webpack_require__(156);
+var baseIsTypedArray = __webpack_require__(155),
+    baseUnary = __webpack_require__(156),
+    nodeUtil = __webpack_require__(157);
 
 /* Node.js helper references. */
 var nodeIsTypedArray = nodeUtil && nodeUtil.isTypedArray;
@@ -57571,7 +59773,7 @@ module.exports = isTypedArray;
 
 
 /***/ }),
-/* 154 */
+/* 155 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var baseGetTag = __webpack_require__(10),
@@ -57637,7 +59839,7 @@ module.exports = baseIsTypedArray;
 
 
 /***/ }),
-/* 155 */
+/* 156 */
 /***/ (function(module, exports) {
 
 /**
@@ -57657,7 +59859,7 @@ module.exports = baseUnary;
 
 
 /***/ }),
-/* 156 */
+/* 157 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(module) {var freeGlobal = __webpack_require__(22);
@@ -57686,12 +59888,12 @@ module.exports = nodeUtil;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)(module)))
 
 /***/ }),
-/* 157 */
+/* 158 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var isObject = __webpack_require__(8),
-    isPrototype = __webpack_require__(158),
-    nativeKeysIn = __webpack_require__(159);
+    isPrototype = __webpack_require__(159),
+    nativeKeysIn = __webpack_require__(160);
 
 /** Used for built-in method references. */
 var objectProto = Object.prototype;
@@ -57725,7 +59927,7 @@ module.exports = baseKeysIn;
 
 
 /***/ }),
-/* 158 */
+/* 159 */
 /***/ (function(module, exports) {
 
 /** Used for built-in method references. */
@@ -57749,7 +59951,7 @@ module.exports = isPrototype;
 
 
 /***/ }),
-/* 159 */
+/* 160 */
 /***/ (function(module, exports) {
 
 /**
@@ -57775,7 +59977,7 @@ module.exports = nativeKeysIn;
 
 
 /***/ }),
-/* 160 */
+/* 161 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -57788,7 +59990,7 @@ function isTouch() {
 }
 
 /***/ }),
-/* 161 */
+/* 162 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -57811,7 +60013,7 @@ function isMedia(name) {
 }
 
 /***/ }),
-/* 162 */
+/* 163 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -57828,27 +60030,6 @@ function documentReady(callback) {
         callback();
     }
 }
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
-
-/***/ }),
-/* 163 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/* WEBPACK VAR INJECTION */(function($) {
-
-exports.__esModule = true;
-
-var funcRecalcFooter = function funcRecalcFooter() {
-    var footerHeight = $('footer').height();
-
-    console.log(footerHeight);
-
-    $('#content-wrapper').css('margin-bottom', -footerHeight);
-    $('.off-canvas-content .push').css('height', footerHeight);
-};
-
-exports.default = funcRecalcFooter;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ })
