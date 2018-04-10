@@ -2,17 +2,17 @@
     {if $slide.link}
     <a href="">
     {else}
-    <span>
+    <div>
     {/if}
 
-        <div data-background="{$slide.image}">
+        <div class="slide-data" data-background="{$slide.image}">
             <h3 class="caption">{$slide.title}</h3>
             <p class="description">{$slide.description}</p>
         </div>
 
     {if $slide.link}
-    <a href="">
+    </a>
     {else}
-    </span>
+    </div>
     {/if}
 </div>

@@ -1,3 +1,51 @@
 .banners-section {
+  height: rem-calc(177);
+  display: flex;
+
+  @include flex-grid-row();
+
+  @include breakpoint(medium) {
+    height: rem-calc(314);
+  }
+  @include breakpoint(large) {
+    height: rem-calc(416);
+  }
+
+
+  .promotion {
+    flex-basis: 100%;
+    flex-grow: 2;
+
+    @include breakpoint(medium) {
+      flex-basis: 77%;
+    }
+
+    @include breakpoint(large) {
+      flex-basis: 59%;
+    }
+
+
+    .promo_slider {
+
+      ul, li {
+        display: block;
+      }
+
+      .slide-data {
+        background-size: cover;
+      }
+
+    }
+
+  }
+
+  .product-of-the-day {
+    flex-grow: 1;
+  }
+
+  .right-banners {
+    flex-grow: 1;
+  }
+
 
 }

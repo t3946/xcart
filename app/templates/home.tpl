@@ -2,8 +2,9 @@
 
 {block 'content'}
 <section class="banners-section">
+    {*<div class="row">*}
 
-        <div class="promotion__block">
+        <div class="promotion">
             {renderSlider 'promo-sly-slider'}
         </div>
 
@@ -37,6 +38,7 @@
             </div>
         </div>
 
+    {*</div>*}
 </section>
 
 {/block}
