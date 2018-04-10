@@ -4,6 +4,10 @@
     <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700" rel="stylesheet">
 {/block}
 {block 'content'}
+    {$ga_script}
+    <script type="text/javascript">
+        ga('send', 'pageview');
+    </script>
     <div class="content">
 
         <div class="thanks tips_done">

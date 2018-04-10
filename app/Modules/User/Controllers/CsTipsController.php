@@ -6,7 +6,7 @@ namespace Modules\User\Controllers;
 use Modules\Core\Models\GlobalConfigModel;
 use Modules\Order\Helpers\OrderTagEventHelper;
 use Modules\Order\Models\OrderLogModel;
-use Modules\Order\Models\OrderModel;
+use Modules\Sites\Helpers\CurrentSiteHelper;
 use Modules\User\Models\CsTipsModel;
 use Xcart\App\Controller\FrontendController;
 use Xcart\App\Main\Xcart;
@@ -26,7 +26,8 @@ class CsTipsController extends FrontendController
             'order_id' => $request->get->get('order'),
             'hash' => $request->get->get('hash'),
             'capture_amount' => $csTipsModel->capture_amount,
-            'tips' => $csTipsModel->tips
+            'tips' => $csTipsModel->tips,
+            'ga_script' => self::getGoogleAnalitycsScript()
         ]);
 
     }
@@ -43,7 +44,7 @@ class CsTipsController extends FrontendController
             $this->getRequest()->redirect("/");
         }
 
-        if (empty($request->post->get('cash')) || $request->post->get('cash') == 0 || $request->post->get('cash') < 0) {
+        if (empty($request->post->get('cash'))) {
 
             $order_log_model = new OrderLogModel();
             $order_log_model->orderid = $csTipsModel->order_id;
@@ -74,9 +75,23 @@ class CsTipsController extends FrontendController
 
         echo $this->render('cs_tips_done.tpl', [
             'order_id' => $order_log_model->login,
-            'tips' => $order_log_model->log
+            'tips' => $order_log_model->log,
+            'ga_script' => self::getGoogleAnalitycsScript()
         ]);
     }
 
+    public static function getGoogleAnalitycsScript()
+    {
+        $google_analitycs_script_model = GlobalConfigModel::objects()->get(['name' => 'google_analitics_tracking_script']);
+
+        $script = $google_analitycs_script_model->value;
+        $ga_account = CurrentSiteHelper::getGoogleAnalitycsAccount();
+
+        $script = str_replace("{{ga_account_nr}}", $ga_account, $script);
+        $script = str_replace("{{ga_ec_data}}", "", $script);
+        $script = str_replace("{{ga_send}}", "", $script);
+
+        return $script;
+    }
 
 }

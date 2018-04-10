@@ -4,12 +4,16 @@
     <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700" rel="stylesheet">
 {/block}
 {block 'content'}
+    {$ga_script}
+    <script type="text/javascript">
+        ga('send', 'pageview');
+    </script>
     <div class="content">
 
         <div class="thanks main_tips">
             <span class="thanks main_tips">Thank you for your purchase.</span>
             <span class="tips_text">
-                <p>If you are satisfied woith our customer service team,<br>
+                <p>If you are satisfied with our customer service team,<br>
                     feel free to leave a tip. The payment will go straight<br>
                     to customer service from your behalf.
                 </p>
