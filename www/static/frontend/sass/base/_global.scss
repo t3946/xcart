@@ -143,13 +143,15 @@
   }
 }
 
-html, body, #main_wrapper, .off-canvas-content{
+html, body {
   min-height: 100%;
   height: 100%;
 }
 
-#content-wrapper {
+#main_wrapper, #content-wrapper, .off-canvas-content {
   min-height: 100%;
+  //height: 100%;
+  //height: auto;
 }
 
 #main_wrapper {

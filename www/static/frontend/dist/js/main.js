@@ -37511,6 +37511,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
                         families: ['Lato:300,300i,400,400i,700,700i,900']
                     }
                 });
+
+                (0, _footer2.default)();
             }, 2000);
         }, 100);
     });

@@ -118,6 +118,8 @@ import funcRecalcFooter from "./components/footer"; "./components/footer";
                         families: ['Lato:300,300i,400,400i,700,700i,900']
                     }
                 });
+
+                funcRecalcFooter();
             }, 2000);
         }, 100);
 
