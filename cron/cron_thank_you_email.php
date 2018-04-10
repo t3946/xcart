@@ -112,6 +112,8 @@ if ($storefrontsModels = SiteModel::objects()->all()){
                         $oMail->sendEmail();
                         $oMail->to = 'igor@s3stores.com';
                         $oMail->sendEmail();
+                        $oMail->to = 'nikolay@s3stores.com';
+                        $oMail->sendEmail();
 
                         $orderModel->thankyou_for_order_email_sent = 'Y';
                         $orderModel->save();
