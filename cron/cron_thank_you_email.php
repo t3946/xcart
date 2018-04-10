@@ -116,6 +116,10 @@ if ($storefrontsModels = SiteModel::objects()->all()){
                         $orderModel->thankyou_for_order_email_sent = 'Y';
                         $orderModel->save();
 
+                        $str_time = (new DateTime('now'))->diff($start_time)->format('%H:%I:%S');
+                        $log_text = "This order {$orderModel->orderid} 'thank you' email message";
+                        func_backprocess_log($log_category, $log_text);
+
                         $log = "Thank you email sent by system <br />";
                         func_log_order($orderModel->orderid, 'X', $log);
                     }
