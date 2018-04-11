@@ -1,24 +1,25 @@
 (function($) {
     $.event.special.swipe = {
         setup: function () {
-            $(this).on('touchstart', $.event.special.swipe.handler);
-            $(this).on('touchend', $.event.special.swipe.handler);
+            document.addEventListener('touchstart', $.event.special.swipe.handler, {passive: true});
+            document.addEventListener('touchend', $.event.special.swipe.handler, {passive: true});
         },
 
         teardown: function () {
-            $(this).off('touchstart', $.event.special.swipe.handler);
+            document.removeEventListener('touchstart', $.event.special.swipe.handler);
         },
 
         handler: function (event) {
+
             let args = [].slice.call(arguments, 1),
-                touches = event.originalEvent.touches,
+                touches = event.touches,
                 startX, startY,
                 deltaX = 0, deltaY = 0,
                 self = this,
+                originalEvent = event,
                 Dxy = {};
 
-
-            event = $.event.fix(event);
+            event = jQuery.Event( event );
 
             function cancelTouch() {
                 self.removeEventListener('touchmove', onTouchMove);
@@ -28,6 +29,8 @@
 
             function onTouchEnd(e)
             {
+                e = jQuery.Event(e);
+
                 let rad = null,
                     minPath = window['swipe_min_path'] || 100,
                     Dx = Dxy.Dx,
@@ -57,8 +60,13 @@
                 }
 
                 event.type = "swipe";
-                args.unshift(event, deltaX, deltaY, rad); // add back the new event to the front of the arguments with the delatas
-                return ($.event.dispatch || $.event.handle).apply(self, args);
+                event.target = originalEvent.target;
+                event.originalEvent = originalEvent;
+                // args.unshift(event, deltaX, deltaY, rad); // add back the new event to the front of the arguments with the delatas
+
+                $(originalEvent.target).trigger('swipe', [deltaX, deltaY, rad]);
+
+                // return ($.event.dispatch || $.event.handle).apply(self, args);
             }
 
             function onTouchMove(e) {

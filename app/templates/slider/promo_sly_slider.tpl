@@ -1,14 +1,14 @@
-<div id='{$slider_name}' class="promo_slider sly_slider">
+<div id='{$slider_name}' class="promo_slider sly_slider visibility__hidden">
     <div class="frame">
-        <ul>
+        <ul class="clearfix">
             {foreach $slides as $slide}
-                <li>
+                <li class="float-left">
                     {include 'slider/_slide_cover_1.tpl' slide=$slide}
                 </li>
             {/foreach}
         </ul>
     </div>
-    {if $data|length > 1}
+    {if $slides|length > 1}
     <ul class="pages">
         {set $length = $slides|length}
         {foreach 1..$length as $key}
@@ -22,16 +22,33 @@
     <script type="text/javascript">
         window.app.afterReady.push(function(){
             var slider_name = '{$slider_name}';
+            var query = '#{$slider_name} .frame';
+            var $wrap = $('#{$slider_name}');
+            var $frame = $(query);
             {ignore}
-            $().sly({
+            $frame.sly({
                 horizontal: 1,
                 itemNav: 'basic',
                 speed: 300,
                 mouseDragging: 1,
-                touchDragging: 1
+                touchDragging: 1,
+                pagesBar: $wrap.find('.pages'),
+                activatePageOn: 'click'
             });
 
-            console.log($('#promo_slider').toElement);
+            $frame.sly('on', 'load', function(){
+                $wrap.removeClass('visibility__hidden');
+            });
+
+            var funcReload = function() {
+                $(query + ' li').width(Math.floor($wrap.width()));
+                $frame.sly('reload');
+            };
+
+            $(window).on('resize', funcReload);
+
+            funcReload();
+
             {/ignore}
         });
     </script>

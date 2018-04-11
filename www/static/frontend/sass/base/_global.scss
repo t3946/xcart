@@ -116,6 +116,13 @@
   }
 }
 
+.visibility {
+  &__hidden {
+    visibility: hidden;
+  }
+
+}
+
 .no-padding {
   padding: 0;
 }

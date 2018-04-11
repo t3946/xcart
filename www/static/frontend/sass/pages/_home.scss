@@ -1,51 +1,200 @@
-.banners-section {
-  height: rem-calc(177);
-  display: flex;
-
-  @include flex-grid-row();
+.home-page {
+  padding-top: rem-calc(5);
 
   @include breakpoint(medium) {
-    height: rem-calc(314);
+    padding-top: rem-calc(10);
   }
+
   @include breakpoint(large) {
-    height: rem-calc(416);
+    padding-top: rem-calc(5);
   }
 
+  .banners-section {
+    height: rem-calc(177);
+    display: flex;
 
-  .promotion {
-    flex-basis: 100%;
-    flex-grow: 2;
+    @include flex-grid-row();
 
     @include breakpoint(medium) {
-      flex-basis: 77%;
+      height: rem-calc(314);
+      padding: 0 rem-calc(10);
     }
-
     @include breakpoint(large) {
-      flex-basis: 59%;
+      height: rem-calc(416);
     }
 
 
-    .promo_slider {
+    .promotion {
+      overflow: hidden;
+      flex-basis: 100%;
+      flex-grow: 2;
 
-      ul, li {
-        display: block;
+      @include breakpoint(medium) {
+        flex-basis: 77%;
       }
 
-      .slide-data {
-        background-size: cover;
+      @include breakpoint(large) {
+        flex-basis: 59%;
       }
 
+
+      .promo_slider {
+        position: relative;
+        width: 100%;
+        height: 100%;
+
+        .frame {
+          background-color: rgba(11, 62, 111, 0.06);
+
+          ul {
+            list-style: none;
+            display: block;
+            padding: 0;
+            margin: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+
+            //flex-wrap: nowrap;
+            //flex: 1 0 100%;
+          }
+
+          li {
+            padding: 0;
+            margin: 0;
+
+            height: 100%;
+          }
+        }
+
+
+        .slide-data {
+          position: relative;
+          background-size: cover;
+          background-position: center center;
+          height: rem-calc(177);
+
+          @include breakpoint(medium) {
+            height: rem-calc(314);
+          }
+          @include breakpoint(large) {
+            height: rem-calc(416);
+          }
+
+          .slide-info {
+            color: white;
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            //background-color: rgba(8,4,1, .6);
+            background-image:
+                    linear-gradient(to right,
+                        rgba(8,4,1, .6),
+                        rgba(8,4,1, .6) 70%,
+                        rgba(8,4,1, .5) 80%,
+                        rgba(8,4,1,  0) 100%);
+
+            padding: rem-calc(10) 0;
+            padding-left: rem-calc(10);
+
+            @include breakpoint(medium) {
+
+              top: 60%;
+              right: 25%;
+              padding-left: rem-calc(20);
+            }
+
+            @include breakpoint(large) {
+              right: 25%;
+              padding-left: rem-calc(40);
+            }
+
+            h3 {
+              font-size: 21px;
+              font-weight: 900;
+              line-height: 22px;
+              text-transform: uppercase;
+              display: block;
+
+
+              @include breakpoint(medium) {
+                font-size: 26px;
+                line-height: 28px;
+              }
+              @include breakpoint(large) {
+                font-size: 35px;
+                line-height: 38px;
+              }
+            }
+
+            .description {
+              font-size: 12px;
+              font-weight: 800;
+              line-height: 22px;
+              margin: 0;
+              display: block;
+
+
+              @include breakpoint(medium) {
+                font-size: 16px;
+                font-weight: 900;
+                line-height: 28px;
+              }
+              @include breakpoint(large) {
+                font-size: 20px;
+                line-height: 37px;
+              }
+            }
+          }
+        }
+
+        .pages {
+          display: none;
+          position: absolute;
+          list-style: none;
+          padding: 0;
+          margin: 0;
+          bottom: 0;
+          justify-content: center;
+          width: 100%;
+          line-height: rem-calc(25);
+          height: rem-calc(25);
+
+          li {
+            padding: 0;
+            margin: 0 rem-calc(10);
+            border-radius: 10px;
+            background-color: #fff;
+            text-indent:  -9999px;
+            cursor: pointer;
+
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+
+            &.active {
+              background-color: #939393;
+            }
+          }
+
+
+          @include breakpoint(medium) {
+            display: flex;
+          }
+
+        }
+      }
     }
 
+    .product-of-the-day {
+      flex-grow: 1;
+    }
+
+    .right-banners {
+      flex-grow: 1;
+    }
+
+
   }
-
-  .product-of-the-day {
-    flex-grow: 1;
-  }
-
-  .right-banners {
-    flex-grow: 1;
-  }
-
-
 }

@@ -37434,7 +37434,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
         var $offCanvasRight = $('#offCanvasRight');
 
         $(document).on('swipe', function (e, Dx, Dy, angle) {
-            if (e.target.closest('#main_wrapper')) {
+            if (e.target.closest('#main_wrapper') && !e.target.closest('.disable-global-swipe') && !e.target.closest('.disable-global-swipe-horizontal')) {
                 if ((0, _isMedia2.default)('medium') && (0, _isTouch2.default)()) {
                     if (angle < 10) {
                         if (Dx === 1 && Dy === 0) {
@@ -54561,30 +54561,32 @@ module.exports = checkPropTypes;
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function($) {
+/* WEBPACK VAR INJECTION */(function($, jQuery) {
 
 (function ($) {
     $.event.special.swipe = {
         setup: function setup() {
-            $(this).on('touchstart', $.event.special.swipe.handler);
-            $(this).on('touchend', $.event.special.swipe.handler);
+            document.addEventListener('touchstart', $.event.special.swipe.handler, { passive: true });
+            document.addEventListener('touchend', $.event.special.swipe.handler, { passive: true });
         },
 
         teardown: function teardown() {
-            $(this).off('touchstart', $.event.special.swipe.handler);
+            document.removeEventListener('touchstart', $.event.special.swipe.handler);
         },
 
         handler: function handler(event) {
+
             var args = [].slice.call(arguments, 1),
-                touches = event.originalEvent.touches,
+                touches = event.touches,
                 startX = void 0,
                 startY = void 0,
                 deltaX = 0,
                 deltaY = 0,
                 self = this,
+                originalEvent = event,
                 Dxy = {};
 
-            event = $.event.fix(event);
+            event = jQuery.Event(event);
 
             function cancelTouch() {
                 self.removeEventListener('touchmove', onTouchMove);
@@ -54592,6 +54594,8 @@ module.exports = checkPropTypes;
             }
 
             function onTouchEnd(e) {
+                e = jQuery.Event(e);
+
                 var rad = null,
                     minPath = window['swipe_min_path'] || 100,
                     Dx = Dxy.Dx,
@@ -54620,8 +54624,11 @@ module.exports = checkPropTypes;
                 }
 
                 event.type = "swipe";
-                args.unshift(event, deltaX, deltaY, rad);
-                return ($.event.dispatch || $.event.handle).apply(self, args);
+                event.target = originalEvent.target;
+                event.originalEvent = originalEvent;
+
+
+                $(originalEvent.target).trigger('swipe', [deltaX, deltaY, rad]);
             }
 
             function onTouchMove(e) {
@@ -54643,7 +54650,7 @@ module.exports = checkPropTypes;
         }
     };
 })($);
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0), __webpack_require__(0)))
 
 /***/ }),
 /* 106 */

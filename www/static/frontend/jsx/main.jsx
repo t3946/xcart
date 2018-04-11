@@ -39,7 +39,7 @@ import documentReady from "./utils/documentReady";
         let $offCanvasRight = $('#offCanvasRight');
 
         $(document).on('swipe', function(e, Dx, Dy, angle) {
-            if (e.target.closest('#main_wrapper')) {
+            if (e.target.closest('#main_wrapper') && !e.target.closest('.disable-global-swipe') && !e.target.closest('.disable-global-swipe-horizontal')) {
                 if (isMedia('medium') && isTouch()) {
                     if (angle < 10) {
                         if (Dx === 1 && Dy === 0) { //right
