@@ -104,7 +104,7 @@ import documentReady from "./utils/documentReady";
             setTimeout(()=>{
                 WebFont.load({
                     google: {
-                        families: ['Lato:300,300i,400,400i,700,700i,900']
+                        families: ['Lato:300,300i,400,400i,700,700i,800,900']
                     }
                 });
             }, 2000);

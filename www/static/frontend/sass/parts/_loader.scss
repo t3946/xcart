@@ -43,7 +43,7 @@ img {
   };
 
   &.lazy-bg-loaded {
-    background-color: inherit;
+    background-color: inherit !important;
   }
 }
 

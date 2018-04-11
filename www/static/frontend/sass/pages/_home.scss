@@ -21,7 +21,111 @@
     }
     @include breakpoint(large) {
       height: rem-calc(416);
+      padding: 0 rem-calc(20);
     }
+
+
+    .static_banners {
+      display: flex;
+
+      @include breakpoint(medium) {
+        flex-basis: 23%;
+      }
+
+      @include breakpoint(large) {
+        flex-basis: 41%;
+      }
+
+      .banners_column {
+        //width: 50%;
+        display: flex;
+        flex: 1 0 50%;
+        flex-direction: column;
+
+        .banner {
+          flex-grow: 1;
+          height: 100%;
+        }
+
+        &.right-banners {
+          .banner {
+            height: 50%;
+            padding-bottom: rem-calc(2.5);
+
+            &:nth-last-child(1) {
+              padding-top: rem-calc(2.5);
+              padding-bottom: 0;
+            }
+          }
+        }
+      }
+    }
+
+    .static_banners, .banners_column {
+      height: 100%;
+    }
+
+    .banners_column {
+      padding-left: rem-calc(5);
+    }
+
+    .banner__cover {
+      display: block;
+      width: 100%;
+      height: 100%;
+      background-size: cover;
+      background: no-repeat center center;
+    }
+
+    .banner {
+      position: relative;
+      background-color: rgba(11, 62, 111, 0.06);
+
+      .banner__cover {
+        color: black;
+
+        .banner__info {
+          position: absolute;
+          left: 0;
+          right: 0;
+          bottom: rem-calc(15);
+          padding: 0 rem-calc(10) 0 rem-calc(15);
+
+          font-size: 22px;
+          font-weight: 900;
+          line-height: 24px;
+
+
+          @include breakpoint(large) {
+            font-size: 30px;
+            line-height: 31px;
+          }
+
+
+          @include breakpoint(large) {
+            padding-left: rem-calc(20);
+          }
+        }
+      }
+
+
+      &.dark {
+        .banner__cover {
+          color: white;
+
+          .banner__info {
+            padding: rem-calc(10);
+            background-image:
+                    linear-gradient(to right,
+                            rgba(8,4,1, .6),
+                            rgba(8,4,1, .6) 70%,
+                            rgba(8,4,1, .5) 80%,
+                            rgba(8,4,1,  0) 100%);
+          }
+        }
+      }
+    }
+
 
 
     .promotion {
@@ -44,8 +148,6 @@
         height: 100%;
 
         .frame {
-          background-color: rgba(11, 62, 111, 0.06);
-
           ul {
             list-style: none;
             display: block;
@@ -54,9 +156,6 @@
             width: 100%;
             height: 100%;
             overflow: hidden;
-
-            //flex-wrap: nowrap;
-            //flex: 1 0 100%;
           }
 
           li {
@@ -82,32 +181,22 @@
           }
 
           .slide-info {
-            color: white;
-            position: absolute;
-            top: 50%;
             left: 0;
             right: 0;
-            //background-color: rgba(8,4,1, .6);
-            background-image:
-                    linear-gradient(to right,
-                        rgba(8,4,1, .6),
-                        rgba(8,4,1, .6) 70%,
-                        rgba(8,4,1, .5) 80%,
-                        rgba(8,4,1,  0) 100%);
+            bottom: rem-calc(15);
 
-            padding: rem-calc(10) 0;
-            padding-left: rem-calc(10);
+            padding: rem-calc(10);
 
             @include breakpoint(medium) {
-
-              top: 60%;
               right: 25%;
+              bottom: rem-calc(25);
               padding-left: rem-calc(20);
             }
 
             @include breakpoint(large) {
               right: 25%;
               padding-left: rem-calc(40);
+              bottom: rem-calc(40);
             }
 
             h3 {
@@ -186,15 +275,5 @@
         }
       }
     }
-
-    .product-of-the-day {
-      flex-grow: 1;
-    }
-
-    .right-banners {
-      flex-grow: 1;
-    }
-
-
   }
 }

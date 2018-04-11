@@ -37494,7 +37494,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
             setTimeout(function () {
                 WebFont.load({
                     google: {
-                        families: ['Lato:300,300i,400,400i,700,700i,900']
+                        families: ['Lato:300,300i,400,400i,700,700i,800,900']
                     }
                 });
             }, 2000);

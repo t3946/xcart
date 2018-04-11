@@ -108,24 +108,26 @@
 
 
 <script>
-    var createStyleElement = function (href) {
-        var h = document.getElementsByTagName('head')[0];
-        var l = document.createElement('link');
+    (function(){
+        var createStyleElement = function (href) {
+            var h = document.getElementsByTagName('head')[0];
+            var l = document.createElement('link');
 
-        l.rel = 'stylesheet';
-        l.href = href;
-        h.parentNode.insertBefore(l, h);
-    };
+            l.rel = 'stylesheet';
+            l.href = href;
+            h.parentNode.insertBefore(l, h);
+        };
 
-    var cb = function() {
-        setTimeout(function(){
-            createStyleElement( "/static/frontend/dist/css/styles.css?v={frontend_version resource='css/styles.css'}");
-        }, 40);
-    };
-    var raf = requestAnimationFrame || mozRequestAnimationFrame ||
-        webkitRequestAnimationFrame || msRequestAnimationFrame;
-    if (raf) raf(cb);
-    else window.addEventListener('DOMContentLoaded', cb);
+        var cb = function() {
+            setTimeout(function(){
+                createStyleElement( "/static/frontend/dist/css/styles.css?v={frontend_version resource='css/styles.css'}");
+            }, 40);
+        };
+        var raf = requestAnimationFrame || mozRequestAnimationFrame ||
+            webkitRequestAnimationFrame || msRequestAnimationFrame;
+        if (raf) raf(cb);
+        else window.addEventListener('DOMContentLoaded', cb);
+    })();
 </script>
 
 </body>

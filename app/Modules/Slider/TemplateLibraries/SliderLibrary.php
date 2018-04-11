@@ -69,16 +69,6 @@ class SliderLibrary extends TemplateLibrary
                 'description' => 'Try it for 90 days. Enjoy it for 25 years >',
                 'image' => "/static/frontend/dist/images/slider/{$code}/promo.jpg",
             ],
-            [
-                'title' => 'Promotional product',
-                'description' => 'Try it for 90 days. Enjoy it for 25 years >',
-                'image' => "/static/frontend/dist/images/slider/{$code}/promo.jpg",
-            ],
-            [
-                'title' => 'Promotional product',
-                'description' => 'Try it for 90 days. Enjoy it for 25 years >',
-                'image' => "/static/frontend/dist/images/slider/{$code}/promo.jpg",
-            ],
         ];
     }
 }
