@@ -36,15 +36,21 @@ class CsTipsModel extends Model
             $this->capture_amount = (new OrderStore($order_model))->getAdditionalCaptureAmount();
             $this->order_tips = min($this->capture_amount * 0.02, 50);
 
-            if ($this->first_tip = min(15, (0.15 * $this->capture_amount - 0.01) ) ){
-                $this->tips[] = round($this->first_tip,2 ,PHP_ROUND_HALF_UP);
-            }
-            if ($this->second_tip = 0.30 * min(100, $this->capture_amount) ){
-                $this->tips[] = round($this->second_tip,2,PHP_ROUND_HALF_UP);
-            }
-            if ($this->third_tip = 0.50 * min(100, $this->capture_amount) ){
-                $this->tips[] = round($this->third_tip,2,PHP_ROUND_HALF_UP);
-            }
+            $this->tips = [
+                0 => 10,
+                1 => 20,
+                2 => 50
+            ];
+
+//            if ($this->first_tip = min(15, (0.15 * $this->capture_amount - 0.01) ) ){
+//                $this->tips[] = round($this->first_tip,2 ,PHP_ROUND_HALF_UP);
+//            }
+//            if ($this->second_tip = 0.30 * min(100, $this->capture_amount) ){
+//                $this->tips[] = round($this->second_tip,2,PHP_ROUND_HALF_UP);
+//            }
+//            if ($this->third_tip = 0.50 * min(100, $this->capture_amount) ){
+//                $this->tips[] = round($this->third_tip,2,PHP_ROUND_HALF_UP);
+//            }
 
         }
     }
