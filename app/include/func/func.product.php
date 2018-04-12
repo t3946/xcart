@@ -765,15 +765,13 @@ SQL
     /** @var \Xcart\Product $classProduct */
     if ($oProduct = ProductModel::objects()->get(['pk' => $id])) {
 
-
-
         $classProduct = $oProduct;
         Profiler::getInstance()->addPoint();
 
         $oCategory = $oProduct->getMainCategory();
         $categoryid = $oCategory->pk;
 
-        if ($oProduct->isGroupRoot() && !$oProduct->getFrontendChilds()) {
+        if ($oProduct->isGroupRoot() && !$oProduct->getFrontendChilds()->count()) {
             if ($oCategory){
                 Xcart::app()->request->redirect($oCategory->getAbsoluteUrl(), [], 302);
             }
