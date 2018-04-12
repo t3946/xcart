@@ -130,7 +130,7 @@ if ($resources_count = getResourcesCount()) {
 
         /** @var ProductModel $model */
         if ($model = ProductModel::objects()->get(['pk' => $model->resourceid])) {
-            if ($model->groop_root) {
+            if ($model->group_root) {
                 if ($model->isGroupChild()) {
                     $model_root = $model->parent;
                 }
