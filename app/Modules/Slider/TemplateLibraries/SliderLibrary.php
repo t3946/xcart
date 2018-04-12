@@ -65,8 +65,8 @@ class SliderLibrary extends TemplateLibrary
 
         return [
             [
-                'title' => 'Promotional product',
-                'description' => 'Try it for 90 days. Enjoy it for 25 years >',
+                'title' => 'Everyday unbeatable',
+                'description' => 'LOW PRICES up to 50% off',
                 'image' => "/static/frontend/dist/images/slider/{$code}/promo.jpg",
             ],
         ];
