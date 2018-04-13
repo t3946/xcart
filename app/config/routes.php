@@ -19,6 +19,8 @@ return array_merge($admin_routes, [
         'route' => '/pbx',
         'path' => 'Modules.PBX.routes',
         'namespace' => 'pbx',
+    ],
+    [
         'route' => '/brand',
         'path' => 'Modules.Brand.routes',
         'namespace' => 'brand',

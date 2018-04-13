@@ -277,4 +277,36 @@
       }
     }
   }
+
+  .promo-links {
+    .links {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+
+      border-bottom: 2px solid #e8e8e8;
+      height: rem-calc(70);
+
+      @include breakpoint(large) {
+        height: rem-calc(80);
+      }
+
+      .icon {
+        display: inline-block;
+        color: black;
+        vertical-align: middle;
+        height: rem-calc(22);
+        line-height: rem-calc(22);
+        padding-left: rem-calc(40);
+        background: no-repeat left center;
+
+        &.brands { background-image: url('/static/frontend/dist/images/icons/promo/brand.svg'); }
+        &.new { background-image: url('/static/frontend/dist/images/icons/promo/new.svg'); }
+        &.bestsellers { background-image: url('/static/frontend/dist/images/icons/promo/bestsellers.svg'); }
+        &.day { background-image: url('/static/frontend/dist/images/icons/promo/day.svg'); }
+        &.featured { background-image: url('/static/frontend/dist/images/icons/promo/featured.svg'); }
+      }
+    }
+  }
+
 }

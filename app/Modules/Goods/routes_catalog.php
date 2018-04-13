@@ -21,6 +21,26 @@ return [
         'target' => ['\Modules\Goods\Controllers\PromoController', 'actionBestsellers'],
         'name' => 'bestsellers'
     ],
+    [
+        'route' => '/category/featured',
+        'target' => ['\Modules\Goods\Controllers\PromoController', 'actionFeatured'],
+        'name' => 'featured'
+    ],
+    [
+        'route' => '/category/new',
+        'target' => ['\Modules\Goods\Controllers\PromoController', 'actionNew'],
+        'name' => 'new'
+    ],
+    [
+        'route' => '/category/viewed',
+        'target' => ['\Modules\Goods\Controllers\PromoController', 'actionViewed'],
+        'name' => 'viewed'
+    ],
+    [
+        'route' => '/category/brands',
+        'target' => ['\Modules\Goods\Controllers\PromoController', 'actionBrands'],
+        'name' => 'brands'
+    ],
 
 
     [

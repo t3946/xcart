@@ -1,7 +1,7 @@
 {extends  $.request->getIsAjax() ? "ajax.tpl" : "base.tpl"}
 
 {block 'content'}
-<div class="home-page">
+<div class="default-content-page home-page">
     <section class="banners-section">
 
         <div class="promotion disable-global-swipe-horizontal">
@@ -46,24 +46,55 @@
 
 
     </section>
-    <div class="promo-links">
 
+    <div class="promo-links show-for-medium">
+        <div class="row">
+            <div class="column small-12">
+                <div class="links">
+
+                    <a class="icon brands"      href="{url 'brand:list'}">Brands</a>
+                    <a class="icon new"         href="{$category_new->getAbsoluteUrl()}">What's new</a>
+                    <a class="icon bestsellers" href="{url 'catalog:bestsellers'}">Bestsellers</a>
+                    <a class="icon day"         href="#">Product of the day</a>
+                    <a class="icon featured"    href="{url 'catalog:featured'}">Featured products</a>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="small-12 column slider-featured-product">
+            {set $link}{url 'catalog:featured'}{/set}
+            {include 'slider/base_product_slider.tpl' title='Featured product' link=$link}
+        </div>
     </div>
 
     <div class="row">
-        <div class="small-12 column">
-            <div class="slider-block slider-featured-product">
-                <div class="title_container">
-                    <div class="title-section">
-                        Featured product
+        <div class="small-12 column slider-new">
+            {set $link}{url 'catalog:new'}{/set}
+            {include 'slider/base_product_slider.tpl' title="What's new" link=$category_new->getAbsoluteUrl() data_link=$link}
+        </div>
+    </div>
 
-                        <a href="" class="link">
-                            Show all
-                        </a>
-                    </div>
-                </div>
-                <div class="slider-data" data-url="/goods/api/slider/featured"></div>
-            </div>
+    <div class="row">
+        <div class="small-12 column top-categories">
+
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="small-12 column brands">
+            {set $link}{url 'brand:list'}{/set}
+            {set $link_data}{url 'catalog:brands'}{/set}
+            {include 'slider/base_product_slider.tpl' title="Brands" link=$link data_link=$link_data}
+        </div>
+    </div>
+    <div class="row">
+        <div class="small-12 column brands">
+            {set $link}{url 'catalog:viewed'}{/set}
+            {include 'slider/base_product_slider.tpl' title="You recently viewed items" link=$link hidden=true}
         </div>
     </div>
 </div>
