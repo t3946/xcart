@@ -60,6 +60,11 @@ return array_merge($admin_routes, [
         'namespace' => 'payment'
     ],
     [
+        'route' => '/checkout',
+        'path' => 'Modules.Order.routes_checkout',
+        'namespace' => 'checkout'
+    ],
+    [
         'route' => '/',
         'path' => 'Modules.Pages.routes',
         'namespace' => 'page'
