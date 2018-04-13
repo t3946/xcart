@@ -15,6 +15,14 @@ return [
 
     /** CATEGORY ROUTES */
 
+
+    [
+        'route' => '/category/bestsellers',
+        'target' => ['\Modules\Goods\Controllers\PromoController', 'actionBestsellers'],
+        'name' => 'bestsellers'
+    ],
+
+
     [
         'route' => '/category/{i:id}/{slug:slug}/',
         'target' => ['\Modules\Goods\Controllers\CategoryController', 'actionViewOld'],

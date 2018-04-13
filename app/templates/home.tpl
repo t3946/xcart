@@ -25,7 +25,7 @@
             <div class="banners_column right-banners show-for-large">
 
                 <div class="banner bestsellers">
-                    <a href="#" class="banner__cover" data-background="/static/frontend/dist/images/slider/{$.getSite->code|strtolower}/bestsellers.jpg">
+                    <a href="{url 'catalog:bestsellers'}" class="banner__cover" data-background="/static/frontend/dist/images/slider/{$.getSite->code|strtolower}/bestsellers.jpg">
                         <div class="banner__info">
                             <div class="caption">Bestsellers</div>
                             {*<div class="description">Try it for 90 days. Enjoy it for 25 years > </div>*}
@@ -34,7 +34,7 @@
                 </div>
 
                 <div class="banner whatsnew dark">
-                    <a href="#" class="banner__cover" data-background="/static/frontend/dist/images/slider/{$.getSite->code|strtolower}/what_is_new.jpg">
+                    <a href="{$category_new->getAbsoluteUrl()}" class="banner__cover" data-background="/static/frontend/dist/images/slider/{$.getSite->code|strtolower}/what_is_new.jpg">
                         <div class="banner__info">
                             <div class="caption">What’s new</div>
                         </div>
@@ -46,6 +46,26 @@
 
 
     </section>
+    <div class="promo-links">
+
+    </div>
+
+    <div class="row">
+        <div class="small-12 column">
+            <div class="slider-block slider-featured-product">
+                <div class="title_container">
+                    <div class="title-section">
+                        Featured product
+
+                        <a href="" class="link">
+                            Show all
+                        </a>
+                    </div>
+                </div>
+                <div class="slider-data" data-url="/goods/api/slider/featured"></div>
+            </div>
+        </div>
+    </div>
 </div>
 
 {/block}
