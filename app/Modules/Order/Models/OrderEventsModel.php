@@ -62,7 +62,7 @@ class OrderEventsModel extends Model
      */
     public static function newOrderEvent($owner = null, $order_id, string $message = null, int $user_id = null)
     {
-        if (static::objects()->filter(['order_id' => $order_id, 'created_at' => new \DateTime()])->count() == 0)
+        if ($order_id && static::objects()->filter(['order_id' => $order_id, 'created_at' => new \DateTime()])->count() == 0)
         {
             if (!$user_id) {
                 if ($user = Xcart::app()->getUser()) {
@@ -75,7 +75,9 @@ class OrderEventsModel extends Model
 
             //Cache UP
             if (rand(0,10) > 6) {
-                $model->order->getOTRSTicketMessages();
+                if ($order = $model->order) {
+                    $order->getOTRSTicketMessages();
+                }
             }
 
             if ($model->isValid() && $model->save())

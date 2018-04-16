@@ -112,8 +112,8 @@ class UPS extends ShippingProcessor
 
 
             } catch (\Exception $e) {
-                //log
-                Logs::_log(Logs::LOG_RESOURCE_SHIPPING_QUOTES, time(), Logs::LOG_TYPE_SYSTEM, __CLASS__ . ': ' . $e->getMessage());
+                //TODO Add logging
+                //Logs::_log(Logs::LOG_RESOURCE_SHIPPING_QUOTES, time(), Logs::LOG_TYPE_SYSTEM, __CLASS__ . ': ' . $e->getMessage());
             }
         }
 

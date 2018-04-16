@@ -205,4 +205,9 @@ class SiteModel extends Model
         return $this->getName();
     }
 
+    public function getOrderPrefix()
+    {
+        return $this->code."-";
+    }
+
 }

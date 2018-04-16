@@ -3,6 +3,7 @@
 namespace Modules\Order\Helpers;
 
 
+use Modules\Order\Models\FraudStatusModel;
 use Modules\Order\Models\OrderExtraModel;
 use Modules\Order\Models\OrderModel;
 use Modules\Order\Models\OrderStatusModel;
@@ -41,7 +42,9 @@ class OrderEventHelper
             self::$_all_statuses = [];
             self::$_f_statuses = [];
 
-            self::$_f_statuses = func_query_hash('SELECT code, name FROM xcart_order_fraud_statuses ORDER BY order_by', 'code', false, true, true);
+            foreach (FraudStatusModel::objects()->cache(3600)->valuesList(['code', 'name']) as $status) {
+                self::$_f_statuses[$status['code']] = $status['name'];
+            }
 
             foreach (OrderStatusModel::objects()->cache(3600)->valuesList(['code', 'name']) as $status) {
                 self::$_all_statuses[$status['code']] = $status['name'];
