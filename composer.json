@@ -91,7 +91,7 @@
             "app/include/func/func.tests.php",
             "app/include/func/func.user.php",
             "app/include/func/func.xml.php",
-            "www/include/blowfish.php"
+            "app/include/func/blowfish.php"
         ]
     }
 }
