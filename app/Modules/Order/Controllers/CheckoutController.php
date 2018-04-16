@@ -6,6 +6,7 @@ use Modules\Core\Models\CountryModel;
 use Modules\Dashboard\Sqls\SearchSql;
 use Modules\Order\Models\OrderModel;
 use Modules\Order\Models\OrderStatusModel;
+use Modules\Payment\Models\PaymentMethodModel;
 use Modules\User\Models\AddressModel;
 use Xcart\App\Controller\FrontendController;
 use Xcart\App\Main\Xcart;
@@ -87,18 +88,26 @@ class CheckoutController extends FrontendController
         $app = Xcart::app();
         $user = $app->user;
         $cart = $app->cart;
+        $site = $app->getModule('Sites')->getSite();
 
         if (!$user) {}
 
-        [$order, $is_created] = OrderModel::objects()->getOrCreate([
-            'user_id' => $user->id,
+        $order = OrderModel::objects()->get([
             'cart_number' => $cart->getStorage()->getCartNumber(),
-            'order_prefix' => $app->getModule('Sites')->getSite()->getOrderPrefix()
         ]);
+
+        if (!$order) {
+            $this->redirect('checkout:shipping');
+        }
+
+        $payment_methods = PaymentMethodModel::objects()
+            ->filter(['active' => 'Y', 'site__through__storefrontid' => $site->storefrontid])
+            ->order(['is_cod', 'orderby'])
+            ->all();
 
         echo $this->render('checkout/options.tpl', [
             'order' => $order,
-            'countries' => Connection::getInstance()->fetchAll(SearchSql::getAllCountryOrderSql())
+            'payment_methods' => $payment_methods
         ]);
     }
 }

@@ -37,11 +37,10 @@ class ShippingModule extends Module
         }
 
         try {
-            $shipping_rates = Shipping::model()->getShippingRates($user, $distributor, $cart);
+            $shipping_rates = Shipping::model()->getShippingRates($user, $distributor, $cart)[0];
         } catch (\Exception $e) {
             $shipping_rates = [];
         }
-
-        return $shipping_rates;
+        return $shipping_rates ?: reset($shipping_rates);
     }
 }

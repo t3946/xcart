@@ -2,10 +2,12 @@
 
 namespace Modules\Payment\Models;
 
+use Modules\Sites\Models\SiteModel;
 use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\HasManyField;
+use Xcart\App\Orm\Fields\ManyToManyField;
 use Xcart\App\Orm\Model;
 
 class PaymentMethodModel extends Model
@@ -33,6 +35,11 @@ class PaymentMethodModel extends Model
                 'class' => HasManyField::className(),
                 'modelClass' => PaymentProcessorModel::className(),
                 'link' => ['paymentid' => 'paymentid'],
+            ],
+            'site' => [
+                'class' => ManyToManyField::class,
+                'modelClass' => SiteModel::class,
+                'through' => PaymentStorefrontModel::class,
             ]
         ];
     }
