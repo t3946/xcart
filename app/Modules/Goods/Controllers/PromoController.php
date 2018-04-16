@@ -8,12 +8,15 @@ class PromoController extends AbstractCatalogController
 {
     public function actionBestsellers()
     {
-
+        echo '123';
     }
 
 
     public function actionFeatured()
     {
+
+        $this->jsonResponse(['val' =>'123']);
+
         ProductModel::objects();
     }
 

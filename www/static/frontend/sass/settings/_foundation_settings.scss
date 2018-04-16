@@ -153,7 +153,7 @@ $anchor-color: #055a93;
 //$anchor-color-hover: scale-color($anchor-color, $lightness: -14%);
 $anchor-color-hover: #154159;
 $anchor-text-decoration: none;
-$anchor-text-decoration-hover: none;
+$anchor-text-decoration-hover: underline;
 $hr-width: $global-width;
 $hr-border: 1px solid $medium-gray;
 $hr-margin: rem-calc(20) auto;

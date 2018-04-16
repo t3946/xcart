@@ -29,6 +29,7 @@ import  "./_binds/minicart";
 import  "./_binds/shadow";
 import  "./_binds/catalog_actionblock_sort";
 import  "./_binds/productSlider";
+import  "./_binds/sliders";
 
 import  "./_binds/pages/product";
 
@@ -45,6 +46,9 @@ import '../../vendors/wNumb.js'
     window['Waves'] = Waves;
     window['WebFont'] = WebFont;
     window['noUiSlider'] = noUiSlider;
+    window['d'] = arg =>{
+        console.log(...arguments);
+    };
     // window['PhotoSwipe'] = PhotoSwipe;
     // window['PhotoSwipeUI_Default'] = PhotoSwipeUI_Default;
     // window['Fotorama'] = Fotorama;

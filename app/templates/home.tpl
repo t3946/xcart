@@ -74,14 +74,14 @@
 
 
     <div class="row">
-        <div class="small-12 column slider-featured-product">
+        <div class="small-12 column slider-products slider-featured-product">
             {set $link}{url 'catalog:featured'}{/set}
             {include 'slider/base_product_slider.tpl' title='Featured product' link=$link}
         </div>
     </div>
 
     <div class="row">
-        <div class="small-12 column slider-new">
+        <div class="small-12 column slider-products slider-new">
             {set $link}{url 'catalog:new'}{/set}
             {include 'slider/base_product_slider.tpl' title="What's new" link=$category_new->getAbsoluteUrl() data_link=$link}
         </div>
@@ -93,15 +93,16 @@
         </div>
     </div>
 
+    {*<div class="row">*}
+        {*<div class="small-12 column brands">*}
+            {*{set $link}{url 'brand:list'}{/set}*}
+            {*{set $link_data}{url 'catalog:brands'}{/set}*}
+            {*{include 'slider/base_product_slider.tpl' title="Brands" link=$link data_link=$link_data}*}
+        {*</div>*}
+    {*</div>*}
+
     <div class="row">
-        <div class="small-12 column brands">
-            {set $link}{url 'brand:list'}{/set}
-            {set $link_data}{url 'catalog:brands'}{/set}
-            {include 'slider/base_product_slider.tpl' title="Brands" link=$link data_link=$link_data}
-        </div>
-    </div>
-    <div class="row">
-        <div class="small-12 column brands">
+        <div class="small-12 column slider-viewed">
             {set $link}{url 'catalog:viewed'}{/set}
             {include 'slider/base_product_slider.tpl' title="You recently viewed items" link=$link hidden=true}
         </div>
