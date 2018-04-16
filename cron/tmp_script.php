@@ -123,3 +123,10 @@ $qor_2 = ['fulldescr__contains' => '<video'];
 
 
 echo "All {$product_count_all}, is clear ==> {$product_count}";
+
+
+$time = (new DateTime('now'))->diff($start_time)->format('%H:%I:%S');
+
+$log_category = "products_sf_moves";
+$log_text = "Время обработки = {$time}\r\n Всего продуктов обработано = {$product_count_all}\r\n Продуктов очищено = {$product_count}";
+func_backprocess_log($log_category, $log_text);
