@@ -52,11 +52,20 @@
             <div class="column small-12">
                 <div class="links">
 
-                    <a class="icon brands"      href="{url 'brand:list'}">Brands</a>
-                    <a class="icon new"         href="{$category_new->getAbsoluteUrl()}">What's new</a>
-                    <a class="icon bestsellers" href="{url 'catalog:bestsellers'}">Bestsellers</a>
-                    <a class="icon day"         href="#">Product of the day</a>
-                    <a class="icon featured"    href="{url 'catalog:featured'}">Featured products</a>
+                    <a class="icon brands show-for-large"
+                       href="{url 'brand:list'}">Brands</a>
+
+                    <a class="icon new"
+                       href="{$category_new->getAbsoluteUrl()}">What's new</a>
+
+                    <a class="icon bestsellers"
+                       href="{url 'catalog:bestsellers'}">Bestsellers</a>
+
+                    <a class="icon day"
+                       href="#">Product of the day</a>
+
+                    <a class="icon featured"
+                       href="{url 'catalog:featured'}">Featured products</a>
 
                 </div>
             </div>
