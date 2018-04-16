@@ -10,7 +10,7 @@ class MetaTemplateAdmin extends Admin
 {
     public function getSearchColumns()
     {
-        return ['code', 'title', 'description', 'keywords'];
+        return ['code', 'title', 'description'];
     }
 
     public function getModel()

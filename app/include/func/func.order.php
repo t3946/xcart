@@ -1580,8 +1580,10 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
         $oOrder->updateVerificationStatus();
 
         $oSurfPath = SurfPathModel::objects()
-            ->filter(['resource_type' => SurfPathModel::GOAL_TYPE_REFERER,
-                'meta_id' =>  SurfMetaModel::getInstance()->id])
+            ->filter([
+                'resource_type' => SurfPathModel::GOAL_TYPE_REFERER,
+                'meta_id' =>  SurfMetaModel::getInstance()->id
+            ])
             ->order(['-id'])
             ->limit(1)->get();
 

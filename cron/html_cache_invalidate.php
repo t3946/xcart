@@ -130,6 +130,20 @@ if ($resources_count = getResourcesCount()) {
 
         /** @var ProductModel $model */
         if ($model = ProductModel::objects()->get(['pk' => $model->resourceid])) {
+            if ($model->group_root) {
+                if ($model->isGroupChild()) {
+                    $model_root = $model->parent;
+                }
+                else {
+                    $model_root = $model;
+                }
+
+                if ($model_root) {
+                    $model_root->forsale = $model_root->getFrontendChilds()->count() ? 'Y' : 'N';
+                    $model_root->save();
+                }
+            }
+
             foreach (ProductStorefrontModel::objects()->filter(['productid' => $model->pk])->valuesList(['sfid'], true) as $sf_id)
             {
                 /** @var SiteModel $site */
@@ -202,6 +216,13 @@ writeLog("Sessions GC.");
 /** @var \Modules\User\Models\SurfMetaModel $model */
 foreach (getEmptySurfMeta() as $model) {
     \Modules\User\Models\SessionDataModel::objects()->delete(['sessid' => $model->sessid]);
+}
+
+#
+# Clean temporary data
+#
+if ((rand() % 100) == 0) {
+    db_query("DELETE FROM $sql_tbl[temporary_data] WHERE expire<UNIX_TIMESTAMP(NOW())");
 }
 
 writeLog("End.");

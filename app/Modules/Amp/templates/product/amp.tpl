@@ -233,7 +233,7 @@
         <script type="application/json">
             {
                 "vars": {
-                    "account": "{$model->getUniqueIdSf()}"
+                    "account": "{$ga_account}"
                 },
                 "triggers": {
                     "default pageview":

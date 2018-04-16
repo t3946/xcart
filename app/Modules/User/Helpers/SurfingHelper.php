@@ -38,8 +38,11 @@ class SurfingHelper
 
             $sReferalUrl = $sReferalUrl ?: SurfingHelper::getReferUrl();
 
-            if ($sReferalUrl && self::checkReferUrl($sReferalUrl) && ($referer = self::prepareReferUrl($sReferalUrl))) {
+            if ($sReferalUrl && self::checkReferUrl($sReferalUrl))
+            {
+                $referer = self::prepareReferUrl($sReferalUrl);
 
+                /** @var ReferrerModel $oReferer */
                 $oReferer = ReferrerModel::objects()->filter(['referer' => $referer])->limit(1)->get();
                 if (!$oReferer) {
                     $oReferer = new ReferrerModel(['referer' => $referer]);
@@ -110,7 +113,7 @@ class SurfingHelper
     public static function prepareReferUrl($url)
     {
         if ($origin = self::getQueryOrigin()) {
-            $urlParts = parse_url($url);
+            $urlParts = self::parse_url($url);
 
             $url .= (empty($urlParts['query']) ? '?' : '&') . $origin;
         }
@@ -122,7 +125,7 @@ class SurfingHelper
     {
         $sReferUrl = $sPath = null;
 
-        if ($aReferalUrl = parse_url(Xcart::app()->request->getReferrer()))
+        if ($aReferalUrl = self::parse_url(Xcart::app()->request->getReferrer()))
         {
             if (!empty($aReferalUrl['path'])) {
                 $sPath = ltrim($aReferalUrl['path'], '/');
@@ -136,7 +139,7 @@ class SurfingHelper
 
     public static function checkReferUrl(string $url) : bool
     {
-        $parts = parse_url($url);
+        $parts = self::parse_url($url);
 
         return $parts['host'] != Xcart::app()->request->getHost();
     }
@@ -150,5 +153,21 @@ class SurfingHelper
         }
 
         return null;
+    }
+
+    /**
+     * @return array|string
+     */
+    private static function parse_url($url, $component = -1 )
+    {
+        if ($url) {
+            if (strpos($url, 'http') !== 0) {
+                $url = '//' . $url;
+            }
+
+            return parse_url($url, $component);
+        }
+
+        return [];
     }
 }

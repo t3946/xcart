@@ -9,4 +9,6 @@ class MetaType
     const PRODUCT = 0x03;
     const SEARCH = 0x04;
     const PAGE = 0x05;
+
+    const DEFAULT = 0x99;
 }
