@@ -9909,6 +9909,7 @@ return array(
     'Modules\\User\\Middleware\\ExpireHeadersMiddleware' => $baseDir . '/app/Modules/User/Middleware/ExpireHeadersMiddleware.php',
     'Modules\\User\\Middleware\\ReferrerSearchMiddleware' => $baseDir . '/app/Modules/User/Middleware/ReferrerSearchMiddleware.php',
     'Modules\\User\\Middleware\\UserAdminMiddleware' => $baseDir . '/app/Modules/User/Middleware/UserAdminMiddleware.php',
+    'Modules\\User\\Models\\AddressModel' => $baseDir . '/app/Modules/User/Models/AddressModel.php',
     'Modules\\User\\Models\\PbxOptionsModel' => $baseDir . '/app/Modules/User/Models/PbxOptionsModel.php',
     'Modules\\User\\Models\\ReferrerModel' => $baseDir . '/app/Modules/User/Models/ReferrerModel.php',
     'Modules\\User\\Models\\SessionDataModel' => $baseDir . '/app/Modules/User/Models/SessionDataModel.php',

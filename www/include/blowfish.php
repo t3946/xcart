@@ -33,7 +33,7 @@
 #
 # $Id: blowfish.php,v 1.23.2.10 2006/12/28 07:37:19 max Exp $
 #
-if ( !defined('XCART_START') ) { header("Location: ../"); die("Access denied"); }
+//if ( !defined('XCART_START') ) { header("Location: ../"); die("Access denied"); }
 
 #
 # This variable contains list of tables with crypted data
@@ -810,5 +810,3 @@ function func_hex2str($str) {
 
 	return $ret;
 }
-
-?>

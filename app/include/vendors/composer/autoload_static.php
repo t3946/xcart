@@ -51,6 +51,7 @@ class ComposerStaticInited1e2f7cb4425e4bdc0264910bb94e92
         '439368cf5ba298ee1596643cef52adae' => __DIR__ . '/../../../..' . '/app/include/func/func.tests.php',
         'a995d74c3d0337cd2d6f734851668029' => __DIR__ . '/../../../..' . '/app/include/func/func.user.php',
         '466984b3dc8bf99b478ff217bd1893bd' => __DIR__ . '/../../../..' . '/app/include/func/func.xml.php',
+        '9e1dad6ee47d609c48b0dcc4c86996be' => __DIR__ . '/../../../..' . '/www/include/blowfish.php',
     );
 
     public static $prefixLengthsPsr4 = array (
@@ -10355,6 +10356,7 @@ class ComposerStaticInited1e2f7cb4425e4bdc0264910bb94e92
         'Modules\\User\\Middleware\\ExpireHeadersMiddleware' => __DIR__ . '/../../../..' . '/app/Modules/User/Middleware/ExpireHeadersMiddleware.php',
         'Modules\\User\\Middleware\\ReferrerSearchMiddleware' => __DIR__ . '/../../../..' . '/app/Modules/User/Middleware/ReferrerSearchMiddleware.php',
         'Modules\\User\\Middleware\\UserAdminMiddleware' => __DIR__ . '/../../../..' . '/app/Modules/User/Middleware/UserAdminMiddleware.php',
+        'Modules\\User\\Models\\AddressModel' => __DIR__ . '/../../../..' . '/app/Modules/User/Models/AddressModel.php',
         'Modules\\User\\Models\\PbxOptionsModel' => __DIR__ . '/../../../..' . '/app/Modules/User/Models/PbxOptionsModel.php',
         'Modules\\User\\Models\\ReferrerModel' => __DIR__ . '/../../../..' . '/app/Modules/User/Models/ReferrerModel.php',
         'Modules\\User\\Models\\SessionDataModel' => __DIR__ . '/../../../..' . '/app/Modules/User/Models/SessionDataModel.php',
