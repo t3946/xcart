@@ -82,6 +82,8 @@ function cutTags($fulldescr, $flag = true, $tags = [])
     return $fulldescr;
 }
 
+$start_time = new DateTime('now');
+
 $regexp = '/<iframe[^>]*?src=(""|"|\'|\\"|\\\')(.*?)("""|\'|\\"|\\\')[^>]*?>/i';
 $regexp_2 = '/<video[^>]*?>\s+?<source[^>]*?src=(""|"|\'|\\"|\\\')(.*?)(""|"|\'|\\"|\\\')[^>]*?>/i';
 
@@ -99,7 +101,7 @@ $qor_2 = ['fulldescr__contains' => '<video'];
     foreach ($product_models as $product_model){
         $video = $videos = [];
         $video_url = '';
-        if ( (preg_match($regexp, $product_model->fulldescr, $matches)) || (preg_match($regexp_2, $product_model->fulldescr, $matches_2))){
+        if ( (preg_match($regexp, $product_model->fulldescr, $matches)) || (preg_match($regexp_2, $product_model->fulldescr, $matches))){
             if (empty($matches[2])){
                 $breakpoint = 1;
             }
