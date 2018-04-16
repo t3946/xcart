@@ -16,9 +16,9 @@ class XCart extends Cart
         $this->getEventManager()->on('app:end', [$this, 'save']);
     }
 
-    public function getCartNumber()
+    public function getCartNumber() :? int
     {
-        $this->getStorage()->getCartNumber();
+        return $this->getStorage()->getCartNumber();
     }
 
     public function save()

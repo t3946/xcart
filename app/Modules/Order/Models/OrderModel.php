@@ -11,12 +11,14 @@ use Modules\User\Models\UserModel;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
+use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\HasManyField;
 use Xcart\App\Orm\Fields\ManyToManyField;
 use Xcart\App\Orm\Fields\OneToOneField;
 use Xcart\App\Orm\Fields\SerializeField;
 use Xcart\App\Orm\Fields\TimestampField;
+use Xcart\App\Orm\Fields\UnixTimestampField;
 use Xcart\App\Orm\Model;
 use Xcart\App\Traits\DataModelTrait;
 use Xcart\App\Traits\FieldManagerCacheTrait;
@@ -46,7 +48,8 @@ class OrderModel extends Model
                 'class' => AutoField::className(),
             ],
             'date' => [
-                'class' => TimestampField::className(),
+                'class' => UnixTimestampField::class,
+                'autoNowAdd' => true,
             ],
             'extra_model' => [
                 'class' => ForeignField::class,
@@ -96,6 +99,7 @@ class OrderModel extends Model
                 'link' => ['cb_status' => 'code'],
                 'sqlType' => Type::STRING,
                 'null' => false,
+                'default' => OrderStatusModel::ORDER_STATUS_QUEUED
             ],
             'dc_status_model' => [
                 'field' => 'dc_status',
@@ -104,6 +108,16 @@ class OrderModel extends Model
                 'link' => ['dc_status' => 'code'],
                 'sqlType' => Type::STRING,
                 'null' => false,
+                'default' => OrderStatusModel::ORDER_DC_STATUS_NOT_SHIPPED
+            ],
+            'bd_status_model' => [
+                'field' => 'bd_status',
+                'class' => ForeignField::className(),
+                'modelClass' => OrderStatusModel::className(),
+                'link' => ['bd_status' => 'code'],
+                'sqlType' => Type::STRING,
+                'null' => false,
+                'default' => OrderStatusModel::ORDER_BD_STATUS_UNPAID
             ],
             'fraud_status_model' => [
                 'field' => 'fraud_status',
@@ -129,6 +143,46 @@ class OrderModel extends Model
                 'modelClass' => PaymentMethodModel::class,
                 'link' => ['paymentid' => 'paymentid'],
                 'null' => false,
+            ],
+            'giftcert_ids' => [
+                'class' => CharField::class,
+                'null' => false,
+                'default' => ''
+            ],
+            'shippingid' => [
+                'class' => CharField::class,
+                'null' => false,
+                'default' => ''
+            ],
+            'tracking' => [
+                'class' => CharField::class,
+                'null' => false,
+                'default' => ''
+            ],
+            'shipping_costs' => [
+                'class' => CharField::class,
+                'null' => false,
+                'default' => ''
+            ],
+            'taxes_applied' => [
+                'class' => CharField::class,
+                'null' => false,
+                'default' => ''
+            ],
+            'notes' => [
+                'class' => CharField::class,
+                'null' => false,
+                'default' => ''
+            ],
+            'customer_notes' => [
+                'class' => CharField::class,
+                'null' => false,
+                'default' => ''
+            ],
+            'shipping_groups' => [
+                'class' => CharField::class,
+                'null' => false,
+                'default' => ''
             ],
         ];
     }
@@ -210,5 +264,10 @@ class OrderModel extends Model
         foreach ($this->getAttributes() as $attribute => $value) {
             OrderEventHelper::registerAfterSaveEvent($this->pk, $attribute, $value, $this->getOldAttribute($attribute));
         }
+    }
+
+    public function getAddress() : array
+    {
+        return explode(PHP_EOL, $this->s_address, 2);
     }
 }

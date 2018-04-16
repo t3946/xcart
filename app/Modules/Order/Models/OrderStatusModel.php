@@ -16,6 +16,10 @@ class OrderStatusModel extends Model
     const ORDER_STATUS_UNPAID = 'N';
     const ORDER_STATUS_NOT_FINISHED = 'I';
 
+    const ORDER_DC_STATUS_NOT_SHIPPED = 'T';
+
+    const ORDER_BD_STATUS_UNPAID = 'W';
+
     public static function tableName()
     {
         return 'xcart_order_statuses';
