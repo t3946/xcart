@@ -40,7 +40,6 @@ class AnalyticsTest extends \PHPUnit_Framework_TestCase
      */
     private $analyticsSsl;
 
-
     public function setUp()
     {
         $this->analytics = new Analytics();
@@ -53,6 +52,14 @@ class AnalyticsTest extends \PHPUnit_Framework_TestCase
     public function testInvalidClassInitialization()
     {
         (new Analytics('1'));
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testInvalidClassInitialization2()
+    {
+        (new Analytics(false, '1'));
     }
 
     public function testHttpsEndpoint()
@@ -179,23 +186,43 @@ class AnalyticsTest extends \PHPUnit_Framework_TestCase
         $this->analytics->setProductActionToPurchae();
     }
 
+    public function testDisablingSend()
+    {
+        $analyticsDisabled = new Analytics(false, true);
+        $analyticsDisabled
+            ->setProtocolVersion('1')
+            ->setTrackingId('555')
+            ->setClientId('666')
+            ->setDocumentPath('\thepage')
+            ->setHitType('pageview');
+
+        $result = $analyticsDisabled->sendPageview();
+        $this->assertInstanceOf(
+            'TheIconic\Tracking\GoogleAnalytics\NullAnalyticsResponse',
+            $result
+        );
+
+        $this->assertNull($result->getHttpStatusCode());
+        $this->assertEmpty($result->getRequestUrl());
+        $this->assertEquals([], $result->getDebugResponse());
+    }
+
     public function testSendSimpleHit()
     {
         $httpClient = $this->getMock('TheIconic\Tracking\GoogleAnalytics\Network\HttpClient', ['post']);
-
-        $httpClient->expects($this->once())
-            ->method('post')
-            ->with(
-                $this->equalTo('http://www.google-analytics.com/collect'),
-                $this->isType('array'),
-                $this->isType('array')
-            );
 
         $this->analytics
             ->setProtocolVersion('1')
             ->setTrackingId('555')
             ->setClientId('666')
-            ->setDocumentPath('\thepage');
+            ->setDocumentPath('\thepage')
+            ->setHitType('pageview');
+
+        $httpClient->expects($this->once())
+            ->method('post')
+            ->with(
+                $this->equalTo($this->analytics->getUrl())
+            );
 
         $this->analytics->setHttpClient($httpClient);
 
@@ -206,20 +233,65 @@ class AnalyticsTest extends \PHPUnit_Framework_TestCase
     {
         $httpClient = $this->getMock('TheIconic\Tracking\GoogleAnalytics\Network\HttpClient', ['post']);
 
-        $httpClient->expects($this->once())
-            ->method('post')
-            ->with(
-                $this->equalTo('https://ssl.google-analytics.com/collect'),
-                $this->isType('array'),
-                $this->isType('array')
-            );
-
         $this->analyticsSsl
             ->setAsyncRequest(true)
             ->setProtocolVersion('1')
             ->setTrackingId('555')
             ->setClientId('666')
-            ->setDocumentPath('\mypage');
+            ->setDocumentPath('\mypage')
+            ->setHitType('pageview');
+
+        $httpClient->expects($this->once())
+            ->method('post')
+            ->with(
+                $this->equalTo($this->analyticsSsl->getUrl())
+            );
+
+        $this->analyticsSsl->setHttpClient($httpClient);
+
+        $this->analyticsSsl->sendPageview();
+    }
+
+    public function testSendSimpleDebugHit()
+    {
+        $httpClient = $this->getMock('TheIconic\Tracking\GoogleAnalytics\Network\HttpClient', ['post']);
+
+        $this->analytics
+            ->setDebug(true)
+            ->setProtocolVersion('1')
+            ->setTrackingId('555')
+            ->setClientId('666')
+            ->setDocumentPath('\mypage')
+            ->setHitType('pageview');
+
+        $httpClient->expects($this->once())
+            ->method('post')
+            ->with(
+                $this->equalTo($this->analytics->getUrl())
+            );
+
+        $this->analytics->setHttpClient($httpClient);
+
+        $this->analytics->sendPageview();
+    }
+
+    public function testFixTypos()
+    {
+        $httpClient = $this->getMock('TheIconic\Tracking\GoogleAnalytics\Network\HttpClient', ['post']);
+
+        $this->analyticsSsl
+            ->setUserTiminCategory('hehe')
+            ->setProtocolVersion('1')
+            ->setTrackingId('555')
+            ->setClientId('666')
+            ->setDocumentPath('\mypage')
+            ->setHitType('pageview');
+
+        $httpClient->expects($this->once())
+            ->method('post')
+            ->with(
+                $this->equalTo($this->analyticsSsl->getUrl())
+            );
 
         $this->analyticsSsl->setHttpClient($httpClient);
 
@@ -235,21 +307,20 @@ class AnalyticsTest extends \PHPUnit_Framework_TestCase
             't' => (new HitType())->setValue('pageview'),
         ];
 
+        $this->analytics
+            ->makeNonBlocking()
+            ->setProtocolVersion('1')
+            ->setTrackingId('555')
+            ->setClientId('666')
+            ->setHitType('pageview');
+
         $httpClient = $this->getMock('TheIconic\Tracking\GoogleAnalytics\Network\HttpClient', ['post']);
 
         $httpClient->expects($this->once())
             ->method('post')
             ->with(
-                $this->equalTo('http://www.google-analytics.com/collect'),
-                $this->equalTo($singleParameters),
-                $this->isType('array')
+                $this->equalTo($this->analytics->getUrl())
             );
-
-        $this->analytics
-            ->makeNonBlocking()
-            ->setProtocolVersion('1')
-            ->setTrackingId('555')
-            ->setClientId('666');
 
         $this->analytics->setHttpClient($httpClient);
 
@@ -266,22 +337,23 @@ class AnalyticsTest extends \PHPUnit_Framework_TestCase
             'cg1' => (new ContentGroup(1))->setValue('group'),
         ];
 
-        $httpClient = $this->getMock('TheIconic\Tracking\GoogleAnalytics\Network\HttpClient', ['post']);
-
-        $httpClient->expects($this->once())
-            ->method('post')
-            ->with(
-                $this->equalTo('http://www.google-analytics.com/collect'),
-                $this->equalTo($singleParameters),
-                $this->isType('array')
-            );
-
         $this->analytics
             ->makeNonBlocking()
             ->setProtocolVersion('1')
             ->setTrackingId('555')
             ->setClientId('666')
-            ->setContentGroup('group', 1);
+            ->setContentGroup('group', 1)
+            ->setHitType('pageview');
+
+        $httpClient = $this->getMock('TheIconic\Tracking\GoogleAnalytics\Network\HttpClient', ['post']);
+
+        $httpClient->expects($this->once())
+            ->method('post')
+            ->with(
+                $this->equalTo($this->analytics->getUrl())
+            );
+
+
 
         $this->analytics->setHttpClient($httpClient);
 
@@ -338,7 +410,8 @@ class AnalyticsTest extends \PHPUnit_Framework_TestCase
             ->setRevenue(250.0)
             ->setTax(25.0)
             ->setShipping(15.0)
-            ->setCouponCode('MY_COUPON');
+            ->setCouponCode('MY_COUPON')
+            ->setHitType('event');
 
 
         $productData1 = [
@@ -364,7 +437,11 @@ class AnalyticsTest extends \PHPUnit_Framework_TestCase
             'price' => 85.00,
             'quantity' => 2,
             'coupon_code' => 'TEST',
-            'position' => 4
+            'position' => 4,
+            'custom_dimension_1' => 'iamcustomdim1',
+            'custom_dimension_2' => 'iamcustomdim2',
+            'custom_metric_1' => 666.99,
+            'custom_metric_2' => 999,
         ];
 
         $this->analytics->addProduct($productData2);
@@ -373,20 +450,20 @@ class AnalyticsTest extends \PHPUnit_Framework_TestCase
         $products->add(new Product($productData1));
         $products->add(new Product($productData2));
 
-        $compoundParameters = [
-            'Product' => $products,
-        ];
-
         $this->analytics->setProductActionToPurchase();
+
+        $this->analytics->setCustomMetric(50, 3);
+
+        $url = $this->analytics->getUrl();
+
+        $this->assertEquals('http://www.google-analytics.com/collect?v=1&tid=555&cid=666&aip=1&ds=call%20center&qt=560&ni=1&dclid=d_click_id&uip=202.126.106.175&ti=7778922&ta=THE%20ICONIC&tr=250&tt=25&ts=15&tcc=MY_COUPON&t=event&pa=purchase&cm3=50&pr1id=AAAA-6666&pr1nm=Test%20Product%202&pr1br=Test%20Brand%202&pr1ca=Test%20Category%203%2FTest%20Category%204&pr1va=yellow&pr1pr=50&pr1qt=1&pr1cc=TEST%202&pr1ps=2&pr2id=AAAA-5555&pr2nm=Test%20Product&pr2br=Test%20Brand&pr2ca=Test%20Category%201%2FTest%20Category%202&pr2va=blue&pr2pr=85&pr2qt=2&pr2cc=TEST&pr2ps=4&pr2cd1=iamcustomdim1&pr2cd2=iamcustomdim2&pr2cm1=666.99&pr2cm2=999&z=289372387623', $url);
 
         $httpClient = $this->getMock('TheIconic\Tracking\GoogleAnalytics\Network\HttpClient', ['post']);
 
         $httpClient->expects($this->once())
             ->method('post')
             ->with(
-                $this->equalTo('http://www.google-analytics.com/collect'),
-                $this->equalTo($singleParameters),
-                $this->equalTo($compoundParameters)
+                $this->equalTo($url)
             );
 
         $this->analytics->setHttpClient($httpClient);
@@ -399,6 +476,61 @@ class AnalyticsTest extends \PHPUnit_Framework_TestCase
      */
     public function testMinimumParametersForSendHit()
     {
+        $this->analytics->sendPageview();
+    }
+
+    /**
+     * @expectedException \TheIconic\Tracking\GoogleAnalytics\Exception\InvalidPayloadDataException
+     */
+    public function testMinimumParametersForSendHitMissingClientIdAndUserId()
+    {
+        $this->analytics
+            ->setProtocolVersion('1')
+            ->setTrackingId('UA-26293424-11')
+            ->setDocumentPath('/');
+
+        $this->analytics->sendPageview();
+    }
+
+    public function testMinimumParametersForSendHitMissingClientIdButUserId()
+    {
+        $httpClient = $this->getMock('TheIconic\Tracking\GoogleAnalytics\Network\HttpClient', ['post']);
+
+        $this->analytics
+            ->setProtocolVersion('1')
+            ->setTrackingId('UA-26293424-11')
+            ->setUserId('sdsdsd')
+            ->setDocumentPath('/');
+
+        $httpClient->expects($this->once())
+            ->method('post')
+            ->with(
+                $this->equalTo($this->analytics->getUrl() . '&t=pageview')
+            );
+
+        $this->analytics->setHttpClient($httpClient);
+
+        $this->analytics->sendPageview();
+    }
+
+    public function testMinimumParametersForSendHitWithClientIdButMissingUserId()
+    {
+        $httpClient = $this->getMock('TheIconic\Tracking\GoogleAnalytics\Network\HttpClient', ['post']);
+
+        $this->analytics
+            ->setProtocolVersion('1')
+            ->setTrackingId('UA-26293424-11')
+            ->setClientId('sdsdsd')
+            ->setDocumentPath('/');
+
+        $httpClient->expects($this->once())
+            ->method('post')
+            ->with(
+                $this->equalTo($this->analytics->getUrl() . '&t=pageview')
+            );
+
+        $this->analytics->setHttpClient($httpClient);
+
         $this->analytics->sendPageview();
     }
 
@@ -417,5 +549,43 @@ class AnalyticsTest extends \PHPUnit_Framework_TestCase
     {
         $this->analytics
             ->iDontExists();
+    }
+
+    /**
+     * @dataProvider dataProviderAnalyticsOptions
+     *
+     * @param array $options
+     * @param array $expectedOptions
+     * @param bool $async
+     */
+    public function testSendPassesOptionsToHttpClient(array $options, array $expectedOptions, $async)
+    {
+        $httpClient = $this->getMock('TheIconic\Tracking\GoogleAnalytics\Network\HttpClient', ['post']);
+
+        $analytics = new Analytics(false, false, $options);
+        $analytics
+            ->setProtocolVersion('1')
+            ->setTrackingId('555')
+            ->setClientId('666')
+            ->setDocumentPath('\thepage')
+            ->setHitType('pageview')
+            ->setAsyncRequest($async);
+
+        $httpClient->expects($this->once())
+            ->method('post')
+            ->with($this->equalTo($analytics->getUrl()), $expectedOptions);
+
+        $analytics->setHttpClient($httpClient);
+        $analytics->sendPageview();
+    }
+
+    public static function dataProviderAnalyticsOptions()
+    {
+        return [
+            [[], ['async' => false], false],
+            [[], ['async' => true], true],
+            [['timeout' => 5], ['timeout' => 5, 'async' => false], false],
+            [['timeout' => 101], ['timeout' => 101, 'async' => true], true],
+        ];
     }
 }
