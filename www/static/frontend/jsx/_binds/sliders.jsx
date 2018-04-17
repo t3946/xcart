@@ -6,10 +6,28 @@ import ajax from "../utils/ajax";
         slide.closest('.slider-block').classList.add('hide');
     };
 
+    let fncSlyAttach = (slide) => {
+        window.addEventListener('resize', () => $(slide).sly('reload'));
+
+        $(slide).sly({
+            horizontal: 1,
+            itemNav: 'basic',
+            speed: 300,
+            mouseDragging: 1,
+            touchDragging: 1,
+            // pagesBar: $wrap.find('.pages'),
+            activatePageOn: 'click'
+        })
+            .css('overflow', 'visible');
+    };
+
     document.addEventListener('sliders_show', ()=>{
         let sliders = document.querySelectorAll('.slider-block .slider-data:not(.loaded):not(.loading):not(.not-load)');
 
         if (sliders.length) {
+            let aSlider = [];
+            let countAll = 0;
+
             for (let i=0; i < sliders.length; i++) {
                 let slide = sliders[i];
                 slide.classList.add('loading');
@@ -25,6 +43,7 @@ import ajax from "../utils/ajax";
                                 slide.innerHTML = data.html;
 
                                 slide.classList.add('loaded');
+                                fncSlyAttach(slide);
                             }
                             else {
                                 fncHideBlock(slide);

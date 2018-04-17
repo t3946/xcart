@@ -37454,7 +37454,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
         var $offCanvasRight = $('#offCanvasRight');
 
         $(document).on('swipe', function (e, Dx, Dy, angle) {
-            if (e.target.closest('#main_wrapper') && !e.target.closest('.disable-global-swipe') && !e.target.closest('.disable-global-swipe-horizontal')) {
+            if (e.target.closest('#main_wrapper') && !e.target.closest('.disable-global-swipe, .slider-data, .disable-global-swipe-horizontal')) {
                 if ((0, _isMedia2.default)('medium') && (0, _isTouch2.default)()) {
                     if (angle < 10) {
                         if (Dx === 1 && Dy === 0) {
@@ -54546,7 +54546,7 @@ module.exports = checkPropTypes;
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-
+/* WEBPACK VAR INJECTION */(function($) {
 
 var _ajax = __webpack_require__(17);
 
@@ -54560,10 +54560,29 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
         slide.closest('.slider-block').classList.add('hide');
     };
 
+    var fncSlyAttach = function fncSlyAttach(slide) {
+        window.addEventListener('resize', function () {
+            return $(slide).sly('reload');
+        });
+
+        $(slide).sly({
+            horizontal: 1,
+            itemNav: 'basic',
+            speed: 300,
+            mouseDragging: 1,
+            touchDragging: 1,
+
+            activatePageOn: 'click'
+        }).css('overflow', 'visible');
+    };
+
     document.addEventListener('sliders_show', function () {
         var sliders = document.querySelectorAll('.slider-block .slider-data:not(.loaded):not(.loading):not(.not-load)');
 
         if (sliders.length) {
+            var aSlider = [];
+            var countAll = 0;
+
             var _loop = function _loop(i) {
                 var slide = sliders[i];
                 slide.classList.add('loading');
@@ -54577,6 +54596,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
                             slide.innerHTML = data.html;
 
                             slide.classList.add('loaded');
+                            fncSlyAttach(slide);
                         } else {
                             fncHideBlock(slide);
                         }
@@ -54597,6 +54617,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
     var evnt = new CustomEvent('sliders_show');
     document.dispatchEvent(evnt);
 })();
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
 /* 105 */

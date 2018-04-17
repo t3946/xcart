@@ -69,9 +69,21 @@
         float: left;
       }
     }
+
+    .product-items {
+      flex-wrap: nowrap;
+
+      .item {
+        max-width: rem-calc(160);
+
+        @include breakpoint(medium) {
+          max-width: rem-calc(172);
+        }
+
+        @include breakpoint(large) {
+          max-width: rem-calc(230);
+        }
+      }
+    }
   }
-}
-
-.slider-products {
-
 }
