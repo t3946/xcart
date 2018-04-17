@@ -7,6 +7,8 @@
         {meta controller=$this!:null}
     {/block}
 
+    {add $site = $.getSite()}
+
     <link rel="canonical" href="{$model->getAbsoluteUrl(true)}">
     <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
     <style amp-boilerplate>

@@ -3,6 +3,8 @@
 
 namespace Modules\Sites\Helpers;
 
+use Modules\Core\Models\GlobalConfigModel;
+use Modules\Sites\Models\SiteConfigModel;
 use Modules\Sites\Models\SiteModel;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Request\HttpRequest;
@@ -36,4 +38,18 @@ class CurrentSiteHelper
 
         return $value;
     }
+
+    public static function getGoogleAnalitycsAccount()
+    {
+        $modul = Xcart::app()->getModule('Sites');
+        $site = $modul->getSite();
+
+        if ($site->storefrontid) {
+            return SiteConfigModel::objects()->get(['name' => 'cidev_ga_code_number', 'storefrontid' => $site->storefrontid])->value;
+        }
+        else {
+            return GlobalConfigModel::objects()->get(['name' => 'cidev_ga_code_number'])->value;
+        }
+    }
+
 }

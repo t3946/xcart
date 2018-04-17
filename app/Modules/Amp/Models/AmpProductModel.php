@@ -18,30 +18,6 @@ class AmpProductModel extends ProductModel
      * @throws \Exception
      * @throws \Xcart\App\Exceptions\UnknownPropertyException
      */
-    public function getUniqueIdSf()
-    {
-        $modul = Xcart::app()->getModule('Sites');
-        $site = $modul->getSite();
-//        $site = $this->sites->limit(1)->get();
-
-        if ($site->storefrontid) {
-            return SiteConfigModel::objects()->get(['name' => 'cidev_ga_code_number', 'storefrontid' => $site->storefrontid])->value;
-        }
-        else {
-            return GlobalConfigModel::objects()->get(['name' => 'cidev_ga_code_number'])->value;
-        }
-    }
-
-//    public function getFavicon(){
-//        $modul = Xcart::app()->getModule('Sites');
-//        $site = $modul->getSite();
-//
-//        /** @var \Modules\Sites\Models\ImageFModel $favoicons */
-//        $favoicons = $site->favicons->limit(1)->get();
-//
-//        return $favoicons->getURL();
-//
-//    }
 
     public function getAbsoluteUrl($full = false, $amp = false)
     {

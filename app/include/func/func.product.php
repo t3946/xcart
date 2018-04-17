@@ -11,6 +11,7 @@ use Modules\Core\Components\Profiler;
 use Modules\Goods\Models\CategoryModel;
 use Modules\Goods\Models\ProductModel;
 use Modules\Goods\Models\ProductsSfMovesModel;
+use Xcart\App\Main\Xcart;
 
 /**
  * @deprecated
@@ -739,7 +740,7 @@ function func_select_product($id, $membershipid, $redirect_if_error=true, $clear
 
 
     if (!is_numeric($id)) {
-        $id = \Xcart\App\Main\Xcart::app()->db->getConnection()->quote($id);
+        $id = Xcart::app()->db->getConnection()->quote($id);
         $product_condition = "p.productcode={$id} ";
     }
     else {
@@ -763,12 +764,25 @@ SQL
     /** @var ProductModel $oProduct */
     /** @var \Xcart\Product $classProduct */
     if ($oProduct = ProductModel::objects()->get(['pk' => $id])) {
+
         $classProduct = $oProduct;
         Profiler::getInstance()->addPoint();
 
         $oCategory = $oProduct->getMainCategory();
         $categoryid = $oCategory->pk;
+
+        if ($oProduct->isGroupRoot() && !$oProduct->getFrontendChilds()->count()) {
+            if ($oCategory){
+                Xcart::app()->request->redirect($oCategory->getAbsoluteUrl(), [], 302);
+            }
+            else {
+                Xcart::app()->request->redirect('/', [], 302);
+            }
+        }
+
     }
+
+
 
     Profiler::getInstance()->addPoint();
     #
@@ -785,14 +799,8 @@ SQL
             else {
 
                 if ($oProduct && $mv_resource = $oProduct->sf_moves->filter(['resource_type' => ProductsSfMovesModel::RESOURCE_TYPE_CATEGORY])->order(['-batch_id'])->limit(1)->get()) {
-                    /** @var CategoryModel $mv_category */
-                    if ($mv_category = CategoryModel::objects()->get(['pk' => $mv_resource->resource_id])) {
-                        if ($mv_category = $mv_category->getObjects()->ancestors(true)->filter(['avail' => 'Y', 'product_count__gt' => 0])->limit(1)->get()) {
-                            \Xcart\App\Main\Xcart::app()->request->redirect($mv_category->getAbsoluteUrl());
-                        }
-                    }
 
-                    \Xcart\App\Main\Xcart::app()->request->redirect('/');
+                    Xcart::app()->request->redirect($oProduct->getAbsoluteUrl(true), [], 301);
 
                 }
 
@@ -937,11 +945,11 @@ SQL
 
                     if ($oProduct && $mv_category = $oProduct->getMainCategory()) {
                         if ($mv_category = $mv_category->getObjects()->ancestors(true)->filter(['avail' => 'Y', 'product_count__gt' => 0])->limit(1)->get()) {
-                            \Xcart\App\Main\Xcart::app()->request->redirect($mv_category->getAbsoluteUrl());
+                            Xcart::app()->request->redirect($mv_category->getAbsoluteUrl());
                         }
                     }
 
-                    \Xcart\App\Main\Xcart::app()->request->redirect('/');
+                    Xcart::app()->request->redirect('/');
                 }
             }
             else {

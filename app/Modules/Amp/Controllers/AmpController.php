@@ -7,6 +7,7 @@ use Mindy\QueryBuilder\Expression;
 use Modules\Amp\Models\AmpProductModel;
 use Modules\Goods\Models\CategoryModel;
 use Modules\Meta\Types\MetaType;
+use Modules\Sites\Helpers\CurrentSiteHelper;
 use Xcart\App\Controller\FrontendController;
 use Xcart\App\Main\Xcart;
 use Modules\Amp\Helpers\AmpHelper;
@@ -71,10 +72,13 @@ class AmpController extends FrontendController
                                       ->all();
             }
 
-            $this->display('product/amp.tpl', [
+            $ga_account = CurrentSiteHelper::getGoogleAnalitycsAccount();
+
+            echo $this->render('product/amp.tpl', [
                 'model' => $model,
                 'category' => $category,
                 'categories' =>$categories,
+                'ga_account' => $ga_account,
                 'helper' => new AmpHelper($model),
             ]);
 
