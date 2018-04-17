@@ -198,7 +198,7 @@
             </div>
             <div class="row align-center">
                 <div class="column small-12">
-                    <div class="submit-disclaim text-center">
+                    <div class="submit-notes text-center">
                         {t 'Submit and proceed to shipping & payment options.' dict='order'}
                     </div>
                 </div>

@@ -2,6 +2,7 @@
 
 namespace Xcart\Shipping;
 
+use Modules\Core\Models\GlobalConfigModel;
 use Monolog\Logger;
 use Ups\Entity\Address;
 use Ups\Entity\Package;
@@ -54,21 +55,21 @@ class UPS extends ShippingProcessor
         return true;
     }
 
+
     /**
-     * @param $aShippingRates ShippingRate[]
-     * @return null|\Ups\Entity\RateRequest
+     * @param $aShippingRates
+     * @return null|\Ups\Entity\RateResponse
      */
     public function getServerQuotes($aShippingRates)
     {
         /* get UPS Rates from server */
-        global $config;
         $aResponses = null;
         if (!empty($aShippingRates)) {
             $oShippingRate = reset($aShippingRates);
 
-            $UPS_username = text_decrypt(trim($config["UPS_OnLine_Tools"]["UPS_username"]));
-            $UPS_password = text_decrypt(trim($config["UPS_OnLine_Tools"]["UPS_password"]));
-            $UPS_accesskey = text_decrypt(trim($config["UPS_OnLine_Tools"]["UPS_accesskey"]));
+            $UPS_username = text_decrypt(trim(GlobalConfigModel::objects()->get(['name' => 'UPS_username'])->value));
+            $UPS_password = text_decrypt(trim(GlobalConfigModel::objects()->get(['name' => 'UPS_password'])->value));
+            $UPS_accesskey = text_decrypt(trim(GlobalConfigModel::objects()->get(['name' => 'UPS_accesskey'])->value));
 
             $rate = new Rate($UPS_accesskey, $UPS_username, $UPS_password);
 
@@ -109,7 +110,6 @@ class UPS extends ShippingProcessor
 
                 $shipment->addPackage($package);
                 $aResponses = $rate->shopRates($shipment);
-
 
             } catch (\Exception $e) {
                 //TODO Add logging
