@@ -2,10 +2,14 @@
 namespace Modules\Goods\Controllers;
 
 
+use Mindy\QueryBuilder\Expression;
+use Mindy\QueryBuilder\Q\QOr;
 use Modules\Goods\Models\CategoryModel;
+use Modules\Goods\Models\FeaturedProductsModel;
 use Modules\Goods\Models\ProductModel;
 use Modules\Sites\Models\SiteModel;
 use Xcart\App\Main\Xcart;
+use Xcart\App\Orm\Manager;
 
 class PromoController extends AbstractCatalogController
 {
@@ -20,6 +24,19 @@ class PromoController extends AbstractCatalogController
         /** @var SiteModel $site */
         $site = Xcart::app()->getModule('Sites')->getSite();
 
+        /** @var ProductModel[] $products */
+        $products = $this->getDefaultProductFilter()->filter([
+            'pk__in' => FeaturedProductsModel::objects()->filter(['storefrontid' => $site])->select(['product__productid']),
+        ])->all();
+
+        $sProducts = '';
+        foreach ($products as $product) {
+            $sProducts .= $this->render('catalog/parts/_catalog_list_item.tpl', ['item' => $product]);
+        }
+
+        $this->jsonResponse([
+            'html' => "<div class='product-items tile-view' itemtype='http://schema.org/OfferCatalog'>{$sProducts}</div>",
+        ]);
     }
 
     public function actionNew()
@@ -36,14 +53,9 @@ class PromoController extends AbstractCatalogController
             ->get();
 
         /** @var ProductModel[] $products */
-        $products = ProductModel::objects()->filter([
-            'forsale' => 'Y',
-            'avail__gt' => 10,
-            'category_main__categoryid__in' => $category_new->getObjects()->descendants(true)->select(['pk'])
-        ])
-            ->limit(20)
-            ->order(['?'])
-            ->cache(10)->all();
+        $products = $this->getDefaultProductFilter()->filter([
+            'category_main__categoryid__in' => $category_new->getObjects()->descendants(true)->select(['pk']),
+            ])->all();
 
         $sProducts = '';
         foreach ($products as $product) {
@@ -59,5 +71,21 @@ class PromoController extends AbstractCatalogController
     public function actionViewed()
     {
 
+    }
+
+    private function getDefaultProductFilter(): Manager
+    {
+        return ProductModel::objects()->filter([
+            'forsale' => 'Y',
+            'avail__gt' => 10,
+            new QOr([
+                'group_root__isnull' => true,
+                'pk' => new Expression('group_root'),
+            ])
+        ])
+
+            ->limit(20)
+            ->order(['?'])
+            ->cache(10);
     }
 }

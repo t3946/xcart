@@ -36,18 +36,17 @@ import ajax from "../utils/ajax";
                 {
                     ajax( slide.dataset.url )
                         .then(data => {
-                            slide.classList.remove('loading');
-                            console.log(data);
-
                             if (data) {
                                 slide.innerHTML = data.html;
-
                                 slide.classList.add('loaded');
+
                                 fncSlyAttach(slide);
                             }
                             else {
                                 fncHideBlock(slide);
                             }
+
+                            slide.classList.remove('loading');
                         })
                         .catch(error => {
                             console.error(

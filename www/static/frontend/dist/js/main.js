@@ -54589,17 +54589,16 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
                 if (slide.dataset.url) {
                     (0, _ajax2.default)(slide.dataset.url).then(function (data) {
-                        slide.classList.remove('loading');
-                        console.log(data);
-
                         if (data) {
                             slide.innerHTML = data.html;
-
                             slide.classList.add('loaded');
+
                             fncSlyAttach(slide);
                         } else {
                             fncHideBlock(slide);
                         }
+
+                        slide.classList.remove('loading');
                     }).catch(function (error) {
                         console.error(error.message, slide.dataset.url);
 
