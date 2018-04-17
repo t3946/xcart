@@ -93,34 +93,37 @@ $product_count = 0;
 
 $qor_1 = ['fulldescr__contains' => 'iframe'];
 $qor_2 = ['fulldescr__contains' => '<video'];
-    $product_models = ProductModel::objects()->filter([
-                                                        new Qor([
-                                                            $qor_1, $qor_2
-                                                                ])
-                                                      ])->all();
 
-    foreach ($product_models as $product_model){
-        $video = $videos = [];
-        $video_url = '';
-        if ( (preg_match($regexp, $product_model->fulldescr, $matches)) || (preg_match($regexp_2, $product_model->fulldescr, $matches)) || (preg_match($regexp_3, $product_model->fulldescr, $matches))){
+$product_models = ProductModel::objects()->filter([
+                                                    new Qor([
+                                                        $qor_1, $qor_2
+                                                            ])
+                                                  ])->all();
 
-            $video_url = $matches[2];
+foreach ($product_models as $product_model){
 
-            if (!empty($video_url)) {
-                (new ProductVideosModel([
-                                            'product_id' => $product_model->productid,
-                                            'video' => $video_url,
-                                            'name' => $product_model->product
-                                        ]))->save();
-            }
-            $tmp_fulldescr = '';
-            $tmp_fulldescr = cutTags($product_model->fulldescr);
-            $product_model->fulldescr = $tmp_fulldescr;
-            $product_model->update(['fulldescr']);
-            $product_count++;
+    $video = $videos = [];
+    $video_url = '';
+    if ( (preg_match($regexp, $product_model->fulldescr, $matches)) || (preg_match($regexp_2, $product_model->fulldescr, $matches)) || (preg_match($regexp_3, $product_model->fulldescr, $matches))){
+
+        $video_url = $matches[2];
+
+        if (!empty($video_url)) {
+            (new ProductVideosModel([
+                                        'product_id' => $product_model->productid,
+                                        'video' => $video_url,
+                                        'name' => $product_model->product
+                                    ]))->save();
         }
-        $product_count_all++;
+
+        $product_count++;
     }
+    $tmp_fulldescr = '';
+    $tmp_fulldescr = cutTags($product_model->fulldescr);
+    $product_model->fulldescr = $tmp_fulldescr;
+    $product_model->update(['fulldescr']);
+    $product_count_all++;
+}
 
 
 echo "All {$product_count_all}, is clear ==> {$product_count}";
