@@ -86,6 +86,7 @@ $start_time = new DateTime('now');
 
 $regexp = '/<iframe[^>]*?src=("|\'|\\"|\\\')(.*?)(\'|\\"|\\\')[^>]*?>/i';
 $regexp_2 = '/<video[^>]*?>\s+?<source[^>]*?src=("|\'|\\"|\\\')(.*?)("|\'|\\"|\\\')[^>]*?>/i';
+$regexp_3 = '/<video[^>]*?>\s?<source[^>]*?src=("|\'|\\"|\\\')(.*?)("|\'|\\"|\\\')[^>]*?>/i';
 
 $product_count_all = 0;
 $product_count = 0;
@@ -101,7 +102,7 @@ $qor_2 = ['fulldescr__contains' => '<video'];
     foreach ($product_models as $product_model){
         $video = $videos = [];
         $video_url = '';
-        if ( (preg_match($regexp, $product_model->fulldescr, $matches)) || (preg_match($regexp_2, $product_model->fulldescr, $matches))){
+        if ( (preg_match($regexp, $product_model->fulldescr, $matches)) || (preg_match($regexp_2, $product_model->fulldescr, $matches)) || (preg_match($regexp_3, $product_model->fulldescr, $matches))){
 
             $video_url = $matches[2];
 
