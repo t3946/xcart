@@ -79,7 +79,7 @@ class Creator
     {
         static $reflections = [];
 
-        if (is_string($config)) {
+        if (\is_string($config)) {
             $class = $config;
             $config = [];
         } elseif (isset($config['class'])) {
@@ -94,14 +94,14 @@ class Creator
             $config = array_merge(static::$objectConfig[$class], $config);
         }
 
-        if (($n = func_num_args()) > 1) {
+        if (($n = \func_num_args()) > 1) {
             /** @var \ReflectionClass $reflection */
             if (isset($reflections[$class])) {
                 $reflection = $reflections[$class];
             } else {
                 $reflection = $reflections[$class] = new \ReflectionClass($class);
             }
-            $args = func_get_args();
+            $args = \func_get_args();
             array_shift($args); // remove $config
             if (!empty($config)) {
                 $args[] = $config;
@@ -117,7 +117,7 @@ class Creator
         }
 
 
-        if (array_key_exists(Creator::className(), self::class_uses_deep($obj))) {
+        if (array_key_exists(self::className(), self::class_uses_deep($obj))) {
             return $obj;
         } else {
             $obj = self::configure($obj, $config);
@@ -128,7 +128,7 @@ class Creator
         }
     }
 
-    public static function class_uses_deep($class, $autoload = true)
+    public static function class_uses_deep($class, $autoload = true): array
     {
         $traits = [];
 

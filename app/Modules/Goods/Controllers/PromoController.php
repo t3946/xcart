@@ -4,6 +4,7 @@ namespace Modules\Goods\Controllers;
 
 use Modules\Goods\Models\CategoryModel;
 use Modules\Goods\Models\ProductModel;
+use Modules\Sites\Models\SiteModel;
 use Xcart\App\Main\Xcart;
 
 class PromoController extends AbstractCatalogController
@@ -16,17 +17,23 @@ class PromoController extends AbstractCatalogController
 
     public function actionFeatured()
     {
+        /** @var SiteModel $site */
+        $site = Xcart::app()->getModule('Sites')->getSite();
 
-        $this->jsonResponse(['val' =>'123', 'html' => '123']);
-
-        ProductModel::objects();
     }
 
     public function actionNew()
     {
+        /** @var SiteModel $site */
         $site = Xcart::app()->getModule('Sites')->getSite();
         /** @var CategoryModel $category_new */
-        $category_new = CategoryModel::objects()->filter(['category' => 'New Products', 'storefrontid' => $site->pk, 'level' => 1])->limit(1)->get();
+        $category_new = CategoryModel::objects()->filter([
+            'category' => 'New Products',
+            'storefrontid' => $site->pk,
+            'level' => 1
+        ])
+            ->limit(1)
+            ->get();
 
         /** @var ProductModel[] $products */
         $products = ProductModel::objects()->filter([
@@ -39,13 +46,12 @@ class PromoController extends AbstractCatalogController
             ->cache(10)->all();
 
         $sProducts = '';
-        $aProducts = [];
         foreach ($products as $product) {
             $sProducts .= $this->render('catalog/parts/_catalog_list_item.tpl', ['item' => $product]);
         }
 
         $this->jsonResponse([
-            'html' => "<div class='product-items tile-view'>{$sProducts}</div>",
+            'html' => "<div class='product-items tile-view' itemtype='http://schema.org/OfferCatalog'>{$sProducts}</div>",
         ]);
 
     }
