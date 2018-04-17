@@ -1,26 +1,44 @@
 import ajax from "../utils/ajax";
 
 (()=>{
+    let fncHideBlock = slide => {
+        slide.classList.remove('loading');
+        slide.closest('.slider-block').classList.add('hide');
+    };
+
     document.addEventListener('sliders_show', ()=>{
-        let sliders = document.querySelectorAll('.slider-block .slider-data:not(.loaded):not(.loading)');
+        let sliders = document.querySelectorAll('.slider-block .slider-data:not(.loaded):not(.loading):not(.not-load)');
 
         if (sliders.length) {
             for (let i=0; i < sliders.length; i++) {
-                let slider = sliders[i];
-                slider.classList.add('loading');
+                let slide = sliders[i];
+                slide.classList.add('loading');
 
-                if (slider.dataset.url)
+                if (slide.dataset.url)
                 {
-                    ajax( slider.dataset.url, {},
-                        (data) => {
-                            console.log(data);
-                        })
+                    ajax( slide.dataset.url )
                         .then(data => {
-                            slider.classList.remove('loading');
-                            slider.classList.add('loaded');
+                            slide.classList.remove('loading');
+                            console.log(data);
 
-                            console.log(data, 'd2');
-                        });
+                            if (data) {
+                                slide.innerHTML = data.html;
+
+                                slide.classList.add('loaded');
+                            }
+                            else {
+                                fncHideBlock(slide);
+                            }
+                        })
+                        .catch(error => {
+                            console.error(
+                                error.message,
+                                slide.dataset.url
+                            );
+
+                            fncHideBlock(slide);
+                        })
+                    ;
 
                 }
             }

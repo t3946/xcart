@@ -1,7 +1,6 @@
 import { createStore, applyMiddleware } from 'redux'
 import _ from 'lodash';
 import thunkMiddleware from 'redux-thunk'
-import ajax from '../utils/ajax';
 import trigger from "../utils/trigger";
 
 const _INIT_ACTION_TYPE = "@@redux/INIT";

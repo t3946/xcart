@@ -1,5 +1,3 @@
-import $ from 'jquery';
-
 let prepareUrl = url => (url += (url.indexOf('?') ? '?' : '&') + '__=' + (new Date()).getTime());
 let isJsonResponse = (response, isJson = false) => (isJson || response.headers.get('Content-Type').toLowerCase() === 'application/json');
 

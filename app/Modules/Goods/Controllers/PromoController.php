@@ -15,7 +15,7 @@ class PromoController extends AbstractCatalogController
     public function actionFeatured()
     {
 
-        $this->jsonResponse(['val' =>'123']);
+        $this->jsonResponse(['val' =>'123', 'html' => '123']);
 
         ProductModel::objects();
     }
