@@ -62,6 +62,36 @@
     }
   }
 
+  .scrollbar {
+    width: 100%;
+    height: 12px;
+    background-color: #eee;
+    position: relative;
+    margin-top: rem-calc(10);
+
+    .handle {
+      width: 0;
+      height: 12px;
+      position: relative;
+      top: -5px;
+      cursor: pointer;
+
+      &:before {
+        overflow: hidden;
+        border-radius: rem-calc(10);
+        position: absolute;
+        display: block;
+        background-color: #aaa;
+        content: '';
+        top: 4px;
+        height: 4px;
+        left: 0;
+        right: 0;
+      }
+    }
+  }
+
+
   .slider-data {
     //ul {
     //  &:after {
@@ -103,6 +133,13 @@
   .slider-products {
     .slider-data {
       min-height: rem-calc(310);
+    }
+  }
+
+
+  &.loaded {
+    .scrollbar {
+
     }
   }
 }

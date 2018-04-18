@@ -15,6 +15,12 @@ import ajax from "../utils/ajax";
             speed: 300,
             mouseDragging: 1,
             touchDragging: 1,
+            releaseSwing: 1,
+            dragHandle: 1,
+            dynamicHandle: 1,
+            clickBar: 1,
+            scrollBar: $(slide).closest('.slider-block').find('.scrollbar'),
+            scrollBy: 1,
             // pagesBar: $wrap.find('.pages'),
             activatePageOn: 'click'
         })
@@ -25,9 +31,6 @@ import ajax from "../utils/ajax";
         let sliders = document.querySelectorAll('.slider-block .slider-data:not(.loaded):not(.loading):not(.not-load)');
 
         if (sliders.length) {
-            let aSlider = [];
-            let countAll = 0;
-
             for (let i=0; i < sliders.length; i++) {
                 let slide = sliders[i];
                 slide.classList.add('loading');

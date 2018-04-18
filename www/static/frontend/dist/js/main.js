@@ -54571,6 +54571,12 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
             speed: 300,
             mouseDragging: 1,
             touchDragging: 1,
+            releaseSwing: 1,
+            dragHandle: 1,
+            dynamicHandle: 1,
+            clickBar: 1,
+            scrollBar: $(slide).closest('.slider-block').find('.scrollbar'),
+            scrollBy: 1,
 
             activatePageOn: 'click'
         }).css('overflow', 'visible');
@@ -54580,9 +54586,6 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
         var sliders = document.querySelectorAll('.slider-block .slider-data:not(.loaded):not(.loading):not(.not-load)');
 
         if (sliders.length) {
-            var aSlider = [];
-            var countAll = 0;
-
             var _loop = function _loop(i) {
                 var slide = sliders[i];
                 slide.classList.add('loading');
