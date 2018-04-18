@@ -20,7 +20,8 @@ import ajax from "../utils/ajax";
             dynamicHandle: 1,
             clickBar: 1,
             scrollBar: $(slide).closest('.slider-block').find('.scrollbar'),
-            scrollBy: 1,
+            scrollBy: 0,
+            scrollTrap: true,
             // pagesBar: $wrap.find('.pages'),
             activatePageOn: 'click'
         })

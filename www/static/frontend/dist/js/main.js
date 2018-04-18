@@ -54576,7 +54576,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
             dynamicHandle: 1,
             clickBar: 1,
             scrollBar: $(slide).closest('.slider-block').find('.scrollbar'),
-            scrollBy: 1,
+            scrollBy: 0,
+            scrollTrap: true,
 
             activatePageOn: 'click'
         }).css('overflow', 'visible');

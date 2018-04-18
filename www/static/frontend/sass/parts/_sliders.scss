@@ -5,63 +5,6 @@
     margin-top: rem-calc(50);
   }
 
-  .title_container {
-
-    @include breakpoint(medium) {
-      text-align: center;
-    }
-  }
-
-  .title-section {
-    display: flex;
-    justify-content: space-between;
-    color: #154159;
-    font-size: rem-calc(16);
-    font-weight: 700;
-    text-transform: uppercase;
-
-
-    @include breakpoint(medium) {
-      display: inline-block;
-      justify-content: center;
-      font-size: rem-calc(24);
-      position: relative;
-    }
-
-    .link {
-      display: inline-block;
-      color: #055a93;
-      font-size: rem-calc(13);
-      font-weight: 500;
-      text-transform: none;
-
-      @include breakpoint(medium) {
-        position: absolute;
-        display: block;
-        font-size: rem-calc(16);
-        top: calc(50% - .8rem);
-        left: 100%;
-        line-height: rem-calc(24);
-        width: rem-calc(100);
-        vertical-align: middle;
-        height: rem-calc(24);
-        margin-left: rem-calc(10);
-
-
-        &:before {
-          content: '';
-          display: inline-block;
-          width: rem-calc(16);
-          height: rem-calc(14);
-          margin-right: rem-calc(5);
-          background: url("../images/icons/header/view_all_departments_blue.svg") center center no-repeat;
-          background-size: contain;
-        }
-      }
-
-    }
-  }
-
   .scrollbar {
     width: 100%;
     height: 12px;
@@ -140,25 +83,23 @@
         }
 
         .overflow_container {
-          //background: #fff;
-          //z-index: 3;
-
           display: none !important;
         }
       }
     }
   }
 
-  .slider-products {
-    .slider-data {
-      min-height: rem-calc(310);
-    }
-  }
-
-
   &.loaded {
     .scrollbar {
 
+    }
+  }
+}
+
+.slider-products {
+  .slider-block {
+    .slider-data {
+      min-height: rem-calc(320);
     }
   }
 }
