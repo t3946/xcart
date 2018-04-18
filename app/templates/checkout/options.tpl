@@ -2,7 +2,6 @@
 
 {block 'content'}
 
-
     <form data-abide action="{url 'checkout:options'}" method="POST" class="checkout-options-form">
         <section class="checkout-options">
             <div class="row">
@@ -25,6 +24,8 @@
                     {foreach $.app->cart->getItemsGroupedBy() as $gi => $group}
                         {set $warehouse = $.get_warehouse($gi)}
                         {set $shipping  = $.get_shipping($gi, $order, $group) }
+                        {set $order_group = $order->groups->get(['manufacturerid' => $gi])}
+
                         <div class="row">
                             <div class="columns small-12">
                                 <h3 class="shipped-from">
@@ -38,9 +39,9 @@
                                     {set $shipping_model = $quote->shipping}
                                     <div class="row">
                                         <div class="columns small-9">
-                                            <input id="shipping_{$gi}" type="radio" name="shipping_rates[{$gi}]" value="{$quote->rateid}"/>
+                                            <input {if $order_group && $order_group->shippingid == $shipping_model->shippingid}checked{/if} id="shipping_{$gi}" type="radio" name="shipping_rates[{$gi}]" value="{$quote->rateid}"/>
                                             <label for="shipping_{$gi}">
-                                                <span class="name">{$shipping_model->getName()}</span> {$shipping_model->shipping_time}
+                                                <span class="name">{$shipping_model->getFrontendName()}</span> {$shipping_model->shipping_time}
                                             </label>
                                         </div>
                                         <div class="columns small-3">
@@ -84,7 +85,7 @@
                             {foreach $payment_methods as $method}
                                 <div class="row align-center-middle {cycle ["odd", ""]}">
                                     <div class="columns small-4">
-                                        <input id="payment_{$method->paymentid}" type="radio" name="payment_method" value="{$method->paymentid}"/>
+                                        <input {if $method->paymentid == $order->paymentid}checked{/if} id="payment_{$method->paymentid}" type="radio" name="payment_method" value="{$method->paymentid}"/>
                                         <label for="payment_{$method->paymentid}">
                                             <span class="name">{$method->payment_method}</span>
                                         </label>
@@ -114,9 +115,9 @@
                     </div>
                     <div class="row">
                         <div class="columns small-12">
-                            <input id="biiling_yes" type="radio" name="billing_address"/>
+                            <input id="biiling_yes" type="radio" checked name="billing_address"/>
                             <label for="biiling_yes">
-                                <span class="name">{t 'Yes' dict='order'}</span>
+                                {t 'Yes' dict='order'}
                             </label>
                         </div>
                     </div>
@@ -124,7 +125,7 @@
                         <div class="columns small-12">
                             <input id="biiling_no" type="radio" name="billing_address"/>
                             <label for="biiling_no">
-                                <span class="name">{t 'No' dict='order'}</span>
+                                {t 'No' dict='order'}
                             </label>
                         </div>
                     </div>

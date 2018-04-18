@@ -26,7 +26,7 @@ use Xcart\Order;
 
 class OrderModel extends Model
 {
-    use DataModelTrait, FieldManagerCacheTrait, AutoMetaTrait;
+    use DataModelTrait, AutoMetaTrait;
 
     public $last_activity;
     public $last_message;

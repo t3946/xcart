@@ -4,9 +4,12 @@ namespace Modules\Order\Controllers;
 
 use Modules\Core\Models\CountryModel;
 use Modules\Dashboard\Sqls\SearchSql;
+use Modules\Order\Models\OrderGroupModel;
 use Modules\Order\Models\OrderModel;
 use Modules\Order\Models\OrderStatusModel;
 use Modules\Payment\Models\PaymentMethodModel;
+use Modules\Shipping\Models\ShippingModel;
+use Modules\Shipping\Models\ShippingRateModel;
 use Modules\User\Models\AddressModel;
 use Xcart\App\Controller\FrontendController;
 use Xcart\App\Main\Xcart;
@@ -14,13 +17,20 @@ use Xcart\Connection;
 
 class CheckoutController extends FrontendController
 {
-    /**
-     * @return \Modules\Cart\Components\Cart
-     * @throws \Xcart\App\Exceptions\UnknownPropertyException
-     */
-    protected function getCart()
+
+    protected function getOrder() : OrderModel
     {
-        return Xcart::app()->getModule('Cart')->getComponent('cart');
+        /** @var OrderModel $order */
+
+        $order = OrderModel::objects()->get([
+            'cart_number' => Xcart::app()->cart->getCartNumber(),
+        ]);
+
+        if (!$order) {
+            $this->redirect('checkout:shipping');
+        }
+
+        return $order;
     }
 
     public function actionShipping()
@@ -75,8 +85,6 @@ class CheckoutController extends FrontendController
             }
         }
 
-        [$s_address, $s_address_2] = $order->getAddress();
-
         echo $this->render('checkout/shipping.tpl', [
             'order' => $order,
             'countries' => Connection::getInstance()->fetchAll(SearchSql::getAllCountryOrderSql())
@@ -87,18 +95,40 @@ class CheckoutController extends FrontendController
     {
         $app = Xcart::app();
         $user = $app->user;
-        $cart = $app->cart;
         $site = $app->getModule('Sites')->getSite();
 
         if (!$user) {}
 
-        $order = OrderModel::objects()->get([
-            'cart_number' => $cart->getStorage()->getCartNumber(),
-        ]);
+        $order = $this->getOrder();
 
-        if (!$order) {
-            $this->redirect('checkout:shipping');
+        if ($app->request->getIsPost()) {
+            if ($app->request->post->has('shipping_rates')) {
+                if ($rates = $app->request->post->get('shipping_rates')) {
+                    foreach ($rates as $d => $rateid) {
+                        /** @var ShippingRateModel $rate */
+                        if ($rate = ShippingRateModel::objects()->get(['rateid' => $rateid])) {
+                            /** @var OrderGroupModel $group */
+                            [$group] = OrderGroupModel::objects()->getOrCreate(['manufacturerid' => $d, 'orderid' => $order->orderid]);
+
+                            $group->setAttributes([
+                                'shippingid' => $rate->shippingid,
+                                'shipping' => $rate->shipping->getFrontendName()
+                            ]);
+
+                            $group->save();
+                        }
+                    }
+                }
+                if ($app->request->post->has('payment_method')) {
+                    if (($paymentid = $app->request->post->get('payment_method')) && $payment_method = PaymentMethodModel::objects()->get(['paymentid' => $paymentid])) {
+                        $order->paymentid = $payment_method->paymentid;
+                        $order->save();
+                    }
+                }
+            }
+            $this->redirect('checkout:review');
         }
+
 
         $payment_methods = PaymentMethodModel::objects()
             ->filter(['active' => 'Y', 'site__through__storefrontid' => $site->storefrontid])
@@ -109,5 +139,20 @@ class CheckoutController extends FrontendController
             'order' => $order,
             'payment_methods' => $payment_methods
         ]);
+    }
+
+    public function actionReview()
+    {
+        $app = Xcart::app();
+        $user = $app->user;
+
+        if (!$user) {}
+
+        $order = $this->getOrder();
+
+        echo $this->render('checkout/review.tpl', [
+            'order' => $order,
+        ]);
+
     }
 }
