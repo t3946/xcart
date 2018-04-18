@@ -8348,7 +8348,7 @@ var _lodash = __webpack_require__(12);
 
 var _lodash2 = _interopRequireDefault(_lodash);
 
-var _reduxThunk = __webpack_require__(26);
+var _reduxThunk = __webpack_require__(25);
 
 var _reduxThunk2 = _interopRequireDefault(_reduxThunk);
 
@@ -8648,11 +8648,11 @@ var _redux = __webpack_require__(15);
 
 var _reduxLogger = __webpack_require__(74);
 
-var _reduxThunk = __webpack_require__(26);
+var _reduxThunk = __webpack_require__(25);
 
 var _reduxThunk2 = _interopRequireDefault(_reduxThunk);
 
-var _ajax = __webpack_require__(17);
+var _ajax = __webpack_require__(26);
 
 var _ajax2 = _interopRequireDefault(_ajax);
 
@@ -8787,7 +8787,7 @@ exports.default = store;
 /* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var Symbol = __webpack_require__(22),
+var Symbol = __webpack_require__(21),
     getRawTag = __webpack_require__(65),
     objectToString = __webpack_require__(66);
 
@@ -26355,7 +26355,7 @@ exports.Triggers = Triggers;
 exports.__esModule = true;
 exports.compose = exports.applyMiddleware = exports.bindActionCreators = exports.combineReducers = exports.createStore = undefined;
 
-var _createStore = __webpack_require__(20);
+var _createStore = __webpack_require__(19);
 
 var _createStore2 = _interopRequireDefault(_createStore);
 
@@ -26371,11 +26371,11 @@ var _applyMiddleware = __webpack_require__(73);
 
 var _applyMiddleware2 = _interopRequireDefault(_applyMiddleware);
 
-var _compose = __webpack_require__(25);
+var _compose = __webpack_require__(24);
 
 var _compose2 = _interopRequireDefault(_compose);
 
-var _warning = __webpack_require__(24);
+var _warning = __webpack_require__(23);
 
 var _warning2 = _interopRequireDefault(_warning);
 
@@ -26401,7 +26401,7 @@ exports.compose = _compose2['default'];
 /* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var freeGlobal = __webpack_require__(23);
+var freeGlobal = __webpack_require__(22);
 
 /** Detect free variable `self`. */
 var freeSelf = typeof self == 'object' && self && self.Object === Object && self;
@@ -26414,63 +26414,6 @@ module.exports = root;
 
 /***/ }),
 /* 17 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-exports.__esModule = true;
-var prepareUrl = function prepareUrl(url) {
-    return url += (url.indexOf('?') ? '?' : '&') + '__=' + new Date().getTime();
-};
-var isJsonResponse = function isJsonResponse(response) {
-    var isJson = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
-    return isJson || response.headers.get('Content-Type').toLowerCase() === 'application/json';
-};
-
-exports.default = function (url, data, success, error) {
-    var isJson = false;
-    var options = {
-        cache: 'no-cache',
-        credentials: 'same-origin',
-        headers: {
-            'X-REQUESTED-WITH': 'XMLHttpRequest'
-        },
-        method: 'GET',
-        mode: 'same-origin',
-        redirect: 'follow',
-        referrer: 'no-referrer' };
-
-    if (data) {
-        if (data.type) {
-            isJson = data.type.toLowerCase() === 'json';
-        }
-
-        if (data.data) {
-            options['body'] = data.data;
-        }
-
-        if (data.forceNoCache) {
-            url = prepareUrl(url);
-        }
-
-        options['method'] = data.method ? data.method.toUpperCase() : 'GET';
-        options['mode'] = data.mode ? data.method.toLowerCase() : 'same-origin';
-    }
-
-    return fetch(url, options).then(function (response) {
-        var pr = isJsonResponse(response, isJson) ? response.json() : response.text();
-
-        pr.then(success, error);
-
-        return pr;
-    }, function (response) {
-        return error(response);
-    });
-};
-
-/***/ }),
-/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -33796,7 +33739,7 @@ return Swiper$1;
 
 
 /***/ }),
-/* 19 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -34785,7 +34728,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
   };
 
   if (true) {
-    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(19)], __WEBPACK_AMD_DEFINE_RESULT__ = (function () {
+    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(18)], __WEBPACK_AMD_DEFINE_RESULT__ = (function () {
       return Pace;
     }).apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
@@ -34799,7 +34742,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 }).call(undefined);
 
 /***/ }),
-/* 20 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -34809,7 +34752,7 @@ exports.__esModule = true;
 exports.ActionTypes = undefined;
 exports['default'] = createStore;
 
-var _isPlainObject = __webpack_require__(21);
+var _isPlainObject = __webpack_require__(20);
 
 var _isPlainObject2 = _interopRequireDefault(_isPlainObject);
 
@@ -35066,7 +35009,7 @@ var ActionTypes = exports.ActionTypes = {
 }
 
 /***/ }),
-/* 21 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var baseGetTag = __webpack_require__(10),
@@ -35134,7 +35077,7 @@ module.exports = isPlainObject;
 
 
 /***/ }),
-/* 22 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var root = __webpack_require__(16);
@@ -35146,7 +35089,7 @@ module.exports = Symbol;
 
 
 /***/ }),
-/* 23 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global) {/** Detect free variable `global` from Node.js. */
@@ -35157,7 +35100,7 @@ module.exports = freeGlobal;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
 
 /***/ }),
-/* 24 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -35188,7 +35131,7 @@ function warning(message) {
 }
 
 /***/ }),
-/* 25 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -35230,7 +35173,7 @@ function compose() {
 }
 
 /***/ }),
-/* 26 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -35257,6 +35200,63 @@ var thunk = createThunkMiddleware();
 thunk.withExtraArgument = createThunkMiddleware;
 
 exports['default'] = thunk;
+
+/***/ }),
+/* 26 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+exports.__esModule = true;
+var prepareUrl = function prepareUrl(url) {
+    return url += (url.indexOf('?') ? '?' : '&') + '__=' + new Date().getTime();
+};
+var isJsonResponse = function isJsonResponse(response) {
+    var isJson = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+    return isJson || response.headers.get('Content-Type').toLowerCase() === 'application/json';
+};
+
+exports.default = function (url, data, success, error) {
+    var isJson = false;
+    var options = {
+        cache: 'no-cache',
+        credentials: 'same-origin',
+        headers: {
+            'X-REQUESTED-WITH': 'XMLHttpRequest'
+        },
+        method: 'GET',
+        mode: 'same-origin',
+        redirect: 'follow',
+        referrer: 'no-referrer' };
+
+    if (data) {
+        if (data.type) {
+            isJson = data.type.toLowerCase() === 'json';
+        }
+
+        if (data.data) {
+            options['body'] = data.data;
+        }
+
+        if (data.forceNoCache) {
+            url = prepareUrl(url);
+        }
+
+        options['method'] = data.method ? data.method.toUpperCase() : 'GET';
+        options['mode'] = data.mode ? data.method.toLowerCase() : 'same-origin';
+    }
+
+    return fetch(url, options).then(function (response) {
+        var pr = isJsonResponse(response, isJson) ? response.json() : response.text();
+
+        pr.then(success, error);
+
+        return pr;
+    }, function (response) {
+        return error(response);
+    });
+};
 
 /***/ }),
 /* 27 */
@@ -37540,7 +37540,7 @@ __webpack_require__(53);
 
 __webpack_require__(54);
 
-__webpack_require__(18);
+__webpack_require__(17);
 
 var _webfontloader = __webpack_require__(55);
 
@@ -37560,7 +37560,7 @@ var _noUiSlider2 = _interopRequireDefault(_noUiSlider);
 
 __webpack_require__(59);
 
-__webpack_require__(19);
+__webpack_require__(18);
 
 __webpack_require__(60);
 
@@ -45591,7 +45591,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 /* 65 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var Symbol = __webpack_require__(22);
+var Symbol = __webpack_require__(21);
 
 /** Used for built-in method references. */
 var objectProto = Object.prototype;
@@ -45775,13 +45775,13 @@ function symbolObservablePonyfill(root) {
 exports.__esModule = true;
 exports['default'] = combineReducers;
 
-var _createStore = __webpack_require__(20);
+var _createStore = __webpack_require__(19);
 
-var _isPlainObject = __webpack_require__(21);
+var _isPlainObject = __webpack_require__(20);
 
 var _isPlainObject2 = _interopRequireDefault(_isPlainObject);
 
-var _warning = __webpack_require__(24);
+var _warning = __webpack_require__(23);
 
 var _warning2 = _interopRequireDefault(_warning);
 
@@ -45984,7 +45984,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
 exports['default'] = applyMiddleware;
 
-var _compose = __webpack_require__(25);
+var _compose = __webpack_require__(24);
 
 var _compose2 = _interopRequireDefault(_compose);
 
@@ -53156,7 +53156,7 @@ var _reactDom = __webpack_require__(30);
 
 var _reactDom2 = _interopRequireDefault(_reactDom);
 
-var _swiper = __webpack_require__(18);
+var _swiper = __webpack_require__(17);
 
 var _swiper2 = _interopRequireDefault(_swiper);
 
@@ -54548,7 +54548,7 @@ module.exports = checkPropTypes;
 "use strict";
 /* WEBPACK VAR INJECTION */(function($) {
 
-var _ajax = __webpack_require__(17);
+var _ajax = __webpack_require__(26);
 
 var _ajax2 = _interopRequireDefault(_ajax);
 
@@ -59975,7 +59975,7 @@ module.exports = baseUnary;
 /* 158 */
 /***/ (function(module, exports, __webpack_require__) {
 
-/* WEBPACK VAR INJECTION */(function(module) {var freeGlobal = __webpack_require__(23);
+/* WEBPACK VAR INJECTION */(function(module) {var freeGlobal = __webpack_require__(22);
 
 /** Detect free variable `exports`. */
 var freeExports = typeof exports == 'object' && exports && !exports.nodeType && exports;

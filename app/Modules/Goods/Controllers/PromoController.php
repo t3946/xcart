@@ -24,19 +24,24 @@ class PromoController extends AbstractCatalogController
         /** @var SiteModel $site */
         $site = Xcart::app()->getModule('Sites')->getSite();
 
-        /** @var ProductModel[] $products */
-        $products = $this->getDefaultProductFilter()->filter([
+        $productsQS = $this->getDefaultProductFilter()->filter([
             'pk__in' => FeaturedProductsModel::objects()->filter(['storefrontid' => $site])->select(['product__productid']),
-        ])->all();
+        ]);
 
-        $sProducts = '';
-        foreach ($products as $product) {
-            $sProducts .= $this->render('catalog/parts/_catalog_list_item.tpl', ['item' => $product]);
+        if ($this->getRequest()->getIsAjax()) {
+            $sProducts = '';
+            foreach ($productsQS as $product) {
+                $sProducts .= $this->render('catalog/parts/_catalog_list_item.tpl', ['item' => $product]);
+            }
+
+            $this->jsonResponse([
+                'html' => "<div class='product-items tile-view' itemtype='http://schema.org/OfferCatalog'>{$sProducts}</div>",
+            ]);
         }
 
-        $this->jsonResponse([
-            'html' => "<div class='product-items tile-view' itemtype='http://schema.org/OfferCatalog'>{$sProducts}</div>",
-        ]);
+
+
+
     }
 
     public function actionNew()
@@ -52,19 +57,22 @@ class PromoController extends AbstractCatalogController
             ->limit(1)
             ->get();
 
-        /** @var ProductModel[] $products */
-        $products = $this->getDefaultProductFilter()->filter([
+        $productsQS = $this->getDefaultProductFilter()->filter([
             'category_main__categoryid__in' => $category_new->getObjects()->descendants(true)->select(['pk']),
             ])->all();
 
-        $sProducts = '';
-        foreach ($products as $product) {
-            $sProducts .= $this->render('catalog/parts/_catalog_list_item.tpl', ['item' => $product]);
+        if ($this->getRequest()->getIsAjax()) {
+            $sProducts = '';
+            foreach ($productsQS as $product) {
+                $sProducts .= $this->render('catalog/parts/_catalog_list_item.tpl', ['item' => $product]);
+            }
+
+            $this->jsonResponse([
+                'html' => "<div class='product-items tile-view' itemtype='http://schema.org/OfferCatalog'>{$sProducts}</div>",
+            ]);
         }
 
-        $this->jsonResponse([
-            'html' => "<div class='product-items tile-view' itemtype='http://schema.org/OfferCatalog'>{$sProducts}</div>",
-        ]);
+
 
     }
 

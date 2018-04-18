@@ -23,7 +23,7 @@ return [
     ],
     [
         'route' => '/category/featured',
-        'target' => ['\Modules\Goods\Controllers\PromoController', 'actionFeatured'],
+        'target' => ['\Modules\Goods\Controllers\PromoFeaturedController', 'actionFeatured'],
         'name' => 'featured'
     ],
     [
