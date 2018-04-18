@@ -1,6 +1,7 @@
 <?php
 namespace Modules\Sites\Models;
 
+use Modules\Core\Components\GlobalConfig;
 use Xcart\App\Helpers\Text;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\CharField;
@@ -21,6 +22,7 @@ use Xcart\App\Orm\Model;
 class SiteModel extends Model
 {
     private $_config = [];
+    private $_globalConfig = [];
 
 
     public function __toString()
@@ -122,6 +124,16 @@ class SiteModel extends Model
 
         return $this->_config;
     }
+
+    public function getGlobalConfig()
+    {
+        if (!$this->_globalConfig) {
+            $this->_globalConfig = GlobalConfig::getInstance()->getAllData();
+        }
+
+        return $this->_globalConfig;
+    }
+
 
 
     public function getBaseDomain()

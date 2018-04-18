@@ -33,7 +33,7 @@ use Xcart\App\Request\HttpRequest;
  * @property \Xcart\App\Components\Flash $flash
  * @property \Modules\Mail\Components\Mailer $mail Mailer
  * @property \Modules\Mail\Components\MailComponent $oldMail Mailer
- * @property \Modules\Cart\Components\XCart|\Modules\Cart\Components\Cart $cart Cart
+ * @property \Modules\Cart\Components\XCart $cart Cart
  *
  * @property UserModel $user
  * 

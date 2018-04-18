@@ -315,7 +315,7 @@ class Cart
     /**
      * @return \Modules\Cart\Components\CartItem[]
      */
-    public function getItems()
+    public function getItems(): array
     {
         $items = $this->getStorage()->getData();
         if ($this->forceFetch) {

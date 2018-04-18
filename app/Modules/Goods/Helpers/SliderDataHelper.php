@@ -4,47 +4,51 @@ namespace Modules\Goods\Helpers;
 use Mindy\QueryBuilder\Expression;
 use Mindy\QueryBuilder\Q\QAndNot;
 use Modules\Goods\Models\ProductModel;
+use Modules\Sites\Models\SiteModel;
+use Xcart\App\Main\Xcart;
 use Xcart\Brands;
 use Xcart\ElasticSearch;
 use Xcart\Product;
 
 class SliderDataHelper
 {
+    /**
+     * @param $mode
+     * @param null $productid
+     * @param int $fba_limit
+     * @param int $max_products
+     * @return ProductModel[]
+     * @throws \Doctrine\DBAL\DBALException
+     * @throws \Xcart\App\Exceptions\UnknownMethodException
+     * @throws \Xcart\App\Exceptions\UnknownPropertyException
+     */
     public static function getSliderData ($mode, $productid = null, $fba_limit = 1, $max_products = 30): array
     {
-        global $config, $sql_tbl;
-        global $current_storefront;
+        global $sql_tbl;
 
+        /** @var SiteModel $site */
+        $site = Xcart::app()->getModule('Site')->getSite();
 
         $section_name = $mode;
         $saveOrder = false;
         $extendFilter = [];
 
 
-        $productids = array();
-        if (!empty($productid)){
-            $productids[] = $productid;
-        }
+        $productids = $productid ? [$productid] : [];
 
-
-        if (!empty($cart["products"]) && is_array($cart["products"]) && ($section_name != "recently_viewed_products")){
-            foreach ($cart["products"] as $k => $v){
-                $productids[] = $v["productid"];
+        if ($section_name !== 'recently_viewed_products') {
+            foreach (Xcart::app()->cart->getItems() as $cartItem) {
+                $productids[] = $cartItem->getObject()->pk;
             }
         }
 
-        $sGoogleAnaliticsParam = "";
 
-        if (
-            $section_name == "products_also_bought_with_this_product"  ||
-            $section_name == "related_products"  ||
-            $section_name == "recently_viewed_products"
-        ){
+        if (\in_array($section_name, ['products_also_bought_with_this_product', 'related_products', 'recently_viewed_products'])){
 
             $productids = implode("','", $productids);
             $p_query = '';
 
-            if ($section_name == "products_also_bought_with_this_product"){
+            if ($section_name === 'products_also_bought_with_this_product'){
                 $p_query = <<<SQL
 select RO.related_resource_id as needed_resource_id
 from xcart_cidev_related_objects RO
@@ -54,13 +58,13 @@ where RO.resource_id = '{$productid}'
   and RO.resource_type = 'OP' 
   and RO.related_resource_type = 'P'  
   and RO.related_resource_id NOT IN ('{$productids}')
-  and SF.sfid = {$current_storefront}
+  and SF.sfid = {$site->pk}
   
 order By RO.related_resource_orderby 
 limit 30
 SQL;
             }
-            elseif ($section_name === "recently_viewed_products" && !\defined('IS_ROBOT')){
+            elseif ($section_name === 'recently_viewed_products' && !\defined('IS_ROBOT')){
 
                 $saveOrder = true;
 
@@ -75,16 +79,16 @@ where SP.meta_id = '{$meta_id}'
   and SP.resource_type = 'P' 
   and SP.resource_id NOT IN ('{$productids}')
   and SP.meta_id > 0
-  and SF.sfid = {$current_storefront}
+  and SF.sfid = {$site->pk}
   
 group By SP.resource_id
 order By max(SP.`position`) desc
 LIMIT 50
 SQL;
             }
-            elseif ($section_name == "related_products"){
+            elseif ($section_name === 'related_products'){
 
-                $avail_condition = "";
+                $avail_condition = '';
 
                 $p_query = "SELECT $sql_tbl[products].productid as needed_resource_id FROM $sql_tbl[product_links], $sql_tbl[products] WHERE $sql_tbl[products].productid=$sql_tbl[product_links].productid2 AND $sql_tbl[product_links].productid1='$productid' AND $sql_tbl[products].forsale = 'Y' AND $sql_tbl[products].productid NOT IN ('$productids') $avail_condition GROUP BY $sql_tbl[products].productid ORDER BY $sql_tbl[product_links].orderby, product";
             }
@@ -95,23 +99,15 @@ SQL;
                 $pids = func_query($p_query);
             }
 
-            switch ($section_name) {
-                case 'products_also_bought_with_this_product': $sGoogleAnaliticsParam = 'customer_also_bought_carousel';
-                    break;
-                case 'related_products': $sGoogleAnaliticsParam = 'related_products_carousel';
-                    break;
-                case 'recently_viewed_products': $sGoogleAnaliticsParam = 'recently_viewed_carousel';
-                    break;
-            }
 
         }
         elseif ( \in_array($section_name, ['similar_products', 'similar_products_ob']) ) {
 
             $saveOrder = true;
 
-            $classElastic = new ElasticSearch($config["ElasticSearch_options"], \Xcart\App\Main\Xcart::app()->getModule('Sites')->getSite()->domain);
-            $classElastic->setSource("*._id");
-            $classElastic->setType("product");
+            $classElastic = new ElasticSearch($site->getGlobalConfig()['ElasticSearch_options'], $site->domain);
+            $classElastic->setSource('*._id');
+            $classElastic->setType('product');
             $classElastic->setMinScore(0.5);
             $classElastic->setSize(100);
             $classElastic->setProductId($productid);
@@ -134,8 +130,8 @@ SQL;
 
             $res = $classElastic->query();
 
-            if (!empty($res["hits"]["hits"])) {
-                $hits = $res["hits"]["hits"];
+            if (!empty($res['hits']['hits'])) {
+                $hits = $res['hits']['hits'];
                 usort($hits, function($a, $b){
                     if ($a['_score'] == $b['_score']) {
                         return 0;
@@ -146,7 +142,7 @@ SQL;
             }
         }
 
-        $isInStock = in_array($section_name, ['similar_products', 'similar_products_ob']);
+        $isInStock = \in_array($section_name, ['similar_products', 'similar_products_ob']);
 
         $p_ids = [];
         $products = [];
@@ -155,7 +151,7 @@ SQL;
             $fba_pids = [];
             $i_ids = array_map(function($item){ return $item['needed_resource_id']; }, $pids);
 
-            if (!in_array($section_name, ['related_products', 'recently_viewed_products']))
+            if (!\in_array($section_name, ['related_products', 'recently_viewed_products']))
             {
                 if ($fba_pids = Product::getRandFbaProducts($fba_limit, array_merge($i_ids, [$productid])))
                 {
@@ -165,17 +161,15 @@ SQL;
                 }
             }
 
-            if (($key = array_search($productid, $i_ids)) !== false) {
+            if (($key = array_search($productid, $i_ids, true)) !== false) {
                 unset($i_ids[$key]);
             }
 
             $qs = ProductModel::objects()->filter(array_merge(['productid__in' => $i_ids], $extendFilter));
             $ta = $qs->getTableAlias();
 
-            if (isset($current_storefront)) {
-                $qs->getQueryBuilder()
-                    ->join('inner join', 'xcart_products_sf', ['ps.productid' => $ta.'.productid' , 'ps.sfid' => new Expression($current_storefront)], 'ps');
-            }
+            $qs->getQueryBuilder()
+                ->join('inner join', 'xcart_products_sf', ['ps.productid' => $ta.'.productid' , 'ps.sfid' => new Expression($site->pk)], 'ps');
 
 
             if ($saveOrder) {
@@ -184,11 +178,11 @@ SQL;
 
             $oProducts = $qs->all();
 
-            if (count($oProducts) <= $fba_limit && in_array($oProducts[0]->productid, $fba_pids)) {
+            if (\count($oProducts) <= $fba_limit && \in_array($oProducts[0]->productid, $fba_pids, true)) {
                 return [$products, $sGoogleAnaliticsParam];
             }
 
-            if (in_array($section_name, ['similar_products', 'similar_products_ob', 'related_products'])) {
+            if (\in_array($section_name, ['similar_products', 'similar_products_ob', 'related_products'])) {
                 $oProducts = ProductHelper::groupRootProducts($oProducts);
                 if (isset($oProducts[$productid])) {
                     unset($oProducts[$productid]);
@@ -206,10 +200,10 @@ SQL;
                 }
 
                 $p_ids[] = $oProduct->productid;
-                $oProduct->product = str_replace("'", "&#39;", $oProduct->product);
+                $oProduct->product = str_replace("'", '&#39;', $oProduct->product);
                 $products[] = $oProduct;
 
-                if (count($p_ids) >= $max_products) {
+                if (\count($p_ids) >= $max_products) {
                     break;
                 }
             }
@@ -220,5 +214,4 @@ SQL;
 
         return $products;
     }
-
 }
