@@ -10,6 +10,7 @@ use Modules\Order\Models\OrderStatusModel;
 use Modules\Payment\Models\PaymentMethodModel;
 use Modules\Shipping\Models\ShippingModel;
 use Modules\Shipping\Models\ShippingRateModel;
+use Modules\Shipping\ShippingModule;
 use Modules\User\Models\AddressModel;
 use Xcart\App\Controller\FrontendController;
 use Xcart\App\Main\Xcart;
@@ -96,6 +97,8 @@ class CheckoutController extends FrontendController
         $app = Xcart::app();
         $user = $app->user;
         $site = $app->getModule('Sites')->getSite();
+        $ship_module = Xcart::app()->getModule('Shipping');
+        $cart = $app->cart;
 
         if (!$user) {}
 
@@ -110,12 +113,19 @@ class CheckoutController extends FrontendController
                             /** @var OrderGroupModel $group */
                             [$group] = OrderGroupModel::objects()->getOrCreate(['manufacturerid' => $d, 'orderid' => $order->orderid]);
 
-                            $group->setAttributes([
-                                'shippingid' => $rate->shippingid,
-                                'shipping' => $rate->shipping->getFrontendName()
-                            ]);
+                            if (($shipping_rates = $ship_module::getShipping($d, $order, $cart->getItemsGroupedBy()[$d])) && $shipping_rates[$rateid]) {
 
-                            $group->save();
+                                $charge = $shipping_rates[$rateid]->getShippingCharge();
+
+                                $group->setAttributes([
+                                    'shippingid' => $rate->shippingid,
+                                    'shipping' => $rate->shipping->getFrontendName(),
+                                    'shipping_gross' => $charge,
+                                    'shipping_net' => $charge,
+                                ]);
+
+                                $group->save();
+                            }
                         }
                     }
                 }

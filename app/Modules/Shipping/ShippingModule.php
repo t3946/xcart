@@ -19,8 +19,10 @@ class ShippingModule extends Module
         $template->addAccessorSmart('get_shipping', self::class."::getShipping", $template::ACCESSOR_CALL);
     }
 
-    public static function getShipping($id, OrderModel $order, $group)
+    public static function getShipping(int $id, OrderModel $order, array $group) : array
     {
+        $result = [];
+
         $user = new UserModel([
             's_zipcode' => $order->s_zipcode,
             's_country' => $order->s_country,
@@ -41,6 +43,13 @@ class ShippingModule extends Module
         } catch (\Exception $e) {
             $shipping_rates = [];
         }
-        return $shipping_rates ?: reset($shipping_rates);
+
+        if ($shipping_rates) {
+            foreach ($shipping_rates as $rate) {
+                $result[$rate->rateid] = $rate;
+            }
+        }
+
+        return $result;
     }
 }
