@@ -1,5 +1,36 @@
+import _ from 'lodash';
+
 let prepareUrl = url => (url += (url.indexOf('?') ? '?' : '&') + '__=' + (new Date()).getTime());
 let isJsonResponse = (response, isJson = false) => (isJson || response.headers.get('Content-Type').toLowerCase() === 'application/json');
+
+let paramsToForm = (data, form = new FormData) => serialize(form, data);
+
+let  serialize = (form, obj, traditional, scope) => {
+    let type,
+        array = _.isArray(obj),
+        hash = _.isObject(obj);
+
+    _.each(obj, (value, key) => {
+        type = typeof value;
+        if (scope) {
+            key = traditional ? scope :
+                scope + '[' + (hash || type === 'object' || type === 'array' ? key : '') + ']'
+        }
+
+        if (!scope && array) {
+            form.append(key, value);
+        }
+        else if (type === "array" || (!traditional && type === "object")) {
+            serialize(form, value, traditional, key)
+        }
+        else {
+            form.append(key, value)
+        }
+    });
+
+    return form;
+};
+
 
 export default (url, data, success, error) => {
     let isJson = false;
@@ -21,7 +52,7 @@ export default (url, data, success, error) => {
         }
 
         if (data.data) {
-            options['body'] = data.data;
+            options['body'] = paramsToForm(data.data);
         }
 
         if (data.forceNoCache) {

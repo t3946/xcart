@@ -25,66 +25,67 @@
             return;
         }
 
-        let show = false;
-        let product = data.product;
+        if (data.product || (data.target && data.target.dataset.product)) {
+            let show = false;
+            let product = data.product || data.target;
+            let subtotal_container = product.querySelector('[cont-subtotal]');
+            let id = product.dataset.product;
+            let quantity = product.dataset.quantity || 1;
+            let price = 0;
 
-        let subtotal_container = product.querySelector('[cont-subtotal]');
+            if (!cache[id]) {
+                cache[id] = JSON.parse(product.dataset.prices);
+            }
 
-        let id = product.dataset.product;
-        let quantity = product.dataset.quantity || 1;
-        let price = 0;
+            let prices = cache[id];
+            let base_price = null;
 
-        if (!cache[id]) {
-            cache[id] = JSON.parse(product.dataset.prices);
-        }
+            for ( let count in prices ) {
+                if (prices.hasOwnProperty(count)) {
+                    let i_count = parseInt(count);
 
-        let prices = cache[id];
-        let base_price = null;
+                    if (i_count) {
+                        if (!base_price) {
+                            base_price = prices[i_count];
+                        }
 
-        for ( let count in prices ) {
-            let i_count = parseInt(count);
+                        if ( i_count > quantity ) {
+                            break;
+                        }
 
-            if (i_count) {
-                if (!base_price) {
-                    base_price = prices[i_count];
+                        price = prices[i_count];
+                    }
                 }
+            }
 
-                if ( i_count > quantity ) {
-                    break;
+            let extended  = (quantity * price);
+
+            toHtml(product, '[var-price]', toLocaleCurrency(price));
+            toHtml(product, '[var-price-extended]', toLocaleCurrency(extended));
+
+            if (quantity) {
+                let list_price = parseFloat(product.dataset.listPrice);
+
+                if (list_price && list_price !== price) {
+                    show = true;
+
+                    let safe_price = ((list_price * quantity) - extended);
+                    let safe_percentage = Math.floor(safe_price / (extended * .01));
+                    let per_unit = (safe_price / quantity);
+
+                    toHtml(product, '[var-percentage-safe]', safe_percentage);
+                    toHtml(product, '[var-price-safe]', toLocaleCurrency(safe_price));
+                    toHtml(product, '[var-price-perunit-safe]', toLocaleCurrency(per_unit));
                 }
+            }
 
-                price = prices[i_count];
+            if (subtotal_container) {
+                subtotal_container.classList.toggle('hide', !show);
             }
         }
-
-        let extended  = (quantity * price);
-
-        toHtml(product, '[var-price]', toLocaleCurrency(price));
-        toHtml(product, '[var-price-extended]', toLocaleCurrency(extended));
-
-        if (quantity) {
-            let list_price = parseFloat(product.dataset.listPrice);
-
-            if (list_price && list_price !== price) {
-                let safe_percentage = 0;
-                let safe_price = 0;
-                let per_unit = 0;
-
-                show = true;
-                safe_price = ((list_price * quantity) - extended);
-                safe_percentage = Math.floor(safe_price / (extended * .01));
-                per_unit = (safe_price / quantity);
-
-                toHtml(product, '[var-percentage-safe]', safe_percentage);
-                toHtml(product, '[var-price-safe]', toLocaleCurrency(safe_price));
-                toHtml(product, '[var-price-perunit-safe]', toLocaleCurrency(per_unit));
-            }
+        else {
+            console.warn(data);
         }
 
-        console.log(subtotal_container, show);
-
-        if (subtotal_container) {
-            subtotal_container.classList.toggle('hide', !show);
-        }
     });
 })();

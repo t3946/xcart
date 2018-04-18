@@ -1,37 +1,20 @@
 <?php
-namespace Xcart\Helpers;
+namespace Modules\Goods\Helpers;
 
 use Mindy\QueryBuilder\Expression;
 use Mindy\QueryBuilder\Q\QAndNot;
-use Modules\Goods\Helpers\ProductHelper;
 use Modules\Goods\Models\ProductModel;
 use Xcart\Brands;
 use Xcart\ElasticSearch;
 use Xcart\Product;
 
-class SliderData
+class SliderDataHelper
 {
-    /***
-     * @param $params array
-     * @param $smarty \Smarty
-     */
-    public static function getSliderDataSmarty ($params , $smarty)
+    public static function getSliderData ($mode, $productid = null, $fba_limit = 1, $max_products = 30): array
     {
-        if (!isset($params['productid'])) {
-            $params['productid'] = null;
-        }
-
-        list($products, $gaparam) = self::getSliderData($params['mode'], $params['productid'], 1);
-
-        $smarty->assign($params['assign'], $products);
-    }
-
-    public static function getSliderData ($mode, $productid = null, $fba_limit = 1, $max_products = 30)
-    {
-        global $config, $sql_tbl, $site_domain;
+        global $config, $sql_tbl;
         global $current_storefront;
 
-        x_session_register("cart", []);
 
         $section_name = $mode;
         $saveOrder = false;
@@ -102,9 +85,6 @@ SQL;
             elseif ($section_name == "related_products"){
 
                 $avail_condition = "";
-                if ($config["General"]["unlimited_products"] == "N" && $config["General"]["disable_outofstock_products"] == "Y") {
-                    $avail_condition = "AND $sql_tbl[products].avail > 0";
-                }
 
                 $p_query = "SELECT $sql_tbl[products].productid as needed_resource_id FROM $sql_tbl[product_links], $sql_tbl[products] WHERE $sql_tbl[products].productid=$sql_tbl[product_links].productid2 AND $sql_tbl[product_links].productid1='$productid' AND $sql_tbl[products].forsale = 'Y' AND $sql_tbl[products].productid NOT IN ('$productids') $avail_condition GROUP BY $sql_tbl[products].productid ORDER BY $sql_tbl[product_links].orderby, product";
             }
@@ -194,7 +174,7 @@ SQL;
 
             if (isset($current_storefront)) {
                 $qs->getQueryBuilder()
-                   ->join('inner join', 'xcart_products_sf', ['ps.productid' => $ta.'.productid' , 'ps.sfid' => new Expression($current_storefront)], 'ps');
+                    ->join('inner join', 'xcart_products_sf', ['ps.productid' => $ta.'.productid' , 'ps.sfid' => new Expression($current_storefront)], 'ps');
             }
 
 
@@ -238,7 +218,7 @@ SQL;
 
         Product::updateShowInLists($p_ids);
 
-        return [$products, $sGoogleAnaliticsParam];
+        return $products;
     }
 
 }
