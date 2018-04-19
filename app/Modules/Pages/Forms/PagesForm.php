@@ -6,14 +6,13 @@ use Modules\Editor\Fields\EditorField;
 use Modules\Meta\Forms\MetaInlineForm;
 use Modules\Pages\Models\Page;
 use Modules\Pages\PagesModule;
+use Modules\Sites\Models\SiteModel;
 use Xcart\App\Form\Fields\CheckboxField;
 use Xcart\App\Form\Fields\DateTimeField;
 use Xcart\App\Form\Fields\DropDownField;
 use Xcart\App\Form\Fields\ImageField;
 use Xcart\App\Form\Fields\TextAreaField;
-use Xcart\App\Form\Fields\TextField;
 use Xcart\App\Form\ModelForm;
-use Xcart\App\Orm\Fields\CharField;
 
 /**
  * Class PagesForm
@@ -25,7 +24,7 @@ class PagesForm extends ModelForm
     {
         return [
             PagesModule::t('Main information') => [
-                'name', 'url', 'parent', 'is_index', 'no_index', 'is_published'
+                'name', 'url', 'parent', 'is_index', 'no_index', 'is_published', 'storefronts'
             ],
             PagesModule::t('Content') => [
                 'content_short', 'content'
@@ -72,6 +71,22 @@ class PagesForm extends ModelForm
             ],
             'file' => ImageField::className(),
 //            'published_at' => DateTimeField::className()
+            'storefronts' => [
+                'class' => DropDownField::className(),
+                'choices' => function() {
+                    $sf = [];
+
+                    $site_models = SiteModel::objects()->all();
+                    foreach ($site_models as $site_model){
+                        if ($site_model->isWork()){
+                            $sf[$site_model->storefrontid] = $site_model->getName();
+                        }
+                    }
+
+                    return $sf;
+                },
+                'multiple' => true,
+            ],
         ];
     }
 
