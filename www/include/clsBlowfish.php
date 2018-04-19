@@ -35,10 +35,6 @@
 #
 if ( !defined('XCART_START') ) { header("Location: ../"); die("Access denied"); }
 
-if ( class_exists('ctBlowfish') ) {
-    return;
-}
-
 #
 # This variable contains list of tables with crypted data
 # (by Blowfish currently). It used every time we need to change
