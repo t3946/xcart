@@ -4,7 +4,6 @@ namespace Modules\Pages\Controllers;
 
 use Modules\Pages\Models\Page;
 use Xcart\App\Controller\FrontendController;
-use Xcart\App\Main\Xcart;
 use Xcart\App\Pagination\DataSource\QuerySetDataSource;
 use Xcart\App\Pagination\Pagination;
 
@@ -27,6 +26,7 @@ class PageController extends FrontendController
 
     public function actionView($url = null)
     {
+        /** @var Page $model */
         $model = Page::objects()
             ->published()
             ->get(empty($url) ? ['is_index' => true] : ['url' => ltrim($url, '/')]);

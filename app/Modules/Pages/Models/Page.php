@@ -4,6 +4,7 @@ namespace Modules\Pages\Models;
 
 use Closure;
 use Modules\Pages\PagesModule;
+use Modules\Sites\Models\SiteModel;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use Xcart\App\Helpers\Paths;
@@ -12,6 +13,7 @@ use Xcart\App\Orm\Fields\BooleanField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\DateTimeField;
 use Xcart\App\Orm\Fields\ImageField;
+use Xcart\App\Orm\Fields\ManyToManyField;
 use Xcart\App\Orm\Fields\TextField;
 use Xcart\App\Orm\SlugFields\AutoSlugField;
 use Xcart\App\Orm\TreeModel;
@@ -96,7 +98,11 @@ class Page extends TreeModel
             ],
             'is_index' => [
                 'class' => BooleanField::className(),
-                'verboseName' => PagesModule::t('Is index')
+                'verboseName' => PagesModule::t('Is index (main page)')
+            ],
+            'no_index' => [
+                'class' => BooleanField::className(),
+                'verboseName' => PagesModule::t('No index')
             ],
             'is_published' => [
                 'class' => BooleanField::className(),
@@ -113,6 +119,12 @@ class Page extends TreeModel
                     '-lft' => PagesModule::t('Position DESC'),
                 ],
                 'verboseName' => PagesModule::t("Sorting")
+            ],
+            'sites' => [
+                'class' => ManyToManyField::className(),
+                'modelClass' => SiteModel::className(),
+                'through' => PagesStorefrontLink::className(),
+                'verboseName' => PagesModule::t('storefronts'),
             ],
         ]);
     }
