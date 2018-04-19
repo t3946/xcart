@@ -1,6 +1,7 @@
 <?php
 namespace Modules\Sites\Models;
 
+use Modules\Pages\Models\Page;
 use Xcart\App\Helpers\Text;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\CharField;
@@ -106,6 +107,11 @@ class SiteModel extends Model
                 'class' => IntField::className(),
                 'null' => false,
                 'default' => 10
+            ],
+            'static_page' => [
+                'class' => HasManyField::className(),
+                'modelClass' => Page::className(),
+                'link' => ['storefrontid' => 'storefront_id'],
             ],
         ];
     }
