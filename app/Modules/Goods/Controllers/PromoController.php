@@ -33,6 +33,7 @@ class PromoController extends AbstractCatalogController
         if ($this->getRequest()->getIsAjax()) {
 
             $this->renderSliderData($this->getQS()->filter([
+                'images__image_path__isnull' => false,
                 'category_main__categoryid__in' => $category_new->getObjects()->descendants(true)->select(['pk']),
             ]));
         }
@@ -47,6 +48,7 @@ class PromoController extends AbstractCatalogController
         {
             $this->renderSliderData($this->getQS()
                 ->filter([
+                    'images__image_path__isnull' => false,
                     'pk__in' => FeaturedProductsModel::objects()->filter([
                         'storefrontid' => Xcart::app()->getModule('Sites')->getSite()
                     ])->select(['product__productid']),
@@ -115,7 +117,6 @@ class PromoController extends AbstractCatalogController
     {
         return parent::getQS($data)->filter([
             'avail__gt' => 10,
-            'images__image_path__isnull' => false
         ])
             ->order(['?'])
             ->cache(10);
