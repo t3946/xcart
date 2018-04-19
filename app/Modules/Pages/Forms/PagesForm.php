@@ -25,7 +25,7 @@ class PagesForm extends ModelForm
     {
         return [
             PagesModule::t('Main information') => [
-                'name', 'url', 'parent', 'is_index', 'is_published'
+                'name', 'url', 'parent', 'is_index', 'no_index', 'is_published'
             ],
             PagesModule::t('Content') => [
                 'content_short', 'content'
@@ -43,6 +43,7 @@ class PagesForm extends ModelForm
     {
         return [
             'is_index' => CheckboxField::className(),
+            'no_index' => CheckboxField::className(),
             'is_published' => CheckboxField::className(),
             'content_short' => [
                 'class' => TextAreaField::className(),

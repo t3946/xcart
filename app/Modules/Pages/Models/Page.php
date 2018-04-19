@@ -98,6 +98,10 @@ class Page extends TreeModel
                 'class' => BooleanField::className(),
                 'verboseName' => PagesModule::t('Is index')
             ],
+            'no_index' => [
+                'class' => BooleanField::className(),
+                'verboseName' => PagesModule::t('No index')
+            ],
             'is_published' => [
                 'class' => BooleanField::className(),
                 'verboseName' => PagesModule::t('Is published'),
