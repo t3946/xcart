@@ -37,18 +37,6 @@ if (isset($argv) && is_array($argv)) {
     }
 }
 
-//if ($config[$log_category] == "Y") {
-//    $oMail = \Xcart\App\Main\Xcart::app()->oldMail;
-//    $oMail->to = 'team@s3stores.com';
-//    $oMail->from = ('team@s3stores.com');
-//    $oMail->subject = sprintf('Attention! Xcart cron %s Already launched', $log_category);
-//    $oMail->body = $log_category . ' already launched';
-//    $oMail->sendEmail();
-//    if (!isset($argv) || (isset($argv) && !in_array('--force-flag', $argv))) {
-//        die("Already launched"); // ################################
-//    }
-//}
-//db_query_param('REPLACE xcart_config SET value=:value, name=:name', ['value' => 'Y', 'name' => $log_category]);
 
 $start_time = new DateTime('now');
 $log_text = " * * *  Cron started  * * * ";
