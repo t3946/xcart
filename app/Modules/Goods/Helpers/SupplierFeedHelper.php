@@ -18,6 +18,7 @@ use Modules\Goods\Models\ProductLinksModel;
 use Modules\Goods\Models\ProductModel;
 use Modules\Goods\Models\ProductStorefrontModel;
 use Modules\Goods\Models\ProductUpcChangesModel;
+use Modules\Goods\Models\ProductVideosModel;
 use Modules\Goods\Stores\SupplierFeedStore;
 use Xcart\App\Helpers\Paths;
 
@@ -104,6 +105,28 @@ class SupplierFeedHelper
 
     /**
      * @param ProductModel $model
+     */
+    public static function getVideos($model)
+    {
+        /** @var ProductVideosModel $video_model */
+        if ($model->videos){
+            foreach ($model->videos as $video){
+                $filter = [];
+                foreach ($video as $key => $value){
+                    $filter[$key] = $value;
+                }
+                $filter['product_id'] = $model->productid;
+                list($video_model, $is_created) = ProductVideosModel::objects()->getOrNew($filter);
+
+                if ($is_created) {
+                    $video_model->save();
+                }
+            }
+        }
+    }
+
+    /**
+     * @param ProductModel $model
      * @param bool $is_created
      * @param SupplierFeedModel $feed
      * @param array $data
@@ -137,6 +160,8 @@ class SupplierFeedHelper
         $model = SupplierFeedHelper::getEtaDate($model);
 
         $model = SupplierFeedHelper::getWeightOptions($model);
+
+        self::getVideos($model);
 
         list($model, $upc_different) = SupplierFeedHelper::getUPC($model);
 
@@ -177,14 +202,14 @@ class SupplierFeedHelper
             }
 
             (new ProductStorefrontModel([
-                'productid' => $model->productid,
-                'sfid' => $feed->storefront_id]))
+                                            'productid' => $model->productid,
+                                            'sfid' => $feed->storefront_id]))
                 ->save();
 
             (new PricingModel([
-                'productid' => $model->productid,
-                'quantity' => 1,
-                'price' => $model->distributor->calculatePrice($model)]))
+                                  'productid' => $model->productid,
+                                  'quantity' => 1,
+                                  'price' => $model->distributor->calculatePrice($model)]))
                 ->save();
 
             $clean_url = func_clean_url_autogenerate('P', $model->productid, array('product' => $model->product, 'productcode' => $model->productcode));
@@ -335,15 +360,15 @@ class SupplierFeedHelper
         if (!empty($data)) {
 
             if (!$brand = BrandModel::objects()->filter([
-                'brand' => $data
-            ])->limit(1)->order(['brandid'])->get()) {
+                                                            'brand' => $data
+                                                        ])->limit(1)->order(['brandid'])->get()) {
 
                 $brand = new BrandModel([
-                    'brand' => $data,
-                    'orderby' => 10,
-                    'prevent_search_indexing_of_all_brand_products' => $model->prevent_search_indexing_this_product_page == 'Y' ? 'Y' : 'N',
-                    'prevent_search_indexing_brand_page' => $model->prevent_search_indexing_this_product_page == 'Y' ? 'Y' : 'N'
-                ]);
+                                            'brand' => $data,
+                                            'orderby' => 10,
+                                            'prevent_search_indexing_of_all_brand_products' => $model->prevent_search_indexing_this_product_page == 'Y' ? 'Y' : 'N',
+                                            'prevent_search_indexing_brand_page' => $model->prevent_search_indexing_this_product_page == 'Y' ? 'Y' : 'N'
+                                        ]);
 
                 $brand->save();
 
@@ -353,9 +378,9 @@ class SupplierFeedHelper
             }
 
             BrandStorefrontModel::objects()->getOrCreate([
-                'brandid' => $brand->brandid,
-                'sfid' => $feed->storefront_id,
-            ]);
+                                                             'brandid' => $brand->brandid,
+                                                             'sfid' => $feed->storefront_id,
+                                                         ]);
 
             if ($brand->parent_brand_id) {
                 $brand = $brand->parent;
@@ -454,11 +479,11 @@ class SupplierFeedHelper
 
                     if ($is_cat_created) {
                         $modelCat->setAttributes([
-                            'prevent_index_products' => $model->prevent_search_indexing_this_product_page == 'Y' ? 'Y' : 'N',
-                            'prevent_index_category_page' => $model->prevent_search_indexing_this_product_page == 'Y' ? 'Y' : 'N',
-                            'is_bold' => 'Y',
-                            'order_by' => 10
-                        ]);
+                                                     'prevent_index_products' => $model->prevent_search_indexing_this_product_page == 'Y' ? 'Y' : 'N',
+                                                     'prevent_index_category_page' => $model->prevent_search_indexing_this_product_page == 'Y' ? 'Y' : 'N',
+                                                     'is_bold' => 'Y',
+                                                     'order_by' => 10
+                                                 ]);
 
                         $modelCat->categoryid_path = $modelCat->parent->categoryid_path . "/" . $modelCat->categoryid;
 
