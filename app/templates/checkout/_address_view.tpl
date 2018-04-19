@@ -1,14 +1,12 @@
 <h2 class="title">{$header}</h2>
 
-{set $address = $order->getAddress()}
-
 <ul class="address-view">
-    <li>{$address[0]}</li>
-    {if $address[1]}<li>{$address[1]}</li>{/if}
-    <li>{$order->s_city}</li>
-    <li>{$order->s_state}</li>
-    <li>{$order->s_country}</li>
-    <li>{$order->s_zipcode}</li>
+    <li>{$info['address'][0]}</li>
+    {if $info['address'][1]}<li>{$info['address'][1]}</li>{/if}
+    <li>{$info['city']}</li>
+    <li>{$info['state']}</li>
+    <li>{$info['country']}</li>
+    <li>{$info['zipcode']}</li>
 </ul>
 
 <div class="row align-center">

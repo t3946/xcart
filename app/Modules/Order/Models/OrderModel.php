@@ -266,8 +266,34 @@ class OrderModel extends Model
         }
     }
 
-    public function getAddress() : array
+    public function getInfo(string $type) : array
     {
-        return explode(PHP_EOL, $this->s_address, 2);
+        $info = [];
+
+        switch ($type) {
+            case 'shipping':
+                $info = [
+                    'address' => explode(PHP_EOL, $this->s_address, 2),
+                    'firstname' => $this->s_firstname,
+                    'company' => $this->s_company,
+                    'city' => $this->s_city,
+                    'state' => $this->s_state,
+                    'country' => $this->s_country,
+                    'zipcode' => $this->s_zipcode,
+                ];
+                break;
+            case 'billing':
+                $info = [
+                    'address' => explode(PHP_EOL, $this->b_address, 2),
+                    'firstname' => $this->b_firstname,
+                    'company' => $this->b_company,
+                    'city' => $this->b_city,
+                    'state' => $this->b_state,
+                    'country' => $this->b_country,
+                    'zipcode' => $this->b_zipcode,
+                ];
+                break;
+        }
+        return $info;
     }
 }

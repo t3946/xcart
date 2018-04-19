@@ -12,7 +12,7 @@
             <div class="row">
                 <div class="columns small-5">
                     <div class="options">
-                        {include 'checkout/_address_view.tpl' header=$.t('Shipping Address','order') uri='checkout:shipping'}
+                        {include 'checkout/_address_view.tpl' info=$order->getInfo('shipping') header=$.t('Shipping Address','order') uri='checkout:shipping'}
                     </div>
                 </div>
                 <div class="columns small-7">
@@ -115,7 +115,7 @@
                     </div>
                     <div class="row">
                         <div class="columns small-12">
-                            <input id="biiling_yes" type="radio" checked name="billing_address"/>
+                            <input id="biiling_yes" type="radio" checked name="billing_same"/>
                             <label for="biiling_yes">
                                 {t 'Yes' dict='order'}
                             </label>
@@ -123,7 +123,7 @@
                     </div>
                     <div class="row">
                         <div class="columns small-12">
-                            <input id="biiling_no" type="radio" name="billing_address"/>
+                            <input id="biiling_no" type="radio" name="billing_same"/>
                             <label for="biiling_no">
                                 {t 'No' dict='order'}
                             </label>

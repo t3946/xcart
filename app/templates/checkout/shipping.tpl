@@ -1,7 +1,7 @@
 {extends "checkout/base.tpl"}
 
 {block 'content'}
-    {set $address = $order->getAddress()}
+    {set $address = $order->getInfo('shipping')['address']}
 
     <form data-abide action="{url 'checkout:shipping'}" method="POST" class="checkout-shipping-form">
         <section class="checkout-shipping">

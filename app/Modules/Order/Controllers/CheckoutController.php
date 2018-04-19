@@ -135,6 +135,18 @@ class CheckoutController extends FrontendController
                         $order->save();
                     }
                 }
+                if ($app->request->post->has('billing_same')) {
+                   $order->setAttributes([
+                       'b_address' => $order->s_address,
+                       'b_firstname' => $order->s_firstname,
+                       'b_company' => $order->s_company,
+                       'b_city' => $order->s_city,
+                       'b_state' => $order->s_state,
+                       'b_country' => $order->s_country,
+                       'b_zipcode' => $order->s_zipcode,
+                   ]);
+                   $order->save();
+                }
             }
             $this->redirect('checkout:review');
         }
@@ -159,6 +171,13 @@ class CheckoutController extends FrontendController
         if (!$user) {}
 
         $order = $this->getOrder();
+
+        if ($app->request->getIsPost()) {
+            if ($app->request->post->has('customer_notes')) {
+                $order->customer_notes = $app->request->post->get('customer_notes');
+                $order->save();
+            }
+        }
 
         echo $this->render('checkout/review.tpl', [
             'order' => $order,
