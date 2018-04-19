@@ -24,13 +24,13 @@ class PagesForm extends ModelForm
     {
         return [
             PagesModule::t('Main information') => [
-                'name', 'url', 'parent', 'is_index', 'no_index', 'is_published', 'storefronts'
+                'name', 'url', 'parent', 'is_index', 'no_index', 'is_published'
             ],
             PagesModule::t('Content') => [
                 'content_short', 'content'
             ],
             PagesModule::t('Additional') => [
-                'published_at', 'file'
+                'published_at', 'file', 'sites'
             ],
             PagesModule::t('Display settings') => [
                 'view', 'view_children', 'sorting'
@@ -71,21 +71,16 @@ class PagesForm extends ModelForm
             ],
             'file' => ImageField::className(),
 //            'published_at' => DateTimeField::className()
-            'storefronts' => [
+            'sites' => [
                 'class' => DropDownField::className(),
-                'choices' => function() {
-                    $sf = [];
-
-                    $site_models = SiteModel::objects()->all();
-                    foreach ($site_models as $site_model){
-                        if ($site_model->isWork()){
-                            $sf[$site_model->storefrontid] = $site_model->getName();
-                        }
-                    }
-
-                    return $sf;
-                },
                 'multiple' => true,
+                'choices' => function() {
+                    return ['' => ''] + array_filter(SiteModel::objects()->all(),
+                        function($model){
+                            /** @var SiteModel $model */
+                            return $model->isWork();
+                        });
+                },
             ],
         ];
     }

@@ -4,6 +4,8 @@ namespace Xcart\App\Orm\Fields;
 
 use Exception;
 use Mindy\QueryBuilder\Expression;
+use RuntimeException;
+use Xcart\App\Orm\Manager;
 use Xcart\App\Orm\MetaData;
 use Xcart\App\Orm\Model;
 use Xcart\App\Orm\ModelInterface;
@@ -104,21 +106,43 @@ class ManyToManyField extends RelatedField
      */
     public function getRelatedModelColumn()
     {
-        if (!empty($this->link)) {
-            list($fromId, $toId) = $this->link;
-            return $toId;
+        if (empty($this->_modelColumn)) {
+            if (!empty($this->through)) {
+                if (empty($this->link)) {
+                    $throughClass = $this->through;
+                    $through = call_user_func([$throughClass, 'create']);
+
+                    /**
+                     * @var  Model $through
+                     * @var  string $fieldName
+                     * @var  mixed $params
+                     */
+                    foreach ($through->getFields() as $fieldName => $params) {
+                        if (isset($params['modelClass']) && $params['modelClass'] == $this->modelClass) {
+                            $this->_relatedModelColumn = $through->getField($fieldName)->getAttributeName();
+                            break;
+                        }
+                    }
+                } else {
+                    if ($this->link) {
+                        throw new Exception('throughLink is missing in configutaion');
+                    }
+
+                    [$fromId, $toId] = $this->link;
+
+                    $this->_relatedModelColumn = $this->reversed ? $toId : $fromId;
+                }
+            } else {
+                $end = $this->getModelPk();
+                if ($this->ownerClassName === $this->modelClass) {
+                    $end = $this->reversed ? 'to_id' : 'from_id';
+                }
+                $tmp = explode('\\', $this->modelClass);
+                $column = AbstractModel::normalizeTableName(end($tmp));
+                $this->_relatedModelColumn = $column . '_' . $end;
+            }
         }
 
-        if (!$this->_relatedModelColumn) {
-            $cls = $this->modelClass;
-            $end = $this->getRelatedModelPk();
-            if ($cls == $this->ownerClassName) {
-                $end = $this->reversed ? 'from_id' : 'to_id';
-            }
-            $tmp = explode('\\', $cls);
-            $column = AbstractModel::normalizeTableName(end($tmp));
-            $this->_relatedModelColumn = $column . '_' . $end;
-        }
         return $this->_relatedModelColumn;
     }
 
@@ -145,34 +169,37 @@ class ManyToManyField extends RelatedField
                     $throughClass = $this->through;
                     $through = call_user_func([$throughClass, 'create']);
 
-                    $name = '';
+                    /**
+                     * @var  Model $through
+                     * @var  string $fieldName
+                     * @var  mixed $params
+                     */
                     foreach ($through->getFields() as $fieldName => $params) {
                         if (isset($params['modelClass']) && $params['modelClass'] == $this->ownerClassName) {
-                            $name = $fieldName;
+                            $this->_modelColumn = $through->getField($fieldName)->getAttributeName();
                             break;
                         }
                     }
-
-                    $this->_modelColumn = $name;
                 } else {
-                    list($fromId, $toId) = $this->link;
-                    if (empty($this->link)) {
+                    if ($this->link) {
                         throw new Exception('throughLink is missing in configutaion');
                     }
+
+                    [$fromId, $toId] = $this->link;
 
                     $this->_modelColumn = $this->reversed ? $toId : $fromId;
                 }
             } else {
-                $cls = $this->ownerClassName;
                 $end = $this->getModelPk();
-                if ($cls == $this->modelClass) {
+                if ($this->ownerClassName === $this->modelClass) {
                     $end = $this->reversed ? 'to_id' : 'from_id';
                 }
-                $tmp = explode('\\', $cls);
+                $tmp = explode('\\', $this->ownerClassName);
                 $column = AbstractModel::normalizeTableName(end($tmp));
                 $this->_modelColumn = $column . '_' . $end;
             }
         }
+
         return $this->_modelColumn;
     }
 
@@ -216,10 +243,10 @@ class ManyToManyField extends RelatedField
      */
     public function getManager()
     {
-        $className = get_class($this->getRelatedModel()->objects());
+        $className = \get_class($this->getRelatedModel()->objects());
         $config = [
             'modelColumn' => $this->getRelatedModelColumn(),
-            //            'primaryModelColumn' => $this->getModelColumn(),
+            'primaryModelColumn' => $this->getModelColumn(),
             'primaryModel' => $this->getModel(),
             'relatedTable' => $this->getTableName(),
             'extra' => $this->extra,
@@ -237,7 +264,7 @@ class ManyToManyField extends RelatedField
         $throughAlias = $manager->getQueryBuilder()->makeAliasKey($this->getTableName());
         $this->buildSelectQuery($manager->getQueryBuilder(), $manager->getQueryBuilder()->makeAliasKey($this->getModel()->tableName()));
 
-        $through = call_user_func([$this->through, 'create']);
+        $through = \call_user_func([$this->through, 'create']);
         $adapter = $manager->getQueryBuilder()->getAdapter();
 
         foreach ($through->getFields() as $fieldName => $params) {
@@ -254,7 +281,7 @@ class ManyToManyField extends RelatedField
                         $throughAlias = $adapter->quoteColumn($throughAlias);
                         $from = $adapter->quoteColumn($from);
 
-                        if (is_null($this->getModel()->{$to})) {
+                        if (\is_null($this->getModel()->{$to})) {
                             $manager->filter("{$throughAlias}.{$from} IS NULL");
                         }
                         else {
@@ -301,7 +328,8 @@ class ManyToManyField extends RelatedField
             $parts = [$adapter->getRawTableName($this->getTable()), $adapter->getRawTableName($this->getRelatedTable())];
             sort($parts);
             return '{{%' . implode('_', $parts) . '}}';
-        } else {
+        }
+        else {
             return call_user_func([$this->through, 'tableName']);
         }
     }
@@ -339,28 +367,30 @@ class ManyToManyField extends RelatedField
             return [];
         }
 
-        if (!is_array($value)) {
-            if (is_string($value) && strpos($value, ',') !== false) {
+        if (!\is_array($value)) {
+            if (\is_string($value) && strpos($value, ',') !== false) {
                 $value = explode(',', $value);
             } else {
                 $value = [$value];
             }
         }
 
-        if (is_array($value) && count($value) > 0) {
+        if (\is_array($value) && \count($value) > 0) {
             if (
                 is_numeric($value[0]) ||
                 $value[0] instanceof Model
             ) {
                 return $value;
-            } else {
+            }
+            else {
                 if (empty($value[0])) {
                     return [];
                 }
 
-                throw new Exception("ManyToMany field can set only arrays of Models or existing primary keys");
+                throw new RuntimeException("{$this->getName()}: ManyToMany field can set only arrays of Models or existing primary keys");
             }
-        } else {
+        }
+        else {
             return [];
         }
     }
@@ -371,14 +401,19 @@ class ManyToManyField extends RelatedField
      */
     public function setValue($value)
     {
+        if ($value instanceof Manager) {
+            $value = $value->all();
+        }
+
         $value = $this->preformatValue($value);
         $manager = $this->getManager();
         $manager->clean();
+
         foreach ($value as $linkModel) {
             if (
                 ($linkModel instanceof ModelInterface) === false &&
                 !is_a($linkModel, $this->modelClass)) {
-                $linkModel = call_user_func([$this->modelClass, 'objects'])->get(['pk' => $linkModel]);
+                $linkModel = \call_user_func([$this->modelClass, 'objects'])->get(['pk' => $linkModel]);
             }
 
             if ($linkModel instanceof ModelInterface) {
@@ -392,7 +427,7 @@ class ManyToManyField extends RelatedField
     protected function getThroughTableName()
     {
         if ($this->through) {
-            return call_user_func([$this->through, 'tableName']);
+            return \call_user_func([$this->through, 'tableName']);
         }
     }
 

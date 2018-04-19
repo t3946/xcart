@@ -99,21 +99,27 @@ abstract class ManyToManyManager extends ManagerBase
             throw new Exception('Unable to ' . ($link ? 'link' : 'unlink') . ' models: the primary key of ' . get_class($primaryModel) . ' is ' . $primaryModel->pk . '.');
         }
 
-        if ($this->through && $link) {
+        if ($this->through && $link)
+        {
             /** @var \Xcart\App\Orm\Model $throughModel */
             $throughModel = new $this->through;
-            if (empty($this->throughLink)) {
+
+            if (empty($this->throughLink))
+            {
                 $from = $this->primaryModelColumn;
                 $to = $this->modelColumn;
-            } else {
-                list($from, $to) = $this->throughLink;
             }
-            list($through, $created) = $throughModel->objects()->getOrCreate([
+            else {
+                [$from, $to] = $this->throughLink;
+            }
+
+            [$through, $created] = $throughModel->objects()->getOrCreate([
                 $from => $this->primaryModel->pk,
                 $to => $model->pk,
             ]);
             return $through->pk;
-        } else {
+        }
+        else {
             $db = $this->primaryModel->getConnection();
             $builder = QueryBuilder::getInstance($db);
             $data = array_merge([

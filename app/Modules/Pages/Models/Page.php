@@ -98,7 +98,7 @@ class Page extends TreeModel
             ],
             'is_index' => [
                 'class' => BooleanField::className(),
-                'verboseName' => PagesModule::t('Is index')
+                'verboseName' => PagesModule::t('Is index (main page)')
             ],
             'no_index' => [
                 'class' => BooleanField::className(),
@@ -124,7 +124,7 @@ class Page extends TreeModel
                 'class' => ManyToManyField::className(),
                 'modelClass' => SiteModel::className(),
                 'through' => PagesStorefrontLink::className(),
-                'verboseName' => PagesModule::t('storefronts')
+                'verboseName' => PagesModule::t('storefronts'),
             ],
         ]);
     }

@@ -7769,7 +7769,6 @@ a.button, a.button:visited, a.button:hover {
   padding-bottom: 10px; }
 
 .admin-page select, .modal-content select {
-  background: #FFFFFF;
   border: 1px solid #DFDFDF;
   border-radius: 0;
   -moz-appearance: none;
@@ -7777,13 +7776,19 @@ a.button, a.button:visited, a.button:hover {
   font-size: 14px;
   color: #000000;
   height: 40px;
-  padding: 0 10px;
-  padding-right: 26px;
-  background-image: url("../images/forms/select-bg.png");
-  background-repeat: no-repeat;
+  padding: 0 26px 0 10px;
   background-size: 9px 7px;
-  background-position: right 10px center;
+  background: #FFFFFF url("../images/forms/select-bg.png") no-repeat right 10px center;
   font-family: GothamPro, Arial, sans-serif; }
+  .admin-page select[multiple], .modal-content select[multiple] {
+    height: auto;
+    min-height: 160px;
+    background-image: none; }
+    .admin-page select[multiple] option, .modal-content select[multiple] option {
+      padding: .2em;
+      vertical-align: middle; }
+      .admin-page select[multiple] option[selected], .modal-content select[multiple] option[selected] {
+        background: #f1f1f1; }
 
 .breadcrumbs-block ul {
   font-size: 14px;
