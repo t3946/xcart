@@ -38,7 +38,7 @@ return [
         'name' => 'new'
     ],
     [
-        'route' => '/category/viewed',
+        'route' => '/category/api/viewed',
         'target' => [PromoController::class, 'actionViewed'],
         'name' => 'viewed'
     ],

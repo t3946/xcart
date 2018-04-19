@@ -77,7 +77,6 @@
       flex-wrap: nowrap;
 
       .item {
-        background: #fff;
         max-width: rem-calc(160);
 
         @include breakpoint(medium) {
@@ -90,6 +89,30 @@
 
         .overflow_container {
           display: none !important;
+        }
+
+        &.minimal {
+          max-width: rem-calc(50);
+          min-height: rem-calc(50);
+
+          @include breakpoint(medium) {
+            max-width: rem-calc(70);
+            min-height: rem-calc(70);
+          }
+
+          @include breakpoint(large) {
+            max-width: rem-calc(90);
+
+            min-height: rem-calc(70);
+          }
+
+          .image_container {
+            height: rem-calc(70);
+          }
+
+          img {
+            min-height: rem-calc(50);
+          }
         }
       }
     }

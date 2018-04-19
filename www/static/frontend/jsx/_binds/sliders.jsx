@@ -8,6 +8,7 @@ import ajax from "../utils/ajax";
 
     let fncSlyAttach = (slide) => {
         window.addEventListener('resize', () => $(slide).sly('reload'));
+        slide.closest('.slider-block').classList.remove('hide');
 
         $(slide).sly({
             horizontal: 1,

@@ -27,7 +27,7 @@ class SliderDataHelper
         global $sql_tbl;
 
         /** @var SiteModel $site */
-        $site = Xcart::app()->getModule('Site')->getSite();
+        $site = Xcart::app()->getModule('Sites')->getSite();
 
         $section_name = $mode;
         $saveOrder = false;

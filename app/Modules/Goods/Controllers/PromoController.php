@@ -1,8 +1,10 @@
 <?php
 namespace Modules\Goods\Controllers;
 
+use Modules\Goods\Helpers\SliderDataHelper;
 use Modules\Goods\Models\CategoryModel;
 use Modules\Goods\Models\FeaturedProductsModel;
+use Modules\Goods\Models\ProductModel;
 use Modules\Sites\Models\SiteModel;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\QuerySet;
@@ -56,16 +58,48 @@ class PromoController extends AbstractCatalogController
         $this->view_internal();
     }
 
-    /**
-     * @param QuerySet $productsQS
-     */
-    private function renderSliderData($productsQS): void
+    public function actionAlsoBought($id): void
     {
-        $productsQS->limit(20)->cache(10);
+        /** @var ProductModel[] $products */
+        $products = SliderDataHelper::getSliderData('products_also_bought_with_this_product', $id);
+        if ($products) {
+            $this->renderSliderData($products);
+        }
+    }
+
+    public function actionRelatedProducts($id): void
+    {
+        /** @var ProductModel[] $products */
+        $products = SliderDataHelper::getSliderData('related_products', $id);
+        if ($products) {
+            $this->renderSliderData($products);
+        }
+    }
+
+    public function actionViewed(): void
+    {
+        /** @var ProductModel[] $products */
+        $products = SliderDataHelper::getSliderData('recently_viewed_products');
+
+        if ($products) {
+            $this->renderSliderData($products, 'catalog/parts/_minimal_view_item.tpl');
+        }
+    }
+
+
+    /**
+     * @param QuerySet|ProductModel[] $products
+     * @param string $view
+     */
+    private function renderSliderData($products, $view = 'catalog/parts/_catalog_list_item.tpl'): void
+    {
+        if (!\is_array($products)) {
+            $products->limit(20)->cache(10);
+        }
 
         $sProducts = '';
-        foreach ($productsQS as $product) {
-            $sProducts .= $this->render('catalog/parts/_catalog_list_item.tpl', ['item' => $product]);
+        foreach ($products as $product) {
+            $sProducts .= $this->render($view, ['item' => $product]);
         }
 
         $this->jsonResponse([
@@ -75,10 +109,13 @@ class PromoController extends AbstractCatalogController
         die();
     }
 
+
+
     public function getQS($data = null)
     {
         return parent::getQS($data)->filter([
             'avail__gt' => 10,
+            'images__image_path__isnull' => false
         ])
             ->order(['?'])
             ->cache(10);
