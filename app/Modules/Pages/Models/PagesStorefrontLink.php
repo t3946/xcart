@@ -1,13 +1,27 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: User
- * Date: 4/19/2018
- * Time: 10:25 AM
- */
 
 namespace Modules\Pages\Models;
 
-class PagesStorefrontLink
+use Modules\Sites\Models\SiteModel;
+use Xcart\App\Orm\Fields\AutoField;
+use Xcart\App\Orm\Fields\ForeignField;
+use Xcart\App\Orm\Model;
+
+class PagesStorefrontLink extends Model
 {
+    public static function getFields()
+    {
+        return [
+
+            'id' => [
+                'class' => AutoField::className(),
+            ],
+
+            'storefront' => [
+                'class' => ForeignField::className(),
+                'modelClass' => SiteModel::className(),
+                'link' => ['storefront_id' => 'storefrontid']
+            ],
+        ];
+    }
 }
