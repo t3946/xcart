@@ -2,21 +2,24 @@
 namespace Modules\Goods\Controllers;
 
 use Modules\Goods\Models\CategoryModel;
+use Modules\Goods\Models\FeaturedProductsModel;
 use Modules\Sites\Models\SiteModel;
 use Xcart\App\Main\Xcart;
+use Xcart\App\Orm\QuerySet;
 
 class PromoController extends AbstractCatalogController
 {
-    public function actionBestsellers()
+    public function actionBestsellers(): void
     {
         echo '123';
     }
 
-    public function actionNew()
+    public function actionNew(): void
     {
         /** @var SiteModel $site */
-        $site = Xcart::app()->getModule('Sites')->getSite();
         /** @var CategoryModel $category_new */
+
+        $site = Xcart::app()->getModule('Sites')->getSite();
         $category_new = CategoryModel::objects()->filter([
             'category' => 'New Products',
             'storefrontid' => $site->pk,
@@ -27,31 +30,56 @@ class PromoController extends AbstractCatalogController
 
         if ($this->getRequest()->getIsAjax()) {
 
-            $productsQS = $this->getQS()->filter([
+            $this->renderSliderData($this->getQS()->filter([
                 'category_main__categoryid__in' => $category_new->getObjects()->descendants(true)->select(['pk']),
-            ])
-                ->limit(20)
-                ->cache(10);
-
-            $sProducts = '';
-            foreach ($productsQS as $product) {
-                $sProducts .= $this->render('catalog/parts/_catalog_list_item.tpl', ['item' => $product]);
-            }
-
-            $this->jsonResponse([
-                'html' => "<div class='product-items tile-view' itemtype='http://schema.org/OfferCatalog'>{$sProducts}</div>",
-            ]);
-            die();
+            ]));
         }
 
         $this->redirect($category_new->getAbsoluteUrl());
+    }
+
+
+    public function actionFeatured(): void
+    {
+        if ($this->getRequest()->getIsAjax() && !$this->getRequest()->get->has('page'))
+        {
+            $this->renderSliderData($this->getQS()
+                ->filter([
+                    'pk__in' => FeaturedProductsModel::objects()->filter([
+                        'storefrontid' => Xcart::app()->getModule('Sites')->getSite()
+                    ])->select(['product__productid']),
+                ])
+                ->order(['?']));
+        }
+
+        $this->view = 'catalog/featured.tpl';
+        $this->view_internal();
+    }
+
+    /**
+     * @param QuerySet $productsQS
+     */
+    private function renderSliderData($productsQS): void
+    {
+        $productsQS->limit(20)->cache(10);
+
+        $sProducts = '';
+        foreach ($productsQS as $product) {
+            $sProducts .= $this->render('catalog/parts/_catalog_list_item.tpl', ['item' => $product]);
+        }
+
+        $this->jsonResponse([
+            'html' => "<div class='product-items tile-view' itemtype='http://schema.org/OfferCatalog'>{$sProducts}</div>",
+        ]);
+
+        die();
     }
 
     public function getQS($data = null)
     {
         return parent::getQS($data)->filter([
             'avail__gt' => 10,
-            ])
+        ])
             ->order(['?'])
             ->cache(10);
     }

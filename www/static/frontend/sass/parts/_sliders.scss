@@ -42,6 +42,12 @@
         left: 0;
         right: 0;
       }
+
+      &.dragged {
+        &:before {
+          background-color: #aaa;
+        }
+      }
     }
 
     &:hover {
