@@ -42,7 +42,7 @@ abstract class AbstractCatalogController extends FrontendController
      *
      * @return \Xcart\App\Orm\QuerySet|\Xcart\App\Orm\Manager
      */
-    public function getQS($data)
+    public function getQS($data = null)
     {
         $qs = ProductModel::objects();
         $ta = $qs->getTableAlias();

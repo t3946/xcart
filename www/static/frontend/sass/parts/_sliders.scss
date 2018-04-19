@@ -1,79 +1,77 @@
 .slider-block {
+  margin-top: rem-calc(40);
 
-  .title_container {
-
-    @include breakpoint(medium) {
-      text-align: center;
-    }
+  @include breakpoint(large) {
+    margin-top: rem-calc(50);
   }
 
-  .title-section {
-    display: flex;
-    justify-content: space-between;
-    color: #154159;
-    font-size: rem-calc(16);
-    font-weight: 700;
-    text-transform: uppercase;
+  .scrollbar {
+    width: 100%;
+    height: 12px;
+    position: relative;
+    margin-top: rem-calc(10);
 
-
-    @include breakpoint(medium) {
-      display: inline-block;
-      justify-content: center;
-      font-size: rem-calc(24);
-      position: relative;
+    &:before {
+      position: absolute;
+      content: '';
+      height: 2px;
+      top: 5px;
+      display: block;
+      left: 0;
+      right: 0;
+      background-color: #eee;
     }
 
-    .link {
-      display: inline-block;
-      color: #055a93;
-      font-size: rem-calc(13);
-      font-weight: 500;
-      text-transform: none;
+    .handle {
+      width: 0;
+      height: 12px;
+      position: relative;
+      //top: -5px;
+      cursor: pointer;
 
-      @include breakpoint(medium) {
+      &:before {
+        transition: background-color .3s;
+        overflow: hidden;
+        border-radius: rem-calc(10);
         position: absolute;
         display: block;
-        font-size: rem-calc(16);
-        top: calc(50% - .8rem);
-        left: 100%;
-        line-height: rem-calc(24);
-        width: rem-calc(100);
-        vertical-align: middle;
-        height: rem-calc(24);
-        margin-left: rem-calc(10);
+        background-color: #dadada;
+        content: '';
+        top: 4px;
+        height: 4px;
+        left: 0;
+        right: 0;
+      }
+    }
 
-
+    &:hover {
+      .handle {
         &:before {
-          content: '';
-          display: inline-block;
-          width: rem-calc(16);
-          height: rem-calc(14);
-          margin-right: rem-calc(5);
-          background: url("../images/icons/header/view_all_departments_blue.svg") center center no-repeat;
-          background-size: contain;
+          background-color: #aaa;
         }
       }
-
     }
   }
 
-  .slider-data {
-    ul {
-      &:after {
-        content: '';
-        display: table;
-        clear: both;
-      }
 
-      li {
-        float: left;
-      }
-    }
+  .slider-data {
+    //ul {
+    //  &:after {
+    //    content: '';
+    //    display: table;
+    //    clear: both;
+    //  }
+    //
+    //  li {
+    //    float: left;
+    //  }
+    //}
 
     .product-items {
       flex-wrap: nowrap;
 
       .item {
+        background: #fff;
         max-width: rem-calc(160);
 
         @include breakpoint(medium) {
@@ -82,6 +80,40 @@
 
         @include breakpoint(large) {
           max-width: rem-calc(230);
+        }
+
+        .overflow_container {
+          display: none !important;
+        }
+      }
+    }
+  }
+
+  &.loaded {
+    .scrollbar {
+
+    }
+  }
+}
+
+.slider-products {
+  .slider-block {
+    .slider-data {
+      min-height: rem-calc(320);
+    }
+  }
+}
+
+html {
+  &.touchevents {
+    .slider-data {
+      .product-items {
+        &.tile-view {
+          .item {
+            .overflow_container {
+              display: none;
+            }
+          }
         }
       }
     }

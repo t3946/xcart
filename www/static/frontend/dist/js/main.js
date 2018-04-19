@@ -8337,525 +8337,6 @@ exports.Plugin = Plugin;
 /* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
-
-
-exports.__esModule = true;
-
-var _redux = __webpack_require__(15);
-
-var _lodash = __webpack_require__(12);
-
-var _lodash2 = _interopRequireDefault(_lodash);
-
-var _reduxThunk = __webpack_require__(26);
-
-var _reduxThunk2 = _interopRequireDefault(_reduxThunk);
-
-var _trigger = __webpack_require__(27);
-
-var _trigger2 = _interopRequireDefault(_trigger);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var _INIT_ACTION_TYPE = "@@redux/INIT";
-
-var ACTIONS = {
-    SET: function SET(state, action) {
-        if (action.data) {
-            var new_state = {};
-
-            new_state = _lodash2.default.merge(new_state, state);
-            new_state = _lodash2.default.merge(new_state, action.data);
-
-            return new_state;
-        }
-
-        return state;
-    },
-
-    INIT: function INIT() {
-        var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : window.app;
-        var action = arguments[1];
-
-        state['frontend'] = {
-            darkness: false,
-            header: {
-                active: null
-            }
-        };
-
-        return state;
-    },
-
-    default: function _default(state, action) {
-        if (action.type === _INIT_ACTION_TYPE) {
-            state = ACTIONS['INIT'](state, action);
-        } else {
-            state = ACTIONS['SET'](state, action);
-        }
-
-        return state;
-    }
-
-};
-
-var store = (0, _redux.createStore)(function (state, action) {
-    return action && ACTIONS[action.type] ? ACTIONS[action.type](state, action) : ACTIONS['default'](state, action);
-});
-
-exports.default = store;
-
-/***/ }),
-/* 7 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-exports.__esModule = true;
-exports.MediaQuery = undefined;
-
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
-var _jquery = __webpack_require__(0);
-
-var _jquery2 = _interopRequireDefault(_jquery);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var defaultQueries = {
-  'default': 'only screen',
-  landscape: 'only screen and (orientation: landscape)',
-  portrait: 'only screen and (orientation: portrait)',
-  retina: 'only screen and (-webkit-min-device-pixel-ratio: 2),' + 'only screen and (min--moz-device-pixel-ratio: 2),' + 'only screen and (-o-min-device-pixel-ratio: 2/1),' + 'only screen and (min-device-pixel-ratio: 2),' + 'only screen and (min-resolution: 192dpi),' + 'only screen and (min-resolution: 2dppx)'
-};
-
-var matchMedia = window.matchMedia || function () {
-  'use strict';
-
-  var styleMedia = window.styleMedia || window.media;
-
-  if (!styleMedia) {
-    var style = document.createElement('style'),
-        script = document.getElementsByTagName('script')[0],
-        info = null;
-
-    style.type = 'text/css';
-    style.id = 'matchmediajs-test';
-
-    script && script.parentNode && script.parentNode.insertBefore(style, script);
-
-    info = 'getComputedStyle' in window && window.getComputedStyle(style, null) || style.currentStyle;
-
-    styleMedia = {
-      matchMedium: function matchMedium(media) {
-        var text = '@media ' + media + '{ #matchmediajs-test { width: 1px; } }';
-
-        if (style.styleSheet) {
-          style.styleSheet.cssText = text;
-        } else {
-          style.textContent = text;
-        }
-
-        return info.width === '1px';
-      }
-    };
-  }
-
-  return function (media) {
-    return {
-      matches: styleMedia.matchMedium(media || 'all'),
-      media: media || 'all'
-    };
-  };
-}();
-
-var MediaQuery = {
-  queries: [],
-
-  current: '',
-
-  _init: function _init() {
-    var self = this;
-    var $meta = (0, _jquery2.default)('meta.foundation-mq');
-    if (!$meta.length) {
-      (0, _jquery2.default)('<meta class="foundation-mq">').appendTo(document.head);
-    }
-
-    var extractedStyles = (0, _jquery2.default)('.foundation-mq').css('font-family');
-    var namedQueries;
-
-    namedQueries = parseStyleToObject(extractedStyles);
-
-    for (var key in namedQueries) {
-      if (namedQueries.hasOwnProperty(key)) {
-        self.queries.push({
-          name: key,
-          value: 'only screen and (min-width: ' + namedQueries[key] + ')'
-        });
-      }
-    }
-
-    this.current = this._getCurrentSize();
-
-    this._watcher();
-  },
-  atLeast: function atLeast(size) {
-    var query = this.get(size);
-
-    if (query) {
-      return matchMedia(query).matches;
-    }
-
-    return false;
-  },
-  is: function is(size) {
-    size = size.trim().split(' ');
-    if (size.length > 1 && size[1] === 'only') {
-      if (size[0] === this._getCurrentSize()) return true;
-    } else {
-      return this.atLeast(size[0]);
-    }
-    return false;
-  },
-  get: function get(size) {
-    for (var i in this.queries) {
-      if (this.queries.hasOwnProperty(i)) {
-        var query = this.queries[i];
-        if (size === query.name) return query.value;
-      }
-    }
-
-    return null;
-  },
-  _getCurrentSize: function _getCurrentSize() {
-    var matched;
-
-    for (var i = 0; i < this.queries.length; i++) {
-      var query = this.queries[i];
-
-      if (matchMedia(query.value).matches) {
-        matched = query;
-      }
-    }
-
-    if ((typeof matched === 'undefined' ? 'undefined' : _typeof(matched)) === 'object') {
-      return matched.name;
-    } else {
-      return matched;
-    }
-  },
-  _watcher: function _watcher() {
-    var _this = this;
-
-    (0, _jquery2.default)(window).off('resize.zf.mediaquery').on('resize.zf.mediaquery', function () {
-      var newSize = _this._getCurrentSize(),
-          currentSize = _this.current;
-
-      if (newSize !== currentSize) {
-        _this.current = newSize;
-
-        (0, _jquery2.default)(window).trigger('changed.zf.mediaquery', [newSize, currentSize]);
-      }
-    });
-  }
-};
-
-function parseStyleToObject(str) {
-  var styleObject = {};
-
-  if (typeof str !== 'string') {
-    return styleObject;
-  }
-
-  str = str.trim().slice(1, -1);
-
-  if (!str) {
-    return styleObject;
-  }
-
-  styleObject = str.split('&').reduce(function (ret, param) {
-    var parts = param.replace(/\+/g, ' ').split('=');
-    var key = parts[0];
-    var val = parts[1];
-    key = decodeURIComponent(key);
-
-    val = val === undefined ? null : decodeURIComponent(val);
-
-    if (!ret.hasOwnProperty(key)) {
-      ret[key] = val;
-    } else if (Array.isArray(ret[key])) {
-      ret[key].push(val);
-    } else {
-      ret[key] = [ret[key], val];
-    }
-    return ret;
-  }, {});
-
-  return styleObject;
-}
-
-exports.MediaQuery = MediaQuery;
-
-/***/ }),
-/* 8 */
-/***/ (function(module, exports) {
-
-/**
- * Checks if `value` is the
- * [language type](http://www.ecma-international.org/ecma-262/7.0/#sec-ecmascript-language-types)
- * of `Object`. (e.g. arrays, functions, objects, regexes, `new Number(0)`, and `new String('')`)
- *
- * @static
- * @memberOf _
- * @since 0.1.0
- * @category Lang
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if `value` is an object, else `false`.
- * @example
- *
- * _.isObject({});
- * // => true
- *
- * _.isObject([1, 2, 3]);
- * // => true
- *
- * _.isObject(_.noop);
- * // => true
- *
- * _.isObject(null);
- * // => false
- */
-function isObject(value) {
-  var type = typeof value;
-  return value != null && (type == 'object' || type == 'function');
-}
-
-module.exports = isObject;
-
-
-/***/ }),
-/* 9 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-exports.__esModule = true;
-
-var _redux = __webpack_require__(15);
-
-var _reduxLogger = __webpack_require__(74);
-
-var _reduxThunk = __webpack_require__(26);
-
-var _reduxThunk2 = _interopRequireDefault(_reduxThunk);
-
-var _ajax = __webpack_require__(17);
-
-var _ajax2 = _interopRequireDefault(_ajax);
-
-var _trigger = __webpack_require__(27);
-
-var _trigger2 = _interopRequireDefault(_trigger);
-
-var _storage = __webpack_require__(28);
-
-var _storage2 = _interopRequireDefault(_storage);
-
-var _StoreApp = __webpack_require__(6);
-
-var _StoreApp2 = _interopRequireDefault(_StoreApp);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var _INIT_ACTION_TYPE = "@@redux/INIT";
-var ls_key = _StoreApp2.default.getState().options.session_key + '__store_cart_state';
-
-var loggerMiddleware = (0, _reduxLogger.createLogger)();
-
-var ACTIONS = {
-    SET: function SET(state, action) {
-        var new_state = Object.assign({}, state, {
-            cart: Object.assign({}, action.data)
-        });
-
-        var data = { state: new_state, prevState: Object.assign({}, state) };
-
-        if (action.triggers === 'ignore') {
-            (0, _trigger2.default)('fetch.cart.store', data);
-        } else {
-            (0, _trigger2.default)('update.cart.store', data);
-        }
-
-        _storage2.default.set(ls_key, JSON.stringify(new_state));
-
-        return new_state;
-    },
-
-    INIT: function INIT() {
-        var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : INITIAL;
-        var action = arguments[1];
-
-        var t_state = _storage2.default.get(ls_key);
-        if (t_state) {
-            state = JSON.parse(t_state);
-        }
-
-        _storage2.default.on(ls_key, function (value) {
-            var data = JSON.parse(value);
-            store.dispatch({ type: 'SET', data: data.cart });
-
-            state = data;
-        });
-
-        return state;
-    },
-
-    FETCH: function FETCH(state, action) {
-        return ACTIONS['PUSH'](state, action);
-    },
-
-    PUSH: function PUSH(state, action) {
-        var url = null;
-        var app_state = _StoreApp2.default.getState();
-
-        switch (action.action) {
-            case 'ADD':
-                {
-                    url = app_state.options.urls.cart.add;
-                    break;
-                }
-            case 'SET':
-                {
-                    url = app_state.options.urls.cart.set;
-                    break;
-                }
-            case 'DEL':
-                {
-                    url = app_state.options.urls.cart.del;
-                    break;
-                }
-            case 'GET':
-            default:
-                url = app_state.options.urls.cart.get;
-        }
-
-        if (url) {
-            (0, _ajax2.default)(url, action.data, function (data) {
-                store.dispatch({ type: 'SET', data: data });
-
-                if (typeof action.callback === 'function') {
-                    action.callback();
-                }
-            });
-        }
-
-        return state;
-    },
-
-    default: function _default(state, action) {
-        if (action.type === _INIT_ACTION_TYPE) {
-            state = ACTIONS['INIT'](state, action);
-
-            state = ACTIONS['FETCH'](state, action);
-        }
-
-        return state;
-    }
-
-};
-
-var INITIAL = {
-    cart: {
-        items: [],
-        groups: [],
-        total: 0,
-        discount: 0,
-        quantity: 0
-    }
-};
-
-var store = (0, _redux.createStore)(function (state, action) {
-    return action && ACTIONS[action.type] ? ACTIONS[action.type](state, action) : ACTIONS['default'](state, action);
-}, (0, _redux.applyMiddleware)(_reduxThunk2.default));
-
-exports.default = store;
-
-/***/ }),
-/* 10 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var Symbol = __webpack_require__(22),
-    getRawTag = __webpack_require__(65),
-    objectToString = __webpack_require__(66);
-
-/** `Object#toString` result references. */
-var nullTag = '[object Null]',
-    undefinedTag = '[object Undefined]';
-
-/** Built-in value references. */
-var symToStringTag = Symbol ? Symbol.toStringTag : undefined;
-
-/**
- * The base implementation of `getTag` without fallbacks for buggy environments.
- *
- * @private
- * @param {*} value The value to query.
- * @returns {string} Returns the `toStringTag`.
- */
-function baseGetTag(value) {
-  if (value == null) {
-    return value === undefined ? undefinedTag : nullTag;
-  }
-  return (symToStringTag && symToStringTag in Object(value))
-    ? getRawTag(value)
-    : objectToString(value);
-}
-
-module.exports = baseGetTag;
-
-
-/***/ }),
-/* 11 */
-/***/ (function(module, exports) {
-
-/**
- * Checks if `value` is object-like. A value is object-like if it's not `null`
- * and has a `typeof` result of "object".
- *
- * @static
- * @memberOf _
- * @since 4.0.0
- * @category Lang
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if `value` is object-like, else `false`.
- * @example
- *
- * _.isObjectLike({});
- * // => true
- *
- * _.isObjectLike([1, 2, 3]);
- * // => true
- *
- * _.isObjectLike(_.noop);
- * // => false
- *
- * _.isObjectLike(null);
- * // => false
- */
-function isObjectLike(value) {
-  return value != null && typeof value == 'object';
-}
-
-module.exports = isObjectLike;
-
-
-/***/ }),
-/* 12 */
-/***/ (function(module, exports, __webpack_require__) {
-
 /* WEBPACK VAR INJECTION */(function(global, module) {var __WEBPACK_AMD_DEFINE_RESULT__;/**
  * @license
  * Lodash <https://lodash.com/>
@@ -25945,6 +25426,525 @@ module.exports = isObjectLike;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2), __webpack_require__(4)(module)))
 
 /***/ }),
+/* 7 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+exports.__esModule = true;
+
+var _redux = __webpack_require__(15);
+
+var _lodash = __webpack_require__(6);
+
+var _lodash2 = _interopRequireDefault(_lodash);
+
+var _reduxThunk = __webpack_require__(25);
+
+var _reduxThunk2 = _interopRequireDefault(_reduxThunk);
+
+var _trigger = __webpack_require__(27);
+
+var _trigger2 = _interopRequireDefault(_trigger);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var _INIT_ACTION_TYPE = "@@redux/INIT";
+
+var ACTIONS = {
+    SET: function SET(state, action) {
+        if (action.data) {
+            var new_state = {};
+
+            new_state = _lodash2.default.merge(new_state, state);
+            new_state = _lodash2.default.merge(new_state, action.data);
+
+            return new_state;
+        }
+
+        return state;
+    },
+
+    INIT: function INIT() {
+        var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : window.app;
+        var action = arguments[1];
+
+        state['frontend'] = {
+            darkness: false,
+            header: {
+                active: null
+            }
+        };
+
+        return state;
+    },
+
+    default: function _default(state, action) {
+        if (action.type === _INIT_ACTION_TYPE) {
+            state = ACTIONS['INIT'](state, action);
+        } else {
+            state = ACTIONS['SET'](state, action);
+        }
+
+        return state;
+    }
+
+};
+
+var store = (0, _redux.createStore)(function (state, action) {
+    return action && ACTIONS[action.type] ? ACTIONS[action.type](state, action) : ACTIONS['default'](state, action);
+});
+
+exports.default = store;
+
+/***/ }),
+/* 8 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+exports.__esModule = true;
+exports.MediaQuery = undefined;
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+var _jquery = __webpack_require__(0);
+
+var _jquery2 = _interopRequireDefault(_jquery);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var defaultQueries = {
+  'default': 'only screen',
+  landscape: 'only screen and (orientation: landscape)',
+  portrait: 'only screen and (orientation: portrait)',
+  retina: 'only screen and (-webkit-min-device-pixel-ratio: 2),' + 'only screen and (min--moz-device-pixel-ratio: 2),' + 'only screen and (-o-min-device-pixel-ratio: 2/1),' + 'only screen and (min-device-pixel-ratio: 2),' + 'only screen and (min-resolution: 192dpi),' + 'only screen and (min-resolution: 2dppx)'
+};
+
+var matchMedia = window.matchMedia || function () {
+  'use strict';
+
+  var styleMedia = window.styleMedia || window.media;
+
+  if (!styleMedia) {
+    var style = document.createElement('style'),
+        script = document.getElementsByTagName('script')[0],
+        info = null;
+
+    style.type = 'text/css';
+    style.id = 'matchmediajs-test';
+
+    script && script.parentNode && script.parentNode.insertBefore(style, script);
+
+    info = 'getComputedStyle' in window && window.getComputedStyle(style, null) || style.currentStyle;
+
+    styleMedia = {
+      matchMedium: function matchMedium(media) {
+        var text = '@media ' + media + '{ #matchmediajs-test { width: 1px; } }';
+
+        if (style.styleSheet) {
+          style.styleSheet.cssText = text;
+        } else {
+          style.textContent = text;
+        }
+
+        return info.width === '1px';
+      }
+    };
+  }
+
+  return function (media) {
+    return {
+      matches: styleMedia.matchMedium(media || 'all'),
+      media: media || 'all'
+    };
+  };
+}();
+
+var MediaQuery = {
+  queries: [],
+
+  current: '',
+
+  _init: function _init() {
+    var self = this;
+    var $meta = (0, _jquery2.default)('meta.foundation-mq');
+    if (!$meta.length) {
+      (0, _jquery2.default)('<meta class="foundation-mq">').appendTo(document.head);
+    }
+
+    var extractedStyles = (0, _jquery2.default)('.foundation-mq').css('font-family');
+    var namedQueries;
+
+    namedQueries = parseStyleToObject(extractedStyles);
+
+    for (var key in namedQueries) {
+      if (namedQueries.hasOwnProperty(key)) {
+        self.queries.push({
+          name: key,
+          value: 'only screen and (min-width: ' + namedQueries[key] + ')'
+        });
+      }
+    }
+
+    this.current = this._getCurrentSize();
+
+    this._watcher();
+  },
+  atLeast: function atLeast(size) {
+    var query = this.get(size);
+
+    if (query) {
+      return matchMedia(query).matches;
+    }
+
+    return false;
+  },
+  is: function is(size) {
+    size = size.trim().split(' ');
+    if (size.length > 1 && size[1] === 'only') {
+      if (size[0] === this._getCurrentSize()) return true;
+    } else {
+      return this.atLeast(size[0]);
+    }
+    return false;
+  },
+  get: function get(size) {
+    for (var i in this.queries) {
+      if (this.queries.hasOwnProperty(i)) {
+        var query = this.queries[i];
+        if (size === query.name) return query.value;
+      }
+    }
+
+    return null;
+  },
+  _getCurrentSize: function _getCurrentSize() {
+    var matched;
+
+    for (var i = 0; i < this.queries.length; i++) {
+      var query = this.queries[i];
+
+      if (matchMedia(query.value).matches) {
+        matched = query;
+      }
+    }
+
+    if ((typeof matched === 'undefined' ? 'undefined' : _typeof(matched)) === 'object') {
+      return matched.name;
+    } else {
+      return matched;
+    }
+  },
+  _watcher: function _watcher() {
+    var _this = this;
+
+    (0, _jquery2.default)(window).off('resize.zf.mediaquery').on('resize.zf.mediaquery', function () {
+      var newSize = _this._getCurrentSize(),
+          currentSize = _this.current;
+
+      if (newSize !== currentSize) {
+        _this.current = newSize;
+
+        (0, _jquery2.default)(window).trigger('changed.zf.mediaquery', [newSize, currentSize]);
+      }
+    });
+  }
+};
+
+function parseStyleToObject(str) {
+  var styleObject = {};
+
+  if (typeof str !== 'string') {
+    return styleObject;
+  }
+
+  str = str.trim().slice(1, -1);
+
+  if (!str) {
+    return styleObject;
+  }
+
+  styleObject = str.split('&').reduce(function (ret, param) {
+    var parts = param.replace(/\+/g, ' ').split('=');
+    var key = parts[0];
+    var val = parts[1];
+    key = decodeURIComponent(key);
+
+    val = val === undefined ? null : decodeURIComponent(val);
+
+    if (!ret.hasOwnProperty(key)) {
+      ret[key] = val;
+    } else if (Array.isArray(ret[key])) {
+      ret[key].push(val);
+    } else {
+      ret[key] = [ret[key], val];
+    }
+    return ret;
+  }, {});
+
+  return styleObject;
+}
+
+exports.MediaQuery = MediaQuery;
+
+/***/ }),
+/* 9 */
+/***/ (function(module, exports) {
+
+/**
+ * Checks if `value` is the
+ * [language type](http://www.ecma-international.org/ecma-262/7.0/#sec-ecmascript-language-types)
+ * of `Object`. (e.g. arrays, functions, objects, regexes, `new Number(0)`, and `new String('')`)
+ *
+ * @static
+ * @memberOf _
+ * @since 0.1.0
+ * @category Lang
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is an object, else `false`.
+ * @example
+ *
+ * _.isObject({});
+ * // => true
+ *
+ * _.isObject([1, 2, 3]);
+ * // => true
+ *
+ * _.isObject(_.noop);
+ * // => true
+ *
+ * _.isObject(null);
+ * // => false
+ */
+function isObject(value) {
+  var type = typeof value;
+  return value != null && (type == 'object' || type == 'function');
+}
+
+module.exports = isObject;
+
+
+/***/ }),
+/* 10 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+exports.__esModule = true;
+
+var _redux = __webpack_require__(15);
+
+var _reduxLogger = __webpack_require__(74);
+
+var _reduxThunk = __webpack_require__(25);
+
+var _reduxThunk2 = _interopRequireDefault(_reduxThunk);
+
+var _ajax = __webpack_require__(26);
+
+var _ajax2 = _interopRequireDefault(_ajax);
+
+var _trigger = __webpack_require__(27);
+
+var _trigger2 = _interopRequireDefault(_trigger);
+
+var _storage = __webpack_require__(28);
+
+var _storage2 = _interopRequireDefault(_storage);
+
+var _StoreApp = __webpack_require__(7);
+
+var _StoreApp2 = _interopRequireDefault(_StoreApp);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var _INIT_ACTION_TYPE = "@@redux/INIT";
+var ls_key = _StoreApp2.default.getState().options.session_key + '__store_cart_state';
+
+var loggerMiddleware = (0, _reduxLogger.createLogger)();
+
+var ACTIONS = {
+    SET: function SET(state, action) {
+        var new_state = Object.assign({}, state, {
+            cart: Object.assign({}, action.data)
+        });
+
+        var data = { state: new_state, prevState: Object.assign({}, state) };
+
+        if (action.triggers === 'ignore') {
+            (0, _trigger2.default)('fetch.cart.store', data);
+        } else {
+            (0, _trigger2.default)('update.cart.store', data);
+        }
+
+        _storage2.default.set(ls_key, JSON.stringify(new_state));
+
+        return new_state;
+    },
+
+    INIT: function INIT() {
+        var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : INITIAL;
+        var action = arguments[1];
+
+        var t_state = _storage2.default.get(ls_key);
+        if (t_state) {
+            state = JSON.parse(t_state);
+        }
+
+        _storage2.default.on(ls_key, function (value) {
+            var data = JSON.parse(value);
+            store.dispatch({ type: 'SET', data: data.cart });
+
+            state = data;
+        });
+
+        return state;
+    },
+
+    FETCH: function FETCH(state, action) {
+        return ACTIONS['PUSH'](state, action);
+    },
+
+    PUSH: function PUSH(state, action) {
+        var url = null;
+        var app_state = _StoreApp2.default.getState();
+
+        switch (action.action) {
+            case 'ADD':
+                {
+                    url = app_state.options.urls.cart.add;
+                    break;
+                }
+            case 'SET':
+                {
+                    url = app_state.options.urls.cart.set;
+                    break;
+                }
+            case 'DEL':
+                {
+                    url = app_state.options.urls.cart.del;
+                    break;
+                }
+            case 'GET':
+            default:
+                url = app_state.options.urls.cart.get;
+        }
+
+        if (url) {
+            (0, _ajax2.default)(url, { method: 'POST', data: action.data }).then(function (data) {
+                store.dispatch({ type: 'SET', data: data });
+
+                if (typeof action.callback === 'function') {
+                    action.callback();
+                }
+            });
+        }
+
+        return state;
+    },
+
+    default: function _default(state, action) {
+        if (action.type === _INIT_ACTION_TYPE) {
+            state = ACTIONS['INIT'](state, action);
+
+            state = ACTIONS['FETCH'](state, action);
+        }
+
+        return state;
+    }
+
+};
+
+var INITIAL = {
+    cart: {
+        items: [],
+        groups: [],
+        total: 0,
+        discount: 0,
+        quantity: 0
+    }
+};
+
+var store = (0, _redux.createStore)(function (state, action) {
+    return action && ACTIONS[action.type] ? ACTIONS[action.type](state, action) : ACTIONS['default'](state, action);
+}, (0, _redux.applyMiddleware)(_reduxThunk2.default));
+
+exports.default = store;
+
+/***/ }),
+/* 11 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var Symbol = __webpack_require__(21),
+    getRawTag = __webpack_require__(65),
+    objectToString = __webpack_require__(66);
+
+/** `Object#toString` result references. */
+var nullTag = '[object Null]',
+    undefinedTag = '[object Undefined]';
+
+/** Built-in value references. */
+var symToStringTag = Symbol ? Symbol.toStringTag : undefined;
+
+/**
+ * The base implementation of `getTag` without fallbacks for buggy environments.
+ *
+ * @private
+ * @param {*} value The value to query.
+ * @returns {string} Returns the `toStringTag`.
+ */
+function baseGetTag(value) {
+  if (value == null) {
+    return value === undefined ? undefinedTag : nullTag;
+  }
+  return (symToStringTag && symToStringTag in Object(value))
+    ? getRawTag(value)
+    : objectToString(value);
+}
+
+module.exports = baseGetTag;
+
+
+/***/ }),
+/* 12 */
+/***/ (function(module, exports) {
+
+/**
+ * Checks if `value` is object-like. A value is object-like if it's not `null`
+ * and has a `typeof` result of "object".
+ *
+ * @static
+ * @memberOf _
+ * @since 4.0.0
+ * @category Lang
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is object-like, else `false`.
+ * @example
+ *
+ * _.isObjectLike({});
+ * // => true
+ *
+ * _.isObjectLike([1, 2, 3]);
+ * // => true
+ *
+ * _.isObjectLike(_.noop);
+ * // => false
+ *
+ * _.isObjectLike(null);
+ * // => false
+ */
+function isObjectLike(value) {
+  return value != null && typeof value == 'object';
+}
+
+module.exports = isObjectLike;
+
+
+/***/ }),
 /* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -26355,7 +26355,7 @@ exports.Triggers = Triggers;
 exports.__esModule = true;
 exports.compose = exports.applyMiddleware = exports.bindActionCreators = exports.combineReducers = exports.createStore = undefined;
 
-var _createStore = __webpack_require__(20);
+var _createStore = __webpack_require__(19);
 
 var _createStore2 = _interopRequireDefault(_createStore);
 
@@ -26371,11 +26371,11 @@ var _applyMiddleware = __webpack_require__(73);
 
 var _applyMiddleware2 = _interopRequireDefault(_applyMiddleware);
 
-var _compose = __webpack_require__(25);
+var _compose = __webpack_require__(24);
 
 var _compose2 = _interopRequireDefault(_compose);
 
-var _warning = __webpack_require__(24);
+var _warning = __webpack_require__(23);
 
 var _warning2 = _interopRequireDefault(_warning);
 
@@ -26401,7 +26401,7 @@ exports.compose = _compose2['default'];
 /* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var freeGlobal = __webpack_require__(23);
+var freeGlobal = __webpack_require__(22);
 
 /** Detect free variable `self`. */
 var freeSelf = typeof self == 'object' && self && self.Object === Object && self;
@@ -26414,63 +26414,6 @@ module.exports = root;
 
 /***/ }),
 /* 17 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-exports.__esModule = true;
-var prepareUrl = function prepareUrl(url) {
-    return url += (url.indexOf('?') ? '?' : '&') + '__=' + new Date().getTime();
-};
-var isJsonResponse = function isJsonResponse(response) {
-    var isJson = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
-    return isJson || response.headers.get('Content-Type').toLowerCase() === 'application/json';
-};
-
-exports.default = function (url, data, success, error) {
-    var isJson = false;
-    var options = {
-        cache: 'no-cache',
-        credentials: 'same-origin',
-        headers: {
-            'X-REQUESTED-WITH': 'XMLHttpRequest'
-        },
-        method: 'GET',
-        mode: 'same-origin',
-        redirect: 'follow',
-        referrer: 'no-referrer' };
-
-    if (data) {
-        if (data.type) {
-            isJson = data.type.toLowerCase() === 'json';
-        }
-
-        if (data.data) {
-            options['body'] = data.data;
-        }
-
-        if (data.forceNoCache) {
-            url = prepareUrl(url);
-        }
-
-        options['method'] = data.method ? data.method.toUpperCase() : 'GET';
-        options['mode'] = data.mode ? data.method.toLowerCase() : 'same-origin';
-    }
-
-    return fetch(url, options).then(function (response) {
-        var pr = isJsonResponse(response, isJson) ? response.json() : response.text();
-
-        pr.then(success, error);
-
-        return pr;
-    }, function (response) {
-        return error(response);
-    });
-};
-
-/***/ }),
-/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -33796,7 +33739,7 @@ return Swiper$1;
 
 
 /***/ }),
-/* 19 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -34785,7 +34728,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
   };
 
   if (true) {
-    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(19)], __WEBPACK_AMD_DEFINE_RESULT__ = (function () {
+    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(18)], __WEBPACK_AMD_DEFINE_RESULT__ = (function () {
       return Pace;
     }).apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
@@ -34799,7 +34742,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 }).call(undefined);
 
 /***/ }),
-/* 20 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -34809,7 +34752,7 @@ exports.__esModule = true;
 exports.ActionTypes = undefined;
 exports['default'] = createStore;
 
-var _isPlainObject = __webpack_require__(21);
+var _isPlainObject = __webpack_require__(20);
 
 var _isPlainObject2 = _interopRequireDefault(_isPlainObject);
 
@@ -35066,12 +35009,12 @@ var ActionTypes = exports.ActionTypes = {
 }
 
 /***/ }),
-/* 21 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var baseGetTag = __webpack_require__(10),
+var baseGetTag = __webpack_require__(11),
     getPrototype = __webpack_require__(67),
-    isObjectLike = __webpack_require__(11);
+    isObjectLike = __webpack_require__(12);
 
 /** `Object#toString` result references. */
 var objectTag = '[object Object]';
@@ -35134,7 +35077,7 @@ module.exports = isPlainObject;
 
 
 /***/ }),
-/* 22 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var root = __webpack_require__(16);
@@ -35146,7 +35089,7 @@ module.exports = Symbol;
 
 
 /***/ }),
-/* 23 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global) {/** Detect free variable `global` from Node.js. */
@@ -35157,7 +35100,7 @@ module.exports = freeGlobal;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
 
 /***/ }),
-/* 24 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -35188,7 +35131,7 @@ function warning(message) {
 }
 
 /***/ }),
-/* 25 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -35230,7 +35173,7 @@ function compose() {
 }
 
 /***/ }),
-/* 26 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -35257,6 +35200,100 @@ var thunk = createThunkMiddleware();
 thunk.withExtraArgument = createThunkMiddleware;
 
 exports['default'] = thunk;
+
+/***/ }),
+/* 26 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+exports.__esModule = true;
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+var _lodash = __webpack_require__(6);
+
+var _lodash2 = _interopRequireDefault(_lodash);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var prepareUrl = function prepareUrl(url) {
+    return url += (url.indexOf('?') ? '?' : '&') + '__=' + new Date().getTime();
+};
+var isJsonResponse = function isJsonResponse(response) {
+    var isJson = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+    return isJson || response.headers.get('Content-Type').toLowerCase() === 'application/json';
+};
+
+var paramsToForm = function paramsToForm(data) {
+    var form = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : new FormData();
+    return serialize(form, data);
+};
+
+var serialize = function serialize(form, obj, traditional, scope) {
+    var type = void 0,
+        array = _lodash2.default.isArray(obj),
+        hash = _lodash2.default.isObject(obj);
+
+    _lodash2.default.each(obj, function (value, key) {
+        type = typeof value === 'undefined' ? 'undefined' : _typeof(value);
+        if (scope) {
+            key = traditional ? scope : scope + '[' + (hash || type === 'object' || type === 'array' ? key : '') + ']';
+        }
+
+        if (!scope && array) {
+            form.append(key, value);
+        } else if (type === "array" || !traditional && type === "object") {
+            serialize(form, value, traditional, key);
+        } else {
+            form.append(key, value);
+        }
+    });
+
+    return form;
+};
+
+exports.default = function (url, data, success, error) {
+    var isJson = false;
+    var options = {
+        cache: 'no-cache',
+        credentials: 'same-origin',
+        headers: {
+            'X-REQUESTED-WITH': 'XMLHttpRequest'
+        },
+        method: 'GET',
+        mode: 'same-origin',
+        redirect: 'follow',
+        referrer: 'no-referrer' };
+
+    if (data) {
+        if (data.type) {
+            isJson = data.type.toLowerCase() === 'json';
+        }
+
+        if (data.data) {
+            options['body'] = paramsToForm(data.data);
+        }
+
+        if (data.forceNoCache) {
+            url = prepareUrl(url);
+        }
+
+        options['method'] = data.method ? data.method.toUpperCase() : 'GET';
+        options['mode'] = data.mode ? data.method.toLowerCase() : 'same-origin';
+    }
+
+    return fetch(url, options).then(function (response) {
+        var pr = isJsonResponse(response, isJson) ? response.json() : response.text();
+
+        pr.then(success, error);
+
+        return pr;
+    }, function (response) {
+        return error(response);
+    });
+};
 
 /***/ }),
 /* 27 */
@@ -35319,7 +35356,7 @@ exports.__esModule = true;
 exports.hideAll = hideAll;
 exports.action = action;
 
-var _StoreApp = __webpack_require__(6);
+var _StoreApp = __webpack_require__(7);
 
 var _StoreApp2 = _interopRequireDefault(_StoreApp);
 
@@ -37157,8 +37194,8 @@ module.exports = defineProperty;
 /* 44 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var baseGetTag = __webpack_require__(10),
-    isObject = __webpack_require__(8);
+var baseGetTag = __webpack_require__(11),
+    isObject = __webpack_require__(9);
 
 /** `Object#toString` result references. */
 var asyncTag = '[object AsyncFunction]',
@@ -37540,7 +37577,7 @@ __webpack_require__(53);
 
 __webpack_require__(54);
 
-__webpack_require__(18);
+__webpack_require__(17);
 
 var _webfontloader = __webpack_require__(55);
 
@@ -37560,7 +37597,7 @@ var _noUiSlider2 = _interopRequireDefault(_noUiSlider);
 
 __webpack_require__(59);
 
-__webpack_require__(19);
+__webpack_require__(18);
 
 __webpack_require__(60);
 
@@ -45397,11 +45434,11 @@ var _countUp = __webpack_require__(64);
 
 var _countUp2 = _interopRequireDefault(_countUp);
 
-var _StoreCart = __webpack_require__(9);
+var _StoreCart = __webpack_require__(10);
 
 var _StoreCart2 = _interopRequireDefault(_StoreCart);
 
-var _StoreApp = __webpack_require__(6);
+var _StoreApp = __webpack_require__(7);
 
 var _StoreApp2 = _interopRequireDefault(_StoreApp);
 
@@ -45591,7 +45628,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 /* 65 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var Symbol = __webpack_require__(22);
+var Symbol = __webpack_require__(21);
 
 /** Used for built-in method references. */
 var objectProto = Object.prototype;
@@ -45775,13 +45812,13 @@ function symbolObservablePonyfill(root) {
 exports.__esModule = true;
 exports['default'] = combineReducers;
 
-var _createStore = __webpack_require__(20);
+var _createStore = __webpack_require__(19);
 
-var _isPlainObject = __webpack_require__(21);
+var _isPlainObject = __webpack_require__(20);
 
 var _isPlainObject2 = _interopRequireDefault(_isPlainObject);
 
-var _warning = __webpack_require__(24);
+var _warning = __webpack_require__(23);
 
 var _warning2 = _interopRequireDefault(_warning);
 
@@ -45984,7 +46021,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
 exports['default'] = applyMiddleware;
 
-var _compose = __webpack_require__(25);
+var _compose = __webpack_require__(24);
 
 var _compose2 = _interopRequireDefault(_compose);
 
@@ -46399,7 +46436,7 @@ exports.default = {
 exports.__esModule = true;
 exports.cartAdd = cartAdd;
 
-var _StoreCart = __webpack_require__(9);
+var _StoreCart = __webpack_require__(10);
 
 var _StoreCart2 = _interopRequireDefault(_StoreCart);
 
@@ -46453,66 +46490,65 @@ function cartAdd() {
             return;
         }
 
-        var show = false;
-        var product = data.product;
+        if (data.product || data.target && data.target.dataset.product) {
+            var show = false;
+            var product = data.product || data.target;
+            var subtotal_container = product.querySelector('[cont-subtotal]');
+            var id = product.dataset.product;
+            var quantity = product.dataset.quantity || 1;
+            var price = 0;
 
-        var subtotal_container = product.querySelector('[cont-subtotal]');
-
-        var id = product.dataset.product;
-        var quantity = product.dataset.quantity || 1;
-        var price = 0;
-
-        if (!cache[id]) {
-            cache[id] = JSON.parse(product.dataset.prices);
-        }
-
-        var prices = cache[id];
-        var base_price = null;
-
-        for (var count in prices) {
-            var i_count = parseInt(count);
-
-            if (i_count) {
-                if (!base_price) {
-                    base_price = prices[i_count];
-                }
-
-                if (i_count > quantity) {
-                    break;
-                }
-
-                price = prices[i_count];
+            if (!cache[id]) {
+                cache[id] = JSON.parse(product.dataset.prices);
             }
-        }
 
-        var extended = quantity * price;
+            var prices = cache[id];
+            var base_price = null;
 
-        toHtml(product, '[var-price]', toLocaleCurrency(price));
-        toHtml(product, '[var-price-extended]', toLocaleCurrency(extended));
+            for (var count in prices) {
+                if (prices.hasOwnProperty(count)) {
+                    var i_count = parseInt(count);
 
-        if (quantity) {
-            var list_price = parseFloat(product.dataset.listPrice);
+                    if (i_count) {
+                        if (!base_price) {
+                            base_price = prices[i_count];
+                        }
 
-            if (list_price && list_price !== price) {
-                var safe_percentage = 0;
-                var safe_price = 0;
-                var per_unit = 0;
+                        if (i_count > quantity) {
+                            break;
+                        }
 
-                show = true;
-                safe_price = list_price * quantity - extended;
-                safe_percentage = Math.floor(safe_price / (extended * .01));
-                per_unit = safe_price / quantity;
-
-                toHtml(product, '[var-percentage-safe]', safe_percentage);
-                toHtml(product, '[var-price-safe]', toLocaleCurrency(safe_price));
-                toHtml(product, '[var-price-perunit-safe]', toLocaleCurrency(per_unit));
+                        price = prices[i_count];
+                    }
+                }
             }
-        }
 
-        console.log(subtotal_container, show);
+            var extended = quantity * price;
 
-        if (subtotal_container) {
-            subtotal_container.classList.toggle('hide', !show);
+            toHtml(product, '[var-price]', toLocaleCurrency(price));
+            toHtml(product, '[var-price-extended]', toLocaleCurrency(extended));
+
+            if (quantity) {
+                var list_price = parseFloat(product.dataset.listPrice);
+
+                if (list_price && list_price !== price) {
+                    show = true;
+
+                    var safe_price = list_price * quantity - extended;
+                    var safe_percentage = Math.floor(safe_price / (extended * .01));
+                    var per_unit = safe_price / quantity;
+
+                    toHtml(product, '[var-percentage-safe]', safe_percentage);
+                    toHtml(product, '[var-price-safe]', toLocaleCurrency(safe_price));
+                    toHtml(product, '[var-price-perunit-safe]', toLocaleCurrency(per_unit));
+                }
+            }
+
+            if (subtotal_container) {
+                subtotal_container.classList.toggle('hide', !show);
+            }
+        } else {
+            console.warn(data);
         }
     });
 })();
@@ -46525,7 +46561,7 @@ function cartAdd() {
 "use strict";
 /* WEBPACK VAR INJECTION */(function($) {
 
-var _StoreCart = __webpack_require__(9);
+var _StoreCart = __webpack_require__(10);
 
 var _StoreCart2 = _interopRequireDefault(_StoreCart);
 
@@ -46662,7 +46698,7 @@ var _MiniCart = __webpack_require__(88);
 
 var _MiniCart2 = _interopRequireDefault(_MiniCart);
 
-var _StoreCart = __webpack_require__(9);
+var _StoreCart = __webpack_require__(10);
 
 var _StoreCart2 = _interopRequireDefault(_StoreCart);
 
@@ -47924,7 +47960,7 @@ exports.__esModule = true;
 
 var _preact = __webpack_require__(3);
 
-var _lodash = __webpack_require__(12);
+var _lodash = __webpack_require__(6);
 
 var _lodash2 = _interopRequireDefault(_lodash);
 
@@ -48128,7 +48164,7 @@ var i=Object.getOwnPropertySymbols,o=Object.prototype.hasOwnProperty,s=Object.pr
 "use strict";
 /* WEBPACK VAR INJECTION */(function($) {
 
-var _StoreApp = __webpack_require__(6);
+var _StoreApp = __webpack_require__(7);
 
 var _StoreApp2 = _interopRequireDefault(_StoreApp);
 
@@ -48291,7 +48327,7 @@ var _PhotoSwipeContainer = __webpack_require__(96);
 
 var _PhotoSwipeContainer2 = _interopRequireDefault(_PhotoSwipeContainer);
 
-var _lodash = __webpack_require__(12);
+var _lodash = __webpack_require__(6);
 
 var _lodash2 = _interopRequireDefault(_lodash);
 
@@ -53156,7 +53192,7 @@ var _reactDom = __webpack_require__(30);
 
 var _reactDom2 = _interopRequireDefault(_reactDom);
 
-var _swiper = __webpack_require__(18);
+var _swiper = __webpack_require__(17);
 
 var _swiper2 = _interopRequireDefault(_swiper);
 
@@ -54548,7 +54584,7 @@ module.exports = checkPropTypes;
 "use strict";
 /* WEBPACK VAR INJECTION */(function($) {
 
-var _ajax = __webpack_require__(17);
+var _ajax = __webpack_require__(26);
 
 var _ajax2 = _interopRequireDefault(_ajax);
 
@@ -54571,6 +54607,13 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
             speed: 300,
             mouseDragging: 1,
             touchDragging: 1,
+            releaseSwing: 1,
+            dragHandle: 1,
+            dynamicHandle: 1,
+            clickBar: 1,
+            scrollBar: $(slide).closest('.slider-block').find('.scrollbar'),
+            scrollBy: 0,
+            scrollTrap: true,
 
             activatePageOn: 'click'
         }).css('overflow', 'visible');
@@ -54580,9 +54623,6 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
         var sliders = document.querySelectorAll('.slider-block .slider-data:not(.loaded):not(.loading):not(.not-load)');
 
         if (sliders.length) {
-            var aSlider = [];
-            var countAll = 0;
-
             var _loop = function _loop(i) {
                 var slide = sliders[i];
                 slide.classList.add('loading');
@@ -54824,7 +54864,7 @@ var _foundationUtil3 = __webpack_require__(37);
 
 var _foundationUtil4 = __webpack_require__(13);
 
-var _foundationUtil5 = __webpack_require__(7);
+var _foundationUtil5 = __webpack_require__(8);
 
 var _foundationUtil6 = __webpack_require__(14);
 
@@ -54886,7 +54926,7 @@ var _jquery2 = _interopRequireDefault(_jquery);
 
 var _foundationUtil = __webpack_require__(1);
 
-var _foundationUtil2 = __webpack_require__(7);
+var _foundationUtil2 = __webpack_require__(8);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -55361,7 +55401,7 @@ var _jquery2 = _interopRequireDefault(_jquery);
 
 var _foundationUtil = __webpack_require__(13);
 
-var _foundationUtil2 = __webpack_require__(7);
+var _foundationUtil2 = __webpack_require__(8);
 
 var _foundationUtil3 = __webpack_require__(1);
 
@@ -55758,7 +55798,7 @@ var _jquery2 = _interopRequireDefault(_jquery);
 
 var _foundationUtil = __webpack_require__(1);
 
-var _foundationUtil2 = __webpack_require__(7);
+var _foundationUtil2 = __webpack_require__(8);
 
 var _foundation = __webpack_require__(5);
 
@@ -56263,7 +56303,7 @@ var _jquery = __webpack_require__(0);
 
 var _jquery2 = _interopRequireDefault(_jquery);
 
-var _foundationUtil = __webpack_require__(7);
+var _foundationUtil = __webpack_require__(8);
 
 var _foundationUtil2 = __webpack_require__(1);
 
@@ -56764,7 +56804,7 @@ function foundationRegisterCustomEvents() {}
 
 exports.__esModule = true;
 
-var _StoreApp = __webpack_require__(6);
+var _StoreApp = __webpack_require__(7);
 
 var _StoreApp2 = _interopRequireDefault(_StoreApp);
 
@@ -57161,12 +57201,11 @@ var LazyImageLoad = function () {
 
         this.attached = [];
         this.timer = null;
-        this.intervalSearch = null;
         this.intervalLoad = null;
         this.timeoutToFullLoad = null;
         this.observer = null;
         this.inLoad = 0;
-        this.maxLoad = 3;
+        this.maxLoad = 5;
         this.stack = [];
 
         this.setObserver();
@@ -58547,7 +58586,7 @@ var _isArray = __webpack_require__(41);
 
 var _isArray2 = _interopRequireDefault(_isArray);
 
-var _isObject = __webpack_require__(8);
+var _isObject = __webpack_require__(9);
 
 var _isObject2 = _interopRequireDefault(_isObject);
 
@@ -58620,7 +58659,7 @@ function objToUri(obj, prefix) {
 
 exports.__esModule = true;
 
-var _lodash = __webpack_require__(12);
+var _lodash = __webpack_require__(6);
 
 var _lodash2 = _interopRequireDefault(_lodash);
 
@@ -59168,7 +59207,7 @@ module.exports = getNative;
 
 var isFunction = __webpack_require__(44),
     isMasked = __webpack_require__(135),
-    isObject = __webpack_require__(8),
+    isObject = __webpack_require__(9),
     toSource = __webpack_require__(137);
 
 /**
@@ -59569,7 +59608,7 @@ module.exports = shortOut;
 var eq = __webpack_require__(45),
     isArrayLike = __webpack_require__(47),
     isIndex = __webpack_require__(49),
-    isObject = __webpack_require__(8);
+    isObject = __webpack_require__(9);
 
 /**
  * Checks if the given arguments are from an iteratee call.
@@ -59722,7 +59761,7 @@ module.exports = baseTimes;
 /***/ (function(module, exports, __webpack_require__) {
 
 var baseIsArguments = __webpack_require__(152),
-    isObjectLike = __webpack_require__(11);
+    isObjectLike = __webpack_require__(12);
 
 /** Used for built-in method references. */
 var objectProto = Object.prototype;
@@ -59763,8 +59802,8 @@ module.exports = isArguments;
 /* 152 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var baseGetTag = __webpack_require__(10),
-    isObjectLike = __webpack_require__(11);
+var baseGetTag = __webpack_require__(11),
+    isObjectLike = __webpack_require__(12);
 
 /** `Object#toString` result references. */
 var argsTag = '[object Arguments]';
@@ -59889,9 +59928,9 @@ module.exports = isTypedArray;
 /* 156 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var baseGetTag = __webpack_require__(10),
+var baseGetTag = __webpack_require__(11),
     isLength = __webpack_require__(48),
-    isObjectLike = __webpack_require__(11);
+    isObjectLike = __webpack_require__(12);
 
 /** `Object#toString` result references. */
 var argsTag = '[object Arguments]',
@@ -59975,7 +60014,7 @@ module.exports = baseUnary;
 /* 158 */
 /***/ (function(module, exports, __webpack_require__) {
 
-/* WEBPACK VAR INJECTION */(function(module) {var freeGlobal = __webpack_require__(23);
+/* WEBPACK VAR INJECTION */(function(module) {var freeGlobal = __webpack_require__(22);
 
 /** Detect free variable `exports`. */
 var freeExports = typeof exports == 'object' && exports && !exports.nodeType && exports;
@@ -60004,7 +60043,7 @@ module.exports = nodeUtil;
 /* 159 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var isObject = __webpack_require__(8),
+var isObject = __webpack_require__(9),
     isPrototype = __webpack_require__(160),
     nativeKeysIn = __webpack_require__(161);
 

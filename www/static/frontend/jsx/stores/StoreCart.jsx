@@ -76,13 +76,14 @@ let ACTIONS = {
         }
 
         if (url) {
-            ajax(url, action.data, (data) => {
-                store.dispatch({type:'SET', data: data});
+            ajax(url, {method:'POST', data: action.data})
+                .then(data => {
+                    store.dispatch({type:'SET', data: data});
 
-                if (typeof action.callback === 'function') {
-                    action.callback();
-                }
-            });
+                    if (typeof action.callback === 'function') {
+                        action.callback();
+                    }
+                });
         }
 
         return state;

@@ -5,12 +5,11 @@ export default class LazyImageLoad
     constructor(elements = '.lazy-img, [data-background]') {
         this.attached = [];
         this.timer = null;
-        this.intervalSearch = null;
         this.intervalLoad = null;
         this.timeoutToFullLoad = null;
         this.observer = null;
         this.inLoad = 0;
-        this.maxLoad = 3;
+        this.maxLoad = 5;
         this.stack = [];
 
         this.setObserver();
