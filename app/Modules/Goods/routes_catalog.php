@@ -43,6 +43,16 @@ return [
         'name' => 'viewed'
     ],
     [
+        'route' => '/category/api/also-bound-{i:id}',
+        'target' => [PromoController::class, 'actionAlsoBought'],
+        'name' => 'also_bound'
+    ],
+    [
+        'route' => '/category/api/related-{i:id}',
+        'target' => [PromoController::class, 'actionRelatedProducts'],
+        'name' => 'related'
+    ],
+    [
         'route' => '/category/brands',
         'target' => [PromoController::class, 'actionBrands'],
         'name' => 'brands'

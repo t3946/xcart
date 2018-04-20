@@ -142,11 +142,30 @@
             {include "product/_groupped_products.tpl"}
         </section>
     {/if}
+
+    <div class="row">
+        <div class="small-12 column slider-also_bought">
+            {set $link}{url 'catalog:also_bound' id=$model->pk}{/set}
+            {include 'slider/base_product_slider.tpl' title="Customers Who Bought This Item Also Bought" link=$link hide=true hide_link=true}
+        </div>
+    </div>
+    <div class="row">
+        <div class="small-12 column slider-related">
+            {set $link}{url 'catalog:related' id=$model->pk}{/set}
+            {include 'slider/base_product_slider.tpl' title="Similar products" link=$link hide=true hide_link=true}
+        </div>
+    </div>
+    <div class="row">
+        <div class="small-12 column slider-viewed">
+            {set $link}{url 'catalog:viewed'}{/set}
+            {include 'slider/base_product_slider.tpl' title="You recently viewed items" link=$link hide=true hide_link=true}
+        </div>
+    </div>
 </section>
 {/block}
 
 {block 'after-content'}
-    {*{include "demo/blocks/sliders/_recently_viewed.tpl"}*}
+
 {/block}
 
 {block 'js'}
