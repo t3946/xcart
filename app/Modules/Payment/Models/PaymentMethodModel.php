@@ -10,6 +10,9 @@ use Xcart\App\Orm\Fields\HasManyField;
 use Xcart\App\Orm\Fields\ManyToManyField;
 use Xcart\App\Orm\Model;
 
+/**
+ * @property int paymentid
+ */
 class PaymentMethodModel extends Model
 {
     use AutoMetaTrait;

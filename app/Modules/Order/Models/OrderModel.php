@@ -24,6 +24,18 @@ use Xcart\App\Traits\DataModelTrait;
 use Xcart\App\Traits\FieldManagerCacheTrait;
 use Xcart\Order;
 
+/**
+ * @property string|null purchase_order
+ * @property string s_address
+ * @property string s_firstname
+ * @property string s_company
+ * @property string s_city
+ * @property string s_state
+ * @property string s_country
+ * @property string s_zipcode
+ * @property int orderid
+ * @property int paymentid
+ */
 class OrderModel extends Model
 {
     use DataModelTrait, AutoMetaTrait;
