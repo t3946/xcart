@@ -47,6 +47,8 @@ import { cartAdd } from "../../redusers/appCartRediser";
 
         for (let i = 0, len = $products.length; i < len; i++) {
             // let $product = $($products[i]);
+            let product = $products[i];
+            product.dataset.quantity = val;
 
             // $product.data('quantity', undefined);
             // let $input = $product.find('.quantity-group input');
@@ -64,10 +66,13 @@ import { cartAdd } from "../../redusers/appCartRediser";
             e.preventDefault();
 
             let $product = $(e.target).closest('[data-product]');
-            if ( $product.length ) {
+            if ( $product.length )
+            {
+                let product = $product[0];
+
                 let data = [{
                     id: $product.data('product'),
-                    quantity: $product.data('quantity') || 1
+                    quantity: product.dataset.quantity || $product.data('quantity') || 1
                 }];
 
                 cartAdd(data, ()=>{ productItemResetState($product); });

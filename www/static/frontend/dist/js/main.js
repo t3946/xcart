@@ -45487,6 +45487,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
         $products.data('quantity', val);
 
         for (var i = 0, len = $products.length; i < len; i++) {
+            var product = $products[i];
+            product.dataset.quantity = val;
 
             $(document).trigger('component.quantity.change', {
                 target: $products[i],
@@ -45500,9 +45502,11 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
         var $product = $(e.target).closest('[data-product]');
         if ($product.length) {
+            var product = $product[0];
+
             var data = [{
                 id: $product.data('product'),
-                quantity: $product.data('quantity') || 1
+                quantity: product.dataset.quantity || $product.data('quantity') || 1
             }];
 
             (0, _appCartRediser.cartAdd)(data, function () {
