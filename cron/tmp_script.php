@@ -88,6 +88,7 @@ $regexp = '/<iframe[^>]*?src=("|\'|\\"|\\\')(.*?)(\'|\\"|\\\')[^>]*?>/i';
 $regexp_2 = '/<video[^>]*?>\s+?<source[^>]*?src=("|\'|\\"|\\\')(.*?)("|\'|\\"|\\\')[^>]*?>/i';
 $regexp_3 = '/<video[^>]*?>\s?<source[^>]*?src=("|\'|\\"|\\\')(.*?)("|\'|\\"|\\\')[^>]*?>/i';
 
+$all_products_with_clear_fulldescr = 0;
 $product_count_all = 0;
 $product_count = 0;
 
@@ -125,6 +126,16 @@ foreach ($product_models as $product_model){
     $product_count_all++;
 }
 
+$product_models = ProductModel::objects()->all();
+
+foreach ($product_models as $product_model){
+    if ($product_model->fulldescr) {
+        $product_model->fulldescr = cutTags($product_model->fulldescr);
+        $product_model->update(['fulldescr']);
+        $all_products_with_clear_fulldescr++;
+    }
+}
+
 
 echo "All {$product_count_all}, is clear ==> {$product_count}";
 
@@ -132,5 +143,5 @@ echo "All {$product_count_all}, is clear ==> {$product_count}";
 $time = (new DateTime('now'))->diff($start_time)->format('%H:%I:%S');
 
 $log_category = "Cut_video";
-$log_text = "Время обработки = {$time}\r\n Всего продуктов обработано = {$product_count_all}\r\n Продуктов очищено = {$product_count}";
+$log_text = "Время обработки = {$time}\r\n Всего продуктов обработано = {$product_count_all}\r\n Продуктов очищено = {$product_count}\r\nОчищенно описаний ==> {$all_products_with_clear_fulldescr}\r\n";
 func_backprocess_log($log_category, $log_text);
