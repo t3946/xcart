@@ -45500,7 +45500,10 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
         var $product = $(e.target).closest('[data-product]');
         if ($product.length) {
-            var data = [{ id: $product.data('product'), quantity: $product.data('quantity') || 1 }];
+            var data = [{
+                id: $product.data('product'),
+                quantity: $product.data('quantity') || 1
+            }];
 
             (0, _appCartRediser.cartAdd)(data, function () {
                 productItemResetState($product);
@@ -45512,6 +45515,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
         var $products = $(e.target).closest('[data-product-group]').find('[data-product]');
 
         if ($products.length) {
+
+            d($products);
 
             var data = [];
 
@@ -46950,9 +46955,22 @@ function cartAdd() {
         }
     };
 
-    var formatter = new Intl.NumberFormat("en-US", {
-        minimumFractionDigits: 2
-    });
+    var formatter = {
+        format: function format(number) {
+            if (!number) {
+                return number;
+            }
+
+            var currency = new Number(number).toLocaleString('en-US', {
+                style: 'currency',
+                currency: 'USD',
+                currencyDisplay: 'symbol'
+            });
+
+            return (currency + '').substring(1);
+        }
+    };
+
     var toLocaleCurrency = function toLocaleCurrency() {
         var number = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
         return formatter.format(number);
@@ -46969,7 +46987,7 @@ function cartAdd() {
             var product = data.product || data.target;
             var subtotal_container = product.querySelector('[cont-subtotal]');
             var id = product.dataset.product;
-            var quantity = product.dataset.quantity || 1;
+            var quantity = product.dataset.quantity || data.val || 1;
             var price = 0;
 
             if (!cache[id]) {

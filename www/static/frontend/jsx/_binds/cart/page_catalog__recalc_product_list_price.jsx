@@ -11,12 +11,25 @@
         }
     };
 
-    let formatter = new Intl.NumberFormat("en-US", {
-        minimumFractionDigits: 2
-    });
+    let formatter = {
+        format: number => {
+            if (!number) {
+                return number;
+            }
+
+            let currency = (new Number(number)).toLocaleString('en-US', {
+                style: 'currency',
+                currency: 'USD',
+                currencyDisplay: 'symbol'
+            });
+
+            return (currency + '') .substring(1);
+        }
+    };
+
+
     let toLocaleCurrency = (number = 0) => (
         formatter.format(number)
-        // number.toLocaleString('en-US', {style: 'currency', currency: 'USD', currencyDisplay: 'code'})
     );
 
     let cache = {};
@@ -30,7 +43,7 @@
             let product = data.product || data.target;
             let subtotal_container = product.querySelector('[cont-subtotal]');
             let id = product.dataset.product;
-            let quantity = product.dataset.quantity || 1;
+            let quantity = product.dataset.quantity || data.val || 1;
             let price = 0;
 
             if (!cache[id]) {
