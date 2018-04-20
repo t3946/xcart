@@ -11,23 +11,23 @@
                 }
 *}
 
+                {set $brand = $model->brand}
                 {include 'product/tabs/__option.tpl'
-                title='Brand'
-                value=$model->brand->brand
+                    title='Brand'
+                    value="<a href='"~ $brand->getAbsoluteUrl() ~"'>" ~ $brand->brand ~ "</a>"
                 }
-
 
                 {foreach $model->getParamList() as $item}
                     {include 'product/tabs/__option.tpl'
-                    title=$item.name
-                    value=$item.values|implode:', '
+                        title=$item.name
+                        value=$item.values|implode:', '
                     }
                 {/foreach}
 
                 {if $model->upc}
                     {include 'product/tabs/__option.tpl'
-                    title="Barcode"
-                    value=$model->upc
+                        title="Barcode"
+                        value=$model->upc
                     }
                 {/if}
 

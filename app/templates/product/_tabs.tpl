@@ -4,9 +4,9 @@
           <a href="#description" aria-selected="true">Description</a>
         </li>
 
-        <li class="tabs-title">
-          <a href="#brand" aria-selected="false">Brand</a>
-        </li>
+        {*<li class="tabs-title">*}
+          {*<a href="#brand" aria-selected="false">Brand</a>*}
+        {*</li>*}
 
         <li class="tabs-title">
           <a href="#shipping" aria-selected="false">Shipping</a>
@@ -37,11 +37,11 @@
             </div>
         </div>
 
-        <div class="tabs-panel " id="brand">
-            <div class="tab-brand tab-content">
-                {include 'product/tabs/_brand.tpl' model=$model}
-            </div>
-        </div>
+        {*<div class="tabs-panel " id="brand">*}
+            {*<div class="tab-brand tab-content">*}
+                {*{include 'product/tabs/_brand.tpl' model=$model}*}
+            {*</div>*}
+        {*</div>*}
 
         <div class="tabs-panel" id="shipping">
             <div class="tab-shipping tab-content">

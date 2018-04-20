@@ -64,4 +64,39 @@
   .product-title-small {
     padding-bottom: rem-calc(25);
   }
+
+  .product__images-slider {
+    margin: 0 auto;
+
+    @include breakpoint(large) {
+      margin: 0;
+    }
+
+    .images-slider {
+    }
+  }
+
+  .prices__container {
+    margin: rem-calc(20) 0;
+
+    @include breakpoint(large) {
+      margin: 0;
+    }
+
+    .cart_add {
+      margin: rem-calc(20) 0;
+
+      @include breakpoint(large) {
+        margin: 0;
+      }
+    }
+  }
+
+  .tabs-title {
+    a {
+      &:hover {
+        text-decoration: none;
+      }
+    }
+  }
 }
