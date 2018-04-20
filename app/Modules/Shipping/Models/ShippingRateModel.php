@@ -13,6 +13,10 @@ use Xcart\App\Orm\Model;
 use Xcart\App\Traits\DataModelTrait;
 use Xcart\ShippingRate;
 
+/**
+ * @property ShippingModel shipping
+ * @property int shippingid
+ */
 class ShippingRateModel extends Model
 {
     use DataModelTrait, AutoMetaTrait;

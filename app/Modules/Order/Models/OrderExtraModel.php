@@ -6,6 +6,7 @@ namespace Modules\Order\Models;
 use Modules\User\Models\UserModel;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\OneToOneField;
+use Xcart\App\Orm\Fields\SerializeField;
 use Xcart\App\Orm\Model;
 
 class OrderExtraModel extends Model
@@ -41,6 +42,11 @@ class OrderExtraModel extends Model
                 'modelClass' => UserModel::class,
                 'link' => ['payment_operator_id' => 'id'],
                 'null' => true,
+            ],
+
+            'purchase_order' => [
+                'class' => SerializeField::className(),
+                'null' => false,
             ],
         ];
     }

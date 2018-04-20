@@ -4,6 +4,7 @@ namespace Modules\Order\Controllers;
 
 use Modules\Core\Models\CountryModel;
 use Modules\Dashboard\Sqls\SearchSql;
+use Modules\Order\Models\OrderExtraModel;
 use Modules\Order\Models\OrderGroupModel;
 use Modules\Order\Models\OrderModel;
 use Modules\Order\Models\OrderStatusModel;
@@ -19,7 +20,7 @@ use Xcart\Connection;
 class CheckoutController extends FrontendController
 {
 
-    protected function getOrder() : OrderModel
+    protected function getOrder(): OrderModel
     {
         /** @var OrderModel $order */
 
@@ -34,7 +35,7 @@ class CheckoutController extends FrontendController
         return $order;
     }
 
-    public function actionShipping()
+    public function actionShipping(): void
     {
         $app = Xcart::app();
         $user = $app->user;
@@ -44,7 +45,7 @@ class CheckoutController extends FrontendController
 
         /** @var OrderModel $order */
 
-        [$order, $is_created] = OrderModel::objects()->getOrCreate([
+        [$order] = OrderModel::objects()->getOrCreate([
             'user_id' => $user->id,
             'cart_number' => $cart->getCartNumber(),
             'order_prefix' => $app->getModule('Sites')->getSite()->getOrderPrefix()
@@ -92,8 +93,10 @@ class CheckoutController extends FrontendController
         ]);
     }
 
-    public function actionOptions()
+    public function actionOptions(): void
     {
+        /** @var ShippingModule $ship_module */
+
         $app = Xcart::app();
         $user = $app->user;
         $site = $app->getModule('Sites')->getSite();
@@ -105,6 +108,11 @@ class CheckoutController extends FrontendController
         $order = $this->getOrder();
 
         if ($app->request->getIsPost()) {
+
+            if ($order->groups->count()) {
+                $order->groups->delete();
+            }
+
             if ($app->request->post->has('shipping_rates')) {
                 if ($rates = $app->request->post->get('shipping_rates')) {
                     foreach ($rates as $d => $rateid) {
@@ -113,6 +121,7 @@ class CheckoutController extends FrontendController
                             /** @var OrderGroupModel $group */
                             [$group] = OrderGroupModel::objects()->getOrCreate(['manufacturerid' => $d, 'orderid' => $order->orderid]);
 
+                            /** @var ShippingRateModel[] $shipping_rates */
                             if (($shipping_rates = $ship_module::getShipping($d, $order, $cart->getItemsGroupedBy()[$d])) && $shipping_rates[$rateid]) {
 
                                 $charge = $shipping_rates[$rateid]->getShippingCharge();
@@ -131,6 +140,7 @@ class CheckoutController extends FrontendController
                 }
                 if ($app->request->post->has('payment_method')) {
                     if (($paymentid = $app->request->post->get('payment_method')) && $payment_method = PaymentMethodModel::objects()->get(['paymentid' => $paymentid])) {
+                        /** @var PaymentMethodModel $payment_method */
                         $order->paymentid = $payment_method->paymentid;
                         $order->save();
                     }
@@ -163,7 +173,7 @@ class CheckoutController extends FrontendController
         ]);
     }
 
-    public function actionReview()
+    public function actionReview(): void
     {
         $app = Xcart::app();
         $user = $app->user;
@@ -174,14 +184,33 @@ class CheckoutController extends FrontendController
 
         if ($app->request->getIsPost()) {
             if ($app->request->post->has('customer_notes')) {
-                $order->customer_notes = $app->request->post->get('customer_notes');
+                $order->setAttributes([
+                    'customer_notes' => $app->request->post->get('customer_notes'),
+                    'cb_status' => OrderStatusModel::ORDER_STATUS_QUEUED
+                ]);
                 $order->save();
             }
+
+            if ($app->request->post->has('purchase_order')) {
+                if (($purchase_order = $app->request->post->get('purchase_order')) && 1==1) { //verify
+                    /** @var OrderModel $extra */
+                    [$extra] = OrderExtraModel::objects()->getOrNew(['order_id' => $order->orderid]);
+                    $extra->purchase_order = $purchase_order;
+                    $extra->save();
+                }
+            }
+
+            $this->redirect('checkout:payment');
         }
 
         echo $this->render('checkout/review.tpl', [
             'order' => $order,
         ]);
+
+    }
+
+    public function actionPayment(): void
+    {
 
     }
 }
