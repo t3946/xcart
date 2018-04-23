@@ -20,12 +20,18 @@ use Xcart\Connection;
 class CheckoutController extends FrontendController
 {
 
-    protected function getOrder(): OrderModel
+    protected function getOrder() :? OrderModel
     {
+        $cart = Xcart::app()->cart;
+
+        if (!$cart) {
+            return null;
+        }
+
         /** @var OrderModel $order */
 
         $order = OrderModel::objects()->get([
-            'cart_number' => Xcart::app()->cart->getCartNumber(),
+            'cart_number' => $cart->getCartNumber(),
         ]);
 
         if (!$order) {
@@ -42,6 +48,10 @@ class CheckoutController extends FrontendController
         $cart = $app->cart;
 
         if (!$user) {}
+
+        if (!$cart->getCartNumber()) {
+            $this->redirect('cart:list');
+        }
 
         /** @var OrderModel $order */
 
