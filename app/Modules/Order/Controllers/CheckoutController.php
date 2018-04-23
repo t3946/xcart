@@ -20,12 +20,12 @@ use Xcart\Connection;
 class CheckoutController extends FrontendController
 {
 
-    protected function getOrder() :? OrderModel
+    protected function getOrder(): OrderModel
     {
         $cart = Xcart::app()->cart;
 
-        if (!$cart) {
-            return null;
+        if (!$cart->getCartNumber() || $cart->getIsEmpty()) {
+            $this->redirect('cart:list');
         }
 
         /** @var OrderModel $order */
@@ -49,7 +49,7 @@ class CheckoutController extends FrontendController
 
         if (!$user) {}
 
-        if (!$cart->getCartNumber()) {
+        if (!$cart->getCartNumber() || $cart->getIsEmpty()) {
             $this->redirect('cart:list');
         }
 
@@ -170,7 +170,6 @@ class CheckoutController extends FrontendController
             }
             $this->redirect('checkout:review');
         }
-
 
         $payment_methods = PaymentMethodModel::objects()
             ->filter(['active' => 'Y', 'site__through__storefrontid' => $site->storefrontid])
