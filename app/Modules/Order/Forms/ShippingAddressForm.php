@@ -38,7 +38,7 @@ class ShippingAddressForm extends BaseForm
             ],
 
             's_zipcode' => [
-                'class' => NumberField::className(),
+                'class' => CharField::class,
                 'label' => 'Zip/Postal Code',
             ],
 
@@ -58,12 +58,12 @@ class ShippingAddressForm extends BaseForm
             ],
 
             'phone' => [
-                'class' => CharField::className(),
+                'class' => NumberField::className(),
                 'label' => 'Phone'
             ],
 
             'phone_ext' => [
-                'class' => CharField::className(),
+                'class' => NumberField::className(),
                 'label' => 'ext'
             ],
 
