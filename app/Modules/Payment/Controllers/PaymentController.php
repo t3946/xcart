@@ -5,37 +5,54 @@ namespace Modules\Payment\Controllers;
 
 use Exception;
 use Modules\Order\Helpers\OrderTagEventHelper;
+use Modules\Order\Models\OrderModel;
 use Modules\Order\Models\OrderTransactionModel;
 use Modules\Payment\Gateways\Gateway;
 use Modules\Payment\Models\ProcessorModel;
 use Xcart\App\Controller\Controller;
-use Xcart\App\Logger\Logger;
 use Xcart\App\Main\Xcart;
 
 class PaymentController extends Controller
 {
+    /**
+     * @param $gateway
+     */
     public function process($gateway)
     {
         /** @var ProcessorModel $pm */
         if ($pm = ProcessorModel::objects()->get(['processor_name' => $gateway])){
             if ($gw = Gateway::getGateway($pm)){
 
+                $app = Xcart::app();
+                $user = $app->user;
+                $cart = $app->cart;
+                if (!$cart->getCartNumber() || $cart->getIsEmpty()) {
+                    $this->redirect('cart:list');
+                }
+
+                /** @var OrderModel $order */
+                $order = OrderModel::objects()->get([
+                    'cart_number' => $cart->getCartNumber(),
+                ]);
+
                 try {
+
                     $params = [
                         'cancelUrl' => Xcart::app()->router->absoluteUrl("payment:cancel", ['gateway' => strtolower($pm->processor_name)]),
                         'returnUrl' => Xcart::app()->router->absoluteUrl("payment:return", ['gateway' => strtolower($pm->processor_name)]),
                         'notifyUrl' => Xcart::app()->router->absoluteUrl("payment:success", ['gateway' => strtolower($pm->processor_name)]),
-                        'amount' => '1.11',
+                        'amount' => number_format($order->total, 2, '.', ''),
                         'currency' => 'USD'
                     ];
 
                     if ($response = $gw->purchase($params)) {
-
                         //create order here
 
                         if ($gw->result->isRedirect()) {
                             $gw->result->redirect();
                         }
+
+                        $this->redirect("payment:return", ['gateway' => strtolower($pm->processor_name)]);
                     }
 
                 } catch (Exception $e){
@@ -73,7 +90,14 @@ class PaymentController extends Controller
 
     public function ret($gateway)
     {
-        var_dump($gateway);
+        $pm = ProcessorModel::objects()->get(['processor_name' => $gateway]);
+
+        if (!$pm) {
+            $this->error(404);
+        }
+
+        
+
     }
 
     public function endpoint($gateway)

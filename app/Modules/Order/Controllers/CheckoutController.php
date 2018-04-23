@@ -22,10 +22,16 @@ class CheckoutController extends FrontendController
 
     protected function getOrder(): OrderModel
     {
+        $cart = Xcart::app()->cart;
+
+        if (!$cart->getCartNumber() || $cart->getIsEmpty()) {
+            $this->redirect('cart:list');
+        }
+
         /** @var OrderModel $order */
 
         $order = OrderModel::objects()->get([
-            'cart_number' => Xcart::app()->cart->getCartNumber(),
+            'cart_number' => $cart->getCartNumber(),
         ]);
 
         if (!$order) {
@@ -42,6 +48,10 @@ class CheckoutController extends FrontendController
         $cart = $app->cart;
 
         if (!$user) {}
+
+        if (!$cart->getCartNumber() || $cart->getIsEmpty()) {
+            $this->redirect('cart:list');
+        }
 
         /** @var OrderModel $order */
 
@@ -161,7 +171,6 @@ class CheckoutController extends FrontendController
             $this->redirect('checkout:review');
         }
 
-
         $payment_methods = PaymentMethodModel::objects()
             ->filter(['active' => 'Y', 'site__through__storefrontid' => $site->storefrontid])
             ->order(['is_cod', 'orderby'])
@@ -211,6 +220,10 @@ class CheckoutController extends FrontendController
 
     public function actionPayment(): void
     {
+        $app = Xcart::app();
+        $order = $this->getOrder();
+
+        $this->redirect("payment:process", ['gateway' => strtolower($order->payment_method->processor->processor_name)]);
 
     }
 }

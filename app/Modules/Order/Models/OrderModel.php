@@ -35,6 +35,7 @@ use Xcart\Order;
  * @property string s_zipcode
  * @property int orderid
  * @property int paymentid
+ * @property float total
  */
 class OrderModel extends Model
 {
