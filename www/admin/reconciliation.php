@@ -352,6 +352,8 @@ if ($tab == "rules"){
 
 if ($REQUEST_METHOD == "POST") {
 
+    $search_data  = $search_data ?: [];
+
 	if (!empty($data_orders_selectbox)){
 
                 foreach ($all_tabs as $t){
