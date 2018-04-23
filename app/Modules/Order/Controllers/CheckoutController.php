@@ -211,6 +211,10 @@ class CheckoutController extends FrontendController
 
     public function actionPayment(): void
     {
+        $app = Xcart::app();
+        $order = $this->getOrder();
+
+        $this->redirect("payment:process", ['gateway' => strtolower($order->payment_method->processor->processor_name)]);
 
     }
 }
