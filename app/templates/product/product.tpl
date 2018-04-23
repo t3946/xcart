@@ -11,7 +11,7 @@
 {/block}
 
 {block "content"}
-<section class="product-page page"
+<section class="product-page default-content-page"
          data-product="{$model->productid}"
          data-prices='{$model->getPrices()|json_encode}'
          {if $model->getFrontendPrice() < $model->list_price}

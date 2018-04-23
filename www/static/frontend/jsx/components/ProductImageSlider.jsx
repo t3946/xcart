@@ -2,6 +2,7 @@ import {h, render, Component} from "preact";
 import renderToStringr from 'preact-render-to-string';
 import { videoLinkToObject } from "../utils/video";
 import PhotoSwipe from "./PhotoSwipeContainer";
+import ReactSlyWrapper from 'react-sly-wrapper'
 import _ from 'lodash';
 import Swiper from 'react-id-swiper';
 
@@ -277,21 +278,17 @@ export default class ProductImageSlider extends Component
             <div className="slider-thumbs">
                 <a href="#" className="prev" onClick={(e)=>{this.prevHndl(e)}}></a>
                 <div className="wrap" ref={(el) => this._box = el }>
-                    <Swiper {...{
-                        direction: 'vertical',
-                        slidesPerView: 'auto',
-                        // slidesPerView: 5,
-                        mousewheelControl: true,
-                        paginationClickable: false,
-                        freeMode: true,
-                        height: this.state.height,
-                        freeModeFluid:  true,
-                        freeModeSticky: false,
-                        followFinger:   true,
-                        // autoHeight: true,
-                    }}>
-                        {this.renderThumbs()}
-                    </Swiper>
+                    <ReactSlyWrapper options={
+                        activatePageOn: 'click',
+                        speed: 300,
+                        mouseDragging: 1,
+                        touchDragging: 1,
+                        smart: 1
+                    }>
+                        <div className="frame">
+                            {this.renderThumbs()}
+                        </div>
+                    </ReactSlyWrapper>
                 </div>
                 <a href="#" className="next" onClick={(e)=>{this.nextHndl(e)}}></a>
             </div>

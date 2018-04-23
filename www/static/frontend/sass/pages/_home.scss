@@ -1,13 +1,5 @@
 .home-page {
-  padding-top: rem-calc(5);
 
-  @include breakpoint(medium) {
-    padding-top: rem-calc(10);
-  }
-
-  @include breakpoint(large) {
-    padding-top: rem-calc(5);
-  }
 
   .banners-section {
     height: rem-calc(177);
