@@ -14,9 +14,9 @@ import Loader from "./components/Loader";
 import isTouch from "./utils/isTouch";
 import isMedia from "./utils/isMedia";
 import documentReady from "./utils/documentReady";
-// import funcRecalcFooter from "./components/footer";
 
-// require('preact/devtools');
+require('preact/devtools');
+require('preact/debug');
 
 (function(){
     documentReady(()=>{

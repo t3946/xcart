@@ -6,6 +6,7 @@ namespace Modules\Payment\Controllers;
 use Exception;
 use Modules\Order\Helpers\OrderTagEventHelper;
 use Modules\Order\Models\OrderModel;
+use Modules\Order\Models\OrderStatusModel;
 use Modules\Order\Models\OrderTransactionModel;
 use Modules\Payment\Gateways\Gateway;
 use Modules\Payment\Models\ProcessorModel;
@@ -96,7 +97,15 @@ class PaymentController extends Controller
             $this->error(404);
         }
 
-        
+        $app = Xcart::app();
+        $cart = $app->cart;
+        if ($cart->getCartNumber()){
+            if ($order = OrderModel::objects()->get(['cart_number' => $cart->getCartNumber()])) {
+                $order->cb_status = OrderStatusModel::ORDER_STATUS_AUTHORIZED;
+                $order->save();
+                $this->redirect("checkout:complete");
+            }
+        }
 
     }
 

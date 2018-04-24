@@ -5,7 +5,6 @@ namespace Modules\Order\Models;
 
 use Modules\User\Models\UserModel;
 use Xcart\App\Orm\Fields\ForeignField;
-use Xcart\App\Orm\Fields\OneToOneField;
 use Xcart\App\Orm\Fields\SerializeField;
 use Xcart\App\Orm\Model;
 

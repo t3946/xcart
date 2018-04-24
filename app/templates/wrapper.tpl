@@ -76,17 +76,19 @@
     {get_assets:raw type='css' position='head'}
     {get_assets:raw type='js' position='head'}
 </head>
-<body itemscope itemprop="mainEntity" {block 'schema_page_type'}itemtype="http://schema.org/WebPage"{/block} class="loading loading-active">
+<body itemscope itemprop="mainEntity" {block 'schema_page_type'}itemtype="http://schema.org/WebPage"{/block}
+      {*class="loading loading-active"*}
+>
 
 {filter|strip:true}
 {autoescape true}
 {block 'preloader'}
-    <div class="loader-bg waves waves-dark">
-        <div class="loader-wrapper">
-            <div class="loader-spinner"></div>
-            <div class="loader-container"></div>
-        </div>
-    </div>
+    {*<div class="loader-bg waves waves-dark">*}
+        {*<div class="loader-wrapper">*}
+            {*<div class="loader-spinner"></div>*}
+            {*<div class="loader-container"></div>*}
+        {*</div>*}
+    {*</div>*}
 {/block}
 
 {block "wrapper"}
