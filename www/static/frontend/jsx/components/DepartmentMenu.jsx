@@ -1,5 +1,3 @@
-// import MouseSpeed from './MouseSpeed';
-
 import storeApp from '../stores/StoreApp';
 
 export default class DepartmentMenu

@@ -7,6 +7,7 @@ use Mindy\QueryBuilder\Q\QAnd;
 use Mindy\QueryBuilder\Q\QAndNot;
 use Mindy\QueryBuilder\Q\QOr;
 use Mindy\QueryBuilder\QueryBuilder;
+use Modules\Order\Forms\ShippingAddressForm;
 use Modules\Order\Models\OrderEventsModel;
 use Modules\Order\Models\OrderGroupModel;
 use Modules\Order\Models\OrderModel;
@@ -88,8 +89,8 @@ class OrderHelper
             $qs = static::getCountEventsQS($user_id, $min_date);
 
             $sql = $qs->filter(['order_id__in' => $ids,])
-                ->group(["order_id"])
-                ->allSql();
+                      ->group(["order_id"])
+                      ->allSql();
 
             $counts = $connection->fetchAll($sql);
             if ($counts) {
@@ -134,13 +135,13 @@ class OrderHelper
 
         $qs = $qs
             ->filter([
-                new QAnd(['created_at__gte' => (new \DateTime())->modify('-6 month'),]),
-                new QOr([
-                    new QAnd(['a.user_id' => $user_id, new QAnd(new Expression("`{$topAlias}`.`created_at` >= `a`.`created_at`"))]),
-                    'a.user_id__isnull' => true
-                ]),
-                new QAndNot(['user_id' => $user_id,]),
-            ])
+                         new QAnd(['created_at__gte' => (new \DateTime())->modify('-6 month'),]),
+                         new QOr([
+                                     new QAnd(['a.user_id' => $user_id, new QAnd(new Expression("`{$topAlias}`.`created_at` >= `a`.`created_at`"))]),
+                                     'a.user_id__isnull' => true
+                                 ]),
+                         new QAndNot(['user_id' => $user_id,]),
+                     ])
             ->getQuerySet()
             ->join('left join', OrderUserLastActivityModel::tableName(), ['a.order_id' => 'order_id', 'a.user_id' => new Expression($user_id)], 'a')
             ->select(['order_id', 'count' => new Expression('count(*)')]);
@@ -174,7 +175,7 @@ class OrderHelper
                 if (in_array($group->cb_status, ['Q', 'N', 'I'])) {
                     if ($group->cb_status != $status) {
                         $log = "<br/><b>" . $group->manufacturer->code . ":</b> cb_status: " . $group->cb_status_model->name
-                            . " -> " . OrderStatusModel::objects()->get(['code' => $status])->name;
+                               . " -> " . OrderStatusModel::objects()->get(['code' => $status])->name;
                     }
                     $send = true;
                     $group->cb_status = $status;
@@ -197,11 +198,11 @@ class OrderHelper
 
         $auth_transactions = array_filter($order_model->transactions->all(), function ($a) {
             return ($a->type == OrderTransactionModel::TYPE_AUTHORIZATION && in_array($a->transaction_status,
-                    [
-                        OrderTransactionModel::STATUS_AUTHORIZED,
-                        OrderTransactionModel::STATUS_PARTIALLY_CAPTURED,
-                        OrderTransactionModel::STATUS_PENDING
-                    ]
+                                                                                      [
+                                                                                          OrderTransactionModel::STATUS_AUTHORIZED,
+                                                                                          OrderTransactionModel::STATUS_PARTIALLY_CAPTURED,
+                                                                                          OrderTransactionModel::STATUS_PENDING
+                                                                                      ]
                 ));
         });
         foreach ($auth_transactions as $auth_tr) {
@@ -210,12 +211,12 @@ class OrderHelper
                 'currency' => $auth_tr->transaction_currency,
             ];
             $params = array_merge(PaymentHelper::getPaymentParams($auth_tr, $amount),
-                [
-                    'mode' => 'void',
-                    'new_method_model' => $auth_tr->payment_method_model,
-                    'order' => $order_model,
-                    'orderTransaction' => $auth_tr,
-                ]
+                                  [
+                                      'mode' => 'void',
+                                      'new_method_model' => $auth_tr->payment_method_model,
+                                      'order' => $order_model,
+                                      'orderTransaction' => $auth_tr,
+                                  ]
             );
 
             $trStore = new OrderTransactionStore($params, $auth_tr);
@@ -235,10 +236,23 @@ class OrderHelper
 
         if (($user_ids = Xcart::app()->request->session->get('identifiers')) && ($login = $user_ids['A'] ?: null) && !empty($login['login'])) {
 
-             $user = UserModel::objects()->filter(['login' => $login['login']])->limit(1)->get();
-         }
+            $user = UserModel::objects()->filter(['login' => $login['login']])->limit(1)->get();
+        }
 
 
         return $user;
+    }
+
+    public static function isValidShippingAddress($post_data = []): bool
+    {
+        $form = new ShippingAddressForm();
+        $post_data['firstname'] = '';
+//        dd($post_data);
+
+        $form->populate(['ShippingAddressForm' => $post_data]);
+        dd($form->isValid(), $form->getErrors());
+
+        return $form->isValid() ?: $form->getErrors();
+
     }
 }

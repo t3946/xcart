@@ -1,5 +1,7 @@
 <?php
 
+namespace Modules\Order\Forms;
+
 use Xcart\App\Form\BaseForm;
 use Xcart\App\Form\Fields\CharField;
 use Xcart\App\Form\Fields\DropDownField;
@@ -12,54 +14,62 @@ class ShippingAddressForm extends BaseForm
     {
         return [
             's_firstname' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'label' => "Full Name",
+                'required' => true
 
             ],
 
             's_company' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'label' => "Companu (optional)",
             ],
 
             's_address' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'label' => 'Address',
+                'required' => true
             ],
 
             's_address_2' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'label' => 'Address',
             ],
 
             's_country' => [
-                'class' => DropDownField::className(),
+                'class' => DropDownField::class,
                 'label' => 'Country',
+                'required' => true
             ],
 
             's_zipcode' => [
                 'class' => CharField::class,
                 'label' => 'Zip/Postal Code',
+                'required' => true
             ],
 
             's_statename' => [
                 'class' => CharField::className(),
                 'label' => 'State/Province',
+                'required' => true
             ],
 
             's_city' => [
                 'class' => CharField::className(),
-                'label' => 'City'
+                'label' => 'City',
+                'required' => true
             ],
 
             'firstname' => [
                 'class' => CharField::className(),
-                'label' => 'fullname'
+                'label' => 'fullname',
+                'required' => true
             ],
 
             'phone' => [
                 'class' => NumberField::className(),
-                'label' => 'Phone'
+                'label' => 'Phone',
+                'required' => true
             ],
 
             'phone_ext' => [
@@ -69,7 +79,8 @@ class ShippingAddressForm extends BaseForm
 
             'email' => [
                 'class' => EmailField::className(),
-                'label' => 'Email'
+                'label' => 'Email',
+                'required' => true
             ],
         ];
     }

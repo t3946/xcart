@@ -4,6 +4,7 @@ namespace Modules\Order\Controllers;
 
 use Modules\Core\Models\CountryModel;
 use Modules\Dashboard\Sqls\SearchSql;
+use Modules\Order\Helpers\OrderHelper;
 use Modules\Order\Models\OrderExtraModel;
 use Modules\Order\Models\OrderGroupModel;
 use Modules\Order\Models\OrderModel;
@@ -13,6 +14,7 @@ use Modules\Shipping\Models\ShippingModel;
 use Modules\Shipping\Models\ShippingRateModel;
 use Modules\Shipping\ShippingModule;
 use Modules\User\Models\AddressModel;
+use ShippingAddressForm;
 use Xcart\App\Controller\FrontendController;
 use Xcart\App\Main\Xcart;
 use Xcart\Connection;
@@ -46,6 +48,7 @@ class CheckoutController extends FrontendController
         $app = Xcart::app();
         $user = $app->user;
         $cart = $app->cart;
+        $errors = [];
 
         if (!$user) {}
 
@@ -63,7 +66,8 @@ class CheckoutController extends FrontendController
 
         if ($app->request->getIsPost()) {
             $data = $app->request->post->get('customer');
-            if (1==1) { //validation
+            //
+            if ($errors = OrderHelper::isValidShippingAddress($data) === true) { //validation
 
                 [$address] = AddressModel::objects()->getOrCreate([
                     'user_id' => $user->id,
@@ -99,6 +103,7 @@ class CheckoutController extends FrontendController
 
         echo $this->render('checkout/shipping.tpl', [
             'order' => $order,
+            'errors' => $errors,
             'countries' => Connection::getInstance()->fetchAll(SearchSql::getAllCountryOrderSql())
         ]);
     }
@@ -225,5 +230,17 @@ class CheckoutController extends FrontendController
 
         $this->redirect("payment:process", ['gateway' => strtolower($order->payment_method->processor->processor_name)]);
 
+    }
+
+    public function actionComplete(): void
+    {
+        $order = $this->getOrder();
+
+
+        echo $this->render('checkout/complete.tpl', [
+            'order' => $order,
+            'shipping_info' => $order->getInfo('shipping'),
+            'billing_info' => $order->getInfo('billing'),
+        ]);
     }
 }

@@ -6,7 +6,6 @@ export function findVideoId (link, forceVideo)
     let id, type;
 
     if (href.host.match(/youtube\.com/) && href.search) {
-        //.log();
         id = href.search.split('v=')[1];
 
         if (id) {
@@ -26,6 +25,11 @@ export function findVideoId (link, forceVideo)
         type = 'vimeo';
     }
 
+    else if (href.host.match(/salsify\.com/)) {
+        id = href.pathname.replace(/^\/(video\/)?/, '').replace(/\/.*/, '');
+        type = 'salsify';
+    }
+
     if ((!id || !type) && forceVideo) {
         id = href.href;
         type = 'custom';
@@ -43,6 +47,16 @@ export function getVideoThumbs (videoFrame, callback)
 
         thumb = base_uri + '/default.jpg';
         img = base_uri + '/hqdefault.jpg';
+    }
+    else if (videoFrame.type === 'salsify') {
+        let href = videoFrame.href;
+
+        if (href.indexOf('?')) {
+            href = href.split('?')[0];
+        }
+
+        let index = href.lastIndexOf('.');
+        thumb = img = href.substring(0, index) + 'jpg';
     }
     else if (videoFrame.type === 'vimeo') {
         $.ajax({

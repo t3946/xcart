@@ -65,7 +65,7 @@ class OrderModel extends Model
                 'autoNowAdd' => true,
             ],
             'extra_model' => [
-                'class' => ForeignField::class,
+                'class' => OneToOneField::class,
                 'modelClass' => OrderExtraModel::class,
                 'link' => ['orderid' => 'order_id'],
                 'null' => true,
