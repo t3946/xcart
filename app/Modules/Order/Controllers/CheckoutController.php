@@ -4,6 +4,7 @@ namespace Modules\Order\Controllers;
 
 use Modules\Core\Models\CountryModel;
 use Modules\Dashboard\Sqls\SearchSql;
+use Modules\Order\Helpers\OrderHelper;
 use Modules\Order\Models\OrderExtraModel;
 use Modules\Order\Models\OrderGroupModel;
 use Modules\Order\Models\OrderModel;
@@ -13,6 +14,7 @@ use Modules\Shipping\Models\ShippingModel;
 use Modules\Shipping\Models\ShippingRateModel;
 use Modules\Shipping\ShippingModule;
 use Modules\User\Models\AddressModel;
+use ShippingAddressForm;
 use Xcart\App\Controller\FrontendController;
 use Xcart\App\Main\Xcart;
 use Xcart\Connection;
@@ -63,7 +65,7 @@ class CheckoutController extends FrontendController
 
         if ($app->request->getIsPost()) {
             $data = $app->request->post->get('customer');
-            if (1==1) { //validation
+            if (OrderHelper::isValidShippingAddress($data)) { //validation
 
                 [$address] = AddressModel::objects()->getOrCreate([
                     'user_id' => $user->id,

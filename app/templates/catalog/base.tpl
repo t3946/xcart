@@ -8,7 +8,7 @@
             {include "catalog/parts/_catalog_list_item.tpl" item=$item}
         {/foreach}
     {else}
-    <section class="catalog-page">
+    <section class="catalog-page default-content-page">
         {block "content-top"}
 
         {/block}

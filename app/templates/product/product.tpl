@@ -11,7 +11,7 @@
 {/block}
 
 {block "content"}
-<section class="product-page page"
+<section class="product-page default-content-page"
          data-product="{$model->productid}"
          data-prices='{$model->getPrices()|json_encode}'
          {if $model->getFrontendPrice() < $model->list_price}
@@ -50,8 +50,17 @@
             <div class="column small-12 large-5 block__image">
                 <div class="product__images-slider">
                     {add $site = $model->sites->limit(1)->get()}
-                    {set $images = $model->images->order(['orderby'])->all()}
 
+                    {if $model->isGroupRoot()}
+                        {set $images = []}
+
+                        {set $childrens = $item->getFrontendChilds()->limit(4)->all()}
+                        {foreach $childrens as $child}
+                            {set $images[] = $child->images->orders(['orderby'])->limit(1)->get()}
+                        {/foreach}
+                    {else}
+                        {set $images = $model->images->order(['orderby'])->all()}
+                    {/if}
                     <datalist>
                         {foreach $images as $image}
                             <option value="//cdn.{$site->getBaseDomain()}{$image->getUrl()}"
