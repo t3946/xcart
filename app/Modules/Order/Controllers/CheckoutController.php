@@ -226,4 +226,16 @@ class CheckoutController extends FrontendController
         $this->redirect("payment:process", ['gateway' => strtolower($order->payment_method->processor->processor_name)]);
 
     }
+
+    public function actionComplete(): void
+    {
+        $order = $this->getOrder();
+
+
+        echo $this->render('checkout/complete.tpl', [
+            'order' => $order,
+            'shipping_info' => $order->getInfo('shipping'),
+            'billing_info' => $order->getInfo('billing'),
+        ]);
+    }
 }
