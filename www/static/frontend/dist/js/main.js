@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 50);
+/******/ 	return __webpack_require__(__webpack_require__.s = 42);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -10930,98 +10930,6 @@ module.exports = g;
 
 /***/ }),
 /* 4 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-exports.__esModule = true;
-exports.Plugin = undefined;
-
-var _jquery = __webpack_require__(0);
-
-var _jquery2 = _interopRequireDefault(_jquery);
-
-var _foundationUtil = __webpack_require__(1);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var Plugin = function () {
-  function Plugin(element, options) {
-    _classCallCheck(this, Plugin);
-
-    this._setup(element, options);
-    var pluginName = getPluginName(this);
-    this.uuid = (0, _foundationUtil.GetYoDigits)(6, pluginName);
-
-    if (!this.$element.attr('data-' + pluginName)) {
-      this.$element.attr('data-' + pluginName, this.uuid);
-    }
-    if (!this.$element.data('zfPlugin')) {
-      this.$element.data('zfPlugin', this);
-    }
-
-    this.$element.trigger('init.zf.' + pluginName);
-  }
-
-  Plugin.prototype.destroy = function destroy() {
-    this._destroy();
-    var pluginName = getPluginName(this);
-    this.$element.removeAttr('data-' + pluginName).removeData('zfPlugin').trigger('destroyed.zf.' + pluginName);
-    for (var prop in this) {
-      this[prop] = null;
-    }
-  };
-
-  return Plugin;
-}();
-
-function hyphenate(str) {
-  return str.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
-}
-
-function getPluginName(obj) {
-  if (typeof obj.constructor.name !== 'undefined') {
-    return hyphenate(obj.constructor.name);
-  } else {
-    return hyphenate(obj.className);
-  }
-}
-
-exports.Plugin = Plugin;
-
-/***/ }),
-/* 5 */
-/***/ (function(module, exports) {
-
-module.exports = function(module) {
-	if(!module.webpackPolyfill) {
-		module.deprecate = function() {};
-		module.paths = [];
-		// module.parent = undefined by default
-		if(!module.children) module.children = [];
-		Object.defineProperty(module, "loaded", {
-			enumerable: true,
-			get: function() {
-				return module.l;
-			}
-		});
-		Object.defineProperty(module, "id", {
-			enumerable: true,
-			get: function() {
-				return module.i;
-			}
-		});
-		module.webpackPolyfill = 1;
-	}
-	return module;
-};
-
-
-/***/ }),
-/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global, module) {var __WEBPACK_AMD_DEFINE_RESULT__;/**
@@ -28110,7 +28018,99 @@ module.exports = function(module) {
   }
 }.call(this));
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2), __webpack_require__(5)(module)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2), __webpack_require__(6)(module)))
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+exports.__esModule = true;
+exports.Plugin = undefined;
+
+var _jquery = __webpack_require__(0);
+
+var _jquery2 = _interopRequireDefault(_jquery);
+
+var _foundationUtil = __webpack_require__(1);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Plugin = function () {
+  function Plugin(element, options) {
+    _classCallCheck(this, Plugin);
+
+    this._setup(element, options);
+    var pluginName = getPluginName(this);
+    this.uuid = (0, _foundationUtil.GetYoDigits)(6, pluginName);
+
+    if (!this.$element.attr('data-' + pluginName)) {
+      this.$element.attr('data-' + pluginName, this.uuid);
+    }
+    if (!this.$element.data('zfPlugin')) {
+      this.$element.data('zfPlugin', this);
+    }
+
+    this.$element.trigger('init.zf.' + pluginName);
+  }
+
+  Plugin.prototype.destroy = function destroy() {
+    this._destroy();
+    var pluginName = getPluginName(this);
+    this.$element.removeAttr('data-' + pluginName).removeData('zfPlugin').trigger('destroyed.zf.' + pluginName);
+    for (var prop in this) {
+      this[prop] = null;
+    }
+  };
+
+  return Plugin;
+}();
+
+function hyphenate(str) {
+  return str.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
+}
+
+function getPluginName(obj) {
+  if (typeof obj.constructor.name !== 'undefined') {
+    return hyphenate(obj.constructor.name);
+  } else {
+    return hyphenate(obj.className);
+  }
+}
+
+exports.Plugin = Plugin;
+
+/***/ }),
+/* 6 */
+/***/ (function(module, exports) {
+
+module.exports = function(module) {
+	if(!module.webpackPolyfill) {
+		module.deprecate = function() {};
+		module.paths = [];
+		// module.parent = undefined by default
+		if(!module.children) module.children = [];
+		Object.defineProperty(module, "loaded", {
+			enumerable: true,
+			get: function() {
+				return module.l;
+			}
+		});
+		Object.defineProperty(module, "id", {
+			enumerable: true,
+			get: function() {
+				return module.i;
+			}
+		});
+		module.webpackPolyfill = 1;
+	}
+	return module;
+};
+
 
 /***/ }),
 /* 7 */
@@ -28123,15 +28123,15 @@ exports.__esModule = true;
 
 var _redux = __webpack_require__(15);
 
-var _lodash = __webpack_require__(6);
+var _lodash = __webpack_require__(4);
 
 var _lodash2 = _interopRequireDefault(_lodash);
 
-var _reduxThunk = __webpack_require__(25);
+var _reduxThunk = __webpack_require__(24);
 
 var _reduxThunk2 = _interopRequireDefault(_reduxThunk);
 
-var _trigger = __webpack_require__(27);
+var _trigger = __webpack_require__(26);
 
 var _trigger2 = _interopRequireDefault(_trigger);
 
@@ -28425,21 +28425,21 @@ exports.__esModule = true;
 
 var _redux = __webpack_require__(15);
 
-var _reduxLogger = __webpack_require__(74);
+var _reduxLogger = __webpack_require__(67);
 
-var _reduxThunk = __webpack_require__(25);
+var _reduxThunk = __webpack_require__(24);
 
 var _reduxThunk2 = _interopRequireDefault(_reduxThunk);
 
-var _ajax = __webpack_require__(26);
+var _ajax = __webpack_require__(25);
 
 var _ajax2 = _interopRequireDefault(_ajax);
 
-var _trigger = __webpack_require__(27);
+var _trigger = __webpack_require__(26);
 
 var _trigger2 = _interopRequireDefault(_trigger);
 
-var _storage = __webpack_require__(28);
+var _storage = __webpack_require__(27);
 
 var _storage2 = _interopRequireDefault(_storage);
 
@@ -28566,9 +28566,9 @@ exports.default = store;
 /* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var Symbol = __webpack_require__(21),
-    getRawTag = __webpack_require__(65),
-    objectToString = __webpack_require__(66);
+var Symbol = __webpack_require__(20),
+    getRawTag = __webpack_require__(58),
+    objectToString = __webpack_require__(59);
 
 /** `Object#toString` result references. */
 var nullTag = '[object Null]',
@@ -28777,7 +28777,7 @@ var _jquery = __webpack_require__(0);
 
 var _jquery2 = _interopRequireDefault(_jquery);
 
-var _foundationUtil = __webpack_require__(38);
+var _foundationUtil = __webpack_require__(30);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -29042,27 +29042,27 @@ exports.Triggers = Triggers;
 exports.__esModule = true;
 exports.compose = exports.applyMiddleware = exports.bindActionCreators = exports.combineReducers = exports.createStore = undefined;
 
-var _createStore = __webpack_require__(19);
+var _createStore = __webpack_require__(18);
 
 var _createStore2 = _interopRequireDefault(_createStore);
 
-var _combineReducers = __webpack_require__(71);
+var _combineReducers = __webpack_require__(64);
 
 var _combineReducers2 = _interopRequireDefault(_combineReducers);
 
-var _bindActionCreators = __webpack_require__(72);
+var _bindActionCreators = __webpack_require__(65);
 
 var _bindActionCreators2 = _interopRequireDefault(_bindActionCreators);
 
-var _applyMiddleware = __webpack_require__(73);
+var _applyMiddleware = __webpack_require__(66);
 
 var _applyMiddleware2 = _interopRequireDefault(_applyMiddleware);
 
-var _compose = __webpack_require__(24);
+var _compose = __webpack_require__(23);
 
 var _compose2 = _interopRequireDefault(_compose);
 
-var _warning = __webpack_require__(23);
+var _warning = __webpack_require__(22);
 
 var _warning2 = _interopRequireDefault(_warning);
 
@@ -29088,7 +29088,7 @@ exports.compose = _compose2['default'];
 /* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var freeGlobal = __webpack_require__(22);
+var freeGlobal = __webpack_require__(21);
 
 /** Detect free variable `self`. */
 var freeSelf = typeof self == 'object' && self && self.Object === Object && self;
@@ -29101,6 +29101,5022 @@ module.exports = root;
 
 /***/ }),
 /* 17 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+(function () {
+  var AjaxMonitor,
+      Bar,
+      DocumentMonitor,
+      ElementMonitor,
+      ElementTracker,
+      EventLagMonitor,
+      Evented,
+      Events,
+      NoTargetError,
+      Pace,
+      RequestIntercept,
+      SOURCE_KEYS,
+      Scaler,
+      SocketRequestTracker,
+      XHRRequestTracker,
+      animation,
+      avgAmplitude,
+      bar,
+      cancelAnimation,
+      cancelAnimationFrame,
+      defaultOptions,
+      _extend,
+      extendNative,
+      getFromDOM,
+      getIntercept,
+      handlePushState,
+      ignoreStack,
+      init,
+      now,
+      options,
+      requestAnimationFrame,
+      result,
+      runAnimation,
+      scalers,
+      shouldIgnoreURL,
+      shouldTrack,
+      source,
+      sources,
+      uniScaler,
+      _WebSocket,
+      _XDomainRequest,
+      _XMLHttpRequest,
+      _i,
+      _intercept,
+      _len,
+      _pushState,
+      _ref,
+      _ref1,
+      _replaceState,
+      __slice = [].slice,
+      __hasProp = {}.hasOwnProperty,
+      __extends = function __extends(child, parent) {
+    for (var key in parent) {
+      if (__hasProp.call(parent, key)) child[key] = parent[key];
+    }function ctor() {
+      this.constructor = child;
+    }ctor.prototype = parent.prototype;child.prototype = new ctor();child.__super__ = parent.prototype;return child;
+  },
+      __indexOf = [].indexOf || function (item) {
+    for (var i = 0, l = this.length; i < l; i++) {
+      if (i in this && this[i] === item) return i;
+    }return -1;
+  };
+
+  defaultOptions = {
+    catchupTime: 100,
+    initialRate: .03,
+    minTime: 250,
+    ghostTime: 100,
+    maxProgressPerFrame: 20,
+    easeFactor: 1.25,
+    startOnPageLoad: true,
+    restartOnPushState: true,
+    restartOnRequestAfter: 500,
+    target: 'body',
+    elements: {
+      checkInterval: 100,
+      selectors: ['body']
+    },
+    eventLag: {
+      minSamples: 10,
+      sampleCount: 3,
+      lagThreshold: 3
+    },
+    ajax: {
+      trackMethods: ['GET'],
+      trackWebSockets: true,
+      ignoreURLs: []
+    }
+  };
+
+  now = function now() {
+    var _ref;
+    return (_ref = typeof performance !== "undefined" && performance !== null ? typeof performance.now === "function" ? performance.now() : void 0 : void 0) != null ? _ref : +new Date();
+  };
+
+  requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
+
+  cancelAnimationFrame = window.cancelAnimationFrame || window.mozCancelAnimationFrame;
+
+  if (requestAnimationFrame == null) {
+    requestAnimationFrame = function requestAnimationFrame(fn) {
+      return setTimeout(fn, 50);
+    };
+    cancelAnimationFrame = function cancelAnimationFrame(id) {
+      return clearTimeout(id);
+    };
+  }
+
+  runAnimation = function runAnimation(fn) {
+    var last, _tick;
+    last = now();
+    _tick = function tick() {
+      var diff;
+      diff = now() - last;
+      if (diff >= 33) {
+        last = now();
+        return fn(diff, function () {
+          return requestAnimationFrame(_tick);
+        });
+      } else {
+        return setTimeout(_tick, 33 - diff);
+      }
+    };
+    return _tick();
+  };
+
+  result = function result() {
+    var args, key, obj;
+    obj = arguments[0], key = arguments[1], args = 3 <= arguments.length ? __slice.call(arguments, 2) : [];
+    if (typeof obj[key] === 'function') {
+      return obj[key].apply(obj, args);
+    } else {
+      return obj[key];
+    }
+  };
+
+  _extend = function extend() {
+    var key, out, source, sources, val, _i, _len;
+    out = arguments[0], sources = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
+    for (_i = 0, _len = sources.length; _i < _len; _i++) {
+      source = sources[_i];
+      if (source) {
+        for (key in source) {
+          if (!__hasProp.call(source, key)) continue;
+          val = source[key];
+          if (out[key] != null && _typeof(out[key]) === 'object' && val != null && (typeof val === 'undefined' ? 'undefined' : _typeof(val)) === 'object') {
+            _extend(out[key], val);
+          } else {
+            out[key] = val;
+          }
+        }
+      }
+    }
+    return out;
+  };
+
+  avgAmplitude = function avgAmplitude(arr) {
+    var count, sum, v, _i, _len;
+    sum = count = 0;
+    for (_i = 0, _len = arr.length; _i < _len; _i++) {
+      v = arr[_i];
+      sum += Math.abs(v);
+      count++;
+    }
+    return sum / count;
+  };
+
+  getFromDOM = function getFromDOM(key, json) {
+    var data, e, el;
+    if (key == null) {
+      key = 'options';
+    }
+    if (json == null) {
+      json = true;
+    }
+    el = document.querySelector("[data-pace-" + key + "]");
+    if (!el) {
+      return;
+    }
+    data = el.getAttribute("data-pace-" + key);
+    if (!json) {
+      return data;
+    }
+    try {
+      return JSON.parse(data);
+    } catch (_error) {
+      e = _error;
+      return typeof console !== "undefined" && console !== null ? console.error("Error parsing inline pace options", e) : void 0;
+    }
+  };
+
+  Evented = function () {
+    function Evented() {}
+
+    Evented.prototype.on = function (event, handler, ctx, once) {
+      var _base;
+      if (once == null) {
+        once = false;
+      }
+      if (this.bindings == null) {
+        this.bindings = {};
+      }
+      if ((_base = this.bindings)[event] == null) {
+        _base[event] = [];
+      }
+      return this.bindings[event].push({
+        handler: handler,
+        ctx: ctx,
+        once: once
+      });
+    };
+
+    Evented.prototype.once = function (event, handler, ctx) {
+      return this.on(event, handler, ctx, true);
+    };
+
+    Evented.prototype.off = function (event, handler) {
+      var i, _ref, _results;
+      if (((_ref = this.bindings) != null ? _ref[event] : void 0) == null) {
+        return;
+      }
+      if (handler == null) {
+        return delete this.bindings[event];
+      } else {
+        i = 0;
+        _results = [];
+        while (i < this.bindings[event].length) {
+          if (this.bindings[event][i].handler === handler) {
+            _results.push(this.bindings[event].splice(i, 1));
+          } else {
+            _results.push(i++);
+          }
+        }
+        return _results;
+      }
+    };
+
+    Evented.prototype.trigger = function () {
+      var args, ctx, event, handler, i, once, _ref, _ref1, _results;
+      event = arguments[0], args = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
+      if ((_ref = this.bindings) != null ? _ref[event] : void 0) {
+        i = 0;
+        _results = [];
+        while (i < this.bindings[event].length) {
+          _ref1 = this.bindings[event][i], handler = _ref1.handler, ctx = _ref1.ctx, once = _ref1.once;
+          handler.apply(ctx != null ? ctx : this, args);
+          if (once) {
+            _results.push(this.bindings[event].splice(i, 1));
+          } else {
+            _results.push(i++);
+          }
+        }
+        return _results;
+      }
+    };
+
+    return Evented;
+  }();
+
+  Pace = window.Pace || {};
+
+  window.Pace = Pace;
+
+  _extend(Pace, Evented.prototype);
+
+  options = Pace.options = _extend({}, defaultOptions, window.paceOptions, getFromDOM());
+
+  _ref = ['ajax', 'document', 'eventLag', 'elements'];
+  for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+    source = _ref[_i];
+    if (options[source] === true) {
+      options[source] = defaultOptions[source];
+    }
+  }
+
+  NoTargetError = function (_super) {
+    __extends(NoTargetError, _super);
+
+    function NoTargetError() {
+      _ref1 = NoTargetError.__super__.constructor.apply(this, arguments);
+      return _ref1;
+    }
+
+    return NoTargetError;
+  }(Error);
+
+  Bar = function () {
+    function Bar() {
+      this.progress = 0;
+    }
+
+    Bar.prototype.getElement = function () {
+      var targetElement;
+      if (this.el == null) {
+        targetElement = document.querySelector(options.target);
+        if (!targetElement) {
+          throw new NoTargetError();
+        }
+        this.el = document.createElement('div');
+        this.el.className = "pace pace-active";
+        document.body.className = document.body.className.replace(/pace-done/g, '');
+        document.body.className += ' pace-running';
+        this.el.innerHTML = '<div class="pace-progress">\n  <div class="pace-progress-inner"></div>\n</div>\n<div class="pace-activity"></div>';
+        if (targetElement.firstChild != null) {
+          targetElement.insertBefore(this.el, targetElement.firstChild);
+        } else {
+          targetElement.appendChild(this.el);
+        }
+      }
+      return this.el;
+    };
+
+    Bar.prototype.finish = function () {
+      var el;
+      el = this.getElement();
+      el.className = el.className.replace('pace-active', '');
+      el.className += ' pace-inactive';
+      document.body.className = document.body.className.replace('pace-running', '');
+      return document.body.className += ' pace-done';
+    };
+
+    Bar.prototype.update = function (prog) {
+      this.progress = prog;
+      return this.render();
+    };
+
+    Bar.prototype.destroy = function () {
+      try {
+        this.getElement().parentNode.removeChild(this.getElement());
+      } catch (_error) {
+        NoTargetError = _error;
+      }
+      return this.el = void 0;
+    };
+
+    Bar.prototype.render = function () {
+      var el, key, progressStr, transform, _j, _len1, _ref2;
+      if (document.querySelector(options.target) == null) {
+        return false;
+      }
+      el = this.getElement();
+      transform = "translate3d(" + this.progress + "%, 0, 0)";
+      _ref2 = ['webkitTransform', 'msTransform', 'transform'];
+      for (_j = 0, _len1 = _ref2.length; _j < _len1; _j++) {
+        key = _ref2[_j];
+        el.children[0].style[key] = transform;
+      }
+      if (!this.lastRenderedProgress || this.lastRenderedProgress | 0 !== this.progress | 0) {
+        el.children[0].setAttribute('data-progress-text', "" + (this.progress | 0) + "%");
+        if (this.progress >= 100) {
+          progressStr = '99';
+        } else {
+          progressStr = this.progress < 10 ? "0" : "";
+          progressStr += this.progress | 0;
+        }
+        el.children[0].setAttribute('data-progress', "" + progressStr);
+      }
+      return this.lastRenderedProgress = this.progress;
+    };
+
+    Bar.prototype.done = function () {
+      return this.progress >= 100;
+    };
+
+    return Bar;
+  }();
+
+  Events = function () {
+    function Events() {
+      this.bindings = {};
+    }
+
+    Events.prototype.trigger = function (name, val) {
+      var binding, _j, _len1, _ref2, _results;
+      if (this.bindings[name] != null) {
+        _ref2 = this.bindings[name];
+        _results = [];
+        for (_j = 0, _len1 = _ref2.length; _j < _len1; _j++) {
+          binding = _ref2[_j];
+          _results.push(binding.call(this, val));
+        }
+        return _results;
+      }
+    };
+
+    Events.prototype.on = function (name, fn) {
+      var _base;
+      if ((_base = this.bindings)[name] == null) {
+        _base[name] = [];
+      }
+      return this.bindings[name].push(fn);
+    };
+
+    return Events;
+  }();
+
+  _XMLHttpRequest = window.XMLHttpRequest;
+
+  _XDomainRequest = window.XDomainRequest;
+
+  _WebSocket = window.WebSocket;
+
+  extendNative = function extendNative(to, from) {
+    var e, key, _results;
+    _results = [];
+    for (key in from.prototype) {
+      try {
+        if (to[key] == null && typeof from[key] !== 'function') {
+          if (typeof Object.defineProperty === 'function') {
+            _results.push(Object.defineProperty(to, key, {
+              get: function get() {
+                return from.prototype[key];
+              },
+              configurable: true,
+              enumerable: true
+            }));
+          } else {
+            _results.push(to[key] = from.prototype[key]);
+          }
+        } else {
+          _results.push(void 0);
+        }
+      } catch (_error) {
+        e = _error;
+      }
+    }
+    return _results;
+  };
+
+  ignoreStack = [];
+
+  Pace.ignore = function () {
+    var args, fn, ret;
+    fn = arguments[0], args = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
+    ignoreStack.unshift('ignore');
+    ret = fn.apply(null, args);
+    ignoreStack.shift();
+    return ret;
+  };
+
+  Pace.track = function () {
+    var args, fn, ret;
+    fn = arguments[0], args = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
+    ignoreStack.unshift('track');
+    ret = fn.apply(null, args);
+    ignoreStack.shift();
+    return ret;
+  };
+
+  shouldTrack = function shouldTrack(method) {
+    var _ref2;
+    if (method == null) {
+      method = 'GET';
+    }
+    if (ignoreStack[0] === 'track') {
+      return 'force';
+    }
+    if (!ignoreStack.length && options.ajax) {
+      if (method === 'socket' && options.ajax.trackWebSockets) {
+        return true;
+      } else if (_ref2 = method.toUpperCase(), __indexOf.call(options.ajax.trackMethods, _ref2) >= 0) {
+        return true;
+      }
+    }
+    return false;
+  };
+
+  RequestIntercept = function (_super) {
+    __extends(RequestIntercept, _super);
+
+    function RequestIntercept() {
+      var monitorXHR,
+          _this = this;
+      RequestIntercept.__super__.constructor.apply(this, arguments);
+      monitorXHR = function monitorXHR(req) {
+        var _open;
+        _open = req.open;
+        return req.open = function (type, url, async) {
+          if (shouldTrack(type)) {
+            _this.trigger('request', {
+              type: type,
+              url: url,
+              request: req
+            });
+          }
+          return _open.apply(req, arguments);
+        };
+      };
+      window.XMLHttpRequest = function (flags) {
+        var req;
+        req = new _XMLHttpRequest(flags);
+        monitorXHR(req);
+        return req;
+      };
+      try {
+        extendNative(window.XMLHttpRequest, _XMLHttpRequest);
+      } catch (_error) {}
+      if (_XDomainRequest != null) {
+        window.XDomainRequest = function () {
+          var req;
+          req = new _XDomainRequest();
+          monitorXHR(req);
+          return req;
+        };
+        try {
+          extendNative(window.XDomainRequest, _XDomainRequest);
+        } catch (_error) {}
+      }
+      if (_WebSocket != null && options.ajax.trackWebSockets) {
+        window.WebSocket = function (url, protocols) {
+          var req;
+          if (protocols != null) {
+            req = new _WebSocket(url, protocols);
+          } else {
+            req = new _WebSocket(url);
+          }
+          if (shouldTrack('socket')) {
+            _this.trigger('request', {
+              type: 'socket',
+              url: url,
+              protocols: protocols,
+              request: req
+            });
+          }
+          return req;
+        };
+        try {
+          extendNative(window.WebSocket, _WebSocket);
+        } catch (_error) {}
+      }
+    }
+
+    return RequestIntercept;
+  }(Events);
+
+  _intercept = null;
+
+  getIntercept = function getIntercept() {
+    if (_intercept == null) {
+      _intercept = new RequestIntercept();
+    }
+    return _intercept;
+  };
+
+  shouldIgnoreURL = function shouldIgnoreURL(url) {
+    var pattern, _j, _len1, _ref2;
+    _ref2 = options.ajax.ignoreURLs;
+    for (_j = 0, _len1 = _ref2.length; _j < _len1; _j++) {
+      pattern = _ref2[_j];
+      if (typeof pattern === 'string') {
+        if (url.indexOf(pattern) !== -1) {
+          return true;
+        }
+      } else {
+        if (pattern.test(url)) {
+          return true;
+        }
+      }
+    }
+    return false;
+  };
+
+  getIntercept().on('request', function (_arg) {
+    var after, args, request, type, url;
+    type = _arg.type, request = _arg.request, url = _arg.url;
+    if (shouldIgnoreURL(url)) {
+      return;
+    }
+    if (!Pace.running && (options.restartOnRequestAfter !== false || shouldTrack(type) === 'force')) {
+      args = arguments;
+      after = options.restartOnRequestAfter || 0;
+      if (typeof after === 'boolean') {
+        after = 0;
+      }
+      return setTimeout(function () {
+        var stillActive, _j, _len1, _ref2, _ref3, _results;
+        if (type === 'socket') {
+          stillActive = request.readyState < 2;
+        } else {
+          stillActive = 0 < (_ref2 = request.readyState) && _ref2 < 4;
+        }
+        if (stillActive) {
+          Pace.restart();
+          _ref3 = Pace.sources;
+          _results = [];
+          for (_j = 0, _len1 = _ref3.length; _j < _len1; _j++) {
+            source = _ref3[_j];
+            if (source instanceof AjaxMonitor) {
+              source.watch.apply(source, args);
+              break;
+            } else {
+              _results.push(void 0);
+            }
+          }
+          return _results;
+        }
+      }, after);
+    }
+  });
+
+  AjaxMonitor = function () {
+    function AjaxMonitor() {
+      var _this = this;
+      this.elements = [];
+      getIntercept().on('request', function () {
+        return _this.watch.apply(_this, arguments);
+      });
+    }
+
+    AjaxMonitor.prototype.watch = function (_arg) {
+      var request, tracker, type, url;
+      type = _arg.type, request = _arg.request, url = _arg.url;
+      if (shouldIgnoreURL(url)) {
+        return;
+      }
+      if (type === 'socket') {
+        tracker = new SocketRequestTracker(request);
+      } else {
+        tracker = new XHRRequestTracker(request);
+      }
+      return this.elements.push(tracker);
+    };
+
+    return AjaxMonitor;
+  }();
+
+  XHRRequestTracker = function () {
+    function XHRRequestTracker(request) {
+      var event,
+          size,
+          _j,
+          _len1,
+          _onreadystatechange,
+          _ref2,
+          _this = this;
+      this.progress = 0;
+      if (window.ProgressEvent != null) {
+        size = null;
+        request.addEventListener('progress', function (evt) {
+          if (evt.lengthComputable) {
+            return _this.progress = 100 * evt.loaded / evt.total;
+          } else {
+            return _this.progress = _this.progress + (100 - _this.progress) / 2;
+          }
+        }, false);
+        _ref2 = ['load', 'abort', 'timeout', 'error'];
+        for (_j = 0, _len1 = _ref2.length; _j < _len1; _j++) {
+          event = _ref2[_j];
+          request.addEventListener(event, function () {
+            return _this.progress = 100;
+          }, false);
+        }
+      } else {
+        _onreadystatechange = request.onreadystatechange;
+        request.onreadystatechange = function () {
+          var _ref3;
+          if ((_ref3 = request.readyState) === 0 || _ref3 === 4) {
+            _this.progress = 100;
+          } else if (request.readyState === 3) {
+            _this.progress = 50;
+          }
+          return typeof _onreadystatechange === "function" ? _onreadystatechange.apply(null, arguments) : void 0;
+        };
+      }
+    }
+
+    return XHRRequestTracker;
+  }();
+
+  SocketRequestTracker = function () {
+    function SocketRequestTracker(request) {
+      var event,
+          _j,
+          _len1,
+          _ref2,
+          _this = this;
+      this.progress = 0;
+      _ref2 = ['error', 'open'];
+      for (_j = 0, _len1 = _ref2.length; _j < _len1; _j++) {
+        event = _ref2[_j];
+        request.addEventListener(event, function () {
+          return _this.progress = 100;
+        }, false);
+      }
+    }
+
+    return SocketRequestTracker;
+  }();
+
+  ElementMonitor = function () {
+    function ElementMonitor(options) {
+      var selector, _j, _len1, _ref2;
+      if (options == null) {
+        options = {};
+      }
+      this.elements = [];
+      if (options.selectors == null) {
+        options.selectors = [];
+      }
+      _ref2 = options.selectors;
+      for (_j = 0, _len1 = _ref2.length; _j < _len1; _j++) {
+        selector = _ref2[_j];
+        this.elements.push(new ElementTracker(selector));
+      }
+    }
+
+    return ElementMonitor;
+  }();
+
+  ElementTracker = function () {
+    function ElementTracker(selector) {
+      this.selector = selector;
+      this.progress = 0;
+      this.check();
+    }
+
+    ElementTracker.prototype.check = function () {
+      var _this = this;
+      if (document.querySelector(this.selector)) {
+        return this.done();
+      } else {
+        return setTimeout(function () {
+          return _this.check();
+        }, options.elements.checkInterval);
+      }
+    };
+
+    ElementTracker.prototype.done = function () {
+      return this.progress = 100;
+    };
+
+    return ElementTracker;
+  }();
+
+  DocumentMonitor = function () {
+    DocumentMonitor.prototype.states = {
+      loading: 0,
+      interactive: 50,
+      complete: 100
+    };
+
+    function DocumentMonitor() {
+      var _onreadystatechange,
+          _ref2,
+          _this = this;
+      this.progress = (_ref2 = this.states[document.readyState]) != null ? _ref2 : 100;
+      _onreadystatechange = document.onreadystatechange;
+      document.onreadystatechange = function () {
+        if (_this.states[document.readyState] != null) {
+          _this.progress = _this.states[document.readyState];
+        }
+        return typeof _onreadystatechange === "function" ? _onreadystatechange.apply(null, arguments) : void 0;
+      };
+    }
+
+    return DocumentMonitor;
+  }();
+
+  EventLagMonitor = function () {
+    function EventLagMonitor() {
+      var avg,
+          interval,
+          last,
+          points,
+          samples,
+          _this = this;
+      this.progress = 0;
+      avg = 0;
+      samples = [];
+      points = 0;
+      last = now();
+      interval = setInterval(function () {
+        var diff;
+        diff = now() - last - 50;
+        last = now();
+        samples.push(diff);
+        if (samples.length > options.eventLag.sampleCount) {
+          samples.shift();
+        }
+        avg = avgAmplitude(samples);
+        if (++points >= options.eventLag.minSamples && avg < options.eventLag.lagThreshold) {
+          _this.progress = 100;
+          return clearInterval(interval);
+        } else {
+          return _this.progress = 100 * (3 / (avg + 3));
+        }
+      }, 50);
+    }
+
+    return EventLagMonitor;
+  }();
+
+  Scaler = function () {
+    function Scaler(source) {
+      this.source = source;
+      this.last = this.sinceLastUpdate = 0;
+      this.rate = options.initialRate;
+      this.catchup = 0;
+      this.progress = this.lastProgress = 0;
+      if (this.source != null) {
+        this.progress = result(this.source, 'progress');
+      }
+    }
+
+    Scaler.prototype.tick = function (frameTime, val) {
+      var scaling;
+      if (val == null) {
+        val = result(this.source, 'progress');
+      }
+      if (val >= 100) {
+        this.done = true;
+      }
+      if (val === this.last) {
+        this.sinceLastUpdate += frameTime;
+      } else {
+        if (this.sinceLastUpdate) {
+          this.rate = (val - this.last) / this.sinceLastUpdate;
+        }
+        this.catchup = (val - this.progress) / options.catchupTime;
+        this.sinceLastUpdate = 0;
+        this.last = val;
+      }
+      if (val > this.progress) {
+        this.progress += this.catchup * frameTime;
+      }
+      scaling = 1 - Math.pow(this.progress / 100, options.easeFactor);
+      this.progress += scaling * this.rate * frameTime;
+      this.progress = Math.min(this.lastProgress + options.maxProgressPerFrame, this.progress);
+      this.progress = Math.max(0, this.progress);
+      this.progress = Math.min(100, this.progress);
+      this.lastProgress = this.progress;
+      return this.progress;
+    };
+
+    return Scaler;
+  }();
+
+  sources = null;
+
+  scalers = null;
+
+  bar = null;
+
+  uniScaler = null;
+
+  animation = null;
+
+  cancelAnimation = null;
+
+  Pace.running = false;
+
+  handlePushState = function handlePushState() {
+    if (options.restartOnPushState) {
+      return Pace.restart();
+    }
+  };
+
+  if (window.history.pushState != null) {
+    _pushState = window.history.pushState;
+    window.history.pushState = function () {
+      handlePushState();
+      return _pushState.apply(window.history, arguments);
+    };
+  }
+
+  if (window.history.replaceState != null) {
+    _replaceState = window.history.replaceState;
+    window.history.replaceState = function () {
+      handlePushState();
+      return _replaceState.apply(window.history, arguments);
+    };
+  }
+
+  SOURCE_KEYS = {
+    ajax: AjaxMonitor,
+    elements: ElementMonitor,
+    document: DocumentMonitor,
+    eventLag: EventLagMonitor
+  };
+
+  (init = function init() {
+    var type, _j, _k, _len1, _len2, _ref2, _ref3, _ref4;
+    Pace.sources = sources = [];
+    _ref2 = ['ajax', 'elements', 'document', 'eventLag'];
+    for (_j = 0, _len1 = _ref2.length; _j < _len1; _j++) {
+      type = _ref2[_j];
+      if (options[type] !== false) {
+        sources.push(new SOURCE_KEYS[type](options[type]));
+      }
+    }
+    _ref4 = (_ref3 = options.extraSources) != null ? _ref3 : [];
+    for (_k = 0, _len2 = _ref4.length; _k < _len2; _k++) {
+      source = _ref4[_k];
+      sources.push(new source(options));
+    }
+    Pace.bar = bar = new Bar();
+    scalers = [];
+    return uniScaler = new Scaler();
+  })();
+
+  Pace.stop = function () {
+    Pace.trigger('stop');
+    Pace.running = false;
+    bar.destroy();
+    cancelAnimation = true;
+    if (animation != null) {
+      if (typeof cancelAnimationFrame === "function") {
+        cancelAnimationFrame(animation);
+      }
+      animation = null;
+    }
+    return init();
+  };
+
+  Pace.restart = function () {
+    Pace.trigger('restart');
+    Pace.stop();
+    return Pace.start();
+  };
+
+  Pace.go = function () {
+    var start;
+    Pace.running = true;
+    bar.render();
+    start = now();
+    cancelAnimation = false;
+    return animation = runAnimation(function (frameTime, enqueueNextFrame) {
+      var avg, count, done, element, elements, i, j, remaining, scaler, scalerList, sum, _j, _k, _len1, _len2, _ref2;
+      remaining = 100 - bar.progress;
+      count = sum = 0;
+      done = true;
+      for (i = _j = 0, _len1 = sources.length; _j < _len1; i = ++_j) {
+        source = sources[i];
+        scalerList = scalers[i] != null ? scalers[i] : scalers[i] = [];
+        elements = (_ref2 = source.elements) != null ? _ref2 : [source];
+        for (j = _k = 0, _len2 = elements.length; _k < _len2; j = ++_k) {
+          element = elements[j];
+          scaler = scalerList[j] != null ? scalerList[j] : scalerList[j] = new Scaler(element);
+          done &= scaler.done;
+          if (scaler.done) {
+            continue;
+          }
+          count++;
+          sum += scaler.tick(frameTime);
+        }
+      }
+      avg = sum / count;
+      bar.update(uniScaler.tick(frameTime, avg));
+      if (bar.done() || done || cancelAnimation) {
+        bar.update(100);
+        Pace.trigger('done');
+        return setTimeout(function () {
+          bar.finish();
+          Pace.running = false;
+          return Pace.trigger('hide');
+        }, Math.max(options.ghostTime, Math.max(options.minTime - (now() - start), 0)));
+      } else {
+        return enqueueNextFrame();
+      }
+    });
+  };
+
+  Pace.start = function (_options) {
+    _extend(options, _options);
+    Pace.running = true;
+    try {
+      bar.render();
+    } catch (_error) {
+      NoTargetError = _error;
+    }
+    if (!document.querySelector('.pace')) {
+      return setTimeout(Pace.start, 50);
+    } else {
+      Pace.trigger('start');
+      return Pace.go();
+    }
+  };
+
+  if (true) {
+    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(17)], __WEBPACK_AMD_DEFINE_RESULT__ = (function () {
+      return Pace;
+    }).apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+  } else if ((typeof exports === 'undefined' ? 'undefined' : _typeof(exports)) === 'object') {
+    module.exports = Pace;
+  } else {
+    if (options.startOnPageLoad) {
+      Pace.start();
+    }
+  }
+}).call(undefined);
+
+/***/ }),
+/* 18 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+exports.__esModule = true;
+exports.ActionTypes = undefined;
+exports['default'] = createStore;
+
+var _isPlainObject = __webpack_require__(19);
+
+var _isPlainObject2 = _interopRequireDefault(_isPlainObject);
+
+var _symbolObservable = __webpack_require__(62);
+
+var _symbolObservable2 = _interopRequireDefault(_symbolObservable);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+/**
+ * These are private action types reserved by Redux.
+ * For any unknown actions, you must return the current state.
+ * If the current state is undefined, you must return the initial state.
+ * Do not reference these action types directly in your code.
+ */
+var ActionTypes = exports.ActionTypes = {
+  INIT: '@@redux/INIT'
+
+  /**
+   * Creates a Redux store that holds the state tree.
+   * The only way to change the data in the store is to call `dispatch()` on it.
+   *
+   * There should only be a single store in your app. To specify how different
+   * parts of the state tree respond to actions, you may combine several reducers
+   * into a single reducer function by using `combineReducers`.
+   *
+   * @param {Function} reducer A function that returns the next state tree, given
+   * the current state tree and the action to handle.
+   *
+   * @param {any} [preloadedState] The initial state. You may optionally specify it
+   * to hydrate the state from the server in universal apps, or to restore a
+   * previously serialized user session.
+   * If you use `combineReducers` to produce the root reducer function, this must be
+   * an object with the same shape as `combineReducers` keys.
+   *
+   * @param {Function} [enhancer] The store enhancer. You may optionally specify it
+   * to enhance the store with third-party capabilities such as middleware,
+   * time travel, persistence, etc. The only store enhancer that ships with Redux
+   * is `applyMiddleware()`.
+   *
+   * @returns {Store} A Redux store that lets you read the state, dispatch actions
+   * and subscribe to changes.
+   */
+};function createStore(reducer, preloadedState, enhancer) {
+  var _ref2;
+
+  if (typeof preloadedState === 'function' && typeof enhancer === 'undefined') {
+    enhancer = preloadedState;
+    preloadedState = undefined;
+  }
+
+  if (typeof enhancer !== 'undefined') {
+    if (typeof enhancer !== 'function') {
+      throw new Error('Expected the enhancer to be a function.');
+    }
+
+    return enhancer(createStore)(reducer, preloadedState);
+  }
+
+  if (typeof reducer !== 'function') {
+    throw new Error('Expected the reducer to be a function.');
+  }
+
+  var currentReducer = reducer;
+  var currentState = preloadedState;
+  var currentListeners = [];
+  var nextListeners = currentListeners;
+  var isDispatching = false;
+
+  function ensureCanMutateNextListeners() {
+    if (nextListeners === currentListeners) {
+      nextListeners = currentListeners.slice();
+    }
+  }
+
+  /**
+   * Reads the state tree managed by the store.
+   *
+   * @returns {any} The current state tree of your application.
+   */
+  function getState() {
+    return currentState;
+  }
+
+  /**
+   * Adds a change listener. It will be called any time an action is dispatched,
+   * and some part of the state tree may potentially have changed. You may then
+   * call `getState()` to read the current state tree inside the callback.
+   *
+   * You may call `dispatch()` from a change listener, with the following
+   * caveats:
+   *
+   * 1. The subscriptions are snapshotted just before every `dispatch()` call.
+   * If you subscribe or unsubscribe while the listeners are being invoked, this
+   * will not have any effect on the `dispatch()` that is currently in progress.
+   * However, the next `dispatch()` call, whether nested or not, will use a more
+   * recent snapshot of the subscription list.
+   *
+   * 2. The listener should not expect to see all state changes, as the state
+   * might have been updated multiple times during a nested `dispatch()` before
+   * the listener is called. It is, however, guaranteed that all subscribers
+   * registered before the `dispatch()` started will be called with the latest
+   * state by the time it exits.
+   *
+   * @param {Function} listener A callback to be invoked on every dispatch.
+   * @returns {Function} A function to remove this change listener.
+   */
+  function subscribe(listener) {
+    if (typeof listener !== 'function') {
+      throw new Error('Expected listener to be a function.');
+    }
+
+    var isSubscribed = true;
+
+    ensureCanMutateNextListeners();
+    nextListeners.push(listener);
+
+    return function unsubscribe() {
+      if (!isSubscribed) {
+        return;
+      }
+
+      isSubscribed = false;
+
+      ensureCanMutateNextListeners();
+      var index = nextListeners.indexOf(listener);
+      nextListeners.splice(index, 1);
+    };
+  }
+
+  /**
+   * Dispatches an action. It is the only way to trigger a state change.
+   *
+   * The `reducer` function, used to create the store, will be called with the
+   * current state tree and the given `action`. Its return value will
+   * be considered the **next** state of the tree, and the change listeners
+   * will be notified.
+   *
+   * The base implementation only supports plain object actions. If you want to
+   * dispatch a Promise, an Observable, a thunk, or something else, you need to
+   * wrap your store creating function into the corresponding middleware. For
+   * example, see the documentation for the `redux-thunk` package. Even the
+   * middleware will eventually dispatch plain object actions using this method.
+   *
+   * @param {Object} action A plain object representing “what changed”. It is
+   * a good idea to keep actions serializable so you can record and replay user
+   * sessions, or use the time travelling `redux-devtools`. An action must have
+   * a `type` property which may not be `undefined`. It is a good idea to use
+   * string constants for action types.
+   *
+   * @returns {Object} For convenience, the same action object you dispatched.
+   *
+   * Note that, if you use a custom middleware, it may wrap `dispatch()` to
+   * return something else (for example, a Promise you can await).
+   */
+  function dispatch(action) {
+    if (!(0, _isPlainObject2['default'])(action)) {
+      throw new Error('Actions must be plain objects. ' + 'Use custom middleware for async actions.');
+    }
+
+    if (typeof action.type === 'undefined') {
+      throw new Error('Actions may not have an undefined "type" property. ' + 'Have you misspelled a constant?');
+    }
+
+    if (isDispatching) {
+      throw new Error('Reducers may not dispatch actions.');
+    }
+
+    try {
+      isDispatching = true;
+      currentState = currentReducer(currentState, action);
+    } finally {
+      isDispatching = false;
+    }
+
+    var listeners = currentListeners = nextListeners;
+    for (var i = 0; i < listeners.length; i++) {
+      var listener = listeners[i];
+      listener();
+    }
+
+    return action;
+  }
+
+  /**
+   * Replaces the reducer currently used by the store to calculate the state.
+   *
+   * You might need this if your app implements code splitting and you want to
+   * load some of the reducers dynamically. You might also need this if you
+   * implement a hot reloading mechanism for Redux.
+   *
+   * @param {Function} nextReducer The reducer for the store to use instead.
+   * @returns {void}
+   */
+  function replaceReducer(nextReducer) {
+    if (typeof nextReducer !== 'function') {
+      throw new Error('Expected the nextReducer to be a function.');
+    }
+
+    currentReducer = nextReducer;
+    dispatch({ type: ActionTypes.INIT });
+  }
+
+  /**
+   * Interoperability point for observable/reactive libraries.
+   * @returns {observable} A minimal observable of state changes.
+   * For more information, see the observable proposal:
+   * https://github.com/tc39/proposal-observable
+   */
+  function observable() {
+    var _ref;
+
+    var outerSubscribe = subscribe;
+    return _ref = {
+      /**
+       * The minimal observable subscription method.
+       * @param {Object} observer Any object that can be used as an observer.
+       * The observer object should have a `next` method.
+       * @returns {subscription} An object with an `unsubscribe` method that can
+       * be used to unsubscribe the observable from the store, and prevent further
+       * emission of values from the observable.
+       */
+      subscribe: function subscribe(observer) {
+        if (typeof observer !== 'object') {
+          throw new TypeError('Expected the observer to be an object.');
+        }
+
+        function observeState() {
+          if (observer.next) {
+            observer.next(getState());
+          }
+        }
+
+        observeState();
+        var unsubscribe = outerSubscribe(observeState);
+        return { unsubscribe: unsubscribe };
+      }
+    }, _ref[_symbolObservable2['default']] = function () {
+      return this;
+    }, _ref;
+  }
+
+  // When a store is created, an "INIT" action is dispatched so that every
+  // reducer returns their initial state. This effectively populates
+  // the initial state tree.
+  dispatch({ type: ActionTypes.INIT });
+
+  return _ref2 = {
+    dispatch: dispatch,
+    subscribe: subscribe,
+    getState: getState,
+    replaceReducer: replaceReducer
+  }, _ref2[_symbolObservable2['default']] = observable, _ref2;
+}
+
+/***/ }),
+/* 19 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var baseGetTag = __webpack_require__(11),
+    getPrototype = __webpack_require__(60),
+    isObjectLike = __webpack_require__(12);
+
+/** `Object#toString` result references. */
+var objectTag = '[object Object]';
+
+/** Used for built-in method references. */
+var funcProto = Function.prototype,
+    objectProto = Object.prototype;
+
+/** Used to resolve the decompiled source of functions. */
+var funcToString = funcProto.toString;
+
+/** Used to check objects for own properties. */
+var hasOwnProperty = objectProto.hasOwnProperty;
+
+/** Used to infer the `Object` constructor. */
+var objectCtorString = funcToString.call(Object);
+
+/**
+ * Checks if `value` is a plain object, that is, an object created by the
+ * `Object` constructor or one with a `[[Prototype]]` of `null`.
+ *
+ * @static
+ * @memberOf _
+ * @since 0.8.0
+ * @category Lang
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is a plain object, else `false`.
+ * @example
+ *
+ * function Foo() {
+ *   this.a = 1;
+ * }
+ *
+ * _.isPlainObject(new Foo);
+ * // => false
+ *
+ * _.isPlainObject([1, 2, 3]);
+ * // => false
+ *
+ * _.isPlainObject({ 'x': 0, 'y': 0 });
+ * // => true
+ *
+ * _.isPlainObject(Object.create(null));
+ * // => true
+ */
+function isPlainObject(value) {
+  if (!isObjectLike(value) || baseGetTag(value) != objectTag) {
+    return false;
+  }
+  var proto = getPrototype(value);
+  if (proto === null) {
+    return true;
+  }
+  var Ctor = hasOwnProperty.call(proto, 'constructor') && proto.constructor;
+  return typeof Ctor == 'function' && Ctor instanceof Ctor &&
+    funcToString.call(Ctor) == objectCtorString;
+}
+
+module.exports = isPlainObject;
+
+
+/***/ }),
+/* 20 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var root = __webpack_require__(16);
+
+/** Built-in value references. */
+var Symbol = root.Symbol;
+
+module.exports = Symbol;
+
+
+/***/ }),
+/* 21 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function(global) {/** Detect free variable `global` from Node.js. */
+var freeGlobal = typeof global == 'object' && global && global.Object === Object && global;
+
+module.exports = freeGlobal;
+
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
+
+/***/ }),
+/* 22 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+exports.__esModule = true;
+exports['default'] = warning;
+/**
+ * Prints a warning in the console if it exists.
+ *
+ * @param {String} message The warning message.
+ * @returns {void}
+ */
+function warning(message) {
+  /* eslint-disable no-console */
+  if (typeof console !== 'undefined' && typeof console.error === 'function') {
+    console.error(message);
+  }
+  /* eslint-enable no-console */
+  try {
+    // This error was thrown as a convenience so that if you enable
+    // "break on all exceptions" in your console,
+    // it would pause the execution at this line.
+    throw new Error(message);
+    /* eslint-disable no-empty */
+  } catch (e) {}
+  /* eslint-enable no-empty */
+}
+
+/***/ }),
+/* 23 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+exports.__esModule = true;
+exports["default"] = compose;
+/**
+ * Composes single-argument functions from right to left. The rightmost
+ * function can take multiple arguments as it provides the signature for
+ * the resulting composite function.
+ *
+ * @param {...Function} funcs The functions to compose.
+ * @returns {Function} A function obtained by composing the argument functions
+ * from right to left. For example, compose(f, g, h) is identical to doing
+ * (...args) => f(g(h(...args))).
+ */
+
+function compose() {
+  for (var _len = arguments.length, funcs = Array(_len), _key = 0; _key < _len; _key++) {
+    funcs[_key] = arguments[_key];
+  }
+
+  if (funcs.length === 0) {
+    return function (arg) {
+      return arg;
+    };
+  }
+
+  if (funcs.length === 1) {
+    return funcs[0];
+  }
+
+  return funcs.reduce(function (a, b) {
+    return function () {
+      return a(b.apply(undefined, arguments));
+    };
+  });
+}
+
+/***/ }),
+/* 24 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+exports.__esModule = true;
+function createThunkMiddleware(extraArgument) {
+  return function (_ref) {
+    var dispatch = _ref.dispatch,
+        getState = _ref.getState;
+    return function (next) {
+      return function (action) {
+        if (typeof action === 'function') {
+          return action(dispatch, getState, extraArgument);
+        }
+
+        return next(action);
+      };
+    };
+  };
+}
+
+var thunk = createThunkMiddleware();
+thunk.withExtraArgument = createThunkMiddleware;
+
+exports['default'] = thunk;
+
+/***/ }),
+/* 25 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+exports.__esModule = true;
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+var _lodash = __webpack_require__(4);
+
+var _lodash2 = _interopRequireDefault(_lodash);
+
+__webpack_require__(68);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var prepareUrl = function prepareUrl(url) {
+    return url += (url.indexOf('?') ? '?' : '&') + '__=' + new Date().getTime();
+};
+var isJsonResponse = function isJsonResponse(response) {
+    var isJson = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+    return isJson || response.headers.get('Content-Type').toLowerCase() === 'application/json';
+};
+
+var paramsToForm = function paramsToForm(data) {
+    var form = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : new FormData();
+    return serialize(form, data);
+};
+
+var serialize = function serialize(form, obj, traditional, scope) {
+    var type = void 0,
+        array = _lodash2.default.isArray(obj),
+        hash = _lodash2.default.isObject(obj);
+
+    _lodash2.default.each(obj, function (value, key) {
+        type = typeof value === 'undefined' ? 'undefined' : _typeof(value);
+        if (scope) {
+            key = traditional ? scope : scope + '[' + (hash || type === 'object' || type === 'array' ? key : '') + ']';
+        }
+
+        if (!scope && array) {
+            form.append(key, value);
+        } else if (type === "array" || !traditional && type === "object") {
+            serialize(form, value, traditional, key);
+        } else {
+            form.append(key, value);
+        }
+    });
+
+    return form;
+};
+
+exports.default = function (url, data, success, error) {
+    var isJson = false;
+    var options = {
+        cache: 'no-cache',
+        credentials: 'same-origin',
+        headers: {
+            'X-REQUESTED-WITH': 'XMLHttpRequest'
+        },
+        method: 'GET',
+        mode: 'same-origin',
+        redirect: 'follow',
+        referrer: 'no-referrer' };
+
+    if (data) {
+        if (data.type) {
+            isJson = data.type.toLowerCase() === 'json';
+        }
+
+        if (data.data) {
+            options['body'] = paramsToForm(data.data);
+        }
+
+        if (data.forceNoCache) {
+            url = prepareUrl(url);
+        }
+
+        options['method'] = data.method ? data.method.toUpperCase() : 'GET';
+        options['mode'] = data.mode ? data.method.toLowerCase() : 'same-origin';
+    }
+
+    return fetch(url, options).then(function (response) {
+        var pr = isJsonResponse(response, isJson) ? response.json() : response.text();
+
+        pr.then(success, error);
+
+        return pr;
+    }, function (response) {
+        return error(response);
+    });
+};
+
+/***/ }),
+/* 26 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+exports.__esModule = true;
+
+var _jquery = __webpack_require__(0);
+
+var _jquery2 = _interopRequireDefault(_jquery);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+exports.default = function (type, data) {
+    var target = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : document;
+
+    (0, _jquery2.default)(target).trigger(type, data);
+};
+
+/***/ }),
+/* 27 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(global) {
+
+exports.__esModule = true;
+
+var _cookie = __webpack_require__(69);
+
+var _cookie2 = _interopRequireDefault(_cookie);
+
+var _local = __webpack_require__(71);
+
+var _local2 = _interopRequireDefault(_local);
+
+var _tracking = __webpack_require__(72);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var ls = 'localStorage' in global && global.localStorage ? new _local2.default() : new _cookie2.default();
+
+ls.on = _tracking.on;
+ls.off = _tracking.off;
+
+exports.default = ls;
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
+
+/***/ }),
+/* 28 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+exports.__esModule = true;
+exports.hideAll = hideAll;
+exports.action = action;
+
+var _StoreApp = __webpack_require__(7);
+
+var _StoreApp2 = _interopRequireDefault(_StoreApp);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var setTtype = {
+    type: 'SET'
+};
+
+function hideAll() {
+    _StoreApp2.default.dispatch(Object.assign({}, setTtype, {
+        data: {
+            frontend: {
+                darkness: false,
+                header: {
+                    active: null
+                }
+            }
+        }
+    }));
+}
+
+function action(action) {
+    _StoreApp2.default.dispatch(Object.assign({}, setTtype, {
+        data: {
+            frontend: {
+                darkness: action !== null,
+                header: {
+                    active: action
+                }
+            }
+        }
+    }));
+}
+
+/***/ }),
+/* 29 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+exports.__esModule = true;
+exports.onImagesLoaded = undefined;
+
+var _jquery = __webpack_require__(0);
+
+var _jquery2 = _interopRequireDefault(_jquery);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function onImagesLoaded(images, callback) {
+  var self = this,
+      unloaded = images.length;
+
+  if (unloaded === 0) {
+    callback();
+  }
+
+  images.each(function () {
+    if (this.complete && this.naturalWidth !== undefined) {
+      singleImageLoaded();
+    } else {
+      var image = new Image();
+
+      var events = "load.zf.images error.zf.images";
+      (0, _jquery2.default)(image).one(events, function me(event) {
+        (0, _jquery2.default)(this).off(events, me);
+        singleImageLoaded();
+      });
+      image.src = (0, _jquery2.default)(this).attr('src');
+    }
+  });
+
+  function singleImageLoaded() {
+    unloaded--;
+    if (unloaded === 0) {
+      callback();
+    }
+  }
+}
+
+exports.onImagesLoaded = onImagesLoaded;
+
+/***/ }),
+/* 30 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+exports.__esModule = true;
+exports.Motion = exports.Move = undefined;
+
+var _jquery = __webpack_require__(0);
+
+var _jquery2 = _interopRequireDefault(_jquery);
+
+var _foundationUtil = __webpack_require__(1);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var initClasses = ['mui-enter', 'mui-leave'];
+var activeClasses = ['mui-enter-active', 'mui-leave-active'];
+
+var Motion = {
+  animateIn: function animateIn(element, animation, cb) {
+    animate(true, element, animation, cb);
+  },
+
+  animateOut: function animateOut(element, animation, cb) {
+    animate(false, element, animation, cb);
+  }
+};
+
+function Move(duration, elem, fn) {
+  var anim,
+      prog,
+      start = null;
+
+
+  if (duration === 0) {
+    fn.apply(elem);
+    elem.trigger('finished.zf.animate', [elem]).triggerHandler('finished.zf.animate', [elem]);
+    return;
+  }
+
+  function move(ts) {
+    if (!start) start = ts;
+
+    prog = ts - start;
+    fn.apply(elem);
+
+    if (prog < duration) {
+      anim = window.requestAnimationFrame(move, elem);
+    } else {
+      window.cancelAnimationFrame(anim);
+      elem.trigger('finished.zf.animate', [elem]).triggerHandler('finished.zf.animate', [elem]);
+    }
+  }
+  anim = window.requestAnimationFrame(move);
+}
+
+function animate(isIn, element, animation, cb) {
+  element = (0, _jquery2.default)(element).eq(0);
+
+  if (!element.length) return;
+
+  var initClass = isIn ? initClasses[0] : initClasses[1];
+  var activeClass = isIn ? activeClasses[0] : activeClasses[1];
+
+  reset();
+
+  element.addClass(animation).css('transition', 'none');
+
+  requestAnimationFrame(function () {
+    element.addClass(initClass);
+    if (isIn) element.show();
+  });
+
+  requestAnimationFrame(function () {
+    element[0].offsetWidth;
+    element.css('transition', '').addClass(activeClass);
+  });
+
+  element.one((0, _foundationUtil.transitionend)(element), finish);
+
+  function finish() {
+    if (!isIn) element.hide();
+    reset();
+    if (cb) cb.apply(element);
+  }
+
+  function reset() {
+    element[0].style.transitionDuration = 0;
+    element.removeClass(initClass + ' ' + activeClass + ' ' + animation);
+  }
+}
+
+exports.Move = Move;
+exports.Motion = Motion;
+
+/***/ }),
+/* 31 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+exports.__esModule = true;
+exports.Accordion = undefined;
+
+var _jquery = __webpack_require__(0);
+
+var _jquery2 = _interopRequireDefault(_jquery);
+
+var _foundationUtil = __webpack_require__(13);
+
+var _foundationUtil2 = __webpack_require__(1);
+
+var _foundation = __webpack_require__(5);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Accordion = function (_Plugin) {
+  _inherits(Accordion, _Plugin);
+
+  function Accordion() {
+    _classCallCheck(this, Accordion);
+
+    return _possibleConstructorReturn(this, _Plugin.apply(this, arguments));
+  }
+
+  Accordion.prototype._setup = function _setup(element, options) {
+    this.$element = element;
+    this.options = _jquery2.default.extend({}, Accordion.defaults, this.$element.data(), options);
+
+    this.className = 'Accordion';
+    this._init();
+
+    _foundationUtil.Keyboard.register('Accordion', {
+      'ENTER': 'toggle',
+      'SPACE': 'toggle',
+      'ARROW_DOWN': 'next',
+      'ARROW_UP': 'previous'
+    });
+  };
+
+  Accordion.prototype._init = function _init() {
+    var _this3 = this;
+
+    this.$element.attr('role', 'tablist');
+    this.$tabs = this.$element.children('[data-accordion-item]');
+
+    this.$tabs.each(function (idx, el) {
+      var $el = (0, _jquery2.default)(el),
+          $content = $el.children('[data-tab-content]'),
+          id = $content[0].id || (0, _foundationUtil2.GetYoDigits)(6, 'accordion'),
+          linkId = el.id || id + '-label';
+
+      $el.find('a:first').attr({
+        'aria-controls': id,
+        'role': 'tab',
+        'id': linkId,
+        'aria-expanded': false,
+        'aria-selected': false
+      });
+
+      $content.attr({ 'role': 'tabpanel', 'aria-labelledby': linkId, 'aria-hidden': true, 'id': id });
+    });
+    var $initActive = this.$element.find('.is-active').children('[data-tab-content]');
+    this.firstTimeInit = true;
+    if ($initActive.length) {
+      this.down($initActive, this.firstTimeInit);
+      this.firstTimeInit = false;
+    }
+
+    this._checkDeepLink = function () {
+      var anchor = window.location.hash;
+
+      if (anchor.length) {
+        var $link = _this3.$element.find('[href$="' + anchor + '"]'),
+            $anchor = (0, _jquery2.default)(anchor);
+
+        if ($link.length && $anchor) {
+          if (!$link.parent('[data-accordion-item]').hasClass('is-active')) {
+            _this3.down($anchor, _this3.firstTimeInit);
+            _this3.firstTimeInit = false;
+          };
+
+          if (_this3.options.deepLinkSmudge) {
+            var _this = _this3;
+            (0, _jquery2.default)(window).load(function () {
+              var offset = _this.$element.offset();
+              (0, _jquery2.default)('html, body').animate({ scrollTop: offset.top }, _this.options.deepLinkSmudgeDelay);
+            });
+          }
+
+          _this3.$element.trigger('deeplink.zf.accordion', [$link, $anchor]);
+        }
+      }
+    };
+
+    if (this.options.deepLink) {
+      this._checkDeepLink();
+    }
+
+    this._events();
+  };
+
+  Accordion.prototype._events = function _events() {
+    var _this = this;
+
+    this.$tabs.each(function () {
+      var $elem = (0, _jquery2.default)(this);
+      var $tabContent = $elem.children('[data-tab-content]');
+      if ($tabContent.length) {
+        $elem.children('a').off('click.zf.accordion keydown.zf.accordion').on('click.zf.accordion', function (e) {
+          e.preventDefault();
+          _this.toggle($tabContent);
+        }).on('keydown.zf.accordion', function (e) {
+          _foundationUtil.Keyboard.handleKey(e, 'Accordion', {
+            toggle: function toggle() {
+              _this.toggle($tabContent);
+            },
+            next: function next() {
+              var $a = $elem.next().find('a').focus();
+              if (!_this.options.multiExpand) {
+                $a.trigger('click.zf.accordion');
+              }
+            },
+            previous: function previous() {
+              var $a = $elem.prev().find('a').focus();
+              if (!_this.options.multiExpand) {
+                $a.trigger('click.zf.accordion');
+              }
+            },
+            handled: function handled() {
+              e.preventDefault();
+              e.stopPropagation();
+            }
+          });
+        });
+      }
+    });
+    if (this.options.deepLink) {
+      (0, _jquery2.default)(window).on('popstate', this._checkDeepLink);
+    }
+  };
+
+  Accordion.prototype.toggle = function toggle($target) {
+    if ($target.closest('[data-accordion]').is('[disabled]')) {
+      console.info('Cannot toggle an accordion that is disabled.');
+      return;
+    }
+    if ($target.parent().hasClass('is-active')) {
+      this.up($target);
+    } else {
+      this.down($target);
+    }
+
+    if (this.options.deepLink) {
+      var anchor = $target.prev('a').attr('href');
+
+      if (this.options.updateHistory) {
+        history.pushState({}, '', anchor);
+      } else {
+        history.replaceState({}, '', anchor);
+      }
+    }
+  };
+
+  Accordion.prototype.down = function down($target, firstTime) {
+    var _this4 = this;
+
+    if ($target.closest('[data-accordion]').is('[disabled]') && !firstTime) {
+      console.info('Cannot call down on an accordion that is disabled.');
+      return;
+    }
+    $target.attr('aria-hidden', false).parent('[data-tab-content]').addBack().parent().addClass('is-active');
+
+    if (!this.options.multiExpand && !firstTime) {
+      var $currentActive = this.$element.children('.is-active').children('[data-tab-content]');
+      if ($currentActive.length) {
+        this.up($currentActive.not($target));
+      }
+    }
+
+    $target.slideDown(this.options.slideSpeed, function () {
+      _this4.$element.trigger('down.zf.accordion', [$target]);
+    });
+
+    (0, _jquery2.default)('#' + $target.attr('aria-labelledby')).attr({
+      'aria-expanded': true,
+      'aria-selected': true
+    });
+  };
+
+  Accordion.prototype.up = function up($target) {
+    if ($target.closest('[data-accordion]').is('[disabled]')) {
+      console.info('Cannot call up on an accordion that is disabled.');
+      return;
+    }
+
+    var $aunts = $target.parent().siblings(),
+        _this = this;
+
+    if (!this.options.allowAllClosed && !$aunts.hasClass('is-active') || !$target.parent().hasClass('is-active')) {
+      return;
+    }
+
+    $target.slideUp(_this.options.slideSpeed, function () {
+      _this.$element.trigger('up.zf.accordion', [$target]);
+    });
+
+    $target.attr('aria-hidden', true).parent().removeClass('is-active');
+
+    (0, _jquery2.default)('#' + $target.attr('aria-labelledby')).attr({
+      'aria-expanded': false,
+      'aria-selected': false
+    });
+  };
+
+  Accordion.prototype._destroy = function _destroy() {
+    this.$element.find('[data-tab-content]').stop(true).slideUp(0).css('display', '');
+    this.$element.find('a').off('.zf.accordion');
+    if (this.options.deepLink) {
+      (0, _jquery2.default)(window).off('popstate', this._checkDeepLink);
+    }
+  };
+
+  return Accordion;
+}(_foundation.Plugin);
+
+Accordion.defaults = {
+  slideSpeed: 250,
+
+  multiExpand: false,
+
+  allowAllClosed: false,
+
+  deepLink: false,
+
+  deepLinkSmudge: false,
+
+  deepLinkSmudgeDelay: 300,
+
+  updateHistory: false
+};
+
+exports.Accordion = Accordion;
+
+/***/ }),
+/* 32 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+exports.__esModule = true;
+exports.Tabs = undefined;
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+var _jquery = __webpack_require__(0);
+
+var _jquery2 = _interopRequireDefault(_jquery);
+
+var _foundationUtil = __webpack_require__(13);
+
+var _foundationUtil2 = __webpack_require__(29);
+
+var _foundation = __webpack_require__(5);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Tabs = function (_Plugin) {
+  _inherits(Tabs, _Plugin);
+
+  function Tabs() {
+    _classCallCheck(this, Tabs);
+
+    return _possibleConstructorReturn(this, _Plugin.apply(this, arguments));
+  }
+
+  Tabs.prototype._setup = function _setup(element, options) {
+    this.$element = element;
+    this.options = _jquery2.default.extend({}, Tabs.defaults, this.$element.data(), options);
+    this.className = 'Tabs';
+
+    this._init();
+    _foundationUtil.Keyboard.register('Tabs', {
+      'ENTER': 'open',
+      'SPACE': 'open',
+      'ARROW_RIGHT': 'next',
+      'ARROW_UP': 'previous',
+      'ARROW_DOWN': 'next',
+      'ARROW_LEFT': 'previous'
+    });
+  };
+
+  Tabs.prototype._init = function _init() {
+    var _this3 = this;
+
+    var _this = this;
+
+    this.$element.attr({ 'role': 'tablist' });
+    this.$tabTitles = this.$element.find('.' + this.options.linkClass);
+    this.$tabContent = (0, _jquery2.default)('[data-tabs-content="' + this.$element[0].id + '"]');
+
+    this.$tabTitles.each(function () {
+      var $elem = (0, _jquery2.default)(this),
+          $link = $elem.find('a'),
+          isActive = $elem.hasClass('' + _this.options.linkActiveClass),
+          hash = $link.attr('data-tabs-target') || $link[0].hash.slice(1),
+          linkId = $link[0].id ? $link[0].id : hash + '-label',
+          $tabContent = (0, _jquery2.default)('#' + hash);
+
+      $elem.attr({ 'role': 'presentation' });
+
+      $link.attr({
+        'role': 'tab',
+        'aria-controls': hash,
+        'aria-selected': isActive,
+        'id': linkId,
+        'tabindex': isActive ? '0' : '-1'
+      });
+
+      $tabContent.attr({
+        'role': 'tabpanel',
+        'aria-labelledby': linkId
+      });
+
+      if (!isActive) {
+        $tabContent.attr('aria-hidden', 'true');
+      }
+
+      if (isActive && _this.options.autoFocus) {
+        (0, _jquery2.default)(window).load(function () {
+          (0, _jquery2.default)('html, body').animate({ scrollTop: $elem.offset().top }, _this.options.deepLinkSmudgeDelay, function () {
+            $link.focus();
+          });
+        });
+      }
+    });
+    if (this.options.matchHeight) {
+      var $images = this.$tabContent.find('img');
+
+      if ($images.length) {
+        (0, _foundationUtil2.onImagesLoaded)($images, this._setHeight.bind(this));
+      } else {
+        this._setHeight();
+      }
+    }
+
+    this._checkDeepLink = function () {
+      var anchor = window.location.hash;
+
+      if (anchor.length) {
+        var $link = _this3.$element.find('[href$="' + anchor + '"]');
+        if ($link.length) {
+          _this3.selectTab((0, _jquery2.default)(anchor), true);
+
+          if (_this3.options.deepLinkSmudge) {
+            var offset = _this3.$element.offset();
+            (0, _jquery2.default)('html, body').animate({ scrollTop: offset.top }, _this3.options.deepLinkSmudgeDelay);
+          }
+
+          _this3.$element.trigger('deeplink.zf.tabs', [$link, (0, _jquery2.default)(anchor)]);
+        }
+      }
+    };
+
+    if (this.options.deepLink) {
+      this._checkDeepLink();
+    }
+
+    this._events();
+  };
+
+  Tabs.prototype._events = function _events() {
+    this._addKeyHandler();
+    this._addClickHandler();
+    this._setHeightMqHandler = null;
+
+    if (this.options.matchHeight) {
+      this._setHeightMqHandler = this._setHeight.bind(this);
+
+      (0, _jquery2.default)(window).on('changed.zf.mediaquery', this._setHeightMqHandler);
+    }
+
+    if (this.options.deepLink) {
+      (0, _jquery2.default)(window).on('popstate', this._checkDeepLink);
+    }
+  };
+
+  Tabs.prototype._addClickHandler = function _addClickHandler() {
+    var _this = this;
+
+    this.$element.off('click.zf.tabs').on('click.zf.tabs', '.' + this.options.linkClass, function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      _this._handleTabChange((0, _jquery2.default)(this));
+    });
+  };
+
+  Tabs.prototype._addKeyHandler = function _addKeyHandler() {
+    var _this = this;
+
+    this.$tabTitles.off('keydown.zf.tabs').on('keydown.zf.tabs', function (e) {
+      if (e.which === 9) return;
+
+      var $element = (0, _jquery2.default)(this),
+          $elements = $element.parent('ul').children('li'),
+          $prevElement,
+          $nextElement;
+
+      $elements.each(function (i) {
+        if ((0, _jquery2.default)(this).is($element)) {
+          if (_this.options.wrapOnKeys) {
+            $prevElement = i === 0 ? $elements.last() : $elements.eq(i - 1);
+            $nextElement = i === $elements.length - 1 ? $elements.first() : $elements.eq(i + 1);
+          } else {
+            $prevElement = $elements.eq(Math.max(0, i - 1));
+            $nextElement = $elements.eq(Math.min(i + 1, $elements.length - 1));
+          }
+          return;
+        }
+      });
+
+      _foundationUtil.Keyboard.handleKey(e, 'Tabs', {
+        open: function open() {
+          $element.find('[role="tab"]').focus();
+          _this._handleTabChange($element);
+        },
+        previous: function previous() {
+          $prevElement.find('[role="tab"]').focus();
+          _this._handleTabChange($prevElement);
+        },
+        next: function next() {
+          $nextElement.find('[role="tab"]').focus();
+          _this._handleTabChange($nextElement);
+        },
+        handled: function handled() {
+          e.stopPropagation();
+          e.preventDefault();
+        }
+      });
+    });
+  };
+
+  Tabs.prototype._handleTabChange = function _handleTabChange($target, historyHandled) {
+    if ($target.hasClass('' + this.options.linkActiveClass)) {
+      if (this.options.activeCollapse) {
+        this._collapseTab($target);
+
+        this.$element.trigger('collapse.zf.tabs', [$target]);
+      }
+      return;
+    }
+
+    var $oldTab = this.$element.find('.' + this.options.linkClass + '.' + this.options.linkActiveClass),
+        $tabLink = $target.find('[role="tab"]'),
+        hash = $tabLink.attr('data-tabs-target') || $tabLink[0].hash.slice(1),
+        $targetContent = this.$tabContent.find('#' + hash);
+
+    this._collapseTab($oldTab);
+
+    this._openTab($target);
+
+    if (this.options.deepLink && !historyHandled) {
+      var anchor = $target.find('a').attr('href');
+
+      if (this.options.updateHistory) {
+        history.pushState({}, '', anchor);
+      } else {
+        history.replaceState({}, '', anchor);
+      }
+    }
+
+    this.$element.trigger('change.zf.tabs', [$target, $targetContent]);
+
+    $targetContent.find("[data-mutate]").trigger("mutateme.zf.trigger");
+  };
+
+  Tabs.prototype._openTab = function _openTab($target) {
+    var $tabLink = $target.find('[role="tab"]'),
+        hash = $tabLink.attr('data-tabs-target') || $tabLink[0].hash.slice(1),
+        $targetContent = this.$tabContent.find('#' + hash);
+
+    $target.addClass('' + this.options.linkActiveClass);
+
+    $tabLink.attr({
+      'aria-selected': 'true',
+      'tabindex': '0'
+    });
+
+    $targetContent.addClass('' + this.options.panelActiveClass).removeAttr('aria-hidden');
+  };
+
+  Tabs.prototype._collapseTab = function _collapseTab($target) {
+    var $target_anchor = $target.removeClass('' + this.options.linkActiveClass).find('[role="tab"]').attr({
+      'aria-selected': 'false',
+      'tabindex': -1
+    });
+
+    (0, _jquery2.default)('#' + $target_anchor.attr('aria-controls')).removeClass('' + this.options.panelActiveClass).attr({ 'aria-hidden': 'true' });
+  };
+
+  Tabs.prototype.selectTab = function selectTab(elem, historyHandled) {
+    var idStr;
+
+    if ((typeof elem === 'undefined' ? 'undefined' : _typeof(elem)) === 'object') {
+      idStr = elem[0].id;
+    } else {
+      idStr = elem;
+    }
+
+    if (idStr.indexOf('#') < 0) {
+      idStr = '#' + idStr;
+    }
+
+    var $target = this.$tabTitles.find('[href$="' + idStr + '"]').parent('.' + this.options.linkClass);
+
+    this._handleTabChange($target, historyHandled);
+  };
+
+  Tabs.prototype._setHeight = function _setHeight() {
+    var max = 0,
+        _this = this;
+
+    this.$tabContent.find('.' + this.options.panelClass).css('height', '').each(function () {
+
+      var panel = (0, _jquery2.default)(this),
+          isActive = panel.hasClass('' + _this.options.panelActiveClass);
+
+      if (!isActive) {
+        panel.css({ 'visibility': 'hidden', 'display': 'block' });
+      }
+
+      var temp = this.getBoundingClientRect().height;
+
+      if (!isActive) {
+        panel.css({
+          'visibility': '',
+          'display': ''
+        });
+      }
+
+      max = temp > max ? temp : max;
+    }).css('height', max + 'px');
+  };
+
+  Tabs.prototype._destroy = function _destroy() {
+    this.$element.find('.' + this.options.linkClass).off('.zf.tabs').hide().end().find('.' + this.options.panelClass).hide();
+
+    if (this.options.matchHeight) {
+      if (this._setHeightMqHandler != null) {
+        (0, _jquery2.default)(window).off('changed.zf.mediaquery', this._setHeightMqHandler);
+      }
+    }
+
+    if (this.options.deepLink) {
+      (0, _jquery2.default)(window).off('popstate', this._checkDeepLink);
+    }
+  };
+
+  return Tabs;
+}(_foundation.Plugin);
+
+Tabs.defaults = {
+  deepLink: false,
+
+  deepLinkSmudge: false,
+
+  deepLinkSmudgeDelay: 300,
+
+  updateHistory: false,
+
+  autoFocus: false,
+
+  wrapOnKeys: true,
+
+  matchHeight: false,
+
+  activeCollapse: false,
+
+  linkClass: 'tabs-title',
+
+  linkActiveClass: 'is-active',
+
+  panelClass: 'tabs-panel',
+
+  panelActiveClass: 'is-active'
+};
+
+exports.Tabs = Tabs;
+
+/***/ }),
+/* 33 */
+/***/ (function(module, exports) {
+
+/**
+ * Checks if `value` is classified as an `Array` object.
+ *
+ * @static
+ * @memberOf _
+ * @since 0.1.0
+ * @category Lang
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is an array, else `false`.
+ * @example
+ *
+ * _.isArray([1, 2, 3]);
+ * // => true
+ *
+ * _.isArray(document.body.children);
+ * // => false
+ *
+ * _.isArray('abc');
+ * // => false
+ *
+ * _.isArray(_.noop);
+ * // => false
+ */
+var isArray = Array.isArray;
+
+module.exports = isArray;
+
+
+/***/ }),
+/* 34 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var defineProperty = __webpack_require__(35);
+
+/**
+ * The base implementation of `assignValue` and `assignMergeValue` without
+ * value checks.
+ *
+ * @private
+ * @param {Object} object The object to modify.
+ * @param {string} key The key of the property to assign.
+ * @param {*} value The value to assign.
+ */
+function baseAssignValue(object, key, value) {
+  if (key == '__proto__' && defineProperty) {
+    defineProperty(object, key, {
+      'configurable': true,
+      'enumerable': true,
+      'value': value,
+      'writable': true
+    });
+  } else {
+    object[key] = value;
+  }
+}
+
+module.exports = baseAssignValue;
+
+
+/***/ }),
+/* 35 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var getNative = __webpack_require__(123);
+
+var defineProperty = (function() {
+  try {
+    var func = getNative(Object, 'defineProperty');
+    func({}, '', {});
+    return func;
+  } catch (e) {}
+}());
+
+module.exports = defineProperty;
+
+
+/***/ }),
+/* 36 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var baseGetTag = __webpack_require__(11),
+    isObject = __webpack_require__(9);
+
+/** `Object#toString` result references. */
+var asyncTag = '[object AsyncFunction]',
+    funcTag = '[object Function]',
+    genTag = '[object GeneratorFunction]',
+    proxyTag = '[object Proxy]';
+
+/**
+ * Checks if `value` is classified as a `Function` object.
+ *
+ * @static
+ * @memberOf _
+ * @since 0.1.0
+ * @category Lang
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is a function, else `false`.
+ * @example
+ *
+ * _.isFunction(_);
+ * // => true
+ *
+ * _.isFunction(/abc/);
+ * // => false
+ */
+function isFunction(value) {
+  if (!isObject(value)) {
+    return false;
+  }
+  // The use of `Object#toString` avoids issues with the `typeof` operator
+  // in Safari 9 which returns 'object' for typed arrays and other constructors.
+  var tag = baseGetTag(value);
+  return tag == funcTag || tag == genTag || tag == asyncTag || tag == proxyTag;
+}
+
+module.exports = isFunction;
+
+
+/***/ }),
+/* 37 */
+/***/ (function(module, exports) {
+
+/**
+ * Performs a
+ * [`SameValueZero`](http://ecma-international.org/ecma-262/7.0/#sec-samevaluezero)
+ * comparison between two values to determine if they are equivalent.
+ *
+ * @static
+ * @memberOf _
+ * @since 4.0.0
+ * @category Lang
+ * @param {*} value The value to compare.
+ * @param {*} other The other value to compare.
+ * @returns {boolean} Returns `true` if the values are equivalent, else `false`.
+ * @example
+ *
+ * var object = { 'a': 1 };
+ * var other = { 'a': 1 };
+ *
+ * _.eq(object, object);
+ * // => true
+ *
+ * _.eq(object, other);
+ * // => false
+ *
+ * _.eq('a', 'a');
+ * // => true
+ *
+ * _.eq('a', Object('a'));
+ * // => false
+ *
+ * _.eq(NaN, NaN);
+ * // => true
+ */
+function eq(value, other) {
+  return value === other || (value !== value && other !== other);
+}
+
+module.exports = eq;
+
+
+/***/ }),
+/* 38 */
+/***/ (function(module, exports) {
+
+/**
+ * This method returns the first argument it receives.
+ *
+ * @static
+ * @since 0.1.0
+ * @memberOf _
+ * @category Util
+ * @param {*} value Any value.
+ * @returns {*} Returns `value`.
+ * @example
+ *
+ * var object = { 'a': 1 };
+ *
+ * console.log(_.identity(object) === object);
+ * // => true
+ */
+function identity(value) {
+  return value;
+}
+
+module.exports = identity;
+
+
+/***/ }),
+/* 39 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var isFunction = __webpack_require__(36),
+    isLength = __webpack_require__(40);
+
+/**
+ * Checks if `value` is array-like. A value is considered array-like if it's
+ * not a function and has a `value.length` that's an integer greater than or
+ * equal to `0` and less than or equal to `Number.MAX_SAFE_INTEGER`.
+ *
+ * @static
+ * @memberOf _
+ * @since 4.0.0
+ * @category Lang
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is array-like, else `false`.
+ * @example
+ *
+ * _.isArrayLike([1, 2, 3]);
+ * // => true
+ *
+ * _.isArrayLike(document.body.children);
+ * // => true
+ *
+ * _.isArrayLike('abc');
+ * // => true
+ *
+ * _.isArrayLike(_.noop);
+ * // => false
+ */
+function isArrayLike(value) {
+  return value != null && isLength(value.length) && !isFunction(value);
+}
+
+module.exports = isArrayLike;
+
+
+/***/ }),
+/* 40 */
+/***/ (function(module, exports) {
+
+/** Used as references for various `Number` constants. */
+var MAX_SAFE_INTEGER = 9007199254740991;
+
+/**
+ * Checks if `value` is a valid array-like length.
+ *
+ * **Note:** This method is loosely based on
+ * [`ToLength`](http://ecma-international.org/ecma-262/7.0/#sec-tolength).
+ *
+ * @static
+ * @memberOf _
+ * @since 4.0.0
+ * @category Lang
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is a valid length, else `false`.
+ * @example
+ *
+ * _.isLength(3);
+ * // => true
+ *
+ * _.isLength(Number.MIN_VALUE);
+ * // => false
+ *
+ * _.isLength(Infinity);
+ * // => false
+ *
+ * _.isLength('3');
+ * // => false
+ */
+function isLength(value) {
+  return typeof value == 'number' &&
+    value > -1 && value % 1 == 0 && value <= MAX_SAFE_INTEGER;
+}
+
+module.exports = isLength;
+
+
+/***/ }),
+/* 41 */
+/***/ (function(module, exports) {
+
+/** Used as references for various `Number` constants. */
+var MAX_SAFE_INTEGER = 9007199254740991;
+
+/** Used to detect unsigned integer values. */
+var reIsUint = /^(?:0|[1-9]\d*)$/;
+
+/**
+ * Checks if `value` is a valid array-like index.
+ *
+ * @private
+ * @param {*} value The value to check.
+ * @param {number} [length=MAX_SAFE_INTEGER] The upper bounds of a valid index.
+ * @returns {boolean} Returns `true` if `value` is a valid index, else `false`.
+ */
+function isIndex(value, length) {
+  length = length == null ? MAX_SAFE_INTEGER : length;
+  return !!length &&
+    (typeof value == 'number' || reIsUint.test(value)) &&
+    (value > -1 && value % 1 == 0 && value < length);
+}
+
+module.exports = isIndex;
+
+
+/***/ }),
+/* 42 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function($) {
+
+__webpack_require__(43);
+
+var _foundation_events = __webpack_require__(106);
+
+var _foundation_events2 = _interopRequireDefault(_foundation_events);
+
+var _DepartmentMenu = __webpack_require__(107);
+
+var _DepartmentMenu2 = _interopRequireDefault(_DepartmentMenu);
+
+var _DottedText = __webpack_require__(108);
+
+var _DottedText2 = _interopRequireDefault(_DottedText);
+
+var _CategoryViewType = __webpack_require__(109);
+
+var _CategoryViewType2 = _interopRequireDefault(_CategoryViewType);
+
+var _LazyImageLoad = __webpack_require__(110);
+
+var _LazyImageLoad2 = _interopRequireDefault(_LazyImageLoad);
+
+var _CatalogFilter = __webpack_require__(112);
+
+var _CatalogFilter2 = _interopRequireDefault(_CatalogFilter);
+
+var _FilterPriceSlider = __webpack_require__(116);
+
+var _FilterPriceSlider2 = _interopRequireDefault(_FilterPriceSlider);
+
+var _SearchSuggestion = __webpack_require__(117);
+
+var _SearchSuggestion2 = _interopRequireDefault(_SearchSuggestion);
+
+var _Loader = __webpack_require__(118);
+
+var _Loader2 = _interopRequireDefault(_Loader);
+
+var _isTouch = __webpack_require__(152);
+
+var _isTouch2 = _interopRequireDefault(_isTouch);
+
+var _isMedia = __webpack_require__(153);
+
+var _isMedia2 = _interopRequireDefault(_isMedia);
+
+var _documentReady = __webpack_require__(154);
+
+var _documentReady2 = _interopRequireDefault(_documentReady);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+(function () {
+    (0, _documentReady2.default)(function () {
+        new _SearchSuggestion2.default();
+        new _LazyImageLoad2.default();
+        new _CategoryViewType2.default();
+        new _DepartmentMenu2.default();
+        new _DottedText2.default('.must-show-less');
+        new _CatalogFilter2.default();
+
+        window['FilterPriceSlider'] = _FilterPriceSlider2.default;
+        window['loader'] = new _Loader2.default();
+
+        (0, _isMedia2.default)('medium', '(max-width: 1023px)');
+
+        Waves.attach('.waves');
+        Waves.init();
+
+        var $offCanvasLeft = $('#offCanvasLeft');
+        var $offCanvasRight = $('#offCanvasRight');
+
+        $(document).on('swipe', function (e, Dx, Dy, angle) {
+            if (e.target.closest('#main_wrapper') && !e.target.closest('.disable-global-swipe, .slider-data, .disable-global-swipe-horizontal')) {
+                if ((0, _isMedia2.default)('medium') && (0, _isTouch2.default)()) {
+                    if (angle < 10) {
+                        if (Dx === 1 && Dy === 0) {
+                            if ($offCanvasRight.hasClass('is-open')) {
+                                $offCanvasRight.foundation('close');
+                            } else {
+                                $offCanvasLeft.foundation('open', e);
+                            }
+                        } else if (Dx === -1 && Dy === 0) {
+                            if ($offCanvasLeft.hasClass('is-open')) {
+                                $offCanvasLeft.foundation('close');
+                            } else {
+                                $offCanvasRight.foundation('open', e);
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        $(document).on('click', '.show_more', function (e) {
+            var $this = $(this);
+            var $target = $($this.data('target'));
+
+            if (!$target.hasClass('full')) {
+                $target.addClass('full');
+
+                $this.html($this.data('text-less'));
+            } else {
+                $target.removeClass('full');
+
+                $this.html($this.data('text-more'));
+            }
+        });
+
+        loader.detach(function () {
+            $('.off-canvas').removeClass('hide');
+
+            $(document).foundation();
+
+            while (window.app.afterReady.length) {
+                window.app.afterReady.pop()();
+            }
+
+            (0, _foundation_events2.default)();
+        });
+
+        setTimeout(function () {
+            WebFont.load({
+                google: {
+                    families: ['Lato:300i,400,700']
+                }
+            });
+
+            $(document).trigger('component.cart.check');
+
+            setTimeout(function () {
+                WebFont.load({
+                    google: {
+                        families: ['Lato:300,300i,400,400i,700,700i,800,900']
+                    }
+                });
+            }, 2000);
+        }, 100);
+    });
+})();
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
+
+/***/ }),
+/* 43 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(__webpack_provided_window_dot_jQuery) {
+
+__webpack_require__(44);
+
+var _jquery = __webpack_require__(0);
+
+var _jquery2 = _interopRequireDefault(_jquery);
+
+__webpack_require__(45);
+
+__webpack_require__(46);
+
+__webpack_require__(47);
+
+var _webfontloader = __webpack_require__(48);
+
+var _webfontloader2 = _interopRequireDefault(_webfontloader);
+
+var _Waves = __webpack_require__(49);
+
+var _Waves2 = _interopRequireDefault(_Waves);
+
+var _whatInput = __webpack_require__(50);
+
+var _whatInput2 = _interopRequireDefault(_whatInput);
+
+var _noUiSlider = __webpack_require__(51);
+
+var _noUiSlider2 = _interopRequireDefault(_noUiSlider);
+
+__webpack_require__(52);
+
+__webpack_require__(17);
+
+__webpack_require__(53);
+
+__webpack_require__(54);
+
+__webpack_require__(76);
+
+__webpack_require__(77);
+
+__webpack_require__(78);
+
+__webpack_require__(79);
+
+__webpack_require__(80);
+
+__webpack_require__(84);
+
+__webpack_require__(85);
+
+__webpack_require__(86);
+
+__webpack_require__(94);
+
+__webpack_require__(95);
+
+__webpack_require__(96);
+
+__webpack_require__(97);
+
+__webpack_require__(98);
+
+__webpack_require__(105);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+(function () {
+    var _arguments = arguments;
+
+    window['$'] = _jquery2.default;
+    __webpack_provided_window_dot_jQuery = _jquery2.default;
+    window['whatInput'] = _whatInput2.default;
+    window['Waves'] = _Waves2.default;
+    window['WebFont'] = _webfontloader2.default;
+    window['noUiSlider'] = _noUiSlider2.default;
+    window['d'] = function (arg) {
+        var _console;
+
+        (_console = console).log.apply(_console, _arguments);
+    };
+})();
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
+
+/***/ }),
+/* 44 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+;(function (window) {
+  var hadGlobal = 'Modernizr' in window;
+  var oldGlobal = window.Modernizr;
+
+
+  ;(function (window, document, undefined) {
+    var tests = [];
+
+    var ModernizrProto = {
+      _version: '3.5.0',
+
+      _config: {
+        'classPrefix': '',
+        'enableClasses': true,
+        'enableJSClass': true,
+        'usePrefixes': true
+      },
+
+      _q: [],
+
+      on: function on(test, cb) {
+        var self = this;
+        setTimeout(function () {
+          cb(self[test]);
+        }, 0);
+      },
+
+      addTest: function addTest(name, fn, options) {
+        tests.push({ name: name, fn: fn, options: options });
+      },
+
+      addAsyncTest: function addAsyncTest(fn) {
+        tests.push({ name: null, fn: fn });
+      }
+    };
+
+    var Modernizr = function Modernizr() {};
+    Modernizr.prototype = ModernizrProto;
+
+    Modernizr = new Modernizr();
+
+    var classes = [];
+
+    function is(obj, type) {
+      return (typeof obj === 'undefined' ? 'undefined' : _typeof(obj)) === type;
+    }
+    ;
+
+    function testRunner() {
+      var featureNames;
+      var feature;
+      var aliasIdx;
+      var result;
+      var nameIdx;
+      var featureName;
+      var featureNameSplit;
+
+      for (var featureIdx in tests) {
+        if (tests.hasOwnProperty(featureIdx)) {
+          featureNames = [];
+          feature = tests[featureIdx];
+
+          if (feature.name) {
+            featureNames.push(feature.name.toLowerCase());
+
+            if (feature.options && feature.options.aliases && feature.options.aliases.length) {
+              for (aliasIdx = 0; aliasIdx < feature.options.aliases.length; aliasIdx++) {
+                featureNames.push(feature.options.aliases[aliasIdx].toLowerCase());
+              }
+            }
+          }
+
+          result = is(feature.fn, 'function') ? feature.fn() : feature.fn;
+
+          for (nameIdx = 0; nameIdx < featureNames.length; nameIdx++) {
+            featureName = featureNames[nameIdx];
+
+            featureNameSplit = featureName.split('.');
+
+            if (featureNameSplit.length === 1) {
+              Modernizr[featureNameSplit[0]] = result;
+            } else {
+              if (Modernizr[featureNameSplit[0]] && !(Modernizr[featureNameSplit[0]] instanceof Boolean)) {
+                Modernizr[featureNameSplit[0]] = new Boolean(Modernizr[featureNameSplit[0]]);
+              }
+
+              Modernizr[featureNameSplit[0]][featureNameSplit[1]] = result;
+            }
+
+            classes.push((result ? '' : 'no-') + featureNameSplit.join('-'));
+          }
+        }
+      }
+    }
+    ;
+
+    var docElement = document.documentElement;
+
+    var isSVG = docElement.nodeName.toLowerCase() === 'svg';
+
+    function setClasses(classes) {
+      var className = docElement.className;
+      var classPrefix = Modernizr._config.classPrefix || '';
+
+      if (isSVG) {
+        className = className.baseVal;
+      }
+
+      if (Modernizr._config.enableJSClass) {
+        var reJS = new RegExp('(^|\\s)' + classPrefix + 'no-js(\\s|$)');
+        className = className.replace(reJS, '$1' + classPrefix + 'js$2');
+      }
+
+      if (Modernizr._config.enableClasses) {
+        className += ' ' + classPrefix + classes.join(' ' + classPrefix);
+        if (isSVG) {
+          docElement.className.baseVal = className;
+        } else {
+          docElement.className = className;
+        }
+      }
+    }
+
+    ;
+
+    var omPrefixes = 'Moz O ms Webkit';
+
+    var cssomPrefixes = ModernizrProto._config.usePrefixes ? omPrefixes.split(' ') : [];
+    ModernizrProto._cssomPrefixes = cssomPrefixes;
+
+    function contains(str, substr) {
+      return !!~('' + str).indexOf(substr);
+    }
+
+    ;
+
+    function createElement() {
+      if (typeof document.createElement !== 'function') {
+        return document.createElement(arguments[0]);
+      } else if (isSVG) {
+        return document.createElementNS.call(document, 'http://www.w3.org/2000/svg', arguments[0]);
+      } else {
+        return document.createElement.apply(document, arguments);
+      }
+    }
+
+    ;
+
+    var modElem = {
+      elem: createElement('modernizr')
+    };
+
+    Modernizr._q.push(function () {
+      delete modElem.elem;
+    });
+
+    var mStyle = {
+      style: modElem.elem.style
+    };
+
+    Modernizr._q.unshift(function () {
+      delete mStyle.style;
+    });
+
+    function getBody() {
+      var body = document.body;
+
+      if (!body) {
+        body = createElement(isSVG ? 'svg' : 'body');
+        body.fake = true;
+      }
+
+      return body;
+    }
+
+    ;
+
+    function injectElementWithStyles(rule, callback, nodes, testnames) {
+      var mod = 'modernizr';
+      var style;
+      var ret;
+      var node;
+      var docOverflow;
+      var div = createElement('div');
+      var body = getBody();
+
+      if (parseInt(nodes, 10)) {
+        while (nodes--) {
+          node = createElement('div');
+          node.id = testnames ? testnames[nodes] : mod + (nodes + 1);
+          div.appendChild(node);
+        }
+      }
+
+      style = createElement('style');
+      style.type = 'text/css';
+      style.id = 's' + mod;
+
+      (!body.fake ? div : body).appendChild(style);
+      body.appendChild(div);
+
+      if (style.styleSheet) {
+        style.styleSheet.cssText = rule;
+      } else {
+        style.appendChild(document.createTextNode(rule));
+      }
+      div.id = mod;
+
+      if (body.fake) {
+        body.style.background = '';
+
+        body.style.overflow = 'hidden';
+        docOverflow = docElement.style.overflow;
+        docElement.style.overflow = 'hidden';
+        docElement.appendChild(body);
+      }
+
+      ret = callback(div, rule);
+
+      if (body.fake) {
+        body.parentNode.removeChild(body);
+        docElement.style.overflow = docOverflow;
+
+        docElement.offsetHeight;
+      } else {
+        div.parentNode.removeChild(div);
+      }
+
+      return !!ret;
+    }
+
+    ;
+
+    function domToCSS(name) {
+      return name.replace(/([A-Z])/g, function (str, m1) {
+        return '-' + m1.toLowerCase();
+      }).replace(/^ms-/, '-ms-');
+    }
+    ;
+
+    function computedStyle(elem, pseudo, prop) {
+      var result;
+
+      if ('getComputedStyle' in window) {
+        result = getComputedStyle.call(window, elem, pseudo);
+        var console = window.console;
+
+        if (result !== null) {
+          if (prop) {
+            result = result.getPropertyValue(prop);
+          }
+        } else {
+          if (console) {
+            var method = console.error ? 'error' : 'log';
+            console[method].call(console, 'getComputedStyle returning null, its possible modernizr test results are inaccurate');
+          }
+        }
+      } else {
+        result = !pseudo && elem.currentStyle && elem.currentStyle[prop];
+      }
+
+      return result;
+    }
+
+    ;
+
+    function nativeTestProps(props, value) {
+      var i = props.length;
+
+      if ('CSS' in window && 'supports' in window.CSS) {
+        while (i--) {
+          if (window.CSS.supports(domToCSS(props[i]), value)) {
+            return true;
+          }
+        }
+        return false;
+      } else if ('CSSSupportsRule' in window) {
+          var conditionText = [];
+          while (i--) {
+            conditionText.push('(' + domToCSS(props[i]) + ':' + value + ')');
+          }
+          conditionText = conditionText.join(' or ');
+          return injectElementWithStyles('@supports (' + conditionText + ') { #modernizr { position: absolute; } }', function (node) {
+            return computedStyle(node, null, 'position') == 'absolute';
+          });
+        }
+      return undefined;
+    }
+    ;
+
+    function cssToDOM(name) {
+      return name.replace(/([a-z])-([a-z])/g, function (str, m1, m2) {
+        return m1 + m2.toUpperCase();
+      }).replace(/^-/, '');
+    }
+    ;
+
+    function testProps(props, prefixed, value, skipValueTest) {
+      skipValueTest = is(skipValueTest, 'undefined') ? false : skipValueTest;
+
+      if (!is(value, 'undefined')) {
+        var result = nativeTestProps(props, value);
+        if (!is(result, 'undefined')) {
+          return result;
+        }
+      }
+
+      var afterInit, i, propsLength, prop, before;
+
+      var elems = ['modernizr', 'tspan', 'samp'];
+      while (!mStyle.style && elems.length) {
+        afterInit = true;
+        mStyle.modElem = createElement(elems.shift());
+        mStyle.style = mStyle.modElem.style;
+      }
+
+      function cleanElems() {
+        if (afterInit) {
+          delete mStyle.style;
+          delete mStyle.modElem;
+        }
+      }
+
+      propsLength = props.length;
+      for (i = 0; i < propsLength; i++) {
+        prop = props[i];
+        before = mStyle.style[prop];
+
+        if (contains(prop, '-')) {
+          prop = cssToDOM(prop);
+        }
+
+        if (mStyle.style[prop] !== undefined) {
+          if (!skipValueTest && !is(value, 'undefined')) {
+            try {
+              mStyle.style[prop] = value;
+            } catch (e) {}
+
+            if (mStyle.style[prop] != before) {
+              cleanElems();
+              return prefixed == 'pfx' ? prop : true;
+            }
+          } else {
+              cleanElems();
+              return prefixed == 'pfx' ? prop : true;
+            }
+        }
+      }
+      cleanElems();
+      return false;
+    }
+
+    ;
+
+    var domPrefixes = ModernizrProto._config.usePrefixes ? omPrefixes.toLowerCase().split(' ') : [];
+    ModernizrProto._domPrefixes = domPrefixes;
+
+    function fnBind(fn, that) {
+      return function () {
+        return fn.apply(that, arguments);
+      };
+    }
+
+    ;
+
+    function testDOMProps(props, obj, elem) {
+      var item;
+
+      for (var i in props) {
+        if (props[i] in obj) {
+          if (elem === false) {
+            return props[i];
+          }
+
+          item = obj[props[i]];
+
+          if (is(item, 'function')) {
+            return fnBind(item, elem || obj);
+          }
+
+          return item;
+        }
+      }
+      return false;
+    }
+
+    ;
+
+    function testPropsAll(prop, prefixed, elem, value, skipValueTest) {
+
+      var ucProp = prop.charAt(0).toUpperCase() + prop.slice(1),
+          props = (prop + ' ' + cssomPrefixes.join(ucProp + ' ') + ucProp).split(' ');
+
+      if (is(prefixed, 'string') || is(prefixed, 'undefined')) {
+        return testProps(props, prefixed, value, skipValueTest);
+      } else {
+        props = (prop + ' ' + domPrefixes.join(ucProp + ' ') + ucProp).split(' ');
+        return testDOMProps(props, prefixed, elem);
+      }
+    }
+
+    ModernizrProto.testAllProps = testPropsAll;
+
+    function testAllProps(prop, value, skipValueTest) {
+      return testPropsAll(prop, undefined, undefined, value, skipValueTest);
+    }
+    ModernizrProto.testAllProps = testAllProps;
+
+    Modernizr.addTest('flexbox', testAllProps('flexBasis', '1px', true));
+
+    Modernizr.addTest('svg', !!document.createElementNS && !!document.createElementNS('http://www.w3.org/2000/svg', 'svg').createSVGRect);
+
+    var prefixes = ModernizrProto._config.usePrefixes ? ' -webkit- -moz- -o- -ms- '.split(' ') : ['', ''];
+
+    ModernizrProto._prefixes = prefixes;
+
+    var testStyles = ModernizrProto.testStyles = injectElementWithStyles;
+
+    Modernizr.addTest('touchevents', function () {
+      var bool;
+      if ('ontouchstart' in window || window.DocumentTouch && document instanceof DocumentTouch) {
+        bool = true;
+      } else {
+        var query = ['@media (', prefixes.join('touch-enabled),('), 'heartz', ')', '{#modernizr{top:9px;position:absolute}}'].join('');
+        testStyles(query, function (node) {
+          bool = node.offsetTop === 9;
+        });
+      }
+      return bool;
+    });
+
+    testRunner();
+
+    setClasses(classes);
+
+    delete ModernizrProto.addTest;
+    delete ModernizrProto.addAsyncTest;
+
+    for (var i = 0; i < Modernizr._q.length; i++) {
+      Modernizr._q[i]();
+    }
+
+    window.Modernizr = Modernizr;
+
+    ;
+  })(window, document);
+  module.exports = window.Modernizr;
+  if (hadGlobal) {
+    window.Modernizr = oldGlobal;
+  } else {
+    delete window.Modernizr;
+  }
+})(window);
+
+/***/ }),
+/* 45 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+(function (factory) {
+	if (true) {
+		!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(0)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
+				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+	} else if ((typeof module === 'undefined' ? 'undefined' : _typeof(module)) === 'object' && module.exports) {
+		module.exports = function (root, jQuery) {
+			if (typeof jQuery === 'undefined') {
+				if (typeof window !== 'undefined') {
+					jQuery = require('jquery');
+				} else {
+					jQuery = require('jquery')(root);
+				}
+			}
+			factory(jQuery);
+			return jQuery;
+		};
+	} else {
+		factory(jQuery);
+	}
+})(function ($) {
+	'use strict';
+
+	var rCRLF = /\r?\n/g;
+
+	var feature = {};
+
+	feature.fileapi = $('<input type="file">').get(0).files !== undefined;
+	feature.formdata = typeof window.FormData !== 'undefined';
+
+	var hasProp = !!$.fn.prop;
+
+	$.fn.attr2 = function () {
+		if (!hasProp) {
+			return this.attr.apply(this, arguments);
+		}
+
+		var val = this.prop.apply(this, arguments);
+
+		if (val && val.jquery || typeof val === 'string') {
+			return val;
+		}
+
+		return this.attr.apply(this, arguments);
+	};
+
+	$.fn.ajaxSubmit = function (options, data, dataType, onSuccess) {
+		if (!this.length) {
+			log('ajaxSubmit: skipping submit process - no element selected');
+
+			return this;
+		}
+
+		var method,
+		    action,
+		    url,
+		    $form = this;
+
+		if (typeof options === 'function') {
+			options = { success: options };
+		} else if (typeof options === 'string' || options === false && arguments.length > 0) {
+			options = {
+				'url': options,
+				'data': data,
+				'dataType': dataType
+			};
+
+			if (typeof onSuccess === 'function') {
+				options.success = onSuccess;
+			}
+		} else if (typeof options === 'undefined') {
+			options = {};
+		}
+
+		method = options.method || options.type || this.attr2('method');
+		action = options.url || this.attr2('action');
+
+		url = typeof action === 'string' ? $.trim(action) : '';
+		url = url || window.location.href || '';
+		if (url) {
+			url = (url.match(/^([^#]+)/) || [])[1];
+		}
+
+		options = $.extend(true, {
+			url: url,
+			success: $.ajaxSettings.success,
+			type: method || $.ajaxSettings.type,
+			iframeSrc: /^https/i.test(window.location.href || '') ? 'javascript:false' : 'about:blank' }, options);
+
+		var veto = {};
+
+		this.trigger('form-pre-serialize', [this, options, veto]);
+
+		if (veto.veto) {
+			log('ajaxSubmit: submit vetoed via form-pre-serialize trigger');
+
+			return this;
+		}
+
+		if (options.beforeSerialize && options.beforeSerialize(this, options) === false) {
+			log('ajaxSubmit: submit aborted via beforeSerialize callback');
+
+			return this;
+		}
+
+		var traditional = options.traditional;
+
+		if (typeof traditional === 'undefined') {
+			traditional = $.ajaxSettings.traditional;
+		}
+
+		var elements = [];
+		var qx,
+		    a = this.formToArray(options.semantic, elements, options.filtering);
+
+		if (options.data) {
+			var optionsData = $.isFunction(options.data) ? options.data(a) : options.data;
+
+			options.extraData = optionsData;
+			qx = $.param(optionsData, traditional);
+		}
+
+		if (options.beforeSubmit && options.beforeSubmit(a, this, options) === false) {
+			log('ajaxSubmit: submit aborted via beforeSubmit callback');
+
+			return this;
+		}
+
+		this.trigger('form-submit-validate', [a, this, options, veto]);
+		if (veto.veto) {
+			log('ajaxSubmit: submit vetoed via form-submit-validate trigger');
+
+			return this;
+		}
+
+		var q = $.param(a, traditional);
+
+		if (qx) {
+			q = q ? q + '&' + qx : qx;
+		}
+
+		if (options.type.toUpperCase() === 'GET') {
+			options.url += (options.url.indexOf('?') >= 0 ? '&' : '?') + q;
+			options.data = null;
+		} else {
+			options.data = q;
+		}
+
+		var callbacks = [];
+
+		if (options.resetForm) {
+			callbacks.push(function () {
+				$form.resetForm();
+			});
+		}
+
+		if (options.clearForm) {
+			callbacks.push(function () {
+				$form.clearForm(options.includeHidden);
+			});
+		}
+
+		if (!options.dataType && options.target) {
+			var oldSuccess = options.success || function () {};
+
+			callbacks.push(function (data, textStatus, jqXHR) {
+				var successArguments = arguments,
+				    fn = options.replaceTarget ? 'replaceWith' : 'html';
+
+				$(options.target)[fn](data).each(function () {
+					oldSuccess.apply(this, successArguments);
+				});
+			});
+		} else if (options.success) {
+			if ($.isArray(options.success)) {
+				$.merge(callbacks, options.success);
+			} else {
+				callbacks.push(options.success);
+			}
+		}
+
+		options.success = function (data, status, xhr) {
+			var context = options.context || this;
+
+			for (var i = 0, max = callbacks.length; i < max; i++) {
+				callbacks[i].apply(context, [data, status, xhr || $form, $form]);
+			}
+		};
+
+		if (options.error) {
+			var oldError = options.error;
+
+			options.error = function (xhr, status, error) {
+				var context = options.context || this;
+
+				oldError.apply(context, [xhr, status, error, $form]);
+			};
+		}
+
+		if (options.complete) {
+			var oldComplete = options.complete;
+
+			options.complete = function (xhr, status) {
+				var context = options.context || this;
+
+				oldComplete.apply(context, [xhr, status, $form]);
+			};
+		}
+
+		var fileInputs = $('input[type=file]:enabled', this).filter(function () {
+			return $(this).val() !== '';
+		});
+		var hasFileInputs = fileInputs.length > 0;
+		var mp = 'multipart/form-data';
+		var multipart = $form.attr('enctype') === mp || $form.attr('encoding') === mp;
+		var fileAPI = feature.fileapi && feature.formdata;
+
+		log('fileAPI :' + fileAPI);
+
+		var shouldUseFrame = (hasFileInputs || multipart) && !fileAPI;
+		var jqxhr;
+
+		if (options.iframe !== false && (options.iframe || shouldUseFrame)) {
+			if (options.closeKeepAlive) {
+				$.get(options.closeKeepAlive, function () {
+					jqxhr = fileUploadIframe(a);
+				});
+			} else {
+				jqxhr = fileUploadIframe(a);
+			}
+		} else if ((hasFileInputs || multipart) && fileAPI) {
+			jqxhr = fileUploadXhr(a);
+		} else {
+			jqxhr = $.ajax(options);
+		}
+
+		$form.removeData('jqxhr').data('jqxhr', jqxhr);
+
+		for (var k = 0; k < elements.length; k++) {
+			elements[k] = null;
+		}
+
+		this.trigger('form-submit-notify', [this, options]);
+
+		return this;
+
+		function deepSerialize(extraData) {
+			var serialized = $.param(extraData, options.traditional).split('&');
+			var len = serialized.length;
+			var result = [];
+			var i, part;
+
+			for (i = 0; i < len; i++) {
+				serialized[i] = serialized[i].replace(/\+/g, ' ');
+				part = serialized[i].split('=');
+
+				result.push([decodeURIComponent(part[0]), decodeURIComponent(part[1])]);
+			}
+
+			return result;
+		}
+
+		function fileUploadXhr(a) {
+			var formdata = new FormData();
+
+			for (var i = 0; i < a.length; i++) {
+				formdata.append(a[i].name, a[i].value);
+			}
+
+			if (options.extraData) {
+				var serializedData = deepSerialize(options.extraData);
+
+				for (i = 0; i < serializedData.length; i++) {
+					if (serializedData[i]) {
+						formdata.append(serializedData[i][0], serializedData[i][1]);
+					}
+				}
+			}
+
+			options.data = null;
+
+			var s = $.extend(true, {}, $.ajaxSettings, options, {
+				contentType: false,
+				processData: false,
+				cache: false,
+				type: method || 'POST'
+			});
+
+			if (options.uploadProgress) {
+				s.xhr = function () {
+					var xhr = $.ajaxSettings.xhr();
+
+					if (xhr.upload) {
+						xhr.upload.addEventListener('progress', function (event) {
+							var percent = 0;
+							var position = event.loaded || event.position;
+							var total = event.total;
+
+							if (event.lengthComputable) {
+								percent = Math.ceil(position / total * 100);
+							}
+
+							options.uploadProgress(event, position, total, percent);
+						}, false);
+					}
+
+					return xhr;
+				};
+			}
+
+			s.data = null;
+
+			var beforeSend = s.beforeSend;
+
+			s.beforeSend = function (xhr, o) {
+				if (options.formData) {
+					o.data = options.formData;
+				} else {
+					o.data = formdata;
+				}
+
+				if (beforeSend) {
+					beforeSend.call(this, xhr, o);
+				}
+			};
+
+			return $.ajax(s);
+		}
+
+		function fileUploadIframe(a) {
+			var form = $form[0],
+			    el,
+			    i,
+			    s,
+			    g,
+			    id,
+			    $io,
+			    io,
+			    xhr,
+			    sub,
+			    n,
+			    timedOut,
+			    timeoutHandle;
+			var deferred = $.Deferred();
+
+			deferred.abort = function (status) {
+				xhr.abort(status);
+			};
+
+			if (a) {
+				for (i = 0; i < elements.length; i++) {
+					el = $(elements[i]);
+					if (hasProp) {
+						el.prop('disabled', false);
+					} else {
+						el.removeAttr('disabled');
+					}
+				}
+			}
+
+			s = $.extend(true, {}, $.ajaxSettings, options);
+			s.context = s.context || s;
+			id = 'jqFormIO' + new Date().getTime();
+			var ownerDocument = form.ownerDocument;
+			var $body = $form.closest('body');
+
+			if (s.iframeTarget) {
+				$io = $(s.iframeTarget, ownerDocument);
+				n = $io.attr2('name');
+				if (!n) {
+					$io.attr2('name', id);
+				} else {
+					id = n;
+				}
+			} else {
+				$io = $('<iframe name="' + id + '" src="' + s.iframeSrc + '" />', ownerDocument);
+				$io.css({ position: 'absolute', top: '-1000px', left: '-1000px' });
+			}
+			io = $io[0];
+
+			xhr = {
+				aborted: 0,
+				responseText: null,
+				responseXML: null,
+				status: 0,
+				statusText: 'n/a',
+				getAllResponseHeaders: function getAllResponseHeaders() {},
+				getResponseHeader: function getResponseHeader() {},
+				setRequestHeader: function setRequestHeader() {},
+				abort: function abort(status) {
+					var e = status === 'timeout' ? 'timeout' : 'aborted';
+
+					log('aborting upload... ' + e);
+					this.aborted = 1;
+
+					try {
+						if (io.contentWindow.document.execCommand) {
+							io.contentWindow.document.execCommand('Stop');
+						}
+					} catch (ignore) {}
+
+					$io.attr('src', s.iframeSrc);
+					xhr.error = e;
+					if (s.error) {
+						s.error.call(s.context, xhr, e, status);
+					}
+
+					if (g) {
+						$.event.trigger('ajaxError', [xhr, s, e]);
+					}
+
+					if (s.complete) {
+						s.complete.call(s.context, xhr, e);
+					}
+				}
+			};
+
+			g = s.global;
+
+			if (g && $.active++ === 0) {
+				$.event.trigger('ajaxStart');
+			}
+			if (g) {
+				$.event.trigger('ajaxSend', [xhr, s]);
+			}
+
+			if (s.beforeSend && s.beforeSend.call(s.context, xhr, s) === false) {
+				if (s.global) {
+					$.active--;
+				}
+				deferred.reject();
+
+				return deferred;
+			}
+
+			if (xhr.aborted) {
+				deferred.reject();
+
+				return deferred;
+			}
+
+			sub = form.clk;
+			if (sub) {
+				n = sub.name;
+				if (n && !sub.disabled) {
+					s.extraData = s.extraData || {};
+					s.extraData[n] = sub.value;
+					if (sub.type === 'image') {
+						s.extraData[n + '.x'] = form.clk_x;
+						s.extraData[n + '.y'] = form.clk_y;
+					}
+				}
+			}
+
+			var CLIENT_TIMEOUT_ABORT = 1;
+			var SERVER_ABORT = 2;
+
+			function getDoc(frame) {
+
+				var doc = null;
+
+				try {
+					if (frame.contentWindow) {
+						doc = frame.contentWindow.document;
+					}
+				} catch (err) {
+					log('cannot get iframe.contentWindow document: ' + err);
+				}
+
+				if (doc) {
+					return doc;
+				}
+
+				try {
+					doc = frame.contentDocument ? frame.contentDocument : frame.document;
+				} catch (err) {
+					log('cannot get iframe.contentDocument: ' + err);
+					doc = frame.document;
+				}
+
+				return doc;
+			}
+
+			var csrf_token = $('meta[name=csrf-token]').attr('content');
+			var csrf_param = $('meta[name=csrf-param]').attr('content');
+
+			if (csrf_param && csrf_token) {
+				s.extraData = s.extraData || {};
+				s.extraData[csrf_param] = csrf_token;
+			}
+
+			function doSubmit() {
+				var t = $form.attr2('target'),
+				    a = $form.attr2('action'),
+				    mp = 'multipart/form-data',
+				    et = $form.attr('enctype') || $form.attr('encoding') || mp;
+
+				form.setAttribute('target', id);
+				if (!method || /post/i.test(method)) {
+					form.setAttribute('method', 'POST');
+				}
+				if (a !== s.url) {
+					form.setAttribute('action', s.url);
+				}
+
+				if (!s.skipEncodingOverride && (!method || /post/i.test(method))) {
+					$form.attr({
+						encoding: 'multipart/form-data',
+						enctype: 'multipart/form-data'
+					});
+				}
+
+				if (s.timeout) {
+					timeoutHandle = setTimeout(function () {
+						timedOut = true;cb(CLIENT_TIMEOUT_ABORT);
+					}, s.timeout);
+				}
+
+				function checkState() {
+					try {
+						var state = getDoc(io).readyState;
+
+						log('state = ' + state);
+						if (state && state.toLowerCase() === 'uninitialized') {
+							setTimeout(checkState, 50);
+						}
+					} catch (e) {
+						log('Server abort: ', e, ' (', e.name, ')');
+						cb(SERVER_ABORT);
+						if (timeoutHandle) {
+							clearTimeout(timeoutHandle);
+						}
+						timeoutHandle = undefined;
+					}
+				}
+
+				var extraInputs = [];
+
+				try {
+					if (s.extraData) {
+						for (var n in s.extraData) {
+							if (s.extraData.hasOwnProperty(n)) {
+								if ($.isPlainObject(s.extraData[n]) && s.extraData[n].hasOwnProperty('name') && s.extraData[n].hasOwnProperty('value')) {
+									extraInputs.push($('<input type="hidden" name="' + s.extraData[n].name + '">', ownerDocument).val(s.extraData[n].value).appendTo(form)[0]);
+								} else {
+									extraInputs.push($('<input type="hidden" name="' + n + '">', ownerDocument).val(s.extraData[n]).appendTo(form)[0]);
+								}
+							}
+						}
+					}
+
+					if (!s.iframeTarget) {
+						$io.appendTo($body);
+					}
+
+					if (io.attachEvent) {
+						io.attachEvent('onload', cb);
+					} else {
+						io.addEventListener('load', cb, false);
+					}
+
+					setTimeout(checkState, 15);
+
+					try {
+						form.submit();
+					} catch (err) {
+						var submitFn = document.createElement('form').submit;
+
+						submitFn.apply(form);
+					}
+				} finally {
+					form.setAttribute('action', a);
+					form.setAttribute('enctype', et);
+					if (t) {
+						form.setAttribute('target', t);
+					} else {
+						$form.removeAttr('target');
+					}
+					$(extraInputs).remove();
+				}
+			}
+
+			if (s.forceSync) {
+				doSubmit();
+			} else {
+				setTimeout(doSubmit, 10);
+			}
+
+			var data,
+			    doc,
+			    domCheckCount = 50,
+			    callbackProcessed;
+
+			function cb(e) {
+				if (xhr.aborted || callbackProcessed) {
+					return;
+				}
+
+				doc = getDoc(io);
+				if (!doc) {
+					log('cannot access response document');
+					e = SERVER_ABORT;
+				}
+				if (e === CLIENT_TIMEOUT_ABORT && xhr) {
+					xhr.abort('timeout');
+					deferred.reject(xhr, 'timeout');
+
+					return;
+				} else if (e === SERVER_ABORT && xhr) {
+					xhr.abort('server abort');
+					deferred.reject(xhr, 'error', 'server abort');
+
+					return;
+				}
+
+				if (!doc || doc.location.href === s.iframeSrc) {
+					if (!timedOut) {
+						return;
+					}
+				}
+
+				if (io.detachEvent) {
+					io.detachEvent('onload', cb);
+				} else {
+					io.removeEventListener('load', cb, false);
+				}
+
+				var status = 'success',
+				    errMsg;
+
+				try {
+					if (timedOut) {
+						throw 'timeout';
+					}
+
+					var isXml = s.dataType === 'xml' || doc.XMLDocument || $.isXMLDoc(doc);
+
+					log('isXml=' + isXml);
+
+					if (!isXml && window.opera && (doc.body === null || !doc.body.innerHTML)) {
+						if (--domCheckCount) {
+							log('requeing onLoad callback, DOM not available');
+							setTimeout(cb, 250);
+
+							return;
+						}
+					}
+
+					var docRoot = doc.body ? doc.body : doc.documentElement;
+
+					xhr.responseText = docRoot ? docRoot.innerHTML : null;
+					xhr.responseXML = doc.XMLDocument ? doc.XMLDocument : doc;
+					if (isXml) {
+						s.dataType = 'xml';
+					}
+					xhr.getResponseHeader = function (header) {
+						var headers = { 'content-type': s.dataType };
+
+						return headers[header.toLowerCase()];
+					};
+
+					if (docRoot) {
+						xhr.status = Number(docRoot.getAttribute('status')) || xhr.status;
+						xhr.statusText = docRoot.getAttribute('statusText') || xhr.statusText;
+					}
+
+					var dt = (s.dataType || '').toLowerCase();
+					var scr = /(json|script|text)/.test(dt);
+
+					if (scr || s.textarea) {
+						var ta = doc.getElementsByTagName('textarea')[0];
+
+						if (ta) {
+							xhr.responseText = ta.value;
+
+							xhr.status = Number(ta.getAttribute('status')) || xhr.status;
+							xhr.statusText = ta.getAttribute('statusText') || xhr.statusText;
+						} else if (scr) {
+							var pre = doc.getElementsByTagName('pre')[0];
+							var b = doc.getElementsByTagName('body')[0];
+
+							if (pre) {
+								xhr.responseText = pre.textContent ? pre.textContent : pre.innerText;
+							} else if (b) {
+								xhr.responseText = b.textContent ? b.textContent : b.innerText;
+							}
+						}
+					} else if (dt === 'xml' && !xhr.responseXML && xhr.responseText) {
+						xhr.responseXML = toXml(xhr.responseText);
+					}
+
+					try {
+						data = httpData(xhr, dt, s);
+					} catch (err) {
+						status = 'parsererror';
+						xhr.error = errMsg = err || status;
+					}
+				} catch (err) {
+					log('error caught: ', err);
+					status = 'error';
+					xhr.error = errMsg = err || status;
+				}
+
+				if (xhr.aborted) {
+					log('upload aborted');
+					status = null;
+				}
+
+				if (xhr.status) {
+					status = xhr.status >= 200 && xhr.status < 300 || xhr.status === 304 ? 'success' : 'error';
+				}
+
+				if (status === 'success') {
+					if (s.success) {
+						s.success.call(s.context, data, 'success', xhr);
+					}
+
+					deferred.resolve(xhr.responseText, 'success', xhr);
+
+					if (g) {
+						$.event.trigger('ajaxSuccess', [xhr, s]);
+					}
+				} else if (status) {
+					if (typeof errMsg === 'undefined') {
+						errMsg = xhr.statusText;
+					}
+					if (s.error) {
+						s.error.call(s.context, xhr, status, errMsg);
+					}
+					deferred.reject(xhr, 'error', errMsg);
+					if (g) {
+						$.event.trigger('ajaxError', [xhr, s, errMsg]);
+					}
+				}
+
+				if (g) {
+					$.event.trigger('ajaxComplete', [xhr, s]);
+				}
+
+				if (g && ! --$.active) {
+					$.event.trigger('ajaxStop');
+				}
+
+				if (s.complete) {
+					s.complete.call(s.context, xhr, status);
+				}
+
+				callbackProcessed = true;
+				if (s.timeout) {
+					clearTimeout(timeoutHandle);
+				}
+
+				setTimeout(function () {
+					if (!s.iframeTarget) {
+						$io.remove();
+					} else {
+						$io.attr('src', s.iframeSrc);
+					}
+					xhr.responseXML = null;
+				}, 100);
+			}
+
+			var toXml = $.parseXML || function (s, doc) {
+				if (window.ActiveXObject) {
+					doc = new ActiveXObject('Microsoft.XMLDOM');
+					doc.async = 'false';
+					doc.loadXML(s);
+				} else {
+					doc = new DOMParser().parseFromString(s, 'text/xml');
+				}
+
+				return doc && doc.documentElement && doc.documentElement.nodeName !== 'parsererror' ? doc : null;
+			};
+			var parseJSON = $.parseJSON || function (s) {
+				return window['eval']('(' + s + ')');
+			};
+
+			var httpData = function httpData(xhr, type, s) {
+
+				var ct = xhr.getResponseHeader('content-type') || '',
+				    xml = (type === 'xml' || !type) && ct.indexOf('xml') >= 0,
+				    data = xml ? xhr.responseXML : xhr.responseText;
+
+				if (xml && data.documentElement.nodeName === 'parsererror') {
+					if ($.error) {
+						$.error('parsererror');
+					}
+				}
+				if (s && s.dataFilter) {
+					data = s.dataFilter(data, type);
+				}
+				if (typeof data === 'string') {
+					if ((type === 'json' || !type) && ct.indexOf('json') >= 0) {
+						data = parseJSON(data);
+					} else if ((type === 'script' || !type) && ct.indexOf('javascript') >= 0) {
+						$.globalEval(data);
+					}
+				}
+
+				return data;
+			};
+
+			return deferred;
+		}
+	};
+
+	$.fn.ajaxForm = function (options, data, dataType, onSuccess) {
+		if (typeof options === 'string' || options === false && arguments.length > 0) {
+			options = {
+				'url': options,
+				'data': data,
+				'dataType': dataType
+			};
+
+			if (typeof onSuccess === 'function') {
+				options.success = onSuccess;
+			}
+		}
+
+		options = options || {};
+		options.delegation = options.delegation && $.isFunction($.fn.on);
+
+		if (!options.delegation && this.length === 0) {
+			var o = { s: this.selector, c: this.context };
+
+			if (!$.isReady && o.s) {
+				log('DOM not ready, queuing ajaxForm');
+				$(function () {
+					$(o.s, o.c).ajaxForm(options);
+				});
+
+				return this;
+			}
+
+			log('terminating; zero elements found by selector' + ($.isReady ? '' : ' (DOM not ready)'));
+
+			return this;
+		}
+
+		if (options.delegation) {
+			$(document).off('submit.form-plugin', this.selector, doAjaxSubmit).off('click.form-plugin', this.selector, captureSubmittingElement).on('submit.form-plugin', this.selector, options, doAjaxSubmit).on('click.form-plugin', this.selector, options, captureSubmittingElement);
+
+			return this;
+		}
+
+		return this.ajaxFormUnbind().on('submit.form-plugin', options, doAjaxSubmit).on('click.form-plugin', options, captureSubmittingElement);
+	};
+
+	function doAjaxSubmit(e) {
+		var options = e.data;
+
+		if (!e.isDefaultPrevented()) {
+			e.preventDefault();
+			$(e.target).closest('form').ajaxSubmit(options);
+		}
+	}
+
+	function captureSubmittingElement(e) {
+		var target = e.target;
+		var $el = $(target);
+
+		if (!$el.is('[type=submit],[type=image]')) {
+			var t = $el.closest('[type=submit]');
+
+			if (t.length === 0) {
+				return;
+			}
+			target = t[0];
+		}
+
+		var form = target.form;
+
+		form.clk = target;
+
+		if (target.type === 'image') {
+			if (typeof e.offsetX !== 'undefined') {
+				form.clk_x = e.offsetX;
+				form.clk_y = e.offsetY;
+			} else if (typeof $.fn.offset === 'function') {
+				var offset = $el.offset();
+
+				form.clk_x = e.pageX - offset.left;
+				form.clk_y = e.pageY - offset.top;
+			} else {
+				form.clk_x = e.pageX - target.offsetLeft;
+				form.clk_y = e.pageY - target.offsetTop;
+			}
+		}
+
+		setTimeout(function () {
+			form.clk = form.clk_x = form.clk_y = null;
+		}, 100);
+	}
+
+	$.fn.ajaxFormUnbind = function () {
+		return this.off('submit.form-plugin click.form-plugin');
+	};
+
+	$.fn.formToArray = function (semantic, elements, filtering) {
+		var a = [];
+
+		if (this.length === 0) {
+			return a;
+		}
+
+		var form = this[0];
+		var formId = this.attr('id');
+		var els = semantic || typeof form.elements === 'undefined' ? form.getElementsByTagName('*') : form.elements;
+		var els2;
+
+		if (els) {
+			els = $.makeArray(els);
+		}
+
+		if (formId && (semantic || /(Edge|Trident)\//.test(navigator.userAgent))) {
+			els2 = $(':input[form="' + formId + '"]').get();
+			if (els2.length) {
+				els = (els || []).concat(els2);
+			}
+		}
+
+		if (!els || !els.length) {
+			return a;
+		}
+
+		if ($.isFunction(filtering)) {
+			els = $.map(els, filtering);
+		}
+
+		var i, j, n, v, el, max, jmax;
+
+		for (i = 0, max = els.length; i < max; i++) {
+			el = els[i];
+			n = el.name;
+			if (!n || el.disabled) {
+				continue;
+			}
+
+			if (semantic && form.clk && el.type === 'image') {
+				if (form.clk === el) {
+					a.push({ name: n, value: $(el).val(), type: el.type });
+					a.push({ name: n + '.x', value: form.clk_x }, { name: n + '.y', value: form.clk_y });
+				}
+				continue;
+			}
+
+			v = $.fieldValue(el, true);
+			if (v && v.constructor === Array) {
+				if (elements) {
+					elements.push(el);
+				}
+				for (j = 0, jmax = v.length; j < jmax; j++) {
+					a.push({ name: n, value: v[j] });
+				}
+			} else if (feature.fileapi && el.type === 'file') {
+				if (elements) {
+					elements.push(el);
+				}
+
+				var files = el.files;
+
+				if (files.length) {
+					for (j = 0; j < files.length; j++) {
+						a.push({ name: n, value: files[j], type: el.type });
+					}
+				} else {
+					a.push({ name: n, value: '', type: el.type });
+				}
+			} else if (v !== null && typeof v !== 'undefined') {
+				if (elements) {
+					elements.push(el);
+				}
+				a.push({ name: n, value: v, type: el.type, required: el.required });
+			}
+		}
+
+		if (!semantic && form.clk) {
+			var $input = $(form.clk),
+			    input = $input[0];
+
+			n = input.name;
+
+			if (n && !input.disabled && input.type === 'image') {
+				a.push({ name: n, value: $input.val() });
+				a.push({ name: n + '.x', value: form.clk_x }, { name: n + '.y', value: form.clk_y });
+			}
+		}
+
+		return a;
+	};
+
+	$.fn.formSerialize = function (semantic) {
+		return $.param(this.formToArray(semantic));
+	};
+
+	$.fn.fieldSerialize = function (successful) {
+		var a = [];
+
+		this.each(function () {
+			var n = this.name;
+
+			if (!n) {
+				return;
+			}
+
+			var v = $.fieldValue(this, successful);
+
+			if (v && v.constructor === Array) {
+				for (var i = 0, max = v.length; i < max; i++) {
+					a.push({ name: n, value: v[i] });
+				}
+			} else if (v !== null && typeof v !== 'undefined') {
+				a.push({ name: this.name, value: v });
+			}
+		});
+
+		return $.param(a);
+	};
+
+	$.fn.fieldValue = function (successful) {
+		for (var val = [], i = 0, max = this.length; i < max; i++) {
+			var el = this[i];
+			var v = $.fieldValue(el, successful);
+
+			if (v === null || typeof v === 'undefined' || v.constructor === Array && !v.length) {
+				continue;
+			}
+
+			if (v.constructor === Array) {
+				$.merge(val, v);
+			} else {
+				val.push(v);
+			}
+		}
+
+		return val;
+	};
+
+	$.fieldValue = function (el, successful) {
+		var n = el.name,
+		    t = el.type,
+		    tag = el.tagName.toLowerCase();
+
+		if (typeof successful === 'undefined') {
+			successful = true;
+		}
+
+		if (successful && (!n || el.disabled || t === 'reset' || t === 'button' || (t === 'checkbox' || t === 'radio') && !el.checked || (t === 'submit' || t === 'image') && el.form && el.form.clk !== el || tag === 'select' && el.selectedIndex === -1)) {
+			return null;
+		}
+
+		if (tag === 'select') {
+			var index = el.selectedIndex;
+
+			if (index < 0) {
+				return null;
+			}
+
+			var a = [],
+			    ops = el.options;
+			var one = t === 'select-one';
+			var max = one ? index + 1 : ops.length;
+
+			for (var i = one ? index : 0; i < max; i++) {
+				var op = ops[i];
+
+				if (op.selected && !op.disabled) {
+					var v = op.value;
+
+					if (!v) {
+						v = op.attributes && op.attributes.value && !op.attributes.value.specified ? op.text : op.value;
+					}
+
+					if (one) {
+						return v;
+					}
+
+					a.push(v);
+				}
+			}
+
+			return a;
+		}
+
+		return $(el).val().replace(rCRLF, '\r\n');
+	};
+
+	$.fn.clearForm = function (includeHidden) {
+		return this.each(function () {
+			$('input,select,textarea', this).clearFields(includeHidden);
+		});
+	};
+
+	$.fn.clearFields = $.fn.clearInputs = function (includeHidden) {
+		var re = /^(?:color|date|datetime|email|month|number|password|range|search|tel|text|time|url|week)$/i;
+
+		return this.each(function () {
+			var t = this.type,
+			    tag = this.tagName.toLowerCase();
+
+			if (re.test(t) || tag === 'textarea') {
+				this.value = '';
+			} else if (t === 'checkbox' || t === 'radio') {
+				this.checked = false;
+			} else if (tag === 'select') {
+				this.selectedIndex = -1;
+			} else if (t === 'file') {
+				if (/MSIE/.test(navigator.userAgent)) {
+					$(this).replaceWith($(this).clone(true));
+				} else {
+					$(this).val('');
+				}
+			} else if (includeHidden) {
+				if (includeHidden === true && /hidden/.test(t) || typeof includeHidden === 'string' && $(this).is(includeHidden)) {
+					this.value = '';
+				}
+			}
+		});
+	};
+
+	$.fn.resetForm = function () {
+		return this.each(function () {
+			var el = $(this);
+			var tag = this.tagName.toLowerCase();
+
+			switch (tag) {
+				case 'input':
+					this.checked = this.defaultChecked;
+
+
+				case 'textarea':
+					this.value = this.defaultValue;
+
+					return true;
+
+				case 'option':
+				case 'optgroup':
+					var select = el.parents('select');
+
+					if (select.length && select[0].multiple) {
+						if (tag === 'option') {
+							this.selected = this.defaultSelected;
+						} else {
+							el.find('option').resetForm();
+						}
+					} else {
+						select.resetForm();
+					}
+
+					return true;
+
+				case 'select':
+					el.find('option').each(function (i) {
+						this.selected = this.defaultSelected;
+						if (this.defaultSelected && !el[0].multiple) {
+							el[0].selectedIndex = i;
+
+							return false;
+						}
+					});
+
+					return true;
+
+				case 'label':
+					var forEl = $(el.attr('for'));
+					var list = el.find('input,select,textarea');
+
+					if (forEl[0]) {
+						list.unshift(forEl[0]);
+					}
+
+					list.resetForm();
+
+					return true;
+
+				case 'form':
+					if (typeof this.reset === 'function' || _typeof(this.reset) === 'object' && !this.reset.nodeType) {
+						this.reset();
+					}
+
+					return true;
+
+				default:
+					el.find('form,input,label,select,textarea').resetForm();
+
+					return true;
+			}
+		});
+	};
+
+	$.fn.enable = function (b) {
+		if (typeof b === 'undefined') {
+			b = true;
+		}
+
+		return this.each(function () {
+			this.disabled = !b;
+		});
+	};
+
+	$.fn.selected = function (select) {
+		if (typeof select === 'undefined') {
+			select = true;
+		}
+
+		return this.each(function () {
+			var t = this.type;
+
+			if (t === 'checkbox' || t === 'radio') {
+				this.checked = select;
+			} else if (this.tagName.toLowerCase() === 'option') {
+				var $sel = $(this).parent('select');
+
+				if (select && $sel[0] && $sel[0].type === 'select-one') {
+					$sel.find('option').selected(false);
+				}
+
+				this.selected = select;
+			}
+		});
+	};
+
+	$.fn.ajaxSubmit.debug = false;
+
+	function log() {
+		if (!$.fn.ajaxSubmit.debug) {
+			return;
+		}
+
+		var msg = '[jquery.form] ' + Array.prototype.join.call(arguments, '');
+
+		if (window.console && window.console.log) {
+			window.console.log(msg);
+		} else if (window.opera && window.opera.postError) {
+			window.opera.postError(msg);
+		}
+	}
+});
+
+/***/ }),
+/* 46 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(jQuery) {
+
+(function ($) {
+    var mmodal = function mmodal(element, options) {
+        return this.init(element, options);
+    };
+
+    mmodal.prototype = {
+        version: "1.1",
+        locked: true,
+        $element: undefined,
+        $content: undefined,
+        $bg: undefined,
+        $container: undefined,
+
+        params: {},
+
+        inline: false,
+        inlineIndex: undefined,
+        $inlineParent: undefined,
+
+        classes: {
+            content: 'mmodal-content',
+            container: 'mmodal-container',
+            animation: 'animated',
+            background: 'mmodal-modal-bg',
+            closeButton: 'mmodal-close',
+            bodyClass: 'mmodal-opened'
+        },
+        init: function init(element, options) {
+            var defaultOptions = {
+                ajax: {
+                    type: "GET",
+                    dataType: null
+                },
+                animation: false,
+                animationdelay: 1.3,
+                skin: 'default',
+                width: undefined,
+                closeonclick: true,
+                closeonescape: true,
+
+                touchEvents: false,
+
+                autoclose: false,
+                autoclosedelay: 1450,
+
+                onBeforeStart: $.noop,
+                onSuccess: $.noop,
+                onBeforeOpen: $.noop,
+                onAfterOpen: $.noop,
+                onBeforeClose: $.noop,
+                onAfterClose: $.noop,
+                onSubmit: 'default'
+            };
+            this.locked = true;
+
+            this.$element = element instanceof Object ? element : $(element);
+
+            this.options = $.extend(defaultOptions, options);
+
+            if (this.$element.is("a")) {
+                this._prepareLink();
+            } else {
+                this.start(this.$element.clone());
+            }
+
+            this.params['lineHeight'] = this.getLineHeight($('html'));
+            this.params['pageHeight'] = this.getPageHeight($('html'));
+
+            return this;
+        },
+        getLineHeight: function getLineHeight(elem) {
+            var $elem = $(elem),
+                $parent = $elem['offsetParent' in $.fn ? 'offsetParent' : 'parent']();
+            if (!$parent.length) {
+                $parent = $('body');
+            }
+            return parseInt($parent.css('fontSize'), 10) || parseInt($elem.css('fontSize'), 10) || 16;
+        },
+
+        getPageHeight: function getPageHeight(elem) {
+            return $(elem).height();
+        },
+
+        getContainer: function getContainer() {
+            return this.$container == undefined ? this.renderContainer() : this.$container;
+        },
+        setContent: function setContent($html) {
+            var $content = this.$content;
+
+            $content.html($html);
+            var $forms = $content.find('form');
+            if ($forms.length > 0) {
+                var self = this;
+                $forms = $forms.filter(function (index, el) {
+                    if ($(el).data('ajax-send') == 'off') {
+                        return false;
+                    }
+                    return true;
+                });
+
+                $forms.find("[type='submit']").off("click").on("click", function (e) {
+                    e.preventDefault();
+                    self._submitHandler.call(self, this);
+                    return false;
+                });
+                $forms.off("submit").on("submit", function (e) {
+                    e.preventDefault();
+                    self._submitHandler.call(self, this);
+                    return false;
+                });
+            }
+        },
+        renderContainer: function renderContainer() {
+            this.$content = $('<div />').addClass(this.classes.content);
+
+            this.$close = $('<a href="#">&times;</a>').addClass(this.classes.closeButton);
+
+            this.$container = $('<div />').addClass(this.classes.container + ' ' + this.options.skin);
+
+            if (this.options.animation) {
+                this.$container.addClass(this.classes.animation + ' ' + this.options.animation + 'In');
+            }
+
+            this.$container.append(this.$close).append(this.$content);
+
+            this.$bg = $("<div />").addClass(this.classes.background + ' ' + this.options.skin).append(this.$container).appendTo('body');
+
+            return this.$container;
+        },
+        _prepareLink: function _prepareLink() {
+            var self = this,
+                href = this.$element.attr('href'),
+                $html;
+
+            if (href.match(/^#/)) {
+                var $targetContainer = $(href);
+
+                $html = $targetContainer[0];
+
+                this.$inlineParent = $targetContainer.parent();
+                this.inlineIndex = $targetContainer.index();
+                this.inline = true;
+
+                $targetContainer.detach();
+                this.start($html);
+            } else {
+                $.ajax({
+                    dataType: this.options.ajax.dataType,
+                    type: this.options.ajax.type,
+                    url: href,
+                    cache: false,
+                    success: function success(data, textStatus, jqXHR) {
+                        if (self.options.ajax.dataType == 'json') {
+                            $html = data.content;
+                        } else {
+                            $html = data;
+                        }
+                        self.start.call(self, $html);
+                    },
+                    error: function error(jqXHR, textStatus, errorThrown) {
+                        self.start.call(self, jqXHR.responseText);
+                    }
+                });
+            }
+        },
+        _submitHandler: function _submitHandler(element) {
+            if (typeof this.options.onSubmit == 'function') {
+                this.options.onSubmit.call(this, element);
+            } else {
+                this._submitHandlerDefault.call(this, element);
+            }
+        },
+        _submitHandlerDefault: function _submitHandlerDefault(element) {
+            var self = this,
+                content = '',
+                options = this.options,
+                $data = {},
+                $form = $(element),
+                $context = $($form.context);
+
+            if ($context.is('[type="submit"]')) {
+                $data[$context.attr('name')] = $context.val();
+                $form = $context.closest('form');
+            }
+
+            $form.ajaxSubmit({
+                type: "post",
+                data: $data,
+                success: function success(data, textStatus, jqXHR) {
+                    try {
+                        data = $.parseJSON(data);
+                    } catch (e) {}
+
+                    options.onSuccess.call(this, data, textStatus, jqXHR);
+                    if (data.close) {
+                        return self.close();
+                    }
+                    if (data) {
+                        content = data['content'] || data['title'] || data;
+                        self.setContent(content);
+                    }
+
+                    if (!data) {
+                        self.close();
+                    } else if (data.status === 'success' && options.autoclose) {
+                        setTimeout(function () {
+                            return self.close();
+                        }, options.autoclosedelay);
+                    }
+                }
+            });
+        },
+        start: function start(html) {
+            this.options.onBeforeStart();
+            this.renderContainer();
+            this.setContent(html);
+            this.bindEvents();
+            this.open();
+        },
+        open: function open() {
+            var $body = $('body'),
+                before = $body.outerWidth();
+
+            this.options.onBeforeOpen();
+
+            this.$bg.show();
+            this.$container.css('width', this.options.width || this.$container.width()).show();
+
+            $body.css({
+                'overflow': 'hidden',
+                'padding-right': $body.outerWidth() - before
+            }).addClass(this.classes.bodyClass);
+
+            this.options.onAfterOpen();
+        },
+        close: function close() {
+            this.options.onBeforeClose();
+
+            $('body').off('keyup').css({
+                'overflow': '',
+                'padding-right': ''
+            }).removeClass(this.classes.bodyClass);
+
+            this.$close.off('click');
+            this.$bg.off('click');
+
+            if (this.inline) {
+                var href = this.$element.attr('href');
+                var $target = this.$inlineParent.children(":eq(" + this.inlineIndex + ")");
+                var $originalContent = this.$content.children();
+                if ($target > -1) {
+                    $target.prepend($originalContent);
+                } else {
+                    this.$inlineParent.append($originalContent);
+                }
+            }
+
+            if (this.options.animation) {
+                this.$container.addClass(this.classes.animation + ' ' + this.options.animation + 'Out');
+
+                var self = this;
+                setTimeout(function () {
+                    self.$bg.remove();
+                }, this.options.animationdelay * 1000);
+            } else {
+                this.$bg.remove();
+            }
+
+            this.options.onAfterClose();
+        },
+        bindEvents: function bindEvents() {
+            var self = this,
+                options = this.options;
+
+            this.$close.on('click', function (e) {
+                e.preventDefault();
+                self.close();
+                return false;
+            });
+
+            if (options.closeonclick == true) {
+                this.$bg.addClass('clickable');
+                this.$bg.on('click', function (e) {
+                    if (e.target === this) {
+                        e.preventDefault();
+                        self.close();
+                        return false;
+                    }
+                });
+            }
+
+            this.$bg.on('mousewheel', function (e) {
+                var $this = $(this);
+                var deltaY = e.originalEvent.wheelDeltaY || e.originalEvent.deltaY;
+                var mode = e.originalEvent.deltaMode;
+
+                if (mode === 1) {
+                    deltaY *= self.params.lineHeight * -1;
+                } else if (mode === 2) {
+                    deltaY *= self.params.pageHeight;
+                }
+
+                $this.scrollTop($this.scrollTop() - deltaY);
+
+                return false;
+            });
+
+            if (this.options.touchEvents) {
+                this.$bg.on("touchstart", function (e) {
+                    self.touches = {
+                        'startingY': e.originalEvent.touches[0].pageY,
+                        'startingX': e.originalEvent.touches[0].pageX
+                    };
+                }).on('touchmove', function (e) {
+                    var $this = $(this),
+                        $window = $(window);
+
+                    var deltaY = e.originalEvent.touches[0].pageY - self.touches.startingY;
+                    var deltaX = e.originalEvent.touches[0].pageX - self.touches.startingX;
+
+                    $this.scrollTop($this.scrollTop() - deltaY);
+                    $this.scrollLeft($this.scrollLeft() - deltaX);
+
+                    self.touches.startingY = e.originalEvent.touches[0].pageY;
+                    self.touches.startingX = e.originalEvent.touches[0].pageX;
+
+                    return false;
+                });
+            }
+
+            if (options.closeonescape == true) {
+                $('body').on('keyup', function (e) {
+                    if (e.which === 27) {
+                        self.close();
+                    }
+                });
+            }
+        }
+    };
+
+    $.fn.mmodal = function (options) {
+        return new mmodal(this, options);
+    };
+})(jQuery);
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
+
+/***/ }),
+/* 47 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -36426,5030 +41442,7 @@ return Swiper$1;
 
 
 /***/ }),
-/* 18 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;
-
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
-(function () {
-  var AjaxMonitor,
-      Bar,
-      DocumentMonitor,
-      ElementMonitor,
-      ElementTracker,
-      EventLagMonitor,
-      Evented,
-      Events,
-      NoTargetError,
-      Pace,
-      RequestIntercept,
-      SOURCE_KEYS,
-      Scaler,
-      SocketRequestTracker,
-      XHRRequestTracker,
-      animation,
-      avgAmplitude,
-      bar,
-      cancelAnimation,
-      cancelAnimationFrame,
-      defaultOptions,
-      _extend,
-      extendNative,
-      getFromDOM,
-      getIntercept,
-      handlePushState,
-      ignoreStack,
-      init,
-      now,
-      options,
-      requestAnimationFrame,
-      result,
-      runAnimation,
-      scalers,
-      shouldIgnoreURL,
-      shouldTrack,
-      source,
-      sources,
-      uniScaler,
-      _WebSocket,
-      _XDomainRequest,
-      _XMLHttpRequest,
-      _i,
-      _intercept,
-      _len,
-      _pushState,
-      _ref,
-      _ref1,
-      _replaceState,
-      __slice = [].slice,
-      __hasProp = {}.hasOwnProperty,
-      __extends = function __extends(child, parent) {
-    for (var key in parent) {
-      if (__hasProp.call(parent, key)) child[key] = parent[key];
-    }function ctor() {
-      this.constructor = child;
-    }ctor.prototype = parent.prototype;child.prototype = new ctor();child.__super__ = parent.prototype;return child;
-  },
-      __indexOf = [].indexOf || function (item) {
-    for (var i = 0, l = this.length; i < l; i++) {
-      if (i in this && this[i] === item) return i;
-    }return -1;
-  };
-
-  defaultOptions = {
-    catchupTime: 100,
-    initialRate: .03,
-    minTime: 250,
-    ghostTime: 100,
-    maxProgressPerFrame: 20,
-    easeFactor: 1.25,
-    startOnPageLoad: true,
-    restartOnPushState: true,
-    restartOnRequestAfter: 500,
-    target: 'body',
-    elements: {
-      checkInterval: 100,
-      selectors: ['body']
-    },
-    eventLag: {
-      minSamples: 10,
-      sampleCount: 3,
-      lagThreshold: 3
-    },
-    ajax: {
-      trackMethods: ['GET'],
-      trackWebSockets: true,
-      ignoreURLs: []
-    }
-  };
-
-  now = function now() {
-    var _ref;
-    return (_ref = typeof performance !== "undefined" && performance !== null ? typeof performance.now === "function" ? performance.now() : void 0 : void 0) != null ? _ref : +new Date();
-  };
-
-  requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
-
-  cancelAnimationFrame = window.cancelAnimationFrame || window.mozCancelAnimationFrame;
-
-  if (requestAnimationFrame == null) {
-    requestAnimationFrame = function requestAnimationFrame(fn) {
-      return setTimeout(fn, 50);
-    };
-    cancelAnimationFrame = function cancelAnimationFrame(id) {
-      return clearTimeout(id);
-    };
-  }
-
-  runAnimation = function runAnimation(fn) {
-    var last, _tick;
-    last = now();
-    _tick = function tick() {
-      var diff;
-      diff = now() - last;
-      if (diff >= 33) {
-        last = now();
-        return fn(diff, function () {
-          return requestAnimationFrame(_tick);
-        });
-      } else {
-        return setTimeout(_tick, 33 - diff);
-      }
-    };
-    return _tick();
-  };
-
-  result = function result() {
-    var args, key, obj;
-    obj = arguments[0], key = arguments[1], args = 3 <= arguments.length ? __slice.call(arguments, 2) : [];
-    if (typeof obj[key] === 'function') {
-      return obj[key].apply(obj, args);
-    } else {
-      return obj[key];
-    }
-  };
-
-  _extend = function extend() {
-    var key, out, source, sources, val, _i, _len;
-    out = arguments[0], sources = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
-    for (_i = 0, _len = sources.length; _i < _len; _i++) {
-      source = sources[_i];
-      if (source) {
-        for (key in source) {
-          if (!__hasProp.call(source, key)) continue;
-          val = source[key];
-          if (out[key] != null && _typeof(out[key]) === 'object' && val != null && (typeof val === 'undefined' ? 'undefined' : _typeof(val)) === 'object') {
-            _extend(out[key], val);
-          } else {
-            out[key] = val;
-          }
-        }
-      }
-    }
-    return out;
-  };
-
-  avgAmplitude = function avgAmplitude(arr) {
-    var count, sum, v, _i, _len;
-    sum = count = 0;
-    for (_i = 0, _len = arr.length; _i < _len; _i++) {
-      v = arr[_i];
-      sum += Math.abs(v);
-      count++;
-    }
-    return sum / count;
-  };
-
-  getFromDOM = function getFromDOM(key, json) {
-    var data, e, el;
-    if (key == null) {
-      key = 'options';
-    }
-    if (json == null) {
-      json = true;
-    }
-    el = document.querySelector("[data-pace-" + key + "]");
-    if (!el) {
-      return;
-    }
-    data = el.getAttribute("data-pace-" + key);
-    if (!json) {
-      return data;
-    }
-    try {
-      return JSON.parse(data);
-    } catch (_error) {
-      e = _error;
-      return typeof console !== "undefined" && console !== null ? console.error("Error parsing inline pace options", e) : void 0;
-    }
-  };
-
-  Evented = function () {
-    function Evented() {}
-
-    Evented.prototype.on = function (event, handler, ctx, once) {
-      var _base;
-      if (once == null) {
-        once = false;
-      }
-      if (this.bindings == null) {
-        this.bindings = {};
-      }
-      if ((_base = this.bindings)[event] == null) {
-        _base[event] = [];
-      }
-      return this.bindings[event].push({
-        handler: handler,
-        ctx: ctx,
-        once: once
-      });
-    };
-
-    Evented.prototype.once = function (event, handler, ctx) {
-      return this.on(event, handler, ctx, true);
-    };
-
-    Evented.prototype.off = function (event, handler) {
-      var i, _ref, _results;
-      if (((_ref = this.bindings) != null ? _ref[event] : void 0) == null) {
-        return;
-      }
-      if (handler == null) {
-        return delete this.bindings[event];
-      } else {
-        i = 0;
-        _results = [];
-        while (i < this.bindings[event].length) {
-          if (this.bindings[event][i].handler === handler) {
-            _results.push(this.bindings[event].splice(i, 1));
-          } else {
-            _results.push(i++);
-          }
-        }
-        return _results;
-      }
-    };
-
-    Evented.prototype.trigger = function () {
-      var args, ctx, event, handler, i, once, _ref, _ref1, _results;
-      event = arguments[0], args = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
-      if ((_ref = this.bindings) != null ? _ref[event] : void 0) {
-        i = 0;
-        _results = [];
-        while (i < this.bindings[event].length) {
-          _ref1 = this.bindings[event][i], handler = _ref1.handler, ctx = _ref1.ctx, once = _ref1.once;
-          handler.apply(ctx != null ? ctx : this, args);
-          if (once) {
-            _results.push(this.bindings[event].splice(i, 1));
-          } else {
-            _results.push(i++);
-          }
-        }
-        return _results;
-      }
-    };
-
-    return Evented;
-  }();
-
-  Pace = window.Pace || {};
-
-  window.Pace = Pace;
-
-  _extend(Pace, Evented.prototype);
-
-  options = Pace.options = _extend({}, defaultOptions, window.paceOptions, getFromDOM());
-
-  _ref = ['ajax', 'document', 'eventLag', 'elements'];
-  for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-    source = _ref[_i];
-    if (options[source] === true) {
-      options[source] = defaultOptions[source];
-    }
-  }
-
-  NoTargetError = function (_super) {
-    __extends(NoTargetError, _super);
-
-    function NoTargetError() {
-      _ref1 = NoTargetError.__super__.constructor.apply(this, arguments);
-      return _ref1;
-    }
-
-    return NoTargetError;
-  }(Error);
-
-  Bar = function () {
-    function Bar() {
-      this.progress = 0;
-    }
-
-    Bar.prototype.getElement = function () {
-      var targetElement;
-      if (this.el == null) {
-        targetElement = document.querySelector(options.target);
-        if (!targetElement) {
-          throw new NoTargetError();
-        }
-        this.el = document.createElement('div');
-        this.el.className = "pace pace-active";
-        document.body.className = document.body.className.replace(/pace-done/g, '');
-        document.body.className += ' pace-running';
-        this.el.innerHTML = '<div class="pace-progress">\n  <div class="pace-progress-inner"></div>\n</div>\n<div class="pace-activity"></div>';
-        if (targetElement.firstChild != null) {
-          targetElement.insertBefore(this.el, targetElement.firstChild);
-        } else {
-          targetElement.appendChild(this.el);
-        }
-      }
-      return this.el;
-    };
-
-    Bar.prototype.finish = function () {
-      var el;
-      el = this.getElement();
-      el.className = el.className.replace('pace-active', '');
-      el.className += ' pace-inactive';
-      document.body.className = document.body.className.replace('pace-running', '');
-      return document.body.className += ' pace-done';
-    };
-
-    Bar.prototype.update = function (prog) {
-      this.progress = prog;
-      return this.render();
-    };
-
-    Bar.prototype.destroy = function () {
-      try {
-        this.getElement().parentNode.removeChild(this.getElement());
-      } catch (_error) {
-        NoTargetError = _error;
-      }
-      return this.el = void 0;
-    };
-
-    Bar.prototype.render = function () {
-      var el, key, progressStr, transform, _j, _len1, _ref2;
-      if (document.querySelector(options.target) == null) {
-        return false;
-      }
-      el = this.getElement();
-      transform = "translate3d(" + this.progress + "%, 0, 0)";
-      _ref2 = ['webkitTransform', 'msTransform', 'transform'];
-      for (_j = 0, _len1 = _ref2.length; _j < _len1; _j++) {
-        key = _ref2[_j];
-        el.children[0].style[key] = transform;
-      }
-      if (!this.lastRenderedProgress || this.lastRenderedProgress | 0 !== this.progress | 0) {
-        el.children[0].setAttribute('data-progress-text', "" + (this.progress | 0) + "%");
-        if (this.progress >= 100) {
-          progressStr = '99';
-        } else {
-          progressStr = this.progress < 10 ? "0" : "";
-          progressStr += this.progress | 0;
-        }
-        el.children[0].setAttribute('data-progress', "" + progressStr);
-      }
-      return this.lastRenderedProgress = this.progress;
-    };
-
-    Bar.prototype.done = function () {
-      return this.progress >= 100;
-    };
-
-    return Bar;
-  }();
-
-  Events = function () {
-    function Events() {
-      this.bindings = {};
-    }
-
-    Events.prototype.trigger = function (name, val) {
-      var binding, _j, _len1, _ref2, _results;
-      if (this.bindings[name] != null) {
-        _ref2 = this.bindings[name];
-        _results = [];
-        for (_j = 0, _len1 = _ref2.length; _j < _len1; _j++) {
-          binding = _ref2[_j];
-          _results.push(binding.call(this, val));
-        }
-        return _results;
-      }
-    };
-
-    Events.prototype.on = function (name, fn) {
-      var _base;
-      if ((_base = this.bindings)[name] == null) {
-        _base[name] = [];
-      }
-      return this.bindings[name].push(fn);
-    };
-
-    return Events;
-  }();
-
-  _XMLHttpRequest = window.XMLHttpRequest;
-
-  _XDomainRequest = window.XDomainRequest;
-
-  _WebSocket = window.WebSocket;
-
-  extendNative = function extendNative(to, from) {
-    var e, key, _results;
-    _results = [];
-    for (key in from.prototype) {
-      try {
-        if (to[key] == null && typeof from[key] !== 'function') {
-          if (typeof Object.defineProperty === 'function') {
-            _results.push(Object.defineProperty(to, key, {
-              get: function get() {
-                return from.prototype[key];
-              },
-              configurable: true,
-              enumerable: true
-            }));
-          } else {
-            _results.push(to[key] = from.prototype[key]);
-          }
-        } else {
-          _results.push(void 0);
-        }
-      } catch (_error) {
-        e = _error;
-      }
-    }
-    return _results;
-  };
-
-  ignoreStack = [];
-
-  Pace.ignore = function () {
-    var args, fn, ret;
-    fn = arguments[0], args = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
-    ignoreStack.unshift('ignore');
-    ret = fn.apply(null, args);
-    ignoreStack.shift();
-    return ret;
-  };
-
-  Pace.track = function () {
-    var args, fn, ret;
-    fn = arguments[0], args = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
-    ignoreStack.unshift('track');
-    ret = fn.apply(null, args);
-    ignoreStack.shift();
-    return ret;
-  };
-
-  shouldTrack = function shouldTrack(method) {
-    var _ref2;
-    if (method == null) {
-      method = 'GET';
-    }
-    if (ignoreStack[0] === 'track') {
-      return 'force';
-    }
-    if (!ignoreStack.length && options.ajax) {
-      if (method === 'socket' && options.ajax.trackWebSockets) {
-        return true;
-      } else if (_ref2 = method.toUpperCase(), __indexOf.call(options.ajax.trackMethods, _ref2) >= 0) {
-        return true;
-      }
-    }
-    return false;
-  };
-
-  RequestIntercept = function (_super) {
-    __extends(RequestIntercept, _super);
-
-    function RequestIntercept() {
-      var monitorXHR,
-          _this = this;
-      RequestIntercept.__super__.constructor.apply(this, arguments);
-      monitorXHR = function monitorXHR(req) {
-        var _open;
-        _open = req.open;
-        return req.open = function (type, url, async) {
-          if (shouldTrack(type)) {
-            _this.trigger('request', {
-              type: type,
-              url: url,
-              request: req
-            });
-          }
-          return _open.apply(req, arguments);
-        };
-      };
-      window.XMLHttpRequest = function (flags) {
-        var req;
-        req = new _XMLHttpRequest(flags);
-        monitorXHR(req);
-        return req;
-      };
-      try {
-        extendNative(window.XMLHttpRequest, _XMLHttpRequest);
-      } catch (_error) {}
-      if (_XDomainRequest != null) {
-        window.XDomainRequest = function () {
-          var req;
-          req = new _XDomainRequest();
-          monitorXHR(req);
-          return req;
-        };
-        try {
-          extendNative(window.XDomainRequest, _XDomainRequest);
-        } catch (_error) {}
-      }
-      if (_WebSocket != null && options.ajax.trackWebSockets) {
-        window.WebSocket = function (url, protocols) {
-          var req;
-          if (protocols != null) {
-            req = new _WebSocket(url, protocols);
-          } else {
-            req = new _WebSocket(url);
-          }
-          if (shouldTrack('socket')) {
-            _this.trigger('request', {
-              type: 'socket',
-              url: url,
-              protocols: protocols,
-              request: req
-            });
-          }
-          return req;
-        };
-        try {
-          extendNative(window.WebSocket, _WebSocket);
-        } catch (_error) {}
-      }
-    }
-
-    return RequestIntercept;
-  }(Events);
-
-  _intercept = null;
-
-  getIntercept = function getIntercept() {
-    if (_intercept == null) {
-      _intercept = new RequestIntercept();
-    }
-    return _intercept;
-  };
-
-  shouldIgnoreURL = function shouldIgnoreURL(url) {
-    var pattern, _j, _len1, _ref2;
-    _ref2 = options.ajax.ignoreURLs;
-    for (_j = 0, _len1 = _ref2.length; _j < _len1; _j++) {
-      pattern = _ref2[_j];
-      if (typeof pattern === 'string') {
-        if (url.indexOf(pattern) !== -1) {
-          return true;
-        }
-      } else {
-        if (pattern.test(url)) {
-          return true;
-        }
-      }
-    }
-    return false;
-  };
-
-  getIntercept().on('request', function (_arg) {
-    var after, args, request, type, url;
-    type = _arg.type, request = _arg.request, url = _arg.url;
-    if (shouldIgnoreURL(url)) {
-      return;
-    }
-    if (!Pace.running && (options.restartOnRequestAfter !== false || shouldTrack(type) === 'force')) {
-      args = arguments;
-      after = options.restartOnRequestAfter || 0;
-      if (typeof after === 'boolean') {
-        after = 0;
-      }
-      return setTimeout(function () {
-        var stillActive, _j, _len1, _ref2, _ref3, _results;
-        if (type === 'socket') {
-          stillActive = request.readyState < 2;
-        } else {
-          stillActive = 0 < (_ref2 = request.readyState) && _ref2 < 4;
-        }
-        if (stillActive) {
-          Pace.restart();
-          _ref3 = Pace.sources;
-          _results = [];
-          for (_j = 0, _len1 = _ref3.length; _j < _len1; _j++) {
-            source = _ref3[_j];
-            if (source instanceof AjaxMonitor) {
-              source.watch.apply(source, args);
-              break;
-            } else {
-              _results.push(void 0);
-            }
-          }
-          return _results;
-        }
-      }, after);
-    }
-  });
-
-  AjaxMonitor = function () {
-    function AjaxMonitor() {
-      var _this = this;
-      this.elements = [];
-      getIntercept().on('request', function () {
-        return _this.watch.apply(_this, arguments);
-      });
-    }
-
-    AjaxMonitor.prototype.watch = function (_arg) {
-      var request, tracker, type, url;
-      type = _arg.type, request = _arg.request, url = _arg.url;
-      if (shouldIgnoreURL(url)) {
-        return;
-      }
-      if (type === 'socket') {
-        tracker = new SocketRequestTracker(request);
-      } else {
-        tracker = new XHRRequestTracker(request);
-      }
-      return this.elements.push(tracker);
-    };
-
-    return AjaxMonitor;
-  }();
-
-  XHRRequestTracker = function () {
-    function XHRRequestTracker(request) {
-      var event,
-          size,
-          _j,
-          _len1,
-          _onreadystatechange,
-          _ref2,
-          _this = this;
-      this.progress = 0;
-      if (window.ProgressEvent != null) {
-        size = null;
-        request.addEventListener('progress', function (evt) {
-          if (evt.lengthComputable) {
-            return _this.progress = 100 * evt.loaded / evt.total;
-          } else {
-            return _this.progress = _this.progress + (100 - _this.progress) / 2;
-          }
-        }, false);
-        _ref2 = ['load', 'abort', 'timeout', 'error'];
-        for (_j = 0, _len1 = _ref2.length; _j < _len1; _j++) {
-          event = _ref2[_j];
-          request.addEventListener(event, function () {
-            return _this.progress = 100;
-          }, false);
-        }
-      } else {
-        _onreadystatechange = request.onreadystatechange;
-        request.onreadystatechange = function () {
-          var _ref3;
-          if ((_ref3 = request.readyState) === 0 || _ref3 === 4) {
-            _this.progress = 100;
-          } else if (request.readyState === 3) {
-            _this.progress = 50;
-          }
-          return typeof _onreadystatechange === "function" ? _onreadystatechange.apply(null, arguments) : void 0;
-        };
-      }
-    }
-
-    return XHRRequestTracker;
-  }();
-
-  SocketRequestTracker = function () {
-    function SocketRequestTracker(request) {
-      var event,
-          _j,
-          _len1,
-          _ref2,
-          _this = this;
-      this.progress = 0;
-      _ref2 = ['error', 'open'];
-      for (_j = 0, _len1 = _ref2.length; _j < _len1; _j++) {
-        event = _ref2[_j];
-        request.addEventListener(event, function () {
-          return _this.progress = 100;
-        }, false);
-      }
-    }
-
-    return SocketRequestTracker;
-  }();
-
-  ElementMonitor = function () {
-    function ElementMonitor(options) {
-      var selector, _j, _len1, _ref2;
-      if (options == null) {
-        options = {};
-      }
-      this.elements = [];
-      if (options.selectors == null) {
-        options.selectors = [];
-      }
-      _ref2 = options.selectors;
-      for (_j = 0, _len1 = _ref2.length; _j < _len1; _j++) {
-        selector = _ref2[_j];
-        this.elements.push(new ElementTracker(selector));
-      }
-    }
-
-    return ElementMonitor;
-  }();
-
-  ElementTracker = function () {
-    function ElementTracker(selector) {
-      this.selector = selector;
-      this.progress = 0;
-      this.check();
-    }
-
-    ElementTracker.prototype.check = function () {
-      var _this = this;
-      if (document.querySelector(this.selector)) {
-        return this.done();
-      } else {
-        return setTimeout(function () {
-          return _this.check();
-        }, options.elements.checkInterval);
-      }
-    };
-
-    ElementTracker.prototype.done = function () {
-      return this.progress = 100;
-    };
-
-    return ElementTracker;
-  }();
-
-  DocumentMonitor = function () {
-    DocumentMonitor.prototype.states = {
-      loading: 0,
-      interactive: 50,
-      complete: 100
-    };
-
-    function DocumentMonitor() {
-      var _onreadystatechange,
-          _ref2,
-          _this = this;
-      this.progress = (_ref2 = this.states[document.readyState]) != null ? _ref2 : 100;
-      _onreadystatechange = document.onreadystatechange;
-      document.onreadystatechange = function () {
-        if (_this.states[document.readyState] != null) {
-          _this.progress = _this.states[document.readyState];
-        }
-        return typeof _onreadystatechange === "function" ? _onreadystatechange.apply(null, arguments) : void 0;
-      };
-    }
-
-    return DocumentMonitor;
-  }();
-
-  EventLagMonitor = function () {
-    function EventLagMonitor() {
-      var avg,
-          interval,
-          last,
-          points,
-          samples,
-          _this = this;
-      this.progress = 0;
-      avg = 0;
-      samples = [];
-      points = 0;
-      last = now();
-      interval = setInterval(function () {
-        var diff;
-        diff = now() - last - 50;
-        last = now();
-        samples.push(diff);
-        if (samples.length > options.eventLag.sampleCount) {
-          samples.shift();
-        }
-        avg = avgAmplitude(samples);
-        if (++points >= options.eventLag.minSamples && avg < options.eventLag.lagThreshold) {
-          _this.progress = 100;
-          return clearInterval(interval);
-        } else {
-          return _this.progress = 100 * (3 / (avg + 3));
-        }
-      }, 50);
-    }
-
-    return EventLagMonitor;
-  }();
-
-  Scaler = function () {
-    function Scaler(source) {
-      this.source = source;
-      this.last = this.sinceLastUpdate = 0;
-      this.rate = options.initialRate;
-      this.catchup = 0;
-      this.progress = this.lastProgress = 0;
-      if (this.source != null) {
-        this.progress = result(this.source, 'progress');
-      }
-    }
-
-    Scaler.prototype.tick = function (frameTime, val) {
-      var scaling;
-      if (val == null) {
-        val = result(this.source, 'progress');
-      }
-      if (val >= 100) {
-        this.done = true;
-      }
-      if (val === this.last) {
-        this.sinceLastUpdate += frameTime;
-      } else {
-        if (this.sinceLastUpdate) {
-          this.rate = (val - this.last) / this.sinceLastUpdate;
-        }
-        this.catchup = (val - this.progress) / options.catchupTime;
-        this.sinceLastUpdate = 0;
-        this.last = val;
-      }
-      if (val > this.progress) {
-        this.progress += this.catchup * frameTime;
-      }
-      scaling = 1 - Math.pow(this.progress / 100, options.easeFactor);
-      this.progress += scaling * this.rate * frameTime;
-      this.progress = Math.min(this.lastProgress + options.maxProgressPerFrame, this.progress);
-      this.progress = Math.max(0, this.progress);
-      this.progress = Math.min(100, this.progress);
-      this.lastProgress = this.progress;
-      return this.progress;
-    };
-
-    return Scaler;
-  }();
-
-  sources = null;
-
-  scalers = null;
-
-  bar = null;
-
-  uniScaler = null;
-
-  animation = null;
-
-  cancelAnimation = null;
-
-  Pace.running = false;
-
-  handlePushState = function handlePushState() {
-    if (options.restartOnPushState) {
-      return Pace.restart();
-    }
-  };
-
-  if (window.history.pushState != null) {
-    _pushState = window.history.pushState;
-    window.history.pushState = function () {
-      handlePushState();
-      return _pushState.apply(window.history, arguments);
-    };
-  }
-
-  if (window.history.replaceState != null) {
-    _replaceState = window.history.replaceState;
-    window.history.replaceState = function () {
-      handlePushState();
-      return _replaceState.apply(window.history, arguments);
-    };
-  }
-
-  SOURCE_KEYS = {
-    ajax: AjaxMonitor,
-    elements: ElementMonitor,
-    document: DocumentMonitor,
-    eventLag: EventLagMonitor
-  };
-
-  (init = function init() {
-    var type, _j, _k, _len1, _len2, _ref2, _ref3, _ref4;
-    Pace.sources = sources = [];
-    _ref2 = ['ajax', 'elements', 'document', 'eventLag'];
-    for (_j = 0, _len1 = _ref2.length; _j < _len1; _j++) {
-      type = _ref2[_j];
-      if (options[type] !== false) {
-        sources.push(new SOURCE_KEYS[type](options[type]));
-      }
-    }
-    _ref4 = (_ref3 = options.extraSources) != null ? _ref3 : [];
-    for (_k = 0, _len2 = _ref4.length; _k < _len2; _k++) {
-      source = _ref4[_k];
-      sources.push(new source(options));
-    }
-    Pace.bar = bar = new Bar();
-    scalers = [];
-    return uniScaler = new Scaler();
-  })();
-
-  Pace.stop = function () {
-    Pace.trigger('stop');
-    Pace.running = false;
-    bar.destroy();
-    cancelAnimation = true;
-    if (animation != null) {
-      if (typeof cancelAnimationFrame === "function") {
-        cancelAnimationFrame(animation);
-      }
-      animation = null;
-    }
-    return init();
-  };
-
-  Pace.restart = function () {
-    Pace.trigger('restart');
-    Pace.stop();
-    return Pace.start();
-  };
-
-  Pace.go = function () {
-    var start;
-    Pace.running = true;
-    bar.render();
-    start = now();
-    cancelAnimation = false;
-    return animation = runAnimation(function (frameTime, enqueueNextFrame) {
-      var avg, count, done, element, elements, i, j, remaining, scaler, scalerList, sum, _j, _k, _len1, _len2, _ref2;
-      remaining = 100 - bar.progress;
-      count = sum = 0;
-      done = true;
-      for (i = _j = 0, _len1 = sources.length; _j < _len1; i = ++_j) {
-        source = sources[i];
-        scalerList = scalers[i] != null ? scalers[i] : scalers[i] = [];
-        elements = (_ref2 = source.elements) != null ? _ref2 : [source];
-        for (j = _k = 0, _len2 = elements.length; _k < _len2; j = ++_k) {
-          element = elements[j];
-          scaler = scalerList[j] != null ? scalerList[j] : scalerList[j] = new Scaler(element);
-          done &= scaler.done;
-          if (scaler.done) {
-            continue;
-          }
-          count++;
-          sum += scaler.tick(frameTime);
-        }
-      }
-      avg = sum / count;
-      bar.update(uniScaler.tick(frameTime, avg));
-      if (bar.done() || done || cancelAnimation) {
-        bar.update(100);
-        Pace.trigger('done');
-        return setTimeout(function () {
-          bar.finish();
-          Pace.running = false;
-          return Pace.trigger('hide');
-        }, Math.max(options.ghostTime, Math.max(options.minTime - (now() - start), 0)));
-      } else {
-        return enqueueNextFrame();
-      }
-    });
-  };
-
-  Pace.start = function (_options) {
-    _extend(options, _options);
-    Pace.running = true;
-    try {
-      bar.render();
-    } catch (_error) {
-      NoTargetError = _error;
-    }
-    if (!document.querySelector('.pace')) {
-      return setTimeout(Pace.start, 50);
-    } else {
-      Pace.trigger('start');
-      return Pace.go();
-    }
-  };
-
-  if (true) {
-    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(18)], __WEBPACK_AMD_DEFINE_RESULT__ = (function () {
-      return Pace;
-    }).apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
-				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-  } else if ((typeof exports === 'undefined' ? 'undefined' : _typeof(exports)) === 'object') {
-    module.exports = Pace;
-  } else {
-    if (options.startOnPageLoad) {
-      Pace.start();
-    }
-  }
-}).call(undefined);
-
-/***/ }),
-/* 19 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-exports.__esModule = true;
-exports.ActionTypes = undefined;
-exports['default'] = createStore;
-
-var _isPlainObject = __webpack_require__(20);
-
-var _isPlainObject2 = _interopRequireDefault(_isPlainObject);
-
-var _symbolObservable = __webpack_require__(69);
-
-var _symbolObservable2 = _interopRequireDefault(_symbolObservable);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-/**
- * These are private action types reserved by Redux.
- * For any unknown actions, you must return the current state.
- * If the current state is undefined, you must return the initial state.
- * Do not reference these action types directly in your code.
- */
-var ActionTypes = exports.ActionTypes = {
-  INIT: '@@redux/INIT'
-
-  /**
-   * Creates a Redux store that holds the state tree.
-   * The only way to change the data in the store is to call `dispatch()` on it.
-   *
-   * There should only be a single store in your app. To specify how different
-   * parts of the state tree respond to actions, you may combine several reducers
-   * into a single reducer function by using `combineReducers`.
-   *
-   * @param {Function} reducer A function that returns the next state tree, given
-   * the current state tree and the action to handle.
-   *
-   * @param {any} [preloadedState] The initial state. You may optionally specify it
-   * to hydrate the state from the server in universal apps, or to restore a
-   * previously serialized user session.
-   * If you use `combineReducers` to produce the root reducer function, this must be
-   * an object with the same shape as `combineReducers` keys.
-   *
-   * @param {Function} [enhancer] The store enhancer. You may optionally specify it
-   * to enhance the store with third-party capabilities such as middleware,
-   * time travel, persistence, etc. The only store enhancer that ships with Redux
-   * is `applyMiddleware()`.
-   *
-   * @returns {Store} A Redux store that lets you read the state, dispatch actions
-   * and subscribe to changes.
-   */
-};function createStore(reducer, preloadedState, enhancer) {
-  var _ref2;
-
-  if (typeof preloadedState === 'function' && typeof enhancer === 'undefined') {
-    enhancer = preloadedState;
-    preloadedState = undefined;
-  }
-
-  if (typeof enhancer !== 'undefined') {
-    if (typeof enhancer !== 'function') {
-      throw new Error('Expected the enhancer to be a function.');
-    }
-
-    return enhancer(createStore)(reducer, preloadedState);
-  }
-
-  if (typeof reducer !== 'function') {
-    throw new Error('Expected the reducer to be a function.');
-  }
-
-  var currentReducer = reducer;
-  var currentState = preloadedState;
-  var currentListeners = [];
-  var nextListeners = currentListeners;
-  var isDispatching = false;
-
-  function ensureCanMutateNextListeners() {
-    if (nextListeners === currentListeners) {
-      nextListeners = currentListeners.slice();
-    }
-  }
-
-  /**
-   * Reads the state tree managed by the store.
-   *
-   * @returns {any} The current state tree of your application.
-   */
-  function getState() {
-    return currentState;
-  }
-
-  /**
-   * Adds a change listener. It will be called any time an action is dispatched,
-   * and some part of the state tree may potentially have changed. You may then
-   * call `getState()` to read the current state tree inside the callback.
-   *
-   * You may call `dispatch()` from a change listener, with the following
-   * caveats:
-   *
-   * 1. The subscriptions are snapshotted just before every `dispatch()` call.
-   * If you subscribe or unsubscribe while the listeners are being invoked, this
-   * will not have any effect on the `dispatch()` that is currently in progress.
-   * However, the next `dispatch()` call, whether nested or not, will use a more
-   * recent snapshot of the subscription list.
-   *
-   * 2. The listener should not expect to see all state changes, as the state
-   * might have been updated multiple times during a nested `dispatch()` before
-   * the listener is called. It is, however, guaranteed that all subscribers
-   * registered before the `dispatch()` started will be called with the latest
-   * state by the time it exits.
-   *
-   * @param {Function} listener A callback to be invoked on every dispatch.
-   * @returns {Function} A function to remove this change listener.
-   */
-  function subscribe(listener) {
-    if (typeof listener !== 'function') {
-      throw new Error('Expected listener to be a function.');
-    }
-
-    var isSubscribed = true;
-
-    ensureCanMutateNextListeners();
-    nextListeners.push(listener);
-
-    return function unsubscribe() {
-      if (!isSubscribed) {
-        return;
-      }
-
-      isSubscribed = false;
-
-      ensureCanMutateNextListeners();
-      var index = nextListeners.indexOf(listener);
-      nextListeners.splice(index, 1);
-    };
-  }
-
-  /**
-   * Dispatches an action. It is the only way to trigger a state change.
-   *
-   * The `reducer` function, used to create the store, will be called with the
-   * current state tree and the given `action`. Its return value will
-   * be considered the **next** state of the tree, and the change listeners
-   * will be notified.
-   *
-   * The base implementation only supports plain object actions. If you want to
-   * dispatch a Promise, an Observable, a thunk, or something else, you need to
-   * wrap your store creating function into the corresponding middleware. For
-   * example, see the documentation for the `redux-thunk` package. Even the
-   * middleware will eventually dispatch plain object actions using this method.
-   *
-   * @param {Object} action A plain object representing “what changed”. It is
-   * a good idea to keep actions serializable so you can record and replay user
-   * sessions, or use the time travelling `redux-devtools`. An action must have
-   * a `type` property which may not be `undefined`. It is a good idea to use
-   * string constants for action types.
-   *
-   * @returns {Object} For convenience, the same action object you dispatched.
-   *
-   * Note that, if you use a custom middleware, it may wrap `dispatch()` to
-   * return something else (for example, a Promise you can await).
-   */
-  function dispatch(action) {
-    if (!(0, _isPlainObject2['default'])(action)) {
-      throw new Error('Actions must be plain objects. ' + 'Use custom middleware for async actions.');
-    }
-
-    if (typeof action.type === 'undefined') {
-      throw new Error('Actions may not have an undefined "type" property. ' + 'Have you misspelled a constant?');
-    }
-
-    if (isDispatching) {
-      throw new Error('Reducers may not dispatch actions.');
-    }
-
-    try {
-      isDispatching = true;
-      currentState = currentReducer(currentState, action);
-    } finally {
-      isDispatching = false;
-    }
-
-    var listeners = currentListeners = nextListeners;
-    for (var i = 0; i < listeners.length; i++) {
-      var listener = listeners[i];
-      listener();
-    }
-
-    return action;
-  }
-
-  /**
-   * Replaces the reducer currently used by the store to calculate the state.
-   *
-   * You might need this if your app implements code splitting and you want to
-   * load some of the reducers dynamically. You might also need this if you
-   * implement a hot reloading mechanism for Redux.
-   *
-   * @param {Function} nextReducer The reducer for the store to use instead.
-   * @returns {void}
-   */
-  function replaceReducer(nextReducer) {
-    if (typeof nextReducer !== 'function') {
-      throw new Error('Expected the nextReducer to be a function.');
-    }
-
-    currentReducer = nextReducer;
-    dispatch({ type: ActionTypes.INIT });
-  }
-
-  /**
-   * Interoperability point for observable/reactive libraries.
-   * @returns {observable} A minimal observable of state changes.
-   * For more information, see the observable proposal:
-   * https://github.com/tc39/proposal-observable
-   */
-  function observable() {
-    var _ref;
-
-    var outerSubscribe = subscribe;
-    return _ref = {
-      /**
-       * The minimal observable subscription method.
-       * @param {Object} observer Any object that can be used as an observer.
-       * The observer object should have a `next` method.
-       * @returns {subscription} An object with an `unsubscribe` method that can
-       * be used to unsubscribe the observable from the store, and prevent further
-       * emission of values from the observable.
-       */
-      subscribe: function subscribe(observer) {
-        if (typeof observer !== 'object') {
-          throw new TypeError('Expected the observer to be an object.');
-        }
-
-        function observeState() {
-          if (observer.next) {
-            observer.next(getState());
-          }
-        }
-
-        observeState();
-        var unsubscribe = outerSubscribe(observeState);
-        return { unsubscribe: unsubscribe };
-      }
-    }, _ref[_symbolObservable2['default']] = function () {
-      return this;
-    }, _ref;
-  }
-
-  // When a store is created, an "INIT" action is dispatched so that every
-  // reducer returns their initial state. This effectively populates
-  // the initial state tree.
-  dispatch({ type: ActionTypes.INIT });
-
-  return _ref2 = {
-    dispatch: dispatch,
-    subscribe: subscribe,
-    getState: getState,
-    replaceReducer: replaceReducer
-  }, _ref2[_symbolObservable2['default']] = observable, _ref2;
-}
-
-/***/ }),
-/* 20 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var baseGetTag = __webpack_require__(11),
-    getPrototype = __webpack_require__(67),
-    isObjectLike = __webpack_require__(12);
-
-/** `Object#toString` result references. */
-var objectTag = '[object Object]';
-
-/** Used for built-in method references. */
-var funcProto = Function.prototype,
-    objectProto = Object.prototype;
-
-/** Used to resolve the decompiled source of functions. */
-var funcToString = funcProto.toString;
-
-/** Used to check objects for own properties. */
-var hasOwnProperty = objectProto.hasOwnProperty;
-
-/** Used to infer the `Object` constructor. */
-var objectCtorString = funcToString.call(Object);
-
-/**
- * Checks if `value` is a plain object, that is, an object created by the
- * `Object` constructor or one with a `[[Prototype]]` of `null`.
- *
- * @static
- * @memberOf _
- * @since 0.8.0
- * @category Lang
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if `value` is a plain object, else `false`.
- * @example
- *
- * function Foo() {
- *   this.a = 1;
- * }
- *
- * _.isPlainObject(new Foo);
- * // => false
- *
- * _.isPlainObject([1, 2, 3]);
- * // => false
- *
- * _.isPlainObject({ 'x': 0, 'y': 0 });
- * // => true
- *
- * _.isPlainObject(Object.create(null));
- * // => true
- */
-function isPlainObject(value) {
-  if (!isObjectLike(value) || baseGetTag(value) != objectTag) {
-    return false;
-  }
-  var proto = getPrototype(value);
-  if (proto === null) {
-    return true;
-  }
-  var Ctor = hasOwnProperty.call(proto, 'constructor') && proto.constructor;
-  return typeof Ctor == 'function' && Ctor instanceof Ctor &&
-    funcToString.call(Ctor) == objectCtorString;
-}
-
-module.exports = isPlainObject;
-
-
-/***/ }),
-/* 21 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var root = __webpack_require__(16);
-
-/** Built-in value references. */
-var Symbol = root.Symbol;
-
-module.exports = Symbol;
-
-
-/***/ }),
-/* 22 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/* WEBPACK VAR INJECTION */(function(global) {/** Detect free variable `global` from Node.js. */
-var freeGlobal = typeof global == 'object' && global && global.Object === Object && global;
-
-module.exports = freeGlobal;
-
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
-
-/***/ }),
-/* 23 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-exports.__esModule = true;
-exports['default'] = warning;
-/**
- * Prints a warning in the console if it exists.
- *
- * @param {String} message The warning message.
- * @returns {void}
- */
-function warning(message) {
-  /* eslint-disable no-console */
-  if (typeof console !== 'undefined' && typeof console.error === 'function') {
-    console.error(message);
-  }
-  /* eslint-enable no-console */
-  try {
-    // This error was thrown as a convenience so that if you enable
-    // "break on all exceptions" in your console,
-    // it would pause the execution at this line.
-    throw new Error(message);
-    /* eslint-disable no-empty */
-  } catch (e) {}
-  /* eslint-enable no-empty */
-}
-
-/***/ }),
-/* 24 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-exports.__esModule = true;
-exports["default"] = compose;
-/**
- * Composes single-argument functions from right to left. The rightmost
- * function can take multiple arguments as it provides the signature for
- * the resulting composite function.
- *
- * @param {...Function} funcs The functions to compose.
- * @returns {Function} A function obtained by composing the argument functions
- * from right to left. For example, compose(f, g, h) is identical to doing
- * (...args) => f(g(h(...args))).
- */
-
-function compose() {
-  for (var _len = arguments.length, funcs = Array(_len), _key = 0; _key < _len; _key++) {
-    funcs[_key] = arguments[_key];
-  }
-
-  if (funcs.length === 0) {
-    return function (arg) {
-      return arg;
-    };
-  }
-
-  if (funcs.length === 1) {
-    return funcs[0];
-  }
-
-  return funcs.reduce(function (a, b) {
-    return function () {
-      return a(b.apply(undefined, arguments));
-    };
-  });
-}
-
-/***/ }),
-/* 25 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-exports.__esModule = true;
-function createThunkMiddleware(extraArgument) {
-  return function (_ref) {
-    var dispatch = _ref.dispatch,
-        getState = _ref.getState;
-    return function (next) {
-      return function (action) {
-        if (typeof action === 'function') {
-          return action(dispatch, getState, extraArgument);
-        }
-
-        return next(action);
-      };
-    };
-  };
-}
-
-var thunk = createThunkMiddleware();
-thunk.withExtraArgument = createThunkMiddleware;
-
-exports['default'] = thunk;
-
-/***/ }),
-/* 26 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-exports.__esModule = true;
-
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
-var _lodash = __webpack_require__(6);
-
-var _lodash2 = _interopRequireDefault(_lodash);
-
-__webpack_require__(75);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var prepareUrl = function prepareUrl(url) {
-    return url += (url.indexOf('?') ? '?' : '&') + '__=' + new Date().getTime();
-};
-var isJsonResponse = function isJsonResponse(response) {
-    var isJson = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
-    return isJson || response.headers.get('Content-Type').toLowerCase() === 'application/json';
-};
-
-var paramsToForm = function paramsToForm(data) {
-    var form = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : new FormData();
-    return serialize(form, data);
-};
-
-var serialize = function serialize(form, obj, traditional, scope) {
-    var type = void 0,
-        array = _lodash2.default.isArray(obj),
-        hash = _lodash2.default.isObject(obj);
-
-    _lodash2.default.each(obj, function (value, key) {
-        type = typeof value === 'undefined' ? 'undefined' : _typeof(value);
-        if (scope) {
-            key = traditional ? scope : scope + '[' + (hash || type === 'object' || type === 'array' ? key : '') + ']';
-        }
-
-        if (!scope && array) {
-            form.append(key, value);
-        } else if (type === "array" || !traditional && type === "object") {
-            serialize(form, value, traditional, key);
-        } else {
-            form.append(key, value);
-        }
-    });
-
-    return form;
-};
-
-exports.default = function (url, data, success, error) {
-    var isJson = false;
-    var options = {
-        cache: 'no-cache',
-        credentials: 'same-origin',
-        headers: {
-            'X-REQUESTED-WITH': 'XMLHttpRequest'
-        },
-        method: 'GET',
-        mode: 'same-origin',
-        redirect: 'follow',
-        referrer: 'no-referrer' };
-
-    if (data) {
-        if (data.type) {
-            isJson = data.type.toLowerCase() === 'json';
-        }
-
-        if (data.data) {
-            options['body'] = paramsToForm(data.data);
-        }
-
-        if (data.forceNoCache) {
-            url = prepareUrl(url);
-        }
-
-        options['method'] = data.method ? data.method.toUpperCase() : 'GET';
-        options['mode'] = data.mode ? data.method.toLowerCase() : 'same-origin';
-    }
-
-    return fetch(url, options).then(function (response) {
-        var pr = isJsonResponse(response, isJson) ? response.json() : response.text();
-
-        pr.then(success, error);
-
-        return pr;
-    }, function (response) {
-        return error(response);
-    });
-};
-
-/***/ }),
-/* 27 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-exports.__esModule = true;
-
-var _jquery = __webpack_require__(0);
-
-var _jquery2 = _interopRequireDefault(_jquery);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-exports.default = function (type, data) {
-    var target = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : document;
-
-    (0, _jquery2.default)(target).trigger(type, data);
-};
-
-/***/ }),
-/* 28 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/* WEBPACK VAR INJECTION */(function(global) {
-
-exports.__esModule = true;
-
-var _cookie = __webpack_require__(76);
-
-var _cookie2 = _interopRequireDefault(_cookie);
-
-var _local = __webpack_require__(78);
-
-var _local2 = _interopRequireDefault(_local);
-
-var _tracking = __webpack_require__(79);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var ls = 'localStorage' in global && global.localStorage ? new _local2.default() : new _cookie2.default();
-
-ls.on = _tracking.on;
-ls.off = _tracking.off;
-
-exports.default = ls;
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
-
-/***/ }),
-/* 29 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-exports.__esModule = true;
-exports.hideAll = hideAll;
-exports.action = action;
-
-var _StoreApp = __webpack_require__(7);
-
-var _StoreApp2 = _interopRequireDefault(_StoreApp);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var setTtype = {
-    type: 'SET'
-};
-
-function hideAll() {
-    _StoreApp2.default.dispatch(Object.assign({}, setTtype, {
-        data: {
-            frontend: {
-                darkness: false,
-                header: {
-                    active: null
-                }
-            }
-        }
-    }));
-}
-
-function action(action) {
-    _StoreApp2.default.dispatch(Object.assign({}, setTtype, {
-        data: {
-            frontend: {
-                darkness: action !== null,
-                header: {
-                    active: action
-                }
-            }
-        }
-    }));
-}
-
-/***/ }),
-/* 30 */,
-/* 31 */,
-/* 32 */,
-/* 33 */,
-/* 34 */,
-/* 35 */,
-/* 36 */,
-/* 37 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-exports.__esModule = true;
-exports.onImagesLoaded = undefined;
-
-var _jquery = __webpack_require__(0);
-
-var _jquery2 = _interopRequireDefault(_jquery);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function onImagesLoaded(images, callback) {
-  var self = this,
-      unloaded = images.length;
-
-  if (unloaded === 0) {
-    callback();
-  }
-
-  images.each(function () {
-    if (this.complete && this.naturalWidth !== undefined) {
-      singleImageLoaded();
-    } else {
-      var image = new Image();
-
-      var events = "load.zf.images error.zf.images";
-      (0, _jquery2.default)(image).one(events, function me(event) {
-        (0, _jquery2.default)(this).off(events, me);
-        singleImageLoaded();
-      });
-      image.src = (0, _jquery2.default)(this).attr('src');
-    }
-  });
-
-  function singleImageLoaded() {
-    unloaded--;
-    if (unloaded === 0) {
-      callback();
-    }
-  }
-}
-
-exports.onImagesLoaded = onImagesLoaded;
-
-/***/ }),
-/* 38 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-exports.__esModule = true;
-exports.Motion = exports.Move = undefined;
-
-var _jquery = __webpack_require__(0);
-
-var _jquery2 = _interopRequireDefault(_jquery);
-
-var _foundationUtil = __webpack_require__(1);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var initClasses = ['mui-enter', 'mui-leave'];
-var activeClasses = ['mui-enter-active', 'mui-leave-active'];
-
-var Motion = {
-  animateIn: function animateIn(element, animation, cb) {
-    animate(true, element, animation, cb);
-  },
-
-  animateOut: function animateOut(element, animation, cb) {
-    animate(false, element, animation, cb);
-  }
-};
-
-function Move(duration, elem, fn) {
-  var anim,
-      prog,
-      start = null;
-
-
-  if (duration === 0) {
-    fn.apply(elem);
-    elem.trigger('finished.zf.animate', [elem]).triggerHandler('finished.zf.animate', [elem]);
-    return;
-  }
-
-  function move(ts) {
-    if (!start) start = ts;
-
-    prog = ts - start;
-    fn.apply(elem);
-
-    if (prog < duration) {
-      anim = window.requestAnimationFrame(move, elem);
-    } else {
-      window.cancelAnimationFrame(anim);
-      elem.trigger('finished.zf.animate', [elem]).triggerHandler('finished.zf.animate', [elem]);
-    }
-  }
-  anim = window.requestAnimationFrame(move);
-}
-
-function animate(isIn, element, animation, cb) {
-  element = (0, _jquery2.default)(element).eq(0);
-
-  if (!element.length) return;
-
-  var initClass = isIn ? initClasses[0] : initClasses[1];
-  var activeClass = isIn ? activeClasses[0] : activeClasses[1];
-
-  reset();
-
-  element.addClass(animation).css('transition', 'none');
-
-  requestAnimationFrame(function () {
-    element.addClass(initClass);
-    if (isIn) element.show();
-  });
-
-  requestAnimationFrame(function () {
-    element[0].offsetWidth;
-    element.css('transition', '').addClass(activeClass);
-  });
-
-  element.one((0, _foundationUtil.transitionend)(element), finish);
-
-  function finish() {
-    if (!isIn) element.hide();
-    reset();
-    if (cb) cb.apply(element);
-  }
-
-  function reset() {
-    element[0].style.transitionDuration = 0;
-    element.removeClass(initClass + ' ' + activeClass + ' ' + animation);
-  }
-}
-
-exports.Move = Move;
-exports.Motion = Motion;
-
-/***/ }),
-/* 39 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-exports.__esModule = true;
-exports.Accordion = undefined;
-
-var _jquery = __webpack_require__(0);
-
-var _jquery2 = _interopRequireDefault(_jquery);
-
-var _foundationUtil = __webpack_require__(13);
-
-var _foundationUtil2 = __webpack_require__(1);
-
-var _foundation = __webpack_require__(4);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var Accordion = function (_Plugin) {
-  _inherits(Accordion, _Plugin);
-
-  function Accordion() {
-    _classCallCheck(this, Accordion);
-
-    return _possibleConstructorReturn(this, _Plugin.apply(this, arguments));
-  }
-
-  Accordion.prototype._setup = function _setup(element, options) {
-    this.$element = element;
-    this.options = _jquery2.default.extend({}, Accordion.defaults, this.$element.data(), options);
-
-    this.className = 'Accordion';
-    this._init();
-
-    _foundationUtil.Keyboard.register('Accordion', {
-      'ENTER': 'toggle',
-      'SPACE': 'toggle',
-      'ARROW_DOWN': 'next',
-      'ARROW_UP': 'previous'
-    });
-  };
-
-  Accordion.prototype._init = function _init() {
-    var _this3 = this;
-
-    this.$element.attr('role', 'tablist');
-    this.$tabs = this.$element.children('[data-accordion-item]');
-
-    this.$tabs.each(function (idx, el) {
-      var $el = (0, _jquery2.default)(el),
-          $content = $el.children('[data-tab-content]'),
-          id = $content[0].id || (0, _foundationUtil2.GetYoDigits)(6, 'accordion'),
-          linkId = el.id || id + '-label';
-
-      $el.find('a:first').attr({
-        'aria-controls': id,
-        'role': 'tab',
-        'id': linkId,
-        'aria-expanded': false,
-        'aria-selected': false
-      });
-
-      $content.attr({ 'role': 'tabpanel', 'aria-labelledby': linkId, 'aria-hidden': true, 'id': id });
-    });
-    var $initActive = this.$element.find('.is-active').children('[data-tab-content]');
-    this.firstTimeInit = true;
-    if ($initActive.length) {
-      this.down($initActive, this.firstTimeInit);
-      this.firstTimeInit = false;
-    }
-
-    this._checkDeepLink = function () {
-      var anchor = window.location.hash;
-
-      if (anchor.length) {
-        var $link = _this3.$element.find('[href$="' + anchor + '"]'),
-            $anchor = (0, _jquery2.default)(anchor);
-
-        if ($link.length && $anchor) {
-          if (!$link.parent('[data-accordion-item]').hasClass('is-active')) {
-            _this3.down($anchor, _this3.firstTimeInit);
-            _this3.firstTimeInit = false;
-          };
-
-          if (_this3.options.deepLinkSmudge) {
-            var _this = _this3;
-            (0, _jquery2.default)(window).load(function () {
-              var offset = _this.$element.offset();
-              (0, _jquery2.default)('html, body').animate({ scrollTop: offset.top }, _this.options.deepLinkSmudgeDelay);
-            });
-          }
-
-          _this3.$element.trigger('deeplink.zf.accordion', [$link, $anchor]);
-        }
-      }
-    };
-
-    if (this.options.deepLink) {
-      this._checkDeepLink();
-    }
-
-    this._events();
-  };
-
-  Accordion.prototype._events = function _events() {
-    var _this = this;
-
-    this.$tabs.each(function () {
-      var $elem = (0, _jquery2.default)(this);
-      var $tabContent = $elem.children('[data-tab-content]');
-      if ($tabContent.length) {
-        $elem.children('a').off('click.zf.accordion keydown.zf.accordion').on('click.zf.accordion', function (e) {
-          e.preventDefault();
-          _this.toggle($tabContent);
-        }).on('keydown.zf.accordion', function (e) {
-          _foundationUtil.Keyboard.handleKey(e, 'Accordion', {
-            toggle: function toggle() {
-              _this.toggle($tabContent);
-            },
-            next: function next() {
-              var $a = $elem.next().find('a').focus();
-              if (!_this.options.multiExpand) {
-                $a.trigger('click.zf.accordion');
-              }
-            },
-            previous: function previous() {
-              var $a = $elem.prev().find('a').focus();
-              if (!_this.options.multiExpand) {
-                $a.trigger('click.zf.accordion');
-              }
-            },
-            handled: function handled() {
-              e.preventDefault();
-              e.stopPropagation();
-            }
-          });
-        });
-      }
-    });
-    if (this.options.deepLink) {
-      (0, _jquery2.default)(window).on('popstate', this._checkDeepLink);
-    }
-  };
-
-  Accordion.prototype.toggle = function toggle($target) {
-    if ($target.closest('[data-accordion]').is('[disabled]')) {
-      console.info('Cannot toggle an accordion that is disabled.');
-      return;
-    }
-    if ($target.parent().hasClass('is-active')) {
-      this.up($target);
-    } else {
-      this.down($target);
-    }
-
-    if (this.options.deepLink) {
-      var anchor = $target.prev('a').attr('href');
-
-      if (this.options.updateHistory) {
-        history.pushState({}, '', anchor);
-      } else {
-        history.replaceState({}, '', anchor);
-      }
-    }
-  };
-
-  Accordion.prototype.down = function down($target, firstTime) {
-    var _this4 = this;
-
-    if ($target.closest('[data-accordion]').is('[disabled]') && !firstTime) {
-      console.info('Cannot call down on an accordion that is disabled.');
-      return;
-    }
-    $target.attr('aria-hidden', false).parent('[data-tab-content]').addBack().parent().addClass('is-active');
-
-    if (!this.options.multiExpand && !firstTime) {
-      var $currentActive = this.$element.children('.is-active').children('[data-tab-content]');
-      if ($currentActive.length) {
-        this.up($currentActive.not($target));
-      }
-    }
-
-    $target.slideDown(this.options.slideSpeed, function () {
-      _this4.$element.trigger('down.zf.accordion', [$target]);
-    });
-
-    (0, _jquery2.default)('#' + $target.attr('aria-labelledby')).attr({
-      'aria-expanded': true,
-      'aria-selected': true
-    });
-  };
-
-  Accordion.prototype.up = function up($target) {
-    if ($target.closest('[data-accordion]').is('[disabled]')) {
-      console.info('Cannot call up on an accordion that is disabled.');
-      return;
-    }
-
-    var $aunts = $target.parent().siblings(),
-        _this = this;
-
-    if (!this.options.allowAllClosed && !$aunts.hasClass('is-active') || !$target.parent().hasClass('is-active')) {
-      return;
-    }
-
-    $target.slideUp(_this.options.slideSpeed, function () {
-      _this.$element.trigger('up.zf.accordion', [$target]);
-    });
-
-    $target.attr('aria-hidden', true).parent().removeClass('is-active');
-
-    (0, _jquery2.default)('#' + $target.attr('aria-labelledby')).attr({
-      'aria-expanded': false,
-      'aria-selected': false
-    });
-  };
-
-  Accordion.prototype._destroy = function _destroy() {
-    this.$element.find('[data-tab-content]').stop(true).slideUp(0).css('display', '');
-    this.$element.find('a').off('.zf.accordion');
-    if (this.options.deepLink) {
-      (0, _jquery2.default)(window).off('popstate', this._checkDeepLink);
-    }
-  };
-
-  return Accordion;
-}(_foundation.Plugin);
-
-Accordion.defaults = {
-  slideSpeed: 250,
-
-  multiExpand: false,
-
-  allowAllClosed: false,
-
-  deepLink: false,
-
-  deepLinkSmudge: false,
-
-  deepLinkSmudgeDelay: 300,
-
-  updateHistory: false
-};
-
-exports.Accordion = Accordion;
-
-/***/ }),
-/* 40 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-exports.__esModule = true;
-exports.Tabs = undefined;
-
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
-var _jquery = __webpack_require__(0);
-
-var _jquery2 = _interopRequireDefault(_jquery);
-
-var _foundationUtil = __webpack_require__(13);
-
-var _foundationUtil2 = __webpack_require__(37);
-
-var _foundation = __webpack_require__(4);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var Tabs = function (_Plugin) {
-  _inherits(Tabs, _Plugin);
-
-  function Tabs() {
-    _classCallCheck(this, Tabs);
-
-    return _possibleConstructorReturn(this, _Plugin.apply(this, arguments));
-  }
-
-  Tabs.prototype._setup = function _setup(element, options) {
-    this.$element = element;
-    this.options = _jquery2.default.extend({}, Tabs.defaults, this.$element.data(), options);
-    this.className = 'Tabs';
-
-    this._init();
-    _foundationUtil.Keyboard.register('Tabs', {
-      'ENTER': 'open',
-      'SPACE': 'open',
-      'ARROW_RIGHT': 'next',
-      'ARROW_UP': 'previous',
-      'ARROW_DOWN': 'next',
-      'ARROW_LEFT': 'previous'
-    });
-  };
-
-  Tabs.prototype._init = function _init() {
-    var _this3 = this;
-
-    var _this = this;
-
-    this.$element.attr({ 'role': 'tablist' });
-    this.$tabTitles = this.$element.find('.' + this.options.linkClass);
-    this.$tabContent = (0, _jquery2.default)('[data-tabs-content="' + this.$element[0].id + '"]');
-
-    this.$tabTitles.each(function () {
-      var $elem = (0, _jquery2.default)(this),
-          $link = $elem.find('a'),
-          isActive = $elem.hasClass('' + _this.options.linkActiveClass),
-          hash = $link.attr('data-tabs-target') || $link[0].hash.slice(1),
-          linkId = $link[0].id ? $link[0].id : hash + '-label',
-          $tabContent = (0, _jquery2.default)('#' + hash);
-
-      $elem.attr({ 'role': 'presentation' });
-
-      $link.attr({
-        'role': 'tab',
-        'aria-controls': hash,
-        'aria-selected': isActive,
-        'id': linkId,
-        'tabindex': isActive ? '0' : '-1'
-      });
-
-      $tabContent.attr({
-        'role': 'tabpanel',
-        'aria-labelledby': linkId
-      });
-
-      if (!isActive) {
-        $tabContent.attr('aria-hidden', 'true');
-      }
-
-      if (isActive && _this.options.autoFocus) {
-        (0, _jquery2.default)(window).load(function () {
-          (0, _jquery2.default)('html, body').animate({ scrollTop: $elem.offset().top }, _this.options.deepLinkSmudgeDelay, function () {
-            $link.focus();
-          });
-        });
-      }
-    });
-    if (this.options.matchHeight) {
-      var $images = this.$tabContent.find('img');
-
-      if ($images.length) {
-        (0, _foundationUtil2.onImagesLoaded)($images, this._setHeight.bind(this));
-      } else {
-        this._setHeight();
-      }
-    }
-
-    this._checkDeepLink = function () {
-      var anchor = window.location.hash;
-
-      if (anchor.length) {
-        var $link = _this3.$element.find('[href$="' + anchor + '"]');
-        if ($link.length) {
-          _this3.selectTab((0, _jquery2.default)(anchor), true);
-
-          if (_this3.options.deepLinkSmudge) {
-            var offset = _this3.$element.offset();
-            (0, _jquery2.default)('html, body').animate({ scrollTop: offset.top }, _this3.options.deepLinkSmudgeDelay);
-          }
-
-          _this3.$element.trigger('deeplink.zf.tabs', [$link, (0, _jquery2.default)(anchor)]);
-        }
-      }
-    };
-
-    if (this.options.deepLink) {
-      this._checkDeepLink();
-    }
-
-    this._events();
-  };
-
-  Tabs.prototype._events = function _events() {
-    this._addKeyHandler();
-    this._addClickHandler();
-    this._setHeightMqHandler = null;
-
-    if (this.options.matchHeight) {
-      this._setHeightMqHandler = this._setHeight.bind(this);
-
-      (0, _jquery2.default)(window).on('changed.zf.mediaquery', this._setHeightMqHandler);
-    }
-
-    if (this.options.deepLink) {
-      (0, _jquery2.default)(window).on('popstate', this._checkDeepLink);
-    }
-  };
-
-  Tabs.prototype._addClickHandler = function _addClickHandler() {
-    var _this = this;
-
-    this.$element.off('click.zf.tabs').on('click.zf.tabs', '.' + this.options.linkClass, function (e) {
-      e.preventDefault();
-      e.stopPropagation();
-      _this._handleTabChange((0, _jquery2.default)(this));
-    });
-  };
-
-  Tabs.prototype._addKeyHandler = function _addKeyHandler() {
-    var _this = this;
-
-    this.$tabTitles.off('keydown.zf.tabs').on('keydown.zf.tabs', function (e) {
-      if (e.which === 9) return;
-
-      var $element = (0, _jquery2.default)(this),
-          $elements = $element.parent('ul').children('li'),
-          $prevElement,
-          $nextElement;
-
-      $elements.each(function (i) {
-        if ((0, _jquery2.default)(this).is($element)) {
-          if (_this.options.wrapOnKeys) {
-            $prevElement = i === 0 ? $elements.last() : $elements.eq(i - 1);
-            $nextElement = i === $elements.length - 1 ? $elements.first() : $elements.eq(i + 1);
-          } else {
-            $prevElement = $elements.eq(Math.max(0, i - 1));
-            $nextElement = $elements.eq(Math.min(i + 1, $elements.length - 1));
-          }
-          return;
-        }
-      });
-
-      _foundationUtil.Keyboard.handleKey(e, 'Tabs', {
-        open: function open() {
-          $element.find('[role="tab"]').focus();
-          _this._handleTabChange($element);
-        },
-        previous: function previous() {
-          $prevElement.find('[role="tab"]').focus();
-          _this._handleTabChange($prevElement);
-        },
-        next: function next() {
-          $nextElement.find('[role="tab"]').focus();
-          _this._handleTabChange($nextElement);
-        },
-        handled: function handled() {
-          e.stopPropagation();
-          e.preventDefault();
-        }
-      });
-    });
-  };
-
-  Tabs.prototype._handleTabChange = function _handleTabChange($target, historyHandled) {
-    if ($target.hasClass('' + this.options.linkActiveClass)) {
-      if (this.options.activeCollapse) {
-        this._collapseTab($target);
-
-        this.$element.trigger('collapse.zf.tabs', [$target]);
-      }
-      return;
-    }
-
-    var $oldTab = this.$element.find('.' + this.options.linkClass + '.' + this.options.linkActiveClass),
-        $tabLink = $target.find('[role="tab"]'),
-        hash = $tabLink.attr('data-tabs-target') || $tabLink[0].hash.slice(1),
-        $targetContent = this.$tabContent.find('#' + hash);
-
-    this._collapseTab($oldTab);
-
-    this._openTab($target);
-
-    if (this.options.deepLink && !historyHandled) {
-      var anchor = $target.find('a').attr('href');
-
-      if (this.options.updateHistory) {
-        history.pushState({}, '', anchor);
-      } else {
-        history.replaceState({}, '', anchor);
-      }
-    }
-
-    this.$element.trigger('change.zf.tabs', [$target, $targetContent]);
-
-    $targetContent.find("[data-mutate]").trigger("mutateme.zf.trigger");
-  };
-
-  Tabs.prototype._openTab = function _openTab($target) {
-    var $tabLink = $target.find('[role="tab"]'),
-        hash = $tabLink.attr('data-tabs-target') || $tabLink[0].hash.slice(1),
-        $targetContent = this.$tabContent.find('#' + hash);
-
-    $target.addClass('' + this.options.linkActiveClass);
-
-    $tabLink.attr({
-      'aria-selected': 'true',
-      'tabindex': '0'
-    });
-
-    $targetContent.addClass('' + this.options.panelActiveClass).removeAttr('aria-hidden');
-  };
-
-  Tabs.prototype._collapseTab = function _collapseTab($target) {
-    var $target_anchor = $target.removeClass('' + this.options.linkActiveClass).find('[role="tab"]').attr({
-      'aria-selected': 'false',
-      'tabindex': -1
-    });
-
-    (0, _jquery2.default)('#' + $target_anchor.attr('aria-controls')).removeClass('' + this.options.panelActiveClass).attr({ 'aria-hidden': 'true' });
-  };
-
-  Tabs.prototype.selectTab = function selectTab(elem, historyHandled) {
-    var idStr;
-
-    if ((typeof elem === 'undefined' ? 'undefined' : _typeof(elem)) === 'object') {
-      idStr = elem[0].id;
-    } else {
-      idStr = elem;
-    }
-
-    if (idStr.indexOf('#') < 0) {
-      idStr = '#' + idStr;
-    }
-
-    var $target = this.$tabTitles.find('[href$="' + idStr + '"]').parent('.' + this.options.linkClass);
-
-    this._handleTabChange($target, historyHandled);
-  };
-
-  Tabs.prototype._setHeight = function _setHeight() {
-    var max = 0,
-        _this = this;
-
-    this.$tabContent.find('.' + this.options.panelClass).css('height', '').each(function () {
-
-      var panel = (0, _jquery2.default)(this),
-          isActive = panel.hasClass('' + _this.options.panelActiveClass);
-
-      if (!isActive) {
-        panel.css({ 'visibility': 'hidden', 'display': 'block' });
-      }
-
-      var temp = this.getBoundingClientRect().height;
-
-      if (!isActive) {
-        panel.css({
-          'visibility': '',
-          'display': ''
-        });
-      }
-
-      max = temp > max ? temp : max;
-    }).css('height', max + 'px');
-  };
-
-  Tabs.prototype._destroy = function _destroy() {
-    this.$element.find('.' + this.options.linkClass).off('.zf.tabs').hide().end().find('.' + this.options.panelClass).hide();
-
-    if (this.options.matchHeight) {
-      if (this._setHeightMqHandler != null) {
-        (0, _jquery2.default)(window).off('changed.zf.mediaquery', this._setHeightMqHandler);
-      }
-    }
-
-    if (this.options.deepLink) {
-      (0, _jquery2.default)(window).off('popstate', this._checkDeepLink);
-    }
-  };
-
-  return Tabs;
-}(_foundation.Plugin);
-
-Tabs.defaults = {
-  deepLink: false,
-
-  deepLinkSmudge: false,
-
-  deepLinkSmudgeDelay: 300,
-
-  updateHistory: false,
-
-  autoFocus: false,
-
-  wrapOnKeys: true,
-
-  matchHeight: false,
-
-  activeCollapse: false,
-
-  linkClass: 'tabs-title',
-
-  linkActiveClass: 'is-active',
-
-  panelClass: 'tabs-panel',
-
-  panelActiveClass: 'is-active'
-};
-
-exports.Tabs = Tabs;
-
-/***/ }),
-/* 41 */
-/***/ (function(module, exports) {
-
-/**
- * Checks if `value` is classified as an `Array` object.
- *
- * @static
- * @memberOf _
- * @since 0.1.0
- * @category Lang
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if `value` is an array, else `false`.
- * @example
- *
- * _.isArray([1, 2, 3]);
- * // => true
- *
- * _.isArray(document.body.children);
- * // => false
- *
- * _.isArray('abc');
- * // => false
- *
- * _.isArray(_.noop);
- * // => false
- */
-var isArray = Array.isArray;
-
-module.exports = isArray;
-
-
-/***/ }),
-/* 42 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var defineProperty = __webpack_require__(43);
-
-/**
- * The base implementation of `assignValue` and `assignMergeValue` without
- * value checks.
- *
- * @private
- * @param {Object} object The object to modify.
- * @param {string} key The key of the property to assign.
- * @param {*} value The value to assign.
- */
-function baseAssignValue(object, key, value) {
-  if (key == '__proto__' && defineProperty) {
-    defineProperty(object, key, {
-      'configurable': true,
-      'enumerable': true,
-      'value': value,
-      'writable': true
-    });
-  } else {
-    object[key] = value;
-  }
-}
-
-module.exports = baseAssignValue;
-
-
-/***/ }),
-/* 43 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var getNative = __webpack_require__(134);
-
-var defineProperty = (function() {
-  try {
-    var func = getNative(Object, 'defineProperty');
-    func({}, '', {});
-    return func;
-  } catch (e) {}
-}());
-
-module.exports = defineProperty;
-
-
-/***/ }),
-/* 44 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var baseGetTag = __webpack_require__(11),
-    isObject = __webpack_require__(9);
-
-/** `Object#toString` result references. */
-var asyncTag = '[object AsyncFunction]',
-    funcTag = '[object Function]',
-    genTag = '[object GeneratorFunction]',
-    proxyTag = '[object Proxy]';
-
-/**
- * Checks if `value` is classified as a `Function` object.
- *
- * @static
- * @memberOf _
- * @since 0.1.0
- * @category Lang
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if `value` is a function, else `false`.
- * @example
- *
- * _.isFunction(_);
- * // => true
- *
- * _.isFunction(/abc/);
- * // => false
- */
-function isFunction(value) {
-  if (!isObject(value)) {
-    return false;
-  }
-  // The use of `Object#toString` avoids issues with the `typeof` operator
-  // in Safari 9 which returns 'object' for typed arrays and other constructors.
-  var tag = baseGetTag(value);
-  return tag == funcTag || tag == genTag || tag == asyncTag || tag == proxyTag;
-}
-
-module.exports = isFunction;
-
-
-/***/ }),
-/* 45 */
-/***/ (function(module, exports) {
-
-/**
- * Performs a
- * [`SameValueZero`](http://ecma-international.org/ecma-262/7.0/#sec-samevaluezero)
- * comparison between two values to determine if they are equivalent.
- *
- * @static
- * @memberOf _
- * @since 4.0.0
- * @category Lang
- * @param {*} value The value to compare.
- * @param {*} other The other value to compare.
- * @returns {boolean} Returns `true` if the values are equivalent, else `false`.
- * @example
- *
- * var object = { 'a': 1 };
- * var other = { 'a': 1 };
- *
- * _.eq(object, object);
- * // => true
- *
- * _.eq(object, other);
- * // => false
- *
- * _.eq('a', 'a');
- * // => true
- *
- * _.eq('a', Object('a'));
- * // => false
- *
- * _.eq(NaN, NaN);
- * // => true
- */
-function eq(value, other) {
-  return value === other || (value !== value && other !== other);
-}
-
-module.exports = eq;
-
-
-/***/ }),
-/* 46 */
-/***/ (function(module, exports) {
-
-/**
- * This method returns the first argument it receives.
- *
- * @static
- * @since 0.1.0
- * @memberOf _
- * @category Util
- * @param {*} value Any value.
- * @returns {*} Returns `value`.
- * @example
- *
- * var object = { 'a': 1 };
- *
- * console.log(_.identity(object) === object);
- * // => true
- */
-function identity(value) {
-  return value;
-}
-
-module.exports = identity;
-
-
-/***/ }),
-/* 47 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var isFunction = __webpack_require__(44),
-    isLength = __webpack_require__(48);
-
-/**
- * Checks if `value` is array-like. A value is considered array-like if it's
- * not a function and has a `value.length` that's an integer greater than or
- * equal to `0` and less than or equal to `Number.MAX_SAFE_INTEGER`.
- *
- * @static
- * @memberOf _
- * @since 4.0.0
- * @category Lang
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if `value` is array-like, else `false`.
- * @example
- *
- * _.isArrayLike([1, 2, 3]);
- * // => true
- *
- * _.isArrayLike(document.body.children);
- * // => true
- *
- * _.isArrayLike('abc');
- * // => true
- *
- * _.isArrayLike(_.noop);
- * // => false
- */
-function isArrayLike(value) {
-  return value != null && isLength(value.length) && !isFunction(value);
-}
-
-module.exports = isArrayLike;
-
-
-/***/ }),
 /* 48 */
-/***/ (function(module, exports) {
-
-/** Used as references for various `Number` constants. */
-var MAX_SAFE_INTEGER = 9007199254740991;
-
-/**
- * Checks if `value` is a valid array-like length.
- *
- * **Note:** This method is loosely based on
- * [`ToLength`](http://ecma-international.org/ecma-262/7.0/#sec-tolength).
- *
- * @static
- * @memberOf _
- * @since 4.0.0
- * @category Lang
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if `value` is a valid length, else `false`.
- * @example
- *
- * _.isLength(3);
- * // => true
- *
- * _.isLength(Number.MIN_VALUE);
- * // => false
- *
- * _.isLength(Infinity);
- * // => false
- *
- * _.isLength('3');
- * // => false
- */
-function isLength(value) {
-  return typeof value == 'number' &&
-    value > -1 && value % 1 == 0 && value <= MAX_SAFE_INTEGER;
-}
-
-module.exports = isLength;
-
-
-/***/ }),
-/* 49 */
-/***/ (function(module, exports) {
-
-/** Used as references for various `Number` constants. */
-var MAX_SAFE_INTEGER = 9007199254740991;
-
-/** Used to detect unsigned integer values. */
-var reIsUint = /^(?:0|[1-9]\d*)$/;
-
-/**
- * Checks if `value` is a valid array-like index.
- *
- * @private
- * @param {*} value The value to check.
- * @param {number} [length=MAX_SAFE_INTEGER] The upper bounds of a valid index.
- * @returns {boolean} Returns `true` if `value` is a valid index, else `false`.
- */
-function isIndex(value, length) {
-  length = length == null ? MAX_SAFE_INTEGER : length;
-  return !!length &&
-    (typeof value == 'number' || reIsUint.test(value)) &&
-    (value > -1 && value % 1 == 0 && value < length);
-}
-
-module.exports = isIndex;
-
-
-/***/ }),
-/* 50 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/* WEBPACK VAR INJECTION */(function($) {
-
-__webpack_require__(51);
-
-var _foundation_events = __webpack_require__(117);
-
-var _foundation_events2 = _interopRequireDefault(_foundation_events);
-
-var _DepartmentMenu = __webpack_require__(118);
-
-var _DepartmentMenu2 = _interopRequireDefault(_DepartmentMenu);
-
-var _DottedText = __webpack_require__(119);
-
-var _DottedText2 = _interopRequireDefault(_DottedText);
-
-var _CategoryViewType = __webpack_require__(120);
-
-var _CategoryViewType2 = _interopRequireDefault(_CategoryViewType);
-
-var _LazyImageLoad = __webpack_require__(121);
-
-var _LazyImageLoad2 = _interopRequireDefault(_LazyImageLoad);
-
-var _CatalogFilter = __webpack_require__(123);
-
-var _CatalogFilter2 = _interopRequireDefault(_CatalogFilter);
-
-var _FilterPriceSlider = __webpack_require__(127);
-
-var _FilterPriceSlider2 = _interopRequireDefault(_FilterPriceSlider);
-
-var _SearchSuggestion = __webpack_require__(128);
-
-var _SearchSuggestion2 = _interopRequireDefault(_SearchSuggestion);
-
-var _Loader = __webpack_require__(129);
-
-var _Loader2 = _interopRequireDefault(_Loader);
-
-var _isTouch = __webpack_require__(163);
-
-var _isTouch2 = _interopRequireDefault(_isTouch);
-
-var _isMedia = __webpack_require__(164);
-
-var _isMedia2 = _interopRequireDefault(_isMedia);
-
-var _documentReady = __webpack_require__(165);
-
-var _documentReady2 = _interopRequireDefault(_documentReady);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-(function () {
-    (0, _documentReady2.default)(function () {
-        new _SearchSuggestion2.default();
-        new _LazyImageLoad2.default();
-        new _CategoryViewType2.default();
-        new _DepartmentMenu2.default();
-        new _DottedText2.default('.must-show-less');
-        new _CatalogFilter2.default();
-
-        window['FilterPriceSlider'] = _FilterPriceSlider2.default;
-        window['loader'] = new _Loader2.default();
-
-        (0, _isMedia2.default)('medium', '(max-width: 1023px)');
-
-        Waves.attach('.waves');
-        Waves.init();
-
-        var $offCanvasLeft = $('#offCanvasLeft');
-        var $offCanvasRight = $('#offCanvasRight');
-
-        $(document).on('swipe', function (e, Dx, Dy, angle) {
-            if (e.target.closest('#main_wrapper') && !e.target.closest('.disable-global-swipe, .slider-data, .disable-global-swipe-horizontal')) {
-                if ((0, _isMedia2.default)('medium') && (0, _isTouch2.default)()) {
-                    if (angle < 10) {
-                        if (Dx === 1 && Dy === 0) {
-                            if ($offCanvasRight.hasClass('is-open')) {
-                                $offCanvasRight.foundation('close');
-                            } else {
-                                $offCanvasLeft.foundation('open', e);
-                            }
-                        } else if (Dx === -1 && Dy === 0) {
-                            if ($offCanvasLeft.hasClass('is-open')) {
-                                $offCanvasLeft.foundation('close');
-                            } else {
-                                $offCanvasRight.foundation('open', e);
-                            }
-                        }
-                    }
-                }
-            }
-        });
-
-        $(document).on('click', '.show_more', function (e) {
-            var $this = $(this);
-            var $target = $($this.data('target'));
-
-            if (!$target.hasClass('full')) {
-                $target.addClass('full');
-
-                $this.html($this.data('text-less'));
-            } else {
-                $target.removeClass('full');
-
-                $this.html($this.data('text-more'));
-            }
-        });
-
-        loader.detach(function () {
-            $('.off-canvas').removeClass('hide');
-
-            $(document).foundation();
-
-            while (window.app.afterReady.length) {
-                window.app.afterReady.pop()();
-            }
-
-            (0, _foundation_events2.default)();
-        });
-
-        setTimeout(function () {
-            WebFont.load({
-                google: {
-                    families: ['Lato:300i,400,700']
-                }
-            });
-
-            $(document).trigger('component.cart.check');
-
-            setTimeout(function () {
-                WebFont.load({
-                    google: {
-                        families: ['Lato:300,300i,400,400i,700,700i,800,900']
-                    }
-                });
-            }, 2000);
-        }, 100);
-    });
-})();
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
-
-/***/ }),
-/* 51 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/* WEBPACK VAR INJECTION */(function(__webpack_provided_window_dot_jQuery) {
-
-__webpack_require__(52);
-
-var _jquery = __webpack_require__(0);
-
-var _jquery2 = _interopRequireDefault(_jquery);
-
-__webpack_require__(53);
-
-__webpack_require__(54);
-
-__webpack_require__(17);
-
-var _webfontloader = __webpack_require__(55);
-
-var _webfontloader2 = _interopRequireDefault(_webfontloader);
-
-var _Waves = __webpack_require__(56);
-
-var _Waves2 = _interopRequireDefault(_Waves);
-
-var _whatInput = __webpack_require__(57);
-
-var _whatInput2 = _interopRequireDefault(_whatInput);
-
-var _noUiSlider = __webpack_require__(58);
-
-var _noUiSlider2 = _interopRequireDefault(_noUiSlider);
-
-__webpack_require__(59);
-
-__webpack_require__(18);
-
-__webpack_require__(60);
-
-__webpack_require__(61);
-
-__webpack_require__(83);
-
-__webpack_require__(84);
-
-__webpack_require__(85);
-
-__webpack_require__(86);
-
-__webpack_require__(87);
-
-__webpack_require__(91);
-
-__webpack_require__(92);
-
-__webpack_require__(93);
-
-__webpack_require__(105);
-
-__webpack_require__(106);
-
-__webpack_require__(107);
-
-__webpack_require__(108);
-
-__webpack_require__(109);
-
-__webpack_require__(116);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-(function () {
-    var _arguments = arguments;
-
-    window['$'] = _jquery2.default;
-    __webpack_provided_window_dot_jQuery = _jquery2.default;
-    window['whatInput'] = _whatInput2.default;
-    window['Waves'] = _Waves2.default;
-    window['WebFont'] = _webfontloader2.default;
-    window['noUiSlider'] = _noUiSlider2.default;
-    window['d'] = function (arg) {
-        var _console;
-
-        (_console = console).log.apply(_console, _arguments);
-    };
-})();
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
-
-/***/ }),
-/* 52 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
-;(function (window) {
-  var hadGlobal = 'Modernizr' in window;
-  var oldGlobal = window.Modernizr;
-
-
-  ;(function (window, document, undefined) {
-    var tests = [];
-
-    var ModernizrProto = {
-      _version: '3.5.0',
-
-      _config: {
-        'classPrefix': '',
-        'enableClasses': true,
-        'enableJSClass': true,
-        'usePrefixes': true
-      },
-
-      _q: [],
-
-      on: function on(test, cb) {
-        var self = this;
-        setTimeout(function () {
-          cb(self[test]);
-        }, 0);
-      },
-
-      addTest: function addTest(name, fn, options) {
-        tests.push({ name: name, fn: fn, options: options });
-      },
-
-      addAsyncTest: function addAsyncTest(fn) {
-        tests.push({ name: null, fn: fn });
-      }
-    };
-
-    var Modernizr = function Modernizr() {};
-    Modernizr.prototype = ModernizrProto;
-
-    Modernizr = new Modernizr();
-
-    var classes = [];
-
-    function is(obj, type) {
-      return (typeof obj === 'undefined' ? 'undefined' : _typeof(obj)) === type;
-    }
-    ;
-
-    function testRunner() {
-      var featureNames;
-      var feature;
-      var aliasIdx;
-      var result;
-      var nameIdx;
-      var featureName;
-      var featureNameSplit;
-
-      for (var featureIdx in tests) {
-        if (tests.hasOwnProperty(featureIdx)) {
-          featureNames = [];
-          feature = tests[featureIdx];
-
-          if (feature.name) {
-            featureNames.push(feature.name.toLowerCase());
-
-            if (feature.options && feature.options.aliases && feature.options.aliases.length) {
-              for (aliasIdx = 0; aliasIdx < feature.options.aliases.length; aliasIdx++) {
-                featureNames.push(feature.options.aliases[aliasIdx].toLowerCase());
-              }
-            }
-          }
-
-          result = is(feature.fn, 'function') ? feature.fn() : feature.fn;
-
-          for (nameIdx = 0; nameIdx < featureNames.length; nameIdx++) {
-            featureName = featureNames[nameIdx];
-
-            featureNameSplit = featureName.split('.');
-
-            if (featureNameSplit.length === 1) {
-              Modernizr[featureNameSplit[0]] = result;
-            } else {
-              if (Modernizr[featureNameSplit[0]] && !(Modernizr[featureNameSplit[0]] instanceof Boolean)) {
-                Modernizr[featureNameSplit[0]] = new Boolean(Modernizr[featureNameSplit[0]]);
-              }
-
-              Modernizr[featureNameSplit[0]][featureNameSplit[1]] = result;
-            }
-
-            classes.push((result ? '' : 'no-') + featureNameSplit.join('-'));
-          }
-        }
-      }
-    }
-    ;
-
-    var docElement = document.documentElement;
-
-    var isSVG = docElement.nodeName.toLowerCase() === 'svg';
-
-    function setClasses(classes) {
-      var className = docElement.className;
-      var classPrefix = Modernizr._config.classPrefix || '';
-
-      if (isSVG) {
-        className = className.baseVal;
-      }
-
-      if (Modernizr._config.enableJSClass) {
-        var reJS = new RegExp('(^|\\s)' + classPrefix + 'no-js(\\s|$)');
-        className = className.replace(reJS, '$1' + classPrefix + 'js$2');
-      }
-
-      if (Modernizr._config.enableClasses) {
-        className += ' ' + classPrefix + classes.join(' ' + classPrefix);
-        if (isSVG) {
-          docElement.className.baseVal = className;
-        } else {
-          docElement.className = className;
-        }
-      }
-    }
-
-    ;
-
-    var omPrefixes = 'Moz O ms Webkit';
-
-    var cssomPrefixes = ModernizrProto._config.usePrefixes ? omPrefixes.split(' ') : [];
-    ModernizrProto._cssomPrefixes = cssomPrefixes;
-
-    function contains(str, substr) {
-      return !!~('' + str).indexOf(substr);
-    }
-
-    ;
-
-    function createElement() {
-      if (typeof document.createElement !== 'function') {
-        return document.createElement(arguments[0]);
-      } else if (isSVG) {
-        return document.createElementNS.call(document, 'http://www.w3.org/2000/svg', arguments[0]);
-      } else {
-        return document.createElement.apply(document, arguments);
-      }
-    }
-
-    ;
-
-    var modElem = {
-      elem: createElement('modernizr')
-    };
-
-    Modernizr._q.push(function () {
-      delete modElem.elem;
-    });
-
-    var mStyle = {
-      style: modElem.elem.style
-    };
-
-    Modernizr._q.unshift(function () {
-      delete mStyle.style;
-    });
-
-    function getBody() {
-      var body = document.body;
-
-      if (!body) {
-        body = createElement(isSVG ? 'svg' : 'body');
-        body.fake = true;
-      }
-
-      return body;
-    }
-
-    ;
-
-    function injectElementWithStyles(rule, callback, nodes, testnames) {
-      var mod = 'modernizr';
-      var style;
-      var ret;
-      var node;
-      var docOverflow;
-      var div = createElement('div');
-      var body = getBody();
-
-      if (parseInt(nodes, 10)) {
-        while (nodes--) {
-          node = createElement('div');
-          node.id = testnames ? testnames[nodes] : mod + (nodes + 1);
-          div.appendChild(node);
-        }
-      }
-
-      style = createElement('style');
-      style.type = 'text/css';
-      style.id = 's' + mod;
-
-      (!body.fake ? div : body).appendChild(style);
-      body.appendChild(div);
-
-      if (style.styleSheet) {
-        style.styleSheet.cssText = rule;
-      } else {
-        style.appendChild(document.createTextNode(rule));
-      }
-      div.id = mod;
-
-      if (body.fake) {
-        body.style.background = '';
-
-        body.style.overflow = 'hidden';
-        docOverflow = docElement.style.overflow;
-        docElement.style.overflow = 'hidden';
-        docElement.appendChild(body);
-      }
-
-      ret = callback(div, rule);
-
-      if (body.fake) {
-        body.parentNode.removeChild(body);
-        docElement.style.overflow = docOverflow;
-
-        docElement.offsetHeight;
-      } else {
-        div.parentNode.removeChild(div);
-      }
-
-      return !!ret;
-    }
-
-    ;
-
-    function domToCSS(name) {
-      return name.replace(/([A-Z])/g, function (str, m1) {
-        return '-' + m1.toLowerCase();
-      }).replace(/^ms-/, '-ms-');
-    }
-    ;
-
-    function computedStyle(elem, pseudo, prop) {
-      var result;
-
-      if ('getComputedStyle' in window) {
-        result = getComputedStyle.call(window, elem, pseudo);
-        var console = window.console;
-
-        if (result !== null) {
-          if (prop) {
-            result = result.getPropertyValue(prop);
-          }
-        } else {
-          if (console) {
-            var method = console.error ? 'error' : 'log';
-            console[method].call(console, 'getComputedStyle returning null, its possible modernizr test results are inaccurate');
-          }
-        }
-      } else {
-        result = !pseudo && elem.currentStyle && elem.currentStyle[prop];
-      }
-
-      return result;
-    }
-
-    ;
-
-    function nativeTestProps(props, value) {
-      var i = props.length;
-
-      if ('CSS' in window && 'supports' in window.CSS) {
-        while (i--) {
-          if (window.CSS.supports(domToCSS(props[i]), value)) {
-            return true;
-          }
-        }
-        return false;
-      } else if ('CSSSupportsRule' in window) {
-          var conditionText = [];
-          while (i--) {
-            conditionText.push('(' + domToCSS(props[i]) + ':' + value + ')');
-          }
-          conditionText = conditionText.join(' or ');
-          return injectElementWithStyles('@supports (' + conditionText + ') { #modernizr { position: absolute; } }', function (node) {
-            return computedStyle(node, null, 'position') == 'absolute';
-          });
-        }
-      return undefined;
-    }
-    ;
-
-    function cssToDOM(name) {
-      return name.replace(/([a-z])-([a-z])/g, function (str, m1, m2) {
-        return m1 + m2.toUpperCase();
-      }).replace(/^-/, '');
-    }
-    ;
-
-    function testProps(props, prefixed, value, skipValueTest) {
-      skipValueTest = is(skipValueTest, 'undefined') ? false : skipValueTest;
-
-      if (!is(value, 'undefined')) {
-        var result = nativeTestProps(props, value);
-        if (!is(result, 'undefined')) {
-          return result;
-        }
-      }
-
-      var afterInit, i, propsLength, prop, before;
-
-      var elems = ['modernizr', 'tspan', 'samp'];
-      while (!mStyle.style && elems.length) {
-        afterInit = true;
-        mStyle.modElem = createElement(elems.shift());
-        mStyle.style = mStyle.modElem.style;
-      }
-
-      function cleanElems() {
-        if (afterInit) {
-          delete mStyle.style;
-          delete mStyle.modElem;
-        }
-      }
-
-      propsLength = props.length;
-      for (i = 0; i < propsLength; i++) {
-        prop = props[i];
-        before = mStyle.style[prop];
-
-        if (contains(prop, '-')) {
-          prop = cssToDOM(prop);
-        }
-
-        if (mStyle.style[prop] !== undefined) {
-          if (!skipValueTest && !is(value, 'undefined')) {
-            try {
-              mStyle.style[prop] = value;
-            } catch (e) {}
-
-            if (mStyle.style[prop] != before) {
-              cleanElems();
-              return prefixed == 'pfx' ? prop : true;
-            }
-          } else {
-              cleanElems();
-              return prefixed == 'pfx' ? prop : true;
-            }
-        }
-      }
-      cleanElems();
-      return false;
-    }
-
-    ;
-
-    var domPrefixes = ModernizrProto._config.usePrefixes ? omPrefixes.toLowerCase().split(' ') : [];
-    ModernizrProto._domPrefixes = domPrefixes;
-
-    function fnBind(fn, that) {
-      return function () {
-        return fn.apply(that, arguments);
-      };
-    }
-
-    ;
-
-    function testDOMProps(props, obj, elem) {
-      var item;
-
-      for (var i in props) {
-        if (props[i] in obj) {
-          if (elem === false) {
-            return props[i];
-          }
-
-          item = obj[props[i]];
-
-          if (is(item, 'function')) {
-            return fnBind(item, elem || obj);
-          }
-
-          return item;
-        }
-      }
-      return false;
-    }
-
-    ;
-
-    function testPropsAll(prop, prefixed, elem, value, skipValueTest) {
-
-      var ucProp = prop.charAt(0).toUpperCase() + prop.slice(1),
-          props = (prop + ' ' + cssomPrefixes.join(ucProp + ' ') + ucProp).split(' ');
-
-      if (is(prefixed, 'string') || is(prefixed, 'undefined')) {
-        return testProps(props, prefixed, value, skipValueTest);
-      } else {
-        props = (prop + ' ' + domPrefixes.join(ucProp + ' ') + ucProp).split(' ');
-        return testDOMProps(props, prefixed, elem);
-      }
-    }
-
-    ModernizrProto.testAllProps = testPropsAll;
-
-    function testAllProps(prop, value, skipValueTest) {
-      return testPropsAll(prop, undefined, undefined, value, skipValueTest);
-    }
-    ModernizrProto.testAllProps = testAllProps;
-
-    Modernizr.addTest('flexbox', testAllProps('flexBasis', '1px', true));
-
-    Modernizr.addTest('svg', !!document.createElementNS && !!document.createElementNS('http://www.w3.org/2000/svg', 'svg').createSVGRect);
-
-    var prefixes = ModernizrProto._config.usePrefixes ? ' -webkit- -moz- -o- -ms- '.split(' ') : ['', ''];
-
-    ModernizrProto._prefixes = prefixes;
-
-    var testStyles = ModernizrProto.testStyles = injectElementWithStyles;
-
-    Modernizr.addTest('touchevents', function () {
-      var bool;
-      if ('ontouchstart' in window || window.DocumentTouch && document instanceof DocumentTouch) {
-        bool = true;
-      } else {
-        var query = ['@media (', prefixes.join('touch-enabled),('), 'heartz', ')', '{#modernizr{top:9px;position:absolute}}'].join('');
-        testStyles(query, function (node) {
-          bool = node.offsetTop === 9;
-        });
-      }
-      return bool;
-    });
-
-    testRunner();
-
-    setClasses(classes);
-
-    delete ModernizrProto.addTest;
-    delete ModernizrProto.addAsyncTest;
-
-    for (var i = 0; i < Modernizr._q.length; i++) {
-      Modernizr._q[i]();
-    }
-
-    window.Modernizr = Modernizr;
-
-    ;
-  })(window, document);
-  module.exports = window.Modernizr;
-  if (hadGlobal) {
-    window.Modernizr = oldGlobal;
-  } else {
-    delete window.Modernizr;
-  }
-})(window);
-
-/***/ }),
-/* 53 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;
-
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
-(function (factory) {
-	if (true) {
-		!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(0)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
-				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
-				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
-				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-	} else if ((typeof module === 'undefined' ? 'undefined' : _typeof(module)) === 'object' && module.exports) {
-		module.exports = function (root, jQuery) {
-			if (typeof jQuery === 'undefined') {
-				if (typeof window !== 'undefined') {
-					jQuery = require('jquery');
-				} else {
-					jQuery = require('jquery')(root);
-				}
-			}
-			factory(jQuery);
-			return jQuery;
-		};
-	} else {
-		factory(jQuery);
-	}
-})(function ($) {
-	'use strict';
-
-	var rCRLF = /\r?\n/g;
-
-	var feature = {};
-
-	feature.fileapi = $('<input type="file">').get(0).files !== undefined;
-	feature.formdata = typeof window.FormData !== 'undefined';
-
-	var hasProp = !!$.fn.prop;
-
-	$.fn.attr2 = function () {
-		if (!hasProp) {
-			return this.attr.apply(this, arguments);
-		}
-
-		var val = this.prop.apply(this, arguments);
-
-		if (val && val.jquery || typeof val === 'string') {
-			return val;
-		}
-
-		return this.attr.apply(this, arguments);
-	};
-
-	$.fn.ajaxSubmit = function (options, data, dataType, onSuccess) {
-		if (!this.length) {
-			log('ajaxSubmit: skipping submit process - no element selected');
-
-			return this;
-		}
-
-		var method,
-		    action,
-		    url,
-		    $form = this;
-
-		if (typeof options === 'function') {
-			options = { success: options };
-		} else if (typeof options === 'string' || options === false && arguments.length > 0) {
-			options = {
-				'url': options,
-				'data': data,
-				'dataType': dataType
-			};
-
-			if (typeof onSuccess === 'function') {
-				options.success = onSuccess;
-			}
-		} else if (typeof options === 'undefined') {
-			options = {};
-		}
-
-		method = options.method || options.type || this.attr2('method');
-		action = options.url || this.attr2('action');
-
-		url = typeof action === 'string' ? $.trim(action) : '';
-		url = url || window.location.href || '';
-		if (url) {
-			url = (url.match(/^([^#]+)/) || [])[1];
-		}
-
-		options = $.extend(true, {
-			url: url,
-			success: $.ajaxSettings.success,
-			type: method || $.ajaxSettings.type,
-			iframeSrc: /^https/i.test(window.location.href || '') ? 'javascript:false' : 'about:blank' }, options);
-
-		var veto = {};
-
-		this.trigger('form-pre-serialize', [this, options, veto]);
-
-		if (veto.veto) {
-			log('ajaxSubmit: submit vetoed via form-pre-serialize trigger');
-
-			return this;
-		}
-
-		if (options.beforeSerialize && options.beforeSerialize(this, options) === false) {
-			log('ajaxSubmit: submit aborted via beforeSerialize callback');
-
-			return this;
-		}
-
-		var traditional = options.traditional;
-
-		if (typeof traditional === 'undefined') {
-			traditional = $.ajaxSettings.traditional;
-		}
-
-		var elements = [];
-		var qx,
-		    a = this.formToArray(options.semantic, elements, options.filtering);
-
-		if (options.data) {
-			var optionsData = $.isFunction(options.data) ? options.data(a) : options.data;
-
-			options.extraData = optionsData;
-			qx = $.param(optionsData, traditional);
-		}
-
-		if (options.beforeSubmit && options.beforeSubmit(a, this, options) === false) {
-			log('ajaxSubmit: submit aborted via beforeSubmit callback');
-
-			return this;
-		}
-
-		this.trigger('form-submit-validate', [a, this, options, veto]);
-		if (veto.veto) {
-			log('ajaxSubmit: submit vetoed via form-submit-validate trigger');
-
-			return this;
-		}
-
-		var q = $.param(a, traditional);
-
-		if (qx) {
-			q = q ? q + '&' + qx : qx;
-		}
-
-		if (options.type.toUpperCase() === 'GET') {
-			options.url += (options.url.indexOf('?') >= 0 ? '&' : '?') + q;
-			options.data = null;
-		} else {
-			options.data = q;
-		}
-
-		var callbacks = [];
-
-		if (options.resetForm) {
-			callbacks.push(function () {
-				$form.resetForm();
-			});
-		}
-
-		if (options.clearForm) {
-			callbacks.push(function () {
-				$form.clearForm(options.includeHidden);
-			});
-		}
-
-		if (!options.dataType && options.target) {
-			var oldSuccess = options.success || function () {};
-
-			callbacks.push(function (data, textStatus, jqXHR) {
-				var successArguments = arguments,
-				    fn = options.replaceTarget ? 'replaceWith' : 'html';
-
-				$(options.target)[fn](data).each(function () {
-					oldSuccess.apply(this, successArguments);
-				});
-			});
-		} else if (options.success) {
-			if ($.isArray(options.success)) {
-				$.merge(callbacks, options.success);
-			} else {
-				callbacks.push(options.success);
-			}
-		}
-
-		options.success = function (data, status, xhr) {
-			var context = options.context || this;
-
-			for (var i = 0, max = callbacks.length; i < max; i++) {
-				callbacks[i].apply(context, [data, status, xhr || $form, $form]);
-			}
-		};
-
-		if (options.error) {
-			var oldError = options.error;
-
-			options.error = function (xhr, status, error) {
-				var context = options.context || this;
-
-				oldError.apply(context, [xhr, status, error, $form]);
-			};
-		}
-
-		if (options.complete) {
-			var oldComplete = options.complete;
-
-			options.complete = function (xhr, status) {
-				var context = options.context || this;
-
-				oldComplete.apply(context, [xhr, status, $form]);
-			};
-		}
-
-		var fileInputs = $('input[type=file]:enabled', this).filter(function () {
-			return $(this).val() !== '';
-		});
-		var hasFileInputs = fileInputs.length > 0;
-		var mp = 'multipart/form-data';
-		var multipart = $form.attr('enctype') === mp || $form.attr('encoding') === mp;
-		var fileAPI = feature.fileapi && feature.formdata;
-
-		log('fileAPI :' + fileAPI);
-
-		var shouldUseFrame = (hasFileInputs || multipart) && !fileAPI;
-		var jqxhr;
-
-		if (options.iframe !== false && (options.iframe || shouldUseFrame)) {
-			if (options.closeKeepAlive) {
-				$.get(options.closeKeepAlive, function () {
-					jqxhr = fileUploadIframe(a);
-				});
-			} else {
-				jqxhr = fileUploadIframe(a);
-			}
-		} else if ((hasFileInputs || multipart) && fileAPI) {
-			jqxhr = fileUploadXhr(a);
-		} else {
-			jqxhr = $.ajax(options);
-		}
-
-		$form.removeData('jqxhr').data('jqxhr', jqxhr);
-
-		for (var k = 0; k < elements.length; k++) {
-			elements[k] = null;
-		}
-
-		this.trigger('form-submit-notify', [this, options]);
-
-		return this;
-
-		function deepSerialize(extraData) {
-			var serialized = $.param(extraData, options.traditional).split('&');
-			var len = serialized.length;
-			var result = [];
-			var i, part;
-
-			for (i = 0; i < len; i++) {
-				serialized[i] = serialized[i].replace(/\+/g, ' ');
-				part = serialized[i].split('=');
-
-				result.push([decodeURIComponent(part[0]), decodeURIComponent(part[1])]);
-			}
-
-			return result;
-		}
-
-		function fileUploadXhr(a) {
-			var formdata = new FormData();
-
-			for (var i = 0; i < a.length; i++) {
-				formdata.append(a[i].name, a[i].value);
-			}
-
-			if (options.extraData) {
-				var serializedData = deepSerialize(options.extraData);
-
-				for (i = 0; i < serializedData.length; i++) {
-					if (serializedData[i]) {
-						formdata.append(serializedData[i][0], serializedData[i][1]);
-					}
-				}
-			}
-
-			options.data = null;
-
-			var s = $.extend(true, {}, $.ajaxSettings, options, {
-				contentType: false,
-				processData: false,
-				cache: false,
-				type: method || 'POST'
-			});
-
-			if (options.uploadProgress) {
-				s.xhr = function () {
-					var xhr = $.ajaxSettings.xhr();
-
-					if (xhr.upload) {
-						xhr.upload.addEventListener('progress', function (event) {
-							var percent = 0;
-							var position = event.loaded || event.position;
-							var total = event.total;
-
-							if (event.lengthComputable) {
-								percent = Math.ceil(position / total * 100);
-							}
-
-							options.uploadProgress(event, position, total, percent);
-						}, false);
-					}
-
-					return xhr;
-				};
-			}
-
-			s.data = null;
-
-			var beforeSend = s.beforeSend;
-
-			s.beforeSend = function (xhr, o) {
-				if (options.formData) {
-					o.data = options.formData;
-				} else {
-					o.data = formdata;
-				}
-
-				if (beforeSend) {
-					beforeSend.call(this, xhr, o);
-				}
-			};
-
-			return $.ajax(s);
-		}
-
-		function fileUploadIframe(a) {
-			var form = $form[0],
-			    el,
-			    i,
-			    s,
-			    g,
-			    id,
-			    $io,
-			    io,
-			    xhr,
-			    sub,
-			    n,
-			    timedOut,
-			    timeoutHandle;
-			var deferred = $.Deferred();
-
-			deferred.abort = function (status) {
-				xhr.abort(status);
-			};
-
-			if (a) {
-				for (i = 0; i < elements.length; i++) {
-					el = $(elements[i]);
-					if (hasProp) {
-						el.prop('disabled', false);
-					} else {
-						el.removeAttr('disabled');
-					}
-				}
-			}
-
-			s = $.extend(true, {}, $.ajaxSettings, options);
-			s.context = s.context || s;
-			id = 'jqFormIO' + new Date().getTime();
-			var ownerDocument = form.ownerDocument;
-			var $body = $form.closest('body');
-
-			if (s.iframeTarget) {
-				$io = $(s.iframeTarget, ownerDocument);
-				n = $io.attr2('name');
-				if (!n) {
-					$io.attr2('name', id);
-				} else {
-					id = n;
-				}
-			} else {
-				$io = $('<iframe name="' + id + '" src="' + s.iframeSrc + '" />', ownerDocument);
-				$io.css({ position: 'absolute', top: '-1000px', left: '-1000px' });
-			}
-			io = $io[0];
-
-			xhr = {
-				aborted: 0,
-				responseText: null,
-				responseXML: null,
-				status: 0,
-				statusText: 'n/a',
-				getAllResponseHeaders: function getAllResponseHeaders() {},
-				getResponseHeader: function getResponseHeader() {},
-				setRequestHeader: function setRequestHeader() {},
-				abort: function abort(status) {
-					var e = status === 'timeout' ? 'timeout' : 'aborted';
-
-					log('aborting upload... ' + e);
-					this.aborted = 1;
-
-					try {
-						if (io.contentWindow.document.execCommand) {
-							io.contentWindow.document.execCommand('Stop');
-						}
-					} catch (ignore) {}
-
-					$io.attr('src', s.iframeSrc);
-					xhr.error = e;
-					if (s.error) {
-						s.error.call(s.context, xhr, e, status);
-					}
-
-					if (g) {
-						$.event.trigger('ajaxError', [xhr, s, e]);
-					}
-
-					if (s.complete) {
-						s.complete.call(s.context, xhr, e);
-					}
-				}
-			};
-
-			g = s.global;
-
-			if (g && $.active++ === 0) {
-				$.event.trigger('ajaxStart');
-			}
-			if (g) {
-				$.event.trigger('ajaxSend', [xhr, s]);
-			}
-
-			if (s.beforeSend && s.beforeSend.call(s.context, xhr, s) === false) {
-				if (s.global) {
-					$.active--;
-				}
-				deferred.reject();
-
-				return deferred;
-			}
-
-			if (xhr.aborted) {
-				deferred.reject();
-
-				return deferred;
-			}
-
-			sub = form.clk;
-			if (sub) {
-				n = sub.name;
-				if (n && !sub.disabled) {
-					s.extraData = s.extraData || {};
-					s.extraData[n] = sub.value;
-					if (sub.type === 'image') {
-						s.extraData[n + '.x'] = form.clk_x;
-						s.extraData[n + '.y'] = form.clk_y;
-					}
-				}
-			}
-
-			var CLIENT_TIMEOUT_ABORT = 1;
-			var SERVER_ABORT = 2;
-
-			function getDoc(frame) {
-
-				var doc = null;
-
-				try {
-					if (frame.contentWindow) {
-						doc = frame.contentWindow.document;
-					}
-				} catch (err) {
-					log('cannot get iframe.contentWindow document: ' + err);
-				}
-
-				if (doc) {
-					return doc;
-				}
-
-				try {
-					doc = frame.contentDocument ? frame.contentDocument : frame.document;
-				} catch (err) {
-					log('cannot get iframe.contentDocument: ' + err);
-					doc = frame.document;
-				}
-
-				return doc;
-			}
-
-			var csrf_token = $('meta[name=csrf-token]').attr('content');
-			var csrf_param = $('meta[name=csrf-param]').attr('content');
-
-			if (csrf_param && csrf_token) {
-				s.extraData = s.extraData || {};
-				s.extraData[csrf_param] = csrf_token;
-			}
-
-			function doSubmit() {
-				var t = $form.attr2('target'),
-				    a = $form.attr2('action'),
-				    mp = 'multipart/form-data',
-				    et = $form.attr('enctype') || $form.attr('encoding') || mp;
-
-				form.setAttribute('target', id);
-				if (!method || /post/i.test(method)) {
-					form.setAttribute('method', 'POST');
-				}
-				if (a !== s.url) {
-					form.setAttribute('action', s.url);
-				}
-
-				if (!s.skipEncodingOverride && (!method || /post/i.test(method))) {
-					$form.attr({
-						encoding: 'multipart/form-data',
-						enctype: 'multipart/form-data'
-					});
-				}
-
-				if (s.timeout) {
-					timeoutHandle = setTimeout(function () {
-						timedOut = true;cb(CLIENT_TIMEOUT_ABORT);
-					}, s.timeout);
-				}
-
-				function checkState() {
-					try {
-						var state = getDoc(io).readyState;
-
-						log('state = ' + state);
-						if (state && state.toLowerCase() === 'uninitialized') {
-							setTimeout(checkState, 50);
-						}
-					} catch (e) {
-						log('Server abort: ', e, ' (', e.name, ')');
-						cb(SERVER_ABORT);
-						if (timeoutHandle) {
-							clearTimeout(timeoutHandle);
-						}
-						timeoutHandle = undefined;
-					}
-				}
-
-				var extraInputs = [];
-
-				try {
-					if (s.extraData) {
-						for (var n in s.extraData) {
-							if (s.extraData.hasOwnProperty(n)) {
-								if ($.isPlainObject(s.extraData[n]) && s.extraData[n].hasOwnProperty('name') && s.extraData[n].hasOwnProperty('value')) {
-									extraInputs.push($('<input type="hidden" name="' + s.extraData[n].name + '">', ownerDocument).val(s.extraData[n].value).appendTo(form)[0]);
-								} else {
-									extraInputs.push($('<input type="hidden" name="' + n + '">', ownerDocument).val(s.extraData[n]).appendTo(form)[0]);
-								}
-							}
-						}
-					}
-
-					if (!s.iframeTarget) {
-						$io.appendTo($body);
-					}
-
-					if (io.attachEvent) {
-						io.attachEvent('onload', cb);
-					} else {
-						io.addEventListener('load', cb, false);
-					}
-
-					setTimeout(checkState, 15);
-
-					try {
-						form.submit();
-					} catch (err) {
-						var submitFn = document.createElement('form').submit;
-
-						submitFn.apply(form);
-					}
-				} finally {
-					form.setAttribute('action', a);
-					form.setAttribute('enctype', et);
-					if (t) {
-						form.setAttribute('target', t);
-					} else {
-						$form.removeAttr('target');
-					}
-					$(extraInputs).remove();
-				}
-			}
-
-			if (s.forceSync) {
-				doSubmit();
-			} else {
-				setTimeout(doSubmit, 10);
-			}
-
-			var data,
-			    doc,
-			    domCheckCount = 50,
-			    callbackProcessed;
-
-			function cb(e) {
-				if (xhr.aborted || callbackProcessed) {
-					return;
-				}
-
-				doc = getDoc(io);
-				if (!doc) {
-					log('cannot access response document');
-					e = SERVER_ABORT;
-				}
-				if (e === CLIENT_TIMEOUT_ABORT && xhr) {
-					xhr.abort('timeout');
-					deferred.reject(xhr, 'timeout');
-
-					return;
-				} else if (e === SERVER_ABORT && xhr) {
-					xhr.abort('server abort');
-					deferred.reject(xhr, 'error', 'server abort');
-
-					return;
-				}
-
-				if (!doc || doc.location.href === s.iframeSrc) {
-					if (!timedOut) {
-						return;
-					}
-				}
-
-				if (io.detachEvent) {
-					io.detachEvent('onload', cb);
-				} else {
-					io.removeEventListener('load', cb, false);
-				}
-
-				var status = 'success',
-				    errMsg;
-
-				try {
-					if (timedOut) {
-						throw 'timeout';
-					}
-
-					var isXml = s.dataType === 'xml' || doc.XMLDocument || $.isXMLDoc(doc);
-
-					log('isXml=' + isXml);
-
-					if (!isXml && window.opera && (doc.body === null || !doc.body.innerHTML)) {
-						if (--domCheckCount) {
-							log('requeing onLoad callback, DOM not available');
-							setTimeout(cb, 250);
-
-							return;
-						}
-					}
-
-					var docRoot = doc.body ? doc.body : doc.documentElement;
-
-					xhr.responseText = docRoot ? docRoot.innerHTML : null;
-					xhr.responseXML = doc.XMLDocument ? doc.XMLDocument : doc;
-					if (isXml) {
-						s.dataType = 'xml';
-					}
-					xhr.getResponseHeader = function (header) {
-						var headers = { 'content-type': s.dataType };
-
-						return headers[header.toLowerCase()];
-					};
-
-					if (docRoot) {
-						xhr.status = Number(docRoot.getAttribute('status')) || xhr.status;
-						xhr.statusText = docRoot.getAttribute('statusText') || xhr.statusText;
-					}
-
-					var dt = (s.dataType || '').toLowerCase();
-					var scr = /(json|script|text)/.test(dt);
-
-					if (scr || s.textarea) {
-						var ta = doc.getElementsByTagName('textarea')[0];
-
-						if (ta) {
-							xhr.responseText = ta.value;
-
-							xhr.status = Number(ta.getAttribute('status')) || xhr.status;
-							xhr.statusText = ta.getAttribute('statusText') || xhr.statusText;
-						} else if (scr) {
-							var pre = doc.getElementsByTagName('pre')[0];
-							var b = doc.getElementsByTagName('body')[0];
-
-							if (pre) {
-								xhr.responseText = pre.textContent ? pre.textContent : pre.innerText;
-							} else if (b) {
-								xhr.responseText = b.textContent ? b.textContent : b.innerText;
-							}
-						}
-					} else if (dt === 'xml' && !xhr.responseXML && xhr.responseText) {
-						xhr.responseXML = toXml(xhr.responseText);
-					}
-
-					try {
-						data = httpData(xhr, dt, s);
-					} catch (err) {
-						status = 'parsererror';
-						xhr.error = errMsg = err || status;
-					}
-				} catch (err) {
-					log('error caught: ', err);
-					status = 'error';
-					xhr.error = errMsg = err || status;
-				}
-
-				if (xhr.aborted) {
-					log('upload aborted');
-					status = null;
-				}
-
-				if (xhr.status) {
-					status = xhr.status >= 200 && xhr.status < 300 || xhr.status === 304 ? 'success' : 'error';
-				}
-
-				if (status === 'success') {
-					if (s.success) {
-						s.success.call(s.context, data, 'success', xhr);
-					}
-
-					deferred.resolve(xhr.responseText, 'success', xhr);
-
-					if (g) {
-						$.event.trigger('ajaxSuccess', [xhr, s]);
-					}
-				} else if (status) {
-					if (typeof errMsg === 'undefined') {
-						errMsg = xhr.statusText;
-					}
-					if (s.error) {
-						s.error.call(s.context, xhr, status, errMsg);
-					}
-					deferred.reject(xhr, 'error', errMsg);
-					if (g) {
-						$.event.trigger('ajaxError', [xhr, s, errMsg]);
-					}
-				}
-
-				if (g) {
-					$.event.trigger('ajaxComplete', [xhr, s]);
-				}
-
-				if (g && ! --$.active) {
-					$.event.trigger('ajaxStop');
-				}
-
-				if (s.complete) {
-					s.complete.call(s.context, xhr, status);
-				}
-
-				callbackProcessed = true;
-				if (s.timeout) {
-					clearTimeout(timeoutHandle);
-				}
-
-				setTimeout(function () {
-					if (!s.iframeTarget) {
-						$io.remove();
-					} else {
-						$io.attr('src', s.iframeSrc);
-					}
-					xhr.responseXML = null;
-				}, 100);
-			}
-
-			var toXml = $.parseXML || function (s, doc) {
-				if (window.ActiveXObject) {
-					doc = new ActiveXObject('Microsoft.XMLDOM');
-					doc.async = 'false';
-					doc.loadXML(s);
-				} else {
-					doc = new DOMParser().parseFromString(s, 'text/xml');
-				}
-
-				return doc && doc.documentElement && doc.documentElement.nodeName !== 'parsererror' ? doc : null;
-			};
-			var parseJSON = $.parseJSON || function (s) {
-				return window['eval']('(' + s + ')');
-			};
-
-			var httpData = function httpData(xhr, type, s) {
-
-				var ct = xhr.getResponseHeader('content-type') || '',
-				    xml = (type === 'xml' || !type) && ct.indexOf('xml') >= 0,
-				    data = xml ? xhr.responseXML : xhr.responseText;
-
-				if (xml && data.documentElement.nodeName === 'parsererror') {
-					if ($.error) {
-						$.error('parsererror');
-					}
-				}
-				if (s && s.dataFilter) {
-					data = s.dataFilter(data, type);
-				}
-				if (typeof data === 'string') {
-					if ((type === 'json' || !type) && ct.indexOf('json') >= 0) {
-						data = parseJSON(data);
-					} else if ((type === 'script' || !type) && ct.indexOf('javascript') >= 0) {
-						$.globalEval(data);
-					}
-				}
-
-				return data;
-			};
-
-			return deferred;
-		}
-	};
-
-	$.fn.ajaxForm = function (options, data, dataType, onSuccess) {
-		if (typeof options === 'string' || options === false && arguments.length > 0) {
-			options = {
-				'url': options,
-				'data': data,
-				'dataType': dataType
-			};
-
-			if (typeof onSuccess === 'function') {
-				options.success = onSuccess;
-			}
-		}
-
-		options = options || {};
-		options.delegation = options.delegation && $.isFunction($.fn.on);
-
-		if (!options.delegation && this.length === 0) {
-			var o = { s: this.selector, c: this.context };
-
-			if (!$.isReady && o.s) {
-				log('DOM not ready, queuing ajaxForm');
-				$(function () {
-					$(o.s, o.c).ajaxForm(options);
-				});
-
-				return this;
-			}
-
-			log('terminating; zero elements found by selector' + ($.isReady ? '' : ' (DOM not ready)'));
-
-			return this;
-		}
-
-		if (options.delegation) {
-			$(document).off('submit.form-plugin', this.selector, doAjaxSubmit).off('click.form-plugin', this.selector, captureSubmittingElement).on('submit.form-plugin', this.selector, options, doAjaxSubmit).on('click.form-plugin', this.selector, options, captureSubmittingElement);
-
-			return this;
-		}
-
-		return this.ajaxFormUnbind().on('submit.form-plugin', options, doAjaxSubmit).on('click.form-plugin', options, captureSubmittingElement);
-	};
-
-	function doAjaxSubmit(e) {
-		var options = e.data;
-
-		if (!e.isDefaultPrevented()) {
-			e.preventDefault();
-			$(e.target).closest('form').ajaxSubmit(options);
-		}
-	}
-
-	function captureSubmittingElement(e) {
-		var target = e.target;
-		var $el = $(target);
-
-		if (!$el.is('[type=submit],[type=image]')) {
-			var t = $el.closest('[type=submit]');
-
-			if (t.length === 0) {
-				return;
-			}
-			target = t[0];
-		}
-
-		var form = target.form;
-
-		form.clk = target;
-
-		if (target.type === 'image') {
-			if (typeof e.offsetX !== 'undefined') {
-				form.clk_x = e.offsetX;
-				form.clk_y = e.offsetY;
-			} else if (typeof $.fn.offset === 'function') {
-				var offset = $el.offset();
-
-				form.clk_x = e.pageX - offset.left;
-				form.clk_y = e.pageY - offset.top;
-			} else {
-				form.clk_x = e.pageX - target.offsetLeft;
-				form.clk_y = e.pageY - target.offsetTop;
-			}
-		}
-
-		setTimeout(function () {
-			form.clk = form.clk_x = form.clk_y = null;
-		}, 100);
-	}
-
-	$.fn.ajaxFormUnbind = function () {
-		return this.off('submit.form-plugin click.form-plugin');
-	};
-
-	$.fn.formToArray = function (semantic, elements, filtering) {
-		var a = [];
-
-		if (this.length === 0) {
-			return a;
-		}
-
-		var form = this[0];
-		var formId = this.attr('id');
-		var els = semantic || typeof form.elements === 'undefined' ? form.getElementsByTagName('*') : form.elements;
-		var els2;
-
-		if (els) {
-			els = $.makeArray(els);
-		}
-
-		if (formId && (semantic || /(Edge|Trident)\//.test(navigator.userAgent))) {
-			els2 = $(':input[form="' + formId + '"]').get();
-			if (els2.length) {
-				els = (els || []).concat(els2);
-			}
-		}
-
-		if (!els || !els.length) {
-			return a;
-		}
-
-		if ($.isFunction(filtering)) {
-			els = $.map(els, filtering);
-		}
-
-		var i, j, n, v, el, max, jmax;
-
-		for (i = 0, max = els.length; i < max; i++) {
-			el = els[i];
-			n = el.name;
-			if (!n || el.disabled) {
-				continue;
-			}
-
-			if (semantic && form.clk && el.type === 'image') {
-				if (form.clk === el) {
-					a.push({ name: n, value: $(el).val(), type: el.type });
-					a.push({ name: n + '.x', value: form.clk_x }, { name: n + '.y', value: form.clk_y });
-				}
-				continue;
-			}
-
-			v = $.fieldValue(el, true);
-			if (v && v.constructor === Array) {
-				if (elements) {
-					elements.push(el);
-				}
-				for (j = 0, jmax = v.length; j < jmax; j++) {
-					a.push({ name: n, value: v[j] });
-				}
-			} else if (feature.fileapi && el.type === 'file') {
-				if (elements) {
-					elements.push(el);
-				}
-
-				var files = el.files;
-
-				if (files.length) {
-					for (j = 0; j < files.length; j++) {
-						a.push({ name: n, value: files[j], type: el.type });
-					}
-				} else {
-					a.push({ name: n, value: '', type: el.type });
-				}
-			} else if (v !== null && typeof v !== 'undefined') {
-				if (elements) {
-					elements.push(el);
-				}
-				a.push({ name: n, value: v, type: el.type, required: el.required });
-			}
-		}
-
-		if (!semantic && form.clk) {
-			var $input = $(form.clk),
-			    input = $input[0];
-
-			n = input.name;
-
-			if (n && !input.disabled && input.type === 'image') {
-				a.push({ name: n, value: $input.val() });
-				a.push({ name: n + '.x', value: form.clk_x }, { name: n + '.y', value: form.clk_y });
-			}
-		}
-
-		return a;
-	};
-
-	$.fn.formSerialize = function (semantic) {
-		return $.param(this.formToArray(semantic));
-	};
-
-	$.fn.fieldSerialize = function (successful) {
-		var a = [];
-
-		this.each(function () {
-			var n = this.name;
-
-			if (!n) {
-				return;
-			}
-
-			var v = $.fieldValue(this, successful);
-
-			if (v && v.constructor === Array) {
-				for (var i = 0, max = v.length; i < max; i++) {
-					a.push({ name: n, value: v[i] });
-				}
-			} else if (v !== null && typeof v !== 'undefined') {
-				a.push({ name: this.name, value: v });
-			}
-		});
-
-		return $.param(a);
-	};
-
-	$.fn.fieldValue = function (successful) {
-		for (var val = [], i = 0, max = this.length; i < max; i++) {
-			var el = this[i];
-			var v = $.fieldValue(el, successful);
-
-			if (v === null || typeof v === 'undefined' || v.constructor === Array && !v.length) {
-				continue;
-			}
-
-			if (v.constructor === Array) {
-				$.merge(val, v);
-			} else {
-				val.push(v);
-			}
-		}
-
-		return val;
-	};
-
-	$.fieldValue = function (el, successful) {
-		var n = el.name,
-		    t = el.type,
-		    tag = el.tagName.toLowerCase();
-
-		if (typeof successful === 'undefined') {
-			successful = true;
-		}
-
-		if (successful && (!n || el.disabled || t === 'reset' || t === 'button' || (t === 'checkbox' || t === 'radio') && !el.checked || (t === 'submit' || t === 'image') && el.form && el.form.clk !== el || tag === 'select' && el.selectedIndex === -1)) {
-			return null;
-		}
-
-		if (tag === 'select') {
-			var index = el.selectedIndex;
-
-			if (index < 0) {
-				return null;
-			}
-
-			var a = [],
-			    ops = el.options;
-			var one = t === 'select-one';
-			var max = one ? index + 1 : ops.length;
-
-			for (var i = one ? index : 0; i < max; i++) {
-				var op = ops[i];
-
-				if (op.selected && !op.disabled) {
-					var v = op.value;
-
-					if (!v) {
-						v = op.attributes && op.attributes.value && !op.attributes.value.specified ? op.text : op.value;
-					}
-
-					if (one) {
-						return v;
-					}
-
-					a.push(v);
-				}
-			}
-
-			return a;
-		}
-
-		return $(el).val().replace(rCRLF, '\r\n');
-	};
-
-	$.fn.clearForm = function (includeHidden) {
-		return this.each(function () {
-			$('input,select,textarea', this).clearFields(includeHidden);
-		});
-	};
-
-	$.fn.clearFields = $.fn.clearInputs = function (includeHidden) {
-		var re = /^(?:color|date|datetime|email|month|number|password|range|search|tel|text|time|url|week)$/i;
-
-		return this.each(function () {
-			var t = this.type,
-			    tag = this.tagName.toLowerCase();
-
-			if (re.test(t) || tag === 'textarea') {
-				this.value = '';
-			} else if (t === 'checkbox' || t === 'radio') {
-				this.checked = false;
-			} else if (tag === 'select') {
-				this.selectedIndex = -1;
-			} else if (t === 'file') {
-				if (/MSIE/.test(navigator.userAgent)) {
-					$(this).replaceWith($(this).clone(true));
-				} else {
-					$(this).val('');
-				}
-			} else if (includeHidden) {
-				if (includeHidden === true && /hidden/.test(t) || typeof includeHidden === 'string' && $(this).is(includeHidden)) {
-					this.value = '';
-				}
-			}
-		});
-	};
-
-	$.fn.resetForm = function () {
-		return this.each(function () {
-			var el = $(this);
-			var tag = this.tagName.toLowerCase();
-
-			switch (tag) {
-				case 'input':
-					this.checked = this.defaultChecked;
-
-
-				case 'textarea':
-					this.value = this.defaultValue;
-
-					return true;
-
-				case 'option':
-				case 'optgroup':
-					var select = el.parents('select');
-
-					if (select.length && select[0].multiple) {
-						if (tag === 'option') {
-							this.selected = this.defaultSelected;
-						} else {
-							el.find('option').resetForm();
-						}
-					} else {
-						select.resetForm();
-					}
-
-					return true;
-
-				case 'select':
-					el.find('option').each(function (i) {
-						this.selected = this.defaultSelected;
-						if (this.defaultSelected && !el[0].multiple) {
-							el[0].selectedIndex = i;
-
-							return false;
-						}
-					});
-
-					return true;
-
-				case 'label':
-					var forEl = $(el.attr('for'));
-					var list = el.find('input,select,textarea');
-
-					if (forEl[0]) {
-						list.unshift(forEl[0]);
-					}
-
-					list.resetForm();
-
-					return true;
-
-				case 'form':
-					if (typeof this.reset === 'function' || _typeof(this.reset) === 'object' && !this.reset.nodeType) {
-						this.reset();
-					}
-
-					return true;
-
-				default:
-					el.find('form,input,label,select,textarea').resetForm();
-
-					return true;
-			}
-		});
-	};
-
-	$.fn.enable = function (b) {
-		if (typeof b === 'undefined') {
-			b = true;
-		}
-
-		return this.each(function () {
-			this.disabled = !b;
-		});
-	};
-
-	$.fn.selected = function (select) {
-		if (typeof select === 'undefined') {
-			select = true;
-		}
-
-		return this.each(function () {
-			var t = this.type;
-
-			if (t === 'checkbox' || t === 'radio') {
-				this.checked = select;
-			} else if (this.tagName.toLowerCase() === 'option') {
-				var $sel = $(this).parent('select');
-
-				if (select && $sel[0] && $sel[0].type === 'select-one') {
-					$sel.find('option').selected(false);
-				}
-
-				this.selected = select;
-			}
-		});
-	};
-
-	$.fn.ajaxSubmit.debug = false;
-
-	function log() {
-		if (!$.fn.ajaxSubmit.debug) {
-			return;
-		}
-
-		var msg = '[jquery.form] ' + Array.prototype.join.call(arguments, '');
-
-		if (window.console && window.console.log) {
-			window.console.log(msg);
-		} else if (window.opera && window.opera.postError) {
-			window.opera.postError(msg);
-		}
-	}
-});
-
-/***/ }),
-/* 54 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/* WEBPACK VAR INJECTION */(function(jQuery) {
-
-(function ($) {
-    var mmodal = function mmodal(element, options) {
-        return this.init(element, options);
-    };
-
-    mmodal.prototype = {
-        version: "1.1",
-        locked: true,
-        $element: undefined,
-        $content: undefined,
-        $bg: undefined,
-        $container: undefined,
-
-        params: {},
-
-        inline: false,
-        inlineIndex: undefined,
-        $inlineParent: undefined,
-
-        classes: {
-            content: 'mmodal-content',
-            container: 'mmodal-container',
-            animation: 'animated',
-            background: 'mmodal-modal-bg',
-            closeButton: 'mmodal-close',
-            bodyClass: 'mmodal-opened'
-        },
-        init: function init(element, options) {
-            var defaultOptions = {
-                ajax: {
-                    type: "GET",
-                    dataType: null
-                },
-                animation: false,
-                animationdelay: 1.3,
-                skin: 'default',
-                width: undefined,
-                closeonclick: true,
-                closeonescape: true,
-
-                touchEvents: false,
-
-                autoclose: false,
-                autoclosedelay: 1450,
-
-                onBeforeStart: $.noop,
-                onSuccess: $.noop,
-                onBeforeOpen: $.noop,
-                onAfterOpen: $.noop,
-                onBeforeClose: $.noop,
-                onAfterClose: $.noop,
-                onSubmit: 'default'
-            };
-            this.locked = true;
-
-            this.$element = element instanceof Object ? element : $(element);
-
-            this.options = $.extend(defaultOptions, options);
-
-            if (this.$element.is("a")) {
-                this._prepareLink();
-            } else {
-                this.start(this.$element.clone());
-            }
-
-            this.params['lineHeight'] = this.getLineHeight($('html'));
-            this.params['pageHeight'] = this.getPageHeight($('html'));
-
-            return this;
-        },
-        getLineHeight: function getLineHeight(elem) {
-            var $elem = $(elem),
-                $parent = $elem['offsetParent' in $.fn ? 'offsetParent' : 'parent']();
-            if (!$parent.length) {
-                $parent = $('body');
-            }
-            return parseInt($parent.css('fontSize'), 10) || parseInt($elem.css('fontSize'), 10) || 16;
-        },
-
-        getPageHeight: function getPageHeight(elem) {
-            return $(elem).height();
-        },
-
-        getContainer: function getContainer() {
-            return this.$container == undefined ? this.renderContainer() : this.$container;
-        },
-        setContent: function setContent($html) {
-            var $content = this.$content;
-
-            $content.html($html);
-            var $forms = $content.find('form');
-            if ($forms.length > 0) {
-                var self = this;
-                $forms = $forms.filter(function (index, el) {
-                    if ($(el).data('ajax-send') == 'off') {
-                        return false;
-                    }
-                    return true;
-                });
-
-                $forms.find("[type='submit']").off("click").on("click", function (e) {
-                    e.preventDefault();
-                    self._submitHandler.call(self, this);
-                    return false;
-                });
-                $forms.off("submit").on("submit", function (e) {
-                    e.preventDefault();
-                    self._submitHandler.call(self, this);
-                    return false;
-                });
-            }
-        },
-        renderContainer: function renderContainer() {
-            this.$content = $('<div />').addClass(this.classes.content);
-
-            this.$close = $('<a href="#">&times;</a>').addClass(this.classes.closeButton);
-
-            this.$container = $('<div />').addClass(this.classes.container + ' ' + this.options.skin);
-
-            if (this.options.animation) {
-                this.$container.addClass(this.classes.animation + ' ' + this.options.animation + 'In');
-            }
-
-            this.$container.append(this.$close).append(this.$content);
-
-            this.$bg = $("<div />").addClass(this.classes.background + ' ' + this.options.skin).append(this.$container).appendTo('body');
-
-            return this.$container;
-        },
-        _prepareLink: function _prepareLink() {
-            var self = this,
-                href = this.$element.attr('href'),
-                $html;
-
-            if (href.match(/^#/)) {
-                var $targetContainer = $(href);
-
-                $html = $targetContainer[0];
-
-                this.$inlineParent = $targetContainer.parent();
-                this.inlineIndex = $targetContainer.index();
-                this.inline = true;
-
-                $targetContainer.detach();
-                this.start($html);
-            } else {
-                $.ajax({
-                    dataType: this.options.ajax.dataType,
-                    type: this.options.ajax.type,
-                    url: href,
-                    cache: false,
-                    success: function success(data, textStatus, jqXHR) {
-                        if (self.options.ajax.dataType == 'json') {
-                            $html = data.content;
-                        } else {
-                            $html = data;
-                        }
-                        self.start.call(self, $html);
-                    },
-                    error: function error(jqXHR, textStatus, errorThrown) {
-                        self.start.call(self, jqXHR.responseText);
-                    }
-                });
-            }
-        },
-        _submitHandler: function _submitHandler(element) {
-            if (typeof this.options.onSubmit == 'function') {
-                this.options.onSubmit.call(this, element);
-            } else {
-                this._submitHandlerDefault.call(this, element);
-            }
-        },
-        _submitHandlerDefault: function _submitHandlerDefault(element) {
-            var self = this,
-                content = '',
-                options = this.options,
-                $data = {},
-                $form = $(element),
-                $context = $($form.context);
-
-            if ($context.is('[type="submit"]')) {
-                $data[$context.attr('name')] = $context.val();
-                $form = $context.closest('form');
-            }
-
-            $form.ajaxSubmit({
-                type: "post",
-                data: $data,
-                success: function success(data, textStatus, jqXHR) {
-                    try {
-                        data = $.parseJSON(data);
-                    } catch (e) {}
-
-                    options.onSuccess.call(this, data, textStatus, jqXHR);
-                    if (data.close) {
-                        return self.close();
-                    }
-                    if (data) {
-                        content = data['content'] || data['title'] || data;
-                        self.setContent(content);
-                    }
-
-                    if (!data) {
-                        self.close();
-                    } else if (data.status === 'success' && options.autoclose) {
-                        setTimeout(function () {
-                            return self.close();
-                        }, options.autoclosedelay);
-                    }
-                }
-            });
-        },
-        start: function start(html) {
-            this.options.onBeforeStart();
-            this.renderContainer();
-            this.setContent(html);
-            this.bindEvents();
-            this.open();
-        },
-        open: function open() {
-            var $body = $('body'),
-                before = $body.outerWidth();
-
-            this.options.onBeforeOpen();
-
-            this.$bg.show();
-            this.$container.css('width', this.options.width || this.$container.width()).show();
-
-            $body.css({
-                'overflow': 'hidden',
-                'padding-right': $body.outerWidth() - before
-            }).addClass(this.classes.bodyClass);
-
-            this.options.onAfterOpen();
-        },
-        close: function close() {
-            this.options.onBeforeClose();
-
-            $('body').off('keyup').css({
-                'overflow': '',
-                'padding-right': ''
-            }).removeClass(this.classes.bodyClass);
-
-            this.$close.off('click');
-            this.$bg.off('click');
-
-            if (this.inline) {
-                var href = this.$element.attr('href');
-                var $target = this.$inlineParent.children(":eq(" + this.inlineIndex + ")");
-                var $originalContent = this.$content.children();
-                if ($target > -1) {
-                    $target.prepend($originalContent);
-                } else {
-                    this.$inlineParent.append($originalContent);
-                }
-            }
-
-            if (this.options.animation) {
-                this.$container.addClass(this.classes.animation + ' ' + this.options.animation + 'Out');
-
-                var self = this;
-                setTimeout(function () {
-                    self.$bg.remove();
-                }, this.options.animationdelay * 1000);
-            } else {
-                this.$bg.remove();
-            }
-
-            this.options.onAfterClose();
-        },
-        bindEvents: function bindEvents() {
-            var self = this,
-                options = this.options;
-
-            this.$close.on('click', function (e) {
-                e.preventDefault();
-                self.close();
-                return false;
-            });
-
-            if (options.closeonclick == true) {
-                this.$bg.addClass('clickable');
-                this.$bg.on('click', function (e) {
-                    if (e.target === this) {
-                        e.preventDefault();
-                        self.close();
-                        return false;
-                    }
-                });
-            }
-
-            this.$bg.on('mousewheel', function (e) {
-                var $this = $(this);
-                var deltaY = e.originalEvent.wheelDeltaY || e.originalEvent.deltaY;
-                var mode = e.originalEvent.deltaMode;
-
-                if (mode === 1) {
-                    deltaY *= self.params.lineHeight * -1;
-                } else if (mode === 2) {
-                    deltaY *= self.params.pageHeight;
-                }
-
-                $this.scrollTop($this.scrollTop() - deltaY);
-
-                return false;
-            });
-
-            if (this.options.touchEvents) {
-                this.$bg.on("touchstart", function (e) {
-                    self.touches = {
-                        'startingY': e.originalEvent.touches[0].pageY,
-                        'startingX': e.originalEvent.touches[0].pageX
-                    };
-                }).on('touchmove', function (e) {
-                    var $this = $(this),
-                        $window = $(window);
-
-                    var deltaY = e.originalEvent.touches[0].pageY - self.touches.startingY;
-                    var deltaX = e.originalEvent.touches[0].pageX - self.touches.startingX;
-
-                    $this.scrollTop($this.scrollTop() - deltaY);
-                    $this.scrollLeft($this.scrollLeft() - deltaX);
-
-                    self.touches.startingY = e.originalEvent.touches[0].pageY;
-                    self.touches.startingX = e.originalEvent.touches[0].pageX;
-
-                    return false;
-                });
-            }
-
-            if (options.closeonescape == true) {
-                $('body').on('keyup', function (e) {
-                    if (e.which === 27) {
-                        self.close();
-                    }
-                });
-            }
-        }
-    };
-
-    $.fn.mmodal = function (options) {
-        return new mmodal(this, options);
-    };
-})(jQuery);
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
-
-/***/ }),
-/* 55 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -41807,7 +41800,7 @@ var __WEBPACK_AMD_DEFINE_RESULT__;
 })();
 
 /***/ }),
-/* 56 */
+/* 49 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -42321,7 +42314,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
 
 /***/ }),
-/* 57 */
+/* 50 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -42577,10 +42570,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 	}]);
 });
 ;
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)(module)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(6)(module)))
 
 /***/ }),
-/* 58 */
+/* 51 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -44323,7 +44316,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 });
 
 /***/ }),
-/* 59 */
+/* 52 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(jQuery) {/*!
@@ -46540,7 +46533,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 60 */
+/* 53 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -47052,22 +47045,22 @@ jQuery(window).on('load', function () {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 61 */
+/* 54 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-__webpack_require__(62);
+__webpack_require__(55);
 
-__webpack_require__(63);
+__webpack_require__(56);
 
-__webpack_require__(81);
+__webpack_require__(74);
 
-__webpack_require__(82);
+__webpack_require__(75);
 
 /***/ }),
-/* 62 */
+/* 55 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -47157,13 +47150,13 @@ __webpack_require__(82);
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 63 */
+/* 56 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 /* WEBPACK VAR INJECTION */(function($) {
 
-var _countUp = __webpack_require__(64);
+var _countUp = __webpack_require__(57);
 
 var _countUp2 = _interopRequireDefault(_countUp);
 
@@ -47175,9 +47168,9 @@ var _StoreApp = __webpack_require__(7);
 
 var _StoreApp2 = _interopRequireDefault(_StoreApp);
 
-var _appHeadReduser = __webpack_require__(29);
+var _appHeadReduser = __webpack_require__(28);
 
-var _appCartRediser = __webpack_require__(80);
+var _appCartRediser = __webpack_require__(73);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -47296,7 +47289,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 64 */
+/* 57 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -47367,10 +47360,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 });
 
 /***/ }),
-/* 65 */
+/* 58 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var Symbol = __webpack_require__(21);
+var Symbol = __webpack_require__(20);
 
 /** Used for built-in method references. */
 var objectProto = Object.prototype;
@@ -47419,7 +47412,7 @@ module.exports = getRawTag;
 
 
 /***/ }),
-/* 66 */
+/* 59 */
 /***/ (function(module, exports) {
 
 /** Used for built-in method references. */
@@ -47447,10 +47440,10 @@ module.exports = objectToString;
 
 
 /***/ }),
-/* 67 */
+/* 60 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var overArg = __webpack_require__(68);
+var overArg = __webpack_require__(61);
 
 /** Built-in value references. */
 var getPrototype = overArg(Object.getPrototypeOf, Object);
@@ -47459,7 +47452,7 @@ module.exports = getPrototype;
 
 
 /***/ }),
-/* 68 */
+/* 61 */
 /***/ (function(module, exports) {
 
 /**
@@ -47480,7 +47473,7 @@ module.exports = overArg;
 
 
 /***/ }),
-/* 69 */
+/* 62 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -47490,7 +47483,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _ponyfill = __webpack_require__(70);
+var _ponyfill = __webpack_require__(63);
 
 var _ponyfill2 = _interopRequireDefault(_ponyfill);
 
@@ -47513,10 +47506,10 @@ if (typeof self !== 'undefined') {
 
 var result = (0, _ponyfill2['default'])(root);
 exports['default'] = result;
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2), __webpack_require__(5)(module)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2), __webpack_require__(6)(module)))
 
 /***/ }),
-/* 70 */
+/* 63 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -47545,7 +47538,7 @@ function symbolObservablePonyfill(root) {
 };
 
 /***/ }),
-/* 71 */
+/* 64 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -47554,13 +47547,13 @@ function symbolObservablePonyfill(root) {
 exports.__esModule = true;
 exports['default'] = combineReducers;
 
-var _createStore = __webpack_require__(19);
+var _createStore = __webpack_require__(18);
 
-var _isPlainObject = __webpack_require__(20);
+var _isPlainObject = __webpack_require__(19);
 
 var _isPlainObject2 = _interopRequireDefault(_isPlainObject);
 
-var _warning = __webpack_require__(23);
+var _warning = __webpack_require__(22);
 
 var _warning2 = _interopRequireDefault(_warning);
 
@@ -47694,7 +47687,7 @@ function combineReducers(reducers) {
 }
 
 /***/ }),
-/* 72 */
+/* 65 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -47751,7 +47744,7 @@ function bindActionCreators(actionCreators, dispatch) {
 }
 
 /***/ }),
-/* 73 */
+/* 66 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -47763,7 +47756,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
 exports['default'] = applyMiddleware;
 
-var _compose = __webpack_require__(24);
+var _compose = __webpack_require__(23);
 
 var _compose2 = _interopRequireDefault(_compose);
 
@@ -47815,7 +47808,7 @@ function applyMiddleware() {
 }
 
 /***/ }),
-/* 74 */
+/* 67 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global) {!function(e,t){ true?t(exports):"function"==typeof define&&define.amd?define(["exports"],t):t(e.reduxLogger=e.reduxLogger||{})}(this,function(e){"use strict";function t(e,t){e.super_=t,e.prototype=Object.create(t.prototype,{constructor:{value:e,enumerable:!1,writable:!0,configurable:!0}})}function r(e,t){Object.defineProperty(this,"kind",{value:e,enumerable:!0}),t&&t.length&&Object.defineProperty(this,"path",{value:t,enumerable:!0})}function n(e,t,r){n.super_.call(this,"E",e),Object.defineProperty(this,"lhs",{value:t,enumerable:!0}),Object.defineProperty(this,"rhs",{value:r,enumerable:!0})}function o(e,t){o.super_.call(this,"N",e),Object.defineProperty(this,"rhs",{value:t,enumerable:!0})}function i(e,t){i.super_.call(this,"D",e),Object.defineProperty(this,"lhs",{value:t,enumerable:!0})}function a(e,t,r){a.super_.call(this,"A",e),Object.defineProperty(this,"index",{value:t,enumerable:!0}),Object.defineProperty(this,"item",{value:r,enumerable:!0})}function f(e,t,r){var n=e.slice((r||t)+1||e.length);return e.length=t<0?e.length+t:t,e.push.apply(e,n),e}function u(e){var t="undefined"==typeof e?"undefined":N(e);return"object"!==t?t:e===Math?"math":null===e?"null":Array.isArray(e)?"array":"[object Date]"===Object.prototype.toString.call(e)?"date":"function"==typeof e.toString&&/^\/.*\//.test(e.toString())?"regexp":"object"}function l(e,t,r,c,s,d,p){s=s||[],p=p||[];var g=s.slice(0);if("undefined"!=typeof d){if(c){if("function"==typeof c&&c(g,d))return;if("object"===("undefined"==typeof c?"undefined":N(c))){if(c.prefilter&&c.prefilter(g,d))return;if(c.normalize){var h=c.normalize(g,d,e,t);h&&(e=h[0],t=h[1])}}}g.push(d)}"regexp"===u(e)&&"regexp"===u(t)&&(e=e.toString(),t=t.toString());var y="undefined"==typeof e?"undefined":N(e),v="undefined"==typeof t?"undefined":N(t),b="undefined"!==y||p&&p[p.length-1].lhs&&p[p.length-1].lhs.hasOwnProperty(d),m="undefined"!==v||p&&p[p.length-1].rhs&&p[p.length-1].rhs.hasOwnProperty(d);if(!b&&m)r(new o(g,t));else if(!m&&b)r(new i(g,e));else if(u(e)!==u(t))r(new n(g,e,t));else if("date"===u(e)&&e-t!==0)r(new n(g,e,t));else if("object"===y&&null!==e&&null!==t)if(p.filter(function(t){return t.lhs===e}).length)e!==t&&r(new n(g,e,t));else{if(p.push({lhs:e,rhs:t}),Array.isArray(e)){var w;e.length;for(w=0;w<e.length;w++)w>=t.length?r(new a(g,w,new i(void 0,e[w]))):l(e[w],t[w],r,c,g,w,p);for(;w<t.length;)r(new a(g,w,new o(void 0,t[w++])))}else{var x=Object.keys(e),S=Object.keys(t);x.forEach(function(n,o){var i=S.indexOf(n);i>=0?(l(e[n],t[n],r,c,g,n,p),S=f(S,i)):l(e[n],void 0,r,c,g,n,p)}),S.forEach(function(e){l(void 0,t[e],r,c,g,e,p)})}p.length=p.length-1}else e!==t&&("number"===y&&isNaN(e)&&isNaN(t)||r(new n(g,e,t)))}function c(e,t,r,n){return n=n||[],l(e,t,function(e){e&&n.push(e)},r),n.length?n:void 0}function s(e,t,r){if(r.path&&r.path.length){var n,o=e[t],i=r.path.length-1;for(n=0;n<i;n++)o=o[r.path[n]];switch(r.kind){case"A":s(o[r.path[n]],r.index,r.item);break;case"D":delete o[r.path[n]];break;case"E":case"N":o[r.path[n]]=r.rhs}}else switch(r.kind){case"A":s(e[t],r.index,r.item);break;case"D":e=f(e,t);break;case"E":case"N":e[t]=r.rhs}return e}function d(e,t,r){if(e&&t&&r&&r.kind){for(var n=e,o=-1,i=r.path?r.path.length-1:0;++o<i;)"undefined"==typeof n[r.path[o]]&&(n[r.path[o]]="number"==typeof r.path[o]?[]:{}),n=n[r.path[o]];switch(r.kind){case"A":s(r.path?n[r.path[o]]:n,r.index,r.item);break;case"D":delete n[r.path[o]];break;case"E":case"N":n[r.path[o]]=r.rhs}}}function p(e,t,r){if(r.path&&r.path.length){var n,o=e[t],i=r.path.length-1;for(n=0;n<i;n++)o=o[r.path[n]];switch(r.kind){case"A":p(o[r.path[n]],r.index,r.item);break;case"D":o[r.path[n]]=r.lhs;break;case"E":o[r.path[n]]=r.lhs;break;case"N":delete o[r.path[n]]}}else switch(r.kind){case"A":p(e[t],r.index,r.item);break;case"D":e[t]=r.lhs;break;case"E":e[t]=r.lhs;break;case"N":e=f(e,t)}return e}function g(e,t,r){if(e&&t&&r&&r.kind){var n,o,i=e;for(o=r.path.length-1,n=0;n<o;n++)"undefined"==typeof i[r.path[n]]&&(i[r.path[n]]={}),i=i[r.path[n]];switch(r.kind){case"A":p(i[r.path[n]],r.index,r.item);break;case"D":i[r.path[n]]=r.lhs;break;case"E":i[r.path[n]]=r.lhs;break;case"N":delete i[r.path[n]]}}}function h(e,t,r){if(e&&t){var n=function(n){r&&!r(e,t,n)||d(e,t,n)};l(e,t,n)}}function y(e){return"color: "+F[e].color+"; font-weight: bold"}function v(e){var t=e.kind,r=e.path,n=e.lhs,o=e.rhs,i=e.index,a=e.item;switch(t){case"E":return[r.join("."),n,"→",o];case"N":return[r.join("."),o];case"D":return[r.join(".")];case"A":return[r.join(".")+"["+i+"]",a];default:return[]}}function b(e,t,r,n){var o=c(e,t);try{n?r.groupCollapsed("diff"):r.group("diff")}catch(e){r.log("diff")}o?o.forEach(function(e){var t=e.kind,n=v(e);r.log.apply(r,["%c "+F[t].text,y(t)].concat(P(n)))}):r.log("—— no diff ——");try{r.groupEnd()}catch(e){r.log("—— diff end —— ")}}function m(e,t,r,n){switch("undefined"==typeof e?"undefined":N(e)){case"object":return"function"==typeof e[n]?e[n].apply(e,P(r)):e[n];case"function":return e(t);default:return e}}function w(e){var t=e.timestamp,r=e.duration;return function(e,n,o){var i=["action"];return i.push("%c"+String(e.type)),t&&i.push("%c@ "+n),r&&i.push("%c(in "+o.toFixed(2)+" ms)"),i.join(" ")}}function x(e,t){var r=t.logger,n=t.actionTransformer,o=t.titleFormatter,i=void 0===o?w(t):o,a=t.collapsed,f=t.colors,u=t.level,l=t.diff,c="undefined"==typeof t.titleFormatter;e.forEach(function(o,s){var d=o.started,p=o.startedTime,g=o.action,h=o.prevState,y=o.error,v=o.took,w=o.nextState,x=e[s+1];x&&(w=x.prevState,v=x.started-d);var S=n(g),k="function"==typeof a?a(function(){return w},g,o):a,j=D(p),E=f.title?"color: "+f.title(S)+";":"",A=["color: gray; font-weight: lighter;"];A.push(E),t.timestamp&&A.push("color: gray; font-weight: lighter;"),t.duration&&A.push("color: gray; font-weight: lighter;");var O=i(S,j,v);try{k?f.title&&c?r.groupCollapsed.apply(r,["%c "+O].concat(A)):r.groupCollapsed(O):f.title&&c?r.group.apply(r,["%c "+O].concat(A)):r.group(O)}catch(e){r.log(O)}var N=m(u,S,[h],"prevState"),P=m(u,S,[S],"action"),C=m(u,S,[y,h],"error"),F=m(u,S,[w],"nextState");if(N)if(f.prevState){var L="color: "+f.prevState(h)+"; font-weight: bold";r[N]("%c prev state",L,h)}else r[N]("prev state",h);if(P)if(f.action){var T="color: "+f.action(S)+"; font-weight: bold";r[P]("%c action    ",T,S)}else r[P]("action    ",S);if(y&&C)if(f.error){var M="color: "+f.error(y,h)+"; font-weight: bold;";r[C]("%c error     ",M,y)}else r[C]("error     ",y);if(F)if(f.nextState){var _="color: "+f.nextState(w)+"; font-weight: bold";r[F]("%c next state",_,w)}else r[F]("next state",w);l&&b(h,w,r,k);try{r.groupEnd()}catch(e){r.log("—— log end ——")}})}function S(){var e=arguments.length>0&&void 0!==arguments[0]?arguments[0]:{},t=Object.assign({},L,e),r=t.logger,n=t.stateTransformer,o=t.errorTransformer,i=t.predicate,a=t.logErrors,f=t.diffPredicate;if("undefined"==typeof r)return function(){return function(e){return function(t){return e(t)}}};if(e.getState&&e.dispatch)return console.error("[redux-logger] redux-logger not installed. Make sure to pass logger instance as middleware:\n// Logger with default options\nimport { logger } from 'redux-logger'\nconst store = createStore(\n  reducer,\n  applyMiddleware(logger)\n)\n// Or you can create your own logger with custom options http://bit.ly/redux-logger-options\nimport createLogger from 'redux-logger'\nconst logger = createLogger({\n  // ...options\n});\nconst store = createStore(\n  reducer,\n  applyMiddleware(logger)\n)\n"),function(){return function(e){return function(t){return e(t)}}};var u=[];return function(e){var r=e.getState;return function(e){return function(l){if("function"==typeof i&&!i(r,l))return e(l);var c={};u.push(c),c.started=O.now(),c.startedTime=new Date,c.prevState=n(r()),c.action=l;var s=void 0;if(a)try{s=e(l)}catch(e){c.error=o(e)}else s=e(l);c.took=O.now()-c.started,c.nextState=n(r());var d=t.diff&&"function"==typeof f?f(r,l):t.diff;if(x(u,Object.assign({},t,{diff:d})),u.length=0,c.error)throw c.error;return s}}}}var k,j,E=function(e,t){return new Array(t+1).join(e)},A=function(e,t){return E("0",t-e.toString().length)+e},D=function(e){return A(e.getHours(),2)+":"+A(e.getMinutes(),2)+":"+A(e.getSeconds(),2)+"."+A(e.getMilliseconds(),3)},O="undefined"!=typeof performance&&null!==performance&&"function"==typeof performance.now?performance:Date,N="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(e){return typeof e}:function(e){return e&&"function"==typeof Symbol&&e.constructor===Symbol&&e!==Symbol.prototype?"symbol":typeof e},P=function(e){if(Array.isArray(e)){for(var t=0,r=Array(e.length);t<e.length;t++)r[t]=e[t];return r}return Array.from(e)},C=[];k="object"===("undefined"==typeof global?"undefined":N(global))&&global?global:"undefined"!=typeof window?window:{},j=k.DeepDiff,j&&C.push(function(){"undefined"!=typeof j&&k.DeepDiff===c&&(k.DeepDiff=j,j=void 0)}),t(n,r),t(o,r),t(i,r),t(a,r),Object.defineProperties(c,{diff:{value:c,enumerable:!0},observableDiff:{value:l,enumerable:!0},applyDiff:{value:h,enumerable:!0},applyChange:{value:d,enumerable:!0},revertChange:{value:g,enumerable:!0},isConflict:{value:function(){return"undefined"!=typeof j},enumerable:!0},noConflict:{value:function(){return C&&(C.forEach(function(e){e()}),C=null),c},enumerable:!0}});var F={E:{color:"#2196F3",text:"CHANGED:"},N:{color:"#4CAF50",text:"ADDED:"},D:{color:"#F44336",text:"DELETED:"},A:{color:"#2196F3",text:"ARRAY:"}},L={level:"log",logger:console,logErrors:!0,collapsed:void 0,predicate:void 0,duration:!1,timestamp:!0,stateTransformer:function(e){return e},actionTransformer:function(e){return e},errorTransformer:function(e){return e},colors:{title:function(){return"inherit"},prevState:function(){return"#9E9E9E"},action:function(){return"#03A9F4"},nextState:function(){return"#4CAF50"},error:function(){return"#F20404"}},diff:!1,diffPredicate:void 0,transformer:void 0},T=function(){var e=arguments.length>0&&void 0!==arguments[0]?arguments[0]:{},t=e.dispatch,r=e.getState;return"function"==typeof t||"function"==typeof r?S()({dispatch:t,getState:r}):void console.error("\n[redux-logger v3] BREAKING CHANGE\n[redux-logger v3] Since 3.0.0 redux-logger exports by default logger with default settings.\n[redux-logger v3] Change\n[redux-logger v3] import createLogger from 'redux-logger'\n[redux-logger v3] to\n[redux-logger v3] import { createLogger } from 'redux-logger'\n")};e.defaults=L,e.createLogger=S,e.logger=T,e.default=T,Object.defineProperty(e,"__esModule",{value:!0})});
@@ -47823,7 +47816,7 @@ function applyMiddleware() {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
 
 /***/ }),
-/* 75 */
+/* 68 */
 /***/ (function(module, exports) {
 
 (function(self) {
@@ -48295,7 +48288,7 @@ function applyMiddleware() {
 
 
 /***/ }),
-/* 76 */
+/* 69 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -48303,7 +48296,7 @@ function applyMiddleware() {
 
 exports.__esModule = true;
 
-var _jsCookie = __webpack_require__(77);
+var _jsCookie = __webpack_require__(70);
 
 var _jsCookie2 = _interopRequireDefault(_jsCookie);
 
@@ -48351,7 +48344,7 @@ var CookieStorage = function () {
 exports.default = CookieStorage;
 
 /***/ }),
-/* 77 */
+/* 70 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -48526,7 +48519,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
 
 
 /***/ }),
-/* 78 */
+/* 71 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -48578,7 +48571,7 @@ exports.default = LocalStorage;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
 
 /***/ }),
-/* 79 */
+/* 72 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -48641,7 +48634,7 @@ exports.default = {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
 
 /***/ }),
-/* 80 */
+/* 73 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -48671,7 +48664,7 @@ function cartAdd() {
 }
 
 /***/ }),
-/* 81 */
+/* 74 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -48782,7 +48775,7 @@ function cartAdd() {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 82 */
+/* 75 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -48803,7 +48796,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 83 */
+/* 76 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -48820,7 +48813,7 @@ $(document).ajaxComplete(function (e, xhr, settings) {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 84 */
+/* 77 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -48872,7 +48865,7 @@ window.endless_paginate = function () {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 85 */
+/* 78 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -48886,7 +48879,7 @@ $(document).on('click', 'a.mmodal', function (e) {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 86 */
+/* 79 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -48911,7 +48904,7 @@ $('.search-form-container .button-clear').on('click', function () {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 87 */
+/* 80 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -48919,9 +48912,9 @@ $('.search-form-container .button-clear').on('click', function () {
 
 var _preact = __webpack_require__(3);
 
-var _preactRedux = __webpack_require__(88);
+var _preactRedux = __webpack_require__(81);
 
-var _MiniCart = __webpack_require__(89);
+var _MiniCart = __webpack_require__(82);
 
 var _MiniCart2 = _interopRequireDefault(_MiniCart);
 
@@ -48942,7 +48935,7 @@ if (minicart) {
 }
 
 /***/ }),
-/* 88 */
+/* 81 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global) {(function (global, factory) {
@@ -50177,7 +50170,7 @@ return index;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
 
 /***/ }),
-/* 89 */
+/* 82 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -50187,11 +50180,11 @@ exports.__esModule = true;
 
 var _preact = __webpack_require__(3);
 
-var _lodash = __webpack_require__(6);
+var _lodash = __webpack_require__(4);
 
 var _lodash2 = _interopRequireDefault(_lodash);
 
-var _simplebar = __webpack_require__(90);
+var _simplebar = __webpack_require__(83);
 
 var _simplebar2 = _interopRequireDefault(_simplebar);
 
@@ -50363,7 +50356,7 @@ var MiniCart = function (_Component) {
 exports.default = MiniCart;
 
 /***/ }),
-/* 90 */
+/* 83 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*!
@@ -50385,7 +50378,7 @@ object-assign
 var i=Object.getOwnPropertySymbols,o=Object.prototype.hasOwnProperty,s=Object.prototype.propertyIsEnumerable;t.exports=function(){try{if(!Object.assign)return!1;var t=new String("abc");if(t[5]="de","5"===Object.getOwnPropertyNames(t)[0])return!1;for(var e={},n=0;n<10;n++)e["_"+String.fromCharCode(n)]=n;if("0123456789"!==Object.getOwnPropertyNames(e).map(function(t){return e[t]}).join(""))return!1;var r={};return"abcdefghijklmnopqrst".split("").forEach(function(t){r[t]=t}),"abcdefghijklmnopqrst"===Object.keys(Object.assign({},r)).join("")}catch(t){return!1}}()?Object.assign:function(t,e){for(var n,c,a=r(t),u=1;u<arguments.length;u++){n=Object(arguments[u]);for(var l in n)o.call(n,l)&&(a[l]=n[l]);if(i){c=i(n);for(var f=0;f<c.length;f++)s.call(n,c[f])&&(a[c[f]]=n[c[f]])}}return a}}]).default});
 
 /***/ }),
-/* 91 */
+/* 84 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -50395,7 +50388,7 @@ var _StoreApp = __webpack_require__(7);
 
 var _StoreApp2 = _interopRequireDefault(_StoreApp);
 
-var _appHeadReduser = __webpack_require__(29);
+var _appHeadReduser = __webpack_require__(28);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -50417,7 +50410,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 92 */
+/* 85 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -50464,7 +50457,7 @@ $(document).on('click', '.action_block.sort .options li', function (e) {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 93 */
+/* 86 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -50472,7 +50465,7 @@ $(document).on('click', '.action_block.sort .options li', function (e) {
 
 var _preact = __webpack_require__(3);
 
-var _ProductImageSlider = __webpack_require__(94);
+var _ProductImageSlider = __webpack_require__(87);
 
 var _ProductImageSlider2 = _interopRequireDefault(_ProductImageSlider);
 
@@ -50534,30 +50527,4904 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 94 */
-/***/ (function(module, exports) {
-
-"use strict";
-throw new Error("Module build failed: SyntaxError: Unexpected token, expected } (282:38)\n\n\u001b[0m \u001b[90m 280 | \u001b[39m                \u001b[33m<\u001b[39m\u001b[33mdiv\u001b[39m className\u001b[33m=\u001b[39m\u001b[32m\"wrap\"\u001b[39m ref\u001b[33m=\u001b[39m{(el) \u001b[33m=>\u001b[39m \u001b[36mthis\u001b[39m\u001b[33m.\u001b[39m_box \u001b[33m=\u001b[39m el }\u001b[33m>\u001b[39m\n \u001b[90m 281 | \u001b[39m                    \u001b[33m<\u001b[39m\u001b[33mReactSlyWrapper\u001b[39m options\u001b[33m=\u001b[39m{\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 282 | \u001b[39m                        activatePageOn\u001b[33m:\u001b[39m \u001b[32m'click'\u001b[39m\u001b[33m,\u001b[39m\n \u001b[90m     | \u001b[39m                                      \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 283 | \u001b[39m                        speed\u001b[33m:\u001b[39m \u001b[35m300\u001b[39m\u001b[33m,\u001b[39m\n \u001b[90m 284 | \u001b[39m                        mouseDragging\u001b[33m:\u001b[39m \u001b[35m1\u001b[39m\u001b[33m,\u001b[39m\n \u001b[90m 285 | \u001b[39m                        touchDragging\u001b[33m:\u001b[39m \u001b[35m1\u001b[39m\u001b[33m,\u001b[39m\u001b[0m\n");
-
-/***/ }),
-/* 95 */,
-/* 96 */,
-/* 97 */,
-/* 98 */,
-/* 99 */,
-/* 100 */,
-/* 101 */,
-/* 102 */,
-/* 103 */,
-/* 104 */,
-/* 105 */
+/* 87 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 /* WEBPACK VAR INJECTION */(function($) {
 
-var _ajax = __webpack_require__(26);
+exports.__esModule = true;
+
+var _preact = __webpack_require__(3);
+
+var _preactRenderToString = __webpack_require__(88);
+
+var _preactRenderToString2 = _interopRequireDefault(_preactRenderToString);
+
+var _video = __webpack_require__(89);
+
+var _PhotoSwipeContainer = __webpack_require__(90);
+
+var _PhotoSwipeContainer2 = _interopRequireDefault(_PhotoSwipeContainer);
+
+var _lodash = __webpack_require__(4);
+
+var _lodash2 = _interopRequireDefault(_lodash);
+
+var _PreactSlide = __webpack_require__(93);
+
+var _PreactSlide2 = _interopRequireDefault(_PreactSlide);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var ProductImageSlider = function (_Component) {
+    _inherits(ProductImageSlider, _Component);
+
+    function ProductImageSlider(props) {
+        _classCallCheck(this, ProductImageSlider);
+
+        var _this = _possibleConstructorReturn(this, _Component.call(this));
+
+        var len = 0,
+            wait = 0;
+        if (props.items) {
+            len = props.items.length;
+        }
+
+        _this.preparedItems = null;
+
+        _this.onResize = _lodash2.default.throttle(_this.onResize, 200);
+
+        _this.state = {
+            height: 400,
+            loading: true,
+            items: props.items || [],
+            count: len,
+            wait: wait,
+            isVideo: false,
+            index: 0
+        };
+
+        _this.prepareItems(_this.state.items);
+        return _this;
+    }
+
+    ProductImageSlider.prototype.componentDidMount = function componentDidMount() {
+        window.addEventListener("resize", this.onResize.bind(this));
+    };
+
+    ProductImageSlider.prototype.componentWillUnmount = function componentWillUnmount() {
+        window.removeEventListener("resize", this.onResize);
+    };
+
+    ProductImageSlider.prototype.onResize = function onResize() {
+
+        if (this._box) {
+            var height = this._box.getBoundingClientRect().height;
+
+            if (this.state.height !== height) {
+                this.setState({ height: height });
+            }
+        }
+    };
+
+    ProductImageSlider.prototype.prepareItems = function prepareItems(items) {
+        var _this2 = this;
+
+        var wait = this.state.wait;
+
+        var _loop = function _loop(i) {
+            var item = items[i];
+
+            if (item.type === 'video') {
+                wait += 1;
+                (0, _video.videoLinkToObject)(item.href, function (meta) {
+                    var wait = _this2.state.wait--;
+                    items[i] = _lodash2.default.extend(item, { meta: meta });
+
+                    _this2.setState({
+                        wait: wait,
+                        loading: !!wait
+                    });
+                });
+            }
+        };
+
+        for (var i in items) {
+            _loop(i);
+        }
+    };
+
+    ProductImageSlider.prototype.clickHndl = function clickHndl(e, n, item) {
+
+        if (this.state.index !== n) {
+            this.setState({
+                index: n,
+                isVideo: false
+            });
+        }
+    };
+
+    ProductImageSlider.prototype.zoomHndl = function zoomHndl(e, item) {
+        var _this3 = this;
+
+        e.preventDefault();
+
+        if (!this.preparedItems) {
+            var items = [];
+            for (var i in this.state.items) {
+                var _item = this.state.items[i];
+
+                if (_item.type === 'image') {
+                    items.push({ src: _item.src, w: null, h: null });
+                } else if (_item.type === 'html') {
+                    items.push({ html: _item.html });
+                } else if (_item.type === 'video') {
+                    items.push({
+                        originalItem: _item,
+                        html: (0, _preactRenderToString2.default)((0, _preact.h)(
+                            "div",
+                            { className: "slide-wrapper" },
+                            (0, _preact.h)(
+                                "div",
+                                { className: "video-wrapper" },
+                                this.renderVideoItem(_item)
+                            )
+                        )),
+                        onTap: function onTap(item, pswp) {
+                            if (!item.videoShow) {
+                                $(item.container).find('.video-wrapper')[0].innerHTML = (0, _preactRenderToString2.default)(_this3.renderVideoItem(item.originalItem, true, true));
+                            }
+
+                            item.videoShow = true;
+                        },
+                        onBlur: function onBlur(item, pswp) {
+                            if (item.container && item.videoShow) {
+                                item.videoShow = false;
+                                $(item.container).find('.video-wrapper')[0].innerHTML = (0, _preactRenderToString2.default)(_this3.renderVideoItem(item.originalItem));
+                            }
+                        }
+                    });
+                }
+            }
+
+            this.preparedItems = items;
+        }
+
+        var pswp = _PhotoSwipeContainer2.default;
+        pswp.options.index = this.state.index;
+        pswp.setImages(this.preparedItems);
+        pswp.init();
+    };
+
+    ProductImageSlider.prototype.prevHndl = function prevHndl(e) {
+        e.preventDefault();
+    };
+
+    ProductImageSlider.prototype.nextHndl = function nextHndl(e) {
+        e.preventDefault();
+    };
+
+    ProductImageSlider.prototype.videoShowHndl = function videoShowHndl(e) {
+        e.preventDefault();
+
+        this.setState({ isVideo: true });
+    };
+
+    ProductImageSlider.prototype.renderThumbs = function renderThumbs() {
+        var _this4 = this;
+
+        return _lodash2.default.map(this.state.items, function (item, n) {
+
+            var is_active = _this4.state.index == n ? ' active' : '';
+
+            if (item.type === 'image') {
+                return (0, _preact.h)("div", { className: "slide type-image" + is_active, key: "image.thumb." + n, onClick: function onClick(e) {
+                        _this4.clickHndl(e, n, item);
+                    },
+                    style: "background-image: url(" + item.src + ")" });
+            }
+            if (item.type === 'video') {
+
+                var src = item.thumb || item.meta.images.thumb || null;
+
+                if (src) {
+                    return (0, _preact.h)("div", { className: "slide type-video" + is_active,
+                        key: "video.thumb." + n,
+                        onClick: function onClick(e) {
+                            _this4.clickHndl(e, n, item);
+                        },
+                        style: "background-image: url(" + src + ")"
+                    });
+                } else {
+                    return (0, _preact.h)(
+                        "div",
+                        { className: "slide type-video" + is_active, key: "video.thumb." + n, onClick: function onClick(e) {
+                                _this4.clickHndl(e, n, item);
+                            } },
+                        (0, _preact.h)(
+                            "span",
+                            null,
+                            "No image"
+                        )
+                    );
+                }
+            }
+
+            if (item.type === 'html') {
+                return (0, _preact.h)(
+                    "div",
+                    { className: "slide type-html" + is_active, key: "html.thumb." + n, onClick: function onClick(e) {
+                            _this4.clickHndl(e, n, item);
+                        } },
+                    "HTML"
+                );
+            }
+        });
+    };
+
+    ProductImageSlider.prototype.renderVideoItem = function renderVideoItem(item) {
+        var forceVideo = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+        var autolay = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
+
+        if (item.meta.type === 'youtube') {
+
+            if (this.state.isVideo || forceVideo) {
+                return (0, _preact.h)("iframe", {
+                    src: item.meta.p + "www.youtube.com/embed/" + item.meta.id + '?autoplay=' + (autolay ? 1 : 0),
+                    type: "text/html",
+                    frameborder: "0",
+                    width: 640,
+                    height: 360,
+                    allowfullscreen: true });
+            } else {
+                var image = item.img || item.meta.images.img;
+                return this.renderImage(image);
+            }
+        }
+    };
+
+    ProductImageSlider.prototype.renderImage = function renderImage(src) {
+        return (0, _preact.h)("div", { className: "image", style: "background-image: url(" + src + ")" });
+    };
+
+    ProductImageSlider.prototype.renderDetail = function renderDetail() {
+        var _this5 = this;
+
+        if (this.state.count) {
+            var position = this.state.index;
+
+            if (position <= this.state.items.length) {
+                var _item2 = this.state.items[position];
+                var key = 'detail.' + position;
+
+                if (_item2.type === 'image') {
+                    return (0, _preact.h)(
+                        "div",
+                        { className: "slide type-image", key: key, onClick: function onClick(e) {
+                                _this5.zoomHndl(e, _item2);
+                            } },
+                        this.renderImage(_item2.src)
+                    );
+                }
+
+                if (_item2.type === 'html') {
+                    return (0, _preact.h)("div", { className: "slide type-html", dangerouslySetInnerHTML: { __html: _item2.html }, key: key });
+                }
+
+                if (_item2.type === 'video') {
+                    var content = this.renderVideoItem(_item2);
+                    var clName = "slide type-video ";
+
+                    clName += this.state.isVideo ? "video-show" : "video-hide";
+
+                    return (0, _preact.h)(
+                        "div",
+                        { className: clName, onClick: function onClick(e) {
+                                _this5.videoShowHndl(e);
+                            }, key: key },
+                        content
+                    );
+                }
+            }
+        }
+
+        return null;
+    };
+
+    ProductImageSlider.prototype.render = function render() {
+        var _this6 = this;
+
+        if (this.state.loading) {
+            return (0, _preact.h)("div", { className: "slider loading" });
+        }
+
+        return (0, _preact.h)(
+            "div",
+            { className: "images-slider" },
+            (0, _preact.h)(
+                "div",
+                { className: "slider-thumbs" },
+                (0, _preact.h)("a", { href: "#", className: "prev", onClick: function onClick(e) {
+                        _this6.prevHndl(e);
+                    } }),
+                (0, _preact.h)(
+                    _PreactSlide2.default,
+                    { options: {
+                            speed: 300,
+                            mouseDragging: 1,
+                            touchDragging: 1,
+                            smart: 1
+                        } },
+                    this.renderThumbs()
+                ),
+                (0, _preact.h)("a", { href: "#", className: "next", onClick: function onClick(e) {
+                        _this6.nextHndl(e);
+                    } })
+            ),
+            (0, _preact.h)(
+                "div",
+                { className: "slider-detail" },
+                (0, _preact.h)(
+                    "div",
+                    { className: "wrap" },
+                    this.renderDetail()
+                )
+            )
+        );
+    };
+
+    return ProductImageSlider;
+}(_preact.Component);
+
+exports.default = ProductImageSlider;
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
+
+/***/ }),
+/* 88 */
+/***/ (function(module, exports, __webpack_require__) {
+
+(function (global, factory) {
+	 true ? module.exports = factory() :
+	typeof define === 'function' && define.amd ? define(factory) :
+	(global.preactRenderToString = factory());
+}(this, (function () {
+
+var NON_DIMENSION_PROPS = {
+	boxFlex: 1, boxFlexGroup: 1, columnCount: 1, fillOpacity: 1, flex: 1, flexGrow: 1,
+	flexPositive: 1, flexShrink: 1, flexNegative: 1, fontWeight: 1, lineClamp: 1, lineHeight: 1,
+	opacity: 1, order: 1, orphans: 1, strokeOpacity: 1, widows: 1, zIndex: 1, zoom: 1
+};
+
+var ESC = {
+	'<': '&lt;',
+	'>': '&gt;',
+	'"': '&quot;',
+	'&': '&amp;'
+};
+
+var objectKeys = Object.keys || function (obj) {
+	var keys = [];
+	for (var i in obj) {
+		if (obj.hasOwnProperty(i)) keys.push(i);
+	}return keys;
+};
+
+var encodeEntities = function encodeEntities(s) {
+	return String(s).replace(/[<>"&]/g, escapeChar);
+};
+
+var escapeChar = function escapeChar(a) {
+	return ESC[a] || a;
+};
+
+var falsey = function falsey(v) {
+	return v == null || v === false;
+};
+
+var memoize = function memoize(fn) {
+	var mem = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+	return function (v) {
+		return mem[v] || (mem[v] = fn(v));
+	};
+};
+
+var indent = function indent(s, char) {
+	return String(s).replace(/(\n+)/g, '$1' + (char || '\t'));
+};
+
+var isLargeString = function isLargeString(s, length, ignoreLines) {
+	return String(s).length > (length || 40) || !ignoreLines && String(s).indexOf('\n') !== -1 || String(s).indexOf('<') !== -1;
+};
+
+function styleObjToCss(s) {
+	var str = '';
+	for (var prop in s) {
+		var val = s[prop];
+		if (val != null) {
+			if (str) str += ' ';
+			str += jsToCss(prop);
+			str += ': ';
+			str += val;
+			if (typeof val === 'number' && !NON_DIMENSION_PROPS[prop]) {
+				str += 'px';
+			}
+			str += ';';
+		}
+	}
+	return str || undefined;
+}
+
+function hashToClassName(c) {
+	var str = '';
+	for (var prop in c) {
+		if (c[prop]) {
+			if (str) str += ' ';
+			str += prop;
+		}
+	}
+	return str;
+}
+
+var jsToCss = memoize(function (s) {
+	return s.replace(/([A-Z])/g, '-$1').toLowerCase();
+});
+
+function assign(obj, props) {
+	for (var i in props) {
+		obj[i] = props[i];
+	}return obj;
+}
+
+function getNodeProps(vnode) {
+	var defaultProps = vnode.nodeName.defaultProps,
+	    props = assign({}, defaultProps || vnode.attributes);
+	if (defaultProps) assign(props, vnode.attributes);
+	if (vnode.children) props.children = vnode.children;
+	return props;
+}
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+var SHALLOW = { shallow: true };
+
+var UNNAMED = [];
+
+var EMPTY = {};
+
+var VOID_ELEMENTS = ['area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'link', 'meta', 'param', 'source', 'track', 'wbr'];
+
+renderToString.render = renderToString;
+
+var shallowRender = function shallowRender(vnode, context) {
+	return renderToString(vnode, context, SHALLOW);
+};
+
+function renderToString(vnode, context, opts, inner, isSvgMode) {
+	var _ref = vnode || EMPTY,
+	    nodeName = _ref.nodeName,
+	    attributes = _ref.attributes,
+	    children = _ref.children,
+	    isComponent = false;
+
+	context = context || {};
+	opts = opts || {};
+
+	var pretty = opts.pretty,
+	    indentChar = typeof pretty === 'string' ? pretty : '\t';
+
+	if (vnode == null || typeof vnode === 'boolean') {
+		return '';
+	}
+
+	if ((typeof vnode === 'undefined' ? 'undefined' : _typeof(vnode)) !== 'object' && !nodeName) {
+		return encodeEntities(vnode);
+	}
+
+	if (typeof nodeName === 'function') {
+		isComponent = true;
+		if (opts.shallow && (inner || opts.renderRootComponent === false)) {
+			nodeName = getComponentName(nodeName);
+		} else {
+			var props = getNodeProps(vnode),
+			    rendered = void 0;
+
+			if (!nodeName.prototype || typeof nodeName.prototype.render !== 'function') {
+				rendered = nodeName(props, context);
+			} else {
+				var c = new nodeName(props, context);
+
+				c._disable = c.__x = true;
+				c.props = props;
+				c.context = context;
+				if (c.componentWillMount) c.componentWillMount();
+				rendered = c.render(c.props, c.state, c.context);
+
+				if (c.getChildContext) {
+					context = assign(assign({}, context), c.getChildContext());
+				}
+			}
+
+			return renderToString(rendered, context, opts, opts.shallowHighOrder !== false);
+		}
+	}
+
+	var s = '',
+	    html = void 0;
+
+	if (attributes) {
+		var attrs = objectKeys(attributes);
+
+		if (opts && opts.sortAttributes === true) attrs.sort();
+
+		for (var i = 0; i < attrs.length; i++) {
+			var name = attrs[i],
+			    v = attributes[name];
+			if (name === 'children') continue;
+			if (!(opts && opts.allAttributes) && (name === 'key' || name === 'ref')) continue;
+
+			if (name === 'className') {
+				if (attributes['class']) continue;
+				name = 'class';
+			} else if (isSvgMode && name.match(/^xlink\:?(.+)/)) {
+				name = name.toLowerCase().replace(/^xlink\:?(.+)/, 'xlink:$1');
+			}
+
+			if (name === 'class' && v && (typeof v === 'undefined' ? 'undefined' : _typeof(v)) === 'object') {
+				v = hashToClassName(v);
+			} else if (name === 'style' && v && (typeof v === 'undefined' ? 'undefined' : _typeof(v)) === 'object') {
+				v = styleObjToCss(v);
+			}
+
+			var hooked = opts.attributeHook && opts.attributeHook(name, v, context, opts, isComponent);
+			if (hooked || hooked === '') {
+				s += hooked;
+				continue;
+			}
+
+			if (name === 'dangerouslySetInnerHTML') {
+				html = v && v.__html;
+			} else if ((v || v === 0 || v === '') && typeof v !== 'function') {
+				if (v === true || v === '') {
+					v = name;
+
+					if (!opts || !opts.xml) {
+						s += ' ' + name;
+						continue;
+					}
+				}
+				s += ' ' + name + '="' + encodeEntities(v) + '"';
+			}
+		}
+	}
+
+	var sub = s.replace(/^\n\s*/, ' ');
+	if (sub !== s && !~sub.indexOf('\n')) s = sub;else if (pretty && ~s.indexOf('\n')) s += '\n';
+
+	s = '<' + nodeName + s + '>';
+
+	if (VOID_ELEMENTS.indexOf(nodeName) > -1) {
+		s = s.replace(/>$/, ' />');
+	}
+
+	if (html) {
+		if (pretty && isLargeString(html)) {
+			html = '\n' + indentChar + indent(html, indentChar);
+		}
+		s += html;
+	} else {
+		var len = children && children.length,
+		    pieces = [],
+		    hasLarge = ~s.indexOf('\n');
+		for (var _i = 0; _i < len; _i++) {
+			var child = children[_i];
+			if (!falsey(child)) {
+				var childSvgMode = nodeName === 'svg' ? true : nodeName === 'foreignObject' ? false : isSvgMode,
+				    ret = renderToString(child, context, opts, true, childSvgMode);
+				if (!hasLarge && pretty && isLargeString(ret)) hasLarge = true;
+				if (ret) pieces.push(ret);
+			}
+		}
+		if (pretty && hasLarge) {
+			for (var _i2 = pieces.length; _i2--;) {
+				pieces[_i2] = '\n' + indentChar + indent(pieces[_i2], indentChar);
+			}
+		}
+		if (pieces.length) {
+			s += pieces.join('');
+		} else if (opts && opts.xml) {
+			return s.substring(0, s.length - 1) + ' />';
+		}
+	}
+
+	if (VOID_ELEMENTS.indexOf(nodeName) === -1) {
+		if (pretty && ~s.indexOf('\n')) s += '\n';
+		s += '</' + nodeName + '>';
+	}
+
+	return s;
+}
+
+function getComponentName(component) {
+	return component.displayName || component !== Function && component.name || getFallbackComponentName(component);
+}
+
+function getFallbackComponentName(component) {
+	var str = Function.prototype.toString.call(component),
+	    name = (str.match(/^\s*function\s+([^\( ]+)/) || EMPTY)[1];
+	if (!name) {
+		var index = -1;
+		for (var i = UNNAMED.length; i--;) {
+			if (UNNAMED[i] === component) {
+				index = i;
+				break;
+			}
+		}
+
+		if (index < 0) {
+			index = UNNAMED.push(component) - 1;
+		}
+		name = 'UnnamedComponent' + index;
+	}
+	return name;
+}
+renderToString.shallowRender = shallowRender;
+
+return renderToString;
+
+})));
+//# sourceMappingURL=index.js.map
+
+
+/***/ }),
+/* 89 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function($) {
+
+exports.__esModule = true;
+exports.findVideoId = findVideoId;
+exports.getVideoThumbs = getVideoThumbs;
+exports.getProtocol = getProtocol;
+exports.parseHref = parseHref;
+exports.videoLinkToObject = videoLinkToObject;
+function findVideoId(link, forceVideo) {
+    if (typeof link !== 'string') return link;
+    var href = parseHref(link);
+
+    var id = void 0,
+        type = void 0;
+
+    if (href.host.match(/youtube\.com/) && href.search) {
+        id = href.search.split('v=')[1];
+
+        if (id) {
+            var ampersandPosition = id.indexOf('&');
+            if (ampersandPosition !== -1) {
+                id = id.substring(0, ampersandPosition);
+            }
+            type = 'youtube';
+        }
+    } else if (href.host.match(/youtube\.com|youtu\.be/)) {
+        id = href.pathname.replace(/^\/(embed\/|v\/)?/, '').replace(/\/.*/, '');
+        type = 'youtube';
+    } else if (href.host.match(/vimeo\.com/)) {
+        id = href.pathname.replace(/^\/(video\/)?/, '').replace(/\/.*/, '');
+        type = 'vimeo';
+    }
+
+    if ((!id || !type) && forceVideo) {
+        id = href.href;
+        type = 'custom';
+    }
+
+    return id ? { id: id, type: type, href: link, s: href.search.replace(/^\?/, ''), p: getProtocol() } : false;
+}
+
+function getVideoThumbs(videoFrame, callback) {
+    var img = void 0,
+        thumb = void 0;
+
+    if (videoFrame.type === 'youtube') {
+        var base_uri = getProtocol() + 'img.youtube.com/vi/' + videoFrame.id;
+
+        thumb = base_uri + '/default.jpg';
+        img = base_uri + '/hqdefault.jpg';
+    } else if (videoFrame.type === 'vimeo') {
+        $.ajax({
+            url: getProtocol() + 'vimeo.com/api/v2/video/' + videoFrame.id + '.json',
+            dataType: 'jsonp',
+            success: function success(json) {
+                videoFrame.images = {
+                    img: json[0].thumbnail_large,
+                    thumb: json[0].thumbnail_small
+                };
+
+                callback(videoFrame);
+            }
+        });
+    }
+
+    videoFrame.images = {
+        img: img,
+        thumb: thumb
+    };
+
+    callback(videoFrame);
+}
+
+function getProtocol() {
+    getProtocol.p = getProtocol.p || (location.protocol === 'https:' ? 'https://' : 'http://');
+    return getProtocol.p;
+}
+
+function parseHref(href) {
+    var a = document.createElement('a');
+    a.href = href;
+    return a;
+}
+
+function videoLinkToObject(href, callback) {
+    var frame = findVideoId(href, true);
+
+    if (frame) {
+        getVideoThumbs(frame, callback);
+
+        return true;
+    }
+
+    return false;
+}
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
+
+/***/ }),
+/* 90 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+exports.__esModule = true;
+
+var _preact = __webpack_require__(3);
+
+var _photoswipe = __webpack_require__(91);
+
+var _photoswipe2 = _interopRequireDefault(_photoswipe);
+
+var _photoswipeUiDefault = __webpack_require__(92);
+
+var _photoswipeUiDefault2 = _interopRequireDefault(_photoswipeUiDefault);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var cont = new (function () {
+    function PhotoSwipeContainer() {
+        _classCallCheck(this, PhotoSwipeContainer);
+
+        this.container = null;
+        this.pswp = null;
+        this.images = [];
+        this.options = {
+            index: 0,
+            history: false,
+            bgOpacity: 0.91,
+            showHideOpacity: true
+        };
+    }
+
+    PhotoSwipeContainer.prototype.init = function init() {
+        var _this = this;
+
+        this.render();
+        this.pswp = new _photoswipe2.default(this.container, _photoswipeUiDefault2.default, this.images, this.options);
+
+        this.pswp.listen('close', function () {
+            var item = _this.pswp.currItem;
+            if (item.onBlur) {
+                item.onBlur(item, _this.pswp);
+            }
+
+            _this.options.index = 0;
+            _this.images = [];
+            _this.pswp = null;
+        });
+
+        this.pswp.listen('beforeChange', function (d) {
+            if (!!d) {
+                var pswp = _this.pswp;
+                var cIndex = pswp.getCurrentIndex();
+                var maxPos = pswp.items.length - 1;
+                var pIndex = d;
+
+                if (d === -1 && cIndex === maxPos) {
+                    pIndex = 0;
+                } else if (d === 1 && cIndex === maxPos) {
+                    pIndex = maxPos - 1;
+                } else if (d === 1 && cIndex === 0) {
+                    pIndex = maxPos;
+                } else if (d === -1) {
+                    pIndex = cIndex + 1;
+                } else if (d === 1) {
+                    pIndex = cIndex - 1;
+                }
+
+                var prevItem = pswp.items[pIndex];
+
+                if (prevItem.onBlur) {
+                    prevItem.onBlur(prevItem, _this.pswp);
+                }
+            }
+        });
+        this.pswp.listen('afterChange', function () {
+            var item = _this.pswp.currItem;
+            if (item.onShow) {
+                item.onShow(item, _this.pswp);
+            }
+        });
+
+        this.pswp.listen('gettingData', function (index, item) {
+
+            if (item.src) {
+                if (item.w < 1 || item.h < 1) {
+                    var img = new Image();
+
+                    img.onload = function () {
+                        item.w = img.width;
+                        item.h = img.height;
+
+                        _this.pswp.invalidateCurrItems();
+                        _this.pswp.updateSize(true);
+                    };
+
+                    img.src = item.src;
+                }
+            }
+        });
+
+        this.pswp.init();
+
+        this.pswp.framework.bind(this.pswp.scrollWrap, 'pswpTap', function (e) {
+            var item = _this.pswp.currItem;
+            if (item.onTap) {
+                item.onTap(item, _this.pswp);
+            }
+        });
+    };
+
+    PhotoSwipeContainer.prototype.getPhotoSwipe = function getPhotoSwipe() {
+        return this.pswp;
+    };
+
+    PhotoSwipeContainer.prototype.setImages = function setImages(images) {
+        this.images = images;
+    };
+
+    PhotoSwipeContainer.prototype.render = function render() {
+        if (!this.container) {
+            this.container = (0, _preact.render)((0, _preact.h)(
+                'div',
+                { className: 'pswp', tabindex: '-1', role: 'dialog', 'aria-hidden': 'true' },
+                (0, _preact.h)('div', { className: 'pswp__bg' }),
+                (0, _preact.h)(
+                    'div',
+                    { className: 'pswp__scroll-wrap' },
+                    (0, _preact.h)(
+                        'div',
+                        { className: 'pswp__container' },
+                        (0, _preact.h)('div', { className: 'pswp__item' }),
+                        (0, _preact.h)('div', { className: 'pswp__item' }),
+                        (0, _preact.h)('div', { className: 'pswp__item' })
+                    ),
+                    (0, _preact.h)(
+                        'div',
+                        { className: 'pswp__ui pswp__ui--hidden' },
+                        (0, _preact.h)(
+                            'div',
+                            { className: 'pswp__top-bar' },
+                            (0, _preact.h)('div', { className: 'pswp__counter' }),
+                            (0, _preact.h)('button', { className: 'pswp__button pswp__button--close', title: 'Close (Esc)' }),
+                            (0, _preact.h)('button', { className: 'pswp__button pswp__button--share', title: 'Share' }),
+                            (0, _preact.h)('button', { className: 'pswp__button pswp__button--fs', title: 'Toggle fullscreen' }),
+                            (0, _preact.h)('button', { className: 'pswp__button pswp__button--zoom', title: 'Zoom in/out' }),
+                            (0, _preact.h)(
+                                'div',
+                                { className: 'pswp__preloader' },
+                                (0, _preact.h)(
+                                    'div',
+                                    { className: 'pswp__preloader__icn' },
+                                    (0, _preact.h)(
+                                        'div',
+                                        { className: 'pswp__preloader__cut' },
+                                        (0, _preact.h)('div', { className: 'pswp__preloader__donut' })
+                                    )
+                                )
+                            )
+                        ),
+                        (0, _preact.h)(
+                            'div',
+                            { className: 'pswp__share-modal pswp__share-modal--hidden pswp__single-tap' },
+                            (0, _preact.h)('div', { className: 'pswp__share-tooltip' })
+                        ),
+                        (0, _preact.h)('button', { className: 'pswp__button pswp__button--arrow--left', title: 'Previous (arrow left)' }),
+                        (0, _preact.h)('button', { className: 'pswp__button pswp__button--arrow--right', title: 'Next (arrow right)' }),
+                        (0, _preact.h)(
+                            'div',
+                            { className: 'pswp__caption' },
+                            (0, _preact.h)('div', { className: 'pswp__caption__center' })
+                        )
+                    )
+                )
+            ), document.body);
+        }
+    };
+
+    return PhotoSwipeContainer;
+}())();
+
+exports.default = cont;
+
+/***/ }),
+/* 91 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+(function (root, factory) {
+	if (true) {
+		!(__WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
+				(__WEBPACK_AMD_DEFINE_FACTORY__.call(exports, __webpack_require__, exports, module)) :
+				__WEBPACK_AMD_DEFINE_FACTORY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+	} else if ((typeof exports === 'undefined' ? 'undefined' : _typeof(exports)) === 'object') {
+		module.exports = factory();
+	} else {
+		root.PhotoSwipe = factory();
+	}
+})(undefined, function () {
+
+	'use strict';
+
+	var PhotoSwipe = function PhotoSwipe(template, UiClass, items, options) {
+		var framework = {
+			features: null,
+			bind: function bind(target, type, listener, unbind) {
+				var methodName = (unbind ? 'remove' : 'add') + 'EventListener';
+				type = type.split(' ');
+				for (var i = 0; i < type.length; i++) {
+					if (type[i]) {
+						target[methodName](type[i], listener, false);
+					}
+				}
+			},
+			isArray: function isArray(obj) {
+				return obj instanceof Array;
+			},
+			createEl: function createEl(classes, tag) {
+				var el = document.createElement(tag || 'div');
+				if (classes) {
+					el.className = classes;
+				}
+				return el;
+			},
+			getScrollY: function getScrollY() {
+				var yOffset = window.pageYOffset;
+				return yOffset !== undefined ? yOffset : document.documentElement.scrollTop;
+			},
+			unbind: function unbind(target, type, listener) {
+				framework.bind(target, type, listener, true);
+			},
+			removeClass: function removeClass(el, className) {
+				var reg = new RegExp('(\\s|^)' + className + '(\\s|$)');
+				el.className = el.className.replace(reg, ' ').replace(/^\s\s*/, '').replace(/\s\s*$/, '');
+			},
+			addClass: function addClass(el, className) {
+				if (!framework.hasClass(el, className)) {
+					el.className += (el.className ? ' ' : '') + className;
+				}
+			},
+			hasClass: function hasClass(el, className) {
+				return el.className && new RegExp('(^|\\s)' + className + '(\\s|$)').test(el.className);
+			},
+			getChildByClass: function getChildByClass(parentEl, childClassName) {
+				var node = parentEl.firstChild;
+				while (node) {
+					if (framework.hasClass(node, childClassName)) {
+						return node;
+					}
+					node = node.nextSibling;
+				}
+			},
+			arraySearch: function arraySearch(array, value, key) {
+				var i = array.length;
+				while (i--) {
+					if (array[i][key] === value) {
+						return i;
+					}
+				}
+				return -1;
+			},
+			extend: function extend(o1, o2, preventOverwrite) {
+				for (var prop in o2) {
+					if (o2.hasOwnProperty(prop)) {
+						if (preventOverwrite && o1.hasOwnProperty(prop)) {
+							continue;
+						}
+						o1[prop] = o2[prop];
+					}
+				}
+			},
+			easing: {
+				sine: {
+					out: function out(k) {
+						return Math.sin(k * (Math.PI / 2));
+					},
+					inOut: function inOut(k) {
+						return -(Math.cos(Math.PI * k) - 1) / 2;
+					}
+				},
+				cubic: {
+					out: function out(k) {
+						return --k * k * k + 1;
+					}
+				}
+			},
+
+			detectFeatures: function detectFeatures() {
+				if (framework.features) {
+					return framework.features;
+				}
+				var helperEl = framework.createEl(),
+				    helperStyle = helperEl.style,
+				    vendor = '',
+				    features = {};
+
+				features.oldIE = document.all && !document.addEventListener;
+
+				features.touch = 'ontouchstart' in window;
+
+				if (window.requestAnimationFrame) {
+					features.raf = window.requestAnimationFrame;
+					features.caf = window.cancelAnimationFrame;
+				}
+
+				features.pointerEvent = navigator.pointerEnabled || navigator.msPointerEnabled;
+
+				if (!features.pointerEvent) {
+
+					var ua = navigator.userAgent;
+
+					if (/iP(hone|od)/.test(navigator.platform)) {
+						var v = navigator.appVersion.match(/OS (\d+)_(\d+)_?(\d+)?/);
+						if (v && v.length > 0) {
+							v = parseInt(v[1], 10);
+							if (v >= 1 && v < 8) {
+								features.isOldIOSPhone = true;
+							}
+						}
+					}
+
+					var match = ua.match(/Android\s([0-9\.]*)/);
+					var androidversion = match ? match[1] : 0;
+					androidversion = parseFloat(androidversion);
+					if (androidversion >= 1) {
+						if (androidversion < 4.4) {
+							features.isOldAndroid = true;
+						}
+						features.androidVersion = androidversion;
+					}
+					features.isMobileOpera = /opera mini|opera mobi/i.test(ua);
+				}
+
+				var styleChecks = ['transform', 'perspective', 'animationName'],
+				    vendors = ['', 'webkit', 'Moz', 'ms', 'O'],
+				    styleCheckItem,
+				    styleName;
+
+				for (var i = 0; i < 4; i++) {
+					vendor = vendors[i];
+
+					for (var a = 0; a < 3; a++) {
+						styleCheckItem = styleChecks[a];
+
+						styleName = vendor + (vendor ? styleCheckItem.charAt(0).toUpperCase() + styleCheckItem.slice(1) : styleCheckItem);
+
+						if (!features[styleCheckItem] && styleName in helperStyle) {
+							features[styleCheckItem] = styleName;
+						}
+					}
+
+					if (vendor && !features.raf) {
+						vendor = vendor.toLowerCase();
+						features.raf = window[vendor + 'RequestAnimationFrame'];
+						if (features.raf) {
+							features.caf = window[vendor + 'CancelAnimationFrame'] || window[vendor + 'CancelRequestAnimationFrame'];
+						}
+					}
+				}
+
+				if (!features.raf) {
+					var lastTime = 0;
+					features.raf = function (fn) {
+						var currTime = new Date().getTime();
+						var timeToCall = Math.max(0, 16 - (currTime - lastTime));
+						var id = window.setTimeout(function () {
+							fn(currTime + timeToCall);
+						}, timeToCall);
+						lastTime = currTime + timeToCall;
+						return id;
+					};
+					features.caf = function (id) {
+						clearTimeout(id);
+					};
+				}
+
+				features.svg = !!document.createElementNS && !!document.createElementNS('http://www.w3.org/2000/svg', 'svg').createSVGRect;
+
+				framework.features = features;
+
+				return features;
+			}
+		};
+
+		framework.detectFeatures();
+
+		if (framework.features.oldIE) {
+
+			framework.bind = function (target, type, listener, unbind) {
+
+				type = type.split(' ');
+
+				var methodName = (unbind ? 'detach' : 'attach') + 'Event',
+				    evName,
+				    _handleEv = function _handleEv() {
+					listener.handleEvent.call(listener);
+				};
+
+				for (var i = 0; i < type.length; i++) {
+					evName = type[i];
+					if (evName) {
+
+						if ((typeof listener === 'undefined' ? 'undefined' : _typeof(listener)) === 'object' && listener.handleEvent) {
+							if (!unbind) {
+								listener['oldIE' + evName] = _handleEv;
+							} else {
+								if (!listener['oldIE' + evName]) {
+									return false;
+								}
+							}
+
+							target[methodName]('on' + evName, listener['oldIE' + evName]);
+						} else {
+							target[methodName]('on' + evName, listener);
+						}
+					}
+				}
+			};
+		}
+
+		var self = this;
+
+		var DOUBLE_TAP_RADIUS = 25,
+		    NUM_HOLDERS = 3;
+
+		var _options = {
+			allowPanToNext: true,
+			spacing: 0.12,
+			bgOpacity: 1,
+			mouseUsed: false,
+			loop: true,
+			pinchToClose: true,
+			closeOnScroll: true,
+			closeOnVerticalDrag: true,
+			verticalDragRange: 0.75,
+			hideAnimationDuration: 333,
+			showAnimationDuration: 333,
+			showHideOpacity: false,
+			focus: true,
+			escKey: true,
+			arrowKeys: true,
+			mainScrollEndFriction: 0.35,
+			panEndFriction: 0.35,
+			isClickableElement: function isClickableElement(el) {
+				return el.tagName === 'A';
+			},
+			getDoubleTapZoom: function getDoubleTapZoom(isMouseClick, item) {
+				if (isMouseClick) {
+					return 1;
+				} else {
+					return item.initialZoomLevel < 0.7 ? 1 : 1.33;
+				}
+			},
+			maxSpreadZoom: 1.33,
+			modal: true,
+
+			scaleMode: 'fit' };
+		framework.extend(_options, options);
+
+		var _getEmptyPoint = function _getEmptyPoint() {
+			return { x: 0, y: 0 };
+		};
+
+		var _isOpen,
+		    _isDestroying,
+		    _closedByScroll,
+		    _currentItemIndex,
+		    _containerStyle,
+		    _containerShiftIndex,
+		    _currPanDist = _getEmptyPoint(),
+		    _startPanOffset = _getEmptyPoint(),
+		    _panOffset = _getEmptyPoint(),
+		    _upMoveEvents,
+		    _downEvents,
+		    _globalEventHandlers,
+		    _viewportSize = {},
+		    _currZoomLevel,
+		    _startZoomLevel,
+		    _translatePrefix,
+		    _translateSufix,
+		    _updateSizeInterval,
+		    _itemsNeedUpdate,
+		    _currPositionIndex = 0,
+		    _offset = {},
+		    _slideSize = _getEmptyPoint(),
+		    _itemHolders,
+		    _prevItemIndex,
+		    _indexDiff = 0,
+		    _dragStartEvent,
+		    _dragMoveEvent,
+		    _dragEndEvent,
+		    _dragCancelEvent,
+		    _transformKey,
+		    _pointerEventEnabled,
+		    _isFixedPosition = true,
+		    _likelyTouchDevice,
+		    _modules = [],
+		    _requestAF,
+		    _cancelAF,
+		    _initalClassName,
+		    _initalWindowScrollY,
+		    _oldIE,
+		    _currentWindowScrollY,
+		    _features,
+		    _windowVisibleSize = {},
+		    _renderMaxResolution = false,
+		    _orientationChangeTimeout,
+		    _registerModule = function _registerModule(name, module) {
+			framework.extend(self, module.publicMethods);
+			_modules.push(name);
+		},
+		    _getLoopedId = function _getLoopedId(index) {
+			var numSlides = _getNumItems();
+			if (index > numSlides - 1) {
+				return index - numSlides;
+			} else if (index < 0) {
+				return numSlides + index;
+			}
+			return index;
+		},
+		    _listeners = {},
+		    _listen = function _listen(name, fn) {
+			if (!_listeners[name]) {
+				_listeners[name] = [];
+			}
+			return _listeners[name].push(fn);
+		},
+		    _shout = function _shout(name) {
+			var listeners = _listeners[name];
+
+			if (listeners) {
+				var args = Array.prototype.slice.call(arguments);
+				args.shift();
+
+				for (var i = 0; i < listeners.length; i++) {
+					listeners[i].apply(self, args);
+				}
+			}
+		},
+		    _getCurrentTime = function _getCurrentTime() {
+			return new Date().getTime();
+		},
+		    _applyBgOpacity = function _applyBgOpacity(opacity) {
+			_bgOpacity = opacity;
+			self.bg.style.opacity = opacity * _options.bgOpacity;
+		},
+		    _applyZoomTransform = function _applyZoomTransform(styleObj, x, y, zoom, item) {
+			if (!_renderMaxResolution || item && item !== self.currItem) {
+				zoom = zoom / (item ? item.fitRatio : self.currItem.fitRatio);
+			}
+
+			styleObj[_transformKey] = _translatePrefix + x + 'px, ' + y + 'px' + _translateSufix + ' scale(' + zoom + ')';
+		},
+		    _applyCurrentZoomPan = function _applyCurrentZoomPan(allowRenderResolution) {
+			if (_currZoomElementStyle) {
+
+				if (allowRenderResolution) {
+					if (_currZoomLevel > self.currItem.fitRatio) {
+						if (!_renderMaxResolution) {
+							_setImageSize(self.currItem, false, true);
+							_renderMaxResolution = true;
+						}
+					} else {
+						if (_renderMaxResolution) {
+							_setImageSize(self.currItem);
+							_renderMaxResolution = false;
+						}
+					}
+				}
+
+				_applyZoomTransform(_currZoomElementStyle, _panOffset.x, _panOffset.y, _currZoomLevel);
+			}
+		},
+		    _applyZoomPanToItem = function _applyZoomPanToItem(item) {
+			if (item.container) {
+
+				_applyZoomTransform(item.container.style, item.initialPosition.x, item.initialPosition.y, item.initialZoomLevel, item);
+			}
+		},
+		    _setTranslateX = function _setTranslateX(x, elStyle) {
+			elStyle[_transformKey] = _translatePrefix + x + 'px, 0px' + _translateSufix;
+		},
+		    _moveMainScroll = function _moveMainScroll(x, dragging) {
+
+			if (!_options.loop && dragging) {
+				var newSlideIndexOffset = _currentItemIndex + (_slideSize.x * _currPositionIndex - x) / _slideSize.x,
+				    delta = Math.round(x - _mainScrollPos.x);
+
+				if (newSlideIndexOffset < 0 && delta > 0 || newSlideIndexOffset >= _getNumItems() - 1 && delta < 0) {
+					x = _mainScrollPos.x + delta * _options.mainScrollEndFriction;
+				}
+			}
+
+			_mainScrollPos.x = x;
+			_setTranslateX(x, _containerStyle);
+		},
+		    _calculatePanOffset = function _calculatePanOffset(axis, zoomLevel) {
+			var m = _midZoomPoint[axis] - _offset[axis];
+			return _startPanOffset[axis] + _currPanDist[axis] + m - m * (zoomLevel / _startZoomLevel);
+		},
+		    _equalizePoints = function _equalizePoints(p1, p2) {
+			p1.x = p2.x;
+			p1.y = p2.y;
+			if (p2.id) {
+				p1.id = p2.id;
+			}
+		},
+		    _roundPoint = function _roundPoint(p) {
+			p.x = Math.round(p.x);
+			p.y = Math.round(p.y);
+		},
+		    _mouseMoveTimeout = null,
+		    _onFirstMouseMove = function _onFirstMouseMove() {
+			if (_mouseMoveTimeout) {
+				framework.unbind(document, 'mousemove', _onFirstMouseMove);
+				framework.addClass(template, 'pswp--has_mouse');
+				_options.mouseUsed = true;
+				_shout('mouseUsed');
+			}
+			_mouseMoveTimeout = setTimeout(function () {
+				_mouseMoveTimeout = null;
+			}, 100);
+		},
+		    _bindEvents = function _bindEvents() {
+			framework.bind(document, 'keydown', self);
+
+			if (_features.transform) {
+				framework.bind(self.scrollWrap, 'click', self);
+			}
+
+			if (!_options.mouseUsed) {
+				framework.bind(document, 'mousemove', _onFirstMouseMove);
+			}
+
+			framework.bind(window, 'resize scroll orientationchange', self);
+
+			_shout('bindEvents');
+		},
+		    _unbindEvents = function _unbindEvents() {
+			framework.unbind(window, 'resize scroll orientationchange', self);
+			framework.unbind(window, 'scroll', _globalEventHandlers.scroll);
+			framework.unbind(document, 'keydown', self);
+			framework.unbind(document, 'mousemove', _onFirstMouseMove);
+
+			if (_features.transform) {
+				framework.unbind(self.scrollWrap, 'click', self);
+			}
+
+			if (_isDragging) {
+				framework.unbind(window, _upMoveEvents, self);
+			}
+
+			clearTimeout(_orientationChangeTimeout);
+
+			_shout('unbindEvents');
+		},
+		    _calculatePanBounds = function _calculatePanBounds(zoomLevel, update) {
+			var bounds = _calculateItemSize(self.currItem, _viewportSize, zoomLevel);
+			if (update) {
+				_currPanBounds = bounds;
+			}
+			return bounds;
+		},
+		    _getMinZoomLevel = function _getMinZoomLevel(item) {
+			if (!item) {
+				item = self.currItem;
+			}
+			return item.initialZoomLevel;
+		},
+		    _getMaxZoomLevel = function _getMaxZoomLevel(item) {
+			if (!item) {
+				item = self.currItem;
+			}
+			return item.w > 0 ? _options.maxSpreadZoom : 1;
+		},
+		    _modifyDestPanOffset = function _modifyDestPanOffset(axis, destPanBounds, destPanOffset, destZoomLevel) {
+			if (destZoomLevel === self.currItem.initialZoomLevel) {
+				destPanOffset[axis] = self.currItem.initialPosition[axis];
+				return true;
+			} else {
+				destPanOffset[axis] = _calculatePanOffset(axis, destZoomLevel);
+
+				if (destPanOffset[axis] > destPanBounds.min[axis]) {
+					destPanOffset[axis] = destPanBounds.min[axis];
+					return true;
+				} else if (destPanOffset[axis] < destPanBounds.max[axis]) {
+					destPanOffset[axis] = destPanBounds.max[axis];
+					return true;
+				}
+			}
+			return false;
+		},
+		    _setupTransforms = function _setupTransforms() {
+
+			if (_transformKey) {
+				var allow3dTransform = _features.perspective && !_likelyTouchDevice;
+				_translatePrefix = 'translate' + (allow3dTransform ? '3d(' : '(');
+				_translateSufix = _features.perspective ? ', 0px)' : ')';
+				return;
+			}
+
+			_transformKey = 'left';
+			framework.addClass(template, 'pswp--ie');
+
+			_setTranslateX = function _setTranslateX(x, elStyle) {
+				elStyle.left = x + 'px';
+			};
+			_applyZoomPanToItem = function _applyZoomPanToItem(item) {
+
+				var zoomRatio = item.fitRatio > 1 ? 1 : item.fitRatio,
+				    s = item.container.style,
+				    w = zoomRatio * item.w,
+				    h = zoomRatio * item.h;
+
+				s.width = w + 'px';
+				s.height = h + 'px';
+				s.left = item.initialPosition.x + 'px';
+				s.top = item.initialPosition.y + 'px';
+			};
+			_applyCurrentZoomPan = function _applyCurrentZoomPan() {
+				if (_currZoomElementStyle) {
+
+					var s = _currZoomElementStyle,
+					    item = self.currItem,
+					    zoomRatio = item.fitRatio > 1 ? 1 : item.fitRatio,
+					    w = zoomRatio * item.w,
+					    h = zoomRatio * item.h;
+
+					s.width = w + 'px';
+					s.height = h + 'px';
+
+					s.left = _panOffset.x + 'px';
+					s.top = _panOffset.y + 'px';
+				}
+			};
+		},
+		    _onKeyDown = function _onKeyDown(e) {
+			var keydownAction = '';
+			if (_options.escKey && e.keyCode === 27) {
+				keydownAction = 'close';
+			} else if (_options.arrowKeys) {
+				if (e.keyCode === 37) {
+					keydownAction = 'prev';
+				} else if (e.keyCode === 39) {
+					keydownAction = 'next';
+				}
+			}
+
+			if (keydownAction) {
+				if (!e.ctrlKey && !e.altKey && !e.shiftKey && !e.metaKey) {
+					if (e.preventDefault) {
+						e.preventDefault();
+					} else {
+						e.returnValue = false;
+					}
+					self[keydownAction]();
+				}
+			}
+		},
+		    _onGlobalClick = function _onGlobalClick(e) {
+			if (!e) {
+				return;
+			}
+
+			if (_moved || _zoomStarted || _mainScrollAnimating || _verticalDragInitiated) {
+				e.preventDefault();
+				e.stopPropagation();
+			}
+		},
+		    _updatePageScrollOffset = function _updatePageScrollOffset() {
+			self.setScrollOffset(0, framework.getScrollY());
+		};
+
+		var _animations = {},
+		    _numAnimations = 0,
+		    _stopAnimation = function _stopAnimation(name) {
+			if (_animations[name]) {
+				if (_animations[name].raf) {
+					_cancelAF(_animations[name].raf);
+				}
+				_numAnimations--;
+				delete _animations[name];
+			}
+		},
+		    _registerStartAnimation = function _registerStartAnimation(name) {
+			if (_animations[name]) {
+				_stopAnimation(name);
+			}
+			if (!_animations[name]) {
+				_numAnimations++;
+				_animations[name] = {};
+			}
+		},
+		    _stopAllAnimations = function _stopAllAnimations() {
+			for (var prop in _animations) {
+
+				if (_animations.hasOwnProperty(prop)) {
+					_stopAnimation(prop);
+				}
+			}
+		},
+		    _animateProp = function _animateProp(name, b, endProp, d, easingFn, onUpdate, onComplete) {
+			var startAnimTime = _getCurrentTime(),
+			    t;
+			_registerStartAnimation(name);
+
+			var animloop = function animloop() {
+				if (_animations[name]) {
+
+					t = _getCurrentTime() - startAnimTime;
+
+					if (t >= d) {
+						_stopAnimation(name);
+						onUpdate(endProp);
+						if (onComplete) {
+							onComplete();
+						}
+						return;
+					}
+					onUpdate((endProp - b) * easingFn(t / d) + b);
+
+					_animations[name].raf = _requestAF(animloop);
+				}
+			};
+			animloop();
+		};
+
+		var publicMethods = {
+			shout: _shout,
+			listen: _listen,
+			viewportSize: _viewportSize,
+			options: _options,
+
+			isMainScrollAnimating: function isMainScrollAnimating() {
+				return _mainScrollAnimating;
+			},
+			getZoomLevel: function getZoomLevel() {
+				return _currZoomLevel;
+			},
+			getCurrentIndex: function getCurrentIndex() {
+				return _currentItemIndex;
+			},
+			isDragging: function isDragging() {
+				return _isDragging;
+			},
+			isZooming: function isZooming() {
+				return _isZooming;
+			},
+			setScrollOffset: function setScrollOffset(x, y) {
+				_offset.x = x;
+				_currentWindowScrollY = _offset.y = y;
+				_shout('updateScrollOffset', _offset);
+			},
+			applyZoomPan: function applyZoomPan(zoomLevel, panX, panY, allowRenderResolution) {
+				_panOffset.x = panX;
+				_panOffset.y = panY;
+				_currZoomLevel = zoomLevel;
+				_applyCurrentZoomPan(allowRenderResolution);
+			},
+
+			init: function init() {
+
+				if (_isOpen || _isDestroying) {
+					return;
+				}
+
+				var i;
+
+				self.framework = framework;
+				self.template = template;
+				self.bg = framework.getChildByClass(template, 'pswp__bg');
+
+				_initalClassName = template.className;
+				_isOpen = true;
+
+				_features = framework.detectFeatures();
+				_requestAF = _features.raf;
+				_cancelAF = _features.caf;
+				_transformKey = _features.transform;
+				_oldIE = _features.oldIE;
+
+				self.scrollWrap = framework.getChildByClass(template, 'pswp__scroll-wrap');
+				self.container = framework.getChildByClass(self.scrollWrap, 'pswp__container');
+
+				_containerStyle = self.container.style;
+				self.itemHolders = _itemHolders = [{ el: self.container.children[0], wrap: 0, index: -1 }, { el: self.container.children[1], wrap: 0, index: -1 }, { el: self.container.children[2], wrap: 0, index: -1 }];
+
+				_itemHolders[0].el.style.display = _itemHolders[2].el.style.display = 'none';
+
+				_setupTransforms();
+
+				_globalEventHandlers = {
+					resize: self.updateSize,
+
+					orientationchange: function orientationchange() {
+						clearTimeout(_orientationChangeTimeout);
+						_orientationChangeTimeout = setTimeout(function () {
+							if (_viewportSize.x !== self.scrollWrap.clientWidth) {
+								self.updateSize();
+							}
+						}, 500);
+					},
+					scroll: _updatePageScrollOffset,
+					keydown: _onKeyDown,
+					click: _onGlobalClick
+				};
+
+				var oldPhone = _features.isOldIOSPhone || _features.isOldAndroid || _features.isMobileOpera;
+				if (!_features.animationName || !_features.transform || oldPhone) {
+					_options.showAnimationDuration = _options.hideAnimationDuration = 0;
+				}
+
+				for (i = 0; i < _modules.length; i++) {
+					self['init' + _modules[i]]();
+				}
+
+				if (UiClass) {
+					var ui = self.ui = new UiClass(self, framework);
+					ui.init();
+				}
+
+				_shout('firstUpdate');
+				_currentItemIndex = _currentItemIndex || _options.index || 0;
+
+				if (isNaN(_currentItemIndex) || _currentItemIndex < 0 || _currentItemIndex >= _getNumItems()) {
+					_currentItemIndex = 0;
+				}
+				self.currItem = _getItemAt(_currentItemIndex);
+
+				if (_features.isOldIOSPhone || _features.isOldAndroid) {
+					_isFixedPosition = false;
+				}
+
+				template.setAttribute('aria-hidden', 'false');
+				if (_options.modal) {
+					if (!_isFixedPosition) {
+						template.style.position = 'absolute';
+						template.style.top = framework.getScrollY() + 'px';
+					} else {
+						template.style.position = 'fixed';
+					}
+				}
+
+				if (_currentWindowScrollY === undefined) {
+					_shout('initialLayout');
+					_currentWindowScrollY = _initalWindowScrollY = framework.getScrollY();
+				}
+
+				var rootClasses = 'pswp--open ';
+				if (_options.mainClass) {
+					rootClasses += _options.mainClass + ' ';
+				}
+				if (_options.showHideOpacity) {
+					rootClasses += 'pswp--animate_opacity ';
+				}
+				rootClasses += _likelyTouchDevice ? 'pswp--touch' : 'pswp--notouch';
+				rootClasses += _features.animationName ? ' pswp--css_animation' : '';
+				rootClasses += _features.svg ? ' pswp--svg' : '';
+				framework.addClass(template, rootClasses);
+
+				self.updateSize();
+
+				_containerShiftIndex = -1;
+				_indexDiff = null;
+				for (i = 0; i < NUM_HOLDERS; i++) {
+					_setTranslateX((i + _containerShiftIndex) * _slideSize.x, _itemHolders[i].el.style);
+				}
+
+				if (!_oldIE) {
+					framework.bind(self.scrollWrap, _downEvents, self);
+				}
+
+				_listen('initialZoomInEnd', function () {
+					self.setContent(_itemHolders[0], _currentItemIndex - 1);
+					self.setContent(_itemHolders[2], _currentItemIndex + 1);
+
+					_itemHolders[0].el.style.display = _itemHolders[2].el.style.display = 'block';
+
+					if (_options.focus) {
+						template.focus();
+					}
+
+					_bindEvents();
+				});
+
+				self.setContent(_itemHolders[1], _currentItemIndex);
+
+				self.updateCurrItem();
+
+				_shout('afterInit');
+
+				if (!_isFixedPosition) {
+
+					_updateSizeInterval = setInterval(function () {
+						if (!_numAnimations && !_isDragging && !_isZooming && _currZoomLevel === self.currItem.initialZoomLevel) {
+							self.updateSize();
+						}
+					}, 1000);
+				}
+
+				framework.addClass(template, 'pswp--visible');
+			},
+
+			close: function close() {
+				if (!_isOpen) {
+					return;
+				}
+
+				_isOpen = false;
+				_isDestroying = true;
+				_shout('close');
+				_unbindEvents();
+
+				_showOrHide(self.currItem, null, true, self.destroy);
+			},
+
+			destroy: function destroy() {
+				_shout('destroy');
+
+				if (_showOrHideTimeout) {
+					clearTimeout(_showOrHideTimeout);
+				}
+
+				template.setAttribute('aria-hidden', 'true');
+				template.className = _initalClassName;
+
+				if (_updateSizeInterval) {
+					clearInterval(_updateSizeInterval);
+				}
+
+				framework.unbind(self.scrollWrap, _downEvents, self);
+
+				framework.unbind(window, 'scroll', self);
+
+				_stopDragUpdateLoop();
+
+				_stopAllAnimations();
+
+				_listeners = null;
+			},
+
+			panTo: function panTo(x, y, force) {
+				if (!force) {
+					if (x > _currPanBounds.min.x) {
+						x = _currPanBounds.min.x;
+					} else if (x < _currPanBounds.max.x) {
+						x = _currPanBounds.max.x;
+					}
+
+					if (y > _currPanBounds.min.y) {
+						y = _currPanBounds.min.y;
+					} else if (y < _currPanBounds.max.y) {
+						y = _currPanBounds.max.y;
+					}
+				}
+
+				_panOffset.x = x;
+				_panOffset.y = y;
+				_applyCurrentZoomPan();
+			},
+
+			handleEvent: function handleEvent(e) {
+				e = e || window.event;
+				if (_globalEventHandlers[e.type]) {
+					_globalEventHandlers[e.type](e);
+				}
+			},
+
+			goTo: function goTo(index) {
+
+				index = _getLoopedId(index);
+
+				var diff = index - _currentItemIndex;
+				_indexDiff = diff;
+
+				_currentItemIndex = index;
+				self.currItem = _getItemAt(_currentItemIndex);
+				_currPositionIndex -= diff;
+
+				_moveMainScroll(_slideSize.x * _currPositionIndex);
+
+				_stopAllAnimations();
+				_mainScrollAnimating = false;
+
+				self.updateCurrItem();
+			},
+			next: function next() {
+				self.goTo(_currentItemIndex + 1);
+			},
+			prev: function prev() {
+				self.goTo(_currentItemIndex - 1);
+			},
+
+			updateCurrZoomItem: function updateCurrZoomItem(emulateSetContent) {
+				if (emulateSetContent) {
+					_shout('beforeChange', 0);
+				}
+
+				if (_itemHolders[1].el.children.length) {
+					var zoomElement = _itemHolders[1].el.children[0];
+					if (framework.hasClass(zoomElement, 'pswp__zoom-wrap')) {
+						_currZoomElementStyle = zoomElement.style;
+					} else {
+						_currZoomElementStyle = null;
+					}
+				} else {
+					_currZoomElementStyle = null;
+				}
+
+				_currPanBounds = self.currItem.bounds;
+				_startZoomLevel = _currZoomLevel = self.currItem.initialZoomLevel;
+
+				_panOffset.x = _currPanBounds.center.x;
+				_panOffset.y = _currPanBounds.center.y;
+
+				if (emulateSetContent) {
+					_shout('afterChange');
+				}
+			},
+
+			invalidateCurrItems: function invalidateCurrItems() {
+				_itemsNeedUpdate = true;
+				for (var i = 0; i < NUM_HOLDERS; i++) {
+					if (_itemHolders[i].item) {
+						_itemHolders[i].item.needsUpdate = true;
+					}
+				}
+			},
+
+			updateCurrItem: function updateCurrItem(beforeAnimation) {
+
+				if (_indexDiff === 0) {
+					return;
+				}
+
+				var diffAbs = Math.abs(_indexDiff),
+				    tempHolder;
+
+				if (beforeAnimation && diffAbs < 2) {
+					return;
+				}
+
+				self.currItem = _getItemAt(_currentItemIndex);
+				_renderMaxResolution = false;
+
+				_shout('beforeChange', _indexDiff);
+
+				if (diffAbs >= NUM_HOLDERS) {
+					_containerShiftIndex += _indexDiff + (_indexDiff > 0 ? -NUM_HOLDERS : NUM_HOLDERS);
+					diffAbs = NUM_HOLDERS;
+				}
+				for (var i = 0; i < diffAbs; i++) {
+					if (_indexDiff > 0) {
+						tempHolder = _itemHolders.shift();
+						_itemHolders[NUM_HOLDERS - 1] = tempHolder;
+
+						_containerShiftIndex++;
+						_setTranslateX((_containerShiftIndex + 2) * _slideSize.x, tempHolder.el.style);
+						self.setContent(tempHolder, _currentItemIndex - diffAbs + i + 1 + 1);
+					} else {
+						tempHolder = _itemHolders.pop();
+						_itemHolders.unshift(tempHolder);
+
+						_containerShiftIndex--;
+						_setTranslateX(_containerShiftIndex * _slideSize.x, tempHolder.el.style);
+						self.setContent(tempHolder, _currentItemIndex + diffAbs - i - 1 - 1);
+					}
+				}
+
+				if (_currZoomElementStyle && Math.abs(_indexDiff) === 1) {
+
+					var prevItem = _getItemAt(_prevItemIndex);
+					if (prevItem.initialZoomLevel !== _currZoomLevel) {
+						_calculateItemSize(prevItem, _viewportSize);
+						_setImageSize(prevItem);
+						_applyZoomPanToItem(prevItem);
+					}
+				}
+
+				_indexDiff = 0;
+
+				self.updateCurrZoomItem();
+
+				_prevItemIndex = _currentItemIndex;
+
+				_shout('afterChange');
+			},
+
+			updateSize: function updateSize(force) {
+
+				if (!_isFixedPosition && _options.modal) {
+					var windowScrollY = framework.getScrollY();
+					if (_currentWindowScrollY !== windowScrollY) {
+						template.style.top = windowScrollY + 'px';
+						_currentWindowScrollY = windowScrollY;
+					}
+					if (!force && _windowVisibleSize.x === window.innerWidth && _windowVisibleSize.y === window.innerHeight) {
+						return;
+					}
+					_windowVisibleSize.x = window.innerWidth;
+					_windowVisibleSize.y = window.innerHeight;
+
+					template.style.height = _windowVisibleSize.y + 'px';
+				}
+
+				_viewportSize.x = self.scrollWrap.clientWidth;
+				_viewportSize.y = self.scrollWrap.clientHeight;
+
+				_updatePageScrollOffset();
+
+				_slideSize.x = _viewportSize.x + Math.round(_viewportSize.x * _options.spacing);
+				_slideSize.y = _viewportSize.y;
+
+				_moveMainScroll(_slideSize.x * _currPositionIndex);
+
+				_shout('beforeResize');
+				if (_containerShiftIndex !== undefined) {
+
+					var holder, item, hIndex;
+
+					for (var i = 0; i < NUM_HOLDERS; i++) {
+						holder = _itemHolders[i];
+						_setTranslateX((i + _containerShiftIndex) * _slideSize.x, holder.el.style);
+
+						hIndex = _currentItemIndex + i - 1;
+
+						if (_options.loop && _getNumItems() > 2) {
+							hIndex = _getLoopedId(hIndex);
+						}
+
+						item = _getItemAt(hIndex);
+
+						if (item && (_itemsNeedUpdate || item.needsUpdate || !item.bounds)) {
+
+							self.cleanSlide(item);
+
+							self.setContent(holder, hIndex);
+
+							if (i === 1) {
+								self.currItem = item;
+								self.updateCurrZoomItem(true);
+							}
+
+							item.needsUpdate = false;
+						} else if (holder.index === -1 && hIndex >= 0) {
+							self.setContent(holder, hIndex);
+						}
+						if (item && item.container) {
+							_calculateItemSize(item, _viewportSize);
+							_setImageSize(item);
+							_applyZoomPanToItem(item);
+						}
+					}
+					_itemsNeedUpdate = false;
+				}
+
+				_startZoomLevel = _currZoomLevel = self.currItem.initialZoomLevel;
+				_currPanBounds = self.currItem.bounds;
+
+				if (_currPanBounds) {
+					_panOffset.x = _currPanBounds.center.x;
+					_panOffset.y = _currPanBounds.center.y;
+					_applyCurrentZoomPan(true);
+				}
+
+				_shout('resize');
+			},
+
+			zoomTo: function zoomTo(destZoomLevel, centerPoint, speed, easingFn, updateFn) {
+
+				if (centerPoint) {
+					_startZoomLevel = _currZoomLevel;
+					_midZoomPoint.x = Math.abs(centerPoint.x) - _panOffset.x;
+					_midZoomPoint.y = Math.abs(centerPoint.y) - _panOffset.y;
+					_equalizePoints(_startPanOffset, _panOffset);
+				}
+
+				var destPanBounds = _calculatePanBounds(destZoomLevel, false),
+				    destPanOffset = {};
+
+				_modifyDestPanOffset('x', destPanBounds, destPanOffset, destZoomLevel);
+				_modifyDestPanOffset('y', destPanBounds, destPanOffset, destZoomLevel);
+
+				var initialZoomLevel = _currZoomLevel;
+				var initialPanOffset = {
+					x: _panOffset.x,
+					y: _panOffset.y
+				};
+
+				_roundPoint(destPanOffset);
+
+				var onUpdate = function onUpdate(now) {
+					if (now === 1) {
+						_currZoomLevel = destZoomLevel;
+						_panOffset.x = destPanOffset.x;
+						_panOffset.y = destPanOffset.y;
+					} else {
+						_currZoomLevel = (destZoomLevel - initialZoomLevel) * now + initialZoomLevel;
+						_panOffset.x = (destPanOffset.x - initialPanOffset.x) * now + initialPanOffset.x;
+						_panOffset.y = (destPanOffset.y - initialPanOffset.y) * now + initialPanOffset.y;
+					}
+
+					if (updateFn) {
+						updateFn(now);
+					}
+
+					_applyCurrentZoomPan(now === 1);
+				};
+
+				if (speed) {
+					_animateProp('customZoomTo', 0, 1, speed, easingFn || framework.easing.sine.inOut, onUpdate);
+				} else {
+					onUpdate(1);
+				}
+			}
+
+		};
+
+		var MIN_SWIPE_DISTANCE = 30,
+		    DIRECTION_CHECK_OFFSET = 10;
+
+		var _gestureStartTime,
+		    _gestureCheckSpeedTime,
+		    p = {},
+		    p2 = {},
+		    delta = {},
+		    _currPoint = {},
+		    _startPoint = {},
+		    _currPointers = [],
+		    _startMainScrollPos = {},
+		    _releaseAnimData,
+		    _posPoints = [],
+		    _tempPoint = {},
+		    _isZoomingIn,
+		    _verticalDragInitiated,
+		    _oldAndroidTouchEndTimeout,
+		    _currZoomedItemIndex = 0,
+		    _centerPoint = _getEmptyPoint(),
+		    _lastReleaseTime = 0,
+		    _isDragging,
+		    _isMultitouch,
+		    _zoomStarted,
+		    _moved,
+		    _dragAnimFrame,
+		    _mainScrollShifted,
+		    _currentPoints,
+		    _isZooming,
+		    _currPointsDistance,
+		    _startPointsDistance,
+		    _currPanBounds,
+		    _mainScrollPos = _getEmptyPoint(),
+		    _currZoomElementStyle,
+		    _mainScrollAnimating,
+		    _midZoomPoint = _getEmptyPoint(),
+		    _currCenterPoint = _getEmptyPoint(),
+		    _direction,
+		    _isFirstMove,
+		    _opacityChanged,
+		    _bgOpacity,
+		    _wasOverInitialZoom,
+		    _isEqualPoints = function _isEqualPoints(p1, p2) {
+			return p1.x === p2.x && p1.y === p2.y;
+		},
+		    _isNearbyPoints = function _isNearbyPoints(touch0, touch1) {
+			return Math.abs(touch0.x - touch1.x) < DOUBLE_TAP_RADIUS && Math.abs(touch0.y - touch1.y) < DOUBLE_TAP_RADIUS;
+		},
+		    _calculatePointsDistance = function _calculatePointsDistance(p1, p2) {
+			_tempPoint.x = Math.abs(p1.x - p2.x);
+			_tempPoint.y = Math.abs(p1.y - p2.y);
+			return Math.sqrt(_tempPoint.x * _tempPoint.x + _tempPoint.y * _tempPoint.y);
+		},
+		    _stopDragUpdateLoop = function _stopDragUpdateLoop() {
+			if (_dragAnimFrame) {
+				_cancelAF(_dragAnimFrame);
+				_dragAnimFrame = null;
+			}
+		},
+		    _dragUpdateLoop = function _dragUpdateLoop() {
+			if (_isDragging) {
+				_dragAnimFrame = _requestAF(_dragUpdateLoop);
+				_renderMovement();
+			}
+		},
+		    _canPan = function _canPan() {
+			return !(_options.scaleMode === 'fit' && _currZoomLevel === self.currItem.initialZoomLevel);
+		},
+		    _closestElement = function _closestElement(el, fn) {
+			if (!el || el === document) {
+				return false;
+			}
+
+			if (el.getAttribute('class') && el.getAttribute('class').indexOf('pswp__scroll-wrap') > -1) {
+				return false;
+			}
+
+			if (fn(el)) {
+				return el;
+			}
+
+			return _closestElement(el.parentNode, fn);
+		},
+		    _preventObj = {},
+		    _preventDefaultEventBehaviour = function _preventDefaultEventBehaviour(e, isDown) {
+			_preventObj.prevent = !_closestElement(e.target, _options.isClickableElement);
+
+			_shout('preventDragEvent', e, isDown, _preventObj);
+			return _preventObj.prevent;
+		},
+		    _convertTouchToPoint = function _convertTouchToPoint(touch, p) {
+			p.x = touch.pageX;
+			p.y = touch.pageY;
+			p.id = touch.identifier;
+			return p;
+		},
+		    _findCenterOfPoints = function _findCenterOfPoints(p1, p2, pCenter) {
+			pCenter.x = (p1.x + p2.x) * 0.5;
+			pCenter.y = (p1.y + p2.y) * 0.5;
+		},
+		    _pushPosPoint = function _pushPosPoint(time, x, y) {
+			if (time - _gestureCheckSpeedTime > 50) {
+				var o = _posPoints.length > 2 ? _posPoints.shift() : {};
+				o.x = x;
+				o.y = y;
+				_posPoints.push(o);
+				_gestureCheckSpeedTime = time;
+			}
+		},
+		    _calculateVerticalDragOpacityRatio = function _calculateVerticalDragOpacityRatio() {
+			var yOffset = _panOffset.y - self.currItem.initialPosition.y;
+			return 1 - Math.abs(yOffset / (_viewportSize.y / 2));
+		},
+		    _ePoint1 = {},
+		    _ePoint2 = {},
+		    _tempPointsArr = [],
+		    _tempCounter,
+		    _getTouchPoints = function _getTouchPoints(e) {
+			while (_tempPointsArr.length > 0) {
+				_tempPointsArr.pop();
+			}
+
+			if (!_pointerEventEnabled) {
+				if (e.type.indexOf('touch') > -1) {
+
+					if (e.touches && e.touches.length > 0) {
+						_tempPointsArr[0] = _convertTouchToPoint(e.touches[0], _ePoint1);
+						if (e.touches.length > 1) {
+							_tempPointsArr[1] = _convertTouchToPoint(e.touches[1], _ePoint2);
+						}
+					}
+				} else {
+					_ePoint1.x = e.pageX;
+					_ePoint1.y = e.pageY;
+					_ePoint1.id = '';
+					_tempPointsArr[0] = _ePoint1;
+				}
+			} else {
+				_tempCounter = 0;
+
+				_currPointers.forEach(function (p) {
+					if (_tempCounter === 0) {
+						_tempPointsArr[0] = p;
+					} else if (_tempCounter === 1) {
+						_tempPointsArr[1] = p;
+					}
+					_tempCounter++;
+				});
+			}
+			return _tempPointsArr;
+		},
+		    _panOrMoveMainScroll = function _panOrMoveMainScroll(axis, delta) {
+
+			var panFriction,
+			    overDiff = 0,
+			    newOffset = _panOffset[axis] + delta[axis],
+			    startOverDiff,
+			    dir = delta[axis] > 0,
+			    newMainScrollPosition = _mainScrollPos.x + delta.x,
+			    mainScrollDiff = _mainScrollPos.x - _startMainScrollPos.x,
+			    newPanPos,
+			    newMainScrollPos;
+
+			if (newOffset > _currPanBounds.min[axis] || newOffset < _currPanBounds.max[axis]) {
+				panFriction = _options.panEndFriction;
+			} else {
+				panFriction = 1;
+			}
+
+			newOffset = _panOffset[axis] + delta[axis] * panFriction;
+
+			if (_options.allowPanToNext || _currZoomLevel === self.currItem.initialZoomLevel) {
+
+				if (!_currZoomElementStyle) {
+
+					newMainScrollPos = newMainScrollPosition;
+				} else if (_direction === 'h' && axis === 'x' && !_zoomStarted) {
+
+					if (dir) {
+						if (newOffset > _currPanBounds.min[axis]) {
+							panFriction = _options.panEndFriction;
+							overDiff = _currPanBounds.min[axis] - newOffset;
+							startOverDiff = _currPanBounds.min[axis] - _startPanOffset[axis];
+						}
+
+						if ((startOverDiff <= 0 || mainScrollDiff < 0) && _getNumItems() > 1) {
+							newMainScrollPos = newMainScrollPosition;
+							if (mainScrollDiff < 0 && newMainScrollPosition > _startMainScrollPos.x) {
+								newMainScrollPos = _startMainScrollPos.x;
+							}
+						} else {
+							if (_currPanBounds.min.x !== _currPanBounds.max.x) {
+								newPanPos = newOffset;
+							}
+						}
+					} else {
+
+						if (newOffset < _currPanBounds.max[axis]) {
+							panFriction = _options.panEndFriction;
+							overDiff = newOffset - _currPanBounds.max[axis];
+							startOverDiff = _startPanOffset[axis] - _currPanBounds.max[axis];
+						}
+
+						if ((startOverDiff <= 0 || mainScrollDiff > 0) && _getNumItems() > 1) {
+							newMainScrollPos = newMainScrollPosition;
+
+							if (mainScrollDiff > 0 && newMainScrollPosition < _startMainScrollPos.x) {
+								newMainScrollPos = _startMainScrollPos.x;
+							}
+						} else {
+							if (_currPanBounds.min.x !== _currPanBounds.max.x) {
+								newPanPos = newOffset;
+							}
+						}
+					}
+				}
+
+				if (axis === 'x') {
+
+					if (newMainScrollPos !== undefined) {
+						_moveMainScroll(newMainScrollPos, true);
+						if (newMainScrollPos === _startMainScrollPos.x) {
+							_mainScrollShifted = false;
+						} else {
+							_mainScrollShifted = true;
+						}
+					}
+
+					if (_currPanBounds.min.x !== _currPanBounds.max.x) {
+						if (newPanPos !== undefined) {
+							_panOffset.x = newPanPos;
+						} else if (!_mainScrollShifted) {
+							_panOffset.x += delta.x * panFriction;
+						}
+					}
+
+					return newMainScrollPos !== undefined;
+				}
+			}
+
+			if (!_mainScrollAnimating) {
+
+				if (!_mainScrollShifted) {
+					if (_currZoomLevel > self.currItem.fitRatio) {
+						_panOffset[axis] += delta[axis] * panFriction;
+					}
+				}
+			}
+		},
+		    _onDragStart = function _onDragStart(e) {
+			if (e.type === 'mousedown' && e.button > 0) {
+				return;
+			}
+
+			if (_initialZoomRunning) {
+				e.preventDefault();
+				return;
+			}
+
+			if (_oldAndroidTouchEndTimeout && e.type === 'mousedown') {
+				return;
+			}
+
+			if (_preventDefaultEventBehaviour(e, true)) {
+				e.preventDefault();
+			}
+
+			_shout('pointerDown');
+
+			if (_pointerEventEnabled) {
+				var pointerIndex = framework.arraySearch(_currPointers, e.pointerId, 'id');
+				if (pointerIndex < 0) {
+					pointerIndex = _currPointers.length;
+				}
+				_currPointers[pointerIndex] = { x: e.pageX, y: e.pageY, id: e.pointerId };
+			}
+
+			var startPointsList = _getTouchPoints(e),
+			    numPoints = startPointsList.length;
+
+			_currentPoints = null;
+
+			_stopAllAnimations();
+
+			if (!_isDragging || numPoints === 1) {
+
+				_isDragging = _isFirstMove = true;
+				framework.bind(window, _upMoveEvents, self);
+
+				_isZoomingIn = _wasOverInitialZoom = _opacityChanged = _verticalDragInitiated = _mainScrollShifted = _moved = _isMultitouch = _zoomStarted = false;
+
+				_direction = null;
+
+				_shout('firstTouchStart', startPointsList);
+
+				_equalizePoints(_startPanOffset, _panOffset);
+
+				_currPanDist.x = _currPanDist.y = 0;
+				_equalizePoints(_currPoint, startPointsList[0]);
+				_equalizePoints(_startPoint, _currPoint);
+
+				_startMainScrollPos.x = _slideSize.x * _currPositionIndex;
+
+				_posPoints = [{
+					x: _currPoint.x,
+					y: _currPoint.y
+				}];
+
+				_gestureCheckSpeedTime = _gestureStartTime = _getCurrentTime();
+
+				_calculatePanBounds(_currZoomLevel, true);
+
+				_stopDragUpdateLoop();
+				_dragUpdateLoop();
+			}
+
+			if (!_isZooming && numPoints > 1 && !_mainScrollAnimating && !_mainScrollShifted) {
+				_startZoomLevel = _currZoomLevel;
+				_zoomStarted = false;
+
+				_isZooming = _isMultitouch = true;
+				_currPanDist.y = _currPanDist.x = 0;
+
+				_equalizePoints(_startPanOffset, _panOffset);
+
+				_equalizePoints(p, startPointsList[0]);
+				_equalizePoints(p2, startPointsList[1]);
+
+				_findCenterOfPoints(p, p2, _currCenterPoint);
+
+				_midZoomPoint.x = Math.abs(_currCenterPoint.x) - _panOffset.x;
+				_midZoomPoint.y = Math.abs(_currCenterPoint.y) - _panOffset.y;
+				_currPointsDistance = _startPointsDistance = _calculatePointsDistance(p, p2);
+			}
+		},
+		    _onDragMove = function _onDragMove(e) {
+
+			e.preventDefault();
+
+			if (_pointerEventEnabled) {
+				var pointerIndex = framework.arraySearch(_currPointers, e.pointerId, 'id');
+				if (pointerIndex > -1) {
+					var p = _currPointers[pointerIndex];
+					p.x = e.pageX;
+					p.y = e.pageY;
+				}
+			}
+
+			if (_isDragging) {
+				var touchesList = _getTouchPoints(e);
+				if (!_direction && !_moved && !_isZooming) {
+
+					if (_mainScrollPos.x !== _slideSize.x * _currPositionIndex) {
+						_direction = 'h';
+					} else {
+						var diff = Math.abs(touchesList[0].x - _currPoint.x) - Math.abs(touchesList[0].y - _currPoint.y);
+
+						if (Math.abs(diff) >= DIRECTION_CHECK_OFFSET) {
+							_direction = diff > 0 ? 'h' : 'v';
+							_currentPoints = touchesList;
+						}
+					}
+				} else {
+					_currentPoints = touchesList;
+				}
+			}
+		},
+		    _renderMovement = function _renderMovement() {
+
+			if (!_currentPoints) {
+				return;
+			}
+
+			var numPoints = _currentPoints.length;
+
+			if (numPoints === 0) {
+				return;
+			}
+
+			_equalizePoints(p, _currentPoints[0]);
+
+			delta.x = p.x - _currPoint.x;
+			delta.y = p.y - _currPoint.y;
+
+			if (_isZooming && numPoints > 1) {
+
+				_currPoint.x = p.x;
+				_currPoint.y = p.y;
+
+				if (!delta.x && !delta.y && _isEqualPoints(_currentPoints[1], p2)) {
+					return;
+				}
+
+				_equalizePoints(p2, _currentPoints[1]);
+
+				if (!_zoomStarted) {
+					_zoomStarted = true;
+					_shout('zoomGestureStarted');
+				}
+
+				var pointsDistance = _calculatePointsDistance(p, p2);
+
+				var zoomLevel = _calculateZoomLevel(pointsDistance);
+
+				if (zoomLevel > self.currItem.initialZoomLevel + self.currItem.initialZoomLevel / 15) {
+					_wasOverInitialZoom = true;
+				}
+
+				var zoomFriction = 1,
+				    minZoomLevel = _getMinZoomLevel(),
+				    maxZoomLevel = _getMaxZoomLevel();
+
+				if (zoomLevel < minZoomLevel) {
+
+					if (_options.pinchToClose && !_wasOverInitialZoom && _startZoomLevel <= self.currItem.initialZoomLevel) {
+						var minusDiff = minZoomLevel - zoomLevel;
+						var percent = 1 - minusDiff / (minZoomLevel / 1.2);
+
+						_applyBgOpacity(percent);
+						_shout('onPinchClose', percent);
+						_opacityChanged = true;
+					} else {
+						zoomFriction = (minZoomLevel - zoomLevel) / minZoomLevel;
+						if (zoomFriction > 1) {
+							zoomFriction = 1;
+						}
+						zoomLevel = minZoomLevel - zoomFriction * (minZoomLevel / 3);
+					}
+				} else if (zoomLevel > maxZoomLevel) {
+					zoomFriction = (zoomLevel - maxZoomLevel) / (minZoomLevel * 6);
+					if (zoomFriction > 1) {
+						zoomFriction = 1;
+					}
+					zoomLevel = maxZoomLevel + zoomFriction * minZoomLevel;
+				}
+
+				if (zoomFriction < 0) {
+					zoomFriction = 0;
+				}
+
+				_currPointsDistance = pointsDistance;
+
+				_findCenterOfPoints(p, p2, _centerPoint);
+
+				_currPanDist.x += _centerPoint.x - _currCenterPoint.x;
+				_currPanDist.y += _centerPoint.y - _currCenterPoint.y;
+				_equalizePoints(_currCenterPoint, _centerPoint);
+
+				_panOffset.x = _calculatePanOffset('x', zoomLevel);
+				_panOffset.y = _calculatePanOffset('y', zoomLevel);
+
+				_isZoomingIn = zoomLevel > _currZoomLevel;
+				_currZoomLevel = zoomLevel;
+				_applyCurrentZoomPan();
+			} else {
+
+				if (!_direction) {
+					return;
+				}
+
+				if (_isFirstMove) {
+					_isFirstMove = false;
+
+					if (Math.abs(delta.x) >= DIRECTION_CHECK_OFFSET) {
+						delta.x -= _currentPoints[0].x - _startPoint.x;
+					}
+
+					if (Math.abs(delta.y) >= DIRECTION_CHECK_OFFSET) {
+						delta.y -= _currentPoints[0].y - _startPoint.y;
+					}
+				}
+
+				_currPoint.x = p.x;
+				_currPoint.y = p.y;
+
+				if (delta.x === 0 && delta.y === 0) {
+					return;
+				}
+
+				if (_direction === 'v' && _options.closeOnVerticalDrag) {
+					if (!_canPan()) {
+						_currPanDist.y += delta.y;
+						_panOffset.y += delta.y;
+
+						var opacityRatio = _calculateVerticalDragOpacityRatio();
+
+						_verticalDragInitiated = true;
+						_shout('onVerticalDrag', opacityRatio);
+
+						_applyBgOpacity(opacityRatio);
+						_applyCurrentZoomPan();
+						return;
+					}
+				}
+
+				_pushPosPoint(_getCurrentTime(), p.x, p.y);
+
+				_moved = true;
+				_currPanBounds = self.currItem.bounds;
+
+				var mainScrollChanged = _panOrMoveMainScroll('x', delta);
+				if (!mainScrollChanged) {
+					_panOrMoveMainScroll('y', delta);
+
+					_roundPoint(_panOffset);
+					_applyCurrentZoomPan();
+				}
+			}
+		},
+		    _onDragRelease = function _onDragRelease(e) {
+
+			if (_features.isOldAndroid) {
+
+				if (_oldAndroidTouchEndTimeout && e.type === 'mouseup') {
+					return;
+				}
+
+				if (e.type.indexOf('touch') > -1) {
+					clearTimeout(_oldAndroidTouchEndTimeout);
+					_oldAndroidTouchEndTimeout = setTimeout(function () {
+						_oldAndroidTouchEndTimeout = 0;
+					}, 600);
+				}
+			}
+
+			_shout('pointerUp');
+
+			if (_preventDefaultEventBehaviour(e, false)) {
+				e.preventDefault();
+			}
+
+			var releasePoint;
+
+			if (_pointerEventEnabled) {
+				var pointerIndex = framework.arraySearch(_currPointers, e.pointerId, 'id');
+
+				if (pointerIndex > -1) {
+					releasePoint = _currPointers.splice(pointerIndex, 1)[0];
+
+					if (navigator.pointerEnabled) {
+						releasePoint.type = e.pointerType || 'mouse';
+					} else {
+						var MSPOINTER_TYPES = {
+							4: 'mouse',
+							2: 'touch',
+							3: 'pen' };
+						releasePoint.type = MSPOINTER_TYPES[e.pointerType];
+
+						if (!releasePoint.type) {
+							releasePoint.type = e.pointerType || 'mouse';
+						}
+					}
+				}
+			}
+
+			var touchList = _getTouchPoints(e),
+			    gestureType,
+			    numPoints = touchList.length;
+
+			if (e.type === 'mouseup') {
+				numPoints = 0;
+			}
+
+			if (numPoints === 2) {
+				_currentPoints = null;
+				return true;
+			}
+
+			if (numPoints === 1) {
+				_equalizePoints(_startPoint, touchList[0]);
+			}
+
+			if (numPoints === 0 && !_direction && !_mainScrollAnimating) {
+				if (!releasePoint) {
+					if (e.type === 'mouseup') {
+						releasePoint = { x: e.pageX, y: e.pageY, type: 'mouse' };
+					} else if (e.changedTouches && e.changedTouches[0]) {
+						releasePoint = { x: e.changedTouches[0].pageX, y: e.changedTouches[0].pageY, type: 'touch' };
+					}
+				}
+
+				_shout('touchRelease', e, releasePoint);
+			}
+
+			var releaseTimeDiff = -1;
+
+			if (numPoints === 0) {
+				_isDragging = false;
+				framework.unbind(window, _upMoveEvents, self);
+
+				_stopDragUpdateLoop();
+
+				if (_isZooming) {
+					releaseTimeDiff = 0;
+				} else if (_lastReleaseTime !== -1) {
+					releaseTimeDiff = _getCurrentTime() - _lastReleaseTime;
+				}
+			}
+			_lastReleaseTime = numPoints === 1 ? _getCurrentTime() : -1;
+
+			if (releaseTimeDiff !== -1 && releaseTimeDiff < 150) {
+				gestureType = 'zoom';
+			} else {
+				gestureType = 'swipe';
+			}
+
+			if (_isZooming && numPoints < 2) {
+				_isZooming = false;
+
+				if (numPoints === 1) {
+					gestureType = 'zoomPointerUp';
+				}
+				_shout('zoomGestureEnded');
+			}
+
+			_currentPoints = null;
+			if (!_moved && !_zoomStarted && !_mainScrollAnimating && !_verticalDragInitiated) {
+				return;
+			}
+
+			_stopAllAnimations();
+
+			if (!_releaseAnimData) {
+				_releaseAnimData = _initDragReleaseAnimationData();
+			}
+
+			_releaseAnimData.calculateSwipeSpeed('x');
+
+			if (_verticalDragInitiated) {
+
+				var opacityRatio = _calculateVerticalDragOpacityRatio();
+
+				if (opacityRatio < _options.verticalDragRange) {
+					self.close();
+				} else {
+					var initalPanY = _panOffset.y,
+					    initialBgOpacity = _bgOpacity;
+
+					_animateProp('verticalDrag', 0, 1, 300, framework.easing.cubic.out, function (now) {
+
+						_panOffset.y = (self.currItem.initialPosition.y - initalPanY) * now + initalPanY;
+
+						_applyBgOpacity((1 - initialBgOpacity) * now + initialBgOpacity);
+						_applyCurrentZoomPan();
+					});
+
+					_shout('onVerticalDrag', 1);
+				}
+
+				return;
+			}
+
+			if ((_mainScrollShifted || _mainScrollAnimating) && numPoints === 0) {
+				var itemChanged = _finishSwipeMainScrollGesture(gestureType, _releaseAnimData);
+				if (itemChanged) {
+					return;
+				}
+				gestureType = 'zoomPointerUp';
+			}
+
+			if (_mainScrollAnimating) {
+				return;
+			}
+
+			if (gestureType !== 'swipe') {
+				_completeZoomGesture();
+				return;
+			}
+
+			if (!_mainScrollShifted && _currZoomLevel > self.currItem.fitRatio) {
+				_completePanGesture(_releaseAnimData);
+			}
+		},
+		    _initDragReleaseAnimationData = function _initDragReleaseAnimationData() {
+			var lastFlickDuration, tempReleasePos;
+
+			var s = {
+				lastFlickOffset: {},
+				lastFlickDist: {},
+				lastFlickSpeed: {},
+				slowDownRatio: {},
+				slowDownRatioReverse: {},
+				speedDecelerationRatio: {},
+				speedDecelerationRatioAbs: {},
+				distanceOffset: {},
+				backAnimDestination: {},
+				backAnimStarted: {},
+				calculateSwipeSpeed: function calculateSwipeSpeed(axis) {
+
+					if (_posPoints.length > 1) {
+						lastFlickDuration = _getCurrentTime() - _gestureCheckSpeedTime + 50;
+						tempReleasePos = _posPoints[_posPoints.length - 2][axis];
+					} else {
+						lastFlickDuration = _getCurrentTime() - _gestureStartTime;
+						tempReleasePos = _startPoint[axis];
+					}
+					s.lastFlickOffset[axis] = _currPoint[axis] - tempReleasePos;
+					s.lastFlickDist[axis] = Math.abs(s.lastFlickOffset[axis]);
+					if (s.lastFlickDist[axis] > 20) {
+						s.lastFlickSpeed[axis] = s.lastFlickOffset[axis] / lastFlickDuration;
+					} else {
+						s.lastFlickSpeed[axis] = 0;
+					}
+					if (Math.abs(s.lastFlickSpeed[axis]) < 0.1) {
+						s.lastFlickSpeed[axis] = 0;
+					}
+
+					s.slowDownRatio[axis] = 0.95;
+					s.slowDownRatioReverse[axis] = 1 - s.slowDownRatio[axis];
+					s.speedDecelerationRatio[axis] = 1;
+				},
+
+				calculateOverBoundsAnimOffset: function calculateOverBoundsAnimOffset(axis, speed) {
+					if (!s.backAnimStarted[axis]) {
+
+						if (_panOffset[axis] > _currPanBounds.min[axis]) {
+							s.backAnimDestination[axis] = _currPanBounds.min[axis];
+						} else if (_panOffset[axis] < _currPanBounds.max[axis]) {
+							s.backAnimDestination[axis] = _currPanBounds.max[axis];
+						}
+
+						if (s.backAnimDestination[axis] !== undefined) {
+							s.slowDownRatio[axis] = 0.7;
+							s.slowDownRatioReverse[axis] = 1 - s.slowDownRatio[axis];
+							if (s.speedDecelerationRatioAbs[axis] < 0.05) {
+
+								s.lastFlickSpeed[axis] = 0;
+								s.backAnimStarted[axis] = true;
+
+								_animateProp('bounceZoomPan' + axis, _panOffset[axis], s.backAnimDestination[axis], speed || 300, framework.easing.sine.out, function (pos) {
+									_panOffset[axis] = pos;
+									_applyCurrentZoomPan();
+								});
+							}
+						}
+					}
+				},
+
+				calculateAnimOffset: function calculateAnimOffset(axis) {
+					if (!s.backAnimStarted[axis]) {
+						s.speedDecelerationRatio[axis] = s.speedDecelerationRatio[axis] * (s.slowDownRatio[axis] + s.slowDownRatioReverse[axis] - s.slowDownRatioReverse[axis] * s.timeDiff / 10);
+
+						s.speedDecelerationRatioAbs[axis] = Math.abs(s.lastFlickSpeed[axis] * s.speedDecelerationRatio[axis]);
+						s.distanceOffset[axis] = s.lastFlickSpeed[axis] * s.speedDecelerationRatio[axis] * s.timeDiff;
+						_panOffset[axis] += s.distanceOffset[axis];
+					}
+				},
+
+				panAnimLoop: function panAnimLoop() {
+					if (_animations.zoomPan) {
+						_animations.zoomPan.raf = _requestAF(s.panAnimLoop);
+
+						s.now = _getCurrentTime();
+						s.timeDiff = s.now - s.lastNow;
+						s.lastNow = s.now;
+
+						s.calculateAnimOffset('x');
+						s.calculateAnimOffset('y');
+
+						_applyCurrentZoomPan();
+
+						s.calculateOverBoundsAnimOffset('x');
+						s.calculateOverBoundsAnimOffset('y');
+
+						if (s.speedDecelerationRatioAbs.x < 0.05 && s.speedDecelerationRatioAbs.y < 0.05) {
+							_panOffset.x = Math.round(_panOffset.x);
+							_panOffset.y = Math.round(_panOffset.y);
+							_applyCurrentZoomPan();
+
+							_stopAnimation('zoomPan');
+							return;
+						}
+					}
+				}
+			};
+			return s;
+		},
+		    _completePanGesture = function _completePanGesture(animData) {
+			animData.calculateSwipeSpeed('y');
+
+			_currPanBounds = self.currItem.bounds;
+
+			animData.backAnimDestination = {};
+			animData.backAnimStarted = {};
+
+			if (Math.abs(animData.lastFlickSpeed.x) <= 0.05 && Math.abs(animData.lastFlickSpeed.y) <= 0.05) {
+				animData.speedDecelerationRatioAbs.x = animData.speedDecelerationRatioAbs.y = 0;
+
+				animData.calculateOverBoundsAnimOffset('x');
+				animData.calculateOverBoundsAnimOffset('y');
+				return true;
+			}
+
+			_registerStartAnimation('zoomPan');
+			animData.lastNow = _getCurrentTime();
+			animData.panAnimLoop();
+		},
+		    _finishSwipeMainScrollGesture = function _finishSwipeMainScrollGesture(gestureType, _releaseAnimData) {
+			var itemChanged;
+			if (!_mainScrollAnimating) {
+				_currZoomedItemIndex = _currentItemIndex;
+			}
+
+			var itemsDiff;
+
+			if (gestureType === 'swipe') {
+				var totalShiftDist = _currPoint.x - _startPoint.x,
+				    isFastLastFlick = _releaseAnimData.lastFlickDist.x < 10;
+
+				if (totalShiftDist > MIN_SWIPE_DISTANCE && (isFastLastFlick || _releaseAnimData.lastFlickOffset.x > 20)) {
+					itemsDiff = -1;
+				} else if (totalShiftDist < -MIN_SWIPE_DISTANCE && (isFastLastFlick || _releaseAnimData.lastFlickOffset.x < -20)) {
+					itemsDiff = 1;
+				}
+			}
+
+			var nextCircle;
+
+			if (itemsDiff) {
+
+				_currentItemIndex += itemsDiff;
+
+				if (_currentItemIndex < 0) {
+					_currentItemIndex = _options.loop ? _getNumItems() - 1 : 0;
+					nextCircle = true;
+				} else if (_currentItemIndex >= _getNumItems()) {
+					_currentItemIndex = _options.loop ? 0 : _getNumItems() - 1;
+					nextCircle = true;
+				}
+
+				if (!nextCircle || _options.loop) {
+					_indexDiff += itemsDiff;
+					_currPositionIndex -= itemsDiff;
+					itemChanged = true;
+				}
+			}
+
+			var animateToX = _slideSize.x * _currPositionIndex;
+			var animateToDist = Math.abs(animateToX - _mainScrollPos.x);
+			var finishAnimDuration;
+
+			if (!itemChanged && animateToX > _mainScrollPos.x !== _releaseAnimData.lastFlickSpeed.x > 0) {
+				finishAnimDuration = 333;
+			} else {
+				finishAnimDuration = Math.abs(_releaseAnimData.lastFlickSpeed.x) > 0 ? animateToDist / Math.abs(_releaseAnimData.lastFlickSpeed.x) : 333;
+
+				finishAnimDuration = Math.min(finishAnimDuration, 400);
+				finishAnimDuration = Math.max(finishAnimDuration, 250);
+			}
+
+			if (_currZoomedItemIndex === _currentItemIndex) {
+				itemChanged = false;
+			}
+
+			_mainScrollAnimating = true;
+
+			_shout('mainScrollAnimStart');
+
+			_animateProp('mainScroll', _mainScrollPos.x, animateToX, finishAnimDuration, framework.easing.cubic.out, _moveMainScroll, function () {
+				_stopAllAnimations();
+				_mainScrollAnimating = false;
+				_currZoomedItemIndex = -1;
+
+				if (itemChanged || _currZoomedItemIndex !== _currentItemIndex) {
+					self.updateCurrItem();
+				}
+
+				_shout('mainScrollAnimComplete');
+			});
+
+			if (itemChanged) {
+				self.updateCurrItem(true);
+			}
+
+			return itemChanged;
+		},
+		    _calculateZoomLevel = function _calculateZoomLevel(touchesDistance) {
+			return 1 / _startPointsDistance * touchesDistance * _startZoomLevel;
+		},
+		    _completeZoomGesture = function _completeZoomGesture() {
+			var destZoomLevel = _currZoomLevel,
+			    minZoomLevel = _getMinZoomLevel(),
+			    maxZoomLevel = _getMaxZoomLevel();
+
+			if (_currZoomLevel < minZoomLevel) {
+				destZoomLevel = minZoomLevel;
+			} else if (_currZoomLevel > maxZoomLevel) {
+				destZoomLevel = maxZoomLevel;
+			}
+
+			var destOpacity = 1,
+			    onUpdate,
+			    initialOpacity = _bgOpacity;
+
+			if (_opacityChanged && !_isZoomingIn && !_wasOverInitialZoom && _currZoomLevel < minZoomLevel) {
+				self.close();
+				return true;
+			}
+
+			if (_opacityChanged) {
+				onUpdate = function onUpdate(now) {
+					_applyBgOpacity((destOpacity - initialOpacity) * now + initialOpacity);
+				};
+			}
+
+			self.zoomTo(destZoomLevel, 0, 200, framework.easing.cubic.out, onUpdate);
+			return true;
+		};
+
+		_registerModule('Gestures', {
+			publicMethods: {
+
+				initGestures: function initGestures() {
+					var addEventNames = function addEventNames(pref, down, move, up, cancel) {
+						_dragStartEvent = pref + down;
+						_dragMoveEvent = pref + move;
+						_dragEndEvent = pref + up;
+						if (cancel) {
+							_dragCancelEvent = pref + cancel;
+						} else {
+							_dragCancelEvent = '';
+						}
+					};
+
+					_pointerEventEnabled = _features.pointerEvent;
+					if (_pointerEventEnabled && _features.touch) {
+						_features.touch = false;
+					}
+
+					if (_pointerEventEnabled) {
+						if (navigator.pointerEnabled) {
+							addEventNames('pointer', 'down', 'move', 'up', 'cancel');
+						} else {
+							addEventNames('MSPointer', 'Down', 'Move', 'Up', 'Cancel');
+						}
+					} else if (_features.touch) {
+						addEventNames('touch', 'start', 'move', 'end', 'cancel');
+						_likelyTouchDevice = true;
+					} else {
+						addEventNames('mouse', 'down', 'move', 'up');
+					}
+
+					_upMoveEvents = _dragMoveEvent + ' ' + _dragEndEvent + ' ' + _dragCancelEvent;
+					_downEvents = _dragStartEvent;
+
+					if (_pointerEventEnabled && !_likelyTouchDevice) {
+						_likelyTouchDevice = navigator.maxTouchPoints > 1 || navigator.msMaxTouchPoints > 1;
+					}
+
+					self.likelyTouchDevice = _likelyTouchDevice;
+
+					_globalEventHandlers[_dragStartEvent] = _onDragStart;
+					_globalEventHandlers[_dragMoveEvent] = _onDragMove;
+					_globalEventHandlers[_dragEndEvent] = _onDragRelease;
+
+					if (_dragCancelEvent) {
+						_globalEventHandlers[_dragCancelEvent] = _globalEventHandlers[_dragEndEvent];
+					}
+
+					if (_features.touch) {
+						_downEvents += ' mousedown';
+						_upMoveEvents += ' mousemove mouseup';
+						_globalEventHandlers.mousedown = _globalEventHandlers[_dragStartEvent];
+						_globalEventHandlers.mousemove = _globalEventHandlers[_dragMoveEvent];
+						_globalEventHandlers.mouseup = _globalEventHandlers[_dragEndEvent];
+					}
+
+					if (!_likelyTouchDevice) {
+						_options.allowPanToNext = false;
+					}
+				}
+
+			}
+		});
+
+		var _showOrHideTimeout,
+		    _showOrHide = function _showOrHide(item, img, out, completeFn) {
+
+			if (_showOrHideTimeout) {
+				clearTimeout(_showOrHideTimeout);
+			}
+
+			_initialZoomRunning = true;
+			_initialContentSet = true;
+
+			var thumbBounds;
+			if (item.initialLayout) {
+				thumbBounds = item.initialLayout;
+				item.initialLayout = null;
+			} else {
+				thumbBounds = _options.getThumbBoundsFn && _options.getThumbBoundsFn(_currentItemIndex);
+			}
+
+			var duration = out ? _options.hideAnimationDuration : _options.showAnimationDuration;
+
+			var onComplete = function onComplete() {
+				_stopAnimation('initialZoom');
+				if (!out) {
+					_applyBgOpacity(1);
+					if (img) {
+						img.style.display = 'block';
+					}
+					framework.addClass(template, 'pswp--animated-in');
+					_shout('initialZoom' + (out ? 'OutEnd' : 'InEnd'));
+				} else {
+					self.template.removeAttribute('style');
+					self.bg.removeAttribute('style');
+				}
+
+				if (completeFn) {
+					completeFn();
+				}
+				_initialZoomRunning = false;
+			};
+
+			if (!duration || !thumbBounds || thumbBounds.x === undefined) {
+
+				_shout('initialZoom' + (out ? 'Out' : 'In'));
+
+				_currZoomLevel = item.initialZoomLevel;
+				_equalizePoints(_panOffset, item.initialPosition);
+				_applyCurrentZoomPan();
+
+				template.style.opacity = out ? 0 : 1;
+				_applyBgOpacity(1);
+
+				if (duration) {
+					setTimeout(function () {
+						onComplete();
+					}, duration);
+				} else {
+					onComplete();
+				}
+
+				return;
+			}
+
+			var startAnimation = function startAnimation() {
+				var closeWithRaf = _closedByScroll,
+				    fadeEverything = !self.currItem.src || self.currItem.loadError || _options.showHideOpacity;
+
+				if (item.miniImg) {
+					item.miniImg.style.webkitBackfaceVisibility = 'hidden';
+				}
+
+				if (!out) {
+					_currZoomLevel = thumbBounds.w / item.w;
+					_panOffset.x = thumbBounds.x;
+					_panOffset.y = thumbBounds.y - _initalWindowScrollY;
+
+					self[fadeEverything ? 'template' : 'bg'].style.opacity = 0.001;
+					_applyCurrentZoomPan();
+				}
+
+				_registerStartAnimation('initialZoom');
+
+				if (out && !closeWithRaf) {
+					framework.removeClass(template, 'pswp--animated-in');
+				}
+
+				if (fadeEverything) {
+					if (out) {
+						framework[(closeWithRaf ? 'remove' : 'add') + 'Class'](template, 'pswp--animate_opacity');
+					} else {
+						setTimeout(function () {
+							framework.addClass(template, 'pswp--animate_opacity');
+						}, 30);
+					}
+				}
+
+				_showOrHideTimeout = setTimeout(function () {
+
+					_shout('initialZoom' + (out ? 'Out' : 'In'));
+
+					if (!out) {
+
+						_currZoomLevel = item.initialZoomLevel;
+						_equalizePoints(_panOffset, item.initialPosition);
+						_applyCurrentZoomPan();
+						_applyBgOpacity(1);
+
+						if (fadeEverything) {
+							template.style.opacity = 1;
+						} else {
+							_applyBgOpacity(1);
+						}
+
+						_showOrHideTimeout = setTimeout(onComplete, duration + 20);
+					} else {
+						var destZoomLevel = thumbBounds.w / item.w,
+						    initialPanOffset = {
+							x: _panOffset.x,
+							y: _panOffset.y
+						},
+						    initialZoomLevel = _currZoomLevel,
+						    initalBgOpacity = _bgOpacity,
+						    onUpdate = function onUpdate(now) {
+
+							if (now === 1) {
+								_currZoomLevel = destZoomLevel;
+								_panOffset.x = thumbBounds.x;
+								_panOffset.y = thumbBounds.y - _currentWindowScrollY;
+							} else {
+								_currZoomLevel = (destZoomLevel - initialZoomLevel) * now + initialZoomLevel;
+								_panOffset.x = (thumbBounds.x - initialPanOffset.x) * now + initialPanOffset.x;
+								_panOffset.y = (thumbBounds.y - _currentWindowScrollY - initialPanOffset.y) * now + initialPanOffset.y;
+							}
+
+							_applyCurrentZoomPan();
+							if (fadeEverything) {
+								template.style.opacity = 1 - now;
+							} else {
+								_applyBgOpacity(initalBgOpacity - now * initalBgOpacity);
+							}
+						};
+
+						if (closeWithRaf) {
+							_animateProp('initialZoom', 0, 1, duration, framework.easing.cubic.out, onUpdate, onComplete);
+						} else {
+							onUpdate(1);
+							_showOrHideTimeout = setTimeout(onComplete, duration + 20);
+						}
+					}
+				}, out ? 25 : 90);
+			};
+			startAnimation();
+		};
+
+		var _items,
+		    _tempPanAreaSize = {},
+		    _imagesToAppendPool = [],
+		    _initialContentSet,
+		    _initialZoomRunning,
+		    _controllerDefaultOptions = {
+			index: 0,
+			errorMsg: '<div class="pswp__error-msg"><a href="%url%" target="_blank">The image</a> could not be loaded.</div>',
+			forceProgressiveLoading: false,
+			preload: [1, 1],
+			getNumItemsFn: function getNumItemsFn() {
+				return _items.length;
+			}
+		};
+
+		var _getItemAt,
+		    _getNumItems,
+		    _initialIsLoop,
+		    _getZeroBounds = function _getZeroBounds() {
+			return {
+				center: { x: 0, y: 0 },
+				max: { x: 0, y: 0 },
+				min: { x: 0, y: 0 }
+			};
+		},
+		    _calculateSingleItemPanBounds = function _calculateSingleItemPanBounds(item, realPanElementW, realPanElementH) {
+			var bounds = item.bounds;
+
+			bounds.center.x = Math.round((_tempPanAreaSize.x - realPanElementW) / 2);
+			bounds.center.y = Math.round((_tempPanAreaSize.y - realPanElementH) / 2) + item.vGap.top;
+
+			bounds.max.x = realPanElementW > _tempPanAreaSize.x ? Math.round(_tempPanAreaSize.x - realPanElementW) : bounds.center.x;
+
+			bounds.max.y = realPanElementH > _tempPanAreaSize.y ? Math.round(_tempPanAreaSize.y - realPanElementH) + item.vGap.top : bounds.center.y;
+
+			bounds.min.x = realPanElementW > _tempPanAreaSize.x ? 0 : bounds.center.x;
+			bounds.min.y = realPanElementH > _tempPanAreaSize.y ? item.vGap.top : bounds.center.y;
+		},
+		    _calculateItemSize = function _calculateItemSize(item, viewportSize, zoomLevel) {
+
+			if (item.src && !item.loadError) {
+				var isInitial = !zoomLevel;
+
+				if (isInitial) {
+					if (!item.vGap) {
+						item.vGap = { top: 0, bottom: 0 };
+					}
+
+					_shout('parseVerticalMargin', item);
+				}
+
+				_tempPanAreaSize.x = viewportSize.x;
+				_tempPanAreaSize.y = viewportSize.y - item.vGap.top - item.vGap.bottom;
+
+				if (isInitial) {
+					var hRatio = _tempPanAreaSize.x / item.w;
+					var vRatio = _tempPanAreaSize.y / item.h;
+
+					item.fitRatio = hRatio < vRatio ? hRatio : vRatio;
+
+
+					var scaleMode = _options.scaleMode;
+
+					if (scaleMode === 'orig') {
+						zoomLevel = 1;
+					} else if (scaleMode === 'fit') {
+						zoomLevel = item.fitRatio;
+					}
+
+					if (zoomLevel > 1) {
+						zoomLevel = 1;
+					}
+
+					item.initialZoomLevel = zoomLevel;
+
+					if (!item.bounds) {
+						item.bounds = _getZeroBounds();
+					}
+				}
+
+				if (!zoomLevel) {
+					return;
+				}
+
+				_calculateSingleItemPanBounds(item, item.w * zoomLevel, item.h * zoomLevel);
+
+				if (isInitial && zoomLevel === item.initialZoomLevel) {
+					item.initialPosition = item.bounds.center;
+				}
+
+				return item.bounds;
+			} else {
+				item.w = item.h = 0;
+				item.initialZoomLevel = item.fitRatio = 1;
+				item.bounds = _getZeroBounds();
+				item.initialPosition = item.bounds.center;
+
+				return item.bounds;
+			}
+		},
+		    _appendImage = function _appendImage(index, item, baseDiv, img, preventAnimation, keepPlaceholder) {
+
+			if (item.loadError) {
+				return;
+			}
+
+			if (img) {
+
+				item.imageAppended = true;
+				_setImageSize(item, img, item === self.currItem && _renderMaxResolution);
+
+				baseDiv.appendChild(img);
+
+				if (keepPlaceholder) {
+					setTimeout(function () {
+						if (item && item.loaded && item.placeholder) {
+							item.placeholder.style.display = 'none';
+							item.placeholder = null;
+						}
+					}, 500);
+				}
+			}
+		},
+		    _preloadImage = function _preloadImage(item) {
+			item.loading = true;
+			item.loaded = false;
+			var img = item.img = framework.createEl('pswp__img', 'img');
+			var onComplete = function onComplete() {
+				item.loading = false;
+				item.loaded = true;
+
+				if (item.loadComplete) {
+					item.loadComplete(item);
+				} else {
+					item.img = null;
+				}
+				img.onload = img.onerror = null;
+				img = null;
+			};
+			img.onload = onComplete;
+			img.onerror = function () {
+				item.loadError = true;
+				onComplete();
+			};
+
+			img.src = item.src;
+
+			return img;
+		},
+		    _checkForError = function _checkForError(item, cleanUp) {
+			if (item.src && item.loadError && item.container) {
+
+				if (cleanUp) {
+					item.container.innerHTML = '';
+				}
+
+				item.container.innerHTML = _options.errorMsg.replace('%url%', item.src);
+				return true;
+			}
+		},
+		    _setImageSize = function _setImageSize(item, img, maxRes) {
+			if (!item.src) {
+				return;
+			}
+
+			if (!img) {
+				img = item.container.lastChild;
+			}
+
+			var w = maxRes ? item.w : Math.round(item.w * item.fitRatio),
+			    h = maxRes ? item.h : Math.round(item.h * item.fitRatio);
+
+			if (item.placeholder && !item.loaded) {
+				item.placeholder.style.width = w + 'px';
+				item.placeholder.style.height = h + 'px';
+			}
+
+			img.style.width = w + 'px';
+			img.style.height = h + 'px';
+		},
+		    _appendImagesPool = function _appendImagesPool() {
+
+			if (_imagesToAppendPool.length) {
+				var poolItem;
+
+				for (var i = 0; i < _imagesToAppendPool.length; i++) {
+					poolItem = _imagesToAppendPool[i];
+					if (poolItem.holder.index === poolItem.index) {
+						_appendImage(poolItem.index, poolItem.item, poolItem.baseDiv, poolItem.img, false, poolItem.clearPlaceholder);
+					}
+				}
+				_imagesToAppendPool = [];
+			}
+		};
+
+		_registerModule('Controller', {
+
+			publicMethods: {
+
+				lazyLoadItem: function lazyLoadItem(index) {
+					index = _getLoopedId(index);
+					var item = _getItemAt(index);
+
+					if (!item || (item.loaded || item.loading) && !_itemsNeedUpdate) {
+						return;
+					}
+
+					_shout('gettingData', index, item);
+
+					if (!item.src) {
+						return;
+					}
+
+					_preloadImage(item);
+				},
+				initController: function initController() {
+					framework.extend(_options, _controllerDefaultOptions, true);
+					self.items = _items = items;
+					_getItemAt = self.getItemAt;
+					_getNumItems = _options.getNumItemsFn;
+
+					_initialIsLoop = _options.loop;
+					if (_getNumItems() < 3) {
+						_options.loop = false;
+					}
+
+					_listen('beforeChange', function (diff) {
+
+						var p = _options.preload,
+						    isNext = diff === null ? true : diff >= 0,
+						    preloadBefore = Math.min(p[0], _getNumItems()),
+						    preloadAfter = Math.min(p[1], _getNumItems()),
+						    i;
+
+						for (i = 1; i <= (isNext ? preloadAfter : preloadBefore); i++) {
+							self.lazyLoadItem(_currentItemIndex + i);
+						}
+						for (i = 1; i <= (isNext ? preloadBefore : preloadAfter); i++) {
+							self.lazyLoadItem(_currentItemIndex - i);
+						}
+					});
+
+					_listen('initialLayout', function () {
+						self.currItem.initialLayout = _options.getThumbBoundsFn && _options.getThumbBoundsFn(_currentItemIndex);
+					});
+
+					_listen('mainScrollAnimComplete', _appendImagesPool);
+					_listen('initialZoomInEnd', _appendImagesPool);
+
+					_listen('destroy', function () {
+						var item;
+						for (var i = 0; i < _items.length; i++) {
+							item = _items[i];
+
+							if (item.container) {
+								item.container = null;
+							}
+							if (item.placeholder) {
+								item.placeholder = null;
+							}
+							if (item.img) {
+								item.img = null;
+							}
+							if (item.preloader) {
+								item.preloader = null;
+							}
+							if (item.loadError) {
+								item.loaded = item.loadError = false;
+							}
+						}
+						_imagesToAppendPool = null;
+					});
+				},
+
+				getItemAt: function getItemAt(index) {
+					if (index >= 0) {
+						return _items[index] !== undefined ? _items[index] : false;
+					}
+					return false;
+				},
+
+				allowProgressiveImg: function allowProgressiveImg() {
+					return _options.forceProgressiveLoading || !_likelyTouchDevice || _options.mouseUsed || screen.width > 1200;
+				},
+
+				setContent: function setContent(holder, index) {
+
+					if (_options.loop) {
+						index = _getLoopedId(index);
+					}
+
+					var prevItem = self.getItemAt(holder.index);
+					if (prevItem) {
+						prevItem.container = null;
+					}
+
+					var item = self.getItemAt(index),
+					    img;
+
+					if (!item) {
+						holder.el.innerHTML = '';
+						return;
+					}
+
+					_shout('gettingData', index, item);
+
+					holder.index = index;
+					holder.item = item;
+
+					var baseDiv = item.container = framework.createEl('pswp__zoom-wrap');
+
+					if (!item.src && item.html) {
+						if (item.html.tagName) {
+							baseDiv.appendChild(item.html);
+						} else {
+							baseDiv.innerHTML = item.html;
+						}
+					}
+
+					_checkForError(item);
+
+					_calculateItemSize(item, _viewportSize);
+
+					if (item.src && !item.loadError && !item.loaded) {
+
+						item.loadComplete = function (item) {
+							if (!_isOpen) {
+								return;
+							}
+
+							if (holder && holder.index === index) {
+								if (_checkForError(item, true)) {
+									item.loadComplete = item.img = null;
+									_calculateItemSize(item, _viewportSize);
+									_applyZoomPanToItem(item);
+
+									if (holder.index === _currentItemIndex) {
+										self.updateCurrZoomItem();
+									}
+									return;
+								}
+								if (!item.imageAppended) {
+									if (_features.transform && (_mainScrollAnimating || _initialZoomRunning)) {
+										_imagesToAppendPool.push({
+											item: item,
+											baseDiv: baseDiv,
+											img: item.img,
+											index: index,
+											holder: holder,
+											clearPlaceholder: true
+										});
+									} else {
+										_appendImage(index, item, baseDiv, item.img, _mainScrollAnimating || _initialZoomRunning, true);
+									}
+								} else {
+									if (!_initialZoomRunning && item.placeholder) {
+										item.placeholder.style.display = 'none';
+										item.placeholder = null;
+									}
+								}
+							}
+
+							item.loadComplete = null;
+							item.img = null;
+
+							_shout('imageLoadComplete', index, item);
+						};
+
+						if (framework.features.transform) {
+
+							var placeholderClassName = 'pswp__img pswp__img--placeholder';
+							placeholderClassName += item.msrc ? '' : ' pswp__img--placeholder--blank';
+
+							var placeholder = framework.createEl(placeholderClassName, item.msrc ? 'img' : '');
+							if (item.msrc) {
+								placeholder.src = item.msrc;
+							}
+
+							_setImageSize(item, placeholder);
+
+							baseDiv.appendChild(placeholder);
+							item.placeholder = placeholder;
+						}
+
+						if (!item.loading) {
+							_preloadImage(item);
+						}
+
+						if (self.allowProgressiveImg()) {
+							if (!_initialContentSet && _features.transform) {
+								_imagesToAppendPool.push({
+									item: item,
+									baseDiv: baseDiv,
+									img: item.img,
+									index: index,
+									holder: holder
+								});
+							} else {
+								_appendImage(index, item, baseDiv, item.img, true, true);
+							}
+						}
+					} else if (item.src && !item.loadError) {
+						img = framework.createEl('pswp__img', 'img');
+						img.style.opacity = 1;
+						img.src = item.src;
+						_setImageSize(item, img);
+						_appendImage(index, item, baseDiv, img, true);
+					}
+
+					if (!_initialContentSet && index === _currentItemIndex) {
+						_currZoomElementStyle = baseDiv.style;
+						_showOrHide(item, img || item.img);
+					} else {
+						_applyZoomPanToItem(item);
+					}
+
+					holder.el.innerHTML = '';
+					holder.el.appendChild(baseDiv);
+				},
+
+				cleanSlide: function cleanSlide(item) {
+					if (item.img) {
+						item.img.onload = item.img.onerror = null;
+					}
+					item.loaded = item.loading = item.img = item.imageAppended = false;
+				}
+
+			}
+		});
+
+		var tapTimer,
+		    tapReleasePoint = {},
+		    _dispatchTapEvent = function _dispatchTapEvent(origEvent, releasePoint, pointerType) {
+			var e = document.createEvent('CustomEvent'),
+			    eDetail = {
+				origEvent: origEvent,
+				target: origEvent.target,
+				releasePoint: releasePoint,
+				pointerType: pointerType || 'touch'
+			};
+
+			e.initCustomEvent('pswpTap', true, true, eDetail);
+			origEvent.target.dispatchEvent(e);
+		};
+
+		_registerModule('Tap', {
+			publicMethods: {
+				initTap: function initTap() {
+					_listen('firstTouchStart', self.onTapStart);
+					_listen('touchRelease', self.onTapRelease);
+					_listen('destroy', function () {
+						tapReleasePoint = {};
+						tapTimer = null;
+					});
+				},
+				onTapStart: function onTapStart(touchList) {
+					if (touchList.length > 1) {
+						clearTimeout(tapTimer);
+						tapTimer = null;
+					}
+				},
+				onTapRelease: function onTapRelease(e, releasePoint) {
+					if (!releasePoint) {
+						return;
+					}
+
+					if (!_moved && !_isMultitouch && !_numAnimations) {
+						var p0 = releasePoint;
+						if (tapTimer) {
+							clearTimeout(tapTimer);
+							tapTimer = null;
+
+							if (_isNearbyPoints(p0, tapReleasePoint)) {
+								_shout('doubleTap', p0);
+								return;
+							}
+						}
+
+						if (releasePoint.type === 'mouse') {
+							_dispatchTapEvent(e, releasePoint, 'mouse');
+							return;
+						}
+
+						var clickedTagName = e.target.tagName.toUpperCase();
+
+						if (clickedTagName === 'BUTTON' || framework.hasClass(e.target, 'pswp__single-tap')) {
+							_dispatchTapEvent(e, releasePoint);
+							return;
+						}
+
+						_equalizePoints(tapReleasePoint, p0);
+
+						tapTimer = setTimeout(function () {
+							_dispatchTapEvent(e, releasePoint);
+							tapTimer = null;
+						}, 300);
+					}
+				}
+			}
+		});
+
+		var _wheelDelta;
+
+		_registerModule('DesktopZoom', {
+
+			publicMethods: {
+
+				initDesktopZoom: function initDesktopZoom() {
+
+					if (_oldIE) {
+						return;
+					}
+
+					if (_likelyTouchDevice) {
+						_listen('mouseUsed', function () {
+							self.setupDesktopZoom();
+						});
+					} else {
+						self.setupDesktopZoom(true);
+					}
+				},
+
+				setupDesktopZoom: function setupDesktopZoom(onInit) {
+
+					_wheelDelta = {};
+
+					var events = 'wheel mousewheel DOMMouseScroll';
+
+					_listen('bindEvents', function () {
+						framework.bind(template, events, self.handleMouseWheel);
+					});
+
+					_listen('unbindEvents', function () {
+						if (_wheelDelta) {
+							framework.unbind(template, events, self.handleMouseWheel);
+						}
+					});
+
+					self.mouseZoomedIn = false;
+
+					var hasDraggingClass,
+					    updateZoomable = function updateZoomable() {
+						if (self.mouseZoomedIn) {
+							framework.removeClass(template, 'pswp--zoomed-in');
+							self.mouseZoomedIn = false;
+						}
+						if (_currZoomLevel < 1) {
+							framework.addClass(template, 'pswp--zoom-allowed');
+						} else {
+							framework.removeClass(template, 'pswp--zoom-allowed');
+						}
+						removeDraggingClass();
+					},
+					    removeDraggingClass = function removeDraggingClass() {
+						if (hasDraggingClass) {
+							framework.removeClass(template, 'pswp--dragging');
+							hasDraggingClass = false;
+						}
+					};
+
+					_listen('resize', updateZoomable);
+					_listen('afterChange', updateZoomable);
+					_listen('pointerDown', function () {
+						if (self.mouseZoomedIn) {
+							hasDraggingClass = true;
+							framework.addClass(template, 'pswp--dragging');
+						}
+					});
+					_listen('pointerUp', removeDraggingClass);
+
+					if (!onInit) {
+						updateZoomable();
+					}
+				},
+
+				handleMouseWheel: function handleMouseWheel(e) {
+
+					if (_currZoomLevel <= self.currItem.fitRatio) {
+						if (_options.modal) {
+
+							if (!_options.closeOnScroll || _numAnimations || _isDragging) {
+								e.preventDefault();
+							} else if (_transformKey && Math.abs(e.deltaY) > 2) {
+								_closedByScroll = true;
+								self.close();
+							}
+						}
+						return true;
+					}
+
+					e.stopPropagation();
+
+					_wheelDelta.x = 0;
+
+					if ('deltaX' in e) {
+						if (e.deltaMode === 1) {
+								_wheelDelta.x = e.deltaX * 18;
+								_wheelDelta.y = e.deltaY * 18;
+							} else {
+							_wheelDelta.x = e.deltaX;
+							_wheelDelta.y = e.deltaY;
+						}
+					} else if ('wheelDelta' in e) {
+						if (e.wheelDeltaX) {
+							_wheelDelta.x = -0.16 * e.wheelDeltaX;
+						}
+						if (e.wheelDeltaY) {
+							_wheelDelta.y = -0.16 * e.wheelDeltaY;
+						} else {
+							_wheelDelta.y = -0.16 * e.wheelDelta;
+						}
+					} else if ('detail' in e) {
+						_wheelDelta.y = e.detail;
+					} else {
+						return;
+					}
+
+					_calculatePanBounds(_currZoomLevel, true);
+
+					var newPanX = _panOffset.x - _wheelDelta.x,
+					    newPanY = _panOffset.y - _wheelDelta.y;
+
+					if (_options.modal || newPanX <= _currPanBounds.min.x && newPanX >= _currPanBounds.max.x && newPanY <= _currPanBounds.min.y && newPanY >= _currPanBounds.max.y) {
+						e.preventDefault();
+					}
+
+					self.panTo(newPanX, newPanY);
+				},
+
+				toggleDesktopZoom: function toggleDesktopZoom(centerPoint) {
+					centerPoint = centerPoint || { x: _viewportSize.x / 2 + _offset.x, y: _viewportSize.y / 2 + _offset.y };
+
+					var doubleTapZoomLevel = _options.getDoubleTapZoom(true, self.currItem);
+					var zoomOut = _currZoomLevel === doubleTapZoomLevel;
+
+					self.mouseZoomedIn = !zoomOut;
+
+					self.zoomTo(zoomOut ? self.currItem.initialZoomLevel : doubleTapZoomLevel, centerPoint, 333);
+					framework[(!zoomOut ? 'add' : 'remove') + 'Class'](template, 'pswp--zoomed-in');
+				}
+
+			}
+		});
+
+		var _historyDefaultOptions = {
+			history: true,
+			galleryUID: 1
+		};
+
+		var _historyUpdateTimeout,
+		    _hashChangeTimeout,
+		    _hashAnimCheckTimeout,
+		    _hashChangedByScript,
+		    _hashChangedByHistory,
+		    _hashReseted,
+		    _initialHash,
+		    _historyChanged,
+		    _closedFromURL,
+		    _urlChangedOnce,
+		    _windowLoc,
+		    _supportsPushState,
+		    _getHash = function _getHash() {
+			return _windowLoc.hash.substring(1);
+		},
+		    _cleanHistoryTimeouts = function _cleanHistoryTimeouts() {
+
+			if (_historyUpdateTimeout) {
+				clearTimeout(_historyUpdateTimeout);
+			}
+
+			if (_hashAnimCheckTimeout) {
+				clearTimeout(_hashAnimCheckTimeout);
+			}
+		},
+		    _parseItemIndexFromURL = function _parseItemIndexFromURL() {
+			var hash = _getHash(),
+			    params = {};
+
+			if (hash.length < 5) {
+				return params;
+			}
+
+			var i,
+			    vars = hash.split('&');
+			for (i = 0; i < vars.length; i++) {
+				if (!vars[i]) {
+					continue;
+				}
+				var pair = vars[i].split('=');
+				if (pair.length < 2) {
+					continue;
+				}
+				params[pair[0]] = pair[1];
+			}
+			if (_options.galleryPIDs) {
+				var searchfor = params.pid;
+				params.pid = 0;
+				for (i = 0; i < _items.length; i++) {
+					if (_items[i].pid === searchfor) {
+						params.pid = i;
+						break;
+					}
+				}
+			} else {
+				params.pid = parseInt(params.pid, 10) - 1;
+			}
+			if (params.pid < 0) {
+				params.pid = 0;
+			}
+			return params;
+		},
+		    _updateHash = function _updateHash() {
+
+			if (_hashAnimCheckTimeout) {
+				clearTimeout(_hashAnimCheckTimeout);
+			}
+
+			if (_numAnimations || _isDragging) {
+				_hashAnimCheckTimeout = setTimeout(_updateHash, 500);
+				return;
+			}
+
+			if (_hashChangedByScript) {
+				clearTimeout(_hashChangeTimeout);
+			} else {
+				_hashChangedByScript = true;
+			}
+
+			var pid = _currentItemIndex + 1;
+			var item = _getItemAt(_currentItemIndex);
+			if (item.hasOwnProperty('pid')) {
+				pid = item.pid;
+			}
+			var newHash = _initialHash + '&' + 'gid=' + _options.galleryUID + '&' + 'pid=' + pid;
+
+			if (!_historyChanged) {
+				if (_windowLoc.hash.indexOf(newHash) === -1) {
+					_urlChangedOnce = true;
+				}
+			}
+
+			var newURL = _windowLoc.href.split('#')[0] + '#' + newHash;
+
+			if (_supportsPushState) {
+
+				if ('#' + newHash !== window.location.hash) {
+					history[_historyChanged ? 'replaceState' : 'pushState']('', document.title, newURL);
+				}
+			} else {
+				if (_historyChanged) {
+					_windowLoc.replace(newURL);
+				} else {
+					_windowLoc.hash = newHash;
+				}
+			}
+
+			_historyChanged = true;
+			_hashChangeTimeout = setTimeout(function () {
+				_hashChangedByScript = false;
+			}, 60);
+		};
+
+		_registerModule('History', {
+
+			publicMethods: {
+				initHistory: function initHistory() {
+
+					framework.extend(_options, _historyDefaultOptions, true);
+
+					if (!_options.history) {
+						return;
+					}
+
+					_windowLoc = window.location;
+					_urlChangedOnce = false;
+					_closedFromURL = false;
+					_historyChanged = false;
+					_initialHash = _getHash();
+					_supportsPushState = 'pushState' in history;
+
+					if (_initialHash.indexOf('gid=') > -1) {
+						_initialHash = _initialHash.split('&gid=')[0];
+						_initialHash = _initialHash.split('?gid=')[0];
+					}
+
+					_listen('afterChange', self.updateURL);
+					_listen('unbindEvents', function () {
+						framework.unbind(window, 'hashchange', self.onHashChange);
+					});
+
+					var returnToOriginal = function returnToOriginal() {
+						_hashReseted = true;
+						if (!_closedFromURL) {
+
+							if (_urlChangedOnce) {
+								history.back();
+							} else {
+
+								if (_initialHash) {
+									_windowLoc.hash = _initialHash;
+								} else {
+									if (_supportsPushState) {
+										history.pushState('', document.title, _windowLoc.pathname + _windowLoc.search);
+									} else {
+										_windowLoc.hash = '';
+									}
+								}
+							}
+						}
+
+						_cleanHistoryTimeouts();
+					};
+
+					_listen('unbindEvents', function () {
+						if (_closedByScroll) {
+							returnToOriginal();
+						}
+					});
+					_listen('destroy', function () {
+						if (!_hashReseted) {
+							returnToOriginal();
+						}
+					});
+					_listen('firstUpdate', function () {
+						_currentItemIndex = _parseItemIndexFromURL().pid;
+					});
+
+					var index = _initialHash.indexOf('pid=');
+					if (index > -1) {
+						_initialHash = _initialHash.substring(0, index);
+						if (_initialHash.slice(-1) === '&') {
+							_initialHash = _initialHash.slice(0, -1);
+						}
+					}
+
+					setTimeout(function () {
+						if (_isOpen) {
+							framework.bind(window, 'hashchange', self.onHashChange);
+						}
+					}, 40);
+				},
+				onHashChange: function onHashChange() {
+
+					if (_getHash() === _initialHash) {
+
+						_closedFromURL = true;
+						self.close();
+						return;
+					}
+					if (!_hashChangedByScript) {
+
+						_hashChangedByHistory = true;
+						self.goTo(_parseItemIndexFromURL().pid);
+						_hashChangedByHistory = false;
+					}
+				},
+				updateURL: function updateURL() {
+
+					_cleanHistoryTimeouts();
+
+					if (_hashChangedByHistory) {
+						return;
+					}
+
+					if (!_historyChanged) {
+						_updateHash();
+					} else {
+						_historyUpdateTimeout = setTimeout(_updateHash, 800);
+					}
+				}
+
+			}
+		});
+
+		framework.extend(self, publicMethods);
+	};
+	return PhotoSwipe;
+});
+
+/***/ }),
+/* 92 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+(function (root, factory) {
+	if (true) {
+		!(__WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
+				(__WEBPACK_AMD_DEFINE_FACTORY__.call(exports, __webpack_require__, exports, module)) :
+				__WEBPACK_AMD_DEFINE_FACTORY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+	} else if ((typeof exports === 'undefined' ? 'undefined' : _typeof(exports)) === 'object') {
+		module.exports = factory();
+	} else {
+		root.PhotoSwipeUI_Default = factory();
+	}
+})(undefined, function () {
+
+	'use strict';
+
+	var PhotoSwipeUI_Default = function PhotoSwipeUI_Default(pswp, framework) {
+
+		var ui = this;
+		var _overlayUIUpdated = false,
+		    _controlsVisible = true,
+		    _fullscrenAPI,
+		    _controls,
+		    _captionContainer,
+		    _fakeCaptionContainer,
+		    _indexIndicator,
+		    _shareButton,
+		    _shareModal,
+		    _shareModalHidden = true,
+		    _initalCloseOnScrollValue,
+		    _isIdle,
+		    _listen,
+		    _loadingIndicator,
+		    _loadingIndicatorHidden,
+		    _loadingIndicatorTimeout,
+		    _galleryHasOneSlide,
+		    _options,
+		    _defaultUIOptions = {
+			barsSize: { top: 44, bottom: 'auto' },
+			closeElClasses: ['item', 'caption', 'zoom-wrap', 'ui', 'top-bar'],
+			timeToIdle: 4000,
+			timeToIdleOutside: 1000,
+			loadingIndicatorDelay: 1000,
+
+			addCaptionHTMLFn: function addCaptionHTMLFn(item, captionEl) {
+				if (!item.title) {
+					captionEl.children[0].innerHTML = '';
+					return false;
+				}
+				captionEl.children[0].innerHTML = item.title;
+				return true;
+			},
+
+			closeEl: true,
+			captionEl: true,
+			fullscreenEl: true,
+			zoomEl: true,
+			shareEl: true,
+			counterEl: true,
+			arrowEl: true,
+			preloaderEl: true,
+
+			tapToClose: false,
+			tapToToggleControls: true,
+
+			clickToCloseNonZoomable: true,
+
+			shareButtons: [{ id: 'facebook', label: 'Share on Facebook', url: 'https://www.facebook.com/sharer/sharer.php?u={{url}}' }, { id: 'twitter', label: 'Tweet', url: 'https://twitter.com/intent/tweet?text={{text}}&url={{url}}' }, { id: 'pinterest', label: 'Pin it', url: 'http://www.pinterest.com/pin/create/button/' + '?url={{url}}&media={{image_url}}&description={{text}}' }, { id: 'download', label: 'Download image', url: '{{raw_image_url}}', download: true }],
+			getImageURLForShare: function getImageURLForShare() {
+				return pswp.currItem.src || '';
+			},
+			getPageURLForShare: function getPageURLForShare() {
+				return window.location.href;
+			},
+			getTextForShare: function getTextForShare() {
+				return pswp.currItem.title || '';
+			},
+
+			indexIndicatorSep: ' / ',
+			fitControlsWidth: 1200
+
+		},
+		    _blockControlsTap,
+		    _blockControlsTapTimeout;
+
+		var _onControlsTap = function _onControlsTap(e) {
+			if (_blockControlsTap) {
+				return true;
+			}
+
+			e = e || window.event;
+
+			if (_options.timeToIdle && _options.mouseUsed && !_isIdle) {
+				_onIdleMouseMove();
+			}
+
+			var target = e.target || e.srcElement,
+			    uiElement,
+			    clickedClass = target.getAttribute('class') || '',
+			    found;
+
+			for (var i = 0; i < _uiElements.length; i++) {
+				uiElement = _uiElements[i];
+				if (uiElement.onTap && clickedClass.indexOf('pswp__' + uiElement.name) > -1) {
+					uiElement.onTap();
+					found = true;
+				}
+			}
+
+			if (found) {
+				if (e.stopPropagation) {
+					e.stopPropagation();
+				}
+				_blockControlsTap = true;
+
+				var tapDelay = framework.features.isOldAndroid ? 600 : 30;
+				_blockControlsTapTimeout = setTimeout(function () {
+					_blockControlsTap = false;
+				}, tapDelay);
+			}
+		},
+		    _fitControlsInViewport = function _fitControlsInViewport() {
+			return !pswp.likelyTouchDevice || _options.mouseUsed || screen.width > _options.fitControlsWidth;
+		},
+		    _togglePswpClass = function _togglePswpClass(el, cName, add) {
+			framework[(add ? 'add' : 'remove') + 'Class'](el, 'pswp__' + cName);
+		},
+		    _countNumItems = function _countNumItems() {
+			var hasOneSlide = _options.getNumItemsFn() === 1;
+
+			if (hasOneSlide !== _galleryHasOneSlide) {
+				_togglePswpClass(_controls, 'ui--one-slide', hasOneSlide);
+				_galleryHasOneSlide = hasOneSlide;
+			}
+		},
+		    _toggleShareModalClass = function _toggleShareModalClass() {
+			_togglePswpClass(_shareModal, 'share-modal--hidden', _shareModalHidden);
+		},
+		    _toggleShareModal = function _toggleShareModal() {
+
+			_shareModalHidden = !_shareModalHidden;
+
+			if (!_shareModalHidden) {
+				_toggleShareModalClass();
+				setTimeout(function () {
+					if (!_shareModalHidden) {
+						framework.addClass(_shareModal, 'pswp__share-modal--fade-in');
+					}
+				}, 30);
+			} else {
+				framework.removeClass(_shareModal, 'pswp__share-modal--fade-in');
+				setTimeout(function () {
+					if (_shareModalHidden) {
+						_toggleShareModalClass();
+					}
+				}, 300);
+			}
+
+			if (!_shareModalHidden) {
+				_updateShareURLs();
+			}
+			return false;
+		},
+		    _openWindowPopup = function _openWindowPopup(e) {
+			e = e || window.event;
+			var target = e.target || e.srcElement;
+
+			pswp.shout('shareLinkClick', e, target);
+
+			if (!target.href) {
+				return false;
+			}
+
+			if (target.hasAttribute('download')) {
+				return true;
+			}
+
+			window.open(target.href, 'pswp_share', 'scrollbars=yes,resizable=yes,toolbar=no,' + 'location=yes,width=550,height=420,top=100,left=' + (window.screen ? Math.round(screen.width / 2 - 275) : 100));
+
+			if (!_shareModalHidden) {
+				_toggleShareModal();
+			}
+
+			return false;
+		},
+		    _updateShareURLs = function _updateShareURLs() {
+			var shareButtonOut = '',
+			    shareButtonData,
+			    shareURL,
+			    image_url,
+			    page_url,
+			    share_text;
+
+			for (var i = 0; i < _options.shareButtons.length; i++) {
+				shareButtonData = _options.shareButtons[i];
+
+				image_url = _options.getImageURLForShare(shareButtonData);
+				page_url = _options.getPageURLForShare(shareButtonData);
+				share_text = _options.getTextForShare(shareButtonData);
+
+				shareURL = shareButtonData.url.replace('{{url}}', encodeURIComponent(page_url)).replace('{{image_url}}', encodeURIComponent(image_url)).replace('{{raw_image_url}}', image_url).replace('{{text}}', encodeURIComponent(share_text));
+
+				shareButtonOut += '<a href="' + shareURL + '" target="_blank" ' + 'class="pswp__share--' + shareButtonData.id + '"' + (shareButtonData.download ? 'download' : '') + '>' + shareButtonData.label + '</a>';
+
+				if (_options.parseShareButtonOut) {
+					shareButtonOut = _options.parseShareButtonOut(shareButtonData, shareButtonOut);
+				}
+			}
+			_shareModal.children[0].innerHTML = shareButtonOut;
+			_shareModal.children[0].onclick = _openWindowPopup;
+		},
+		    _hasCloseClass = function _hasCloseClass(target) {
+			for (var i = 0; i < _options.closeElClasses.length; i++) {
+				if (framework.hasClass(target, 'pswp__' + _options.closeElClasses[i])) {
+					return true;
+				}
+			}
+		},
+		    _idleInterval,
+		    _idleTimer,
+		    _idleIncrement = 0,
+		    _onIdleMouseMove = function _onIdleMouseMove() {
+			clearTimeout(_idleTimer);
+			_idleIncrement = 0;
+			if (_isIdle) {
+				ui.setIdle(false);
+			}
+		},
+		    _onMouseLeaveWindow = function _onMouseLeaveWindow(e) {
+			e = e ? e : window.event;
+			var from = e.relatedTarget || e.toElement;
+			if (!from || from.nodeName === 'HTML') {
+				clearTimeout(_idleTimer);
+				_idleTimer = setTimeout(function () {
+					ui.setIdle(true);
+				}, _options.timeToIdleOutside);
+			}
+		},
+		    _setupFullscreenAPI = function _setupFullscreenAPI() {
+			if (_options.fullscreenEl && !framework.features.isOldAndroid) {
+				if (!_fullscrenAPI) {
+					_fullscrenAPI = ui.getFullscreenAPI();
+				}
+				if (_fullscrenAPI) {
+					framework.bind(document, _fullscrenAPI.eventK, ui.updateFullscreen);
+					ui.updateFullscreen();
+					framework.addClass(pswp.template, 'pswp--supports-fs');
+				} else {
+					framework.removeClass(pswp.template, 'pswp--supports-fs');
+				}
+			}
+		},
+		    _setupLoadingIndicator = function _setupLoadingIndicator() {
+			if (_options.preloaderEl) {
+
+				_toggleLoadingIndicator(true);
+
+				_listen('beforeChange', function () {
+
+					clearTimeout(_loadingIndicatorTimeout);
+
+					_loadingIndicatorTimeout = setTimeout(function () {
+
+						if (pswp.currItem && pswp.currItem.loading) {
+
+							if (!pswp.allowProgressiveImg() || pswp.currItem.img && !pswp.currItem.img.naturalWidth) {
+								_toggleLoadingIndicator(false);
+							}
+						} else {
+							_toggleLoadingIndicator(true);
+						}
+					}, _options.loadingIndicatorDelay);
+				});
+				_listen('imageLoadComplete', function (index, item) {
+					if (pswp.currItem === item) {
+						_toggleLoadingIndicator(true);
+					}
+				});
+			}
+		},
+		    _toggleLoadingIndicator = function _toggleLoadingIndicator(hide) {
+			if (_loadingIndicatorHidden !== hide) {
+				_togglePswpClass(_loadingIndicator, 'preloader--active', !hide);
+				_loadingIndicatorHidden = hide;
+			}
+		},
+		    _applyNavBarGaps = function _applyNavBarGaps(item) {
+			var gap = item.vGap;
+
+			if (_fitControlsInViewport()) {
+
+				var bars = _options.barsSize;
+				if (_options.captionEl && bars.bottom === 'auto') {
+					if (!_fakeCaptionContainer) {
+						_fakeCaptionContainer = framework.createEl('pswp__caption pswp__caption--fake');
+						_fakeCaptionContainer.appendChild(framework.createEl('pswp__caption__center'));
+						_controls.insertBefore(_fakeCaptionContainer, _captionContainer);
+						framework.addClass(_controls, 'pswp__ui--fit');
+					}
+					if (_options.addCaptionHTMLFn(item, _fakeCaptionContainer, true)) {
+
+						var captionSize = _fakeCaptionContainer.clientHeight;
+						gap.bottom = parseInt(captionSize, 10) || 44;
+					} else {
+						gap.bottom = bars.top;
+					}
+				} else {
+					gap.bottom = bars.bottom === 'auto' ? 0 : bars.bottom;
+				}
+
+				gap.top = bars.top;
+			} else {
+				gap.top = gap.bottom = 0;
+			}
+		},
+		    _setupIdle = function _setupIdle() {
+			if (_options.timeToIdle) {
+				_listen('mouseUsed', function () {
+
+					framework.bind(document, 'mousemove', _onIdleMouseMove);
+					framework.bind(document, 'mouseout', _onMouseLeaveWindow);
+
+					_idleInterval = setInterval(function () {
+						_idleIncrement++;
+						if (_idleIncrement === 2) {
+							ui.setIdle(true);
+						}
+					}, _options.timeToIdle / 2);
+				});
+			}
+		},
+		    _setupHidingControlsDuringGestures = function _setupHidingControlsDuringGestures() {
+			_listen('onVerticalDrag', function (now) {
+				if (_controlsVisible && now < 0.95) {
+					ui.hideControls();
+				} else if (!_controlsVisible && now >= 0.95) {
+					ui.showControls();
+				}
+			});
+
+			var pinchControlsHidden;
+			_listen('onPinchClose', function (now) {
+				if (_controlsVisible && now < 0.9) {
+					ui.hideControls();
+					pinchControlsHidden = true;
+				} else if (pinchControlsHidden && !_controlsVisible && now > 0.9) {
+					ui.showControls();
+				}
+			});
+
+			_listen('zoomGestureEnded', function () {
+				pinchControlsHidden = false;
+				if (pinchControlsHidden && !_controlsVisible) {
+					ui.showControls();
+				}
+			});
+		};
+
+		var _uiElements = [{
+			name: 'caption',
+			option: 'captionEl',
+			onInit: function onInit(el) {
+				_captionContainer = el;
+			}
+		}, {
+			name: 'share-modal',
+			option: 'shareEl',
+			onInit: function onInit(el) {
+				_shareModal = el;
+			},
+			onTap: function onTap() {
+				_toggleShareModal();
+			}
+		}, {
+			name: 'button--share',
+			option: 'shareEl',
+			onInit: function onInit(el) {
+				_shareButton = el;
+			},
+			onTap: function onTap() {
+				_toggleShareModal();
+			}
+		}, {
+			name: 'button--zoom',
+			option: 'zoomEl',
+			onTap: pswp.toggleDesktopZoom
+		}, {
+			name: 'counter',
+			option: 'counterEl',
+			onInit: function onInit(el) {
+				_indexIndicator = el;
+			}
+		}, {
+			name: 'button--close',
+			option: 'closeEl',
+			onTap: pswp.close
+		}, {
+			name: 'button--arrow--left',
+			option: 'arrowEl',
+			onTap: pswp.prev
+		}, {
+			name: 'button--arrow--right',
+			option: 'arrowEl',
+			onTap: pswp.next
+		}, {
+			name: 'button--fs',
+			option: 'fullscreenEl',
+			onTap: function onTap() {
+				if (_fullscrenAPI.isFullscreen()) {
+					_fullscrenAPI.exit();
+				} else {
+					_fullscrenAPI.enter();
+				}
+			}
+		}, {
+			name: 'preloader',
+			option: 'preloaderEl',
+			onInit: function onInit(el) {
+				_loadingIndicator = el;
+			}
+		}];
+
+		var _setupUIElements = function _setupUIElements() {
+			var item, classAttr, uiElement;
+
+			var loopThroughChildElements = function loopThroughChildElements(sChildren) {
+				if (!sChildren) {
+					return;
+				}
+
+				var l = sChildren.length;
+				for (var i = 0; i < l; i++) {
+					item = sChildren[i];
+					classAttr = item.className;
+
+					for (var a = 0; a < _uiElements.length; a++) {
+						uiElement = _uiElements[a];
+
+						if (classAttr.indexOf('pswp__' + uiElement.name) > -1) {
+
+							if (_options[uiElement.option]) {
+
+								framework.removeClass(item, 'pswp__element--disabled');
+								if (uiElement.onInit) {
+									uiElement.onInit(item);
+								}
+							} else {
+								framework.addClass(item, 'pswp__element--disabled');
+							}
+						}
+					}
+				}
+			};
+			loopThroughChildElements(_controls.children);
+
+			var topBar = framework.getChildByClass(_controls, 'pswp__top-bar');
+			if (topBar) {
+				loopThroughChildElements(topBar.children);
+			}
+		};
+
+		ui.init = function () {
+			framework.extend(pswp.options, _defaultUIOptions, true);
+
+			_options = pswp.options;
+
+			_controls = framework.getChildByClass(pswp.scrollWrap, 'pswp__ui');
+
+			_listen = pswp.listen;
+
+			_setupHidingControlsDuringGestures();
+
+			_listen('beforeChange', ui.update);
+
+			_listen('doubleTap', function (point) {
+				var initialZoomLevel = pswp.currItem.initialZoomLevel;
+				if (pswp.getZoomLevel() !== initialZoomLevel) {
+					pswp.zoomTo(initialZoomLevel, point, 333);
+				} else {
+					pswp.zoomTo(_options.getDoubleTapZoom(false, pswp.currItem), point, 333);
+				}
+			});
+
+			_listen('preventDragEvent', function (e, isDown, preventObj) {
+				var t = e.target || e.srcElement;
+				if (t && t.getAttribute('class') && e.type.indexOf('mouse') > -1 && (t.getAttribute('class').indexOf('__caption') > 0 || /(SMALL|STRONG|EM)/i.test(t.tagName))) {
+					preventObj.prevent = false;
+				}
+			});
+
+			_listen('bindEvents', function () {
+				framework.bind(_controls, 'pswpTap click', _onControlsTap);
+				framework.bind(pswp.scrollWrap, 'pswpTap', ui.onGlobalTap);
+
+				if (!pswp.likelyTouchDevice) {
+					framework.bind(pswp.scrollWrap, 'mouseover', ui.onMouseOver);
+				}
+			});
+
+			_listen('unbindEvents', function () {
+				if (!_shareModalHidden) {
+					_toggleShareModal();
+				}
+
+				if (_idleInterval) {
+					clearInterval(_idleInterval);
+				}
+				framework.unbind(document, 'mouseout', _onMouseLeaveWindow);
+				framework.unbind(document, 'mousemove', _onIdleMouseMove);
+				framework.unbind(_controls, 'pswpTap click', _onControlsTap);
+				framework.unbind(pswp.scrollWrap, 'pswpTap', ui.onGlobalTap);
+				framework.unbind(pswp.scrollWrap, 'mouseover', ui.onMouseOver);
+
+				if (_fullscrenAPI) {
+					framework.unbind(document, _fullscrenAPI.eventK, ui.updateFullscreen);
+					if (_fullscrenAPI.isFullscreen()) {
+						_options.hideAnimationDuration = 0;
+						_fullscrenAPI.exit();
+					}
+					_fullscrenAPI = null;
+				}
+			});
+
+			_listen('destroy', function () {
+				if (_options.captionEl) {
+					if (_fakeCaptionContainer) {
+						_controls.removeChild(_fakeCaptionContainer);
+					}
+					framework.removeClass(_captionContainer, 'pswp__caption--empty');
+				}
+
+				if (_shareModal) {
+					_shareModal.children[0].onclick = null;
+				}
+				framework.removeClass(_controls, 'pswp__ui--over-close');
+				framework.addClass(_controls, 'pswp__ui--hidden');
+				ui.setIdle(false);
+			});
+
+			if (!_options.showAnimationDuration) {
+				framework.removeClass(_controls, 'pswp__ui--hidden');
+			}
+			_listen('initialZoomIn', function () {
+				if (_options.showAnimationDuration) {
+					framework.removeClass(_controls, 'pswp__ui--hidden');
+				}
+			});
+			_listen('initialZoomOut', function () {
+				framework.addClass(_controls, 'pswp__ui--hidden');
+			});
+
+			_listen('parseVerticalMargin', _applyNavBarGaps);
+
+			_setupUIElements();
+
+			if (_options.shareEl && _shareButton && _shareModal) {
+				_shareModalHidden = true;
+			}
+
+			_countNumItems();
+
+			_setupIdle();
+
+			_setupFullscreenAPI();
+
+			_setupLoadingIndicator();
+		};
+
+		ui.setIdle = function (isIdle) {
+			_isIdle = isIdle;
+			_togglePswpClass(_controls, 'ui--idle', isIdle);
+		};
+
+		ui.update = function () {
+			if (_controlsVisible && pswp.currItem) {
+
+				ui.updateIndexIndicator();
+
+				if (_options.captionEl) {
+					_options.addCaptionHTMLFn(pswp.currItem, _captionContainer);
+
+					_togglePswpClass(_captionContainer, 'caption--empty', !pswp.currItem.title);
+				}
+
+				_overlayUIUpdated = true;
+			} else {
+				_overlayUIUpdated = false;
+			}
+
+			if (!_shareModalHidden) {
+				_toggleShareModal();
+			}
+
+			_countNumItems();
+		};
+
+		ui.updateFullscreen = function (e) {
+
+			if (e) {
+				setTimeout(function () {
+					pswp.setScrollOffset(0, framework.getScrollY());
+				}, 50);
+			}
+
+			framework[(_fullscrenAPI.isFullscreen() ? 'add' : 'remove') + 'Class'](pswp.template, 'pswp--fs');
+		};
+
+		ui.updateIndexIndicator = function () {
+			if (_options.counterEl) {
+				_indexIndicator.innerHTML = pswp.getCurrentIndex() + 1 + _options.indexIndicatorSep + _options.getNumItemsFn();
+			}
+		};
+
+		ui.onGlobalTap = function (e) {
+			e = e || window.event;
+			var target = e.target || e.srcElement;
+
+			if (_blockControlsTap) {
+				return;
+			}
+
+			if (e.detail && e.detail.pointerType === 'mouse') {
+				if (_hasCloseClass(target)) {
+					pswp.close();
+					return;
+				}
+
+				if (framework.hasClass(target, 'pswp__img')) {
+					if (pswp.getZoomLevel() === 1 && pswp.getZoomLevel() <= pswp.currItem.fitRatio) {
+						if (_options.clickToCloseNonZoomable) {
+							pswp.close();
+						}
+					} else {
+						pswp.toggleDesktopZoom(e.detail.releasePoint);
+					}
+				}
+			} else {
+				if (_options.tapToToggleControls) {
+					if (_controlsVisible) {
+						ui.hideControls();
+					} else {
+						ui.showControls();
+					}
+				}
+
+				if (_options.tapToClose && (framework.hasClass(target, 'pswp__img') || _hasCloseClass(target))) {
+					pswp.close();
+					return;
+				}
+			}
+		};
+		ui.onMouseOver = function (e) {
+			e = e || window.event;
+			var target = e.target || e.srcElement;
+
+			_togglePswpClass(_controls, 'ui--over-close', _hasCloseClass(target));
+		};
+
+		ui.hideControls = function () {
+			framework.addClass(_controls, 'pswp__ui--hidden');
+			_controlsVisible = false;
+		};
+
+		ui.showControls = function () {
+			_controlsVisible = true;
+			if (!_overlayUIUpdated) {
+				ui.update();
+			}
+			framework.removeClass(_controls, 'pswp__ui--hidden');
+		};
+
+		ui.supportsFullscreen = function () {
+			var d = document;
+			return !!(d.exitFullscreen || d.mozCancelFullScreen || d.webkitExitFullscreen || d.msExitFullscreen);
+		};
+
+		ui.getFullscreenAPI = function () {
+			var dE = document.documentElement,
+			    api,
+			    tF = 'fullscreenchange';
+
+			if (dE.requestFullscreen) {
+				api = {
+					enterK: 'requestFullscreen',
+					exitK: 'exitFullscreen',
+					elementK: 'fullscreenElement',
+					eventK: tF
+				};
+			} else if (dE.mozRequestFullScreen) {
+				api = {
+					enterK: 'mozRequestFullScreen',
+					exitK: 'mozCancelFullScreen',
+					elementK: 'mozFullScreenElement',
+					eventK: 'moz' + tF
+				};
+			} else if (dE.webkitRequestFullscreen) {
+				api = {
+					enterK: 'webkitRequestFullscreen',
+					exitK: 'webkitExitFullscreen',
+					elementK: 'webkitFullscreenElement',
+					eventK: 'webkit' + tF
+				};
+			} else if (dE.msRequestFullscreen) {
+				api = {
+					enterK: 'msRequestFullscreen',
+					exitK: 'msExitFullscreen',
+					elementK: 'msFullscreenElement',
+					eventK: 'MSFullscreenChange'
+				};
+			}
+
+			if (api) {
+				api.enter = function () {
+					_initalCloseOnScrollValue = _options.closeOnScroll;
+					_options.closeOnScroll = false;
+
+					if (this.enterK === 'webkitRequestFullscreen') {
+						pswp.template[this.enterK](Element.ALLOW_KEYBOARD_INPUT);
+					} else {
+						return pswp.template[this.enterK]();
+					}
+				};
+				api.exit = function () {
+					_options.closeOnScroll = _initalCloseOnScrollValue;
+
+					return document[this.exitK]();
+				};
+				api.isFullscreen = function () {
+					return document[this.elementK];
+				};
+			}
+
+			return api;
+		};
+	};
+	return PhotoSwipeUI_Default;
+});
+
+/***/ }),
+/* 93 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+exports.__esModule = true;
+
+var _preact = __webpack_require__(3);
+
+var _lodash = __webpack_require__(4);
+
+var _lodash2 = _interopRequireDefault(_lodash);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var PreactSlide = function (_Component) {
+    _inherits(PreactSlide, _Component);
+
+    function PreactSlide() {
+        _classCallCheck(this, PreactSlide);
+
+        return _possibleConstructorReturn(this, _Component.call(this));
+    }
+
+    PreactSlide.prototype.render = function render(_ref) {
+        var children = _ref.children;
+
+        console.log(children);
+
+        return (0, _preact.h)(
+            'div',
+            { className: 'wrap', style: 'overflow:hidden' },
+            children
+        );
+    };
+
+    return PreactSlide;
+}(_preact.Component);
+
+exports.default = PreactSlide;
+
+/***/ }),
+/* 94 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function($) {
+
+var _ajax = __webpack_require__(25);
 
 var _ajax2 = _interopRequireDefault(_ajax);
 
@@ -50633,7 +55500,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 106 */
+/* 95 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -50677,7 +55544,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 107 */
+/* 96 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -50773,7 +55640,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0), __webpack_require__(0)))
 
 /***/ }),
-/* 108 */
+/* 97 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -50822,19 +55689,19 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 109 */
+/* 98 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 /* WEBPACK VAR INJECTION */(function($) {
 
-var _foundation = __webpack_require__(110);
+var _foundation = __webpack_require__(99);
 
 var _foundationUtil = __webpack_require__(1);
 
-var _foundationUtil2 = __webpack_require__(111);
+var _foundationUtil2 = __webpack_require__(100);
 
-var _foundationUtil3 = __webpack_require__(37);
+var _foundationUtil3 = __webpack_require__(29);
 
 var _foundationUtil4 = __webpack_require__(13);
 
@@ -50842,17 +55709,17 @@ var _foundationUtil5 = __webpack_require__(8);
 
 var _foundationUtil6 = __webpack_require__(14);
 
-var _foundation2 = __webpack_require__(39);
+var _foundation2 = __webpack_require__(31);
 
-var _foundation3 = __webpack_require__(112);
+var _foundation3 = __webpack_require__(101);
 
-var _foundation4 = __webpack_require__(113);
+var _foundation4 = __webpack_require__(102);
 
-var _foundation5 = __webpack_require__(40);
+var _foundation5 = __webpack_require__(32);
 
-var _foundation6 = __webpack_require__(114);
+var _foundation6 = __webpack_require__(103);
 
-var _foundation7 = __webpack_require__(115);
+var _foundation7 = __webpack_require__(104);
 
 (function () {
     _foundation.Foundation.addToJquery($);
@@ -50883,7 +55750,7 @@ var _foundation7 = __webpack_require__(115);
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 110 */
+/* 99 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -51161,7 +56028,7 @@ function hyphenate(str) {
 exports.Foundation = Foundation;
 
 /***/ }),
-/* 111 */
+/* 100 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -51360,7 +56227,7 @@ function GetExplicitOffsets(element, anchor, position, alignment, vOffset, hOffs
 exports.Box = Box;
 
 /***/ }),
-/* 112 */
+/* 101 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -51379,7 +56246,7 @@ var _foundationUtil2 = __webpack_require__(8);
 
 var _foundationUtil3 = __webpack_require__(1);
 
-var _foundation = __webpack_require__(4);
+var _foundation = __webpack_require__(5);
 
 var _foundationUtil4 = __webpack_require__(14);
 
@@ -51757,7 +56624,7 @@ OffCanvas.defaults = {
 exports.OffCanvas = OffCanvas;
 
 /***/ }),
-/* 113 */
+/* 102 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -51774,7 +56641,7 @@ var _foundationUtil = __webpack_require__(1);
 
 var _foundationUtil2 = __webpack_require__(8);
 
-var _foundation = __webpack_require__(4);
+var _foundation = __webpack_require__(5);
 
 var _foundationUtil3 = __webpack_require__(14);
 
@@ -52139,7 +57006,7 @@ function emCalc(em) {
 exports.Sticky = Sticky;
 
 /***/ }),
-/* 114 */
+/* 103 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -52152,9 +57019,9 @@ var _jquery = __webpack_require__(0);
 
 var _jquery2 = _interopRequireDefault(_jquery);
 
-var _foundationUtil = __webpack_require__(38);
+var _foundationUtil = __webpack_require__(30);
 
-var _foundation = __webpack_require__(4);
+var _foundation = __webpack_require__(5);
 
 var _foundationUtil2 = __webpack_require__(14);
 
@@ -52264,7 +57131,7 @@ Toggler.defaults = {
 exports.Toggler = Toggler;
 
 /***/ }),
-/* 115 */
+/* 104 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -52281,11 +57148,11 @@ var _foundationUtil = __webpack_require__(8);
 
 var _foundationUtil2 = __webpack_require__(1);
 
-var _foundation = __webpack_require__(4);
+var _foundation = __webpack_require__(5);
 
-var _foundation2 = __webpack_require__(39);
+var _foundation2 = __webpack_require__(31);
 
-var _foundation3 = __webpack_require__(40);
+var _foundation3 = __webpack_require__(32);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -52492,7 +57359,7 @@ ResponsiveAccordionTabs.defaults = {};
 exports.ResponsiveAccordionTabs = ResponsiveAccordionTabs;
 
 /***/ }),
-/* 116 */
+/* 105 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -52759,7 +57626,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 })();
 
 /***/ }),
-/* 117 */
+/* 106 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -52770,7 +57637,7 @@ exports.default = foundationRegisterCustomEvents;
 function foundationRegisterCustomEvents() {}
 
 /***/ }),
-/* 118 */
+/* 107 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -52962,7 +57829,7 @@ exports.default = DepartmentMenu;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 119 */
+/* 108 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -53048,7 +57915,7 @@ exports.default = DottedText;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 120 */
+/* 109 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -53056,7 +57923,7 @@ exports.default = DottedText;
 
 exports.__esModule = true;
 
-var _storage = __webpack_require__(28);
+var _storage = __webpack_require__(27);
 
 var _storage2 = _interopRequireDefault(_storage);
 
@@ -53155,7 +58022,7 @@ exports.default = CategoryViewType;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 121 */
+/* 110 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -53163,7 +58030,7 @@ exports.default = CategoryViewType;
 
 exports.__esModule = true;
 
-__webpack_require__(122);
+__webpack_require__(111);
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -53403,7 +58270,7 @@ exports.default = LazyImageLoad;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 122 */
+/* 111 */
 /***/ (function(module, exports) {
 
 /**
@@ -54126,7 +58993,7 @@ window.IntersectionObserverEntry = IntersectionObserverEntry;
 
 
 /***/ }),
-/* 123 */
+/* 112 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -54134,15 +59001,15 @@ window.IntersectionObserverEntry = IntersectionObserverEntry;
 
 exports.__esModule = true;
 
-var _formSerialize = __webpack_require__(124);
+var _formSerialize = __webpack_require__(113);
 
 var _formSerialize2 = _interopRequireDefault(_formSerialize);
 
-var _deduplicate = __webpack_require__(125);
+var _deduplicate = __webpack_require__(114);
 
 var _deduplicate2 = _interopRequireDefault(_deduplicate);
 
-var _objToUri = __webpack_require__(126);
+var _objToUri = __webpack_require__(115);
 
 var _objToUri2 = _interopRequireDefault(_objToUri);
 
@@ -54281,7 +59148,7 @@ exports.default = CatalogFilter;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 124 */
+/* 113 */
 /***/ (function(module, exports) {
 
 // get successful control from form and assemble into object
@@ -54547,7 +59414,7 @@ module.exports = serialize;
 
 
 /***/ }),
-/* 125 */
+/* 114 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -54556,7 +59423,7 @@ module.exports = serialize;
 exports.__esModule = true;
 exports.default = dedup;
 
-var _isArray = __webpack_require__(41);
+var _isArray = __webpack_require__(33);
 
 var _isArray2 = _interopRequireDefault(_isArray);
 
@@ -54600,7 +59467,7 @@ function dedup(val) {
 }
 
 /***/ }),
-/* 126 */
+/* 115 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -54625,7 +59492,7 @@ function objToUri(obj, prefix) {
 }
 
 /***/ }),
-/* 127 */
+/* 116 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -54633,7 +59500,7 @@ function objToUri(obj, prefix) {
 
 exports.__esModule = true;
 
-var _lodash = __webpack_require__(6);
+var _lodash = __webpack_require__(4);
 
 var _lodash2 = _interopRequireDefault(_lodash);
 
@@ -54738,7 +59605,7 @@ var FilterPriceSlider = function () {
 exports.default = FilterPriceSlider;
 
 /***/ }),
-/* 128 */
+/* 117 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -54841,7 +59708,7 @@ exports.default = SearchSuggestion;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 129 */
+/* 118 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -54851,7 +59718,7 @@ exports.__esModule = true;
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
-var _extend = __webpack_require__(130);
+var _extend = __webpack_require__(119);
 
 var _extend2 = _interopRequireDefault(_extend);
 
@@ -55020,19 +59887,19 @@ exports.default = Loader;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 130 */
+/* 119 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(131);
+module.exports = __webpack_require__(120);
 
 
 /***/ }),
-/* 131 */
+/* 120 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var copyObject = __webpack_require__(132),
-    createAssigner = __webpack_require__(140),
-    keysIn = __webpack_require__(149);
+var copyObject = __webpack_require__(121),
+    createAssigner = __webpack_require__(129),
+    keysIn = __webpack_require__(138);
 
 /**
  * This method is like `_.assign` except that it iterates over own and
@@ -55073,11 +59940,11 @@ module.exports = assignIn;
 
 
 /***/ }),
-/* 132 */
+/* 121 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var assignValue = __webpack_require__(133),
-    baseAssignValue = __webpack_require__(42);
+var assignValue = __webpack_require__(122),
+    baseAssignValue = __webpack_require__(34);
 
 /**
  * Copies properties of `source` to `object`.
@@ -55119,11 +59986,11 @@ module.exports = copyObject;
 
 
 /***/ }),
-/* 133 */
+/* 122 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var baseAssignValue = __webpack_require__(42),
-    eq = __webpack_require__(45);
+var baseAssignValue = __webpack_require__(34),
+    eq = __webpack_require__(37);
 
 /** Used for built-in method references. */
 var objectProto = Object.prototype;
@@ -55153,11 +60020,11 @@ module.exports = assignValue;
 
 
 /***/ }),
-/* 134 */
+/* 123 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var baseIsNative = __webpack_require__(135),
-    getValue = __webpack_require__(139);
+var baseIsNative = __webpack_require__(124),
+    getValue = __webpack_require__(128);
 
 /**
  * Gets the native function at `key` of `object`.
@@ -55176,13 +60043,13 @@ module.exports = getNative;
 
 
 /***/ }),
-/* 135 */
+/* 124 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var isFunction = __webpack_require__(44),
-    isMasked = __webpack_require__(136),
+var isFunction = __webpack_require__(36),
+    isMasked = __webpack_require__(125),
     isObject = __webpack_require__(9),
-    toSource = __webpack_require__(138);
+    toSource = __webpack_require__(127);
 
 /**
  * Used to match `RegExp`
@@ -55229,10 +60096,10 @@ module.exports = baseIsNative;
 
 
 /***/ }),
-/* 136 */
+/* 125 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var coreJsData = __webpack_require__(137);
+var coreJsData = __webpack_require__(126);
 
 /** Used to detect methods masquerading as native. */
 var maskSrcKey = (function() {
@@ -55255,7 +60122,7 @@ module.exports = isMasked;
 
 
 /***/ }),
-/* 137 */
+/* 126 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var root = __webpack_require__(16);
@@ -55267,7 +60134,7 @@ module.exports = coreJsData;
 
 
 /***/ }),
-/* 138 */
+/* 127 */
 /***/ (function(module, exports) {
 
 /** Used for built-in method references. */
@@ -55299,7 +60166,7 @@ module.exports = toSource;
 
 
 /***/ }),
-/* 139 */
+/* 128 */
 /***/ (function(module, exports) {
 
 /**
@@ -55318,11 +60185,11 @@ module.exports = getValue;
 
 
 /***/ }),
-/* 140 */
+/* 129 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var baseRest = __webpack_require__(141),
-    isIterateeCall = __webpack_require__(148);
+var baseRest = __webpack_require__(130),
+    isIterateeCall = __webpack_require__(137);
 
 /**
  * Creates a function like `_.assign`.
@@ -55361,12 +60228,12 @@ module.exports = createAssigner;
 
 
 /***/ }),
-/* 141 */
+/* 130 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var identity = __webpack_require__(46),
-    overRest = __webpack_require__(142),
-    setToString = __webpack_require__(144);
+var identity = __webpack_require__(38),
+    overRest = __webpack_require__(131),
+    setToString = __webpack_require__(133);
 
 /**
  * The base implementation of `_.rest` which doesn't validate or coerce arguments.
@@ -55384,10 +60251,10 @@ module.exports = baseRest;
 
 
 /***/ }),
-/* 142 */
+/* 131 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var apply = __webpack_require__(143);
+var apply = __webpack_require__(132);
 
 /* Built-in method references for those with the same name as other `lodash` methods. */
 var nativeMax = Math.max;
@@ -55426,7 +60293,7 @@ module.exports = overRest;
 
 
 /***/ }),
-/* 143 */
+/* 132 */
 /***/ (function(module, exports) {
 
 /**
@@ -55453,11 +60320,11 @@ module.exports = apply;
 
 
 /***/ }),
-/* 144 */
+/* 133 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var baseSetToString = __webpack_require__(145),
-    shortOut = __webpack_require__(147);
+var baseSetToString = __webpack_require__(134),
+    shortOut = __webpack_require__(136);
 
 /**
  * Sets the `toString` method of `func` to return `string`.
@@ -55473,12 +60340,12 @@ module.exports = setToString;
 
 
 /***/ }),
-/* 145 */
+/* 134 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var constant = __webpack_require__(146),
-    defineProperty = __webpack_require__(43),
-    identity = __webpack_require__(46);
+var constant = __webpack_require__(135),
+    defineProperty = __webpack_require__(35),
+    identity = __webpack_require__(38);
 
 /**
  * The base implementation of `setToString` without support for hot loop shorting.
@@ -55501,7 +60368,7 @@ module.exports = baseSetToString;
 
 
 /***/ }),
-/* 146 */
+/* 135 */
 /***/ (function(module, exports) {
 
 /**
@@ -55533,7 +60400,7 @@ module.exports = constant;
 
 
 /***/ }),
-/* 147 */
+/* 136 */
 /***/ (function(module, exports) {
 
 /** Used to detect hot functions by number of calls within a span of milliseconds. */
@@ -55576,12 +60443,12 @@ module.exports = shortOut;
 
 
 /***/ }),
-/* 148 */
+/* 137 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var eq = __webpack_require__(45),
-    isArrayLike = __webpack_require__(47),
-    isIndex = __webpack_require__(49),
+var eq = __webpack_require__(37),
+    isArrayLike = __webpack_require__(39),
+    isIndex = __webpack_require__(41),
     isObject = __webpack_require__(9);
 
 /**
@@ -55612,12 +60479,12 @@ module.exports = isIterateeCall;
 
 
 /***/ }),
-/* 149 */
+/* 138 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var arrayLikeKeys = __webpack_require__(150),
-    baseKeysIn = __webpack_require__(160),
-    isArrayLike = __webpack_require__(47);
+var arrayLikeKeys = __webpack_require__(139),
+    baseKeysIn = __webpack_require__(149),
+    isArrayLike = __webpack_require__(39);
 
 /**
  * Creates an array of the own and inherited enumerable property names of `object`.
@@ -55650,15 +60517,15 @@ module.exports = keysIn;
 
 
 /***/ }),
-/* 150 */
+/* 139 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var baseTimes = __webpack_require__(151),
-    isArguments = __webpack_require__(152),
-    isArray = __webpack_require__(41),
-    isBuffer = __webpack_require__(154),
-    isIndex = __webpack_require__(49),
-    isTypedArray = __webpack_require__(156);
+var baseTimes = __webpack_require__(140),
+    isArguments = __webpack_require__(141),
+    isArray = __webpack_require__(33),
+    isBuffer = __webpack_require__(143),
+    isIndex = __webpack_require__(41),
+    isTypedArray = __webpack_require__(145);
 
 /** Used for built-in method references. */
 var objectProto = Object.prototype;
@@ -55705,7 +60572,7 @@ module.exports = arrayLikeKeys;
 
 
 /***/ }),
-/* 151 */
+/* 140 */
 /***/ (function(module, exports) {
 
 /**
@@ -55731,10 +60598,10 @@ module.exports = baseTimes;
 
 
 /***/ }),
-/* 152 */
+/* 141 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var baseIsArguments = __webpack_require__(153),
+var baseIsArguments = __webpack_require__(142),
     isObjectLike = __webpack_require__(12);
 
 /** Used for built-in method references. */
@@ -55773,7 +60640,7 @@ module.exports = isArguments;
 
 
 /***/ }),
-/* 153 */
+/* 142 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var baseGetTag = __webpack_require__(11),
@@ -55797,11 +60664,11 @@ module.exports = baseIsArguments;
 
 
 /***/ }),
-/* 154 */
+/* 143 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(module) {var root = __webpack_require__(16),
-    stubFalse = __webpack_require__(155);
+    stubFalse = __webpack_require__(144);
 
 /** Detect free variable `exports`. */
 var freeExports = typeof exports == 'object' && exports && !exports.nodeType && exports;
@@ -55839,10 +60706,10 @@ var isBuffer = nativeIsBuffer || stubFalse;
 
 module.exports = isBuffer;
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)(module)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(6)(module)))
 
 /***/ }),
-/* 155 */
+/* 144 */
 /***/ (function(module, exports) {
 
 /**
@@ -55866,12 +60733,12 @@ module.exports = stubFalse;
 
 
 /***/ }),
-/* 156 */
+/* 145 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var baseIsTypedArray = __webpack_require__(157),
-    baseUnary = __webpack_require__(158),
-    nodeUtil = __webpack_require__(159);
+var baseIsTypedArray = __webpack_require__(146),
+    baseUnary = __webpack_require__(147),
+    nodeUtil = __webpack_require__(148);
 
 /* Node.js helper references. */
 var nodeIsTypedArray = nodeUtil && nodeUtil.isTypedArray;
@@ -55899,11 +60766,11 @@ module.exports = isTypedArray;
 
 
 /***/ }),
-/* 157 */
+/* 146 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var baseGetTag = __webpack_require__(11),
-    isLength = __webpack_require__(48),
+    isLength = __webpack_require__(40),
     isObjectLike = __webpack_require__(12);
 
 /** `Object#toString` result references. */
@@ -55965,7 +60832,7 @@ module.exports = baseIsTypedArray;
 
 
 /***/ }),
-/* 158 */
+/* 147 */
 /***/ (function(module, exports) {
 
 /**
@@ -55985,10 +60852,10 @@ module.exports = baseUnary;
 
 
 /***/ }),
-/* 159 */
+/* 148 */
 /***/ (function(module, exports, __webpack_require__) {
 
-/* WEBPACK VAR INJECTION */(function(module) {var freeGlobal = __webpack_require__(22);
+/* WEBPACK VAR INJECTION */(function(module) {var freeGlobal = __webpack_require__(21);
 
 /** Detect free variable `exports`. */
 var freeExports = typeof exports == 'object' && exports && !exports.nodeType && exports;
@@ -56011,15 +60878,15 @@ var nodeUtil = (function() {
 
 module.exports = nodeUtil;
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)(module)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(6)(module)))
 
 /***/ }),
-/* 160 */
+/* 149 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var isObject = __webpack_require__(9),
-    isPrototype = __webpack_require__(161),
-    nativeKeysIn = __webpack_require__(162);
+    isPrototype = __webpack_require__(150),
+    nativeKeysIn = __webpack_require__(151);
 
 /** Used for built-in method references. */
 var objectProto = Object.prototype;
@@ -56053,7 +60920,7 @@ module.exports = baseKeysIn;
 
 
 /***/ }),
-/* 161 */
+/* 150 */
 /***/ (function(module, exports) {
 
 /** Used for built-in method references. */
@@ -56077,7 +60944,7 @@ module.exports = isPrototype;
 
 
 /***/ }),
-/* 162 */
+/* 151 */
 /***/ (function(module, exports) {
 
 /**
@@ -56103,7 +60970,7 @@ module.exports = nativeKeysIn;
 
 
 /***/ }),
-/* 163 */
+/* 152 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -56116,7 +60983,7 @@ function isTouch() {
 }
 
 /***/ }),
-/* 164 */
+/* 153 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -56139,7 +61006,7 @@ function isMedia(name) {
 }
 
 /***/ }),
-/* 165 */
+/* 154 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";

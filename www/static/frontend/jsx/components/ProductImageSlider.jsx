@@ -2,9 +2,8 @@ import {h, render, Component} from "preact";
 import renderToStringr from 'preact-render-to-string';
 import { videoLinkToObject } from "../utils/video";
 import PhotoSwipe from "./PhotoSwipeContainer";
-import ReactSlyWrapper from 'react-sly-wrapper'
 import _ from 'lodash';
-import Swiper from 'react-id-swiper';
+import PreactSlide from "./PreactSlide";
 
 export default class ProductImageSlider extends Component
 {
@@ -277,19 +276,14 @@ export default class ProductImageSlider extends Component
         <div className="images-slider">
             <div className="slider-thumbs">
                 <a href="#" className="prev" onClick={(e)=>{this.prevHndl(e)}}></a>
-                <div className="wrap" ref={(el) => this._box = el }>
-                    <ReactSlyWrapper options={
-                        activatePageOn: 'click',
-                        speed: 300,
-                        mouseDragging: 1,
-                        touchDragging: 1,
-                        smart: 1
-                    }>
-                        <div className="frame">
-                            {this.renderThumbs()}
-                        </div>
-                    </ReactSlyWrapper>
-                </div>
+                <PreactSlide options={{
+                    speed: 300,
+                    mouseDragging: 1,
+                    touchDragging: 1,
+                    smart: 1
+                }}>
+                        {this.renderThumbs()}
+                </PreactSlide>
                 <a href="#" className="next" onClick={(e)=>{this.nextHndl(e)}}></a>
             </div>
             <div className="slider-detail">
