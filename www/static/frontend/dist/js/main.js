@@ -51637,6 +51637,9 @@ function findVideoId(link, forceVideo) {
     } else if (href.host.match(/vimeo\.com/)) {
         id = href.pathname.replace(/^\/(video\/)?/, '').replace(/\/.*/, '');
         type = 'vimeo';
+    } else if (href.host.match(/salsify\.com/)) {
+        id = href.pathname.replace(/^\/(video\/)?/, '').replace(/\/.*/, '');
+        type = 'salsify';
     }
 
     if ((!id || !type) && forceVideo) {
@@ -51656,6 +51659,15 @@ function getVideoThumbs(videoFrame, callback) {
 
         thumb = base_uri + '/default.jpg';
         img = base_uri + '/hqdefault.jpg';
+    } else if (videoFrame.type === 'salsify') {
+        var href = videoFrame.href;
+
+        if (href.indexOf('?')) {
+            href = href.split('?')[0];
+        }
+
+        var index = href.lastIndexOf('.');
+        thumb = img = href.substring(0, index) + 'jpg';
     } else if (videoFrame.type === 'vimeo') {
         $.ajax({
             url: getProtocol() + 'vimeo.com/api/v2/video/' + videoFrame.id + '.json',
