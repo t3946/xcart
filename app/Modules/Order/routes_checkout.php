@@ -23,4 +23,19 @@ return [
         'target' => [CheckoutController::class, 'actionPayment'],
         'name' => 'payment'
     ],
+    [
+        'route' => '/complete/',
+        'target' => [CheckoutController::class, 'actionComplete'],
+        'name' => 'complete'
+    ],
+    [
+        'route' => '/invoice/',
+        'target' => [CheckoutController::class, 'actionInvoice'],
+        'name' => 'invoice'
+    ],
+    [
+        'route' => '/invoicepdf/',
+        'target' => [CheckoutController::class, 'actionInvoicePdf'],
+        'name' => 'invoicepdf'
+    ],
 ];
