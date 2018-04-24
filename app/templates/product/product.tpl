@@ -54,9 +54,9 @@
                     {if $model->isGroupRoot()}
                         {set $images = []}
 
-                        {set $childrens = $item->getFrontendChilds()->limit(4)->all()}
+                        {set $childrens = $model->getFrontendChilds()->limit(4)->all()}
                         {foreach $childrens as $child}
-                            {set $images[] = $child->images->orders(['orderby'])->limit(1)->get()}
+                            {set $images[] = $child->images->order(['orderby'])->limit(1)->get()}
                         {/foreach}
                     {else}
                         {set $images = $model->images->order(['orderby'])->all()}
