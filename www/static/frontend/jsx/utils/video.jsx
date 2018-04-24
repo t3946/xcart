@@ -6,7 +6,6 @@ export function findVideoId (link, forceVideo)
     let id, type;
 
     if (href.host.match(/youtube\.com/) && href.search) {
-        //.log();
         id = href.search.split('v=')[1];
 
         if (id) {

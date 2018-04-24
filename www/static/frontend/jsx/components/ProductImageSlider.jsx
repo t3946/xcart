@@ -16,6 +16,7 @@ export default class ProductImageSlider extends Component
         }
 
         this.preparedItems = null;
+        this.refs = {};
 
         this.onResize = _.throttle(this.onResize, 200);
 
@@ -164,10 +165,9 @@ export default class ProductImageSlider extends Component
 
             if (item.type === 'image') {
                 return (
-                    <div className={"slide type-image" + is_active} key={"image.thumb." + n} onClick={(e)=>{this.clickHndl(e, n, item)}}
-                         // style={"background-image: url("+item.src+")"}
+                    <div className={"slide type-image" + is_active} key={"image.thumb." + n} onClick={e=>{this.clickHndl(e, n, item)}}
+                         style={"background-image: url("+item.src+")"}
                     >
-                        <img src={item.src} alt=""/>
                     </div>
                 );
             }
@@ -180,14 +180,14 @@ export default class ProductImageSlider extends Component
                         <div className={"slide type-video" + is_active}
                              key={"video.thumb." + n}
                              onClick={(e)=>{this.clickHndl(e, n, item)}}
+                             style={"background-image: url("+src+")"}
                         >
-                            <img src={src} alt=""/>
                         </div>
                     );
                 }
                 else {
                     return (
-                        <div className={"slide type-video" + is_active} key={"video.thumb." + n} onClick={(e)=>{this.clickHndl(e, n, item)}}>
+                        <div className={"slide type-video" + is_active} key={"video.thumb." + n} onClick={e=>{this.clickHndl(e, n, item)}}>
                             <span>No image</span>
                         </div>
                     );
@@ -196,7 +196,7 @@ export default class ProductImageSlider extends Component
 
             if (item.type === 'html') {
                 return (
-                    <div className={"slide type-html" + is_active} key={"html.thumb." + n} onClick={(e)=>{this.clickHndl(e, n, item)}}>
+                    <div className={"slide type-html" + is_active} key={"html.thumb." + n} onClick={e=>{this.clickHndl(e, n, item)}}>
                         HTML
                     </div>
                 );
@@ -244,7 +244,6 @@ export default class ProductImageSlider extends Component
                 if (item.type === 'image') {
                     return (
                         <div className="slide type-image" key={key} onClick={(e)=>{this.zoomHndl(e, item)}}>
-                            {/*<img src={item.src} alt={item.alt} title={item.title} className="" itemprop="image"/>*/}
                             {this.renderImage(item.src)}
                         </div>
                     );
@@ -277,7 +276,7 @@ export default class ProductImageSlider extends Component
         return (
         <div className="images-slider">
             <div className="slider-thumbs">
-                <a href="#" className="prev" onClick={(e)=>{this.prevHndl(e)}}></a>
+                <a href="#" className="prev" onClick={e=>{this.prevHndl(e)}} ref={el => this.refs.prev = el }></a>
                 <PreactSlySlide options={{
                     horizontal: 0,
                     speed: 300,
@@ -289,7 +288,7 @@ export default class ProductImageSlider extends Component
                         {this.renderThumbs()}
                     </div>
                 </PreactSlySlide>
-                <a href="#" className="next" onClick={(e)=>{this.nextHndl(e)}}></a>
+                <a href="#" className="next" onClick={e=>{this.nextHndl(e)}} ref={el => this.refs.next = el }></a>
             </div>
             <div className="slider-detail">
                 <div className="wrap">

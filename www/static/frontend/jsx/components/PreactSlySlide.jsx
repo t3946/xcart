@@ -5,8 +5,10 @@ export default class PreactSlySlide extends Component
 {
     constructor(...args) {
         super(...args);
+
         this.refs = {};
         this['$refs'] = {};
+
         this.options = _.extend({
             horizontal: 1,
             itemNav: 'basic',
@@ -14,19 +16,30 @@ export default class PreactSlySlide extends Component
             mouseDragging: 1,
             touchDragging: 1,
             activatePageOn: 'click'
-        }, args[0].options||{});
+        }, args[0].options || {});
     }
 
     componentDidMount() {
-
-        console.log(this.options);
-
         this.$refs.wrap = $(this.refs.wrap);
         this.$refs.wrap.sly(this.options);
+
+        window.addEventListener('resize', this.onResize.bind(this));
+    }
+
+    componentWillUnmount() {
+        window.removeEventListener('resize', this.onResize)
+    }
+
+    slyReload() {
+        this.$refs.wrap.sly('reload');
+    }
+
+    onResize() {
+        _.throttle(this.slyReload, 200);
     }
 
     render({children}) {
-        return <div className={'wrap'} ref={(el) => this.refs.wrap = el }>
+        return <div className={'wrap'} ref={el => this.refs.wrap = el }>
             {children}
         </div>;
     }

@@ -28127,14 +28127,6 @@ var _lodash = __webpack_require__(6);
 
 var _lodash2 = _interopRequireDefault(_lodash);
 
-var _reduxThunk = __webpack_require__(24);
-
-var _reduxThunk2 = _interopRequireDefault(_reduxThunk);
-
-var _trigger = __webpack_require__(26);
-
-var _trigger2 = _interopRequireDefault(_trigger);
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var _INIT_ACTION_TYPE = "@@redux/INIT";
@@ -50994,6 +50986,7 @@ var ProductImageSlider = function (_Component) {
         }
 
         _this.preparedItems = null;
+        _this.refs = {};
 
         _this.onResize = _lodash2.default.throttle(_this.onResize, 200);
 
@@ -51141,30 +51134,24 @@ var ProductImageSlider = function (_Component) {
             var is_active = _this4.state.index == n ? ' active' : '';
 
             if (item.type === 'image') {
-                return (0, _preact.h)(
-                    "div",
-                    { className: "slide type-image" + is_active, key: "image.thumb." + n, onClick: function onClick(e) {
-                            _this4.clickHndl(e, n, item);
-                        }
+                return (0, _preact.h)("div", { className: "slide type-image" + is_active, key: "image.thumb." + n, onClick: function onClick(e) {
+                        _this4.clickHndl(e, n, item);
                     },
-                    (0, _preact.h)("img", { src: item.src, alt: "" })
-                );
+                    style: "background-image: url(" + item.src + ")"
+                });
             }
             if (item.type === 'video') {
 
                 var src = item.thumb || item.meta.images.thumb || null;
 
                 if (src) {
-                    return (0, _preact.h)(
-                        "div",
-                        { className: "slide type-video" + is_active,
-                            key: "video.thumb." + n,
-                            onClick: function onClick(e) {
-                                _this4.clickHndl(e, n, item);
-                            }
+                    return (0, _preact.h)("div", { className: "slide type-video" + is_active,
+                        key: "video.thumb." + n,
+                        onClick: function onClick(e) {
+                            _this4.clickHndl(e, n, item);
                         },
-                        (0, _preact.h)("img", { src: src, alt: "" })
-                    );
+                        style: "background-image: url(" + src + ")"
+                    });
                 } else {
                     return (0, _preact.h)(
                         "div",
@@ -51276,6 +51263,8 @@ var ProductImageSlider = function (_Component) {
                 { className: "slider-thumbs" },
                 (0, _preact.h)("a", { href: "#", className: "prev", onClick: function onClick(e) {
                         _this6.prevHndl(e);
+                    }, ref: function ref(el) {
+                        return _this6.refs.prev = el;
                     } }),
                 (0, _preact.h)(
                     _PreactSlySlide2.default,
@@ -51294,6 +51283,8 @@ var ProductImageSlider = function (_Component) {
                 ),
                 (0, _preact.h)("a", { href: "#", className: "next", onClick: function onClick(e) {
                         _this6.nextHndl(e);
+                    }, ref: function ref(el) {
+                        return _this6.refs.next = el;
                     } })
             ),
             (0, _preact.h)(
@@ -55833,6 +55824,7 @@ var PreactSlySlide = function (_Component) {
 
         _this.refs = {};
         _this['$refs'] = {};
+
         _this.options = _lodash2.default.extend({
             horizontal: 1,
             itemNav: 'basic',
@@ -55845,11 +55837,22 @@ var PreactSlySlide = function (_Component) {
     }
 
     PreactSlySlide.prototype.componentDidMount = function componentDidMount() {
-
-        console.log(this.options);
-
         this.$refs.wrap = $(this.refs.wrap);
         this.$refs.wrap.sly(this.options);
+
+        window.addEventListener('resize', this.onResize.bind(this));
+    };
+
+    PreactSlySlide.prototype.componentWillUnmount = function componentWillUnmount() {
+        window.removeEventListener('resize', this.onResize);
+    };
+
+    PreactSlySlide.prototype.slyReload = function slyReload() {
+        this.$refs.wrap.sly('reload');
+    };
+
+    PreactSlySlide.prototype.onResize = function onResize() {
+        _lodash2.default.throttle(this.slyReload, 200);
     };
 
     PreactSlySlide.prototype.render = function render(_ref) {
