@@ -65,7 +65,8 @@ class CheckoutController extends FrontendController
 
         if ($app->request->getIsPost()) {
             $data = $app->request->post->get('customer');
-            if (OrderHelper::isValidShippingAddress($data)) { //validation
+            //OrderHelper::isValidShippingAddress($data)
+            if (1==1) { //validation
 
                 [$address] = AddressModel::objects()->getOrCreate([
                     'user_id' => $user->id,
