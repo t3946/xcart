@@ -1,0 +1,58 @@
+.page-departments {
+
+  .all-departments-menu {
+
+    border-bottom: 2px solid #0d2431;
+    padding-bottom: 12px;
+
+    .item-title {
+
+      border: 1px solid transparent;
+      margin-top:15px;
+      padding-top: 3px;
+      padding-bottom: 3px;
+      display: table;
+
+      .image-container{
+        display: table-cell;
+        vertical-align: middle;
+
+        padding-right:15px;
+        text-align: center;
+
+        .image{
+          width: 28px;
+          display: inline-block;
+
+        }
+      }
+      .title{
+        display: table-cell;
+        vertical-align: middle;
+        white-space: pre-wrap;
+        text-align: left;
+
+        font-size: rem-calc(12);
+        overflow: hidden;
+      }
+
+      &:hover {
+        border: 1px solid #9a1524;
+        color: #9a1524;
+
+        .image{
+          filter: contrast(50%) sepia(100%) hue-rotate(-70deg) saturate(400%);
+        }
+      }
+    }
+  }
+
+  .departments-submenu {
+    margin-top: 39px;
+    padding-bottom:36px;
+    border-bottom: 1px solid #b0b0b0;
+    .group-items {
+      border: 1px solid green;
+    }
+  }
+}
