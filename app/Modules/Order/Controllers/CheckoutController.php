@@ -48,6 +48,7 @@ class CheckoutController extends FrontendController
         $app = Xcart::app();
         $user = $app->user;
         $cart = $app->cart;
+        $errors = [];
 
         if (!$user) {}
 
@@ -65,8 +66,8 @@ class CheckoutController extends FrontendController
 
         if ($app->request->getIsPost()) {
             $data = $app->request->post->get('customer');
-            //OrderHelper::isValidShippingAddress($data)
-            if (1==1) { //validation
+            //
+            if ($errors = OrderHelper::isValidShippingAddress($data) === true) { //validation
 
                 [$address] = AddressModel::objects()->getOrCreate([
                     'user_id' => $user->id,
@@ -102,6 +103,7 @@ class CheckoutController extends FrontendController
 
         echo $this->render('checkout/shipping.tpl', [
             'order' => $order,
+            'errors' => $errors,
             'countries' => Connection::getInstance()->fetchAll(SearchSql::getAllCountryOrderSql())
         ]);
     }
