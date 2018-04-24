@@ -16,6 +16,7 @@ use Modules\Order\Models\OrderUserLastActivityModel;
 use Modules\Order\Stores\OrderTransactionStore;
 use Modules\Payment\Helpers\PaymentHelper;
 use Modules\User\Models\UserModel;
+use ShippingAddressForm;
 use Xcart\App\Main\Xcart;
 
 class OrderHelper
@@ -240,5 +241,17 @@ class OrderHelper
 
 
         return $user;
+    }
+
+    public static function isValidShippingAddress($post_data = []): bool
+    {
+        $form = new ShippingAddressForm();
+
+        if ($post_data) {
+            return $form->populate($post_data)->isValid();
+        }
+        else {
+            return false;
+        }
     }
 }
