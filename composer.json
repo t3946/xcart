@@ -3,9 +3,6 @@
         "sort-packages": true,
         "optimize-autoloader": true,
         "vendor-dir": "app/include/vendors",
-        "platform": {
-            "php": "7.2"
-        }
     },
     "repositories": [
         {
