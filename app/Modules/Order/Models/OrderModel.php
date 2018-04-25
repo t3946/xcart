@@ -76,11 +76,6 @@ class OrderModel extends Model
                 'modelClass' => OrderGroupModel::className(),
                 'link' => ['orderid' => 'orderid'],
             ],
-            'details' => [
-                'class' => HasManyField::className(),
-                'modelClass' => OrderDetailModel::className(),
-                'link' => ['orderid' => 'orderid'],
-            ],
             'tags' => [
                 'class' => ManyToManyField::className(),
                 'modelClass' => AttentionTagModel::className(),
@@ -112,6 +107,23 @@ class OrderModel extends Model
                 'modelClass' => CountryModel::class,
                 'sqlType' => Type::STRING,
                 'link' => ['s_country' => 'code']
+            ],
+            'billing_state' => [
+                'field' => 's_state',
+                'class' => ForeignField::class,
+                'modelClass' => StateModel::class,
+                'sqlType' => Type::STRING,
+                'link' => [
+                    'b_state' => 'code',
+                    'b_country' => 'country_code'
+                ]
+            ],
+            'billing_country' => [
+                'field' => 's_country',
+                'class' => ForeignField::class,
+                'modelClass' => CountryModel::class,
+                'sqlType' => Type::STRING,
+                'link' => ['b_country' => 'code']
             ],
             'cb_status_model' => [
                 'field' => 'cb_status',
@@ -201,6 +213,11 @@ class OrderModel extends Model
                 'default' => ''
             ],
             'shipping_groups' => [
+                'class' => CharField::class,
+                'null' => false,
+                'default' => ''
+            ],
+            'details' => [
                 'class' => CharField::class,
                 'null' => false,
                 'default' => ''
@@ -309,8 +326,8 @@ class OrderModel extends Model
                     'firstname' => $this->b_firstname,
                     'company' => $this->b_company,
                     'city' => $this->b_city,
-                    'state' => $this->b_state,
-                    'country' => $this->b_country,
+                    'state' => $this->billing_state,
+                    'country' => $this->billing_country,
                     'zipcode' => $this->b_zipcode,
                 ];
                 break;
