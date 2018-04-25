@@ -66,9 +66,9 @@ return [
     ],
 
     [
-        'route' => '/categorylist/{i:id}/',
+        'route' => '/categories/',
         'target' => [CategoryController::class, 'actionList'],
-        'name' => 'view_s'
+        'name' => 'list'
     ],
 
 

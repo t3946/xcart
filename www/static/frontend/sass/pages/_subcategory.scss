@@ -1,58 +1,131 @@
 .page-departments {
 
+  a {
+    color: #000;
+    text-decoration: none;
+  }
+
+  /* Верхнее меню - все основные категории */
   .all-departments-menu {
 
-    border-bottom: 2px solid #0d2431;
     padding-bottom: 12px;
 
+    /* Ссылка на основную категорию */
     .item-title {
-
       border: 1px solid transparent;
-      margin-top:15px;
+      margin-top: 15px;
       padding-top: 3px;
       padding-bottom: 3px;
-      display: table;
+      display: block;
 
-      .image-container{
+      .image-container {
         display: table-cell;
         vertical-align: middle;
 
-        padding-right:15px;
+        padding-right: 15px;
+        width: 43px;
         text-align: center;
 
-        .image{
-          width: 28px;
-          display: inline-block;
-
+        .image {
+          width: 100%;
         }
       }
-      .title{
+      .title {
         display: table-cell;
         vertical-align: middle;
         white-space: pre-wrap;
         text-align: left;
 
         font-size: rem-calc(12);
+        line-height: 110%;
         overflow: hidden;
       }
 
       &:hover {
         border: 1px solid #9a1524;
         color: #9a1524;
+        text-decoration: none;
 
-        .image{
+        .image {
           filter: contrast(50%) sepia(100%) hue-rotate(-70deg) saturate(400%);
         }
       }
     }
   }
 
-  .departments-submenu {
-    margin-top: 39px;
-    padding-bottom:36px;
-    border-bottom: 1px solid #b0b0b0;
-    .group-items {
-      border: 1px solid green;
+  .all-departments-menu-hr {
+    .hr{
+      border-bottom: 2px solid #0d2431;
     }
   }
+
+  /* Подкатегории основной категории */
+  .departments-submenu-container {
+    margin-top: 39px;
+
+
+    .hr{
+      margin-top: 36px;
+      border-bottom: 1px solid #b0b0b0;
+    }
+
+    /* Заголовок категории */
+    .departments-submenu-title {
+      display: inline-block;
+      text-decoration: none;
+
+      .image-container {
+        display: table-cell;
+        vertical-align: middle;
+
+        padding-right: 20px;
+        width: 62px;
+        text-align: center;
+
+        .image {
+          width: 100%;
+        }
+
+      }
+      .title {
+        display: table-cell;
+        vertical-align: middle;
+        font-size: rem-calc(24);
+
+      }
+
+      &:hover {
+        color: #9a1524;
+        text-decoration: none;
+
+        .image {
+          filter: contrast(50%) sepia(100%) hue-rotate(-70deg) saturate(400%);
+        }
+      }
+
+    }
+
+    /* Список подкатегорий */
+    .departments-submenu-items {
+
+      a {
+        color: #055a93;
+        &:hover{
+          text-decoration: underline;
+        }
+      }
+
+      .group-items {
+        margin-top: 22px;
+        .items-title {
+          font-weight: bold;
+          padding-bottom: .5rem;
+        }
+        .items-list {
+          font-size: rem-calc(14);
+        }
+      }
+    }
+  }
+
 }

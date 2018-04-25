@@ -44,15 +44,9 @@ class CategoryController extends AbstractCatalogController
         $categories = CategoryModel::objects()->filter([
             'level' => 1,
             'active_product_count__gt' => 0,
+            'avail' => 'Y',
             'storefrontid' => Xcart::app()->getModule('Sites')->getSite()
         ])->all();
-
-        /** @var CategoryModel $category */
-       // $category = $categories[0];
-       // echo $category->category;
-
-        //dd($category->getObjects()->descendants(false, 1)->all());
-
 
         echo $this->render('catalog/subcategory.tpl', [
             'categories' => $categories,
