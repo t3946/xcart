@@ -2,6 +2,7 @@
 
 {block 'js'}
     <script type="text/javascript">
+        document.getElementById("registration").style.display = "none";
         function hideForm() {
             document.getElementById("registration").style.display = "none";
         }
