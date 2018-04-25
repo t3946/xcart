@@ -22,4 +22,5 @@ return [
     'Pages',
     'Amp',
     'PBX',
+    'Landing',
 ];
