@@ -129,6 +129,93 @@
                             </label>
                         </div>
                     </div>
+
+                    <div class="registration">
+                        <div class="row">
+                            <div class="small-4 columns"></div>
+                            <div class="small-8 columns">
+                                <div class="mandatory">
+                                    {t 'The fields marked with' dict='order'} <span class="required">*</span> {t 'are mandatory.' dict='order'}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="small-4 columns">
+                                <label for="registration__b_firstname">{t 'Full name' dict='order'}</label>
+                                <span class="reqired">*</span>
+                            </div>
+                            <div class="small-8 columns">
+                                <input value="{$order->b_firstname}" id="registration__b_firstname" required placeholder="{t 'Albert H. Einstein' dict='order'}" name="BillingAddressForm[b_firstname]" type="text"/>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="small-4 columns">
+                                <label for="registration__b_company">{t 'Company' dict='order'}</label>
+                                <i>{t '(optional)' dict='order'}</i>
+                            </div>
+                            <div class="small-8 columns">
+                                <input value="{$order->b_company}" id="registration__b_company" placeholder="{t 'Eureka Inc.' dict='order'}" name="BillingAddressForm[b_company]" type="text"/>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="small-4 columns">
+                                <label for="registration__b_address">{t 'Address' dict='order'}</label>
+                                <span class="reqired">*</span>
+                            </div>
+                            <div class="small-8 columns">
+                                <input value="{$address[0]}" id="registration__b_address" required placeholder="{t '112 Mercer Street' dict='order'}" name="BillingAddressForm[b_address]" type="text"/>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="small-4 columns">
+                                <label for="registration__b_address_2">{t 'Address (line 2)' dict='order'}</label>
+                            </div>
+                            <div class="small-8 columns">
+                                <input value="{$address[1]}" id="registration__b_address_2" placeholder="{t 'Apt 1' dict='order'}" name="BillingAddressForm[b_address_2]" type="text"/>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="small-4 columns">
+                                <label for="registration__b_countryname">{t 'Country' dict='order'}</label>
+                                <span class="reqired">*</span>
+                            </div>
+                            <div class="small-8 columns">
+                                <select id="registration__b_countryname" name="BillingAddressForm[b_country]">
+                                    {foreach $countries as $country}
+                                        <option {if $order->b_country == $country.id}selected{/if} value="{raw $country.id}">{raw $country.text}</option>
+                                    {/foreach}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="small-4 columns">
+                                <label for="registration__b_zipcode">{t 'Zip/Postal Code' dict='order'}</label>
+                                <span class="reqired">*</span>
+                            </div>
+                            <div class="small-8 columns">
+                                <input value="{$order->b_zipcode}" id="registration__b_zipcode" required placeholder="{t '08540' dict='order'}" name="BillingAddressForm[b_zipcode]" type="text"/>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="small-4 columns">
+                                <label for="registration__b_statename">{t 'State/Province' dict='order'}</label>
+                                <span class="reqired">*</span>
+                            </div>
+                            <div class="small-8 columns">
+                                <input value="{$order->s_state}" id="registration__b_statename" required placeholder="{t 'New Jersey' dict='order'}" name="BillingAddressForm[b_statename]" type="text"/>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="small-4 columns">
+                                <label for="registration__b_city">{t 'City' dict='order'}</label>
+                                <span class="reqired">*</span>
+                            </div>
+                            <div class="small-8 columns">
+                                <input value="{$order->b_city}" id="registration__b_city" required placeholder="{t 'Princeton' dict='order'}" name="BillingAddressForm[b_city]" type="text"/>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="row">
                         <div class="column small-12">
                             <div class="buttons">
