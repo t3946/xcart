@@ -14,6 +14,7 @@ use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Fields\ManyToManyField;
 use Xcart\App\Orm\Manager;
+use Xcart\App\Orm\QuerySet;
 use Xcart\App\Orm\TreeModel;
 use Xcart\App\Traits\DataModelTrait;
 use Xcart\App\Traits\SlugifyTrait;
@@ -152,6 +153,14 @@ class CategoryModel extends TreeModel
     public function getFrontendName()
     {
         return $this->SEO_category_name ?: $this->category;
+    }
+
+    public function getActiveChilds($includeSelf = false, $level = 1)
+    {
+        return $this->getObjects()->descendants($includeSelf, $level)->filter([
+            'avail' => 'Y',
+            'active_product_count__gt' => 0,
+        ]);
     }
 
     public function getSubcategories($withProductCount = true, $level = 1, $tree = false, $cache = true)
