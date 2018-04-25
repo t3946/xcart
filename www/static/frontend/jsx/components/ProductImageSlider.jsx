@@ -85,6 +85,18 @@ export default class ProductImageSlider extends Component
                 isVideo: false,
             });
         }
+
+        if (e.target) {
+            if ( e.target.classList.contains('play-icon') ) {
+                 e.target.classList.remove('play-icon');
+            }
+            else {
+                let nl = e.target.closest('.play-icon');
+                if (nl) {
+                    nl.classList.remove('play-icon');
+                }
+            }
+        }
     }
 
     zoomHndl(e, item) {
@@ -106,7 +118,7 @@ export default class ProductImageSlider extends Component
                         originalItem: item,
                         html: renderToStringr(
                             <div className="slide-wrapper">
-                                <div className="video-wrapper">
+                                <div className="video-wrapper play-icon">
                                     {this.renderVideoItem(item)}
                                 </div>
                             </div>),
@@ -143,12 +155,12 @@ export default class ProductImageSlider extends Component
     }
 
     prevHndl(e) {
-        e.preventDefault();
+        // e.preventDefault();
 
     }
 
     nextHndl(e) {
-        e.preventDefault();
+        // e.preventDefault();
 
     }
 
@@ -177,9 +189,9 @@ export default class ProductImageSlider extends Component
 
                 if (src) {
                     return (
-                        <div className={"slide type-video" + is_active}
+                        <div className={"slide type-video play-icon" + is_active}
                              key={"video.thumb." + n}
-                             onClick={(e)=>{this.clickHndl(e, n, item)}}
+                             onClick={ e => {this.clickHndl(e, n, item)}}
                              style={"background-image: url("+src+")"}
                         >
                         </div>
@@ -243,7 +255,7 @@ export default class ProductImageSlider extends Component
 
                 if (item.type === 'image') {
                     return (
-                        <div className="slide type-image" key={key} onClick={(e)=>{this.zoomHndl(e, item)}}>
+                        <div className="slide type-image" key={key} onClick={ e => {this.zoomHndl(e, item)}}>
                             {this.renderImage(item.src)}
                         </div>
                     );
@@ -257,10 +269,11 @@ export default class ProductImageSlider extends Component
                     let content = this.renderVideoItem(item);
                     let clName = "slide type-video ";
 
-                    clName += this.state.isVideo? "video-show" : "video-hide";
+                    clName += this.state.isVideo? "video-show" : "video-hide play-icon";
 
 
-                    return <div className={clName} onClick={(e)=>{ this.videoShowHndl(e);}} key={key}>{content}</div>;
+                    return <div className={clName} onClick={ e => {this.zoomHndl(e, item)}} key={key}>{content}</div>;
+                    // return <div className={clName} onClick={ e => { this.videoShowHndl(e)}} key={key}>{content}</div>;
                 }
             }
         }
@@ -273,22 +286,26 @@ export default class ProductImageSlider extends Component
             return <div className="slider loading"></div>;
         }
 
+        let sliderButtonsClasses = (this.state.items.length <= 3) ? 'hide':'';
+
         return (
         <div className="images-slider">
             <div className="slider-thumbs">
-                <a href="#" className="prev" onClick={e=>{this.prevHndl(e)}} ref={el => this.refs.prev = el }></a>
+                <button className={"prev " + sliderButtonsClasses} onClick={ e => {this.prevHndl(e)}} ref={el => this.refs.prev = el }></button>
                 <PreactSlySlide options={{
                     horizontal: 0,
                     speed: 300,
                     mouseDragging: 1,
                     touchDragging: 1,
-                    smart: 1
+                    smart: 1,
+                    prev: this.refs.prev,
+                    next: this.refs.next,
                 }}>
                     <div className="frame">
                         {this.renderThumbs()}
                     </div>
                 </PreactSlySlide>
-                <a href="#" className="next" onClick={e=>{this.nextHndl(e)}} ref={el => this.refs.next = el }></a>
+                <button className={"next " + sliderButtonsClasses} onClick={ e =>{this.nextHndl(e)}} ref={el => this.refs.next = el }></button>
             </div>
             <div className="slider-detail">
                 <div className="wrap">
