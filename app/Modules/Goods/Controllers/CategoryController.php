@@ -26,6 +26,14 @@ class CategoryController extends AbstractCatalogController
             $this->error();
         }
 
+        /** @var \Modules\Sites\Models\SiteModel $site */
+        $site = Xcart::app()->getModule('Sites')->getSite();
+
+        $this->setMetaTemplate('categories:base', [
+            'model' => $model,
+            'site' => $site,
+        ]);
+
         $this->view_internal($model);
     }
 
