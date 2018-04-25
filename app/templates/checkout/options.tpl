@@ -2,12 +2,11 @@
 
 {block 'js'}
     <script type="text/javascript">
-        document.getElementById("registration").style.display = "none";
         function hideForm() {
-            document.getElementById("registration").style.display = "none";
+            document.getElementById("registration").classList.add("hide");
         }
         function showForm() {
-            document.getElementById("registration").style.display = "block";
+            document.getElementById("registration").classList.remove("hide");
         }
     </script>
 {/block}
@@ -24,7 +23,7 @@
             <div class="row">
                 <div class="columns small-5">
                     <div class="options">
-                        {include 'checkout/_address_view.tpl' info=$order->getInfo('shipping') header=$.t('Shipping Address','order') uri='checkout:shipping'}
+                        {include 'checkout/_address_view.tpl' info=$order->getAddressInfo('shipping') header=$.t('Shipping Address','order') uri='checkout:shipping'}
                     </div>
                 </div>
                 <div class="columns small-7">
@@ -120,6 +119,7 @@
                 <div class="columns small-5">
                 </div>
                 <div class="columns small-7">
+                    {set $billing_diff = $order->isBillingAddressDiff()}
                     <div class="row">
                         <div class="columns small-12">
                             <h2>{t 'Is Billing Address the same as Shipping Address?' dict='order'}</h2>
@@ -127,7 +127,7 @@
                     </div>
                     <div class="row">
                         <div class="columns small-12">
-                            <input id="biiling_yes" type="radio" onclick="hideForm()" checked name="billing_same"/>
+                            <input id="biiling_yes" type="radio" onclick="hideForm()" {if !$billing_diff}checked{/if} name="billing_same" value="{$billing_diff}"/>
                             <label for="biiling_yes">
                                 {t 'Yes' dict='order'}
                             </label>
@@ -135,14 +135,16 @@
                     </div>
                     <div class="row">
                         <div class="columns small-12">
-                            <input id="biiling_no" type="radio" onclick="showForm()" name="billing_same"/>
+                            <input id="biiling_no" type="radio" onclick="showForm()" {if $billing_diff}checked{/if} name="billing_same" value="{$billing_diff}"/>
                             <label for="biiling_no">
                                 {t 'No' dict='order'}
                             </label>
                         </div>
                     </div>
 
-                    <div class="registration" id="registration">
+                    {set $address = $order->getAddressInfo('billing')['address']}
+
+                    <div class="registration {if !$billing_diff}hide{/if}" id="registration">
                         <div class="row">
                             <div class="small-4 columns"></div>
                             <div class="small-8 columns">
@@ -214,7 +216,7 @@
                                 <span class="reqired">*</span>
                             </div>
                             <div class="small-8 columns">
-                                <input value="{$order->s_state}" id="registration__b_statename" required placeholder="{t 'New Jersey' dict='order'}" name="BillingAddressForm[b_statename]" type="text"/>
+                                <input value="{$order->billing_state}" id="registration__b_statename" required placeholder="{t 'New Jersey' dict='order'}" name="BillingAddressForm[b_statename]" type="text"/>
                             </div>
                         </div>
                         <div class="row">

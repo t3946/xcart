@@ -304,7 +304,7 @@ class OrderModel extends Model
         }
     }
 
-    public function getInfo(string $type) : array
+    public function getAddressInfo(string $type) : array
     {
         $info = [];
 
@@ -334,5 +334,13 @@ class OrderModel extends Model
         }
 
         return $info;
+    }
+
+    public function isBillingAddressDiff()
+    {
+        $a_s = $this->getAddressInfo('shipping');
+        $a_b = $this->getAddressInfo('billing');
+
+        return !empty(array_diff($a_s, $a_b));
     }
 }
