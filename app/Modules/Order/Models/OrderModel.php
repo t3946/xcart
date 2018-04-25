@@ -2,6 +2,7 @@
 namespace Modules\Order\Models;
 
 use Doctrine\DBAL\Types\Type;
+use Modules\Core\Models\CountryModel;
 use Modules\Core\Models\StateModel;
 use Modules\Order\Helpers\OrderEventHelper;
 use Modules\Order\Helpers\OrderHelper;
@@ -75,11 +76,6 @@ class OrderModel extends Model
                 'modelClass' => OrderGroupModel::className(),
                 'link' => ['orderid' => 'orderid'],
             ],
-            'details' => [
-                'class' => HasManyField::className(),
-                'modelClass' => OrderDetailModel::className(),
-                'link' => ['orderid' => 'orderid'],
-            ],
             'tags' => [
                 'class' => ManyToManyField::className(),
                 'modelClass' => AttentionTagModel::className(),
@@ -97,13 +93,37 @@ class OrderModel extends Model
             ],
             'shipping_state' => [
                 'field' => 's_state',
-                'class' => ForeignField::className(),
-                'modelClass' => StateModel::className(),
+                'class' => ForeignField::class,
+                'modelClass' => StateModel::class,
                 'sqlType' => Type::STRING,
                 'link' => [
                     's_state' => 'code',
                     's_country' => 'country_code'
                 ]
+            ],
+            'shipping_country' => [
+                'field' => 's_country',
+                'class' => ForeignField::class,
+                'modelClass' => CountryModel::class,
+                'sqlType' => Type::STRING,
+                'link' => ['s_country' => 'code']
+            ],
+            'billing_state' => [
+                'field' => 's_state',
+                'class' => ForeignField::class,
+                'modelClass' => StateModel::class,
+                'sqlType' => Type::STRING,
+                'link' => [
+                    'b_state' => 'code',
+                    'b_country' => 'country_code'
+                ]
+            ],
+            'billing_country' => [
+                'field' => 's_country',
+                'class' => ForeignField::class,
+                'modelClass' => CountryModel::class,
+                'sqlType' => Type::STRING,
+                'link' => ['b_country' => 'code']
             ],
             'cb_status_model' => [
                 'field' => 'cb_status',
@@ -197,6 +217,11 @@ class OrderModel extends Model
                 'null' => false,
                 'default' => ''
             ],
+            'details' => [
+                'class' => CharField::class,
+                'null' => false,
+                'default' => ''
+            ],
         ];
     }
 
@@ -279,7 +304,7 @@ class OrderModel extends Model
         }
     }
 
-    public function getInfo(string $type) : array
+    public function getAddressInfo(string $type) : array
     {
         $info = [];
 
@@ -290,8 +315,8 @@ class OrderModel extends Model
                     'firstname' => $this->s_firstname,
                     'company' => $this->s_company,
                     'city' => $this->s_city,
-                    'state' => $this->s_state,
-                    'country' => $this->s_country,
+                    'state' => $this->shipping_state,
+                    'country' => $this->shipping_country,
                     'zipcode' => $this->s_zipcode,
                 ];
                 break;
@@ -301,12 +326,21 @@ class OrderModel extends Model
                     'firstname' => $this->b_firstname,
                     'company' => $this->b_company,
                     'city' => $this->b_city,
-                    'state' => $this->b_state,
-                    'country' => $this->b_country,
+                    'state' => $this->billing_state,
+                    'country' => $this->billing_country,
                     'zipcode' => $this->b_zipcode,
                 ];
                 break;
         }
+
         return $info;
+    }
+
+    public function isBillingAddressDiff()
+    {
+        $a_s = $this->getAddressInfo('shipping');
+        $a_b = $this->getAddressInfo('billing');
+
+        return !empty(array_diff($a_s, $a_b));
     }
 }

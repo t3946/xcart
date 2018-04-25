@@ -16,7 +16,17 @@ class DefaultController extends AbstractCatalogController
 
     public function actionViewOld($id, $slug)
     {
-        $this->view_internal(BrandModel::objects()->filter(['brandid' => $id])->get());
+        /** @var \Modules\Sites\Models\SiteModel $site */
+        $site = Xcart::app()->getModule('Sites')->getSite();
+
+        $model = BrandModel::objects()->get(['brandid' => $id]);
+
+        $this->setMetaTemplate('brands:base', [
+            'model' => $model,
+            'site' => $site,
+        ]);
+
+        $this->view_internal($model);
     }
 
     public function actionView($sku)
