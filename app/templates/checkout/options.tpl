@@ -1,5 +1,16 @@
 {extends "checkout/base.tpl"}
 
+{block 'js'}
+    <script type="text/javascript">
+        function hideForm() {
+            document.getElementById("registration").style.display = "none";
+        }
+        function showForm() {
+            document.getElementById("registration").style.display = "block";
+        }
+    </script>
+{/block}
+
 {block 'content'}
 
     <form data-abide action="{url 'checkout:options'}" method="POST" class="checkout-options-form">
@@ -115,7 +126,7 @@
                     </div>
                     <div class="row">
                         <div class="columns small-12">
-                            <input id="biiling_yes" type="radio" checked name="billing_same"/>
+                            <input id="biiling_yes" type="radio" onclick="hideForm()" checked name="billing_same"/>
                             <label for="biiling_yes">
                                 {t 'Yes' dict='order'}
                             </label>
@@ -123,14 +134,14 @@
                     </div>
                     <div class="row">
                         <div class="columns small-12">
-                            <input id="biiling_no" type="radio" name="billing_same"/>
+                            <input id="biiling_no" type="radio" onclick="showForm()" name="billing_same"/>
                             <label for="biiling_no">
                                 {t 'No' dict='order'}
                             </label>
                         </div>
                     </div>
 
-                    <div class="registration">
+                    <div class="registration" id="registration">
                         <div class="row">
                             <div class="small-4 columns"></div>
                             <div class="small-8 columns">
