@@ -137,7 +137,7 @@ foreach ($product_models as $product_model){
 }
 
 
-echo "All {$product_count_all}, is clear ==> {$product_count}";
+echo "All {$product_count_all}, is clear ==> {$product_count} and {$all_products_with_clear_fulldescr}";
 
 
 $time = (new DateTime('now'))->diff($start_time)->format('%H:%I:%S');
