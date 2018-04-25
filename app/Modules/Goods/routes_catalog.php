@@ -65,6 +65,12 @@ return [
         'name' => 'view'
     ],
 
+    [
+        'route' => '/categorylist/{i:id}/',
+        'target' => [CategoryController::class, 'actionList'],
+        'name' => 'view_s'
+    ],
+
 
     /** SEARCH ROUTES */
     [
