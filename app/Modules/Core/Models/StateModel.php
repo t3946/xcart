@@ -23,4 +23,9 @@ class StateModel extends Model
             ],
         ];
     }
+
+    public function __toString(): string
+    {
+        return (string) $this->state;
+    }
 }

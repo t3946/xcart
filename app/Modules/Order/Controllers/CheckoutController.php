@@ -65,20 +65,23 @@ class CheckoutController extends FrontendController
         ]);
 
         if ($app->request->getIsPost()) {
-            $data = $app->request->post->get('customer');
-            //
-            if ($errors = OrderHelper::isValidShippingAddress($data) === true) { //validation
+
+            $data = $app->request->post->all();
+
+            if (!($errors = OrderHelper::isValidShippingAddress($data))) {
+                $shipping = $data['ShippingAddressForm'];
+                $contact = $data['ContactInfoForm'];
 
                 [$address] = AddressModel::objects()->getOrCreate([
                     'user_id' => $user->id,
-                    'full_name' => $data['s_firstname'],
-                    'company' => $data['s_company'],
-                    'address' => $data['s_address'],
-                    'address_2' => $data['s_address_2'],
-                    'country' => $data['s_country'],
-                    'zip' => $data['s_zipcode'],
-                    'state' => $data['s_statename'],
-                    'city' => $data['s_city'],
+                    'full_name' => $shipping['s_firstname'],
+                    'company' => $shipping['s_company'],
+                    'address' => $shipping['s_address'],
+                    'address_2' => $shipping['s_address_2'],
+                    'country' => $shipping['s_country'],
+                    'zip' => $shipping['s_zipcode'],
+                    'state' => $shipping['s_statename'],
+                    'city' => $shipping['s_city'],
                 ]);
                 $address->save();
 
@@ -90,9 +93,9 @@ class CheckoutController extends FrontendController
                     's_zipcode' => $address->zip,
                     's_state' => $address->state,
                     's_city' => $address->city,
-                    'phone' => $data['phone'],
-                    'email' => $data['email'],
-                    'firstname' => $data['firstname'],
+                    'phone' => $contact['phone'],
+                    'email' => $contact['email'],
+                    'firstname' => $contact['firstname'],
                 ]);
 
                 if ($order->save()) {
@@ -101,7 +104,7 @@ class CheckoutController extends FrontendController
             }
         }
 
-        echo $this->render('checkout/shipping.tpl', [
+        $this->display('checkout/shipping.tpl', [
             'order' => $order,
             'errors' => $errors,
             'countries' => Connection::getInstance()->fetchAll(SearchSql::getAllCountryOrderSql())
@@ -117,6 +120,7 @@ class CheckoutController extends FrontendController
         $site = $app->getModule('Sites')->getSite();
         $ship_module = Xcart::app()->getModule('Shipping');
         $cart = $app->cart;
+        $errors = [];
 
         if (!$user) {}
 
@@ -128,6 +132,8 @@ class CheckoutController extends FrontendController
                 $order->groups->delete();
             }
 
+            $data = $app->request->post->all();
+
             if ($app->request->post->has('shipping_rates')) {
                 if ($rates = $app->request->post->get('shipping_rates')) {
                     foreach ($rates as $d => $rateid) {
@@ -136,8 +142,11 @@ class CheckoutController extends FrontendController
                             /** @var OrderGroupModel $group */
                             [$group] = OrderGroupModel::objects()->getOrCreate(['manufacturerid' => $d, 'orderid' => $order->orderid]);
 
+                            $items = $cart->getItemsGroupedBy()[$d];
+                            dd($items);
+
                             /** @var ShippingRateModel[] $shipping_rates */
-                            if (($shipping_rates = $ship_module::getShipping($d, $order, $cart->getItemsGroupedBy()[$d])) && $shipping_rates[$rateid]) {
+                            if (($shipping_rates = $ship_module::getShipping($d, $order, $items)) && $shipping_rates[$rateid]) {
 
                                 $charge = $shipping_rates[$rateid]->getShippingCharge();
 
@@ -153,27 +162,37 @@ class CheckoutController extends FrontendController
                         }
                     }
                 }
+
                 if ($app->request->post->has('payment_method')) {
                     if (($paymentid = $app->request->post->get('payment_method')) && $payment_method = PaymentMethodModel::objects()->get(['paymentid' => $paymentid])) {
                         /** @var PaymentMethodModel $payment_method */
                         $order->paymentid = $payment_method->paymentid;
-                        $order->save();
                     }
                 }
+
                 if ($app->request->post->has('billing_same')) {
-                   $order->setAttributes([
-                       'b_address' => $order->s_address,
-                       'b_firstname' => $order->s_firstname,
-                       'b_company' => $order->s_company,
-                       'b_city' => $order->s_city,
-                       'b_state' => $order->s_state,
-                       'b_country' => $order->s_country,
-                       'b_zipcode' => $order->s_zipcode,
-                   ]);
-                   $order->save();
+                    if ($app->request->post->get('billing_same')) {
+                        $order->setAttributes([
+                            'b_address' => $order->s_address,
+                            'b_firstname' => $order->s_firstname,
+                            'b_company' => $order->s_company,
+                            'b_city' => $order->s_city,
+                            'b_state' => $order->s_state,
+                            'b_country' => $order->s_country,
+                            'b_zipcode' => $order->s_zipcode,
+                        ]);
+                    } else {
+                        if (!($errors = OrderHelper::isValidShippingAddress($data))) {
+                            $order->setAttributes($data['BillingAddressForm']);
+                        }
+                    }
                 }
+                $order->save();
             }
-            $this->redirect('checkout:review');
+
+            if (!$errors) {
+                $this->redirect('checkout:review');
+            }
         }
 
         $payment_methods = PaymentMethodModel::objects()
@@ -181,9 +200,11 @@ class CheckoutController extends FrontendController
             ->order(['is_cod', 'orderby'])
             ->all();
 
-        echo $this->render('checkout/options.tpl', [
+        $this->display('checkout/options.tpl', [
             'order' => $order,
-            'payment_methods' => $payment_methods
+            'payment_methods' => $payment_methods,
+            'errors' => $errors,
+            'countries' => Connection::getInstance()->fetchAll(SearchSql::getAllCountryOrderSql())
         ]);
     }
 
@@ -217,7 +238,7 @@ class CheckoutController extends FrontendController
             $this->redirect('checkout:payment');
         }
 
-        echo $this->render('checkout/review.tpl', [
+        $this->display('checkout/review.tpl', [
             'order' => $order,
         ]);
 
@@ -237,10 +258,10 @@ class CheckoutController extends FrontendController
         $order = $this->getOrder();
 
 
-        echo $this->render('checkout/complete.tpl', [
+        $this->display('checkout/complete.tpl', [
             'order' => $order,
-            'shipping_info' => $order->getInfo('shipping'),
-            'billing_info' => $order->getInfo('billing'),
+            'shipping_info' => $order->getAddressInfo('shipping'),
+            'billing_info' => $order->getAddressInfo('billing'),
         ]);
     }
 }

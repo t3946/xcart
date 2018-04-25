@@ -266,10 +266,10 @@
             </div>
             <div class="row address">
                 <div class="columns">
-                    {include "checkout/_address_view_full.tpl" info=$order->getInfo('shipping') uri='checkout:shipping' header=$.t('Shipping Address','order')}
+                    {include "checkout/_address_view_full.tpl" info=$order->getAddressInfo('shipping') uri='checkout:shipping' header=$.t('Shipping Address','order')}
                 </div>
                 <div class="columns">
-                    {include "checkout/_address_view_full.tpl" info=$order->getInfo('billing') uri='checkout:shipping' header=$.t('Billing Address','order')}
+                    {include "checkout/_address_view_full.tpl" info=$order->getAddressInfo('billing') uri='checkout:shipping' header=$.t('Billing Address','order')}
                 </div>
             </div>
             <div class="row delivery">

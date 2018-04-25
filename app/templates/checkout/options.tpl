@@ -1,5 +1,16 @@
 {extends "checkout/base.tpl"}
 
+{block 'js'}
+    <script type="text/javascript">
+        function hideForm() {
+            document.getElementById("registration").classList.add("hide");
+        }
+        function showForm() {
+            document.getElementById("registration").classList.remove("hide");
+        }
+    </script>
+{/block}
+
 {block 'content'}
 
     <form data-abide action="{url 'checkout:options'}" method="POST" class="checkout-options-form">
@@ -12,7 +23,7 @@
             <div class="row">
                 <div class="columns small-5">
                     <div class="options">
-                        {include 'checkout/_address_view.tpl' info=$order->getInfo('shipping') header=$.t('Shipping Address','order') uri='checkout:shipping'}
+                        {include 'checkout/_address_view.tpl' info=$order->getAddressInfo('shipping') header=$.t('Shipping Address','order') uri='checkout:shipping'}
                     </div>
                 </div>
                 <div class="columns small-7">
@@ -108,6 +119,7 @@
                 <div class="columns small-5">
                 </div>
                 <div class="columns small-7">
+                    {set $billing_diff = $order->isBillingAddressDiff()}
                     <div class="row">
                         <div class="columns small-12">
                             <h2>{t 'Is Billing Address the same as Shipping Address?' dict='order'}</h2>
@@ -115,7 +127,7 @@
                     </div>
                     <div class="row">
                         <div class="columns small-12">
-                            <input id="biiling_yes" type="radio" checked name="billing_same"/>
+                            <input id="biiling_yes" type="radio" onclick="hideForm()" {if !$billing_diff}checked{/if} name="billing_same" value="{$billing_diff}"/>
                             <label for="biiling_yes">
                                 {t 'Yes' dict='order'}
                             </label>
@@ -123,12 +135,101 @@
                     </div>
                     <div class="row">
                         <div class="columns small-12">
-                            <input id="biiling_no" type="radio" name="billing_same"/>
+                            <input id="biiling_no" type="radio" onclick="showForm()" {if $billing_diff}checked{/if} name="billing_same" value="{$billing_diff}"/>
                             <label for="biiling_no">
                                 {t 'No' dict='order'}
                             </label>
                         </div>
                     </div>
+
+                    {set $address = $order->getAddressInfo('billing')['address']}
+
+                    <div class="registration {if !$billing_diff}hide{/if}" id="registration">
+                        <div class="row">
+                            <div class="small-4 columns"></div>
+                            <div class="small-8 columns">
+                                <div class="mandatory">
+                                    {t 'The fields marked with' dict='order'} <span class="required">*</span> {t 'are mandatory.' dict='order'}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="small-4 columns">
+                                <label for="registration__b_firstname">{t 'Full name' dict='order'}</label>
+                                <span class="reqired">*</span>
+                            </div>
+                            <div class="small-8 columns">
+                                <input value="{$order->b_firstname}" id="registration__b_firstname" required placeholder="{t 'Albert H. Einstein' dict='order'}" name="BillingAddressForm[b_firstname]" type="text"/>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="small-4 columns">
+                                <label for="registration__b_company">{t 'Company' dict='order'}</label>
+                                <i>{t '(optional)' dict='order'}</i>
+                            </div>
+                            <div class="small-8 columns">
+                                <input value="{$order->b_company}" id="registration__b_company" placeholder="{t 'Eureka Inc.' dict='order'}" name="BillingAddressForm[b_company]" type="text"/>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="small-4 columns">
+                                <label for="registration__b_address">{t 'Address' dict='order'}</label>
+                                <span class="reqired">*</span>
+                            </div>
+                            <div class="small-8 columns">
+                                <input value="{$address[0]}" id="registration__b_address" required placeholder="{t '112 Mercer Street' dict='order'}" name="BillingAddressForm[b_address]" type="text"/>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="small-4 columns">
+                                <label for="registration__b_address_2">{t 'Address (line 2)' dict='order'}</label>
+                            </div>
+                            <div class="small-8 columns">
+                                <input value="{$address[1]}" id="registration__b_address_2" placeholder="{t 'Apt 1' dict='order'}" name="BillingAddressForm[b_address_2]" type="text"/>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="small-4 columns">
+                                <label for="registration__b_countryname">{t 'Country' dict='order'}</label>
+                                <span class="reqired">*</span>
+                            </div>
+                            <div class="small-8 columns">
+                                <select id="registration__b_countryname" name="BillingAddressForm[b_country]">
+                                    {foreach $countries as $country}
+                                        <option {if $order->b_country == $country.id}selected{/if} value="{raw $country.id}">{raw $country.text}</option>
+                                    {/foreach}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="small-4 columns">
+                                <label for="registration__b_zipcode">{t 'Zip/Postal Code' dict='order'}</label>
+                                <span class="reqired">*</span>
+                            </div>
+                            <div class="small-8 columns">
+                                <input value="{$order->b_zipcode}" id="registration__b_zipcode" required placeholder="{t '08540' dict='order'}" name="BillingAddressForm[b_zipcode]" type="text"/>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="small-4 columns">
+                                <label for="registration__b_statename">{t 'State/Province' dict='order'}</label>
+                                <span class="reqired">*</span>
+                            </div>
+                            <div class="small-8 columns">
+                                <input value="{$order->billing_state}" id="registration__b_statename" required placeholder="{t 'New Jersey' dict='order'}" name="BillingAddressForm[b_statename]" type="text"/>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="small-4 columns">
+                                <label for="registration__b_city">{t 'City' dict='order'}</label>
+                                <span class="reqired">*</span>
+                            </div>
+                            <div class="small-8 columns">
+                                <input value="{$order->b_city}" id="registration__b_city" required placeholder="{t 'Princeton' dict='order'}" name="BillingAddressForm[b_city]" type="text"/>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="row">
                         <div class="column small-12">
                             <div class="buttons">
