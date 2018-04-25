@@ -2,6 +2,7 @@
 namespace Modules\Order\Models;
 
 use Doctrine\DBAL\Types\Type;
+use Modules\Core\Models\CountryModel;
 use Modules\Core\Models\StateModel;
 use Modules\Order\Helpers\OrderEventHelper;
 use Modules\Order\Helpers\OrderHelper;
@@ -97,13 +98,20 @@ class OrderModel extends Model
             ],
             'shipping_state' => [
                 'field' => 's_state',
-                'class' => ForeignField::className(),
-                'modelClass' => StateModel::className(),
+                'class' => ForeignField::class,
+                'modelClass' => StateModel::class,
                 'sqlType' => Type::STRING,
                 'link' => [
                     's_state' => 'code',
                     's_country' => 'country_code'
                 ]
+            ],
+            'shipping_country' => [
+                'field' => 's_country',
+                'class' => ForeignField::class,
+                'modelClass' => CountryModel::class,
+                'sqlType' => Type::STRING,
+                'link' => ['s_country' => 'code']
             ],
             'cb_status_model' => [
                 'field' => 'cb_status',
@@ -290,8 +298,8 @@ class OrderModel extends Model
                     'firstname' => $this->s_firstname,
                     'company' => $this->s_company,
                     'city' => $this->s_city,
-                    'state' => $this->s_state,
-                    'country' => $this->s_country,
+                    'state' => $this->shipping_state,
+                    'country' => $this->shipping_country,
                     'zipcode' => $this->s_zipcode,
                 ];
                 break;
@@ -307,6 +315,7 @@ class OrderModel extends Model
                 ];
                 break;
         }
+
         return $info;
     }
 }

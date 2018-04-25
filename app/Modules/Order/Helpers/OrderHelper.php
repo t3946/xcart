@@ -17,6 +17,7 @@ use Modules\Order\Models\OrderUserLastActivityModel;
 use Modules\Order\Stores\OrderTransactionStore;
 use Modules\Payment\Helpers\PaymentHelper;
 use Modules\User\Models\UserModel;
+use Xcart\App\Form\BaseForm;
 use Xcart\App\Main\Xcart;
 
 class OrderHelper
@@ -243,16 +244,23 @@ class OrderHelper
         return $user;
     }
 
-    public static function isValidShippingAddress($post_data = []): bool
+    public static function isValidShippingAddress(array $post_data = []): array
     {
-        $form = new ShippingAddressForm();
-        $post_data['firstname'] = '';
-//        dd($post_data);
+        $errors = [];
 
-        $form->populate(['ShippingAddressForm' => $post_data]);
-        dd($form->isValid(), $form->getErrors());
+        if ($post_data) {
+            foreach ($post_data as $f_c => $values) {
+                $f_class = "Modules\\Order\\Forms\\$f_c";
+                /** @var BaseForm $form */
+                if (class_exists($f_class)) {
+                    $form = new $f_class;
+                    if (!$form->populate($post_data)->isValid()) {
+                        $errors[$f_c] = $form->getErrors();
+                    }
+                }
+            }
+        }
 
-        return $form->isValid() ?: $form->getErrors();
-
+        return $errors;
     }
 }

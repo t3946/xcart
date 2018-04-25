@@ -3,6 +3,7 @@
 namespace Modules\Core\Models;
 
 
+use Modules\Core\CoreModule;
 use Modules\Shipping\Models\ZoneElementModel;
 use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
@@ -36,5 +37,14 @@ class CountryModel extends Model
                 'extra' => ['field_type' => 'C']
             ],
         ];
+    }
+
+    public function __toString(): string
+    {
+        if ($model = LanguageModel::objects()->get(['code' => 'US', 'name' => "country_$this->code"])){
+            return $model->value;
+        }
+
+        return parent::__toString();
     }
 }

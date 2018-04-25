@@ -8,53 +8,53 @@ use Xcart\App\Form\Fields\DropDownField;
 use Xcart\App\Form\Fields\EmailField;
 use Xcart\App\Form\Fields\NumberField;
 
-class ShippingAddressForm extends BaseForm
+class BillingAddressForm extends BaseForm
 {
     public function getFields()
     {
         return [
-            's_firstname' => [
+            'b_firstname' => [
                 'class' => CharField::class,
                 'label' => "Full Name",
                 'required' => true
 
             ],
 
-            's_company' => [
+            'b_company' => [
                 'class' => CharField::class,
                 'label' => "Company (optional)",
             ],
 
-            's_address' => [
+            'b_address' => [
                 'class' => CharField::class,
                 'label' => 'Address',
                 'required' => true
             ],
 
-            's_address_2' => [
+            'b_address_2' => [
                 'class' => CharField::class,
                 'label' => 'Address (line 2)',
             ],
 
-            's_country' => [
+            'b_country' => [
                 'class' => DropDownField::class,
                 'label' => 'Country',
                 'required' => true
             ],
 
-            's_zipcode' => [
+            'b_zipcode' => [
                 'class' => CharField::class,
                 'label' => 'Zip/Postal Code',
                 'required' => true
             ],
 
-            's_statename' => [
+            'b_statename' => [
                 'class' => CharField::class,
                 'label' => 'State/Province',
                 'required' => true
             ],
 
-            's_city' => [
+            'b_city' => [
                 'class' => CharField::class,
                 'label' => 'City',
                 'required' => true

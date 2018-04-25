@@ -65,20 +65,23 @@ class CheckoutController extends FrontendController
         ]);
 
         if ($app->request->getIsPost()) {
-            $data = $app->request->post->get('customer');
-            //
-            if ($errors = OrderHelper::isValidShippingAddress($data) === true) { //validation
+
+            $data = $app->request->post->all();
+
+            if (!($errors = OrderHelper::isValidShippingAddress($data))) {
+                $shipping = $data['ShippingAddressForm'];
+                $contact = $data['ContactInfoForm'];
 
                 [$address] = AddressModel::objects()->getOrCreate([
                     'user_id' => $user->id,
-                    'full_name' => $data['s_firstname'],
-                    'company' => $data['s_company'],
-                    'address' => $data['s_address'],
-                    'address_2' => $data['s_address_2'],
-                    'country' => $data['s_country'],
-                    'zip' => $data['s_zipcode'],
-                    'state' => $data['s_statename'],
-                    'city' => $data['s_city'],
+                    'full_name' => $shipping['s_firstname'],
+                    'company' => $shipping['s_company'],
+                    'address' => $shipping['s_address'],
+                    'address_2' => $shipping['s_address_2'],
+                    'country' => $shipping['s_country'],
+                    'zip' => $shipping['s_zipcode'],
+                    'state' => $shipping['s_statename'],
+                    'city' => $shipping['s_city'],
                 ]);
                 $address->save();
 
@@ -90,9 +93,9 @@ class CheckoutController extends FrontendController
                     's_zipcode' => $address->zip,
                     's_state' => $address->state,
                     's_city' => $address->city,
-                    'phone' => $data['phone'],
-                    'email' => $data['email'],
-                    'firstname' => $data['firstname'],
+                    'phone' => $contact['phone'],
+                    'email' => $contact['email'],
+                    'firstname' => $contact['firstname'],
                 ]);
 
                 if ($order->save()) {
