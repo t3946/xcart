@@ -104,7 +104,7 @@ class CheckoutController extends FrontendController
             }
         }
 
-        echo $this->render('checkout/shipping.tpl', [
+        $this->display('checkout/shipping.tpl', [
             'order' => $order,
             'errors' => $errors,
             'countries' => Connection::getInstance()->fetchAll(SearchSql::getAllCountryOrderSql())
@@ -120,6 +120,7 @@ class CheckoutController extends FrontendController
         $site = $app->getModule('Sites')->getSite();
         $ship_module = Xcart::app()->getModule('Shipping');
         $cart = $app->cart;
+        $errors = [];
 
         if (!$user) {}
 
@@ -131,52 +132,62 @@ class CheckoutController extends FrontendController
                 $order->groups->delete();
             }
 
-            if ($app->request->post->has('shipping_rates')) {
-                if ($rates = $app->request->post->get('shipping_rates')) {
-                    foreach ($rates as $d => $rateid) {
-                        /** @var ShippingRateModel $rate */
-                        if ($rate = ShippingRateModel::objects()->get(['rateid' => $rateid])) {
-                            /** @var OrderGroupModel $group */
-                            [$group] = OrderGroupModel::objects()->getOrCreate(['manufacturerid' => $d, 'orderid' => $order->orderid]);
+            $data = $app->request->post->all();
 
-                            /** @var ShippingRateModel[] $shipping_rates */
-                            if (($shipping_rates = $ship_module::getShipping($d, $order, $cart->getItemsGroupedBy()[$d])) && $shipping_rates[$rateid]) {
+                if ($app->request->post->has('shipping_rates')) {
+                    if ($rates = $app->request->post->get('shipping_rates')) {
+                        foreach ($rates as $d => $rateid) {
+                            /** @var ShippingRateModel $rate */
+                            if ($rate = ShippingRateModel::objects()->get(['rateid' => $rateid])) {
+                                /** @var OrderGroupModel $group */
+                                [$group] = OrderGroupModel::objects()->getOrCreate(['manufacturerid' => $d, 'orderid' => $order->orderid]);
 
-                                $charge = $shipping_rates[$rateid]->getShippingCharge();
+                                /** @var ShippingRateModel[] $shipping_rates */
+                                if (($shipping_rates = $ship_module::getShipping($d, $order, $cart->getItemsGroupedBy()[$d])) && $shipping_rates[$rateid]) {
 
-                                $group->setAttributes([
-                                    'shippingid' => $rate->shippingid,
-                                    'shipping' => $rate->shipping->getFrontendName(),
-                                    'shipping_gross' => $charge,
-                                    'shipping_net' => $charge,
-                                ]);
+                                    $charge = $shipping_rates[$rateid]->getShippingCharge();
 
-                                $group->save();
+                                    $group->setAttributes([
+                                        'shippingid' => $rate->shippingid,
+                                        'shipping' => $rate->shipping->getFrontendName(),
+                                        'shipping_gross' => $charge,
+                                        'shipping_net' => $charge,
+                                    ]);
+
+                                    $group->save();
+                                }
                             }
                         }
                     }
-                }
-                if ($app->request->post->has('payment_method')) {
-                    if (($paymentid = $app->request->post->get('payment_method')) && $payment_method = PaymentMethodModel::objects()->get(['paymentid' => $paymentid])) {
-                        /** @var PaymentMethodModel $payment_method */
-                        $order->paymentid = $payment_method->paymentid;
-                        $order->save();
+
+                    if ($app->request->post->has('payment_method')) {
+                        if (($paymentid = $app->request->post->get('payment_method')) && $payment_method = PaymentMethodModel::objects()->get(['paymentid' => $paymentid])) {
+                            /** @var PaymentMethodModel $payment_method */
+                            $order->paymentid = $payment_method->paymentid;
+                        }
                     }
+
+                    if ($app->request->post->has('billing_same')) {
+                        $order->setAttributes([
+                            'b_address' => $order->s_address,
+                            'b_firstname' => $order->s_firstname,
+                            'b_company' => $order->s_company,
+                            'b_city' => $order->s_city,
+                            'b_state' => $order->s_state,
+                            'b_country' => $order->s_country,
+                            'b_zipcode' => $order->s_zipcode,
+                        ]);
+                    } else {
+                        if (!($errors = OrderHelper::isValidShippingAddress($data))) {
+                            $order->setAttributes($data['BillingAddressForm']);
+                        }
+                    }
+                    $order->save();
                 }
-                if ($app->request->post->has('billing_same')) {
-                   $order->setAttributes([
-                       'b_address' => $order->s_address,
-                       'b_firstname' => $order->s_firstname,
-                       'b_company' => $order->s_company,
-                       'b_city' => $order->s_city,
-                       'b_state' => $order->s_state,
-                       'b_country' => $order->s_country,
-                       'b_zipcode' => $order->s_zipcode,
-                   ]);
-                   $order->save();
+
+                if (!$errors) {
+                    $this->redirect('checkout:review');
                 }
-            }
-            $this->redirect('checkout:review');
         }
 
         $payment_methods = PaymentMethodModel::objects()
@@ -184,9 +195,10 @@ class CheckoutController extends FrontendController
             ->order(['is_cod', 'orderby'])
             ->all();
 
-        echo $this->render('checkout/options.tpl', [
+        $this->display('checkout/options.tpl', [
             'order' => $order,
-            'payment_methods' => $payment_methods
+            'payment_methods' => $payment_methods,
+            'errors' => $errors
         ]);
     }
 
@@ -220,7 +232,7 @@ class CheckoutController extends FrontendController
             $this->redirect('checkout:payment');
         }
 
-        echo $this->render('checkout/review.tpl', [
+        $this->display('checkout/review.tpl', [
             'order' => $order,
         ]);
 
@@ -240,7 +252,7 @@ class CheckoutController extends FrontendController
         $order = $this->getOrder();
 
 
-        echo $this->render('checkout/complete.tpl', [
+        $this->display('checkout/complete.tpl', [
             'order' => $order,
             'shipping_info' => $order->getInfo('shipping'),
             'billing_info' => $order->getInfo('billing'),
