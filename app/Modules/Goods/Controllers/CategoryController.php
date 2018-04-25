@@ -3,6 +3,7 @@
 namespace Modules\Goods\Controllers;
 
 use Modules\Goods\Models\CategoryModel;
+use Xcart\App\Main\Xcart;
 
 class CategoryController extends AbstractCatalogController
 {
@@ -24,6 +25,14 @@ class CategoryController extends AbstractCatalogController
         if (!$model) {
             $this->error();
         }
+
+        /** @var \Modules\Sites\Models\SiteModel $site */
+        $site = Xcart::app()->getModule('Sites')->getSite();
+
+        $this->setMetaTemplate('categories:base', [
+            'model' => $model,
+            'site' => $site,
+        ]);
 
         $this->view_internal($model);
     }
