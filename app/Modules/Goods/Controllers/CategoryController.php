@@ -56,8 +56,12 @@ class CategoryController extends AbstractCatalogController
             'storefrontid' => Xcart::app()->getModule('Sites')->getSite()
         ])->all();
 
+        /** @var ProductModel[] $products */
+        $products = \Modules\Goods\Helpers\SliderDataHelper::getSliderData('recently_viewed_products');
+
         echo $this->render('catalog/subcategory.tpl', [
             'categories' => $categories,
+            'showSlider' => !empty($products)
         ]);
     }
 }

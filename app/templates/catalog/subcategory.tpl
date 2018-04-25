@@ -24,7 +24,7 @@
 
         {* Список меню категорий *}
         <div class="sections">
-            {foreach $categories as $category}
+            {foreach $categories as $categoryKey => $category}
                 <section id="id{$category->categoryid}" class="departments-submenu-container">
                     {*<a name="id{$category->categoryid}"></a>*}
                     {* Заголовок категории *}
@@ -59,12 +59,13 @@
                     </div>
 
                     {* Разделитель *}
-                    {*{if <expression>}*}
+                    {if ($showSlider || ($categoryKey < (count($categories) - 1)))}
                     <div class="row">
                         <div class="column small-12">
                             <div class="hr"></div>
                         </div>
                     </div>
+                    {/if}
                 </section>
             {/foreach}
         </div>
@@ -72,13 +73,6 @@
 {/block}
 
 {block 'after-content'}
-
-    {* Разделитель *}
-    <div class="row">
-        <div class="column small-12">
-            <div class="hr"></div>
-        </div>
-    </div>
 
     <div class="row">
         <div class="small-12 column slider-viewed">
