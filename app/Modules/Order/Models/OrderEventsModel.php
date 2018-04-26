@@ -1,6 +1,7 @@
 <?php
 namespace Modules\Order\Models;
 
+use Modules\Order\Helpers\OrderHelper;
 use Modules\User\Models\UserModel;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\Fields\CharField;
@@ -56,6 +57,7 @@ class OrderEventsModel extends Model
      * @param OrderModel|Order|null $owner Owner order model
      * @param int $order_id                Order id
      * @param string|null $message         Message for event
+     * @param int|null $user_id            User id
      *
      * @return null|static
      * @throws \Exception
@@ -74,9 +76,9 @@ class OrderEventsModel extends Model
             $model->setAttributes(['order_id' => $order_id, 'message' => $message, 'user_id' => $user_id]);
 
             //Cache UP
-            if (rand(0,10) > 6) {
+            if (random_int(0,10) > 6) {
                 if ($order = $model->order) {
-                    $order->getOTRSTicketMessages();
+                    OrderHelper::getOTRSMessages($order);
                 }
             }
 

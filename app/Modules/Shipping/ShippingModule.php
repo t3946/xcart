@@ -25,6 +25,7 @@ class ShippingModule extends Module
 
         $user = new UserModel([
             's_zipcode' => $order->s_zipcode,
+            's_state' => $order->s_state,
             's_country' => $order->s_country,
         ]);
 

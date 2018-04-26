@@ -3,6 +3,7 @@
 namespace Modules\Order\Controllers;
 
 use Modules\Core\Models\CountryModel;
+use Modules\Core\Models\StateModel;
 use Modules\Dashboard\Sqls\SearchSql;
 use Modules\Order\Helpers\OrderHelper;
 use Modules\Order\Models\OrderExtraModel;
@@ -72,6 +73,13 @@ class CheckoutController extends FrontendController
                 $shipping = $data['ShippingAddressForm'];
                 $contact = $data['ContactInfoForm'];
 
+                $s_state = $shipping['s_statename'];
+                if (!StateModel::objects()->get(['code' => $s_state])) {
+                    if ($state_m = StateModel::objects()->get(['state' => $s_state, 'country_code' => $shipping['s_country']])) {
+                        $s_state = $state_m->code;
+                    }
+                }
+                
                 [$address] = AddressModel::objects()->getOrCreate([
                     'user_id' => $user->id,
                     'full_name' => $shipping['s_firstname'],
@@ -80,7 +88,7 @@ class CheckoutController extends FrontendController
                     'address_2' => $shipping['s_address_2'],
                     'country' => $shipping['s_country'],
                     'zip' => $shipping['s_zipcode'],
-                    'state' => $shipping['s_statename'],
+                    'state' => $s_state,
                     'city' => $shipping['s_city'],
                 ]);
                 $address->save();
@@ -134,61 +142,77 @@ class CheckoutController extends FrontendController
 
             $data = $app->request->post->all();
 
-            if ($app->request->post->has('shipping_rates')) {
-                if ($rates = $app->request->post->get('shipping_rates')) {
-                    foreach ($rates as $d => $rateid) {
-                        /** @var ShippingRateModel $rate */
-                        if ($rate = ShippingRateModel::objects()->get(['rateid' => $rateid])) {
-                            /** @var OrderGroupModel $group */
-                            [$group] = OrderGroupModel::objects()->getOrCreate(['manufacturerid' => $d, 'orderid' => $order->orderid]);
+            if ($cart_groups = $cart->getItemsGroupedBy()) {
+                $rates = $app->request->post->get('shipping_rates');
 
-                            $items = $cart->getItemsGroupedBy()[$d];
-                            dd($items);
+                $order->subtotal = $order->shipping_cost = 0;
 
-                            /** @var ShippingRateModel[] $shipping_rates */
-                            if (($shipping_rates = $ship_module::getShipping($d, $order, $items)) && $shipping_rates[$rateid]) {
+                foreach ($cart_groups as $g => $items) {
+                    [$group] = OrderGroupModel::objects()->getOrCreate(['manufacturerid' => $g, 'orderid' => $order->orderid]);
 
-                                $charge = $shipping_rates[$rateid]->getShippingCharge();
+                    if ($rates[$g] && ($rate = ShippingRateModel::objects()->get(['rateid' => $rates[$g]]))) {
 
-                                $group->setAttributes([
-                                    'shippingid' => $rate->shippingid,
-                                    'shipping' => $rate->shipping->getFrontendName(),
-                                    'shipping_gross' => $charge,
-                                    'shipping_net' => $charge,
-                                ]);
+                        /** @var ShippingRateModel[] $shipping_rates */
+                        if (($shipping_rates = $ship_module::getShipping($g, $order, $cart_groups[$g])) && $shipping_rates[$rate->rateid]) {
 
-                                $group->save();
-                            }
+                            $charge = $shipping_rates[$rate->rateid]->getShippingCharge();
+
+                            $group->setAttributes([
+                                'shippingid' => $rate->shippingid,
+                                'shipping' => $rate->shipping->getFrontendName(),
+                                'shipping_gross' => $charge,
+                                'shipping_net' => $charge,
+                                'total_gross' => $cart_groups[$g]['subtotal'],
+                                'total_net' => $cart_groups[$g]['subtotal'],
+                            ]);
+
+                            $group->save();
+
+                            $order->subtotal += $group->total_gross;
+                            $order->shipping_cost += $charge;
                         }
                     }
                 }
 
-                if ($app->request->post->has('payment_method')) {
-                    if (($paymentid = $app->request->post->get('payment_method')) && $payment_method = PaymentMethodModel::objects()->get(['paymentid' => $paymentid])) {
-                        /** @var PaymentMethodModel $payment_method */
-                        $order->paymentid = $payment_method->paymentid;
-                    }
-                }
+                $order->total = $order->subtotal + $order->shipping_cost;
 
-                if ($app->request->post->has('billing_same')) {
-                    if ($app->request->post->get('billing_same')) {
-                        $order->setAttributes([
-                            'b_address' => $order->s_address,
-                            'b_firstname' => $order->s_firstname,
-                            'b_company' => $order->s_company,
-                            'b_city' => $order->s_city,
-                            'b_state' => $order->s_state,
-                            'b_country' => $order->s_country,
-                            'b_zipcode' => $order->s_zipcode,
-                        ]);
-                    } else {
-                        if (!($errors = OrderHelper::isValidShippingAddress($data))) {
-                            $order->setAttributes($data['BillingAddressForm']);
-                        }
-                    }
-                }
                 $order->save();
             }
+
+            if ($app->request->post->has('payment_method')) {
+                if (($paymentid = $app->request->post->get('payment_method')) && $payment_method = PaymentMethodModel::objects()->get(['paymentid' => $paymentid])) {
+                    /** @var PaymentMethodModel $payment_method */
+                    $order->paymentid = $payment_method->paymentid;
+                }
+            }
+
+            if ($app->request->post->has('billing_same')) {
+                if ($app->request->post->get('billing_same')) {
+                    $order->setAttributes([
+                        'b_address' => $order->s_address,
+                        'b_firstname' => $order->s_firstname,
+                        'b_company' => $order->s_company,
+                        'b_city' => $order->s_city,
+                        'b_state' => $order->s_state,
+                        'b_country' => $order->s_country,
+                        'b_zipcode' => $order->s_zipcode,
+                    ]);
+                } else {
+                    if (!($errors = OrderHelper::isValidShippingAddress($data))) {
+                        $order->setAttributes($data['BillingAddressForm']);
+
+                        $b_state = $data['BillingAddressForm']['b_statename'];
+                        if (!StateModel::objects()->get(['code' => $b_state])) {
+                            if ($state_m = StateModel::objects()->get(['state' => $b_state, 'country_code' => $data['BillingAddressForm']['b_country']])) {
+                                $b_state = $state_m->code;
+                            }
+                        }
+
+                        $order->b_state = $b_state;
+                    }
+                }
+            }
+            $order->save();
 
             if (!$errors) {
                 $this->redirect('checkout:review');
@@ -221,7 +245,6 @@ class CheckoutController extends FrontendController
             if ($app->request->post->has('customer_notes')) {
                 $order->setAttributes([
                     'customer_notes' => $app->request->post->get('customer_notes'),
-                    'cb_status' => OrderStatusModel::ORDER_STATUS_QUEUED
                 ]);
                 $order->save();
             }
@@ -249,7 +272,7 @@ class CheckoutController extends FrontendController
         $app = Xcart::app();
         $order = $this->getOrder();
 
-        $this->redirect("payment:process", ['gateway' => strtolower($order->payment_method->processor->processor_name)]);
+        $this->redirect("payment:process", ['gateway' => strtolower($order->payment_method->frontend_processor->processor_name)]);
 
     }
 

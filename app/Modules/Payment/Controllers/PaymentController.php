@@ -22,42 +22,46 @@ class PaymentController extends Controller
     {
         /** @var ProcessorModel $pm */
         if ($pm = ProcessorModel::objects()->get(['processor_name' => $gateway])){
+
             if ($gw = Gateway::getGateway($pm)){
 
+                dd($gw);
+
                 $app = Xcart::app();
-                $user = $app->user;
                 $cart = $app->cart;
                 if (!$cart->getCartNumber() || $cart->getIsEmpty()) {
                     $this->redirect('cart:list');
                 }
 
                 /** @var OrderModel $order */
-                $order = OrderModel::objects()->get([
-                    'cart_number' => $cart->getCartNumber(),
-                ]);
+                if ($order = OrderModel::objects()->get(['cart_number' => $cart->getCartNumber()])) {
 
-                try {
+                    try {
 
-                    $params = [
-                        'cancelUrl' => Xcart::app()->router->absoluteUrl("payment:cancel", ['gateway' => strtolower($pm->processor_name)]),
-                        'returnUrl' => Xcart::app()->router->absoluteUrl("payment:return", ['gateway' => strtolower($pm->processor_name)]),
-                        'notifyUrl' => Xcart::app()->router->absoluteUrl("payment:success", ['gateway' => strtolower($pm->processor_name)]),
-                        'amount' => number_format($order->total, 2, '.', ''),
-                        'currency' => 'USD'
-                    ];
+                        $params = [
+                            'cancelUrl' => Xcart::app()->router->absoluteUrl("payment:cancel", ['gateway' => strtolower($pm->processor_name)]),
+                            'returnUrl' => Xcart::app()->router->absoluteUrl("payment:return", ['gateway' => strtolower($pm->processor_name)]),
+                            'notifyUrl' => Xcart::app()->router->absoluteUrl("payment:success", ['gateway' => strtolower($pm->processor_name)]),
+                            'amount' => number_format($order->total, 2, '.', ''),
+                            'currency' => 'USD'
+                        ];
 
-                    if ($response = $gw->purchase($params)) {
-                        //create order here
+                        if ($response = $gw->purchase($params)) {
+                            $order->cb_status = OrderStatusModel::ORDER_STATUS_NOT_FINISHED;
+                            $order->save();
 
-                        if ($gw->result->isRedirect()) {
-                            $gw->result->redirect();
+                            $order->groups->update(['cb_status' => $order->cb_status]);
+
+                            if ($gw->result->isRedirect()) {
+                                $gw->result->redirect();
+                            }
+
+                            $this->redirect("payment:return", ['gateway' => strtolower($pm->processor_name)]);
                         }
 
-                        $this->redirect("payment:return", ['gateway' => strtolower($pm->processor_name)]);
+                    } catch (Exception $e){
+                        exit('Sorry, there was an error processing your payment. Please try again later.');
                     }
-
-                } catch (Exception $e){
-                    exit('Sorry, there was an error processing your payment. Please try again later.');
                 }
             }
         }
@@ -67,6 +71,8 @@ class PaymentController extends Controller
     public function success($gateway)
     {
         //x_log_flag('log_payment_paypal_processing', 'PAYPAL', $_REQUEST, true);
+
+        $app = Xcart::app();
 
         if(isset($_GET['success'])) {
             /** @var ProcessorModel $pm */
@@ -86,7 +92,17 @@ class PaymentController extends Controller
 
     public function cancel($gateway)
     {
-        var_dump($gateway);
+        $app = Xcart::app();
+        $cart = $app->cart;
+        if ($cart->getCartNumber()){
+            if ($order = OrderModel::objects()->get(['cart_number' => $cart->getCartNumber()])) {
+                $order->cb_status = OrderStatusModel::ORDER_STATUS_QUEUED;
+                $order->save();
+
+                $order->groups->update(['cb_status' => $order->cb_status]);
+            }
+        }
+        $this->redirect("checkout:review");
     }
 
     public function ret($gateway)

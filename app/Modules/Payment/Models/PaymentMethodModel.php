@@ -34,6 +34,12 @@ class PaymentMethodModel extends Model
                 'modelClass' => ProcessorModel::className(),
                 'link' => ['processor_id' => 'processor_id'],
             ],
+            'frontend_processor' => [
+                'field' => 'frontend_processor_id',
+                'class' => ForeignField::className(),
+                'modelClass' => ProcessorModel::className(),
+                'link' => ['frontend_processor_id' => 'processor_id'],
+            ],
             'cc_processor_models' => [
                 'class' => HasManyField::className(),
                 'modelClass' => PaymentProcessorModel::className(),

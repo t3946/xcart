@@ -175,7 +175,6 @@
                                 {t 'Extended' dict='cart'}
                             </div>
                         </div>
-                        {set $subtotal = 0}
                         {foreach $items as $key=>$position}
                             <div class="row order-table-body">
                                 <div class="columns small-2 text-align--center sku">
@@ -199,19 +198,18 @@
                                     US$ <span class="price">{$extended|number_format:2}</span>
                                 </div>
                             </div>
-                            {set $subtotal += $extended}
-                            {set $shipping_total += $order_group->shipping_gross}
                         {/foreach}
-                        <div class="row group-shipping">
-                            <div class="columns text-align--right">{t 'Shipping by' dict='order'} {$order_group->shippingModel->getFrontendName()}:</div>
-                            <div class="columns small-2">US$ <span class="price">{$order_group->shipping_gross|number_format:2}</span></div>
-                        </div>
+                        {if $order_group->shippingModel}
+                            <div class="row group-shipping">
+                                <div class="columns text-align--right">{t 'Shipping by' dict='order'} {$order_group->shippingModel->getFrontendName()}:</div>
+                                <div class="columns small-2">US$ <span class="price">{$order_group->shipping_gross|number_format:2}</span></div>
+                            </div>
+                        {/if}
                         <div class="row group-total">
                             <div class="columns text-align--right">{t 'Subtotal:' dict='order'}</div>
-                            <div class="columns small-2">US$ <span class="price">{$subtotal|number_format:2}</span></div>
+                            <div class="columns small-2">US$ <span class="price">{$order_group->total_gross|number_format:2}</span></div>
                         </div>
                     </div>
-                    {set $order_total += $subtotal}
                 {/foreach}
             </div>
             <div class="row">
@@ -222,16 +220,15 @@
             <div class="order-total">
                 <div class="row total">
                     <div class="columns small-offset-8 text-align--right">{t 'Total:' dict='order'}</div>
-                    <div class="columns">US$ <span class="price">{$order_total|number_format:2}</span></div>
+                    <div class="columns">US$ <span class="price">{$order->subtotal|number_format:2}</span></div>
                 </div>
                 <div class="row total-shipping">
                     <div class="columns title small-offset-8 text-align--right">{t 'Total Shipping Cost:' dict='order'}</div>
-                    <div class="columns value">US$ <span class="price">{$shipping_total|number_format:2}</span></div>
+                    <div class="columns value">US$ <span class="price">{$order->shipping_cost|number_format:2}</span></div>
                 </div>
-                {set $grand_total = $order_total + $shipping_total}
                 <div class="row grand-total">
                     <div class="columns title small-offset-8 text-align--right">{t 'Grand Total:' dict='order'}</div>
-                    <div class="columns value">US$ <span class="price">{$grand_total|number_format:2}</span></div>
+                    <div class="columns value">US$ <span class="price">{$order->total|number_format:2}</span></div>
                 </div>
             </div>
 
@@ -269,7 +266,7 @@
                     {include "checkout/_address_view_full.tpl" info=$order->getAddressInfo('shipping') uri='checkout:shipping' header=$.t('Shipping Address','order')}
                 </div>
                 <div class="columns">
-                    {include "checkout/_address_view_full.tpl" info=$order->getAddressInfo('billing') uri='checkout:shipping' header=$.t('Billing Address','order')}
+                    {include "checkout/_address_view_full.tpl" info=$order->getAddressInfo('billing') uri='checkout:options' header=$.t('Billing Address','order')}
                 </div>
             </div>
             <div class="row delivery">
@@ -291,7 +288,9 @@
                                     <div class="column">{t 'warehouse items:' dict='order'}</div>
                                 </div>
                             </div>
-                            <div class="columns">{$shipping_model->getFrontendName()} - {$shipping_model->shipping_time}</div>
+                            {if $shipping_model}
+                                <div class="columns">{$shipping_model->getFrontendName()} - {$shipping_model->shipping_time}</div>
+                            {/if}
                         </div>
                     {/foreach}
                     <div class="row align-center">

@@ -321,15 +321,17 @@ class OrderModel extends Model
                 ];
                 break;
             case 'billing':
-                $info = [
-                    'address' => explode(PHP_EOL, $this->b_address, 2),
-                    'firstname' => $this->b_firstname,
-                    'company' => $this->b_company,
-                    'city' => $this->b_city,
-                    'state' => $this->billing_state,
-                    'country' => $this->billing_country,
-                    'zipcode' => $this->b_zipcode,
-                ];
+                if ($this->b_firstname || $this->b_company || $this->b_address || $this->b_city || $this->billing_state || $this->billing_country || $this->billing_country || $this->b_zipcode !== null) {
+                    $info = [
+                        'address' => explode(PHP_EOL, $this->b_address, 2),
+                        'firstname' => $this->b_firstname,
+                        'company' => $this->b_company,
+                        'city' => $this->b_city,
+                        'state' => $this->billing_state,
+                        'country' => $this->billing_country,
+                        'zipcode' => $this->b_zipcode,
+                    ];
+                }
                 break;
         }
 
@@ -340,6 +342,10 @@ class OrderModel extends Model
     {
         $a_s = $this->getAddressInfo('shipping');
         $a_b = $this->getAddressInfo('billing');
+
+        if (!$a_b) {
+            return false;
+        }
 
         return !empty(array_diff($a_s, $a_b));
     }
