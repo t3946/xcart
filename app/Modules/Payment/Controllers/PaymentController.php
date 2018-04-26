@@ -25,8 +25,6 @@ class PaymentController extends Controller
 
             if ($gw = Gateway::getGateway($pm)){
 
-                dd($gw);
-
                 $app = Xcart::app();
                 $cart = $app->cart;
                 if (!$cart->getCartNumber() || $cart->getIsEmpty()) {
