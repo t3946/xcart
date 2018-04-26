@@ -14,6 +14,8 @@ html, body {
 
     color: #a38c8c;
     background: #fff;
+
+    min-width: 1240px;
 }
 
 
@@ -33,6 +35,7 @@ html, body {
 }
 
 header {
+    position: relative;
 }
 
 header a.logo {
@@ -60,6 +63,7 @@ header a.logo {
 }
 
 .content {
+    position: relative;
     flex: 1;
 }
 .slick-slider {

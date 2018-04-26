@@ -13,8 +13,8 @@
         {/block}
     </head>
     <body>
-    <div class="top-patter pattern-yl"></div>
     <div id="wrapper">
+        <div class="top-patter pattern-yl"></div>
         <header>
             <div class="row">
                 <div class="column columns small-12 text-center">
@@ -38,7 +38,6 @@
                     </div>
                 </div>
             </div>
-
         </footer>
     </div>
     </body>
