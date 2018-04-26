@@ -7,7 +7,7 @@
 {block 'content'}
 
     <div class="row">
-        <div class="column large-7">
+        <div class="column small-7">
             <div class="slider">
                 <img src="/static/frontend/production/images/land/p/1-4.jpg" alt="Wick Candle Maker by We R Memory Keepers или We R Wick Candle Machine Kit">
                 <img src="/static/frontend/production/images/land/p/1-3.jpg" alt="Wick Candle Maker by We R Memory Keepers или We R Wick Candle Machine Kit">
@@ -15,7 +15,7 @@
                 <img src="/static/frontend/production/images/land/p/1-1.jpg" alt="Wick Candle Maker by We R Memory Keepers или We R Wick Candle Machine Kit">
             </div>
         </div>
-        <div class="column large-5">
+        <div class="column small-5">
 
             <div class="info-block">
                 <h1>Wick Candle Maker by We R Memory Keepers</h1>
@@ -55,23 +55,23 @@
         <div class="bg-block ro"></div>
         <div class="content-block">
             <div class="row">
-                <div class="column large-12 text-center">
+                <div class="column small-12 text-center">
                     <h2>
                         Watch our Wick Candle Maker video presentation and make sure how easy it is to use.
                     </h2>
                 </div>
             </div>
             <div class="row video-block">
-                <div class="column large-12 text-center">
+                <div class="column small-12 text-center">
                     <iframe width="780" height="439" src="https://www.youtube.com/embed/bEhlvggbwk8?rel=0&amp;showinfo=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
                 </div>
             </div>
             <div class="row video-info-block">
-                <div class="column large-3">&nbsp;</div>
-                <div class="column large-6 text-center">
+                <div class="column small-3">&nbsp;</div>
+                <div class="column small-6 text-center">
                     Candle making is now safe, easy, and clean with this new candle machine kit. Create candles in various colors and shades by yourself.
                 </div>
-                <div class="column large-3">&nbsp;</div>
+                <div class="column small-3">&nbsp;</div>
             </div>
         </div>
     </div>
@@ -79,21 +79,21 @@
 
     <div class="promo-block">
         <div class="row">
-            <div class="column large-12 text-center">
+            <div class="column small-12 text-center">
                 <h2>
                     What's inside We R Wick Candle Machine Kit?
                 </h2>
             </div>
         </div>
         <div class="row">
-            <div class="column large-12">
+            <div class="column small-12">
                 <div class="top-border borders">
                     &nbsp;
                 </div>
 
                 <div class="row">
-                    <div class="columns large-2">&nbsp;</div>
-                    <div class="columns large-10">
+                    <div class="columns small-2">&nbsp;</div>
+                    <div class="columns small-10">
                         <ul>
                             <li>
                                 Wick candle maker;
@@ -125,7 +125,7 @@
                         </ul>
                     </div>
 
-                    <div class="columns large-2"></div>
+                    <div class="columns small-2"></div>
                 </div>
 
                 <div class="bottom-border borders text-center">
@@ -142,7 +142,7 @@
 
     <div class="remarks">
         <div class="row">
-            <div class="column large-12 text-center">
+            <div class="column small-12 text-center">
                 * This product contains chemicals known to the state of California to cause cancer, birth defects or other reproductive harm. Do not mouth or chew.
                 <br>
                 *UL listed. *Imported.
