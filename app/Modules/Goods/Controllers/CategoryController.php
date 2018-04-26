@@ -64,4 +64,10 @@ class CategoryController extends AbstractCatalogController
             'showSlider' => !empty($products)
         ]);
     }
+
+    public function actionContact()
+    {
+        //echo '11';
+        echo $this->render('pages/contact.tpl');
+    }
 }
