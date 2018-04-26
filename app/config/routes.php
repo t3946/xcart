@@ -6,7 +6,7 @@ return array_merge($admin_routes, [
         'path' => 'Modules.Goods.routes',
     ],
     [
-        'route' => '/landos',
+        'route' => '/product',
         'path' => 'Modules.Landing.routes',
         'namespace' => 'landing',
     ],

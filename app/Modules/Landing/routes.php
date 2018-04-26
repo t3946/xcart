@@ -1,9 +1,11 @@
 <?php
 
- return [
+use Modules\Landing\Controllers\LandingController;
+
+return [
      [
-         'route' => '/product/{i:id}/',
-         'target' => ['\Modules\Landing\Controllers\LandingController', 'index'],
+         'route' => '/wick-candle-maker/',
+         'target' => [LandingController::class, 'index'],
          'name' => 'product'
      ],
  ];
