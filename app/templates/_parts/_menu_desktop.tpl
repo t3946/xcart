@@ -43,7 +43,7 @@
                     </ul>
 
                     <div class="view-all-container">
-                        <a href="#" class="view-all">View all departments</a>
+                        <a href="{url 'catalog:list'}" class="view-all">View all departments</a>
                     </div>
                 </div>
 

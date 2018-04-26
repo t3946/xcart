@@ -37,7 +37,7 @@
 
         </div>
 
-        <a href="#" class="view-all">
+        <a href="{url 'catalog:list'}#id{$model->categoryid}" class="view-all">
             View all {$menu_name} departments
         </a>
     </div>

@@ -109,3 +109,42 @@
   }
 
 }
+.slide,
+.video-wrapper {
+  &.play-icon {
+    position: relative;
+
+    &:before, &:after {
+      content: '';
+      display: block;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+    }
+
+    &:before {
+      border-radius: 50px;
+      width: 35px;
+      height: 35px;
+      opacity: 0.5;
+      background-color: black;
+      margin-top: -17px;
+      margin-left: -17px;
+    }
+
+    &:after {
+      border: 8px solid transparent;
+      border-right-width: 14px;
+      border-left: 14px solid #ededed;
+
+      margin-left: -5px;
+      margin-top: -8px;
+    }
+  }
+}
+
+.slider-detail {
+  .play-icon {
+
+  }
+}

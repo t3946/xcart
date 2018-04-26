@@ -2,7 +2,7 @@
     "config": {
         "sort-packages": true,
         "optimize-autoloader": true,
-        "vendor-dir": "app/include/vendors"
+        "vendor-dir": "app/include/vendors",
     },
     "repositories": [
         {
