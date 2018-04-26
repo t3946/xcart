@@ -2,7 +2,7 @@
     "config": {
         "sort-packages": true,
         "optimize-autoloader": true,
-        "vendor-dir": "app/include/vendors",
+        "vendor-dir": "app/include/vendors"
     },
     "repositories": [
         {
@@ -47,7 +47,8 @@
             "Xcart\\External_Product_Verification\\": "www/modules/External_Product_Verification/include",
             "Xcart\\External_Marketplaces\\": "www/modules/External_Marketplaces/include",
             "Omnipay\\BluePay\\" : "app/Modules/Payment/Gateways/Omnipay/BluePay",
-            "Omnipay\\PayPal\\" : "app/Modules/Payment/Gateways/Omnipay/PayPal"
+            "Omnipay\\PayPal\\" : "app/Modules/Payment/Gateways/Omnipay/PayPal",
+            "Omnipay\\Xpay\\" : "app/Modules/Payment/Gateways/Omnipay/Xpay"
         },
         "classmap": [
             "app/include/vendors/caponica/amazon-mws-complete/src/AmazonPhpClientLibrary/FBAOutboundServiceMWS",
