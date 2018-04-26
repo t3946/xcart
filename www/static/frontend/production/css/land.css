@@ -154,6 +154,10 @@ h2 {
     line-height: 22px;
 }
 
+.buttons .button.red {
+    background-color: #f7367f;
+}
+
 .show-work {
     position: relative;
 }
@@ -212,4 +216,63 @@ h2 {
 .remarks {
     color: #beafaf;
     font-size: 12px;
+}
+
+.form {
+    width: 589px;
+    height: 611px;
+    display: inline-block;
+    padding: 90px 100px 40px;
+    margin: 2px;
+}
+
+.form-block {
+    background: url("/static/frontend/production/images/land/bg-form-order.png") center center no-repeat;
+}
+
+.form label {
+    display: none;
+}
+
+.form .info {
+    width: 250px;
+    margin: 0 auto;
+    color: #838790;
+    font-size: 14px;
+    line-height: 22px;
+    padding: 20px 0;
+}
+
+.form h1 {
+    margin-bottom: 20px;
+}
+
+.form .buttons {
+    margin-top: 20px;
+}
+
+.form .hr {
+    margin: 0 auto;
+    width: 68px;
+    height: 2px;
+    background-color: #917c74;
+}
+
+.form input {
+    background-color: white;
+    border: 1px solid #a4a4a4;
+    border-radius: 4px;
+}
+
+.form input:focus {
+    border: 1px solid #5b5b5b;
+    box-shadow: 0 3px 8px rgba(93, 78, 72, 0.15);
+}
+
+.form .errors {
+    display: none;
+}
+
+.form input.invalid {
+    border-color: #f7367f;
 }

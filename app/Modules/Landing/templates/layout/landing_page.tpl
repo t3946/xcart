@@ -2,11 +2,11 @@
 <html>
     <head>
         <meta charset="utf-8">
-
-        {*<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.4.3/css/foundation.min.css">*}
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.4.3/css/foundation-float.min.css">
         <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700" rel="stylesheet">
         <link rel="stylesheet" href="/static/frontend/production/css/land.css?_={time()}">
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.slim.min.js"></script>
 
         {block 'head'}
 
@@ -40,6 +40,7 @@
             </div>
         </footer>
     </div>
+    {include 'inSmarty/raw_flash.tpl'}
     </body>
 </html>
 

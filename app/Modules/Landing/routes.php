@@ -8,4 +8,9 @@ return [
          'target' => [LandingController::class, 'index'],
          'name' => 'product'
      ],
+     [
+         'route' => '/wick-candle-maker/buy/',
+         'target' => [LandingController::class, 'order'],
+         'name' => 'order'
+     ],
  ];

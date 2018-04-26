@@ -39,7 +39,7 @@
                 </div>
 
                 <div class="buttons">
-                    <a href="/product/wick-candle-maker/buy" class="button">
+                    <a href="/product/wick-candle-maker/buy/" class="button">
                         Buy
                     </a>
                 </div>
@@ -130,7 +130,7 @@
 
                 <div class="bottom-border borders text-center">
                     <div class="buttons">
-                        <a href="/product/wick-candle-maker/buy" class="button">
+                        <a href="/product/wick-candle-maker/buy/" class="button">
                             Buy
                         </a>
                     </div>
@@ -166,6 +166,5 @@
 
     </script>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.slim.min.js" defer></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.min.js" defer onload="slickInit();"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.min.js" async onload="slickInit();"></script>
 {/block}
