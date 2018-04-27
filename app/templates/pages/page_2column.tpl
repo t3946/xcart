@@ -10,7 +10,7 @@
         </section>
         <section class="page-container">
             <div class="row">
-                <div class="column large-12 large-2column">
+                <div class="column large-12">
                     {raw $model->content}
                 </div>
             </div>
