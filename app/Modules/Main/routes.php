@@ -1,4 +1,7 @@
 <?php
+
+use Modules\Main\Controllers\ContactFormController;
+
 return [
     '' => [
         'route' => '',
