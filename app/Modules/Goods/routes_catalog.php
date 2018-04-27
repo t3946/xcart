@@ -72,6 +72,7 @@ return [
     ],
 
 
+
     /** SEARCH ROUTES */
     [
         'route' => '/search',

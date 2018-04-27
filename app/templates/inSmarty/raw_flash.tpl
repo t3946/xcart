@@ -15,9 +15,20 @@
 
         $(document).on('click', '.close-flash, .flash-message', function (e) {
             e.preventDefault();
-            $(this).closest('.flash-message').fadeOut(400, function () {
-                $(this).remove();
-            });
+            var el = this;
+
+            if (!el.classList.contains('flash-message')) {
+                el = el.closest('.flash-message')
+            }
+
+            if ($(el).fadeOut) {
+                $(el).fadeOut(400, function () {
+                    $(el).remove();
+                });
+            }
+            else {
+                $(el).remove();
+            }
             return false;
         });
 
@@ -122,6 +133,7 @@
     position:fixed;
     left:0;
     right:0;
+    top: 0;
     margin-left:auto;
     margin-right:auto;
     z-index: 1000;

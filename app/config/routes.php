@@ -11,6 +11,11 @@ return array_merge($admin_routes, [
         'path' => 'Modules.Goods.routes',
     ],
     [
+        'route' => '/product',
+        'path' => 'Modules.Landing.routes',
+        'namespace' => 'landing',
+    ],
+    [
         'route' => '/amp',
         'path' => 'Modules.Amp.routes',
         'namespace' => 'amp',

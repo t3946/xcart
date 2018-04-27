@@ -108,7 +108,7 @@ export default class Loader
     detach(callback = null) {
         this.loaders--;
 
-        if (this.loaders <= 0) {
+        // if (this.loaders <= 0) {
             clearTimeout(this.timer);
 
             setTimeout(()=>{
@@ -126,7 +126,7 @@ export default class Loader
             if (this.loaders < 0) {
                 this.loaders = 0;
             }
-        }
+        // }
     }
 
     allDetach() {
