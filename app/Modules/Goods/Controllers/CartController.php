@@ -147,6 +147,7 @@ class CartController extends BaseCartController
             'key' => $key,
             'image' => $image,
             'name' => $product->getFrontendName(),
+            'href' => $product->getAbsoluteUrl(),
             'id' => $product->productid,
             'code' => $product->productcode,
             'price' => $price,

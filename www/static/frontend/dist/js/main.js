@@ -50694,7 +50694,11 @@ var MiniCart = function (_Component) {
                         (0, _preact.h)(
                             'div',
                             { className: 'name' },
-                            item.name
+                            (0, _preact.h)(
+                                'a',
+                                { href: item.href },
+                                item.name
+                            )
                         ),
                         (0, _preact.h)(
                             'div',
@@ -51051,23 +51055,13 @@ var ProductImageSlider = function (_Component) {
     };
 
     ProductImageSlider.prototype.clickHndl = function clickHndl(e, n, item) {
+        e.preventDefault();
 
         if (this.state.index !== n) {
             this.setState({
                 index: n,
                 isVideo: false
             });
-        }
-
-        if (e.target) {
-            if (e.target.classList.contains('play-icon')) {
-                e.target.classList.remove('play-icon');
-            } else {
-                var nl = e.target.closest('.play-icon');
-                if (nl) {
-                    nl.classList.remove('play-icon');
-                }
-            }
         }
     };
 
@@ -51123,9 +51117,27 @@ var ProductImageSlider = function (_Component) {
         pswp.init();
     };
 
-    ProductImageSlider.prototype.prevHndl = function prevHndl(e) {};
+    ProductImageSlider.prototype.prevHndl = function prevHndl(e) {
+        e.preventDefault();
 
-    ProductImageSlider.prototype.nextHndl = function nextHndl(e) {};
+        if (this.state.index) {
+            this.setState({
+                index: this.state.index - 1,
+                isVideo: false
+            });
+        }
+    };
+
+    ProductImageSlider.prototype.nextHndl = function nextHndl(e) {
+        e.preventDefault();
+
+        if (this.state.index < this.state.count - 1) {
+            this.setState({
+                index: this.state.index + 1,
+                isVideo: false
+            });
+        }
+    };
 
     ProductImageSlider.prototype.videoShowHndl = function videoShowHndl(e) {
         e.preventDefault();
@@ -51137,8 +51149,7 @@ var ProductImageSlider = function (_Component) {
         var _this4 = this;
 
         return _lodash2.default.map(this.state.items, function (item, n) {
-
-            var is_active = _this4.state.index == n ? ' active' : '';
+            var is_active = '';
 
             if (item.type === 'image') {
                 return (0, _preact.h)("div", { className: "slide type-image" + is_active, key: "image.thumb." + n, onClick: function onClick(e) {
@@ -51278,7 +51289,8 @@ var ProductImageSlider = function (_Component) {
                     } }),
                 (0, _preact.h)(
                     _PreactSlySlide2.default,
-                    { options: {
+                    {
+                        options: {
                             horizontal: 0,
                             speed: 300,
                             mouseDragging: 1,
@@ -51286,7 +51298,8 @@ var ProductImageSlider = function (_Component) {
                             smart: 1,
                             prev: this.refs.prev,
                             next: this.refs.next
-                        } },
+                        },
+                        pos: this.state.index },
                     (0, _preact.h)(
                         "div",
                         { className: "frame" },
@@ -55865,6 +55878,12 @@ var PreactSlySlide = function (_Component) {
         this.$refs.wrap.sly(this.options);
 
         window.addEventListener('resize', this.onResize.bind(this));
+    };
+
+    PreactSlySlide.prototype.componentWillReceiveProps = function componentWillReceiveProps(props, prev) {
+        if (this.$refs.wrap) {
+            this.$refs.wrap.sly('activate', props.pos);
+        }
     };
 
     PreactSlySlide.prototype.componentWillUnmount = function componentWillUnmount() {

@@ -1,6 +1,11 @@
 .product__images-slider {
-  width: rem-calc(458);
   height: rem-calc(462);
+
+
+  @include breakpoint(large) {
+    width: rem-calc(458);
+  }
+
 
   .images-slider {
     height: 100%;
@@ -65,7 +70,12 @@
       width: rem-calc(350);
       height: 100%;
       overflow: hidden;
-      margin-left: rem-calc(5);
+      margin: 0 auto;
+
+      @include breakpoint(large) {
+        margin: 0 0 0 rem-calc(5);
+      }
+
 
       @include breakpoint(xl up) {
         width: rem-calc(458 - 53 - 5);
@@ -157,7 +167,7 @@
       border-right-width: 24px;
       border-left: 24px solid #ededed;
 
-      margin-left: -12px;
+      margin-left: -8px;
       margin-top: -16px;
     }
   }
