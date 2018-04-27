@@ -1,7 +1,9 @@
 {extends 'layout/landing_page.tpl'}
-{block 'head'}
+
+{block 'seo'}
     <title>Order | Wick Candle Maker by We R Memory Keepers | Artist Supply Source</title>
 {/block}
+
 {block 'content'}
     <div class="form-block">
         <div class="row">
@@ -31,10 +33,4 @@
             </div>
         </div>
     </div>
-
-
-{/block}
-
-{block 'after-content'}
-
 {/block}
