@@ -9,6 +9,7 @@ use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use Xcart\App\Helpers\Paths;
 use Xcart\App\Main\Xcart;
+use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\BooleanField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\DateTimeField;
@@ -44,6 +45,9 @@ class Page extends TreeModel
         $sizes = Xcart::app()->getModule('Pages')->sizes;
 
         return array_merge(parent::getFields(), [
+            'id' => [
+                'class' => AutoField::className(),
+            ],
             'name' => [
                 'class' => CharField::className(),
                 'required' => true,
@@ -120,12 +124,12 @@ class Page extends TreeModel
                 ],
                 'verboseName' => PagesModule::t("Sorting")
             ],
-            'sites' => [
-                'class' => ManyToManyField::className(),
-                'modelClass' => SiteModel::className(),
-                'through' => PagesStorefrontLink::className(),
-                'verboseName' => PagesModule::t('storefronts'),
-            ],
+//            'sites' => [
+//                'class' => ManyToManyField::className(),
+//                'modelClass' => SiteModel::className(),
+//                'through' => PagesStorefrontLink::className(),
+//                'verboseName' => PagesModule::t('storefronts'),
+//            ],
         ]);
     }
 

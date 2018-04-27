@@ -77,7 +77,7 @@ return array_merge($admin_routes, [
         'namespace' => 'checkout'
     ],
     [
-        'route' => '/',
+        'route' => '/pages',
         'path' => 'Modules.Pages.routes',
         'namespace' => 'page'
     ],

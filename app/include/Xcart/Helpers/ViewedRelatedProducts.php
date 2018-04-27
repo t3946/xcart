@@ -111,7 +111,7 @@ from (
 order by FIELD(SP.resource_type, 'S', 'P') asc, SP.position desc
 SQL;
 
-        $resources = Xcart::app()->db->getConnection()->fetchAll($sql);
+//        $resources = Xcart::app()->db->getConnection()->fetchAll($sql);
 
         if (empty($resources)) {
             return [];
