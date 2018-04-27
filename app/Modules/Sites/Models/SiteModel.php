@@ -136,6 +136,14 @@ class SiteModel extends Model
         if (!$this->_globalConfig) {
             $this->_globalConfig = GlobalConfig::getInstance()->getAllData();
         }
+        return $this->_globalConfig;
+    }
+
+    public function getGlobalConfig()
+    {
+        if (!$this->_globalConfig) {
+            $this->_globalConfig = GlobalConfig::getInstance()->getAllData();
+        }
 
         return $this->_globalConfig;
     }

@@ -7,10 +7,23 @@
         <link rel="stylesheet" href="/static/frontend/production/css/land.css?_={time()}">
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.slim.min.js"></script>
+        {block 'seo'}
+            {meta controller=$this!:null}
+        {/block}
 
         {block 'head'}
 
         {/block}
+
+        {set $site = $.getSite}
+        {set $gConfig = $site->getGlobalConfig()}
+        {set $config  = $site->getConfig()}
+
+        {$gConfig.google_analitics_tracking_script
+            |replace:'{{ga_account_nr}}':$config.cidev_ga_code_number
+            |replace:'{{ga_ec_data}}':''
+            |replace:'{{ga_send}}':''
+        }
     </head>
     <body>
     <div id="wrapper">

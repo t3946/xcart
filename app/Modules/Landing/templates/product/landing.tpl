@@ -1,9 +1,14 @@
 {extends 'layout/landing_page.tpl'}
-{block 'head'}
+
+{block 'seo'}
     <title>Wick Candle Maker by We R Memory Keepers | Artist Supply Source</title>
     <meta name="description" content="Buy Wick Candle Maker by We R Memory Keepers at Artist Supply Source. Order We R Wick Candle Machine Kit online at the cheap price. Fast shipping.">
+{/block}
+
+{block 'head'}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.min.css">
 {/block}
+
 {block 'content'}
 
     <div class="row">
