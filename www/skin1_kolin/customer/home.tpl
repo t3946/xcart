@@ -564,9 +564,6 @@
             {$xcartApp->template->render('inSmarty/raw_flash.tpl')}
             {$xcartApp->template->render('inSmarty/raw_static_notifications.tpl')}
 
-            {if $AREA_TYPE ne 'A'}
-                <script id="jquery_script" async src="{$SkinDir}/jquery.min.1.7.1.js" type="text/javascript" onload='afterQueryLoaded()'></script>
-            {/if}
 
             {defer file="`$SkinDir`/js/jquery.autocomplete.min.js" type="js"}
             {defer file="`$SkinDir`/js/jquery.tooltip.min.js" type="js"}
@@ -622,6 +619,11 @@
             {if !empty($config.Appearance.Facebook_pixel_code)}
                 {$config.Appearance.Facebook_pixel_code}
             {/if}
+
+            {if $AREA_TYPE ne 'A'}
+            <script id="jquery_script" async src="{$SkinDir}/jquery.min.1.7.1.js" type="text/javascript" onload='afterQueryLoaded()'></script>
+            {/if}
+
         </body>
     </html>
 {/if}

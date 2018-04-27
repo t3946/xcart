@@ -46,11 +46,11 @@
                         </div>
                         {if $shipping}
                             <div class="shipping-methods">
-                                {foreach $shipping as $quote}
+                                {foreach $shipping as $quote first=$first}
                                     {set $shipping_model = $quote->shipping}
                                     <div class="row">
                                         <div class="columns small-9">
-                                            <input {if $order_group && $order_group->shippingid == $shipping_model->shippingid}checked{/if} id="shipping_{$gi}" type="radio" name="shipping_rates[{$gi}]" value="{$quote->rateid}"/>
+                                            <input {if $first}required{/if} {if $order_group && $order_group->shippingid == $shipping_model->shippingid}checked{/if} id="shipping_{$gi}" type="radio" name="shipping_rates[{$gi}]" value="{$quote->rateid}"/>
                                             <label for="shipping_{$gi}">
                                                 <span class="name">{$shipping_model->getFrontendName()}</span> {$shipping_model->shipping_time}
                                             </label>
@@ -127,7 +127,7 @@
                     </div>
                     <div class="row">
                         <div class="columns small-12">
-                            <input id="biiling_yes" type="radio" onclick="hideForm()" {if !$billing_diff}checked{/if} name="billing_same" value="{$billing_diff}"/>
+                            <input id="biiling_yes" type="radio" onclick="hideForm()" {if !$billing_diff}checked{/if} name="billing_same" value="1"/>
                             <label for="biiling_yes">
                                 {t 'Yes' dict='order'}
                             </label>
@@ -135,7 +135,7 @@
                     </div>
                     <div class="row">
                         <div class="columns small-12">
-                            <input id="biiling_no" type="radio" onclick="showForm()" {if $billing_diff}checked{/if} name="billing_same" value="{$billing_diff}"/>
+                            <input id="biiling_no" type="radio" onclick="showForm()" {if $billing_diff}checked{/if} name="billing_same" value="0"/>
                             <label for="biiling_no">
                                 {t 'No' dict='order'}
                             </label>
@@ -159,7 +159,7 @@
                                 <span class="reqired">*</span>
                             </div>
                             <div class="small-8 columns">
-                                <input value="{$order->b_firstname}" id="registration__b_firstname" required placeholder="{t 'Albert H. Einstein' dict='order'}" name="BillingAddressForm[b_firstname]" type="text"/>
+                                <input value="{$order->b_firstname}" id="registration__b_firstname" placeholder="{t 'Albert H. Einstein' dict='order'}" name="BillingAddressForm[b_firstname]" type="text"/>
                             </div>
                         </div>
                         <div class="row">
@@ -177,7 +177,7 @@
                                 <span class="reqired">*</span>
                             </div>
                             <div class="small-8 columns">
-                                <input value="{$address[0]}" id="registration__b_address" required placeholder="{t '112 Mercer Street' dict='order'}" name="BillingAddressForm[b_address]" type="text"/>
+                                <input value="{$address[0]}" id="registration__b_address" placeholder="{t '112 Mercer Street' dict='order'}" name="BillingAddressForm[b_address]" type="text"/>
                             </div>
                         </div>
                         <div class="row">
@@ -207,7 +207,7 @@
                                 <span class="reqired">*</span>
                             </div>
                             <div class="small-8 columns">
-                                <input value="{$order->b_zipcode}" id="registration__b_zipcode" required placeholder="{t '08540' dict='order'}" name="BillingAddressForm[b_zipcode]" type="text"/>
+                                <input value="{$order->b_zipcode}" id="registration__b_zipcode" placeholder="{t '08540' dict='order'}" name="BillingAddressForm[b_zipcode]" type="text"/>
                             </div>
                         </div>
                         <div class="row">
@@ -216,7 +216,7 @@
                                 <span class="reqired">*</span>
                             </div>
                             <div class="small-8 columns">
-                                <input value="{$order->billing_state}" id="registration__b_statename" required placeholder="{t 'New Jersey' dict='order'}" name="BillingAddressForm[b_statename]" type="text"/>
+                                <input value="{$order->billing_state}" id="registration__b_statename" placeholder="{t 'New Jersey' dict='order'}" name="BillingAddressForm[b_statename]" type="text"/>
                             </div>
                         </div>
                         <div class="row">
@@ -225,7 +225,7 @@
                                 <span class="reqired">*</span>
                             </div>
                             <div class="small-8 columns">
-                                <input value="{$order->b_city}" id="registration__b_city" required placeholder="{t 'Princeton' dict='order'}" name="BillingAddressForm[b_city]" type="text"/>
+                                <input value="{$order->b_city}" id="registration__b_city" placeholder="{t 'Princeton' dict='order'}" name="BillingAddressForm[b_city]" type="text"/>
                             </div>
                         </div>
                     </div>

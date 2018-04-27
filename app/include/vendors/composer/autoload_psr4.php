@@ -30,6 +30,7 @@ return array(
     'Psr\\Http\\Message\\' => array($vendorDir . '/psr/http-message/src'),
     'Psr\\Cache\\' => array($vendorDir . '/psr/cache/src'),
     'PhpParser\\' => array($vendorDir . '/nikic/php-parser/lib/PhpParser'),
+    'Omnipay\\Xpay\\' => array($baseDir . '/app/Modules/Payment/Gateways/Omnipay/Xpay'),
     'Omnipay\\PayPal\\' => array($baseDir . '/app/Modules/Payment/Gateways/Omnipay/PayPal', $vendorDir . '/omnipay/paypal/src'),
     'Omnipay\\BluePay\\' => array($baseDir . '/app/Modules/Payment/Gateways/Omnipay/BluePay'),
     'Monolog\\' => array($vendorDir . '/monolog/monolog/src/Monolog'),

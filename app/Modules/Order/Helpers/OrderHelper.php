@@ -19,6 +19,7 @@ use Modules\Payment\Helpers\PaymentHelper;
 use Modules\User\Models\UserModel;
 use Xcart\App\Form\BaseForm;
 use Xcart\App\Main\Xcart;
+use Xcart\OrderToTicketResolver;
 
 class OrderHelper
 {
@@ -195,35 +196,37 @@ class OrderHelper
     {
         $log = null;
 
-        $order_model = OrderModel::objects()->get(['orderid' => $order_id]);
+        if ($order_model = OrderModel::objects()->get(['orderid' => $order_id])) {
 
-        $auth_transactions = array_filter($order_model->transactions->all(), function ($a) {
-            return ($a->type == OrderTransactionModel::TYPE_AUTHORIZATION && in_array($a->transaction_status,
-                                                                                      [
-                                                                                          OrderTransactionModel::STATUS_AUTHORIZED,
-                                                                                          OrderTransactionModel::STATUS_PARTIALLY_CAPTURED,
-                                                                                          OrderTransactionModel::STATUS_PENDING
-                                                                                      ]
-                ));
-        });
-        foreach ($auth_transactions as $auth_tr) {
-            $amount = [
-                'amount' => number_format($auth_tr->transaction_amount, 2),
-                'currency' => $auth_tr->transaction_currency,
-            ];
-            $params = array_merge(PaymentHelper::getPaymentParams($auth_tr, $amount),
-                                  [
-                                      'mode' => 'void',
-                                      'new_method_model' => $auth_tr->payment_method_model,
-                                      'order' => $order_model,
-                                      'orderTransaction' => $auth_tr,
-                                  ]
-            );
+            $auth_transactions = array_filter($order_model->transactions->all(), function ($a) {
+                return ($a->type == OrderTransactionModel::TYPE_AUTHORIZATION
+                    && in_array($a->transaction_status,
+                        [
+                            OrderTransactionModel::STATUS_AUTHORIZED,
+                            OrderTransactionModel::STATUS_PARTIALLY_CAPTURED,
+                            OrderTransactionModel::STATUS_PENDING
+                        ]
+                    ));
+            });
+            foreach ($auth_transactions as $auth_tr) {
+                $amount = [
+                    'amount' => number_format($auth_tr->transaction_amount, 2),
+                    'currency' => $auth_tr->transaction_currency,
+                ];
+                $params = array_merge(PaymentHelper::getPaymentParams($auth_tr, $amount),
+                    [
+                        'mode' => 'void',
+                        'new_method_model' => $auth_tr->payment_method_model,
+                        'order' => $order_model,
+                        'orderTransaction' => $auth_tr,
+                    ]
+                );
 
-            $trStore = new OrderTransactionStore($params, $auth_tr);
-            $model = $trStore->void();
+                $trStore = new OrderTransactionStore($params, $auth_tr);
+                $model = $trStore->void();
 
-            $log .= "<br />".$trStore->log;
+                $log .= "<br />" . $trStore->log;
+            }
         }
 
         return $log;
@@ -262,5 +265,51 @@ class OrderHelper
         }
 
         return $errors;
+    }
+
+    public static function getOTRSMessages(OrderModel $model) : int
+    {
+        $ticket_resolver_messages = 0;
+        $url = "http://helpdesk.s3stores.com/otrs/index.pl";
+        $TicketConnector_link = "http://helpdesk.s3stores.com/otrs/nph-genericinterface.pl/Webservice/TicketConnector";
+
+        if ($model) {
+
+            $curl_err = false;
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_TIMEOUT_MS, 1000);
+            curl_exec($ch);
+
+            if (curl_errno($ch) != 0 || curl_getinfo($ch, CURLINFO_HTTP_CODE) !== 200) {
+                $curl_err = true;
+            }
+            curl_close($ch);
+
+            if (!$curl_err) {
+                $resolver = new OrderToTicketResolver(
+                    "xcart", "@Pp6Lcg^VNMC",
+                    $TicketConnector_link,
+                    "otrs-soap",
+                    "%s",
+                    "http://helpdesk.s3stores.com/otrs/index.pl?Action=AgentTicketZoom;TicketID=%d"
+                );
+                $ticket_resolver = $resolver->fetch_ticket_info($model->getOrderNumber());
+                if (!empty($ticket_resolver[0]["url"])) {
+                    $ticket_resolver_link = $ticket_resolver[0]["url"];
+
+                    if (!empty($ticket_resolver[0]["messages"])) {
+                        $ticket_resolver_messages = $ticket_resolver[0]["messages"];
+
+                        $t_arr = Xcart::app()->cache->get('ticket_resolver_messages', []);
+                        $t_arr [$model->orderid] = $ticket_resolver_messages;
+                        Xcart::app()->cache->set('ticket_resolver_messages', $t_arr);
+                    }
+                    $model->otrs_ticket = $ticket_resolver_link;
+                }
+            }
+        }
+        return $ticket_resolver_messages;
     }
 }

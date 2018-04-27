@@ -350,7 +350,10 @@ if ($tab == "rules"){
 
 }
 
+$search_data  = $search_data ?: [];
+
 if ($REQUEST_METHOD == "POST") {
+
 
 	if (!empty($data_orders_selectbox)){
 

@@ -89,7 +89,7 @@
                                 <span class="reqired">*</span>
                             </div>
                             <div class="small-8 columns">
-                                <input value="{$order->s_state}" id="registration__s_statename" required placeholder="{t 'New Jersey' dict='order'}" name="ShippingAddressForm[s_statename]" type="text"/>
+                                <input value="{$order->shipping_state}" id="registration__s_statename" required placeholder="{t 'New Jersey' dict='order'}" name="ShippingAddressForm[s_statename]" type="text"/>
                             </div>
                         </div>
                         <div class="row">

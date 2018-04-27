@@ -26,4 +26,5 @@ return [
     'Amp',
     'PBX',
     'Shipping',
+    'Landing',
 ];
