@@ -139,17 +139,6 @@ class SiteModel extends Model
         return $this->_globalConfig;
     }
 
-    public function getGlobalConfig()
-    {
-        if (!$this->_globalConfig) {
-            $this->_globalConfig = GlobalConfig::getInstance()->getAllData();
-        }
-
-        return $this->_globalConfig;
-    }
-
-
-
     public function getBaseDomain()
     {
         $domain = strtolower($this->domain);
