@@ -5,7 +5,9 @@ namespace Modules\Order\Controllers;
 use Modules\Core\Models\CountryModel;
 use Modules\Core\Models\StateModel;
 use Modules\Dashboard\Sqls\SearchSql;
+use Modules\Goods\Models\ProductModel;
 use Modules\Order\Helpers\OrderHelper;
+use Modules\Order\Models\OrderDetailModel;
 use Modules\Order\Models\OrderExtraModel;
 use Modules\Order\Models\OrderGroupModel;
 use Modules\Order\Models\OrderModel;
@@ -25,17 +27,8 @@ class CheckoutController extends FrontendController
 
     protected function getOrder(): OrderModel
     {
-        $cart = Xcart::app()->cart;
-
-        if (!$cart->getCartNumber() || $cart->getIsEmpty()) {
-            $this->redirect('cart:list');
-        }
-
         /** @var OrderModel $order */
-
-        $order = OrderModel::objects()->get([
-            'cart_number' => $cart->getCartNumber(),
-        ]);
+        $order = OrderHelper::getCartOrder();
 
         if (!$order) {
             $this->redirect('checkout:shipping');
@@ -112,9 +105,12 @@ class CheckoutController extends FrontendController
             }
         }
 
+        [$shipping] = $order->getAddressInfo();
+
         $this->display('checkout/shipping.tpl', [
             'order' => $order,
             'errors' => $errors,
+            'address' => $shipping['address'],
             'countries' => Connection::getInstance()->fetchAll(SearchSql::getAllCountryOrderSql())
         ]);
     }
@@ -236,6 +232,7 @@ class CheckoutController extends FrontendController
     {
         $app = Xcart::app();
         $user = $app->user;
+        $cart = $app->cart;
 
         if (!$user) {}
 
@@ -257,6 +254,33 @@ class CheckoutController extends FrontendController
                     $extra->save();
                 }
             }
+
+            $items = $cart->getItems();
+
+            $order->detail_models->delete();
+
+            foreach ($order->groups as $group) {
+
+                foreach ($items as $item) {
+
+                    /** @var ProductModel $product */
+                    $product = $item->getObject();
+
+                    $detail = new OrderDetailModel([
+                        'orderid' => $group->orderid,
+                        'productid' => $product->productid,
+                        'price' => $product->getPrice(),
+                        'amount' => $item->getQuantity(),
+                        'productcode' => $product->productcode,
+                        'product' => $product->getFrontendName(),
+                        'provider' => $product->provider,
+                        'original_provider' => $product->original_provider,
+                        'item_cost_to_us' => $product->cost_to_us,
+                    ]);
+                    $detail->save();
+                }
+            }
+
 
             $this->redirect('checkout:payment');
         }
@@ -280,11 +304,13 @@ class CheckoutController extends FrontendController
     {
         $order = $this->getOrder();
 
+        [$shipping, $billing] = $order->getAddressInfo();
+
 
         $this->display('checkout/complete.tpl', [
             'order' => $order,
-            'shipping_info' => $order->getAddressInfo('shipping'),
-            'billing_info' => $order->getAddressInfo('billing'),
+            'shipping_info' => $shipping,
+            'billing_info' => $billing,
         ]);
     }
 }

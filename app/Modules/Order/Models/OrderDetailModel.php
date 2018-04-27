@@ -4,6 +4,7 @@ namespace Modules\Order\Models;
 use Modules\Goods\Models\ProductModel;
 use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
+use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\DecimalField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\IntField;
@@ -51,6 +52,11 @@ class OrderDetailModel  extends Model
             ],
             'extra_data' => [
                 'class' => SerializeField::className(),
+                'null' => false,
+                'default' => '',
+            ],
+            'product_options' => [
+                'class' => CharField::className(),
                 'null' => false,
                 'default' => '',
             ],

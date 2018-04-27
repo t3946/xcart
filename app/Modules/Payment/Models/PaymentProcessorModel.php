@@ -18,18 +18,8 @@ class PaymentProcessorModel extends Model
     public static function getFields()
     {
         return [
-            'processor_id' => [
-                'class' => AutoField::className(),
-            ],
-            'processor_name' => [
-                'class' => CharField::className(),
-                'default' => '',
-                'null' => false,
-            ],
-            'transaction_link' => [
-                'class' => CharField::className(),
-                'default' => '',
-                'null' => false,
+            'module_name' => [
+                'class' => CharField::class,
             ],
 
         ];

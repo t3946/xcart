@@ -4,6 +4,7 @@ namespace Modules\Payment\Controllers;
 
 
 use Exception;
+use Modules\Order\Helpers\OrderHelper;
 use Modules\Order\Helpers\OrderTagEventHelper;
 use Modules\Order\Models\OrderModel;
 use Modules\Order\Models\OrderStatusModel;
@@ -21,49 +22,47 @@ class PaymentController extends Controller
     public function process($gateway)
     {
         /** @var ProcessorModel $pm */
-        if ($pm = ProcessorModel::objects()->get(['processor_name' => $gateway])){
+        if ($pm = ProcessorModel::objects()->get(['processor_name' => $gateway])) {
 
-            if ($gw = Gateway::getGateway($pm)){
+            if ($gw = Gateway::getGateway($pm)) {
 
-                $app = Xcart::app();
-                $cart = $app->cart;
-                if (!$cart->getCartNumber() || $cart->getIsEmpty()) {
+                /** @var OrderModel $order */
+                $order = OrderHelper::getCartOrder();
+
+                if (!$order) {
                     $this->redirect('cart:list');
                 }
 
-                /** @var OrderModel $order */
-                if ($order = OrderModel::objects()->get(['cart_number' => $cart->getCartNumber()])) {
+                try {
 
-                    try {
+                    $params = [
+                        'cancelUrl' => Xcart::app()->router->absoluteUrl("payment:cancel", ['gateway' => strtolower($pm->processor_name)]),
+                        'returnUrl' => Xcart::app()->router->absoluteUrl("payment:return", ['gateway' => strtolower($pm->processor_name)]),
+                        'notifyUrl' => Xcart::app()->router->absoluteUrl("payment:success", ['gateway' => strtolower($pm->processor_name)]),
+                        'amount' => number_format($order->total, 2, '.', ''),
+                        'order' => $order,
+                        'currency' => 'USD'
+                    ];
 
-                        $params = [
-                            'cancelUrl' => Xcart::app()->router->absoluteUrl("payment:cancel", ['gateway' => strtolower($pm->processor_name)]),
-                            'returnUrl' => Xcart::app()->router->absoluteUrl("payment:return", ['gateway' => strtolower($pm->processor_name)]),
-                            'notifyUrl' => Xcart::app()->router->absoluteUrl("payment:success", ['gateway' => strtolower($pm->processor_name)]),
-                            'amount' => number_format($order->total, 2, '.', ''),
-                            'currency' => 'USD'
-                        ];
+                    if ($response = $gw->purchase($params)) {
+                        $order->cb_status = OrderStatusModel::ORDER_STATUS_NOT_FINISHED;
+                        $order->save();
 
-                        if ($response = $gw->purchase($params)) {
-                            $order->cb_status = OrderStatusModel::ORDER_STATUS_NOT_FINISHED;
-                            $order->save();
+                        $order->groups->update(['cb_status' => $order->cb_status]);
 
-                            $order->groups->update(['cb_status' => $order->cb_status]);
-
-                            if ($gw->result->isRedirect()) {
-                                $gw->result->redirect();
-                            }
-
-                            $this->redirect("payment:return", ['gateway' => strtolower($pm->processor_name)]);
+                        if ($gw->result->isRedirect()) {
+                            $gw->result->redirect();
                         }
 
-                    } catch (Exception $e){
-                        exit('Sorry, there was an error processing your payment. Please try again later.');
+                        $this->redirect("payment:return", ['gateway' => strtolower($pm->processor_name)]);
                     }
+
+                } catch (Exception $e) {
+                    dd($e);
+                    exit('Sorry, there was an error processing your payment. Please try again later.');
                 }
             }
         }
-
     }
 
     public function success($gateway)
@@ -111,14 +110,10 @@ class PaymentController extends Controller
             $this->error(404);
         }
 
-        $app = Xcart::app();
-        $cart = $app->cart;
-        if ($cart->getCartNumber()){
-            if ($order = OrderModel::objects()->get(['cart_number' => $cart->getCartNumber()])) {
-                $order->cb_status = OrderStatusModel::ORDER_STATUS_AUTHORIZED;
-                $order->save();
-                $this->redirect("checkout:complete");
-            }
+        if ($order = OrderHelper::getCartOrder()) {
+            $order->cb_status = OrderStatusModel::ORDER_STATUS_AUTHORIZED;
+            $order->save();
+            $this->redirect("checkout:complete");
         }
 
     }

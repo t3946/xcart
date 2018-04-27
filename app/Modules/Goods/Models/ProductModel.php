@@ -65,6 +65,7 @@ use Xcart\Product;
  * @property null|CleanUrlModel clean_url
  * @property null|\Xcart\App\Orm\Manager|\Modules\Goods\Models\CategoryModel[] categories
  * @property null|\Xcart\App\Orm\Manager|ProductModel[] childs
+ * @property mixed cost_to_us
  *
  * @method bool isForSale
  */
