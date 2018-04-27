@@ -117,8 +117,8 @@ export default class ProductImageSlider extends Component
                     items.push({
                         originalItem: item,
                         html: renderToStringr(
-                            <div className="slide-wrapper">
-                                <div className="video-wrapper play-icon">
+                            <div className="slide-wrapper slider-detail">
+                                <div className="video-wrapper">
                                     {this.renderVideoItem(item)}
                                 </div>
                             </div>),
@@ -232,16 +232,15 @@ export default class ProductImageSlider extends Component
                 );
             }
             else {
-                let image = item.img || item.meta.images.img;
-                return this.renderImage(image);
+                return this.renderImage(item.img || item.meta.images.img, 'play-icon');
             }
 
         }
     }
 
-    renderImage(src)
+    renderImage(src, classes = '')
     {
-        return <div className="image" style={"background-image: url("+src+")"}></div>
+        return <div className={"image " + classes} style={"background-image: url("+src+")"}></div>
     }
 
     renderDetail()
@@ -269,7 +268,7 @@ export default class ProductImageSlider extends Component
                     let content = this.renderVideoItem(item);
                     let clName = "slide type-video ";
 
-                    clName += this.state.isVideo? "video-show" : "video-hide play-icon";
+                    clName += this.state.isVideo? "video-show" : "video-hide";
 
 
                     return <div className={clName} onClick={ e => {this.zoomHndl(e, item)}} key={key}>{content}</div>;
