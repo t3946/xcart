@@ -57930,24 +57930,22 @@ var Loader = function () {
 
         this.loaders--;
 
-        if (this.loaders <= 0) {
-            clearTimeout(this.timer);
+        clearTimeout(this.timer);
 
-            setTimeout(function () {
-                _this3.elements['container'].removeClass('loading-active');
-            }, this.options.timeout / 2);
+        setTimeout(function () {
+            _this3.elements['container'].removeClass('loading-active');
+        }, this.options.timeout / 2);
 
-            setTimeout(function () {
-                _this3.elements['container'].removeClass('loading');
-                _this3.elements['bg'].detach();
-                if (typeof callback === 'function') {
-                    callback();
-                }
-            }, this.options.timeout);
-
-            if (this.loaders < 0) {
-                this.loaders = 0;
+        setTimeout(function () {
+            _this3.elements['container'].removeClass('loading');
+            _this3.elements['bg'].detach();
+            if (typeof callback === 'function') {
+                callback();
             }
+        }, this.options.timeout);
+
+        if (this.loaders < 0) {
+            this.loaders = 0;
         }
     };
 
