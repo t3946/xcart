@@ -51090,10 +51090,10 @@ var ProductImageSlider = function (_Component) {
                         originalItem: _item,
                         html: (0, _preactRenderToString2.default)((0, _preact.h)(
                             "div",
-                            { className: "slide-wrapper" },
+                            { className: "slide-wrapper slider-detail" },
                             (0, _preact.h)(
                                 "div",
-                                { className: "video-wrapper play-icon" },
+                                { className: "video-wrapper" },
                                 this.renderVideoItem(_item)
                             )
                         )),
@@ -51201,14 +51201,15 @@ var ProductImageSlider = function (_Component) {
                     height: 360,
                     allowfullscreen: true });
             } else {
-                var image = item.img || item.meta.images.img;
-                return this.renderImage(image);
+                return this.renderImage(item.img || item.meta.images.img, 'play-icon');
             }
         }
     };
 
     ProductImageSlider.prototype.renderImage = function renderImage(src) {
-        return (0, _preact.h)("div", { className: "image", style: "background-image: url(" + src + ")" });
+        var classes = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
+
+        return (0, _preact.h)("div", { className: "image " + classes, style: "background-image: url(" + src + ")" });
     };
 
     ProductImageSlider.prototype.renderDetail = function renderDetail() {
@@ -51239,7 +51240,7 @@ var ProductImageSlider = function (_Component) {
                     var content = this.renderVideoItem(_item2);
                     var clName = "slide type-video ";
 
-                    clName += this.state.isVideo ? "video-show" : "video-hide play-icon";
+                    clName += this.state.isVideo ? "video-show" : "video-hide";
 
                     return (0, _preact.h)(
                         "div",
