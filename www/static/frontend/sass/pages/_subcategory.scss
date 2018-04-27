@@ -9,13 +9,94 @@
     background-color: transparent;
   }
 
-
+  /* Стили для мобильных устройств */
   @include breakpoint(ml down) {
+
     .all-departments-menu{
-      display:none;
+      padding: 0 calc(0.625rem - 2px);
+
+      /* Ссылка на основную категорию */
+      .item-title {
+        margin: 2px;
+        padding: 3px 6px;
+        display: block;
+        background-color: #efefef;
+        opacity: 1;
+
+        transition: width 2s, height 2s, opacity 2s;
+
+        .image-container {
+          display: table-cell;
+          vertical-align: middle;
+
+          padding-right: 12px;
+          width: 42px;
+          text-align: center;
+
+          .image {
+            width: 100%;
+          }
+        }
+        .title {
+          display: table-cell;
+          vertical-align: middle;
+          white-space: pre-wrap;
+          text-align: left;
+
+          font-size: 1rem;
+          line-height: 110%;
+          overflow: hidden;
+        }
+
+        &.opened{
+          display: flex;
+          width: calc(100% - 4px);
+          opacity: 1;
+        }
+        &.closed{
+          display: none;
+          opacity: 0;
+          width: 0;
+          height:0;
+        }
+      }
     }
-    .sections section {
-      //border: 1px solid red;
+
+    @include breakpoint(medium down) {
+      .item-title {
+        max-width: calc(100% - 4px) ;
+      }
+    }
+
+    @include breakpoint(medium up) {
+      .item-title {
+        max-width: calc(50% - 4px);
+      }
+    }
+
+    @include breakpoint(ml only) {
+      .item-title {
+        max-width: calc(33.33% - 4px);
+      }
+    }
+
+    .opened{
+      display: flex;
+      width: calc(100% - 4px);
+      opacity: 1;
+    }
+    .closed{
+      display: none;
+      opacity: 0;
+      width: 0;
+      height:0;
+    }
+
+
+    .sections{
+      display:none;
+      section {
+
       .departments-submenu-items{
         display: none;
         opacity: 0;
@@ -53,11 +134,13 @@
         }
 
       }
-    }
+    }}
+
+
 
   }
 
-
+  /* Стили для десктопа */
   @include breakpoint(large up) {
     /* Верхнее меню - все основные категории */
     .all-departments-menu {

@@ -66,6 +66,8 @@ class GlobalConfig implements ArrayAccess, Iterator
                 $this->checked[$row['name']] = true;
             }
         }
+
+        $this->data = $config;
     }
 
     private function fetchByKey($key)

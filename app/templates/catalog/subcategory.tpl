@@ -2,6 +2,22 @@
 
 {block 'content'}
     <div class="page-departments default-content-page">
+
+        {* Меню категорий для мобильных устройств *}
+        {*<div class="row all-departments-menu-mobile">*}
+            {*<div class="column small-12">*}
+                {*{foreach $categories as $category}*}
+                    {*<a href="#id{$category->categoryid}" class="item-title">*}
+                        {*<div class="image-container">*}
+                            {*<img class="image"*}
+                                 {*src="/static/frontend/demo_images/demo_images_new/icon{(rand(5,15)%2 > 0) ? 1 : 2}.svg"*}
+                                 {*alt="">*}
+                        {*</div>*}
+                        {*<div class="title"><span>{$category->category}</span></div>*}
+                    {*</a>*}
+                {*{/foreach}*}
+            {*</div>*}
+        {*</div>*}
         {* Меню категорий *}
         <div class="row all-departments-menu  small-up-1 medium-up-2 ml-up-3 large-up-6" data-smooth-scroll>
             {foreach $categories as $category}

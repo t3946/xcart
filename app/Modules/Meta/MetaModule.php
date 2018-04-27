@@ -4,9 +4,9 @@ namespace Modules\Meta;
 
 use Modules\Admin\Traits\AdminTrait;
 use Modules\Meta\Helpers\MetaExtHelper;
-use Modules\Meta\Helpers\MetaHelper;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Module\Module;
+use Modules\Meta\Helpers\MetaTextHelper;
 
 class MetaModule extends Module
 {
@@ -16,7 +16,7 @@ class MetaModule extends Module
 
     public function init()
     {
-        if (is_null($this->onSite)) {
+        if (\is_null($this->onSite)) {
             $this->onSite = (bool)Xcart::app()->getModule('Sites');
         }
     }
@@ -32,7 +32,7 @@ class MetaModule extends Module
             MetaExtHelper::getMeta($c, $canonical);
         });
 
-        $tpl->addFunction('meta_text', ['\Modules\Meta\Helpers\MetaTextHelper', 'getMetaText']);
+        $tpl->addFunction('meta_text', [MetaTextHelper::class, 'getMetaText']);
 
     }
 }
