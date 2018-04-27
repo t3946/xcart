@@ -3,7 +3,7 @@
 {block 'content'}
     <div class="page-departments default-content-page">
         {* Меню категорий *}
-        <div class="row all-departments-menu  small-up-2 medium-up-3 large-up-6" data-smooth-scroll>
+        <div class="row all-departments-menu  small-up-1 medium-up-2 ml-up-3 large-up-6" data-smooth-scroll>
             {foreach $categories as $category}
                 <a href="#id{$category->categoryid}" class="item-title column">
                     <div class="image-container">
@@ -23,9 +23,9 @@
         </div>
 
         {* Список меню категорий *}
-        <div class="sections">
+        <div class="sections row small-up-1 medium-up-2 ml-up-3 large-up-1">
             {foreach $categories as $categoryKey => $category}
-                <section id="id{$category->categoryid}" class="departments-submenu-container">
+                <section id="id{$category->categoryid}" class="departments-submenu-container column">
                     {*<a name="id{$category->categoryid}"></a>*}
                     {* Заголовок категории *}
                     <div class="row">
@@ -42,7 +42,7 @@
                     </div>
 
                     {* Меню подкатегорий категории *}
-                    <div class="row departments-submenu-items  small-up-1 medium-up-2 large-up-4">
+                    <div class="row departments-submenu-items  small-up-1 medium-up-2 ml-up-3 large-up-4">
                         {foreach $category->getActiveChilds()->all() as $subCategory}
                             <div class="group-items column">
                                 <div class="items-title"><a
@@ -60,7 +60,7 @@
 
                     {* Разделитель *}
                     {if ($showSlider || ($categoryKey < (count($categories) - 1)))}
-                    <div class="row">
+                    <div class="row hr-container">
                         <div class="column small-12">
                             <div class="hr"></div>
                         </div>
