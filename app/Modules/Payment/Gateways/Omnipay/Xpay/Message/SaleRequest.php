@@ -15,8 +15,6 @@ class SaleRequest extends AbstractRequest
 
         $data = array_merge($data, $this->getCartData());
 
-        //dd($data);
-
         return $data;
     }
 

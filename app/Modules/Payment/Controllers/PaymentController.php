@@ -58,7 +58,6 @@ class PaymentController extends Controller
                     }
 
                 } catch (Exception $e) {
-                    dd($e);
                     exit('Sorry, there was an error processing your payment. Please try again later.');
                 }
             }
@@ -89,16 +88,15 @@ class PaymentController extends Controller
 
     public function cancel($gateway)
     {
-        $app = Xcart::app();
-        $cart = $app->cart;
-        if ($cart->getCartNumber()){
-            if ($order = OrderModel::objects()->get(['cart_number' => $cart->getCartNumber()])) {
-                $order->cb_status = OrderStatusModel::ORDER_STATUS_QUEUED;
-                $order->save();
+        $order = OrderHelper::getCartOrder();
 
-                $order->groups->update(['cb_status' => $order->cb_status]);
-            }
+        if ($order) {
+            $order->cb_status = OrderStatusModel::ORDER_STATUS_QUEUED;
+            $order->save();
+
+            $order->groups->update(['cb_status' => $order->cb_status]);
         }
+
         $this->redirect("checkout:review");
     }
 

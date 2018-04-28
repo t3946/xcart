@@ -15,14 +15,10 @@ use Omnipay\Xpay\Message\SaleRequest;
  */
 class Gateway extends AbstractGateway
 {
+
     public function getName(): string
     {
         return 'Xpay';
-    }
-
-    public function getDefaultParameters(): array
-    {
-        return [];
     }
 
     public function getShoppingCartId():? string

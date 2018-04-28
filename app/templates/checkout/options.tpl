@@ -23,7 +23,7 @@
             <div class="row">
                 <div class="columns small-5">
                     <div class="options">
-                        {include 'checkout/_address_view.tpl' info=$order->getAddressInfo('shipping') header=$.t('Shipping Address','order') uri='checkout:shipping'}
+                        {include 'checkout/_address_view.tpl' info=$order->getAddressInfo()[0] header=$.t('Shipping Address','order') uri='checkout:shipping'}
                     </div>
                 </div>
                 <div class="columns small-7">
@@ -142,7 +142,7 @@
                         </div>
                     </div>
 
-                    {set $address = $order->getAddressInfo('billing')['address']}
+                    {set $address = $order->getAddressInfo()[1]['address']}
 
                     <div class="registration {if !$billing_diff}hide{/if}" id="registration">
                         <div class="row">
