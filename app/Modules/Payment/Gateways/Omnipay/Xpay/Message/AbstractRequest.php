@@ -119,18 +119,18 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
 
         [$shipping, $billing] = $order->getAddressInfo();
 
-        foreach($order->groups as $group) {
-            foreach($group->detail_models as $detail) {
-                $items[] = [
+        foreach ($order->detail_models as $detail) {
+            $items[] = ['items' => [
+                    '@attributes' => ['type' => 'cell'],
                     'sku' => $detail->productcode,
                     'name' => $detail->product,
                     'price' => $detail->price,
                     'quantity' => $detail->amount,
-                ];
-            }
+                ]
+            ];
         }
 
-        return [
+        $result = [
             'cart' => [
                 'login' => $order->user_id ?: random_int(10,12),
                 'currency' => $this->getCurrency(),
@@ -162,9 +162,12 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
                     'phone' => $order->phone,
                     'fax' => $order->fax,
                 ],
-                'items' => $items,
             ]
         ];
+
+        $result['cart'] = array_merge($result['cart'], $items);
+
+        return $result;
     }
 
 
@@ -173,8 +176,6 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
         preg_match("/<response>(.*)<\/response>/s", Xml::encode('response', $data, true), $matches);
         $xml = $matches[1];
 
-        dd($xml);
-
         $request = [
             'cart_id' => $this->getShoppingCartId(),
             'request' => $this->encrypt($xml),
@@ -182,7 +183,6 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
 
         $httpResponse = $this->httpClient->post($this->getEndpoint(), null, $request)->send();
         $this->response = new Response($this, $this->decrypt($httpResponse->getBody()));
-        dd($this->response->getData());
         return $this->response;
     }
 
