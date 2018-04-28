@@ -11,9 +11,12 @@
   .large-2column h2 {
     padding-top: 0;
   }
+  section.sas-header {
+    background: url('/static/frontend/images/Rectangle12.png') center center no-repeat;
+    background-size: 100%;
+  }
   div.sas-header {
-    background-image: url('/static/frontend/images/Rectangle12.png');
-    background-position: center;
+
     height: 280px;
     width: 100%;
     text-align: center;
