@@ -1,18 +1,28 @@
 <?php
 
-namespace Omnipay\Xpay;
+namespace Omnipay\Xpay\Message;
 
-use Omnipay\Xpay\Message\AbstractRequest;
 
 /**
  * Xpay Sale Request
  */
 class SaleRequest extends AbstractRequest
 {
-    protected $action = 'SALE';
 
     public function getData()
     {
-        return $this->getBaseData();
+        $data = $this->getBaseData();
+
+        $data = array_merge($data, $this->getCartData());
+
+        //dd($data);
+
+        return $data;
     }
+
+    public function getMethod()
+    {
+        return 'init';
+    }
+
 }

@@ -37,6 +37,11 @@ use Xcart\Order;
  * @property int orderid
  * @property int paymentid
  * @property float total
+ * @property float discount
+ * @property float tax
+ * @property float shipping_cost
+ * @property int|null user_id
+ * @property float coupon_discount
  */
 class OrderModel extends Model
 {
@@ -159,6 +164,11 @@ class OrderModel extends Model
                 'link' => ['fraud_status' => 'code'],
                 'sqlType' => Type::STRING,
                 'null' => false,
+            ],
+            'detail_models' => [
+                'class' => HasManyField::class,
+                'modelClass' => OrderDetailModel::class,
+                'link' => ['orderid' => 'orderid'],
             ],
             'extra' => [
                 'class' => SerializeField::className(),
@@ -304,44 +314,36 @@ class OrderModel extends Model
         }
     }
 
-    public function getAddressInfo(string $type) : array
+    public function getAddressInfo() : array
     {
-        $info = [];
+        $info[] = [
+            'address' => explode(PHP_EOL, $this->s_address, 2),
+            'firstname' => $this->s_firstname,
+            'company' => $this->s_company,
+            'city' => $this->s_city,
+            'state' => $this->shipping_state,
+            'country' => $this->shipping_country,
+            'zipcode' => $this->s_zipcode,
+        ];
 
-        switch ($type) {
-            case 'shipping':
-                $info = [
-                    'address' => explode(PHP_EOL, $this->s_address, 2),
-                    'firstname' => $this->s_firstname,
-                    'company' => $this->s_company,
-                    'city' => $this->s_city,
-                    'state' => $this->shipping_state,
-                    'country' => $this->shipping_country,
-                    'zipcode' => $this->s_zipcode,
-                ];
-                break;
-            case 'billing':
-                if ($this->b_firstname || $this->b_company || $this->b_address || $this->b_city || $this->billing_state || $this->billing_country || $this->billing_country || $this->b_zipcode !== null) {
-                    $info = [
-                        'address' => explode(PHP_EOL, $this->b_address, 2),
-                        'firstname' => $this->b_firstname,
-                        'company' => $this->b_company,
-                        'city' => $this->b_city,
-                        'state' => $this->billing_state,
-                        'country' => $this->billing_country,
-                        'zipcode' => $this->b_zipcode,
-                    ];
-                }
-                break;
+        if ($this->b_firstname || $this->b_company || $this->b_address || $this->b_city || $this->billing_state || $this->billing_country || $this->billing_country || $this->b_zipcode !== null) {
+            $info[] = [
+                'address' => explode(PHP_EOL, $this->b_address, 2),
+                'firstname' => $this->b_firstname,
+                'company' => $this->b_company,
+                'city' => $this->b_city,
+                'state' => $this->billing_state,
+                'country' => $this->billing_country,
+                'zipcode' => $this->b_zipcode,
+            ];
         }
 
         return $info;
     }
 
-    public function isBillingAddressDiff()
+    public function isBillingAddressDiff(): bool
     {
-        $a_s = $this->getAddressInfo('shipping');
-        $a_b = $this->getAddressInfo('billing');
+        [$a_s, $a_b] = $this->getAddressInfo();
 
         if (!$a_b) {
             return false;

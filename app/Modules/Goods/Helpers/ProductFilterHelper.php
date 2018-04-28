@@ -28,19 +28,17 @@ class ProductFilterHelper
         $this->qs = clone $qs;
         $this->qs->order([]);
         $this->form_data = $form_data;
-        return $this;
     }
 
     /**
      * @kind accessorFunction
      * @name getFilterStructure
-     *
      * @param array            $types ['price', 'brand', 'filter']
      *
      * @return array
      * @throws \Exception
      */
-    public function getFilterStructure(array $types = ['price', 'brand', 'filter'])
+    public function getFilterStructure(array $types = ['price', 'brand', 'filter']): array
     {
         $cache_key = implode('-',$types) .';sql:' . (clone $this->qs)->allSql();
         $list = [];
@@ -50,7 +48,7 @@ class ProductFilterHelper
 //            return $list;
 //        }
 
-        if (in_array('price', $types)) {
+        if (\in_array('price', $types, true)) {
             $tqs = clone $this->qs;
             $tqs->filter(['quick_prices__price__isnull' => false])
                 ->select([new Min('quick_prices__price', 'min'),
@@ -78,7 +76,7 @@ class ProductFilterHelper
             ];
         }
 
-        if (in_array('brand', $types)) {
+        if (\in_array('brand', $types, true)) {
             $tqs = clone $this->qs;
             $brands = $tqs->select(['name' => 'brand__brand', 'value' => 'brandid', new Count('*', 'count')])
                           ->group(['brandid'])
@@ -101,7 +99,7 @@ class ProductFilterHelper
         }
 
 
-        if (in_array('filter', $types)) {
+        if (\in_array('filter', $types, true)) {
             $ftqs = clone $this->getFiltrateQS();
             $tqs = clone $this->qs;
             $tqs = $tqs->filter(['filter_values__fv_active' => 'Y'])->order([]);
@@ -146,7 +144,7 @@ class ProductFilterHelper
                     foreach ($values as $value)
                     {
                         if ($list[$value['f_id']]) {
-                            $checked = (!empty($this->form_data['filter']) && in_array($value['fv_id'],$this->form_data['filter']));
+                            $checked = (!empty($this->form_data['filter']) && \in_array($value['fv_id'], $this->form_data['filter'], true));
 
                             $list[$value['f_id']]['changed'] = $list[$value['f_id']]['changed'] ?: $checked;
                             $list[$value['f_id']]['values'][] = [
@@ -161,7 +159,7 @@ class ProductFilterHelper
 
                     foreach ($list as $key => $filter)
                     {
-                        if (count($filter['values']) < 2) {
+                        if (\count($filter['values']) < 2) {
                             unset($list[$key]);
                         }
                     }

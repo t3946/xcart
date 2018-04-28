@@ -3,6 +3,7 @@
 namespace Modules\Payment\Gateways;
 
 
+use Modules\Core\Models\GlobalConfigModel;
 
 class Xpay extends Gateway
 {
@@ -14,6 +15,14 @@ class Xpay extends Gateway
     public function init()
     {
         parent::init();
+
+        $this->gateway->setShoppingCartId(GlobalConfigModel::objects()->get(['name' => 'xpc_shopping_cart_id'])->value);
+        $this->gateway->setPublicKey(GlobalConfigModel::objects()->get(['name' => 'xpc_public_key'])->value);
+        $this->gateway->setPrivateKey(GlobalConfigModel::objects()->get(['name' => 'xpc_private_key'])->value);
+        $this->gateway->setPrivateKeyPassword(GlobalConfigModel::objects()->get(['name' => 'xpc_private_key_password'])->value);
+        $this->gateway->setConfigurationId($this->model->param01);
+        $this->gateway->setMerchantEmail(GlobalConfigModel::objects()->get(['name' => 'orders_department'])->value);
+
     }
 
     public function getLinks()
@@ -66,7 +75,11 @@ class Xpay extends Gateway
      */
     public function purchase($params)
     {
-        // TODO: Implement purchase() method.
+        $this->result = $this->gateway
+            ->purchase($params)
+            ->send();
+
+        return $this->result->isSuccessful();
     }
 
     /**

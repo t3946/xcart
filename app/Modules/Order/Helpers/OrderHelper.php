@@ -312,4 +312,22 @@ class OrderHelper
         }
         return $ticket_resolver_messages;
     }
+
+    public static function getCartOrder() :? OrderModel
+    {
+        $order = null;
+        $cart = Xcart::app()->cart;
+        $user = Xcart::app()->user;
+
+        /** @var OrderModel $order */
+
+        if ($cart->getCartNumber() && !$cart->getIsEmpty()) {
+            $order = OrderModel::objects()->get([
+                'cart_number' => $cart->getCartNumber(),
+                'user_id' => $user->id,
+            ]);
+        }
+
+        return $order;
+    }
 }

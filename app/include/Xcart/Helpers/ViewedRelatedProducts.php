@@ -15,13 +15,11 @@ class ViewedRelatedProducts
      * @var ElasticSearch
      */
     private $elastic;
-    private $elastic_config;
     private $_search_with_categories = false;
 
     public function __construct( $categories = null, $search_string = null )
     {
         $config = GlobalConfig::getInstance()->setOldMode();
-        $this->elastic_config = $config["ElasticSearch_options"];
 
         /** @var \Modules\Sites\SitesModule $siteModule */
         $siteModule = Xcart::app()->getModule('Sites');
@@ -29,7 +27,7 @@ class ViewedRelatedProducts
 
         $this->ssid = Xcart::app()->request->session->getId();
 
-        $this->elastic = new ElasticSearch($this->elastic_config,  $site_domain);
+        $this->elastic = new ElasticSearch($config["ElasticSearch_options"],  $site_domain);
 
         if (!empty($categories)) {
             $this->categories = $categories;
@@ -39,13 +37,13 @@ class ViewedRelatedProducts
         }
     }
 
-    public function setCategories($categories)
+    public function setCategories($categories): void
     {
         if (!empty($categories)) {
             $this->categories = $categories;
         }
     }
-    public function setSearchString($search_string)
+    public function setSearchString($search_string): void
     {
         if (!empty($search_string)) {
             $this->search_string = $search_string;
@@ -58,7 +56,7 @@ class ViewedRelatedProducts
 
         if ($elastic_query = $this->getElasticQuery($last_viewed))
         {
-            if ($p_ids = self::getFromElastic($elastic_query))
+            if ($p_ids = $this->getFromElastic($elastic_query))
             {
                 usort($p_ids, function($a, $b)
                 {
@@ -74,8 +72,12 @@ class ViewedRelatedProducts
     }
 
 
-    public function getLastViewedResources($categories = null)
+    public function getLastViewedResources($categories = null): array
     {
+        if (!$this->ssid) {
+            return [];
+        }
+
         $to_sql = '';
 
         if ($this->_search_with_categories) {
@@ -111,7 +113,7 @@ from (
 order by FIELD(SP.resource_type, 'S', 'P') asc, SP.position desc
 SQL;
 
-//        $resources = Xcart::app()->db->getConnection()->fetchAll($sql);
+        $resources = Xcart::app()->db->getConnection()->fetchAll($sql);
 
         if (empty($resources)) {
             return [];
@@ -122,7 +124,7 @@ SQL;
 
     public function getElasticQuery($last_viewed)
     {
-        $resources = array_slice($last_viewed, 0, 11);
+        $resources = \array_slice($last_viewed, 0, 11);
         $summary_pids = [];
         $jsons = [];
         $mlt_s_phrase = '';
@@ -196,14 +198,14 @@ JSON;
         return json_decode($json, true);
     }
 
-    public function getFromElastic($query = array(), $minScope = 0.3, $size = 500, $from = 0, $pull_categories = true)
+    public function getFromElastic(array $query = [], $minScope = 0.3, $size = 500, $from = 0, $pull_categories = true)
     {
         if (!$result = Xcart::app()->cache->get($query)) {
             $classElastic = clone $this->elastic;
             $classElastic->setMinScore($minScope);
             $classElastic->setType('product');
             $classElastic->setSearchQuery($query);
-            $result =  $classElastic->query(array("size"=>$size, "from"=>$from));
+            $result =  $classElastic->query(['size' => $size, 'from' => $from]);
 
             Xcart::app()->cache->set($query, $result, 60);
         }
@@ -236,7 +238,7 @@ JSON;
         return $t_arr;
     }
 
-    private static function pullCategoriesToElasticProducts($products)
+    private static function pullCategoriesToElasticProducts(iterable $products)
     {
         $p_ids = [];
 
