@@ -32,6 +32,7 @@ import  "./_binds/productSlider";
 import  "./_binds/sliders";
 
 import  "./_binds/pages/product";
+import  "./_binds/pages/categories";
 
 import  "./ext/jq-swipe";
 import  "./components/Flash";

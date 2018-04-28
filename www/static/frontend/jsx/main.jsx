@@ -31,6 +31,7 @@ require('preact/debug');
         window['loader'] = new Loader;
 
         isMedia('medium', '(max-width: 1023px)');
+        isMedia('large', '(min-width: 1024px)');
 
         Waves.attach('.waves');
         Waves.init();

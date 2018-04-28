@@ -12,25 +12,23 @@
   /* Стили для мобильных устройств */
   @include breakpoint(ml down) {
 
-    .all-departments-menu{
-      padding: 0 calc(0.625rem - 2px);
+    .all-departments-menu {
+      padding: 0 .5rem;
+      //padding: 0 calc(0.625rem - 0.125rem);
 
       /* Ссылка на основную категорию */
       .item-title {
-        margin: 2px;
-        padding: 3px 6px;
+        margin: 0.125rem;
+        padding: .5rem 1rem .5rem .5rem;
         display: block;
         background-color: #efefef;
-        opacity: 1;
-
-        transition: width 2s, height 2s, opacity 2s;
+        display: flex;
+        align-items: center;
 
         .image-container {
-          display: table-cell;
-          vertical-align: middle;
-
-          padding-right: 12px;
-          width: 42px;
+          display: block;
+          padding-right: .75rem;
+          width: 2.626rem;
           text-align: center;
 
           .image {
@@ -38,105 +36,97 @@
           }
         }
         .title {
-          display: table-cell;
-          vertical-align: middle;
+          display: block;
           white-space: pre-wrap;
           text-align: left;
-
           font-size: 1rem;
           line-height: 110%;
           overflow: hidden;
         }
 
-        &.opened{
-          display: flex;
-          width: calc(100% - 4px);
-          opacity: 1;
-        }
-        &.closed{
-          display: none;
-          opacity: 0;
-          width: 0;
-          height:0;
-        }
       }
     }
 
     @include breakpoint(medium down) {
       .item-title {
-        max-width: calc(100% - 4px) ;
+        max-width: calc(100% - 0.25rem);
       }
     }
 
     @include breakpoint(medium up) {
       .item-title {
-        max-width: calc(50% - 4px);
+        max-width: calc(50% - 0.25rem);
       }
     }
 
     @include breakpoint(ml only) {
       .item-title {
-        max-width: calc(33.33% - 4px);
+        max-width: calc(33.33% - 0.25rem);
       }
     }
 
-    .opened{
-      display: flex;
-      width: calc(100% - 4px);
-      opacity: 1;
-    }
-    .closed{
-      display: none;
-      opacity: 0;
-      width: 0;
-      height:0;
-    }
+    .sections {
 
 
-    .sections{
-      display:none;
+      //margin-top: .5rem;
       section {
-
-      .departments-submenu-items{
         display: none;
-        opacity: 0;
-      }
-      .hr-container {
-        display:none;
-      }
+        height: 0;
 
-      /* Заголовок категории */
-      .departments-submenu-title {
-        display: block;
-        text-decoration: none;
-        padding: .5rem;
-        background-color: #efefef;
-        margin-top: .5rem;
+        transition: height 1s;
 
-        .image-container {
-          display: table-cell;
-          vertical-align: middle;
+        &.show{
+          height: auto;
+          display: block;
+        }
 
-          padding-right: 12px;
-          width: 42px;
-          text-align: center;
+        //.departments-submenu-items{
+        //  display: none;
+        //  //opacity: 0;
+        //}
+        .hr-container {
+          display: none;
+        }
 
-          .image {
-            width: 100%;
+        /* Заголовок категории */
+        .departments-submenu-title {
+          display: flex;
+          text-decoration: none;
+          padding: .5rem;
+          background-color: #efefef;
+          //margin-top: .5rem;
+          align-items: center;
+
+          .image-container {
+            display: block;
+
+            padding-right: .75rem;
+            width: 2.626rem;
+            text-align: center;
+
+            .image {
+              width: 100%;
+            }
+
+          }
+          .title {
+            display: block;
+            font-size: 1rem;
           }
 
-        }
-        .title {
-          display: table-cell;
-          vertical-align: middle;
-          font-size: 1rem;
+          &::after {
+            content: '\2014';
+            display: block;
+            font-size: 1.5rem;
+            text-align: right;
+            padding-left: .75rem;
+            flex-grow: 1;
+          }
+
 
         }
-
       }
-    }}
-
-
+    }
 
   }
 
@@ -192,7 +182,7 @@
     }
 
     .all-departments-menu-hr {
-      .hr{
+      .hr {
         border-bottom: 2px solid #0d2431;
       }
     }
@@ -201,8 +191,7 @@
     .departments-submenu-container {
       margin-top: 39px;
 
-
-      .hr{
+      .hr {
         margin-top: 36px;
         border-bottom: 1px solid #b0b0b0;
       }
@@ -242,37 +231,30 @@
         }
 
       }
-
-      /* Список подкатегорий */
-      .departments-submenu-items {
-
-        a {
-          color: #055a93;
-          &:hover{
-            text-decoration: underline;
-          }
-        }
-
-        .group-items {
-          margin-top: 22px;
-          .items-title {
-            font-weight: bold;
-            padding-bottom: .5rem;
-          }
-          .items-list {
-            font-size: rem-calc(14);
-          }
-        }
-      }
     }
   }
 
+  /* Список подкатегорий */
+  .departments-submenu-items {
 
+    a {
+      color: #055a93;
+      &:hover {
+        text-decoration: underline;
+      }
+    }
 
-
-
-
-
+    .group-items {
+      margin-top: 22px;
+      .items-title {
+        font-weight: bold;
+        padding-bottom: .5rem;
+      }
+      .items-list {
+        font-size: rem-calc(14);
+      }
+    }
+  }
 
 }
 
