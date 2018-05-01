@@ -4,7 +4,10 @@
   "scripts": {
     "gulp": "gulp",
     "production": "NODE_ENV=production",
-    "watch": "gulp watch"
+    "watch": "gulp watch",
+    "webpack:frontend": "webpack --config ./config/webpack.frontend.js ",
+    "webpack:frontend:watch": "webpack --config ./config/webpack.frontend.js --watch --progress",
+    "webpack:frontend:hot": "webpack --config ./config/webpack.frontend.hot.js "
   },
   "devDependencies": {
     "babel-loader": "^7.0.0",
@@ -41,7 +44,8 @@
     "modernizr-loader": "^1.0.1",
     "path": "^0.12.7",
     "pump": "^1.0.2",
-    "webpack": "^3.5.5"
+    "webpack": "^3.5.5",
+    "webpack-sweet-entry": "^1.1.5"
   },
   "dependencies": {
     "form-serialize": "^0.7.2",
@@ -51,6 +55,7 @@
     "intl-polyfill": "0.0.3",
     "js-cookie": "^2.1.4",
     "linkstate": "^1.1.0",
+    "lodash": "^4.17.10",
     "modernizr": "^3.5.0",
     "preact": "^8.2.1",
     "preact-compat": "^3.16.0",
@@ -58,12 +63,12 @@
     "preact-redux": "^2.0.2",
     "preact-render-to-string": "^3.6.3",
     "react-id-swiper": "^1.4.0",
+    "react-sly-wrapper": "git+https://github.com/thangkieu/react-sly-wrapper.git",
     "redux": "^3.7.1",
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.2.0",
     "simplebar": "^2.6.1",
     "sly": "git+https://github.com/tsukasa-mixer/sly.git",
-    "react-sly-wrapper": "git+https://github.com/thangkieu/react-sly-wrapper.git",
     "whatwg-fetch": "^2.0.4"
   }
 }

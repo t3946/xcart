@@ -3,6 +3,7 @@ const imagemin = require('gulp-imagemin');
 
 
 
+
 var modulesDir = 'node_modules';
 
 var modules = fs.readdirSync(modulesDir).map(function (module) {
@@ -11,8 +12,9 @@ var modules = fs.readdirSync(modulesDir).map(function (module) {
 
 module.exports = {
     dst: {
-        js: 'frontend/dist/js',
-        jsx: 'temp/frontend/js',
+        // js: 'frontend/dist/js',
+        js: 'temp/frontend/js',
+        jsx: 'frontend/dist/js',
         scss: 'temp/frontend/css',
         css: 'frontend/dist/css',
         images: 'frontend/dist/images',
@@ -34,7 +36,7 @@ module.exports = {
         ],
         js: [
             'frontend/js/**/*',
-            'temp/frontend/js/**/*.js'
+            // 'temp/frontend/js/**/*.js'
         ],
         scss: [
             'frontend/sass/**/*.scss'

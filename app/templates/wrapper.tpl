@@ -101,6 +101,7 @@
         {*<link rel="stylesheet" href="/static/frontend/dist/css/styles.css?v={frontend_version resource='css/styles.css'}" media="all">*}
     {*</noscript>*}
 
+    <script src="/static/frontend/dist/js/vendor.js?v={frontend_version resource="js/vendor.js"}" async></script>
     <script src="/static/frontend/dist/js/main.js?v={frontend_version resource="js/main.js"}" async></script>
 
 {block 'js'}{/block}
