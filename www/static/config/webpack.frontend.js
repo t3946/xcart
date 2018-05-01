@@ -10,13 +10,14 @@ const paths = require('./gulp.frontend.patchs');
 
 config = {
     // devtool: 'source-map',
-    entry: _.merge(
-        paths.src.jsx_bundles,
-        WebpackSweetEntry(path.resolve("./temp/frontend/", 'js/**/*.js*'), 'js', 'js')
-    ),
+    entry: paths.src.jsx_bundles,
+    // entry: _.merge(
+    //     paths.src.jsx_bundles,
+    //     WebpackSweetEntry(path.resolve("./temp/frontend/", 'js/**/*.js*'), 'js', 'js')
+    // ),
     output: {
         path: path.resolve('./' + paths.dst.jsx),
-        filename: '[name]-bundle.js'
+        filename: '[name].js'
     },
     target: "web",
     resolve: {

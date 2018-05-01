@@ -26,7 +26,7 @@ module.exports = {
     },
     src: {
         jsx_bundles: {
-            app: './frontend/jsx/main.jsx'
+            main: './frontend/jsx/main.jsx'
         },
         jsx: [ // for watching
             'frontend/jsx/**/*'
