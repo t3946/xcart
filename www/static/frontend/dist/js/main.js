@@ -32197,6 +32197,8 @@ initDevTools();
 "use strict";
 /* WEBPACK VAR INJECTION */(function($) {
 
+__webpack_require__(156);
+
 __webpack_require__(42);
 
 var _foundation_events = __webpack_require__(107);
@@ -32249,7 +32251,6 @@ var _documentReady2 = _interopRequireDefault(_documentReady);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-__webpack_require__(156);
 __webpack_require__(40);
 __webpack_require__(157);
 
