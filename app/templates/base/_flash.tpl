@@ -6,6 +6,7 @@
     </div>
 </div>
 
+{if $messages}
 {add_asset_block type="js"}
     <script>
         window['flashStack'] = [];
@@ -15,3 +16,4 @@
         {/foreach}
     </script>
 {/add_asset_block}
+{/if}
