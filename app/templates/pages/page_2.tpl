@@ -4,7 +4,9 @@
         <section class="heading sas-header">
             <div class="row">
                 <div class="column head sas-header ">
+                    <div class="hit-header">
                     <img class="sas-lock" src="/static/frontend/images/lock.png"><h1>{$model->name}</h1>
+                    </div>
                 </div>
             </div>
         </section>
