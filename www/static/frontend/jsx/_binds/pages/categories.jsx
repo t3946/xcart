@@ -1,74 +1,123 @@
 import isMedia from "../../utils/isMedia";
+import documentReady from "../../utils/documentReady";
 
 // console.log('11');
 
-$(function () {
+(function () {
+    documentReady(() => {
 
 
-    let buttons = $('.all-departments-menu');
-    let sections = $('.sections');
-    let container = buttons.parent().css('height','auto');
-    let initialHeight = container.height();
+        let buttons = $('.all-departments-menu-container').css('overflow', 'hidden');
+        let sections = $('.sections');
+        let container = buttons.parent().css('height', 'auto');
+        let initialHeight = container.height();
+        let visibleElement = buttons.find('.all-departments-menu');
+        let duration = 400;
+        let scrollDuration = 800;
 
-    container.css({
-        'height': initialHeight + 'px',
-        'overflow': 'hidden'
-    });
+        container.css({
+            'height': initialHeight + 'px',
+            'overflow': 'hidden'
+        });
 
-    $('#content').on('click', '.item-title', function (event) {
+        // Открыть пункт меню (закрыть меню)
+        $('#content').on('click', '.item-title', function (event) {
 
-        // if (!isMedia('large') ) {
+            console.log('click');
 
-        event.preventDefault();
+            if (!isMedia('large')) {
 
-        let oneButton = $(event.target).is('.item-title') ? $(event.target) : $(event.target).parents('.item-title');
-        let idSection = oneButton.attr('href');
-        let oneSection = sections.find(idSection);
+                console.log('!large');
+                event.preventDefault();
 
-        oneSection.css('display', 'block');
-        let sectionHeight = oneSection.height();
+                let oneButton = $(event.target).is('.item-title') ? $(event.target) : $(event.target).parents('.item-title');
+                let idSection = oneButton.attr('href');
+                let oneSection = sections.find(idSection);
 
-        buttons.slideUp(400);
-        container.animate({
-            'height': sectionHeight + 'px'
-        }, 400);
+                oneSection.css('display', 'block');
+                let sectionHeight = oneSection.outerHeight(true);
 
-        return false;
-        // }
+                console.log(oneSection);
+                console.log(sectionHeight);
 
-    });
+                buttons.animate({
+                    'height': 0
+                }, duration);
+                container.animate({
+                    'height': sectionHeight + 'px'
+                }, duration);
 
-    sections.on('click', '.departments-submenu-title', function (event) {
+                visibleElement = oneSection;
+                visibleElement.data('type', 'section');
 
-        // if (!isMedia('large') ) {
-        event.preventDefault();
+                return false;
+            }
 
-        let closeButton = $(event.target).is('.departments-submenu-title') ? $(event.target) : $(event.target).parents('.departments-submenu-title');
-        let oneSection = closeButton.parents('section.departments-submenu-container');
-        buttons.slideDown(400, function(){
-            container.animate({
-                'height': buttons.outerHeight() + 'px'
-            }, 400, function () {
-                oneSection.css('display', 'none');
-            });
+        });
+
+        // Закрыть пункт меню (открыть меню)
+        sections.on('click', '.departments-submenu-title', function (event) {
+
+            if (!isMedia('large')) {
+                event.preventDefault();
+
+                let closeButton = $(event.target).is('.departments-submenu-title') ? $(event.target) : $(event.target).parents('.departments-submenu-title');
+                let oneSection = closeButton.parents('section.departments-submenu-container');
+                let menuHeight = buttons.find('.all-departments-menu').outerHeight();
+                buttons.animate({
+                    'height': menuHeight + 'px'
+                }, duration);
+                container.animate({
+                    'height': menuHeight + 'px'
+                }, duration, function () {
+                    oneSection.css('display', 'none');
+                });
+
+                visibleElement = buttons.find('.all-departments-menu');
+                visibleElement.data('type', 'menu');
+
+                return false;
+
+            }
+        });
+
+        // Если изменяется ширина окна
+        window.addEventListener('resize', e => {
+            if (!isMedia('large')) {
+                // Если мобильные разрешения
+                let height = visibleElement.outerHeight();
+                sections.find('section.departments-submenu-container').css('display', 'none');
+                if (visibleElement.data('type') == 'menu') {
+                    // Если активный элемент - меню
+                    buttons.css('height', height + 'px');
+                } else {
+                    // Если раскрыт 1 пункт меню
+                    visibleElement.css('display', 'block');
+                    buttons.css('height', 0)
+                }
+                container.css('height', height + 'px');
+            } else {
+                // Если десктопные разрешения
+                sections.find('section.departments-submenu-container').css('display', 'block');
+                container.css('height', 'auto');
+                buttons.css({'height': 'auto', 'display': 'block'});
+            }
+        });
+
+        // Прокрутка до верха страницы
+        console.info(document.querySelectorAll('#scrollToTop'));
+        document.querySelectorAll('#scrollToTop').addEventListener('click', e => {
+            e.preventDefault();
+            $('html,body').stop().animate({ scrollTop: 0 }, scrollDuration);
         });
 
 
-        return false;
-
-        // }
+        // document.querySelectorAll('#content').addEventListener('click', e => {
+        //
+        // });
+        //
+        // window.addEventListener('resize', e =>  {
+        //
+        // })
     });
-
-     // window.addEventListener('resize', e =>  {
-     //
-     // })
-
-
-    // document.querySelectorAll('#content').addEventListener('click', e => {
-    //
-    // });
-    //
-    // window.addEventListener('resize', e =>  {
-    //
-    // })
-});
+})();
