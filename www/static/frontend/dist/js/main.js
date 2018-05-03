@@ -67736,6 +67736,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
         });
 
         window.addEventListener('resize', function (e) {
+
             if (!(0, _isMedia2.default)('large')) {
                 var height = visibleElement.outerHeight();
                 sections.find('section.departments-submenu-container').css('display', 'none');

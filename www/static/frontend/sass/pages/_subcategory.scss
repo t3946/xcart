@@ -16,7 +16,6 @@
     .all-departments-menu {
 
       @include breakpoint(ml only) {
-        //padding: 0 calc(0.625rem - 0.3125rem);
         padding: 0 .3125rem;
 
         .item-title {
@@ -26,7 +25,6 @@
       }
 
       padding: 0 .5rem;
-      //padding: 0 calc(0.625rem - 0.125rem);
 
       /* Ссылка на основную категорию */
       .item-title {
@@ -70,13 +68,10 @@
       }
     }
 
-
-
     .sections {
 
       section {
         display: none;
-        //transition: height 1s;
 
         &.show {
           height: auto;

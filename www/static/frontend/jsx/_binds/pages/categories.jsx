@@ -20,8 +20,8 @@ import documentReady from "../../utils/documentReady";
             return p ? p[0] : false;
         }
 
-        function scrollToSection(sectionId){
-            $('html,body').stop().animate({ scrollTop: $(sectionId).offset().top }, scrollDuration);
+        function scrollToSection(sectionId) {
+            $('html,body').stop().animate({scrollTop: $(sectionId).offset().top}, scrollDuration);
         }
 
         container.css({
@@ -94,55 +94,41 @@ import documentReady from "../../utils/documentReady";
 
         // Если изменяется ширина окна
         window.addEventListener('resize', e => {
-            //_.throttle(function(){
-                if (!isMedia('large')) {
-                    // Если мобильные разрешения
-                    let height = visibleElement.outerHeight();
-                    sections.find('section.departments-submenu-container').css('display', 'none');
-                    if (visibleElement.data('type') == 'menu') {
-                        // Если активный элемент - меню
-                        buttons.css('height', height + 'px');
-                    } else {
-                        // Если раскрыт 1 пункт меню
-                        visibleElement.css('display', 'block');
-                        buttons.css('height', 0)
-                    }
-                    container.css('height', height + 'px');
+
+            if (!isMedia('large')) {
+                // Если мобильные разрешения
+                let height = visibleElement.outerHeight();
+                sections.find('section.departments-submenu-container').css('display', 'none');
+                if (visibleElement.data('type') == 'menu') {
+                    // Если активный элемент - меню
+                    buttons.css('height', height + 'px');
                 } else {
-                    // Если десктопные разрешения
-                    sections.find('section.departments-submenu-container').css('display', 'block');
-                    container.css('height', 'auto');
-                    buttons.css({'height': 'auto', 'display': 'block'});
+                    // Если раскрыт 1 пункт меню
+                    visibleElement.css('display', 'block');
+                    buttons.css('height', 0)
                 }
-           // }, 5);
+                container.css('height', height + 'px');
+            } else {
+                // Если десктопные разрешения
+                sections.find('section.departments-submenu-container').css('display', 'block');
+                container.css('height', 'auto');
+                buttons.css({'height': 'auto', 'display': 'block'});
+            }
+
         });
 
 
         // После загрузки css открыть нужный пункт меню если передан его идентификатор
-        $(document).on('app.start', function(){
-            if(!getSectionId()){
+        $(document).on('app.start', function () {
+            if (!getSectionId()) {
                 return false;
             }
 
             let sectionId = getSectionId();
             // Клик на нужную ссылку записывает текущее значение в десктопной версии
-            $('a.link-' + sectionId.replace('#','')).trigger('click');
+            $('a.link-' + sectionId.replace('#', '')).trigger('click');
 
 
         });
-
-        // Прокрутка до верха страницы
-        // document.querySelector('#scrollToTop').addEventListener('click', e => {
-        //     e.preventDefault();
-        //     $('html,body').stop().animate({ scrollTop: 0 }, scrollDuration);
-        // });
-
-        // document.querySelectorAll('#content').addEventListener('click', e => {
-        //
-        // });
-        //
-        // window.addEventListener('resize', e =>  {
-        //
-        // })
     });
 })();
