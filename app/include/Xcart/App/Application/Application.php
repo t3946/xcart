@@ -274,6 +274,7 @@ class Application
     public function handleWebRequest()
     {
         /** @var HttpRequest $request */
+
         $request = $this->request;
         $router = $this->router;
 
@@ -295,6 +296,8 @@ class Application
             $params = $match['params'];
 
             /** @var Controller $controller */
+
+
             $controller = new $controllerClass($this->request);
             $controller->run($action, $params);
         }
