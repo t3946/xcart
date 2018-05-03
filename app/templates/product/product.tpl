@@ -151,8 +151,6 @@
             {include "product/_groupped_products.tpl"}
         </section>
     {/if}
-
-
 </section>
 {/block}
 
