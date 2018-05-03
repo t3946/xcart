@@ -1,5 +1,7 @@
 'use strict';
 
+import '../../temp/frontend/js/vendors';
+
 import 'head';
 import foundationRegisterCustomEvents from "./_binds/foundation_events";
 
@@ -15,7 +17,6 @@ import isTouch from "./utils/isTouch";
 import isMedia from "./utils/isMedia";
 import documentReady from "./utils/documentReady";
 
-require('../../temp/frontend/js/vendors');
 require('preact/devtools');
 require('preact/debug');
 
