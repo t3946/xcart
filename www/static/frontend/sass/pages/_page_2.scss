@@ -15,8 +15,26 @@
     background: url('/static/frontend/images/Rectangle12.png') center center no-repeat;
     background-size: 100%;
   }
+  .page-container{
+    margin-top: 50px;
+  }
+  //.hit-header {
+  //  margin-top: 120px;
+  //}
+  .sas-lock {
+    padding-top: 100px;
+    float: left;
+  }
+  .sas-header h1 {
+    padding-top: 55px;
+    padding-left: 20px;
+    font-size: 80px;
+    float: left;
+    color: #fff;
+    line-height: normal;
+    font-weight: lighter;
+  }
   div.sas-header {
-
     height: 280px;
     width: 100%;
     text-align: center;
