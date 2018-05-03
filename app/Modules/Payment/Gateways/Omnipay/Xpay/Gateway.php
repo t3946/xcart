@@ -2,7 +2,9 @@
 
 namespace Omnipay\Xpay;
 
+use Modules\Order\Models\OrderModel;
 use Omnipay\Common\AbstractGateway;
+use Omnipay\Xpay\Message\SaleRequest;
 
 /**
  * @method \Omnipay\Common\Message\RequestInterface completeAuthorize(array $options = array())
@@ -13,135 +15,113 @@ use Omnipay\Common\AbstractGateway;
  */
 class Gateway extends AbstractGateway
 {
-    public function getName()
+
+    public function getName(): string
     {
         return 'Xpay';
     }
 
-
-    public function getDefaultParameters()
+    public function getShoppingCartId():? string
     {
-        return array(
-            'accountId' => '',
-            'secretKey' => '',
-        );
+        return $this->getParameter('shopping_cart_id');
     }
 
-
-    public function getAccountId()
+    public function setShoppingCartId($value): object
     {
-        return $this->getParameter('accountId');
+        return $this->setParameter('shopping_cart_id', $value);
     }
 
-    public function setAccountId($value)
+    public function getPublicKey():? string
     {
-        return $this->setParameter('accountId', $value);
+        return $this->getParameter('public_key');
     }
 
-
-    public function getSecretKey()
+    public function setPublicKey($value): object
     {
-        return $this->getParameter('secretKey');
+        return $this->setParameter('public_key', $value);
     }
 
-    public function setSecretKey($value)
+    public function getPrivateKey():? string
     {
-        return $this->setParameter('secretKey', $value);
+        return $this->getParameter('private_key');
     }
 
+    public function setPrivateKey($value): object
+    {
+        return $this->setParameter('private_key', $value);
+    }
 
-    public function getToken()
+    public function getPrivateKeyPassword():? string
+    {
+        return $this->getParameter('private_key_password');
+    }
+
+    public function setPrivateKeyPassword($value): object
+    {
+        return $this->setParameter('private_key_password', $value);
+    }
+
+    public function getConfigurationId():? string
+    {
+        return $this->getParameter('configuration_id');
+    }
+
+    public function setConfigurationId($value): object
+    {
+        return $this->setParameter('configuration_id', $value);
+    }
+
+    public function getMerchantEmail():? string
+    {
+        return $this->getParameter('merchant_email');
+    }
+
+    public function setMerchantEmail($value): object
+    {
+        return $this->setParameter('merchant_email', $value);
+    }
+
+    public function setOrder(OrderModel $value): object
+    {
+        return $this->setParameter('order', $value);
+    }
+
+    public function getOrder($value): OrderModel
+    {
+        return $this->getParameter('order');
+    }
+
+    public function getToken():? string
     {
         return $this->getParameter('token');
     }
 
-    public function setToken($value)
+    public function setToken($value): object
     {
         return $this->setParameter('token', $value);
     }
-
-
-    public function getCustomId1()
-    {
-        return $this->getParameter('customId1');
-    }
-
-    public function setCustomId1($value)
-    {
-        return $this->setParameter('customId1', $value);
-    }
-
-
-    public function getCustomId2()
-    {
-        return $this->getParameter('customId2');
-    }
-
-    public function setCustomId2($value)
-    {
-        return $this->setParameter('customId2', $value);
-    }
-
-
-    public function getOrderId()
-    {
-        return $this->getParameter('orderId');
-    }
-
-    public function setOrderId($value)
-    {
-        return $this->setParameter('orderId', $value);
-    }
-
-
-    public function getInvoiceId()
-    {
-        return $this->getParameter('invoiceId');
-    }
-
-    public function setInvoiceId($value)
-    {
-        return $this->setParameter('invoiceId', $value);
-    }
-
-
-    public function getMemo()
-    {
-        return $this->getParameter('memo');
-    }
-
-    public function setMemo($value)
-    {
-        return $this->setParameter('memo', $value);
-    }
-
 
     public function getDeveloperMode()
     {
         return $this->getParameter('developerMode');
     }
 
-
     public function setDeveloperMode($value)
     {
         $this->setParameter('developerMode', $value);
     }
 
-
     public function authorize(array $parameters = array())
     {
     }
-
 
     public function capture(array $parameters = array())
     {
     }
 
-
     public function refund(array $parameters = array())
     {
     }
-
 
     public function purchase(array $parameters = array())
     {

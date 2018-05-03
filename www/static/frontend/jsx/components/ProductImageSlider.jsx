@@ -77,25 +77,13 @@ export default class ProductImageSlider extends Component
 
 
     clickHndl(e, n, item) {
-        // e.preventDefault();
+        e.preventDefault();
 
         if (this.state.index !== n) {
             this.setState({
                 index: n,
                 isVideo: false,
             });
-        }
-
-        if (e.target) {
-            if ( e.target.classList.contains('play-icon') ) {
-                 e.target.classList.remove('play-icon');
-            }
-            else {
-                let nl = e.target.closest('.play-icon');
-                if (nl) {
-                    nl.classList.remove('play-icon');
-                }
-            }
         }
     }
 
@@ -155,13 +143,25 @@ export default class ProductImageSlider extends Component
     }
 
     prevHndl(e) {
-        // e.preventDefault();
+        e.preventDefault();
 
+        if (this.state.index) {
+            this.setState({
+                index: this.state.index-1,
+                isVideo: false,
+            });
+        }
     }
 
     nextHndl(e) {
-        // e.preventDefault();
+        e.preventDefault();
 
+        if (this.state.index < this.state.count-1) {
+            this.setState({
+                index: this.state.index+1,
+                isVideo: false,
+            });
+        }
     }
 
     videoShowHndl(e) {
@@ -173,7 +173,8 @@ export default class ProductImageSlider extends Component
     renderThumbs() {
         return _.map(this.state.items, (item, n)=>{
 
-            let is_active = (this.state.index == n ? ' active' : '');
+            // let is_active = (this.state.index == n ? ' active' : '');
+            let is_active = '';
 
             if (item.type === 'image') {
                 return (
@@ -291,15 +292,17 @@ export default class ProductImageSlider extends Component
         <div className="images-slider">
             <div className="slider-thumbs">
                 <button className={"prev " + sliderButtonsClasses} onClick={ e => {this.prevHndl(e)}} ref={el => this.refs.prev = el }></button>
-                <PreactSlySlide options={{
-                    horizontal: 0,
-                    speed: 300,
-                    mouseDragging: 1,
-                    touchDragging: 1,
-                    smart: 1,
-                    prev: this.refs.prev,
-                    next: this.refs.next,
-                }}>
+                <PreactSlySlide
+                    options={{
+                        horizontal: 0,
+                        speed: 300,
+                        mouseDragging: 1,
+                        touchDragging: 1,
+                        smart: 1,
+                        prev: this.refs.prev,
+                        next: this.refs.next,
+                    }}
+                    pos={this.state.index}>
                     <div className="frame">
                         {this.renderThumbs()}
                     </div>

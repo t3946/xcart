@@ -92,7 +92,9 @@ export default class MiniCart extends Component
 
                     <div className="name-quantity">
                         <div className="name">
-                            {item.name}
+                            <a href={item.href}>
+                                {item.name}
+                            </a>
                         </div>
 
                         <div className="quantity-extended">

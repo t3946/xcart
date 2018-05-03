@@ -1,204 +1,343 @@
 <?php
 
 namespace Omnipay\Xpay\Message;
+use Modules\Order\Models\OrderModel;
+use Xcart\App\Helpers\Xml;
 
 /**
  * Xpay Abstract Request
  */
 abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
 {
-    protected $liveEndpoint = 'https://secure.bluepay.com/interfaces/bp20post';
+    public const API_VERSION = '1.8';
 
-    // there is no sandbox but you can send transactions with mode set to
-    // "TEST" or "LIVE". calling $this->setDeveloperMode(true) sets the mode
-    // to TEST.
-    protected $developerEndpoint = 'https://secure.bluepay.com/interfaces/bp20post';
+    protected $liveEndpoint = 'https://secure.s3stores.com/xpayments/api.php';
 
-    public function getAccountId()
+    abstract public function getMethod();
+
+    public function getShoppingCartId():? string
     {
-        return $this->getParameter('accountId');
+        return $this->getParameter('shopping_cart_id');
     }
 
-    public function setAccountId($value)
+    public function setShoppingCartId($value): object
     {
-        return $this->setParameter('accountId', $value);
+        return $this->setParameter('shopping_cart_id', $value);
     }
 
-
-    public function getSecretKey()
+    public function getPublicKey():? string
     {
-        return $this->getParameter('secretKey');
+        return $this->getParameter('public_key');
     }
 
-    public function setSecretKey($value)
+    public function setPublicKey($value): object
     {
-        return $this->setParameter('secretKey', $value);
+        return $this->setParameter('public_key', $value);
     }
 
-
-    public function getToken()
+    public function getPrivateKey():? string
     {
-        return $this->getParameter('token');
+        return $this->getParameter('private_key');
     }
 
-    public function setToken($value)
+    public function setPrivateKey($value): object
     {
-        return $this->setParameter('token', $value);
+        return $this->setParameter('private_key', $value);
     }
 
-
-    public function getCustomId1()
+    public function getPrivateKeyPassword():? string
     {
-        return $this->getParameter('customId1');
+        return $this->getParameter('private_key_password');
     }
 
-    public function setCustomId1($value)
+    public function setPrivateKeyPassword($value): object
     {
-        return $this->setParameter('customId1', $value);
+        return $this->setParameter('private_key_password', $value);
     }
 
-
-    public function getCustomId2()
+    public function getConfigurationId():? string
     {
-        return $this->getParameter('customId2');
+        return $this->getOrder()->payment_method->cc_processor_models->limit(1)->get()->param01;
     }
 
-    public function setCustomId2($value)
+    public function getMerchantEmail():? string
     {
-        return $this->setParameter('customId2', $value);
+        return $this->getParameter('merchant_email');
     }
 
-
-    public function getOrderId()
+    public function setMerchantEmail($value): object
     {
-        return $this->getParameter('orderId');
+        return $this->setParameter('merchant_email', $value);
     }
 
-    public function setOrderId($value)
+    public function setOrder(object $value): object
     {
-        return $this->setParameter('orderId', $value);
+        return $this->setParameter('order', $value);
     }
 
-
-    public function getInvoiceId()
+    public function getOrder(): object
     {
-        return $this->getParameter('invoiceId');
+        return $this->getParameter('order');
     }
 
-    public function setInvoiceId($value)
+    public function getEndPoint()
     {
-        return $this->setParameter('invoiceId', $value);
+        return $this->liveEndpoint;
     }
 
-
-    public function getMemo()
+    public function getHttpMethod()
     {
-        return $this->getParameter('memo');
+        return 'POST';
     }
 
-    public function setMemo($value)
+    public function getHeaders()
     {
-        return $this->setParameter('memo', $value);
+        return [
+            "content-type" => 'application/x-www-form-urlencoded'
+        ];
     }
 
-
-    public function getDeveloperMode()
+    protected function getBaseData(): array
     {
-        return $this->getParameter('developerMode');
+        return [
+            'api_version' => self::API_VERSION,
+            'refId' => $this->getOrder()->orderid,
+            'confId' => $this->getConfigurationId(),
+            'returnUrl' => $this->getReturnUrl(),
+            'callbackUrl' => $this->getNotifyUrl(),
+            'target' => 'payment',
+            'action' => $this->getMethod(),
+            'language' => 'en',
+        ];
+
     }
 
-    public function setDeveloperMode($value)
+    protected function getCartData(): array
     {
-        $this->setParameter('developerMode', $value);
-    }
+        /** @var OrderModel $order */
+        $order = $this->getOrder();
 
+        [$shipping, $billing] = $order->getAddressInfo();
 
-    protected function getBaseData()
-    {
-        $data = array(
-            'ACCOUNT_ID' => $this->getAccountId(),
-            'TAMPER_PROOF_SEAL' => $this->tps(),
-            'TRANS_TYPE' => $this->action,
-            'MODE' => $this->getDeveloperMode() ? 'TEST' : 'LIVE',
-            'MASTER_ID' => $this->getToken(),
-        );
-        return $data;
-    }
-
-
-    protected function getBillingData()
-    {
-        $data = array();
-        $data['AMOUNT'] = $this->getAmount();
-
-        if ($card = $this->getCard()) {
-            $data['PAYMENT_ACCOUNT'] = $card->getNumber();
-            $data['NAME1']   = $card->getBillingFirstName();
-            $data['NAME2']   = $card->getBillingLastName();
-            $data['ADDR1']   = $card->getBillingAddress1();
-            $data['ADDR2']   = $card->getBillingAddress1();
-            $data['CITY']    = $card->getBillingCity();
-            $data['STATE']   = $card->getBillingState();
-            $data['ZIP']     = $card->getBillingPostcode();
-            $data['PHONE']   = $card->getBillingPhone();
-            $data['EMAIL']   = $card->getEmail();
-            $data['COUNTRY'] = $card->getBillingCountry();
+        foreach ($order->detail_models as $detail) {
+            $items[] = ['items' => [
+                    '@attributes' => ['type' => 'cell'],
+                    'sku' => $detail->productcode,
+                    'name' => $detail->product,
+                    'price' => $detail->price,
+                    'quantity' => $detail->amount,
+                ]
+            ];
         }
 
-        $data['MEMO']        = $this->getMemo();
-        $data['CUSTOM_ID']   = $this->getCustomId1();
-        $data['CUSTOM_ID2']  = $this->getCustomId2();
-        $data['ORDER_ID']    = $this->getOrderId();
-        $data['INVOICE_ID']  = $this->getInvoiceId();
-        $data['CUSTOMER_IP'] = $this->getClientIp();
+        $result = [
+            'cart' => [
+                'login' => $order->user_id ?: random_int(10,12),
+                'currency' => $this->getCurrency(),
+                'shippingCost' => number_format($order->shipping_cost,2),
+                'taxCost' => number_format($order->tax,2),
+                'discount' => number_format($order->discount + $order->coupon_discount, 2),
+                'totalCost' => number_format($order->total, 2),
+                'description' => "Order(s) # {$order->getOrderNumber()}",
+                'merchantEmail' => $this->getMerchantEmail(),
+                'shippingAddress' => [
+                    'firstname' => $shipping['firstname'],
+                    'address' => $shipping['address'][0],
+                    'city' => $shipping['city'],
+                    'state' => $shipping['state']->state,
+                    'zipcode' => $shipping['zipcode'],
+                    'country' => $shipping['country']->code,
+                    'email' => $order->email,
+                    'phone' => $order->phone,
+                    'fax' => $order->fax,
+                ],
+                'billingAddress' => [
+                    'firstname' => $billing['firstname'],
+                    'address' => $billing['address'][0],
+                    'city' => $billing['city'],
+                    'state' => $billing['state']->state,
+                    'zipcode' => $billing['zipcode'],
+                    'country' => $billing['country']->code,
+                    'email' => $order->email,
+                    'phone' => $order->phone,
+                    'fax' => $order->fax,
+                ],
+            ]
+        ];
 
-        return $data;
-    }
+        $result['cart'] = array_merge($result['cart'], $items);
 
-
-    /**
-     * In lieu of sending the secret key, create a "tamper proof seal"
-     * by hashing a bunch of parameters that are part of the transaction
-     * and send that instead.
-     *
-     * @return string
-     */
-    public function tps()
-    {
-        $name = '';
-        $account = '';
-        if ($card = $this->getCard()) {
-            $name = $card->getBillingFirstName();
-            $account = $card->getNumber();
-        }
-
-        $hashstr = $this->getSecretKey() . $this->getAccountId() . $this->action .
-        $this->getAmount() . $this->getToken() . $name . $account;
-
-        return md5($hashstr);
+        return $result;
     }
 
 
     public function sendData($data)
     {
-        // don't throw exceptions for 4xx errors
-        // cribbed from https://github.com/thephpleague/omnipay-stripe/blob/master/src/Message/AbstractRequest.php
-        $this->httpClient->getEventDispatcher()->addListener(
-            'request.error',
-            function ($event) {
-                if ($event['response']->isClientError()) {
-                    $event->stopPropagation();
-                }
-            }
-        );
+        preg_match("/<response>(.*)<\/response>/s", Xml::encode('response', $data, true), $matches);
+        $xml = $matches[1];
 
-        $httpResponse = $this->httpClient->post($this->getEndpoint(), null, $data)->send();
-        return $this->response = new Response($this, $httpResponse->getBody());
+        $request = [
+            'cart_id' => $this->getShoppingCartId(),
+            'request' => $this->encrypt($xml),
+        ];
+
+        $httpResponse = $this->httpClient->post($this->getEndpoint(), null, $request)->send();
+        $this->response = new Response($this, $this->decrypt($httpResponse->getBody()));
+        return $this->response;
     }
 
-
-    public function getEndpoint()
+    /**
+     * Get string with prepended length
+     * Length is 12 digits, leading zeroes added
+     *
+     * @param $str string
+     *
+     * @return string
+     */
+    private function getStringLen($str)
     {
-        return $this->getDeveloperMode() ? $this->developerEndpoint : $this->liveEndpoint;
+        return str_pad(strlen($str), 12, '0', STR_PAD_LEFT) . $str;
     }
+
+    /**
+     * Generate salt for request.
+     * String of 32 characters
+     *
+     * IMPORTANT! Make sure the implementation of openssl_random_pseudo_bytes() in your PHP version
+     * is indeed cryptographically secure. Please check:
+     *  - https://bugs.php.net/bug.php?id=70014
+     *
+     * If necessary you may use another way to generate the cryptographically secure random string. See:
+     *  - http://stackoverflow.com/questions/31492921/cryptographically-secure-random-string-function
+     *
+     * @return string
+     */
+    private function getSalt()
+    {
+        return openssl_random_pseudo_bytes(32);
+    }
+
+    public function encrypt(string $data): string
+    {
+        // Initialize public key
+        $publicKey = openssl_pkey_get_public($this->getPublicKey());
+
+        // 1) Get Salt block.
+        //  - Generate 32-character string formed of random characters.
+        $salt = $this->getSalt();
+
+        // 2) Get CRC block.
+        //  - Generate MD5 in binary format of the passed data
+        //  - Prepend it with the "     MD5" prefix (spaces are mandatory!)
+        $crc = '     MD5' . md5($data, true);
+
+        // 3) Data block.
+        //  - For each Salt, CRC and Data calculate length: it's formatted as a 12-digit number, e.g. 000000000032.
+        //  - Compose data block. Write consequently: length of Salt, Salt, length of CRC, CRC, length of Data, Data.
+        $data = $this->getStringLen($salt) . $this->getStringLen($crc) . $this->getStringLen($data);
+
+        // 4) Split data by chunks of 128 characters
+        $data = str_split($data, 128);
+
+        // 5) Encrypt each chunk consequently using the public key
+        foreach ($data as $key => $chunk) {
+            $cryptText = null;
+            openssl_public_encrypt($chunk, $cryptText, $publicKey);
+            $data[$key] = $cryptText;
+        }
+
+        // 6) Encode each chunk with base64
+        $data = array_map('base64_encode', $data);
+
+        // 7) Compose the encrypted data.
+        //  - Start with the "API" prefix
+        //  - Write the encrypted and encoded chunks separated with line-break
+        $result = 'API' . implode("\n", $data);
+
+        return $result;
+    }
+
+    public function decrypt(string $data): string
+    {
+        // Initialize the private key
+        $res = openssl_pkey_get_private($this->getPrivateKey(), $this->getPrivateKeyPassword());
+
+        // Remove leading "API" word
+        $data = substr($data, 3);
+
+        // Split and decode the encrypted chunks
+        $data = explode("\n", $data);
+        $data = array_map('base64_decode', $data);
+
+        // Decrypt each chunk
+        foreach ($data as $key => $str) {
+            $decryptText = null;
+            openssl_private_decrypt($str, $decryptText, $res);
+            $data[$key] = $decryptText;
+        }
+
+        openssl_free_key($res);
+
+        // Combine the decrypted chunks
+        $result = implode('', $data);
+
+        // Validate the CRC of the encrypted response
+        return $this->validateDecryptedData($result);
+    }
+
+    /**
+     * Shift block from data string
+     *
+     * @param string &$data Response data
+     *
+     * @return string
+     */
+    private function shiftBlock(&$data)
+    {
+        $length = intval(substr($data, 0, 12));
+
+        $block = substr($data, 12, $length);
+
+        $data = substr($data, 12 + $length);
+
+        return $block;
+    }
+
+    /**
+     * Check CRC of decrypted data
+     *
+     * @param string $data
+     *
+     * @return string
+     */
+    private function validateDecryptedData($data)
+    {
+        // 1) Extract Salt
+        //  - get the salt length from the first 12 characters
+        //  - shift the salt block by it's length
+        $salt = $this->shiftBlock($data);
+
+        // 2) Extract CRC
+        //  - get the CRC length from the first 12 characters
+        //  - shift the CRC block by it's length
+        //  - remove the "     MD5" prefix from CRC
+        $crc = substr($this->shiftBlock($data), 8);
+
+        // 3) Extract data
+        //  - get the data length from the first 12 characters
+        //  - shift the data block by it's length
+        $data = $this->shiftBlock($data);
+
+        // 4) Calculate the MD5 checksum in the binary format of the received data
+        $dataCRC = md5($data, true);
+
+        // 5) Compare it with CRC
+        if ($dataCRC !== $crc) {
+            throw new \Exception('Original CRC and calculated CRC is not equal');
+        }
+
+        return $data;
+    }
+
+
 }

@@ -58,7 +58,7 @@ where RO.resource_id = '{$productid}'
   and RO.resource_type = 'OP' 
   and RO.related_resource_type = 'P'  
   and RO.related_resource_id NOT IN ('{$productids}')
-  and SF.sfid = {$site->pk}
+  and SF.sfid = '{$site->pk}'
   
 order By RO.related_resource_orderby 
 limit 30
@@ -79,7 +79,7 @@ where SP.meta_id = '{$meta_id}'
   and SP.resource_type = 'P' 
   and SP.resource_id NOT IN ('{$productids}')
   and SP.meta_id > 0
-  and SF.sfid = {$site->pk}
+  and SF.sfid = '{$site->pk}'
   
 group By SP.resource_id
 order By max(SP.`position`) desc
@@ -153,7 +153,7 @@ SQL;
 
             if (!\in_array($section_name, ['related_products', 'recently_viewed_products']))
             {
-                if ($fba_pids = Product::getRandFbaProducts($fba_limit, array_merge($i_ids, [$productid])))
+                if ($fba_pids = Product::getRandFbaProducts($fba_limit, array_merge($i_ids, [$productid]), $site->pk))
                 {
                     $fba_pids = array_map(function($item){ return $item['needed_resource_id']; }, $fba_pids);
 

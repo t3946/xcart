@@ -23,7 +23,7 @@
             <div class="row">
                 <div class="columns small-5">
                     <div class="options">
-                        {include 'checkout/_address_view.tpl' info=$order->getAddressInfo('shipping') header=$.t('Shipping Address','order') uri='checkout:shipping'}
+                        {include 'checkout/_address_view.tpl' info=$order->getAddressInfo()[0] header=$.t('Shipping Address','order') uri='checkout:shipping'}
                     </div>
                 </div>
                 <div class="columns small-7">
@@ -50,7 +50,7 @@
                                     {set $shipping_model = $quote->shipping}
                                     <div class="row">
                                         <div class="columns small-9">
-                                            <input {if $first}required{/if} {if $order_group && $order_group->shippingid == $shipping_model->shippingid}checked{/if} id="shipping_{$gi}" type="radio" name="shipping_rates[{$gi}]" value="{$quote->rateid}"/>
+                                            <input {if $first}required{/if} {if (!$order_group && $first) || ($order_group && $order_group->shippingid == $shipping_model->shippingid)}checked{/if} id="shipping_{$gi}" type="radio" name="shipping_rates[{$gi}]" value="{$quote->rateid}"/>
                                             <label for="shipping_{$gi}">
                                                 <span class="name">{$shipping_model->getFrontendName()}</span> {$shipping_model->shipping_time}
                                             </label>
@@ -93,10 +93,10 @@
                     </div>
                     {if $payment_methods}
                         <div class="payment-methods">
-                            {foreach $payment_methods as $method}
+                            {foreach $payment_methods as $method first=$first}
                                 <div class="row align-center-middle {cycle ["odd", ""]}">
                                     <div class="columns small-4">
-                                        <input {if $method->paymentid == $order->paymentid}checked{/if} id="payment_{$method->paymentid}" type="radio" name="payment_method" value="{$method->paymentid}"/>
+                                        <input {if ($first && !$order->paymentid) || ($method->paymentid == $order->paymentid)}checked{/if} id="payment_{$method->paymentid}" type="radio" name="payment_method" value="{$method->paymentid}"/>
                                         <label for="payment_{$method->paymentid}">
                                             <span class="name">{$method->payment_method}</span>
                                         </label>
@@ -142,7 +142,7 @@
                         </div>
                     </div>
 
-                    {set $address = $order->getAddressInfo('billing')['address']}
+                    {set $address = $order->getAddressInfo()[1]['address']}
 
                     <div class="registration {if !$billing_diff}hide{/if}" id="registration">
                         <div class="row">

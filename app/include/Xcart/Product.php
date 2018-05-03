@@ -767,13 +767,6 @@ SQL;
 
     public static function getRandFbaProducts($limit = 2, array $no_ids = null, $sfid = null)
     {
-        global $current_storefront_info;
-
-
-        if (empty($sfid) && !empty($current_storefront_info)) {
-            $sfid = $current_storefront_info['storefrontid'];
-        }
-
         $where = ['amazon_fba' => 'Y', 'amazon_fba_avail__gt' => 1, 'forsale' => 'Y', 'ps.sfid' => $sfid];
 
         if (!empty($no_ids)) {

@@ -92,7 +92,7 @@ abstract class AbstractCatalogController extends FrontendController
      */
     public function getBreadcrumbsFromData($data)
     {
-        if (is_object($data) && method_exists($data, 'getBreadcrumbs'))
+        if (\is_object($data) && method_exists($data, 'getBreadcrumbs'))
         {
             return $data->getBreadcrumbs();
         }

@@ -1,0 +1,61 @@
+.page.pages {
+  //margin: rem-calc(40) 0;
+  padding: rem-calc(40) 0;
+  //transition: height .4s ease-in-out;
+  .heading {
+    padding-bottom: rem-calc(35);
+  }
+  h2 {
+    padding-top: .5em;
+  }
+  .large-2column h2 {
+    padding-top: 0;
+  }
+  p.sd-green {
+    background-image: url("/static/frontend/images/Rectangle11.png");
+    color: #fff;
+    padding-left: 15px;
+    font-size: 24px;
+  }
+  img.sd-green-img {
+    float: left;
+    margin-right: 16px;
+    margin-top: 16px;
+    text-align: center;
+  }
+  p.sd-green-mini {
+    color: #28862f;
+    text-transform: uppercase;
+  }
+  p.sd-green-mini strong {
+    font-size: 16px;
+  }
+  .sd-red-block {
+    outline: 2px solid #9a1524;
+    padding-left: 15px;
+    padding-bottom: 15px;
+    padding-right: 15px;
+  }
+  .sd-red-block p {
+    padding-top: 15px;
+    color: #9a1524;
+  }
+  .large-2column p.sd {
+    font-size: 20px;
+  }
+  p.sd-normal-text {
+    font-size: inherit;
+  }
+  @include breakpoint(large up) {
+    .large-2column {
+      columns: 2 ;
+      column-gap: rem-calc(60);
+      .block, p {
+        break-inside: auto-column;
+      }
+      .block {
+        display: inline-block;
+      }
+    }
+  }
+}

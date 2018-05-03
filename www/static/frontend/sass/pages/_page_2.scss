@@ -1,0 +1,42 @@
+.page.pages {
+  //margin: rem-calc(40) 0;
+  padding: rem-calc(40) 0;
+  //transition: height .4s ease-in-out;
+  .heading {
+    padding-bottom: rem-calc(35);
+  }
+  h2 {
+    padding-top: .5em;
+  }
+  .large-2column h2 {
+    padding-top: 0;
+  }
+  section.sas-header {
+    background: url('/static/frontend/images/Rectangle12.png') center center no-repeat;
+    background-size: 100%;
+  }
+  div.sas-header {
+
+    height: 280px;
+    width: 100%;
+    text-align: center;
+  }
+  h1.sas-h1 {
+    font-size: 80px;
+    word-wrap: break-word;
+    color: #ffffff;
+    width: 570px;
+  }
+  @include breakpoint(large up) {
+    .large-2column {
+      columns: 2 ;
+      column-gap: rem-calc(60);
+      .block, p {
+        break-inside: auto-column;
+      }
+      .block {
+        display: inline-block;
+      }
+    }
+  }
+}

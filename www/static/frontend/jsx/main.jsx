@@ -15,6 +15,7 @@ import isTouch from "./utils/isTouch";
 import isMedia from "./utils/isMedia";
 import documentReady from "./utils/documentReady";
 
+require('../../temp/frontend/js/vendors');
 require('preact/devtools');
 require('preact/debug');
 

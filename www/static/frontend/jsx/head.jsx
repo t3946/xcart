@@ -1,10 +1,8 @@
 import 'modernizr';
 import $ from 'jquery';
-// import 'jScrollPane';
 import 'jquery-form';
 import 'mmodal';
 
-// import Fotorama from 'fotorama';
 import 'swiper';
 import WebFont from 'webfontloader';
 import Waves from 'Waves';
@@ -15,10 +13,7 @@ import 'sly/dist/sly';
 import 'pace';
 // import 'bower_components/PACE/pace.js';
 import 'bower_components/jQuery.dotdotdot/src/jquery.dotdotdot.js';
-// import PhotoSwipe from 'bower_components/photoswipe/dist/photoswipe.js';
-// import PhotoSwipeUI_Default from 'bower_components/photoswipe/dist/photoswipe-ui-default';
 
-// import 'sly';
 
 import  "./_binds/cart"
 import  "./_binds/response_status_278";
@@ -50,7 +45,4 @@ import '../../vendors/wNumb.js'
     window['d'] = arg =>{
         console.log(...arguments);
     };
-    // window['PhotoSwipe'] = PhotoSwipe;
-    // window['PhotoSwipeUI_Default'] = PhotoSwipeUI_Default;
-    // window['Fotorama'] = Fotorama;
 })();

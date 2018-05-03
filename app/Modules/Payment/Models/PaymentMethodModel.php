@@ -8,6 +8,7 @@ use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\HasManyField;
 use Xcart\App\Orm\Fields\ManyToManyField;
+use Xcart\App\Orm\Fields\OneToOneField;
 use Xcart\App\Orm\Model;
 
 /**
@@ -41,7 +42,7 @@ class PaymentMethodModel extends Model
                 'link' => ['frontend_processor_id' => 'processor_id'],
             ],
             'cc_processor_models' => [
-                'class' => HasManyField::className(),
+                'class' => HasManyField::class,
                 'modelClass' => PaymentProcessorModel::className(),
                 'link' => ['paymentid' => 'paymentid'],
             ],

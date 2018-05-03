@@ -26,6 +26,15 @@ export default class PreactSlySlide extends Component
         window.addEventListener('resize', this.onResize.bind(this));
     }
 
+    componentWillReceiveProps(props, prev)
+    {
+        if (this.$refs.wrap) {
+            this.$refs.wrap.sly('activate', props.pos);
+            // this.$refs.wrap.sly('slideTo', this.$refs.wrap.sly.items[props.pos].center);
+            // this.$refs.wrap.sly.slideTo(props.pos);
+        }
+    }
+
     componentWillUnmount() {
         window.removeEventListener('resize', this.onResize)
     }
