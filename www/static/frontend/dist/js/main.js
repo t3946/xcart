@@ -67673,13 +67673,6 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
             $('html,body').stop().animate({ scrollTop: $(sectionId).offset().top }, scrollDuration);
         }
 
-        $(".all-departments-menu-container").on('click', '[href*="#"]', function (e) {
-            if ((0, _isMedia2.default)('large')) {
-                scrollToSection(this.hash);
-                e.preventDefault();
-            }
-        });
-
         container.css({
             'height': initialHeight + 'px',
             'overflow': 'hidden'
@@ -67687,13 +67680,12 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
         $('#content').on('click', '.item-title', function (event) {
 
+            event.preventDefault();
+            var oneButton = $(event.target).is('.item-title') ? $(event.target) : $(event.target).parents('.item-title');
+            var idSection = oneButton.attr('href');
+            var oneSection = sections.find(idSection);
+
             if (!(0, _isMedia2.default)('large')) {
-
-                event.preventDefault();
-
-                var oneButton = $(event.target).is('.item-title') ? $(event.target) : $(event.target).parents('.item-title');
-                var idSection = oneButton.attr('href');
-                var oneSection = sections.find(idSection);
 
                 oneSection.css('display', 'block');
                 var sectionHeight = oneSection.outerHeight(true);
@@ -67710,6 +67702,10 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
                 visibleElement.data('type', 'section');
 
                 return false;
+            } else {
+                visibleElement = oneSection;
+                visibleElement.data('type', 'section');
+                scrollToSection(this.hash);
             }
         });
 
@@ -67761,12 +67757,10 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
             if (!getSectionId()) {
                 return false;
             }
-            if ((0, _isMedia2.default)('large')) {
-                scrollToSection(getSectionId());
-            } else {
-                var sectionId = getSectionId();
-                $('a.link-' + sectionId.replace('#', '')).trigger('click');
-            }
+
+            var sectionId = getSectionId();
+
+            $('a.link-' + sectionId.replace('#', '')).trigger('click');
         });
     });
 })();

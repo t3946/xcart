@@ -24,14 +24,6 @@ import documentReady from "../../utils/documentReady";
             $('html,body').stop().animate({ scrollTop: $(sectionId).offset().top }, scrollDuration);
         }
 
-        $(".all-departments-menu-container").on('click', '[href*="#"]', function(e){
-            if (isMedia('large')) {
-                scrollToSection(this.hash);
-                e.preventDefault();
-            }
-        });
-
-
         container.css({
             'height': initialHeight + 'px',
             'overflow': 'hidden'
@@ -40,13 +32,12 @@ import documentReady from "../../utils/documentReady";
         // Открыть пункт меню (закрыть меню)
         $('#content').on('click', '.item-title', function (event) {
 
+            event.preventDefault();
+            let oneButton = $(event.target).is('.item-title') ? $(event.target) : $(event.target).parents('.item-title');
+            let idSection = oneButton.attr('href');
+            let oneSection = sections.find(idSection);
+
             if (!isMedia('large')) {
-
-                event.preventDefault();
-
-                let oneButton = $(event.target).is('.item-title') ? $(event.target) : $(event.target).parents('.item-title');
-                let idSection = oneButton.attr('href');
-                let oneSection = sections.find(idSection);
 
                 oneSection.css('display', 'block');
                 let sectionHeight = oneSection.outerHeight(true);
@@ -63,6 +54,12 @@ import documentReady from "../../utils/documentReady";
                 visibleElement.data('type', 'section');
 
                 return false;
+
+            } else {
+                // Если десктопная версия - запомнить новое актуальное состояние
+                visibleElement = oneSection;
+                visibleElement.data('type', 'section');
+                scrollToSection(this.hash);
             }
 
         });
@@ -126,12 +123,11 @@ import documentReady from "../../utils/documentReady";
             if(!getSectionId()){
                 return false;
             }
-            if(isMedia('large')){
-                scrollToSection(getSectionId());
-            } else {
-                let sectionId = getSectionId();
-                $('a.link-' + sectionId.replace('#','')).trigger('click');
-            }
+
+            let sectionId = getSectionId();
+            // Клик на нужную ссылку записывает текущее значение в десктопной версии
+            $('a.link-' + sectionId.replace('#','')).trigger('click');
+
 
         });
 
@@ -140,10 +136,6 @@ import documentReady from "../../utils/documentReady";
         //     e.preventDefault();
         //     $('html,body').stop().animate({ scrollTop: 0 }, scrollDuration);
         // });
-
-
-
-
 
         // document.querySelectorAll('#content').addEventListener('click', e => {
         //
