@@ -111,6 +111,13 @@ import documentReady from "../../utils/documentReady";
             $('html,body').stop().animate({ scrollTop: 0 }, scrollDuration);
         });
 
+        $("body").on('click', '[href*="#"]', function(e){
+            if (isMedia('large')) {
+                $('html,body').stop().animate({ scrollTop: $(this.hash).offset().top }, scrollDuration);
+                e.preventDefault();
+            }
+        });
+
 
         // document.querySelectorAll('#content').addEventListener('click', e => {
         //
