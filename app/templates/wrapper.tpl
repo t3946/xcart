@@ -39,6 +39,9 @@
 
     <script type="text/javascript">
         window['app'] = {
+            assets: {
+                cssLoaded: false,
+            },
             afterReady:[],
             options: {
                 'session_key': '{$.sessionKey}',
@@ -118,6 +121,11 @@
 
             l.rel = 'stylesheet';
             l.href = href;
+            l.onLoad = function(){
+                window.app.assets.cssLoaded = true;
+                var event = new CustomEvent('cssLoad');
+                document.dispatchEvent(event);
+            };
             h.parentNode.insertBefore(l, h);
         };
 

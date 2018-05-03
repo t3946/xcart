@@ -103,6 +103,7 @@ require('preact/debug');
             });
 
             $(document).trigger('component.cart.check');
+            $(document).trigger('app.start');
 
             setTimeout(()=>{
                 WebFont.load({

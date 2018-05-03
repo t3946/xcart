@@ -1,19 +1,36 @@
 import isMedia from "../../utils/isMedia";
 import documentReady from "../../utils/documentReady";
 
-// console.log('11');
-
 (function () {
     documentReady(() => {
-
 
         let buttons = $('.all-departments-menu-container').css('overflow', 'hidden');
         let sections = $('.sections');
         let container = buttons.parent().css('height', 'auto');
         let initialHeight = container.height();
         let visibleElement = buttons.find('.all-departments-menu');
+        visibleElement.data('type', 'menu');
         let duration = 400;
         let scrollDuration = 800;
+
+
+        function getSectionId() {
+            let p = window.location.toString();
+            p = p.match(new RegExp('#id[0-9]+'));
+            return p ? p[0] : false;
+        }
+
+        function scrollToSection(sectionId){
+            $('html,body').stop().animate({ scrollTop: $(sectionId).offset().top }, scrollDuration);
+        }
+
+        $(".all-departments-menu-container").on('click', '[href*="#"]', function(e){
+            if (isMedia('large')) {
+                scrollToSection(this.hash);
+                e.preventDefault();
+            }
+        });
+
 
         container.css({
             'height': initialHeight + 'px',
@@ -23,11 +40,8 @@ import documentReady from "../../utils/documentReady";
         // Открыть пункт меню (закрыть меню)
         $('#content').on('click', '.item-title', function (event) {
 
-            console.log('click');
-
             if (!isMedia('large')) {
 
-                console.log('!large');
                 event.preventDefault();
 
                 let oneButton = $(event.target).is('.item-title') ? $(event.target) : $(event.target).parents('.item-title');
@@ -37,12 +51,10 @@ import documentReady from "../../utils/documentReady";
                 oneSection.css('display', 'block');
                 let sectionHeight = oneSection.outerHeight(true);
 
-                console.log(oneSection);
-                console.log(sectionHeight);
-
                 buttons.animate({
                     'height': 0
                 }, duration);
+
                 container.animate({
                     'height': sectionHeight + 'px'
                 }, duration);
@@ -64,9 +76,11 @@ import documentReady from "../../utils/documentReady";
                 let closeButton = $(event.target).is('.departments-submenu-title') ? $(event.target) : $(event.target).parents('.departments-submenu-title');
                 let oneSection = closeButton.parents('section.departments-submenu-container');
                 let menuHeight = buttons.find('.all-departments-menu').outerHeight();
+
                 buttons.animate({
                     'height': menuHeight + 'px'
                 }, duration);
+
                 container.animate({
                     'height': menuHeight + 'px'
                 }, duration, function () {
@@ -83,40 +97,52 @@ import documentReady from "../../utils/documentReady";
 
         // Если изменяется ширина окна
         window.addEventListener('resize', e => {
-            if (!isMedia('large')) {
-                // Если мобильные разрешения
-                let height = visibleElement.outerHeight();
-                sections.find('section.departments-submenu-container').css('display', 'none');
-                if (visibleElement.data('type') == 'menu') {
-                    // Если активный элемент - меню
-                    buttons.css('height', height + 'px');
+            //_.throttle(function(){
+                if (!isMedia('large')) {
+                    // Если мобильные разрешения
+                    let height = visibleElement.outerHeight();
+                    sections.find('section.departments-submenu-container').css('display', 'none');
+                    if (visibleElement.data('type') == 'menu') {
+                        // Если активный элемент - меню
+                        buttons.css('height', height + 'px');
+                    } else {
+                        // Если раскрыт 1 пункт меню
+                        visibleElement.css('display', 'block');
+                        buttons.css('height', 0)
+                    }
+                    container.css('height', height + 'px');
                 } else {
-                    // Если раскрыт 1 пункт меню
-                    visibleElement.css('display', 'block');
-                    buttons.css('height', 0)
+                    // Если десктопные разрешения
+                    sections.find('section.departments-submenu-container').css('display', 'block');
+                    container.css('height', 'auto');
+                    buttons.css({'height': 'auto', 'display': 'block'});
                 }
-                container.css('height', height + 'px');
-            } else {
-                // Если десктопные разрешения
-                sections.find('section.departments-submenu-container').css('display', 'block');
-                container.css('height', 'auto');
-                buttons.css({'height': 'auto', 'display': 'block'});
+           // }, 5);
+        });
+
+
+        // После загрузки css открыть нужный пункт меню если передан его идентификатор
+        $(document).on('app.start', function(){
+            if(!getSectionId()){
+                return false;
             }
+            if(isMedia('large')){
+                scrollToSection(getSectionId());
+            } else {
+                let sectionId = getSectionId();
+                $('a.link-' + sectionId.replace('#','')).trigger('click');
+            }
+
         });
 
         // Прокрутка до верха страницы
-        console.info(document.querySelectorAll('#scrollToTop'));
-        document.querySelectorAll('#scrollToTop').addEventListener('click', e => {
-            e.preventDefault();
-            $('html,body').stop().animate({ scrollTop: 0 }, scrollDuration);
-        });
+        // document.querySelector('#scrollToTop').addEventListener('click', e => {
+        //     e.preventDefault();
+        //     $('html,body').stop().animate({ scrollTop: 0 }, scrollDuration);
+        // });
 
-        $("body").on('click', '[href*="#"]', function(e){
-            if (isMedia('large')) {
-                $('html,body').stop().animate({ scrollTop: $(this.hash).offset().top }, scrollDuration);
-                e.preventDefault();
-            }
-        });
+
+
 
 
         // document.querySelectorAll('#content').addEventListener('click', e => {
