@@ -51301,6 +51301,11 @@ var ProductImageSlider = function (_Component) {
         }
 
         var sliderButtonsClasses = this.state.items.length <= 3 ? 'hide' : '';
+        var buttonStyles = {
+            'background': '#000',
+            'width': '100%',
+            'height': '10px'
+        };
 
         return (0, _preact.h)(
             "div",
@@ -51312,7 +51317,7 @@ var ProductImageSlider = function (_Component) {
                         _this6.prevHndl(e);
                     }, ref: function ref(el) {
                         return _this6.refs.prev = el;
-                    } }),
+                    }, style: buttonStyles }),
                 (0, _preact.h)(
                     _PreactSlySlide2.default,
                     {
@@ -51336,7 +51341,7 @@ var ProductImageSlider = function (_Component) {
                         _this6.nextHndl(e);
                     }, ref: function ref(el) {
                         return _this6.refs.next = el;
-                    } })
+                    }, style: buttonStyles })
             ),
             (0, _preact.h)(
                 "div",

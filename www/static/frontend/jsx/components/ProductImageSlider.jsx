@@ -287,11 +287,17 @@ export default class ProductImageSlider extends Component
         }
 
         let sliderButtonsClasses = (this.state.items.length <= 3) ? 'hide':'';
+        let buttonStyles = {
+            'background': '#000',
+            'width': '100%',
+            'height': '10px'
+        };
+
 
         return (
         <div className="images-slider">
             <div className="slider-thumbs">
-                <button className={"prev " + sliderButtonsClasses} onClick={ e => {this.prevHndl(e)}} ref={el => this.refs.prev = el }></button>
+                <button className={"prev " + sliderButtonsClasses} onClick={ e => {this.prevHndl(e)}} ref={el => this.refs.prev = el } style={buttonStyles}></button>
                 <PreactSlySlide
                     options={{
                         horizontal: 0,
@@ -307,7 +313,7 @@ export default class ProductImageSlider extends Component
                         {this.renderThumbs()}
                     </div>
                 </PreactSlySlide>
-                <button className={"next " + sliderButtonsClasses} onClick={ e =>{this.nextHndl(e)}} ref={el => this.refs.next = el }></button>
+                <button className={"next " + sliderButtonsClasses} onClick={ e =>{this.nextHndl(e)}} ref={el => this.refs.next = el } style={buttonStyles}></button>
             </div>
             <div className="slider-detail">
                 <div className="wrap">
