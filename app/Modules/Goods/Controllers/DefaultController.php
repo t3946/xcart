@@ -5,10 +5,6 @@ namespace Modules\Goods\Controllers;
 use Modules\Goods\Helpers\ProductSortHelper;
 use Modules\Goods\Helpers\TabDataHelper;
 use Modules\Goods\Models\ProductModel;
-use Modules\Meta\Helpers\MetaExtHelper;
-use Modules\User\Helpers\SurfingHelper;
-use Modules\User\Models\SurfPathModel;
-use Xcart\App\Controller\Controller;
 use Xcart\App\Controller\FrontendController;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Pagination\DataSource\QuerySetDataSource;
@@ -16,12 +12,12 @@ use Xcart\App\Pagination\Pagination;
 
 class DefaultController extends FrontendController
 {
-    public function actionViewOld($id, $slug)
+    public function actionViewOld($id, $slug): void
     {
         $this->view_internal(ProductModel::objects()->filter(['productid' => $id])->get());
     }
     
-    public function actionView($sku)
+    public function actionView($sku): void
     {
         $this->view_internal(ProductModel::objects()->filter(['productcode' => $sku])->get());
     }
@@ -32,10 +28,8 @@ class DefaultController extends FrontendController
      * @throws \Xcart\App\Exceptions\HttpException
      * @throws \Xcart\App\Exceptions\UnknownPropertyException
      */
-    private function view_internal($model = null)
+    private function view_internal($model = null): void
     {
-//        $this->display('wrapper.tpl');
-
         /** @var \Modules\Sites\Models\SiteModel $site */
         $site = Xcart::app()->getModule('Sites')->getSite();
 
@@ -93,9 +87,5 @@ class DefaultController extends FrontendController
         }
 
         $this->display('product/product.tpl', $params);
-
-
-//        SurfingHelper::logSurfPath(['resource_type' => SurfPathModel::GOAL_TYPE_PRODUCT, 'resource_id' => $model->pk]);
     }
-
 }
