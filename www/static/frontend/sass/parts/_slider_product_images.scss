@@ -25,9 +25,14 @@
       margin-right: rem-calc(5);
       overflow: hidden;
 
+      display: flex;
+      flex-direction: column;
+
+
       .wrap {
         height: 277px;
         overflow: hidden;
+        flex-grow: 1;
 
         @include breakpoint(medium up) {
           height: 600px;
@@ -67,6 +72,21 @@
         //  line-height: 1;
         //}
       }
+
+      button {
+        height: rem-calc(32);
+        &:hover {
+          .next_path, .prev_path {
+            fill: #949494;
+          }
+        }
+        &:active {
+          .next_path, .prev_path {
+            fill: #055a93;
+          }
+        }
+      }
+
     }
 
     .slider-detail {
