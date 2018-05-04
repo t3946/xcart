@@ -51029,7 +51029,7 @@ var ProductImageSlider = function (_Component) {
             loading: true,
             items: props.items || [],
             count: len,
-            wait: wait,
+            wait: len,
             isVideo: false,
             index: 0
         };
@@ -51060,15 +51060,23 @@ var ProductImageSlider = function (_Component) {
     ProductImageSlider.prototype.prepareItems = function prepareItems(items) {
         var _this2 = this;
 
-        var wait = this.state.wait;
+        console.log(items);
 
         var _loop = function _loop(i) {
             var item = items[i];
 
+            if (item.type === 'image') {
+                var wait = _this2.state.wait - 1;
+
+                _this2.setState({
+                    wait: wait,
+                    loading: !!wait
+                });
+            }
+
             if (item.type === 'video') {
-                wait += 1;
                 (0, _video.videoLinkToObject)(item.href, function (meta) {
-                    var wait = _this2.state.wait--;
+                    var wait = _this2.state.wait - 1;
                     items[i] = _lodash2.default.extend(item, { meta: meta });
 
                     _this2.setState({

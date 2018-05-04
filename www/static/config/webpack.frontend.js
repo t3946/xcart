@@ -1,7 +1,7 @@
 const webpack = require('webpack');
 const _ = require('lodash');
 const path = require('path');
-const WebpackSweetEntry = require('webpack-sweet-entry');
+// const WebpackSweetEntry = require('webpack-sweet-entry');
 const BowerResolvePlugin = require("bower-resolve-webpack-plugin");
 const paths = require('./gulp.frontend.patchs');
 // const conf_dev = require('./webpack/webpack.develop');
