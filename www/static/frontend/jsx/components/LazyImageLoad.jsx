@@ -62,11 +62,15 @@ export default class LazyImageLoad
         }
 
         if (target.dataset.src) {
-            this.stack.push(()=>{
-                let original = target.dataset.src;
-                let hasUpdate = (target.src !== original);
+            let hasUpdate = !target.src.includes(target.dataset.src);
 
-                if (hasUpdate) {
+            if (!hasUpdate) {
+                target.classList.add('lazy-loaded');
+            }
+            else {
+                this.stack.push(()=>{
+                    let original = target.dataset.src;
+
                     target.src = '';
                     target.dataset.src = '';
 
@@ -78,8 +82,8 @@ export default class LazyImageLoad
                             }
                         }
                     );
-                }
-            });
+                });
+            }
         }
 
         this.observer.unobserve(target);

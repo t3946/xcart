@@ -9,6 +9,10 @@
 
   .images-slider {
     height: 100%;
+    display: flex;
+    flex: 1 1 100%;
+    flex-direction: row;
+    flex-wrap: nowrap;
 
     &:after {
       content:'';
@@ -16,7 +20,6 @@
     }
 
     .slider-thumbs {
-      float: left;
       width: rem-calc(53);
       height: 100%;
       margin-right: rem-calc(5);

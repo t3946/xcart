@@ -17,8 +17,8 @@ class CommonLibrary extends TemplateLibrary
      */
     public static function renderBreadcrumbs($params)
     {
-        $template = isset($params['template']) ? $params['template'] : '_breadcrumbs.tpl';
-        $name = isset($params['name']) ? $params['name'] : 'DEFAULT';
+        $template = $params['template'] ?? '_breadcrumbs.tpl';
+        $name = $params['name'] ?? 'DEFAULT';
 
         return self::renderTemplate($template, [
             'breadcrumbs' => Xcart::app()->breadcrumbs->get($name)
@@ -32,7 +32,7 @@ class CommonLibrary extends TemplateLibrary
      */
     public static function renderFlash($params)
     {
-        $template = isset($params['template']) ? $params['template'] : '_flash.tpl';
+        $template = $params['template'] ?? '_flash.tpl';
 
         return self::renderTemplate($template, [
             'messages' => Xcart::app()->flash->read()
@@ -47,7 +47,7 @@ class CommonLibrary extends TemplateLibrary
      */
     public static function buildUrl($params)
     {
-        $data = isset($params['data']) ? $params['data'] : [];
+        $data = $params['data'] ?? [];
         $query = Xcart::app()->request->getQueryArray(null, false);
         $query = array_replace_recursive($query, $data);
         foreach ($data as $key => $value) {
@@ -67,11 +67,11 @@ class CommonLibrary extends TemplateLibrary
         $query = '';
         $path = '';
 
-        $url = isset($params['url']) ? $params['url'] : Xcart::app()->request->getUrl();
+        $url = $params['url'] ?? Xcart::app()->request->getUrl();
         extract(parse_url($url), EXTR_OVERWRITE);
         $query = Xcart::app()->request->getQueryArray($query, false);
 
-        $data = isset($params['data']) ? $params['data'] : [];
+        $data = $params['data'] ?? [];
         $query = array_replace_recursive($query, $data);
         foreach ($data as $key => $value) {
             $query[$key] = $value;

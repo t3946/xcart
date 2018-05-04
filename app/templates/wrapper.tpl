@@ -38,11 +38,18 @@
     <link rel="shortcut icon" href="/favicon.png" type="image/png" />
 
     <script type="text/javascript">
-        window['app'] = {
+        window.app = {
             assets: {
                 cssLoaded: false,
             },
             afterReady:[],
+            assets: {
+                'css': {
+                    'styles.css': {
+                        'loaded': false,
+                    }
+                }
+            },
             options: {
                 'session_key': '{$.sessionKey}',
                 'urls': {
@@ -55,6 +62,7 @@
                 }
             }
         };
+        window.parseUrl = function(href) { var a = document.createElement("a");a.href = href;return { 'href':href,'protocol': a.protocol,'host': a.host,'hostname': a.hostname,'port': a.port,'pathname': a.pathname,'hash': a.hash,'search': a.search,'origin': a.origin, 'document':a.pathname.split("/").pop(),};}
     </script>
 
     <script type="application/ld+json">
@@ -104,7 +112,6 @@
         {*<link rel="stylesheet" href="/static/frontend/dist/css/styles.css?v={frontend_version resource='css/styles.css'}" media="all">*}
     {*</noscript>*}
 
-    <script src="/static/frontend/dist/js/vendor.js?v={frontend_version resource="js/vendor.js"}" async></script>
     <script src="/static/frontend/dist/js/main.js?v={frontend_version resource="js/main.js"}" async></script>
 
 {block 'js'}{/block}
@@ -121,11 +128,12 @@
 
             l.rel = 'stylesheet';
             l.href = href;
-            l.onLoad = function(){
-                window.app.assets.cssLoaded = true;
-                var event = new CustomEvent('cssLoad');
-                document.dispatchEvent(event);
+            l.onload = function(){
+                var url = parseUrl(this.href);
+                document.dispatchEvent(new CustomEvent('cssLoad', { 'file': url.document }));
+                window.app.assets.css[url.document].loaded = true;
             };
+
             h.parentNode.insertBefore(l, h);
         };
 

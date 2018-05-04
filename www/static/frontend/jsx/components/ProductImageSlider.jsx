@@ -35,15 +35,15 @@ export default class ProductImageSlider extends Component
 
     componentDidMount() {
         window.addEventListener("resize", this.onResize.bind(this));
+        this.onResize()
     }
     componentWillUnmount() {
         window.removeEventListener("resize", this.onResize);
     }
 
     onResize() {
-
-        if (this._box) {
-            let height = this._box.getBoundingClientRect().height;
+        if (this.refs.frame) {
+            let height = this.refs.frame.getBoundingClientRect().height;
 
             if (this.state.height !== height) {
                 this.setState({ height: height });
@@ -273,7 +273,6 @@ export default class ProductImageSlider extends Component
 
 
                     return <div className={clName} onClick={ e => {this.zoomHndl(e, item)}} key={key}>{content}</div>;
-                    // return <div className={clName} onClick={ e => { this.videoShowHndl(e)}} key={key}>{content}</div>;
                 }
             }
         }
@@ -287,12 +286,18 @@ export default class ProductImageSlider extends Component
         }
 
         let sliderButtonsClasses = (this.state.items.length <= 3) ? 'hide':'';
+        let buttonStyles = {
+            'background': '#000',
+            'width': '100%',
+            'height': '10px'
+        };
 
         return (
         <div className="images-slider">
             <div className="slider-thumbs">
-                <button className={"prev " + sliderButtonsClasses} onClick={ e => {this.prevHndl(e)}} ref={el => this.refs.prev = el }></button>
+                <button className={"prev " + sliderButtonsClasses} onClick={ e => {this.prevHndl(e)}} ref={el => this.refs.prev = el } style={buttonStyles}></button>
                 <PreactSlySlide
+                    pos={this.state.index}
                     options={{
                         horizontal: 0,
                         speed: 300,
@@ -301,13 +306,12 @@ export default class ProductImageSlider extends Component
                         smart: 1,
                         prev: this.refs.prev,
                         next: this.refs.next,
-                    }}
-                    pos={this.state.index}>
-                    <div className="frame">
+                    }}>
+                    <div className="frame" ref={ el => this.refs.frame = el }  style={{'height': this.state.height}}>
                         {this.renderThumbs()}
                     </div>
                 </PreactSlySlide>
-                <button className={"next " + sliderButtonsClasses} onClick={ e =>{this.nextHndl(e)}} ref={el => this.refs.next = el }></button>
+                <button className={"next " + sliderButtonsClasses} onClick={ e =>{this.nextHndl(e)}} ref={el => this.refs.next = el } style={buttonStyles}></button>
             </div>
             <div className="slider-detail">
                 <div className="wrap">

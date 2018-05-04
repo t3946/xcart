@@ -62600,6 +62600,7 @@ var ProductImageSlider = function (_Component) {
 
     ProductImageSlider.prototype.componentDidMount = function componentDidMount() {
         window.addEventListener("resize", this.onResize.bind(this));
+        this.onResize();
     };
 
     ProductImageSlider.prototype.componentWillUnmount = function componentWillUnmount() {
@@ -62607,9 +62608,8 @@ var ProductImageSlider = function (_Component) {
     };
 
     ProductImageSlider.prototype.onResize = function onResize() {
-
-        if (this._box) {
-            var height = this._box.getBoundingClientRect().height;
+        if (this.refs.frame) {
+            var height = this.refs.frame.getBoundingClientRect().height;
 
             if (this.state.height !== height) {
                 this.setState({ height: height });
@@ -62865,6 +62865,11 @@ var ProductImageSlider = function (_Component) {
         }
 
         var sliderButtonsClasses = this.state.items.length <= 3 ? 'hide' : '';
+        var buttonStyles = {
+            'background': '#000',
+            'width': '100%',
+            'height': '10px'
+        };
 
         return (0, _preact.h)(
             "div",
@@ -62876,10 +62881,11 @@ var ProductImageSlider = function (_Component) {
                         _this6.prevHndl(e);
                     }, ref: function ref(el) {
                         return _this6.refs.prev = el;
-                    } }),
+                    }, style: buttonStyles }),
                 (0, _preact.h)(
                     _PreactSlySlide2.default,
                     {
+                        pos: this.state.index,
                         options: {
                             horizontal: 0,
                             speed: 300,
@@ -62888,11 +62894,12 @@ var ProductImageSlider = function (_Component) {
                             smart: 1,
                             prev: this.refs.prev,
                             next: this.refs.next
-                        },
-                        pos: this.state.index },
+                        } },
                     (0, _preact.h)(
                         "div",
-                        { className: "frame" },
+                        { className: "frame", ref: function ref(el) {
+                                return _this6.refs.frame = el;
+                            }, style: { 'height': this.state.height } },
                         this.renderThumbs()
                     )
                 ),
@@ -62900,7 +62907,7 @@ var ProductImageSlider = function (_Component) {
                         _this6.nextHndl(e);
                     }, ref: function ref(el) {
                         return _this6.refs.next = el;
-                    } })
+                    }, style: buttonStyles })
             ),
             (0, _preact.h)(
                 "div",
@@ -70320,11 +70327,14 @@ var LazyImageLoad = function () {
         }
 
         if (target.dataset.src) {
-            this.stack.push(function () {
-                var original = target.dataset.src;
-                var hasUpdate = target.src !== original;
+            var hasUpdate = !target.src.includes(target.dataset.src);
 
-                if (hasUpdate) {
+            if (!hasUpdate) {
+                target.classList.add('lazy-loaded');
+            } else {
+                this.stack.push(function () {
+                    var original = target.dataset.src;
+
                     target.src = '';
                     target.dataset.src = '';
 
@@ -70336,8 +70346,8 @@ var LazyImageLoad = function () {
                             $(target).rwdImageMaps();
                         }
                     });
-                }
-            });
+                });
+            }
         }
 
         this.observer.unobserve(target);

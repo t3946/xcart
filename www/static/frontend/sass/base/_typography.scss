@@ -1,9 +1,9 @@
-//@import 'lato-webfont';
-
 h1, h2, h3, h4, h5, h6 {
   font-weight: bold;
   color: black;
-  text-align: center;
+  text-align: left;
+  white-space: pre-wrap;
+  hyphens: auto;
 
   @include breakpoint(large up) {
     text-align: left;
