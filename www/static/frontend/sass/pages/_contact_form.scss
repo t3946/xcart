@@ -146,28 +146,41 @@
       margin-top: 40px;
     }
   }
+
   .tabs-container{
     margin-top: 44px;
-
     display: flex;
+    margin-left: auto;
+    margin-right: auto;
 
     .tabs-title-container{
       width: 100px;
+
       ul{
         width:6.25rem;
+        border: 0 !important;
+
         .tabs-title{
           background-color: #e7eaeb;
-          border: 1px solid #b2b8bc;
+          border-top: 1px solid #b2b8bc;
+          border-bottom: 1px solid #b2b8bc;
+          border-left: 1px solid #b2b8bc;
           font-size: rem-calc(17);
           text-decoration: none;
-          margin-bottom: .25rem;
+          margin-top: .25rem;
+
+          &:first-child{
+            margin-top: 0;
+          }
 
           a{
             color:#505050;
             padding: 1rem 1.75rem;
+
             span{
               border-bottom: 1px dashed #505050;
             }
+
             &:hover{
               background-color: #e7eaeb;
               color:#505050;
@@ -176,16 +189,84 @@
           }
 
         }
+
+        .is-active{
+          background-color: #fff;
+          border-top: 2px solid #c2c2c2;
+          border-bottom: 2px solid #c2c2c2;
+          border-left: 2px solid #c2c2c2;
+          position: relative;
+
+          a{
+            color:#000;
+            background-color: #fff;
+            text-decoration: none;
+
+            span{
+              border: 0;
+            }
+
+            &:hover{
+              background-color: #fff;
+              color:#000;
+              text-decoration: none;
+            }
+          }
+
+          &:after{
+            content: "";
+            display: block;
+            height: 100%;
+            width: 2px;
+            background-color: #fff;
+            top: 0;
+            right: -2px;
+            position: absolute;
+          }
+        }
       }
     }
+
     .tabs-content-container{
       width: calc(100% - 6.25rem);
+      border: 2px solid #c2c2c2;
+      display:flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+
       .tabs-content{
         width:100%;
+        border: 0;
+
+        //.tab-content{
+        //  display:flex;
+        //  align-items: center;
+        //  justify-content: center;
+        //}
+        .tabs-panel{
+          align-items: center;
+        }
+
       }
     }
   }
 
+  @include breakpoint(medium up) {
+
+    .tabs-container{
+      width: 688px;
+    }
+
+  }
+
+  @include breakpoint(large up) {
+
+    .tabs-container{
+      width: 757px;
+    }
+
+  }
   //.tabs-container {
   //  margin-top: 44px;
   //
