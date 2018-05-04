@@ -15,6 +15,7 @@ class DetailInfoRequest extends AbstractRequest
             'api_version' => self::API_VERSION,
             'target' => 'payment',
             'txnId' => $this->getTransactionReference(),
+            'action' => $this->getMethod(),
         ];
 
         return $data;

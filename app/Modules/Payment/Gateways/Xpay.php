@@ -111,11 +111,10 @@ class Xpay extends Gateway
             exit;
         }
 
-        if (($txn = OrderTransactionModel::objects()->get(['transaction_id' => $params['txnId']])) && $order = $txn->order) {
+        if ($this->txn = OrderTransactionModel::objects()->get(['transaction_id' => $params['txnId']])) {
 
             $response  = self::decrypt($params['updateData'] ?: '', $this->gateway->getPrivateKey(), $this->gateway->getPrivateKeyPassword());
 
-            //Bug X-payments?
             $response = str_replace(['<Response code>', '3dsecure'], ['<Response>', 'threedsecure'], $response); //Bug X-payments?
 
             if ($s_xml = simplexml_load_string($response)) {
@@ -123,29 +122,50 @@ class Xpay extends Gateway
 
                 switch ($updatedData['status']) {
                     case self::PAYMENT_STATUS_DECLINED :
-                        $txn->transaction_status = OrderTransactionModel::STATUS_DECLINED;
+                        $this->txn->transaction_status = OrderTransactionModel::STATUS_DECLINED;
                         break;
                     case self::PAYMENT_STATUS_AUTHORIZED :
-                        $txn->transaction_status = OrderTransactionModel::STATUS_AUTHORIZED;
+                        $this->txn->transaction_status = OrderTransactionModel::STATUS_AUTHORIZED;
 
-                        $order->cb_status = OrderStatusModel::ORDER_STATUS_AUTHORIZED;
-                        $order->save();
+                        if ($this->get_detail_info(['txnId' => $params['txnId']])) {
+                            if (($real_txns = $this->result->getData()['transactions']) && is_array($real_txns)) {
+                                foreach ($real_txns as $r_txn) {
+                                    if (!empty($r_txn['txnid'])) {
+                                        $order = $this->txn->order;
 
-                        $order->groups->update(['cb_status' => OrderStatusModel::ORDER_STATUS_AUTHORIZED]);
+                                        /** @var OrderTransactionModel $t_model */
+                                        [$t_model] = OrderTransactionModel::objects()->getOrCreate(['transaction_id' => $r_txn['txnid'], 'orderid' => $order->orderid]);
+
+                                        $t_model->setAttributes([
+                                            'paymentid' => $this->txn->paymentid,
+                                            'type' => $this->txn->type,
+                                            'transaction_amount' => $this->txn->transaction_amount,
+                                            'transaction_status' => $this->txn->transaction_status,
+                                            'transaction_response' => $r_txn,
+                                            'transaction_currency' => $this->txn->transaction_currency,
+                                        ]);
+
+                                        $t_model->save();
+                                    }
+                                }
+                            }
+                        }
 
                         break;
                 }
 
-                $txn->transaction_response = $updatedData;
+                $this->txn->transaction_response = $updatedData;
 
-                $txn->save();
-
-                Xcart::app()->logger->debug('Updated data', $updatedData, 'payment');
+                Xcart::app()->logger->debug('Response updated data', $updatedData, 'payment');
+            } else {
+                Xcart::app()->logger->error('Response XML not valid', $params, 'payment');
             }
 
         } else {
             Xcart::app()->logger->error('Transaction not found', $params, 'payment');
         }
+
+        parent::success($params);
     }
 
     public function check_cart($params): void
@@ -153,6 +173,15 @@ class Xpay extends Gateway
         echo $this->gateway
             ->check_card($params)
             ->getAnswer();
+    }
+
+    public function get_detail_info($params)
+    {
+        $this->result = $this->gateway
+            ->get_detail_info($params)
+            ->send();
+
+        return $this->result->isSuccessful();
     }
 
     /**
