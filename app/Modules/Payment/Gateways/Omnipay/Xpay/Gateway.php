@@ -4,6 +4,8 @@ namespace Omnipay\Xpay;
 
 use Modules\Order\Models\OrderModel;
 use Omnipay\Common\AbstractGateway;
+use Omnipay\Xpay\Message\CheckCartRequest;
+use Omnipay\Xpay\Message\DetailInfoRequest;
 use Omnipay\Xpay\Message\SaleRequest;
 
 /**
@@ -147,5 +149,15 @@ class Gateway extends AbstractGateway
         // TODO: Implement @method \Omnipay\Common\Message\RequestInterface createCard(array $options = array())
         // TODO: Implement @method \Omnipay\Common\Message\RequestInterface updateCard(array $options = array())
         // TODO: Implement @method \Omnipay\Common\Message\RequestInterface deleteCard(array $options = array())
+    }
+
+    public function check_card(array $parameters = [])
+    {
+        return $this->createRequest(CheckCartRequest::class, $parameters);
+    }
+
+    public function get_detail_info(array $parameters = [])
+    {
+        return $this->createRequest(DetailInfoRequest::class, $parameters);
     }
 }

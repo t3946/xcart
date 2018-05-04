@@ -2,6 +2,7 @@
 
 namespace Omnipay\Xpay\Message;
 use Modules\Order\Models\OrderModel;
+use Modules\Payment\Gateways\Xpay;
 use Xcart\App\Helpers\Xml;
 
 /**
@@ -178,166 +179,15 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
 
         $request = [
             'cart_id' => $this->getShoppingCartId(),
-            'request' => $this->encrypt($xml),
+            'request' => Xpay::encrypt($xml,$this->getPublicKey()),
         ];
 
         $httpResponse = $this->httpClient->post($this->getEndpoint(), null, $request)->send();
-        $this->response = new Response($this, $this->decrypt($httpResponse->getBody()));
+        $this->response = new Response($this, Xpay::decrypt($httpResponse->getBody(), $this->getPrivateKey(), $this->getPrivateKeyPassword()));
         return $this->response;
     }
 
-    /**
-     * Get string with prepended length
-     * Length is 12 digits, leading zeroes added
-     *
-     * @param $str string
-     *
-     * @return string
-     */
-    private function getStringLen($str)
-    {
-        return str_pad(strlen($str), 12, '0', STR_PAD_LEFT) . $str;
-    }
 
-    /**
-     * Generate salt for request.
-     * String of 32 characters
-     *
-     * IMPORTANT! Make sure the implementation of openssl_random_pseudo_bytes() in your PHP version
-     * is indeed cryptographically secure. Please check:
-     *  - https://bugs.php.net/bug.php?id=70014
-     *
-     * If necessary you may use another way to generate the cryptographically secure random string. See:
-     *  - http://stackoverflow.com/questions/31492921/cryptographically-secure-random-string-function
-     *
-     * @return string
-     */
-    private function getSalt()
-    {
-        return openssl_random_pseudo_bytes(32);
-    }
-
-    public function encrypt(string $data): string
-    {
-        // Initialize public key
-        $publicKey = openssl_pkey_get_public($this->getPublicKey());
-
-        // 1) Get Salt block.
-        //  - Generate 32-character string formed of random characters.
-        $salt = $this->getSalt();
-
-        // 2) Get CRC block.
-        //  - Generate MD5 in binary format of the passed data
-        //  - Prepend it with the "     MD5" prefix (spaces are mandatory!)
-        $crc = '     MD5' . md5($data, true);
-
-        // 3) Data block.
-        //  - For each Salt, CRC and Data calculate length: it's formatted as a 12-digit number, e.g. 000000000032.
-        //  - Compose data block. Write consequently: length of Salt, Salt, length of CRC, CRC, length of Data, Data.
-        $data = $this->getStringLen($salt) . $this->getStringLen($crc) . $this->getStringLen($data);
-
-        // 4) Split data by chunks of 128 characters
-        $data = str_split($data, 128);
-
-        // 5) Encrypt each chunk consequently using the public key
-        foreach ($data as $key => $chunk) {
-            $cryptText = null;
-            openssl_public_encrypt($chunk, $cryptText, $publicKey);
-            $data[$key] = $cryptText;
-        }
-
-        // 6) Encode each chunk with base64
-        $data = array_map('base64_encode', $data);
-
-        // 7) Compose the encrypted data.
-        //  - Start with the "API" prefix
-        //  - Write the encrypted and encoded chunks separated with line-break
-        $result = 'API' . implode("\n", $data);
-
-        return $result;
-    }
-
-    public function decrypt(string $data): string
-    {
-        // Initialize the private key
-        $res = openssl_pkey_get_private($this->getPrivateKey(), $this->getPrivateKeyPassword());
-
-        // Remove leading "API" word
-        $data = substr($data, 3);
-
-        // Split and decode the encrypted chunks
-        $data = explode("\n", $data);
-        $data = array_map('base64_decode', $data);
-
-        // Decrypt each chunk
-        foreach ($data as $key => $str) {
-            $decryptText = null;
-            openssl_private_decrypt($str, $decryptText, $res);
-            $data[$key] = $decryptText;
-        }
-
-        openssl_free_key($res);
-
-        // Combine the decrypted chunks
-        $result = implode('', $data);
-
-        // Validate the CRC of the encrypted response
-        return $this->validateDecryptedData($result);
-    }
-
-    /**
-     * Shift block from data string
-     *
-     * @param string &$data Response data
-     *
-     * @return string
-     */
-    private function shiftBlock(&$data)
-    {
-        $length = intval(substr($data, 0, 12));
-
-        $block = substr($data, 12, $length);
-
-        $data = substr($data, 12 + $length);
-
-        return $block;
-    }
-
-    /**
-     * Check CRC of decrypted data
-     *
-     * @param string $data
-     *
-     * @return string
-     */
-    private function validateDecryptedData($data)
-    {
-        // 1) Extract Salt
-        //  - get the salt length from the first 12 characters
-        //  - shift the salt block by it's length
-        $salt = $this->shiftBlock($data);
-
-        // 2) Extract CRC
-        //  - get the CRC length from the first 12 characters
-        //  - shift the CRC block by it's length
-        //  - remove the "     MD5" prefix from CRC
-        $crc = substr($this->shiftBlock($data), 8);
-
-        // 3) Extract data
-        //  - get the data length from the first 12 characters
-        //  - shift the data block by it's length
-        $data = $this->shiftBlock($data);
-
-        // 4) Calculate the MD5 checksum in the binary format of the received data
-        $dataCRC = md5($data, true);
-
-        // 5) Compare it with CRC
-        if ($dataCRC !== $crc) {
-            throw new \Exception('Original CRC and calculated CRC is not equal');
-        }
-
-        return $data;
-    }
 
 
 }

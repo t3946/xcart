@@ -1,6 +1,6 @@
 <?php
 
-use Modules\Main\Controllers\ContactFormController;
+//use \Modules\Main\Controllers\ContactFormController;
 
 return [
     '' => [
@@ -10,7 +10,7 @@ return [
     ],
     [
         'route' => '/contactus/',
-        'target' => [ContactFormController::class, 'actionContactUs'],
+        'target' => ['\Modules\Main\Controllers\ContactFormController', 'actionContactUs'],
         'name' => 'contact_us_form'
     ],
 

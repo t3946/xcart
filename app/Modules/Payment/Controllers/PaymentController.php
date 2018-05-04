@@ -6,6 +6,7 @@ namespace Modules\Payment\Controllers;
 use Exception;
 use Modules\Order\Helpers\OrderHelper;
 use Modules\Order\Helpers\OrderTagEventHelper;
+use Modules\Order\Helpers\OrderTransactionHelper;
 use Modules\Order\Models\OrderModel;
 use Modules\Order\Models\OrderStatusModel;
 use Modules\Order\Models\OrderTransactionModel;
@@ -44,17 +45,34 @@ class PaymentController extends Controller
                         'currency' => 'USD'
                     ];
 
-                    if ($response = $gw->purchase($params)) {
+                    if ($gw->purchase($params)) {
                         $order->cb_status = OrderStatusModel::ORDER_STATUS_NOT_FINISHED;
                         $order->save();
 
                         $order->groups->update(['cb_status' => $order->cb_status]);
 
+                        $params = [
+                            'mode' => OrderTransactionModel::TYPE_AUTHORIZATION,
+                            'amount' => $order->total,
+                            'currency' => 'USD',
+                        ];
+
+                        $transaction = new OrderTransactionModel(array_merge(
+                            OrderTransactionHelper::prepareOrderTransaction($gw, $params),
+                            [
+                                'transaction_status' => OrderTransactionModel::STATUS_PENDING,
+                                'orderid' => $order->orderid,
+                                'type' => $params['mode'],
+                                'paymentid' => $order->paymentid,
+                            ])
+                        );
+                        $transaction->save();
+
                         if ($gw->result->isRedirect()) {
                             $gw->result->redirect();
                         }
 
-                        $this->redirect("payment:return", ['gateway' => strtolower($pm->processor_name)]);
+                        //$this->redirect('payment:return', ['gateway' => strtolower($pm->processor_name)]);
                     }
 
                 } catch (Exception $e) {
@@ -64,23 +82,21 @@ class PaymentController extends Controller
         }
     }
 
-    public function success($gateway)
+    public function success($gateway): void
     {
-        //x_log_flag('log_payment_paypal_processing', 'PAYPAL', $_REQUEST, true);
+        $params = Xcart::app()->request->request->all();
 
-        $app = Xcart::app();
+        Xcart::app()->logger->debug("{$gateway} callback action", $params, 'payment');
 
-        if(isset($_GET['success'])) {
-            /** @var ProcessorModel $pm */
-            if ($pm = ProcessorModel::objects()->get(['processor_name' => $gateway])){
-                if ($gw = Gateway::getGateway($pm)) {
-                    try {
-                        $params = [];
-                        $gw->complete($params);
-                    }
-                    catch (Exception $e) {
-                        exit('Sorry, there was an error processing your payment. Please try again later.');
-                    }
+        /** @var ProcessorModel $pm */
+        if ($pm = ProcessorModel::objects()->get(['processor_name' => $gateway])) {
+            if ($gw = Gateway::getGateway($pm)) {
+                try {
+
+                    $gw->success($params);
+
+                } catch (Exception $e) {
+                    Xcart::app()->logger->error("{$gateway} callback action error : {$e->getMessage()}", $params, 'payment');
                 }
             }
         }
@@ -100,7 +116,7 @@ class PaymentController extends Controller
         $this->redirect("checkout:review");
     }
 
-    public function ret($gateway)
+    public function return($gateway): void
     {
         $pm = ProcessorModel::objects()->get(['processor_name' => $gateway]);
 
@@ -108,9 +124,13 @@ class PaymentController extends Controller
             $this->error(404);
         }
 
+        if (($action = Xcart::app()->request->get->get('action')) && $action === 'cancel') {
+            $this->cancel($gateway);
+        }
+
         if ($order = OrderHelper::getCartOrder()) {
-            $order->cb_status = OrderStatusModel::ORDER_STATUS_AUTHORIZED;
-            $order->save();
+            //$order->cb_status = OrderStatusModel::ORDER_STATUS_AUTHORIZED;
+            //$order->save();
             $this->redirect("checkout:complete");
         }
 

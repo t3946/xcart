@@ -1,19 +1,12 @@
 {extends "pages/base.tpl"}
 {block "content"}
     <article class="pages page">
-        <section class="heading sas-header">
-            <div class="row">
-                <div class="column head sas-header ">
-                    <div class="hit-header">
-                    <img class="sas-lock" src="/static/frontend/images/lock.png"><h1>{$model->name}</h1>
-                    </div>
-                </div>
-            </div>
-        </section>
+        {block "custom_content"}{/block}
         <section class="page-container">
             <div class="row">
                 <div class="column large-12">
-                    {raw $model->content}
+                        {raw $model->content}
+                        {block "form"}{/block}
                 </div>
             </div>
         </section>

@@ -18,6 +18,8 @@ class Response extends AbstractResponse implements RedirectResponseInterface
 
         $this->raw = (string) $data;
 
+        $data = str_replace(['<Response code>', '3dsecure'], ['<Response>', 'threedsecure'], $data); //Bug X-payments?
+
         $data = json_decode(json_encode((array)simplexml_load_string($data)),1);
 
         if ($this->data && count($this->data)) {
@@ -69,6 +71,11 @@ class Response extends AbstractResponse implements RedirectResponseInterface
             'action' => 'start',
             'allow_save_card' => 'N',
         ]);
+    }
+
+    public function getTransactionReference()
+    {
+        return $this->data['txnId'];
     }
 
 }

@@ -1,47 +1,35 @@
 {extends  "catalog/base.tpl"}
 
 {block 'content'}
-    <div class="page-departments default-content-page">
+    <div class="default-content-page page-departments-container">
+    <div class="page-departments">
 
-        {* Меню категорий для мобильных устройств *}
-        {*<div class="row all-departments-menu-mobile">*}
-            {*<div class="column small-12">*}
-                {*{foreach $categories as $category}*}
-                    {*<a href="#id{$category->categoryid}" class="item-title">*}
-                        {*<div class="image-container">*}
-                            {*<img class="image"*}
-                                 {*src="/static/frontend/demo_images/demo_images_new/icon{(rand(5,15)%2 > 0) ? 1 : 2}.svg"*}
-                                 {*alt="">*}
-                        {*</div>*}
-                        {*<div class="title"><span>{$category->category}</span></div>*}
-                    {*</a>*}
-                {*{/foreach}*}
-            {*</div>*}
-        {*</div>*}
         {* Меню категорий *}
-        <div class="row all-departments-menu  small-up-1 medium-up-2 ml-up-3 large-up-6" data-smooth-scroll>
-            {foreach $categories as $category}
-                <a href="#id{$category->categoryid}" class="item-title column">
-                    <div class="image-container">
-                        <img class="image"
-                             src="/static/frontend/demo_images/demo_images_new/icon{(rand(5,15)%2 > 0) ? 1 : 2}.svg"
-                             alt="">
-                    </div>
-                    <div class="title"><span>{$category->category}</span></div>
-                </a>
-            {/foreach}
-        </div>
-        {* Разделитель *}
-        <div class="row all-departments-menu-hr">
-            <div class="column small-12">
-                <div class="hr"></div>
+        <div class="all-departments-menu-container">
+            <div class="row all-departments-menu  small-up-1 medium-up-2 ml-up-3 large-up-6">
+                {foreach $categories as $category}
+                    <a href="#id{$category->categoryid}" class="item-title column link-id{$category->categoryid}">
+                        <div class="image-container">
+                            <img class="image"
+                                 src="/static/frontend/demo_images/demo_images_new/icon{(rand(0,1)) ? 1 : 2}.svg"
+                                 alt="">
+                        </div>
+                        <div class="title"><span>{$category->category}</span></div>
+                    </a>
+                {/foreach}
+            </div>
+            {* Разделитель *}
+            <div class="row all-departments-menu-hr">
+                <div class="column small-12">
+                    <div class="hr"></div>
+                </div>
             </div>
         </div>
 
         {* Список меню категорий *}
-        <div class="sections row small-up-1 medium-up-2 ml-up-3 large-up-1">
+        <div class="sections">
             {foreach $categories as $categoryKey => $category}
-                <section id="id{$category->categoryid}" class="departments-submenu-container column">
+                <section id="id{$category->categoryid}" class="departments-submenu-container">
                     {*<a name="id{$category->categoryid}"></a>*}
                     {* Заголовок категории *}
                     <div class="row">
@@ -58,7 +46,7 @@
                     </div>
 
                     {* Меню подкатегорий категории *}
-                    <div class="row departments-submenu-items  small-up-1 medium-up-2 ml-up-3 large-up-4">
+                    <div class="row departments-submenu-items small-up-1 medium-up-2 ml-up-3 large-up-4">
                         {foreach $category->getActiveChilds()->all() as $subCategory}
                             <div class="group-items column">
                                 <div class="items-title"><a
@@ -86,6 +74,7 @@
             {/foreach}
         </div>
     </div>
+    </div>
 {/block}
 
 {block 'after-content'}
@@ -96,5 +85,16 @@
             {include 'slider/base_product_slider.tpl' title="You recently viewed items" link=$link hide=true hide_link=true}
         </div>
     </div>
+
+    {*<div class="row">*}
+        {*<div class="small-12 column">*}
+            {*<div id="scrollToTop">*}
+                {*<img class="image"*}
+                     {*src="/static/frontend/demo_images/demo_images_new/up.svg"*}
+                     {*alt="">*}
+                {*<span>UP</span>*}
+            {*</div>*}
+        {*</div>*}
+    {*</div>*}
 
 {/block}

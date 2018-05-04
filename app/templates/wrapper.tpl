@@ -39,6 +39,9 @@
 
     <script type="text/javascript">
         window.app = {
+            assets: {
+                cssLoaded: false,
+            },
             afterReady:[],
             assets: {
                 'css': {
