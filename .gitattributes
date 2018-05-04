@@ -1,0 +1,12 @@
+www/static/frontend/dist merge=ours
+www/static/frontend/dist/css/styles.css merge=ours
+www/static/frontend/dist/js/main.js merge=ours
+www/static/frontend/versions merge=ours
+www/static/frontend/versions/css.yml merge=ours
+www/static/frontend/versions/js.yml merge=ours
+www/static/backend/dist merge=ours
+www/static/backend/dist/css/styles.css merge=ours
+www/static/backend/dist/js/main.js merge=ours
+www/static/backend/versions merge=ours
+www/static/backend/versions/css.yml merge=ours
+www/static/backend/versions/js.yml merge=ours

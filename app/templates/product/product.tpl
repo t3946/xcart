@@ -133,7 +133,7 @@
                     {*{else}*}
                     {*{/if}*}
                 </div>
-                {else}
+                {else}https://127.0.0.1:8443/static/frontend/dist/images/icons/item_product/white_out_of_stock.svg
 
                 {/if}
                 {*<div class="godaddy hide-for-medium hide-for-large text-align--center">*}
@@ -151,7 +151,10 @@
             {include "product/_groupped_products.tpl"}
         </section>
     {/if}
+</section>
+{/block}
 
+{block 'after-content'}
     <div class="row">
         <div class="small-12 column slider-also_bought">
             {set $link}{url 'catalog:also_bound' id=$model->pk}{/set}
@@ -170,21 +173,4 @@
             {include 'slider/base_product_slider.tpl' title="You recently viewed items" link=$link hide=true hide_link=true}
         </div>
     </div>
-</section>
-{/block}
-
-{block 'after-content'}
-
-{/block}
-
-{block 'js'}
-    <script>
-        (function(){
-            window.app.afterReady.push(function(){
-
-
-            });
-
-        })();
-    </script>
 {/block}
