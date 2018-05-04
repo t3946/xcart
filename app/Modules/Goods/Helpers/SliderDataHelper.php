@@ -87,21 +87,24 @@ LIMIT 50
 SQL;
             }
             elseif ($section_name === 'related_products'){
+                $p_query = <<<SQL
+SELECT $sql_tbl[products].productid as needed_resource_id 
+FROM $sql_tbl[product_links], $sql_tbl[products] 
+WHERE $sql_tbl[products].productid=$sql_tbl[product_links].productid2 
+  AND $sql_tbl[product_links].productid1='{$productid}' 
+  AND $sql_tbl[products].forsale = 'Y' 
+  AND $sql_tbl[products].productid NOT IN ('{$productids}')
 
-                $avail_condition = '';
-
-                $p_query = "SELECT $sql_tbl[products].productid as needed_resource_id FROM $sql_tbl[product_links], $sql_tbl[products] WHERE $sql_tbl[products].productid=$sql_tbl[product_links].productid2 AND $sql_tbl[product_links].productid1='$productid' AND $sql_tbl[products].forsale = 'Y' AND $sql_tbl[products].productid NOT IN ('$productids') $avail_condition GROUP BY $sql_tbl[products].productid ORDER BY $sql_tbl[product_links].orderby, product";
+GROUP BY $sql_tbl[products].productid 
+ORDER BY $sql_tbl[product_links].orderby
+SQL;
             }
 
             $pids = [];
 
-            if (!empty($p_query)) {
-                $pids = func_query($p_query);
-
-                d($pids, $p_query);
+            if ($p_query) {
+                $pids = func_query($p_query) ?: [];
             }
-
-
         }
         elseif ( \in_array($section_name, ['similar_products', 'similar_products_ob']) ) {
 
@@ -140,7 +143,7 @@ SQL;
                     }
                     return $a['_score'] < $b['_score'] ?  1 : -1;
                 });
-                $pids = array_map(function($item){ return ['needed_resource_id' => $item["_id"]]; }, $hits);
+                $pids = array_map(function($item){ return ['needed_resource_id' => $item['_id']]; }, $hits);
             }
         }
 
@@ -153,14 +156,11 @@ SQL;
             $fba_pids = [];
             $i_ids = array_map(function($item){ return $item['needed_resource_id']; }, $pids);
 
-            if (!\in_array($section_name, ['related_products', 'recently_viewed_products']))
+            if (!\in_array($section_name, ['related_products', 'recently_viewed_products'])
+                && $fba_pids = Product::getRandFbaProducts($fba_limit, array_merge($i_ids, [$productid]), $site->pk))
             {
-                if ($fba_pids = Product::getRandFbaProducts($fba_limit, array_merge($i_ids, [$productid]), $site->pk))
-                {
-                    $fba_pids = array_map(function($item){ return $item['needed_resource_id']; }, $fba_pids);
-
-                    $i_ids = array_merge($fba_pids, $i_ids);
-                }
+                $fba_pids = array_map(function($item){ return $item['needed_resource_id']; }, $fba_pids);
+                $i_ids = array_merge($fba_pids, $i_ids);
             }
 
             if (($key = array_search($productid, $i_ids, true)) !== false) {
@@ -191,6 +191,7 @@ SQL;
                 }
             }
 
+            /** @var ProductModel|Product $oProduct */
             foreach ($oProducts as $oProduct)
             {
                 if ($isInStock && $oProduct->isProductOutOfStock() && !$oProduct->isGroupRoot()) {
