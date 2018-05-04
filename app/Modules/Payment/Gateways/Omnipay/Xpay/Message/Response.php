@@ -71,4 +71,9 @@ class Response extends AbstractResponse implements RedirectResponseInterface
         ]);
     }
 
+    public function getTransactionReference()
+    {
+        return $this->data['txnId'];
+    }
+
 }

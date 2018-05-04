@@ -54,9 +54,12 @@ class CheckoutController extends FrontendController
 
         [$order] = OrderModel::objects()->getOrCreate([
             'user_id' => $user->id,
-            'login' => $user->login,
             'cart_number' => $cart->getCartNumber(),
-            'order_prefix' => $app->getModule('Sites')->getSite()->getOrderPrefix()
+        ]);
+
+        $order->setAttributes([
+            'login' => $user->login,
+            'order_prefix' => $app->getModule('Sites')->getSite()->getOrderPrefix(),
         ]);
 
         if ($app->request->getIsPost()) {

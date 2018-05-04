@@ -15,7 +15,7 @@ class OrderTransactionHelper
      * @param array $params
      * @return array
      */
-    public static function prepareOrderTransaction($gw, $params = [])
+    public static function prepareOrderTransaction($gw, array $params = []): array
     {
 
         $response = [];
@@ -30,11 +30,11 @@ class OrderTransactionHelper
                 ];
         }
 
-        if ($params['mode'] == 'refund_transaction') {
+        if ($params['mode'] === 'refund_transaction') {
             $result['amount']['total'] = -abs($result['amount']['total']);
         }
 
-        if ($params['mode'] != 'lookup') {
+        if ($params['mode'] !== 'lookup') {
             $response['login'] = Xcart::app()->user->login;
         }
 
