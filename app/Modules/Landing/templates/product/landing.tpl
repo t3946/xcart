@@ -44,7 +44,7 @@
                 </div>
 
                 <div class="buttons">
-                    <a href="/product/wick-candle-maker/buy/" class="button">
+                    <a href="/product/wick-candle-maker/buy/" class="button" onclick="ga('send', 'buy');">
                         Buy
                     </a>
                 </div>
