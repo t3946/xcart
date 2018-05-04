@@ -35,6 +35,7 @@ export default class ProductImageSlider extends Component
 
     componentDidMount() {
         window.addEventListener("resize", this.onResize.bind(this));
+
     }
     componentWillUnmount() {
         window.removeEventListener("resize", this.onResize);
@@ -293,7 +294,6 @@ export default class ProductImageSlider extends Component
             'height': '10px'
         };
 
-
         return (
         <div className="images-slider">
             <div className="slider-thumbs">
@@ -309,7 +309,7 @@ export default class ProductImageSlider extends Component
                         next: this.refs.next,
                     }}
                     pos={this.state.index}>
-                    <div className="frame">
+                    <div className="frame" ref={ el => this.refs.frame = el }>
                         {this.renderThumbs()}
                     </div>
                 </PreactSlySlide>

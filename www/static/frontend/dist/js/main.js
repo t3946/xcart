@@ -51337,7 +51337,9 @@ var ProductImageSlider = function (_Component) {
                         pos: this.state.index },
                     (0, _preact.h)(
                         "div",
-                        { className: "frame" },
+                        { className: "frame", ref: function ref(el) {
+                                return _this6.refs.frame = el;
+                            } },
                         this.renderThumbs()
                     )
                 ),
