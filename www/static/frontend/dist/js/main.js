@@ -51040,6 +51040,7 @@ var ProductImageSlider = function (_Component) {
 
     ProductImageSlider.prototype.componentDidMount = function componentDidMount() {
         window.addEventListener("resize", this.onResize.bind(this));
+        this.onResize();
     };
 
     ProductImageSlider.prototype.componentWillUnmount = function componentWillUnmount() {
@@ -51047,9 +51048,8 @@ var ProductImageSlider = function (_Component) {
     };
 
     ProductImageSlider.prototype.onResize = function onResize() {
-
-        if (this._box) {
-            var height = this._box.getBoundingClientRect().height;
+        if (this.refs.frame) {
+            var height = this.refs.frame.getBoundingClientRect().height;
 
             if (this.state.height !== height) {
                 this.setState({ height: height });
@@ -51339,7 +51339,7 @@ var ProductImageSlider = function (_Component) {
                         "div",
                         { className: "frame", ref: function ref(el) {
                                 return _this6.refs.frame = el;
-                            } },
+                            }, style: { 'height': this.state.height } },
                         this.renderThumbs()
                     )
                 ),
