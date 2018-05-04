@@ -49,9 +49,7 @@ class PromoController extends AbstractCatalogController
             $this->renderSliderData($this->getQS()
                 ->filter([
                     'images__image_path__isnull' => false,
-                    'pk__in' => FeaturedProductsModel::objects()->filter([
-                        'storefrontid' => Xcart::app()->getModule('Sites')->getSite()
-                    ])->select(['product__productid']),
+                    'pk__in' => FeaturedProductsModel::objects()->select(['product__productid']),
                 ])
                 ->order(['?']));
         }
