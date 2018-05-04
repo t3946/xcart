@@ -5,9 +5,11 @@
   .heading {
     padding-bottom: rem-calc(35);
   }
+  
   h2 {
     padding-top: .5em;
   }
+
   .large-2column h2 {
     padding-top: 0;
   }
@@ -15,20 +17,50 @@
     background: url('/static/frontend/images/Rectangle12.png') center center no-repeat;
     background-size: 100%;
   }
+
   section.rp-header {
     background: url('/static/frontend/images/return_service.png') center center no-repeat;
+    background-size: 100%;
+  }
+
+  section.ro-header {
+    background: url('/static/frontend/images/retrieve_orders.png') center center no-repeat;
     background-size: 100%;
   }
   .page-container{
     margin-top: 50px;
   }
-  //.hit-header {
-  //  margin-top: 120px;
-  //}
+
+  form.ro_email {
+    width: 500px;
+    height: 60px;
+    background: url("/static/frontend/images/ro_email.png") no-repeat center;
+  }
+
+  input.ro_input_email {
+    margin-left: 50px;
+    margin-top: 14px;
+    height: 30px;
+    width: 280px;
+    font-style: italic;
+  }
+
+  input.ro_input_submit {
+    margin-left: 30px;
+    width: 80px;
+    height: 30px;
+    background-color: #ffb400;
+    border-radius: 5px;
+    border: 0;
+    font-weight: bold;
+    text-transform: uppercase;
+  }
+
   .sas-lock {
     padding-top: 100px;
     float: left;
   }
+
   .sas-header h1 {
     padding-top: 55px;
     padding-left: 20px;
@@ -38,17 +70,22 @@
     line-height: normal;
     font-weight: lighter;
   }
+
   div.sas-header {
     height: 280px;
     width: 100%;
     text-align: center;
   }
-  h1.sas-h1 {
-    font-size: 80px;
-    word-wrap: break-word;
-    color: #ffffff;
-    width: 570px;
+
+  h1 {
+    &.sas-h1 {
+      font-size: 80px;
+      word-wrap: break-word;
+      color: #ffffff;
+      width: 570px;
+    }
   }
+
   @include breakpoint(large up) {
     .large-2column {
       columns: 2 ;
