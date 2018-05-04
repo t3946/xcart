@@ -32,3 +32,8 @@ code {
 a {
   white-space: normal;
 }
+
+html * {
+  white-space: normal;
+  box-sizing: border-box;
+}
