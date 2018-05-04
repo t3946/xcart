@@ -20,14 +20,19 @@
     }
 
     .slider-thumbs {
-      width: rem-calc(53);
+      width: rem-calc(54);
       height: 100%;
       margin-right: rem-calc(5);
       overflow: hidden;
 
+      display: flex;
+      flex-direction: column;
+
+
       .wrap {
         height: 277px;
         overflow: hidden;
+        flex-grow: 1;
 
         @include breakpoint(medium up) {
           height: 600px;
@@ -67,6 +72,27 @@
         //  line-height: 1;
         //}
       }
+
+      button {
+        height: rem-calc(32);
+
+        .next_path, .prev_path {
+          fill: #b0b0b0;
+        }
+
+        &:hover {
+          .next_path, .prev_path {
+            fill: #949494;
+          }
+        }
+
+        &:active {
+          .next_path, .prev_path {
+            fill: #055a93;
+          }
+        }
+      }
+
     }
 
     .slider-detail {

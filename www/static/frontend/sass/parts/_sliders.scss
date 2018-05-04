@@ -92,17 +92,11 @@
         }
 
         &.minimal {
-          max-width: rem-calc(50);
-          min-height: rem-calc(50);
-
-          @include breakpoint(medium) {
-            max-width: rem-calc(70);
-            min-height: rem-calc(70);
-          }
+          max-width: rem-calc(70);
+          min-height: rem-calc(70);
 
           @include breakpoint(large) {
             max-width: rem-calc(90);
-
             min-height: rem-calc(70);
           }
 
