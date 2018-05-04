@@ -42,6 +42,7 @@ use Xcart\Order;
  * @property float shipping_cost
  * @property int|null user_id
  * @property float coupon_discount
+ * @property mixed|string cb_status
  */
 class OrderModel extends Model
 {
@@ -228,6 +229,11 @@ class OrderModel extends Model
                 'default' => ''
             ],
             'details' => [
+                'class' => CharField::class,
+                'null' => false,
+                'default' => ''
+            ],
+            'order_prefix' => [
                 'class' => CharField::class,
                 'null' => false,
                 'default' => ''

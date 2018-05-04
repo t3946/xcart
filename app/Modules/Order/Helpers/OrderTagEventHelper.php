@@ -46,7 +46,7 @@ class OrderTagEventHelper
                 if ($save_log && $created) {
                     (new OrderLogModel([
                         'orderid' => $order_id,
-                        'type' => 'X',
+                        'type' => OrderLogModel::LOG_TYPE_XCART,
                         'log' => $message,
                         'login' => Xcart::app()->user->login
                     ]))->save();
