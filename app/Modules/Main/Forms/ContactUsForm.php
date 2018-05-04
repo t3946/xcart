@@ -41,36 +41,40 @@ class ContactUsForm extends Form
         return [
 
             'full_name' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'required' => true,
                 'label' => MainModule::t('Full name'),
                 'hint' => MainModule::t('Your first and last name'),
                 'html' => [
                     'placeholder' => MainModule::t('Albert H. Einstein'),
-                ]
+                ],
+                'fieldTemplate' => 'forms/field/default/field_hint_top.tpl'
             ],
             'company_name' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'label' => MainModule::t('Your company name'),
                 'html' => [
                     'placeholder' => MainModule::t('Eureka Inc.'),
-                ]
+                ],
+                'fieldTemplate' => 'forms/field/default/field_hint_top.tpl'
             ],
             'zip_postal_code' => [
-                'class' => NumberField::className(),
+                'class' => NumberField::class,
                 'label' => MainModule::t('Your zip/postal code'),
+                'fieldTemplate' => 'forms/field/default/field_hint_top.tpl'
             ],
             'phone_number' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'label' => MainModule::t('Your phone number'),
                 'hint' => MainModule::t('Phone number you can be reached at'),
                 'type' => 'tel',
                 'html' => [
                     'placeholder' => '(609) 734-8000',
                 ],
+                'fieldTemplate' => 'forms/field/default/field_hint_top.tpl'
             ],
             'email' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'label' => MainModule::t('Your email address'),
                 'hint' => MainModule::t('Valid email address is a must'),
                 'type' => 'email',
@@ -82,35 +86,40 @@ class ContactUsForm extends Form
                 'html' => [
                     'placeholder' => 'albert.einstein@gmail.com',
                 ],
+                'fieldTemplate' => 'forms/field/default/field_hint_top.tpl'
             ],
             'department' => [
-                'class' => DropDownField::className(),
+                'class' => DropDownField::class,
                 'label' => MainModule::t('Department'),
                 'choices' => $this->getDepartments(),
                 'hint' => MainModule::t('Your message will be routed to this department'),
                 'required' => true,
+                'fieldTemplate' => 'forms/field/default/field_hint_top.tpl'
             ],
             'product_sku' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'required' => true,
                 'label' => MainModule::t('Product SKU or your order #'),
                 'hint' => MainModule::t('SKU of product you are interested in or your order #'),
                 'html' => [
                     'placeholder' => MainModule::t('EDR-T-A63127 or AR-54321'),
-                ]
+                ],
+                'fieldTemplate' => 'forms/field/default/field_hint_top.tpl'
             ],
             'subject_line' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'label' => MainModule::t('Subject line'),
                 'required' => true,
                 'html' => [
                     'placeholder' => 'Is gravitation responsible for people falling in love?',
                 ],
+                'fieldTemplate' => 'forms/field/default/field_hint_top.tpl'
             ],
             'messsage' => [
-                'class' => TextField::className(),
+                'class' => TextField::class,
                 'label' => MainModule::t('Your message'),
                 'required' => true,
+                'fieldTemplate' => 'forms/field/default/field_hint_top.tpl'
             ],
         ];
     }
