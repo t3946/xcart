@@ -273,7 +273,6 @@ export default class ProductImageSlider extends Component
 
 
                     return <div className={clName} onClick={ e => {this.zoomHndl(e, item)}} key={key}>{content}</div>;
-                    // return <div className={clName} onClick={ e => { this.videoShowHndl(e)}} key={key}>{content}</div>;
                 }
             }
         }
@@ -298,6 +297,7 @@ export default class ProductImageSlider extends Component
             <div className="slider-thumbs">
                 <button className={"prev " + sliderButtonsClasses} onClick={ e => {this.prevHndl(e)}} ref={el => this.refs.prev = el } style={buttonStyles}></button>
                 <PreactSlySlide
+                    pos={this.state.index}
                     options={{
                         horizontal: 0,
                         speed: 300,
@@ -306,8 +306,7 @@ export default class ProductImageSlider extends Component
                         smart: 1,
                         prev: this.refs.prev,
                         next: this.refs.next,
-                    }}
-                    pos={this.state.index}>
+                    }}>
                     <div className="frame" ref={ el => this.refs.frame = el }  style={{'height': this.state.height}}>
                         {this.renderThumbs()}
                     </div>

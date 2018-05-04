@@ -51325,6 +51325,7 @@ var ProductImageSlider = function (_Component) {
                 (0, _preact.h)(
                     _PreactSlySlide2.default,
                     {
+                        pos: this.state.index,
                         options: {
                             horizontal: 0,
                             speed: 300,
@@ -51333,8 +51334,7 @@ var ProductImageSlider = function (_Component) {
                             smart: 1,
                             prev: this.refs.prev,
                             next: this.refs.next
-                        },
-                        pos: this.state.index },
+                        } },
                     (0, _preact.h)(
                         "div",
                         { className: "frame", ref: function ref(el) {
