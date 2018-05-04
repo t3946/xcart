@@ -2,6 +2,7 @@
 
   h1 {
     margin-bottom: 0;
+    text-align: center;
   }
 
   input, textarea, select {
@@ -14,7 +15,13 @@
     }
   }
 
-  .required:after {
+  select{
+    appearance: none;
+    background: url('../images/select_str.png') calc(100% - .625rem) center no-repeat;
+  }
+
+  .page-info-text span.required:after,
+  label.required:after {
     content: '*';
     display: inline;
     vertical-align: top;
@@ -22,33 +29,103 @@
   }
 
   .page-info-text {
+
     text-align: center;
     font-size: rem-calc(14);
     color: #4a4949;
     line-height: 100%;
     margin-bottom: 30px;
+
     .required {
       font-size: rem-calc(22);
     }
   }
 
-  .field-line {
+  .form-field {
+
     margin-bottom: 1.25rem;
+    padding: 0 .625rem;
+
     .field-title {
       line-height: 110%;
       margin-bottom: .33rem;
 
       label {
-        font-size: rem-calc(20);
+        font-size: rem-calc(17);
         font-weight: bold;
       }
 
-      .comment {
-        font-size: rem-calc(14);
+      .hint {
+        font-size: rem-calc(11);
         color: #777777;
       }
     }
   }
+
+  @include breakpoint(sm up) {
+    .field-title {
+      label {
+        font-size: rem-calc(20);
+      }
+
+      .hint {
+        font-size: rem-calc(14);
+      }
+    }
+  }
+
+  @include breakpoint(medium up) {
+
+    .form-field {
+      display: flex;
+
+      .field-title {
+        text-align: right;
+        width: 50%;
+        padding-right: .5625rem;
+
+        label {
+          font-size: rem-calc(18);
+        }
+
+        .hint {
+          font-size: rem-calc(14);
+        }
+
+      }
+      .field {
+        width: 50%;
+        input, select, textarea {
+          max-width: 20rem;
+        }
+      }
+    }
+
+  }
+
+  @include breakpoint(large up) {
+    .form-field {
+      .field-title {
+        label {
+          font-size: rem-calc(14);
+        }
+
+        .hint {
+          font-size: rem-calc(12);
+        }
+      }
+      .field {
+        input, select {
+          max-width: 15.9375rem;
+        }
+        #ContactUsForm_subject_line,
+        #ContactUsForm_messsage {
+          max-width: 32.9375rem;
+        }
+      }
+    }
+  }
+
   .button-row {
     text-align: center;
 
@@ -67,6 +144,39 @@
     .hr {
       border-bottom: 1px solid #bbbbbb;
       margin-top: 40px;
+    }
+  }
+  .tabs-container{
+    margin-top: 44px;
+
+    display: flex;
+
+    .tabs-title-container{
+      width: 100px;
+      ul{
+        width:100%;
+        .tabs-title{
+          background-color: #e7eaeb;
+          border: 1px solid #b2b8bc;
+          font-size: rem-calc(17);
+          text-decoration: none;
+          
+          &:hover{
+            background-color: #e7eaeb;
+            text-decoration: none;
+          }
+          a{
+            color:#505050;
+            border-bottom: 1px dashed #505050;
+          }
+        }
+      }
+    }
+    .tabs-content-container{
+      width: calc(100% - 100px);
+      .tabs-content{
+        width:100%;
+      }
     }
   }
 
