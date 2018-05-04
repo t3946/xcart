@@ -301,7 +301,9 @@ export default class ProductImageSlider extends Component
             <div className="slider-thumbs">
                 <button className={"prev " + sliderButtonsClasses} onClick={ e => {this.prevHndl(e)}} ref={el => this.refs.prev = el } style={buttonStyles}>
                     <svg xmlns="http://www.w3.org/2000/svg" width="31.75" height="17.688" viewBox="0 0 31.75 17.688">
-                        <path fill={"#b0b0b0"} class="prev_path" d="M90.364,222.341l-0.728-.685,16-17,0.728,0.686Zm30.272,0,0.728-.685-16-17-0.728.686Z" transform="translate(-89.625 -204.656)"/>
+                        <path class="prev_path"
+                              d="M90.364,222.341l-0.728-.685,16-17,0.728,0.686Zm30.272,0,0.728-.685-16-17-0.728.686Z"
+                              transform="translate(-89.625 -204.656)"/>
                     </svg>
                 </button>
                 <PreactSlySlide
@@ -321,7 +323,9 @@ export default class ProductImageSlider extends Component
                 </PreactSlySlide>
                 <button className={"next " + sliderButtonsClasses} onClick={ e =>{this.nextHndl(e)}} ref={el => this.refs.next = el } style={buttonStyles}>
                     <svg xmlns="http://www.w3.org/2000/svg" width="31.75" height="17.688" viewBox="0 0 31.75 17.688">
-                        <path fill={"#b0b0b0"} class="prev_next" d="M120.636,279.657l0.728,0.685-16,17-0.728-.685Zm-30.272,0-0.728.685,16,17,0.728-.685Z" transform="translate(-89.625 -279.656)"/>
+                        <path class="next_path"
+                              d="M120.636,279.657l0.728,0.685-16,17-0.728-.685Zm-30.272,0-0.728.685,16,17,0.728-.685Z"
+                              transform="translate(-89.625 -279.656)"/>
                     </svg>
                 </button>
             </div>
