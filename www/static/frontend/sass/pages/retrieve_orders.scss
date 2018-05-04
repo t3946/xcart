@@ -13,15 +13,6 @@
   .large-2column h2 {
     padding-top: 0;
   }
-  section.sas-header {
-    background: url('/static/frontend/images/Rectangle12.png') center center no-repeat;
-    background-size: 100%;
-  }
-
-  section.rp-header {
-    background: url('/static/frontend/images/return_service.png') center center no-repeat;
-    background-size: 100%;
-  }
 
   section.ro-header {
     background: url('/static/frontend/images/retrieve_orders.png') center center no-repeat;
@@ -56,35 +47,6 @@
     text-transform: uppercase;
   }
 
-  .sas-lock {
-    padding-top: 100px;
-    float: left;
-  }
-
-  .sas-header h1 {
-    padding-top: 55px;
-    padding-left: 20px;
-    font-size: 80px;
-    float: left;
-    color: #fff;
-    line-height: normal;
-    font-weight: lighter;
-  }
-
-  div.sas-header {
-    height: 280px;
-    width: 100%;
-    text-align: center;
-  }
-
-  h1 {
-    &.sas-h1 {
-      font-size: 80px;
-      word-wrap: break-word;
-      color: #ffffff;
-      width: 570px;
-    }
-  }
 
   @include breakpoint(large up) {
     .large-2column {
