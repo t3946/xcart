@@ -3,10 +3,10 @@
 namespace Modules\Payment\Gateways;
 
 
+use Modules\Order\Models\OrderModel;
+use Modules\Order\Models\OrderStatusModel;
 use Modules\Order\Models\OrderTransactionModel;
 use Modules\Payment\Interfaces\GatewayInterface;
-use Modules\Payment\Models\PaymentMethodModel;
-use Modules\Payment\Models\PaymentProcessorModel;
 use Modules\Payment\Models\ProcessorModel;
 use Omnipay\Common\Message\ResponseInterface;
 use Omnipay\Omnipay;
@@ -20,6 +20,9 @@ abstract class Gateway implements GatewayInterface
 
     /** @var ProcessorModel $model */
     public $model;
+
+    /** @var OrderTransactionModel $model */
+    public $txn;
 
     public $test_mode = false;
     /** @var  ResponseInterface $result */
@@ -66,5 +69,24 @@ abstract class Gateway implements GatewayInterface
     public static function isPartiallyCaptureEnabled()
     {
         return true;
+    }
+
+    public function success($params)
+    {
+        if ($this->txn) {
+            $this->txn->save();
+
+            switch ($this->txn->transaction_status) {
+                case OrderTransactionModel::STATUS_AUTHORIZED:
+                    $order = $this->txn->order;
+                    $order->cb_status = OrderStatusModel::ORDER_STATUS_AUTHORIZED;
+                    $order->groups->update(['cb_status' => OrderStatusModel::ORDER_STATUS_AUTHORIZED]);
+                    break;
+                case OrderTransactionModel::STATUS_DECLINED:
+                    break;
+            }
+
+            $order->save();
+        }
     }
 }
