@@ -5,7 +5,7 @@ $loader-color: #27a3e5;
 img {
   &.lazy {
     transition: opacity 1s;
-    opacity: 0;
+    //opacity: 0;
 
     min-width: 100px !important;
     min-height: 100px !important;
@@ -21,7 +21,7 @@ img {
       opacity: 0;
       text-indent: -9999px;
       display: inline-block;
-      filter: grayscale(100%);
+      //filter: grayscale(100%);
       background: rgba(12, 61, 93, 0.18);
     }
 

@@ -58628,11 +58628,14 @@ var LazyImageLoad = function () {
         }
 
         if (target.dataset.src) {
-            this.stack.push(function () {
-                var original = target.dataset.src;
-                var hasUpdate = target.src !== original;
+            var hasUpdate = !target.src.includes(target.dataset.src);
 
-                if (hasUpdate) {
+            if (!hasUpdate) {
+                target.classList.add('lazy-loaded');
+            } else {
+                this.stack.push(function () {
+                    var original = target.dataset.src;
+
                     target.src = '';
                     target.dataset.src = '';
 
@@ -58644,8 +58647,8 @@ var LazyImageLoad = function () {
                             $(target).rwdImageMaps();
                         }
                     });
-                }
-            });
+                });
+            }
         }
 
         this.observer.unobserve(target);
