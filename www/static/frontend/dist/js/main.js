@@ -51060,13 +51060,11 @@ var ProductImageSlider = function (_Component) {
     ProductImageSlider.prototype.prepareItems = function prepareItems(items) {
         var _this2 = this;
 
-        console.log(items);
-
         var _loop = function _loop(i) {
             var item = items[i];
 
             if (item.type === 'image') {
-                var wait = _this2.state.wait - 1;
+                var wait = --_this2.state.wait;
 
                 _this2.setState({
                     wait: wait,
@@ -51076,7 +51074,7 @@ var ProductImageSlider = function (_Component) {
 
             if (item.type === 'video') {
                 (0, _video.videoLinkToObject)(item.href, function (meta) {
-                    var wait = _this2.state.wait - 1;
+                    var wait = --_this2.state.wait;
                     items[i] = _lodash2.default.extend(item, { meta: meta });
 
                     _this2.setState({

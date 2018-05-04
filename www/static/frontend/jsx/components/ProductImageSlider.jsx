@@ -53,13 +53,12 @@ export default class ProductImageSlider extends Component
 
     prepareItems(items)
     {
-        console.log(items);
 
         for (let i in items) {
             let item = items[i];
 
             if (item.type === 'image') {
-                let wait = this.state.wait -1;
+                let wait = --this.state.wait;
 
                 this.setState({
                     wait: wait,
@@ -69,7 +68,7 @@ export default class ProductImageSlider extends Component
 
             if (item.type === 'video') {
                 videoLinkToObject(item.href, (meta)=>{
-                    let wait = this.state.wait -1;
+                    let wait = --this.state.wait;
                     items[i] = _.extend(item, {meta: meta});
 
                     this.setState({
