@@ -143,6 +143,8 @@ class Creator
             $traits[] = class_uses($class, $autoload) ?: [];
         } while ($class = get_parent_class($class));
 
+        d($traits);
+
         foreach ($traits as $trait => $same) {
             $traits[] = class_uses($trait, $autoload) ?: [];
         }
