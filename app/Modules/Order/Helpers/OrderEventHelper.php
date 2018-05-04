@@ -3,10 +3,14 @@
 namespace Modules\Order\Helpers;
 
 
+use Modules\GeoIp\Helpers\GeoIpHelper;
 use Modules\Order\Models\FraudStatusModel;
 use Modules\Order\Models\OrderExtraModel;
+use Modules\Order\Models\OrderLogModel;
 use Modules\Order\Models\OrderModel;
 use Modules\Order\Models\OrderStatusModel;
+use Modules\User\Models\SurfMetaModel;
+use Modules\User\Models\SurfPathModel;
 use Xcart\App\Main\Xcart;
 
 class OrderEventHelper
@@ -32,6 +36,41 @@ class OrderEventHelper
 
             $order_extra_model->submit_operator = OrderHelper::getSubmitOperator();
             $order_extra_model->save();
+
+            $ip = Xcart::app()->request->getUserIP();
+            if ($geo_litecity_location = GeoIpHelper::getGeoipLocation($ip)) {
+                $ip .= "({$geo_litecity_location})";
+            }
+
+            $log_message[] = "<b>Customer IP:</b> {$ip}";
+
+            if (!empty($model->customer_notes)) {
+                $log_message[] = "<b>Customer notes:</b>\n{$model->customer_notes}\n\n";
+            }
+
+            (new OrderLogModel([
+                    'orderid' => $model->orderid,
+                    'type' => OrderLogModel::LOG_TYPE_CUSTOMER,
+                    'login' => Xcart::app()->user->login,
+                    'log' => \nl2br(implode(PHP_EOL, $log_message))
+                ])
+            )->save();
+
+            $model->updateVerificationStatus();
+
+            $surf_path = SurfPathModel::objects()
+                ->filter([
+                    'resource_type' => SurfPathModel::GOAL_TYPE_REFERER,
+                    'meta_id' =>  SurfMetaModel::getInstance()->id
+                ])
+                ->order(['-id'])
+                ->limit(1)
+                ->get();
+
+            if ($surf_path) {
+                $model->referer_id = $surf_path->resource_id;
+                $model->save();
+            }
         }
     }
 

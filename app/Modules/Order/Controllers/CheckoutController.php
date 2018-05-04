@@ -43,30 +43,30 @@ class CheckoutController extends FrontendController
         $user = $app->user;
         $cart = $app->cart;
         $errors = [];
+        $shipping = null;
 
-        if (!$user) {}
-
-        if (!$cart->getCartNumber() || $cart->getIsEmpty()) {
-            $this->redirect('cart:list');
+        if (!$user) {
         }
-
-        /** @var OrderModel $order */
-
-        [$order] = OrderModel::objects()->getOrCreate([
-            'user_id' => $user->id,
-            'cart_number' => $cart->getCartNumber(),
-        ]);
-
-        $order->setAttributes([
-            'login' => $user->login,
-            'order_prefix' => $app->getModule('Sites')->getSite()->getOrderPrefix(),
-        ]);
 
         if ($app->request->getIsPost()) {
 
             $data = $app->request->post->all();
 
             if (!($errors = OrderHelper::isValidShippingAddress($data))) {
+                [$order, $is_created] = OrderModel::objects()->getOrCreate([
+                    'user_id' => $user->id,
+                    'cart_number' => $cart->getCartNumber(),
+                ]);
+
+                $order->setAttributes([
+                    'login' => $user->login,
+                    'order_prefix' => $app->getModule('Sites')->getSite()->getOrderPrefix(),
+                ]);
+
+                if ($is_created) {
+                    \Xcart\App\Main\Xcart::app()->event->trigger('order:created', ['model' => $order]);
+                }
+
                 $shipping = $data['ShippingAddressForm'];
                 $contact = $data['ContactInfoForm'];
 
@@ -76,7 +76,7 @@ class CheckoutController extends FrontendController
                         $s_state = $state_m->code;
                     }
                 }
-                
+
                 [$address] = AddressModel::objects()->getOrCreate([
                     'user_id' => $user->id,
                     'full_name' => $shipping['s_firstname'],
@@ -109,7 +109,20 @@ class CheckoutController extends FrontendController
             }
         }
 
-        [$shipping] = $order->getAddressInfo();
+        /** @var OrderModel $order */
+
+        $order = OrderModel::objects()->get([
+            'user_id' => $user->id,
+            'cart_number' => $cart->getCartNumber(),
+        ]);
+
+        if (!$cart->getCartNumber() || $cart->getIsEmpty()) {
+            $this->redirect('cart:list');
+        }
+
+        if ($order) {
+            [$shipping] = $order->getAddressInfo();
+        }
 
         $this->display('checkout/shipping.tpl', [
             'order' => $order,
@@ -130,7 +143,8 @@ class CheckoutController extends FrontendController
         $cart = $app->cart;
         $errors = [];
 
-        if (!$user) {}
+        if (!$user) {
+        }
 
         $order = $this->getOrder();
 
@@ -262,7 +276,8 @@ class CheckoutController extends FrontendController
         $user = $app->user;
         $cart = $app->cart;
 
-        if (!$user) {}
+        if (!$user) {
+        }
 
         $order = $this->getOrder();
 
@@ -275,7 +290,7 @@ class CheckoutController extends FrontendController
             }
 
             if ($app->request->post->has('purchase_order')) {
-                if (($purchase_order = $app->request->post->get('purchase_order')) && 1==1) { //verify
+                if (($purchase_order = $app->request->post->get('purchase_order')) && 1 == 1) { //verify
                     /** @var OrderModel $extra */
                     [$extra] = OrderExtraModel::objects()->getOrNew(['order_id' => $order->orderid]);
                     $extra->purchase_order = $purchase_order;

@@ -103,6 +103,7 @@ class Xpay extends Gateway
 
     /**
      * @param $params
+     * @throws \Exception
      */
     public function success($params): void
     {
@@ -128,28 +129,21 @@ class Xpay extends Gateway
                         $this->txn->transaction_status = OrderTransactionModel::STATUS_AUTHORIZED;
 
                         if ($this->get_detail_info(['txnId' => $params['txnId']])) {
-                            if (($real_txns = $this->result->getData()['transactions']) && is_array($real_txns)) {
+
+                            $info = $this->result->getData();
+
+                            if ($info && \is_array($info) && ($real_txns = $info['transactions']) && \is_array($real_txns)) {
                                 foreach ($real_txns as $r_txn) {
                                     if (!empty($r_txn['txnid'])) {
-                                        $order = $this->txn->order;
-
-                                        /** @var OrderTransactionModel $t_model */
-                                        [$t_model] = OrderTransactionModel::objects()->getOrCreate(['transaction_id' => $r_txn['txnid'], 'orderid' => $order->orderid]);
-
-                                        $t_model->setAttributes([
-                                            'paymentid' => $this->txn->paymentid,
-                                            'type' => $this->txn->type,
-                                            'transaction_amount' => $this->txn->transaction_amount,
-                                            'transaction_status' => $this->txn->transaction_status,
+                                        $this->txn->setAttributes([
                                             'transaction_response' => $r_txn,
-                                            'transaction_currency' => $this->txn->transaction_currency,
+                                            'transaction_id' => $r_txn['txnid'],
                                         ]);
-
-                                        $t_model->save();
                                     }
                                 }
                             }
                         }
+                        $this->txn->save();
 
                         break;
                 }
