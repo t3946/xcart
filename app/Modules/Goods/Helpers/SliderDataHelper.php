@@ -97,6 +97,8 @@ SQL;
 
             if (!empty($p_query)) {
                 $pids = func_query($p_query);
+
+                d($pids, $p_query);
             }
 
 
@@ -112,12 +114,12 @@ SQL;
             $classElastic->setSize(100);
             $classElastic->setProductId($productid);
 
-            if ($section_name == 'similar_products')
+            if ($section_name === 'similar_products')
             {
                 $sGoogleAnaliticsParam = 'similar_products_all_carousel';
                 $classElastic->setSearchQuery($classElastic->getQuerySimilarProductsBrands());
             }
-            elseif ($section_name == 'similar_products_ob')
+            elseif ($section_name === 'similar_products_ob')
             {
                 $sGoogleAnaliticsParam = 'similar_products_other_brands_carousel';
                 $classBrands = new Brands();

@@ -20,16 +20,16 @@ abstract class AbstractCatalogController extends FrontendController
     public $pageSize = 20;
     public $filters = ['price', 'brand', 'filter'];
 
-    public function getAdvancedCacheData()
+    public function getAdvancedCacheData(): array
     {
         return ['category_sort' => Xcart::app()->request->session->get('category_sort', ProductSortHelper::$default)];
     }
 
-    public function beforeAction($action, $params)
+    public function beforeAction($action, $params): void
     {
         if ( $this->getRequest()->getIsPost() && !empty($_POST['sort'])) {
             $this->getRequest()->session->add('category_sort', $_POST['sort']);
-            echo "OK";
+            echo 'OK';
             Xcart::app()->end();
         }
 
@@ -76,7 +76,7 @@ abstract class AbstractCatalogController extends FrontendController
      *
      * @return \Xcart\App\Pagination\Pagination
      */
-    public function getPager($qs)
+    public function getPager($qs): Pagination
     {
         return new Pagination($qs, [
             'pageSize' => $this->pageSize,
@@ -100,7 +100,7 @@ abstract class AbstractCatalogController extends FrontendController
         return $this->getBreadcrumbs();
     }
 
-    public function getAdvancedData($data = null) { return []; }
+    public function getAdvancedData($data = null): array { return []; }
 
     /**
      * @param CategoryModel|null $model
@@ -108,7 +108,7 @@ abstract class AbstractCatalogController extends FrontendController
      * @throws \Exception
      * @throws \Xcart\App\Exceptions\HttpException
      */
-    protected function view_internal($model = null)
+    protected function view_internal($model = null): void
     {
         $this->model = $model;
 
