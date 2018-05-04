@@ -25,7 +25,7 @@ export default class ProductImageSlider extends Component
             loading: true,
             items: props.items || [],
             count: len,
-            wait: wait,
+            wait: len,
             isVideo: false,
             index: 0,
         };
@@ -53,17 +53,23 @@ export default class ProductImageSlider extends Component
 
     prepareItems(items)
     {
-        let wait = this.state.wait;
+        console.log(items);
 
         for (let i in items) {
             let item = items[i];
 
-            // if (item.type === 'image') { }
+            if (item.type === 'image') {
+                let wait = this.state.wait -1;
+
+                this.setState({
+                    wait: wait,
+                    loading: (!!wait),
+                });
+            }
 
             if (item.type === 'video') {
-                wait += 1;
                 videoLinkToObject(item.href, (meta)=>{
-                    let wait = this.state.wait--;
+                    let wait = this.state.wait -1;
                     items[i] = _.extend(item, {meta: meta});
 
                     this.setState({
@@ -291,6 +297,7 @@ export default class ProductImageSlider extends Component
             'width': '100%',
             'height': '10px'
         };
+
 
         return (
         <div className="images-slider">
