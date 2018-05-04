@@ -154,26 +154,32 @@
     .tabs-title-container{
       width: 100px;
       ul{
-        width:100%;
+        width:6.25rem;
         .tabs-title{
           background-color: #e7eaeb;
           border: 1px solid #b2b8bc;
           font-size: rem-calc(17);
           text-decoration: none;
-          
-          &:hover{
-            background-color: #e7eaeb;
-            text-decoration: none;
-          }
+          margin-bottom: .25rem;
+
           a{
             color:#505050;
-            border-bottom: 1px dashed #505050;
+            padding: 1rem 1.75rem;
+            span{
+              border-bottom: 1px dashed #505050;
+            }
+            &:hover{
+              background-color: #e7eaeb;
+              color:#505050;
+              text-decoration: none;
+            }
           }
+
         }
       }
     }
     .tabs-content-container{
-      width: calc(100% - 100px);
+      width: calc(100% - 6.25rem);
       .tabs-content{
         width:100%;
       }

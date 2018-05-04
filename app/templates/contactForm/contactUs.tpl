@@ -30,10 +30,10 @@
                 <div class="tabs-container">
                     <div class="tabs-title-container">
                         <ul class="vertical tabs" data-tabs id="contact-us-tabs">
-                            <li class="tabs-title is-active"><a href="#Email" aria-selected="true">Email</a></li>
-                            <li class="tabs-title"><a data-tabs-target="Phone" href="#Phone">Phone</a></li>
-                            <li class="tabs-title"><a data-tabs-target="Fax" href="#Fax">Fax</a></li>
-                            <li class="tabs-title"><a data-tabs-target="Mail" href="#Mail">Mail</a></li>
+                            <li class="tabs-title is-active"><a href="#Email" aria-selected="true"><span>Email</span></a></li>
+                            <li class="tabs-title"><a data-tabs-target="Phone" href="#Phone"><span>Phone</span></a></li>
+                            <li class="tabs-title"><a data-tabs-target="Fax" href="#Fax"><span>Fax</span></a></li>
+                            <li class="tabs-title"><a data-tabs-target="Mail" href="#Mail"><span>Mail</span></a></li>
                         </ul>
                     </div>
                     <div class="tabs-content-container">
