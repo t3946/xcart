@@ -2,6 +2,7 @@
 
 namespace Modules\Menu\TemplateLibraries;
 
+use Modules\Cart\Components\XCart;
 use Xcart\App\Template\TemplateLibrary;
 use Xcart\App\Traits\RenderTrait;
 
@@ -83,7 +84,7 @@ class MenuLibrary extends TemplateLibrary
                         'items' => [],
                     ],
                     [
-                        'url' => '/',
+                        'url' => \Xcart\App\Main\Xcart::app()->router->url('main:contact_us_form'),
                         'name' => 'Contact Us',
                         'class' => '',
                         'items' => [],
