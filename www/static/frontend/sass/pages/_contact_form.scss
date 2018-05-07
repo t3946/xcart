@@ -46,6 +46,13 @@
 
   select{
     padding: .38rem .625rem;
+    &:-moz-focusring {
+      color: transparent;
+      text-shadow: 0 0 0 #000;
+    }
+    option:not(:checked) {
+      color: black; /* prevent <option>s from becoming transparent as well */
+    }
   }
 
   @include breakpoint(large up) {
@@ -193,6 +200,14 @@
         }
         select {
           background-size: .625rem;
+          option{
+            background-color: white;
+            color: black;
+            border: 1px solid black;
+            &:hover{
+              background-color: #edf0f2;
+            }
+          }
         }
         textarea {
           height: 5.5rem;
