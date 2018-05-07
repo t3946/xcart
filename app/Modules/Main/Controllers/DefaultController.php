@@ -1,6 +1,7 @@
 <?php
 namespace Modules\Main\Controllers;
 
+use Modules\Goods\Helpers\PromotionalProductsHelper;
 use Modules\Goods\Models\CategoryModel;
 use Modules\Sites\SitesModule;
 use Xcart\App\Controller\FrontendController;
@@ -29,6 +30,7 @@ class DefaultController extends FrontendController
 
         $this->display('home.tpl', [
             'category_new' => $category_new,
+            'product' => PromotionalProductsHelper::getProductOfTheDay(),
 
         ]);
     }

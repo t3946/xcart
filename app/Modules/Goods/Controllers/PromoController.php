@@ -1,6 +1,7 @@
 <?php
 namespace Modules\Goods\Controllers;
 
+use Modules\Goods\Helpers\PromotionalProductsHelper;
 use Modules\Goods\Helpers\SliderDataHelper;
 use Modules\Goods\Models\CategoryModel;
 use Modules\Goods\Models\FeaturedProductsModel;
@@ -13,9 +14,15 @@ class PromoController extends AbstractCatalogController
 {
     public $filters = ['price', 'brand'];
 
+    private $qs;
+
     public function actionBestsellers(): void
     {
-        echo '123';
+        $this->qs = PromotionalProductsHelper::getBestsellersSQ();
+
+        $this->qs->filter(['avail__gt' => 10]);
+        $this->view = 'catalog/featured.tpl';
+        $this->view_internal();
     }
 
     public function actionNew(): void
@@ -115,6 +122,10 @@ class PromoController extends AbstractCatalogController
 
     public function getQS($data = null)
     {
+        if ($this->qs) {
+            return $this->qs;
+        }
+
         return parent::getQS($data)->filter([
             'avail__gt' => 10,
         ])

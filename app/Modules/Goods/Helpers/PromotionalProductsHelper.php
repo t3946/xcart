@@ -2,36 +2,37 @@
 namespace Modules\Goods\Helpers;
 
 
+use Modules\Core\Helpers\Cache;
 use Modules\Goods\Models\ProductModel;
 use Xcart\App\Main\Xcart;
-use Xcart\App\Pagination\Pagination;
 
 class PromotionalProductsHelper
 {
     public static function getProductOfTheDay() : ProductModel
     {
+        $qs = self::getBestsellersSQ();
+        if ($product = $qs->cache(Cache::CACHE_DAY) ->order(['?'])->limit(1)->get()) {
+            return $product;
+        }
 
+        return ProductModel::showed()->cache(Cache::CACHE_DAY)->order(['?'])->limit(1)->get();
     }
 
-    public static function getBestsellers() : Pagination
-    {
 
-    }
-
-
-    private static function getBestsellersSQ()
+    public static function getBestsellersSQ(): \Xcart\App\Orm\Manager
     {
         $qs = ProductModel::showed();
-        d($qs);
 
         if ($arr = self::getStaticProductsBestsellers(
-            Xcart::app()->getModule('Site')->getSite()))
+            Xcart::app()->getModule('Sites')->getSite()))
         {
             $qs->filter(['pk__in' => $arr]);
         }
         else {
-
+            $qs->limit(20)->order(['?']);
         }
+
+        return $qs;
     }
 
     public static function getStaticProductsBestsellers($site) :? array
