@@ -10,15 +10,13 @@ import DottedText from "./components/DottedText";
 import CategoryViewType from "./components/CategoryViewType";
 import LazyImageLoad from "./components/LazyImageLoad";
 import CatalogFilter from "./components/CatalogFilter";
-import FilterPriceSlider from "./components/FilterPriceSlider";
 import SearchSuggestion from "./components/SearchSuggestion";
-import Loader from "./components/Loader";
 import isTouch from "./utils/isTouch";
 import isMedia from "./utils/isMedia";
 import documentReady from "./utils/documentReady";
 
-require('preact/devtools');
-require('preact/debug');
+// require('preact/devtools');
+// require('preact/debug');
 
 (function(){
     documentReady(()=>{
@@ -28,9 +26,6 @@ require('preact/debug');
         new DepartmentMenu();
         new DottedText('.must-show-less');
         new CatalogFilter();
-
-        window['FilterPriceSlider'] = FilterPriceSlider;
-        window['loader'] = new Loader;
 
         isMedia('medium', '(max-width: 1023px)');
         isMedia('large', '(min-width: 1024px)');

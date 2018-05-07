@@ -28,7 +28,7 @@
     };
 
 
-    let toLocaleCurrency = (number = 0) => (
+    window.toLocaleCurrency = (number = 0) => (
         formatter.format(number)
     );
 
@@ -75,6 +75,9 @@
 
             toHtml(product, '[var-price]', toLocaleCurrency(price));
             toHtml(product, '[var-price-extended]', toLocaleCurrency(extended));
+
+            product.dataset.price = price;
+            product.dataset.subtotal = extended;
 
             if (quantity) {
                 let list_price = parseFloat(product.dataset.listPrice);

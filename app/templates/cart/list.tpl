@@ -43,7 +43,9 @@
                         {foreach $items as $key=>$position}
                         <div class="table-row"
                              data-key="{$key}"
+                             data-wh="{$gi}"
                              data-product='{$position->object->productid}'
+                             data-subtotal="{$position->getPrice()|number_format:2}"
                              data-prices='{$position->object->getPrices()|json_encode}'
                              data-cart-action="{url 'cart:quantity:set:post' key=$key}">
                             <div class="table-column image">
@@ -115,7 +117,7 @@
                     </div>
                 </div>
 
-                <div class="warehouse_subtotal wh_{$gi}" data-group-id="{$gi}">
+                <div class="warehouse_subtotal wh_{$gi}" data-wh="{$gi}">
                     <div class="table">
                         <div class="table-body">
 
@@ -127,7 +129,7 @@
                                     warehouse subtotal:
                                 </div>
                                 <div class="table-column extended_remove format_price">
-                                    US$ <span class="wh_{$gi}_subtotal" var-group-subtotal>{$group.subtotal|number_format:2}</span>
+                                    US$ <span class="wh_{$gi}_subtotal subtotal" var-group-subtotal>{$group.subtotal|number_format:2}</span>
                                 </div>
                             </div>
 
