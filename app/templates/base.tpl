@@ -120,7 +120,10 @@
 
                 {render_flash:raw template='base/_flash.tpl'}
 
-                {block "content"}{/block}
+
+                {block "content-wrapper"}
+                    {block "content"}{/block}
+                {/block}
 
                 <section class="after-content">
                     {block "after-content"}{/block}
