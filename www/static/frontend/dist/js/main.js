@@ -68707,7 +68707,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
     var page_cart = document.querySelector('.cart-page');
     if (page_cart) {
         var recalc = function recalc() {
-            var products = document.querySelectorAll('.cart-page [data-product]');
+            var products = page_cart.querySelectorAll('[data-product]');
             if (products) {
                 var subtotals = Object.create(null);
                 subtotals.wh = Object.create(null);
@@ -68723,7 +68723,6 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
                 for (var _i = 0; whs.length > _i; ++_i) {
                     var wh = whs[_i];
-                    console.log(wh.dataset.wh, wh);
                     wh.querySelector('.subtotal').innerHTML = toLocaleCurrency(subtotals.wh[wh.dataset.wh]);
                 }
 

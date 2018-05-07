@@ -6,7 +6,7 @@ import _ from 'lodash';
     let page_cart = document.querySelector('.cart-page');
     if (page_cart) {
         let recalc = () => {
-            let products = document.querySelectorAll('.cart-page [data-product]');
+            let products = page_cart.querySelectorAll('[data-product]');
             if (products) {
                 let subtotals = Object.create(null);
                 subtotals.wh = Object.create(null);
@@ -22,7 +22,6 @@ import _ from 'lodash';
 
                 for (let i = 0; whs.length > i; ++i) {
                     let wh = whs[i];
-                    console.log(wh.dataset.wh, wh);
                     wh.querySelector('.subtotal').innerHTML = toLocaleCurrency(subtotals.wh[wh.dataset.wh]);
                 }
 
