@@ -5,6 +5,7 @@ namespace Modules\Payment\Gateways;
 use Modules\Core\Models\GlobalConfigModel;
 use Modules\Order\Models\OrderTransactionModel;
 use Modules\Order\Stores\OrderTransactionStore;
+use PayPal\Api\CreditCard;
 use Xcart\OrderTransaction;
 
 class PayPal extends Gateway
