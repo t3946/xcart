@@ -122,7 +122,7 @@ class MenuLibrary extends TemplateLibrary
                         'items' => [
                             [
                                 'name' => 'Safe & Secure Shopping',
-                                'url' => 'up',
+                                'url' => 'safe-and-secure-shopping',
                                 'items' => [],
                             ],
                             [
@@ -152,7 +152,7 @@ class MenuLibrary extends TemplateLibrary
                             ],
                             [
                                 'name' => 'Retrieve Order',
-                                'url' => 'up',
+                                'url' => 'retrieve-orders',
                                 'items' => [],
                             ],
                             [
@@ -172,7 +172,7 @@ class MenuLibrary extends TemplateLibrary
                             ],
                             [
                                 'name' => 'About Us',
-                                'url' => 'up',
+                                'url' => 'about-us',
                                 'items' => [],
                             ],
                             [
@@ -197,17 +197,17 @@ class MenuLibrary extends TemplateLibrary
                             ],
                             [
                                 'name' => 'Return Policy',
-                                'url' => 'up',
+                                'url' => 'return-policy',
                                 'items' => [],
                             ],
                             [
                                 'name' => 'Term of Use',
-                                'url' => 'up',
+                                'url' => 'terms-of-use',
                                 'items' => [],
                             ],
                             [
                                 'name' => 'Privacy Policy',
-                                'url' => 'up',
+                                'url' => 'privacy-policy',
                                 'items' => [],
                             ],
                         ],
