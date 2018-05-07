@@ -83,6 +83,11 @@ require('preact/debug');
                 }
             });
 
+        $(document).on('click', 'form button', function(event){
+            $(event.target).parents('form').addClass('tried_to_submit');
+        });
+
+
         loader.detach(()=>{
             $('.off-canvas').removeClass('hide');
 

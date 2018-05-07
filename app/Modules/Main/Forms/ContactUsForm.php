@@ -48,7 +48,9 @@ class ContactUsForm extends Form
                 'html' => [
                     'placeholder' => MainModule::t('Albert H. Einstein'),
                 ],
-                'fieldTemplate' => 'forms/field/default/field_hint_top.tpl'
+                'fieldTemplate' => 'forms/field/default/field_hint_top.tpl'//,
+                //'labelTemplate' => 'forms/field/default/label_optional.tpl'
+
             ],
             'company_name' => [
                 'class' => CharField::class,
