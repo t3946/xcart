@@ -16,10 +16,12 @@
 
       .price-row-width {
 
-        max-width: rem-calc(148) + rem-calc(174) + rem-calc(2) + rem-calc(40);
+        @include breakpoint(medium) {
+          max-width: rem-calc(150) + rem-calc(174) + rem-calc(2) + rem-calc(40);
+        }
 
         @include breakpoint(large only) {
-          max-width: rem-calc(128) + rem-calc(154) + rem-calc(2) + rem-calc(40);
+          max-width: rem-calc(130) + rem-calc(154) + rem-calc(2) + rem-calc(40);
         }
 
       }
@@ -49,6 +51,21 @@
             display: flex;
             align-content: center;
             align-items: center;
+
+            font: {
+              size: rem-calc(13);
+            }
+
+            @include breakpoint(medium) {
+              font: {
+                size: rem-calc(16);
+              }
+            }
+            @include breakpoint(large) {
+              font: {
+                size: rem-calc(15);
+              }
+            }
           }
         }
       }
@@ -65,13 +82,15 @@
           .value {
             text-align: center;
             justify-content: center;
-            //padding: 10px;
-
           }
 
           &.price {
-            flex: 0 0 rem-calc(174);
-            width: rem-calc(174);
+            flex: 0 0 33%;
+
+            @include breakpoint(medium) {
+              flex: 0 0 rem-calc(174);
+              width: rem-calc(174);
+            }
 
             @include breakpoint(large only) {
               flex: 0 0 rem-calc(154);
@@ -80,8 +99,13 @@
           }
 
           &.quantity {
-            flex: 0 0 rem-calc(148);
-            width: rem-calc(148);
+            flex: 0 0 33%;
+
+            @include breakpoint(medium) {
+              flex: 0 0 rem-calc(150);
+              width: rem-calc(150);
+            }
+
 
             @include breakpoint(large only) {
               flex: 0 0 rem-calc(128);
@@ -91,6 +115,10 @@
 
           &.extended {
             flex: auto;
+
+            @include breakpoint(sm down) {
+              border-right: none;
+            }
 
             @include breakpoint(medium up) {
               flex: 0 0 rem-calc(175);
@@ -144,22 +172,19 @@
           line-height: rem-calc(30);
           overflow: hidden;
 
-          border: 2px solid #bababa;
-          border-top: none;
-          border-right: none;
-          border-bottom: 1px solid #dbdbdb;
-          background-color: #f2f2f2;
-
-
-          max-width: rem-calc(148) + rem-calc(174) + rem-calc(2);
+          @include breakpoint(medium) {
+            max-width: rem-calc(150) + rem-calc(174) + rem-calc(2);
+          }
 
           @include breakpoint(large only) {
-            max-width: rem-calc(128) + rem-calc(154) + rem-calc(2);
+            max-width: rem-calc(130) + rem-calc(154) + rem-calc(2);
           }
 
 
           &:nth-last-child(1) {
-            border-bottom: 2px solid #bababa;
+            .column {
+              border-bottom: 2px solid #bababa;
+            }
           }
 
           &.hidden {
@@ -171,6 +196,17 @@
           }
 
 
+          .column {
+            border: 2px solid #bababa;
+            border-top: none;
+            border-right: none;
+            border-bottom: 1px solid #dbdbdb;
+            background-color: #f2f2f2;
+          }
+
+          .quantity {
+            border-right: 2px solid #bababa;
+          }
         }
       }
     }

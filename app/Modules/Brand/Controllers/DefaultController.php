@@ -49,7 +49,7 @@ class DefaultController extends AbstractCatalogController
         ]);
     }
 
-    public function getAdvancedData($data = null)
+    public function getAdvancedData($data = null): array
     {
         /** @var \Modules\Sites\SitesModule $siteModule */
         $siteModule = Xcart::app()->getModule('Sites');

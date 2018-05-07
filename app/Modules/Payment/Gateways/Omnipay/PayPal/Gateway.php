@@ -369,7 +369,7 @@ class Gateway extends AbstractGateway
      */
     public function purchase(array $parameters = array())
     {
-        return $this->createRequest('\Omnipay\PayPal\Message\RestPurchaseRequest', $parameters);
+        return $this->createRequest('\Omnipay\PayPal\Message\CheckoutAuthorizeRequest', $parameters);
     }
 
     /**

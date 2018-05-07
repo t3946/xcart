@@ -116,7 +116,7 @@ class PayPal extends Gateway
                 }
             }
         }
-        switch ($data['name']) {
+            switch ($data['name']) {
             case 'AUTHORIZATION_EXPIRED' :
                 return OrderTransactionModel::STATUS_EXPIRED;
                 break;
