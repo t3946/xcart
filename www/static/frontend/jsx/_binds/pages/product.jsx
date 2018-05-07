@@ -7,11 +7,12 @@
         if (prices_row) {
             let timers = {};
 
-            $(document).on('component.quantity.change', function(e, data) {
+            $(document).on('component.quantity.change', (e, data) => {
+
                 if (data.product && data.product.dataset.product === page.dataset.product) {
                     let allHide = true;
 
-                    prices_row.forEach((price) =>{
+                    prices_row.forEach( price => {
                         let hide = (price.dataset.quantity <= data.val);
                         let key = 'price_' + price.dataset.quantity;
 

@@ -1,8 +1,8 @@
 'use strict';
 
 import '../../temp/frontend/js/vendors';
+import '_head';
 
-import 'head';
 import foundationRegisterCustomEvents from "./_binds/foundation_events";
 
 import DepartmentMenu from "./components/DepartmentMenu";

@@ -1,3 +1,6 @@
+'use strict';
+
+import 'pace';
 import 'modernizr';
 import $ from 'jquery';
 import 'jquery-form';
@@ -10,8 +13,6 @@ import whatInput from 'what-input';
 import noUiSlider from 'noUiSlider';
 import 'sly/dist/sly';
 
-import 'pace';
-import 'bower_components/PACE/pace.js';
 import 'bower_components/jQuery.dotdotdot/src/jquery.dotdotdot.js';
 
 

@@ -38,7 +38,7 @@
             return;
         }
 
-        if (data.product || (data.target && data.target.dataset.product)) {
+        if (data.target || (data.product && data.product.dataset.product)) {
             let show = false;
             let product = data.product || data.target;
             let subtotal_container = product.querySelector('[cont-subtotal]');
