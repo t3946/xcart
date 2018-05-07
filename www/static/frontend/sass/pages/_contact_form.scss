@@ -4,6 +4,9 @@
     margin-bottom: 0;
     text-align: center;
   }
+  .desktop-label {
+    display: none;
+  }
 
   .tried_to_submit {
 
@@ -11,6 +14,9 @@
     textarea[required]:invalid,
     select[required]:invalid {
       border: 1px solid red;
+      &:focus {
+        border: 1px solid #ff8d91;
+      }
     }
 
   }
@@ -19,6 +25,9 @@
   textarea.invalid,
   select.invalid {
     border: 1px solid red;
+    &:focus {
+      border: 1px solid #ff8d91;
+    }
   }
 
   input, textarea, select {
@@ -35,7 +44,24 @@
     }
   }
 
+  select{
+    padding: .38rem .625rem;
+  }
+
   @include breakpoint(large up) {
+    .desktop-label {
+      display: block;
+      font-size: rem-calc(20);
+      font-weight: bold;
+    }
+    .page-info-text{
+      text-align: left;
+      font-size: rem-calc(12);
+      padding:0;
+      .required{
+        font-size: rem-calc(14);
+      }
+    }
     input, textarea {
       padding: .125rem .625rem .25rem;
     }
@@ -64,7 +90,7 @@
     font-size: rem-calc(14);
     color: #4a4949;
     line-height: 100%;
-    margin-bottom: 30px;
+    margin-bottom: 1.875rem;
 
     .required {
       font-size: rem-calc(22);
@@ -85,6 +111,7 @@
         font-weight: bold;
       }
 
+      .comment,
       .hint {
         font-size: rem-calc(11);
         color: #777777;
@@ -98,6 +125,7 @@
         font-size: rem-calc(20);
       }
 
+      .comment,
       .hint {
         font-size: rem-calc(14);
       }
@@ -105,6 +133,14 @@
   }
 
   @include breakpoint(medium up) {
+
+    h1 {
+      margin-bottom: .9em;
+    }
+
+    .page-info-text {
+      margin-bottom: 1em;
+    }
 
     .form-field {
       display: flex;
@@ -116,8 +152,10 @@
 
         label {
           font-size: rem-calc(18);
+          font-weight: normal;
         }
 
+        .comment,
         .hint {
           font-size: rem-calc(14);
         }
@@ -140,9 +178,9 @@
         height: 1.5rem;
         label {
           font-size: rem-calc(14);
-          font-weight: normal;
         }
 
+        .comment,
         .hint {
           font-size: rem-calc(12);
           line-height: 105%;
@@ -152,6 +190,12 @@
         font-size: rem-calc(14);
         input, select {
           max-width: 15.9375rem;
+        }
+        select {
+          background-size: .625rem;
+        }
+        textarea {
+          height: 5.5rem;
         }
         #ContactUsForm_subject_line,
         #ContactUsForm_messsage {
@@ -170,8 +214,9 @@
       line-height: 100%;
       background-color: #ffb400;
       border-radius: 4px;
-      padding: 15px 35px;
+      padding: 1em 2.25rem;
       cursor: pointer;
+      margin-top: 1em;
     }
   }
 
