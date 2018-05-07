@@ -32355,6 +32355,10 @@ __webpack_require__(159);
             }
         });
 
+        $(document).on('click', 'form button', function (event) {
+            $(event.target).parents('form').addClass('tried_to_submit');
+        });
+
         loader.detach(function () {
             $('.off-canvas').removeClass('hide');
 

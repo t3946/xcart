@@ -23,11 +23,10 @@ class ContactFormController extends FrontendController
     {
         $form = new ContactUsForm();
         if ($this->getRequest()->getIsPost() && $form->populate($_POST)) {
-           // if ($form->isValid()) {
-                // todo: вызвать всплывающее сообщение
-                //Xcart::app()->flash->add();
-               // $this->redirect('admin:index');
-           // }
+            if ($form->isValid()) {
+                Xcart::app()->flash->add('Your message has been sent successfully');
+                $this->redirect('admin:index');
+            }
         }
         echo $this->render('contactForm/contactUs.tpl', [
             'form' => $form

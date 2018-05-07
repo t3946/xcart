@@ -49,6 +49,16 @@ class CheckoutAuthorizeRequest extends AbstractRequest
         return $this->getParameter('shippingOptions');
     }
 
+    public function setOrder(object $value): object
+    {
+        return $this->setParameter('order', $value);
+    }
+
+    public function getOrder(): object
+    {
+        return $this->getParameter('order');
+    }
+
     protected function validateCallback()
     {
         $callback = $this->getCallback();
@@ -152,6 +162,8 @@ class CheckoutAuthorizeRequest extends AbstractRequest
             $data['EMAIL'] = $card->getEmail();
         }
 
+        $data['order'] = $this->getOrder();
+
         $data = array_merge($data, $this->getItemData());
 
         return $data;
@@ -164,6 +176,6 @@ class CheckoutAuthorizeRequest extends AbstractRequest
 
     public function sendData($data)
     {
-        return $this->createResponse(null);
+        return $this->createResponse($data);
     }
 }
