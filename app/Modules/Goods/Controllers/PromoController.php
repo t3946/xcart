@@ -15,13 +15,17 @@ class PromoController extends AbstractCatalogController
     public $filters = ['price', 'brand'];
 
     private $qs;
+    private $advancedData = [];
 
     public function actionBestsellers(): void
     {
         $this->qs = PromotionalProductsHelper::getBestsellersSQ();
 
         $this->qs->filter(['avail__gt' => 10]);
-        $this->view = 'catalog/featured.tpl';
+        $this->view = 'catalog/promo.tpl';
+        $this->advancedData = [
+            'title' => 'Bestsellers',
+        ];
         $this->view_internal();
     }
 
@@ -63,7 +67,10 @@ class PromoController extends AbstractCatalogController
                 ->order(['?']));
         }
 
-        $this->view = 'catalog/featured.tpl';
+        $this->view = 'catalog/promo.tpl';
+        $this->advancedData = [
+            'title' => 'Featured products',
+        ];
         $this->view_internal();
     }
 
@@ -118,7 +125,9 @@ class PromoController extends AbstractCatalogController
         die();
     }
 
-
+    public function getAdvancedData($data = null): array {
+        return $this->advancedData;
+    }
 
     public function getQS($data = null)
     {
