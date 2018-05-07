@@ -105,6 +105,8 @@ require('preact/debug');
             $(document).trigger('component.cart.check');
             $(document).trigger('app.start');
 
+            window.surfMetaRegister();
+
             setTimeout(()=>{
                 WebFont.load({
                     google: {
@@ -112,6 +114,7 @@ require('preact/debug');
                     }
                 });
             }, 2000);
+
         }, 100);
 
     })

@@ -16,13 +16,12 @@
 
       .price-row-width {
 
-
         @include breakpoint(medium) {
-          max-width: rem-calc(148) + rem-calc(174) + rem-calc(2) + rem-calc(40);
+          max-width: rem-calc(150) + rem-calc(174) + rem-calc(2) + rem-calc(40);
         }
 
         @include breakpoint(large only) {
-          max-width: rem-calc(128) + rem-calc(154) + rem-calc(2) + rem-calc(40);
+          max-width: rem-calc(130) + rem-calc(154) + rem-calc(2) + rem-calc(40);
         }
 
       }
@@ -174,11 +173,11 @@
           overflow: hidden;
 
           @include breakpoint(medium) {
-            max-width: rem-calc(148) + rem-calc(174) + rem-calc(2);
+            max-width: rem-calc(150) + rem-calc(174) + rem-calc(2);
           }
 
           @include breakpoint(large only) {
-            max-width: rem-calc(128) + rem-calc(154) + rem-calc(2);
+            max-width: rem-calc(130) + rem-calc(154) + rem-calc(2);
           }
 
 

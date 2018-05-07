@@ -11,7 +11,7 @@
 
 
   .images_prices {
-    @include breakpoint(xl up) {
+    @include breakpoint(large) {
       height: rem-calc(521);
     }
   }

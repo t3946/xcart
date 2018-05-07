@@ -54,6 +54,9 @@
         </footer>
     </div>
     {include 'inSmarty/raw_flash.tpl'}
+    <script type="text/javascript">
+        ga('send', 'pageview');
+    </script>
     </body>
 </html>
 

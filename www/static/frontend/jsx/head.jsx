@@ -11,7 +11,7 @@ import noUiSlider from 'noUiSlider';
 import 'sly/dist/sly';
 
 import 'pace';
-// import 'bower_components/PACE/pace.js';
+import 'bower_components/PACE/pace.js';
 import 'bower_components/jQuery.dotdotdot/src/jquery.dotdotdot.js';
 
 
@@ -42,7 +42,13 @@ import '../../vendors/wNumb.js'
     window['Waves'] = Waves;
     window['WebFont'] = WebFont;
     window['noUiSlider'] = noUiSlider;
-    window['d'] = arg =>{
+    window.d = arg =>{
         console.log(...arguments);
+    };
+
+    window.surfMetaRegister = () => {
+        $.post('/api/analytics?_='+(new Date()).getTime(),{
+            'url':window.location.href,
+            'referrer': document.referrer || ''});
     };
 })();

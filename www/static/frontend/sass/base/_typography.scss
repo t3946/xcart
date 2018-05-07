@@ -2,7 +2,7 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: bold;
   color: black;
   text-align: left;
-  white-space: pre-wrap;
+  white-space: normal;
   hyphens: auto;
 
   @include breakpoint(large up) {
@@ -10,7 +10,11 @@ h1, h2, h3, h4, h5, h6 {
   }
 }
 
-pre, code, xmp, plaintext, list{
+template {
+  display: none;
+}
+
+pre, code, xmp, plaintext, list {
   //display: block;
   line-height: 1.1em;
   margin: 1em 0px 1em;
@@ -23,4 +27,13 @@ pre, code, xmp, plaintext, list{
 code {
   background:#F8F8FF;
   border:black dashed 1px;
+}
+
+a {
+  white-space: normal;
+}
+
+html * {
+  white-space: normal;
+  box-sizing: border-box;
 }
