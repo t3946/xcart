@@ -9,7 +9,7 @@
                     <div class="row">
                         <div class="columns small-4">
                             <ul class="our-websites no-bullet">
-                                <li class="current"><span>Artist</span></li>
+                                <li class="current"><span>{$.getSite->short_name}</span></li>
                                 {*<li><a href="#">Teacher</a></li>*}
                                 {*<li><a href="#">Kids</a></li>*}
                                 {*<li><a href="#">Sport</a></li>*}

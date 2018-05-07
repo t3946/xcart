@@ -8,22 +8,21 @@ use Modules\Amazon\Models\AmazonFbaMissingSkuModel;
 use Modules\Distributor\Models\DistributorModel;
 use Modules\Goods\Models\ProductFileModel;
 use Modules\Goods\Models\ProductModel;
-use Xcart\App\Orm\Manager;
 
 class ProductHelper
 {
 
-    public static function cleanProductFullDescription($str)
+    public static function cleanProductFullDescription($str): string
     {
         $result = '';
-        $br_arr = array("<br>", "<BR>", "<br/>", "<Br>", "<bR>", "<Br/>", "<Br />", "<BR/>", "<bR/>", "<bR />", "\n");
-        $str = str_replace($br_arr, "<br />", $str);
-        $tmp_fulldescr_arr = explode("<br />", $str);
+        $br_arr = array('<br>', '<BR>', '<br/>', '<Br>', '<bR>', '<Br/>', '<Br />', '<BR/>', '<bR/>', '<bR />', "\n");
+        $str = str_replace($br_arr, '<br />', $str);
+        $tmp_fulldescr_arr = explode('<br />', $str);
         if (!empty($tmp_fulldescr_arr)) {
             foreach ($tmp_fulldescr_arr as $k_br => $v_br) {
                 $v_br = trim($v_br);
                 if (!empty($v_br)) {
-                    $v_br = "* " . ucfirst($v_br);
+                    $v_br = '* ' . ucfirst($v_br);
                     $tmp_fulldescr_arr[$k_br] = $v_br;
                 }
             }
@@ -32,14 +31,14 @@ class ProductHelper
         return $result;
     }
 
-    public static function getFileNameFromDownloadLink($imgLink, $allowExtensions = [], $defaultExtension)
+    public static function getFileNameFromDownloadLink($imgLink, array $allowExtensions = [], $defaultExtension)
     {
         $result = null;
         $path = parse_url(strtolower($imgLink));
         if (!empty($path)) {
             $fileName = basename($path['path']);
             $filename = pathinfo($fileName);
-            if (!empty($allowExtensions) && !in_array($filename['extension'], $allowExtensions)) {
+            if (!empty($allowExtensions) && !in_array($filename['extension'], $allowExtensions, true)) {
                 parse_str($path['query'], $arrQueryParams);
                 if (!empty($arrQueryParams)) {
                     $arrQueryParamsFiltered = array_filter($arrQueryParams, function ($var) use($allowExtensions) {
@@ -58,7 +57,7 @@ class ProductHelper
                 }
             } else {
                 $filePathPre = '';
-                $dir = ltrim(dirname(ltrim($path['path'], '/')), '.');
+                $dir = ltrim(\dirname(ltrim($path['path'], '/')), '.');
                 if (!empty($dir)) {
                     $aPath = explode('/', $dir);
                     if (!empty($aPath)) {
@@ -77,7 +76,7 @@ class ProductHelper
      * @param $product_id
      * @return ProductFileModel|null
      */
-    public static function uploadProductFile($fileDesc, $filePath, $product_id)
+    public static function uploadProductFile($fileDesc, $filePath, $product_id): ?ProductFileModel
     {
         global $product_files_dir;
 
@@ -122,7 +121,7 @@ class ProductHelper
     {
         $res = [];
 
-        $map_price = isset($params['map_price']) ? $params['map_price'] : 0;
+        $map_price = $params['map_price'] ?? 0;
 
         if ($params['pricing']) {
 
@@ -142,7 +141,7 @@ class ProductHelper
      * @param ProductModel[] $oProducts
      * @return ProductModel[]
      */
-    public static function groupRootProducts($oProducts)
+    public static function groupRootProducts($oProducts): array
     {
         $res = [];
         if ($oProducts) {
@@ -154,7 +153,8 @@ class ProductHelper
                             $res[$parent->productid] = $parent;
                         }
                     }
-                } else {
+                }
+                else {
                     $res[$oProduct->productid] = $oProduct;
                 }
             }
@@ -167,7 +167,7 @@ class ProductHelper
      * @param string[] $a
      * @return string
      */
-    public static function getFirstSame($a)
+    public static function getFirstSame($a): string
     {
         function intersect($arr1, $arr2) {
             $res = [];
@@ -185,13 +185,14 @@ class ProductHelper
         $arr = null;
         foreach ($a as $w) {
             $as = explode(' ', $w);
-            if (is_null($arr)) {
+            if (\is_null($arr)) {
                 $arr = $as;
             } else {
                 $arr = intersect($as, $arr);
             }
         }
-        return $res = implode(' ', $arr);
+
+        return implode(' ', $arr);
     }
 
     public static function getGroupLevel($option)
@@ -226,8 +227,8 @@ class ProductHelper
 
     public static function calculateUPC($upc_code)
     {
-        $upc_code = preg_replace("/[^0-9]/", "", $upc_code);
-        switch (strlen($upc_code)) {
+        $upc_code = preg_replace('/[^0-9]/', '', $upc_code);
+        switch (\strlen($upc_code)) {
             case 8:
             case 14:
                 $cd = self::UPC_calculate_check_digit($upc_code);
@@ -242,25 +243,28 @@ class ProductHelper
             case 13:
                 $cd = self::UPC_calculate_check_digit($upc_code);
                 if ($cd != $upc_code[strlen($upc_code) - 1]) {
-                    if (!self::isISBN($upc_code) || (self::isISBN($upc_code) && strlen($upc_code) == 12)) {
-                        $cd = self::UPC_calculate_check_digit($upc_code . "1");
+                    if (!self::isISBN($upc_code) || (self::isISBN($upc_code) && \strlen($upc_code) == 12)) {
+                        $cd = self::UPC_calculate_check_digit($upc_code . '1');
                         return $upc_code . $cd;
-                    } else {
-                        return "";
                     }
-                } else {
+                    else {
+                        return '';
+                    }
+                }
+                else {
                     return $upc_code;
                 }
+
                 break;
         }
-        return "";
+        return '';
     }
 
     private static function UPC_calculate_check_digit($upc_code)
     {
         $sum = 0;
         $mult = 3;
-        for ($i = (strlen($upc_code) - 2); $i >= 0; $i--) {
+        for ($i = (\strlen($upc_code) - 2); $i >= 0; $i--) {
             $sum += $mult * $upc_code[$i];
             if ($mult == 3) {
                 $mult = 1;
@@ -279,10 +283,8 @@ class ProductHelper
     private static function isISBN($sCode)
     {
         $bResult = false;
-        if (in_array(strlen($sCode), [10, 13])) {
-            if (in_array(substr($sCode, 0, 3), [978, 979])) {
-                $bResult = true;
-            }
+        if (\in_array(strlen($sCode), [10, 13], true) && \in_array(substr($sCode, 0, 3), [978, 979], true)) {
+            $bResult = true;
         }
         return $bResult;
     }

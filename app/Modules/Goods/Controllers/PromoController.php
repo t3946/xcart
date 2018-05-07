@@ -11,6 +11,8 @@ use Xcart\App\Orm\QuerySet;
 
 class PromoController extends AbstractCatalogController
 {
+    public $filters = ['price', 'brand'];
+
     public function actionBestsellers(): void
     {
         echo '123';

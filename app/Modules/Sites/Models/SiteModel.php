@@ -45,58 +45,58 @@ class SiteModel extends Model
         return "[{$this->code}] {$this->getName()}{$str}";
     }
 
-    public static function tableName()
+    public static function tableName() : string
     {
         return 'xcart_storefronts';
     }
 
-    public static function getFields()
+    public static function getFields() :array
     {
         return [
             'images' => [
-                'class' => HasManyField::className(),
-                'modelClass' => ImageSModel::className(),
+                'class' => HasManyField::class,
+                'modelClass' => ImageSModel::class,
                 'link' => ['storefrontid' => 'id'],
             ],
 
             'favicons' => [
-                'class' => HasManyField::className(),
-                'modelClass' => ImageFModel::className(),
+                'class' => HasManyField::class,
+                'modelClass' => ImageFModel::class,
                 'link' => ['storefrontid' => 'id'],
             ],
             'config' => [
-                'class' => HasManyField::className(),
-                'modelClass' => SiteConfigModel::className(),
+                'class' => HasManyField::class,
+                'modelClass' => SiteConfigModel::class,
                 'link' => ['storefrontid' => 'storefrontid'],
             ],
 
             'list_config' => [
                 'field' => 'code',
-                'class' => ForeignCharField::className(),
-                'modelClass' => ListConfigModel::className(),
+                'class' => ForeignCharField::class,
+                'modelClass' => ListConfigModel::class,
                 'link' => ['code' => 'sf_code'],
             ],
 
             'storefrontid' => [
-                'class' => AutoField::className(),
+                'class' => AutoField::class,
             ],
             'code' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'length' => 10,
                 'null' => false,
                 'default' => '',
             ],
             'domain' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'null' => false,
             ],
             'prefix' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'null' => false,
                 'default' => '',
             ],
             'status' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'null' => false,
                 'default' => 'D',
                 'choices' => [
@@ -106,15 +106,16 @@ class SiteModel extends Model
                 ],
             ],
             'orderby' => [
-                'class' => IntField::className(),
+                'class' => IntField::class,
                 'null' => false,
                 'default' => 10
             ],
             'static_page' => [
-                'class' => HasManyField::className(),
-                'modelClass' => Page::className(),
+                'class' => HasManyField::class,
+                'modelClass' => Page::class,
                 'link' => ['storefrontid' => 'storefront_id'],
             ],
+            'short_name' => CharField::class
         ];
     }
 
