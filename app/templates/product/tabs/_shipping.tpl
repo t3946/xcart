@@ -39,12 +39,12 @@
         {/if}
         <div class="columns small-12 {if $is_specs}large-8{else}large-12{/if} block">
             <h2 class="title">Shipping from</h2>
-            <div class="content">
-                This product is shipped from our warehouse in
-                {$warehouse->m_city},
-                {$warehouse->m_state},
-                {$warehouse->m_country}.
-            </div>
+            {*<div class="content">*}
+                {*This product is shipped from our warehouse in*}
+                {*{$warehouse->m_city},*}
+                {*{$warehouse->m_state},*}
+                {*{$warehouse->m_country}.*}
+            {*</div>*}
 
             {if $tab}
                 <div class="raw-content">
