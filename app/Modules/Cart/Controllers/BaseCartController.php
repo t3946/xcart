@@ -35,7 +35,7 @@ abstract class BaseCartController extends FrontendController
         return Xcart::app()->getModule('Cart')->getComponent('cart');
     }
 
-    public function actionGetQuantity()
+    public function actionGetQuantity(): void
     {
         $isAjax = $this->getRequest()->getIsAjax();
         $cart = $this->getCart();
@@ -47,7 +47,8 @@ abstract class BaseCartController extends FrontendController
                 'quantity' => $cart->getQuantity(),
             ]);
             Xcart::app()->end();
-        } else {
+        }
+        else {
             echo $cart->getQuantity();
         }
     }
@@ -56,8 +57,11 @@ abstract class BaseCartController extends FrontendController
     {
         $isAjax = $this->getRequest()->getIsAjax();
         $cart = $this->getCart();
-        if ($this->addInternal($uniqueId, $quantity)) {
-            if ($isAjax) {
+
+        if ($this->addInternal($uniqueId, $quantity))
+        {
+            if ($isAjax)
+            {
                 $this->jsonResponse([
                     'status' => true,
                     'total' => $cart->getTotal(),
@@ -67,11 +71,13 @@ abstract class BaseCartController extends FrontendController
                     ]
                 ]);
                 Xcart::app()->end();
-            } else {
+            }
+            else {
                 Xcart::app()->flash->success(CartModule::t('Product added'));
                 $this->getRequest()->redirect($this->getListRoute());
             }
-        } else {
+        }
+        else {
             if ($isAjax) {
                 $this->jsonResponse([
                     'status' => false,
@@ -82,22 +88,25 @@ abstract class BaseCartController extends FrontendController
                     ]
                 ]);
                 Xcart::app()->end();
-            } else {
+            }
+            else {
                 Xcart::app()->flash->success(CartModule::t('Error has occurred'));
                 $this->getRequest()->redirect($this->getListRoute());
             }
         }
     }
 
-    public function actionList()
+    public function actionList(): void
     {
         $listRoute = $this->getListRoute();
         $url = Xcart::app()->router->url($listRoute);
         if ($listRoute && strpos($this->getRequest()->getPath(), $url) === false) {
             $this->getRequest()->redirect($listRoute);
         }
+
         $cart = $this->getCart();
-        echo $this->render($this->listTemplate, [
+
+        $this->display($this->listTemplate, [
             'items' => $cart->getItems(),
             'total' => $cart->getTotal(),
             'quantity' => $cart->getQuantity(),

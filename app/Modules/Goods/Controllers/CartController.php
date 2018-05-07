@@ -15,12 +15,10 @@ class CartController extends BaseCartController
 
     public function actionAdd($uniqueId, $quantity = 1)
     {
-        $quantity = $this->getRequest()->post->get('quantity', 1);
-
-        parent::actionAdd($uniqueId, $quantity);
+        parent::actionAdd($uniqueId, $this->getRequest()->post->get('quantity', 1));
     }
 
-    public function actionProductsDel()
+    public function actionProductsDel(): void
     {
         $cart = $this->getCart();
 
@@ -33,7 +31,7 @@ class CartController extends BaseCartController
         $this->actionProductsGet();
     }
 
-    public function actionProductsSet()
+    public function actionProductsSet(): void
     {
         if ($items = $this->getRequest()->post->get('items', [])) {
             foreach ( $items as $item) {
@@ -44,7 +42,7 @@ class CartController extends BaseCartController
         $this->actionProductsGet();
     }
 
-    public function actionProductsAdd()
+    public function actionProductsAdd(): void
     {
         if ($items = $this->getRequest()->post->get('items', [])) {
             foreach ( $items as $item) {
@@ -65,12 +63,13 @@ class CartController extends BaseCartController
                      ],
                 ]));
             Xcart::app()->end();
-        } else {
+        }
+        else {
             echo $cart->getQuantity();
         }
     }
 
-    public function actionProductsGet()
+    public function actionProductsGet(): void
     {
         $isAjax = $this->getRequest()->getIsAjax();
         $cart = $this->getCart();
@@ -78,12 +77,13 @@ class CartController extends BaseCartController
         if ($isAjax) {
             $this->jsonResponse($this->getCartStateArray());
             Xcart::app()->end();
-        } else {
+        }
+        else {
             echo $cart->getQuantity();
         }
     }
 
-    public function getCartStateArray()
+    public function getCartStateArray(): array
     {
         $cart = $this->getCart();
 
@@ -96,7 +96,7 @@ class CartController extends BaseCartController
         ];
     }
 
-    public function getCartGroupsArray($with_items = false)
+    public function getCartGroupsArray($with_items = false): array
     {
         /** @var \Modules\Cart\Components\XCart $cart */
         $cart = $this->getCart();
@@ -125,8 +125,8 @@ class CartController extends BaseCartController
         return $items;
     }
 
-    protected function getProductStructure(CartItem $item, $key) {
-
+    protected function getProductStructure(CartItem $item, $key): array
+    {
         /** @var ProductModel $product */
         $product = $item->getObject();
         $image = null;
@@ -164,7 +164,7 @@ class CartController extends BaseCartController
      * @return array
      * @throws \Xcart\App\Exceptions\UnknownPropertyException
      */
-    public function getCartProductsArray($cart_items = null)
+    public function getCartProductsArray($cart_items = null): array
     {
         $cart = $this->getCart();
         $items = [];

@@ -46,11 +46,11 @@
             let quantity = product.dataset.quantity || data.val || 1;
             let price = 0;
 
-            if (!cache[id]) {
+            if (!cache[id] && product.dataset.prices) {
                 cache[id] = JSON.parse(product.dataset.prices);
             }
 
-            let prices = cache[id];
+            let prices = cache[id] || [];
             let base_price = null;
 
             for ( let count in prices ) {

@@ -53,9 +53,11 @@ import _ from 'lodash';
             target: e.target,
             val: params.val,
             params: params,
-            product: product,
+            product: product
         });
     };
+
+    recheckActives = _.throttle(recheckActives, 50);
 
     $(document)
         .on('click', '.quantity-group .btn', e => {
@@ -76,5 +78,5 @@ import _ from 'lodash';
             recheckActives(e, params);
 
         })
-        .on('change blur propertychange mousewheel keyup', '.quantity-group input', e => _.throttle(()=> recheckActives(e), 50))
+        .on('change blur propertychange mousewheel keyup', '.quantity-group input', e => recheckActives(e));
 })();

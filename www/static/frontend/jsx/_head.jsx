@@ -29,6 +29,7 @@ import  "./_binds/sliders";
 
 import  "./_binds/pages/product";
 import  "./_binds/pages/categories";
+import  "./_binds/pages/cart";
 
 import  "./ext/jq-swipe";
 import  "./components/Flash";
@@ -43,8 +44,8 @@ import '../../vendors/wNumb.js'
     window['Waves'] = Waves;
     window['WebFont'] = WebFont;
     window['noUiSlider'] = noUiSlider;
-    window.d = arg =>{
-        console.log(...arguments);
+    window.d = (...arg) =>{
+        console.log(...arg);
     };
 
     window.surfMetaRegister = () => {
