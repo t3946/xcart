@@ -1,3 +1,5 @@
+'use strict';
+
 (()=>{
     let toHtml = (parent, find, value) => {
         if (parent) {

@@ -32,20 +32,16 @@ import _ from 'lodash';
             }
         };
 
-        let updateCart = product => {
+        let updateCart = _.throttle(product => {
             let key = product.dataset.key, quantity = product.dataset.quantity || 1;
 
             // console.log(key, quantity, product.dataset);
 
             recalc();
+        }, 200);
 
+        // updateCart = _.throttle(updateCart, 500);
 
-        };
-
-        updateCart = _.throttle(updateCart, 500);
-
-        $(document).on('component.quantity.change', (e, data) => {
-            updateCart(data.product);
-        });
+        $(document).on('component.quantity.change', (e, data) => updateCart(data.product));
     }
 })();

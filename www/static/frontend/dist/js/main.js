@@ -68733,17 +68733,15 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
             }
         };
 
-        var updateCart = function updateCart(product) {
+        var updateCart = _lodash2.default.throttle(function (product) {
             var key = product.dataset.key,
                 quantity = product.dataset.quantity || 1;
 
             recalc();
-        };
-
-        updateCart = _lodash2.default.throttle(updateCart, 500);
+        }, 200);
 
         $(document).on('component.quantity.change', function (e, data) {
-            updateCart(data.product);
+            return updateCart(data.product);
         });
     }
 })();
