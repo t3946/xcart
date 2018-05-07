@@ -61662,7 +61662,7 @@ function cartAdd() {
             toHtml(product, '[var-price-extended]', toLocaleCurrency(extended));
 
             product.dataset.price = price;
-            product.dataset.subtotal = extended;
+            product.dataset.quantity = quantity;
 
             if (quantity) {
                 var list_price = parseFloat(product.dataset.listPrice);
@@ -68714,9 +68714,12 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
                 subtotals.cart = 0;
 
                 for (var i = 0; products.length > i; ++i) {
+
                     var product = products[i];
-                    subtotals.cart = +product.dataset.subtotal;
-                    subtotals.wh[product.dataset.wh] = +product.dataset.subtotal;
+                    var subtotal = product.dataset.price * product.dataset.quantity;
+
+                    subtotals.cart += subtotal;
+                    subtotals.wh[product.dataset.wh] = subtotal + (subtotals.wh[product.dataset.wh] || 0);
                 }
 
                 var whs = page_cart.querySelectorAll('.warehouse_subtotal');
@@ -68733,8 +68736,6 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
         var updateCart = function updateCart(product) {
             var key = product.dataset.key,
                 quantity = product.dataset.quantity || 1;
-
-            console.log(key, quantity, product.dataset);
 
             recalc();
         };

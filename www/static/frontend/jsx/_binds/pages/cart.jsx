@@ -13,9 +13,12 @@ import _ from 'lodash';
                 subtotals.cart = 0;
 
                 for (let i = 0; products.length > i; ++i) {
+
                     let product = products[i];
-                    subtotals.cart =+ product.dataset.subtotal;
-                    subtotals.wh[product.dataset.wh] =+ product.dataset.subtotal;
+                    let subtotal = product.dataset.price * product.dataset.quantity;
+
+                    subtotals.cart += subtotal;
+                    subtotals.wh[product.dataset.wh] = subtotal + (subtotals.wh[product.dataset.wh] || 0);
                 }
 
                 let whs = page_cart.querySelectorAll('.warehouse_subtotal');
@@ -32,7 +35,7 @@ import _ from 'lodash';
         let updateCart = product => {
             let key = product.dataset.key, quantity = product.dataset.quantity || 1;
 
-            console.log(key, quantity, product.dataset);
+            // console.log(key, quantity, product.dataset);
 
             recalc();
 

@@ -45,7 +45,8 @@
                              data-key="{$key}"
                              data-wh="{$gi}"
                              data-product='{$position->object->productid}'
-                             data-subtotal="{$position->getPrice()|number_format:2}"
+                             data-quantity="{$position->quantity}"
+                             data-price="{$position->object->getFrontendPrice($position->quantity)}"
                              data-prices='{$position->object->getPrices()|json_encode}'
                              data-cart-action="{url 'cart:quantity:set:post' key=$key}">
                             <div class="table-column image">
