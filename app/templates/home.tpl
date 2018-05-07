@@ -62,7 +62,7 @@
                        href="{url 'catalog:bestsellers'}">Bestsellers</a>
 
                     <a class="icon day"
-                       href="#">Product of the day</a>
+                       href="{$product->getAbsoluteUrl()}">Product of the day</a>
 
                     <a class="icon featured"
                        href="{url 'catalog:featured'}">Featured products</a>
