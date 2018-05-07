@@ -165,7 +165,6 @@
           border-top: 1px solid #b2b8bc;
           border-bottom: 1px solid #b2b8bc;
           border-left: 1px solid #b2b8bc;
-          font-size: rem-calc(17);
           text-decoration: none;
           margin-top: .25rem;
 
@@ -176,6 +175,7 @@
           a{
             color:#505050;
             padding: 1rem 1.75rem;
+            font-size: 1rem;
 
             span{
               border-bottom: 1px dashed #505050;
@@ -239,13 +239,22 @@
         width:100%;
         border: 0;
 
-        //.tab-content{
-        //  display:flex;
-        //  align-items: center;
-        //  justify-content: center;
-        //}
         .tabs-panel{
           align-items: center;
+          .tab-content{
+            overflow: hidden;
+            text-overflow: ellipsis;
+            hyphens: auto;
+          }
+
+          .title{
+            padding-right: .5rem;
+          }
+        }
+        #Email{
+          .title{
+            display:none;
+          }
         }
 
       }
@@ -255,7 +264,25 @@
   @include breakpoint(medium up) {
 
     .tabs-container{
-      width: 688px;
+      width: 43rem;
+      .tabs-title-container{
+        ul .tabs-title{
+          a{
+            font-size: rem-calc(18);
+          }
+        }
+      }
+
+      .tabs-content-container .tabs-content{
+        font-size: rem-calc(20);
+        #Email{
+          .title{
+            padding-right: 1.875rem;
+            display:inline;
+          }
+        }
+      }
+
     }
 
   }
@@ -264,26 +291,21 @@
 
     .tabs-container{
       width: 757px;
+
+      .tabs-title-container{
+        ul .tabs-title{
+          a{
+            font-size: 1rem;
+          }
+        }
+      }
+
+      .tabs-content-container .tabs-content{
+        font-size: 1rem;
+      }
     }
 
   }
-  //.tabs-container {
-  //  margin-top: 44px;
-  //
-  //  .tabs-title-container{
-  //    padding-right:0 !important;
-  //
-  //    .tabs-title {
-  //      text-align: center;
-  //      font-size: 1rem;
-  //      a{
-  //        padding:1rem 0;
-  //      }
-  //    }
-  //  }
-  //  .tabs-panel-container{
-  //    padding-left:0 !important;
-  //  }
-  //}
+
 
 }

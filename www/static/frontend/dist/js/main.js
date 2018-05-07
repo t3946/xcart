@@ -62620,13 +62620,11 @@ var ProductImageSlider = function (_Component) {
     ProductImageSlider.prototype.prepareItems = function prepareItems(items) {
         var _this2 = this;
 
-        console.log(items);
-
         var _loop = function _loop(i) {
             var item = items[i];
 
             if (item.type === 'image') {
-                var wait = _this2.state.wait - 1;
+                var wait = --_this2.state.wait;
 
                 _this2.setState({
                     wait: wait,
@@ -62636,7 +62634,7 @@ var ProductImageSlider = function (_Component) {
 
             if (item.type === 'video') {
                 (0, _video.videoLinkToObject)(item.href, function (meta) {
-                    var wait = _this2.state.wait - 1;
+                    var wait = --_this2.state.wait;
                     items[i] = _lodash2.default.extend(item, { meta: meta });
 
                     _this2.setState({
@@ -62874,9 +62872,7 @@ var ProductImageSlider = function (_Component) {
 
         var sliderButtonsClasses = this.state.items.length <= 3 ? 'hide' : '';
         var buttonStyles = {
-            'background': '#000',
-            'width': '100%',
-            'height': '10px'
+            'width': '100%'
         };
 
         return (0, _preact.h)(
@@ -62885,11 +62881,21 @@ var ProductImageSlider = function (_Component) {
             (0, _preact.h)(
                 "div",
                 { className: "slider-thumbs" },
-                (0, _preact.h)("button", { className: "prev " + sliderButtonsClasses, onClick: function onClick(e) {
-                        _this6.prevHndl(e);
-                    }, ref: function ref(el) {
-                        return _this6.refs.prev = el;
-                    }, style: buttonStyles }),
+                (0, _preact.h)(
+                    "button",
+                    { className: "prev " + sliderButtonsClasses, onClick: function onClick(e) {
+                            _this6.prevHndl(e);
+                        }, ref: function ref(el) {
+                            return _this6.refs.prev = el;
+                        }, style: buttonStyles },
+                    (0, _preact.h)(
+                        "svg",
+                        { xmlns: "http://www.w3.org/2000/svg", width: "31.75", height: "17.688", viewBox: "0 0 31.75 17.688" },
+                        (0, _preact.h)("path", { "class": "prev_path",
+                            d: "M90.364,222.341l-0.728-.685,16-17,0.728,0.686Zm30.272,0,0.728-.685-16-17-0.728.686Z",
+                            transform: "translate(-89.625 -204.656)" })
+                    )
+                ),
                 (0, _preact.h)(
                     _PreactSlySlide2.default,
                     {
@@ -62911,11 +62917,21 @@ var ProductImageSlider = function (_Component) {
                         this.renderThumbs()
                     )
                 ),
-                (0, _preact.h)("button", { className: "next " + sliderButtonsClasses, onClick: function onClick(e) {
-                        _this6.nextHndl(e);
-                    }, ref: function ref(el) {
-                        return _this6.refs.next = el;
-                    }, style: buttonStyles })
+                (0, _preact.h)(
+                    "button",
+                    { className: "next " + sliderButtonsClasses, onClick: function onClick(e) {
+                            _this6.nextHndl(e);
+                        }, ref: function ref(el) {
+                            return _this6.refs.next = el;
+                        }, style: buttonStyles },
+                    (0, _preact.h)(
+                        "svg",
+                        { xmlns: "http://www.w3.org/2000/svg", width: "31.75", height: "17.688", viewBox: "0 0 31.75 17.688" },
+                        (0, _preact.h)("path", { "class": "next_path",
+                            d: "M120.636,279.657l0.728,0.685-16,17-0.728-.685Zm-30.272,0-0.728.685,16,17,0.728-.685Z",
+                            transform: "translate(-89.625 -279.656)" })
+                    )
+                )
             ),
             (0, _preact.h)(
                 "div",

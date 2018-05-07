@@ -40,36 +40,36 @@
                         <div class="tabs-content" data-tabs-content="contact-us-tabs">
                             <div class="tabs-panel is-active" id="Email">
                                 <div class="tab-content">
-                                    <p><span class="title">Email</span><a href="mailto:helpdesk@s3stores.com">helpdesk@s3stores.com</a></p>
+                                    <span class="title">Email</span><a href="mailto:helpdesk@s3stores.com">helpdesk@s3stores.com</a>
                                 </div>
                             </div>
                             <div class="tabs-panel" id="Phone">
                                 <div class="tab-content">
-                                    <p><span class="title">Local</span>(616) 259-5711</p>
-                                    <p><span class="title">Toll free</span>1-800-929-2431</p>
+                                    <div><span class="title">Local</span><wbr>(616) 259-5711</div>
+                                    <div><span class="title">Toll&nbsp;free</span><wbr>1-800-929-2431</div>
                                 </div>
                             </div>
                             <div class="tabs-panel" id="Fax">
                                 <div class="tab-content">
-                                    <p>(813) 944-4516</p>
+                                    <span>(813) 944-4516</span>
                                 </div>
                             </div>
                             <div class="tabs-panel" id="Mail">
                                 <div class="row">
-                                    <p class="column small-12">
+                                    <div class="column small-12 medium-6">
                                         <strong>USA Address</strong><br/>
                                         S3 Stores, Inc.<br/>
                                         2885 Sanford Ave SW #12717<br/>
                                         Grandville, MI 49418<br/>
                                         USA
-                                    </p>
-                                    <p class="column small-12">
+                                    </div>
+                                    <div class="column small-12 medium-6">
                                         <strong>Canadian Address</strong><br/>
                                         S3 Stores, Inc.<br/>
                                         27 Joseph St.<br/>
                                         Chatham, Ontario N7L 3G4<br/>
                                         Canada
-                                    </p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
