@@ -155,7 +155,13 @@ class CategoryModel extends TreeModel
         return $this->SEO_category_name ?: $this->category;
     }
 
-    public function getActiveChilds($includeSelf = false, $level = 1)
+    /**
+     * Return all active children
+     * @param bool $includeSelf
+     * @param int $level
+     * @return $this
+     */
+    public function getActiveChildren($includeSelf = false, $level = 1)
     {
         return $this->getObjects()->descendants($includeSelf, $level)->filter([
             'avail' => 'Y',

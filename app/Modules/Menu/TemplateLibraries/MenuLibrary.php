@@ -66,7 +66,7 @@ class MenuLibrary extends TemplateLibrary
             case 'main-menu':
                 return [
                     [
-                        'url' => '/',
+                        'url' => 'shipping-delivery',
                         'name' => 'Shipping & Delivery',
                         'class' => '',
                         'items' => [],
@@ -78,7 +78,7 @@ class MenuLibrary extends TemplateLibrary
                         'items' => [],
                     ],
                     [
-                        'url' => '/',
+                        'url' => 'about-us',
                         'name' => 'About Us',
                         'class' => '',
                         'items' => [],

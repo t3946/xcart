@@ -45,8 +45,6 @@ class CheckoutController extends FrontendController
         $errors = [];
         $shipping = null;
 
-        if (!$user) {
-        }
 
         if ($app->request->getIsPost()) {
 
@@ -88,7 +86,7 @@ class CheckoutController extends FrontendController
                     'state' => $s_state,
                     'city' => $shipping['s_city'],
                 ]);
-                $address->save();
+                //$address->save();
 
                 $order->setAttributes([
                     's_firstname' => $address->full_name,
@@ -98,7 +96,8 @@ class CheckoutController extends FrontendController
                     's_zipcode' => $address->zip,
                     's_state' => $address->state,
                     's_city' => $address->city,
-                    'phone' => $contact['phone'],
+                    'phone' => preg_replace('/\D/S', "", $contact['phone']),
+                    'phone_ext' => $contact['phone_ext'],
                     'email' => $contact['email'],
                     'firstname' => $contact['firstname'],
                 ]);
@@ -262,11 +261,15 @@ class CheckoutController extends FrontendController
             ->order(['is_cod', 'orderby'])
             ->all();
 
+        [$shipping_address, $billing_address] = $order->getAddressInfo();
+
         $this->display('checkout/options.tpl', [
             'order' => $order,
             'payment_methods' => $payment_methods,
             'errors' => $errors,
-            'countries' => Connection::getInstance()->fetchAll(SearchSql::getAllCountryOrderSql())
+            'countries' => Connection::getInstance()->fetchAll(SearchSql::getAllCountryOrderSql()),
+            'shipping_address' => $shipping_address,
+            'billing_address' => $billing_address,
         ]);
     }
 

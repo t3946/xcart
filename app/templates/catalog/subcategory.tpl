@@ -47,12 +47,12 @@
 
                     {* Меню подкатегорий категории *}
                     <div class="row departments-submenu-items small-up-1 medium-up-2 ml-up-3 large-up-4">
-                        {foreach $category->getActiveChilds()->all() as $subCategory}
+                        {foreach $category->getActiveChildren()->all() as $subCategory}
                             <div class="group-items column">
                                 <div class="items-title"><a
                                             href="{$subCategory->getAbsoluteUrl()}">{$subCategory->category}</a></div>
                                 <div class="items-list">
-                                    {foreach $subCategory->getActiveChilds()->all() as $subSubCategory}
+                                    {foreach $subCategory->getActiveChildren()->all() as $subSubCategory}
                                         <div class="item-link">
                                             <a href="{$subSubCategory->getAbsoluteUrl()}">{$subSubCategory->category}</a>
                                         </div>

@@ -23,7 +23,7 @@
             <div class="row">
                 <div class="columns small-5">
                     <div class="options">
-                        {include 'checkout/_address_view.tpl' info=$order->getAddressInfo()[0] header=$.t('Shipping Address','order') uri='checkout:shipping'}
+                        {include 'checkout/_address_view.tpl' info=$shipping_address header=$.t('Shipping Address','order') uri='checkout:shipping'}
                     </div>
                 </div>
                 <div class="columns small-7">
@@ -142,7 +142,6 @@
                         </div>
                     </div>
 
-                    {set $address = $order->getAddressInfo()[1]['address']}
 
                     <div class="registration {if !$billing_diff}hide{/if}" id="registration">
                         <div class="row">
@@ -159,7 +158,7 @@
                                 <span class="reqired">*</span>
                             </div>
                             <div class="small-8 columns">
-                                <input value="{$order->b_firstname}" id="registration__b_firstname" placeholder="{t 'Albert H. Einstein' dict='order'}" name="BillingAddressForm[b_firstname]" type="text"/>
+                                <input value="{$billing_address['firstname']}" id="registration__b_firstname" placeholder="{t 'Albert H. Einstein' dict='order'}" name="BillingAddressForm[b_firstname]" type="text"/>
                             </div>
                         </div>
                         <div class="row">
@@ -168,7 +167,7 @@
                                 <i>{t '(optional)' dict='order'}</i>
                             </div>
                             <div class="small-8 columns">
-                                <input value="{$order->b_company}" id="registration__b_company" placeholder="{t 'Eureka Inc.' dict='order'}" name="BillingAddressForm[b_company]" type="text"/>
+                                <input value="{$billing_address['company']}" id="registration__b_company" placeholder="{t 'Eureka Inc.' dict='order'}" name="BillingAddressForm[b_company]" type="text"/>
                             </div>
                         </div>
                         <div class="row">
@@ -177,7 +176,7 @@
                                 <span class="reqired">*</span>
                             </div>
                             <div class="small-8 columns">
-                                <input value="{$address[0]}" id="registration__b_address" placeholder="{t '112 Mercer Street' dict='order'}" name="BillingAddressForm[b_address]" type="text"/>
+                                <input value="{$billing_address['address'][0]}" id="registration__b_address" placeholder="{t '112 Mercer Street' dict='order'}" name="BillingAddressForm[b_address]" type="text"/>
                             </div>
                         </div>
                         <div class="row">
@@ -185,7 +184,7 @@
                                 <label for="registration__b_address_2">{t 'Address (line 2)' dict='order'}</label>
                             </div>
                             <div class="small-8 columns">
-                                <input value="{$address[1]}" id="registration__b_address_2" placeholder="{t 'Apt 1' dict='order'}" name="BillingAddressForm[b_address_2]" type="text"/>
+                                <input value="{$billing_address['address'][1]}" id="registration__b_address_2" placeholder="{t 'Apt 1' dict='order'}" name="BillingAddressForm[b_address_2]" type="text"/>
                             </div>
                         </div>
                         <div class="row">
@@ -196,7 +195,7 @@
                             <div class="small-8 columns">
                                 <select id="registration__b_countryname" name="BillingAddressForm[b_country]">
                                     {foreach $countries as $country}
-                                        <option {if $order->b_country == $country.id}selected{/if} value="{raw $country.id}">{raw $country.text}</option>
+                                        <option {if $billing_address['country'] == $country.id}selected{/if} value="{raw $country.id}">{raw $country.text}</option>
                                     {/foreach}
                                 </select>
                             </div>
@@ -207,7 +206,7 @@
                                 <span class="reqired">*</span>
                             </div>
                             <div class="small-8 columns">
-                                <input value="{$order->b_zipcode}" id="registration__b_zipcode" placeholder="{t '08540' dict='order'}" name="BillingAddressForm[b_zipcode]" type="text"/>
+                                <input value="{$billing_address['zipcode']}" id="registration__b_zipcode" placeholder="{t '08540' dict='order'}" name="BillingAddressForm[b_zipcode]" type="text"/>
                             </div>
                         </div>
                         <div class="row">
@@ -216,7 +215,7 @@
                                 <span class="reqired">*</span>
                             </div>
                             <div class="small-8 columns">
-                                <input value="{$order->billing_state}" id="registration__b_statename" placeholder="{t 'New Jersey' dict='order'}" name="BillingAddressForm[b_statename]" type="text"/>
+                                <input value="{$billing_address['state']}" id="registration__b_statename" placeholder="{t 'New Jersey' dict='order'}" name="BillingAddressForm[b_statename]" type="text"/>
                             </div>
                         </div>
                         <div class="row">
@@ -225,7 +224,7 @@
                                 <span class="reqired">*</span>
                             </div>
                             <div class="small-8 columns">
-                                <input value="{$order->b_city}" id="registration__b_city" placeholder="{t 'Princeton' dict='order'}" name="BillingAddressForm[b_city]" type="text"/>
+                                <input value="{$billing_address['city']}" id="registration__b_city" placeholder="{t 'Princeton' dict='order'}" name="BillingAddressForm[b_city]" type="text"/>
                             </div>
                         </div>
                     </div>

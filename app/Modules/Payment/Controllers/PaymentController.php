@@ -48,10 +48,6 @@ class PaymentController extends Controller
                     ];
 
                     if ($gw->purchase($params)) {
-                        $order->cb_status = OrderStatusModel::ORDER_STATUS_NOT_FINISHED;
-                        $order->save();
-
-                        $order->groups->update(['cb_status' => $order->cb_status]);
 
                         $params = [
                             'mode' => OrderTransactionModel::TYPE_AUTHORIZATION,
@@ -71,6 +67,11 @@ class PaymentController extends Controller
                         );
                         $transaction->save();
                     }
+
+                    $order->cb_status = OrderStatusModel::ORDER_STATUS_NOT_FINISHED;
+                    $order->save();
+
+                    $order->groups->update(['cb_status' => $order->cb_status]);
 
                     if ($gw->result && $gw->result->isRedirect()) {
                         $gw->result->redirect();
@@ -204,7 +205,7 @@ class PaymentController extends Controller
 
                         $txn->save();
 
-                        $order->cb_status = OrderStatusModel::ORDER_STATUS_AUTHORIZED;
+                        Xcart::app()->event->trigger('order:paid', ['model' => $order]);
 
                         break;
 
