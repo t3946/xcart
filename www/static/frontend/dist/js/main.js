@@ -43214,7 +43214,7 @@ jQuery(window).on('load', function () {
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-
+/* WEBPACK VAR INJECTION */(function(__webpack_provided_window_dot_jQuery) {
 
 __webpack_require__(46);
 
@@ -43291,6 +43291,8 @@ __webpack_require__(151);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 (function () {
+    window['$'] = _jquery2.default;
+    __webpack_provided_window_dot_jQuery = _jquery2.default;
     window['FilterPriceSlider'] = _FilterPriceSlider2.default;
     window['loader'] = new _Loader2.default();
     window['whatInput'] = _whatInput2.default;
@@ -43310,6 +43312,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
         });
     };
 })();
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
 /* 46 */
@@ -71502,7 +71505,7 @@ var LazyImageLoad = function () {
         this.attached.push(elements);
 
         this._bind();
-        this.search();
+        this.observe();
     };
 
     LazyImageLoad.prototype.setObserver = function setObserver() {
@@ -71524,8 +71527,6 @@ var LazyImageLoad = function () {
     LazyImageLoad.prototype.load = function load(target) {
         var _this2 = this;
 
-        target.classList.remove('lazy-img');
-
         if (target.dataset.background) {
             this.stack.push(function () {
                 var background = target.dataset.background;
@@ -71535,9 +71536,12 @@ var LazyImageLoad = function () {
                 _this2.onLoad(background, function () {
                     target.style.backgroundImage = 'url(' + background + ')';
                 }, function () {
+                    target.classList.remove('lazy-img');
                     target.classList.add('lazy-bg-loaded');
                 });
             });
+
+            return;
         }
 
         if (target.dataset.src) {
@@ -71555,6 +71559,7 @@ var LazyImageLoad = function () {
                     _this2.onLoad(original, function () {
                         target.src = original;
                     }, function () {
+                        target.classList.remove('lazy-img');
                         target.classList.add('lazy-loaded');
                         if (typeof target.usemap !== 'undefined' && $.fn.rwdImageMaps) {
                             $(target).rwdImageMaps();
@@ -71636,6 +71641,9 @@ var LazyImageLoad = function () {
 
         if (items.length) {
             for (var i = 0, len = items.length; i < len; i++) {
+                if (items[i].src) {
+                    items[i].src = '';
+                }
                 this.observer.observe(items[i]);
             }
         }
