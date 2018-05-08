@@ -67,8 +67,4 @@
         </div>
     {/block}
 
-
-    {block 'after-content'}
-        {*{include "demo/blocks/sliders/_recently_viewed.tpl"}*}
-    {/block}
 {/if}

@@ -76,25 +76,3 @@
     </div>
     </div>
 {/block}
-
-{block 'after-content'}
-
-    <div class="row">
-        <div class="small-12 column slider-viewed">
-            {set $link}{url 'catalog:viewed'}{/set}
-            {include 'slider/base_product_slider.tpl' title="You recently viewed items" link=$link hide=true hide_link=true}
-        </div>
-    </div>
-
-    {*<div class="row">*}
-        {*<div class="small-12 column">*}
-            {*<div id="scrollToTop">*}
-                {*<img class="image"*}
-                     {*src="/static/frontend/demo_images/demo_images_new/up.svg"*}
-                     {*alt="">*}
-                {*<span>UP</span>*}
-            {*</div>*}
-        {*</div>*}
-    {*</div>*}
-
-{/block}
