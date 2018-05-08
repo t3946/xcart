@@ -11,6 +11,7 @@ export default class LazyImageLoad
         this.inLoad = 0;
         this.maxLoad = 5;
         this.stack = [];
+        this.pool = [];
 
         this.setObserver();
         this.init(elements);
@@ -92,14 +93,16 @@ export default class LazyImageLoad
 
     onLoad(image, call1, call2)
     {
-        let element = new Image();
+        let element = (this.pool.length) ? this.pool.pop() : new Image();
 
         element.onload = () => {
             setTimeout(()=>{call1()}, 20);
             setTimeout(()=>{call2()}, 100);
 
+            element.src = '';
+            // element.onload = null;
             this.inLoad--;
-            element.remove();
+            this.pool.push(element);
         };
 
         this.inLoad++;
