@@ -71255,7 +71255,6 @@ var LazyImageLoad = function () {
         this.inLoad = 0;
         this.maxLoad = 5;
         this.stack = [];
-        this.pool = [];
 
         this.setObserver();
         this.init(elements);
@@ -71265,7 +71264,7 @@ var LazyImageLoad = function () {
         this.attached.push(elements);
 
         this._bind();
-        this.search();
+        this.observe();
     };
 
     LazyImageLoad.prototype.setObserver = function setObserver() {
@@ -71287,8 +71286,6 @@ var LazyImageLoad = function () {
     LazyImageLoad.prototype.load = function load(target) {
         var _this2 = this;
 
-        target.classList.remove('lazy-img');
-
         if (target.dataset.background) {
             this.stack.push(function () {
                 var background = target.dataset.background;
@@ -71298,9 +71295,12 @@ var LazyImageLoad = function () {
                 _this2.onLoad(background, function () {
                     target.style.backgroundImage = 'url(' + background + ')';
                 }, function () {
+                    target.classList.remove('lazy-img');
                     target.classList.add('lazy-bg-loaded');
                 });
             });
+
+            return;
         }
 
         if (target.dataset.src) {
@@ -71318,6 +71318,7 @@ var LazyImageLoad = function () {
                     _this2.onLoad(original, function () {
                         target.src = original;
                     }, function () {
+                        target.classList.remove('lazy-img');
                         target.classList.add('lazy-loaded');
                         if (typeof target.usemap !== 'undefined' && $.fn.rwdImageMaps) {
                             $(target).rwdImageMaps();
@@ -71334,7 +71335,7 @@ var LazyImageLoad = function () {
     LazyImageLoad.prototype.onLoad = function onLoad(image, call1, call2) {
         var _this3 = this;
 
-        var element = this.pool.length ? this.pool.pop() : new Image();
+        var element = new Image();
 
         element.onload = function () {
             setTimeout(function () {
@@ -71344,10 +71345,8 @@ var LazyImageLoad = function () {
                 call2();
             }, 100);
 
-            element.src = '';
-
             _this3.inLoad--;
-            _this3.pool.push(element);
+            element.remove();
         };
 
         this.inLoad++;
@@ -71401,6 +71400,9 @@ var LazyImageLoad = function () {
 
         if (items.length) {
             for (var i = 0, len = items.length; i < len; i++) {
+                if (items[i].src) {
+                    items[i].src = '';
+                }
                 this.observer.observe(items[i]);
             }
         }
