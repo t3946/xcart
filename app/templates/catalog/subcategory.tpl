@@ -9,12 +9,12 @@
             <div class="row all-departments-menu  small-up-1 medium-up-2 ml-up-3 large-up-6">
                 {foreach $categories as $category}
                     <a href="#id{$category->categoryid}" class="item-title column link-id{$category->categoryid}">
-                        <div class="image-container">
+                        <span class="image-container">
                             <img class="image"
                                  src="/static/frontend/demo_images/demo_images_new/icon{(rand(0,1)) ? 1 : 2}.svg"
                                  alt="">
-                        </div>
-                        <div class="title"><span>{$category->category}</span></div>
+                        </span>
+                        <span class="title"><span>{$category->category}</span></span>
                     </a>
                 {/foreach}
             </div>
