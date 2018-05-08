@@ -8,14 +8,14 @@
             {* Меню категорий *}
             <div class="all-departments-menu-container">
                 <div class="row all-departments-menu  small-up-1 medium-up-2 ml-up-3 large-up-6">
-                    {foreach $brands as $brand}
-                        <a href="#id{$brand->brandid}" class="item-title column link-id{$brand->brandid}">
+                    {foreach $brands as $letter => $brand}
+                        <a href="#id{$letter}" class="item-title column link-id{$letter}">
                             {*<div class="image-container">*}
                                 {*<img class="image"*}
                                      {*src="/static/frontend/demo_images/demo_images_new/icon{(rand(0,1)) ? 1 : 2}.svg"*}
                                      {*alt="">*}
                             {*</div>*}
-                            <div class="title"><span>{$brand->brand}</span></div>
+                            <div class="title"><span>{$letter}</span></div>
                         </a>
                     {/foreach}
                 </div>
@@ -29,35 +29,35 @@
 
             {* Список меню брендов *}
             <div class="sections">
-                {foreach $brands as $brandKey => $brand}
-                    <section id="id{$brand->brandid}" class="departments-submenu-container">
+                {foreach $brands as $letter => $brands}
+                    <section id="id{$letter}" class="departments-submenu-container">
                         {* Заголовок категории *}
                         <div class="row">
                             <div class="column small-12">
-                                <a href="{$brand->getAbsoluteUrl()}" class="departments-submenu-title">
+                                <div class="departments-submenu-title">
                                 {*<span class="image-container">*}
                                     {*<img class="image"*}
                                          {*src="/static/frontend/demo_images/demo_images_new/icon{(rand(0,1)) ? 1 : 2}.svg"*}
                                          {*alt="">*}
                                 {*</span>*}
-                                    <span class="title">{$brand->brand}</span>
-                                </a>
+                                    <span class="title">{$letter}</span>
+                                </div>
                             </div>
                         </div>
 
                         {* Меню подбрендов брендов категории *}
                         <div class="row departments-submenu-items small-up-1 medium-up-2 ml-up-3 large-up-4">
-                            {foreach $brand->getActiveChildren()->all() as $subBrand}
+                            {foreach $brands as $brand}
                                 <div class="group-items column">
                                     <div class="items-title"><a
-                                                href="{$subBrand->getAbsoluteUrl()}">{$subBrand->brand}</a></div>
-                                    <div class="items-list">
-                                        {foreach $subBrand->getActiveChildren()->all() as $subSubBrand}
-                                            <div class="item-link">
-                                                <a href="{$subSubBrand->getAbsoluteUrl()}">{$subSubBrand->brand}</a>
-                                            </div>
-                                        {/foreach}
-                                    </div>
+                                                href="{$brand->getAbsoluteUrl()}">{$brand->brand}</a></div>
+                                    {*<div class="items-list">*}
+                                        {*{foreach $brand->getActiveChildren()->all() as $subBrand}*}
+                                            {*<div class="item-link">*}
+                                                {*<a href="{$subBrand->getAbsoluteUrl()}">{$subBrand->brand}</a>*}
+                                            {*</div>*}
+                                        {*{/foreach}*}
+                                    {*</div>*}
                                 </div>
                             {/foreach}
                         </div>
