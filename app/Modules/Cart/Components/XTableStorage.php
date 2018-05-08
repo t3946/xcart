@@ -69,7 +69,7 @@ class XTableStorage extends AbstractStorage
     /**
      * @param \Modules\Cart\Interfaces\IDiscount[] $discounts
      */
-    public function save($discounts = [])
+    public function save(array $discounts = []): void
     {
 //        $data = [];
 //
@@ -96,7 +96,13 @@ class XTableStorage extends AbstractStorage
 
         if ($this->model->data != $data) {
             $this->model->data = $data;
-            $this->model->save();
+
+            if (!$this->model->data && !$this->model->getIsNewRecord()) {
+                $this->model->delete();
+            }
+            else {
+                $this->model->save();
+            }
         }
     }
 }
