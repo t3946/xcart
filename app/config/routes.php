@@ -1,5 +1,5 @@
 <?php
-$admin_routes = include('routes_admin.php');
+$admin_routes = include 'routes_admin.php';
 return array_merge($admin_routes, [
     [
         'route' => '',

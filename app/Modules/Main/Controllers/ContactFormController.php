@@ -24,7 +24,7 @@ class ContactFormController extends FrontendController
         $form = new ContactUsForm();
         if ($this->getRequest()->getIsPost() && $form->populate($_POST) && $form->isValid()) {
             Xcart::app()->flash->add('Your message has been sent successfully');
-            $this->redirect('admin:index');
+            $this->refresh();
         }
 
         $this->display('contactForm/contactUs.tpl', [
