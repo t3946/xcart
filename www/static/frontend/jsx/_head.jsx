@@ -40,8 +40,8 @@ import './ext/foundation-init';
 import '../../vendors/wNumb.js'
 
 (function(){
-    // window['$'] = $;
-    // window['jQuery'] = $;
+    window['$'] = $;
+    window['jQuery'] = $;
     window['FilterPriceSlider'] = FilterPriceSlider;
     window['loader'] = new Loader;
     window['whatInput'] = whatInput;

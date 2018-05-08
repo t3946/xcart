@@ -20,7 +20,7 @@ export default class LazyImageLoad
         this.attached.push(elements);
 
         this._bind();
-        this.search();
+        this.observe();
     }
 
     setObserver()
@@ -45,7 +45,6 @@ export default class LazyImageLoad
      */
     load(target)
     {
-        target.classList.remove('lazy-img');
 
         if (target.dataset.background) {
             this.stack.push(()=>{
@@ -55,10 +54,14 @@ export default class LazyImageLoad
 
                 this.onLoad(background,
                     ()=>{ target.style.backgroundImage = 'url('+background+')' },
-                    ()=>{ target.classList.add('lazy-bg-loaded'); }
+                    ()=>{
+                        target.classList.remove('lazy-img');
+                        target.classList.add('lazy-bg-loaded');
+                    }
                 );
             });
 
+            return;
         }
 
         if (target.dataset.src) {
@@ -76,7 +79,9 @@ export default class LazyImageLoad
 
                     this.onLoad(original,
                         ()=>{ target.src = original; },
-                        ()=>{ target.classList.add('lazy-loaded');
+                        ()=>{
+                            target.classList.remove('lazy-img');
+                            target.classList.add('lazy-loaded');
                             if (typeof(target.usemap) !== 'undefined' && $.fn.rwdImageMaps) {
                                 $(target).rwdImageMaps();
                             }
@@ -99,7 +104,7 @@ export default class LazyImageLoad
             setTimeout(()=>{call2()}, 100);
 
             this.inLoad--;
-            element.remove();
+            element.remove()
         };
 
         this.inLoad++;
@@ -142,6 +147,7 @@ export default class LazyImageLoad
         if (items.length)
         {
             for (let i = 0, len = items.length; i < len; i++) {
+                if (items[i].src) {items[i].src = '';}
                 this.observer.observe(items[i]);
             }
         }

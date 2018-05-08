@@ -54,4 +54,6 @@ interface GatewayInterface
      * @return bool
      */
     public function success($params);
+
+    public function getState($mode);
 }

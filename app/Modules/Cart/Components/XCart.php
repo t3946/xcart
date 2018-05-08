@@ -6,7 +6,7 @@ class XCart extends Cart
 {
     public $storageConfig = [
 //        'class' => '\Modules\Cart\Components\XSessionStorage,
-        'class' => '\Modules\Cart\Components\XTableStorage',
+        'class' => \Modules\Cart\Components\XTableStorage::class,
     ];
 
     public function init()

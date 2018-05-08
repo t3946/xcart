@@ -1,5 +1,6 @@
 ###################################
 ## files with extensions to exclude
+*.orig
 *.tiff
 *.log
 *.mmdb
