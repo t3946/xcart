@@ -22,7 +22,7 @@ class ContactFormController extends FrontendController
     public function actionContactUs(): void
     {
         $form = new ContactUsForm();
-        if ($this->getRequest()->getIsPost() && $form->populate($_POST) && $form->isValid()) {
+        if ($this->getRequest()->getIsPost() && $form->populate($_POST)->isValid()) {
             Xcart::app()->flash->add('Your message has been sent successfully');
             $this->refresh();
         }
