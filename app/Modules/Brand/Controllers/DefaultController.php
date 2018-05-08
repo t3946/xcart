@@ -2,6 +2,7 @@
 namespace Modules\Brand\Controllers;
 
 use Mindy\QueryBuilder\Expression;
+use Mindy\QueryBuilder\Q\QOr;
 use Modules\Brand\Models\BrandModel;
 use Modules\Goods\Controllers\AbstractCatalogController;
 use Modules\Goods\Models\CategoryModel;
@@ -41,11 +42,21 @@ class DefaultController extends AbstractCatalogController
 
     public function actionList()
     {
+        $brands = BrandModel::objects()->filter([
+            'parent_brand_id__isnull' => true,
+            'avail' => 'Y',
+            'storefront__through__sfid' => Xcart::app()->getModule('Sites')->getSite(),
+            'storefront__through__products_count__gt' => 0,
+            //'brandid' => 3
+        ])->all();
+
+
         $breadcrumbs = new Breadcrumbs();
         $breadcrumbs->add('Brands', 'brand:list');
 
         $this->display('brand/list.tpl', [
-            'breadcrumbs' => $breadcrumbs
+            'breadcrumbs' => $breadcrumbs,
+            'brands' => $brands
         ]);
     }
 

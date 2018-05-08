@@ -205,4 +205,23 @@ class BrandModel extends Model
     {
         return $this->product_brand_name ?: $this->brand;
     }
+
+    /**
+     * Return all active children
+     * @param bool $includeSelf
+     * @param int $level
+     * @return mixed
+     * @throws \Xcart\App\Exceptions\UnknownMethodException
+     * @throws \Xcart\App\Exceptions\UnknownPropertyException
+     */
+    public function getActiveChildren()
+    {
+        return $this->getObjects()->filter([
+            'avail' => 'Y',
+            'active_product_count__gt' => 0,
+            'storefront__through__sfid' => Xcart::app()->getModule('Sites')->getSite(),
+            'storefront__through__products_count__gt' => 0,
+            'parent_brand_id' => $this->brandid
+        ]);
+    }
 }
