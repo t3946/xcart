@@ -11,30 +11,33 @@
   .large-2column h2 {
     padding-top: 0;
   }
-  div.st-main-content {
-    @include breakpoint(ml down) {
+
+  @include breakpoint(ml down) {
+    div.st-main-content {
       margin-top: 20px;
     }
-  }
-  table.st-per-all {
-    @include breakpoint(ml down) {
+    table.st-per-all {
       margin-left: auto;
       margin-right: auto;
     }
-  }
-  img.st-tax-map {
-    @include breakpoint(ml down) {
+    img.st-tax-map {
       margin-left: auto;
       margin-right: auto;
       float: none;
       display: block;
     }
-  }
-  h1 {
-    @include breakpoint(ml down) {
-      text-align: center;
+    h1 {
+      text-align: left;
+    }
+    .pages.page {
+      text-align: left;
     }
   }
+
+  p.st-descr {
+    width:100%;
+  }
+
   p.sd-green {
     background-image: url("/static/frontend/images/pages/sad_green_line.png");
     color: #fff;

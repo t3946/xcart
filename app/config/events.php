@@ -1,4 +1,7 @@
 <?php
+
+use Modules\Order\Helpers\OrderEventHelper;
+
 return [
     'anveo:call' => [
         [
@@ -13,7 +16,13 @@ return [
 
     'order:created' => [
         [
-            'callback' => ['\\Modules\\Order\\Helpers\\OrderEventHelper', 'triggerOrderCreateEvent'],
+            'callback' => [OrderEventHelper::class, 'triggerOrderCreateEvent'],
+        ],
+    ],
+
+    'order:paid' => [
+        [
+            'callback' => [OrderEventHelper::class, 'triggerOrderPaidEvent'],
         ],
     ],
 

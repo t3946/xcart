@@ -27,6 +27,11 @@ class OrderEventHelper
         self::orderCreateEvent($model);
     }
 
+    public static function triggerOrderPaidEvent($owner = null, OrderModel $model): void
+    {
+        self::orderPaidEvent($model);
+    }
+
     public static function orderCreateEvent(OrderModel $model): void
     {
         if ($model) {
@@ -123,5 +128,12 @@ class OrderEventHelper
                 ]);
             }
         }
+    }
+
+    public static function orderPaidEvent(OrderModel $model): void
+    {
+        $model->cb_status = OrderStatusModel::ORDER_STATUS_AUTHORIZED;
+        $model->save();
+        $model->groups->update(['cb_status' => $model->cb_status]);
     }
 }
