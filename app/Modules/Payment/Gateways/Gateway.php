@@ -11,6 +11,7 @@ use Modules\Payment\Models\ProcessorModel;
 use Omnipay\Common\Message\ResponseInterface;
 use Omnipay\Omnipay;
 use Omnipay\PayPal\RestGateway;
+use Xcart\App\Main\Xcart;
 
 abstract class Gateway implements GatewayInterface
 {
@@ -78,15 +79,11 @@ abstract class Gateway implements GatewayInterface
 
             switch ($this->txn->transaction_status) {
                 case OrderTransactionModel::STATUS_AUTHORIZED:
-                    $order = $this->txn->order;
-                    $order->cb_status = OrderStatusModel::ORDER_STATUS_AUTHORIZED;
-                    $order->groups->update(['cb_status' => OrderStatusModel::ORDER_STATUS_AUTHORIZED]);
+                    Xcart::app()->event->trigger('order:paid', ['model' => $this->txn->order]);
                     break;
                 case OrderTransactionModel::STATUS_DECLINED:
                     break;
             }
-
-            $order->save();
         }
     }
 }
