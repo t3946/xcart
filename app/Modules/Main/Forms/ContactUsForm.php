@@ -36,7 +36,7 @@ class ContactUsForm extends Form
      * Список полей формы
      * @return array Поля формы
      */
-    public function getFields()
+    public function getFields() : array
     {
         return [
 
@@ -138,7 +138,7 @@ class ContactUsForm extends Form
      * Отправка сообщения пользователю
      * @return bool Сообщение отправлено успешно
      */
-    public function send()
+    public function send(): bool
     {
         return (bool)Xcart::app()->mail->template(
             $this->sendTo,
@@ -164,7 +164,7 @@ class ContactUsForm extends Form
      * Функция список причин обращения пользователя
      * @return array Массив с причинами обращения
      */
-    private function getDepartments()
+    private function getDepartments(): array
     {
         return [
             '' => '',
