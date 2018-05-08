@@ -8,6 +8,7 @@ use Omnipay\Common\AbstractGateway;
 use Omnipay\Common\Message\AbstractRequest;
 use Omnipay\Common\Message\AbstractResponse;
 use Omnipay\Common\Message\ResponseInterface;
+use Xcart\App\Main\Xcart;
 
 class Offline extends Gateway
 {
@@ -89,9 +90,8 @@ class Offline extends Gateway
      */
     public function purchase($params)
     {
-        if ($this->result = new OfflineResponse($this->gateway->purchase($params), $params)) {
-            return true;
-        }
+        $this->result = new OfflineResponse($this->gateway->purchase($params), $params);
+
         return false;
     }
 
@@ -120,8 +120,25 @@ class OfflineResponse extends AbstractResponse
      */
     public function isSuccessful()
     {
+        return false;
+    }
+
+    public function isRedirect()
+    {
         return true;
     }
+
+    public function getRedirectUrl()
+    {
+        return Xcart::app()->router->url('checkout:complete', ['order_id' => $this->getRequest()->getOrder()->orderid]);
+    }
+
+    public function redirect()
+    {
+        Xcart::app()->event->trigger('order:paid', ['model' => $this->getRequest()->getOrder()]);
+        Xcart::app()->request->redirect($this->getRedirectUrl());
+    }
+
 
 }
 
@@ -148,6 +165,16 @@ class OfflineRequest extends AbstractRequest
     public function sendData($data)
     {
         // TODO: Implement sendData() method.
+    }
+
+    public function setOrder(object $value): object
+    {
+        return $this->setParameter('order', $value);
+    }
+
+    public function getOrder(): object
+    {
+        return $this->getParameter('order');
     }
 }
 
