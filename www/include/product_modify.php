@@ -1166,7 +1166,7 @@ if (($REQUEST_METHOD == "POST") && ($mode == "product_modify")) {
                           $top_message['content'] = "Cost to us error";
  
 		} else {
-			if (!$oProduct->isGroupRoot()) {
+			if ($oProduct && !$oProduct->isGroupRoot()) {
                 $top_message['content'] = func_get_langvar_by_name("msg_adm_err_product_upd");
                 $top_message['fillerror'] = true;
             }
