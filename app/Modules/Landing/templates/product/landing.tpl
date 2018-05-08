@@ -44,7 +44,7 @@
                 </div>
 
                 <div class="buttons">
-                    <a href="/product/wick-candle-maker/buy/" class="button" onclick="ga('send', 'buy');">
+                    <a href="/product/wick-candle-maker/buy/" class="button" onclick="window.goal('buy')">
                         Buy
                     </a>
                 </div>
@@ -85,9 +85,9 @@
     <div class="promo-block">
         <div class="row">
             <div class="column small-12 text-center">
-                <h2>
+                <h3>
                     What's inside We R Wick Candle Machine Kit?
-                </h2>
+                </h3>
             </div>
         </div>
         <div class="row">
@@ -135,7 +135,7 @@
 
                 <div class="bottom-border borders text-center">
                     <div class="buttons">
-                        <a href="/product/wick-candle-maker/buy/" class="button">
+                        <a href="/product/wick-candle-maker/buy/" class="button" onclick="window.goal('buy')">
                             Buy
                         </a>
                     </div>
@@ -163,6 +163,12 @@
 
 {block 'after-content'}
     <script type="text/javascript">
+        window.goal = function(goal) {
+            if (window.ga) {
+                window.ga('send', goal);
+            }
+        };
+
         var slickInit = function(){
             $('.slider').slick({
                 autoplay: true,
