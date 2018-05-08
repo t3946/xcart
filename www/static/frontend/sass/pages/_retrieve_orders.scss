@@ -14,39 +14,9 @@
     padding-top: 0;
   }
 
-  section.ro-header {
-    background: url('/static/frontend/images/pages/retrieve_orders.png') center center no-repeat;
-    background-size: 100%;
-  }
   .page-container{
     margin-top: 50px;
   }
-
-  form.ro_email {
-    width: 500px;
-    height: 60px;
-    background: url("/static/frontend/images/pages/ro_email.png") no-repeat center;
-  }
-
-  input.ro_input_email {
-    margin-left: 50px;
-    margin-top: 14px;
-    height: 30px;
-    width: 280px;
-    font-style: italic;
-  }
-
-  input.ro_input_submit {
-    margin-left: 30px;
-    width: 80px;
-    height: 30px;
-    background-color: #ffb400;
-    border-radius: 5px;
-    border: 0;
-    font-weight: bold;
-    text-transform: uppercase;
-  }
-
 
   @include breakpoint(large up) {
     .large-2column {
