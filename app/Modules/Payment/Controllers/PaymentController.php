@@ -130,11 +130,7 @@ class PaymentController extends Controller
             $this->cancel($gateway);
         }
 
-        if ($order = OrderHelper::getCartOrder()) {
-            //$order->cb_status = OrderStatusModel::ORDER_STATUS_AUTHORIZED;
-            //$order->save();
-            $this->redirect("checkout:complete");
-        }
+        $this->redirect("checkout:complete");
 
     }
 
