@@ -142,7 +142,7 @@ class ContactUsForm extends Form
     {
         return (bool)Xcart::app()->mail->template(
             $this->sendTo,
-            $this->getField('subject')->getValue(),
+            $this->getField('subject_line')->getValue(),
             'mail/form_auto.tpl',
             ['form' => $this]
         );

@@ -35,7 +35,7 @@ import _ from 'lodash';
         let updateCart = _.throttle(product => {
             let key = product.dataset.key, quantity = product.dataset.quantity || 1;
 
-            // console.log(key, quantity, product.dataset);
+            console.log(key, quantity, product.dataset);
 
             recalc();
         }, 200);
