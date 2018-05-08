@@ -42,8 +42,12 @@
                     <div class="table-body">
                         {foreach $items as $key=>$position}
                         <div class="table-row"
-                             data-product
                              data-key="{$key}"
+                             data-wh="{$gi}"
+                             data-product='{$position->object->productid}'
+                             data-quantity="{$position->quantity}"
+                             data-price="{$position->object->getFrontendPrice($position->quantity)}"
+                             data-prices='{$position->object->getPrices()|json_encode}'
                              data-cart-action="{url 'cart:quantity:set:post' key=$key}">
                             <div class="table-column image">
                                 {include 'catalog/parts/_item_image.tpl' model=$position->object}
@@ -72,7 +76,7 @@
                                 </div>
 
                                 <div class="table-column price show-for-large format_price">
-                                    US$ <span class="price">{$position->object->getFrontendPrice()|number_format:2}</span>
+                                    US$ <span class="price" var-price>{$position->object->getFrontendPrice()|number_format:2}</span>
                                 </div>
 
                                 <div class="table-wrapper quantity-extended">
@@ -95,10 +99,10 @@
 
                                     <div class="table-column extended format_price">
                                         <span class="show-for-large">
-                                            US$ <span class="price">{$position->getPrice()|number_format:2}</span>
+                                            US$ <span class="price" var-price-extended>{$position->getPrice()|number_format:2}</span>
                                         </span>
                                         <span class="hide-for-large">
-                                            US$ <span class="price">{$position->object->getFrontendPrice()|number_format:2}</span>
+                                            US$ <span class="price" var-price-extended>{$position->object->getFrontendPrice()|number_format:2}</span>
                                         </span>
                                     </div>
                                 </div>
@@ -114,7 +118,7 @@
                     </div>
                 </div>
 
-                <div class="warehouse_subtotal">
+                <div class="warehouse_subtotal wh_{$gi}" data-wh="{$gi}">
                     <div class="table">
                         <div class="table-body">
 
@@ -126,7 +130,7 @@
                                     warehouse subtotal:
                                 </div>
                                 <div class="table-column extended_remove format_price">
-                                    US$ {$group.subtotal|number_format:2}
+                                    US$ <span class="wh_{$gi}_subtotal subtotal" var-group-subtotal>{$group.subtotal|number_format:2}</span>
                                 </div>
                             </div>
 
@@ -142,7 +146,7 @@
                 <div class="grand-subtotal">
                     Subtotal:
                     <div class="subtotal">
-                        US$ {$total|number_format:2}
+                        US$ <span class="cart_subtotal" var-cart-subtotal>{$total|number_format:2}</span>
                     </div>
                 </div>
 

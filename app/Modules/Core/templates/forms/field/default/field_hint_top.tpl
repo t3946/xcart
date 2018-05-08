@@ -4,5 +4,4 @@
 </div>
 <div class="field">
     {raw $input}
-    {raw $errors}
 </div>

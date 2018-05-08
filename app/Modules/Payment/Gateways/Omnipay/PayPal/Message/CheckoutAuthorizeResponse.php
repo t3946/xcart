@@ -2,7 +2,9 @@
 
 namespace Omnipay\PayPal\Message;
 
+use Modules\Order\Models\OrderModel;
 use Omnipay\Common\Message\RedirectResponseInterface;
+use Omnipay\Common\Message\RequestInterface;
 
 /**
  * PayPal Express Authorize Response
@@ -12,9 +14,16 @@ class CheckoutAuthorizeResponse extends Response implements RedirectResponseInte
     protected $liveCheckoutEndpoint = 'https://www.paypal.com/cgi-bin/webscr';
     protected $testCheckoutEndpoint = 'https://www.sandbox.paypal.com/cgi-bin/webscr';
 
+    public function __construct(RequestInterface $request, $data)
+    {
+        parent::__construct($request, $data);
+
+        $this->data['order'] = $data['order'];
+    }
+
     public function isSuccessful()
     {
-        return true;
+        return false;
     }
 
     public function isRedirect()
@@ -44,31 +53,45 @@ class CheckoutAuthorizeResponse extends Response implements RedirectResponseInte
 
     protected function getRedirectQueryParameters()
     {
-        $u_phone = '(606) 111-1111';
-        return array(
+        /** @var OrderModel $order */
+        $order = $this->data['order'];
+
+        if (!$order) {
+            return [];
+        }
+
+        [$first_name, $last_name] = explode(' ', $order->b_firstname, 2);
+
+        return [
             'cmd' => '_ext-enter',
-            "redirect_cmd" => "_xclick",
-            "mrb" => "R-2JR83330TB370181P",
-            "pal" => "RDGQCFJTT6Y6A",
-            "rm" => "2",
-            "custom" => '111394',
-            "business" => $this->getBusiness(),
-            "email" => 'romann@s3stores.com',
-            "first_name" => 'Albert',
-            "last_name" => 'Einstain',
-            "country" => 'US',
-            "state" => 'NY',
-            "day_phone_a" => substr($u_phone, -10, -7),
-            "day_phone_b" => substr($u_phone, -7, -4),
-            "day_phone_c" => substr($u_phone, -4),
-            "night_phone_a" => substr($u_phone, -10, -7),
-            "night_phone_b" => substr($u_phone, -7, -4),
-            "night_phone_c" => substr($u_phone, -4),
-            "item_name" => 'SKU' . " order # 99111",
-            "amount" => sprintf("%0.2f", 1.11),
-            "currency_code" => 'USD',
-            "bn" => "x-cart"
-        );
+            'redirect_cmd' => '_xclick',
+            'mrb' => 'R-2JR83330TB370181P',
+            'pal' => 'RDGQCFJTT6Y6A',
+            'rm' => "2",
+            'custom' => $order->orderid,
+            'business' => $this->getBusiness(),
+            'email' => $order->email,
+            'first_name' => $first_name,
+            'last_name' => $last_name,
+            'day_phone_a' => substr($order->phone, -10, -7),
+            'day_phone_b' => substr($order->phone, -7, -4),
+            'day_phone_c' => substr($order->phone, -4),
+            'night_phone_a' => substr($order->phone, -10, -7),
+            'night_phone_b' => substr($order->phone, -7, -4),
+            'night_phone_c' => substr($order->phone, -4),
+            'item_name' => "S3 Stores, Inc. Order # {$order->getOrderNumber()}",
+            'amount' => sprintf("%0.2f", $order->total),
+            'currency_code' => 'USD',
+            'bn' => 'x-cart',
+            'paymentaction' => 'authorization',
+            'address1' => $order->b_address,
+            "country" => $order->b_country,
+            "state" => $order->b_state,
+            'city' => $order->b_city,
+            'zip' => $order->b_zipcode,
+            "return" => $this->getRequest()->getReturnUrl(),
+            "cancel_return" => $this->getRequest()->getCancelUrl(),
+        ];
     }
 
     protected function getCheckoutEndpoint()

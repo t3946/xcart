@@ -12,7 +12,7 @@
 
             <div class="banners_column">
                 <div class="banner product-of-the-day show-for-medium">
-                    <a href="#" class="banner__cover" data-background="/static/frontend/dist/images/slider/{$.getSite->code|strtolower}/product_of_day.jpg">
+                    <a href="{$product->getAbsoluteUrl()}" class="banner__cover" data-background="/static/frontend/dist/images/slider/{$.getSite->code|strtolower}/product_of_day.jpg">
                         <div class="product-of-the-day_cover banner__info">
                             <div class="product-of-the-day__caption">Product оf the day</div>
                         </div>
@@ -62,7 +62,7 @@
                        href="{url 'catalog:bestsellers'}">Bestsellers</a>
 
                     <a class="icon day"
-                       href="#">Product of the day</a>
+                       href="{$product->getAbsoluteUrl()}">Product of the day</a>
 
                     <a class="icon featured"
                        href="{url 'catalog:featured'}">Featured products</a>
@@ -101,12 +101,25 @@
         {*</div>*}
     {*</div>*}
 
+    {add $main_html = $.getSite->getConfig().cidev_main_page_code}
+    {if $main_html}
+    <div class="row">
+        <div class="small-12 column">
+            <div class="pages page">
+                {$main_html}
+            </div>
+        </div>
+    </div>
+    {/if}
+</div>
+
+{/block}
+
+{block 'after-content'}
     <div class="row">
         <div class="small-12 column slider-viewed">
             {set $link}{url 'catalog:viewed'}{/set}
             {include 'slider/base_product_slider.tpl' title="You recently viewed items" link=$link hide=true hide_link=true}
         </div>
     </div>
-</div>
-
 {/block}

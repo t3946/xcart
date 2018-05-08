@@ -1,8 +1,8 @@
 import storeCart from 'stores/StoreCart';
-(()=>{
-    let cart_container = $('.cart-page');
-    if (cart_container.length) {
-        storeCart.dispatch({type:'FETCH'});
 
+(()=>{
+    let cart_container = document.querySelector('.cart-page');
+    if (cart_container) {
+        storeCart.dispatch({type:'FETCH'});
     }
 })();

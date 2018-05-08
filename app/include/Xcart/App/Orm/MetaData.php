@@ -2,8 +2,8 @@
 
 namespace Xcart\App\Orm;
 
-use ReflectionMethod;
 use Xcart\App\Orm\Fields\AutoField;
+use Xcart\App\Orm\Fields\Field;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\HasManyField;
 use Xcart\App\Orm\Fields\ManyToManyField;
@@ -22,7 +22,7 @@ class MetaData
     /**
      * Default pk name
      */
-    const DEFAULT_PRIMARY_KEY_NAME = 'id';
+    public const DEFAULT_PRIMARY_KEY_NAME = 'id';
 
     /**
      * @var MetaData[]
@@ -39,11 +39,11 @@ class MetaData
     /**
      * @var array
      */
-    protected $attributes = null;
+    protected $attributes;
     /**
      * @var array
      */
-    protected $primaryKeys = null;
+    protected $primaryKeys;
 
     /**
      * MetaData constructor.
@@ -58,18 +58,19 @@ class MetaData
      * @param $config
      * @return ModelFieldInterface
      */
-    protected function createField($config)
+    protected function createField($config): ModelFieldInterface
     {
         /** @var $field ModelFieldInterface */
-        if (is_string($config)) {
+        if (\is_string($config)) {
             $config = ['class' => $config];
         }
 
-        if (is_array($config)) {
+        if (\is_array($config)) {
             $className = $config['class'];
             unset($config['class']);
             $field = (new ReflectionClass($className))->newInstance($config);
-        } else if (is_object($config)) {
+        }
+        else if (\is_object($config)) {
             $field = $config;
         }
 
@@ -85,7 +86,7 @@ class MetaData
 
         foreach (call_user_func([$className, 'getFields']) as $name => $config) {
 
-            /** @var \Xcart\App\Orm\Fields\Field $field */
+            /** @var Field $field */
             $field = $this->createField($config);
             $field->setName((!empty($config['name'])) ? $config['name'] : $name);
             $field->setModelClass($className);
@@ -129,33 +130,33 @@ class MetaData
     /**
      * @return array|[]ModelFieldInterface
      */
-    public function getOneToOneFields()
+    public function getOneToOneFields(): array
     {
-        return $this->fetchFields(OneToOneField::className());
+        return $this->fetchFields(OneToOneField::class);
     }
 
     /**
      * @return array|[]ModelFieldInterface
      */
-    public function getHasManyFields()
+    public function getHasManyFields(): array
     {
-        return $this->fetchFields(HasManyField::className());
+        return $this->fetchFields(HasManyField::class);
     }
 
     /**
      * @return array|[]ModelFieldInterface
      */
-    public function getManyToManyFields()
+    public function getManyToManyFields(): array
     {
-        return $this->fetchFields(ManyToManyField::className());
+        return $this->fetchFields(ManyToManyField::class);
     }
 
     /**
      * @return array|[]ModelFieldInterface
      */
-    public function getForeignFields()
+    public function getForeignFields(): array
     {
-        return $this->fetchFields(ForeignField::className());
+        return $this->fetchFields(ForeignField::class);
     }
 
     /**
@@ -180,7 +181,7 @@ class MetaData
      * @param $name
      * @return bool
      */
-    public function getRelatedField($name)
+    public function getRelatedField($name):? bool
     {
         $field = $this->getField($name);
         return $field instanceof RelatedField ? $field : null;
@@ -189,16 +190,16 @@ class MetaData
     /**
      * @return array|[]ModelFieldInterface
      */
-    public function getRelatedFields()
+    public function getRelatedFields(): array
     {
-        return $this->fetchFields(RelatedField::className());
+        return $this->fetchFields(RelatedField::class);
     }
 
     /**
      * @param $name
      * @return bool
      */
-    public function hasHasManyField($name)
+    public function hasHasManyField($name): bool
     {
         return array_key_exists($name, $this->getHasManyFields());
     }
@@ -207,7 +208,7 @@ class MetaData
      * @param $name
      * @return bool
      */
-    public function hasManyToManyField($name)
+    public function hasManyToManyField($name): bool
     {
         return array_key_exists($name, $this->getManyToManyFields());
     }
@@ -216,7 +217,7 @@ class MetaData
      * @param $name
      * @return bool
      */
-    public function hasOneToOneField($name)
+    public function hasOneToOneField($name): bool
     {
         return array_key_exists($name, $this->getOneToOneFields());
     }
@@ -225,7 +226,7 @@ class MetaData
      * @param $className
      * @return MetaData
      */
-    public static function getInstance($className)
+    public static function getInstance($className): MetaData
     {
         if (!isset(self::$instances[$className])) {
             self::$instances[$className] = new static($className);
@@ -236,7 +237,7 @@ class MetaData
     /**
      * @return array
      */
-    public function getAttributes()
+    public function getAttributes(): array
     {
         if ($this->attributes === null) {
             /** @var \Xcart\App\Orm\Model $className */
@@ -255,7 +256,7 @@ class MetaData
     /**
      * @return array|\Xcart\App\Orm\Fields\ModelFieldInterface[]
      */
-    public function getFields()
+    public function getFields(): array
     {
         return $this->fields;
     }
@@ -266,14 +267,14 @@ class MetaData
      */
     public function getMappingName($name)
     {
-        return isset($this->mapping[$name]) ? $this->mapping[$name] : $name;
+        return $this->mapping[$name] ?? $name;
     }
 
     /**
      * @param $name
-     * @return \Xcart\App\Orm\Fields\Field
+     * @return Field
      */
-    public function getField($name)
+    public function getField($name):? Field
     {
         if ($name === 'pk') {
             $name = $this->getPrimaryKeyName();
@@ -294,7 +295,7 @@ class MetaData
      * @param $name
      * @return bool
      */
-    public function hasField($name)
+    public function hasField($name): bool
     {
         if ($name === 'pk') {
             $name = $this->getPrimaryKeyName();
@@ -306,16 +307,16 @@ class MetaData
      * @param $name
      * @return bool
      */
-    public function hasForeignField($name)
+    public function hasForeignField($name): bool
     {
         return $this->getField($name) instanceof ForeignField;
     }
 
     /**
      * @param $name
-     * @return ModelFieldInterface
+     * @return ModelFieldInterface|null
      */
-    public function getForeignField($name)
+    public function getForeignField($name):? ModelFieldInterface
     {
         $field = $this->getField($name);
         return $field instanceof ForeignField ? $field : null;
@@ -323,9 +324,9 @@ class MetaData
 
     /**
      * @param $name
-     * @return ModelFieldInterface
+     * @return ModelFieldInterface|null
      */
-    public function getOneToOneField($name)
+    public function getOneToOneField($name):? ModelFieldInterface
     {
         $field = $this->getField($name);
         return $field instanceof OneToOneField ? $field : null;
@@ -335,7 +336,7 @@ class MetaData
      * @param $name
      * @return mixed|null
      */
-    public function getManyToManyField($name)
+    public function getManyToManyField($name):? ManyToManyField
     {
         $field = $this->getField($name);
         return $field instanceof ManyToManyField ? $field : null;
@@ -345,7 +346,7 @@ class MetaData
      * @param $name
      * @return mixed|null
      */
-    public function getHasManyField($name)
+    public function getHasManyField($name):? HasManyField
     {
         $field = $this->getField($name);
         return $field instanceof HasManyField ? $field : null;
@@ -355,16 +356,14 @@ class MetaData
      * @param $keys
      * @return bool
      */
-    public static function isPrimaryKey($keys)
+    public function isPrimaryKey($keys): bool
     {
-        if (!is_array($keys)) {
-            $keys = [$keys];
+        $keys = (array)$keys;
+        $pks = $this->getPrimaryKeyName(true);
+        if (\count($keys) === \count($pks)) {
+            return \count($pks) === \count(array_intersect($keys, $pks));
         }
-        $pks = static::getPrimaryKeyName(true);
-        if (count($keys) === count($pks)) {
-            return count(array_intersect($keys, $pks)) === count($pks);
-        } else {
-            return false;
-        }
+
+        return false;
     }
 }

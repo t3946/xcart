@@ -38,86 +38,76 @@ import { cartAdd } from "../../redusers/appCartRediser";
     });
 
 
-    let productItemResetState = ($products) => {
-        let $input = $products.find('.quantity-group input');
-        let val = $input.attr('min');
+    let productItemResetState = product => {
+        console.log(product);
+        let input = product.querySelector('.quantity-group input');
+        let val = input.min;
 
-        $input.val(val);
-        $products.data('quantity', val);
+        input.value = val;
+        product.dataset.quantity = val;
 
-        for (let i = 0, len = $products.length; i < len; i++) {
-            // let $product = $($products[i]);
-            let product = $products[i];
-            product.dataset.quantity = val;
-
-            // $product.data('quantity', undefined);
-            // let $input = $product.find('.quantity-group input');
-            // $input.val($input.attr('min'));
-
-            $(document).trigger('component.quantity.change', {
-                target: $products[i],
-                val: val
-            });
-        }
+        $(document).trigger('component.quantity.change', {
+            target: product,
+            val: val,
+            product: product,
+        });
     };
 
     $(document)
         .on('click','.cart_add .add', (e) =>{
             e.preventDefault();
 
-            let $product = $(e.target).closest('[data-product]');
-            if ( $product.length )
+            let product = e.target.closest('[data-product]');
+            if ( product )
             {
-                let product = $product[0];
-
                 let data = [{
-                    id: $product.data('product'),
-                    quantity: product.dataset.quantity || $product.data('quantity') || 1
+                    id: product.dataset.product,
+                    quantity: product.dataset.quantity  || 1
                 }];
 
-                cartAdd(data, ()=>{ productItemResetState($product); });
+                cartAdd(data, ()=>{ productItemResetState(product); });
             }
 
         })
         .on('click', '.group_cart_add .button', (e) => {
             e.preventDefault();
 
-            let $products = $(e.target)
+            let products = e.target
                 .closest('[data-product-group]')
                 .find('[data-product]');
 
-            if ( $products.length ) {
-
-                d($products);
-
+            if ( products.length ) {
                 let data = [];
 
-                for (let i = 0, len = $products.length; i < len; i++) {
-                    if ($products[i].data('quantity')) {
+                for (let i = 0, len = products.length; i < len; i++) {
+                    if (products[i].dataset.quantity) {
                         data.push({
-                            id: $products[i].data('product'),
-                            quantity: $products[i].data('quantity'),
+                            id: products[i].dataset.product,
+                            quantity: products[i].dataset.quantity,
                         });
                     }
                 }
 
-
-                cartAdd(data, ()=>{ productItemResetState($products); });
+                cartAdd(data, ()=>{
+                    for (let i = 0; i < products.length; ++i) {
+                        productItemResetState(products[i]);
+                    }
+                });
             }
-
         })
         .on('update.cart.store', (e, data) => {
             let qNew = data.state.cart.quantity;
             let qPrev = data.prevState.cart.quantity;
+            let mc_count = document.querySelector('.mc_count');
 
             if (qNew > 99) {
-                $('.mc_count').addClass('small');
+                mc_count.classList.add('small');
             }
             else {
-                $('.mc_count').removeClass('small');
+                mc_count.classList.remove('small');
             }
 
-            $('.mc_count').html(qNew);
+            mc_count.innerHTML = qNew;
 
             (new CountUp('desktop-cart-quantity', qPrev, qNew,0, 1, {useEasing: true})).start();
 

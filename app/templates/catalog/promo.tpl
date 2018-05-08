@@ -16,7 +16,7 @@
             </div>
             <div class="columns large-10">
                 <h1 class="title" itemprop="name">
-                    Featured products
+                    {$title}
                 </h1>
 
                 {*{if $model->description}*}

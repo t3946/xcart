@@ -2,31 +2,6 @@ import {h, render} from 'preact';
 import ProductImageSlider from "../components/ProductImageSlider";
 
 (()=>{
-
-    // let elements = document.querySelectorAll('.product__images-slider');
-    //
-    // if (elements.length) {
-    //
-    //     for (let i = 0, len = elements.length; len > i; i++) {
-    //         let item = elements[i];
-    //
-    //         for (let i = 0; i < item.children.length; i++) {
-    //             if (item.children[i].nodeName === 'DATALIST') {
-    //
-    //                 for (let i = 0; i < item.children.length; i++) {
-    //                     if (item.children[i].nodeName === 'OPTION') {
-    //
-    //
-    //
-    //                     }
-    //                 }
-    //
-    //             }
-    //         }
-    //     }
-    // }
-
-
     $('.product__images-slider').each((i, item) => {
         let data = $(item).find('datalist');
 

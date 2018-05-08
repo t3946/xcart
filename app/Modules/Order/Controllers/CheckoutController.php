@@ -88,7 +88,7 @@ class CheckoutController extends FrontendController
                     'state' => $s_state,
                     'city' => $shipping['s_city'],
                 ]);
-                $address->save();
+                //$address->save();
 
                 $order->setAttributes([
                     's_firstname' => $address->full_name,

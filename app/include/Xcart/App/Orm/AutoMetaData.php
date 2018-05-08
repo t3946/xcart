@@ -20,6 +20,11 @@ class AutoMetaData extends MetaData
     private static $_tables;
     private static $_configs;
 
+    /**
+     * @param string $className
+     * @throws \Doctrine\DBAL\DBALException
+     * @throws \ReflectionException
+     */
     protected function init($className)
     {
         $this->initTableData();
@@ -51,7 +56,7 @@ class AutoMetaData extends MetaData
         }
 
         if (empty($primaryFields) && empty($this->primaryKeys)) {
-            $this->primaryKeys = call_user_func([$className, 'getPrimaryKeyName']);
+            $this->primaryKeys = \call_user_func([$className, 'getPrimaryKeyName']);
         }
         elseif (!empty($primaryFields)) {
 
@@ -65,14 +70,14 @@ class AutoMetaData extends MetaData
      * @return \Doctrine\DBAL\Schema\Column[]
      * @throws \Doctrine\DBAL\DBALException
      */
-    private function getTableColumns($className)
+    private function getTableColumns($className): array
     {
         if (!isset(self::$_tables[$className]))
         {
             self::$_tables[$className] = Xcart::app()->db
                 ->getConnection()
                 ->getSchemaManager()
-                ->listTableColumns(call_user_func([$className, 'tableName']));
+                ->listTableColumns(\call_user_func([$className, 'tableName']));
         }
 
         return self::$_tables[$className];
@@ -84,7 +89,7 @@ class AutoMetaData extends MetaData
      * @return array Config fields as $name => $config
      * @throws \Doctrine\DBAL\DBALException
      */
-    private function getTableConfig($className)
+    private function getTableConfig($className): array
     {
         if (!isset(self::$_configs[$className]))
         {
@@ -177,12 +182,12 @@ class AutoMetaData extends MetaData
         return null;
     }
 
-    public function initTableData()
+    public function initTableData(): void
     {
 
         self::$_tables = [];
 
-        if (is_null(self::$_configs))
+        if (null === self::$_configs)
         {
             if (Xcart::app()->hasComponent('event') && Xcart::app()->hasComponent('cache'))
             {
@@ -195,10 +200,10 @@ class AutoMetaData extends MetaData
         }
     }
 
-    public static function saveCache($owner)
+    public static function saveCache($owner): void
     {
-        if (!defined('APP_DEBUG') && self::$_configs) {
-            Xcart::app()->cache->set('auto_meta_data_configs', self::$_configs, defined('APP_DEBUG')?360:7200);
+        if (!\defined('APP_DEBUG') && self::$_configs) {
+            Xcart::app()->cache->set('auto_meta_data_configs', self::$_configs, \defined('APP_DEBUG')?360:7200);
         }
     }
 }

@@ -48,7 +48,9 @@ class ContactUsForm extends Form
                 'html' => [
                     'placeholder' => MainModule::t('Albert H. Einstein'),
                 ],
-                'fieldTemplate' => 'forms/field/default/field_hint_top.tpl'
+                'fieldTemplate' => 'forms/field/default/field_hint_top.tpl',
+                'labelTemplate' => 'forms/field/default/label_optional.tpl'
+
             ],
             'company_name' => [
                 'class' => CharField::class,
@@ -56,12 +58,14 @@ class ContactUsForm extends Form
                 'html' => [
                     'placeholder' => MainModule::t('Eureka Inc.'),
                 ],
-                'fieldTemplate' => 'forms/field/default/field_hint_top.tpl'
+                'fieldTemplate' => 'forms/field/default/field_hint_top.tpl',
+                'labelTemplate' => 'forms/field/default/label_optional.tpl'
             ],
             'zip_postal_code' => [
                 'class' => NumberField::class,
                 'label' => MainModule::t('Your zip/postal code'),
-                'fieldTemplate' => 'forms/field/default/field_hint_top.tpl'
+                'fieldTemplate' => 'forms/field/default/field_hint_top.tpl',
+                'labelTemplate' => 'forms/field/default/label_optional.tpl'
             ],
             'phone_number' => [
                 'class' => CharField::class,
@@ -71,7 +75,8 @@ class ContactUsForm extends Form
                 'html' => [
                     'placeholder' => '(609) 734-8000',
                 ],
-                'fieldTemplate' => 'forms/field/default/field_hint_top.tpl'
+                'fieldTemplate' => 'forms/field/default/field_hint_top.tpl',
+                'labelTemplate' => 'forms/field/default/label_optional.tpl'
             ],
             'email' => [
                 'class' => CharField::class,
@@ -86,7 +91,8 @@ class ContactUsForm extends Form
                 'html' => [
                     'placeholder' => 'albert.einstein@gmail.com',
                 ],
-                'fieldTemplate' => 'forms/field/default/field_hint_top.tpl'
+                'fieldTemplate' => 'forms/field/default/field_hint_top.tpl',
+                'labelTemplate' => 'forms/field/default/label_optional.tpl'
             ],
             'department' => [
                 'class' => DropDownField::class,
@@ -94,7 +100,8 @@ class ContactUsForm extends Form
                 'choices' => $this->getDepartments(),
                 'hint' => MainModule::t('Your message will be routed to this department'),
                 'required' => true,
-                'fieldTemplate' => 'forms/field/default/field_hint_top.tpl'
+                'fieldTemplate' => 'forms/field/default/field_hint_top.tpl',
+                'labelTemplate' => 'forms/field/default/label_optional.tpl'
             ],
             'product_sku' => [
                 'class' => CharField::class,
@@ -104,7 +111,8 @@ class ContactUsForm extends Form
                 'html' => [
                     'placeholder' => MainModule::t('EDR-T-A63127 or AR-54321'),
                 ],
-                'fieldTemplate' => 'forms/field/default/field_hint_top.tpl'
+                'fieldTemplate' => 'forms/field/default/field_hint_top.tpl',
+                'labelTemplate' => 'forms/field/default/label_optional.tpl'
             ],
             'subject_line' => [
                 'class' => CharField::class,
@@ -113,13 +121,15 @@ class ContactUsForm extends Form
                 'html' => [
                     'placeholder' => 'Is gravitation responsible for people falling in love?',
                 ],
-                'fieldTemplate' => 'forms/field/default/field_hint_top.tpl'
+                'fieldTemplate' => 'forms/field/default/field_hint_top.tpl',
+                'labelTemplate' => 'forms/field/default/label_optional.tpl'
             ],
             'messsage' => [
                 'class' => TextField::class,
                 'label' => MainModule::t('Your message'),
                 'required' => true,
-                'fieldTemplate' => 'forms/field/default/field_hint_top.tpl'
+                'fieldTemplate' => 'forms/field/default/field_hint_top.tpl',
+                'labelTemplate' => 'forms/field/default/label_optional.tpl'
             ],
         ];
     }

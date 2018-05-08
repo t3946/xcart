@@ -4,7 +4,10 @@
     <div class="contact-form default-content-page">
 
         <h1>Contact Us</h1>
-        <div class="page-info-text column">The fields marked with <span class="required"></span> are mandatory</div>
+        <div class="row">
+            <div class="desktop-label column small-12 large-6">Web Form (recommended)</div>
+            <div class="page-info-text column small-12 large-6">The fields marked with <span class="required"></span> are mandatory</div>
+        </div>
 
         <div class="contact-form">
             <form action="" method="post">

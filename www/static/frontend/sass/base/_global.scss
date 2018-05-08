@@ -1,5 +1,3 @@
-
-
 .middle-inline-block {
   display: inline-block;
   vertical-align: middle;
@@ -143,28 +141,3 @@
   }
 }
 
-.column, .columns {
-  &.auto {
-    flex: auto;
-    max-width: 100%;
-  }
-}
-
-html, body {
-  min-height: 100%;
-  height: 100%;
-}
-
-#main_wrapper {
-  min-width: 320px;
-}
-
-.off-canvas-content {
-  display: flex;
-  min-height: 100vh;
-  flex-direction: column;
-
-  #content-wrapper {
-    flex-grow: 1;
-  }
-}

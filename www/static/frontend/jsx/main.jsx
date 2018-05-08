@@ -1,8 +1,8 @@
 'use strict';
 
 import '../../temp/frontend/js/vendors';
+import '_head';
 
-import 'head';
 import foundationRegisterCustomEvents from "./_binds/foundation_events";
 
 import DepartmentMenu from "./components/DepartmentMenu";
@@ -10,15 +10,13 @@ import DottedText from "./components/DottedText";
 import CategoryViewType from "./components/CategoryViewType";
 import LazyImageLoad from "./components/LazyImageLoad";
 import CatalogFilter from "./components/CatalogFilter";
-import FilterPriceSlider from "./components/FilterPriceSlider";
 import SearchSuggestion from "./components/SearchSuggestion";
-import Loader from "./components/Loader";
 import isTouch from "./utils/isTouch";
 import isMedia from "./utils/isMedia";
 import documentReady from "./utils/documentReady";
 
-require('preact/devtools');
-require('preact/debug');
+// require('preact/devtools');
+// require('preact/debug');
 
 (function(){
     documentReady(()=>{
@@ -28,9 +26,6 @@ require('preact/debug');
         new DepartmentMenu();
         new DottedText('.must-show-less');
         new CatalogFilter();
-
-        window['FilterPriceSlider'] = FilterPriceSlider;
-        window['loader'] = new Loader;
 
         isMedia('medium', '(max-width: 1023px)');
         isMedia('large', '(min-width: 1024px)');
@@ -82,6 +77,11 @@ require('preact/debug');
                     $this.html($this.data('text-more'));
                 }
             });
+
+        $(document).on('click', 'form button', function(event){
+            $(event.target).parents('form').addClass('tried_to_submit');
+        });
+
 
         loader.detach(()=>{
             $('.off-canvas').removeClass('hide');

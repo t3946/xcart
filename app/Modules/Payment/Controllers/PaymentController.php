@@ -12,6 +12,7 @@ use Modules\Order\Models\OrderStatusModel;
 use Modules\Order\Models\OrderTransactionModel;
 use Modules\Payment\Gateways\Gateway;
 use Modules\Payment\Models\ProcessorModel;
+use PayPal\Api\Transaction;
 use Xcart\App\Controller\Controller;
 use Xcart\App\Main\Xcart;
 
@@ -42,14 +43,11 @@ class PaymentController extends Controller
                         'notifyUrl' => Xcart::app()->router->absoluteUrl("payment:success", ['gateway' => strtolower($pm->processor_name)]),
                         'amount' => number_format($order->total, 2, '.', ''),
                         'order' => $order,
-                        'currency' => 'USD'
+                        'currency' => 'USD',
+                        'description' => "S3 Stores, Inc. Order # {$order->getOrderNumber()}"
                     ];
 
                     if ($gw->purchase($params)) {
-                        $order->cb_status = OrderStatusModel::ORDER_STATUS_NOT_FINISHED;
-                        $order->save();
-
-                        $order->groups->update(['cb_status' => $order->cb_status]);
 
                         $params = [
                             'mode' => OrderTransactionModel::TYPE_AUTHORIZATION,
@@ -68,12 +66,15 @@ class PaymentController extends Controller
                             ])
                         );
                         $transaction->save();
+                    }
 
-                        if ($gw->result->isRedirect()) {
-                            $gw->result->redirect();
-                        }
+                    $order->cb_status = OrderStatusModel::ORDER_STATUS_NOT_FINISHED;
+                    $order->save();
 
-                        //$this->redirect('payment:return', ['gateway' => strtolower($pm->processor_name)]);
+                    $order->groups->update(['cb_status' => $order->cb_status]);
+
+                    if ($gw->result && $gw->result->isRedirect()) {
+                        $gw->result->redirect();
                     }
 
                 } catch (Exception $e) {
@@ -137,6 +138,10 @@ class PaymentController extends Controller
 
     }
 
+    /**
+     * @param $gateway
+     * @throws \Xcart\App\Exceptions\UnknownPropertyException
+     */
     public function endpoint($gateway)
     {
         $params = null;
@@ -167,15 +172,43 @@ class PaymentController extends Controller
 
             if (Xcart::app()->request->request->has('txn_type') && Xcart::app()->request->request->has('txn_id')) {
 
-                if ($txn = OrderTransactionModel::objects()->get(['transaction_id' => Xcart::app()->request->request->get('txn_id')])) {
+                $txn_data = ['transaction_id' => Xcart::app()->request->request->get('txn_id')];
 
-                    switch (Xcart::app()->request->request->get('txn_type')) {
-                        case 'new_case':
+                if (Xcart::app()->request->request->has('custom')) {
+                    /** @var OrderModel $order */
+                    $order = OrderModel::objects()->get(['orderid' => Xcart::app()->request->request->get('custom')]);
+                    $txn_data['orderid'] = $order->orderid;
+                }
 
-                            OrderTagEventHelper::orderTagEvent($config['Attention_tags_invoices']['tag_for_events_dispute_created'], $txn->order->orderid);
+                /** @var OrderTransactionModel $txn */
+                [$txn] = OrderTransactionModel::objects()->getOrCreate($txn_data);
 
-                            break;
-                    }
+                switch (Xcart::app()->request->request->get('txn_type')) {
+                    case 'new_case':
+
+                        if ($order = $txn->order) {
+                            OrderTagEventHelper::orderTagEvent($config['Attention_tags_invoices']['tag_for_events_dispute_created'], $order->orderid);
+                        }
+
+                        break;
+                    case 'web_accept':
+
+                        $txn->setAttributes([
+                            'orderid' => $order->orderid,
+                            'type' => OrderTransactionModel::TYPE_AUTHORIZATION,
+                            'transaction_status' => OrderTransactionModel::STATUS_PENDING,
+                            'transaction_amount' => Xcart::app()->request->request->get('payment_gross'),
+                            'transaction_response' => Xcart::app()->request->request->all(),
+                            'login' => $order->login,
+                            'paymentid' => $order->paymentid,
+                        ]);
+
+                        $txn->save();
+
+                        Xcart::app()->event->trigger('order:paid', ['model' => $order]);
+
+                        break;
+
                 }
             }
         }

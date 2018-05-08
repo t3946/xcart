@@ -19,9 +19,9 @@ class PageController extends FrontendController
      * @param Page $model
      * @return string
      */
-    protected function getView(Page $model)
+    protected function getView(Page $model): string
     {
-        return "pages/" . $model->getView();
+        return 'pages/' . $model->getView();
     }
 
     public function actionView($url = null)
@@ -46,7 +46,7 @@ class PageController extends FrontendController
         echo $this->actionInternal($model);
     }
 
-    protected function fetchBreadrumbs(Page $model)
+    protected function fetchBreadrumbs(Page $model): void
     {
         if (!$model->is_index) {
             /** @var Page[] $pages */
@@ -60,7 +60,7 @@ class PageController extends FrontendController
         }
     }
 
-    public function actionInternal(Page $model)
+    public function actionInternal(Page $model): string
     {
         $pager = new Pagination($model->getChildrenQuerySet(), [], new QuerySetDataSource());
         return $this->render($this->getView($model), [

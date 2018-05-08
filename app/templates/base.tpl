@@ -9,7 +9,7 @@
                     <div class="row">
                         <div class="columns small-4">
                             <ul class="our-websites no-bullet">
-                                <li class="current"><span>Artist</span></li>
+                                <li class="current"><span>{$.getSite->short_name}</span></li>
                                 {*<li><a href="#">Teacher</a></li>*}
                                 {*<li><a href="#">Kids</a></li>*}
                                 {*<li><a href="#">Sport</a></li>*}
@@ -120,7 +120,10 @@
 
                 {render_flash:raw template='base/_flash.tpl'}
 
-                {block "content"}{/block}
+
+                {block "content-wrapper"}
+                    {block "content"}{/block}
+                {/block}
 
                 <section class="after-content">
                     {block "after-content"}{/block}

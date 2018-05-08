@@ -23,7 +23,6 @@ config = {
     resolve: {
         alias: {
             modernizr$: path.resolve(__dirname, "./support/modernizrrc.js"),
-            // 'jquery': 'jQuery',
             'jQuery': 'jquery',
             'react': 'preact-compat',
             'react-dom': 'preact-compat',

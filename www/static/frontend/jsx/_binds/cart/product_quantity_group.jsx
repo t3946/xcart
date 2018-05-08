@@ -1,6 +1,11 @@
-(()=>{
-    let getValues = (e) => {
+'use strict';
 
+import _ from 'lodash';
+
+(()=>{
+    let getValues = e => {
+
+        let el = e.target;
         let $this = $(e.target);
         let $container = $this.closest('.quantity-group');
         let $input = $container.find('input');
@@ -16,6 +21,7 @@
             '$this': $this,
             '$container': $container,
             '$input': $input,
+            'element': el,
             'val': val,
             'max': max,
             'min': min | data_min,
@@ -33,11 +39,9 @@
             params.$container.find('.btn.dec').addClass('active');
         }
 
-        let product = params.$this.closest('[data-product]');
-        if (product.length) {
-            product = product[0];
+        let product = params.element.closest('[data-product]');
+        if (product) {
             product.dataset.quantity = params.val;
-            // product.data('quantity', params.val);
         }
         else {
             product = null;
@@ -49,12 +53,14 @@
             target: e.target,
             val: params.val,
             params: params,
-            product: product,
+            product: product
         });
     };
 
+    recheckActives = _.throttle(recheckActives, 50);
+
     $(document)
-        .on('click', '.quantity-group .btn', (e) => {
+        .on('click', '.quantity-group .btn', e => {
             e.preventDefault();
 
             let params = getValues(e);
@@ -72,13 +78,5 @@
             recheckActives(e, params);
 
         })
-        .on('change blur propertychange mousewheel keyup', '.quantity-group input', (e) => {
-            clearTimeout($.data(e.target, 'timer'));
-
-            $.data(e.target, 'timer', setTimeout(() => {
-                recheckActives(e);
-            }, 50));
-        })
-
-
+        .on('change blur propertychange mousewheel keyup', '.quantity-group input', e => recheckActives(e));
 })();

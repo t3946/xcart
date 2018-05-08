@@ -1,6 +1,7 @@
 <?php
 namespace Modules\Goods\Controllers;
 
+use Modules\Goods\Helpers\PromotionalProductsHelper;
 use Modules\Goods\Helpers\SliderDataHelper;
 use Modules\Goods\Models\CategoryModel;
 use Modules\Goods\Models\FeaturedProductsModel;
@@ -11,9 +12,21 @@ use Xcart\App\Orm\QuerySet;
 
 class PromoController extends AbstractCatalogController
 {
+    public $filters = ['price', 'brand'];
+
+    private $qs;
+    private $advancedData = [];
+
     public function actionBestsellers(): void
     {
-        echo '123';
+        $this->qs = PromotionalProductsHelper::getBestsellersSQ();
+
+        $this->qs->filter(['avail__gt' => 10]);
+        $this->view = 'catalog/promo.tpl';
+        $this->advancedData = [
+            'title' => 'Bestsellers',
+        ];
+        $this->view_internal();
     }
 
     public function actionNew(): void
@@ -54,7 +67,10 @@ class PromoController extends AbstractCatalogController
                 ->order(['?']));
         }
 
-        $this->view = 'catalog/featured.tpl';
+        $this->view = 'catalog/promo.tpl';
+        $this->advancedData = [
+            'title' => 'Featured products',
+        ];
         $this->view_internal();
     }
 
@@ -109,10 +125,16 @@ class PromoController extends AbstractCatalogController
         die();
     }
 
-
+    public function getAdvancedData($data = null): array {
+        return $this->advancedData;
+    }
 
     public function getQS($data = null)
     {
+        if ($this->qs) {
+            return $this->qs;
+        }
+
         return parent::getQS($data)->filter([
             'avail__gt' => 10,
         ])

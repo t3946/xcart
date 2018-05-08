@@ -1,3 +1,5 @@
+'use strict';
+
 (()=>{
     let toHtml = (parent, find, value) => {
         if (parent) {
@@ -28,7 +30,7 @@
     };
 
 
-    let toLocaleCurrency = (number = 0) => (
+    window.toLocaleCurrency = (number = 0) => (
         formatter.format(number)
     );
 
@@ -38,7 +40,7 @@
             return;
         }
 
-        if (data.product || (data.target && data.target.dataset.product)) {
+        if (data.target || (data.product && data.product.dataset.product)) {
             let show = false;
             let product = data.product || data.target;
             let subtotal_container = product.querySelector('[cont-subtotal]');
@@ -46,11 +48,11 @@
             let quantity = product.dataset.quantity || data.val || 1;
             let price = 0;
 
-            if (!cache[id]) {
+            if (!cache[id] && product.dataset.prices) {
                 cache[id] = JSON.parse(product.dataset.prices);
             }
 
-            let prices = cache[id];
+            let prices = cache[id] || [];
             let base_price = null;
 
             for ( let count in prices ) {
@@ -75,6 +77,9 @@
 
             toHtml(product, '[var-price]', toLocaleCurrency(price));
             toHtml(product, '[var-price-extended]', toLocaleCurrency(extended));
+
+            product.dataset.price = price;
+            product.dataset.quantity = quantity;
 
             if (quantity) {
                 let list_price = parseFloat(product.dataset.listPrice);

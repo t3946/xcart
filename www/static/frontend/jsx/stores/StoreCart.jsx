@@ -92,10 +92,7 @@ let ACTIONS = {
     default: (state, action) => {
         if (action.type === _INIT_ACTION_TYPE) {
             state = ACTIONS['INIT'](state, action);
-
-            // if (!state.cart) {
-                state = ACTIONS['FETCH'](state, action)
-            // }
+            state = ACTIONS['FETCH'](state, action)
         }
 
         return state;

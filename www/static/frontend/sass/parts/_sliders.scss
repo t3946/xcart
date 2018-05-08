@@ -75,6 +75,7 @@
 
     .product-items {
       flex-wrap: nowrap;
+      min-width: 100% !important;
 
       .item {
         max-width: rem-calc(160);
