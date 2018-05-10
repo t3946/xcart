@@ -149,5 +149,7 @@
     })();
 </script>
 
+{render_flash:raw template='base/_flash.tpl'}
+
 </body>
 </html>
