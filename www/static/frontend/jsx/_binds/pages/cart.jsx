@@ -38,13 +38,13 @@ import _ from 'lodash';
             }
         };
 
-        let updateCart = _.throttle(product => {
+        let sync = _.throttle(product => {
             let key = product.dataset.key, quantity = product.dataset.quantity || 1;
 
             $.post(product.dataset.cartAction, {
-                    uid: key,
-                    quantity: quantity,
-                })
+                uid: key,
+                quantity: quantity,
+            })
                 .done(data => {
                     let p_data = page_cart.dataset;
 
@@ -52,7 +52,10 @@ import _ from 'lodash';
                         $.get('/cart/?_=' + (new Date).getTime(), {}).done(data => $(page_cart).html(data.content || data));
                     }
                 });
+        }, 200);
 
+        let updateCart = _.throttle(product => {
+            sync(product);
             recalc();
 
         }, 200);

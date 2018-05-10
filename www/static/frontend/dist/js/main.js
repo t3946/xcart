@@ -68743,7 +68743,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
             }
         };
 
-        var updateCart = _lodash2.default.throttle(function (product) {
+        var sync = _lodash2.default.throttle(function (product) {
             var key = product.dataset.key,
                 quantity = product.dataset.quantity || 1;
 
@@ -68759,7 +68759,10 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
                     });
                 }
             });
+        }, 200);
 
+        var updateCart = _lodash2.default.throttle(function (product) {
+            sync(product);
             recalc();
         }, 200);
 
