@@ -131,24 +131,22 @@ class AmazonMWS
             'MaxErrorRetry' => 3,
         );
 
-        if ($oServiceClass == 'MarketplaceWebServiceOrders_Client' ||
-            $oServiceClass == 'FBAInventoryServiceMWS_Client' ||
-            $oServiceClass == 'MarketplaceWebServiceProducts_Client' ||
-            $oServiceClass == 'FBAInboundServiceMWS_Client'
-        ) {
+        if (\in_array($oServiceClass, ['MarketplaceWebServiceOrders_Client','FBAInventoryServiceMWS_Client' ,'MarketplaceWebServiceProducts_Client', 'FBAInboundServiceMWS_Client']))
+        {
             $this->oMWSService = new $oServiceClass(
                 AWS_ACCESS_KEY_ID,
                 AWS_SECRET_ACCESS_KEY,
                 APPLICATION_NAME,
                 APPLICATION_VERSION,
                 $a_config);
-        } else
+        } else {
             $this->oMWSService = new $oServiceClass(
                 AWS_ACCESS_KEY_ID,
                 AWS_SECRET_ACCESS_KEY,
                 $a_config,
                 APPLICATION_NAME,
                 APPLICATION_VERSION);
+        }
 
         $this->marketplaceIdArray = array("Id" => array('ATVPDKIKX0DER'));
         $this->amazonReportType = '_GET_FBA_ESTIMATED_FBA_FEES_TXT_DATA_';

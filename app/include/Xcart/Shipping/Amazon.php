@@ -37,8 +37,9 @@ class Amazon extends ShippingProcessor
                 if (!empty($aFetchRates)) {
                     $aAmazonMethods = array_keys($aFetchRates);
                     foreach ($aShippingRates as $oShippingRate) {
-                        if (in_array($oShippingRate->getShippingEntity()->getName(), $aAmazonMethods) && !is_null($aFetchRates[$oShippingRate->getShippingEntity()->getName()])) {
-                            $this->aShippingRates[] = $oShippingRate->setShippingChargeQuote($aFetchRates[$oShippingRate->getShippingEntity()->getName()]);
+                        if (in_array($oShippingRate->getShippingEntity()->getName(), $aAmazonMethods) && null !== $aFetchRates[$oShippingRate->getShippingEntity()->getName()]) {
+                            $oShippingRate->setShippingChargeQuote($aFetchRates[$oShippingRate->getShippingEntity()->getName()]);
+                            $this->aShippingRates[] = $oShippingRate;
                         }
                     }
                     $this->saveShippingQuotesCached();

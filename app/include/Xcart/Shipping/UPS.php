@@ -112,8 +112,7 @@ class UPS extends ShippingProcessor
                 $aResponses = $rate->shopRates($shipment);
 
             } catch (\Exception $e) {
-                //TODO Add logging
-                //Logs::_log(Logs::LOG_RESOURCE_SHIPPING_QUOTES, time(), Logs::LOG_TYPE_SYSTEM, __CLASS__ . ': ' . $e->getMessage());
+                Logs::_log(Logs::LOG_RESOURCE_SHIPPING_QUOTES, time(), Logs::LOG_TYPE_SYSTEM, __CLASS__ . ': ' . $e->getMessage());
             }
         }
 
@@ -149,7 +148,8 @@ class UPS extends ShippingProcessor
                                         $shippingCharge = $oApproximationRates->bw_75 + ($oApproximationRates->bw_150 - $oApproximationRates->bw_75) / (150 - 75) * ($weight - 75);
                                         break;
                                 }
-                                $this->aShippingRates[$oShippingRate->getShippingId()] = $oShippingRate->setShippingChargeQuote(round($shippingCharge, 2));
+                                $oShippingRate->setShippingChargeQuote(round($shippingCharge, 2));
+                                $this->aShippingRates[$oShippingRate->getShippingId()] = $oShippingRate;
                             }
                             break;
                         }

@@ -44,6 +44,7 @@ use Xcart\Order;
  * @property int|null user_id
  * @property float coupon_discount
  * @property mixed|string cb_status
+ * @property int|mixed subtotal
  */
 class OrderModel extends Model
 {

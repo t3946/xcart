@@ -56,15 +56,6 @@ class CheckoutController extends FrontendController
                     'cart_number' => $cart->getCartNumber(),
                 ]);
 
-                $order->setAttributes([
-                    'login' => $user->login,
-                    'order_prefix' => $app->getModule('Sites')->getSite()->getOrderPrefix(),
-                ]);
-
-                if ($is_created) {
-                    \Xcart\App\Main\Xcart::app()->event->trigger('order:created', ['model' => $order]);
-                }
-
                 $shipping = $data['ShippingAddressForm'];
                 $contact = $data['ContactInfoForm'];
 
@@ -100,9 +91,15 @@ class CheckoutController extends FrontendController
                     'phone_ext' => $contact['phone_ext'],
                     'email' => $contact['email'],
                     'firstname' => $contact['firstname'],
+                    'login' => $user->login,
+                    'order_prefix' => $app->getModule('Sites')->getSite()->getOrderPrefix(),
+                    'cb_status' => OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP1,
                 ]);
 
                 if ($order->save()) {
+                    if ($is_created) {
+                        \Xcart\App\Main\Xcart::app()->event->trigger('order:created', ['model' => $order]);
+                    }
                     $this->redirect('checkout:options');
                 }
             }
@@ -212,6 +209,7 @@ class CheckoutController extends FrontendController
                 }
 
                 $order->total = $order->subtotal + $order->shipping_cost;
+                $order->cb_status = OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP2;
 
                 $order->save();
             }
@@ -277,7 +275,6 @@ class CheckoutController extends FrontendController
     {
         $app = Xcart::app();
         $user = $app->user;
-        $cart = $app->cart;
 
         if (!$user) {
         }
@@ -304,15 +301,18 @@ class CheckoutController extends FrontendController
             $this->redirect('checkout:payment');
         }
 
+        [$shipping_address, $billing_address] = $order->getAddressInfo();
+
         $this->display('checkout/review.tpl', [
             'order' => $order,
+            'shipping_address' => $shipping_address,
+            'billing_address' => $billing_address,
         ]);
 
     }
 
     public function actionPayment(): void
     {
-        $app = Xcart::app();
         $order = $this->getOrder();
 
         $this->redirect("payment:process", ['gateway' => strtolower($order->payment_method->frontend_processor->processor_name)]);

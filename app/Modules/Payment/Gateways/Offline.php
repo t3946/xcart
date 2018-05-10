@@ -130,7 +130,7 @@ class OfflineResponse extends AbstractResponse
 
     public function getRedirectUrl()
     {
-        return Xcart::app()->router->url('checkout:complete', ['order_id' => $this->getRequest()->getOrder()->orderid]);
+        return $this->getRequest()->getReturnUrl();
     }
 
     public function redirect()

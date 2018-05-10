@@ -91,7 +91,7 @@ class ShippingRate extends Data
 
     public function getShippingCharge()
     {
-        if (is_null($this->fShippingCharge) && !is_null($this->fShippingQuote)) {
+        if ($this->fShippingCharge === null && $this->fShippingQuote !== null) {
             $this->fShippingCharge = $this->fShippingQuote;
             if ($this->getCostMarcup() > 0) {
                 $this->fShippingCharge *= $this->getCostMarcup();
