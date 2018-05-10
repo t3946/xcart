@@ -148,10 +148,9 @@
                 </div>
             </div>
             <div class="order-review">
-                {foreach $.app->cart->getItemsGroupedBy() as $gi => $group}
-                    {set $warehouse = $.get_warehouse($gi)}
-                    {set $order_group = $order->groups->get(['manufacturerid' => $gi])}
-                    {set $items = $group.items}
+                {foreach $order->groups as $order_group}
+                    {set $warehouse = $.get_warehouse($order_group->manufacturerid)}
+                    {set $items = $order_group->detail_models}
                     <div class="row shipped_from align-center">
                         <div class="columns text-align--center">
                             <h2>{t 'The items below will be shipped from warehouse in' dict='order'} {$warehouse->m_city}, {$warehouse->m_state}, {$warehouse->m_country}</h2>
@@ -175,26 +174,24 @@
                                 {t 'Extended' dict='cart'}
                             </div>
                         </div>
-                        {foreach $items as $key=>$position}
+                        {foreach $items as $item}
                             <div class="row order-table-body">
                                 <div class="columns small-2 text-align--center sku">
-                                    {$position->object->productcode}
+                                    {$item->productcode}
                                 </div>
 
                                 <div class="columns small-5 item-name">
-                                    {$position->object}
-                                    {foreach $position->data as $name => $value}
-                                        <p>{$name}: {$value}</p>
-                                    {/foreach}
+                                    {$item->product}
+                                    {*options*}
                                 </div>
 
                                 <div class="columns text-align--center price">
-                                    US$ <span class="price">{$position->object->getFrontendPrice()|number_format:2}</span>
+                                    US$ <span class="price">{$item->price|number_format:2}</span>
                                 </div>
 
-                                <div class="columns small-1 text-align--center quantity">{$position->quantity}</div>
+                                <div class="columns small-1 text-align--center quantity">{$item->amount}</div>
                                 <div class="columns extended">
-                                    {set $extended = $position->quantity * $position->object->getFrontendPrice()}
+                                    {set $extended = $item->amount * $item->price}
                                     US$ <span class="price">{$extended|number_format:2}</span>
                                 </div>
                             </div>
@@ -263,10 +260,10 @@
             </div>
             <div class="row address">
                 <div class="columns">
-                    {include "checkout/_address_view_full.tpl" info=$order->getAddressInfo('shipping') uri='checkout:shipping' header=$.t('Shipping Address','order')}
+                    {include "checkout/_address_view_full.tpl" info=$shipping_address uri='checkout:shipping' header=$.t('Shipping Address','order')}
                 </div>
                 <div class="columns">
-                    {include "checkout/_address_view_full.tpl" info=$order->getAddressInfo('billing') uri='checkout:options' header=$.t('Billing Address','order')}
+                    {include "checkout/_address_view_full.tpl" info=$billing_address uri='checkout:options' header=$.t('Billing Address','order')}
                 </div>
             </div>
             <div class="row delivery">

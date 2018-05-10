@@ -13,14 +13,14 @@
   .large-2column h2 {
     padding-top: 0;
   }
-  section.sas-header {
+  section.sas-header-main {
     background: url('/static/frontend/images/pages/sas_shopping.png') center center no-repeat;
-    background-size: 100%;
+    background-size: cover;
   }
 
   section.rp-header {
     background: url('/static/frontend/images/pages/return_service.png') center center no-repeat;
-    background-size: 100%;
+    background-size: cover;
   }
 
   section.ro-header {
@@ -147,26 +147,81 @@
     }
   }
 
-  //@include breakpoint(sm) {
-  //  .sas-header h1 {
-  //    padding-top: 30px;
-  //    padding-left: 15px;
-  //    font-size: 38px;
-  //  }
-  //
-  //  div.sas-header {
-  //    height: 160px;
-  //  }
-  //
-  //  .sas-lock {
-  //    padding-top: 40px;
-  //  }
-  //}
+  .sas-header-main {
+    div {
+      height: 120px;
+      width: 100%;
+      text-align: center;
 
+      @include breakpoint(medium) {
+        height: 200px;
+      }
+
+      @include breakpoint(large) {
+        height: 280px;
+      }
+
+    }
+  }
+
+  .sas-h1-txt {
+    float: left;
+    margin-top: 0;
+    color: #fff;
+    line-height: normal;
+    font-weight: lighter;
+    padding-top: 35px;
+    padding-left: 10px;
+    font-size: 30px;
+    width: 250px;
+
+    @include breakpoint(medium) {
+      padding-top: 43px;
+      padding-left: 20px;
+      font-size: 60px;
+      width: 400px;
+    }
+
+    @include breakpoint(large) {
+      padding-top: 53px;
+      padding-left: 20px;
+      font-size: 80px;
+      width: 500px;
+    }
+  }
+
+  .sas-h1-img {
+    float: left;
+    width: 40px;
+    margin-top: 45px;
+    margin-left: 10px;
+
+    @include breakpoint (medium) {
+      width: 100px;
+    }
+
+    @include breakpoint (large) {
+      margin-top: 100px;
+      width: auto;
+    }
+
+  }
 
   @include breakpoint(large) {
 
+    section.sas-header {
+      background-size: contain;
+    }
+
+    section.sas-header-main {
+      background-size: contain;
+    }
+
     section.ro-header {
+      background-size: contain;
+    }
+
+    section.rp-header {
       background-size: contain;
     }
 

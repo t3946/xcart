@@ -82,44 +82,66 @@ function cutTags($fulldescr, $flag = true, $tags = [])
     return $fulldescr;
 }
 
-$regexp = '/<iframe[^>]*?src=(""|"|\'|\\"|\\\')(.*?)("""|\'|\\"|\\\')[^>]*?>/i';
-$regexp_2 = '/<video[^>]*?>\s+?<source[^>]*?src=(""|"|\'|\\"|\\\')(.*?)(""|"|\'|\\"|\\\')[^>]*?>/i';
+$start_time = new DateTime('now');
 
+$regexp = '/<iframe[^>]*?src=("|\'|\\"|\\\')(.*?)(\'|\\"|\\\')[^>]*?>/i';
+$regexp_2 = '/<video[^>]*?>\s+?<source[^>]*?src=("|\'|\\"|\\\')(.*?)("|\'|\\"|\\\')[^>]*?>/i';
+$regexp_3 = '/<video[^>]*?>\s?<source[^>]*?src=("|\'|\\"|\\\')(.*?)("|\'|\\"|\\\')[^>]*?>/i';
+
+$all_products_with_clear_fulldescr = 0;
 $product_count_all = 0;
 $product_count = 0;
 
 $qor_1 = ['fulldescr__contains' => 'iframe'];
 $qor_2 = ['fulldescr__contains' => '<video'];
-    $product_models = ProductModel::objects()->filter([
-                                                        new Qor([
-                                                            $qor_1, $qor_2
-                                                                ])
-                                                      ])->exclude(['provider' => 'feed'])->all();
 
-    foreach ($product_models as $product_model){
-        $video = $videos = [];
-        $video_url = '';
-        if ( (preg_match($regexp, $product_model->fulldescr, $matches)) || (preg_match($regexp_2, $product_model->fulldescr, $matches_2))){
-            if (empty($matches[2])){
-                $breakpoint = 1;
-            }
+$product_models = ProductModel::objects()->filter([
+                                                      new Qor([
+                                                                  $qor_1, $qor_2
+                                                              ])
+                                                  ])->all();
 
-            $video_url = $matches[2];
+foreach ($product_models as $product_model){
 
+    $video = $videos = [];
+    $video_url = '';
+    if ( (preg_match($regexp, $product_model->fulldescr, $matches)) || (preg_match($regexp_2, $product_model->fulldescr, $matches)) || (preg_match($regexp_3, $product_model->fulldescr, $matches))){
+
+        $video_url = $matches[2];
+
+        if (!empty($video_url)) {
             (new ProductVideosModel([
-                'product_id' => $product_model->productid,
-                'video' => $video_url,
-                'name' => $product_model->product
+                                        'product_id' => $product_model->productid,
+                                        'video' => $video_url,
+                                        'name' => $product_model->product
                                     ]))->save();
-
-            $tmp_fulldescr = '';
-            $tmp_fulldescr = cutTags($product_model->fulldescr);
-            $product_model->fulldescr = $tmp_fulldescr;
-            $product_model->update(['fulldescr']);
-            $product_count++;
         }
-        $product_count_all++;
+
+        $product_count++;
     }
+    $tmp_fulldescr = '';
+    $tmp_fulldescr = cutTags($product_model->fulldescr);
+    $product_model->fulldescr = $tmp_fulldescr;
+    $product_model->update(['fulldescr']);
+    $product_count_all++;
+}
+
+$product_models = ProductModel::objects()->all();
+
+foreach ($product_models as $product_model){
+    if ($product_model->fulldescr) {
+        $product_model->fulldescr = cutTags($product_model->fulldescr);
+        $product_model->update(['fulldescr']);
+        $all_products_with_clear_fulldescr++;
+    }
+}
 
 
-echo "All {$product_count_all}, is clear ==> {$product_count}";
+echo "All {$product_count_all}, is clear ==> {$product_count} and {$all_products_with_clear_fulldescr}";
+
+
+$time = (new DateTime('now'))->diff($start_time)->format('%H:%I:%S');
+
+$log_category = "Cut_video";
+$log_text = "Время обработки = {$time}\r\n Всего продуктов обработано = {$product_count_all}\r\n Продуктов очищено = {$product_count}\r\nОчищенно описаний ==> {$all_products_with_clear_fulldescr}\r\n";
+func_backprocess_log($log_category, $log_text);

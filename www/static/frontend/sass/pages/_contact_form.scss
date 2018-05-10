@@ -1,12 +1,27 @@
+
 .contact-form {
 
   h1 {
     margin-bottom: 0;
     text-align: center;
+
+    @include breakpoint(medium up) {
+      margin-bottom: .9em;
+    }
   }
+
+  /* show label only on desktop */
   .desktop-label {
     display: none;
+
+    @include breakpoint(large up) {
+        display: block;
+        font-size: rem-calc(20);
+        font-weight: bold;
+    }
   }
+
+  /* sets when user tried to submit form */
 
   .tried_to_submit {
 
@@ -14,6 +29,7 @@
     textarea[required]:invalid,
     select[required]:invalid {
       border: 1px solid red;
+
       &:focus {
         border: 1px solid #ff8d91;
       }
@@ -21,75 +37,109 @@
 
   }
 
-  input.invalid,
-  textarea.invalid,
-  select.invalid {
-    border: 1px solid red;
-    &:focus {
-      border: 1px solid #ff8d91;
-    }
-  }
 
-  input, textarea, select {
+
+  /* all input styles */
+
+  input, textarea, select{
+
     width: 100%;
     box-shadow: none;
-    padding: .5rem .625rem;
     border: 1px solid #aaaaaa;
+    padding: 0 .625rem;
+    font-size: 1em;
+    line-height: 1.875rem;
+    height: 1.875rem;
+    vertical-align: middle;
+
+    @include breakpoint(sm up) {
+      font-size: rem-calc(20);
+      line-height: rem-calc(46);
+      height: rem-calc(46);
+    }
+    @include breakpoint(medium up) {
+      max-width: 20rem;
+      font-size: rem-calc(18);
+      line-height: rem-calc(40);
+      height: rem-calc(40);
+    }
+    @include breakpoint(large up) {
+      max-width: 15.9375rem;
+      font-size: rem-calc(14);
+      line-height: rem-calc(22);
+      height: rem-calc(22);
+    }
+
     &::placeholder {
       font-style: italic;
       color: #969696;
     }
+
     &:focus {
       border: 1px solid #ff8d91;
     }
+
+    &.invalid{
+      border: 1px solid red;
+
+      &:focus {
+        border: 1px solid #ff8d91;
+      }
+    }
   }
 
+  /* special styles for textarea */
+
+  textarea {
+    resize: vertical;
+    min-height: 7em;
+    height: 7em;
+    max-height: 14em;
+  }
+
+  /* special styles for select */
+
   select{
-    padding: .38rem .625rem;
+
+    appearance: none;
+    background: url('../images/select_str.png') calc(100% - .625rem) center no-repeat;
+
     &:-moz-focusring {
       color: transparent;
       text-shadow: 0 0 0 #000;
     }
+
+    /* prevent <option>s from becoming transparent as well */
     option:not(:checked) {
-      color: black; /* prevent <option>s from becoming transparent as well */
+      color: black;
     }
+
+    @include breakpoint(large up) {
+      background-size: .625rem;
+
+      option{
+          background-color: white;
+          color: black;
+
+          &:hover{
+                background-color: #edf0f2;
+          }
+
+      }
+    }
+
   }
 
   @include breakpoint(large up) {
-    .desktop-label {
-      display: block;
-      font-size: rem-calc(20);
-      font-weight: bold;
+
+    #ContactUsForm_subject_line,
+    #ContactUsForm_messsage {
+      max-width: 32.9375rem;
     }
-    .page-info-text{
-      text-align: left;
-      font-size: rem-calc(12);
-      padding:0;
-      .required{
-        font-size: rem-calc(14);
-      }
-    }
-    input, textarea {
-      padding: .125rem .625rem .25rem;
-    }
-    select {
-      padding: .0625rem .625rem;
-    }
+
   }
 
-  select {
-    appearance: none;
-    background: url('../images/select_str.png') calc(100% - .625rem) center no-repeat;
-    outline: none;
-  }
-
-  .page-info-text span.required:after,
-  label.required:after {
-    content: '*';
-    display: inline;
-    vertical-align: top;
-    color: #ff0000;
-  }
+  /* page comments text styles */
 
   .page-info-text {
 
@@ -99,127 +149,116 @@
     line-height: 100%;
     margin-bottom: 1.875rem;
 
+    @include breakpoint(medium up) {
+      margin-bottom: 1em;
+    }
+
+    @include breakpoint(large up) {
+      text-align: left;
+      font-size: rem-calc(12);
+      padding:0;
+    }
+
     .required {
       font-size: rem-calc(22);
+
+      @include breakpoint(large up) {
+        font-size: rem-calc(14);
+      }
+
+      &.after{
+        content: '*';
+        display: inline;
+        vertical-align: top;
+        color: #ff0000;
+      }
     }
   }
+
+  /* page labels text styles */
+
 
   .form-field {
 
     margin-bottom: 1.25rem;
     padding: 0 .625rem;
 
+    @include breakpoint(medium up) {
+      display: flex;
+    }
+    @include breakpoint(large up) {
+        margin-bottom: .625rem;
+    }
+
     .field-title {
       line-height: 110%;
       margin-bottom: .33rem;
 
+      @include breakpoint(medium up) {
+        text-align: right;
+        width: 50%;
+        padding-right: .5625rem;
+      }
+
+      @include breakpoint(large up) {
+         height: 1.5rem;
+      }
+
       label {
         font-size: rem-calc(17);
         font-weight: bold;
+
+        @include breakpoint(sm up) {
+          font-size: rem-calc(20);
+        }
+        @include breakpoint(medium up) {
+          font-size: rem-calc(18);
+          font-weight: normal;
+        }
+        @include breakpoint(large up) {
+          font-size: rem-calc(14);
+        }
+
+        &.required:after {
+
+          content: '*';
+          display: inline;
+          vertical-align: top;
+          color: #ff0000;
+
+        }
+
       }
 
       .comment,
       .hint {
         font-size: rem-calc(11);
         color: #777777;
-      }
-    }
-  }
 
-  @include breakpoint(sm up) {
-    .field-title {
-      label {
-        font-size: rem-calc(20);
-      }
-
-      .comment,
-      .hint {
-        font-size: rem-calc(14);
-      }
-    }
-  }
-
-  @include breakpoint(medium up) {
-
-    h1 {
-      margin-bottom: .9em;
-    }
-
-    .page-info-text {
-      margin-bottom: 1em;
-    }
-
-    .form-field {
-      display: flex;
-
-      .field-title {
-        text-align: right;
-        width: 50%;
-        padding-right: .5625rem;
-
-        label {
-          font-size: rem-calc(18);
-          font-weight: normal;
-        }
-
-        .comment,
-        .hint {
+        @include breakpoint(sm up) {
           font-size: rem-calc(14);
         }
-
-      }
-      .field {
-        width: 50%;
-        input, select, textarea {
-          max-width: 20rem;
-        }
-      }
-    }
-
-  }
-
-  @include breakpoint(large up) {
-    .form-field {
-      margin-bottom: .625rem;
-      .field-title {
-        height: 1.5rem;
-        label {
+        @include breakpoint(medium up) {
           font-size: rem-calc(14);
         }
-
-        .comment,
-        .hint {
+        @include breakpoint(large up) {
           font-size: rem-calc(12);
           line-height: 105%;
         }
       }
-      .field {
+    }
+
+    .field{
+      @include breakpoint(medium up) {
+        width: 50%;
+      }
+      @include breakpoint(large up) {
         font-size: rem-calc(14);
-        input, select {
-          max-width: 15.9375rem;
-        }
-        select {
-          background-size: .625rem;
-          option{
-            background-color: white;
-            color: black;
-            border: 1px solid black;
-            &:hover{
-              background-color: #edf0f2;
-            }
-          }
-        }
-        textarea {
-          height: 5.5rem;
-        }
-        #ContactUsForm_subject_line,
-        #ContactUsForm_messsage {
-          max-width: 32.9375rem;
-        }
       }
     }
   }
 
+  /* styles for button */
   .button-row {
     text-align: center;
 
@@ -241,6 +280,8 @@
       margin-top: 40px;
     }
   }
+
+  /* styles for tabs */
 
   .tabs-container {
     margin-top: 44px;

@@ -695,17 +695,17 @@ SQL;
     public function getShippingWeight($iAmount = 1)
     {
         $fProductWeight = 0.1;
-        if (floatval($this->shipping_weight) > 0) {
-            $fProductWeight = floatval($this->shipping_weight);
-        } elseif (floatval($this->weight) > 0) {
-            $fProductWeight = floatval($this->weight);
+        if ((float)$this->shipping_weight > 0) {
+            $fProductWeight = (float)$this->shipping_weight;
+        } elseif ((float)$this->weight > 0) {
+            $fProductWeight = (float)$this->weight;
         }
         return $fProductWeight * $iAmount;
     }
 
     public function getShippingFreight()
     {
-        return floatval($this->getField('shipping_freight'));
+        return (float)$this->getField('shipping_freight');
     }
 
     public function getExtraMarginValue($forQuantity = 1)
@@ -713,8 +713,8 @@ SQL;
         $fExtraMarginValue = null;
         $oManufacturer = $this->getManfacturerClass();
             if ($oManufacturer->getField('reduce_extra_margin') == 'Y') {
-                if (floatval($oManufacturer->getField('price_coef_z') != 0) && $this->getProductCostToUs() > 0) {
-                    $fExpectedMargin = round(($this->getProductCostToUs() * floatval($oManufacturer->getField('price_coef_x')) + floatval($oManufacturer->getField('price_coef_y'))) / floatval($oManufacturer->getField('price_coef_z')), 2);
+                if ((float)$oManufacturer->getField('price_coef_z') != 0 && $this->getProductCostToUs() > 0) {
+                    $fExpectedMargin = round(($this->getProductCostToUs() * (float)$oManufacturer->getField('price_coef_x') + (float)$oManufacturer->getField('price_coef_y')) / (float)$oManufacturer->getField('price_coef_z'), 2);
                     $fExtraMarginValue = ($this->getPrice($forQuantity) - $fExpectedMargin) * $forQuantity;
                 }
             }

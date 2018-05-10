@@ -37,8 +37,9 @@ class Amazon extends ShippingProcessor
                 if (!empty($aFetchRates)) {
                     $aAmazonMethods = array_keys($aFetchRates);
                     foreach ($aShippingRates as $oShippingRate) {
-                        if (in_array($oShippingRate->getShippingEntity()->getName(), $aAmazonMethods) && !is_null($aFetchRates[$oShippingRate->getShippingEntity()->getName()])) {
-                            $this->aShippingRates[] = $oShippingRate->setShippingChargeQuote($aFetchRates[$oShippingRate->getShippingEntity()->getName()]);
+                        if (in_array($oShippingRate->getShippingEntity()->getName(), $aAmazonMethods) && null !== $aFetchRates[$oShippingRate->getShippingEntity()->getName()]) {
+                            $oShippingRate->setShippingChargeQuote($aFetchRates[$oShippingRate->getShippingEntity()->getName()]);
+                            $this->aShippingRates[] = $oShippingRate;
                         }
                     }
                     $this->saveShippingQuotesCached();
@@ -50,13 +51,12 @@ class Amazon extends ShippingProcessor
 
     public function getAdditionalShippingFee($weight)
     {
-        $fAdditionalShippingFee = 0;
-        return $fAdditionalShippingFee;
+        return 0;
     }
 
-    public function getCart()
+    public function getCart(): Cart
     {
-        if (is_null($this->oCarierCart)) {
+        if ($this->oCarierCart === null) {
             $this->oCarierCart = new Cart();
             $aProducts = $this->oCart->getElements();
             if (!empty($aProducts)) {
@@ -64,7 +64,7 @@ class Amazon extends ShippingProcessor
                 foreach ($aProducts as $oCartElement) {
                     if (($oCartElement->getProduct()->isAmazonFBAEnabled() &&
                        ($oCartElement->getProduct()->getAmazonFBAAvailExcludedProcessing() >= $oCartElement->getQuantity())) ||
-                       count($oCartElement->getProduct()->getProductsAvailOnAmazonParentWithChild($oCartElement->getQuantity())) > 0) {
+                       \count($oCartElement->getProduct()->getProductsAvailOnAmazonParentWithChild($oCartElement->getQuantity())) > 0) {
                        $this->oCarierCart->addObjectToCart($oCartElement);
                     }
                 }
