@@ -34,4 +34,9 @@ class DefaultController extends FrontendController
 
         ]);
     }
+
+    public function actionAboutUs()
+    {
+        $this->display('about_us.tpl');
+    }
 }

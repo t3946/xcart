@@ -1,0 +1,70 @@
+.effect {
+
+  &__flip {
+    transition: .6s;
+    transform-style: preserve-3d;
+    position: relative;
+
+    .front,
+    .back{
+      top: 0;
+      left: 0;
+      position: absolute;
+      backface-visibility: hidden;
+    }
+
+    .front {
+      z-index: 2;
+    }
+
+    &--horisontal {
+      transform: rotateY(0deg);
+
+      .front {
+        transform: rotateY(0deg);
+      }
+
+      .back {
+        transform: rotateY(180deg);
+      }
+
+      &:hover {
+        transform: rotateY(180deg);
+      }
+    }
+
+    &--vertical {
+      transform: rotateY(0deg);
+
+      .front {
+        transform: rotateY(0deg);
+      }
+
+      .back {
+        transform: rotateX(180deg);
+      }
+
+      &:hover {
+        transform: rotateX(180deg);
+      }
+    }
+
+  }
+
+  &__img_zoom {
+    z-index: 3;
+    overflow: hidden;
+
+    img {
+      z-index: 2;
+      transform:scale(.9);
+      transition: all .5s ease-in-out;
+    }
+
+    &:hover {
+      img {
+        transform:scale(1);
+      }
+    }
+  }
+}

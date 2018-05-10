@@ -153,7 +153,7 @@
                     <div class="hr"></div>
                 </div>
             </div>
-            <div class="row">
+            {*<div class="row">
                 <div class="columns small-4">
                     <div class="subscription-options">
                         <h2 class="title">{t 'Newsletter' dict='order'}</h2>
@@ -177,7 +177,7 @@
                 <div class="small-12 columns">
                     <div class="hr"></div>
                 </div>
-            </div>
+            </div>*}
             <div class="row">
                 <div class="columns small-12">
                     <div class="subscription-options">
