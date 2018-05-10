@@ -26,6 +26,7 @@ class ShippingModule extends Module
         $user = new UserModel([
             's_zipcode' => $order->s_zipcode,
             's_state' => $order->s_state,
+            's_city' => !empty($order->s_city) ? $order->s_city : 'New City',
             's_country' => $order->s_country,
         ]);
 

@@ -2,6 +2,7 @@
 namespace Xcart;
 
 use Modules\Distributor\Models\DistributorModel;
+use Modules\Shipping\Models\ShippingRateModel;
 use Modules\User\Models\UserModel;
 use Xcart\Shipping\ShippingProcessor;
 
@@ -227,10 +228,10 @@ SQL;
      * @param bool $bGetOnlyApproximationRates
      * @param bool $use_cache
      * @param bool $use_map_price
-     * @return null|ShippingRate[]
+     * @return null|ShippingRateModel[]
      * @throws \Exception
      */
-    public function getShippingRates($oCustomer, $oManufacturer, Cart $oCart, $bGetOnlyApproximationRates = false, $use_cache = true, $use_map_price = true, $use_approximation = true)
+    public function getShippingRates($oCustomer, $oManufacturer, Cart $oCart, $bGetOnlyApproximationRates = false, $use_cache = true, $use_map_price = true, $use_approximation = true) :? array
     {
         $aResult = null;
         $aShippingZoneRatesPriority = [];
@@ -277,7 +278,7 @@ SQL;
                                         /** @var ShippingRate[] $aShippingZoneRate */
                                         foreach ($aMinPriority as $keyPriority => $aShippingZoneRate) {
                                             $iSimilarRateKey = $oShippingRate->getSimilarShippingRateByDeliveryTime($aShippingZoneRate);
-                                            if (!is_null($iSimilarRateKey)) {
+                                            if ($iSimilarRateKey !== null) {
                                                 $aShippingZoneRate[$iSimilarRateKey]->addShippingCharge($oShippingRate);
                                                 unset ($aMinPriority[$keyPriority][$iSimilarRateKey]);
                                             }
