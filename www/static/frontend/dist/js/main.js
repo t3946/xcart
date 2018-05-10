@@ -43479,6 +43479,8 @@ __webpack_require__(91);
 
 __webpack_require__(92);
 
+__webpack_require__(157);
+
 __webpack_require__(114);
 
 __webpack_require__(115);
@@ -72844,6 +72846,74 @@ exports.default = isTouch;
 function isTouch() {
     return window.whatInput.ask('loose') === 'touch' || window.whatInput.ask() === 'touch';
 }
+
+/***/ }),
+/* 157 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function($) {
+
+var _isMedia = __webpack_require__(36);
+
+var _isMedia2 = _interopRequireDefault(_isMedia);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+(function () {
+    $(document).on('app.start', function () {
+
+        var lastKnownScrollPosition = 0;
+        var ticking = false;
+
+        if ((0, _isMedia2.default)('large')) {
+            var checkMenuPosition = function checkMenuPosition(lastKnownScrollPosition) {
+
+                if (lastKnownScrollPosition >= stickyContainer.offset().top) {
+                    sticky.addClass('menu-fixed');
+                } else {
+                    sticky.removeClass('menu-fixed');
+                }
+            };
+
+            var stickyContainer = $('.sticky-container');
+            var sticky = stickyContainer.find('.sticky');
+
+            var processScroll = _.throttle(function () {
+
+                lastKnownScrollPosition = window.scrollY;
+                if (!ticking) {
+                    window.requestAnimationFrame(function () {
+                        checkMenuPosition(lastKnownScrollPosition);
+                        ticking = false;
+                    });
+                    ticking = true;
+                }
+            }, 50);
+
+            var initStickyMenu = function initStickyMenu() {
+
+                var heightOfStickyBlock = sticky.height();
+                if (heightOfStickyBlock <= 0) {
+                    return;
+                }
+
+                stickyContainer.css({
+                    'display': 'block',
+                    'height': heightOfStickyBlock + 'px'
+                });
+
+                window.addEventListener('scroll', processScroll, { 'passive': true });
+            };
+
+            var initStickyMenuOnResize = _.throttle(initStickyMenu, 50);
+
+            initStickyMenu();
+            $(window).resize(initStickyMenuOnResize);
+        }
+    });
+})();
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ })
 /******/ ]);

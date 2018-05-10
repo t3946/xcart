@@ -42,6 +42,7 @@ class Cart
         $signal = $this->getEventManager();
         $signal->on('cart:addItem', [$this, 'onAddItem']);
         $signal->on('cart:removeItem', [$this, 'onRemoveItem']);
+        $signal->on('cart:change', [$this, 'onChange']);
     }
 
     public function getEventManager(): \Xcart\App\Event\EventManager
@@ -52,6 +53,8 @@ class Cart
     public function onAddItem($item): void {}
 
     public function onRemoveItem($item): void {}
+
+    public function onChange($item): void {}
 
     /**
      * @return \Modules\Cart\Interfaces\ICartStorage
