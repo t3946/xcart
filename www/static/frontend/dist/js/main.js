@@ -68710,16 +68710,21 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
     var page_cart = document.querySelector('.cart-page');
     if (page_cart) {
         var recalc = function recalc() {
+            page_cart = document.querySelector('.cart-page');
+
             var products = page_cart.querySelectorAll('[data-product]');
             if (products) {
-                var subtotals = Object.create(null);
+                var subtotals = Object.create(null),
+                    fullquantity = 0;
                 subtotals.wh = Object.create(null);
                 subtotals.cart = 0;
 
                 for (var i = 0; products.length > i; ++i) {
-
                     var product = products[i];
-                    var subtotal = product.dataset.price * product.dataset.quantity;
+                    var quantity = parseInt(product.dataset.quantity);
+                    var subtotal = product.dataset.price * quantity;
+
+                    fullquantity += quantity;
 
                     subtotals.cart += subtotal;
                     subtotals.wh[product.dataset.wh] = subtotal + (subtotals.wh[product.dataset.wh] || 0);
@@ -68733,6 +68738,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
                 }
 
                 page_cart.querySelector('.cart_subtotal').innerHTML = toLocaleCurrency(subtotals.cart);
+                page_cart.dataset.total = subtotals.cart;
+                page_cart.dataset.quantity = fullquantity;
             }
         };
 
@@ -68740,7 +68747,18 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
             var key = product.dataset.key,
                 quantity = product.dataset.quantity || 1;
 
-            console.log(key, quantity, product.dataset);
+            $.post(product.dataset.cartAction, {
+                uid: key,
+                quantity: quantity
+            }).done(function (data) {
+                var p_data = page_cart.dataset;
+
+                if (p_data.quantity != data.quantity || p_data.total != data.total) {
+                    $.get('/cart/?_=' + new Date().getTime(), {}).done(function (data) {
+                        return $(page_cart).html(data.content || data);
+                    });
+                }
+            });
 
             recalc();
         }, 200);

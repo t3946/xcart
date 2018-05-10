@@ -1,4 +1,4 @@
-{extends "cart/base.tpl"}
+{extends  $.request->getIsAjax() ? "ajax.tpl" : "cart/base.tpl"}
 
 {block 'content'}
 <section class="cart-page">
@@ -76,7 +76,7 @@
                                 </div>
 
                                 <div class="table-column price show-for-large format_price">
-                                    US$ <span class="price" var-price>{$position->object->getFrontendPrice()|number_format:2}</span>
+                                    US$ <span class="price" var-price>{$position->object->getFrontendPrice($position->quantity)|number_format:2}</span>
                                 </div>
 
                                 <div class="table-wrapper quantity-extended">
@@ -102,7 +102,7 @@
                                             US$ <span class="price" var-price-extended>{$position->getPrice()|number_format:2}</span>
                                         </span>
                                         <span class="hide-for-large">
-                                            US$ <span class="price" var-price-extended>{$position->object->getFrontendPrice()|number_format:2}</span>
+                                            US$ <span class="price" var-price-extended>{$position->object->getFrontendPrice($position->quantity)|number_format:2}</span>
                                         </span>
                                     </div>
                                 </div>
