@@ -66,19 +66,19 @@ class MenuLibrary extends TemplateLibrary
             case 'main-menu':
                 return [
                     [
-                        'url' => 'shipping-delivery',
+                        'url' => '/shipping-delivery',
                         'name' => 'Shipping & Delivery',
                         'class' => '',
                         'items' => [],
                     ],
                     [
-                        'url' => '/',
+                        'url' => '/purchase-orders',
                         'name' => 'Purchase Orders',
                         'class' => '',
                         'items' => [],
                     ],
                     [
-                        'url' => 'about-us',
+                        'url' => '/about-us',
                         'name' => 'About Us',
                         'class' => '',
                         'items' => [],
@@ -90,7 +90,7 @@ class MenuLibrary extends TemplateLibrary
                         'items' => [],
                     ],
                     [
-                        'url' => '/',
+                        'url' => '/testimonials',
                         'name' => 'Testimonials',
                         'class' => '',
                         'items' => [],
@@ -103,17 +103,17 @@ class MenuLibrary extends TemplateLibrary
                         'items' => [
                             [
                                 'name' => 'Shipping & Delivery',
-                                'url' => 'shipping-delivery',
+                                'url' => '/shipping-delivery',
                                 'items' => [],
                             ],
                             [
                                 'name' => 'Our Price Guarantee',
-                                'url' => 'our-price-guarantee',
+                                'url' => '/our-price-guarantee',
                                 'items' => [],
                             ],
                             [
                                 'name' => 'Sales Taxes',
-                                'url' => 'Sales-taxes',
+                                'url' => '/sales-taxes',
                                 'items' => [],
                             ],
                         ],
@@ -123,22 +123,22 @@ class MenuLibrary extends TemplateLibrary
                         'items' => [
                             [
                                 'name' => 'Safe & Secure Shopping',
-                                'url' => 'safe-and-secure-shopping',
+                                'url' => '/safe-and-secure-shopping',
                                 'items' => [],
                             ],
                             [
                                 'name' => 'Purchase Orders',
-                                'url' => 'up',
+                                'url' => '/purchase-orders',
                                 'items' => [],
                             ],
                             [
                                 'name' => 'Bill Me Later',
-                                'url' => 'up',
+                                'url' => '/bill-me-later',
                                 'items' => [],
                             ],
                             [
                                 'name' => 'Combating eCommerce Fraud',
-                                'url' => 'up',
+                                'url' => '/combating-fraud',
                                 'items' => [],
                             ],
                         ],
@@ -148,19 +148,19 @@ class MenuLibrary extends TemplateLibrary
                         'items' => [
                             [
                                 'name' => 'Order Communication',
-                                'url' => 'up',
+                                'url' => '/order-communication',
                                 'items' => [],
                             ],
                             [
                                 'name' => 'Retrieve Order',
-                                'url' => 'retrieve-orders',
+                                'url' => '/retrieve-orders',
                                 'items' => [],
                             ],
-                            [
-                                'name' => 'RMA Request',
-                                'url' => 'up',
-                                'items' => [],
-                            ],
+//                            [
+//                                'name' => 'RMA Request',
+//                                'url' => 'up',
+//                                'items' => [],
+//                            ],
                         ],
                     ],
                     [
@@ -173,19 +173,19 @@ class MenuLibrary extends TemplateLibrary
                             ],
                             [
                                 'name' => 'About Us',
-                                'url' => 'about-us',
+                                'url' => '/about-us',
                                 'items' => [],
                             ],
                             [
                                 'name' => 'Community',
-                                'url' => 'up',
+                                'url' => '/community',
                                 'items' => [],
                             ],
-                            [
-                                'name' => 'Link to Us',
-                                'url' => 'up',
-                                'items' => [],
-                            ],
+//                            [
+//                                'name' => 'Link to Us',
+//                                'url' => 'up',
+//                                'items' => [],
+//                            ],
                         ],
                     ],
                     [
@@ -193,22 +193,22 @@ class MenuLibrary extends TemplateLibrary
                         'items' => [
                             [
                                 'name' => 'Backorder Policy',
-                                'url' => 'up',
+                                'url' => '/backorder-policy',
                                 'items' => [],
                             ],
                             [
                                 'name' => 'Return Policy',
-                                'url' => 'return-policy',
+                                'url' => '/return-policy',
                                 'items' => [],
                             ],
                             [
                                 'name' => 'Term of Use',
-                                'url' => 'terms-of-use',
+                                'url' => '/terms-of-use',
                                 'items' => [],
                             ],
                             [
                                 'name' => 'Privacy Policy',
-                                'url' => 'privacy-policy',
+                                'url' => '/privacy-policy',
                                 'items' => [],
                             ],
                         ],
@@ -227,7 +227,7 @@ class MenuLibrary extends TemplateLibrary
                         'items' => [],
                     ],
                     [
-                        'url' => '/retail-trust',
+                        'url' => '/retail-trust-terms-and-conditions',
                         'name' => 'Retail Trust Terms & Conditions',
                         'items' => [],
                     ],
