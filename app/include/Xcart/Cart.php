@@ -54,7 +54,7 @@ class Cart
 
     public function getProductCount()
     {
-        if (is_null($this->iProductCount)) {
+        if ($this->iProductCount === null) {
             $this->iProductCount = 0;
             $iterator = $this->aArrayOfObjects->getIterator();
             if (!empty($iterator)) {
@@ -68,7 +68,7 @@ class Cart
 
     public function getCost()
     {
-        if (is_null($this->fCost)) {
+        if ($this->fCost === null) {
             $this->fCost = 0;
             $iterator = $this->aArrayOfObjects->getIterator();
             if (!empty($iterator)) {
