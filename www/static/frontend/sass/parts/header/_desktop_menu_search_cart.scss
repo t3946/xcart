@@ -418,3 +418,9 @@ $default_height: rem-calc(50);
   }
 }
 
+.menu-fixed{
+   position: fixed;
+   top: 0;
+   z-index: 9999;
+}
+
