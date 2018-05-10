@@ -68,4 +68,11 @@ class XCart extends Cart
 
         OrderHelper::OrderStepsReset($this->getCartNumber());
     }
+
+    public function onChange($item): void {
+
+        parent::onChange($item);
+
+        OrderHelper::OrderStepsReset($this->getCartNumber());
+    }
 }
