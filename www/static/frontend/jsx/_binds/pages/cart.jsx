@@ -48,15 +48,17 @@ import _ from 'lodash';
                 .done(data => {
                     let p_data = page_cart.dataset;
 
-                    if (p_data.quantity != data.quantity || p_data.total != data.total) {
-                        $.get('/cart/?_=' + (new Date).getTime(), {}).done(data => $(page_cart).html(data.content || data));
+                    if (p_data.quantity != data.quantity || p_data.total != data.total)
+                    {
+                        $.get('/cart/?_=' + (new Date).getTime(), {})
+                            .done(data => $(page_cart).html(data.content || data));
                     }
                 });
         }, 200);
 
         let updateCart = _.throttle(product => {
-            sync(product);
             recalc();
+            sync(product);
 
         }, 200);
 

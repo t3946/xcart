@@ -68762,8 +68762,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
         }, 200);
 
         var updateCart = _lodash2.default.throttle(function (product) {
-            sync(product);
             recalc();
+            sync(product);
         }, 200);
 
         $(document).on('component.quantity.change', function (e, data) {
