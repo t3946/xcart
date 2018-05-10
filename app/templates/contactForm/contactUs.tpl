@@ -1,6 +1,7 @@
 {extends  "catalog/base.tpl"}
 
 {block 'content'}
+
     <div class="contact-form default-content-page">
 
         <h1>Contact Us</h1>

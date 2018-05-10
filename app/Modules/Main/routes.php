@@ -13,5 +13,10 @@ return [
         'target' => ['\Modules\Main\Controllers\ContactFormController', 'actionContactUs'],
         'name' => 'contact_us_form'
     ],
+    [
+        'route' => '/about-us/',
+        'target' => ['\Modules\Main\Controllers\DefaultController', 'actionAboutUs'],
+        'name' => 'about_us'
+    ],
 
 ];
