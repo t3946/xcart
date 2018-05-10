@@ -81,7 +81,7 @@
         </div>
         <div class="row">
             <div class="columns small-3">{t 'Date:' dict='order'}</div>
-            <div class="columns small-3">{$order->date}</div>
+            <div class="columns small-3">{$order->date|date_format:'%d-%b-%Y'}</div>
             <div class="columns small-3">{t 'Contact information' dict='order'}</div>
             <div class="columns small-3"></div>
         </div>

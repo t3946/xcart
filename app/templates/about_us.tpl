@@ -19,7 +19,7 @@
                                         <div class="desc-cont">
                                             <div class="column large-12">
                                                 <section class="desc">
-                                                        S3 Stores, Inc. sells the finest quality goods and merchandise from the best known brands in the USA, Canada, and worldwide.
+                                                    S3 Stores, Inc. sells the finest quality goods and merchandise from the best known brands in the USA, Canada, and worldwide.
                                                 </section>
                                             </div>
                                         </div>
@@ -32,7 +32,7 @@
                             <div class="row align-center">
                                 <div class="column large-12 text-right">
                                     <div class="photo-video">
-                                        <img data-src="/static/frontend/dist/images/pages/about-us/our_team.jpg" alt="our team" class="lazy lazy-img">
+                                        <img data-src="/static/frontend/dist/images/p/about-us/our_team.jpg" alt="our team" class="lazy lazy-img">
                                     </div>
                                 </div>
                             </div>
@@ -43,13 +43,13 @@
 
         </section>
         {*<div class="hide-for-medium">*}
-            {*<div class="row">*}
-                {*<div class="column large-12">*}
-                    {*<div class="photo-video">*}
-                        {*<img src="/static/frontend/dist/images/p/about-us/our_team.jpg" alt="our team">*}
-                    {*</div>*}
-                {*</div>*}
-            {*</div>*}
+        {*<div class="row">*}
+        {*<div class="column large-12">*}
+        {*<div class="photo-video">*}
+        {*<img src="/static/frontend/dist/images/p/about-us/our_team.jpg" alt="our team">*}
+        {*</div>*}
+        {*</div>*}
+        {*</div>*}
         {*</div>*}
 
         <div class="row w1280">
@@ -113,78 +113,78 @@
                     {set $team = $.getTeam}
 
                     {if $team}
-                    <section class="team">
-                        <div class="row">
-                            <div class="column small-12">
-                                <h3 class="block-title text-center weight-light">
-                                    Leadership team
-                                </h3>
+                        <section class="team">
+                            <div class="row">
+                                <div class="column small-12">
+                                    <h3 class="block-title text-center weight-light">
+                                        Leadership team
+                                    </h3>
+                                </div>
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="column small-12">
-                                <div class="info" itemscope itemtype="http://schema.org/Person">
-                                    <div class="photo">
-                                        <img data-src="{$team[0]->getField('photo')->getUrl()}" alt="{$team[0]->name|escape}" class="lazy lazy-img" itemprop="image">
-                                    </div>
-                                    <div class="name" itemprop="name">
-                                        {$team[0]->name}
-                                    </div>
-                                    <div class="tag" itemprop="jobTitle">
-                                        {$team[0]->post}
+                            <div class="row">
+                                <div class="column small-12">
+                                    <div class="info" itemscope itemtype="http://schema.org/Person">
+                                        <div class="photo">
+                                            <img data-src="{$team[0]->getField('photo')->getUrl()}" alt="{$team[0]->name|escape}" class="lazy lazy-img" itemprop="image">
+                                        </div>
+                                        <div class="name" itemprop="name">
+                                            {$team[0]->name}
+                                        </div>
+                                        <div class="tag" itemprop="jobTitle">
+                                            {$team[0]->post}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
 
-                        {unset $team[0]}
+                            {unset $team[0]}
 
-                        <div class="row small-up-2 medium-up-3 ml-up-4 align-center">
+                            <div class="row small-up-2 medium-up-3 ml-up-4 align-center">
 
-                            {foreach $team as $item}
+                                {foreach $team as $item}
 
-                            <div class="column column-block">
-                                <div class="info" itemscope itemtype="http://schema.org/Person">
+                                    <div class="column column-block">
+                                        <div class="info" itemscope itemtype="http://schema.org/Person">
 
-                                    {if $item->photo2->getValue()}
-                                        <div class="photo effect__flip effect__flip--vertical">
-                                            <div class="front" itemprop="image" itemscope itemtype="https://schema.org/ImageObject">
-                                                <img data-src="{$item->getField('photo')->getUrl()}" alt="{$item->name|escape}" class="lazy lazy-img">
-                                                <link itemprop="url" href="{$item->getField('photo')->getUrl()}">
+                                            {if $item->photo2->getValue()}
+                                                <div class="photo effect__flip effect__flip--vertical">
+                                                    <div class="front" itemprop="image" itemscope itemtype="https://schema.org/ImageObject">
+                                                        <img data-src="{$item->getField('photo')->getUrl()}" alt="{$item->name|escape}" class="lazy lazy-img">
+                                                        <link itemprop="url" href="{$item->getField('photo')->getUrl()}">
+                                                    </div>
+                                                    <div class="back" itemprop="image" itemscope itemtype="https://schema.org/ImageObject">
+                                                        <img data-src="{$item->getField('photo2')->getUrl()}" alt="{$item->name|escape}" class="lazy lazy-img">
+                                                        <link itemprop="url" href="{$item->getField('photo2')->getUrl()}">
+                                                    </div>
+                                                </div>
+
+                                            {else}
+                                                <div class="photo effect__img_zoom" itemprop="image" itemscope itemtype="https://schema.org/ImageObject">
+                                                    <img data-src="{$item->getField('photo')->getUrl()}" alt="{$item->name|escape}" class="lazy lazy-img">
+                                                    <link itemprop="url" href="{$item->getField('photo')->getUrl()}">
+                                                </div>
+                                            {/if}
+                                            <div class="name" itemprop="name">
+                                                {$item->name}
                                             </div>
-                                            <div class="back" itemprop="image" itemscope itemtype="https://schema.org/ImageObject">
-                                                <img data-src="{$item->getField('photo2')->getUrl()}" alt="{$item->name|escape}" class="lazy lazy-img">
-                                                <link itemprop="url" href="{$item->getField('photo2')->getUrl()}">
+                                            <div class="tag" itemprop="jobTitle">
+                                                {$item->post}
                                             </div>
                                         </div>
+                                    </div>
+                                {/foreach}
 
-                                    {else}
-                                        <div class="photo effect__img_zoom" itemprop="image" itemscope itemtype="https://schema.org/ImageObject">
-                                            <img data-src="{$item->getField('photo')->getUrl()}" alt="{$item->name|escape}" class="lazy lazy-img">
-                                            <link itemprop="url" href="{$item->getField('photo')->getUrl()}">
-                                        </div>
-                                    {/if}
-                                    <div class="name" itemprop="name">
-                                        {$item->name}
-                                    </div>
-                                    <div class="tag" itemprop="jobTitle">
-                                        {$item->post}
-                                    </div>
-                                </div>
                             </div>
-                            {/foreach}
 
-                        </div>
-
-                    </section>
+                        </section>
                     {/if}
 
                     {*<section class="recognition">*}
-                        {*<div class="row">*}
-                            {*<div class="columns small-12">*}
-                                {*<h3 class="weight-light">Recognition</h3>*}
-                            {*</div>*}
-                        {*</div>*}
+                    {*<div class="row">*}
+                    {*<div class="columns small-12">*}
+                    {*<h3 class="weight-light">Recognition</h3>*}
+                    {*</div>*}
+                    {*</div>*}
                     {*</section>*}
                 </div>
             </div>
