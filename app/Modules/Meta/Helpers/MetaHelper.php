@@ -32,7 +32,6 @@ class MetaHelper
         }
 
         $site = Xcart::app()->getModule('Sites')->getSite();
-
         if ($meta) {
             echo self::renderTemplate('meta/meta_helper.tpl', [
                 'title' => self::formatTitle($controller, $meta->title, $site, $meta),
@@ -43,7 +42,6 @@ class MetaHelper
         }
         elseif ($controller && $metaTemplate = MetaTemplate::objects()->filter(['code' => $controller->getMetaTemplate()])->limit(1)->get()) {
             $metaTemplate->params = $controller->getMetaTemplateParams();
-
             echo self::renderTemplate('meta/meta_helper.tpl', [
                 'title' => self::cleanString( self::formatTitle($controller, $metaTemplate->renderTitle()) ),
                 'canonical' => $canonical,
