@@ -53,7 +53,6 @@ class CheckoutController extends FrontendController
 
             if (!($errors = OrderHelper::isValidShippingAddress($data))) {
                 [$order, $is_created] = OrderModel::objects()->getOrCreate([
-                    'user_id' => $user->id,
                     'cart_number' => $cart->getCartNumber(),
                 ]);
 
@@ -94,6 +93,7 @@ class CheckoutController extends FrontendController
                     'login' => $user->login,
                     'order_prefix' => $app->getModule('Sites')->getSite()->getOrderPrefix(),
                     'cb_status' => OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP1,
+                    'user_id' => $user->id,
                 ]);
 
                 if ($order->save()) {
@@ -106,7 +106,6 @@ class CheckoutController extends FrontendController
         }
 
         $order = OrderModel::objects()->get([
-            'user_id' => $user->id,
             'cart_number' => $cart->getCartNumber(),
         ]);
 
@@ -279,6 +278,10 @@ class CheckoutController extends FrontendController
 
         $order = $this->getOrder();
 
+        if (OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP1 === $order->cb_status) {
+            $this->redirect('checkout:options');
+        }
+
         if ($app->request->getIsPost()) {
             if ($app->request->post->has('customer_notes')) {
                 $order->setAttributes([
@@ -312,6 +315,10 @@ class CheckoutController extends FrontendController
     public function actionPayment(): void
     {
         $order = $this->getOrder();
+
+        if (OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP1 === $order->cb_status) {
+            $this->redirect('checkout:options');
+        }
 
         $this->redirect('payment:process', ['gateway' => strtolower($order->payment_method->frontend_processor->processor_name)]);
 
