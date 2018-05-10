@@ -6,16 +6,20 @@ import _ from 'lodash';
     let page_cart = document.querySelector('.cart-page');
     if (page_cart) {
         let recalc = () => {
+            page_cart = document.querySelector('.cart-page');
+
             let products = page_cart.querySelectorAll('[data-product]');
             if (products) {
-                let subtotals = Object.create(null);
+                let subtotals = Object.create(null), fullquantity = 0;
                 subtotals.wh = Object.create(null);
                 subtotals.cart = 0;
 
                 for (let i = 0; products.length > i; ++i) {
-
                     let product = products[i];
-                    let subtotal = product.dataset.price * product.dataset.quantity;
+                    let quantity = parseInt(product.dataset.quantity);
+                    let subtotal = product.dataset.price * quantity;
+
+                    fullquantity += quantity;
 
                     subtotals.cart += subtotal;
                     subtotals.wh[product.dataset.wh] = subtotal + (subtotals.wh[product.dataset.wh] || 0);
@@ -29,18 +33,32 @@ import _ from 'lodash';
                 }
 
                 page_cart.querySelector('.cart_subtotal').innerHTML = toLocaleCurrency(subtotals.cart);
+                page_cart.dataset.total = subtotals.cart;
+                page_cart.dataset.quantity = fullquantity;
             }
         };
 
-        let updateCart = _.throttle(product => {
+        let sync = _.throttle(product => {
             let key = product.dataset.key, quantity = product.dataset.quantity || 1;
 
-            console.log(key, quantity, product.dataset);
+            $.post(product.dataset.cartAction, {
+                uid: key,
+                quantity: quantity,
+            })
+                .done(data => {
+                    let p_data = page_cart.dataset;
 
-            recalc();
+                    if (p_data.quantity != data.quantity || p_data.total != data.total) {
+                        $.get('/cart/?_=' + (new Date).getTime(), {}).done(data => $(page_cart).html(data.content || data));
+                    }
+                });
         }, 200);
 
-        // updateCart = _.throttle(updateCart, 500);
+        let updateCart = _.throttle(product => {
+            sync(product);
+            recalc();
+
+        }, 200);
 
         $(document).on('component.quantity.change', (e, data) => updateCart(data.product));
     }

@@ -86,30 +86,25 @@
             <div class="columns small-3"></div>
         </div>
         <div class="row">
-            <div class="columns small-3">
-                {t 'Order status:' dict='order'}
-            </div>
-            <div class="columns small-3">
-                {t 'please see below' dict='order'}
-            </div>
-            <div class="columns small-3">
-                {t 'Full name:' dict='order'}
-            </div>
-            <div class="columns small-3">
-                {t '(616) 259-5711' dict='order'}
+            <div class="columns small-3">{t 'Order status:' dict='order'}</div>
+            <div class="columns small-3">{t 'please see below' dict='order'}</div>
+            <div class="columns small-3">{t 'Full name:' dict='order'}</div>
+            <div class="columns small-3">{$order->firstname}
             </div>
         </div>
         <div class="row">
             <div class="columns small-3">{t 'Payment method:' dict='order'}</div>
             <div class="columns small-3">{$order->payment_method->payment_method}</div>
             <div class="columns small-3">{t 'Phone:' dict='order'}</div>
-            <div class="columns small-3">{t '(813) 944-4516' dict='order'}</div>
+            <div class="columns small-3">{$order->phone}</div>
         </div>
         <div class="row">
             <div class="columns small-3">{t 'Delivery methods:' dict='order'}</div>
             <div class="columns small-3">
                 {foreach $order->groups as $group}
-
+                    <div class="delivery-method">
+                        {$group->shippingModel->getFrontendName()}
+                    </div>
                 {/foreach}
             </div>
             <div class="columns small-3">{t 'Email:' dict='order'}</div>
@@ -306,12 +301,14 @@
                 </div>
             {/if}
         </div>
-        <div class="row">
-            <div class="columns small-4 text-align--center title">{t 'Customer notes' dict='order'}</div>
-            <div class="columns small-8 customer-notes">
-                {$order->customer_notes}
+        {if $order->customer_notes}
+            <div class="row">
+                <div class="columns small-4 text-align--center title">{t 'Customer notes' dict='order'}</div>
+                <div class="columns small-8 customer-notes">
+                    {$order->customer_notes}
+                </div>
             </div>
-        </div>
+        {/if}
     </section>
     <section class="buttons-bottom">
         {include 'checkout/_order_buttons.tpl'}

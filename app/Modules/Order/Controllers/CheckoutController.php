@@ -39,12 +39,13 @@ class CheckoutController extends FrontendController
 
     public function actionShipping(): void
     {
+        /** @var OrderModel $order */
+
         $app = Xcart::app();
         $user = $app->user;
         $cart = $app->cart;
         $errors = [];
         $shipping = null;
-
 
         if ($app->request->getIsPost()) {
 
@@ -60,10 +61,9 @@ class CheckoutController extends FrontendController
                 $contact = $data['ContactInfoForm'];
 
                 $s_state = $shipping['s_statename'];
-                if (!StateModel::objects()->get(['code' => $s_state])) {
-                    if ($state_m = StateModel::objects()->get(['state' => $s_state, 'country_code' => $shipping['s_country']])) {
-                        $s_state = $state_m->code;
-                    }
+
+                if (!StateModel::objects()->get(['code' => $s_state]) && $state_m = StateModel::objects()->get(['state' => $s_state, 'country_code' => $shipping['s_country']])) {
+                    $s_state = $state_m->code;
                 }
 
                 [$address] = AddressModel::objects()->getOrCreate([
@@ -87,7 +87,7 @@ class CheckoutController extends FrontendController
                     's_zipcode' => $address->zip,
                     's_state' => $address->state,
                     's_city' => $address->city,
-                    'phone' => preg_replace('/\D/S', "", $contact['phone']),
+                    'phone' => preg_replace('/\D/S', '', $contact['phone']),
                     'phone_ext' => $contact['phone_ext'],
                     'email' => $contact['email'],
                     'firstname' => $contact['firstname'],
@@ -98,14 +98,12 @@ class CheckoutController extends FrontendController
 
                 if ($order->save()) {
                     if ($is_created) {
-                        \Xcart\App\Main\Xcart::app()->event->trigger('order:created', ['model' => $order]);
+                        $app->event->trigger('order:created', ['model' => $order]);
                     }
                     $this->redirect('checkout:options');
                 }
             }
         }
-
-        /** @var OrderModel $order */
 
         $order = OrderModel::objects()->get([
             'user_id' => $user->id,
@@ -284,7 +282,7 @@ class CheckoutController extends FrontendController
         if ($app->request->getIsPost()) {
             if ($app->request->post->has('customer_notes')) {
                 $order->setAttributes([
-                    'customer_notes' => $app->request->post->get('customer_notes'),
+                    'customer_notes' => trim($app->request->post->get('customer_notes')),
                 ]);
                 $order->save();
             }
@@ -315,18 +313,19 @@ class CheckoutController extends FrontendController
     {
         $order = $this->getOrder();
 
-        $this->redirect("payment:process", ['gateway' => strtolower($order->payment_method->frontend_processor->processor_name)]);
+        $this->redirect('payment:process', ['gateway' => strtolower($order->payment_method->frontend_processor->processor_name)]);
 
     }
 
     public function actionComplete($order_id): void
     {
+        /** @var OrderModel $order */
         $app = Xcart::app();
         $user = $app->user;
+
         if($order = OrderModel::objects()->get(['orderid' => $order_id, 'user_id' => $user->id])) {
 
             [$shipping, $billing] = $order->getAddressInfo();
-
 
             $this->display('checkout/complete.tpl', [
                 'order' => $order,

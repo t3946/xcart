@@ -1,6 +1,6 @@
-.page.pages {
+.pages.page {
   //margin: rem-calc(40) 0;
-  padding: rem-calc(40) 0;
+  padding: 0;
   //transition: height .4s ease-in-out;
   .heading {
     padding-bottom: rem-calc(35);
@@ -179,14 +179,14 @@
       padding-top: 43px;
       padding-left: 20px;
       font-size: 60px;
-      width: 400px;
+      width: 415px;
     }
 
     @include breakpoint(large) {
       padding-top: 53px;
       padding-left: 20px;
       font-size: 80px;
-      width: 500px;
+      width: 520px;
     }
   }
 
@@ -207,25 +207,25 @@
 
   }
 
-  @include breakpoint(large) {
-
-    section.sas-header {
-      background-size: contain;
-    }
-
-    section.sas-header-main {
-      background-size: contain;
-    }
-
-    section.ro-header {
-      background-size: contain;
-    }
-
-    section.rp-header {
-      background-size: contain;
-    }
-
-  }
+  //@include breakpoint(large) {
+  //
+  //  section.sas-header {
+  //    background-size: contain;
+  //  }
+  //
+  //  section.sas-header-main {
+  //    background-size: contain;
+  //  }
+  //
+  //  section.ro-header {
+  //    background-size: contain;
+  //  }
+  //
+  //  section.rp-header {
+  //    background-size: contain;
+  //  }
+  //
+  //}
 
   @include breakpoint(large up) {
     .large-2column {

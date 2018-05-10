@@ -131,6 +131,13 @@ abstract class BaseCartController extends FrontendController
                 $this->actionSetQuantity($uniqueId);
             }
         }
+
+        $cart = $this->getCart();
+
+        $this->jsonResponse([
+            'total' => $cart->getTotal(),
+            'quantity' => $cart->getQuantity(),
+        ]);
     }
 
     public function actionQuantity($key, $quantity)

@@ -118,9 +118,6 @@
                     {/block}
                 </section>
 
-                {render_flash:raw template='base/_flash.tpl'}
-
-
                 {block "content-wrapper"}
                     {block "content"}{/block}
                 {/block}

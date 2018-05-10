@@ -2,23 +2,21 @@
 
 namespace Xcart;
 
-use Modules\Shipping\Models\ShippingProductModel;
-use Xcart\Shipping\ShippingProcessor;
 
 class ShippingRate extends Data
 {
-    private $fShippingQuote = null;
+    private $fShippingQuote;
     private $oShipping;
-    private $fShippingCharge = null;
-    private $fShippingChargeBeforeMAP = null;
-    private $oCart = null;
-    private $fCartShippingWeight = null;
+    private $fShippingCharge;
+    private $fShippingChargeBeforeMAP;
+    private $oCart;
+    private $fCartShippingWeight;
     private $fAdditionalShippingCharge = 0;
     private $useMapPrice = true;
     /**
      * @var ShippingRate[] $aAddedShippingRates
      */
-    private $aAddedShippingRates = null;
+    private $aAddedShippingRates;
 
     public function __construct($aParams = [])
     {
@@ -29,7 +27,7 @@ class ShippingRate extends Data
 
     public function setShippingChargeQuote($fCharge)
     {
-        $this->fShippingQuote = floatval($fCharge);
+        $this->fShippingQuote = (float)$fCharge;
         return $this;
     }
 
@@ -38,17 +36,17 @@ class ShippingRate extends Data
         return $this->fShippingQuote;
     }
 
-    public function getShippingId()
+    public function getShippingId(): int
     {
-        return intval($this->getField('shippingid'));
+        return (int)$this->getField('shippingid');
     }
 
     /**
      * @return Shipping
      */
-    public function getShippingEntity()
+    public function getShippingEntity(): Shipping
     {
-        if (is_null($this->oShipping)) {
+        if ($this->oShipping === null) {
             $this->oShipping = Shipping::model(['shippingid' => $this->getField('shippingid')]);
         }
         return $this->oShipping;
@@ -58,38 +56,38 @@ class ShippingRate extends Data
      * @param Shipping $oShipping
      * @return ShippingRate
      */
-    public function setShippingEntity(Shipping $oShipping)
+    public function setShippingEntity(Shipping $oShipping): ShippingRate
     {
         $this->oShipping = $oShipping;
         return $this;
     }
 
-    public function getCostMarcup()
+    public function getCostMarcup(): float
     {
-        return floatval($this->getField('cost_marcup'));
+        return (float)$this->getField('cost_marcup');
     }
 
-    public function getRate()
+    public function getRate(): float
     {
-        return floatval($this->getField('rate'));
+        return (float)$this->getField('rate');
     }
 
-    public function getWeightRate()
+    public function getWeightRate(): float
     {
-        return floatval($this->getField('weight_rate'));
+        return (float)$this->getField('weight_rate');
     }
 
-    public function getItemRate()
+    public function getItemRate(): float
     {
-        return floatval($this->getField('item_rate'));
+        return (float)$this->getField('item_rate');
     }
 
-    public function getRateP()
+    public function getRateP(): float
     {
-        return floatval($this->getField('rate_p'));
+        return (float)$this->getField('rate_p');
     }
 
-    public function getShippingCharge()
+    public function getShippingCharge() :? float
     {
         if ($this->fShippingCharge === null && $this->fShippingQuote !== null) {
             $this->fShippingCharge = $this->fShippingQuote;
@@ -118,23 +116,22 @@ class ShippingRate extends Data
         return $this->fShippingCharge;
     }
 
-    public function setShippingCharge($fValue)
+    public function setShippingCharge($fValue): void
     {
-        $this->fShippingCharge = floatval($fValue);
+        $this->fShippingCharge = (float)$fValue;
     }
 
-    public function getShippingChargeBeforeMap()
+    public function getShippingChargeBeforeMap(): float
     {
-        return $this->fShippingChargeBeforeMAP;
+        return (float) $this->fShippingChargeBeforeMAP;
     }
 
-    public function setShippingChargeBeforeMap($fValue)
+    public function setShippingChargeBeforeMap($fValue): void
     {
-        return $this->fShippingChargeBeforeMAP = floatval($fValue);
+        $this->fShippingChargeBeforeMAP = (float)$fValue;
     }
 
-
-    public function addShippingCharge($oShippingRate)
+    public function addShippingCharge($oShippingRate): void
     {
         $this->getShippingCharge();
         $this->fShippingCharge += $oShippingRate->getShippingCharge();
@@ -154,13 +151,9 @@ class ShippingRate extends Data
         return $this->oCart;
     }
 
-
-    /**
-     * @return float
-     */
-    public function getCartShippingWeight()
+    public function getCartShippingWeight(): float
     {
-        if (is_null($this->fCartShippingWeight)) {
+        if ($this->fCartShippingWeight === null) {
             $this->fCartShippingWeight = 0;
             $aCartObjects = $this->getCart()->getElements();
             if (!empty($aCartObjects)) {
@@ -179,7 +172,7 @@ class ShippingRate extends Data
         return round($this->fCartShippingWeight, 2);
     }
 
-    public function getCartShippingFreight()
+    public function getCartShippingFreight(): float
     {
         $shippingFreight = 0;
         $aCartObjects = $this->getCart()->getElements();
@@ -189,10 +182,10 @@ class ShippingRate extends Data
                 $shippingFreight += $oCartElement->getProduct()->getShippingFreight() * $oCartElement->getQuantity();
             }
         }
-        return $shippingFreight;
+        return (float) $shippingFreight;
     }
 
-    public function checkShippingRateByFilterValues()
+    public function checkShippingRateByFilterValues(): bool
     {
         $weight = $this->getCartShippingWeight();
         $total = $this->getCart()->getCost();
@@ -202,7 +195,7 @@ class ShippingRate extends Data
         return $bResult;
     }
 
-    public function setAdditionalShippingCharge($fShippingCharge)
+    public function setAdditionalShippingCharge($fShippingCharge): void
     {
         $this->fAdditionalShippingCharge = $fShippingCharge;
     }

@@ -51,13 +51,12 @@ class Amazon extends ShippingProcessor
 
     public function getAdditionalShippingFee($weight)
     {
-        $fAdditionalShippingFee = 0;
-        return $fAdditionalShippingFee;
+        return 0;
     }
 
-    public function getCart()
+    public function getCart(): Cart
     {
-        if (is_null($this->oCarierCart)) {
+        if ($this->oCarierCart === null) {
             $this->oCarierCart = new Cart();
             $aProducts = $this->oCart->getElements();
             if (!empty($aProducts)) {
@@ -65,7 +64,7 @@ class Amazon extends ShippingProcessor
                 foreach ($aProducts as $oCartElement) {
                     if (($oCartElement->getProduct()->isAmazonFBAEnabled() &&
                        ($oCartElement->getProduct()->getAmazonFBAAvailExcludedProcessing() >= $oCartElement->getQuantity())) ||
-                       count($oCartElement->getProduct()->getProductsAvailOnAmazonParentWithChild($oCartElement->getQuantity())) > 0) {
+                       \count($oCartElement->getProduct()->getProductsAvailOnAmazonParentWithChild($oCartElement->getQuantity())) > 0) {
                        $this->oCarierCart->addObjectToCart($oCartElement);
                     }
                 }

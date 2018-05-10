@@ -21,12 +21,12 @@ class XCart extends Cart
         return $this->getStorage()->getCartNumber();
     }
 
-    public function save()
+    public function save(): void
     {
         $this->getStorage()->save($this->discounts);
     }
 
-    public function getItemsGroupedBy($property = 'manufacturerid')
+    public function getItemsGroupedBy($property = 'manufacturerid'): array
     {
         $groups = [];
 
