@@ -70,7 +70,7 @@ trait MetaTrait
     /**
      * @return string
      */
-    public function getKeywords(): string
+    public function getKeywords():? string
     {
         return $this->keywords;
     }
@@ -86,7 +86,7 @@ trait MetaTrait
     /**
      * @return string
      */
-    public function getDescription(): string
+    public function getDescription():? string
     {
         return $this->description;
     }
@@ -208,12 +208,12 @@ trait MetaTrait
     /**
      * @return mixed
      */
-    public function getMetaTemplate()
+    public function getMetaTemplate():? string
     {
         return $this->metaTemplate;
     }
 
-    public function getMetaBase():?int
+    public function getMetaBase():? int
     {
         return $this->metaBase;
     }
@@ -221,7 +221,7 @@ trait MetaTrait
     /**
      * @return mixed
      */
-    public function getMetaTemplateParams()
+    public function getMetaTemplateParams():? array
     {
         return $this->metaTemplateParams;
     }
