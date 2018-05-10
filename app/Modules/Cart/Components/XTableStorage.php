@@ -48,12 +48,12 @@ class XTableStorage extends AbstractStorage
         Xcart::app()->event->on('app:end', [$this, 'save']);
     }
 
-    public function getCartNumber()
+    public function getCartNumber():? int
     {
         return $this->model->id;
     }
 
-    public function add($key, $value)
+    public function add($key, $value): AbstractStorage
     {
         $this->saveCartNumber();
 

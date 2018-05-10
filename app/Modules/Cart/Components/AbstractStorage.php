@@ -57,9 +57,9 @@ abstract class AbstractStorage implements ICartStorage
     /**
      * @param $key
      * @param $value
-     * @return $this
+     * @return AbstractStorage
      */
-    public function add($key, $value): self
+    public function add($key, $value): AbstractStorage
     {
         $this->cart->getEventManager()->trigger('cart:change');
         $this->cart->getEventManager()->trigger('cart:addItem', [$value], $this->cart);
