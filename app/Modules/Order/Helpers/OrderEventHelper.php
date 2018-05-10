@@ -130,16 +130,15 @@ class OrderEventHelper
         }
     }
 
-    public static function orderPaidEvent(OrderModel $model): void
+    public static function orderPaidEvent(OrderModel $model, $status = OrderStatusModel::ORDER_STATUS_AUTHORIZED): void
     {
-        $model->cb_status = OrderStatusModel::ORDER_STATUS_AUTHORIZED;
-        if ($cart = $model->cart) {
-            $cart->delete();
-        }
-        $model->cart_number = null;
+        $model->setAttributes(['cb_status' => $status, 'cart_number' => null]);
         $model->save();
 
         $model->groups->update(['cb_status' => $model->cb_status]);
 
+        if ($cart = $model->cart) {
+            $cart->delete();
+        }
     }
 }
