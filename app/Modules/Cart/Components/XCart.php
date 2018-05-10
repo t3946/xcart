@@ -2,6 +2,10 @@
 
 namespace Modules\Cart\Components;
 
+use Modules\Order\Helpers\OrderHelper;
+use Modules\Order\Models\OrderModel;
+use Modules\Order\Models\OrderStatusModel;
+
 class XCart extends Cart
 {
     public $storageConfig = [
@@ -49,5 +53,26 @@ class XCart extends Cart
         }
 
         return $groups;
+    }
+
+    public function onAddItem($item): void {
+
+        parent::onAddItem($item);
+
+        OrderHelper::OrderStepsReset($this->getCartNumber());
+    }
+
+    public function onRemoveItem($item): void {
+
+        parent::onRemoveItem($item);
+
+        OrderHelper::OrderStepsReset($this->getCartNumber());
+    }
+
+    public function onChange($item): void {
+
+        parent::onChange($item);
+
+        OrderHelper::OrderStepsReset($this->getCartNumber());
     }
 }

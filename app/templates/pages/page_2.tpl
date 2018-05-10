@@ -1,6 +1,6 @@
-{extends "pages/base.tpl"}
+{extends "pages/base_2.tpl"}
 {block "content"}
-    <article class="pages page">
+    <article class="page_s_content">
         {block "custom_content"}{/block}
         <section class="page-container">
             <div class="row">

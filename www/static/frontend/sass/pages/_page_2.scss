@@ -1,10 +1,4 @@
-.pages.page {
-  //margin: rem-calc(40) 0;
-  padding: 0;
-  //transition: height .4s ease-in-out;
-  .heading {
-    padding-bottom: rem-calc(35);
-  }
+.page_s_content {
 
   h2 {
     padding-top: .5em;
@@ -27,7 +21,7 @@
     background: url('/static/frontend/images/pages/retrieve_orders.png') center center no-repeat;
     background-size: cover;
   }
-  .page-container{
+  .page-container {
     margin-top: 50px;
   }
 
@@ -90,12 +84,12 @@
 
   .sas-lock {
     width: 55px;
-    margin-top: 50px;
+    margin-top: 35px;
     float: left;
 
     @include breakpoint(medium) {
       width: 100px;
-      padding-top: 32px;
+      padding-top: 15px;
     }
 
     @include breakpoint(large) {
@@ -109,22 +103,22 @@
 
     h1 {
       float: left;
-      margin-top: 15px;
+      margin-top: 5px;
       color: #fff;
       line-height: normal;
       font-weight: lighter;
       padding-top: 20px;
       padding-left: 10px;
-      font-size: 35px;
+      font-size: 30px;
 
       @include breakpoint(medium) {
-        padding-top: 50px;
+        padding-top: 20px;
         padding-left: 20px;
         font-size: 60px;
       }
 
       @include breakpoint(large) {
-        padding-top: 45px;
+        padding-top: 35px;
         padding-left: 20px;
         font-size: 80px;
       }
@@ -170,13 +164,13 @@
     color: #fff;
     line-height: normal;
     font-weight: lighter;
-    padding-top: 35px;
+    padding-top: 26px;
     padding-left: 10px;
-    font-size: 30px;
+    font-size: 28px;
     width: 250px;
 
     @include breakpoint(medium) {
-      padding-top: 43px;
+      padding-top: 30px;
       padding-left: 20px;
       font-size: 60px;
       width: 415px;
@@ -193,7 +187,7 @@
   .sas-h1-img {
     float: left;
     width: 40px;
-    margin-top: 45px;
+    margin-top: 35px;
     margin-left: 10px;
 
     @include breakpoint (medium) {
@@ -229,7 +223,7 @@
 
   @include breakpoint(large up) {
     .large-2column {
-      columns: 2 ;
+      columns: 2;
       column-gap: rem-calc(60);
       .block, p {
         break-inside: auto-column;

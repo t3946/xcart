@@ -84,7 +84,7 @@ abstract class ShippingProcessor
         $this->oCart = $oShippingCart;
     }
 
-    public function getShippingRates(): array
+    public function getShippingRates()
     {
         if ($this->getCart() && $this->getCart()->getProductCount() > 0) {
             if ($this->isProcessorApplicable()) {
