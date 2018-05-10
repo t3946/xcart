@@ -31,7 +31,7 @@ abstract class AbstractStorage implements ICartStorage
      * @param $key
      * @return \Modules\Cart\Components\CartItem
      */
-    public function get($key)
+    public function get($key):? CartItem
     {
         if ($this->has($key)) {
             return $this->data[$key];
@@ -43,9 +43,10 @@ abstract class AbstractStorage implements ICartStorage
      * @param $key
      * @return bool
      */
-    public function remove($key)
+    public function remove($key): bool
     {
         if ($this->has($key)) {
+            $this->cart->getEventManager()->trigger('cart:change');
             $this->cart->getEventManager()->trigger('cart:removeItem', [$this->data[$key]], $this->cart);
             unset($this->data[$key]);
             return true;
@@ -58,8 +59,9 @@ abstract class AbstractStorage implements ICartStorage
      * @param $value
      * @return $this
      */
-    public function add($key, $value)
+    public function add($key, $value): self
     {
+        $this->cart->getEventManager()->trigger('cart:change');
         $this->cart->getEventManager()->trigger('cart:addItem', [$value], $this->cart);
         $this->data[$key] = $value;
         return $this;
@@ -68,15 +70,15 @@ abstract class AbstractStorage implements ICartStorage
     /**
      * @return int
      */
-    public function count()
+    public function count(): int
     {
-        return count($this->data);
+        return \count($this->data);
     }
 
     /**
      * @return $this
      */
-    public function clear()
+    public function clear(): self
     {
         $this->data = [];
         return $this;
@@ -85,7 +87,7 @@ abstract class AbstractStorage implements ICartStorage
     /**
      * @return \Modules\Cart\Components\CartItem[]
      */
-    public function getItems()
+    public function getItems(): array
     {
         $items = [];
         foreach ($this->getData() as $item) {
@@ -98,7 +100,7 @@ abstract class AbstractStorage implements ICartStorage
      * @param $key
      * @return bool
      */
-    public function has($key)
+    public function has($key): bool
     {
         return array_key_exists($key, $this->getData());
     }
@@ -106,7 +108,7 @@ abstract class AbstractStorage implements ICartStorage
     /**
      * @return array
      */
-    public function getData()
+    public function getData() : array
     {
         return $this->data ?: [];
     }

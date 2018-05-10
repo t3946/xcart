@@ -7,6 +7,14 @@ use Xcart\App\Orm\Fields\DateTimeField;
 use Xcart\App\Orm\Fields\SerializeField;
 use Xcart\App\Orm\Model;
 
+/**
+ * Class CartModel
+ * @package Modules\Cart\Models
+ *
+ * @property int id
+ * @property array data
+ * @property string|\DateTime created_at
+ */
 class CartModel extends Model
 {
     public static function getFields()

@@ -3,8 +3,6 @@
 namespace Modules\Cart\Components;
 
 use Modules\Order\Helpers\OrderHelper;
-use Modules\Order\Models\OrderModel;
-use Modules\Order\Models\OrderStatusModel;
 
 class XCart extends Cart
 {
@@ -13,21 +11,10 @@ class XCart extends Cart
         'class' => \Modules\Cart\Components\XTableStorage::class,
     ];
 
-    public function init()
-    {
-        parent::init();
-
-        $this->getEventManager()->on('app:end', [$this, 'save']);
-    }
 
     public function getCartNumber() :? int
     {
         return $this->getStorage()->getCartNumber();
-    }
-
-    public function save(): void
-    {
-        $this->getStorage()->save($this->discounts);
     }
 
     public function getItemsGroupedBy($property = 'manufacturerid'): array

@@ -357,7 +357,7 @@ class Cart
         return $item->getPrice();
     }
 
-    public function getDiscounts()
+    public function getDiscounts(): ?array
     {
         if ($this->_discounts === null) {
             $this->_discounts = [];
