@@ -33,32 +33,11 @@
                         </div>
                         <div class="columns small-3 medium-2">
                             <a href="/">
-                                <img src="/static/frontend/dist/images/logos/sites/{$.getSite->code|lower}/logo.svg" alt="{$.getSiteConfig->company_name->value}" class="show-for-large logo-big">
-                                <img src="/static/frontend/dist/images/logos/sites/{$.getSite->code|lower}/logo-small.svg" alt="{$.getSiteConfig->company_name->value}" class="show-for-small hide-for-large logo-small">
+                                <img src="/static/frontend/demo_images/home/1280/artist_supply_sourсe_logo.svg" alt="{$.getSiteConfig->company_name->value}" class="show-for-large logo-big">
+                                <img src="/static/frontend/demo_images/home/768/logo.svg" alt="{$.getSiteConfig->company_name->value}" class="show-for-small hide-for-large logo-small">
                             </a>
                         </div>
 
-                        <div class="columns small-3 medium-7 large-push-3">
-                            <section class="main-menu-wrap">
-                                <ul class="main-menu no-bullet show-for-medium">
-                                    {get_menu code='main-menu'}
-                                </ul>
-                            </section>
-                        </div>
-
-                        <div class="columns hide-for-large small-2 medium-1">
-                            <a class="mobile__search-btn middle-inline-block" data-toggle="search_container"></a>
-                        </div>
-
-                        <div class="columns hide-for-large small-2 medium-1">
-                            <a href="{url "cart:list"}" class="mobile__cart middle-inline-block">
-                            <span class="count">
-                                <span class="mc_count">
-                                    {*{$.app->cart->getQuantity()}*}
-                                </span>
-                            </span>
-                            </a>
-                        </div>
 
                     </div>
                 </section>
@@ -69,43 +48,7 @@
                 </div>
             </header>
 
-            <div class="shadow"></div>
-            <div data-sticky-container class="sticky-container">
-                <div class="sticky def-zi2"
-                     style="width: 100%"
-                     data-sticky
-                     data-sticky-on="large"
-                     data-margin-top="0"
-                     data-check-every="0"
-                     data-top-anchor="content-wrapper"
-                        {*data-btm-anchor="content"*}
-                >
-                    <section id="search_container" class="desktop_menu_search_cart show-for-large" data-toggler="show-for-large" >
-                        <div class="row" >
-                            <div class="columns large-3 show-for-large">
 
-                                <section class="category-menu-container"  >
-                                    <div class="category-menu">
-                                        <span class="menu-icon"></span>
-                                        <span class="category-menu-title" >Departments</span>
-                                    </div>
-                                </section>
-                                {*{cache key = '_parts/_menu_desktop.tpl'}*}
-                                {insert "_parts/_menu_desktop.tpl"}
-                                {*{/cache}*}
-                            </div>
-                            <div class="columns small-12 large-7">
-                                {insert "_parts/_search.tpl"}
-                            </div>
-
-                            <div class="columns large-2 show-for-large">
-                                {include "_parts/_cart.tpl"}
-                            </div>
-                        </div>
-                    </section>
-
-                </div>
-            </div>
 
             <section id="content">
                 <section class="before-content">

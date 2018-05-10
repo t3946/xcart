@@ -19,6 +19,7 @@ use Xcart\App\Orm\Model;
  * @property int|null storefrontid
  *
  * @property null|\Xcart\App\Orm\Manager favicons
+ * @property string code
  */
 class SiteModel extends Model
 {
@@ -221,9 +222,9 @@ class SiteModel extends Model
         return $this->getName();
     }
 
-    public function getOrderPrefix()
+    public function getOrderPrefix(): string
     {
-        return $this->code."-";
+        return $this->code. '-';
     }
 
 }
