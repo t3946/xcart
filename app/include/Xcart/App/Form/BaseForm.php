@@ -481,7 +481,7 @@ abstract class BaseForm implements IteratorAggregate, Countable, ArrayAccess, IV
      * @param array|Collection $files
      * @return $this
      */
-    public function populate($data, $files = [])
+    public function populate($data, array $files = []): self
     {
         if ($data instanceof Collection) {
             $data = $data->all();

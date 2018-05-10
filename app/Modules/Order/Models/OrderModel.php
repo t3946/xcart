@@ -2,6 +2,7 @@
 namespace Modules\Order\Models;
 
 use Doctrine\DBAL\Types\Type;
+use Modules\Cart\Models\CartModel;
 use Modules\Core\Models\CountryModel;
 use Modules\Core\Models\StateModel;
 use Modules\Order\Helpers\OrderEventHelper;
@@ -76,6 +77,13 @@ class OrderModel extends Model
                 'modelClass' => OrderExtraModel::class,
                 'link' => ['orderid' => 'order_id'],
                 'null' => true,
+            ],
+            'cart' => [
+                'field' => 'cart_number',
+                'class' => ForeignField::class,
+                'modelClass' => CartModel::class,
+                'link' => ['cart_number' => 'id'],
+                'null' => true
             ],
             'groups' => [
                 'class' => HasManyField::className(),

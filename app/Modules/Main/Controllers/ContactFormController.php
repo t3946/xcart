@@ -19,20 +19,16 @@ class ContactFormController extends FrontendController
      *  Форма связаться с нами
      * @throws \Exception
      */
-    public function actionContactUs()
+    public function actionContactUs(): void
     {
         $form = new ContactUsForm();
-        if ($this->getRequest()->getIsPost() && $form->populate($_POST)) {
-            if ($form->isValid()) {
-                Xcart::app()->flash->add('Your message has been sent successfully');
-                $this->redirect('admin:index');
-            }
+        if ($this->getRequest()->getIsPost() && $form->populate($_POST)->isValid()) {
+            Xcart::app()->flash->add('Your message has been sent successfully');
+            $this->refresh();
         }
-        echo $this->render('contactForm/contactUs.tpl', [
+
+        $this->display('contactForm/contactUs.tpl', [
             'form' => $form
         ]);
     }
-
-
-
 }

@@ -319,17 +319,22 @@ class CheckoutController extends FrontendController
 
     }
 
-    public function actionComplete(): void
+    public function actionComplete($order_id): void
     {
-        $order = $this->getOrder();
+        $app = Xcart::app();
+        $user = $app->user;
+        if($order = OrderModel::objects()->get(['orderid' => $order_id, 'user_id' => $user->id])) {
 
-        [$shipping, $billing] = $order->getAddressInfo();
+            [$shipping, $billing] = $order->getAddressInfo();
 
 
-        $this->display('checkout/complete.tpl', [
-            'order' => $order,
-            'shipping_info' => $shipping,
-            'billing_info' => $billing,
-        ]);
+            $this->display('checkout/complete.tpl', [
+                'order' => $order,
+                'shipping_info' => $shipping,
+                'billing_info' => $billing,
+            ]);
+        } else {
+            $this->error(404);
+        }
     }
 }

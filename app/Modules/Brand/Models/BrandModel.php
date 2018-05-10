@@ -4,6 +4,7 @@ namespace Modules\Brand\Models;
 
 use Doctrine\DBAL\Types\Type;
 use Modules\Brand\BrandModule;
+use Modules\Core\Helpers\Cache;
 use Modules\Menu\Models\CleanUrlModel;
 use Modules\Goods\Models\ProductModel;
 use Modules\Sites\Models\SiteModel;
@@ -207,21 +208,55 @@ class BrandModel extends Model
     }
 
     /**
-     * Return all active children
+     * Return all active brands
      * @param bool $includeSelf
      * @param int $level
      * @return mixed
      * @throws \Xcart\App\Exceptions\UnknownMethodException
      * @throws \Xcart\App\Exceptions\UnknownPropertyException
      */
-    public function getActiveChildren()
+    public static function getAllActive()
     {
-        return $this->getObjects()->filter([
+        $qs = static::objects()->filter([
+            'parent_brand_id__isnull' => true,
             'avail' => 'Y',
-            'active_product_count__gt' => 0,
             'storefront__through__sfid' => Xcart::app()->getModule('Sites')->getSite(),
             'storefront__through__products_count__gt' => 0,
-            'parent_brand_id' => $this->brandid
-        ]);
+        ])->cache(Cache::CACHE_DAY);
+
+        return $qs->order(['brand'])->all();
     }
+
+    /**
+     * Recieve all brands and split alphabetically
+     * @return array
+     * @throws \Xcart\App\Exceptions\UnknownMethodException
+     * @throws \Xcart\App\Exceptions\UnknownPropertyException
+     */
+    public function getAllAlphabetically()
+    {
+        $allBrands = static::getAllActive();
+        return static::breakUpAlphabetically($allBrands);
+    }
+
+    /**
+     * Split brands alphabetically
+     * @param $allBrands
+     * @return array
+     */
+    private static function breakUpAlphabetically($allBrands)
+    {
+        $brands = [];
+        foreach ($allBrands as $brand) {
+            $letter = strtoupper(substr($brand->brand, 0, 1));
+            if (!isset($brands[$letter])) {
+                $brands[$letter] = [$brand];
+            } else {
+                $brands[$letter][] = $brand;
+            }
+        }
+        return $brands;
+    }
+
+
 }

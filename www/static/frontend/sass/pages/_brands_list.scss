@@ -1,0 +1,60 @@
+.brands-list-container{
+  /* Стили для мобильных устройств */
+  @include breakpoint(ml down) {
+
+    .all-departments-menu {
+
+      @include breakpoint(ml only) {
+        .item-title {
+          max-width: calc(6.6666% - 0.625rem);
+        }
+      }
+
+      padding: 0 .5rem;
+
+      /* Ссылка на основную категорию */
+      .item-title {
+        padding: .7rem .5rem;
+        display: block;
+
+        .title {
+          text-align: center;
+        }
+
+      }
+    }
+
+    @include breakpoint(medium down) {
+      .item-title {
+        max-width: calc(20% - 0.25rem);
+      }
+    }
+
+    @include breakpoint(medium up) {
+      .item-title {
+        max-width: calc(10% - 0.25rem);
+      }
+    }
+
+  }
+
+  /* Стили для десктопа */
+  @include breakpoint(large up) {
+    /* Верхнее меню - все основные категории */
+    .all-departments-menu {
+      /* Ссылка на основную категорию */
+      .item-title {
+        max-width: 6.6666%;
+        padding-top: .5rem;
+        padding-bottom: .5rem;
+        display: block;
+
+        .title {
+          text-align: center;
+          font-size: 1.5em;
+        }
+      }
+    }
+
+  }
+}

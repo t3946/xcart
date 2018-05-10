@@ -2,20 +2,15 @@
 
 
 {block "content"}
-    <div class="default-content-page page-departments-container">
+    <div class="default-content-page page-departments-container brands-list-container">
         <div class="page-departments">
 
             {* Меню категорий *}
             <div class="all-departments-menu-container">
-                <div class="row all-departments-menu  small-up-1 medium-up-2 ml-up-3 large-up-6">
+                <div class="row all-departments-menu  small-up-5 medium-up-10 ml-up-15">
                     {foreach $brands as $letter => $brand}
                         <a href="#id{$letter}" class="item-title column link-id{$letter}">
-                            {*<div class="image-container">*}
-                                {*<img class="image"*}
-                                     {*src="/static/frontend/demo_images/demo_images_new/icon{(rand(0,1)) ? 1 : 2}.svg"*}
-                                     {*alt="">*}
-                            {*</div>*}
-                            <div class="title"><span>{$letter}</span></div>
+                            <span class="title">{$letter}</span>
                         </a>
                     {/foreach}
                 </div>
@@ -49,15 +44,9 @@
                         <div class="row departments-submenu-items small-up-1 medium-up-2 ml-up-3 large-up-4">
                             {foreach $brands as $brand}
                                 <div class="group-items column">
-                                    <div class="items-title"><a
-                                                href="{$brand->getAbsoluteUrl()}">{$brand->brand}</a></div>
-                                    {*<div class="items-list">*}
-                                        {*{foreach $brand->getActiveChildren()->all() as $subBrand}*}
-                                            {*<div class="item-link">*}
-                                                {*<a href="{$subBrand->getAbsoluteUrl()}">{$subBrand->brand}</a>*}
-                                            {*</div>*}
-                                        {*{/foreach}*}
-                                    {*</div>*}
+                                    <div class="items-title">
+                                        <a href="{$brand->getAbsoluteUrl()}">{$brand->brand}</a>
+                                    </div>
                                 </div>
                             {/foreach}
                         </div>
@@ -75,26 +64,4 @@
             </div>
         </div>
     </div>
-{/block}
-
-{block 'after-content'}
-
-    <div class="row">
-        <div class="small-12 column slider-viewed">
-            {set $link}{url 'catalog:viewed'}{/set}
-            {include 'slider/base_product_slider.tpl' title="You recently viewed items" link=$link hide=true hide_link=true}
-        </div>
-    </div>
-
-    {*<div class="row">*}
-    {*<div class="small-12 column">*}
-    {*<div id="scrollToTop">*}
-    {*<img class="image"*}
-    {*src="/static/frontend/demo_images/demo_images_new/up.svg"*}
-    {*alt="">*}
-    {*<span>UP</span>*}
-    {*</div>*}
-    {*</div>*}
-    {*</div>*}
-
 {/block}

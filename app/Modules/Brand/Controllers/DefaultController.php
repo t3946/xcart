@@ -4,11 +4,13 @@ namespace Modules\Brand\Controllers;
 use Mindy\QueryBuilder\Expression;
 use Mindy\QueryBuilder\Q\QOr;
 use Modules\Brand\Models\BrandModel;
+use Modules\Core\Helpers\Cache;
 use Modules\Goods\Controllers\AbstractCatalogController;
 use Modules\Goods\Models\CategoryModel;
 use Modules\Goods\Models\ProductModel;
 use Xcart\App\Components\Breadcrumbs;
 use Xcart\App\Main\Xcart;
+use Xcart\Brand;
 
 class DefaultController extends AbstractCatalogController
 {
@@ -40,35 +42,19 @@ class DefaultController extends AbstractCatalogController
         $this->redirect('brand:list', [], 301);
     }
 
+    /**
+     * Show all brands alphabetically
+     * @throws \Xcart\App\Exceptions\UnknownMethodException
+     * @throws \Xcart\App\Exceptions\UnknownPropertyException
+     */
     public function actionList()
     {
-        $qs = BrandModel::objects()->filter([
-            'parent_brand_id__isnull' => true,
-            'avail' => 'Y',
-            'storefront__through__sfid' => Xcart::app()->getModule('Sites')->getSite(),
-            'storefront__through__products_count__gt' => 0,
-            //'brandid' => 3
-        ]);
-
-        //$brands = $qs->group([(new Expression("SUBSTRING({$qs->getTableAlias()}.brand, 1, 1)"))->toSQL()])->order(['brand'])->all();
-        $allBrands = $qs->order(['brand'])->all();
-        $brands = [];
-
-        foreach ($allBrands as $brand){
-            $letter = strtoupper(substr($brand->brand, 0, 1));
-            if(!isset($brands[$letter])){
-                $brands[$letter] = [$brand];
-            } else {
-                $brands[$letter][] = $brand;
-            }
-        }
-
         $breadcrumbs = new Breadcrumbs();
         $breadcrumbs->add('Brands', 'brand:list');
 
         $this->display('brand/list.tpl', [
             'breadcrumbs' => $breadcrumbs,
-            'brands' => $brands
+            'brands' => BrandModel::getAllAlphabetically()
         ]);
     }
 
