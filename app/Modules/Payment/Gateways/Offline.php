@@ -3,6 +3,7 @@
 namespace Modules\Payment\Gateways;
 
 
+use Modules\Order\Models\OrderStatusModel;
 use Modules\Order\Models\OrderTransactionModel;
 use Omnipay\Common\AbstractGateway;
 use Omnipay\Common\Message\AbstractRequest;
@@ -106,7 +107,7 @@ class Offline extends Gateway
 
     public function getState($mode)
     {
-        return OrderTransactionModel::STATUS_AUTHORIZED;
+
     }
 }
 
@@ -133,9 +134,9 @@ class OfflineResponse extends AbstractResponse
         return $this->getRequest()->getReturnUrl();
     }
 
-    public function redirect()
+    public function redirect(): void
     {
-        Xcart::app()->event->trigger('order:paid', ['model' => $this->getRequest()->getOrder()]);
+        Xcart::app()->event->trigger('order:paid', ['model' => $this->getRequest()->getOrder(), 'status' => OrderStatusModel::ORDER_STATUS_QUEUED]);
         Xcart::app()->request->redirect($this->getRedirectUrl());
     }
 

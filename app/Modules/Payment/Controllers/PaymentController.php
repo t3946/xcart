@@ -21,7 +21,7 @@ class PaymentController extends Controller
     /**
      * @param $gateway
      */
-    public function process($gateway)
+    public function process($gateway): void
     {
         /** @var ProcessorModel $pm */
         if ($pm = ProcessorModel::objects()->get(['processor_name' => $gateway])) {
@@ -39,7 +39,7 @@ class PaymentController extends Controller
 
                     $params = [
                         'cancelUrl' => Xcart::app()->router->absoluteUrl("payment:cancel", ['gateway' => strtolower($pm->processor_name)]),
-                        'returnUrl' => Xcart::app()->router->absoluteUrl("payment:return", ['gateway' => strtolower($pm->processor_name)]),
+                        'returnUrl' => Xcart::app()->router->absoluteUrl("payment:return", ['gateway' => strtolower($pm->processor_name), 'order_id' => $order->orderid]),
                         'notifyUrl' => Xcart::app()->router->absoluteUrl("payment:success", ['gateway' => strtolower($pm->processor_name)]),
                         'amount' => number_format($order->total, 2, '.', ''),
                         'order' => $order,
@@ -78,6 +78,7 @@ class PaymentController extends Controller
                     }
 
                 } catch (Exception $e) {
+                    Xcart::app()->logger->error("{$gateway} process action error", [$e->getMessage()], 'payment');
                     exit('Sorry, there was an error processing your payment. Please try again later.');
                 }
             }
@@ -104,7 +105,7 @@ class PaymentController extends Controller
         }
     }
 
-    public function cancel($gateway)
+    public function cancel($gateway): void
     {
         $order = OrderHelper::getCartOrder();
 
@@ -115,10 +116,10 @@ class PaymentController extends Controller
             $order->groups->update(['cb_status' => $order->cb_status]);
         }
 
-        $this->redirect("checkout:review");
+        $this->redirect('checkout:review');
     }
 
-    public function return($gateway): void
+    public function return($gateway, $order_id): void
     {
         $pm = ProcessorModel::objects()->get(['processor_name' => $gateway]);
 
@@ -130,7 +131,7 @@ class PaymentController extends Controller
             $this->cancel($gateway);
         }
 
-        $this->redirect("checkout:complete");
+        $this->redirect('checkout:complete', ['order_id' => $order_id]);
 
     }
 
@@ -138,7 +139,7 @@ class PaymentController extends Controller
      * @param $gateway
      * @throws \Xcart\App\Exceptions\UnknownPropertyException
      */
-    public function endpoint($gateway)
+    public function endpoint($gateway): void
     {
         $params = null;
 
