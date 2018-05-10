@@ -719,7 +719,7 @@ class HttpRequest extends Request
         if (is_object($url) && method_exists($url, 'getAbsoluteUrl')) {
             $url = $url->getAbsoluteUrl();
         }
-        elseif (strpos($url, ':') !== false && strpos($url, 'http:') === false) {
+        elseif (strpos($url, ':') !== false) {
             $url = Xcart::app()->router->url($url, $data, $query);
         }
 
