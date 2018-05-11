@@ -70,10 +70,9 @@
             </header>
 
             <div class="shadow"></div>
-            <div class="sticky-container">
-                <div class="sticky def-zi2"
+            <div class="sticky-menu-container">
+                <div class="sticky"
                      style="width: 100%"
-                     data-sticky
                 >
                     <section id="search_container" class="desktop_menu_search_cart show-for-large" data-toggler="show-for-large" >
                         <div class="row" >
