@@ -2,6 +2,7 @@
 
 namespace Modules\Order\Controllers;
 
+use Mobile_Detect;
 use Modules\Core\Models\CountryModel;
 use Modules\Core\Models\StateModel;
 use Modules\Dashboard\Sqls\SearchSql;
@@ -66,27 +67,30 @@ class CheckoutController extends FrontendController
                     $s_state = $state_m->code;
                 }
 
-                [$address] = AddressModel::objects()->getOrCreate([
-                    'user_id' => $user->id,
-                    'full_name' => $shipping['s_firstname'],
-                    'company' => $shipping['s_company'],
-                    'address' => $shipping['s_address'],
-                    'address_2' => $shipping['s_address_2'],
-                    'country' => $shipping['s_country'],
-                    'zip' => $shipping['s_zipcode'],
-                    'state' => $s_state,
-                    'city' => $shipping['s_city'],
-                ]);
-                //$address->save();
+                if ($user && $user->id) {
+                    [$address] = AddressModel::objects()->getOrCreate([
+                        'user_id' => $user->id,
+                        'full_name' => $shipping['s_firstname'],
+                        'company' => $shipping['s_company'],
+                        'address' => $shipping['s_address'],
+                        'address_2' => $shipping['s_address_2'],
+                        'country' => $shipping['s_country'],
+                        'zip' => $shipping['s_zipcode'],
+                        'state' => $s_state,
+                        'city' => $shipping['s_city'],
+                    ]);
+                    //$address->save();
+                }
+
 
                 $order->setAttributes([
-                    's_firstname' => $address->full_name,
-                    's_company' => $address->company,
-                    's_address' => $address->address . PHP_EOL . $address->address_2,
-                    's_country' => $address->country,
-                    's_zipcode' => $address->zip,
-                    's_state' => $address->state,
-                    's_city' => $address->city,
+                    's_firstname' => $shipping['s_firstname'],
+                    's_company' => $shipping['s_company'],
+                    's_address' => $shipping['s_address'] . PHP_EOL . $shipping['s_address_2'],
+                    's_country' => $shipping['s_country'],
+                    's_zipcode' => $shipping['s_zipcode'],
+                    's_state' => $s_state,
+                    's_city' => $shipping['s_city'],
                     'phone' => preg_replace('/\D/S', '', $contact['phone']),
                     'phone_ext' => $contact['phone_ext'],
                     'email' => $contact['email'],
@@ -95,6 +99,7 @@ class CheckoutController extends FrontendController
                     'order_prefix' => $app->getModule('Sites')->getSite()->getOrderPrefix(),
                     'cb_status' => OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP2,
                     'user_id' => $user->id,
+                    'is_mobile_checkout' => (new Mobile_Detect)->isMobile()
                 ]);
 
                 if ($order->save()) {
