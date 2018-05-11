@@ -209,7 +209,7 @@ module.exports = {
                 'bower_components/foundation-sites/dist/js/plugins/foundation.core.js',
                 'bower_components/foundation-sites/dist/js/plugins/foundation.offcanvas.js',
                 'bower_components/foundation-sites/dist/js/plugins/foundation.accordion.js',
-                'bower_components/foundation-sites/dist/js/plugins/foundation.sticky.js',
+                // 'bower_components/foundation-sites/dist/js/plugins/foundation.sticky.js',
                 'bower_components/foundation-sites/dist/js/plugins/foundation.toggler.js',
                 'bower_components/foundation-sites/dist/js/plugins/foundation.smoothScroll.js',
                 'bower_components/foundation-sites/dist/js/plugins/foundation.abide.js',

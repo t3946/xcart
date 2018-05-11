@@ -72858,6 +72858,10 @@ var _isMedia = __webpack_require__(36);
 
 var _isMedia2 = _interopRequireDefault(_isMedia);
 
+var _cssFileLoaded = __webpack_require__(158);
+
+var _cssFileLoaded2 = _interopRequireDefault(_cssFileLoaded);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 (function () {
@@ -72867,20 +72871,22 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
         var ticking = false;
 
         if ((0, _isMedia2.default)('large')) {
-            var checkMenuPosition = function checkMenuPosition(lastKnownScrollPosition) {
-
-                if (lastKnownScrollPosition >= stickyContainer.offset().top) {
-                    sticky.addClass('menu-fixed');
-                } else {
-                    sticky.removeClass('menu-fixed');
-                }
-            };
 
             var stickyContainer = $('.sticky-container');
             var sticky = stickyContainer.find('.sticky');
 
-            var processScroll = _.throttle(function () {
+            var checkMenuPosition = function checkMenuPosition(lastKnownScrollPosition) {
 
+                if ((0, _isMedia2.default)('large')) {
+                    if (lastKnownScrollPosition >= stickyContainer.offset().top) {
+                        sticky.addClass('menu-fixed');
+                    } else {
+                        sticky.removeClass('menu-fixed');
+                    }
+                }
+            };
+
+            var processScroll = _.throttle(function () {
                 lastKnownScrollPosition = window.scrollY;
                 if (!ticking) {
                     window.requestAnimationFrame(function () {
@@ -72893,27 +72899,40 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
             var initStickyMenu = function initStickyMenu() {
 
-                var heightOfStickyBlock = sticky.height();
+                var heightOfStickyBlock = sticky.innerHeight;
                 if (heightOfStickyBlock <= 0) {
                     return;
                 }
 
-                stickyContainer.css({
-                    'display': 'block',
-                    'height': heightOfStickyBlock + 'px'
-                });
-
                 window.addEventListener('scroll', processScroll, { 'passive': true });
             };
 
-            var initStickyMenuOnResize = _.throttle(initStickyMenu, 50);
-
-            initStickyMenu();
-            $(window).resize(initStickyMenuOnResize);
+            (0, _cssFileLoaded2.default)('styles.css', initStickyMenu);
         }
     });
 })();
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
+
+/***/ }),
+/* 158 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+exports.__esModule = true;
+exports.default = cssFileLoaded;
+function cssFileLoaded(filename, callback) {
+    if (window.app.assets.css[filename].loaded) {
+        callback();
+    } else {
+        document.addEventListener('cssLoad', function () {
+            if (window.app.assets.css[filename].loaded) {
+                callback();
+            }
+        }, { passive: true });
+    }
+}
 
 /***/ })
 /******/ ]);

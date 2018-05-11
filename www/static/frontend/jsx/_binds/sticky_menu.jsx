@@ -1,4 +1,5 @@
 import isMedia from "../utils/isMedia";
+import cssFileLoaded from "../utils/cssFileLoaded";
 
 (()=>{
 
@@ -13,11 +14,21 @@ import isMedia from "../utils/isMedia";
             let stickyContainer = $('.sticky-container');
             let sticky = stickyContainer.find('.sticky');
 
-            let processScroll = _.throttle(function(){
+            let checkMenuPosition = (lastKnownScrollPosition) => {
 
+                if (isMedia('large')) {
+                    if (lastKnownScrollPosition >= stickyContainer.offset().top) {
+                        sticky.addClass('menu-fixed');
+                    } else {
+                        sticky.removeClass('menu-fixed');
+                    }
+                }
+            };
+
+            let processScroll = _.throttle(() => {
                 lastKnownScrollPosition = window.scrollY;
                 if (!ticking) {
-                    window.requestAnimationFrame(function() {
+                    window.requestAnimationFrame(() => {
                         checkMenuPosition(lastKnownScrollPosition);
                         ticking = false;
                     });
@@ -25,34 +36,23 @@ import isMedia from "../utils/isMedia";
                 }
             }, 50);
 
-            let initStickyMenu = function () {
+            let initStickyMenu = () => {
 
-                let heightOfStickyBlock = sticky.height();
+                let heightOfStickyBlock = sticky.innerHeight;
                 if(heightOfStickyBlock <= 0){
                     return;
                 }
-                //console.log(heightOfStickyBlock);
-                stickyContainer.css({
-                    'display': 'block',
-                    'height': heightOfStickyBlock + 'px'
-                });
+
+                // stickyContainer.css({
+                //     'display': 'block',
+                //     'height': heightOfStickyBlock + 'px'
+                // });
 
                 window.addEventListener('scroll', processScroll, {'passive' : true});
             };
 
-            let initStickyMenuOnResize = _.throttle(initStickyMenu, 50);
 
-            function checkMenuPosition(lastKnownScrollPosition) {
-
-                if (lastKnownScrollPosition >= stickyContainer.offset().top) {
-                    sticky.addClass('menu-fixed');
-                } else {
-                    sticky.removeClass('menu-fixed');
-                }
-            }
-
-            initStickyMenu();
-            $(window).resize(initStickyMenuOnResize);
+            cssFileLoaded('styles.css', initStickyMenu);
         }
     });
 })();

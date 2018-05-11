@@ -130,8 +130,8 @@
             l.href = href;
             l.onload = function(){
                 var url = parseUrl(this.href);
-                document.dispatchEvent(new CustomEvent('cssLoad', { 'file': url.document }));
                 window.app.assets.css[url.document].loaded = true;
+                document.dispatchEvent(new CustomEvent('cssLoad', { 'file': url.document }));
             };
 
             h.parentNode.insertBefore(l, h);
