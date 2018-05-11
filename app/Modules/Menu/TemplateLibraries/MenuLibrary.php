@@ -138,7 +138,7 @@ class MenuLibrary extends TemplateLibrary
                             ],
                             [
                                 'name' => 'Combating eCommerce Fraud',
-                                'url' => '/combating-fraud',
+                                'url' => '/ecomerce-fraud',
                                 'items' => [],
                             ],
                         ],
