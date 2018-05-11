@@ -55,42 +55,47 @@
         </section>
 
         <div class="row cart-steps-container">
-            <a class="columns shrink cart-steps-back">
+            <a class="columns shrink cart-steps-back active">
                 <img src="/static/frontend/images/icons/cart/cart_small_arrow_back.png" alt="">
                 <span>BACK</span>
             </a>
 
             <section class="cart-steps-section columns">
                 <ul class="cart-steps-items no-bullet">
-                    <li class="cart-step">
+                    <li class="cart-step inactive">
                         <a href="" class="step-link">
-                            <span class="step-number">1.</span>
+                            <span class="step-number">1</span>
                             <span class="step-label">Shopping cart</span>
                         </a>
+                        <div class="arrow-right"></div>
                     </li>
-                    <li class="cart-step">
+                    <li class="cart-step inactive">
                         <a href="" class="step-link">
-                            <span class="step-number">2.</span>
+                            <span class="step-number">2</span>
                             <span class="step-label">Shipping Address</span>
                         </a>
+                        <div class="arrow-right"></div>
                     </li>
-                    <li class="cart-step">
+                    <li class="cart-step inactive">
                         <a href="" class="step-link">
-                            <span class="step-number">3.</span>
+                            <span class="step-number">3</span>
                             <span class="step-label">Shipping & payment options</span>
                         </a>
+                        <div class="arrow-right"></div>
                     </li>
-                    <li class="cart-step">
+                    <li class="cart-step inactive">
                         <a href="" class="step-link">
-                            <span class="step-number">4.</span>
+                            <span class="step-number">4</span>
                             <span class="step-label">order review</span>
                         </a>
+                        <div class="arrow-right"></div>
                     </li>
-                    <li class="cart-step">
+                    <li class="cart-step active">
                         <a href="" class="step-link">
-                            <span class="step-number">5.</span>
+                            <span class="step-number">5</span>
                             <span class="step-label">Payment</span>
                         </a>
+                        <div class="arrow-right"></div>
                     </li>
                 </ul>
             </section>
