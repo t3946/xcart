@@ -42,20 +42,6 @@ class XCart extends Cart
         return $groups;
     }
 
-    public function onAddItem($item): void {
-
-        parent::onAddItem($item);
-
-        OrderHelper::OrderStepsReset($this->getCartNumber());
-    }
-
-    public function onRemoveItem($item): void {
-
-        parent::onRemoveItem($item);
-
-        OrderHelper::OrderStepsReset($this->getCartNumber());
-    }
-
     public function onChange($item): void {
 
         parent::onChange($item);

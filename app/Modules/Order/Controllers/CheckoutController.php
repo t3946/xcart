@@ -2,6 +2,7 @@
 
 namespace Modules\Order\Controllers;
 
+use Mobile_Detect;
 use Modules\Core\Models\CountryModel;
 use Modules\Core\Models\StateModel;
 use Modules\Dashboard\Sqls\SearchSql;
@@ -12,6 +13,7 @@ use Modules\Order\Models\OrderExtraModel;
 use Modules\Order\Models\OrderGroupModel;
 use Modules\Order\Models\OrderModel;
 use Modules\Order\Models\OrderStatusModel;
+use Modules\Order\OrderModule;
 use Modules\Payment\Models\PaymentMethodModel;
 use Modules\Shipping\Models\ShippingModel;
 use Modules\Shipping\Models\ShippingRateModel;
@@ -65,35 +67,39 @@ class CheckoutController extends FrontendController
                     $s_state = $state_m->code;
                 }
 
-                [$address] = AddressModel::objects()->getOrCreate([
-                    'user_id' => $user->id,
-                    'full_name' => $shipping['s_firstname'],
-                    'company' => $shipping['s_company'],
-                    'address' => $shipping['s_address'],
-                    'address_2' => $shipping['s_address_2'],
-                    'country' => $shipping['s_country'],
-                    'zip' => $shipping['s_zipcode'],
-                    'state' => $s_state,
-                    'city' => $shipping['s_city'],
-                ]);
-                //$address->save();
+                if ($user && $user->id) {
+                    [$address] = AddressModel::objects()->getOrCreate([
+                        'user_id' => $user->id,
+                        'full_name' => $shipping['s_firstname'],
+                        'company' => $shipping['s_company'],
+                        'address' => $shipping['s_address'],
+                        'address_2' => $shipping['s_address_2'],
+                        'country' => $shipping['s_country'],
+                        'zip' => $shipping['s_zipcode'],
+                        'state' => $s_state,
+                        'city' => $shipping['s_city'],
+                    ]);
+                    //$address->save();
+                }
+
 
                 $order->setAttributes([
-                    's_firstname' => $address->full_name,
-                    's_company' => $address->company,
-                    's_address' => $address->address . PHP_EOL . $address->address_2,
-                    's_country' => $address->country,
-                    's_zipcode' => $address->zip,
-                    's_state' => $address->state,
-                    's_city' => $address->city,
+                    's_firstname' => $shipping['s_firstname'],
+                    's_company' => $shipping['s_company'],
+                    's_address' => $shipping['s_address'] . PHP_EOL . $shipping['s_address_2'],
+                    's_country' => $shipping['s_country'],
+                    's_zipcode' => $shipping['s_zipcode'],
+                    's_state' => $s_state,
+                    's_city' => $shipping['s_city'],
                     'phone' => preg_replace('/\D/S', '', $contact['phone']),
                     'phone_ext' => $contact['phone_ext'],
                     'email' => $contact['email'],
                     'firstname' => $contact['firstname'],
                     'login' => $user->login,
                     'order_prefix' => $app->getModule('Sites')->getSite()->getOrderPrefix(),
-                    'cb_status' => OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP1,
+                    'cb_status' => OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP2,
                     'user_id' => $user->id,
+                    'is_mobile_checkout' => (new Mobile_Detect)->isMobile()
                 ]);
 
                 if ($order->save()) {
@@ -136,9 +142,6 @@ class CheckoutController extends FrontendController
         $cart = $app->cart;
         $errors = [];
 
-        if (!$user) {
-        }
-
         $order = $this->getOrder();
 
         if ($app->request->getIsPost()) {
@@ -150,6 +153,8 @@ class CheckoutController extends FrontendController
             if ($order->detail_models->count()) {
                 $order->detail_models->delete();
             }
+
+            $this->internalCartChanged($order);
 
             $data = $app->request->post->all();
 
@@ -273,14 +278,9 @@ class CheckoutController extends FrontendController
         $app = Xcart::app();
         $user = $app->user;
 
-        if (!$user) {
-        }
-
         $order = $this->getOrder();
 
-        if (OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP1 === $order->cb_status) {
-            $this->redirect('checkout:options');
-        }
+        $this->internalCartChanged($order);
 
         if ($app->request->getIsPost()) {
             if ($app->request->post->has('customer_notes')) {
@@ -316,9 +316,7 @@ class CheckoutController extends FrontendController
     {
         $order = $this->getOrder();
 
-        if (OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP1 === $order->cb_status) {
-            $this->redirect('checkout:options');
-        }
+        $this->internalCartChanged($order);
 
         $this->redirect('payment:process', ['gateway' => strtolower($order->payment_method->frontend_processor->processor_name)]);
 
@@ -341,6 +339,19 @@ class CheckoutController extends FrontendController
             ]);
         } else {
             $this->error(404);
+        }
+    }
+
+    private function internalCartChanged(OrderModel $order, $route = 'checkout:options')
+    {
+        if (OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP1 === $order->cb_status) {
+
+            $order->cb_status = OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP2;
+            $order->save();
+
+            Xcart::app()->flash->error(OrderModule::t('Cart changed: One or more items have changed!'));
+
+            $this->redirect($route);
         }
     }
 }

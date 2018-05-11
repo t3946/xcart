@@ -74,7 +74,7 @@
 
             <div class="shadow"></div>
             <div class="sticky-menu-container">
-                <div class="sticky"
+                <div class="sticky def-zi2"
                      style="width: 100%"
                 >
                     <section id="search_container" class="desktop_menu_search_cart show-for-large" data-toggler="show-for-large" >

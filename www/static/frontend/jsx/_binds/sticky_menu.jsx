@@ -1,4 +1,5 @@
 import isMedia from "../utils/isMedia";
+import cssFileLoaded from "../utils/cssFileLoaded";
 
 (() => {
 
@@ -70,7 +71,7 @@ import isMedia from "../utils/isMedia";
         }
 
 
-        initStickyMenu();
+        cssFileLoaded('styles.css', initStickyMenu);
         $(window).resize(initStickyMenuOnResize);
 
     });
