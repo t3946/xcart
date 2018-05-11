@@ -5,6 +5,8 @@ namespace Modules\Goods\Controllers;
 use Modules\Goods\Helpers\ProductSortHelper;
 use Modules\Goods\Helpers\TabDataHelper;
 use Modules\Goods\Models\ProductModel;
+use Modules\Meta\Helpers\MetaExtHelper;
+use Modules\Meta\Types\MetaType;
 use Xcart\App\Controller\FrontendController;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Pagination\DataSource\QuerySetDataSource;
@@ -46,10 +48,10 @@ class DefaultController extends FrontendController
             $this->redirect($model->getAbsoluteUrl(true), 301);
         }
 
-        $this->setMetaTemplate('products:base', [
+        $this->setMetaBase(MetaType::PRODUCT, [
             'model' => $model,
             'category' => $model->getMainCategory(),
-            'site' => $site,
+            'site' => $site
         ]);
 
         $params = [
