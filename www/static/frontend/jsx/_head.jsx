@@ -40,6 +40,8 @@ import  "./components/Flash";
 import './ext/foundation-init';
 import '../../vendors/wNumb.js'
 
+import sendAnalytics from './utils/sendAnalytics'
+
 (function(){
     window['$'] = $;
     window['jQuery'] = $;
@@ -49,6 +51,7 @@ import '../../vendors/wNumb.js'
     window['Waves'] = Waves;
     window['WebFont'] = WebFont;
     window['noUiSlider'] = noUiSlider;
+    window['sendAnalytics'] = new sendAnalytics;
     window.d = (...arg) => {
         console.log(...arg);
     };

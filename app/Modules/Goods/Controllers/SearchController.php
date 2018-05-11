@@ -126,6 +126,7 @@ class SearchController extends AbstractCatalogController
             'searched' => $this->searched,
             'q_original' => $this->q_original,
             'q' => $this->q,
+            'analytics_source' => 'search'
         ];
     }
 

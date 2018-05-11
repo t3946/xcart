@@ -4,6 +4,7 @@ import storeApp from '../../stores/StoreApp';
 
 import { hideAll, action } from "../../redusers/appHeadReduser";
 import { cartAdd } from "../../redusers/appCartRediser";
+import sendAnalytics from "../../utils/sendAnalytics";
 
 (()=>{
     let $minicart = $('.minicart');
@@ -66,6 +67,7 @@ import { cartAdd } from "../../redusers/appCartRediser";
                 }];
 
                 cartAdd(data, ()=>{ productItemResetState(product); });
+                window.sendAnalytics.addToCart(product);
             }
 
         })

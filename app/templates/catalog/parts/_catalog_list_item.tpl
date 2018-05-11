@@ -1,5 +1,7 @@
 <div class="item product{if $item->isOutOfStock()} out_of_stock{/if} {if $item->isGroupRoot()} group{/if}"
      data-product="{$item->productid}"
+     data-name="{$item->getFrontendName()|escape}"
+     data-source="{$analitics_source}"
      {*data-uid="{$item->getUniqueId()}"*}
      data-prices='{$item->getPrices()|json_encode}'
      {if $item->getFrontendPrice() < $item->list_price}
