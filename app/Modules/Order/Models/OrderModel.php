@@ -13,6 +13,7 @@ use Modules\User\Models\UserModel;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
+use Xcart\App\Orm\Fields\BooleanCharField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\HasManyField;
@@ -247,6 +248,10 @@ class OrderModel extends Model
                 'null' => false,
                 'default' => ''
             ],
+            'is_mobile_checkout' => [
+                'class' => BooleanCharField::class,
+                'null' => false,
+            ]
         ];
     }
 
