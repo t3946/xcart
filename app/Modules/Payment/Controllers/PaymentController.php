@@ -202,7 +202,11 @@ class PaymentController extends Controller
 
                         $txn->save();
 
-                        Xcart::app()->event->trigger('order:paid', ['model' => $order]);
+                        if (($payment_gross = (float) Xcart::app()->request->request->get('payment_gross')) && $payment_gross === (float) $order->total) {
+
+                            Xcart::app()->event->trigger('order:paid', ['model' => $order]);
+
+                        }
 
                         break;
 

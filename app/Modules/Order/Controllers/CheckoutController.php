@@ -12,6 +12,7 @@ use Modules\Order\Models\OrderExtraModel;
 use Modules\Order\Models\OrderGroupModel;
 use Modules\Order\Models\OrderModel;
 use Modules\Order\Models\OrderStatusModel;
+use Modules\Order\OrderModule;
 use Modules\Payment\Models\PaymentMethodModel;
 use Modules\Shipping\Models\ShippingModel;
 use Modules\Shipping\Models\ShippingRateModel;
@@ -92,7 +93,7 @@ class CheckoutController extends FrontendController
                     'firstname' => $contact['firstname'],
                     'login' => $user->login,
                     'order_prefix' => $app->getModule('Sites')->getSite()->getOrderPrefix(),
-                    'cb_status' => OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP1,
+                    'cb_status' => OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP2,
                     'user_id' => $user->id,
                 ]);
 
@@ -136,9 +137,6 @@ class CheckoutController extends FrontendController
         $cart = $app->cart;
         $errors = [];
 
-        if (!$user) {
-        }
-
         $order = $this->getOrder();
 
         if ($app->request->getIsPost()) {
@@ -150,6 +148,8 @@ class CheckoutController extends FrontendController
             if ($order->detail_models->count()) {
                 $order->detail_models->delete();
             }
+
+            $this->internalCartChanged($order);
 
             $data = $app->request->post->all();
 
@@ -273,14 +273,9 @@ class CheckoutController extends FrontendController
         $app = Xcart::app();
         $user = $app->user;
 
-        if (!$user) {
-        }
-
         $order = $this->getOrder();
 
-        if (OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP1 === $order->cb_status) {
-            $this->redirect('checkout:options');
-        }
+        $this->internalCartChanged($order);
 
         if ($app->request->getIsPost()) {
             if ($app->request->post->has('customer_notes')) {
@@ -316,9 +311,7 @@ class CheckoutController extends FrontendController
     {
         $order = $this->getOrder();
 
-        if (OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP1 === $order->cb_status) {
-            $this->redirect('checkout:options');
-        }
+        $this->internalCartChanged($order);
 
         $this->redirect('payment:process', ['gateway' => strtolower($order->payment_method->frontend_processor->processor_name)]);
 
@@ -341,6 +334,19 @@ class CheckoutController extends FrontendController
             ]);
         } else {
             $this->error(404);
+        }
+    }
+
+    private function internalCartChanged(OrderModel $order, $route = 'checkout:options')
+    {
+        if (OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP1 === $order->cb_status) {
+
+            $order->cb_status = OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP2;
+            $order->save();
+
+            Xcart::app()->flash->error(OrderModule::t('Cart changed: One or more items have changed!'));
+
+            $this->redirect($route);
         }
     }
 }
