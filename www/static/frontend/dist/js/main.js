@@ -42739,6 +42739,10 @@ __webpack_require__(139);
 
 __webpack_require__(146);
 
+var _sendAnalytics = __webpack_require__(159);
+
+var _sendAnalytics2 = _interopRequireDefault(_sendAnalytics);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 (function () {
@@ -42750,6 +42754,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
     window['Waves'] = _Waves2.default;
     window['WebFont'] = _webfontloader2.default;
     window['noUiSlider'] = _noUiSlider2.default;
+    window['sendAnalytics'] = new _sendAnalytics2.default();
     window.d = function () {
         var _console;
 
@@ -59353,6 +59358,10 @@ var _appHeadReduser = __webpack_require__(36);
 
 var _appCartRediser = __webpack_require__(111);
 
+var _sendAnalytics = __webpack_require__(159);
+
+var _sendAnalytics2 = _interopRequireDefault(_sendAnalytics);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 (function () {
@@ -59412,6 +59421,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
             (0, _appCartRediser.cartAdd)(data, function () {
                 productItemResetState(product);
             });
+            window.sendAnalytics.addToCart(product);
         }
     }).on('click', '.group_cart_add .button', function (e) {
         e.preventDefault();
@@ -72183,6 +72193,44 @@ exports.default = isTouch;
 function isTouch() {
     return window.whatInput.ask('loose') === 'touch' || window.whatInput.ask() === 'touch';
 }
+
+/***/ }),
+/* 159 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+exports.__esModule = true;
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var sendAnalytics = function () {
+    function sendAnalytics() {
+        var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+        _classCallCheck(this, sendAnalytics);
+    }
+
+    sendAnalytics.prototype.addToCart = function addToCart(product) {
+        if (window['ga']) {
+            window.ga('ec:addProduct', {
+                'id': product.dataset.product,
+                'name': product.dataset.name || '',
+                'category': product.dataset.category || '',
+                'brand': product.dataset.brand || '',
+                'price': product.dataset.price,
+                'quantity': product.dataset.quantity || 1
+            });
+            window.ga('ec:setAction', 'add', { list: product.dataset.source });
+            window.ga('send', 'event', 'UX', 'click', 'Add to cart');
+        }
+    };
+
+    return sendAnalytics;
+}();
+
+exports.default = sendAnalytics;
 
 /***/ })
 /******/ ]);
