@@ -42,9 +42,11 @@ class XCart extends Cart
         return $groups;
     }
 
-    public function onChange($item): void {
+    public function onChange(): void {
 
-        parent::onChange($item);
+        parent::onChange();
+
+        d(123);
 
         OrderHelper::OrderStepsReset($this->getCartNumber());
     }
