@@ -54,7 +54,7 @@ class Cart
 
     public function onRemoveItem($item): void {}
 
-    public function onChange($item): void {}
+    public function onChange(): void {}
 
     /**
      * @return \Modules\Cart\Interfaces\ICartStorage

@@ -45,7 +45,7 @@ class XTableStorage extends AbstractStorage
             }
         }
 
-        Xcart::app()->event->on('app:end', [$this, 'save']);
+        $this->cart->getEventManager()->on('app:end', [$this, 'save']);
     }
 
     public function getCartNumber():? int

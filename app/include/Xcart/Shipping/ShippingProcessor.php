@@ -174,7 +174,7 @@ abstract class ShippingProcessor
     /**
      * @return ShippingRateModel[]
      */
-    public function getShippingRatesEntities(): array
+    public function getShippingRatesEntities():? array
     {
         if ($this->aShippingRatesEntities === null && $this->aShippingMethods) {
             foreach ($this->aShippingMethods as $oShipping) {
