@@ -4,7 +4,9 @@
 
     <div class="off-canvas-content" data-off-canvas-content>
         <section id="content-wrapper">
+            {block "header"}
             <header itemscope itemtype="http://schema.org/WPHeader">
+
                 <section class="top-header hide-for-small-only">
                     <div class="row">
                         <div class="columns small-4">
@@ -67,6 +69,7 @@
                         <div class="hr hide-for-large"></div>
                     </div>
                 </div>
+
             </header>
 
             <div class="shadow"></div>
@@ -100,7 +103,7 @@
 
                 </div>
             </div>
-
+            {/block}
             <section id="content">
                 <section class="before-content">
                     {block "before-content"}

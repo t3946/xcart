@@ -61785,11 +61785,16 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 (function () {
     $(document).on('app.start', function () {
 
+        var stickyContainer = $('.sticky-menu-container');
+
+        if (stickyContainer.length <= 0) {
+            return;
+        }
+
         var lastKnownScrollPosition = 0;
         var ticking = false;
         var containerHeightRemoved = false;
 
-        var stickyContainer = $('.sticky-menu-container');
         var sticky = stickyContainer.find('.sticky');
 
         var processScroll = _.throttle(function () {
