@@ -61787,6 +61787,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
         var lastKnownScrollPosition = 0;
         var ticking = false;
+        var containerHeightRemoved = false;
 
         var stickyContainer = $('.sticky-menu-container');
         var sticky = stickyContainer.find('.sticky');
@@ -61804,15 +61805,16 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
         }, 50);
 
         var initStickyMenu = function initStickyMenu() {
-
             if (!(0, _isMedia2.default)('large')) {
+                if (!containerHeightRemoved) {
+                    stickyContainer.css({
+                        'height': 'auto'
+                    });
+                    containerHeightRemoved = true;
+                }
                 return;
             }
-
-            if (typeof stickyContainer === 'undefined') {
-                stickyContainer = $('.sticky-menu-container');
-                sticky = stickyContainer.find('.sticky');
-            }
+            containerHeightRemoved = false;
 
             var heightOfStickyBlock = sticky.height();
             if (heightOfStickyBlock <= 0) {

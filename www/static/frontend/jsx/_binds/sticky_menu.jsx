@@ -2,11 +2,13 @@ import isMedia from "../utils/isMedia";
 
 (() => {
 
+
     // После загрузки css
     $(document).on('app.start', function () {
 
         var lastKnownScrollPosition = 0;
         var ticking = false;
+        var containerHeightRemoved = false;
 
 
         let stickyContainer = $('.sticky-menu-container');
@@ -26,20 +28,23 @@ import isMedia from "../utils/isMedia";
 
         let initStickyMenu = function () {
 
+            // Выход если разрешение для мобильного устройства
             if (!isMedia('large')) {
+                if(!containerHeightRemoved){
+                    stickyContainer.css({
+                        'height': 'auto'
+                    });
+                    containerHeightRemoved = true;
+                }
                 return;
             }
-
-            if (typeof stickyContainer === 'undefined') {
-                stickyContainer = $('.sticky-menu-container');
-                sticky = stickyContainer.find('.sticky');
-            }
+            containerHeightRemoved = false;
 
             let heightOfStickyBlock = sticky.height();
             if (heightOfStickyBlock <= 0) {
                 return;
             }
-            //console.log(heightOfStickyBlock);
+
             stickyContainer.css({
                 'display': 'block',
                 'height': heightOfStickyBlock + 'px'
