@@ -11,8 +11,7 @@
                 <div class="columns shop-logo-block">
                     <a href="/">
                         <img src="/static/frontend/dist/images/logos/sites/{$.getSite->code|lower}/logo.svg"
-                             alt="{$.getSiteConfig->company_name->value}"
-                             class="show-for-large logo-big">
+                             alt="{$.getSiteConfig->company_name->value}" class="show-for-large logo-big">
 
                         <img src="/static/frontend/dist/images/logos/sites/{$.getSite->code|lower}/logo-small.svg"
                              alt="{$.getSiteConfig->company_name->value}"
@@ -21,17 +20,22 @@
                 </div>
                 <div class="columns s3-logo-block shrink">
                     <img src="/static/frontend/dist/images/logos/s3stores.svg"
-                         alt="s3stores" class="show-for-large s3-logo-big">
+                         alt="s3stores"
+                         class="show-for-large s3-logo-big">
+
                     <img src="/static/frontend/dist/images/logos/verified_secured_logo.svg"
-                         alt="verified&secured" class="show-for-large secured-logo-big">
+                         alt="verified&secured"
+                         class="show-for-large secured-logo-big">
+
                     <img src="/static/frontend/dist/images/logos/small_s3_logo.svg"
-                         alt="s3stores" class="show-for-small hide-for-large s3-logo-small">
+                         alt="s3stores"
+                         class="show-for-small hide-for-large s3-logo-small">
                 </div>
                 <div class="columns contacts-logo-block hide-for-small show-for-large">
                     <div class="working-hours">
                         <div class="text-order-online">
                             <span class="green-circle-icon">
-                                <img src="/static/frontend/dist/images/icons/cart/white_check_mark_icon.svg" alt=""
+                                <img src="/static/frontend/images/icons/cart/white_check_mark_icon.svg" alt=""
                                      class="white-check-mark">
                             </span>
                             <span>Order online or call us. Operators are standing by!</span>
@@ -43,7 +47,8 @@
                     </div>
                     <div class="after-hours">
                         <div class="text-order-online">
-                            <img src="/static/frontend/dist/images/icons/cart/place_order_online_icon.svg" alt=""
+                            <img src="/static/frontend/dist/images/icons/cart/place_order_online_icon.svg"
+                                 alt=""
                                  class="clock-icon">
                             <span>Place order online 24/7</span>
                         </div>
@@ -57,42 +62,47 @@
         </section>
 
         <div class="row cart-steps-container">
-            <a class="columns shrink cart-steps-back">
+            <a class="columns shrink cart-steps-back active">
                 <img src="/static/frontend/dist/images/icons/cart/cart_small_arrow_back.png" alt="">
                 <span>BACK</span>
             </a>
 
             <section class="cart-steps-section columns">
                 <ul class="cart-steps-items no-bullet">
-                    <li class="cart-step">
+                    <li class="cart-step inactive">
                         <a href="" class="step-link">
-                            <span class="step-number">1.</span>
+                            <span class="step-number">1</span>
                             <span class="step-label">Shopping cart</span>
                         </a>
+                        <div class="arrow-right"></div>
                     </li>
-                    <li class="cart-step">
+                    <li class="cart-step inactive">
                         <a href="" class="step-link">
-                            <span class="step-number">2.</span>
+                            <span class="step-number">2</span>
                             <span class="step-label">Shipping Address</span>
                         </a>
+                        <div class="arrow-right"></div>
                     </li>
-                    <li class="cart-step">
+                    <li class="cart-step inactive">
                         <a href="" class="step-link">
-                            <span class="step-number">3.</span>
+                            <span class="step-number">3</span>
                             <span class="step-label">Shipping & payment options</span>
                         </a>
+                        <div class="arrow-right"></div>
                     </li>
-                    <li class="cart-step">
+                    <li class="cart-step inactive">
                         <a href="" class="step-link">
-                            <span class="step-number">4.</span>
+                            <span class="step-number">4</span>
                             <span class="step-label">order review</span>
                         </a>
+                        <div class="arrow-right"></div>
                     </li>
-                    <li class="cart-step">
+                    <li class="cart-step active">
                         <a href="" class="step-link">
-                            <span class="step-number">5.</span>
+                            <span class="step-number">5</span>
                             <span class="step-label">Payment</span>
                         </a>
+                        <div class="arrow-right"></div>
                     </li>
                 </ul>
             </section>
