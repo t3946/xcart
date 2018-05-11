@@ -4,7 +4,21 @@
 <section class="cart-page">
     <div class="row">
         <div class="columns large-12">
-            <h1>{t 'Shopping Cart' dict='cart'}</h1>
+            <div class="head_line">
+                <div class="b-back">
+                    <a href="/" class="button yellow-white waves waves-orange waves-effect">
+                        <strong>&#65513;</strong> Shop more
+                    </a>
+                </div>
+                <div class="head">
+                    <h1>{t 'Shopping Cart' dict='cart'}</h1>
+                </div>
+                <div class="b-next">
+                    <a href="{url 'checkout:shipping'}" class="button yellow waves waves-orange waves-effect">
+                        Checkout &#65515;
+                    </a>
+                </div>
+            </div>
 
             {foreach $.app->cart->getItemsGroupedBy() as $gi => $group}
             {set $items = $group.items}

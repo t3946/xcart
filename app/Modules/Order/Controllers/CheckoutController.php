@@ -27,6 +27,15 @@ use Xcart\Connection;
 class CheckoutController extends FrontendController
 {
 
+    public function beforeAction($action, $params)
+    {
+        parent::beforeAction($action, $params);
+
+        if (! Xcart::app()->cart->isValid()) {
+            $this->redirect('cart:list');
+        }
+    }
+
     protected function getOrder(): OrderModel
     {
         /** @var OrderModel $order */

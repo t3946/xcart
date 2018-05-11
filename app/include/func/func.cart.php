@@ -1642,7 +1642,7 @@ function func_calculate_single($cart, $products, $login, $login_type, $provider_
 
     if (!empty($shipping_groups) && is_array($shipping_groups)) {
         foreach ($shipping_groups as $m_id => $s_g) {
-            if ($shipping_groups[ $m_id ]['d_minimum_order_amount_in_us'] > 0 && $shipping_groups[ $m_id ]['d_minimum_order_amount'] == "applies_to_all_orders" && $current_order_amount_in_us[ $m_id ] < $shipping_groups[ $m_id ]['d_minimum_order_amount_in_us'] && $shipping_groups[ $m_id ]['d_for_orders_below_min_order_amount'] == "are_rejected") {
+            if ($shipping_groups[ $m_id ]['d_minimum_order_amount_in_us'] > 0 && $shipping_groups[ $m_id ]['d_minimum_order_amount'] === 'applies_to_all_orders' && $current_order_amount_in_us[ $m_id ] < $shipping_groups[ $m_id ]['d_minimum_order_amount_in_us'] && $shipping_groups[ $m_id ]['d_for_orders_below_min_order_amount'] === 'are_rejected') {
                 $need_add_more = $shipping_groups[ $m_id ]['d_minimum_order_amount_in_us'] - $current_order_amount_in_us[ $m_id ];
                 $shipping_groups[ $m_id ]['need_add_more'] = $need_add_more;
             }

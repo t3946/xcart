@@ -11,7 +11,7 @@ class GoodsModule extends Module
     {
         $template = Xcart::app()->template->getRenderer();
 
-        $template->addAccessorSmart('get_warehouse', self::className()."::getWarehouse", $template::ACCESSOR_CALL);
+        $template->addAccessorSmart('get_warehouse', self::class. '::getWarehouse', $template::ACCESSOR_CALL);
     }
 
     public static function getWarehouse($id)
@@ -19,7 +19,7 @@ class GoodsModule extends Module
         return DistributorModel::objects()->get(['pk' => $id]);
     }
 
-    public static function getAdminMenu()
+    public static function getAdminMenu(): array
     {
         $user = Xcart::app()->user;
         $router = Xcart::app()->router;
@@ -30,7 +30,7 @@ class GoodsModule extends Module
             'route' => $router->url('product:group_products'),
         ]];
 
-        if (($user && $user->getIsSuperuser())) {
+        if ($user && $user->getIsSuperuser()) {
             $items[] = [
                 'icon' => 'fa fa-object-group',
                 'name' => 'Grouping products',
