@@ -155,9 +155,11 @@
                     </div>
 
                     <div class="errors">
-                        <div class="err minamount {if $warehouse->checkMinimalAmount($group.subtotal)}hide{/if}">
-
-                        </div>
+                        {if $warehouse->getMinimalAmount()}
+                        {p_label cls="fill err minimal-amount " ~ ($warehouse->checkMinimalAmount($group.subtotal) ? 'hide': '')}
+                            The minimum order amount for this product line is US$ {$warehouse->getMinimalAmount()}
+                        {/p_label}
+                        {/if}
                     </div>
                 </div>
                 {/foreach}

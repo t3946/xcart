@@ -23,7 +23,7 @@ class DashboardModule extends Module
                 $eta_date_y = $max_eta + ($config["backorder_decision_request"]["backorder_eta_date_y"]*60*60*24);
 
                 if (time() < $eta_date_x){
-                    return "#cfe2f3";
+                    return '#cfe2f3';
                 }
 
                 if ($eta_date_x < time() && time() < $eta_date_y){
@@ -31,7 +31,7 @@ class DashboardModule extends Module
                 }
 
                 if (time() > $eta_date_y){
-                   return "do_not_show";
+                   return 'do_not_show';
                 }
             }
             return '';
@@ -42,7 +42,7 @@ class DashboardModule extends Module
             $t_models = [];
             foreach ($models as $model)
             {
-                if (is_null($gid) && empty($model->group_id)) {
+                if (null === $gid && empty($model->group_id)) {
                     $t_models[] = $model;
                 }
                 elseif ($model->group_id == $gid) {

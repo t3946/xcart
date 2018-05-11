@@ -5,6 +5,7 @@ import _ from 'lodash';
 (()=>{
     let page_cart = document.querySelector('.cart-page');
     if (page_cart) {
+        let n_request = 0;
         let recalc = () => {
             page_cart = document.querySelector('.cart-page');
 
@@ -40,6 +41,7 @@ import _ from 'lodash';
 
         let sync = _.throttle(product => {
             let key = product.dataset.key, quantity = product.dataset.quantity || 1;
+            let number_request = ++n_request;
 
             $.post(product.dataset.cartAction, {
                 uid: key,
@@ -48,10 +50,10 @@ import _ from 'lodash';
                 .done(data => {
                     let p_data = page_cart.dataset;
 
-                    if (p_data.quantity != data.quantity || p_data.total != data.total)
+                    if (number_request === n_request && ( p_data.quantity != data.quantity || p_data.total != data.total))
                     {
                         $.get('/cart/?_=' + (new Date).getTime(), {})
-                            .done(data => $(page_cart).html(data.content || data));
+                            .done(data => {if (number_request === n_request) $(page_cart).html(data.content || data);});
                     }
                 });
         }, 200);

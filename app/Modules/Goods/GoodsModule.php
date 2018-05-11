@@ -12,6 +12,12 @@ class GoodsModule extends Module
         $template = Xcart::app()->template->getRenderer();
 
         $template->addAccessorSmart('get_warehouse', self::class. '::getWarehouse', $template::ACCESSOR_CALL);
+        $template->addBlockFunction('p_label', function($params, $html){
+
+            $params['text'] = $html;
+
+            echo Xcart::app()->template->render('product/messages/_p_label.tpl', $params);
+        });
     }
 
     public static function getWarehouse($id)

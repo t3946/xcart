@@ -29,6 +29,7 @@ import _ from 'lodash';
     };
 
     let recheckActives = (e, params = getValues(e))=>{
+        console.log('recheck', e);
         params.$container.find('.btn').removeClass('active');
 
         if (params.val < params.max) {
@@ -57,7 +58,16 @@ import _ from 'lodash';
         });
     };
 
-    recheckActives = _.throttle(recheckActives, 50);
+    let recheckActives_throttled = _.throttle(recheckActives, 20);
+    recheckActives = (e, params) => {
+        let group = e.target.closest('.quantity-group');
+
+        clearTimeout($.data(group, 'timer'));
+
+        $.data(group, 'timer', setTimeout(() => {
+            recheckActives_throttled(e, params);
+        }, 100));
+    };
 
     $(document)
         .on('click', '.quantity-group .btn', e => {
@@ -74,9 +84,7 @@ import _ from 'lodash';
             }
 
             // params.$input.val(params.val);
-
             recheckActives(e, params);
-
         })
         .on('change blur propertychange mousewheel keyup', '.quantity-group input', e => recheckActives(e));
 })();

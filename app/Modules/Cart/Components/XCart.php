@@ -69,10 +69,6 @@ class XCart extends Cart
 
             foreach ( DistributorModel::objects()->all(['pk__in' => $mids]) as $model) {
                 $distrs[$model->pk] = $model;
-
-                if ($model->d_minimum_order_amount && $model->d_minimum_order_amount_in_us) {
-                    $dist_valid[$model->pk] = false;
-                }
             }
 
             foreach ($groups as $mid => $item) {

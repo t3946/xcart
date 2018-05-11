@@ -272,6 +272,15 @@ $remove: (
       }
     }
 
+
+    .errors {
+      text-align: right;
+
+      .err {
+        display: inline-block;
+      }
+    }
+
   }
 
   .hr {

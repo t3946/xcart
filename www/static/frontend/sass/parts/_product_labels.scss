@@ -15,6 +15,13 @@
     display: block;
     overflow: hidden;
     padding: 1px;
+
+    //&:after {
+    //  content: '';
+    //  position: absolute;
+    //  left:0;right:0;
+    //  top: 0; bottom: 0;
+    //}
   }
 
   .text {
@@ -58,6 +65,11 @@
   &.out-of-stock {
     i {
       background-image: url("../images/icons/item_product/out_of_stock.svg");
+    }
+  }
+  &.minimal-amount {
+    i {
+      background-image: url("../images/icons/item_product/minimal_amount.svg");
     }
   }
 
@@ -152,6 +164,15 @@
       i {
         background-color: #FF7200;
         background-image: url("../images/icons/item_product/white_out_of_stock.svg");
+      }
+    }
+
+    &.minimal-amount {
+      border-color: #9A1524;
+
+      i {
+        background-color: #9A1524;
+        background-image: url("../images/icons/item_product/white_minimal_amount.svg");
       }
     }
   }
