@@ -3,6 +3,7 @@
 namespace Modules\Goods\Controllers;
 
 use Modules\Goods\Models\CategoryModel;
+use Modules\Meta\Types\MetaType;
 use Xcart\App\Main\Xcart;
 
 class CategoryController extends AbstractCatalogController
@@ -29,9 +30,9 @@ class CategoryController extends AbstractCatalogController
         /** @var \Modules\Sites\Models\SiteModel $site */
         $site = Xcart::app()->getModule('Sites')->getSite();
 
-        $this->setMetaTemplate('categories:base', [
+        $this->setMetaBase(MetaType::CATEGORY, [
             'model' => $model,
-            'site' => $site,
+            'site' => $site
         ]);
 
         $this->view_internal($model);
