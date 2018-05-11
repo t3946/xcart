@@ -40,6 +40,7 @@
         h1 {
           color: #fff;
           margin: 0;
+          padding-top: 0;
 
           font: {
             weight: 300;
@@ -70,13 +71,13 @@
           @include breakpoint(medium down) {
             padding-top: 2em;
             position: absolute;
-            margin-left: -20px;
+            margin-left: -10px;
             left: 0;
             bottom: 0;
           }
 
           @include breakpoint(sm down) {
-            margin-left: -10px;
+            margin-left: -5px;
 
             .desc {
               //padding-bottom: 1em;
@@ -165,10 +166,6 @@
             width: 550px;
           }
 
-          @include breakpoint(large-half-xl up) {
-            width: 600px;
-          }
-
           @include breakpoint(xl up) {
             width: 740px;
           }
@@ -198,10 +195,6 @@
 
         @include breakpoint(large up) {
           height: rem-calc(340);
-        }
-
-        @include breakpoint(large-half-xl up) {
-          margin-bottom: rem-calc(90);
         }
 
         @include breakpoint(xl up) {

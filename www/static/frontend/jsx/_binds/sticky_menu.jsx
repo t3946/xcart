@@ -7,12 +7,17 @@ import cssFileLoaded from "../utils/cssFileLoaded";
     // После загрузки css
     $(document).on('app.start', function () {
 
+        var stickyContainer = $('.sticky-menu-container');
+
+        // выход, если нет прилипающего меню
+        if(stickyContainer.length <= 0){
+            return;
+        }
+
         var lastKnownScrollPosition = 0;
         var ticking = false;
         var containerHeightRemoved = false;
 
-
-        let stickyContainer = $('.sticky-menu-container');
         let sticky = stickyContainer.find('.sticky');
 
         let processScroll = _.throttle(function () {
