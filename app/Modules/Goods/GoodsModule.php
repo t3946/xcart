@@ -4,9 +4,12 @@ namespace Modules\Goods;
 use Modules\Distributor\Models\DistributorModel;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Module\Module;
+use Xcart\App\Traits\RenderTrait;
 
 class GoodsModule extends Module
 {
+    use RenderTrait;
+
     public static function onApplicationRun()
     {
         $template = Xcart::app()->template->getRenderer();
@@ -16,7 +19,7 @@ class GoodsModule extends Module
 
             $params['text'] = $html;
 
-            echo Xcart::app()->template->render('product/messages/_p_label.tpl', $params);
+            return self::renderTemplate('product/messages/_p_label.tpl', $params);
         });
     }
 

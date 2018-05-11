@@ -156,7 +156,7 @@
 
                     <div class="errors">
                         {if $warehouse->getMinimalAmount()}
-                        {p_label cls="fill err minimal-amount " ~ ($warehouse->checkMinimalAmount($group.subtotal) ? 'hide': '')}
+                        {p_label cls="err fill minimal-amount " ~ ($warehouse->checkMinimalAmount($group.subtotal) ? 'hide': '')}
                             The minimum order amount for this product line is US$ {$warehouse->getMinimalAmount()}
                         {/p_label}
                         {/if}
