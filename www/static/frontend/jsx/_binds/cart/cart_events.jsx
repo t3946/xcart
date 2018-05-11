@@ -100,17 +100,18 @@ import { cartAdd } from "../../redusers/appCartRediser";
             let qPrev = data.prevState.cart.quantity;
             let mc_count = document.querySelector('.mc_count');
 
-            if (qNew > 99) {
-                mc_count.classList.add('small');
+            if (mc_count) {
+                if (qNew > 99) {
+                    mc_count.classList.add('small');
+                }
+                else {
+                    mc_count.classList.remove('small');
+                }
+
+                mc_count.innerHTML = qNew;
+
+                (new CountUp('desktop-cart-quantity', qPrev, qNew,0, 1, {useEasing: true})).start();
             }
-            else {
-                mc_count.classList.remove('small');
-            }
-
-            mc_count.innerHTML = qNew;
-
-            (new CountUp('desktop-cart-quantity', qPrev, qNew,0, 1, {useEasing: true})).start();
-
         })
         .on('click', '.minicart.enabled .cart_info', (e) => {
             e.preventDefault();

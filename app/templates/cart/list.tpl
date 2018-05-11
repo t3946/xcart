@@ -132,7 +132,10 @@
                     </div>
                 </div>
 
-                <div class="warehouse_subtotal wh_{$gi}" data-wh="{$gi}">
+                <div class="warehouse_subtotal wh_{$gi}"
+                     data-wh="{$gi}"
+                     data-minamount="{$warehouse->getMinimalAmount()}"
+                >
                     <div class="table">
                         <div class="table-body">
 
@@ -147,6 +150,12 @@
                                     US$ <span class="wh_{$gi}_subtotal subtotal" var-group-subtotal>{$group.subtotal|number_format:2}</span>
                                 </div>
                             </div>
+
+                        </div>
+                    </div>
+
+                    <div class="errors">
+                        <div class="err minamount {if $warehouse->checkMinimalAmount($group.subtotal)}hide{/if}">
 
                         </div>
                     </div>

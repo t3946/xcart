@@ -64,29 +64,19 @@ class XCart extends Cart
 
         if ($mids = array_keys($groups)) {
             /** @var DistributorModel[] $distrs */
-            $distrs = DistributorModel::objects()->all(['pk__in' => $mids]);
-            $dist_min = [];
+            $distrs = [];
             $dist_valid = [];
 
-            foreach ( $distrs as $model) {
+            foreach ( DistributorModel::objects()->all(['pk__in' => $mids]) as $model) {
+                $distrs[$model->pk] = $model;
+
                 if ($model->d_minimum_order_amount && $model->d_minimum_order_amount_in_us) {
-                    $dist_min[$model->pk] += $model->d_minimum_order_amount_in_us;
                     $dist_valid[$model->pk] = false;
                 }
             }
 
             foreach ($groups as $mid => $item) {
-                if ($dist_min[$mid]) {
-                    $dist_min[$mid] -= $item->getPrice();
-                }
-
-                if ($dist_min[$mid] <= 0 ) {
-                    unset($dist_valid[$mid]);
-                }
-            }
-
-            if ($dist_valid) {
-                return false;
+                $dist_valid[$mid] = $distrs[$mid]->checkMinimalAmount($item['subtotal']);
             }
         }
 

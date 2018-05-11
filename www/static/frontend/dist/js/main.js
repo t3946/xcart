@@ -59441,15 +59441,17 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
         var qPrev = data.prevState.cart.quantity;
         var mc_count = document.querySelector('.mc_count');
 
-        if (qNew > 99) {
-            mc_count.classList.add('small');
-        } else {
-            mc_count.classList.remove('small');
+        if (mc_count) {
+            if (qNew > 99) {
+                mc_count.classList.add('small');
+            } else {
+                mc_count.classList.remove('small');
+            }
+
+            mc_count.innerHTML = qNew;
+
+            new _countUp2.default('desktop-cart-quantity', qPrev, qNew, 0, 1, { useEasing: true }).start();
         }
-
-        mc_count.innerHTML = qNew;
-
-        new _countUp2.default('desktop-cart-quantity', qPrev, qNew, 0, 1, { useEasing: true }).start();
     }).on('click', '.minicart.enabled .cart_info', function (e) {
         e.preventDefault();
 
