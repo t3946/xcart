@@ -8,6 +8,8 @@ use Modules\Core\Helpers\Cache;
 use Modules\Goods\Controllers\AbstractCatalogController;
 use Modules\Goods\Models\CategoryModel;
 use Modules\Goods\Models\ProductModel;
+use Modules\Meta\Helpers\MetaExtHelper;
+use Modules\Meta\Types\MetaType;
 use Xcart\App\Components\Breadcrumbs;
 use Xcart\App\Main\Xcart;
 use Xcart\Brand;
@@ -24,9 +26,9 @@ class DefaultController extends AbstractCatalogController
 
         $model = BrandModel::objects()->get(['brandid' => $id]);
 
-        $this->setMetaTemplate('brands:base', [
+        $this->setMetaBase(MetaType::BRAND, [
             'model' => $model,
-            'site' => $site,
+            'site' => $site
         ]);
 
         $this->view_internal($model);
