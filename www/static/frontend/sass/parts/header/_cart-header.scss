@@ -1,4 +1,8 @@
 .cart-header {
+
+  overflow: hidden;
+
+  $arrow-width: rem-calc(10);
   $cart-breadcrumbs-height: rem-calc(36);
   $last-cart-breadcrumbs-item-height: rem-calc(36+10);
 
