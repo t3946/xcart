@@ -7,6 +7,7 @@ use Modules\Core\Models\CountryModel;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\ForeignField;
+use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Model;
 
 class AddressModel extends Model
@@ -62,6 +63,10 @@ class AddressModel extends Model
             ],
             'city' => [
                 'class' => CharField::class,
+                'null' => false,
+            ],
+            'phone' => [
+                'class' => IntField::class,
                 'null' => false,
             ],
         ];

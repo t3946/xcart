@@ -5,17 +5,20 @@
 
     {block 'seo'}{meta controller=$this!:null}{/block}
 
+    {set $site = $.getSite}
+    {set $config  = $site->getConfig()}
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
     <meta name="format-detection" content="telephone=no">
     <meta name="format-detection" content="date=no">
     <meta name="format-detection" content="address=no">
     <meta name="format-detection" content="email=no">
 
-    <link rel="dns-prefetch" href="{$.getSite->getHttpOrHttps() ~ $.getSite->getConfig().CDN_domain}">
+    <link rel="dns-prefetch" href="{$site->getHttpOrHttps() ~ $config.CDN_domain}">
     <link rel="dns-prefetch" href="https://www.google-analytics.com">
     <link rel="dns-prefetch" href="https://fonts.googleapis.com">
 
-    <link rel="preconnect" href="{$.getSite->getHttpOrHttps() ~ $.getSite->getConfig().CDN_domain}">
+    <link rel="preconnect" href="{$site->getHttpOrHttps() ~ $config.CDN_domain}">
     <link rel="preconnect" href="https://www.google-analytics.com">
     <link rel="preconnect" href="https://fonts.googleapis.com">
 
@@ -30,10 +33,10 @@
     {*<meta name="apple-mobile-web-app-title" content="S3 Stores">*}
 
     <meta name="mobile-web-app-capable" content="yes">
-    <meta name="application-name" content="{$.getSite->getName()}">
+    <meta name="application-name" content="{$site->getName()}">
 
     {*<meta name="url" itemprop="url" content="{$.getSite->getAbsoluteUrl()}" >*}
-    <meta name="name" itemprop='name' content="{$.getSite->getName()}">
+    <meta name="name" itemprop='name' content="{$site->getName()}">
 
     <link rel="shortcut icon" href="/favicon.png" type="image/png" />
 
@@ -69,10 +72,10 @@
     {
       "@context": "http://schema.org",
       "@type": "WebSite",
-      "url": "https://{$.getSite->domain}/",
+      "url": "https://{$site->domain}/",
       "potentialAction": {
         "@type": "SearchAction",
-        "target": "https://{$.getSite->domain}/search?q={ignore}{search_term_string}{/ignore}",
+        "target": "https://{$site->domain}/search?q={ignore}{search_term_string}{/ignore}",
         "query-input": "required name=search_term_string"
       }
     }
@@ -83,6 +86,14 @@
     {*<script src="/static/frontend/dist/js/vendors.js?v={frontend_version resource='vendors.js'}" defer></script>*}
 
     {block 'head'}{/block}
+
+    {set $gConfig = $site->getGlobalConfig()}
+
+    {$gConfig.google_analitics_tracking_script
+        |replace:'{{ga_account_nr}}':$config.cidev_ga_code_number
+        |replace:'{{ga_ec_data}}':"ga('require', 'ec');"
+        |replace:'{{ga_send}}':"ga('send', 'pageview');"
+    }
 
     {get_assets:raw type='css' position='head'}
     {get_assets:raw type='js' position='head'}

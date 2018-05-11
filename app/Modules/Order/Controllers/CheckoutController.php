@@ -76,6 +76,8 @@ class CheckoutController extends FrontendController
                     $s_state = $state_m->code;
                 }
 
+                $phone = preg_replace('/\D/S', '', $contact['phone']);
+
                 if ($user && $user->id) {
                     [$address] = AddressModel::objects()->getOrCreate([
                         'user_id' => $user->id,
@@ -87,6 +89,7 @@ class CheckoutController extends FrontendController
                         'zip' => $shipping['s_zipcode'],
                         'state' => $s_state,
                         'city' => $shipping['s_city'],
+                        'phone' => $phone
                     ]);
                     //$address->save();
                 }
@@ -100,7 +103,7 @@ class CheckoutController extends FrontendController
                     's_zipcode' => $shipping['s_zipcode'],
                     's_state' => $s_state,
                     's_city' => $shipping['s_city'],
-                    'phone' => preg_replace('/\D/S', '', $contact['phone']),
+                    'phone' => $phone,
                     'phone_ext' => $contact['phone_ext'],
                     'email' => $contact['email'],
                     'firstname' => $contact['firstname'],
@@ -147,7 +150,7 @@ class CheckoutController extends FrontendController
         $app = Xcart::app();
         $user = $app->user;
         $site = $app->getModule('Sites')->getSite();
-        $ship_module = Xcart::app()->getModule('Shipping');
+        $ship_module = $app->getModule('Shipping');
         $cart = $app->cart;
         $errors = [];
 
