@@ -150,7 +150,7 @@ class CheckoutController extends FrontendController
         $app = Xcart::app();
         $user = $app->user;
         $site = $app->getModule('Sites')->getSite();
-        $ship_module = Xcart::app()->getModule('Shipping');
+        $ship_module = $app->getModule('Shipping');
         $cart = $app->cart;
         $errors = [];
 

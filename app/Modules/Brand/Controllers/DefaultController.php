@@ -74,6 +74,7 @@ class DefaultController extends AbstractCatalogController
 
         return [
             'categories' => $categories ? : [],
+            'analytics_source' => 'brand'
         ];
     }
 
