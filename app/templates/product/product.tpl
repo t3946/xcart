@@ -13,6 +13,9 @@
 {block "content"}
 <section class="product-page default-content-page"
          data-product="{$model->productid}"
+         data-name="{$model->getFrontendName()|escape}"
+         data-category="{$category->category|escape}"
+         data-source="detail-page"
          data-prices='{$model->getPrices()|json_encode}'
          {if $model->getFrontendPrice() < $model->list_price}
          data-list-price="{$model->list_price}"

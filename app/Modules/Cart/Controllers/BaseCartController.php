@@ -105,6 +105,7 @@ abstract class BaseCartController extends FrontendController
         }
 
         $cart = $this->getCart();
+        $cart->isValid();
 
         $this->display($this->listTemplate, [
             'items' => $cart->getItems(),

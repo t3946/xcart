@@ -37,7 +37,7 @@ class Cart
      */
     private $_discounts;
 
-    public function init()
+    public function init(): void
     {
         $signal = $this->getEventManager();
         $signal->on('cart:addItem', [$this, 'onAddItem']);
@@ -112,11 +112,13 @@ class Cart
         $key = $this->makeKey($object, $data);
         if ($this->has($object, $data)) {
             $oldItem = $this->get($object, $data);
+
             $item = new CartItem([
                 'object' => $oldItem->object,
                 'data' => $oldItem->data,
                 'quantity' => $oldItem->quantity + $quantity,
                 'type' => $type,
+                'cart' => $this,
             ]);
 
             $this->getStorage()->remove($key);
@@ -127,6 +129,7 @@ class Cart
                 'data' => $data,
                 'quantity' => $quantity,
                 'type' => $type,
+                'cart' => $this,
             ]);
         }
 
@@ -340,18 +343,19 @@ class Cart
     /**
      * @return bool
      */
-    public function getIsEmpty()
+    public function getIsEmpty(): bool
     {
         return $this->getStorage()->count() === 0;
     }
 
-    public function applyDiscount(ICartItem $object, $quantity = 1, $type = null, array $data = [])
+    public function applyDiscount(ICartItem $object, $quantity = 1, $type = null, array $data = []): float
     {
         $item = new CartItem([
             'quantity' => $quantity,
             'type' => $type,
             'data' => $data,
-            'object' => $object
+            'object' => $object,
+            'cart' => $this,
         ]);
         $item->applyDiscount($this, $this->getDiscounts());
         return $item->getPrice();

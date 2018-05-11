@@ -2,6 +2,7 @@
 
 namespace Modules\Cart\Components;
 
+use Modules\Distributor\Models\DistributorModel;
 use Modules\Order\Helpers\OrderHelper;
 
 class XCart extends Cart
@@ -17,6 +18,10 @@ class XCart extends Cart
         return $this->getStorage()->getCartNumber();
     }
 
+    /**
+     * @param string $property
+     * @return CartItem[]
+     */
     public function getItemsGroupedBy($property = 'manufacturerid'): array
     {
         $groups = [];
@@ -42,10 +47,40 @@ class XCart extends Cart
         return $groups;
     }
 
-    public function onChange($item): void {
+    public function onChange(): void {
 
-        parent::onChange($item);
+        parent::onChange();
 
         OrderHelper::OrderStepsReset($this->getCartNumber());
+    }
+
+    public function isValid():bool
+    {
+        if ($this->getIsEmpty()) {
+            return false;
+        }
+
+        $groups = $this->getItemsGroupedBy();
+
+        if ($mids = array_keys($groups)) {
+            /** @var DistributorModel[] $distrs */
+            $distrs = [];
+            $dist_valid = [];
+
+            foreach ( DistributorModel::objects()->all(['pk__in' => $mids]) as $model) {
+                $distrs[$model->pk] = $model;
+
+                if ($model->d_minimum_order_amount && $model->d_minimum_order_amount_in_us) {
+                    $dist_valid[$model->pk] = false;
+                }
+            }
+
+            foreach ($groups as $mid => $item) {
+                $dist_valid[$mid] = $distrs[$mid]->checkMinimalAmount($item['subtotal']);
+            }
+        }
+
+
+        return true;
     }
 }

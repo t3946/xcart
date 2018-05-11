@@ -12,6 +12,11 @@ use Xcart\App\Orm\Model;
 use Xcart\App\Traits\DataModelTrait;
 use Xcart\Manufacturer;
 
+/**
+ * @property float price_coef_z
+ * @property float d_minimum_order_amount_in_us
+ * @property string d_minimum_order_amount
+ */
 class DistributorModel extends Model
 {
     use DataModelTrait, AutoMetaTrait;
@@ -59,15 +64,13 @@ class DistributorModel extends Model
         return $price;
     }
 
-    public function hasDefaultShippingZone()
+    public function hasDefaultShippingZone(): bool
     {
         return ShippingRateModel::objects()
-                ->filter(
-                    [
-                        'manufacturerid' => $this->manufacturerid,
-                        'zoneid' => 0
-                    ]
-                )->count() > 0;
+                ->filter([
+                    'manufacturerid' => $this->manufacturerid,
+                    'zoneid' => 0
+                ])->count() > 0;
     }
 
     public function getDistributorTime(): DateTime
@@ -91,5 +94,19 @@ class DistributorModel extends Model
         }
 
         return $result;
+    }
+
+    public function checkMinimalAmount($subtotal = 0): bool
+    {
+        return $this->getMinimalAmount() < $subtotal;
+    }
+
+    public function getMinimalAmount(): float
+    {
+        if ($this->d_minimum_order_amount && $this->d_minimum_order_amount_in_us) {
+            return (float)$this->d_minimum_order_amount_in_us;
+        }
+
+        return 0;
     }
 }

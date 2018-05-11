@@ -48,9 +48,11 @@ class DefaultController extends FrontendController
             $this->redirect($model->getAbsoluteUrl(true), 301);
         }
 
+        $category = $model->getMainCategory();
+
         $this->setMetaBase(MetaType::PRODUCT, [
             'model' => $model,
-            'category' => $model->getMainCategory(),
+            'category' => $category,
             'site' => $site
         ]);
 
@@ -58,6 +60,7 @@ class DefaultController extends FrontendController
             'model' => $model,
             'breadcrumbs' => Xcart::app()->breadcrumbs->set($model->getBreadcrumbs()),
             'tabs' => TabDataHelper::getTabsFromManufacturer($model->manufacturerid),
+            'category' => $category,
         ];
 
         if ($model->isGroupRoot()) {

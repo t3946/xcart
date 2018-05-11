@@ -71,4 +71,11 @@ class CategoryController extends AbstractCatalogController
         //echo '11';
         echo $this->render('pages/contact.tpl');
     }
+
+    public function getAdvancedData($data = null): array
+    {
+        return [
+            'analytics_source' => 'category_list'
+        ];
+    }
 }
