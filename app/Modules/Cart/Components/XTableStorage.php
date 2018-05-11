@@ -41,16 +41,30 @@ class XTableStorage extends AbstractStorage
                 $this->cart->setDiscounts($data['discounts']);
             }
             if (!empty($data['cart'])) {
-                $this->data = $data['cart'];
+                $this->data = $this->prepareCartPositions($data['cart']);
             }
         }
 
         $this->cart->getEventManager()->on('app:end', [$this, 'save']);
     }
 
+    private function prepareCartPositions(array $items = []): array
+    {
+        $items = $items ?? [];
+
+        /** @var CartItem $item */
+        foreach ($items as $item) {
+            $item->setCart($this->cart);
+        }
+
+        return $items;
+    }
+
     public function getCartNumber():? int
     {
-        return $this->model->id;
+        return $this->model
+            ? $this->model->id
+            : null;
     }
 
     public function add($key, $value): AbstractStorage

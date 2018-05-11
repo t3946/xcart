@@ -46,8 +46,6 @@ class XCart extends Cart
 
         parent::onChange();
 
-        d(123);
-
         OrderHelper::OrderStepsReset($this->getCartNumber());
     }
 }

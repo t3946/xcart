@@ -232,7 +232,7 @@ class CartController extends BaseCartController
 
                 $tq = $model->getActualQuantity($quantity);
 
-                if ($tq) {
+                if ($item && $tq) {
                     $item->setQuantity($tq);
 
                     if ($tq != $quantity) {
