@@ -42,13 +42,20 @@
 
       ul{
         display: flex;
+
         li{
           display:block;
           height: rem-calc(36);
-          .step-link{
-            .step-number{
+          line-height: rem-calc(36);
+          text-align: center;
+          border: 1px solid #dddddd;
+          vertical-align: center;
+          overflow: hidden;
 
-            }
+          .step-link{
+            text-decoration: none;
+            color: #acacac;
+
             .step-label{
               display:none;
             }
