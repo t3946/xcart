@@ -1,58 +1,73 @@
 import isMedia from "../utils/isMedia";
 import cssFileLoaded from "../utils/cssFileLoaded";
 
-(()=>{
+(() => {
+
 
     // После загрузки css
     $(document).on('app.start', function () {
 
         var lastKnownScrollPosition = 0;
         var ticking = false;
+        var containerHeightRemoved = false;
 
-        if (isMedia('large')) {
 
-            let stickyContainer = $('.sticky-container');
-            let sticky = stickyContainer.find('.sticky');
+        let stickyContainer = $('.sticky-menu-container');
+        let sticky = stickyContainer.find('.sticky');
 
-            let checkMenuPosition = (lastKnownScrollPosition) => {
+        let processScroll = _.throttle(function () {
 
-                if (isMedia('large')) {
-                    if (lastKnownScrollPosition >= stickyContainer.offset().top) {
-                        sticky.addClass('menu-fixed');
-                    } else {
-                        sticky.removeClass('menu-fixed');
-                    }
-                }
-            };
+            lastKnownScrollPosition = window.scrollY;
+            if (!ticking) {
+                window.requestAnimationFrame(function () {
+                    checkMenuPosition(lastKnownScrollPosition);
+                    ticking = false;
+                });
+                ticking = true;
+            }
+        }, 50);
 
-            let processScroll = _.throttle(() => {
-                lastKnownScrollPosition = window.scrollY;
-                if (!ticking) {
-                    window.requestAnimationFrame(() => {
-                        checkMenuPosition(lastKnownScrollPosition);
-                        ticking = false;
+        let initStickyMenu = function () {
+
+            // Выход если разрешение для мобильного устройства
+            if (!isMedia('large')) {
+                if(!containerHeightRemoved){
+                    stickyContainer.css({
+                        'height': 'auto'
                     });
-                    ticking = true;
+                    containerHeightRemoved = true;
                 }
-            }, 50);
+                return;
+            }
+            containerHeightRemoved = false;
 
-            let initStickyMenu = () => {
+            let heightOfStickyBlock = sticky.height();
+            if (heightOfStickyBlock <= 0) {
+                return;
+            }
 
-                let heightOfStickyBlock = sticky.innerHeight;
-                if(heightOfStickyBlock <= 0){
-                    return;
-                }
+            stickyContainer.css({
+                'display': 'block',
+                'height': heightOfStickyBlock + 'px'
+            });
 
-                // stickyContainer.css({
-                //     'display': 'block',
-                //     'height': heightOfStickyBlock + 'px'
-                // });
+            window.addEventListener('scroll', processScroll, {'passive': true});
+        };
 
-                window.addEventListener('scroll', processScroll, {'passive' : true});
-            };
+        let initStickyMenuOnResize = _.throttle(initStickyMenu, 50);
 
+        function checkMenuPosition(lastKnownScrollPosition) {
 
-            cssFileLoaded('styles.css', initStickyMenu);
+            if (lastKnownScrollPosition >= stickyContainer.offset().top) {
+                sticky.addClass('menu-fixed');
+            } else {
+                sticky.removeClass('menu-fixed');
+            }
         }
+
+
+        cssFileLoaded('styles.css', initStickyMenu);
+        $(window).resize(initStickyMenuOnResize);
+
     });
 })();
