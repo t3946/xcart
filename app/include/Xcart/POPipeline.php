@@ -130,7 +130,7 @@ class POPipeline extends Data
     public function uploadPurchaseOrder($purchase_order_number_upload, $purchase_order_storefront_upload, $purchase_order_received_status)
     {
         global $xcart_dir, $login;
-        $aPathInfo = (pathinfo($_FILES["purchase_order_file"]['name']));
+        $aPathInfo = pathinfo($_FILES["purchase_order_file"]['name']);
         $sFileName = $purchase_order_number_upload . '.' . $aPathInfo['extension'];
         $sNewFilePath = $xcart_dir . sprintf(self::PO_FILE_LINK, $sFileName);
         $allow_extensions = ['pdf'];
