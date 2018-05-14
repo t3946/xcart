@@ -27,9 +27,9 @@ class OrderEventHelper
         self::orderCreateEvent($model);
     }
 
-    public static function triggerOrderPaidEvent($owner = null, OrderModel $model): void
+    public static function triggerOrderPaidEvent($owner = null, OrderModel $model, string $status): void
     {
-        self::orderPaidEvent($model);
+        self::orderPaidEvent($model, $status);
     }
 
     public static function orderCreateEvent(OrderModel $model): void
@@ -130,7 +130,7 @@ class OrderEventHelper
         }
     }
 
-    public static function orderPaidEvent(OrderModel $model, $status = OrderStatusModel::ORDER_STATUS_AUTHORIZED): void
+    public static function orderPaidEvent(OrderModel $model, string $status = OrderStatusModel::ORDER_STATUS_AUTHORIZED): void
     {
         if ($cart = $model->cart) {
             $cart->delete();
