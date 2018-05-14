@@ -77,7 +77,7 @@ class CheckoutController extends FrontendController
                 $phone = preg_replace('/\D/S', '', $contact['phone']);
 
                 if ($user && $user->id) {
-                    [$address] = AddressModel::objects()->getOrCreate([
+                    /*[$address] = AddressModel::objects()->getOrCreate([
                         'user_id' => $user->id,
                         'full_name' => $shipping['s_firstname'],
                         'company' => $shipping['s_company'],
@@ -89,7 +89,8 @@ class CheckoutController extends FrontendController
                         'city' => $shipping['s_city'],
                         'phone' => $phone
                     ]);
-                    //$address->save();
+                    $address->save();
+                    */
                 }
 
 
@@ -352,7 +353,7 @@ class CheckoutController extends FrontendController
         }
     }
 
-    private function internalCartChanged(OrderModel $order, $route = 'checkout:options')
+    private function internalCartChanged(OrderModel $order, $route = 'checkout:options'): void
     {
         if (OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP1 === $order->cb_status) {
 
