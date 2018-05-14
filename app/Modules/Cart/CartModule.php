@@ -5,6 +5,7 @@ namespace Modules\Cart;
 use Modules\Admin\Traits\AdminTrait;
 use Modules\Cart\Admin\CouponKitAdmin;
 use Modules\Cart\Helpers\CouponOldCart;
+use Modules\Cart\Helpers\StagesOfOrdering;
 use Modules\Cart\Models\CouponKitModel;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Module\Module;
@@ -21,6 +22,8 @@ class CartModule extends Module
 
     private $validate_component;
 
+    private static $_stagesOfOrdering;
+
     /**
      * @var array
      */
@@ -28,6 +31,9 @@ class CartModule extends Module
         'class' => '\Modules\Cart\Components\Cart',
     ];
 
+    /**
+     * @throws \Xcart\App\Exceptions\UnknownPropertyException
+     */
     public static function onApplicationRun()
     {
         $tpl = Xcart::app()->template->getRenderer();
@@ -36,7 +42,26 @@ class CartModule extends Module
             return Xcart::app()->getModule('Cart')->getCart();
         });
 
-        Xcart::app()->getModule('Cart'); //Small hack for init class;
+        // Small hack for init class;
+        Xcart::app()->getModule('Cart');
+
+        // receive information about stages of ordering
+       static::$_stagesOfOrdering = new StagesOfOrdering();
+        static::$_stagesOfOrdering->setActive('shopping_cart');
+//        static::$_stagesOfOrdering->setActive('shipping_address');
+//        static::$_stagesOfOrdering->setActive('shipping_payment_options');
+//        static::$_stagesOfOrdering->setActive('order_review');
+       // static::$_stagesOfOrdering->setActive('payment');
+
+        $tpl->addAccessorCallback('getCartBreadcrumbs', function () {
+            return static::$_stagesOfOrdering->getStages();
+        });
+
+        $tpl->addAccessorCallback('getCartBreadcrumbsBackEnabled', function () {
+            return !static::$_stagesOfOrdering->getFirstStage();
+        });
+
+
     }
 
     public function init()

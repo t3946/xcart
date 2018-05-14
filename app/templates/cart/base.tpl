@@ -27,7 +27,7 @@
                          alt="verified&secured"
                          class="show-for-large secured-logo-big">
 
-                    <img src="/static/frontend/dist/images/logos/small_s3_logo.svg"
+                    <img src="/static/frontend/dist/images/logos/s3stores_logo.svg"
                          alt="s3stores"
                          class="show-for-small hide-for-large s3-logo-small">
                 </div>
@@ -61,54 +61,32 @@
             </div>
         </section>
 
+        {set $breadcrumbs = $.getCartBreadcrumbs}
+        {if $breadcrumbs}
+
         <div class="row cart-steps-container">
-            <a class="columns shrink cart-steps-back active">
-                <img src="/static/frontend/dist/images/icons/cart/cart_small_arrow_back.png" alt="">
-                <span>BACK</span>
+            {set $buttonBackEnabled = $.getCartBreadcrumbsBackEnabled}
+
+            <a class="columns shrink cart-steps-back {if !$buttonBackEnabled} inactive{/if}">
+                <span class="img"><img src="/static/frontend/dist/images/icons/cart/arrow_left_shop_more.svg" alt=""></span>
+                <span class="text">BACK</span>
             </a>
 
             <section class="cart-steps-section columns">
                 <ul class="cart-steps-items no-bullet">
-                    <li class="cart-step inactive">
+                    {foreach $breadcrumbs as $item}
+                    <li class="cart-step{if !empty($item['status'])} {$item['status']}{/if}">
                         <a href="" class="step-link">
-                            <span class="step-number">1</span>
-                            <span class="step-label">Shopping cart</span>
+                            <span class="step-number">{$item['number']}</span>
+                            <span class="step-label">{$item['label']}</span>
                         </a>
                         <div class="arrow-right"></div>
                     </li>
-                    <li class="cart-step inactive">
-                        <a href="" class="step-link">
-                            <span class="step-number">2</span>
-                            <span class="step-label">Shipping Address</span>
-                        </a>
-                        <div class="arrow-right"></div>
-                    </li>
-                    <li class="cart-step inactive">
-                        <a href="" class="step-link">
-                            <span class="step-number">3</span>
-                            <span class="step-label">Shipping & payment options</span>
-                        </a>
-                        <div class="arrow-right"></div>
-                    </li>
-                    <li class="cart-step inactive">
-                        <a href="" class="step-link">
-                            <span class="step-number">4</span>
-                            <span class="step-label">order review</span>
-                        </a>
-                        <div class="arrow-right"></div>
-                    </li>
-                    <li class="cart-step active">
-                        <a href="" class="step-link">
-                            <span class="step-number">5</span>
-                            <span class="step-label">Payment</span>
-                        </a>
-                        <div class="arrow-right"></div>
-                    </li>
+                    {/foreach}
                 </ul>
             </section>
-
-
         </div>
+        {/if}
 
 
     </header>
