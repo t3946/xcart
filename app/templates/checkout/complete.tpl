@@ -314,3 +314,50 @@
         {include 'checkout/_order_buttons.tpl'}
     </section>
 {/block}
+
+{block 'js'}
+    <!-- Google Code for Conversion Tracking: Order Conversion Page -->
+    <script type="text/javascript">
+        var google_conversion_id = 1072406910;
+        var google_conversion_language = "en";
+        var google_conversion_format = "3";
+        var google_conversion_color = "ffffff";
+        var google_conversion_label = "9T_YCJXjmXMQ_sKu_wM";
+        var google_conversion_value = {$order->total};
+        var google_conversion_order_id = {$order->orderid};
+        var google_conversion_currency = "USD";
+        var google_remarketing_only = false;
+    </script>
+    <script type="text/javascript" src="//www.googleadservices.com/pagead/conversion.js"></script>
+    <noscript>
+        <div style="display:inline;">
+            <img height="1" width="1" style="border-style:none;" alt="" src="//www.googleadservices.com/pagead/conversion/1072406910/?value={$order->total}&amp;currency_code=USD&amp;label=9T_YCJXjmXMQ_sKu_wM&amp;guid=ON&amp;script=0"/>
+        </div>
+    </noscript>
+    <!-- Google Code for Conversion Tracking: Order Conversion Page -->
+
+    <!-- Bing Code for Conversion Tracking: Order Conversion Page -->
+    <noscript><img src="//bat.bing.com/action/0?ti=5024901&Ver=2" height="0" width="0" style="display:none; visibility: hidden;"/></noscript>
+
+    <script type="text/javascript">
+        {ignore}
+        (function (w, d, t, r, u) {
+            var f, n, i;
+            w[u] = w[u] || [], f = function () {
+                var o = {ti: "5024901"};
+                o.q = w[u], w[u] = new UET(o), w[u].push("pageLoad")
+            }, n = d.createElement(t), n.src = r, n.async = 1, n.onload = n.onreadystatechange = function () {
+                var s = this.readyState;
+                s && s !== "loaded" && s !== "complete" || (f(), n.onload = n.onreadystatechange = null)
+            }, i = d.getElementsByTagName(t)[0], i.parentNode.insertBefore(n, i)
+        })(window, document, "script", "//bat.bing.com/bat.js", "uetq");
+        {/ignore}
+        var revenue = {$order->total};
+        {ignore}
+        window.uetq = window.uetq || [];
+        window.uetq.push({'gv': revenue});
+        {/ignore}
+    </script>
+    <!-- Bing Code for Conversion Tracking: Order Conversion Page -->
+
+{/block}
