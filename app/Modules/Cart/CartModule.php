@@ -50,22 +50,11 @@ class CartModule extends Module
         Xcart::app()->getModule('Cart');
 
         // receive information about stages of ordering
-       static::$_stagesOfOrdering = new StagesOfOrdering();
-      //  static::$_stagesOfOrdering->setActive('shopping_cart');
-        static::$_stagesOfOrdering->setActive('shipping_address');
-//        static::$_stagesOfOrdering->setActive('shipping_payment_options');
-//        static::$_stagesOfOrdering->setActive('order_review');
-       // static::$_stagesOfOrdering->setActive('payment');
+        static::$_stagesOfOrdering = StagesOfOrdering::getInstance();
 
         $tpl->addAccessorCallback('getCartBreadcrumbs', function () {
-            return static::$_stagesOfOrdering->getStages();
+            return static::$_stagesOfOrdering;
         });
-
-        $tpl->addAccessorCallback('getCartBreadcrumbsBackEnabled', function () {
-            return !static::$_stagesOfOrdering->getFirstStage();
-        });
-
-
     }
 
     public function init(): void

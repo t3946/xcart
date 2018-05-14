@@ -11,69 +11,38 @@ namespace Modules\Cart\Helpers;
 
 
 use Modules\Main\MainModule;
+use Xcart\App\DataClasses\ArrayClass;
 use Xcart\App\Main\Xcart;
+use Xcart\App\Traits\Singleton;
 
-class StagesOfOrdering
+class StagesOfOrdering extends ArrayClass
 {
+    use Singleton;
 
-    const FIRST_STAGE = 'shopping_cart';
+    const FIRST_STAGE = 0;
+
     /**
-     * @var array
-     */
-    private $_stages;
-    /**
-     * @var string
+     * @var int
      */
     private $_active = self::FIRST_STAGE;
-    /**
-     * @var bool
-     */
-    private $_firstStage = true;
 
-    public function __construct()
+    protected function init(): void
     {
         // Устанавливает список этапов оформления поумолчанию (с активным этапом поумолчанию)
-        $this->_stages = $this->getDefaultStages();
+        $this->data = static::getDefaultStages();
     }
 
     /**
-     * Устанавливает указанному этапу оформления заказа статуст "активен",
-     * а всем предыдущим этапам "неактивен"
-     * @param $stageKey
-     * @return bool
+     * @return int
      */
-    public function setActive($stageKey)
-    {
-
-        if (!isset($this->_stages[$stageKey])) {
-            return false;
-        }
-
-
-        $this->clearStageStatus();
-
-        foreach ($this->_stages as $key => $stage) {
-
-            if ($key !== $stageKey) {
-                $this->_stages[$key]['status'] = 'inactive';
-            } else {
-                $this->_stages[$key]['status'] = 'active';
-                break;
-            }
-        }
-
-
-        $this->_firstStage = ($stageKey === self::FIRST_STAGE) ? true : false;
-        $this->_active = $stageKey;
-
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getActive()
+    public function getActive(): int
     {
         return $this->_active;
+    }
+
+    public function hasStage(int $n): bool
+    {
+        return $this->offsetExists($n);
     }
 
     /**
@@ -81,65 +50,90 @@ class StagesOfOrdering
      */
     public function getStages():? array
     {
-        return $this->_stages;
+        return $this->data;
+    }
+
+    public function getStage(int $n)
+    {
+        if ($this->hasStage($n)) {
+            return $this->getData($n);
+        }
+
+        return $this->getData(static::FIRST_STAGE);
+    }
+
+    public function getPrevStage()
+    {
+        return $this->_active > 0
+            ? $this->getData($this->_active-1)
+            : $this->getData(static::FIRST_STAGE);
+    }
+
+    public function getNextStage()
+    {
+        return ($this->count() - 1) > $this->_active
+            ? $this->getData($this->_active + 1)
+            : null;
+    }
+
+    public function setStage(int $n): bool
+    {
+        if ($this->hasStage($n)) {
+            $this->_active = $n;
+
+            return true;
+        }
+
+        return false;
+    }
+
+    public function isStagePassed(int $n): bool
+    {
+        return $n < $this->_active;
     }
 
     /**
      * @return bool
      */
-    public function getFirstStage()
+    public function isFirstStage(): bool
     {
-        return $this->_firstStage;
+        return $this->_active == static::FIRST_STAGE;
     }
 
     /**
      * список этапов офопмления заказа поумолчанию
      * @return array
      */
-    private function getDefaultStages()
+    private static function getDefaultStages(): array
     {
         $manager = Xcart::app()->router;
 
         return [
             [
                 'status' => 'active',
-                'number' => '1',
-                'url' => $manager->url(''),
+                'url' => $manager->url('cart:list'),
                 'label' => MainModule::t('Shopping cart'),
             ],
             [
                 'status' => '',
-                'number' => '2',
+                'url' => $manager->url('checkout:shipping'),
                 'label' => MainModule::t('Shipping Address'),
             ],
              [
                 'status' => '',
-                'number' => '3',
+                 'url' => $manager->url('checkout:options'),
                 'label' => MainModule::t('Shipping & payment options'),
             ],
             [
                 'status' => '',
-                'number' => '4',
+                'url' => $manager->url('checkout:review'),
                 'label' => MainModule::t('Order review'),
             ],
             [
                 'status' => '',
-                'number' => '5',
                 'label' => MainModule::t('Payment'),
             ],
         ];
-    }
-
-    /**
-     * сбрасывает статусы всех этапов оформления заказа
-     */
-    private function clearStageStatus()
-    {
-
-        foreach ($this->_stage as $key => $stage) {
-            $this->_stage[$key]['status'] = '';
-        }
-
     }
 
 }

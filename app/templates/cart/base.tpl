@@ -76,21 +76,31 @@
         {if $breadcrumbs}
 
         <div class="row cart-steps-container">
-            {set $buttonBackEnabled = $.getCartBreadcrumbsBackEnabled}
 
-            <a class="columns shrink cart-steps-back {if !$buttonBackEnabled} inactive{/if} hide-for-large">
-                <span class="img"><img src="/static/frontend/dist/images/icons/cart/arrow_left_shop_more.svg" alt=""></span>
+            {if !$breadcrumbs->isFirstStage()}
+            <a class="columns shrink cart-steps-back hide-for-large" href="{$breadcrumbs->getPrevStage().url}">
+                <span class="img">
+                    <img src="/static/frontend/dist/images/icons/cart/arrow_left_shop_more.svg" alt="">
+                </span>
                 <span class="text">BACK</span>
             </a>
+            {/if}
 
             <section class="cart-steps-section columns">
                 <ul class="cart-steps-items no-bullet">
-                    {foreach $breadcrumbs as $item}
-                    <li class="cart-step{if !empty($item['status'])} {$item['status']}{/if}">
-                        <a href="" class="step-link">
-                            <span class="step-number">{$item['number']}</span>
-                            <span class="step-label">{$item['label']}</span>
-                        </a>
+                    {foreach $breadcrumbs as $key => $item}
+                    <li class="cart-step{if $breadcrumbs->isStagePassed($key)} inactive{/if} {if $breadcrumbs->getActive() == $key} active{/if}">
+                        {if !$item.url || $breadcrumbs->getActive() == $key}
+                            <span class="step-link">
+                                <span class="step-number">{$key+1}</span>
+                                <span class="step-label">{$item['label']}</span>
+                            </span>
+                        {else}
+                            <a href="{$item['url']}" class="step-link">
+                                <span class="step-number">{$key+1}</span>
+                                <span class="step-label">{$item['label']}</span>
+                            </a>
+                        {/if}
                         <div class="arrow-right"></div>
                     </li>
                     {/foreach}
@@ -101,4 +111,10 @@
 
 
     </header>
+{/block}
+
+{block "content-wrapper"}
+    <div class="cart_shipping-page default-form">
+        {block "content"}{/block}
+    </div>
 {/block}

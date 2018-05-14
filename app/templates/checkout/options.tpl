@@ -12,7 +12,6 @@
 {/block}
 
 {block 'content'}
-<div class="cart_shipping-page">
     <form data-abide action="{url 'checkout:options'}" method="POST" class="checkout-options-form">
         <section class="checkout-options">
             <div class="row">
@@ -248,5 +247,4 @@
 
         </section>
     </form>
-</div>
 {/block}

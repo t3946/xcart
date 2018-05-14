@@ -303,6 +303,7 @@
             text-transform: uppercase;
             font-weight: bold;
             cursor: default;
+            display: block;
 
             @include breakpoint(sm) {
               margin-left: $arrow-width-sm;
