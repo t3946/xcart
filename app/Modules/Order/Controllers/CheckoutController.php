@@ -3,26 +3,26 @@
 namespace Modules\Order\Controllers;
 
 use Mobile_Detect;
-use Modules\Core\Models\CountryModel;
 use Modules\Core\Models\StateModel;
 use Modules\Dashboard\Sqls\SearchSql;
 use Modules\Goods\Models\ProductModel;
 use Modules\Order\Helpers\OrderHelper;
+use Modules\Order\Helpers\PurchaseOrderHelper;
 use Modules\Order\Models\OrderDetailModel;
 use Modules\Order\Models\OrderExtraModel;
 use Modules\Order\Models\OrderGroupModel;
 use Modules\Order\Models\OrderModel;
 use Modules\Order\Models\OrderStatusModel;
+use Modules\Order\Models\PurchaseOrderModel;
 use Modules\Order\OrderModule;
 use Modules\Payment\Models\PaymentMethodModel;
-use Modules\Shipping\Models\ShippingModel;
 use Modules\Shipping\Models\ShippingRateModel;
 use Modules\Shipping\ShippingModule;
-use Modules\User\Models\AddressModel;
-use ShippingAddressForm;
+use Modules\Sites\Models\SiteModel;
 use Xcart\App\Controller\FrontendController;
 use Xcart\App\Main\Xcart;
 use Xcart\Connection;
+use Xcart\Logs;
 
 class CheckoutController extends FrontendController
 {
@@ -307,6 +307,38 @@ class CheckoutController extends FrontendController
                     [$extra] = OrderExtraModel::objects()->getOrNew(['order_id' => $order->orderid]);
                     $extra->purchase_order = $purchase_order;
                     $extra->save();
+
+                    if (!empty($_FILES['purchase_order_file']) && $_FILES['purchase_order_file']['error'] === UPLOAD_ERR_OK)
+                    {
+                        $original_file = $_FILES["purchase_order_file"]['name'];
+
+                        $site = Xcart::app()->getModule('Sites')->getSite();
+
+                        $po_model = new PurchaseOrderModel([
+                                'login' => Xcart::app()->user->login,
+                                'PO_number' => $purchase_order['po_number'],
+                                'storefront_id' => $site->storefrontid,
+                                'received_by' => 'website'
+                        ]);
+
+                        try {
+                            $ext = pathinfo($original_file)['extension'];
+                            if (PurchaseOrderHelper::uploadPurchaseOrder($po_model, $_FILES['purchase_order_file']['tmp_name'], $ext)) {
+                                $po_model->setAttributes([
+                                    'status' => 'uploaded',
+                                    'order_id' => $order->orderid,
+                                    'file_name' => "{$po_model->PO_number}.{$ext}",
+                                    'original_po_file' => $original_file,
+                                ]);
+                            }
+                            $po_model->save();
+                            Logs::_log('purchase_orders', $this->po_id, Logs::LOG_TYPE_CLIENT, sprintf('PO# %s has been successfully entered', "{$order->getOrderNumber()} ({$po_model->original_po_file})"));
+                        }
+                        catch (\Exception $ex) {
+                            Logs::_log('purchase_orders', $po_model->po_id, Logs::LOG_TYPE_CLIENT, $ex->getMessage());
+                        }
+
+                    }
                 }
             }
 

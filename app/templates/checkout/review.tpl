@@ -1,7 +1,7 @@
 {extends "checkout/base.tpl"}
 
 {block 'content'}
-    <form data-abide action="{url 'checkout:review'}" method="POST" class="checkout-review-form">
+    <form data-abide action="{url 'checkout:review'}" method="POST" class="checkout-review-form" enctype= "multipart/form-data">
         {if $order->payment_method->payment_method == 'Purchase Order'}
             {set $extra = $order->extra_model}
             <section class="checkout-po">
@@ -135,6 +135,15 @@
                             </div>
                             <div class="columns">
                                 <input value="{$extra->purchase_order->accounts_payable_email}" id="purchase_order__accounts_payable_email" required placeholder="{t 'albert.einstein@gmail.com' dict='order'}" name="purchase_order[accounts_payable_email]" type="email"/>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="columns small-4">
+                                <label for="purchase_order__file">{t 'Attach original PO' dict='order'} <i>{t '(optional)' dict='order'}</i></label>
+                                <div class="description">{t 'Alternatively fax PO to (813) 944-4516' dict='order'}</div>
+                            </div>
+                            <div class="columns">
+                                <input accept=".pdf" type="file" name="purchase_order_file" id="purchase_order__file" />
                             </div>
                         </div>
                     </div>
