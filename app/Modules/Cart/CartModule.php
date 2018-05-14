@@ -47,8 +47,8 @@ class CartModule extends Module
 
         // receive information about stages of ordering
        static::$_stagesOfOrdering = new StagesOfOrdering();
-        static::$_stagesOfOrdering->setActive('shopping_cart');
-//        static::$_stagesOfOrdering->setActive('shipping_address');
+      //  static::$_stagesOfOrdering->setActive('shopping_cart');
+        static::$_stagesOfOrdering->setActive('shipping_address');
 //        static::$_stagesOfOrdering->setActive('shipping_payment_options');
 //        static::$_stagesOfOrdering->setActive('order_review');
        // static::$_stagesOfOrdering->setActive('payment');
