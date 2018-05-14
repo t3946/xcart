@@ -401,14 +401,36 @@ $remove: (
   .head {
     text-align: center;
     min-height: 2.5em;
+    padding-top: 3rem;
+
+    .nop {
+      display: none;
+    }
+
+    h1 {
+      text-align: center;
+      white-space: nowrap;
+
+      @include breakpoint(large) {
+        display: inline-block;
+      }
+    }
+
+    @include breakpoint(430) {
+      padding-top: 0;
+    }
+
 
     @include breakpoint(large) {
-
       display: flex;
       //flex-direction: column;
       align-content: center;
       align-items: center;
       flex-direction: row;
+
+      .nop {
+        display: block;
+      }
 
       & > * {
         width: 35%;
@@ -417,11 +439,6 @@ $remove: (
       h1 {
         width: 30%;
       }
-    }
-
-    h1 {
-      text-align: center;
-      display: inline-block;
     }
   }
 
