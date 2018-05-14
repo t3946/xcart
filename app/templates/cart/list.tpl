@@ -1,24 +1,41 @@
 {extends  $.request->getIsAjax() ? "ajax.tpl" : "cart/base.tpl"}
 
 {block 'content'}
-<section class="cart-page">
+<section class="cart-page cart_shipping-page">
     <div class="row">
         <div class="columns large-12">
             <div class="head_line">
-                <div class="b-back">
-                    <a href="/" class="button yellow-white waves waves-orange waves-effect">
-                        <strong>&#65513;</strong> Shop more
-                    </a>
-                </div>
-                <div class="head">
-                    <h1>{t 'Shopping Cart' dict='cart'}</h1>
-                </div>
+
                 <div class="b-next">
                     <a href="{url 'checkout:shipping'}" class="button yellow waves waves-orange waves-effect">
                         Checkout &#65515;
                     </a>
                 </div>
+
+                <div class="b-back">
+                    <a href="/" class="button yellow-white waves waves-orange waves-effect">
+                        <strong>&#65513;</strong> Shop more
+                    </a>
+                </div>
+
+                <div class="head">
+                    <div class="nop"></div>
+
+                    <h1>{t 'Shopping Cart' dict='cart'}</h1>
+
+                    <div class="need-help">
+                        <div class="multiline">
+                            <span class="color--orange">
+                                Got a question ?
+                            </span>
+                            Call us 1-800-929-2431 and provide shopping cart reference
+                            <span class="color--black"> # {$.app->cart->getCartNumber()}</span>
+                        </div>
+                    </div>
+                </div>
             </div>
+
+
 
             {foreach $.app->cart->getItemsGroupedBy() as $gi => $group}
             {set $items = $group.items}
