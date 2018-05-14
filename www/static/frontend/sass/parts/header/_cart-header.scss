@@ -3,19 +3,36 @@
   overflow: hidden;
 
   $arrow-width: rem-calc(10);
-  $cart-breadcrumbs-height: rem-calc(36);
+  $cart-breadcrumbs-height: rem-calc(35);
+  $cart-breadcrumbs-line-height: rem-calc(35-2);
   $last-cart-breadcrumbs-item-height: rem-calc(36+10);
+  $breadcrumbs-font-size: rem-calc(11);
+  $breadcrumb-border-width: 1px;
+
+  $arrow-width-sm: rem-calc(13);
+  $cart-breadcrumbs-height-sm: rem-calc(45);
+  $cart-breadcrumbs-line-height-sm: rem-calc(45-4);
+  $last-cart-breadcrumbs-item-height-sm: rem-calc(45+15);
+  $breadcrumbs-font-size-sm: rem-calc(13);
+  $breadcrumb-border-width-sm: 2px;
+
 
   .logo_menu {
     .shop-logo-block {
       .logo-small {
         height: rem-calc(26);
+        @include breakpoint(sm up) {
+          height: rem-calc(33);
+        }
       }
     }
     .s3-logo-block {
       text-align: right;
       .s3-logo-small {
         height: rem-calc(22);
+        @include breakpoint(sm up) {
+          height: rem-calc(26);
+        }
       }
     }
   }
@@ -27,23 +44,45 @@
     .cart-steps-back {
 
       height: $cart-breadcrumbs-height;
+      line-height: $cart-breadcrumbs-line-height;
       padding: 0 .5rem 0 rem-calc(5);
       margin-right: rem-calc(4);
-      border: 1px solid #ffb400;
-      display: flex;
-      align-items: center;
+      border: $breadcrumb-border-width solid #ffb400;
 
-      font-size: rem-calc(11);
+      font-size: $breadcrumbs-font-size;
       text-decoration: none;
       font-weight: bold;
       color: #4a4949;
+
+      @include breakpoint(sm up) {
+        height: $cart-breadcrumbs-height-sm;
+        line-height: $cart-breadcrumbs-line-height-sm;
+        border-width: $breadcrumb-border-width-sm;
+        font-size: $breadcrumbs-font-size-sm;
+      }
 
       &.inactive{
         display: none;
       }
 
-      img {
-        margin-right: .5rem;
+      .img{
+        display: inline-block;
+        padding-right: .5rem;
+        padding-bottom:3px;
+        vertical-align: middle;
+        img{
+          vertical-align: middle;
+          height:14px;
+          @include breakpoint(sm up) {
+            height:16px;
+          }
+        }
+      }
+
+      span{
+        display: inline;
+        //display: inline-block;
+        vertical-align: middle;
       }
     }
     .cart-steps-section {
@@ -63,12 +102,21 @@
           position: relative;
           height: $cart-breadcrumbs-height;
           width: $cart-breadcrumbs-height;
-          line-height: $cart-breadcrumbs-height;
-          font-size: rem-calc(11);
+          line-height: $cart-breadcrumbs-line-height;
+          font-size: $breadcrumbs-font-size;
           text-align: center;
-          border: 1px solid #dddddd;
+          border: $breadcrumb-border-width solid #dddddd;
           border-right: 0;
           vertical-align: middle;
+
+          @include breakpoint(sm up) {
+            height: $cart-breadcrumbs-height-sm;
+            width: $cart-breadcrumbs-height-sm;
+            line-height: $cart-breadcrumbs-line-height-sm;
+            border-width: $breadcrumb-border-width-sm;
+            font-size: $breadcrumbs-font-size-sm;
+            vertical-align: middle;
+          }
 
           .step-link {
             text-decoration: none;
@@ -77,6 +125,10 @@
             text-transform: uppercase;
             font-weight: bold;
             cursor: default;
+
+            @include breakpoint(sm up) {
+              margin-left: $arrow-width-sm;
+            }
 
             .step-label {
               display: none;
@@ -88,14 +140,21 @@
             overflow: hidden;
             width: $arrow-width;
             position: absolute;
-            top: 0;
+            top: -$breadcrumb-border-width;
             right: - $arrow-width;
+
+            @include breakpoint(sm up) {
+              height: $cart-breadcrumbs-height-sm;
+              width: $arrow-width-sm;
+              right: - $arrow-width-sm;
+              top: -$breadcrumb-border-width-sm;
+            }
 
             &:after {
               content: '';
               display: block;
-              border-top: 1px solid #dddddd;
-              border-right: 1px solid #dddddd;
+              border-top: $breadcrumb-border-width solid #dddddd;
+              border-right: $breadcrumb-border-width solid #dddddd;
               position: absolute;
               top: 8px;
               right: 0;
@@ -104,18 +163,35 @@
               transform: matrix(.37, 0.7, -.6, 1.21, 0, 0);
               background: white;
               z-index: 1;
+
+              @include breakpoint(sm up) {
+                border-width: $breadcrumb-border-width-sm;
+                border-right-width: 3px !important;
+                width: $cart-breadcrumbs-height-sm;
+                height: $cart-breadcrumbs-height-sm;
+                top: 10px;
+              }
             }
           }
 
           &:last-child {
-            border-right: 1px solid #dddddd;
+            border-right: $breadcrumb-border-width solid #dddddd;
             padding-right: $arrow-width;
             width: $last-cart-breadcrumbs-item-height;
             .arrow-right {
               display: none;
             }
             &.active{
-              border-right: 1px solid #959595;
+              border-right: $breadcrumb-border-width solid #959595;
+              @include breakpoint(sm up) {
+                border-width: $breadcrumb-border-width-sm;
+              }
+            }
+
+            @include breakpoint(sm up) {
+              border-width: $breadcrumb-border-width-sm;
+              padding-right: $arrow-width-sm;
+              width: $last-cart-breadcrumbs-item-height-sm;
             }
           }
 
@@ -127,8 +203,12 @@
             width: auto;
             flex-grow: 1;
             background-color: #fff2cc;
-            border: 1px solid #959595;
+            border: $breadcrumb-border-width solid #959595;
             border-right: 0;
+
+            @include breakpoint(sm up) {
+              border-width: $breadcrumb-border-width-sm;
+            }
 
             .step-link {
               color: #000000;
@@ -145,9 +225,13 @@
 
             .arrow-right {
               &:after {
-                border-top: 1px solid #959595;
-                border-right: 1px solid #959595;
+                border-top: $breadcrumb-border-width solid #959595;
+                border-right: $breadcrumb-border-width solid #959595;
                 background-color: #fff2cc;
+
+                @include breakpoint(sm up) {
+                  border-width: $breadcrumb-border-width-sm;
+                }
               }
             }
 
