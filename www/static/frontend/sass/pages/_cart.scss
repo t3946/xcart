@@ -365,4 +365,106 @@ $remove: (
     }
   }
 
+  .need-help {
+    max-width: rem-calc(300);
+    margin: 0 auto;
+
+    background: url("../images/icons/cart/got_a_questions.svg") no-repeat 0 rem-calc(2);
+    background-size: rem-calc(15) rem-calc(15);
+    padding: 0 rem-calc(20);
+    text-align: left;
+    font-size: rem-calc(12);
+
+    @include breakpoint(large) {
+      margin: 0;
+    }
+
+    .color--orange {
+      color: #FFA10B;
+      font-size: rem-calc(14);
+    }
+    .color--black {
+      color: black;
+      font: {
+        weight: 700;
+      }
+    }
+
+    .multiline {
+      max-width: rem-calc(270);
+    }
+  }
+
+}
+
+.cart_shipping-page {
+  .head {
+    text-align: center;
+    min-height: 2.5em;
+    padding-top: 3rem;
+
+    .nop {
+      display: none;
+    }
+
+    h1 {
+      text-align: center;
+      white-space: nowrap;
+
+      @include breakpoint(large) {
+        display: inline-block;
+      }
+    }
+
+    @include breakpoint(430) {
+      padding-top: 0;
+    }
+
+
+    @include breakpoint(large) {
+      display: flex;
+      //flex-direction: column;
+      align-content: center;
+      align-items: center;
+      flex-direction: row;
+
+      .nop {
+        display: block;
+      }
+
+      & > * {
+        width: 35%;
+      }
+
+      h1 {
+        width: 30%;
+      }
+    }
+  }
+
+  .head_line {
+    &:after {
+      content: '';
+      display: block;;
+      clear: both;
+    }
+
+    .b-next,
+    .b-back {
+      display: inline-block;
+    }
+
+    .b-back {
+      float: left;
+    }
+
+    .b-next {
+      float: right;
+    }
+  }
+
+  .button {
+    line-height: 1.8;
+    padding: 0 .7em;
+  }
 }
