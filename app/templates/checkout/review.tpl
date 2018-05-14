@@ -1,6 +1,7 @@
 {extends "checkout/base.tpl"}
 
 {block 'content'}
+<div class="cart_shipping-page">
     <form data-abide action="{url 'checkout:review'}" method="POST" class="checkout-review-form" enctype= "multipart/form-data">
         {if $order->payment_method->payment_method == 'Purchase Order'}
             {set $extra = $order->extra_model}
@@ -363,4 +364,5 @@
         </section>
 
     </form>
+</div>
 {/block}

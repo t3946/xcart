@@ -4,6 +4,7 @@
 
     {set $extra = $order->extra_model}
 
+<div class="cart_shipping-page">
     <section class="order-confirmation">
         <div class="row align-center">
             <div class="column text-align--center">
@@ -313,6 +314,7 @@
     <section class="buttons-bottom">
         {include 'checkout/_order_buttons.tpl'}
     </section>
+</div>
 {/block}
 
 {block 'js'}

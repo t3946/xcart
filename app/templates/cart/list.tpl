@@ -8,13 +8,13 @@
 
                 <div class="b-next">
                     <a href="{url 'checkout:shipping'}" class="button yellow waves waves-orange waves-effect">
-                        Checkout &#65515;
+                        Checkout
                     </a>
                 </div>
 
                 <div class="b-back">
                     <a href="/" class="button yellow-white waves waves-orange waves-effect">
-                        <strong>&#65513;</strong> Shop more
+                       Shop more
                     </a>
                 </div>
 
@@ -195,6 +195,23 @@
                 <div class="memo">
                     Your merchandise subtotal does not include shipping charges and taxes, which will be reflected on the 'order review' page.
                 </div>
+            </div>
+
+            <div class="bottom_line">
+
+                <div class="b-next">
+                    <a href="{url 'checkout:shipping'}" class="button yellow waves waves-orange waves-effect">
+                        Checkout
+                    </a>
+                </div>
+
+                <div class="b-back">
+                    <a href="/" class="button yellow-white waves waves-orange waves-effect">
+                        Shop more
+                    </a>
+                </div>
+
+
             </div>
         </div>
     </div>

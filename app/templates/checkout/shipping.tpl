@@ -1,7 +1,7 @@
 {extends "checkout/base.tpl"}
 
 {block 'content'}
-
+<div class="cart_shipping-page">
     <form data-abide action="{url 'checkout:shipping'}" method="POST" class="checkout-shipping-form">
         <section class="checkout-shipping">
             <div class="row">
@@ -205,4 +205,5 @@
 
         </section>
     </form>
+</div>
 {/block}

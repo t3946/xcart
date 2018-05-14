@@ -11,6 +11,7 @@ namespace Modules\Cart\Helpers;
 
 
 use Modules\Main\MainModule;
+use Xcart\App\Main\Xcart;
 
 class StagesOfOrdering
 {
@@ -78,7 +79,7 @@ class StagesOfOrdering
     /**
      * @return array
      */
-    public function getStages()
+    public function getStages():? array
     {
         return $this->_stages;
     }
@@ -97,28 +98,31 @@ class StagesOfOrdering
      */
     private function getDefaultStages()
     {
+        $manager = Xcart::app()->router;
+
         return [
-            'shopping_cart' => [
+            [
                 'status' => 'active',
                 'number' => '1',
+                'url' => $manager->url(''),
                 'label' => MainModule::t('Shopping cart'),
             ],
-            'shipping_address' => [
+            [
                 'status' => '',
                 'number' => '2',
                 'label' => MainModule::t('Shipping Address'),
             ],
-            'shipping_payment_options' => [
+             [
                 'status' => '',
                 'number' => '3',
                 'label' => MainModule::t('Shipping & payment options'),
             ],
-            'order_review' => [
+            [
                 'status' => '',
                 'number' => '4',
-                'label' => MainModule::t('order review'),
+                'label' => MainModule::t('Order review'),
             ],
-            'payment' => [
+            [
                 'status' => '',
                 'number' => '5',
                 'label' => MainModule::t('Payment'),
