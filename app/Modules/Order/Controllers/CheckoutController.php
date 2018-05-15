@@ -62,7 +62,8 @@ class CheckoutController extends FrontendController
 
             $data = $app->request->post->all();
 
-            if (!($errors = OrderHelper::isValidShippingAddress($data))) {
+            if (!($errors = OrderHelper::validateForm($data))) {
+
                 [$order, $is_created] = OrderModel::objects()->getOrCreate([
                     'cart_number' => $cart->getCartNumber(),
                 ]);
@@ -70,9 +71,9 @@ class CheckoutController extends FrontendController
                 $shipping = $data['ShippingAddressForm'];
                 $contact = $data['ContactInfoForm'];
 
-                $s_state = $shipping['s_statename'];
+                $s_state = StateModel::objects()->get(['code' => $shipping['s_statename']]);
 
-                if (!StateModel::objects()->get(['code' => $s_state]) && $state_m = StateModel::objects()->get(['state' => $s_state, 'country_code' => $shipping['s_country']])) {
+                if (!$s_state && $state_m = StateModel::objects()->get(['state' => $s_state, 'country_code' => $shipping['s_country']])) {
                     $s_state = $state_m->code;
                 }
 
@@ -249,7 +250,7 @@ class CheckoutController extends FrontendController
                         'b_zipcode' => $order->s_zipcode,
                     ]);
                 } else {
-                    if (!($errors = OrderHelper::isValidShippingAddress($data))) {
+                    if (!($errors = OrderHelper::validateForm($data))) {
                         $order->setAttributes($data['BillingAddressForm']);
 
                         $b_state = $data['BillingAddressForm']['b_statename'];
@@ -291,7 +292,6 @@ class CheckoutController extends FrontendController
     {
         StagesOfOrdering::getInstance()->setStage(3);
         $app = Xcart::app();
-        $user = $app->user;
 
         $order = $this->getOrder();
 
@@ -396,19 +396,34 @@ class CheckoutController extends FrontendController
     {
         if (!self::isStepValid($order_status, $current_step)) {
             //Xcart::app()->flash->error(OrderModule::t('Cart changed: One or more items have changed!'));
-            $this->redirect(self::$steps[$order_status]);
+            $this->redirect(self::$steps[$order_status]['url']);
         }
     }
 
     private static $steps = [
-        OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP1 => 'checkout:shipping',
-        OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP2 => 'checkout:options',
-        OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP3 => 'checkout:review',
-        OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP4 => 'checkout:payment',
+        OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP1 => [
+            'url' => 'checkout:shipping',
+            'step' => 1,
+        ],
+        OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP2 => [
+            'url' => 'checkout:options',
+            'step' => 2,
+        ],
+        OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP3 => [
+            'url' => 'checkout:review',
+            'step' => 3,
+        ],
+        OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP4 => [
+            'url' => 'checkout:payment',
+            'step' => 4,
+        ],
     ];
 
     private static function isStepValid(string $order_status, string $current_step): bool
     {
-        return $order_status >= $current_step;
+        if (self::$steps[$order_status] && self::$steps[$current_step]) {
+            return self::$steps[$order_status]['step'] >= self::$steps[$current_step]['step'];
+        }
+        return false;
     }
 }

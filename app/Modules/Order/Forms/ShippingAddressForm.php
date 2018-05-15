@@ -16,8 +16,7 @@ class ShippingAddressForm extends BaseForm
             's_firstname' => [
                 'class' => CharField::class,
                 'label' => "Full Name",
-                'required' => true
-
+                'required' => true,
             ],
 
             's_company' => [
@@ -39,19 +38,28 @@ class ShippingAddressForm extends BaseForm
             's_country' => [
                 'class' => DropDownField::class,
                 'label' => 'Country',
-                'required' => true
+                'required' => true,
+                'validators' => [
+                    new CountryValidator()
+                ],
             ],
 
             's_zipcode' => [
                 'class' => CharField::class,
                 'label' => 'Zip/Postal Code',
-                'required' => true
+                'required' => true,
+                'validators' => [
+                    new ZipCodeValidator()
+                ],
             ],
 
             's_statename' => [
                 'class' => CharField::class,
                 'label' => 'State/Province',
-                'required' => true
+                'required' => true,
+                'validators' => [
+                    new StateValidator(['country' => 's_country'])
+                ],
             ],
 
             's_city' => [
