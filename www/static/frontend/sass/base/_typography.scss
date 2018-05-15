@@ -37,3 +37,9 @@ html * {
   white-space: normal;
   box-sizing: border-box;
 }
+
+@each $align in (left, right, center, justify) {
+  .text-#{$align} {
+    text-align: $align;
+  }
+}

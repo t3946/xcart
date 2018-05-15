@@ -56,6 +56,7 @@ $default_qg_lheight: #{$default_qg_height - 1};
     text-align: center;
     width: 3em;
     max-width: 5em;
+    margin: 0;
     min-width: 2em;
 
     @include breakpoint(large up) {

@@ -1,5 +1,78 @@
+form {
+  .required {
+    color: red;
+  }
+}
+
 .default-form {
   input, select, textarea {
-    
+    border: 1px solid #aaa;
+    border-radius: 0;
+    max-width: rem-calc(295);
+    width: rem-calc(295);
+    line-height: rem-calc(24);
+    padding: 0 rem-calc(10);
+    margin: rem-calc(6) 0;
+    background: #fff;
+    box-sizing: border-box;
+
+    @include appearance(none);
+
+    &:active, &:focus {
+      border: 1px solid #ff8d91;
+    }
+  }
+  textarea {
+    line-height: 1.2;
+  }
+
+  label {
+    position: relative;
+
+    .required {
+      position: absolute;
+      right: rem-calc(-10);
+    }
+  }
+
+  h1 {
+    text-align: center;
+    margin-bottom: rem-calc(40);
+
+    @include breakpoint(medium) {
+      margin-bottom: rem-calc(50);
+    }
+    @include breakpoint(medium) {
+      margin-bottom: rem-calc(60);
+    }
+  }
+  h2 {
+    text-align: center;
+
+    @include breakpoint(large) {
+      text-align: left;
+    }
+  }
+
+  .hr {
+    margin-top: rem-calc(20);
+    margin-bottom: rem-calc(5);
+  }
+}
+
+.cart_shipping-page {
+
+  form {
+
+    .phone_ext--container {
+      padding-left: rem-calc(20);
+      label {
+        padding-right: rem-calc(5);
+      }
+    }
+
+    .phone_ext {
+      width: rem-calc(72);
+    }
   }
 }
