@@ -22,6 +22,7 @@ use Xcart\App\Orm\Fields\OneToOneField;
 use Xcart\App\Orm\Fields\SerializeField;
 use Xcart\App\Orm\Fields\TimestampField;
 use Xcart\App\Orm\Fields\UnixTimestampField;
+use Xcart\App\Orm\Manager;
 use Xcart\App\Orm\Model;
 use Xcart\App\Traits\DataModelTrait;
 use Xcart\App\Traits\FieldManagerCacheTrait;
@@ -46,6 +47,8 @@ use Xcart\Order;
  * @property float coupon_discount
  * @property mixed|string cb_status
  * @property int|mixed subtotal
+ * @property Manager|OrderDetailModel[] detail_models
+ * @property Manager|OrderGroupModel[] groups
  */
 class OrderModel extends Model
 {

@@ -116,14 +116,18 @@
         .text-order-online{
           .green-circle-icon{
             display: inline-block;
+            position: relative;
             background-color: #4db539;
             height: rem-calc(12);
             width: rem-calc(12);
-            line-height: rem-calc(8);
             text-align: center;
             border-radius: 50%;
-            img{
-              margin-left: 1px;
+            &:after{
+              content: url("../images/icons/cart/white_check_mark_icon.svg");
+              display:block;
+              position: absolute;
+              top: -11px;
+              left: 3px;
             }
           }
           .grey-text-label{

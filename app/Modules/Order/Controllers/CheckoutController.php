@@ -15,11 +15,10 @@ use Modules\Order\Models\OrderGroupModel;
 use Modules\Order\Models\OrderModel;
 use Modules\Order\Models\OrderStatusModel;
 use Modules\Order\Models\PurchaseOrderModel;
-use Modules\Order\OrderModule;
 use Modules\Payment\Models\PaymentMethodModel;
 use Modules\Shipping\Models\ShippingRateModel;
 use Modules\Shipping\ShippingModule;
-use Modules\Sites\Models\SiteModel;
+use Xcart\App\Application\Application;
 use Xcart\App\Controller\FrontendController;
 use Xcart\App\Main\Xcart;
 use Xcart\Connection;
@@ -28,7 +27,7 @@ use Xcart\Logs;
 class CheckoutController extends FrontendController
 {
 
-    public function beforeAction($action, $params)
+    public function beforeAction($action, $params): void
     {
         if ($action !== 'actionComplete' && !Xcart::app()->cart->isValid()) {
             $this->redirect('cart:list');
@@ -47,11 +46,18 @@ class CheckoutController extends FrontendController
         return $order;
     }
 
+    /**
+     * Step 1
+     *
+     * @throws \Xcart\App\Exceptions\UnknownMethodException
+     * @throws \Xcart\App\Exceptions\UnknownPropertyException
+     */
     public function actionShipping(): void
     {
-        StagesOfOrdering::getInstance()->setStage(1);
+        StagesOfOrdering::getInstance()->setStage(StagesOfOrdering::STAGE_SHIPPING_ADDRESS);
         /** @var OrderModel $order */
 
+        /** @var Application $app */
         $app = Xcart::app();
         $user = $app->user;
         $cart = $app->cart;
@@ -70,6 +76,7 @@ class CheckoutController extends FrontendController
 
                 $shipping = $data['ShippingAddressForm'];
                 $contact = $data['ContactInfoForm'];
+
 
                 $s_state = StateModel::objects()->get(['code' => $shipping['s_statename']]);
 
@@ -145,11 +152,18 @@ class CheckoutController extends FrontendController
         ]);
     }
 
+    /**
+     * Step 2
+     *
+     * @throws \Xcart\App\Exceptions\UnknownMethodException
+     * @throws \Xcart\App\Exceptions\UnknownPropertyException
+     */
     public function actionOptions(): void
     {
-        StagesOfOrdering::getInstance()->setStage(2);
+        StagesOfOrdering::getInstance()->setStage(StagesOfOrdering::STAGE_SHIPPING_PAYMENT_OPTIONS);
         /** @var ShippingModule $ship_module */
 
+        /** @var Application $app */
         $app = Xcart::app();
         $user = $app->user;
         $site = $app->getModule('Sites')->getSite();
@@ -180,9 +194,11 @@ class CheckoutController extends FrontendController
 
                 foreach ($cart_groups as $g => $cart_group) {
 
+                    /** @var OrderGroupModel $group */
                     [$group] = OrderGroupModel::objects()->getOrCreate(['manufacturerid' => $g, 'orderid' => $order->orderid]);
 
                     if ($rates[$g] && ($rate = ShippingRateModel::objects()->get(['rateid' => $rates[$g]]))) {
+                        /** @var ShippingRateModel $rate */
 
                         /** @var ShippingRateModel[] $shipping_rates */
                         if (($shipping_rates = $ship_module::getShipping($g, $order, $cart_group)) && $shipping_rates[$rate->rateid]) {
@@ -288,9 +304,15 @@ class CheckoutController extends FrontendController
         ]);
     }
 
+    /**
+     * Step 3
+     *
+     * @throws \Xcart\App\Exceptions\UnknownMethodException
+     * @throws \Xcart\App\Exceptions\UnknownPropertyException
+     */
     public function actionReview(): void
     {
-        StagesOfOrdering::getInstance()->setStage(3);
+        StagesOfOrdering::getInstance()->setStage(StagesOfOrdering::STAGE_ORDER_REVIEW);
         $app = Xcart::app();
 
         $order = $this->getOrder();
@@ -361,9 +383,13 @@ class CheckoutController extends FrontendController
 
     }
 
+    /**
+     * Step 3.5
+     * Redirect to payment processor
+     */
     public function actionPayment(): void
     {
-        StagesOfOrdering::getInstance()->setStage(4);
+        StagesOfOrdering::getInstance()->setStage(StagesOfOrdering::STAGE_PAYMENT);
         $order = $this->getOrder();
 
         $this->checkoutStepsValidate($order->cb_status, OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP4);
@@ -372,7 +398,12 @@ class CheckoutController extends FrontendController
 
     }
 
-    public function actionComplete($order_id): void
+    /**
+     * Step 4
+     * @param $order_id
+     * @throws \Xcart\App\Exceptions\HttpException
+     */
+    public function actionComplete(int $order_id): void
     {
         /** @var OrderModel $order */
         $app = Xcart::app();

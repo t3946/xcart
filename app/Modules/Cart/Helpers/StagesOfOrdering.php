@@ -18,7 +18,13 @@ class StagesOfOrdering extends ArrayClass
 {
     use Singleton;
 
-    const FIRST_STAGE = Stages::SHOPPING_CART;
+    const FIRST_STAGE = 0;
+
+    const STAGE_SHOPPING_CART = 0;
+    const STAGE_SHIPPING_ADDRESS = 1;
+    const STAGE_SHIPPING_PAYMENT_OPTIONS = 2;
+    const STAGE_ORDER_REVIEW = 3;
+    const STAGE_PAYMENT = 4;
 
     /**
      * @var int

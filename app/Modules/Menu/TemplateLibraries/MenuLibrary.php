@@ -168,7 +168,7 @@ class MenuLibrary extends TemplateLibrary
                         'items' => [
                             [
                                 'name' => 'Contact Us',
-                                'url' => 'up',
+                                'url' => \Xcart\App\Main\Xcart::app()->router->url('main:contact_us_form'),
                                 'items' => [],
                             ],
                             [
