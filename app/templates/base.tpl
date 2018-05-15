@@ -116,7 +116,9 @@
                 </section>
 
                 {block "content-wrapper"}
-                    {block "content"}{/block}
+                    <div class="content">
+                        {block "content"}{/block}
+                    </div>
                 {/block}
 
                 <section class="after-content">
