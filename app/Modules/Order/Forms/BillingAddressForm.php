@@ -39,7 +39,10 @@ class BillingAddressForm extends BaseForm
             'b_country' => [
                 'class' => DropDownField::class,
                 'label' => 'Country',
-                'required' => true
+                'required' => true,
+                'validators' => [
+                    new CountryValidator()
+                ],
             ],
 
             'b_zipcode' => [

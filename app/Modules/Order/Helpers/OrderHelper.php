@@ -247,7 +247,7 @@ class OrderHelper
         return $user;
     }
 
-    public static function isValidShippingAddress(array $post_data = []): array
+    public static function validateForm(array $post_data = []): array
     {
         $errors = [];
 
