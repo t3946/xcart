@@ -316,6 +316,8 @@ class CheckoutController extends FrontendController
         StagesOfOrdering::getInstance()->setStage(StagesOfOrdering::STAGE_ORDER_REVIEW);
         $app = Xcart::app();
 
+        $errors = [];
+
         $order = $this->getOrder();
 
         $this->checkoutStepsValidate($order->cb_status, OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP3);
@@ -330,7 +332,8 @@ class CheckoutController extends FrontendController
             $data = $app->request->post->all();
             $purchase_order = $data['PurchaseOrderForm'];
 
-            if ($purchase_order && !$errors = OrderHelper::validateForm($data)) { //verify
+            if ($purchase_order && !$errors = OrderHelper::validateForm($data)) {
+
                 /** @var OrderModel $extra */
                 [$extra] = OrderExtraModel::objects()->getOrNew(['order_id' => $order->orderid]);
                 $extra->purchase_order = $purchase_order;
@@ -357,7 +360,7 @@ class CheckoutController extends FrontendController
                                 'file_name' => "{$po_model->PO_number}.{$ext}",
                                 'original_po_file' => $original_file,
                             ]);
-                            //$order->orig_po = $site->getAbsoluteUrl() . $original_file
+                            $order->orig_po = $site->getAbsoluteUrl() . $original_file;
                         }
                         $po_model->save();
                         Logs::_log('purchase_orders', $this->po_id, Logs::LOG_TYPE_CLIENT, sprintf('PO# %s has been successfully entered', "{$order->getOrderNumber()} ({$po_model->original_po_file})"));
@@ -367,10 +370,13 @@ class CheckoutController extends FrontendController
                 }
             }
 
-            $order->cb_status = OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP4;
-            $order->save();
+            if (!$errors) {
 
-            $this->redirect('checkout:payment');
+                $order->cb_status = OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP4;
+                $order->save();
+
+                $this->redirect('checkout:payment');
+            }
         }
 
         [$shipping_address, $billing_address] = $order->getAddressInfo();
@@ -379,8 +385,8 @@ class CheckoutController extends FrontendController
             'order' => $order,
             'shipping_address' => $shipping_address,
             'billing_address' => $billing_address,
+            'errors' => $errors
         ]);
-
     }
 
     /**
