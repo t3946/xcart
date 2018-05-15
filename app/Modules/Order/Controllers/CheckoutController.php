@@ -295,6 +295,7 @@ class CheckoutController extends FrontendController
 
         $order = $this->getOrder();
 
+
         $this->checkoutStepsValidate($order->cb_status, OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP3);
 
         if ($app->request->getIsPost()) {
