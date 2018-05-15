@@ -158,6 +158,8 @@ class CheckoutController extends FrontendController
 
         $order = $this->getOrder();
 
+        $this->checkoutStepsValidate($order->cb_status, OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP2);
+
         if ($app->request->getIsPost()) {
 
             if ($order->groups->count()) {
@@ -167,8 +169,6 @@ class CheckoutController extends FrontendController
             if ($order->detail_models->count()) {
                 $order->detail_models->delete();
             }
-
-            $this->internalCartChanged($order->cb_status, OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP2);
 
             $data = $app->request->post->all();
 
@@ -295,7 +295,7 @@ class CheckoutController extends FrontendController
 
         $order = $this->getOrder();
 
-        $this->internalCartChanged($order->cb_status, OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP3);
+        $this->checkoutStepsValidate($order->cb_status, OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP3);
 
         if ($app->request->getIsPost()) {
             if ($app->request->post->has('customer_notes')) {
@@ -366,7 +366,7 @@ class CheckoutController extends FrontendController
         StagesOfOrdering::getInstance()->setStage(4);
         $order = $this->getOrder();
 
-        $this->internalCartChanged($order->cb_status, OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP4);
+        $this->checkoutStepsValidate($order->cb_status, OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP4);
 
         $this->redirect('payment:process', ['gateway' => strtolower($order->payment_method->frontend_processor->processor_name)]);
 
@@ -392,9 +392,9 @@ class CheckoutController extends FrontendController
         }
     }
 
-    private function internalCartChanged(string $order_status, $current_step = OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP1): void
+    private function checkoutStepsValidate(string $order_status, $current_step = OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP1): void
     {
-        if (!$this->isStepValid($order_status, $current_step)) {
+        if (!self::isStepValid($order_status, $current_step)) {
             //Xcart::app()->flash->error(OrderModule::t('Cart changed: One or more items have changed!'));
             $this->redirect(self::$steps[$order_status]);
         }
@@ -407,7 +407,7 @@ class CheckoutController extends FrontendController
         OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP4 => 'checkout:payment',
     ];
 
-    private function isStepValid(string $order_status, string $current_step): bool
+    private static function isStepValid(string $order_status, string $current_step): bool
     {
         return $order_status >= $current_step;
     }
