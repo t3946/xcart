@@ -56,8 +56,12 @@ trait ValidateField
                     }
                 }
                 else if ($validator instanceof Validator) {
-                    if ($this instanceof Field && $this->getForm() instanceof ModelForm) {
-                        $validator->setModel($this->form->getInstance());
+                    if ($this instanceof Field) {
+                        $validator->setForm($this->getForm());
+
+                        if ( $this->getForm() instanceof ModelForm) {
+                            $validator->setModel($this->form->getInstance());
+                        }
                     }
 
                     $validator->clearErrors();

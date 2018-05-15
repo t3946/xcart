@@ -6,6 +6,7 @@ use Xcart\App\Form\BaseForm;
 use Xcart\App\Form\Fields\CharField;
 use Xcart\App\Form\Fields\EmailField;
 use Xcart\App\Form\Fields\NumberField;
+use Xcart\App\Validation\EmailValidator;
 
 class ContactInfoForm extends BaseForm
 {
@@ -32,7 +33,10 @@ class ContactInfoForm extends BaseForm
             'email' => [
                 'class' => EmailField::class,
                 'label' => 'Email',
-                'required' => true
+                'required' => true,
+                'validators' => [
+                    new EmailValidator()
+                ],
             ],
         ];
     }

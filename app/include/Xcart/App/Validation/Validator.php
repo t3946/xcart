@@ -2,6 +2,7 @@
 
 namespace Xcart\App\Validation;
 
+use Xcart\App\Form\BaseForm;
 use Xcart\App\Orm\Model;
 
 /**
@@ -18,6 +19,11 @@ abstract class Validator
      * @var Model|string
      */
     protected $model;
+
+    /**
+     * @var BaseForm
+     */
+    protected $form;
     /**
      * @var array
      */
@@ -67,5 +73,15 @@ abstract class Validator
     public function getModel()
     {
         return $this->model;
+    }
+
+    public function setForm($form)
+    {
+        $this->form = $form;
+    }
+
+    public function getForm()
+    {
+        return $this->form;
     }
 }

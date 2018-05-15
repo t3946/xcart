@@ -200,13 +200,11 @@ class OrderHelper
 
             $auth_transactions = array_filter($order_model->transactions->all(), function ($a) {
                 return ($a->type == OrderTransactionModel::TYPE_AUTHORIZATION
-                    && in_array($a->transaction_status,
-                        [
-                            OrderTransactionModel::STATUS_AUTHORIZED,
-                            OrderTransactionModel::STATUS_PARTIALLY_CAPTURED,
-                            OrderTransactionModel::STATUS_PENDING
-                        ]
-                    ));
+                    && \in_array($a->transaction_status, [
+                        OrderTransactionModel::STATUS_AUTHORIZED,
+                        OrderTransactionModel::STATUS_PARTIALLY_CAPTURED,
+                        OrderTransactionModel::STATUS_PENDING
+                    ], true));
             });
             foreach ($auth_transactions as $auth_tr) {
                 $amount = [
@@ -247,16 +245,15 @@ class OrderHelper
         return $user;
     }
 
-    public static function isValidShippingAddress(array $post_data = []): array
+    public static function validateForm(array $post_data = []): array
     {
         $errors = [];
 
         if ($post_data) {
             foreach ($post_data as $f_c => $values) {
-                $f_class = "Modules\\Order\\Forms\\$f_c";
                 /** @var BaseForm $form */
-                if (class_exists($f_class)) {
-                    $form = new $f_class;
+                if ($form = static::getForm($f_c))
+                {
                     if (!$form->populate($post_data)->isValid()) {
                         $errors[$f_c] = $form->getErrors();
                     }
@@ -267,11 +264,22 @@ class OrderHelper
         return $errors;
     }
 
+    public static function getForm(string $form)
+    {
+        $f_class = "Modules\\Order\\Forms\\$form";
+        /** @var BaseForm $form */
+        if (class_exists($f_class)) {
+            return new $f_class;
+        }
+
+        return null;
+    }
+
     public static function getOTRSMessages(OrderModel $model) : int
     {
         $ticket_resolver_messages = 0;
-        $url = "http://helpdesk.s3stores.com/otrs/index.pl";
-        $TicketConnector_link = "http://helpdesk.s3stores.com/otrs/nph-genericinterface.pl/Webservice/TicketConnector";
+        $url = 'http://helpdesk.s3stores.com/otrs/index.pl';
+        $TicketConnector_link = 'http://helpdesk.s3stores.com/otrs/nph-genericinterface.pl/Webservice/TicketConnector';
 
         if ($model) {
 
@@ -289,18 +297,18 @@ class OrderHelper
 
             if (!$curl_err) {
                 $resolver = new OrderToTicketResolver(
-                    "xcart", "@Pp6Lcg^VNMC",
+                    'xcart', '@Pp6Lcg^VNMC',
                     $TicketConnector_link,
-                    "otrs-soap",
-                    "%s",
-                    "http://helpdesk.s3stores.com/otrs/index.pl?Action=AgentTicketZoom;TicketID=%d"
+                    'otrs-soap',
+                    '%s',
+                    'http://helpdesk.s3stores.com/otrs/index.pl?Action=AgentTicketZoom;TicketID=%d'
                 );
                 $ticket_resolver = $resolver->fetch_ticket_info($model->getOrderNumber());
-                if (!empty($ticket_resolver[0]["url"])) {
-                    $ticket_resolver_link = $ticket_resolver[0]["url"];
+                if (!empty($ticket_resolver[0]['url'])) {
+                    $ticket_resolver_link = $ticket_resolver[0]['url'];
 
-                    if (!empty($ticket_resolver[0]["messages"])) {
-                        $ticket_resolver_messages = $ticket_resolver[0]["messages"];
+                    if (!empty($ticket_resolver[0]['messages'])) {
+                        $ticket_resolver_messages = $ticket_resolver[0]['messages'];
 
                         $t_arr = Xcart::app()->cache->get('ticket_resolver_messages', []);
                         $t_arr [$model->orderid] = $ticket_resolver_messages;

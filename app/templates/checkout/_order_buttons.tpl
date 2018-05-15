@@ -1,6 +1,6 @@
 <div class="row">
     <div class="columns">
-        <a href="{url 'cart:list'}" class="button yellow-white waves waves-orange waves-effect">{t 'Shop more' dict='order'}</a>
+        <a href="/" class="button yellow-white waves waves-orange waves-effect">{t 'Shop more' dict='order'}</a>
     </div>
     <div class="columns">
         <div class="row align-center">
