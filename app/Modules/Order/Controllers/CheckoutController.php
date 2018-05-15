@@ -327,43 +327,42 @@ class CheckoutController extends FrontendController
                 ]);
             }
 
-            if ($app->request->post->has('purchase_order')) {
-                if (($purchase_order = $app->request->post->get('purchase_order')) && 1 == 1) { //verify
-                    /** @var OrderModel $extra */
-                    [$extra] = OrderExtraModel::objects()->getOrNew(['order_id' => $order->orderid]);
-                    $extra->purchase_order = $purchase_order;
-                    $extra->save();
+            $data = $app->request->post->all();
+            $purchase_order = $data['PurchaseOrderForm'];
 
-                    if (!empty($_FILES['purchase_order_file']) && $_FILES['purchase_order_file']['error'] === UPLOAD_ERR_OK)
-                    {
-                        $original_file = $_FILES["purchase_order_file"]['name'];
+            if ($purchase_order && !$errors = OrderHelper::validateForm($data)) { //verify
+                /** @var OrderModel $extra */
+                [$extra] = OrderExtraModel::objects()->getOrNew(['order_id' => $order->orderid]);
+                $extra->purchase_order = $purchase_order;
+                $extra->save();
 
-                        $site = Xcart::app()->getModule('Sites')->getSite();
+                if (!empty($_FILES['purchase_order_file']) && $_FILES['purchase_order_file']['error'] === UPLOAD_ERR_OK) {
+                    $original_file = $_FILES["purchase_order_file"]['name'];
 
-                        $po_model = new PurchaseOrderModel([
-                                'login' => Xcart::app()->user->login,
-                                'PO_number' => $purchase_order['po_number'],
-                                'storefront_id' => $site->storefrontid,
-                                'received_by' => 'website'
-                        ]);
+                    $site = Xcart::app()->getModule('Sites')->getSite();
 
-                        try {
-                            $ext = pathinfo($original_file)['extension'];
-                            if (PurchaseOrderHelper::uploadPurchaseOrder($po_model, $_FILES['purchase_order_file']['tmp_name'], $ext)) {
-                                $po_model->setAttributes([
-                                    'status' => 'uploaded',
-                                    'order_id' => $order->orderid,
-                                    'file_name' => "{$po_model->PO_number}.{$ext}",
-                                    'original_po_file' => $original_file,
-                                ]);
-                                //$order->orig_po = $site->getAbsoluteUrl() . $original_file
-                            }
-                            $po_model->save();
-                            Logs::_log('purchase_orders', $this->po_id, Logs::LOG_TYPE_CLIENT, sprintf('PO# %s has been successfully entered', "{$order->getOrderNumber()} ({$po_model->original_po_file})"));
+                    $po_model = new PurchaseOrderModel([
+                        'login' => Xcart::app()->user->login,
+                        'PO_number' => $purchase_order['po_number'],
+                        'storefront_id' => $site->storefrontid,
+                        'received_by' => 'website'
+                    ]);
+
+                    try {
+                        $ext = pathinfo($original_file)['extension'];
+                        if (PurchaseOrderHelper::uploadPurchaseOrder($po_model, $_FILES['purchase_order_file']['tmp_name'], $ext)) {
+                            $po_model->setAttributes([
+                                'status' => 'uploaded',
+                                'order_id' => $order->orderid,
+                                'file_name' => "{$po_model->PO_number}.{$ext}",
+                                'original_po_file' => $original_file,
+                            ]);
+                            //$order->orig_po = $site->getAbsoluteUrl() . $original_file
                         }
-                        catch (\Exception $ex) {
-                            Logs::_log('purchase_orders', $po_model->po_id, Logs::LOG_TYPE_CLIENT, $ex->getMessage());
-                        }
+                        $po_model->save();
+                        Logs::_log('purchase_orders', $this->po_id, Logs::LOG_TYPE_CLIENT, sprintf('PO# %s has been successfully entered', "{$order->getOrderNumber()} ({$po_model->original_po_file})"));
+                    } catch (\Exception $ex) {
+                        Logs::_log('purchase_orders', $po_model->po_id, Logs::LOG_TYPE_CLIENT, $ex->getMessage());
                     }
                 }
             }
