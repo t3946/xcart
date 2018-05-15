@@ -31,18 +31,16 @@
  * \*****************************************************************************/
 
 use Modules\Order\Helpers\OrderGroupHelper;
-use Modules\Order\Helpers\OrderTransactionHelper;
 use Modules\Order\Models\OrderGroupModel;
 use Modules\Order\Models\OrderGroupRefundModel;
 use Modules\Order\Models\OrderModel;
+use Modules\Order\Models\OrderStatusModel;
 use Modules\Order\Models\OrderTransactionModel;
-use Modules\Order\Models\TransactionLogModel;
 use Modules\Order\Stores\OrderTransactionStore;
-use Modules\Payment\Gateways\Gateway;
 use Modules\Payment\Helpers\PaymentHelper;
-use Modules\Payment\Models\ProcessorModel;
 use Modules\Goods\Models\OptionValueModel;
-use Xcart\Paypal;
+use Xcart\App\Main\Xcart;
+use Xcart\Customer;
 
 global $login;
 
@@ -51,8 +49,6 @@ $trusted_post_variables = ['update', 'mnf_body'];
 
 require "./auth.php";
 require $xcart_dir . "/include/security.php";
-
-x_load('mail', 'order');
 
 x_session_register("order_search_condition");
 x_session_register("show_intershipper_rates");
@@ -65,6 +61,17 @@ $po_issued_to_arr = [
 
 $smarty->assign("po_issued_to_arr", $po_issued_to_arr);
 
+if ($orderid && is_numeric($orderid)) {
+    $order_model = OrderModel::objects()->get(['orderid' => $orderid]);
+}
+if (!$order_model || in_array($order_model->cb_status, [
+        OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP1,
+        OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP2,
+        OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP3,
+        OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP4
+    ], true)) {
+    Xcart::app()->request->redirect('/admin/');
+}
 
 if ($REQUEST_METHOD == "POST" && $mode == "unlock_order")
 {
@@ -2553,16 +2560,11 @@ elseif ($instock_and_outofstock_items_table["additional_info"]["count_instock_it
     $backorder_decision_request_message      = $config["backorder_decision_request"]["backorder_message_body_condition_case_f"];
 }
 
-$backorder_decision_request_subject_line = str_replace("{{orderid}}", $order["order_prefix"] . $orderid, $backorder_decision_request_subject_line);
-$backorder_decision_request_subject_line = str_replace("{{c-fullname}}", $userinfo["firstname"], $backorder_decision_request_subject_line);
-$backorder_decision_request_subject_line = str_replace("{{po_number}}", $order["po_number"], $backorder_decision_request_subject_line);
+$backorder_decision_request_subject_line = str_replace(array('{{orderid}}', '{{c-fullname}}', '{{po_number}}'),
+    array($order["order_prefix"] . $orderid, $userinfo["firstname"], $order["po_number"]), $backorder_decision_request_subject_line);
 
-$backorder_decision_request_message = str_replace("{{orderid}}", $order["order_prefix"] . $orderid, $backorder_decision_request_message);
-$backorder_decision_request_message = str_replace("{{c-fullname}}", $userinfo["firstname"], $backorder_decision_request_message);
-$backorder_decision_request_message = str_replace("{{instock}}", $cidev_instock_items_table, $backorder_decision_request_message);
-$backorder_decision_request_message = str_replace("{{outofstock}}", $cidev_outofstock_items_table, $backorder_decision_request_message);
-$backorder_decision_request_message = str_replace("{{discontinued}}", $cidev_discontinued_items_table, $backorder_decision_request_message);
-$backorder_decision_request_message = str_replace("{{po_number}}", $order["po_number"], $backorder_decision_request_message);
+$backorder_decision_request_message = str_replace(array('{{orderid}}', '{{c-fullname}}', '{{instock}}', '{{outofstock}}', '{{discontinued}}', '{{po_number}}'),
+    array($order["order_prefix"] . $orderid, $userinfo["firstname"], $cidev_instock_items_table, $cidev_outofstock_items_table, $cidev_discontinued_items_table, $order["po_number"]), $backorder_decision_request_message);
 
 $outofstock_disc_cat_urls                = "";
 $productids_for_outofstock_disc_cat_urls = [];
@@ -2927,7 +2929,7 @@ $main_order_tabs[$tabs_key]["anchor"]  = $main_order_tabs[$tabs_key]["section"];
 $tabs_key++;
 
 global $xcart_dir, $login;
-$oCustomer = new Xcart\Customer(['login' => $login]);
+$oCustomer = new Customer(['login' => $login]);
 if (!empty($oCustomer)) {
     if ($oCustomer->isCustomerUseSecureData()) {
         $main_order_tabs[$tabs_key]["title"]   = "Secure";
@@ -3191,8 +3193,8 @@ if (!empty($orderid)) {
 # Assign the current location line
 $smarty->assign("location", $location);
 
-$smarty->assign('authorise_url', Xcart\App\Main\Xcart::app()->router->url('order:authorise', ['order_id' => $orderid]));
-$smarty->assign('manual_url', Xcart\App\Main\Xcart::app()->router->url('order:manual_transaction', ['order_id' => $orderid]));
+$smarty->assign('authorise_url', Xcart::app()->router->url('order:authorise', ['order_id' => $orderid]));
+$smarty->assign('manual_url', Xcart::app()->router->url('order:manual_transaction', ['order_id' => $orderid]));
 $smarty->assign('order_store', new \Modules\Order\Stores\OrderStore(OrderModel::objects()->get(['orderid' => $orderid])));
 
 @include $xcart_dir . "/modules/gold_display.php";

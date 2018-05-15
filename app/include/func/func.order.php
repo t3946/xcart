@@ -386,43 +386,10 @@ function func_select_order($orderid)
 
     if ($order["paymentid"] == 2) {
         # Get PO data from order details text
-        $tmp = explode("\n", $order["details"]);
-
-
-        if ($tmp) {
-            $po_fields = [
-                "po_number" => "PO Number",
-                "company_name" => "Company name",
-                "name_of_purchaser" => "Name of purchaser",
-                "position" => "Position",
-                "po_fax" => "po fax",
-                "accounts_payable_full_name" => "accounts payable full name",
-                "accounts_payable_phone" => "accounts payable phone",
-                "accounts_payable_fax" => "accounts payable fax",
-                "accounts_payable_email" => "accounts payable email",
-                "purchase_manager_phone" => "purchase manager phone",
-                "purchase_manager_email" => "purchase manager email",
-                "purchase_manager_phone_ext" => "purchase manager phone ext",
-                "accounts_payable_phone_ext" => "accounts payable phone ext"
-            ];
-
-            $order["po_details"] = [];
-
-            foreach ($tmp as $line)
-            {
-                if (empty($po_fields)) {
-                    break;
-                }
-                foreach ($po_fields as $k => $po_text) {
-                    if (($a = strpos($line, $po_text . ":")) !== false) {
-                        $value                   = substr($line, $a + strlen($po_text) + 2);
-                        $order["po_details"][$k] = $value;
-                        unset($po_fields[$k]);
-                        break;
-                    }
-                }
-            }
+        if ($order_extra_data = OrderExtraModel::objects()->get(['order_id' => $order['orderid']])) {
+            $order["po_details"] = $order_extra_data->purchase_order;
         }
+
     }
     return $order;
 }
