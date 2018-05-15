@@ -49,7 +49,7 @@ class CheckoutController extends FrontendController
 
     public function actionShipping(): void
     {
-        StagesOfOrdering::getInstance()->setStage(1);
+        StagesOfOrdering::getInstance()->setStage(StagesOfOrdering::STAGE_SHIPPING_ADDRESS);
         /** @var OrderModel $order */
 
         $app = Xcart::app();
@@ -146,7 +146,7 @@ class CheckoutController extends FrontendController
 
     public function actionOptions(): void
     {
-        StagesOfOrdering::getInstance()->setStage(2);
+        StagesOfOrdering::getInstance()->setStage(StagesOfOrdering::STAGE_SHIPPING_PAYMENT_OPTIONS);
         /** @var ShippingModule $ship_module */
 
         $app = Xcart::app();
@@ -289,7 +289,7 @@ class CheckoutController extends FrontendController
 
     public function actionReview(): void
     {
-        StagesOfOrdering::getInstance()->setStage(3);
+        StagesOfOrdering::getInstance()->setStage(StagesOfOrdering::STAGE_ORDER_REVIEW);
         $app = Xcart::app();
         $user = $app->user;
 
@@ -363,7 +363,7 @@ class CheckoutController extends FrontendController
 
     public function actionPayment(): void
     {
-        StagesOfOrdering::getInstance()->setStage(4);
+        StagesOfOrdering::getInstance()->setStage(StagesOfOrdering::STAGE_PAYMENT);
         $order = $this->getOrder();
 
         $this->checkoutStepsValidate($order->cb_status, OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP4);
