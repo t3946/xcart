@@ -1,0 +1,108 @@
+.order-review {
+
+  h2 {
+    font-size: 1rem;
+    font-weight: bold;
+    text-align: center;
+  }
+
+  .order-table {
+    margin-bottom: rem-calc(28);
+
+    .table-items {
+      margin: 0 .625rem;
+
+      .table-row {
+        border-bottom: 1px solid #e3e3e3;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        align-items: center;
+        font-size: rem-calc(13);
+        color: #5c5c5c;
+
+        @include breakpoint(sm){
+          font-size: 1rem;
+        }
+
+        @include breakpoint(medium){
+          font-size: rem-calc(18);
+        }
+
+        &:first-child {
+          border-top: 1px solid #e3e3e3;
+        }
+
+        .table-cell {
+          padding: .5rem .625rem .5rem 0;
+
+          &.picture {
+            flex-grow: 1;
+            flex-basis: 3.3125rem;
+            min-width: 3.3125rem;
+
+            @include breakpoint(sm){
+              flex-basis: 4.3125rem;
+              min-width: 4.3125rem;
+            }
+
+          }
+
+          &.product-info {
+            flex-grow: 2;
+
+            @include breakpoint(medium){
+              flex-grow: 4;
+              display: flex;
+              justify-content: space-between;
+            }
+            .price-info {
+              color: #000000;
+            }
+          }
+
+          &.quantity {
+            flex-grow: 2;
+            text-align: center;
+            min-width: rem-calc(45);
+
+            @include breakpoint(medium){
+              color: #3b3b3b;
+            }
+          }
+
+        }
+
+      }
+    }
+
+
+
+
+    .group-info{
+      font-size: rem-calc(13);
+      line-height: rem-calc(37);
+      color: #28862f;
+      text-align: right;
+
+      @include breakpoint(sm){
+        font-size: 1rem;
+        line-height: rem-calc(42);
+      }
+      @include breakpoint(medium){
+        font-size: rem-calc(18);
+        line-height: rem-calc(54);
+      }
+
+      &.group-total{
+        color: #9a1524;
+      }
+
+      .shipping-text{
+        display: inline-block;
+        border-bottom: 1px solid #929292;
+      }
+    }
+
+  }
+}

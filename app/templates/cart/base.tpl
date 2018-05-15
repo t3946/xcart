@@ -45,10 +45,7 @@
                 <div class="columns contacts-logo-block hide-for-small show-for-large">
                     <div class="working-hours active">
                         <div class="text-order-online">
-                            <span class="green-circle-icon">
-                                {*<img src="/static/frontend/images/icons/cart/white_check_mark_icon.svg" alt=""*}
-                                     {*class="white-check-mark">*}
-                            </span>
+                            <span class="green-circle-icon"></span>
                             <span class="grey-text-label">Order online or call us. Operators are standing by!</span>
                         </div>
                         <div class="phone">
