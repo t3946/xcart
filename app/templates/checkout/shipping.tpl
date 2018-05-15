@@ -25,46 +25,62 @@
                     <div class="registration">
 
                         <div class="row">
-                            <div class="small-6 columns medium-text-right">
+                            <div class="small-6 columns medium-text-right text-block">
                                 <label for="registration__s_firstname">
                                     {t 'Full name' dict='order'}
                                     <span class="required">*</span>
                                 </label>
+                                <span class="hint">
+                                    {t 'The order will be shipped under this name' dict='order'}
+                                </span>
                             </div>
                             <div class="small-12 medium-6 columns">
                                 <input value="{$order->s_firstname}" id="registration__s_firstname" required placeholder="{t 'Albert H. Einstein' dict='order'}" name="ShippingAddressForm[s_firstname]" type="text"/>
                             </div>
                         </div>
                         <div class="row">
-                            <div class="small-12 medium-6 columns medium-text-right">
-                                <label for="registration__s_company">{t 'Company' dict='order'}</label>
-                                <i>{t '(optional)' dict='order'}</i>
+                            <div class="small-12 medium-6 columns medium-text-right text-block">
+                                <label for="registration__s_company">
+                                    {t 'Company' dict='order'} <i>{t '(optional)' dict='order'}</i>
+                                </label>
+
+                                <span class="hint">
+                                    {t 'Fill in if shipping to a corporate or university address' dict='order'}
+                                </span>
                             </div>
                             <div class="small-12 medium-6 columns">
                                 <input value="{$order->s_company}" id="registration__s_company" placeholder="{t 'Eureka Inc.' dict='order'}" name="ShippingAddressForm[s_company]" type="text"/>
                             </div>
                         </div>
                         <div class="row">
-                            <div class="small-12 medium-6 columns medium-text-right">
+                            <div class="small-12 medium-6 columns medium-text-right text-block">
                                 <label for="registration__s_address">
                                     {t 'Address' dict='order'}
                                     <span class="required">*</span>
                                 </label>
+
+                                <span class="hint">
+                                    {t 'Street address please, we don\'t ship to P.O. boxes' dict='order'}
+                                </span>
                             </div>
                             <div class="small-12 medium-6 columns">
                                 <input value="{$address[0]}" id="registration__s_address" required placeholder="{t '112 Mercer Street' dict='order'}" name="ShippingAddressForm[s_address]" type="text"/>
                             </div>
                         </div>
                         <div class="row">
-                            <div class="small-12 medium-6 columns medium-text-right">
+                            <div class="small-12 medium-6 columns medium-text-right text-block">
                                 <label for="registration__s_address_2">{t 'Address (line 2)' dict='order'}</label>
+
+                                <span class="hint">
+                                    {t 'Apartment, suite, floor, etc.' dict='order'}
+                                </span>
                             </div>
                             <div class="small-12 medium-6 columns">
                                 <input value="{$address[1]}" id="registration__s_address_2" placeholder="{t 'Apt 1' dict='order'}" name="ShippingAddressForm[s_address_2]" type="text"/>
                             </div>
                         </div>
                         <div class="row">
-                            <div class="small-12 medium-6 columns medium-text-right">
+                            <div class="small-12 medium-6 columns medium-text-right text-block">
                                 <label for="registration__s_countryname">
                                     {t 'Country' dict='order'}
                                     <span class="required">*</span>
@@ -79,7 +95,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="small-12 medium-6 columns medium-text-right">
+                            <div class="small-12 medium-6 columns medium-text-right text-block">
                                 <label for="registration__s_zipcode">
                                     {t 'Zip/Postal Code' dict='order'}
                                     <span class="required">*</span>
@@ -91,7 +107,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="small-12 medium-6 columns medium-text-right">
+                            <div class="small-12 medium-6 columns medium-text-right text-block">
                                 <label for="registration__s_statename">
                                     {t 'State/Province' dict='order'}
                                     <span class="required">*</span>
@@ -102,7 +118,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="small-12 medium-6 columns medium-text-right">
+                            <div class="small-12 medium-6 columns medium-text-right text-block">
                                 <label for="registration__s_city">
                                     {t 'City' dict='order'}
                                     <span class="required">*</span>
@@ -133,11 +149,15 @@
                 <div class="columns small-12 ">
                     <div class="contact-information">
                         <div class="row">
-                            <div class="small-12 medium-6 columns medium-text-right">
+                            <div class="small-12 medium-6 columns medium-text-right text-block">
                                 <label>
                                     {t 'Full name' dict='order'}
                                     <span class="required">*</span>
                                 </label>
+
+                                <span class="hint">
+                                    {t 'First and last name of the order contact person' dict='order'}
+                                </span>
 
                             </div>
                             <div class="small-12 medium-6 columns">
@@ -145,27 +165,35 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="small-12 medium-6 columns medium-text-right">
+                            <div class="small-12 medium-6 columns medium-text-right text-block">
                                 <label>
                                     {t 'Phone' dict='order'}
                                     <span class="required">*</span>
                                 </label>
+
+                                <span class="hint">
+                                    {t 'Phone number at which you can be reached is a must, otherwise order processing will be delayed' dict='order'}
+                                </span>
                             </div>
                             <div class="small-12 medium-6 columns">
                                 <input value="{$order->phone}" required type="tel" placeholder="{t '(609) 734-8000' dict='order'}" name="ContactInfoForm[phone]"/>
 
                                 <span class="phone_ext--container">
-                                    <label>{t 'ext' dict='order'}</label>
+                                    <label class="display-inline">{t 'ext' dict='order'}</label>
                                     <input placeholder="" name="ContactInfoForm[phone_ext]" type="text" class="phone_ext"/>
                                 </span>
                             </div>
                         </div>
                         <div class="row">
-                            <div class="small-12 medium-6 columns medium-text-right">
+                            <div class="small-12 medium-6 columns medium-text-right text-block text-block">
                                 <label>
                                     {t 'Email' dict='order'}
                                     <span class="required">*</span>
                                 </label>
+
+                                <span class="hint">
+                                    {t 'Order progress notifications will be sent here' dict='order'}
+                                </span>
                             </div>
                             <div class="small-12 medium-6 columns">
                                 <input value="{$order->email}" required type="email" placeholder="{t 'albert.einstein@gmail.com' dict='order'}" name="ContactInfoForm[email]"/>
@@ -219,13 +247,15 @@
             <div class="row align-center">
                 <div class="column small-12">
                     <div class="buttons text-center">
-                        <button type="submit" class="button yellow waves waves-orange waves-effect">{t 'Submit' dict='order'}</button>
+                        <button type="submit" class="button submit yellow waves waves-orange waves-effect">
+                            {t 'Submit' dict='order'}
+                        </button>
                     </div>
                 </div>
             </div>
             <div class="row align-center">
                 <div class="column small-12">
-                    <div class="submit-notes text-center">
+                    <div class="submit-notes text-center hint">
                         {t 'Submit and proceed to shipping & payment options.' dict='order'}
                     </div>
                 </div>

@@ -5,6 +5,9 @@ form {
 }
 
 .default-form {
+  font-size: rem-calc(14);
+  line-height: 1;
+
   input, select, textarea {
     border: 1px solid #aaa;
     border-radius: 0;
@@ -28,6 +31,7 @@ form {
 
   label {
     position: relative;
+    display: block;
 
     .required {
       position: absolute;
@@ -58,6 +62,35 @@ form {
     margin-top: rem-calc(20);
     margin-bottom: rem-calc(5);
   }
+
+  .hint {
+    display: inline-block;
+    color: #777;
+    font: {
+      size: rem-calc(12);
+    }
+    line-height: 1.1;
+    max-width: rem-calc(300);
+  }
+  .submit {
+    width: rem-calc(198);
+    height: rem-calc(58);
+    //line-height: rem-calc(58);
+    font-size: rem-calc(20) !important;
+    font-weight: 700;
+    text-transform: uppercase;
+
+    &:after {
+      width: rem-calc(19);
+      height: rem-calc(16);
+      background-origin: content-box;
+      background-size: contain;
+      display: inline-block;
+      margin-left: rem-calc(3);
+      content:'';
+      background: url("../images/icons/cart/arrow_right_checkout.svg") no-repeat;
+    }
+  }
 }
 
 .cart_shipping-page {
@@ -74,5 +107,20 @@ form {
     .phone_ext {
       width: rem-calc(72);
     }
+    .buttons {
+      margin:  rem-calc(3) 0;
+    }
+  }
+
+  .text-block {
+    line-height: 1;
   }
 }
+
+.checkout-shipping {
+  .submit-notes {
+    font-size: rem-calc(14);
+    max-width: initial;
+  }
+}
+
