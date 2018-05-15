@@ -81,7 +81,7 @@ class CheckoutController extends FrontendController
                 /** @var StateModel $s_state */
                 $s_state = StateModel::objects()->get(['code' => $shipping['s_statename']]);
 
-                if (!$s_state && $state_m = StateModel::objects()->get(['state' => $s_state, 'country_code' => $shipping['s_country']])) {
+                if (!$s_state && $state_m = StateModel::objects()->get(['state' => $shipping['s_statename'], 'country_code' => $shipping['s_country']])) {
                     $s_state = $state_m->code;
                 }
 
