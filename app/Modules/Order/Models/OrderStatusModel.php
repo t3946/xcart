@@ -13,6 +13,7 @@ class OrderStatusModel extends Model
     const ORDER_STATUS_CHECKOUT_STEP1 = 'S1';
     const ORDER_STATUS_CHECKOUT_STEP2 = 'S2';
     const ORDER_STATUS_CHECKOUT_STEP3 = 'S3';
+    const ORDER_STATUS_CHECKOUT_STEP4 = 'S4';
 
     const ORDER_STATUS_AUTHORIZED = 'AP';
     const ORDER_STATUS_COMPLETED = 'P';

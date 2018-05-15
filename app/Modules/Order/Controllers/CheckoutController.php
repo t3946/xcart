@@ -29,7 +29,7 @@ class CheckoutController extends FrontendController
 
     public function beforeAction($action, $params)
     {
-        if ($action != 'actionComplete' && !Xcart::app()->cart->isValid()) {
+        if ($action !== 'actionComplete' && !Xcart::app()->cart->isValid()) {
             $this->redirect('cart:list');
         }
     }
@@ -165,7 +165,7 @@ class CheckoutController extends FrontendController
                 $order->detail_models->delete();
             }
 
-            $this->internalCartChanged($order);
+            $this->internalCartChanged($order, OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP2);
 
             $data = $app->request->post->all();
 
@@ -222,7 +222,7 @@ class CheckoutController extends FrontendController
                 }
 
                 $order->total = $order->subtotal + $order->shipping_cost;
-                $order->cb_status = OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP2;
+                $order->cb_status = OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP3;
 
                 $order->save();
             }
@@ -291,14 +291,13 @@ class CheckoutController extends FrontendController
 
         $order = $this->getOrder();
 
-        $this->internalCartChanged($order);
+        $this->internalCartChanged($order->cb_status, OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP3);
 
         if ($app->request->getIsPost()) {
             if ($app->request->post->has('customer_notes')) {
                 $order->setAttributes([
                     'customer_notes' => trim($app->request->post->get('customer_notes')),
                 ]);
-                $order->save();
             }
 
             if ($app->request->post->has('purchase_order')) {
@@ -330,6 +329,7 @@ class CheckoutController extends FrontendController
                                     'file_name' => "{$po_model->PO_number}.{$ext}",
                                     'original_po_file' => $original_file,
                                 ]);
+                                //$order->orig_po = $site->getAbsoluteUrl() . $original_file
                             }
                             $po_model->save();
                             Logs::_log('purchase_orders', $this->po_id, Logs::LOG_TYPE_CLIENT, sprintf('PO# %s has been successfully entered', "{$order->getOrderNumber()} ({$po_model->original_po_file})"));
@@ -337,10 +337,12 @@ class CheckoutController extends FrontendController
                         catch (\Exception $ex) {
                             Logs::_log('purchase_orders', $po_model->po_id, Logs::LOG_TYPE_CLIENT, $ex->getMessage());
                         }
-
                     }
                 }
             }
+
+            $order->cb_status = OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP4;
+            $order->save();
 
             $this->redirect('checkout:payment');
         }
@@ -359,7 +361,7 @@ class CheckoutController extends FrontendController
     {
         $order = $this->getOrder();
 
-        $this->internalCartChanged($order);
+        $this->internalCartChanged($order->cb_status, OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP4);
 
         $this->redirect('payment:process', ['gateway' => strtolower($order->payment_method->frontend_processor->processor_name)]);
 
@@ -385,16 +387,23 @@ class CheckoutController extends FrontendController
         }
     }
 
-    private function internalCartChanged(OrderModel $order, $route = 'checkout:options'): void
+    private function internalCartChanged(OrderModel $order, $current_step = OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP1): void
     {
-        if (OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP1 === $order->cb_status) {
-
-            $order->cb_status = OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP2;
-            $order->save();
-
-            Xcart::app()->flash->error(OrderModule::t('Cart changed: One or more items have changed!'));
-
-            $this->redirect($route);
+        if (!$this->isStepValid($order->cb_status, $current_step)) {
+            //Xcart::app()->flash->error(OrderModule::t('Cart changed: One or more items have changed!'));
+            $this->redirect(self::$steps[$order->cb_status]);
         }
+    }
+
+    private static $steps = [
+        OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP1 => 'checkout:shipping',
+        OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP2 => 'checkout:options',
+        OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP3 => 'checkout:review',
+        OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP4 => 'checkout:payment',
+    ];
+
+    private function isStepValid(string $order_status, string $current_step): bool
+    {
+        return $order_status >= $current_step;
     }
 }
