@@ -43,3 +43,8 @@ html * {
     text-align: $align;
   }
 }
+@each $display in (inline, block, inline-block, none) {
+  .display-#{$display} {
+    display: $display;
+  }
+}
