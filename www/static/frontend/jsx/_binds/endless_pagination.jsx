@@ -6,7 +6,7 @@ $(document).on('click', '.front-endless-pager a.show-more', function(e){
 window.endless_paginate = ()=>{
     let $this = $('.front-endless-pager a.show-more');
     // let $parent = $this.parent();
-    let $container = $('.product-items');
+    let $container = $('.content .product-items');
     let text_loading = $this.data('text-loading');
     let text_default = $this.data('text-default');
 
@@ -39,7 +39,7 @@ window.endless_paginate = ()=>{
 
                     window.addFlashMessage('An error has occurred. Please try again later.', 'error');
                 }
-            })
+            });
         // );
 
 
