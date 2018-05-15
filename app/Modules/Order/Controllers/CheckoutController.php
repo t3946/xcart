@@ -320,6 +320,7 @@ class CheckoutController extends FrontendController
 
         $order = $this->getOrder();
 
+
         $this->checkoutStepsValidate($order->cb_status, OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP3);
 
         if ($app->request->getIsPost()) {
@@ -360,8 +361,10 @@ class CheckoutController extends FrontendController
                                 'file_name' => "{$po_model->PO_number}.{$ext}",
                                 'original_po_file' => $original_file,
                             ]);
-                            $order->orig_po = $site->getAbsoluteUrl() . $original_file;
+                            $order->orig_po = $site->getAbsoluteUrl() . sprintf('/files/purchase_orders/%s', $original_file);
+                            $order->po_number = $po_model->PO_number;
                         }
+                        $po_model->status = 'entered';
                         $po_model->save();
                         Logs::_log('purchase_orders', $this->po_id, Logs::LOG_TYPE_CLIENT, sprintf('PO# %s has been successfully entered', "{$order->getOrderNumber()} ({$po_model->original_po_file})"));
                     } catch (\Exception $ex) {
