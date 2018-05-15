@@ -27,4 +27,5 @@ return [
     'PBX',
     'Shipping',
     'Landing',
+    'Subscribe',
 ];

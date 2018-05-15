@@ -82,4 +82,10 @@ return array_merge($admin_routes, [
         'namespace' => 'page'
     ],
 
+    [
+        'route' => '/sub',
+        'path' => 'Modules.Subscribe.routes',
+        'namespace' => 'sub'
+    ],
+
 ]);
