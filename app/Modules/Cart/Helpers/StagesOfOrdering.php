@@ -4,7 +4,6 @@
  *
  * @param $active string активный этап оформления заказа
  * @param $stages array возвращает список этапов оформления заказа
- * @param $firstStage bool true - активен первый этап оформления заказа
  */
 
 namespace Modules\Cart\Helpers;
@@ -19,7 +18,7 @@ class StagesOfOrdering extends ArrayClass
 {
     use Singleton;
 
-    const FIRST_STAGE = 0;
+    const FIRST_STAGE = Stages::SHOPPING_CART;
 
     /**
      * @var int
@@ -40,6 +39,10 @@ class StagesOfOrdering extends ArrayClass
         return $this->_active;
     }
 
+    /**
+     * @param int $n
+     * @return bool
+     */
     public function hasStage(int $n): bool
     {
         return $this->offsetExists($n);
@@ -53,6 +56,10 @@ class StagesOfOrdering extends ArrayClass
         return $this->data;
     }
 
+    /**
+     * @param int $n
+     * @return mixed
+     */
     public function getStage(int $n)
     {
         if ($this->hasStage($n)) {
@@ -62,6 +69,9 @@ class StagesOfOrdering extends ArrayClass
         return $this->getData(static::FIRST_STAGE);
     }
 
+    /**
+     * @return mixed
+     */
     public function getPrevStage()
     {
         return $this->_active > 0
@@ -69,6 +79,9 @@ class StagesOfOrdering extends ArrayClass
             : $this->getData(static::FIRST_STAGE);
     }
 
+    /**
+     * @return mixed|null
+     */
     public function getNextStage()
     {
         return ($this->count() - 1) > $this->_active
@@ -76,6 +89,10 @@ class StagesOfOrdering extends ArrayClass
             : null;
     }
 
+    /**
+     * @param int $n
+     * @return bool
+     */
     public function setStage(int $n): bool
     {
         if ($this->hasStage($n)) {
@@ -87,6 +104,10 @@ class StagesOfOrdering extends ArrayClass
         return false;
     }
 
+    /**
+     * @param int $n
+     * @return bool
+     */
     public function isStagePassed(int $n): bool
     {
         return $n < $this->_active;
@@ -103,6 +124,7 @@ class StagesOfOrdering extends ArrayClass
     /**
      * список этапов офопмления заказа поумолчанию
      * @return array
+     * @throws \Exception
      */
     private static function getDefaultStages(): array
     {
