@@ -168,7 +168,7 @@ class CheckoutController extends FrontendController
                 $order->detail_models->delete();
             }
 
-            $this->internalCartChanged($order, OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP2);
+            $this->internalCartChanged($order->cb_status, OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP2);
 
             $data = $app->request->post->all();
 
@@ -392,11 +392,11 @@ class CheckoutController extends FrontendController
         }
     }
 
-    private function internalCartChanged(OrderModel $order, $current_step = OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP1): void
+    private function internalCartChanged(string $order_status, $current_step = OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP1): void
     {
-        if (!$this->isStepValid($order->cb_status, $current_step)) {
+        if (!$this->isStepValid($order_status, $current_step)) {
             //Xcart::app()->flash->error(OrderModule::t('Cart changed: One or more items have changed!'));
-            $this->redirect(self::$steps[$order->cb_status]);
+            $this->redirect(self::$steps[$order_status]);
         }
     }
 
