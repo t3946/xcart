@@ -168,7 +168,7 @@ class MenuLibrary extends TemplateLibrary
                         'items' => [
                             [
                                 'name' => 'Contact Us',
-                                'url' => 'up',
+                                'url' => '/contactus/',
                                 'items' => [],
                             ],
                             [
