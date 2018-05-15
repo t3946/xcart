@@ -46,6 +46,12 @@ class CheckoutController extends FrontendController
         return $order;
     }
 
+    /**
+     * Step 1
+     *
+     * @throws \Xcart\App\Exceptions\UnknownMethodException
+     * @throws \Xcart\App\Exceptions\UnknownPropertyException
+     */
     public function actionShipping(): void
     {
         StagesOfOrdering::getInstance()->setStage(StagesOfOrdering::STAGE_SHIPPING_ADDRESS);
@@ -145,6 +151,12 @@ class CheckoutController extends FrontendController
         ]);
     }
 
+    /**
+     * Step 2
+     *
+     * @throws \Xcart\App\Exceptions\UnknownMethodException
+     * @throws \Xcart\App\Exceptions\UnknownPropertyException
+     */
     public function actionOptions(): void
     {
         StagesOfOrdering::getInstance()->setStage(StagesOfOrdering::STAGE_SHIPPING_PAYMENT_OPTIONS);
@@ -291,6 +303,12 @@ class CheckoutController extends FrontendController
         ]);
     }
 
+    /**
+     * Step 3
+     *
+     * @throws \Xcart\App\Exceptions\UnknownMethodException
+     * @throws \Xcart\App\Exceptions\UnknownPropertyException
+     */
     public function actionReview(): void
     {
         StagesOfOrdering::getInstance()->setStage(StagesOfOrdering::STAGE_ORDER_REVIEW);
@@ -365,6 +383,10 @@ class CheckoutController extends FrontendController
 
     }
 
+    /**
+     * Step 3.5
+     * Redirect to payment processor
+     */
     public function actionPayment(): void
     {
         StagesOfOrdering::getInstance()->setStage(StagesOfOrdering::STAGE_PAYMENT);
@@ -376,7 +398,12 @@ class CheckoutController extends FrontendController
 
     }
 
-    public function actionComplete($order_id): void
+    /**
+     * Step 4
+     * @param $order_id
+     * @throws \Xcart\App\Exceptions\HttpException
+     */
+    public function actionComplete(int $order_id): void
     {
         /** @var OrderModel $order */
         $app = Xcart::app();
