@@ -78,6 +78,7 @@ class CheckoutController extends FrontendController
                 $contact = $data['ContactInfoForm'];
 
 
+                /** @var StateModel $s_state */
                 $s_state = StateModel::objects()->get(['code' => $shipping['s_statename']]);
 
                 if (!$s_state && $state_m = StateModel::objects()->get(['state' => $s_state, 'country_code' => $shipping['s_country']])) {
