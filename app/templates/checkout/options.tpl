@@ -12,7 +12,6 @@
 {/block}
 
 {block 'content'}
-
     <form data-abide action="{url 'checkout:options'}" method="POST" class="checkout-options-form">
         <section class="checkout-options">
             <div class="row">

@@ -18,36 +18,47 @@
                              class="show-for-small hide-for-large logo-small">
                     </a>
                 </div>
-                <div class="columns s3-logo-block shrink">
-                    <img src="/static/frontend/dist/images/logos/s3stores.svg"
-                         alt="s3stores"
-                         class="show-for-large s3-logo-big">
-
+                <div class="columns verified-secured-logo-block show-for-medium hide-for-large">
                     <img src="/static/frontend/dist/images/logos/verified_secured_logo.svg"
                          alt="verified&secured"
-                         class="show-for-large secured-logo-big">
+                         class="secured-logo-big">
+                </div>
+                <div class="columns s3-logo-block">
+                    <a href="" class="s3-logo-big-link logo-link">
+                        <img src="/static/frontend/dist/images/logos/s3stores.svg"
+                                    alt="s3stores"
+                                    class="show-for-large s3-logo-big">
+                    </a>
 
-                    <img src="/static/frontend/dist/images/logos/s3stores_logo.svg"
-                         alt="s3stores"
-                         class="show-for-small hide-for-large s3-logo-small">
+                    <a href="" class="secured-logo-big-link logo-link">
+                        <img src="/static/frontend/dist/images/logos/verified_secured_logo.svg"
+                                    alt="verified&secured"
+                                    class="show-for-large secured-logo-big">
+                    </a>
+
+                    <a href="" class="s3-logo-small-link logo-link">
+                        <img src="/static/frontend/dist/images/logos/s3stores_logo.svg"
+                                    alt="s3stores"
+                                    class="show-for-small hide-for-large s3-logo-small">
+                    </a>
                 </div>
                 <div class="columns contacts-logo-block hide-for-small show-for-large">
-                    <div class="working-hours">
+                    <div class="working-hours inactive">
                         <div class="text-order-online">
                             <span class="green-circle-icon">
                                 <img src="/static/frontend/images/icons/cart/white_check_mark_icon.svg" alt=""
                                      class="white-check-mark">
                             </span>
-                            <span>Order online or call us. Operators are standing by!</span>
+                            <span class="grey-text-label">Order online or call us. Operators are standing by!</span>
                         </div>
                         <div class="phone">
-                            <span class="phone-number">(616) 259-5711</span>
+                            <span class="phone-number"><span class="small-number">(616)</span> 259-5711</span>
                             <span class="phone-number">1-800-929-2431</span>
                         </div>
                     </div>
-                    <div class="after-hours">
+                    <div class="after-hours active">
                         <div class="text-order-online">
-                            <img src="/static/frontend/dist/images/icons/cart/place_order_online_icon.svg"
+                            <img src="/static/frontend/images/icons/cart/place_order_online_icon.svg"
                                  alt=""
                                  class="clock-icon">
                             <span>Place order online 24/7</span>
@@ -65,21 +76,31 @@
         {if $breadcrumbs}
 
         <div class="row cart-steps-container">
-            {set $buttonBackEnabled = $.getCartBreadcrumbsBackEnabled}
 
-            <a class="columns shrink cart-steps-back {if !$buttonBackEnabled} inactive{/if}">
-                <span class="img"><img src="/static/frontend/dist/images/icons/cart/arrow_left_shop_more.svg" alt=""></span>
+            {if !$breadcrumbs->isFirstStage()}
+            <a class="columns shrink cart-steps-back hide-for-large" href="{$breadcrumbs->getPrevStage().url}">
+                <span class="img">
+                    <img src="/static/frontend/dist/images/icons/cart/arrow_left_shop_more.svg" alt="">
+                </span>
                 <span class="text">BACK</span>
             </a>
+            {/if}
 
             <section class="cart-steps-section columns">
                 <ul class="cart-steps-items no-bullet">
-                    {foreach $breadcrumbs as $item}
-                    <li class="cart-step{if !empty($item['status'])} {$item['status']}{/if}">
-                        <a href="" class="step-link">
-                            <span class="step-number">{$item['number']}</span>
-                            <span class="step-label">{$item['label']}</span>
-                        </a>
+                    {foreach $breadcrumbs as $key => $item}
+                    <li class="cart-step{if $breadcrumbs->isStagePassed($key)} inactive{/if} {if $breadcrumbs->getActive() == $key} active{/if}">
+                        {if !$item.url || $breadcrumbs->getActive() == $key}
+                            <span class="step-link">
+                                <span class="step-number">{$key+1}</span>
+                                <span class="step-label">{$item['label']}</span>
+                            </span>
+                        {else}
+                            <a href="{$item['url']}" class="step-link">
+                                <span class="step-number">{$key+1}</span>
+                                <span class="step-label">{$item['label']}</span>
+                            </a>
+                        {/if}
                         <div class="arrow-right"></div>
                     </li>
                     {/foreach}
@@ -90,4 +111,10 @@
 
 
     </header>
+{/block}
+
+{block "content-wrapper"}
+    <div class="cart_shipping-page default-form">
+        {block "content"}{/block}
+    </div>
 {/block}

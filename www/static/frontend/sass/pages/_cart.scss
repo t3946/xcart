@@ -416,7 +416,7 @@ $remove: (
       }
     }
 
-    @include breakpoint(430) {
+    @include breakpoint(550) {
       padding-top: 0;
     }
 
@@ -442,7 +442,10 @@ $remove: (
     }
   }
 
+  .bottom_line,
   .head_line {
+    min-height: 2.5em;
+
     &:after {
       content: '';
       display: block;;
@@ -452,19 +455,51 @@ $remove: (
     .b-next,
     .b-back {
       display: inline-block;
+
+      a {
+        &:before,
+        &:after {
+          width: rem-calc(14);
+          height: rem-calc(13);
+          background-origin: content-box;
+          background-size: contain;
+          display: inline-block;
+        }
+      }
     }
 
     .b-back {
       float: left;
+
+      a {
+        &:before {
+          padding-right: rem-calc(5);
+          content:'';
+          background: url("../images/icons/cart/arrow_left_shop_more.svg");
+        }
+      }
     }
 
     .b-next {
       float: right;
+
+
+      a {
+        &:after {
+          padding-left: rem-calc(5);
+          content:'';
+          background: url("../images/icons/cart/arrow_right_checkout.svg");
+        }
+      }
     }
   }
 
   .button {
-    line-height: 1.8;
-    padding: 0 .7em;
+    line-height: 2;
+    min-height: rem-calc(38);
+    padding: 0 rem-calc(10);
+    text-transform: uppercase;
+    font-size: rem-calc(18);
+    font-weight: 700;
   }
 }

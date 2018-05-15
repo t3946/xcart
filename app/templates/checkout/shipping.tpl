@@ -1,7 +1,6 @@
 {extends "checkout/base.tpl"}
 
 {block 'content'}
-
     <form data-abide action="{url 'checkout:shipping'}" method="POST" class="checkout-shipping-form">
         <section class="checkout-shipping">
             <div class="row">

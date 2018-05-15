@@ -3,6 +3,7 @@
 namespace Modules\Order\Controllers;
 
 use Mobile_Detect;
+use Modules\Cart\Helpers\StagesOfOrdering;
 use Modules\Core\Models\StateModel;
 use Modules\Dashboard\Sqls\SearchSql;
 use Modules\Goods\Models\ProductModel;
@@ -48,6 +49,7 @@ class CheckoutController extends FrontendController
 
     public function actionShipping(): void
     {
+        StagesOfOrdering::getInstance()->setStage(1);
         /** @var OrderModel $order */
 
         $app = Xcart::app();
@@ -144,6 +146,7 @@ class CheckoutController extends FrontendController
 
     public function actionOptions(): void
     {
+        StagesOfOrdering::getInstance()->setStage(2);
         /** @var ShippingModule $ship_module */
 
         $app = Xcart::app();
@@ -286,6 +289,7 @@ class CheckoutController extends FrontendController
 
     public function actionReview(): void
     {
+        StagesOfOrdering::getInstance()->setStage(3);
         $app = Xcart::app();
         $user = $app->user;
 
@@ -359,6 +363,7 @@ class CheckoutController extends FrontendController
 
     public function actionPayment(): void
     {
+        StagesOfOrdering::getInstance()->setStage(4);
         $order = $this->getOrder();
 
         $this->internalCartChanged($order->cb_status, OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP4);
