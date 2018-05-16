@@ -32,8 +32,8 @@
                                         <span class="required">*</span>
                                     </label>
                                     <span class="hint">
-                                    {t 'The order will be shipped under this name' dict='order'}
-                                </span>
+                                        {t 'The order will be shipped under this name' dict='order'}
+                                    </span>
                                 </div>
                             </div>
                             <div class="small-12 medium-6 columns">
