@@ -3,11 +3,12 @@
 namespace Modules\Subscribe\Controllers;
 
 use Modules\Sites\Models\SiteModel;
-use Xcart\App\Controller\Controller;
+use Modules\Subscribe\Helpers\SubscribeHelper;
+use Xcart\App\Controller\FrontendController;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Validation\EmailValidator;
 
-class SubscribeController extends Controller
+class SubscribeController extends FrontendController
 {
     public function sendMessage()
     {
@@ -22,6 +23,8 @@ class SubscribeController extends Controller
 
         $email = $request->get->get('subscribe')['email'];
 
+        $key = SubscribeHelper::getHashData($email, $sfid);
+
         $email_validator = new EmailValidator();
 
         if ($email_validator->validate($email)) {
@@ -30,9 +33,7 @@ class SubscribeController extends Controller
                 'Subscribe to our newsletter',
                 'subscribe_mail.tpl',
                 [
-                    'message' => "",
-                    'email' => $email,
-                    'sfid' => $sfid
+                    'key' => $key,
                 ]
             );
         }
