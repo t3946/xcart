@@ -49,6 +49,7 @@ use Xcart\Order;
  * @property int|mixed subtotal
  * @property Manager|OrderDetailModel[] detail_models
  * @property Manager|OrderGroupModel[] groups
+ * @property PaymentMethodModel payment_method
  */
 class OrderModel extends Model
 {

@@ -16,6 +16,9 @@ use Xcart\App\Orm\Fields\SerializeField;
 use Xcart\App\Orm\Fields\UnixTimestampField;
 use Xcart\App\Orm\Model;
 
+/**
+ * @property OrderModel order
+ */
 class OrderTransactionModel extends Model
 {
     use AutoMetaTrait;
