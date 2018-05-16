@@ -2,6 +2,7 @@
 
 namespace Modules\Subscribe\Controllers;
 
+use Modules\Sites\Models\SiteModel;
 use Xcart\App\Controller\Controller;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Validation\EmailValidator;
@@ -11,23 +12,28 @@ class SubscribeController extends Controller
     public function sendMessage()
     {
         $request = $this->getRequest();
-//        dd($request->getDomain());
-//        dd($request->getAbsoluteUrl(), $request->get);
-//        dd($request);
 
+        $domain = $request->getDomain();
+
+        /** @var SiteModel $site_model */
+        $site_model = SiteModel::objects()->get(['domain' => $domain]);
+
+        $sfid = $site_model->storefrontid;
 
         $email = $request->get->get('subscribe')['email'];
 
-//        dd($email);
-
         $email_validator = new EmailValidator();
 
-        if ($email_validator->validate($email)) { dd($email);
+        if ($email_validator->validate($email)) {
             $res = Xcart::app()->mail->template(
                 $email,
                 'Subscribe to our newsletter',
                 'subscribe_mail.tpl',
-                ['message' => ""]
+                [
+                    'message' => "",
+                    'email' => $email,
+                    'sfid' => $sfid
+                ]
             );
         }
 

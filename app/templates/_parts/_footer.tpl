@@ -108,7 +108,7 @@
                     </li>
 
                     <li>
-                        <form class="email-subscription" action="{url subscribe:send_message}">
+                        <form class="email-subscription" action="{url 'subscribe:send_message'}">
                             <input type="email" name="subscribe[email]" required placeholder="Your Email Address" value="">
                             <button class="waves waves-dark">
                                 Send
