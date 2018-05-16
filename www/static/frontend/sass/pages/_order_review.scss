@@ -1,4 +1,67 @@
+.order-review-info-tabs{
+
+  .accordion-item{
+    &:last-child:not(.is-active) > .accordion-title{
+      border-bottom: 1px solid #cbcbcb;
+    }
+    &:first-child:not(.is-active) > .accordion-title{
+      border-bottom: 0;
+    }
+
+
+    .accordion-title{
+      border: {
+        top: 1px solid #cbcbcb;
+        right: 0;
+        bottom: 1px solid #cbcbcb;
+        left: 0;
+      }
+      background-color: #f5f5f5;
+      text-decoration: none;
+      font-size: 1rem;
+      color: #000000;
+      font-weight: bold;
+
+      @include breakpoint(sm) {
+        font-size: rem-calc(20);
+      }
+
+      &:hover{
+        text-decoration: none;
+        background-color: #dfe5e8;
+      }
+
+      @include breakpoint(medium) {
+        display: none !important;
+      }
+    }
+    .accordion-content{
+      padding: 0;
+      border: 0;
+
+
+      @include breakpoint(medium) {
+        display: block !important;
+      }
+
+    }
+
+    &.is-active{
+      .accordion-title{
+        background-color: #dfe5e8;
+        text-decoration: none;
+        border-bottom: 0;
+      }
+    }
+  }
+
+}
 .checkout-review {
+
+  h1{
+    margin: 0 !important;
+  }
+
   .order-review {
 
     h2.review-title {

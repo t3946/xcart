@@ -1,4 +1,4 @@
-<div class="row align-center">
+<div class="row align-center show-for-medium">
     <div class="column">
         <h1 class="text-center">{$header}</h1>
     </div>
