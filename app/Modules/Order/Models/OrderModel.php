@@ -50,6 +50,7 @@ use Xcart\Order;
  * @property Manager|OrderDetailModel[] detail_models
  * @property Manager|OrderGroupModel[] groups
  * @property PaymentMethodModel payment_method
+ * @property mixed|null non_us_confirmation
  */
 class OrderModel extends Model
 {
@@ -255,7 +256,11 @@ class OrderModel extends Model
             'is_mobile_checkout' => [
                 'class' => BooleanCharField::class,
                 'null' => false,
-            ]
+            ],
+            'non_us_confirmation' => [
+                'class' => BooleanCharField::class,
+                'null' => false,
+            ],
         ];
     }
 
@@ -374,5 +379,12 @@ class OrderModel extends Model
         }
 
         return !empty(array_diff($a_s, $a_b));
+    }
+
+    public function isCanadianShipping(): bool
+    {
+        [$shipping] = $this->getAddressInfo();
+
+        return $shipping['country']->code === 'CA' && $this->groups->exclude(['manufacturer__m_country' => 'CA'])->count();
     }
 }
