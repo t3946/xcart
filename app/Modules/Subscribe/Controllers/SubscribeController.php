@@ -10,13 +10,14 @@ class SubscribeController extends Controller
     public function launchMessage()
     {
         $request = $this->getRequest();
+//        dd($request->getDomain());
 //        dd($request->getAbsoluteUrl(), $request->get);
 //        dd($request);
 
         $res = Xcart::app()->mail->template(
             'nikolay@s3stores.com',
             'send',
-            'mail/log_template.tpl',
+            'subscribe_mail.tpl',
             ['message' => "Email test: PASS"]
         );
 
