@@ -4,6 +4,7 @@ namespace Modules\Order\Models;
 
 
 use Modules\User\Models\UserModel;
+use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\SerializeField;
 use Xcart\App\Orm\Model;
@@ -46,6 +47,11 @@ class OrderExtraModel extends Model
             'purchase_order' => [
                 'class' => SerializeField::className(),
                 'null' => false,
+            ],
+
+            'ip' => [
+                'class' => CharField::class,
+                'null' => true,
             ],
         ];
     }
