@@ -15,6 +15,7 @@ use Modules\Order\Models\OrderGroupModel;
 use Modules\Order\Models\OrderModel;
 use Modules\Order\Models\OrderStatusModel;
 use Modules\Order\Models\PurchaseOrderModel;
+use Modules\Order\OrderModule;
 use Modules\Payment\Models\PaymentMethodModel;
 use Modules\Shipping\Models\ShippingRateModel;
 use Modules\Shipping\ShippingModule;
@@ -106,7 +107,7 @@ class CheckoutController extends FrontendController
                 $order->setAttributes([
                     's_firstname' => $shipping['s_firstname'],
                     's_company' => $shipping['s_company'],
-                    's_address' => $shipping['s_address'] . PHP_EOL . $shipping['s_address_2'],
+                    's_address' => $shipping['s_address'] . "\n" . $shipping['s_address_2'],
                     's_country' => $shipping['s_country'],
                     's_zipcode' => $shipping['s_zipcode'],
                     's_state' => $s_state,
@@ -236,10 +237,11 @@ class CheckoutController extends FrontendController
                     }
                 }
 
-                $order->total = $order->subtotal + $order->shipping_cost;
-                $order->cb_status = OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP3;
+                $order->setAttributes([
+                    'total' => $order->subtotal + $order->shipping_cost,
+                    'cb_status' => OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP3,
+                ]);
 
-                $order->save();
             }
 
             if ($app->request->post->has('payment_method')) {
@@ -275,9 +277,14 @@ class CheckoutController extends FrontendController
                     }
                 }
             }
-            $order->save();
+
+            $order->non_us_confirmation = false;
+            if ($order->isCanadianShipping() && !($order->non_us_confirmation = $app->request->post->get('non_us_confirmation'))) {
+                $errors[] = OrderModule::t('You must agree for custom duties');
+            }
 
             if (!$errors) {
+                $order->save();
                 $this->redirect('checkout:review');
             }
         }
