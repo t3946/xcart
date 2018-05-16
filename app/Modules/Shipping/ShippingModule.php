@@ -19,7 +19,7 @@ class ShippingModule extends Module
         $template->addAccessorSmart('get_shipping', self::class."::getShipping", $template::ACCESSOR_CALL);
     }
 
-    public static function getShipping(int $id, OrderModel $order, array $group) : array
+    public static function getShipping(int $id, OrderModel $order, $group) : array
     {
         $result = [];
 
