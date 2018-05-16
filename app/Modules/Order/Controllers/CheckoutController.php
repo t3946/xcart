@@ -72,7 +72,7 @@ class CheckoutController extends FrontendController
         if ($app->request->getIsPost()) {
             $data = $app->request->post->all();
 
-            if (!($errors = OrderHelper::validateForm($data))) {
+            if ($shippingForm->populate($data)->isValid() && $contactForm->populate($data)->isValid()) {
 
                 [$order, $is_created] = OrderModel::objects()->getOrCreate([
                     'cart_number' => $cart->getCartNumber(),
@@ -131,9 +131,12 @@ class CheckoutController extends FrontendController
             }
         }
 
-        $order = OrderModel::objects()->get([
-            'cart_number' => $cart->getCartNumber(),
-        ]);
+        $order = $order ?? OrderModel::objects()->get([
+                'cart_number' => $cart->getCartNumber(),
+            ]);
+
+        $shippingForm->setAttributes($order->getAttributes());
+        $contactForm->setAttributes($order->getAttributes());
 
         if (!$cart->getCartNumber() || $cart->getIsEmpty()) {
             $this->redirect('cart:list');
@@ -147,9 +150,7 @@ class CheckoutController extends FrontendController
             'order' => $order,
             'shippingForm' => $shippingForm,
             'contactForm' => $contactForm,
-            'errors' => $errors,
             'address' => $shipping['address'],
-            'countries' => Connection::getInstance()->fetchAll(SearchSql::getAllCountryOrderSql())
         ]);
     }
 

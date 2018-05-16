@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Order\Forms;
+namespace Modules\Order\Validation;
 
 
 use Modules\Core\Models\CountryModel;

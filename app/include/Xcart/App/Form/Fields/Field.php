@@ -138,7 +138,7 @@ abstract class Field implements IValidateField
         foreach ($this->validators as $validator) {
             if (is_subclass_of($validator, $this->_validatorClass)) {
                 /** @var $validator \Xcart\App\Validation\Validator */
-                $validator->setName($this->label ? $this->label : $this->name);
+                $validator->setName($this->label ?: $this->name);
             }
         }
     }
@@ -186,9 +186,9 @@ abstract class Field implements IValidateField
 
         if ($prefix) {
             return $prefix . '[' . $this->form->classNameShort() . '][' . $this->getId() . ']';
-        } else {
-            return $this->getForm()->classNameShort();
         }
+
+        return $this->getForm()->classNameShort();
     }
 
     public function getId()
@@ -216,7 +216,7 @@ abstract class Field implements IValidateField
 
     public function setHtml($html)
     {
-        if (!is_array($html)) {
+        if (!\is_array($html)) {
             $html = [$html];
         }
 
@@ -231,7 +231,7 @@ abstract class Field implements IValidateField
      */
     public function setAttributes($attributes)
     {
-        if (!is_array($attributes)) {
+        if (!\is_array($attributes)) {
             throw new InvalidConfigException('Attributes must be an array');
         }
         $this->_attributes = $attributes;
@@ -375,12 +375,12 @@ abstract class Field implements IValidateField
         $builtAttributes = '';
         foreach ($attributes as $key => $value)
         {
-            if (!is_scalar($value) && !is_null($value)) {
+            if (!is_scalar($value) && null !== $value) {
                 throw new InvalidConfigException('Values of attributes must be a scalar types');
             }
 
             if ($key) {
-                if (is_null($value)) {
+                if (null === $value) {
                     $builtAttributes .= htmlspecialchars($key);
                 }
                 else {
