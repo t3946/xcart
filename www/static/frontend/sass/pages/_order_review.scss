@@ -26,14 +26,17 @@
           border-top: 1px solid #e3e3e3;
           color: #5c5c5c;
           padding: .5rem .625rem .5rem 0;
+          min-height: rem-calc(63);
 
           @include breakpoint(sm){
             font-size: 1rem;
             line-height: rem-calc(18);
+            min-height: rem-calc(76);
           }
           @include breakpoint(medium){
             font-size: rem-calc(18);
             line-height: rem-calc(21);
+            min-height: rem-calc(63);
           }
 
           @include breakpoint(large){
@@ -42,6 +45,7 @@
             color: #000000;
             padding: rem-calc(14) .625rem;
             text-align: center;
+            min-height: auto;
           }
 
           &.sku{
@@ -49,8 +53,12 @@
           }
 
           &.picture {
+            text-align: center;
             img{
+              max-height: 100%;
               max-width: rem-calc(45);
+              min-height: auto !important;
+              min-width: auto !important;
               @include breakpoint(sm){
                 max-width: rem-calc(55);
               }
@@ -66,6 +74,10 @@
           &.price-info{
             color: #000000;
             text-align: right;
+
+            @include breakpoint(large){
+              text-align: center;
+            }
           }
 
           &.quantity {
@@ -91,6 +103,56 @@
       }
     }
   }
+
+  /* Ширина колонок для разных ращрешений */
+  /* small  17.7258%	15.719%	 66.5552% */
+  .picture{
+    width: 17.7258%;
+  }
+  .quantity {
+    width: 15.719%;
+  }
+  .product-info {
+    width: 66.5552%;
+  }
+
+  /* medium  8.9409%	10.3164%	63.5488%	17.1939% */
+  @include breakpoint(medium) {
+    .picture{
+      width: 8.9409%;
+    }
+    .quantity {
+      width: 10.3164%;
+    }
+    .product-info {
+      width: 63.5488%;
+    }
+    .price-info {
+      width: 17.1939%;
+    }
+  }
+
+
+  /* large 10.4839	47.1774%	13.9516%	13.7097%	14.6774% */
+  @include breakpoint(large) {
+    .sku {
+      width: 10.4839%;
+    }
+    .product-info {
+      width: 47.1774%;
+    }
+    .price-info {
+      width: 13.9516%;
+    }
+    .quantity {
+      width: 13.7097%;
+    }
+    .extended {
+      width: 14.6774%;
+    }
+  }
+
+  /* */
 
 
   .group-info .info{
