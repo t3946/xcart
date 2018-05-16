@@ -129,6 +129,12 @@ form {
       flex-direction: row;
       flex-wrap: nowrap;
 
+      .phone {
+        @include breakpoint(large) {
+          width: rem-calc(147);
+        }
+      }
+
       .phone_ext--container {
 
         display: flex;
@@ -139,6 +145,10 @@ form {
           padding: 0 rem-calc(10);
           display: inline ;
           align-self: center;
+        }
+
+        input {
+          width: rem-calc(72);
         }
 
       }
@@ -154,7 +164,7 @@ form {
 
     @include breakpoint(large) {
       .phone_ext--container {
-        padding-left: rem-calc(20);
+        padding-left: rem-calc(30);
 
         label {
           padding-right: rem-calc(5);
