@@ -3,6 +3,7 @@
 namespace Modules\Order\Helpers;
 
 
+use Mobile_Detect;
 use Modules\GeoIp\Helpers\GeoIpHelper;
 use Modules\Order\Models\FraudStatusModel;
 use Modules\Order\Models\OrderExtraModel;
@@ -34,18 +35,24 @@ class OrderEventHelper
 
     public static function orderCreateEvent(OrderModel $model): void
     {
-        if ($model) {
+        if ($model && $app = Xcart::app()) {
+
+            $user = $app->user;
+
             /** @var OrderExtraModel $order_extra_model */
 
             [$order_extra_model] = OrderExtraModel::objects()->getOrNew(['order_id' => $model->orderid]);
 
-            $order_extra_model->submit_operator = OrderHelper::getSubmitOperator();
-            $order_extra_model->save();
-
-            $ip = Xcart::app()->request->getUserIP();
+            $ip = $app->request->getUserIP();
             if ($geo_litecity_location = GeoIpHelper::getGeoipLocation($ip)) {
-                $ip .= "({$geo_litecity_location})";
+                $ip .= " ({$geo_litecity_location})";
             }
+
+            $order_extra_model->setAttributes([
+                'submit_operator' => OrderHelper::getSubmitOperator(),
+                'ip' => $ip,
+            ]);
+            $order_extra_model->save();
 
             $log_message[] = "<b>Customer IP:</b> {$ip}";
 
@@ -74,8 +81,15 @@ class OrderEventHelper
 
             if ($surf_path) {
                 $model->referer_id = $surf_path->resource_id;
-                $model->save();
             }
+
+            $model->setAttributes([
+                'is_mobile_checkout' => (new Mobile_Detect)->isMobile(),
+                'order_prefix' => $app->getModule('Sites')->getSite()->getOrderPrefix(),
+                'login' => $user->login,
+                'user_id' => $user->id,
+            ]);
+            $model->save();
         }
     }
 
@@ -132,6 +146,8 @@ class OrderEventHelper
 
     public static function orderPaidEvent(OrderModel $model, string $status = OrderStatusModel::ORDER_STATUS_AUTHORIZED): void
     {
+        Xcart::app()->logger->debug("Order paid event: {$model->orderid}", ['status' => $status], 'payment');
+
         if ($cart = $model->cart) {
             $cart->delete();
         }

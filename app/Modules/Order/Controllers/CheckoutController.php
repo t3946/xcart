@@ -77,7 +77,6 @@ class CheckoutController extends FrontendController
                 $shipping = $data['ShippingAddressForm'];
                 $contact = $data['ContactInfoForm'];
 
-
                 /** @var StateModel $s_state */
                 $s_state = StateModel::objects()->get(['code' => $shipping['s_statename']]);
 
@@ -104,7 +103,6 @@ class CheckoutController extends FrontendController
                     */
                 }
 
-
                 $order->setAttributes([
                     's_firstname' => $shipping['s_firstname'],
                     's_company' => $shipping['s_company'],
@@ -117,11 +115,7 @@ class CheckoutController extends FrontendController
                     'phone_ext' => $contact['phone_ext'],
                     'email' => $contact['email'],
                     'firstname' => $contact['firstname'],
-                    'login' => $user->login,
-                    'order_prefix' => $app->getModule('Sites')->getSite()->getOrderPrefix(),
                     'cb_status' => OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP2,
-                    'user_id' => $user->id,
-                    'is_mobile_checkout' => (new Mobile_Detect)->isMobile()
                 ]);
 
                 if ($order->save()) {
