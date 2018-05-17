@@ -27,13 +27,12 @@ form {
   input, select, textarea {
     border: 1px solid #aaa;
     border-radius: 0;
-    line-height: rem-calc(38);
+    line-height: rem-calc(34);
     padding: 0 rem-calc(10);
     margin: rem-calc(6) 0;
     background: #fff;
     box-sizing: border-box;
     width: 100%;
-
 
     @include appearance(none);
 
@@ -48,6 +47,11 @@ form {
     }
 
   }
+
+  input[type=radio] {
+    display: none;
+  }
+
   textarea {
     line-height: 1.2;
   }
@@ -141,8 +145,8 @@ form {
     margin-bottom: rem-calc(20);
 
     @include breakpoint(large) {
-      margin-top: rem-calc(10);
-      margin-bottom: rem-calc(10);
+      margin-top: rem-calc(3);
+      margin-bottom: rem-calc(3);
     }
 
     input, select, textarea {
@@ -163,6 +167,8 @@ form {
       margin-bottom: rem-calc(10);
 
       li {
+        text-align: center;
+
         &:nth-last-child(1) {
           &:after {
             content: '';
@@ -205,6 +211,8 @@ form {
         }
 
         li {
+          text-align: left;
+
           &:nth-last-child(1) {
             &:after {
               border-width: rem-calc(2);
