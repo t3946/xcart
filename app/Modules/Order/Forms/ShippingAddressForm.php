@@ -2,11 +2,16 @@
 
 namespace Modules\Order\Forms;
 
+use Modules\Dashboard\Sqls\SearchSql;
+use Modules\Order\Validation\CountryValidator;
+use Modules\Order\Validation\StateValidator;
+use Modules\Order\Validation\ZipCodeValidator;
 use Xcart\App\Form\BaseForm;
 use Xcart\App\Form\Fields\CharField;
 use Xcart\App\Form\Fields\DropDownField;
 use Xcart\App\Form\Fields\EmailField;
 use Xcart\App\Form\Fields\NumberField;
+use Xcart\Connection;
 
 class ShippingAddressForm extends BaseForm
 {
@@ -15,24 +20,40 @@ class ShippingAddressForm extends BaseForm
         return [
             's_firstname' => [
                 'class' => CharField::class,
-                'label' => "Full Name",
+                'label' => 'Full Name',
+                'hint' => 'The order will be shipped under this name',
                 'required' => true,
+                'html' => [
+                    'placeholder' => 'Albert H. Einstein'
+                ]
             ],
 
             's_company' => [
                 'class' => CharField::class,
-                'label' => "Company (optional)",
+                'label' => 'Company <i>(optional)</i>',
+                'hint' => 'Fill in if shipping to a corporate or university address',
+                'html' => [
+                    'placeholder' => 'Eureka Inc.'
+                ],
             ],
 
             's_address' => [
                 'class' => CharField::class,
                 'label' => 'Address',
-                'required' => true
+                'required' => true,
+                'hint' => 'Street address please, we don\'t ship to P . O . boxes',
+                'html' => [
+                    'placeholder' => '112 Mercer Street',
+                ],
             ],
 
             's_address_2' => [
                 'class' => CharField::class,
                 'label' => 'Address (line 2)',
+                'hint' => 'Apartment, suite, floor, etc.',
+                'html' => [
+                    'placeholder' => 'Apt 1'
+                ],
             ],
 
             's_country' => [
@@ -42,6 +63,14 @@ class ShippingAddressForm extends BaseForm
                 'validators' => [
                     new CountryValidator()
                 ],
+                'choices' => function() {
+                    $result = ['' => ''];
+                    foreach (Connection::getInstance()->fetchAll(SearchSql::getAllCountryOrderSql()) as $item) {
+                        $result[$item['id']] = $item['text'];
+                    }
+
+                    return $result;
+                }
             ],
 
             's_zipcode' => [
@@ -50,6 +79,9 @@ class ShippingAddressForm extends BaseForm
                 'required' => true,
                 'validators' => [
                     new ZipCodeValidator()
+                ],
+                'html' => [
+                    'placeholder' => '08540',
                 ],
             ],
 
@@ -60,13 +92,30 @@ class ShippingAddressForm extends BaseForm
                 'validators' => [
                     new StateValidator(['country' => 's_country'])
                 ],
+                'html' => [
+                    'placeholder' => 'New Jersey'
+                ],
             ],
 
             's_city' => [
                 'class' => CharField::class,
                 'label' => 'City',
-                'required' => true
+                'required' => true,
+                'html' => [
+                    'placeholder' => 'Princeton'
+                ],
             ],
         ];
+    }
+
+    public function setAttributes(array $data)
+    {
+        if (strpos($data['s_address'], "\n")) {
+            $t = explode("\n", $data['s_address']);
+            $data['s_address'] = $t[0];
+            $data['s_address_2'] = $t[1];
+        }
+
+        return parent::setAttributes($data);
     }
 }

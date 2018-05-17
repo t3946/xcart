@@ -15,8 +15,12 @@ class ContactInfoForm extends BaseForm
         return [
             'firstname' => [
                 'class' => CharField::class,
-                'label' => 'fullname',
-                'required' => true
+                'label' => 'Full name',
+                'required' => true,
+                'hint' => 'First and last name of the order contact person',
+                'html' => [
+                    'placeholder' => 'Albert H. Einstein'
+                ],
             ],
 
             'phone' => [
