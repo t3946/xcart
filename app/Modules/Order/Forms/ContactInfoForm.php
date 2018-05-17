@@ -36,7 +36,10 @@ class ContactInfoForm extends BaseForm
 
             'phone_ext' => [
                 'class' => NumberField::class,
-                'label' => 'ext'
+                'label' => 'ext',
+                'html' => [
+                    'class' => 'phone_ext',
+                ]
             ],
 
             'email' => [
@@ -49,7 +52,6 @@ class ContactInfoForm extends BaseForm
                 ],
                 'html' => [
                     'placeholder' => 'albert.einstein@gmail.com',
-                    'class' => 'phone_ext'
                 ],
             ],
         ];
