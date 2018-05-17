@@ -1,5 +1,38 @@
 {extends "checkout/base.tpl"}
 
+{block "breadcrumbs"}
+    {set $breadcrumbs = $.getCartBreadcrumbs}
+    {if $order-confirmation}
+        <div class="row cart-steps-container show-for-large order-confirmation-breadcrumbs">
+            <section class="cart-steps-section columns">
+                <ul class="cart-steps-items no-bullet">
+                    {foreach $breadcrumbs as $key => $item}
+                        <li class="cart-step inactive">
+                            <span class="step-link">
+                                <span class="step-number">{$key+1}</span>
+                                <span class="step-label">{$item['label']}</span>
+                            </span>
+                            <div class="arrow-right"></div>
+                        </li>
+                    {/foreach}
+                </ul>
+            </section>
+        </div>
+    {/if}
+    <div class="row cart-steps-container hide-for-large">
+        <section class="cart-steps-section columns">
+            <ul class="cart-steps-items no-bullet">
+                <li class="cart-step active">
+                        <span class="step-link">
+                            <span class="step-label">{t 'Order confirmation'}</span>
+                        </span>
+                    <div class="arrow-right"></div>
+                </li>
+            </ul>
+        </section>
+    </div>
+{/block}
+
 {block 'content'}
 
     {set $extra = $order->extra_model}
