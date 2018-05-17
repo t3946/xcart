@@ -487,7 +487,8 @@ abstract class BaseForm implements IteratorAggregate, Countable, ArrayAccess, IV
     {
         if ($data instanceof Collection) {
             $data = $data->all();
-        } else if (!\is_array($data)) {
+        }
+        else if (!\is_array($data)) {
             throw new RuntimeException('$data must be a array');
         }
 

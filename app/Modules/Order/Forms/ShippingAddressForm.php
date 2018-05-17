@@ -111,6 +111,12 @@ class ShippingAddressForm extends BaseForm
 
     public function setAttributes(array $data)
     {
+        foreach ($data as $k=>$v) {
+            if (\is_string($v)) {
+                $data[$k] = trim($v);
+            }
+        }
+
         if (strpos($data['s_address'], "\n")) {
             $t = explode("\n", $data['s_address']);
             $data['s_address'] = $t[0];
@@ -133,7 +139,7 @@ class ShippingAddressForm extends BaseForm
 
         if ($data['s_state'] && $data['s_country']) {
             /** @var StateModel $sModel */
-            if ($sModel =  StateModel::objects()->get(['state__icontains' => $data['s_state'], 'country_code' =>  $data['s_country']])) {
+            if ($sModel =  StateModel::objects()->get(['state' => $data['s_state'], 'country_code' =>  $data['s_country']])) {
                 $data['s_state'] = $sModel->code;
             }
         }
