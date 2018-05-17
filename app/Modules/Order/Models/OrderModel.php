@@ -354,7 +354,7 @@ class OrderModel extends Model
             'firstname' => $this->s_firstname,
             'company' => $this->s_company,
             'city' => $this->s_city,
-            'state' => $this->shipping_state,
+            'state' => $this->shipping_state ?: $this->s_state,
             'country' => $this->shipping_country,
             'zipcode' => $this->s_zipcode,
         ];
@@ -365,7 +365,7 @@ class OrderModel extends Model
                 'firstname' => $this->b_firstname,
                 'company' => $this->b_company,
                 'city' => $this->b_city,
-                'state' => !empty($this->b_state) ? $this->billing_state : null,
+                'state' => $this->billing_state ?: $this->b_state,
                 'country' => !empty($this->b_country) ? $this->billing_country : null,
                 'zipcode' => $this->b_zipcode,
             ];

@@ -26,20 +26,32 @@ class ContactInfoForm extends BaseForm
             'phone' => [
                 'class' => CharField::class,
                 'label' => 'Phone',
-                'required' => true
+                'required' => true,
+                'hint' => 'Phone number at which you can be reached is a must, otherwise order processing will be delayed',
+                'html' => [
+                    'placeholder' => '(609) 734-8000',
+                    'class' => 'phone'
+                ],
             ],
 
             'phone_ext' => [
                 'class' => NumberField::class,
-                'label' => 'ext'
+                'label' => 'ext',
+                'html' => [
+                    'class' => 'phone_ext',
+                ]
             ],
 
             'email' => [
                 'class' => EmailField::class,
                 'label' => 'Email',
+                'hint' => 'Order progress notifications will be sent here',
                 'required' => true,
                 'validators' => [
                     new EmailValidator()
+                ],
+                'html' => [
+                    'placeholder' => 'albert.einstein@gmail.com',
                 ],
             ],
         ];

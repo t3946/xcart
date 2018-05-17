@@ -37,14 +37,17 @@ class PrepareData
     {
         foreach ($b as $key => $value) {
             if (array_key_exists($key, $a)) {
-                if (is_int($key) && !$preserveNumericKeys) {
+                if (\is_int($key) && !$preserveNumericKeys) {
                     $a[] = $value;
-                } elseif (is_array($value) && is_array($a[$key])) {
+                }
+                elseif (\is_array($value) && \is_array($a[$key])) {
                     $a[$key] = static::merge($a[$key], $value, $preserveNumericKeys);
-                } else {
+                }
+                else {
                     $a[$key] = $value;
                 }
-            } else {
+            }
+            else {
                 $a[$key] = $value;
             }
         }
@@ -63,7 +66,7 @@ class PrepareData
         foreach ($data as $baseName => $params) {
             foreach ($params as $innerKey => $value) {
                 foreach ($value as $inlineName => $item) {
-                    if (is_array($item)) {
+                    if (\is_array($item)) {
                         /**
                          * @TODO I HATE THIS FUCKING PHP LOGIC.
                          *
@@ -86,7 +89,7 @@ class PrepareData
 
     public static function checkFilesStruct($data)
     {
-        if (is_array($data) &&
+        if (\is_array($data) &&
             isset($data['error']) &&
             isset($data['tmp_name']) &&
             isset($data['size']) &&

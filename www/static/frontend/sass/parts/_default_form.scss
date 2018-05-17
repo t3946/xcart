@@ -134,6 +134,41 @@ form {
       background: url("../images/icons/cart/arrow_right_checkout.svg") no-repeat;
     }
   }
+
+  .errors {
+    position: relative;
+    list-style: none;
+    background-color: #ffebeb;
+    border: 1px solid #ed1c24;
+    padding: rem-calc(11);
+
+    li {
+
+    }
+
+    &:before, &:after {
+      content: '';
+      position: absolute;
+      background-color: #ffebeb;
+      width: rem-calc(10);
+      height: rem-calc(10);
+      left: calc(50% - 10px);
+      bottom: 0;
+    }
+
+    &:after {
+      border: 1px solid #ed1c24;
+      transform: rotate(63deg) skewX(36deg);
+
+      width: rem-calc(12);
+      height: rem-calc(9);
+      bottom: rem-calc(-5);
+    }
+
+    &:before {
+
+    }
+  }
 }
 
 .cart_shipping-page {

@@ -13,7 +13,7 @@ class OrderInvoiceHelper
 
         /*Xcart::app()->mail->template(
             $order->email,
-            str_replace($order->notification->customer_subject, '{{orderid}}', $order->orderid,),
+            str_replace($order->notification->customer_subject, '{{orderid}}', $order->orderid),
             'mail/invoice.tpl',
             ['order' => $order]
         );*/

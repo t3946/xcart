@@ -53,8 +53,7 @@ class CheckoutController extends FrontendController
     /**
      * Step 1
      *
-     * @throws \Xcart\App\Exceptions\UnknownMethodException
-     * @throws \Xcart\App\Exceptions\UnknownPropertyException
+     * @throws \Exception
      */
     public function actionShipping(): void
     {
@@ -83,11 +82,11 @@ class CheckoutController extends FrontendController
                 $contact = $data['ContactInfoForm'];
 
                 /** @var StateModel $s_state */
-                $s_state = StateModel::objects()->get(['code' => $shipping['s_statename']]);
+                $s_state = StateModel::objects()->get(['code' => $shipping['s_state']]);
 
                 /** @var StateModel $state_m */
-                if (!$s_state && $state_m = StateModel::objects()->get(['state' => $shipping['s_statename'], 'country_code' => $shipping['s_country']])) {
-                    $s_state = $state_m->code;
+                if (!$s_state) {
+                    $s_state = StateModel::objects()->get(['state' => $shipping['s_state'], 'country_code' => $shipping['s_country']]);
                 }
 
                 $phone = preg_replace('/\D/S', '', $contact['phone']);
@@ -114,7 +113,7 @@ class CheckoutController extends FrontendController
                     's_address' => $shipping['s_address'] . "\n" . $shipping['s_address_2'],
                     's_country' => $shipping['s_country'],
                     's_zipcode' => $shipping['s_zipcode'],
-                    's_state' => $s_state,
+                    's_state' => $s_state ? $s_state->code : $shipping['s_state'],
                     's_city' => $shipping['s_city'],
                     'phone' => $phone,
                     'phone_ext' => $contact['phone_ext'],
@@ -143,15 +142,10 @@ class CheckoutController extends FrontendController
             $this->redirect('cart:list');
         }
 
-        if ($order) {
-            [$shipping] = $order->getAddressInfo();
-        }
-
         $this->display('checkout/shipping.tpl', [
             'order' => $order,
             'shippingForm' => $shippingForm,
             'contactForm' => $contactForm,
-            'address' => $shipping['address'],
         ]);
     }
 
@@ -228,11 +222,10 @@ class CheckoutController extends FrontendController
 
                         /** @var ProductModel $product */
                         $product = $item->getObject();
-
                         $detail = new OrderDetailModel([
                             'orderid' => $group->orderid,
                             'productid' => $product->productid,
-                            'price' => $product->getPrice(),
+                            'price' => $product->getPrice($item->getQuantity()),
                             'amount' => $item->getQuantity(),
                             'productcode' => $product->productcode,
                             'product' => $product->getFrontendName(),
@@ -419,13 +412,19 @@ class CheckoutController extends FrontendController
      * @param $order_id
      * @throws \Xcart\App\Exceptions\HttpException
      */
-    public function actionComplete(int $order_id): void
+    public function actionComplete(int $order_id, string $slug): void
     {
         /** @var OrderModel $order */
         $app = Xcart::app();
         $user = $app->user;
 
         if($order = OrderModel::objects()->get(['orderid' => $order_id])) {
+
+            $hash = md5($order->orderid.$order->total.$order->email);
+
+            if ($slug !== $hash) {
+                $this->error(404);
+            }
 
             [$shipping, $billing] = $order->getAddressInfo();
 

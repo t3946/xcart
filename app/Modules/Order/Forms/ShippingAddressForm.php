@@ -2,6 +2,7 @@
 
 namespace Modules\Order\Forms;
 
+use Modules\Core\Models\StateModel;
 use Modules\Dashboard\Sqls\SearchSql;
 use Modules\Order\Validation\CountryValidator;
 use Modules\Order\Validation\StateValidator;
@@ -85,7 +86,7 @@ class ShippingAddressForm extends BaseForm
                 ],
             ],
 
-            's_statename' => [
+            's_state' => [
                 'class' => CharField::class,
                 'label' => 'State/Province',
                 'required' => true,
@@ -110,12 +111,39 @@ class ShippingAddressForm extends BaseForm
 
     public function setAttributes(array $data)
     {
+        foreach ($data as $k=>$v) {
+            if (\is_string($v)) {
+                $data[$k] = trim($v);
+            }
+        }
+
         if (strpos($data['s_address'], "\n")) {
             $t = explode("\n", $data['s_address']);
             $data['s_address'] = $t[0];
             $data['s_address_2'] = $t[1];
         }
 
+        if ($data['s_state'] && $data['s_country']) {
+            /** @var StateModel $sModel */
+            if ($sModel =  StateModel::objects()->get(['code' => $data['s_state'], 'country_code' =>  $data['s_country']])) {
+                $data['s_state'] = $sModel->state;
+            }
+        }
+
         return parent::setAttributes($data);
+    }
+
+    public function getAttributes()
+    {
+        $data = parent::getAttributes();
+
+        if ($data['s_state'] && $data['s_country']) {
+            /** @var StateModel $sModel */
+            if ($sModel =  StateModel::objects()->get(['state' => $data['s_state'], 'country_code' =>  $data['s_country']])) {
+                $data['s_state'] = $sModel->code;
+            }
+        }
+
+        return $data;
     }
 }

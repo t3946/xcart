@@ -2,11 +2,12 @@
 
 namespace Modules\Order\Forms;
 
+use Modules\Order\Validation\CountryValidator;
+use Modules\Order\Validation\StateValidator;
+use Modules\Order\Validation\ZipCodeValidator;
 use Xcart\App\Form\BaseForm;
 use Xcart\App\Form\Fields\CharField;
 use Xcart\App\Form\Fields\DropDownField;
-use Xcart\App\Form\Fields\EmailField;
-use Xcart\App\Form\Fields\NumberField;
 
 class BillingAddressForm extends BaseForm
 {

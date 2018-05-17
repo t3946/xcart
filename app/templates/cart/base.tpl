@@ -117,3 +117,6 @@
         {block "content"}{/block}
     </div>
 {/block}
+
+
+{block 'offcanvas-menu-left'}{/block}
