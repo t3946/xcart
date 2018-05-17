@@ -217,7 +217,7 @@
                         </tr>
                         <tr>
                             <td><b>State/Province:</b></td>
-                            <td>{$order->shipping_state}</td>
+                            <td>{$order->shipping_state ?: $order->s_state}</td>
                         </tr>
                         <tr>
                             <td><b>Country:</b></td>
@@ -247,7 +247,7 @@
                         </tr>
                         <tr>
                             <td><b>State/Province:</b></td>
-                            <td>{$order->billing_state}</td>
+                            <td>{$order->billing_state ?: $order->b_state}</td>
                         </tr>
                         <tr>
                             <td><b>Country:</b></td>
