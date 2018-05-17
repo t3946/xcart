@@ -2,6 +2,7 @@
 
 namespace Modules\Order\Forms;
 
+use Modules\Core\Models\StateModel;
 use Modules\Dashboard\Sqls\SearchSql;
 use Modules\Order\Validation\CountryValidator;
 use Modules\Order\Validation\StateValidator;
@@ -116,6 +117,27 @@ class ShippingAddressForm extends BaseForm
             $data['s_address_2'] = $t[1];
         }
 
+        if ($data['s_state'] && $data['s_country']) {
+            /** @var StateModel $sModel */
+            if ($sModel =  StateModel::objects()->get(['code' => $data['s_state'], 'country_code' =>  $data['s_country']])) {
+                $data['s_state'] = $sModel->state;
+            }
+        }
+
         return parent::setAttributes($data);
+    }
+
+    public function getAttributes()
+    {
+        $data = parent::getAttributes();
+
+        if ($data['s_state'] && $data['s_country']) {
+            /** @var StateModel $sModel */
+            if ($sModel =  StateModel::objects()->get(['state__icontains' => $data['s_state'], 'country_code' =>  $data['s_country']])) {
+                $data['s_state'] = $sModel->code;
+            }
+        }
+
+        return $data;
     }
 }
