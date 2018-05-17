@@ -78,8 +78,8 @@ class CheckoutController extends FrontendController
                     'cart_number' => $cart->getCartNumber(),
                 ]);
 
-                $shipping = $data['ShippingAddressForm'];
-                $contact = $data['ContactInfoForm'];
+                $shipping = $shippingForm->getAttributes();
+                $contact = $contactForm->getAttributes();
 
                 /** @var StateModel $s_state */
                 $s_state = StateModel::objects()->get(['code' => $shipping['s_state']]);
