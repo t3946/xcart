@@ -84,7 +84,7 @@ class MetaData
     {
         $primaryFields = [];
 
-        foreach (call_user_func([$className, 'getFields']) as $name => $config) {
+        foreach (\call_user_func([$className, 'getFields']) as $name => $config) {
 
             /** @var Field $field */
             $field = $this->createField($config);
