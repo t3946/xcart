@@ -1,5 +1,8 @@
 {extends "mail/invoice_template.tpl"}
 
+
+
+
 {block 'message'}
     <p/>
     {set $message = $order->notification->email_body}
@@ -7,9 +10,9 @@
 {/block}
 
 {block 'content'}
-    {set $site = $.getSite}
-    {set $config = $site->getGlobalConfig()}
-
+    {add $site = $.getSite}
+    {add $config = $site->getGlobalConfig()}
+    {add $site_config  = $site->getConfig()}
     <table cellspacing="0" cellpadding="0" width="600" bgcolor="#ffffff">
     <tr>
     <td>
@@ -70,7 +73,7 @@
         </tr>
         <tr>
             <td colspan='2'>
-                <hr style="width:100%;margin: 0px; border: 0 none; border-bottom: 1px solid #999999;"/>
+                <hr style="width:100%;margin: 0; border: 0 none; border-bottom: 1px solid #999999;"/>
             </td>
         </tr>
     </table>
@@ -127,11 +130,11 @@
         <table cellspacing="0" cellpadding="0" width="100%" border="0">
             <tr>
                 <td width="45%" height="25"><b>Purchase manager</b>
-                    <hr style="width:100%;margin: 0px; border: 0 none; border-bottom: 1px solid #999999;"/>
+                    <hr style="width:100%;margin: 0; border: 0 none; border-bottom: 1px solid #999999;"/>
                 </td>
                 <td width="10%">&nbsp;</td>
                 <td width="45%" height="25"><b>Accounts payable</b>
-                    <hr style="width:100%;margin: 0px; border: 0 none; border-bottom: 1px solid #999999;"/>
+                    <hr style="width:100%;margin: 0; border: 0 none; border-bottom: 1px solid #999999;"/>
                 </td>
             </tr>
 
@@ -194,11 +197,11 @@
     <table cellspacing="0" cellpadding="0" width="100%" border="0">
         <tr>
             <td width="45%" height="25"><b>Shipping Address</b>
-                <hr style="width:100%;margin: 0px; border: 0 none; border-bottom: 1px solid #999999;"/>
+                <hr style="width:100%;margin: 0; border: 0 none; border-bottom: 1px solid #999999;"/>
             </td>
             <td width="10%">&nbsp;</td>
             <td width="45%" height="25"><b>Billing Address</b>
-                <hr style="width:100%;margin: 0px; border: 0 none; border-bottom: 1px solid #999999;"/>
+                <hr style="width:100%;margin: 0; border: 0 none; border-bottom: 1px solid #999999;"/>
             </td>
         </tr>
 
@@ -273,7 +276,6 @@
                     {else}
                         [X]
                     {/if} I agree to be responsible for custom duties, CODs, and other charges associated with bringing goods to Canada.
-
                 </td>
             </tr>
         {/if}
@@ -283,19 +285,11 @@
     <br/>
     <br/>
 
-    {if $this_is_printable_version == "Y"}
-        </td>
-        </tr>
-        </table>
-    {/if}
+    {include "mail/invoice_details.tpl"}
 
-    {*{include "mail/html/order_data.tpl"}*}
-
-    {if $this_is_printable_version != "Y"}
-        </td>
-        </tr>
-        </table>
-    {/if}
+    </td>
+    </tr>
+    </table>
 
 
     {if $this_is_printable_version != "Y"}
@@ -332,10 +326,27 @@
         <div align="center">
             {if $order->customer_notes && $ref_notify != 'Y'}
                 <div><span style="FONT-SIZE: 14px; FONT-WEIGHT: bold;">Customer notes</span></div>
-                <div style="height:50px; border: 1px solid;">{$order->customer_notes}</div>
+                <div style="height:50px; border: 1px solid;">{$order->customer_notes|nl2br}</div>
             {/if}
 
         </div>
     {/if}
 
+{/block}
+
+{block 'signature'}
+    {add $site = $.getSite}
+    {add $config = $site->getGlobalConfig()}
+    {add $site_config  = $site->getConfig()}
+
+    <hr size="1" noshade="noshade" />
+    Thank you for choosing S3 Stores!
+    <p>
+        <font size="2">
+            {$site_config.company_name}, a division of {$config.operating_company_name}<br/>
+            Phone: {$config.company_phone}<br/>
+            Fax: {$config.company_fax}<br/>
+            URL: <a href="{$site->getAbsoluteUrl()}" target=_new>{$site->getAbsoluteUrl()}</a>
+        </font>
+    </p>
 {/block}

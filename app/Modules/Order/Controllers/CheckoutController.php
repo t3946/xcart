@@ -328,7 +328,7 @@ class CheckoutController extends FrontendController
 
         $order = $this->getOrder();
 
-        //OrderInvoiceHelper::sendOrderStatusNotification($order);
+        OrderInvoiceHelper::sendOrderStatusNotification($order);
 
         $this->checkoutStepsValidate($order->cb_status, OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP3);
 

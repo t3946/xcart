@@ -37,8 +37,14 @@
 {block 'message'}
 
 {/block}
+
 {block 'content'}
 
 {/block}
+
+{block 'signature'}
+
+{/block}
+
 </body>
 </html>
