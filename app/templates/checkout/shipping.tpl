@@ -56,26 +56,38 @@
                         {include 'checkout/_form_row.tpl' field=$contactForm->getField('firstname')}
 
                         <div class="row">
-                            <div class="small-12 medium-6 columns medium-text-right text-block">
-                                <div class="multiline">
-                                    {$contactForm->getField('phone')->renderLabel()}
-                                    <span class="hint">
-                                        {$contactForm->getField('phone')->renderHint()}
-                                    </span>
+                            <div class="column show-for-large small-12 large-2"></div>
+                            <div class="column small-12 large-2 large-order-2">
+                                {$contactForm->getField('phone')->renderErrors()}
+                            </div>
+
+                            <div class="column small-12 large-8 large-order-1">
+                                <div class="row">
+                                    <div class="small-12 large-6 columns large-text-right text-block">
+                                        <div class="multiline">
+                                            {$contactForm->getField('phone')->renderLabel()}
+
+                                            <span class="hint">
+                                                {$contactForm->getField('phone')->renderHint()}
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="small-12 large-6 columns phone--container">
+
+                                        {$contactForm->getField('phone')->renderInput()}
+
+                                        <span class="phone_ext--container">
+                                            <label class="display-inline hide-for-medium">X</label>
+                                            <label class="display-inline show-for-medium">{t 'ext' dict='order'}</label>
+
+                                            {$contactForm->getField('phone_ext')->renderInput()}
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="small-12 medium-6 columns phone--container">
-
-                                {$contactForm->getField('phone')->renderInput()}
-
-                                <span class="phone_ext--container">
-                                    <label class="display-inline hide-for-medium">X</label>
-                                    <label class="display-inline show-for-medium">{t 'ext' dict='order'}</label>
-
-                                    {$contactForm->getField('phone_ext')->renderInput()}
-                                </span>
-                            </div>
                         </div>
+
+
 
 
                         {include 'checkout/_form_row.tpl' field=$contactForm->getField('email')}
