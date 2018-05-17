@@ -2,73 +2,7 @@
 
 namespace Modules\Order\Forms;
 
-use Modules\Order\Validation\CountryValidator;
-use Modules\Order\Validation\StateValidator;
-use Modules\Order\Validation\ZipCodeValidator;
-use Xcart\App\Form\BaseForm;
-use Xcart\App\Form\Fields\CharField;
-use Xcart\App\Form\Fields\DropDownField;
-
-class BillingAddressForm extends BaseForm
+class BillingAddressForm extends AddressForm
 {
-    public function getFields()
-    {
-        return [
-            'b_firstname' => [
-                'class' => CharField::class,
-                'label' => "Full Name",
-                'required' => true
-
-            ],
-
-            'b_company' => [
-                'class' => CharField::class,
-                'label' => "Company (optional)",
-            ],
-
-            'b_address' => [
-                'class' => CharField::class,
-                'label' => 'Address',
-                'required' => true
-            ],
-
-            'b_address_2' => [
-                'class' => CharField::class,
-                'label' => 'Address (line 2)',
-            ],
-
-            'b_country' => [
-                'class' => DropDownField::class,
-                'label' => 'Country',
-                'required' => true,
-                'validators' => [
-                    new CountryValidator()
-                ],
-            ],
-
-            'b_zipcode' => [
-                'class' => CharField::class,
-                'label' => 'Zip/Postal Code',
-                'required' => true,
-                'validators' => [
-                    new ZipCodeValidator()
-                ],
-            ],
-
-            'b_statename' => [
-                'class' => CharField::class,
-                'label' => 'State/Province',
-                'required' => true,
-                'validators' => [
-                    new StateValidator(['country' => 'b_country'])
-                ],
-            ],
-
-            'b_city' => [
-                'class' => CharField::class,
-                'label' => 'City',
-                'required' => true
-            ],
-        ];
-    }
+    public $replacement = 'b_';
 }

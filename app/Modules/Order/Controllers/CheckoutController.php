@@ -7,6 +7,7 @@ use Modules\Cart\Helpers\StagesOfOrdering;
 use Modules\Core\Models\StateModel;
 use Modules\Dashboard\Sqls\SearchSql;
 use Modules\Goods\Models\ProductModel;
+use Modules\Order\Forms\BillingAddressForm;
 use Modules\Order\Forms\ContactInfoForm;
 use Modules\Order\Forms\ShippingAddressForm;
 use Modules\Order\Helpers\OrderHelper;
@@ -167,6 +168,7 @@ class CheckoutController extends FrontendController
         $ship_module = $app->getModule('Shipping');
         $cart = $app->cart;
         $errors = [];
+        $billingForm = new BillingAddressForm();
 
         $order = $this->getOrder();
 
@@ -251,31 +253,29 @@ class CheckoutController extends FrontendController
                 }
             }
 
-            if ($app->request->post->has('billing_same')) {
-                if ($app->request->post->get('billing_same')) {
-                    $order->setAttributes([
-                        'b_address' => $order->s_address,
-                        'b_firstname' => $order->s_firstname,
-                        'b_company' => $order->s_company,
-                        'b_city' => $order->s_city,
-                        'b_state' => $order->s_state,
-                        'b_country' => $order->s_country,
-                        'b_zipcode' => $order->s_zipcode,
-                    ]);
-                } else {
-                    if (!($errors = OrderHelper::validateForm($data))) {
-                        $order->setAttributes($data['BillingAddressForm']);
+            if ($app->request->post->get('billing_same')) {
+                $order->setAttributes([
+                    'b_address' => $order->s_address,
+                    'b_firstname' => $order->s_firstname,
+                    'b_company' => $order->s_company,
+                    'b_city' => $order->s_city,
+                    'b_state' => $order->s_state,
+                    'b_country' => $order->s_country,
+                    'b_zipcode' => $order->s_zipcode,
+                ]);
+            }
+            elseif ($billingForm->populate($data)->isValid()) {
+                $order->setAttributes($billingForm->getAttributes());
 
-                        $b_state = $data['BillingAddressForm']['b_statename'];
-                        if (!StateModel::objects()->get(['code' => $b_state])) {
-                            if ($state_m = StateModel::objects()->get(['state' => $b_state, 'country_code' => $data['BillingAddressForm']['b_country']])) {
-                                $b_state = $state_m->code;
-                            }
-                        }
+                $b_state = $data['BillingAddressForm']['b_statename'];
 
-                        $order->b_state = $b_state;
+                if (!StateModel::objects()->get(['code' => $b_state])) {
+                    if ($state_m = StateModel::objects()->get(['state' => $b_state, 'country_code' => $data['BillingAddressForm']['b_country']])) {
+                        $b_state = $state_m->code;
                     }
                 }
+
+                $order->b_state = $b_state;
             }
 
             $order->non_us_confirmation = false;
@@ -296,10 +296,16 @@ class CheckoutController extends FrontendController
 
         [$shipping_address, $billing_address] = $order->getAddressInfo();
 
+
+        if (!$app->request->getIsPost() && !$app->request->post->get('billing_same') && $order->b_firstname) {
+            $billingForm->setAttributes($order->getAttributes());
+        }
+
         $this->display('checkout/options.tpl', [
             'order' => $order,
             'payment_methods' => $payment_methods,
             'errors' => $errors,
+            'billingForm' => $billingForm,
             'countries' => Connection::getInstance()->fetchAll(SearchSql::getAllCountryOrderSql()),
             'shipping_address' => $shipping_address,
             'billing_address' => $billing_address,

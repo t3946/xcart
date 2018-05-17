@@ -24,14 +24,14 @@
                 <div class="columns small-12">
                     <div class="registration">
 
-                        {include 'checkout/_form_row.tpl' field=$shippingForm->getField('s_firstname')}
-                        {include 'checkout/_form_row.tpl' field=$shippingForm->getField('s_company')}
-                        {include 'checkout/_form_row.tpl' field=$shippingForm->getField('s_address')}
-                        {include 'checkout/_form_row.tpl' field=$shippingForm->getField('s_address_2')}
-                        {include 'checkout/_form_row.tpl' field=$shippingForm->getField('s_country')}
-                        {include 'checkout/_form_row.tpl' field=$shippingForm->getField('s_zipcode')}
-                        {include 'checkout/_form_row.tpl' field=$shippingForm->getField('s_state')}
-                        {include 'checkout/_form_row.tpl' field=$shippingForm->getField('s_city')}
+                        {include 'checkout/_form_row.tpl' field=$shippingForm->getField('firstname')}
+                        {include 'checkout/_form_row.tpl' field=$shippingForm->getField('company')}
+                        {include 'checkout/_form_row.tpl' field=$shippingForm->getField('address')}
+                        {include 'checkout/_form_row.tpl' field=$shippingForm->getField('address_2')}
+                        {include 'checkout/_form_row.tpl' field=$shippingForm->getField('country')}
+                        {include 'checkout/_form_row.tpl' field=$shippingForm->getField('zipcode')}
+                        {include 'checkout/_form_row.tpl' field=$shippingForm->getField('state')}
+                        {include 'checkout/_form_row.tpl' field=$shippingForm->getField('city')}
 
                     </div>
                 </div>

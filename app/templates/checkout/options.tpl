@@ -20,12 +20,12 @@
                 </div>
             </div>
             <div class="row">
-                <div class="columns small-5">
+                <div class="columns large-5 show-for-large">
                     <div class="options">
                         {include 'checkout/_address_view.tpl' info=$shipping_address header=$.t('Shipping Address','order') uri='checkout:shipping'}
                     </div>
                 </div>
-                <div class="columns small-7">
+                <div class="columns small-12 large-7">
                     <div class="row">
                         <div class="columns small-12">
                             <h2>{t 'Delivery Methods' dict='order'}</h2>
@@ -94,9 +94,8 @@
             </div>
 
             <div class="row">
-                <div class="columns small-5">
-                </div>
-                <div class="columns small-7">
+                <div class="columns large-5 show-for-large"></div>
+                <div class="columns large-7">
                     <div class="row">
                         <div class="columns small-12">
                             <h2>{t 'Payment Methods' dict='order'}</h2>
@@ -127,9 +126,8 @@
                 </div>
             </div>
             <div class="row">
-                <div class="columns small-5">
-                </div>
-                <div class="columns small-7">
+                <div class="columns large-5 show-for-large"></div>
+                <div class="columns large-7">
                     {set $billing_diff = $order->isBillingAddressDiff()}
                     <div class="row">
                         <div class="columns small-12">
@@ -153,106 +151,39 @@
                         </div>
                     </div>
 
+                </div>
+            </div>
 
-                    <div class="registration {if !$billing_diff}hide{/if}" id="registration">
-                        <div class="row">
-                            <div class="small-4 columns"></div>
-                            <div class="small-8 columns">
-                                <div class="mandatory">
-                                    {t 'The fields marked with' dict='order'} <span class="required">*</span> {t 'are mandatory.' dict='order'}
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="small-4 columns">
-                                <label for="registration__b_firstname">{t 'Full name' dict='order'}</label>
-                                <span class="reqired">*</span>
-                            </div>
-                            <div class="small-8 columns">
-                                <input value="{$billing_address['firstname']}" id="registration__b_firstname" placeholder="{t 'Albert H. Einstein' dict='order'}" name="BillingAddressForm[b_firstname]" type="text"/>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="small-4 columns">
-                                <label for="registration__b_company">{t 'Company' dict='order'}</label>
-                                <i>{t '(optional)' dict='order'}</i>
-                            </div>
-                            <div class="small-8 columns">
-                                <input value="{$billing_address['company']}" id="registration__b_company" placeholder="{t 'Eureka Inc.' dict='order'}" name="BillingAddressForm[b_company]" type="text"/>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="small-4 columns">
-                                <label for="registration__b_address">{t 'Address' dict='order'}</label>
-                                <span class="reqired">*</span>
-                            </div>
-                            <div class="small-8 columns">
-                                <input value="{$billing_address['address'][0]}" id="registration__b_address" placeholder="{t '112 Mercer Street' dict='order'}" name="BillingAddressForm[b_address]" type="text"/>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="small-4 columns">
-                                <label for="registration__b_address_2">{t 'Address (line 2)' dict='order'}</label>
-                            </div>
-                            <div class="small-8 columns">
-                                <input value="{$billing_address['address'][1]}" id="registration__b_address_2" placeholder="{t 'Apt 1' dict='order'}" name="BillingAddressForm[b_address_2]" type="text"/>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="small-4 columns">
-                                <label for="registration__b_countryname">{t 'Country' dict='order'}</label>
-                                <span class="reqired">*</span>
-                            </div>
-                            <div class="small-8 columns">
-                                <select id="registration__b_countryname" name="BillingAddressForm[b_country]">
-                                    {foreach $countries as $country}
-                                        <option {if $billing_address['country']->code == $country.id}selected{/if} value="{raw $country.id}">{raw $country.text}</option>
-                                    {/foreach}
-                                </select>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="small-4 columns">
-                                <label for="registration__b_zipcode">{t 'Zip/Postal Code' dict='order'}</label>
-                                <span class="reqired">*</span>
-                            </div>
-                            <div class="small-8 columns">
-                                <input value="{$billing_address['zipcode']}" id="registration__b_zipcode" placeholder="{t '08540' dict='order'}" name="BillingAddressForm[b_zipcode]" type="text"/>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="small-4 columns">
-                                <label for="registration__b_statename">{t 'State/Province' dict='order'}</label>
-                                <span class="reqired">*</span>
-                            </div>
-                            <div class="small-8 columns">
-                                <input value="{$billing_address['state']}" id="registration__b_statename" placeholder="{t 'New Jersey' dict='order'}" name="BillingAddressForm[b_statename]" type="text"/>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="small-4 columns">
-                                <label for="registration__b_city">{t 'City' dict='order'}</label>
-                                <span class="reqired">*</span>
-                            </div>
-                            <div class="small-8 columns">
-                                <input value="{$billing_address['city']}" id="registration__b_city" placeholder="{t 'Princeton' dict='order'}" name="BillingAddressForm[b_city]" type="text"/>
-                            </div>
-                        </div>
-                    </div>
+            <div class="row">
+                <div class="columns small-12 large-10 billing_address_form {if !$billing_diff}hide{/if}">
 
-                    <div class="row">
-                        <div class="column small-12">
-                            <div class="buttons">
-                                <button type="submit" class="button yellow waves waves-orange waves-effect">{t 'Continue' dict='order'}</button>
-                            </div>
-                        </div>
+                    {include 'checkout/_form_row.tpl' field=$billingForm->getField('firstname')}
+                    {include 'checkout/_form_row.tpl' field=$billingForm->getField('company')}
+                    {include 'checkout/_form_row.tpl' field=$billingForm->getField('address')}
+                    {include 'checkout/_form_row.tpl' field=$billingForm->getField('address_2')}
+                    {include 'checkout/_form_row.tpl' field=$billingForm->getField('country')}
+                    {include 'checkout/_form_row.tpl' field=$billingForm->getField('zipcode')}
+                    {include 'checkout/_form_row.tpl' field=$billingForm->getField('state')}
+                    {include 'checkout/_form_row.tpl' field=$billingForm->getField('city')}
+
+                </div>
+                <div class="columns large-2 show-for-large"></div>
+            </div>
+
+            <div class="row">
+                <div class="column small-12 align-center text-center">
+                    <div class="buttons">
+                        <button type="submit" class="button submit yellow waves waves-orange waves-effect">
+                            {t 'Continue' dict='order'}
+                        </button>
                     </div>
-                    <div class="row">
-                        <div class="column small-12">
-                            <div class="continue-notes">
-                                {t 'Continue to the order review page' dict='order'}
-                            </div>
-                        </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="column small-12 align-center text-center">
+                    <div class="submit-notes hint">
+                        {t 'Continue to the order review page' dict='order'}
                     </div>
                 </div>
             </div>
