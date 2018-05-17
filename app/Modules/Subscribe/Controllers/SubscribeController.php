@@ -28,14 +28,15 @@ class SubscribeController extends FrontendController
 
         if ($email_validator->validate($email)) {
 
-            (new SubscriberModel(['email' => $email, 'sfid' => $sfid, 'nonce' => $nonce]) )->save();
+            if (!(SubscriberModel::objects()->get(['email' => $email, 'sfid' => $sfid]))) {
+                (new SubscriberModel(['email' => $email, 'sfid' => $sfid, 'nonce' => $nonce]))->save();
 
-            echo Xcart::app()->mail::renderTemplate(
-              'subscribe_mail.tpl',
-              [
-                  'key' => $nonce,
-              ]
-            );
+                echo Xcart::app()->mail::renderTemplate(
+                    'subscribe_mail.tpl',
+                    [
+                        'key' => $nonce,
+                    ]
+                );
 
 //            $res = Xcart::app()->mail->template(
 //                $email,
@@ -45,9 +46,10 @@ class SubscribeController extends FrontendController
 //                    'key' => $nonce,
 //                ]
 //            );
+            }
         }
 
-        $this->redirect($request->getDomain());
+        $this->redirect('/');
     }
 
     public function getSubscribe()
