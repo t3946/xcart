@@ -1,80 +1,111 @@
 {extends "checkout/base.tpl"}
 
+{block "breadcrumbs"}
+    {set $breadcrumbs = $.getCartBreadcrumbs}
+    {if $breadcrumbs}
+        <div class="row cart-steps-container show-for-large order-confirmation-breadcrumbs">
+            <section class="cart-steps-section columns">
+                <ul class="cart-steps-items no-bullet">
+                    {foreach $breadcrumbs as $key => $item}
+                        <li class="cart-step inactive">
+                            <span class="step-link">
+                                <span class="step-number">{$key+1}</span>
+                                <span class="step-label">{$item['label']}</span>
+                            </span>
+                            <div class="arrow-right"></div>
+                        </li>
+                    {/foreach}
+                </ul>
+            </section>
+        </div>
+    {/if}
+    <div class="row cart-steps-container hide-for-large">
+        <section class="cart-steps-section columns">
+            <ul class="cart-steps-items no-bullet">
+                <li class="cart-step active">
+                        <span class="step-link">
+                            <span class="step-label">{t 'Order confirmation'}</span>
+                        </span>
+                    <div class="arrow-right"></div>
+                </li>
+            </ul>
+        </section>
+    </div>
+{/block}
+
 {block 'content'}
+<div class="order-confirmation-container"">
 
     {set $extra = $order->extra_model}
 
     <section class="order-confirmation">
         <div class="row align-center">
             <div class="column text-align--center">
-                <div class="title">{t 'Order Confirmation' dict='order'}</div>
-                <div>{t 'Your order has been successfuly placed. An order confirmation email has been sent to your email address.' dict='order'}</div>
-                <div>{t 'Thank you for shopping with S3 Stores, Inc. We appreciate your business!' dict='order'}</div>
+                <div class="green-border">
+                    <div class="title show-for-large">{t 'Order Confirmation' dict='order'}</div>
+                    <div>{t 'Your order has been successfuly placed. An order confirmation email has been sent to your email address.' dict='order'}</div>
+                    <div>{t 'Thank you for shopping with S3 Stores, Inc. We appreciate your business!' dict='order'}</div>
+                </div>
             </div>
         </div>
     </section>
-    <section class="buttons-top">
+    <section class="buttons-top show-for-large">
         {include 'checkout/_order_buttons.tpl'}
     </section>
     <section class="order-info">
         <div class="row align-center">
             <div class="column text-align--center">
                 <div class="title">{t 'Order #' dict='order'} {$order->getOrderNumber()}</div>
-                {if $order->payment_method->payment_method == 'Purchase Order'}
-                    <div class="purchase-order-title">
-                        {t 'Purchase order #' dict='order'} {$extra->purchase_order['po_number']}
+                {*{if $order->payment_method->payment_method == 'Purchase Order'}*}
+                    <div class="purchase-order-title hide-for-medium">
+                        {*{t 'Purchase order #' dict='order'} {$extra->purchase_order['po_number']}*}
+                        {t 'Purchase order #' dict='order'} 2322423
                     </div>
-                {/if}
+                {*{/if}*}
             </div>
         </div>
-        <div class="row">
-            <div class="columns small-3">
-                <img src="/static/frontend/demo_images/home/1280/logo_S3Stores.svg" alt="{t 'S3 Stores, Inc.' dict='order'}" class="show-for-large logo-big">
+        <div class="row shop-info">
+            <div class="columns small-5 medium-4">
+                <img src="/static/frontend/dist/images/logos/s3stores_logo.svg" alt="{t 'S3 Stores, Inc.' dict='order'}" class="logo-big">
+                <div class="place-for-witter"></div>
             </div>
-            <div class="columns small-3">
-                <div class="row">
-                    <div class="column">{t 'S3 Stores, Inc.' dict='order'}</div>
+            <div class="columns small-7 medium-8">
+                <div class="row text-item">
+                    <div class="column shop-name">{t 'S3 Stores, Inc.' dict='order'}</div>
                 </div>
-                <div class="row">
+                <div class="row text-item">
                     <div class="column">{t '27 Joseph St.' dict='order'}</div>
                 </div>
-                <div class="row">
+                <div class="row text-item">
                     <div class="column">{t 'Chatham, Ontario, N7L 3G4' dict='order'}</div>
                 </div>
-                <div class="row">
+                <div class="row text-item">
                     <div class="column">{t 'Canada' dict='order'}</div>
                 </div>
             </div>
-            <div class="columns small-3">
-                <div class="row">
-                    <div class="column">{t 'Toll free:' dict='order'}</div>
-                </div>
-                <div class="row">
-                    <div class="column">{t 'Local phone:' dict='order'}</div>
-                </div>
-                <div class="row">
-                    <div class="column">{t 'Fax:' dict='order'}</div>
-                </div>
-                <div class="row">
-                    <div class="column">{t 'Email:' dict='order'}</div>
-                </div>
-            </div>
-            <div class="columns small-3">
-                <div class="row">
+
+            <div class="columns small-12 contact-info">
+                <div class="row text-item">
+                    <div class="column small-5 label">{t 'Toll free:' dict='order'}</div>
                     <div class="column">{t '1-800-929-2431' dict='order'}</div>
                 </div>
-                <div class="row">
+                <div class="row text-item">
+                    <div class="column small-5 label">{t 'Local phone:' dict='order'}</div>
                     <div class="column">{t '(616) 259-5711' dict='order'}</div>
                 </div>
-                <div class="row">
+                <div class="row text-item">
+                    <div class="column small-5 label">{t 'Fax:' dict='order'}</div>
                     <div class="column">{t '(813) 944-4516' dict='order'}</div>
                 </div>
-                <div class="row">
+                <div class="row text-item">
+                    <div class="column small-5 label">{t 'Email:' dict='order'}</div>
                     <div class="column">{t 'orders@s3stores.com' dict='order'}</div>
                 </div>
             </div>
         </div>
-        <div class="row">
+
+        <div class="ordering-info">
+        <div class="row show-for-large">
             <div class="small-12 columns">
                 <div class="hr"></div>
             </div>
@@ -111,11 +142,14 @@
             <div class="columns small-3">{$order->email}</div>
         </div>
 
-        <div class="row">
+        <div class="row show-for-large">
             <div class="small-12 columns">
                 <div class="hr"></div>
             </div>
         </div>
+        </div>
+
+
         <div class="row">
             <div class="columns small-6">{t 'Shipping address' dict='order'}</div>
             <div class="columns small-6">{t 'Billing address' dict='order'}</div>
@@ -313,6 +347,7 @@
     <section class="buttons-bottom">
         {include 'checkout/_order_buttons.tpl'}
     </section>
+</div>
 {/block}
 
 {block 'js'}

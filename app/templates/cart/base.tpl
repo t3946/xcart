@@ -26,20 +26,20 @@
                 <div class="columns s3-logo-block">
                     <a href="" class="s3-logo-big-link logo-link">
                         <img src="/static/frontend/dist/images/logos/s3stores.svg"
-                                    alt="s3stores"
-                                    class="show-for-large s3-logo-big">
+                             alt="s3stores"
+                             class="show-for-large s3-logo-big">
                     </a>
 
                     <a href="" class="secured-logo-big-link logo-link">
                         <img src="/static/frontend/dist/images/logos/verified_secured_logo.svg"
-                                    alt="verified&secured"
-                                    class="show-for-large secured-logo-big">
+                             alt="verified&secured"
+                             class="show-for-large secured-logo-big">
                     </a>
 
                     <a href="" class="s3-logo-small-link logo-link">
                         <img src="/static/frontend/dist/images/logos/s3stores_logo.svg"
-                                    alt="s3stores"
-                                    class="show-for-small hide-for-large s3-logo-small">
+                             alt="s3stores"
+                             class="show-for-small hide-for-large s3-logo-small">
                     </a>
                 </div>
                 <div class="columns contacts-logo-block hide-for-small show-for-large">
@@ -69,42 +69,44 @@
             </div>
         </section>
 
-        {set $breadcrumbs = $.getCartBreadcrumbs}
-        {if $breadcrumbs}
+        {block "breadcrumbs"}
+            {set $breadcrumbs = $.getCartBreadcrumbs}
+            {if $breadcrumbs}
+                <div class="row cart-steps-container">
 
-        <div class="row cart-steps-container">
+                    {if !$breadcrumbs->isFirstStage()}
+                        <a class="columns shrink cart-steps-back hide-for-large"
+                           href="{$breadcrumbs->getPrevStage().url}">
+                            <span class="img">
+                                <img src="/static/frontend/dist/images/icons/cart/arrow_left_shop_more.svg" alt="">
+                            </span>
+                            <span class="text">BACK</span>
+                        </a>
+                    {/if}
 
-            {if !$breadcrumbs->isFirstStage()}
-            <a class="columns shrink cart-steps-back hide-for-large" href="{$breadcrumbs->getPrevStage().url}">
-                <span class="img">
-                    <img src="/static/frontend/dist/images/icons/cart/arrow_left_shop_more.svg" alt="">
-                </span>
-                <span class="text">BACK</span>
-            </a>
-            {/if}
-
-            <section class="cart-steps-section columns">
-                <ul class="cart-steps-items no-bullet">
-                    {foreach $breadcrumbs as $key => $item}
-                    <li class="cart-step{if $breadcrumbs->isStagePassed($key)} inactive{/if} {if $breadcrumbs->getActive() == $key} active{/if}">
-                        {if !$item.url || $breadcrumbs->getActive() == $key}
-                            <span class="step-link">
+                    <section class="cart-steps-section columns">
+                        <ul class="cart-steps-items no-bullet">
+                            {foreach $breadcrumbs as $key => $item}
+                                <li class="cart-step{if $breadcrumbs->isStagePassed($key)} inactive{/if} {if $breadcrumbs->getActive() == $key} active{/if}">
+                                    {if !$item.url || $breadcrumbs->getActive() == $key}
+                                        <span class="step-link">
                                 <span class="step-number">{$key+1}</span>
                                 <span class="step-label">{$item['label']}</span>
                             </span>
-                        {else}
-                            <a href="{$item['url']}" class="step-link">
-                                <span class="step-number">{$key+1}</span>
-                                <span class="step-label">{$item['label']}</span>
-                            </a>
-                        {/if}
-                        <div class="arrow-right"></div>
-                    </li>
-                    {/foreach}
-                </ul>
-            </section>
-        </div>
-        {/if}
+                                    {else}
+                                        <a href="{$item['url']}" class="step-link">
+                                            <span class="step-number">{$key+1}</span>
+                                            <span class="step-label">{$item['label']}</span>
+                                        </a>
+                                    {/if}
+                                    <div class="arrow-right"></div>
+                                </li>
+                            {/foreach}
+                        </ul>
+                    </section>
+                </div>
+            {/if}
+        {/block}
 
 
     </header>

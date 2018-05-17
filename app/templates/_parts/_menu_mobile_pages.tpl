@@ -22,7 +22,7 @@
                         <ul class="no-bullet">
                             {foreach $childs as $item}
                                     <li>
-                                        <a href="{$item.link}">
+                                        <a href="{$item.url}">
                                             {$item.name}
                                         </a>
                                     </li>
