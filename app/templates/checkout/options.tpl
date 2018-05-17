@@ -3,10 +3,10 @@
 {block 'js'}
     <script type="text/javascript">
         function hideForm() {
-            document.getElementById("registration").classList.add("hide");
+            document.getElementById("billing_address_form").classList.add("hide");
         }
         function showForm() {
-            document.getElementById("registration").classList.remove("hide");
+            document.getElementById("billing_address_form").classList.remove("hide");
         }
     </script>
 {/block}
