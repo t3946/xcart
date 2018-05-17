@@ -19,6 +19,7 @@ use Xcart\OrderGroup;
 
 /**
  * @property float total_gross
+ * @property int orderid
  */
 class OrderGroupModel extends Model
 {

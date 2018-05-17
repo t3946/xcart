@@ -69,13 +69,15 @@ use Xcart\Product;
  * @property null|\Xcart\App\Orm\Manager|ProductModel[] childs
  * @property mixed cost_to_us
  * @property mixed amazon_fba
+ * @property string provider
+ * @property string original_provider
  *
  * @method bool isForSale
  * @method static Manager showed($instance = null)
  */
 class ProductModel extends Model implements ICartItem
 {
-    const ADMIN_PRODUCT_MODIFY_URL = '/admin/product_modify.php?productid=%d&sf=%d';
+    public const ADMIN_PRODUCT_MODIFY_URL = '/admin/product_modify.php?productid=%d&sf=%d';
 
     use DataModelTrait, AutoMetaTrait, SlugifyTrait;
 

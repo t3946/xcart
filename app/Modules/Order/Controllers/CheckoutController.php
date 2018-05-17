@@ -3,6 +3,7 @@
 namespace Modules\Order\Controllers;
 
 use Mobile_Detect;
+use Modules\Cart\Components\CartItem;
 use Modules\Cart\Helpers\StagesOfOrdering;
 use Modules\Core\Models\StateModel;
 use Modules\Dashboard\Sqls\SearchSql;
@@ -195,6 +196,7 @@ class CheckoutController extends FrontendController
                         }
                     }
 
+                    /** @var CartItem $item */
                     foreach ($cart_group['items'] as $item)
                     {
                         /** @var ProductModel $product */
@@ -287,9 +289,10 @@ class CheckoutController extends FrontendController
     {
         StagesOfOrdering::getInstance()->setStage(StagesOfOrdering::STAGE_ORDER_REVIEW);
 
+        /** @var Application $app */
         $app = Xcart::app();
-        $errors = [];
         $order = $this->getOrder();
+        $errors = [];
 
         $this->checkoutStepsValidate($order->cb_status, OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP3);
 
@@ -340,15 +343,18 @@ class CheckoutController extends FrontendController
                         }
                         $po_model->status = 'entered';
                         $po_model->save();
-                        Logs::_log('purchase_orders', $this->po_id, Logs::LOG_TYPE_CLIENT, sprintf('PO# %s has been successfully entered', "{$order->getOrderNumber()} ({$po_model->original_po_file})"));
-                    } catch (\Exception $ex) {
-                        Logs::_log('purchase_orders', $po_model->po_id, Logs::LOG_TYPE_CLIENT, $ex->getMessage());
+                        $message = sprintf('PO# %s has been successfully entered', "{$order->getOrderNumber()} ({$po_model->original_po_file})");
+                    }
+                    catch (\Exception $ex) {
+                        $message = $ex->getMessage();
+                    }
+                    finally {
+                        Logs::_log('purchase_orders', $po_model->po_id, Logs::LOG_TYPE_CLIENT, $message);
                     }
                 }
             }
 
             if (!$errors) {
-
                 $order->cb_status = OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP4;
                 $order->save();
 
