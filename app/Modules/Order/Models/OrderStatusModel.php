@@ -38,4 +38,8 @@ class OrderStatusModel extends Model
             ],
         ];
     }
+    public function __toString()
+    {
+        return $this->name;
+    }
 }

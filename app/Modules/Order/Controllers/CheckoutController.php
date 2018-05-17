@@ -10,6 +10,7 @@ use Modules\Goods\Models\ProductModel;
 use Modules\Order\Forms\ContactInfoForm;
 use Modules\Order\Forms\ShippingAddressForm;
 use Modules\Order\Helpers\OrderHelper;
+use Modules\Order\Helpers\OrderInvoiceHelper;
 use Modules\Order\Helpers\PurchaseOrderHelper;
 use Modules\Order\Models\OrderDetailModel;
 use Modules\Order\Models\OrderExtraModel;
@@ -326,7 +327,6 @@ class CheckoutController extends FrontendController
         $errors = [];
 
         $order = $this->getOrder();
-
 
         $this->checkoutStepsValidate($order->cb_status, OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP3);
 
