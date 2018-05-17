@@ -59,7 +59,7 @@
                 </td>
                 <td align="center" nowrap="nowrap">US$ {$order_detail->price|number_format:2}</td>
                 <td align="center">{$order_detail->amount}</td>
-                <td align="right" nowrap="nowrap">US$ {$order_detail->price * $order_detail->amount|number_format:2}</td>
+                <td align="right" nowrap="nowrap">US$ {($order_detail->price * $order_detail->amount)|number_format:2}</td>
             </tr>
         {/foreach}
         <tr>
@@ -103,21 +103,21 @@
 
     {if $config.disable_shipping != 'Y'}
         <tr>
-            <td align="right" width="100%" height="20"><b>Total Shipping Cost:</b>&nbsp;</td>
-            <td align="right" nowrap="nowrap">US$ {$order->shipping_cost}</td>
+            <td align="right" width="100%" height="20"><b>Total Shipping Cost:</b></td>
+            <td align="right" nowrap="nowrap">US$ {$order->shipping_cost|number_format:2}</td>
         </tr>
     {/if}
 
     {if $order->coupon && $order->coupon_type == "free_ship"}
         <tr>
             <td align="right" width="100%" height="20"><b>Coupon Savings:</b>&nbsp;</td>
-            <td align="right" nowrap="nowrap">US$ {$order->coupon_discount}</td>
+            <td align="right" nowrap="nowrap">US$ {$order->coupon_discount|number_format:2}</td>
         </tr>
     {/if}
 
     <tr>
         <td colspan="2">
-            <hr style="width:100%;margin: 0; border: 0 none; border-bottom: 1px solid #999999;">
+            <hr style="width:600px; margin: 0; border: 0 none; border-bottom: 1px solid #999999;">
         </td>
     </tr>
 
@@ -125,7 +125,7 @@
         <td align="right" width="100%" bgcolor="#cccccc" height="25"><b>Grand total:</b>&nbsp;
         </td>
         <td align="right" bgcolor="#cccccc" height="25" nowrap="nowrap">
-            <b>US$ {$order->total}</b>
+            <b>US$ {$order->total|number_format:2}</b>
         </td>
     </tr>
 

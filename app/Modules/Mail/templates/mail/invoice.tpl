@@ -40,14 +40,9 @@
                             <br/><b>Payment method:</b><br/>
                                 {$order->payment_method->payment_method}<br/>
                             <b>Delivery methods:</b><br/>
-                            {if $order->groups->count()}
-                                {foreach $order->groups as $group}
-                                    {if $group->shippingModel->getFrontendName()}
-                                        <br/>
-                                    {/if}
-                                {/foreach}
-                            {/if}
-
+                            {foreach $order->groups as $group}
+                                {$group->shippingModel->getFrontendName()}<br/>
+                            {/foreach}
                         </td>
                         <td valign="bottom" align="right">
                             <b>{$config.operating_company_name}</b><br/>
@@ -222,7 +217,7 @@
                         </tr>
                         <tr>
                             <td><b>State/Province:</b></td>
-                            <td>{$order->shipping_state}</td>
+                            <td>{$order->shipping_state ?: $order->s_state}</td>
                         </tr>
                         <tr>
                             <td><b>Country:</b></td>
@@ -252,7 +247,7 @@
                         </tr>
                         <tr>
                             <td><b>State/Province:</b></td>
-                            <td>{$order->billing_state}</td>
+                            <td>{$order->billing_state ?: $order->b_state}</td>
                         </tr>
                         <tr>
                             <td><b>Country:</b></td>

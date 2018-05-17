@@ -53,8 +53,7 @@ class CheckoutController extends FrontendController
     /**
      * Step 1
      *
-     * @throws \Xcart\App\Exceptions\UnknownMethodException
-     * @throws \Xcart\App\Exceptions\UnknownPropertyException
+     * @throws \Exception
      */
     public function actionShipping(): void
     {
@@ -114,7 +113,7 @@ class CheckoutController extends FrontendController
                     's_address' => $shipping['s_address'] . "\n" . $shipping['s_address_2'],
                     's_country' => $shipping['s_country'],
                     's_zipcode' => $shipping['s_zipcode'],
-                    's_state' => $s_state ? $s_state->code : '',
+                    's_state' => $s_state ? $s_state->code : $shipping['s_state'],
                     's_city' => $shipping['s_city'],
                     'phone' => $phone,
                     'phone_ext' => $contact['phone_ext'],

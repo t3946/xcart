@@ -23,21 +23,29 @@ class StateValidator extends Validator
      */
     public function validate($value)
     {
-        $state = StateModel::objects()->get(['code' => $value, 'country_code' => $this->getCountry()]);
+        if ($filter = $this->getCountryFilter()) {
 
-        if (!$state) {
-            $state = StateModel::objects()->get(['state' => $value, 'country_code' => $this->getCountry()]);
-        }
+            $state = StateModel::objects()->get(array_merge(['code' => $value], $filter));
 
-        if (!$state) {
-            $this->addError(Translate::getInstance()->t('validation', 'Is not a valid state', []));
+            if (!$state) {
+                $state = StateModel::objects()->get(array_merge(['state' => trim($value)], $filter));
+            }
+
+            if (!$state) {
+                $this->addError(Translate::getInstance()->t('validation', 'Is not a valid state', []));
+            }
         }
 
         return $this->hasErrors() === false;
     }
 
-    public function getCountry()
+    public function getCountryFilter(): array
     {
-        return $this->getForm()->getField($this->depends['country'])->getValue();
+        $country_code = $this->getForm()->getField($this->depends['country'])->getValue();
+
+        if (!\in_array($country_code, ['US', 'CA'])) {
+            return [];
+        }
+        return ['country_code' => $country_code];
     }
 }
