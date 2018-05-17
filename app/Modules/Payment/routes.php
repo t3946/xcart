@@ -17,7 +17,7 @@ return [
         'name' => 'cancel'
     ],
     [
-        'route' => '/return/{slug:gateway}/{i:order_id}',
+        'route' => '/return/{slug:gateway}/{i:order_id}/{slug:slug}',
         'target' => ['\Modules\Payment\Controllers\PaymentController', 'return'],
         'name' => 'return'
     ],

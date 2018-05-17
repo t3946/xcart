@@ -24,7 +24,7 @@ return [
         'name' => 'payment'
     ],
     [
-        'route' => '/complete/{i:order_id}',
+        'route' => '/complete/{i:order_id}/{slug:slug}',
         'target' => [CheckoutController::class, 'actionComplete'],
         'name' => 'complete'
     ],
