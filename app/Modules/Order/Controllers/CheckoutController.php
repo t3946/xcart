@@ -135,8 +135,8 @@ class CheckoutController extends FrontendController
                 'cart_number' => $cart->getCartNumber(),
             ]);
 
-        $shippingForm->setAttributes($order->getAttributes());
-        $contactForm->setAttributes($order->getAttributes());
+        $shippingForm->setAttributes($order ? $order->getAttributes() : []);
+        $contactForm->setAttributes($order ? $order->getAttributes() : []);
 
         if (!$cart->getCartNumber() || $cart->getIsEmpty()) {
             $this->redirect('cart:list');
@@ -425,7 +425,7 @@ class CheckoutController extends FrontendController
         $app = Xcart::app();
         $user = $app->user;
 
-        if($order = OrderModel::objects()->get(['orderid' => $order_id, 'user_id' => $user->id])) {
+        if($order = OrderModel::objects()->get(['orderid' => $order_id])) {
 
             [$shipping, $billing] = $order->getAddressInfo();
 
