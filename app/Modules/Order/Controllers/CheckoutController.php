@@ -8,6 +8,7 @@ use Modules\Core\Models\StateModel;
 use Modules\Dashboard\Sqls\SearchSql;
 use Modules\Goods\Models\ProductModel;
 use Modules\Order\Helpers\OrderHelper;
+use Modules\Order\Helpers\OrderInvoiceHelper;
 use Modules\Order\Helpers\PurchaseOrderHelper;
 use Modules\Order\Models\OrderDetailModel;
 use Modules\Order\Models\OrderExtraModel;
@@ -321,6 +322,8 @@ class CheckoutController extends FrontendController
 
         $order = $this->getOrder();
 
+        dd($app->router->url('subscribe:send_message'));
+        OrderInvoiceHelper::sendOrderStatusNotification($order);
 
         $this->checkoutStepsValidate($order->cb_status, OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP3);
 
