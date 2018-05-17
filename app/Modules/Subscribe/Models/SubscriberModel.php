@@ -5,7 +5,7 @@ namespace Modules\Subscribe\Models;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\BooleanField;
 use Xcart\App\Orm\Fields\CharField;
-use Xcart\App\Orm\Fields\DateField;
+use Xcart\App\Orm\Fields\DateTimeField;
 use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Model;
 
@@ -28,22 +28,22 @@ class SubscriberModel extends Model
 
             'subscribe' => [
                 'class' => BooleanField::class,
-                'default' => null,
+                'default' => false,
             ],
 
             'unsubscribe' => [
                 'class' => BooleanField::class,
-                'default' => null,
+                'default' => false,
             ],
 
             'created_at' => [
-                'class' => DateField::class,
-                'null' => false,
+                'class' => DateTimeField::class,
+                'autoNowAdd' => true,
+                'autoNow' => true,
             ],
 
             'nonce' => [
                 'class' => CharField::class,
-                'null' => false,
                 'default' => '',
             ],
         ];
