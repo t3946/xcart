@@ -273,11 +273,11 @@
           padding-left: .625rem;
           @include breakpoint(medium) {
             text-align: left;
-            width: 17.1939%;
+            min-width: 17.1939%;
             padding: 0 .625rem;
           }
           @include breakpoint(large) {
-            width: 14.6774%;
+            min-width: 14.6774%;
             text-align: center;
           }
 
@@ -340,11 +340,11 @@
 
         @include breakpoint(medium) {
           text-align: left;
-          width: 17.1939%;
+          min-width: 17.1939%;
           padding: 0 .625rem;
         }
         @include breakpoint(large) {
-          width: 14.6774%;
+          min-width: 14.6774%;
           text-align: center;
         }
       }
