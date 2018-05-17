@@ -2,6 +2,7 @@
 namespace Xcart\App\Orm;
 
 use Doctrine\DBAL\Schema\Column;
+use Modules\Core\Helpers\Cache;
 use ReflectionMethod;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\Fields\BigIntField;
@@ -123,48 +124,48 @@ class AutoMetaData extends MetaData
             switch ($type->getName()) {
                 case 'smallint' :
                 case 'integer' : {
-                    $config['class'] = IntField::className();
+                    $config['class'] = IntField::class;
                     break;
                 }
                 case 'bigint' : {
-                    $config['class'] = BigIntField::className();
+                    $config['class'] = BigIntField::class;
                     break;
                 }
                 case 'decimal' : {
-                    $config['class'] = DecimalField::className();
+                    $config['class'] = DecimalField::class;
                     $config['precision'] = $column->getPrecision();
                     $config['scale'] = $column->getScale();
                     break;
                 }
                 case 'float' : {
-                    $config['class'] = FloatField::className();
+                    $config['class'] = FloatField::class;
                     break;
                 }
 
                 case 'blob' : {
-                    $config['class'] = BlobField::className();
+                    $config['class'] = BlobField::class;
                     unset($config['length']);
                     break;
                 }
                 case 'date' : {
-                    $config['class'] = DateField::className();
+                    $config['class'] = DateField::class;
                     break;
                 }
                 case 'datetime' : {
-                    $config['class'] = DateTimeField::className();
+                    $config['class'] = DateTimeField::class;
                     break;
                 }
                 case 'time' : {
-                    $config['class'] = TimeField::className();
+                    $config['class'] = TimeField::class;
                     break;
                 }
 //            case 'timeshtamp' : {
-//                $config['class'] = TimestampField::className();
+//                $config['class'] = TimestampField::class;
 //                break;
 //            }
 
                 case 'string' : {
-                    $config['class'] = CharField::className();
+                    $config['class'] = CharField::class;
                     break;
                 }
                 case 'longtext' :
@@ -172,7 +173,7 @@ class AutoMetaData extends MetaData
                     unset($config['length']);
                 }
                 default: {
-                    $config['class'] = TextField::className();
+                    $config['class'] = TextField::class;
                 }
             }
 
@@ -203,7 +204,7 @@ class AutoMetaData extends MetaData
     public static function saveCache($owner): void
     {
         if (!\defined('APP_DEBUG') && self::$_configs) {
-            Xcart::app()->cache->set('auto_meta_data_configs', self::$_configs, \defined('APP_DEBUG')?360:7200);
+            Xcart::app()->cache->set('auto_meta_data_configs', self::$_configs, Cache::CACHE_HALF_DAY);
         }
     }
 }
