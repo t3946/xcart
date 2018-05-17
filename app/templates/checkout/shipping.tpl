@@ -24,128 +24,15 @@
                 <div class="columns small-12">
                     <div class="registration">
 
-                        <div class="row">
-                            <div class="small-6 columns medium-text-right text-block">
-                                <div class="multiline">
-                                    <label for="registration__s_firstname">
-                                        {t 'Full name' dict='order'}
-                                        <span class="required">*</span>
-                                    </label>
-                                    <span class="hint">
-                                    {t 'The order will be shipped under this name' dict='order'}
-                                </span>
-                                </div>
-                            </div>
-                            <div class="small-12 medium-6 columns">
-                                <input value="{$order->s_firstname}" id="registration__s_firstname" required placeholder="{t 'Albert H. Einstein' dict='order'}" name="ShippingAddressForm[s_firstname]" type="text"/>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="small-12 medium-6 columns medium-text-right text-block">
-                                <div class="multiline">
-                                    <label for="registration__s_company">
-                                        {t 'Company' dict='order'} <i>{t '(optional)' dict='order'}</i>
-                                    </label>
+                        {include 'checkout/_form_row.tpl' form=$shippingForm field='s_firstname'}
+                        {include 'checkout/_form_row.tpl' form=$shippingForm field='s_company'}
+                        {include 'checkout/_form_row.tpl' form=$shippingForm field='s_address'}
+                        {include 'checkout/_form_row.tpl' form=$shippingForm field='s_address_2'}
+                        {include 'checkout/_form_row.tpl' form=$shippingForm field='s_country'}
+                        {include 'checkout/_form_row.tpl' form=$shippingForm field='s_zipcode'}
+                        {include 'checkout/_form_row.tpl' form=$shippingForm field='s_statename'}
+                        {include 'checkout/_form_row.tpl' form=$shippingForm field='s_city'}
 
-                                    <span class="hint">
-                                        {t 'Fill in if shipping to a corporate or university address' dict='order'}
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="small-12 medium-6 columns">
-                                <input value="{$order->s_company}" id="registration__s_company" placeholder="{t 'Eureka Inc.' dict='order'}" name="ShippingAddressForm[s_company]" type="text"/>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="small-12 medium-6 columns medium-text-right text-block">
-                                <div class="multiline">
-                                    <label for="registration__s_address">
-                                        {t 'Address' dict='order'}
-                                        <span class="required">*</span>
-                                    </label>
-
-                                    <span class="hint">
-                                        {t 'Street address please, we don\'t ship to P.O. boxes' dict='order'}
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="small-12 medium-6 columns">
-                                <input value="{$address[0]}" id="registration__s_address" required placeholder="{t '112 Mercer Street' dict='order'}" name="ShippingAddressForm[s_address]" type="text"/>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="small-12 medium-6 columns medium-text-right text-block">
-                                <div class="multiline">
-                                    <label for="registration__s_address_2">{t 'Address (line 2)' dict='order'}</label>
-
-                                    <span class="hint">
-                                        {t 'Apartment, suite, floor, etc.' dict='order'}
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="small-12 medium-6 columns">
-                                <input value="{$address[1]}" id="registration__s_address_2" placeholder="{t 'Apt 1' dict='order'}" name="ShippingAddressForm[s_address_2]" type="text"/>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="small-12 medium-6 columns medium-text-right text-block">
-                                <div class="multiline">
-                                    <label for="registration__s_countryname">
-                                        {t 'Country' dict='order'}
-                                        <span class="required">*</span>
-                                    </label>
-
-                                </div>
-                            </div>
-                            <div class="small-12 medium-6 columns">
-                                <select id="registration__s_countryname" name="ShippingAddressForm[s_country]">
-                                    {foreach $countries as $country}
-                                        <option {if $order->s_country == $country.id}selected{/if} value="{raw $country.id}">{raw $country.text}</option>
-                                    {/foreach}
-                                </select>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="small-12 medium-6 columns medium-text-right text-block">
-                                <div class="multiline">
-                                    <label for="registration__s_zipcode">
-                                        {t 'Zip/Postal Code' dict='order'}
-                                        <span class="required">*</span>
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="small-12 medium-6 columns">
-                                <input value="{$order->s_zipcode}" id="registration__s_zipcode" required placeholder="{t '08540' dict='order'}" name="ShippingAddressForm[s_zipcode]" type="text"/>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="small-12 medium-6 columns medium-text-right text-block">
-                                <div class="multiline">
-                                    <label for="registration__s_statename">
-                                        {t 'State/Province' dict='order'}
-                                        <span class="required">*</span>
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="small-12 medium-6 columns">
-                                <input value="{$order->shipping_state}" id="registration__s_statename" required placeholder="{t 'New Jersey' dict='order'}" name="ShippingAddressForm[s_statename]" type="text"/>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="small-12 medium-6 columns medium-text-right text-block">
-                                <div class="multiline">
-                                    <label for="registration__s_city">
-                                        {t 'City' dict='order'}
-                                        <span class="required">*</span>
-                                    </label>
-
-                                </div>
-
-                            </div>
-                            <div class="small-12 medium-6 columns">
-                                <input value="{$order->s_city}" id="registration__s_city" required placeholder="{t 'Princeton' dict='order'}" name="ShippingAddressForm[s_city]" type="text"/>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>

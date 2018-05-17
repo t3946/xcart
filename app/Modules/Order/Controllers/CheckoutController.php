@@ -7,6 +7,8 @@ use Modules\Cart\Helpers\StagesOfOrdering;
 use Modules\Core\Models\StateModel;
 use Modules\Dashboard\Sqls\SearchSql;
 use Modules\Goods\Models\ProductModel;
+use Modules\Order\Forms\ContactInfoForm;
+use Modules\Order\Forms\ShippingAddressForm;
 use Modules\Order\Helpers\OrderHelper;
 use Modules\Order\Helpers\PurchaseOrderHelper;
 use Modules\Order\Models\OrderDetailModel;
@@ -64,12 +66,13 @@ class CheckoutController extends FrontendController
         $cart = $app->cart;
         $errors = [];
         $shipping = null;
+        $shippingForm = new ShippingAddressForm();
+        $contactForm = new ContactInfoForm();
 
         if ($app->request->getIsPost()) {
-
             $data = $app->request->post->all();
 
-            if (!($errors = OrderHelper::validateForm($data))) {
+            if ($shippingForm->populate($data)->isValid() && $contactForm->populate($data)->isValid()) {
 
                 [$order, $is_created] = OrderModel::objects()->getOrCreate([
                     'cart_number' => $cart->getCartNumber(),
@@ -81,28 +84,28 @@ class CheckoutController extends FrontendController
                 /** @var StateModel $s_state */
                 $s_state = StateModel::objects()->get(['code' => $shipping['s_statename']]);
 
+                /** @var StateModel $state_m */
                 if (!$s_state && $state_m = StateModel::objects()->get(['state' => $shipping['s_statename'], 'country_code' => $shipping['s_country']])) {
                     $s_state = $state_m->code;
                 }
 
                 $phone = preg_replace('/\D/S', '', $contact['phone']);
 
-                if ($user && $user->id) {
-                    /*[$address] = AddressModel::objects()->getOrCreate([
-                        'user_id' => $user->id,
-                        'full_name' => $shipping['s_firstname'],
-                        'company' => $shipping['s_company'],
-                        'address' => $shipping['s_address'],
-                        'address_2' => $shipping['s_address_2'],
-                        'country' => $shipping['s_country'],
-                        'zip' => $shipping['s_zipcode'],
-                        'state' => $s_state,
-                        'city' => $shipping['s_city'],
-                        'phone' => $phone
-                    ]);
-                    $address->save();
-                    */
-                }
+//                if ($user && $user->id) {
+//                    [$address] = AddressModel::objects()->getOrCreate([
+//                        'user_id' => $user->id,
+//                        'full_name' => $shipping['s_firstname'],
+//                        'company' => $shipping['s_company'],
+//                        'address' => $shipping['s_address'],
+//                        'address_2' => $shipping['s_address_2'],
+//                        'country' => $shipping['s_country'],
+//                        'zip' => $shipping['s_zipcode'],
+//                        'state' => $s_state,
+//                        'city' => $shipping['s_city'],
+//                        'phone' => $phone
+//                    ]);
+//                    $address->save();
+//                }
 
                 $order->setAttributes([
                     's_firstname' => $shipping['s_firstname'],
@@ -128,9 +131,12 @@ class CheckoutController extends FrontendController
             }
         }
 
-        $order = OrderModel::objects()->get([
-            'cart_number' => $cart->getCartNumber(),
-        ]);
+        $order = $order ?? OrderModel::objects()->get([
+                'cart_number' => $cart->getCartNumber(),
+            ]);
+
+        $shippingForm->setAttributes($order->getAttributes());
+        $contactForm->setAttributes($order->getAttributes());
 
         if (!$cart->getCartNumber() || $cart->getIsEmpty()) {
             $this->redirect('cart:list');
@@ -142,9 +148,9 @@ class CheckoutController extends FrontendController
 
         $this->display('checkout/shipping.tpl', [
             'order' => $order,
-            'errors' => $errors,
+            'shippingForm' => $shippingForm,
+            'contactForm' => $contactForm,
             'address' => $shipping['address'],
-            'countries' => Connection::getInstance()->fetchAll(SearchSql::getAllCountryOrderSql())
         ]);
     }
 
