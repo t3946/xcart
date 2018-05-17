@@ -40,14 +40,9 @@
                             <br/><b>Payment method:</b><br/>
                                 {$order->payment_method->payment_method}<br/>
                             <b>Delivery methods:</b><br/>
-                            {if $order->groups->count()}
-                                {foreach $order->groups as $group}
-                                    {if $group->shippingModel->getFrontendName()}
-                                        <br/>
-                                    {/if}
-                                {/foreach}
-                            {/if}
-
+                            {foreach $order->groups as $group}
+                                {$group->shippingModel->getFrontendName()}<br/>
+                            {/foreach}
                         </td>
                         <td valign="bottom" align="right">
                             <b>{$config.operating_company_name}</b><br/>

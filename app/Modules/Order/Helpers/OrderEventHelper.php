@@ -148,13 +148,15 @@ class OrderEventHelper
     {
         Xcart::app()->logger->debug("Order paid event: {$model->orderid}", ['status' => $status], 'payment');
 
-        if ($cart = $model->cart) {
+        /*if ($cart = $model->cart) {
             $cart->delete();
         }
 
         $model->setAttributes(['cb_status' => $status, 'cart_number' => null]);
         $model->save();
 
-        $model->groups->update(['cb_status' => $model->cb_status]);
+        $model->groups->update(['cb_status' => $model->cb_status]);*/
+
+        OrderInvoiceHelper::sendOrderStatusNotification($model);
     }
 }
