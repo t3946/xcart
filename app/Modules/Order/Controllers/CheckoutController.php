@@ -419,13 +419,19 @@ class CheckoutController extends FrontendController
      * @param $order_id
      * @throws \Xcart\App\Exceptions\HttpException
      */
-    public function actionComplete(int $order_id): void
+    public function actionComplete(int $order_id, string $slug): void
     {
         /** @var OrderModel $order */
         $app = Xcart::app();
         $user = $app->user;
 
         if($order = OrderModel::objects()->get(['orderid' => $order_id])) {
+
+            $hash = md5($order->orderid.$order->total.$order->email);
+
+            if ($slug !== $hash) {
+                $this->error(404);
+            }
 
             [$shipping, $billing] = $order->getAddressInfo();
 
