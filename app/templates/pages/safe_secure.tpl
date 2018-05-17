@@ -4,7 +4,7 @@
         <div class="row">
             <div class="column head sas-header-main">
                 <div class="hit-header">
-                    <img class="sas-h1-img" src="/static/frontend/images/pages/lock.png"><h1 class="sas-h1-txt">{$model->name}</h1>
+                    <img class="sas-h1-img" src="/static/frontend/images/pages/lock.png"><h1 class="sas-h1-txt multiline">{$model->name}</h1>
                 </div>
             </div>
         </div>

@@ -84,17 +84,17 @@
 
   .sas-lock {
     width: 55px;
-    margin-top: 35px;
+    margin-top: 25px;
     float: left;
 
     @include breakpoint(medium) {
       width: 100px;
-      padding-top: 15px;
+      padding-top: 10px;
     }
 
     @include breakpoint(large) {
       width: auto;
-      padding-top: 40px;
+      padding-top: 35px;
     }
 
   }
@@ -158,8 +158,11 @@
     }
   }
 
+  div.hit-header {
+    text-align: left;
+  }
+
   .sas-h1-txt {
-    float: left;
     margin-top: 0;
     color: #fff;
     line-height: normal;
@@ -180,14 +183,14 @@
       padding-top: 53px;
       padding-left: 20px;
       font-size: 80px;
-      width: 520px;
+      width: 540px;
     }
   }
 
   .sas-h1-img {
     float: left;
     width: 40px;
-    margin-top: 35px;
+    margin-top: 30px;
     margin-left: 10px;
 
     @include breakpoint (medium) {
@@ -195,7 +198,7 @@
     }
 
     @include breakpoint (large) {
-      margin-top: 100px;
+      margin-top: 90px;
       width: auto;
     }
 
