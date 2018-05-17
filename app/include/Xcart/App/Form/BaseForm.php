@@ -7,6 +7,7 @@ use ArrayIterator;
 use Countable;
 use Exception;
 use IteratorAggregate;
+use RuntimeException;
 use Xcart\App\Helpers\Accessors;
 use Xcart\App\Helpers\Collection;
 use Xcart\App\Helpers\Creator;
@@ -221,11 +222,11 @@ abstract class BaseForm implements IteratorAggregate, Countable, ArrayAccess, IV
         $prefix = $this->getPrefix();
         $fields = $this->getFields();
         foreach ($fields as $name => $config) {
-            if (in_array($name, $this->getExclude())) {
+            if (\in_array($name, $this->getExclude(), true)) {
                 continue;
             }
 
-            if (!is_array($config)) {
+            if (!\is_array($config)) {
                 $config = ['class' => $config];
             }
 
@@ -242,10 +243,11 @@ abstract class BaseForm implements IteratorAggregate, Countable, ArrayAccess, IV
         $type = strtolower(ltrim($name, 'as'));
         if (isset($this->templates[$type])) {
             $template = $this->getTemplateFromType($type);
-            return call_user_func_array([$this, 'render'], array_merge([$template], $arguments));
-        } else {
-            return $this->__callInternal($name, $arguments);
+
+            return \call_user_func_array([$this, 'render'], array_merge([$template], $arguments));
         }
+
+        return $this->__callInternal($name, $arguments);
     }
 
     public function getFields()
@@ -364,13 +366,13 @@ abstract class BaseForm implements IteratorAggregate, Countable, ArrayAccess, IV
         $initFields = $this->getFieldsInit();
 
         foreach ($fields as $name) {
-            if (in_array($name, $this->exclude)) {
+            if (\in_array($name, $this->exclude, true)) {
                 continue;
             }
             if (array_key_exists($name, $initFields)) {
                 $this->_renderFields[] = $name;
             } else {
-                throw new Exception("Field $name not found");
+                throw new RuntimeException("Field $name not found");
             }
         }
         return $this;
@@ -391,7 +393,7 @@ abstract class BaseForm implements IteratorAggregate, Countable, ArrayAccess, IV
      */
     public function getFieldsInit()
     {
-        if (is_null($this->_fields)) {
+        if (null === $this->_fields) {
             $this->initFields();
         }
 
@@ -409,7 +411,7 @@ abstract class BaseForm implements IteratorAggregate, Countable, ArrayAccess, IV
      */
     public function hasField($name)
     {
-        if (is_null($this->_fields)) {
+        if (null === $this->_fields) {
             $this->getFieldsInit();
         }
 
@@ -427,7 +429,7 @@ abstract class BaseForm implements IteratorAggregate, Countable, ArrayAccess, IV
 
         if ($result) {
             $errors = $this->getErrors();
-            $result = count($errors) === 0;
+            $result = \count($errors) === 0;
         }
 
         return $result;
@@ -485,8 +487,8 @@ abstract class BaseForm implements IteratorAggregate, Countable, ArrayAccess, IV
     {
         if ($data instanceof Collection) {
             $data = $data->all();
-        } else if (!is_array($data)) {
-            throw new Exception('$data must be a array');
+        } else if (!\is_array($data)) {
+            throw new RuntimeException('$data must be a array');
         }
 
         $fixFiles = true;
