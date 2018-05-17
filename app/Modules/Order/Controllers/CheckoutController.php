@@ -83,11 +83,11 @@ class CheckoutController extends FrontendController
                 $contact = $data['ContactInfoForm'];
 
                 /** @var StateModel $s_state */
-                $s_state = StateModel::objects()->get(['code' => $shipping['s_statename']]);
+                $s_state = StateModel::objects()->get(['code' => $shipping['s_state']]);
 
                 /** @var StateModel $state_m */
-                if (!$s_state && $state_m = StateModel::objects()->get(['state' => $shipping['s_statename'], 'country_code' => $shipping['s_country']])) {
-                    $s_state = $state_m->code;
+                if (!$s_state) {
+                    $s_state = StateModel::objects()->get(['state' => $shipping['s_state'], 'country_code' => $shipping['s_country']]);
                 }
 
                 $phone = preg_replace('/\D/S', '', $contact['phone']);
@@ -114,7 +114,7 @@ class CheckoutController extends FrontendController
                     's_address' => $shipping['s_address'] . "\n" . $shipping['s_address_2'],
                     's_country' => $shipping['s_country'],
                     's_zipcode' => $shipping['s_zipcode'],
-                    's_state' => $s_state,
+                    's_state' => $s_state ? $s_state->code : '',
                     's_city' => $shipping['s_city'],
                     'phone' => $phone,
                     'phone_ext' => $contact['phone_ext'],
@@ -143,15 +143,10 @@ class CheckoutController extends FrontendController
             $this->redirect('cart:list');
         }
 
-        if ($order) {
-            [$shipping] = $order->getAddressInfo();
-        }
-
         $this->display('checkout/shipping.tpl', [
             'order' => $order,
             'shippingForm' => $shippingForm,
             'contactForm' => $contactForm,
-            'address' => $shipping['address'],
         ]);
     }
 

@@ -30,7 +30,7 @@
                         {include 'checkout/_form_row.tpl' form=$shippingForm field='s_address_2'}
                         {include 'checkout/_form_row.tpl' form=$shippingForm field='s_country'}
                         {include 'checkout/_form_row.tpl' form=$shippingForm field='s_zipcode'}
-                        {include 'checkout/_form_row.tpl' form=$shippingForm field='s_statename'}
+                        {include 'checkout/_form_row.tpl' form=$shippingForm field='s_state'}
                         {include 'checkout/_form_row.tpl' form=$shippingForm field='s_city'}
 
                     </div>
