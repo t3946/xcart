@@ -2,12 +2,16 @@
 
 {block 'js'}
     <script type="text/javascript">
+        var bill_addres_el = document.querySelector(".billing_address_form");
+
         function hideForm() {
-            document.getElementById("billing_address_form").classList.add("hide");
+            bill_addres_el.classList.add("hide");
+
         }
         function showForm() {
-            document.getElementById("billing_address_form").classList.remove("hide");
+            bill_addres_el.classList.remove("hide");
         }
+
     </script>
 {/block}
 
@@ -39,7 +43,7 @@
                         <div class="row">
                             <div class="columns small-12">
                                 <h3 class="shipped-from">
-                                    {t 'Delivery methods for' dict='order'} <a>{t 'the items' dict='order'}</a> {t 'shipped from warehouse in' dict='order'} {$warehouse->m_city}, {$warehouse->m_state}, {$warehouse->m_country}
+                                    {t 'Delivery methods for' dict='order'} {t 'the items' dict='order'} {t 'shipped from warehouse in' dict='order'} {$warehouse->m_city}, {$warehouse->m_state}, {$warehouse->m_country}
                                 </h3>
                             </div>
                         </div>
@@ -75,7 +79,7 @@
                     {if $order->isCanadianShipping()}
                         <div class="row">
                             <div class="column small-1">
-                                <input type="checkbox" {if $order->non_us_confirmation}checked{/if} value="Y" name="non_us_confirmation" required/>
+                                <input type="checkbox" {if $order->non_us_confirmation}checked{/if} value="Y" name="non_us_confirmation" required />
                             </div>
                             <div class="column">
                                 <div class="non-us-disclaimer">
@@ -136,7 +140,7 @@
                     </div>
                     <div class="row">
                         <div class="columns small-12">
-                            <input id="biiling_yes" type="radio" onclick="hideForm()" {if !$billing_diff}checked{/if} name="billing_same" value="1"/>
+                            <input id="biiling_yes" type="radio" onclick="showForm()" {if !$billing_diff}checked{/if} name="billing_same" value="1"/>
                             <label for="biiling_yes">
                                 {t 'Yes' dict='order'}
                             </label>
@@ -144,7 +148,7 @@
                     </div>
                     <div class="row">
                         <div class="columns small-12">
-                            <input id="biiling_no" type="radio" onclick="showForm()" {if $billing_diff}checked{/if} name="billing_same" value="0"/>
+                            <input id="biiling_no" type="radio" onclick="hideForm()" {if $billing_diff}checked{/if} name="billing_same" value="0"/>
                             <label for="biiling_no">
                                 {t 'No' dict='order'}
                             </label>

@@ -65,30 +65,22 @@ class CheckoutController extends FrontendController
         $app = Xcart::app();
         $user = $app->user;
         $cart = $app->cart;
-        $errors = [];
         $shipping = null;
         $shippingForm = new ShippingAddressForm();
         $contactForm = new ContactInfoForm();
 
         if ($app->request->getIsPost()) {
-            $data = $app->request->post->all();
+            $shippingForm->populate($app->request->post);
+            $contactForm->populate($app->request->post);
 
-            if ($shippingForm->populate($data)->isValid() && $contactForm->populate($data)->isValid()) {
+            if ($shippingForm->isValid() && $contactForm->isValid()) {
 
                 [$order, $is_created] = OrderModel::objects()->getOrCreate([
                     'cart_number' => $cart->getCartNumber(),
                 ]);
 
-                $shipping = $shippingForm->getAttributes();
+                $order->setAttributes($shippingForm->getAttributes());
                 $contact = $contactForm->getAttributes();
-
-                /** @var StateModel $s_state */
-                $s_state = StateModel::objects()->get(['code' => $shipping['s_state']]);
-
-                /** @var StateModel $state_m */
-                if (!$s_state) {
-                    $s_state = StateModel::objects()->get(['state' => $shipping['s_state'], 'country_code' => $shipping['s_country']]);
-                }
 
                 $phone = preg_replace('/\D/S', '', $contact['phone']);
 
@@ -109,13 +101,6 @@ class CheckoutController extends FrontendController
 //                }
 
                 $order->setAttributes([
-                    's_firstname' => $shipping['s_firstname'],
-                    's_company' => $shipping['s_company'],
-                    's_address' => $shipping['s_address'] . "\n" . $shipping['s_address_2'],
-                    's_country' => $shipping['s_country'],
-                    's_zipcode' => $shipping['s_zipcode'],
-                    's_state' => $s_state ? $s_state->code : $shipping['s_state'],
-                    's_city' => $shipping['s_city'],
                     'phone' => $phone,
                     'phone_ext' => $contact['phone_ext'],
                     'email' => $contact['email'],
@@ -124,20 +109,18 @@ class CheckoutController extends FrontendController
                 ]);
 
                 if ($order->save()) {
-                    if ($is_created) {
-                        $app->event->trigger('order:created', ['model' => $order]);
-                    }
+                    $is_created ?: $app->event->trigger('order:created', ['model' => $order]);
                     $this->redirect('checkout:options');
                 }
             }
         }
 
-        $order = $order ?? OrderModel::objects()->get([
-                'cart_number' => $cart->getCartNumber(),
-            ]);
+        $order = $order ?? OrderModel::objects()->get(['cart_number' => $cart->getCartNumber(), ]);
 
-        $shippingForm->setAttributes($order ? $order->getAttributes() : []);
-        $contactForm->setAttributes($order ? $order->getAttributes() : []);
+        if (!$app->request->getIsPost() && $order) {
+            $shippingForm->setAttributes($order ? $order->getAttributes() : []);
+            $contactForm->setAttributes( $order ? $order->getAttributes() : []);
+        }
 
         if (!$cart->getCartNumber() || $cart->getIsEmpty()) {
             $this->redirect('cart:list');
@@ -266,16 +249,6 @@ class CheckoutController extends FrontendController
             }
             elseif ($billingForm->populate($data)->isValid()) {
                 $order->setAttributes($billingForm->getAttributes());
-
-                $b_state = $data['BillingAddressForm']['b_statename'];
-
-                if (!StateModel::objects()->get(['code' => $b_state])) {
-                    if ($state_m = StateModel::objects()->get(['state' => $b_state, 'country_code' => $data['BillingAddressForm']['b_country']])) {
-                        $b_state = $state_m->code;
-                    }
-                }
-
-                $order->b_state = $b_state;
             }
 
             $order->non_us_confirmation = false;

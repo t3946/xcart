@@ -154,6 +154,11 @@ abstract class AddressForm extends BaseForm
             }
         }
 
+        if ($data['address'] && $data['address_2']) {
+            $data['address'] .= "\n" . $data['address_2'];
+            unset($data['address_2']);
+        }
+
         if ($this->replacement) {
             $t_data = [];
             foreach ($data as $key => $val) {
