@@ -323,18 +323,15 @@ class OrderHelper
 
     public static function getCartOrder() :? OrderModel
     {
-        $order = null;
         $cart = Xcart::app()->cart;
 
-        /** @var OrderModel $order */
-
         if ($cart->getCartNumber() && !$cart->getIsEmpty()) {
-            $order = OrderModel::objects()->get([
+            return OrderModel::objects()->get([
                 'cart_number' => $cart->getCartNumber(),
             ]);
         }
 
-        return $order;
+        return null;
     }
 
     public static function OrderStepsReset($cart_number): void

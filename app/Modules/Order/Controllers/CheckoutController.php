@@ -41,14 +41,7 @@ class CheckoutController extends FrontendController
 
     protected function getOrder(): OrderModel
     {
-        /** @var OrderModel $order */
-        $order = OrderHelper::getCartOrder();
-
-        if (!$order) {
-            $this->redirect('checkout:shipping');
-        }
-
-        return $order;
+        return OrderHelper::getCartOrder() ?? $this->redirect('checkout:shipping');
     }
 
     /**
