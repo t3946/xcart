@@ -228,11 +228,10 @@ class CheckoutController extends FrontendController
 
                         /** @var ProductModel $product */
                         $product = $item->getObject();
-
                         $detail = new OrderDetailModel([
                             'orderid' => $group->orderid,
                             'productid' => $product->productid,
-                            'price' => $product->getPrice(),
+                            'price' => $product->getPrice($item->getQuantity()),
                             'amount' => $item->getQuantity(),
                             'productcode' => $product->productcode,
                             'product' => $product->getFrontendName(),
