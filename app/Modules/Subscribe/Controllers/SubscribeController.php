@@ -15,22 +15,14 @@ class SubscribeController extends FrontendController
     {
         $request = $this->getRequest();
 
-        $domain = $request->getDomain();
-
         /** @var SiteModel $site_model */
-        $site_model = SiteModel::objects()->get(['domain' => $domain]);
+        $site_model = Xcart::app()->getModule('Sites')->getSite();
 
         $sfid = $site_model->storefrontid;
-
 
         $email = $request->get->get('subscribe')['email'];
 
         $nonce = SubscribeHelper::getHashData($email, $sfid);
-
-         /** TODO построить урл */
-//        Xcart::app()->router;
-        $url = '';
-
 
         $email_validator = new EmailValidator();
 
@@ -38,15 +30,21 @@ class SubscribeController extends FrontendController
 
             (new SubscriberModel(['email' => $email, 'sfid' => $sfid, 'nonce' => $nonce]) )->save();
 
-            $res = Xcart::app()->mail->template(
-                $email,
-                'Subscribe to our newsletter',
-                'subscribe_mail.tpl',
-                [
-                    'key' => $nonce,
-                    'url' => $url,
-                ]
+            echo Xcart::app()->mail::renderTemplate(
+              'subscribe_mail.tpl',
+              [
+                  'key' => $nonce,
+              ]
             );
+
+//            $res = Xcart::app()->mail->template(
+//                $email,
+//                'Subscribe to our newsletter',
+//                'subscribe_mail.tpl',
+//                [
+//                    'key' => $nonce,
+//                ]
+//            );
         }
 
         $this->redirect($request->getDomain());
@@ -55,15 +53,16 @@ class SubscribeController extends FrontendController
     public function getSubscribe()
     {
         $request = $this->getRequest();
-
-        $nonce = $request->post->get('hidden');
+        $nonce = $request->post->get('hide');
 
         $sub_model = SubscriberModel::objects()->get(['nonce' => $nonce]);
         $sub_model->subscribe = true;
         $sub_model->nonce = '';
         $sub_model->update(['subscribe', 'nonce']);
 
-        $this->redirect(SiteModel::objects()->get(['storefrontid' => $sub_model->sfid])->domain);
+        $this->redirect('/');
+
+//        $this->redirect(SiteModel::objects()->get(['storefrontid' => $sub_model->sfid])->domain);
 
     }
 

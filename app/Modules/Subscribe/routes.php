@@ -5,18 +5,18 @@ return [
     [
         'route' => '/send/',
         'target' => ['\Modules\Subscribe\Controllers\SubscribeController', 'sendMessage'],
-        'namespace' => 'send_message'
+        'name' => 'send_message'
     ],
 
     [
         'route' => '/add/',
         'target' => ['\Modules\Subscribe\Controllers\SubscribeController', 'getSubscribe'],
-        'namespace' => 'set'
+        'name' => 'set'
     ],
 
     [
         'route' => '/delete/',
         'target' => ['\Modules\Subscribe\Controllers\SubscribeController', 'getUnsubscribe'],
-        'namespace' => 'unset'
+        'name' => 'unset'
     ],
 ];
