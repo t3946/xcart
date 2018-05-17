@@ -321,7 +321,7 @@ class Product extends Data
 
     public function getMapPrice()
     {
-        return floatval($this->getField('new_map_price'));
+        return (float) $this->getField('new_map_price');
     }
 
     public function getProductCostToUs(\DateTime $oDate = null)
@@ -347,20 +347,17 @@ SQL;
 
     public function getPrice($forQuantity = 1)
     {
-        if (!is_null($this->fPrice)) {
-            return $this->fPrice;
-        }
 
         $fPrice = 0;
 
-        if (is_null($this->aPricing)) {
+        if ($this->aPricing === null) {
             $this->getPricing();
         }
 
-        if (!empty($this->aPricing)) {
+        if ($this->aPricing) {
             foreach ($this->aPricing as $oPrice) {
-                if ($forQuantity >= floatval($oPrice->getQuantity())) {
-                    $fPrice = floatval($oPrice->getPrice());
+                if ($forQuantity >= (float) $oPrice->getQuantity()) {
+                    $fPrice = (float) $oPrice->getPrice();
                 } else {
                     break;
                 }

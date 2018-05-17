@@ -85,7 +85,7 @@ class ShippingAddressForm extends BaseForm
                 ],
             ],
 
-            's_statename' => [
+            's_state' => [
                 'class' => CharField::class,
                 'label' => 'State/Province',
                 'required' => true,

@@ -35,11 +35,13 @@ class PaymentController extends Controller
             $order->cb_status = OrderStatusModel::ORDER_STATUS_QUEUED;
             $order->save();
 
+            $hash = md5($order->orderid.$order->total.$order->email);
+
             try {
 
                 $params = [
                     'cancelUrl' => Xcart::app()->router->absoluteUrl('payment:cancel', ['gateway' => strtolower($pm->processor_name)]),
-                    'returnUrl' => Xcart::app()->router->absoluteUrl('payment:return', ['gateway' => strtolower($pm->processor_name), 'order_id' => $order->orderid]),
+                    'returnUrl' => Xcart::app()->router->absoluteUrl('payment:return', ['gateway' => strtolower($pm->processor_name), 'order_id' => $order->orderid, 'slug' => $hash]),
                     'notifyUrl' => Xcart::app()->router->absoluteUrl('payment:success', ['gateway' => strtolower($pm->processor_name)]),
                     'amount' => number_format($order->total, 2, '.', ''),
                     'order' => $order,
@@ -121,7 +123,7 @@ class PaymentController extends Controller
         $this->redirect('checkout:review');
     }
 
-    public function return($gateway, $order_id): void
+    public function return($gateway, $order_id, $slug): void
     {
         $pm = ProcessorModel::objects()->get(['processor_name' => $gateway]);
 
@@ -133,7 +135,7 @@ class PaymentController extends Controller
             $this->cancel($gateway);
         }
 
-        $this->redirect('checkout:complete', ['order_id' => $order_id]);
+        $this->redirect('checkout:complete', ['order_id' => $order_id, 'slug' => $slug]);
 
     }
 
