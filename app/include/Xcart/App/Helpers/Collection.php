@@ -13,7 +13,7 @@ class Collection implements IteratorAggregate, ArrayAccess, Countable, Serializa
 {
     protected $_data = [];
 
-    public function __construct($data = [])
+    public function __construct(array $data = [])
     {
         $this->_data = $data;
     }
@@ -21,6 +21,11 @@ class Collection implements IteratorAggregate, ArrayAccess, Countable, Serializa
     public function __get($name)
     {
         return $this->get($name);
+    }
+
+    public function __isset($name)
+    {
+        return $this->has($name);
     }
 
     public function __set($name, $value)
@@ -159,7 +164,7 @@ class Collection implements IteratorAggregate, ArrayAccess, Countable, Serializa
      */
     public function count()
     {
-        return count($this->_data);
+        return \count($this->_data);
     }
 
     /**
