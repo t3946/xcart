@@ -1,13 +1,17 @@
 <div class="row">
     <div class="small-6 columns medium-text-right text-block">
-        <div class="multiline">
-            {$form->getField($field)->renderLabel()}
-            <span class="hint">
-                {$form->getField($field)->renderHint()}
-            </span>
-        </div>
+        {if $field->hint}
+            <div class="multiline">
+                {$field->renderLabel()}
+                <span class="hint">
+                    {$field->renderHint()}
+                </span>
+            </div>
+        {else}
+            {$field->renderLabel()}
+        {/if}
     </div>
     <div class="small-12 medium-6 columns">
-        {$form->getField($field)->renderInput()}
+        {$field->renderInput()}
     </div>
 </div>

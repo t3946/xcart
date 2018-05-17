@@ -136,12 +136,18 @@
 
         {insert "_parts/_footer.tpl"}
     </div>
+
+    {block 'offcanvas-menu-left'}
     <div class="off-canvas position-left hide" id="offCanvasLeft" data-off-canvas data-transition="push">
         {insert "_parts/_menu_mobile.tpl"}
     </div>
+    {/block}
+
+    {block 'offcanvas-menu-right'}
     <div class="off-canvas position-right hide" id="offCanvasRight" data-off-canvas data-transition="push">
         {insert "_parts/_menu_mobile_pages.tpl"}
     </div>
+    {/block}
 
 </section>
 {/block}
