@@ -40,6 +40,12 @@ class SubscriberModel extends Model
                 'class' => DateField::class,
                 'null' => false,
             ],
+
+            'nonce' => [
+                'class' => CharField::class,
+                'null' => false,
+                'default' => '',
+            ],
         ];
     }
 }
