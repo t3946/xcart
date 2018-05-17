@@ -8,6 +8,9 @@ use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\TimestampField;
 use Xcart\App\Orm\Model;
 
+/**
+ * @property string PO_number
+ */
 class PurchaseOrderModel extends Model
 {
     use AutoMetaTrait;

@@ -25,6 +25,7 @@ use Modules\Shipping\Models\ShippingRateModel;
 use Modules\Shipping\ShippingModule;
 use Xcart\App\Application\Application;
 use Xcart\App\Controller\FrontendController;
+use Xcart\App\Form\PrepareData;
 use Xcart\App\Main\Xcart;
 use Xcart\Connection;
 use Xcart\Logs;
@@ -309,8 +310,12 @@ class CheckoutController extends FrontendController
                 $extra->purchase_order = $purchase_order;
                 $extra->save();
 
-                if (!empty($_FILES['purchase_order_file']) && $_FILES['purchase_order_file']['error'] === UPLOAD_ERR_OK) {
-                    $original_file = $_FILES["purchase_order_file"]['name'];
+                if (!$_FILES) {
+                    $files = PrepareData::fixFiles($_FILES);
+                }
+
+                if (!empty($files['purchase_order_file']) && $files['purchase_order_file']['error'] === UPLOAD_ERR_OK) {
+                    $original_file = $files['purchase_order_file']['name'];
 
                     $site = Xcart::app()->getModule('Sites')->getSite();
 
@@ -323,7 +328,7 @@ class CheckoutController extends FrontendController
 
                     try {
                         $ext = pathinfo($original_file)['extension'];
-                        if (PurchaseOrderHelper::uploadPurchaseOrder($po_model, $_FILES['purchase_order_file']['tmp_name'], $ext)) {
+                        if (PurchaseOrderHelper::uploadPurchaseOrder($po_model, $files['purchase_order_file']['tmp_name'], $ext)) {
                             $po_model->setAttributes([
                                 'status' => 'uploaded',
                                 'order_id' => $order->orderid,
