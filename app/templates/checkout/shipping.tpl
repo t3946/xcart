@@ -70,12 +70,15 @@
                                 <input value="{$order->firstname}" required placeholder="{t 'Albert H. Einstein' dict='order'}" name="ContactInfoForm[firstname]" type="text"/>
                             </div>
                         </div>
+
+
+                        {include 'checkout/_form_row.tpl' field=$contactForm->getField('firstname')}
+
                         <div class="row">
                             <div class="small-12 medium-6 columns medium-text-right text-block">
                                 <div class="multiline">
                                     <label>
-                                        {t 'Phone' dict='order'}
-                                        <span class="required">*</span>
+                                        {$contactForm->getField('firstname')->renderLabel}
                                     </label>
 
                                     <span class="hint">
@@ -93,6 +96,7 @@
                                 </span>
                             </div>
                         </div>
+
                         <div class="row">
                             <div class="small-12 medium-6 columns medium-text-right text-block text-block">
                                 <div class="multiline">
