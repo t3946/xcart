@@ -9,8 +9,6 @@ use Modules\Order\Helpers\OrderEventHelper;
 use Modules\Order\Helpers\OrderHelper;
 use Modules\Goods\Models\ProductModel;
 use Modules\Payment\Models\PaymentMethodModel;
-use Modules\User\Models\UserModel;
-use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\BooleanCharField;
@@ -20,12 +18,10 @@ use Xcart\App\Orm\Fields\HasManyField;
 use Xcart\App\Orm\Fields\ManyToManyField;
 use Xcart\App\Orm\Fields\OneToOneField;
 use Xcart\App\Orm\Fields\SerializeField;
-use Xcart\App\Orm\Fields\TimestampField;
 use Xcart\App\Orm\Fields\UnixTimestampField;
 use Xcart\App\Orm\Manager;
 use Xcart\App\Orm\Model;
 use Xcart\App\Traits\DataModelTrait;
-use Xcart\App\Traits\FieldManagerCacheTrait;
 use Xcart\Order;
 
 /**
@@ -130,7 +126,7 @@ class OrderModel extends Model
                 'link' => ['s_country' => 'code']
             ],
             'billing_state' => [
-                'field' => 's_state',
+                'field' => 'b_state',
                 'class' => ForeignField::class,
                 'modelClass' => StateModel::class,
                 'sqlType' => Type::STRING,
@@ -140,7 +136,7 @@ class OrderModel extends Model
                 ]
             ],
             'billing_country' => [
-                'field' => 's_country',
+                'field' => 'b_country',
                 'class' => ForeignField::class,
                 'modelClass' => CountryModel::class,
                 'sqlType' => Type::STRING,
@@ -180,6 +176,13 @@ class OrderModel extends Model
                 'link' => ['fraud_status' => 'code'],
                 'sqlType' => Type::STRING,
                 'null' => false,
+            ],
+            'notification' => [
+                'field' => 'cb_status',
+                'class' => ForeignField::class,
+                'modelClass' => OrderStatusNotificationModel::class,
+                'link' => ['cb_status' => 'code'],
+                'sqlType' => Type::STRING,
             ],
             'detail_models' => [
                 'class' => HasManyField::class,
@@ -261,6 +264,7 @@ class OrderModel extends Model
                 'class' => BooleanCharField::class,
                 'null' => false,
             ],
+
         ];
     }
 
