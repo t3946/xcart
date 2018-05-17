@@ -48,8 +48,16 @@ form {
 
   }
 
+  /**
+  @TODO: For fucking chrome
+   */
   input[type=radio] {
-    display: none;
+    display: block;
+    width: 0;
+    height: 0;
+    padding: 0;
+    margin: 0;
+    border: none;
   }
 
   textarea {
@@ -82,6 +90,38 @@ form {
     }
 
 
+  }
+
+  input[type=radio] {
+    &  + label {
+      line-height: rem-calc(38);
+      background-color: #f4f4f4;
+
+      &:before {
+        content: '';
+        display: inline-block;
+        margin-right: rem-calc(5);
+        width: rem-calc(17);
+        height: rem-calc(17);
+        vertical-align: middle;
+        background: url('../images/icons/inputs/radio_unchecked.png') center center no-repeat;
+        background-origin: content-box;
+      }
+
+      &:nth-child(2n) {
+        background-color: #fff;
+      }
+
+      &:nth-last-child(1) {
+        background-color: #f4f4f4;
+      }
+    }
+
+    &:checked + label {
+      &:before {
+        background-image: url('../images/icons/inputs/radio_cheched.png');
+      }
+    }
   }
 
   h1 {
