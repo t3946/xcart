@@ -12,9 +12,9 @@ class ShippingModel extends Model
 {
     use DataModelTrait, AutoMetaTrait;
 
-    public static function getDataModelClass()
+    public static function getDataModelClass(): string
     {
-        return Shipping::className();
+        return Shipping::class;
     }
 
     public static function tableName()

@@ -21,9 +21,9 @@ class DistributorModel extends Model
 {
     use DataModelTrait, AutoMetaTrait;
 
-    public static function getDataModelClass()
+    public static function getDataModelClass(): string
     {
-        return Manufacturer::className();
+        return Manufacturer::class;
     }
 
     public static function tableName()

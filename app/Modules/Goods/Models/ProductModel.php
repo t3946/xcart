@@ -79,7 +79,7 @@ class ProductModel extends Model implements ICartItem
 
     use DataModelTrait, AutoMetaTrait, SlugifyTrait;
 
-    public static function getDataModelClass()
+    public static function getDataModelClass(): string
     {
         return Product::class;
     }

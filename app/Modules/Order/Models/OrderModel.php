@@ -55,9 +55,9 @@ class OrderModel extends Model
     public $last_activity;
     public $last_message;
 
-    public static function getDataModelClass()
+    public static function getDataModelClass(): string
     {
-        return Order::className();
+        return Order::class;
     }
 
     public static function tableName()

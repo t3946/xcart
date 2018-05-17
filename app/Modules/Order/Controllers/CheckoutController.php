@@ -167,17 +167,15 @@ class CheckoutController extends FrontendController
 
                 $order->subtotal = $order->shipping_cost = 0;
 
-                foreach ($cart_groups as $g => $cart_group) {
-
+                foreach ($cart_groups as $g => $cart_group)
+                {
                     /** @var OrderGroupModel $group */
                     [$group] = OrderGroupModel::objects()->getOrCreate(['manufacturerid' => $g, 'orderid' => $order->orderid]);
 
+                    /** @var ShippingRateModel $rate */
                     if ($rates[$g] && ($rate = ShippingRateModel::objects()->get(['rateid' => $rates[$g]]))) {
-                        /** @var ShippingRateModel $rate */
-
                         /** @var ShippingRateModel[] $shipping_rates */
                         if (($shipping_rates = $ship_module::getShipping($g, $order, $cart_group)) && $shipping_rates[$rate->rateid]) {
-
                             $charge = $shipping_rates[$rate->rateid]->getShippingCharge();
 
                             $group->setAttributes([
@@ -196,8 +194,8 @@ class CheckoutController extends FrontendController
                         }
                     }
 
-                    foreach ($cart_group['items'] as $item) {
-
+                    foreach ($cart_group['items'] as $item)
+                    {
                         /** @var ProductModel $product */
                         $product = $item->getObject();
                         $detail = new OrderDetailModel([
@@ -287,10 +285,9 @@ class CheckoutController extends FrontendController
     public function actionReview(): void
     {
         StagesOfOrdering::getInstance()->setStage(StagesOfOrdering::STAGE_ORDER_REVIEW);
+
         $app = Xcart::app();
-
         $errors = [];
-
         $order = $this->getOrder();
 
         $this->checkoutStepsValidate($order->cb_status, OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP3);

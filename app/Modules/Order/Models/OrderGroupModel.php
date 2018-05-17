@@ -17,13 +17,16 @@ use Xcart\App\Orm\Model;
 use Xcart\App\Traits\DataModelTrait;
 use Xcart\OrderGroup;
 
+/**
+ * @property float total_gross
+ */
 class OrderGroupModel extends Model
 {
     use DataModelTrait, AutoMetaTrait;
 
-    public static function getDataModelClass()
+    public static function getDataModelClass(): string
     {
-        return OrderGroup::className();
+        return OrderGroup::class;
     }
 
     public static function tableName()
