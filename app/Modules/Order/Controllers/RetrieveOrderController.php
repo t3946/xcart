@@ -16,14 +16,15 @@ class RetrieveOrderController extends FrontendController
         $email = $request->post->get('email');
 
         /** @var OrderModel $order_model */
-        if ($order_model = OrderModel::objects()->get(['email' => $email]) ) {
-            Xcart::app()->flash->success("Check your email");
+        if ($order_models = OrderModel::objects()->filter(['email' => $email])->all() ) {
+            Xcart::app()->flash->success("Please, check your email");
 
-            OrderInvoiceHelper::sendOrderStatusNotification($order_model, false);
-
+            foreach ($order_models as $order_model) {
+                OrderInvoiceHelper::sendOrderStatusNotification($order_model, false);
+            }
         }
         else {
-            Xcart::app()->flash->error("You haven't invoice");
+            Xcart::app()->flash->error("No orders found");
         }
 
         $this->redirect('/');
