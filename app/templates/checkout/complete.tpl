@@ -64,41 +64,64 @@
                 {*{/if}*}
             </div>
         </div>
-        <div class="row shop-info">
-            <div class="columns small-5 medium-4 ml-3">
-                <img src="/static/frontend/dist/images/logos/s3stores_logo.svg" alt="{t 'S3 Stores, Inc.' dict='order'}" class="logo-big">
-                <div class="place-for-witter"></div>
-            </div>
-            <div class="columns small-7 medium-8 ml-3">
-                <div class="row text-item">
-                    <div class="column shop-name">{t 'S3 Stores, Inc.' dict='order'}</div>
-                </div>
-                <div class="row text-item">
-                    <div class="column">{t '27 Joseph St.' dict='order'}</div>
-                </div>
-                <div class="row text-item">
-                    <div class="column">{t 'Chatham, Ontario, N7L 3G4' dict='order'}</div>
-                </div>
-                <div class="row text-item">
-                    <div class="column">{t 'Canada' dict='order'}</div>
+        <div class="row shop-info align-spaced">
+            {*<div class="columns small-5 medium-4 ml-3 large-2">*}
+                {*<img src="/static/frontend/dist/images/logos/s3stores_logo.svg" alt="{t 'S3 Stores, Inc.' dict='order'}" class="logo-big">*}
+                {*<div class="place-for-witter"></div>*}
+            {*</div>*}
+            {*<div class="columns small-7 medium-8 ml-3 large-4">*}
+                {*<div class="row text-item">*}
+                    {*<div class="column shop-name">{t 'S3 Stores, Inc.' dict='order'}</div>*}
+                {*</div>*}
+                {*<div class="row text-item">*}
+                    {*<div class="column">{t '27 Joseph St.' dict='order'}</div>*}
+                {*</div>*}
+                {*<div class="row text-item">*}
+                    {*<div class="column">{t 'Chatham, Ontario, N7L 3G4' dict='order'}</div>*}
+                {*</div>*}
+                {*<div class="row text-item">*}
+                    {*<div class="column">{t 'Canada' dict='order'}</div>*}
+                {*</div>*}
+            {*</div>*}
+
+            <div class="columns small-12 ml-6 large-4">
+                <div class="row">
+                    <div class="column small-5 medium-4 ml-3 large-6">
+                        <img src="/static/frontend/dist/images/logos/s3stores_logo.svg" alt="{t 'S3 Stores, Inc.' dict='order'}" class="logo-big">
+                        <div class="place-for-witter"></div>
+                    </div>
+                    <div class="column">
+                        <div class="text-item shop-name">
+                            {t 'S3 Stores, Inc.' dict='order'}
+                        </div>
+                        <div class="text-item">
+                            {t '27 Joseph St.' dict='order'}
+                        </div>
+                        <div class="text-item">
+                            {t 'Chatham, Ontario, N7L 3G4' dict='order'}
+                        </div>
+                        <div class="text-item">
+                            {t 'Canada' dict='order'}
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <div class="columns small-12 ml-6 contact-info">
+            <div class="columns small-12 ml-6 large-4 contact-info">
                 <div class="row text-item">
-                    <div class="column small-5 medium-4 ml-5 label">{t 'Toll free:' dict='order'}</div>
+                    <div class="column small-5 medium-4 ml-5 large-6 label">{t 'Toll free:' dict='order'}</div>
                     <div class="column">{t '1-800-929-2431' dict='order'}</div>
                 </div>
                 <div class="row text-item">
-                    <div class="column small-5 medium-4 ml-5 label">{t 'Local phone:' dict='order'}</div>
+                    <div class="column small-5 medium-4 ml-5 large-6 label">{t 'Local phone:' dict='order'}</div>
                     <div class="column">{t '(616) 259-5711' dict='order'}</div>
                 </div>
                 <div class="row text-item">
-                    <div class="column small-5 medium-4 ml-5 label">{t 'Fax:' dict='order'}</div>
+                    <div class="column small-5 medium-4 ml-5 large-6 label">{t 'Fax:' dict='order'}</div>
                     <div class="column">{t '(813) 944-4516' dict='order'}</div>
                 </div>
                 <div class="row text-item">
-                    <div class="column small-5 medium-4 ml-5 label">{t 'Email:' dict='order'}</div>
+                    <div class="column small-5 medium-4 ml-5 large-6 label">{t 'Email:' dict='order'}</div>
                     <div class="column">{t 'orders@s3stores.com' dict='order'}</div>
                 </div>
             </div>

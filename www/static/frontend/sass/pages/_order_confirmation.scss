@@ -183,6 +183,13 @@
       font-size: 18px;
     }
 
+    @include breakpoint(large){
+      font-size: 14px;
+      margin-top: 45px;
+    }
+
+
+
     .label{
       color: #000000;
       font-weight: bold;
@@ -192,8 +199,8 @@
 
       max-width: 170px;
 
-      @include breakpoint(ml){
-
+      @include breakpoint(large){
+        max-width: 150px;
       }
     }
 
@@ -211,8 +218,10 @@
         height: 43px;
         margin-top: 20px;
       }
-
-
+      @include breakpoint(large){
+        height: 28px;
+        margin-top: 16px;
+      }
     }
 
     .shop-name{
@@ -225,6 +234,9 @@
       }
       @include breakpoint(medium){
         font-size: 22px;
+      }
+      @include breakpoint(large){
+        font-size: 18px;
       }
     }
 
@@ -239,6 +251,9 @@
       }
       @include breakpoint(ml){
         margin-bottom: 12px;
+      }
+      @include breakpoint(large){
+        margin-bottom: 8px;
       }
     }
 
