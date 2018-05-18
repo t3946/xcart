@@ -6,7 +6,7 @@
 
 
 ///Users/anna/git/xcart/www/static/frontend/images/logos/s3stores_logo.svg
-#content-wrapper{
+#content-wrapper12{
   //background: url("../../demo_images/templates/large_Payment.jpg") 50% -1065px no-repeat;
   background: url("../../demo_images/templates/small_Payment (Purchas order).jpg") 50% 3px no-repeat;
 
@@ -83,6 +83,31 @@
 
 
 .order-confirmation-container{
+
+  .hr{
+    margin: 0;
+  }
+  //.dark{
+  //  .hr{
+  //    border-bottom: 2px solid #15303f;;
+  //  }
+  //}
+
+  .light{
+    border-bottom: 1px solid #bbbbbb;
+    .hr{
+      border: 0;
+    }
+
+    //@include breakpoint(large){
+    //  border-bottom: 0;
+    //}
+    //.hr{
+    //  @include breakpoint(large){
+    //    border-bottom: 1px solid #bbbbbb;
+    //  }
+    //}
+  }
 
   .order-confirmation{
     .green-border{
@@ -199,6 +224,13 @@
     @include breakpoint(large){
       margin-top: 17px;
     }
+
+    &.line-1{
+      padding-bottom: 15px;
+    }
+    &.line-2{
+      padding-bottom: 20px;
+    }
   }
 
   .shop-info,
@@ -312,7 +344,7 @@
 
 
   .ordering-info-content{
-    //background-color: #f9f9f9;
+    background-color: #f9f9f9;
     border-top: 2px solid #15303f;
     margin-top: 8px;
 
@@ -323,6 +355,28 @@
     @include breakpoint(medium){
       margin-top: 4px;
     }
+
+    //@include breakpoint(large){
+    //  border: 0;
+    //  background-color: transparent;
+    //  .ordering-info{
+    //    background-color: #f9f9f9;
+    //  }
+    //}
   }
+
+  .checkout-review {
+
+    .title{
+      font-size: 22px;
+      font-weight: bold;
+      margin-top: 30px;
+    }
+
+    .order-review .price-info {
+    width: auto;
+    }
+  }
+
 
 }
