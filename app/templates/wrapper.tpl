@@ -152,6 +152,22 @@
             setTimeout(function(){
                 createStyleElement( "/static/frontend/dist/css/styles.css?v={frontend_version resource='css/styles.css'}");
             }, 40);
+
+            window.LHCChatOptions = {
+                opt: {
+                    'widget_height':540,
+                    'widget_width':300,
+                    'popup_height':520,
+                    'popup_width':500,
+                    'domain':'{$site->domain}'
+                }
+            };
+
+            var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true; po.defer = true;
+            var referrer = (document.referrer) ? encodeURIComponent(document.referrer.substr(document.referrer.indexOf('://')+1)) : '';
+            var location  = (document.location) ? encodeURIComponent(window.location.href.substring(window.location.protocol.length)) : '';
+            po.src = '//livechat.s3stores.com/index.php/chat/getstatus/(click)/internal/(position)/bottom_left/(ma)/br/(check_operator_messages)/true/(top)/350/(units)/pixels/(leaveamessage)/true/(department)/2?r='+referrer+'&l='+location;
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
         };
         var raf = requestAnimationFrame || mozRequestAnimationFrame ||
             webkitRequestAnimationFrame || msRequestAnimationFrame;

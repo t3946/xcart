@@ -14,6 +14,7 @@ use Modules\Order\Forms\ShippingAddressForm;
 use Modules\Order\Helpers\OrderHelper;
 use Modules\Order\Helpers\OrderInvoiceHelper;
 use Modules\Order\Helpers\PurchaseOrderHelper;
+use Modules\Order\Models\LogModel;
 use Modules\Order\Models\OrderDetailModel;
 use Modules\Order\Models\OrderExtraModel;
 use Modules\Order\Models\OrderGroupModel;
@@ -77,8 +78,6 @@ class CheckoutController extends FrontendController
                 $order->setAttributes($shippingForm->getAttributes());
                 $contact = $contactForm->getAttributes();
 
-                $phone = preg_replace('/\D/S', '', $contact['phone']);
-
 //                if ($user && $user->id) {
 //                    [$address] = AddressModel::objects()->getOrCreate([
 //                        'user_id' => $user->id,
@@ -96,7 +95,7 @@ class CheckoutController extends FrontendController
 //                }
 
                 $order->setAttributes([
-                    'phone' => $phone,
+                    'phone' => $contact['phone'],
                     'phone_ext' => $contact['phone_ext'],
                     'email' => $contact['email'],
                     'firstname' => $contact['firstname'],
@@ -113,8 +112,8 @@ class CheckoutController extends FrontendController
         $order = $order ?? OrderModel::objects()->get(['cart_number' => $cart->getCartNumber(), ]);
 
         if (!$app->request->getIsPost() && $order) {
-            $shippingForm->setAttributes($order ? $order->getAttributes() : []);
-            $contactForm->setAttributes( $order ? $order->getAttributes() : []);
+            $shippingForm->setAttributes($order->getAttributes());
+            $contactForm->setAttributes($order->getAttributes());
         }
 
         if (!$cart->getCartNumber() || $cart->getIsEmpty()) {
@@ -313,9 +312,10 @@ class CheckoutController extends FrontendController
                 $extra->purchase_order = $purchase_order;
                 $extra->save();
 
-                if (!$_FILES) {
-                    $files = PrepareData::fixFiles($_FILES);
-                }
+                $files = $_FILES;
+//                if (!$_FILES) {
+//                    $files = PrepareData::fixFiles($_FILES);
+//                }
 
                 if (!empty($files['purchase_order_file']) && $files['purchase_order_file']['error'] === UPLOAD_ERR_OK) {
                     $original_file = $files['purchase_order_file']['name'];
@@ -349,7 +349,13 @@ class CheckoutController extends FrontendController
                         $message = $ex->getMessage();
                     }
                     finally {
-                        Logs::_log('purchase_orders', $po_model->po_id, Logs::LOG_TYPE_CLIENT, $message);
+                        (new LogModel([
+                            'resource_type' => 'purchase_orders',
+                            'resource_id' => $po_model->po_id,
+                            'type' => 'C',
+                            'login' => $app->user->login,
+                            'log' => $message
+                        ]))->save();
                     }
                 }
             }
