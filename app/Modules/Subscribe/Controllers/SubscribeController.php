@@ -34,21 +34,21 @@ class SubscribeController extends FrontendController
             if (!(SubscriberModel::objects()->get(['email' => $email, 'sfid' => $sfid]))) {
                 (new SubscriberModel(['email' => $email, 'sfid' => $sfid, 'nonce' => $nonce]))->save();
 
-                echo Xcart::app()->mail::renderTemplate(
-                    'subscribe_mail.tpl',
-                    [
-                        'key' => $nonce,
-                    ]
-                );
+//                echo Xcart::app()->mail::renderTemplate(
+//                    'subscribe_mail.tpl',
+//                    [
+//                        'key' => $nonce,
+//                    ]
+//                );
 
-//            Xcart::app()->mail->template(
-//                $email,
-//                'Subscribe to our newsletter',
-//                'subscribe_mail.tpl',
-//                [
-//                    'key' => $nonce,
-//                ]
-//            );
+            Xcart::app()->mail->template(
+                $email,
+                'Subscribe to our newsletter',
+                'subscribe_mail.tpl',
+                [
+                    'key' => $nonce,
+                ]
+            );
             }
         }
 
