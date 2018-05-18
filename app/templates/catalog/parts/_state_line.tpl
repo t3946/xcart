@@ -18,27 +18,28 @@
                         </a>
                     </div>
                     {/if}
+                    {if !$hide_sort}
+                        <div class="action_block sort">
+                            <div class="action_button sort">
+                                <span class="action">
+                                    Sort by
+                                </span>
+                                <span class="active_value show-for-large">
+                                    {foreach $sort_arr as $key=>$item}
+                                        {if $key == $sort}
+                                            {$item}
+                                        {/if}
+                                    {/foreach}
+                                </span>
 
-                    <div class="action_block sort">
-                        <div class="action_button sort">
-                            <span class="action">
-                                Sort by
-                            </span>
-                            <span class="active_value show-for-large">
+                            </div>
+                            <ul class="options no-bullet">
                                 {foreach $sort_arr as $key=>$item}
-                                    {if $key == $sort}
-                                        {$item}
-                                    {/if}
+                                    <li data-value="{$key}" {if $sort == $key} class="active"{/if}>{$item}</li>
                                 {/foreach}
-                            </span>
-
+                            </ul>
                         </div>
-                        <ul class="options no-bullet">
-                            {foreach $sort_arr as $key=>$item}
-                                <li data-value="{$key}" {if $sort == $key} class="active"{/if}>{$item}</li>
-                            {/foreach}
-                        </ul>
-                    </div>
+                    {/if}
 
                 </div>
                 <div class="action_block view">

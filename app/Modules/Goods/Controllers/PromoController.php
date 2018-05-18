@@ -7,6 +7,7 @@ use Modules\Goods\Models\CategoryModel;
 use Modules\Goods\Models\FeaturedProductsModel;
 use Modules\Goods\Models\ProductModel;
 use Modules\Sites\Models\SiteModel;
+use Xcart\App\Components\Breadcrumbs;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\QuerySet;
 
@@ -21,10 +22,15 @@ class PromoController extends AbstractCatalogController
     {
         $this->qs = PromotionalProductsHelper::getBestsellersSQ();
 
+        $bread = new Breadcrumbs();
+
+        $bread->add('Bestsellers');
+
         $this->qs->filter(['avail__gt' => 10]);
         $this->view = 'catalog/promo.tpl';
         $this->advancedData = [
             'title' => 'Bestsellers',
+            'breadcrumbs' => Xcart::app()->breadcrumbs->set($bread),
         ];
         $this->view_internal();
     }
@@ -67,9 +73,14 @@ class PromoController extends AbstractCatalogController
                 ->order(['?']));
         }
 
+        $bread = new Breadcrumbs();
+
+        $bread->add('Featured products');
+
         $this->view = 'catalog/promo.tpl';
         $this->advancedData = [
             'title' => 'Featured products',
+            'breadcrumbs' => Xcart::app()->breadcrumbs->set($bread),
         ];
         $this->view_internal();
     }
