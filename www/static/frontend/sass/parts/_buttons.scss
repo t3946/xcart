@@ -36,6 +36,11 @@
       //background-color: #ff9c00;
     }
   }
+
+  &.default-style{
+    line-height: rem-calc(40);
+    padding: 0 rem-calc(36);
+  }
 }
 
 .action_button {

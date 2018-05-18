@@ -67,7 +67,7 @@
         <div class="row shop-info align-spaced">
             <div class="columns small-12 ml-6 large-4">
                 <div class="row">
-                    <div class="column small-5 medium-4 ml-3 large-6">
+                    <div class="column small-5 medium-4 ml-5 large-6">
                         <img src="/static/frontend/dist/images/logos/s3stores_logo.svg" alt="{t 'S3 Stores, Inc.' dict='order'}" class="logo-big">
                         <div class="place-for-witter"></div>
                     </div>
