@@ -77,6 +77,11 @@ return array_merge($admin_routes, [
         'namespace' => 'checkout'
     ],
     [
+        'route' => '/retrieve',
+        'path' => 'Modules.Order.routes_retrieve',
+        'namespace' => 'retrieve'
+    ],
+    [
         'route' => '',
         'path' => 'Modules.Pages.routes',
         'namespace' => 'page'
