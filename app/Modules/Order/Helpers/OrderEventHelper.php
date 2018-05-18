@@ -157,6 +157,6 @@ class OrderEventHelper
 
         $model->groups->update(['cb_status' => $model->cb_status]);*/
 
-        OrderInvoiceHelper::sendOrderStatusNotification($model);
+        //OrderInvoiceHelper::sendOrderStatusNotification($model);
     }
 }

@@ -15,14 +15,21 @@
   }
   @include breakpoint(medium){
     //746
-    background: url("../../demo_images/templates/medium_Payment.jpg") 50% -16px no-repeat;
+   // background: url("../../demo_images/templates/medium_Payment.jpg") 50% -16px no-repeat;
+    //background: url("../../demo_images/templates/medium_Payment.jpg") 50% -30px no-repeat;
+    background: url("../../demo_images/templates/medium_Payment.jpg") 50% -30px no-repeat;
   }
-  //@include breakpoint(ml){
-  //  background: none;
-  //}
-  //@include breakpoint(large){
-  //  background: none;
-  //}
+  @include breakpoint(ml){
+    //background: url("../../demo_images/templates/ml_Payment.jpg") 50% -13px no-repeat;
+    //background: url("../../demo_images/templates/ml_Payment.jpg") 50% 4px no-repeat;
+    background: url("../../demo_images/templates/ml_Payment.jpg") 50% -4px no-repeat;
+    padding: 0 10px;
+  }
+  @include breakpoint(large){
+    background: url("../../demo_images/templates/large_Payment.jpg") 50% -20px no-repeat;
+    padding: 0;
+    //1279
+  }
 }
 
 .order-confirmation-breadcrumbs{
@@ -31,6 +38,45 @@
     text-decoration: none !important;
     cursor: default !important;
   }
+}
+
+.invoice-buttons{
+
+  .button{
+    position:relative;
+    line-height: 40px;
+    padding: 0 36px;
+  }
+
+  .open-pdf-invoice{
+    padding-left: 70px;
+    &:before{
+      content: '';
+      position: absolute;
+      display: block;
+      width:22px;
+      height: 22px;
+      background: url('../../dist/images/icons/order/open_pdf_invoice.svg') 0 0 no-repeat;
+      top: 9px;
+      left: 35px;
+
+    }
+  }
+
+  .print-invoice{
+    padding-left: 70px;
+    &:before{
+      content: '';
+      position: absolute;
+      display: block;
+      width:24px;
+      height: 24px;
+      background: url('../../dist/images/icons/order/print_invoice.svg') 0 0 no-repeat;
+      top: 8px;
+      left: 35px;
+    }
+  }
+
 }
 
 
@@ -56,11 +102,24 @@
         padding: 12px 46px 13px;
       }
 
+      @include breakpoint(large){
+        font-size: 16px;
+        line-height: 25px;
+        margin-bottom: 20px;
+      }
+
+      .title{
+        text-transform: uppercase;
+        font-size: 20px;
+        font-weight: bold;
+      }
+
     }
   }
 
   .order-info{
     margin-top: 23px;
+
     @include breakpoint(sm){
       margin-top: 30px;
     }
@@ -68,17 +127,27 @@
       margin-top: 37px;
     }
 
+    @include breakpoint(large){
+      margin-top: 29px;
+    }
+
+
+
 
 
     .title{
       font-size: 21px;
       font-weight: bold;
       text-transform: uppercase;
+
       @include breakpoint(sm){
         font-size: 24px;
       }
       @include breakpoint(medium){
         font-size: 28px;
+      }
+      @include breakpoint(large){
+        font-size: 40px;
       }
     }
     .purchase-order-title{
@@ -98,13 +167,20 @@
     font-size: 13px;
     color: #3a3a3a;
 
-
     @include breakpoint(sm){
       margin-top: 26px;
       font-size: 14px;
     }
     @include breakpoint(medium){
+      margin-top: 33px;
       padding: 0 22px;
+      font-size: 18px;
+    }
+
+    @include breakpoint(ml){
+      margin-top: 33px;
+      padding: 0;
+      font-size: 18px;
     }
 
     .label{
@@ -112,9 +188,31 @@
       font-weight: bold;
     }
 
+    .logo-big{
+
+      max-width: 170px;
+
+      @include breakpoint(ml){
+
+      }
+    }
+
     .place-for-witter{
       height: 30px;
       margin-top: 10px;
+      background-color: blue;
+      opacity: .4;
+
+      @include breakpoint(sm){
+        height: 37px;
+        margin-top: 14px;
+      }
+      @include breakpoint(medium){
+        height: 43px;
+        margin-top: 20px;
+      }
+
+
     }
 
     .shop-name{
@@ -125,6 +223,9 @@
       @include breakpoint(sm){
         font-size: 20px;
       }
+      @include breakpoint(medium){
+        font-size: 22px;
+      }
     }
 
     .text-item{
@@ -133,6 +234,12 @@
       @include breakpoint(sm){
         margin-bottom: 10px;
       }
+      @include breakpoint(medium){
+        margin-bottom: 14px;
+      }
+      @include breakpoint(ml){
+        margin-bottom: 12px;
+      }
     }
 
     .contact-info{
@@ -140,6 +247,14 @@
 
       @include breakpoint(sm){
         margin-top: 16px;
+      }
+
+      @include breakpoint(medium){
+        margin-top: 21px;
+      }
+
+      @include breakpoint(ml){
+        margin-top: 3px;
       }
 
 
@@ -153,6 +268,10 @@
 
     @include breakpoint(sm){
       margin-top: 11px;
+    }
+
+    @include breakpoint(medium){
+      margin-top: 4px;
     }
   }
 
