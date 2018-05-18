@@ -137,9 +137,11 @@
                     {*{/if}*}
                 </div>
                 {else}
-                    <div class="full_line__group_root">
-                        <a class="button yellow-white waves waves-orange waves-effect">Full product line</a>
-                        <div>Click here to see full product line</div>
+                    <div class="full_line__group_root buttons">
+                        {ignore}
+                            <a onclick="$('html, body').animate({scrollTop: $('#products').offset().top}, 1000);" class="button yellow waves waves-orange waves-effect default-style">Full product line</a>
+                            <div class="info">Click here to see full product line</div>
+                        {/ignore}
                     </div>
                 {/if}
                 {*<div class="godaddy hide-for-medium hide-for-large text-align--center">*}
