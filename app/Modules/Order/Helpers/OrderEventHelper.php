@@ -68,9 +68,6 @@ class OrderEventHelper
                 ])
             )->save();
 
-            //TODO rewrite this logic
-            //$model->updateVerificationStatus();
-
             $surf_path = SurfPathModel::objects()
                 ->filter([
                     'resource_type' => SurfPathModel::GOAL_TYPE_REFERER,
@@ -89,6 +86,7 @@ class OrderEventHelper
                 'order_prefix' => $app->getModule('Sites')->getSite()->getOrderPrefix(),
                 'login' => $user->login,
                 'user_id' => $user->id,
+                'phone' => preg_replace('/\D/S', '', $model->phone)
             ]);
             $model->save();
         }
@@ -158,6 +156,6 @@ class OrderEventHelper
 
         $model->groups->update(['cb_status' => $model->cb_status]);
 
-        OrderInvoiceHelper::sendOrderStatusNotification($model);
+        //OrderInvoiceHelper::sendOrderStatusNotification($model);
     }
 }
