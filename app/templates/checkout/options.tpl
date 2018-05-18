@@ -7,18 +7,36 @@
 
         function hideForm() {
             bill_addres_el.classList.add("hide");
-            elements.forEach(function (item, i, elements) {
-                item.removeAttribute("required");
-            })
-
+            removeRequired();
         }
+
         function showForm() {
             bill_addres_el.classList.remove("hide");
+            addRequired();
+        }
+        
+        function setOrRemoveRequired() {
+            if( (document.querySelector("input#biiling_yes")).hasAttribute("checked") ) {
+                removeRequired();
+            } else {
+                addRequired();
+            }
+        }
+
+        function addRequired() {
             elements.forEach(function (item, i, elements) {
                 item.setAttribute("required", "required");
             })
         }
-        hideForm();
+
+        function removeRequired() {
+            elements.forEach(function (item, i, elements) {
+                item.removeAttribute("required");
+            })
+        }
+        
+        setOrRemoveRequired();
+
     </script>
 {/block}
 
