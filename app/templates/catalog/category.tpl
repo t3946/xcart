@@ -9,9 +9,9 @@
         <div class="row">
             <div class="columns large-2 show-for-large">
                 <div class="top-block">
-                    <div class="image" id="image_left-top">
+                    {*<div class="image" id="image_left-top">
                         <img src="/static/frontend/demo_images/category/1280/image.png" alt="image" itemprop="image" />
-                    </div>
+                    </div>*}
                 </div>
             </div>
             <div class="columns large-10">
