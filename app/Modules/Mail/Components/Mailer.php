@@ -104,6 +104,16 @@ class Mailer
             $message->setSender($default);
         }
 
+        if (isset($additional['reply_to'])) {
+            $message->setReplyTo($additional['reply_to']);
+        }
+
+        if (isset($additional['headers']) && \is_array($additional['headers'])) {
+            foreach($additional['headers'] as $header => $value) {
+                $message->getHeaders()->addTextHeader($header, $value);
+            }
+        }
+
         return $this->getMailer()->send($message);
     }
 

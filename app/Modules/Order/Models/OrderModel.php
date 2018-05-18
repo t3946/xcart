@@ -46,9 +46,10 @@ use Xcart\Order;
  * @property Manager|OrderDetailModel[] detail_models
  * @property Manager|OrderGroupModel[] groups
  * @property PaymentMethodModel payment_method
- * @property mixed|null non_us_confirmation
+ * @property string|null non_us_confirmation
  * @property string orig_po
  * @property string po_number
+ * @property string firstname
  */
 class OrderModel extends Model
 {

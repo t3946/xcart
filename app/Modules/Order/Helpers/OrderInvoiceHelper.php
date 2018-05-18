@@ -4,6 +4,7 @@ namespace Modules\Order\Helpers;
 
 
 use Modules\Order\Models\OrderModel;
+use Modules\Sites\Models\SiteModel;
 use Xcart\App\Main\Xcart;
 
 class OrderInvoiceHelper
@@ -11,11 +12,33 @@ class OrderInvoiceHelper
     public static function sendOrderStatusNotification(OrderModel $order): void
     {
 
-        Xcart::app()->mail->template(
-            $order->email,
-            str_replace($order->notification->customer_subject, '{{orderid}}', $order->orderid),
-            'mail/invoice.tpl',
-            ['order' => $order]
-        );
+        if ($notification = $order->notification) {
+
+            /** @var SiteModel $site */
+            $site = Xcart::app()->getModule('Sites')->getSite();
+            $config = $site->getGlobalConfig();
+
+            Xcart::app()->mail->template(
+                $order->email,
+                str_replace($notification->customer_subject, '{{orderid}}', $order->orderid),
+                'mail/invoice.tpl',
+                ['order' => $order],
+                ['from' => $config['orders_department']]
+            );
+
+            Xcart::app()->mail->template(
+                $config['orders_department'],
+                str_replace($notification->copy_subject, '{{orderid}}', $order->orderid),
+                'mail/invoice.tpl',
+                ['order' => $order],
+                [
+                    'from' => "{$order->firstname} <{$config['orders_department']}>",
+                    'reply_to' => "{$order->firstname} <{$order->email}>",
+                    'headers' => [
+                        'X-Xcart-Label' => 'order-status-init'
+                    ]
+                ]
+            );
+        }
     }
 }
