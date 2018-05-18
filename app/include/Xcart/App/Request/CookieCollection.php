@@ -31,14 +31,13 @@ class CookieCollection implements ArrayAccess, Countable
 
     public function get($key, $default = null)
     {
-//        return $this->has($key) ? $_COOKIE[$key] : $default; //For history
         $return = $default;
 
         if ($this->has($key))
         {
             $return = $_COOKIE[$key];
 
-            if (defined('X_REJECT_OVERRIDE_COOKIE')) {
+            if (\defined('X_REJECT_OVERRIDE_COOKIE')) {
                 $return = stripcslashes($return);
                 $return = html_entity_decode($return);
             }
@@ -56,7 +55,7 @@ class CookieCollection implements ArrayAccess, Countable
     public function remove($key)
     {
         if ($this->has($key)) {
-            if ($this->setCookie($key, "", time()-3600, '/')) {
+            if ($this->setCookie($key, '', time()-3600, '/')) {
                 unset($_COOKIE[$key]);
             }
         }
@@ -142,15 +141,13 @@ class CookieCollection implements ArrayAccess, Countable
      */
     public function count()
     {
-        return count($_COOKIE);
+        return \count($_COOKIE);
     }
 
-    private function setCookie ($name, $value = "", $expire = 0, $path = "", $domain = "", $secure = false, $httponly = false) {
-        if (!headers_sent()) {
-            if (setcookie($name, $value, $expire, $path, $domain, $secure, $httponly)) {
-                $_COOKIE[$name] = $value;
-                return true;
-            }
+    private function setCookie ($name, $value = '', $expire = 0, $path = '', $domain = '', $secure = false, $httponly = false) {
+        if (!headers_sent() && setcookie($name, $value, $expire, $path, $domain, $secure, $httponly)) {
+            $_COOKIE[$name] = $value;
+            return true;
         }
 
         return false;

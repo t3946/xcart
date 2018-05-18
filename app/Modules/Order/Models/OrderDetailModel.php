@@ -17,9 +17,9 @@ class OrderDetailModel  extends Model
 {
     use DataModelTrait, AutoMetaTrait;
 
-    public static function getDataModelClass()
+    public static function getDataModelClass(): string
     {
-        return OrderDetail::className();
+        return OrderDetail::class;
     }
 
     public static function tableName()

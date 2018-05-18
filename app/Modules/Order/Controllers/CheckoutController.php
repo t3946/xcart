@@ -3,15 +3,18 @@
 namespace Modules\Order\Controllers;
 
 use Mobile_Detect;
+use Modules\Cart\Components\CartItem;
 use Modules\Cart\Helpers\StagesOfOrdering;
 use Modules\Core\Models\StateModel;
 use Modules\Dashboard\Sqls\SearchSql;
 use Modules\Goods\Models\ProductModel;
+use Modules\Order\Forms\BillingAddressForm;
 use Modules\Order\Forms\ContactInfoForm;
 use Modules\Order\Forms\ShippingAddressForm;
 use Modules\Order\Helpers\OrderHelper;
 use Modules\Order\Helpers\OrderInvoiceHelper;
 use Modules\Order\Helpers\PurchaseOrderHelper;
+use Modules\Order\Models\LogModel;
 use Modules\Order\Models\OrderDetailModel;
 use Modules\Order\Models\OrderExtraModel;
 use Modules\Order\Models\OrderGroupModel;
@@ -24,6 +27,7 @@ use Modules\Shipping\Models\ShippingRateModel;
 use Modules\Shipping\ShippingModule;
 use Xcart\App\Application\Application;
 use Xcart\App\Controller\FrontendController;
+use Xcart\App\Form\PrepareData;
 use Xcart\App\Main\Xcart;
 use Xcart\Connection;
 use Xcart\Logs;
@@ -40,14 +44,7 @@ class CheckoutController extends FrontendController
 
     protected function getOrder(): OrderModel
     {
-        /** @var OrderModel $order */
-        $order = OrderHelper::getCartOrder();
-
-        if (!$order) {
-            $this->redirect('checkout:shipping');
-        }
-
-        return $order;
+        return OrderHelper::getCartOrder() ?? $this->redirect('checkout:shipping');
     }
 
     /**
@@ -64,32 +61,22 @@ class CheckoutController extends FrontendController
         $app = Xcart::app();
         $user = $app->user;
         $cart = $app->cart;
-        $errors = [];
         $shipping = null;
         $shippingForm = new ShippingAddressForm();
         $contactForm = new ContactInfoForm();
 
         if ($app->request->getIsPost()) {
-            $data = $app->request->post->all();
+            $shippingForm->populate($app->request->post);
+            $contactForm->populate($app->request->post);
 
-            if ($shippingForm->populate($data)->isValid() && $contactForm->populate($data)->isValid()) {
+            if ($shippingForm->isValid() && $contactForm->isValid()) {
 
                 [$order, $is_created] = OrderModel::objects()->getOrCreate([
                     'cart_number' => $cart->getCartNumber(),
                 ]);
 
-                $shipping = $data['ShippingAddressForm'];
-                $contact = $data['ContactInfoForm'];
-
-                /** @var StateModel $s_state */
-                $s_state = StateModel::objects()->get(['code' => $shipping['s_state']]);
-
-                /** @var StateModel $state_m */
-                if (!$s_state) {
-                    $s_state = StateModel::objects()->get(['state' => $shipping['s_state'], 'country_code' => $shipping['s_country']]);
-                }
-
-                $phone = preg_replace('/\D/S', '', $contact['phone']);
+                $order->setAttributes($shippingForm->getAttributes());
+                $contact = $contactForm->getAttributes();
 
 //                if ($user && $user->id) {
 //                    [$address] = AddressModel::objects()->getOrCreate([
@@ -108,14 +95,7 @@ class CheckoutController extends FrontendController
 //                }
 
                 $order->setAttributes([
-                    's_firstname' => $shipping['s_firstname'],
-                    's_company' => $shipping['s_company'],
-                    's_address' => $shipping['s_address'] . "\n" . $shipping['s_address_2'],
-                    's_country' => $shipping['s_country'],
-                    's_zipcode' => $shipping['s_zipcode'],
-                    's_state' => $s_state ? $s_state->code : $shipping['s_state'],
-                    's_city' => $shipping['s_city'],
-                    'phone' => $phone,
+                    'phone' => $contact['phone'],
                     'phone_ext' => $contact['phone_ext'],
                     'email' => $contact['email'],
                     'firstname' => $contact['firstname'],
@@ -123,20 +103,18 @@ class CheckoutController extends FrontendController
                 ]);
 
                 if ($order->save()) {
-                    if ($is_created) {
-                        $app->event->trigger('order:created', ['model' => $order]);
-                    }
+                    $is_created ?: $app->event->trigger('order:created', ['model' => $order]);
                     $this->redirect('checkout:options');
                 }
             }
         }
 
-        $order = $order ?? OrderModel::objects()->get([
-                'cart_number' => $cart->getCartNumber(),
-            ]);
+        $order = $order ?? OrderModel::objects()->get(['cart_number' => $cart->getCartNumber(), ]);
 
-        $shippingForm->setAttributes($order ? $order->getAttributes() : []);
-        $contactForm->setAttributes($order ? $order->getAttributes() : []);
+        if (!$app->request->getIsPost() && $order) {
+            $shippingForm->setAttributes($order->getAttributes());
+            $contactForm->setAttributes($order->getAttributes());
+        }
 
         if (!$cart->getCartNumber() || $cart->getIsEmpty()) {
             $this->redirect('cart:list');
@@ -167,6 +145,7 @@ class CheckoutController extends FrontendController
         $ship_module = $app->getModule('Shipping');
         $cart = $app->cart;
         $errors = [];
+        $billingForm = new BillingAddressForm();
 
         $order = $this->getOrder();
 
@@ -189,17 +168,15 @@ class CheckoutController extends FrontendController
 
                 $order->subtotal = $order->shipping_cost = 0;
 
-                foreach ($cart_groups as $g => $cart_group) {
-
+                foreach ($cart_groups as $g => $cart_group)
+                {
                     /** @var OrderGroupModel $group */
                     [$group] = OrderGroupModel::objects()->getOrCreate(['manufacturerid' => $g, 'orderid' => $order->orderid]);
 
+                    /** @var ShippingRateModel $rate */
                     if ($rates[$g] && ($rate = ShippingRateModel::objects()->get(['rateid' => $rates[$g]]))) {
-                        /** @var ShippingRateModel $rate */
-
                         /** @var ShippingRateModel[] $shipping_rates */
                         if (($shipping_rates = $ship_module::getShipping($g, $order, $cart_group)) && $shipping_rates[$rate->rateid]) {
-
                             $charge = $shipping_rates[$rate->rateid]->getShippingCharge();
 
                             $group->setAttributes([
@@ -218,8 +195,9 @@ class CheckoutController extends FrontendController
                         }
                     }
 
-                    foreach ($cart_group['items'] as $item) {
-
+                    /** @var CartItem $item */
+                    foreach ($cart_group['items'] as $item)
+                    {
                         /** @var ProductModel $product */
                         $product = $item->getObject();
                         $detail = new OrderDetailModel([
@@ -251,31 +229,19 @@ class CheckoutController extends FrontendController
                 }
             }
 
-            if ($app->request->post->has('billing_same')) {
-                if ($app->request->post->get('billing_same')) {
-                    $order->setAttributes([
-                        'b_address' => $order->s_address,
-                        'b_firstname' => $order->s_firstname,
-                        'b_company' => $order->s_company,
-                        'b_city' => $order->s_city,
-                        'b_state' => $order->s_state,
-                        'b_country' => $order->s_country,
-                        'b_zipcode' => $order->s_zipcode,
-                    ]);
-                } else {
-                    if (!($errors = OrderHelper::validateForm($data))) {
-                        $order->setAttributes($data['BillingAddressForm']);
-
-                        $b_state = $data['BillingAddressForm']['b_statename'];
-                        if (!StateModel::objects()->get(['code' => $b_state])) {
-                            if ($state_m = StateModel::objects()->get(['state' => $b_state, 'country_code' => $data['BillingAddressForm']['b_country']])) {
-                                $b_state = $state_m->code;
-                            }
-                        }
-
-                        $order->b_state = $b_state;
-                    }
-                }
+            if ($app->request->post->get('billing_same')) {
+                $order->setAttributes([
+                    'b_address' => $order->s_address,
+                    'b_firstname' => $order->s_firstname,
+                    'b_company' => $order->s_company,
+                    'b_city' => $order->s_city,
+                    'b_state' => $order->s_state,
+                    'b_country' => $order->s_country,
+                    'b_zipcode' => $order->s_zipcode,
+                ]);
+            }
+            elseif ($billingForm->populate($data)->isValid()) {
+                $order->setAttributes($billingForm->getAttributes());
             }
 
             $order->non_us_confirmation = false;
@@ -296,10 +262,16 @@ class CheckoutController extends FrontendController
 
         [$shipping_address, $billing_address] = $order->getAddressInfo();
 
+
+        if (!$app->request->getIsPost() && !$app->request->post->get('billing_same') && $order->b_firstname) {
+            $billingForm->setAttributes($order->getAttributes());
+        }
+
         $this->display('checkout/options.tpl', [
             'order' => $order,
             'payment_methods' => $payment_methods,
             'errors' => $errors,
+            'billingForm' => $billingForm,
             'countries' => Connection::getInstance()->fetchAll(SearchSql::getAllCountryOrderSql()),
             'shipping_address' => $shipping_address,
             'billing_address' => $billing_address,
@@ -315,11 +287,11 @@ class CheckoutController extends FrontendController
     public function actionReview(): void
     {
         StagesOfOrdering::getInstance()->setStage(StagesOfOrdering::STAGE_ORDER_REVIEW);
+
+        /** @var Application $app */
         $app = Xcart::app();
-
-        $errors = [];
-
         $order = $this->getOrder();
+        $errors = [];
 
         $this->checkoutStepsValidate($order->cb_status, OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP3);
 
@@ -340,8 +312,13 @@ class CheckoutController extends FrontendController
                 $extra->purchase_order = $purchase_order;
                 $extra->save();
 
-                if (!empty($_FILES['purchase_order_file']) && $_FILES['purchase_order_file']['error'] === UPLOAD_ERR_OK) {
-                    $original_file = $_FILES["purchase_order_file"]['name'];
+                $files = $_FILES;
+//                if (!$_FILES) {
+//                    $files = PrepareData::fixFiles($_FILES);
+//                }
+
+                if (!empty($files['purchase_order_file']) && $files['purchase_order_file']['error'] === UPLOAD_ERR_OK) {
+                    $original_file = $files['purchase_order_file']['name'];
 
                     $site = Xcart::app()->getModule('Sites')->getSite();
 
@@ -354,7 +331,7 @@ class CheckoutController extends FrontendController
 
                     try {
                         $ext = pathinfo($original_file)['extension'];
-                        if (PurchaseOrderHelper::uploadPurchaseOrder($po_model, $_FILES['purchase_order_file']['tmp_name'], $ext)) {
+                        if (PurchaseOrderHelper::uploadPurchaseOrder($po_model, $files['purchase_order_file']['tmp_name'], $ext)) {
                             $po_model->setAttributes([
                                 'status' => 'uploaded',
                                 'order_id' => $order->orderid,
@@ -366,15 +343,24 @@ class CheckoutController extends FrontendController
                         }
                         $po_model->status = 'entered';
                         $po_model->save();
-                        Logs::_log('purchase_orders', $this->po_id, Logs::LOG_TYPE_CLIENT, sprintf('PO# %s has been successfully entered', "{$order->getOrderNumber()} ({$po_model->original_po_file})"));
-                    } catch (\Exception $ex) {
-                        Logs::_log('purchase_orders', $po_model->po_id, Logs::LOG_TYPE_CLIENT, $ex->getMessage());
+                        $message = sprintf('PO# %s has been successfully entered', "{$order->getOrderNumber()} ({$po_model->original_po_file})");
+                    }
+                    catch (\Exception $ex) {
+                        $message = $ex->getMessage();
+                    }
+                    finally {
+                        (new LogModel([
+                            'resource_type' => 'purchase_orders',
+                            'resource_id' => $po_model->po_id,
+                            'type' => 'C',
+                            'login' => $app->user->login,
+                            'log' => $message
+                        ]))->save();
                     }
                 }
             }
 
             if (!$errors) {
-
                 $order->cb_status = OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP4;
                 $order->save();
 

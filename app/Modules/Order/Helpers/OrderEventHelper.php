@@ -68,8 +68,6 @@ class OrderEventHelper
                 ])
             )->save();
 
-            $model->updateVerificationStatus();
-
             $surf_path = SurfPathModel::objects()
                 ->filter([
                     'resource_type' => SurfPathModel::GOAL_TYPE_REFERER,
@@ -88,6 +86,7 @@ class OrderEventHelper
                 'order_prefix' => $app->getModule('Sites')->getSite()->getOrderPrefix(),
                 'login' => $user->login,
                 'user_id' => $user->id,
+                'phone' => preg_replace('/\D/S', '', $model->phone)
             ]);
             $model->save();
         }
@@ -148,14 +147,14 @@ class OrderEventHelper
     {
         Xcart::app()->logger->debug("Order paid event: {$model->orderid}", ['status' => $status], 'payment');
 
-        /*if ($cart = $model->cart) {
+        if ($cart = $model->cart) {
             $cart->delete();
         }
 
         $model->setAttributes(['cb_status' => $status, 'cart_number' => null]);
         $model->save();
 
-        $model->groups->update(['cb_status' => $model->cb_status]);*/
+        $model->groups->update(['cb_status' => $model->cb_status]);
 
         //OrderInvoiceHelper::sendOrderStatusNotification($model);
     }

@@ -46,7 +46,10 @@ use Xcart\Order;
  * @property Manager|OrderDetailModel[] detail_models
  * @property Manager|OrderGroupModel[] groups
  * @property PaymentMethodModel payment_method
- * @property mixed|null non_us_confirmation
+ * @property string|null non_us_confirmation
+ * @property string orig_po
+ * @property string po_number
+ * @property string firstname
  */
 class OrderModel extends Model
 {
@@ -55,9 +58,9 @@ class OrderModel extends Model
     public $last_activity;
     public $last_message;
 
-    public static function getDataModelClass()
+    public static function getDataModelClass(): string
     {
-        return Order::className();
+        return Order::class;
     }
 
     public static function tableName()

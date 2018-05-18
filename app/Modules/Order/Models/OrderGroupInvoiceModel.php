@@ -14,9 +14,9 @@ class OrderGroupInvoiceModel extends Model
 {
     use DataModelTrait, AutoMetaTrait;
 
-    public static function getDataModelClass()
+    public static function getDataModelClass(): string
     {
-        return OrderGroupInvoice::className();
+        return OrderGroupInvoice::class;
     }
 
     public static function tableName()
