@@ -3,15 +3,22 @@
 {block 'js'}
     <script type="text/javascript">
         var bill_addres_el = document.querySelector(".billing_address_form");
+        var elements = bill_addres_el.querySelectorAll("input.required, select.required");
 
         function hideForm() {
             bill_addres_el.classList.add("hide");
+            elements.forEach(function (item, i, elements) {
+                item.removeAttribute("required");
+            })
 
         }
         function showForm() {
             bill_addres_el.classList.remove("hide");
+            elements.forEach(function (item, i, elements) {
+                item.setAttribute("required", "required");
+            })
         }
-
+        hideForm();
     </script>
 {/block}
 
@@ -142,7 +149,7 @@
                     </div>
                     <div class="row">
                         <div class="columns small-12">
-                            <input id="biiling_yes" type="radio" onclick="showForm()" {if !$billing_diff}checked{/if} name="billing_same" value="1"/>
+                            <input id="biiling_yes" type="radio" onclick="hideForm()" {if !$billing_diff}checked{/if} name="billing_same" value="1"/>
                             <label for="biiling_yes">
                                 {t 'Yes' dict='order'}
                             </label>
@@ -150,7 +157,7 @@
                     </div>
                     <div class="row">
                         <div class="columns small-12">
-                            <input id="biiling_no" type="radio" onclick="hideForm()" {if $billing_diff}checked{/if} name="billing_same" value="0"/>
+                            <input id="biiling_no" type="radio" onclick="showForm()" {if $billing_diff}checked{/if} name="billing_same" value="0"/>
                             <label for="biiling_no">
                                 {t 'No' dict='order'}
                             </label>
