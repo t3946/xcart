@@ -136,8 +136,13 @@
                     {*{else}*}
                     {*{/if}*}
                 </div>
-                {else}https://127.0.0.1:8443/static/frontend/dist/images/icons/item_product/white_out_of_stock.svg
-
+                {else}
+                    <div class="full_line__group_root buttons">
+                        {ignore}
+                            <a onclick="$('html, body').animate({scrollTop: $('#products').offset().top}, 1000);" class="button yellow waves waves-orange waves-effect default-style">Full product line</a>
+                            <div class="info">Click here to see full product line</div>
+                        {/ignore}
+                    </div>
                 {/if}
                 {*<div class="godaddy hide-for-medium hide-for-large text-align--center">*}
                     {*<img src="/static/frontend/dist/images/icons/item_product/gd_label.png" alt="GODADDY Verified & secured" class="gd">*}

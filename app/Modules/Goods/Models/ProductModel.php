@@ -268,6 +268,11 @@ class ProductModel extends Model implements ICartItem
                 'modelClass' => ImageTModel::class,
                 'link' => ['productid' => 'id']
             ],
+            'preview' => [
+                'class' => HasManyField::class,
+                'modelClass' => ImagePModel::class,
+                'link' => ['productid' => 'id']
+            ],
             'pricing' => [
                 'class' => HasManyField::class,
                 'modelClass' => PricingModel::class,
@@ -388,11 +393,11 @@ class ProductModel extends Model implements ICartItem
     }
 
     /**
-     * @return ImagePModel[]
+     * @return ImageDModel[]
      */
     public function getImages()
     {
-        /** @var ImagePModel[] $images */
+        /** @var ImageDModel[] $images */
         $images = $this->images->filter(['avail' => 'Y'])->order(['orderby'])->all();
         return $images ?: [];
     }
