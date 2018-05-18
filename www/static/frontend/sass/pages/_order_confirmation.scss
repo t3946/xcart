@@ -164,28 +164,44 @@
 
   .shop-info{
     margin-top: 23px;
+
+    @include breakpoint(sm){
+      margin-top: 26px;
+    }
+    @include breakpoint(medium){
+      margin-top: 33px;
+    }
+
+    @include breakpoint(ml){
+      margin-top: 33px;
+    }
+
+    @include breakpoint(large){
+      margin-top: 45px;
+    }
+  }
+
+  .shop-info,
+  .ordering-info{
+
     font-size: 13px;
     color: #3a3a3a;
 
     @include breakpoint(sm){
-      margin-top: 26px;
       font-size: 14px;
     }
     @include breakpoint(medium){
-      margin-top: 33px;
       padding: 0 22px;
       font-size: 18px;
     }
 
     @include breakpoint(ml){
-      margin-top: 33px;
       padding: 0;
       font-size: 18px;
     }
 
     @include breakpoint(large){
       font-size: 14px;
-      margin-top: 45px;
     }
 
 
@@ -224,7 +240,7 @@
       }
     }
 
-    .shop-name{
+    .group-items-title{
       font-size: 17px;
       font-weight: bold;
       color: #000000;
@@ -271,12 +287,11 @@
       @include breakpoint(ml){
         margin-top: 3px;
       }
-
-
     }
   }
 
-  .ordering-info{
+
+  .ordering-info-content{
     //background-color: #f9f9f9;
     border-top: 2px solid #15303f;
     margin-top: 8px;
