@@ -3,6 +3,7 @@
 namespace Modules\Goods\Controllers;
 
 use Mindy\QueryBuilder\Expression;
+use Modules\Core\Components\GlobalConfig;
 use Modules\Goods\Helpers\SearchSuggestionHelper;
 use Modules\Goods\Models\ProductModel;
 use Modules\Sites\Models\SiteModel;

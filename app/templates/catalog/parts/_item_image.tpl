@@ -1,5 +1,6 @@
 
-{set $image = $model->images->limit(1)->get()}
+{*{set $image = $model->images->limit(1)->get()}*}
+{set $image = $model->preview->limit(1)->get()}
 {if $image!}
     {set $img_url = "//cdn." ~ $.getSite->getBaseDomain() ~ $image->getURL()}
     <img src="{$img_url}"
