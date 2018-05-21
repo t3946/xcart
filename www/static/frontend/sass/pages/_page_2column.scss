@@ -1,0 +1,96 @@
+.page.pages {
+  //margin: rem-calc(40) 0;
+  //padding: rem-calc(40) 0;
+  //transition: height .4s ease-in-out;
+  //.heading {
+  //  padding-bottom: rem-calc(35);
+  //}
+  h2 {
+    padding-top: .5em;
+  }
+
+  .large-2column h2 {
+    padding-top: 0;
+  }
+
+  .sd-txt {
+    width: 85%;
+    padding-left: 10px;
+  }
+
+  @include breakpoint(ml down) {
+    div.st-main-content {
+      margin-top: 20px;
+    }
+    table.st-per-all {
+      margin-left: auto;
+      margin-right: auto;
+    }
+    img.st-tax-map {
+      margin-left: auto;
+      margin-right: auto;
+      float: none;
+      display: block;
+    }
+    h1 {
+      text-align: left;
+    }
+    .pages.page {
+      text-align: left;
+    }
+  }
+
+  p.st-descr {
+    width:100%;
+  }
+
+  p.sd-green {
+    background: url(/static/frontend/images/pages/sad_green_line.png) no-repeat;
+    background-size: cover;
+    color: #fff;
+    padding-left: 15px;
+    font-size: 24px;
+  }
+
+  p.sd-green-mini {
+    color: #28862f;
+    text-transform: uppercase;
+  }
+
+  p.sd-green-mini strong {
+    font-size: 16px;
+  }
+
+  .sd-red-block {
+    outline: 2px solid #9a1524;
+    padding-left: 15px;
+    padding-bottom: 15px;
+    padding-right: 15px;
+  }
+
+  .sd-red-block p {
+    padding-top: 15px;
+    color: #9a1524;
+  }
+
+  .large-2column p.sd {
+    font-size: 20px;
+  }
+
+  p.sd-normal-text {
+    font-size: inherit;
+  }
+
+  @include breakpoint(large up) {
+    .large-2column {
+      columns: 2 ;
+      column-gap: rem-calc(60);
+      .block, p {
+        break-inside: auto-column;
+      }
+      .block {
+        display: inline-block;
+      }
+    }
+  }
+}

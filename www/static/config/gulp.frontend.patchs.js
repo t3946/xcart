@@ -3,6 +3,7 @@ const imagemin = require('gulp-imagemin');
 
 
 
+
 var modulesDir = 'node_modules';
 
 var modules = fs.readdirSync(modulesDir).map(function (module) {
@@ -11,8 +12,9 @@ var modules = fs.readdirSync(modulesDir).map(function (module) {
 
 module.exports = {
     dst: {
-        js: 'frontend/dist/js',
-        jsx: 'temp/frontend/js',
+        // js: 'frontend/dist/js',
+        js: 'temp/frontend/js',
+        jsx: 'frontend/dist/js',
         scss: 'temp/frontend/css',
         css: 'frontend/dist/css',
         images: 'frontend/dist/images',
@@ -24,7 +26,7 @@ module.exports = {
     },
     src: {
         jsx_bundles: {
-            app: './frontend/jsx/main.jsx'
+            main: './frontend/jsx/main.jsx'
         },
         jsx: [ // for watching
             'frontend/jsx/**/*'
@@ -34,7 +36,7 @@ module.exports = {
         ],
         js: [
             'frontend/js/**/*',
-            'temp/frontend/js/**/*.js'
+            // 'temp/frontend/js/**/*.js'
         ],
         scss: [
             'frontend/sass/**/*.scss'
@@ -64,8 +66,8 @@ module.exports = {
         },
 
         jquery: {
-            js_include: [
-                'bower_components/jquery/dist/jquery.min.js'
+            js: [
+                // 'bower_components/jquery/dist/jquery.min.js'
             ]
         },
         // jquery_cookie: {
@@ -182,6 +184,11 @@ module.exports = {
                 'vendors/wNumb.js'
             ]
         },
+        Sly: {
+            js: [
+                // 'node_modules/sly/dist/sly.js'
+            ]
+        },
         pace: {
             js_include: [
                 'bower_components/PACE/pace.js'
@@ -191,14 +198,21 @@ module.exports = {
                 // 'bower_components/PACE/themes/red/pace-theme-minimal.css'
             ]
         },
+        simplebar: {
+            css_raw: [
+                'node_modules/simplebar/dist/simplebar.css'
+            ]
+        },
         foundation: {
             js_include: [
                 // 'bower_components/foundation-sites/dist/js/foundation.js', //all
                 'bower_components/foundation-sites/dist/js/plugins/foundation.core.js',
                 'bower_components/foundation-sites/dist/js/plugins/foundation.offcanvas.js',
                 'bower_components/foundation-sites/dist/js/plugins/foundation.accordion.js',
-                'bower_components/foundation-sites/dist/js/plugins/foundation.sticky.js',
+                // 'bower_components/foundation-sites/dist/js/plugins/foundation.sticky.js',
                 'bower_components/foundation-sites/dist/js/plugins/foundation.toggler.js',
+                'bower_components/foundation-sites/dist/js/plugins/foundation.smoothScroll.js',
+                'bower_components/foundation-sites/dist/js/plugins/foundation.abide.js',
                 // 'bower_components/foundation-sites/dist/js/plugins/foundation.dropdown.js',
                 // 'bower_components/foundation-sites/dist/js/plugins/foundation.dropdownMenu.js',
                 // 'bower_components/foundation-sites/dist/js/plugins/foundation.tooltip.js',

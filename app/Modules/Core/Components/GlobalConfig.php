@@ -47,10 +47,10 @@ class GlobalConfig implements ArrayAccess, Iterator
                 if (!empty($row['category'])) {
 
                     if (!isset($this->data[$row['category']])) {
-                        $this->data[$row['category']] = new self();
+                        $config[$row['category']] = new self;
                     }
 
-                    $this->data[$row['category']][$row['name']] = $row['value'];
+                    $config[$row['category']][$row['name']] = $row['value'];
                     $this->checked[$row['category']] = true;
                 }
                 else {
@@ -66,6 +66,8 @@ class GlobalConfig implements ArrayAccess, Iterator
                 $this->checked[$row['name']] = true;
             }
         }
+
+        $this->data = $config;
     }
 
     private function fetchByKey($key)
@@ -130,7 +132,7 @@ class GlobalConfig implements ArrayAccess, Iterator
     public function offsetSet($offset, $value)
     {
         if (!$this->offsetExists($offset)) {
-            $this->data[$offset] = new self();
+            $this->data[$offset] = new self;
         }
 
         $this->data[$offset] = $value;

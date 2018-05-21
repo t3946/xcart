@@ -192,7 +192,7 @@ class Process implements \IteratorAggregate
      * @throws RuntimeException When process stopped after receiving signal
      * @throws LogicException   In case a callback is provided and output has been disabled
      *
-     * @final since version 3.3
+     * @final
      */
     public function run(callable $callback = null, array $env = array()): int
     {
@@ -214,7 +214,7 @@ class Process implements \IteratorAggregate
      *
      * @throws ProcessFailedException if the process didn't terminate successfully
      *
-     * @final since version 3.3
+     * @final
      */
     public function mustRun(callable $callback = null, array $env = array())
     {
@@ -289,11 +289,18 @@ class Process implements \IteratorAggregate
             $ptsWorkaround = fopen(__FILE__, 'r');
         }
 
+        $envPairs = array();
+        foreach ($env as $k => $v) {
+            if (false !== $v) {
+                $envPairs[] = $k.'='.$v;
+            }
+        }
+
         if (!is_dir($this->cwd)) {
             throw new RuntimeException('The provided cwd does not exist.');
         }
 
-        $this->process = proc_open($commandline, $descriptors, $this->processPipes->pipes, $this->cwd, $env, $options);
+        $this->process = proc_open($commandline, $descriptors, $this->processPipes->pipes, $this->cwd, $envPairs, $options);
 
         if (!is_resource($this->process)) {
             throw new RuntimeException('Unable to launch a new process.');
@@ -328,7 +335,7 @@ class Process implements \IteratorAggregate
      *
      * @see start()
      *
-     * @final since version 3.3
+     * @final
      */
     public function restart(callable $callback = null, array $env = array())
     {
@@ -1061,7 +1068,7 @@ class Process implements \IteratorAggregate
     /**
      * Sets the environment variables.
      *
-     * An environment variable value should be a string.
+     * Each environment variable value should be a string.
      * If it is an array, the variable is ignored.
      * If it is false or null, it will be removed when
      * env vars are otherwise inherited.
@@ -1100,7 +1107,7 @@ class Process implements \IteratorAggregate
      *
      * This content will be passed to the underlying process standard input.
      *
-     * @param resource|scalar|\Traversable|null $input The content
+     * @param string|int|float|bool|resource|\Traversable|null $input The content
      *
      * @return self The current Process instance
      *
@@ -1536,7 +1543,13 @@ class Process implements \IteratorAggregate
 
     private function getDefaultEnv()
     {
-        $env = getenv();
+        $env = array();
+
+        foreach ($_SERVER as $k => $v) {
+            if (is_string($v) && false !== $v = getenv($k)) {
+                $env[$k] = $v;
+            }
+        }
 
         foreach ($_ENV as $k => $v) {
             if (is_string($v)) {

@@ -321,7 +321,7 @@ class Product extends Data
 
     public function getMapPrice()
     {
-        return floatval($this->getField('new_map_price'));
+        return (float) $this->getField('new_map_price');
     }
 
     public function getProductCostToUs(\DateTime $oDate = null)
@@ -347,20 +347,17 @@ SQL;
 
     public function getPrice($forQuantity = 1)
     {
-        if (!is_null($this->fPrice)) {
-            return $this->fPrice;
-        }
 
         $fPrice = 0;
 
-        if (is_null($this->aPricing)) {
+        if ($this->aPricing === null) {
             $this->getPricing();
         }
 
-        if (!empty($this->aPricing)) {
+        if ($this->aPricing) {
             foreach ($this->aPricing as $oPrice) {
-                if ($forQuantity >= floatval($oPrice->getQuantity())) {
-                    $fPrice = floatval($oPrice->getPrice());
+                if ($forQuantity >= (float) $oPrice->getQuantity()) {
+                    $fPrice = (float) $oPrice->getPrice();
                 } else {
                     break;
                 }
@@ -695,17 +692,17 @@ SQL;
     public function getShippingWeight($iAmount = 1)
     {
         $fProductWeight = 0.1;
-        if (floatval($this->shipping_weight) > 0) {
-            $fProductWeight = floatval($this->shipping_weight);
-        } elseif (floatval($this->weight) > 0) {
-            $fProductWeight = floatval($this->weight);
+        if ((float)$this->shipping_weight > 0) {
+            $fProductWeight = (float)$this->shipping_weight;
+        } elseif ((float)$this->weight > 0) {
+            $fProductWeight = (float)$this->weight;
         }
         return $fProductWeight * $iAmount;
     }
 
     public function getShippingFreight()
     {
-        return floatval($this->getField('shipping_freight'));
+        return (float)$this->getField('shipping_freight');
     }
 
     public function getExtraMarginValue($forQuantity = 1)
@@ -713,8 +710,8 @@ SQL;
         $fExtraMarginValue = null;
         $oManufacturer = $this->getManfacturerClass();
             if ($oManufacturer->getField('reduce_extra_margin') == 'Y') {
-                if (floatval($oManufacturer->getField('price_coef_z') != 0) && $this->getProductCostToUs() > 0) {
-                    $fExpectedMargin = round(($this->getProductCostToUs() * floatval($oManufacturer->getField('price_coef_x')) + floatval($oManufacturer->getField('price_coef_y'))) / floatval($oManufacturer->getField('price_coef_z')), 2);
+                if ((float)$oManufacturer->getField('price_coef_z') != 0 && $this->getProductCostToUs() > 0) {
+                    $fExpectedMargin = round(($this->getProductCostToUs() * (float)$oManufacturer->getField('price_coef_x') + (float)$oManufacturer->getField('price_coef_y')) / (float)$oManufacturer->getField('price_coef_z'), 2);
                     $fExtraMarginValue = ($this->getPrice($forQuantity) - $fExpectedMargin) * $forQuantity;
                 }
             }
@@ -767,13 +764,6 @@ SQL;
 
     public static function getRandFbaProducts($limit = 2, array $no_ids = null, $sfid = null)
     {
-        global $current_storefront_info;
-
-
-        if (empty($sfid) && !empty($current_storefront_info)) {
-            $sfid = $current_storefront_info['storefrontid'];
-        }
-
         $where = ['amazon_fba' => 'Y', 'amazon_fba_avail__gt' => 1, 'forsale' => 'Y', 'ps.sfid' => $sfid];
 
         if (!empty($no_ids)) {

@@ -9,6 +9,9 @@ use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Model;
 
+/**
+ * @property mixed processor_name
+ */
 class ProcessorModel extends Model
 {
     use AutoMetaTrait;

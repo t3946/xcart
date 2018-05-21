@@ -1,0 +1,200 @@
+.selectBox-dropdown {
+  width: 128px !important;
+  height: 37px;
+  position: relative;
+  line-height: 1.5;
+  text-decoration: none;
+  text-align: left;
+  color: #000;
+  outline: none;
+  vertical-align: middle;
+  display: inline-block;
+  cursor: default;
+}
+
+.switch-settings__form_bottom .selectBox-dropdown {
+  color: #ffffff;
+}
+
+.selectBox-dropdown {
+  &:focus {
+    .selectBox-arrow {
+
+    }
+  }
+  &.selectBox-menuShowing-bottom {
+
+  }
+  &.selectBox-menuShowing-top {
+
+  }
+}
+
+.switch-settings__form .selectBox-dropdown {
+  &.selectBox-menuShowing-top .selectBox-arrow, &.selectBox-menuShowing-bottom .selectBox-arrow {
+    background: url(../images/rma/1280/drop_up_list.svg) 50% center no-repeat;
+  }
+}
+
+.switch-settings__form_bottom .selectBox-dropdown {
+  &.selectBox-menuShowing-top .selectBox-arrow, &.selectBox-menuShowing-bottom .selectBox-arrow {
+    background: url(../images/rma/1280/drop_down_list_white.svg) 50% center no-repeat;
+  }
+}
+
+.selectBox-dropdown .selectBox-label {
+  padding: 10px 8px;
+  display: inline-block;
+  white-space: nowrap;
+  overflow: hidden;
+  height: 90%;
+}
+
+.switch-settings__form .selectBox-dropdown .selectBox-arrow {
+  position: absolute;
+  top: 0;
+  width: 10px;
+  height: 100%;
+  background: url(../images/rma/1280/drop_down_list.svg) 50% center no-repeat;
+}
+
+.switch-settings__form_bottom .selectBox-dropdown .selectBox-arrow {
+  background: url(../images/rma/1280/drop_up_list_white.svg) 50% center no-repeat;
+}
+
+.selectBox-dropdown-menu {
+  position: absolute;
+  z-index: 99999;
+  max-height: 200px;
+  min-height: 1em;
+  border: solid 1px #000000;
+
+  background: #FFF;
+
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+  a {
+    &[rel="usa"]::before {
+      content: "";
+      display: inline-block;
+      width: 16px;
+      height: 11px;
+      margin-right: 8px;
+      background: url("../images/1280/home/multilang/usa.png") no-repeat;
+    }
+    &[rel="euro"]::before {
+      content: "";
+      display: inline-block;
+      width: 16px;
+      height: 11px;
+      margin-right: 8px;
+      background: url("../images/1280/home/multilang/euro.png") no-repeat;
+    }
+    &[rel="pound"]::before {
+      content: "";
+      display: inline-block;
+      width: 16px;
+      height: 11px;
+      margin-right: 8px;
+      background: url("../images/1280/home/multilang/pound.png") no-repeat;
+    }
+  }
+}
+
+
+
+.selectBox-inline {
+  width: 128px !important;
+  outline: none;
+  border: solid 1px #BBB;
+  background: #FFF;
+  display: inline-block;
+
+  overflow: auto;
+  &:focus {
+  }
+}
+
+.selectBox-options {
+  list-style: none;
+  display: block;
+  cursor: default;
+  padding: 0;
+  margin: 0;
+  color: #000000;
+  text-decoration: none;
+  font-size: 14px;
+  LI {
+    list-style: none;
+    display: block;
+    cursor: default;
+    padding: 0;
+    margin: 0;
+    color: #000000;
+    text-decoration: none;
+    font-size: 14px;
+    A {
+      list-style: none;
+      display: block;
+      cursor: default;
+      padding: 0;
+      margin: 0;
+      color: #000000;
+      text-decoration: none;
+      font-size: 14px;
+    }
+  }
+  &.selectBox-options-top {
+    border-bottom: none;
+    margin-top: 1px;
+  }
+  &.selectBox-options-bottom {
+    border-top: none;
+
+  }
+  LI {
+    A {
+      line-height: 2.2;
+      padding: 0 .5em;
+      white-space: nowrap;
+      overflow: hidden;
+      background: 6px center no-repeat;
+    }
+    &.selectBox-hover A {
+      background-color: #EEE;
+    }
+    &.selectBox-disabled A {
+      color: #888;
+      background-color: transparent;
+    }
+    &.selectBox-selected A {
+      background-color: #dfe5e8;
+    }
+  }
+  .selectBox-optgroup {
+    color: #666;
+    background: #EEE;
+    font-weight: bold;
+    line-height: 1.5;
+    padding: 0 .3em;
+    white-space: nowrap;
+  }
+}
+
+
+.selectBox.selectBox-disabled {
+  color: #888 !important;
+}
+
+.selectBox-dropdown.selectBox-disabled .selectBox-arrow {
+  opacity: .5;
+  filter: alpha(opacity = 50);
+  border-color: #000000;
+}
+
+.selectBox-inline.selectBox-disabled {
+  color: #888 !important;
+  .selectBox-options A {
+    background-color: transparent !important;
+  }
+}

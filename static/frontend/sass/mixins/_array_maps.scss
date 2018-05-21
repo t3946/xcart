@@ -1,0 +1,55 @@
+//@mixin iterate($items) {
+//  @each $key, $val in $items {
+//    @content;
+//  }
+//}
+
+//@function is-number();
+
+@function array_merge_sum ($args...) {
+  $t: ();
+
+  @each $arg in $args {
+    @if is-map($arg) {
+      @each $key, $val in $arg {
+        @if is-number($val) {
+          @if map-has-key($t, $key) {
+            $t: map-merge($t, ($key: map-get($t, $key) + $val));
+          }
+          @else {
+            $t: map-merge($t, ($key: $val));
+          }
+        }
+      }
+    }
+    @else if is-number($arg) {
+      @each $key, $val in $t {
+        $t: map-merge($t, ($key: map-get($t, $key) + $arg));
+      }
+    }
+  }
+
+  @return $t;
+}
+
+//@function breakpoint_array_merge_sum($breakpoints: $breakpoints, $args...) {
+//  $t: ();
+//
+//  @each $name, $size in $breakpoints {
+//    $t: map-merge($t, ($name: 0));
+//  }
+//
+//
+//  @each $arg in $args {
+//    @if is-map($arg) {
+//
+//      @each $name, $sum in $t {
+//        $last: $sum;
+//
+//      }
+//    }
+//
+//
+//  }
+//
+//}

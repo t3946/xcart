@@ -3,7 +3,7 @@
     <h1 align="center">
         Filters list.
         <a href="{url 'dashboard:create_group'}" class="button">
-            <i class="icon-plus-thin">+</i>
+            <i class="icon-plus"></i>
         </a>
     </h1>
 {/block}

@@ -1,0 +1,239 @@
+.page_s_content {
+
+  h2 {
+    padding-top: .5em;
+  }
+
+  .large-2column h2 {
+    padding-top: 0;
+  }
+  section.sas-header-main {
+    background: url('/static/frontend/images/pages/sas_shopping.png') center center no-repeat;
+    background-size: cover;
+  }
+
+  section.rp-header {
+    background: url('/static/frontend/images/pages/return_service.png') center center no-repeat;
+    background-size: cover;
+  }
+
+  section.ro-header {
+    background: url('/static/frontend/images/pages/retrieve_orders.png') center center no-repeat;
+    background-size: cover;
+  }
+  .page-container {
+    margin-top: 50px;
+  }
+
+  form.ro_email {
+    width: auto;
+    height: auto;
+
+    @include breakpoint(medium) {
+      margin-left: auto;
+      margin-right: auto;
+      width: 500px;
+      height: 60px;
+      background: url("/static/frontend/images/pages/ro_email.png") no-repeat center;
+    }
+  }
+
+  input.ro_input_email {
+    margin-left: 10px;
+    margin-top: 14px;
+    height: 30px;
+    width: 93%;
+    font-style: italic;
+
+    @include breakpoint(medium) {
+      margin-left: 50px;
+      margin-top: 14px;
+      height: 30px;
+      width: 280px;
+    }
+
+    @include breakpoint(large) {
+
+    }
+  }
+
+  input.ro_input_submit {
+    margin-left: 38%;
+    width: 80px;
+    height: 30px;
+    background-color: #ffb400;
+    border-radius: 5px;
+    border: 0;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-top: 25px;
+
+    @include breakpoint(medium) {
+      margin-left: 30px;
+      width: 80px;
+      height: 30px;
+      margin-top: 0;
+    }
+
+    @include breakpoint(large) {
+      margin-left: 30px;
+      width: 80px;
+      height: 30px;
+    }
+  }
+
+  .sas-lock {
+    width: 55px;
+    margin-top: 25px;
+    float: left;
+
+    @include breakpoint(medium) {
+      width: 100px;
+      padding-top: 10px;
+    }
+
+    @include breakpoint(large) {
+      width: auto;
+      padding-top: 35px;
+    }
+
+  }
+
+  .sas-header {
+
+    h1 {
+      float: left;
+      margin-top: 5px;
+      color: #fff;
+      line-height: normal;
+      font-weight: lighter;
+      padding-top: 20px;
+      padding-left: 10px;
+      font-size: 30px;
+
+      @include breakpoint(medium) {
+        padding-top: 20px;
+        padding-left: 20px;
+        font-size: 60px;
+      }
+
+      @include breakpoint(large) {
+        padding-top: 35px;
+        padding-left: 20px;
+        font-size: 80px;
+      }
+
+    }
+
+    div {
+      height: 120px;
+      width: 100%;
+      text-align: center;
+
+      @include breakpoint(medium) {
+        height: 200px;
+      }
+
+      @include breakpoint(large) {
+        height: 280px;
+      }
+
+    }
+  }
+
+  .sas-header-main {
+    div {
+      height: 120px;
+      width: 100%;
+      text-align: center;
+
+      @include breakpoint(medium) {
+        height: 200px;
+      }
+
+      @include breakpoint(large) {
+        height: 280px;
+      }
+
+    }
+  }
+
+  div.hit-header {
+    text-align: left;
+  }
+
+  .sas-h1-txt {
+    margin-top: 0;
+    color: #fff;
+    line-height: normal;
+    font-weight: lighter;
+    padding-top: 26px;
+    padding-left: 10px;
+    font-size: 28px;
+    width: 250px;
+
+    @include breakpoint(medium) {
+      padding-top: 30px;
+      padding-left: 20px;
+      font-size: 60px;
+      width: 415px;
+    }
+
+    @include breakpoint(large) {
+      padding-top: 53px;
+      padding-left: 20px;
+      font-size: 80px;
+      width: 540px;
+    }
+  }
+
+  .sas-h1-img {
+    float: left;
+    width: 40px;
+    margin-top: 30px;
+    margin-left: 10px;
+
+    @include breakpoint (medium) {
+      width: 100px;
+    }
+
+    @include breakpoint (large) {
+      margin-top: 90px;
+      width: auto;
+    }
+
+  }
+
+  //@include breakpoint(large) {
+  //
+  //  section.sas-header {
+  //    background-size: contain;
+  //  }
+  //
+  //  section.sas-header-main {
+  //    background-size: contain;
+  //  }
+  //
+  //  section.ro-header {
+  //    background-size: contain;
+  //  }
+  //
+  //  section.rp-header {
+  //    background-size: contain;
+  //  }
+  //
+  //}
+
+  @include breakpoint(large up) {
+    .large-2column {
+      columns: 2;
+      column-gap: rem-calc(60);
+      .block, p {
+        break-inside: auto-column;
+      }
+      .block {
+        display: inline-block;
+      }
+    }
+  }
+}

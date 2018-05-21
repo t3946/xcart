@@ -73,9 +73,9 @@ class TreeManager extends Manager
      *
      * @return $this
      */
-    public function parents($includeSelf = false)
+    public function parents($includeSelf = false, $depth = null)
     {
-        $this->getQuerySet()->parents($includeSelf);
+        $this->getQuerySet()->parents($includeSelf, $depth);
 
         return $this;
     }

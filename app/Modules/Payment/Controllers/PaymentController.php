@@ -4,94 +4,161 @@ namespace Modules\Payment\Controllers;
 
 
 use Exception;
+use Modules\Order\Helpers\OrderHelper;
 use Modules\Order\Helpers\OrderTagEventHelper;
+use Modules\Order\Helpers\OrderTransactionHelper;
+use Modules\Order\Models\OrderModel;
+use Modules\Order\Models\OrderStatusModel;
 use Modules\Order\Models\OrderTransactionModel;
 use Modules\Payment\Gateways\Gateway;
 use Modules\Payment\Models\ProcessorModel;
 use Xcart\App\Controller\Controller;
-use Xcart\App\Logger\Logger;
 use Xcart\App\Main\Xcart;
 
 class PaymentController extends Controller
 {
-    public function process($gateway)
+    /**
+     * @param $gateway
+     */
+    public function process($gateway): void
     {
         /** @var ProcessorModel $pm */
-        if ($pm = ProcessorModel::objects()->get(['processor_name' => $gateway])){
-            if ($gw = Gateway::getGateway($pm)){
+        if (($pm = ProcessorModel::objects()->get(['processor_name' => $gateway])) && $gw = Gateway::getGateway($pm)) {
 
-                try {
+            /** @var OrderModel $order */
+            $order = OrderHelper::getCartOrder();
+
+            if (!$order) {
+                $this->redirect('cart:list');
+            }
+
+            $order->cb_status = OrderStatusModel::ORDER_STATUS_QUEUED;
+            $order->save();
+
+            $hash = md5($order->orderid.$order->total.$order->email);
+
+            try {
+
+                $params = [
+                    'cancelUrl' => Xcart::app()->router->absoluteUrl('payment:cancel', ['gateway' => strtolower($pm->processor_name)]),
+                    'returnUrl' => Xcart::app()->router->absoluteUrl('payment:return', ['gateway' => strtolower($pm->processor_name), 'order_id' => $order->orderid, 'slug' => $hash]),
+                    'notifyUrl' => Xcart::app()->router->absoluteUrl('payment:success', ['gateway' => strtolower($pm->processor_name)]),
+                    'amount' => number_format($order->total, 2, '.', ''),
+                    'order' => $order,
+                    'currency' => 'USD',
+                    'description' => "S3 Stores, Inc. Order # {$order->getOrderNumber()}"
+                ];
+
+                if ($gw->purchase($params)) {
+
                     $params = [
-                        'cancelUrl' => Xcart::app()->router->absoluteUrl("payment:cancel", ['gateway' => strtolower($pm->processor_name)]),
-                        'returnUrl' => Xcart::app()->router->absoluteUrl("payment:return", ['gateway' => strtolower($pm->processor_name)]),
-                        'notifyUrl' => Xcart::app()->router->absoluteUrl("payment:success", ['gateway' => strtolower($pm->processor_name)]),
-                        'amount' => '1.11',
-                        'currency' => 'USD'
+                        'mode' => OrderTransactionModel::TYPE_AUTHORIZATION,
+                        'amount' => $order->total,
+                        'currency' => 'USD',
+                        'payment_method_model' => $order->payment_method
                     ];
 
-                    if ($response = $gw->purchase($params)) {
-
-                        //create order here
-
-                        if ($gw->result->isRedirect()) {
-                            $gw->result->redirect();
-                        }
-                    }
-
-                } catch (Exception $e){
-                    exit('Sorry, there was an error processing your payment. Please try again later.');
+                    $transaction = new OrderTransactionModel(array_merge(
+                        OrderTransactionHelper::prepareOrderTransaction($gw, $params),
+                        [
+                            'transaction_status' => OrderTransactionModel::STATUS_PENDING,
+                            'orderid' => $order->orderid,
+                            'type' => $params['mode'],
+                            'paymentid' => $order->paymentid,
+                        ])
+                    );
+                    $transaction->save();
                 }
-            }
-        }
 
-    }
+                $order->cb_status = OrderStatusModel::ORDER_STATUS_NOT_FINISHED;
+                $order->save();
 
-    public function success($gateway)
-    {
-        //x_log_flag('log_payment_paypal_processing', 'PAYPAL', $_REQUEST, true);
+                $order->groups->update(['cb_status' => $order->cb_status]);
 
-        if(isset($_GET['success'])) {
-            /** @var ProcessorModel $pm */
-            if ($pm = ProcessorModel::objects()->get(['processor_name' => $gateway])){
-                if ($gw = Gateway::getGateway($pm)) {
-                    try {
-                        $params = [];
-                        $gw->complete($params);
-                    }
-                    catch (Exception $e) {
-                        exit('Sorry, there was an error processing your payment. Please try again later.');
-                    }
+                if ($gw->result && $gw->result->isRedirect()) {
+                    $gw->result->redirect();
                 }
+
+            } catch (Exception $e) {
+                Xcart::app()->logger->error("{$gateway} process action error", [$e->getMessage()], 'payment');
+                exit('Sorry, there was an error processing your payment. Please try again later.');
             }
         }
     }
 
-    public function cancel($gateway)
+    /**
+     * @param $gateway
+     */
+    public function success($gateway): void
     {
-        var_dump($gateway);
+        $params = Xcart::app()->request->request->all();
+
+        Xcart::app()->logger->debug("{$gateway} callback action", $params, 'payment');
+
+        /** @var ProcessorModel $pm */
+        if ($pm = ProcessorModel::objects()->get(['processor_name' => $gateway])) {
+            if ($gw = Gateway::getGateway($pm)) {
+                try {
+
+                    $gw->success($params);
+
+                } catch (\Exception $e) {
+                    Xcart::app()->logger->error("{$gateway} callback action error : {$e->getMessage()}", $params, 'payment');
+                }
+            }
+        }
     }
 
-    public function ret($gateway)
+    public function cancel($gateway): void
     {
-        var_dump($gateway);
+        $order = OrderHelper::getCartOrder();
+
+        if ($order) {
+            $order->cb_status = OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP3;
+            $order->save();
+
+            $order->groups->update(['cb_status' => $order->cb_status]);
+        }
+
+        $this->redirect('checkout:review');
     }
 
-    public function endpoint($gateway)
+    public function return($gateway, $order_id, $slug): void
     {
-        $params = null;
+        $pm = ProcessorModel::objects()->get(['processor_name' => $gateway]);
 
-        /** @var \Modules\Core\CoreModule $coreModule */
-        $coreModule = Xcart::app()->getModule('Core');
-        $config = $coreModule::getGlobalConfig();
+        if (!$pm) {
+            $this->error(404);
+        }
 
-        if ($bodyReceived = file_get_contents('php://input')) {
+        if (($action = Xcart::app()->request->get->get('action')) && $action === 'cancel') {
+            $this->cancel($gateway);
+        }
 
-            if ($params = json_decode($bodyReceived, true)) {
+        $this->redirect('checkout:complete', ['order_id' => $order_id, 'slug' => $slug]);
+
+    }
+
+    /**
+     * @param $gateway
+     * @throws \Xcart\App\Exceptions\UnknownPropertyException
+     */
+    public function endpoint($gateway): void
+    {
+        if ($app = Xcart::app()) {
+            $params = $order = null;
+
+            /** @var \Modules\Core\CoreModule $coreModule */
+            $coreModule = $app->getModule('Core');
+            $config = $coreModule::getGlobalConfig();
+
+            if (($bodyReceived = file_get_contents('php://input')) && $params = json_decode($bodyReceived, true)) {
 
                 switch ($params['event_type']) {
 
                     case 'CUSTOMER.DISPUTE.CREATED':
 
+                        /** @var OrderTransactionModel $txn */
                         if ($txn = OrderTransactionModel::objects()->get(['transaction_id' => $params['buyer_transaction_id']])) {
 
                             OrderTagEventHelper::orderTagEvent($config['Attention_tags_invoices']['tag_for_events_dispute_created'], $txn->order->orderid);
@@ -100,25 +167,58 @@ class PaymentController extends Controller
                         break;
                 }
             }
-        }
 
-        if (!$params) {
+            if (!$params) {
 
-            if (Xcart::app()->request->request->has('txn_type') && Xcart::app()->request->request->has('txn_id')) {
+                if ($app->request->request->has('txn_type') && $app->request->request->has('txn_id')) {
 
-                if ($txn = OrderTransactionModel::objects()->get(['transaction_id' => Xcart::app()->request->request->get('txn_id')])) {
+                    $txn_data = ['transaction_id' => $app->request->request->get('txn_id')];
 
-                    switch (Xcart::app()->request->request->get('txn_type')) {
+                    if ($app->request->request->has('custom')) {
+                        /** @var OrderModel $order */
+                        $order = OrderModel::objects()->get(['orderid' => $app->request->request->get('custom')]);
+                        $txn_data['orderid'] = $order->orderid;
+                    }
+
+                    /** @var OrderTransactionModel $txn */
+                    [$txn] = OrderTransactionModel::objects()->getOrCreate($txn_data);
+
+                    switch ($app->request->request->get('txn_type')) {
                         case 'new_case':
 
-                            OrderTagEventHelper::orderTagEvent($config['Attention_tags_invoices']['tag_for_events_dispute_created'], $txn->order->orderid);
+                            if ($order = $txn->order) {
+                                OrderTagEventHelper::orderTagEvent($config['Attention_tags_invoices']['tag_for_events_dispute_created'], $order->orderid);
+                            }
+
+                            break;
+                        case 'web_accept':
+
+                            if ($order) {
+                                $txn->setAttributes([
+                                    'orderid' => $order->orderid,
+                                    'type' => OrderTransactionModel::TYPE_AUTHORIZATION,
+                                    'transaction_status' => OrderTransactionModel::STATUS_PENDING,
+                                    'transaction_amount' => $app->request->request->get('payment_gross'),
+                                    'transaction_response' => $app->request->request->all(),
+                                    'login' => $order->login,
+                                    'paymentid' => $order->paymentid,
+                                ]);
+
+                                $txn->save();
+
+                                if (($payment_gross = (float)$app->request->request->get('payment_gross')) && $payment_gross === (float)$order->total) {
+
+                                    $app->event->trigger('order:paid', ['model' => $order]);
+
+                                }
+                            }
 
                             break;
                     }
                 }
             }
-        }
 
-        Xcart::app()->logger->info("{$gateway} IPN response", $params ?: $_REQUEST ?: [], 'ipn');
+            $app->logger->info("{$gateway} IPN response", $params ?: $_REQUEST ?: [], 'ipn');
+        }
     }
 }

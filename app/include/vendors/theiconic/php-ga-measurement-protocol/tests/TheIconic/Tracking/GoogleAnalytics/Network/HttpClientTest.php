@@ -2,10 +2,7 @@
 
 namespace TheIconic\Tracking\GoogleAnalytics\Network;
 
-use TheIconic\Tracking\GoogleAnalytics\Tests\CompoundParameterTestCollection;
-use TheIconic\Tracking\GoogleAnalytics\Tests\CompoundTestParameter;
-use TheIconic\Tracking\GoogleAnalytics\Tests\SingleTestParameter;
-use TheIconic\Tracking\GoogleAnalytics\Tests\SingleTestParameterIndexed;
+use Psr\Http\Message\RequestInterface;
 
 class HttpClientTest extends \PHPUnit_Framework_TestCase
 {
@@ -14,66 +11,128 @@ class HttpClientTest extends \PHPUnit_Framework_TestCase
      */
     private $httpClient;
 
+    /**
+     * @var HttpClient
+     */
+    private $mockHttpClient;
+
     public function setUp()
     {
         $this->httpClient = new HttpClient();
+    }
 
+    /**
+     * @dataProvider dataProviderInvalidOptions
+     *
+     * @param array $options
+     * @param $exceptionMessage
+     */
+    public function testPostValidatesOptions(array $options, $exceptionMessage)
+    {
         $guzzleClient = $this->getMockBuilder('GuzzleHttp\Client')
-            ->setMethods(['createRequest', 'send'])
+            ->setMethods(['sendAsync'])
             ->disableOriginalConstructor()
             ->getMock();
 
-        $mockRequest = $this->getMockBuilder('GuzzleHttp\Message\Request')
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $guzzleClient->expects($this->atLeast(1))
-            ->method('createRequest')
-            ->with($this->equalTo('GET'), $this->equalTo('http://test-collector.com'), $this->anything())
-            ->will($this->returnValue($mockRequest));
-
-        $mockResponse = $this->getMockBuilder('GuzzleHttp\Message\Response')
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $guzzleClient->expects($this->atLeast(1))
-            ->method('send')
-            ->with($this->anything())
-            ->will($this->returnValue($mockResponse));
-
+        $guzzleClient->expects($this->never())->method('sendAsync');
         $this->httpClient->setClient($guzzleClient);
+
+        $this->setExpectedException(\UnexpectedValueException::class, $exceptionMessage);
+
+        $this->httpClient->post('http://test-collector.com/collect?v=1', $options);
+    }
+
+    public static function dataProviderInvalidOptions()
+    {
+        $timeoutExc = 'The timeout must be an integer with a value greater than 0';
+        $asyncExc = 'The async option must be boolean';
+
+        return [
+            [['timeout' => 'no'], $timeoutExc],
+            [['timeout' => -1], $timeoutExc],
+            [['timeout' => true], $timeoutExc],
+            [['async' => 'false'], $asyncExc],
+            [['async' => 1], $asyncExc],
+        ];
     }
 
     public function testPost()
     {
-        $singleParameter = new SingleTestParameter();
-        $singleParameter->setValue('hey');
-        $singleParameterIdx = new SingleTestParameterIndexed(4);
-        $singleParameterIdx->setValue(9);
-        $singles = [$singleParameter, $singleParameterIdx];
+        $mockResponse = $this->getMockBuilder('GuzzleHttp\Psr7\Response')
+            ->setMethods(['getStatusCode'])
+            ->disableOriginalConstructor()
+            ->getMock();
 
-        $compoundCollection = new CompoundParameterTestCollection(6);
-        $compoundParameter = new CompoundTestParameter(['sku' => 555, 'name' => 'cathy']);
-        $compoundCollection->add($compoundParameter);
-        $compoundParameter2 = new CompoundTestParameter(['sku' => 666, 'name' => 'isa']);
-        $compoundCollection->add($compoundParameter2);
-        $compounds = [$compoundCollection];
+        $mockPromise = $this->getMockBuilder('GuzzleHttp\Promise\Promise')
+            ->disableOriginalConstructor()
+            ->getMock();
 
-        $response = $this->httpClient->post('http://test-collector.com', $singles, $compounds);
+        $mockPromise->expects($this->exactly(3))
+            ->method('wait')
+            ->will($this->returnValue($mockResponse));
+
+        $guzzleClient = $this->getMockBuilder('GuzzleHttp\Client')
+            ->setMethods(['sendAsync'])
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $guzzleClient->expects($this->atLeast(1))
+            ->method('sendAsync')
+            ->withConsecutive(
+                [
+                    $this->isInstanceOf(RequestInterface::class),
+                    [
+                        'synchronous' => true,
+                        'timeout' => 100,
+                        'connect_timeout' => 100,
+                    ],
+                ],
+                [
+                    $this->isInstanceOf(RequestInterface::class),
+                    [
+                        'synchronous' => false,
+                        'timeout' => 30,
+                        'connect_timeout' => 30,
+                    ],
+                ],
+                [
+                    $this->isInstanceOf(RequestInterface::class),
+                    [
+                        'synchronous' => true,
+                        'timeout' => 3,
+                        'connect_timeout' => 3,
+                    ],
+                ]
+            )
+            ->will($this->returnValue($mockPromise));
+
+        $this->httpClient->setClient($guzzleClient);
+
+        $this->mockHttpClient = $this->getMockBuilder('TheIconic\Tracking\GoogleAnalytics\Network\HttpClient')
+            ->setMethods(['getAnalyticsResponse'])
+            ->getMock();
+
+        $this->mockHttpClient->expects($this->atLeast(1))
+            ->method('getAnalyticsResponse')
+            ->will($this->returnArgument(1));
+
+        $this->mockHttpClient->setClient($guzzleClient);
+
+        $response = $this->mockHttpClient->post('http://test-collector.com/collect?v=1');
+        $this->assertInstanceOf('Psr\Http\Message\ResponseInterface', $response);
+
+        $responseAsync = $this->mockHttpClient->post(
+            'http://test-collector.com/collect?v=1',
+            ['async' => true, 'timeout' => 30]
+        );
+        $this->assertInstanceOf('GuzzleHttp\Promise\PromiseInterface', $responseAsync);
+
+        $response = $this->httpClient->post('http://test-collector.com/collect?v=1', ['timeout' => 3]);
 
         $this->assertInstanceOf('TheIconic\Tracking\GoogleAnalytics\AnalyticsResponse', $response);
 
-        $payload = $this->httpClient->getPayloadParameters();
-
-        $expect = [
-            'test' => 'hey',
-            'testi4' => 9,
-            'cp6t1id' => 555,
-            'cp6t1nm' => 'cathy',
-            'cp6t2id' => 666,
-            'cp6t2nm' => 'isa',
-        ];
-
-        $this->assertEquals($expect, $payload);
+        // Promises should be unwrapped on the object destruction
+        $this->httpClient = null;
+        $this->mockHttpClient = null;
     }
 }

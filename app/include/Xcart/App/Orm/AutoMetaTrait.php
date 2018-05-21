@@ -5,10 +5,10 @@ namespace Xcart\App\Orm;
 trait AutoMetaTrait
 {
     /**
-     * @return MetaData
+     * @return AutoMetaData|MetaData
      */
-    public static function getMeta()
+    public static function getMeta(): AutoMetaData
     {
-        return AutoMetaData::getInstance(get_called_class());
+        return AutoMetaData::getInstance(static::class);
     }
 }

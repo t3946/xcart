@@ -16,8 +16,8 @@ class CurrentSiteHelper
         /** @var HttpRequest $request */
         /** @var SiteModel $modelClass */
         $modelClass = Xcart::app()->getModule('Sites')->modelClass;
+        $model = $modelClass::objects()->filter([ 'domain' => static::decode( $request->getDomain() ) ])->get();
 
-        $model = $modelClass::objects()->get([ 'domain' =>  static::decode($request->getHost())]);
         return $model;
     }
 

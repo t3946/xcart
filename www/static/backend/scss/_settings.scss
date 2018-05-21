@@ -13,6 +13,10 @@ $h-font: $font;
 
 $header-height: 60px;
 $footer-height: 60px;
+
+$footer-height: rem-calc(50);
+$header-small: rem-calc(50);
+$header-big: rem-calc(90);
 $menu-height: $header-height;
 
 $input-height: 40px;

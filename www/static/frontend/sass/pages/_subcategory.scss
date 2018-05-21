@@ -1,0 +1,269 @@
+.page-departments {
+  margin-top: 2rem;
+
+  a {
+    color: #000;
+    text-decoration: none;
+  }
+
+  .hr {
+    background-color: transparent;
+  }
+
+  /* Стили для мобильных устройств */
+  @include breakpoint(ml down) {
+
+    .all-departments-menu {
+
+      @include breakpoint(ml only) {
+        padding: 0 .3125rem;
+
+        .item-title {
+          margin: .3125rem;
+          max-width: calc(33.33% - 0.625rem);
+        }
+      }
+
+      padding: 0 .5rem;
+
+      /* Ссылка на основную категорию */
+      .item-title {
+        margin: 0.125rem;
+        padding: .5rem 1rem .5rem .5rem;
+        background-color: #efefef;
+        display: flex;
+        align-items: center;
+
+        .image-container {
+          display: block;
+          padding-right: .75rem;
+          width: 2.626rem;
+          text-align: center;
+
+          .image {
+            width: 100%;
+          }
+        }
+        .title {
+          display: block;
+          white-space: pre-wrap;
+          text-align: left;
+          font-size: 1rem;
+          line-height: 112%;
+          overflow: hidden;
+        }
+
+      }
+    }
+
+    @include breakpoint(medium down) {
+      .item-title {
+        max-width: calc(100% - 0.25rem);
+      }
+    }
+
+    @include breakpoint(medium up) {
+      .item-title {
+        max-width: calc(50% - 0.25rem);
+      }
+    }
+
+    .sections {
+
+      section {
+        display: none;
+
+        &.show {
+          height: auto;
+          display: block;
+        }
+
+        .hr-container {
+          display: none;
+        }
+
+        /* Заголовок категории */
+        .departments-submenu-title {
+          display: flex;
+          text-decoration: none;
+          padding: .5rem;
+          background-color: #efefef;
+          align-items: center;
+
+          .image-container {
+            display: block;
+
+            padding-right: .75rem;
+            width: 2.626rem;
+            text-align: center;
+
+            .image {
+              width: 100%;
+            }
+
+          }
+          .title {
+            display: block;
+            font-size: 1rem;
+          }
+
+          &::after {
+            content: '\2014';
+            display: block;
+            font-size: 1.5rem;
+            text-align: right;
+            padding-left: .75rem;
+            flex-grow: 1;
+          }
+
+        }
+      }
+    }
+
+  }
+
+  /* Стили для десктопа */
+  @include breakpoint(large up) {
+    /* Верхнее меню - все основные категории */
+    .all-departments-menu {
+
+      display: flex;
+      padding-bottom: 12px;
+
+      /* Ссылка на основную категорию */
+      .item-title {
+        border: 1px solid transparent;
+        margin-top: 15px;
+        padding-top: 3px;
+        padding-bottom: 3px;
+        display: flex;
+        align-items: center;
+
+        .image-container {
+          display: block;
+
+          padding-right: 15px;
+          width: 43px;
+          text-align: center;
+
+          .image {
+            width: 100%;
+          }
+        }
+        .title {
+          display: block;
+          white-space: pre-wrap;
+          text-align: left;
+
+          font-size: rem-calc(12);
+          line-height: 112%;
+          overflow: hidden;
+        }
+
+        &:hover {
+          border: 1px solid #9a1524;
+          color: #9a1524;
+          text-decoration: none;
+
+          .image {
+            filter: contrast(50%) sepia(100%) hue-rotate(-70deg) saturate(400%);
+          }
+        }
+      }
+    }
+
+    .all-departments-menu-hr {
+      .hr {
+        border-bottom: 2px solid #0d2431;
+      }
+    }
+
+    /* Подкатегории основной категории */
+    .departments-submenu-container {
+      margin-top: 39px;
+
+      .hr {
+        margin-top: 36px;
+        border-bottom: 1px solid #b0b0b0;
+      }
+
+      /* Заголовок категории */
+      .departments-submenu-title {
+        display: inline-block;
+        text-decoration: none;
+
+        .image-container {
+          display: table-cell;
+          vertical-align: middle;
+
+          padding-right: 20px;
+          width: 62px;
+          text-align: center;
+
+          .image {
+            width: 100%;
+          }
+
+        }
+        .title {
+          display: table-cell;
+          vertical-align: middle;
+          font-size: rem-calc(24);
+
+        }
+
+        &:hover {
+          color: #9a1524;
+          text-decoration: none;
+
+          .image {
+            filter: contrast(50%) sepia(100%) hue-rotate(-70deg) saturate(400%);
+          }
+        }
+
+      }
+    }
+  }
+
+  /* Список подкатегорий */
+  .departments-submenu-items {
+
+    a {
+      color: #055a93;
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+
+    .group-items {
+      margin-top: 22px;
+      .items-title {
+        font-weight: bold;
+        padding-bottom: .5rem;
+      }
+      .items-list {
+        font-size: rem-calc(14);
+      }
+    }
+  }
+
+}
+
+#scrollToTop {
+  box-shadow: 0 1px 4px rgba(0, 0, 0, .3);
+  cursor: pointer;
+  text-align: center;
+  margin-top: 1rem;
+  line-height: 111%;
+  padding-bottom: .188rem;
+  span {
+    display: block;
+  }
+}
+
+@include breakpoint(medium up) {
+  #scrollToTop {
+    display: none;
+  }
+}
+

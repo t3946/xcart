@@ -1,0 +1,50 @@
+h1, h2, h3, h4, h5, h6 {
+  font-weight: bold;
+  color: black;
+  text-align: left;
+  white-space: normal;
+  hyphens: auto;
+
+  @include breakpoint(large up) {
+    text-align: left;
+  }
+}
+
+template {
+  display: none;
+}
+
+pre, code, xmp, plaintext, list {
+  //display: block;
+  line-height: 1.1em;
+  margin: 1em 0px 1em;
+  font: {
+    size: rem-calc(12);
+    family: Menlo, monospace;
+  }
+}
+
+code {
+  background:#F8F8FF;
+  border:black dashed 1px;
+}
+
+a {
+  white-space: normal;
+}
+
+html * {
+  white-space: normal;
+  box-sizing: border-box;
+}
+
+@each $align in (left, right, center, justify) {
+  .text-#{$align} {
+    text-align: $align;
+  }
+}
+@each $display in (inline, block, inline-block, none) {
+  .display-#{$display} {
+    display: $display;
+  }
+}

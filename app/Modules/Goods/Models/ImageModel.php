@@ -11,6 +11,9 @@ use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Model;
 use Xcart\Product;
 
+/**
+ * @property mixed image_path
+ */
 class ImageModel extends Model
 {
     public static function tableName()
@@ -98,12 +101,12 @@ class ImageModel extends Model
         return ltrim($this->image_path, '.');
     }
 
-    public function getCdnURL()
+    public function getCdnURL(): string
     {
         $site = Xcart::app()->getModule('Sites')->getSite();
-        $pref = ($site->getConfig()['Enable_CDN'] == "Y") ? 'cdn.': 'www.';
+        $pref = ($site->getConfig()['Enable_CDN'] === "Y") ? 'cdn.': 'www.';
         $domain = $site->getBaseDomain();
-        return "//" .$pref . $domain . $this->getURL();
+        return '//' .$pref . $domain . $this->getURL();
     }
 
     public function __toString()

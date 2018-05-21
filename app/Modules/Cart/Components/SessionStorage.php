@@ -47,6 +47,7 @@ class SessionStorage implements ICartStorage
     {
         if ($this->has($key)) {
             $this->cart->getEventManager()->trigger('cart:removeItem', unserialize($_SESSION[$this->key][$key]), $this->cart);
+            $this->cart->getEventManager()->trigger('cart:change');
             unset($_SESSION[$this->key][$key]);
             return true;
         }
@@ -61,6 +62,7 @@ class SessionStorage implements ICartStorage
     public function add($key, $value)
     {
         $this->cart->getEventManager()->trigger('cart:addItem', $value, $this->cart);
+        $this->cart->getEventManager()->trigger('cart:change', $value, $this->cart);
         $_SESSION[$this->key][$key] = serialize($value);
         return $this;
     }

@@ -6,15 +6,17 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname(dirname(dirname($vendorDir)));
 
 return array(
-    'ad155f8f1cf0d418fe49e248db8c661b' => $vendorDir . '/react/promise/src/functions_include.php',
+    'a0edc8309cc5e1d60e3047b5df6b7052' => $vendorDir . '/guzzlehttp/psr7/src/functions_include.php',
+    'c964ee0ededf28c96ebd9db5099ef910' => $vendorDir . '/guzzlehttp/promises/src/functions_include.php',
     '2c102faa651ef8ea5874edb585946bce' => $vendorDir . '/swiftmailer/swiftmailer/lib/swift_required.php',
     '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => $vendorDir . '/symfony/polyfill-mbstring/bootstrap.php',
+    '37a3dc5111fe8f707ab4c132ef1dbc62' => $vendorDir . '/guzzlehttp/guzzle/src/functions_include.php',
     'e40631d46120a9c38ea139981f8dab26' => $vendorDir . '/ircmaxell/password-compat/lib/password.php',
     '3e2471375464aac821502deb0ac64275' => $vendorDir . '/symfony/polyfill-php54/bootstrap.php',
     'edc6464955a37aa4d5fbf39d40fb6ee7' => $vendorDir . '/symfony/polyfill-php55/bootstrap.php',
-    'a0edc8309cc5e1d60e3047b5df6b7052' => $vendorDir . '/guzzlehttp/psr7/src/functions_include.php',
     'bd9634f2d41831496de0d3dfe4c94881' => $vendorDir . '/symfony/polyfill-php56/bootstrap.php',
     'decc78cc4436b1292c6c0d151b19445c' => $vendorDir . '/phpseclib/phpseclib/phpseclib/bootstrap.php',
+    'ad155f8f1cf0d418fe49e248db8c661b' => $vendorDir . '/react/promise/src/functions_include.php',
     '68f9084e889ebf718663435970ab45e3' => $vendorDir . '/mindy/query_builder/src/Conditions.php',
     'f29a2007f2178ee4ae11496b92ada6d1' => $baseDir . '/app/include/func/func.core.php',
     '3d0a72febcb8a483969ed811c9d351f7' => $baseDir . '/app/include/func/func.amazon.php',
@@ -48,4 +50,5 @@ return array(
     '439368cf5ba298ee1596643cef52adae' => $baseDir . '/app/include/func/func.tests.php',
     'a995d74c3d0337cd2d6f734851668029' => $baseDir . '/app/include/func/func.user.php',
     '466984b3dc8bf99b478ff217bd1893bd' => $baseDir . '/app/include/func/func.xml.php',
+    'd1ab13c67879a05460ccadea3ccb4445' => $baseDir . '/app/include/func/blowfish.php',
 );

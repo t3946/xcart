@@ -1,6 +1,10 @@
 <?php
 namespace Xcart;
 
+use Modules\Order\Models\LogModel;
+use Modules\Order\Models\OrderLogModel;
+use Xcart\App\Main\Xcart;
+
 class Logs extends Data
 {
     const LOG_TYPE_CLIENT = 'C';
@@ -26,27 +30,27 @@ class Logs extends Data
         self::$log_resource_type = $log_resource_type;
     }
 
-    public static function _log($sResourceType, $iResourceId, $sLogType, $sLog, $sLogin = null)
+    public static function _log($sResourceType, $iResourceId, $sLogType, $sLog, $sLogin = null): void
     {
         $aParams['resource_type'] = $sResourceType;
         $aParams['resource_id'] = $iResourceId;
         $aParams['type'] = $sLogType;
         if (!isset($sLogin)) {
-            global $login;
-            $sLogin = $login;
+            $sLogin = Xcart::app()->user->login;
         }
         $aParams['login'] = addslashes($sLogin);
         $aParams['log'] = addslashes($sLog);
 
-        if ($sResourceType == 'orders') {
+        if ($sResourceType === 'orders') {
             unset($aParams['resource_type']);
             $aParams['orderid'] = $iResourceId;
             unset($aParams['resource_id']);
             $aParams['date'] = time();
-            func_array2insert('order_logs', $aParams);
+            (new OrderLogModel($aParams))->save();
         }
-        else
-            func_array2insert('logs', $aParams);
+        else {
+            (new LogModel($aParams))->save();
+        }
     }
 
     public static function _getFoundRows()

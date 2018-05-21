@@ -63,6 +63,6 @@ abstract class Module
 
     public static function t($str, $params = [], $dic = 'main')
     {
-        return Translate::getInstance()->t(get_called_class() . "." . $dic, $str, $params);
+        return Translate::getInstance()->t(static::class . '.' . $dic, $str, $params);
     }
 }

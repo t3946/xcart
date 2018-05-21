@@ -196,9 +196,7 @@ class XcartSession extends Session
         if (!$this->session_key) {
             /** @var \Modules\Sites\SitesModule $module */
             if ($module = Xcart::app()->getModule('Sites')) {
-                if ($model = $module->getSite()) {
-                    $key .= $model->storefrontid;
-                }
+                $key .= $module->getSite()->pk;
             }
 
             $this->session_key = $key;

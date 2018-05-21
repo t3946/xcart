@@ -1,0 +1,70 @@
+$offcanvas-custom-width: 85%;
+
+@media screen and (max-width: $break-large) {
+  .row-offcanvas {
+    position: relative;
+    @include css3-prefix(transition, all .25s ease-out);
+  }
+
+  .row-offcanvas-right {
+    right: 0;
+
+    &.active{
+      right: 50%; /* 6 columns */
+    }
+
+    .sidebar-offcanvas {
+      right: -50%; /* 6 columns */
+    }
+  }
+
+  .row-offcanvas-left {
+    left: 0;
+
+    &.active{
+      $left: 45px;
+      left: calc(100% - #{$left}); /* 6 columns */
+
+      .sidebar-offcanvas {
+        left: calc(#{$left} - 100%);
+        width: calc(100% - #{$left});
+      }
+
+      .main-canvas{
+        @include box-shadow(0 0 15px 10px rgba(0, 0, 0, 0.15));
+        z-index: 5000;
+        position: fixed;
+      }
+
+      @media screen and (min-width: $break-small){
+        $left: 55px;
+        left: calc(100% - #{$left}); /* 6 columns */
+
+        .sidebar-offcanvas {
+          left: calc(#{$left} - 100%);
+          width: calc(100% - #{$left});
+        }
+      }
+
+      @media screen and (min-width: $break-medium){
+        $left: 79px;
+        left: calc(100% - #{$left}); /* 6 columns */
+
+        .sidebar-offcanvas {
+          left: calc(#{$left} - 100%);
+          width: calc(100% - #{$left});
+        }
+      }
+    }
+
+    .sidebar-offcanvas {
+      left: -100%; /* 6 columns */
+    }
+  }
+
+  .sidebar-offcanvas {
+    position: absolute;
+    top: 0;
+    width: 100%; /* 6 columns */
+  }
+}

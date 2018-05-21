@@ -4,7 +4,6 @@ namespace Modules\Pages\Controllers;
 
 use Modules\Pages\Models\Page;
 use Xcart\App\Controller\FrontendController;
-use Xcart\App\Main\Xcart;
 use Xcart\App\Pagination\DataSource\QuerySetDataSource;
 use Xcart\App\Pagination\Pagination;
 
@@ -20,13 +19,14 @@ class PageController extends FrontendController
      * @param Page $model
      * @return string
      */
-    protected function getView(Page $model)
+    protected function getView(Page $model): string
     {
-        return "pages/" . $model->getView();
+        return 'pages/' . $model->getView();
     }
 
     public function actionView($url = null)
     {
+        /** @var Page $model */
         $model = Page::objects()
             ->published()
             ->get(empty($url) ? ['is_index' => true] : ['url' => ltrim($url, '/')]);
@@ -46,7 +46,7 @@ class PageController extends FrontendController
         echo $this->actionInternal($model);
     }
 
-    protected function fetchBreadrumbs(Page $model)
+    protected function fetchBreadrumbs(Page $model): void
     {
         if (!$model->is_index) {
             /** @var Page[] $pages */
@@ -60,7 +60,7 @@ class PageController extends FrontendController
         }
     }
 
-    public function actionInternal(Page $model)
+    public function actionInternal(Page $model): string
     {
         $pager = new Pagination($model->getChildrenQuerySet(), [], new QuerySetDataSource());
         return $this->render($this->getView($model), [

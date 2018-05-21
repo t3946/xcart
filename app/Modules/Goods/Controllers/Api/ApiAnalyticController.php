@@ -12,7 +12,7 @@ class ApiAnalyticController extends Controller
 {
     public $defaultAction = 'index';
 
-    public function index()
+    public function index(): void
     {
         if ( $url = $this->getRequest()->post->get('url') )
         {
@@ -29,7 +29,7 @@ class ApiAnalyticController extends Controller
                     $id = $match[1];
                 }
 
-                if (in_array($path, ['', '/'])) {
+                if (\in_array($path, ['', '/'], true)) {
                     $type = SurfPathModel::GOAL_TYPE_HOME_PAGE;
                     $id = 1;
                 }

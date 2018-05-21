@@ -2,6 +2,7 @@
 namespace Modules\Goods\Models;
 
 use Mindy\QueryBuilder\Expression;
+use Mindy\QueryBuilder\Q\QOr;
 use Modules\Amazon\Models\AmazonFbaMissingSkuModel;
 use Modules\Amazon\Models\AmazonProductsFieldsModel;
 use Modules\Amp\Models\AmpProductModel;
@@ -27,6 +28,7 @@ use Xcart\App\Orm\Fields\HasToOneField;
 use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Fields\ManyToManyField;
 use Xcart\App\Orm\Fields\UnixTimestampField;
+use Xcart\App\Orm\Manager;
 use Xcart\App\Orm\Model;
 use Xcart\App\Traits\DataModelTrait;
 use Xcart\App\Traits\SlugifyTrait;
@@ -65,18 +67,23 @@ use Xcart\Product;
  * @property null|CleanUrlModel clean_url
  * @property null|\Xcart\App\Orm\Manager|\Modules\Goods\Models\CategoryModel[] categories
  * @property null|\Xcart\App\Orm\Manager|ProductModel[] childs
+ * @property mixed cost_to_us
+ * @property mixed amazon_fba
+ * @property string provider
+ * @property string original_provider
  *
  * @method bool isForSale
+ * @method static Manager showed($instance = null)
  */
 class ProductModel extends Model implements ICartItem
 {
-    const ADMIN_PRODUCT_MODIFY_URL = '/admin/product_modify.php?productid=%d&sf=%d';
+    public const ADMIN_PRODUCT_MODIFY_URL = '/admin/product_modify.php?productid=%d&sf=%d';
 
     use DataModelTrait, AutoMetaTrait, SlugifyTrait;
 
-    public static function getDataModelClass()
+    public static function getDataModelClass(): string
     {
-        return Product::className();
+        return Product::class;
     }
 
     public static function tableName()
@@ -88,51 +95,51 @@ class ProductModel extends Model implements ICartItem
     {
         return [
             'categories' => [
-                'class' => ManyToManyField::className(),
-                'modelClass' => CategoryModel::className(),
-                'through' => ProductCategoriesModel::className(),
+                'class' => ManyToManyField::class,
+                'modelClass' => CategoryModel::class,
+                'through' => ProductCategoriesModel::class,
             ],
 
             'product_categories' => [
-                'class' => HasManyField::className(),
-                'modelClass' => ProductCategoriesModel::className(),
+                'class' => HasManyField::class,
+                'modelClass' => ProductCategoriesModel::class,
                 'link' => ['productid' => 'productid'],
             ],
 
             'prices' => [
-                'class' => HasManyField::className(),
-                'modelClass' => PricingModel::className(),
+                'class' => HasManyField::class,
+                'modelClass' => PricingModel::class,
                 'link' => ['productid' => 'productid'],
             ],
 
             'sites' => [
-                'class' => ManyToManyField::className(),
-                'modelClass' => SiteModel::className(),
-                'through' => ProductStorefrontModel::className(),
+                'class' => ManyToManyField::class,
+                'modelClass' => SiteModel::class,
+                'through' => ProductStorefrontModel::class,
             ],
 
             'quick_prices' => [
-                'class' => ManyToManyField::className(),
-                'modelClass' => PricingModel::className(),
-                'through' => QuickPricingModel::className(),
+                'class' => ManyToManyField::class,
+                'modelClass' => PricingModel::class,
+                'through' => QuickPricingModel::class,
             ],
 
             'clean_url' => [
-                'class' => HasToOneField::className(),
-                'modelClass' => CleanUrlModel::className(),
+                'class' => HasToOneField::class,
+                'modelClass' => CleanUrlModel::class,
                 'link' => ['productid' => 'resource_id'],
                 'extra' => ['resource_type' => 'P'],
             ],
 
             'order_details' => [
-                'class' => HasManyField::className(),
-                'modelClass' => OrderDetailModel::className(),
+                'class' => HasManyField::class,
+                'modelClass' => OrderDetailModel::class,
                 'link' => ['productid' => 'productid'],
             ],
 
             'surf_path' => [
-                'class' => HasManyField::className(),
-                'modelClass' => SurfPathModel::className(),
+                'class' => HasManyField::class,
+                'modelClass' => SurfPathModel::class,
                 'link' => ['productid' => 'resource_id'],
                 'extra' => ['resource_type' => 'P'],
             ],
@@ -145,177 +152,182 @@ class ProductModel extends Model implements ICartItem
 
 
             'productid' => [
-                'class' => AutoField::className(),
+                'class' => AutoField::class,
             ],
             'distributor' => [
                 'field' => 'manufacturerid',
-                'class' => ForeignField::className(),
-                'modelClass' => DistributorModel::className(),
+                'class' => ForeignField::class,
+                'modelClass' => DistributorModel::class,
                 'link' => ['manufacturerid' => 'manufacturerid'],
                 'null' => false,
             ],
             'brand' => [
                 'field' => 'brandid',
-                'class' => ForeignField::className(),
-                'modelClass' => BrandModel::className(),
+                'class' => ForeignField::class,
+                'modelClass' => BrandModel::class,
                 'link' => ['brandid' => 'brandid'],
                 'null' => true,
             ],
             'filter_values' => [
-                'class' => ManyToManyField::className(),
-                'modelClass' => FilterValueModel::className(),
-                'through' => FilterProductModel::className(),
+                'class' => ManyToManyField::class,
+                'modelClass' => FilterValueModel::class,
+                'through' => FilterProductModel::class,
             ],
             'images' => [
-                'class' => HasManyField::className(),
-                'modelClass' => ImageDModel::className(),
+                'class' => HasManyField::class,
+                'modelClass' => ImageDModel::class,
                 'link' => ['productid' => 'id'],
 //                'extra' => ['avail' => 'Y']
             ],
             'videos' => [
-                'class' => HasManyField::className(),
-                'modelClass' => ProductVideosModel::className(),
+                'class' => HasManyField::class,
+                'modelClass' => ProductVideosModel::class,
                 'link' => ['productid' => 'product_id'],
             ],
 
             'descr' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'null' => false,
                 'default' => '',
             ],
             'fulldescr' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'null' => false,
                 'default' => '',
             ],
             'seo_fulldescr' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'null' => false,
                 'default' => '',
             ],
             'seo_product_name' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'null' => false,
                 'default' => ''
             ],
             'product' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'null' => false,
                 'default' => ''
             ],
             'group_mask' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'null' => true,
                 'default' => null
             ],
             'group_option' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'null' => true,
                 'default' => null
             ],
             'source_sfid' => [
-                'class' => IntField::className(),
+                'class' => IntField::class,
                 'null' => false,
                 'default' => 0,
             ],
             'clone_parent_productid' => [
-                'class' => IntField::className(),
+                'class' => IntField::class,
                 'null' => false,
                 'default' => 0,
             ],
             'missing_products' => [
-                'class' => HasManyField::className(),
-                'modelClass' => AmazonFbaMissingSkuModel::className(),
+                'class' => HasManyField::class,
+                'modelClass' => AmazonFbaMissingSkuModel::class,
                 'link' => ['productid' => 'productid'],
             ],
             'add_date' => [
-                'class' => UnixTimestampField::className(),
+                'class' => UnixTimestampField::class,
                 'autoNowAdd' => true,
             ],
             'mod_date' => [
-                'class' => UnixTimestampField::className(),
+                'class' => UnixTimestampField::class,
                 'autoNow' => true,
                 'autoNowAdd' => true,
             ],
             'category_main' => [
-                'class' => HasManyField::className(),
-                'modelClass' => ProductCategoriesModel::className(),
+                'class' => HasManyField::class,
+                'modelClass' => ProductCategoriesModel::class,
                 'link' => ['productid' => 'productid'],
                 'extra' => ['main' => 'Y']
             ],
             'childs' => [
-                'class' => HasManyField::className(),
-                'modelClass' => ProductModel::className(),
+                'class' => HasManyField::class,
+                'modelClass' => ProductModel::class,
                 'link' => ['productid' => 'group_root'],
                 'extra' => ['productid__isnt' => new Expression('group_root')]
             ],
             'parent' => [
                 'field' => 'group_root',
-                'class' => ForeignField::className(),
-                'modelClass' => ProductModel::className(),
+                'class' => ForeignField::class,
+                'modelClass' => ProductModel::class,
                 'link' => ['group_root' => 'productid'],
                 'null' => true,
             ],
             'thumbnail' => [
-                'class' => HasManyField::className(),
-                'modelClass' => ImageTModel::className(),
+                'class' => HasManyField::class,
+                'modelClass' => ImageTModel::class,
+                'link' => ['productid' => 'id']
+            ],
+            'preview' => [
+                'class' => HasManyField::class,
+                'modelClass' => ImagePModel::class,
                 'link' => ['productid' => 'id']
             ],
             'pricing' => [
-                'class' => HasManyField::className(),
-                'modelClass' => PricingModel::className(),
+                'class' => HasManyField::class,
+                'modelClass' => PricingModel::class,
                 'link' => ['productid' => 'productid']
             ],
             'amazon_fields' => [
-                'class' => HasManyField::className(),
-                'modelClass' => AmazonProductsFieldsModel::className(),
+                'class' => HasManyField::class,
+                'modelClass' => AmazonProductsFieldsModel::class,
                 'link' => ['productid' => 'productid']
             ],
             'retail_trust_enabled' => [
-                'class' => BooleanCharField::className(),
+                'class' => BooleanCharField::class,
             ],
             'options' => [
-                'class' => HasManyField::className(),
-                'modelClass' => OptionModel::className(),
+                'class' => HasManyField::class,
+                'modelClass' => OptionModel::class,
                 'link' => ['productid' => 'productid']
             ],
             'cost_to_us' => [
-                'class' => DecimalField::className(),
+                'class' => DecimalField::class,
                 'null' => false,
                 'default' => 0,
             ],
             'weight' => [
-                'class' => DecimalField::className(),
+                'class' => DecimalField::class,
                 'null' => false,
                 'default' => 0,
             ],
             'list_price' => [
-                'class' => DecimalField::className(),
+                'class' => DecimalField::class,
                 'null' => false,
                 'default' => 0,
             ],
             'map_price' => [
-                'class' => DecimalField::className(),
+                'class' => DecimalField::class,
                 'null' => false,
                 'default' => 0,
             ],
             'new_map_price' => [
-                'class' => DecimalField::className(),
+                'class' => DecimalField::class,
                 'null' => false,
                 'default' => 0,
             ],
             'shipping_weight' => [
-                'class' => DecimalField::className(),
+                'class' => DecimalField::class,
                 'null' => false,
                 'default' => 0,
             ],
             'brand_normalized' => [
-                'class' => BooleanField::className(),
+                'class' => BooleanField::class,
                 'null' => false,
                 'default' => false,
             ],
             'r_avail' => [
-                'class' => IntField::className(),
+                'class' => IntField::class,
                 'null' => false,
                 'default' => 0,
             ],
@@ -327,7 +339,7 @@ class ProductModel extends Model implements ICartItem
         $model = $this->distributor;
 
         if (strpos($this->productcode, $model->code) == 0) {
-            return substr($this->productcode, strlen($model->code)+1 );
+            return substr($this->productcode, \strlen($model->code)+1 );
         }
 
         return null;
@@ -340,12 +352,12 @@ class ProductModel extends Model implements ICartItem
 
     public function isGroupChild()
     {
-        return (!is_null($this->group_root) && ($this->productid != $this->group_root));
+        return (null !== $this->group_root && ($this->productid != $this->group_root));
     }
 
     public function isAmazonFBAEnabled()
     {
-        return $this->amazon_fba == 'Y';
+        return $this->amazon_fba === 'Y';
     }
 
     public function getParamList()
@@ -381,11 +393,11 @@ class ProductModel extends Model implements ICartItem
     }
 
     /**
-     * @return ImagePModel[]
+     * @return ImageDModel[]
      */
     public function getImages()
     {
-        /** @var ImagePModel[] $images */
+        /** @var ImageDModel[] $images */
         $images = $this->images->filter(['avail' => 'Y'])->order(['orderby'])->all();
         return $images ?: [];
     }
@@ -401,7 +413,8 @@ class ProductModel extends Model implements ICartItem
         return ($this->list_price > ($fp + $fp * .3));
     }
 
-    public function checkSite($id) {
+    public function checkSite($id):bool
+    {
         return (bool)($this->sites->filter(['storefrontid' => $id])->count());
     }
 
@@ -434,31 +447,34 @@ class ProductModel extends Model implements ICartItem
         return $model->getAbsoluteUrl($full, true);
     }
 
-    public function getMainCategory():?CategoryModel
+    public function getMainCategory(int $site_id = null):?CategoryModel
     {
-        return CategoryModel::objects()->filter([
+        $params  = [
             'products__through__main' => 'Y',
             'products__through__productid' => $this->productid,
-            'storefrontid' => $this->sites->limit(1)->get()->storefrontid
-        ])->limit(1)->get();
+        ];
+
+        if ($site_id) {
+            $params['storefrontid']  = $site_id;
+        }
+
+        return CategoryModel::objects()
+            ->limit(1)->get($params);
     }
 
-    /**
-     * @param CategoryModel $model
-     */
-    public function setMainCategory(CategoryModel $model)
+    public function setMainCategory(CategoryModel $model, int $site_id = null):void
     {
-        if ($adc = ProductCategoriesModel::objects()
-            ->filter([
-                'category__storefrontid' => $this->sites->limit(1)->get()->storefrontid,
-                'productid' => $this->productid,
-                'main' => 'Y',
-                'categoryid__isnt' => $model->categoryid
-            ])->all()) {
-            foreach ($adc as $dc) {
-                $dc->delete();
-            }
+        $params = [
+            'productid' => $this->productid,
+            'main' => 'Y',
+            'categoryid__isnt' => $model->categoryid
+        ];
+
+        if ($site_id) {
+            $params['category__storefrontid'] = $site_id;
         }
+
+        ProductCategoriesModel::objects()->delete($params);
 
         ProductCategoriesModel::objects()->getOrCreate(
             [
@@ -469,7 +485,7 @@ class ProductModel extends Model implements ICartItem
         );
     }
 
-    public function getBreadcrumbs()
+    public function getBreadcrumbs():Breadcrumbs
     {
         /** @var CategoryModel $category */
         if ($category = $this->getMainCategory()) {
@@ -479,7 +495,13 @@ class ProductModel extends Model implements ICartItem
             $bread = new Breadcrumbs();
         }
 
-        $bread->add($this->product, $this->getAbsoluteUrl());
+        if ($this->isGroupChild()) {
+            /** @var static $parent */
+            $parent = $this->parent;
+            $bread->add($parent->getFrontendName(), $parent->getAbsoluteUrl());
+        }
+
+        $bread->add($this->getFrontendName(), $this->getAbsoluteUrl());
 
         return $bread;
     }
@@ -561,7 +583,7 @@ class ProductModel extends Model implements ICartItem
     /**
      * @return ImageTModel|null
      */
-    public function getThumbnail()
+    public function getThumbnail():? ImageTModel
     {
         return $this->thumbnail->limit(1)->get();
     }
@@ -574,5 +596,17 @@ class ProductModel extends Model implements ICartItem
     public function isCategorized()
     {
         return ($this->pc_classify_status === 'ACC' || $this->pc_classify_status === 'MC');
+    }
+
+    public static function showedManager($instance = null) : Manager
+    {
+        return static::objects($instance)->filter([
+            'forsale' => 'Y',
+            'sites__storefrontid' => Xcart::app()->getModule('Sites')->getSite(),
+            new QOr([
+                ['group_root__isnull' => true],
+                ['group_root__productid' => 'productid']
+            ])
+        ]);
     }
 }

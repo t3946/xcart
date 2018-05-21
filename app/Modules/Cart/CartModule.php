@@ -5,9 +5,11 @@ namespace Modules\Cart;
 use Modules\Admin\Traits\AdminTrait;
 use Modules\Cart\Admin\CouponKitAdmin;
 use Modules\Cart\Helpers\CouponOldCart;
+use Modules\Cart\Helpers\StagesOfOrdering;
 use Modules\Cart\Models\CouponKitModel;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Module\Module;
+use Modules\Cart\Components\Cart;
 
 class CartModule extends Module
 {
@@ -22,13 +24,21 @@ class CartModule extends Module
     private $validate_component;
 
     /**
+     * @var StagesOfOrdering
+     */
+    private static $_stagesOfOrdering;
+
+    /**
      * @var array
      */
     public $cartConfig = [
-        'class' => '\Modules\Cart\Components\Cart',
+        'class' => Cart::class,
     ];
 
-    public static function onApplicationRun()
+    /**
+     * @throws \Xcart\App\Exceptions\UnknownPropertyException
+     */
+    public static function onApplicationRun(): void
     {
         $tpl = Xcart::app()->template->getRenderer();
 
@@ -36,22 +46,30 @@ class CartModule extends Module
             return Xcart::app()->getModule('Cart')->getCart();
         });
 
-        Xcart::app()->getModule('Cart'); //Small hack for init class;
+        // Small hack for init class;
+        Xcart::app()->getModule('Cart');
+
+        // receive information about stages of ordering
+        static::$_stagesOfOrdering = StagesOfOrdering::getInstance();
+
+        $tpl->addAccessorCallback('getCartBreadcrumbs', function () {
+            return static::$_stagesOfOrdering;
+        });
     }
 
-    public function init()
+    public function init(): void
     {
         if (!Xcart::app()->hasComponent('cart')) {
-            $this->setComponent('cart', $this->cartConfig);
+            static::setComponent('cart', $this->cartConfig);
         }
     }
 
     public function getCart()
     {
-        return $this->getComponent('cart');
+        return static::getComponent('cart');
     }
 
-    public static function getAdminMenu()
+    public static function getAdminMenu(): array
     {
         $user = Xcart::app()->user;
         $router = Xcart::app()->router;
@@ -96,9 +114,9 @@ class CartModule extends Module
         return null;
     }
 
-    public function isCouponActive()
+    public function isCouponActive(): bool
     {
-        if (is_null($this->isCouponsActive)) {
+        if (null === $this->isCouponsActive) {
             $this->isCouponsActive = (bool)CouponKitModel::objects()->filter(['active' => true, 'deleted' => false])->count();
         }
 

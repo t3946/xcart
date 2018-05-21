@@ -49,4 +49,11 @@ interface GatewayInterface
      * @return bool
      */
     public function complete($params);
+    /**
+     * @param $params
+     * @return bool
+     */
+    public function success($params);
+
+    public function getState($mode);
 }

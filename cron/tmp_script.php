@@ -96,9 +96,9 @@ $qor_1 = ['fulldescr__contains' => 'iframe'];
 $qor_2 = ['fulldescr__contains' => '<video'];
 
 $product_models = ProductModel::objects()->filter([
-                                                    new Qor([
-                                                        $qor_1, $qor_2
-                                                            ])
+                                                      new Qor([
+                                                                  $qor_1, $qor_2
+                                                              ])
                                                   ])->all();
 
 foreach ($product_models as $product_model){

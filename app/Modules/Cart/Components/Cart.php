@@ -17,7 +17,7 @@ class Cart
      * @var string|array component configuration
      */
     public $storageConfig = [
-        'class' => '\Modules\Cart\Components\SessionStorage'
+        'class' => SessionStorage::class
     ];
     public $storageKey = 'cart';
     /**
@@ -35,28 +35,31 @@ class Cart
     /**
      * @var IDiscount[]
      */
-    private $_discounts = null;
+    private $_discounts;
 
-    public function init()
+    public function init(): void
     {
         $signal = $this->getEventManager();
         $signal->on('cart:addItem', [$this, 'onAddItem']);
         $signal->on('cart:removeItem', [$this, 'onRemoveItem']);
+        $signal->on('cart:change', [$this, 'onChange']);
     }
 
-    public function getEventManager()
+    public function getEventManager(): \Xcart\App\Event\EventManager
     {
         return Xcart::app()->event;
     }
 
-    public function onAddItem($item) {}
+    public function onAddItem($item): void {}
 
-    public function onRemoveItem($item) {}
+    public function onRemoveItem($item): void {}
+
+    public function onChange(): void {}
 
     /**
      * @return \Modules\Cart\Interfaces\ICartStorage
      */
-    public function getStorage()
+    public function getStorage(): \Modules\Cart\Interfaces\ICartStorage
     {
         if ($this->_storage === null) {
             $this->_storage = Creator::createObject($this->storageConfig, $this, $this->storageKey);
@@ -69,21 +72,21 @@ class Cart
      * @param array $data
      * @return string
      */
-    public function makeKey(ICartItem $object, array $data = [])
+    public function makeKey(ICartItem $object, array $data = []): string
     {
         $prefix = '';
-        $clss = get_class($object);
+        $clss = \get_class($object);
         $clss = explode('\\', $clss);
 
         foreach ($clss as $cls) {
-            $prefix .= substr($cls,0, 1);
+            $prefix .= $cls[0];
         }
-        $prefix .= substr($cls, -1, 1);
+        $prefix .= $cls[\strlen($cls) - 1];
 
-        return strtr("{prefix}{unique_id}{data}", [
-            "{prefix}" => $prefix,
-            "{unique_id}" => $object->getUniqueId(),
-            "{data}"=> (empty($data)?:'-') . implode('-', $data),
+        return strtr('{prefix}{unique_id}{data}', [
+            '{prefix}' => $prefix,
+            '{unique_id}' => $object->getUniqueId(),
+            '{data}' => (empty($data)?:'-') . implode('-', $data),
         ]);
     }
 
@@ -92,7 +95,7 @@ class Cart
      * @param array $data
      * @return CartItem|null
      */
-    public function get(ICartItem $object, array $data = [])
+    public function get(ICartItem $object, array $data = []): ?CartItem
     {
         return $this->getStorage()->get($this->makeKey($object, $data));
     }
@@ -104,16 +107,18 @@ class Cart
      * @param array $data
      * @return $this
      */
-    public function add(ICartItem $object, $quantity = 1, $type = null, array $data = [])
+    public function add(ICartItem $object, $quantity = 1, $type = null, array $data = []): self
     {
         $key = $this->makeKey($object, $data);
         if ($this->has($object, $data)) {
             $oldItem = $this->get($object, $data);
+
             $item = new CartItem([
                 'object' => $oldItem->object,
                 'data' => $oldItem->data,
                 'quantity' => $oldItem->quantity + $quantity,
                 'type' => $type,
+                'cart' => $this,
             ]);
 
             $this->getStorage()->remove($key);
@@ -124,6 +129,7 @@ class Cart
                 'data' => $data,
                 'quantity' => $quantity,
                 'type' => $type,
+                'cart' => $this,
             ]);
         }
 
@@ -146,7 +152,7 @@ class Cart
      * @param $quantity
      * @return bool
      */
-    public function updateQuantityByKey($key, $quantity)
+    public function updateQuantityByKey($key, $quantity): bool
     {
         $positionKey = $this->getPositionByKey($key);
         if ($positionKey) {
@@ -163,7 +169,7 @@ class Cart
      * @param $key
      * @return bool
      */
-    public function increaseQuantityByKey($key)
+    public function increaseQuantityByKey($key): bool
     {
         $positionKey = $this->getPositionByKey($key);
         if ($positionKey) {
@@ -181,7 +187,7 @@ class Cart
      * @param array $data
      * @return bool
      */
-    public function increaseQuantity(ICartItem $object, array $data = [])
+    public function increaseQuantity(ICartItem $object, array $data = []): bool
     {
         $item = $this->get($object, $data);
         if ($item) {
@@ -198,7 +204,7 @@ class Cart
      * @param $key
      * @return bool
      */
-    public function decreaseQuantityByKey($key)
+    public function decreaseQuantityByKey($key): bool
     {
         $positionKey = $this->getPositionByKey($key);
         if ($positionKey) {
@@ -220,7 +226,7 @@ class Cart
      * @param array $data
      * @return bool
      */
-    public function decreaseQuantity(ICartItem $object, array $data = [])
+    public function decreaseQuantity(ICartItem $object, array $data = []): bool
     {
         $item = $this->get($object, $data);
         if ($item) {
@@ -241,7 +247,7 @@ class Cart
      * @param $key
      * @return bool
      */
-    public function removeByKey($key)
+    public function removeByKey($key): bool
     {
         $key = $this->getPositionByKey($key);
         return $key === null ? false : $this->getStorage()->remove($key);
@@ -252,7 +258,7 @@ class Cart
      * @param array $data
      * @return bool
      */
-    public function remove(ICartItem $object, array $data = [])
+    public function remove(ICartItem $object, array $data = []): bool
     {
         return $this->getStorage()->remove($this->makeKey($object, $data));
     }
@@ -262,7 +268,7 @@ class Cart
      * @param array $data
      * @return bool
      */
-    public function has(ICartItem $object, array $data = [])
+    public function has(ICartItem $object, array $data = []): bool
     {
         $key = $this->makeKey($object, $data);
         return $this->getStorage()->has($key);
@@ -315,7 +321,7 @@ class Cart
     /**
      * @return \Modules\Cart\Components\CartItem[]
      */
-    public function getItems()
+    public function getItems(): array
     {
         $items = $this->getStorage()->getData();
         if ($this->forceFetch) {
@@ -337,24 +343,25 @@ class Cart
     /**
      * @return bool
      */
-    public function getIsEmpty()
+    public function getIsEmpty(): bool
     {
         return $this->getStorage()->count() === 0;
     }
 
-    public function applyDiscount(ICartItem $object, $quantity = 1, $type = null, array $data = [])
+    public function applyDiscount(ICartItem $object, $quantity = 1, $type = null, array $data = []): float
     {
         $item = new CartItem([
             'quantity' => $quantity,
             'type' => $type,
             'data' => $data,
-            'object' => $object
+            'object' => $object,
+            'cart' => $this,
         ]);
         $item->applyDiscount($this, $this->getDiscounts());
         return $item->getPrice();
     }
 
-    public function getDiscounts()
+    public function getDiscounts(): ?array
     {
         if ($this->_discounts === null) {
             $this->_discounts = [];
@@ -368,21 +375,21 @@ class Cart
     /**
      * @param IDiscount[] $discounts
      */
-    public function setDiscounts($discounts = [])
+    public function setDiscounts(array $discounts = []): void
     {
         foreach ($discounts as $discount) {
-            if (in_array('Modules\Cart\Interfaces\IDiscount',class_implements($discount))) {
+            if (\in_array(IDiscount::class, class_implements($discount), true)) {
                 $this->setDiscount($discount);
             }
         }
     }
 
-    public function setDiscount(IDiscount $discount)
+    public function setDiscount(IDiscount $discount): void
     {
-        if (is_object($discount)) {
+        if (\is_object($discount)) {
             $this->_discounts[] = $discount;
         }
-        else if (is_string($discount)) {
+        else if (\is_string($discount)) {
             $this->_discounts[] = Creator::createObject($discount);
         }
     }

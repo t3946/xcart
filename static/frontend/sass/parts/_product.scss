@@ -1,0 +1,94 @@
+$default_qg_border: 1px solid #ffe296;
+$default_qg_height: 35px;
+$default_qg_lheight: #{$default_qg_height - 1};
+
+@import 'product/list-item';
+
+.quantity-group {
+  border: $default_qg_border;
+  word-spacing: 0;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  display: flex;
+  align-items: center;
+  max-width: rem-calc(126);
+
+  .btn {
+    flex: 0 0 rem-calc(22);
+
+    //vertical-align: top;
+    color: black;
+    text-align: center;
+    background-color: #fff0ca;
+    //display: inline-block;
+    height: $default_qg_height;
+    min-width: 1.4em;
+    line-height: $default_qg_lheight;
+    cursor: pointer;
+
+    @include breakpoint(large up) {
+      height: rem-calc(28);
+      line-height: rem-calc(27);
+    }
+
+
+    &.active {
+      background-color: #ffe296;
+    }
+
+    &.inc {
+      border-left: $default_qg_border;
+    }
+
+    &.dec {
+      border-right: $default_qg_border;
+    }
+  }
+
+  input {
+    flex: 10 0;
+    vertical-align: top;
+    //height: $default_qg_height;
+    //line-height: $default_qg_lheight;
+    border: none;
+    padding: 0;
+    outline: none;
+    text-align: center;
+    width: 3em;
+    max-width: 5em;
+    min-width: 2em;
+
+    @include breakpoint(large up) {
+
+      height: rem-calc(28);
+      line-height: rem-calc(27);
+    }
+  }
+}
+
+.cart_add {
+  .add {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 100%;
+    text-align: center;
+    text-transform: uppercase;
+    line-height: rem-calc(42);
+    height: rem-calc(42);
+    font: {
+      size: rem-calc(18);
+      weight: 900;
+    }
+
+    &:before {
+      content: '';
+      display: inline-block;
+      width: 35px;
+      height: 27px;
+      background: url("../images/icons/add_to_cart.svg") center center no-repeat;
+      background-size: 90%;
+    }
+  }
+}

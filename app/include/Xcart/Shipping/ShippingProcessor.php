@@ -23,42 +23,42 @@ use Xcart\Cart;
 
 abstract class ShippingProcessor
 {
-    protected $oManufacturer = null;
-    private $oShippingZone = null;
-    private $sShippingType = null;
+    protected $oManufacturer;
+    private $oShippingZone;
+    private $sShippingType;
     /**
      * @var UserModel
      */
-    private $oCustomer = null;
+    private $oCustomer;
 
     /**
      * @var Cart
      */
-    protected $oCart = null;
+    protected $oCart;
 
     /**
      * @var Cart
      */
-    protected $oCarierCart = null;
+    protected $oCarierCart;
 
     /**
      * @var Shipping[]
      */
-    private $aShippingMethods = null;
+    private $aShippingMethods;
 
     /**
      * @var ShippingRateModel[]
      */
-    private $aShippingRatesEntities = null;
+    private $aShippingRatesEntities;
     /**
      * @var ShippingRate[]
      */
-    protected $aShippingRates = null;
+    protected $aShippingRates;
 
     /**
      * @var ShippingCarrier
      */
-    private $oShippingCarrier = null;
+    private $oShippingCarrier;
 
     protected $bGetOnlyApproximationRates = false;
 
@@ -116,7 +116,7 @@ abstract class ShippingProcessor
     /**
      * @param Manufacturer
      */
-    public function setManufacturer($oManufacturer)
+    public function setManufacturer($oManufacturer): void
     {
         $this->oManufacturer = $oManufacturer;
     }
@@ -124,7 +124,7 @@ abstract class ShippingProcessor
     /**
      * @return ShippingZone
      */
-    public function getShippingZone()
+    public function getShippingZone(): ShippingZone
     {
         return $this->oShippingZone;
     }
@@ -132,7 +132,7 @@ abstract class ShippingProcessor
     /**
      * @param ShippingZone
      */
-    public function setShippingZone($oShippingZone)
+    public function setShippingZone($oShippingZone): void
     {
         $this->oShippingZone = $oShippingZone;
     }
@@ -140,7 +140,7 @@ abstract class ShippingProcessor
     /**
      * @return string
      */
-    public function getShippingType()
+    public function getShippingType(): string
     {
         return $this->sShippingType;
     }
@@ -148,13 +148,13 @@ abstract class ShippingProcessor
     /**
      * @param string $sShippingType
      */
-    public function setShippingType($sShippingType)
+    public function setShippingType($sShippingType): void
     {
         $this->sShippingType = $sShippingType;
     }
 
 
-    public function getCartShippingWeight(Shipping $oShipping)
+    public function getCartShippingWeight(Shipping $oShipping): float
     {
         $fCartShippingWeight = 0;
         $aCartObjects = $this->getCart()->getElements();
@@ -167,16 +167,16 @@ abstract class ShippingProcessor
                     $oCartElement->getProduct()->getShippingVolume($oCartElement->getQuantity()));
             }
         }
-        return $fCartShippingWeight;
+        return (float) $fCartShippingWeight;
     }
 
 
     /**
      * @return ShippingRateModel[]
      */
-    public function getShippingRatesEntities()
+    public function getShippingRatesEntities():? array
     {
-        if (is_null($this->aShippingRatesEntities) && $this->aShippingMethods) {
+        if ($this->aShippingRatesEntities === null && $this->aShippingMethods) {
             foreach ($this->aShippingMethods as $oShipping) {
                 $aResults = ShippingRateModel::objects()->filter([
                     'zoneid' => $this->getShippingZone()->zoneid,
@@ -211,7 +211,7 @@ abstract class ShippingProcessor
     /**
      * @return Cart
      */
-    public function getCart()
+    public function getCart(): Cart
     {
         $oCart = new Cart();
         $aProducts = $this->oCart->getElements();
@@ -234,12 +234,12 @@ abstract class ShippingProcessor
     /**
      * @param UserModel $oCustomer
      */
-    public function setCustomer($oCustomer)
+    public function setCustomer($oCustomer): void
     {
         $this->oCustomer = $oCustomer;
     }
 
-    public function removeFromCart()
+    public function removeFromCart(): void
     {
         $aProducts = $this->getCart()->getElements();
         if (!empty($aProducts)) {
@@ -257,13 +257,13 @@ abstract class ShippingProcessor
 
     public function getShippingCarrier()
     {
-        if (is_null($this->oShippingCarrier)) {
+        if ($this->oShippingCarrier === null) {
             $this->oShippingCarrier = ShippingCarrier::model(['carrier_code' => (new \ReflectionClass($this))->getShortName()]);
         }
         return $this->oShippingCarrier;
     }
 
-    protected function saveShippingQuotesCached()
+    protected function saveShippingQuotesCached(): void
     {
         if (!$this->useCache) {
             return;
@@ -394,7 +394,7 @@ abstract class ShippingProcessor
                             $this->aShippingRates = null;
                         }
                     }
-                    if (is_null($this->aShippingRates)) {
+                    if ($this->aShippingRates === null) {
                         $cache_model->delete();
                     }
                 }
@@ -403,11 +403,15 @@ abstract class ShippingProcessor
         return;
     }
 
-    public function setGetOnlyApproximationRates($bValue)
+    public function setGetOnlyApproximationRates($bValue): void
     {
         $this->bGetOnlyApproximationRates = $bValue;
     }
 
+    /**
+     * @param Shipping $oShipping
+     * @return $this
+     */
     public function addShippingMethod(Shipping $oShipping)
     {
         if (empty($this->aShippingMethods[$oShipping->getShippingId()])) {
@@ -416,17 +420,17 @@ abstract class ShippingProcessor
         return $this;
     }
 
-    public function setUseCache($value)
+    public function setUseCache($value): void
     {
         $this->useCache = $value;
     }
 
-    public function setUseMapPrice($value)
+    public function setUseMapPrice($value): void
     {
         $this->useMapPrice = $value;
     }
 
-    public function setUseApproximation($value)
+    public function setUseApproximation($value): void
     {
         $this->useApproximation = $value;
     }

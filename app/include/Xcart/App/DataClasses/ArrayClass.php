@@ -79,7 +79,7 @@ class ArrayClass implements ArrayAccess, Iterator, Countable, Serializable
 
     public function count()
     {
-        return count($this->data);
+        return \count($this->data);
     }
 
     public function serialize()

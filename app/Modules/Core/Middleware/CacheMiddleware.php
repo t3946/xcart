@@ -9,6 +9,7 @@ use Xcart\App\Controller\FrontendController;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Middleware\Middleware;
 use Xcart\App\Request\HttpRequest;
+use Xcart\App\Request\Request;
 
 class CacheMiddleware extends Middleware
 {
@@ -64,7 +65,7 @@ class CacheMiddleware extends Middleware
         }
     }
 
-    public function processView($request, &$output)
+    public function processView(Request $request, string $output): string
     {
         if (!Cli::isCli()) {
 

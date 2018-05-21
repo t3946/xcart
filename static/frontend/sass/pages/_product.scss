@@ -1,0 +1,67 @@
+@import "product/tabs";
+@import "product/price_table";
+
+.product-page {
+  @include getProductTabs();
+  @include getPricesTable();
+
+  .price {
+    padding-left: 3px ;
+  }
+
+
+  .images_prices {
+    @include breakpoint(xl up) {
+      height: rem-calc(521);
+    }
+  }
+
+
+  .block__image {
+    @include breakpoint(large up) {
+      padding-right: rem-calc(46);
+      max-width: rem-calc(478);
+    }
+  }
+
+  .block__title_price {
+    @include breakpoint(large up) {
+      max-width: 100%;
+      //flex: auto;
+
+      .sku {
+        line-height: 2;
+      }
+    }
+  }
+
+
+  .product-title {
+    h1 {
+      font-weight: 700;
+      text-align: left;
+
+      .retailTrust {
+        &:after {
+          vertical-align: middle;
+          width: rem-calc(33);
+          height: rem-calc(31);
+        }
+
+        @include breakpoint(large up) {
+          margin-left: rem-calc(15);
+
+          &:after {
+            vertical-align: baseline;
+            width: rem-calc(29);
+            height: rem-calc(26);
+          }
+        }
+      }
+    }
+  }
+
+  .product-title-small {
+    padding-bottom: rem-calc(25);
+  }
+}

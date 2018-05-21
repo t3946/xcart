@@ -6,13 +6,13 @@ use Modules\Core\Components\Profiler;
 use Xcart\App\Application\Application;
 use Xcart\App\Helpers\Creator;
 
-if (!function_exists('d')) {
+if (!\function_exists('d')) {
     require_once __DIR__ . '/dump.php';
 }
 
 class Xcart
 {
-    public static function getVersion()
+    public static function getVersion(): string
     {
         return '0.1';
     }
@@ -20,7 +20,7 @@ class Xcart
     /** @var \Xcart\App\Application\Application */
     protected static $_app;
 
-    public static function init($configuration, $application = 'Xcart\App\Application\Application')
+    public static function init($configuration, $application = Application::class): void
     {
         static::$_app = new $application;
         static::$_app = Creator::configure(static::$_app, $configuration);
@@ -36,7 +36,7 @@ class Xcart
     /**
      * @return \Xcart\App\Application\Application
      */
-    public static function app()
+    public static function app():? Application
     {
         return static::$_app;
     }

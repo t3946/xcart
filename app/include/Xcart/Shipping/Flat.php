@@ -33,7 +33,6 @@ class Flat extends ShippingProcessor
 
     public function getAdditionalShippingFee($weight)
     {
-        $fAdditionalShippingFee = 0;
-        return $fAdditionalShippingFee;
+        return 0;
     }
 }

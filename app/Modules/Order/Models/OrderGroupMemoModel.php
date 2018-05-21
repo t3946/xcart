@@ -13,9 +13,9 @@ class OrderGroupMemoModel extends Model
 {
     use DataModelTrait, AutoMetaTrait;
 
-    public static function getDataModelClass()
+    public static function getDataModelClass(): string
     {
-        return OrderGroupMemos::className();
+        return OrderGroupMemos::class;
     }
 
     public static function tableName()

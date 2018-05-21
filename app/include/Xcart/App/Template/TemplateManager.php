@@ -90,6 +90,11 @@ class TemplateManager
         return $paths;
     }
 
+    public function display($template, $params = [])
+    {
+        return $this->_renderer->display($template, $params);
+    }
+
     public function render($template, $params = [])
     {
         return $this->_renderer->fetch($template, $params);
@@ -186,7 +191,7 @@ class TemplateManager
                 }
             }
             foreach ($classes as $class) {
-                if (class_exists($class) && is_a($class, TemplateLibrary::className(), true)) {
+                if (class_exists($class) && is_a($class, TemplateLibrary::class, true)) {
                     $extensions = array_merge($extensions, $class::getExtensions());
                 }
             }

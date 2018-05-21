@@ -43,7 +43,7 @@ trait MetaTrait
     /**
      * @param $canonical string
      */
-    public function setCanonical($canonical)
+    public function setCanonical($canonical): void
     {
         if($canonical instanceof Model) {
             $canonical = $canonical->getAbsoluteUrl();
@@ -54,7 +54,7 @@ trait MetaTrait
     /**
      * @return string
      */
-    public function getCanonical()
+    public function getCanonical(): string
     {
         return $this->canonical;
     }
@@ -62,7 +62,7 @@ trait MetaTrait
     /**
      * @param $keywords string
      */
-    public function setKeywords($keywords)
+    public function setKeywords($keywords): void
     {
         $this->keywords = $keywords;
     }
@@ -70,7 +70,7 @@ trait MetaTrait
     /**
      * @return string
      */
-    public function getKeywords()
+    public function getKeywords():? string
     {
         return $this->keywords;
     }
@@ -78,7 +78,7 @@ trait MetaTrait
     /**
      * @param $description string
      */
-    public function setDescription($description)
+    public function setDescription($description): void
     {
         $this->description = $description;
     }
@@ -86,7 +86,7 @@ trait MetaTrait
     /**
      * @return string
      */
-    public function getDescription()
+    public function getDescription():? string
     {
         return $this->description;
     }
@@ -95,9 +95,9 @@ trait MetaTrait
      * @param $values array|string
      * @return $this
      */
-    public function setBreadcrumbs($values)
+    public function setBreadcrumbs($values): self
     {
-        if (!is_array($values)) {
+        if (!\is_array($values)) {
             $values = [$values];
         }
 
@@ -113,7 +113,7 @@ trait MetaTrait
      * @param $url
      * @return $this
      */
-    public function addBreadcrumb($name, $url = null, $items = [])
+    public function addBreadcrumb($name, $url = null, array $items = []): self
     {
         $ba = Xcart::app()->breadcrumbs->getActive();
         Xcart::app()->breadcrumbs->setActive('metaTrait');
@@ -126,7 +126,7 @@ trait MetaTrait
     /**
      * @return array
      */
-    public function getBreadcrumbs()
+    public function getBreadcrumbs(): array
     {
         return Xcart::app()->breadcrumbs->get('metaTrait');
     }
@@ -135,7 +135,7 @@ trait MetaTrait
      * @param $value
      * @return $this
      */
-    public function addTitle($value)
+    public function addTitle($value): self
     {
         $this->title[] = (string) $value;
         return $this;
@@ -145,9 +145,9 @@ trait MetaTrait
      * @param $value array|string
      * @return $this
      */
-    public function setTitle($value)
+    public function setTitle($value): self
     {
-        if (!is_array($value)) {
+        if (!\is_array($value)) {
             $value = [$value];
         }
 
@@ -158,7 +158,7 @@ trait MetaTrait
     /**
      * @return array
      */
-    public function getTitle()
+    public function getTitle(): array
     {
         $title = $this->title;
         if ($this->titleSortAsc) {
@@ -171,7 +171,7 @@ trait MetaTrait
      * @param $value
      * @return $this
      */
-    public function setPageTitle($value)
+    public function setPageTitle($value): self
     {
         return $this->setTitle($value);
     }
@@ -179,7 +179,7 @@ trait MetaTrait
     /**
      * @return array
      */
-    public function getPageTitle()
+    public function getPageTitle(): array
     {
         return $this->getTitle();
     }
@@ -188,19 +188,19 @@ trait MetaTrait
      * @param $template string
      * @param array $params
      */
-    public function setMetaTemplate($template, $params = [])
+    public function setMetaTemplate($template, array $params = []): void
     {
         $this->metaTemplate = $template;
         $this->metaTemplateParams = $params;
     }
 
-    public function setMetaBase($type, $params = [])
+    public function setMetaBase($type, array $params = []): void
     {
         $this->metaBase = $type;
         $this->metaTemplateParams = $params;
     }
 
-    public function addMetaTemplateParam($param, $data)
+    public function addMetaTemplateParam($param, $data): void
     {
         $this->metaTemplateParams[$param] = $data;
     }
@@ -208,12 +208,12 @@ trait MetaTrait
     /**
      * @return mixed
      */
-    public function getMetaTemplate()
+    public function getMetaTemplate():? string
     {
         return $this->metaTemplate;
     }
 
-    public function getMetaBase():?int
+    public function getMetaBase():? int
     {
         return $this->metaBase;
     }
@@ -221,7 +221,7 @@ trait MetaTrait
     /**
      * @return mixed
      */
-    public function getMetaTemplateParams()
+    public function getMetaTemplateParams():? array
     {
         return $this->metaTemplateParams;
     }

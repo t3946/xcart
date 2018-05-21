@@ -1,0 +1,152 @@
+.items__list{
+  margin-bottom: 15px;
+  border-top: 1px solid $grey_cc;
+
+  .item{
+    padding: 13px 6px 16px;
+    border-bottom: 1px solid $grey_cc;
+    min-height: 163px;
+
+    .item__pic-container{
+      padding: 2px 8px 2px 3px;
+      height: 132px;
+      overflow: hidden;
+      text-align: center;
+
+      a {
+        height:100%;
+        width: auto;
+        //max-width: 100%;
+
+        .item__pic{
+          height: auto;
+          max-height: 100%;
+          width: auto;
+          max-width: 100%;
+          display: inline-block;
+          vertical-align: middle;
+        }
+      }
+    }
+
+    .item__info-container{
+      padding-left: 10px;
+
+      .item__caption {
+        margin: 0;
+        font-size: 1em;
+
+        a{
+          font-size: 0.875em;
+          line-height: 18px;
+          font-weight: 700;
+          margin-bottom: 12px;
+          color: $black;
+
+          &:hover, &:focus{
+
+          }
+
+          &:after{
+            content: '';
+            display: inline-block;
+            width: 7px;
+            height: 11px;
+            margin-left: 11px;
+            margin-bottom: -2px;
+            background: url("../images/home/1280/right_arrow_2.svg") no-repeat;
+
+          }
+        }
+      }
+
+      .item__brand{
+        color: $dark_33;
+      }
+
+      .item__description{
+        font-size: 0.75em;
+        color: $dark_33;
+        padding-bottom: 10px;
+        line-height: 15px;
+      }
+
+      .item__price{
+
+        .item__price_old{
+          font-size: 0.75em;
+          color: $grey_5c;
+          text-decoration: line-through;
+        }
+
+        .item__price_new{
+          font-size: 0.875em;
+          font-weight: 700;
+          padding-left: 7px;
+        }
+      }
+    }
+  }
+
+  &.tile-view{
+    letter-spacing: 0;
+    border-top: none;
+
+    .item{
+      width: 50%;
+      float: left;
+      //display: inline-block;
+      display: block;
+      padding-top: 8px;
+      padding-bottom: 18px;
+      height: auto;
+      border-bottom: none;
+
+      .item__pic-container{
+        width: 100%;
+        padding: 0 2px 14px 3px;
+        height: 162px;
+
+        .item__pic {
+          display: inline-block;
+          vertical-align: middle;
+
+        }
+
+      }
+
+      &:nth-child(2n+1) {
+        clear: both;
+      }
+    }
+
+    .item__info-container{
+      width: 100%;
+      padding-left: 2px;
+
+      .item__caption {
+        line-height: 15px;
+
+        a{
+          margin-bottom: 0;
+          color: $grey_5c;
+
+
+          &:after{
+            display: none;
+          }
+        }
+      }
+    }
+
+    .item__description{
+      display: none;
+    }
+
+    &:after {
+      content: '';
+      display: block;
+      clear: both;
+    }
+  }
+}

@@ -68,9 +68,9 @@ class HttpRequest extends Request
 
     public $enableCsrfValidation = false;
 
-    public $csrfTokenName = "CSRF_TOKEN";
+    public $csrfTokenName = 'CSRF_TOKEN';
 
-    public $csrfTokenHeader = "X-CSRF-Token";
+    public $csrfTokenHeader = 'X-CSRF-Token';
 
     public $from_get = false;
 
@@ -83,10 +83,10 @@ class HttpRequest extends Request
         }
     }
 
-    public function validateCsrfToken()
+    public function validateCsrfToken(): void
     {
         $method = $this->getMethod();
-        if (in_array($method, ['POST', 'PUT', 'PATCH', 'DELETE'])) {
+        if (\in_array($method, ['POST', 'PUT', 'PATCH', 'DELETE'])) {
             // @TODO: PUT, PATCH, DELETE check
             $userToken = $this->post->get($this->csrfTokenName);
             $validToken = $this->getCsrfToken();
@@ -111,7 +111,7 @@ class HttpRequest extends Request
     {
         $key = 'HTTP_' . str_replace('-', '_', strtoupper($key));
 
-        return isset($_SERVER[$key]) ? $_SERVER[$key] : null;
+        return $_SERVER[$key] ?? null;
     }
 
     public function getCsrfToken()
@@ -136,12 +136,12 @@ class HttpRequest extends Request
         $this->cookie = new CookieCollection();
     }
 
-    public function setSession($session)
+    public function setSession($session): void
     {
         if ($session instanceof Session) {
             $this->_session = $session;
         }
-        elseif (is_array($session) || is_string($session)) {
+        elseif (\is_array($session) || \is_string($session)) {
             $session['request'] = $this;
             $this->_session = Creator::create($session);
         }
@@ -174,7 +174,7 @@ class HttpRequest extends Request
      *
      * @return boolean whether this is a GET request.
      */
-    public function getIsGet()
+    public function getIsGet(): bool
     {
         return $this->getMethod() === 'GET';
     }
@@ -184,7 +184,7 @@ class HttpRequest extends Request
      *
      * @return boolean whether this is a OPTIONS request.
      */
-    public function getIsOptions()
+    public function getIsOptions(): bool
     {
         return $this->getMethod() === 'OPTIONS';
     }
@@ -194,7 +194,7 @@ class HttpRequest extends Request
      *
      * @return boolean whether this is a HEAD request.
      */
-    public function getIsHead()
+    public function getIsHead(): bool
     {
         return $this->getMethod() === 'HEAD';
     }
@@ -204,7 +204,7 @@ class HttpRequest extends Request
      *
      * @return boolean whether this is a POST request.
      */
-    public function getIsPost()
+    public function getIsPost(): bool
     {
         return $this->getMethod() === 'POST';
     }
@@ -214,7 +214,7 @@ class HttpRequest extends Request
      *
      * @return boolean whether this is a DELETE request.
      */
-    public function getIsDelete()
+    public function getIsDelete(): bool
     {
         return $this->getMethod() === 'DELETE';
     }
@@ -224,7 +224,7 @@ class HttpRequest extends Request
      *
      * @return boolean whether this is a PUT request.
      */
-    public function getIsPut()
+    public function getIsPut(): bool
     {
         return $this->getMethod() === 'PUT';
     }
@@ -234,7 +234,7 @@ class HttpRequest extends Request
      *
      * @return boolean whether this is a PATCH request.
      */
-    public function getIsPatch()
+    public function getIsPatch(): bool
     {
         return $this->getMethod() === 'PATCH';
     }
@@ -247,7 +247,7 @@ class HttpRequest extends Request
      *
      * @return boolean whether this is an AJAX (XMLHttpRequest) request.
      */
-    public function getIsAjax()
+    public function getIsAjax(): bool
     {
         return isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest';
     }
@@ -257,18 +257,9 @@ class HttpRequest extends Request
      *
      * @return boolean whether this is a PJAX request
      */
-    public function getIsPjax()
+    public function getIsPjax(): bool
     {
         return $this->getIsAjax() && !empty($_SERVER['HTTP_X_PJAX']);
-    }
-
-    public function getDomain()
-    {
-        if ($host = $this->getHost()) {
-            return explode(':', $host)[0];
-        }
-
-        return null;
     }
 
     public function getHost()
@@ -282,6 +273,15 @@ class HttpRequest extends Request
         else {
             return null;
         }
+    }
+
+    public function getDomain()
+    {
+        if ($host = $this->getHost()) {
+            return current(explode(':', $host));
+        }
+
+        return null;
     }
 
     /**
@@ -321,7 +321,7 @@ class HttpRequest extends Request
      * @return string the relative URL of the entry script.
      * @throws InvalidConfigException if unable to determine the entry script URL
      */
-    public function getScriptUrl()
+    public function getScriptUrl(): string
     {
         if ($this->_scriptUrl === null) {
             $scriptFile = $this->getScriptFile();
@@ -339,7 +339,7 @@ class HttpRequest extends Request
                 $this->_scriptUrl = substr($_SERVER['SCRIPT_NAME'], 0, $pos) . '/' . $scriptName;
             }
             elseif (!empty($_SERVER['DOCUMENT_ROOT']) && strpos($scriptFile, $_SERVER['DOCUMENT_ROOT']) === 0) {
-                $this->_scriptUrl = str_replace('\\', '/', str_replace($_SERVER['DOCUMENT_ROOT'], '', $scriptFile));
+                $this->_scriptUrl = str_replace(array($_SERVER['DOCUMENT_ROOT'], '\\'), array('', '/'), $scriptFile);
             }
             else {
                 throw new InvalidConfigException('Unable to determine the entry script URL.');
@@ -368,17 +368,17 @@ class HttpRequest extends Request
      * @return string the entry script file path
      * @throws InvalidConfigException
      */
-    public function getScriptFile()
+    public function getScriptFile(): ?string
     {
         if (isset($this->_scriptFile)) {
             return $this->_scriptFile;
         }
-        elseif (isset($_SERVER['SCRIPT_FILENAME'])) {
+
+        if (isset($_SERVER['SCRIPT_FILENAME'])) {
             return $_SERVER['SCRIPT_FILENAME'];
         }
-        else {
-            throw new InvalidConfigException('Unable to determine the entry script file path.');
-        }
+
+        throw new InvalidConfigException('Unable to determine the entry script file path.');
     }
 
     /**
@@ -388,7 +388,7 @@ class HttpRequest extends Request
      * @return string the currently requested absolute URL.
      * @throws \Xcart\App\Exceptions\InvalidConfigException
      */
-    public function getAbsoluteUrl()
+    public function getAbsoluteUrl(): string
     {
         return $this->getHostInfo() . $this->getUrl();
     }
@@ -401,7 +401,7 @@ class HttpRequest extends Request
      * @return string the currently requested relative URL. Note that the URI returned is URL-encoded.
      * @throws InvalidConfigException if the URL cannot be determined due to unusual server configuration
      */
-    public function getUrl()
+    public function getUrl(): string
     {
         if ($this->_url === null) {
             $this->_url = $this->getRequestUri();
@@ -416,7 +416,7 @@ class HttpRequest extends Request
      * @return string part of the request URL that is before the question mark
      * @throws \Xcart\App\Exceptions\InvalidConfigException
      */
-    public function getPath()
+    public function getPath(): string
     {
         return strtok($this->getUrl(), '?');
     }
@@ -426,15 +426,14 @@ class HttpRequest extends Request
     {
         $requestUri = '';
 
-        if ($from_get_path && is_bool($this->from_get) && $this->from_get) {
+        if ($from_get_path && \is_bool($this->from_get) && $this->from_get) {
             if ($qs = $this->getQueryArray(null, false)) {
                 $requestUri = current(array_keys($qs));
             }
         }
         elseif ($from_get_path && $this->from_get && !empty($_GET[$this->from_get])) {
             $requestUri = urldecode($_GET[$this->from_get]);
-            unset ($_GET[$this->from_get]);
-            unset ($_REQUEST[$this->from_get]);
+            unset($_GET[$this->from_get], $_REQUEST[$this->from_get]);
         }
         else {
             $requestUri = $this->getRequestUri();
@@ -494,22 +493,24 @@ class HttpRequest extends Request
      *
      * @return string part of the request URL that is after the question mark
      */
-    public function getQueryString()
+    public function getQueryString(): string
     {
-        return isset($_SERVER['QUERY_STRING']) ? $_SERVER['QUERY_STRING'] : '';
+        return $_SERVER['QUERY_STRING'] ?? '';
     }
 
     /**
      * Returns array representation part of the request URL that is after the question mark.
      *
+     * @param null $query_string
+     * @param bool $ignore_fg
      * @return array part of the request URL that is after the question mark
      */
-    public function getQueryArray($query_string = null, $ignore_fg = true)
+    public function getQueryArray($query_string = null, $ignore_fg = true): array
     {
         $string = $query_string ?: $this->getQueryString();
         parse_str($string, $data);
 
-        if ($ignore_fg && is_bool($this->from_get)) {
+        if ($ignore_fg && \is_bool($this->from_get)) {
             if ($data) {
                 $requestUri = current(array_keys($data));
                 unset($data[$requestUri]);
@@ -528,10 +529,10 @@ class HttpRequest extends Request
      *
      * @return boolean if the request is sent via secure channel (https)
      */
-    public function getIsSecureConnection()
+    public function getIsSecureConnection(): bool
     {
-        return isset($_SERVER['HTTPS']) && (strcasecmp($_SERVER['HTTPS'], 'on') === 0 || $_SERVER['HTTPS'] == 1)
-               || isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && strcasecmp($_SERVER['HTTP_X_FORWARDED_PROTO'], 'https') === 0;
+        return (isset($_SERVER['HTTPS']) && (strcasecmp($_SERVER['HTTPS'], 'on') === 0 || $_SERVER['HTTPS'] == 1))
+               || (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && strcasecmp($_SERVER['HTTP_X_FORWARDED_PROTO'], 'https') === 0);
     }
 
     /**
@@ -539,9 +540,9 @@ class HttpRequest extends Request
      *
      * @return string server name, null if not available
      */
-    public function getServerName()
+    public function getServerName(): string
     {
-        return isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : null;
+        return $_SERVER['SERVER_NAME'] ?? null;
     }
 
     /**
@@ -549,7 +550,7 @@ class HttpRequest extends Request
      *
      * @return integer|null server port number, null if not available
      */
-    public function getServerPort()
+    public function getServerPort(): ?int
     {
         return isset($_SERVER['SERVER_PORT']) ? (int)$_SERVER['SERVER_PORT'] : null;
     }
@@ -559,9 +560,9 @@ class HttpRequest extends Request
      *
      * @return string|null URL referrer, null if not available
      */
-    public function getReferrer()
+    public function getReferrer(): ?string
     {
-        return isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : null;
+        return $_SERVER['HTTP_REFERER'] ?? null;
     }
 
     /**
@@ -569,9 +570,9 @@ class HttpRequest extends Request
      *
      * @return string|null user agent, null if not available
      */
-    public function getUserAgent()
+    public function getUserAgent(): ?string
     {
-        return isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : null;
+        return $_SERVER['HTTP_USER_AGENT'] ?? null;
     }
 
     /**
@@ -579,9 +580,9 @@ class HttpRequest extends Request
      *
      * @return string|null user IP address, null if not available
      */
-    public function getUserIP()
+    public function getUserIP(): ?string
     {
-        return isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : null;
+        return $_SERVER['REMOTE_ADDR'] ?? null;
     }
 
     /**
@@ -589,25 +590,25 @@ class HttpRequest extends Request
      *
      * @return string|null user host name, null if not available
      */
-    public function getUserHost()
+    public function getUserHost(): ?string
     {
-        return isset($_SERVER['REMOTE_HOST']) ? $_SERVER['REMOTE_HOST'] : null;
+        return $_SERVER['REMOTE_HOST'] ?? null;
     }
 
     /**
      * @return string|null the username sent via HTTP authentication, null if the username is not given
      */
-    public function getAuthUser()
+    public function getAuthUser(): ?string
     {
-        return isset($_SERVER['PHP_AUTH_USER']) ? $_SERVER['PHP_AUTH_USER'] : null;
+        return $_SERVER['PHP_AUTH_USER'] ?? null;
     }
 
     /**
      * @return string|null the password sent via HTTP authentication, null if the password is not given
      */
-    public function getAuthPassword()
+    public function getAuthPassword(): ?string
     {
-        return isset($_SERVER['PHP_AUTH_PW']) ? $_SERVER['PHP_AUTH_PW'] : null;
+        return $_SERVER['PHP_AUTH_PW'] ?? null;
     }
 
     /**
@@ -618,7 +619,7 @@ class HttpRequest extends Request
      * @return integer port number for insecure requests.
      * @see setPort()
      */
-    public function getPort()
+    public function getPort(): int
     {
         if ($this->_port === null) {
             $this->_port = !$this->getIsSecureConnection() && isset($_SERVER['SERVER_PORT']) ? (int)$_SERVER['SERVER_PORT'] : 80;
@@ -634,7 +635,7 @@ class HttpRequest extends Request
      *
      * @param integer $value port number.
      */
-    public function setPort($value)
+    public function setPort($value): void
     {
         if ($value != $this->_port) {
             $this->_port = (int)$value;
@@ -650,7 +651,7 @@ class HttpRequest extends Request
      * @return integer port number for secure requests.
      * @see setSecurePort()
      */
-    public function getSecurePort()
+    public function getSecurePort(): int
     {
         if ($this->_securePort === null) {
             $this->_securePort = $this->getIsSecureConnection() && isset($_SERVER['SERVER_PORT']) ? (int)$_SERVER['SERVER_PORT'] : 443;
@@ -666,7 +667,7 @@ class HttpRequest extends Request
      *
      * @param integer $value port number.
      */
-    public function setSecurePort($value)
+    public function setSecurePort($value): void
     {
         if ($value != $this->_securePort) {
             $this->_securePort = (int)$value;
@@ -685,12 +686,13 @@ class HttpRequest extends Request
      * @link http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.17
      * HTTP 1.1 header field definitions
      */
-    public function getContentType()
+    public function getContentType(): string
     {
         if (isset($_SERVER['CONTENT_TYPE'])) {
             return $_SERVER['CONTENT_TYPE'];
         }
-        elseif (isset($_SERVER['HTTP_CONTENT_TYPE'])) {
+
+        if (isset($_SERVER['HTTP_CONTENT_TYPE'])) {
             //fix bug https://bugs.php.net/bug.php?id=66606
             return $_SERVER['HTTP_CONTENT_TYPE'];
         }
@@ -714,20 +716,21 @@ class HttpRequest extends Request
      * @throws \Xcart\App\Exceptions\InvalidConfigException
      * @throws \Xcart\App\Exceptions\UnknownPropertyException
      */
-    public function redirect($url, $data = [], $statusCode = 302, $query = [])
+    public function redirect($url, array $data = [], $statusCode = 302, $query = [])
     {
-        if (is_object($url) && method_exists($url, 'getAbsoluteUrl')) {
+        if (\is_object($url) && method_exists($url, 'getAbsoluteUrl')) {
             $url = $url->getAbsoluteUrl();
         }
-        elseif (strpos($url, ':') !== false) {
+        elseif (strpos($url, ':') !== false && strpos($url, 'http', 0) === false) {
             $url = Xcart::app()->router->url($url, $data, $query);
         }
 
         header('Location: ' . $url, true, $statusCode);
 
         if (Xcart::app()->hasComponent('middleware')) {
-            Xcart::app()->middleware->processResponse(Xcart::app()->request);
+            Xcart::app()->middleware->processResponse(Xcart::app()->request->getRequest());
         }
+
         Xcart::app()->end();
     }
 
@@ -740,7 +743,7 @@ class HttpRequest extends Request
         return Xcart::app()->router->match($url);
     }
 
-    public function refresh()
+    public function refresh(): void
     {
         if ($match = $this->getMatchRouting()) {
             $this->redirect($match['name'], $match['params']);
@@ -749,7 +752,7 @@ class HttpRequest extends Request
         $this->redirect($this->getUrl());
     }
 
-    public function getMatchingUrl($query = [])
+    public function getMatchingUrl(array $query = []): string
     {
         if ($match = $this->getMatchRouting()) {
             return Xcart::app()->router->url($match['name'], $match['params'], $query);

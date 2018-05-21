@@ -27,13 +27,13 @@ class EventManager
         $this->_events = new DataPriorityQueue();
     }
 
-    public function init()
+    public function init(): void
     {
         if ($this->events) {
             foreach ($this->events as $name => $group)
             {
                 foreach ($group as $event) {
-                    $this->on($name, $event['callback'], (isset($event['sender']) ? $event['sender'] : null), (isset($event['priority'])? $event['priority'] : 0));
+                    $this->on($name, $event['callback'], $event['sender'] ?? null, $event['priority'] ?? 0);
                 }
             }
         }
@@ -45,14 +45,15 @@ class EventManager
      * @param null $sender string|null Class name of sender or null
      * @param int $priority
      */
-    public function on($name, $callback, $sender = null, $priority = 0)
+    public function on($name, $callback, $sender = null, $priority = 0): void
     {
-        if (!is_callable($callback)) {
+        if (!\is_callable($callback)) {
             throw new InvalidArgumentException('Attribute $callback must be valid callback');
         }
-        if (!is_string($sender) && !is_null($sender)) {
+        if (!\is_string($sender) && null !== $sender) {
             throw new InvalidArgumentException('Attribute $sender must be string or null');
         }
+
         $this->_events->insert([
             'name' => $name,
             'callback' => $callback,
@@ -66,9 +67,9 @@ class EventManager
      * @param null $sender string|object|null Sender object or sender class name or null
      * @param null $callback callable|null Callback function that calls after event callback function and takes result of event callback function
      */
-    public function trigger($name, $params = array(), $sender = null, $callback = null)
+    public function trigger($name, array $params = [], $sender = null, $callback = null): void
     {
-        if (!is_callable($callback) && !is_null($callback)) {
+        if (!\is_callable($callback) && null !== $callback) {
             throw new InvalidArgumentException('Attribute $callback must be valid callback or null');
         }
 
@@ -76,21 +77,21 @@ class EventManager
             if ($event['name'] == $name) {
                 $receiver = $event['sender'];
                 if ($sender && $receiver) {
-                    if (
-                        is_string($sender) &&
-                        (!is_subclass_of($sender, $receiver) && $receiver !== $sender)
-                    ) {
+                    if (\is_string($sender) &&
+                    (!is_subclass_of($sender, $receiver) && $receiver !== $sender)) {
                         continue;
-                    } elseif (
-                        is_object($sender)
+                    }
+
+                    if (
+                        \is_object($sender)
                         && !($sender instanceof $receiver)
                     ) {
                         continue;
                     }
                 }
-                $result = call_user_func_array($event['callback'], array_merge([$sender], $params));
+                $result = \call_user_func_array($event['callback'], array_merge([$sender], $params));
                 if ($callback) {
-                    call_user_func_array($callback, [$result]);
+                    \call_user_func_array($callback, [$result]);
                 }
             }
         }

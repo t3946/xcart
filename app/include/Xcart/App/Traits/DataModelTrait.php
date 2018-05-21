@@ -15,9 +15,9 @@ trait DataModelTrait
     /**
      * @return string class of Data
      */
-    public static function getDataModelClass()
+    public static function getDataModelClass(): string
     {
-        return Data::className();
+        return Data::class;
     }
 
     /**

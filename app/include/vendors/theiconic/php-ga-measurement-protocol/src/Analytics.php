@@ -5,8 +5,8 @@ namespace TheIconic\Tracking\GoogleAnalytics;
 use TheIconic\Tracking\GoogleAnalytics\Parameters\SingleParameter;
 use TheIconic\Tracking\GoogleAnalytics\Parameters\CompoundParameterCollection;
 use TheIconic\Tracking\GoogleAnalytics\Network\HttpClient;
+use TheIconic\Tracking\GoogleAnalytics\Network\PrepareUrl;
 use TheIconic\Tracking\GoogleAnalytics\Exception\InvalidPayloadDataException;
-use Symfony\Component\Finder\Finder;
 
 /**
  * Class Analytics
@@ -14,6 +14,7 @@ use Symfony\Component\Finder\Finder;
  * The main interface for the clients, it relies heavily in magic methods exposing
  * an interface with method tags.
  *
+ * ==== GETTERS ====
  * General
  * @method \TheIconic\Tracking\GoogleAnalytics\Analytics setProtocolVersion($value)
  * @method \TheIconic\Tracking\GoogleAnalytics\Analytics setTrackingId($value)
@@ -125,7 +126,7 @@ use Symfony\Component\Finder\Finder;
  * @method \TheIconic\Tracking\GoogleAnalytics\Analytics setSocialActionTarget($value)
  *
  * Timing
- * @method \TheIconic\Tracking\GoogleAnalytics\Analytics setUserTiminCategory($value)
+ * @method \TheIconic\Tracking\GoogleAnalytics\Analytics setUserTimingCategory($value)
  * @method \TheIconic\Tracking\GoogleAnalytics\Analytics setUserTimingVariableName($value)
  * @method \TheIconic\Tracking\GoogleAnalytics\Analytics setUserTimingTime($value)
  * @method \TheIconic\Tracking\GoogleAnalytics\Analytics setUserTimingLabel($value)
@@ -153,6 +154,137 @@ use Symfony\Component\Finder\Finder;
  * @method \TheIconic\Tracking\GoogleAnalytics\Analytics setExperimentId($value)
  * @method \TheIconic\Tracking\GoogleAnalytics\Analytics setExperimentVariant($value)
  *
+ * ==== SETTERS ====
+ * General
+ * @method string|int|null getProtocolVersion()
+ * @method string|int|null getTrackingId()
+ * @method string|int|null getAnonymizeIp()
+ * @method string|int|null getDataSource()
+ * @method string|int|null getQueueTime()
+ * @method string|int|null getCacheBuster()
+ *
+ * User
+ * @method string|int|null getClientId()
+ * @method string|int|null getUserId()
+ *
+ * Session
+ * @method string|int|null getSessionControl()
+ * @method string|int|null getIpOverride()
+ * @method string|int|null getUserAgentOverride()
+ * @method string|int|null getGeographicalOverride()
+ *
+ * Traffic Sources
+ * @method string|int|null getDocumentReferrer()
+ * @method string|int|null getCampaignName()
+ * @method string|int|null getCampaignSource()
+ * @method string|int|null getCampaignMedium()
+ * @method string|int|null getCampaignKeyword()
+ * @method string|int|null getCampaignContent()
+ * @method string|int|null getCampaignId()
+ * @method string|int|null getGoogleAdwordsId()
+ * @method string|int|null getGoogleDisplayAdsId()
+ *
+ * System Info
+ * @method string|int|null getScreenResolution()
+ * @method string|int|null getViewportSize()
+ * @method string|int|null getDocumentEncoding()
+ * @method string|int|null getScreenColors()
+ * @method string|int|null getUserLanguage()
+ * @method string|int|null getJavaEnabled()
+ * @method string|int|null getFlashVersion()
+ *
+ * Hit
+ * @method string|int|null getHitType()
+ * @method string|int|null getNonInteractionHit()
+ *
+ * Content Information
+ * @method string|int|null getDocumentLocationUrl()
+ * @method string|int|null getDocumentHostName()
+ * @method string|int|null getDocumentPath()
+ * @method string|int|null getDocumentTitle()
+ * @method string|int|null getScreenName()
+ * @method string|int|null getLinkId()
+ *
+ * App Tracking
+ * @method string|int|null getApplicationName()
+ * @method string|int|null getApplicationId()
+ * @method string|int|null getApplicationVersion()
+ * @method string|int|null getApplicationInstallerId()
+ *
+ * Event Tracking
+ * @method string|int|null getEventCategory()
+ * @method string|int|null getEventAction()
+ * @method string|int|null getEventLabel()
+ * @method string|int|null getEventValue()
+ *
+ * E-commerce
+ * @method string|int|null getItemName()
+ * @method string|int|null getItemPrice()
+ * @method string|int|null getItemQuantity()
+ * @method string|int|null getItemCode()
+ * @method string|int|null getItemCategory()
+ * @method string|int|null getCurrencyCode()
+ *
+ * Enhanced E-Commerce
+ * @method string|int|null getTransactionId()
+ * @method string|int|null getAffiliation()
+ * @method string|int|null getRevenue()
+ * @method string|int|null getTax()
+ * @method string|int|null getShipping()
+ * @method string|int|null getCouponCode()
+ * @method string|int|null getProductActionList()
+ * @method string|int|null getCheckoutStep()
+ * @method string|int|null getCheckoutStepOption()
+ * @method string|int|null getProduct()
+ * @method string|int|null getProductAction()
+ * @method string|int|null getProductActionToDetail()
+ * @method string|int|null getProductActionToClick()
+ * @method string|int|null getProductActionToAdd()
+ * @method string|int|null getProductActionToRemove()
+ * @method string|int|null getProductActionToCheckout()
+ * @method string|int|null getProductActionToCheckoutOption()
+ * @method string|int|null getProductActionToPurchase()
+ * @method string|int|null getProductActionToRefund()
+ * @method string|int|null getProductImpressionListName($index)
+ * @method string|int|null getProductImpression($listIndex)
+ * @method string|int|null getPromotion()
+ * @method string|int|null getPromotionAction()
+ * @method string|int|null getPromotionActionToClick()
+ * @method string|int|null getPromotionActionToView()
+ *
+ * Social Interactions
+ * @method string|int|null getSocialNetwork()
+ * @method string|int|null getSocialAction()
+ * @method string|int|null getSocialActionTarget()
+ *
+ * Timing
+ * @method string|int|null getUserTimingCategory()
+ * @method string|int|null getUserTimingVariableName()
+ * @method string|int|null getUserTimingTime()
+ * @method string|int|null getUserTimingLabel()
+ * @method string|int|null getPageLoadTime()
+ * @method string|int|null getDnsTime()
+ * @method string|int|null getPageDownloadTime()
+ * @method string|int|null getRedirectResponseTime()
+ * @method string|int|null getTcpConnectTime()
+ * @method string|int|null getServerResponseTime()
+ * @method string|int|null getDomInteractiveTime()
+ * @method string|int|null getContentLoadTime()
+ *
+ * Exceptions
+ * @method string|int|null getExceptionDescription()
+ * @method string|int|null getIsExceptionFatal()
+ *
+ * Custom Dimension / Metrics
+ * @method string|int|null getCustomDimension($index)
+ * @method string|int|null getCustomMetric($index)
+ *
+ * Content Grouping
+ * @method string|int|null getContentGroup($index)
+ *
+ * Content Experiments
+ * @method string|int|null getExperimentId()
+ * @method string|int|null getExperimentVariant()
  *
  * @package TheIconic\Tracking\GoogleAnalytics
  */
@@ -163,61 +295,185 @@ class Analytics
      *
      * @var string
      */
-    private $uriScheme = 'http';
+    protected $uriScheme = 'http';
 
     /**
      * Indicates if the request to GA will be asynchronous (non-blocking).
      *
      * @var boolean
      */
-    private $isAsyncRequest = false;
+    protected $isAsyncRequest = false;
 
     /**
      * Endpoint to connect to when sending data to GA.
      *
      * @var string
      */
-    private $endpoint = '://www.google-analytics.com/collect';
+    protected $endpoint = '://www.google-analytics.com/collect';
+
+    /**
+     * Endpoint to connect to when validating hits.
+     * @link https://developers.google.com/analytics/devguides/collection/protocol/v1/validating-hits
+     *
+     * @var string
+     */
+    protected $debugEndpoint = '://www.google-analytics.com/debug/collect';
+
+    /**
+     * Indicates if the request is in debug mode(validating hits).
+     *
+     * @var boolean
+     */
+    protected $isDebug = false;
 
     /**
      * Holds the single parameters added to the hit.
      *
      * @var SingleParameter[]
      */
-    private $singleParameters = [];
+    protected $singleParameters = [];
 
     /**
      * Holds the compound parameters collections added to the hit.
      *
      * @var  CompoundParameterCollection[]
      */
-    private $compoundParametersCollections = [];
-
-    /**
-     * Initializes to a list of all the available parameters to be sent in a hit.
-     *
-     * @var array
-     */
-    private $availableParameters;
+    protected $compoundParametersCollections = [];
 
     /**
      * Holds the HTTP client used to connect to GA.
      *
      * @var HttpClient
      */
-    private $httpClient;
+    protected $httpClient;
+
+    /**
+     * Indicates if the request to GA will be executed (by default) or not.
+     *
+     * @var boolean
+     */
+    protected $isDisabled = false;
+
+    /**
+     * @var array
+     */
+    protected $options = [];
+    
+    /**
+     * Initializes to a list of all the available parameters to be sent in a hit.
+     *
+     * @var array
+     */
+    protected $availableParameters = [
+        'ApplicationId' => 'AppTracking\\ApplicationId',
+        'ApplicationInstallerId' => 'AppTracking\\ApplicationInstallerId',
+        'ApplicationName' => 'AppTracking\\ApplicationName',
+        'ApplicationVersion' => 'AppTracking\\ApplicationVersion',
+        'ExperimentId' => 'ContentExperiments\\ExperimentId',
+        'ExperimentVariant' => 'ContentExperiments\\ExperimentVariant',
+        'ContentGroup' => 'ContentGrouping\\ContentGroup',
+        'DocumentHostName' => 'ContentInformation\\DocumentHostName',
+        'DocumentLocationUrl' => 'ContentInformation\\DocumentLocationUrl',
+        'DocumentPath' => 'ContentInformation\\DocumentPath',
+        'DocumentTitle' => 'ContentInformation\\DocumentTitle',
+        'LinkId' => 'ContentInformation\\LinkId',
+        'ScreenName' => 'ContentInformation\\ScreenName',
+        'CustomDimension' => 'CustomDimensionsMetrics\\CustomDimension',
+        'CustomMetric' => 'CustomDimensionsMetrics\\CustomMetric',
+        'CurrencyCode' => 'Ecommerce\\CurrencyCode',
+        'ItemCategory' => 'Ecommerce\\ItemCategory',
+        'ItemCode' => 'Ecommerce\\ItemCode',
+        'ItemName' => 'Ecommerce\\ItemName',
+        'ItemPrice' => 'Ecommerce\\ItemPrice',
+        'ItemQuantity' => 'Ecommerce\\ItemQuantity',
+        'Affiliation' => 'EnhancedEcommerce\\Affiliation',
+        'CheckoutStep' => 'EnhancedEcommerce\\CheckoutStep',
+        'CheckoutStepOption' => 'EnhancedEcommerce\\CheckoutStepOption',
+        'CouponCode' => 'EnhancedEcommerce\\CouponCode',
+        'Product' => 'EnhancedEcommerce\\Product',
+        'ProductAction' => 'EnhancedEcommerce\\ProductAction',
+        'ProductActionList' => 'EnhancedEcommerce\\ProductActionList',
+        'ProductCollection' => 'EnhancedEcommerce\\ProductCollection',
+        'ProductImpression' => 'EnhancedEcommerce\\ProductImpression',
+        'ProductImpressionCollection' => 'EnhancedEcommerce\\ProductImpressionCollection',
+        'ProductImpressionListName' => 'EnhancedEcommerce\\ProductImpressionListName',
+        'Promotion' => 'EnhancedEcommerce\\Promotion',
+        'PromotionAction' => 'EnhancedEcommerce\\PromotionAction',
+        'PromotionCollection' => 'EnhancedEcommerce\\PromotionCollection',
+        'Revenue' => 'EnhancedEcommerce\\Revenue',
+        'Shipping' => 'EnhancedEcommerce\\Shipping',
+        'Tax' => 'EnhancedEcommerce\\Tax',
+        'TransactionId' => 'EnhancedEcommerce\\TransactionId',
+        'EventAction' => 'Event\\EventAction',
+        'EventCategory' => 'Event\\EventCategory',
+        'EventLabel' => 'Event\\EventLabel',
+        'EventValue' => 'Event\\EventValue',
+        'ExceptionDescription' => 'Exceptions\\ExceptionDescription',
+        'IsExceptionFatal' => 'Exceptions\\IsExceptionFatal',
+        'AnonymizeIp' => 'General\\AnonymizeIp',
+        'CacheBuster' => 'General\\CacheBuster',
+        'DataSource' => 'General\\DataSource',
+        'ProtocolVersion' => 'General\\ProtocolVersion',
+        'QueueTime' => 'General\\QueueTime',
+        'TrackingId' => 'General\\TrackingId',
+        'HitType' => 'Hit\\HitType',
+        'NonInteractionHit' => 'Hit\\NonInteractionHit',
+        'GeographicalOverride' => 'Session\\GeographicalOverride',
+        'IpOverride' => 'Session\\IpOverride',
+        'SessionControl' => 'Session\\SessionControl',
+        'UserAgentOverride' => 'Session\\UserAgentOverride',
+        'SocialAction' => 'SocialInteractions\\SocialAction',
+        'SocialActionTarget' => 'SocialInteractions\\SocialActionTarget',
+        'SocialNetwork' => 'SocialInteractions\\SocialNetwork',
+        'DocumentEncoding' => 'SystemInfo\\DocumentEncoding',
+        'FlashVersion' => 'SystemInfo\\FlashVersion',
+        'JavaEnabled' => 'SystemInfo\\JavaEnabled',
+        'ScreenColors' => 'SystemInfo\\ScreenColors',
+        'ScreenResolution' => 'SystemInfo\\ScreenResolution',
+        'UserLanguage' => 'SystemInfo\\UserLanguage',
+        'ViewportSize' => 'SystemInfo\\ViewportSize',
+        'ContentLoadTime' => 'Timing\\ContentLoadTime',
+        'DnsTime' => 'Timing\\DnsTime',
+        'DomInteractiveTime' => 'Timing\\DomInteractiveTime',
+        'PageDownloadTime' => 'Timing\\PageDownloadTime',
+        'PageLoadTime' => 'Timing\\PageLoadTime',
+        'RedirectResponseTime' => 'Timing\\RedirectResponseTime',
+        'ServerResponseTime' => 'Timing\\ServerResponseTime',
+        'TcpConnectTime' => 'Timing\\TcpConnectTime',
+        'UserTimingCategory' => 'Timing\\UserTimingCategory',
+        'UserTimingLabel' => 'Timing\\UserTimingLabel',
+        'UserTimingTime' => 'Timing\\UserTimingTime',
+        'UserTimingVariableName' => 'Timing\\UserTimingVariableName',
+        'CampaignContent' => 'TrafficSources\\CampaignContent',
+        'CampaignId' => 'TrafficSources\\CampaignId',
+        'CampaignKeyword' => 'TrafficSources\\CampaignKeyword',
+        'CampaignMedium' => 'TrafficSources\\CampaignMedium',
+        'CampaignName' => 'TrafficSources\\CampaignName',
+        'CampaignSource' => 'TrafficSources\\CampaignSource',
+        'DocumentReferrer' => 'TrafficSources\\DocumentReferrer',
+        'GoogleAdwordsId' => 'TrafficSources\\GoogleAdwordsId',
+        'GoogleDisplayAdsId' => 'TrafficSources\\GoogleDisplayAdsId',
+        'ClientId' => 'User\\ClientId',
+        'UserId' => 'User\\UserId',
+    ];
 
     /**
      * When passed with an argument of TRUE, it will send the hit using HTTPS instead of plain HTTP.
      * It parses the available parameters.
      *
      * @param bool $isSsl
+     * @param bool $isDisabled
+     * @param array $options
      * @throws \InvalidArgumentException
      */
-    public function __construct($isSsl = false)
+    public function __construct($isSsl = false, $isDisabled = false, array $options = [])
     {
         if (!is_bool($isSsl)) {
             throw new \InvalidArgumentException('First constructor argument "isSSL" must be boolean');
+        }
+
+        if (!is_bool($isDisabled)) {
+            throw new \InvalidArgumentException('Second constructor argument "isDisabled" must be boolean');
         }
 
         if ($isSsl) {
@@ -225,12 +481,14 @@ class Analytics
             $this->endpoint = str_replace('www', 'ssl', $this->endpoint);
         }
 
-        $this->availableParameters = $this->getAvailableParameters();
+        $this->isDisabled = $isDisabled;
+        $this->options = $options;
     }
 
     /**
      * Sets a request to be either synchronous or asynchronous (non-blocking).
      *
+     * @api
      * @param boolean $isAsyncRequest
      * @return $this
      */
@@ -256,8 +514,9 @@ class Analytics
     }
 
     /**
-     * Sets the HtppClient.
+     * Sets the HttpClient.
      *
+     * @internal
      * @param HttpClient $httpClient
      * @return $this
      */
@@ -273,7 +532,7 @@ class Analytics
      *
      * @return HttpClient
      */
-    private function getHttpClient()
+    protected function getHttpClient()
     {
         if ($this->httpClient === null) {
             // @codeCoverageIgnoreStart
@@ -285,53 +544,37 @@ class Analytics
     }
 
     /**
-     * Returns an array containing all the available parameters that can be sent in the hit.
-     *
-     * @return array
-     */
-    private function getAvailableParameters()
-    {
-        $parameterClassNames = [];
-
-        $finder = new Finder();
-
-        $finder->files()->in(__DIR__ . '/Parameters');
-
-        foreach ($finder as $file) {
-            $categorisedParameter = str_replace(
-                ['.php', '/'],
-                ['', '\\'],
-                $file->getRelativePathname()
-            );
-            $categorisedParameterArray = explode('\\', $categorisedParameter);
-
-            $validCategorisedParameterCount = 2;
-            if (count($categorisedParameterArray) >= $validCategorisedParameterCount) {
-                $parameterClassNames[$categorisedParameterArray[1]] = $categorisedParameter;
-            }
-        }
-
-        return $parameterClassNames;
-    }
-
-    /**
      * Gets the full endpoint to GA.
      *
      * @return string
      */
-    private function getEndpoint()
+    protected function getEndpoint()
     {
-        return $this->uriScheme . $this->endpoint;
+        return ($this->isDebug) ? $this->uriScheme . $this->debugEndpoint : $this->uriScheme . $this->endpoint;
+    }
+
+    /**
+     * Sets debug mode to true or false.
+     *
+     * @api
+     * @param bool $value
+     * @return \TheIconic\Tracking\GoogleAnalytics\Analytics
+     */
+    public function setDebug($value)
+    {
+        $this->isDebug = $value;
+
+        return $this;
     }
 
     /**
      * Sends a hit to GA. The hit will contain in the payload all the parameters added before.
      *
      * @param $methodName
-     * @return AnalyticsResponse
+     * @return AnalyticsResponseInterface
      * @throws Exception\InvalidPayloadDataException
      */
-    private function sendHit($methodName)
+    protected function sendHit($methodName)
     {
         $hitType = strtoupper(substr($methodName, 4));
 
@@ -346,32 +589,75 @@ class Analytics
             throw new InvalidPayloadDataException();
         }
 
-        return $this->getHttpClient()->post(
+        if ($this->isDisabled) {
+            return new NullAnalyticsResponse();
+        }
+
+        return $this->getHttpClient()->post($this->getUrl(), $this->getHttpClientOptions());
+    }
+
+    /**
+     * Build the options array for the http client based on the Analytics object options.
+     *
+     * @return array
+     */
+    protected function getHttpClientOptions()
+    {
+        $options = ['async' => $this->isAsyncRequest];
+
+        if (isset($this->options['timeout'])) {
+            $options['timeout'] = $this->options['timeout'];
+        }
+
+        return $options;
+    }
+
+    /**
+     * Build and returns URL used to send to Google Analytics.
+     *
+     * @api
+     * @return string
+     */
+    public function getUrl()
+    {
+        $prepareUrl = new PrepareUrl;
+
+        return $prepareUrl->build(
             $this->getEndpoint(),
             $this->singleParameters,
-            $this->compoundParametersCollections,
-            $this->isAsyncRequest
+            $this->compoundParametersCollections
         );
     }
 
     /**
      * Validates the minimum required parameters for every GA hit are being sent.
      *
+     * @SuppressWarnings(PHPMD.LongVariable)
+     *
      * @return bool
      */
-    private function hasMinimumRequiredParameters()
+    protected function hasMinimumRequiredParameters()
     {
         $minimumRequiredParameters = [
             'v' => false,
             'tid' => false,
             'cid' => false,
+            'uid' => false,
             't' => false,
         ];
 
         foreach ($minimumRequiredParameters as $parameterName => $isParamPresent) {
-            if (in_array($parameterName, array_keys($this->singleParameters))) {
+            if (array_key_exists($parameterName, $this->singleParameters)) {
                 $minimumRequiredParameters[$parameterName] = true;
             }
+        }
+
+        if (!$minimumRequiredParameters['cid'] && $minimumRequiredParameters['uid']) {
+            $minimumRequiredParameters['cid'] = true;
+        }
+
+        if (!$minimumRequiredParameters['uid'] && $minimumRequiredParameters['cid']) {
+            $minimumRequiredParameters['uid'] = true;
         }
 
         return !in_array(false, $minimumRequiredParameters, true);
@@ -384,7 +670,7 @@ class Analytics
      * @param $action
      * @return $this
      */
-    private function setParameterActionTo($parameter, $action)
+    protected function setParameterActionTo($parameter, $action)
     {
         $actionConstant = $this->getParameterClassConstant(
             'TheIconic\Tracking\GoogleAnalytics\Parameters\EnhancedEcommerce\\'
@@ -407,7 +693,7 @@ class Analytics
      * @return mixed
      * @throws \BadMethodCallException
      */
-    private function getParameterClassConstant($constant, $exceptionMsg)
+    protected function getParameterClassConstant($constant, $exceptionMsg)
     {
         if (defined($constant)) {
             return constant($constant);
@@ -424,7 +710,7 @@ class Analytics
      * @return $this
      * @throws \InvalidArgumentException
      */
-    private function setParameter($methodName, array $methodArguments)
+    protected function setParameter($methodName, array $methodArguments)
     {
         $parameterClass = substr($methodName, 3);
 
@@ -451,12 +737,14 @@ class Analytics
     /**
      * Adds an item to a compund parameter collection.
      *
+     * @SuppressWarnings(PHPMD.LongVariable)
+     *
      * @param $methodName
      * @param array $methodArguments
      * @return $this
      * @throws \InvalidArgumentException
      */
-    private function addItem($methodName, array $methodArguments)
+    protected function addItem($methodName, array $methodArguments)
     {
         $parameterClass = substr($methodName, 3);
 
@@ -489,12 +777,61 @@ class Analytics
     }
 
     /**
+     * Gets the value for a parameter.
+     *
+     * @SuppressWarnings(PHPMD.LongVariable)
+     *
+     * @param $methodName
+     * @param array $methodArguments
+     * @return string
+     * @throws \InvalidArgumentException
+     */
+    protected function getParameter($methodName, array $methodArguments)
+    {
+        $parameterClass = substr($methodName, 3);
+
+        $fullParameterClass = $this->getFullParameterClass($parameterClass, $methodName);
+
+        // Handle index arguments
+        $parameterIndex = '';
+        if (isset($methodArguments[0]) && is_numeric($methodArguments[0])) {
+            $parameterIndex = $methodArguments[0];
+        }
+
+        // Handle compoundParametersCollections
+        if (isset($this->compoundParametersCollections[$parameterClass . $parameterIndex])) {
+            // If compoundParametersCollections contains our Objects, return them well-formatted
+            return $this->compoundParametersCollections[$parameterClass . $parameterIndex]->getReadableItems();
+        } else {
+            $fullParameterCollectionClass = $fullParameterClass . 'Collection';
+
+            // Test if the class Collection exist
+            if (class_exists($fullParameterCollectionClass, false)) {
+                return null;
+            }
+            // If not, it's a SingleParameter Object, continue the magic
+        }
+
+        /** @var SingleParameter $parameterObject */
+        $parameterObject = new $fullParameterClass($parameterIndex);
+
+        if (!array_key_exists($parameterObject->getName(), $this->singleParameters)) {
+            return null;
+        }
+
+        $currentParameterObject = $this->singleParameters[$parameterObject->getName()];
+
+        return $currentParameterObject->getValue();
+
+    }
+
+    /**
      * Gets the index value from the arguments.
      *
      * @param $methodArguments
      * @return string
      */
-    private function getIndexFromArguments($methodArguments)
+    protected function getIndexFromArguments($methodArguments)
     {
         $index = '';
         if (isset($methodArguments[1]) && is_numeric($methodArguments[1])) {
@@ -512,7 +849,7 @@ class Analytics
      * @return string
      * @throws \BadMethodCallException
      */
-    private function getFullParameterClass($parameterClass, $methodName)
+    protected function getFullParameterClass($parameterClass, $methodName)
     {
         if (empty($this->availableParameters[$parameterClass])) {
             throw new \BadMethodCallException('Method ' . $methodName . ' not defined for Analytics class');
@@ -522,15 +859,17 @@ class Analytics
     }
 
     /**
-     * Routes the method call to the adequate private method.
+     * Routes the method call to the adequate protected method.
      *
      * @param $methodName
      * @param array $methodArguments
-     * @return $this|AnalyticsResponse
+     * @return mixed
      * @throws \BadMethodCallException
      */
     public function __call($methodName, array $methodArguments)
     {
+        $methodName = $this->fixTypos($methodName);
+
         if (preg_match('/^set(Product|Promotion)ActionTo(\w+)/', $methodName, $matches)) {
             return $this->setParameterActionTo($matches[1], $matches[2]);
         }
@@ -547,6 +886,27 @@ class Analytics
             return $this->sendHit($methodName);
         }
 
+        // Get Parameters
+        if (preg_match('/^(get)(\w+)/', $methodName, $matches)) {
+            return $this->getParameter($methodName, $methodArguments);
+        }
+
         throw new \BadMethodCallException('Method ' . $methodName . ' not defined for Analytics class');
+    }
+
+    /**
+     * Fix typos that went into releases, this way we ensure we don't break scripts in production.
+     *
+     * @param string $methodName
+     * @return string
+     */
+    protected function fixTypos($methodName)
+    {
+        // @TODO deprecated in v2, to be removed in v3
+        if ($methodName === 'setUserTiminCategory') {
+            $methodName = 'setUserTimingCategory';
+        }
+
+        return $methodName;
     }
 }

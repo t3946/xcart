@@ -1,5 +1,6 @@
 {extends 'base/admin.tpl'}
 
+{block 'wrapper_block_class'}admin{/block}
 {block 'js'}
 <script type="text/javascript">
     (function(){
