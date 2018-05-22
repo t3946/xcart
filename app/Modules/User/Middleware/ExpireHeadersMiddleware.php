@@ -11,7 +11,7 @@ class ExpireHeadersMiddleware extends Middleware
 
     public function processHttpRequest($request)
     {
-        header('Vary: Accept-Encoding');
+        header('Vary: Accept-Encoding, X-Requested-With');
 
         if (!headers_sent())
         {
