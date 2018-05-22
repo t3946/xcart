@@ -202,7 +202,7 @@ class OrderModel extends Model
                 'modelClass' => OrderExtrasModel::className(),
                 'link' => ['orderid' => 'orderid'],
             ],
-            'payment_method' => [
+            'payment_method_model' => [
                 'field' => 'paymentid',
                 'class' => ForeignField::class,
                 'modelClass' => PaymentMethodModel::class,

@@ -38,7 +38,7 @@
                                 {/if}
                             <br/><b>Order status:</b> please see below
                             <br/><b>Payment method:</b><br/>
-                                {$order->payment_method->payment_method}<br/>
+                                {$order->payment_method}<br/>
                             <b>Delivery methods:</b><br/>
                             {foreach $order->groups as $group}
                                 {$group->shippingModel->getFrontendName()}<br/>
