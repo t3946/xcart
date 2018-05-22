@@ -123,7 +123,7 @@
         {*<link rel="stylesheet" href="/static/frontend/dist/css/styles.css?v={frontend_version resource='css/styles.css'}" media="all">*}
     {*</noscript>*}
 
-    <script src="/static/frontend/dist/js/main.js?v={frontend_version resource="js/main.js"}" async></script>
+
 
 {block 'js'}{/block}
 
@@ -178,5 +178,6 @@
 
 {render_flash:raw template='base/_flash.tpl'}
 
+<script src="/static/frontend/dist/js/main.js?v={frontend_version resource="js/main.js"}" async></script>
 </body>
 </html>
