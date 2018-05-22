@@ -33,8 +33,8 @@ class OrderInvoiceHelper
                     'mail/invoice.tpl',
                     ['order' => $order],
                     [
-                        'from' => trim("\"{$order->firstname}\" <{$config['orders_department']}>"),
-                        'reply_to' => trim("\"{$order->firstname}\" <{$order->email}>"),
+                        'from' => sprintf('"%s" <%s>',$order->firstname, $config['orders_department']),
+                        'reply_to' => sprintf('"%s" <%s>',$order->firstname, $order->email),
                         'headers' => [
                             'X-Xcart-Label' => 'order-status-init'
                         ]
