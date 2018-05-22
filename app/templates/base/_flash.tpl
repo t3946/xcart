@@ -14,7 +14,6 @@
         {foreach $messages as $item}
         window['flashStack'].push({ 'message': "{$item['message']|escape}", 'type': "{$item['type']|escape}" });
         {/foreach}
-        console.log(window['flashStack']);
     </script>
 
 {/if}
