@@ -226,6 +226,7 @@ class CheckoutController extends FrontendController
                 if (($paymentid = $app->request->post->get('payment_method')) && $payment_method = PaymentMethodModel::objects()->get(['paymentid' => $paymentid])) {
                     /** @var PaymentMethodModel $payment_method */
                     $order->paymentid = $payment_method->paymentid;
+                    $order->payment_method = $payment_method->payment_method;
                 }
             }
 
