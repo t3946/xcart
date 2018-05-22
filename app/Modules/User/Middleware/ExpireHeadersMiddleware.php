@@ -2,9 +2,7 @@
 
 namespace Modules\User\Middleware;
 
-use Modules\User\Helpers\SurfingHelper;
-use Modules\User\Models\SurfPathModel;
-use Xcart\App\Cli\Cli;
+use Xcart\App\Main\Xcart;
 use Xcart\App\Middleware\Middleware;
 
 class ExpireHeadersMiddleware extends Middleware
@@ -13,10 +11,18 @@ class ExpireHeadersMiddleware extends Middleware
 
     public function processHttpRequest($request)
     {
-        header('Vary: Accept-Encoding');
+        header('Vary: Accept-Encoding, X-Requested-With');
 
         if (!headers_sent())
         {
+            if ($match = Xcart::app()->router->match(Xcart::app()->request->getUrl(), Xcart::app()->request->getMethod())) {
+                [$name] = explode(':', $match['name']);
+                if ($name && \in_array($name, ['cart', 'checkout', 'payment'])) {
+                    $this->noCache();
+                    return;
+                }
+            }
+
             $this->autoLastModified();
 
             if (!defined('SET_EXPIRE')) {
