@@ -19,7 +19,7 @@ class OrderInvoiceHelper
             $config = $site->getGlobalConfig();
 
             Xcart::app()->mail->template(
-                $order->email,
+                trim($order->email),
                 str_replace($notification->customer_subject, '{{orderid}}', $order->orderid),
                 'mail/invoice.tpl',
                 ['order' => $order],
@@ -28,13 +28,13 @@ class OrderInvoiceHelper
 
             if ($send_copy) {
                 Xcart::app()->mail->template(
-                    $config['orders_department'],
+                    trim($config['orders_department']),
                     str_replace($notification->copy_subject, '{{orderid}}', $order->orderid),
                     'mail/invoice.tpl',
                     ['order' => $order],
                     [
-                        'from' => "{$order->firstname} <{$config['orders_department']}>",
-                        'reply_to' => "{$order->firstname} <{$order->email}>",
+                        'from' => trim("\"{$order->firstname}\" <{$config['orders_department']}>"),
+                        'reply_to' => trim("\"{$order->firstname}\" <{$order->email}>"),
                         'headers' => [
                             'X-Xcart-Label' => 'order-status-init'
                         ]
