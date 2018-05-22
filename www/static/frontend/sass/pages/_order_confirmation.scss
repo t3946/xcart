@@ -84,37 +84,9 @@
       width: auto;
     }
   }
-
 }
 
-
-
 .order-confirmation-container{
-
-  .hr{
-    margin: 0;
-  }
-  //.dark{
-  //  .hr{
-  //    border-bottom: 2px solid #15303f;;
-  //  }
-  //}
-
-  .light{
-    border-bottom: 1px solid #bbbbbb;
-    .hr{
-      border: 0;
-    }
-
-    //@include breakpoint(large){
-    //  border-bottom: 0;
-    //}
-    //.hr{
-    //  @include breakpoint(large){
-    //    border-bottom: 1px solid #bbbbbb;
-    //  }
-    //}
-  }
 
   .order-confirmation{
     .green-border{
@@ -165,9 +137,6 @@
     }
 
 
-
-
-
     .title{
       font-size: 21px;
       font-weight: bold;
@@ -215,28 +184,52 @@
   }
 
   .ordering-info{
-    margin-top: 14px;
+    padding-top: 14px;
 
     @include breakpoint(sm){
-      margin-top: 18px;
+      padding-top: 18px;
     }
     @include breakpoint(medium){
-      margin-top: 17px;
+      padding-top: 17px;
     }
 
     @include breakpoint(ml){
-      margin-top: 17px;
+      padding-top: 17px;
     }
 
     @include breakpoint(large){
-      margin-top: 17px;
+      padding-top: 17px;
     }
 
     &.line-1{
       padding-bottom: 15px;
+      background-color: #f9f9f9;
+      border-top: 2px solid #15303f;
     }
     &.line-2{
       padding-bottom: 20px;
+      border-top: 1px solid #bbbbbb;
+      background-color: #f9f9f9;
+    }
+    &.line-3{
+      padding-bottom: 20px;
+      background-color: #f2f2f2;
+    }
+  }
+
+  @include breakpoint(large){
+    .line-wrapper{
+      padding-right:0;
+      padding-left:0;
+      margin-right: 1.25rem;
+      margin-left: 1.25rem;
+      flex: 1 1 0px;
+
+      .line{
+        margin-right: 0;
+        margin-left: 0;
+
+      }
     }
   }
 
@@ -250,12 +243,14 @@
       font-size: 14px;
     }
     @include breakpoint(medium){
-      padding: 0 22px;
+      padding-right: 22px;
+      padding-left: 22px;
       font-size: 18px;
     }
 
     @include breakpoint(ml){
-      padding: 0;
+      padding-right: 0;
+      padding-left: 0;
       font-size: 18px;
     }
 
@@ -351,8 +346,7 @@
 
 
   .ordering-info-content{
-    background-color: #f9f9f9;
-    border-top: 2px solid #15303f;
+
     margin-top: 8px;
 
     @include breakpoint(sm){
@@ -363,13 +357,6 @@
       margin-top: 4px;
     }
 
-    //@include breakpoint(large){
-    //  border: 0;
-    //  background-color: transparent;
-    //  .ordering-info{
-    //    background-color: #f9f9f9;
-    //  }
-    //}
   }
 
   .checkout-review {
