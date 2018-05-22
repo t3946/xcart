@@ -50,7 +50,7 @@
                                     </div>
                                     <div class="price-info hide-for-large">
                                         {set $extended = $item->amount * $item->price}
-                                        {$item->amount} x US$ <span class="price">{$item->price|number_format:2}</span> = US$&nbsp;<span class="price">{$extended|number_format:2}</span>
+                                        {$item->amount} x US$&nbsp;<span class="price">{$item->price|number_format:2}</span> = US$&nbsp;<span class="price">{$extended|number_format:2}</span>
                                     </div>
                                 </div>
 
@@ -69,33 +69,35 @@
                             </div>
                         {/foreach}
                     </div>
-                    <div class="order-group-shipping">
-                        <div class="row">
-                            <div class="columns small-10 text-align-right">
-                                {t 'Delivery from'}  {$warehouse->m_city}, {$warehouse->m_state}, {$warehouse->m_country} {t 'by'} {$group->shippingModel->getFrontendName()} :
-                            </div>
-                            <div class="columns small-2">
-                                US$ <span class="price">{$group->shipping_gross|number_format:2}</span>
-                            </div>
-                        </div>
-                    </div>
+
                     <div class="group-info order-table-row">
                         <div class="sum-info shipping">
                             <span class="sum-info-label">
-                                {t 'Total' dict='order'}
+                                <span class="delivery-details show-for-medium">
+                                    {t 'Delivery from'}  {$warehouse->m_city}, {$warehouse->m_state}, {$warehouse->m_country} {t 'by'}
+                                </span>
+                                {$group->shippingModel->getFrontendName()}:
                             </span>
                             <span class="sum">
-                                US$ <span class="price">{$order->subtotal|number_format:2}</span>
+                                US$&nbsp;<span class="price">{$group->shipping_gross|number_format:2}</span>
                             </span>
                         </div>
-                        <div class="sum-info sum-price-info">
-                        <span class="sum-info-label">
-                            {t 'Total Shipping Cost' dict='order'}
-                        </span>
-                            <span class="sum">
-                            US$ <span class="price">{$order->shipping_cost|number_format:2}</span>
-                        </span>
-                        </div>
+                        {*<div class="sum-info shipping">*}
+                            {*<span class="sum-info-label">*}
+                                {*{t 'Total' dict='order'}:*}
+                            {*</span>*}
+                            {*<span class="sum">*}
+                                {*US$&nbsp;<span class="price">{$order->subtotal|number_format:2}</span>*}
+                            {*</span>*}
+                        {*</div>*}
+                        {*<div class="sum-info sum-price-info">*}
+                            {*<span class="sum-info-label">*}
+                                {*{t 'Total Shipping Cost' dict='order'}:*}
+                            {*</span>*}
+                            {*<span class="sum">*}
+                                {*US$&nbsp;<span class="price">{$order->shipping_cost|number_format:2}</span>*}
+                            {*</span>*}
+                        {*</div>*}
                     </div>
 
                 {/foreach}
@@ -107,26 +109,47 @@
             <div class="hr-bold"></div>
         </div>
     </div>
+    {*shipping*}
+    {*sum-price-info*}
+    {*total*}
+    {*total-shipping*}
+    {*grand-total*}
     <div class="row">
         <div class="small-12 columns">
             <div class="order-total">
                 <div class="info-row total">
-                    <span class="label">{t 'Grand Total' dict='order'}</span>
-                    <span class="sum">{$order->total|number_format:2}</span>
+                    <span class="sum-info-label">{t 'Total' dict='order'}:</span>
+                    <span class="sum">US$&nbsp;<span class="price">{$order->subtotal|number_format:2}</span></span>
                 </div>
-                {if $hst}
                 <div class="info-row total-shipping">
-                    <span class="label">{t 'Including 13% HST' dict='order'}</span>
-                    <span class="sum">US$ <span class="price">{$order->tax|number_format:2}</span></span>
+                    <span class="sum-info-label">{t 'Total Shipping Cost' dict='order'}:</span>
+                    <span class="sum">US$&nbsp;<span class="price">{$order->shipping_cost|number_format:2}</span></span>
                 </div>
-                {/if}
-                {if $order->customer_notes}
                 <div class="info-row grand-total">
-                    <span class="label">{t 'Customer notes' dict='order'}</span>
-                    <span class="sum">{$order->customer_notes}</span></span>
+                    <span class="label">{t 'Grand Total' dict='order'}</span>
+                    <span class="sum">US$&nbsp;<span class="price">{$order->total|number_format:2}</span></span>
                 </div>
-                {/if}
+                {*{if $hst}*}
+                <div class="info-row ">
+                    <span class="label">{t 'Including 13% HST' dict='order'}</span>
+                    {*<span class="sum">US$&nbsp;<span class="price">{$order->tax|number_format:2}</span></span>*}
+                    <span class="sum">US$&nbsp;<span class="price">23.67</span></span>
+                </div>
+                {*{/if}*}
             </div>
         </div>
     </div>
+    {*{if $order->customer_notes}*}
+    <div class="row">
+        <div class="columns small-12 customer-notes-title-row large-3">
+                <h2 class="customer-notes-title">{t 'Customer notes' dict='order'}</h2>
+        </div>
+        <div class="columns small-12 large-6">
+            <div class="customer-notes-text">
+                {*<span class="sum">{$order->customer_notes}</span>*}
+                ewrwer wrewerwr werwerwe wrwerwe sdfsfsdf sfsfsf sfsfsfe efferfrrfrf rfrfrfr dggdfgdg dgfdfdgg dfgfg ddfgdfg
+            </div>
+        </div>
+    </div>
+    {*{/if}*}
 </div>

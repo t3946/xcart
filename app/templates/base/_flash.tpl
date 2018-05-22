@@ -6,6 +6,7 @@
     </div>
 </div>
 
+{set $messages = $.app->flash->read()}
 {if $messages}
 {add_asset_block type="js"}
     <script>
