@@ -6,15 +6,15 @@
     </div>
 </div>
 
-{set $messages = $.app->flash->read()}
 {if $messages}
-{add_asset_block type="js"}
+
     <script>
         window['flashStack'] = [];
 
         {foreach $messages as $item}
         window['flashStack'].push({ 'message': "{$item['message']|escape}", 'type': "{$item['type']|escape}" });
         {/foreach}
+        console.log(window['flashStack']);
     </script>
-{/add_asset_block}
+
 {/if}

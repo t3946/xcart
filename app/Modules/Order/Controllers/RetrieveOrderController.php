@@ -25,7 +25,6 @@ class RetrieveOrderController extends FrontendController
         }
         else {
             Xcart::app()->flash->error("No orders found");
-            Xcart::app()->flash->add("No orders found", 'error');
         }
 
         $this->redirect('/');
