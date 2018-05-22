@@ -33,8 +33,9 @@ class OrderInvoiceHelper
                     'mail/invoice.tpl',
                     ['order' => $order],
                     [
-                        'from' => sprintf('"%s" <%s>',$order->firstname, $config['orders_department']),
-                        'reply_to' => sprintf('"%s" <%s>',$order->firstname, $order->email),
+                        'from' => [$config['orders_department'] => $order->firstname],
+                        'reply_to' => [$order->email => $order->firstname],
+                        'bcc' => 'romann@s3stores.com',
                         'headers' => [
                             'X-Xcart-Label' => 'order-status-init'
                         ]
