@@ -56,7 +56,7 @@
         <div class="row align-center">
             <div class="column text-align--center">
                 <div class="title">{t 'Order #' dict='order'} {$order->getOrderNumber()}</div>
-                {*{if $order->payment_method->payment_method == 'Purchase Order'}*}
+                {*{if $order->payment_method == 'Purchase Order'}*}
                     <div class="purchase-order-title hide-for-medium">
                         {*{t 'Purchase order #' dict='order'} {$extra->purchase_order['po_number']}*}
                         {t 'Purchase order #' dict='order'} 2322423
@@ -129,7 +129,7 @@
                 </div>
                 <div class="row text-item">
                     <div class="column small-5 medium-4 ml-5 large-6 label">{t 'Payment method:' dict='order'}</div>
-                    <div class="column">{$order->payment_method->payment_method}</div>
+                    <div class="column">{$order->payment_method}</div>
                 </div>
                 <div class="row text-item">
                     <div class="column small-5 medium-4 ml-5 large-6 label">{t 'Delivery methods:' dict='order'}</div>
@@ -308,6 +308,95 @@
     <section class="order-products">
         {include 'checkout/_complete_order_review.tpl' order_groups = $order->groups}
 
+        {*<div class="row align-center">*}
+            {*<div class="column text-align--center">*}
+                {*<div class="title">{t 'Products Ordered' dict='order'}</div>*}
+            {*</div>*}
+        {*</div>*}
+        {*{foreach $order->groups as $group}*}
+            {*{set $warehouse = $.get_warehouse($group->manufacturerid)}*}
+            {*<div class="row align-center notes">*}
+                {*<div class="column text-align--center">*}
+                    {*{t 'The item below will be shipped from warehouse in' dict='order'} {$warehouse->m_city}, {$warehouse->m_state}, {$warehouse->m_country}*}
+                {*</div>*}
+            {*</div>*}
+            {*<div class="order-product-table">*}
+                {*<div class="row order-table-head">*}
+                    {*<div class="columns small-2 text-align--center sku">*}
+                        {*{t 'SKU' dict='order'}*}
+                    {*</div>*}
+                    {*<div class="columns small-4 text-align--center item-name">*}
+                        {*{t 'Item name' dict='order'}*}
+                    {*</div>*}
+                    {*<div class="columns text-align--center price">*}
+                        {*{t 'Price' dict='order'}*}
+                    {*</div>*}
+                    {*<div class="columns text-align--center quantity">*}
+                        {*{t 'Qty ordered' dict='order'}*}
+                    {*</div>*}
+                    {*<div class="columns extended">*}
+                        {*{t 'Extended' dict='order'}*}
+                    {*</div>*}
+                {*</div>*}
+
+                {*{set $items = $group->detail_models}*}
+
+                {*{foreach $items as $item}*}
+                    {*<div class="row order-table-body">*}
+                        {*<div class="columns small-2 text-align--center sku">{$item->productcode}</div>*}
+
+                        {*<div class="columns small-4 item-name">*}
+                            {*options*}
+                        {*</div>*}
+
+                        {*<div class="columns text-align--center price">US$ <span class="price">{$item->price|number_format:2}</span></div>*}
+
+                        {*<div class="columns text-align--center quantity">{$item->amount}</div>*}
+                        {*<div class="columns extended">*}
+                            {*{set $extended = $item->amount * $item->price}*}
+                            {*US$ <span class="price">{$extended|number_format:2}</span>*}
+                        {*</div>*}
+                    {*</div>*}
+                {*{/foreach}*}
+            {*</div>*}
+            {*<div class="order-group-shipping">*}
+                {*<div class="row">*}
+                    {*<div class="columns small-10 text-align-right">*}
+                        {*{t 'Delivery from'}  {$warehouse->m_city}, {$warehouse->m_state}, {$warehouse->m_country} {t 'by'} {$group->shippingModel->getFrontendName()} :*}
+                    {*</div>*}
+                    {*<div class="columns small-2">*}
+                        {*US$ <span class="price">{$group->shipping_gross|number_format:2}</span>*}
+                    {*</div>*}
+                {*</div>*}
+            {*</div>*}
+        {*{/foreach}*}
+        {*<div class="row">*}
+            {*<div class="small-12 columns">*}
+                {*<div class="hr"></div>*}
+            {*</div>*}
+        {*</div>*}
+        {*<div class="total">*}
+            {*<div class="row">*}
+                {*<div class="columns small-10 text-align--right">{t 'Total' dict='order'}</div>*}
+                {*<div class="columns small-2">US$ <span class="price">{$order->subtotal|number_format:2}</span></div>*}
+            {*</div>*}
+            {*<div class="row">*}
+                {*<div class="columns small-10 text-align--right">{t 'Total Shipping Cost' dict='order'}</div>*}
+                {*<div class="columns small-2">US$ <span class="price">{$order->shipping_cost|number_format:2}</span></div>*}
+            {*</div>*}
+        {*</div>*}
+        {*<div class="grand-total">*}
+            {*<div class="row">*}
+                {*<div class="columns small-10 text-align--right">{t 'Grand Total' dict='order'}</div>*}
+                {*<div class="columns small-2">US$ <span class="price">{$order->total|number_format:2}</span></div>*}
+            {*</div>*}
+            {*{if $hst}*}
+                {*<div class="row">*}
+                    {*<div class="columns small-10 text-align--right">{t 'Including 13% HST' dict='order'}</div>*}
+                    {*<div class="columns small-2">US$ <span class="price">{$order->tax|number_format:2}</span></div>*}
+                {*</div>*}
+            {*{/if}*}
+        {*</div>*}
         {if $order->customer_notes}
             <div class="row">
                 <div class="columns small-4 text-align--center title">{t 'Customer notes' dict='order'}</div>
