@@ -56,7 +56,7 @@
         <div class="row align-center">
             <div class="column text-align--center">
                 <div class="title">{t 'Order #' dict='order'} {$order->getOrderNumber()}</div>
-                {*{if $order->payment_method->payment_method == 'Purchase Order'}*}
+                {*{if $order->payment_method == 'Purchase Order'}*}
                     <div class="purchase-order-title hide-for-medium">
                         {*{t 'Purchase order #' dict='order'} {$extra->purchase_order['po_number']}*}
                         {t 'Purchase order #' dict='order'} 2322423
@@ -129,7 +129,7 @@
                 </div>
                 <div class="row text-item">
                     <div class="column small-5 medium-4 ml-5 large-6 label">{t 'Payment method:' dict='order'}</div>
-                    <div class="column">{$order->payment_method->payment_method}</div>
+                    <div class="column">{$order->payment_method}</div>
                 </div>
                 <div class="row text-item">
                     <div class="column small-5 medium-4 ml-5 large-6 label">{t 'Delivery methods:' dict='order'}</div>
@@ -240,7 +240,7 @@
 
 
 
-        {if $order->payment_method->payment_method == 'Purchase Order'}
+        {if $order->payment_method == 'Purchase Order'}
             <div class="purchase-order-info">
                 <div class="row">
                     <div class="columns">{t 'Purchase order information' dict='order'}</div>

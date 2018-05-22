@@ -103,7 +103,9 @@ class CheckoutController extends FrontendController
                 ]);
 
                 if ($order->save()) {
-                    $is_created ?: $app->event->trigger('order:created', ['model' => $order]);
+                    if ($is_created) {
+                        $app->event->trigger('order:created', ['model' => $order]);
+                    }
                     $this->redirect('checkout:options');
                 }
             }
@@ -390,7 +392,7 @@ class CheckoutController extends FrontendController
 
         $this->checkoutStepsValidate($order->cb_status, OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP4);
 
-        $this->redirect('payment:process', ['gateway' => strtolower($order->payment_method->frontend_processor->processor_name)]);
+        $this->redirect('payment:process', ['gateway' => strtolower($order->payment_method_model->frontend_processor->processor_name)]);
 
     }
 

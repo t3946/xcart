@@ -58,7 +58,7 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
 
     public function getConfigurationId():? string
     {
-        return $this->getOrder()->payment_method->cc_processor_models->limit(1)->get()->param01;
+        return $this->getOrder()->payment_method_model->cc_processor_models->limit(1)->get()->param01;
     }
 
     public function getMerchantEmail():? string

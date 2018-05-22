@@ -2,7 +2,7 @@
 
 {block 'content'}
     <form data-abide action="{url 'checkout:review'}" method="POST" class="checkout-review-form" enctype= "multipart/form-data">
-        {if $order->payment_method->payment_method == 'Purchase Order'}
+        {if $order->payment_method == 'Purchase Order'}
             {set $extra = $order->extra_model}
             <section class="checkout-po">
                 <div class="row">
