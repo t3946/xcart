@@ -236,57 +236,73 @@
             </div>
         </div>
 
+            {if $order->payment_method == 'Purchase Order'}
+                <div class="row ordering-info align-spaced line-2">
+                    <div class="columns small-12 ml-6 large-4 contact-info">
+                        <div class="row text-item">
+                            <div class="column small-12 label group-items-title">{t 'Purchase order information' dict='order'}</div>
+                        </div>
+                        <div class="row text-item">
+                            <div class="column small-5 medium-4 ml-5 large-6 label">{t 'PO number:' dict='order'}</div>
+                            <div class="column">{$extra->purchase_order['po_number']}</div>
+                        </div>
+                        <div class="row text-item">
+                            <div class="column small-5 medium-4 ml-5 large-6 label">{t 'Company name:' dict='order'}</div>
+                            <div class="column">{$extra->purchase_order['company_name']}</div>
+                        </div>
+                    </div>
+                    <div class="columns small-12 ml-6 large-4">
+                    </div>
+                </div>
+
+                <div class="row ordering-info align-spaced line-2">
+                    <div class="columns small-12 ml-6 large-4 contact-info">
+                        <div class="row text-item">
+                            <div class="column small-12 label group-items-title">{t 'Purchase manager' dict='order'}</div>
+                        </div>
+                        <div class="row text-item">
+                            <div class="column small-5 medium-4 ml-5 large-6 label">{t 'Full name:' dict='order'}</div>
+                            <div class="column">{$extra->purchase_order['name_of_purchaser']}</div>
+                        </div>
+                        <div class="row text-item">
+                            <div class="column small-5 medium-4 ml-5 large-6 label">{t 'Phone:' dict='order'}</div>
+                            <div class="column">{$extra->purchase_order['purchase_manager_phone']}</div>
+                        </div>
+                        <div class="row text-item">
+                            <div class="column small-5 medium-4 ml-5 large-6 label">{t 'Fax:' dict='order'}</div>
+                            <div class="column">{$extra->purchase_order['purchase_manager_fax']}</div>
+                        </div>
+                        <div class="row text-item">
+                            <div class="column small-5 medium-4 ml-5 large-6 label">{t 'Email:' dict='order'}</div>
+                            <div class="column">{$extra->purchase_order['purchase_manager_email']}</div>
+                        </div>
+                    </div>
+                    <div class="columns small-12 ml-6 large-4 contact-info">
+                        <div class="row text-item">
+                            <div class="column small-12 label group-items-title">{t 'Accounts payable' dict='order'}</div>
+                        </div>
+                        <div class="row text-item">
+                            <div class="column small-5 medium-4 ml-5 large-6 label">{t 'Full name:' dict='order'}</div>
+                            <div class="column">{$extra->purchase_order['accounts_payable_full_name']}</div>
+                        </div>
+                        <div class="row text-item">
+                            <div class="column small-5 medium-4 ml-5 large-6 label">{t 'Phone:' dict='order'}</div>
+                            <div class="column">{$extra->purchase_order['accounts_payable_phone']}</div>
+                        </div>
+                        <div class="row text-item">
+                            <div class="column small-5 medium-4 ml-5 large-6 label">{t 'Fax:' dict='order'}</div>
+                            <div class="column">{$extra->purchase_order['purchase_manager_fax']}</div>
+                        </div>
+                        <div class="row text-item">
+                            <div class="column small-5 medium-4 ml-5 large-6 label">{t 'Email:' dict='order'}</div>
+                            <div class="column">{$extra->purchase_order['accounts_payable_email']}</div>
+                        </div>
+                    </div>
+                </div>
+            {/if}
+
         </div>
 
-
-
-        {if $order->payment_method == 'Purchase Order'}
-            <div class="purchase-order-info">
-                <div class="row">
-                    <div class="columns">{t 'Purchase order information' dict='order'}</div>
-                </div>
-                <div class="row">
-                    <div class="columns small-3">{t 'PO number:' dict='order'}</div>
-                    <div class="columns small-3">{$extra->purchase_order['po_number']}</div>
-                    <div class="columns small-3"></div>
-                    <div class="columns small-3"></div>
-                </div>
-                <div class="row">
-                    <div class="columns small-3">{t 'Company name:' dict='order'}</div>
-                    <div class="columns small-3">{$extra->purchase_order['company_name']}</div>
-                    <div class="columns small-3"></div>
-                    <div class="columns small-3"></div>
-                </div>
-                <div class="row">
-                    <div class="columns small-6">{t 'Purchase manager' dict='order'}</div>
-                    <div class="columns small-6">{t 'Accounts payable' dict='order'}</div>
-                </div>
-                <div class="row">
-                    <div class="columns small-3">{t 'Full name:' dict='order'}</div>
-                    <div class="columns small-3">{$extra->purchase_order['name_of_purchaser']}</div>
-                    <div class="columns small-3">{t 'Full name:' dict='order'}</div>
-                    <div class="columns small-3">{$extra->purchase_order['accounts_payable_full_name']}</div>
-                </div>
-                <div class="row">
-                    <div class="columns small-3">{t 'Phone:' dict='order'}</div>
-                    <div class="columns small-3">{$extra->purchase_order['purchase_manager_phone']}</div>
-                    <div class="columns small-3">{t 'Phone:' dict='order'}</div>
-                    <div class="columns small-3">{$extra->purchase_order['accounts_payable_phone']}</div>
-                </div>
-                <div class="row">
-                    <div class="columns small-3">{t 'Fax:' dict='order'}</div>
-                    <div class="columns small-3">{$extra->purchase_order['purchase_manager_fax']}</div>
-                    <div class="columns small-3">{t 'Fax:' dict='order'}</div>
-                    <div class="columns small-3">{$extra->purchase_order['purchase_manager_fax']}</div>
-                </div>
-                <div class="row">
-                    <div class="columns small-3">{t 'Email:' dict='order'}</div>
-                    <div class="columns small-3">{$extra->purchase_order['purchase_manager_email']}</div>
-                    <div class="columns small-3">{t 'Email:' dict='order'}</div>
-                    <div class="columns small-3">{$extra->purchase_order['accounts_payable_email']}</div>
-                </div>
-            </div>
-        {/if}
     </section>
 
     <section class="order-products">
