@@ -6,13 +6,14 @@
     </div>
 </div>
 
+{set $messages = $.app->flash->read()}
 {if $messages}
 {add_asset_block type="js"}
     <script>
         window['flashStack'] = [];
 
         {foreach $messages as $item}
-        window['flashStack'].push({ 'message': "{$item['message']|json_encode}", 'type': "{$item['type']|json_encode}" });
+        window['flashStack'].push({ 'message': "{$item['message']|json_encode}", 'type': "{$item['type']|json_encode}, 'time': {$item['time']|json_encode}" });
         {/foreach}
     </script>
 {/add_asset_block}
