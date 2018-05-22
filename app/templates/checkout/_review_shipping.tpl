@@ -78,7 +78,7 @@
             <div class="columns small-5 info-title">
                 {t 'Payment method:' dict='order'}
             </div>
-            <div class="columns info-text">{$order->payment_method->payment_method}</div>
+            <div class="columns info-text">{$order->payment_method}</div>
         </div>
         <div class="row align-center">
             <div class="columns small-12">

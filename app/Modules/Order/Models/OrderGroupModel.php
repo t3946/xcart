@@ -185,7 +185,7 @@ class OrderGroupModel extends Model
 
     public function getEstimateProfit($additional_shipping_charge = null) :? array
     {
-        if ($order_payment_method = $this->payment_method ?: $this->order->payment_method) {
+        if ($order_payment_method = $this->payment_method ?: $this->order->payment_method_model) {
 
             $estimated_profit = (1 - $order_payment_method->acc_percent / 100) * $this->total_gross - $order_payment_method->acc_per_trans - $this->getTotalCostToUs() - $this->actual_shipping_gross;
 

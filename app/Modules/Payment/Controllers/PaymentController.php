@@ -55,7 +55,7 @@ class PaymentController extends Controller
                         'mode' => OrderTransactionModel::TYPE_AUTHORIZATION,
                         'amount' => $order->total,
                         'currency' => 'USD',
-                        'payment_method_model' => $order->payment_method
+                        'payment_method_model' => $order->payment_method_model
                     ];
 
                     $transaction = new OrderTransactionModel(array_merge(
