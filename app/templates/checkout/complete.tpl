@@ -236,7 +236,7 @@
             </div>
         </div>
 
-            {if $order->payment_method->payment_method == 'Purchase Order'}
+            {if $order->payment_method == 'Purchase Order'}
                 <div class="row ordering-info align-spaced line-2">
                     <div class="columns small-12 ml-6 large-4 contact-info">
                         <div class="row text-item">
