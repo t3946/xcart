@@ -81,7 +81,8 @@ class PaymentController extends Controller
 
             } catch (Exception $e) {
                 Xcart::app()->logger->error("{$gateway} process action error", [$e->getMessage()], 'payment');
-                exit('Sorry, there was an error processing your payment. Please try again later.');
+                Xcart::app()->flash->error('Sorry, there was an error processing your payment. Please try again later.');
+                $this->redirect('checkout:review');
             }
         }
     }
