@@ -25,6 +25,7 @@ use Modules\Order\OrderModule;
 use Modules\Payment\Models\PaymentMethodModel;
 use Modules\Shipping\Models\ShippingRateModel;
 use Modules\Shipping\ShippingModule;
+use Modules\Sites\Models\SiteModel;
 use Xcart\App\Application\Application;
 use Xcart\App\Controller\FrontendController;
 use Xcart\App\Form\PrepareData;
@@ -323,6 +324,7 @@ class CheckoutController extends FrontendController
                 if (!empty($files['purchase_order_file']) && $files['purchase_order_file']['error'] === UPLOAD_ERR_OK) {
                     $original_file = $files['purchase_order_file']['name'];
 
+                    /** @var SiteModel $site */
                     $site = Xcart::app()->getModule('Sites')->getSite();
 
                     $po_model = new PurchaseOrderModel([

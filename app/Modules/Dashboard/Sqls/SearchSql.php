@@ -116,7 +116,7 @@ SQL;
 select DISTINCT c.code as id, l.value as text 
 from xcart_countries as c
 LEFT JOIN xcart_languages as l on l.name = CONCAT('country_', c.code) and l.code in ('US', 'en')
-ORDER BY l.name, field(l.code, 'US', 'en') ASC
+ORDER BY field(c.code, 'CA', 'US') DESC, l.name ASC
 SQL;
     }
 
