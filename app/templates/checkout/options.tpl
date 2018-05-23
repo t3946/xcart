@@ -78,8 +78,8 @@
                                     {set $shipping_model = $quote->shipping}
                                     <div class="row">
                                         <div class="columns small-9">
-                                            <input {if $first}required{/if} {if (!$order_group && $first) || ($order_group && $order_group->shippingid == $shipping_model->shippingid)}checked{/if} id="shipping_{$gi}" type="radio" name="shipping_rates[{$gi}]" value="{$quote->rateid}"/>
-                                            <label for="shipping_{$gi}">
+                                            <input {if $first}required{/if} {if (!$order_group && $first) || ($order_group && $order_group->shippingid == $shipping_model->shippingid)}checked{/if} id="shipping_{$quote->rateid}" type="radio" name="shipping_rates[{$gi}]" value="{$quote->rateid}"/>
+                                            <label for="shipping_{$quote->rateid}">
                                                 <span class="name">{$shipping_model->getFrontendName()}</span> {$shipping_model->shipping_time}
                                             </label>
                                         </div>
