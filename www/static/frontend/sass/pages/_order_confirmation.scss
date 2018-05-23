@@ -277,8 +277,8 @@
     .place-for-witter{
       height: 30px;
       margin-top: 10px;
-      background-color: blue;
-      opacity: .4;
+      //background-color: blue;
+      //opacity: .4;
 
       @include breakpoint(sm){
         height: 37px;
@@ -400,6 +400,46 @@
         font-size: 14px;
       }
     }
+  }
+
+  .non-us-disclaimer{
+    margin-top: 1rem;
+
+    label{
+      font-size: 15px;
+      line-height: 18px;
+      font-weight: normal;
+      padding-left: 37px;
+      display: inline-block;
+
+      &:before{
+        content: '';
+        display: block;
+        width: 21px;
+        height: 21px;
+        border: 1px solid #d4d4d4;
+        position: absolute;
+        top: 0;
+        left: 0;
+      }
+
+      &:after{
+        content: url("../../dist/images/icons/order/check_mark_grey.svg");
+        position: absolute;
+        display: block;
+        width: 12px;
+        height: 15px;
+        top: 3px;
+        left: 5px;
+      }
+
+      input{
+        display: none;
+      }
+    }
+
+
+
   }
 
 }
