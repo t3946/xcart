@@ -3,7 +3,6 @@
 *.orig
 *.tiff
 *.log
-*.mmdb
 www.*.xml
 thumbs.db
 Thumbs.db
