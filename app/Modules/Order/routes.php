@@ -1,7 +1,11 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: User
- * Date: 5/23/2018
- * Time: 4:01 PM
- */
+
+use Modules\Order\Api\Controllers\InvoiceConventerController;
+
+return [
+    [
+        'route' => '/{i:order_id}/authorise',
+        'target' => [InvoiceConventerController::class, 'convertToPdf'],
+        'name' => 'pdf'
+    ],
+];
