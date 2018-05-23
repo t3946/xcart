@@ -47,4 +47,15 @@ class OrderInvoiceHelper
             }
         }
     }
+
+    public static function getInvoiceHtml(OrderModel $order)
+    {
+        if ($notification = $order->notification) {
+            /** @var SiteModel $site */
+            $site = Xcart::app()->getModule('Sites')->getSite();
+            $config = $site->getGlobalConfig();
+
+            return Xcart::app()->template->render('mail/invoice.tpl', ['order' => $order]);
+        }
+    }
 }

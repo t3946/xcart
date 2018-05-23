@@ -341,4 +341,9 @@ class OrderHelper
             $order->save();
         }
     }
+
+    public static function getOrderHash(array $data = []): string
+    {
+        return md5(implode('', $data));
+    }
 }
