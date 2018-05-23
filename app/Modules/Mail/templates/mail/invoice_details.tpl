@@ -45,7 +45,7 @@
             <tr>
                 <td align="center">{$product->productcode}</td>
                 <td>
-                    <span style="font-size: 11px"><a href="{$product->getAbsoluteUrl(true)}">{$product->getFrontendName()}</a></span>
+                    <span style="font-size: 11px"><a href="https:{$product->getAbsoluteUrl(true)}">{$product->getFrontendName()}</a></span>
                         {if $order_detail->product_options}
                             <table>
                                 <tr>

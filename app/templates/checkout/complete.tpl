@@ -305,6 +305,18 @@
                     </div>
                 </div>
             {/if}
+            {*{if $order->non_us_confirmation}*}
+                <div class="row">
+                    <div class="column small-12">
+                        <div class="non-us-disclaimer">
+                            <label>
+                                {*<input type="checkbox" checked value="Y" name="non_us_confirmation" required />*}
+                                I agree to be responsible for custom duties, CODs, and other charges associated with bringing goods to Canada.
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            {*{/if}*}
 
 
         </section>
