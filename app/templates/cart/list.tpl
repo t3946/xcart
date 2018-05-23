@@ -184,35 +184,38 @@
 
             <div class="hr"></div>
 
-            <div class="memo_subtotal">
-                <div class="grand-subtotal">
-                    Subtotal:
-                    <div class="subtotal">
-                        US$ <span class="cart_subtotal" var-cart-subtotal>{$total|number_format:2}</span>
+            <div class="columns large-12">
+                <div class="memo_subtotal">
+                    <div class="grand-subtotal">
+                        Subtotal:
+                        <div class="subtotal">
+                            US$ <span class="cart_subtotal" var-cart-subtotal>{$total|number_format:2}</span>
+                        </div>
+                    </div>
+
+                    <div class="memo">
+                        Your merchandise subtotal does not include shipping charges and taxes, which will be reflected on the 'order review' page.
                     </div>
                 </div>
 
-                <div class="memo">
-                    Your merchandise subtotal does not include shipping charges and taxes, which will be reflected on the 'order review' page.
+                <div class="bottom_line">
+                    <div class="b-next">
+                        <a href="{url 'checkout:shipping'}" class="button yellow waves waves-orange waves-effect">
+                            Checkout
+                        </a>
+                    </div>
+
+                    <div class="b-back">
+                        <a href="/" class="button yellow-white waves waves-orange waves-effect">
+                            Shop more
+                        </a>
+                    </div>
                 </div>
             </div>
 
-            <div class="bottom_line">
-
-                <div class="b-next">
-                    <a href="{url 'checkout:shipping'}" class="button yellow waves waves-orange waves-effect">
-                        Checkout
-                    </a>
-                </div>
-
-                <div class="b-back">
-                    <a href="/" class="button yellow-white waves waves-orange waves-effect">
-                        Shop more
-                    </a>
-                </div>
 
 
-            </div>
+
         </div>
     </div>
 </section>

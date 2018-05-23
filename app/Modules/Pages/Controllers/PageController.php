@@ -2,6 +2,7 @@
 
 namespace Modules\Pages\Controllers;
 
+use Modules\Meta\Types\MetaType;
 use Modules\Pages\Models\Page;
 use Xcart\App\Controller\FrontendController;
 use Xcart\App\Pagination\DataSource\QuerySetDataSource;
@@ -39,6 +40,8 @@ class PageController extends FrontendController
         if ($model->is_index && !empty($url)) {
             $this->error(404);
         }
+
+        $this->setMetaBase(MetaType::PAGE);
 
         $this->setCanonical($model);
         $this->fetchBreadrumbs($model);

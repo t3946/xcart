@@ -203,9 +203,12 @@ trait MetaTrait
         if (isset($params['model'])) {
             $this->setNoIndexTag($type, $params['model']);
         }
+        else {
+            $this->setNoIndexTag($type);
+        }
     }
 
-    public function setNoIndexTag($type, $model)
+    public function setNoIndexTag($type, $model = null)
     {
         switch ($type) {
             case MetaType::PRODUCT :
@@ -227,6 +230,9 @@ trait MetaTrait
                 if ($model->prevent_search_indexing_brand_page == 'Y') {
                     $this->noIndex = true;
                 }
+                break;
+            case MetaType::PAGE :
+                $this->noIndex = true;
                 break;
 
             default :

@@ -37,7 +37,8 @@ class MetaHelper
                 'title' => self::formatTitle($controller, $meta->title, $site, $meta),
                 'canonical' => $canonical,
                 'description' => $meta->description,
-                'site' => $site
+                'site' => $site,
+                'noIndex' => $controller->noIndex,
             ]);
         }
         elseif ($controller && $metaTemplate = MetaTemplate::objects()->filter(['code' => $controller->getMetaTemplate()])->limit(1)->get()) {
@@ -46,7 +47,8 @@ class MetaHelper
                 'title' => self::cleanString( self::formatTitle($controller, $metaTemplate->renderTitle()) ),
                 'canonical' => $canonical,
                 'description' => self::cleanString( $metaTemplate->renderDescription() ),
-                'site' => $site
+                'site' => $site,
+                'noIndex' => $controller->noIndex,
             ]);
         }
         else if ($controller) {
@@ -54,7 +56,8 @@ class MetaHelper
                 'title' => self::formatTitle($controller, null, $site),
                 'canonical' => $canonical,
                 'description' => $controller->getDescription(),
-                'site' => $site
+                'site' => $site,
+                'noIndex' => $controller->noIndex,
             ]);
         }
     }

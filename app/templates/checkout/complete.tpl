@@ -305,7 +305,7 @@
                     </div>
                 </div>
             {/if}
-            {*{if $order->non_us_confirmation}*}
+            {if $order->non_us_confirmation}
                 <div class="row">
                     <div class="column small-12">
                         <div class="non-us-disclaimer">
@@ -316,7 +316,7 @@
                         </div>
                     </div>
                 </div>
-            {*{/if}*}
+            {/if}
 
 
         </section>
