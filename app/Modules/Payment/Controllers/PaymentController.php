@@ -5,6 +5,7 @@ namespace Modules\Payment\Controllers;
 
 use Exception;
 use Modules\Order\Helpers\OrderHelper;
+use Modules\Order\Helpers\OrderInvoiceHelper;
 use Modules\Order\Helpers\OrderTagEventHelper;
 use Modules\Order\Helpers\OrderTransactionHelper;
 use Modules\Order\Models\OrderModel;
@@ -68,12 +69,13 @@ class PaymentController extends Controller
                         ])
                     );
                     $transaction->save();
+                    $order->cb_status = OrderStatusModel::ORDER_STATUS_NOT_FINISHED;
+                    $order->save();
+
+                    $order->groups->update(['cb_status' => $order->cb_status]);
+
+                    OrderInvoiceHelper::sendOrderStatusNotification($order);
                 }
-
-                $order->cb_status = OrderStatusModel::ORDER_STATUS_NOT_FINISHED;
-                $order->save();
-
-                $order->groups->update(['cb_status' => $order->cb_status]);
 
                 if ($gw->result && $gw->result->isRedirect()) {
                     $gw->result->redirect();
@@ -118,7 +120,7 @@ class PaymentController extends Controller
             $order->cb_status = OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP3;
             $order->save();
 
-            $order->groups->update(['cb_status' => $order->cb_status]);
+            //$order->groups->update(['cb_status' => $order->cb_status]);
         }
 
         $this->redirect('checkout:review');
