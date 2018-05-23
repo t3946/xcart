@@ -87,7 +87,7 @@ abstract class AddressForm extends BaseForm
                     new ZipCodeValidator()
                 ],
                 'html' => [
-                    'placeholder' => '08540',
+                    'placeholder' => GeoipHelper::getGeoipLocation(Xcart::app()->request->getUserIP())['postalCode'] ?? '08540',
                 ],
             ],
 
@@ -99,7 +99,13 @@ abstract class AddressForm extends BaseForm
                     new StateValidator(['country' => 'country'])
                 ],
                 'html' => [
-                    'placeholder' => 'New Jersey'
+                    'placeholder' => ($state = StateModel::objects()->get(
+                        [
+                            'code' => GeoipHelper::getGeoipLocation(Xcart::app()->request->getUserIP())['region'],
+                            'country_code' => GeoipHelper::getGeoipLocation(Xcart::app()->request->getUserIP())['country']
+                        ]))
+                        ? $state->state
+                        : 'New Jersey'
                 ],
             ],
 
@@ -108,7 +114,7 @@ abstract class AddressForm extends BaseForm
                 'label' => 'City',
                 'required' => true,
                 'html' => [
-                    'placeholder' => 'Princeton'
+                    'placeholder' => GeoipHelper::getGeoipLocation(Xcart::app()->request->getUserIP())['city'] ?? 'Princeton'
                 ],
             ],
         ];
