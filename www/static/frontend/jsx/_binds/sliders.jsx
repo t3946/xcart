@@ -26,7 +26,7 @@ import ajax from "../utils/ajax";
             // pagesBar: $wrap.find('.pages'),
             activatePageOn: 'click'
         })
-            .css('overflow', 'visible');
+            .css('overflow', 'hidden');
     };
 
     document.addEventListener('sliders_show', ()=>{

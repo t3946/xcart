@@ -3,6 +3,7 @@
 namespace Omnipay\Xpay\Message;
 
 
+use Modules\Order\Helpers\OrderInvoiceHelper;
 use Omnipay\Common\Exception\InvalidResponseException;
 use Omnipay\Common\Message\AbstractResponse;
 use Omnipay\Common\Message\RedirectResponseInterface;
@@ -76,6 +77,12 @@ class Response extends AbstractResponse implements RedirectResponseInterface
     public function getTransactionReference()
     {
         return $this->data['txnId'];
+    }
+
+    public function redirect(): void
+    {
+        OrderInvoiceHelper::sendOrderStatusNotification($this->getRequest()->getOrder());
+        parent::redirect();
     }
 
 }

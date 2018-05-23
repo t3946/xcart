@@ -14,6 +14,8 @@ use Modules\Sites\Models\SiteConfigModel;
 
 class GeoIpHelper
 {
+
+    public static $geoIp;
     /**
      * @param string $ip
      * @return GeoipLitecityLocationModel|null
@@ -22,26 +24,29 @@ class GeoIpHelper
     {
         $model = null;
 
-        try {
+        if (self::$geoIp === null) {
+            try {
 
-            $reader = new Reader(__DIR__ . '/../GeoLite2/GeoLite2-City.mmdb');
-            $result = $reader->city($ip);
-            $model = new GeoipLitecityLocationModel(
-                [
-                    'country' => $result->country->isoCode,
-                    'region' => $result->mostSpecificSubdivision->isoCode,
-                    'city' => $result->city->name,
-                    'postalCode' => $result->postal->code,
-                ]
-            );
+                $reader = new Reader(__DIR__ . '/../GeoLite2/GeoLite2-City.mmdb');
+                $result = $reader->city($ip);
+                $model = new GeoipLitecityLocationModel(
+                    [
+                        'country' => $result->country->isoCode,
+                        'region' => $result->mostSpecificSubdivision->isoCode,
+                        'city' => $result->city->name,
+                        'postalCode' => $result->postal->code,
+                    ]
+                );
+                self::$geoIp = $model;
 
-        } catch (AddressNotFoundException $addressNotFoundException) {
+            } catch (AddressNotFoundException $addressNotFoundException) {
 
-        } catch (\Exception $addressNotFoundException) {
+            } catch (\Exception $addressNotFoundException) {
 
+            }
         }
 
-        return $model;
+        return self::$geoIp;
     }
 
     public static function getGeoipLocation($ip)
