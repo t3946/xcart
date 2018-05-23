@@ -86,7 +86,7 @@
         </tr>
     {/if}
 
-    {if $order->coupon && $order->coupon_type != "free_ship"}
+    {if $order->coupon}
         <tr>
             <td align="right" width="100%" height="20"><b>Coupon Savings:</b>&nbsp;</td>
             <td align="right" nowrap="nowrap">US$ {$order->coupon_discount|number_format:2}</td>
@@ -105,13 +105,6 @@
         <tr>
             <td align="right" width="100%" height="20"><b>Total Shipping Cost:</b></td>
             <td align="right" nowrap="nowrap">US$ {$order->shipping_cost|number_format:2}</td>
-        </tr>
-    {/if}
-
-    {if $order->coupon && $order->coupon_type == "free_ship"}
-        <tr>
-            <td align="right" width="100%" height="20"><b>Coupon Savings:</b>&nbsp;</td>
-            <td align="right" nowrap="nowrap">US$ {$order->coupon_discount|number_format:2}</td>
         </tr>
     {/if}
 
