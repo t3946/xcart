@@ -5,7 +5,6 @@ namespace Modules\Goods\Controllers;
 use Modules\Goods\Helpers\ProductSortHelper;
 use Modules\Goods\Helpers\TabDataHelper;
 use Modules\Goods\Models\ProductModel;
-use Modules\Meta\Helpers\MetaExtHelper;
 use Modules\Meta\Types\MetaType;
 use Xcart\App\Controller\FrontendController;
 use Xcart\App\Main\Xcart;
