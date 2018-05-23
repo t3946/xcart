@@ -36,7 +36,6 @@
             </div>
 
 
-
             {foreach $.app->cart->getItemsGroupedBy() as $gi => $group}
             {set $items = $group.items}
             {set $warehouse  = $.get_warehouse($gi) }
