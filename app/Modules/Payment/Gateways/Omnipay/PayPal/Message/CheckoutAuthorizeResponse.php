@@ -2,6 +2,7 @@
 
 namespace Omnipay\PayPal\Message;
 
+use Modules\Order\Helpers\OrderInvoiceHelper;
 use Modules\Order\Models\OrderModel;
 use Omnipay\Common\Message\RedirectResponseInterface;
 use Omnipay\Common\Message\RequestInterface;
@@ -102,5 +103,11 @@ class CheckoutAuthorizeResponse extends Response implements RedirectResponseInte
     protected function getBusiness()
     {
         return $this->getRequest()->getTestMode() ? 'igor@s3stores.com' : 'paypal@s3stores.com';
+    }
+
+    public function redirect(): void
+    {
+        OrderInvoiceHelper::sendOrderStatusNotification($this->getRequest()->getOrder());
+        parent::redirect();
     }
 }
