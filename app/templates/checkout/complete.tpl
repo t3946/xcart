@@ -323,15 +323,6 @@
 
         <section class="order-products">
             {include 'checkout/_complete_order_review.tpl' order_groups = $order->groups}
-
-            {if $order->customer_notes}
-                <div class="row">
-                    <div class="columns small-4 text-align--center title">{t 'Customer notes' dict='order'}</div>
-                    <div class="columns small-8 customer-notes">
-                        {$order->customer_notes}
-                    </div>
-                </div>
-            {/if}
         </section>
         <section class="buttons-bottom">
             {include 'checkout/_order_buttons.tpl'}
