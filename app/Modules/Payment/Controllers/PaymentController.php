@@ -5,6 +5,7 @@ namespace Modules\Payment\Controllers;
 
 use Exception;
 use Modules\Order\Helpers\OrderHelper;
+use Modules\Order\Helpers\OrderInvoiceHelper;
 use Modules\Order\Helpers\OrderTagEventHelper;
 use Modules\Order\Helpers\OrderTransactionHelper;
 use Modules\Order\Models\OrderModel;
@@ -75,6 +76,7 @@ class PaymentController extends Controller
 
                 $order->groups->update(['cb_status' => $order->cb_status]);
 
+                OrderInvoiceHelper::sendOrderStatusNotification($order);
                 if ($gw->result && $gw->result->isRedirect()) {
                     $gw->result->redirect();
                 }
