@@ -1,10 +1,10 @@
 <?php
 
-use Modules\Order\Api\Controllers\InvoiceConventerController;
+use Modules\Order\Controllers\Api\InvoiceConventerController;
 
 return [
     [
-        'route' => '/{i:order_id}/authorise',
+        'route' => '/pdf',
         'target' => [InvoiceConventerController::class, 'convertToPdf'],
         'name' => 'pdf'
     ],
