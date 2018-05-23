@@ -130,6 +130,31 @@ class CheckoutController extends FrontendController
         ]);
     }
 
+    public function actionAutoCompleteCountry(){
+
+        return ['United States', 'United Arab Emirates', 'zcefefefaef', 'hgfgfthytyhghg', 'sdsdsfdsdsdsd'];
+
+    }
+
+    public function actionAutoCompleteZipCode(){
+
+        return [
+            ['10001', 'New York', 'NY', 'New York'],
+            ['10002', 'dadfaddf', 'seded', 'seaefefef'],
+            ['10012', 'rfrfrfrf', 'rtyyrt', 'fhfhghyyt'],
+            ['10032', 'ujujujuj', 'rtyuyj', 'sdrtrtyty'],
+            ['10004', 'dtdyyyjj', 'rthhjhhj', 'jhjghjhgjh'],
+        ];
+    }
+
+    public function actionAutoCompleteState(){
+        return ['New York', 'sdrgsrgsrgr', 'zcefefefaef', 'rgrfgtgtdg'];
+    }
+
+    public function actionAutoCompleteCity(){
+        return ['New York', 'sdrgrrrgr', 'ftgtgtt', 'sfefefsrsfr'];
+    }
+
     /**
      * Step 2
      *
