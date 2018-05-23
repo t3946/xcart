@@ -7,6 +7,7 @@ use Modules\Cart\Components\CartItem;
 use Modules\Cart\Helpers\StagesOfOrdering;
 use Modules\Core\Models\StateModel;
 use Modules\Dashboard\Sqls\SearchSql;
+use Modules\GeoIp\Helpers\GeoIpHelper;
 use Modules\Goods\Models\ProductModel;
 use Modules\Order\Forms\BillingAddressForm;
 use Modules\Order\Forms\ContactInfoForm;

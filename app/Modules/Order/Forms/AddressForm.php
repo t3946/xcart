@@ -4,6 +4,7 @@ namespace Modules\Order\Forms;
 
 use Modules\Core\Models\StateModel;
 use Modules\Dashboard\Sqls\SearchSql;
+use Modules\GeoIp\Helpers\GeoIpHelper;
 use Modules\Order\Validation\CountryValidator;
 use Modules\Order\Validation\StateValidator;
 use Modules\Order\Validation\ZipCodeValidator;
@@ -12,6 +13,7 @@ use Xcart\App\Form\Fields\CharField;
 use Xcart\App\Form\Fields\DropDownField;
 use Xcart\App\Form\Fields\EmailField;
 use Xcart\App\Form\Fields\NumberField;
+use Xcart\App\Main\Xcart;
 use Xcart\Connection;
 
 abstract class AddressForm extends BaseForm
@@ -67,13 +69,14 @@ abstract class AddressForm extends BaseForm
                     new CountryValidator()
                 ],
                 'choices' => function() {
-                    $result = ['' => ''];
+                    $result = ['' => 'Select Country'];
                     foreach (Connection::getInstance()->fetchAll(SearchSql::getAllCountryOrderSql()) as $item) {
                         $result[$item['id']] = $item['text'];
                     }
 
                     return $result;
-                }
+                },
+                'value' => GeoipHelper::getGeoipLocation(Xcart::app()->request->getUserIP())['country'] ?? null,
             ],
 
             'zipcode' => [
