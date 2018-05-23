@@ -10,6 +10,7 @@ namespace Modules\Main\Controllers;
 
 
 use Modules\Main\Forms\ContactUsForm;
+use Modules\Meta\Types\MetaType;
 use Xcart\App\Components\Breadcrumbs;
 use Xcart\App\Controller\FrontendController;
 use Xcart\App\Main\Xcart;
@@ -23,6 +24,8 @@ class ContactFormController extends FrontendController
     public function actionContactUs(): void
     {
         $request = $this->getRequest();
+
+        $this->setMetaBase(MetaType::PAGE);
 
         $bread = new Breadcrumbs();
 

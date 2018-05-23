@@ -26,6 +26,7 @@ class MetaExtHelper
     private $template_code;
     /** @var int */
     private $base_code = MetaType::DEFAULT;
+    private $noIndex = false;
 
     private $_params = [];
     private $_composed = [];
@@ -95,6 +96,7 @@ class MetaExtHelper
             $instance = self::newInstance();
             $instance->setBaseCode($base_code);
             $instance->setParams($controller->getMetaTemplateParams());
+            $instance->getNoIndexFlag($controller);
 
             if ($instance->compose()) {
                 echo $instance->render();
@@ -257,6 +259,13 @@ class MetaExtHelper
         return false;
     }
 
+    public function getNoIndexFlag($controller): void
+    {
+        if ($controller->noIndex){
+            $this->noIndex = $controller->noIndex;
+        }
+    }
+
     public function render(): ?string
     {
         if ($this->_composed) {
@@ -284,6 +293,7 @@ class MetaExtHelper
             $this->_composed = [
                 'title' => $this->cleanup([$template->renderTitle()])[0],
                 'description' => $this->cleanup([$template->renderDescription()])[0],
+                'noIndex' => $this->noIndex,
                 'advanced' => $this->cleanup($template->renderAdvanced()),
             ];
             ob_end_clean();
