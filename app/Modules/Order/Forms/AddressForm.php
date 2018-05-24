@@ -65,21 +65,21 @@ abstract class AddressForm extends BaseForm
             ],
 
             'country' => [
-                'class' => DropDownField::class,
+                'class' => CharField::class,
                 'label' => 'Country',
                 'required' => true,
                 'validators' => [
                     new CountryValidator()
                 ],
-                'choices' => function() {
-                    $result = ['' => 'Select Country'];
-                    foreach (Connection::getInstance()->fetchAll(SearchSql::getAllCountryOrderSql()) as $item) {
-                        $result[$item['id']] = $item['text'];
-                    }
-
-                    return $result;
-                },
-                'value' => $geoIp['country'] ?? null,
+                'value' => ($geoIp && $country = CountryModel::objects()->get(
+                        [
+                            'code' => $geoIp['country'] ?? '',
+                        ]))
+                        ? $country->name
+                        : null,
+				'html' => [
+                    'placeholder' => $country->name ?? 'United States',
+                ],
             ],
 
             'zipcode' => [
