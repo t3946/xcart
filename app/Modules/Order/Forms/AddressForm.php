@@ -103,8 +103,8 @@ abstract class AddressForm extends BaseForm
                 'html' => [
                     'placeholder' => ($geoIp && $state = StateModel::objects()->get(
                         [
-                            'code' => $geoIp['region'],
-                            'country_code' => $geoIp['country']
+                            'code' => $geoIp['region'] ?? '',
+                            'country_code' => $geoIp['country'] ?? ''
                         ]))
                         ? $state->state
                         : 'New Jersey'
