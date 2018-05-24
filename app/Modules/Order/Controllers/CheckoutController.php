@@ -426,6 +426,7 @@ class CheckoutController extends FrontendController
                 'order' => $order,
                 'shipping_info' => $shipping,
                 'billing_info' => $billing,
+                'hash' => $hash,
             ]);
         } else {
             $this->error(404);

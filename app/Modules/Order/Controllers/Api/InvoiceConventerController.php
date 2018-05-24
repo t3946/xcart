@@ -17,20 +17,22 @@ class InvoiceConventerController extends Controller
         /** @var OrderModel $order_model */
         if ($order_model = OrderModel::objects()->get(['orderid' => $request->get->get('orderid')])) {
 
-//            $slug = $request->get->get('p');
-//
-//            $hash = OrderHelper::getOrderHash([$order_model->orderid, $order_model->total, $order_model->email]);
+            $slug = $request->get->get('p');
 
-//            if ($slug == $hash) {
+            $hash = OrderHelper::getOrderHash([$order_model->orderid, $order_model->total, $order_model->email]);
+
+            if ($slug == $hash) {
             $string = '<html lang="ru">
 <meta http-equiv="content-type" content="text/html; charset=UTF-8" />';
-//            echo $html_invoice = OrderInvoiceHelper::getInvoiceHtml($order_model);
+
                 $mpdf = new Mpdf();
                 $html_invoice = OrderInvoiceHelper::getInvoiceHtml($order_model, "mail/invoice_pdf.tpl");
                 $html_invoice = $string . $html_invoice;
                 $mpdf->WriteHTML($html_invoice);
                 $mpdf->Output();
-//            }
+            }
         }
+
+        $this->redirect(404);
     }
 }

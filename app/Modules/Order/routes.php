@@ -4,7 +4,7 @@ use Modules\Order\Controllers\Api\InvoiceConventerController;
 
 return [
     [
-        'route' => '/pdf',
+        'route' => '/pdf/',
         'target' => [InvoiceConventerController::class, 'convertToPdf'],
         'name' => 'pdf'
     ],
