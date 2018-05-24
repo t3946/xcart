@@ -138,7 +138,7 @@ class CheckoutController extends FrontendController
     public function actionAutoCompleteCountry(): void
     {
         if ($search = Xcart::app()->request->get->get('search')) {
-            $countries = CountryModel::objects()->filter(['name__startswith' => $search])->valuesList('name', true);
+            $countries = CountryModel::objects()->filter(['name__contains' => $search])->limit(10)->valuesList('name', true);
         }
         $this->jsonResponse($countries ?? []);
     }
@@ -150,7 +150,7 @@ class CheckoutController extends FrontendController
             $filter['country'] = $country;
         }
         if ($search = Xcart::app()->request->get->get('search')) {
-            $zips = ZipCodeModel::objects()->filter(array_merge(['zip__startswith' => $search], $filter ?? []))->valuesList('zip', true);
+            $zips = ZipCodeModel::objects()->filter(array_merge(['zip__contains' => $search], $filter ?? []))->limit(10)->valuesList('zip', true);
         }
 
         $this->jsonResponse($zips ?? []);
@@ -163,17 +163,24 @@ class CheckoutController extends FrontendController
         }
 
         if ($search = Xcart::app()->request->get->get('search')) {
-            $states = StateModel::objects()->filter(array_merge(['state__startswith' => $search], $filter ?? []))->valuesList('state', true);
+            $states = StateModel::objects()->filter(array_merge(['state__contains' => $search], $filter ?? []))->limit(10)->valuesList('state', true);
         }
 
         $this->jsonResponse($states ?? []);
     }
 
     public function actionAutoCompleteCity(){
-        $search = htmlspecialchars($_GET['search']);
-        $country = htmlspecialchars($_GET['country']);
-        $state = htmlspecialchars($_GET['state']);
-        $this->jsonResponse(['New York', 'sdrgrrrgr', 'ftgtgtt', 'sfefefsrsfr']);
+        if ($country = Xcart::app()->request->get->get('country')) {
+            $filter['country_code'] = $country;
+        }
+        if ($state = Xcart::app()->request->get->get('state')) {
+            $filter['state'] = $state;
+        }
+
+        if ($search = Xcart::app()->request->get->get('search')) {
+            $city = ZipCodeModel::objects()->filter(array_merge(['primary_city__contains' => $search], $filter ?? []))->limit(10)->valuesList('primary_city', true);
+        }
+        $this->jsonResponse($city ?? []);
     }
 
     /**
