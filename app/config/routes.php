@@ -88,6 +88,12 @@ return array_merge($admin_routes, [
     ],
 
     [
+        'route' => '/convert',
+        'path' => 'Modules.Order.routes',
+        'namespace' => 'convert'
+    ],
+
+    [
         'route' => '/subscribe',
         'path' => 'Modules.Subscribe.routes',
         'namespace' => 'subscribe'

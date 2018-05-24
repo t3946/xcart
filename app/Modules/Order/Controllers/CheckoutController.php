@@ -312,7 +312,7 @@ class CheckoutController extends FrontendController
             'billingForm' => $billingForm,
             'countries' => Connection::getInstance()->fetchAll(SearchSql::getAllCountryOrderSql()),
             'shipping_address' => $shipping_address,
-            'billing_address' => $billing_address,
+//            'billing_address' => $billing_address,
         ]);
     }
 
@@ -434,7 +434,10 @@ class CheckoutController extends FrontendController
 
     /**
      * Step 4
-     * @param $order_id
+     *
+     * @param int    $order_id
+     * @param string $slug
+     *
      * @throws \Xcart\App\Exceptions\HttpException
      */
     public function actionComplete(int $order_id, string $slug): void
@@ -445,7 +448,7 @@ class CheckoutController extends FrontendController
 
         if($order = OrderModel::objects()->get(['orderid' => $order_id])) {
 
-            $hash = md5($order->orderid.$order->total.$order->email);
+            $hash = OrderHelper::getOrderHash([$order->orderid, $order->total, $order->email]);
 
             if ($slug !== $hash) {
                 $this->error(404);
@@ -457,6 +460,7 @@ class CheckoutController extends FrontendController
                 'order' => $order,
                 'shipping_info' => $shipping,
                 'billing_info' => $billing,
+                'hash' => $hash,
             ]);
         } else {
             $this->error(404);
@@ -467,7 +471,7 @@ class CheckoutController extends FrontendController
     {
         if (!self::isStepValid($order_status, $current_step)) {
             //Xcart::app()->flash->error(OrderModule::t('Cart changed: One or more items have changed!'));
-            $this->redirect(self::$steps[$order_status]['url']);
+            $this->redirect(self::$steps[$order_status]['url'] ?? self::$steps[OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP1]['url']);
         }
     }
 
