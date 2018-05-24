@@ -5,6 +5,7 @@ namespace Modules\Order\Controllers;
 use Mobile_Detect;
 use Modules\Cart\Components\CartItem;
 use Modules\Cart\Helpers\StagesOfOrdering;
+use Modules\Core\Models\CountryModel;
 use Modules\Core\Models\StateModel;
 use Modules\Dashboard\Sqls\SearchSql;
 use Modules\GeoIp\Helpers\GeoIpHelper;
@@ -132,7 +133,7 @@ class CheckoutController extends FrontendController
     }
 
     public function actionAutoCompleteCountry(){
-        $search = htmlspecialchars($_GET['search']);
+        $search = Xcart::app()->request->get->get('search');
 
         $this->jsonResponse(['United States', 'United Arab Emirates', 'zcefefefaef', 'hgfgfthytyhghg', 'sdsdsfdsdsdsd']);
 

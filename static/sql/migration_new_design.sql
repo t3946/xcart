@@ -3574,3 +3574,12 @@ INSERT INTO `xcart_states` (`stateid`, `state`, `code`, `country_code`, `base_st
 
 
 UPDATE `xcart_k`.`pages_page` SET `content`='<p><br />When a product is labeled \'Temporarily Out of Stock\', the product is still available for order. It\'s currently not available in our warehouses, but we have ordered more from our suppliers. Most out of stock items are replenished within a few days. In some cases, production delays or inventory shortages may delay the arrival of your item to our fulfillment center.<br /><br />We ship from warehouses located across the United States and Canada. If you add a product that\'s out of stock to your shopping cart, it may hold up other items shipped from the same warehouse until the unavailable item arrives at our warehouse. Items shipped from other locations will not be affected. Add items to your cart, click \'Shipping quote\' and \'Calculate grand total\' to see which part of the order contains the temporarily out of stock item. We\'ll remind you on checkout about an out of stock item, and will send an email the moment the part of the order containing the item is on its way. If you don\'t want to wait, you can swap the out of stock item for something similar, or remove it from the order completely, either on checkout, or by&nbsp;<a href="/contactus/">contacting</a>&nbsp;our customer service team.&nbsp;</p>' WHERE  `id`=13;
+
+ALTER TABLE `xcart_countries`
+  ADD COLUMN `name` VARCHAR(255) NULL DEFAULT NULL AFTER `display_states`;
+
+UPDATE `xcart_countries` AS `xcart_countries_1`
+  LEFT JOIN `xcart_languages` AS `xcart_languages_1` ON 'US'=`xcart_languages_1`.`code` AND xcart_languages_1.name = CONCAT('country_', xcart_countries_1.code)
+SET xcart_countries_1.name = `xcart_languages_1`.value;
+
+ALTER TABLE `xcart_countries`  ADD INDEX `name` (`name`);

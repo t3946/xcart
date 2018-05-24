@@ -3,11 +3,14 @@
 namespace Modules\Core\Models;
 
 
+use Mindy\QueryBuilder\Expression;
 use Modules\Core\CoreModule;
 use Modules\Shipping\Models\ZoneElementModel;
 use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
+use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\HasManyField;
+use Xcart\App\Orm\Fields\OneToOneField;
 use Xcart\App\Orm\Model;
 
 class CountryModel extends Model
@@ -28,7 +31,8 @@ class CountryModel extends Model
     {
         return [
             'code' => [
-                'class' => AutoField::className(),
+                'class' => CharField::class,
+                'primary' => true,
             ],
             'zone_element' => [
                 'class' => HasManyField::className(),
@@ -36,15 +40,15 @@ class CountryModel extends Model
                 'link' => ['code' => 'field'],
                 'extra' => ['field_type' => 'C']
             ],
+            'name' => [
+                'class' => CharField::class,
+                'null' => true,
+            ]
         ];
     }
 
     public function __toString(): string
     {
-        if ($model = LanguageModel::objects()->get(['code' => 'US', 'name' => "country_$this->code"])){
-            return $model->value;
-        }
-
-        return parent::__toString();
+        return (string) $this->name;
     }
 }
