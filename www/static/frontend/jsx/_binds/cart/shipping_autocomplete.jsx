@@ -19,6 +19,7 @@ import autoComplete from 'bower_components/javascript-auto-complete/auto-complet
                 $.getJSON('/checkout/auto_complete_country/', { q: term }, function(data){
                     //response(data);
                     console.info(data);
+                    response([]);
                 });
             }
         });
@@ -29,6 +30,7 @@ import autoComplete from 'bower_components/javascript-auto-complete/auto-complet
                 $.getJSON('/checkout/auto_complete_zip_code/', { q: term }, function(data){
                     //response(data);
                     console.info(data);
+                    response([]);
                 });
             }
         });
@@ -39,6 +41,7 @@ import autoComplete from 'bower_components/javascript-auto-complete/auto-complet
                 $.getJSON('/checkout/auto_complete_state/', { q: term }, function(data){
                     //response(data);
                     console.info(data);
+                    response([]);
                 });
             }
         });
@@ -49,6 +52,7 @@ import autoComplete from 'bower_components/javascript-auto-complete/auto-complet
                 $.getJSON('/checkout/auto_complete_city/', { q: term }, function(data){
                     //response(data);
                     console.info(data);
+                    response([]);
                 });
             }
         });
