@@ -61038,20 +61038,38 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
         new _autoComplete2.default({
             selector: '#ShippingAddressForm_country',
-            source: function source(term, response) {
-                $.getJSON('/checkout/auto_complete_country/', { q: term }, function (data) {
-                    console.info(data);
-                    response([]);
+            offsetTop: 0,
+            source: function source(term, suggest) {
+                $.getJSON('/checkout/auto_complete_country/', { search: term }, function (data) {
+                    suggest(data);
                 });
             }
         });
 
         new _autoComplete2.default({
             selector: '#ShippingAddressForm_zipcode',
-            source: function source(term, response) {
-                $.getJSON('/checkout/auto_complete_zip_code/', { q: term }, function (data) {
-                    console.info(data);
-                    response([]);
+            source: function source(term, suggest) {
+                $.getJSON('/checkout/auto_complete_zip_code/', { search: term }, function (data) {
+
+                    var result = [];
+                    for (var _iterator = data, _isArray = Array.isArray(_iterator), _i = 0, _iterator = _isArray ? _iterator : _iterator[Symbol.iterator]();;) {
+                        var _ref;
+
+                        if (_isArray) {
+                            if (_i >= _iterator.length) break;
+                            _ref = _iterator[_i++];
+                        } else {
+                            _i = _iterator.next();
+                            if (_i.done) break;
+                            _ref = _i.value;
+                        }
+
+                        var item = _ref;
+
+                        result.push(item[0]);
+                    }
+
+                    suggest(result);
                 });
             }
         });
@@ -61059,9 +61077,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
         new _autoComplete2.default({
             selector: '#ShippingAddressForm_state',
             source: function source(term, response) {
-                $.getJSON('/checkout/auto_complete_state/', { q: term }, function (data) {
-                    console.info(data);
-                    response([]);
+                $.getJSON('/checkout/auto_complete_state/', { search: term }, function (data) {
+                    response(data);
                 });
             }
         });
@@ -61069,9 +61086,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
         new _autoComplete2.default({
             selector: '#ShippingAddressForm_city',
             source: function source(term, response) {
-                $.getJSON('/checkout/auto_complete_city/', { q: term }, function (data) {
-                    console.info(data);
-                    response([]);
+                $.getJSON('/checkout/auto_complete_city/', { search: term }, function (data) {
+                    response(data);
                 });
             }
         });

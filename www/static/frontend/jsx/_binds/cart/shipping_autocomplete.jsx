@@ -15,22 +15,26 @@ import autoComplete from 'bower_components/javascript-auto-complete/auto-complet
 
         new autoComplete({
             selector: '#ShippingAddressForm_country',
-            source: function(term, response){
-                $.getJSON('/checkout/auto_complete_country/', { q: term }, function(data){
-                    //response(data);
-                    console.info(data);
-                    response([]);
+            offsetTop: 0,
+            source: function(term, suggest){
+                $.getJSON('/checkout/auto_complete_country/', { search: term }, function(data){
+                    suggest(data);
                 });
             }
         });
 
         new autoComplete({
             selector: '#ShippingAddressForm_zipcode',
-            source: function(term, response){
-                $.getJSON('/checkout/auto_complete_zip_code/', { q: term }, function(data){
-                    //response(data);
-                    console.info(data);
-                    response([]);
+            source: function(term, suggest){
+                $.getJSON('/checkout/auto_complete_zip_code/', { search: term }, function(data){
+
+                    let result = [];
+                    for (let item of data) {
+                        //result.push('<span class="code">' + item[0] + '</span><span class="city">' + item[1] + '</span><span class="state">' + item[1] + '</span>');
+                        result.push(item[0]);
+                    }
+
+                    suggest(result);
                 });
             }
         });
@@ -38,10 +42,8 @@ import autoComplete from 'bower_components/javascript-auto-complete/auto-complet
         new autoComplete({
             selector: '#ShippingAddressForm_state',
             source: function(term, response){
-                $.getJSON('/checkout/auto_complete_state/', { q: term }, function(data){
-                    //response(data);
-                    console.info(data);
-                    response([]);
+                $.getJSON('/checkout/auto_complete_state/', { search: term }, function(data){
+                    response(data);
                 });
             }
         });
@@ -49,10 +51,8 @@ import autoComplete from 'bower_components/javascript-auto-complete/auto-complet
         new autoComplete({
             selector: '#ShippingAddressForm_city',
             source: function(term, response){
-                $.getJSON('/checkout/auto_complete_city/', { q: term }, function(data){
-                    //response(data);
-                    console.info(data);
-                    response([]);
+                $.getJSON('/checkout/auto_complete_city/', { search: term }, function(data){
+                    response(data);
                 });
             }
         });

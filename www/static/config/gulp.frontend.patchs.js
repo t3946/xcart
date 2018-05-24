@@ -110,14 +110,6 @@ module.exports = {
                 'bower_components/sly/dist/sly.min.js'
             ]
         },
-        auto_complete: {
-            // js_include: [
-            //     'bower_components/javascript-auto-complete/auto-complete.min.js'
-            // ],
-            css_raw: [
-                'bower_components/javascript-auto-complete/auto-complete.css'
-            ]
-        },
         // swiper: {
         //     // css: [
         //     //     'bower_components/swiper/dist/css/swiper.min.css'
