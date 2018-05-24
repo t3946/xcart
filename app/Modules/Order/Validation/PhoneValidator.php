@@ -13,7 +13,7 @@ class PhoneValidator extends Validator
         $regexp = '/^\+?[-()\d\s]+[^a-zA-Z]/m';
 
         if (!preg_match($regexp, $value)){
-            $this->addError(Translate::getInstance()->t('validation', 'Is not a valid country', []));
+            $this->addError(Translate::getInstance()->t('validation', 'Is not a valid phone', []));
         }
 
         return $this->hasErrors() === false;
