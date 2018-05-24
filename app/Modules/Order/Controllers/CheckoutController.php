@@ -132,28 +132,36 @@ class CheckoutController extends FrontendController
     }
 
     public function actionAutoCompleteCountry(){
+        $search = htmlspecialchars($_GET['search']);
 
-        return ['United States', 'United Arab Emirates', 'zcefefefaef', 'hgfgfthytyhghg', 'sdsdsfdsdsdsd'];
+        $this->jsonResponse(['United States', 'United Arab Emirates', 'zcefefefaef', 'hgfgfthytyhghg', 'sdsdsfdsdsdsd']);
 
     }
 
     public function actionAutoCompleteZipCode(){
+        $code = htmlspecialchars($_GET['search']);
+        $country = htmlspecialchars($_GET['country']);
 
-        return [
+        $this->jsonResponse([
             ['10001', 'New York', 'NY', 'New York'],
-            ['10002', 'dadfaddf', 'seded', 'seaefefef'],
-            ['10012', 'rfrfrfrf', 'rtyyrt', 'fhfhghyyt'],
-            ['10032', 'ujujujuj', 'rtyuyj', 'sdrtrtyty'],
-            ['10004', 'dtdyyyjj', 'rthhjhhj', 'jhjghjhgjh'],
-        ];
+            ['10002', 'dadfaddf', 'se', 'seaefefef'],
+            ['10012', 'rfrfrfrf', 'rt', 'fhfhghyyt'],
+            ['10032', 'ujujujuj', 'rt', 'sdrtrtyty'],
+            ['10004', 'dtdyyyjj', 'rt', 'jhjghjhgjh'],
+        ]);
     }
 
     public function actionAutoCompleteState(){
-        return ['New York', 'sdrgsrgsrgr', 'zcefefefaef', 'rgrfgtgtdg'];
+        $search = htmlspecialchars($_GET['search']);
+        $country = htmlspecialchars($_GET['country']);
+        $this->jsonResponse(['New York', 'sdrgsrgsrgr', 'zcefefefaef', 'rgrfgtgtdg']);
     }
 
     public function actionAutoCompleteCity(){
-        return ['New York', 'sdrgrrrgr', 'ftgtgtt', 'sfefefsrsfr'];
+        $search = htmlspecialchars($_GET['search']);
+        $country = htmlspecialchars($_GET['country']);
+        $state = htmlspecialchars($_GET['state']);
+        $this->jsonResponse(['New York', 'sdrgrrrgr', 'ftgtgtt', 'sfefefsrsfr']);
     }
 
     /**
@@ -304,7 +312,7 @@ class CheckoutController extends FrontendController
             'billingForm' => $billingForm,
             'countries' => Connection::getInstance()->fetchAll(SearchSql::getAllCountryOrderSql()),
             'shipping_address' => $shipping_address,
-            'billing_address' => $billing_address,
+//            'billing_address' => $billing_address,
         ]);
     }
 
@@ -463,7 +471,7 @@ class CheckoutController extends FrontendController
     {
         if (!self::isStepValid($order_status, $current_step)) {
             //Xcart::app()->flash->error(OrderModule::t('Cart changed: One or more items have changed!'));
-            $this->redirect(self::$steps[$order_status]['url']);
+            $this->redirect(self::$steps[$order_status]['url'] ?? self::$steps[OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP1]['url']);
         }
     }
 

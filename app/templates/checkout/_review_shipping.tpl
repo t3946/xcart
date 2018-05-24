@@ -64,7 +64,7 @@
         {/foreach}
         <div class="row align-center">
             <div class="columns small-12">
-                <a href="{url 'checkout:shipping'}" class="button yellow-white waves waves-orange waves-effect">{t 'Modify' dict='order'}</a>
+                <a href="{url 'checkout:options'}" class="button yellow-white waves waves-orange waves-effect">{t 'Modify' dict='order'}</a>
             </div>
         </div>
     </div>
