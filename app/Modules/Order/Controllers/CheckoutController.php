@@ -34,6 +34,7 @@ use Xcart\App\Form\PrepareData;
 use Xcart\App\Main\Xcart;
 use Xcart\Connection;
 use Xcart\Logs;
+use Xcart\State;
 
 class CheckoutController extends FrontendController
 {
@@ -132,11 +133,12 @@ class CheckoutController extends FrontendController
         ]);
     }
 
-    public function actionAutoCompleteCountry(){
-        $search = Xcart::app()->request->get->get('search');
-
-        $this->jsonResponse(['United States', 'United Arab Emirates', 'zcefefefaef', 'hgfgfthytyhghg', 'sdsdsfdsdsdsd']);
-
+    public function actionAutoCompleteCountry(): void
+    {
+        if ($search = Xcart::app()->request->get->get('search')) {
+            $countries = CountryModel::objects()->filter(['name__startswith' => $search])->valuesList('name', true);
+        }
+        $this->jsonResponse($countries ?? []);
     }
 
     public function actionAutoCompleteZipCode(){
@@ -153,9 +155,15 @@ class CheckoutController extends FrontendController
     }
 
     public function actionAutoCompleteState(){
-        $search = htmlspecialchars($_GET['search']);
-        $country = htmlspecialchars($_GET['country']);
-        $this->jsonResponse(['New York', 'sdrgsrgsrgr', 'zcefefefaef', 'rgrfgtgtdg']);
+        if ($country = Xcart::app()->request->get->get('country')) {
+            $filter['country_code'] = $country;
+        }
+
+        if ($search = Xcart::app()->request->get->get('search')) {
+            $states = StateModel::objects()->filter(array_merge(['state__startswith' => $search], $filter ?? []))->valuesList('name', true);
+        }
+
+        $this->jsonResponse($states ?? []);
     }
 
     public function actionAutoCompleteCity(){
