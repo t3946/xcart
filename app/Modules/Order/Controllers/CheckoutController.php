@@ -135,20 +135,28 @@ class CheckoutController extends FrontendController
         ]);
     }
 
+    /**
+     * auto complete country code
+     */
     public function actionAutoCompleteCountry(): void
     {
         if ($search = Xcart::app()->request->get->get('search')) {
             $countries = CountryModel::objects()->filter(['name__contains' => $search])->limit(10)->valuesList('name', true);
         }
+
         $this->jsonResponse($countries ?? []);
     }
 
+    /**
+     * auto complete zip code
+     */
     public function actionAutoCompleteZipCode(): void
     {
 
         if ($country = Xcart::app()->request->get->get('country')) {
             $filter['country'] = $country;
         }
+
         if ($search = Xcart::app()->request->get->get('search')) {
             $zips = ZipCodeModel::objects()->filter(array_merge(['zip__contains' => $search], $filter ?? []))->limit(10)->valuesList('zip', true);
         }
@@ -156,6 +164,9 @@ class CheckoutController extends FrontendController
         $this->jsonResponse($zips ?? []);
     }
 
+    /**
+     * auto complete state action
+     */
     public function actionAutoCompleteState(): void
     {
         if ($country = Xcart::app()->request->get->get('country')) {
@@ -169,7 +180,11 @@ class CheckoutController extends FrontendController
         $this->jsonResponse($states ?? []);
     }
 
-    public function actionAutoCompleteCity(){
+    /**
+     * auto complete city action
+     */
+    public function actionAutoCompleteCity(): void
+    {
         if ($country = Xcart::app()->request->get->get('country')) {
             $filter['country_code'] = $country;
         }
