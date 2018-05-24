@@ -7,6 +7,7 @@ use Modules\Cart\Components\CartItem;
 use Modules\Cart\Helpers\StagesOfOrdering;
 use Modules\Core\Models\CountryModel;
 use Modules\Core\Models\StateModel;
+use Modules\Core\Models\ZipCodeModel;
 use Modules\Dashboard\Sqls\SearchSql;
 use Modules\GeoIp\Helpers\GeoIpHelper;
 use Modules\Goods\Models\ProductModel;
@@ -24,6 +25,7 @@ use Modules\Order\Models\OrderModel;
 use Modules\Order\Models\OrderStatusModel;
 use Modules\Order\Models\PurchaseOrderModel;
 use Modules\Order\OrderModule;
+use Modules\Order\Validation\ZipCodeValidator;
 use Modules\Payment\Models\PaymentMethodModel;
 use Modules\Shipping\Models\ShippingRateModel;
 use Modules\Shipping\ShippingModule;
@@ -141,26 +143,27 @@ class CheckoutController extends FrontendController
         $this->jsonResponse($countries ?? []);
     }
 
-    public function actionAutoCompleteZipCode(){
-        $code = htmlspecialchars($_GET['search']);
-        $country = htmlspecialchars($_GET['country']);
+    public function actionAutoCompleteZipCode(): void
+    {
 
-        $this->jsonResponse([
-            ['10001', 'New York', 'NY', 'New York'],
-            ['10002', 'dadfaddf', 'se', 'seaefefef'],
-            ['10012', 'rfrfrfrf', 'rt', 'fhfhghyyt'],
-            ['10032', 'ujujujuj', 'rt', 'sdrtrtyty'],
-            ['10004', 'dtdyyyjj', 'rt', 'jhjghjhgjh'],
-        ]);
+        if ($country = Xcart::app()->request->get->get('country')) {
+            $filter['country'] = $country;
+        }
+        if ($search = Xcart::app()->request->get->get('search')) {
+            $zips = ZipCodeModel::objects()->filter(array_merge(['zip__startswith' => $search], $filter ?? []))->valuesList('zip', true);
+        }
+
+        $this->jsonResponse($zips ?? []);
     }
 
-    public function actionAutoCompleteState(){
+    public function actionAutoCompleteState(): void
+    {
         if ($country = Xcart::app()->request->get->get('country')) {
             $filter['country_code'] = $country;
         }
 
         if ($search = Xcart::app()->request->get->get('search')) {
-            $states = StateModel::objects()->filter(array_merge(['state__startswith' => $search], $filter ?? []))->valuesList('name', true);
+            $states = StateModel::objects()->filter(array_merge(['state__startswith' => $search], $filter ?? []))->valuesList('state', true);
         }
 
         $this->jsonResponse($states ?? []);
