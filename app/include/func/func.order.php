@@ -1984,7 +1984,7 @@ function func_check_and_send_request_availability_email($orderid, $sent_by = '')
 
 function func_get_order_manufacturers($orderid)
 {
-    global $sql_tbl, $config, $userfirstname, $userfullname;
+    global $sql_tbl, $config, $userfirstname, $userfullname, $department;
 
     $order_data = func_order_data($orderid);
 
@@ -2092,7 +2092,13 @@ function func_get_order_manufacturers($orderid)
                                     }
                                 }
 
-                                $tmp_sku = $product_model->getMPN();
+                                if ($department == 'distributor' || empty($department)){
+                                    $tmp_sku = $product_model->getMPN();
+                                }
+                                else {
+                                    $tmp_sku = $product_model->productcode;
+                                }
+
 
                                 $cidev_items_table .= '<tr><td width="150px" style="text-align: left;">' . $tmp_sku . '</td><td width="250px" style="text-align: left;"><a href="' . $product_model->getUrl() . '">' . $detail_model->product . '</a>' . $selected_product_options . '</td><td style="text-align: right;">' . $detail_model->amount . '</td></tr>';
 

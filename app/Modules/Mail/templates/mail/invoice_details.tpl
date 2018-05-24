@@ -5,7 +5,7 @@
         </td>
     </tr>
 </table>
-{set $colspan = 6}
+{set $colspan = 5}
 
 <table cellspacing="0" cellpadding="3" width="100%" border="1">
     <tr>

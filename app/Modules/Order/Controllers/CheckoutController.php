@@ -426,7 +426,10 @@ class CheckoutController extends FrontendController
 
     /**
      * Step 4
-     * @param $order_id
+     *
+     * @param int    $order_id
+     * @param string $slug
+     *
      * @throws \Xcart\App\Exceptions\HttpException
      */
     public function actionComplete(int $order_id, string $slug): void
@@ -437,7 +440,7 @@ class CheckoutController extends FrontendController
 
         if($order = OrderModel::objects()->get(['orderid' => $order_id])) {
 
-            $hash = md5($order->orderid.$order->total.$order->email);
+            $hash = OrderHelper::getOrderHash([$order->orderid, $order->total, $order->email]);
 
             if ($slug !== $hash) {
                 $this->error(404);
@@ -449,6 +452,7 @@ class CheckoutController extends FrontendController
                 'order' => $order,
                 'shipping_info' => $shipping,
                 'billing_info' => $billing,
+                'hash' => $hash,
             ]);
         } else {
             $this->error(404);
