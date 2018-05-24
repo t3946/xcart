@@ -38,4 +38,24 @@ return [
         'target' => [CheckoutController::class, 'actionInvoicePdf'],
         'name' => 'invoicepdf'
     ],
+    [
+        'route' => '/auto_complete_country/',
+        'target' => [CheckoutController::class, 'actionAutoCompleteCountry'],
+        'name' => 'auto_complete_country'
+    ],
+    [
+        'route' => '/auto_complete_zip_code/',
+        'target' => [CheckoutController::class, 'actionAutoCompleteZipCode'],
+        'name' => 'auto_complete_zip_code'
+    ],
+    [
+        'route' => '/auto_complete_state/',
+        'target' => [CheckoutController::class, 'actionAutoCompleteState'],
+        'name' => 'auto_complete_state'
+    ],
+    [
+        'route' => '/auto_complete_city/',
+        'target' => [CheckoutController::class, 'actionAutoCompleteCity'],
+        'name' => 'auto_complete_city'
+    ],
 ];
