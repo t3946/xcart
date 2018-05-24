@@ -22,8 +22,8 @@
     <link rel="preconnect" href="https://www.google-analytics.com">
     <link rel="preconnect" href="https://fonts.googleapis.com">
 
-    <link rel="prefetch" href="/static/frontend/dist/css/styles.css" as="style">
-    <link rel="prefetch" href="/static/frontend/dist/js/main.js" as="script">
+    <link rel="preload" href="/static/frontend/dist/css/styles.css?v={frontend_version resource='css/styles.css'}" as="style">
+    <link rel="preload" href="/static/frontend/dist/js/main.js?v={frontend_version resource="js/main.js"}" as="script">
 
     {*<link rel="manifest" href="/manifest.json">*}
 
