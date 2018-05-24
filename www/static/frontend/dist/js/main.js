@@ -61036,6 +61036,11 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
     var page = document.querySelector('.cart_shipping-page');
     if (page) {
 
+        var inputCountry = document.querySelector('#ShippingAddressForm_country');
+
+        var inputState = document.querySelector('#ShippingAddressForm_state');
+
+
         new _autoComplete2.default({
             selector: '#ShippingAddressForm_country',
             offsetTop: 0,
@@ -61049,7 +61054,11 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
         new _autoComplete2.default({
             selector: '#ShippingAddressForm_zipcode',
             source: function source(term, suggest) {
-                $.getJSON('/checkout/auto_complete_zip_code/', { search: term }, function (data) {
+
+                $.getJSON('/checkout/auto_complete_zip_code/', {
+                    search: term,
+                    country: inputCountry.value
+                }, function (data) {
 
                     var result = [];
                     for (var _iterator = data, _isArray = Array.isArray(_iterator), _i = 0, _iterator = _isArray ? _iterator : _iterator[Symbol.iterator]();;) {
@@ -61077,7 +61086,10 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
         new _autoComplete2.default({
             selector: '#ShippingAddressForm_state',
             source: function source(term, response) {
-                $.getJSON('/checkout/auto_complete_state/', { search: term }, function (data) {
+                $.getJSON('/checkout/auto_complete_state/', {
+                    search: term,
+                    country: inputCountry.value
+                }, function (data) {
                     response(data);
                 });
             }
@@ -61086,7 +61098,11 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
         new _autoComplete2.default({
             selector: '#ShippingAddressForm_city',
             source: function source(term, response) {
-                $.getJSON('/checkout/auto_complete_city/', { search: term }, function (data) {
+                $.getJSON('/checkout/auto_complete_city/', {
+                    search: term,
+                    country: inputCountry.value,
+                    state: inputState.value
+                }, function (data) {
                     response(data);
                 });
             }
