@@ -44,7 +44,7 @@ class DefaultController extends FrontendController
 
 
         if (!$model->checkSite($site->pk)) {
-            $this->redirect($model->getAbsoluteUrl(true), 301);
+            $this->redirect($model->getAbsoluteUrl(true), [],301);
         }
 
         $category = $model->getMainCategory();
