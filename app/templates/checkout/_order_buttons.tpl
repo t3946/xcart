@@ -5,7 +5,7 @@
     <div class="columns show-for-medium">
         <div class="row align-right">
             <div class="columns text-align--right show-for-large">
-                <a href="{url 'checkout:invoice'}" class="button yellow-white waves waves-orange waves-effect print-invoice">
+                <a href="{url 'convert:print'}?orderid={$order->orderid}&p={$hash}" target="_blank" class="button yellow-white waves waves-orange waves-effect print-invoice">
                     {t 'Print invoice' dict='order'}
                 </a>
             </div>

@@ -8,4 +8,10 @@ return [
         'target' => [InvoiceConventerController::class, 'convertToPdf'],
         'name' => 'pdf'
     ],
+
+    [
+        'route' => '/invoice/',
+        'target' => [InvoiceConventerController::class, 'printInvoice'],
+        'name' => 'print'
+    ],
 ];

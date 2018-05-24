@@ -35,4 +35,22 @@ class InvoiceConventerController extends Controller
 
         $this->redirect(404);
     }
+
+    public function printInvoice()
+    {
+        $request = $this->getRequest();
+
+        /** @var OrderModel $order_model */
+        if ($order_model = OrderModel::objects()->get(['orderid' => $request->get->get('orderid')])) {
+
+            $slug = $request->get->get('p');
+
+            $hash = OrderHelper::getOrderHash([$order_model->orderid, $order_model->total, $order_model->email]);
+
+            if ($slug == $hash) {
+                echo OrderInvoiceHelper::getInvoiceHtml($order_model);
+            }
+        }
+        $this->redirect(404);
+    }
 }
