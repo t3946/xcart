@@ -304,7 +304,7 @@ class CheckoutController extends FrontendController
             'billingForm' => $billingForm,
             'countries' => Connection::getInstance()->fetchAll(SearchSql::getAllCountryOrderSql()),
             'shipping_address' => $shipping_address,
-            'billing_address' => $billing_address,
+//            'billing_address' => $billing_address,
         ]);
     }
 
@@ -463,7 +463,7 @@ class CheckoutController extends FrontendController
     {
         if (!self::isStepValid($order_status, $current_step)) {
             //Xcart::app()->flash->error(OrderModule::t('Cart changed: One or more items have changed!'));
-            $this->redirect(self::$steps[$order_status]['url']);
+            $this->redirect(self::$steps[$order_status]['url'] ?? self::$steps[OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP1]['url']);
         }
     }
 

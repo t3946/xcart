@@ -22,6 +22,8 @@ abstract class AddressForm extends BaseForm
 
     public function getFields()
     {
+        $geoIp = GeoipHelper::getGeoipLocation(Xcart::app()->request->getUserIP());
+
         return [
             'firstname' => [
                 'class' => CharField::class,
@@ -76,7 +78,7 @@ abstract class AddressForm extends BaseForm
 
                     return $result;
                 },
-                'value' => GeoipHelper::getGeoipLocation(Xcart::app()->request->getUserIP())['country'] ?? null,
+                'value' => $geoIp['country'] ?? null,
             ],
 
             'zipcode' => [
@@ -87,7 +89,7 @@ abstract class AddressForm extends BaseForm
                     new ZipCodeValidator()
                 ],
                 'html' => [
-                    'placeholder' => GeoipHelper::getGeoipLocation(Xcart::app()->request->getUserIP())['postalCode'] ?? '08540',
+                    'placeholder' => $geoIp['postalCode'] ?? '08540',
                 ],
             ],
 
@@ -99,10 +101,10 @@ abstract class AddressForm extends BaseForm
                     new StateValidator(['country' => 'country'])
                 ],
                 'html' => [
-                    'placeholder' => ($state = StateModel::objects()->get(
+                    'placeholder' => ($geoIp && $state = StateModel::objects()->get(
                         [
-                            'code' => GeoipHelper::getGeoipLocation(Xcart::app()->request->getUserIP())['region'],
-                            'country_code' => GeoipHelper::getGeoipLocation(Xcart::app()->request->getUserIP())['country']
+                            'code' => $geoIp['region'],
+                            'country_code' => $geoIp['country']
                         ]))
                         ? $state->state
                         : 'New Jersey'
@@ -114,7 +116,7 @@ abstract class AddressForm extends BaseForm
                 'label' => 'City',
                 'required' => true,
                 'html' => [
-                    'placeholder' => GeoipHelper::getGeoipLocation(Xcart::app()->request->getUserIP())['city'] ?? 'Princeton'
+                    'placeholder' => $geoIp['city'] ?? 'Princeton'
                 ],
             ],
         ];
