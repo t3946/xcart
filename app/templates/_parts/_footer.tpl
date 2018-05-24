@@ -129,7 +129,7 @@
 
                             <ul class="no-bullet menu-list">
                                 <li class="title-menu">
-                                    Payments Methods
+                                    Payment Methods
                                 </li>
                                 <li class="payment-methods">
                                     <img src="/static/frontend/dist/images/icons/p_methods/visa.png" alt="Visa icon">
