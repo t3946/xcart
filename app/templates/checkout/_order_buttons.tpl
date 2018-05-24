@@ -10,7 +10,7 @@
                 </a>
             </div>
             <div class="columns shrink text-align--right">
-                <a href="{url 'convert:pdf'}?orderid={$order->orderid}&p={$hash}" class="button yellow-white waves waves-orange waves-effect open-pdf-invoice">
+                <a href="{url 'convert:pdf'}?orderid={$order->orderid}&p={$hash}" target="_blank" class="button yellow-white waves waves-orange waves-effect open-pdf-invoice">
                     {t 'Open PDF invoice' dict='order'}
                 </a>
             </div>
