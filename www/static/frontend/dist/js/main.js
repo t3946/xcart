@@ -61057,6 +61057,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
                     });
                 },
                 onSelect: function onSelect(e, term, item) {
+                    e.preventDefault();
                     var code = item.getAttribute('data-code');
                     inputCountry.setAttribute('data-code', code);
                 }
@@ -61084,6 +61085,9 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
                     }, function (data) {
                         suggest(data);
                     });
+                },
+                onSelect: function onSelect(e, term, item) {
+                    e.preventDefault();
                 }
             });
         }
@@ -61106,6 +61110,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
                     });
                 },
                 onSelect: function onSelect(e, term, item) {
+                    e.preventDefault();
                     var code = item.getAttribute('data-code');
                     inputState.setAttribute('data-code', code);
                 }
@@ -61124,6 +61129,9 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
                     }, function (data) {
                         response(data);
                     });
+                },
+                onSelect: function onSelect(e, term, item) {
+                    e.preventDefault();
                 }
             });
         }
