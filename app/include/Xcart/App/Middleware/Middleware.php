@@ -29,7 +29,7 @@ abstract class Middleware implements IMiddleware
     /**
      * @param \Xcart\App\Request\Request $request
      */
-    public function processCliRequest(CliRequest $request) {}
+    public function processCliRequest($request) {}
 
     /**
      * @param \Xcart\App\Request\HttpRequest $request

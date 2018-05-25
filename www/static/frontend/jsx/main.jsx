@@ -24,7 +24,7 @@ import documentReady from "./utils/documentReady";
         new LazyImageLoad();
         new CategoryViewType();
         new DepartmentMenu();
-        new DottedText('.must-show-less');
+        // new DottedText('.must-show-less');
         new CatalogFilter();
 
         isMedia('medium', '(max-width: 1023px)');

@@ -27,9 +27,35 @@
   }
 }
 
+.show_less {
+  z-index: 1;
+  line-height: 1;
+  position: relative;
+  border-bottom: 1px dashed;
+  padding-right: rem-calc(10);
+  color: $color_link;
+  cursor: pointer;
+  display:none;
+
+  &:after {
+    content: '';
+    display: block;
+    border: 3px solid transparent;
+    border-top: 5px solid $color_link;
+
+    position: absolute;
+    top: 50%;
+    right: 0;
+    width: 5px;
+    transition: all .4s;
+
+    transform: rotate(180deg);
+    margin-top: -5px;
+  }
+}
+
 .must-show-less {
   overflow: hidden;
-
   .show_more {}
 
   &.full {
