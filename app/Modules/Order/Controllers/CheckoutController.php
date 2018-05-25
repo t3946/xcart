@@ -2,6 +2,7 @@
 
 namespace Modules\Order\Controllers;
 
+use Mindy\QueryBuilder\Expression;
 use Mobile_Detect;
 use Modules\Cart\Components\CartItem;
 use Modules\Cart\Helpers\StagesOfOrdering;
@@ -141,7 +142,7 @@ class CheckoutController extends FrontendController
     public function actionAutoCompleteCountry(): void
     {
         if ($search = Xcart::app()->request->get->get('search')) {
-            $countries = CountryModel::objects()->filter(['name__startswith' => $search])->limit(10)->valuesList(['name', 'code'], false);
+            $countries = CountryModel::objects()->filter(['name__contains' => $search])->limit(10)->order([new Expression("FIELD(code, 'US') DESC, code")])->valuesList(['name', 'code'], false);
         }
 
         $this->jsonResponse($countries ?? []);
