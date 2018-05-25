@@ -3,6 +3,7 @@ namespace Modules\Main\Controllers;
 
 use Modules\Goods\Helpers\PromotionalProductsHelper;
 use Modules\Goods\Models\CategoryModel;
+use Modules\Meta\Types\MetaType;
 use Modules\Sites\SitesModule;
 use Xcart\App\Controller\FrontendController;
 use Xcart\App\Main\Xcart;
@@ -27,6 +28,9 @@ class DefaultController extends FrontendController
 
         $category_new = CategoryModel::objects()->filter(['category' => 'New Products', 'storefrontid' => $site->pk, 'level' => 1])->limit(1)->get();
 
+        $this->setMetaBase(MetaType::DEFAULT, [
+            'site' => $site
+        ]);
 
         $this->display('home.tpl', [
             'category_new' => $category_new,
