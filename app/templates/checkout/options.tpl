@@ -115,7 +115,7 @@
                             </div>
                         {/if}
                     {/foreach}
-                    {*{if $order->isCanadianShipping()}*}
+                    {if $order->isCanadianShipping()}
                         <div class="row">
                             <div class="column small-1">
                             </div>
@@ -128,7 +128,7 @@
                                 </div>
                             </div>
                         </div>
-                    {*{/if}*}
+                    {/if}
                 </div>
             </div>
 
