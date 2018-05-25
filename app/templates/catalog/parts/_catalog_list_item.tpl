@@ -199,7 +199,7 @@
                         </div>
 
                         <div class="cart_add cart_buttons">
-                            <a class="add button waves waves-orange yellow">
+                            <a class="add button waves waves-orange yellow waves-effect">
                                 <span class="text">
                                     Add to cart
                                 </span>
