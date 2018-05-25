@@ -3,6 +3,7 @@
 namespace Modules\Order\Forms;
 
 use Modules\Core\Models\StateModel;
+use Modules\Core\Models\CountryModel;
 use Modules\Dashboard\Sqls\SearchSql;
 use Modules\GeoIp\Helpers\GeoIpHelper;
 use Modules\Order\Validation\CountryValidator;
@@ -64,21 +65,21 @@ abstract class AddressForm extends BaseForm
             ],
 
             'country' => [
-                'class' => DropDownField::class,
+                'class' => CharField::class,
                 'label' => 'Country',
                 'required' => true,
                 'validators' => [
                     new CountryValidator()
                 ],
-                'choices' => function() {
-                    $result = ['' => 'Select Country'];
-                    foreach (Connection::getInstance()->fetchAll(SearchSql::getAllCountryOrderSql()) as $item) {
-                        $result[$item['id']] = $item['text'];
-                    }
-
-                    return $result;
-                },
-                'value' => $geoIp['country'] ?? null,
+                'value' => ($geoIp && $country = CountryModel::objects()->get(
+                        [
+                            'code' => $geoIp['country'] ?? '',
+                        ]))
+                        ? $country->name
+                        : null,
+				'html' => [
+                    'placeholder' => $country->name ?? 'United States',
+                ],
             ],
 
             'zipcode' => [
@@ -103,8 +104,8 @@ abstract class AddressForm extends BaseForm
                 'html' => [
                     'placeholder' => ($geoIp && $state = StateModel::objects()->get(
                         [
-                            'code' => $geoIp['region'],
-                            'country_code' => $geoIp['country']
+                            'code' => $geoIp['region'] ?? '',
+                            'country_code' => $geoIp['country'] ?? ''
                         ]))
                         ? $state->state
                         : 'New Jersey'
@@ -143,13 +144,19 @@ abstract class AddressForm extends BaseForm
             $t_data['address'] = $t[0];
             $t_data['address_2'] = $t[1];
         }
-
+		
         if ($t_data['state'] && $t_data['country']) {
             /** @var StateModel $sModel */
             if ($sModel =  StateModel::objects()->get(['code' => $t_data['state'], 'country_code' =>  $t_data['country']])) {
                 $t_data['state'] = $sModel->state;
             }
         }
+		
+		if ($t_data['country']) {
+			if ($cModel =  CountryModel::objects()->get(['code' =>  $t_data['country']])) {
+                $t_data['country'] = $cModel->name;
+            }
+		}
 
         return parent::setAttributes($t_data);
     }
@@ -158,7 +165,14 @@ abstract class AddressForm extends BaseForm
     {
         $data = parent::getAttributes();
 
-        if ($data['state'] && $data['country']) {
+        if ($data['country']) {
+            /** @var CountryModel $cModel */
+            if ($cModel =  CountryModel::objects()->get(['name' => $data['country']])) {
+                $data['country'] = $cModel->code;
+            }
+        }
+		
+		if ($data['state'] && $data['country']) {
             /** @var StateModel $sModel */
             if ($sModel =  StateModel::objects()->get(['state' => $data['state'], 'country_code' =>  $data['country']])) {
                 $data['state'] = $sModel->code;

@@ -2,6 +2,7 @@
 
 namespace Modules\Order\Forms;
 
+use Modules\Order\Validation\PhoneValidator;
 use Xcart\App\Form\BaseForm;
 use Xcart\App\Form\Fields\CharField;
 use Xcart\App\Form\Fields\EmailField;
@@ -28,6 +29,9 @@ class ContactInfoForm extends BaseForm
                 'label' => 'Phone',
                 'required' => true,
                 'hint' => 'Phone number at which you can be reached is a must, otherwise order processing will be delayed',
+                'validators' => [
+                    new PhoneValidator(),
+                ],
                 'html' => [
                     'placeholder' => '(609) 734-8000',
                     'class' => 'phone'

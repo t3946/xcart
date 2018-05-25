@@ -135,27 +135,39 @@ class CheckoutController extends FrontendController
         ]);
     }
 
+    /**
+     * auto complete country code
+     */
     public function actionAutoCompleteCountry(): void
     {
         if ($search = Xcart::app()->request->get->get('search')) {
-            $countries = CountryModel::objects()->filter(['name__contains' => $search])->limit(10)->valuesList('name', true);
+            $countries = CountryModel::objects()->filter(['name__startswith' => $search])->limit(10)->valuesList(['name', 'code'], false);
         }
+
         $this->jsonResponse($countries ?? []);
     }
 
+    /**
+     * auto complete zip code
+     */
     public function actionAutoCompleteZipCode(): void
     {
 
         if ($country = Xcart::app()->request->get->get('country')) {
             $filter['country'] = $country;
         }
+
         if ($search = Xcart::app()->request->get->get('search')) {
-            $zips = ZipCodeModel::objects()->filter(array_merge(['zip__contains' => $search], $filter ?? []))->limit(10)->valuesList('zip', true);
+            $zips = ZipCodeModel::objects()->filter(array_merge(['zip__startswith' => $search],
+                $filter ?? []))->limit(10)->valuesList(['zip', 'primary_city', 'state'], false);
         }
 
         $this->jsonResponse($zips ?? []);
     }
 
+    /**
+     * auto complete state action
+     */
     public function actionAutoCompleteState(): void
     {
         if ($country = Xcart::app()->request->get->get('country')) {
@@ -163,22 +175,29 @@ class CheckoutController extends FrontendController
         }
 
         if ($search = Xcart::app()->request->get->get('search')) {
-            $states = StateModel::objects()->filter(array_merge(['state__contains' => $search], $filter ?? []))->limit(10)->valuesList('state', true);
+            $states = StateModel::objects()->filter(array_merge(['state__contains' => $search],
+                $filter ?? []))->limit(10)->valuesList(['state', 'code'], false);
         }
 
         $this->jsonResponse($states ?? []);
     }
 
-    public function actionAutoCompleteCity(){
+    /**
+     * auto complete city action
+     */
+    public function actionAutoCompleteCity(): void
+    {
         if ($country = Xcart::app()->request->get->get('country')) {
-            $filter['country_code'] = $country;
+            $filter['country'] = $country;
         }
         if ($state = Xcart::app()->request->get->get('state')) {
             $filter['state'] = $state;
         }
 
         if ($search = Xcart::app()->request->get->get('search')) {
-            $city = ZipCodeModel::objects()->filter(array_merge(['primary_city__contains' => $search], $filter ?? []))->limit(10)->valuesList('primary_city', true);
+            $city = ZipCodeModel::objects()->filter(array_merge(['primary_city__contains' => $search],
+                $filter ?? []))->limit(10)->group(['primary_city'])->valuesList('primary_city', true);
+           // dd($city);
         }
         $this->jsonResponse($city ?? []);
     }
