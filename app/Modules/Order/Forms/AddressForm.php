@@ -155,12 +155,16 @@ abstract class AddressForm extends BaseForm
             /** @var StateModel $sModel */
             if ($sModel =  StateModel::objects()->get(['code' => $t_data['state'], 'country_code' =>  $t_data['country']])) {
                 $t_data['state'] = $sModel->state;
+                $state_f = $this->getField('state');
+                $state_f->setAttributes(array_merge($state_f->getAttributes(), ['data-code' => $sModel->code ?? '']));
             }
         }
 		
 		if ($t_data['country']) {
 			if ($cModel =  CountryModel::objects()->get(['code' =>  $t_data['country']])) {
                 $t_data['country'] = $cModel->name;
+                $country_f = $this->getField('country');
+                $country_f->setAttributes(array_merge($country_f->getAttributes(), ['data-code' => $cModel->code ?? '']));
             }
 		}
 
