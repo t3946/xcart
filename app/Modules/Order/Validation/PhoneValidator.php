@@ -10,7 +10,7 @@ class PhoneValidator extends Validator
 {
     public function validate($value)
     {
-        $regexp = '/^\+?[-()\d\s]+[^a-zA-Z]/m';
+        $regexp = '/^\+?[-()\d\s]+$/m';
 
         if (!preg_match($regexp, $value)){
             $this->addError(Translate::getInstance()->t('validation', 'Is not a valid phone', []));
