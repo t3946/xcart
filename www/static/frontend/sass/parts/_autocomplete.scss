@@ -23,6 +23,8 @@
     text-overflow: ellipsis;
     font-size: 14px;
     color: #000000;
+    display: flex;
+    justify-content: stretch;
 
     @include breakpoint(large){
       line-height: 26px;
@@ -30,6 +32,15 @@
 
     b {
       font-weight: bold;
+    }
+
+    .city {
+      padding-left: 3rem;
+      color: #777;
+      display: block;
+    }
+    .zip{
+      display: block;
     }
 
     &.selected { background: #f0f0f0; }
