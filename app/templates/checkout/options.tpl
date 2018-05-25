@@ -43,7 +43,7 @@
 {block 'content'}
     <form data-abide action="{url 'checkout:options'}" method="POST" class="checkout-options-form">
         <section class="checkout-options">
-            <div class="row">
+            <div class="row show-for-large">
                 <div class="columns small-12">
                     <h1>{t 'Shipping & Payment Options' dict='order'}</h1>
                 </div>
@@ -72,22 +72,37 @@
                             </div>
                         </div>
                         {if $shipping}
-                            <div class="shipping-methods">
-                                {foreach $shipping as $quote first=$first}
-                                    {set $shipping_model = $quote->shipping}
-                                    <div class="row">
-                                        <div class="columns small-9">
-                                            <input {if $first}required{/if} {if ($first) || ($order_group && $order_group->shippingid == $shipping_model->shippingid)}checked{/if} id="shipping_{$quote->rateid}" type="radio" name="shipping_rates[{$gi}]" value="{$quote->rateid}"/>
-                                            <label for="shipping_{$quote->rateid}">
-                                                <span class="name">{$shipping_model->getFrontendName()}</span> {$shipping_model->shipping_time}
-                                            </label>
-                                        </div>
-                                        <div class="columns small-3">
-                                            <span class="cost">US$ {$quote->getShippingCharge()|number_format:2}</span>
-                                        </div>
+                            <div class="row">
+                                <div class="columns small-12">
+                                    <div class="shipping-methods methods-table">
+                                        {foreach $shipping as $quote first=$first}
+                                            {set $shipping_model = $quote->shipping}
+                                            <div class="methods-row">
+
+                                                <div class="methods-cell delivery-item-label">
+                                                    <input {if $first}required{/if} {if ($first) || ($order_group && $order_group->shippingid == $shipping_model->shippingid)}checked{/if}
+                                                           id="shipping_{$quote->rateid}" type="radio"
+                                                           name="shipping_rates[{$gi}]" value="{$quote->rateid}"/>
+
+                                                    <label class="methods-label" for="shipping_{$quote->rateid}">
+                                                        <span class="methods-text">
+                                                            <span class="name">{$shipping_model->getFrontendName()}</span>
+                                                            <span class="comment">{$shipping_model->shipping_time}</span>
+                                                        </span>
+                                                    </label>
+                                                </div>
+
+                                                <div class="methods-cell delivery-item-price">
+                                                    <span class="cost">US$ {$quote->getShippingCharge()|number_format:2}</span>
+                                                </div>
+
+                                            </div>
+                                            <div class="methods-row-space"></div>
+                                        {/foreach}
                                     </div>
-                                {/foreach}
+                                </div>
                             </div>
+
                         {else}
                             <div class="row">
                                 <div class="columns small-12">
@@ -100,7 +115,7 @@
                             </div>
                         {/if}
                     {/foreach}
-                    {if $order->isCanadianShipping()}
+                    {*{if $order->isCanadianShipping()}*}
                         <div class="row">
                             <div class="column small-1">
                             </div>
@@ -113,7 +128,7 @@
                                 </div>
                             </div>
                         </div>
-                    {/if}
+                    {*{/if}*}
                 </div>
             </div>
 

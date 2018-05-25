@@ -1,0 +1,107 @@
+
+.checkout-options-form {
+
+  $medium-font-size: rem-calc(20);
+
+  h3 {
+    font-size: rem-calc(15);
+    font-weight: bold;
+    line-height: rem-calc(22);
+    text-align: center;
+  }
+
+  .methods-label {
+    //display: inline-block;
+    line-height: 100% !important;
+    white-space: nowrap;
+    cursor: pointer;
+
+    .methods-text {
+      display: inline-block;
+
+      .name{
+        font-size: rem-calc(14);
+        @include breakpoint(medium){
+          font-size: $medium-font-size;
+
+          &:after{
+            content: ' - ';
+            display: inline;
+          }
+        }
+
+      }
+
+      .comment {
+        display: block;
+        font-size: rem-calc(12);
+        color: #4a4a4a;
+
+        @include breakpoint(medium){
+          display: inline;
+          font-size: $medium-font-size;
+          font-weight: normal;
+          color: #000000;
+        }
+      }
+    }
+
+    &:before {
+      vertical-align: top !important;
+    }
+  }
+
+  .methods-table {
+    display: table;
+    width: 100%;
+
+    .methods-row {
+      display: table-row;
+      background-color: #f4f4f4;
+
+      .methods-cell {
+        display: table-cell;
+        vertical-align: top;
+      }
+    }
+
+    .methods-row-space {
+      display: table-row;
+      height: 2px;
+    }
+  }
+
+  .shipping-methods {
+    .methods-row {
+
+      .delivery-item-label {
+        width: 70%;
+        text-align: left;
+        padding: rem-calc(9) 0 rem-calc(9) rem-calc(9);
+
+        @include breakpoint(medium){
+          padding: rem-calc(17) 0 rem-calc(17) rem-calc(20);
+        }
+      }
+
+      .delivery-item-price {
+        width: 30%;
+        text-align: left;
+        padding: rem-calc(9);
+        font-size: rem-calc(14);
+
+        @include breakpoint(medium){
+          font-size: $medium-font-size;
+          padding: rem-calc(17) rem-calc(20);
+        }
+
+        .cost {
+          white-space: nowrap;
+        }
+
+      }
+    }
+
+  }
+
+}
