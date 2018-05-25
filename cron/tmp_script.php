@@ -13,7 +13,6 @@ require __DIR__ . DIRECTORY_SEPARATOR . "../www/init.php";
 function cutTags($fulldescr, $flag = true, $tags = [])
 {
     $mass = [
-        'div',
         'span',
         'p',
         'br',
