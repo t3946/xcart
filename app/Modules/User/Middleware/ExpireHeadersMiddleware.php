@@ -15,6 +15,11 @@ class ExpireHeadersMiddleware extends Middleware
 
         if (!headers_sent())
         {
+            if ($request->getIsAjax()) {
+                $this->noCache();
+                return;
+            }
+
             if ($match = Xcart::app()->router->match(Xcart::app()->request->getUrl(), Xcart::app()->request->getMethod())) {
                 [$name] = explode(':', $match['name']);
                 if ($name && \in_array($name, ['cart', 'checkout', 'payment'])) {
