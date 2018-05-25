@@ -20,8 +20,7 @@ $padding_container: rem-calc(18);
 
   .description {
     .content {
-      height: #{4 * $global-lineheight}em; //3 row * line-height
-      transition: height 2s ease-in;
+      height: #{6 * $global-lineheight}em; //3 row * line-height
     }
     .relative{
       position: relative;

@@ -56,13 +56,11 @@
 
 .must-show-less {
   overflow: hidden;
-  transition: height 2s ease-in;
   .show_more {}
 
   &.full {
     height: auto !important;
     max-height: 100% !important;
-    transition: height 2s ease-in;
 
     .show_more {
       &:after {
