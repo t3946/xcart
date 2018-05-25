@@ -158,18 +158,27 @@
                     </span>
                 </span>
                 {else}
+                    {if $item->getFrontendPrice() != $item->getFrontendPrice(2)}
                     <div>
                         <span class="price-title">Price from:</span>
                         <span itemprop="priceCurrency" content="USD">US$</span>
-                        <span itemprop="price">{$item->getPrice(1)|number_format:2}</span>
+                        <span itemprop="price">{$item->getFrontendPrice(1)|number_format:2}</span>
                     </div>
 
                     <div>
                         <span class="price-title">Price to:</span>
                         <span itemprop="priceCurrency" content="USD">US$</span>
-                        <span itemprop="price">{$item->getPrice(2)|number_format:2}</span>
+                        <span itemprop="price">{$item->getFrontendPrice(2)|number_format:2}</span>
                     </div>
-
+                    {else}
+                        <span class="current">
+                            <span class="title">Price:</span>
+                            <span class="price">
+                                <span itemprop="priceCurrency" content="USD">US$</span>
+                                <span itemprop="price">{$item->getFrontendPrice(1)|number_format:2}</span>
+                            </span>
+                        </span>
+                    {/if}
                 {/if}
             </div>
 
