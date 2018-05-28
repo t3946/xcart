@@ -134,10 +134,14 @@ form {
     @include breakpoint(medium) {
       margin-bottom: rem-calc(60);
     }
+    &.no-margin-bottom{
+      margin-bottom: 0;
+    }
   }
   h2 {
-    line-height: rem-calc(60);
+    line-height: 110%;
     text-align: center;
+    margin: 1rem 0;
 
     @include breakpoint(large) {
       line-height: inherit;
@@ -389,3 +393,4 @@ form {
     }
   }
 }
+

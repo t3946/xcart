@@ -76,3 +76,63 @@ input {
     min-height: 100%;
   }
 }
+
+.non-us-disclaimer{
+  margin-top: 1rem;
+
+  input{
+    display: none;
+  }
+
+  label{
+    font-size: 15px;
+    line-height: 18px;
+    font-weight: normal;
+    padding-left: 37px;
+    display: inline-block;
+
+    &:before{
+      content: '';
+      display: block;
+      width: 21px;
+      height: 21px;
+      border: 1px solid #d4d4d4;
+      position: absolute;
+      top: 0;
+      left: 8px;
+    }
+
+  }
+
+
+  input:checked + label{
+    font-size: 15px;
+    line-height: 18px;
+    font-weight: normal;
+    padding-left: 37px;
+    display: inline-block;
+
+    &:before{
+      content: '';
+      display: block;
+      width: 21px;
+      height: 21px;
+      border: 1px solid #d4d4d4;
+      position: absolute;
+      top: 0;
+      left: 8px;
+    }
+
+    &:after{
+      content: url("../../dist/images/icons/order/check_mark_grey.svg");
+      position: absolute;
+      display: block;
+      width: 12px;
+      height: 15px;
+      top: 3px;
+      left: 12px;
+    }
+
+  }
+
+}

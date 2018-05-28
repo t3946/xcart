@@ -45,16 +45,16 @@
         <section class="checkout-options">
             <div class="row show-for-large">
                 <div class="columns small-12">
-                    <h1>{t 'Shipping & Payment Options' dict='order'}</h1>
+                    <h1 class="no-margin-bottom">{t 'Shipping & Payment Options' dict='order'}</h1>
                 </div>
             </div>
             <div class="row">
-                <div class="columns large-5 show-for-large">
+                <div class="columns large-4 show-for-large">
                     <div class="options">
                         {include 'checkout/_address_view.tpl' info=$shipping_address header=$.t('Shipping Address','order') uri='checkout:shipping'}
                     </div>
                 </div>
-                <div class="columns small-12 large-7">
+                <div class="columns small-12 large-8">
                     <div class="row">
                         <div class="columns small-12">
                             <h2>{t 'Delivery Methods' dict='order'}</h2>
@@ -137,8 +137,8 @@
             </div>
 
             <div class="row">
-                <div class="columns large-5 show-for-large"></div>
-                <div class="columns large-7">
+                <div class="columns large-4 show-for-large"></div>
+                <div class="columns large-8">
                     <div class="row">
                         <div class="columns small-12">
                             <h2>{t 'Payment Methods' dict='order'}</h2>
@@ -170,8 +170,8 @@
                 </div>
             </div>
             <div class="row">
-                <div class="columns large-5 show-for-large"></div>
-                <div class="columns large-7">
+                <div class="columns large-4 show-for-large"></div>
+                <div class="columns large-8 billing_same_shipping">
                     {set $billing_diff = $order->isBillingAddressDiff()}
                     <div class="row">
                         <div class="columns small-12">
