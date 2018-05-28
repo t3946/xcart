@@ -31916,7 +31916,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
         new _LazyImageLoad2.default();
         new _CategoryViewType2.default();
         new _DepartmentMenu2.default();
-        new _DottedText2.default('.must-show-less');
+
         new _CatalogFilter2.default();
 
         (0, _isMedia2.default)('medium', '(max-width: 1023px)');

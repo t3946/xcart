@@ -2,6 +2,7 @@
 .checkout-options-form {
 
   $medium-font-size: rem-calc(20);
+  $large-font-size: rem-calc(14);
 
   h3 {
     font-size: rem-calc(15);
@@ -21,6 +22,11 @@
 
       .name{
         font-size: rem-calc(14);
+
+        @include breakpoint(sm){
+          font-size: rem-calc(17);
+        }
+
         @include breakpoint(medium){
           font-size: $medium-font-size;
 
@@ -30,6 +36,10 @@
           }
         }
 
+        @include breakpoint(large){
+          font-size: $large-font-size;
+        }
+
       }
 
       .comment {
@@ -37,11 +47,19 @@
         font-size: rem-calc(12);
         color: #4a4a4a;
 
+        @include breakpoint(sm){
+          font-size: rem-calc(14);
+        }
+
         @include breakpoint(medium){
           display: inline;
           font-size: $medium-font-size;
           font-weight: normal;
           color: #000000;
+        }
+
+        @include breakpoint(large){
+          font-size: $large-font-size;
         }
       }
     }
@@ -82,6 +100,9 @@
         @include breakpoint(medium){
           padding: rem-calc(17) 0 rem-calc(17) rem-calc(20);
         }
+        @include breakpoint(large){
+          padding: rem-calc(7);
+        }
       }
 
       .delivery-item-price {
@@ -90,9 +111,18 @@
         padding: rem-calc(9);
         font-size: rem-calc(14);
 
+        @include breakpoint(sm){
+          font-size: rem-calc(17);
+        }
+
         @include breakpoint(medium){
           font-size: $medium-font-size;
           padding: rem-calc(17) rem-calc(20);
+        }
+
+        @include breakpoint(large){
+          font-size: $large-font-size;
+          padding: rem-calc(7);
         }
 
         .cost {
@@ -102,6 +132,44 @@
       }
     }
 
+  }
+
+}
+
+.non-us-disclaimer{
+  margin-top: 1rem;
+
+  label{
+    font-size: 15px;
+    line-height: 18px;
+    font-weight: normal;
+    padding-left: 37px;
+    display: inline-block;
+
+    &:before{
+      content: '';
+      display: block;
+      width: 21px;
+      height: 21px;
+      border: 1px solid #d4d4d4;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+
+    &:after{
+      content: url("../../dist/images/icons/order/check_mark_grey.svg");
+      position: absolute;
+      display: block;
+      width: 12px;
+      height: 15px;
+      top: 3px;
+      left: 5px;
+    }
+
+    input{
+      display: none;
+    }
   }
 
 }

@@ -41,7 +41,9 @@
                                 {$order->payment_method}<br/>
                             <b>Delivery methods:</b><br/>
                             {foreach $order->groups as $group}
+                                {if $group->shippingModel}
                                 {$group->shippingModel->getFrontendName()}<br/>
+                                {/if}
                             {/foreach}
                         </td>
                         <td valign="bottom" align="right">
