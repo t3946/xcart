@@ -43,7 +43,7 @@ class StateValidator extends Validator
     {
         $country_code = $this->getForm()->getField($this->depends['country'])->getValue();
 
-        if (!\in_array($country_code, ['US', 'CA'])) {
+        if (!\in_array($country_code, ['United States', 'Canada'])) {
             return [];
         }
         return ['country_code' => $country_code];
