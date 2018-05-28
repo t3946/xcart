@@ -28,7 +28,7 @@ class OrderEventHelper
         self::orderCreateEvent($model);
     }
 
-    public static function triggerOrderPaidEvent($owner = null, OrderModel $model, string $status): void
+    public static function triggerOrderPaidEvent($owner = null, OrderModel $model, string $status = OrderStatusModel::ORDER_STATUS_AUTHORIZED): void
     {
         self::orderPaidEvent($model, $status);
     }
