@@ -118,7 +118,7 @@
                     {if $order->isCanadianShipping()}
                         <div class="row">
                             <div class="columns small-12">
-                                <div class="non-us-disclaimer">
+                                <div class="non-us-disclaimer checkbox-container">
                                     <input id="non-us-disclaimer-checkbox" type="checkbox" {if $order->non_us_confirmation}checked{/if} value="Y" name="non_us_confirmation" required />
                                     <label for="non-us-disclaimer-checkbox">
                                         By checking this box I agree to be responsible for custom duties, CODs, and other charges associated with bringing goods to Canada. All prices are in USD.

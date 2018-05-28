@@ -186,6 +186,10 @@
 
     padding: 0 .625rem;
 
+    @include breakpoint(large){
+      padding: 0 1.25rem;
+    }
+
     .cart-steps-back {
 
       height: $cart-breadcrumbs-height;
@@ -244,7 +248,6 @@
 
       span{
         display: inline;
-        //display: inline-block;
         vertical-align: middle;
       }
     }
