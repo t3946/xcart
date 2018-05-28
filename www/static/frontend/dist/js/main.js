@@ -61047,9 +61047,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
                 cache: false,
                 offsetTop: 0,
                 renderItem: function renderItem(item, search) {
-                    search = search.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
-                    var re = new RegExp("(" + search.split(' ').join('|') + ")", "gi");
-                    return '<div class="autocomplete-suggestion" data-val="' + item.name + '" data-code="' + item.code + '">' + item.name.replace(re, "<b>$1</b>") + '</div>';
+                    return '<div class="autocomplete-suggestion" data-val="' + item.name + '" data-code="' + item.code + '">' + item.name + '</div>';
                 },
                 source: function source(term, suggest) {
                     $.getJSON('/checkout/auto_complete_country/', { search: term }, function (data) {
@@ -61069,11 +61067,9 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
                 selector: inputZipCode,
                 cache: false,
                 renderItem: function renderItem(item, search) {
-                    search = search.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
-                    var re = new RegExp("(" + search.split(' ').join('|') + ")", "gi");
-                    var html = '<span class="zip">' + item.zip.replace(re, "<b>$1</b>") + '</span>';
-                    html += ' <span class="city">' + item.primary_city.replace(re, "<b>$1</b>") + ', ';
-                    html += item.state.replace(re, "<b>$1</b>") + '</span>';
+                    var html = '<span class="zip">' + item.zip + '</span>';
+                    html += ' <span class="city">' + item.primary_city + ', ';
+                    html += item.state + '</span>';
 
                     return '<div class="autocomplete-suggestion" data-val="' + item.zip + '">' + html + '</div>';
                 },
@@ -61097,9 +61093,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
                 selector: inputState,
                 cache: false,
                 renderItem: function renderItem(item, search) {
-                    search = search.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
-                    var re = new RegExp("(" + search.split(' ').join('|') + ")", "gi");
-                    return '<div class="autocomplete-suggestion" data-val="' + item.state + '" data-code="' + item.code + '">' + item.state.replace(re, "<b>$1</b>") + '</div>';
+                    return '<div class="autocomplete-suggestion" data-val="' + item.state + '" data-code="' + item.code + '">' + item.state + '</div>';
                 },
                 source: function source(term, response) {
                     $.getJSON('/checkout/auto_complete_state/', {
@@ -61129,6 +61123,9 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
                     }, function (data) {
                         response(data);
                     });
+                },
+                renderItem: function renderItem(item, search) {
+                    return '<div class="autocomplete-suggestion" data-val="' + item + '">' + item + '</div>';
                 },
                 onSelect: function onSelect(e, term, item) {
                     e.preventDefault();
