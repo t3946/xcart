@@ -200,7 +200,7 @@
             </div>
 
             <div class="row">
-                <div class="columns small-12 large-10 billing_address_form {if !$billing_diff}hide{/if}">
+                <div class="columns small-12 large-10 billing_address_form {if !$billing_diff && !$billingForm->hasErrors()}hide{/if}">
 
                     {include 'checkout/_form_row.tpl' field=$billingForm->getField('firstname')}
                     {include 'checkout/_form_row.tpl' field=$billingForm->getField('company')}
