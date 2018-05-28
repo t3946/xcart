@@ -134,10 +134,59 @@
 
   }
 
+  .radio-list-table{
+    .table-row{
+      display: block;
+      margin-bottom: 1rem;
+
+      @include breakpoint(large){
+        display: table-row;
+        margin-bottom: 0;
+      }
+
+      .table-cell{
+        display: block;
+
+        @include breakpoint(large){
+          display: table-cell;
+        }
+
+        label{
+          background-color: transparent;
+          font-size: rem-calc(15);
+          line-height: 2rem;
+          cursor: pointer;
+          padding-left: .5625rem;
+
+          @include breakpoint(sm){
+            font-size: rem-calc(18);
+          }
+        }
+
+        &.payment-description{
+          color: #4a4a4a;
+          font-size: rem-calc(12);
+          line-height: rem-calc(16);
+          padding-left: 2.2rem;
+          cursor: default;
+
+          @include breakpoint(sm){
+            font-size: rem-calc(14);
+          }
+        }
+
+      }
+    }
+  }
+
 }
 
 .non-us-disclaimer{
   margin-top: 1rem;
+
+  input{
+    display: none;
+  }
 
   label{
     font-size: 15px;
@@ -154,7 +203,28 @@
       border: 1px solid #d4d4d4;
       position: absolute;
       top: 0;
-      left: 0;
+      left: 8px;
+    }
+
+  }
+
+
+  input:checked + label{
+    font-size: 15px;
+    line-height: 18px;
+    font-weight: normal;
+    padding-left: 37px;
+    display: inline-block;
+
+    &:before{
+      content: '';
+      display: block;
+      width: 21px;
+      height: 21px;
+      border: 1px solid #d4d4d4;
+      position: absolute;
+      top: 0;
+      left: 8px;
     }
 
     &:after{
@@ -164,12 +234,9 @@
       width: 12px;
       height: 15px;
       top: 3px;
-      left: 5px;
+      left: 12px;
     }
 
-    input{
-      display: none;
-    }
   }
 
 }
