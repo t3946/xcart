@@ -117,12 +117,10 @@
                     {/foreach}
                     {if $order->isCanadianShipping()}
                         <div class="row">
-                            <div class="column small-1">
-                            </div>
-                            <div class="column">
+                            <div class="columns small-12">
                                 <div class="non-us-disclaimer">
-                                    <label>
-                                        <input type="checkbox" {if $order->non_us_confirmation}checked{/if} value="Y" name="non_us_confirmation" required />
+                                    <input id="non-us-disclaimer-checkbox" type="checkbox" {if $order->non_us_confirmation}checked{/if} value="Y" name="non_us_confirmation" required />
+                                    <label for="non-us-disclaimer-checkbox">
                                         By checking this box I agree to be responsible for custom duties, CODs, and other charges associated with bringing goods to Canada. All prices are in USD.
                                     </label>
                                 </div>
@@ -147,16 +145,17 @@
                         </div>
                     </div>
                     {if $payment_methods}
-                        <div class="payment-methods">
+                        <div class="payment-methods radio-list-table">
                             {foreach $payment_methods as $method first=$first}
-                                <div class="row align-center-middle {cycle ["odd", ""]}">
-                                    <div class="columns small-4">
-                                        <input {if ($first) || ($method->paymentid == $order->paymentid)}checked{/if} id="payment_{$method->paymentid}" type="radio" name="payment_method" value="{$method->paymentid}"/>
+                                <div class="table-row {cycle ["odd", ""]}">
+                                    <div class="table-cell payment-method">
+                                        <input {if ($first) || ($method->paymentid == $order->paymentid)}checked{/if}
+                                               id="payment_{$method->paymentid}" type="radio" name="payment_method" value="{$method->paymentid}"/>
                                         <label for="payment_{$method->paymentid}">
                                             <span class="name">{$method->payment_method}</span>
                                         </label>
                                     </div>
-                                    <div class="columns small-8">
+                                    <div class="table-cell payment-description">
                                         <span class="details">{$method->payment_details}</span>
                                     </div>
                                 </div>
