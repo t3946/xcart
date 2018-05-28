@@ -40,9 +40,6 @@ CREATE TABLE `pages_pages_storefront_link` (
   COLLATE='utf8_general_ci'
   ENGINE=InnoDB;
 
-ALTER TABLE `order_extra`
-  ADD COLUMN `purchase_order` TEXT NULL DEFAULT NULL COMMENT 'Purchase order info' AFTER `payment_operator_id`;
-
 ALTER TABLE `xcart_orders`
   ADD COLUMN `user_id` INT(11) UNSIGNED NULL DEFAULT NULL AFTER `orderid`;
 
