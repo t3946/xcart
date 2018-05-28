@@ -8,7 +8,7 @@
                     <div class="column price">
                         <div class="title">Price</div>
                         <div class="value">
-                            US$ <span class="price" var-price>{$model->getFrontendPrice()}</span>
+                            US$ <span class="price" var-price>{$model->getFrontendPrice()|number_format:2}</span>
                         </div>
                     </div>
 
@@ -28,7 +28,7 @@
                         <div class="column extended">
                             <div class="title">Subtotal</div>
                             <div class="value">
-                                US$ <span class="price" var-price-extended>{$model->getFrontendPrice()}</span>
+                                US$ <span class="price" var-price-extended>{$model->getFrontendPrice()|number_format:2}</span>
                             </div>
                         </div>
 
@@ -102,7 +102,7 @@
                                 List Price:
                             </div>
                             <div class="value">
-                                US$ <span class="price" var-price-list>{$model->list_price}</span>
+                                US$ <span class="price" var-price-list>{$model->list_price|number_format:2}</span>
                             </div>
                         </div>
                     {/if}
