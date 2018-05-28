@@ -319,6 +319,8 @@ class CheckoutController extends FrontendController
             }
             elseif ($billingForm->populate($data)->isValid()) {
                 $order->setAttributes($billingForm->getAttributes());
+            } else {
+                $errors = $billingForm->getErrors();
             }
 
             $order->non_us_confirmation = false;

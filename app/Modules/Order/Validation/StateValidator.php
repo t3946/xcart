@@ -41,11 +41,11 @@ class StateValidator extends Validator
 
     public function getCountryFilter(): array
     {
-        $country_code = $this->getForm()->getField($this->depends['country'])->getValue();
+        $attributes = $this->getForm()->getAttributes();
 
-        if (!\in_array($country_code, ['US', 'CA'])) {
+        if (!\in_array($attributes[$this->getForm()->replacement.$this->depends['country']], ['US', 'CA'])) {
             return [];
         }
-        return ['country_code' => $country_code];
+        return ['country_code' => $attributes[$this->getForm()->replacement.$this->depends['country']]];
     }
 }
