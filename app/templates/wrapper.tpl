@@ -105,12 +105,12 @@
 {filter|strip:true}
 {autoescape true}
 {block 'preloader'}
-    {*<div class="loader-bg waves waves-dark">*}
-        {*<div class="loader-wrapper">*}
-            {*<div class="loader-spinner"></div>*}
-            {*<div class="loader-container"></div>*}
-        {*</div>*}
-    {*</div>*}
+    <div class="loader-bg waves waves-dark">
+        <div class="loader-wrapper">
+            <div class="loader-spinner"></div>
+            <div class="loader-container"></div>
+        </div>
+    </div>
 {/block}
 
 {block "wrapper"}
