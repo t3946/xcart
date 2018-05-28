@@ -28,6 +28,8 @@
       display: flex;
       flex-direction: column;
 
+      min-width: rem-calc(54);
+
 
       .wrap {
         height: 277px;
