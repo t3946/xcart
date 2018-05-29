@@ -11,6 +11,7 @@ namespace Modules\Order\Forms;
 
 use Xcart\App\Form\BaseForm;
 use Xcart\App\Form\Fields\CharField;
+use Xcart\App\Form\Fields\FileField;
 use Xcart\App\Form\Fields\NumberField;
 
 class PurchaseOrderDetailsForm extends BaseForm
@@ -19,7 +20,7 @@ class PurchaseOrderDetailsForm extends BaseForm
     {
         return [
             'po_number' => [
-                'class' => NumberField::class,
+                'class' => CharField::class,
                 'label' => 'PO number',
                 'required' => true,
                 'hint' => 'PO number or internal order code in your system',
@@ -37,6 +38,13 @@ class PurchaseOrderDetailsForm extends BaseForm
                     'placeholder' => 'Eureka Inc.'
                 ],
             ],
+            'purchase_order_file' => [
+                'class' => FileField::class,
+                'label' => 'Attach original PO',
+                'required' => false,
+                'hint' => 'Alternatively fax PO to (813) 944-4516',
+                'types' => ['.pdf'],
+            ]
         ];
     }
 }
