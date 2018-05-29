@@ -1,12 +1,12 @@
 {if $filters!}
-<section class="filter_container">
+<div class="filter_container">
     <div class="filter-block" id="all_filter">
         <div class="block-title">
             Filter by
         </div>
 
         <ul class="accordion" data-accordion data-allow-all-closed="true" data-multi-expand="true">
-            {foreach $filters as $item}
+            {foreach $filters as $item index=$index}
                 <li class="accordion-item {if $item.changed! && $item.changed}changed{/if}" data-accordion-item>
                     <a class="accordion-title">
                         <span>{$item.name}</span>
@@ -16,12 +16,12 @@
                     {if $item.type == 'price'}
                         {include 'catalog/parts/filters/price.tpl' values=$item.values key=$item.key}
                     {elseif $item.type == 'list'}
-                        {include 'catalog/parts/filters/list.tpl' values=$item.values key=$item.key}
+                        {include 'catalog/parts/filters/list.tpl' values=$item.values key=$item.key index=$index}
                     {/if}
                     </div>
                 </li>
             {/foreach}
         </ul>
     </div>
-</section>
+</div>
 {/if}

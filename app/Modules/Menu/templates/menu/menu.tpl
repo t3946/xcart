@@ -24,5 +24,5 @@
             </ul>
         {/if}
     </li>
-&ensp;
+
 {/foreach}

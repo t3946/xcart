@@ -35,7 +35,7 @@
 
 
 {add_asset_block type="js"}
-<script type="text/javascript">
+<script>
     window.app.afterReady.push(function(){
         var price_min = {$values.prices.min};
         var price_max = {$values.prices.max};

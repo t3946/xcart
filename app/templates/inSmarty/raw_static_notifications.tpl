@@ -1,6 +1,6 @@
 {render_static_notifications}
 
-<script type="text/javascript" rel="static-messages">
+<script rel="static-messages">
     $(function(){
         var $block = $('.static-messages-block');
 

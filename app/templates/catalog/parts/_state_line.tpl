@@ -1,4 +1,4 @@
-<section class="products_state_line pcont">
+<div class="products_state_line pcont">
     <div class="row">
         <div class="columns large-3 show-for-large">
             <div class="page_count_wrap">
@@ -53,4 +53,4 @@
         </div>
     </div>
 
-</section>
+</div>

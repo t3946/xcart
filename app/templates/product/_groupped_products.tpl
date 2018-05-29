@@ -16,7 +16,7 @@
         {raw $pager->render()}
 
         {add_asset_block type="js"}
-            <script type="text/javascript">
+            <script>
                 window.app.afterReady.push(function(){
                     endless_paginate();
                 });

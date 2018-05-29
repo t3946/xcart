@@ -2,7 +2,7 @@
 
     {insert "_parts/_bottom_menu.tpl"}
 
-    <section class="footer-content">
+    <div class="footer-content">
 
         <div class="row contacts-presentations">
             <div class="column small-12 medium-7 large-7 left-side">
@@ -16,7 +16,7 @@
                             </div>
 
                             <div class="all-times">
-                                <img  alt="" class="" src="/static/frontend/dist/images/icons/footer/web_order.svg">
+                                <img  alt="" class="Web order 24/7" src="/static/frontend/dist/images/icons/footer/web_order.svg">
                                 <div class="content">
                                     <div class="title">
                                         Web Orders
@@ -32,7 +32,7 @@
                                 <li class="title-menu">
                                     Email Support
                                 </li>
-                                <li><a href="/contact-us">Contact Us</a></li>
+                                <li><a href="/contactus/">Contact Us</a></li>
                             </ul>
 
                         </div>
@@ -57,10 +57,10 @@
                                 <li class="title-menu">
                                     Contact Us
                                 </li>
-                                <li><a href="/contact-us#form">Web Form</a></li>
-                                <li><a href="/contact-us#email">Email</a></li>
-                                <li><a href="/contact-us#address">USA address</a></li>
-                                <li><a href="/contact-us#address">Canadian address</a></li>
+                                <li><a href="/contactus/#form">Web Form</a></li>
+                                <li><a href="/contactus/#email">Email</a></li>
+                                <li><a href="/contactus/#address">USA address</a></li>
+                                <li><a href="/contactus/#address">Canadian address</a></li>
                             </ul>
 
                             <ul class="no-bullet menu-list show-for-large">
@@ -93,13 +93,13 @@
             <div class="column small-12 medium-5 large-5 right-side">
 
                 <div class="socials show-for-medium">
-                    <a href="https://www.facebook.com/s3stores/" target="_blanck" class="facebook"></a>
-                    <a href="https://www.twitter.com/s3stores/" target="_blanck" class="twitter"></a>
-                    <a href="https://www.youtube.com/channel/UCjE6xR1TriWo-hCDsbpvMKg" target="_blanck" class="youtube"></a>
-                    <a href="https://www.pinterest.com/s3storesinc/" target="_blanck" class="pinterest"></a>
-                    {*<a href="https://www.instagram.com/s3stores/" target="_blanck" ""class="instagram"></a>*}
-                    <a href="https://plus.google.com/118379608603424325840" target="_blanck" class="googleplus"></a>
-                    {*<a href="https://www.bbb.org/western-ontario/business-reviews/online-retailer/s3-stores-in-chatham-on-1054268" target="_blanck" class="bbb"></a>*}
+                    <a href="https://www.facebook.com/s3stores/" rel="nofollow" target="_blank" class="facebook"></a>
+                    <a href="https://www.twitter.com/s3stores/" target="_blank" rel="nofollow" class="twitter"></a>
+                    <a href="https://www.youtube.com/channel/UCjE6xR1TriWo-hCDsbpvMKg" rel="nofollow" target="_blank" class="youtube"></a>
+                    <a href="https://www.pinterest.com/s3storesinc/" target="_blank" rel="nofollow" class="pinterest"></a>
+                    {*<a href="https://www.instagram.com/s3stores/" target="_blank" ""class="instagram"></a>*}
+                    <a href="https://plus.google.com/118379608603424325840" target="_blank" rel="nofollow" class="googleplus"></a>
+                    {*<a href="https://www.bbb.org/western-ontario/business-reviews/online-retailer/s3-stores-in-chatham-on-1054268" target="_blank" class="bbb"></a>*}
                 </div>
 
                 <ul class="no-bullet menu-list">
@@ -171,9 +171,9 @@
                 </div>
             </div>
         </div>
-    </section>
+    </div>
 
-    <section class="footer-menu">
+    <div class="footer-menu">
         <div class="row">
             <div class="column small-12 medium-5 medium-order-2">
                 <ul class="no-bullet">
@@ -184,5 +184,5 @@
                 Copyright © 2005-{date_add()|date:"Y"} S3 Stores Holdings, Inc. All Rights Reserved.
             </div>
         </div>
-    </section>
+    </div>
 </footer>

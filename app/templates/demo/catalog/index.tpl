@@ -49,7 +49,7 @@
     {/foreach}
 
     {if $menus.menu|count > 0}
-        <section class="subcategories">
+        <div class="subcategories">
             <div class="row small-up-1 medium-up-2 large-up-4">
                 {foreach $menu as $item index=$index}
                     <div class="column {if $index > 11}more_items{/if}">
@@ -57,7 +57,7 @@
                     </div>
                 {/foreach}
             </div>
-        </section>
+        </div>
     {/if}
 {/block}
 

@@ -16,7 +16,7 @@
             <div class="columns large-2 show-for-large" itemscope itemtype="http://schema.org/WPSideBar">
                 <div class="firm_cont">
                     {if $filters!}
-                    <form action="{$.request->getMatchingUrl(['q' => $.request->get->get('q')])}" type="get"  id="filter_form" data-ajax-send="off">
+                    <form action="{$.request->getMatchingUrl(['q' => $.request->get->get('q')])}" method="get"  id="filter_form" data-ajax-send="off">
                         <div class="filters_section advanced">
                             {block "catalog-filter"}
                                 {*{include "catalog/parts/_filter.tpl" modal_class='filter advanced' filters=[]}*}
@@ -26,7 +26,7 @@
                             {include "catalog/parts/_filter.tpl" modal_class='filter default'}
                         </div>
 
-                        <section class="buttons">
+                        <div class="buttons">
                             <button class="button waves">Apply</button>
 
                             <a href="{$.request->getMatchingUrl(['q' => $.request->get->get('q')])}" class="reset_filter waves waves-dark" rel="nofollow">
@@ -34,7 +34,7 @@
                                     Reset filters
                                 </span>
                             </a>
-                        </section>
+                        </div>
 
                     </form>
                     {/if}
@@ -65,7 +65,7 @@
                 {raw $pager->render()}
 
                 {add_asset_block type="js"}
-                    <script type="text/javascript">
+                    <script>
                         window.app.afterReady.push(function(){
                             endless_paginate();
                         });

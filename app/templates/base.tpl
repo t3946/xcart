@@ -1,13 +1,13 @@
 {extends "wrapper.tpl"}
 {block "wrapper"}
-<section id="main_wrapper" class="off-canvas-wrapper">
+<div id="main_wrapper" class="off-canvas-wrapper">
 
     <div class="off-canvas-content" data-off-canvas-content>
-        <section id="content-wrapper">
+        <div id="content-wrapper">
             {block "header"}
             <header itemscope itemtype="http://schema.org/WPHeader">
 
-                <section class="top-header hide-for-small-only">
+                <div class="top-header hide-for-small-only">
                     <div class="row">
                         <div class="columns small-4">
                             <ul class="our-websites no-bullet">
@@ -18,17 +18,17 @@
                             </ul>
                         </div>
                         <div class="columns small-8">
-                            <section class="call_lang">
+                            <div class="call_lang">
                                 {insert "demo/blocks/_call_in_hours.tpl"}
                                 {*{include "demo/blocks/_call_after_hours.tpl"}*}
 
                                 <a href="#" class="lang"> </a>
-                            </section>
+                            </div>
                         </div>
                     </div>
-                </section>
+                </div>
 
-                <section class="logo_menu">
+                <div class="logo_menu">
                     <div class="row align-justify">
                         <div class="columns small-2 medium-1 show-for-small hide-for-large">
                             <a href="#" data-toggle="offCanvasLeft" class="mobile_menu middle-inline-block hamburger"></a>
@@ -41,11 +41,11 @@
                         </div>
 
                         <div class="columns small-3 medium-7 large-push-3">
-                            <section class="main-menu-wrap">
+                            <div class="main-menu-wrap">
                                 <ul class="main-menu no-bullet show-for-medium">
                                     {get_menu code='main-menu'}
                                 </ul>
-                            </section>
+                            </div>
                         </div>
 
                         <div class="columns hide-for-large small-2 medium-1">
@@ -63,7 +63,7 @@
                         </div>
 
                     </div>
-                </section>
+                </div>
                 <div class="row">
                     <div class="columns small-12">
                         <div class="hr hide-for-large"></div>
@@ -77,16 +77,16 @@
                 <div class="sticky def-zi2"
                      style="width: 100%"
                 >
-                    <section id="search_container" class="desktop_menu_search_cart show-for-large" data-toggler="show-for-large" >
+                    <div id="search_container" class="desktop_menu_search_cart show-for-large" data-toggler="show-for-large" >
                         <div class="row" >
                             <div class="columns large-3 show-for-large">
 
-                                <section class="category-menu-container"  >
+                                <div class="category-menu-container"  >
                                     <div class="category-menu">
                                         <span class="menu-icon"></span>
                                         <span class="category-menu-title" >Departments</span>
                                     </div>
-                                </section>
+                                </div>
                                 {*{cache key = '_parts/_menu_desktop.tpl'}*}
                                 {insert "_parts/_menu_desktop.tpl"}
                                 {*{/cache}*}
@@ -99,13 +99,13 @@
                                 {include "_parts/_cart.tpl"}
                             </div>
                         </div>
-                    </section>
+                    </div>
 
                 </div>
             </div>
             {/block}
-            <section id="content">
-                <section class="before-content">
+            <div id="content">
+                <div class="before-content">
                     {block "before-content"}
                         <div class="row">
                             <div class="columns large-12">
@@ -113,7 +113,7 @@
                             </div>
                         </div>
                     {/block}
-                </section>
+                </div>
 
                 {block "content-wrapper"}
                     <div class="content">
@@ -121,7 +121,7 @@
                     </div>
                 {/block}
 
-                <section class="after-content">
+                <div class="after-content">
                     {block "after-content"}
                         <div class="row">
                             <div class="small-12 column slider-viewed">
@@ -130,9 +130,9 @@
                             </div>
                         </div>
                     {/block}
-                </section>
-            </section>
-        </section>
+                </div>
+            </div>
+        </div>
 
         {insert "_parts/_footer.tpl"}
     </div>
@@ -149,5 +149,5 @@
     </div>
     {/block}
 
-</section>
+</div>
 {/block}

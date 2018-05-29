@@ -36,11 +36,12 @@
     <meta name="application-name" content="{$site->getName()}">
 
     {*<meta name="url" itemprop="url" content="{$.getSite->getAbsoluteUrl()}" >*}
-    <meta name="name" itemprop='name' content="{$site->getName()}">
+    <meta name="name" content="{$site->getName()}">
+    <meta itemprop='name' content="{$site->getName()}">
 
     <link rel="shortcut icon" href="/favicon.png" type="image/png" />
 
-    <script type="text/javascript">
+    <script>
         window.app = {
             assets: {
                 cssLoaded: false,
@@ -81,7 +82,7 @@
     }
     </script>
 
-    <style type="text/css">{inline file="static/frontend/dist/css/base.css"}</style>
+    <style>{inline file="static/frontend/dist/css/base.css"}</style>
 
     {*<script src="/static/frontend/dist/js/vendors.js?v={frontend_version resource='vendors.js'}" defer></script>*}
 
@@ -163,7 +164,7 @@
                 }
             };
 
-            var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true; po.defer = true;
+            var po = document.createElement('script'); po.async = true; po.defer = true;
             var referrer = (document.referrer) ? encodeURIComponent(document.referrer.substr(document.referrer.indexOf('://')+1)) : '';
             var location  = (document.location) ? encodeURIComponent(window.location.href.substring(window.location.protocol.length)) : '';
             po.src = '//livechat.s3stores.com/index.php/chat/getstatus/(click)/internal/(position)/bottom_left/(ma)/br/(check_operator_messages)/true/(top)/350/(units)/pixels/(leaveamessage)/true/(department)/2?r='+referrer+'&l='+location;

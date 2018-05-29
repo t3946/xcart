@@ -1,5 +1,5 @@
 {if !$.request->getIsAjax() }
-<section class="front-endless-pager">
+<div class="front-endless-pager">
 {/if}
     {if $view->hasNextPage()}
         <a href="{$view->getUrl($view->getPage() + 1, true)}"
@@ -12,5 +12,5 @@
         </a>
     {/if}
 {if !$.request->getIsAjax() }
-</section>
+</div>
 {/if}

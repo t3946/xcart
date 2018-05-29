@@ -41,7 +41,7 @@
                 {set $subcategories = $model->getSubcategories()}
 
                 {if $subcategories|count > 0}
-                <section class="subcategories">
+                <div class="subcategories">
                     <a href="#subdepartmens" class="hide-for-large mmodal sub-dep_button">
                         See subdepartments
                     </a>
@@ -68,7 +68,7 @@
                         </div>
 
                     </div>
-                </section>
+                </div>
                 {/if}
                 {*{/cache}*}
             </div>
