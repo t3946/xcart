@@ -37,6 +37,7 @@
 
     {*<meta name="url" itemprop="url" content="{$.getSite->getAbsoluteUrl()}" >*}
     <meta name="name" itemprop='name' content="{$site->getName()}">
+    <meta itemprop='name' content="{$site->getName()}">
 
     <link rel="shortcut icon" href="/favicon.png" type="image/png" />
 
