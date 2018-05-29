@@ -12,8 +12,11 @@ use Modules\Core\Models\ZipCodeModel;
 use Modules\Dashboard\Sqls\SearchSql;
 use Modules\GeoIp\Helpers\GeoIpHelper;
 use Modules\Goods\Models\ProductModel;
+use Modules\Order\Forms\AccountsPayableForm;
 use Modules\Order\Forms\BillingAddressForm;
 use Modules\Order\Forms\ContactInfoForm;
+use Modules\Order\Forms\PurchaseOrderDetailsForm;
+use Modules\Order\Forms\PurchasingManagerForm;
 use Modules\Order\Forms\ShippingAddressForm;
 use Modules\Order\Helpers\OrderHelper;
 use Modules\Order\Helpers\OrderInvoiceHelper;
@@ -450,11 +453,18 @@ class CheckoutController extends FrontendController
 
         [$shipping_address, $billing_address] = $order->getAddressInfo();
 
+        $orderDetailsForm = new PurchaseOrderDetailsForm();
+        $purchasingManagerForm = new PurchasingManagerForm();
+        $accountsPayableForm = new AccountsPayableForm();
+
         $this->display('checkout/review.tpl', [
             'order' => $order,
             'shipping_address' => $shipping_address,
             'billing_address' => $billing_address,
-            'errors' => $errors
+            'errors' => $errors,
+            'orderDetailsForm' => $orderDetailsForm,
+            'purchasingManagerForm' => $purchasingManagerForm,
+            'accountsPayableForm' => $accountsPayableForm
         ]);
     }
 
