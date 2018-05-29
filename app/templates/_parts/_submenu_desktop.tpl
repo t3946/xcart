@@ -5,12 +5,12 @@
 
             {foreach $menus.menu as $menu}
                 {*<div class="menu-block {if !$has_banner && ($menus.columns > 1)}liquid{/if}">*}
-                <div class="menu-block">
+                <noindex><div class="menu-block">
                     <h4 class="{if $menu.items|count > 0}has-children{/if}">
                         <a href="{$menu.link}">{$menu.name}</a>
                     </h4>
                     {if $menu.items|count > 0}
-                        <noindex>
+
                             <ul class="{if $menu.more_items}has_more_items{/if}">
                                     {foreach $menu.items as $item}
                                         <li>
@@ -18,9 +18,9 @@
                                         </li>
                                     {/foreach}
                             </ul>
-                        </noindex>
+
                     {/if}
-                </div>
+                </div></noindex>
             {/foreach}
 
             {if $has_banner}
