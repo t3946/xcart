@@ -8,38 +8,19 @@
             {set $extra = $order->extra_model}
             <section class="checkout-po">
                 <div class="row">
-                    <div class="columns small-3">
+                    <div class="columns small-12">
                         <div class="options">
                             <h2 class="title">{t 'Purchase Order Details' dict='order'}</h2>
                         </div>
                     </div>
                     <div class="columns">
                         <div class="row">
-                            <div class="column small-offset-4">
+                            <div class="column small-12">
                                 <div class="mandatory">
                                     {t 'The fields marked with' dict='order'} <span class="required">*</span> {t 'are mandatory.' dict='order'}
                                 </div>
                             </div>
                         </div>
-                        {*<div class="row">*}
-                            {*<div class="columns small-4 text-align--right">*}
-                                {*<label for="purchase_order__number">{t 'PO number' dict='order'} <span class="required">*</span></label>*}
-                                {*<div class="description">{t 'PO number or internal order code in your system' dict='order'}</div>*}
-                            {*</div>*}
-                            {*<div class="columns">*}
-                                {*<input value="{$extra->purchase_order['po_number']}" id="purchase_order__number" required placeholder="{t '14031879' dict='order'}" name="PurchaseOrderForm[po_number]" type="text"/>*}
-                            {*</div>*}
-                        {*</div>*}
-                        {*<div class="row">*}
-                            {*<div class="columns small-4 text-align--right">*}
-                                {*<label for="purchase_order__company">{t 'Organization name' dict='order'} <span class="required">*</span></label>*}
-                                {*<div class="description">{t 'The name of your organization' dict='order'}</div>*}
-                            {*</div>*}
-                            {*<div class="columns">*}
-                                {*<input value="{$extra->purchase_order['company_name']}" id="purchase_order__company" required placeholder="{t 'Eureka Inc.' dict='order'}" name="PurchaseOrderForm[company_name]" type="text"/>*}
-                            {*</div>*}
-                        {*</div>*}
-
                         {include 'checkout/_form_row.tpl' field=$orderDetailsForm->getField('po_number')}
                         {include 'checkout/_form_row.tpl' field=$orderDetailsForm->getField('organization_name')}
                     </div>
@@ -50,52 +31,44 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="columns small-3">
+                    <div class="columns small-12">
                         <div class="options">
                             <h2 class="title">{t 'Purchasing Manager' dict='order'}</h2>
                         </div>
                     </div>
                     <div class="columns">
+                        {include 'checkout/_form_row.tpl' field=$purchasingManagerForm->getField('firstname')}
                         <div class="row">
-                            <div class="columns small-4 text-align--right">
-                                <label for="purchase_order__name_of_purchaser">{t 'Full name' dict='order'} <span class="required">*</span></label>
-                                <div class="description">{t 'Full name of the person placing the order' dict='order'}</div>
+                            <div class="column show-for-large small-12 large-2"></div>
+                            <div class="column small-12 large-2 large-order-2">
+                                {$purchasingManagerForm->getField('phone')->renderErrors()}
                             </div>
-                            <div class="columns">
-                                <input value="{$extra->purchase_order['name_of_purchaser']}" id="purchase_order__name_of_purchaser" required placeholder="{t 'Albert H. Einstein' dict='order'}" name="PurchaseOrderForm[name_of_purchaser]" type="text"/>
+
+                            <div class="column small-12 large-8 large-order-1">
+                                <div class="row">
+                                    <div class="small-12 large-6 columns large-text-right text-block">
+                                        <div class="multiline">
+                                            {$purchasingManagerForm->getField('phone')->renderLabel()}
+
+                                            <span class="hint">
+                                                {$purchasingManagerForm->getField('phone')->renderHint()}
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="small-12 large-6 columns phone--container">
+
+                                        {$purchasingManagerForm->getField('phone')->renderInput()}
+
+                                        <span class="phone_ext--container">
+                                            <label class="display-inline hide-for-medium">X</label>
+                                            <label class="display-inline show-for-medium">{t 'ext' dict='order'}</label>
+
+                                            {$purchasingManagerForm->getField('phone_ext')->renderInput()}
+                                        </span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        {*<div class="row">*}
-                            {*<div class="columns small-4 text-align--right">*}
-                                {*<label for="purchase_order__phone">{t 'Phone' dict='order'} <span class="required">*</span></label>*}
-                                {*<div class="description">{t 'Phone number of the person placing the order' dict='order'}</div>*}
-                            {*</div>*}
-                            {*<div class="columns">*}
-                                {*<input value="{$extra->purchase_order['purchase_manager_phone']}" id="purchase_order__phone" required placeholder="{t '(609) 734-8000' dict='order'}" name="PurchaseOrderForm[purchase_manager_phone]" type="tel"/>*}
-                            {*</div>*}
-                        {*</div>*}
-                        {*<div class="row">*}
-                            {*<div class="columns small-4 text-align--right">*}
-                                {*<label for="purchase_order__fax">{t 'Fax' dict='order'} <i>{t '(optional)' dict='order'}</i></label>*}
-                                {*<div class="description">{t 'Fax number of the person placing the order' dict='order'}</div>*}
-                            {*</div>*}
-                            {*<div class="columns">*}
-                                {*<input value="{$extra->purchase_order['purchase_manager_fax']}" id="purchase_order__fax" placeholder="{t '(609) 924-8399' dict='order'}" name="PurchaseOrderForm[purchase_manager_fax]" type="tel"/>*}
-                            {*</div>*}
-                        {*</div>*}
-                        {*<div class="row">*}
-                            {*<div class="columns small-4 text-align--right">*}
-                                {*<label for="purchase_order__email">{t 'Email' dict='order'} <span class="required">*</span></label>*}
-                                {*<div class="description">{t 'Email of the person placing the order' dict='order'}</div>*}
-                            {*</div>*}
-                            {*<div class="columns">*}
-                                {*<input value="{$extra->purchase_order['purchase_manager_email']}" id="purchase_order__email" required placeholder="{t 'albert.einstein@gmail.com' dict='order'}" name="PurchaseOrderForm[purchase_manager_email]" type="email"/>*}
-                            {*</div>*}
-                        {*</div>*}
-
-                        {include 'checkout/_form_row.tpl' field=$purchasingManagerForm->getField('firstname')}
-                        {include 'checkout/_form_row.tpl' field=$purchasingManagerForm->getField('phone')}
-                        {include 'checkout/_form_row.tpl' field=$purchasingManagerForm->getField('phone_ext')}
                         {include 'checkout/_form_row.tpl' field=$purchasingManagerForm->getField('fax')}
                         {include 'checkout/_form_row.tpl' field=$purchasingManagerForm->getField('email')}
                     </div>
@@ -106,61 +79,44 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="columns small-3">
+                    <div class="columns small-12">
                         <div class="options">
                             <h2 class="title">{t 'Accounts Payable' dict='order'}</h2>
                         </div>
                     </div>
                     <div class="columns">
+                        {include 'checkout/_form_row.tpl' field=$accountsPayableForm->getField('firstname')}
                         <div class="row">
-                            <div class="columns small-4 text-align--right">
-                                <label for="purchase_order__accounts_payable_full_name">{t 'Full name' dict='order'} <span class="required">*</span></label>
-                                <div class="description">{t 'Full name of the person who will remit the payment' dict='order'}</div>
+                            <div class="column show-for-large small-12 large-2"></div>
+                            <div class="column small-12 large-2 large-order-2">
+                                {$accountsPayableForm->getField('phone')->renderErrors()}
                             </div>
-                            <div class="columns">
-                                <input value="{$extra->purchase_order['accounts_payable_full_name']}" id="purchase_order__accounts_payable_full_name" required placeholder="{t 'Albert H. Einstein' dict='order'}" name="PurchaseOrderForm[accounts_payable_full_name]" type="text"/>
+
+                            <div class="column small-12 large-8 large-order-1">
+                                <div class="row">
+                                    <div class="small-12 large-6 columns large-text-right text-block">
+                                        <div class="multiline">
+                                            {$accountsPayableForm->getField('phone')->renderLabel()}
+
+                                            <span class="hint">
+                                                {$accountsPayableForm->getField('phone')->renderHint()}
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="small-12 large-6 columns phone--container">
+
+                                        {$accountsPayableForm->getField('phone')->renderInput()}
+
+                                        <span class="phone_ext--container">
+                                            <label class="display-inline hide-for-medium">X</label>
+                                            <label class="display-inline show-for-medium">{t 'ext' dict='order'}</label>
+
+                                            {$accountsPayableForm->getField('phone_ext')->renderInput()}
+                                        </span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        {*<div class="row">*}
-                            {*<div class="columns small-4 text-align--right">*}
-                                {*<label for="purchase_order__accounts_payable_phone">{t 'Phone' dict='order'} <span class="required">*</span></label>*}
-                                {*<div class="description">{t 'Phone number of the person who will remit the payment' dict='order'}</div>*}
-                            {*</div>*}
-                            {*<div class="columns">*}
-                                {*<input value="{$extra->purchase_order['accounts_payable_phone']}" id="purchase_order__accounts_payable_phone" required placeholder="{t '(609) 734-8000' dict='order'}" name="PurchaseOrderForm[accounts_payable_phone]" type="tel"/>*}
-                            {*</div>*}
-                        {*</div>*}
-                        {*<div class="row">*}
-                            {*<div class="columns small-4 text-align--right">*}
-                                {*<label for="purchase_order__accounts_payable_fax">{t 'Fax' dict='order'} <i>{t '(optional)' dict='order'}</i></label>*}
-                                {*<div class="description">{t 'Fax number of the person who will remit the payment' dict='order'}</div>*}
-                            {*</div>*}
-                            {*<div class="columns">*}
-                                {*<input value="{$extra->purchase_order['accounts_payable_fax']}" id="purchase_order__accounts_payable_fax" placeholder="{t '(609) 924-8399' dict='order'}" name="PurchaseOrderForm[accounts_payable_fax]" type="tel"/>*}
-                            {*</div>*}
-                        {*</div>*}
-                        {*<div class="row">*}
-                            {*<div class="columns small-4 text-align--right">*}
-                                {*<label for="purchase_order__accounts_payable_email">{t 'Email' dict='order'} <span class="required">*</span></label>*}
-                                {*<div class="description">{t 'Email of the person who will remit the payment' dict='order'}</div>*}
-                            {*</div>*}
-                            {*<div class="columns">*}
-                                {*<input value="{$extra->purchase_order['accounts_payable_email']}" id="purchase_order__accounts_payable_email" required placeholder="{t 'albert.einstein@gmail.com' dict='order'}" name="PurchaseOrderForm[accounts_payable_email]" type="email"/>*}
-                            {*</div>*}
-                        {*</div>*}
-                        {*<div class="row">*}
-                            {*<div class="columns small-4">*}
-                                {*<label for="purchase_order__file">{t 'Attach original PO' dict='order'} <i>{t '(optional)' dict='order'}</i></label>*}
-                                {*<div class="description">{t 'Alternatively fax PO to (813) 944-4516' dict='order'}</div>*}
-                            {*</div>*}
-                            {*<div class="columns">*}
-                                {*<input accept=".pdf" type="file" name="purchase_order_file" id="purchase_order__file" />*}
-                            {*</div>*}
-                        {*</div>*}
-
-                        {include 'checkout/_form_row.tpl' field=$accountsPayableForm->getField('firstname')}
-                        {include 'checkout/_form_row.tpl' field=$accountsPayableForm->getField('phone')}
-                        {include 'checkout/_form_row.tpl' field=$accountsPayableForm->getField('phone_ext')}
                         {include 'checkout/_form_row.tpl' field=$accountsPayableForm->getField('fax')}
                         {include 'checkout/_form_row.tpl' field=$accountsPayableForm->getField('email')}
                     </div>
