@@ -1,7 +1,7 @@
 {*{set $catMenu = $.getCategoryMenu()}*}
 {set $catMenu = []}
 
-<nav id="hidden_category_menu" class="category-menu-list-wrapper hide" data-toggler="hide" role="navigation">
+<nav id="hidden_category_menu" class="category-menu-list-wrapper hide" data-toggler="hide">
     <div class="row">
         <div class="columns large-12">
             <section class="category-menu-list-container">
