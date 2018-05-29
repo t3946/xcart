@@ -77,7 +77,7 @@
                 <div class="sticky def-zi2"
                      style="width: 100%"
                 >
-                    <section id="search_container" class="desktop_menu_search_cart show-for-large" data-toggler="show-for-large" >
+                    <div id="search_container" class="desktop_menu_search_cart show-for-large" data-toggler="show-for-large" >
                         <div class="row" >
                             <div class="columns large-3 show-for-large">
 
@@ -99,7 +99,7 @@
                                 {include "_parts/_cart.tpl"}
                             </div>
                         </div>
-                    </section>
+                    </div>
 
                 </div>
             </div>
