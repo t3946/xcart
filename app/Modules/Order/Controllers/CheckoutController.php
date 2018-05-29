@@ -383,7 +383,7 @@ class CheckoutController extends FrontendController
                 ]);
             }
 
-            if ($orderDetailsForm->isValid() && $purchasingManagerForm->isValid() && $accountsPayableForm->isValid()) {
+            if ($order->payment_method != 'Purchase Order' || ($orderDetailsForm->isValid() && $purchasingManagerForm->isValid() && $accountsPayableForm->isValid())) {
 
                 /** @var OrderModel $extra */
                 [$extra] = OrderExtraModel::objects()->getOrNew(['order_id' => $order->orderid]);
