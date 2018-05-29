@@ -41,7 +41,7 @@
 
     <link rel="shortcut icon" href="/favicon.png" type="image/png" />
 
-    <script type="text/javascript">
+    <script>
         window.app = {
             assets: {
                 cssLoaded: false,
@@ -82,7 +82,7 @@
     }
     </script>
 
-    <style type="text/css">{inline file="static/frontend/dist/css/base.css"}</style>
+    <style>{inline file="static/frontend/dist/css/base.css"}</style>
 
     {*<script src="/static/frontend/dist/js/vendors.js?v={frontend_version resource='vendors.js'}" defer></script>*}
 
