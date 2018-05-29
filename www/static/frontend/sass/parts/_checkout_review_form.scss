@@ -1,0 +1,21 @@
+.checkout-review-form {
+  .customer-notes {
+    h2 {
+      text-align: left;
+      font-size: rem-calc(17);
+      margin: .5rem 0;
+    }
+
+    textarea {
+      height: rem-calc(77);
+    }
+
+    .buttons {
+      button {
+        width: 100%;
+        font-size: rem-calc(25);
+
+      }
+    }
+  }
+}
