@@ -93,12 +93,12 @@
             <div class="column small-12 medium-5 large-5 right-side">
 
                 <div class="socials show-for-medium">
-                    <a href="https://www.facebook.com/s3stores/" target="_blank" class="facebook"></a>
-                    <a href="https://www.twitter.com/s3stores/" target="_blank" class="twitter"></a>
-                    <a href="https://www.youtube.com/channel/UCjE6xR1TriWo-hCDsbpvMKg" target="_blank" class="youtube"></a>
-                    <a href="https://www.pinterest.com/s3storesinc/" target="_blank" class="pinterest"></a>
+                    <a href="https://www.facebook.com/s3stores/" rel="nofollow" target="_blank" class="facebook"></a>
+                    <a href="https://www.twitter.com/s3stores/" target="_blank" rel="nofollow" class="twitter"></a>
+                    <a href="https://www.youtube.com/channel/UCjE6xR1TriWo-hCDsbpvMKg" rel="nofollow" target="_blank" class="youtube"></a>
+                    <a href="https://www.pinterest.com/s3storesinc/" target="_blank" rel="nofollow" class="pinterest"></a>
                     {*<a href="https://www.instagram.com/s3stores/" target="_blank" ""class="instagram"></a>*}
-                    <a href="https://plus.google.com/118379608603424325840" target="_blank" class="googleplus"></a>
+                    <a href="https://plus.google.com/118379608603424325840" target="_blank" rel="nofollow" class="googleplus"></a>
                     {*<a href="https://www.bbb.org/western-ontario/business-reviews/online-retailer/s3-stores-in-chatham-on-1054268" target="_blank" class="bbb"></a>*}
                 </div>
 
