@@ -16,7 +16,7 @@
                             </div>
 
                             <div class="all-times">
-                                <img  alt="" class="" src="/static/frontend/dist/images/icons/footer/web_order.svg">
+                                <img  alt="" class="Web order 24/7" src="/static/frontend/dist/images/icons/footer/web_order.svg">
                                 <div class="content">
                                     <div class="title">
                                         Web Orders
