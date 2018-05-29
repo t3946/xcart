@@ -24,6 +24,7 @@
                 <div class="columns small-12">
                     <div class="registration">
 
+
                         {include 'checkout/_form_row.tpl' field=$shippingForm->getField('firstname')}
                         {include 'checkout/_form_row.tpl' field=$shippingForm->getField('company')}
                         {include 'checkout/_form_row.tpl' field=$shippingForm->getField('address')}
