@@ -19,7 +19,7 @@
 </div>
 
 {add_asset_block type="js"}
-    <script type="text/javascript">
+    <script>
         window.app.afterReady.push(function(){
             var slider_name = '{$slider_name}';
             var query = '#{$slider_name} .frame';

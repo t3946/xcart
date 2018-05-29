@@ -1,7 +1,7 @@
 {extends "checkout/base.tpl"}
 
 {block 'js'}
-    <script type="text/javascript">
+    <script>
         var bill_addres_el = document.querySelector(".billing_address_form");
         var elements = bill_addres_el.querySelectorAll("input.required, select.required");
 

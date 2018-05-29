@@ -332,7 +332,7 @@
 
 {block 'js'}
     <!-- Google Code for Conversion Tracking: Order Conversion Page -->
-    <script type="text/javascript">
+    <script>
         var google_conversion_id = 1072406910;
         var google_conversion_language = "en";
         var google_conversion_format = "3";
@@ -343,7 +343,7 @@
         var google_conversion_currency = "USD";
         var google_remarketing_only = false;
     </script>
-    <script type="text/javascript" src="//www.googleadservices.com/pagead/conversion.js"></script>
+    <script src="//www.googleadservices.com/pagead/conversion.js"></script>
     <noscript>
         <div style="display:inline;">
             <img height="1" width="1" style="border-style:none;" alt=""
@@ -355,7 +355,7 @@
     <!-- Bing Code for Conversion Tracking: Order Conversion Page -->
     <noscript><img src="//bat.bing.com/action/0?ti=5024901&Ver=2" height="0" width="0"
                    style="display:none; visibility: hidden;"/></noscript>
-    <script type="text/javascript">
+    <script>
         {ignore}
         (function (w, d, t, r, u) {
             var f, n, i;

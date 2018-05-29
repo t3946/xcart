@@ -164,7 +164,7 @@
                 }
             };
 
-            var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true; po.defer = true;
+            var po = document.createElement('script'); po.async = true; po.defer = true;
             var referrer = (document.referrer) ? encodeURIComponent(document.referrer.substr(document.referrer.indexOf('://')+1)) : '';
             var location  = (document.location) ? encodeURIComponent(window.location.href.substring(window.location.protocol.length)) : '';
             po.src = '//livechat.s3stores.com/index.php/chat/getstatus/(click)/internal/(position)/bottom_left/(ma)/br/(check_operator_messages)/true/(top)/350/(units)/pixels/(leaveamessage)/true/(department)/2?r='+referrer+'&l='+location;

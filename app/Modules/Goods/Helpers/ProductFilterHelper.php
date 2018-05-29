@@ -134,7 +134,7 @@ class ProductFilterHelper
                     {
                         $list[$filter['f_id']] = [
                             'type' => 'list',
-                            'key' => 'filter',
+                            'key' => "filter",
                             'name' =>$filter['f_name'],
                             'changed' => false,
                             'values' => []
