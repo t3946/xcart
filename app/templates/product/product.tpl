@@ -1,5 +1,10 @@
 {extends  $.request->getIsAjax() ? "ajax.tpl" : "base.tpl"}
 
+{block 'seo'}
+    {parent}
+    <link rel="amphtml" href="{$model->getAmpAbsoluteUrl()}">
+{/block}
+
 {block "before-content"}
     {if !$.request->getIsAjax()}
     <div class="row">
