@@ -84,7 +84,6 @@
                 </div>
             </div>
             <div class="column small-12 large-7 block__title_price">
-                <noindex>
                 <div class="product-title show-for-large">
 
                     <h1>
@@ -105,8 +104,6 @@
                     </span>
                 </div>
                 <span class="clearfix"></span>
-                </noindex>
-
 
                 <div class="notifications">
 
