@@ -85,7 +85,7 @@
         }
 
         @include breakpoint(large) {
-          max-width: rem-calc(230);
+          max-width: rem-calc(206);
         }
 
         .overflow_container {
@@ -109,6 +109,10 @@
             min-height: rem-calc(50);
           }
         }
+      }
+
+      &.tile-view {
+        margin-left: 0;
       }
     }
   }

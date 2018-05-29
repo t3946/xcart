@@ -321,7 +321,8 @@ class CheckoutController extends FrontendController
 
             $order->non_us_confirmation = false;
             if ($order->isCanadianShipping() && !($order->non_us_confirmation = $app->request->post->get('non_us_confirmation'))) {
-                $errors[] = OrderModule::t('You must agree for custom duties');
+                $app->flash->error(OrderModule::t('You must agree for custom duties'));
+                $this->refresh();
             }
 
             if (!$errors) {
@@ -383,7 +384,7 @@ class CheckoutController extends FrontendController
                 ]);
             }
 
-            if ($orderDetailsForm->isValid() && $purchasingManagerForm->isValid() && $accountsPayableForm->isValid()) {
+            if ($order->payment_method != 'Purchase Order' || ($orderDetailsForm->isValid() && $purchasingManagerForm->isValid() && $accountsPayableForm->isValid())) {
 
                 /** @var OrderModel $extra */
                 [$extra] = OrderExtraModel::objects()->getOrNew(['order_id' => $order->orderid]);

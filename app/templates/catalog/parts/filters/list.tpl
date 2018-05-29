@@ -27,7 +27,7 @@
                 Show more
             </a>
         {/if}
-        <div id="{$key}-f-{$index}" class="full filter">
+        <div class="full filter">
             <ul class="no-bullet">
                 {foreach $values as $val}
                     <li>

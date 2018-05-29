@@ -1,5 +1,10 @@
 {extends  $.request->getIsAjax() ? "ajax.tpl" : "base.tpl"}
 
+{block 'seo'}
+    {parent}
+    <link rel="amphtml" href="{$model->getAmpAbsoluteUrl()}">
+{/block}
+
 {block "before-content"}
     {if !$.request->getIsAjax()}
     <div class="row">
@@ -66,11 +71,13 @@
                     {/if}
                     <datalist>
                         {foreach $images as $image}
-                            <option value="//cdn.{$site->getBaseDomain()}{$image->getUrl()}"
-                                    data-thumb="//cdn.{$site->getBaseDomain()}{$image->getUrl()}"
-                                    data-id="{$image->imageid}"
-                                    type="image">
-                            </option>
+                            {if $image}
+                                <option value="//cdn.{$site->getBaseDomain()}{$image->getUrl()}"
+                                        data-thumb="//cdn.{$site->getBaseDomain()}{$image->getUrl()}"
+                                        data-id="{$image->imageid}"
+                                        type="image">
+                                </option>
+                            {/if}
                         {/foreach}
 
                         {*<option value="https://www.youtube.com/watch?v=dQw4w9WgXcQ" type="video"></option>*}

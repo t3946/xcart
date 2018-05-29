@@ -39,7 +39,7 @@
     <meta name="name" content="{$site->getName()}">
     <meta itemprop='name' content="{$site->getName()}">
 
-    <link rel="shortcut icon" href="/favicon.png" type="image/png" />
+    <link rel="shortcut icon" href="{$site->favicons->get()}" type="image/png" />
 
     <script>
         window.app = {
