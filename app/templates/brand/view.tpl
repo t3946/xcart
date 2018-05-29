@@ -22,7 +22,7 @@
                 <h1 class="title">{$model->brand}</h1>
 
                 {if $model->descr}
-                <section class="description show-for-medium">
+                <div class="description show-for-medium">
                     <div class="row">
                         <div class="columns large-10">
                             <article class="content must-show-less" data-text-more="Read more" data-text-less="Read less">
@@ -30,7 +30,7 @@
                             </article>
                         </div>
                     </div>
-                </section>
+                </div>
                 {/if}
 
                 {if $categories|count > 0}
