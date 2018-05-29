@@ -26,7 +26,7 @@
                             {include "catalog/parts/_filter.tpl" modal_class='filter default'}
                         </div>
 
-                        <section class="buttons">
+                        <div class="buttons">
                             <button class="button waves">Apply</button>
 
                             <a href="{$.request->getMatchingUrl(['q' => $.request->get->get('q')])}" class="reset_filter waves waves-dark" rel="nofollow">
@@ -34,7 +34,7 @@
                                     Reset filters
                                 </span>
                             </a>
-                        </section>
+                        </div>
 
                     </form>
                     {/if}

@@ -1,5 +1,5 @@
 {if $filters!}
-<section class="filter_container">
+<div class="filter_container">
     <div class="filter-block" id="all_filter">
         <div class="block-title">
             Filter by
@@ -23,5 +23,5 @@
             {/foreach}
         </ul>
     </div>
-</section>
+</div>
 {/if}

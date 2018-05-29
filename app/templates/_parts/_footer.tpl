@@ -2,7 +2,7 @@
 
     {insert "_parts/_bottom_menu.tpl"}
 
-    <section class="footer-content">
+    <div class="footer-content">
 
         <div class="row contacts-presentations">
             <div class="column small-12 medium-7 large-7 left-side">
@@ -171,9 +171,9 @@
                 </div>
             </div>
         </div>
-    </section>
+    </div>
 
-    <section class="footer-menu">
+    <div class="footer-menu">
         <div class="row">
             <div class="column small-12 medium-5 medium-order-2">
                 <ul class="no-bullet">
@@ -184,5 +184,5 @@
                 Copyright © 2005-{date_add()|date:"Y"} S3 Stores Holdings, Inc. All Rights Reserved.
             </div>
         </div>
-    </section>
+    </div>
 </footer>

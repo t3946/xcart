@@ -1,7 +1,7 @@
 {*{set $catMenu = $.getCategoryMenu()}*}
 {set $catMenu = []}
 
-<section id="hidden_category_menu" class="category-menu-list-wrapper hide" data-toggler="hide">
+<div id="hidden_category_menu" class="category-menu-list-wrapper hide" data-toggler="hide">
     <div class="row">
         <div class="columns large-12">
             <section class="category-menu-list-container">
@@ -49,4 +49,4 @@
     </div>
 
 
-</section>
+</div>

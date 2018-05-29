@@ -34,7 +34,7 @@
                 {/if}
 
                 {if $categories|count > 0}
-                    <section class="subcategories">
+                    <div class="subcategories">
                     <a href="#subdepartmens" class="hide-for-large mmodal sub-dep_button">
                         See departments
                     </a>
@@ -69,7 +69,7 @@
                         </div>
 
                     </div>
-                </section>
+                </div>
                 {/if}
 
             </div>
