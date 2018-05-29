@@ -68,8 +68,7 @@
                         {foreach $images as $image}
                             <option value="//cdn.{$site->getBaseDomain()}{$image->getUrl()}"
                                     data-thumb="//cdn.{$site->getBaseDomain()}{$image->getUrl()}"
-                                    data-id="{$image->imageid}"
-                                    type="image">
+                                    data-id="{$image->imageid}">
                             </option>
                         {/foreach}
 
