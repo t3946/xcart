@@ -20,7 +20,7 @@ class ContactInfoFaxForm extends ContactInfoForm
 
         $fields['fax'] = [
             'class' => CharField::class,
-            'label' => 'Fax (optional)',
+            'label' => 'Fax <span class="comment">(optional)</span>',
             'required' => true,
             'validators' => [
                 new PhoneValidator(),

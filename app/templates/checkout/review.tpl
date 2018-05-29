@@ -128,11 +128,11 @@
         {include "checkout/_review_info.tpl" order = $order}
 
         <section class="customer-notes">
-            <div class="row">
-                <div class="columns  small-4">
+            <div class="row align-center">
+                <div class="columns  small-12 medium-4">
                     <h2>{t 'Customer notes' dict='order'}</h2>
                 </div>
-                <div class="columns">
+                <div class="columns small-12 ml-5 large-8">
                     <textarea name="customer_notes" placeholder="{t 'Put your order related instructions here' dict='order'}">
                         {$order->customer_notes}
                     </textarea>
