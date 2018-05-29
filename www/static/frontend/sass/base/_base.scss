@@ -77,62 +77,60 @@ input {
   }
 }
 
-.non-us-disclaimer{
+.non-us-disclaimer.checkbox-container{
   margin-top: 1rem;
+
+  @include breakpoint(medium){
+    margin-left: rem-calc(10);
+  }
+
+  @include breakpoint(large){
+    margin-left: 0;
+  }
+
 
   input{
     display: none;
-  }
 
-  label{
-    font-size: 15px;
-    line-height: 18px;
-    font-weight: normal;
-    padding-left: 37px;
-    display: inline-block;
+    & + label{
+      font-size: rem-calc(14);
+      line-height: rem-calc(18);
+      font-weight: normal;
+      padding-left: rem-calc(37);
+      display: inline-block;
 
-    &:before{
-      content: '';
-      display: block;
-      width: 21px;
-      height: 21px;
-      border: 1px solid #d4d4d4;
-      position: absolute;
-      top: 0;
-      left: 8px;
+      &:before{
+        content: '';
+        display: block;
+        width: rem-calc(21);
+        height: rem-calc(21);
+        border: 1px solid #d4d4d4;
+        position: absolute;
+        top: 0;
+        left: rem-calc(8);
+        @include breakpoint(large){
+          left: rem-calc(5);
+        }
+      }
     }
 
+    &:checked + label{
+
+      &:after{
+        content: url("../../dist/images/icons/order/check_mark_grey.svg");
+        position: absolute;
+        display: block;
+        width: rem-calc(12);
+        height: rem-calc(15);
+        top: rem-calc(3);
+        left: rem-calc(12);
+        @include breakpoint(large){
+          left: rem-calc(9);
+        }
+      }
+
+    }
   }
 
-
-  input:checked + label{
-    font-size: 15px;
-    line-height: 18px;
-    font-weight: normal;
-    padding-left: 37px;
-    display: inline-block;
-
-    &:before{
-      content: '';
-      display: block;
-      width: 21px;
-      height: 21px;
-      border: 1px solid #d4d4d4;
-      position: absolute;
-      top: 0;
-      left: 8px;
-    }
-
-    &:after{
-      content: url("../../dist/images/icons/order/check_mark_grey.svg");
-      position: absolute;
-      display: block;
-      width: 12px;
-      height: 15px;
-      top: 3px;
-      left: 12px;
-    }
-
-  }
 
 }
