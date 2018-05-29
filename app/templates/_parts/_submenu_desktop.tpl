@@ -10,15 +10,15 @@
                         <a href="{$menu.link}">{$menu.name}</a>
                     </h4>
                     {if $menu.items|count > 0}
-                        <noindex>
+
                             <ul class="{if $menu.more_items}has_more_items{/if}">
                                     {foreach $menu.items as $item}
                                         <li>
-                                            <a href="{$item.link}" rel="noindex">{$item.name}</a>
+                                            <a href="{$item.link}" rel="nofollow">{$item.name}</a>
                                         </li>
                                     {/foreach}
                             </ul>
-                        </noindex>
+
                     {/if}
                 </div>
             {/foreach}
