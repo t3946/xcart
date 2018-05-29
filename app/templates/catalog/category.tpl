@@ -18,7 +18,7 @@
                 <h1 class="title" itemprop="name">{$model->category}</h1>
 
                 {if $model->description}
-                <section class="description show-for-medium">
+                <div class="description show-for-medium">
                     <div class="row">
                         <div class="columns large-10 must-show-less">
                             <div class="relative">
@@ -34,7 +34,7 @@
                             {/ignore}
                         </div>
                     </div>
-                </section>
+                </div>
                 {/if}
 
                 {*{cache key = 'category:' ~ $model->categoryid}*}

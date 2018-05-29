@@ -11,7 +11,7 @@
 {/block}
 
 {block "content"}
-<section class="product-page default-content-page"
+<div class="product-page default-content-page"
          data-product="{$model->productid}"
          data-name="{$model->getFrontendName()|escape}"
          data-category="{$category->category|escape}"
@@ -159,7 +159,7 @@
             {include "product/_groupped_products.tpl"}
         </section>
     {/if}
-</section>
+</div>
 {/block}
 
 {block 'after-content'}
