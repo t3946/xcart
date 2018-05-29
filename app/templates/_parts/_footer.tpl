@@ -16,7 +16,7 @@
                             </div>
 
                             <div class="all-times">
-                                <img  alt="" class="" src="/static/frontend/dist/images/icons/footer/web_order.svg">
+                                <img  alt="" class="Web order 24/7" src="/static/frontend/dist/images/icons/footer/web_order.svg">
                                 <div class="content">
                                     <div class="title">
                                         Web Orders
@@ -32,7 +32,7 @@
                                 <li class="title-menu">
                                     Email Support
                                 </li>
-                                <li><a href="/contact-us">Contact Us</a></li>
+                                <li><a href="/contactus/">Contact Us</a></li>
                             </ul>
 
                         </div>
@@ -57,10 +57,10 @@
                                 <li class="title-menu">
                                     Contact Us
                                 </li>
-                                <li><a href="/contact-us#form">Web Form</a></li>
-                                <li><a href="/contact-us#email">Email</a></li>
-                                <li><a href="/contact-us#address">USA address</a></li>
-                                <li><a href="/contact-us#address">Canadian address</a></li>
+                                <li><a href="/contactus/#form">Web Form</a></li>
+                                <li><a href="/contactus/#email">Email</a></li>
+                                <li><a href="/contactus/#address">USA address</a></li>
+                                <li><a href="/contactus/#address">Canadian address</a></li>
                             </ul>
 
                             <ul class="no-bullet menu-list show-for-large">
