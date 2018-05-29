@@ -1,16 +1,18 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: anna
- * Date: 29.05.2018
- * Time: 11:03
- */
 
 namespace Modules\Order\Forms;
 
 
 class AccountsPayableForm extends ContactInfoFaxForm
 {
+    public $replacement = [
+        'firstname' => 'accounts_payable_full_name',
+        'phone' => 'accounts_payable_phone',
+        'phone_ext' => 'accounts_payable_phone_ext',
+        'email' => 'accounts_payable_email',
+        'fax' => 'accounts_payable_fax',
+    ];
+
     public function getFields(): array
     {
         $fields = parent::getFields();

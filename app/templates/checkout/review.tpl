@@ -119,6 +119,7 @@
                         </div>
                         {include 'checkout/_form_row.tpl' field=$accountsPayableForm->getField('fax')}
                         {include 'checkout/_form_row.tpl' field=$accountsPayableForm->getField('email')}
+                        {include 'checkout/_form_row.tpl' field=$orderDetailsForm->getField('purchase_order_file')}
                     </div>
                 </div>
             </section>

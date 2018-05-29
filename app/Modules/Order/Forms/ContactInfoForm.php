@@ -11,6 +11,8 @@ use Xcart\App\Validation\EmailValidator;
 
 class ContactInfoForm extends BaseForm
 {
+    public $replacement;
+
     public function getFields()
     {
         return [
@@ -59,5 +61,37 @@ class ContactInfoForm extends BaseForm
                 ],
             ],
         ];
+    }
+
+    public function getAttributes()
+    {
+        $data = parent::getAttributes();
+
+        if ($this->replacement) {
+            $t_data = [];
+            $replace = $this->replacement;
+            foreach ($data as $key => $val) {
+                $t_data[$replace[$key]] = $val;
+            }
+            $data = $t_data;
+        }
+
+        return $data;
+    }
+
+    public function setAttributes(array $data)
+    {
+        $t_data = $data;
+
+        if ($this->replacement) {
+            $replace = array_flip($this->replacement);
+            foreach ($data as $key => $val) {
+                if (\is_string($val)) {
+                    $t_data[$replace[$key]] = trim($val);
+                }
+            }
+        }
+
+        return parent::setAttributes($t_data);
     }
 }

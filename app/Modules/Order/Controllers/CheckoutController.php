@@ -86,7 +86,6 @@ class CheckoutController extends FrontendController
                 ]);
 
                 $order->setAttributes($shippingForm->getAttributes());
-                $contact = $contactForm->getAttributes();
 
 //                if ($user && $user->id) {
 //                    [$address] = AddressModel::objects()->getOrCreate([
@@ -104,13 +103,7 @@ class CheckoutController extends FrontendController
 //                    $address->save();
 //                }
 
-                $order->setAttributes([
-                    'phone' => $contact['phone'],
-                    'phone_ext' => $contact['phone_ext'],
-                    'email' => $contact['email'],
-                    'firstname' => $contact['firstname'],
-                    'cb_status' => OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP2,
-                ]);
+                $order->setAttributes(array_merge($contactForm->getAttributes(), ['cb_status' => OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP2]));
 
                 if ($order->save()) {
                     if ($is_created) {
@@ -354,9 +347,7 @@ class CheckoutController extends FrontendController
             'payment_methods' => $payment_methods,
             'errors' => $errors,
             'billingForm' => $billingForm,
-            'countries' => Connection::getInstance()->fetchAll(SearchSql::getAllCountryOrderSql()),
             'shipping_address' => $shipping_address,
-//            'billing_address' => $billing_address,
         ]);
     }
 
@@ -373,31 +364,39 @@ class CheckoutController extends FrontendController
         /** @var Application $app */
         $app = Xcart::app();
         $order = $this->getOrder();
-        $errors = [];
 
         $this->checkoutStepsValidate($order->cb_status, OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP3);
 
+        $orderDetailsForm = new PurchaseOrderDetailsForm();
+        $purchasingManagerForm = new PurchasingManagerForm();
+        $accountsPayableForm = new AccountsPayableForm();
+
         if ($app->request->getIsPost()) {
+
+            $orderDetailsForm->populate($app->request->post);
+            $purchasingManagerForm->populate($app->request->post);
+            $accountsPayableForm->populate($app->request->post);
+
             if ($app->request->post->has('customer_notes')) {
                 $order->setAttributes([
                     'customer_notes' => trim($app->request->post->get('customer_notes')),
                 ]);
             }
 
-            $data = $app->request->post->all();
-            $purchase_order = $data['PurchaseOrderForm'];
-
-            if ($purchase_order && !$errors = OrderHelper::validateForm($data)) {
+            if ($orderDetailsForm->isValid() && $purchasingManagerForm->isValid() && $accountsPayableForm->isValid()) {
 
                 /** @var OrderModel $extra */
                 [$extra] = OrderExtraModel::objects()->getOrNew(['order_id' => $order->orderid]);
-                $extra->purchase_order = $purchase_order;
+                $extra->purchase_order = array_merge(
+                    $orderDetailsForm->getAttributes(),
+                    $purchasingManagerForm->getAttributes(),
+                    $accountsPayableForm->getAttributes()
+                );
                 $extra->save();
 
-                $files = $_FILES;
-//                if (!$_FILES) {
-//                    $files = PrepareData::fixFiles($_FILES);
-//                }
+                if ($_FILES) {
+                   $files = PrepareData::fixFiles($_FILES)['PurchaseOrderDetailsForm'] ?? null;
+                }
 
                 if (!empty($files['purchase_order_file']) && $files['purchase_order_file']['error'] === UPLOAD_ERR_OK) {
                     $original_file = $files['purchase_order_file']['name'];
@@ -407,7 +406,7 @@ class CheckoutController extends FrontendController
 
                     $po_model = new PurchaseOrderModel([
                         'login' => Xcart::app()->user->login,
-                        'PO_number' => $purchase_order['po_number'],
+                        'PO_number' => $orderDetailsForm->getField('po_number')->getValue(),
                         'storefront_id' => $site->storefrontid,
                         'received_by' => 'website'
                     ]);
@@ -441,9 +440,7 @@ class CheckoutController extends FrontendController
                         ]))->save();
                     }
                 }
-            }
 
-            if (!$errors) {
                 $order->cb_status = OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP4;
                 $order->save();
 
@@ -453,15 +450,19 @@ class CheckoutController extends FrontendController
 
         [$shipping_address, $billing_address] = $order->getAddressInfo();
 
-        $orderDetailsForm = new PurchaseOrderDetailsForm();
-        $purchasingManagerForm = new PurchasingManagerForm();
-        $accountsPayableForm = new AccountsPayableForm();
+        if (!$app->request->getIsPost() && $order) {
+            /** @var OrderExtraModel $extra */
+            $extra = $order->extra_model;
+            $orderDetailsForm->setAttributes($extra->purchase_order ?? []);
+            $purchasingManagerForm->setAttributes($extra->purchase_order ?? []);
+            $accountsPayableForm->setAttributes($extra->purchase_order ?? []);
+        }
+
 
         $this->display('checkout/review.tpl', [
             'order' => $order,
             'shipping_address' => $shipping_address,
             'billing_address' => $billing_address,
-            'errors' => $errors,
             'orderDetailsForm' => $orderDetailsForm,
             'purchasingManagerForm' => $purchasingManagerForm,
             'accountsPayableForm' => $accountsPayableForm
