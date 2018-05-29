@@ -145,7 +145,7 @@
             <div class="row align-center">
                 <div class="column small-12">
                     <div class="buttons text-center">
-                        <button type="submit" class="button yellow waves waves-orange waves-effect">{t 'Submit order' dict='order'}</button>
+                        <button type="submit" class="button yellow waves waves-orange waves-effect submit-order-button">{t 'Submit order' dict='order'}</button>
                     </div>
                 </div>
             </div>

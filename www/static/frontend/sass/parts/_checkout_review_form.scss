@@ -10,12 +10,10 @@
       height: rem-calc(77);
     }
 
-    .buttons {
-      button {
-        width: 100%;
-        font-size: rem-calc(25);
+  }
 
-      }
-    }
+  .submit-order {
+    width: 100%;
+    font-size: rem-calc(25);
   }
 }
