@@ -379,18 +379,55 @@
   // /Users/anna/git/xcart/www/static/frontend/demo_images/templates/small_Order review (Shipping & Billing address).jpg
 
   //background: url("../../demo_images/templates/small_Order review (Shipping & Billing address).jpg") 50% -1065px no-repeat;
-  //background: url("../../demo_images/templates/small_Order review (Shipping & Billing address).jpg") 50% -1076px no-repeat;
+  //background: url("../../demo_images/templates/small_Order review (Shipping & Billing address).jpg") 50% -1310px no-repeat;
 
   h2 {
     font-size: 17px;
     text-align: left;
     line-height: 19px;
     margin-top: 13px;
+
+    @include breakpoint(sm) {
+      font-size: 20px;
+      line-height: 24px;
+      margin-top: 22px;
+    }
+
+    @include breakpoint(medium) {
+      font-size: 22px;
+      line-height: 26px;
+      margin-top: 20px;
+    }
+
+    @include breakpoint(large) {
+      font-size: 20px;
+      line-height: 24px;
+      margin-top: 22px;
+    }
   }
 
   .info-row {
-    font-size: 14px;
+    font-size: 13px;
     line-height: 20px;
+    margin-bottom: 10px;
+
+    @include breakpoint(sm) {
+      font-size: 15px;
+      line-height: 22px;
+      margin-bottom: 10px;
+    }
+
+    @include breakpoint(medium) {
+      font-size: 18px;
+      line-height: 25px;
+      margin-bottom: 10px;
+    }
+
+    @include breakpoint(large) {
+      font-size: 15px;
+      line-height: 22px;
+      margin-bottom: 10px;
+    }
 
     &.address {
       margin-top: 10px;
@@ -410,5 +447,33 @@
   .hr-info{
     border-bottom: 1px solid #e1e1e1;
     margin-top: 14px;
+  }
+
+  .button{
+    border: 1px solid #ffb400;
+    line-height: 1.9;
+    min-height: 1.9rem;
+    padding: 0 1.35rem;
+    font-size: rem-calc(15);
+    border-radius: 3px;
+
+    @include breakpoint(sm) {
+      font-size: rem-calc(17);
+      line-height: 2;
+      min-height: 2rem;
+    }
+
+    @include breakpoint(medium) {
+      font-size: rem-calc(20);
+      line-height: 2;
+      min-height: 2rem;
+    }
+
+    @include breakpoint(large) {
+      font-size: rem-calc(17);
+      line-height: 2;
+      min-height: 2rem;
+    }
+
   }
 }

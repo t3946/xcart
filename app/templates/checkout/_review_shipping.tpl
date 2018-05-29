@@ -11,15 +11,15 @@
             </div>
         </div>
         <div class="row full-name">
-            <div class="columns info-title small-5">{t 'Full name:' dict='order'}</div>
+            <div class="columns info-title small-6">{t 'Full name:' dict='order'}</div>
             <div class="columns info-text">{$order->firstname}</div>
         </div>
         <div class="row phone">
-            <div class="columns info-title small-5">{t 'Phone:' dict='order'}</div>
+            <div class="columns info-title small-6">{t 'Phone:' dict='order'}</div>
             <div class="columns info-text">{$order->phone}</div>
         </div>
         <div class="row email">
-            <div class="columns info-title small-5">{t 'Email:' dict='order'}</div>
+            <div class="columns info-title small-6">{t 'Email:' dict='order'}</div>
             <div class="columns info-text">{$order->email}</div>
         </div>
     </div>
@@ -48,17 +48,11 @@
             {set $warehouse = $.get_warehouse($group->manufacturerid)}
             {set $shipping_model = $group->shippingModel}
             <div class="row info-row delivery-method">
-                <div class="columns">
-                    <div class="row">
-                        <div class="column info-title small-5">{$warehouse->m_city}, {$warehouse->m_state},
-                            {$warehouse->m_country}
-                            <div>{t 'warehouse items:' dict='order'}</div>
-                        </div>
-                        <div class="column info-text"></div>
-                    </div>
+                <div class="columns info-title small-6">
+                    {$warehouse->m_city}, {$warehouse->m_state}, {$warehouse->m_country}<br/>{t 'warehouse items:' dict='order'}
                 </div>
                 {if $shipping_model}
-                    <div class="columns">{$shipping_model->getFrontendName()} - {$shipping_model->shipping_time}</div>
+                    <div class="columns info-text">{$shipping_model->getFrontendName()}<br/>{$shipping_model->shipping_time}</div>
                 {/if}
             </div>
         {/foreach}
@@ -75,7 +69,7 @@
             </div>
         </div>
         <div class="row payment-method info-row">
-            <div class="columns small-5 info-title">
+            <div class="columns small-6 info-title">
                 {t 'Payment method:' dict='order'}
             </div>
             <div class="columns info-text">{$order->payment_method}</div>

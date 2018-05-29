@@ -1,19 +1,40 @@
 .checkout-review-form {
   .customer-notes {
+
+    @include breakpoint(medium) {
+      margin: 1rem 0 1.5rem 0;
+    }
+
     h2 {
       text-align: left;
       font-size: rem-calc(17);
       margin: .5rem 0;
+
+      @include breakpoint(sm) {
+        font-size: rem-calc(20);
+      }
+
     }
 
     textarea {
-      height: rem-calc(77);
+      height: rem-calc(90);
+
+      @include breakpoint(large) {
+        width: 80%;
+        max-width: 80%;
+      }
     }
 
   }
 
-  .submit-order {
+  .submit-order-button {
     width: 100%;
     font-size: rem-calc(25);
+    height: 2.5em;
+
+    @include breakpoint(medium) {
+      width: auto;
+      padding: 0 rem-calc(40);
+    }
   }
 }

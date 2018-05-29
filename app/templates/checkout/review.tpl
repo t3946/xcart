@@ -1,7 +1,4 @@
 {extends "checkout/base.tpl"}
-{*$orderDetailsForm = new PurchaseOrderDetailsForm();*}
-{*$purchasingManagerForm = new PurchasingManagerForm();*}
-{*$accountsPayableForm = new AccountsPayableForm();*}
 {block 'content'}
     <form data-abide action="{url 'checkout:review'}" method="POST" class="checkout-review-form" enctype= "multipart/form-data">
         {if $order->payment_method == 'Purchase Order'}
@@ -129,10 +126,10 @@
 
         <section class="customer-notes">
             <div class="row align-center">
-                <div class="columns  small-12 medium-4">
+                <div class="columns  small-12 medium-3 large-3">
                     <h2>{t 'Customer notes' dict='order'}</h2>
                 </div>
-                <div class="columns small-12 ml-5 large-8">
+                <div class="columns small-12 medium-6 large-9">
                     <textarea name="customer_notes" placeholder="{t 'Put your order related instructions here' dict='order'}">
                         {$order->customer_notes}
                     </textarea>
@@ -145,13 +142,15 @@
             <div class="row align-center">
                 <div class="column small-12">
                     <div class="buttons text-center">
-                        <button type="submit" class="button yellow waves waves-orange waves-effect submit-order-button">{t 'Submit order' dict='order'}</button>
+                        <button type="submit" class="button yellow waves waves-orange waves-effect submit-order-button">
+                            {t 'Submit order' dict='order'}
+                        </button>
                     </div>
                 </div>
             </div>
             <div class="row align-center">
                 <div class="column small-12">
-                    <div class="submit-notes text-center">
+                    <div class="submit-notes text-center submit-order-comment">
                         {t 'Submit your order and get transferred to a credit card payment system.' dict='order'}
                     </div>
                 </div>
