@@ -12,11 +12,13 @@
 
             <div class="banners_column">
                 <div class="banner product-of-the-day show-for-medium dark">
+                    {if $product}
                     <a href="{$product->getAbsoluteUrl()}" class="banner__cover" data-background="/static/frontend/dist/images/slider/{$.getSite->code|strtolower}/product_of_day.jpg">
                         <div class="product-of-the-day_cover banner__info">
                             <div class="product-of-the-day__caption">Product of the day</div>
                         </div>
                     </a>
+                    {/if}
                 </div>
             </div>
 
