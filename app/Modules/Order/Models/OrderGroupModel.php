@@ -65,6 +65,7 @@ class OrderGroupModel extends Model
                 'modelClass' => OrderStatusModel::className(),
                 'link' => ['cb_status' => 'code'],
                 'null' => false,
+                'default' => OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP3
             ],
             'dc_status_model' => [
                 'class' => ForeignField::className(),
