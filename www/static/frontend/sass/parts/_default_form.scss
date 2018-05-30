@@ -154,6 +154,12 @@ form {
     }
   }
 
+  .mandatory {
+    .required{
+      color: red;
+    }
+  }
+
   .hr {
     margin-top: rem-calc(20);
     margin-bottom: rem-calc(5);
@@ -371,13 +377,10 @@ form {
 }
 
 .checkout-shipping {
+
   .mandatory {
     @include breakpoint(large) {
       margin-top: 2em;
-    }
-
-    .required{
-      color: red;
     }
   }
 

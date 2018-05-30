@@ -12,7 +12,7 @@
                     </div>
                     <div class="columns">
                         <div class="row">
-                            <div class="column small-12">
+                            <div class="column small-12 large-6 large-offset-6">
                                 <div class="mandatory">
                                     {t 'The fields marked with' dict='order'} <span class="required">*</span> {t 'are mandatory.' dict='order'}
                                 </div>
