@@ -9,6 +9,7 @@ use Modules\Order\Helpers\OrderEventHelper;
 use Modules\Order\Helpers\OrderHelper;
 use Modules\Goods\Models\ProductModel;
 use Modules\Payment\Models\PaymentMethodModel;
+use Modules\User\Models\UserModel;
 use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\BooleanCharField;
@@ -186,6 +187,13 @@ class OrderModel extends Model
                 'modelClass' => OrderStatusNotificationModel::class,
                 'link' => ['cb_status' => 'code'],
                 'sqlType' => Type::STRING,
+            ],
+            'user' => [
+                'field' => 'user_id',
+                'class' => ForeignField::class,
+                'modelClass' => UserModel::class,
+                'link' => ['user_id' => 'id'],
+                'null' => true,
             ],
             'detail_models' => [
                 'class' => HasManyField::class,

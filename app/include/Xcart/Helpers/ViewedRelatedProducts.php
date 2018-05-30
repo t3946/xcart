@@ -200,14 +200,14 @@ JSON;
 
     public function getFromElastic(array $query = [], $minScope = 0.3, $size = 500, $from = 0, $pull_categories = true)
     {
-        if (!$result = Xcart::app()->cache->get($query)) {
+        if (true || !$result = Xcart::app()->cache->get($query)) {
             $classElastic = clone $this->elastic;
             $classElastic->setMinScore($minScope);
             $classElastic->setType('product');
             $classElastic->setSearchQuery($query);
             $result =  $classElastic->query(['size' => $size, 'from' => $from]);
 
-            Xcart::app()->cache->set($query, $result, 60);
+            //Xcart::app()->cache->set($query, $result, 60);
         }
 
         if ($result['hits']['total'])
