@@ -33,7 +33,7 @@ class ContactFormController extends FrontendController
 
         $form = new ContactUsForm();
         if ($this->getRequest()->getIsPost() && $form->populate($_POST)->isValid()) {
-            Xcart::app()->flash->add('Your message has been sent successfully');
+            Xcart::app()->flash->add('Your message has been successfully sent');
             $this->refresh();
         }
         ($this->getBreadcrumbs());
