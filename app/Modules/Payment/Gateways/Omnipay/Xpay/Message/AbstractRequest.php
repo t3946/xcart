@@ -135,10 +135,10 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
             'cart' => [
                 'login' => $order->user_id ?: random_int(10,12),
                 'currency' => $this->getCurrency(),
-                'shippingCost' => number_format($order->shipping_cost,2),
-                'taxCost' => number_format($order->tax,2),
-                'discount' => number_format($order->discount + $order->coupon_discount, 2),
-                'totalCost' => number_format($order->total, 2),
+                'shippingCost' => number_format($order->shipping_cost,2,'.', ''),
+                'taxCost' => number_format($order->tax,2,'.', ''),
+                'discount' => number_format($order->discount + $order->coupon_discount, 2,'.', ''),
+                'totalCost' => number_format($order->total, 2,'.', ''),
                 'description' => "Order(s) # {$order->getOrderNumber()}",
                 'merchantEmail' => $this->getMerchantEmail(),
                 'shippingAddress' => [
