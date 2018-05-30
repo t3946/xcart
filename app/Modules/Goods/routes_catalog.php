@@ -18,12 +18,7 @@ return [
         'name' => 'product:view',
     ],
     [
-        'route' => '/product/{i:id}/{slug:slug}',
-        'target' => [DefaultController::class, 'actionViewOldSlash'],
-        'name' => 'product:view_slash',
-    ],
-    [
-        'route' => '/product/{i:id}/',
+        'route' => '/product/{i:id}/.*',
         'target' => [DefaultController::class, 'actionViewOldIndex'],
         'name' => 'product:view_index',
     ],
