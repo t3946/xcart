@@ -17,6 +17,11 @@ return [
         'target' => [DefaultController::class, 'actionViewOld'],
         'name' => 'product:view',
     ],
+    [
+        'route' => '/product/{i:id}/.*',
+        'target' => [DefaultController::class, 'actionViewOldIndex'],
+        'name' => 'product:view_index',
+    ],
 
 
     /** CATEGORY ROUTES */
@@ -66,6 +71,12 @@ return [
     ],
 
     [
+        'route' => '/category/{i:id}/.*',
+        'target' => [CategoryController::class, 'actionViewIndex'],
+        'name' => 'view_index'
+    ],
+
+    [
         'route' => '/categories/',
         'target' => [CategoryController::class, 'actionList'],
         'name' => 'list'
@@ -81,7 +92,7 @@ return [
     ],
     [
         'route' => '/search/suggestion',
-        'target' => [SearchController::class, 'actionSuggestion'],
+        'target' => [SearchController::class, 'actionApiSuggestion'],
         'name' => 'search:suggestion',
     ],
 
