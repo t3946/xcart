@@ -13,6 +13,7 @@ class XTableStorage extends AbstractStorage
 {
     public $session_keyName = 'cart_number';
 
+    /** @var CartModel  */
     private $model;
     private $session;
 
@@ -40,24 +41,40 @@ class XTableStorage extends AbstractStorage
                 $this->cart->setDiscounts($data['discounts']);
             }
             if (!empty($data['cart'])) {
-                $this->data = $data['cart'];
+                $this->data = $this->prepareCartPositions($data['cart']);
             }
         }
+
+        $this->cart->getEventManager()->on('app:end', [$this, 'save']);
     }
 
-    public function getCartNumber()
+    private function prepareCartPositions(array $items = []): array
     {
-        return $this->model->id;
+        $items = $items ?? [];
+
+        /** @var CartItem $item */
+        foreach ($items as $item) {
+            $item->setCart($this->cart);
+        }
+
+        return $items;
     }
 
-    public function add($key, $value)
+    public function getCartNumber():? int
+    {
+        return $this->model
+            ? $this->model->id
+            : null;
+    }
+
+    public function add($key, $value): AbstractStorage
     {
         $this->saveCartNumber();
 
         return parent::add($key, $value);
     }
 
-    private function saveCartNumber()
+    private function saveCartNumber(): void
     {
         if (!$this->getCartNumber()) {
             $this->model->save();
@@ -66,10 +83,7 @@ class XTableStorage extends AbstractStorage
         }
     }
 
-    /**
-     * @param \Modules\Cart\Interfaces\IDiscount[] $discounts
-     */
-    public function save($discounts = [])
+    public function save(): void
     {
 //        $data = [];
 //
@@ -96,7 +110,13 @@ class XTableStorage extends AbstractStorage
 
         if ($this->model->data != $data) {
             $this->model->data = $data;
-            $this->model->save();
+
+            if (!$this->model->data && !$this->model->getIsNewRecord()) {
+                $this->model->delete();
+            }
+            else {
+                $this->model->save();
+            }
         }
     }
 }

@@ -1,6 +1,7 @@
 const webpack = require('webpack');
 const _ = require('lodash');
 const path = require('path');
+// const WebpackSweetEntry = require('webpack-sweet-entry');
 const BowerResolvePlugin = require("bower-resolve-webpack-plugin");
 const paths = require('./gulp.frontend.patchs');
 // const conf_dev = require('./webpack/webpack.develop');
@@ -10,15 +11,18 @@ const paths = require('./gulp.frontend.patchs');
 config = {
     // devtool: 'source-map',
     entry: paths.src.jsx_bundles,
+    // entry: _.merge(
+    //     paths.src.jsx_bundles,
+    //     WebpackSweetEntry(path.resolve("./temp/frontend/", 'js/**/*.js*'), 'js', 'js')
+    // ),
     output: {
         path: path.resolve('./' + paths.dst.jsx),
-        filename: '[name]-bundle.js'
+        filename: '[name].js'
     },
     target: "web",
     resolve: {
         alias: {
             modernizr$: path.resolve(__dirname, "./support/modernizrrc.js"),
-            // 'jquery': 'jQuery',
             'jQuery': 'jquery',
             'react': 'preact-compat',
             'react-dom': 'preact-compat',
@@ -114,7 +118,11 @@ config = {
                 NODE_ENV: JSON.stringify(process.env.NODE_ENV || 'development')
             }
         }),
-    ]
+    ],
+    watchOptions: {
+        aggregateTimeout: 300,
+        poll: 1000
+    }
 };
 
 if (process.env.NODE_ENV == 'production') {
@@ -163,6 +171,5 @@ if (process.env.NODE_ENV == 'production') {
         })
     );
 }
-
 
 module.exports = config;

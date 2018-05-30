@@ -5,6 +5,7 @@ namespace Modules\Payment\Gateways;
 use Modules\Core\Models\GlobalConfigModel;
 use Modules\Order\Models\OrderTransactionModel;
 use Modules\Order\Stores\OrderTransactionStore;
+use PayPal\Api\CreditCard;
 use Xcart\OrderTransaction;
 
 class PayPal extends Gateway
@@ -116,7 +117,7 @@ class PayPal extends Gateway
                 }
             }
         }
-        switch ($data['name']) {
+            switch ($data['name']) {
             case 'AUTHORIZATION_EXPIRED' :
                 return OrderTransactionModel::STATUS_EXPIRED;
                 break;

@@ -4,7 +4,7 @@ namespace Xcart\App\Request;
 use Xcart\App\Application\Application;
 use Xcart\App\Helpers\Creator;
 
-class RequestManager
+class RequestManager extends Request
 {
     protected $_request;
 

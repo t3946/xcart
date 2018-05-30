@@ -1,3 +1,44 @@
+## Version 2
+### 2.7.1 (2017-06-30)
+ * Fixing class_exists bug when getting parameters, by @peterjaap
+
+### 2.7.0 (2017-05-13)
+ * Adding timeout option, by @venyii
+
+### 2.6.0 (2017-04-10)
+ * Adding Disabling library feature, by @edim24
+
+### 2.5.1 (2017-03-20)
+ * Fixing required params for all hits, either Client ID or User ID
+
+### 2.5.0 (2017-03-20)
+ * Fixing required params for Products, by @rhrebecek
+ * Making Analytics class completely extensible
+
+### 2.4.1 (2017-01-19)
+ * Fixing URL encoding for Japanese characters by using RFC3986, by @ryo88c
+
+### 2.4.0 (2017-10-14)
+ * Adding get params methods by @Nightbr
+
+### 2.3.0 (2016-08-20)
+ * Adding getting URL method by @stefanzweifel
+
+### 2.2.0 (2016-07-31)
+ * Adding Debug feature for validating hits, in part contributed by @amit0rana (I had to fix the unit tests)
+ * Removing dependency to Symfony Finder, now the lib is much faster since it doesn't read from disk
+ * Fixing typo for setUserTimingCategory (a method to allow backward compatibility was added, it will be removed in V3)
+ * Fixing issue #21 for cache buster param
+
+### 2.1.0 (2015-07-19)
+ * Updating dependencies
+ * Adding Content Grouping support by @lombo
+
+### 2.0.0 (2015-07-03)
+ * Upgrading to Guzzle 6
+ * Removing support for PHP 5.4 (use version 1 for that)
+
+## Version 1
 ### 1.2.0 (2015-07-19)
  * Updating dependencies
  * Adding Content Grouping support by @lombo

@@ -2,9 +2,7 @@
 
 namespace Modules\User\Middleware;
 
-use Modules\User\Helpers\SurfingHelper;
-use Modules\User\Models\SurfPathModel;
-use Xcart\App\Cli\Cli;
+use Xcart\App\Main\Xcart;
 use Xcart\App\Middleware\Middleware;
 
 class ExpireHeadersMiddleware extends Middleware
@@ -13,10 +11,23 @@ class ExpireHeadersMiddleware extends Middleware
 
     public function processHttpRequest($request)
     {
-        header('Vary: Accept-Encoding, User-Agent');
+        header('Vary: Accept-Encoding, X-Requested-With');
 
         if (!headers_sent())
         {
+            if ($request->getIsAjax()) {
+                $this->noCache();
+                return;
+            }
+
+            if ($match = Xcart::app()->router->match(Xcart::app()->request->getUrl(), Xcart::app()->request->getMethod())) {
+                [$name] = explode(':', $match['name']);
+                if ($name && \in_array($name, ['cart', 'checkout', 'payment'])) {
+                    $this->noCache();
+                    return;
+                }
+            }
+
             $this->autoLastModified();
 
             if (!defined('SET_EXPIRE')) {
@@ -26,10 +37,6 @@ class ExpireHeadersMiddleware extends Middleware
             !defined("SET_EXPIRE") ?:
                 header("Expires: " . gmdate("D, d M Y H:i:s", SET_EXPIRE) . " GMT"); // is defined
 
-//            if ( $request->getIsAjax() || (defined('AREA_TYPE') && AREA_TYPE == 'A'))
-//            {
-//                header("Cache-Control: no-cache, must-revalidate");
-//            }
 
             if (defined('AREA_TYPE') && AREA_TYPE == 'A')
             {
@@ -45,9 +52,6 @@ class ExpireHeadersMiddleware extends Middleware
         header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
         header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
         header("Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0");
-
-//        header("Vary: User-Agent");
-//        header("Pragma: no-cache");
     }
 
     public function autoLastModified()

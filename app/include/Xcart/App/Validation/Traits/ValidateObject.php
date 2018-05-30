@@ -85,7 +85,7 @@ trait ValidateObject
      *         'Username must contain only word characters.',
      *     ],
      *     'email' => [
-     *         'Email address is invalid.',
+     *         'Email address is invalid.',e
      *     ]
      * ]
      * ~~~

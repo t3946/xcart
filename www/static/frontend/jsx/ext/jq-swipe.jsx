@@ -1,0 +1,90 @@
+(function($) {
+    $.event.special.swipe = {
+        setup: function () {
+            document.addEventListener('touchstart', $.event.special.swipe.handler, {passive: true});
+            document.addEventListener('touchend', $.event.special.swipe.handler, {passive: true});
+        },
+
+        teardown: function () {
+            document.removeEventListener('touchstart', $.event.special.swipe.handler);
+        },
+
+        handler: function (event) {
+
+            let args = [].slice.call(arguments, 1),
+                touches = event.touches,
+                startX, startY,
+                deltaX = 0, deltaY = 0,
+                self = this,
+                originalEvent = event,
+                Dxy = {};
+
+            event = jQuery.Event( event );
+
+            function cancelTouch() {
+                self.removeEventListener('touchmove', onTouchMove);
+                self.removeEventListener('touchend', onTouchEnd);
+                // startX = startY = null;
+            }
+
+            function onTouchEnd(e)
+            {
+                e = jQuery.Event(e);
+
+                let rad = null,
+                    minPath = window['swipe_min_path'] || 100,
+                    Dx = Dxy.Dx,
+                    Dy = Dxy.Dy;
+
+                if (Math.abs(Dx) >= minPath || Math.abs(Dy) >= minPath) {
+                    rad = Math.abs(Math.atan2(Dy, Dx)*(180/3.14));
+
+                    if (rad > 90) {
+                        rad = 180 - rad;
+                    }
+                }
+
+                if (Math.abs(Dx) >= minPath) {
+                    cancelTouch();
+                    deltaX = (Dx > 0) ? -1 : 1;
+                }
+                else if (Math.abs(Dy) >= minPath) {
+                    cancelTouch();
+                    deltaY = (Dy > 0) ? 1 : -1;
+                }
+
+                if (deltaX !== 0) {
+                    if (e.cancelable) {
+                        e.preventDefault();
+                    }
+                }
+
+                event.type = "swipe";
+                event.target = originalEvent.target;
+                event.originalEvent = originalEvent;
+                // args.unshift(event, deltaX, deltaY, rad); // add back the new event to the front of the arguments with the delatas
+
+                $(originalEvent.target).trigger('swipe', [deltaX, deltaY, rad]);
+
+                // return ($.event.dispatch || $.event.handle).apply(self, args);
+            }
+
+            function onTouchMove(e) {
+                let Dx = startX - e.touches[0].pageX,
+                    Dy = startY - e.touches[0].pageY;
+
+                Dxy = {
+                    Dx: Dx,
+                    Dy: Dy,
+                }
+            }
+
+            if (touches.length === 1) {
+                startX = touches[0].pageX;
+                startY = touches[0].pageY;
+                this.addEventListener('touchmove', onTouchMove, false);
+                this.addEventListener('touchend', onTouchEnd, false);
+            }
+        }
+    };
+})($);

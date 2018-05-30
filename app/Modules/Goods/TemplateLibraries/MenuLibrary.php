@@ -32,37 +32,18 @@ class MenuLibrary extends TemplateLibrary
             $module = Xcart::app()->getModule('Sites');
 
             $qs = CategoryModel::objects()
-                               ->filter([
-                                            new QOr(['parentid__isnull' => true, 'parentid' => 0]),
-                                            'storefrontid' => $module->getSite()->pk,
-                                            'avail' => 'Y',
-                                        ])
-                               ->order(['order_by']);
+                ->filter([
+                    'parentid' => 0,
+                    'storefrontid' => $module->getSite()->pk,
+                    'avail' => 'Y',
+                    'active_product_count__gt' => 0,
+                ])
+                ->order(['order_by']);
 
-            $ta = $qs->getTableAlias();
-
-            $pcountSql = ProductModel::objects()
-                                     ->with(['categories'])
-                                     ->filter([
-                                                  'forsale' => 'Y',
-                                                  'categories__lft__gte' => new Expression("{{category}}.lft"),
-                                                  'categories__rgt__lte' => new Expression("{{category}}.rgt"),
-                                                  'categories__root' => new Expression("{{category}}.root"),
-                                              ])
-                                     ->countSql();
-
-            $pcountSql = str_replace($ta, 'cp', $pcountSql);
-            $pcountSql = str_replace("{{category}}", $ta, $pcountSql);
 
             $qs->group(['categoryid']);
-            $qs->select([
-                            'pcount' => $pcountSql,
-                            '*',
-                        ]);
 
-            $qs->having(['pcount__gt' => 0]);
-
-            self::$root_categories = $qs->cache(300)->all();
+            self::$root_categories = $qs->cache()->all();
         }
 
         return self::$root_categories;

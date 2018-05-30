@@ -16,24 +16,28 @@ use Xcart\App\Orm\Fields\SerializeField;
 use Xcart\App\Orm\Fields\UnixTimestampField;
 use Xcart\App\Orm\Model;
 
+/**
+ * @property OrderModel order
+ */
 class OrderTransactionModel extends Model
 {
     use AutoMetaTrait;
 
-    const STATUS_AUTHORIZED = 'authorized';
-    const STATUS_COMPLETED = 'completed';
-    const STATUS_CAPTURED = 'captured';
-    const STATUS_PENDING = 'pending';
-    const STATUS_VOIDED = 'voided';
-    const STATUS_FAILED = 'failed';
-    const STATUS_REFUNDED = 'refunded';
-    const STATUS_EXPIRED = 'expired';
-    const STATUS_PARTIALLY_RUFUNDED = 'partially_refunded';
-    const STATUS_PARTIALLY_CAPTURED = 'partially_captured';
+    public const STATUS_AUTHORIZED = 'authorized';
+    public const STATUS_COMPLETED = 'completed';
+    public const STATUS_CAPTURED = 'captured';
+    public const STATUS_PENDING = 'pending';
+    public const STATUS_VOIDED = 'voided';
+    public const STATUS_FAILED = 'failed';
+    public const STATUS_REFUNDED = 'refunded';
+    public const STATUS_EXPIRED = 'expired';
+    public const STATUS_DECLINED = 'declined';
+    public const STATUS_PARTIALLY_RUFUNDED = 'partially_refunded';
+    public const STATUS_PARTIALLY_CAPTURED = 'partially_captured';
 
-    const TYPE_AUTHORIZATION = 'authorization';
-    const TYPE_REFUND = 'refund';
-    const TYPE_CAPTURE = 'capture';
+    public const TYPE_AUTHORIZATION = 'authorization';
+    public const TYPE_REFUND = 'refund';
+    public const TYPE_CAPTURE = 'capture';
 
     public static function tableName()
     {

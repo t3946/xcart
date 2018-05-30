@@ -1,1 +1,5 @@
 dist merge=ours
+dist/css/styles.css merge=ours
+versions merge=ours
+versions/css.yml
+versions/js.yml

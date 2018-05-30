@@ -1,0 +1,309 @@
+@media only screen and (min-width: $break-small){
+  #main_footer{
+    .mobile{
+      .accordion-mob-menu{
+        .panel{
+          .panel-heading{
+            height: 45px;
+
+            .panel-title{
+              line-height: 45px;
+              font-size: 1.25em;
+
+              a{
+                &:after{
+                  width:14px;
+                  height:14px;
+                }
+
+                b{
+                }
+
+              }
+            }
+          }
+
+          .panel-collapse{
+            font-size: 1.125em;
+
+            .panel-body{
+              padding: 7px 5.4% 2px 8%;
+
+              .row{
+                margin-bottom: 0;
+              }
+
+              a.link-arrow-right{
+                &:after{
+                  width: 14px;
+                  height: 14px;
+                  margin: 10px 0;
+                }
+              }
+
+              ul{
+                li{
+                }
+              }
+            }
+          }
+
+          #mob_payments_methods{
+            .panel-body{
+              padding-bottom: 2px;
+
+              .row{
+                .mob-payments__link{
+                  width: 51px;
+                }
+
+                .mob-payments__image{
+
+                }
+              }
+
+            }
+          }
+
+          #mob_confidence{
+            .panel-body{
+              padding: 14px 7.6% 14px 8%;
+
+              .row{
+                .mob-confidence__link{
+                  &.mob-confidence__verified_secured{
+                    width: 101px;
+
+                    .mob-confidence__image{
+
+                    }
+                  }
+
+                  &.mob-confidence__google_trust{
+                    width: 68px;
+
+                    .mob-confidence__image{
+
+                    }
+                  }
+
+                  &.mob-confidence__mcafee{
+                    width: 64px;
+
+                    .mob-confidence__image{
+
+                    }
+                  }
+
+                  &.mob-confidence__trustwave{
+                    width: 44px;
+
+                    .mob-confidence__image{
+
+                    }
+                  }
+
+                }
+              }
+            }
+          }
+
+          #mob_follow_us{
+            .panel-body{
+              padding: 20px 5.4% 20px 8%;
+
+              .row{
+                .col-xs-offset-3{
+                }
+
+                .mob-follow-us__link{
+                  width: 45px;
+                  height: 45px;
+                }
+
+                .mob-follow-us__image{
+
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .bottom-info{
+
+      .find-local-btn{
+        font-size: 0.875em;
+        height: 60px;
+        line-height: 60px;
+        padding-left: 58px;
+
+        &:before{
+          width: 58px;
+          height: 58px;
+          background-size: 42px 42px;
+          background-position: 8px 8px;
+        }
+
+      }
+
+      .bottom-info__title{
+        font-size: 1.5625em;
+        line-height: 1;
+      }
+
+      .telephone{
+        margin-top: 17px;
+
+        span{
+          line-height: 2em;
+          font-size: 1.175em;
+        }
+
+        .telephone__free{
+          font-size: 1.46em;
+
+          a{
+
+          }
+
+        }
+      }
+
+      .subscribe{
+        .subscribe__caption{
+          line-height: 1.5;
+        }
+
+        .btn-group{
+          input{
+            height: 46px;
+            font-size: 1.25em;
+            padding: 0 9px;
+
+            &[type="email"] {
+
+            }
+
+            &[type="submit"]{
+
+            }
+          }
+        }
+
+      }
+
+      .switch-settings-bottom-container {
+
+        .switch-settings-bottom {
+          .dropup {
+            width: 150px;
+
+            &.open {
+
+              .switch-settings_selected {
+
+                &:after {
+                }
+
+              }
+            }
+
+            &.dropup-language {
+
+            }
+
+            &.dropdown-currency {
+
+            }
+
+            .dropdown-toggle {
+
+              .switch-settings_selected {
+
+                &:before {
+                }
+
+                &:after {
+
+                }
+              }
+
+            }
+
+            .dropdown-menu {
+              li {
+                a {
+
+
+                  &:hover {
+
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+
+      .switch-to-desktop{
+        margin-top: 7px;
+        margin-bottom: 0;
+        line-height: 56px;
+        font-size: 1.25em;
+        height: 60px;
+
+        &:before{
+          width: 43px;
+          height: 40px;
+        }
+      }
+
+      .up-btn{
+        background-position: center 8px;
+        background-size: 23px 12px;
+        font-size: 1.25em;
+        line-height: 26px;
+        height: 54px;
+        padding-top: 24px;
+        margin: 18px 0;
+
+        &:focus{
+          background-position: center 8px;
+          background-size: 23px 12px;
+        }
+      }
+    }
+
+    .copyright{
+
+      padding: 11px 3.125%;
+
+      .policy-nav{
+        li{
+          &.policy-nav__retail-trust{
+            display: inline-block;
+          }
+
+          &:nth-child(-n+3){
+            margin-right: 13%;
+            margin-bottom: 16px;
+          }
+          a{
+            font-size: 0.9375em;
+
+          }
+        }
+      }
+
+      .copyright__text{
+        margin-top: 12px;
+
+        small{
+          font-size: 0.6875em;
+        }
+      }
+    }
+  }
+}

@@ -14,6 +14,7 @@ use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Fields\ManyToManyField;
 use Xcart\App\Orm\Manager;
+use Xcart\App\Orm\QuerySet;
 use Xcart\App\Orm\TreeModel;
 use Xcart\App\Traits\DataModelTrait;
 use Xcart\App\Traits\SlugifyTrait;
@@ -122,15 +123,13 @@ class CategoryModel extends TreeModel
     {
         $bread = new Breadcrumbs();
 
-        if ($parents = self::objects($this)->ancestors()->order(['lft'])->all())
+        if ($parents = $this->getObjects()->ancestors(true)->order(['lft'])->all())
         {
             /** @var self $model */
             foreach ($parents as $model) {
                 $bread->add($model->category, $model->getAbsoluteUrl());
             }
         }
-
-        $bread->add($this->category, $this->getAbsoluteUrl());
 
         return $bread;
     }
@@ -156,43 +155,32 @@ class CategoryModel extends TreeModel
         return $this->SEO_category_name ?: $this->category;
     }
 
+    /**
+     * Return all active children
+     * @param bool $includeSelf
+     * @param int $level
+     * @return $this
+     */
+    public function getActiveChildren($includeSelf = false, $level = 1)
+    {
+        return $this->getObjects()->descendants($includeSelf, $level)->filter([
+            'avail' => 'Y',
+            'active_product_count__gt' => 0,
+        ]);
+    }
+
     public function getSubcategories($withProductCount = true, $level = 1, $tree = false, $cache = true)
     {
-        $qs = static::objects()
+        $qs = $this->objects()
                     ->descendants(false, $level)
-                    ->filter(['avail' => 'Y']);
+                    ->filter([ 'avail' => 'Y' ]);
 
         if ($withProductCount) {
-            $ta = $qs->getTableAlias();
-
-            $pcountSql = ProductModel::objects()
-                        ->with(['categories'])
-                        ->filter([
-                            'forsale' => 'Y',
-                            'categories__lft__gte' => new Expression("{{category}}.lft"),
-                            'categories__rgt__lte' => new Expression("{{category}}.rgt"),
-                            'categories__root' => new Expression("{{category}}.root"),
-                        ])
-                        ->countSql();
-
-            $pcountSql = str_replace($ta, 'cp', $pcountSql);
-            $pcountSql = str_replace("{{category}}", $ta, $pcountSql);
-
-            $qs->group(['categoryid']);
-            $qs->select([
-                'pcount' => $pcountSql,
-                '*',
-            ]);
-
-            $qs->having(['pcount__gt' => 0]);
+            $qs->filter(['active_product_count__gt' => 0,]);
         }
 
         if ($tree) {
             $qs->asTree();
-        }
-
-        if ($cache) {
-            $qs->cache(300);
         }
 
         return $qs->all();

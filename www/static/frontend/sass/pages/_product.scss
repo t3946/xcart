@@ -1,0 +1,127 @@
+@import "product/tabs";
+@import "product/price_table";
+
+.product-page {
+  @include getProductTabs();
+  @include getPricesTable();
+
+  .price {
+    padding-left: 3px ;
+  }
+
+
+  .images_prices {
+    @include breakpoint(large) {
+      height: rem-calc(521);
+    }
+  }
+
+
+  .block__image {
+    @include breakpoint(large up) {
+      padding-right: rem-calc(46);
+      max-width: rem-calc(478);
+    }
+  }
+
+  .block__title_price {
+    @include breakpoint(large up) {
+      max-width: 100%;
+      //flex: auto;
+
+      .sku {
+        line-height: 2;
+      }
+    }
+  }
+
+
+  .product-title {
+    h1 {
+      font-weight: 700;
+      text-align: left;
+
+      .retailTrust {
+        &:after {
+          vertical-align: middle;
+          width: rem-calc(33);
+          height: rem-calc(31);
+        }
+
+        @include breakpoint(large up) {
+          margin-left: rem-calc(15);
+
+          &:after {
+            vertical-align: baseline;
+            width: rem-calc(29);
+            height: rem-calc(26);
+          }
+        }
+      }
+    }
+  }
+
+  .product-title-small {
+    padding-bottom: rem-calc(25);
+  }
+
+  .product__images-slider {
+    margin: 0 auto;
+
+    @include breakpoint(large) {
+      margin: 0;
+    }
+
+    .images-slider {
+    }
+  }
+
+  .prices__container {
+    margin: rem-calc(20) 0;
+
+    @include breakpoint(large) {
+      margin: 0;
+    }
+
+    .cart_add {
+      margin: rem-calc(20) 0;
+
+      @include breakpoint(large) {
+        margin: 0;
+      }
+    }
+  }
+
+  .tabs-title {
+    a {
+      &:hover {
+        text-decoration: none;
+      }
+    }
+  }
+
+  .groupped-products {
+    margin: rem-calc(40) 0;
+  }
+
+  .full_line__group_root {
+
+    text-align: center;
+    margin: rem-calc(20) 0;
+
+    .button {
+      text-transform: uppercase;
+      line-height: rem-calc(42);
+      height: rem-calc(42);
+      font: {
+        size: rem-calc(18);
+        weight: 900;
+      }
+    }
+
+    @include breakpoint(large) {
+      text-align: left;
+      margin: 0;
+    }
+  }
+}

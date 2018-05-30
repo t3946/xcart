@@ -14,9 +14,9 @@ class UserModel extends Model
 {
     use DataModelTrait, AutoMetaTrait;
 
-    public static function getDataModelClass()
+    public static function getDataModelClass(): string
     {
-        return Customer::className();
+        return Customer::class;
     }
 
     public static function tableName()

@@ -6,14 +6,13 @@ use Modules\Editor\Fields\EditorField;
 use Modules\Meta\Forms\MetaInlineForm;
 use Modules\Pages\Models\Page;
 use Modules\Pages\PagesModule;
+use Modules\Sites\Models\SiteModel;
 use Xcart\App\Form\Fields\CheckboxField;
 use Xcart\App\Form\Fields\DateTimeField;
 use Xcart\App\Form\Fields\DropDownField;
 use Xcart\App\Form\Fields\ImageField;
 use Xcart\App\Form\Fields\TextAreaField;
-use Xcart\App\Form\Fields\TextField;
 use Xcart\App\Form\ModelForm;
-use Xcart\App\Orm\Fields\CharField;
 
 /**
  * Class PagesForm
@@ -25,13 +24,13 @@ class PagesForm extends ModelForm
     {
         return [
             PagesModule::t('Main information') => [
-                'name', 'url', 'parent', 'is_index', 'is_published'
+                'name', 'url', 'parent', 'is_index', 'no_index', 'is_published'
             ],
             PagesModule::t('Content') => [
                 'content_short', 'content'
             ],
             PagesModule::t('Additional') => [
-                'published_at', 'file'
+                'published_at', 'file', 'sites'
             ],
             PagesModule::t('Display settings') => [
                 'view', 'view_children', 'sorting'
@@ -43,6 +42,7 @@ class PagesForm extends ModelForm
     {
         return [
             'is_index' => CheckboxField::className(),
+            'no_index' => CheckboxField::className(),
             'is_published' => CheckboxField::className(),
             'content_short' => [
                 'class' => TextAreaField::className(),
@@ -71,6 +71,17 @@ class PagesForm extends ModelForm
             ],
             'file' => ImageField::className(),
 //            'published_at' => DateTimeField::className()
+            'sites' => [
+                'class' => DropDownField::className(),
+                'multiple' => true,
+                'choices' => function() {
+                    return ['' => ''] + array_filter(SiteModel::objects()->all(),
+                        function($model){
+                            /** @var SiteModel $model */
+                            return $model->isWork();
+                        });
+                },
+            ],
         ];
     }
 

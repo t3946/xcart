@@ -459,11 +459,11 @@ abstract class Field implements ModelFieldInterface
             return null;
         }
 
-        $validators = [];
-        if ($form->hasField($this->name)) {
-            $field = $form->getField($this->name);
-            $validators = $field->validators;
-        }
+//        $validators = [];
+//        if ($form->hasField($this->name)) {
+//            $field = $form->getField($this->name);
+//            $validators = $field->validators;
+//        }
 
 //        if (($this->null === false || $this->required) && $this->autoFetch === false && ($this instanceof BooleanField) === false) {
 //            $validator = new RequiredValidator;

@@ -1,0 +1,114 @@
+header {
+  .logo_menu {
+    margin: rem-calc(7) 0;
+    height: rem-calc(39);
+    line-height: rem-calc(39);
+
+    @include breakpoint(large up) {
+      line-height: rem-calc(62);
+      height: rem-calc(62);
+    }
+
+    .mobile_menu {
+      width: 25px;
+      height: 19px;
+    }
+
+    .logo-small {
+      height: 26px;
+    }
+
+    .logo-big {
+      height: 62px;
+    }
+
+    .main-menu-wrap {
+      text-align: right;
+      height: rem-calc(39);
+
+      @include breakpoint(large up) {
+        height: rem-calc(62);
+      }
+
+      .main-menu {
+        @include justify-menu;
+        display: inline-block;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+
+        @include breakpoint(ml down) {
+          max-width: 300px;
+        }
+
+        li {
+          display: inline-block;
+          line-height: rem-calc(39);
+
+          @include breakpoint(large up) {
+            line-height: rem-calc(62);
+          }
+
+          @include breakpoint(ml down) {
+            &:nth-child(1n+3) {
+              display: none;
+            }
+          }
+
+          a {
+            @include shadowed;
+
+            color: #154159;
+            font-size: rem-calc(14);
+
+            @include breakpoint(large up) {
+              font-size: rem-calc(16);
+            }
+          }
+        }
+      }
+    }
+
+    .mobile__search-btn {
+      background: url("../images/icons/header/magnifier.svg") no-repeat;
+      width: 30px;
+      height: 30px;
+    }
+
+    .mobile__cart {
+      background: url("../images/icons/header/cart.svg") no-repeat;
+      width: 40px;
+      height: 30px;
+      position: relative;
+
+      &:hover {
+        text-decoration: none;
+      }
+
+      .count {
+        @include border-radius(10px);
+        background: #F12D2D;
+        font: {
+          size: .75em;
+          weight: 800;
+        }
+        padding: 0 5px;
+        color: $white;
+        position: absolute;
+        left: -3px;
+        top: -1px;
+        line-height: 1.2;
+        min-width: 1.5em;
+        text-align: center;
+
+
+        .mc_count {
+          display: inline-block;
+          padding-top: 0.12em;
+          line-height: rem-calc(14);
+          vertical-align: top;
+        }
+      }
+    }
+  }
+}

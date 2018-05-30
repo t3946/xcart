@@ -1,0 +1,525 @@
+.cart-header {
+
+  overflow: hidden;
+
+  $arrow-width: rem-calc(10);
+  $cart-breadcrumbs-height: rem-calc(35);
+  $cart-breadcrumbs-line-height: rem-calc(35-2);
+  $last-cart-breadcrumbs-item-height: rem-calc(36+10);
+  $breadcrumbs-font-size: rem-calc(11);
+  $breadcrumb-border-width: 1px;
+
+  $arrow-width-sm: rem-calc(13);
+  $cart-breadcrumbs-height-sm: rem-calc(45);
+  $cart-breadcrumbs-line-height-sm: rem-calc(45-4);
+  $last-cart-breadcrumbs-item-height-sm: rem-calc(45+13);
+  $breadcrumbs-font-size-sm: rem-calc(13);
+  $breadcrumb-border-width-sm: 2px;
+
+  $arrow-width-medium: rem-calc(17);
+  $cart-breadcrumbs-height-medium: rem-calc(56);
+  $cart-breadcrumbs-line-height-medium: rem-calc(56-4);
+  $last-cart-breadcrumbs-item-height-medium: rem-calc(56+17);
+  $breadcrumbs-font-size-medium: rem-calc(18);
+  $breadcrumb-border-width-medium: 2px;
+
+  $arrow-width-large: rem-calc(12);
+  $cart-breadcrumbs-height-large: rem-calc(40);
+  $cart-breadcrumbs-line-height-large: rem-calc(40-4);
+  $last-cart-breadcrumbs-item-height-large: rem-calc(40+12);
+  $breadcrumbs-font-size-large: rem-calc(14);
+  $breadcrumb-border-width-large: 2px;
+
+
+  .logo_menu {
+
+    height: rem-calc(34);
+    line-height: rem-calc(34);
+
+    .logo-link{
+      display: inline-block;
+      text-decoration: none;
+    }
+
+    @include breakpoint(sm up) {
+      height: rem-calc(36);
+      line-height: rem-calc(36);
+    }
+
+    @include breakpoint(medium up) {
+      height: rem-calc(64);
+      line-height: rem-calc(64);
+    }
+
+    @include breakpoint(ml up) {
+      height: rem-calc(68);
+      line-height: rem-calc(68);
+    }
+
+    @include breakpoint(large up) {
+      height: rem-calc(60);
+      line-height: rem-calc(60);
+    }
+
+    .shop-logo-block {
+
+      .logo-small {
+        height: rem-calc(26);
+
+        @include breakpoint(sm up) {
+          height: rem-calc(33);
+        }
+
+        @include breakpoint(medium up) {
+          height: rem-calc(42);
+        }
+      }
+      .show-for-large{
+        height: rem-calc(60);
+      }
+    }
+    .s3-logo-block {
+      text-align: right;
+
+      .s3-logo-small {
+        height: rem-calc(22);
+
+        @include breakpoint(sm up) {
+          height: rem-calc(26);
+        }
+
+        @include breakpoint(medium up) {
+          height: rem-calc(42);
+        }
+      }
+      .s3-logo-big{
+        height: rem-calc(55);
+        margin-right: rem-calc(44);
+      }
+      @include breakpoint(large) {
+        text-align: center;
+      }
+    }
+    .verified-secured-logo-block{
+      text-align: center;
+    }
+
+    .contacts-logo-block{
+      text-align: right;
+      line-height: 0;
+
+      .working-hours{
+        text-align: center;
+        line-height: rem-calc(29);
+        display: inline-block;
+
+        .text-order-online{
+          .green-circle-icon{
+            display: inline-block;
+            position: relative;
+            background-color: #4db539;
+            height: rem-calc(12);
+            width: rem-calc(12);
+            text-align: center;
+            border-radius: 50%;
+            &:after{
+              content: url("../images/icons/cart/white_check_mark_icon.svg");
+              display:block;
+              position: absolute;
+              top: -11px;
+              left: 3px;
+            }
+          }
+          .grey-text-label{
+            color: #808181;
+            font-size: rem-calc(13);
+          }
+        }
+        .phone{
+          text-align: center;
+          .phone-number{
+            font-size: rem-calc(18);
+            font-weight: bold;
+            .small-number{
+              font-size: 1rem;
+            }
+            &:first-child{
+              padding-right: rem-calc(30);
+            }
+          }
+
+
+        }
+
+        &.inactive{
+          display: none;
+        }
+
+      }
+      .after-hours{
+
+        line-height: rem-calc(20);
+
+        .text-order-online{
+          img{
+            height: rem-calc(30);
+          }
+        }
+
+        text-align: right;
+        font-size: rem-calc(14);
+
+        .phone-number{
+          font-size: rem-calc(18);
+          font-weight: bold;
+        }
+
+        &.inactive{
+          display: none;
+        }
+
+      }
+    }
+  }
+
+  .cart-steps-container {
+
+    padding: 0 .625rem;
+
+    @include breakpoint(large){
+      padding: 0 1.25rem;
+    }
+
+    .cart-steps-back {
+
+      height: $cart-breadcrumbs-height;
+      line-height: $cart-breadcrumbs-line-height;
+      padding: 0 .5rem 0 rem-calc(5);
+      margin-right: rem-calc(4);
+      border: $breadcrumb-border-width solid #ffb400;
+
+      font-size: $breadcrumbs-font-size;
+      text-decoration: none;
+      font-weight: bold;
+      color: #4a4949;
+
+      @include breakpoint(sm up) {
+        height: $cart-breadcrumbs-height-sm;
+        line-height: $cart-breadcrumbs-line-height-sm;
+        border-width: $breadcrumb-border-width-sm;
+        font-size: $breadcrumbs-font-size-sm;
+      }
+
+      @include breakpoint(medium up) {
+        height: $cart-breadcrumbs-height-medium;
+        line-height: $cart-breadcrumbs-line-height-medium;
+        border-width: $breadcrumb-border-width-medium;
+        font-size: $breadcrumbs-font-size-medium;
+      }
+
+      @include breakpoint(medium ml) {
+        padding: 0 rem-calc(9);
+      }
+
+
+      &.inactive{
+        display: none;
+      }
+
+      .img{
+        display: inline-block;
+        padding-right: .5rem;
+        padding-bottom:3px;
+        vertical-align: middle;
+
+        img{
+          vertical-align: middle;
+          height:14px;
+
+          @include breakpoint(sm up) {
+            height:16px;
+          }
+
+          @include breakpoint(medium up) {
+            height:14px;
+          }
+        }
+      }
+
+      span{
+        display: inline;
+        vertical-align: middle;
+      }
+    }
+    .cart-steps-section {
+
+      overflow: hidden;
+      padding: 0;
+
+      ul {
+        display: flex;
+        overflow: hidden;
+        align-items: center;
+        width: 100%;
+        text-align: justify;
+
+        li {
+          display: block;
+          position: relative;
+          height: $cart-breadcrumbs-height;
+          min-width: $cart-breadcrumbs-height;
+          line-height: $cart-breadcrumbs-line-height;
+          font-size: $breadcrumbs-font-size;
+          text-align: center;
+          border: $breadcrumb-border-width solid #dddddd;
+          border-right: 0;
+          vertical-align: middle;
+          flex-grow: 2;
+          background-color: #ffffff;
+
+          @include breakpoint(sm up) {
+            height: $cart-breadcrumbs-height-sm;
+            min-width: $cart-breadcrumbs-height-sm;
+            line-height: $cart-breadcrumbs-line-height-sm;
+            border-width: $breadcrumb-border-width-sm;
+            font-size: $breadcrumbs-font-size-sm;
+          }
+
+          @include breakpoint(medium up) {
+            height: $cart-breadcrumbs-height-medium;
+            min-width: $cart-breadcrumbs-height-medium;
+            line-height: $cart-breadcrumbs-line-height-medium;
+            border-width: $breadcrumb-border-width-medium;
+            font-size: $breadcrumbs-font-size-medium;
+          }
+
+          @include breakpoint(large up) {
+            height: $cart-breadcrumbs-height-large;
+            min-width: $cart-breadcrumbs-height-large;
+            line-height: $cart-breadcrumbs-line-height-large;
+            border-width: $breadcrumb-border-width-large;
+            font-size: $breadcrumbs-font-size-large;
+            flex-grow: 1 !important;
+            justify-content: space-around;
+          }
+
+          .step-link {
+            text-decoration: none;
+            color: #acacac;
+            margin-left: $arrow-width;
+            text-transform: uppercase;
+            font-weight: bold;
+            cursor: default;
+            display: block;
+
+            @include breakpoint(sm) {
+              margin-left: $arrow-width-sm;
+            }
+
+            @include breakpoint(medium) {
+              margin-left: $arrow-width-medium;
+            }
+
+            @include breakpoint(large) {
+              margin-left: $arrow-width-large;
+
+              .step-number:after{
+                content: '.';
+                display: inline;
+              }
+            }
+
+            .step-label {
+              display: none;
+              @include breakpoint(large up) {
+                display: inline;
+              }
+
+            }
+          }
+
+          .arrow-right {
+            height: $cart-breadcrumbs-height;
+            overflow: hidden;
+            width: $arrow-width;
+            position: absolute;
+            top: -$breadcrumb-border-width;
+            right: - $arrow-width;
+
+            @include breakpoint(sm up) {
+              height: $cart-breadcrumbs-height-sm;
+              width: $arrow-width-sm;
+              right: - $arrow-width-sm;
+              top: -$breadcrumb-border-width-sm;
+            }
+
+            @include breakpoint(medium up) {
+              height: $cart-breadcrumbs-height-medium;
+              width: $arrow-width-medium;
+              right: - $arrow-width-medium;
+              top: -$breadcrumb-border-width-medium;
+            }
+
+            @include breakpoint(large up) {
+              height: $cart-breadcrumbs-height-large;
+              width: $arrow-width-large;
+              right: - $arrow-width-large;
+              top: -$breadcrumb-border-width-large;
+            }
+
+            &:after {
+              content: '';
+              display: block;
+              border-top: $breadcrumb-border-width solid #dddddd;
+              border-right: $breadcrumb-border-width solid #dddddd;
+              position: absolute;
+              top: 8px;
+              right: 0;
+              width: $cart-breadcrumbs-height;
+              height: $cart-breadcrumbs-height;
+              transform: matrix(.37, 0.7, -.6, 1.21, 0, 0);
+              background: white;
+              z-index: 1;
+
+              @include breakpoint(sm up) {
+                border-width: $breadcrumb-border-width-sm;
+                border-right-width: 3px !important;
+                width: $cart-breadcrumbs-height-sm;
+                height: $cart-breadcrumbs-height-sm;
+                top: 10px;
+              }
+              @include breakpoint(medium up) {
+                border-width: $breadcrumb-border-width-medium;
+                width: $cart-breadcrumbs-height-medium;
+                height: $cart-breadcrumbs-height-medium;
+                top: 13px;
+              }
+              @include breakpoint(large up) {
+                border-width: $breadcrumb-border-width-large;
+                width: $cart-breadcrumbs-height-large;
+                height: $cart-breadcrumbs-height-large;
+                top: 10px;
+              }
+            }
+          }
+
+          &:last-child {
+            border-right: $breadcrumb-border-width solid #dddddd;
+            padding-right: $arrow-width;
+            width: $last-cart-breadcrumbs-item-height;
+            flex-grow: 1;
+            .arrow-right {
+              display: none;
+            }
+            &.active{
+              border-right: $breadcrumb-border-width solid #959595;
+              @include breakpoint(sm up) {
+                border-width: $breadcrumb-border-width-sm;
+              }
+              @include breakpoint(medium up) {
+                border-width: $breadcrumb-border-width-medium;
+              }
+              @include breakpoint(large up) {
+                border-width: $breadcrumb-border-width-large;
+              }
+            }
+
+            @include breakpoint(sm up) {
+              border-width: $breadcrumb-border-width-sm;
+              padding-right: $arrow-width-sm;
+              width: $last-cart-breadcrumbs-item-height-sm;
+            }
+            @include breakpoint(medium up) {
+              border-width: $breadcrumb-border-width-medium;
+              padding-right: $arrow-width-medium;
+              width: $last-cart-breadcrumbs-item-height-medium;
+            }
+            @include breakpoint(large up) {
+              border-width: $breadcrumb-border-width-large;
+              padding-right: $arrow-width-large;
+              width: $last-cart-breadcrumbs-item-height-large;
+              flex-basis: rem-calc(80);
+            }
+          }
+
+          &.inactive {
+            display: none;
+
+            @include breakpoint(large up) {
+              display: block;
+              background-color: #d9ead3;
+              border-color: #959595;
+
+              .step-link {
+                text-decoration: underline;
+                cursor: pointer;
+                color: #000000;
+              }
+
+              .arrow-right {
+                &:after {
+                  border-color: #959595;
+                  background-color: #d9ead3;
+                }
+              }
+
+            }
+          }
+
+          &.active {
+            width: auto;
+            flex-grow: 5;
+            background-color: #fff2cc;
+            border: $breadcrumb-border-width solid #959595;
+            border-right: 0;
+
+            @include breakpoint(sm up) {
+              border-width: $breadcrumb-border-width-sm;
+            }
+            @include breakpoint(medium up) {
+              border-width: $breadcrumb-border-width-medium;
+            }
+            @include breakpoint(large up) {
+              border-width: $breadcrumb-border-width-large;
+              flex-grow: 1;
+            }
+
+            .step-link {
+              color: #000000;
+
+              .step-number:after {
+                content: '.';
+                display: inline;
+              }
+
+              .step-label {
+                display: inline;
+              }
+            }
+
+            .arrow-right {
+              &:after {
+                border-top: $breadcrumb-border-width solid #959595;
+                border-right: $breadcrumb-border-width solid #959595;
+                background-color: #fff2cc;
+
+                @include breakpoint(sm up) {
+                  border-width: $breadcrumb-border-width-sm;
+                }
+
+                @include breakpoint(medium up) {
+                  border-width: $breadcrumb-border-width-medium;
+                }
+                @include breakpoint(large up) {
+                  border-width: $breadcrumb-border-width-large;
+                }
+              }
+            }
+
+          }
+
+        }
+      }
+    }
+  }
+}

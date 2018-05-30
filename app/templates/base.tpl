@@ -1,135 +1,153 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    {* Title, description, keywords *}
-    {block 'seo'}{/block}
+{extends "wrapper.tpl"}
+{block "wrapper"}
+<div id="main_wrapper" class="off-canvas-wrapper">
 
-    {* Another head information *}
-    {block 'head'}{/block}
+    <div class="off-canvas-content" data-off-canvas-content>
+        <div id="content-wrapper">
+            {block "header"}
+            <header itemscope itemtype="http://schema.org/WPHeader">
 
-    {*<link rel="stylesheet" href="/static/frontend/dist/css/main.css?v={frontend_css_version}">*}
-    {*<script src="/static/frontend/dist/js/main.js?v={frontend_js_version}"></script>*}
-</head>
-<body>
-<div id="wrapper">
-    <header>
-        <div class="row">
-            <div class="column large-12">
-                <div class="header-inner">
+                <div class="top-header hide-for-small-only">
                     <div class="row">
-                        <div class="column large-2">
-                            <div class="header-block v-align">
-                                <div>
-                                    <a href="/" class="logo">
-                                        <img src="/static/frontend/images/base/logo.png" alt="">
-                                    </a>
-                                </div>
-                            </div>
+                        <div class="columns small-4">
+                            <ul class="our-websites no-bullet">
+                                <li class="current"><span>{$.getSite->short_name}</span></li>
+                                {*<li><a href="#">Teacher</a></li>*}
+                                {*<li><a href="#">Kids</a></li>*}
+                                {*<li><a href="#">Sport</a></li>*}
+                            </ul>
                         </div>
-                        <div class="column large-10">
-                            <div class="header-block v-align">
-                                <div>
-                                    <ul class="main-menu justify">
-                                        <li>
-                                            <a href="#">Index</a>
-                                        </li>
-                                        <li>
-                                            <a href="#">News</a>
-                                        </li>
-                                        <li>
-                                            <a href="#">Articles</a>
-                                        </li>
-                                        <li>
-                                            <a href="#">About</a>
-                                        </li>
-                                        <li>
-                                            <a href="#">Contacts</a>
-                                        </li>
-                                    </ul>
-                                </div>
+                        <div class="columns small-8">
+                            <div class="call_lang">
+                                {insert "demo/blocks/_call_in_hours.tpl"}
+                                {*{include "demo/blocks/_call_after_hours.tpl"}*}
+
+                                <a href="#" class="lang"> </a>
                             </div>
                         </div>
                     </div>
                 </div>
+
+                <div class="logo_menu">
+                    <div class="row align-justify">
+                        <div class="columns small-2 medium-1 show-for-small hide-for-large">
+                            <a href="#" data-toggle="offCanvasLeft" class="mobile_menu middle-inline-block hamburger"></a>
+                        </div>
+                        <div class="columns small-3 medium-2">
+                            <a href="/">
+                                <img src="/static/frontend/dist/images/logos/sites/{$.getSite->code|lower}/logo.svg" alt="{$.getSiteConfig->company_name->value}" class="show-for-large logo-big">
+                                <img src="/static/frontend/dist/images/logos/sites/{$.getSite->code|lower}/logo-small.svg" alt="{$.getSiteConfig->company_name->value}" class="show-for-small hide-for-large logo-small">
+                            </a>
+                        </div>
+
+                        <div class="columns small-3 medium-7 large-push-3">
+                            <div class="main-menu-wrap">
+                                <ul class="main-menu no-bullet show-for-medium">
+                                    {get_menu code='main-menu'}
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="columns hide-for-large small-2 medium-1">
+                            <a class="mobile__search-btn middle-inline-block" data-toggle="search_container"></a>
+                        </div>
+
+                        <div class="columns hide-for-large small-2 medium-1">
+                            <a href="{url "cart:list"}" class="mobile__cart middle-inline-block">
+                            <span class="count">
+                                <span class="mc_count">
+                                    {*{$.app->cart->getQuantity()}*}
+                                </span>
+                            </span>
+                            </a>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="columns small-12">
+                        <div class="hr hide-for-large"></div>
+                    </div>
+                </div>
+
+            </header>
+
+            <div class="shadow"></div>
+            <div class="sticky-menu-container">
+                <div class="sticky def-zi2"
+                     style="width: 100%"
+                >
+                    <div id="search_container" class="desktop_menu_search_cart show-for-large" data-toggler="show-for-large" >
+                        <div class="row" >
+                            <div class="columns large-3 show-for-large">
+
+                                <div class="category-menu-container"  >
+                                    <div class="category-menu">
+                                        <span class="menu-icon"></span>
+                                        <span class="category-menu-title" >Departments</span>
+                                    </div>
+                                </div>
+                                {*{cache key = '_parts/_menu_desktop.tpl'}*}
+                                {insert "_parts/_menu_desktop.tpl"}
+                                {*{/cache}*}
+                            </div>
+                            <div class="columns small-12 large-7">
+                                {insert "_parts/_search.tpl"}
+                            </div>
+
+                            <div class="columns large-2 show-for-large">
+                                {include "_parts/_cart.tpl"}
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
             </div>
-        </div>
-    </header>
-
-    {render_flash:raw template='base/_flash.tpl'}
-
-    {block 'content-header'}
-        <div class="content-header">
-            <div class="row">
-                <div class="column large-12">
-                    {block 'breadcrumbs'}
-                        {render_breadcrumbs:raw template="base/_breadcrumbs.tpl"}
+            {/block}
+            <div id="content">
+                <div class="before-content">
+                    {block "before-content"}
+                        <div class="row">
+                            <div class="columns large-12">
+                                {insert "base/_breadcrumbs.tpl"}
+                            </div>
+                        </div>
                     {/block}
+                </div>
 
-                    {block 'heading'}
+                {block "content-wrapper"}
+                    <div class="content">
+                        {block "content"}{/block}
+                    </div>
+                {/block}
 
+                <div class="after-content">
+                    {block "after-content"}
+                        <div class="row">
+                            <div class="small-12 column slider-viewed">
+                                {set $link}{url 'catalog:viewed'}{/set}
+                                {include 'slider/base_product_slider.tpl' title="You recently viewed items" link=$link hide=true hide_link=true}
+                            </div>
+                        </div>
                     {/block}
                 </div>
             </div>
         </div>
+
+        {insert "_parts/_footer.tpl"}
+    </div>
+
+    {block 'offcanvas-menu-left'}
+    <div class="off-canvas position-left hide" id="offCanvasLeft" data-off-canvas data-transition="push">
+        {insert "_parts/_menu_mobile.tpl"}
+    </div>
     {/block}
 
-    <div id="main">
-        {block 'main'}
-            <div class="main-content">
-                {block 'before-content'}
-
-                {/block}
-
-                <div class="row">
-                    <div class="column large-12">
-                        {block 'content'}
-
-                        {/block}
-                    </div>
-                </div>
-
-                {block 'after-content'}
-
-                {/block}
-            </div>
-        {/block}
+    {block 'offcanvas-menu-right'}
+    <div class="off-canvas position-right hide" id="offCanvasRight" data-off-canvas data-transition="push">
+        {insert "_parts/_menu_mobile_pages.tpl"}
     </div>
+    {/block}
 
-    <div id="push"></div>
 </div>
-<footer id="footer">
-    <div class="row">
-        <div class="column large-12">
-            <div class="footer-inner">
-                <div class="row">
-                    <div class="column large-4">
-                        <div class="footer-block v-align">
-                            <div>
-                                Компания <br/>
-                                Все права защищены &copy; {'now'|date:"Y"}
-                            </div>
-                        </div>
-                    </div>
-                    <div class="column large-4">
-                        &nbsp;
-                    </div>
-                    <div class="column large-4">
-                        <div class="footer-block v-align text-right">
-                            <div>
-                                Разработано в <a href="http://hashstudio.ru">#hashstudio</a> <br/>
-                                &copy; {'now'|date:"Y"}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</footer>
-
-{block 'js'}
-
 {/block}
-</body>
-</html>

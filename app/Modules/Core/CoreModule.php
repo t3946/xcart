@@ -24,7 +24,7 @@ class CoreModule extends Module
 
         $template->addModifier('br2nl', function($str)
         {
-            return trim(preg_replace("=<br */?>=i", "\n", $str));
+            return trim(preg_replace('=<br */?>=i', "\n", $str));
         });
 
         $template->addModifier('nl2space', function($str)
@@ -51,7 +51,7 @@ class CoreModule extends Module
 //        $template->addAccessorSmart("global_config", "config", Fenom::ACCESSOR_PROPERTY);
 //        $template->global_config = self::getGlobalConfig();
 
-        $template->addAccessorSmart("detector", "detector", Fenom::ACCESSOR_PROPERTY);
+        $template->addAccessorSmart('detector', 'detector', Fenom::ACCESSOR_PROPERTY);
         $template->detector = new MobileDetect();
     }
 }

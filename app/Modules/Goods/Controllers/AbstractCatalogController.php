@@ -2,11 +2,11 @@
 
 namespace Modules\Goods\Controllers;
 
+use Mindy\QueryBuilder\Q\QOr;
 use Modules\Goods\Helpers\ProductFilterHelper;
 use Modules\Goods\Helpers\ProductSortHelper;
 use Modules\Goods\Models\CategoryModel;
 use Modules\Goods\Models\ProductModel;
-use Xcart\App\Components\Breadcrumbs;
 use Xcart\App\Controller\FrontendController;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Pagination\DataSource\QuerySetDataSource;
@@ -20,22 +20,20 @@ abstract class AbstractCatalogController extends FrontendController
     public $pageSize = 20;
     public $filters = ['price', 'brand', 'filter'];
 
-    public function getAdvancedCacheData()
+    public function getAdvancedCacheData(): array
     {
         return ['category_sort' => Xcart::app()->request->session->get('category_sort', ProductSortHelper::$default)];
     }
 
-    public function beforeAction($action, $params)
+    public function beforeAction($action, $params): void
     {
         if ( $this->getRequest()->getIsPost() && !empty($_POST['sort'])) {
             $this->getRequest()->session->add('category_sort', $_POST['sort']);
-            echo "OK";
+            echo 'OK';
             Xcart::app()->end();
         }
 
         $this->sort = Xcart::app()->request->session->get('category_sort', ProductSortHelper::$default);
-
-        parent::beforeAction($action, $params);
     }
 
 
@@ -44,9 +42,21 @@ abstract class AbstractCatalogController extends FrontendController
      *
      * @return \Xcart\App\Orm\QuerySet|\Xcart\App\Orm\Manager
      */
-    public function getQS($data)
+    public function getQS($data = null)
     {
-        return ProductModel::objects()->filter([ 'forsale' => 'Y' ]);
+        $qs = ProductModel::objects();
+        $ta = $qs->getTableAlias();
+
+         $qs->filter([
+            'forsale' => 'Y',
+            'sites__storefrontid' => Xcart::app()->getModule('Sites')->getSite(),
+            new QOr([
+                ['group_root__isnull' => true],
+                ['group_root__raw' => " = `{$ta}`.`productid`"]
+            ])
+         ]);
+
+         return $qs;
     }
 
     /**
@@ -67,9 +77,13 @@ abstract class AbstractCatalogController extends FrontendController
      *
      * @return \Xcart\App\Pagination\Pagination
      */
-    public function getPager($qs)
+    public function getPager($qs): Pagination
     {
-        return new Pagination($qs, ['pageSize' => $this->pageSize, 'view' => 'core/pager/front_endless.tpl', 'pageKey' => 'page'], new QuerySetDataSource());
+        return new Pagination($qs, [
+            'pageSize' => $this->pageSize,
+            'view' => 'core/pager/front_endless.tpl',
+            'pageKey' => 'page'
+        ], new QuerySetDataSource());
     }
 
     /**
@@ -79,7 +93,7 @@ abstract class AbstractCatalogController extends FrontendController
      */
     public function getBreadcrumbsFromData($data)
     {
-        if (is_object($data) && method_exists($data, 'getBreadcrumbs'))
+        if (\is_object($data) && method_exists($data, 'getBreadcrumbs'))
         {
             return $data->getBreadcrumbs();
         }
@@ -87,7 +101,7 @@ abstract class AbstractCatalogController extends FrontendController
         return $this->getBreadcrumbs();
     }
 
-    public function getAdvancedData($data = null) { return []; }
+    public function getAdvancedData($data = null): array { return []; }
 
     /**
      * @param CategoryModel|null $model
@@ -95,7 +109,7 @@ abstract class AbstractCatalogController extends FrontendController
      * @throws \Exception
      * @throws \Xcart\App\Exceptions\HttpException
      */
-    protected function view_internal($model = null)
+    protected function view_internal($model = null): void
     {
         $this->model = $model;
 
@@ -119,16 +133,16 @@ abstract class AbstractCatalogController extends FrontendController
             $pagerView = $pager->createView();
 
             $this->jsonResponse([
-                'href' => $pagerView->hasNextPage() ? $pagerView->getUrl($pagerView->getPage() + 1) : false,
+                'href' => $pagerView->hasNextPage() ? $pagerView->getUrl($pager->getPage() + 1) : false,
                 'content' => $this->render($this->view, array_replace([ 'model' => $model, 'pager' => $pager,], $this->getAdvancedData($model))),
                 'page_count' => $this->render('catalog/parts/_page_count.tpl', [ 'model' => $model, 'pager' => $pager,]),
             ]);
         }
         else {
-            $pager->setPage(0);
-            echo $this->render($this->view, array_replace([
+            $this->display($this->view,
+                array_replace([
                 'model' => $model,
-                'pager' => $pager,
+                'pager' => $pager->setPage(0),
                 'sort'  => $orderBy,
                 'sort_arr'  => ProductSortHelper::$orderBy,
                 'breadcrumbs' => $this->getBreadcrumbsFromData($model),

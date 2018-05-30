@@ -3,6 +3,7 @@
 
 namespace Omnipay\PayPal;
 
+use Modules\Order\Models\OrderModel;
 use Omnipay\Common\AbstractGateway;
 use Omnipay\PayPal\Message\ProAuthorizeRequest;
 use Omnipay\PayPal\Message\CaptureRequest;
@@ -266,6 +267,16 @@ class Gateway extends AbstractGateway
         return $this->getParameter('token');
     }
 
+    public function setOrder(OrderModel $value): object
+    {
+        return $this->setParameter('order', $value);
+    }
+
+    public function getOrder($value): OrderModel
+    {
+        return $this->getParameter('order');
+    }
+
     /**
      * Create OAuth 2.0 access token request.
      *
@@ -369,7 +380,7 @@ class Gateway extends AbstractGateway
      */
     public function purchase(array $parameters = array())
     {
-        return $this->createRequest('\Omnipay\PayPal\Message\RestPurchaseRequest', $parameters);
+        return $this->createRequest('\Omnipay\PayPal\Message\CheckoutAuthorizeRequest', $parameters);
     }
 
     /**

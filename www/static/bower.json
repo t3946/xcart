@@ -26,7 +26,7 @@
     "bootstrap-sass": "^3.3.7",
     "nouislider": "^9.2.0",
     "lato-webfont": "^1.1.2",
-    "foundation-sites": "^6.3.1",
+    "foundation-sites": "~6.4",
     "jQuery.dotdotdot": "dotdotdot#^1.8.3",
     "Waves": "waves#^0.7.5",
     "PACE": "pace#^1.0.2",
@@ -38,7 +38,8 @@
     "underscore": ">=1.8.3",
     "slick-carousel": "~1.6.0",
     "fancybox": "~2.1.5",
-    "flow-js": "~2"
+    "flow-js": "~2",
+    "javascript-auto-complete": "^1.0.4"
   },
   "devDependencies": {}
 }

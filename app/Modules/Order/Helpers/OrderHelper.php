@@ -7,6 +7,7 @@ use Mindy\QueryBuilder\Q\QAnd;
 use Mindy\QueryBuilder\Q\QAndNot;
 use Mindy\QueryBuilder\Q\QOr;
 use Mindy\QueryBuilder\QueryBuilder;
+use Modules\Order\Forms\ShippingAddressForm;
 use Modules\Order\Models\OrderEventsModel;
 use Modules\Order\Models\OrderGroupModel;
 use Modules\Order\Models\OrderModel;
@@ -16,7 +17,9 @@ use Modules\Order\Models\OrderUserLastActivityModel;
 use Modules\Order\Stores\OrderTransactionStore;
 use Modules\Payment\Helpers\PaymentHelper;
 use Modules\User\Models\UserModel;
+use Xcart\App\Form\BaseForm;
 use Xcart\App\Main\Xcart;
+use Xcart\OrderToTicketResolver;
 
 class OrderHelper
 {
@@ -88,8 +91,8 @@ class OrderHelper
             $qs = static::getCountEventsQS($user_id, $min_date);
 
             $sql = $qs->filter(['order_id__in' => $ids,])
-                ->group(["order_id"])
-                ->allSql();
+                      ->group(["order_id"])
+                      ->allSql();
 
             $counts = $connection->fetchAll($sql);
             if ($counts) {
@@ -134,13 +137,13 @@ class OrderHelper
 
         $qs = $qs
             ->filter([
-                new QAnd(['created_at__gte' => (new \DateTime())->modify('-6 month'),]),
-                new QOr([
-                    new QAnd(['a.user_id' => $user_id, new QAnd(new Expression("`{$topAlias}`.`created_at` >= `a`.`created_at`"))]),
-                    'a.user_id__isnull' => true
-                ]),
-                new QAndNot(['user_id' => $user_id,]),
-            ])
+                         new QAnd(['created_at__gte' => (new \DateTime())->modify('-6 month'),]),
+                         new QOr([
+                                     new QAnd(['a.user_id' => $user_id, new QAnd(new Expression("`{$topAlias}`.`created_at` >= `a`.`created_at`"))]),
+                                     'a.user_id__isnull' => true
+                                 ]),
+                         new QAndNot(['user_id' => $user_id,]),
+                     ])
             ->getQuerySet()
             ->join('left join', OrderUserLastActivityModel::tableName(), ['a.order_id' => 'order_id', 'a.user_id' => new Expression($user_id)], 'a')
             ->select(['order_id', 'count' => new Expression('count(*)')]);
@@ -174,7 +177,7 @@ class OrderHelper
                 if (in_array($group->cb_status, ['Q', 'N', 'I'])) {
                     if ($group->cb_status != $status) {
                         $log = "<br/><b>" . $group->manufacturer->code . ":</b> cb_status: " . $group->cb_status_model->name
-                            . " -> " . OrderStatusModel::objects()->get(['code' => $status])->name;
+                               . " -> " . OrderStatusModel::objects()->get(['code' => $status])->name;
                     }
                     $send = true;
                     $group->cb_status = $status;
@@ -193,35 +196,35 @@ class OrderHelper
     {
         $log = null;
 
-        $order_model = OrderModel::objects()->get(['orderid' => $order_id]);
+        if ($order_model = OrderModel::objects()->get(['orderid' => $order_id])) {
 
-        $auth_transactions = array_filter($order_model->transactions->all(), function ($a) {
-            return ($a->type == OrderTransactionModel::TYPE_AUTHORIZATION && in_array($a->transaction_status,
-                    [
+            $auth_transactions = array_filter($order_model->transactions->all(), function ($a) {
+                return ($a->type == OrderTransactionModel::TYPE_AUTHORIZATION
+                    && \in_array($a->transaction_status, [
                         OrderTransactionModel::STATUS_AUTHORIZED,
                         OrderTransactionModel::STATUS_PARTIALLY_CAPTURED,
                         OrderTransactionModel::STATUS_PENDING
+                    ], true));
+            });
+            foreach ($auth_transactions as $auth_tr) {
+                $amount = [
+                    'amount' => number_format($auth_tr->transaction_amount, 2),
+                    'currency' => $auth_tr->transaction_currency,
+                ];
+                $params = array_merge(PaymentHelper::getPaymentParams($auth_tr, $amount),
+                    [
+                        'mode' => 'void',
+                        'new_method_model' => $auth_tr->payment_method_model,
+                        'order' => $order_model,
+                        'orderTransaction' => $auth_tr,
                     ]
-                ));
-        });
-        foreach ($auth_transactions as $auth_tr) {
-            $amount = [
-                'amount' => number_format($auth_tr->transaction_amount, 2),
-                'currency' => $auth_tr->transaction_currency,
-            ];
-            $params = array_merge(PaymentHelper::getPaymentParams($auth_tr, $amount),
-                [
-                    'mode' => 'void',
-                    'new_method_model' => $auth_tr->payment_method_model,
-                    'order' => $order_model,
-                    'orderTransaction' => $auth_tr,
-                ]
-            );
+                );
 
-            $trStore = new OrderTransactionStore($params, $auth_tr);
-            $model = $trStore->void();
+                $trStore = new OrderTransactionStore($params, $auth_tr);
+                $model = $trStore->void();
 
-            $log .= "<br />".$trStore->log;
+                $log .= "<br />" . $trStore->log;
+            }
         }
 
         return $log;
@@ -235,10 +238,112 @@ class OrderHelper
 
         if (($user_ids = Xcart::app()->request->session->get('identifiers')) && ($login = $user_ids['A'] ?: null) && !empty($login['login'])) {
 
-             $user = UserModel::objects()->filter(['login' => $login['login']])->limit(1)->get();
-         }
+            $user = UserModel::objects()->filter(['login' => $login['login']])->limit(1)->get();
+        }
 
 
         return $user;
+    }
+
+    public static function validateForm(array $post_data = []): array
+    {
+        $errors = [];
+
+        if ($post_data) {
+            foreach ($post_data as $f_c => $values) {
+                /** @var BaseForm $form */
+                if ($form = static::getForm($f_c))
+                {
+                    if (!$form->populate($post_data)->isValid()) {
+                        $errors[$f_c] = $form->getErrors();
+                    }
+                }
+            }
+        }
+
+        return $errors;
+    }
+
+    public static function getForm(string $form)
+    {
+        $f_class = "Modules\\Order\\Forms\\$form";
+        /** @var BaseForm $form */
+        if (class_exists($f_class)) {
+            return new $f_class;
+        }
+
+        return null;
+    }
+
+    public static function getOTRSMessages(OrderModel $model) : int
+    {
+        $ticket_resolver_messages = 0;
+        $url = 'http://helpdesk.s3stores.com/otrs/index.pl';
+        $TicketConnector_link = 'http://helpdesk.s3stores.com/otrs/nph-genericinterface.pl/Webservice/TicketConnector';
+
+        if ($model) {
+
+            $curl_err = false;
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_TIMEOUT_MS, 1000);
+            curl_exec($ch);
+
+            if (curl_errno($ch) != 0 || curl_getinfo($ch, CURLINFO_HTTP_CODE) !== 200) {
+                $curl_err = true;
+            }
+            curl_close($ch);
+
+            if (!$curl_err) {
+                $resolver = new OrderToTicketResolver(
+                    'xcart', '@Pp6Lcg^VNMC',
+                    $TicketConnector_link,
+                    'otrs-soap',
+                    '%s',
+                    'http://helpdesk.s3stores.com/otrs/index.pl?Action=AgentTicketZoom;TicketID=%d'
+                );
+                $ticket_resolver = $resolver->fetch_ticket_info($model->getOrderNumber());
+                if (!empty($ticket_resolver[0]['url'])) {
+                    $ticket_resolver_link = $ticket_resolver[0]['url'];
+
+                    if (!empty($ticket_resolver[0]['messages'])) {
+                        $ticket_resolver_messages = $ticket_resolver[0]['messages'];
+
+                        $t_arr = Xcart::app()->cache->get('ticket_resolver_messages', []);
+                        $t_arr [$model->orderid] = $ticket_resolver_messages;
+                        Xcart::app()->cache->set('ticket_resolver_messages', $t_arr);
+                    }
+                    $model->otrs_ticket = $ticket_resolver_link;
+                }
+            }
+        }
+        return $ticket_resolver_messages;
+    }
+
+    public static function getCartOrder() :? OrderModel
+    {
+        $cart = Xcart::app()->cart;
+
+        if ($cart->getCartNumber() && !$cart->getIsEmpty()) {
+            return OrderModel::objects()->get([
+                'cart_number' => $cart->getCartNumber(),
+            ]);
+        }
+
+        return null;
+    }
+
+    public static function OrderStepsReset($cart_number): void
+    {
+        if ($order = OrderModel::objects()->get(['cart_number' => $cart_number])) {
+            $order->cb_status = OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP2;
+            $order->save();
+        }
+    }
+
+    public static function getOrderHash(array $data = []): string
+    {
+        return md5(implode('', $data));
     }
 }

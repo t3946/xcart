@@ -13,6 +13,10 @@ use Xcart\App\Orm\Model;
 
 class OrderLogModel extends Model
 {
+    public const LOG_TYPE_CUSTOMER = 'C';
+    public const LOG_TYPE_XCART = 'X';
+    public const LOG_TYPE_SYSTEM = 'S';
+
     public static function tableName()
     {
         return 'xcart_order_logs';

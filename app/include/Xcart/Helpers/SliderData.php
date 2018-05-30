@@ -77,7 +77,7 @@ order By RO.related_resource_orderby
 limit 30
 SQL;
             }
-            elseif ($section_name == "recently_viewed_products" && !defined('IS_ROBOT')){
+            elseif ($section_name === "recently_viewed_products" && !\defined('IS_ROBOT')){
 
                 $saveOrder = true;
 
@@ -125,7 +125,7 @@ SQL;
             }
 
         }
-        elseif ( in_array($section_name, ['similar_products', 'similar_products_ob'])) {
+        elseif ( \in_array($section_name, ['similar_products', 'similar_products_ob']) ) {
 
             $saveOrder = true;
 

@@ -1,0 +1,513 @@
+$image: (
+        small: rem-calc(70),
+        medium: rem-calc(83),
+        large: rem-calc(85),
+);
+$name: rem-calc(555);
+$price: rem-calc(160);
+$quantity: rem-calc(177);
+$x: rem-calc(53);
+$extended: (
+        small: auto,
+        medium: rem-calc(103),
+        ml: rem-calc(192),
+        large: rem-calc(123),
+);
+$remove: (
+        small: rem-calc(42),
+        medium: rem-calc(84),
+        ml: rem-calc(72),
+        large: rem-calc(107),
+);
+
+
+.cart-page {
+  .table {
+    width: 100%;
+
+    .table-row, .table-wrapper {
+      align-items: center;
+    }
+
+    .table-head {
+      line-height: rem-calc(40);
+      background: #ebebeb;
+
+      .image-name {
+        text-align: center;
+      }
+    }
+
+    .table-body {
+      font-size: rem-calc(15);
+
+      @include breakpoint(medium up) {
+        font-size: rem-calc(16);
+      }
+
+      @include breakpoint(large up) {
+        font-size: rem-calc(14);
+      }
+
+      .table-row {
+        padding: rem-calc(12) 0;
+        min-height: rem-calc(105);
+        border-top: 1px solid #e1e1e1;
+        border-bottom: 1px solid #e1e1e1;
+        border-collapse: collapse;
+      }
+    }
+
+    .image-name {
+      flex-grow: 1;
+      flex-shrink: 1;
+    }
+
+    .image {
+      text-align: center;
+
+      @each $key, $val in $image {
+        @include breakpoint($key up) {
+          width: $val;
+        }
+      }
+
+      img {
+        max-height: rem-calc(100);
+        //max-width: rem-calc(100);
+        max-width: 100%;
+      }
+    }
+
+    .name {
+      flex-grow: 1;
+      flex-shrink: 1;
+    }
+
+    .price {
+      width: $price;
+      text-align: center;
+    }
+
+    .x {
+      width: $x;
+      text-align: center;
+
+      @include breakpoint(large up) {
+        flex-shrink: 1;
+        text-indent: -9999px;
+      }
+
+      @include breakpoint(sm down) {
+        width: rem-calc(36);
+      }
+    }
+
+    .quantity {
+      //width: rem-calc(70);
+      text-align: center;
+
+      @include breakpoint(medium up) {
+        width: rem-calc(135);
+      }
+
+      @include breakpoint(large up) {
+        width: $quantity;
+      }
+
+      @include breakpoint(560 down) {
+        width: auto;
+        //width: rem-calc(135);
+
+        .quantity-group {
+          border: 1px solid #aaa;
+
+          .btn { display: none; }
+          input {
+            width: 61px;
+            height: 38px;
+          }
+        }
+      }
+    }
+
+    .extended {
+      width: auto;
+      text-align: left;
+
+      @include breakpoint(sm down) {
+        font-weight: 700;
+      }
+
+      @each $key, $val in $extended {
+        @include breakpoint($key up) {
+          width: $val;
+        }
+      }
+    }
+
+    .remove {
+      text-align: center;
+
+      @include breakpoint(560 down) {
+        align-self: flex-start;
+
+        .icon:after {
+          width: rem-calc(21);
+          height: rem-calc(27);
+        }
+      }
+
+      @each $key, $val in $remove {
+        @include breakpoint($key up) {
+          width: $val;
+        }
+      }
+    }
+
+
+    .name-quantity {
+      flex-grow: 1;
+      flex-shrink: 1;
+      padding-left: rem-calc(20);
+
+      @include breakpoint(560 down) {
+        flex-direction: column;
+        align-items: flex-start;
+        padding-left: rem-calc(16);
+      }
+
+      @include breakpoint(560 up) {
+        justify-content: space-between;
+      }
+    }
+
+    .quantity-extended {
+      @include breakpoint(sm down) {
+        width: 100%;
+        flex-shrink: 1;
+      }
+
+      @include breakpoint(560 down) {
+        padding-top: rem-calc(10);
+      }
+
+      @include breakpoint(560 up) {
+        justify-content: flex-end;
+      }
+
+      @each $key, $val in $extended {
+        @if is-number($val) {
+          @include breakpoint($key up) {
+            width: $quantity + $x + $val;
+          }
+        }
+      }
+    }
+
+    .auto {
+      flex-grow: 1;
+      flex-shrink: 1;
+    }
+
+    .extended_remove {
+      width: auto;
+
+      @include breakpoint(sm down) {
+        min-width: rem-calc(100);
+      }
+
+      @include breakpoint(medium up) {
+        text-align: left !important;
+      }
+
+      @each $key, $val in array_merge_sum($remove, $extended) {
+        @if is-number($val) {
+          @include breakpoint($key up) {
+            width: $val;
+          }
+        }
+      }
+    }
+  }
+
+
+  .warehouse_products {
+    .shipped_from {
+      padding: rem-calc(22) 0;
+      text-align: center;
+      font-size: rem-calc(18);
+      font-weight: 700;
+    }
+
+    .warehouse_subtotal {
+      font-size: rem-calc(14);
+
+      @include breakpoint(medium up) {
+        font-size: rem-calc(18);
+      }
+
+      @include breakpoint(large up) {
+        font-size: rem-calc(16);
+      }
+
+      .table-row {
+        border: none;
+        min-height: rem-calc(40);
+        padding: rem-calc(10) 0;
+
+        .table-column {
+          text-align: right;
+        }
+
+        .from {
+          padding-right: rem-calc(5);
+        }
+
+        .extended_remove {
+          @include breakpoint(sm down) {
+            font-size: 1.08em;
+          }
+        }
+      }
+    }
+
+
+    .errors {
+      text-align: right;
+
+      .err {
+        display: inline-block;
+      }
+    }
+
+  }
+
+  .hr {
+    background-color: #8a8a8a;
+  }
+
+  .memo {
+    font-size: rem-calc(14);
+
+
+    @include breakpoint(medium up) {
+      font-size: rem-calc(16);
+    }
+
+    @include breakpoint(large up) {
+      font-size: rem-calc(14)
+    }
+  }
+
+  .grand-subtotal {
+    width: rem-calc(320);
+    font-weight: 700;
+    font-size: rem-calc(20);
+
+
+    @include breakpoint(medium up) {
+      font-size: rem-calc(22);
+    }
+
+    @include breakpoint(large up) {
+      font-size: rem-calc(20)
+    }
+
+    .subtotal {
+      margin-left: rem-calc(15);
+
+      @include breakpoint(large up) {
+        margin-left: rem-calc(5);
+      }
+
+      //display: inline-block;
+      @each $key, $val in array_merge_sum($remove, $extended) {
+        @if is-number($val) {
+          @include breakpoint($key up) {
+            width: $val;
+          }
+        }
+      }
+    }
+
+  }
+
+  .memo_subtotal {
+    padding: rem-calc(20) 0;
+    display: flex;
+    flex: 0 0 100%;
+    flex-direction: column;
+
+    @include breakpoint(large up) {
+      flex-direction: row;
+    }
+
+    .memo {
+      padding-top: rem-calc(20);
+      flex: 1 1 auto;
+      @include breakpoint(large up) {
+        padding-top: 0;
+        order: 0;
+      }
+    }
+
+    .grand-subtotal {
+      display: flex;
+      flex: 1 1;
+      flex-direction: row;
+      justify-content: flex-end;
+      align-self: flex-end;
+
+      @include breakpoint(large up) {
+        order: 1;
+      }
+    }
+  }
+
+  .need-help {
+    max-width: rem-calc(300);
+    margin: 0 auto;
+
+    background: url("../images/icons/cart/got_a_questions.svg") no-repeat 0 rem-calc(2);
+    background-size: rem-calc(15) rem-calc(15);
+    padding: 0 rem-calc(20);
+    text-align: left;
+    font-size: rem-calc(12);
+
+    @include breakpoint(large) {
+      margin: 0;
+    }
+
+    .color--orange {
+      color: #FFA10B;
+      font-size: rem-calc(14);
+    }
+    .color--black {
+      color: black;
+      font: {
+        weight: 700;
+      }
+    }
+
+    .multiline {
+      max-width: rem-calc(270);
+    }
+  }
+
+}
+
+.cart_shipping-page {
+  .head {
+    text-align: center;
+    min-height: 2.5em;
+    padding-top: 3rem;
+
+    .nop {
+      display: none;
+    }
+
+    h1 {
+      text-align: center;
+      white-space: nowrap;
+
+      @include breakpoint(large) {
+        display: inline-block;
+      }
+    }
+
+    @include breakpoint(550) {
+      padding-top: 0;
+    }
+
+
+    @include breakpoint(large) {
+      display: flex;
+      //flex-direction: column;
+      align-content: center;
+      align-items: center;
+      flex-direction: row;
+
+      .nop {
+        display: block;
+      }
+
+      & > * {
+        width: 35%;
+      }
+
+      h1 {
+        width: 30%;
+      }
+    }
+  }
+
+  .bottom_line,
+  .head_line {
+    min-height: 2.5em;
+
+    &:after {
+      content: '';
+      display: block;;
+      clear: both;
+    }
+
+    .b-next,
+    .b-back {
+      display: inline-block;
+
+      a {
+        &:before,
+        &:after {
+          width: rem-calc(14);
+          height: rem-calc(13);
+          background-origin: content-box;
+          background-size: contain;
+          display: inline-block;
+        }
+      }
+    }
+
+    .b-back {
+      float: left;
+
+      a {
+        &:before {
+          padding-right: rem-calc(5);
+          content:'';
+          background: url("../images/icons/cart/arrow_left_shop_more.svg");
+        }
+      }
+    }
+
+    .b-next {
+      float: right;
+
+
+      a {
+        &:after {
+          padding-left: rem-calc(5);
+          content:'';
+          background: url("../images/icons/cart/arrow_right_checkout.svg");
+        }
+      }
+    }
+  }
+
+  .button {
+    line-height: 2;
+    min-height: rem-calc(38);
+    padding: 0 rem-calc(10);
+    text-transform: uppercase;
+    font-size: rem-calc(18);
+    font-weight: 700;
+  }
+}
+
+input[type="number"] {
+  -moz-appearance:textfield !important;
+}
+
+a.btn.dec, a.btn.inc {
+  text-decoration: none;
+}

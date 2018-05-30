@@ -1,0 +1,102 @@
+.jspPane{
+  margin:0;
+  position:relative;
+}
+
+.jspHorizontalBar{
+  height:11px;
+  background-color:$white;
+  border:2px solid $grey_e1;
+  width:100%;
+  position:absolute;
+  left:0;
+  bottom:30px;
+  z-index:20000;
+
+  &:after{
+    width:2px;
+    height:11px;
+    background: $grey_e1;
+    right:2px;
+    top:0;
+    content:'';
+    position:absolute;
+    display:block;
+  }
+}
+
+.jspContainer{
+  position:relative;
+  overflow:hidden;
+}
+
+.jspTrack{
+  height:11px;
+  position:relative;
+}
+
+.jspDrag{
+  background: url("../images/scroll/drag.png") repeat-y;
+  position:relative;
+  display:block;
+  cursor:pointer;
+  border:1px solid $grey_a;
+  @include border-radius(8px);
+  @include box-shadow(0 0 3px $grey_ab);
+}
+
+.jspCap{
+  display: none;
+}
+
+.jspVerticalBar{
+  height:100%;
+  position:absolute;
+  right:0;
+  top:0;
+  z-index:20000;
+  width:20px;
+  background: url("../images/scroll/bg.png") repeat-y;
+  padding-left:2px;
+  padding-right:2px;
+
+  &:after {
+    width:11px;
+    height:2px;
+    background:$grey_e1;
+    right:0;
+    bottom:0;
+    content:'';
+    position:absolute;
+    display:block;
+  }
+
+  &:hover{
+    .jspArrowUp{
+      background: url("../images/home/1280/up_cart_list_hover.svg") no-repeat center center;
+    }
+    .jspArrowDown{
+      background: url("../images/home/1280/down_cart_list_hover.svg") no-repeat center center;
+    }
+  }
+}
+
+.scroll_block{
+  position:relative;
+  overflow-x:scroll;
+  overflow-y:scroll;
+  width:100%;
+}
+
+.jspArrowUp{
+  height:19px;
+  margin: 0 2px;
+  display:block;
+  background: url("../images/home/1280/up_cart_list.svg") no-repeat center center;
+  cursor:pointer;
+}
+
+.jspArrowDown{
+  @extend .jspArrowUp;
+  background: url("../images/home/1280/down_cart_list.svg") no-repeat center center;
+}

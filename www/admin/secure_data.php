@@ -5,7 +5,7 @@ if (!defined('XCART_SESSION_START')) {
 }
 global $login;
 
-if (!in_array($login, ['sergey2', 'elena', 'igor']))
+if (!in_array($login, ['sergey2', 'elena', 'igor', 'roman_n']))
     func_header_location("error_message.php?access_denied&id=25");
 global $xcart_dir;
 x_load('crypt');

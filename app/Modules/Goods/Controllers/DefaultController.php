@@ -2,22 +2,23 @@
 
 namespace Modules\Goods\Controllers;
 
+use Modules\Goods\Helpers\ProductSortHelper;
 use Modules\Goods\Helpers\TabDataHelper;
 use Modules\Goods\Models\ProductModel;
-use Modules\User\Helpers\SurfingHelper;
-use Modules\User\Models\SurfPathModel;
-use Xcart\App\Controller\Controller;
+use Modules\Meta\Types\MetaType;
 use Xcart\App\Controller\FrontendController;
 use Xcart\App\Main\Xcart;
+use Xcart\App\Pagination\DataSource\QuerySetDataSource;
+use Xcart\App\Pagination\Pagination;
 
 class DefaultController extends FrontendController
 {
-    public function actionViewOld($id, $slug)
+    public function actionViewOld($id, $slug): void
     {
         $this->view_internal(ProductModel::objects()->filter(['productid' => $id])->get());
     }
     
-    public function actionView($sku)
+    public function actionView($sku): void
     {
         $this->view_internal(ProductModel::objects()->filter(['productcode' => $sku])->get());
     }
@@ -28,7 +29,7 @@ class DefaultController extends FrontendController
      * @throws \Xcart\App\Exceptions\HttpException
      * @throws \Xcart\App\Exceptions\UnknownPropertyException
      */
-    private function view_internal($model = null)
+    private function view_internal($model = null): void
     {
         /** @var \Modules\Sites\Models\SiteModel $site */
         $site = Xcart::app()->getModule('Sites')->getSite();
@@ -42,38 +43,53 @@ class DefaultController extends FrontendController
         }
 
 
-//        if (!$model->checkSite($site->storefrontid)) {
-//            $this->redirect($model->getAbsoluteUrl(true));
-//        }
+        if (!$model->checkSite($site->pk)) {
+            $this->redirect($model->getAbsoluteUrl(true), [],301);
+        }
 
-        $this->setMetaTemplate('products:base', [
+        $category = $model->getMainCategory();
+
+        $this->setMetaBase(MetaType::PRODUCT, [
             'model' => $model,
-            'category' => $model->getMainCategory(),
-            'site' => $site,
+            'category' => $category,
+            'site' => $site
         ]);
 
-        echo $this->render('product/product.tpl', [
+        $params = [
             'model' => $model,
-            'breadcrumbs' => $model->getBreadcrumbs(),
+            'breadcrumbs' => Xcart::app()->breadcrumbs->set($model->getBreadcrumbs()),
             'tabs' => TabDataHelper::getTabsFromManufacturer($model->manufacturerid),
-        ]);
+            'category' => $category,
+        ];
 
-//        if (!Xcart::app()->cart->has($model)) {
-//            Xcart::app()->cart->add($model);
-//        }
+        if ($model->isGroupRoot()) {
+            $pager = new Pagination($model->getFrontendChilds(), [
+                'pageSize' => 25,
+                'view' => 'core/pager/front_endless.tpl',
+                'pageKey' => 'page'
+            ], new QuerySetDataSource());
 
-//        foreach (Xcart::app()->cart->getItems() as $cartItem) {
-//            func_dump((string)"{{$cartItem->getQuantity()}}" . $cartItem->getObject() );
-//        }
-//
-//
-//        func_dump(Xcart::app()->cart->getQuantity());
-//        func_dump(Xcart::app()->cart->getTotal());
+            if ($this->getRequest()->getIsAjax()) {
+                $pagerView = $pager->createView();
 
+                $this->jsonResponse([
+                    'href' => $pagerView->hasNextPage() ? $pagerView->getUrl($pager->getPage() + 1) : false,
+                    'content' => $this->render('catalog/category.tpl', [ 'model' => $model, 'pager' => $pager,]),
+                    'page_count' => $this->render('catalog/parts/_page_count.tpl', [ 'model' => $model, 'pager' => $pager,]),
+                ]);
+                Xcart::app()->end();
+            }
+            else {
+                $orderBy = Xcart::app()->request->session->get('category_sort', ProductSortHelper::$default);
 
-//        func_dump($model);
+                $params = array_merge($params, [
+                    'pager' => $pager->setPage(0),
+                    'sort'  => $orderBy,
+                    'sort_arr'  => ProductSortHelper::$orderBy,
+                ]);
+            }
+        }
 
-//        SurfingHelper::logSurfPath(['resource_type' => SurfPathModel::GOAL_TYPE_PRODUCT, 'resource_id' => $model->pk]);
+        $this->display('product/product.tpl', $params);
     }
-
 }

@@ -23,6 +23,8 @@ class Google_Service_AndroidManagement_Policy extends Google_Collection
   public $adjustVolumeDisabled;
   protected $alwaysOnVpnPackageType = 'Google_Service_AndroidManagement_AlwaysOnVpnPackage';
   protected $alwaysOnVpnPackageDataType = '';
+  public $androidDevicePolicyTracks;
+  public $appAutoUpdatePolicy;
   protected $applicationsType = 'Google_Service_AndroidManagement_ApplicationPolicy';
   protected $applicationsDataType = 'array';
   public $autoTimeRequired;
@@ -47,6 +49,7 @@ class Google_Service_AndroidManagement_Policy extends Google_Collection
   public $installUnknownSourcesAllowed;
   public $keyguardDisabled;
   public $keyguardDisabledFeatures;
+  public $kioskCustomLauncherEnabled;
   protected $longSupportMessageType = 'Google_Service_AndroidManagement_UserFacingMessage';
   protected $longSupportMessageDataType = '';
   public $maximumTimeToLock;
@@ -127,6 +130,22 @@ class Google_Service_AndroidManagement_Policy extends Google_Collection
   public function getAlwaysOnVpnPackage()
   {
     return $this->alwaysOnVpnPackage;
+  }
+  public function setAndroidDevicePolicyTracks($androidDevicePolicyTracks)
+  {
+    $this->androidDevicePolicyTracks = $androidDevicePolicyTracks;
+  }
+  public function getAndroidDevicePolicyTracks()
+  {
+    return $this->androidDevicePolicyTracks;
+  }
+  public function setAppAutoUpdatePolicy($appAutoUpdatePolicy)
+  {
+    $this->appAutoUpdatePolicy = $appAutoUpdatePolicy;
+  }
+  public function getAppAutoUpdatePolicy()
+  {
+    return $this->appAutoUpdatePolicy;
   }
   /**
    * @param Google_Service_AndroidManagement_ApplicationPolicy
@@ -315,6 +334,14 @@ class Google_Service_AndroidManagement_Policy extends Google_Collection
   public function getKeyguardDisabledFeatures()
   {
     return $this->keyguardDisabledFeatures;
+  }
+  public function setKioskCustomLauncherEnabled($kioskCustomLauncherEnabled)
+  {
+    $this->kioskCustomLauncherEnabled = $kioskCustomLauncherEnabled;
+  }
+  public function getKioskCustomLauncherEnabled()
+  {
+    return $this->kioskCustomLauncherEnabled;
   }
   /**
    * @param Google_Service_AndroidManagement_UserFacingMessage

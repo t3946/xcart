@@ -37,17 +37,21 @@ class QuerySet extends QuerySetBase
      * Executes query and returns all results as an array.
      * If null, the DB connection returned by [[modelClass]] will be used.
      *
+     * @param array $filter
      * @return array the query results. If the query results in nothing, an empty array will be returned.
-     * @throws \Doctrine\DBAL\DBALException
      * @throws \Exception
      */
-    public function all()
+    public function all($filter = [])
     {
+        if ($filter) {
+            $this->filter($filter);
+        }
+
         if ($this->_data) {
             $rows = $this->_data;
         }
         else {
-            $sql = $this->sql === null ? $this->allSql() : $this->sql;
+            $sql = $this->sql ?? $this->allSql();
 
             $rows = $this->execute($sql);
         }
@@ -101,7 +105,6 @@ class QuerySet extends QuerySetBase
      */
     public function valuesList($columns, $flat = false)
     {
-
         if ($this->_data) {
             $rows = $this->_data;
         }
@@ -117,12 +120,17 @@ class QuerySet extends QuerySetBase
         if ($flat) {
             $flatArr = [];
             foreach ($rows as $item) {
-                $flatArr = array_merge($flatArr, array_values($item));
+                $flatArr[] = array_values($item);
             }
+
+            if ($flatArr) {
+                $flatArr = array_merge(...$flatArr);
+            }
+
             return $flatArr;
-        } else {
-            return $rows;
         }
+
+        return $rows;
     }
 
     /**

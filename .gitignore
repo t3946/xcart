@@ -1,8 +1,8 @@
 ###################################
 ## files with extensions to exclude
+*.orig
 *.tiff
 *.log
-*.mmdb
 www.*.xml
 thumbs.db
 Thumbs.db

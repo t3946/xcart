@@ -35,6 +35,11 @@ class CartItem implements Serializable
      */
     private $_discountPrice;
 
+    /**
+     * @var Cart
+     */
+    private $_cart;
+
     public function __construct(array $config = [])
     {
         foreach ($config as $key => $value) {
@@ -43,11 +48,17 @@ class CartItem implements Serializable
         $this->fetchPrice();
     }
 
+    public function setCart(Cart $cart)
+    {
+        $this->_cart = $cart;
+        return $this;
+    }
+
     /**
      * @param $data
      * @return CartItem
      */
-    public function setData($data)
+    public function setData(array $data): CartItem
     {
         $this->_data = $data;
         return $this->fetchPrice();
@@ -56,7 +67,7 @@ class CartItem implements Serializable
     /**
      * @return array
      */
-    public function getData()
+    public function getData(): array
     {
         return $this->_data;
     }
@@ -65,7 +76,7 @@ class CartItem implements Serializable
      * @param $type
      * @return CartItem
      */
-    public function setType($type)
+    public function setType($type): CartItem
     {
         $this->_type = $type;
         return $this->fetchPrice();
@@ -74,7 +85,7 @@ class CartItem implements Serializable
     /**
      * @return string
      */
-    public function getType()
+    public function getType(): string
     {
         return $this->_type;
     }
@@ -83,16 +94,17 @@ class CartItem implements Serializable
      * @param $quantity
      * @return CartItem
      */
-    public function setQuantity($quantity)
+    public function setQuantity($quantity): CartItem
     {
         $this->_quantity = $quantity;
+        $this->_cart->getEventManager()->trigger('cart:change');
         return $this->fetchPrice();
     }
 
     /**
      * @return int
      */
-    public function getQuantity()
+    public function getQuantity(): int
     {
         return $this->_quantity;
     }
@@ -101,9 +113,10 @@ class CartItem implements Serializable
      * @param ICartItem $object
      * @return $this
      */
-    public function setObject(ICartItem $object)
+    public function setObject(ICartItem $object): CartItem
     {
         $this->_object = $object;
+        $this->_cart->getEventManager()->trigger('cart:change');
         return $this->fetchPrice();
     }
 
@@ -123,7 +136,7 @@ class CartItem implements Serializable
     /**
      * @return $this
      */
-    private function fetchPrice()
+    private function fetchPrice(): CartItem
     {
         if ($this->getObject()) {
             $this->_price = $this->recalculate();
@@ -134,7 +147,7 @@ class CartItem implements Serializable
     /**
      * @return float
      */
-    public function getPrice()
+    public function getPrice(): float
     {
         return (float)str_replace(',', '', $this->_discountPrice ?: $this->_price);
     }
@@ -152,7 +165,7 @@ class CartItem implements Serializable
      * @param Cart $cart
      * @param IDiscount[] $discounts
      */
-    public function applyDiscount(Cart $cart, array $discounts)
+    public function applyDiscount(Cart $cart, array $discounts): void
     {
         foreach ($discounts as $discount) {
             $this->_discountPrice = $discount->applyDiscount($cart, $this);
@@ -164,7 +177,7 @@ class CartItem implements Serializable
         return serialize([
             'data' => $this->getData(),
             'pk' => $this->_object->getUniqueId(),
-            'class' => get_class($this->_object),
+            'class' => \get_class($this->_object),
             'quantity' => $this->getQuantity()
          ]);
     }

@@ -79,13 +79,15 @@ class Creator
     {
         static $reflections = [];
 
-        if (is_string($config)) {
+        if (\is_string($config)) {
             $class = $config;
             $config = [];
-        } elseif (isset($config['class'])) {
+        }
+        elseif (isset($config['class'])) {
             $class = $config['class'];
             unset($config['class']);
-        } else {
+        }
+        else {
             throw new InvalidArgumentException('Object configuration must be an array containing a "class" element.');
         }
 
@@ -94,41 +96,46 @@ class Creator
             $config = array_merge(static::$objectConfig[$class], $config);
         }
 
-        if (($n = func_num_args()) > 1) {
+        if (\func_num_args() > 1) {
             /** @var \ReflectionClass $reflection */
             if (isset($reflections[$class])) {
                 $reflection = $reflections[$class];
             } else {
                 $reflection = $reflections[$class] = new \ReflectionClass($class);
             }
-            $args = func_get_args();
+            $args = \func_get_args();
             array_shift($args); // remove $config
+
             if (!empty($config)) {
                 $args[] = $config;
             }
+
             if (method_exists($class, self::$singletonMethod)) {
                 $method = $reflection->getMethod(self::$singletonMethod);
                 $obj = $method->invokeArgs($class, $args);
-            } else {
+            }
+            else {
                 $obj = $reflection->newInstanceArgs($args);
             }
-        } else {
+        }
+        else {
             $obj = empty($config) ? new $class : new $class($config);
         }
 
 
-        if (array_key_exists(Creator::className(), self::class_uses_deep($obj))) {
-            return $obj;
-        } else {
-            $obj = self::configure($obj, $config);
-            if (method_exists($obj, 'init')) {
-                $obj->init();
-            }
+        if (array_key_exists(self::class, self::class_uses_deep($obj))) {
             return $obj;
         }
+
+        $obj = self::configure($obj, $config);
+        if (method_exists($obj, 'init')) {
+            $obj->init();
+        }
+
+        return $obj;
     }
 
-    public static function class_uses_deep($class, $autoload = true)
+    public static function class_uses_deep($class, $autoload = true): array
     {
         $traits = [];
 
@@ -152,17 +159,17 @@ class Creator
      * @return mixed
      * @throws InvalidConfigException
      */
-    public static function create($class, $config = [])
+    public static function create($class, array $config = [])
     {
-        if (is_array($class) && isset($class['class'])) {
+        if (\is_array($class) && isset($class['class'])) {
             $config = $class;
             $class = $config['class'];
             unset($config['class']);
         }
-        elseif (!is_string($class)) {
-            throw new InvalidConfigException("Class name must be defined");
+        elseif (!\is_string($class)) {
+            throw new InvalidConfigException('Class name must be defined');
         }
-        
+
         $obj = new $class;
         $obj = self::configure($obj, $config);
         if (method_exists($obj, 'init')) {
@@ -171,6 +178,11 @@ class Creator
         return $obj;
     }
 
+    /**
+     * @param $object
+     * @param array|\Iterator $properties
+     * @return mixed
+     */
     public static function configure($object, $properties)
     {
         foreach ($properties as $name => $value) {
@@ -188,7 +200,7 @@ class Creator
      * @param object $object the object to be handled
      * @return array the public member variables of the object
      */
-    public static function getObjectVars($object)
+    public static function getObjectVars($object): array
     {
         return get_object_vars($object);
     }

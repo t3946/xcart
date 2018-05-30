@@ -1,6 +1,6 @@
 {set $messages = $.app->flash->read()}
 
-<script type="text/javascript" rel="flash">
+<script rel="flash">
     window['flashStack'] = [];
 
     {foreach $messages as $item}

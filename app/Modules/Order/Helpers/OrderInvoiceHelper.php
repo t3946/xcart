@@ -1,0 +1,61 @@
+<?php
+
+namespace Modules\Order\Helpers;
+
+
+use Modules\Order\Models\OrderModel;
+use Modules\Sites\Models\SiteModel;
+use Xcart\App\Main\Xcart;
+
+class OrderInvoiceHelper
+{
+    public static function sendOrderStatusNotification(OrderModel $order, bool $send_copy = true): void
+    {
+
+        if ($notification = $order->notification) {
+
+            /** @var SiteModel $site */
+            $site = Xcart::app()->getModule('Sites')->getSite();
+            $config = $site->getGlobalConfig();
+
+            Xcart::app()->mail->template(
+                $order->email,
+                str_replace('{{orderid}}', $order->getOrderNumber(), $notification->customer_subject),
+                'mail/invoice.tpl',
+                ['order' => $order],
+                ['from' => $config['orders_department']]
+            );
+
+            if ($send_copy) {
+                Xcart::app()->mail->template(
+                    $config['orders_department'],
+                    str_replace( '{{orderid}}', $order->getOrderNumber(), $notification->copy_subject),
+                    'mail/invoice.tpl',
+                    [
+                        'order' => $order,
+                        'type' => 'A',
+                    ],
+                    [
+                        'from' => [$config['orders_department'] => $order->firstname],
+                        'reply_to' => [$order->email => $order->firstname],
+                        'bcc' => ['igor@s3stores.com' => '', 'romann@s3stores.com' => ''],
+                        'headers' => [
+                            'X-Xcart-Label' => 'order-status-init'
+                        ]
+                    ]
+                );
+            }
+        }
+    }
+
+    public static function getInvoiceHtml(OrderModel $order, $template = 'mail/invoice.tpl')
+    {
+        if ($notification = $order->notification) {
+            /** @var SiteModel $site */
+            $site = Xcart::app()->getModule('Sites')->getSite();
+            $config = $site->getGlobalConfig();
+
+            return Xcart::app()->template->render($template, ['order' => $order]);
+        }
+    }
+}

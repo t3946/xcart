@@ -56,6 +56,6 @@
         </ul>
 
         <section class="page-size columns large-2">
-            {include "core/pager/sizes.tpl"}
+            {insert "core/pager/sizes.tpl"}
         </section>
     </section>

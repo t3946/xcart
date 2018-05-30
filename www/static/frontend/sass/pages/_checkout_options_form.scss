@@ -1,0 +1,270 @@
+
+.checkout-options-form {
+
+  $medium-font-size: rem-calc(20);
+  $large-font-size: rem-calc(14);
+
+  h3 {
+    font-size: rem-calc(15);
+    font-weight: bold;
+    line-height: rem-calc(22);
+    text-align: center;
+
+    @include breakpoint(large) {
+      text-align: left;
+    }
+  }
+
+  .billing_same_shipping {
+    label {
+      background-color: transparent !important;
+      padding-left: .5625rem;
+      font-weight: normal;
+    }
+  }
+
+  .methods-label {
+    //display: inline-block;
+    line-height: 100% !important;
+    white-space: nowrap;
+    cursor: pointer;
+
+    .methods-text {
+      display: inline-block;
+
+      .name {
+        font-size: rem-calc(14);
+
+        @include breakpoint(sm) {
+          font-size: rem-calc(17);
+        }
+
+        @include breakpoint(medium) {
+          font-size: $medium-font-size;
+
+          &:after {
+            content: ' - ';
+            display: inline;
+          }
+        }
+
+        @include breakpoint(large) {
+          font-size: $large-font-size;
+        }
+
+      }
+
+      .comment {
+        display: block;
+        font-size: rem-calc(12);
+        color: #4a4a4a;
+
+        @include breakpoint(sm) {
+          font-size: rem-calc(14);
+        }
+
+        @include breakpoint(medium) {
+          display: inline;
+          font-size: $medium-font-size;
+          font-weight: normal;
+          color: #000000;
+        }
+
+        @include breakpoint(large) {
+          font-size: $large-font-size;
+        }
+      }
+    }
+
+    &:before {
+      vertical-align: top !important;
+    }
+  }
+
+  .methods-table {
+    display: table;
+    width: 100%;
+
+    .methods-row {
+      display: table-row;
+      background-color: #f4f4f4;
+
+      .methods-cell {
+        display: table-cell;
+        vertical-align: top;
+      }
+    }
+
+    .methods-row-space {
+      display: table-row;
+      height: 2px;
+    }
+  }
+
+  .shipping-methods {
+    .methods-row {
+
+      .delivery-item-label {
+        text-align: left;
+        padding: rem-calc(9) 0 rem-calc(9) rem-calc(9);
+
+        @include breakpoint(medium) {
+          padding: rem-calc(17) 0 rem-calc(17) rem-calc(20);
+        }
+        @include breakpoint(large) {
+          padding: rem-calc(7);
+        }
+      }
+
+      .delivery-item-price {
+        min-width: rem-calc(90);
+        width: rem-calc(90);
+        text-align: left;
+        padding: rem-calc(9);
+        font-size: rem-calc(14);
+
+        @include breakpoint(sm) {
+          font-size: rem-calc(17);
+        }
+
+        @include breakpoint(medium) {
+          font-size: $medium-font-size;
+          padding: rem-calc(17) rem-calc(20);
+        }
+
+        @include breakpoint(large) {
+          font-size: $large-font-size;
+          padding: rem-calc(7);
+        }
+
+        .cost {
+          white-space: nowrap;
+        }
+
+      }
+    }
+
+  }
+
+  .radio-list-table {
+    .table-row {
+      display: block;
+      margin-bottom: 1rem;
+
+      @include breakpoint(large) {
+        display: table-row;
+        margin-bottom: 0;
+      }
+
+      @include breakpoint(large) {
+        &.odd {
+          background-color: #f4f4f4;
+        }
+      }
+
+      .table-cell {
+        display: block;
+
+        @include breakpoint(large) {
+          display: table-cell;
+          min-height: rem-calc(40);
+          vertical-align: middle;
+          padding: rem-calc(12) .4375rem;
+        }
+
+        label {
+          background-color: transparent;
+          font-size: rem-calc(15);
+          line-height: rem-calc(20);
+          cursor: pointer;
+          padding-left: .5625rem;
+          white-space: nowrap;
+
+          @include breakpoint(sm) {
+            font-size: rem-calc(18);
+            line-height: rem-calc(23);
+          }
+
+          @include breakpoint(medium) {
+            font-size: rem-calc(20);
+            line-height: rem-calc(32);
+          }
+          @include breakpoint(large) {
+            font-size: rem-calc(14);
+            line-height: 110%;
+            padding: 0;
+          }
+
+          &:before {
+            display: inline-block;
+            margin: 0;
+            @include breakpoint(large) {
+              vertical-align: middle;
+            }
+          }
+
+          span {
+            display: inline-block;
+            padding-left: rem-calc(5);
+            white-space: normal;
+
+            @include breakpoint(large) {
+              width: calc(100% - 2.1875rem);
+              vertical-align: middle;
+            }
+          }
+        }
+
+        &.payment-method {
+          @include breakpoint(large) {
+            width: 28.7%;
+            min-width: 28.7%;
+          }
+        }
+
+        &.payment-description {
+          color: #4a4a4a;
+          font-size: rem-calc(12);
+          line-height: rem-calc(16);
+          padding-left: 2.2rem;
+          cursor: default;
+
+          @include breakpoint(sm) {
+            font-size: rem-calc(14);
+          }
+          @include breakpoint(medium) {
+            font-size: rem-calc(18);
+          }
+          @include breakpoint(large) {
+            font-size: rem-calc(12);
+            padding-left: 0;
+            //width: 71.3%;
+          }
+        }
+
+      }
+    }
+  }
+
+  .buttons {
+    button {
+      width: 100%;
+
+      @include breakpoint(medium){
+        width: auto;
+        padding-right: rem-calc(37);
+        padding-left: rem-calc(37);
+      }
+    }
+  }
+
+  .billing_address_form{
+    @include breakpoint(large){
+      padding-top: 2rem;
+      padding-bottom: 1rem;
+    }
+
+  }
+
+}
+

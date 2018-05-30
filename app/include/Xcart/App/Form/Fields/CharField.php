@@ -15,7 +15,7 @@ class CharField extends Field
         $value = parent::getValue();
 
         if ($value instanceof \Xcart\App\Orm\Manager) {
-            throw new Exception("Value must be a string, not a manager");
+            throw new Exception('Value must be a string, not a manager');
         }
         return $this->value;
     }

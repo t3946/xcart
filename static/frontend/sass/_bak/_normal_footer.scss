@@ -1,0 +1,213 @@
+@media only screen and (min-width: $break-normal) {
+  #main_footer {
+
+    .footer-row {
+      @media screen and (max-width: $break-large) {
+        padding: 0 8px 0 0;
+      }
+    }
+
+    .bottom-nav {
+      padding: 17px 20px 2px;
+
+      .bottom-nav__column {
+        width: 19.9%;
+
+        a {
+        }
+
+        .bottom-nav__column_title {
+
+        }
+
+        .bottom-nav__item {
+
+        }
+      }
+    }
+
+    .bottom-info {
+
+      .logo-s3stores {
+        margin-left: 10px;
+      }
+
+      .web-orders {
+        margin-left: 10px;
+
+        .web-orders__container {
+
+          .web-orders__caption {
+          }
+
+          .web-orders__description {
+          }
+        }
+
+        &:before {
+        }
+      }
+
+      .find-local-btn {
+        width: 80%;
+        margin-left: 4px;
+      }
+
+      .contact-row {
+        padding: 18px 8px 30px 10px;
+
+        .bottom-info__title {
+        }
+
+        .telephone {
+
+          span {
+            &.telephone__free {
+
+            }
+            a {
+
+            }
+          }
+        }
+
+        .contact-us {
+          margin-left: 0;
+
+          li {
+
+            a {
+
+            }
+          }
+        }
+
+        .social-subscribe {
+
+          .follow-us {
+
+            .col-sm-offset-5 {
+              margin-left: 2.4%;
+            }
+
+            .follow-us__link {
+
+            }
+          }
+
+          .subscribe {
+
+            .subscribe__caption {
+            }
+
+            input {
+
+              &.subscribe__email {
+
+              }
+
+              &.subscribe__submit {
+                padding: 0 3.6%;
+              }
+            }
+          }
+        }
+      }
+
+      .payment-confidence-row {
+        padding: 19px 8px 16px 10px;
+
+        h3 {
+
+        }
+
+        .icons-container {
+
+        }
+
+        .payment-icons {
+          .payment-icons__main {
+
+          }
+
+          .payment-icons__po {
+
+          }
+
+          .payment__link {
+            margin-right: 1px;
+          }
+
+          .payment__span {
+
+          }
+        }
+
+        .confidence {
+          .confidence__link {
+
+            &.confidence__verified_secured {
+              margin-right: 4.7%;
+            }
+
+            &.confidence__google_trust {
+
+            }
+          }
+        }
+      }
+
+      .switch-settings-bottom-container {
+
+      }
+    }
+
+    .copyright {
+      padding: 11px 18px 8px 20px;
+
+      .policy-nav {
+
+        li {
+
+          a {
+          }
+
+          &.policy-nav__terms-of-use{
+            padding-right: 5.8%;
+          }
+
+          &.policy-nav__switch-to-mobile{
+            padding-right: 5.8%;
+            padding-left: 20px;
+
+            &:before{
+              content: '';
+              display: inline-block;
+              background: url("../images/static/1280/phone_footer.svg");
+              width: 11px;
+              height: 20px;
+              position: absolute;
+              left: 0;
+            }
+
+            @media screen and (min-width: 950px) {
+              padding-left: 0;
+
+              &:before{
+                left: -20px;
+              }
+            }
+
+          }
+
+        }
+      }
+
+      .copyright__text {
+
+        small {
+        }
+      }
+    }
+  }
+}

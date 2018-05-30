@@ -1,0 +1,19 @@
+@mixin create-context($classes...) {
+  @each $class in $classes {
+    .#{$class} & {
+      @content;
+    }
+  }
+}
+
+@mixin bem_element($name) {
+  @at-root #{&}__#{$name} {
+    @content;
+  }
+}
+
+@mixin bem_modifier($name) {
+  @at-root #{&}--#{$name} {
+    @content;
+  }
+}

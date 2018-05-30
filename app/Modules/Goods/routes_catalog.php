@@ -1,49 +1,96 @@
 <?php
+
+use Modules\Goods\Controllers\SearchController;
+use Modules\Goods\Controllers\CategoryController;
+use Modules\Goods\Controllers\DefaultController;
+use Modules\Goods\Controllers\PromoController;
+
 return [
     /** PRODUCTS ROUTES */
     [
         'route' => '/product/{slug:sku}',
-        'target' => ['\Modules\Goods\Controllers\DefaultController', 'actionView'],
-        //        'name' => 'product:view'
+        'target' => [DefaultController::class, 'actionView'],
+//        'name' => 'product:view'
     ],
     [
         'route' => '/product/{i:id}/{slug:slug}/',
-        'target' => ['\Modules\Goods\Controllers\DefaultController', 'actionViewOld'],
+        'target' => [DefaultController::class, 'actionViewOld'],
         'name' => 'product:view',
     ],
 
 
     /** CATEGORY ROUTES */
 
+
+    [
+        'route' => '/category/bestsellers',
+        'target' => [PromoController::class, 'actionBestsellers'],
+        'name' => 'bestsellers'
+    ],
+    [
+        'route' => '/category/featured',
+        'target' => [PromoController::class, 'actionFeatured'],
+        'name' => 'featured'
+    ],
+    [
+        'route' => '/category/new',
+        'target' => [PromoController::class, 'actionNew'],
+        'name' => 'new'
+    ],
+    [
+        'route' => '/category/api/viewed',
+        'target' => [PromoController::class, 'actionViewed'],
+        'name' => 'viewed'
+    ],
+    [
+        'route' => '/category/api/also-bound-{i:id}',
+        'target' => [PromoController::class, 'actionAlsoBought'],
+        'name' => 'also_bound'
+    ],
+    [
+        'route' => '/category/api/related-{i:id}',
+        'target' => [PromoController::class, 'actionRelatedProducts'],
+        'name' => 'related'
+    ],
+    [
+        'route' => '/category/brands',
+        'target' => [PromoController::class, 'actionBrands'],
+        'name' => 'brands'
+    ],
+
+
     [
         'route' => '/category/{i:id}/{slug:slug}/',
-        'target' => ['\Modules\Goods\Controllers\CategoryController', 'actionViewOld'],
-        'name' => 'view',
-//        'meta' => [
-//            'cache' => true,
-//            'cache_time' => 60
-//        ]
+        'target' => [CategoryController::class, 'actionViewOld'],
+        'name' => 'view'
     ],
+
+    [
+        'route' => '/categories/',
+        'target' => [CategoryController::class, 'actionList'],
+        'name' => 'list'
+    ],
+
 
 
     /** SEARCH ROUTES */
     [
         'route' => '/search',
-        'target' => ['\Modules\Goods\Controllers\SearchController', 'actionSearch'],
+        'target' => [SearchController::class, 'actionSearch'],
         'name' => 'search',
     ],
     [
         'route' => '/search/suggestion',
-        'target' => ['\Modules\Goods\Controllers\SearchController', 'actionSuggestion'],
+        'target' => [SearchController::class, 'actionSuggestion'],
         'name' => 'search:suggestion',
     ],
 
     [
         'route' => '/keyword/{slug:q}',
-        'target' => ['\Modules\Goods\Controllers\SearchController', 'actionKeywords'],
+        'target' => [SearchController::class, 'actionKeywords'],
     ],
     [
         'route' => '/keyword/{slug:q}/',
-        'target' => ['\Modules\Goods\Controllers\SearchController', 'actionKeywords'],
+        'target' => [SearchController::class, 'actionKeywords'],
     ],
 ];

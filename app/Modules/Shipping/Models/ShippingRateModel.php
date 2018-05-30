@@ -13,13 +13,20 @@ use Xcart\App\Orm\Model;
 use Xcart\App\Traits\DataModelTrait;
 use Xcart\ShippingRate;
 
+/**
+ * @property ShippingModel shipping
+ * @property int shippingid
+ * @property int rateid
+ *
+ * @method null|float getShippingCharge
+ */
 class ShippingRateModel extends Model
 {
     use DataModelTrait, AutoMetaTrait;
 
-    public static function getDataModelClass()
+    public static function getDataModelClass(): string
     {
-        return ShippingRate::className();
+        return ShippingRate::class;
     }
 
     public static function tableName()

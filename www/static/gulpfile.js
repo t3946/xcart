@@ -146,13 +146,14 @@ gulp.task('frontend:jsx', function(done){
     });
 });
 
+let fjsinc_builded = false;
 gulp.task('frontend:js:includes', function(done){
     if (!fjsinc_builded) {
         let pipe = gulp.src(frontend.src.js_include);
 
-        if (isProduction && frontend.config.compress) {
-            pipe = pipe.pipe(uglify(frontend.config.uglify));
-        }
+        // if (isProduction && frontend.config.compress) {
+        //     pipe = pipe.pipe(uglify(frontend.config.uglify));
+        // }
 
         return pipe
             .pipe(concat('vendors.js'))
@@ -164,14 +165,16 @@ gulp.task('frontend:js:includes', function(done){
 });
 
 // gulp.task('frontend:js', ['frontend:js:includes'], function() {
-gulp.task('frontend:js', function() {
-    let pipe = gulp.src(frontend.src.js);
+gulp.task('frontend:js', function(done) {
+    // let pipe = gulp.src(frontend.src.js);
+    //
+    // return pipe
+    //     .pipe(concat(frontend.config.name + '.js'))
+    //     .pipe(gulp.dest(frontend.dst.js))
+    //     .pipe(hashsum({filename: 'frontend/versions/js.yml', hash: 'md5'}))
+    //     .pipe(livereload());
 
-    return pipe
-        .pipe(concat(frontend.config.name + '.js'))
-        .pipe(gulp.dest(frontend.dst.js))
-        .pipe(hashsum({filename: 'frontend/versions/js.yml', hash: 'md5'}))
-        .pipe(livereload());
+    done();
 });
 
 
@@ -263,7 +266,7 @@ gulp.task('watch:frontend', ['build:frontend'], function() {
     gulp.watch(frontend.src.raw, ['frontend:raw']);
     gulp.watch(frontend.src.scss, ['frontend:css']);
     gulp.watch(frontend.src.css, ['frontend:css']);
-    gulp.watch(frontend.src.js, ['frontend:js']);
+    // gulp.watch(frontend.src.js, ['frontend:js']);
     gulp.watch(frontend.src.images, ['frontend:images']);
     gulp.watch(frontend.src.fonts, ['frontend:fonts']);
 
@@ -282,7 +285,8 @@ gulp.task('watch:backend', ['build:backend'], function() {
     gulp.watch(backend.src.fonts, ['backend:fonts']);
 });
 
-gulp.task('prepare:frontend', ['clear:frontend' , 'frontend:jsx'], function(done){
+// gulp.task('prepare:frontend', ['clear:frontend' , 'frontend:jsx'], function(done){
+gulp.task('prepare:frontend', ['clear:frontend' , 'frontend:js:includes'], function(done){
 
     if (!fs.existsSync(frontend.dst.scss)){
         fs.mkdirSync(frontend.dst.scss);

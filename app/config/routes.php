@@ -1,6 +1,11 @@
 <?php
-$admin_routes = include('routes_admin.php');
+$admin_routes = include 'routes_admin.php';
 return array_merge($admin_routes, [
+    [
+        'route' => '',
+        'path' => 'Modules.Main.routes',
+        'namespace' => 'main'
+    ],
     [
         'route' => '',
         'path' => 'Modules.Goods.routes',
@@ -26,14 +31,35 @@ return array_merge($admin_routes, [
         'namespace' => 'user',
     ],
     [
-        'route' => '/coupon',
-        'path' => 'Modules.Cart.routes_coupon',
-        'namespace' => 'coupon',
-    ],
-    [
         'route' => '/brand',
         'path' => 'Modules.Brand.routes',
         'namespace' => 'brand',
+        //        'config' => [
+        //            'cache' => [
+        //                'time' => 3600,
+        //            ]
+        //        ]
+    ],
+    //    [
+    //        'route' => '/cart',
+    //        'path' => 'Modules.Cart.routes',
+    //        'namespace' => 'cart',
+    //        'config' => [
+    //            'cache' => false
+    //        ]
+    //    ],
+
+
+
+    [
+        'route' => '/demo',
+        'path' => 'Modules.Demo.routes',
+        'namespace' => 'demo'
+    ],
+    [
+        'route' => '/coupon',
+        'path' => 'Modules.Cart.routes_coupon',
+        'namespace' => 'coupon',
     ],
     [
         'route' => '/images',
@@ -46,9 +72,31 @@ return array_merge($admin_routes, [
         'namespace' => 'payment'
     ],
     [
-        'route' => '/',
+        'route' => '/checkout',
+        'path' => 'Modules.Order.routes_checkout',
+        'namespace' => 'checkout'
+    ],
+    [
+        'route' => '/retrieve',
+        'path' => 'Modules.Order.routes_retrieve',
+        'namespace' => 'retrieve'
+    ],
+    [
+        'route' => '',
         'path' => 'Modules.Pages.routes',
         'namespace' => 'page'
+    ],
+
+    [
+        'route' => '/convert',
+        'path' => 'Modules.Order.routes',
+        'namespace' => 'convert'
+    ],
+
+    [
+        'route' => '/subscribe',
+        'path' => 'Modules.Subscribe.routes',
+        'namespace' => 'subscribe'
     ],
 
 ]);

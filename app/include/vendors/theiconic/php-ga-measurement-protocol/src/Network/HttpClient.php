@@ -3,11 +3,12 @@
 namespace TheIconic\Tracking\GoogleAnalytics\Network;
 
 use TheIconic\Tracking\GoogleAnalytics\AnalyticsResponse;
-use TheIconic\Tracking\GoogleAnalytics\Parameters\SingleParameter;
-use TheIconic\Tracking\GoogleAnalytics\Parameters\CompoundParameterCollection;
 use GuzzleHttp\Client;
-use GuzzleHttp\Message\RequestInterface;
-use GuzzleHttp\Message\ResponseInterface;
+use GuzzleHttp\Psr7\Request;
+use GuzzleHttp\Promise;
+use GuzzleHttp\Promise\PromiseInterface;
+use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * Class HttpClient
@@ -36,26 +37,29 @@ class HttpClient
     private $client;
 
     /**
-     * @var array
+     * Holds the promises (async responses).
+     *
+     * @var PromiseInterface[]
      */
-    private $payloadParameters;
+    private static $promises = [];
+
+    /**
+     * We have to unwrap and send all promises at the end before analytics objects is destroyed.
+     */
+    public function __destruct()
+    {
+        Promise\unwrap(self::$promises);
+    }
 
     /**
      * Sets HTTP client.
      *
+     * @internal
      * @param Client $client
      */
     public function setClient(Client $client)
     {
         $this->client = $client;
-    }
-
-    /**
-     * @return array
-     */
-    public function getPayloadParameters()
-    {
-        return $this->payloadParameters;
     }
 
     /**
@@ -77,79 +81,73 @@ class HttpClient
     /**
      * Sends request to Google Analytics.
      *
+     * @internal
      * @param string $url
-     * @param SingleParameter[] $singleParameters
-     * @param CompoundParameterCollection[] $compoundParameters
-     * @param boolean $nonBlocking
+     * @param array $options
      * @return AnalyticsResponse
      */
-    public function post($url, array $singleParameters, array $compoundParameters, $nonBlocking = false)
+    public function post($url, array $options = [])
     {
-        $singlesPost = $this->getSingleParametersPayload($singleParameters);
+        $request = new Request(
+            'GET',
+            $url,
+            ['User-Agent' => self::PHP_GA_MEASUREMENT_PROTOCOL_USER_AGENT]
+        );
 
-        $compoundsPost = $this->getCompoundParametersPayload($compoundParameters);
-
-        $this->payloadParameters = array_merge($singlesPost, $compoundsPost);
-
-        $request = $this->getClient()->createRequest('GET', $url, [
-            'future' => $nonBlocking,
-            'timeout' => self::REQUEST_TIMEOUT_SECONDS,
-            'connect_timeout' => self::REQUEST_TIMEOUT_SECONDS,
-            'query' => $this->payloadParameters,
-            'headers' => [
-                'User-Agent' => self::PHP_GA_MEASUREMENT_PROTOCOL_USER_AGENT,
-            ],
+        $opts = $this->parseOptions($options);
+        $response = $this->getClient()->sendAsync($request, [
+            'synchronous' => !$opts['async'],
+            'timeout' => $opts['timeout'],
+            'connect_timeout' => $opts['timeout'],
         ]);
 
-        $response = $this->getClient()->send($request);
+        if ($opts['async']) {
+            self::$promises[] = $response;
+        } else {
+            $response = $response->wait();
+        }
 
         return $this->getAnalyticsResponse($request, $response);
     }
 
     /**
+     * Parse the given options and fill missing fields with default values.
+     *
+     * @param array $options
+     * @return array
+     */
+    private function parseOptions(array $options)
+    {
+        $defaultOptions = [
+            'timeout' => static::REQUEST_TIMEOUT_SECONDS,
+            'async' => false,
+        ];
+
+        $opts = [];
+        foreach ($defaultOptions as $option => $value) {
+            $opts[$option] = isset($options[$option]) ? $options[$option] : $defaultOptions[$option];
+        }
+
+        if (!is_int($opts['timeout']) || $opts['timeout'] <= 0) {
+            throw new \UnexpectedValueException('The timeout must be an integer with a value greater than 0');
+        }
+
+        if (!is_bool($opts['async'])) {
+            throw new \UnexpectedValueException('The async option must be boolean');
+        }
+
+        return $opts;
+    }
+
+    /**
      * Creates an analytics response object.
      *
-     * @param $request
-     * @param $response
+     * @param RequestInterface $request
+     * @param ResponseInterface|PromiseInterface $response
      * @return AnalyticsResponse
      */
-    private function getAnalyticsResponse(RequestInterface $request, ResponseInterface $response)
+    protected function getAnalyticsResponse(RequestInterface $request, $response)
     {
         return new AnalyticsResponse($request, $response);
-    }
-
-    /**
-     * Prepares all the Single Parameters to be sent to GA.
-     *
-     * @param SingleParameter[] $singleParameters
-     * @return array
-     */
-    private function getSingleParametersPayload(array $singleParameters)
-    {
-        $postData = [];
-
-        foreach ($singleParameters as $parameterObj) {
-            $postData[$parameterObj->getName()] = $parameterObj->getValue();
-        }
-
-        return $postData;
-    }
-
-    /**
-     * Prepares compound parameters inside collections to be sent to GA.
-     *
-     * @param CompoundParameterCollection[] $compoundParameters
-     * @return array
-     */
-    private function getCompoundParametersPayload(array $compoundParameters)
-    {
-        $postData = [];
-
-        foreach ($compoundParameters as $compoundCollection) {
-            $parameterArray = $compoundCollection->getParametersArray();
-            $postData = array_merge($postData, $parameterArray);
-        }
-
-        return $postData;
     }
 }

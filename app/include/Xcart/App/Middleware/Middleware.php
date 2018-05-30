@@ -3,6 +3,7 @@
 namespace Xcart\App\Middleware;
 use Exception;
 use Xcart\App\Cli\Cli;
+use Xcart\App\Request\CliRequest;
 use Xcart\App\Request\Request;
 use Xcart\App\Request\HttpRequest;
 
@@ -18,7 +19,7 @@ abstract class Middleware implements IMiddleware
     /**
      * @param \Xcart\App\Request\Request|\Xcart\App\Request\HttpRequest $request
      */
-    public function processRequest($request)
+    public function processRequest(Request $request)
     {
         $this->requestIsWeb($request) ?
             $this->processHttpRequest($request) :
@@ -33,21 +34,22 @@ abstract class Middleware implements IMiddleware
     /**
      * @param \Xcart\App\Request\HttpRequest $request
      */
-    public function processHttpRequest($request) {}
+    public function processHttpRequest(HttpRequest $request) {}
 
     /**
      * Event owner RenderTrait
      * @param \Xcart\App\Request\Request $request
      * @param $output string
+     * @return string
      */
-    public function processView($request, &$output) {}
+    public function processView(Request $request, string $output):string {}
 
     public function processException(Exception $exception) {}
 
     /**
      * @param \Xcart\App\Request\Request|\Xcart\App\Request\HttpRequest $request
      */
-    public function processResponse($request)
+    public function processResponse(Request $request)
     {
         $this->requestIsWeb($request) ?
             $this->processHttpResponse($request) :
@@ -58,12 +60,12 @@ abstract class Middleware implements IMiddleware
     /**
      * @param \Xcart\App\Request\Request $request
      */
-    public function processCliResponse($request) {}
+    public function processCliResponse(CliRequest $request) {}
 
     /**
      * @param \Xcart\App\Request\HttpRequest $request
      */
-    public function processHttpResponse($request) {}
+    public function processHttpResponse(HttpRequest $request) {}
 
     protected function requestIsWeb($request, $force = false)
     {

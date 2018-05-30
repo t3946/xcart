@@ -572,7 +572,7 @@
 
   <tr>
     <td><b>Customer's IP:</b> </td>
-    <td width="100%">&nbsp;{$order.extra.ip_info}</td>
+    <td width="100%">&nbsp;{$oOrder->extra_model->ip}</td>
   </tr>
 
   </table>

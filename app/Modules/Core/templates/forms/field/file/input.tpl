@@ -4,8 +4,9 @@
     <a href="{$field->getCurrentFileUrl()}">{$field->getCurrentFileName()}</a>
 {/if}
 
+{*
 {if $field->canClear()}
     <br/><br/>
     <input value="{$field->getClearValue()}" id="{$id}_clear" type="checkbox" name="{$name}">
     <label for="{$id}_clear">{t 'Clean'}</label>
-{/if}
+{/if}*}

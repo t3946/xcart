@@ -3,6 +3,7 @@
 namespace Modules\Goods\Controllers;
 
 use Mindy\QueryBuilder\Expression;
+use Modules\Core\Components\GlobalConfig;
 use Modules\Goods\Helpers\SearchSuggestionHelper;
 use Modules\Goods\Models\ProductModel;
 use Modules\Sites\Models\SiteModel;
@@ -28,13 +29,13 @@ class SearchController extends AbstractCatalogController
 
 
 
-    public function actionKeywords($q)
+    public function actionKeywords($q): void
     {
         $q = str_replace(['_', '-'], ' ', $q);
         $this->redirect('catalog:search', [], 302, ['q' => $q]);
     }
 
-    public function actionApiSuggestion()
+    public function actionApiSuggestion(): void
     {
         if ($this->getRequest()->getIsAjax()) {
             $this->jsonResponse([
@@ -57,7 +58,7 @@ class SearchController extends AbstractCatalogController
         $indexes = [];
         foreach ($sites as $site) {
             $index = strtolower($site->domain);
-            if (!in_array($index, $this->excluded_indexes)) {
+            if (!\in_array($index, $this->excluded_indexes, true)) {
                 $indexes[] = $index;
             }
         }
@@ -65,7 +66,7 @@ class SearchController extends AbstractCatalogController
         return implode(',', $indexes);
     }
 
-    public function actionSearch()
+    public function actionSearch(): void
     {
         $show_empty = false;
 
@@ -119,13 +120,14 @@ class SearchController extends AbstractCatalogController
     }
 
 
-    public function getAdvancedData($data = null)
+    public function getAdvancedData($data = null): array
     {
         return [
             'suggestion' => $this->suggestion,
             'searched' => $this->searched,
             'q_original' => $this->q_original,
             'q' => $this->q,
+            'analytics_source' => 'search'
         ];
     }
 

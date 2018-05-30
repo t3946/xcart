@@ -120,9 +120,9 @@ abstract class ManagerBase implements ManagerInterface, IteratorAggregate, Array
     /**
      * {@inheritdoc}
      */
-    public function all()
+    public function all($filter = [])
     {
-        return $this->getQuerySet()->all();
+        return $this->getQuerySet()->all($filter);
     }
 
     /**

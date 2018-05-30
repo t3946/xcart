@@ -7,10 +7,10 @@ use Xcart\App\Controller\Controller;
 
 class ApiProductController extends Controller
 {
-    const PRIVATE_KEY = "y5gzWWCcqyVVQByEzG/mRApTaW6l1tvq2ngOb5b3qeA=";
-    const PUBLIC_KEY = "2r7bQsPMLds=";
+    private const PRIVATE_KEY = 'y5gzWWCcqyVVQByEzG/mRApTaW6l1tvq2ngOb5b3qeA=';
+    private const PUBLIC_KEY = '2r7bQsPMLds=';
 
-    public function getDistributorProductList()
+    public function getDistributorProductList(): void
     {
         $encrypt = base64_decode($_GET['a']);
         $ad =      base64_decode($_GET['b']);

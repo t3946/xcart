@@ -1,0 +1,136 @@
+html,
+body {
+  height: 100%;
+  font-size: 16px;
+}
+
+body {
+  width: 100%;
+  min-height: 100%;
+  min-width: 320px;
+  background-color: #fff;
+}
+
+* {
+  outline: none;
+}
+
+input,
+label,
+select,
+button,
+textarea {
+  font-family: $body-font-family;
+}
+
+img {
+  width: auto;
+  height: auto;
+
+  //&.loader {
+  //  background: url("../images/preloaders/loader1.gif") center center no-repeat;
+  //}
+}
+
+input {
+  display: inline-block;
+  padding: 0 4px;
+  width: 34.5%;
+  border: 1px solid #aaaaaa;
+
+  &[type='number'] {
+    &,
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+      -moz-appearance:textfield;
+      -webkit-appearance: none;
+    }
+
+    @include appearance(textfield);
+  }
+}
+
+
+.column, .columns {
+  &.auto {
+    flex: auto;
+    max-width: 100%;
+  }
+}
+
+.off-canvas-content {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+
+  #content-wrapper {
+    flex-grow: 1;
+  }
+}
+
+#main_wrapper {
+  min-width: 320px;
+  min-height: 100%;
+
+  .off-canvas-content {
+    min-height: 100%;
+  }
+}
+
+.non-us-disclaimer.checkbox-container{
+  margin-top: 1rem;
+
+  @include breakpoint(medium){
+    margin-left: rem-calc(10);
+  }
+
+  @include breakpoint(large){
+    margin-left: 0;
+  }
+
+
+  input{
+    display: none;
+
+    & + label{
+      font-size: rem-calc(14);
+      line-height: rem-calc(18);
+      font-weight: normal;
+      padding-left: rem-calc(37);
+      display: inline-block;
+
+      &:before{
+        content: '';
+        display: block;
+        width: rem-calc(21);
+        height: rem-calc(21);
+        border: 1px solid #d4d4d4;
+        position: absolute;
+        top: 0;
+        left: rem-calc(8);
+        @include breakpoint(large){
+          left: rem-calc(5);
+        }
+      }
+    }
+
+    &:checked + label{
+
+      &:after{
+        content: url("../../dist/images/icons/order/check_mark_grey.svg");
+        position: absolute;
+        display: block;
+        width: rem-calc(12);
+        height: rem-calc(15);
+        top: rem-calc(3);
+        left: rem-calc(12);
+        @include breakpoint(large){
+          left: rem-calc(9);
+        }
+      }
+
+    }
+  }
+
+
+}

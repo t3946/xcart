@@ -2,12 +2,17 @@
 namespace Modules\Brand\Controllers;
 
 use Mindy\QueryBuilder\Expression;
+use Mindy\QueryBuilder\Q\QOr;
 use Modules\Brand\Models\BrandModel;
+use Modules\Core\Helpers\Cache;
 use Modules\Goods\Controllers\AbstractCatalogController;
 use Modules\Goods\Models\CategoryModel;
 use Modules\Goods\Models\ProductModel;
+use Modules\Meta\Helpers\MetaExtHelper;
+use Modules\Meta\Types\MetaType;
 use Xcart\App\Components\Breadcrumbs;
 use Xcart\App\Main\Xcart;
+use Xcart\Brand;
 
 class DefaultController extends AbstractCatalogController
 {
@@ -16,7 +21,17 @@ class DefaultController extends AbstractCatalogController
 
     public function actionViewOld($id, $slug)
     {
-        $this->view_internal(BrandModel::objects()->filter(['brandid' => $id])->get());
+        /** @var \Modules\Sites\Models\SiteModel $site */
+        $site = Xcart::app()->getModule('Sites')->getSite();
+
+        $model = BrandModel::objects()->get(['brandid' => $id]);
+
+        $this->setMetaBase(MetaType::BRAND, [
+            'model' => $model,
+            'site' => $site
+        ]);
+
+        $this->view_internal($model);
     }
 
     public function actionView($sku)
@@ -29,45 +44,37 @@ class DefaultController extends AbstractCatalogController
         $this->redirect('brand:list', [], 301);
     }
 
+    /**
+     * Show all brands alphabetically
+     * @throws \Xcart\App\Exceptions\UnknownMethodException
+     * @throws \Xcart\App\Exceptions\UnknownPropertyException
+     */
     public function actionList()
     {
         $breadcrumbs = new Breadcrumbs();
         $breadcrumbs->add('Brands', 'brand:list');
 
-        echo $this->render('brand/list.tpl', [
-            'breadcrumbs' => $breadcrumbs
+        $this->display('brand/list.tpl', [
+            'breadcrumbs' => $breadcrumbs,
+            'brands' => BrandModel::getAllAlphabetically()
         ]);
     }
 
-    public function getAdvancedData($data = null)
+    public function getAdvancedData($data = null): array
     {
         /** @var \Modules\Sites\SitesModule $siteModule */
         $siteModule = Xcart::app()->getModule('Sites');
         $qs = CategoryModel::objects()->filter([
             'categoryid__in' => $this->getQS($data)->select(['categories__categoryid']),
-            'storefrontid' => $siteModule->getSite()->storefrontid
+            'storefrontid' => $siteModule->getSite()->storefrontid,
+            'active_product_count__gt' => 0,
         ]);
 
-        $ta = $qs->getTableAlias();
-
-        $pcountSql = $this->getQS($data)
-            ->with(['categories'])
-            ->filter([
-                'categories__lft__gte' => new Expression("{{category}}.lft"),
-                'categories__rgt__lte' => new Expression("{{category}}.rgt"),
-                'categories__root' => new Expression("{{category}}.root"),
-            ])
-            ->countSql();
-
-        $pcountSql = str_replace($ta, 'cp', $pcountSql);
-        $pcountSql = str_replace("{{category}}", $ta, $pcountSql);
-
-        $qs->group(['categoryid'])
-           ->select(['pcount' => $pcountSql, '*', ]);
-        $categories = $qs->cache(300)->order(['-pcount', 'category'])->all();
+        $categories = $qs->order(['category'])->all();
 
         return [
             'categories' => $categories ? : [],
+            'analytics_source' => 'brand'
         ];
     }
 
