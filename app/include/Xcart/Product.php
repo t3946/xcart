@@ -312,7 +312,7 @@ class Product extends Data
             return true;
         }
 
-        if (floatval($this->shipping_freight) == 0 && strpos($this->productcode, "ART-") === false) {
+        if ((float)$this->shipping_freight == 0 && strpos($this->productcode, "ART-") === false) {
             return true;
         }
 
