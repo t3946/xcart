@@ -39,6 +39,9 @@
     <meta name="name" content="{$site->getName()}">
     <meta itemprop='name' content="{$site->getName()}">
 
+    {block 'noindex'}{/block}
+
+
     <link rel="shortcut icon" href="{$site->favicons->get()}" type="image/png" />
 
     <script>
