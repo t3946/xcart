@@ -26,6 +26,10 @@ class DefaultController extends AbstractCatalogController
 
         $model = BrandModel::objects()->get(['brandid' => $id]);
 
+        if (!$model) {
+            $this->error();
+        }
+
         $this->setMetaBase(MetaType::BRAND, [
             'model' => $model,
             'site' => $site
