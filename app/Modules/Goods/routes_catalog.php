@@ -73,7 +73,7 @@ return [
     [
         'route' => '/category/{i:id}/.*',
         'target' => [CategoryController::class, 'actionViewIndex'],
-        'name' => 'view'
+        'name' => 'view_index'
     ],
 
     [
