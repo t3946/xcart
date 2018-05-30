@@ -18,7 +18,8 @@ class JobRunner extends Jobby
         }
 
         $scheduleChecker = new ScheduleChecker();
-        foreach ($this->jobs as $job => $config) {
+        foreach ($this->jobs as $job => $jobConfig) {
+            [$job, $config] = $jobConfig;
             if (!$scheduleChecker->isDue($config['schedule'])) {
                 continue;
             }

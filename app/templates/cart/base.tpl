@@ -43,7 +43,7 @@
                     </a>
                 </div>
                 <div class="columns contacts-logo-block hide-for-small show-for-large">
-                    <div class="working-hours inactive">
+                    <div class="working-hours active">
                         <div class="text-order-online">
                             <span class="green-circle-icon"></span>
                             <span class="grey-text-label">Order online or call us. Operators are standing by!</span>
@@ -53,7 +53,7 @@
                             <span class="phone-number">1-800-929-2431</span>
                         </div>
                     </div>
-                    <div class="after-hours active">
+                    <div class="after-hours inactive">
                         <div class="text-order-online">
                             <img src="/static/frontend/images/icons/cart/place_order_online_icon.svg"
                                  alt=""
@@ -90,11 +90,11 @@
                                 <li class="cart-step{if $breadcrumbs->isStagePassed($key)} inactive{/if} {if $breadcrumbs->getActive() == $key} active{/if}">
                                     {if !$item.url || $breadcrumbs->getActive() == $key}
                                         <span class="step-link">
-                                <span class="step-number">{$key+1}</span>
-                                <span class="step-label">{$item['label']}</span>
-                            </span>
+                                            <span class="step-number">{$key+1}</span>
+                                            <span class="step-label">{$item['label']}</span>
+                                        </span>
                                     {else}
-                                        <a href="{$item['url']}" class="step-link">
+                                        <a href="{$item['url']}" class="step-link" rel="nofollow">
                                             <span class="step-number">{$key+1}</span>
                                             <span class="step-label">{$item['label']}</span>
                                         </a>

@@ -22,7 +22,6 @@ class CategoryController extends AbstractCatalogController
         if ($category = CategoryModel::objects()->filter(['categoryid' => $id])->get()) {
             $this->redirect($category->getAbsoluteUrl(), [], 301);
         }
-
     }
 
     public function actionView($sku)

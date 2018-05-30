@@ -24,7 +24,7 @@
         "geoip2/geoip2": "^2.7",
         "google/apiclient": "^2.0",
         "guzzlehttp/guzzle": "^6.3",
-        "hellogerard/jobby": "^3.3",
+        "hellogerard/jobby": "^3.4.0",
         "imagine/imagine": "^0.7.1",
         "jaybizzle/crawler-detect": "^1.2",
         "league/flysystem": "^1.0",
