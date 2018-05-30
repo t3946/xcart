@@ -207,7 +207,7 @@ JSON;
             $classElastic->setSearchQuery($query);
             $result =  $classElastic->query(['size' => $size, 'from' => $from]);
 
-            Xcart::app()->cache->set($query, $result, 60);
+            //Xcart::app()->cache->set($query, $result, 60);
         }
 
         if ($result['hits']['total'])
