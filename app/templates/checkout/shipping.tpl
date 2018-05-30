@@ -56,40 +56,44 @@
 
                         {include 'checkout/_form_row.tpl' field=$contactForm->getField('firstname')}
 
-                        <div class="row">
-                            <div class="column show-for-large small-12 large-2"></div>
-                            <div class="column small-12 large-2 large-order-2">
+                        <div class="row form-row compound-field">
+
+                            <div class="column hide-for-large small-12 large-2 large-order-2">
                                 {$contactForm->getField('phone')->renderErrors()}
                             </div>
 
-                            <div class="column small-12 large-8 large-order-1">
+                            <div class="column small-12 large-order-1">
                                 <div class="row">
                                     <div class="small-12 large-6 columns large-text-right text-block">
-                                        <div class="multiline">
-                                            {$contactForm->getField('phone')->renderLabel()}
+                                        {if $contactForm->getField('phone')->hint}
+                                            <div class="multiline">
+                                                {$contactForm->getField('phone')->renderLabel()}
 
-                                            <span class="hint">
-                                                {$contactForm->getField('phone')->renderHint()}
-                                            </span>
-                                        </div>
+                                                <span class="hint">
+                                                    {$contactForm->getField('phone')->renderHint()}
+                                                </span>
+                                            </div>
+                                        {else}
+                                            {$contactForm->getField('phone')->renderLabel()}
+                                        {/if}
                                     </div>
                                     <div class="small-12 large-6 columns phone--container">
-
                                         {$contactForm->getField('phone')->renderInput()}
-
                                         <span class="phone_ext--container">
                                             <label class="display-inline hide-for-medium">X</label>
                                             <label class="display-inline show-for-medium">{t 'ext' dict='order'}</label>
 
                                             {$contactForm->getField('phone_ext')->renderInput()}
                                         </span>
+
+                                        <span class="show-for-large">
+                                            {$contactForm->getField('phone')->renderErrors()}
+                                        </span>
                                     </div>
                                 </div>
                             </div>
+
                         </div>
-
-
-
 
                         {include 'checkout/_form_row.tpl' field=$contactForm->getField('email')}
                     </div>
