@@ -18,7 +18,11 @@ class CategoryController extends AbstractCatalogController
 
     public function actionViewIndex($id)
     {
-        $this->preView(CategoryModel::objects()->filter(['categoryid' => $id])->get());
+        /** @var CategoryModel $category */
+        if ($category = CategoryModel::objects()->filter(['categoryid' => $id])->get()) {
+            $this->redirect($category->getAbsoluteUrl());
+        }
+
     }
 
     public function actionView($sku)
