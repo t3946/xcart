@@ -89,12 +89,12 @@ class MenuLibrary extends TemplateLibrary
                         'class' => '',
                         'items' => [],
                     ],
-                    [
-                        'url' => '/testimonials',
-                        'name' => 'Testimonials',
-                        'class' => '',
-                        'items' => [],
-                    ],
+//                    [
+//                        'url' => '/testimonials',
+//                        'name' => 'Testimonials',
+//                        'class' => '',
+//                        'items' => [],
+//                    ],
                 ];
             case 'pages-menu':
                 return [

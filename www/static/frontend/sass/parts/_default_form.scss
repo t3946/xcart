@@ -136,8 +136,8 @@ form {
     @include breakpoint(medium) {
       margin-bottom: rem-calc(50);
     }
-    @include breakpoint(medium) {
-      margin-bottom: rem-calc(60);
+    @include breakpoint(large) {
+      margin-bottom: rem-calc(30);
     }
     &.no-margin-bottom{
       margin-bottom: 0;
@@ -341,6 +341,7 @@ form {
     .phone_ext {
       width: rem-calc(72);
     }
+
     .buttons {
       margin:  rem-calc(10) 0;
     }
@@ -371,13 +372,23 @@ form {
 
 .checkout-shipping {
   .mandatory {
-    vertical-align: bottom;
-    display: inline;
+    @include breakpoint(large) {
+      margin-top: 2em;
+    }
+
+    .required{
+      color: red;
+    }
   }
+
   .submit-notes {
     display: block;
     font-size: rem-calc(14);
     max-width: initial;
+  }
+
+  .subscription-options {
+    margin-bottom: 2rem;
   }
 }
 

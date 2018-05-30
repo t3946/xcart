@@ -339,6 +339,7 @@
         {set $distributor = $group->manufacturer}
         {set $shipping = $group->shippingModel}
         {set $order_details = $group->detail_models}
+        {if $shipping}
         <tr>
             <td colspan="{$colspan}">
                 <b>
@@ -347,6 +348,7 @@
                 </b>
             </td>
         </tr>
+        {/if}
         {foreach $order_details as $order_detail}
             {set $product = $order_detail->product_model}
             <tr>

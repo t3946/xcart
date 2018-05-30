@@ -35,36 +35,43 @@
                     </div>
                     <div class="columns">
                         {include 'checkout/_form_row.tpl' field=$purchasingManagerForm->getField('firstname')}
-                        <div class="row">
-                            <div class="column show-for-large small-12 large-2"></div>
-                            <div class="column small-12 large-2 large-order-2">
+                        <div class="row form-row compound-field">
+
+                            <div class="column hide-for-large small-12 large-2 large-order-2">
                                 {$purchasingManagerForm->getField('phone')->renderErrors()}
                             </div>
 
-                            <div class="column small-12 large-8 large-order-1">
+                            <div class="column small-12 large-order-1">
                                 <div class="row">
                                     <div class="small-12 large-6 columns large-text-right text-block">
-                                        <div class="multiline">
-                                            {$purchasingManagerForm->getField('phone')->renderLabel()}
+                                        {if $field->hint}
+                                            <div class="multiline">
+                                                {$purchasingManagerForm->getField('phone')->renderLabel()}
 
-                                            <span class="hint">
-                                                {$purchasingManagerForm->getField('phone')->renderHint()}
-                                            </span>
-                                        </div>
+                                                <span class="hint">
+                                                    {$purchasingManagerForm->getField('phone')->renderHint()}
+                                                </span>
+                                            </div>
+                                        {else}
+                                            {$purchasingManagerForm->getField('phone')->renderLabel()}
+                                        {/if}
                                     </div>
                                     <div class="small-12 large-6 columns phone--container">
-
                                         {$purchasingManagerForm->getField('phone')->renderInput()}
-
                                         <span class="phone_ext--container">
                                             <label class="display-inline hide-for-medium">X</label>
                                             <label class="display-inline show-for-medium">{t 'ext' dict='order'}</label>
 
                                             {$purchasingManagerForm->getField('phone_ext')->renderInput()}
                                         </span>
+
+                                        <span class="show-for-large">
+                                            {$purchasingManagerForm->getField('phone')->renderErrors()}
+                                        </span>
                                     </div>
                                 </div>
                             </div>
+
                         </div>
                         {include 'checkout/_form_row.tpl' field=$purchasingManagerForm->getField('fax')}
                         {include 'checkout/_form_row.tpl' field=$purchasingManagerForm->getField('email')}
@@ -83,36 +90,43 @@
                     </div>
                     <div class="columns">
                         {include 'checkout/_form_row.tpl' field=$accountsPayableForm->getField('firstname')}
-                        <div class="row">
-                            <div class="column show-for-large small-12 large-2"></div>
-                            <div class="column small-12 large-2 large-order-2">
+                        <div class="row form-row compound-field">
+
+                            <div class="column hide-for-large small-12 large-2 large-order-2">
                                 {$accountsPayableForm->getField('phone')->renderErrors()}
                             </div>
 
-                            <div class="column small-12 large-8 large-order-1">
+                            <div class="column small-12 large-order-1">
                                 <div class="row">
                                     <div class="small-12 large-6 columns large-text-right text-block">
-                                        <div class="multiline">
-                                            {$accountsPayableForm->getField('phone')->renderLabel()}
+                                        {if $accountsPayableForm->getField('phone')->hint}
+                                            <div class="multiline">
+                                                {$accountsPayableForm->getField('phone')->renderLabel()}
 
-                                            <span class="hint">
-                                                {$accountsPayableForm->getField('phone')->renderHint()}
-                                            </span>
-                                        </div>
+                                                <span class="hint">
+                                                    {$accountsPayableForm->getField('phone')->renderHint()}
+                                                </span>
+                                            </div>
+                                        {else}
+                                            {$accountsPayableForm->getField('phone')->renderLabel()}
+                                        {/if}
                                     </div>
                                     <div class="small-12 large-6 columns phone--container">
-
                                         {$accountsPayableForm->getField('phone')->renderInput()}
-
                                         <span class="phone_ext--container">
                                             <label class="display-inline hide-for-medium">X</label>
                                             <label class="display-inline show-for-medium">{t 'ext' dict='order'}</label>
 
                                             {$accountsPayableForm->getField('phone_ext')->renderInput()}
                                         </span>
+
+                                        <span class="show-for-large">
+                                            {$accountsPayableForm->getField('phone')->renderErrors()}
+                                        </span>
                                     </div>
                                 </div>
                             </div>
+
                         </div>
                         {include 'checkout/_form_row.tpl' field=$accountsPayableForm->getField('fax')}
                         {include 'checkout/_form_row.tpl' field=$accountsPayableForm->getField('email')}
