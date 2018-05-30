@@ -20,7 +20,7 @@ class CategoryController extends AbstractCatalogController
     {
         /** @var CategoryModel $category */
         if ($category = CategoryModel::objects()->filter(['categoryid' => $id])->get()) {
-            $this->redirect($category->getAbsoluteUrl());
+            $this->redirect($category->getAbsoluteUrl(), [], 301);
         }
 
     }

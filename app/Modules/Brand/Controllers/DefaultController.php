@@ -36,7 +36,15 @@ class DefaultController extends AbstractCatalogController
         ]);
 
         $this->view_internal($model);
-}
+    }
+
+    public function actionViewIndex($id)
+    {
+        /** @var BrandModel $model */
+        if ($model = BrandModel::objects()->get(['brandid' => $id])) {
+            $this->redirect($model->getAbsoluteUrl(), [], 301);
+        }
+    }
 
     public function actionView($sku)
     {

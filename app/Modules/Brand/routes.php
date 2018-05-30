@@ -33,4 +33,9 @@ return [
         'target' => ['\Modules\Brand\Controllers\DefaultController', 'actionViewOld'],
         'name' => 'view'
     ],
+    [
+        'route' => '/{i:id}/*/',
+        'target' => ['\Modules\Brand\Controllers\DefaultController', 'actionViewOld'],
+        'name' => 'view_index'
+    ],
 ];
