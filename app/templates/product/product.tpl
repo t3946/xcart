@@ -79,6 +79,16 @@
                                 </option>
                             {/if}
                         {/foreach}
+                        {if $videos}
+                            {foreach $videos as $video}
+                                <option value="{$video->video}"
+                                        data-thump=""
+                                        data-id="{$video->id}"
+                                        type="video">
+
+                                </option>
+                            {/foreach}
+                        {/if}
 
                         {*<option value="https://www.youtube.com/watch?v=dQw4w9WgXcQ" type="video"></option>*}
                         {*<option value="https://www.youtube.com/watch?v=yPYZpwSpKmA" type="video"></option>*}
