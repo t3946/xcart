@@ -52,7 +52,7 @@ class SubscribeController extends FrontendController
             }
         }
 
-        $this->refresh();
+        $this->redirect('/');
     }
 
     public function getSubscribe()
