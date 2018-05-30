@@ -2,6 +2,7 @@
 
 
 {block 'schema_page_type'}itemtype="http://schema.org/CollectionPage"{/block}
+{block 'noindex'}<meta name="robots" content="noindex">{/block}
 
 {block "header"}
     <header class="cart-header" itemscope itemtype="http://schema.org/WPHeader">
