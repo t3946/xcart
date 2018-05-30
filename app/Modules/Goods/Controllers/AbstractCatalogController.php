@@ -111,10 +111,6 @@ abstract class AbstractCatalogController extends FrontendController
      */
     protected function view_internal($model = null): void
     {
-        if (!$model) {
-            $this->error();
-        }
-
         $this->model = $model;
 
         $orderBy = Xcart::app()->request->session->get('category_sort', ProductSortHelper::$default);
