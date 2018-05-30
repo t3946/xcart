@@ -2,6 +2,8 @@
 
 //use \Modules\Main\Controllers\ContactFormController;
 
+use Modules\Main\Controllers\RobotsController;
+
 return [
     '' => [
         'route' => '',
@@ -17,6 +19,12 @@ return [
         'route' => '/about-us/',
         'target' => ['\Modules\Main\Controllers\DefaultController', 'actionAboutUs'],
         'name' => 'about_us'
+    ],
+
+    [
+        'route' => '/robots.txt',
+        'target' => [RobotsController::class, 'actionIndex'],
+        'name' => 'robots'
     ],
 
 ];
