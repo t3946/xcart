@@ -79,7 +79,8 @@ abstract class AddressForm extends BaseForm
                         : null,
 				'html' => [
                     'placeholder' => $country->name ?? 'United States',
-                    'class' => 'auto-complete country'
+                    'class' => 'auto-complete country',
+                    'autocomplete' => 'off'
                 ],
 
             ],
@@ -93,7 +94,8 @@ abstract class AddressForm extends BaseForm
                 ],
                 'html' => [
                     'placeholder' => $geoIp['postalCode'] ?? '08540',
-                    'class' => 'auto-complete zip'
+                    'class' => 'auto-complete zip',
+                    'autocomplete' => 'off'
                 ],
             ],
 
@@ -112,7 +114,8 @@ abstract class AddressForm extends BaseForm
                         ]))
                         ? $state->state
                         : 'New Jersey',
-                    'class' => 'auto-complete state'
+                    'class' => 'auto-complete state',
+                    'autocomplete' => 'off'
                 ],
             ],
 
@@ -122,7 +125,8 @@ abstract class AddressForm extends BaseForm
                 'required' => true,
                 'html' => [
                     'placeholder' => $geoIp['city'] ?? 'Princeton',
-                    'class' => 'auto-complete city'
+                    'class' => 'auto-complete city',
+                    'autocomplete' => 'off'
                 ],
 
             ],
