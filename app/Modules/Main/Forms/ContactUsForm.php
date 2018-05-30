@@ -30,7 +30,7 @@ class ContactUsForm extends Form
     /**
      * @var string email, куда отправить письмо
      */
-    public $sendTo = 'helpdesc@s3stores.com';
+    public $sendTo = 'helpdesk@s3stores.com';
 
     /**
      * Список полей формы
