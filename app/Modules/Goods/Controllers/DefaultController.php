@@ -17,6 +17,11 @@ class DefaultController extends FrontendController
     {
         $this->view_internal(ProductModel::objects()->filter(['productid' => $id])->get());
     }
+
+    public function actionViewOldSlash($id, $slug): void
+    {
+        $this->redirect('catalog:product:view', ['id' => $id, 'slug' => $slug], 301);
+    }
     
     public function actionView($sku): void
     {

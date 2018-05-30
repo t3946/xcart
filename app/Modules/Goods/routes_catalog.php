@@ -17,6 +17,11 @@ return [
         'target' => [DefaultController::class, 'actionViewOld'],
         'name' => 'product:view',
     ],
+    [
+        'route' => '/product/{i:id}/{slug:slug}',
+        'target' => [DefaultController::class, 'actionViewOldSlash'],
+        'name' => 'product:view_slash',
+    ],
 
 
     /** CATEGORY ROUTES */
