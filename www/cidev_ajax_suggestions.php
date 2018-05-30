@@ -1,4 +1,5 @@
 <?php
+exit;
 /**
  * @var \Xcart\Product $oProduct
  */
