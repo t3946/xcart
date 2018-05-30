@@ -32,7 +32,7 @@ class DefaultController extends AbstractCatalogController
         ]);
 
         $this->view_internal($model);
-    }
+}
 
     public function actionView($sku)
     {
