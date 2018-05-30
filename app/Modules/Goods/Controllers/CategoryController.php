@@ -16,6 +16,11 @@ class CategoryController extends AbstractCatalogController
         $this->preView(CategoryModel::objects()->filter(['categoryid' => $id])->get());
     }
 
+    public function actionViewIndex($id)
+    {
+        $this->preView(CategoryModel::objects()->filter(['categoryid' => $id])->get());
+    }
+
     public function actionView($sku)
     {
         $this->preView(CategoryModel::objects()->filter(['productcode' => $sku])->get());
