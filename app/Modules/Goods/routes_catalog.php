@@ -91,7 +91,7 @@ return [
     ],
     [
         'route' => '/search/suggestion',
-        'target' => [SearchController::class, 'actionSuggestion'],
+        'target' => [SearchController::class, 'actionApiSuggestion'],
         'name' => 'search:suggestion',
     ],
 
