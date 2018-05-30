@@ -120,7 +120,7 @@ class PaymentController extends Controller
             $order->cb_status = OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP3;
             $order->save();
 
-            //$order->groups->update(['cb_status' => $order->cb_status]);
+            $order->groups->update(['cb_status' => $order->cb_status]);
         }
 
         $this->redirect('checkout:review');
