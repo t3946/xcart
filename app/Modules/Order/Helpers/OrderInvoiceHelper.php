@@ -23,7 +23,9 @@ class OrderInvoiceHelper
                 str_replace('{{orderid}}', $order->getOrderNumber(), $notification->customer_subject),
                 'mail/invoice.tpl',
                 ['order' => $order],
-                ['from' => [$config['orders_department'] => '']]
+                [
+                    'from' => $config['orders_department']
+                ]
             );
 
             if ($send_copy) {
