@@ -177,9 +177,9 @@ class PaymentController extends Controller
 
                     $txn_data = ['transaction_id' => $app->request->request->get('txn_id')];
 
-                    if ($app->request->request->has('custom')) {
+                    if ($app->request->request->has('custom') && (int) $order_id = $app->request->request->get('custom')) {
                         /** @var OrderModel $order */
-                        $order = OrderModel::objects()->get(['orderid' => $app->request->request->get('custom')]);
+                        $order = OrderModel::objects()->get(['orderid' => $order_id]);
                         $txn_data['orderid'] = $order->orderid;
                     }
 
