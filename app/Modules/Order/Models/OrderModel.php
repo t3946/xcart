@@ -153,7 +153,7 @@ class OrderModel extends Model
                 'link' => ['cb_status' => 'code'],
                 'sqlType' => Type::STRING,
                 'null' => false,
-                'default' => OrderStatusModel::ORDER_STATUS_QUEUED
+                'default' => OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP3
             ],
             'dc_status_model' => [
                 'field' => 'dc_status',
