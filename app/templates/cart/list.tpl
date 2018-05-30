@@ -1,6 +1,6 @@
 {extends  $.request->getIsAjax() ? "ajax.tpl" : "cart/base.tpl"}
-
 {block 'content'}
+    {set $cartEmpty = $.app->cart->getIsEmpty()}
 <section class="cart-page cart_shipping-page">
     <div class="row">
         <div class="columns large-12">
@@ -18,6 +18,8 @@
                     </a>
                 </div>
 
+
+                {if !$cartEmpty}
                 <div class="head">
                     <div class="nop"></div>
 
@@ -33,7 +35,9 @@
                         </div>
                     </div>
                 </div>
+                {/if}
             </div>
+
 
 
             {foreach $.app->cart->getItemsGroupedBy() as $gi => $group}
@@ -183,7 +187,8 @@
 
             <div class="hr"></div>
 
-            <div class="columns large-12">
+            {if !$cartEmpty}
+
                 <div class="memo_subtotal">
                     <div class="grand-subtotal">
                         Subtotal:
@@ -210,7 +215,8 @@
                         </a>
                     </div>
                 </div>
-            </div>
+
+            {/if}
 
 
 
