@@ -258,6 +258,7 @@ class CheckoutController extends FrontendController
                                 'shipping_net' => $charge,
                                 'total_gross' => $cart_group['subtotal'],
                                 'total_net' => $cart_group['subtotal'],
+                                'cb_status' => OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP3,
                             ]);
 
                             $group->save();
