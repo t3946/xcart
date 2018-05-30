@@ -22,6 +22,16 @@ class DefaultController extends FrontendController
     {
         $this->redirect('catalog:product:view', ['id' => $id, 'slug' => $slug], 301);
     }
+
+    public function actionViewOldIndex($id): void
+    {
+        /** @var ProductModel $product */
+        if ($product = ProductModel::objects()->filter(['productid' => $id])->get()) {
+            $this->redirect($product->getAbsoluteUrl(), [], 301);
+        }
+
+        $this->error();
+    }
     
     public function actionView($sku): void
     {
