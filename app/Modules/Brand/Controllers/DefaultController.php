@@ -26,12 +26,24 @@ class DefaultController extends AbstractCatalogController
 
         $model = BrandModel::objects()->get(['brandid' => $id]);
 
+        if (!$model) {
+            $this->error();
+        }
+
         $this->setMetaBase(MetaType::BRAND, [
             'model' => $model,
             'site' => $site
         ]);
 
         $this->view_internal($model);
+    }
+
+    public function actionViewIndex($id)
+    {
+        /** @var BrandModel $model */
+        if ($model = BrandModel::objects()->get(['brandid' => $id])) {
+            $this->redirect($model->getAbsoluteUrl(), [], 301);
+        }
     }
 
     public function actionView($sku)

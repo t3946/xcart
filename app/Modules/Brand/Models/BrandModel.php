@@ -168,7 +168,6 @@ class BrandModel extends Model
 
                 $url = '//' . $site->domain . $url;
             }
-            http://via.placeholder.com/200x200/efefef/a6a6a6/?text=No+image
             return $url;
         }
 

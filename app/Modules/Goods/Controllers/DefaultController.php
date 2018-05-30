@@ -5,6 +5,7 @@ namespace Modules\Goods\Controllers;
 use Modules\Goods\Helpers\ProductSortHelper;
 use Modules\Goods\Helpers\TabDataHelper;
 use Modules\Goods\Models\ProductModel;
+use Modules\Goods\Models\ProductVideosModel;
 use Modules\Meta\Types\MetaType;
 use Xcart\App\Controller\FrontendController;
 use Xcart\App\Main\Xcart;
@@ -16,6 +17,21 @@ class DefaultController extends FrontendController
     public function actionViewOld($id, $slug): void
     {
         $this->view_internal(ProductModel::objects()->filter(['productid' => $id])->get());
+    }
+
+    public function actionViewOldSlash($id, $slug): void
+    {
+        $this->redirect('catalog:product:view', ['id' => $id, 'slug' => $slug], 301);
+    }
+
+    public function actionViewOldIndex($id): void
+    {
+        /** @var ProductModel $product */
+        if ($product = ProductModel::objects()->filter(['productid' => $id])->get()) {
+            $this->redirect($product->getAbsoluteUrl(), [], 301);
+        }
+
+        $this->error();
     }
     
     public function actionView($sku): void
@@ -67,7 +83,13 @@ class DefaultController extends FrontendController
             'category' => $category,
         ];
 
-        if ($model->isGroupRoot()) {
+        /** @var ProductVideosModel $video_models */
+        if ($video_models = ProductVideosModel::objects()->filter(['product_id' => $model->productid])->all() ) {
+            $params['videos'] = $video_models;
+        }
+
+
+            if ($model->isGroupRoot()) {
             $pager = new Pagination($model->getFrontendChilds(), [
                 'pageSize' => 25,
                 'view' => 'core/pager/front_endless.tpl',
