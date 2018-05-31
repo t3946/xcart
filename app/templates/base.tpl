@@ -19,9 +19,11 @@
                         </div>
                         <div class="columns small-8">
                             <div class="call_lang">
-                                {insert "demo/blocks/_call_in_hours.tpl"}
-                                {*{include "demo/blocks/_call_after_hours.tpl"}*}
-
+                                {if $.workingDayTimeNow}
+                                    {insert "demo/blocks/_call_in_hours.tpl"}
+                                {else}
+                                    {include "demo/blocks/_call_after_hours.tpl"}
+                                {/if}
                                 <a href="#" class="lang"> </a>
                             </div>
                         </div>
