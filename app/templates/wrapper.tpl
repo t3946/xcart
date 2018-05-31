@@ -96,7 +96,7 @@
     {$gConfig.google_analitics_tracking_script
         |replace:'{{ga_account_nr}}':$config.cidev_ga_code_number
         |replace:'{{ga_ec_data}}':"ga('require', 'ec');"
-        |replace:'{{ga_send}}':"ga('send', 'pageview');"
+        |replace:'{{ga_send}}':""
     }
 
     {get_assets:raw type='css' position='head'}
@@ -178,6 +178,8 @@
         if (raf) raf(cb);
         else window.addEventListener('DOMContentLoaded', cb);
     })();
+
+    ga('send', 'pageview');
 </script>
 
 {render_flash:raw template='base/_flash.tpl'}

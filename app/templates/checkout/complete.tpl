@@ -375,5 +375,36 @@
         {/ignore}
     </script>
     <!-- Bing Code for Conversion Tracking: Order Conversion Page -->
+    <script>
+        {ignore}
+        ga('ec:setAction', 'purchase', {
+        {/ignore}
+            'id': '{$order->getOrderNumber()}',
+            'affiliation': '{$.getSite->domain}',
+            'revenue': '{$order->subtotal|number_format:2}',
+            'shipping': '{$order->shipping_cost|number_format:2}'
+        {ignore}
+        });
+        {/ignore}
 
+        {foreach $order->detail_models as $detail}
+            {set $product = $detail->product_model}
+            {set $category = $product->getMainCategory()}
+            {if $product}
+                {ignore}
+                ga('ec:addItem', {
+                {/ignore}
+                    'id':'{$order->getOrderNumber()}',
+                    'name':'{$product->getFrontendName()}',
+                    'sku':'{$product->productcode}',
+                    'category':'{$category->category}',
+                    'price':'{$detail->price}',
+                    'quantity':'{$detail->amount}'
+                {ignore}
+                });
+                {/ignore}
+            {/if}
+        {/foreach}
+        
+    </script>
 {/block}
