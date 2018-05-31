@@ -136,7 +136,8 @@ class OfflineResponse extends AbstractResponse
 
     public function redirect(): void
     {
-        Xcart::app()->event->trigger('order:paid', ['model' => $this->getRequest()->getOrder(), 'status' => OrderStatusModel::ORDER_STATUS_QUEUED]);
+        $model = $this->getRequest()->getOrder();
+		Xcart::app()->event->trigger('order:paid', ['model' => $model, 'status' => $model->payment_method == 'Purchase Order' ? 'IO' : OrderStatusModel::ORDER_STATUS_QUEUED]);
         Xcart::app()->request->redirect($this->getRedirectUrl());
     }
 

@@ -12,11 +12,13 @@
 
             <div class="banners_column">
                 <div class="banner product-of-the-day show-for-medium dark">
+                    {if $product}
                     <a href="{$product->getAbsoluteUrl()}" class="banner__cover" data-background="/static/frontend/dist/images/slider/{$.getSite->code|strtolower}/product_of_day.jpg">
                         <div class="product-of-the-day_cover banner__info">
                             <div class="product-of-the-day__caption">Product of the day</div>
                         </div>
                     </a>
+                    {/if}
                 </div>
             </div>
 
@@ -34,11 +36,13 @@
                 </div>
 
                 <div class="banner whatsnew dark">
-                    <a href="{$category_new->getAbsoluteUrl()}" class="banner__cover" data-background="/static/frontend/dist/images/slider/{$.getSite->code|strtolower}/what_is_new.jpg">
-                        <div class="banner__info">
-                            <div class="caption">What’s new</div>
-                        </div>
-                    </a>
+                    {if $category_new}
+                        <a href="{$category_new->getAbsoluteUrl()}" class="banner__cover" data-background="/static/frontend/dist/images/slider/{$.getSite->code|strtolower}/what_is_new.jpg">
+                            <div class="banner__info">
+                                <div class="caption">What’s new</div>
+                            </div>
+                        </a>
+                    {/if}
                 </div>
             </div>
 
@@ -54,15 +58,18 @@
 
                     <a class="icon brands show-for-large"
                        href="{url 'brand:list'}">Brands</a>
-
+                    {if ($category_new)}
                     <a class="icon new"
                        href="{$category_new->getAbsoluteUrl()}">What's new</a>
+                    {/if}
 
                     <a class="icon bestsellers"
                        href="{url 'catalog:bestsellers'}">Bestsellers</a>
 
+                    {if $product}
                     <a class="icon day"
                        href="{$product->getAbsoluteUrl()}">Product of the day</a>
+                    {/if}
 
                     <a class="icon featured"
                        href="{url 'catalog:featured'}">Featured products</a>
@@ -83,7 +90,9 @@
     <div class="row">
         <div class="small-12 column slider-products slider-new">
             {set $link}{url 'catalog:new'}{/set}
-            {include 'slider/base_product_slider.tpl' title="What's new" link=$category_new->getAbsoluteUrl() data_link=$link}
+            {if $category_new}
+                {include 'slider/base_product_slider.tpl' title="What's new" link=$category_new->getAbsoluteUrl() data_link=$link}
+            {/if}
         </div>
     </div>
 

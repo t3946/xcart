@@ -105,7 +105,7 @@
             </td>
             <td width="10%">&nbsp;</td>
             <td width="45%" style="vertical-align: top;">
-                {if $purchase_order}
+                {if $order->payment_method == 'Purchase Order'}
                     <table cellspacing="0" cellpadding="0" width="100%" border="0">
                         <tr>
                             <td width="40%"><b>PO Number:</b></td>
@@ -121,8 +121,7 @@
             </td>
         </tr>
     </table>
-    {if $purchase_order}
-        &nbsp;
+    {if $order->payment_method == 'Purchase Order'}
         <br/>
         <table cellspacing="0" cellpadding="0" width="100%" border="0">
             <tr>

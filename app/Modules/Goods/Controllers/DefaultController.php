@@ -83,11 +83,20 @@ class DefaultController extends FrontendController
             'category' => $category,
         ];
 
+        $flag = true;
         /** @var ProductVideosModel $video_models */
         if ($video_models = ProductVideosModel::objects()->filter(['product_id' => $model->productid])->all() ) {
-            $params['videos'] = $video_models;
+            foreach ($video_models as $video_model){
+                if (!preg_match('/youtu/i', $video_model->video) ){
+                    $flag = false;
+                }
+            }
         }
 
+        if ($flag) {
+            $params['videos'] = $video_models;
+        }
+        
 
             if ($model->isGroupRoot()) {
             $pager = new Pagination($model->getFrontendChilds(), [

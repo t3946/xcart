@@ -90,7 +90,8 @@ class OrderModel extends Model
                 'class' => ForeignField::class,
                 'modelClass' => CartModel::class,
                 'link' => ['cart_number' => 'id'],
-                'null' => true
+                'null' => true,
+                'default' => null,
             ],
             'groups' => [
                 'class' => HasManyField::className(),

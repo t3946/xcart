@@ -82,7 +82,7 @@
                         {if $videos}
                             {foreach $videos as $video}
                                 <option value="{$video->video}"
-                                        data-thump=""
+                                        data-thumb=""
                                         data-id="{$video->id}"
                                         type="video">
 
@@ -139,11 +139,13 @@
 
                     {if $model->isGroupChild()}
                         {set $parent = $model->parent}
-                        <div class="link__group_root">
-                            <a href="{$parent->getAbsoluteUrl()}">
-                                Full {$parent->getFrontendName()} product line
-                            </a>
-                        </div>
+                        {if $parent}
+                            <div class="link__group_root">
+                                <a href="{$parent->getAbsoluteUrl()}">
+                                    Full {$parent->getFrontendName()} product line
+                                </a>
+                            </div>
+                        {/if}
                     {/if}
 
                     {*{if $model->isOutOfStock()}*}

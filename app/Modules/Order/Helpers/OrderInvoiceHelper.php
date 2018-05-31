@@ -18,32 +18,40 @@ class OrderInvoiceHelper
             $site = Xcart::app()->getModule('Sites')->getSite();
             $config = $site->getGlobalConfig();
 
-            Xcart::app()->mail->template(
-                $order->email,
-                str_replace('{{orderid}}', $order->getOrderNumber(), $notification->customer_subject),
-                'mail/invoice.tpl',
-                ['order' => $order],
-                ['from' => $config['orders_department']]
-            );
+            $cs_email = $config['orders_department'] ?? 'orders@s3stores.com';
 
-            if ($send_copy) {
+            try {
                 Xcart::app()->mail->template(
-                    $config['orders_department'],
-                    str_replace( '{{orderid}}', $order->getOrderNumber(), $notification->copy_subject),
+                    $order->email,
+                    str_replace('{{orderid}}', $order->getOrderNumber(), $notification->customer_subject),
                     'mail/invoice.tpl',
+                    ['order' => $order],
                     [
-                        'order' => $order,
-                        'type' => 'A',
-                    ],
-                    [
-                        'from' => [$config['orders_department'] => $order->firstname],
-                        'reply_to' => [$order->email => $order->firstname],
-                        'bcc' => ['igor@s3stores.com' => '', 'romann@s3stores.com' => ''],
-                        'headers' => [
-                            'X-Xcart-Label' => 'order-status-init'
-                        ]
+                        'from' => $cs_email
                     ]
                 );
+
+                if ($send_copy) {
+                    Xcart::app()->mail->template(
+                        $cs_email,
+                        str_replace('{{orderid}}', $order->getOrderNumber(), $notification->copy_subject),
+                        'mail/invoice.tpl',
+                        [
+                            'order' => $order,
+                            'type' => 'A',
+                        ],
+                        [
+                            'from' => [$cs_email => $order->firstname],
+                            'reply_to' => [$order->email => $order->firstname],
+                            'bcc' => ['igor@s3stores.com' => '', 'romann@s3stores.com' => ''],
+                            'headers' => [
+                                'X-Xcart-Label' => 'order-status-init'
+                            ]
+                        ]
+                    );
+                }
+            } catch(\Exception $exception){
+                Xcart::app()->logger->error($exception->getMessage(), $config ?? [], 'email');
             }
         }
     }

@@ -80,8 +80,7 @@ class GMC extends StoreFrontMarketPlace
         if (empty($this->oService)) {
             global $xcart_dir;
 
-            $client = new Google_Client();
-            $client->getHttpClient()->setDefaultOption('verify',false);
+            $client = new Google_Client(['verify' => false]);
             $client->setApplicationName("Client_Library_Examples");
             $client->setAuthConfig($xcart_dir . '/include/system/gapi-3c467d1a8e76.json');
             $client->addScope(Google_Service_ShoppingContent::CONTENT);
