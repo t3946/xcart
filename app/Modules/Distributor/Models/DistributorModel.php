@@ -4,6 +4,7 @@ namespace Modules\Distributor\Models;
 
 use DateTime;
 use Modules\Goods\Models\ProductModel;
+use Modules\Main\Helpers\WorkingTimeHelper;
 use Modules\Shipping\Models\ShippingRateModel;
 use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
@@ -80,20 +81,7 @@ class DistributorModel extends Model
 
     public function isGoodTimeToSendEmail(): bool
     {
-        $result = false;
-
-        $d_time = $this->getDistributorTime();
-
-        $startTime = new DateTime('08:30');
-        $endTime = new DateTime('16:30');
-
-        if ($d_time >= $startTime && $d_time <= $endTime && !in_array(intval($d_time->format( 'N' )), [6, 7])) {
-            if (!RequestAvailabilityOptionModel::objects()->get(['date_mm_dd_yyyy' => $d_time->format('m/d/Y'), 'active' => 'Y'])) {
-                $result = true;
-            }
-        }
-
-        return $result;
+        return WorkingTimeHelper::workingDayTime($this->getDistributorTime());
     }
 
     public function checkMinimalAmount($subtotal = 0): bool

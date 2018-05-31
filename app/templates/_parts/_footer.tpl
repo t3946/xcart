@@ -11,22 +11,23 @@
                     <div class="row">
                         <div class="columns small-12">
 
-                            <div class="s3stores-logo">
-                                <img alt="S3 Stores, Inc." class="s3logo " src="/static/frontend/dist/images/logos/s3stores.svg">
-                            </div>
+                            {if !$.workingDayTimeNow}
+                                <div class="s3stores-logo">
+                                    <img alt="S3 Stores, Inc." class="s3logo " src="/static/frontend/dist/images/logos/s3stores.svg">
+                                </div>
 
-                            <div class="all-times">
-                                <img  alt="" class="Web order 24/7" src="/static/frontend/dist/images/icons/footer/web_order.svg">
-                                <div class="content">
-                                    <div class="title">
-                                        Web Orders
-                                    </div>
-                                    <div>
-                                        24 hours a day, 7 days a week
+                                <div class="all-times">
+                                    <img  alt="" class="Web order 24/7" src="/static/frontend/dist/images/icons/footer/web_order.svg">
+                                    <div class="content">
+                                        <div class="title">
+                                            Web Orders
+                                        </div>
+                                        <div>
+                                            24 hours a day, 7 days a week
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-
+                            {/if}
 
                             <ul class="no-bullet menu-list show-for-large email-support">
                                 <li class="title-menu">

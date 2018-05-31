@@ -44,7 +44,7 @@
                     </a>
                 </div>
                 <div class="columns contacts-logo-block hide-for-small show-for-large">
-                    <div class="working-hours active">
+                    <div class="working-hours {if $.workingDayTimeNow}active{else}inactive{/if}">
                         <div class="text-order-online">
                             <span class="green-circle-icon"></span>
                             <span class="grey-text-label">Order online or call us. Operators are standing by!</span>
@@ -54,7 +54,7 @@
                             <span class="phone-number">1-800-929-2431</span>
                         </div>
                     </div>
-                    <div class="after-hours inactive">
+                    <div class="after-hours {if !$.workingDayTimeNow}active{else}inactive{/if}">
                         <div class="text-order-online">
                             <img src="/static/frontend/images/icons/cart/place_order_online_icon.svg"
                                  alt=""

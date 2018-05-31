@@ -20,11 +20,15 @@ return [
         'target' => ['\Modules\Main\Controllers\DefaultController', 'actionAboutUs'],
         'name' => 'about_us'
     ],
-
     [
         'route' => '/robots.txt',
         'target' => [RobotsController::class, 'actionIndex'],
         'name' => 'robots'
     ],
+//    [
+//        'route' => '/test/',
+//        'target' => ['\Modules\Main\Controllers\TestController', 'actionTest'],
+//        'name' => 'test'
+//    ]
 
 ];
