@@ -1,23 +1,24 @@
 <?php
 
-//use \Modules\Main\Controllers\ContactFormController;
-
+use Modules\Main\Controllers\ContactFormController;
+use Modules\Main\Controllers\DefaultController;
+use Modules\Main\Controllers\TestController;
 use Modules\Main\Controllers\RobotsController;
 
 return [
     '' => [
         'route' => '',
-        'target' => ['\Modules\Main\Controllers\DefaultController', 'index'],
+        'target' => [DefaultController::class, 'index'],
         'name' => 'index'
     ],
     [
         'route' => '/contactus/',
-        'target' => ['\Modules\Main\Controllers\ContactFormController', 'actionContactUs'],
+        'target' => [ContactFormController::class, 'actionContactUs'],
         'name' => 'contact_us_form'
     ],
     [
         'route' => '/about-us/',
-        'target' => ['\Modules\Main\Controllers\DefaultController', 'actionAboutUs'],
+        'target' => [DefaultController::class, 'actionAboutUs'],
         'name' => 'about_us'
     ],
     [
@@ -27,7 +28,7 @@ return [
     ],
 //    [
 //        'route' => '/test/',
-//        'target' => ['\Modules\Main\Controllers\TestController', 'actionTest'],
+//        'target' => [TestController::class, 'actionTest'],
 //        'name' => 'test'
 //    ]
 
