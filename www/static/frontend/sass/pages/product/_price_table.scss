@@ -56,7 +56,8 @@
               size: rem-calc(13);
             }
 
-            &.price-value {
+            &.price-value,
+            &.extended-value {
               font: {
                 size: rem-calc(15);
               }
@@ -66,7 +67,8 @@
               font: {
                 size: rem-calc(16);
               }
-              &.price-value {
+              &.price-value,
+              &.extended-value {
                 font: {
                   size: rem-calc(18);
                 }
@@ -76,7 +78,8 @@
               font: {
                 size: rem-calc(15);
               }
-              &.price-value {
+              &.price-value,
+              &.extended-value {
                 font: {
                   size: rem-calc(17);
                 }

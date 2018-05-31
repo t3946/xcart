@@ -40,14 +40,14 @@
                    {if !$model->isOutOfStock()}
                         <div class="column extended">
                             <div class="title">Subtotal</div>
-                            <div class="value">
+                            <div class="value extended-value">
                                 US$ <span class="price" var-price-extended>{$model->getFrontendPrice()|number_format:2}</span>
                             </div>
                         </div>
 
                         <div class="column auto hide-for-small show-for-medium">
                             <div class="title"></div>
-                            <div class="value">
+                            <div class="value ">
                                 <div class="cart_add">
                                     <a class="add button waves waves-orange yellow">
                                         <span class="text">
