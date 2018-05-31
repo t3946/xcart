@@ -10,9 +10,9 @@
                 {foreach $categories as $category}
                     <a href="#id{$category->categoryid}" class="item-title column link-id{$category->categoryid}">
                         <span class="image-container">
-                            <img class="image"
-                                 src="/static/frontend/demo_images/demo_images_new/icon{(rand(0,1)) ? 1 : 2}.svg"
-                                 alt="">
+                            {*<img class="image"*}
+                                 {*src="/static/frontend/demo_images/demo_images_new/icon{(rand(0,1)) ? 1 : 2}.svg"*}
+                                 {*alt="">*}
                         </span>
                         <span class="title"><span>{$category->category}</span></span>
                     </a>
@@ -36,9 +36,9 @@
                         <div class="column small-12">
                             <a href="{$category->getAbsoluteUrl()}" class="departments-submenu-title">
                                 <span class="image-container">
-                                    <img class="image"
-                                         src="/static/frontend/demo_images/demo_images_new/icon{(rand(0,1)) ? 1 : 2}.svg"
-                                         alt="">
+                                    {*<img class="image"*}
+                                         {*src="/static/frontend/demo_images/demo_images_new/icon{(rand(0,1)) ? 1 : 2}.svg"*}
+                                         {*alt="">*}
                                 </span>
                                 <span class="title">{$category->category}</span>
                             </a>
