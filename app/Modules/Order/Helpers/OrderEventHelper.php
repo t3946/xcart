@@ -86,7 +86,8 @@ class OrderEventHelper
                 'order_prefix' => $app->getModule('Sites')->getSite()->getOrderPrefix(),
                 'login' => $user->login,
                 'user_id' => $user->id,
-                'phone' => preg_replace('/\D/S', '', $model->phone)
+                'phone' => preg_replace('/\D/S', '', $model->phone),
+                'storefrontid' => Xcart::app()->getModule('Sites')->getSite()->storefrontid,
             ]);
             $model->save();
         }
