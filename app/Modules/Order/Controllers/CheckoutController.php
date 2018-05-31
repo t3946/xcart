@@ -261,10 +261,13 @@ class CheckoutController extends FrontendController
                                 'cb_status' => OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP3,
                             ]);
 
-                            $group->save();
-
                             $order->subtotal += $group->total_gross;
                             $order->shipping_cost += $charge;
+
+                            $group-> total_gross += $charge;
+                            $group-> total_net += $charge;
+
+                            $group->save();
                         }
                     }
 
