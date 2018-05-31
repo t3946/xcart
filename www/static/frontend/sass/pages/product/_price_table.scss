@@ -56,14 +56,30 @@
               size: rem-calc(13);
             }
 
+            &.price-value {
+              font: {
+                size: rem-calc(15);
+              }
+            }
+
             @include breakpoint(medium) {
               font: {
                 size: rem-calc(16);
+              }
+              &.price-value {
+                font: {
+                  size: rem-calc(18);
+                }
               }
             }
             @include breakpoint(large) {
               font: {
                 size: rem-calc(15);
+              }
+              &.price-value {
+                font: {
+                  size: rem-calc(17);
+                }
               }
             }
           }

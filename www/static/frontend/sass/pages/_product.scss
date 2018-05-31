@@ -6,7 +6,11 @@
   @include getPricesTable();
 
   .price {
-    padding-left: 3px ;
+    padding-left: 3px;
+
+     .price-value{
+       font-weight: bold;
+     }
   }
 
 
