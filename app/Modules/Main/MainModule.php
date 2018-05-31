@@ -20,7 +20,7 @@ class MainModule extends Module
         });
 
         $template->addAccessorCallback('workingDayTimeNow', function () {
-            return WorkingTimeHelper::workingDayTimeNow();
+           return WorkingTimeHelper::workingDayTimeNow();
         });
 
     }
