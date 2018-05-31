@@ -82,7 +82,7 @@
                         {if $videos}
                             {foreach $videos as $video}
                                 <option value="{$video->video}"
-                                        data-thump=""
+                                        data-thumb=""
                                         data-id="{$video->id}"
                                         type="video">
 
