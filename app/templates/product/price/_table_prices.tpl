@@ -1,5 +1,19 @@
 <div class="prices__container">
 
+    {if !$model->isOutOfStock()}
+        <div class="row">
+            <div class="columns small-12 hide-for-medium">
+                <div class="cart_add">
+                    <a class="add button waves waves-orange yellow">
+                    <span class="text">
+                        Add to cart
+                    </span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    {/if}
+
     <div class="price__quantity">
         <div class="row">
             <div class="column small-12">
@@ -7,7 +21,7 @@
                <div class="table table__prices table__prices--top">
                     <div class="column price">
                         <div class="title">Price</div>
-                        <div class="value">
+                        <div class="value price-value">
                             US$ <span class="price" var-price>{$model->getFrontendPrice()|number_format:2}</span>
                         </div>
                     </div>
@@ -15,27 +29,25 @@
                     <div class="column quantity">
                         <div class="title">Quantity</div>
                         <div class="value">
-
-                        {if !$model->isOutOfStock()}
-                            {include "product/parts/_quantity_group.tpl"}
-                        {else}
-                            Out of stock
-                        {/if}
+                            {if !$model->isOutOfStock()}
+                                {include "product/parts/_quantity_group.tpl"}
+                            {else}
+                                Out of stock
+                            {/if}
                         </div>
                     </div>
 
                    {if !$model->isOutOfStock()}
                         <div class="column extended">
                             <div class="title">Subtotal</div>
-                            <div class="value">
+                            <div class="value extended-value">
                                 US$ <span class="price" var-price-extended>{$model->getFrontendPrice()|number_format:2}</span>
                             </div>
                         </div>
 
-                           <div class="column auto hide-for-small show-for-medium">
+                        <div class="column auto hide-for-small show-for-medium">
                             <div class="title"></div>
-                            <div class="value">
-
+                            <div class="value ">
                                 <div class="cart_add">
                                     <a class="add button waves waves-orange yellow">
                                         <span class="text">
@@ -43,22 +55,15 @@
                                         </span>
                                     </a>
                                 </div>
-
                             </div>
                         </div>
                    {else}
-
                         <div class="column notify auto">
                             <div class="title"></div>
-                            <div class="value">
-
-                            </div>
+                            <div class="value"></div>
                         </div>
-
                    {/if}
                </div>
-
-
             </div>
         </div>
 
@@ -131,19 +136,7 @@
         {/if}
     </div>
 
-    {if !$model->isOutOfStock()}
-    <div class="row">
-        <div class="columns small-12 hide-for-medium">
-            <div class="cart_add">
-                <a class="add button waves waves-orange yellow">
-                    <span class="text">
-                        Add to cart
-                    </span>
-                </a>
-            </div>
-        </div>
-    </div>
-    {/if}
+
 
 </div>
 
