@@ -18,6 +18,8 @@ class OrderInvoiceHelper
             $site = Xcart::app()->getModule('Sites')->getSite();
             $config = $site->getGlobalConfig();
 
+            $cs_email = $config['orders_department'] ?? 'orders@s3stores.com';
+
             try {
                 Xcart::app()->mail->template(
                     $order->email,
@@ -25,7 +27,7 @@ class OrderInvoiceHelper
                     'mail/invoice.tpl',
                     ['order' => $order],
                     [
-                        'from' => $config['orders_department']
+                        'from' => $cs_email
                     ]
                 );
 
@@ -39,7 +41,7 @@ class OrderInvoiceHelper
                             'type' => 'A',
                         ],
                         [
-                            'from' => [$config['orders_department'] => $order->firstname],
+                            'from' => [$cs_email => $order->firstname],
                             'reply_to' => [$order->email => $order->firstname],
                             'bcc' => ['igor@s3stores.com' => '', 'romann@s3stores.com' => ''],
                             'headers' => [
@@ -49,7 +51,7 @@ class OrderInvoiceHelper
                     );
                 }
             } catch(\Exception $exception){
-                Xcart::app()->logger->error($exception->getMessage(), [], 'email');
+                Xcart::app()->logger->error($exception->getMessage(), $config ?? [], 'email');
             }
         }
     }
