@@ -33,7 +33,7 @@ class OrderInvoiceHelper
 
                 if ($send_copy) {
                     Xcart::app()->mail->template(
-                        $config['orders_department'],
+                        $cs_email,
                         str_replace('{{orderid}}', $order->getOrderNumber(), $notification->copy_subject),
                         'mail/invoice.tpl',
                         [
