@@ -26,10 +26,10 @@ return [
         'target' => [RobotsController::class, 'actionIndex'],
         'name' => 'robots'
     ],
-    [
-        'route' => '/test/',
-        'target' => [TestController::class, 'actionTest'],
-        'name' => 'test'
-    ]
+//    [
+//        'route' => '/test/',
+//        'target' => [TestController::class, 'actionTest'],
+//        'name' => 'test'
+//    ]
 
 ];
