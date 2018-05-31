@@ -264,8 +264,8 @@ class CheckoutController extends FrontendController
                             $order->subtotal += $group->total_gross;
                             $order->shipping_cost += $charge;
 
-                            $group-> total_gross += $charge;
-                            $group-> total_net += $charge;
+                            $group->total_gross += $charge;
+                            $group->total_net += $charge;
 
                             $group->save();
                         }
