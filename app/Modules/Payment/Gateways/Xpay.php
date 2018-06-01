@@ -128,7 +128,7 @@ class Xpay extends Gateway
                     case self::PAYMENT_STATUS_AUTHORIZED :
                         $this->txn->transaction_status = OrderTransactionModel::STATUS_AUTHORIZED;
 
-                        if ($this->get_detail_info(['txnId' => $params['txnId']])) {
+                        if ($this->get_detail_info(['transactionReference' => $params['txnId']])) {
 
                             $info = $this->result->getData();
 
