@@ -6,6 +6,7 @@ use Modules\Cart\CartModule;
 use Modules\Cart\Components\CartItem;
 use Modules\Cart\Controllers\BaseCartController;
 use Modules\Goods\Models\ProductModel;
+use Modules\Order\Forms\CountShippingForm;
 use Xcart\App\Main\Xcart;
 
 class CartController extends BaseCartController
@@ -180,6 +181,38 @@ class CartController extends BaseCartController
         }
 
         return $items;
+    }
+
+    public function actionCalculateShipping()
+    {
+        //$shippingForm = new CountShippingForm();
+        //echo 'actionCalculateShipping';
+
+//        $listRoute = $this->getListRoute();
+//        $url = Xcart::app()->router->url($listRoute);
+//        if ($listRoute && strpos($this->getRequest()->getPath(), $url) === false) {
+//            $this->getRequest()->redirect($listRoute);
+//        }
+//
+//        $cart = $this->getCart();
+//        $cart->isValid();
+        $data = Xcart::app()->request->post->all();
+
+        if(!empty($data)){
+
+            $result = [
+                'name1' => 'cost1',
+                'name2' => 'cost2',
+                'name3' => 'cost3',
+            ];
+
+            $this->jsonResponse($result);
+            return;
+        }
+
+        $this->display('cart/calculate_shipping.tpl', [
+            'form' => new CountShippingForm()
+        ]);
     }
 
     protected function addInternal($uniqueId, $quantity = 1)

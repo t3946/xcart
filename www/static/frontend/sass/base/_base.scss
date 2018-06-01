@@ -77,6 +77,12 @@ input {
   }
 }
 
+body .mmodal-modal-bg .mmodal-container {
+  .mmodal-close {
+    text-indent: 0 !important;
+  }
+}
+
 .non-us-disclaimer.checkbox-container{
   margin-top: 1rem;
 
