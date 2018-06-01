@@ -131,8 +131,12 @@ class Xpay extends Gateway
                         if ($this->get_detail_info(['transactionReference' => $params['txnId']])) {
 
                             $info = $this->result->getData();
+                            Xcart::app()->logger->debug('Response get_detail_info', $info ?? [], 'payment');
 
                             if ($info && \is_array($info) && ($real_txns = $info['transactions']) && \is_array($real_txns)) {
+
+                                Xcart::app()->logger->debug('Response real_txns', $real_txns ?? [], 'payment');
+
                                 foreach ($real_txns as $r_txn) {
                                     if (!empty($r_txn['txnid'])) {
                                         $this->txn->setAttributes([
@@ -144,7 +148,7 @@ class Xpay extends Gateway
                             }
                         }
 
-                        Xcart::app()->logger->debug('Response get_detail_info', $this->result->getData() ?? [], 'payment');
+
 
                         $this->txn->save();
 
