@@ -1,6 +1,7 @@
 <?php
 namespace Modules\Goods\Helpers;
 
+use Modules\Core\Components\GlobalConfig;
 use Modules\Sites\Models\SiteModel;
 use Xcart\App\Main\Xcart;
 use Xcart\ElasticSearch;
@@ -14,6 +15,7 @@ class SearchSuggestionHelper
         /** @var \Modules\Core\CoreModule $coreModule */
         $coreModule = Xcart::app()->getModule('Core');
         $config = $coreModule::getGlobalConfig();
+
         $config_min_scope = $config["ElasticSearch_options"]["search_results_minimum_score_value"];
 
         $this->search = trim($search);
@@ -22,6 +24,7 @@ class SearchSuggestionHelper
         $this->elastic->setMinScore($config_min_scope);
         $this->elastic->setType('product');
         $this->elastic->setQueryParams($search);
+        GlobalConfig::getInstance()->setOldMode(false);
     }
 
     public function getSearchIndex()

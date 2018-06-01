@@ -143,6 +143,7 @@ class SearchController extends AbstractCatalogController
         $classElastic->setMinScore($min_score ?: $config_min_scope);
         $classElastic->setType('product');
         $classElastic->setQueryParams($search);
+        GlobalConfig::getInstance()->setOldMode(false);
 
         return $classElastic;
     }
