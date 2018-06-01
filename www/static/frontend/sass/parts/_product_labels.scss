@@ -131,6 +131,16 @@
       }
     }
 
+    &.free-shipping {
+      border-color: #4EAAFC;
+      border-left: 1px dashed #4EAAFC;
+      i {
+        width: rem-calc(64);
+        padding: 5px;
+        background-image: url("../images/icons/item_product/free_shipping.svg");
+      }
+    }
+
     &.lead-time {
       border-color: #FF7200;
 
