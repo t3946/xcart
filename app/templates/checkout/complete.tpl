@@ -392,7 +392,7 @@
             {set $category = $product->getMainCategory()}
             {if $product}
                 {ignore}
-                ga('ec:addItem', {
+                ga('ec:addProduct', {
                 {/ignore}
                     'id':'{$order->getOrderNumber()}',
                     'name':'{$product->getFrontendName()}',
