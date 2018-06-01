@@ -132,6 +132,8 @@ class Xpay extends Gateway
 
                             $info = $this->result->getData();
 
+                            Xcart::app()->logger->debug('Response get_detail_info', $info ?? [], 'payment');
+
                             if ($info && \is_array($info) && ($real_txns = $info['transactions']) && \is_array($real_txns)) {
                                 foreach ($real_txns as $r_txn) {
                                     if (!empty($r_txn['txnid'])) {
