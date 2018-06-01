@@ -148,8 +148,6 @@ class Xpay extends Gateway
                             }
                         }
 
-
-
                         $this->txn->save();
 
                         break;
