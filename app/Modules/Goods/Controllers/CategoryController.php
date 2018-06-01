@@ -32,7 +32,7 @@ class CategoryController extends AbstractCatalogController
     public function preView($model)
     {
         if (!$model) {
-            $this->error();
+            $this->redirect('catalog:list', [], 301);
         }
 
         /** @var \Modules\Sites\Models\SiteModel $site */
