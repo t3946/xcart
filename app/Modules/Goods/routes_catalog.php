@@ -81,6 +81,11 @@ return [
         'target' => [CategoryController::class, 'actionList'],
         'name' => 'list'
     ],
+    [
+        'route' => '/categories',
+        'target' => [CategoryController::class, 'actionListIndex'],
+        'name' => 'list0'
+    ],
 
 
 

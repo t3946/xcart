@@ -24,6 +24,11 @@ class CategoryController extends AbstractCatalogController
         }
     }
 
+    public function actionListIndex()
+    {
+        $this->redirect('catalog:list', [], 301);
+    }
+
     public function actionView($sku)
     {
         $this->preView(CategoryModel::objects()->filter(['productcode' => $sku])->get());
