@@ -137,14 +137,14 @@ class Xpay extends Gateway
 
                                 Xcart::app()->logger->debug('Response real_txns', $real_txns ?? [], 'payment');
 
-                                foreach ($real_txns as $r_txn) {
-                                    if (!empty($r_txn['txnid'])) {
+                                //foreach ($real_txns as $r_txn) {
+                                    if (!empty($real_txns['txnid'])) {
                                         $this->txn->setAttributes([
-                                            'transaction_response' => $r_txn,
-                                            'transaction_id' => $r_txn['txnid'],
+                                            'transaction_response' => $info,
+                                            'parent_transaction_id' => $real_txns['txnid'],
                                         ]);
                                     }
-                                }
+                                //}
                             }
                         }
 
