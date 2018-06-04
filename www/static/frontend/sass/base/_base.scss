@@ -80,6 +80,11 @@ input {
 body .mmodal-modal-bg .mmodal-container {
   .mmodal-close {
     text-indent: 0 !important;
+    width: rem-calc(20) !important;
+    height: rem-calc(20) !important;
+    background-image: none !important;
+    top: rem-calc(12) !important;
+    right: rem-calc(12) !important;
   }
 }
 

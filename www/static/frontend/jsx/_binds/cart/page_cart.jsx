@@ -2,9 +2,9 @@ import storeCart from 'stores/StoreCart';
 import createAutoComplete from '_binds/cart/shipping_autocomplete';
 
 (() => {
-    let cart_container = document.querySelector('.cart-page');
+    let cartContainer = document.querySelector('.cart-page');
 
-    if (cart_container) {
+    if (cartContainer) {
 
         storeCart.dispatch({type: 'FETCH'});
 
@@ -54,13 +54,9 @@ import createAutoComplete from '_binds/cart/shipping_autocomplete';
                 windowWrapper.style.display = 'none';
 
                 windowWrapper.appendChild(window);
-                cart_container.appendChild(windowWrapper);
-
-                console.log('1222222');
+                cartContainer.appendChild(windowWrapper);
 
                 $.ajax('/cart/calculate_shipping').done(function(html) {
-
-                    //console.log(html);
 
                     $(window).html(html).mmodal({
                         'width': 750,

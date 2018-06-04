@@ -1,7 +1,8 @@
 {extends  $.request->getIsAjax() ? "ajax.tpl" : "cart/base.tpl"}
 {block 'content'}
-    <div class="cart_shipping-page default-content-page default-form" >
     <div class="ajax-calculate-shipping-form">
+    <div class="cart_shipping-page default-content-page default-form" >
+
         <form action="/cart/calculate_shipping" method="post">
             <div class="row">
                 <div class="column small-12">
