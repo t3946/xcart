@@ -8,6 +8,8 @@
 
 namespace Modules\Order\Forms;
 
+use Modules\Core\Models\CountryModel;
+use Modules\Core\Models\StateModel;
 use Modules\Order\Validation\CountryValidator;
 use Modules\Order\Validation\StateValidator;
 use Modules\Order\Validation\ZipCodeValidator;
@@ -16,6 +18,9 @@ use Xcart\App\Form\Fields\CharField;
 
 class CountShippingForm extends BaseForm
 {
+
+    private $replacement;
+
     public function getFields()
     {
         return [

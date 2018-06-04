@@ -185,21 +185,11 @@ class CartController extends BaseCartController
 
     public function actionCalculateShipping()
     {
-        //$shippingForm = new CountShippingForm();
-        //echo 'actionCalculateShipping';
 
-//        $listRoute = $this->getListRoute();
-//        $url = Xcart::app()->router->url($listRoute);
-//        if ($listRoute && strpos($this->getRequest()->getPath(), $url) === false) {
-//            $this->getRequest()->redirect($listRoute);
-//        }
-//
-//        $cart = $this->getCart();
-//        $cart->isValid();
-        $data = Xcart::app()->request->post->all();
+        $shippingForm = new CountShippingForm();
 
-        if(!empty($data)){
-
+        if (Xcart::app()->request->getIsPost() && $shippingForm->populate(Xcart::app()->request->post)->isValid()) {
+            
             $result = [
                 'name1' => 'cost1',
                 'name2' => 'cost2',
@@ -211,7 +201,7 @@ class CartController extends BaseCartController
         }
 
         $this->display('cart/calculate_shipping.tpl', [
-            'form' => new CountShippingForm()
+            'form' => $shippingForm
         ]);
     }
 
