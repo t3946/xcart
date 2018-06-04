@@ -141,7 +141,7 @@ class Xpay extends Gateway
                                     if (!empty($real_txns['txnid'])) {
                                         $this->txn->setAttributes([
                                             'transaction_response' => $info,
-                                            'parent_transaction_id' => $real_txns['txnid'],
+                                            'transaction_id' => $real_txns['txnid'],
                                         ]);
                                     }
                                 //}
