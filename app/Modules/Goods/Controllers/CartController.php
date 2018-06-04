@@ -207,7 +207,10 @@ class CartController extends BaseCartController
                     }
                 }
 
-                $this->jsonResponse($result);
+                $this->jsonResponse([
+                    'type' => 'json',
+                    'result' => $result
+                ]);
                 return;
             }
         }
