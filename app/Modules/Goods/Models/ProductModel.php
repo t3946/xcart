@@ -609,4 +609,9 @@ class ProductModel extends Model implements ICartItem
             ])
         ]);
     }
+
+    public function isFreeShipping()
+    {
+        return false;
+    }
 }

@@ -8,7 +8,7 @@ use Xcart\App\Main\Xcart;
 
 class PromotionalProductsHelper
 {
-    public static function getProductOfTheDay() : ProductModel
+    public static function getProductOfTheDay() :? ProductModel
     {
         $qs = self::getBestsellersSQ();
         if ($product = $qs->cache(Cache::CACHE_DAY) ->order(['?'])->limit(1)->get()) {

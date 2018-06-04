@@ -96,7 +96,7 @@
     {$gConfig.google_analitics_tracking_script
         |replace:'{{ga_account_nr}}':$config.cidev_ga_code_number
         |replace:'{{ga_ec_data}}':"ga('require', 'ec');"
-        |replace:'{{ga_send}}':"ga('send', 'pageview');"
+        |replace:'{{ga_send}}':""
     }
 
     {get_assets:raw type='css' position='head'}
@@ -157,6 +157,13 @@
                 createStyleElement( "/static/frontend/dist/css/styles.css?v={frontend_version resource='css/styles.css'}");
             }, 40);
 
+        };
+        var raf = requestAnimationFrame || mozRequestAnimationFrame ||
+            webkitRequestAnimationFrame || msRequestAnimationFrame;
+        if (raf) raf(cb);
+        else window.addEventListener('DOMContentLoaded', cb);
+
+        window.addEventListener("load", function(event) {
             window.LHCChatOptions = {
                 opt: {
                     'widget_height':540,
@@ -172,12 +179,11 @@
             var location  = (document.location) ? encodeURIComponent(window.location.href.substring(window.location.protocol.length)) : '';
             po.src = '//livechat.s3stores.com/index.php/chat/getstatus/(click)/internal/(position)/bottom_left/(ma)/br/(check_operator_messages)/true/(top)/350/(units)/pixels/(leaveamessage)/true/(department)/2?r='+referrer+'&l='+location;
             var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
-        };
-        var raf = requestAnimationFrame || mozRequestAnimationFrame ||
-            webkitRequestAnimationFrame || msRequestAnimationFrame;
-        if (raf) raf(cb);
-        else window.addEventListener('DOMContentLoaded', cb);
+        });
+
     })();
+
+    ga('send', 'pageview');
 </script>
 
 {render_flash:raw template='base/_flash.tpl'}

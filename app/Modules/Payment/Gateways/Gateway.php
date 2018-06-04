@@ -16,7 +16,7 @@ use Xcart\App\Main\Xcart;
 abstract class Gateway implements GatewayInterface
 {
 
-    /** @var \Omnipay\Common\AbstractGateway|RestGateway|\Omnipay\BluePay\Gateway $gateway */
+    /** @var \Omnipay\Common\AbstractGateway|RestGateway|\Omnipay\BluePay\Gateway|\Omnipay\Xpay\Gateway $gateway */
     public $gateway;
 
     /** @var ProcessorModel $model */

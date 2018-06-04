@@ -4,6 +4,7 @@ namespace Modules\Payment\Controllers;
 
 
 use Exception;
+use Modules\Core\Components\GlobalConfig;
 use Modules\Order\Helpers\OrderHelper;
 use Modules\Order\Helpers\OrderInvoiceHelper;
 use Modules\Order\Helpers\OrderTagEventHelper;
@@ -151,9 +152,7 @@ class PaymentController extends Controller
         if ($app = Xcart::app()) {
             $params = $order = null;
 
-            /** @var \Modules\Core\CoreModule $coreModule */
-            $coreModule = $app->getModule('Core');
-            $config = $coreModule::getGlobalConfig();
+            $config = GlobalConfig::getInstance();
 
             if (($bodyReceived = file_get_contents('php://input')) && $params = json_decode($bodyReceived, true)) {
 
@@ -164,7 +163,7 @@ class PaymentController extends Controller
                         /** @var OrderTransactionModel $txn */
                         if ($txn = OrderTransactionModel::objects()->get(['transaction_id' => $params['buyer_transaction_id']])) {
 
-                            OrderTagEventHelper::orderTagEvent($config['Attention_tags_invoices']['tag_for_events_dispute_created'], $txn->order->orderid);
+                            OrderTagEventHelper::orderTagEvent($config['tag_for_events_dispute_created'], $txn->order->orderid);
                         }
 
                         break;
@@ -190,7 +189,7 @@ class PaymentController extends Controller
                         case 'new_case':
 
                             if ($order = $txn->order) {
-                                OrderTagEventHelper::orderTagEvent($config['Attention_tags_invoices']['tag_for_events_dispute_created'], $order->orderid);
+                                OrderTagEventHelper::orderTagEvent($config['tag_for_events_dispute_created'], $order->orderid);
                             }
 
                             break;

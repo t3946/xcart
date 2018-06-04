@@ -1,6 +1,7 @@
 <?php
 namespace Modules\Goods\Helpers;
 
+use Modules\Core\Components\GlobalConfig;
 use Modules\Sites\Models\SiteModel;
 use Xcart\App\Main\Xcart;
 use Xcart\ElasticSearch;
@@ -14,6 +15,7 @@ class SearchSuggestionHelper
         /** @var \Modules\Core\CoreModule $coreModule */
         $coreModule = Xcart::app()->getModule('Core');
         $config = $coreModule::getGlobalConfig();
+
         $config_min_scope = $config["ElasticSearch_options"]["search_results_minimum_score_value"];
 
         $this->search = trim($search);
@@ -22,6 +24,7 @@ class SearchSuggestionHelper
         $this->elastic->setMinScore($config_min_scope);
         $this->elastic->setType('product');
         $this->elastic->setQueryParams($search);
+        GlobalConfig::getInstance()->setOldMode(false);
     }
 
     public function getSearchIndex()
@@ -120,16 +123,20 @@ JSON;
 
         $spaces = substr_count($this->search, ' ') + 2;
 
-        $search_phrase_updated = ltrim($this->search);
+        $search_phrase_updated = addslashes(ltrim($this->search));
 
-        $query = "select LOWER(SUBSTRING_INDEX(SS.search_phrase,' ', {$spaces})) As suggester
+        $query = "select LOWER(SUBSTRING_INDEX(SS.search_phrase,' ', :spaces)) As suggester
        from xcart_search_stats SS 
-       where SS.storefrontid = '{$siteModule->getSite()->storefrontid}' and SS.hits>0 and SS.search_phrase like '{$search_phrase_updated}%'
+       where SS.storefrontid = :sfid and SS.hits>0 and SS.search_phrase like ':name%'
        group By Suggester
        Order By COUNT(SS.id) desc
         Limit {$count}";
 
-        $query_result = Xcart::app()->db->getConnection()->fetchAll($query);
+        $query_result = Xcart::app()->db->getConnection()->fetchAll($query,[
+            'spaces' => $spaces,
+            'sfid' => $siteModule->getSite()->storefrontid,
+            'name' => $search_phrase_updated,
+        ]);
 
         if (!empty($query_result)){
             foreach ($query_result as $k => $v){

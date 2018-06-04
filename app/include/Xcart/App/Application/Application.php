@@ -281,6 +281,9 @@ class Application
         $match = $router->match($request->resolveRequestUri(), $request->getMethod());
 
         if (empty($match)) {
+            if (!$request->getIsAjax()) {
+                $request->redirect('/', [], 301);
+            }
             throw new NotFoundHttpException("Page not found");
         }
 
