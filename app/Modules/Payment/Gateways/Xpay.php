@@ -151,6 +151,15 @@ class Xpay extends Gateway
                         $this->txn->save();
 
                         break;
+					case self::PAYMENT_STATUS_CHARGED :
+						$this->txn->transaction_status = OrderTransactionModel::STATUS_COMPLETED;
+						break;
+					case self::PAYMENT_STATUS_REFUNDED :
+						$this->txn->transaction_status = OrderTransactionModel::STATUS_REFUNDED;
+						break;
+					case self::PAYMENT_STATUS_PARTIALY_REFUNDED :
+						$this->txn->transaction_status = OrderTransactionModel::STATUS_PARTIALLY_RUFUNDED;
+						break;
                 }
 
                 $this->txn->transaction_response = $updatedData;
