@@ -65,14 +65,20 @@ import createAutoComplete from '_binds/cart/shipping_autocomplete';
                                 url: '/cart/calculate_shipping',
                                 method: 'POST',
                                 data: $('.mmodal-content form').serialize()
-                            }).done(function(json) {
-                                console.log(json);
-                                let html = '';
-                                for (let key in json) {
-                                    html += '<div class="row align-center"><div class="name columns small-4">' + key
-                                        + '</div><div class="value columns small-2">' + json[key] + '</div></div>';
+                            }).done(function(result) {
+                                console.log(result);
+                                if(result.type && result.type == 'json') {
+                                    let html = '';
+                                    let json = result.result;
+                                    for (let key in json) {
+                                        html += '<div class="row align-center"><div class="name columns small-4">' + key
+                                            + '</div><div class="value columns small-2">' + json[key] + '</div></div>';
+                                    }
+                                    $('.mmodal-content .ajax-calculate-shipping-form').html(html);
+                                } else {
+                                    $('.mmodal-content .ajax-calculate-shipping-form').html(result);
                                 }
-                                $('.mmodal-content .ajax-calculate-shipping-form').html(html);
+
                             });
                         }
                     });
