@@ -155,15 +155,18 @@
         var cb = function() {
             setTimeout(function(){
                 createStyleElement( "/static/frontend/dist/css/styles.css?v={frontend_version resource='css/styles.css'}");
-            }, 40);
+            }, 0);
 
         };
         var raf = requestAnimationFrame || mozRequestAnimationFrame ||
             webkitRequestAnimationFrame || msRequestAnimationFrame;
         if (raf) raf(cb);
-        else window.addEventListener('DOMContentLoaded', cb);
+        else window.addEventListener('load', cb);
 
         window.addEventListener("load", function(event) {
+
+            ga('send', 'pageview');
+
             window.LHCChatOptions = {
                 opt: {
                     'widget_height':540,
@@ -183,7 +186,7 @@
 
     })();
 
-    ga('send', 'pageview');
+
 </script>
 
 {render_flash:raw template='base/_flash.tpl'}
