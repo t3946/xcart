@@ -7,6 +7,9 @@ use Modules\Cart\Components\CartItem;
 use Modules\Cart\Controllers\BaseCartController;
 use Modules\Goods\Models\ProductModel;
 use Modules\Order\Forms\CountShippingForm;
+use Modules\Order\Models\OrderModel;
+use Modules\Shipping\Models\ShippingModel;
+use Modules\Shipping\ShippingModule;
 use Xcart\App\Main\Xcart;
 
 class CartController extends BaseCartController
@@ -189,15 +192,24 @@ class CartController extends BaseCartController
         $shippingForm = new CountShippingForm();
 
         if (Xcart::app()->request->getIsPost() && $shippingForm->populate(Xcart::app()->request->post)->isValid()) {
-            
-            $result = [
-                'name1' => 'cost1',
-                'name2' => 'cost2',
-                'name3' => 'cost3',
-            ];
 
-            $this->jsonResponse($result);
-            return;
+            if ($cart_groups = Xcart::app()->cart->getItemsGroupedBy()) {
+
+                /** @var ShippingModule $shm */
+                $shm = Xcart::app()->getModule('Shipping');
+                foreach ($cart_groups as $g => $cart_group)
+                {
+                    if ($rates = $shm::getShipping($g, new OrderModel($shippingForm->getAttributes()), $cart_group)) {
+                        foreach ($rates as $rate) {
+                            $ship_m = $rate->shipping;
+                            $result[$ship_m->getFrontendName() . ' - '. $ship_m->shipping_time] = "US$ {$rate->getShippingCharge()}";
+                        }
+                    }
+                }
+
+                $this->jsonResponse($result);
+                return;
+            }
         }
 
         $this->display('cart/calculate_shipping.tpl', [

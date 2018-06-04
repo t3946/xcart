@@ -19,7 +19,7 @@ use Xcart\App\Form\Fields\CharField;
 class CountShippingForm extends BaseForm
 {
 
-    private $replacement;
+    public $replacement = 's_';
 
     public function getFields()
     {
