@@ -447,6 +447,7 @@ class CheckoutController extends FrontendController
                 }
 
                 $order->cb_status = OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP4;
+                $order->date = time();
                 $order->save();
 
                 $this->redirect('checkout:payment');
