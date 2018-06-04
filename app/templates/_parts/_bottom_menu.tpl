@@ -1,9 +1,6 @@
 <div class="bottom-menu">
-
-    <div class="hide-for-medium row">
-        <div class="column small-12">
-
-        </div>
+    <div class="mobileMenu hide-for-medium">
+        {insert "_parts/_bottom_menu_mobile_pages.tpl"}
     </div>
 
     <div class="show-for-medium row">
@@ -13,6 +10,4 @@
             </ul>
         </div>
     </div>
-
-
 </div>
