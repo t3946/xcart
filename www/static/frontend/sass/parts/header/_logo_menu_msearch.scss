@@ -1,4 +1,7 @@
 header {
+
+  border-bottom: 1px solid #cdcdcd;
+
   .logo_menu {
     margin: rem-calc(7) 0;
     height: rem-calc(39);
@@ -110,5 +113,12 @@ header {
         }
       }
     }
+  }
+
+  &.header-fixed {
+    position:fixed;
+    z-index: 9999;
+    background-color: white;
+    width: 100%;
   }
 }
