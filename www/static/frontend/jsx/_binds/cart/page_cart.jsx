@@ -69,9 +69,10 @@ import createAutoComplete from '_binds/cart/shipping_autocomplete';
                                 console.log(result);
                                 if(result.type && result.type == 'json') {
                                     let html = '';
-                                    for (let key in result) {
+                                    let json = result.result;
+                                    for (let key in json) {
                                         html += '<div class="row align-center"><div class="name columns small-4">' + key
-                                            + '</div><div class="value columns small-2">' + result[key] + '</div></div>';
+                                            + '</div><div class="value columns small-2">' + json[key] + '</div></div>';
                                     }
                                     $('.mmodal-content .ajax-calculate-shipping-form').html(html);
                                 } else {
