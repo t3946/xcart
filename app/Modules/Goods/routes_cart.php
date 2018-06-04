@@ -78,4 +78,9 @@ return [
         'target' => ['\Modules\Goods\Controllers\CartController', 'actionDecrease'],
         'name' => 'quantity:dec'
     ],
+    [
+        'route' => '/calculate_shipping',
+        'target' => ['\Modules\Goods\Controllers\CartController', 'actionCalculateShipping'],
+        'name' => 'calculate_shipping'
+    ],
 ];
