@@ -55,7 +55,7 @@ trait MetaTrait
     /**
      * @return string
      */
-    public function getCanonical(): string
+    public function getCanonical():? string
     {
         return $this->canonical;
     }

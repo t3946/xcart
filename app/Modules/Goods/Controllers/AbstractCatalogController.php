@@ -128,6 +128,8 @@ abstract class AbstractCatalogController extends FrontendController
 
         $pager = $this->getPager($pqs);
 
+        $this->setCanonical($model);
+
         if ($this->getRequest()->getIsAjax())
         {
             $pagerView = $pager->createView();
