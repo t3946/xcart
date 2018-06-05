@@ -32,6 +32,8 @@ class DefaultController extends FrontendController
             'site' => $site
         ]);
 
+        $this->setCanonical('');
+
         $this->display('home.tpl', [
             'category_new' => $category_new,
             'product' => PromotionalProductsHelper::getProductOfTheDay(),
