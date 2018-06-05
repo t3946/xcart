@@ -12,10 +12,12 @@
 *}
 
                 {set $brand = $model->brand}
-                {include 'product/tabs/__option.tpl'
-                    title='Brand'
-                    value="<a href='"~ $brand->getAbsoluteUrl() ~"'>" ~ $brand->brand ~ "</a>"
-                }
+                {if $brand}
+                    {include 'product/tabs/__option.tpl'
+                        title='Brand'
+                        value="<a href='"~ $brand->getAbsoluteUrl() ~"'>" ~ $brand->brand ~ "</a>"
+                    }
+                {/if}
 
                 {foreach $model->getParamList() as $item}
                     {include 'product/tabs/__option.tpl'
