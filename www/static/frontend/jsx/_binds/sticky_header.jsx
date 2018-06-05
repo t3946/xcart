@@ -18,7 +18,8 @@ import cssFileLoaded from "../utils/cssFileLoaded";
 
         let sticky = stickyContainer.find('#top-header');
         let topFixed = false;
-        let prevPosition;
+        let prevPosition = 0;
+        let delta = 50;
 
         let processScroll = _.throttle(function () {
 
@@ -66,21 +67,42 @@ import cssFileLoaded from "../utils/cssFileLoaded";
 
         let initStickyMenuOnResize = _.throttle(initStickyMenu, 50);
 
+        function changePrevPosition(currentPosition){
+            if(prevPosition <= currentPosition){
+                prevPosition = currentPosition;
+                return 1;
+            }
+
+            let lDelta = prevPosition - currentPosition;
+            if(lDelta > delta) {
+                prevPosition = currentPosition;
+                //console.log('change', prevPosition);
+                return 2;
+            }
+
+            return 0;
+        }
+
         function checkMenuPosition(lastKnownScrollPosition) {
 
-            if (lastKnownScrollPosition >= stickyContainer.offset().top && lastKnownScrollPosition < prevPosition) {
+            let direction = changePrevPosition(lastKnownScrollPosition);
+
+            //console.log(prevPosition);
+
+            if (lastKnownScrollPosition >= stickyContainer.offset().top && direction == 2) {
                 if(!topFixed){
                     sticky.addClass('header-fixed');
                     topFixed = true;
                 }
 
             } else {
-                if(topFixed){
+                if(topFixed && direction == 1){
                     sticky.removeClass('header-fixed');
                     topFixed = false;
                 }
             }
-            prevPosition = lastKnownScrollPosition;
+
+
         }
 
 
