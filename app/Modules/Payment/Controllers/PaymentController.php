@@ -195,6 +195,9 @@ class PaymentController extends Controller
                             break;
                         case 'web_accept':
 
+                            if ($app->request->request->get('payment_status') === 'Completed') {
+                                break;
+                            }
                             if ($order) {
                                 $txn->setAttributes([
                                     'orderid' => $order->orderid,

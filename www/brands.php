@@ -3,12 +3,16 @@
 # brands.php, random
 #
 
-use Modules\User\Helpers\SurfingHelper;
-use Modules\User\Models\SurfPathModel;
+use Modules\Brand\Models\BrandModel;
+use Xcart\App\Main\Xcart;
 
 require "./auth.php";
 
-$brandid = abs(intval($brandid));
+if ($brand_model = BrandModel::objects()->get(['brandid' => (int) $brandid])) {
+    Xcart::app()->request->redirect($brand_model->getAbsoluteUrl(true), [], 301);
+} else {
+    Xcart::app()->request->redirect('brand:list', [], 301);
+}
 
 x_session_register("notify_email");
 $smarty->assign("notify_email", $notify_email);
@@ -25,7 +29,7 @@ if (
 
 
 if($active_modules["Brands"]) {
-    if ($brandid && ($brand_model = \Modules\Brand\Models\BrandModel::objects()->get(['brandid' => $brandid]))) {
+    if ($brandid && ($brand_model = BrandModel::objects()->get(['brandid' => $brandid]))) {
         if ($brand_model->parent_brand_id) {
             func_clean_url_permanent_redirect('M', $brand_model->parent_brand_id);
         }

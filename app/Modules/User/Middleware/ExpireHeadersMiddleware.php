@@ -44,6 +44,10 @@ class ExpireHeadersMiddleware extends Middleware
                 defined("SET_EXPIRE") ?:
                     header("Expires: " . gmdate("D, d M Y H:i:s", time() + 10) . " GMT");
             }
+
+            //TODO remove this. Session not created on main action
+            Xcart::app()->request->session->get('category_sort');
+
         }
     }
 
