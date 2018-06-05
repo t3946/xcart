@@ -19,6 +19,7 @@ import 'bower_components/jQuery.dotdotdot/src/jquery.dotdotdot.js';
 
 
 import  "./_binds/cart"
+import  "./_binds/breadcrumbs"
 import  "./_binds/sticky_menu"
 import  "./_binds/sticky_header"
 import  "./_binds/response_status_278";
