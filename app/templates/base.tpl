@@ -5,75 +5,70 @@
     <div class="off-canvas-content" data-off-canvas-content>
         <div id="content-wrapper">
             {block "header"}
-            <header itemscope itemtype="http://schema.org/WPHeader">
+            <div id="top-header-content">
+                <header id="top-header" itemscope itemtype="http://schema.org/WPHeader">
 
-                <div class="top-header hide-for-small-only">
-                    <div class="row">
-                        <div class="columns small-4">
-                            <ul class="our-websites no-bullet">
-                                <li class="current"><span>{$.getSite->short_name}</span></li>
-                                {*<li><a href="#">Teacher</a></li>*}
-                                {*<li><a href="#">Kids</a></li>*}
-                                {*<li><a href="#">Sport</a></li>*}
-                            </ul>
-                        </div>
-                        <div class="columns small-8">
-                            <div class="call_lang">
-                                {if $.workingDayTimeNow}
-                                    {insert "demo/blocks/_call_in_hours.tpl"}
-                                {else}
-                                    {include "demo/blocks/_call_after_hours.tpl"}
-                                {/if}
-                                <a href="#" class="lang"> </a>
+                    <div class="top-header hide-for-small-only">
+                        <div class="row">
+                            <div class="columns small-4">
+                                <ul class="our-websites no-bullet">
+                                    <li class="current"><span>{$.getSite->short_name}</span></li>
+                                    {*<li><a href="#">Teacher</a></li>*}
+                                    {*<li><a href="#">Kids</a></li>*}
+                                    {*<li><a href="#">Sport</a></li>*}
+                                </ul>
+                            </div>
+                            <div class="columns small-8">
+                                <div class="call_lang">
+                                    {if $.workingDayTimeNow}
+                                        {insert "demo/blocks/_call_in_hours.tpl"}
+                                    {else}
+                                        {include "demo/blocks/_call_after_hours.tpl"}
+                                    {/if}
+                                    <a href="#" class="lang"> </a>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="logo_menu">
-                    <div class="row align-justify">
-                        <div class="columns small-2 medium-1 show-for-small hide-for-large">
-                            <a href="#" data-toggle="offCanvasLeft" class="mobile_menu middle-inline-block hamburger"></a>
-                        </div>
-                        <div class="columns small-3 medium-2">
-                            <a href="/">
-                                <img src="/static/frontend/dist/images/logos/sites/{$.getSite->code|lower}/logo.svg" alt="{$.getSiteConfig->company_name->value}" class="show-for-large logo-big">
-                                <img src="/static/frontend/dist/images/logos/sites/{$.getSite->code|lower}/logo-small.svg" alt="{$.getSiteConfig->company_name->value}" class="show-for-small hide-for-large logo-small">
-                            </a>
-                        </div>
-
-                        <div class="columns small-3 medium-7 large-push-3">
-                            <div class="main-menu-wrap">
-                                <ul class="main-menu no-bullet show-for-medium">
-                                    {get_menu code='main-menu'}
-                                </ul>
+                    <div class="logo_menu">
+                        <div class="row align-justify">
+                            <div class="columns small-2 medium-1 show-for-small hide-for-large">
+                                <a href="#" data-toggle="offCanvasLeft" class="mobile_menu middle-inline-block hamburger"></a>
                             </div>
-                        </div>
+                            <div class="columns small-3 medium-2">
+                                <a href="/">
+                                    <img src="/static/frontend/dist/images/logos/sites/{$.getSite->code|lower}/logo.svg" alt="{$.getSiteConfig->company_name->value}" class="show-for-large logo-big">
+                                    <img src="/static/frontend/dist/images/logos/sites/{$.getSite->code|lower}/logo-small.svg" alt="{$.getSiteConfig->company_name->value}" class="show-for-small hide-for-large logo-small">
+                                </a>
+                            </div>
 
-                        <div class="columns hide-for-large small-2 medium-1">
-                            <a class="mobile__search-btn middle-inline-block" data-toggle="search_container"></a>
-                        </div>
+                            <div class="columns small-3 medium-7 large-push-3">
+                                <div class="main-menu-wrap">
+                                    <ul class="main-menu no-bullet show-for-medium">
+                                        {get_menu code='main-menu'}
+                                    </ul>
+                                </div>
+                            </div>
 
-                        <div class="columns hide-for-large small-2 medium-1">
-                            <a href="{url "cart:list"}" class="mobile__cart middle-inline-block">
+                            <div class="columns hide-for-large small-2 medium-1">
+                                <a class="mobile__search-btn middle-inline-block" data-toggle="search_container"></a>
+                            </div>
+
+                            <div class="columns hide-for-large small-2 medium-1">
+                                <a href="{url "cart:list"}" class="mobile__cart middle-inline-block">
                             <span class="count">
                                 <span class="mc_count">
                                     {*{$.app->cart->getQuantity()}*}
                                 </span>
                             </span>
-                            </a>
+                                </a>
+                            </div>
+
                         </div>
-
                     </div>
-                </div>
-                <div class="row">
-                    <div class="columns small-12">
-                        <div class="hr hide-for-large"></div>
-                    </div>
-                </div>
-
-            </header>
-
+                </header>
+            </div>
             <div class="shadow"></div>
             <div class="sticky-menu-container">
                 <div class="sticky def-zi2"
@@ -139,17 +134,19 @@
         {insert "_parts/_footer.tpl"}
     </div>
 
+
+
     {block 'offcanvas-menu-left'}
     <div class="off-canvas position-left hide" id="offCanvasLeft" data-off-canvas data-transition="push">
         {insert "_parts/_menu_mobile.tpl"}
     </div>
     {/block}
 
-    {block 'offcanvas-menu-right'}
-    <div class="off-canvas position-right hide" id="offCanvasRight" data-off-canvas data-transition="push">
-        {insert "_parts/_menu_mobile_pages.tpl"}
-    </div>
-    {/block}
+    {*{block 'offcanvas-menu-right'}*}
+    {*<div class="off-canvas position-right hide" id="offCanvasRight" data-off-canvas data-transition="push">*}
+        {*{insert "_parts/_menu_mobile_pages.tpl"}*}
+    {*</div>*}
+    {*{/block}*}
 
 </div>
 {/block}

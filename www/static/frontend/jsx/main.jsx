@@ -33,33 +33,33 @@ import documentReady from "./utils/documentReady";
         Waves.attach('.waves');
         Waves.init();
 
-        let $offCanvasLeft  = $('#offCanvasLeft');
-        let $offCanvasRight = $('#offCanvasRight');
+        //let $offCanvasLeft  = $('#offCanvasLeft');
+        //let $offCanvasRight = $('#offCanvasRight');
 
-        $(document).on('swipe', function(e, Dx, Dy, angle) {
-            if (e.target.closest('#main_wrapper') && !e.target.closest('.disable-global-swipe, .slider-data, .disable-global-swipe-horizontal')) {
-                if (isMedia('medium') && isTouch()) {
-                    if (angle < 10) {
-                        if (Dx === 1 && Dy === 0) { //right
-                            if ($offCanvasRight.hasClass('is-open')) {
-                                $offCanvasRight.foundation('close');
-                            }
-                            else {
-                                $offCanvasLeft.foundation('open', e);
-                            }
-                        }
-                        else if (Dx === -1 && Dy === 0) {
-                            if ($offCanvasLeft.hasClass('is-open')) {
-                                $offCanvasLeft.foundation('close');
-                            }
-                            else {
-                                $offCanvasRight.foundation('open', e);
-                            }
-                        }
-                    }
-                }
-            }
-        });
+        // $(document).on('swipe', function(e, Dx, Dy, angle) {
+        //     if (e.target.closest('#main_wrapper') && !e.target.closest('.disable-global-swipe, .slider-data, .disable-global-swipe-horizontal')) {
+        //         if (isMedia('medium') && isTouch()) {
+        //             if (angle < 10) {
+        //                 if (Dx === 1 && Dy === 0) { //right
+        //                     if ($offCanvasRight.hasClass('is-open')) {
+        //                         $offCanvasRight.foundation('close');
+        //                     }
+        //                     else {
+        //                         $offCanvasLeft.foundation('open', e);
+        //                     }
+        //                 }
+        //                 else if (Dx === -1 && Dy === 0) {
+        //                     if ($offCanvasLeft.hasClass('is-open')) {
+        //                         $offCanvasLeft.foundation('close');
+        //                     }
+        //                     else {
+        //                         $offCanvasRight.foundation('open', e);
+        //                     }
+        //                 }
+        //             }
+        //         }
+        //     }
+        // });
 
         $(document)
             .on('click', '.show_more', function(e){
