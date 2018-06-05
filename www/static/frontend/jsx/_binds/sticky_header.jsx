@@ -14,9 +14,10 @@ import cssFileLoaded from "../utils/cssFileLoaded";
 
         var lastKnownScrollPosition = 0;
         var ticking = false;
-        var containerHeightRemoved = false;
+        var stickyHeaderRemoved = false;
 
         let sticky = stickyContainer.find('#top-header');
+        let topFixed = false;
         let prevPosition;
 
         let processScroll = _.throttle(function () {
@@ -34,20 +35,24 @@ import cssFileLoaded from "../utils/cssFileLoaded";
 
         let initStickyMenu = function () {
 
-            // Выход если разрешение для мобильного устройства
-            if (isMedia('large') && isMedia('medium')) {
-                if(!containerHeightRemoved){
+            // Выход если разрешение не для мобильного устройства
+            if (isMedia('large')) {
+                if(!stickyHeaderRemoved){
                     stickyContainer.css({
                         'height': 'auto'
                     });
-                    containerHeightRemoved = true;
+                    sticky.removeClass('header-fixed');
+                    topFixed = false;
+
+                    window.removeEventListener('scroll', processScroll, {'passive': true});
+                    stickyHeaderRemoved = true;
                 }
                 return;
             }
-            containerHeightRemoved = false;
+            stickyHeaderRemoved = false;
 
             let heightOfStickyBlock = sticky.height();
-            if (heightOfStickyBlock <= 0) {
+            if (heightOfStickyBlock <= 0 || isMedia('large')) {
                 return;
             }
 
@@ -64,9 +69,16 @@ import cssFileLoaded from "../utils/cssFileLoaded";
         function checkMenuPosition(lastKnownScrollPosition) {
 
             if (lastKnownScrollPosition >= stickyContainer.offset().top && lastKnownScrollPosition < prevPosition) {
-                sticky.addClass('header-fixed');
+                if(!topFixed){
+                    sticky.addClass('header-fixed');
+                    topFixed = true;
+                }
+
             } else {
-                sticky.removeClass('header-fixed');
+                if(topFixed){
+                    sticky.removeClass('header-fixed');
+                    topFixed = false;
+                }
             }
             prevPosition = lastKnownScrollPosition;
         }
