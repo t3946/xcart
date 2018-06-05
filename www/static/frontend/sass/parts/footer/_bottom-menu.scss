@@ -38,23 +38,65 @@
   }
 
   .mobileMenu {
-    .accordion-title{
-      border: 1px solid #ffffff;
-      background-color: #ffb400;
-      font-size: 1rem;
-      font-weight: bold;
 
-      @include breakpoint(sm) {
-        font-size: rem-calc(20);
+    .accordion-item {
+      border-bottom: 2px solid #ffffff;
+
+      .accordion-title {
+        border: 0;
+        background-color: #ffb400;
+        font-size: 1rem;
+        font-weight: bold;
+
+        @include breakpoint(sm) {
+          font-size: rem-calc(20);
+        }
+
+        &:before {
+          position: absolute;
+          right: 1rem;
+          margin-top: -.9rem;
+          font-size: 1.8rem;
+        }
       }
 
+      .accordion-content {
+        background-color: #474747;
+        border: 0;
 
-      &:before {
-        position: absolute;
-        right: 1rem;
-        margin-top: -.9rem;
-        font-size: 1.8rem;
+        ul {
+          li {
+            a {
+              display: block;
+              cursor: pointer;
+              color: #fff;
+              font-size: rem-calc(14);
+              line-height: 2em;
+              position: relative;
+
+              @include breakpoint(sm) {
+                font-size: rem-calc(18);
+              }
+
+              &:after {
+                content: url("../../dist/images/icons/link_arrow_right_white.svg");
+                display: block;
+                position: absolute;
+                right: 0;
+                top: 0;
+                width: rem-calc(7);
+                height: rem-calc(7);
+
+                @include breakpoint(sm) {
+                  width: rem-calc(9);
+                  height: rem-calc(9);
+                }
+              }
+            }
+          }
+        }
       }
     }
+
   }
 }
