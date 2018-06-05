@@ -247,29 +247,33 @@ class CheckoutController extends FrontendController
 
                     /** @var ShippingRateModel $rate */
                     if ($rates[$g] && ($rate = ShippingRateModel::objects()->get(['rateid' => $rates[$g]]))) {
+                        $charge = 0;
+
                         /** @var ShippingRateModel[] $shipping_rates */
                         if (($shipping_rates = $ship_module::getShipping($g, $order, $cart_group)) && $shipping_rates[$rate->rateid]) {
                             $charge = $shipping_rates[$rate->rateid]->getShippingCharge();
-
                             $group->setAttributes([
                                 'shippingid' => $rate->shippingid,
                                 'shipping' => $rate->shipping->getFrontendName(),
-                                'shipping_gross' => $charge,
-                                'shipping_net' => $charge,
-                                'total_gross' => $cart_group['subtotal'],
-                                'total_net' => $cart_group['subtotal'],
-                                'cb_status' => OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP3,
                             ]);
-
-                            $order->subtotal += $group->total_gross;
-                            $order->shipping_cost += $charge;
-
-                            $group->total_gross += $charge;
-                            $group->total_net += $charge;
-
-                            $group->save();
                         }
                     }
+
+                    $group->setAttributes([
+                        'shipping_gross' => $charge,
+                        'shipping_net' => $charge,
+                        'total_gross' => $cart_group['subtotal'],
+                        'total_net' => $cart_group['subtotal'],
+                        'cb_status' => OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP3,
+                    ]);
+
+                    $order->subtotal += $group->total_gross;
+                    $order->shipping_cost += $charge;
+
+                    $group->total_gross += $charge;
+                    $group->total_net += $charge;
+
+                    $group->save();
 
                     /** @var CartItem $item */
                     foreach ($cart_group['items'] as $item)
