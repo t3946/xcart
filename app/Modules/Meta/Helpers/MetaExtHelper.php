@@ -296,9 +296,9 @@ class MetaExtHelper
                 'noIndex' => $this->noIndex,
                 'advanced' => $this->cleanup($template->renderAdvanced()),
             ];
-            if ($this->getCanonical()) {
+            /*if ($this->getCanonical()) {
                 $this->_composed['canonical'] = $this->getCanonical();
-            }
+            }*/
             ob_end_clean();
         }
         catch (\Throwable $e) {
