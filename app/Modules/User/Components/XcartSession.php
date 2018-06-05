@@ -155,7 +155,9 @@ class XcartSession extends Session
 //                list($this->model, $isNew) = SessionDataModel::objects()->getOrCreate(['sessid' => $id]);
 
                 $this->model = new SessionDataModel();
-                $this->model->save();
+                if (!\defined('IS_ROBOT')) {
+                    $this->model->save();
+                }
                 $isNew = true;
 
                 $this->data = [];
