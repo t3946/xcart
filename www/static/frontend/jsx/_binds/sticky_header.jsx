@@ -76,7 +76,6 @@ import cssFileLoaded from "../utils/cssFileLoaded";
             let lDelta = prevPosition - currentPosition;
             if(lDelta > delta) {
                 prevPosition = currentPosition;
-                //console.log('change', prevPosition);
                 return 2;
             }
 
@@ -86,8 +85,6 @@ import cssFileLoaded from "../utils/cssFileLoaded";
         function checkMenuPosition(lastKnownScrollPosition) {
 
             let direction = changePrevPosition(lastKnownScrollPosition);
-
-            //console.log(prevPosition);
 
             if (lastKnownScrollPosition >= stickyContainer.offset().top && direction == 2) {
                 if(!topFixed){
