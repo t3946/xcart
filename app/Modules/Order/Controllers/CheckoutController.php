@@ -330,6 +330,8 @@ class CheckoutController extends FrontendController
                 $errors = $billingForm->getErrors();
             }
 
+            $order->firstname = $order->b_firstname;
+
             $order->non_us_confirmation = false;
             if ($order->isCanadianShipping() && !($order->non_us_confirmation = $app->request->post->get('non_us_confirmation'))) {
                 $app->flash->error(OrderModule::t('You must agree for custom duties'));
