@@ -1,15 +1,24 @@
 .breadcrumbs-container  {
   margin: rem-calc(10) 0;
+  width: 100%;
+  padding: 0;
 
   .breadcrumb-list {
     display: block;
-    line-height: 1.3;
+    margin: 0;
+    padding: 0;
+    height: 1.1em;
 
     li {
       display: block;
-      line-height: 1;
+      float: left;
+      margin: 0 3px 0 0;
+      padding: 0;
+      border: 0;
       font-size: rem-calc(12);
       color: #888;
+      line-height: 2em;
+      height: 2em;
 
       a, span {
         color: inherit;
@@ -31,7 +40,6 @@
   }
 
   .back {
-    //margin-right: 36px;
     display: inline-block;
     line-height: 1.3;
 
@@ -48,35 +56,4 @@
       }
     }
   }
-}
-
-.frame {
-  width: 100%;
-  //height: 160px;
-  padding: 0;
-}
-.frame .slidee {
-  margin: 0;
-  padding: 0;
-  //height: 100%;
-  list-style: none;
-  display: block;
-  box-sizing: content-box;
-}
-.frame .slidee li {
-  float: left;
-  margin: 0 3px 0 0;
-  padding: 0;
-  border:0;
-  box-sizing: content-box;
-  //width: 120px;
-  //height: 100%;
-  //border: 1px solid red;
-}
-
-.scrollbar { width: 100%; height: 10px; }
-.scrollbar .handle {
-  width: 100px; /* overriden if dynamicHandle: 1 */
-  height: 100%;
-  background: #222;
 }

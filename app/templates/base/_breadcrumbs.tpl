@@ -33,13 +33,10 @@
                     </span>
                     {/if}
 
-                    <meta itemprop="position" content="{$index +1}" />
+                    <meta itemprop="position" content="{$index + 1}" />
                 </li>
             {/foreach}
         </ol>
     </nav>
-    <div class="scrollbar">
-        <div class="handle"></div>
-    </div>
 {/if}
 
