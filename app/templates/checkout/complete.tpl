@@ -135,9 +135,12 @@
                                 <div class="column small-5 medium-4 ml-5 large-6 label">{t 'Delivery methods:' dict='order'}</div>
                                 <div class="column">
                                     {foreach $order->groups as $group}
+                                        {set $s_model = $group->shippingModel}
+                                        {if $s_model}
                                         <div class="delivery-method">
-                                            {$group->shippingModel->getFrontendName()}
+                                            {$s_model>getFrontendName()}
                                         </div>
+                                        {/if}
                                     {/foreach}
                                 </div>
                             </div>
