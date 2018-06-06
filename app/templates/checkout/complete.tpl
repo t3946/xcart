@@ -138,7 +138,7 @@
                                         {set $s_model = $group->shippingModel}
                                         {if $s_model}
                                         <div class="delivery-method">
-                                            {$s_model>getFrontendName()}
+                                            {$s_model->getFrontendName()}
                                         </div>
                                         {/if}
                                     {/foreach}
