@@ -144,9 +144,9 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
                 'shippingAddress' => [
                     'firstname' => $shipping['firstname'],
                     'address' => $shipping['address'][0],
-                    'city' => $shipping['city'],
-                    'state' => $shipping['state']->state,
-                    'zipcode' => $shipping['zipcode'],
+                    'city' => $shipping['city'] ?? 'empty',
+                    'state' => $shipping['state']->state ?? 'empty',
+                    'zipcode' => $shipping['zipcode'] ?? 'empty',
                     'country' => $shipping['country']->code,
                     'email' => $order->email,
                     'phone' => $order->phone,

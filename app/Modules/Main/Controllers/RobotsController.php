@@ -38,14 +38,6 @@ Disallow: /search.php
 Disallow: /*_openstat
 Disallow: /shop_closed.html
 Disallow: /retrieve_orders.php
-Disallow: ?*page=
-Disallow: ?*sort_direction=
-Disallow: ?*sort=
-Disallow: ?*target=
-Disallow: ?*file=
-Disallow: ?*path=
-Disallow: ?*mode=
-Disallow: ?*f_mode=
 Sitemap: http://%s/sitemap.xml
 
 User-agent: *%s
@@ -65,14 +57,6 @@ Disallow: /search.php
 Disallow: /*_openstat
 Disallow: /shop_closed.html
 Disallow: /retrieve_orders.php
-Disallow: ?*page=
-Disallow: ?*sort_direction=
-Disallow: ?*sort=
-Disallow: ?*target=
-Disallow: ?*file=
-Disallow: ?*path=
-Disallow: ?*mode=
-Disallow: ?*f_mode=
 Sitemap: https://%s/sitemap.xml
 Crawl-delay: 15
 Host: %s

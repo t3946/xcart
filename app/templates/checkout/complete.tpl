@@ -381,7 +381,7 @@
         {/ignore}
             'id': '{$order->getOrderNumber()}',
             'affiliation': '{$.getSite->domain}',
-            'revenue': '{$order->subtotal|number_format:2}',
+            'revenue': '{$order->total|number_format:2}',
             'shipping': '{$order->shipping_cost|number_format:2}'
         {ignore}
         });

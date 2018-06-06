@@ -25,6 +25,11 @@
 
     <link rel="preload" href="/static/frontend/dist/css/styles.css?v={frontend_version resource='css/styles.css'}" as="style">
     <link rel="preload" href="/static/frontend/dist/js/main.js?v={frontend_version resource="js/main.js"}" as="script">
+    <link rel="preload" href="https://fonts.googleapis.com/css?family=Lato:300i,400,700" as="font">
+    <link rel="preload" href="https://fonts.gstatic.com/s/lato/v14/S6u_w4BMUTPHjxsI9w2_Gwft.woff2" as="font">
+    <link rel="preload" href="https://fonts.gstatic.com/s/lato/v14/S6uyw4BMUTPHjx4wXg.woff2" as="font">
+    <link rel="preload" href="https://fonts.gstatic.com/s/lato/v14/S6u9w4BMUTPHh6UVSwiPGQ.woff2" as="font">
+    <link rel="preload" href="https://fonts.googleapis.com/css?family=Lato:300,300i,400,400i,700,700i,800,900" as="font">
 
     {*<link rel="manifest" href="/manifest.json">*}
 

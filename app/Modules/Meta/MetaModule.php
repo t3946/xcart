@@ -28,6 +28,9 @@ class MetaModule extends Module
         $tpl->addFunction('meta', function($params){
             $c = !empty($params['controller']) ? $params['controller'] : null;
             $canonical = !empty($params['canonical']) ? $params['canonical'] : null;
+            if (!$canonical && $c) {
+                $canonical = $c->getCanonical();
+            }
 
             MetaExtHelper::getMeta($c, $canonical);
         });

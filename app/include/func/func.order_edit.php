@@ -1030,13 +1030,18 @@ function func_refund_product($orderid, $mid, &$product, $customer_info)
 
         $product['extra_data']['taxes'] = func_get_product_taxes($_product, $login, false, $product['taxes']);
 
-        $_taxes = func_tax_price($product['refund']['price'], 0, false, null, $customer_info, $product['extra_data']['taxes']);
+        $_taxes = func_tax_price($product['refund']['price'], 0, false, null, $customer_info, $product['extra_data']['taxes']) ?? [];
 
-        $product['extra_data']['display_subtotal'] = price_format($_taxes['taxed_price'] * $product['refund']['amount']);
+        /*$product['extra_data']['display_subtotal'] = price_format($_taxes['taxed_price'] * $product['refund']['amount']);
+
+        if (!\is_array($product['extra_data']['display'])) {
+            $product['extra_data']['display'] = [];
+        }
+
         $product['extra_data']['display']['price'] = price_format($_taxes['taxed_price']);
         $product['extra_data']['product']          = $product['product'];
         $product['extra_data']['productcode']      = $product['productcode'];
-        $product['extra_data']['price']            = $product['price'];
+        $product['extra_data']['price']            = $product['price'];*/
 
         if (!empty($ref_values)) {
             $query_data = [

@@ -33,7 +33,7 @@ class DefaultController extends FrontendController
 
         $this->error();
     }
-    
+
     public function actionView($sku): void
     {
         $this->view_internal(ProductModel::objects()->filter(['productcode' => $sku])->get());
@@ -65,7 +65,7 @@ class DefaultController extends FrontendController
 
 
         if (!$model->checkSite($site->pk)) {
-            $this->redirect($model->getAbsoluteUrl(true), [],301);
+            $this->redirect($model->getAbsoluteUrl(true), [], 301);
         }
 
         $category = $model->getMainCategory();
@@ -85,9 +85,9 @@ class DefaultController extends FrontendController
 
         $flag = true;
         /** @var ProductVideosModel $video_models */
-        if ($video_models = ProductVideosModel::objects()->filter(['product_id' => $model->productid])->all() ) {
-            foreach ($video_models as $video_model){
-                if (!preg_match('/youtu/i', $video_model->video) ){
+        if ($video_models = ProductVideosModel::objects()->filter(['product_id' => $model->productid])->all()) {
+            foreach ($video_models as $video_model) {
+                if (!preg_match('/youtu/i', $video_model->video)) {
                     $flag = false;
                 }
             }
@@ -96,9 +96,9 @@ class DefaultController extends FrontendController
         if ($flag) {
             $params['videos'] = $video_models;
         }
-        
 
-            if ($model->isGroupRoot()) {
+
+        if ($model->isGroupRoot()) {
             $pager = new Pagination($model->getFrontendChilds(), [
                 'pageSize' => 25,
                 'view' => 'core/pager/front_endless.tpl',
@@ -110,21 +110,31 @@ class DefaultController extends FrontendController
 
                 $this->jsonResponse([
                     'href' => $pagerView->hasNextPage() ? $pagerView->getUrl($pager->getPage() + 1) : false,
-                    'content' => $this->render('catalog/category.tpl', [ 'model' => $model, 'pager' => $pager,]),
-                    'page_count' => $this->render('catalog/parts/_page_count.tpl', [ 'model' => $model, 'pager' => $pager,]),
+                    'content' => $this->render('catalog/category.tpl', ['model' => $model, 'pager' => $pager,]),
+                    'page_count' => $this->render('catalog/parts/_page_count.tpl', ['model' => $model, 'pager' => $pager,]),
                 ]);
                 Xcart::app()->end();
-            }
-            else {
+            } else {
                 $orderBy = Xcart::app()->request->session->get('category_sort', ProductSortHelper::$default);
 
                 $params = array_merge($params, [
                     'pager' => $pager->setPage(0),
-                    'sort'  => $orderBy,
-                    'sort_arr'  => ProductSortHelper::$orderBy,
+                    'sort' => $orderBy,
+                    'sort_arr' => ProductSortHelper::$orderBy,
                 ]);
             }
         }
+
+
+
+        if ($model->isGroupChild()) {
+            if ($parent = $model->parent) {
+                $this->setCanonical($parent);
+            }
+        } else {
+            $this->setCanonical($model);
+        }
+
 
         $this->display('product/product.tpl', $params);
     }

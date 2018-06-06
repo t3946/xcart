@@ -27,6 +27,7 @@ class MetaExtHelper
     /** @var int */
     private $base_code = MetaType::DEFAULT;
     private $noIndex = false;
+    private $canonical;
 
     private $_params = [];
     private $_composed = [];
@@ -97,6 +98,7 @@ class MetaExtHelper
             $instance->setBaseCode($base_code);
             $instance->setParams($controller->getMetaTemplateParams());
             $instance->getNoIndexFlag($controller);
+            $instance->setCanonical($controller->getCanonical());
 
             if ($instance->compose()) {
                 echo $instance->render();
@@ -266,6 +268,11 @@ class MetaExtHelper
         }
     }
 
+    public function setCanonical($canonical)
+    {
+        $this->canonical = $canonical;
+    }
+
     public function render(): ?string
     {
         if ($this->_composed) {
@@ -295,6 +302,7 @@ class MetaExtHelper
                 'description' => $this->cleanup([$template->renderDescription()])[0],
                 'noIndex' => $this->noIndex,
                 'advanced' => $this->cleanup($template->renderAdvanced()),
+                'canonical' => $this->canonical,
             ];
             ob_end_clean();
         }
