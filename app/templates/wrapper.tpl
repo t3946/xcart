@@ -97,6 +97,14 @@
 
     {block 'head'}{/block}
 
+    {set $gConfig = $site->getGlobalConfig()}
+
+    {$gConfig.google_analitics_tracking_script
+        |replace:'{{ga_account_nr}}':$config.cidev_ga_code_number
+        |replace:'{{ga_ec_data}}':"ga('require', 'ec');"
+        |replace:'{{ga_send}}':""
+    }
+
     {get_assets:raw type='css' position='head'}
     {get_assets:raw type='js' position='head'}
 </head>
@@ -164,8 +172,8 @@
         };
         var raf = requestAnimationFrame || mozRequestAnimationFrame ||
             webkitRequestAnimationFrame || msRequestAnimationFrame;
-        if (raf) raf(function() { window.setTimeout(cb, 0); });
-        else window.addEventListener('load', cb);
+        if (raf) raf(cb);
+        else window.addEventListener('DOMContentLoaded', cb);
 
         window.addEventListener("load", function(event) {
             createJsElement("/static/frontend/dist/js/main.js?v={frontend_version resource="js/main.js"}");
@@ -177,10 +185,10 @@
             |replace:'</script>':''
             |replace:'{{ga_account_nr}}':$config.cidev_ga_code_number
             |replace:'{{ga_ec_data}}':"ga('require', 'ec');"
-            |replace:'{{ga_send}}':""
+            |replace:'{{ga_send}}':"ga('send', 'pageview');"
             }
 
-            ga('send', 'pageview');
+            
 
             window.LHCChatOptions = {
                 opt: {
