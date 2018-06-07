@@ -57,7 +57,7 @@ class ContactInfoForm extends BaseForm
                     new EmailValidator()
                 ],
                 'html' => [
-                    'placeholder' => 'To Receive Order Confirmation',
+                    'placeholder' => 'To receive order confirmation',
                 ],
             ],
         ];
