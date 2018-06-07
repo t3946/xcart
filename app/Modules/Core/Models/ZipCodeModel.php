@@ -5,6 +5,8 @@ namespace Modules\Core\Models;
 
 use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\CharField;
+use Xcart\App\Orm\Fields\ForeignField;
+use Xcart\App\Orm\Fields\HasManyField;
 use Xcart\App\Orm\Model;
 
 class ZipCodeModel extends Model
@@ -13,7 +15,7 @@ class ZipCodeModel extends Model
 
     public static function tableName()
     {
-        return 'xcart_zip_code_info';
+        return 'xcart_zip';
     }
 
     public static function getFields()
@@ -21,7 +23,12 @@ class ZipCodeModel extends Model
         return [
             'zip' => [
                 'class' => CharField::class,
-                'primary' => true,
+            ],
+            'state_model' => [
+                'field' => 'state',
+                'class' => ForeignField::class,
+                'modelClass' => StateModel::class,
+                'link' => ['state' => 'code', 'country' => 'country_code'],
             ],
 
         ];

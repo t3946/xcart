@@ -32,7 +32,7 @@ class SearchController extends AbstractCatalogController
     public function actionKeywords($q): void
     {
         $q = str_replace(['_', '-'], ' ', $q);
-        $this->redirect('catalog:search', [], 302, ['q' => $q]);
+        $this->redirect('catalog:search', [], 301, ['q' => $q]);
     }
 
     public function actionApiSuggestion(): void

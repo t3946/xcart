@@ -32,6 +32,7 @@
 \*****************************************************************************/
 
 use Modules\Core\Components\Profiler;
+use Xcart\App\Main\Xcart;
 
 /**
  * Clean URLs dispatcher
@@ -53,6 +54,10 @@ define('DISPATCHED_REQUEST', 1);
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . 'auth.php';
 
 Profiler::getInstance()->addPoint();
+
+if (Xcart::app()->request->get->has('request_uri')) {
+    Xcart::app()->request->redirect(Xcart::app()->request->get->get('request_uri'), [], 301);
+}
 
 $request_uri_info = @parse_url(stripslashes(func_get_request_uri()));
 

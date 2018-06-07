@@ -55,7 +55,7 @@ import autoComplete from 'bower_components/javascript-auto-complete/auto-complet
                             html += ' <span class="city">' + item.primary_city + ', ';
                             html += item.state + '</span>';
 
-                            return '<div class="autocomplete-suggestion" data-val="' + item.zip + '">' + html + '</div>';
+                            return '<div class="autocomplete-suggestion" data-state-name="'+item.state_name+'" data-state="'+item.state+'" data-city="'+item.primary_city+'"  data-val="' + item.zip + '">' + html + '</div>';
                         },
                         source: function (term, suggest) {
 
@@ -68,6 +68,9 @@ import autoComplete from 'bower_components/javascript-auto-complete/auto-complet
                         },
                         onSelect: function (e, term, item) {
                             e.preventDefault();
+                            inputCity.value = item.getAttribute('data-city');
+                            inputState.value = item.getAttribute('data-state-name');
+                            inputState.setAttribute('data-code', item.getAttribute('data-state'));
                         }
                     });
                 }

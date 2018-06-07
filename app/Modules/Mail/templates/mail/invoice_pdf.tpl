@@ -70,7 +70,10 @@
                         {$order->payment_method}<br/>
                         <b>Delivery methods:</b><br/>
                         {foreach $order->groups as $group}
-                            {$group->shippingModel->getFrontendName()}<br/>
+                            {set $shipping_m = $group->shippingModel}
+                            {if $shipping_m}
+                                {$shipping_m->getFrontendName()}<br/>
+                            {/if}
                         {/foreach}
                     </td>
                     <td valign="bottom" align="right">
@@ -344,7 +347,7 @@
             <td colspan="{$colspan}">
                 <b>
                     {$distributor->manufacturer} Items
-                    (delivery from {$distributor->m_city}, {$distributor->m_state}, {$distributor->m_country} by {$shipping->getFrontendName()}, US$ {$group->shipping_gross}):
+                    (delivery from {$distributor->m_city}, {$distributor->m_state}, {$distributor->m_country} {if $shipping} by {$shipping->getFrontendName()}{/if}, US$ {$group->shipping_gross}):
                 </b>
             </td>
         </tr>

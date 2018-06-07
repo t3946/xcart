@@ -72,12 +72,15 @@
 
                     <div class="group-info order-table-row">
                         <div class="sum-info shipping">
-                            <span class="sum-info-label">
-                                <span class="delivery-details show-for-medium">
-                                    {t 'Delivery from'}  {$warehouse->m_city}, {$warehouse->m_state}, {$warehouse->m_country} {t 'by'}
+                            {set $shipping_m = $group->shippingModel}
+                            {if $shipping_m}
+                                <span class="sum-info-label">
+                                    <span class="delivery-details show-for-medium">
+                                        {t 'Delivery from'}  {$warehouse->m_city}, {$warehouse->m_state}, {$warehouse->m_country} {t 'by'}
+                                    </span>
+                                    {$shipping_m->getFrontendName()}:
                                 </span>
-                                {$group->shippingModel->getFrontendName()}:
-                            </span>
+                            {/if}
                             <span class="sum">
                                 US$&nbsp;<span class="price">{$group->shipping_gross|number_format:2}</span>
                             </span>

@@ -155,8 +155,10 @@ class CheckoutController extends FrontendController
         }
 
         if ($search = Xcart::app()->request->get->get('search')) {
-            $zips = ZipCodeModel::objects()->filter(array_merge(['zip__startswith' => $search],
-                $filter ?? []))->limit(10)->valuesList(['zip', 'primary_city', 'state'], false);
+            $zips = ZipCodeModel::objects()
+                ->filter(array_merge(['zip__startswith' => $search],$filter ?? []))
+                ->limit(10)
+                ->valuesList(['zip', 'primary_city' => 'city', 'state', 'state_name' => 'state_model__state'], false);
         }
 
         $this->jsonResponse($zips ?? []);
@@ -192,9 +194,10 @@ class CheckoutController extends FrontendController
         }
 
         if ($search = Xcart::app()->request->get->get('search')) {
-            $city = ZipCodeModel::objects()->filter(array_merge(['primary_city__contains' => $search],
-                $filter ?? []))->limit(10)->group(['primary_city'])->valuesList('primary_city', true);
-           // dd($city);
+            $city = ZipCodeModel::objects()
+                ->filter(array_merge(['city__contains' => $search],$filter ?? []))
+                ->limit(10)->group(['city'])
+                ->valuesList(['primary_city' => 'city'], true);
         }
         $this->jsonResponse($city ?? []);
     }
@@ -326,6 +329,8 @@ class CheckoutController extends FrontendController
             } else {
                 $errors = $billingForm->getErrors();
             }
+
+            $order->firstname = $order->b_firstname;
 
             $order->non_us_confirmation = false;
             if ($order->isCanadianShipping() && !($order->non_us_confirmation = $app->request->post->get('non_us_confirmation'))) {

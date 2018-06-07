@@ -19,7 +19,7 @@ class ContactInfoForm extends BaseForm
             'firstname' => [
                 'class' => CharField::class,
                 'label' => 'Full name',
-                'required' => true,
+                'required' => false,
                 'hint' => 'First and last name of the order contact person',
                 'html' => [
                     'placeholder' => 'Albert H. Einstein'
@@ -35,7 +35,7 @@ class ContactInfoForm extends BaseForm
                     new PhoneValidator(),
                 ],
                 'html' => [
-                    'placeholder' => '(609) 734-8000',
+                    'placeholder' => 'In case questions arise',
                     'class' => 'phone'
                 ],
             ],
@@ -57,7 +57,7 @@ class ContactInfoForm extends BaseForm
                     new EmailValidator()
                 ],
                 'html' => [
-                    'placeholder' => 'albert.einstein@gmail.com',
+                    'placeholder' => 'To receive order confirmation',
                 ],
             ],
         ];

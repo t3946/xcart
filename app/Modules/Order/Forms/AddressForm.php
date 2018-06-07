@@ -80,7 +80,8 @@ abstract class AddressForm extends BaseForm
 				'html' => [
                     'placeholder' => $country->name ?? 'United States',
                     'class' => 'auto-complete country',
-                    'autocomplete' => 'off'
+                    'autocomplete' => 'off',
+                    'data-code' => $country->code ?? null
                 ],
 
             ],
