@@ -159,6 +159,8 @@
         };
 
         var cb = function() {
+			ga('send', 'pageview');
+			
             setTimeout(function(){
                 createStyleElement( "/static/frontend/dist/css/styles.css?v={frontend_version resource='css/styles.css'}");
             }, 0);
@@ -167,11 +169,11 @@
         var raf = requestAnimationFrame || mozRequestAnimationFrame ||
             webkitRequestAnimationFrame || msRequestAnimationFrame;
         if (raf) raf(cb);
-        else window.addEventListener('load', cb);
+        else window.addEventListener('DOMContentLoaded', cb);
 
         window.addEventListener("load", function(event) {
 
-            ga('send', 'pageview');
+            
 
             window.LHCChatOptions = {
                 opt: {
