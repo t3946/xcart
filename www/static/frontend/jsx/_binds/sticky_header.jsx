@@ -16,7 +16,7 @@ import cssFileLoaded from "../utils/cssFileLoaded";
         var ticking = false;
         var stickyHeaderRemoved = false;
 
-        let sticky = stickyContainer.find('#top-header');
+        let sticky = stickyContainer.find('#top-header-menu');
         let topFixed = false;
         let prevPosition = 0;
         let delta = 50;
