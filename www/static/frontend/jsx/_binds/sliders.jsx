@@ -25,8 +25,9 @@ import ajax from "../utils/ajax";
             scrollTrap: true,
             // pagesBar: $wrap.find('.pages'),
             activatePageOn: 'click'
-        })
-            .css('overflow', 'hidden');
+        }).sly('on','load move', function(){window.LazyLoad.update();}).css('overflow', 'hidden');
+
+        window.LazyLoad.update();
     };
 
     document.addEventListener('sliders_show', ()=>{

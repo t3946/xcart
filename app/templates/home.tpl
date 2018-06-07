@@ -13,7 +13,7 @@
             <div class="banners_column">
                 <div class="banner product-of-the-day show-for-medium dark">
                     {if $product}
-                    <a href="{$product->getAbsoluteUrl()}" class="banner__cover" data-background="/static/frontend/dist/images/slider/{$.getSite->code|strtolower}/product_of_day.jpg">
+                    <a href="{$product->getAbsoluteUrl()}" class="lazy-bg banner__cover" data-src="//cdn.{$.getSite->getBaseDomain()}/static/frontend/dist/images/slider/{$.getSite->code|strtolower}/product_of_day.jpg">
                         <div class="product-of-the-day_cover banner__info">
                             <div class="product-of-the-day__caption">Product of the day</div>
                         </div>
@@ -27,7 +27,7 @@
             <div class="banners_column right-banners show-for-large">
 
                 <div class="banner bestsellers dark">
-                    <a href="{url 'catalog:bestsellers'}" class="banner__cover" data-background="/static/frontend/dist/images/slider/{$.getSite->code|strtolower}/bestsellers.jpg">
+                    <a href="{url 'catalog:bestsellers'}" class="lazy-bg banner__cover" data-src="//cdn.{$.getSite->getBaseDomain()}/static/frontend/dist/images/slider/{$.getSite->code|strtolower}/bestsellers.jpg">
                         <div class="banner__info">
                             <div class="caption">Bestsellers</div>
                             {*<div class="description">Try it for 90 days. Enjoy it for 25 years > </div>*}
@@ -37,7 +37,7 @@
 
                 <div class="banner whatsnew dark">
                     {if $category_new}
-                        <a href="{$category_new->getAbsoluteUrl()}" class="banner__cover" data-background="/static/frontend/dist/images/slider/{$.getSite->code|strtolower}/what_is_new.jpg">
+                        <a href="{$category_new->getAbsoluteUrl()}" class="lazy-bg banner__cover" data-src="//cdn.{$.getSite->getBaseDomain()}/static/frontend/dist/images/slider/{$.getSite->code|strtolower}/what_is_new.jpg">
                             <div class="banner__info">
                                 <div class="caption">What’s new</div>
                             </div>

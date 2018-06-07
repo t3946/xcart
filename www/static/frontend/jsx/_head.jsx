@@ -43,6 +43,7 @@ import './ext/foundation-init';
 import '../../vendors/wNumb.js'
 
 import sendAnalytics from './utils/sendAnalytics'
+import LazyLoad from "vanilla-lazyload";
 
 (function(){
     window['$'] = $;
@@ -54,6 +55,11 @@ import sendAnalytics from './utils/sendAnalytics'
     window['WebFont'] = WebFont;
     window['noUiSlider'] = noUiSlider;
     window['sendAnalytics'] = new sendAnalytics;
+    window['LazyLoad'] = new LazyLoad({
+        elements_selector: ".lazy-img, .lazy-bg",
+        callback_set: function(el){el.classList.remove('lazy-img')}
+    });
+
     window.d = (...arg) => {
         console.log(...arg);
     };
