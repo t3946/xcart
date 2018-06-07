@@ -48,7 +48,7 @@ class SitesModule extends Module
         }
 
         if ($default) {
-            return $this->_site ?: $this->_default_site;
+            return $this->_site = $this->_site ?: $this->_default_site;
         }
 
         return $this->_site;
