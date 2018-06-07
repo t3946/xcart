@@ -97,14 +97,6 @@
 
     {block 'head'}{/block}
 
-    {set $gConfig = $site->getGlobalConfig()}
-
-    {$gConfig.google_analitics_tracking_script
-        |replace:'{{ga_account_nr}}':$config.cidev_ga_code_number
-        |replace:'{{ga_ec_data}}':"ga('require', 'ec');"
-        |replace:'{{ga_send}}':""
-    }
-
     {get_assets:raw type='css' position='head'}
     {get_assets:raw type='js' position='head'}
 </head>
@@ -115,12 +107,12 @@
 {filter|strip:true}
 {autoescape true}
 {block 'preloader'}
-    <div class="loader-bg waves waves-dark">
+   {* <div class="loader-bg waves waves-dark">
         <div class="loader-wrapper">
             <div class="loader-spinner"></div>
             <div class="loader-container"></div>
         </div>
-    </div>
+    </div>*}
 {/block}
 
 {block "wrapper"}
@@ -144,7 +136,6 @@
 <script>
     (function(){
         var createStyleElement = function (href) {
-            var h = document.getElementsByTagName('head')[0];
             var l = document.createElement('link');
 
             l.rel = 'stylesheet';
@@ -155,21 +146,39 @@
                 document.dispatchEvent(new CustomEvent('cssLoad', { 'file': url.document }));
             };
 
-            h.parentNode.insertBefore(l, h);
+            document.body.appendChild(l)
+
+        };
+
+        var createJsElement = function (href) {
+            var l = document.createElement('script');
+
+            l.src = href;
+
+            document.body.appendChild(l)
+
         };
 
         var cb = function() {
-            setTimeout(function(){
-                createStyleElement( "/static/frontend/dist/css/styles.css?v={frontend_version resource='css/styles.css'}");
-            }, 0);
-
+            //createStyleElement( "/static/frontend/dist/css/styles.css?v={frontend_version resource='css/styles.css'}");
         };
         var raf = requestAnimationFrame || mozRequestAnimationFrame ||
             webkitRequestAnimationFrame || msRequestAnimationFrame;
-        if (raf) raf(cb);
+        if (raf) raf(function() { window.setTimeout(cb, 0); });
         else window.addEventListener('load', cb);
 
         window.addEventListener("load", function(event) {
+            createJsElement("/static/frontend/dist/js/main.js?v={frontend_version resource="js/main.js"}");
+
+            {set $gConfig = $site->getGlobalConfig()}
+
+            {$gConfig.google_analitics_tracking_script
+            |replace:'<script>':''
+            |replace:'</script>':''
+            |replace:'{{ga_account_nr}}':$config.cidev_ga_code_number
+            |replace:'{{ga_ec_data}}':"ga('require', 'ec');"
+            |replace:'{{ga_send}}':""
+            }
 
             ga('send', 'pageview');
 
@@ -197,6 +206,5 @@
 
 {render_flash:raw template='base/_flash.tpl'}
 
-<script src="/static/frontend/dist/js/main.js?v={frontend_version resource="js/main.js"}" async></script>
 </body>
 </html>
