@@ -62,11 +62,13 @@ import createAutoComplete from '_binds/cart/shipping_autocomplete';
                         'width': 750,
                         'onSubmit': function () {
                             $.ajax({
+
                                 url: '/cart/calculate_shipping',
                                 method: 'POST',
                                 data: $('.mmodal-content form').serialize()
+
                             }).done(function(result) {
-                                console.log(result);
+
                                 if(result.type && result.type == 'json') {
                                     let html = '';
                                     let json = result.result;

@@ -37,6 +37,7 @@ export default class ProductImageSlider extends Component
         window.addEventListener("resize", this.onResize.bind(this));
         this.onResize()
     }
+
     componentWillUnmount() {
         window.removeEventListener("resize", this.onResize);
     }

@@ -4,7 +4,7 @@
 import 'modernizr';
 import $ from 'jquery';
 import 'jquery-form';
-import 'mmodal';
+//import 'mmodal';
 
 import 'swiper';
 import WebFont from 'webfontloader';
@@ -14,6 +14,7 @@ import noUiSlider from 'noUiSlider';
 import Loader from "./components/Loader";
 import FilterPriceSlider from "./components/FilterPriceSlider";
 import 'sly/dist/sly';
+import './utils/mmodal/jquery.mindy.modal';
 
 import 'bower_components/jQuery.dotdotdot/src/jquery.dotdotdot.js';
 

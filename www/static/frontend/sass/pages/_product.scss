@@ -1,8 +1,10 @@
 @import "product/tabs";
+//
 @import "product/price_table";
 
 .product-page {
   @include getProductTabs();
+  //
   @include getPricesTable();
 
   .price {
@@ -15,8 +17,8 @@
 
 
   .images_prices {
-    @include breakpoint(large) {
-      height: rem-calc(521);
+    @include breakpoint(ml) {
+      margin-bottom: rem-calc(40);
     }
   }
 
@@ -31,7 +33,6 @@
   .block__title_price {
     @include breakpoint(large up) {
       max-width: 100%;
-      //flex: auto;
 
       .sku {
         line-height: 2;
@@ -39,31 +40,6 @@
     }
   }
 
-
-  .product-title {
-    h1 {
-      font-weight: 700;
-      text-align: left;
-
-      .retailTrust {
-        &:after {
-          vertical-align: middle;
-          width: rem-calc(33);
-          height: rem-calc(31);
-        }
-
-        @include breakpoint(large up) {
-          margin-left: rem-calc(15);
-
-          &:after {
-            vertical-align: baseline;
-            width: rem-calc(29);
-            height: rem-calc(26);
-          }
-        }
-      }
-    }
-  }
 
   .product-title-small {
     padding-bottom: rem-calc(25);
@@ -75,25 +51,10 @@
     @include breakpoint(large) {
       margin: 0;
     }
-
-    .images-slider {
-    }
   }
 
   .prices__container {
     margin: rem-calc(20) 0;
-
-    @include breakpoint(large) {
-      margin: 0;
-    }
-
-    .cart_add {
-      margin: rem-calc(20) 0;
-
-      @include breakpoint(large) {
-        margin: 0;
-      }
-    }
   }
 
   .tabs-title {

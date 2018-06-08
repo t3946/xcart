@@ -1,18 +1,85 @@
 <div class="prices__container">
 
-    {if !$model->isOutOfStock()}
-        <div class="row">
-            <div class="columns small-12 hide-for-medium">
-                <div class="cart_add">
-                    <a class="add button waves waves-orange yellow">
-                    <span class="text">
-                        Add to cart
-                    </span>
-                    </a>
+    <div class="row align-justify">
+
+        <div class="price-section columns small-12 medium-5 ml-12">
+            {set $subtotal_hide = ($model->list_price > $model->getFrontendPrice())}
+            {set $price_safe = ($model->list_price - $model->getFrontendPrice())}
+            <div class="row price-info-block">
+                <div class="columns shrink price-value-text medium-12">
+                    US$ <span class="price">{$model->getFrontendPrice()|number_format:2}</span>
                 </div>
+                {if $subtotal_hide}
+                    <div class="columns shrink save-info-text">
+                        Save $<span class="price">{$price_safe|number_format:2}</span>
+                    </div>
+                    <div class="columns shrink orig-info-text">
+                        Orig. $<span class="price">{$model->list_price|number_format:2}</span>
+                    </div>
+                {/if}
             </div>
         </div>
-    {/if}
+
+        <div class="button-section columns small-12 medium-6 ml-12">
+            {if !$model->isOutOfStock()}
+                <div class="row">
+                    <div class="columns small-12">
+                        <div class="cart_add">
+                            <a class="button number-button grey-border">
+                                <span class="number">
+                                    1
+                                </span>
+                            </a>
+                            <a class="add button waves waves-orange yellow">
+                                <span class="text">
+                                    Add to cart
+                                </span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {/if}
+        </div>
+
+    </div>
+
+
+    <div class="mmodal-hide">
+
+        <div class="select-quantity">
+            <div class="title">
+                Select quantity
+            </div>
+            <div class="quantity-radio-group">
+                <form>
+                        <input type="radio" id="quantity1" name="quantity" value="1" checked>
+                        <label for="quantity1">1</label>
+
+                        <input type="radio" id="quantity2" name="quantity" value="2">
+                        <label for="quantity2">2</label>
+
+                        <input type="radio" id="quantity3" name="quantity" value="3">
+                        <label for="quantity3">3</label>
+
+                        <input type="radio" id="quantity4" name="quantity" value="4">
+                        <label for="quantity4">4</label>
+
+                        <input type="radio" id="quantity5" name="quantity" value="5">
+                        <label for="quantity5">5</label>
+
+                        <input type="radio" id="quantityN" name="quantity" value="6">
+                        <label for="quantityN">Enter the amount</label>
+                </form>
+            </div>
+        </div>
+        <div class="more"></div>
+
+    </div>
+
+
+{**}
+{**}
+
 
     <div class="price__quantity">
         <div class="row">
@@ -136,7 +203,7 @@
         {/if}
     </div>
 
-
-
+{**}
+{**}
 </div>
 

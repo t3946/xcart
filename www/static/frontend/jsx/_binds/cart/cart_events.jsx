@@ -126,7 +126,19 @@ import sendAnalytics from "../../utils/sendAnalytics";
                 $minicart.addClass('active');
                 action('cart');
             }
+        }).on('click','.cart_add .number-button', (e) => {
+            e.preventDefault();
+            let selectQuantity = document.querySelector('.select-quantity');
+            if (selectQuantity) {
+                $(selectQuantity).mmodal({
+                    'width': 300,
+                    'onSubmit': function () {}
+                });
+            }
         });
+
+
+
 
 
 })();

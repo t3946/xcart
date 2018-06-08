@@ -11,16 +11,17 @@ body {
     .mmodal-container {
       margin: 10vh auto;
 
-      @include breakpoint(medium up) {
-        width: 90vw !important;
-        max-width: 80rem;
-      }
-
-      @include breakpoint(medium down) {
-        width: 100vw !important;
-        min-height: 100vh;
-        margin:0;
-      }
+      //@include breakpoint(medium up) {
+      //  width: 90vw !important;
+      //  max-width: 80rem;
+      //}
+      //
+      //@include breakpoint(medium down) {
+      //  width: 100vw !important;
+      //  min-height: 100vh;
+      //  margin:0;
+      // /Users/anna/git/xcart/www/static/frontend/demo_images/category/1280
+      //}
 
       .mmodal-close{
         overflow: hidden;
@@ -34,7 +35,7 @@ body {
 
         background: {
           repeat: no-repeat;
-          image: url("../images/icons/modal/close_white.svg");
+          image: url("../images/icons/modal/close_grey.svg");
           position: center center;
           size: 27px 27px;
         };
@@ -53,7 +54,7 @@ body {
         border-radius: 0;
 
         @include breakpoint(medium down) {
-          min-height: 100vh;
+          min-height: 50px;
         }
 
         .show-for-modal {
@@ -99,3 +100,14 @@ body {
 .show-for-modal {
   display: none;
 }
+
+//body .mmodal-modal-bg .mmodal-container {
+//  .mmodal-close {
+//    text-indent: 0 !important;
+//    width: rem-calc(20) !important;
+//    height: rem-calc(20) !important;
+//    background-image: none !important;
+//    top: rem-calc(12) !important;
+//    right: rem-calc(12) !important;
+//  }
+//}

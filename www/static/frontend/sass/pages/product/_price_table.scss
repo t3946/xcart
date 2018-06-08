@@ -1,16 +1,6 @@
 @mixin getPricesTable()
 {
   .prices__container {
-    .cart_add {
-      @include breakpoint(large only) {
-        .text {
-          display: none;
-
-          .extended {
-          }
-        }
-      }
-    }
 
     .price__quantity {
 
