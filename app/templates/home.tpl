@@ -4,7 +4,7 @@
 <div class="default-content-page home-page">
     <section class="banners-section">
 
-        <div class="promotion disable-global-swipe-horizontal">
+        <div class="promotion disable-global-swipe-horizontal banner">
             {renderSlider 'promo-sly-slider'}
         </div>
 

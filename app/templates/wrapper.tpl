@@ -25,11 +25,6 @@
 
     <link rel="preload" href="/static/frontend/dist/css/styles.css?v={frontend_version resource='css/styles.css'}" as="style">
     <link rel="preload" href="/static/frontend/dist/js/main.js?v={frontend_version resource="js/main.js"}" as="script">
-    <link rel="preload" href="https://fonts.googleapis.com/css?family=Lato:300i,400,700" as="font">
-    <link rel="preload" href="https://fonts.gstatic.com/s/lato/v14/S6u_w4BMUTPHjxsI9w2_Gwft.woff2" as="font">
-    <link rel="preload" href="https://fonts.gstatic.com/s/lato/v14/S6uyw4BMUTPHjx4wXg.woff2" as="font">
-    <link rel="preload" href="https://fonts.gstatic.com/s/lato/v14/S6u9w4BMUTPHh6UVSwiPGQ.woff2" as="font">
-    <link rel="preload" href="https://fonts.googleapis.com/css?family=Lato:300,300i,400,400i,700,700i,800,900" as="font">
 
     {*<link rel="manifest" href="/manifest.json">*}
 
@@ -115,7 +110,7 @@
 {filter|strip:true}
 {autoescape true}
 {block 'preloader'}
-   {* <div class="loader-bg waves waves-dark">
+    {*<div class="loader-bg waves waves-dark">
         <div class="loader-wrapper">
             <div class="loader-spinner"></div>
             <div class="loader-container"></div>
@@ -128,11 +123,6 @@
 {/block}
 {/autoescape}
 {/filter}
-
-    {*<noscript class="styles_no_load" id="deferred-styles">*}
-        {*<link rel="stylesheet" href="/static/frontend/dist/css/styles.css?v={frontend_version resource='css/styles.css'}" media="all">*}
-    {*</noscript>*}
-
 
 
 {block 'js'}{/block}
@@ -160,7 +150,7 @@
 
         var createJsElement = function (href) {
             var l = document.createElement('script');
-
+            l.async = true;
             l.src = href;
 
             document.body.appendChild(l)
@@ -173,38 +163,33 @@
         var raf = requestAnimationFrame || mozRequestAnimationFrame ||
             webkitRequestAnimationFrame || msRequestAnimationFrame;
         if (raf) raf(cb);
-        else window.addEventListener('DOMContentLoaded', cb);
+        else window.addEventListener('load', setTimeout(cb, 0));
 
         window.addEventListener("load", function(event) {
+
             createJsElement("/static/frontend/dist/js/main.js?v={frontend_version resource="js/main.js"}");
 
-            {set $gConfig = $site->getGlobalConfig()}
+            setTimeout(function() {
 
-            {$gConfig.google_analitics_tracking_script
-            |replace:'<script>':''
-            |replace:'</script>':''
-            |replace:'{{ga_account_nr}}':$config.cidev_ga_code_number
-            |replace:'{{ga_ec_data}}':"ga('require', 'ec');"
-            |replace:'{{ga_send}}':"ga('send', 'pageview');"
-            }
+                window.LHCChatOptions = {
+                    opt: {
+                        'widget_height': 540,
+                        'widget_width': 300,
+                        'popup_height': 520,
+                        'popup_width': 500,
+                        'domain': '{$site->domain}'
+                    }
+                };
 
-            
-
-            window.LHCChatOptions = {
-                opt: {
-                    'widget_height':540,
-                    'widget_width':300,
-                    'popup_height':520,
-                    'popup_width':500,
-                    'domain':'{$site->domain}'
-                }
-            };
-
-            var po = document.createElement('script'); po.async = true; po.defer = true;
-            var referrer = (document.referrer) ? encodeURIComponent(document.referrer.substr(document.referrer.indexOf('://')+1)) : '';
-            var location  = (document.location) ? encodeURIComponent(window.location.href.substring(window.location.protocol.length)) : '';
-            po.src = '//livechat.s3stores.com/index.php/chat/getstatus/(click)/internal/(position)/bottom_left/(ma)/br/(check_operator_messages)/true/(top)/350/(units)/pixels/(leaveamessage)/true/(department)/2?r='+referrer+'&l='+location;
-            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+                var po = document.createElement('script');
+                po.async = true;
+                po.defer = true;
+                var referrer = (document.referrer) ? encodeURIComponent(document.referrer.substr(document.referrer.indexOf('://') + 1)) : '';
+                var location = (document.location) ? encodeURIComponent(window.location.href.substring(window.location.protocol.length)) : '';
+                po.src = '//livechat.s3stores.com/index.php/chat/getstatus/(click)/internal/(position)/bottom_left/(ma)/br/(check_operator_messages)/true/(top)/350/(units)/pixels/(leaveamessage)/true/(department)/2?r=' + referrer + '&l=' + location;
+                var s = document.getElementsByTagName('script')[0];
+                s.parentNode.insertBefore(po, s);
+            }, 5000);
         });
 
     })();
