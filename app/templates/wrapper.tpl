@@ -86,7 +86,9 @@
     }
     </script>
 
-    <style>{inline file="static/frontend/dist/css/base.css"}</style>
+    {*<style>{inline file="static/frontend/dist/css/base.css"}</style>*}
+    <link href="static/frontend/dist/css/styles.css" rel="stylesheet" type="text/css"/>
+    {*<style>{inline file="static/frontend/dist/css/base.css"}</style>*}
 
     {*<script src="/static/frontend/dist/js/vendors.js?v={frontend_version resource='vendors.js'}" defer></script>*}
 
@@ -158,7 +160,7 @@
         };
 
         var cb = function() {
-            createStyleElement( "/static/frontend/dist/css/styles.css?v={frontend_version resource='css/styles.css'}");
+            //createStyleElement( "/static/frontend/dist/css/styles.css?v={frontend_version resource='css/styles.css'}");
         };
         var raf = requestAnimationFrame || mozRequestAnimationFrame ||
             webkitRequestAnimationFrame || msRequestAnimationFrame;
