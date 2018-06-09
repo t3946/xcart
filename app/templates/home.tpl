@@ -1,5 +1,10 @@
 {extends  $.request->getIsAjax() ? "ajax.tpl" : "base.tpl"}
 
+{block 'css_preload'}
+    {insert '_parts/_css_preload.tpl'}
+{/block}
+
+
 {block 'content'}
 <div class="default-content-page home-page">
     <section class="banners-section">
