@@ -6,6 +6,9 @@ import { hideAll, action } from "../../redusers/appHeadReduser";
 import { cartAdd } from "../../redusers/appCartRediser";
 import sendAnalytics from "../../utils/sendAnalytics";
 
+import {h, render} from 'preact';
+import SelectNumberItems from "../../components/SelectNumberItems";
+
 (()=>{
     let $minicart = $('.minicart');
 
@@ -126,15 +129,29 @@ import sendAnalytics from "../../utils/sendAnalytics";
                 $minicart.addClass('active');
                 action('cart');
             }
-        }).on('click','.cart_add .number-button', (e) => {
-            e.preventDefault();
+        }).on('click','.cart_add .number-button', (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+
             let selectQuantity = document.querySelector('.select-quantity');
+
             if (selectQuantity) {
                 $(selectQuantity).mmodal({
                     'width': 300,
                     'onSubmit': function () {}
                 });
+                let window = $('.mmodal-content .select-quantity')[0];
+
+                console.log('waerwerwerw');
+                let number = 5;
+                let quantity = 1;
+                let quantityAvailable = 10;
+                let windowObj = $(document).data('mmodal');
+
+                render(<SelectNumberItems number={number} windowObj={windowObj} quantity={quantity}
+                                          quantityAvaliable={quantityAvailable}/>, window, window.firstChild);
             }
+
         });
 
 

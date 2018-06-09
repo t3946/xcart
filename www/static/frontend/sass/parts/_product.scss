@@ -229,4 +229,19 @@ $default_qg_lheight: #{$default_qg_height - 1};
     }
 
   }
+
+  .input-quantity {
+    padding-bottom: 1.5rem;
+
+    input {
+      width: 100%;
+      line-height: 2rem;
+    }
+  }
+
+  .button {
+    line-height: rem-calc(43);
+    height: rem-calc(43);
+    width: 100%;
+  }
 }

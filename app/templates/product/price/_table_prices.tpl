@@ -24,7 +24,7 @@
             {if !$model->isOutOfStock()}
                 <div class="row">
                     <div class="columns small-12">
-                        <div class="cart_add">
+                        <div class="cart_add add-product">
                             <a class="button number-button grey-border">
                                 <span class="number">
                                     1
@@ -47,32 +47,9 @@
     <div class="mmodal-hide">
 
         <div class="select-quantity">
-            <div class="title">
-                Select quantity
-            </div>
-            <div class="quantity-radio-group">
-                <form>
-                        <input type="radio" id="quantity1" name="quantity" value="1" checked>
-                        <label for="quantity1">1</label>
 
-                        <input type="radio" id="quantity2" name="quantity" value="2">
-                        <label for="quantity2">2</label>
-
-                        <input type="radio" id="quantity3" name="quantity" value="3">
-                        <label for="quantity3">3</label>
-
-                        <input type="radio" id="quantity4" name="quantity" value="4">
-                        <label for="quantity4">4</label>
-
-                        <input type="radio" id="quantity5" name="quantity" value="5">
-                        <label for="quantity5">5</label>
-
-                        <input type="radio" id="quantityN" name="quantity" value="6">
-                        <label for="quantityN">Enter the amount</label>
-                </form>
-            </div>
         </div>
-        <div class="more"></div>
+        {*<div class="more"></div>*}
 
     </div>
 
