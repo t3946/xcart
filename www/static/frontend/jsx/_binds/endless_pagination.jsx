@@ -12,6 +12,8 @@ window.endless_paginate = ()=>{
 
     if ($this.length) {
 
+        window.sendAnalytics.sendLoadMore($this.attr('href'));
+
         // window.loader.load(
             $.ajax($this.attr('href'), {
                 'dataType': 'json',
@@ -29,6 +31,8 @@ window.endless_paginate = ()=>{
                     }
 
                     $('.page_count_wrap').html(data.page_count);
+
+                    window.LazyLoad.update();
 
                     // history.replaceState({pageUrl: old_uri}, document.title, old_uri);
                 },

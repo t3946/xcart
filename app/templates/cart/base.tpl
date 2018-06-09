@@ -3,6 +3,7 @@
 
 {block 'schema_page_type'}itemtype="http://schema.org/CollectionPage"{/block}
 {block 'noindex'}<meta name="robots" content="noindex">{/block}
+{block 'css_preload'}<link rel="stylesheet" href="/static/frontend/dist/css/styles.css?v={frontend_version resource='css/styles.css'}">{/block}
 
 {block "header"}
     <header class="cart-header" itemscope itemtype="http://schema.org/WPHeader">
