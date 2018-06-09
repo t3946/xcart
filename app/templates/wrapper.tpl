@@ -96,7 +96,7 @@
 
     {$gConfig.google_analitics_tracking_script
         |replace:'{{ga_account_nr}}':$config.cidev_ga_code_number
-        |replace:'{{ga_ec_data}}':"ga('require', 'ec');"
+        |replace:'{{ga_ec_data}}':""
         |replace:'{{ga_send}}':""
     }
 
