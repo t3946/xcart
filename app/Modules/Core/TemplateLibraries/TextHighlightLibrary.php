@@ -34,7 +34,7 @@ class TextHighlightLibrary extends TemplateLibrary
         if (is_string($search)) {
             $words = preg_split('/[\s+\n\r\t]/', $search);
         }
-        
+
         if (is_array($search)) {
             $words = $search;
         }
@@ -58,6 +58,18 @@ class TextHighlightLibrary extends TemplateLibrary
     {
         if ($founded = self::searchSubstring($str, trim($search)))
         {
+            $full_string = '';
+            $replace_number = 0;
+            $replace_string = "{content";
+
+            $regexp = '/<[^>].*?>.*?<\/.*?>/';
+
+            if (preg_match_all($regexp, $str, $mass_of_strings)){
+                for ($replace_number = 0; $replace_number < count($mass_of_strings[0]); $replace_number++){
+                    $str = str_replace($mass_of_strings[0][$replace_number], "{$replace_string}{$replace_number}}", $str);
+                }
+            }
+
             $len = strlen($founded);
             $pos = strpos(strtolower($str), strtolower($founded));
 
@@ -70,7 +82,15 @@ class TextHighlightLibrary extends TemplateLibrary
                 $str2 = self::textHighlight($str2, $search, $tag);
             }
 
-            return [$str1 . $founded . $str2, true];
+            $full_string = $str1 . $founded . $str2;
+
+            if ($mass_of_strings) {
+                for ($replace_number = 0; $replace_number < count($mass_of_strings[0]); $replace_number++){
+                    $full_string = str_replace("{$replace_string}{$replace_number}}", $mass_of_strings[0][$replace_number], $full_string);
+                }
+            }
+
+            return [$full_string, true];
         }
 
         return [$str, false];
