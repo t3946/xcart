@@ -60839,11 +60839,11 @@ var ProductImageSlider = function (_Component) {
                 'a',
                 { onClick: function onClick(e) {
                         _this3.changeWindow();
-                    }, className: 'add button waves waves-orange yellow' },
+                    }, className: 'add button button-amount' },
                 (0, _preact.h)(
                     'span',
                     { className: 'text' },
-                    'Enter the amount'
+                    'Other amount'
                 )
             )
         );
@@ -60882,6 +60882,21 @@ var ProductImageSlider = function (_Component) {
         this.newState(userEntered);
     };
 
+    ProductImageSlider.prototype.setFocus = function setFocus() {
+        if (this.state.userValue) {
+            this.inputEl.focus();
+            this.inputEl.select();
+        }
+    };
+
+    ProductImageSlider.prototype.componentDidUpdate = function componentDidUpdate() {
+        this.setFocus();
+    };
+
+    ProductImageSlider.prototype.componentDidMount = function componentDidMount() {
+        this.setFocus();
+    };
+
     ProductImageSlider.prototype.renderInputText = function renderInputText() {
         var _this4 = this;
 
@@ -60909,7 +60924,7 @@ var ProductImageSlider = function (_Component) {
                 (0, _preact.h)('input', { ref: function ref(node) {
                         _this4.inputEl = node;
                     }, type: 'number', value: value,
-                    min: this.props.min, max: this.props.max, step: this.props.step })
+                    min: this.props.min, max: this.props.max, step: this.props.step, autofocus: true })
             ),
             (0, _preact.h)(
                 'div',
@@ -60918,11 +60933,11 @@ var ProductImageSlider = function (_Component) {
                     'a',
                     { onClick: function onClick(e) {
                             _this4.getUserQuantity();
-                        }, className: 'add button waves waves-orange yellow' },
+                        }, className: 'add button button-change waves waves-orange yellow' },
                     (0, _preact.h)(
                         'span',
                         { className: 'text' },
-                        'Change'
+                        'Set'
                     )
                 )
             )
