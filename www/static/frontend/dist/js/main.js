@@ -42572,8 +42572,6 @@ __webpack_require__(132);
 
 __webpack_require__(139);
 
-__webpack_require__(140);
-
 __webpack_require__(141);
 
 __webpack_require__(142);
@@ -58718,10 +58716,12 @@ exports.default = FilterPriceSlider;
             this.renderContainer();
             this.setContent(html);
             this.bindEvents();
-
+            this.registerInDocument();
             this.open();
         },
-
+        registerInDocument: function registerInDocument() {
+            $(document).data('mmodal', this);
+        },
         open: function open() {
             var $body = $('body'),
                 before = $body.outerWidth();
@@ -59539,6 +59539,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
     var unsubscribeCart = _StoreCart2.default.subscribe(function () {
         checkEnableMinicart();
     });
+
     var unsubscribeApp = _StoreApp2.default.subscribe(function () {
         var state = _StoreApp2.default.getState();
 
@@ -59548,18 +59549,12 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
     });
 
     var productItemResetState = function productItemResetState(product) {
-        console.log(product);
-        var input = product.querySelector('.quantity-group input');
-        var val = input.min;
 
-        input.value = val;
+        var number = product.querySelector('.add-product .number-button span');
+        var val = parseInt(number.dataset.min, 10);
+
+        number.innerHTML = val;
         product.dataset.quantity = val;
-
-        $(document).trigger('component.quantity.change', {
-            target: product,
-            val: val,
-            product: product
-        });
     };
 
     $(document).on('click', '.cart_add .add', function (e) {
@@ -59630,23 +59625,33 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
         event.preventDefault();
         event.stopPropagation();
 
+        var target = event.target.tagName == 'SPAN' ? event.target : $(event.target).find('span').get(0);
         var selectQuantity = document.querySelector('.select-quantity');
+        var product = event.target.closest('[data-product]');
 
-        if (selectQuantity) {
+        if (selectQuantity && product) {
             $(selectQuantity).mmodal({
                 'width': 300,
                 'onSubmit': function onSubmit() {}
             });
-            var _window = $('.mmodal-content .select-quantity')[0];
+            var _window = $('.mmodal-content .select-quantity').get(0);
 
-            console.log('waerwerwerw');
-            var number = 5;
-            var quantity = 1;
-            var quantityAvailable = 10;
-            var windowObj = $(document).data('mmodal');
+            var number = parseInt(target.dataset.number, 10);
+            var quantityAvailable = parseInt(target.dataset.max, 10);
+            var quantity = product.dataset.quantity || 1;
 
-            (0, _preact.render)((0, _preact.h)(_SelectNumberItems2.default, { number: number, windowObj: windowObj, quantity: quantity,
-                quantityAvaliable: quantityAvailable }), _window, _window.firstChild);
+            var changeQuantity = function changeQuantity(e) {
+
+                var quantity = parseInt(e.detail.quantity, 10);
+                product.dataset.quantity = quantity;
+                target.innerHTML = quantity;
+                $(document).data('mmodal').close();
+                document.removeEventListener('component.select_number_items.change', changeQuantity);
+            };
+
+            document.addEventListener('component.select_number_items.change', changeQuantity);
+
+            (0, _preact.render)((0, _preact.h)(_SelectNumberItems2.default, { number: number, quantity: quantity, quantityAvaliable: quantityAvailable }), _window, _window.firstChild);
         }
     });
 })();
@@ -61008,16 +61013,6 @@ exports.__esModule = true;
 
 var _preact = __webpack_require__(4);
 
-var _preactRenderToString = __webpack_require__(39);
-
-var _preactRenderToString2 = _interopRequireDefault(_preactRenderToString);
-
-var _lodash = __webpack_require__(3);
-
-var _lodash2 = _interopRequireDefault(_lodash);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
@@ -61030,14 +61025,11 @@ var ProductImageSlider = function (_Component) {
     function ProductImageSlider(props) {
         _classCallCheck(this, ProductImageSlider);
 
-        console.info('constructor');
-
         var _this = _possibleConstructorReturn(this, _Component.call(this, props));
 
-        _this.quantityAvailable = props.quantityAvailable;
-        _this.number = _this.quantityAvailable >= props.number ? props.number : _this.quantityAvailable;
+        _this.number = props.quantityAvaliable >= props.number ? props.number : props.quantityAvaliable;
 
-        if (props.quantity > _this.quantityAvailable) {
+        if (props.quantity > props.quantityAvaliable) {
             return _possibleConstructorReturn(_this);
         }
 
@@ -61056,14 +61048,22 @@ var ProductImageSlider = function (_Component) {
     };
 
     ProductImageSlider.prototype.newState = function newState(quantity) {
-        var d = document.getElementsByClassName("add-product");
-        console.log(d.dataset);
 
-        this.setState({
-            'active': 'quantity' + quantity,
-            'quantity': quantity,
-            'userValue': quantity > this.number
-        });
+        if (quantity <= this.props.quantityAvaliable) {
+
+            var detail = {
+                quantity: quantity
+            };
+            var event = new CustomEvent('component.select_number_items.change', { detail: detail });
+
+            this.setState({
+                'active': 'quantity' + quantity,
+                'quantity': quantity,
+                'userValue': quantity > this.number
+            });
+
+            document.dispatchEvent(event);
+        }
     };
 
     ProductImageSlider.prototype.renderNumberItem = function renderNumberItem(index) {
@@ -61148,10 +61148,7 @@ var ProductImageSlider = function (_Component) {
 
     ProductImageSlider.prototype.getUserQuantity = function getUserQuantity() {
         var userEntered = parseInt(this.inputEl.value, 10);
-
-        if (userEntered <= this.quantityAvailable) {
-            this.newState(userEntered);
-        }
+        this.newState(userEntered);
     };
 
     ProductImageSlider.prototype.renderInputText = function renderInputText(number) {
@@ -61170,7 +61167,7 @@ var ProductImageSlider = function (_Component) {
                 { className: 'input-quantity' },
                 (0, _preact.h)('input', { ref: function ref(node) {
                         _this4.inputEl = node;
-                    }, type: 'text', value: number })
+                    }, type: 'text', value: this.state.quantity || number })
             ),
             (0, _preact.h)(
                 'div',
@@ -68432,51 +68429,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 140 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/* WEBPACK VAR INJECTION */(function($) {
-
-(function () {
-    var page = document.querySelector('.product-page');
-    if (page) {
-        var prices_table = page.querySelector('.table__prices--down');
-        var prices_row = page.querySelectorAll('.price-row');
-
-        if (prices_row) {
-            var timers = {};
-
-            $(document).on('component.quantity.change', function (e, data) {
-
-                if (data.product && data.product.dataset.product === page.dataset.product) {
-                    var allHide = true;
-
-                    prices_row.forEach(function (price) {
-                        var hide = price.dataset.quantity <= data.val;
-                        var key = 'price_' + price.dataset.quantity;
-
-                        price.classList.toggle('hidden', hide);
-
-                        clearTimeout(timers[key]);
-                        timers[key] = setTimeout(function () {
-                            price.classList.toggle('af-anim', hide);
-                        }, 200);
-
-                        if (!hide) {
-                            allHide = false;
-                        }
-                    });
-
-                    prices_table.classList.toggle('hidden', allHide);
-                }
-            });
-        }
-    }
-})();
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
-
-/***/ }),
+/* 140 */,
 /* 141 */
 /***/ (function(module, exports, __webpack_require__) {
 

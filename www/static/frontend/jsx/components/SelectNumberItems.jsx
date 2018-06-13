@@ -1,18 +1,16 @@
 import {h, render, Component} from "preact";
-import renderToStringr from 'preact-render-to-string';
-import _ from 'lodash';
+//import renderToStringr from 'preact-render-to-string';
+//import _ from 'lodash';
 
 export default class ProductImageSlider extends Component {
 
 
     constructor(props) {
-        console.info('constructor');
         super(props);
 
-        this.quantityAvailable = props.quantityAvailable;
-        this.number = (this.quantityAvailable >= props.number) ? props.number : this.quantityAvailable;
+        this.number = (props.quantityAvaliable >= props.number) ? props.number : props.quantityAvaliable;
 
-        if(props.quantity > this.quantityAvailable){
+        if(props.quantity > props.quantityAvaliable){
             return;
         }
 
@@ -31,19 +29,21 @@ export default class ProductImageSlider extends Component {
 
     newState(quantity){
 
-        // document.dataset.quantitySelector = [
-        //     'quantity': quantity
-        // ];
-        //document.dataset.quantitySelector = 10;
-        //console.log(document.dataset);//cart_add
-        let d = document.getElementsByClassName("add-product");
-        console.log(d.dataset);
+        if(quantity <= this.props.quantityAvaliable){
 
-        this.setState({
-            'active': 'quantity' + quantity,
-            'quantity': quantity,
-            'userValue': quantity > this.number
-        });
+            let detail = {
+                quantity: quantity
+            };
+            let event = new CustomEvent('component.select_number_items.change', { detail: detail });
+
+            this.setState({
+                'active': 'quantity' + quantity,
+                'quantity': quantity,
+                'userValue': quantity > this.number
+            });
+
+            document.dispatchEvent(event);
+        }
     }
 
     renderNumberItem(index) {
@@ -102,10 +102,7 @@ export default class ProductImageSlider extends Component {
 
     getUserQuantity(){
         let userEntered = parseInt(this.inputEl.value, 10);
-
-        if(userEntered <= this.quantityAvailable) {
-            this.newState(userEntered);
-        }
+        this.newState(userEntered);
     }
 
     renderInputText(number) {
@@ -116,10 +113,10 @@ export default class ProductImageSlider extends Component {
                     Quantity
                 </div>
                 <div className="input-quantity">
-                    <input ref = {node => { this.inputEl = node; }} type='text' value={ number }/>
+                    <input ref = {node => { this.inputEl = node; }} type='text' value={ this.state.quantity || number }/>
                 </div>
                 <div>
-                    <a  onClick={e => { this.getUserQuantity() } } className="add button waves waves-orange yellow">
+                    <a onClick={e => { this.getUserQuantity() } } className="add button waves waves-orange yellow">
                         <span className="text">Change</span>
                     </a>
                 </div>

@@ -33,6 +33,7 @@ import SelectNumberItems from "../../components/SelectNumberItems";
         checkEnableMinicart();
 
     });
+
     let unsubscribeApp = storeApp.subscribe(()=>{
         let state = storeApp.getState();
 
@@ -41,20 +42,19 @@ import SelectNumberItems from "../../components/SelectNumberItems";
         }
     });
 
-
     let productItemResetState = product => {
-        console.log(product);
-        let input = product.querySelector('.quantity-group input');
-        let val = input.min;
 
-        input.value = val;
+        let number = product.querySelector('.add-product .number-button span');
+        let val = parseInt(number.dataset.min, 10);
+
+        number.innerHTML = val;
         product.dataset.quantity = val;
 
-        $(document).trigger('component.quantity.change', {
-            target: product,
-            val: val,
-            product: product,
-        });
+        // $(document).trigger('component.quantity.change', {
+        //     target: product,
+        //     val: val,
+        //     product: product,
+        // });
     };
 
     $(document)
@@ -133,23 +133,35 @@ import SelectNumberItems from "../../components/SelectNumberItems";
             event.preventDefault();
             event.stopPropagation();
 
+            let target = (event.target.tagName == 'SPAN') ? event.target : $(event.target).find('span').get(0);
             let selectQuantity = document.querySelector('.select-quantity');
+            let product = event.target.closest('[data-product]');
 
-            if (selectQuantity) {
+            if (selectQuantity && product) {
                 $(selectQuantity).mmodal({
                     'width': 300,
                     'onSubmit': function () {}
                 });
-                let window = $('.mmodal-content .select-quantity')[0];
+                let window = $('.mmodal-content .select-quantity').get(0);
 
-                console.log('waerwerwerw');
-                let number = 5;
-                let quantity = 1;
-                let quantityAvailable = 10;
-                let windowObj = $(document).data('mmodal');
+                let number = parseInt(target.dataset.number, 10);
+                let quantityAvailable = parseInt(target.dataset.max, 10);
+                let quantity = product.dataset.quantity || 1;
 
-                render(<SelectNumberItems number={number} windowObj={windowObj} quantity={quantity}
-                                          quantityAvaliable={quantityAvailable}/>, window, window.firstChild);
+                let changeQuantity = e => {
+
+                    let quantity = parseInt(e.detail.quantity, 10);
+                    product.dataset.quantity = quantity;
+                    target.innerHTML = quantity;
+                    $(document).data('mmodal').close();
+                    document.removeEventListener('component.select_number_items.change', changeQuantity);
+                };
+
+                document.addEventListener('component.select_number_items.change', changeQuantity);
+
+
+                render(<SelectNumberItems number={number} quantity={quantity} quantityAvaliable={quantityAvailable} />,
+                    window, window.firstChild);
             }
 
         });

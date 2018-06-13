@@ -241,15 +241,16 @@
             this.renderContainer();
             this.setContent(html);
             this.bindEvents();
-            //this.registerInDocument();
+            this.registerInDocument();
             this.open();
         },
-        // registerInDocument: function() {
-        //     var data = $(document).data('mmodal');
-        //     if(typeof data == 'undefined') {
-        //         $(document).data('mmodal', this);
-        //     }
-        // },
+        registerInDocument: function() {
+            // var data = $(document).data('mmodal');
+            // if(typeof data == 'undefined') {
+            //     $(document).data('mmodal', this);
+            // }
+            $(document).data('mmodal', this);
+        },
         open: function () {
             var $body = $('body'),
                 before = $body.outerWidth();

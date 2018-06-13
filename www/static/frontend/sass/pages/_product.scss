@@ -1,6 +1,6 @@
 @import "product/tabs";
 //
-@import "product/price_table";
+//@import "product/price_table";
 
 .product-page {
   @include getProductTabs();
