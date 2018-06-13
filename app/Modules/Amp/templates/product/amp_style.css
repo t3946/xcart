@@ -533,6 +533,7 @@ amp-carousel[controls] .amp-carousel-button{
 
 .add_to_cart{
     padding: 0 25px;
+    background: transparent url('/static/frontend/dist/images/add_to_cart.svg') 10% center no-repeat;
 }
 
 .add_to_cart:before{
@@ -541,7 +542,7 @@ amp-carousel[controls] .amp-carousel-button{
     vertical-align: middle;
     width: 35px;
     height: 35px;
-    background: transparent url('/static/frontend/dist/images/add_to_cart.svg') center center no-repeat;
+
     background-size: contain;
     margin-right: 5px;
 }

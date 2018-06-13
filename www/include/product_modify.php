@@ -921,6 +921,7 @@ if (($REQUEST_METHOD == "POST") && ($mode == "product_modify")) {
 			}
 		}
 
+		$query_data['lock_price'] = (!empty($lock_price))?"Y":"N";
 		$query_data['weight_lock'] = (!empty($lock_product_weight))?"Y":"N";
 		$query_data['shipping_weight_lock'] = (!empty($lock_shipping_weight))?"Y":"N";
 		$query_data['dim_lock'] = (!empty($lock_product_dimension))?"Y":"N";
