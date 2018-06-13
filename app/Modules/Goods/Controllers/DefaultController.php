@@ -59,8 +59,9 @@ class DefaultController extends FrontendController
                 if ($mv_category = $mv_category->getObjects()->ancestors(true)->filter(['avail' => 'Y', 'product_count__gt' => 0])->limit(1)->get()) {
                     Xcart::app()->request->redirect($mv_category->getAbsoluteUrl());
                 }
-                Xcart::app()->request->redirect('/');
             }
+
+            Xcart::app()->request->redirect('/');
         }
 
 
