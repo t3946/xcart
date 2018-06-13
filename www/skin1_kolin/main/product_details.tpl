@@ -810,10 +810,18 @@
 
                                 {if $usertype eq "A"}
                                     <div id="cidev_box1">
+                                        <div style="float:left;">
                                         &nbsp;<a style="text-decoration: none; border-bottom: 1px dashed #000000;"
                                                  href="javascript: void(0)"
-                                                 onclick="javasctip: document.getElementById('cidev_box2').style.display=''; document.getElementById('cidev_box1').style.display='none';">{
+                                                 onclick="document.getElementById('cidev_box2').style.display=''; document.getElementById('cidev_box1').style.display='none';">{
                                             $product.price|formatprice|default:$zero}</a>
+                                        </div>
+                                        <div class="tablebordernone"></div>
+                                        <div>
+                                            <label class="lock_product_weight_label" for="lock_product_price">
+                                                <input style="position: relative;top: 3px;" type="checkbox" id="lock_product_price" name="lock_price" {if $product.lock_price == "Y"}checked="checked"{/if} />
+                                                Locked by Product Manager</label>
+                                        </div>
                                     </div>
                                     <div id="cidev_box2" style="display: none;">
                                     <input type="text" name="price" id="price" size="18"
@@ -841,6 +849,8 @@
                                 {if $usertype eq "A"}
                                     </div>
                                 {/if}
+
+
 
                             {/if}
                         </td>

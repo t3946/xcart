@@ -6,6 +6,9 @@ import { hideAll, action } from "../../redusers/appHeadReduser";
 import { cartAdd } from "../../redusers/appCartRediser";
 import sendAnalytics from "../../utils/sendAnalytics";
 
+import {h, render} from 'preact';
+import SelectNumberItems from "../../components/SelectNumberItems";
+
 (()=>{
     let $minicart = $('.minicart');
 
@@ -30,6 +33,7 @@ import sendAnalytics from "../../utils/sendAnalytics";
         checkEnableMinicart();
 
     });
+
     let unsubscribeApp = storeApp.subscribe(()=>{
         let state = storeApp.getState();
 
@@ -38,20 +42,19 @@ import sendAnalytics from "../../utils/sendAnalytics";
         }
     });
 
-
     let productItemResetState = product => {
-        console.log(product);
-        let input = product.querySelector('.quantity-group input');
-        let val = input.min;
 
-        input.value = val;
+        let number = product.querySelector('.add-product .number-button span');
+        let val = parseInt(number.dataset.min, 10);
+
+        number.innerHTML = val;
         product.dataset.quantity = val;
 
-        $(document).trigger('component.quantity.change', {
-            target: product,
-            val: val,
-            product: product,
-        });
+        // $(document).trigger('component.quantity.change', {
+        //     target: product,
+        //     val: val,
+        //     product: product,
+        // });
     };
 
     $(document)
@@ -105,8 +108,7 @@ import sendAnalytics from "../../utils/sendAnalytics";
             if (mc_count) {
                 if (qNew > 99) {
                     mc_count.classList.add('small');
-                }
-                else {
+                } else {
                     mc_count.classList.remove('small');
                 }
 
@@ -121,12 +123,52 @@ import sendAnalytics from "../../utils/sendAnalytics";
             if ($minicart.hasClass('active')) {
                 $minicart.removeClass('active');
                 hideAll()
-            }
-            else {
+            } else {
                 $minicart.addClass('active');
                 action('cart');
             }
+
+        }).on('click','.cart_add .number-button', (event) => {
+
+            event.preventDefault();
+            event.stopPropagation();
+
+            let target = (event.target.tagName == 'SPAN') ? event.target : $(event.target).find('span').get(0);
+            let selectQuantity = document.querySelector('.select-quantity');
+            let product = event.target.closest('[data-product]');
+
+            if (selectQuantity && product) {
+
+                $(selectQuantity).mmodal({
+                    'windowClass': 'quantitySelector',
+                    'setWidth': false
+                });
+
+                let window = $('.mmodal-content .select-quantity').get(0);
+                let number = parseInt(target.dataset.number, 10);
+                let max = parseInt(target.dataset.max, 10);
+                let min = parseInt(target.dataset.min, 10);
+                let step = parseInt(target.dataset.step, 10);
+                let quantity = product.dataset.quantity || min;
+                let changeQuantity = e => {
+
+                    let quantity = parseInt(e.detail.quantity, 10);
+                    product.dataset.quantity = quantity;
+                    target.innerHTML = quantity;
+                    $(document).data('mmodal').close();
+                    document.removeEventListener('component.select_number_items.change', changeQuantity);
+                };
+
+                document.addEventListener('component.select_number_items.change', changeQuantity);
+
+                render(<SelectNumberItems number={number} quantity={quantity} max={max} min={min} step={step}/>,
+                    window, window.firstChild);
+            }
+
         });
+
+
+
 
 
 })();

@@ -15,7 +15,6 @@
     "font-awesome": "^4.7.0",
     "select2": "~4.0.3",
     "air-datepicker": "^2.2.3",
-    "mmodal": "git://github.com/tsukasa-mixer/mmodal.git",
     "compass-mixins": "^v0.12",
     "mindy-sass": "*",
     "jScrollPane": "jscrollpane#^2.0.23",

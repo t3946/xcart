@@ -1,4 +1,5 @@
 (()=>{
+
     let page = document.querySelector('.product-page');
     if (page) {
         let prices_table = page.querySelector('.table__prices--down');

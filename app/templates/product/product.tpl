@@ -30,7 +30,7 @@
          data-list-price="{$model->list_price}"
          {/if}>
 
-    <section class="product-title product-title-small hide-for-large">
+    <section class="product-title product-title-small">
         <div class="row">
             <div class="column large-12">
                 <h1>
@@ -42,16 +42,26 @@
 
                 </h1>
 
-                <div class="float-right show-for-medium-only show-for-ml-only godaddy">
-                    <img src="/static/frontend/dist/images/icons/item_product/gd_label.png" alt="GODADDY Verified & secured" class="gd">
+                {*<div class="float-right show-for-medium-only show-for-ml-only godaddy">*}
+                    {*<img src="/static/frontend/dist/images/icons/item_product/gd_label.png" alt="GODADDY Verified & secured" class="gd">*}
+                {*</div>*}
+                <div class="row align-justify align-middle">
+                    <div class="column shrink sku">
+                        <span class="value">
+                            SKU: <span class="style" itemprop="sku">{$model->productcode}</span>
+                        </span>
+                    </div>
+                    <div class="column shrink notifications hide-for-ml">
+                        <div class="row">
+                            <div class="column shrink">
+                                {include "product/messages/_messages.tpl" model=$model fill=true}
+                            </div>
+                            <div class="column shrink godaddy show-for-medium">
+                                <img src="/static/frontend/dist/images/icons/item_product/gd_label.png" alt="GODADDY Verified & secured" class="gd">
+                            </div>
+                        </div>
+                    </div>
                 </div>
-
-                <div class="sku">
-                    <span class="value">
-                        SKU: <span class="style" itemprop="sku">{$model->productcode}</span>
-                    </span>
-                </div>
-
                 <span class="clearfix"></span>
             </div>
         </div>
@@ -59,7 +69,7 @@
 
     <section class="images_prices">
         <div class="row">
-            <div class="column small-12 large-5 block__image">
+            <div class="column small-12 ml-7 large-6 block__image">
                 <div class="product__images-slider">
                     {add $site = $model->sites->limit(1)->get()}
 
@@ -105,33 +115,25 @@
 
                 </div>
             </div>
-            <div class="column small-12 large-7 block__title_price">
-                <div class="product-title show-for-large">
-
-                    <h1>
-                        {$model->getFrontendName()}
-                        {if $model->retail_trust_enabled}
-                            <i class="icon retailTrust"></i>
-                        {/if}
-                    </h1>
-
-                </div>
+            <div class="column small-12 ml-5 large-6 block__title_price">
 
                 {*<div class="float-right show-for-large godaddy">*}
                     {*<img src="/static/frontend/dist/images/icons/item_product/gd_label.png" alt="GODADDY Verified & secured" class="gd">*}
                 {*</div>*}
-                <div class="sku show-for-large">
-                    <span class="value">
-                        SKU: <span class="style" itemprop="sku">{$model->productcode}</span>
-                    </span>
-                </div>
-                <span class="clearfix"></span>
+                {*<div class="sku show-for-large">*}
+                    {*<span class="value">*}
+                        {*SKU: <span class="style" itemprop="sku">{$model->productcode}</span>*}
+                    {*</span>*}
+                {*</div>*}
+                {*<span class="clearfix"></span>*}
 
-                <div class="notifications">
-
-                    <div class="row">
-                        <div class="column small-12 medium-10 large-9">
+                <div class="notifications show-for-ml">
+                    <div class="row align-middle">
+                        <div class="column shrink">
                             {include "product/messages/_messages.tpl" model=$model fill=true}
+                        </div>
+                        <div class="column shrink godaddy">
+                            <img src="/static/frontend/dist/images/icons/item_product/gd_label.png" alt="GODADDY Verified & secured" class="gd">
                         </div>
                     </div>
                 </div>
@@ -159,7 +161,8 @@
                 {else}
                     <div class="full_line__group_root buttons">
                         {ignore}
-                            <a onclick="$('html, body').animate({scrollTop: $('#products').offset().top}, 1000);" class="button yellow waves waves-orange waves-effect default-style">Full product line</a>
+                            <a onclick="$('html, body').animate({scrollTop: $('#products').offset().top}, 1000);"
+                               class="button yellow waves waves-orange waves-effect default-style">Full product line</a>
                             <div class="info">Click here to see full product line</div>
                         {/ignore}
                     </div>

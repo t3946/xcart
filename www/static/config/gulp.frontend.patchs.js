@@ -166,14 +166,14 @@ module.exports = {
                 'bower_components/webfontloader/webfontloader.js'
             ]
         },
-        modal: {
-            js_include: [
-                'bower_components/mmodal/js/jquery.mindy.modal.js'
-            ],
-            scss_include: [
-                'bower_components/mmodal/scss/'
-            ]
-        },
+        // modal: {
+        //     js_include: [
+        //         'bower_components/mmodal/js/jquery.mindy.modal.js'
+        //     ],
+        //     scss_include: [
+        //         'bower_components/mmodal/scss/'
+        //     ]
+        // },
         bourbon: {
             scss_include: [
                 'bower_components/bourbon/app/assets/stylesheets/'
