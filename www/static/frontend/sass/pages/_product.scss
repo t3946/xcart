@@ -5,7 +5,7 @@
 .product-page {
   @include getProductTabs();
   //
-  @include getPricesTable();
+  //@include getPricesTable();
 
   .price {
     padding-left: 3px;

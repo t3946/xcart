@@ -108,8 +108,7 @@ import SelectNumberItems from "../../components/SelectNumberItems";
             if (mc_count) {
                 if (qNew > 99) {
                     mc_count.classList.add('small');
-                }
-                else {
+                } else {
                     mc_count.classList.remove('small');
                 }
 
@@ -124,12 +123,13 @@ import SelectNumberItems from "../../components/SelectNumberItems";
             if ($minicart.hasClass('active')) {
                 $minicart.removeClass('active');
                 hideAll()
-            }
-            else {
+            } else {
                 $minicart.addClass('active');
                 action('cart');
             }
+
         }).on('click','.cart_add .number-button', (event) => {
+
             event.preventDefault();
             event.stopPropagation();
 
@@ -138,16 +138,18 @@ import SelectNumberItems from "../../components/SelectNumberItems";
             let product = event.target.closest('[data-product]');
 
             if (selectQuantity && product) {
+
                 $(selectQuantity).mmodal({
-                    'width': 300,
-                    'onSubmit': function () {}
+                    'windowClass': 'quantitySelector',
+                    'setWidth': false
                 });
+
                 let window = $('.mmodal-content .select-quantity').get(0);
-
                 let number = parseInt(target.dataset.number, 10);
-                let quantityAvailable = parseInt(target.dataset.max, 10);
-                let quantity = product.dataset.quantity || 1;
-
+                let max = parseInt(target.dataset.max, 10);
+                let min = parseInt(target.dataset.min, 10);
+                let step = parseInt(target.dataset.step, 10);
+                let quantity = product.dataset.quantity || min;
                 let changeQuantity = e => {
 
                     let quantity = parseInt(e.detail.quantity, 10);
@@ -159,8 +161,7 @@ import SelectNumberItems from "../../components/SelectNumberItems";
 
                 document.addEventListener('component.select_number_items.change', changeQuantity);
 
-
-                render(<SelectNumberItems number={number} quantity={quantity} quantityAvaliable={quantityAvailable} />,
+                render(<SelectNumberItems number={number} quantity={quantity} max={max} min={min} step={step}/>,
                     window, window.firstChild);
             }
 

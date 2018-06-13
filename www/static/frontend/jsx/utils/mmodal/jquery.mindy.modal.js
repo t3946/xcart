@@ -258,12 +258,23 @@
             this.options.onBeforeOpen();
 
             this.$bg.show();
-            this.$container.css('width', this.options.width || this.$container.width()).show();
+            if(this.options.windowClass !== 'undefined') {
+                this.$container.addClass(this.options.windowClass);
+            }
+
+            if(this.options.setWidth !== 'undefined' && this.options.setWidth == false) {
+                this.$container.show();
+            } else {
+                this.$container.css('width', this.options.width || this.$container.width()).show();
+            }
 
             $body.css({
                 'overflow': 'hidden',
-                'padding-right': $body.outerWidth() - before
             }).addClass(this.classes.bodyClass);
+
+            $body.css({
+                'padding-right': $body.outerWidth() - before
+            });
 
             this.options.onAfterOpen();
         },

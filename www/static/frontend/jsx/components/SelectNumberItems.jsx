@@ -8,14 +8,16 @@ export default class ProductImageSlider extends Component {
     constructor(props) {
         super(props);
 
-        this.number = (props.quantityAvaliable >= props.number) ? props.number : props.quantityAvaliable;
-
-        if(props.quantity > props.quantityAvaliable){
+        if(props.quantity > props.max){
             return;
         }
 
         this.props = props;
-        this.initState(props.quantity || 1);
+        this.maxButtonValue = props.min + props.step * (this.props.number - 1);
+        this.maxButtonValue = (props.max >= this.maxButtonValue) ? this.maxButtonValue : props.max;
+
+        //console.log(props.quantity);
+        this.initState(props.quantity || props.min);
     }
 
     initState(quantity){
@@ -23,13 +25,17 @@ export default class ProductImageSlider extends Component {
         this.state = {
             'active': 'quantity' + quantity,
             'quantity': quantity,
-            'userValue': quantity > this.number
+            'userValue': quantity > this.maxButtonValue
         };
     }
 
     newState(quantity){
 
-        if(quantity <= this.props.quantityAvaliable){
+        if(quantity >= this.props.min && quantity <= this.props.max){
+
+            if(this.props.step > 1 && (quantity % this.props.step) > 0 ) {
+                return;
+            }
 
             let detail = {
                 quantity: quantity
@@ -39,7 +45,7 @@ export default class ProductImageSlider extends Component {
             this.setState({
                 'active': 'quantity' + quantity,
                 'quantity': quantity,
-                'userValue': quantity > this.number
+                'userValue': quantity > this.maxButtonValue
             });
 
             document.dispatchEvent(event);
@@ -60,15 +66,24 @@ export default class ProductImageSlider extends Component {
     renderNumbersSelector(number) {
 
         let fields = [];
-        for (let i = 0; i < number; i++) {
-            fields.push(this.renderNumberItem(i + 1));
+        let quantity = this.props.min;
+        //let nButton = 1;
+
+        while(quantity <= this.maxButtonValue){// && nButton <= number
+            fields.push(this.renderNumberItem(quantity));
+            quantity += this.props.step;
+            //nButton ++;
         }
+
         return (
             <div>{fields}</div>
         );
     }
 
     renderButton() {
+        if(this.props.max - this.maxButtonValue < this.props.step) {
+            return;
+        }
         return (
             <div>
                 <a onClick={ e => {this.changeWindow()} } className="add button waves waves-orange yellow">
@@ -105,15 +120,23 @@ export default class ProductImageSlider extends Component {
         this.newState(userEntered);
     }
 
-    renderInputText(number) {
+    renderInputText() {
+
+        let value = (this.state.quantity && this.state.quantity > this.maxButtonValue) ? this.state.quantity : (this.maxButtonValue + this.props.step);
+        value = parseInt(value, 10);
+        let max = parseInt(this.props.max, 10);
 
         return (
             <div>
                 <div className="title">
                     Quantity
                 </div>
+                <div className="max-number">
+                    Maximum amount: {max}
+                </div>
                 <div className="input-quantity">
-                    <input ref = {node => { this.inputEl = node; }} type='text' value={ this.state.quantity || number }/>
+                    <input ref = {node => { this.inputEl = node; }} type="number" value={value}
+                    min={this.props.min} max={this.props.max} step={this.props.step}/>
                 </div>
                 <div>
                     <a onClick={e => { this.getUserQuantity() } } className="add button waves waves-orange yellow">
@@ -127,9 +150,9 @@ export default class ProductImageSlider extends Component {
     render(props, state) {
 
         if(state.userValue) {
-            return this.renderInputText(props.number);
+            return this.renderInputText();
         } else {
-            return this.renderRadioGroup(props.number);
+            return this.renderRadioGroup(this.props.number);
         }
 
     }

@@ -5,11 +5,11 @@ body {
   &.mmodal-opened {}
 
   .mmodal-modal-bg {
-    z-index: 10 !important;
+    z-index: 1500 !important;
     background-color: rgba(0,0,0,.5);
 
     .mmodal-container {
-      margin: 10vh auto;
+      margin: 10vh auto 0;
 
       //@include breakpoint(medium up) {
       //  width: 90vw !important;
@@ -101,6 +101,8 @@ body {
   display: none;
 }
 
+
+
 //body .mmodal-modal-bg .mmodal-container {
 //  .mmodal-close {
 //    text-indent: 0 !important;
@@ -111,3 +113,15 @@ body {
 //    right: rem-calc(12) !important;
 //  }
 //}
+.mmodal-container {
+  &.quantitySelector{
+    width: rem-calc(300);
+
+    @include breakpoint(sm) {
+      width: rem-calc(350);
+    }
+    @include breakpoint(medium) {
+      width: rem-calc(480);
+    }
+  }
+}
