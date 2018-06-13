@@ -202,11 +202,13 @@ class PaymentController extends Controller
                                         'type' => OrderTransactionModel::TYPE_AUTHORIZATION,
                                         'transaction_status' => OrderTransactionModel::STATUS_PENDING,
                                         'transaction_amount' => $app->request->request->get('payment_gross'),
-                                        'transaction_response' => $app->request->request->all(),
                                         'login' => $order->login,
                                         'paymentid' => $order->paymentid,
                                     ]);
 
+                                    $txn->save();
+
+                                    $txn->transaction_response = $app->request->request->all();
                                     $txn->save();
 
                                     if (($payment_gross = (float)$app->request->request->get('payment_gross')) && $payment_gross === (float)$order->total) {
