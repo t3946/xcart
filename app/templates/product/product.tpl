@@ -104,7 +104,11 @@
                             {/foreach}
                         {/if}
 
-                        {*<option value="https://www.youtube.com/watch?v=dQw4w9WgXcQ" type="video"></option>*}
+                        <option value="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+                                type="video"
+                                data-thumb=""
+                                data-id="{$video->id}"
+                        ></option>
                         {*<option value="https://www.youtube.com/watch?v=yPYZpwSpKmA" type="video"></option>*}
                         {*<option value="https://www.youtube.com/watch?v=dQw4w9WgXcQ" type="video"></option>*}
                         {*<option value="https://www.youtube.com/watch?v=yPYZpwSpKmA" type="video"></option>*}

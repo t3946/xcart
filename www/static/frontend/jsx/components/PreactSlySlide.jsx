@@ -15,13 +15,18 @@ export default class PreactSlySlide extends Component
             speed: 300,
             mouseDragging: 1,
             touchDragging: 1,
-            activatePageOn: 'click'
+            activatePageOn: 'click',
+            onSlideActive: null
         }, args[0].options || {});
     }
 
     componentDidMount() {
         this.$refs.wrap = $(this.refs.wrap);
         this.$refs.wrap.sly(this.options);
+        if(this.options.onSlideActive) {
+            this.$refs.wrap.sly('on', 'active', _.throttle(this.options.onSlideActive, 200));
+        }
+
 
         window.addEventListener('resize', this.onResize.bind(this));
     }
