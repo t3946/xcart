@@ -188,7 +188,7 @@ if (mt_rand(0, 10000) < 10) {
     }
 }
 
-if (rand(1, 7) > 1) {
+if (rand(1, 7) > 5) {
 
     writeLog("Get home pages started.");
     foreach ($sites as $site) {
