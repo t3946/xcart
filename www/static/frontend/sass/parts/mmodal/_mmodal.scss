@@ -2,7 +2,9 @@
 @import "jquery.mmodal.scss";
 
 body {
-  &.mmodal-opened {}
+  &.mmodal-opened {
+    position: fixed;
+  }
 
   .mmodal-modal-bg {
     z-index: 1500 !important;
