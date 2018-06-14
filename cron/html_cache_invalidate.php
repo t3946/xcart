@@ -174,38 +174,38 @@ foreach (SiteModel::objects()->all() as $site) {
 //}
 
 
-//if (mt_rand(0, 10000) < 10) {
-//
-//    writeLog( "Remove home cache started.");
-//    foreach ($sites as $site) {
-//        /** @var SiteModel $site */
-//
-//        if ($site->isWork()) {
-//            for($i = 1; $i < 11; $i++) {
-//                Xcart::app()->cache->getDriver('html')->set('home-' . $site->domain. '-' . $i, null);
-//                Xcart::app()->cache->getDriver('html')->set('home-' . $site->domain. '-' . $i . '-mobile', null);
-//            }
-//        }
-//    }
-//}
-//
-//if (rand(1, 7) > 5) {
-//
-//    writeLog("Get home pages started.");
-//    foreach ($sites as $site) {
-//        /** @var SiteModel $site */
-//
-//        if ($site->isWork()) {
-//            $ssl = ($site->getConfig()['https_enabled'] == 'Y');
-//            $url = ($ssl ? 'https' : 'http') . '://' . $site->domain;
-//
-//            $requests[] = $guzzle->createRequest('GET', $url, ['headers' => ['User-Agent' => desktop_user_agent], 'cookies' => $cookie]);
-//            $requests[] = $guzzle->createRequest('GET', $url, ['headers' => ['User-Agent' => mobile_user_agent ], 'cookies' => $cookie]);
-//        }
-//    }
-//
-//    poolSend($guzzle, $requests);
-//}
+if (mt_rand(0, 10000) < 10) {
+
+    writeLog( "Remove home cache started.");
+    foreach ($sites as $site) {
+        /** @var SiteModel $site */
+
+        if ($site->isWork()) {
+            for($i = 1; $i < 11; $i++) {
+                Xcart::app()->cache->getDriver('html')->set('home-' . $site->domain. '-' . $i, null);
+                Xcart::app()->cache->getDriver('html')->set('home-' . $site->domain. '-' . $i . '-mobile', null);
+            }
+        }
+    }
+}
+
+if (rand(1, 7) > 5) {
+
+    writeLog("Get home pages started.");
+    foreach ($sites as $site) {
+        /** @var SiteModel $site */
+
+        if ($site->isWork()) {
+            $ssl = ($site->getConfig()['https_enabled'] == 'Y');
+            $url = ($ssl ? 'https' : 'http') . '://' . $site->domain;
+
+            $requests[] = $guzzle->createRequest('GET', $url, ['headers' => ['User-Agent' => desktop_user_agent], 'cookies' => $cookie]);
+            $requests[] = $guzzle->createRequest('GET', $url, ['headers' => ['User-Agent' => mobile_user_agent ], 'cookies' => $cookie]);
+        }
+    }
+
+    poolSend($guzzle, $requests);
+}
 
 writeLog("Cache GC.");
 Xcart::app()->cache->gc(true);
