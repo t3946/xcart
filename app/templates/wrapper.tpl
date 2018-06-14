@@ -157,6 +157,10 @@
             var l = document.createElement('script');
             l.async = true;
             l.src = href;
+            l.onload = function(){
+                var url = parseUrl(this.href);
+                document.dispatchEvent(new CustomEvent('cssLoad', { 'file': url.document }));
+            };
 
             document.body.appendChild(l)
 
