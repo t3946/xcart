@@ -41,9 +41,10 @@ import cssFileLoaded from "../utils/cssFileLoaded";
                 sly.toEnd();
             }
 
-
-            initBreadcrumbs();
-            $(window).resize(reloadBreadcrumbs);
+            cssFileLoaded('styles.css', function(){
+                initBreadcrumbs();
+                $(window).resize(reloadBreadcrumbs);
+            });
 
         });
 
