@@ -1,6 +1,11 @@
 <?php
 return [
     [
+        'route' => '/admin/cart',
+        'path' => 'Modules.Cart.routes_admin',
+        'namespace' => 'admin_cart'
+    ],
+    [
         'route' => '/admin/pbx',
         'path' => 'Modules.PBX.routes_admin',
         'namespace' => 'admin_pbx'

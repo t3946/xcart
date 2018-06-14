@@ -125,6 +125,7 @@ import SelectNumberItems from "../../components/SelectNumberItems";
                 hideAll()
             } else {
                 $minicart.addClass('active');
+                window.LazyLoad.update();
                 action('cart');
             }
 

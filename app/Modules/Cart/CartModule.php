@@ -82,6 +82,11 @@ class CartModule extends Module
                     'admin' => CouponKitAdmin::classNameShort()
                 ]),
             ],
+
+            [
+                'name' => 'Shopping Cart',
+                'route' => $router->url('admin_cart:show'),
+            ],
         ];
     }
 

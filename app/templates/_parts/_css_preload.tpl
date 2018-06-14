@@ -4,6 +4,7 @@
               var url = parseUrl(this.href);
               window.app.assets.css[url.document].loaded = true;
               document.dispatchEvent(new CustomEvent('cssLoad', { 'file': url.document }));">
+<noscript><link rel="stylesheet" href="/static/frontend/dist/css/styles.css?v={frontend_version resource='css/styles.css'}"></noscript>
 <script>
     /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
     /* This file is meant as a standalone workflow for
