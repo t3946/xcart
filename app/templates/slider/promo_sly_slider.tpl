@@ -1,4 +1,4 @@
-<div id='{$slider_name}' class="promo_slider sly_slider visibility__hidden">
+<div id='{$slider_name}' class="promo_slider sly_slider">
     <div class="frame">
         <ul class="clearfix">
             {foreach $slides as $slide}

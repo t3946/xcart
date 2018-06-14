@@ -21,7 +21,7 @@ import documentReady from "./utils/documentReady";
 (function(){
     documentReady(()=>{
         new SearchSuggestion();
-        new LazyImageLoad();
+        //new LazyImageLoad();
         new CategoryViewType();
         new DepartmentMenu();
         // new DottedText('.must-show-less');

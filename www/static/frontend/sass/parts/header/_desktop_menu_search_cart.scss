@@ -68,7 +68,7 @@ $default_height: rem-calc(50);
       border: none;
       display: inline-block;
       //background: url("../images/home/1280/magnifier_hover.svg") no-repeat;
-      background: url("../images/icons/header/magnifier.svg") no-repeat;
+      background: url("/static/frontend/images/icons/header/magnifier.svg") no-repeat;
       width: 23px;
       height: 23px;
       position: absolute;
@@ -90,7 +90,7 @@ $default_height: rem-calc(50);
       bottom: 6px;
       position: absolute;
       opacity: .6;
-      background: url("../images/icons/header/remove_hover.svg") no-repeat;
+      background: url("/static/frontend/images/icons/header/remove_hover.svg") no-repeat;
 
       right: 17px;
 
@@ -249,7 +249,7 @@ $default_height: rem-calc(50);
         height: rem-calc(16);
         vertical-align: middle;
         margin-right: rem-calc(3);
-        background: url("../images/icons/header/view_all_departments.svg") no-repeat;
+        background: url("/static/frontend/images/icons/header/view_all_departments.svg") no-repeat;
       }
     }
 
@@ -353,7 +353,7 @@ $default_height: rem-calc(50);
       position: absolute;
 
       &:before {
-        background: url("../images/icons/header/view_all_departments_blue.svg") no-repeat;
+        background: url("/static/frontend/images/icons/header/view_all_departments_blue.svg") no-repeat;
       }
     }
   }
@@ -386,7 +386,7 @@ $default_height: rem-calc(50);
         vertical-align: middle;
 
         background: {
-          image: url('../images/icons/header/cart.svg');
+          image: url('/static/frontend/images/icons/header/cart.svg');
           repeat: no-repeat;
           position: center center;
         };
