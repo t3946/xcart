@@ -48,7 +48,7 @@
                         </span>
                     </div>
                     <div class="column shrink notifications hide-for-ml">
-                        <div class="row">
+                        <div class="row notifications-info small-collapse">
                             <div class="column shrink">
                                 {include "product/messages/_messages.tpl" model=$model fill=true}
                             </div>
