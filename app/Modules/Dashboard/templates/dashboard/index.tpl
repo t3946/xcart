@@ -67,13 +67,10 @@
     {/smarty_admin_block}
 
     {smarty_admin_block name= 'Customer Care Dashboard'}
-        <form name="searchform" action="customers_cart.php" method="get">
-            <input name="mode" value="search_cart" type="hidden">
-
+        <form action="{url "admin_cart:show"}" method="get">
             <b>Cart number:</b>
-            <input name="cart_number" size="10" value="" id="cart_number" type="text">
-
-            <input type="button" value="Search cart" onclick="javascript: window.open('customers_cart.php?cart_number='+$('#cart_number').val());" />
+            <input name="ShoppingCartForm[id]" size="10" value="" id="cart_number" type="number">
+            <input type="submit" value="Search cart"  />
         </form>
     {/smarty_admin_block}
 
