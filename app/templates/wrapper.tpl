@@ -40,6 +40,8 @@
     <meta name="name" content="{$site->getName()}">
     <meta itemprop='name' content="{$site->getName()}">
 
+    <meta name="google-site-verification" content="0nGAQ-4SOMyfb83Zrnubq1AmXaVEkC-ih7_k-qcQIZY" />
+
     {block 'noindex'}{/block}
 
 
