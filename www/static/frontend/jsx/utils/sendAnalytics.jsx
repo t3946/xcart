@@ -19,4 +19,10 @@ export default class sendAnalytics {
         }
     }
 
+    sendLoadMore(lc) {
+        if (window['ga']) {
+            window.ga('send', {hitType: 'pageview', location: lc});
+        }
+    }
+
 }

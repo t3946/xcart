@@ -1,5 +1,9 @@
 {extends  $.request->getIsAjax() ? "ajax.tpl" : "base.tpl"}
 
+{block 'css_preload'}
+    {insert '_parts/_css_preload.tpl'}
+{/block}
+
 {block 'seo'}
     {parent}
     <link rel="amphtml" href="{$model->getAmpAbsoluteUrl()}">
