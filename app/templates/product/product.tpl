@@ -52,7 +52,7 @@
                         </span>
                     </div>
                     <div class="column shrink notifications hide-for-ml">
-                        <div class="row">
+                        <div class="row notifications-info small-collapse">
                             <div class="column shrink">
                                 {include "product/messages/_messages.tpl" model=$model fill=true}
                             </div>
@@ -128,8 +128,9 @@
                 {*<span class="clearfix"></span>*}
 
                 <div class="notifications show-for-ml">
-                    <div class="row align-middle">
+                    <div class="row align-middle ml-collapse notifications-info">
                         <div class="column shrink">
+
                             {include "product/messages/_messages.tpl" model=$model fill=true}
                         </div>
                         <div class="column shrink godaddy">

@@ -2,7 +2,7 @@
 
 {*{include "product/messages/_p_label.tpl" cls=$class ~ " lead-time" text=$model->lead_time_message}*}
 {include "product/messages/_p_label.tpl" cls=$class ~ " multiply-quantity" text="Order in multiples of {$model->min_amount} items"}
-{*{include "product/messages/_p_label.tpl" cls=$class ~ " last-items" text="Order at least {$model->avail} items"}*}
+{include "product/messages/_p_label.tpl" cls=$class ~ " last-items" text="Order at least {$model->avail} items"}
 {*{include "product/messages/_p_label.tpl" cls=$class ~~ "out-of-stock" text="Out of stock"}*}
 {if !$model->isGroupRoot()}
     {if !$model->isOutOfStock()}

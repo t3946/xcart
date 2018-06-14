@@ -8,7 +8,7 @@ export default class ProductImageSlider extends Component {
     constructor(props) {
         super(props);
 
-        if(props.quantity > props.max){
+        if (props.quantity > props.max) {
             return;
         }
 
@@ -20,7 +20,7 @@ export default class ProductImageSlider extends Component {
         this.initState(props.quantity || props.min);
     }
 
-    initState(quantity){
+    initState(quantity) {
 
         this.state = {
             'active': 'quantity' + quantity,
@@ -29,18 +29,18 @@ export default class ProductImageSlider extends Component {
         };
     }
 
-    newState(quantity){
+    newState(quantity) {
 
-        if(quantity >= this.props.min && quantity <= this.props.max){
+        if (quantity >= this.props.min && quantity <= this.props.max) {
 
-            if(this.props.step > 1 && (quantity % this.props.step) > 0 ) {
+            if (this.props.step > 1 && (quantity % this.props.step) > 0) {
                 return;
             }
 
             let detail = {
                 quantity: quantity
             };
-            let event = new CustomEvent('component.select_number_items.change', { detail: detail });
+            let event = new CustomEvent('component.select_number_items.change', {detail: detail});
 
             this.setState({
                 'active': 'quantity' + quantity,
@@ -58,7 +58,9 @@ export default class ProductImageSlider extends Component {
             <div>
                 <input type="radio" id={id} name="quantity" value={index} key={index}
                        checked={this.state.active == id}/>
-                <label htmlFor={id} onClick={ e => {this.newState(index)} }>{index}</label>
+                <label htmlFor={id} onClick={e => {
+                    this.newState(index)
+                }}>{index}</label>
             </div>
         );
     }
@@ -69,7 +71,7 @@ export default class ProductImageSlider extends Component {
         let quantity = this.props.min;
         //let nButton = 1;
 
-        while(quantity <= this.maxButtonValue){// && nButton <= number
+        while (quantity <= this.maxButtonValue) {// && nButton <= number
             fields.push(this.renderNumberItem(quantity));
             quantity += this.props.step;
             //nButton ++;
@@ -81,13 +83,15 @@ export default class ProductImageSlider extends Component {
     }
 
     renderButton() {
-        if(this.props.max - this.maxButtonValue < this.props.step) {
+        if (this.props.max - this.maxButtonValue < this.props.step) {
             return;
         }
         return (
             <div>
-                <a onClick={ e => {this.changeWindow()} } className="add button waves waves-orange yellow">
-                    <span className="text">Enter the amount</span>
+                <a onClick={e => {
+                    this.changeWindow()
+                }} className="add button button-amount">
+                    <span className="text">Other amount</span>
                 </a>
             </div>
         );
@@ -109,15 +113,30 @@ export default class ProductImageSlider extends Component {
         );
     }
 
-    changeWindow(){
+    changeWindow() {
         let state = this.state;
         state.userValue = true;
         this.setState(state);
     }
 
-    getUserQuantity(){
+    getUserQuantity() {
         let userEntered = parseInt(this.inputEl.value, 10);
         this.newState(userEntered);
+    }
+
+    setFocus() {
+        if (this.state.userValue) {
+            this.inputEl.focus();
+            this.inputEl.select();
+        }
+    }
+
+    componentDidUpdate() {
+        this.setFocus();
+    }
+
+    componentDidMount() {
+        this.setFocus();
     }
 
     renderInputText() {
@@ -135,12 +154,16 @@ export default class ProductImageSlider extends Component {
                     Maximum amount: {max}
                 </div>
                 <div className="input-quantity">
-                    <input ref = {node => { this.inputEl = node; }} type="number" value={value}
-                    min={this.props.min} max={this.props.max} step={this.props.step}/>
+                    <input ref={node => {
+                        this.inputEl = node;
+                    }} type="number" value={value}
+                           min={this.props.min} max={this.props.max} step={this.props.step} autofocus/>
                 </div>
                 <div>
-                    <a onClick={e => { this.getUserQuantity() } } className="add button waves waves-orange yellow">
-                        <span className="text">Change</span>
+                    <a onClick={e => {
+                        this.getUserQuantity()
+                    }} className="add button button-change waves waves-orange yellow">
+                        <span className="text">Set</span>
                     </a>
                 </div>
             </div>
@@ -149,7 +172,7 @@ export default class ProductImageSlider extends Component {
 
     render(props, state) {
 
-        if(state.userValue) {
+        if (state.userValue) {
             return this.renderInputText();
         } else {
             return this.renderRadioGroup(this.props.number);
