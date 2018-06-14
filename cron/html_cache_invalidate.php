@@ -1,7 +1,5 @@
 <?php
 
-use GuzzleHttp\Event\CompleteEvent;
-use GuzzleHttp\Event\ErrorEvent;
 use GuzzleHttp\Pool;
 use Modules\Goods\Models\ProductModel;
 use Modules\Goods\Models\ProductStorefrontModel;
@@ -23,6 +21,7 @@ const LIMIT = 5000;
 const TIME_PRODUCTS_LIMIT = 113;
 
 $cookie = ['418' => "I'm a teapot"];
+/** @var GuzzleHttp\Client $guzzle */
 $guzzle = new \GuzzleHttp\Client();
 $date = new DateTime();
 $time = time();
@@ -32,9 +31,9 @@ $requests = [];
 
 function poolSend($client, &$requests)
 {
-    Pool::send($client, $requests, [
-        'complete' => function (CompleteEvent $event) {},
-        'error' => function (ErrorEvent $event) {},
+    new Pool($client, $requests, [
+        'fulfilled' => function ($response, $index) {},
+        'rejected' => function ($reason, $index) {},
     ]);
 
     $requests = [];
@@ -189,7 +188,7 @@ if (mt_rand(0, 10000) < 10) {
     }
 }
 
-if (rand(1, 7) > 5) {
+if (rand(1, 7) > 1) {
 
     writeLog("Get home pages started.");
     foreach ($sites as $site) {
@@ -199,14 +198,13 @@ if (rand(1, 7) > 5) {
             $ssl = ($site->getConfig()['https_enabled'] == 'Y');
             $url = ($ssl ? 'https' : 'http') . '://' . $site->domain;
 
-            $requests[] = $guzzle->createRequest('GET', $url, ['headers' => ['User-Agent' => desktop_user_agent], 'cookies' => $cookie]);
-            $requests[] = $guzzle->createRequest('GET', $url, ['headers' => ['User-Agent' => mobile_user_agent ], 'cookies' => $cookie]);
+            $requests[] = $guzzle->request('GET', $url, ['headers' => ['User-Agent' => desktop_user_agent]]);
+            $requests[] = $guzzle->request('GET', $url, ['headers' => ['User-Agent' => mobile_user_agent ]]);
         }
     }
 
     poolSend($guzzle, $requests);
 }
-
 writeLog("Cache GC.");
 Xcart::app()->cache->gc(true);
 
