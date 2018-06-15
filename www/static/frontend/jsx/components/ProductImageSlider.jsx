@@ -4,6 +4,7 @@ import {videoLinkToObject} from "../utils/video";
 import PhotoSwipe from "./PhotoSwipeContainer";
 import _ from 'lodash';
 import PreactSlySlide from "./PreactSlySlide";
+import ScreenSize from "../utils/ScreenSize";
 
 export default class ProductImageSlider extends Component {
     constructor(props) {
@@ -19,7 +20,10 @@ export default class ProductImageSlider extends Component {
 
         this.onResize = _.throttle(this.onResize, 200);
 
-        this.state = {
+        this.screen = new ScreenSize();
+        this.screen.setCallback(this.onResize.bind(this));
+        let info = this.screen.getInfo();
+        let state = {
             height: 400,
             loading: true,
             items: props.items || [],
@@ -27,28 +31,64 @@ export default class ProductImageSlider extends Component {
             wait: len,
             isVideo: false,
             index: 0,
+            media: info.media
         };
 
+        this.state = _.extend(state, this.createNewState(state, info));
         this.prepareItems(this.state.items);
     }
 
-    componentDidMount() {
-        window.addEventListener("resize", this.onResize.bind(this));
-        this.onResize()
+    createNewState(state, info){
+        let showThumbs, newState;
+
+        switch (info.media) {
+            case 'small':
+                showThumbs = false;
+                break;
+            case 'sm':
+                showThumbs = false;
+                break;
+            case 'medium':
+                showThumbs = true;
+                break;
+            case 'ml':
+                showThumbs = true;
+                break;
+            case 'large':
+                showThumbs = true;
+                break;
+        }
+
+        if(state.media != info.media || state.showThumbs != showThumbs){
+            newState = _.extend(state, {
+                'media': info.media,
+                'showThumbs': showThumbs
+            });
+        }
+
+        return newState;
     }
 
     componentWillUnmount() {
-        window.removeEventListener("resize", this.onResize);
+        screen.destructor();
     }
 
-    onResize() {
-        if (this.refs.frame) {
-            let height = this.refs.frame.getBoundingClientRect().height;
+    onResize(info) {
+        console.log(info.media);
 
-            if (this.state.height !== height) {
-                this.setState({height: height});
-            }
+        let newState = this.createNewState(this.state, info);
+        if(newState){
+            this.setState(newState);
         }
+
+
+        // if (this.refs.frame) {
+        //     let height = this.refs.frame.getBoundingClientRect().height;
+        //
+        //     if (this.state.height !== height) {
+        //         this.setState({height: height});
+        //     }
+        // }
     };
 
     prepareItems(items) {
@@ -168,7 +208,7 @@ export default class ProductImageSlider extends Component {
     }
 
     onSlideActive(eventName, index) {
-        console.info('active', eventName, index);
+        //console.info('active', eventName, index);
         if (this.state.index !== index) {
             this.setState({
                 index: index,
@@ -377,6 +417,9 @@ export default class ProductImageSlider extends Component {
     }
 
     renderDetailClickBar() {
+        if(this.state.showThumbs){
+            return;
+        }
         return _.map(this.state.items, (item, n) => {
             let index = n + 1;
             let key = 'detailClick.' + index;
@@ -391,9 +434,10 @@ export default class ProductImageSlider extends Component {
         });
     }
 
-    render() {
-        if (this.state.loading) {
-            return <div className="slider loading"></div>;
+    renderSliderThumbs(){
+
+        if(!this.state.showThumbs){
+            return;
         }
 
         let sliderButtonsClasses = (this.state.items.length <= 3) ? 'hide' : '';
@@ -401,55 +445,64 @@ export default class ProductImageSlider extends Component {
             'width': '100%',
         };
 
+        return (
+            <div className="slider-thumbs">
+                <button className={"prev " + sliderButtonsClasses} onClick={e => {
+                    this.prevHndl(e)
+                }} ref={el => this.refs.prev = el} style={buttonStyles}>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="31.75" height="17.688"
+                         viewBox="0 0 31.75 17.688">
+                        <path className="prev_path"
+                              d="M90.364,222.341l-0.728-.685,16-17,0.728,0.686Zm30.272,0,0.728-.685-16-17-0.728.686Z"
+                              transform="translate(-89.625 -204.656)"/>
+                    </svg>
+                </button>
+                <PreactSlySlide
+                    pos={this.state.index}
+                    options={{
+                        horizontal: 0,
+                        speed: 300,
+                        mouseDragging: 1,
+                        touchDragging: 1,
+                        smart: 1,
+                        prev: this.refs.prev,
+                        next: this.refs.next,
+                    }}>
+                    <div className="frame" ref={el => this.refs.frame = el} style={{'height': this.state.height}}>
+                        {this.renderThumbs()}
+                    </div>
+                </PreactSlySlide>
+                <button className={"next " + sliderButtonsClasses} onClick={e => {
+                    this.nextHndl(e)
+                }} ref={el => this.refs.next = el} style={buttonStyles}>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="31.75" height="17.688"
+                         viewBox="0 0 31.75 17.688">
+                        <path className="next_path"
+                              d="M120.636,279.657l0.728,0.685-16,17-0.728-.685Zm-30.272,0-0.728.685,16,17,0.728-.685Z"
+                              transform="translate(-89.625 -279.656)"/>
+                    </svg>
+                </button>
+            </div>
+        );
+    }
+
+    render() {
+        if (this.state.loading) {
+            return <div className="slider loading"></div>;
+        }
 
         return (
             <div className="images-slider">
-                <div className="slider-thumbs">
-                    <button className={"prev " + sliderButtonsClasses} onClick={e => {
-                        this.prevHndl(e)
-                    }} ref={el => this.refs.prev = el} style={buttonStyles}>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="31.75" height="17.688"
-                             viewBox="0 0 31.75 17.688">
-                            <path class="prev_path"
-                                  d="M90.364,222.341l-0.728-.685,16-17,0.728,0.686Zm30.272,0,0.728-.685-16-17-0.728.686Z"
-                                  transform="translate(-89.625 -204.656)"/>
-                        </svg>
-                    </button>
-                    <PreactSlySlide
-                        pos={this.state.index}
-                        options={{
-                            horizontal: 0,
-                            speed: 300,
-                            mouseDragging: 1,
-                            touchDragging: 1,
-                            smart: 1,
-                            prev: this.refs.prev,
-                            next: this.refs.next,
-                        }}>
-                        <div className="frame" ref={el => this.refs.frame = el} style={{'height': this.state.height}}>
-                            {this.renderThumbs()}
-                        </div>
-                    </PreactSlySlide>
-                    <button className={"next " + sliderButtonsClasses} onClick={e => {
-                        this.nextHndl(e)
-                    }} ref={el => this.refs.next = el} style={buttonStyles}>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="31.75" height="17.688"
-                             viewBox="0 0 31.75 17.688">
-                            <path class="next_path"
-                                  d="M120.636,279.657l0.728,0.685-16,17-0.728-.685Zm-30.272,0-0.728.685,16,17,0.728-.685Z"
-                                  transform="translate(-89.625 -279.656)"/>
-                        </svg>
-                    </button>
-                </div>
+                {this.renderSliderThumbs()}
                 <div className="slider-detail">
                     <div className="wrap">
-                        {/*{this.renderDetail()}*/}
                         {this.renderSlyDetails()}
                     </div>
                     <ul className="detailClickBar">
                         {this.renderDetailClickBar()}
                     </ul>
                 </div>
-            </div>);
+            </div>
+        );
     }
 }
