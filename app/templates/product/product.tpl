@@ -56,9 +56,9 @@
                             <div class="column shrink">
                                 {include "product/messages/_messages.tpl" model=$model fill=true}
                             </div>
-                            <div class="column shrink godaddy show-for-medium">
-                                <img src="/static/frontend/dist/images/icons/item_product/gd_label.png" alt="GODADDY Verified & secured" class="gd">
-                            </div>
+                            {*<div class="column shrink godaddy show-for-medium">*}
+                                {*<img src="/static/frontend/dist/images/icons/item_product/gd_label.png" alt="GODADDY Verified & secured" class="gd">*}
+                            {*</div>*}
                         </div>
                     </div>
                 </div>
@@ -69,7 +69,7 @@
 
     <section class="images_prices">
         <div class="row">
-            <div class="column small-12 ml-7 large-6 block__image">
+            <div class="column small-12 ml-7 large-7 block__image">
                 <div class="product__images-slider">
                     {add $site = $model->sites->limit(1)->get()}
 
@@ -104,11 +104,11 @@
                             {/foreach}
                         {/if}
 
-                        <option value="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
-                                type="video"
-                                data-thumb=""
-                                data-id="{$video->id}"
-                        ></option>
+                        {*<option value="https://www.youtube.com/watch?v=dQw4w9WgXcQ"*}
+                                {*type="video"*}
+                                {*data-thumb=""*}
+                                {*data-id="{$video->id}"*}
+                        {*></option>*}
                         {*<option value="https://www.youtube.com/watch?v=yPYZpwSpKmA" type="video"></option>*}
                         {*<option value="https://www.youtube.com/watch?v=dQw4w9WgXcQ" type="video"></option>*}
                         {*<option value="https://www.youtube.com/watch?v=yPYZpwSpKmA" type="video"></option>*}
@@ -119,7 +119,7 @@
 
                 </div>
             </div>
-            <div class="column small-12 ml-5 large-6 block__title_price">
+            <div class="column small-12 ml-5 large-5 block__title_price">
 
                 {*<div class="float-right show-for-large godaddy">*}
                     {*<img src="/static/frontend/dist/images/icons/item_product/gd_label.png" alt="GODADDY Verified & secured" class="gd">*}
@@ -134,12 +134,11 @@
                 <div class="notifications show-for-ml">
                     <div class="row align-middle ml-collapse notifications-info">
                         <div class="column shrink">
-
                             {include "product/messages/_messages.tpl" model=$model fill=true}
                         </div>
-                        <div class="column shrink godaddy">
-                            <img src="/static/frontend/dist/images/icons/item_product/gd_label.png" alt="GODADDY Verified & secured" class="gd">
-                        </div>
+                        {*<div class="column shrink godaddy">*}
+                            {*<img src="/static/frontend/dist/images/icons/item_product/gd_label.png" alt="GODADDY Verified & secured" class="gd">*}
+                        {*</div>*}
                     </div>
                 </div>
 

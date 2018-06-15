@@ -11,20 +11,20 @@ export default class ScreenSize {
         window.addEventListener('resize', this.onResize, {passive: true});
     }
 
-    setCallback(callback){
+    setCallback(callback) {
         this.callback = callback;
     }
 
-    getInfo(){
+    getInfo() {
         return {
             'width': this.width,
             'height': this.height,
-            'media' : this.media
+            'media': this.media
         };
     }
 
-    executeCallback(){
-        if(this.callback){
+    executeCallback() {
+        if (this.callback) {
             this.callback(this.getInfo());
         }
     }
@@ -36,7 +36,7 @@ export default class ScreenSize {
         this.executeCallback();
     };
 
-    destructor(){
+    destructor() {
         window.removeEventListener('resize', this.onResize);
     }
 }

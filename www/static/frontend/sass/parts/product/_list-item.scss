@@ -709,16 +709,19 @@
 
 
           .add {
-            height: 37px;
+            height: rem-calc(37);
+            line-height: rem-calc(42);
             padding: 0;
+            text-align: center;
 
             @include breakpoint(large up) {
-              height: 30px;
+              height: rem-calc(30);
             }
 
             &:before {
-              display: block;
+              display: inline-block;
               padding: 5%;
+              line-height: 100%;
             }
 
             .text {

@@ -18,6 +18,7 @@ export default class PreactSlySlide extends Component
             activatePageOn: 'click',
             onSlideActive: null
         }, args[0].options || {});
+
     }
 
     componentDidMount() {
@@ -28,28 +29,22 @@ export default class PreactSlySlide extends Component
         }
 
 
-        window.addEventListener('resize', this.onResize.bind(this));
+        document.addEventListener('component.sly.resize', _.throttle(this.onResize.bind(this)));
     }
 
     componentWillReceiveProps(props, prev)
     {
         if (this.$refs.wrap) {
             this.$refs.wrap.sly('activate', props.pos);
-            // this.$refs.wrap.sly('slideTo', this.$refs.wrap.sly.items[props.pos].center);
-            // this.$refs.wrap.sly.slideTo(props.pos);
         }
     }
 
     componentWillUnmount() {
-        window.removeEventListener('resize', this.onResize)
-    }
-
-    slyReload() {
-        this.$refs.wrap.sly('reload');
+        document.removeEventListener('component.sly.resize', this.onResize)
     }
 
     onResize() {
-        _.throttle(this.slyReload, 200);
+        this.$refs.wrap.sly('reload');
     }
 
     render({children}) {

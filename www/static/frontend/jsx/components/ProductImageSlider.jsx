@@ -38,31 +38,20 @@ export default class ProductImageSlider extends Component {
         this.prepareItems(this.state.items);
     }
 
-    createNewState(state, info){
+    createNewState(state, info) {
         let showThumbs, newState;
 
-        switch (info.media) {
-            case 'small':
-                showThumbs = false;
-                break;
-            case 'sm':
-                showThumbs = false;
-                break;
-            case 'medium':
-                showThumbs = true;
-                break;
-            case 'ml':
-                showThumbs = true;
-                break;
-            case 'large':
-                showThumbs = true;
-                break;
+        if(info.media == 'small' || info.media == 'sm') {
+            showThumbs = false;
+        } else {
+            showThumbs = true;
         }
 
-        if(state.media != info.media || state.showThumbs != showThumbs){
+        if (state.media != info.media || state.showThumbs != showThumbs) {
             newState = _.extend(state, {
                 'media': info.media,
-                'showThumbs': showThumbs
+                'showThumbs': showThumbs,
+                'stepResize': state.media != info.media
             });
         }
 
@@ -73,22 +62,19 @@ export default class ProductImageSlider extends Component {
         screen.destructor();
     }
 
-    onResize(info) {
-        console.log(info.media);
+    componentDidUpdate() {
 
+        if (this.state.stepResize) {
+            let event = new Event('component.sly.resize');
+            document.dispatchEvent(event);
+        }
+    }
+
+    onResize(info) {
         let newState = this.createNewState(this.state, info);
-        if(newState){
+        if (newState) {
             this.setState(newState);
         }
-
-
-        // if (this.refs.frame) {
-        //     let height = this.refs.frame.getBoundingClientRect().height;
-        //
-        //     if (this.state.height !== height) {
-        //         this.setState({height: height});
-        //     }
-        // }
     };
 
     prepareItems(items) {
@@ -208,7 +194,6 @@ export default class ProductImageSlider extends Component {
     }
 
     onSlideActive(eventName, index) {
-        //console.info('active', eventName, index);
         if (this.state.index !== index) {
             this.setState({
                 index: index,
@@ -217,17 +202,17 @@ export default class ProductImageSlider extends Component {
         }
     }
 
-    videoShowHndl(e) {
-        e.preventDefault();
-
-        this.setState({isVideo: true})
-    }
+    // videoShowHndl(e) {
+    //     e.preventDefault();
+    //
+    //     this.setState({isVideo: true})
+    // }
 
     renderThumbs() {
         return _.map(this.state.items, (item, n) => {
 
-            //let is_active = (this.state.index == n ? ' active' : '');
-            let is_active = '';
+            let is_active = (this.state.index == n ? ' active' : '');
+            //let is_active = '';
 
             if (item.type === 'image') {
                 return (
@@ -303,53 +288,11 @@ export default class ProductImageSlider extends Component {
         return <div className={"image " + classes} style={"background-image: url(" + src + ")"}></div>
     }
 
-    renderDetail() {
-        if (this.state.count) {
-            let position = this.state.index;
-
-            if (position <= this.state.items.length) {
-                let item = this.state.items[position];
-                let key = 'detail.' + position;
-
-                if (item.type === 'image') {
-                    return (
-                        <div className="slide type-image" key={key} onClick={e => {
-                            this.zoomHndl(e, item)
-                        }}>
-                            {this.renderImage(item.src)}
-                        </div>
-                    );
-                }
-
-                if (item.type === 'html') {
-                    return <div className="slide type-html" dangerouslySetInnerHTML={{__html: item.html}}
-                                key={key}></div>;
-                }
-
-                if (item.type === 'video') {
-                    let content = this.renderVideoItem(item);
-                    let clName = "slide type-video ";
-
-                    clName += this.state.isVideo ? "video-show" : "video-hide";
-
-
-                    return <div className={clName} onClick={e => {
-                        this.zoomHndl(e, item)
-                    }} key={key}>{content}</div>;
-                }
-            }
-        }
-
-        return null;
-    }
-
     renderAllDetails() {
 
         return _.map(this.state.items, (item, n) => {
 
-            // let is_active = (this.state.index == n ? ' active' : '');
             let is_active = '';
-            //let position = this.state.index;
             let position = n + 1;
             let key = 'detail.' + position;
 
@@ -374,14 +317,6 @@ export default class ProductImageSlider extends Component {
                     this.zoomHndl(e, item)
                 }} key={key}>{content}</div>;
             }
-            //
-            // if (item.type === 'html') {
-            //     return (
-            //         <div className={"slide type-html" + is_active} key={"html.thumb." + n} onClick={e=>{this.clickHndl(e, n, item)}}>
-            //             HTML
-            //         </div>
-            //     );
-            // }
 
             // if (item.type === 'html') {
             //     return <div className="slide type-html" dangerouslySetInnerHTML={{__html:item.html}} key={key} ></div>;
@@ -417,7 +352,7 @@ export default class ProductImageSlider extends Component {
     }
 
     renderDetailClickBar() {
-        if(this.state.showThumbs){
+        if (this.state.showThumbs || this.state.count < 2) {
             return;
         }
         return _.map(this.state.items, (item, n) => {
@@ -429,24 +364,23 @@ export default class ProductImageSlider extends Component {
             }
 
             return (
-                <li className={classList} key={key} onClick={ e => { this.clickHndl(e, n, item) }}>{index}</li>
+                <li className={classList} key={key} onClick={e => {
+                    this.clickHndl(e, n, item)
+                }}>{index}</li>
             );
         });
     }
 
-    renderSliderThumbs(){
-
-        if(!this.state.showThumbs){
-            return;
-        }
+    renderSliderThumbs() {
 
         let sliderButtonsClasses = (this.state.items.length <= 3) ? 'hide' : '';
         let buttonStyles = {
             'width': '100%',
         };
+        let hideEl = (!this.state.showThumbs) ? 'display:none' : '';
 
         return (
-            <div className="slider-thumbs">
+            <div className="slider-thumbs" style={hideEl}>
                 <button className={"prev " + sliderButtonsClasses} onClick={e => {
                     this.prevHndl(e)
                 }} ref={el => this.refs.prev = el} style={buttonStyles}>

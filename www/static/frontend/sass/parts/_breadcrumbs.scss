@@ -1,7 +1,9 @@
 .breadcrumbs-container  {
-  margin: rem-calc(10) 0;
+  margin: rem-calc(10) 0 0;
   width: 100%;
   padding: 0;
+  height: rem-calc(24);
+  overflow: hidden;
 
   .breadcrumb-list {
     display: block;
