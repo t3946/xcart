@@ -13,7 +13,7 @@ const cont = new class PhotoSwipeContainer
             index: 0,
             history: false,
             bgOpacity: 0.91,
-            showHideOpacity: true
+            showHideOpacity: false
         };
     }
 
