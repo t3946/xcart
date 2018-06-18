@@ -4,7 +4,9 @@ namespace Modules\Pages\Controllers;
 
 use Modules\Meta\Types\MetaType;
 use Modules\Pages\Models\Page;
+use Xcart\App\Components\Breadcrumbs;
 use Xcart\App\Controller\FrontendController;
+use Xcart\App\Main\Xcart;
 use Xcart\App\Pagination\DataSource\QuerySetDataSource;
 use Xcart\App\Pagination\Pagination;
 
@@ -65,10 +67,15 @@ class PageController extends FrontendController
 
     public function actionInternal(Page $model): string
     {
+        $bread = new Breadcrumbs();
+
+        $bread->add($model->name, $model->getAbsoluteUrl());
+
         $pager = new Pagination($model->getChildrenQuerySet(), [], new QuerySetDataSource());
         return $this->render($this->getView($model), [
             'model' => $model,
             'pager' => $pager,
+            'breadcrumbs' => Xcart::app()->breadcrumbs->set($bread)
         ]);
     }
 }
