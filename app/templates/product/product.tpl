@@ -209,3 +209,41 @@
         </div>
     </div>
 {/block}
+
+{block 'js'}
+    {set $main_image = $model->images->limit(1)->get()}
+
+    <script type="application/ld+json">
+  [
+   {
+        "@context": "http://schema.org/",
+          "@type": "Product",
+          "sku": "{$model->productcode}",
+    {if $model->upc}
+          "gtin14" : "{$model->upc}",
+    {/if}
+          "mpn": "{$model->getMPN()}",
+    {if $main_image}
+          "image": "{$main_image}",
+    {/if}
+          "name": "{$model->getFrontendName()|escape}",
+          "description": "{$model->getFrontendDescription()|escape}",
+          "brand": {
+            "@type": "Thing",
+            "name": "{$model->brand->getProductFrontendName()}"
+          },
+          "offers": {
+            "@type": "Offer",
+            "priceCurrency": "USD",
+            "price": "{$model->getFrontendPrice()|number_format:2}",
+            "itemCondition": "http://schema.org/NewCondition",
+            {if $model->isOutOfStock()}
+            "availability": "http://schema.org/OutOfStock"
+            {else}
+            "availability": "http://schema.org/InStock"
+            {/if}
+          }
+     }
+  ]
+</script>
+{/block}
