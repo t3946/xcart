@@ -12,12 +12,7 @@ set_time_limit(0);
 $start_time = time();
 $counter    = 0;
 
-$cidev_storefronts = $storefronts;
-foreach ($cidev_storefronts as $storefrontid => $sf_info) {
-    $cidev_storefronts[$storefrontid] = func_get_storefront_info($storefrontid);
-}
-
-$cidev_storefronts[0] = func_get_storefront_info(0);
+$cidev_storefronts = \Modules\Sites\Models\SiteModel::objects()->exclude(['code' => 'S3'])->asArray(true)->all();
 
 #
 ## 1. Секция обновления продуктов в индексе Elastic
