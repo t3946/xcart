@@ -40,7 +40,7 @@ import _ from 'lodash';
         };
 
         let sync = _.throttle(product => {
-            let key = product.dataset.key, quantity = product.dataset.quantity || 1;
+            let key = product.dataset.key, quantity = parseInt(product.dataset.quantity) || 1;
             let number_request = ++n_request;
 
             $.post(product.dataset.cartAction, {
