@@ -212,6 +212,7 @@
 
 {block 'js'}
     {set $main_image = $model->images->limit(1)->get()}
+    {set $brand = $model->brand}
 
     <script type="application/ld+json">
   [
@@ -228,10 +229,12 @@
     {/if}
           "name": "{$model->getFrontendName()|escape}",
           "description": "{$model->getFrontendDescription()|escape}",
+          {if $brand}
           "brand": {
             "@type": "Thing",
-            "name": "{$model->brand->getProductFrontendName()}"
+            "name": "{$brand->getProductFrontendName()}"
           },
+          {/if}
           "offers": {
             "@type": "Offer",
             "priceCurrency": "USD",
