@@ -171,7 +171,7 @@ if ($sExtraLog=='Y')
 	$clean_url_link = func_query_first_cell("SELECT clean_url FROM $sql_tbl[clean_urls] WHERE resource_type='P' AND resource_id='$product[productid]'");
 	$clean_url_link .="/";
 
-	$product['link'] = $productModel->getAbsoluteUrl(true);
+	$product['link'] = 'https:'.$productModel->getAbsoluteUrl(true);
 
 	if (!empty($sf_info['prefix'])){
 
