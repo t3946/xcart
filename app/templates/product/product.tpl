@@ -48,7 +48,7 @@
                 <div class="row align-justify align-middle">
                     <div class="column shrink sku">
                         <span class="value">
-                            SKU: <span class="style" itemprop="sku">{$model->productcode}</span>
+                            SKU: <span class="style">{$model->productcode}</span>
                         </span>
                     </div>
                     <div class="column shrink notifications hide-for-ml">
