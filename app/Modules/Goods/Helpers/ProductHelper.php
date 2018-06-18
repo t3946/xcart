@@ -288,4 +288,56 @@ class ProductHelper
         }
         return $bResult;
     }
+
+    /**
+     * @param ProductModel $model
+     *
+     * @return string
+     */
+    public static function getJsonSchema($model)
+    {
+
+        $json = [
+            "@context" => "http://schema.org/",
+            "@type" => "Product",
+            "sku" => "{$model->productcode}",
+        ];
+
+        if ($model->upc){
+            $json['gtin14'] = "{$model->upc}";
+        }
+
+        $json['mpn'] = $model->getMPN();
+
+        if($model->images->limit(1)->get()){
+            $json["image"] = $model->images->limit(1)->get();
+        }
+
+        $json['name'] = $model->getFrontendName();
+        $json['description'] = $model->getFrontendDescription();
+
+        if ($model->brand){
+            $json['brand'] = [
+                "@type" => "Thing",
+                'name' => $model->brand->getProductFrontendName(),
+            ];
+        }
+
+        $json['offers'] = [
+            '@type' => 'Offer',
+            'priceCurrency' => 'USD',
+            'price' => number_format($model->getFrontendPrice(), 2),
+            'itemCondition' => 'http://schema.org/NewCondition',
+        ];
+
+        if ($model->isOutOfStock()){
+            $json['offers']['availability'] = 'http://schema.org/OutOfStock';
+        } else {
+            $json['offers']['availability'] = 'http://schema.org/InStock';
+        }
+
+
+        return json_encode($json);
+
+    }
 }

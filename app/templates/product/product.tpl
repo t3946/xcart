@@ -215,38 +215,6 @@
     {set $brand = $model->brand}
 
     <script type="application/ld+json">
-  [
-   {
-        "@context": "http://schema.org/",
-          "@type": "Product",
-          "sku": "{$model->productcode}",
-    {if $model->upc}
-          "gtin14" : "{$model->upc}",
-    {/if}
-          "mpn": "{$model->getMPN()}",
-    {if $main_image}
-          "image": "{$main_image}",
-    {/if}
-          "name": "{$model->getFrontendName()}",
-          "description": "{$model->getFrontendDescription()|escape}",
-          {if $brand}
-          "brand": {
-            "@type": "Thing",
-            "name": "{$brand->getProductFrontendName()}"
-          },
-          {/if}
-          "offers": {
-            "@type": "Offer",
-            "priceCurrency": "USD",
-            "price": "{$model->getFrontendPrice()|number_format:2}",
-            "itemCondition": "http://schema.org/NewCondition",
-            {if $model->isOutOfStock()}
-            "availability": "http://schema.org/OutOfStock"
-            {else}
-            "availability": "http://schema.org/InStock"
-            {/if}
-          }
-     }
-  ]
+    {$helper->getJsonSchema($model)}
 </script>
 {/block}
