@@ -15,8 +15,8 @@
 
     let formatter = {
         format: number => {
-            if (!number) {
-                return number;
+            if(!number || isNaN(number)){
+                return 0;
             }
 
             let currency = (new Number(number)).toLocaleString('en-US', {
