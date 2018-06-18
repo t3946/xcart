@@ -228,7 +228,7 @@
           "image": "{$main_image}",
     {/if}
           "name": "{$model->getFrontendName()}",
-          "description": "{$model->getFrontendDescription()}",
+          "description": "{$model->getFrontendDescription()|escape}",
           {if $brand}
           "brand": {
             "@type": "Thing",
