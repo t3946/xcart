@@ -160,7 +160,7 @@ if ($sExtraLog=='Y')
 			}
 	}
 
-	$product['froogle_location'] = $froogle_scheme . func_get_http_location_sf($product['sfid']);
+	$product['froogle_location'] = $productModel->sites->limit(1)->get()->getAbsoluteUrl();
 
 	$tmp_upc = trim($product['upc']);
 	$tmp_upc = isset($tmp_upc) ? abs(intval($tmp_upc)) : 0;
@@ -171,7 +171,7 @@ if ($sExtraLog=='Y')
 	$clean_url_link = func_query_first_cell("SELECT clean_url FROM $sql_tbl[clean_urls] WHERE resource_type='P' AND resource_id='$product[productid]'");
 	$clean_url_link .="/";
 
-	$product['link'] = $product['froogle_location'] . constant('DIR_CUSTOMER') . '/'. $clean_url_link;
+	$product['link'] = $productModel->getAbsoluteUrl(true);
 
 	if (!empty($sf_info['prefix'])){
 
@@ -186,14 +186,14 @@ if ($sExtraLog=='Y')
 		/*Google formatted links*/
 		//$product['link'] = $product['froogle_location'] . constant('DIR_CUSTOMER') . '/' . $clean_url_link . '?utm_source=' . $sf_info['prefix'] . 'froogle_Google-Shopping&utm_medium='.$utm_medium.'&utm_campaign='.$utm_campaign;
 //		$product['adwords_redirect'] = $product['froogle_location'] . constant('DIR_CUSTOMER') . '/' . $clean_url_link . '?utm_source=' . $sf_info['prefix'] . 'froogle_Product-Ads&utm_medium='.$utm_medium.'&utm_campaign='.$utm_campaign;
-        $product['adwords_redirect'] = $product['froogle_location'] . constant('DIR_CUSTOMER') . '/' . $clean_url_link . '?origin=google_product_ads';
+        $product['adwords_redirect'] = $product['link'] . '?origin=google_product_ads';
 		/*Bing formatted links*/
 		//$product['bing_link'] = $product['froogle_location'] . constant('DIR_CUSTOMER') . '/' . $clean_url_link . '?utm_source=' . $sf_info['prefix'] . 'Bing-Shopping&utm_medium='.$utm_medium.'&utm_campaign='.$utm_campaign;
 //		$product['bing_adwords_redirect'] = $product['froogle_location'] . constant('DIR_CUSTOMER') . '/' . $clean_url_link . '?utm_source=' . $sf_info['prefix'] . 'Bing_Product-Ads&utm_medium='.$utm_medium.'&utm_campaign='.$utm_campaign;
-		$product['bing_adwords_redirect'] = $product['froogle_location'] . constant('DIR_CUSTOMER') . '/' . $clean_url_link . '?origin=bing_product_ads';
+		$product['bing_adwords_redirect'] = $product['link'] . '?origin=bing_product_ads';
 
 		$product["adwords_grouping"] = $product['manufacturerid'];
-		$product['page_url'] = $product['froogle_location'] . constant('DIR_CUSTOMER') . '/'. $clean_url_link . '?utm_source=' . $sf_info['prefix'] . 'thefind&utm_medium=feed&utm_campaign='.$utm_campaign;
+		$product['page_url'] = $product['link'] . '?utm_source=' . $sf_info['prefix'] . 'thefind&utm_medium=feed&utm_campaign='.$utm_campaign;
 	}
 
 	# Get google product category
