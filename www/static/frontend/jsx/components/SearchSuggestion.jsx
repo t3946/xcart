@@ -1,3 +1,6 @@
+import {h, render} from 'preact';
+import SearchSuggestionsList from "./SearchSuggestionsList";
+import _ from "lodash";
 
 export default class SearchSuggestion
 {
@@ -40,8 +43,8 @@ export default class SearchSuggestion
                 $.ajax(this.elements['search'].data('suggestion-url'), {
                     'data': {'q': str},
                     'success' : (data)=>{
-                        if (currentNumber === this.suggestionNumber && data.content) {
-                            this.setSuggestion(data.content)
+                        if (currentNumber === this.suggestionNumber && data.suggests) {
+                            this.setSuggestion(data.suggests, data.q)
                         }
                     }
                 });
@@ -49,15 +52,26 @@ export default class SearchSuggestion
         }
     }
 
-    setSuggestion(data) {
-        this.suggestions = data;
-        this.elements['container'].html(this.suggestions);
+    setSuggestion(data, search) {
+
+        var re = new RegExp("(" + search.split(' ').join('|') + ")", "gi");
+
+        this.suggestions = _.map(data, (item, n) => {
+
+            return item.replace(re, "<b>$1</b>");
+        });
+        let title = 'Search suggestions';
+        //console.log(this.elements['container']);
+        //suggestion-container
+        //this.elements['container'].html(this.suggestions);
+        //render(<SelectNumberItems number={number} quantity={quantity} max={max} min={min} step={step}/>,window, window.firstChild);
+        render(<SearchSuggestionsList suggestions={this.suggestions} title={title} />, this.elements['container'][0], this.elements['container'][0].firstChild);
 
         if (data) {
             this.show();
         }
         else {
-            this.hide();
+           // this.hide();
         }
     }
 
@@ -71,13 +85,13 @@ export default class SearchSuggestion
         });
 
         this.elements['search'].on('click', (e)=>{
-            console.log(e);
+            //console.log(e);
             this.show();
         });
 
         this.elements['search'].on('blur', (e)=>{
-            console.log(e);
-            this.hide();
+            //console.log(e);
+            //this.hide();
         });
     }
 }
