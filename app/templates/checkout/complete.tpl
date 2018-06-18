@@ -380,6 +380,8 @@
     <!-- Bing Code for Conversion Tracking: Order Conversion Page -->
     <script>
         {ignore}
+        ga('require', 'ec');
+
         ga('ec:setAction', 'purchase', {
         {/ignore}
             'id': '{$order->getOrderNumber()}',
