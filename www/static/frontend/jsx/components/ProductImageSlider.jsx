@@ -46,6 +46,8 @@ export default class ProductImageSlider extends Component {
         } else {
             showThumbs = true;
         }
+        //console.log('info.media',info.media);
+        //console.log('showThumbs',showThumbs);
 
         if (state.media != info.media || state.showThumbs != showThumbs) {
             newState = _.extend(state, {
