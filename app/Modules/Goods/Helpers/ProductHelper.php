@@ -96,9 +96,9 @@ class ProductHelper
                 if ($fileSize = file_put_contents($path . "/" . $fileName, $fileData)) {
                     $productFileModel = new ProductFileModel($param);
                     $productFileModel->setAttributes([
-                        'description' => $fileDesc,
-                        'filesize' => $fileSize
-                    ]);
+                                                         'description' => $fileDesc,
+                                                         'filesize' => $fileSize
+                                                     ]);
                 }
             }
         }
@@ -211,9 +211,9 @@ class ProductHelper
                 'group_root__isnull' => false,
                 'group_root' => new Expression('productid')
             ])
-            ->order([new Expression("-COALESCE(CAST(SUBSTRING_INDEX(productcode, '-', -1) AS UNSIGNED), 1)")])
-            ->limit(1)
-            ->get()
+                                ->order([new Expression("-COALESCE(CAST(SUBSTRING_INDEX(productcode, '-', -1) AS UNSIGNED), 1)")])
+                                ->limit(1)
+                                ->get()
         ) {
             if (preg_match('/-(\d+)$/', $last->productcode, $m)) {
                 if ($model = DistributorModel::objects()->get(['manufacturerid' => $manufacturer_id])) {
@@ -384,46 +384,60 @@ class ProductHelper
 
     }
 
-    public static function getJsonImages($flag = 0, $model){
+    public static function getJsonImages($flag = 0, $model)
+    {
 
         $images = [];
         $image = null;
 
         /** @var \Modules\Sites\Models\SiteModel $site */
         $site = $model->sites->limit(1)->get();
-        $pref = ($site->getConfig()['Enable_CDN'] == "Y") ? 'cdn.': 'www.';
+        $pref = ($site->getConfig()['Enable_CDN'] == "Y") ? 'cdn.' : 'www.';
         $domain = $site->getBaseDomain();
-        $domain = "//" .$pref . $domain;
+        $domain = "//" . $pref . $domain;
 
-        if($model->isGroupRoot()){
+        if ($model->isGroupRoot()) {
             $product_models = $model->getFrontendChilds();
-            foreach ($product_models as $p_model){
+            foreach ($product_models as $p_model) {
 
                 $images_model = $p_model->getImages();
 
-                if ($images_model)
-                {
+                if ($images_model) {
                     $image_model = reset($images_model);
                 }
-                else
-                {
+                else {
                     $image_model = $p_model->getThumbnail();
                 }
 
-                if($image_model)
-                {
+                if ($image_model) {
                     $for_image = ltrim($image_model->image_path, ".");
                     $images[] = $domain . $for_image;
                 }
             }
-        }
 
-
-        if(!$flag){
-            return $images;
+            if (!$flag) {
+                return $images;
+            }
+            else {
+                return json_encode($images);
+            }
         }
         else {
-            return json_encode($images);
+                $images_model = $model->images->all();
+                foreach ($images_model as $image){
+                    if($image)
+                    {
+                        $for_image = ltrim($image->image_path, ".");
+                        $images[] = $domain . $for_image;
+                    }
+                }
+            if (!$flag) {
+                return $images;
+            }
+            else {
+                return json_encode($images);
+            }
         }
+
     }
 }
