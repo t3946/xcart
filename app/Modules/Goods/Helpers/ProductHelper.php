@@ -294,7 +294,7 @@ class ProductHelper
      *
      * @return string
      */
-    public function getDataJsonSchema($model)
+    public function getJsonSchema($model)
     {
         $json = [];
 
