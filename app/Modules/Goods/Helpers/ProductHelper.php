@@ -351,7 +351,7 @@ class ProductHelper
                 "@context" => "http://schema.org/",
                 "@type" => "Product",
                 "name" => $model->getFrontendName(),
-                "image" => json_encode((string) $model->images->all()),
+                "image" => getJsonImages(1, $model),
                 "description" => $descript,
                 "mpn" => $model->getMPN(),
                 "brand" => [
