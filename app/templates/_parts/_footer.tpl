@@ -13,11 +13,11 @@
 
                             {if !$.workingDayTimeNow}
                                 <div class="s3stores-logo">
-                                    <img alt="S3 Stores, Inc." class="s3logo " src="/static/frontend/dist/images/logos/s3stores.svg">
+                                    <img src="" alt="S3 Stores, Inc." class="s3logo lazy-img" data-src="{$site->getHttpOrHttps() ~ $config.CDN_domain}/static/frontend/dist/images/logos/s3stores.svg">
                                 </div>
 
                                 <div class="all-times">
-                                    <img  alt="" class="Web order 24/7" src="/static/frontend/dist/images/icons/footer/web_order.svg">
+                                    <img src="" alt="Web order 24/7" class="lazy-img" data-src="{$site->getHttpOrHttps() ~ $config.CDN_domain}/static/frontend/dist/images/icons/footer/web_order.svg">
                                     <div class="content">
                                         <div class="title">
                                             Web Orders
@@ -133,15 +133,15 @@
                                     Payment Methods
                                 </li>
                                 <li class="payment-methods">
-                                    <img src="/static/frontend/dist/images/icons/p_methods/visa.png" alt="Visa icon">
-                                    <img src="/static/frontend/dist/images/icons/p_methods/mastercard.png" alt="MasterCard icon">
-                                    <img src="/static/frontend/dist/images/icons/p_methods/amex.png" alt="AmericanExpress icon">
-                                    <img src="/static/frontend/dist/images/icons/p_methods/discover_network.png" alt="Discover Network icon">
-                                    <img src="/static/frontend/dist/images/icons/p_methods/visadebit.png" alt="Visa Debit icon">
-                                    <img src="/static/frontend/dist/images/icons/p_methods/paypal.png" alt="PayPal icon">
-                                    <img src="/static/frontend/dist/images/icons/p_methods/echeck.png" alt="eCheck icon">
-                                    <img src="/static/frontend/dist/images/icons/p_methods/check.png" alt="Check icon">
-                                    <img src="/static/frontend/dist/images/icons/p_methods/po.png" alt="Purchase Order request icon">
+                                    <img src="" class="lazy-img" data-src="{$site->getHttpOrHttps() ~ $config.CDN_domain}/static/frontend/dist/images/icons/p_methods/visa.png" alt="Visa icon">
+                                    <img src="" class="lazy-img" data-src="{$site->getHttpOrHttps() ~ $config.CDN_domain}/static/frontend/dist/images/icons/p_methods/mastercard.png" alt="MasterCard icon">
+                                    <img src="" class="lazy-img" data-src="{$site->getHttpOrHttps() ~ $config.CDN_domain}/static/frontend/dist/images/icons/p_methods/amex.png" alt="AmericanExpress icon">
+                                    <img src="" class="lazy-img" data-src="{$site->getHttpOrHttps() ~ $config.CDN_domain}/static/frontend/dist/images/icons/p_methods/discover_network.png" alt="Discover Network icon">
+                                    <img src="" class="lazy-img" data-src="{$site->getHttpOrHttps() ~ $config.CDN_domain}/static/frontend/dist/images/icons/p_methods/visadebit.png" alt="Visa Debit icon">
+                                    <img src="" class="lazy-img" data-src="{$site->getHttpOrHttps() ~ $config.CDN_domain}/static/frontend/dist/images/icons/p_methods/paypal.png" alt="PayPal icon">
+                                    <img src="" class="lazy-img" data-src="{$site->getHttpOrHttps() ~ $config.CDN_domain}/static/frontend/dist/images/icons/p_methods/echeck.png" alt="eCheck icon">
+                                    <img src="" class="lazy-img" data-src="{$site->getHttpOrHttps() ~ $config.CDN_domain}/static/frontend/dist/images/icons/p_methods/check.png" alt="Check icon">
+                                    <img src="" class="lazy-img" data-src="{$site->getHttpOrHttps() ~ $config.CDN_domain}/static/frontend/dist/images/icons/p_methods/po.png" alt="Purchase Order request icon">
                                 </li>
                                 <li class="fraud-orders">
                                     <a href="/ecomerce-fraud">Combating eCommerce Fraud</a>
@@ -158,10 +158,10 @@
                                     Shop with Confidence
                                 </li>
                                 <li class="confidence">
-                                    <img src="/static/frontend/dist/images/icons/confidence/godady.png" alt="GoDaddy Verifed & Secured icon">
-                                    <img src="/static/frontend/dist/images/icons/confidence/google.png" alt="Google Trusted Store icon">
-                                    <img src="/static/frontend/dist/images/icons/confidence/mcafee.png"  alt="McAfee Secure icon" class="show-for-large">
-                                    <img src="/static/frontend/dist/images/icons/confidence/trustwave.png" alt="TrustWave icon"  class="show-for-large">
+                                    <img class="lazy-img" data-src="{$site->getHttpOrHttps() ~ $config.CDN_domain}/static/frontend/dist/images/icons/confidence/godady.png" alt="GoDaddy Verifed & Secured icon">
+                                    <img class="lazy-img" data-src="{$site->getHttpOrHttps() ~ $config.CDN_domain}/static/frontend/dist/images/icons/confidence/google.png" alt="Google Trusted Store icon">
+                                    <img class="lazy-img" data-src="{$site->getHttpOrHttps() ~ $config.CDN_domain}/static/frontend/dist/images/icons/confidence/mcafee.png"  alt="McAfee Secure icon" class="show-for-large">
+                                    <img class="lazy-img" data-src="{$site->getHttpOrHttps() ~ $config.CDN_domain}/static/frontend/dist/images/icons/confidence/trustwave.png" alt="TrustWave icon"  class="show-for-large">
                                 </li>
 
                             </ul>
