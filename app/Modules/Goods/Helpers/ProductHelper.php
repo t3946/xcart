@@ -351,7 +351,7 @@ class ProductHelper
                 "@context" => "http://schema.org/",
                 "@type" => "Product",
                 "name" => $model->getFrontendName(),
-                "image" => self::getJsonImages(1, $model),
+                "image" => (string) $model->images->all(),
                 "description" => $descript,
                 "mpn" => $model->getMPN(),
                 "brand" => [
@@ -416,39 +416,14 @@ class ProductHelper
                     $images[] = $domain . $for_image;
                 }
             }
-
-            if(!$flag){
-                return $images;
-            }
-            else {
-                return json_encode($images);
-            }
         }
 
+
+        if(!$flag){
+            return $images;
+        }
         else {
-            $images_model = $model->getImages();
-
-            if ($images_model)
-            {
-                $image_model = reset($images_model);
-            }
-            else
-            {
-                $image_model = $model->getThumbnail();
-            }
-
-            if($image_model)
-            {
-                $for_image = ltrim($image_model->image_path, ".");
-                $images[] = $domain . $for_image;
-            }
-
-            if (!$flag) {
-                return $images;
-            }
-            else {
-                return json_encode($images);
-            }
+            return json_encode($images);
         }
     }
 }
