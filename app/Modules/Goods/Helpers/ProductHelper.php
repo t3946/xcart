@@ -294,15 +294,15 @@ class ProductHelper
      *
      * @return string
      */
-    public function getJsonSchema($model)
+    public static function getJsonSchema($model)
     {
         $json = [];
 
-        if ($model->avail > 0) {
-            $availability = "http://schema.org/InStock";
+        if ($model->isOutOfStock()) {
+            $availability = "http://schema.org/OutOfStock";
         }
         else {
-            $availability = "http://schema.org/OutOfStock";
+            $availability = "http://schema.org/InStock";
         }
 
         $descript = strip_tags($model->getFrontendDescription());
@@ -318,7 +318,7 @@ class ProductHelper
                 "mpn" => $model->getMPN(),
                 "brand" => [
                     "@type" => "Thing",
-                    "name" => $model->brand->brand
+                    "name" => $model->brand->getProductFrontendName(),
                 ],
                 "offers" => [
                     "@type" => "Offer",
