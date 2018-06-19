@@ -1,0 +1,1 @@
+import storeApp from '../stores/StoreApp';

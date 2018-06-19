@@ -1,4 +1,5 @@
 import {h, render} from 'preact';
+import storeApp from '../stores/StoreApp';
 import SearchSuggestionsList from "./SearchSuggestionsList";
 //import _ from "lodash";
 
@@ -21,13 +22,15 @@ export default class SearchSuggestion {
         this._bind();
     }
 
-    checkValue(str){
+    checkValue(str) {
         return str && str.length >= 3;
     }
 
     show() {
         this.elements['parent'].addClass('suggestion-active');
         this.elements['parent'].append(this.elements['container']);
+        this.storeSearchShow();
+
         $(document).on('click.close_search_suggestion', event => {
             let target = $(event.target);
             if (!target.hasClass('search-form-container') && target.parents('.search-form-container').length <= 0) {
@@ -38,32 +41,38 @@ export default class SearchSuggestion {
     }
 
     hide() {
-        if (this.elements['parent'].hasClass('suggestion-active')) {
-            this.elements['parent'].removeClass('suggestion-active');
-            this.elements['container'].detach();
+
+        if (!this.elements['parent'].hasClass('suggestion-active')) {
+            return;
         }
+
+        this.elements['parent'].removeClass('suggestion-active');
+        this.elements['container'].detach();
+        this.storeSearchHide();
     }
 
     getSuggestions(str) {
-        if (this.checkValue(str)) {
-            this.suggestionNumber++;
-            let currentNumber = this.suggestionNumber;
 
-            clearTimeout(this.timer);
-            this.timer = setTimeout(() => {
-                $.ajax(this.elements['search'].data('suggestion-url'), {
-                    'data': {'q': str},
-                    'success': (data) => {
-                        console.log(data);
-                        if (currentNumber === this.suggestionNumber && data.suggests && data.suggests.length > 0) {
-                            this.setSuggestion(data.suggests, data.q)
-                        }
-                    }
-                });
-            }, this.timeout);
-        } else {
+        if (!this.checkValue(str)) {
             this.hide();
+            return;
         }
+
+        this.suggestionNumber++;
+        let currentNumber = this.suggestionNumber;
+
+        clearTimeout(this.timer);
+        this.timer = setTimeout(() => {
+            $.ajax(this.elements['search'].data('suggestion-url'), {
+                'data': {'q': str},
+                'success': (data) => {
+                    console.log(data);
+                    if (currentNumber === this.suggestionNumber && data.suggests && data.suggests.length > 0) {
+                        this.setSuggestion(data.suggests, data.q)
+                    }
+                }
+            });
+        }, this.timeout);
     }
 
     setSuggestion(data, search) {
@@ -77,10 +86,11 @@ export default class SearchSuggestion {
 
         if (data) {
             this.show();
+            return;
         }
-        else {
-            this.hide();
-        }
+
+        this.hide();
+
     }
 
 
@@ -124,5 +134,31 @@ export default class SearchSuggestion {
             this.elements['clear'].removeClass('active');
         });
 
+    }
+
+    storeSearchHide() {
+        storeApp.dispatch({
+            type: 'SET', data: {
+                frontend: {
+                    darkness: false,
+                    header: {
+                        active: null
+                    }
+                }
+            }
+        });
+    }
+
+    storeSearchShow() {
+        storeApp.dispatch({
+            type: 'SET', data: {
+                frontend: {
+                    darkness: true,
+                    header: {
+                        active: 'search'
+                    }
+                }
+            }
+        });
     }
 }

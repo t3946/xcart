@@ -9,7 +9,6 @@ export default class SearchSuggestionsList extends Component {
         super(props);
         this.props = props;
         this.initState(props);
-        console.log('constructor');
     }
 
     initState(props) {
@@ -33,16 +32,20 @@ export default class SearchSuggestionsList extends Component {
         let detail = {
             item: item
         };
+
         let event = new CustomEvent('components.search-suggestions-list.click', {detail: detail});
         this.props.parent.dispatchEvent(event);
     }
 
     items(props) {
         this.initState(props);
+
         return _.map(this.state.list, (item, n) => {
             return (<li onClick={(e) => {
                 this.chooseItem(item.value)
-            }}>{item.label}</li>);
+            }}>
+                {item.label}
+            </li>);
         });
     }
 

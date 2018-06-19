@@ -6,6 +6,7 @@
         <div id="content-wrapper">
             {block "header"}
             <div id="top-header-content">
+
                 <div id="top-header-menu">
                     <header id="top-header" itemscope itemtype="http://schema.org/WPHeader">
                         <div class="top-header hide-for-small-only">
@@ -68,7 +69,7 @@
                             </div>
                         </div>
                     </header>
-                    <div class="shadow"></div>
+
                     <div class="sticky-menu-container">
                         <div class="sticky def-zi2" style="width: 100%">
                             <div id="search_container" class="desktop_menu_search_cart show-for-large" data-toggler="show-for-large" >
@@ -98,6 +99,7 @@
                         </div>
                     </div>
                 </div>
+                <div class="shadow"></div>
             </div>
 
             {/block}
