@@ -338,7 +338,7 @@ class ProductHelper
                             "https://www.facebook.com/s3stores/",
                             "https://twitter.com/s3stores/",
                             "https://www.youtube.com/channel/UCjE6xR1TriWo-hCDsbpvMKg",
-                            "https://ru.pinterest.com/s3storesinc/",
+                            "https://www.pinterest.com/s3storesinc/",
                             "https://plus.google.com/118379608603424325840"
                         ],
                     ]
