@@ -1,9 +1,8 @@
 import {h, render} from 'preact';
 import SearchSuggestionsList from "./SearchSuggestionsList";
-import _ from "lodash";
+//import _ from "lodash";
 
-export default class SearchSuggestion
-{
+export default class SearchSuggestion {
     constructor(elements = ".search-form-container .search") {
         this.elements = {};
         this.suggestions = '';
@@ -16,82 +15,114 @@ export default class SearchSuggestion
 
     init(elements) {
         this.elements['search'] = $(elements);
-        this.elements['parent'] = $(this.elements['search'].parent());
+        this.elements['parent'] = this.elements['search'].parent();
+        this.elements['clear'] = this.elements['parent'].find('.button-clear');
         this.elements['container'] = $('<dev />').addClass('suggestion-container');
-
         this._bind();
+    }
+
+    checkValue(str){
+        return str && str.length >= 3;
     }
 
     show() {
         this.elements['parent'].addClass('suggestion-active');
         this.elements['parent'].append(this.elements['container']);
+        $(document).on('click.close_search_suggestion', event => {
+            let target = $(event.target);
+            if (!target.hasClass('search-form-container') && target.parents('.search-form-container').length <= 0) {
+                this.hide();
+                $(document).off('click.close_search_suggestion');
+            }
+        });
     }
 
     hide() {
-        this.elements['parent'].removeClass('suggestion-active');
-        this.elements['container'].detach();
+        if (this.elements['parent'].hasClass('suggestion-active')) {
+            this.elements['parent'].removeClass('suggestion-active');
+            this.elements['container'].detach();
+        }
     }
 
     getSuggestions(str) {
-        if (str && str.length >= 3) {
+        if (this.checkValue(str)) {
             this.suggestionNumber++;
-
             let currentNumber = this.suggestionNumber;
 
             clearTimeout(this.timer);
-            this.timer = setTimeout(()=>{
+            this.timer = setTimeout(() => {
                 $.ajax(this.elements['search'].data('suggestion-url'), {
                     'data': {'q': str},
-                    'success' : (data)=>{
-                        if (currentNumber === this.suggestionNumber && data.suggests) {
+                    'success': (data) => {
+                        console.log(data);
+                        if (currentNumber === this.suggestionNumber && data.suggests && data.suggests.length > 0) {
                             this.setSuggestion(data.suggests, data.q)
                         }
                     }
                 });
             }, this.timeout);
+        } else {
+            this.hide();
         }
     }
 
     setSuggestion(data, search) {
 
-        var re = new RegExp("(" + search.split(' ').join('|') + ")", "gi");
-
-        this.suggestions = _.map(data, (item, n) => {
-
-            return item.replace(re, "<b>$1</b>");
-        });
+        this.show();
         let title = 'Search suggestions';
-        //console.log(this.elements['container']);
         //suggestion-container
-        //this.elements['container'].html(this.suggestions);
-        //render(<SelectNumberItems number={number} quantity={quantity} max={max} min={min} step={step}/>,window, window.firstChild);
-        render(<SearchSuggestionsList suggestions={this.suggestions} title={title} />, this.elements['container'][0], this.elements['container'][0].firstChild);
+        render(<SearchSuggestionsList suggestions={data} search={search} title={title}
+                                      parent={this.elements['parent'][0]}/>,
+            this.elements['container'][0], this.elements['container'][0].firstChild);
 
         if (data) {
             this.show();
         }
         else {
-           // this.hide();
+            this.hide();
         }
     }
 
 
     _bind() {
 
-        this.elements['search'].on('change keyup', (e)=>{
+        this.elements['parent'][0].addEventListener('components.search-suggestions-list.click', (e) => {
+            let detail = e.detail.item.replace(/[^a-zA-Z\- ]/g, "");
+
+            this.elements['search'].val(detail);
+            this.hide();
+
+        }, {passive: true});
+
+        this.elements['search'].on('keyup', (e) => {
             let $target = this.elements['search'];
+            let value = $target.val();
 
-            this.getSuggestions($target.val());
+            if (value) {
+                this.elements['clear'].addClass('active');
+            }
+            else {
+                this.elements['clear'].removeClass('active');
+            }
+
+            this.getSuggestions(value);
+
         });
 
-        this.elements['search'].on('click', (e)=>{
-            //console.log(e);
-            this.show();
+        this.elements['search'].on('click', (e) => {
+            $(e.target).focus();
+            let value = e.target.value.trim();
+            if (this.checkValue(value)) {
+                //this.getSuggestions(value);
+                this.show();
+            }
         });
 
-        this.elements['search'].on('blur', (e)=>{
-            //console.log(e);
-            //this.hide();
+        this.elements['clear'].on('click', (e) => {
+            this.elements['search'].val('');
+            this.hide();
+            this.elements['clear'].removeClass('active');
         });
+
     }
 }

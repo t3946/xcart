@@ -7,6 +7,7 @@
                value="{$.app->request->get->get('q', '')}"
                itemprop="query-input"
                data-suggestion-url="{$.app->router->url('catalog:search:suggestion')}"
+               autocomplete="off"
         />
 
 
