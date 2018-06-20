@@ -1,5 +1,8 @@
 $view_all_height: rem-calc(22);
 $default_height: rem-calc(50);
+$search_small_height: rem-calc(44);
+$search_large_height: rem-calc(50);
+$search_input_large_height: rem-calc(36);
 
 .category-menu-list-wrapper {
   position: absolute;
@@ -25,12 +28,13 @@ $default_height: rem-calc(50);
 
 .desktop_menu_search_cart {
   width: 100%; //foundation sticky
-  height: rem-calc(50);
-  line-height: rem-calc(50);
   position: relative;
+  height: 0;
 
   @include breakpoint(large up) {
     background: $dark_blue;
+    padding: 0;
+    height: $search_large_height;
   }
 
   .search-form-container {
@@ -47,16 +51,31 @@ $default_height: rem-calc(50);
 
     .search {
       width: 100%;
-      height: rem-calc(34);
-      font-size: rem-calc(12);
+      display: block;
+      height: $search_small_height;
+      line-height: $search_small_height;
       border: 2px solid #8a8a8a;
       padding: 0 2.6%;
-      //display: block;
+      color: $dark_blue;
+      margin-top: rem-calc(5);
+
+      &:focus{
+        border: 2px solid $dark_blue;
+      }
 
       @include breakpoint(large up) {
         font-size: rem-calc(14);
-        border: 1px solid #0d2431;
+        border: 1px solid $dark_blue;
+        height: $search_input_large_height;
+        line-height: $search_input_large_height;
+        margin: rem-calc(8) 0 0;
+
+        &:focus{
+          border: 1px solid $dark_blue;
+        }
       }
+
+
 
       &::placeholder {
         font-style: italic;
@@ -65,17 +84,25 @@ $default_height: rem-calc(50);
       }
     }
 
+    .suggestion-active{
+      .search {
+        border: 2px solid $dark_blue;
+
+        @include breakpoint(large) {
+          border: 1px solid $dark_blue;
+        }
+      }
+    }
+
     .button-search {
       border: none;
       display: inline-block;
-      //background: url("../images/home/1280/magnifier_hover.svg") no-repeat;
       background: url("/static/frontend/images/icons/header/magnifier.svg") no-repeat;
-      width: 23px;
-      height: 23px;
+      width: rem-calc(23);
+      height: rem-calc(23);
       position: absolute;
-      top: 14px;
-      bottom: 6px;
-      right: 10px;
+      top: rem-calc(7);
+      right: rem-calc(10);
       cursor: pointer;
 
       &:hover {
@@ -85,19 +112,18 @@ $default_height: rem-calc(50);
 
     .button-clear {
       display: none;
-      width: 17px;
-      height: 17px;
-      top: 17px;
-      bottom: 6px;
+      width: rem-calc(17);
+      height: rem-calc(17);
+      top: rem-calc(14);
       position: absolute;
       opacity: .6;
       background: url("/static/frontend/images/icons/header/remove_hover.svg") no-repeat;
 
-      right: 17px;
+      right: rem-calc(8);
 
       @include breakpoint(large up) {
-
-        right: 56px;
+        right: rem-calc(56);
+        top: rem-calc(10);
       }
 
       &.active {
@@ -131,7 +157,8 @@ $default_height: rem-calc(50);
         //margin: -5px 0 0;
         margin: 0;
         padding: 0;
-        border: 1px solid #0d2431;
+        border: 1px solid $dark_blue;
+        border-top: 0;
         background-color: white;
 
         @include breakpoint(large){
@@ -164,12 +191,13 @@ $default_height: rem-calc(50);
             padding: 0 rem-calc(10);
             cursor: pointer;
             border-top: 1px solid #e6e6e6;
+            position: relative;
 
             @include breakpoint(large){
               padding: 0 1rem;
               line-height: rem-calc(26);
               height: rem-calc(26);
-            border: 0;
+              border: 0;
             }
 
             &:first-child{
@@ -178,6 +206,16 @@ $default_height: rem-calc(50);
 
             &:hover {
               background-color: #edf0f2;
+            }
+
+            &:after {
+              content: url("../images/icons/search/switch.svg");
+              display: block;
+              width: rem-calc(12);
+              height: rem-calc(12);
+              position: absolute;
+              right: rem-calc(11);
+              top: 0;
             }
           }
         }
@@ -438,9 +476,10 @@ $default_height: rem-calc(50);
       .count {
         position: relative;
         display: inline-block;
-        width: 44px;
+        width: rem-calc(44);
         //height: $default_height;
-        height: 30px;
+        height: rem-calc(30);
+        line-height: $default_height;
         vertical-align: middle;
 
         background: {
@@ -455,7 +494,7 @@ $default_height: rem-calc(50);
           top: -1em;
           text-align: center;
           left: 0;
-          right: 5px;
+          right: rem-calc(5);
           font: {
             size: rem-calc(19);
           }
@@ -470,6 +509,7 @@ $default_height: rem-calc(50);
 
       .text {
         height: $default_height;
+        line-height: $default_height;
         text-transform: uppercase;
         //vertical-align: middle;
         display: inline-block;

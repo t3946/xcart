@@ -53,7 +53,8 @@
                                 </div>
 
                                 <div class="columns hide-for-large small-2 medium-1">
-                                    <a class="mobile__search-btn middle-inline-block" data-toggle="search_container"></a>
+                                    <a class="mobile__search-btn middle-inline-block" data-swich="search_container"></a>
+                                    {*data-swich="search_container"*}
                                 </div>
 
                                 <div class="columns hide-for-large small-2 medium-1">

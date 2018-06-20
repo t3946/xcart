@@ -1,10 +1,11 @@
 import {h, render, Component} from "preact";
+import storeApp from "../stores/StoreApp";
 import renderToStringr from 'preact-render-to-string';
 import {videoLinkToObject} from "../utils/video";
 import PhotoSwipe from "./PhotoSwipeContainer";
 import _ from 'lodash';
 import PreactSlySlide from "./PreactSlySlide";
-import ScreenSize from "../utils/ScreenSize";
+//import ScreenSize from "../utils/ScreenSize";
 
 export default class ProductImageSlider extends Component {
     constructor(props) {
@@ -18,11 +19,12 @@ export default class ProductImageSlider extends Component {
         this.preparedItems = null;
         this.refs = {};
 
-        this.onResize = _.throttle(this.onResize, 200);
+        this.onResize = _.throttle(this.onResize.bind(this), 200);
 
-        this.screen = new ScreenSize();
-        this.screen.setCallback(this.onResize.bind(this));
-        let info = this.screen.getInfo();
+        // добавить слушатель события resize
+        document.addEventListener('resize_monitor.media_change', this.onResize);
+
+        let globalState = storeApp.getState();
         let state = {
             height: 400,
             loading: true,
@@ -31,11 +33,15 @@ export default class ProductImageSlider extends Component {
             wait: len,
             isVideo: false,
             index: 0,
-            media: info.media
+            media: globalState.frontend.media
         };
 
-        this.state = _.extend(state, this.createNewState(state, info));
+        this.state = _.extend(state, this.createNewState(state, {media: globalState.frontend.media}));
         this.prepareItems(this.state.items);
+    }
+
+    componentWillUnmount() {
+        document.removeEventListener('resize_monitor.media_change', this.onResize)
     }
 
     createNewState(state, info) {
@@ -46,34 +52,19 @@ export default class ProductImageSlider extends Component {
         } else {
             showThumbs = true;
         }
-        //console.log('info.media',info.media);
-        //console.log('showThumbs',showThumbs);
 
         if (state.media != info.media || state.showThumbs != showThumbs) {
             newState = _.extend(state, {
                 'media': info.media,
                 'showThumbs': showThumbs,
-                'stepResize': state.media != info.media
             });
         }
 
         return newState;
     }
 
-    componentWillUnmount() {
-        screen.destructor();
-    }
-
-    componentDidUpdate() {
-
-        if (this.state.stepResize) {
-            let event = new Event('component.sly.resize');
-            document.dispatchEvent(event);
-        }
-    }
-
-    onResize(info) {
-        let newState = this.createNewState(this.state, info);
+    onResize(event) {
+        let newState = this.createNewState(this.state, event.detail);
         if (newState) {
             this.setState(newState);
         }

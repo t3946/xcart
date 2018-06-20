@@ -1,6 +1,7 @@
 import {h, render} from 'preact';
 import storeApp from '../stores/StoreApp';
 import SearchSuggestionsList from "./SearchSuggestionsList";
+import { checkOff, action } from '../redusers/appHeadReduser';
 //import _ from "lodash";
 
 export default class SearchSuggestion {
@@ -137,28 +138,10 @@ export default class SearchSuggestion {
     }
 
     storeSearchHide() {
-        storeApp.dispatch({
-            type: 'SET', data: {
-                frontend: {
-                    darkness: false,
-                    header: {
-                        active: null
-                    }
-                }
-            }
-        });
+        checkOff();
     }
 
     storeSearchShow() {
-        storeApp.dispatch({
-            type: 'SET', data: {
-                frontend: {
-                    darkness: true,
-                    header: {
-                        active: 'search'
-                    }
-                }
-            }
-        });
+        action('search');
     }
 }
