@@ -96,9 +96,9 @@ class ProductHelper
                 if ($fileSize = file_put_contents($path . "/" . $fileName, $fileData)) {
                     $productFileModel = new ProductFileModel($param);
                     $productFileModel->setAttributes([
-                        'description' => $fileDesc,
-                        'filesize' => $fileSize
-                    ]);
+                                                         'description' => $fileDesc,
+                                                         'filesize' => $fileSize
+                                                     ]);
                 }
             }
         }
@@ -211,9 +211,9 @@ class ProductHelper
                 'group_root__isnull' => false,
                 'group_root' => new Expression('productid')
             ])
-            ->order([new Expression("-COALESCE(CAST(SUBSTRING_INDEX(productcode, '-', -1) AS UNSIGNED), 1)")])
-            ->limit(1)
-            ->get()
+                                ->order([new Expression("-COALESCE(CAST(SUBSTRING_INDEX(productcode, '-', -1) AS UNSIGNED), 1)")])
+                                ->limit(1)
+                                ->get()
         ) {
             if (preg_match('/-(\d+)$/', $last->productcode, $m)) {
                 if ($model = DistributorModel::objects()->get(['manufacturerid' => $manufacturer_id])) {
@@ -287,5 +287,157 @@ class ProductHelper
             $bResult = true;
         }
         return $bResult;
+    }
+
+    /**
+     * @param ProductModel $model
+     *
+     * @return string
+     */
+    public static function getJsonSchema($model)
+    {
+        $json = [];
+
+        if ($model->isOutOfStock()) {
+            $availability = "http://schema.org/OutOfStock";
+        }
+        else {
+            $availability = "http://schema.org/InStock";
+        }
+
+        $descript = strip_tags($model->getFrontendDescription());
+
+        if($model->isGroupRoot()){
+
+            $json = [
+                "@context" => "http://schema.org/",
+                "@type" => "Product",
+                "name" => $model->getFrontendName(),
+                "image" => self::getJsonImages(1, $model),
+                "description" => $descript,
+                "mpn" => $model->getMPN(),
+                "brand" => [
+                    "@type" => "Thing",
+                    "name" => $model->brand->getProductFrontendName(),
+                ],
+                "offers" => [
+                    "@type" => "Offer",
+                    "PriceSpecification" => [
+                        "@type" => "PriceSpecification",
+                        "priceCurrency" => "USD",
+                        "price" => $model->getFrontendPrice(),
+                        "minPrice" => $model->getFrontendPrice(),
+                        "maxPrice" => $model->getFrontendPrice(2),
+                    ],
+                    "itemCondition" => "NewCondition",
+                    "seller" => [
+                        "@type" => "Organization",
+                        "name" => "S3Stores, Inc.",
+                        "url" => "http://www.s3stores.com/",
+                        "sameAs" => [
+                            "https://www.facebook.com/s3stores/",
+                            "https://twitter.com/s3stores/",
+                            "https://www.youtube.com/channel/UCjE6xR1TriWo-hCDsbpvMKg",
+                            "https://www.pinterest.com/s3storesinc/",
+                            "https://plus.google.com/118379608603424325840"
+                        ],
+                    ]
+                ]
+            ];
+
+        } else {
+
+            $json = [
+                "@context" => "http://schema.org/",
+                "@type" => "Product",
+                "name" => $model->getFrontendName(),
+                "image" => self::getJsonImages(1, $model),
+                "description" => $descript,
+                "mpn" => $model->getMPN(),
+                "brand" => [
+                    "@type" => "Thing",
+                    "name" => $model->brand->brand
+                ],
+                "offers" => [
+                    "@type" => "Offer",
+                    "priceCurrency" => "USD",
+                    "price" => $model->getFrontendPrice(),
+                    'availability' => $availability,
+                    "itemCondition" => "NewCondition",
+                    "seller" => [
+                        "@type" => "Organization",
+                        "name" => "S3Stores, Inc.",
+                        "url" => "http://www.s3stores.com/",
+                        "sameAs" => [
+                            "https://www.facebook.com/s3stores/",
+                            "https://twitter.com/s3stores/",
+                            "https://www.youtube.com/channel/UCjE6xR1TriWo-hCDsbpvMKg",
+                            "https://ru.pinterest.com/s3storesinc/",
+                            "https://plus.google.com/118379608603424325840"
+                        ],
+                    ]
+                ]
+            ];
+        }
+
+        return json_encode($json);
+
+    }
+
+    public static function getJsonImages($flag = 0, $model)
+    {
+
+        $images = [];
+        $image = null;
+
+        /** @var \Modules\Sites\Models\SiteModel $site */
+        $site = $model->sites->limit(1)->get();
+        $pref = ($site->getConfig()['Enable_CDN'] == "Y") ? 'cdn.' : 'www.';
+        $domain = $site->getBaseDomain();
+        $domain = "//" . $pref . $domain;
+
+        if ($model->isGroupRoot()) {
+            $product_models = $model->getFrontendChilds();
+            foreach ($product_models as $p_model) {
+
+                $images_model = $p_model->getImages();
+
+                if ($images_model) {
+                    $image_model = reset($images_model);
+                }
+                else {
+                    $image_model = $p_model->getThumbnail();
+                }
+
+                if ($image_model) {
+                    $for_image = ltrim($image_model->image_path, ".");
+                    $images[] = $domain . $for_image;
+                }
+            }
+
+            if (!$flag) {
+                return $images;
+            }
+            else {
+                return json_encode($images);
+            }
+        }
+        else {
+                $images_model = $model->images->all();
+                foreach ($images_model as $image){
+                    if($image)
+                    {
+                        $for_image = ltrim($image->image_path, ".");
+                        $images[] = $domain . $for_image;
+                    }
+                }
+            if (!$flag) {
+                return $images;
+            }
+            else {
+                return json_encode($images);
+            }
+        }
+
     }
 }

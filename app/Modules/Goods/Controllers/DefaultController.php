@@ -2,6 +2,7 @@
 
 namespace Modules\Goods\Controllers;
 
+use Modules\Goods\Helpers\ProductHelper;
 use Modules\Goods\Helpers\ProductSortHelper;
 use Modules\Goods\Helpers\TabDataHelper;
 use Modules\Goods\Models\ProductModel;
@@ -82,6 +83,7 @@ class DefaultController extends FrontendController
             'breadcrumbs' => Xcart::app()->breadcrumbs->set($model->getBreadcrumbs()),
             'tabs' => TabDataHelper::getTabsFromManufacturer($model->manufacturerid),
             'category' => $category,
+            'helper' => new ProductHelper(),
         ];
 
         $flag = true;

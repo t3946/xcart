@@ -102,31 +102,28 @@ SQL;
     public static function getCountryOrderSql()
     {
         return /** @lang MySQL */ <<<SQL
-select DISTINCT c.code as id, l.value as text 
+select c.code as id, c.name as text
 from xcart_countries as c
-LEFT JOIN xcart_languages as l on l.name = CONCAT('country_', c.code) and l.code in ('US', 'en')
-where l.value like :like
-ORDER BY l.name, field(l.code, 'US', 'en') ASC
+where c.name like :like
+ORDER BY c.name
 SQL;
     }
 
     public static function getAllCountryOrderSql()
     {
         return /** @lang MySQL */ <<<SQL
-select DISTINCT c.code as id, l.value as text 
+select c.code as id, c.name as text 
 from xcart_countries as c
-LEFT JOIN xcart_languages as l on l.name = CONCAT('country_', c.code) and l.code in ('US', 'en')
-ORDER BY field(c.code, 'CA', 'US') DESC, l.name ASC
+ORDER BY field(c.code, 'CA', 'US') DESC, c.name ASC
 SQL;
     }
 
     public static function getInCountryOrderSql($in)
     {
         $sql = /** @lang MySQL */ <<<SQL
-select DISTINCT c.code as id, l.value as text 
+select c.code as id, c.name as text 
 from xcart_countries as c
-LEFT JOIN xcart_languages as l on l.name = CONCAT('country_', c.code) and l.code in ('US', 'en')
-ORDER BY l.name, field(l.code, 'US', 'en') ASC
+ORDER BY c.name
 SQL;
 
         return QueryBuilder::getInstance(Connection::getInstance())

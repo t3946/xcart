@@ -48,7 +48,7 @@
                 <div class="row align-justify align-middle">
                     <div class="column shrink sku">
                         <span class="value">
-                            SKU: <span class="style" itemprop="sku">{$model->productcode}</span>
+                            SKU: <span class="style">{$model->productcode}</span>
                         </span>
                     </div>
                     <div class="column shrink notifications hide-for-ml">
@@ -215,38 +215,6 @@
     {set $brand = $model->brand}
 
     <script type="application/ld+json">
-  [
-   {
-        "@context": "http://schema.org/",
-          "@type": "Product",
-          "sku": "{$model->productcode}",
-    {if $model->upc}
-          "gtin14" : "{$model->upc}",
-    {/if}
-          "mpn": "{$model->getMPN()}",
-    {if $main_image}
-          "image": "{$main_image}",
-    {/if}
-          "name": "{$model->getFrontendName()|escape}",
-          "description": "{$model->getFrontendDescription()|escape}",
-          {if $brand}
-          "brand": {
-            "@type": "Thing",
-            "name": "{$brand->getProductFrontendName()}"
-          },
-          {/if}
-          "offers": {
-            "@type": "Offer",
-            "priceCurrency": "USD",
-            "price": "{$model->getFrontendPrice()|number_format:2}",
-            "itemCondition": "http://schema.org/NewCondition",
-            {if $model->isOutOfStock()}
-            "availability": "http://schema.org/OutOfStock"
-            {else}
-            "availability": "http://schema.org/InStock"
-            {/if}
-          }
-     }
-  ]
+    {$helper->getJsonSchema($model)}
 </script>
 {/block}

@@ -40,6 +40,7 @@ use Modules\Order\Stores\OrderTransactionStore;
 use Modules\Payment\Helpers\PaymentHelper;
 use Modules\Goods\Models\OptionValueModel;
 use Xcart\App\Main\Xcart;
+use Xcart\GroundMap;
 use Xcart\Customer;
 
 global $login;
@@ -1302,7 +1303,7 @@ $smarty->assign("orderid", $orderid);
 if ($REQUEST_METHOD == "POST") {
 
     if ($mode == 'map_incorrect' && !empty($zipcode)) {
-        Xcart\GroundMap::model(['zipcode' => $zipcode])->_delete();
+        GroundMap::model(['zipcode' => $zipcode])->_delete();
         func_header_location("order.php?orderid=" . $orderid);
     }
     elseif ($mode == "invoice_received") {

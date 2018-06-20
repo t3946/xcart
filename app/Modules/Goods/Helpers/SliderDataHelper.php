@@ -88,15 +88,15 @@ SQL;
             }
             elseif ($section_name === 'related_products'){
                 $p_query = <<<SQL
-SELECT $sql_tbl[products].productid as needed_resource_id 
-FROM $sql_tbl[product_links], $sql_tbl[products] 
-WHERE $sql_tbl[products].productid=$sql_tbl[product_links].productid2 
-  AND $sql_tbl[product_links].productid1='{$productid}' 
-  AND $sql_tbl[products].forsale = 'Y' 
-  AND $sql_tbl[products].productid NOT IN ('{$productids}')
+SELECT p.productid as needed_resource_id 
+FROM xcart_product_links l, xcart_products p 
+WHERE p.productid=l.productid2 
+  AND l.productid1='{$productid}' 
+  AND p.forsale = 'Y' 
+  AND p.productid NOT IN ('{$productids}')
 
-GROUP BY $sql_tbl[products].productid 
-ORDER BY $sql_tbl[product_links].orderby
+GROUP BY p.productid 
+ORDER BY l.orderby
 SQL;
             }
 
