@@ -35,6 +35,8 @@
 # $Id: error_message.php,v 1.6.2.2 2006/10/13 10:41:17 svowl Exp $
 #
 
+use Xcart\App\Main\Xcart;
+
 define ('IS_ERROR_MESSAGE', 1);
 
 require "./auth.php";
