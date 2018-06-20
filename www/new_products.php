@@ -1,4 +1,4 @@
-<?php /* MODIFIED: random:18298_18304_18324 [2009 Jun 08 09:50][Custom development (Форма для отправки нотификаций "производителям" (X-Cart's Manufacturers) + Add new "Brands" module + Search URLs feature)] */ ?>
+<?php /* MODIFIED: random:18298_18304_18324 [2009 Jun 08 09:50][Custom development (О©╫О©╫О©╫О©╫О©╫ О©╫О©╫О©╫ О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫ О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫ "О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫" (X-Cart's Manufacturers) + Add new "Brands" module + Search URLs feature)] */ ?>
 <?php
 /*****************************************************************************\
 +-----------------------------------------------------------------------------+
@@ -35,8 +35,12 @@
 # $Id: home.php,v 1.10 2006/03/31 06:18:48 max Exp $
 #
 
+use Xcart\App\Main\Xcart;
+
 define('OFFERS_DONT_SHOW_NEW',1);
 require "./auth.php";
+
+Xcart::app()->request->redirect('/', [], 301);
 
 require $xcart_dir."/include/categories.php";
 
