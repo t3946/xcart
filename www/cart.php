@@ -35,11 +35,14 @@ use Modules\Distributor\Helpers\DistributorHelper;
 use Modules\Goods\Models\ProductModel;
 use Modules\User\Helpers\SurfingHelper;
 use Modules\User\Models\SurfPathModel;
+use Xcart\App\Main\Xcart;
 use Xcart\CidevSurfPath;
 
 define('SET_EXPIRE', 1);
 
 require "./auth.php";
+
+Xcart::app()->request->redirect('/', [], 301);
 
 if (!empty($active_modules['Wishlist'])) {
     if ($mode == 'add2wl' || $mode == "wishlist") {
