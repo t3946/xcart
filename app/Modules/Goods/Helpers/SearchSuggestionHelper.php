@@ -2,6 +2,7 @@
 namespace Modules\Goods\Helpers;
 
 use Modules\Core\Components\GlobalConfig;
+use Modules\Goods\Models\ProductModel;
 use Modules\Sites\Models\SiteModel;
 use Xcart\App\Main\Xcart;
 use Xcart\ElasticSearch;
@@ -109,7 +110,24 @@ JSON;
             }
         }
 
-        return $suggests;
+        if (isset($result['hits']['hits']) && $result['hits']['hits'] && is_array($result['hits']['hits'])) {
+            foreach($result['hits']['hits'] as $hit) {
+                $ids[] = $hit['_id'];
+            }
+            /** @var ProductModel[] $products */
+            if ($ids && $products = ProductModel::objects()->filter(['productid__in' => $ids])->all()) {
+                foreach($products as $product) {
+                    $thumb = $product->thumbnail->limit(1)->get();
+                    $p_suggestions[$product->productid] = [
+                        'link' => $product->getAbsoluteUrl(),
+                        'name' => $product->getFrontendName(),
+                        'image' => $thumb ? (string) $thumb : null
+                    ];
+                }
+            }
+        }
+
+        return array_merge($suggests, ['product_suggestions' => $p_suggestions]);
     }
 
     public function suggestion_phrase($count = 5)
@@ -150,10 +168,6 @@ JSON;
 
     public function mixed_suggestion($count = 5)
     {
-        if ($result = $this->elastic_suggestion($count)) {
-            return $result;
-        }
-
-        return $this->suggestion_phrase($count);
+        return array_merge($this->elastic_suggestion($count), ['phrase_suggestions' => $this->suggestion_phrase($count)]);
     }
 }
