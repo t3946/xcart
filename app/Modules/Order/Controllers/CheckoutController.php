@@ -228,13 +228,9 @@ class CheckoutController extends FrontendController
 
         if ($app->request->getIsPost()) {
 
-            if ($order->groups->count()) {
-                $order->groups->delete();
-            }
+            $order->groups->delete();
 
-            if ($order->detail_models->count()) {
-                $order->detail_models->delete();
-            }
+            $order->detail_models->delete();
 
             $data = $app->request->post->all();
 
@@ -256,8 +252,8 @@ class CheckoutController extends FrontendController
                         if (($shipping_rates = $ship_module::getShipping($g, $order, $cart_group)) && $shipping_rates[$rate->rateid]) {
                             $charge = $shipping_rates[$rate->rateid]->getShippingCharge();
                             $group->setAttributes([
-                                'shippingid' => $rate->shippingid,
-                                'shipping' => $rate->shipping->getFrontendName(),
+                                'shippingid' => $shipping_rates[$rate->rateid]->shippingid,
+                                'shipping' => $shipping_rates[$rate->rateid]->shipping->getFrontendName(),
                             ]);
                         }
                     }
