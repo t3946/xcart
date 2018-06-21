@@ -705,6 +705,11 @@ SQL;
         return (float)$this->getField('shipping_freight');
     }
 
+    /**
+     * @param int $forQuantity
+     * @return float|null
+     * @deprecated
+     */
     public function getExtraMarginValue($forQuantity = 1)
     {
         $fExtraMarginValue = null;

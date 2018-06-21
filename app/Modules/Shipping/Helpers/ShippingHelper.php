@@ -75,9 +75,9 @@ class ShippingHelper
         $ip = Xcart::app()->request->getUserIP();
         if (($geo_ip = GeoipHelper::getGeoipLocation($ip))
             && ($state_model = $geo_ip->state_model)
-            && ($product->distributor->calculate_shipping == 'Y'
+            && ($product->distributor->calculate_shipping === 'Y'
                 || (
-                    ($product->amazon_fba == 'Y' && $product->getAmazonFBAAvailExcludedProcessing() >= $qty)
+                    ($product->amazon_fba === 'Y' && $product->getAmazonFBAAvailExcludedProcessing() >= $qty)
                     || count($product->getProductsAvailOnAmazonParentWithChild($qty))
                 )
             )
