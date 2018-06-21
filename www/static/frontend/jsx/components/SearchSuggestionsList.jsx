@@ -20,7 +20,7 @@ export default class SearchSuggestionsList extends Component {
             let string = renderToStringr(item + '');
             return {
                 value: string,
-                label: string.replace(re, "<b>$1</b>")
+                html: string.replace(re, "<b>$1</b>")
             };
         });
 
@@ -48,7 +48,7 @@ export default class SearchSuggestionsList extends Component {
         return _.map(this.state.list, (item, n) => {
             return (<li onClick={(e) => {
                 this.chooseItem(item.value)
-            }} dangerouslySetInnerHTML={{__html: item.label}}>
+            }} dangerouslySetInnerHTML={{__html: item.html}}>
             </li>);
         });
     }

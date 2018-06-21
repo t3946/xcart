@@ -1,6 +1,6 @@
 import {h, render} from 'preact';
 import storeApp from '../stores/StoreApp';
-import SearchSuggestionsList from "./SearchSuggestionsList";
+import SearchList from "./SearchList";
 import { checkOff, action } from '../redusers/appHeadReduser';
 //import _ from "lodash";
 
@@ -85,10 +85,8 @@ export default class SearchSuggestion {
             return;
         }
 
-        let title = 'Search suggestions';
         //suggestion-container
-        render(<SearchSuggestionsList suggestions={data} search={search} title={title}
-                                      parent={this.elements['parent'][0]}/>,
+        render(<SearchList suggestions={data} search={search} parent={this.elements['parent'][0]}/>,
             this.elements['container'][0], this.elements['container'][0].firstChild);
         this.show();
         this.suggestionsCreated = true;

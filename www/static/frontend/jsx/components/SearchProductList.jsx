@@ -5,4 +5,49 @@ import SearchSuggestionsList from './SearchSuggestionsList'
 
 export default class SearchProductList extends SearchSuggestionsList {
 
+
+    initState(props) {
+
+        let regExp = new RegExp("(" + props.search.split(' ').join('|') + ")", "gi");
+        let suggestions = _.map(props.suggestions, (item, n) => {
+
+            // экранирует спецсимволы если они были в строке
+            return {
+                value: renderToStringr(item.name),
+                html: this.renderListItem(info, regExp)
+            };
+        });
+
+        this.state = {
+            'search': renderToStringr(props.search),
+            // Можно безопасно выводить html
+            'list': suggestions
+        };
+    }
+
+    renderListItem(info, regExp){
+        let name = renderToStringr(item.name);
+        let src = item.image;
+        let href = item.link;
+        let label = name.replace(regExp, "<b>$1</b>");
+
+        return renderToStringr (
+            <a href={href}>
+                <div className="icon">
+                    <img src={src} alt={name}/>
+                </div>
+                <div className="label" dangerouslySetInnerHTML={{__html: label}}></div>
+            </a>
+        );
+    }
+
+    render(props, state) {
+        return (<div className="products">
+            <div className="productsTitle">{props.title}</div>
+            <ul>
+                {this.items(props)}
+            </ul>
+        </div>);
+    }
+
 }

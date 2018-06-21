@@ -73198,9 +73198,9 @@ var _StoreApp = __webpack_require__(5);
 
 var _StoreApp2 = _interopRequireDefault(_StoreApp);
 
-var _SearchSuggestionsList = __webpack_require__(169);
+var _SearchList = __webpack_require__(171);
 
-var _SearchSuggestionsList2 = _interopRequireDefault(_SearchSuggestionsList);
+var _SearchList2 = _interopRequireDefault(_SearchList);
 
 var _appHeadReduser = __webpack_require__(9);
 
@@ -73295,10 +73295,7 @@ var SearchSuggestion = function () {
             return;
         }
 
-        var title = 'Search suggestions';
-
-        (0, _preact.render)((0, _preact.h)(_SearchSuggestionsList2.default, { suggestions: data, search: search, title: title,
-            parent: this.elements['parent'][0] }), this.elements['container'][0], this.elements['container'][0].firstChild);
+        (0, _preact.render)((0, _preact.h)(_SearchList2.default, { suggestions: data, search: search, parent: this.elements['parent'][0] }), this.elements['container'][0], this.elements['container'][0].firstChild);
         this.show();
         this.suggestionsCreated = true;
     };
@@ -73419,7 +73416,7 @@ var SearchSuggestionsList = function (_Component) {
             var string = (0, _preactRenderToString2.default)(item + '');
             return {
                 value: string,
-                label: string.replace(re, "<b>$1</b>")
+                html: string.replace(re, "<b>$1</b>")
             };
         });
 
@@ -73447,7 +73444,7 @@ var SearchSuggestionsList = function (_Component) {
         return _lodash2.default.map(this.state.list, function (item, n) {
             return (0, _preact.h)("li", { onClick: function onClick(e) {
                     _this2.chooseItem(item.value);
-                }, dangerouslySetInnerHTML: { __html: item.label } });
+                }, dangerouslySetInnerHTML: { __html: item.html } });
         });
     };
 
@@ -73485,6 +73482,164 @@ exports.default = isTouch;
 function isTouch() {
     return window.whatInput.ask('loose') === 'touch' || window.whatInput.ask() === 'touch';
 }
+
+/***/ }),
+/* 171 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+exports.__esModule = true;
+
+var _preact = __webpack_require__(2);
+
+var _lodash = __webpack_require__(1);
+
+var _lodash2 = _interopRequireDefault(_lodash);
+
+var _preactRenderToString = __webpack_require__(40);
+
+var _preactRenderToString2 = _interopRequireDefault(_preactRenderToString);
+
+var _SearchSuggestionsList = __webpack_require__(169);
+
+var _SearchSuggestionsList2 = _interopRequireDefault(_SearchSuggestionsList);
+
+var _SearchProductList = __webpack_require__(172);
+
+var _SearchProductList2 = _interopRequireDefault(_SearchProductList);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var SearchList = function (_Component) {
+    _inherits(SearchList, _Component);
+
+    function SearchList(props) {
+        _classCallCheck(this, SearchList);
+
+        return _possibleConstructorReturn(this, _Component.call(this, props));
+    }
+
+    SearchList.prototype.render = function render(props, state) {
+        return (0, _preact.h)(
+            "div",
+            { className: "found" },
+            (0, _preact.h)(_SearchSuggestionsList2.default, { suggestions: props.suggestions.phrase_suggetions, search: props.search,
+                title: "Search suggestions", parent: props.parent }),
+            (0, _preact.h)(_SearchProductList2.default, { suggestions: props.suggestions.product_suggetions, search: props.search,
+                title: "Products", parent: props.parent })
+        );
+    };
+
+    return SearchList;
+}(_preact.Component);
+
+exports.default = SearchList;
+
+/***/ }),
+/* 172 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+exports.__esModule = true;
+
+var _preact = __webpack_require__(2);
+
+var _lodash = __webpack_require__(1);
+
+var _lodash2 = _interopRequireDefault(_lodash);
+
+var _preactRenderToString = __webpack_require__(40);
+
+var _preactRenderToString2 = _interopRequireDefault(_preactRenderToString);
+
+var _SearchSuggestionsList = __webpack_require__(169);
+
+var _SearchSuggestionsList2 = _interopRequireDefault(_SearchSuggestionsList);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var SearchProductList = function (_SearchSuggestionsLis) {
+    _inherits(SearchProductList, _SearchSuggestionsLis);
+
+    function SearchProductList() {
+        _classCallCheck(this, SearchProductList);
+
+        return _possibleConstructorReturn(this, _SearchSuggestionsLis.apply(this, arguments));
+    }
+
+    SearchProductList.prototype.initState = function initState(props) {
+        var _this2 = this;
+
+        var regExp = new RegExp("(" + props.search.split(' ').join('|') + ")", "gi");
+        var suggestions = _lodash2.default.map(props.suggestions, function (item, n) {
+            return {
+                value: (0, _preactRenderToString2.default)(item.name),
+                html: _this2.renderListItem(info, regExp)
+            };
+        });
+
+        this.state = {
+            'search': (0, _preactRenderToString2.default)(props.search),
+
+            'list': suggestions
+        };
+    };
+
+    SearchProductList.prototype.renderListItem = function renderListItem(info, regExp) {
+        var name = (0, _preactRenderToString2.default)(item.name);
+        var src = item.image;
+        var href = item.link;
+        var label = name.replace(regExp, "<b>$1</b>");
+
+        return (0, _preactRenderToString2.default)((0, _preact.h)(
+            "a",
+            { href: href },
+            (0, _preact.h)(
+                "div",
+                { className: "icon" },
+                (0, _preact.h)("img", { src: src, alt: name })
+            ),
+            (0, _preact.h)("div", { className: "label", dangerouslySetInnerHTML: { __html: label } })
+        ));
+    };
+
+    SearchProductList.prototype.render = function render(props, state) {
+        return (0, _preact.h)(
+            "div",
+            { className: "products" },
+            (0, _preact.h)(
+                "div",
+                { className: "productsTitle" },
+                props.title
+            ),
+            (0, _preact.h)(
+                "ul",
+                null,
+                this.items(props)
+            )
+        );
+    };
+
+    return SearchProductList;
+}(_SearchSuggestionsList2.default);
+
+exports.default = SearchProductList;
 
 /***/ })
 /******/ ]);
