@@ -6,6 +6,7 @@ export default class SearchSuggestionsList extends Component {
 
 
     constructor(props) {
+       // console.log('SearchSuggestionsList', props);
         super(props);
         this.props = props;
         this.initState(props);

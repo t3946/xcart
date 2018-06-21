@@ -69,8 +69,7 @@ export default class SearchSuggestion {
             $.ajax(this.elements['search'].data('suggestion-url'), {
                 'data': {'q': str},
                 'success': (data) => {
-
-                    if (currentNumber === this.suggestionNumber && data.suggests && data.suggests.length > 0) {
+                    if (currentNumber === this.suggestionNumber && !!data.suggests) {
                         this.setSuggestion(data.suggests, data.q)
                     }
                 }
@@ -86,6 +85,7 @@ export default class SearchSuggestion {
         }
 
         //suggestion-container
+
         render(<SearchList suggestions={data} search={search} parent={this.elements['parent'][0]}/>,
             this.elements['container'][0], this.elements['container'][0].firstChild);
         this.show();

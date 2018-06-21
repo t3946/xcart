@@ -12,9 +12,9 @@ export default class SearchList extends Component {
 
     render(props, state) {
         return (<div className="found">
-            <SearchSuggestionsList  suggestions={props.suggestions.phrase_suggetions} search={props.search}
+            <SearchSuggestionsList suggestions={props.suggestions.phrase_suggestions} search={props.search}
                                     title="Search suggestions" parent={props.parent} />
-            <SearchProductList  suggestions={props.suggestions.product_suggetions} search={props.search}
+            <SearchProductList suggestions={props.suggestions.product_suggestions} search={props.search}
                                 title="Products" parent={props.parent} />
         </div>);
     }

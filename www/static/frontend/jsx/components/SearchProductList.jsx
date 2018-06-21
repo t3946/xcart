@@ -8,13 +8,14 @@ export default class SearchProductList extends SearchSuggestionsList {
 
     initState(props) {
 
+        console.log('SearchProductList', props);
         let regExp = new RegExp("(" + props.search.split(' ').join('|') + ")", "gi");
         let suggestions = _.map(props.suggestions, (item, n) => {
 
             // экранирует спецсимволы если они были в строке
             return {
                 value: renderToStringr(item.name),
-                html: this.renderListItem(info, regExp)
+                html: this.renderListItem(item, regExp)
             };
         });
 
@@ -25,7 +26,7 @@ export default class SearchProductList extends SearchSuggestionsList {
         };
     }
 
-    renderListItem(info, regExp){
+    renderListItem(item, regExp){
         let name = renderToStringr(item.name);
         let src = item.image;
         let href = item.link;
