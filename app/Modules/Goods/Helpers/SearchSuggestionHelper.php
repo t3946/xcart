@@ -93,7 +93,7 @@ class SearchSuggestionHelper
 }
 JSON;
         $this->elastic->setQueryParam(json_decode($query));
-        $result = $this->elastic->query(['size' => 5, 'from' => 0]);
+        $result = $this->elastic->query(['size' => 5, 'from' => 0, 'q' => $this->search]);
 
 
         $suggests = [];
