@@ -16,14 +16,17 @@ export default class SearchSuggestionsList extends Component {
         let re = new RegExp("(" + props.search.split(' ').join('|') + ")", "gi");
         let suggestions = _.map(props.suggestions, (item, n) => {
 
+            // экранирует спецсимволы если они были в строке
+            let string = renderToStringr(item + '');
             return {
-                value: item,
-                label: renderToStringr(item.replace(re, "<b>$1</b>"))
+                value: string,
+                label: string.replace(re, "<b>$1</b>")
             };
         });
 
         this.state = {
-            'search': props.search,
+            'search': renderToStringr(props.search),
+            // Можно безопасно выводить html
             'list': suggestions
         };
     }
@@ -38,13 +41,14 @@ export default class SearchSuggestionsList extends Component {
     }
 
     items(props) {
+        // Добавляет в состояние найденные строки, шифрует экранированы
         this.initState(props);
 
+        // Строка, выведенная в dangerouslySetInnerHTML предварительно экранирована
         return _.map(this.state.list, (item, n) => {
             return (<li onClick={(e) => {
                 this.chooseItem(item.value)
-            }}>
-                {item.label}
+            }} dangerouslySetInnerHTML={{__html: item.label}}>
             </li>);
         });
     }

@@ -11,6 +11,7 @@ export default class SearchSuggestion {
         this.suggestionNumber = 0;
         this.timer = null;
         this.timeout = 400;
+        this.suggestionsCreated = false;
 
         this.init(elements);
     }
@@ -27,29 +28,30 @@ export default class SearchSuggestion {
         return str && str.length >= 3;
     }
 
-    show() {
+    showSuggestionsList() {
         this.elements['parent'].addClass('suggestion-active');
         this.elements['parent'].append(this.elements['container']);
-        this.storeSearchShow();
+        //this.storeSearchShow();
 
         $(document).on('click.close_search_suggestion', event => {
             let target = $(event.target);
             if (!target.hasClass('search-form-container') && target.parents('.search-form-container').length <= 0) {
                 this.hide();
-                $(document).off('click.close_search_suggestion');
             }
         });
     }
 
-    hide() {
+    hideSuggestionsList() {
 
+        $(document).off('click.close_search_suggestion');
         if (!this.elements['parent'].hasClass('suggestion-active')) {
             return;
         }
 
         this.elements['parent'].removeClass('suggestion-active');
         this.elements['container'].detach();
-        this.storeSearchHide();
+        this.elements['search'].blur();
+        //this.storeSearchHide();
     }
 
     getSuggestions(str) {
@@ -67,7 +69,7 @@ export default class SearchSuggestion {
             $.ajax(this.elements['search'].data('suggestion-url'), {
                 'data': {'q': str},
                 'success': (data) => {
-                    console.log(data);
+
                     if (currentNumber === this.suggestionNumber && data.suggests && data.suggests.length > 0) {
                         this.setSuggestion(data.suggests, data.q)
                     }
@@ -78,29 +80,43 @@ export default class SearchSuggestion {
 
     setSuggestion(data, search) {
 
-        this.show();
+        if (!data) {
+            this.hide();
+            return;
+        }
+
         let title = 'Search suggestions';
         //suggestion-container
         render(<SearchSuggestionsList suggestions={data} search={search} title={title}
                                       parent={this.elements['parent'][0]}/>,
             this.elements['container'][0], this.elements['container'][0].firstChild);
-
-        if (data) {
-            this.show();
-            return;
-        }
-
-        this.hide();
-
+        this.show();
+        this.suggestionsCreated = true;
     }
 
 
     _bind() {
 
+        this.unsubscribe = storeApp.subscribe(()=>{
+            let state = storeApp.getState();
+
+            if (state.frontend) {
+                //if ( state.frontend.header.mobileSearch)
+                if(state.frontend.header.active == 'search'){
+                    this.showSuggestionsList();
+                }
+                else {
+                    this.hideSuggestionsList();
+                }
+
+            }
+        });
+
         this.elements['parent'][0].addEventListener('components.search-suggestions-list.click', (e) => {
             let detail = e.detail.item.replace(/[^a-zA-Z\- ]/g, "");
 
             this.elements['search'].val(detail);
+            this.elements['parent'].submit();
             this.hide();
 
         }, {passive: true});
@@ -124,8 +140,11 @@ export default class SearchSuggestion {
             $(e.target).focus();
             let value = e.target.value.trim();
             if (this.checkValue(value)) {
-                //this.getSuggestions(value);
-                this.show();
+                if(this.suggestionsCreated){
+                    this.show();
+                    return;
+                }
+                this.getSuggestions(value);
             }
         });
 
@@ -137,11 +156,11 @@ export default class SearchSuggestion {
 
     }
 
-    storeSearchHide() {
+    hide() {
         checkOff();
     }
 
-    storeSearchShow() {
+    show() {
         action('search');
     }
 }

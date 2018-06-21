@@ -1,19 +1,3 @@
-// export function hideAllMobile()
-// {
-//     storeApp.dispatch({
-//         ...setTtypeMobile,
-//         data: {
-//             frontend: {
-//                 darkness: false,
-//                 header: {
-//                     active: null,
-//                     mobileClicked: false
-//                 }
-//             }
-//         }
-//     });
-// }
-
 import { createStore } from 'redux'
 import _ from 'lodash';
 
@@ -50,9 +34,7 @@ let ACTIONS = {
                 return new_state;
             }
 
-            if(new_state.frontend.header.mobileSearch && new_state.frontend.header.active == null){
-                new_state.frontend.darkness = false;
-            }
+            new_state.frontend.darkness = (new_state.frontend.header.active == null) ? false : true;
 
             return new_state;
         }

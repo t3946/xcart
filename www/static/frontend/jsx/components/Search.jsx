@@ -8,6 +8,7 @@ export default class Search {
         this.elements = {};
         this.showInput = false;
         this.init(elements);
+        //console.log(123);
         new SearchSuggestion();
     }
 
