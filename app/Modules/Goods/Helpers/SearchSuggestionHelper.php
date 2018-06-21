@@ -127,7 +127,7 @@ JSON;
 
         $query = "select LOWER(SUBSTRING_INDEX(SS.search_phrase,' ', :spaces)) As suggester
        from xcart_search_stats SS 
-       where SS.storefrontid = :sfid and SS.hits>0 and SS.search_phrase like ':name%'
+       where SS.storefrontid = :sfid and SS.hits>0 and SS.search_phrase like :name
        group By Suggester
        Order By COUNT(SS.id) desc
         Limit {$count}";
@@ -135,7 +135,7 @@ JSON;
         $query_result = Xcart::app()->db->getConnection()->fetchAll($query,[
             'spaces' => $spaces,
             'sfid' => $siteModule->getSite()->storefrontid,
-            'name' => $search_phrase_updated,
+            'name' => $search_phrase_updated.'%',
         ]);
 
         if (!empty($query_result)){

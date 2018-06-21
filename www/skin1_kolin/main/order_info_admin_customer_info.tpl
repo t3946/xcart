@@ -330,7 +330,7 @@
 
   <tr>
     <td width="24%"><b>Fax:</b> </td>
-    <td width="76%"><input type="text" name="po_fax" id="po_fax" value="{$order.po_details.po_fax|escape}" style="{if $order.po_details.po_fax eq '(000) 000-0000'}background-color: #F4CCCC;{/if}" /></td>
+    <td width="76%"><input type="text" name="purchase_manager_fax" id="po_fax" value="{$order.po_details.purchase_manager_fax|escape}" style="{if $order.po_details.purchase_manager_fax eq '(000) 000-0000'}background-color: #F4CCCC;{/if}" /></td>
   </tr>
 
   {if $po_fax_area_code_info ne ""}

@@ -4,6 +4,7 @@ namespace Modules\Dashboard\Controllers;
 
 use Modules\Dashboard\Helpers\SearchHelper;
 use Modules\Dashboard\Stores\OrderSearchStore;
+use Modules\Order\Models\OrderStatusModel;
 use Xcart\App\Controller\PrototypeAdminController;
 use Xcart\App\Main\Xcart;
 
@@ -23,9 +24,18 @@ class SearchController extends PrototypeAdminController
 
         if (!is_array($form_data)) {
             $form_data = [
-                'order'    => [
+                'order' => [
                     'date' => SearchHelper::getDefaultSearchDate(),
+                    'c2b_status' => [
+                        OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP1,
+                        OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP2,
+                        OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP3,
+                        OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP4,
+                    ]
                 ],
+                'not' => ['order' => [
+                    'c2b_status' => true
+                ]]
             ];
         }
 
