@@ -71,7 +71,9 @@ if (!$order_model || in_array($order_model->cb_status, [
         OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP3,
         OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP4
     ], true)) {
-    Xcart::app()->request->redirect('/admin/');
+    if (!in_array($login, ['elenak', 'michaelch'])) {
+        Xcart::app()->request->redirect('/admin/');
+    }
 }
 
 if ($REQUEST_METHOD == "POST" && $mode == "unlock_order")
