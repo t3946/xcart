@@ -162,7 +162,7 @@ JSON;
         return ['category_suggestions' => $suggests];
     }
 
-    public function suggestion_phrase($count = 5)
+    public function suggestion_phrase($count = 5, $self_include = false)
     {
         $suggests = [];
 
@@ -190,16 +190,22 @@ JSON;
 
         if (!empty($query_result)){
             foreach ($query_result as $k => $v){
+                if ($v["suggester"] === $search_phrase_updated) {
+                    if ($self_include) {
+                        $suggests[] = $v["suggester"];
+                    }
+                } else {
+                    $suggests[] = $v["suggester"];
+                }
 
-                $suggests[] = $v["suggester"];
             }
         }
 
         return $suggests;
     }
 
-    public function mixed_suggestion($count = 5)
+    public function mixed_suggestion($count = 5, $self_include = false)
     {
-        return array_merge($this->elastic_suggestion($count), $this->elastic_category_suggestion(4), ['phrase_suggestions' => $this->suggestion_phrase($count)]);
+        return array_merge($this->elastic_suggestion($count), $this->elastic_category_suggestion(4), ['phrase_suggestions' => $this->suggestion_phrase($count, $self_include)]);
     }
 }
