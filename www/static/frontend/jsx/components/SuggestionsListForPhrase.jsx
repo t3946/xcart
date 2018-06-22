@@ -2,11 +2,11 @@ import {h, render, Component} from "preact";
 import _ from "lodash";
 import renderToStringr from 'preact-render-to-string';
 
-export default class SearchSuggestionsList extends Component {
+export default class SuggestionsListForPhrase extends Component {
 
 
     constructor(props) {
-       // console.log('SearchSuggestionsList', props);
+        // console.log('SuggestionsListForPhrase', props);
         super(props);
         this.props = props;
         this.initState(props);
@@ -49,13 +49,13 @@ export default class SearchSuggestionsList extends Component {
         return _.map(this.state.list, (item, n) => {
             return (<li onClick={(e) => {
                 this.chooseItem(item.value)
-            }} dangerouslySetInnerHTML={{__html: item.html}}>
+            }} dangerouslySetInnerHTML={{__html: item.html}} className={'item' + n}>
             </li>);
         });
     }
 
     render(props, state) {
-        return (<div className="suggestions">
+        return (<div className="phrase suggestions">
             <div className="suggestionsTitle">{props.title}</div>
             <ul>
                 {this.items(props)}

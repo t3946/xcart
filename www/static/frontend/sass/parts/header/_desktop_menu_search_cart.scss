@@ -59,7 +59,7 @@ $search_input_large_height: rem-calc(36);
       color: $dark_blue;
       margin-top: rem-calc(5);
 
-      &:focus{
+      &:focus {
         border: 2px solid $dark_blue;
       }
 
@@ -70,12 +70,10 @@ $search_input_large_height: rem-calc(36);
         line-height: $search_input_large_height;
         margin: rem-calc(8) 0 0;
 
-        &:focus{
+        &:focus {
           border: 1px solid $dark_blue;
         }
       }
-
-
 
       &::placeholder {
         font-style: italic;
@@ -84,7 +82,7 @@ $search_input_large_height: rem-calc(36);
       }
     }
 
-    .suggestion-active{
+    .suggestion-active {
       .search {
         border: 2px solid $dark_blue;
 
@@ -140,9 +138,9 @@ $search_input_large_height: rem-calc(36);
           display: inline-block;
           background: $b9_grey;
           width: 1px;
-          height: 30px;
+          height: rem-calc(30);
           position: relative;
-          left: 30px;
+          left: rem-calc(30);
           bottom: 7px;
           opacity: 1;
         }
@@ -161,21 +159,21 @@ $search_input_large_height: rem-calc(36);
         border-top: 0;
         background-color: white;
 
-        @include breakpoint(large){
+        @include breakpoint(large) {
           padding: 0 0 .5rem;
         }
 
         .suggestionsTitle {
           display: none;
 
-          @include breakpoint(large){
+          @include breakpoint(large) {
             display: block;
             line-height: rem-calc(22);
             height: rem-calc(22);
             text-align: right;
             font-size: rem-calc(12);
             color: #616161;
-            padding: 3px 12px;
+            padding: rem-calc(3) rem-calc(12);
           }
         }
 
@@ -192,15 +190,16 @@ $search_input_large_height: rem-calc(36);
             cursor: pointer;
             border-top: 1px solid #e6e6e6;
             position: relative;
+            display: none;
 
-            @include breakpoint(large){
+            @include breakpoint(large) {
               padding: 0 1rem;
               line-height: rem-calc(26);
               height: rem-calc(26);
               border: 0;
             }
 
-            &:first-child{
+            &:first-child {
               border: 0;
             }
 
@@ -216,6 +215,81 @@ $search_input_large_height: rem-calc(36);
               position: absolute;
               right: rem-calc(11);
               top: 0;
+
+              @include breakpoint(large) {
+                display: none;
+              }
+            }
+          }
+
+          @for $i from 0 through 3 {
+            .item#{$i} { display: block; }
+          }
+
+        }
+
+        &.product {
+
+          ul {
+            li {
+              height: auto;
+              display: none;
+
+              a {
+                display: flex;
+                justify-content: left;
+                align-items: center;
+                padding: .5rem 0;
+                color: black;
+
+                &:hover {
+                  text-decoration: none;
+                }
+
+                .icon {
+                  display: block;
+                  width: rem-calc(70);
+                  min-height: rem-calc(70);
+                  background-size: cover;
+                  background-position: center center;
+                }
+                .label {
+                  display: block;
+                  padding-left: 1rem;
+                }
+              }
+            }
+
+            @for $i from 0 through 2 {
+              .item#{$i} { display: block; }
+            }
+
+            @include breakpoint(large){
+              @for $i from 0 through 4 {
+                .item#{$i} { display: block; }
+              }
+            }
+          }
+
+        }
+
+        &.category {
+          display: none;
+
+          @include breakpoint(large){
+            display: block;
+          }
+
+          ul {
+            li {
+
+              a {
+                color: black;
+
+                &:hover {
+                  text-decoration: none;
+                }
+              }
             }
           }
         }
@@ -230,7 +304,7 @@ $search_input_large_height: rem-calc(36);
     line-height: rem-calc(50);
     height: rem-calc(50);
     text-align: center;
-    cursor:pointer;
+    cursor: pointer;
 
     @include active-triangle(6px, 6px, #fff, true, $dark_blue, is-active);
 

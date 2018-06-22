@@ -1,8 +1,7 @@
 import {h, render} from 'preact';
 import storeApp from '../stores/StoreApp';
-import SearchList from "./SearchList";
+import SuggestionsListForAll from "./SuggestionsListForAll";
 import { checkOff, action } from '../redusers/appHeadReduser';
-//import _ from "lodash";
 
 export default class SearchSuggestion {
     constructor(elements = ".search-form-container .search") {
@@ -51,7 +50,6 @@ export default class SearchSuggestion {
         this.elements['parent'].removeClass('suggestion-active');
         this.elements['container'].detach();
         this.elements['search'].blur();
-        //this.storeSearchHide();
     }
 
     getSuggestions(str) {
@@ -77,16 +75,35 @@ export default class SearchSuggestion {
         }, this.timeout);
     }
 
-    setSuggestion(data, search) {
+    hasPhraseSuggestions(data){
+        return data.phrase_suggestions && data.phrase_suggestions.length > 0;
+    }
 
-        if (!data) {
+    hasCategorySuggestions(data){
+        return data.category_suggestions && data.category_suggestions.length > 0;
+    }
+
+    hasProductSuggestions(data){
+        return data.product_suggestions && data.product_suggestions.length > 0;
+    }
+
+    setSuggestion(data, search) {
+        console.log(data);
+
+        if (!data
+            || (!this.hasPhraseSuggestions(data)
+                && !this.hasCategorySuggestions(data)
+                && !this.hasProductSuggestions(data))) {
+            console.log('hide');
             this.hide();
             return;
         }
 
+        console.log('show');
+
         //suggestion-container
 
-        render(<SearchList suggestions={data} search={search} parent={this.elements['parent'][0]}/>,
+        render(<SuggestionsListForAll suggestions={data} search={search} parent={this.elements['parent'][0]}/>,
             this.elements['container'][0], this.elements['container'][0].firstChild);
         this.show();
         this.suggestionsCreated = true;

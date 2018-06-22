@@ -118,7 +118,8 @@ JSON;
             if ($ids && $products = ProductModel::objects()->filter(['productid__in' => $ids])->all()) {
                 foreach($products as $product) {
                     $thumb = $product->thumbnail->limit(1)->get();
-                    $p_suggestions[$product->productid] = [
+                    $p_suggestions[] = [
+                        'id' => $product->productid,
                         'link' => $product->getAbsoluteUrl(),
                         'name' => $product->getFrontendName(),
                         'image' => $thumb ? (string) $thumb : null
@@ -127,7 +128,28 @@ JSON;
             }
         }
 
-        return array_merge($suggests, ['product_suggestions' => $p_suggestions]);
+        return array_merge($suggests, ['product_suggestions' => $p_suggestions], ['category_suggestions' => [
+            [
+                'link' => '/',
+                'name' => 'sdfsdfsf'
+            ],
+            [
+                'link' => '/',
+                'name' => 'sdfsdfsf'
+            ],
+            [
+                'link' => '/',
+                'name' => 'sdfsdfsf'
+            ],
+            [
+                'link' => '/',
+                'name' => 'sdfsdfsf'
+            ],
+            [
+                'link' => '/',
+                'name' => 'sdfsdfsf'
+            ],
+        ]]);
     }
 
     public function suggestion_phrase($count = 5)
