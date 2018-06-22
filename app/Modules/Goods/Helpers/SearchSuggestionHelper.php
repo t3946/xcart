@@ -124,7 +124,8 @@ JSON;
                         $thumb = ($child = $product->childs->limit(1)->get()) ? $child->thumbnail->limit(1)->get() : null;
                     }
 
-                    $p_suggestions[$product->productid] = [
+                    $p_suggestions[] = [
+                        'id' => $product->productid,
                         'link' => $product->getAbsoluteUrl(),
                         'name' => $product->getFrontendName(),
                         'image' => $thumb ? (string) $thumb : null

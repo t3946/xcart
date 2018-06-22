@@ -176,6 +176,7 @@ $search_input_large_height: rem-calc(36);
 
           .suggestionsTitle {
             display: none;
+            cursor: default;
 
             @include breakpoint(large) {
               display: block;
