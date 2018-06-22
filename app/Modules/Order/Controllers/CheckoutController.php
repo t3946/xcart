@@ -228,14 +228,6 @@ class CheckoutController extends FrontendController
 
         if ($app->request->getIsPost()) {
 
-            if ($order->groups->count()) {
-                $order->groups->delete();
-            }
-
-            if ($order->detail_models->count()) {
-                $order->detail_models->delete();
-            }
-
             $data = $app->request->post->all();
 
             if ($cart_groups = $cart->getItemsGroupedBy()) {
@@ -246,7 +238,13 @@ class CheckoutController extends FrontendController
                 foreach ($cart_groups as $g => $cart_group)
                 {
                     /** @var OrderGroupModel $group */
-                    [$group] = OrderGroupModel::objects()->getOrCreate(['manufacturerid' => $g, 'orderid' => $order->orderid]);
+                    [$group, $is_created] = OrderGroupModel::objects()->getOrCreate(['manufacturerid' => $g, 'orderid' => $order->orderid]);
+
+                    if (!$is_created) {
+                        OrderDetailModel::objects()->delete(['order_group_id' => $group->order_group_id]);
+                    }
+
+                    $group->setAttributes(['shippingid' => null, 'shipping' => '']);
 
                     /** @var ShippingRateModel $rate */
                     if ($rates[$g] && ($rate = ShippingRateModel::objects()->get(['rateid' => $rates[$g]]))) {
@@ -304,6 +302,8 @@ class CheckoutController extends FrontendController
                     'cb_status' => OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP3,
                 ]);
 
+            } else {
+                    $order->groups->delete();
             }
 
             if ($app->request->post->has('payment_method')) {

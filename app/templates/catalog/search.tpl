@@ -19,7 +19,7 @@
                         <h2 class="subtitle">Showing results for "<span class="highlight">{$q}</span>"</h2>
                     {/if}
 
-                    {if $suggestion && $suggestion['phrase_suggestions']}
+                    {if $suggestion && $suggestion['phrase_suggestions'] }
                         Related searches:
                         {foreach $suggestion['phrase_suggestions'] as $suggest}
                             {* не надо делать перенос строки перед закрытием тега - появляется лишний пробел *}

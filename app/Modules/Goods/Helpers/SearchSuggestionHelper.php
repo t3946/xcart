@@ -2,6 +2,7 @@
 namespace Modules\Goods\Helpers;
 
 use Modules\Core\Components\GlobalConfig;
+use Modules\Goods\Models\CategoryModel;
 use Modules\Goods\Models\ProductModel;
 use Modules\Sites\Models\SiteModel;
 use Xcart\App\Main\Xcart;
@@ -12,7 +13,7 @@ class SearchSuggestionHelper
     private $elastic;
     private $search;
 
-    public function __construct($search, $indexes=null) {
+    public function __construct($search, $indexes=null, $type = 'product') {
         /** @var \Modules\Core\CoreModule $coreModule */
         $coreModule = Xcart::app()->getModule('Core');
         $config = $coreModule::getGlobalConfig();
@@ -23,7 +24,7 @@ class SearchSuggestionHelper
         $this->elastic = new ElasticSearch($config["ElasticSearch_options"], $indexes ?: $this->getSearchIndex());
         $this->elastic->setSource("*._id");
         $this->elastic->setMinScore($config_min_scope);
-        $this->elastic->setType('product');
+        $this->elastic->setType($type);
         $this->elastic->setQueryParams($search);
         GlobalConfig::getInstance()->setOldMode(false);
     }
@@ -93,7 +94,7 @@ class SearchSuggestionHelper
 }
 JSON;
         $this->elastic->setQueryParam(json_decode($query));
-        $result = $this->elastic->query(['size' => 5, 'from' => 0, 'q' => $this->search]);
+        $result = $this->elastic->query(['size' => $count, 'from' => 0, 'q' => $this->search]);
 
 
         $suggests = [];
@@ -129,6 +130,31 @@ JSON;
         }
 
         return array_merge($suggests, ['product_suggestions' => $p_suggestions]);
+    }
+    public function elastic_category_suggestion($count = 5, array $html = [])
+    {
+        $this->elastic->setType('category');
+        $result = $this->elastic->query(['size' => $count, 'from' => 0, 'q' => $this->search]);
+
+        $suggests = [];
+
+        if (isset($result['hits']['hits']) && $result['hits']['hits'] && is_array($result['hits']['hits'])) {
+            foreach($result['hits']['hits'] as $hit) {
+                $ids[] = $hit['_id'];
+            }
+            /** @var ProductModel[] $products */
+            if ($ids && $categories = CategoryModel::objects()->filter(['categoryid__in' => $ids])->all()) {
+                foreach($categories as $category) {
+                    $suggests[] = [
+                        'id' => $category->categoryid,
+                        'link' => $category->getAbsoluteUrl(),
+                        'name' => $category->getFrontendName(),
+                    ];
+                }
+            }
+        }
+
+        return ['category_suggestions' => $suggests];
     }
 
     public function suggestion_phrase($count = 5)
@@ -169,6 +195,6 @@ JSON;
 
     public function mixed_suggestion($count = 5)
     {
-        return array_merge($this->elastic_suggestion($count), ['phrase_suggestions' => $this->suggestion_phrase($count)]);
+        return array_merge($this->elastic_suggestion($count), $this->elastic_category_suggestion(4), ['phrase_suggestions' => $this->suggestion_phrase($count)]);
     }
 }
