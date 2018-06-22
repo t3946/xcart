@@ -201,6 +201,9 @@ $search_input_large_height: rem-calc(36);
               cursor: pointer;
               border-top: 1px solid #e6e6e6;
               position: relative;
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
 
               @include breakpoint(large) {
                 padding: 0 1rem;
@@ -240,6 +243,8 @@ $search_input_large_height: rem-calc(36);
               li {
                 height: auto;
                 display: none;
+                white-space: normal;
+                text-overflow: clip;
 
                 a {
                   display: flex;
@@ -296,6 +301,10 @@ $search_input_large_height: rem-calc(36);
 
                 a {
                   color: black;
+                  display: block;
+                  white-space: nowrap;
+                  overflow: hidden;
+                  text-overflow: ellipsis;
 
                   &:hover {
                     text-decoration: none;
