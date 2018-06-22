@@ -30,9 +30,13 @@
  * +-----------------------------------------------------------------------------+
  * \*****************************************************************************/
 
+use Modules\Order\Forms\AccountsPayableForm;
+use Modules\Order\Forms\PurchaseOrderDetailsForm;
+use Modules\Order\Forms\PurchasingManagerForm;
 use Modules\Order\Helpers\OrderAnalyticsHelper;
 use Modules\Order\Helpers\OrderGroupHelper;
 use Modules\Order\Helpers\OrderHelper;
+use Modules\Order\Models\OrderExtraModel;
 use Modules\Order\Models\OrderGroupInvoiceProductModel;
 use Modules\Order\Models\OrderGroupModel;
 use Modules\Order\Models\OrderModel;
@@ -1056,27 +1060,34 @@ if ($REQUEST_METHOD == "POST")
 
                 if ($po_update) {
 
-                    $count_data_current = count($data_current);
-                    $count_data         = count($data);
-                    $count_po_fields    = max($count_data_current, $count_data);
+                    $orderDetailsForm = new PurchaseOrderDetailsForm();
+                    $purchasingManagerForm = new PurchasingManagerForm();
+                    $accountsPayableForm = new AccountsPayableForm();
+
+                    $orderDetailsForm->populate(['PurchaseOrderDetailsForm' => \Xcart\App\Main\Xcart::app()->request->post->all()]);
+                    $purchasingManagerForm->populate(['PurchasingManagerForm' => \Xcart\App\Main\Xcart::app()->request->post->all()]);
+                    $accountsPayableForm->populate(['AccountsPayableForm' => \Xcart\App\Main\Xcart::app()->request->post->all()]);
+
+                    /** @var OrderExtraModel $extra */
+                    [$extra] = OrderExtraModel::objects()->getOrNew(['order_id' => $order['orderid']]);
+                    $old_po = $extra->purchase_order;
+                    $extra->purchase_order = array_merge(
+                        $orderDetailsForm->getAttributes(),
+                        $purchasingManagerForm->getAttributes(),
+                        $accountsPayableForm->getAttributes()
+                    );
+
+                    $extra->save();
+
+                    $po_diff = array_merge($old_po, $extra->purchase_order);
 
                     $log           = "<B>Order details:</B><br />";
-                    $insert_po_log = false;
-
-                    for ($i = 0; $i < $count_po_fields; $i++) {
-
-                        if ($data_current[$i] != $data[$i]) {
-                            $log .= $data_current[$i] . " -> " . $data[$i] . "<br />";
-                            $insert_po_log = true;
+                    foreach ($po_diff as $attribute => $value) {
+                        if ($old_po[$attribute] != $extra->purchase_order[$attribute]) {
+                            $log .= "{$attribute}: {$old_po[$attribute]}  ->  {$extra->purchase_order[$attribute]} <br />";
                         }
                     }
-
-                    if ($insert_po_log) {
-                        func_log_order($order["orderid"], 'C', $log, $login);
-                    }
-
-                    $order['details'] = implode("\n", $data);
-                    db_query("UPDATE $sql_tbl[orders] SET details='" . addslashes(text_crypt($order['details'])) . "', po_number='" . addslashes($po_number) . "' WHERE orderid=$order[orderid]");
+                    func_log_order($order["orderid"], 'C', $log, $login);
                 }
             }
         }

@@ -581,14 +581,13 @@ function func_oe_update_order($cart, $shipping_groups, $old_products = "")
                 "provider"        => $product["provider"],
                 "extra_data"      => serialize($product["extra_data"]),
                 "productcode"     => $product['productcode'],
-                "product"         => $product['product'],
+                "product"         => stripslashes($product['product']),
                 "item_cost_to_us" => $product['cost_to_us'],
                 "coupon_discount" => $product['coupon_discount'],
             ];
             if (floatval($query_data['item_cost_to_us']) != 0) {
                 unset($query_data_tmp['item_cost_to_us']);
             }
-            $query_data_tmp = func_array_map("addslashes", $query_data_tmp);
             $query_data     = array_merge($query_data, $query_data_tmp);
 
             if (@$user_account["flag"] != "FS") {
@@ -609,7 +608,14 @@ function func_oe_update_order($cart, $shipping_groups, $old_products = "")
                     func_log_order($cart["orderid"], 'X', $log, $login);
                 }
 
-                $items[] = $products[$pk]['itemid'] = func_array2insert("order_details", $query_data, true);
+                /** @var \Modules\Order\Models\OrderDetailModel $dm */
+                $dm = $query_data['itemid']
+                    ? \Modules\Order\Models\OrderDetailModel::objects()->get(['itemid' => $query_data['itemid']])
+                    : new Modules\Order\Models\OrderDetailModel($query_data);
+                $dm->setAttributes($query_data);
+                $dm->save();
+
+                $items[] = $products[$pk]['itemid'] = $dm->itemid;
             }
 
             if (!isset($back_products[$product['manufacturerid']])) {
@@ -1028,20 +1034,22 @@ function func_refund_product($orderid, $mid, &$product, $customer_info)
         $_product['amount'] = $product['refund']['amount'];
         $_product['price']  = $product['refund']['price'];
 
-        $product['extra_data']['taxes'] = func_get_product_taxes($_product, $login, false, $product['taxes']);
+        $txses = func_get_product_taxes($_product, $login, false, $product['taxes']);
 
-        $_taxes = func_tax_price($product['refund']['price'], 0, false, null, $customer_info, $product['extra_data']['taxes']) ?? [];
+        $_taxes = func_tax_price($product['refund']['price'], 0, false, null, $customer_info, $txses);
 
-        /*$product['extra_data']['display_subtotal'] = price_format($_taxes['taxed_price'] * $product['refund']['amount']);
+        $extra_data = [
+            'taxes' => $txses,
+            'display_subtotal' => price_format($_taxes['taxed_price'] * $product['refund']['amount']),
+            'display' => [
+                'price' => price_format($_taxes['taxed_price'])
+            ],
+            'product' => $product['product'],
+            'productcode' => $product['productcode'],
+            'price' => $product['price']
+        ];
 
-        if (!\is_array($product['extra_data']['display'])) {
-            $product['extra_data']['display'] = [];
-        }
-
-        $product['extra_data']['display']['price'] = price_format($_taxes['taxed_price']);
-        $product['extra_data']['product']          = $product['product'];
-        $product['extra_data']['productcode']      = $product['productcode'];
-        $product['extra_data']['price']            = $product['price'];*/
+        $product['extra_data'] = array_merge($product['extra_data'] ?? [], $extra_data);
 
         if (!empty($ref_values)) {
             $query_data = [
