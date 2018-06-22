@@ -39,7 +39,7 @@ class SearchController extends AbstractCatalogController
     {
         if ($this->getRequest()->getIsAjax()) {
             $this->jsonResponse([
-                'suggests' => (new SearchSuggestionHelper($this->getRequest()->get->get('q'), $this->getSearchIndex()))->mixed_suggestion(5),
+                'suggests' => (new SearchSuggestionHelper($this->getRequest()->get->get('q'), $this->getSearchIndex()))->mixed_suggestion(5, true),
                 'q' => $this->getRequest()->get->get('q'),
             ]);
         }
