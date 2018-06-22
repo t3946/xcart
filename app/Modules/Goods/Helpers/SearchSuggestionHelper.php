@@ -128,24 +128,7 @@ JSON;
             }
         }
 
-        return array_merge($suggests, ['product_suggestions' => $p_suggestions], ['category_suggestions' => [
-            [
-                'link' => '/',
-                'name' => 'sdfsdfsf'
-            ],
-            [
-                'link' => '/',
-                'name' => 'sdfsdfsf'
-            ],
-            [
-                'link' => '/',
-                'name' => 'sdfsdfsf'
-            ],
-            [
-                'link' => '/',
-                'name' => 'sdfsdfsf'
-            ]
-        ]]);
+        return array_merge($suggests, ['product_suggestions' => $p_suggestions]);
     }
 
     public function suggestion_phrase($count = 5)

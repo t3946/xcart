@@ -73632,7 +73632,7 @@ var SuggestionsListForProduct = function (_SuggestionsListForPh) {
 
         var icon = (0, _preact.h)('span', {
             className: 'icon',
-            style: 'background-image: url("' + src + '")'
+            style: src ? 'background-image: url("' + src + '")' : ''
         }, (0, _preact.h)('span', {
             className: 'show-for-sr'
         }, name));

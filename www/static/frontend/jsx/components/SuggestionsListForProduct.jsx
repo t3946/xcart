@@ -34,7 +34,7 @@ export default class SuggestionsListForProduct extends SuggestionsListForPhrase 
 
         let icon = h('span', {
             className: 'icon',
-            style: 'background-image: url("' + src + '")'
+            style: src ? 'background-image: url("' + src + '")' : ''
         }, h('span', {
             className: 'show-for-sr'
         }, name));
