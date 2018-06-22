@@ -118,9 +118,13 @@ JSON;
             /** @var ProductModel[] $products */
             if ($ids && $products = ProductModel::objects()->filter(['productid__in' => $ids])->all()) {
                 foreach($products as $product) {
-                    $thumb = $product->thumbnail->limit(1)->get();
-                    $p_suggestions[] = [
-                        'id' => $product->productid,
+                    if (!$product->isGroupRoot()) {
+                        $thumb = $product->thumbnail->limit(1)->get();
+                    } else {
+                        $thumb = ($child = $product->childs->limit(1)->get()) ? $child->thumbnail->limit(1)->get() : null;
+                    }
+
+                    $p_suggestions[$product->productid] = [
                         'link' => $product->getAbsoluteUrl(),
                         'name' => $product->getFrontendName(),
                         'image' => $thumb ? (string) $thumb : null
