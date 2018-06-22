@@ -49,6 +49,13 @@ export default class SearchSuggestion {
 
         this.elements['parent'].removeClass('suggestion-active');
         this.elements['container'].detach();
+    }
+
+    setActive() {
+        this.elements['search'].focus();
+    }
+
+    setInactive() {
         this.elements['search'].blur();
     }
 
@@ -88,21 +95,16 @@ export default class SearchSuggestion {
     }
 
     setSuggestion(data, search) {
-        console.log(data);
 
         if (!data
             || (!this.hasPhraseSuggestions(data)
                 && !this.hasCategorySuggestions(data)
                 && !this.hasProductSuggestions(data))) {
-            console.log('hide');
             this.hide();
             return;
         }
 
-        console.log('show');
-
         //suggestion-container
-
         render(<SuggestionsListForAll suggestions={data} search={search} parent={this.elements['parent'][0]}/>,
             this.elements['container'][0], this.elements['container'][0].firstChild);
         this.show();
@@ -116,12 +118,15 @@ export default class SearchSuggestion {
             let state = storeApp.getState();
 
             if (state.frontend) {
-                //if ( state.frontend.header.mobileSearch)
                 if(state.frontend.header.active == 'search'){
                     this.showSuggestionsList();
+                    this.setActive()
                 }
                 else {
                     this.hideSuggestionsList();
+                    if(state.frontend.header.active !== null){
+                        this.setInactive()
+                    }
                 }
 
             }
@@ -152,7 +157,6 @@ export default class SearchSuggestion {
         });
 
         this.elements['search'].on('click', (e) => {
-            $(e.target).focus();
             let value = e.target.value.trim();
             if (this.checkValue(value)) {
                 if(this.suggestionsCreated){
@@ -165,8 +169,8 @@ export default class SearchSuggestion {
 
         this.elements['clear'].on('click', (e) => {
             this.elements['search'].val('');
-            this.hide();
             this.elements['clear'].removeClass('active');
+            this.hide();
         });
 
     }

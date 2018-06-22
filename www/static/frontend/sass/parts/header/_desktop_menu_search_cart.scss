@@ -151,149 +151,163 @@ $search_input_large_height: rem-calc(36);
       font-size: 1rem;
       //display:block;
 
-      .suggestions {
-        //margin: -5px 0 0;
-        margin: 0;
-        padding: 0;
+      .found {
         border: 1px solid $dark_blue;
         border-top: 0;
-        background-color: white;
 
-        @include breakpoint(large) {
-          padding: 0 0 .5rem;
-        }
-
-        .suggestionsTitle {
-          display: none;
-
-          @include breakpoint(large) {
-            display: block;
-            line-height: rem-calc(22);
-            height: rem-calc(22);
-            text-align: right;
-            font-size: rem-calc(12);
-            color: #616161;
-            padding: rem-calc(3) rem-calc(12);
-          }
-        }
-
-        ul {
+        .suggestions {
+          //margin: -5px 0 0;
           margin: 0;
           padding: 0;
+          background-color: white;
+          border-top: 1px solid $dark_blue;
 
-          li {
-            margin: 0;
-            list-style-type: none;
-            line-height: rem-calc(37);
-            height: rem-calc(37);
-            padding: 0 rem-calc(10);
-            cursor: pointer;
-            border-top: 1px solid #e6e6e6;
-            position: relative;
+          @include breakpoint(large) {
+            border-top: 1px solid #dcdcdc;
+          }
+
+          &:first-child {
+            border-top: 0;
+          }
+
+          @include breakpoint(large) {
+            padding: 0 0 .5rem;
+          }
+
+          .suggestionsTitle {
             display: none;
 
             @include breakpoint(large) {
-              padding: 0 1rem;
-              line-height: rem-calc(26);
-              height: rem-calc(26);
-              border: 0;
-            }
-
-            &:first-child {
-              border: 0;
-            }
-
-            &:hover {
-              background-color: #edf0f2;
-            }
-
-            &:after {
-              content: url("../images/icons/search/switch.svg");
               display: block;
-              width: rem-calc(12);
-              height: rem-calc(12);
-              position: absolute;
-              right: rem-calc(11);
-              top: 0;
+              line-height: rem-calc(22);
+              height: rem-calc(22);
+              text-align: right;
+              font-size: rem-calc(12);
+              color: #616161;
+              padding: rem-calc(3) rem-calc(12);
+            }
+          }
+
+          ul {
+            margin: 0;
+            padding: 0;
+
+            li {
+              margin: 0;
+              list-style-type: none;
+              line-height: rem-calc(37);
+              height: rem-calc(37);
+              padding: 0 rem-calc(10);
+              cursor: pointer;
+              border-top: 1px solid #e6e6e6;
+              position: relative;
 
               @include breakpoint(large) {
+                padding: 0 1rem;
+                line-height: rem-calc(26);
+                height: rem-calc(26);
+                border: 0;
+              }
+
+              &:first-child {
+                border: 0;
+              }
+
+              &:hover {
+                background-color: #edf0f2;
+              }
+
+              &:after {
+                content: url("../images/icons/search/switch.svg");
+                display: block;
+                width: rem-calc(12);
+                height: rem-calc(12);
+                position: absolute;
+                right: rem-calc(11);
+                top: 0;
+
+                @include breakpoint(large) {
+                  display: none;
+                }
+              }
+            }
+
+          }
+
+          &.product {
+
+            ul {
+              li {
+                height: auto;
                 display: none;
-              }
-            }
-          }
 
-          @for $i from 0 through 3 {
-            .item#{$i} { display: block; }
-          }
+                a {
+                  display: flex;
+                  justify-content: left;
+                  align-items: center;
+                  padding: .5rem 0;
+                  color: black;
 
-        }
+                  &:hover {
+                    text-decoration: none;
+                  }
 
-        &.product {
-
-          ul {
-            li {
-              height: auto;
-              display: none;
-
-              a {
-                display: flex;
-                justify-content: left;
-                align-items: center;
-                padding: .5rem 0;
-                color: black;
-
-                &:hover {
-                  text-decoration: none;
+                  .icon {
+                    display: block;
+                    width: rem-calc(70);
+                    min-height: rem-calc(70);
+                    background-size: cover;
+                    background-position: center center;
+                  }
+                  .label {
+                    display: block;
+                    padding-left: 1rem;
+                    line-height: 1.2;
+                  }
                 }
 
-                .icon {
-                  display: block;
-                  width: rem-calc(70);
-                  min-height: rem-calc(70);
-                  background-size: cover;
-                  background-position: center center;
-                }
-                .label {
-                  display: block;
-                  padding-left: 1rem;
+                &:after {
+                  display: none;
                 }
               }
-            }
 
-            @for $i from 0 through 2 {
-              .item#{$i} { display: block; }
-            }
-
-            @include breakpoint(large){
-              @for $i from 0 through 4 {
+              @for $i from 0 through 2 {
                 .item#{$i} { display: block; }
               }
+
+              @include breakpoint(large){
+                @for $i from 3 through 4 {
+                  .item#{$i} { display: block; }
+                }
+              }
             }
+
           }
 
-        }
+          &.category {
+            display: none;
 
-        &.category {
-          display: none;
+            @include breakpoint(large){
+              display: block;
+            }
 
-          @include breakpoint(large){
-            display: block;
-          }
+            ul {
+              li {
 
-          ul {
-            li {
+                a {
+                  color: black;
 
-              a {
-                color: black;
-
-                &:hover {
-                  text-decoration: none;
+                  &:hover {
+                    text-decoration: none;
+                  }
                 }
               }
             }
           }
         }
       }
+
+
 
     }
   }

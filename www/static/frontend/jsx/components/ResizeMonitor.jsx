@@ -36,7 +36,6 @@ export default class ResizeMonitor {
 
     fireEvent(state) {
         // component.sly.resize
-        console.log(state);
         let event = new CustomEvent('resize_monitor.media_change', { 'detail': state });
         document.dispatchEvent(event);
     }

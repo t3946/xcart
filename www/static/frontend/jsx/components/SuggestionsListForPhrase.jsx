@@ -6,7 +6,6 @@ export default class SuggestionsListForPhrase extends Component {
 
 
     constructor(props) {
-        // console.log('SuggestionsListForPhrase', props);
         super(props);
         this.props = props;
         this.initState(props);

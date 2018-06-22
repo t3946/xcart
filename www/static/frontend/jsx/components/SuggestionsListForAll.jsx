@@ -11,7 +11,6 @@ export default class SuggestionsListForAll extends Component {
 
     renderPhrase(props) {
         if (props.suggestions.phrase_suggestions && props.suggestions.phrase_suggestions.length > 0) {
-            console.log('renderPhrase');
             return <SuggestionsListForPhrase suggestions={props.suggestions.phrase_suggestions} search={props.search}
                                              title="Search suggestions" parent={props.parent}/>
         }
@@ -19,7 +18,6 @@ export default class SuggestionsListForAll extends Component {
 
     renderCategory(props) {
         if (props.suggestions.category_suggestions && props.suggestions.category_suggestions.length > 0) {
-            console.log('renderCategory');
             return <SuggestionsListForCategory suggestions={props.suggestions.category_suggestions} search={props.search}
                                                title="Categories" parent={props.parent}/>
         }
@@ -27,7 +25,6 @@ export default class SuggestionsListForAll extends Component {
 
     renderProduct(props) {
         if (props.suggestions.product_suggestions && props.suggestions.product_suggestions.length > 0) {
-            console.log('renderProduct');
             return <SuggestionsListForProduct suggestions={props.suggestions.product_suggestions} search={props.search}
                                               title="Products" parent={props.parent}/>
         }

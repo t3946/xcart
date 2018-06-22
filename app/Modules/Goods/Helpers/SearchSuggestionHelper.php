@@ -144,11 +144,7 @@ JSON;
             [
                 'link' => '/',
                 'name' => 'sdfsdfsf'
-            ],
-            [
-                'link' => '/',
-                'name' => 'sdfsdfsf'
-            ],
+            ]
         ]]);
     }
 
