@@ -626,13 +626,15 @@ class ProductModel extends Model implements ICartItem
             && (float)$distributor->price_coef_z !== (float) 0
             && (($cost_to_us = $this->getProductCostToUs()) > 0)) {
 
-            $fExpectedMargin = round((
-                $cost_to_us
-                * (float)$distributor->price_coef_x
-                + (float)$distributor->price_coef_y)
-                / (float)$distributor->price_coef_z, 2);
-
-            $fExpectedMargin = $cost_to_us * 1.25;
+            if ($distributor->max_extra_margin > (float) 0) {
+                $fExpectedMargin = $cost_to_us * $distributor->max_extra_margin;
+            } else {
+                $fExpectedMargin = round((
+                        $cost_to_us
+                        * (float)$distributor->price_coef_x
+                        + (float)$distributor->price_coef_y)
+                    / (float)$distributor->price_coef_z, 2);
+            }
 
             $fExtraMarginValue = ($this->getPrice($forQuantity) - $fExpectedMargin) * $forQuantity;
 
