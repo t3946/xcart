@@ -1,5 +1,8 @@
 $view_all_height: rem-calc(22);
 $default_height: rem-calc(50);
+$search_small_height: rem-calc(44);
+$search_large_height: rem-calc(50);
+$search_input_large_height: rem-calc(36);
 
 .category-menu-list-wrapper {
   position: absolute;
@@ -25,12 +28,13 @@ $default_height: rem-calc(50);
 
 .desktop_menu_search_cart {
   width: 100%; //foundation sticky
-  height: rem-calc(50);
-  line-height: rem-calc(50);
   position: relative;
+  height: 0;
 
   @include breakpoint(large up) {
     background: $dark_blue;
+    padding: 0;
+    height: $search_large_height;
   }
 
   .search-form-container {
@@ -47,14 +51,28 @@ $default_height: rem-calc(50);
 
     .search {
       width: 100%;
-      height: rem-calc(34);
-      font-size: rem-calc(12);
+      display: block;
+      height: $search_small_height;
+      line-height: $search_small_height;
       border: 2px solid #8a8a8a;
       padding: 0 2.6%;
+      color: $dark_blue;
+      margin-top: rem-calc(5);
+
+      &:focus {
+        border: 2px solid $dark_blue;
+      }
 
       @include breakpoint(large up) {
         font-size: rem-calc(14);
-        border:none;
+        border: 1px solid $dark_blue;
+        height: $search_input_large_height;
+        line-height: $search_input_large_height;
+        margin: rem-calc(8) 0 0;
+
+        &:focus {
+          border: 1px solid $dark_blue;
+        }
       }
 
       &::placeholder {
@@ -64,39 +82,46 @@ $default_height: rem-calc(50);
       }
     }
 
-    .button-search{
+    .suggestion-active {
+      .search {
+        border: 2px solid $dark_blue;
+
+        @include breakpoint(large) {
+          border: 1px solid $dark_blue;
+        }
+      }
+    }
+
+    .button-search {
       border: none;
       display: inline-block;
-      //background: url("../images/home/1280/magnifier_hover.svg") no-repeat;
       background: url("/static/frontend/images/icons/header/magnifier.svg") no-repeat;
-      width: 23px;
-      height: 23px;
+      width: rem-calc(23);
+      height: rem-calc(23);
       position: absolute;
-      top: 14px;
-      bottom: 6px;
-      right: 10px;
+      top: rem-calc(7);
+      right: rem-calc(10);
       cursor: pointer;
 
-      &:hover{
+      &:hover {
         opacity: .9;
       }
     }
 
     .button-clear {
       display: none;
-      width: 17px;
-      height: 17px;
-      top: 17px;
-      bottom: 6px;
+      width: rem-calc(17);
+      height: rem-calc(17);
+      top: rem-calc(14);
       position: absolute;
       opacity: .6;
       background: url("/static/frontend/images/icons/header/remove_hover.svg") no-repeat;
 
-      right: 17px;
+      right: rem-calc(8);
 
       @include breakpoint(large up) {
-
-        right: 56px;
+        right: rem-calc(56);
+        top: rem-calc(10);
       }
 
       &.active {
@@ -108,18 +133,192 @@ $default_height: rem-calc(50);
       }
 
       @include breakpoint(large up) {
-        &:after{
+        &:after {
           content: "";
           display: inline-block;
           background: $b9_grey;
           width: 1px;
-          height: 30px;
+          height: rem-calc(30);
           position: relative;
-          left: 30px;
+          left: rem-calc(30);
           bottom: 7px;
           opacity: 1;
         }
       }
+    }
+
+    .suggestion-container {
+      font-size: 1rem;
+      //display:block;
+
+      .found {
+        border: 1px solid $dark_blue;
+        border-top: 0;
+
+        .suggestions {
+          //margin: -5px 0 0;
+          margin: 0;
+          padding: 0;
+          background-color: white;
+          border-top: 1px solid $dark_blue;
+
+          @include breakpoint(large) {
+            border-top: 1px solid #dcdcdc;
+          }
+
+          &:first-child {
+            border-top: 0;
+          }
+
+          @include breakpoint(large) {
+            padding: 0 0 .5rem;
+          }
+
+          .suggestionsTitle {
+            display: none;
+            cursor: default;
+
+            @include breakpoint(large) {
+              display: block;
+              line-height: rem-calc(22);
+              height: rem-calc(22);
+              text-align: right;
+              font-size: rem-calc(12);
+              color: #616161;
+              padding: rem-calc(3) rem-calc(12);
+            }
+          }
+
+          ul {
+            margin: 0;
+            padding: 0;
+
+            li {
+              margin: 0;
+              list-style-type: none;
+              line-height: rem-calc(37);
+              height: rem-calc(37);
+              padding: 0 rem-calc(10);
+              cursor: pointer;
+              border-top: 1px solid #e6e6e6;
+              position: relative;
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+
+              @include breakpoint(large) {
+                padding: 0 1rem;
+                line-height: rem-calc(26);
+                height: rem-calc(26);
+                border: 0;
+              }
+
+              &:first-child {
+                border: 0;
+              }
+
+              &:hover {
+                background-color: #edf0f2;
+              }
+
+              &:after {
+                content: url("../images/icons/search/switch.svg");
+                display: block;
+                width: rem-calc(12);
+                height: rem-calc(12);
+                position: absolute;
+                right: rem-calc(11);
+                top: 0;
+
+                @include breakpoint(large) {
+                  display: none;
+                }
+              }
+            }
+
+          }
+
+          &.product {
+
+            ul {
+              li {
+                height: auto;
+                display: none;
+                white-space: normal;
+                text-overflow: clip;
+
+                a {
+                  display: flex;
+                  justify-content: left;
+                  align-items: center;
+                  padding: .5rem 0;
+                  color: black;
+
+                  &:hover {
+                    text-decoration: none;
+                  }
+
+                  .icon {
+                    display: block;
+                    width: rem-calc(70);
+                    min-height: rem-calc(70);
+                    background-size: cover;
+                    background-position: center center;
+                  }
+                  .label {
+                    display: block;
+                    padding-left: 1rem;
+                    line-height: 1.2;
+                  }
+                }
+
+                &:after {
+                  display: none;
+                }
+              }
+
+              @for $i from 0 through 2 {
+                .item#{$i} { display: block; }
+              }
+
+              @include breakpoint(large){
+                @for $i from 3 through 4 {
+                  .item#{$i} { display: block; }
+                }
+              }
+            }
+
+          }
+
+          &.category {
+            display: none;
+
+            @include breakpoint(large){
+              display: block;
+            }
+
+            ul {
+              li {
+
+                a {
+                  color: black;
+                  display: block;
+                  white-space: nowrap;
+                  overflow: hidden;
+                  text-overflow: ellipsis;
+
+                  &:hover {
+                    text-decoration: none;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+
+
+
     }
   }
 
@@ -129,6 +328,7 @@ $default_height: rem-calc(50);
     line-height: rem-calc(50);
     height: rem-calc(50);
     text-align: center;
+    cursor: pointer;
 
     @include active-triangle(6px, 6px, #fff, true, $dark_blue, is-active);
 
@@ -139,7 +339,6 @@ $default_height: rem-calc(50);
       margin-left: 5px;
       text-transform: uppercase;
     }
-
 
     &.is-active {
       background-color: #f5f5f5;
@@ -155,9 +354,6 @@ $default_height: rem-calc(50);
         color: $dark_blue;
       }
     }
-
-
-
 
   }
 
@@ -241,7 +437,6 @@ $default_height: rem-calc(50);
       height: $view_all_height;
       text-align: center;
 
-
       &:before {
         content: '';
         display: inline-block;
@@ -252,7 +447,6 @@ $default_height: rem-calc(50);
         background: url("/static/frontend/images/icons/header/view_all_departments.svg") no-repeat;
       }
     }
-
 
   }
 
@@ -362,7 +556,8 @@ $default_height: rem-calc(50);
     height: $default_height;
     background: {
       color: #ffb400;
-    };
+    }
+  ;
 
     .cart_info {
       //@include active-triangle(5px, 5px);
@@ -380,25 +575,29 @@ $default_height: rem-calc(50);
       .count {
         position: relative;
         display: inline-block;
-        width: 44px;
+        width: rem-calc(44);
         //height: $default_height;
-        height: 30px;
+        height: rem-calc(30);
+        line-height: $default_height;
         vertical-align: middle;
 
         background: {
           image: url('/static/frontend/images/icons/header/cart.svg');
           repeat: no-repeat;
           position: center center;
-        };
+        }
+      ;
 
         .mc_count {
           position: absolute;
           top: -1em;
           text-align: center;
-          left: 0; right: 5px;
+          left: 0;
+          right: rem-calc(5);
           font: {
             size: rem-calc(19);
-          };
+          }
+        ;
 
           &.small {
             font-size: rem-calc(14);
@@ -409,6 +608,7 @@ $default_height: rem-calc(50);
 
       .text {
         height: $default_height;
+        line-height: $default_height;
         text-transform: uppercase;
         //vertical-align: middle;
         display: inline-block;
@@ -418,9 +618,9 @@ $default_height: rem-calc(50);
   }
 }
 
-.menu-fixed{
-   position: fixed;
-   top: 0;
-   z-index: 1499;
+.menu-fixed {
+  position: fixed;
+  top: 0;
+  z-index: 1499;
 }
 

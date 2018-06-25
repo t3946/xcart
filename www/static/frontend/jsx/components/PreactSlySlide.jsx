@@ -29,7 +29,7 @@ export default class PreactSlySlide extends Component
         }
 
 
-        document.addEventListener('component.sly.resize', _.throttle(this.onResize.bind(this)));
+        document.addEventListener('resize_monitor.media_change', _.throttle(this.onResize.bind(this)));
     }
 
     componentWillReceiveProps(props, prev)
@@ -40,7 +40,7 @@ export default class PreactSlySlide extends Component
     }
 
     componentWillUnmount() {
-        document.removeEventListener('component.sly.resize', this.onResize)
+        document.removeEventListener('resize_monitor.media_change', this.onResize)
     }
 
     onResize() {
