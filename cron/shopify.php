@@ -9,7 +9,7 @@ require __DIR__ . DIRECTORY_SEPARATOR . "../www/init.php";
 
 
 $file = file_get_contents('./xcart.txt');
-
+echo "{$file}\r\n";
 $file = explode(';', $file);
 echo count($file);
 $data = [];
