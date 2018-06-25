@@ -26,12 +26,10 @@ export default class MiniCart extends Component
     // componentDidMount() {
     //     this.product_list.appendChild(render(this.renderProducts()));
     //
-    //     console.log(this.product_list);
     //     this.simplebar = new SimpleBar(this.product_list, { autoHide: false });
     // }
     //
     // componentDidUpdate(props, state) {
-    //     console.log(props, state);
     // }
 
     handleRemove(e, key, item)

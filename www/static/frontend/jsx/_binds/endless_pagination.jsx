@@ -41,7 +41,7 @@ window.endless_paginate = ()=>{
                     $this.find('.text').html(text_default);
                     $this.removeAttr('disabled');
 
-                    window.addFlashMessage('An error has occurred. Please try again later.', 'error');
+                    //window.addFlashMessage('An error has occurred. Please try again later.', 'error');
                 }
             });
         // );

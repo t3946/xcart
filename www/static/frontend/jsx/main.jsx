@@ -5,12 +5,13 @@ import '_head';
 
 import foundationRegisterCustomEvents from "./_binds/foundation_events";
 
+import ResizeMonitor from "./components/ResizeMonitor";
 import DepartmentMenu from "./components/DepartmentMenu";
 import DottedText from "./components/DottedText";
 import CategoryViewType from "./components/CategoryViewType";
 import LazyImageLoad from "./components/LazyImageLoad";
 import CatalogFilter from "./components/CatalogFilter";
-import SearchSuggestion from "./components/SearchSuggestion";
+import Search from "./components/Search";
 import isTouch from "./utils/isTouch";
 import isMedia from "./utils/isMedia";
 import documentReady from "./utils/documentReady";
@@ -20,7 +21,8 @@ import documentReady from "./utils/documentReady";
 
 (function(){
     documentReady(()=>{
-        new SearchSuggestion();
+        new ResizeMonitor();
+        new Search();
         //new LazyImageLoad();
         new CategoryViewType();
         new DepartmentMenu();

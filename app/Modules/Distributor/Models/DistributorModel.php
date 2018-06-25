@@ -95,7 +95,7 @@ class DistributorModel extends Model
 
     public function getMinimalAmount(): float
     {
-        if ($this->d_minimum_order_amount && $this->d_minimum_order_amount_in_us) {
+        if ($this->d_minimum_order_amount === 'applies_to_all_orders' && $this->d_for_orders_below_min_order_amount === 'are_rejected' && $this->d_minimum_order_amount_in_us) {
             return (float)$this->d_minimum_order_amount_in_us;
         }
 

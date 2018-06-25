@@ -60,7 +60,6 @@ const cont = new class PhotoSwipeContainer
                     pIndex = cIndex -1;
                 }
 
-                // console.log(d, cIndex, pIndex);
                 let prevItem = pswp.items[pIndex];
 
                 if (prevItem.onBlur) {
