@@ -41,7 +41,7 @@ foreach ($file as $id) {
         }
     }
     $items_count++;
-    $data[] = $row;
+    $data[$model->productcode] = $row;
 }
 
 echo "\r\n{$items_count}\r\n";
