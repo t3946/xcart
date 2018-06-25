@@ -188,7 +188,7 @@ class ShippingHelper
         $qty = $amazon_avail = 0;
         $ups_qty = 1;
 
-        if ($model) {
+        if ($model && !$model->shipping_calc_disabled && $model->distributor->reduce_extra_margin) {
 
                 if($model->amazon_fba === 'Y') {
                     if ($amazon_avail = max($model->getAmazonFBAAvailExcludedProcessing(), count($model->getProductsAvailOnAmazonParentWithChild($qty)))) {

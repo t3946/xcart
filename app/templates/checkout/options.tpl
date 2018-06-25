@@ -104,6 +104,7 @@
                             </div>
 
                         {else}
+                            {add $phone_order_only = true}
                             <div class="row">
                                 <div class="columns small-12">
                                     <div class="no-quotes">
@@ -147,18 +148,20 @@
                     {if $payment_methods}
                         <div class="payment-methods radio-list-table">
                             {foreach $payment_methods as $method first=$first}
-                                <div class="table-row {cycle ["odd", ""]}">
-                                    <div class="table-cell payment-method">
-                                        <input {if ($first) || ($method->paymentid == $order->paymentid)}checked{/if}
-                                               id="payment_{$method->paymentid}" type="radio" name="payment_method" value="{$method->paymentid}"/>
-                                        <label for="payment_{$method->paymentid}">
-                                            <span class="name">{$method->payment_method}</span>
-                                        </label>
+                                {if !$phone_order_only || ($phone_order_only && $method->payment_method === 'Phone Ordering')}
+                                    <div class="table-row {cycle ["odd", ""]}">
+                                        <div class="table-cell payment-method">
+                                            <input {if $first || $phone_order_only || ($method->paymentid == $order->paymentid)}checked{/if}
+                                                   id="payment_{$method->paymentid}" type="radio" name="payment_method" value="{$method->paymentid}"/>
+                                            <label for="payment_{$method->paymentid}">
+                                                <span class="name">{$method->payment_method}</span>
+                                            </label>
+                                        </div>
+                                        <div class="table-cell payment-description">
+                                            <span class="details">{$method->payment_details}</span>
+                                        </div>
                                     </div>
-                                    <div class="table-cell payment-description">
-                                        <span class="details">{$method->payment_details}</span>
-                                    </div>
-                                </div>
+                                {/if}
                             {/foreach}
                         </div>
                     {/if}

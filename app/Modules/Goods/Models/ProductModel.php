@@ -326,6 +326,10 @@ class ProductModel extends Model implements ICartItem
                 'null' => false,
                 'default' => false,
             ],
+            'shipping_calc_disabled' => [
+                'class' => BooleanField::class,
+                'null' => false,
+            ],
             'r_avail' => [
                 'class' => IntField::class,
                 'null' => false,
@@ -618,7 +622,7 @@ class ProductModel extends Model implements ICartItem
     {
         $fExtraMarginValue = null;
         if (($distributor = $this->distributor)
-            && $distributor->reduce_extra_margin === 'Y'
+            && $distributor->reduce_extra_margin
             && (float)$distributor->price_coef_z !== (float) 0
             && (($cost_to_us = $this->getProductCostToUs()) > 0)) {
 
