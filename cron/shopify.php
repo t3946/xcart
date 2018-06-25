@@ -25,7 +25,12 @@ foreach ($file as $id) {
     if ($model->brand->brand) {
         $row['brand'] = $model->brand->getProductFrontendName();
     }
-    $row['price'] = $model->getFrontendPrice();
+    if (!$model->isGroupRoot()) {
+        $row['price'] = $model->getFrontendPrice();
+    } else {
+        $row['minPrice'] = $model->getFrontendPrice();
+        $row['maxPrice'] = $model->getFrontendPrice(2);
+    }
     $row['descr'] = $model->getFrontendDescription();
     $row['stock'] = $model->r_avail;
 
