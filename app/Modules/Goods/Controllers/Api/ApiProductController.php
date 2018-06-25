@@ -52,12 +52,14 @@ class ApiProductController extends Controller
         /** @var ProductModel $model */
         if ($model = ProductModel::objects()->get(['productid' => (int)$id])) {
             if (($geo_ip = GeoipHelper::getGeoipLocation($ip = '142.234.102.224'/* = Xcart::app()->request->getUserIP()*/))
-                && ($state_model = $geo_ip->state_model)) {
+                && ($state_model = $geo_ip->state_model)
+                && ShippingHelper::isUSAContiguous($state_model))
+            {
                 if ($free_ship_q = ShippingHelper::getQtyForFreeShipping($model, $state_model, $geo_ip->postalCode)) {
                     $result['shipping']['free_shipping'] = $this->render('product/messages/_p_label.tpl',
                         [
                             'cls' => 'fill free-shipping',
-                            'text' => "Buy {$free_ship_q} items for Free Shipping"
+                            'text' => "Buy {$free_ship_q} item".($free_ship_q > 1 ? 's' : '') .' for Free Shipping'
                         ]
                     );
                 }
