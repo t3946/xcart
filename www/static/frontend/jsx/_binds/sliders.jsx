@@ -8,6 +8,13 @@ import ajax from "../utils/ajax";
 
     let fncSlyAttach = (slide) => {
         window.addEventListener('resize', () => $(slide).sly('reload'));
+
+        let slideContainer = $( '<div />' ).addClass('slide-container');
+        let buttonLeft = $( '<div />' ).addClass('nav-button b-left');
+        let buttonRight = $( '<div />' ).addClass('nav-button b-right');
+
+        $(slide).wrap( slideContainer );
+        $(slide).after(buttonLeft, buttonRight);
         slide.closest('.slider-block').classList.remove('hide');
 
         $(slide).sly({
@@ -24,7 +31,9 @@ import ajax from "../utils/ajax";
             scrollBy: 0,
             scrollTrap: true,
             // pagesBar: $wrap.find('.pages'),
-            activatePageOn: 'click'
+            activatePageOn: 'click',
+            forward: buttonRight,
+            backward: buttonLeft,
         }).sly('on','load move', function(){window.LazyLoad.update();}).css('overflow', 'hidden');
 
         window.LazyLoad.update();
