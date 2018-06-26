@@ -1,0 +1,91 @@
+.page.pages .error-data-404 {
+  text-align: center;
+
+  h1 {
+    font-size: rem-calc(94);
+    color: #ffd200;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+
+    @include breakpoint(sm) {
+      font-size: rem-calc(114);
+    }
+
+    @include breakpoint(medium) {
+      font-size: rem-calc(137);
+    }
+
+    @include breakpoint(large) {
+      width:446px;
+      float:left;
+    }
+  }
+
+  .text {
+    text-align: left;
+
+    @include breakpoint(sm) {
+      font-size: rem-calc(18);
+      width: 350px;
+      margin: 0 auto;
+    }
+
+    @include breakpoint(medium) {
+      width: 430px;
+      margin: 0 auto;
+      font-size: rem-calc(20);
+    }
+
+    a {
+      color: black;
+      text-decoration: underline;
+    }
+  }
+
+  .picture404 {
+    width: 100%;
+
+    &:after {
+      display: block;
+      content: '';
+      position: relative;
+      top: 0;
+      left: -81%;
+      padding-left: 213.333%;
+      padding-top: 92%;
+
+      background: {
+        image: url("../images/404/banner_404-min.jpg");
+        size: cover;
+        repeat: no-repeat;
+      }
+
+      @include breakpoint(sm) {
+        padding-top: 322px;
+        left: -284px;
+        margin-top: 24px;
+
+        background: {
+          size: auto 100%;
+          position: 23%;
+        }
+      }
+
+      @include breakpoint(medium) {
+        padding-left: 100%;
+        padding-top: 302px;
+        position: relative;
+        left:0;
+        margin-top: 60px;
+
+        background: {
+          size: auto 100%;
+          position: center;
+        }
+      }
+
+    }
+
+  }
+}
