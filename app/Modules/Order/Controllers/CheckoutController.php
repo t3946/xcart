@@ -560,6 +560,10 @@ class CheckoutController extends FrontendController
             'url' => 'checkout:payment',
             'step' => 4,
         ],
+        OrderStatusModel::ORDER_STATUS_FAILED => [
+            'url' => 'checkout:payment',
+            'step' => 3,
+        ],
     ];
 
     private static function isStepValid(string $order_status, string $current_step): bool
