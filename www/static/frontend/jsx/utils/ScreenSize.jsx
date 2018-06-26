@@ -8,7 +8,7 @@ export default class ScreenSize {
         this.width = window.innerWidth;
         this.height = window.innerHeight;
         this.ratio = window.devicePixelRatio;
-        this.cssWidth = Math.round(this.width / this.ratio);
+        this.cssWidth = this.width;
         this.media = getMediaJs(this.cssWidth);
         window.addEventListener('resize', this.onResize, {passive: true});
     }
@@ -34,7 +34,7 @@ export default class ScreenSize {
         this.width = window.innerWidth;
         this.height = window.innerHeight;
         this.ratio = window.devicePixelRatio;
-        this.cssWidth = Math.round(this.width / this.ratio);
+        this.cssWidth = this.width;
         this.media = getMediaJs(this.cssWidth);
         this.executeCallback();
     };
