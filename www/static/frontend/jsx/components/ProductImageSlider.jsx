@@ -5,6 +5,8 @@ import {videoLinkToObject} from "../utils/video";
 import PhotoSwipe from "./PhotoSwipeContainer";
 import _ from 'lodash';
 import PreactSlySlide from "./PreactSlySlide";
+import { actionMedia } from '../redusers/appHeadReduser';
+import ScreenSize from "../utils/ScreenSize";
 //import ScreenSize from "../utils/ScreenSize";
 
 export default class ProductImageSlider extends Component {
@@ -25,6 +27,13 @@ export default class ProductImageSlider extends Component {
         document.addEventListener('resize_monitor.media_change', this.onResize);
 
         let globalState = storeApp.getState();
+        let media = globalState.frontend.media;
+        if(media == ''){
+            let screen = new ScreenSize();
+            state = screen.getInfo();
+            actionMedia(state.media);
+            media = state.media;
+        }
         let state = {
             height: 400,
             loading: true,
@@ -33,10 +42,10 @@ export default class ProductImageSlider extends Component {
             wait: len,
             isVideo: false,
             index: 0,
-            media: globalState.frontend.media
+            media: media
         };
 
-        this.state = _.extend(state, this.createNewState(state, {media: globalState.frontend.media}));
+        this.state = _.extend(state, this.createNewState(state, {media: media}));
         this.prepareItems(this.state.items);
     }
 

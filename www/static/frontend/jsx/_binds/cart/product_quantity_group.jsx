@@ -29,7 +29,7 @@ import _ from 'lodash';
     };
 
     let recheckActives = (e, params = getValues(e))=>{
-        console.log('recheck', e);
+        //console.log('recheck', e);
         params.$container.find('.btn').removeClass('active');
 
         if (params.val < params.max) {

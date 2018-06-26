@@ -10,8 +10,6 @@ export default function cssFileLoaded(filename, callback)
         let font = document.font;
 
         let execute = () => {
-            //console.log(css);
-            //console.log(font);
             if(css && font){
 
                 document.removeEventListener('cssLoad', checkCss);

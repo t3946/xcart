@@ -63,7 +63,7 @@ import LazyLoad from "vanilla-lazyload";
     });
 
     window.d = (...arg) => {
-        console.log(...arg);
+        //console.log(...arg);
     };
 
     window.surfMetaRegister = () => {
