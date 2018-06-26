@@ -32,8 +32,8 @@ import ajax from "../utils/ajax";
             scrollTrap: true,
             // pagesBar: $wrap.find('.pages'),
             activatePageOn: 'click',
-            forward: buttonRight,
-            backward: buttonLeft,
+            nextPage: buttonRight,
+            prevPage: buttonLeft,
         }).sly('on','load move', function(){window.LazyLoad.update();}).css('overflow', 'hidden');
 
         window.LazyLoad.update();
