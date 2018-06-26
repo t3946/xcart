@@ -51,7 +51,7 @@ class ApiProductController extends Controller
 
         /** @var ProductModel $model */
         if ($model = ProductModel::objects()->get(['productid' => (int)$id])) {
-            if (($geo_ip = GeoipHelper::getGeoipLocation($ip = '142.234.102.224'/* = Xcart::app()->request->getUserIP()*/))
+            if (($geo_ip = GeoipHelper::getGeoipLocation($ip = Xcart::app()->request->getUserIP()))
                 && ($state_model = $geo_ip->state_model)
                 && ShippingHelper::isUSAContiguous($state_model))
             {
@@ -63,7 +63,6 @@ class ApiProductController extends Controller
                         ]
                     );
                 }
-
             }
         }
 

@@ -188,7 +188,7 @@ class ShippingHelper
         $qty = $amazon_avail = 0;
         $ups_qty = 1;
 
-        if ($model && !$model->shipping_calc_disabled && $model->distributor->reduce_extra_margin) {
+        if ($model && !$model->shipping_calc_disabled && ($distributor = $model->distributor) && $distributor->reduce_extra_margin && $distributor->max_extra_margin > (float) 0) {
 
                 if($model->amazon_fba === 'Y') {
                     if ($amazon_avail = max($model->getAmazonFBAAvailExcludedProcessing(), count($model->getProductsAvailOnAmazonParentWithChild($qty)))) {
@@ -205,12 +205,12 @@ class ShippingHelper
                 }
 
                 $i = 0;
-                do{
+                do {
                     if ($rate = self::getStateMinShipping($model, ++$ups_qty, $state_model, $zip)) {
                         if (($ship_model = $rate->shipping) && $ship_model->is_free_shipping) {
                             return $ups_qty;
                         }
-                        $ups_qty = ceil($rate->getShippingChargeBeforeMap() / ($model->getPrice($ups_qty) - ($model->cost_to_us * 1.25)));
+                        $ups_qty = ceil($rate->getShippingChargeBeforeMap() / ($model->getPrice($ups_qty) - ($model->cost_to_us * $distributor->max_extra_margin)));
                         if ($ups_qty > $model->r_avail) {
                             break;
                         }
