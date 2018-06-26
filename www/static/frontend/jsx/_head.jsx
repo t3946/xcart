@@ -7,7 +7,8 @@ import 'jquery-form';
 //import 'mmodal';
 
 import 'swiper';
-import WebFont from 'webfontloader';
+//import WebFont from 'webfontloader';
+import FontFaceObserver from 'fontfaceobserver';
 import Waves from 'Waves';
 import whatInput from 'what-input';
 import noUiSlider from 'noUiSlider';
@@ -53,7 +54,7 @@ import LazyLoad from "vanilla-lazyload";
     window['loader'] = new Loader;
     window['whatInput'] = whatInput;
     window['Waves'] = Waves;
-    window['WebFont'] = WebFont;
+    window['FontFaceObserver'] = FontFaceObserver;
     window['noUiSlider'] = noUiSlider;
     window['sendAnalytics'] = new sendAnalytics;
     window['LazyLoad'] = new LazyLoad({

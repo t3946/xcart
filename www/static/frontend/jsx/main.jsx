@@ -16,6 +16,7 @@ import isTouch from "./utils/isTouch";
 import isMedia from "./utils/isMedia";
 import documentReady from "./utils/documentReady";
 
+
 // require('preact/devtools');
 // require('preact/debug');
 
@@ -97,27 +98,46 @@ import documentReady from "./utils/documentReady";
             foundationRegisterCustomEvents();
         });
 
-        setTimeout(()=>{
-            WebFont.load({
-                google: {
-                    families: ['Lato:300i,400,700']
-                }
-            });
+        // setTimeout(()=>{
+        //     WebFont.load({
+        //         google: {
+        //             families: ['Lato:300i,400,700']
+        //         }
+        //     });
+        //
+        //     $(document).trigger('component.cart.check');
+        //     $(document).trigger('app.start');
+        //
+        //     window.surfMetaRegister();
+        //
+        //     setTimeout(()=>{
+        //         WebFont.load({
+        //             google: {
+        //                 families: ['Lato:300,300i,400,400i,700,700i,800,900']
+        //             }
+        //         });
+        //     }, 2000);
+        //
+        // }, 100);
 
-            $(document).trigger('component.cart.check');
-            $(document).trigger('app.start');
+        // var font = new FontFaceObserver('Lato', {
+        //     weight: 100
+        // });
+        var font = new FontFaceObserver('Lato');
 
-            window.surfMetaRegister();
+        window.surfMetaRegister();
+        $(document).trigger('app.start');
 
-            setTimeout(()=>{
-                WebFont.load({
-                    google: {
-                        families: ['Lato:300,300i,400,400i,700,700i,800,900']
-                    }
-                });
-            }, 2000);
+        font.load().then(function () {
+            let event = new CustomEvent('font.loaded', { detail: true });
+            document.font = true;
+            document.dispatchEvent(event);
+        }, function () {
+            let event = new CustomEvent('font.loaded', { detail: false });
+            document.dispatchEvent(event);
+        });
 
-        }, 100);
+
 
     })
 })();
