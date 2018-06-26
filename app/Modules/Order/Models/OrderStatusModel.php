@@ -20,6 +20,7 @@ class OrderStatusModel extends Model
     public const ORDER_STATUS_QUEUED = 'Q';
     public const ORDER_STATUS_UNPAID = 'N';
     public const ORDER_STATUS_NOT_FINISHED = 'I';
+    public const ORDER_STATUS_FAILED = 'F';
 
     public const ORDER_DC_STATUS_NOT_SHIPPED = 'T';
 

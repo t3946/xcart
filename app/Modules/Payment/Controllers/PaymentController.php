@@ -118,7 +118,7 @@ class PaymentController extends Controller
         $order = OrderHelper::getCartOrder();
 
         if ($order) {
-            $order->cb_status = OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP3;
+            $order->cb_status = OrderStatusModel::ORDER_STATUS_FAILED;
             $order->save();
 
             $order->groups->update(['cb_status' => $order->cb_status]);
