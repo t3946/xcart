@@ -1,50 +1,77 @@
 .page.pages .error-data-404 {
   text-align: center;
 
-  h1 {
-    font-size: rem-calc(94);
-    color: #ffd200;
-    margin: 0;
-    padding: 0;
-    text-align: center;
-
-    @include breakpoint(sm) {
-      font-size: rem-calc(114);
-    }
-
-    @include breakpoint(medium) {
-      font-size: rem-calc(137);
-    }
-
-    @include breakpoint(large) {
-      width:446px;
-      float:left;
-    }
+  @include breakpoint(large) {
+    display: flex;
+    align-items: center;
+    width: 1024px;
+    margin: 60px auto 0;
   }
 
-  .text {
-    text-align: left;
+  .info {
 
-    @include breakpoint(sm) {
-      font-size: rem-calc(18);
-      width: 350px;
-      margin: 0 auto;
+    @include breakpoint(large) {
+      width: 404px;
+      position:relative;
+      z-index: 1;
+      margin-top: -60px;
     }
 
-    @include breakpoint(medium) {
-      width: 430px;
-      margin: 0 auto;
-      font-size: rem-calc(20);
+    h1 {
+      font-size: rem-calc(94);
+      color: #ffd200;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+
+      @include breakpoint(sm) {
+        font-size: rem-calc(114);
+      }
+
+      @include breakpoint(medium) {
+        font-size: rem-calc(137);
+      }
+
+      @include breakpoint(large) {
+        //width: 404px;
+        font-size: 121px;
+      }
     }
 
-    a {
-      color: black;
-      text-decoration: underline;
+    .text {
+      text-align: left;
+
+      @include breakpoint(sm) {
+        font-size: rem-calc(18);
+        width: 350px;
+        margin: 0 auto;
+      }
+
+      @include breakpoint(medium) {
+        width: 430px;
+        margin: 0 auto;
+        font-size: rem-calc(20);
+      }
+
+      @include breakpoint(large) {
+        width: 378px;
+        font-size: 1rem;
+      }
+
+      a {
+        color: black;
+        text-decoration: underline;
+      }
     }
   }
 
   .picture404 {
     width: 100%;
+
+    @include breakpoint(large) {
+      position:relative;
+      z-index:0;
+    }
 
     &:after {
       display: block;
@@ -76,13 +103,20 @@
         padding-left: 100%;
         padding-top: 302px;
         position: relative;
-        left:0;
-        margin-top: 60px;
+        left: 0;
+        margin-top: 52px;
 
         background: {
           size: auto 100%;
           position: center;
         }
+      }
+
+      @include breakpoint(large) {
+        margin-top: 0;
+        padding-left: 949px;
+        padding-top: 399px;
+        left: -255px;
       }
 
     }
