@@ -266,6 +266,7 @@ class ErrorHandler
      */
     public function displayError($code, $message, $file, $line)
     {
+        var_dump(11);
         if (defined('APP_DEBUG') && APP_DEBUG) {
             if (Cli::isCli()) {
                 echo "PHP Error [$code]" . PHP_EOL;
@@ -555,6 +556,8 @@ class ErrorHandler
         ];
 
         if ($this->useTemplate) {
+
+
             $output = $this->renderTemplate($view . '.tpl', $data);
         }
         else {

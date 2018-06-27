@@ -8,8 +8,6 @@ import autoComplete from 'bower_components/javascript-auto-complete/auto-complet
             let selectorPrefix = containerSelector ? containerSelector + ' .auto-complete' : '.auto-complete';
             let elExists = document.querySelector(selectorPrefix);
 
-            //console.log(selectorPrefix);
-            //console.log(elExists);
             if (elExists) {
 
                 let inputCountry = document.querySelector(selectorPrefix + '.country');
