@@ -4,17 +4,17 @@
   @include breakpoint(large) {
     display: flex;
     align-items: center;
-    width: 1024px;
-    margin: 60px auto 0;
+    width: rem-calc(1024);
+    margin: rem-calc(60) auto 0;
   }
 
   .info {
 
     @include breakpoint(large) {
-      width: 404px;
+      width: rem-calc(404);
       position:relative;
       z-index: 1;
-      margin-top: -60px;
+      margin-top: rem-calc(-60);
     }
 
     h1 {
@@ -34,7 +34,7 @@
 
       @include breakpoint(large) {
         //width: 404px;
-        font-size: 121px;
+        font-size: rem-calc(121);
       }
     }
 
@@ -43,18 +43,18 @@
 
       @include breakpoint(sm) {
         font-size: rem-calc(18);
-        width: 350px;
+        width: rem-calc(350);
         margin: 0 auto;
       }
 
       @include breakpoint(medium) {
-        width: 430px;
+        width: rem-calc(430);
         margin: 0 auto;
         font-size: rem-calc(20);
       }
 
       @include breakpoint(large) {
-        width: 378px;
+        width: rem-calc(378);
         font-size: 1rem;
       }
 
@@ -89,9 +89,9 @@
       }
 
       @include breakpoint(sm) {
-        padding-top: 322px;
-        left: -284px;
-        margin-top: 24px;
+        padding-top: rem-calc(322);
+        left: rem-calc(-284);
+        margin-top: rem-calc(24);
 
         background: {
           size: auto 100%;
@@ -101,10 +101,10 @@
 
       @include breakpoint(medium) {
         padding-left: 100%;
-        padding-top: 302px;
+        padding-top: rem-calc(302);
         position: relative;
         left: 0;
-        margin-top: 52px;
+        margin-top: rem-calc(52);
 
         background: {
           size: auto 100%;
@@ -114,9 +114,9 @@
 
       @include breakpoint(large) {
         margin-top: 0;
-        padding-left: 949px;
-        padding-top: 399px;
-        left: -255px;
+        padding-left: rem-calc(949);
+        padding-top: rem-calc(399);
+        left: rem-calc(-255);
       }
 
     }
