@@ -2,6 +2,7 @@
 namespace Xcart;
 
 use Modules\Distributor\Models\DistributorModel;
+use Modules\Shipping\Models\ShippingModel;
 use Modules\Shipping\Models\ShippingRateModel;
 use Modules\User\Models\UserModel;
 use Xcart\Shipping\ShippingProcessor;
@@ -191,14 +192,13 @@ SQL;
         if (!empty($aShippingZones)) {
             foreach ($aShippingZones as $aShippingZone) {
                 $aShippingProcessor = null;
-                $aShippingsMethods = $this->getZoneShippingMethodsByZone($oManufacturer, $aShippingZone['zoneid']);
-                if (!empty($aShippingsMethods)) {
+                if ($aShippingsMethods = $this->getZoneShippingMethodsByZone($oManufacturer, $aShippingZone['zoneid'])) {
                     foreach ($aShippingsMethods as $oShippingMethod) {
                         $sShippingCode = $oShippingMethod->code;
                         if (empty($sShippingCode)) {
                             $sShippingCode = 'Flat';
                         }
-                        if (empty($aShippingProcessor) || !in_array($sShippingCode, array_keys($aShippingProcessor))) {
+                        if (empty($aShippingProcessor) || !array_key_exists($sShippingCode, $aShippingProcessor)) {
                             $sProcessor = __NAMESPACE__ . '\\Shipping\\' . $sShippingCode;
                             if (class_exists($sProcessor)) {
                                 /** @var ShippingProcessor $oProcessor */
@@ -233,7 +233,7 @@ SQL;
      */
     public function getShippingRates($oCustomer, $oManufacturer, Cart $oCart, $bGetOnlyApproximationRates = false, $use_cache = true, $use_map_price = true, $use_approximation = true) :? array
     {
-        $aResult = null;
+        $min_rates = null;
         $aShippingZoneRatesPriority = [];
         $iMinProcessorPriority = 0;
 
@@ -248,15 +248,14 @@ SQL;
             $aShippingZones = $this->getShippingZonesProcessors($oCustomer, $oManufacturer, $oCart);
             if (!empty($aShippingZones)) {
                 foreach ($aShippingZones as $aShippingZonesArr) {
-                    if (!empty($aShippingZonesArr)) {
+                    if ($aShippingZonesArr) {
                         /** @var ShippingProcessor $oShippingProcessor */
                         foreach ($aShippingZonesArr as $oShippingProcessor) {
                             $oShippingProcessor->setGetOnlyApproximationRates($bGetOnlyApproximationRates);
                             $oShippingProcessor->setUseApproximation($use_approximation);
                             $oShippingProcessor->setUseCache($use_cache);
                             $oShippingProcessor->setUseMapPrice($use_map_price);
-                            $aRates = $oShippingProcessor->getShippingRates();
-                            if (!empty($aRates)) {
+                            if ($aRates = $oShippingProcessor->getShippingRates()) {
                                 $aShippingZoneRatesPriority[$oShippingProcessor->getPriority()][] = $aRates;
                             }
                         }
@@ -292,9 +291,22 @@ SQL;
             }
         }
         if (!empty($aShippingZoneRatesPriority[$iMinProcessorPriority])) {
-            $aResult = $aShippingZoneRatesPriority[$iMinProcessorPriority];
+            $min_rates = $aShippingZoneRatesPriority[$iMinProcessorPriority];
         }
-        return $aResult;
+
+        /* Free Shipping Calculation */
+        if ($min_rates) {
+            foreach ($min_rates as $m_rate => $rates) {
+                foreach ($rates as $key_r => $rate) {
+                    if ($rate->getShippingCharge() === (float) 0) {
+                        $min_rates = [];
+                        $rate->shippingid = ShippingModel::objects()->get(['is_free_shipping' => 1])->shippingid;
+                        $min_rates[] = [$rate];
+                    }
+                }
+            }
+        }
+        return $min_rates;
     }
 
     /**
@@ -302,7 +314,7 @@ SQL;
      */
     public function getShippingCarrier()
     {
-        if (is_null($this->oShippingCarrier)) {
+        if ($this->oShippingCarrier === null) {
             $sCode = $this->getField('code');
             if (empty($sCode)) {
                 $sCode = 'Flat';

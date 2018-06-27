@@ -936,11 +936,21 @@ onchange="javasript:{literal} if (this.value !=''){$('#tr_d_map_prices').show();
 <tr>
         <td nowrap="nowrap" class="FormButton">Reduce extra margin from shipping cost</td>
         <td>&nbsp;</td>
-        <td><select name="reduce_extra_margin">
+        <td>
+            <select name="reduce_extra_margin">
                 <option value="N">N</option>
                 <option value="Y" {if $manufacturer.reduce_extra_margin == 'Y'} selected="selected"{/if}>Y</option>
-            </select></td>
+            </select>
+        </td>
  </tr>
+    <tr>
+        <td nowrap="nowrap" class="FormButton">Max extra margin for Free shipping</td>
+        <td>&nbsp;</td>
+        <td>
+            <input type="text" size="9" name="max_extra_margin" value="{$manufacturer.max_extra_margin}" />
+        </td>
+    </tr>
+
 </table>
 
 

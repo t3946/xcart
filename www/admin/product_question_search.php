@@ -6,6 +6,10 @@ require $xcart_dir."/include/security.php";
 
 x_session_register("search_data", []);
 
+if (!is_array($search_data)) {
+    $search_data = [];
+}
+
 $location[] = array("Product question search", "");
 
 if ($REQUEST_METHOD=="POST") {

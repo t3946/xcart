@@ -34,7 +34,7 @@ import  "./_binds/catalog_actionblock_sort";
 import  "./_binds/productSlider";
 import  "./_binds/sliders";
 
-//import  "./_binds/pages/product";
+import  "./_binds/pages/product";
 import  "./_binds/pages/categories";
 import  "./_binds/pages/cart";
 
