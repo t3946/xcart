@@ -254,8 +254,8 @@ class CheckoutController extends FrontendController
                         if (($shipping_rates = $ship_module::getShipping($g, $order, $cart_group)) && $shipping_rates[$rate->rateid]) {
                             $charge = $shipping_rates[$rate->rateid]->getShippingCharge();
                             $group->setAttributes([
-                                'shippingid' => $rate->shippingid,
-                                'shipping' => $rate->shipping->getFrontendName(),
+                                'shippingid' => $shipping_rates[$rate->rateid]->shippingid,
+                                'shipping' => $shipping_rates[$rate->rateid]->shipping->getFrontendName(),
                             ]);
                         }
                     }

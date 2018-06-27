@@ -90,7 +90,7 @@ abstract class ShippingProcessor
             if ($this->isProcessorApplicable()) {
                 $this->getShippingQuotesCached();
                 $this->getShippingQuotes();
-                if (!empty($this->aShippingRates) && $this->useApproximation) {
+                if ($this->aShippingRates && $this->useApproximation) {
                     foreach ($this->aShippingRates as $oShippingRate) {
                         $oShippingRate->setCart($this->getCart());
                         $oShippingRate->setUseMapPRice($this->useMapPrice);
@@ -362,7 +362,7 @@ abstract class ShippingProcessor
         $qs->join('inner join', 'xcart_shipping_cache_products', ['shipping_cache_id' => "xs2.shipping_cache_id"], 'xs2');
         $qs->group(['shipping_cache_id']);
 
-        $qs->having(new Expression('cnt_found = cnt_total AND cnt_total = ' . count($oCart->getElements())));
+        $qs->having(new Expression('cnt_found = cnt_total AND cnt_total = ' . \count($oCart->getElements())));
 
         /** @var ShippingCacheModel $cache_model */
         if ($cache_model = $qs->limit(1)->get()) {
@@ -380,7 +380,7 @@ abstract class ShippingProcessor
             if (!empty($this->aShippingRates) && !$this->bGetOnlyApproximationRates) {
                 $aShippingRates = $this->getShippingRatesEntities();
                 if (!empty($aShippingRates)) {
-                    if (count($this->aShippingRates) != count($aShippingRates)) {
+                    if (\count($this->aShippingRates) !== \count($aShippingRates)) {
                         $this->aShippingRates = null;
                     } else {
                         $aR1 = $aR2 = [];

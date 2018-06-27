@@ -3,6 +3,7 @@ namespace Modules\Shipping;
 
 use Modules\Distributor\Models\DistributorModel;
 use Modules\Goods\GoodsModule;
+use Modules\Goods\Models\ProductModel;
 use Modules\Order\Models\OrderModel;
 use Modules\User\Models\UserModel;
 use Xcart\App\Main\Xcart;
@@ -35,7 +36,13 @@ class ShippingModule extends Module
 
         $cart = new Cart();
         foreach ($group['items'] as $key=>$position) {
+            /** @var ProductModel $_product */
             $_product = $position->object;
+
+            if ($_product->shipping_calc_disabled) {
+                return $result;
+            }
+
             $_product->setPrice($position->getPrice()); //calculate regarding cart product price
             $cart->addObjectToCart(new \Xcart\CartElement($_product, $position->quantity));
         }

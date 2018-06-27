@@ -1,13 +1,17 @@
 <?php
+
+use Modules\Goods\Controllers\Api\ApiAnalyticController;
+use Modules\Goods\Controllers\Api\ApiProductController;
+
 return [
     [
         'route' => 'products/getallmpn/',
-        'target' => ['\Modules\Goods\Controllers\Api\ApiProductController', 'getDistributorProductList'],
+        'target' => [ApiProductController::class, 'getDistributorProductList'],
         'name' => 'getmpn'
     ],
     [
         'route' => 'analytics',
-        'target' => ['\Modules\Goods\Controllers\Api\ApiAnalyticController', 'index'],
+        'target' => [ApiAnalyticController::class, 'index'],
         'name' => 'analytic'
     ],
 ];

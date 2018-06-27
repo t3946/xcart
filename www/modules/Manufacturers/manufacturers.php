@@ -426,6 +426,7 @@ if ($REQUEST_METHOD == "POST" || ($mode == "delete_image" && $manufacturerid)) {
 				"code" => trim($code),
 				"descr" => $descr,
 				"reduce_extra_margin" => $reduce_extra_margin,
+				"max_extra_margin" => $max_extra_margin,
 				"calculate_shipping" => $calculate_shipping
 			);
 			$query_data_lng = array(

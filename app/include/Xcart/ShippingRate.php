@@ -103,9 +103,9 @@ class ShippingRate extends Data
 
             //$this->fShippingCharge += $this->fAdditionalShippingCharge;
             $this->fShippingCharge += $this->getCartShippingFreight();
-            if ($this->useMapPrice && $oCart->getExtraMarginValue() > 0) {
+            if ($this->useMapPrice && ($extra_margin = $oCart->getExtraMarginValue()) > 0) {
                 $this->fShippingChargeBeforeMAP = $this->fShippingCharge;
-                $this->fShippingCharge -= $oCart->getExtraMarginValue();
+                $this->fShippingCharge -= $extra_margin;
                 $this->fShippingCharge = max($this->fShippingCharge, 0);
             }
 
@@ -217,8 +217,8 @@ class ShippingRate extends Data
                 $oShipping = $oMinPriorityShippingRate->getShippingEntity();
                 $oShippingThis = $this->getShippingEntity();
                 $aResults [
-                    abs(floatval($oShipping->days_min) - floatval($oShippingThis->days_min))
-                    + abs(floatval($oShipping->days_max) - floatval($oShippingThis->days_max))
+                    abs((float)$oShipping->days_min - (float)$oShippingThis->days_min)
+                    + abs((float)$oShipping->days_max - (float)$oShippingThis->days_max)
                 ] = $key;
             }
             ksort($aResults);

@@ -75,9 +75,9 @@ class ShippingHelper
         $ip = Xcart::app()->request->getUserIP();
         if (($geo_ip = GeoipHelper::getGeoipLocation($ip))
             && ($state_model = $geo_ip->state_model)
-            && ($product->distributor->calculate_shipping == 'Y'
+            && ($product->distributor->calculate_shipping === 'Y'
                 || (
-                    ($product->amazon_fba == 'Y' && $product->getAmazonFBAAvailExcludedProcessing() >= $qty)
+                    ($product->amazon_fba === 'Y' && $product->getAmazonFBAAvailExcludedProcessing() >= $qty)
                     || count($product->getProductsAvailOnAmazonParentWithChild($qty))
                 )
             )
@@ -89,26 +89,28 @@ class ShippingHelper
     }
 
     /**
-     * @param integer $product_id
+     * @param ProductModel $product_model
      * @param integer $qty
      * @param StateModel $stateModel
      * @param float $weight_ratio
+     * @param bool $use_cache
      * @return ShippingRate|null
+     * @throws \Exception
      */
-    public static function getStateMinShipping($product_id, $qty, $stateModel, $weight_ratio = null, $use_cache = true)
+    public static function getStateMinShipping(ProductModel $product_model, $qty, $stateModel, $zip = null, $weight_ratio = null, $use_cache = true)
     {
         $result = null;
 
-        if ($product_model = ProductModel::objects()->get(['productid' => $product_id])) {
+        if ($product_model) {
 
             $userModel = new UserModel([
                 's_country' => $stateModel->country_code,
                 's_state' => $stateModel->code,
-                's_zipcode' => $stateModel->base_state_zipcode,
+                's_zipcode' => $zip ?? $stateModel->base_state_zipcode,
                 's_city' => 'New City'
             ]);
 
-            $result = ShippingHelper::getMinShippingRate($userModel, $product_model->distributor, [['model' => $product_model, 'qty' => intval($qty)]], $weight_ratio, $use_cache);
+            $result = ShippingHelper::getMinShippingRate($userModel, $product_model->distributor, [['model' => $product_model, 'qty' => (int) $qty]], $weight_ratio, $use_cache);
         }
 
         return $result;
@@ -179,5 +181,43 @@ class ShippingHelper
             $shipping_rate = $shipping_rates;
         }
         return $shipping_rate;
+    }
+
+    public static function getQtyForFreeShipping(ProductModel $model, $state_model, $zip): int
+    {
+        $qty = $amazon_avail = 0;
+        $ups_qty = 1;
+
+        if ($model && !$model->shipping_calc_disabled && ($distributor = $model->distributor) && $distributor->reduce_extra_margin && $distributor->max_extra_margin > (float) 0) {
+
+                if($model->amazon_fba === 'Y') {
+                    if ($amazon_avail = max($model->getAmazonFBAAvailExcludedProcessing(), count($model->getProductsAvailOnAmazonParentWithChild($qty)))) {
+                        if ($rate = self::getStateMinShipping($model, $amazon_avail, $state_model, $zip)) {
+                            if (($ship_model = $rate->shipping) && $ship_model->is_free_shipping) {
+                                return $amazon_avail;
+                            }
+                        }
+                    }
+                }
+
+                if ($amazon_avail) {
+                    $ups_qty = $amazon_avail;
+                }
+
+                $i = 0;
+                do {
+                    if ($rate = self::getStateMinShipping($model, ++$ups_qty, $state_model, $zip)) {
+                        if (($ship_model = $rate->shipping) && $ship_model->is_free_shipping) {
+                            return $ups_qty;
+                        }
+                        $ups_qty = ceil($rate->getShippingChargeBeforeMap() / ($model->getPrice($ups_qty) - ($model->cost_to_us * $distributor->max_extra_margin)));
+                        if ($ups_qty > $model->r_avail) {
+                            break;
+                        }
+                    }
+                } while($i++ < 10);
+        }
+
+        return $qty;
     }
 }
