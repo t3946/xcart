@@ -2,8 +2,11 @@
 
 namespace Modules\Goods\Controllers\Api;
 
+use Modules\GeoIp\Helpers\GeoIpHelper;
 use Modules\Goods\Models\ProductModel;
+use Modules\Shipping\Helpers\ShippingHelper;
 use Xcart\App\Controller\Controller;
+use Xcart\App\Main\Xcart;
 
 class ApiProductController extends Controller
 {
@@ -13,7 +16,7 @@ class ApiProductController extends Controller
     public function getDistributorProductList(): void
     {
         $encrypt = base64_decode($_GET['a']);
-        $ad =      base64_decode($_GET['b']);
+        $ad = base64_decode($_GET['b']);
 
         $nonce = base64_decode(self::PUBLIC_KEY);
         $key = base64_decode(self::PRIVATE_KEY);
@@ -25,7 +28,7 @@ class ApiProductController extends Controller
         $qs = ProductModel::objects()->getQuerySet();
         $filter = [];
 
-        foreach ($decrypt as $parameter){
+        foreach ($decrypt as $parameter) {
             $parameter = explode("=", $parameter);
             $filter[$parameter[0]] = $parameter[1];
         }
@@ -35,11 +38,37 @@ class ApiProductController extends Controller
 
         $mass_of_all_mpn = [];
 
-        foreach ($product_models as $product_model){
+        foreach ($product_models as $product_model) {
             $mass_of_all_mpn[] = $product_model->getMPN();
         }
 
         $this->jsonResponse($mass_of_all_mpn);
     }
+
+    public function getProductInfo($id): void
+    {
+        $result = [];
+
+        /** @var ProductModel $model */
+        if ($model = ProductModel::objects()->get(['productid' => (int)$id])) {
+            if (($geo_ip = GeoipHelper::getGeoipLocation($ip = Xcart::app()->request->getUserIP()))
+                && ($state_model = $geo_ip->state_model)
+                && ShippingHelper::isUSAContiguous($state_model))
+            {
+                if ($free_ship_q = ShippingHelper::getQtyForFreeShipping($model, $state_model, $geo_ip->postalCode)) {
+                    $result['shipping']['free_shipping'] = $this->render('product/messages/_p_label.tpl',
+                        [
+                            'cls' => 'fill free-shipping',
+                            'text' => "Buy {$free_ship_q} item".($free_ship_q > 1 ? 's' : '') .' for Free Shipping'
+                        ]
+                    );
+                }
+            }
+        }
+
+
+        $this->jsonResponse($result);
+    }
+
 
 }

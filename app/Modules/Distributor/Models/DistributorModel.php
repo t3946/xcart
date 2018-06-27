@@ -8,6 +8,8 @@ use Modules\Main\Helpers\WorkingTimeHelper;
 use Modules\Shipping\Models\ShippingRateModel;
 use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
+use Xcart\App\Orm\Fields\BooleanCharField;
+use Xcart\App\Orm\Fields\FloatField;
 use Xcart\App\Orm\Fields\HasManyField;
 use Xcart\App\Orm\Model;
 use Xcart\App\Traits\DataModelTrait;
@@ -47,6 +49,12 @@ class DistributorModel extends Model
                 'class' => HasManyField::className(),
                 'modelClass' => ShippingRateModel::className(),
                 'link' => ['manufacturerid' => 'manufacturerid']
+            ],
+            'reduce_extra_margin' => [
+                'class' => BooleanCharField::class,
+            ],
+            'max_extra_margin' => [
+                'class' => FloatField::class,
             ],
         ];
     }
@@ -91,7 +99,7 @@ class DistributorModel extends Model
 
     public function getMinimalAmount(): float
     {
-        if ($this->d_minimum_order_amount && $this->d_minimum_order_amount_in_us) {
+        if ($this->d_minimum_order_amount === 'applies_to_all_orders' && $this->d_for_orders_below_min_order_amount === 'are_rejected' && $this->d_minimum_order_amount_in_us) {
             return (float)$this->d_minimum_order_amount_in_us;
         }
 

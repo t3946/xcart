@@ -16,7 +16,6 @@ export default class ProductImageSlider extends Component {
         this.maxButtonValue = props.min + props.step * (this.props.number - 1);
         this.maxButtonValue = (props.max >= this.maxButtonValue) ? this.maxButtonValue : props.max;
 
-        //console.log(props.quantity);
         this.initState(props.quantity || props.min);
     }
 

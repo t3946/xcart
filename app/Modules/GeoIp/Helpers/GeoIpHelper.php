@@ -34,7 +34,7 @@ class GeoIpHelper
                         'country' => $result->country->isoCode,
                         'region' => $result->mostSpecificSubdivision->isoCode,
                         'city' => $result->city->name,
-                        'postalCode' => $result->postal->code,
+                        'postalCode' => $result->postal->code ?? null,
                     ]
                 );
                 self::$geoIp = $model;

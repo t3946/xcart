@@ -190,7 +190,7 @@ where OG.cb_status IN ('H','V','3','R','P','AP')
 #
 $last_order = func_query_first('SELECT orderid, order_prefix, cb_status, dc_status, bd_status,'
     . ' total, title, firstname, lastname, date'
-    . " FROM $sql_tbl[orders] ORDER BY date DESC LIMIT 1");
+    . " FROM $sql_tbl[orders] WHERE cb_status NOT IN ('S1','S2','S3','S4') ORDER BY date DESC LIMIT 1");
 
 if (!empty($last_order)) {
 	# Get products ordered in the last order

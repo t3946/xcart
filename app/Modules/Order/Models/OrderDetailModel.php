@@ -13,6 +13,9 @@ use Xcart\App\Orm\Fields\SerializeField;
 use Xcart\App\Traits\DataModelTrait;
 use Xcart\OrderDetail;
 
+/**
+ * @property int order_group_id
+ */
 class OrderDetailModel  extends Model
 {
     use DataModelTrait, AutoMetaTrait;
@@ -61,11 +64,11 @@ class OrderDetailModel  extends Model
                 'default' => '',
             ],
 
-            'order_groups' => [
-                'field' => 'orderid',
+            'order_group' => [
+                'field' => 'order_group_id',
                 'class' => ForeignField::className(),
                 'modelClass' => OrderGroupModel::className(),
-                'link' => ['orderid' => 'orderid'],
+                'link' => ['order_group_id' => 'order_group_id'],
                 'null' => false,
             ]
         ];

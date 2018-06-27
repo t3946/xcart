@@ -7,7 +7,8 @@ import 'jquery-form';
 //import 'mmodal';
 
 import 'swiper';
-import WebFont from 'webfontloader';
+//import WebFont from 'webfontloader';
+import FontFaceObserver from 'fontfaceobserver';
 import Waves from 'Waves';
 import whatInput from 'what-input';
 import noUiSlider from 'noUiSlider';
@@ -33,7 +34,7 @@ import  "./_binds/catalog_actionblock_sort";
 import  "./_binds/productSlider";
 import  "./_binds/sliders";
 
-//import  "./_binds/pages/product";
+import  "./_binds/pages/product";
 import  "./_binds/pages/categories";
 import  "./_binds/pages/cart";
 
@@ -53,7 +54,7 @@ import LazyLoad from "vanilla-lazyload";
     window['loader'] = new Loader;
     window['whatInput'] = whatInput;
     window['Waves'] = Waves;
-    window['WebFont'] = WebFont;
+    window['FontFaceObserver'] = FontFaceObserver;
     window['noUiSlider'] = noUiSlider;
     window['sendAnalytics'] = new sendAnalytics;
     window['LazyLoad'] = new LazyLoad({
@@ -62,7 +63,7 @@ import LazyLoad from "vanilla-lazyload";
     });
 
     window.d = (...arg) => {
-        console.log(...arg);
+        //console.log(...arg);
     };
 
     window.surfMetaRegister = () => {

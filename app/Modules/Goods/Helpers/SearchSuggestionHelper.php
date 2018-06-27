@@ -2,6 +2,8 @@
 namespace Modules\Goods\Helpers;
 
 use Modules\Core\Components\GlobalConfig;
+use Modules\Goods\Models\CategoryModel;
+use Modules\Goods\Models\ProductModel;
 use Modules\Sites\Models\SiteModel;
 use Xcart\App\Main\Xcart;
 use Xcart\ElasticSearch;
@@ -11,7 +13,7 @@ class SearchSuggestionHelper
     private $elastic;
     private $search;
 
-    public function __construct($search, $indexes=null) {
+    public function __construct($search, $indexes=null, $type = 'product') {
         /** @var \Modules\Core\CoreModule $coreModule */
         $coreModule = Xcart::app()->getModule('Core');
         $config = $coreModule::getGlobalConfig();
@@ -22,7 +24,7 @@ class SearchSuggestionHelper
         $this->elastic = new ElasticSearch($config["ElasticSearch_options"], $indexes ?: $this->getSearchIndex());
         $this->elastic->setSource("*._id");
         $this->elastic->setMinScore($config_min_scope);
-        $this->elastic->setType('product');
+        $this->elastic->setType($type);
         $this->elastic->setQueryParams($search);
         GlobalConfig::getInstance()->setOldMode(false);
     }
@@ -92,7 +94,7 @@ class SearchSuggestionHelper
 }
 JSON;
         $this->elastic->setQueryParam(json_decode($query));
-        $result = $this->elastic->query(['size' => 5, 'from' => 0]);
+        $result = $this->elastic->query(['size' => $count, 'from' => 0, 'q' => $this->search]);
 
 
         $suggests = [];
@@ -109,10 +111,58 @@ JSON;
             }
         }
 
-        return $suggests;
+        if (isset($result['hits']['hits']) && $result['hits']['hits'] && is_array($result['hits']['hits'])) {
+            foreach($result['hits']['hits'] as $hit) {
+                $ids[] = $hit['_id'];
+            }
+            /** @var ProductModel[] $products */
+            if ($ids && $products = ProductModel::objects()->filter(['productid__in' => $ids])->all()) {
+                foreach($products as $product) {
+                    if (!$product->isGroupRoot()) {
+                        $thumb = $product->thumbnail->limit(1)->get();
+                    } else {
+                        $thumb = ($child = $product->childs->limit(1)->get()) ? $child->thumbnail->limit(1)->get() : null;
+                    }
+
+                    $p_suggestions[] = [
+                        'id' => $product->productid,
+                        'link' => $product->getAbsoluteUrl(),
+                        'name' => $product->getFrontendName(),
+                        'image' => $thumb ? (string) $thumb : null
+                    ];
+                }
+            }
+        }
+
+        return array_merge($suggests, ['product_suggestions' => $p_suggestions]);
+    }
+    public function elastic_category_suggestion($count = 5, array $html = [])
+    {
+        $this->elastic->setType('category');
+        $result = $this->elastic->query(['size' => $count, 'from' => 0, 'q' => $this->search]);
+
+        $suggests = [];
+
+        if (isset($result['hits']['hits']) && $result['hits']['hits'] && is_array($result['hits']['hits'])) {
+            foreach($result['hits']['hits'] as $hit) {
+                $ids[] = $hit['_id'];
+            }
+            /** @var ProductModel[] $products */
+            if ($ids && $categories = CategoryModel::objects()->filter(['categoryid__in' => $ids])->all()) {
+                foreach($categories as $category) {
+                    $suggests[] = [
+                        'id' => $category->categoryid,
+                        'link' => $category->getAbsoluteUrl(),
+                        'name' => $category->getFrontendName(),
+                    ];
+                }
+            }
+        }
+
+        return ['category_suggestions' => $suggests];
     }
 
-    public function suggestion_phrase($count = 5)
+    public function suggestion_phrase($count = 5, $self_include = false)
     {
         $suggests = [];
 
@@ -127,7 +177,7 @@ JSON;
 
         $query = "select LOWER(SUBSTRING_INDEX(SS.search_phrase,' ', :spaces)) As suggester
        from xcart_search_stats SS 
-       where SS.storefrontid = :sfid and SS.hits>0 and SS.search_phrase like ':name%'
+       where SS.storefrontid = :sfid and SS.hits>0 and SS.search_phrase like :name
        group By Suggester
        Order By COUNT(SS.id) desc
         Limit {$count}";
@@ -135,25 +185,27 @@ JSON;
         $query_result = Xcart::app()->db->getConnection()->fetchAll($query,[
             'spaces' => $spaces,
             'sfid' => $siteModule->getSite()->storefrontid,
-            'name' => $search_phrase_updated,
+            'name' => $search_phrase_updated.'%',
         ]);
 
         if (!empty($query_result)){
             foreach ($query_result as $k => $v){
+                if ($v["suggester"] === $search_phrase_updated) {
+                    if ($self_include) {
+                        $suggests[] = $v["suggester"];
+                    }
+                } else {
+                    $suggests[] = $v["suggester"];
+                }
 
-                $suggests[] = $v["suggester"];
             }
         }
 
         return $suggests;
     }
 
-    public function mixed_suggestion($count = 5)
+    public function mixed_suggestion($count = 5, $self_include = false)
     {
-        if ($result = $this->elastic_suggestion($count)) {
-            return $result;
-        }
-
-        return $this->suggestion_phrase($count);
+        return array_merge($this->elastic_suggestion($count), $this->elastic_category_suggestion(4), ['phrase_suggestions' => $this->suggestion_phrase($count, $self_include)]);
     }
 }

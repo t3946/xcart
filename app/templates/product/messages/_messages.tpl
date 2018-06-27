@@ -7,7 +7,7 @@
 {if !$model->isGroupRoot()}
     {if !$model->isOutOfStock()}
 
-        {if $model->isFreeShipping()|trim}
+        {if $model->isFreeShipping()}
             {include "product/messages/_p_label.tpl" cls=$class ~~ "free-shipping" text="Free Shipping"}
         {/if}
 

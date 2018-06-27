@@ -8,6 +8,9 @@
     <section class="page pages error-page">
         <div class="row w1280">
             <div class="columns small-12">
+                {if $data.code == 404}
+                    {include 'page404.tpl'}
+                {else}
                 <section class="error-data">
                     <section class="error-code">
                         {block 'error_code'}
@@ -18,13 +21,11 @@
                         <section class="multiline">
                             <section class="error-title">
                                 {block 'error_title'}
-                                    {if $data.code == 404}
-                                                Page not found
-                                    {elseif $data.message}
-                                        {$data.message}
-                                    {else}
+                                    {*{if $data.message}*}
+                                        {*{$data.message}*}
+                                    {*{else}*}
                                         Internal server error
-                                    {/if}
+                                    {*{/if}*}
                                 {/block}
                             </section>
                             <section class="error-description">
@@ -34,7 +35,9 @@
                             </section>
                         </section>
                     </section>
+
                 </section>
+                {/if}
             </div>
         </div>
 

@@ -9,6 +9,7 @@ use Modules\Payment\Models\PaymentMethodModel;
 use Modules\Shipping\Models\ShippingModel;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\AutoMetaTrait;
+use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\HasManyField;
@@ -20,6 +21,7 @@ use Xcart\OrderGroup;
 /**
  * @property float total_gross
  * @property int orderid
+ * @property int order_group_id
  */
 class OrderGroupModel extends Model
 {
@@ -38,6 +40,9 @@ class OrderGroupModel extends Model
     public static function getFields()
     {
         return [
+            'order_group_id' => [
+                'class' => AutoField::class,
+            ],
             'order' => [
                 'field' => 'orderid',
                 'class' => ForeignField::className(),

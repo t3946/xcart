@@ -225,6 +225,14 @@
                 var s = document.getElementsByTagName('script')[0];
                 s.parentNode.insertBefore(po, s);
             }, 10000);
+
+            setTimeout(function() {
+                var po = document.createElement('script');
+                po.type = 'text/javascript';
+                po.src = 'https://seal.godaddy.com/getSeal?sealID=RVzmFJZUlQZwVnp0XQOKJPtEwfIgrDGcXXE9L625dBokxJCuRu6qptcFSHmt';
+                var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+
+            },6000);
         });
 
     })();

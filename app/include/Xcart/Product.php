@@ -705,16 +705,25 @@ SQL;
         return (float)$this->getField('shipping_freight');
     }
 
+    /**
+     * @param int $forQuantity
+     * @return float|null
+     * @deprecated
+     */
     public function getExtraMarginValue($forQuantity = 1)
     {
         $fExtraMarginValue = null;
         $oManufacturer = $this->getManfacturerClass();
-            if ($oManufacturer->getField('reduce_extra_margin') == 'Y') {
-                if ((float)$oManufacturer->getField('price_coef_z') != 0 && $this->getProductCostToUs() > 0) {
-                    $fExpectedMargin = round(($this->getProductCostToUs() * (float)$oManufacturer->getField('price_coef_x') + (float)$oManufacturer->getField('price_coef_y')) / (float)$oManufacturer->getField('price_coef_z'), 2);
-                    $fExtraMarginValue = ($this->getPrice($forQuantity) - $fExpectedMargin) * $forQuantity;
-                }
+        if ($oManufacturer->getField('reduce_extra_margin') == 'Y') {
+            if ((float)$oManufacturer->getField('price_coef_z') != 0 && $this->getProductCostToUs() > 0) {
+                $fExpectedMargin = round((
+                        $this->getProductCostToUs()
+                        * (float)$oManufacturer->getField('price_coef_x')
+                        + (float)$oManufacturer->getField('price_coef_y'))
+                    / (float)$oManufacturer->getField('price_coef_z'), 2);
+                $fExtraMarginValue = ($this->getPrice($forQuantity) - $fExpectedMargin) * $forQuantity;
             }
+        }
         return $fExtraMarginValue;
     }
 

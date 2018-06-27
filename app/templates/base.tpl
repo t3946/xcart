@@ -6,6 +6,7 @@
         <div id="content-wrapper">
             {block "header"}
             <div id="top-header-content">
+
                 <div id="top-header-menu">
                     <header id="top-header" itemscope itemtype="http://schema.org/WPHeader">
                         <div class="top-header hide-for-small-only">
@@ -52,7 +53,8 @@
                                 </div>
 
                                 <div class="columns hide-for-large small-2 medium-1">
-                                    <a class="mobile__search-btn middle-inline-block" data-toggle="search_container"></a>
+                                    <a class="mobile__search-btn middle-inline-block" data-swich="search_container"></a>
+                                    {*data-swich="search_container"*}
                                 </div>
 
                                 <div class="columns hide-for-large small-2 medium-1">
@@ -68,7 +70,7 @@
                             </div>
                         </div>
                     </header>
-                    <div class="shadow"></div>
+
                     <div class="sticky-menu-container">
                         <div class="sticky def-zi2" style="width: 100%">
                             <div id="search_container" class="desktop_menu_search_cart show-for-large" data-toggler="show-for-large" >
@@ -98,6 +100,7 @@
                         </div>
                     </div>
                 </div>
+                <div class="shadow"></div>
             </div>
 
             {/block}

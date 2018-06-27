@@ -1479,16 +1479,16 @@ SQL;
                                             }
                                         }
 
-                                        $oOrderDetail = OrderDetail::model()->
-                                        setField('orderid', $oOrder->orderid)->
-                                        setField('productid', $oProduct->productid)->
-                                        setField('item_cost_to_us', $oProduct->getProductCostToUs())->
-                                        setField('price', $price)->
-                                        setField('amount', $iOrderQuantity)->
-                                        setField('productcode', $oProduct->getSKU())->
-                                        setField('AmazonOrderItemCode', addslashes($oOrderItem->getElementsByTagName('OrderItemId')->item(0)->nodeValue))->
-                                        setField('product', addslashes($oProduct->getProductName()));
-                                        $oOrderDetail->_insert();
+                                        $oOrderDetail = new OrderDetailModel([
+                                            'orderid' => $oOrder->orderid,
+                                            'productid' => $oProduct->productid,
+                                            'item_cost_to_us' => $oProduct->getProductCostToUs(),
+                                            'price' => $price,
+                                            'amount' => $iOrderQuantity,
+                                            'productcode' => $oProduct->getSKU(),
+                                            'AmazonOrderItemCode' => $oOrderItem->getElementsByTagName('OrderItemId')->item(0)->nodeValue,
+                                            'product' => $oProduct->getProductName()
+                                        ]);
 
                                         if (!in_array($oProduct->getManufacturerId(), $aManufacturerid_arr)) {
                                             $fShippingPrice = $fShippingDiscount = 0;
@@ -1504,10 +1504,7 @@ SQL;
 
 
                                             /** @var OrderGroupModel $oOrderGroup */
-                                            $oOrderGroup = OrderGroupModel::objects()->get(['orderid' => $oOrder->getOrderId(), 'manufacturerid' => $oProduct->getManufacturerId()]);
-                                            if (!$oOrderGroup) {
-                                                $oOrderGroup = new OrderGroupModel(['orderid' => $oOrder->getOrderId(), 'manufacturerid' => $oProduct->getManufacturerId()]);
-                                            }
+                                            [$oOrderGroup] = OrderGroupModel::objects()->getOrNew(['orderid' => $oOrder->getOrderId(), 'manufacturerid' => $oProduct->getManufacturerId()]);
                                             $sShipping = $aOrderInfo->getElementsByTagName('ShipmentServiceLevelCategory')->item(0)->nodeValue;
                                             $oOrderGroup->shippingid = ShippingModel::objects()->filter(['shipping' => 'AFN Delivery'])->limit(1)->get()->shippingid;
                                             $oOrderGroup->shipping = $sShipping;
@@ -1515,9 +1512,11 @@ SQL;
                                             $oOrderGroup->dc_status = ($sOrderStatus == 'Unshipped' ? 'T' : 'S');
                                             $oOrderGroup->acc_paymentid = PaymentMethodModel::objects()->get(['order_tag_preference' => $sFulfilmentChanel])->paymentid;
                                             $oOrderGroup->bd_status = 'W';
-                                            $oOrderGroup->shipping_gross = $oOrderGroup->getDataModel()->getShippingGross() + ($fShippingPrice - $fShippingDiscount);
+                                            $oOrderGroup->shipping_gross = $oOrderGroup->getShippingGross() + ($fShippingPrice - $fShippingDiscount);
                                             $oOrderGroup->save();
                                         }
+                                        $oOrderDetail->order_group_id = $oOrderGroup->order_group_id;
+                                        $oOrderDetail->save();
                                         $product_total += $oOrderDetail->getTotalProductPrice();
                                     }
                                 }

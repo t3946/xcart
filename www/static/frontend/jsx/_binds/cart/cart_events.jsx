@@ -119,6 +119,7 @@ import SelectNumberItems from "../../components/SelectNumberItems";
         })
         .on('click', '.minicart.enabled .cart_info', (e) => {
             e.preventDefault();
+            e.stopPropagation();
 
             if ($minicart.hasClass('active')) {
                 $minicart.removeClass('active');

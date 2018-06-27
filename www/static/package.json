@@ -48,6 +48,7 @@
     "webpack-sweet-entry": "^1.1.5"
   },
   "dependencies": {
+    "fontfaceobserver": "^2.0.13",
     "form-serialize": "^0.7.2",
     "html-to-react": "^1.2.11",
     "intersection-observer": "^0.4.0",

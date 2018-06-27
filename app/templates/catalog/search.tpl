@@ -19,12 +19,12 @@
                         <h2 class="subtitle">Showing results for "<span class="highlight">{$q}</span>"</h2>
                     {/if}
 
-                    {if $suggestion}
+                    {if $suggestion && $suggestion['phrase_suggestions'] }
                         Related searches:
-                        {foreach $suggestion as $suggest}
+                        {foreach $suggestion['phrase_suggestions'] as $suggest}
+                            {* не надо делать перенос строки перед закрытием тега - появляется лишний пробел *}
                             <a href="{$.app->router->url('catalog:search', [], ['q' => $suggest])}" class="related">
-                                {raw $suggest|text_highlight:$q:'span.bold.founded'}
-                            </a>
+                                {raw $suggest|text_highlight:$q:'span.bold.founded'}</a>
                         {/foreach}
                     {/if}
 
