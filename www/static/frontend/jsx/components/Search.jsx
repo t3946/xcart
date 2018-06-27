@@ -14,11 +14,14 @@ export default class Search {
     init(elements) {
 
         this.elements['button'] = $(elements);
-        this.elements['search'] = $('#' + this.elements['button'].data('swich'));
-        this.toggler = this.elements['search'].data('toggler');
-        this.initHasToggler = this.elements['search'].hasClass(this.toggler);
-        this.showInput = false;
-        this._bind();
+        if(this.elements['button'].length > 0) {
+            this.elements['search'] = $('#' + this.elements['button'].data('swich'));
+            this.toggler = this.elements['search'].data('toggler');
+            this.initHasToggler = this.elements['search'].hasClass(this.toggler);
+            this.showInput = false;
+            this._bind();
+        }
+
     }
 
     _bind() {

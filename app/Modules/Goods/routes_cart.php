@@ -1,44 +1,47 @@
 <?php
+
+use Modules\Goods\Controllers\CartController;
+
 return [
     /** PRODUCT CART */
     [
         'route' => '/add/product-{slug:key}',
-        'target' => ['\Modules\Goods\Controllers\CartController', 'actionAdd'],
+        'target' => [CartController::class, 'actionAdd'],
         'name' => 'add'
     ],
     [
         'route' => '/add/products',
-        'target' => ['\Modules\Goods\Controllers\CartController', 'actionProductsAdd'],
+        'target' => [CartController::class, 'actionProductsAdd'],
         'name' => 'products:add'
     ],
     [
         'route' => '/get/products',
-        'target' => ['\Modules\Goods\Controllers\CartController', 'actionProductsGet'],
+        'target' => [CartController::class, 'actionProductsGet'],
         'name' => 'products:get'
     ],
     [
         'route' => '/set/products',
-        'target' => ['\Modules\Goods\Controllers\CartController', 'actionProductsSet'],
+        'target' => [CartController::class, 'actionProductsSet'],
         'name' => 'products:set'
     ],
     [
         'route' => '/del/products',
-        'target' => ['\Modules\Goods\Controllers\CartController', 'actionProductsDel'],
+        'target' => [CartController::class, 'actionProductsDel'],
         'name' => 'products:del'
     ],
 
     [
         'route' => '',
-        'target' => ['\Modules\Goods\Controllers\CartController', 'actionList'],
+        'target' => [CartController::class, 'actionList'],
     ],
     [
         'route' => '/',
-        'target' => ['\Modules\Goods\Controllers\CartController', 'actionList'],
+        'target' => [CartController::class, 'actionList'],
         'name' => 'list'
     ],
     [
         'route' => '/delete/{a:key}',
-        'target' => ['\Modules\Goods\Controllers\CartController', 'actionDelete'],
+        'target' => [CartController::class, 'actionDelete'],
         'name' => 'delete'
     ],
 //    [
@@ -48,13 +51,13 @@ return [
 //    ],
     [
         'route' => '/quantity',
-        'target' => ['\Modules\Goods\Controllers\CartController', 'actionGetQuantity'],
+        'target' => [CartController::class, 'actionGetQuantity'],
         'methods' => ['GET'],
         'name' => 'quantity:get'
     ],
     [
         'route' => '/quantity',
-        'target' => ['\Modules\Goods\Controllers\CartController', 'actionSetPostQuantity'],
+        'target' => [CartController::class, 'actionSetPostQuantity'],
         'methods' => ['POST'],
         'name' => 'quantity:set:post'
     ],
@@ -65,22 +68,22 @@ return [
 //    ],
     [
         'route' => '/quantity/{a:key}-{i:quantity}',
-        'target' => ['\Modules\Goods\Controllers\CartController', 'actionQuantity'],
+        'target' => [CartController::class, 'actionQuantity'],
         'name' => 'quantity:set'
     ],
     [
         'route' => '/quantity/inc-{a:key}',
-        'target' => ['\Modules\Goods\Controllers\CartController', 'actionIncrease'],
+        'target' => [CartController::class, 'actionIncrease'],
         'name' => 'quantity:inc'
     ],
     [
         'route' => '/quantity/dec-{a:key}',
-        'target' => ['\Modules\Goods\Controllers\CartController', 'actionDecrease'],
+        'target' => [CartController::class, 'actionDecrease'],
         'name' => 'quantity:dec'
     ],
     [
         'route' => '/calculate_shipping',
-        'target' => ['\Modules\Goods\Controllers\CartController', 'actionCalculateShipping'],
+        'target' => [CartController::class, 'actionCalculateShipping'],
         'name' => 'calculate_shipping'
     ],
 ];

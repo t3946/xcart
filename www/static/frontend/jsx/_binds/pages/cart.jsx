@@ -53,7 +53,12 @@ import _ from 'lodash';
                     if (number_request === n_request && ( p_data.quantity != data.quantity || p_data.total != data.total))
                     {
                         $.get('/cart/?_=' + (new Date).getTime(), {})
-                            .done(data => {if (number_request === n_request) $(page_cart).html(data.content || data);});
+                            .done(data => {
+                                if (number_request === n_request) {
+                                    $(page_cart).html(data.content || data);
+                                    window.LazyLoad.update();
+                                }
+                            });
                     }
                 });
         }, 200);

@@ -17,10 +17,12 @@ export default class SearchSuggestion {
 
     init(elements) {
         this.elements['search'] = $(elements);
-        this.elements['parent'] = this.elements['search'].parent();
-        this.elements['clear'] = this.elements['parent'].find('.button-clear');
-        this.elements['container'] = $('<dev />').addClass('suggestion-container');
-        this._bind();
+        if(this.elements['search'].length > 0) {
+            this.elements['parent'] = this.elements['search'].parent();
+            this.elements['clear'] = this.elements['parent'].find('.button-clear');
+            this.elements['container'] = $('<dev />').addClass('suggestion-container');
+            this._bind();
+        }
     }
 
     checkValue(str) {
