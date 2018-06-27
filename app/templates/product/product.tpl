@@ -121,27 +121,13 @@
             </div>
             <div class="column small-12 ml-5 large-5 block__title_price">
 
-                {*<div class="float-right show-for-large godaddy">*}
-                    {*<img src="/static/frontend/dist/images/icons/item_product/gd_label.png" alt="GODADDY Verified & secured" class="gd">*}
-                {*</div>*}
-                {*<div class="sku show-for-large">*}
-                    {*<span class="value">*}
-                        {*SKU: <span class="style" itemprop="sku">{$model->productcode}</span>*}
-                    {*</span>*}
-                {*</div>*}
-                {*<span class="clearfix"></span>*}
-
                 <div class="notifications show-for-ml">
                     <div class="row align-middle ml-collapse notifications-info">
                         <div class="column shrink">
                             {include "product/messages/_messages.tpl" model=$model fill=true}
                         </div>
-                        {*<div class="column shrink godaddy">*}
-                            {*<img src="/static/frontend/dist/images/icons/item_product/gd_label.png" alt="GODADDY Verified & secured" class="gd">*}
-                        {*</div>*}
                     </div>
                 </div>
-
 
                 {if !$model->isGroupRoot()}
                 <div class="prices">
@@ -157,10 +143,6 @@
                             </div>
                         {/if}
                     {/if}
-
-                    {*{if $model->isOutOfStock()}*}
-                    {*{else}*}
-                    {*{/if}*}
                 </div>
                 {else}
                     <div class="full_line__group_root buttons">
@@ -171,9 +153,6 @@
                         {/ignore}
                     </div>
                 {/if}
-                {*<div class="godaddy hide-for-medium hide-for-large text-align--center">*}
-                    {*<img src="/static/frontend/dist/images/icons/item_product/gd_label.png" alt="GODADDY Verified & secured" class="gd">*}
-                {*</div>*}
             </div>
         </div>
     </section>

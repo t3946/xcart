@@ -28,6 +28,11 @@ return [
         'target' => [ApiProductController::class, 'getProductInfo'],
         'name' => 'get_product_info'
     ],
+    [
+        'route' => 'product/question',
+        'target' => [DefaultController::class, 'actionProductQuestions'],
+        'name' => 'product_question'
+    ],
 
 
     /** CATEGORY ROUTES */

@@ -6,6 +6,7 @@ use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Model;
 
+
 class ProductQuestionModel extends Model
 {
     use AutoMetaTrait;

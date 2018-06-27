@@ -1,0 +1,3 @@
+<div class="waiting-tab-load">
+    LOADING ...
+</div>

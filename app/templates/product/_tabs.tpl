@@ -24,9 +24,9 @@
           {*<a href="#reviews" aria-selected="false">Product reviews</a>*}
         {*</li>*}
 
-        {*<li class="tabs-title">*}
-          {*<a href="#questions" aria-selected="false">Product questions</a>*}
-        {*</li>*}
+        <li class="tabs-title">
+          <a href="#questions" aria-selected="false">Product questions</a>
+        </li>
     </ul>
 
     <div class="tabs-content" data-tabs-content="product_tabs">
@@ -68,11 +68,11 @@
             {*</div>*}
         {*</div>*}
 
-        {*<div class="tabs-panel" id="questions">*}
-            {*<div class="tab-content tab-questions">*}
-                {*{include 'product/tabs/_questions.tpl' model=$model}*}
-            {*</div>*}
-        {*</div>*}
+        <div class="tabs-panel" id="questions">
+            <div class="tab-content tab-questions">
+                {include 'product/tabs/_wait.tpl' model=$model}
+            </div>
+        </div>
     </div>
 
 </section>

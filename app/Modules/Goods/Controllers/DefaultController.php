@@ -2,6 +2,7 @@
 
 namespace Modules\Goods\Controllers;
 
+use Modules\Goods\Forms\ProductQuestionForm;
 use Modules\Goods\Helpers\ProductHelper;
 use Modules\Goods\Helpers\ProductSortHelper;
 use Modules\Goods\Helpers\TabDataHelper;
@@ -18,6 +19,13 @@ class DefaultController extends FrontendController
     public function actionViewOld($id, $slug): void
     {
         $this->view_internal(ProductModel::objects()->filter(['productid' => $id])->get());
+    }
+
+    public function actionProductQuestions(): void
+    {
+        $this->display('product/tabs/_questions.tpl', [
+            'form' => new ProductQuestionForm()
+        ]);
     }
 
     public function actionViewOldSlash($id, $slug): void

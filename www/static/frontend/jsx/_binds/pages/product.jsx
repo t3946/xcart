@@ -16,5 +16,11 @@
             }
         });
 
+        $('#product_tabs').on('change.zf.tabs', function() {
+            if ($('#questions:visible').length) {
+                console.log('Tab 1 panel shown.');
+            }
+        });
+
     }
 })();
