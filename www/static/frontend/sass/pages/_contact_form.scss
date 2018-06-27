@@ -166,11 +166,12 @@
         font-size: rem-calc(14);
       }
 
-      &.after{
+      &:after{
         content: '*';
         display: inline;
         vertical-align: top;
         color: #ff0000;
+        position: static;
       }
     }
   }
@@ -225,6 +226,7 @@
           display: inline;
           vertical-align: top;
           color: #ff0000;
+          position: static;
 
         }
 
