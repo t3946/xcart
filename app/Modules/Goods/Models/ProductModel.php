@@ -278,6 +278,11 @@ class ProductModel extends Model implements ICartItem
                 'modelClass' => PricingModel::class,
                 'link' => ['productid' => 'productid']
             ],
+            'featured' => [
+                'class' => HasManyField::class,
+                'modelClass' => FeaturedProductsModel::class,
+                'link' => ['productid' => 'productid']
+            ],
             'amazon_fields' => [
                 'class' => HasManyField::class,
                 'modelClass' => AmazonProductsFieldsModel::class,

@@ -66,9 +66,10 @@ class PromoController extends AbstractCatalogController
         if ($this->getRequest()->getIsAjax() && !$this->getRequest()->get->has('page'))
         {
             $this->renderSliderData($this->getQS()
+                ->distinct()
                 ->filter([
                     'images__image_path__isnull' => false,
-                    'pk__in' => FeaturedProductsModel::objects()->select(['product__productid']),
+                    'featured__product_order__isnull' => false,
                 ])
                 ->order(['?']));
         }
