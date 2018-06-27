@@ -9,6 +9,7 @@ use Modules\Shipping\Models\ShippingRateModel;
 use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\BooleanCharField;
+use Xcart\App\Orm\Fields\FloatField;
 use Xcart\App\Orm\Fields\HasManyField;
 use Xcart\App\Orm\Model;
 use Xcart\App\Traits\DataModelTrait;
@@ -51,6 +52,9 @@ class DistributorModel extends Model
             ],
             'reduce_extra_margin' => [
                 'class' => BooleanCharField::class,
+            ],
+            'max_extra_margin' => [
+                'class' => FloatField::class,
             ],
         ];
     }
