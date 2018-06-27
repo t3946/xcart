@@ -186,7 +186,7 @@ class ShippingHelper
     public static function getQtyForFreeShipping(ProductModel $model, $state_model, $zip): int
     {
         $qty = $amazon_avail = 0;
-        $ups_qty = 1;
+        $ups_qty = 0;
 
         if ($model && !$model->shipping_calc_disabled && ($distributor = $model->distributor) && $distributor->reduce_extra_margin && $distributor->max_extra_margin > (float) 0) {
 
