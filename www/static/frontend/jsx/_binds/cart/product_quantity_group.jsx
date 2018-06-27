@@ -28,8 +28,8 @@ import _ from 'lodash';
         }
     };
 
-    let recheckActives = (e, params = getValues(e))=>{
-        //console.log('recheck', e);
+    let recheckActives = (e, params = getValues(e)) => {
+
         params.$container.find('.btn').removeClass('active');
 
         if (params.val < params.max) {
@@ -41,6 +41,15 @@ import _ from 'lodash';
         }
 
         let product = params.element.closest('[data-product]');
+
+        if (!params.val || isNaN(params.val)) {
+            if (e.type == 'blur' || e.type == 'focusout') {
+                params.val = product.dataset.quantity;
+                params.$input.val(params.val);
+            }
+            return;
+        }
+
         if (product) {
             product.dataset.quantity = params.val;
         }

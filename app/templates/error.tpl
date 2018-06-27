@@ -21,11 +21,11 @@
                         <section class="multiline">
                             <section class="error-title">
                                 {block 'error_title'}
-                                    {if $data.message}
-                                        {$data.message}
-                                    {else}
+                                    {*{if $data.message}*}
+                                        {*{$data.message}*}
+                                    {*{else}*}
                                         Internal server error
-                                    {/if}
+                                    {*{/if}*}
                                 {/block}
                             </section>
                             <section class="error-description">
