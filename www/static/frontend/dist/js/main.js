@@ -68641,27 +68641,41 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 "use strict";
 /* WEBPACK VAR INJECTION */(function($) {
 
+var _documentReady = __webpack_require__(43);
+
+var _documentReady2 = _interopRequireDefault(_documentReady);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 (function () {
 
     var page = document.querySelector('.product-page');
     if (page) {
-        $.ajax('/product/api/' + page.dataset.product + '/', {
-            'success': function success(data) {
-                if (data.shipping && data.shipping.free_shipping) {
-                    var notification_info = document.querySelectorAll('.notifications-info > .column');
-                    if (notification_info.length) {
-                        for (var i = 0; i < notification_info.length; i++) {
-                            notification_info[i].innerHTML += data.shipping.free_shipping;
+
+        (0, _documentReady2.default)(function () {
+            $.ajax('/product/api/' + page.dataset.product + '/', {
+                'success': function success(data) {
+                    if (data.shipping && data.shipping.free_shipping) {
+                        var notification_info = document.querySelectorAll('.notifications-info > .column');
+                        if (notification_info.length) {
+                            for (var i = 0; i < notification_info.length; i++) {
+                                notification_info[i].innerHTML += data.shipping.free_shipping;
+                            }
                         }
                     }
                 }
-            }
-        });
+            });
 
-        $('#product_tabs').on('change.zf.tabs', function () {
-            if ($('#questions:visible').length) {
-                console.log('Tab 1 panel shown.');
-            }
+            $('#product_tabs').on('click', '#questions-label', function () {
+
+                $.ajax('/product-question/', {
+                    'success': function success(data) {
+                        if (data) {
+                            $('#questions').html(data);
+                        }
+                    }
+                });
+            });
         });
     }
 })();

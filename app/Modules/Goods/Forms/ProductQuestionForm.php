@@ -11,7 +11,10 @@ namespace Modules\Goods\Forms;
 use Modules\Goods\Models\ProductQuestionModel;
 use Modules\Order\Validation\PhoneValidator;
 use Xcart\App\Form\Fields\CharField;
+use Xcart\App\Form\Fields\NumberField;
+use Xcart\App\Form\Fields\TextField;
 use Xcart\App\Form\ModelForm;
+use Xcart\App\Validation\EmailValidator;
 
 class ProductQuestionForm extends ModelForm
 {
@@ -51,12 +54,20 @@ class ProductQuestionForm extends ModelForm
                 'class' => CharField::class,
                 'label' => 'Your phone',
                 'html' => [
-                    'placeholder' => '(609) 734-8000'
+                    'placeholder' => '(609) 734-8000',
+                    'class' => 'phone'
                 ],
                 'required' => true,
                 'validators' => [
                     new PhoneValidator(),
                 ],
+            ],
+            'phone_ext' => [
+                'class' => NumberField::class,
+                'label' => 'ext',
+                'html' => [
+                    'class' => 'phone_ext',
+                ]
             ],
             'question' => [
                 'class' => TextField::class,

@@ -1,4 +1,6 @@
 @import "product/tabs";
+@import "../parts/form/phone_ext";
+@import "../parts/form/button_def_styles";
 //
 //@import "product/price_table";
 
@@ -6,6 +8,26 @@
   @include getProductTabs();
   //
   //@include getPricesTable();
+  #questions {
+
+    .send-question{
+
+      padding-bottom: rem-calc(25);
+      border-bottom: 2px solid #c9c9c9;
+
+      @include breakpoint(medium) {
+        padding-bottom: rem-calc(30);
+      }
+
+      @include breakpoint(large) {
+        padding-bottom: rem-calc(40);
+      }
+
+      @include getPhoneExtStyle();
+      @include getButtonDefStyle();
+    }
+
+  }
 
   .price {
     padding-left: 3px;
@@ -27,6 +49,7 @@
     @include breakpoint(large up) {
       padding-right: rem-calc(46);
       max-width: rem-calc(617);
+      width: auto;
     }
   }
 
