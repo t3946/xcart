@@ -6,6 +6,7 @@ if (!isset($Product_SKU_found)){
 
 x_load("mail", "product", "http");
 
+
 $product_info = func_select_product($productid, @$user_account['membershipid']);
 
 $customer_email = $email;

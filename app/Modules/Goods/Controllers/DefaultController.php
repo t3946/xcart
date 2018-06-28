@@ -7,6 +7,7 @@ use Modules\Goods\Helpers\ProductHelper;
 use Modules\Goods\Helpers\ProductSortHelper;
 use Modules\Goods\Helpers\TabDataHelper;
 use Modules\Goods\Models\ProductModel;
+use Modules\Goods\Models\ProductQuestionModel;
 use Modules\Goods\Models\ProductVideosModel;
 use Modules\Meta\Types\MetaType;
 use Xcart\App\Controller\FrontendController;
@@ -23,8 +24,22 @@ class DefaultController extends FrontendController
 
     public function actionProductQuestions(): void
     {
+        $productId = (int)Xcart::app()->request->get['productId'];
+
+        $questions = ProductQuestionModel::objects()->filter([
+            'productid' => $productId,
+            'question_published_on_page' => 'Y'
+        ])->order(['order_by'])->all();
+
+//        foreach ($questions as $row){
+//            dd($row->user);
+//            exit;
+//        }
+
+
         $this->display('product/tabs/_questions.tpl', [
-            'form' => new ProductQuestionForm()
+            'form' => new ProductQuestionForm(),
+            'productQuestion' => $questions
         ]);
     }
 
@@ -145,7 +160,6 @@ class DefaultController extends FrontendController
         } else {
             $this->setCanonical($model);
         }
-
 
         $this->display('product/product.tpl', $params);
     }

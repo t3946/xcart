@@ -21,6 +21,19 @@ class GoodsModule extends Module
 
             return self::renderTemplate('product/messages/_p_label.tpl', $params);
         });
+//        $template->('createByLine', function($name, $date){
+//
+//            $byLine = 'asked by ' . $name . $this->createTextDate($date);
+//
+//            return $byLine;
+//        });
+//
+//        $template->('createByLineManager', function($name, $date){
+//
+//            $byLine = 'answered by ' . $name . ' (Staff) on' .
+//
+//            return $byLine;
+//        });
     }
 
     public static function getWarehouse($id)
@@ -48,5 +61,15 @@ class GoodsModule extends Module
         }
 
         return $items;
+    }
+
+    private function createTextDate($date):string
+    {
+        return (string)$date;
+    }
+
+    private function fixDate($date):integer
+    {
+        return $date;
     }
 }

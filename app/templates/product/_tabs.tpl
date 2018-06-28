@@ -68,7 +68,9 @@
             {*</div>*}
         {*</div>*}
 
-        <div class="tabs-panel" id="questions">
+
+
+        <div class="tabs-panel" id="questions" data-productid="{$model->productid}">
             <div class="tab-content tab-questions">
                 {include 'product/tabs/_wait.tpl' model=$model}
             </div>

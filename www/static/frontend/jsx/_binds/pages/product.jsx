@@ -3,8 +3,6 @@ import documentReady from "../../utils/documentReady";
 
     let page = document.querySelector('.product-page');
     if (page) {
-
-
         documentReady(() => {
             $.ajax('/product/api/'+page.dataset.product+'/', {
                 'success' : (data)=>{
@@ -22,18 +20,22 @@ import documentReady from "../../utils/documentReady";
 
             $('#product_tabs').on('click', '#questions-label', function() {
 
+                console.log(67);
+
+                let container = $('#questions');
+
                 $.ajax('/product-question/', {
-                    'success' : (data)=>{
-                        if (data) {
-                            $('#questions').html(data);
+                    'data' : {
+                        'productId' : container.data('productid')
+                    },
+                    'success' : (html)=>{
+                        if (html) {
+                            container.html(html);
                         }
                     }
                 });
 
             });
         });
-
-
-
     }
 })();

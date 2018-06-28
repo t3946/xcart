@@ -58,4 +58,5 @@
         </div>
     </form>
 </div>
+{include 'product/tabs/questions/_questions_list.tpl' productQuestion = $productQuestion}
 
