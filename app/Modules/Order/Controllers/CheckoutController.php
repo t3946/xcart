@@ -3,6 +3,7 @@
 namespace Modules\Order\Controllers;
 
 use Mindy\QueryBuilder\Expression;
+use Mindy\QueryBuilder\Q\QAndNot;
 use Mobile_Detect;
 use Modules\Cart\Components\CartItem;
 use Modules\Cart\Helpers\StagesOfOrdering;
@@ -234,6 +235,8 @@ class CheckoutController extends FrontendController
                 $rates = $app->request->post->get('shipping_rates');
 
                 $order->subtotal = $order->shipping_cost = 0;
+
+                $order->groups->delete([new QAndNot(['manufacturerid__in' => array_keys($cart_groups)])]);
 
                 foreach ($cart_groups as $g => $cart_group)
                 {
