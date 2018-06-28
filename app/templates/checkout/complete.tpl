@@ -386,8 +386,8 @@
         {/ignore}
             'id': '{$order->getOrderNumber()}',
             'affiliation': '{$.getSite->domain}',
-            'revenue': '{$order->total|number_format:2}',
-            'shipping': '{$order->shipping_cost|number_format:2}'
+            'revenue': '{$order->total|number_format:2:'.':''}',
+            'shipping': '{$order->shipping_cost|number_format:2:'.':''}'
         {ignore}
         });
         {/ignore}
@@ -403,7 +403,7 @@
                     'name':'{$product->getFrontendName()}',
                     'sku':'{$product->productcode}',
                     'category':'{$category->category}',
-                    'price':'{$detail->price}',
+                    'price':'{$detail->price|number_format:2:'.':''}',
                     'quantity':'{$detail->amount}'
                 {ignore}
                 });
@@ -412,4 +412,26 @@
         {/foreach}
         
     </script>
+
+    {set $google_review = $.getSite->getConfig().Google_Trusted_Store_ID}
+
+    {if $google_review}
+        <script src="https://apis.google.com/js/platform.js?onload=renderOptIn" async defer></script>
+        <script>
+            window.renderOptIn = function () {
+                window.gapi.load('surveyoptin', function () {
+                    window.gapi.surveyoptin.render(
+                        {
+                            // REQUIRED FIELDS
+                            "merchant_id": {$google_review},
+                            "order_id": "{$order->getOrderNumber()}",
+                            "email": "{$order->email}",
+                            "delivery_country": "{$order->s_country}",
+                            "estimated_delivery_date": "{$order->getEstimatedDeliveryDate()->format('Y-m-d')}",
+
+                        });
+                });
+            }
+        </script>
+    {/if}
 {/block}

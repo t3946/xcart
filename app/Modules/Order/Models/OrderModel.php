@@ -9,6 +9,7 @@ use Modules\Order\Helpers\OrderEventHelper;
 use Modules\Order\Helpers\OrderHelper;
 use Modules\Goods\Models\ProductModel;
 use Modules\Payment\Models\PaymentMethodModel;
+use Modules\Shipping\Models\ShippingModel;
 use Modules\User\Models\UserModel;
 use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
@@ -402,5 +403,28 @@ class OrderModel extends Model
         [$shipping] = $this->getAddressInfo();
 
         return $shipping['country']->code === 'CA' && $this->groups->exclude(['manufacturer__m_country' => 'CA'])->count();
+    }
+
+    public function getEstimatedDeliveryDate():? \DateTime
+    {
+        $result = $max_day = null;
+
+        foreach($this->groups as $group){
+            /** @var ShippingModel $shipping */
+            if (!$shipping = $group->shippingModel) {
+                break;
+            }
+            $max_day = max($max_day, $shipping->days_max);
+        }
+
+        if ($max_day <= 0) {
+            $max_day = 14;
+        }
+
+        $order_date = (new \DateTime)->setTimestamp($this->date);
+
+        $result = $order_date->add(new \DateInterval("P{$max_day}D"));
+
+        return $result;
     }
 }

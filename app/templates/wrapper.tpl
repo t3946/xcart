@@ -192,7 +192,7 @@
 
         var cb = function() {
 
-            ga('send', 'pageview');
+
             {*createStyleElement( "/static/frontend/dist/css/styles.css?v={frontend_version resource='css/styles.css'}");*}
         };
         var raf = requestAnimationFrame || mozRequestAnimationFrame ||

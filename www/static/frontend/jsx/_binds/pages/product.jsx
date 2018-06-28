@@ -1,8 +1,14 @@
+import sendAnalytics from "../../utils/sendAnalytics";
 import documentReady from "../../utils/documentReady";
 (()=>{
 
     let page = document.querySelector('.product-page');
     if (page) {
+
+        $(document).on('app.start', function () {
+            window.sendAnalytics.productDetail(page);
+        });
+
         documentReady(() => {
             $.ajax('/product/api/'+page.dataset.product+'/', {
                 'success' : (data)=>{
@@ -14,9 +20,9 @@ import documentReady from "../../utils/documentReady";
                             }
                         }
 
-                    }
                 }
-            });
+            }
+        });
 
             $('#product_tabs').on('click', '#questions-label', function() {
 
