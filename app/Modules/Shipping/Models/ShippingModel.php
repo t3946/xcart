@@ -49,4 +49,9 @@ class ShippingModel extends Model
     {
         return $this->frontend_name ?: func_insert_trademark($this->shipping);
     }
+
+    public function getEstimatedDeliveryDays() : int
+    {
+        return (int) $this->days_max - (int) $this->days_min;
+    }
 }
