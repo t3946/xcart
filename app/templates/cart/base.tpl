@@ -60,10 +60,10 @@
                             <img src="/static/frontend/images/icons/cart/place_order_online_icon.svg"
                                  alt=""
                                  class="clock-icon">
-                            <span>Place order online 24/7</span>
+                            <span>Place order online 24/7 or</span>
                         </div>
                         <div class="phone">
-                            <span class="phone-label">Call to free</span>
+                            <span class="phone-label">Call us toll free</span>
                             <span class="phone-number">1-800-929-2431</span>
                         </div>
                     </div>
