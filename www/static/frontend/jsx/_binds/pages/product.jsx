@@ -1,7 +1,14 @@
+import sendAnalytics from "../../utils/sendAnalytics";
+
 (()=>{
 
     let page = document.querySelector('.product-page');
     if (page) {
+
+        $(document).on('app.start', function () {
+            window.sendAnalytics.productDetail(page);
+        });
+
         $.ajax('/product/api/'+page.dataset.product+'/', {
             'success' : (data)=>{
                 if (data.shipping && data.shipping.free_shipping) {

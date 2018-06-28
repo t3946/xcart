@@ -386,8 +386,8 @@
         {/ignore}
             'id': '{$order->getOrderNumber()}',
             'affiliation': '{$.getSite->domain}',
-            'revenue': '{$order->total|number_format:2}',
-            'shipping': '{$order->shipping_cost|number_format:2}'
+            'revenue': '{$order->total|number_format:2:'.':''}',
+            'shipping': '{$order->shipping_cost|number_format:2:'.':''}'
         {ignore}
         });
         {/ignore}
@@ -403,7 +403,7 @@
                     'name':'{$product->getFrontendName()}',
                     'sku':'{$product->productcode}',
                     'category':'{$category->category}',
-                    'price':'{$detail->price}',
+                    'price':'{$detail->price|number_format:2:'.':''}',
                     'quantity':'{$detail->amount}'
                 {ignore}
                 });

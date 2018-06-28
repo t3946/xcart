@@ -128,6 +128,8 @@ import documentReady from "./utils/documentReady";
         window.surfMetaRegister();
         $(document).trigger('app.start');
 
+        window.sendAnalytics.pageview();
+
         font.load().then(function () {
             let event = new CustomEvent('font.loaded', { detail: true });
             document.font = true;
