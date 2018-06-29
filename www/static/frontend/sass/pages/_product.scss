@@ -1,6 +1,7 @@
 @import "product/tabs";
 @import "../parts/form/phone_ext";
 @import "../parts/form/button_def_styles";
+@import "../parts/product/questions";
 //
 //@import "product/price_table";
 
@@ -26,6 +27,8 @@
       @include getPhoneExtStyle();
       @include getButtonDefStyle();
     }
+
+    @include getProductQuestionsStyle();
 
   }
 

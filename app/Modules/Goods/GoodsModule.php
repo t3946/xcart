@@ -15,25 +15,23 @@ class GoodsModule extends Module
         $template = Xcart::app()->template->getRenderer();
 
         $template->addAccessorSmart('get_warehouse', self::class. '::getWarehouse', $template::ACCESSOR_CALL);
+
         $template->addBlockFunction('p_label', function($params, $html){
 
             $params['text'] = $html;
 
             return self::renderTemplate('product/messages/_p_label.tpl', $params);
         });
-//        $template->('createByLine', function($name, $date){
-//
-//            $byLine = 'asked by ' . $name . $this->createTextDate($date);
-//
-//            return $byLine;
-//        });
-//
-//        $template->('createByLineManager', function($name, $date){
-//
-//            $byLine = 'answered by ' . $name . ' (Staff) on' .
-//
-//            return $byLine;
-//        });
+
+        $template->addModifier('createByLine', function($name, $date, $manager = false) {
+
+            if(!$manager) {
+                return 'asked by ' . $name . ' on ' . static::createTextDate($date);
+            }
+
+            return 'answered by ' . $name . ' (Staff) on ' . static::createTextDate(static::fixDate($date));
+        });
+
     }
 
     public static function getWarehouse($id)
@@ -63,12 +61,12 @@ class GoodsModule extends Module
         return $items;
     }
 
-    private function createTextDate($date):string
+    private static function createTextDate($date):string
     {
         return (string)$date;
     }
 
-    private function fixDate($date):integer
+    private static function fixDate($date)
     {
         return $date;
     }
