@@ -1,7 +1,23 @@
 @mixin getProductQuestionsStyle() {
   .user-questions {
     .question-row {
+
+      padding-top: rem-calc(22);
+      padding-bottom: rem-calc(22);
+      border-top: 2px solid #c9c9c9;
+
+      &:first-child {
+        border-top: 0;
+      }
+
       .question-item {
+
+        //padding-top: rem-calc(22);
+        //
+        //&:first-child {
+        //  padding-top: 0;
+        //}
+
         .title {
           .full {
             display: none;
@@ -23,6 +39,7 @@
             padding: .5rem rem-calc(12);
             position: relative;
             box-shadow: 0 4px 3px 0px #d2d2d2;
+            font-size: 1rem;
 
             .before {
               width: 24px;
@@ -52,12 +69,29 @@
 
           }
           .by-line {
-
+            color: #6b6b6b;
+            font-size: rem-calc(12);
+            line-height: 1.2;
+            padding-top: .5rem;
           }
         }
       }
       .question {
         .question-item {
+
+          .post {
+            .text {
+              background-color: #f1ffec;
+              border-color: #c8eebb;
+
+              .before {
+                &:before {
+                  background-color: #f1ffec;
+                  border-color: #c8eebb;
+                }
+              }
+            }
+          }
 
         }
       }
