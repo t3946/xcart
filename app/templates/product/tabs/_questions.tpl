@@ -1,5 +1,6 @@
 <div class="send-question default-form">
     <form action="">
+        <input type="hidden" value="{$productId}" name="{$form->classNameShort()}[productid]">
         <div class="row">
             <div class="column small-12">
                 {include 'checkout/_form_row.tpl' field=$form->getField('name')}

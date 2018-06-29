@@ -25,21 +25,25 @@ class DefaultController extends FrontendController
     public function actionProductQuestions(): void
     {
         $productId = (int)Xcart::app()->request->get['productId'];
+        //$newQuestion = Xcart::app()->request->post['ProductQuestionForm'];
+        //pointer-events
+
+        $form = new ProductQuestionForm();
+
+        if($this->getRequest()->getIsPost() && $form->populate($_POST)->isValid()) {
+
+        }
 
         $questions = ProductQuestionModel::objects()->filter([
             'productid' => $productId,
             'question_published_on_page' => 'Y'
         ])->order(['order_by'])->all();
 
-//        foreach ($questions as $row){
-//            dd($row->user);
-//            exit;
-//        }
-
 
         $this->display('product/tabs/_questions.tpl', [
-            'form' => new ProductQuestionForm(),
-            'productQuestion' => $questions
+            'form' => $form,
+            'productQuestion' => $questions,
+            'productId' => $productId
         ]);
     }
 

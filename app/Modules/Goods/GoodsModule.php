@@ -16,20 +16,32 @@ class GoodsModule extends Module
 
         $template->addAccessorSmart('get_warehouse', self::class. '::getWarehouse', $template::ACCESSOR_CALL);
 
-        $template->addBlockFunction('p_label', function($params, $html){
+        $template->addBlockFunction('p_label', function($params, $html)
+        {
 
             $params['text'] = $html;
 
             return self::renderTemplate('product/messages/_p_label.tpl', $params);
         });
 
-        $template->addModifier('createByLine', function($name, $date, $manager = false) {
+        $template->addModifier('createByLine', function($name, $date, $manager = false) : string
+        {
 
-            if(!$manager) {
-                return 'asked by ' . $name . ' on ' . static::createTextDate($date);
+            if(empty($name)){
+                return '';
             }
 
-            return 'answered by ' . $name . ' (Staff) on ' . static::createTextDate(static::fixDate($date));
+            if(!$manager) {
+                $byLine = 'asked by ' . $name;
+            } else {
+                $byLine = 'answered by ' . $name . ' (Staff)';
+            }
+
+            if(!empty($date)){
+                $byLine .=  ' on ' . static::createTextDate($date);
+            }
+
+            return $byLine;
         });
 
     }
@@ -61,13 +73,14 @@ class GoodsModule extends Module
         return $items;
     }
 
+    /**
+     * Format day: 'Oct 07, 2015'
+     * @param $date integer timestump
+     * @return string
+     */
     private static function createTextDate($date):string
     {
-        return (string)$date;
-    }
-
-    private static function fixDate($date)
-    {
-        return $date;
+        $dateTimeObj = (new \DateTime())->setTimestamp($date);
+        return $dateTimeObj->format('M d, Y');
     }
 }

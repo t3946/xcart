@@ -1,7 +1,7 @@
-<div class="question-item row align-center">
+<div class="question-item row small-collapse">
     <div class="title columns shrink">
-        <span class="full">{$title}</span>
-        <span class="short">{$short}</span>
+        <span class="full show-for-large">{$title}</span>
+        <span class="short hide-for-large">{$short}</span>
     </div>
     <div class="post columns">
         <div class="text">
@@ -12,5 +12,4 @@
             {$byLine}
         </div>
     </div>
-
 </div>

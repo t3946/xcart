@@ -31,6 +31,10 @@ class ProductQuestionForm extends ModelForm
     public function getFields()
     {
         return [
+            'productid' => [
+                'class' => NumberField::class,
+                'required' => true,
+            ],
             'name' => [
                 'class' => CharField::class,
                 'label' => 'Your first name',
