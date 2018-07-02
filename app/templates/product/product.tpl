@@ -10,7 +10,7 @@
     <meta property="og:url" content="{$model->getAbsoluteUrl(true)}">
     <meta property="og:description" content="{$model->getFrontendDescription()|escape}">
     <meta property="og:type" content="product">
-    <meta property="og:image" content="{$model->images->filter(['avail' => 'Y'])->limit(1)->get()}">
+    <meta property="og:image" content="https:{$model->images->filter(['avail' => 'Y'])->limit(1)->get()}">
 {/block}
 
 {block 'seo'}
