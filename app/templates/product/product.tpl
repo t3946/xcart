@@ -5,7 +5,7 @@
 {/block}
 
 {block 'product_og'}
-    <meta property="og:site_name" content="{$site->getAbsoluteUrl()}">
+    <meta property="og:site_name" content="{$site->getName()}">
     <meta property="og:title" content="{$model->getFrontendName()}">
     <meta property="og:url" content="{$model->getAbsoluteUrl(true)}">
     <meta property="og:description" content="{$model->getFrontendDescription()|escape}">
