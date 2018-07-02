@@ -8,8 +8,12 @@
 
 namespace Modules\Goods\Forms;
 
+use Modules\Core\Components\GlobalConfig;
+use Modules\GeoIp\Helpers\GeoIpHelper;
 use Modules\Goods\Models\ProductQuestionModel;
+use Modules\Main\Models\DepartmentsModel;
 use Modules\Order\Validation\PhoneValidator;
+use Modules\Goods\Models\ProductModel;
 use Xcart\App\Form\Fields\CharField;
 use Xcart\App\Form\Fields\NumberField;
 use Xcart\App\Form\Fields\TextField;
@@ -86,73 +90,100 @@ class ProductQuestionForm extends ModelForm
         ];
     }
 
-    public function afterOwnerSave($owner)
+    //$brandid = $product_info->brandid;
+    // $storefront_domain = $storefront->domain;
+    //$distributor = $product_info->distributor;
+    //$distributor_email = $distributor->d_product_questions_send_to_email;
+    //$productid = $this->productid;
+
+    private function prefixProductQuestionId($id)
     {
-        parent::afterOwnerSave($owner);
+        return "PRQN-".sprintf('%1$05d', $id);
+    }
+
+
+    public function afterInstanceSave($instance)
+    {
+        //parent::afterOwnerSave(afterInstanceSave);
 
         $config = GlobalConfig::getInstance();
 
-        $product_question_message_body_to_brand = func_eol2br(stripslashes($config["product_question_email"]["product_question_message_body_to_brand"]));
-        $product_question_message_body_to_customer = func_eol2br(stripslashes($config["product_question_email"]["product_question_message_body_to_customer"]));
+        //----
 
-        $product_info = func_select_product($productid, @$user_account['membershipid']);
-
-        $customer_email = $email;
-        $brandid = $product_info['brandid'];
-        $brand_email = func_query_first_cell("SELECT customer_service_email FROM $sql_tbl[brands] WHERE brandid='$brandid'");
-        $distributor_email = func_query_first_cell("SELECT d_product_questions_send_to_email FROM $sql_tbl[manufacturers] WHERE manufacturerid='$product_info[manufacturerid]'");
-        $customer_service_phone = func_query_first_cell("SELECT customer_service_phone FROM $sql_tbl[brands] WHERE brandid='$brandid'");
-        $product_question_departments_email = func_query_first_cell("SELECT email FROM $sql_tbl[departments] WHERE name='Product question'");
-
-        $product_link = "http://".$storefront_domain."/".$product_info["clean_url"]."/";
-
-        // $product_question_message_body_to_brand = Message body to us
-        $product_question_message_body_to_brand = str_replace(['{{mpn}}','{{supplier_internal_id}}'], [$product_info["mpn"],$product_info["supplier_internal_id"]], $product_question_message_body_to_brand);
-        $product_question_message_body_to_brand = str_replace("{{productname}}", $product_info["product"], $product_question_message_body_to_brand);
-        $product_question_message_body_to_brand = str_replace("{{brand_email}}", $brand_email, $product_question_message_body_to_brand);
-        $product_question_message_body_to_brand = str_replace("{{brand_phone}}", $customer_service_phone, $product_question_message_body_to_brand);
-        $product_question_message_body_to_brand = str_replace("{{question}}", $question, $product_question_message_body_to_brand);
-        $product_question_message_body_to_brand = str_replace("{{customer_phone}}", $phone, $product_question_message_body_to_brand);
-        $product_question_message_body_to_brand = str_replace("{{product_link}}", $product_link, $product_question_message_body_to_brand);
-        $product_question_message_body_to_brand = str_replace("{{customer_email}}", $customer_email, $product_question_message_body_to_brand);
-        $product_question_message_body_to_brand = str_replace("{{prqnid}}", $prefix_product_question_id, $product_question_message_body_to_brand);
-        $product_question_message_body_to_brand = str_replace("{{signature}}", $signature, $product_question_message_body_to_brand);
-        $product_question_message_body_to_brand = str_replace("{{customer_name}}", $name, $product_question_message_body_to_brand);
-
-        $product_question_message_body_to_customer = str_replace(['{{mpn}}','{{supplier_internal_id}}'], [$product_info["mpn"],$product_info["supplier_internal_id"]], $product_question_message_body_to_customer);
-        $product_question_message_body_to_customer = str_replace("{{productname}}", $product_info["product"], $product_question_message_body_to_customer);
-        $product_question_message_body_to_customer = str_replace("{{brand_email}}", $brand_email, $product_question_message_body_to_customer);
-        $product_question_message_body_to_customer = str_replace("{{brand_phone}}", $customer_service_phone, $product_question_message_body_to_customer);
-        $product_question_message_body_to_customer = str_replace("{{question}}", $question, $product_question_message_body_to_customer);
-        $product_question_message_body_to_customer = str_replace("{{customer_phone}}", $phone, $product_question_message_body_to_customer);
-        $product_question_message_body_to_customer = str_replace("{{product_link}}", $product_link, $product_question_message_body_to_customer);
-        $product_question_message_body_to_customer = str_replace("{{customer_email}}", $customer_email, $product_question_message_body_to_customer);
-        $product_question_message_body_to_customer = str_replace("{{prqnid}}", $prefix_product_question_id, $product_question_message_body_to_customer);
-        $product_question_message_body_to_customer = str_replace("{{signature}}", $signature, $product_question_message_body_to_customer);
-        $product_question_message_body_to_customer = str_replace("{{customer_name}}", $name, $product_question_message_body_to_customer);
+        $messageToSupplier = $config["product_question_email"]["product_question_message_body_to_brand"];
+        $messageToSupplier = str_replace(['{{mpn}}','{{supplier_internal_id}}'], [
+            $instance->product->mpn,
+            $instance->product->supplier_internal_id
+        ], $messageToSupplier);
+        $messageToSupplier = str_replace("{{productname}}", $instance->product->product, $messageToSupplier);
+        $messageToSupplier = str_replace("{{brand_email}}", $instance->product->brand->customer_service_email, $messageToSupplier);
+        $messageToSupplier = str_replace("{{brand_phone}}", $instance->product->brand->customer_service_phone, $messageToSupplier);
+        $messageToSupplier = str_replace("{{question}}", $this->question, $messageToSupplier);
+        $messageToSupplier = str_replace("{{customer_phone}}", $this->phone . ' x ' . $this->phone_ext, $messageToSupplier);
+        $messageToSupplier = str_replace("{{product_link}}", $instance->product->getAbsoluteUrl(true), $messageToSupplier);
+        $messageToSupplier = str_replace("{{customer_email}}", $this->email, $messageToSupplier);
+        $messageToSupplier = str_replace("{{prqnid}}", $this->prefixProductQuestionId($instance->product->id), $messageToSupplier);
+        $messageToSupplier = str_replace("{{signature}}", $this->getSignature($instance->product->sites->limit(1)->get(), $config), $messageToSupplier);
+        $messageToSupplier = str_replace("{{customer_name}}", $this->name, $messageToSupplier);
 
 
-        $from = $product_question_departments_email;
-        $to = $customer_email;
-        $subject = $product_question_subject_line;
-        $body = $product_question_message_body_to_customer;
-        $mail_smarty->assign('subject', $subject);
-        $mail_smarty->assign('body', $body);
-        func_send_mail($to, "mail/product_question_email_subj.tpl", "mail/product_question_email.tpl", $from, false, false, false, false,'','N',false,false);
+        Xcart::app()->mail->template(
+            $config["product_question_email"]["product_question_bc_email"],
+            $config["product_question_email"]["product_question_subject_line"],
+            'mail/base_template.tpl',
+            [
+                'message' => $messageToSupplier,
+                'from' => $this->email
+            ]
+        );
+
+        // -------
+
+        $messageToCustomer = $config["product_question_email"]["product_question_message_body_to_customer"];
+        $messageToCustomer = str_replace(['{{mpn}}','{{supplier_internal_id}}'], [
+            $instance->product->mpn,
+            $instance->product->supplier_internal_id
+        ], $messageToCustomer);
+        $messageToCustomer = str_replace("{{productname}}", $instance->product->product, $messageToCustomer);
+        $messageToCustomer = str_replace("{{brand_email}}", $instance->product->brand->customer_service_email, $messageToCustomer);
+        $messageToCustomer = str_replace("{{brand_phone}}", $instance->product->brand->customer_service_phone, $messageToCustomer);
+        $messageToCustomer = str_replace("{{question}}", $this->question, $messageToCustomer);
+        $messageToCustomer = str_replace("{{customer_phone}}", $this->phone . ' x ' . $this->phone_ext, $messageToCustomer);
+        $messageToCustomer = str_replace("{{product_link}}", $instance->product->getAbsoluteUrl(true), $messageToCustomer);
+        $messageToCustomer = str_replace("{{customer_email}}", $this->email, $messageToCustomer);
+        $messageToCustomer = str_replace("{{prqnid}}", $this->prefixProductQuestionId($instance->product->id), $messageToCustomer);
+        $messageToCustomer = str_replace("{{signature}}", $this->getSignature($instance->product->sites->limit(1)->get(), $config), $messageToCustomer);
+        $messageToCustomer = str_replace("{{customer_name}}", $this->name, $messageToCustomer);
 
 
-        $body = $product_question_message_body_to_brand; // Message body to us
-        $to = $config["product_question_email"]["product_question_bc_email"];
-        $from = $customer_email;
-        $mail_smarty->assign("subject", $subject);
-        $mail_smarty->assign("body", $body);
-        func_send_mail($to, 'mail/admin_product_question_subj.tpl', 'mail/admin_product_question.tpl', $from, true, false, false, false,'','N',false,false);
 
-//        Xcart::app()->mail->template(
-//            'team@s3stores.com',
-//            'Test sending email',
-//            'mail/log_template.tpl',
-//            ['message' => "Email test: PASS"]
-//        );
+        Xcart::app()->mail->template(
+            $this->email,
+            $config["product_question_email"]["product_question_subject_line"],
+            'mail/base_template.tpl',
+            [
+                'message' => $messageToCustomer,
+                'from' => DepartmentsModel::objects()->getModel()->getDepartmentByName('Product question')->email
+            ]
+        );
+        // ---
+
+
+    }
+
+    private function getSignature($storefront, $config)
+    {
+
+        $params['storefrontid'] =  $storefront->storefrontid;
+        $phones = GeoipHelper::getPhones($params);
+
+        $search = [
+            "{{storefront-url}}" => "https://" . $storefront->domain,
+            "{{customer_service_local_phone_number}}" => $phones
+        ];
+
+        $signature = str_replace (array_keys($search), array_values($search), $config["Company"]["signature"]);
+
+        return $signature;
     }
 }

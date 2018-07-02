@@ -46,6 +46,13 @@ class ProductQuestionModel extends Model
                 'sqlType' => Type::STRING,
                 'null' => true
             ],
+            'product' => [
+                'class' => ForeignField::class,
+                'field' => 'productid',
+                'modelClass' => ProductModel::class,
+                'link' => ['productid' => 'productid'],
+                'null' => true
+            ],
 
         ];
     }

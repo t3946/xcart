@@ -34,13 +34,15 @@ class DefaultController extends FrontendController
             $newQuestion = Xcart::app()->request->post['ProductQuestionForm'];
             $productId = (int)$newQuestion['productid'];
 
-            if($form->populate(Xcart::app()->request->post)->isValid() && $form->save()) {
+            if($form->populate(Xcart::app()->request->post)->isValid()) {
+                $form->save();
                 //Xcart::app()->flash->add('Your question has been successfully sent');
                 $message = [
                     'text' => 'Your question has been successfully sent',
                     'type' => 'success'
                 ];
             }
+            dd($form->getErrors());
         }
 
         $questions = ProductQuestionModel::objects()->filter([
