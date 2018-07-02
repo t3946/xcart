@@ -6,6 +6,8 @@ import documentReady from "../../utils/documentReady";
     let page = document.querySelector('.product-page');
     if (page) {
 
+        let questionsContainer = $('#questions');
+
         $(document).on('app.start', function () {
             window.sendAnalytics.productDetail(page);
         });
@@ -25,23 +27,40 @@ import documentReady from "../../utils/documentReady";
                 }
             });
 
-            $('#product_tabs').on('click', '#questions-label', function () {
-
-                console.log(67);
-
-                let container = $('#questions');
+            $('#product_tabs').on('click', '#questions-label', () => {
 
                 $.ajax('/product-question/', {
                     'data': {
-                        'productId': container.data('productid')
+                        'productId': questionsContainer.data('productid')
                     },
                     'success': (html) => {
                         if (html) {
-                            container.html(html);
+                            questionsContainer.html(html);
                         }
                     }
                 });
 
+            });
+
+            $('#questions').on('submit', 'form', (event) => {
+                event.preventDefault();
+
+                $.ajax('/product-question/', {
+                    'method': 'POST',
+                    'data': $(event.target).serialize(),
+                    'success': (html) => {
+                        if (html) {
+                            questionsContainer.html(html);
+                            let messageInfo = questionsContainer.find('form').get(0).dataset;
+
+                            if (!('messageText' in messageInfo)) {
+                                return;
+                            }
+                            console.log(messageInfo['messageText'],  messageInfo['messageType']);
+                            window.addFlashMessage(messageInfo['messageText'], messageInfo['messageType']);
+                        }
+                    }
+                });
             });
         });
     }

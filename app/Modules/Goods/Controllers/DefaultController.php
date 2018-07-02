@@ -25,13 +25,22 @@ class DefaultController extends FrontendController
     public function actionProductQuestions(): void
     {
         $productId = (int)Xcart::app()->request->get['productId'];
-        //$newQuestion = Xcart::app()->request->post['ProductQuestionForm'];
         //pointer-events
 
         $form = new ProductQuestionForm();
 
-        if($this->getRequest()->getIsPost() && $form->populate($_POST)->isValid()) {
+        if($this->getRequest()->getIsPost()){
 
+            $newQuestion = Xcart::app()->request->post['ProductQuestionForm'];
+            $productId = (int)$newQuestion['productid'];
+
+            if($form->populate(Xcart::app()->request->post)->isValid() && $form->save()) {
+                //Xcart::app()->flash->add('Your question has been successfully sent');
+                $message = [
+                    'text' => 'Your question has been successfully sent',
+                    'type' => 'success'
+                ];
+            }
         }
 
         $questions = ProductQuestionModel::objects()->filter([
@@ -42,6 +51,7 @@ class DefaultController extends FrontendController
 
         $this->display('product/tabs/_questions.tpl', [
             'form' => $form,
+            'message' => $message,
             'productQuestion' => $questions,
             'productId' => $productId
         ]);

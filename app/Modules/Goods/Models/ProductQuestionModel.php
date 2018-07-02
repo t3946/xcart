@@ -43,7 +43,8 @@ class ProductQuestionModel extends Model
                 'field' => 'login',
                 'modelClass' => UserModel::class,
                 'link' => ['login' => 'login'],
-                'sqlType' => Type::STRING
+                'sqlType' => Type::STRING,
+                'null' => true
             ],
 
         ];

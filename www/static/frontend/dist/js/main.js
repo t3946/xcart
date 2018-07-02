@@ -68680,6 +68680,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
     var page = document.querySelector('.product-page');
     if (page) {
 
+        var questionsContainer = $('#questions');
+
         $(document).on('app.start', function () {
             window.sendAnalytics.productDetail(page);
         });
@@ -68700,17 +68702,34 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
             $('#product_tabs').on('click', '#questions-label', function () {
 
-                console.log(67);
-
-                var container = $('#questions');
-
                 $.ajax('/product-question/', {
                     'data': {
-                        'productId': container.data('productid')
+                        'productId': questionsContainer.data('productid')
                     },
                     'success': function success(html) {
                         if (html) {
-                            container.html(html);
+                            questionsContainer.html(html);
+                        }
+                    }
+                });
+            });
+
+            $('#questions').on('submit', 'form', function (event) {
+                event.preventDefault();
+
+                $.ajax('/product-question/', {
+                    'method': 'POST',
+                    'data': $(event.target).serialize(),
+                    'success': function success(html) {
+                        if (html) {
+                            questionsContainer.html(html);
+                            var messageInfo = questionsContainer.find('form').get(0).dataset;
+
+                            if (!('messageText' in messageInfo)) {
+                                return;
+                            }
+                            console.log(messageInfo['messageText'], messageInfo['messageType']);
+                            window.addFlashMessage(messageInfo['messageText'], messageInfo['messageType']);
                         }
                     }
                 });
