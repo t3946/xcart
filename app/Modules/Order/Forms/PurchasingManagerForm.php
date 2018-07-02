@@ -24,6 +24,7 @@ class PurchasingManagerForm extends ContactInfoFaxForm
         $fields = parent::getFields();
 
         $fields['firstname']['hint'] = 'Full name of the person placing the order';
+        $fields['firstname']['required'] = true;
         $fields['phone']['hint'] = 'Phone number of the person placing the order';
         $fields['fax']['hint'] = 'Fax number of the person placing the order';
         $fields['email']['hint'] = 'Email of the person placing the order';
