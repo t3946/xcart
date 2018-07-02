@@ -4,4 +4,8 @@
     <link rel="stylesheet" href="/static/frontend/dist/css/styles.css?v={frontend_version resource='css/styles.css'}">
 {/block}
 
+
+{block 'schema_page_type'}itemtype="http://schema.org/CheckoutPage"{/block}
+
+
 {block 'after-content'}{/block}
