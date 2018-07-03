@@ -34,7 +34,8 @@ class DefaultController extends FrontendController
 
             if($form->populate(Xcart::app()->request->post)->isValid() && $form->save()) {
                 $message = [
-                    'text' => 'Your question has been successfully sent',
+                    'text' => "Thank you for submitting your product question! We appreciate your interest in this product. 
+                        We'll do our best to get back to you within 24 hours. S3 Stores, Inc. customer care team",
                     'type' => 'success'
                 ];
             }

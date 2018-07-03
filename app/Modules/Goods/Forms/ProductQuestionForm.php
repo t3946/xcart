@@ -121,8 +121,7 @@ class ProductQuestionForm extends ModelForm
             "{{customer_service_local_phone_number}}" => $phones
         ];
 
-        $signature = str_replace(array_keys($search), array_values($search), $config["Company"]["signature"]);
-
+        $signature = str_replace(array_keys($search), array_values($search), $config["signature"]);
         return $signature;
     }
 
