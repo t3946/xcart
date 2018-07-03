@@ -31,72 +31,73 @@ foreach ($mass as $product){
         foreach ($childs as $child){
             $ch = [];
 
-            $ch['productcode'] = "TA-{$model->productcode}";
-            $ch['product'] = $model->product;
-            $ch['forsale'] = $model->forsale;
-            $ch['fulldescr'] = $model->fulldescr;
-            $ch['r_avail'] = $model->r_avail;
-            $ch['eta_date_mm_dd_yyyy'] = $model->eta_date_mm_dd_yyyy;
-            $ch['cost_to_us'] = $model->cost_to_us;
+            $ch['productcode'] = "TA-{$child->productcode}";
+            $ch['product'] = $child->product;
+            $ch['forsale'] = $child->forsale;
+            $ch['fulldescr'] = $child->fulldescr;
+            $ch['r_avail'] = $child->r_avail;
+            $ch['eta_date_mm_dd_yyyy'] = $child->eta_date_mm_dd_yyyy;
+            $ch['cost_to_us'] = $child->cost_to_us;
 
-            if (!empty($model->list_price)){
-                $ch['list_price'] = $model->list_price;
+            if (!empty($child->list_price)){
+                $ch['list_price'] = $child->list_price;
             }
 
-            if (!empty($model->new_map_price)) {
-                $ch['new_map_price'] = $model->new_map_price;
+            if (!empty($child->new_map_price)) {
+                $ch['new_map_price'] = $child->new_map_price;
             }
 
-            $ch['brand_name'] = $model->brand->brand;
+            $ch['brand_name'] = $child->brand->brand;
 
-            if ($images = $model->getImages()) {
+            if ($images = $child->getImages()) {
                 foreach ($images as $image){
                     $ch['images'][] = $image->getCdnURL();
-                    $ch['alt_names'][] = $model->product;
+                    $ch['alt_names'][] = $child->product;
                 }
             }
 
-            $ch['brand_normalized'] = $model->brand_normalized;
+            $ch['brand_normalized'] = $child->brand_normalized;
 
-            if (!empty($model->upc)){
-                $ch['upc'] = $model->upc;
+            if (!empty($child->upc)){
+                $ch['upc'] = $child->upc;
             }
 
-            if (!empty($model->dim_x)){
-                $ch['dim_x'] = $model->dim_x;
+            if (!empty($child->dim_x)){
+                $ch['dim_x'] = $child->dim_x;
             }
 
-            if (!empty($model->dim_y)){
-                $ch['dim_y'] = $model->dim_y;
+            if (!empty($child->dim_y)){
+                $ch['dim_y'] = $child->dim_y;
             }
 
-            if (!empty($model->dim_z)){
-                $ch['dim_z'] = $model->dim_z;
+            if (!empty($child->dim_z)){
+                $ch['dim_z'] = $child->dim_z;
             }
 
-            if (!empty($model->weight)){
-                $ch['weight'] = $model->weight;
+            if (!empty($child->weight)){
+                $ch['weight'] = $child->weight;
             }
 
-            if (!empty($model->shipping_dim_x)){
-                $ch['shipping_dim_x'] = $model->shipping_dim_x;
+            if (!empty($child->shipping_dim_x)){
+                $ch['shipping_dim_x'] = $child->shipping_dim_x;
             }
 
-            if (!empty($model->shipping_dim_y)){
-                $ch['shipping_dim_y'] = $model->shipping_dim_y;
+            if (!empty($child->shipping_dim_y)){
+                $ch['shipping_dim_y'] = $child->shipping_dim_y;
             }
 
-            if (!empty($model->shipping_dim_z)){
-                $ch['shipping_dim_z'] = $model->shipping_dim_z;
+            if (!empty($child->shipping_dim_z)){
+                $ch['shipping_dim_z'] = $child->shipping_dim_z;
             }
 
-            if (!empty($model->shipping_weight)){
-                $ch['shipping_weight'] = $model->shipping_weight;
+            if (!empty($child->shipping_weight)){
+                $ch['shipping_weight'] = $child->shipping_weight;
             }
 
-            $ch['seo_meta_descr'] = $model->seo_meta_descr;
-            $ch['seo_product_name'] = $model->seo_product_name;
+            $ch['seo_meta_descr'] = $child->seo_meta_descr;
+            $ch['seo_product_name'] = $child->seo_product_name;
 
+            $child_products[] = $ch;
         }
 
         $row['is_group'] = true;
