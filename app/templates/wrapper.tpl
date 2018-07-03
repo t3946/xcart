@@ -234,6 +234,34 @@
                 po.src = 'https://seal.godaddy.com/getSeal?sealID=RVzmFJZUlQZwVnp0XQOKJPtEwfIgrDGcXXE9L625dBokxJCuRu6qptcFSHmt';
                 var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
 
+                {if $config.cidev_yandex_code_number}
+                (function (d, w, c) {
+                    (w[c] = w[c] || []).push(function() {
+                        try {
+                            w.yaCounter49453150 = new Ya.Metrika2({
+                                id:{$config.cidev_yandex_code_number},
+                                clickmap:true,
+                                trackLinks:true,
+                                accurateTrackBounce:true,
+                                webvisor:true,
+                                trackHash:true
+                            });
+                        } catch(e) { }
+                    });
+
+                    var n = d.getElementsByTagName("script")[0],
+                        s = d.createElement("script"),
+                        f = function () { n.parentNode.insertBefore(s, n); };
+                    s.type = "text/javascript";
+                    s.async = true;
+                    s.src = "https://mc.yandex.ru/metrika/tag.js";
+
+                    if (w.opera == "[object Opera]") {
+                        d.addEventListener("DOMContentLoaded", f, false);
+                    } else { f(); }
+                })(document, window, "yandex_metrika_callbacks2");
+                {/if}
+
             },6000);
         });
 
