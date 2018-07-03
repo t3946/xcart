@@ -101,7 +101,7 @@ foreach ($mass as $product){
 
         $row['is_group'] = true;
         $row['brand_normalized'] = $model->brand_normalized;
-        $row['brand_name'] = $model->brand_name;
+        $row['brand_name'] = $model->brand->brand;
         $row['forsale'] = 'Y';
         $row['child_products'] = $child_products;
 
