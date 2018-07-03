@@ -12,6 +12,7 @@ namespace Modules\Main\Models;
 use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Model;
+use Xcart\App\Orm\ModelInterface;
 
 class DepartmentsModel extends Model
 {
@@ -40,7 +41,11 @@ class DepartmentsModel extends Model
         return $this->objects()->all();
     }
 
-    public function getDepartmentByName($name): array
+    /**
+     * @param $name
+     * @return ModelInterface
+     */
+    public function getDepartmentByName($name): ModelInterface
     {
         return $this->objects()->filter(['name' => $name])->limit(1)->get();
     }

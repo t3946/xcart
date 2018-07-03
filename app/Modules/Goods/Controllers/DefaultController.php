@@ -25,8 +25,6 @@ class DefaultController extends FrontendController
     public function actionProductQuestions(): void
     {
         $productId = (int)Xcart::app()->request->get['productId'];
-        //pointer-events
-
         $form = new ProductQuestionForm();
 
         if($this->getRequest()->getIsPost()){
@@ -34,15 +32,12 @@ class DefaultController extends FrontendController
             $newQuestion = Xcart::app()->request->post['ProductQuestionForm'];
             $productId = (int)$newQuestion['productid'];
 
-            if($form->populate(Xcart::app()->request->post)->isValid()) {
-                $form->save();
-                //Xcart::app()->flash->add('Your question has been successfully sent');
+            if($form->populate(Xcart::app()->request->post)->isValid() && $form->save()) {
                 $message = [
                     'text' => 'Your question has been successfully sent',
                     'type' => 'success'
                 ];
             }
-            dd($form->getErrors());
         }
 
         $questions = ProductQuestionModel::objects()->filter([

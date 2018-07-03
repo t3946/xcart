@@ -18,6 +18,7 @@ use Xcart\App\Form\Fields\CharField;
 use Xcart\App\Form\Fields\NumberField;
 use Xcart\App\Form\Fields\TextField;
 use Xcart\App\Form\ModelForm;
+use Xcart\App\Main\Xcart;
 use Xcart\App\Validation\EmailValidator;
 
 class ProductQuestionForm extends ModelForm
@@ -90,91 +91,29 @@ class ProductQuestionForm extends ModelForm
         ];
     }
 
-    //$brandid = $product_info->brandid;
-    // $storefront_domain = $storefront->domain;
-    //$distributor = $product_info->distributor;
-    //$distributor_email = $distributor->d_product_questions_send_to_email;
-    //$productid = $this->productid;
 
-    private function prefixProductQuestionId($id)
+    /**
+     * @param $instance
+     */
+    public function afterInstanceSave($instance): void
     {
-        return "PRQN-".sprintf('%1$05d', $id);
+        parent::afterInstanceSave($instance);
+
+        $config = GlobalConfig::getInstance()->getAllData();
+
+        $this->sendMessageToSupplier($instance, $config);
+        $this->sendMessageToCustomer($instance, $config);
     }
 
-
-    public function afterInstanceSave($instance)
-    {
-        //parent::afterOwnerSave(afterInstanceSave);
-
-        $config = GlobalConfig::getInstance();
-
-        //----
-
-        $messageToSupplier = $config["product_question_email"]["product_question_message_body_to_brand"];
-        $messageToSupplier = str_replace(['{{mpn}}','{{supplier_internal_id}}'], [
-            $instance->product->mpn,
-            $instance->product->supplier_internal_id
-        ], $messageToSupplier);
-        $messageToSupplier = str_replace("{{productname}}", $instance->product->product, $messageToSupplier);
-        $messageToSupplier = str_replace("{{brand_email}}", $instance->product->brand->customer_service_email, $messageToSupplier);
-        $messageToSupplier = str_replace("{{brand_phone}}", $instance->product->brand->customer_service_phone, $messageToSupplier);
-        $messageToSupplier = str_replace("{{question}}", $this->question, $messageToSupplier);
-        $messageToSupplier = str_replace("{{customer_phone}}", $this->phone . ' x ' . $this->phone_ext, $messageToSupplier);
-        $messageToSupplier = str_replace("{{product_link}}", $instance->product->getAbsoluteUrl(true), $messageToSupplier);
-        $messageToSupplier = str_replace("{{customer_email}}", $this->email, $messageToSupplier);
-        $messageToSupplier = str_replace("{{prqnid}}", $this->prefixProductQuestionId($instance->product->id), $messageToSupplier);
-        $messageToSupplier = str_replace("{{signature}}", $this->getSignature($instance->product->sites->limit(1)->get(), $config), $messageToSupplier);
-        $messageToSupplier = str_replace("{{customer_name}}", $this->name, $messageToSupplier);
-
-
-        Xcart::app()->mail->template(
-            $config["product_question_email"]["product_question_bc_email"],
-            $config["product_question_email"]["product_question_subject_line"],
-            'mail/base_template.tpl',
-            [
-                'message' => $messageToSupplier,
-                'from' => $this->email
-            ]
-        );
-
-        // -------
-
-        $messageToCustomer = $config["product_question_email"]["product_question_message_body_to_customer"];
-        $messageToCustomer = str_replace(['{{mpn}}','{{supplier_internal_id}}'], [
-            $instance->product->mpn,
-            $instance->product->supplier_internal_id
-        ], $messageToCustomer);
-        $messageToCustomer = str_replace("{{productname}}", $instance->product->product, $messageToCustomer);
-        $messageToCustomer = str_replace("{{brand_email}}", $instance->product->brand->customer_service_email, $messageToCustomer);
-        $messageToCustomer = str_replace("{{brand_phone}}", $instance->product->brand->customer_service_phone, $messageToCustomer);
-        $messageToCustomer = str_replace("{{question}}", $this->question, $messageToCustomer);
-        $messageToCustomer = str_replace("{{customer_phone}}", $this->phone . ' x ' . $this->phone_ext, $messageToCustomer);
-        $messageToCustomer = str_replace("{{product_link}}", $instance->product->getAbsoluteUrl(true), $messageToCustomer);
-        $messageToCustomer = str_replace("{{customer_email}}", $this->email, $messageToCustomer);
-        $messageToCustomer = str_replace("{{prqnid}}", $this->prefixProductQuestionId($instance->product->id), $messageToCustomer);
-        $messageToCustomer = str_replace("{{signature}}", $this->getSignature($instance->product->sites->limit(1)->get(), $config), $messageToCustomer);
-        $messageToCustomer = str_replace("{{customer_name}}", $this->name, $messageToCustomer);
-
-
-
-        Xcart::app()->mail->template(
-            $this->email,
-            $config["product_question_email"]["product_question_subject_line"],
-            'mail/base_template.tpl',
-            [
-                'message' => $messageToCustomer,
-                'from' => DepartmentsModel::objects()->getModel()->getDepartmentByName('Product question')->email
-            ]
-        );
-        // ---
-
-
-    }
-
-    private function getSignature($storefront, $config)
+    /**
+     * @param $storefront
+     * @param $config
+     * @return mixed
+     */
+    private function getSignature($storefront, $config): string
     {
 
-        $params['storefrontid'] =  $storefront->storefrontid;
+        $params['storefrontid'] = $storefront->storefrontid;
         $phones = GeoipHelper::getPhones($params);
 
         $search = [
@@ -182,8 +121,90 @@ class ProductQuestionForm extends ModelForm
             "{{customer_service_local_phone_number}}" => $phones
         ];
 
-        $signature = str_replace (array_keys($search), array_values($search), $config["Company"]["signature"]);
+        $signature = str_replace(array_keys($search), array_values($search), $config["Company"]["signature"]);
 
         return $signature;
     }
+
+    /**
+     * @param $instance
+     * @param $config
+     */
+    private function sendMessageToSupplier($instance, $config): void
+    {
+        Xcart::app()->mail->template(
+            $config["product_question_bc_email"],
+            $config["product_question_subject_line"],
+            'mail/base_template.tpl',
+            [
+                'message' => $this->createMessage($instance, $config, $config["product_question_message_body_to_brand"])
+            ],
+            ['from' => $this->email->value]
+        );
+    }
+
+    /**
+     * @param $instance
+     * @param $config
+     */
+    private function sendMessageToCustomer($instance, $config): void
+    {
+        Xcart::app()->mail->template(
+            $this->email->value,
+            $config["product_question_subject_line"],
+            'mail/base_template.tpl',
+            [
+                'message' => $this->createMessage($instance, $config, $config["product_question_message_body_to_customer"])
+            ],
+            ['from' => DepartmentsModel::objects()->getModel()->getDepartmentByName('Product question')->email]
+        );
+    }
+
+    /**
+     * @param $instance
+     * @param $config
+     * @param $message
+     * @return mixed
+     */
+    private function createMessage($instance, $config, $message): string
+    {
+        $product = $instance->product;
+        $brand = $product->brand;
+
+        $message = str_replace(['{{mpn}}', '{{supplier_internal_id}}'], [
+            $product->getMPN(),
+            $product->supplier_internal_id
+        ], $message);
+        $message = str_replace("{{productname}}", $product->product, $message);
+        $message = str_replace("{{brand_email}}", $brand->customer_service_email, $message);
+        $message = str_replace("{{brand_phone}}", $brand->customer_service_phone, $message);
+        $message = str_replace("{{question}}", $this->question, $message);
+        $message = str_replace("{{customer_phone}}", $this->createPhone(), $message);
+        $message = str_replace("{{product_link}}", $product->getAbsoluteUrl(true), $message);
+        $message = str_replace("{{customer_email}}", $this->email->value, $message);
+        $message = str_replace("{{prqnid}}", $this->prefixProductQuestionId($instance->id), $message);
+        $message = str_replace("{{signature}}", $this->getSignature($product->sites->limit(1)->get(), $config), $message);
+        $message = str_replace("{{customer_name}}", $this->name, $message);
+
+        return $message;
+    }
+
+    /**
+     * @return string
+     */
+    private function createPhone(): string
+    {
+        return $this->phone . ' x ' . $this->phone_ext;
+    }
+
+    /**
+     * @param $id
+     * @return string
+     */
+    private function prefixProductQuestionId($id): string
+    {
+        return "PRQN-" . sprintf('%1$05d', $id);
+    }
+
+
 }
