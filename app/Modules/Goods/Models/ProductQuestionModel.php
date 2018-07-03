@@ -57,5 +57,17 @@ class ProductQuestionModel extends Model
         ];
     }
 
+    /**
+     * @return string
+     */
+    public function createPhone(): string
+    {
+        $phone = $this->phone;
+        if($this->phone_ext) {
+            $phone .= ' x ' . $this->phone_ext;
+        }
+        return $phone;
+    }
+
 
 }

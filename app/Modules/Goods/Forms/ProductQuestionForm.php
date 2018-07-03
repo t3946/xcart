@@ -134,12 +134,16 @@ class ProductQuestionForm extends ModelForm
     {
         Xcart::app()->mail->template(
             $config["product_question_bc_email"],
-            $config["product_question_subject_line"],
+            // create subject
+            $this->applyInfoToText($instance, $config, $config["product_question_subject_line"]),
             'mail/base_template.tpl',
             [
-                'message' => $this->createMessage($instance, $config, $config["product_question_message_body_to_brand"])
+                // create message
+                'content' => $this->applyInfoToText($instance, $config, $config["product_question_message_body_to_brand"])
             ],
-            ['from' => $this->email->value]
+            [
+                'from' => $instance->email
+            ]
         );
     }
 
@@ -150,51 +154,49 @@ class ProductQuestionForm extends ModelForm
     private function sendMessageToCustomer($instance, $config): void
     {
         Xcart::app()->mail->template(
-            $this->email->value,
-            $config["product_question_subject_line"],
+            $instance->email,
+            // create subject
+            $this->applyInfoToText($instance, $config, $config["product_question_subject_line"]),
             'mail/base_template.tpl',
             [
-                'message' => $this->createMessage($instance, $config, $config["product_question_message_body_to_customer"])
+                // create message
+                'content' => $this->applyInfoToText($instance, $config, $config["product_question_message_body_to_customer"])
             ],
-            ['from' => DepartmentsModel::objects()->getModel()->getDepartmentByName('Product question')->email]
+            [
+                'from' => DepartmentsModel::objects()->getModel()->getDepartmentByName('Product question')->email
+            ]
         );
     }
 
     /**
      * @param $instance
      * @param $config
-     * @param $message
+     * @param $text
      * @return mixed
      */
-    private function createMessage($instance, $config, $message): string
+    private function applyInfoToText($instance, $config, $text): string
     {
         $product = $instance->product;
         $brand = $product->brand;
 
-        $message = str_replace(['{{mpn}}', '{{supplier_internal_id}}'], [
+        $text = str_replace(['{{mpn}}', '{{supplier_internal_id}}'], [
             $product->getMPN(),
             $product->supplier_internal_id
-        ], $message);
-        $message = str_replace("{{productname}}", $product->product, $message);
-        $message = str_replace("{{brand_email}}", $brand->customer_service_email, $message);
-        $message = str_replace("{{brand_phone}}", $brand->customer_service_phone, $message);
-        $message = str_replace("{{question}}", $this->question, $message);
-        $message = str_replace("{{customer_phone}}", $this->createPhone(), $message);
-        $message = str_replace("{{product_link}}", $product->getAbsoluteUrl(true), $message);
-        $message = str_replace("{{customer_email}}", $this->email->value, $message);
-        $message = str_replace("{{prqnid}}", $this->prefixProductQuestionId($instance->id), $message);
-        $message = str_replace("{{signature}}", $this->getSignature($product->sites->limit(1)->get(), $config), $message);
-        $message = str_replace("{{customer_name}}", $this->name, $message);
+        ], $text);
+        $text = str_replace("{{productname}}", $product->product, $text);
+        $text = str_replace("{{brand_email}}", $brand->customer_service_email, $text);
+        $text = str_replace("{{brand_phone}}", $brand->customer_service_phone, $text);
+        $text = str_replace("{{question}}", $instance->question, $text);
+        $text = str_replace("{{customer_phone}}", $instance->createPhone(), $text);
+        $text = str_replace("{{product_link}}", $product->getAbsoluteUrl(true), $text);
+        $text = str_replace("{{customer_email}}", $instance->email, $text);
+        $text = str_replace("{{prqnid}}", $this->prefixProductQuestionId($instance->id), $text);
+        $text = str_replace("{{signature}}", $this->getSignature($product->sites->limit(1)->get(), $config), $text);
+        $text = str_replace("{{customer_name}}", $instance->name, $text);
 
-        return $message;
-    }
+        //var_dump($message);exit();
 
-    /**
-     * @return string
-     */
-    private function createPhone(): string
-    {
-        return $this->phone . ' x ' . $this->phone_ext;
+        return $text;
     }
 
     /**
