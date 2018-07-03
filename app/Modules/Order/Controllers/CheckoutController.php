@@ -175,8 +175,11 @@ class CheckoutController extends FrontendController
         }
 
         if ($search = Xcart::app()->request->get->get('search')) {
-            $states = StateModel::objects()->filter(array_merge(['state__contains' => $search],
-                $filter ?? []))->limit(10)->valuesList(['state', 'code'], false);
+            $states = StateModel::objects()
+                ->filter(array_merge(['state__contains' => $search],$filter ?? []))
+                ->limit(10)
+                ->order([new Expression("(CASE WHEN state LIKE '{$search}%' THEN 1 ELSE 2 END)"), 'state'])
+                ->valuesList(['state', 'code'], false);
         }
 
         $this->jsonResponse($states ?? []);
@@ -197,7 +200,9 @@ class CheckoutController extends FrontendController
         if ($search = Xcart::app()->request->get->get('search')) {
             $city = ZipCodeModel::objects()
                 ->filter(array_merge(['city__contains' => $search],$filter ?? []))
-                ->limit(10)->group(['city'])
+                ->limit(10)
+                ->order([new Expression("(CASE WHEN city LIKE '{$search}%' THEN 1 ELSE 2 END)"), 'city'])
+                ->group(['city'])
                 ->valuesList(['primary_city' => 'city'], true);
         }
         $this->jsonResponse($city ?? []);
