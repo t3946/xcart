@@ -93,6 +93,7 @@ class ProductQuestionForm extends ModelForm
 
 
     /**
+     * Do stuff after the question is added
      * @param $instance
      */
     public function afterInstanceSave($instance): void
@@ -106,6 +107,7 @@ class ProductQuestionForm extends ModelForm
     }
 
     /**
+     * Create signature
      * @param $storefront
      * @param $config
      * @return mixed
@@ -126,6 +128,7 @@ class ProductQuestionForm extends ModelForm
     }
 
     /**
+     * Send message to supplier
      * @param $instance
      * @param $config
      */
@@ -147,6 +150,7 @@ class ProductQuestionForm extends ModelForm
     }
 
     /**
+     * Send message to customer
      * @param $instance
      * @param $config
      */
@@ -168,6 +172,7 @@ class ProductQuestionForm extends ModelForm
     }
 
     /**
+     * Add information to text
      * @param $instance
      * @param $config
      * @param $text
@@ -193,12 +198,11 @@ class ProductQuestionForm extends ModelForm
         $text = str_replace("{{signature}}", $this->getSignature($product->sites->limit(1)->get(), $config), $text);
         $text = str_replace("{{customer_name}}", $instance->name, $text);
 
-        //var_dump($message);exit();
-
         return $text;
     }
 
     /**
+     * Create product prefix
      * @param $id
      * @return string
      */

@@ -33,11 +33,7 @@ class DefaultController extends FrontendController
             $productId = (int)$newQuestion['productid'];
 
             if($form->populate(Xcart::app()->request->post)->isValid() && $form->save()) {
-                $message = [
-                    'text' => "Thank you for submitting your product question! We appreciate your interest in this product. 
-                        We'll do our best to get back to you within 24 hours. S3 Stores, Inc. customer care team",
-                    'type' => 'success'
-                ];
+                $message = 'success';
             }
         }
 

@@ -11,13 +11,20 @@
         return false;
     });
 
-    window.addFlashMessage = (message, type, time) => {
-        type = type ? type : 'success';
+    window.addFlashMessage = (message, type, html, time) => {
+        type = type ||'success';
+        html = html || false;
         let outTime = (time && time > flashOutTime) ? time : flashOutTime;
 
         let $item = $('<div class="flash-message"></div>').addClass(type);
         let $closer = $('<a class="close-flash right"><i class="icon-delete_in_filter"></i></a>');
-        let $text = $('<span/>').addClass('message').text(message);
+        let $text;
+        if(!html) {
+            $text = $('<span/>').addClass('message').text(message);
+        } else {
+            $text = $('<span/>').addClass('message').html(message);
+        }
+
 
         $item.append([$closer, $text]);
         $flashList.append($item);

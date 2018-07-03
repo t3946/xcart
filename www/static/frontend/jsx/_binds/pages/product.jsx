@@ -56,8 +56,8 @@ import documentReady from "../../utils/documentReady";
                             if (!('messageText' in messageInfo)) {
                                 return;
                             }
-                            console.log(messageInfo['messageText'],  messageInfo['messageType']);
-                            window.addFlashMessage(messageInfo['messageText'], messageInfo['messageType']);
+                            let text = questionsContainer.find('.' + messageInfo['messageText']).html();
+                            window.addFlashMessage(text, messageInfo['messageType'], true);
                         }
                     }
                 });
