@@ -136,7 +136,7 @@ class ProductQuestionForm extends ModelForm
             $config["product_question_bc_email"],
             // create subject
             $this->applyInfoToText($instance, $config, $config["product_question_subject_line"]),
-            'mail/base_template.tpl',
+            'mail/blank.tpl',
             [
                 // create message
                 'content' => $this->applyInfoToText($instance, $config, $config["product_question_message_body_to_brand"])
@@ -157,7 +157,7 @@ class ProductQuestionForm extends ModelForm
             $instance->email,
             // create subject
             $this->applyInfoToText($instance, $config, $config["product_question_subject_line"]),
-            'mail/base_template.tpl',
+            'mail/blank.tpl',
             [
                 // create message
                 'content' => $this->applyInfoToText($instance, $config, $config["product_question_message_body_to_customer"])
