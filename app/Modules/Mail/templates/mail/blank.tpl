@@ -9,7 +9,7 @@
 <table cellpadding="0" cellspacing="0" border="0" width="100%">
     <tr>
         <td style="background-color: {block 'background_color'}#f2f5f7{/block};" align="center" valign="top">
-            <table cellpadding="0" cellspacing="0" border="0" width="600" style="margin-top: 70px;box-shadow: 0 13px 27px rgba(0,0,0,.05);">
+            <table cellpadding="0" cellspacing="0" border="0" width="600" style="margin-top: 70px;margin-bottom: 70px;">
                 <tr>
                     <td style="background-color: #fff;" valign="top" align="center">
                         <table cellpadding="0" cellspacing="0" border="0" width="530" style="margin-top: 35px;">
