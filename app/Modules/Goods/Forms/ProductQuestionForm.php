@@ -200,7 +200,7 @@ class ProductQuestionForm extends ModelForm
         $text = str_replace("{{brand_phone}}", $brand->customer_service_phone, $text);
         $text = str_replace("{{question}}", $instance->question, $text);
         $text = str_replace("{{customer_phone}}", $instance->createPhone(), $text);
-        $text = str_replace("{{product_link}}", $product->getAbsoluteUrl(true), $text);
+        $text = str_replace("{{product_link}}", 'https:' . $product->getAbsoluteUrl(true), $text);
         $text = str_replace("{{customer_email}}", $instance->email, $text);
         $text = str_replace("{{prqnid}}", $this->prefixProductQuestionId($instance->id), $text);
         $text = str_replace("{{signature}}", $this->getSignature($product->sites->limit(1)->get(), $config), $text);
