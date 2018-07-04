@@ -6,6 +6,7 @@ if (!isset($Product_SKU_found)){
 
 x_load("mail", "product", "http");
 
+
 $product_info = func_select_product($productid, @$user_account['membershipid']);
 
 $customer_email = $email;
@@ -60,6 +61,7 @@ $name = $firstname;
 
 $firstname_arr = explode(" ", $firstname);
 $firstname = array_shift($firstname_arr);
+
 
 db_query("INSERT INTO $sql_tbl[product_question] (productid, email, phone, question, date, company, zipcode, name, firstname, answered_date) VALUES ('$productid', '$customer_email', '$phone', '$question', '".time()."', '".addslashes($company)."', '".addslashes($b_zipcode)."', '".addslashes($name)."', '".addslashes($firstname)."', '$answered_date')");
 $product_question_id = db_insert_id();

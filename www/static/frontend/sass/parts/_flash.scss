@@ -1,12 +1,16 @@
 .flash-list {
   list-style: none;
-  padding: 0;
+  padding: 0 .625rem;
   margin: 0;
   position: fixed;
   left: 0;
   top: 0;
   right: 0;
-  z-index: 1;
+  z-index: 4;
+
+  @include breakpoint(large) {
+    padding: 0 1.25rem;
+  }
 
   .flash-message {
     margin: 1em auto;
@@ -48,6 +52,12 @@
       &.right {
         float: right;
       }
+    }
+
+    .in-center{
+      display: block;
+      margin: 0 auto;
+      max-width: rem-calc(600);
     }
   }
 }

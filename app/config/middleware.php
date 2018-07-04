@@ -9,6 +9,9 @@ return [
     'CORS' => [
         'class' => '\\Modules\\Core\\Middleware\\CorsMiddleware',
     ],
+//    'HtmlMinMiddleware' => [
+//        'class' => \Xcart\App\Middleware\HtmlMinMiddleware::class,
+//    ],
     'static_cache' => [
         'class' => '\\Modules\\Core\\Middleware\\CacheMiddleware',
         'cacheEnabled' => (defined('APP_DEBUG') && APP_DEBUG)? false : true,

@@ -1,0 +1,195 @@
+@mixin getProductQuestionsStyle() {
+
+  $line-height-small: rem-calc(22);
+  $line-height-sm: rem-calc(27);
+
+  $spaces-medium: rem-calc(40);
+
+  .user-questions {
+
+    margin-top: rem-calc(25);
+    border-top: 2px solid $grey_c9;
+
+    @include breakpoint(medium) {
+      margin-top: rem-calc(30);
+    }
+
+    @include breakpoint(large) {
+      margin-top: rem-calc(40);
+    }
+
+    .question-row {
+
+      padding-top: $line-height-small;
+      padding-bottom: $line-height-small;
+      border-top: 2px solid $grey_c9;
+
+      @include breakpoint(sm) {
+        padding-top: $line-height-sm;
+        padding-bottom: $line-height-sm;
+      }
+
+      @include breakpoint(medium) {
+        padding-top: $spaces-medium;
+        padding-bottom: $spaces-medium;
+      }
+
+      &:first-child {
+        border-top: 0;
+      }
+
+      .question-item {
+        @include breakpoint(medium){
+          padding: 0 rem-calc(34);
+        }
+
+        @include breakpoint(large){
+          padding: 0 rem-calc(150);
+        }
+
+        .title {
+          color: $grey_5a;
+          font-size: 1rem;
+          font-weight: bold;
+          line-height: 1;
+
+          @include breakpoint(sm) {
+            font-size: rem-calc(20);
+          }
+
+          @include breakpoint(medium) {
+            font-size: rem-calc(24);
+          }
+
+          @include breakpoint(large) {
+            font-size: 1rem;
+            width: rem-calc(115);
+            text-align: right;
+          }
+
+          .full {
+            white-space: nowrap;
+          }
+
+        }
+
+        .post {
+
+          padding-left: rem-calc(10);
+
+          @include breakpoint(sm){
+            padding-left: rem-calc(15);
+          }
+
+          @include breakpoint(medium){
+            padding-left: rem-calc(30);
+          }
+
+          @include breakpoint(large){
+            padding-left: rem-calc(40);
+          }
+
+          .text {
+            border: 1px solid $grey_d2;
+            border-radius: 0 4px 4px;
+            background-color: $light_f8;
+            line-height: $line-height-small;
+            color: $dark_26;
+            padding: .5rem rem-calc(12);
+            position: relative;
+            box-shadow: 0 2px 2px 0px $grey_d2;
+            font-size: 1rem;
+            margin-left: 18px;
+
+
+            @include breakpoint(sm) {
+              padding-right: rem-calc(14);
+              padding-left: rem-calc(14);
+              line-height: $line-height-sm;
+            }
+
+            @include breakpoint(medium) {
+              font-size: rem-calc(18);
+              padding-right: rem-calc(22);
+              padding-left: rem-calc(22);
+            }
+
+            @include breakpoint(large) {
+              font-size: 1rem;
+              padding-right: rem-calc(32);
+              padding-left: rem-calc(32);
+              line-height: $line-height-small;
+            }
+
+            .text-content {
+              overflow: hidden;
+              word-wrap: normal;
+              overflow-wrap: break-word;
+            }
+
+            .before {
+              width: 24px;
+              height: 24px;
+              position: absolute;
+              top: -1px;
+              left: -24px;
+              overflow: hidden;
+
+              &:before {
+                content: '';
+                display: block;
+                width: 32px;
+                height: 19px;
+                border: 1px solid $grey_d2;
+                transform: skewX(45deg);
+                background-color: $light_f8;
+                box-shadow: -1px 6px 2px 2px $grey_d2;
+                position: absolute;
+                top: 0;
+                left: 14px;
+              }
+            }
+          }
+          .by-line {
+            color: #6b6b6b;
+            font-size: rem-calc(12);
+            line-height: 1.2;
+            padding-top: .5rem;
+            margin-left: 18px;
+            min-height: $line-height-small;
+          }
+        }
+      }
+      .answer {
+
+        padding-top: $line-height-small;
+
+        @include breakpoint(sm) {
+          padding-top: $line-height-sm;
+        }
+
+        .question-item {
+
+          .title {
+            color: $forest_green;
+          }
+
+          .post {
+            .text {
+              background-color: $honey_dew;
+              border-color: $green_tea;
+
+              .before {
+                &:before {
+                  background-color: $honey_dew;
+                  border-color: $green_tea;
+                }
+              }
+            }
+          }
+
+        }
+      }
+    }
+  }
+}

@@ -15,9 +15,9 @@
     display: none;
 
     @include breakpoint(large up) {
-        display: block;
-        font-size: rem-calc(20);
-        font-weight: bold;
+      display: block;
+      font-size: rem-calc(20);
+      font-weight: bold;
     }
   }
 
@@ -37,11 +37,9 @@
 
   }
 
-
-
   /* all input styles */
 
-  input, textarea, select{
+  input, textarea, select {
 
     width: 100%;
     box-shadow: none;
@@ -72,14 +70,14 @@
 
     &::placeholder {
       font-style: italic;
-      color: #969696;
+      color: $grey_96;
     }
 
     &:focus {
       border: 1px solid #ff8d91;
     }
 
-    &.invalid{
+    &.invalid {
       border: 1px solid red;
 
       &:focus {
@@ -99,7 +97,7 @@
 
   /* special styles for select */
 
-  select{
+  select {
 
     appearance: none;
     background: url('../images/select_str.png') calc(100% - .625rem) center no-repeat;
@@ -117,13 +115,13 @@
     @include breakpoint(large up) {
       background-size: .625rem;
 
-      option{
-          background-color: white;
-          color: black;
+      option {
+        background-color: white;
+        color: black;
 
-          &:hover{
-                background-color: #edf0f2;
-          }
+        &:hover {
+          background-color: #edf0f2;
+        }
 
       }
     }
@@ -156,7 +154,7 @@
     @include breakpoint(large up) {
       text-align: left;
       font-size: rem-calc(12);
-      padding:0;
+      padding: 0;
     }
 
     .required {
@@ -166,7 +164,7 @@
         font-size: rem-calc(14);
       }
 
-      &:after{
+      &:after {
         content: '*';
         display: inline;
         vertical-align: top;
@@ -178,7 +176,6 @@
 
   /* page labels text styles */
 
-
   .form-field {
 
     margin-bottom: 1.25rem;
@@ -188,7 +185,7 @@
       display: flex;
     }
     @include breakpoint(large up) {
-        margin-bottom: .625rem;
+      margin-bottom: .625rem;
     }
 
     .field-title {
@@ -202,7 +199,7 @@
       }
 
       @include breakpoint(large up) {
-         height: 1.5rem;
+        height: 1.5rem;
       }
 
       label {
@@ -250,7 +247,7 @@
       }
     }
 
-    .field{
+    .field {
       @include breakpoint(medium up) {
         width: 50%;
       }
@@ -268,7 +265,7 @@
       display: inline-block;
       font-weight: bold;
       line-height: 100%;
-      background-color: #ffb400;
+      background-color: $dark_yellow;
       border-radius: 4px;
       padding: 1em 2.25rem;
       cursor: pointer;

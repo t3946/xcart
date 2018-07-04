@@ -78,6 +78,7 @@ class SiteModel extends Model
                 'link' => ['code' => 'sf_code'],
             ],
 
+
             'storefrontid' => [
                 'class' => AutoField::class,
             ],

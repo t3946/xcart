@@ -1,10 +1,15 @@
 <?php
 namespace Modules\Goods\Models;
 
+use Doctrine\DBAL\Types\Type;
+use Modules\User\Models\UserModel;
 use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\CharField;
+use Xcart\App\Orm\Fields\ForeignField;
+use Xcart\App\Orm\Fields\UnixTimestampField;
 use Xcart\App\Orm\Model;
+
 
 class ProductQuestionModel extends Model
 {
@@ -19,10 +24,10 @@ class ProductQuestionModel extends Model
     {
         return [
             'id' => [
-                'class' => AutoField::className(),
+                'class' => AutoField::class,
             ],
             'status' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'null' => false,
                 'default' => 'question_received_from_cust',
                 'choices' => [
@@ -33,7 +38,41 @@ class ProductQuestionModel extends Model
                     "order_pending"                => "Order pending",
                     "closed"                       => "Closed",
                 ]
-            ]
+            ],
+            'user' => [
+                'class' => ForeignField::class,
+                'field' => 'login',
+                'modelClass' => UserModel::class,
+                'link' => ['login' => 'login'],
+                'sqlType' => Type::STRING,
+                'null' => true
+            ],
+            'product' => [
+                'class' => ForeignField::class,
+                'field' => 'productid',
+                'modelClass' => ProductModel::class,
+                'link' => ['productid' => 'productid'],
+                'null' => true
+            ],
+            'date' => [
+                'class' => UnixTimestampField::class,
+                'autoNowAdd' => true,
+            ],
+
         ];
     }
+
+    /**
+     * @return string
+     */
+    public function createPhone(): string
+    {
+        $phone = $this->phone;
+        if($this->phone_ext) {
+            $phone .= ' x ' . $this->phone_ext;
+        }
+        return $phone;
+    }
+
+
 }

@@ -203,10 +203,17 @@ class ModelForm extends BaseForm
 
         $this->setModelAttributes($this->cleanedData);
         $instance = $this->getInstance();
+
+        $this->beforeInstanceSave($instance);
         $saved = $instance->save();
+
+        if($saved){
+            $this->afterInstanceSave($instance);
+        }
 
         $inlineSaved = true;
         if (!$this->getParentForm()) {
+
             $inlineCreate = $this->getInlinesCreate();
 
             foreach ($inlineCreate as $inline) {
@@ -226,6 +233,16 @@ class ModelForm extends BaseForm
         }
 
         return $saved && $inlineSaved;
+    }
+
+    public function afterInstanceSave($instance)
+    {
+
+    }
+
+    public function beforeInstanceSave($instance)
+    {
+
     }
 
     /**

@@ -9,6 +9,11 @@ use Modules\Goods\Controllers\PromoController;
 return [
     /** PRODUCTS ROUTES */
     [
+        'route' => '/product-question/',
+        'target' => [DefaultController::class, 'actionProductQuestions'],
+        'name' => 'product_question'
+    ],
+    [
         'route' => '/product/{slug:sku}',
         'target' => [DefaultController::class, 'actionView'],
 //        'name' => 'product:view'
@@ -28,6 +33,7 @@ return [
         'target' => [ApiProductController::class, 'getProductInfo'],
         'name' => 'get_product_info'
     ],
+
 
 
     /** CATEGORY ROUTES */

@@ -75,10 +75,12 @@ abstract class Base implements ModelInterface, ArrayAccess, Serializable
     /**
      * @param $name
      * @param $value
+     * @return
      * @throws Exception
      */
     public function __set($name, $value)
     {
+
         $name = $this->convertToPrimaryKeyName($name);
         if ($this->hasField($name)) {
             if ($this->getField($name) instanceof ManyToManyField) {
@@ -88,6 +90,12 @@ abstract class Base implements ModelInterface, ArrayAccess, Serializable
                 $this->setAttribute($name, $value);
             }
         } else {
+
+            $method = 'set' . ucfirst($name);
+            if(method_exists($this, $method)) {
+                return $this->$method($value);
+            }
+
             throw new Exception("Setting unknown property " . get_class($this) . "::" . $name);
         }
     }
@@ -126,6 +134,7 @@ abstract class Base implements ModelInterface, ArrayAccess, Serializable
      */
     public function __get($name)
     {
+
         $name = $this->convertToPrimaryKeyName($name);
         if ($this->hasField($name)) {
             $field = $this->getField($name);
@@ -135,6 +144,11 @@ abstract class Base implements ModelInterface, ArrayAccess, Serializable
             }
 
             return $this->getFieldValue($name);
+        }
+
+        $method = 'get' . ucfirst($name);
+        if(method_exists($this, $method)) {
+            return $this->$method();
         }
 
         throw new \RuntimeException('Setting unknown property ' . \get_class($this) . '::' . $name);

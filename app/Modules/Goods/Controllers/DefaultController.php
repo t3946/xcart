@@ -2,10 +2,12 @@
 
 namespace Modules\Goods\Controllers;
 
+use Modules\Goods\Forms\ProductQuestionForm;
 use Modules\Goods\Helpers\ProductHelper;
 use Modules\Goods\Helpers\ProductSortHelper;
 use Modules\Goods\Helpers\TabDataHelper;
 use Modules\Goods\Models\ProductModel;
+use Modules\Goods\Models\ProductQuestionModel;
 use Modules\Goods\Models\ProductVideosModel;
 use Modules\Meta\Types\MetaType;
 use Xcart\App\Controller\FrontendController;
@@ -18,6 +20,35 @@ class DefaultController extends FrontendController
     public function actionViewOld($id, $slug): void
     {
         $this->view_internal(ProductModel::objects()->filter(['productid' => $id])->get());
+    }
+
+    public function actionProductQuestions(): void
+    {
+        $productId = (int)Xcart::app()->request->get['productId'];
+        $form = new ProductQuestionForm();
+
+        if($this->getRequest()->getIsPost()){
+
+            $newQuestion = Xcart::app()->request->post['ProductQuestionForm'];
+            $productId = (int)$newQuestion['productid'];
+
+            if($form->populate(Xcart::app()->request->post)->isValid() && $form->save()) {
+                $message = 'success';
+            }
+        }
+
+        $questions = ProductQuestionModel::objects()->filter([
+            'productid' => $productId,
+            'question_published_on_page' => 'Y'
+        ])->order(['order_by'])->all();
+
+
+        $this->display('product/tabs/_questions.tpl', [
+            'form' => $form,
+            'message' => $message,
+            'productQuestion' => $questions,
+            'productId' => $productId
+        ]);
     }
 
     public function actionViewOldSlash($id, $slug): void
@@ -137,7 +168,6 @@ class DefaultController extends FrontendController
         } else {
             $this->setCanonical($model);
         }
-
 
         $this->display('product/product.tpl', $params);
     }

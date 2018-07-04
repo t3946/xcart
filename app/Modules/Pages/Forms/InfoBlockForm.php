@@ -7,6 +7,7 @@ use Modules\Editor\Fields\EditorField;
 use Modules\Pages\Models\InfoBlock;
 use Xcart\App\Form\ModelForm;
 
+
 class InfoBlockForm extends ModelForm
 {
 

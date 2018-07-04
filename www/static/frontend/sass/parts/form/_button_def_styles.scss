@@ -1,0 +1,33 @@
+@mixin getButtonDefStyle() {
+  .button {
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: rem-calc(19);
+    display: block;
+    width: 100%;
+    line-height: rem-calc(39);
+    //border: 2px solid #ffb400;
+    //border-radius: 5px;
+    text-align: center;
+
+    @include breakpoint (sm) {
+      font-size: rem-calc(20);
+      line-height: rem-calc(42);
+    }
+
+    @include breakpoint (medium) {
+      display: inline-block;
+      line-height: rem-calc(47);
+      padding: 0 rem-calc(40);
+      width: auto;
+    }
+
+    @include breakpoint (ml) {}
+
+    @include breakpoint (large) {
+      font-size: rem-calc(18);
+      line-height: rem-calc(40);
+      padding: 0 rem-calc(33);
+    }
+  }
+}

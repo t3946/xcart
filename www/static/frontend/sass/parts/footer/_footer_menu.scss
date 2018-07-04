@@ -161,7 +161,7 @@ footer {
         }
 
         @include placeholder() {
-          color: #969696;
+          color: $grey_96;
           font-style: italic;
         }
 

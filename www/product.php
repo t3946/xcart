@@ -425,6 +425,7 @@ if (!empty($cart_manufact_text_displayed_tabs) && is_array($cart_manufact_text_d
     }
 }
 
+
 $product_info["product_questions"] = func_query_param(/** @lang MySQL */
     "SELECT * FROM xcart_product_question WHERE question_published_on_page='Y' AND productid=:productid ORDER BY order_by", ['productid' => $productid]);
 

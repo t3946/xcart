@@ -1,3 +1,5 @@
+@import "./form/phone_ext";
+
 form {
   label {
     .required {
@@ -40,6 +42,11 @@ form {
       border: 1px solid #ff8d91;
     }
 
+    &::placeholder{
+      font-style: italic;
+      color: $grey_96;
+    }
+
     @include breakpoint(large) {
       line-height: rem-calc(24);
       max-width: rem-calc(295);
@@ -62,6 +69,10 @@ form {
 
   textarea {
     line-height: 1.2;
+    resize: vertical;
+    min-height: 7em;
+    height: 7em;
+    max-height: 14em;
   }
 
   label {
@@ -288,92 +299,9 @@ form {
   }
 }
 
+
 .cart_shipping-page {
-
-  form {
-
-    .phone--container {
-      display: flex;
-      flex-direction: row;
-      flex-wrap: nowrap;
-
-      .phone {
-        @include breakpoint(large) {
-          width: rem-calc(147);
-        }
-      }
-
-      .phone_ext--container {
-
-        display: flex;
-        flex-direction: row;
-        flex-wrap: nowrap;
-
-        label {
-          padding: 0 rem-calc(10);
-          display: inline ;
-          align-self: center;
-        }
-
-        input {
-          width: rem-calc(72);
-        }
-
-      }
-
-      @include breakpoint(large) {
-        display: block;
-
-        .phone_ext--container {
-          display: inline-block;
-        }
-      }
-    }
-
-    @include breakpoint(large) {
-      .phone_ext--container {
-        padding-left: rem-calc(30);
-
-        label {
-          padding-right: rem-calc(5);
-
-          i {
-            color: #777;
-          }
-        }
-      }
-    }
-
-    .phone_ext {
-      width: rem-calc(72);
-    }
-
-    .buttons {
-      margin:  rem-calc(10) 0;
-    }
-  }
-
-  .text-block {
-    //margin-top: rem-calc(18);
-
-    @include breakpoint(large) {
-      margin: 0;
-      line-height: rem-calc(38);
-    }
-  }
-
-  .multiline {
-    vertical-align: baseline;
-    line-height: 1;
-  }
-
-  .hr {
-    display: none;
-
-    @include breakpoint(large) {
-      display: block;
-    }
-  }
+  @include getPhoneExtStyle();
 }
 
 .checkout-shipping {

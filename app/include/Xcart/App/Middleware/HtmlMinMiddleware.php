@@ -10,7 +10,7 @@ class HtmlMinMiddleware extends Middleware
 
     public $spaceless = true;
 
-    public function processView($request, &$output)
+    public function processView($request, $output): string
     {
         if ($this->spaceless) {
             $output = trim(preg_replace('/>\\s+</', '><', $output));
@@ -23,5 +23,7 @@ class HtmlMinMiddleware extends Middleware
                 $i++;
             }
         }
+
+        return $output;
     }
 }
