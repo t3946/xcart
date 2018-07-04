@@ -9,7 +9,7 @@
   //text-transform: uppercase;
 
   &.yellow-white {
-    border: 2px solid #ffb400;
+    border: 2px solid $dark_yellow;
     background-color: #ffffff;
     color: #4a4949;
 
@@ -18,7 +18,7 @@
     }
 
     &:active {
-      background-color: #ffb400;
+      background-color: $dark_yellow;
     }
 
     &.waves-effect {
@@ -29,7 +29,7 @@
   }
 
   &.yellow {
-    background-color: #ffb400;
+    background-color: $dark_yellow;
     color: black;
 
     &:hover {
