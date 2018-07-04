@@ -505,7 +505,7 @@ class SupplierFeedHelper
             }
         } else {
             /** @var CategoryModel $cat */
-            if ($cat = CategoryModel::objects()->get(['categoryid' => $feed->base_category_id])) {
+            if ($feed->base_category_id && $cat = CategoryModel::objects()->get(['categoryid' => $feed->base_category_id])) {
                 $model->setMainCategory($cat);
             }
         }
