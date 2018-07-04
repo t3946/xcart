@@ -101,6 +101,7 @@
             font-size: 1rem;
             margin-left: 18px;
 
+
             @include breakpoint(sm) {
               padding-right: rem-calc(14);
               padding-left: rem-calc(14);
@@ -118,6 +119,12 @@
               padding-right: rem-calc(32);
               padding-left: rem-calc(32);
               line-height: $line-height-small;
+            }
+
+            .text-content {
+              overflow: hidden;
+              word-wrap: normal;
+              overflow-wrap: break-word;
             }
 
             .before {

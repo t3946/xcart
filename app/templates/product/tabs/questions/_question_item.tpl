@@ -6,7 +6,7 @@
     <div class="post columns">
         <div class="text">
             <div class="before"></div>
-            {$text}
+            <div class="text-content">{$text}</div>
         </div>
         <div class="by-line">
             {$byLine}
