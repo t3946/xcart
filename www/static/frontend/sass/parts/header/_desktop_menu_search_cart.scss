@@ -562,6 +562,9 @@ $search_input_large_height: rem-calc(36);
     .cart_info {
       //@include active-triangle(5px, 5px);
 
+      display: block;
+      color: $black;
+      text-decoration: none;
       width: 100%;
       text-align: center;
       cursor: pointer;
@@ -589,6 +592,7 @@ $search_input_large_height: rem-calc(36);
       ;
 
         .mc_count {
+          display: block;
           position: absolute;
           top: -1em;
           text-align: center;
