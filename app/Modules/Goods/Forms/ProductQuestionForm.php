@@ -40,7 +40,7 @@ class ProductQuestionForm extends ModelForm
                 'class' => NumberField::class,
                 'required' => true,
             ],
-            'name' => [
+            'firstname' => [
                 'class' => CharField::class,
                 'label' => 'Your first name',
                 'html' => [
@@ -91,6 +91,14 @@ class ProductQuestionForm extends ModelForm
         ];
     }
 
+    /**
+     * Do stuff before the question is added
+     * @param $instance
+     */
+    public function beforeInstanceSave($instance): void
+    {
+        $instance->name = $instance->firstname;
+    }
 
     /**
      * Do stuff after the question is added

@@ -53,6 +53,10 @@ class ProductQuestionModel extends Model
                 'link' => ['productid' => 'productid'],
                 'null' => true
             ],
+            'date' => [
+                'class' => UnixTimestampField::class,
+                'autoNowAdd' => true,
+            ],
 
         ];
     }

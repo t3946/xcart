@@ -203,6 +203,8 @@ class ModelForm extends BaseForm
 
         $this->setModelAttributes($this->cleanedData);
         $instance = $this->getInstance();
+
+        $this->beforeInstanceSave($instance);
         $saved = $instance->save();
 
         if($saved){
@@ -234,6 +236,11 @@ class ModelForm extends BaseForm
     }
 
     public function afterInstanceSave($instance)
+    {
+
+    }
+
+    public function beforeInstanceSave($instance)
     {
 
     }
