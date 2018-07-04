@@ -42,6 +42,11 @@ form {
       border: 1px solid #ff8d91;
     }
 
+    &::placeholder{
+      font-style: italic;
+      color: $grey_96;
+    }
+
     @include breakpoint(large) {
       line-height: rem-calc(24);
       max-width: rem-calc(295);
@@ -64,6 +69,10 @@ form {
 
   textarea {
     line-height: 1.2;
+    resize: vertical;
+    min-height: 7em;
+    height: 7em;
+    max-height: 14em;
   }
 
   label {
