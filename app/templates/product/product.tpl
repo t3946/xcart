@@ -4,6 +4,15 @@
     {insert '_parts/_css_preload.tpl'}
 {/block}
 
+{block 'product_og'}
+    <meta property="og:site_name" content="{$site->getName()}">
+    <meta property="og:title" content="{$model->getFrontendName()}">
+    <meta property="og:url" content="{$model->getAbsoluteUrl(true)}">
+    <meta property="og:description" content="{$model->getFrontendDescription()|escape}">
+    <meta property="og:type" content="product">
+    <meta property="og:image" content="https:{$model->images->filter(['avail' => 'Y'])->limit(1)->get()}">
+{/block}
+
 {block 'seo'}
     {parent}
     <link rel="amphtml" href="{$model->getAmpAbsoluteUrl()}">

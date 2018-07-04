@@ -21,6 +21,7 @@ import autoComplete from 'bower_components/javascript-auto-complete/auto-complet
                         selector: inputCountry,
                         cache: false,
                         offsetTop: 0,
+                        minChars: 1,
                         renderItem: function (item, search) {
                             //search = search.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
                             //var re = new RegExp("(" + search.split(' ').join('|') + ")", "gi");
@@ -46,6 +47,7 @@ import autoComplete from 'bower_components/javascript-auto-complete/auto-complet
                     new autoComplete({
                         selector: inputZipCode,
                         cache: false,
+                        minChars: 1,
                         renderItem: function (item, search) {
                             //search = search.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
                             // let re = new RegExp("(" + search.split(' ').join('|') + ")", "gi");
@@ -77,6 +79,7 @@ import autoComplete from 'bower_components/javascript-auto-complete/auto-complet
                     new autoComplete({
                         selector: inputState,
                         cache: false,
+                        minChars: 1,
                         renderItem: function (item, search) {
                             //search = search.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
                             //var re = new RegExp("(" + search.split(' ').join('|') + ")", "gi");
@@ -104,6 +107,7 @@ import autoComplete from 'bower_components/javascript-auto-complete/auto-complet
                     new autoComplete({
                         selector: inputCity,
                         cache: false,
+                        minChars: 1,
                         source: function (term, response) {
                             $.getJSON('/checkout/auto_complete_city/', {
                                 search: term,

@@ -35,7 +35,7 @@ class ContactInfoForm extends BaseForm
                     new PhoneValidator(),
                 ],
                 'html' => [
-                    'placeholder' => 'In case questions arise',
+                    'placeholder' => '(609) 924-8399',
                     'class' => 'phone'
                 ],
             ],
@@ -57,7 +57,7 @@ class ContactInfoForm extends BaseForm
                     new EmailValidator()
                 ],
                 'html' => [
-                    'placeholder' => 'To receive order confirmation',
+                    'placeholder' => 'albert.einstein@gmail.com',
                 ],
             ],
         ];
