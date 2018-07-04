@@ -53,7 +53,7 @@ $loader-color: #27a3e5;
         &:after {
           @include position(absolute, 0 0 0 0);
           @include size(125px);
-          background: #fff;
+          background: $white;
           border-radius: 100%;
           content: '';
           margin: auto;

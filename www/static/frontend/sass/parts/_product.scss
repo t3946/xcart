@@ -165,7 +165,7 @@ $default_qg_lheight: #{$default_qg_height - 1};
     .price-value-text {
       font-size: rem-calc(22);
       font-weight: bold;
-      color: #000000;
+      color: $black;
 
       @include breakpoint(medium) {
         font-size: rem-calc(30);
@@ -222,7 +222,7 @@ $default_qg_lheight: #{$default_qg_height - 1};
 
       &:checked + label {
         font-weight: bold;
-        color: #ffffff;
+        color: $white;
         background-color: #28862f;
         border-color: #28862f;
 

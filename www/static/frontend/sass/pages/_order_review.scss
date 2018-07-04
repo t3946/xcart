@@ -18,7 +18,7 @@
       background-color: #f5f5f5;
       text-decoration: none;
       font-size: rem-calc(17);
-      color: #000000;
+      color: $black;
       font-weight: bold;
       padding: .9rem .625rem;
 
@@ -141,7 +141,7 @@
             @include breakpoint(large) {
               font-size: rem-calc(14);
               line-height: 1rem;
-              color: #000000;
+              color: $black;
               padding: rem-calc(14) .625rem;
               text-align: center;
               min-height: auto;
@@ -166,12 +166,12 @@
 
             &.product-info {
               .price-info {
-                color: #000000;
+                color: $black;
                 padding-top: 2px;
               }
             }
             &.price-info {
-              color: #000000;
+              color: $black;
               //text-align: right;
               padding-left: .625rem;
 

@@ -296,7 +296,7 @@ $noUi-css-prefix: range;
       background-color: #15303f;
       height: 33px;
       //line-height: 35px;
-      color: #ffffff;
+      color: $white;
       text-transform: uppercase;
       text-align: center;
 
@@ -405,7 +405,7 @@ $noUi-css-prefix: range;
         background-color: #15303f;
         height: 33px;
         //line-height: 35px;
-        color: #ffffff;
+        color: $white;
         text-transform: uppercase;
         text-align: center;
       }
@@ -502,7 +502,7 @@ $noUi-css-prefix: range;
       padding: rem-calc(15) 0;
       box-shadow: 0 -4px 9px rgba(0, 0, 0, 0.15);
       text-align: center;
-      background-color: #fff;
+      background-color: $white;
 
       position: absolute;
       bottom: 0;
@@ -551,7 +551,7 @@ $noUi-css-prefix: range;
 
       button {
         background-color: #15303f;
-        color: #ffffff;
+        color: $white;
       }
 
       .reset_filter {

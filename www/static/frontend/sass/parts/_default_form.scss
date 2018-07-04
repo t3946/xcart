@@ -32,7 +32,7 @@ form {
     line-height: rem-calc(34);
     padding: 0 rem-calc(10);
     margin: rem-calc(6) 0;
-    background: #fff;
+    background: $white;
     box-sizing: border-box;
     width: 100%;
 
@@ -125,7 +125,7 @@ form {
       }
 
       &:nth-child(2n) {
-        background-color: #fff;
+        background-color: $white;
       }
 
       &:nth-last-child(1) {

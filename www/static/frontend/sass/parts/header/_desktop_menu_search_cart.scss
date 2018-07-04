@@ -330,10 +330,10 @@ $search_input_large_height: rem-calc(36);
     text-align: center;
     cursor: pointer;
 
-    @include active-triangle(6px, 6px, #fff, true, $dark_blue, is-active);
+    @include active-triangle(6px, 6px, $white, true, $dark_blue, is-active);
 
     .category-menu-title {
-      color: #fff;
+      color: $white;
       font-size: rem-calc(14);
       font-weight: 800;
       margin-left: 5px;
@@ -431,7 +431,7 @@ $search_input_large_height: rem-calc(36);
     .view-all {
       display: block;
       background-color: #456d83;
-      color: #fff;
+      color: $white;
       font-size: rem-calc(14);
       line-height: $view_all_height;
       height: $view_all_height;
@@ -454,7 +454,7 @@ $search_input_large_height: rem-calc(36);
     padding: rem-calc(9) rem-calc(20) $view_all_height;
     display: none;
     position: absolute;
-    background: #fff;
+    background: $white;
     right: 0;
     top: 0;
     min-height: 100%;
@@ -530,7 +530,7 @@ $search_input_large_height: rem-calc(36);
         background-color: #ff005a;
         border-radius: 4px;
         font-weight: bold;
-        color: #ffffff;
+        color: $white;
         padding: 5px 16px;
         font-size: rem-calc(14);
         position: absolute;

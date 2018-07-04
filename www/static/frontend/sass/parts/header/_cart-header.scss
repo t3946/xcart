@@ -276,7 +276,7 @@
           border-right: 0;
           vertical-align: middle;
           flex-grow: 2;
-          background-color: #ffffff;
+          background-color: $white;
 
           @include breakpoint(sm up) {
             height: $cart-breadcrumbs-height-sm;
@@ -454,7 +454,7 @@
               .step-link {
                 text-decoration: underline;
                 cursor: pointer;
-                color: #000000;
+                color: $black;
               }
 
               .arrow-right {
@@ -486,7 +486,7 @@
             }
 
             .step-link {
-              color: #000000;
+              color: $black;
 
               .step-number:after {
                 content: '.';
