@@ -59590,6 +59590,11 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
     $(document).on('click', '.cart_add .add', function (e) {
         e.preventDefault();
+        var $waitButton = $(e.target).closest('.wait-button').addClass('wait loading');
+
+        setTimeout(function () {
+            $waitButton.removeClass('loading');
+        }, 1000);
 
         var product = e.target.closest('[data-product]');
         if (product) {

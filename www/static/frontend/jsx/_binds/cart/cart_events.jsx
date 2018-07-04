@@ -65,6 +65,11 @@ import SelectNumberItems from "../../components/SelectNumberItems";
     $(document)
         .on('click','.cart_add .add', (e) =>{
             e.preventDefault();
+            let $waitButton = $(e.target).closest('.wait-button').addClass('wait loading');
+
+            setTimeout(() => {
+                $waitButton.removeClass('loading');
+            }, 1000);
 
             let product = e.target.closest('[data-product]');
             if ( product )

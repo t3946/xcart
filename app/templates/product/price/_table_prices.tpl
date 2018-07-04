@@ -26,9 +26,12 @@
                     <div class="columns small-12">
                         <div class="cart_add add-product">
                             {include "product/parts/_number_button.tpl"}
-                            <a class="add button waves waves-orange yellow">
+                            <a class="add button yellow wait-button">
                                 <span class="text">
                                     Add to cart
+                                </span>
+                                <span class="wait-text">
+                                    Added
                                 </span>
                             </a>
                         </div>

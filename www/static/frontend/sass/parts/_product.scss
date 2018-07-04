@@ -99,8 +99,69 @@ $default_qg_lheight: #{$default_qg_height - 1};
   }
 
   .button {
-    line-height: rem-calc(48);
-    height: rem-calc(48);
+    line-height: rem-calc(46);
+    height: rem-calc(46);
+    border: 2px solid $dark-yellow;
+  }
+
+  .wait-button{
+    position: relative;
+    overflow: hidden;
+
+    .wait-text {
+      display: none;
+      text-transform: uppercase;
+    }
+
+    &:after {
+      content: '';
+      display: block;
+      position: absolute;
+      width: 300%;
+      height: 100%;
+      top: 0;
+      left: -70%;
+      z-index: 2;
+      background: repeating-linear-gradient(
+                      135deg,
+                      $white,
+                      $white 12px,
+                      $grey_e2 12px,
+                      $grey_e2 24px
+      );
+      visibility: hidden;
+      transition: left 1s linear;
+    }
+
+    &.wait {
+      border: 2px solid $dark_orange;
+      background: $white;
+      cursor: default;
+      pointer-events: none;
+
+      &:hover {
+        text-decoration: none;
+      }
+
+      &:before {
+        display: none;
+      }
+
+      &.loading{
+        &:after {
+          left: 0;
+          visibility: visible;
+        }
+      }
+
+      .text {
+        display: none;
+      }
+
+      .wait-text {
+        display: inline;
+      }
+    }
   }
 
   .number-button {
@@ -184,7 +245,7 @@ $default_qg_lheight: #{$default_qg_height - 1};
     padding-bottom: rem-calc(20);
     font-weight: bold;
   }
-  .max-number{
+  .max-number {
     font-size: 90%;
     color: #4a4949;
   }
