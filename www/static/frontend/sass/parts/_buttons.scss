@@ -30,6 +30,7 @@
 
   &.yellow {
     background-color: $dark_yellow;
+    border: 2px solid $dark-yellow;
     color: black;
 
     &:hover {

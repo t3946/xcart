@@ -1,6 +1,7 @@
 import CountUp from 'countUp.js';
 import storeCart from '../../stores/StoreCart';
 import storeApp from '../../stores/StoreApp';
+import CreateWaitButton from '../../components/AnimateWaitButton';
 
 import { hideAll, action } from "../../redusers/appHeadReduser";
 import { cartAdd } from "../../redusers/appCartRediser";
@@ -65,11 +66,8 @@ import SelectNumberItems from "../../components/SelectNumberItems";
     $(document)
         .on('click','.cart_add .add', (e) =>{
             e.preventDefault();
-            let $waitButton = $(e.target).closest('.wait-button').addClass('wait loading');
-
-            setTimeout(() => {
-                $waitButton.removeClass('loading');
-            }, 1000);
+            let buttonAnimation = CreateWaitButton(e.target.closest('.wait-button'));
+            buttonAnimation.start();
 
             let product = e.target.closest('[data-product]');
             if ( product )

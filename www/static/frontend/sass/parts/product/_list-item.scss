@@ -709,10 +709,24 @@
 
 
           .add {
-            height: rem-calc(37);
-            line-height: rem-calc(42);
+            height: rem-calc(33);
+            line-height: rem-calc(35);
             padding: 0;
             text-align: center;
+
+            &.wait {
+              &:before{
+                content: url('../images/icons/green_check_mark.svg');
+                height: rem-calc(30);
+                width: rem-calc(29);
+                margin-left: rem-calc(7);
+              }
+              .wait-text {
+                font-size:0;
+                text-indent: -9999px;
+              }
+            }
+
 
             @include breakpoint(large up) {
               height: rem-calc(30);
@@ -722,6 +736,7 @@
               display: inline-block;
               padding: 5%;
               line-height: 100%;
+              //height: auto;
             }
 
             .text {

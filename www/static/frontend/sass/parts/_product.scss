@@ -101,7 +101,7 @@ $default_qg_lheight: #{$default_qg_height - 1};
   .button {
     line-height: rem-calc(46);
     height: rem-calc(46);
-    border: 2px solid $dark-yellow;
+    //border: 2px solid $dark-yellow;
   }
 
   .wait-button{
@@ -120,7 +120,7 @@ $default_qg_lheight: #{$default_qg_height - 1};
       width: 300%;
       height: 100%;
       top: 0;
-      left: -70%;
+      left: -50%;
       z-index: 2;
       background: repeating-linear-gradient(
                       135deg,
@@ -130,7 +130,7 @@ $default_qg_lheight: #{$default_qg_height - 1};
                       $grey_e2 24px
       );
       visibility: hidden;
-      transition: left 1s linear;
+      transition: left 1.2s linear;
     }
 
     &.wait {
