@@ -107,7 +107,7 @@ class PromoController extends AbstractCatalogController
     public function actionRelatedProducts($id): void
     {
         /** @var ProductModel[] $products */
-        $products = SliderDataHelper::getSliderData('related_products', $id);
+        $products = SliderDataHelper::getSliderData('similar_products', $id);
         if ($products) {
             $this->renderSliderData($products);
         }
