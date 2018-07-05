@@ -8,7 +8,9 @@
         {if $favicon}
         <link rel="icon" href="{$favicon}" type="image/x-icon">
         {/if}
-        {block 'seo'}{meta controller=$controller!:null canonical=$model->getAbsoluteUrl(true)}{/block}
+        {block 'seo'}
+                <title>{if $model->title_tag} {$model->title_tag} {else} {$model->getFrontendName()} {/if}</title>
+        {/block}
 
 {block 'head'}
 
