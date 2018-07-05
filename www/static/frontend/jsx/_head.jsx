@@ -21,6 +21,7 @@ import 'bower_components/jQuery.dotdotdot/src/jquery.dotdotdot.js';
 
 
 import  "./_binds/cart"
+import  "./_binds/up_down_buttons"
 import  "./_binds/breadcrumbs"
 import  "./_binds/sticky_menu"
 import  "./_binds/sticky_header"

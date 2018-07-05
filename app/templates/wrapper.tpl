@@ -272,5 +272,6 @@
 
 {render_flash:raw template='base/_flash.tpl'}
 
+<div id="containerUpDown" class="show-for-large"></div>
 </body>
 </html>
