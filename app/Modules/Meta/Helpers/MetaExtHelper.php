@@ -104,6 +104,7 @@ class MetaExtHelper
                 echo $instance->render();
                 return;
             }
+
         }
 
         MetaHelper::getMeta($controller, $canonical);
@@ -234,6 +235,24 @@ class MetaExtHelper
                     break;
                 }
 
+                case MetaType::BRANDLIST: {
+                    $codes = [
+                        "brandlist:store.{$site_code}",
+                        "brandlist:base",
+                    ];
+
+                    break;
+                }
+
+                case MetaType::CATLIST: {
+                    $codes = [
+                        "catlist:store.{$site_code}",
+                        "catlist:base",
+                    ];
+
+                    break;
+                }
+
                 case MetaType::DEFAULT: {
                     $codes = [
                         "default:store.{$site_code}",
@@ -242,6 +261,7 @@ class MetaExtHelper
 
                     break;
                 }
+
             }
 
             if ($codes) {

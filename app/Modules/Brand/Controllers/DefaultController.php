@@ -9,6 +9,7 @@ use Modules\Goods\Controllers\AbstractCatalogController;
 use Modules\Goods\Models\CategoryModel;
 use Modules\Goods\Models\ProductModel;
 use Modules\Meta\Helpers\MetaExtHelper;
+use Modules\Meta\Models\Meta;
 use Modules\Meta\Types\MetaType;
 use Xcart\App\Components\Breadcrumbs;
 use Xcart\App\Main\Xcart;
@@ -65,6 +66,10 @@ class DefaultController extends AbstractCatalogController
     {
         $breadcrumbs = new Breadcrumbs();
         $breadcrumbs->add('Brands', 'brand:list');
+
+        $this->setMetaBase(MetaType::BRANDLIST, [
+            'model' => Xcart::app()->getModule('Sites')->getSite(),
+        ]);
 
         $this->display('brand/list.tpl', [
             'breadcrumbs' => $breadcrumbs,

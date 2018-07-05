@@ -70,6 +70,10 @@ class CategoryController extends AbstractCatalogController
             'storefrontid' => Xcart::app()->getModule('Sites')->getSite()
         ])->all();
 
+        $this->setMetaBase(MetaType::CATLIST, [
+            'model' => Xcart::app()->getModule('Sites')->getSite(),
+        ]);
+
         /** @var ProductModel[] $products */
         $products = \Modules\Goods\Helpers\SliderDataHelper::getSliderData('recently_viewed_products');
 
