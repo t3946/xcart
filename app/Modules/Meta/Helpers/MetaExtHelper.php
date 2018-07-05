@@ -253,6 +253,24 @@ class MetaExtHelper
                     break;
                 }
 
+                case MetaType::BESTSELLER: {
+                    $codes = [
+                        "bestseller:store.{$site_code}",
+                        "bestseller:base",
+                    ];
+
+                    break;
+                }
+
+                case MetaType::FEATURED: {
+                    $codes = [
+                        "featured:store.{$site_code}",
+                        "featured:base",
+                    ];
+
+                    break;
+                }
+
                 case MetaType::DEFAULT: {
                     $codes = [
                         "default:store.{$site_code}",
