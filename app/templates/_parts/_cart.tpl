@@ -1,12 +1,12 @@
 <div class="minicart">
-    <div class="cart_info">
-        <div class="count">
-            <div id="desktop-cart-quantity" class="mc_count">
+    <a class="cart_info" href="{url 'cart:list'}">
+        <span class="count">
+            <span id="desktop-cart-quantity" class="mc_count">
                 {$.app->cart->getQuantity()}
-            </div>
-        </div>
+            </span>
+        </span>
         <span class="text">
             {t 'Cart' dict='cart'}
         </span>
-    </div>
+    </a>
 </div>

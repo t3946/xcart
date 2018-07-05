@@ -18,11 +18,11 @@ header {
         float: left;
 
         &.current {
-          background: #fff;
+          background: $white;
         }
 
         a {
-          color: #fff;
+          color: $white;
         }
       }
     }

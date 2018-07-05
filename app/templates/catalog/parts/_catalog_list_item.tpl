@@ -35,7 +35,6 @@
                     </div>
                 {/if}
 
-
                 {if $item->isNewProduct()}
                     <span class="splash splash-new show-for-large">New</span>
                 {/if}
@@ -208,9 +207,12 @@
                         </div>
 
                         <div class="cart_add cart_buttons">
-                            <a class="add button waves waves-orange yellow waves-effect">
+                            <a class="add button yellow wait-button">
                                 <span class="text">
                                     Add to cart
+                                </span>
+                                <span class="wait-text">
+                                    Added
                                 </span>
                             </a>
                         </div>

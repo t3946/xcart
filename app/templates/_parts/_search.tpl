@@ -3,7 +3,7 @@
         <input type="text"
                name='q'
                class="search"
-               placeholder="Search art supply items, brands and categories"
+               placeholder="{$config.cidev_header_code}"
                value="{$.app->request->get->get('q', '')}"
                itemprop="query-input"
                data-suggestion-url="{$.app->router->url('catalog:search:suggestion')}"
