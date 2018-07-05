@@ -18,14 +18,22 @@ class AnimateWaitButton {
 
     start() {
         this._element.classList.add('wait', 'loading');
+        this._element.addEventListener('click', this.blockAllEvents);
 
         setTimeout(() => {
             this._element.classList.remove('loading');
 
             setTimeout(() => {
                 this._element.classList.remove('wait');
+                this._element.removeEventListener('click', this.blockAllEvents);
             }, DURATION_SHOW_INFO);
         }, DURATION_PRELOAD);
+    }
+
+    blockAllEvents(event) {
+        event.stopPropagation();
+        event.preventDefault();
+        return false;
     }
 }
 

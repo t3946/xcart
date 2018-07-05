@@ -66,6 +66,7 @@ import SelectNumberItems from "../../components/SelectNumberItems";
     $(document)
         .on('click','.cart_add .add', (e) =>{
             e.preventDefault();
+
             let buttonAnimation = CreateWaitButton(e.target.closest('.wait-button'));
             buttonAnimation.start();
 
