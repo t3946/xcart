@@ -1,6 +1,7 @@
 import CountUp from 'countUp.js';
 import storeCart from '../../stores/StoreCart';
 import storeApp from '../../stores/StoreApp';
+import CreateWaitButton from '../../components/AnimateWaitButton';
 
 import { hideAll, action } from "../../redusers/appHeadReduser";
 import { cartAdd } from "../../redusers/appCartRediser";
@@ -11,6 +12,7 @@ import SelectNumberItems from "../../components/SelectNumberItems";
 
 (()=>{
     let $minicart = $('.minicart');
+    let minicartTimeout, timerIsStarted = false;
 
     let checkEnableMinicart = () => {
         // let state = storeApp.getState();
@@ -21,6 +23,10 @@ import SelectNumberItems from "../../components/SelectNumberItems";
         }
         else {
             hideAll();
+            if(timerIsStarted){
+                clearTimeout(minicartTimeout);
+                timerIsStarted = false;
+            }
 
             $minicart.removeClass('enabled');
             $minicart.removeClass('active');
@@ -60,6 +66,9 @@ import SelectNumberItems from "../../components/SelectNumberItems";
     $(document)
         .on('click','.cart_add .add', (e) =>{
             e.preventDefault();
+
+            let buttonAnimation = CreateWaitButton(e.target.closest('.wait-button'));
+            buttonAnimation.start();
 
             let product = e.target.closest('[data-product]');
             if ( product )
@@ -117,20 +126,42 @@ import SelectNumberItems from "../../components/SelectNumberItems";
                 (new CountUp('desktop-cart-quantity', qPrev, qNew,0, 1, {useEasing: true})).start();
             }
         })
-        .on('click', '.minicart.enabled .cart_info', (e) => {
+        .on('mouseenter', '.minicart.enabled', (e) => {
+
             e.preventDefault();
             e.stopPropagation();
 
-            if ($minicart.hasClass('active')) {
-                $minicart.removeClass('active');
-                hideAll()
-            } else {
+            if(timerIsStarted){
+                clearTimeout(minicartTimeout);
+                timerIsStarted = false;
+            }
+
+            if (!$minicart.hasClass('active')) {
+
                 $minicart.addClass('active');
                 window.LazyLoad.update();
                 action('cart');
             }
 
-        }).on('click','.cart_add .number-button', (event) => {
+        })
+        .on('mouseleave', '.minicart.enabled', (e) => {
+
+            e.preventDefault();
+            e.stopPropagation();
+
+            if ($minicart.hasClass('active')) {
+
+                 minicartTimeout = setTimeout(() => {
+
+                    $minicart.removeClass('active');
+                    hideAll();
+                    timerIsStarted = false;
+
+                }, 600);
+                timerIsStarted = true;
+            }
+        })
+        .on('click','.cart_add .number-button', (event) => {
 
             event.preventDefault();
             event.stopPropagation();

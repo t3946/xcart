@@ -261,7 +261,7 @@
 
 
     .label{
-      color: #000000;
+      color: $black;
       font-weight: bold;
     }
 
@@ -297,7 +297,7 @@
     .group-items-title{
       font-size: 17px;
       font-weight: bold;
-      color: #000000;
+      color: $black;
 
       @include breakpoint(sm){
         font-size: 20px;

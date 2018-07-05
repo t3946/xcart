@@ -153,9 +153,12 @@
                         </div>
 
                         <div class="cart_add">
-                        <span class="add button yellow">
+                        <span class="add button yellow wait-button">
                             <span class="text">
                                 Add to cart
+                            </span>
+                            <span class="wait-text">
+                                Added
                             </span>
                         </span>
                     </div>

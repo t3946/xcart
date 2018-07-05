@@ -28,15 +28,15 @@
 
     &.success {
       background-color: rgb(122, 175, 100);
-      color: #fff;
+      color: $white;
     }
     &.error {
       background-color: rgb(175, 78, 63);
-      color: #fff;
+      color: $white;
     }
     &.info {
       background-color: rgb(5, 90, 147);
-      color: #fff;
+      color: $white;
     }
 
     .close-flash {

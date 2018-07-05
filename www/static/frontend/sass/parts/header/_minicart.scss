@@ -44,11 +44,11 @@
   position: absolute;
   min-width: rem-calc(345);
   //height: rem-calc(420);
-  background: #fff;
+  background: $white;
   z-index: 100;
 
   //right: rem-calc(-20);
-  left: -100%;
+  right: 0;
   //border: 1px solid #0e2431;
   //border-top: none;
   padding-bottom: rem-calc(58);
@@ -63,7 +63,7 @@
     .item {
       padding: rem-calc(20) 0 rem-calc(20) rem-calc(13);
       margin-top: 1px;
-      background-color: #fff;
+      background-color: $white;
       display: flex;
       flex: 0 0;
       flex-direction: row;

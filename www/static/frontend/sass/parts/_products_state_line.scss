@@ -54,7 +54,7 @@
             .active_value {
               font-size: 14px;
               width: 162px;
-              background: #ffffff;
+              background: $white;
               border: 1px solid #aaa;
               height: 24px;
               line-height: 24px;
@@ -117,7 +117,7 @@
           position: absolute;
           top: 100%;
           z-index: 3;
-          background: #fff;
+          background: $white;
         }
       }
     }
