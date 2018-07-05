@@ -3,6 +3,7 @@ namespace Modules\Goods\Helpers;
 
 use Mindy\QueryBuilder\Expression;
 use Mindy\QueryBuilder\Q\QAndNot;
+use Modules\Core\Components\GlobalConfig;
 use Modules\Goods\Models\ProductModel;
 use Modules\Sites\Models\SiteModel;
 use Xcart\App\Main\Xcart;
@@ -110,7 +111,9 @@ SQL;
 
             $saveOrder = true;
 
-            $classElastic = new ElasticSearch($site->getGlobalConfig()['ElasticSearch_options'], $site->domain);
+            $config = Xcart::app()->getModule('Core')::getGlobalConfig();
+
+            $classElastic = new ElasticSearch($config['ElasticSearch_options'], $site->domain);
             $classElastic->setSource('*._id');
             $classElastic->setType('product');
             $classElastic->setMinScore(0.5);
@@ -134,6 +137,8 @@ SQL;
             }
 
             $res = $classElastic->query();
+
+            GlobalConfig::getInstance()->setOldMode(false);
 
             if (!empty($res['hits']['hits'])) {
                 $hits = $res['hits']['hits'];

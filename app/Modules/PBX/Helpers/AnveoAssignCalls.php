@@ -217,7 +217,7 @@ class AnveoAssignCalls
     {
         $result = [];
 
-        if ( $order_calls_models = OrdersCallsModel::objects()->filter(['order_id' => $order_id])->all() ) {
+        if ( $order_calls_models = OrdersCallsModel::objects()->filter(['order_id' => $order_id])->order(['-call_id'])->all() ) {
             foreach ($order_calls_models as $order_calls_model) {
 
                 /** @var OrdersCallsModel $order_calls_model */

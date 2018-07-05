@@ -4,8 +4,13 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
         {set $site = $.getSite}
-        <link rel="icon" href="{$site->favicons->limit(1)->get()->getCdnURL()}" type="image/x-icon">
-        {block 'seo'}{meta controller=$controller!:null canonical=$model->getAbsoluteUrl(true)}{/block}
+        {set $favicon = $site->favicons->limit(1)->get()}
+        {if $favicon}
+        <link rel="icon" href="{$favicon}" type="image/x-icon">
+        {/if}
+        {block 'seo'}
+                <title>{if $model->title_tag} {$model->title_tag} {else} {$model->getFrontendName()} {/if}</title>
+        {/block}
 
 {block 'head'}
 

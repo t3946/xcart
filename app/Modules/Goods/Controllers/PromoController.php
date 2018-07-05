@@ -6,6 +6,7 @@ use Modules\Goods\Helpers\SliderDataHelper;
 use Modules\Goods\Models\CategoryModel;
 use Modules\Goods\Models\FeaturedProductsModel;
 use Modules\Goods\Models\ProductModel;
+use Modules\Meta\Types\MetaType;
 use Modules\Sites\Models\SiteModel;
 use Xcart\App\Components\Breadcrumbs;
 use Xcart\App\Main\Xcart;
@@ -25,6 +26,10 @@ class PromoController extends AbstractCatalogController
         $bread = new Breadcrumbs();
 
         $bread->add('Bestsellers');
+
+        $this->setMetaBase(MetaType::BESTSELLER,[
+            'model' => Xcart::app()->getModule('Sites')->getSite(),
+        ]);
 
         $this->qs->filter(['avail__gt' => 10]);
         $this->view = 'catalog/promo.tpl';
@@ -78,6 +83,10 @@ class PromoController extends AbstractCatalogController
 
         $bread->add('Featured products');
 
+        $this->setMetaBase(MetaType::FEATURED,[
+            'model' => Xcart::app()->getModule('Sites')->getSite(),
+        ]);
+
         $this->view = 'catalog/promo.tpl';
         $this->advancedData = [
             'title' => 'Featured products',
@@ -98,7 +107,7 @@ class PromoController extends AbstractCatalogController
     public function actionRelatedProducts($id): void
     {
         /** @var ProductModel[] $products */
-        $products = SliderDataHelper::getSliderData('related_products', $id);
+        $products = SliderDataHelper::getSliderData('similar_products', $id);
         if ($products) {
             $this->renderSliderData($products);
         }
