@@ -1396,6 +1396,11 @@ function func_update_refunded_products($products, $orderid)
                         x_load('taxes');
 
                         $query_data['extra_data'] = unserialize($query_data['extra_data']);
+
+                        if (!is_array($query_data['extra_data'])) {
+                            $query_data['extra_data'] = [];
+                        }
+
                         if (isset($query_data['extra_data']['product'])) {
                             $query_data['extra_data']['product'] = addslashes($query_data['extra_data']['product']);
                         }
