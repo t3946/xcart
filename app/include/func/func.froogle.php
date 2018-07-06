@@ -600,10 +600,8 @@ if ($sExtraLog=='Y')
 	$product['google_brand'] = func_froogle_convert(trim($product['brand']), 256);
 	$product['google_product'] = func_froogle_convert((trim($product['product_froogle']) ? trim($product['product_froogle']) : trim($product['product'])), 80);
 
-    if (($distributorModel->d_minimum_order_amount == 'applies_to_all_orders')
-        && (($m_order_amount = floatval($distributorModel->d_minimum_order_amount_in_us)) > 0)
-        && (floatval($product['price']) < $m_order_amount)
-    ) {
+    if (($m_order_amount = $distributorModel->getMinimalAmount()) && (float)$product['price'] < $m_order_amount)
+    {
         $m_order_amount = number_format($m_order_amount, 2);
         $product['shipping_label'] = "Minimum order value {$m_order_amount} USD";
     }
