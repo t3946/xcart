@@ -3,7 +3,6 @@ import _ from 'lodash';
 import ScrollMonitor from './ScrollMonitor';
 
 
-
 export default class ButtonMoveUp extends Component {
     constructor(props) {
         super(props);
@@ -12,18 +11,23 @@ export default class ButtonMoveUp extends Component {
             active: !this.scroll.scrolledTop()
         };
 
-        document.addEventListener('components.scroll_monitor.scrolled_top', this.changeState.bind(this))
-        document.addEventListener('components.scroll_monitor.scrolled_from_top', this.changeState.bind(this))
+        document.addEventListener('components.scroll_monitor.scrolled_top', this.hideButton.bind(this));
+        document.addEventListener('components.scroll_monitor.scrolled_from_top', this.showButton.bind(this));
     }
 
-    changeState(){
-        console.log('MoveUp', 'active', !this.scroll.scrolledTop());
+    hideButton(e) {
         let state = this.state;
-        state.active = !this.scroll.scrolledTop()
+        state.active = false;
         this.setState(state);
     }
 
-    scrollUp(){
+    showButton(e) {
+        let state = this.state;
+        state.active = true;
+        this.setState(state);
+    }
+
+    scrollUp() {
         window.scrollTo({
             top: 0,
             behavior: "smooth"
@@ -32,11 +36,17 @@ export default class ButtonMoveUp extends Component {
 
     render(props, state) {
         let classString = 'button-move-up';
-            if(!state.active){
-                classString += ' disabled';
-            }
-        return (<div className="button-move-up-container">
-            <a className={classString} onClick={() => { this.scrollUp(); }} >
+        let classStringContainer = 'button-move-up-container';
+        if (props.className) {
+            classStringContainer += ' ' + props.className;
+        }
+        if (!state.active) {
+            classStringContainer += ' disabled';
+        }
+        return (<div className={classStringContainer}>
+            <a className={classString} onClick={() => {
+                this.scrollUp();
+            }}>
                 UP
             </a>
         </div>);

@@ -1,0 +1,32 @@
+$half-breakpoints: (
+        small: 160px,
+        sm: 185px,
+        medium: 360px,
+        ml: 480px,
+        large: 512px,
+        xl: 640px,
+        xxl: 700px,
+        xxxl: 810px
+);
+
+@function get-half-width($key) {
+  @if map-has-key($half-breakpoints, $key) {
+    @return map-get($half-breakpoints, $key);
+  }
+
+  @warn "Unknown `#{$key}` in $half-breakpoints.";
+  @return null;
+}
+
+@function get-width($key) {
+  @if map-has-key($breakpoints, $key) {
+    $w: map-get($breakpoints, $key);
+    @if($w == 0) {
+      @return 320px;
+    }
+    @return $w;
+  }
+
+  @warn "Unknown `#{$key}` in $breakpoints.";
+  @return null;
+}

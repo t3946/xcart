@@ -6,9 +6,13 @@ import ButtonMoveDown from "../components/ButtonMoveDown";
 documentReady(() => {
 
     let container = document.getElementById('containerUpDown');
-    console.log(container);
     if(container){
-        render(<div><ButtonMoveUp /><ButtonMoveDown /></div>, container, container.firstChild);
+        render(<div className="buttons-container">
+            {/*<div className="columns small-12 buttons-container">*/}
+                <ButtonMoveUp className="move-button" />
+                <ButtonMoveDown className="move-button" />
+            {/*</div>*/}
+        </div>, container, container.firstChild);
     }
 
 });

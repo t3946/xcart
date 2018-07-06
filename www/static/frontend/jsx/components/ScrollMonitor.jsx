@@ -9,7 +9,6 @@ class ScrollMonitor {
         this._ticking = false;
         this._top = this._scrolledTop(window.scrollY);
         this._bottom = this._scrolledBottom(window.scrollY);
-        console.log(this._top, this._bottom);
         window.addEventListener('scroll', this._onScroll.bind(this));
     }
 
@@ -54,13 +53,11 @@ class ScrollMonitor {
         if(this._top) {
             document.dispatchEvent(new Event('components.scroll_monitor.scrolled_from_top'));
             this._top = false;
-            console.log('not top');
         }
     }
 
     _processNotBottom(){
         if(this._bottom){
-            console.log('not bottom');
             document.dispatchEvent(new Event('components.scroll_monitor.scrolled_from_bottom'));
             this._bottom = false;
         }
@@ -76,7 +73,6 @@ class ScrollMonitor {
 
     _processScrolledTop(){
         if(!this._top) {
-            console.log('top');
             document.dispatchEvent(new Event('components.scroll_monitor.scrolled_top'));
             this._top = true;
         }
@@ -84,7 +80,6 @@ class ScrollMonitor {
 
     _processScrolledBottom(){
         if(!this._bottom) {
-            console.log('bottom');
             document.dispatchEvent(new Event('components.scroll_monitor.scrolled_bottom'));
             this._bottom = true;
         }

@@ -11,14 +11,19 @@ export default class ButtonMoveDown extends Component {
             active: !this.scroll.scrolledBottom()
         };
 
-        document.addEventListener('components.scroll_monitor.scrolled_bottom', this.changeState.bind(this))
-        document.addEventListener('components.scroll_monitor.scrolled_from_bottom', this.changeState.bind(this))
+        document.addEventListener('components.scroll_monitor.scrolled_bottom', this.hideButton.bind(this));
+        document.addEventListener('components.scroll_monitor.scrolled_from_bottom', this.showButton.bind(this));
     }
 
-    changeState(){
-        console.log('MoveDown', 'active', !this.scroll.scrolledBottom());
+    hideButton(e){
         let state = this.state;
-        state.active = !this.scroll.scrolledBottom()
+        state.active = false;
+        this.setState(state);
+    }
+
+    showButton(e){
+        let state = this.state;
+        state.active = true;
         this.setState(state);
     }
 
@@ -31,10 +36,14 @@ export default class ButtonMoveDown extends Component {
 
     render(props, state) {
         let classString = 'button-move-down';
-        if(!state.active){
-            classString += ' disabled';
+        let classStringContainer = 'button-move-down-container';
+        if(props.className){
+            classStringContainer += ' ' + props.className;
         }
-        return (<div className="button-move-down-container">
+        if(!state.active){
+            classStringContainer += ' disabled';
+        }
+        return (<div className={classStringContainer}>
             <a className={classString} onClick={() => { this.scrollDown(); }} >
                 DOWN
             </a>
