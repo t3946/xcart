@@ -34,28 +34,28 @@
 
   .logo_menu {
 
-    height: rem-calc(34);
-    line-height: rem-calc(34);
+    //height: rem-calc(34);
+    //line-height: rem-calc(34);
 
     .logo-link{
       display: inline-block;
       text-decoration: none;
     }
 
-    @include breakpoint(sm up) {
-      height: rem-calc(36);
-      line-height: rem-calc(36);
-    }
-
-    @include breakpoint(medium up) {
-      height: rem-calc(64);
-      line-height: rem-calc(64);
-    }
-
-    @include breakpoint(ml up) {
-      height: rem-calc(68);
-      line-height: rem-calc(68);
-    }
+    //@include breakpoint(sm up) {
+    //  height: rem-calc(36);
+    //  line-height: rem-calc(36);
+    //}
+    //
+    //@include breakpoint(medium up) {
+    //  height: rem-calc(64);
+    //  line-height: rem-calc(64);
+    //}
+    //
+    //@include breakpoint(ml up) {
+    //  height: rem-calc(68);
+    //  line-height: rem-calc(68);
+    //}
 
     @include breakpoint(large up) {
       height: rem-calc(60);

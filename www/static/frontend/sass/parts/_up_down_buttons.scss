@@ -20,7 +20,7 @@
       position: absolute;
       width: rem-calc(60);
       right: 6px;
-      bottom: rem-calc(70);
+      bottom: rem-calc(20);
       background-color: $bg_color;
       border-radius: 3px;
       box-shadow: 0 0 4px 1px $grey_cf;
@@ -29,7 +29,7 @@
       transition: opacity $fade-duration linear;
 
       &.button-move-up-container {
-        bottom: rem-calc(152);
+        bottom: rem-calc(102);
         a{
           &:before{
             content: url("../images/icons/arrow_scroll_down.svg");

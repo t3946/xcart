@@ -1,11 +1,37 @@
+@import "../all_pages/page_width";
+
 header {
 
   border-bottom: 1px solid #cdcdcd;
 
   .logo_menu {
-    margin: rem-calc(7) 0;
-    height: rem-calc(39);
+    padding: rem-calc(7) 0;
+    height: rem-calc(53);
     line-height: rem-calc(39);
+
+    @include breakpoint(medium) {
+      //padding: rem-calc(17) 0;
+      height: rem-calc(80);
+      line-height: rem-calc(63);
+    }
+
+    @include breakpoint(large) {
+      padding: 0;
+      margin: rem-calc(7) 0;
+    }
+
+    .right-icon {
+      //margin-left: rem-calc(30);
+      margin-left: rem-calc(10);
+
+      @include breakpoint(medium) {
+        margin-left: rem-calc(24);
+      }
+
+      &:first-child{
+        margin-left: 0;
+      }
+    }
 
     @include breakpoint(large up) {
       line-height: rem-calc(62);
@@ -13,16 +39,25 @@ header {
     }
 
     .mobile_menu {
-      width: 25px;
-      height: 19px;
+      width: rem-calc(25);
+      height: rem-calc(19);
+
+      @include breakpoint(medium){
+        width: rem-calc(39);
+        height: rem-calc(30);
+      }
     }
 
     .logo-small {
-      height: 26px;
+      height: rem-calc(26);
+
+      @include breakpoint(medium){
+        height: rem-calc(48);
+      }
     }
 
     .logo-big {
-      height: 62px;
+      height: rem-calc(62);
     }
 
     .main-menu-wrap {
@@ -73,16 +108,38 @@ header {
     }
 
     .mobile__search-btn {
-      background: url("/static/frontend/images/icons/header/magnifier.svg") no-repeat;
-      width: 30px;
-      height: 30px;
+      //background: url("../images/icons/header/magnifier.svg") no-repeat;
+      background: url("../images/icons/header/magnifier_thin.svg") no-repeat;
+      width: rem-calc(30);
+      height: rem-calc(30);
+
+      @include breakpoint(medium){
+        width: rem-calc(48);
+        height: rem-calc(48);
+      }
+    }
+
+    .mobile__call-btn {
+      background: url("../images/icons/header/phone-call1.svg") no-repeat;
+      width: rem-calc(30);
+      height: rem-calc(30);
+
+      @include breakpoint(medium){
+        width: rem-calc(48);
+        height: rem-calc(48);
+      }
     }
 
     .mobile__cart {
-      background: url("/static/frontend/images/icons/header/cart.svg") no-repeat;
-      width: 40px;
-      height: 30px;
+      background: url("../images/icons/header/cart.svg") no-repeat;
       position: relative;
+      width: rem-calc(40);
+      height: rem-calc(30);
+
+      @include breakpoint(medium){
+        width: rem-calc(67);
+        height: rem-calc(48);
+      }
 
       &:hover {
         text-decoration: none;
@@ -104,12 +161,20 @@ header {
         min-width: 1.5em;
         text-align: center;
 
+        @include breakpoint(medium) {
+          font-size: rem-calc(20);
+        }
+
 
         .mc_count {
           display: inline-block;
           padding-top: 0.12em;
           line-height: rem-calc(14);
           vertical-align: top;
+
+          @include breakpoint(medium) {
+            padding-top: rem-calc(4);
+          }
         }
       }
     }
@@ -120,6 +185,7 @@ header {
 #top-header-menu{
   position:relative;
   z-index:3;
+  min-width: get-width('small');
 
   &.header-fixed{
     position:fixed;

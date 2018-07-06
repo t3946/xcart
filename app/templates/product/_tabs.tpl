@@ -1,5 +1,5 @@
 <section class="info_tabs">
-    <ul class="tabs" data-responsive-accordion-tabs="tabs small-accordion large-tabs" data-allow-all-closed="true" id="product_tabs">
+    <ul class="tabs" data-responsive-accordion-tabs="tabs small-accordion large-tabs" data-allow-all-closed="true" data-multi-expand="true" id="product_tabs">
         <li class="tabs-title is-active">
           <a href="#description" aria-selected="true">Description</a>
         </li>
