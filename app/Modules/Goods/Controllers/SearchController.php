@@ -70,7 +70,13 @@ class SearchController extends AbstractCatalogController
     {
         $show_empty = false;
 
-        $this->q = $this->q_original = $this->getRequest()->get->get('q', '');
+        $q = $this->getRequest()->get->get('q');
+
+        if (!is_array($q)) {
+            $this->q = $this->q_original = $this->getRequest()->get->get('q', '');
+        } else {
+            $this->q = $this->q_original = $this->getRequest()->get->get('q', '')[0];
+        }
         if (!$this->q) {
             $this->redirect('/');
         }
