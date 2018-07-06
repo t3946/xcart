@@ -15,6 +15,10 @@ class RetrieveOrderController extends FrontendController
 
         $email = $request->post->get('email');
 
+        if (!$email || trim($email) == ''){
+            Xcart::app()->flash->error("No orders found");
+        }
+
         /** @var OrderModel $order_model */
         if ($order_models = OrderModel::objects()->filter(['email' => $email])->all() ) {
             Xcart::app()->flash->success("Please, check your email");
