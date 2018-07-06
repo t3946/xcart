@@ -6,6 +6,7 @@ use Modules\Order\Helpers\OrderInvoiceHelper;
 use Modules\Order\Models\OrderModel;
 use Xcart\App\Controller\FrontendController;
 use Xcart\App\Main\Xcart;
+use Xcart\App\Validation\EmailValidator;
 
 class RetrieveOrderController extends FrontendController
 {
@@ -15,7 +16,13 @@ class RetrieveOrderController extends FrontendController
 
         $email = $request->post->get('email');
 
+        $email_validator = new EmailValidator();
+
         if (!$email || trim($email) == ''){
+            Xcart::app()->flash->error("No orders found");
+        }
+
+        if (!$email_validator->validate($email)){
             Xcart::app()->flash->error("No orders found");
         }
 
