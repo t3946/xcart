@@ -549,7 +549,7 @@ class PromotionalProductsHelper
             ],
 
             'TA' => [
-                '39120'
+                '944507'
             ],
 
         ];
