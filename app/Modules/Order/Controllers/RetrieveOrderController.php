@@ -18,12 +18,7 @@ class RetrieveOrderController extends FrontendController
 
         $email_validator = new EmailValidator();
 
-        if (!$email || trim($email) == ''){
-            Xcart::app()->flash->error("No orders found");
-            $this->redirect('/');
-        }
-
-        if (!$email_validator->validate($email)){
+        if (!$email || trim($email) == '' || !$email_validator->validate($email)){
             Xcart::app()->flash->error("No orders found");
             $this->redirect('/');
         }
