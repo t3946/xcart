@@ -22,7 +22,7 @@ import documentReady from "./utils/documentReady";
 
 (function(){
     documentReady(()=>{
-        new ResizeMonitor();
+        ResizeMonitor();
         new Search();
         //new LazyImageLoad();
         new CategoryViewType();
