@@ -47,6 +47,7 @@ class SubscribeController extends FrontendController
                 'subscribe_mail.tpl',
                 [
                     'key' => $nonce,
+                    'role' => $sfid,
                 ]
             );
             }
@@ -59,6 +60,17 @@ class SubscribeController extends FrontendController
     {
         $request = $this->getRequest();
         $nonce = $request->post->get('hide');
+        $sfid = $request->post->get('role');
+
+        if (!$sub_model = SubscriberModel::objects()->get(['nonce' => $nonce])){
+            /** @var SiteModel $site_model */
+            $site_model = SiteModel::objects()->get(['storefrontid' => $sfid]);
+
+            Xcart::app()->flash->success("You have already subscribed");
+
+            $this->redirect($site_model->getAbsoluteUrl());
+        }
+
 
         $sub_model = SubscriberModel::objects()->get(['nonce' => $nonce]);
         $sub_model->subscribe = true;

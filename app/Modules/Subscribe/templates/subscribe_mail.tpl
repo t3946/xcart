@@ -192,6 +192,7 @@
                                         <form method="post" action="{absoluteUrl 'subscribe:set'}">
                                             <input class="formEmailButton" type="submit" value="Yes, subscribe me to this list" style="color: #ffffff !important;display: inline-block;font-weight: 500;font-size: 16px;line-height: 42px;font-family: 'Helvetica', Arial, sans-serif;width: auto;white-space: nowrap;height: 42px;margin: 12px 5px 12px 0;padding: 0 22px;text-decoration: none;text-align: center;cursor:pointer;border: 0;border-radius: 3px;vertical-align: top;background-color:#5d5d5d !important;">
                                             <input type="hidden" name="hide" value="{$key}">
+                                            <input type="hidden" name="role" value="{$role}">
                                         </form>
                                         <br>
                                         <div><p style="padding: 0 0 10px 0;">If you received this email by mistake, simply delete it. You won't be subscribed if you don't click the confirmation link above.</p>

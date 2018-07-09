@@ -317,7 +317,7 @@ if ($sExtraLog=='Y')
 
 
 	$mpn = $productModel->getMPN();
-	$product['custom_label_3'] = $distributorModel->manufacturer;
+	$product['custom_label_3'] = number_format($productModel->cost_to_us, 2, '.', '');
 
 	# Define "compatible with"
 	$upselling_products = func_query("SELECT p.product_froogle, p.productcode, p.upc, b.brand FROM $sql_tbl[product_links] as pl, $sql_tbl[products] as p LEFT JOIN $sql_tbl[brands] b ON b.brandid=p.brandid WHERE pl.productid1=$product[productid] AND p.productid=pl.productid2");
@@ -600,10 +600,8 @@ if ($sExtraLog=='Y')
 	$product['google_brand'] = func_froogle_convert(trim($product['brand']), 256);
 	$product['google_product'] = func_froogle_convert((trim($product['product_froogle']) ? trim($product['product_froogle']) : trim($product['product'])), 80);
 
-    if (($distributorModel->d_minimum_order_amount == 'applies_to_all_orders')
-        && (($m_order_amount = floatval($distributorModel->d_minimum_order_amount_in_us)) > 0)
-        && (floatval($product['price']) < $m_order_amount)
-    ) {
+    if (($m_order_amount = $distributorModel->getMinimalAmount()) && (float)$product['price'] < $m_order_amount)
+    {
         $m_order_amount = number_format($m_order_amount, 2);
         $product['shipping_label'] = "Minimum order value {$m_order_amount} USD";
     }

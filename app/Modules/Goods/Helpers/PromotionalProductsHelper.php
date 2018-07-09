@@ -548,6 +548,10 @@ class PromotionalProductsHelper
                 '526101'
             ],
 
+            'TA' => [
+                '944507'
+            ],
+
         ];
 
         $code = strtoupper($site->code);

@@ -31,6 +31,10 @@ $giftcerts = $order_data["giftcerts"];
 if ($orderid) {
     $orderModel = OrderModel::objects()->get(['orderid' => $orderid]);
 }
+if (!$orderModel) {
+    Xcart::app()->request->redirect('/admin/');
+}
+
 $all_processors = func_query_hash("SELECT paymentid, payment_method, acc_per_trans, acc_percent FROM $sql_tbl[payment_methods] WHERE acc_proc='Y' ORDER BY orderby", "paymentid", false);
 $smarty->assign("all_processors", $all_processors);
 
