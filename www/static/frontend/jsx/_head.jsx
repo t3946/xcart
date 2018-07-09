@@ -11,6 +11,7 @@ import 'swiper';
 import FontFaceObserver from 'fontfaceobserver';
 import Waves from 'Waves';
 import whatInput from 'what-input';
+import formValidate from 'validate.js';
 import noUiSlider from 'noUiSlider';
 import Loader from "./components/Loader";
 import FilterPriceSlider from "./components/FilterPriceSlider";
@@ -54,6 +55,7 @@ import LazyLoad from "vanilla-lazyload";
     window['FilterPriceSlider'] = FilterPriceSlider;
     window['loader'] = new Loader;
     window['whatInput'] = whatInput;
+    window['formValidate'] = formValidate;
     window['Waves'] = Waves;
     window['FontFaceObserver'] = FontFaceObserver;
     window['noUiSlider'] = noUiSlider;
@@ -62,6 +64,8 @@ import LazyLoad from "vanilla-lazyload";
         elements_selector: ".lazy-img, .lazy-bg",
         callback_set: function(el){el.classList.remove('lazy-img')}
     });
+
+    console.log(formValidate);
 
     window.d = (...arg) => {
         //console.log(...arg);

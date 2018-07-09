@@ -9,6 +9,7 @@
 namespace Modules\Goods\Forms;
 
 use Modules\Core\Components\GlobalConfig;
+use Modules\Core\Forms\FrontendModelForm;
 use Modules\GeoIp\Helpers\GeoIpHelper;
 use Modules\Goods\Models\ProductQuestionModel;
 use Modules\Main\Models\DepartmentsModel;
@@ -21,7 +22,7 @@ use Xcart\App\Form\ModelForm;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Validation\EmailValidator;
 
-class ProductQuestionForm extends ModelForm
+class ProductQuestionForm extends FrontendModelForm
 {
 
     /**
@@ -39,6 +40,8 @@ class ProductQuestionForm extends ModelForm
             'productid' => [
                 'class' => NumberField::class,
                 'required' => true,
+                'fieldTemplate' => 'forms/field/default/field_custom.tpl',
+                //'labelTemplate' => 'forms/field/default/label_optional.tpl'
             ],
             'firstname' => [
                 'class' => CharField::class,
@@ -47,6 +50,7 @@ class ProductQuestionForm extends ModelForm
                     'placeholder' => 'Albert'
                 ],
                 'required' => true,
+                'fieldTemplate' => 'forms/field/default/field_custom.tpl',
             ],
             'email' => [
                 'class' => CharField::class,
@@ -58,6 +62,7 @@ class ProductQuestionForm extends ModelForm
                 'validators' => [
                     new EmailValidator(),
                 ],
+                'fieldTemplate' => 'forms/field/default/field_custom.tpl',
             ],
             'phone' => [
                 'class' => CharField::class,
@@ -70,13 +75,15 @@ class ProductQuestionForm extends ModelForm
                 'validators' => [
                     new PhoneValidator(),
                 ],
+                'fieldTemplate' => 'forms/field/default/field_custom.tpl',
             ],
             'phone_ext' => [
                 'class' => NumberField::class,
                 'label' => 'ext',
                 'html' => [
                     'class' => 'phone_ext',
-                ]
+                ],
+                'fieldTemplate' => 'forms/field/default/field_custom.tpl',
             ],
             'question' => [
                 'class' => TextField::class,
@@ -86,6 +93,7 @@ class ProductQuestionForm extends ModelForm
                     'placeholder' => 'Please type your product question here'
                 ],
                 'required' => true,
+                'fieldTemplate' => 'forms/field/default/field_custom.tpl',
             ],
 
         ];

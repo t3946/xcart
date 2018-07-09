@@ -8,6 +8,8 @@ use Countable;
 use Exception;
 use IteratorAggregate;
 use RuntimeException;
+use Xcart\App\Behaviours\Traits\BehaviorsTrait;
+use Xcart\App\Behaviours\Interfaces\IObjectBehavior;
 use Xcart\App\Helpers\Accessors;
 use Xcart\App\Helpers\Collection;
 use Xcart\App\Helpers\Creator;
@@ -25,9 +27,9 @@ use Xcart\App\Validation\Traits\ValidateObject;
  * @method string asUl(array $renderFields = [])
  * @method string asTable(array $renderFields = [])
  */
-abstract class BaseForm implements IteratorAggregate, Countable, ArrayAccess, IValidateObject
+abstract class BaseForm implements IteratorAggregate, Countable, ArrayAccess, IValidateObject, IObjectBehavior
 {
-    use Accessors, Configurator, ValidateObject, RenderTrait;
+    use Accessors, Configurator, ValidateObject, RenderTrait, BehaviorsTrait;
 
     public $templates = [
         'default' => 'forms/default.tpl',
@@ -99,12 +101,13 @@ abstract class BaseForm implements IteratorAggregate, Countable, ArrayAccess, IV
      */
     private $_parentForm;
 
-//    public function init()
-//    {
+    public function init()
+    {
 //        $this->initFields();
 //        $this->initInlines();
 //        $this->setRenderFields(array_keys($this->getFieldsInit()));
-//    }
+        $this->applyDefaultBehaviours();
+    }
 
     /**
      * @param array $value

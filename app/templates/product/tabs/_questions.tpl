@@ -1,3 +1,4 @@
+{raw $form->render()}
 <div class="send-question default-form">
     {if $message && $message == 'success'}
     <form action="" data-message-text="message" data-message-type="success">
@@ -12,6 +13,7 @@
             <input type="hidden" value="{$productId}" name="{$form->classNameShort()}[productid]">
             <div class="row">
                 <div class="column small-12">
+
                     {include 'checkout/_form_row.tpl' field=$form->getField('firstname')}
                     {include 'checkout/_form_row.tpl' field=$form->getField('email')}
                     <div class="row form-row compound-field">

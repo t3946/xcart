@@ -16,6 +16,7 @@ namespace Modules\Main\Forms;
 
 
 use Modules\Main\MainModule;
+use Xcart\App\Form\BaseForm;
 use Xcart\App\Form\Fields\CharField;
 use Xcart\App\Form\Fields\DropDownField;
 use Xcart\App\Form\Fields\NumberField;
@@ -25,7 +26,7 @@ use Xcart\App\Main\Xcart;
 use Xcart\App\Validation\EmailValidator;
 
 
-class ContactUsForm extends Form
+class ContactUsForm extends BaseForm
 {
     /**
      * @var string email, куда отправить письмо
