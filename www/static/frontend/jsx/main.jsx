@@ -5,7 +5,7 @@ import '_head';
 
 import foundationRegisterCustomEvents from "./_binds/foundation_events";
 
-import ResizeMonitor from "./components/ResizeMonitor";
+import createResizeMonitor from "./components/ResizeMonitor";
 import DepartmentMenu from "./components/DepartmentMenu";
 import DottedText from "./components/DottedText";
 import CategoryViewType from "./components/CategoryViewType";
@@ -22,7 +22,7 @@ import documentReady from "./utils/documentReady";
 
 (function(){
     documentReady(()=>{
-        ResizeMonitor();
+        createResizeMonitor();
         new Search();
         //new LazyImageLoad();
         new CategoryViewType();
