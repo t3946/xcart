@@ -5,6 +5,7 @@ namespace Modules\Goods\Models;
 
 use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
+use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\HasManyField;
 use Xcart\App\Orm\Model;
 
@@ -22,13 +23,20 @@ class OptionModel extends Model
         return [
 
             'values' => [
-                'class' => HasManyField::className(),
-                'modelClass' => OptionValueModel::className(),
+                'class' => HasManyField::class,
+                'modelClass' => OptionValueModel::class,
                 'link' => ['classid' => 'classid'],
             ],
 
+            'product' => [
+                'field' => 'productid',
+                'class' => ForeignField::class,
+                'modelClass' => ProductModel::class,
+                'link' => ['productid' => 'productid']
+            ],
+
             'classid' => [
-                'class' => AutoField::className(),
+                'class' => AutoField::class,
             ],
         ];
     }
@@ -45,6 +53,6 @@ class OptionModel extends Model
 
     public function hasVariants()
     {
-        return $this->is_modifier != 'Y';
+        return $this->is_modifier !== 'Y';
     }
 }
