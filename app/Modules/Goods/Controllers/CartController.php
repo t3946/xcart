@@ -50,7 +50,15 @@ class CartController extends BaseCartController
     {
         if ($items = $this->getRequest()->post->get('items', [])) {
             foreach ( $items as $item) {
-                $this->addInternal($item['id'], $item['quantity']);
+                $data = [];
+
+                if ($item['options']) {
+                    foreach ($item['options'] as $option) {
+                        $data[$option['o_id']] = $option['ov_id'];
+                    }
+                }
+
+                $this->addInternal($item['id'], $item['quantity'], $data);
             }
         }
 
@@ -220,7 +228,7 @@ class CartController extends BaseCartController
         ]);
     }
 
-    protected function addInternal($uniqueId, $quantity = 1)
+    protected function addInternal($uniqueId, $quantity = 1, $data = [])
     {
         /** @var ProductModel $model */
         $model = ProductModel::objects()->get(['pk' => $uniqueId]);
@@ -240,9 +248,10 @@ class CartController extends BaseCartController
             if ($tq) {
                 if ($item) {
                     $item->setQuantity($tq + $inCart);
+                    $item->setData($data);
                 }
                 else {
-                    $cart->add($model, $tq);
+                    $cart->add($model, $tq, null, $data);
                 }
 
                 if ($tq != $quantity) {

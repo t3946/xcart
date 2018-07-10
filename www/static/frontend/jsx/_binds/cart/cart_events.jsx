@@ -73,9 +73,16 @@ import SelectNumberItems from "../../components/SelectNumberItems";
             let product = e.target.closest('[data-product]');
             if ( product )
             {
+                let opt = [];
+
+                $('select.product-options', product).each(function(){
+                    opt.push({'o_id': this.dataset.id, 'ov_id': $(this).find('option:selected').val()});
+                });
+
                 let data = [{
                     id: product.dataset.product,
-                    quantity: product.dataset.quantity  || 1
+                    quantity: product.dataset.quantity  || 1,
+                    options: opt
                 }];
 
                 cartAdd(data, ()=>{ productItemResetState(product); });

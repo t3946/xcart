@@ -290,5 +290,5 @@ abstract class BaseCartController extends FrontendController
         }
     }
 
-    abstract protected function addInternal($uniqueId, $quantity);
+    abstract protected function addInternal($uniqueId, $quantity, $data);
 }
