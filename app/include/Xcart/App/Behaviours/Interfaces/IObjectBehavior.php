@@ -11,8 +11,12 @@ namespace Xcart\App\Behaviours\Interfaces;
 
 interface IObjectBehavior
 {
-    public function attachBehaviour($name, $behavior);
+    public function attachBehavior($name, $behavior);
 
-    public function detachBehaviour($name);
+    /**
+     * @param $name
+     * @return mixed
+     */
+    public function detachBehavior($name);
 
 }

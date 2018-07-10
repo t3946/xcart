@@ -1,0 +1,17 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: anna
+ * Date: 10.07.2018
+ * Time: 14:39
+ */
+
+namespace Xcart\App\Form;
+
+
+use Xcart\App\Form\Traits\FormBehaviourRenderTrait;
+
+abstract class DecoratedModelForm extends ModelForm
+{
+    use FormBehaviourRenderTrait;
+}

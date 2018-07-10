@@ -1,4 +1,4 @@
-{raw $form->render()}
+
 <div class="send-question default-form">
     {if $message && $message == 'success'}
     <form action="" data-message-text="message" data-message-type="success">
@@ -10,6 +10,7 @@
         {else}
         <form action="">
             {/if}
+            {raw $form->render()}
             <input type="hidden" value="{$productId}" name="{$form->classNameShort()}[productid]">
             <div class="row">
                 <div class="column small-12">

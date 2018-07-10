@@ -23,6 +23,15 @@ abstract class Field implements IValidateField
     use Accessors, Configurator, ValidateField, RenderTrait;
 
     /**
+     * Field, that extends current field
+     * @var string
+     */
+    public $extend = '';
+    /**
+     * @var bool
+     */
+    public $extends = false;
+    /**
      * @var bool Технические аттрибуты для inline моделей
      */
     public $hidden = false;

@@ -69,7 +69,6 @@ class ModelForm extends BaseForm
             $this->populateFromInstance($instance);
         }
 
-
         foreach ($fields as $name => $config) {
             if (isset($this->_fields[$name]) || in_array($name, $this->getExclude())) {
                 continue;

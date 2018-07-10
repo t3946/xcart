@@ -106,7 +106,7 @@ abstract class BaseForm implements IteratorAggregate, Countable, ArrayAccess, IV
 //        $this->initFields();
 //        $this->initInlines();
 //        $this->setRenderFields(array_keys($this->getFieldsInit()));
-        $this->applyDefaultBehaviours();
+        $this->applyDefaultBehaviors();
     }
 
     /**
@@ -283,6 +283,7 @@ abstract class BaseForm implements IteratorAggregate, Countable, ArrayAccess, IV
      * @param array $fields
      * @param null|int $extra count of the extra inline forms for render
      * @return string
+     * @throws Exception
      */
     public function render($template = null, array $fields = [], $extra = null)
     {

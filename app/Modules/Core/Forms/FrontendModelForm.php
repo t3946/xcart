@@ -10,24 +10,57 @@ namespace Modules\Core\Forms;
 
 
 use Modules\Core\Behaviours\FrontendFormBehavior;
+use RuntimeException;
+use Xcart\App\Form\DecoratedModelForm;
 use Xcart\App\Form\ModelForm;
 use Xcart\App\Traits\RenderTrait;
 
-class FrontendModelForm extends ModelForm
+class FrontendModelForm extends DecoratedModelForm
 {
     use RenderTrait;
 
+    protected $userFields = [];
+
+    public function init(){
+        parent::init();
+        $this->userFields = array_keys($this->getFields());
+    }
+
     public function renderInternal($template, array $params)
     {
+        var_dump('renderInternal');
+        var_dump($template);
+        //var_dump($params);
         return self::renderTemplate($template, $params);
     }
 
     protected function behaviours()
     {
         return [
-            'customFields' => [
+            'decor' => [
                 'class' => FrontendFormBehavior::class
             ]
         ];
+    }
+
+    public function setRenderFields(array $fields = [])
+    {
+        if (empty($fields)) {
+            $fields = array_keys($this->getFieldsInit());
+        }
+        $this->_renderFields = [];
+        $initFields = $this->getFieldsInit();
+
+        foreach ($fields as $name) {
+            if (\in_array($name, $this->exclude, true) || !\in_array($name, $this->userFields, true)) {
+                continue;
+            }
+            if (array_key_exists($name, $initFields)) {
+                $this->_renderFields[] = $name;
+            } else {
+                throw new RuntimeException("Field $name not found");
+            }
+        }
+        return $this;
     }
 }

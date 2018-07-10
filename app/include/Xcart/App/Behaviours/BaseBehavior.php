@@ -11,19 +11,22 @@ namespace Xcart\App\Behaviours;
 
 //use Xcart\App\Form\Interfaces\IObjectBehavior;
 
-class BaseBehavior
+use Xcart\App\Behaviours\Interfaces\IBehavior;
+
+class BaseBehavior implements IBehavior
 {
-    protected $_owner;
+    public $owner;
 
-    protected $_enabled;
+    public $enabled;
 
-    protected $_name;
+    public $name;
 
-//    public function __construct()
-//    {
-//        var_dump(123);
-//        exit;
-//    }
+
+    public function __construct()
+    {
+        var_dump(123);
+
+    }
 
 //    public function __construct($owner, $params)
 //    {
@@ -38,51 +41,14 @@ class BaseBehavior
 //        $this->owner = null;
 //    }
 
-    /**
-     * @return mixed
-     */
-    public function getOwner()
-    {
-        return $this->_owner;
-    }
-
-    /**
-     * @param mixed $owner
-     */
-    public function setOwner($owner): void
-    {
-        $this->_owner = $owner;
-    }
 
     /**
      * @return mixed
      */
-    public function getEnabled()
+    public function init()
     {
-        return $this->_enabled;
-    }
 
-    /**
-     * @param mixed $enabled
-     */
-    public function setEnabled($enabled): void
-    {
-        $this->_enabled = $enabled;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getName()
-    {
-        return $this->_name;
-    }
-
-    /**
-     * @param mixed $name
-     */
-    public function setName($name): void
-    {
-        $this->_name = $name;
+        var_dump('init' . $this->name);
+        // TODO: Implement init() method.
     }
 }
