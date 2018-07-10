@@ -19,8 +19,6 @@ class SubscribeController extends FrontendController
         /** @var SiteModel $site_model */
         $site_model = Xcart::app()->getModule('Sites')->getSite();
 
-        Xcart::app()->flash->success("Confirmation email was sent. Please check your inbox.");
-
         $sfid = $site_model->storefrontid;
 
         $email = $request->get->get('subscribe')['email'];
@@ -31,15 +29,16 @@ class SubscribeController extends FrontendController
 
         if ($email_validator->validate($email)) {
 
-            if (!(SubscriberModel::objects()->get(['email' => $email, 'sfid' => $sfid]))) {
-                (new SubscriberModel(['email' => $email, 'sfid' => $sfid, 'nonce' => $nonce]))->save();
+            $subscriber = SubscriberModel::objects()->get(['email' => $email, 'sfid' => $sfid]);
 
-//                echo Xcart::app()->mail::renderTemplate(
-//                    'subscribe_mail.tpl',
-//                    [
-//                        'key' => $nonce,
-//                    ]
-//                );
+            if ($subscriber && $subscriber->subscribe) {
+                Xcart::app()->flash->success('You have already subscribed');
+                $this->redirect('/');
+            }
+
+            if (!$subscriber) {
+                (new SubscriberModel(['email' => $email, 'sfid' => $sfid, 'nonce' => $nonce]))->save();
+            }
 
             Xcart::app()->mail->template(
                 $email,
@@ -50,7 +49,9 @@ class SubscribeController extends FrontendController
                     'role' => $sfid,
                 ]
             );
-            }
+            Xcart::app()->flash->success('Confirmation email was sent. Please check your inbox.');
+        } else {
+            Xcart::app()->flash->success('Your email address is invalid. Please enter a valid address.');
         }
 
         $this->redirect('/');
