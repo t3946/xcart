@@ -62,27 +62,30 @@ class SubscribeController extends FrontendController
         $nonce = $request->post->get('hide');
         $sfid = $request->post->get('role');
 
-        if (!$sub_model = SubscriberModel::objects()->get(['nonce' => $nonce])){
+        if ($nonce && !$sub_model = SubscriberModel::objects()->get(['nonce' => $nonce])){
             /** @var SiteModel $site_model */
-            $site_model = SiteModel::objects()->get(['storefrontid' => $sfid]);
+            if ($sfid !== null) {
+                $site_model = SiteModel::objects()->get(['storefrontid' => $sfid]);
 
-            Xcart::app()->flash->success("You have already subscribed");
+                Xcart::app()->flash->success("You have already subscribed");
+
+                $this->redirect($site_model->getAbsoluteUrl());
+            }
+        }
+
+        if ($nonce) {
+            $sub_model = SubscriberModel::objects()->get(['nonce' => $nonce]);
+            $sub_model->subscribe = true;
+            $sub_model->nonce = '';
+            $sub_model->update(['subscribe', 'nonce']);
+
+            /** @var SiteModel $site_model */
+            $site_model = SiteModel::objects()->get(['storefrontid' => $sub_model->sfid]);
+
+            Xcart::app()->flash->success("Thank you! Subscription confirmed");
 
             $this->redirect($site_model->getAbsoluteUrl());
         }
-
-
-        $sub_model = SubscriberModel::objects()->get(['nonce' => $nonce]);
-        $sub_model->subscribe = true;
-        $sub_model->nonce = '';
-        $sub_model->update(['subscribe', 'nonce']);
-
-        /** @var SiteModel $site_model */
-        $site_model = SiteModel::objects()->get(['storefrontid' => $sub_model->sfid]);
-
-        Xcart::app()->flash->success("Thank you! Subscription confirmed");
-
-        $this->redirect($site_model->getAbsoluteUrl());
 
     }
 
