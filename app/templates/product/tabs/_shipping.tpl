@@ -6,7 +6,7 @@
     <div class="row">
         {if $is_specs}
         <div class="columns small-12 large-4 block">
-            <h2 class="title">Shipping specs</h2>
+            <div class="h2 title">Shipping specs</div>
             <div class="options">
                 <div class="content">
                     {include 'product/tabs/__option.tpl'
@@ -38,7 +38,7 @@
         </div>
         {/if}
         <div class="columns small-12 {if $is_specs}large-8{else}large-12{/if} block">
-            <h2 class="title">Shipping from</h2>
+            <div class="h2 title">Shipping from</div>
             {*<div class="content">*}
                 {*This product is shipped from our warehouse in*}
                 {*{$warehouse->m_city},*}

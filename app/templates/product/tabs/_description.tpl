@@ -2,7 +2,7 @@
     <div class="column small-12 large-4 block">
 
         <div class="options">
-            <h2 class="title">Options</h2>
+            <div class="h2 title">Options</div>
             <div class="content">
 {*
                 {include 'product/tabs/__option.tpl'
@@ -40,7 +40,7 @@
     <div class="column small-12 large-8 block">
 
         <div class="description">
-            <h2 class="title">Description</h2>
+            <div class="h2 title">Description</div>
             <div class="content">
                 {raw $model->getFrontendDescription()}
             </div>

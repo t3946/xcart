@@ -80,7 +80,9 @@
       .tabs-panel {
         padding: rem-calc(38);
 
-        h2 {
+        .h2 {
+          font-weight: 700;
+
           &.title {
             @include breakpoint(large up) {
               margin-bottom: rem-calc(21);
