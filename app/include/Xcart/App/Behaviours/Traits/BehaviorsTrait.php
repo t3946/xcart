@@ -21,9 +21,6 @@ trait BehaviorsTrait
      */
     protected $_behaviours = [];
 
-
-
-
     /**
      * @param $name
      * @param $behavior

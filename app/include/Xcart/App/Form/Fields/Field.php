@@ -471,13 +471,14 @@ abstract class Field implements IValidateField
         ]);
     }
 
-    public function render()
+    public function render($fieldExtension = null)
     {
         return $this->innerRender($this->fieldTemplate, [
             'label' => $this->renderLabel(),
             'input' => $this->renderInput(),
             'errors' => $this->renderErrors(),
-            'hint' => $this->renderHint()
+            'hint' => $this->renderHint(),
+            'ext' => $fieldExtension
         ]);
     }
 

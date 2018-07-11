@@ -12,7 +12,12 @@
             </div>
             <div class="small-12 large-6 columns phone--container">
                 {raw $input}
-                {*{raw $inputExt}*}
+
+                <span class="phone_ext--container">
+                    <label class="display-inline hide-for-medium">X</label>
+                    <label class="display-inline show-for-medium">{t 'ext' dict='order'}</label>
+                    {raw $ext->renderInput()}
+                </span>
                 <span class="show-for-large">
                      {raw $errors}
                 </span>

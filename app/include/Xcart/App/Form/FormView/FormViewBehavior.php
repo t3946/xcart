@@ -16,6 +16,9 @@ use Xcart\App\Helpers\Creator;
 
 class FormViewBehavior extends BaseBehavior
 {
+    /**
+     * @var array
+     */
     protected $templates = [];
 
     /**
@@ -28,27 +31,32 @@ class FormViewBehavior extends BaseBehavior
      */
     protected $defaultTemplateType = 'default';
 
-    public $fieldsSettings = [];
+    /**
+     * @var array
+     */
+    protected $fieldsSettings = [];
 
 
+    /**
+     * @return mixed|void
+     * @throws Exception
+     */
     public function init()
     {
-
         parent::init();
 
         if(!($this->owner instanceof BaseForm)){
             throw new Exception("Owner of behavior is incorrect");
         }
-
-        var_dump('init FFormViewBehaviour');
-
     }
 
-
+    /**
+     * @param $type
+     * @return mixed
+     * @throws Exception
+     */
     public function getTemplateFromType($type)
     {
-
-
         $templates = array_merge($this->owner->templates, $this->templates);
 
         if (array_key_exists($type, $templates)) {
@@ -59,6 +67,10 @@ class FormViewBehavior extends BaseBehavior
 
     }
 
+    /**
+     * @return string
+     * @throws Exception
+     */
     public function __toString()
     {
         $template = $this->getTemplateFromType($this->defaultTemplateType);
@@ -69,8 +81,13 @@ class FormViewBehavior extends BaseBehavior
         }
     }
 
-
-
+    /**
+     * @param null $template
+     * @param array $fields
+     * @param null $extra
+     * @return string
+     * @throws Exception
+     */
     public function render($template = null, array $fields = [], $extra = null)
     {
         if (!$template) {
@@ -87,29 +104,29 @@ class FormViewBehavior extends BaseBehavior
     /**
      * Initialize fields
      */
-//    public function initFields()
-//    {
-//        $prefix = $this->owner->getPrefix();
-//        $fields = $this->owner->getFields();
-//        foreach ($fields as $name => $config) {
-//            if (\in_array($name, $this->owner->getExclude(), true)) {
-//                continue;
-//            }
-//
-//            if (!\is_array($config)) {
-//                $config = ['class' => $config];
-//            }
-//
-//            $newField = Creator::createObject(array_merge([
-//                'name' => $name,
-//                'form' => $this,
-//                'prefix' => $prefix,
-//            ], $config));
-//
-//            $this->owner->addInitField($name, $newField);
-//        }
-//
-//        return $this->owner;
-//    }
+    public function initFields()
+    {
+        $prefix = $this->owner->getPrefix();
+        $fields = $this->owner->getFields();
+        foreach ($fields as $name => $config) {
+            if (\in_array($name, $this->owner->getExclude(), true)) {
+                continue;
+            }
+
+            if (!\is_array($config)) {
+                $config = ['class' => $config];
+            }
+
+            $newField = Creator::createObject(array_merge([
+                'name' => $name,
+                'form' => $this->owner,
+                'prefix' => $prefix,
+            ], $this->fieldsSettings, $config));
+
+            $this->owner->addInitField($name, $newField);
+        }
+    }
+
+
 
 }

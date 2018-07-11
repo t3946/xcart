@@ -12,40 +12,79 @@ namespace Modules\Core\Behaviours;
 use Exception;
 use Xcart\App\Behaviours\BaseBehavior;
 use Xcart\App\Form\FormView\FormViewBehavior;
+use Xcart\App\Helpers\Creator;
 
 class FrontendFormBehavior extends FormViewBehavior
 {
+
+    /**
+     * Default template
+     * @var string
+     */
+    protected $defaultTemplateType = 'frontend';
+
+    /**
+     * Additional templates
+     * @var array
+     */
     protected $templates = [
         'frontend' => 'forms/frontend.tpl'
     ];
 
     /**
-     * @var string
+     * Default params for all fields
+     * @var array
      */
-    protected $defaultTemplateType = 'frontend';
+    protected $fieldsSettings = [
+        'fieldTemplate' => 'forms/field/default/custom/field_custom.tpl'
+    ];
 
+    /**
+     * Default params for compound fields
+     * @var array
+     */
+    protected $fieldsCompoundSettings = [
+        'fieldTemplate' => 'forms/field/default/custom/field_compound.tpl'
+    ];
 
-    protected $fieldCompoundTemplate = 'forms/field/default/custom/field_compound.tpl';
-    protected $fieldTemplate = 'forms/field/default/custom/field_custom.tpl';
-
-
-
-
-    public function __construct()
+    /**
+     * Initialize fields
+     */
+    public function initFields()
     {
-        var_dump('construct FrontendFormBehavior');
-    }
+        $prefix = $this->owner->getPrefix();
+        $fields = $this->owner->getFields();
 
-    public function init()
-    {
-        var_dump('init FrontendFormBehavior');
+        foreach ($fields as $name => $config) {
 
-        parent::init();
+            if (\in_array($name, $this->owner->getExclude(), true)) {
+                continue;
+            }
 
-        //$this->owner->templates = array_merge($this->owner->templates, $this->templates);
-        //var_dump($this->owner->templates);
-        //$this->owner->defaultTemplateType = $this->defaultTemplateType;
+            if (!\is_array($config)) {
+                $config = ['class' => $config];
+            }
 
+            if(empty($config['extend'])) {
+
+                $newField = Creator::createObject(array_merge([
+                    'name' => $name,
+                    'form' => $this->owner,
+                    'prefix' => $prefix,
+                ], $this->fieldsSettings, $config));
+
+            } else {
+
+                $newField = Creator::createObject(array_merge([
+                    'name' => $name,
+                    'form' => $this->owner,
+                    'prefix' => $prefix,
+                ], $this->fieldsSettings, $this->fieldsCompoundSettings, $config));
+            }
+
+            $this->owner->addInitField($name, $newField);
+
+        }
     }
 
 }

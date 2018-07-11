@@ -46,7 +46,7 @@ class ProductQuestionForm extends FrontendModelForm
             'productid' => [
                 'class' => NumberField::class,
                 'required' => true,
-                'fieldTemplate' => 'forms/field/default/custom/field_custom.tpl',
+               // 'fieldTemplate' => 'forms/field/default/custom/field_custom.tpl',
                 //'labelTemplate' => 'forms/field/default/label_optional.tpl'
             ],
             'firstname' => [
@@ -56,7 +56,7 @@ class ProductQuestionForm extends FrontendModelForm
                     'placeholder' => 'Albert'
                 ],
                 'required' => true,
-                'fieldTemplate' => 'forms/field/default/custom/field_custom.tpl',
+               // 'fieldTemplate' => 'forms/field/default/custom/field_custom.tpl',
             ],
             'email' => [
                 'class' => CharField::class,
@@ -68,7 +68,7 @@ class ProductQuestionForm extends FrontendModelForm
                 'validators' => [
                     new EmailValidator(),
                 ],
-                'fieldTemplate' => 'forms/field/default/custom/field_custom.tpl',
+               // 'fieldTemplate' => 'forms/field/default/custom/field_custom.tpl',
             ],
             'phone' => [
                 'class' => CharField::class,
@@ -81,7 +81,7 @@ class ProductQuestionForm extends FrontendModelForm
                 'validators' => [
                     new PhoneValidator(),
                 ],
-                'fieldTemplate' => 'forms/field/default/custom/field_compound.tpl',
+                //'fieldTemplate' => 'forms/field/default/custom/field_compound.tpl',
                 'extend' => 'phone_ext'
             ],
             'phone_ext' => [
@@ -90,7 +90,7 @@ class ProductQuestionForm extends FrontendModelForm
                 'html' => [
                     'class' => 'phone_ext',
                 ],
-                'fieldTemplate' => 'forms/field/default/custom/field_custom.tpl',
+               // 'fieldTemplate' => 'forms/field/default/custom/field_custom.tpl',
                 'extends' => true
             ],
             'question' => [
@@ -101,7 +101,7 @@ class ProductQuestionForm extends FrontendModelForm
                     'placeholder' => 'Please type your product question here'
                 ],
                 'required' => true,
-                'fieldTemplate' => 'forms/field/default/custom/field_custom.tpl',
+                //'fieldTemplate' => 'forms/field/default/custom/field_custom.tpl',
             ],
 
         ];

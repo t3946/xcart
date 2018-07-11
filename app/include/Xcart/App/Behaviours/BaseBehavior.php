@@ -22,33 +22,11 @@ class BaseBehavior implements IBehavior
     public $name;
 
 
-    public function __construct()
-    {
-        var_dump(123);
-
-    }
-
-//    public function __construct($owner, $params)
-//    {
-//        if(!($owner instanceof IObjectBehavior)) {
-//            return;
-//        }
-//        $this->owner = $owner;
-//    }
-
-//    public function __destruct()
-//    {
-//        $this->owner = null;
-//    }
-
-
     /**
      * @return mixed
      */
     public function init()
     {
-
-        var_dump('init' . $this->name);
-        // TODO: Implement init() method.
+        // Implement init() method.
     }
 }
