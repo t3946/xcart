@@ -49,6 +49,13 @@
                                 <div class="item-name">
                                     {$item->product}
                                 </div>
+                                {if $item->product_options}
+                                    <div class="item-data">
+                                        {foreach $item->product_options as $name => $option}
+                                            <p>{$name}: {$option}</p>
+                                        {/foreach}
+                                    </div>
+                                {/if}
                                 <div class="price-info hide-for-medium">
                                     US$ <span class="price">{$item->price|number_format:2}</span>
                                 </div>

@@ -4,7 +4,6 @@ namespace Modules\Order\Models;
 use Modules\Goods\Models\ProductModel;
 use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
-use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\DecimalField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\IntField;
@@ -59,18 +58,17 @@ class OrderDetailModel  extends Model
                 'default' => '',
             ],
             'product_options' => [
-                'class' => CharField::className(),
-                'null' => false,
-                'default' => '',
+                'class' => SerializeField::class,
+                'null' => true,
+                'default' => null,
             ],
-
             'order_group' => [
                 'field' => 'order_group_id',
-                'class' => ForeignField::className(),
-                'modelClass' => OrderGroupModel::className(),
+                'class' => ForeignField::class,
+                'modelClass' => OrderGroupModel::class,
                 'link' => ['order_group_id' => 'order_group_id'],
                 'null' => false,
-            ]
+            ],
         ];
     }
 }
