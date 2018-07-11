@@ -94,7 +94,11 @@ class FormViewBehavior extends BaseBehavior
             $template = $this->getTemplateFromType($this->defaultTemplateType);
         }
 
-        return $this->owner->setRenderFields($fields)->renderInternal($template, [
+        $this->owner->setRenderFields($fields);
+        // before render
+        $this->owner->renderClientValidation();
+
+        return $this->owner->renderInternal($template, [
             'form' => $this->owner,
             'fields' => $fields ?: $this->owner->getRenderFields(),
             'inlines' => $this->owner->renderInlines($extra)
@@ -108,6 +112,7 @@ class FormViewBehavior extends BaseBehavior
     {
         $prefix = $this->owner->getPrefix();
         $fields = $this->owner->getFields();
+
         foreach ($fields as $name => $config) {
             if (\in_array($name, $this->owner->getExclude(), true)) {
                 continue;
@@ -126,7 +131,6 @@ class FormViewBehavior extends BaseBehavior
             $this->owner->addInitField($name, $newField);
         }
     }
-
 
 
 }

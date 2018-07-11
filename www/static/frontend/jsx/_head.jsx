@@ -21,6 +21,7 @@ import './utils/mmodal/jquery.mindy.modal';
 import 'bower_components/jQuery.dotdotdot/src/jquery.dotdotdot.js';
 
 
+import  "./_binds/forms"
 import  "./_binds/cart"
 import  "./_binds/up_down_buttons"
 import  "./_binds/breadcrumbs"

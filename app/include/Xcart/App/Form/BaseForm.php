@@ -101,6 +101,14 @@ abstract class BaseForm implements IteratorAggregate, Countable, ArrayAccess, IV
      */
     private $_parentForm;
 
+
+    /**
+     * @param $name
+     * @param $config
+     */
+    public function beforeCreateField(&$name, &$config){
+    }
+
     public function init()
     {
 //        $this->initFields();
@@ -222,7 +230,6 @@ abstract class BaseForm implements IteratorAggregate, Countable, ArrayAccess, IV
      */
     public function initFields()
     {
-        $prefix = $this->getPrefix();
         $fields = $this->getFields();
         foreach ($fields as $name => $config) {
             if (\in_array($name, $this->getExclude(), true)) {
@@ -233,12 +240,19 @@ abstract class BaseForm implements IteratorAggregate, Countable, ArrayAccess, IV
                 $config = ['class' => $config];
             }
 
-            $this->_fields[$name] = Creator::createObject(array_merge([
-                  'name' => $name,
-                  'form' => $this,
-                  'prefix' => $prefix,
-            ], $config));
+            $this->_fields[$name] = $this->createField($name, $config);
         }
+    }
+
+    public function createField($name, $config){
+
+        $this->beforeCreateField($name, $config);
+
+        return Creator::createObject(array_merge([
+            'name' => $name,
+            'form' => $this,
+            'prefix' => $this->getPrefix(),
+        ], $config));
     }
 
     public function __call($name, $arguments)
@@ -380,6 +394,10 @@ abstract class BaseForm implements IteratorAggregate, Countable, ArrayAccess, IV
             }
         }
         return $this;
+    }
+
+    public function renderClientValidation(){
+        return [];
     }
 
     public function getRenderFields()

@@ -81,4 +81,29 @@ class EmailValidator extends Validator
 
         return $this->hasErrors() === false;
     }
+
+    public function jsValidateParams()
+    {
+        $validation = [];
+
+        if ($this->required) {
+            $validation = array_merge($validation, [
+                'presence' => [
+                    'message' => Translate::getInstance()->t('validation', "Is not a valid email address", [])
+                ]
+            ]);
+        }
+
+        return array_merge($validation, [
+            'email' => [
+                'message' => Translate::getInstance()->t('validation', "Is not a valid email address", [])
+            ],
+            'length'=> [
+                'maximum' => 320,
+                'wrongLength' => Translate::getInstance()->t('validation', "Is not a valid email address", [])
+            ]
+        ]);
+    }
+
+
 }

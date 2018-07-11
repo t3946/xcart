@@ -2,6 +2,7 @@
 
 namespace Xcart\App\Form\Fields;
 
+use CMap;
 use Exception;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Xcart\App\Exceptions\InvalidConfigException;
@@ -26,11 +27,19 @@ abstract class Field implements IValidateField
      * Field, that extends current field
      * @var string
      */
+
     public $extend = '';
     /**
      * @var bool
      */
+
     public $extends = false;
+
+    /**
+     * @var array
+     */
+    public $clientValidationParams = [];
+
     /**
      * @var bool Технические аттрибуты для inline моделей
      */
@@ -139,6 +148,9 @@ abstract class Field implements IValidateField
      */
     private $_prefix;
 
+    /**
+     *
+     */
     public function init()
     {
         if (!($this->getForm() instanceof ModelForm) && $this->required) {
@@ -152,6 +164,22 @@ abstract class Field implements IValidateField
         }
     }
 
+    /**
+     * @return string
+     */
+    public function createClientValidationConfig()
+    {
+        $params = [];
+        foreach ($this->validators as $validator) {
+            $params = CMap::mergeArray($params, $validator->jsValidateParams());
+        }
+        $params = CMap::mergeArray($params, $this->clientValidationParams);
+        return json_encode($params);
+    }
+
+    /**
+     * @return string
+     */
     public function __toString()
     {
         try {

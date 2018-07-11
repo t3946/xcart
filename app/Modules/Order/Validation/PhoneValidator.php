@@ -18,4 +18,15 @@ class PhoneValidator extends Validator
 
         return $this->hasErrors() === false;
     }
+
+    public function jsValidateParams()
+    {
+        return [
+            'format' => [
+                'pattern' => "^\+?[-()\d\s]+$",
+                'flags' => "im",
+                'message' => Translate::getInstance()->t('validation', 'Is not a valid phone', [])
+            ]
+        ];
+    }
 }

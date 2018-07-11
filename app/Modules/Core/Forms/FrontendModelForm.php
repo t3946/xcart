@@ -36,7 +36,8 @@ class FrontendModelForm extends DecoratedModelForm
         return [
             'decor' => [
                 'class' => FrontendFormBehavior::class
-            ]
+            ],
+
         ];
     }
 

@@ -274,5 +274,6 @@
 {render_flash:raw template='base/_flash.tpl'}
 
 <div id="containerUpDown" class="show-for-large"></div>
+{get_assets:raw type='js' position='end'}
 </body>
 </html>
