@@ -31,6 +31,9 @@ abstract class BaseForm implements IteratorAggregate, Countable, ArrayAccess, IV
 {
     use Accessors, Configurator, ValidateObject, RenderTrait, BehaviorsTrait;
 
+
+
+
     public $templates = [
         'default' => 'forms/default.tpl',
         'block' => 'core/form/block.tpl',
@@ -101,6 +104,12 @@ abstract class BaseForm implements IteratorAggregate, Countable, ArrayAccess, IV
      */
     private $_parentForm;
 
+    /**
+     * Count number of forms
+     * @var int
+     */
+    private static $countForm = 0;
+
 
     /**
      * Execute before create field
@@ -147,7 +156,13 @@ abstract class BaseForm implements IteratorAggregate, Countable, ArrayAccess, IV
 //        $this->initFields();
 //        $this->initInlines();
 //        $this->setRenderFields(array_keys($this->getFieldsInit()));
+        self::$countForm++;
         $this->applyDefaultBehaviors();
+    }
+
+    public static function getFormCounter()
+    {
+        return self::$countForm;
     }
 
     /**
