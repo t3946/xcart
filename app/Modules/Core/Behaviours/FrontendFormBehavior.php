@@ -11,6 +11,7 @@ namespace Modules\Core\Behaviours;
 
 use Exception;
 use Xcart\App\Behaviours\BaseBehavior;
+use Xcart\App\Form\Fields\Field;
 use Xcart\App\Form\FormView\FormViewBehavior;
 use Xcart\App\Helpers\Creator;
 
@@ -47,44 +48,54 @@ class FrontendFormBehavior extends FormViewBehavior
         'fieldTemplate' => 'forms/field/default/custom/field_compound.tpl'
     ];
 
+    private $_clientValidation = [];
+
     /**
-     * Initialize fields
+     * Execute before create field
+     * @param $name
+     * @param $config
+     * @return mixed
      */
-    public function initFields()
+    public function onBeforeCreateField(&$name, &$config)
     {
-        $prefix = $this->owner->getPrefix();
-        $fields = $this->owner->getFields();
-
-        foreach ($fields as $name => $config) {
-
-            if (\in_array($name, $this->owner->getExclude(), true)) {
-                continue;
-            }
-
-            if (!\is_array($config)) {
-                $config = ['class' => $config];
-            }
-
-            if(empty($config['extend'])) {
-
-                $newField = Creator::createObject(array_merge([
-                    'name' => $name,
-                    'form' => $this->owner,
-                    'prefix' => $prefix,
-                ], $this->fieldsSettings, $config));
-
-            } else {
-
-                $newField = Creator::createObject(array_merge([
-                    'name' => $name,
-                    'form' => $this->owner,
-                    'prefix' => $prefix,
-                ], $this->fieldsSettings, $this->fieldsCompoundSettings, $config));
-            }
-
-            $this->owner->addInitField($name, $newField);
-
+        if(empty($config['extend'])) {
+            // Render default field
+            $config = array_merge($this->fieldsSettings, $config);
+        } else {
+            // Render compound field
+            $config = array_merge($this->fieldsSettings, $this->fieldsCompoundSettings, $config);
         }
     }
+
+    /**
+     * Execute after field is created
+     * @param $field Field
+     */
+    public function onAfterCreateField(&$field)
+    {
+        $this->_clientValidation[$field->name] = $field->createClientValidationConfig();
+
+//        AssetsLibrary::addAsset([
+//            'type' => 'js',
+//            'position' => 'end',
+//            'key' => 'ace_theme'.$this->theme
+//        ], $json);
+
+    }
+
+    /**
+     * Execute before render form
+     * @param $fields
+     */
+    public function onBeforeRender(&$fields):void
+    {
+        $js = "";
+        foreach ($fields as $fieldName) {
+            $json = $this->_clientValidation[$fieldName];
+            //var_dump($json);
+        }
+    }
+
+
 
 }

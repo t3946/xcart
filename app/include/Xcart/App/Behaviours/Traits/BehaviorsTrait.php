@@ -48,9 +48,9 @@ trait BehaviorsTrait
      * @param $name
      * @return FormViewBehavior
      */
-    public function getBehavior($name):FormViewBehavior
+    public function getBehavior($name): FormViewBehavior
     {
-        if(!isset($this->_behaviours[$name])){
+        if (!isset($this->_behaviours[$name])) {
             return null;
         }
         return $this->_behaviours[$name];
@@ -60,12 +60,28 @@ trait BehaviorsTrait
      * @param $name
      * @return bool
      */
-    public function hasBehavior($name):bool
+    public function hasBehavior($name): bool
     {
-        if(isset($this->_behaviours[$name])){
+        if (isset($this->_behaviours[$name])) {
             return true;
         }
         return false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasAnyBehavior(): bool
+    {
+        return !empty($this->_behaviours);
+    }
+
+    /**
+     * @return array
+     */
+    public function getAllBehaviors(): array
+    {
+        return $this->_behaviours;
     }
 
     /**
@@ -86,21 +102,21 @@ trait BehaviorsTrait
         }
     }
 
-    public function  __call($method, $parameters)
+    public function __call($method, $parameters)
     {
-        var_dump('call');
-        var_dump($method);
-        foreach ($this->_behaviours as $name => $behaviour){
-            if(method_exists($behaviour, $method))
-            {
+        //var_dump('call');
+       // var_dump($method);
+        foreach ($this->_behaviours as $name => $behaviour) {
+            if (method_exists($behaviour, $method)) {
                 return call_user_func_array([$behaviour, $method], $parameters);
             }
         }
     }
 
-    public static function  __callStatic($method, $parameters){
-        var_dump('callStatic');
-        var_dump($method);
+    public static function __callStatic($method, $parameters)
+    {
+        //var_dump('callStatic');
+        ///var_dump($method);
         //exit;
     }
 

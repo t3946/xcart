@@ -36,6 +36,11 @@ class FormViewBehavior extends BaseBehavior
      */
     protected $fieldsSettings = [];
 
+    /**
+     * @var bool
+     */
+    public $enabled = true;
+
 
     /**
      * @return mixed|void
@@ -51,86 +56,46 @@ class FormViewBehavior extends BaseBehavior
     }
 
     /**
-     * @param $type
+     * Execute before create field
+     * @param $name
+     * @param $config
      * @return mixed
-     * @throws Exception
      */
-    public function getTemplateFromType($type)
+    public function onBeforeCreateField(&$name, &$config)
     {
-        $templates = array_merge($this->owner->templates, $this->templates);
-
-        if (array_key_exists($type, $templates)) {
-            return $templates[$type];
-        }
-
-        throw new Exception("Template type {$type} not found");
-
+        $config = array_merge($this->fieldsSettings, $config);
     }
 
     /**
-     * @return string
-     * @throws Exception
+     * Execute after field is created
+     * @param $field
      */
-    public function __toString()
+    public function onAfterCreateField(&$field)
     {
-        $template = $this->getTemplateFromType($this->defaultTemplateType);
-        try {
-            return (string)$this->render($template);
-        } catch (Exception $e) {
-            return (string)$e;
-        }
+        //$field->createClientValidationConfig();
     }
 
     /**
-     * @param null $template
-     * @param array $fields
-     * @param null $extra
-     * @return string
-     * @throws Exception
+     * Execute before choose template
+     * @param $templates
+     * @param $defaultTemplateType
      */
-    public function render($template = null, array $fields = [], $extra = null)
+    public function onBeforeGetTemplate(&$templates, &$defaultTemplateType)
     {
-        if (!$template) {
-            $template = $this->getTemplateFromType($this->defaultTemplateType);
-        }
-
-        $this->owner->setRenderFields($fields);
-        // before render
-        $this->owner->renderClientValidation();
-
-        return $this->owner->renderInternal($template, [
-            'form' => $this->owner,
-            'fields' => $fields ?: $this->owner->getRenderFields(),
-            'inlines' => $this->owner->renderInlines($extra)
-        ]);
+        $defaultTemplateType = $this->defaultTemplateType;
+        $templates = array_merge($templates, $this->templates);
     }
 
     /**
-     * Initialize fields
+     * Execute before render form
+     * @param $fields
      */
-    public function initFields()
+    public function onBeforeRender(&$fields):void
     {
-        $prefix = $this->owner->getPrefix();
-        $fields = $this->owner->getFields();
-
-        foreach ($fields as $name => $config) {
-            if (\in_array($name, $this->owner->getExclude(), true)) {
-                continue;
-            }
-
-            if (!\is_array($config)) {
-                $config = ['class' => $config];
-            }
-
-            $newField = Creator::createObject(array_merge([
-                'name' => $name,
-                'form' => $this->owner,
-                'prefix' => $prefix,
-            ], $this->fieldsSettings, $config));
-
-            $this->owner->addInitField($name, $newField);
-        }
     }
+
+
+
 
 
 }

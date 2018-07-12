@@ -103,12 +103,45 @@ abstract class BaseForm implements IteratorAggregate, Countable, ArrayAccess, IV
 
 
     /**
+     * Execute before create field
      * @param $name
      * @param $config
+     * @return mixed
      */
-    public function beforeCreateField(&$name, &$config){
+    public function onBeforeCreateField(&$name, &$config)
+    {
+        var_dump('base onBeforeCreateField');
     }
 
+    /**
+     * Execute after field is created
+     * @param $field
+     * @return mixed
+     */
+    public function onAfterCreateField(&$field)
+    {
+    }
+
+    /**
+     * Execute before choose template
+     * @param $templates
+     * @param $defaultTemplateType
+     */
+    public function onBeforeGetTemplate(&$templates, &$defaultTemplateType)
+    {
+    }
+
+    /**
+     * Execute before render form
+     * @param $fields
+     */
+    public function onBeforeRender(&$fields)
+    {
+    }
+
+    /**
+     *
+     */
     public function init()
     {
 //        $this->initFields();
@@ -230,6 +263,7 @@ abstract class BaseForm implements IteratorAggregate, Countable, ArrayAccess, IV
      */
     public function initFields()
     {
+        var_dump('initFields');
         $fields = $this->getFields();
         foreach ($fields as $name => $config) {
             if (\in_array($name, $this->getExclude(), true)) {
@@ -244,17 +278,29 @@ abstract class BaseForm implements IteratorAggregate, Countable, ArrayAccess, IV
         }
     }
 
-    public function createField($name, $config){
+    public function createField($name, $config)
+    {
 
-        $this->beforeCreateField($name, $config);
+        var_dump('createField');
+        $this->onBeforeCreateField($name, $config);
 
-        return Creator::createObject(array_merge([
+        $newField = Creator::createObject(array_merge([
             'name' => $name,
             'form' => $this,
             'prefix' => $this->getPrefix(),
         ], $config));
+
+        $this->onAfterCreateField($newField);
+
+        return $newField;
     }
 
+    /**
+     * @param $name
+     * @param $arguments
+     * @return mixed|void
+     * @throws Exception
+     */
     public function __call($name, $arguments)
     {
         $type = strtolower(ltrim($name, 'as'));
@@ -274,7 +320,7 @@ abstract class BaseForm implements IteratorAggregate, Countable, ArrayAccess, IV
 
     public function __toString()
     {
-        $template = $this->getTemplateFromType($this->defaultTemplateType);
+        $template = $this->getTemplateFromType();
         try {
             return (string)$this->render($template);
         } catch (Exception $e) {
@@ -282,13 +328,23 @@ abstract class BaseForm implements IteratorAggregate, Countable, ArrayAccess, IV
         }
     }
 
-    public function getTemplateFromType($type)
+    public function getTemplateFromType($type = '')
     {
-        if (array_key_exists($type, $this->templates)) {
-            $template = $this->templates[$type];
+        $defaultTemplate = $this->defaultTemplateType;
+        $templatesArray = array_merge([], $this->templates);
+
+        $this->onBeforeGetTemplate($templatesArray, $defaultTemplate);
+
+        if(empty($type)) {
+            $type = $defaultTemplate;
+        }
+
+        if (array_key_exists($type, $templatesArray)) {
+            $template = $templatesArray[$type];
         } else {
             throw new Exception("Template type {$type} not found");
         }
+
         return $template;
     }
 
@@ -302,12 +358,15 @@ abstract class BaseForm implements IteratorAggregate, Countable, ArrayAccess, IV
     public function render($template = null, array $fields = [], $extra = null)
     {
         if (!$template) {
-            $template = $this->getTemplateFromType($this->defaultTemplateType);
+            $template = $this->getTemplateFromType();
         }
+
+        $fields = $fields ?: $this->getRenderFields();
+        $this->onBeforeRender($fields);
 
         return $this->setRenderFields($fields)->renderInternal($template, [
             'form' => $this,
-            'fields' => $fields ?: $this->getRenderFields(),
+            'fields' => $fields,
             'inlines' => $this->renderInlines($extra)
         ]);
     }

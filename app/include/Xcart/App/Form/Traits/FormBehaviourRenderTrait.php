@@ -14,86 +14,63 @@ trait FormBehaviourRenderTrait
 {
 
     /**
-     * @param $type
-     * @return mixed
-     * @throws \Exception
-     */
-    public function getTemplateFromType($type)
-    {
-
-        if ($this->hasBehavior('decor')) {
-            $behavior = $this->getBehavior('decor');
-            /** @var FormViewBehavior $behavior */
-            return $behavior->getTemplateFromType($type);
-        }
-
-        return parent::getTemplateFromType($type);
-    }
-
-    /**
-     * @return string
-     * @throws \Exception
-     */
-    public function __toString()
-    {
-
-        if ($this->hasBehavior('decor')) {
-            /** @var FormViewBehavior $behavior */
-            $behavior = $this->getBehavior('decor');
-
-            return $behavior->__toString();
-        }
-
-        return parent::__toString();
-    }
-
-    /**
-     * @param null $template
-     * @param array $fields
-     * @param null $extra
-     * @return string
-     * @throws \Exception
-     */
-    public function render($template = null, array $fields = [], $extra = null)
-    {
-        if ($this->hasBehavior('decor')) {
-            $behavior = $this->getBehavior('decor');
-            /** @var FormViewBehavior $behavior */
-            return $behavior->render($template, $fields, $extra);
-        }
-
-        return parent::render($template, $fields, $extra);
-    }
-
-    /**
-     * Initialize fields
-     */
-    public function initFields()
-    {
-        if ($this->hasBehavior('decor')) {
-            $behavior = $this->getBehavior('decor');
-            /** @var FormViewBehavior $behavior */
-            return $behavior->initFields();
-        }
-        return parent::initFields();
-    }
-
-    /**
-     * @param $decorBehavior
-     */
-    public function setDecor($decorBehavior)
-    {
-        $this->attachBehavior('decor', $decorBehavior);
-    }
-
-    /**
-     * Add initialized field
+     * Execute before create field
      * @param $name
-     * @param $value
+     * @param $config
+     * @return mixed
      */
-    public function addInitField($name, $value)
+    public function onBeforeCreateField(&$name, &$config):void
     {
-        $this->_fields[$name] = $value;
+        var_dump('trait onBeforeCreateField');
+        $this->_applyEvent('onBeforeCreateField', $array = [&$name, &$config]);
+    }
+
+    /**
+     * Execute after field is created
+     * @param $field
+     */
+    public function onAfterCreateField(&$field):void
+    {
+        $this->_applyEvent('onAfterCreateField', $array = [&$field]);
+    }
+
+    /**
+     * Execute before choose template
+     * @param $templates
+     * @param $defaultTemplateType
+     */
+    public function onBeforeGetTemplate(&$templates, &$defaultTemplateType):void
+    {
+        $this->_applyEvent('onBeforeGetTemplate', $array = [&$templates, &$defaultTemplateType]);
+    }
+
+    /**
+     * Execute before render form
+     * @param $fields
+     */
+    public function onBeforeRender(&$fields):void
+    {
+        $this->_applyEvent('onBeforeRender', $array = [&$fields]);
+    }
+
+    /**
+     * @param $name
+     * @param $params
+     */
+    private function _applyEvent($eventName, &$params):void
+    {
+
+        parent::$eventName(... $params);
+
+        if ($this->hasAnyBehavior()) {
+            foreach ($this->getAllBehaviors() as $behaviorName => $behavior){
+                /** @var FormViewBehavior $behavior */
+                var_dump($eventName);
+                if($behavior->enabled) {
+                    $behavior->$eventName(... $params);
+                }
+            }
+        }
     }
 
 }

@@ -31,6 +31,7 @@
  * @package system.collections
  * @since 1.0
  */
+namespace yii;
 class CMap
 {
 

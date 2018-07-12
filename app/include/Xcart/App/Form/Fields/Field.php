@@ -2,7 +2,7 @@
 
 namespace Xcart\App\Form\Fields;
 
-use CMap;
+
 use Exception;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Xcart\App\Exceptions\InvalidConfigException;
@@ -14,6 +14,7 @@ use Xcart\App\Traits\RenderTrait;
 use Xcart\App\Validation\Interfaces\IValidateField;
 use Xcart\App\Validation\RequiredValidator;
 use Xcart\App\Validation\Traits\ValidateField;
+use yii\CMap;
 
 /**
  * Class Field

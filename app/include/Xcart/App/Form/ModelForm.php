@@ -78,11 +78,13 @@ class ModelForm extends BaseForm
                 $config = ['class' => $config];
             }
 
-            $this->_fields[$name] = Creator::createObject(array_merge([
-                'name' => $name,
-                'form' => $this,
-                'prefix' => $prefix
-            ], is_array($config) ? $config : ['class' => $config]));
+//            $this->_fields[$name] = Creator::createObject(array_merge([
+//                'name' => $name,
+//                'form' => $this,
+//                'prefix' => $prefix
+//            ], is_array($config) ? $config : ['class' => $config]));
+
+            $this->_fields[$name] = $this->createField($name, (is_array($config) ? $config : ['class' => $config]));
 
             if ($instance && $instance->hasField($name)) {
                 if ($instance->getField($name)->editable) {
@@ -130,6 +132,22 @@ class ModelForm extends BaseForm
                 ]
             ]));
         }
+    }
+
+
+    public function createField($name, $config)
+    {
+        $this->onBeforeCreateField($name, $config);
+
+        $newField = Creator::createObject(array_merge([
+            'name' => $name,
+            'form' => $this,
+            'prefix' => $this->getPrefix(),
+        ], $config));
+
+        $this->onAfterCreateField($newField);
+
+        return $newField;
     }
 
     /**
