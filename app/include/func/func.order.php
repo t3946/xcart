@@ -673,7 +673,7 @@ function func_order_data($orderid)
         $mpn               = $classProduct->getMPN();
         $v["mpn"]          = $mpn;
         $v["oProduct"]     = $classProduct;
-        $v["oOrderDetail"] = \Xcart\OrderDetail::model(['itemid' => $v['itemid']]);
+        $v["oOrderDetail"] = OrderDetailModel::objects()->get(['itemid' => $v['itemid']]);
 
         $v["orig_product_classes"] = func_get_product_classes($v["productid"]);
 
