@@ -134,22 +134,6 @@ class ModelForm extends BaseForm
         }
     }
 
-
-    public function createField($name, $config)
-    {
-        $this->onBeforeCreateField($name, $config);
-
-        $newField = Creator::createObject(array_merge([
-            'name' => $name,
-            'form' => $this,
-            'prefix' => $this->getPrefix(),
-        ], $config));
-
-        $this->onAfterCreateField($newField);
-
-        return $newField;
-    }
-
     /**
      * @param array $ignore
      * @return bool

@@ -37,7 +37,7 @@ class RequiredValidator extends Validator
     {
         return [
             'presence' => [
-                'message' => Translate::getInstance()->t('validation', "Cannot be empty", [])
+                'message' => Translate::getInstance()->t('validation', '^' . $this->message, [])
             ],
         ];
     }

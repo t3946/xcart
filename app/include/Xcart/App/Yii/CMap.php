@@ -31,7 +31,7 @@
  * @package system.collections
  * @since 1.0
  */
-namespace yii;
+namespace Xcart\App\Yii;
 class CMap
 {
 

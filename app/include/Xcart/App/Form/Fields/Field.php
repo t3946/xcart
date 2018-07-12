@@ -4,7 +4,6 @@ namespace Xcart\App\Form\Fields;
 
 
 use Exception;
-use Symfony\Component\Validator\Constraints\NotBlank;
 use Xcart\App\Exceptions\InvalidConfigException;
 use Xcart\App\Form\BaseForm;
 use Xcart\App\Form\ModelForm;
@@ -14,7 +13,7 @@ use Xcart\App\Traits\RenderTrait;
 use Xcart\App\Validation\Interfaces\IValidateField;
 use Xcart\App\Validation\RequiredValidator;
 use Xcart\App\Validation\Traits\ValidateField;
-use yii\CMap;
+use Xcart\App\Yii\CMap;
 
 /**
  * Class Field
@@ -28,15 +27,21 @@ abstract class Field implements IValidateField
      * Field, that extends current field
      * @var string
      */
-
     public $extend = '';
     /**
+     * Field, that extend enother field
      * @var bool
      */
-
     public $extends = false;
 
     /**
+     * Enabled HTML5 validation
+     * @var bool
+     */
+    public $typeEnabled = false;
+
+    /**
+     * Params to generate client validation
      * @var array
      */
     public $clientValidationParams = [];
@@ -154,7 +159,7 @@ abstract class Field implements IValidateField
      */
     public function init()
     {
-        if (!($this->getForm() instanceof ModelForm) && $this->required) {
+        if ($this->required) {
             $this->validators[] = new RequiredValidator();
         }
         foreach ($this->validators as $validator) {
@@ -171,11 +176,12 @@ abstract class Field implements IValidateField
     public function createClientValidationConfig()
     {
         $params = [];
+
         foreach ($this->validators as $validator) {
             $params = CMap::mergeArray($params, $validator->jsValidateParams());
         }
         $params = CMap::mergeArray($params, $this->clientValidationParams);
-        return json_encode($params);
+        return !empty($params) ? json_encode($params) : '';
     }
 
     /**
@@ -440,7 +446,7 @@ abstract class Field implements IValidateField
 
     public function getType()
     {
-        return $this->type ?: 'text';
+        return ($this->typeEnabled && $this->type) ?: 'text';
     }
 
     /**

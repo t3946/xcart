@@ -9,6 +9,8 @@
 namespace Xcart\App\Validation;
 
 
+use Xcart\App\Translate\Translate;
+
 class NumberValidator extends Validator
 {
     /**
@@ -37,8 +39,9 @@ class NumberValidator extends Validator
     {
         return [
             'format' => [
-                'pattern' => "^\\d*$",
-                'message' => Translate::getInstance()->t('validation', $this->message, [])
+                'pattern' => "^\d*$",
+                'flags' => "im",
+                'message' => Translate::getInstance()->t('validation', '^' . $this->message, [])
             ]
         ];
     }

@@ -19,12 +19,12 @@ class FrontendModelForm extends DecoratedModelForm
 {
     use RenderTrait;
 
-//    protected $userFields = [];
-//
-//    public function init(){
-//        parent::init();
-//        $this->userFields = array_keys($this->getFields());
-//    }
+    protected $userFields = [];
+
+    public function init(){
+        parent::init();
+        $this->userFields = array_keys($this->getFields());
+    }
 
     public function renderInternal($template, array $params)
     {
@@ -41,24 +41,24 @@ class FrontendModelForm extends DecoratedModelForm
         ];
     }
 
-//    public function setRenderFields(array $fields = [])
-//    {
-//        if (empty($fields)) {
-//            $fields = array_keys($this->getFieldsInit());
-//        }
-//        $this->_renderFields = [];
-//        $initFields = $this->getFieldsInit();
-//
-//        foreach ($fields as $name) {
-//            if (\in_array($name, $this->exclude, true) || !\in_array($name, $this->userFields, true)) {
-//                continue;
-//            }
-//            if (array_key_exists($name, $initFields)) {
-//                $this->_renderFields[] = $name;
-//            } else {
-//                throw new RuntimeException("Field $name not found");
-//            }
-//        }
-//        return $this;
-//    }
+    public function setRenderFields(array $fields = [])
+    {
+        if (empty($fields)) {
+            $fields = array_keys($this->getFieldsInit());
+        }
+        $this->_renderFields = [];
+        $initFields = $this->getFieldsInit();
+
+        foreach ($fields as $name) {
+            if (\in_array($name, $this->exclude, true) || !\in_array($name, $this->userFields, true)) {
+                continue;
+            }
+            if (array_key_exists($name, $initFields)) {
+                $this->_renderFields[] = $name;
+            } else {
+                throw new RuntimeException("Field $name not found");
+            }
+        }
+        return $this;
+    }
 }

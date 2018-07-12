@@ -63,7 +63,7 @@ class FormViewBehavior extends BaseBehavior
      */
     public function onBeforeCreateField(&$name, &$config)
     {
-        $config = array_merge($this->fieldsSettings, $config);
+        //$config = array_merge($this->fieldsSettings, $config);
     }
 
     /**
@@ -82,8 +82,8 @@ class FormViewBehavior extends BaseBehavior
      */
     public function onBeforeGetTemplate(&$templates, &$defaultTemplateType)
     {
-        $defaultTemplateType = $this->defaultTemplateType;
-        $templates = array_merge($templates, $this->templates);
+        //$defaultTemplateType = $this->defaultTemplateType;
+        //$templates = array_merge($templates, $this->templates);
     }
 
     /**

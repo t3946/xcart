@@ -110,7 +110,7 @@ abstract class BaseForm implements IteratorAggregate, Countable, ArrayAccess, IV
      */
     public function onBeforeCreateField(&$name, &$config)
     {
-        var_dump('base onBeforeCreateField');
+        //var_dump('base onBeforeCreateField');
     }
 
     /**
@@ -263,7 +263,6 @@ abstract class BaseForm implements IteratorAggregate, Countable, ArrayAccess, IV
      */
     public function initFields()
     {
-        var_dump('initFields');
         $fields = $this->getFields();
         foreach ($fields as $name => $config) {
             if (\in_array($name, $this->getExclude(), true)) {
@@ -281,7 +280,6 @@ abstract class BaseForm implements IteratorAggregate, Countable, ArrayAccess, IV
     public function createField($name, $config)
     {
 
-        var_dump('createField');
         $this->onBeforeCreateField($name, $config);
 
         $newField = Creator::createObject(array_merge([

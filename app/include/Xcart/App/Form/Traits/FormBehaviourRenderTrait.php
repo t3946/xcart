@@ -21,7 +21,6 @@ trait FormBehaviourRenderTrait
      */
     public function onBeforeCreateField(&$name, &$config):void
     {
-        var_dump('trait onBeforeCreateField');
         $this->_applyEvent('onBeforeCreateField', $array = [&$name, &$config]);
     }
 
@@ -65,7 +64,6 @@ trait FormBehaviourRenderTrait
         if ($this->hasAnyBehavior()) {
             foreach ($this->getAllBehaviors() as $behaviorName => $behavior){
                 /** @var FormViewBehavior $behavior */
-                var_dump($eventName);
                 if($behavior->enabled) {
                     $behavior->$eventName(... $params);
                 }

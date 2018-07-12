@@ -45,6 +45,8 @@ class EmailValidator extends Validator
      */
     public $required = true;
 
+    private $message = 'Is not a valid email address';
+
     public function __construct($required = true)
     {
         $this->required = $required;
@@ -76,7 +78,7 @@ class EmailValidator extends Validator
         }
 
         if (!$valid) {
-            $this->addError(Translate::getInstance()->t('validation', "Is not a valid email address", []));
+            $this->addError(Translate::getInstance()->t('validation', $this->message, []));
         }
 
         return $this->hasErrors() === false;
@@ -89,18 +91,18 @@ class EmailValidator extends Validator
         if ($this->required) {
             $validation = array_merge($validation, [
                 'presence' => [
-                    'message' => Translate::getInstance()->t('validation', "Is not a valid email address", [])
+                    'message' => Translate::getInstance()->t('validation', '^' . $this->message, [])
                 ]
             ]);
         }
 
         return array_merge($validation, [
             'email' => [
-                'message' => Translate::getInstance()->t('validation', "Is not a valid email address", [])
+                'message' => Translate::getInstance()->t('validation', '^' . $this->message, [])
             ],
             'length'=> [
                 'maximum' => 320,
-                'wrongLength' => Translate::getInstance()->t('validation', "Is not a valid email address", [])
+                'wrongLength' => Translate::getInstance()->t('validation', '^' . $this->message, [])
             ]
         ]);
     }
