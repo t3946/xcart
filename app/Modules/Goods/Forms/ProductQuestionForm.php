@@ -14,11 +14,9 @@ use Modules\GeoIp\Helpers\GeoIpHelper;
 use Modules\Goods\Models\ProductQuestionModel;
 use Modules\Main\Models\DepartmentsModel;
 use Modules\Order\Validation\PhoneValidator;
-use Modules\Goods\Models\ProductModel;
 use Xcart\App\Form\Fields\CharField;
 use Xcart\App\Form\Fields\NumberField;
 use Xcart\App\Form\Fields\TextField;
-use Xcart\App\Form\ModelForm;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Validation\EmailValidator;
 
@@ -46,8 +44,6 @@ class ProductQuestionForm extends FrontendModelForm
             'productid' => [
                 'class' => NumberField::class,
                 'required' => true,
-               // 'fieldTemplate' => 'forms/field/default/custom/field_custom.tpl',
-                //'labelTemplate' => 'forms/field/default/label_optional.tpl'
             ],
             'firstname' => [
                 'class' => CharField::class,
@@ -56,7 +52,6 @@ class ProductQuestionForm extends FrontendModelForm
                     'placeholder' => 'Albert'
                 ],
                 'required' => true,
-               // 'fieldTemplate' => 'forms/field/default/custom/field_custom.tpl',
             ],
             'email' => [
                 'class' => CharField::class,
@@ -68,7 +63,6 @@ class ProductQuestionForm extends FrontendModelForm
                 'validators' => [
                     new EmailValidator(),
                 ],
-               // 'fieldTemplate' => 'forms/field/default/custom/field_custom.tpl',
             ],
             'phone' => [
                 'class' => CharField::class,
@@ -81,7 +75,6 @@ class ProductQuestionForm extends FrontendModelForm
                 'validators' => [
                     new PhoneValidator(),
                 ],
-                //'fieldTemplate' => 'forms/field/default/custom/field_compound.tpl',
                 'extend' => 'phone_ext'
             ],
             'phone_ext' => [
@@ -90,7 +83,6 @@ class ProductQuestionForm extends FrontendModelForm
                 'html' => [
                     'class' => 'phone_ext',
                 ],
-               // 'fieldTemplate' => 'forms/field/default/custom/field_custom.tpl',
                 'extends' => true
             ],
             'question' => [
@@ -101,7 +93,6 @@ class ProductQuestionForm extends FrontendModelForm
                     'placeholder' => 'Please type your product question here'
                 ],
                 'required' => true,
-                //'fieldTemplate' => 'forms/field/default/custom/field_custom.tpl',
             ],
 
         ];

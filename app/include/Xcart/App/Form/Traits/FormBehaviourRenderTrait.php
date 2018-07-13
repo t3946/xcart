@@ -14,7 +14,7 @@ trait FormBehaviourRenderTrait
 {
 
     /**
-     * Execute before create field
+     * Execute before form field creation
      * @param $name
      * @param $config
      * @return mixed
@@ -25,7 +25,7 @@ trait FormBehaviourRenderTrait
     }
 
     /**
-     * Execute after field is created
+     * Execute after form field is created
      * @param $field
      */
     public function onAfterCreateField(&$field):void
@@ -34,7 +34,7 @@ trait FormBehaviourRenderTrait
     }
 
     /**
-     * Execute before choose template
+     * Execute before choose form template
      * @param $templates
      * @param $defaultTemplateType
      */
@@ -44,7 +44,7 @@ trait FormBehaviourRenderTrait
     }
 
     /**
-     * Execute before render form
+     * Execute before form render
      * @param $fields
      */
     public function onBeforeRender(&$fields):void
@@ -53,12 +53,31 @@ trait FormBehaviourRenderTrait
     }
 
     /**
+     * Execute before form begin render
+     * @param $prefix
+     * @param $template
+     */
+    public function onBeforeRenderBegin(&$prefix, &$template):void
+    {
+        $this->_applyEvent('onBeforeRenderBegin', $array = [&$prefix, &$template]);
+    }
+
+    /**
+     * Execute before form end render
+     * @param $prefix
+     * @param $template
+     */
+    public function onBeforeRenderEnd(&$prefix, &$template):void
+    {
+        $this->_applyEvent('onBeforeRenderEnd', $array = [&$prefix, &$template]);
+    }
+
+    /**
      * @param $name
      * @param $params
      */
     private function _applyEvent($eventName, &$params):void
     {
-
         parent::$eventName(... $params);
 
         if ($this->hasAnyBehavior()) {

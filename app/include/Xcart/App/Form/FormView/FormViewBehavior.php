@@ -94,6 +94,15 @@ class FormViewBehavior extends BaseBehavior
     {
     }
 
+    /**
+     * Execute before form end render
+     * @param $prefix
+     * @param $template
+     */
+    public function onBeforeRenderEnd(&$prefix, &$template):void
+    {
+    }
+
 
 
 

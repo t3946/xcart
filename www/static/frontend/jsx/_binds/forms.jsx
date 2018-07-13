@@ -74,7 +74,7 @@ documentReady(() => {
 
 
 
-    document.addEventListener('form.constructed', function (e) {
+    document.addEventListener('form.client.validation', function (e) {
         var form = document.querySelector(".send-question form");
 
 

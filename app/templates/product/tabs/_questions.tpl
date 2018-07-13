@@ -8,7 +8,7 @@
                 S3 Stores, Inc. customer care team</div>
         </div>
         {else}
-        <form action="" novalidate>
+        {raw $form->renderBegin()}
             {/if}
             <input type="hidden" value="{$productId}" name="{$form->classNameShort()}[productid]">
             <div class="row">
@@ -62,7 +62,7 @@
                     </div>
                 </div>
             </div>
-        </form>
+        {raw $form->renderEnd()}
 </div>
 {if $productQuestion}
     {include 'product/tabs/questions/_questions_list.tpl' productQuestion = $productQuestion}

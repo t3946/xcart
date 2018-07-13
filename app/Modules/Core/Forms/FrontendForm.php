@@ -9,7 +9,8 @@
 namespace Modules\Core\Forms;
 
 
-use Modules\Core\Behaviours\FrontendFormBehavior;
+use Modules\Core\Behaviours\ClientValidationBehavior;
+use Modules\Core\Behaviours\FrontendFormDisplayBehavior;
 use Xcart\App\Form\BaseForm;
 use Xcart\App\Traits\RenderTrait;
 
@@ -24,14 +25,18 @@ class FrontendForm extends BaseForm
 
     /**
      * Default Behaviour
+     * The higher the position, the higher the priority
      * @return array
      */
     protected function behaviours()
     {
         return [
-            'customFields' => [
-                'class' => FrontendFormBehavior::class
-            ]
+            'validation' => [
+                'class' => ClientValidationBehavior::class
+            ],
+            'decor' => [
+                'class' => FrontendFormDisplayBehavior::class
+            ],
         ];
     }
 }

@@ -9,7 +9,8 @@
 namespace Modules\Core\Forms;
 
 
-use Modules\Core\Behaviours\FrontendFormBehavior;
+use Modules\Core\Behaviours\ClientValidationBehavior;
+use Modules\Core\Behaviours\FrontendFormDisplayBehavior;
 use RuntimeException;
 use Xcart\App\Form\DecoratedModelForm;
 use Xcart\App\Form\ModelForm;
@@ -31,13 +32,19 @@ class FrontendModelForm extends DecoratedModelForm
         return self::renderTemplate($template, $params);
     }
 
+    /**
+     * The higher the position, the higher the priority
+     * @return array
+     */
     protected function behaviours()
     {
         return [
-            'decor' => [
-                'class' => FrontendFormBehavior::class
+            'validation' => [
+                'class' => ClientValidationBehavior::class
             ],
-
+            'decor' => [
+                'class' => FrontendFormDisplayBehavior::class
+            ],
         ];
     }
 
