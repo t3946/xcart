@@ -60,7 +60,6 @@ class ClientValidationBehavior extends FormViewBehavior
         }
 
         $prefix = $this->owner->getFormIdentifier();
-        $js = $this->_wrapClientValidationConditions($prefix, $js);
         $this->_addClientValidationToPage($prefix, $js);
     }
 
@@ -98,8 +97,26 @@ class ClientValidationBehavior extends FormViewBehavior
      */
     private function _wrapClientValidationConditions($prefix, $js)
     {
-        $triggerEvent = $this->_renderFormCreatedEvent($prefix);
-        return "(() => {document.constraints{$prefix} = {{$js}};{$triggerEvent}})();";
+        //$js = $this->_createJsCommand($prefix, $js);
+
+
+        $jsScript = $this->_renderCreateConstraints();
+
+        $jsScript .= "document.formConstraints.{$prefix} = {{$js}};";
+
+        $jsScript .= $this->_renderFormCreatedEvent($prefix);
+
+        //return "(() => {document.constraints{$prefix} = {{$js}};{$triggerEvent}})();";
+
+         return $this->_wrapInJsClosure($jsScript);
+    }
+
+    /**
+     * @return string
+     */
+    private function _renderCreateConstraints()
+    {
+        return "if(typeof document.formConstraints === 'undefined'){document.formConstraints = {};}";
     }
 
     /**
@@ -112,6 +129,20 @@ class ClientValidationBehavior extends FormViewBehavior
         return "document.dispatchEvent(new CustomEvent('{$this->_jsEvent}', { detail: '{$prefix}' }));";
     }
 
+    private function _wrapInJsClosure($js)
+    {
+        return  "(() => {{$js}})();";
+    }
+
+//    private function _createJsCommand($prefix, $js)
+//    {
+//
+//    }
+
+
+
+
+
     /**
      * Echo js script for the form client validation
      * @param $prefix
@@ -119,6 +150,7 @@ class ClientValidationBehavior extends FormViewBehavior
      */
     private function _addClientValidationToPage($prefix, $js)
     {
+        $js = $this->_wrapClientValidationConditions($prefix, $js);
         //var_dump($js);
 //        AssetsLibrary::addAsset([
 //            'type' => 'js',

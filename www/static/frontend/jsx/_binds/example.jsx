@@ -185,3 +185,33 @@
         alert("Success!");
     }
 })();
+
+(() => {
+    if (typeof document.formConstraints === 'undefined') {
+        document.formConstraints = {};
+    }
+    document.formConstraints.ProductQuestionForm1 = {
+        "ProductQuestionForm[firstname]": {"presence": {"message": "^Cannot be empty"}},
+        "ProductQuestionForm[email]": {
+            "presence": {"message": "^Cannot be empty"},
+            "email": {"message": "^Is not a valid email address"},
+            "length": {"maximum": 320, "wrongLength": "^Is not a valid email address"}
+        },
+        "ProductQuestionForm[phone]": {
+            "format": {
+                "pattern": "^\\+?[-()\\d\\s]*$",
+                "flags": "im",
+                "message": "^Is not a valid phone"
+            }, "presence": {"message": "^Cannot be empty"}
+        },
+        "ProductQuestionForm[phone_ext]": {
+            "format": {
+                "pattern": "^\\d*$",
+                "flags": "im",
+                "message": "^Must be numeric"
+            }
+        },
+        "ProductQuestionForm[question]": {"presence": {"message": "^Cannot be empty"}},
+    };
+    document.dispatchEvent(new CustomEvent('form.client.validation', {detail: 'ProductQuestionForm1'}));
+})();

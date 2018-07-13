@@ -60805,41 +60805,30 @@ jQuery(window).on('load', function () {
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function($) {
+
 
 var _documentReady = __webpack_require__(10);
 
 var _documentReady2 = _interopRequireDefault(_documentReady);
 
-var _validate = __webpack_require__(25);
+var _FormValidation = __webpack_require__(183);
 
-var _validate2 = _interopRequireDefault(_validate);
+var _FormValidation2 = _interopRequireDefault(_FormValidation);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 (0, _documentReady2.default)(function () {
 
-    document.addEventListener('form.constructed', function (e) {
-        var form = document.querySelector(".send-question form");
-
-        function processChange(event) {
-
-            var errors = (0, _validate2.default)(form, constraintsProductQuestionForm) || {};
-
-            console.log(errors);
+    if (typeof document.formConstraints !== 'undefined') {
+        for (var name in document.formConstraints) {
+            (0, _FormValidation2.default)(name);
         }
+    }
 
-        var inputs = form.querySelectorAll("input, textarea, select");
-
-        for (var i = 0; i < inputs.length; ++i) {
-            var el = inputs.item(i);
-            console.log(el, $(el));
-
-            el.addEventListener("change", processChange);
-        }
+    document.addEventListener('form.client.validation', function (event) {
+        (0, _FormValidation2.default)(event.detail);
     }, false);
 });
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
 /* 103 */
@@ -75317,6 +75306,117 @@ exports.default = isTouch;
 function isTouch() {
     return window.whatInput.ask('loose') === 'touch' || window.whatInput.ask() === 'touch';
 }
+
+/***/ }),
+/* 183 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+exports.__esModule = true;
+
+var _lodash = __webpack_require__(1);
+
+var _lodash2 = _interopRequireDefault(_lodash);
+
+var _validate = __webpack_require__(25);
+
+var _validate2 = _interopRequireDefault(_validate);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var FormValidation = function () {
+    function FormValidation(name) {
+        _classCallCheck(this, FormValidation);
+
+        this.name = name;
+        this.constraints = document.formConstraints[name];
+
+        var formSelector = "#" + name;
+        this.form = document.querySelector(formSelector);
+        this._bind();
+    }
+
+    FormValidation.prototype._bind = function _bind() {
+        this.inputs = this.form.querySelectorAll("input, textarea, select");
+        for (var i = 0; i < this.inputs.length; ++i) {
+            var inputElement = this.inputs.item(i);
+            inputElement.addEventListener("change", this.processChange.bind(this));
+        }
+    };
+
+    FormValidation.prototype.processChange = function processChange(event) {
+
+        console.log(event);
+
+        var inputElement = event.target;
+        var inputElementName = inputElement.getAttribute('name');
+        var errors = (0, _validate2.default)(this.form, this.constraints) || {};
+        var currentError = errors[inputElementName];
+
+        if (typeof currentError === 'undefined' || currentError.length <= 0) {
+            this.success(inputElement);
+            return;
+        }
+
+        this.showError(inputElement, currentError[0]);
+    };
+
+    FormValidation.prototype.showError = function showError(element, text) {
+        var field = element.closest('.form-field');
+        var errors = field.querySelectorAll('.errors');
+
+        element.classList.add('hasError');
+        field.classList.add('hasError');
+
+        for (var i = 0; i < errors.length; ++i) {
+            var oneErrorPlace = errors.item(i);
+            var oneErrorPlaceText = oneErrorPlace.querySelector('.error-text');
+            oneErrorPlaceText.textContent = text;
+            oneErrorPlace.classList.add('visible');
+        }
+    };
+
+    FormValidation.prototype.success = function success(element) {
+        var field = element.closest('.form-field');
+        element.classList.add('success');
+
+        if (!field.classList.contains('compound-field')) {
+            field.classList.add('success');
+            return;
+        }
+
+        var inputs = field.querySelectorAll("input, textarea, select");
+        for (var i = 0; i < inputs.length; ++i) {
+            var inputElement = inputs.item(i);
+            if (!inputElement.classList.contains('success')) {
+                return;
+            }
+        }
+
+        field.classList.add('success');
+    };
+
+    FormValidation.prototype.itemAddSuccess = function itemAddSuccess() {
+        field.classList.add('success');
+    };
+
+    FormValidation.prototype.destructor = function destructor() {
+        for (var i = 0; i < this.inputs.length; ++i) {
+            var inputElement = this.inputs.item(i);
+            inputElement.removeEventListener('change', this.processChange.bind(this));
+        }
+    };
+
+    return FormValidation;
+}();
+
+exports.default = function (name) {
+    new FormValidation(name);
+};
 
 /***/ })
 /******/ ]);
