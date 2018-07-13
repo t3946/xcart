@@ -69,9 +69,7 @@ class PromoController extends AbstractCatalogController
     public function actionFeatured(): void
     {
         $this->qs = $this->getQS()
-            ->distinct()
             ->filter([
-                'images__image_path__isnull' => false,
                 'featured__product_order__isnull' => false,
             ])
             ->order(['?']);
