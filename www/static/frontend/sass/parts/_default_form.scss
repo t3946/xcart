@@ -53,6 +53,10 @@ form {
       width: rem-calc(295);
     }
 
+    &.hasError{
+      border: 1px solid red;
+    }
+
   }
 
   /**
@@ -232,6 +236,10 @@ form {
       margin: 0;
       margin-bottom: rem-calc(10);
 
+      &.show{
+        display: block !important;
+      }
+
       li {
         text-align: center;
 
@@ -267,6 +275,10 @@ form {
         border-width: rem-calc(2);
         margin-bottom: 0;
         margin-left: rem-calc(20);
+
+        &.show{
+          display: inline-block !important;
+        }
 
         &:after {
           left: 0;

@@ -4,7 +4,7 @@
     {set $field = $form->getField($name)}
     {if $field->extend}
         {set $fieldExt = $form->getField($field->extend)}
-        <div class="form-field {$name}">
+        <div class="form-field {$name} compound-field">
             {raw $field->render($fieldExt)}
         </div>
     {elseif !$field->extends}

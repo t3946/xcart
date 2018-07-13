@@ -75335,16 +75335,16 @@ var FormValidation = function () {
         this.name = name;
         this.constraints = document.formConstraints[name];
 
-        var formSelector = "#" + name;
+        var formSelector = '#' + name;
         this.form = document.querySelector(formSelector);
         this._bind();
     }
 
     FormValidation.prototype._bind = function _bind() {
-        this.inputs = this.form.querySelectorAll("input, textarea, select");
+        this.inputs = this.form.querySelectorAll('input, textarea, select');
         for (var i = 0; i < this.inputs.length; ++i) {
             var inputElement = this.inputs.item(i);
-            inputElement.addEventListener("change", this.processChange.bind(this));
+            inputElement.addEventListener('change', this.processChange.bind(this));
         }
     };
 
@@ -75369,23 +75369,41 @@ var FormValidation = function () {
         var field = element.closest('.form-field');
         var errors = field.querySelectorAll('.errors');
 
-        element.classList.add('hasError');
-        field.classList.add('hasError');
+        this.itemAddError(element);
+        this.itemAddError(field);
 
         for (var i = 0; i < errors.length; ++i) {
             var oneErrorPlace = errors.item(i);
             var oneErrorPlaceText = oneErrorPlace.querySelector('.error-text');
             oneErrorPlaceText.textContent = text;
-            oneErrorPlace.classList.add('visible');
+            oneErrorPlace.classList.add('show');
+        }
+    };
+
+    FormValidation.prototype.removeError = function removeError(element) {
+        var field = element.closest('.form-field');
+        var errors = field.querySelectorAll('.errors');
+
+        this.itemRemoveError(element);
+        this.itemRemoveError(field);
+
+        for (var i = 0; i < errors.length; ++i) {
+            var oneErrorPlace = errors.item(i);
+            var oneErrorPlaceText = oneErrorPlace.querySelector('.error-text');
+            oneErrorPlaceText.textContent = '';
+            oneErrorPlace.classList.remove('show');
         }
     };
 
     FormValidation.prototype.success = function success(element) {
         var field = element.closest('.form-field');
-        element.classList.add('success');
+        this.itemAddSuccess(element);
 
         if (!field.classList.contains('compound-field')) {
-            field.classList.add('success');
+            console.log(field, field.classList);
+            this.removeError(element);
+            this.itemAddSuccess(field);
+            console.log('!compound-field success');
             return;
         }
 
@@ -75397,11 +75415,23 @@ var FormValidation = function () {
             }
         }
 
-        field.classList.add('success');
+        this.removeError(element);
+        this.itemAddSuccess(field);
+        console.log('compound-field success');
     };
 
-    FormValidation.prototype.itemAddSuccess = function itemAddSuccess() {
-        field.classList.add('success');
+    FormValidation.prototype.itemAddSuccess = function itemAddSuccess(item) {
+        item.classList.remove('hasError');
+        item.classList.add('success');
+    };
+
+    FormValidation.prototype.itemAddError = function itemAddError(item) {
+        item.classList.remove('success');
+        item.classList.add('hasError');
+    };
+
+    FormValidation.prototype.itemRemoveError = function itemRemoveError(item) {
+        item.classList.remove('hasError');
     };
 
     FormValidation.prototype.destructor = function destructor() {

@@ -14,6 +14,8 @@
                 {raw $input}
 
                 <span class="show-for-large">
+                    <div class="show-success"></div>
+                    <div class="show-error"></div>
                     {raw $errors}
                 </span>
             </div>
