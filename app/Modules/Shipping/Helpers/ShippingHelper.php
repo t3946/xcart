@@ -211,7 +211,7 @@ class ShippingHelper
                             return $ups_qty;
                         }
                         $ups_qty = ceil($rate->getShippingChargeBeforeMap() / ($model->getPrice($ups_qty) - ($model->cost_to_us * $distributor->max_extra_margin)));
-                        if ($ups_qty > $model->r_avail) {
+                        if ($ups_qty > $model->r_avail || $ups_qty > 200) {
                             break;
                         }
                     }
